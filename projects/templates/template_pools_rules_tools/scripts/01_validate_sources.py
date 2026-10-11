@@ -97,9 +97,7 @@ def main() -> int:
             v = validate_tool_scripts_exist(tool["name"])
             sym = "✓" if v["valid"] else "✗"
             print(
-                f"  {sym}  {tool['name']} — "
-                f"entrypoints={len(v['entrypoints'])}  "
-                f"missing={len(v['missing'])}"
+                f"  {sym}  {tool['name']} — entrypoints={len(v['entrypoints'])}  missing={len(v['missing'])}"
             )
             if not v["valid"]:
                 errors.append(f"tool {tool['name']}: missing scripts {v['missing']}")

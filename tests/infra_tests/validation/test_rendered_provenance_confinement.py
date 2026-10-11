@@ -11,6 +11,7 @@ from infrastructure.validation.publication.rendered_provenance import (
     write_rendered_provenance_receipt,
 )
 from infrastructure.validation.rendered_snapshot import (
+    RenderedSnapshotError,
     build_current_rendered_snapshot,
 )
 from tests._support.projects import write_doc
@@ -80,7 +81,7 @@ def test_confined_atomic_writer_resists_parent_symlink_swap_race(tmp_path: Path)
     attacker = threading.Thread(target=swap_parent_for_symlink)
     attacker.start()
     try:
-        with pytest.raises(ValueError, match="write parent changed"):
+        with pytest.raises(ValueError, match="write parent changed|refusing symlink component"):
             atomic_write_text_confined(
                 project,
                 reports / "validation_report.json",
@@ -140,10 +141,7 @@ def test_symlinked_project_tree_is_walkable_and_escapes_are_still_refused(tmp_pa
     symlink leaving both the repository and the project is still refused, and a
     caller that declares no extra root keeps the original behavior.
     """
-    from infrastructure.validation.rendered_snapshot import (
-        RenderedSnapshotError,
-        _iter_tree_files,
-    )
+    from infrastructure.validation.rendered_snapshot._scan import iter_tree_files
 
     repository = tmp_path / "repo"
     (repository / "projects" / "working").mkdir(parents=True)
@@ -155,14 +153,14 @@ def test_symlinked_project_tree_is_walkable_and_escapes_are_still_refused(tmp_pa
     linked.symlink_to(outside, target_is_directory=True)
 
     # POSITIVE: declaring the project root makes its tree walkable.
-    records = list(_iter_tree_files(linked, repo_root=repository, extra_root=linked))
+    records = list(iter_tree_files(linked, repo_root=repository, extra_root=linked))
     assert [record.path.name for record in records] == ["module.py"]
 
     # NEGATIVE CONTROL: without the declaration the boundary is unchanged, so
     # the same walk is still refused. Without this the parameter could be
     # widening the guard for everyone.
     with pytest.raises(RenderedSnapshotError) as unguarded:
-        list(_iter_tree_files(linked, repo_root=repository))
+        list(iter_tree_files(linked, repo_root=repository))
     assert unguarded.value.code == "SOURCE_SYMLINK_ESCAPE"
 
     # NEGATIVE CONTROL: a symlink escaping BOTH the repository and the declared
@@ -173,14 +171,14 @@ def test_symlinked_project_tree_is_walkable_and_escapes_are_still_refused(tmp_pa
     (outside / "src" / "escape").symlink_to(elsewhere, target_is_directory=True)
 
     with pytest.raises(RenderedSnapshotError) as escaped:
-        list(_iter_tree_files(linked, repo_root=repository, extra_root=linked))
+        list(iter_tree_files(linked, repo_root=repository, extra_root=linked))
     assert escaped.value.code == "SOURCE_SYMLINK_ESCAPE"
 
     # Internal alias inside the declared project is in scope. The guard exists
     # to stop escapes, not to refuse a sidecar project linking to itself.
     (outside / "src" / "escape").unlink()
     (outside / "src" / "alias.py").symlink_to(outside / "src" / "module.py")
-    aliased = list(_iter_tree_files(linked, repo_root=repository, extra_root=linked))
+    aliased = list(iter_tree_files(linked, repo_root=repository, extra_root=linked))
     keys = {record.key for record in aliased}
     assert any(record.path.name == "module.py" for record in aliased)
     assert any("alias.py" in key for key in keys)

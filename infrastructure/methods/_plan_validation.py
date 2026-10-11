@@ -71,7 +71,7 @@ def _validate_executor_method(
     issues: list[MethodsIssue],
 ) -> None:
     """Verify built-in executor methods against the actual executor class."""
-    if not hasattr(PipelineExecutor, stage.executor_method):
+    if not callable(getattr(PipelineExecutor, stage.executor_method, None)):
         issues.append(
             _issue(
                 "error",
@@ -168,46 +168,6 @@ def _validate_verification_commands(
                     "Migrate the project entrypoint to the shared --project argument contract.",
                 )
             )
-
-
-def _validate_json_object(
-    root: Path,
-    path: Path,
-    *,
-    missing_code: str,
-    invalid_code: str,
-    label: str,
-    issues: list[MethodsIssue],
-) -> None:
-    absolute = root / path
-    if not absolute.exists():
-        issues.append(
-            _issue(
-                "error",
-                missing_code,
-                f"required methods evidence file is missing: {path.as_posix()}",
-                path.as_posix(),
-                "Run the core pipeline or refresh output reports before publication.",
-            )
-        )
-        return
-    try:
-        payload = json.loads(absolute.read_text(encoding="utf-8"))
-    except (OSError, UnicodeError, json.JSONDecodeError) as exc:
-        detail = f"{label} is not readable JSON: {exc}"
-    else:
-        if isinstance(payload, dict) and payload:
-            return
-        detail = f"{label} must be a non-empty JSON object"
-    issues.append(
-        _issue(
-            "error",
-            invalid_code,
-            detail,
-            path.as_posix(),
-            "Regenerate the report from the core pipeline before publication.",
-        )
-    )
 
 
 def _validate_artifact_manifest(

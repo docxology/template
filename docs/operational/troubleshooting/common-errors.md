@@ -174,9 +174,9 @@ validate before copying.
 
 **Fix:** `ollama serve` (in another shell), then `ollama pull gemma3:4b`. The
 LLM stages are gated; if you don't want them, run `execute_pipeline.py` with
-`--core-only` or `--skip-llm` (the multi-project orchestrator
-`execute_multi_project.py` uses `--no-llm`). Record the omitted LLM lanes as
-`not run`, not passed.
+`--mode core`, which is the default across entrypoints. Enable local-model
+lanes with `--mode live` after checking the configured provider and model.
+Missing tools or models leave required live acceptance blocked.
 
 **Symptom:** LLM review times out.
 
@@ -216,7 +216,7 @@ gate.
   invocation. Default is `LOG_LEVEL=1` (INFO).
 - `LOG_TERMINAL_VERBOSE=1` to restore the verbose `[ts] [LEVEL] msg` prefix
   on the terminal (the file always has it).
-- `docs/_generated/last-run-summary.md` shows the last recorded end-of-run
+- `output/multi_project_summary/last-run-summary.md` shows the last recorded end-of-run
   multi-project summary; it is historical evidence, not a current health claim.
   Diff it against a known-good prior run to spot
   regressions.

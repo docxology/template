@@ -118,7 +118,7 @@ uv run python scripts/pipeline/stage_01_test.py --project templates/{name}
 uv run python scripts/pipeline/stage_01_test.py --infra-only --infra-scope full
 
 # Test the build pipeline
-uv run python scripts/runner/execute_pipeline.py --project templates/{name} --core-only
+uv run python scripts/runner/execute_pipeline.py --project templates/{name} --mode core
 
 # Documentation, confidentiality, generated-artifact, and no-stand-in gates
 uv run python scripts/audit/lint_docs.py --quiet

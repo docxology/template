@@ -353,3 +353,160 @@ def test_containment_guard_rejects_escaping_target(tmp_path: Path) -> None:
     dest = (tmp_path / "fork").resolve()
     with pytest.raises(ValueError, match="copy target would escape destination"):
         _contained_destination(dest, Path("../outside"))
+
+
+def _scaffold_pinned_resource_repo(tmp_path: Path) -> tuple[Path, Path]:
+    """Create actual committed Gitlink custody without network or ambient identity."""
+    root = _scaffold_git_repo(tmp_path)
+    project = root / "projects/templates/template_code_project"
+    (project / "export.toml").write_text('[template_export]\ncross_root_dependencies = ["infrastructure"]\n')
+    (root / "pyproject.toml").write_text('[project]\nversion="4.0.1"\n')
+    child = root / "infrastructure/steganography/kmyth"
+    child.mkdir(parents=True)
+    (child / "README.md").write_text("Actual owned pinned resource fixture\n")
+    (child / "owned.c").write_text("int owned_value(void) { return 7; }\n")
+    (child / ".gitignore").write_text("bin/\nlib/\nobj/\nlogger/obj/\nutils/obj/\n")
+    _git("init", cwd=child)
+    _git("config", "user.email", "fixture@example.com", cwd=child)
+    _git("config", "user.name", "Fixture", cwd=child)
+    _git("add", "README.md", "owned.c", ".gitignore", cwd=child)
+    _git("commit", "-m", "owned pinned source", cwd=child)
+    (root / ".gitmodules").write_text(
+        '[submodule "infrastructure/steganography/kmyth"]\n'
+        "\tpath = infrastructure/steganography/kmyth\n"
+        "\turl = https://github.com/docxology/kmyth.git\n"
+    )
+    _git("add", ".gitmodules", "infrastructure/steganography/kmyth", cwd=root)
+    _git("commit", "-m", "pin actual owned source", cwd=root)
+    for relative in ("bin/program", "lib/owned.a", "obj/owned.o", "logger/obj/logger.o", "utils/obj/util.o"):
+        artifact = child / relative
+        artifact.parent.mkdir(parents=True, exist_ok=True)
+        artifact.write_bytes(b"actual owned local build product")
+    authored = root / "infrastructure/validation/output/owned.py"
+    authored.parent.mkdir(parents=True)
+    authored.write_text("VALUE = 11\n")
+    return root, child
+
+
+def _resource_archive(destination: Path, *, fault: str = "") -> tuple[dict[str, object], bytes]:
+    """Bind real exported bytes, including deliberately dishonest closed controls."""
+    from io import BytesIO
+    import zipfile
+
+    embedded = json.loads((destination / ".template-export.json").read_bytes())
+    payloads = {relative: (destination / relative).read_bytes() for relative in embedded["files"]}
+    member = "_template_resources/infrastructure/steganography/kmyth/owned.c"
+    if fault == "omitted-archive":
+        del payloads[member]
+    elif fault == "changed-archive":
+        payloads[member] = b"int owned_value(void) { return 99; }\n"
+    files = {relative: hashlib.sha256(content).hexdigest() for relative, content in payloads.items()}
+    embedded["files"] = files
+    buffer = BytesIO()
+    with zipfile.ZipFile(buffer, "w") as archive:
+        for relative, content in payloads.items():
+            archive.writestr(relative, content)
+        archive.writestr(".template-export.json", json.dumps(embedded))
+    return {"platform_version": "4.0.1", "source_commit": embedded["source_commit"], "files": files}, buffer.getvalue()
+
+
+def test_pinned_resource_export_preserves_complete_source_and_independent_archive_admission(tmp_path: Path) -> None:
+    from infrastructure.reporting.readiness_receipts import public_resource_source_paths
+    from infrastructure.reporting.release_readiness_artifacts import validate_source_archive
+    from infrastructure.reporting.release_readiness_snapshot import SnapshotReader
+
+    root, child = _scaffold_pinned_resource_repo(tmp_path)
+    destination = tmp_path / "template_code_project"
+    export_exemplar(root, "templates/template_code_project", destination)
+    bundled = destination / "_template_resources/infrastructure"
+    for name in ("README.md", "owned.c", ".gitignore"):
+        assert (bundled / "steganography/kmyth" / name).read_bytes() == (child / name).read_bytes()
+    assert (bundled / "validation/output/owned.py").read_text() == "VALUE = 11\n"
+    assert not list(bundled.rglob(".git"))
+    for relative in ("bin", "lib", "obj", "logger/obj", "utils/obj"):
+        assert not (bundled / "steganography/kmyth" / relative).exists()
+    expected = {
+        path.relative_to(root / "infrastructure") for path in public_resource_source_paths(root, "infrastructure")
+    }
+    assert {path.relative_to(bundled) for path in bundled.rglob("*") if path.is_file()} == expected
+    manifest, content = _resource_archive(destination)
+    reader = SnapshotReader(root)
+    validate_source_archive("templates/template_code_project", manifest, content, reader)
+    assert reader.unchanged()
+
+
+@pytest.mark.parametrize(
+    "fault",
+    [
+        "modified-source",
+        "missing-source",
+        "changed-head",
+        "changed-index",
+        "changed-declaration",
+        "unadmitted-source",
+        "private-control",
+        "omitted-archive",
+        "changed-archive",
+    ],
+)
+def test_pinned_resource_export_and_archive_refuse_actual_custody_faults(tmp_path: Path, fault: str) -> None:
+    from infrastructure.reporting.release_readiness_artifacts import validate_source_archive
+    from infrastructure.reporting.release_readiness_snapshot import SnapshotReader
+
+    root, child = _scaffold_pinned_resource_repo(tmp_path)
+    destination = tmp_path / "template_code_project"
+    if fault in {"omitted-archive", "changed-archive"}:
+        export_exemplar(root, "templates/template_code_project", destination)
+        manifest, content = _resource_archive(destination, fault=fault)
+        with pytest.raises(ValueError):
+            validate_source_archive("templates/template_code_project", manifest, content, SnapshotReader(root))
+        return
+    if fault == "private-control":
+        private = child / ".env"
+        private.write_text("owned marker only; no credential\n")
+        opened = []
+        active = [True]
+
+        def refuse_private_open(event: str, arguments: tuple[object, ...]) -> None:
+            if (
+                active[0]
+                and event == "open"
+                and isinstance(arguments[0], str)
+                and Path(arguments[0]) in {private, Path(".env")}
+            ):
+                opened.append(event)
+                raise AssertionError("private control content must not be opened")
+
+        sys.addaudithook(refuse_private_open)
+        try:
+            with pytest.raises(ValueError, match="private credential/control filename"):
+                export_exemplar(root, "templates/template_code_project", destination)
+        finally:
+            active[0] = False
+        assert opened == []
+        return
+    if fault == "missing-source":
+        (child / "owned.c").unlink()
+    elif fault in {"modified-source", "changed-head", "changed-index"}:
+        (child / "owned.c").write_text("int owned_value(void) { return 8; }\n")
+        if fault in {"changed-head", "changed-index"}:
+            _git("add", "owned.c", cwd=child)
+        if fault == "changed-head":
+            _git("commit", "-m", "different actual child commit", cwd=child)
+    elif fault == "changed-declaration":
+        declaration = root / ".gitmodules"
+        declaration.write_bytes(declaration.read_bytes() + b"\n# actual changed declaration\n")
+    else:
+        (child / "unadmitted.c").write_text("int unadmitted_value(void) { return 9; }\n")
+    with pytest.raises(ValueError):
+        export_exemplar(root, "templates/template_code_project", destination)
+
+
+def test_pinned_resource_export_preserves_original_expired_deadline(tmp_path: Path) -> None:
+    import time
+
+    root, _ = _scaffold_pinned_resource_repo(tmp_path)
+    destination = tmp_path / "template_code_project"
+    with pytest.raises(TimeoutError, match="deadline exhausted"):
+        export_exemplar(root, "templates/template_code_project", destination, deadline_monotonic=time.monotonic() - 1)
+    assert not destination.exists()

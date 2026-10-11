@@ -1,41 +1,202 @@
-"""Bind the primary documentation surfaces to the isolated project test gate."""
+"""Bind checkout-specific test guidance to genuine standalone source execution."""
 
 from __future__ import annotations
 
+import json
+import os
 import shlex
+import shutil
+import sys
 from pathlib import Path
 
 import pytest
+from defusedxml import ElementTree as ET
+
+import infrastructure
+
+from infrastructure.core.execution_boundary import build_bounded_env, run_bounded_subprocess
 
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
-REPO_ROOT = PROJECT_ROOT.parents[2]
-CANONICAL_TEST_COMMAND = (
+MONOREPO_TEST_COMMAND = (
     "uv run python scripts/pipeline/stage_01_test.py "
     "--project templates/template_literature_meta_analysis --project-only"
 )
+STANDALONE_TEST_COMMAND = "python -I -m pytest tests/ --cov=src --cov-fail-under=90"
 PRIMARY_DOCS = (
     PROJECT_ROOT / "README.md",
     PROJECT_ROOT / "AGENTS.md",
     PROJECT_ROOT / ".agents" / "skills" / "template-literature-meta-analysis" / "SKILL.md",
+    PROJECT_ROOT / "STANDALONE.md",
+    PROJECT_ROOT / "tests" / "README.md",
+    PROJECT_ROOT / "tests" / "AGENTS.md",
 )
 
 
-@pytest.mark.parametrize("document", PRIMARY_DOCS, ids=lambda path: path.name)
-def test_primary_docs_use_canonical_isolated_test_command(document: Path) -> None:
-    """Fresh-clone instructions must not drift back to root-environment pytest."""
-    assert CANONICAL_TEST_COMMAND in document.read_text(encoding="utf-8")
+@pytest.mark.parametrize("document", PRIMARY_DOCS, ids=lambda path: str(path.relative_to(PROJECT_ROOT)))
+def test_primary_docs_declare_monorepo_and_standalone_test_commands(document: Path) -> None:
+    """Each entry point explains the command appropriate to its checkout."""
+    guidance = document.read_text(encoding="utf-8")
+    assert MONOREPO_TEST_COMMAND in guidance
+    assert STANDALONE_TEST_COMMAND in guidance
 
 
-def test_canonical_test_command_targets_real_stage_and_qualified_project() -> None:
-    """The documented command must resolve to the Stage-01 project-only gate."""
-    assert shlex.split(CANONICAL_TEST_COMMAND) == [
-        "uv",
-        "run",
+def test_standalone_test_command_uses_local_configuration() -> None:
+    """The independent source command selects the real own tests and coverage gate."""
+    assert shlex.split(STANDALONE_TEST_COMMAND) == [
         "python",
-        "scripts/pipeline/stage_01_test.py",
-        "--project",
-        "templates/template_literature_meta_analysis",
-        "--project-only",
+        "-I",
+        "-m",
+        "pytest",
+        "tests/",
+        "--cov=src",
+        "--cov-fail-under=90",
     ]
-    assert (REPO_ROOT / "scripts" / "pipeline" / "stage_01_test.py").is_file()
+    assert (PROJECT_ROOT / "pyproject.toml").is_file()
+    assert (PROJECT_ROOT / "tests" / "conftest.py").is_file()
+
+
+def _standalone_source_copy(destination: Path) -> Path:
+    """Copy genuine source/configuration and selected oracles, without a Root tree."""
+    destination.mkdir(parents=True)
+    shutil.copy2(PROJECT_ROOT / "pyproject.toml", destination / "pyproject.toml")
+    shutil.copytree(
+        PROJECT_ROOT / "src",
+        destination / "src",
+        ignore=shutil.ignore_patterns("__pycache__", "*.pyc", "*.pyo"),
+    )
+    for relative in (
+        "tests/conftest.py",
+        "tests/literature/test_corpus.py",
+        "tests/knowledge_graph/llm_extraction_fixtures.py",
+    ):
+        target = destination / relative
+        target.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(PROJECT_ROOT / relative, target)
+    assert not (destination / "infrastructure").exists()
+    assert not (destination / "scripts" / "pipeline" / "stage_01_test.py").exists()
+    return destination
+
+
+@pytest.mark.timeout(120)
+@pytest.mark.parametrize("case", ("corpus-oracles", "sdk-shadows", "wrong-domain-result", "empty-scope"))
+def test_configured_pytest_runs_in_standalone_source_copy(tmp_path: Path, case: str) -> None:
+    """Real pytest admits copied domain oracles and refuses false/empty evidence.
+
+    The selected interpreter already provides the declared SDK and dev packages.
+    These focused source tests make no full-suite or installed-wheel claim.
+    """
+    owned_context = tmp_path / "owned-context"
+    standalone = _standalone_source_copy(owned_context / "ancestors" / "middle" / "standalone-meta")
+    origin = standalone / "tests" / "test_owned_domain.py"
+    provider_receipt = standalone / "actual-sdk-provider.json"
+    assert infrastructure.__file__ is not None
+    sdk_origin = Path(infrastructure.__file__).resolve(strict=True)
+    sdk_version = infrastructure.__version__
+    shadow_markers: list[Path] = []
+    if case == "sdk-shadows":
+        # All three invalid providers are disposable actual package files.
+        # The ancestor is owned; no ambient pytest/user directory is touched.
+        for index, directory in enumerate(
+            (
+                standalone / "infrastructure",
+                standalone / "src" / "infrastructure",
+                owned_context / "infrastructure",
+            )
+        ):
+            directory.mkdir()
+            marker = standalone / f"shadow-executed-{index}"
+            shadow_markers.append(marker)
+            (directory / "__init__.py").write_text(
+                f"from pathlib import Path\nPath({str(marker)!r}).write_text('invalid SDK executed')\n"
+                "raise RuntimeError('own or guessed-ancestor source cannot select the SDK')\n",
+                encoding="utf-8",
+            )
+    if case in {"corpus-oracles", "sdk-shadows"}:
+        origin.write_text(
+            "import json\nfrom pathlib import Path\nimport infrastructure\n"
+            "from template_literature_meta_analysis.literature import models\n"
+            "def test_actual_source_origin():\n"
+            "    expected = Path(__file__).resolve().parents[1] / 'src/literature/models.py'\n"
+            "    assert Path(models.__file__).resolve() == expected\n"
+            f"    assert Path(infrastructure.__file__).resolve() == Path({str(sdk_origin)!r})\n"
+            f"    assert infrastructure.__version__ == {sdk_version!r}\n"
+            f"    Path({str(provider_receipt)!r}).write_text(json.dumps("
+            "{'origin':str(Path(infrastructure.__file__).resolve()),"
+            "'version':infrastructure.__version__}),encoding='utf-8')\n",
+            encoding="utf-8",
+        )
+        selected = [
+            "tests/literature/test_corpus.py::TestCorpusAdd::test_dedup_keeps_more_complete",
+            "tests/literature/test_corpus.py::TestCorpusPersistence::test_save_and_load_round_trip",
+            "tests/test_owned_domain.py",
+        ]
+        expected_exit, expected_count, expected_failures = 0, 3, 0
+    elif case == "wrong-domain-result":
+        origin.write_text(
+            "from template_literature_meta_analysis.literature.corpus import Corpus\n"
+            "from template_literature_meta_analysis.literature.models import Paper\n"
+            "def test_wrong_deduplication_expectation():\n"
+            "    corpus = Corpus([Paper(title='One', doi='10.5555/same'), "
+            "Paper(title='One again', doi='10.5555/same')])\n"
+            "    assert len(corpus) == 2\n",
+            encoding="utf-8",
+        )
+        selected = ["tests/test_owned_domain.py"]
+        expected_exit, expected_count, expected_failures = 1, 1, 1
+    else:
+        (standalone / "tests" / "empty").mkdir()
+        selected = ["tests/empty"]
+        expected_exit, expected_count, expected_failures = 5, 0, 0
+
+    receipt = standalone / "pytest-results.xml"
+    env = build_bounded_env(dict(os.environ))
+    for name in ("PYTHONPATH", "PYTEST_ADDOPTS", "PYTEST_PLUGINS"):
+        env.pop(name, None)
+    # The focused oracles need no third-party auto-loaded plugins. Admit the
+    # actual declared timeout plugin explicitly; the full coverage gate is above.
+    env["PYTEST_DISABLE_PLUGIN_AUTOLOAD"] = "1"
+    env["MPLCONFIGDIR"] = str(standalone / "matplotlib-config")
+    result = run_bounded_subprocess(
+        [
+            sys.executable,
+            "-I",
+            "-m",
+            "pytest",
+            "-p",
+            "pytest_timeout",
+            "-c",
+            "pyproject.toml",
+            "--confcutdir",
+            str(standalone),
+            "--basetemp",
+            str(standalone / "pytest-tmp"),
+            "--override-ini",
+            f"cache_dir={standalone / 'pytest-cache'}",
+            f"--junitxml={receipt}",
+            "-q",
+            *selected,
+        ],
+        cwd=standalone,
+        env=env,
+        timeout=90,
+    )
+    diagnostic = result.command_error + result.stdout + result.stderr
+    assert not result.timed_out, diagnostic
+    assert not result.custody_refused, diagnostic
+    assert result.returncode == result.original_returncode == expected_exit, diagnostic
+    suites = list(ET.parse(receipt).getroot().iter("testsuite"))
+    assert sum(int(suite.attrib["tests"]) for suite in suites) == expected_count
+    assert sum(int(suite.attrib["failures"]) for suite in suites) == expected_failures
+    assert sum(int(suite.attrib["errors"]) for suite in suites) == 0
+    assert sum(int(suite.attrib["skipped"]) for suite in suites) == 0
+    assert all(not marker.exists() for marker in shadow_markers)
+    if case in {"corpus-oracles", "sdk-shadows"}:
+        assert json.loads(provider_receipt.read_text(encoding="utf-8")) == {
+            "origin": str(sdk_origin),
+            "version": sdk_version,
+        }
+    if case == "wrong-domain-result":
+        failures = list(ET.parse(receipt).getroot().iter("failure"))
+        assert len(failures) == 1
+        assert "assert 1 == 2" in (failures[0].text or ""), diagnostic

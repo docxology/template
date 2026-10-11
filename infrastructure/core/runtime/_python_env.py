@@ -9,9 +9,11 @@ import platform
 import subprocess  # nosec B404
 import sys
 from pathlib import Path
+from collections.abc import Mapping
 
 from infrastructure.core.secrets import is_secret_env_name, strip_secret_env
-from infrastructure.core.runtime._tools import find_uv
+from infrastructure.core.files.secure_write import read_bytes_confined
+from infrastructure.core.runtime.python_binding import select_analysis_python
 from infrastructure.core.logging.utils import get_logger, log_success
 
 logger = get_logger(__name__)
@@ -24,27 +26,38 @@ def validate_analysis_script_path(script_path: Path, project_root: Path) -> Path
     """Return a runnable project script only when it stays under ``scripts/``.
 
     Stage 02 normally receives paths from :func:`script_discovery`, but this
-    low-level helper is also public and can be called directly. Resolve the
-    candidate before checking containment so ``..`` components and symlinks
-    cannot redirect execution outside the project script tree.
+    low-level helper is also public and can be called directly. A bounded held
+    regular-file read rejects lexical traversal and symlinked ancestors or
+    leaves before execution.
     """
-    scripts_root = (project_root / "scripts").resolve()
-    candidate = Path(script_path).resolve(strict=False)
+    scripts_root = (project_root / "scripts").absolute()
+    candidate = Path(script_path).absolute()
+    if ".." in candidate.parts:
+        raise ValueError("analysis script path cannot contain parent traversal")
     try:
         candidate.relative_to(scripts_root)
     except ValueError as exc:
         raise ValueError(f"analysis script must remain under {scripts_root}: {script_path}") from exc
-    if candidate.suffix != ".py" or not candidate.is_file():
+    if candidate.suffix != ".py":
         raise ValueError(f"analysis script is missing or not a Python file: {script_path}")
+    try:
+        read_bytes_confined(project_root, candidate, max_bytes=8 * 1024 * 1024)
+    except OSError as exc:
+        raise ValueError("analysis script must be an existing regular no-follow source file") from exc
     return candidate
 
 
+def _python_version_supported(version: tuple[int, int]) -> bool:
+    """Apply the platform's Python 3.12 floor to an explicit version pair."""
+    return version >= (3, 12)
+
+
 def check_python_version() -> bool:
-    """Verify Python 3.10+ is available (matches ``requires-python`` in pyproject.toml)."""
+    """Verify Python 3.12+ is available (matches ``requires-python`` in pyproject.toml)."""
     version_str = platform.python_version()
 
-    if sys.version_info < (3, 10):
-        logger.error(f"Python 3.10+ required, found {version_str}")
+    if not _python_version_supported((sys.version_info.major, sys.version_info.minor)):
+        logger.error(f"Python 3.12+ required, found {version_str}")
         return False
 
     log_success(f"Python {version_str} available", logger)
@@ -65,47 +78,6 @@ def check_uv_available() -> bool:
 def get_python_command() -> list[str]:
     """Get sys.executable for subprocess calls."""
     return [sys.executable]
-
-
-def resolve_test_python(venv_dir: Path) -> list[str]:
-    """Resolve the interpreter command for running a test suite.
-
-    Prefers the interpreter inside ``venv_dir`` (``bin/python`` on POSIX,
-    ``Scripts/python.exe`` on Windows) but only when that interpreter file
-    actually exists. A virtual-environment directory can survive on disk with
-    a dangling ``python`` symlink — e.g. the base interpreter it pointed at was
-    moved or removed. ``Path.exists()`` follows symlinks, so a broken link
-    resolves to ``False`` and we fall back to the current workspace
-    interpreter instead of crashing the caller with
-    ``FileNotFoundError: .../.venv/bin/python``.
-
-    Args:
-        venv_dir: Path to a ``.venv`` directory (need not exist).
-
-    Returns:
-        ``[str(venv_python)]`` when the venv interpreter exists, otherwise
-        :func:`get_python_command` (the running ``sys.executable``).
-    """
-    venv_python = venv_dir / "Scripts" / "python.exe" if os.name == "nt" else venv_dir / "bin" / "python"
-    if venv_python.exists():
-        return [str(venv_python)]
-    if venv_dir.is_dir():
-        # The venv directory exists but its interpreter does not — almost
-        # always a dangling symlink (base interpreter moved/removed). Fall
-        # back, but make it LOUD: a silent fallback to the workspace
-        # interpreter could otherwise mask a project whose pinned deps differ
-        # from the workspace. (A genuinely absent venv_dir is normal and stays
-        # quiet — that is the expected path for venv-less projects.)
-        logger.warning(
-            "Project venv at %s has no usable interpreter (%s is missing or a "
-            "broken symlink); falling back to the workspace interpreter %s. "
-            "Run `uv sync` or `rm -rf %s` if this project needs pinned deps.",
-            venv_dir,
-            venv_python,
-            sys.executable,
-            venv_dir,
-        )
-    return get_python_command()
 
 
 def validate_interpreter() -> bool:
@@ -180,6 +152,7 @@ def build_analysis_script_cmd_and_env(
     repo_root: Path,
     *,
     allow_secret_env: bool | None = None,
+    base_env: Mapping[str, str] | None = None,
 ) -> tuple[list[str], dict[str, str]]:
     """Build the subprocess command and environment for running an analysis script.
 
@@ -193,6 +166,9 @@ def build_analysis_script_cmd_and_env(
         allow_secret_env: Explicitly permit credential-like environment
             variables. When omitted, only ``ANALYSIS_ALLOW_SECRETS=1`` (or
             another strict true value) opts in; the default is fail-closed.
+        base_env: An already-admitted local environment. Copy it before
+            construction so a sequence can freeze mode/epoch without changing
+            the process's global environment.
 
     Returns:
         A (cmd, env) tuple ready for ``subprocess.run(cmd, env=env, ...)``.
@@ -200,26 +176,16 @@ def build_analysis_script_cmd_and_env(
     import tempfile
 
     script_path = validate_analysis_script_path(script_path, project_root)
+    source_env = dict(os.environ if base_env is None else base_env)
     if allow_secret_env is None:
-        allow_secret_env = os.environ.get(_ANALYSIS_SECRET_OPT_IN, "").strip().lower() in {
+        allow_secret_env = source_env.get(_ANALYSIS_SECRET_OPT_IN, "").strip().lower() in {
             "1",
             "true",
             "yes",
         }
 
-    # Detect project-local venv: if the project has its own .venv with optional
-    # dependencies (e.g. discopy), use uv run from the project directory.
-    project_venv = project_root / ".venv"
-    if project_venv.is_dir():
-        uv_path = find_uv()
-        if uv_path:
-            cmd: list[str] = [uv_path, "run", "--directory", str(project_root), "python", str(script_path)]
-        else:
-            cmd = get_python_command() + [str(script_path)]
-    else:
-        cmd = get_python_command() + [str(script_path)]
-
-    env = get_subprocess_env(redact_secrets=not allow_secret_env)
+    cmd = [str(select_analysis_python(project_root)), str(script_path)]
+    env = dict(source_env) if allow_secret_env else strip_secret_env(source_env)
     env.setdefault("MPLBACKEND", "Agg")
     env.setdefault("MPLCONFIGDIR", os.path.join(tempfile.gettempdir(), "matplotlib"))
     env["PYTHONPATH"] = os.pathsep.join(
@@ -256,10 +222,12 @@ def build_analysis_script_cmd_and_env(
         "OPENAI_BASE_URL",
         "ELAN_HOME",
     )
-    for key, val in os.environ.items():
+    for key, val in source_env.items():
         if (any(key.startswith(p) for p in _PASSTHROUGH_PREFIXES) or key in _PASSTHROUGH_KEYS) and (
             allow_secret_env or not is_secret_env_name(key)
         ):
             env[key] = val
 
-    return cmd, env
+    from infrastructure.core.execution_policy import apply_execution_policy
+
+    return cmd, apply_execution_policy(env, repo_root)

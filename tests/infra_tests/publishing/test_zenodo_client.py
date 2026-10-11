@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from pathlib import Path
+from urllib.parse import urlsplit
 
 import pytest
 
@@ -453,3 +454,209 @@ class TestZenodoVersioning:
             base_url=zenodo_test_server.url_for(""),
         )
         assert result.doi == "10.5281/zenodo.12345"
+
+
+def test_explicit_bearer_ignores_netrc_on_success_and_http_error(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    zenodo_test_server,
+) -> None:
+    """A nominated NETRC cannot replace the selected bearer on real HTTP calls."""
+    base_url = zenodo_test_server.url_for("")
+    hostname = urlsplit(base_url).hostname
+    assert hostname is not None
+    netrc_path = tmp_path / "netrc"
+    netrc_path.write_text(
+        f"machine {hostname} login unrelated-user password unrelated-password\n",
+        encoding="utf-8",
+    )
+    netrc_path.chmod(0o600)
+    monkeypatch.setenv("NETRC", str(netrc_path))
+    token = "explicit-test-bearer"
+    headers = {"Authorization": f"Bearer {token}"}
+    zenodo_test_server.expect_oneshot_request(
+        "/deposit/depositions/auth-success", method="GET", headers=headers
+    ).respond_with_json({"id": "auth-success"})
+    zenodo_test_server.expect_oneshot_request(
+        "/deposit/depositions/auth-error", method="GET", headers=headers
+    ).respond_with_json({"message": "unavailable"}, status=503)
+    client = ZenodoClient(ZenodoConfig(access_token=token, sandbox=True, base_url=base_url))
+
+    assert client.get_deposition("auth-success") == {"id": "auth-success"}
+    with pytest.raises(PublishingError, match="Failed to load deposition auth-error"):
+        client.get_deposition("auth-error")
+
+    zenodo_test_server.check()
+    requests_received = [request for request, _response in zenodo_test_server.log]
+    assert [(request.method, request.path) for request in requests_received] == [
+        ("GET", "/deposit/depositions/auth-success"),
+        ("GET", "/deposit/depositions/auth-error"),
+    ]
+    assert all(request.headers["Authorization"] == headers["Authorization"] for request in requests_received)
+
+
+@pytest.mark.parametrize(
+    "link_case",
+    [
+        "missing",
+        "malformed",
+        "relative",
+        "foreign",
+        "scheme",
+        "credentials",
+        "wrong-path",
+        "nonnumeric",
+        "query",
+        "fragment",
+        "original",
+        "empty-query",
+        "empty-fragment",
+        "leading-control",
+        "path-control",
+    ],
+)
+def test_new_version_rejects_invalid_latest_draft(link_case, zenodo_test_server) -> None:
+    """Reject unusable action links without fetching or modifying a record."""
+    base = zenodo_test_server.url_for("").rstrip("/")
+    links = {
+        "missing": None,
+        "malformed": "http://[",
+        "relative": "/deposit/depositions/8",
+        "foreign": "https://example.invalid/deposit/depositions/8",
+        "scheme": base.replace("http://", "https://") + "/deposit/depositions/8",
+        "credentials": base.replace("http://", "http://user:password@") + "/deposit/depositions/8",
+        "wrong-path": base + "/records/8",
+        "nonnumeric": base + "/deposit/depositions/draft",
+        "query": base + "/deposit/depositions/8?anything=1",
+        "fragment": base + "/deposit/depositions/8#anything",
+        "original": base + "/deposit/depositions/7",
+        "empty-query": base + "/deposit/depositions/8?",
+        "empty-fragment": base + "/deposit/depositions/8#",
+        "leading-control": "\n" + base + "/deposit/depositions/8",
+        "path-control": base + "/depo\tsit/depositions/8",
+    }
+    zenodo_test_server.expect_oneshot_request(
+        "/deposit/depositions/7/actions/newversion", method="POST"
+    ).respond_with_json({"id": 7, "links": {"bucket": base + "/files/original", "latest_draft": links[link_case]}})
+    client = ZenodoClient(ZenodoConfig(access_token="loopback-only", base_url=base))
+    with pytest.raises(PublishingError, match="latest_draft"):
+        client.create_new_version("7")
+    zenodo_test_server.check()
+    assert [(request.method, request.path) for request, _response in zenodo_test_server.log] == [
+        ("POST", "/deposit/depositions/7/actions/newversion")
+    ]
+
+
+@pytest.mark.parametrize(
+    "draft_id,state,submitted,reason",
+    [
+        (9, "unsubmitted", False, "identity differs"),
+        (8, "done", True, "unpublished"),
+        (8, "unsubmitted", True, "unpublished"),
+        (8, "done", False, "unpublished"),
+        (8, "inprogress", True, "unpublished"),
+        (8, "error", False, "unpublished"),
+        (8, None, False, "unpublished"),
+        (8, "unsubmitted", None, "unpublished"),
+    ],
+)
+def test_new_version_rejects_wrong_identity_or_published_draft(
+    draft_id, state, submitted, reason, zenodo_test_server
+) -> None:
+    """Read the genuine draft but refuse an unsafe resource before later writes."""
+    base = zenodo_test_server.url_for("").rstrip("/")
+    zenodo_test_server.expect_oneshot_request(
+        "/deposit/depositions/7/actions/newversion", method="POST"
+    ).respond_with_json({"id": 7, "links": {"latest_draft": base + "/deposit/depositions/8"}})
+    zenodo_test_server.expect_oneshot_request("/deposit/depositions/8", method="GET").respond_with_json(
+        {"id": draft_id, "state": state, "submitted": submitted, "links": {"bucket": base + "/files/actual-draft"}}
+    )
+    client = ZenodoClient(ZenodoConfig(access_token="loopback-only", base_url=base))
+    with pytest.raises(PublishingError, match=reason):
+        client.create_new_version("7")
+    zenodo_test_server.check()
+    assert [(request.method, request.path) for request, _response in zenodo_test_server.log] == [
+        ("POST", "/deposit/depositions/7/actions/newversion"),
+        ("GET", "/deposit/depositions/8"),
+    ]
+
+
+@pytest.mark.parametrize("draft_state", ["unsubmitted", "inprogress"])
+def test_new_version_returns_latest_draft_not_original_action_resource(draft_state, zenodo_test_server) -> None:
+    base = zenodo_test_server.url_for("").rstrip("/")
+    zenodo_test_server.expect_oneshot_request(
+        "/deposit/depositions/7/actions/newversion", method="POST"
+    ).respond_with_json(
+        {
+            "id": 7,
+            "state": "done",
+            "submitted": True,
+            "links": {"bucket": base + "/files/original", "latest_draft": base + "/deposit/depositions/8"},
+        }
+    )
+    zenodo_test_server.expect_oneshot_request("/deposit/depositions/8", method="GET").respond_with_json(
+        {
+            "id": 8,
+            "state": draft_state,
+            "submitted": False,
+            "links": {"bucket": base + "/files/actual-draft"},
+            "conceptdoi": "10.5281/zenodo.6",
+            "metadata": {"prereserve_doi": {"doi": "10.5281/zenodo.8"}},
+        }
+    )
+    client = ZenodoClient(ZenodoConfig(access_token="loopback-only", base_url=base))
+    result = client.create_new_version("7")
+    assert result.deposition_id == "8" and result.bucket_url == base + "/files/actual-draft"
+    assert result.reserved_doi == "10.5281/zenodo.8" and result.concept_doi == "10.5281/zenodo.6"
+    zenodo_test_server.check()
+    assert [(request.method, request.path) for request, _response in zenodo_test_server.log] == [
+        ("POST", "/deposit/depositions/7/actions/newversion"),
+        ("GET", "/deposit/depositions/8"),
+    ]
+
+
+@pytest.mark.parametrize("supplied_date", [None, "", "2026", "2024-02-29"])
+def test_zenodo_date_mapping_preserves_full_date_and_omits_citation_year(supplied_date, zenodo_test_server) -> None:
+    """Exercise the genuine mapper/client and inspect the actual POST payload."""
+    metadata = PublicationMetadata(
+        title="Date mapping", authors=["Test Author"], abstract="Abstract.", keywords=[], publication_date=supplied_date
+    )
+    result = publish_to_zenodo(metadata, [], access_token="loopback-only", base_url=zenodo_test_server.url_for(""))
+    assert result.deposition_id == "12345"
+    requests_received = [request for request, _response in zenodo_test_server.log]
+    assert [(request.method, request.path) for request in requests_received] == [
+        ("POST", "/deposit/depositions"),
+        ("POST", "/deposit/depositions/12345/actions/publish"),
+    ]
+    payload = requests_received[0].get_json()["metadata"]
+    if supplied_date == "2024-02-29":
+        assert payload["publication_date"] == supplied_date
+    else:
+        assert "publication_date" not in payload
+    assert metadata.publication_date == supplied_date
+    zenodo_test_server.check()
+
+
+@pytest.mark.parametrize("supplied_date", ["2026-02-30", "2026-2-1", "20260201", "not-a-date", "0000"])
+@pytest.mark.parametrize("route", ["first", "reserve", "new-version"])
+def test_invalid_zenodo_date_refuses_before_any_http_request(supplied_date, route, zenodo_test_server) -> None:
+    from infrastructure.publishing.zenodo.publish import reserve_zenodo_deposition
+
+    metadata = PublicationMetadata(
+        title="Invalid date", authors=["Test Author"], abstract="Abstract.", keywords=[], publication_date=supplied_date
+    )
+    base_url = zenodo_test_server.url_for("")
+    with pytest.raises(PublishingError, match="publication_date"):
+        if route == "first":
+            publish_to_zenodo(metadata, [], access_token="loopback-only", base_url=base_url)
+        elif route == "reserve":
+            reserve_zenodo_deposition(
+                metadata, access_token="loopback-only", base_url=base_url, existing_doi="10.5281/zenodo.7"
+            )
+        else:
+            publish_new_version_to_zenodo(
+                metadata, [], access_token="loopback-only", existing_doi="10.5281/zenodo.7", base_url=base_url
+            )
+    assert zenodo_test_server.log == []
+    assert metadata.publication_date == supplied_date
+    zenodo_test_server.check()

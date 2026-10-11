@@ -2,7 +2,7 @@
 
 The manuscript for the exploratory-data-analysis exemplar. It describes the EDA
 workflow in prose and references the figures and summary table produced by the
-thin analysis script — every claim traces to a tested function in `src/eda/`.
+thin analysis script — every claim traces to a tested function in `src/template_eda_notebook/eda/`.
 
 ## Manuscript Structure
 
@@ -26,7 +26,7 @@ graph TD
     classDef infra fill:#f5f5f5,stroke:#333,stroke-width:2px;
 
     Script["scripts/eda_analysis.py"]:::project
-    Lib["src/eda/*"]:::project
+    Lib["src/template_eda_notebook/eda/*"]:::project
     Manuscript["manuscript/*.md"]:::project
     Rendering["infrastructure.rendering"]:::infra
 

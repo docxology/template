@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from reproducibility.prompts import _SYSTEM_PROMPT, build_prompt
+from template_literature_meta_analysis.reproducibility.prompts import _SYSTEM_PROMPT, build_prompt
 
 
 class TestSystemPrompt:

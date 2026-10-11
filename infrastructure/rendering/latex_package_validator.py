@@ -1,38 +1,10 @@
-"""LaTeX package validation utilities.
+"""Executable LaTeX package validation command."""
 
-This module serves as the entry point, re-exporting from focused submodules:
-- latex_discovery: kpsewhich location and per-package checking
-- latex_validation: Bulk validation, preamble checking, reports
-"""
-
-# Re-exports for backwards compatibility
 from infrastructure.core.logging.constants import BANNER_WIDTH
-from infrastructure.rendering.latex_discovery import (  # noqa: F401
-    PackageStatus,
-    check_latex_package,
-    find_kpsewhich,
-)
-from infrastructure.rendering.latex_validation import (  # noqa: F401
-    ValidationReport,
-    get_missing_packages_command,
-    validate_packages,
-    validate_preamble_packages,
-)
+from infrastructure.rendering.latex_discovery import find_kpsewhich as _find_kpsewhich
+from infrastructure.rendering.latex_validation import validate_preamble_packages as _validate_preamble_packages
 
-
-__all__ = [
-    # latex_discovery
-    "PackageStatus",
-    "check_latex_package",
-    "find_kpsewhich",
-    # latex_validation
-    "ValidationReport",
-    "get_missing_packages_command",
-    "validate_packages",
-    "validate_preamble_packages",
-    # local
-    "main",
-]
+__all__ = ["main"]
 
 
 def main() -> None:
@@ -41,7 +13,7 @@ def main() -> None:
     print("=" * BANNER_WIDTH)
 
     # Check for kpsewhich
-    kpsewhich = find_kpsewhich()
+    kpsewhich = _find_kpsewhich()
     if kpsewhich:
         print(f"Found kpsewhich: {kpsewhich}")
     else:
@@ -52,7 +24,7 @@ def main() -> None:
     print()
 
     # Validate preamble packages
-    report = validate_preamble_packages(strict=False)
+    report = _validate_preamble_packages(strict=False)
     print(report)
 
     # Exit with error if required packages are missing

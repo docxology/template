@@ -1,3 +1,9 @@
-# EDA notebook exemplar: the src/ library is fully standalone.
-# No src/ module imports infrastructure.* — the allowlist is intentionally empty.
-allow_infrastructure_imports: []
+# Pure EDA transforms and publication operations remain independent.
+# The execution adapter delegates generic source/bytecode/read custody to the
+# explicitly declared platform distribution instead of maintaining another reader.
+allow_infrastructure_imports:
+  - src/template_eda_notebook/notebook_execution.py
+reason: >-
+  The notebook runtime adapter uses the declared platform's mature pre-import
+  bytecode audit, no-follow source manifest, and confined bounded byte reader.
+  Dataset transformations and notebook publication remain project-owned.

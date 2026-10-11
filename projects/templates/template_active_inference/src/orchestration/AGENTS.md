@@ -27,8 +27,26 @@ JUnit outcomes only from the final coverage groups (never the duplicate
 pre-pass), parses them with `defusedxml`, combines pytest-produced warning and
 discovery sidecars, and writes the nonce-bound receipt after every postflight
 gate has passed. Coverage groups use the outer adapter's exact pinned
-interpreter rather than a nested `uv run` environment. Direct invocations
-without that environment remain unchanged.
+interpreter rather than a nested resolver environment. Direct invocations use
+the existing lexical project `.venv` interpreter when nominated, otherwise the
+current interpreter; a missing nominated runtime blocks with exit 75. Every
+producer, pre-pass, and coverage command uses that same selection without
+dependency acquisition.
+
+`verification_refresh.py` owns the workflow's in-session fixed-point bookkeeping
+for idempotent generator refreshes. The controller consumes its `RefreshCache`;
+this does not authorize persistent analysis reuse or replace enclosing source
+and runtime checks.
+
+The full verifier's explicitly prepared `dev` extra includes platform 4.0.1.
+`_verification_launcher.py` is its sole optional Layer-1 adapter: it reuses the
+bounded selected-runtime version probe and mature pre-import source audit for
+each producer and pytest child. The direct CLI imports its controller under an
+owned fresh private cache; Stage 01 separately audits that controller's executed
+code. Project scientific `src/` and script/plugin code are audited; pytest's
+rewritten test modules and arbitrary installed dependency member bytes are
+outside this CodeType proof. Missing prepared platform/test requirements block
+with exit 75. The scientific package itself does not require the verifier extra.
 
 `scripts/run_full_verification.py --coverage-only --profile <name>` runs only
 the same twelve coverage groups: the first starts a fresh Coverage database and
@@ -39,7 +57,7 @@ remainder is split into an explicit 29-module analytical/figure/formal group,
 an explicit seven-module manuscript/pipeline/precision/configuration group, an
 explicit seven-module rendering/scholarship/semantic-validation group, a
 source-derived semantic sheaf split with explicit eight-node certificate and
-seven-node dependency/evidence/manuscript cohorts, and a computed 13-module
+seven-node dependency/evidence/manuscript cohorts, and a computed
 simulation/support/visualization terminal group. Only that twelfth group reports
 and enforces the floor. The selector validator rejects missing, duplicate,
 invented, dynamically generated, class-based, parametrized, or bare-module
@@ -53,5 +71,23 @@ The exact fixed-point coverage group has a 2,400-second inner ceiling aligned
 with its slowest item; every other command retains the 1,800-second default, and
 the counts parent bounds the complete Active measurement at 6,900 seconds,
 aligned with the declared Stage-01 verifier and below the shared 7,200-second
-stage boundary. That aggregate wall-clock boundary does not reserve or sum each
-group's independent maximum.
+stage boundary. The verifier composes its finite command ceilings under that
+6,900-second whole-session deadline and clamps each actual child to the remaining
+budget. It checks the deadline again after cleanup and before receipt promotion;
+expiry exits 124. Observed child exits remain separate from supervision: explicit
+child exits 124 and 130 retain those exit conventions without being recorded as
+synthetic timeout or controller-interruption events. Interruption takes precedence
+over timeout, ordinary child failure, and runtime custody refusal. These runtime
+and budget checks do not establish universal
+installed dependency-byte custody.
+
+The noncoverage prepass accounts for an entirely marker-filtered slice only for
+quick/release profiles and only after an actual child exits 5 with pytest's
+explicit zero-selected diagnostic. Missing collection, test failures, timeouts,
+and custody refusals remain fatal; the complete coverage partition still runs.
+
+The verifier's `_verification_launcher.py` may import only its four named
+project-runtime/binding interfaces from the exact-version development SDK
+declared in `pyproject.toml`. Scientific modules still import without that SDK;
+other platform imports, wildcard imports, and sibling-project imports remain
+forbidden by the standalone guard.

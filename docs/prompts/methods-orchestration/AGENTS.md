@@ -16,7 +16,7 @@ registries.
 ## Verification
 
 ```bash
-uv run python -m infrastructure.methods plan --project <project> --format json --check
+uv run python -m infrastructure.methods plan --project <project> --format json
 uv run python -m infrastructure.methods plan --all-public --artifact-mode source --format json
 ```
 

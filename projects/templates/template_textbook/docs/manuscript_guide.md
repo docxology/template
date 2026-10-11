@@ -39,8 +39,8 @@ Each chapter `<stem>.md` has a matching lab
 from the parent chapter title by [`src/textbook/toc.py`](../src/textbook/toc.py)
 — the config lists only file names.
 
-Config path safety is part of the contract: `units:` takes precedence over the
-legacy `parts:` alias, and declared part directories plus chapter/intro files
+Config path safety is part of the contract: `units:` is the required structure key;
+the retired `parts:` key raises a migration error, and declared part directories plus chapter/intro files
 must be relative, portable, single-level paths ending in `.md`. Traversal,
 absolute paths, malformed mappings, and duplicate source paths are rejected by
 `textbook.config.validate_config` before scaffolding or auditing begins.
@@ -99,11 +99,11 @@ shift; the cross-ref keeps prose correct as the book grows.
 
 - Citations use `[@key]` and must resolve in
   [`references.bib`](../manuscript/references.bib). The contract keys are the ten
-  in `CITATION_KEYS`: `smith2020foundations`, `doe2019methods`, `lee2021systems`,
-  `garcia2022dynamics`, `patel2018models`, `nguyen2023synthesis`, `kim2020data`,
-  `brown2017principles`, `wilson2021analysis`, `taylor2019theory`. Add real
-  references to `references.bib` and keep `CITATION_KEYS` in sync as you replace
-  the placeholders.
+  in `CITATION_KEYS`: `box1976science`, `sandve2013ten`, `nyquist1932regeneration`,
+  `lorenz1963deterministic`, `may1976simple`, `wilkinson2016fair`, `shannon1948mathematical`,
+  `turing1937computable`, `wilson2014best`, `taschuk2017ten`. Add real
+  references to `references.bib` and keep `CITATION_KEYS` in sync when adding or revising
+  authored content.
 - Glossary links use `[**term**](#gl:<anchor>)` and must resolve in
   [`glossary.md`](../manuscript/glossary.md). The contract anchors are the
   fifteen `GLOSSARY_ANCHORS`: `system`, `model`, `parameter`, `variable`,

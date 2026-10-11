@@ -3,37 +3,37 @@
 Extracted from ``scripts/zz_generate_review_report.py`` (thin-orchestrator
 refactor): the script now only resolves paths and calls
 :func:`generate_review_report`, which owns the inventory scan,
-documentation/bibliography/infrastructure audits, review-summary
-subprocess invocation, and markdown report assembly.
+documentation/bibliography/infrastructure audits and stable current-source
+report assembly. Local operational receipt inspection is a separate utility.
 """
 
 from __future__ import annotations
 
 import ast
+import hashlib
 import datetime
 import importlib.util
 import json
 import os
 import re
-import subprocess
 import sys
 from collections import defaultdict
 from pathlib import Path
 
 import yaml
 
+from .provider_paths import platform_import_modules, platform_module_exists, platform_package_root
+from .review_execution import DEFAULT_REVIEW_TIMEOUT, run_review_child, review_output_settings, review_stage_key
+from infrastructure.core.files.secure_write import atomic_write_text_confined, read_text_confined
+from tempfile import TemporaryDirectory
+from .report_inputs import capture_report_inputs, ReportInputs
+from .analysis import validate_bibliography_completeness, audit_infrastructure_imports
 
-def project_paths() -> tuple[Path, Path, Path]:
-    """Resolve the three paths ``generate_review_report`` needs: this
-    project's root, the repository root (derived from this file's
-    location), and the ``output/review`` directory the report is written
-    into.
-    """
-    project_root = Path(__file__).resolve().parent.parent.parent.parent
-    # project_root is projects/templates/<name>/; repo root is three levels above project_root.
-    template_root = project_root.parents[2]
-    review_dir = project_root / "output" / "review"
-    return project_root, template_root, review_dir
+
+def project_paths(project_root: Path) -> tuple[Path, Path]:
+    """Resolve explicit project data paths independently of provider location."""
+    project = project_root.resolve(strict=True)
+    return project, project / "output" / "review"
 
 
 def H(text: str, level: int = 1) -> str:
@@ -54,25 +54,64 @@ def check_anchors(text: str) -> list[str]:
     return broken
 
 
-def _subprocess_env() -> dict[str, str]:
-    env = dict(os.environ)
-    # This module lives at
-    # projects/templates/<name>/src/template_search_project/analysis/review_report.py;
-    # repo root is six levels up from this file.
-    template_root = str(Path(__file__).resolve().parents[6])
-    p = env.get("PYTHONPATH", "")
-    env["PYTHONPATH"] = template_root + (":" + p if p else "")
+def _subprocess_env(base_env: dict[str, str] | None = None) -> dict[str, str]:
+    """Keep application settings without propagating ambient Python imports."""
+    env = dict(os.environ if base_env is None else base_env)
+    env.pop("PYTHONPATH", None)
     return env
 
 
-def ensure_review_summary(project_root: Path, review_dir: Path) -> tuple[dict, int, str]:
-    """Return (summary dict, review exit code, notes for report header)."""
-    summary_path = review_dir / "summary.json"
-    if summary_path.exists():
-        summary = json.loads(summary_path.read_text())
+def configured_review_paths(project_root: Path) -> tuple[Path, str]:
+    """Read actual local operational configuration; history never supplies it."""
+    project = project_root.resolve(strict=True)
+    config_path = project / "review_config.yaml"
+    if config_path.exists() or config_path.is_symlink():
+        config = yaml.safe_load(read_text_confined(project, config_path))
+        if not isinstance(config, dict) or not isinstance(config.get("review"), dict):
+            raise ValueError("review configuration must contain a review mapping")
+        review = config["review"]
+    else:
+        review = {}
+    rows = review.get("stages", [])
+    if not isinstance(rows, list) or any(
+        not isinstance(row, dict) or not isinstance(row.get("name"), str) for row in rows
+    ):
+        raise ValueError("review stages must be named mappings")
+    names: set[str] = set()
+    for row in rows:
+        names.add(review_stage_key(row, names))
+    directory, summary = review_output_settings(review, names)
+    candidate = project / directory
+    current = project
+    for part in candidate.relative_to(project).parts:
+        current /= part
+        if current.is_symlink() or current.exists() and not current.is_dir():
+            raise ValueError("local review receipts require confined real directories")
+    if candidate.resolve() != candidate:
+        raise ValueError("local review receipt directory cannot redirect outside the project")
+    return candidate, summary
+
+
+def ensure_review_summary(
+    project_root: Path,
+    review_dir: Path | None = None,
+    *,
+    timeout: float = DEFAULT_REVIEW_TIMEOUT,
+) -> tuple[dict, int, str]:
+    """Inspect local operational data and process diagnostics, never public acceptance.
+
+    Public report generation does not consume these cached/runtime claims.
+    The actual review coordinator remains responsible for fresh completion.
+    """
+    configured, summary_name = configured_review_paths(project_root)
+    if review_dir is not None and review_dir.absolute() != configured:
+        raise ValueError("review receipt reader must use the configured local operational directory")
+    review_dir = configured
+    summary_path = review_dir / summary_name
+    if summary_path.exists() or summary_path.is_symlink():
+        summary = json.loads(read_text_confined(project_root, summary_path))
         return summary, summary.get("overall_exit_code", 0), ""
 
-    review_dir.mkdir(parents=True, exist_ok=True)
     review_exe = project_root / "scripts" / "review"
     if not review_exe.exists():
         placeholder = {
@@ -84,19 +123,19 @@ def ensure_review_summary(project_root: Path, review_dir: Path) -> tuple[dict, i
         }
         return placeholder, 1, "scripts/review missing — skipped subprocess"
 
-    proc = subprocess.run(
-        [sys.executable, str(review_exe), "--project-root", str(project_root)],
+    proc = run_review_child(
+        [sys.executable, "-I", str(review_exe), "--project-root", str(project_root)],
         cwd=project_root,
         env=_subprocess_env(),
-        capture_output=True,
-        text=True,
+        timeout=timeout,
+        policy_id="search-review-report",
     )
     tail = ""
-    if proc.stdout or proc.stderr:
-        tail = (proc.stdout + "\n" + proc.stderr)[-2000:]
+    if proc.stdout or proc.stderr or proc.command_error:
+        tail = (proc.stdout + "\n" + proc.stderr + "\n" + proc.command_error)[-2000:]
 
-    if summary_path.exists():
-        summary = json.loads(summary_path.read_text())
+    if summary_path.exists() or summary_path.is_symlink():
+        summary = json.loads(read_text_confined(project_root, summary_path))
         return summary, proc.returncode, tail
 
     placeholder = {
@@ -109,17 +148,17 @@ def ensure_review_summary(project_root: Path, review_dir: Path) -> tuple[dict, i
     return placeholder, proc.returncode or 1, tail or "review finished without summary.json"
 
 
-def collect_infra_imports(project_root: Path, template_root: Path) -> defaultdict[str, set[str]]:
+def collect_infra_imports(project_root: Path) -> defaultdict[str, set[str]]:
     """Scan every non-underscore ``src/*.py`` module via ``ast`` and record
     which real ``infrastructure.*`` modules each one imports.
 
     Returns a ``module -> {importing filenames}`` map (section 4 of the
     review report renders this directly). An import is only counted when
-    the target module/package actually exists on disk under
-    ``template_root / "infrastructure"``; unresolvable imports are
-    silently skipped rather than reported as usage.
+    the target module/package exists under the actual loaded platform
+    package. An unrelated ancestor or reference checkout cannot supply it;
+    unresolvable imports are omitted from this usage inventory.
     """
-    infra_root_p = template_root / "infrastructure"
+    infra_root_p = platform_package_root()
     infra_imports_used: defaultdict[str, set[str]] = defaultdict(set)
     for py in sorted((project_root / "src").rglob("*.py")):
         if py.name.startswith("_"):
@@ -128,15 +167,9 @@ def collect_infra_imports(project_root: Path, template_root: Path) -> defaultdic
             tree = ast.parse(py.read_text(encoding="utf-8"))
         except SyntaxError:
             continue
-        for node in ast.walk(tree):
-            if isinstance(node, ast.ImportFrom) and node.module and node.module.startswith("infrastructure."):
-                parts = node.module.split(".")
-                rel = Path(*parts[1:])
-                exists = (infra_root_p / rel.with_suffix(".py")).exists() or (
-                    infra_root_p / rel / "__init__.py"
-                ).exists()
-                if exists:
-                    infra_imports_used[node.module].add(py.name)
+        for module in platform_import_modules(tree):
+            if platform_module_exists(module, infra_root_p):
+                infra_imports_used[module].add(py.name)
     return infra_imports_used
 
 
@@ -160,53 +193,79 @@ def _stable_report_timestamp() -> str:
     return datetime.datetime.fromtimestamp(epoch, tz=datetime.timezone.utc).isoformat(timespec="seconds")
 
 
-def _stable_project_label(project_root: Path, template_root: Path) -> str:
-    """Return a portable project label without leaking local absolute paths."""
-    try:
-        return project_root.resolve().relative_to(template_root.resolve()).as_posix()
-    except ValueError:
+def _stable_project_label(project_root: Path) -> str:
+    """Label the own project without guessing a repository or exposing paths."""
+    project = project_root.resolve()
+    if project.name != "template_search_project":
         return "fixture-project"
+    if project.parent.name == "templates" and project.parent.parent.name == "projects":
+        return "projects/templates/template_search_project"
+    return project.name
 
 
-def generate_review_report(project_root: Path, template_root: Path, review_dir: Path) -> int:
-    """Run the review subprocess (if needed), audit the project, and write
+def generate_review_report(project_root: Path, review_dir: Path) -> int:
+    """Generate informational findings only from one held own-input snapshot."""
+    original = project_root.resolve(strict=True)
+    admitted = original.stat()
+    root_identity = (admitted.st_dev, admitted.st_ino)
+    # Validate actual configured local paths before any pure snapshot work.
+    configured_review_paths(original)
+    inputs = capture_report_inputs(original, root_identity)
+    with TemporaryDirectory(prefix="search-report-inputs-") as temporary:
+        snapshot = Path(temporary) / original.name
+        snapshot.mkdir()
+        inputs.materialize(snapshot)
+        return _generate_review_report(
+            snapshot, review_dir, publication_root=original, root_identity=root_identity, inputs=inputs
+        )
+
+
+def _generate_review_report(
+    project_root: Path,
+    review_dir: Path,
+    *,
+    publication_root: Path,
+    root_identity: tuple[int, int],
+    inputs: ReportInputs,
+) -> int:
+    """Audit current own source/domain inputs and write
     ``output/review/REVIEW_REPORT.md``. Also prints a short summary block.
 
-    Returns 0 (the report is always written; a failing review subprocess is
-    reflected in the report body, not the process exit code).
+    Returns 0 when this informational artifact is generated from stable current
+    inputs. This does not execute or accept the configured review pipeline.
     """
-    review_cfg = yaml.safe_load((project_root / "review_config.yaml").read_text(encoding="utf-8"))
-
-    summary, review_exit, review_notes = ensure_review_summary(project_root, review_dir)
+    project_root = project_root.resolve(strict=True)
+    source_before = dict(inputs.manifest)
+    frozen_stat = project_root.stat()
+    frozen_identity = (frozen_stat.st_dev, frozen_stat.st_ino)
+    frozen_before = capture_report_inputs(project_root, frozen_identity)
+    if frozen_before.files != inputs.files or frozen_before.directories != inputs.directories:
+        raise ValueError("materialized report input snapshot differs from admitted bytes/inventory")
+    review_cfg = yaml.safe_load(read_text_confined(project_root, project_root / "review_config.yaml"))
+    operational_dir, summary_name = configured_review_paths(project_root)
+    bibliography = validate_bibliography_completeness(project_root)
+    imports = audit_infrastructure_imports(project_root)
 
     bib_path = project_root / "manuscript" / "references.bib"
     bib_text = bib_path.read_text(encoding="utf-8")
     bib_entries = bib_text.count("@")
 
-    infra_imports_used = collect_infra_imports(project_root, template_root)
+    infra_imports_used = collect_infra_imports(project_root)
 
     lines: list[str] = []
 
     lines.append(H("TEMPLATE SEARCH PROJECT — DEEP REVIEW REPORT", 1))
-    project_label = _stable_project_label(project_root, template_root)
+    project_label = _stable_project_label(publication_root)
     lines.append(f"**Generated:** {_stable_report_timestamp()}")
     lines.append(f"**Project root:** `{project_label}`")
     lines.append("**Repository root:** `.` (portable report label)")
     lines.append("**Review orchestrator:** `scripts/review`")
-    if review_notes:
-        lines.append(f"**Review subprocess notes:** `{review_notes[:500]}`")
-    lines.append(f"**Review subprocess exit code:** {review_exit}")
-    status = (
-        "PASS — all enabled stages passed"
-        if summary.get("overall_exit_code") == 0
-        else "FAIL — see the failed-stages section below"
-    )
-    lines.append(f"**Overall status:** {status}")
-    lines.append(
-        f"**Stages:** {summary.get('total', 0)} total | "
-        f"{summary.get('passed', 0)} passed | {summary.get('failed', 0)} failed | "
-        f"{summary.get('skipped', 0)} skipped"
-    )
+    lines.append("**Purpose:** informational current-source findings; this report is not run or release acceptance.")
+    lines.append("**Operational completion:** run `scripts/review`; local receipts are separate from this report.")
+    local_summary = (operational_dir / summary_name).relative_to(project_root).as_posix()
+    lines.append(f"**Configured local summary:** `{local_summary}` (not public acceptance)")
+    source_digest = hashlib.sha256(json.dumps(source_before, sort_keys=True).encode()).hexdigest()
+    lines.append(f"**Consumed own-source and presence snapshot SHA-256:** `{source_digest}`")
     lines.append("-" * 75)
 
     # 1. Inventory
@@ -317,7 +376,7 @@ bespoke checks implemented in template_search_project.analysis.
 **Artifacts:**
   • review_config.yaml        stage enable/disable configuration
   • scripts/review            unified single-entrypoint orchestrator
-  • scripts/zz_generate_review_report.py  reporter (runs after z_generate_manuscript_variables.py, before zzz_build_dashboard.py)
+  • scripts/zz_generate_review_report.py  informational source/domain reporter
   • src/template_search_project/analysis/           custom-stage functions
 
 **Default enabled stages (when run via scripts/review):**
@@ -331,31 +390,25 @@ bespoke checks implemented in template_search_project.analysis.
   output_integrity, test_suite_health
 
 **Run:**  uv run python scripts/review   (or add --list, --stage …)
-**Outputs:** output/review/stage_*.json  +  summary.json
+**Operational outputs:** configured output/.pipeline/review/stage_*.json + summary.json (local only)
+**Public report:** output/review/REVIEW_REPORT.md (recomputed source/domain findings)
 """
     )
     lines.append("")
 
-    # 6. Current review results
-    lines.append(H("6.  CURRENT REVIEW RESULTS (baseline run)", 2))
-    lines.append(f"**Overall exit code:** {summary.get('overall_exit_code', -1)}")
+    # 6. Current domain findings are recomputed, never imported from receipts.
+    lines.append(H("6.  CURRENT SOURCE AND DOMAIN FINDINGS", 2))
+    lines.append(f"**Bibliography completeness:** {bibliography.status}")
+    missing_keys = (bibliography.details or {}).get("missing_keys", [])
+    lines.append(f"**Missing bibliography keys:** {len(missing_keys)}")
+    lines.append(f"**Infrastructure import validity:** {imports.status}")
+    lines.append(f"**Infrastructure import issues:** {len((imports.details or {}).get('issues', []))}")
+    lines.append("**Configured stages (execution results remain local):**")
     for stage in review_cfg["review"]["stages"]:
-        name = stage["name"]
-        stage_path = review_dir / f"stage_{name}.json"
-        if not stage_path.exists():
-            lines.append(f"  SKIP (disabled or not materialised)  {name}")
-            continue
-        data = json.loads(stage_path.read_text(encoding="utf-8"))
         enabled = stage.get("enabled", True)
-        if data.get("status") == "skipped":
-            status = "SKIP"
-        elif data.get("success"):
-            status = "PASS"
-        elif not enabled:
-            status = "SKIP"
-        else:
-            status = "FAIL"
-        lines.append(f"  {status}  {name}")
+        if type(enabled) is not bool:
+            raise ValueError("configured review stage enabled must be a boolean")
+        lines.append(f"  {'ENABLED' if enabled else 'DISABLED'}  {stage['name']}")
     lines.append("")
 
     # 7. Gaps & recommendations (ASCII table)
@@ -383,9 +436,8 @@ bespoke checks implemented in template_search_project.analysis.
         bib_gap = "99_references.md defers to .bib; 0 inline citations in manuscript."
         bib_action = "Manually insert citations OR regenerate after z script."
 
-    reading_report_present = (project_root / "output" / "reading_report.md").exists()
-    pdf_dir = project_root / "output" / "pdf"
-    pdf_present = pdf_dir.exists() and any(pdf_dir.glob("*_combined.pdf"))
+    reading_report_present = inputs.presence["reading_report"]
+    pdf_present = inputs.presence["combined_pdf"]
     output_gap = (
         f"output/reading_report.md {'present' if reading_report_present else 'absent'}; "
         f"final PDF {'present' if pdf_present else 'absent'}."
@@ -398,7 +450,7 @@ bespoke checks implemented in template_search_project.analysis.
 
     links_enabled = _stage_enabled("markdown_links")
     links_gap = (
-        "`markdown_links` stage is enabled — see output/review/stage_markdown_links.json for the current count."
+        "`markdown_links` stage is enabled — see `scripts/review` local stage receipt for the current count."
         if links_enabled
         else "`markdown_links` stage is disabled by default (avoids false positives on infra/external docs)."
     )
@@ -410,8 +462,7 @@ bespoke checks implemented in template_search_project.analysis.
 
     prerender_enabled = _stage_enabled("prerender_validation")
     prerender_gap = (
-        "`prerender_validation` stage is enabled — see "
-        "output/review/stage_prerender_validation.json for the current findings."
+        "`prerender_validation` stage is enabled — see `scripts/review` local stage receipt for the current findings."
         if prerender_enabled
         else "`prerender_validation` stage is disabled by default."
     )
@@ -506,8 +557,19 @@ bespoke checks implemented in template_search_project.analysis.
 """
     )
 
-    out = review_dir / "REVIEW_REPORT.md"
-    out.write_text("\n".join(lines).rstrip() + "\n", encoding="utf-8")
+    current = capture_report_inputs(publication_root, root_identity)
+    if dict(current.manifest) != source_before or current.identities != inputs.identities:
+        raise ValueError("report source/data changed during current findings computation")
+    frozen_after = capture_report_inputs(project_root, frozen_identity)
+    if frozen_after.manifest != frozen_before.manifest or frozen_after.identities != frozen_before.identities:
+        raise ValueError("frozen report source/data changed during findings computation")
+    public_dir = publication_root / "output" / "review"
+    if review_dir.absolute() != public_dir.absolute():
+        raise ValueError("public review report must use output/review independently of local receipts")
+    out = public_dir / "REVIEW_REPORT.md"
+    atomic_write_text_confined(
+        publication_root, out, "\n".join(lines).rstrip() + "\n", expected_root_identity=root_identity
+    )
     print(f"REPORT → {out}  ({out.stat().st_size} bytes)")
 
     sep = "=" * 70
@@ -520,7 +582,9 @@ bespoke checks implemented in template_search_project.analysis.
     scripts_list = ", ".join(sorted(os.listdir(project_root / "scripts")))
     print("  • Scripts: " + scripts_list)
     print("  • Review system: scripts/review + review_config.yaml")
-    print(f"  • Review subprocess exit: {review_exit}")
+    actual_operational_dir = publication_root / operational_dir.relative_to(project_root)
+    print(f"  • Operational receipts (local only): {actual_operational_dir}")
+    print("  • Informational report generation; configured execution is not accepted here")
     cite_note = f"  • Bibliography: {bib_entries} bib entries; {len(cite_keys)} inline citations detected"
     print(cite_note)
     print(f"  • Infra modules used: {dict(infra_imports_used)}")
@@ -532,6 +596,7 @@ __all__ = [
     "H",
     "check_anchors",
     "collect_infra_imports",
+    "configured_review_paths",
     "ensure_review_summary",
     "generate_review_report",
     "project_paths",

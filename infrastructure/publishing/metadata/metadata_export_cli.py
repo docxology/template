@@ -24,7 +24,7 @@ def main(argv: list[str] | None = None) -> int:
         Process exit code.
     """
     parser = argparse.ArgumentParser(
-        prog="python -m infrastructure.publishing.metadata_export_cli",
+        prog="python -m infrastructure.publishing.metadata.metadata_export_cli",
         description="Write CITATION.cff, codemeta.json, and .zenodo.json for a project.",
     )
     subparsers = parser.add_subparsers(dest="command")

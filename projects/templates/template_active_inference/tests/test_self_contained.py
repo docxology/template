@@ -1,13 +1,8 @@
-"""Standalone self-containment guard.
+"""Standalone scientific modules and declared verifier SDK boundary.
 
-This template is published as its own GitHub repository, so its code must never
-depend on the monorepo's ``infrastructure/`` layer or any sibling project. These
-tests are the enforcement: they fail if any ``infrastructure`` (or cross-project)
-import is introduced into ``src/``, ``scripts/`` or ``tests/``, and they prove —
-in a clean room with ``infrastructure`` removed from the import system — that every
-``src`` module imports on its own.
-
-Pure stdlib (ast, importlib) so the guard itself is self-contained.
+Scientific modules must import without the platform or sibling projects. The
+verifier launcher may call only its declared, exact-version development SDK
+interfaces; undeclared imports and cross-project imports remain forbidden.
 """
 
 from __future__ import annotations
@@ -16,6 +11,7 @@ import ast
 import builtins
 import importlib
 import pkgutil
+import tomllib
 from pathlib import Path
 from typing import Any, Callable, cast
 
@@ -28,8 +24,33 @@ FORBIDDEN_ROOTS = ("infrastructure", "projects")
 GUARDED_DIRS = ("src", "scripts", "tests")
 
 
-def _forbidden_imports(py_file: Path) -> list[str]:
-    """Return forbidden top-level module roots imported by ``py_file``."""
+def _declared_verifier_sdk_imports(py_file: Path, project_root: Path) -> dict[str, frozenset[str]]:
+    if py_file.resolve() != (project_root / "src/orchestration/_verification_launcher.py").resolve():
+        return {}
+    try:
+        metadata = tomllib.loads((project_root / "pyproject.toml").read_text(encoding="utf-8"))
+        version = metadata["tool"]["template"]["platform_version"]
+        dependencies = metadata["project"]["optional-dependencies"]["dev"]
+    except (OSError, KeyError, tomllib.TOMLDecodeError):
+        return {}
+    if (
+        not isinstance(version, str)
+        or not isinstance(dependencies, list)
+        or not all(isinstance(item, str) for item in dependencies)
+        or f"research-project-template=={version}" not in dependencies
+    ):
+        return {}
+    return {
+        "infrastructure.core.testing.project_test_runtime": frozenset(
+            {"build_audited_project_test_command", "ProjectTestRuntimeError", "admit_project_test_runtime"}
+        ),
+        "infrastructure.core.runtime.python_binding": frozenset({"analysis_runtime_binding"}),
+    }
+
+
+def _forbidden_imports(py_file: Path, *, project_root: Path = PROJECT_ROOT) -> list[str]:
+    """Return undeclared platform or cross-project imports in a genuine source file."""
+    admitted = _declared_verifier_sdk_imports(py_file, project_root)
     try:
         tree = ast.parse(py_file.read_text(encoding="utf-8"), filename=str(py_file))
     except SyntaxError:  # pragma: no cover - a syntax error is a different test's job
@@ -45,13 +66,15 @@ def _forbidden_imports(py_file: Path) -> list[str]:
             # Absolute imports only (node.level == 0); relative imports stay in-package.
             if node.level == 0 and node.module:
                 root = node.module.split(".")[0]
-                if root in FORBIDDEN_ROOTS:
+                if root in FORBIDDEN_ROOTS and not {alias.name for alias in node.names}.issubset(
+                    admitted.get(node.module, frozenset())
+                ):
                     hits.append(f"{py_file.name}: from {node.module} import ...")
     return hits
 
 
 def test_no_infrastructure_or_cross_project_imports() -> None:
-    """No src/scripts/tests file imports `infrastructure` or another project."""
+    """Only the explicitly declared development verifier may call its SDK interfaces."""
     violations: list[str] = []
     for rel in GUARDED_DIRS:
         base = PROJECT_ROOT / rel
@@ -102,3 +125,70 @@ def test_every_src_module_imports_with_infrastructure_blocked() -> None:
 def test_standalone_repo_skeleton_present(required: str) -> None:
     """A standalone GitHub repo needs these top-level entries."""
     assert (PROJECT_ROOT / required).exists(), f"standalone repo missing {required}"
+
+
+@pytest.mark.parametrize(
+    "relative,dependency,module,name,accepted",
+    [
+        (
+            "src/orchestration/_verification_launcher.py",
+            "research-project-template==4.0.1",
+            "infrastructure.core.runtime.python_binding",
+            "analysis_runtime_binding",
+            True,
+        ),
+        (
+            "src/orchestration/_verification_launcher.py",
+            "research-project-template==3.8.0",
+            "infrastructure.core.runtime.python_binding",
+            "analysis_runtime_binding",
+            False,
+        ),
+        (
+            "src/orchestration/_verification_launcher.py",
+            "",
+            "infrastructure.core.runtime.python_binding",
+            "analysis_runtime_binding",
+            False,
+        ),
+        (
+            "src/analysis.py",
+            "research-project-template==4.0.1",
+            "infrastructure.core.runtime.python_binding",
+            "analysis_runtime_binding",
+            False,
+        ),
+        (
+            "src/orchestration/_verification_launcher.py",
+            "research-project-template==4.0.1",
+            "infrastructure.core.runtime.python_binding",
+            "*",
+            False,
+        ),
+        (
+            "src/orchestration/_verification_launcher.py",
+            "research-project-template==4.0.1",
+            "infrastructure.core.pipeline",
+            "PipelineRunner",
+            False,
+        ),
+        (
+            "src/orchestration/_verification_launcher.py",
+            "research-project-template==4.0.1",
+            "projects.template_code_project",
+            "run",
+            False,
+        ),
+    ],
+)
+def test_declared_sdk_boundary_refuses_undeclared_source_imports(
+    tmp_path: Path, relative: str, dependency: str, module: str, name: str, accepted: bool
+) -> None:
+    (tmp_path / "pyproject.toml").write_text(
+        f'[project.optional-dependencies]\ndev = ["{dependency}"]\n[tool.template]\nplatform_version = "4.0.1"\n',
+        encoding="utf-8",
+    )
+    source = tmp_path / relative
+    source.parent.mkdir(parents=True)
+    source.write_text(f"from {module} import {name}\n", encoding="utf-8")
+    assert bool(_forbidden_imports(source, project_root=tmp_path)) is not accepted

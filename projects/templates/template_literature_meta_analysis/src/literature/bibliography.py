@@ -1,57 +1,8 @@
-"""Unified BibTeX export for the literature corpus.
+"""Project-owned BibTeX field mapping and citation-key conventions.
 
-Converts :class:`literature.models.Paper` records into BibTeX entries and
-renders them to a single ``.bib``-formatted string. This module is a NEW,
-standalone export path — it does not read from or write to the manuscript's
-hand-maintained ``manuscript/references.bib`` (that file backs the
-manuscript's own ``\\citep{}`` keys and must stay untouched).
-
-Cross-boundary import note — SELF-CONTAINED BY NECESSITY.
-
-This project's ``src/`` is a separate package root from the top-level
-``infrastructure/`` package (``infrastructure/reference/citation/{models,
-bibtex_writer,converter}.py``), which was the intended reuse target for
-``BibEntry``/``render_entries``/``generate_citation_key``. That import does
-NOT resolve under this project's own documented test invocation. Verified
-directly:
-
-* ``uv run python -c "import infrastructure"`` run from *inside*
-  ``projects/templates/template_literature_meta_analysis/`` (this project's
-  own uv-managed venv) fails with
-  ``ModuleNotFoundError: No module named 'infrastructure'`` — the project's
-  ``pyproject.toml`` declares no dependency on / path wiring to the repo-root
-  ``infrastructure`` package.
-* The bare documented test command,
-  ``uv run pytest projects/templates/template_literature_meta_analysis/tests/literature/test_bibliography.py -q``
-  (run from the repo root, using the repo-root ``uv`` environment), *also*
-  fails the same way: pytest resolves this project's own
-  ``projects/templates/template_literature_meta_analysis/pyproject.toml``
-  (which declares ``[tool.pytest.ini_options] pythonpath = ["src"]``) as the
-  effective rootdir/config *before* reaching the repo-root ``pyproject.toml``
-  / ``conftest.py``, so the repo-root ``conftest.py``'s
-  ``sys.path.insert(0, ROOT)`` never runs and ``infrastructure`` stays
-  unimportable. This is a **pre-existing** condition, not one introduced
-  here: the same failure reproduces today for the existing
-  ``src/deep_research/deep_research_adapter.py``, which imports
-  ``infrastructure.search.deep_research`` at module level — running
-  ``uv run pytest projects/templates/template_literature_meta_analysis/tests/test_deep_research_adapter.py -q``
-  from the repo root raises the identical
-  ``ModuleNotFoundError: No module named 'infrastructure'``. (That module
-  only becomes importable when the officially-wired test runner,
-  ``infrastructure.core.pytest_orchestration.make_coverage_subprocess_env``,
-  explicitly injects ``PYTHONPATH=<repo_root>`` into the pytest subprocess
-  environment — a mechanism this project's plain, directly-invoked pytest
-  command does not go through.)
-
-Given that, this module inlines a small, self-contained citation-key
-generator and BibTeX renderer with NO external dependency on
-``infrastructure``. Only the *field-mapping* and *citation-key* CONVENTIONS
-from ``infrastructure/reference/citation/converter.py`` /
-``infrastructure/core/text_slug.py`` are reused as a style reference (same
-``<surname><year><title-word>`` key shape, same field order, same
-"url is redundant when doi is present" rule, same two-space-indented
-``@type{key,\\n  field={value},\\n}`` BibTeX layout) — none of their code is
-imported.
+The canonical literature engine exports corpus records without altering the
+manuscript bibliography. Live acceptance independently parses these records
+and requires complete author/title/year/identifier custody.
 """
 
 from __future__ import annotations

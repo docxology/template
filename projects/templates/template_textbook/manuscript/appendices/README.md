@@ -8,10 +8,10 @@ crossref/citation/glossary conventions as the main chapters.
 
 | File | Label | Purpose |
 | --- | --- | --- |
-| [`appendix_authoring_guide.md`](appendix_authoring_guide.md) | `sec:appendix_authoring_guide` | How to fill the stubs and grow the book — **read first** |
+| [`appendix_authoring_guide.md`](appendix_authoring_guide.md) | `sec:appendix_authoring_guide` | Authoring, computation checks, and responsible extension — **read first** |
 | [`appendix_notation.md`](appendix_notation.md) | `sec:appendix_notation` | Symbol table for the worked models |
 | [`appendix_math_review.md`](appendix_math_review.md) | `sec:appendix_math_review` | Just-enough math, tied to `src/textbook/models.py` |
-| [`appendix_index.md`](appendix_index.md) | `sec:appendix_index` | Generated index of key terms (placeholder) |
+| [`appendix_index.md`](appendix_index.md) | `sec:appendix_index` | Curated section index of key terms |
 
 The master glossary [`../glossary.md`](../glossary.md) is also included as a
 reference appendix (Appendix D).

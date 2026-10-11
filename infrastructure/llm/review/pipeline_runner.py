@@ -45,7 +45,7 @@ class ReviewMode:
     """Mode for LLM review execution."""
 
     ALL = "all"  # Run both reviews and translations
-    REVIEWS_ONLY = "reviews_only"  # Run only English scientific reviews
+    REVIEWS_ONLY = "reviews_only"  # Run only English draft feedback
     TRANSLATIONS_ONLY = "translations_only"  # Run only translations
 
 
@@ -92,6 +92,9 @@ def run_llm_review_pipeline(
 
         if not available or model_name is None:
             logger.warning("\n⚠️  Skipping LLM review - Ollama not available")
+            from infrastructure.core.pipeline.skip_receipts import write_skip_receipt
+
+            write_skip_receipt("tool_unavailable", "Ollama or a configured local model is unavailable")
             return 2
 
         session_metrics.model_name = model_name
@@ -101,12 +104,12 @@ def run_llm_review_pipeline(
             text, manuscript_metrics = extract_manuscript_text(pdf_path, max_input_length=max_input_length)
         except PDFValidationError as e:
             logger.error(f"Cannot generate reviews: manuscript PDF is invalid — {e}")
-            return 2
+            return 1
         session_metrics.manuscript = manuscript_metrics
 
         if not text:
             logger.error("Cannot generate reviews without manuscript text")
-            return 2
+            return 1
 
         # Step 3: Initialize LLM client
         log_substep("Initializing LLM client...")
@@ -131,7 +134,7 @@ def run_llm_review_pipeline(
 
         # English reviews
         if mode != ReviewMode.TRANSLATIONS_ONLY:
-            logger.info("\n  Generating English scientific reviews...")
+            logger.info("\n  Generating English draft feedback...")
             review_types = get_review_types(repo_root, project_name) or ["executive_summary"]
 
             for i, review_type in enumerate(review_types, 1):
@@ -168,11 +171,14 @@ def run_llm_review_pipeline(
                         save_single_review(review_name, translation_response, output_dir, model_name, metrics)
             elif mode == ReviewMode.TRANSLATIONS_ONLY:
                 logger.warning("\n⚠️  No translation languages configured")
+                from infrastructure.core.pipeline.skip_receipts import write_skip_receipt
+
+                write_skip_receipt("disabled_by_config", "No translation languages configured")
                 return 2
 
         if not reviews:
             logger.warning("\n⚠️  No reviews or translations were generated")
-            return 2
+            return 1
 
         session_metrics.total_generation_time = time.time() - total_start
 

@@ -1,8 +1,6 @@
 """infrastructure.publishing.archival — multi-target archival publishing subpackage.
 
-Re-exports the full public surface so callers can import from either the flat
-``infrastructure.publishing.archival`` module (backwards-compat) or this
-subpackage with identical import paths:
+Exports the declared archival API from its implementation modules:
 
     from infrastructure.publishing.archival import (
         ArchivalProvider,

@@ -37,6 +37,12 @@ class ZenodoClient:
         self.config = config
         self.headers = make_bearer_auth_headers(config.access_token)
 
+    def _request(self, method: str, url: str, **kwargs: Any) -> requests.Response:
+        """Send one request with only the explicitly selected credentials."""
+        with requests.Session() as session:
+            session.trust_env = False
+            return session.request(method, url, **kwargs)
+
     def create_deposition(self, metadata: dict[str, Any] | None = None) -> DepositionResult:
         """Create a new deposition and return its id and file bucket URL."""
         url = f"{self.config.api_base_url}/deposit/depositions"
@@ -45,7 +51,8 @@ class ZenodoClient:
             payload["metadata"] = metadata
 
         try:
-            response = requests.post(
+            response = self._request(
+                "POST",
                 url,
                 json=payload,
                 headers=self.headers,
@@ -77,7 +84,8 @@ class ZenodoClient:
 
         try:
             with file_path.open("rb") as handle:
-                response = requests.put(
+                response = self._request(
+                    "PUT",
                     url,
                     data=handle,
                     headers=self.headers,
@@ -94,7 +102,7 @@ class ZenodoClient:
         url = f"{self.config.api_base_url}/deposit/depositions/{deposition_id}/actions/publish"
 
         try:
-            response = requests.post(url, headers=self.headers, timeout=REQUEST_TIMEOUT)
+            response = self._request("POST", url, headers=self.headers, timeout=REQUEST_TIMEOUT)
             response.raise_for_status()
             body = response.json()
             doi = body.get("doi") or body.get("conceptdoi")
@@ -116,7 +124,8 @@ class ZenodoClient:
 
     def _search_depositions(self, query: str, *, size: int = 1) -> list[Any]:
         url = f"{self.config.api_base_url}/deposit/depositions"
-        response = requests.get(
+        response = self._request(
+            "GET",
             url,
             params={"q": query, "size": str(size), "sort": "mostrecent"},
             headers=self.headers,
@@ -136,7 +145,8 @@ class ZenodoClient:
         normalized = doi.strip()
         url = f"{self.config.api_base_url}/records"
         try:
-            response = requests.get(
+            response = self._request(
+                "GET",
                 url,
                 params={"q": f"doi:{normalized}", "size": "1"},
                 headers=self.headers,
@@ -152,7 +162,8 @@ class ZenodoClient:
             if not match:
                 return None
             record_url = f"{url}/{match.group(1)}"
-            record_response = requests.get(
+            record_response = self._request(
+                "GET",
                 record_url,
                 headers=self.headers,
                 timeout=REQUEST_TIMEOUT,
@@ -183,13 +194,31 @@ class ZenodoClient:
             raise PublishingError(f"Failed to resolve deposition for DOI {doi}: {exc}") from exc
 
     def create_new_version(self, deposition_id: str) -> DepositionResult:
-        """Create a new version of an existing deposition."""
+        """Create a new version and fetch its actual unpublished draft."""
         url = f"{self.config.api_base_url}/deposit/depositions/{deposition_id}/actions/newversion"
         try:
-            response = requests.post(url, headers=self.headers, timeout=REQUEST_TIMEOUT)
+            response = self._request("POST", url, headers=self.headers, timeout=REQUEST_TIMEOUT)
             response.raise_for_status()
             body = response.json()
-            return DepositionResult.from_zenodo_body(body)
+            links = body.get("links") if isinstance(body, dict) else None
+            latest_draft = links.get("latest_draft") if isinstance(links, dict) else None
+            if not isinstance(latest_draft, str):
+                raise PublishingError("Zenodo new version response has no latest_draft link")
+            match = re.fullmatch(
+                re.escape(self.config.api_base_url.rstrip("/")) + r"/deposit/depositions/([0-9]+)",
+                latest_draft,
+            )
+            if match is None:
+                raise PublishingError("Zenodo latest_draft link is outside the configured deposition API")
+            draft_id = match.group(1)
+            if draft_id == str(deposition_id):
+                raise PublishingError("Zenodo latest_draft refers to the original deposition")
+            draft = self.get_deposition(draft_id)
+            if str(draft.get("id")) != draft_id:
+                raise PublishingError("New-version draft identity differs from latest_draft")
+            if draft.get("state") not in {"unsubmitted", "inprogress"} or draft.get("submitted") is not False:
+                raise PublishingError("Zenodo latest_draft is not an unpublished deposition")
+            return DepositionResult.from_zenodo_body(draft)
         except requests.exceptions.RequestException as exc:
             raise PublishingError(f"Failed to create new version: {exc}") from exc
 
@@ -197,7 +226,7 @@ class ZenodoClient:
         """Return the deposition resource, including inherited draft files."""
         url = f"{self.config.api_base_url}/deposit/depositions/{deposition_id}"
         try:
-            response = requests.get(url, headers=self.headers, timeout=REQUEST_TIMEOUT)
+            response = self._request("GET", url, headers=self.headers, timeout=REQUEST_TIMEOUT)
             response.raise_for_status()
             body = response.json()
             if not isinstance(body, dict):
@@ -210,7 +239,7 @@ class ZenodoClient:
         """Delete one file from an unpublished deposition."""
         url = f"{self.config.api_base_url}/deposit/depositions/{deposition_id}/files/{file_id}"
         try:
-            response = requests.delete(url, headers=self.headers, timeout=REQUEST_TIMEOUT)
+            response = self._request("DELETE", url, headers=self.headers, timeout=REQUEST_TIMEOUT)
             response.raise_for_status()
         except requests.exceptions.RequestException as exc:
             raise PublishingError(f"Failed to delete file {file_id} from deposition {deposition_id}: {exc}") from exc
@@ -241,7 +270,8 @@ class ZenodoClient:
         """Update metadata on an unpublished deposition."""
         url = f"{self.config.api_base_url}/deposit/depositions/{deposition_id}"
         try:
-            response = requests.put(
+            response = self._request(
+                "PUT",
                 url,
                 json={"metadata": metadata},
                 headers=self.headers,

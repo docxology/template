@@ -1,47 +1,45 @@
-"""Real-file tests for the Python 3.10 compatibility audit."""
+"""Real-file tests for the Python 3.12 compatibility audit."""
 
 from __future__ import annotations
 
 from pathlib import Path
 
-from infrastructure.core.runtime.python_compatibility import scan_python_310_compatibility
+from infrastructure.core.runtime.python_compatibility import scan_python_312_compatibility
 from infrastructure.project.public_scope import public_ci_source_paths
 
 
-def test_public_python_surface_is_python_310_compatible(repo_root: Path) -> None:
+def test_public_python_surface_is_python_312_compatible(repo_root: Path) -> None:
     paths = [repo_root / relative for relative in public_ci_source_paths(repo_root)]
 
-    issues = scan_python_310_compatibility(paths, repo_root=repo_root)
+    issues = scan_python_312_compatibility(paths, repo_root=repo_root)
 
     assert issues == ()
 
 
 def test_scanner_rejects_new_syntax_and_unguarded_standard_library(tmp_path: Path) -> None:
     (tmp_path / "future_syntax.py").write_text(
-        "try:\n    pass\nexcept* ValueError:\n    pass\n",
+        "def identity[T = int](value: T) -> T:\n    return value\n",
         encoding="utf-8",
     )
-    (tmp_path / "future_api.py").write_text("import tomllib\nfrom enum import StrEnum\n", encoding="utf-8")
+    (tmp_path / "future_api.py").write_text("from typing import TypeIs\n", encoding="utf-8")
 
-    issues = scan_python_310_compatibility([tmp_path], repo_root=tmp_path)
+    issues = scan_python_312_compatibility([tmp_path], repo_root=tmp_path)
 
-    assert {issue.rule for issue in issues} == {"PY310.API", "PY310.SYNTAX"}
+    assert {issue.rule for issue in issues} == {"PY312.API", "PY312.SYNTAX"}
 
 
 def test_scanner_accepts_guarded_backports(tmp_path: Path) -> None:
     source = tmp_path / "guarded.py"
     source.write_text(
         """try:
-    import tomllib
-    from typing import NotRequired
+    from typing import TypeIs
 except ImportError:
-    import tomli as tomllib
-    from typing_extensions import NotRequired
+    from typing_extensions import TypeIs
 """,
         encoding="utf-8",
     )
 
-    assert scan_python_310_compatibility([source], repo_root=tmp_path) == ()
+    assert scan_python_312_compatibility([source], repo_root=tmp_path) == ()
 
 
 def test_scanner_reports_repo_relative_display_paths(tmp_path: Path) -> None:
@@ -54,11 +52,20 @@ def test_scanner_reports_repo_relative_display_paths(tmp_path: Path) -> None:
     repo = tmp_path / "repo"
     (repo / "pkg").mkdir(parents=True)
     bad = repo / "pkg" / "bad.py"
-    bad.write_text("import tomllib\n", encoding="utf-8")
+    bad.write_text("from typing import TypeIs\n", encoding="utf-8")
 
-    issues = scan_python_310_compatibility([repo / "pkg"], repo_root=repo)
+    issues = scan_python_312_compatibility([repo / "pkg"], repo_root=repo)
 
     assert issues
-    assert {issue.rule for issue in issues} == {"PY310.API"}
+    assert {issue.rule for issue in issues} == {"PY312.API"}
     assert all(issue.path == "pkg/bad.py" for issue in issues)
     assert all(not Path(issue.path).is_absolute() for issue in issues)
+
+
+def test_python_312_stdlib_and_syntax_are_supported(tmp_path: Path) -> None:
+    source = tmp_path / "supported.py"
+    source.write_text(
+        "import tomllib\nfrom datetime import UTC\nfrom typing import TypeAliasType\ntype Entry = str\n",
+        encoding="utf-8",
+    )
+    assert scan_python_312_compatibility([source], repo_root=tmp_path) == ()

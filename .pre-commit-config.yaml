@@ -35,6 +35,7 @@ repos:
         args: ["--maxkb=512"]
         exclude: |
           (?x)^(
+            docs/releases/template-v4\.0\.[01]-overview\.png$|
             projects/templates/.*\.png|
             projects/templates/.*\.svg|
             projects/templates/.*\.pdf|

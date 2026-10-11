@@ -18,14 +18,14 @@ from typing import Optional
 
 import networkx as nx
 
-import knowledge_graph.schema as _schema
-from knowledge_graph.nanopublication import Assertion
-from knowledge_graph.schema import (
+import template_literature_meta_analysis.knowledge_graph.schema as _schema
+from template_literature_meta_analysis.knowledge_graph.nanopublication import Assertion
+from template_literature_meta_analysis.knowledge_graph.schema import (
     AIF_NAMESPACE,
     ASSERTION_TYPES,
     SUBFIELD_URIS,
 )
-from literature.models import Paper
+from template_literature_meta_analysis.literature.models import Paper
 
 logger = logging.getLogger(__name__)
 

@@ -5,6 +5,7 @@ from __future__ import annotations
 from pathlib import Path
 
 from infrastructure.core.pipeline.multi_project import MultiProjectResult, format_multi_project_outcome_lines
+from infrastructure.core.pipeline.outcomes import RunResult
 from infrastructure.core.pipeline.types import PipelineStageResult
 from infrastructure.project.project_info import ProjectInfo
 
@@ -21,14 +22,29 @@ def _p(name: str) -> ProjectInfo:
     )
 
 
+def _completed(stage_num: int, name: str) -> PipelineStageResult:
+    """A stage that completed its contract (success alone is not completion)."""
+    return PipelineStageResult(
+        stage_num, name, True, 0.1, exit_code=0, stage_key=name.lower().replace(" ", "_"), stage_completed=True
+    )
+
+
+def _typed(project_results: dict[str, list[PipelineStageResult]], **counts: int) -> MultiProjectResult:
+    """Bind each project's rows to its typed run contract, as the orchestrator does."""
+    contracts = {}
+    for name, stages in project_results.items():
+        for index, stage in enumerate(stages):
+            stage.stage_key = stage.stage_key or f"stage_{index}"
+        contracts[name] = RunResult.from_results(stages, tuple(stage.stage_key for stage in stages))
+    return MultiProjectResult(
+        project_results, expected_projects=tuple(project_results), run_results=contracts, **counts
+    )
+
+
 def test_all_succeeded_lists_names() -> None:
     projs = (_p("alpha"), _p("beta"))
-    ok = PipelineStageResult(1, "Environment Setup", True, 0.1)
-    result = MultiProjectResult(
-        project_results={
-            "alpha": [ok],
-            "beta": [ok],
-        },
+    result = _typed(
+        {"alpha": [_completed(1, "Environment Setup")], "beta": [_completed(1, "Environment Setup")]},
         successful_projects=2,
         failed_projects=0,
     )
@@ -53,7 +69,6 @@ def test_infra_aborted_single_message() -> None:
 
 def test_failed_stage_includes_name_and_hint() -> None:
     projs = (_p("good"), _p("bad"))
-    ok = PipelineStageResult(1, "Setup", True, 0.1)
     boom = PipelineStageResult(
         2,
         "Run Tests",
@@ -62,11 +77,8 @@ def test_failed_stage_includes_name_and_hint() -> None:
         exit_code=1,
         error_message="assert 1 == 2",
     )
-    result = MultiProjectResult(
-        project_results={
-            "good": [ok],
-            "bad": [ok, boom],
-        },
+    result = _typed(
+        {"good": [_completed(1, "Setup")], "bad": [_completed(1, "Setup"), boom]},
         successful_projects=1,
         failed_projects=1,
     )
@@ -75,6 +87,18 @@ def test_failed_stage_includes_name_and_hint() -> None:
     assert "  - good" in lines
     idx = lines.index("Failed:")
     assert any("bad" in ln and "Run Tests" in ln and "assert" in ln for ln in lines[idx + 1 :])
+
+
+def test_success_flag_without_completed_contract_is_not_reported_as_succeeded() -> None:
+    """A row marked successful but lacking contract completion stays unproven."""
+    projs = (_p("alpha"),)
+    result = MultiProjectResult(
+        project_results={"alpha": [PipelineStageResult(1, "Environment Setup", True, 0.1)]},
+        successful_projects=1,
+        failed_projects=0,
+    )
+    lines = format_multi_project_outcome_lines(projs, result)
+    assert "Succeeded:" not in lines and "Failed:" in lines
 
 
 def test_truncates_long_error_message() -> None:

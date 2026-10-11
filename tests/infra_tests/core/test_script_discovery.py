@@ -129,7 +129,8 @@ class TestDiscoverAnalysisScripts:
             encoding="utf-8",
         )
 
-        assert discover_analysis_scripts(repo_root, project_name="project") == []
+        with pytest.raises(ValueError, match="Configured analysis script"):
+            discover_analysis_scripts(repo_root, project_name="project")
 
     @pytest.mark.skipif(os.name == "nt", reason="POSIX symlink semantics")
     def test_discover_analysis_scripts_rejects_external_allowlist_symlink(self, tmp_path):
@@ -148,7 +149,8 @@ class TestDiscoverAnalysisScripts:
             encoding="utf-8",
         )
 
-        assert discover_analysis_scripts(repo_root, project_name="project") == []
+        with pytest.raises(ValueError, match="Configured analysis script"):
+            discover_analysis_scripts(repo_root, project_name="project")
 
     def test_discover_analysis_scripts_reads_docs_manuscript_allowlist(self, tmp_path):
         """A config-only compatibility tree cannot shadow the canonical docs source."""
@@ -243,6 +245,57 @@ class TestDiscoverAnalysisScripts:
 
         assert len(scripts) == 1
         assert scripts[0].name == "script.py"
+
+
+@pytest.mark.parametrize(
+    "configuration",
+    [
+        "analysis: {scripts: [missing.py]}\n",
+        "analysis: {scripts: [analysis.py, analysis.py]}\n",
+        "analysis: {scripts: [3]}\n",
+        "analysis: {scripts: ['']}\n",
+        "analysis: {scripts: null}\n",
+        "analysis: {scripts: analysis.py}\n",
+        "analysis: false\n",
+        "false\n",
+        "analysis: [\n",
+    ],
+)
+def test_invalid_declared_producers_cannot_fallback_or_accept_stale_outputs(tmp_path, configuration):
+    project = tmp_path / "projects/demo"
+    (project / "scripts").mkdir(parents=True)
+    (project / "scripts/analysis.py").write_text("raise RuntimeError('must not execute')\n")
+    (project / "manuscript").mkdir()
+    (project / "manuscript/config.yaml").write_text(configuration)
+    (project / "output/data").mkdir(parents=True)
+    (project / "output/data/stale.csv").write_text("stale\n")
+    with pytest.raises(ValueError):
+        discover_analysis_scripts(tmp_path, "demo")
+    with pytest.raises(ValueError):
+        verify_analysis_outputs(tmp_path, "demo")
+    assert (project / "output/data/stale.csv").read_text() == "stale\n"
+
+
+def test_missing_scripts_directory_cannot_drop_required_producer(tmp_path):
+    project = tmp_path / "projects/demo"
+    (project / "manuscript").mkdir(parents=True)
+    (project / "manuscript/config.yaml").write_text("analysis: {scripts: [required.py]}\n")
+    with pytest.raises(ValueError, match="Configured analysis script"):
+        discover_analysis_scripts(tmp_path, "demo")
+
+
+@pytest.mark.skipif(os.name == "nt", reason="POSIX symlink semantics")
+def test_linked_config_cannot_fallback_to_unrelated_utilities(tmp_path):
+    project = tmp_path / "projects/demo"
+    (project / "scripts").mkdir(parents=True)
+    (project / "scripts/unrelated.py").write_text("raise RuntimeError('must not execute')\n")
+    (project / "manuscript").mkdir()
+    external = tmp_path / "external-config.yaml"
+    external.write_text("analysis: {scripts: []}\n")
+    (project / "manuscript/config.yaml").symlink_to(external)
+    with pytest.raises(ValueError, match="Cannot admit analysis configuration"):
+        discover_analysis_scripts(tmp_path, "demo")
+    assert external.read_text() == "analysis: {scripts: []}\n"
 
 
 class TestDiscoverOrchestrators:

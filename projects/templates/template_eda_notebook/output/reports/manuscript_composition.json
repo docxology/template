@@ -1,22 +1,22 @@
 {
   "algorithm": "web-renderer-combine-v1",
-  "binding_sha256": "5e5ed23b60b85160bcb61fbf050bf830ef5cd36d845d5ef79ab1e45f4a229ade",
+  "binding_sha256": "7ed3c405ae8d1aa0e7ee616ba80a23614d58d3459d5d9bd220e2ad4118728939",
   "combined_path": "output/web/_combined_manuscript.md",
-  "combined_sha256": "0500048a56264fe84cad5084c5e1f9f604159c8aba3754b1a341ccdb57b95a6d",
-  "combined_size_bytes": 28149,
+  "combined_sha256": "824292ac7a759b39e09a1b168b69c540b993ff6d9e193ed73b23fa4a8bb79071",
+  "combined_size_bytes": 28369,
   "input_root_kind": "source",
   "ordered_inputs": [
     {
       "ordinal": 1,
       "path": "manuscript/00_abstract.md",
-      "sha256": "8c83006d71ceb7fad14c6fa0b37a18e80db5261dd77e6f662be0c9a32171a05f",
-      "size_bytes": 1707
+      "sha256": "59a0cb22b852d3bd96e8da1b319a46cb15ada81904536d7f385313b9c302454d",
+      "size_bytes": 1729
     },
     {
       "ordinal": 2,
       "path": "manuscript/01_introduction.md",
-      "sha256": "1eb20f251320f09bb8e2fc959f9189acf560a298a829a5caec853f16d66ff13e",
-      "size_bytes": 3517
+      "sha256": "0652135f85030044405a1570afe44c6f7929dc565b6b3a157fd84d172b1bbe70",
+      "size_bytes": 3605
     },
     {
       "ordinal": 3,
@@ -33,8 +33,8 @@
     {
       "ordinal": 5,
       "path": "manuscript/04_conclusion.md",
-      "sha256": "73897c9ae3ce9f4d23b28c956a5243406c0631c2462b8592e6a812809043f193",
-      "size_bytes": 3102
+      "sha256": "9627351d9fa89fb7c8826cd96e91ce02d9f2b2b05e141ae46805e8b8dfafc97f",
+      "size_bytes": 3168
     },
     {
       "ordinal": 6,
@@ -45,14 +45,14 @@
     {
       "ordinal": 7,
       "path": "manuscript/06_reproducibility.md",
-      "sha256": "ddd57503a7d76e2f442758b946e32cfbce5de5e71267ca2a95403ec3e4dbd983",
-      "size_bytes": 3085
+      "sha256": "817702c4991cbe1cb77d76b2184cb847b5c872916b12bb1f23edef67ed660a31",
+      "size_bytes": 3107
     },
     {
       "ordinal": 8,
       "path": "manuscript/07_scope_and_related_work.md",
-      "sha256": "52cca0ec051711c8732eafa6b999de6ea0158357763c92611c1f3e28a07c9cf4",
-      "size_bytes": 2613
+      "sha256": "7ea54cd3a0f06cd527e79ca4c0df08486404bb771203aabdd0deade4fa1fa7bf",
+      "size_bytes": 2635
     },
     {
       "ordinal": 9,
@@ -61,7 +61,7 @@
       "size_bytes": 616
     }
   ],
-  "ordered_inputs_sha256": "17e3217c28a33aef15b4ce4f3f03d110a75788e682622449ea3cba5c9ea20382",
+  "ordered_inputs_sha256": "49cf40eda36422b72904f7c2d9c3acf4682696a82e59e9af618a780facba9f36",
   "project": "templates/template_eda_notebook",
   "schema_version": "template-manuscript-composition-v1"
 }

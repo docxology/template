@@ -199,7 +199,7 @@ def _canonical_artifact_rows(root: Path, context: _ProvenanceContext | None = No
                 ),
                 "deterministic_seed": context.deterministic_seed,
                 "config_digest": context.config_digest,
-                "source_commit": context.source_commit,
+                "source_input_sha256": context.source_input_sha256,
                 "producer_configured": producer in configured,
                 "consumers": list(consumers.get(rel, ())),
                 "validation_gates": list(gates.get(rel, ())),

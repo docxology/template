@@ -344,6 +344,26 @@ def test_tracked_generated_artifacts_detects_private_output_tree(tmp_path: Path)
     assert "projects/working/secret_project/output/data/x.csv" in tracked_generated_artifacts(tmp_path)
 
 
+def test_forced_public_packaging_intermediates_are_rejected(tmp_path: Path) -> None:
+    _init_git_repo(tmp_path)
+    generated = [
+        "projects/templates/template_code_project/build/lib/model.py",
+        "projects/templates/template_code_project/dist/model.whl",
+    ]
+    authored = [
+        "docs/operational/build/README.md",
+        "projects/templates/template_code_project/src/fixtures/build/model.py",
+    ]
+    (tmp_path / ".gitignore").write_text("build/\ndist/\n", encoding="utf-8")
+    for name in generated + authored:
+        path = tmp_path / name
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text("source = 1\n", encoding="utf-8")
+    subprocess.run(["git", "add", "-f", "--", *generated, *authored], cwd=tmp_path, check=True)
+    assert tracked_generated_artifacts(tmp_path) == generated
+    assert all(not is_generated_artifact_path(name) for name in authored)
+
+
 def test_tracked_generated_artifacts_detects_oversized_public_template_output(
     tmp_path: Path,
 ) -> None:

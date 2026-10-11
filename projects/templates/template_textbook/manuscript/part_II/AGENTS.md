@@ -50,7 +50,7 @@ Each chapter's figure is `<part>_<stem>.png` — for Part II:
 | `dynamics_and_change` | `part_II_dynamics_and_change.png` |
 | `regulation_and_control` | `part_II_regulation_and_control.png` |
 
-These placeholders are generated deterministically by
+These canonical model figures are generated deterministically by
 [`scripts/generate_figures.py`](../../scripts/generate_figures.py). When you replace
 a placeholder with a real figure, keep the exact `<part>_<stem>.png` name so the
 `[@fig:part_II_<stem>]` reference and the audit gate continue to resolve.
@@ -58,9 +58,9 @@ a placeholder with a real figure, keep the exact `<part>_<stem>.png` name so the
 ## Citations and glossary
 
 - **Citations** use `[@key]` and MUST resolve in [`../references.bib`](../references.bib).
-  Available keys: `smith2020foundations`, `doe2019methods`, `lee2021systems`,
-  `garcia2022dynamics`, `patel2018models`, `nguyen2023synthesis`, `kim2020data`,
-  `brown2017principles`, `wilson2021analysis`, `taylor2019theory`.
+  Available keys: `box1976science`, `sandve2013ten`, `nyquist1932regeneration`,
+  `lorenz1963deterministic`, `may1976simple`, `wilkinson2016fair`, `shannon1948mathematical`,
+  `turing1937computable`, `wilson2014best`, `taschuk2017ten`.
 - **Glossary links** use `[**term**](#gl:<anchor>)` against the anchors defined in
   [`../glossary.md`](../glossary.md): `system`, `model`, `parameter`, `variable`,
   `equilibrium`, `feedback`, `gradient`, `threshold`, `network`, `dynamics`,

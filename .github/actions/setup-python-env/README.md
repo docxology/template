@@ -24,7 +24,7 @@ present in the workspace after checkout.
 
 | Input | Default | Description |
 | --- | --- | --- |
-| `python-version` | `"3.12"` | Version passed to `actions/setup-python`. Matrix jobs pass `${{ matrix.python-version }}`. |
+| `python-version` | `"3.14"` | Version passed to `actions/setup-python`. Matrix jobs pass `${{ matrix.python-version }}`. |
 
 ## Scope
 

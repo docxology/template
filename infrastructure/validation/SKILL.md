@@ -25,7 +25,7 @@ issues = scan_for_issues(text)
 **CLI:**
 
 ```bash
-uv run python -m infrastructure.validation.cli pdf output/{project}/pdf/
+uv run python -m infrastructure.validation.cli pdf --project {project} --repo-root .
 ```
 
 ## Markdown Validation (`markdown_validator.py`)

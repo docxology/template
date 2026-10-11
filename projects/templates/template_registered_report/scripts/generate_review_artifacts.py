@@ -16,9 +16,9 @@ from registered_report import (  # noqa: E402
     build_deviation_ledger,
     build_review_packet,
     compare_analysis_to_registration,
-    freeze_registration,
     validate_sensitivity_table,
 )
+from registered_report.protocol import persist_frozen_registration  # noqa: E402
 
 
 DEFAULT_EXECUTED = {
@@ -48,9 +48,14 @@ def main() -> int:
     args = parser.parse_args()
 
     registration = cast("dict[str, Any]", json.loads(args.registration.read_text(encoding="utf-8")))
-    frozen = freeze_registration(registration)
-    sensitivity_rows = cast("list[dict[str, Any]]", frozen.get("sensitivity_analyses", []))
     args.output_dir.mkdir(parents=True, exist_ok=True)
+    frozen_path = args.output_dir / "frozen_registration.json"
+    try:
+        frozen = persist_frozen_registration(frozen_path, registration)
+    except ValueError as exc:
+        print(str(exc), file=sys.stderr)
+        return 2
+    sensitivity_rows = cast("list[dict[str, Any]]", frozen.get("sensitivity_analyses", []))
 
     adherence = compare_analysis_to_registration(frozen, DEFAULT_EXECUTED, DEFAULT_DEVIATIONS)
     ledger = build_deviation_ledger(frozen, DEFAULT_EXECUTED, DEFAULT_DEVIATIONS)
@@ -76,11 +81,12 @@ def main() -> int:
     written: dict[str, str] = {}
     for filename, payload in outputs.items():
         path = args.output_dir / filename
-        path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+        if filename != "frozen_registration.json":
+            path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
         written[filename] = path.as_posix()
 
     print(json.dumps({"valid": packet["valid"], "review_score": packet["review_score"], "outputs": written}, indent=2))
-    return 0
+    return 0 if packet["valid"] else 2
 
 
 if __name__ == "__main__":

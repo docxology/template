@@ -12,53 +12,45 @@ uv run pytest projects/templates/template_autopoiesis/tests/ \
 
 ## Files on disk
 
-This is the complete current test-module inventory (528 collected test
-items, including parametrized cases). Tests are mirrored one-to-one into
-per-cluster directories matching the `src/template_autopoiesis/` subpackage
-split (SUBMODULAR-2):
+The current test modules are mirrored into directories matching their source
+clusters. Measure collected cases with `pytest --collect-only`; current repository
+measurements belong in `docs/_generated/COUNTS.md`.
 
-| Test module | Collected items |
-|---|---:|
-| **`core/`** | |
-| `core/test_cli.py` | 21 |
-| `core/test_common.py` | 7 |
-| `core/test_grammar_and_expand.py` | 67 |
-| `core/test_honesty.py` | 17 |
-| `core/test_manuscript_mermaid.py` | 6 |
-| `core/test_meta_teeth.py` | 20 |
-| `core/test_project_paths.py` | 7 |
-| `core/test_stress_edge_cases.py` | 19 |
-| **`gates/`** | |
-| `gates/test_deps_vendoring.py` | 16 |
-| `gates/test_integrity_and_verify.py` | 32 |
-| `gates/test_materialize.py` | 33 |
-| `gates/test_property_invariants.py` | 28 |
-| `gates/test_realize.py` | 19 |
-| `gates/test_realize_pure.py` | 7 |
-| `gates/test_seal_child.py` | 7 |
-| `gates/test_sealing.py` | 26 |
-| **`figures/`** | |
-| `figures/test_cover_art.py` | 29 |
-| `figures/test_figures.py` | 23 |
-| **`manuscript/`** | |
-| `manuscript/test_emit_templates.py` | 32 |
-| `manuscript/test_manuscript_assets_script.py` | 3 |
-| `manuscript/test_manuscript_contract.py` | 3 |
-| `manuscript/test_manuscript_figures.py` | 9 |
-| `manuscript/test_manuscript_variables.py` | 14 |
-| **`primitives/`** | |
-| `primitives/test_primitives_dynamics.py` | 13 |
-| `primitives/test_primitives_graph.py` | 17 |
-| `primitives/test_primitives_optimization.py` | 13 |
-| `primitives/test_primitives_registry.py` | 10 |
-| `primitives/test_primitives_signal.py` | 17 |
-| `primitives/test_primitives_statistics.py` | 13 |
-
-The inventory is measured with `pytest --collect-only`; parametrized cases are
-counted as separate collected items. `conftest.py` and `__init__.py` are test
-support files, not test modules.
+- `core/test_cli.py`
+- `core/test_common.py`
+- `core/test_grammar_and_expand.py`
+- `core/test_honesty.py`
+- `core/test_manuscript_mermaid.py`
+- `core/test_meta_teeth.py`
+- `core/test_project_paths.py`
+- `core/test_stress_edge_cases.py`
+- `figures/test_cover_art.py`
+- `figures/test_figures.py`
+- `gates/test_deps_vendoring.py`
+- `gates/test_integrity_and_verify.py`
+- `gates/test_materialize.py`
+- `gates/test_property_invariants.py`
+- `gates/test_realization_contract.py`
+- `gates/test_realize.py`
+- `gates/test_realize_pure.py`
+- `gates/test_seal_child.py`
+- `gates/test_sealing.py`
+- `manuscript/test_emit_templates.py`
+- `manuscript/test_manuscript_assets_script.py`
+- `manuscript/test_manuscript_contract.py`
+- `manuscript/test_manuscript_figures.py`
+- `manuscript/test_manuscript_variables.py`
+- `primitives/test_primitives_dynamics.py`
+- `primitives/test_primitives_graph.py`
+- `primitives/test_primitives_optimization.py`
+- `primitives/test_primitives_registry.py`
+- `primitives/test_primitives_signal.py`
+- `primitives/test_primitives_statistics.py`
 
 ## See also
 
 - [`../AGENTS.md`](../AGENTS.md)
 - [`README.md`](README.md)
+
+
+Standalone provider contract: prepare the declared genuine platform 4.0.1 SDK and own dependencies, then invoke own scripts or `python -I -m pytest tests/ --cov=src --cov-fail-under=90`. `_bootstrap.py` selects the environment SDK before registering the exact own package namespace; it adds no own src or inferred parent root to global import paths. A genuinely missing SDK remains absent and the selected-child execution producer records blocked/75 before materialization. Root-checkout metadata poison controls belong to Root tests; they do not manufacture checkout files in wheel site-packages. Installed execution and complete-source reference data remain independently bound acceptance lanes.

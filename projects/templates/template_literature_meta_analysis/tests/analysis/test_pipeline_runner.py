@@ -7,8 +7,8 @@ from pathlib import Path
 
 import json
 
-from analysis.pipeline_runner import run_meta_analysis_pipeline
-from literature.models import Paper
+from template_literature_meta_analysis.analysis.pipeline_runner import run_meta_analysis_pipeline
+from template_literature_meta_analysis.literature.models import Paper
 
 
 def test_run_meta_analysis_pipeline_writes_artifacts(sample_corpus_path: str) -> None:
@@ -41,7 +41,7 @@ def test_run_meta_analysis_pipeline_writes_artifacts(sample_corpus_path: str) ->
 def test_run_meta_analysis_pipeline_temporal_error_on_missing_years(
     tmp_path: Path,
 ) -> None:
-    from literature.corpus import Corpus
+    from template_literature_meta_analysis.literature.corpus import Corpus
 
     corpus = Corpus()
     corpus.add(

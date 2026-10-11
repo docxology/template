@@ -17,9 +17,9 @@ from _bootstrap import bootstrap_project
 
 PROJECT_ROOT = bootstrap_project(include_infrastructure=True)
 
-from config import PROJECT_NAME
+from template_literature_meta_analysis.config import PROJECT_NAME
 from infrastructure.core.logging.utils import get_logger, log_operation
-from manuscript.variables import compute_variables, inject_variables
+from template_literature_meta_analysis.manuscript.variables import compute_variables, inject_variables
 
 logger = get_logger(__name__)
 

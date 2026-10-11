@@ -16,7 +16,7 @@ proven to reject bad input, not just accept good input.
 | [`output_checks_promoted.py`](output_checks_promoted.py) | Promoted artifact schema checks; `set_experiment_plan_metrics` |
 | [`manuscript_checks.py`](manuscript_checks.py) | Sheaf manifest, tokens, hydration, layers markers |
 | [`claim_ledger.py`](claim_ledger.py) | Claim ledger vs on-disk artifacts (`data/claim_ledger.yaml` required) |
-| [`lean.py`](lean.py) | Conditional `lake build` when `lean/lakefile.lean` exists |
+| [`lean.py`](lean.py) | Exact installed Lean4.14.0, bounded builds and complete axiom audits |
 | [`documentation_contract.py`](documentation_contract.py) | Markdown links, generated-doc links, README/AGENTS pairs, command context, and historical evidence wording |
 | [`method_inventory.py`](method_inventory.py) | AST-backed report for every `def` and `class` under `src/` and `scripts/` |
 
@@ -56,9 +56,9 @@ Negative controls: `test_validate_outputs_negative_missing_sweep`, `test_validat
 | Helper | Contract |
 | --- | --- |
 | `lean_project_present(root)` | `True` when `lean/lakefile.lean` exists |
-| `build_lean(root)` | Runs `lake build` when present (must exit 0); returns skip message when absent |
+| `build_lean(root)` | Runs the explicit declared target with installed pinned Lean4.14.0 and a shared deadline; absent declarations/tools are blocked75 |
 
-Negative controls: `test_build_lean_when_present_must_succeed`, `test_build_lean_skips_without_lakefile`, `test_validate_manuscript_gnn_concordance_negative`, `test_validate_manuscript_claim_ledger_negative`, `test_validate_manuscript_claim_ledger_missing_file_negative`, `test_validate_manuscript_tokens_registered_negative`.
+Negative controls: `test_build_lean_when_present_must_succeed`, `test_build_lean_blocks_without_lakefile`, `test_validate_manuscript_gnn_concordance_negative`, `test_validate_manuscript_claim_ledger_negative`, `test_validate_manuscript_claim_ledger_missing_file_negative`, `test_validate_manuscript_tokens_registered_negative`.
 
 ## Method inventory (`generate_method_inventory.py`)
 
@@ -76,3 +76,11 @@ Markdown links, hydrated manuscript output links, README/AGENTS pairs, stale
 root-shaped project commands, explicit historical labeling of old suite counts,
 and required verification signposts. Run it with
 `uv run python scripts/check_documentation_contract.py --check`.
+
+Lean invocation uses `elan run` without `--install`, so missing exact toolchains
+cannot trigger implicit acquisition. Actual source and manifest bytes are captured
+and checked after each run. Axiom auditing freshly elaborates captured source in
+a disposable checker and requires every requested declaration to appear; empty
+output, unproved declarations and non-kernel axioms fail. The direct gate tests
+use real pinned elaboration, including planted `sorry`, `native_decide` and
+invalid-proof controls.

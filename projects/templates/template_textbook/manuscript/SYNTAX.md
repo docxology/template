@@ -80,7 +80,7 @@ See [@fig:part_0_orientation], [@tbl:part_0_orientation_parameters],
 ## Citations
 
 ```markdown
-A single citation [@lee2021systems]; multiple [@kim2020data; @brown2017principles].
+A single citation [@nyquist1932regeneration]; multiple [@shannon1948mathematical; @turing1937computable].
 ```
 
 Every key must resolve in [`references.bib`](references.bib).

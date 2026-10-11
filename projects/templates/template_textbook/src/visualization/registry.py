@@ -24,40 +24,40 @@ FIGURE_ALT_TEXT: dict[str, str] = {
     "fig:gallery_multipanel": ("A two-by-two composite contains a line chart, scatter plot, bar chart, and histogram."),
     "fig:gallery_pie": ("A circular chart is divided into labeled slices whose angles encode category proportions."),
     "fig:part_0_orientation": (
-        "A bordered placeholder overview panel labeled Orientation to the Field, awaiting a subject-specific illustration."
+        "Three smooth S-shaped quantity-versus-time curves start at five units and approach a dashed capacity line at one hundred; higher rates reach the middle of the transition sooner."
     ),
     "fig:part_0_core_methods": (
-        "A bordered placeholder overview panel labeled Core Methods and Tools, awaiting a subject-specific illustration."
+        "Twenty-five synthetic points follow an increasing trend with a smooth oscillating deviation; a fitted straight line summarizes the trend while leaving visible positive and negative residuals."
     ),
     "fig:part_0_quantitative_foundations": (
-        "A bordered placeholder overview panel labeled Quantitative Foundations, awaiting a subject-specific illustration."
+        "A rising cloud of synthetic observations is crossed by a fitted line; the point-to-line deviations remain visible instead of being hidden by an average."
     ),
     "fig:part_I_first_principles": (
         "Three S-shaped logistic-growth curves approach the horizontal carrying-capacity line at 100; higher growth rates rise sooner."
     ),
     "fig:part_I_building_blocks": (
-        "A bordered placeholder overview panel labeled Building Blocks, awaiting a subject-specific illustration."
+        "Three input-versus-response curves rise from zero toward one and all pass through response one half at input three; larger exponents sharpen the transition around that point."
     ),
     "fig:part_I_structure_and_form": (
-        "A bordered placeholder overview panel labeled Structure and Form, awaiting a subject-specific illustration."
+        "Three response curves share the same output scale and midpoint but have different slopes near the midpoint; equal normalized range does not make the relationships identical."
     ),
     "fig:part_II_systems_overview": (
-        "A bordered placeholder overview panel labeled Systems Overview, awaiting a subject-specific illustration."
+        "Three smooth S-shaped quantity-versus-time curves start at five units and approach a dashed capacity line at one hundred; higher rates reach the middle of the transition sooner."
     ),
     "fig:part_II_dynamics_and_change": (
-        "A bordered placeholder overview panel labeled Dynamics and Change, awaiting a subject-specific illustration."
+        "A smooth quantity-versus-time curve starts at one hundred and decreases toward zero; a vertical dashed line at approximately one point three nine time units marks where the remaining amount is fifty."
     ),
     "fig:part_II_regulation_and_control": (
-        "A bordered placeholder overview panel labeled Regulation and Control, awaiting a subject-specific illustration."
+        "A smooth quantity-versus-time curve starts at one hundred and decreases toward zero; a vertical dashed line at approximately one point three nine time units marks where the remaining amount is fifty."
     ),
     "fig:part_III_applied_models": (
-        "A bordered placeholder overview panel labeled Applied Models, awaiting a subject-specific illustration."
+        "Three input-versus-response curves rise from zero toward one and all pass through response one half at input three; larger exponents sharpen the transition around that point."
     ),
     "fig:part_III_case_studies": (
-        "Six pilot measurements increase across control, low-treatment, and high-treatment conditions; each point has a vertical standard-error interval."
+        "Six instructional fixture values increase across control, low-treatment, and high-treatment conditions; each point has a supplied error interval."
     ),
     "fig:part_III_frontiers": (
-        "A bordered placeholder overview panel labeled Frontiers and Open Problems, awaiting a subject-specific illustration."
+        "Three response curves share the same output scale and midpoint but have different slopes near the midpoint; equal normalized range does not make the relationships identical."
     ),
 }
 

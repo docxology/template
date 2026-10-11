@@ -31,3 +31,20 @@ from tests.helpers.log_parser import (
 - [`../AGENTS.md`](../AGENTS.md)
 - [`../integration/AGENTS.md`](../integration/AGENTS.md) — primary consumer of `log_parser`
 - [`README.md`](README.md)
+
+- `workspace_ownership.py` — read-only guard for persistent named test workspaces.
+  Preexisting paths and new leaks are preserved; pytest tmp_path owns disposable
+  cleanup. A new persistent path is a test error, never evidence of ownership.
+  Body exceptions retain their original type; the guard never deletes data.
+
+## Owned process controls
+
+`owned_process.py` supplies `owned_process_fixture` and `OwnedProcessFixture` for
+real ordinary-group and detached-session process controls. Its child publishes
+actual startup/PID/session/clock records; the parent requires a native live
+observation. `assert_cleaned` requires exact native absence or a genuine zombie
+before accepting the delayed-write condition. Missing or failing native tools
+fail the positive control. The context manager attempts cleanup only for the
+observed PID whose untruncated native argv retains its unique owned token; it
+preserves the original test/operator exception. It never treats a missing startup
+receipt as proof of cleanup, changes a production deadline, or replaces a provider.

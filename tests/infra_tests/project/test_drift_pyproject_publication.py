@@ -267,3 +267,66 @@ def test_canonical_exemplars_pass_the_new_check():
     assert scanned_versions >= 20, "no exemplar declares [project] version — check would be vacuous"
     assert scanned_authors >= 20, "no exemplar declares [project] authors — check would be vacuous"
     assert report.findings == [], [f"{f.project}: {f.rule}" for f in report.findings]
+
+
+def test_unreleased_version_keeps_historical_sidecar_binding(tmp_path: Path) -> None:
+    root = _scaffold(tmp_path, pyproject='[project]\nversion = "2.0.0"\n', cff_version="1.0.1")
+    (root / "manuscript").mkdir()
+    (root / "manuscript/config.yaml").write_text(
+        'paper:\n  version: "2.0.0"\npublication:\n  release_status: unreleased\n'
+        '  intended_version: "2.0.0"\n  last_published_version: "1.0.1"\n',
+        encoding="utf-8",
+    )
+    report = Report()
+    check_pyproject_publication_consistency(root, report, "templates/fake_project")
+    assert not report.findings
+    config = root / "manuscript/config.yaml"
+    config.write_text(
+        config.read_text().replace('intended_version: "2.0.0"', 'intended_version: "3.0.0"'), encoding="utf-8"
+    )
+    report = Report()
+    check_pyproject_publication_consistency(root, report, "templates/fake_project")
+    assert "publication_intended_version_drift" in _rules(report)
+
+
+def test_unreleased_historical_metadata_drift_still_fails(tmp_path: Path) -> None:
+    root = _scaffold(tmp_path, pyproject='[project]\nversion = "2.0.0"\n', cff_version="1.0.1")
+    (root / "manuscript").mkdir()
+    (root / "manuscript/config.yaml").write_text(
+        'publication:\n  release_status: unreleased\n  intended_version: "2.0.0"\n  last_published_version: "1.0.2"\n',
+        encoding="utf-8",
+    )
+    report = Report()
+    check_pyproject_publication_consistency(root, report, "templates/fake_project")
+    assert "publication_pyproject_version_drift" in _rules(report)
+
+
+def test_runtime_version_export_binds_current_package_while_sidecars_remain_historical(tmp_path: Path) -> None:
+    root = _scaffold(tmp_path, pyproject='[project]\nversion = "2.0.0"\n', cff_version="1.0.1")
+    (root / "manuscript").mkdir()
+    (root / "manuscript/config.yaml").write_text(
+        'publication:\n  release_status: unreleased\n  intended_version: "2.0.0"\n  last_published_version: "1.0.1"\n'
+    )
+    package = root / "src/package"
+    package.mkdir(parents=True)
+    (package / "__init__.py").write_text('__version__ = "1.0.1"\n')
+    report = Report()
+    check_pyproject_publication_consistency(root, report, "templates/fake_project")
+    assert _rules(report) == ["publication_runtime_version_drift"]
+    (package / "__init__.py").write_text('__version__ = "2.0.0"\n')
+    report = Report()
+    check_pyproject_publication_consistency(root, report, "templates/fake_project")
+    assert not report.findings
+
+
+def test_all_intended_public_versions_match_their_source_metadata() -> None:
+    import tomllib
+    import yaml
+    from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
+
+    for qualified in PUBLIC_PROJECT_NAMES:
+        root = REPO_ROOT / "projects" / qualified
+        config = yaml.safe_load((root / "manuscript/config.yaml").read_text(encoding="utf-8"))
+        package = tomllib.loads((root / "pyproject.toml").read_text(encoding="utf-8"))["project"]
+        work = config.get("paper") or config.get("book")
+        assert package["version"] == work["version"] == config["publication"]["intended_version"], qualified

@@ -84,17 +84,15 @@ uv run pytest projects/templates/template_advanced_literature_review/tests/ \
 Add real-data tests for uncovered branches — including uncovered phases or
 filter-boundary cases; do not remove tests or introduce mocks.
 
-## A Symlinked Module Seems Broken
+## A Shared Provider Method Seems Broken
 
-`src/analysis/`, `src/knowledge_graph/`, `src/reproducibility/`,
-`src/visualization/`, and `src/config_loader.py` are symlinks into
-`template_literature_meta_analysis/src/` (see `architecture.md`). If one of
-these misbehaves, the fix belongs in the sibling project, not here — confirm
-with `readlink` before debugging in place:
-
-```bash
-readlink projects/templates/template_advanced_literature_review/src/analysis
-```
+Check the prepared environment's declared `template-literature-meta-analysis`
+distribution and the script's `template_literature_meta_analysis` import.
+Shared analysis, knowledge-graph, reproducibility and figure methods live in
+Meta's canonical `src/`. Fix them there, then verify the provider suite and
+Advanced's consumer contracts. Advanced's configuration loader and phase
+policy remain project-owned. Installed acceptance requires current admitted
+wheel bytes; an ambient sibling checkout does not supply that evidence.
 
 ## YAML Parse Error
 

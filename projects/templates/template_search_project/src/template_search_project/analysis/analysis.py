@@ -11,11 +11,22 @@ from __future__ import annotations
 import json
 import os
 import re
-import subprocess
 import sys
 from collections.abc import Callable
 from dataclasses import dataclass
 from pathlib import Path
+
+from template_search_project.analysis.provider_paths import (
+    platform_import_modules,
+    platform_module_exists,
+    platform_package_root,
+)
+from template_search_project.analysis.review_execution import (
+    DEFAULT_PROJECT_MIN_COVERAGE,
+    DEFAULT_STAGE_TIMEOUT,
+    child_observation,
+    run_review_child,
+)
 
 
 @dataclass(frozen=True)
@@ -216,8 +227,7 @@ def audit_infrastructure_imports(project_root: Path) -> StageResult:
     import ast
 
     src_dir = project_root / "src"
-    # __file__ is projects/templates/<name>/src/template_search_project/analysis/analysis.py; repo root is six levels up.
-    infra_root = Path(__file__).resolve().parents[6] / "infrastructure"
+    infra_root = platform_package_root()
 
     issues: list[str] = []
     infra_imports_used: dict[str, set[str]] = {}
@@ -231,21 +241,10 @@ def audit_infrastructure_imports(project_root: Path) -> StageResult:
             issues.append(f"{py.name}: syntax error — {exc}")
             continue
 
-        for node in ast.walk(tree):
-            if isinstance(node, ast.ImportFrom):
-                if node.module and node.module.startswith("infrastructure."):
-                    # Verify module/package exists on disk.
-                    # Handles both modules (e.g., infrastructure/foo/bar.py) and packages
-                    # (e.g., infrastructure/foo/bar/__init__.py).
-                    parts = node.module.split(".")
-                    # Translate module path to filesystem path under infra_root
-                    # e.g. infrastructure.search.literature → infrastructure/search/literature
-                    rel_path = Path(*parts[1:])  # drop 'infrastructure' prefix
-                    mod_file = infra_root / rel_path.with_suffix(".py")
-                    pkg_init = infra_root / rel_path / "__init__.py"
-                    if not mod_file.exists() and not pkg_init.exists():
-                        issues.append(f"{py.name} imports non-existent infra module: {node.module}")
-                    infra_imports_used.setdefault(node.module, set()).add(py.name)
+        for module in platform_import_modules(tree):
+            if not platform_module_exists(module, infra_root):
+                issues.append(f"{py.name} imports non-existent infra module: {module}")
+            infra_imports_used.setdefault(module, set()).add(py.name)
         # Check for cross-project imports — not enforceable here, but warn
         # (those imports would be caught by Python import resolution at runtime;
         # this review stage focuses on infra availability.)
@@ -344,7 +343,12 @@ def check_determinism_artifacts(project_root: Path) -> StageResult:
     )
 
 
-def run_project_tests(project_root: Path, min_coverage: float = 90.0) -> StageResult:
+def run_project_tests(
+    project_root: Path,
+    min_coverage: float = DEFAULT_PROJECT_MIN_COVERAGE,
+    *,
+    timeout: float = DEFAULT_STAGE_TIMEOUT,
+) -> StageResult:
     """
     Invoke pytest on the project's tests/ directory and enforce
     ``min_coverage`` threshold. Returns non-zero if coverage below threshold.
@@ -360,6 +364,7 @@ def run_project_tests(project_root: Path, min_coverage: float = 90.0) -> StageRe
 
     cmd = [
         sys.executable,
+        "-I",
         "-m",
         "pytest",
         str(tests_dir),
@@ -382,7 +387,10 @@ def run_project_tests(project_root: Path, min_coverage: float = 90.0) -> StageRe
     isolated_env = os.environ.copy()
     isolated_env["COVERAGE_FILE"] = str(project_root / ".coverage.iso")
     isolated_env.pop("COV_CORE_DATAFILE", None)
-    result = subprocess.run(cmd, capture_output=True, text=True, cwd=project_root, env=isolated_env)
+    isolated_env.pop("PYTHONPATH", None)
+    result = run_review_child(
+        cmd, cwd=project_root, env=isolated_env, timeout=timeout, policy_id="search-review-pytest"
+    )
 
     coverage_match = re.search(r"TOTAL\s+\S+\s+\S+\s+(\d+)%", result.stdout)
     coverage = int(coverage_match.group(1)) if coverage_match else None
@@ -392,16 +400,21 @@ def run_project_tests(project_root: Path, min_coverage: float = 90.0) -> StageRe
             name="test_suite_health",
             status="failed",
             message=f"pytest exit {result.returncode}",
-            details={"stdout": result.stdout[-500:], "stderr": result.stderr[-500:], "coverage": coverage},
+            details={
+                "stdout": result.stdout[-500:],
+                "stderr": result.stderr[-500:],
+                "coverage": coverage,
+                "execution": child_observation(result),
+            },
             exit_code=1,
         )
 
-    if coverage is not None and coverage < min_coverage:
+    if coverage is None or coverage < min_coverage:
         return StageResult(
             name="test_suite_health",
             status="failed",
             message=f"coverage {coverage}% below threshold {min_coverage}%",
-            details={"coverage": coverage},
+            details={"coverage": coverage, "execution": child_observation(result)},
             exit_code=1,
         )
 
@@ -409,7 +422,7 @@ def run_project_tests(project_root: Path, min_coverage: float = 90.0) -> StageRe
         name="test_suite_health",
         status="passed",
         message=f"pytest passed with {coverage}% coverage",
-        details={"coverage": coverage},
+        details={"coverage": coverage, "execution": child_observation(result)},
         exit_code=0,
     )
 
@@ -425,6 +438,15 @@ __all__ = [
 ]
 
 
+REVIEW_STAGE_FUNCTIONS: dict[str, Callable[[Path], StageResult]] = {
+    "bibliography_completeness": validate_bibliography_completeness,
+    "variables_resolved": validate_variables_resolved,
+    "infrastructure_usage": audit_infrastructure_imports,
+    "determinism_check": check_determinism_artifacts,
+    "test_suite_health": run_project_tests,
+}
+
+
 def _cli(argv: list[str] | None = None) -> None:
     import argparse
     import json
@@ -435,26 +457,13 @@ def _cli(argv: list[str] | None = None) -> None:
     parser.add_argument(
         "--stage",
         required=True,
-        choices=[
-            "bibliography_completeness",
-            "variables_resolved",
-            "infrastructure_usage",
-            "determinism_check",
-            "test_suite_health",
-        ],
+        choices=list(REVIEW_STAGE_FUNCTIONS),
     )
     parser.add_argument("--project-root", required=True, help="Project root directory")
     args = parser.parse_args(argv)
 
     project_root = Path(args.project_root).resolve()
-    stages: dict[str, Callable[[Path], StageResult]] = {
-        "bibliography_completeness": validate_bibliography_completeness,
-        "variables_resolved": validate_variables_resolved,
-        "infrastructure_usage": audit_infrastructure_imports,
-        "determinism_check": check_determinism_artifacts,
-        "test_suite_health": run_project_tests,
-    }
-    func = stages[args.stage]
+    func = REVIEW_STAGE_FUNCTIONS[args.stage]
 
     result = func(project_root)
     print(json.dumps(result.as_dict(), indent=2))

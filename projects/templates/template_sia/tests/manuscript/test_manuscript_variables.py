@@ -84,7 +84,7 @@ def test_compute_metrics_variables_no_numeric_values(tmp_path: Path) -> None:
     # Also need a minimal config.yaml so load_sia_settings resolves run_id=1
     manuscript_dir = tmp_path / "manuscript"
     manuscript_dir.mkdir()
-    (manuscript_dir / "config.yaml").write_text("sia:\n  run_id: 1\n", encoding="utf-8")
+    (manuscript_dir / "config.yaml").write_text("project_config:\n  sia:\n    run_id: 1\n", encoding="utf-8")
 
     variables = compute_metrics_variables(tmp_path)
     assert variables["SIA_METRIC_DELTA"] == "0"
@@ -113,7 +113,7 @@ def test_compute_metrics_variables_non_numeric_metric_value(tmp_path: Path) -> N
     (summary_dir / "run_summary.json").write_text(json.dumps(payload) + "\n", encoding="utf-8")
     manuscript_dir = tmp_path / "manuscript"
     manuscript_dir.mkdir()
-    (manuscript_dir / "config.yaml").write_text("sia:\n  run_id: 1\n", encoding="utf-8")
+    (manuscript_dir / "config.yaml").write_text("project_config:\n  sia:\n    run_id: 1\n", encoding="utf-8")
 
     variables = compute_metrics_variables(tmp_path)
     assert variables["SIA_METRIC_DELTA"] == "0"

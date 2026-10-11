@@ -172,7 +172,7 @@ def test_manuscript_variables_cover_all_source_tokens(
     assert variables["ML_CALIBRATION_BIN_INTERVALS_PATH"] == "output/data/ml_calibration_bin_intervals.json"
 
 
-def test_variable_script_writes_resolved_manuscript(project_root: Path) -> None:
+def test_variable_script_writes_resolved_manuscript(project_root: Path, autoresearch_loop_result) -> None:
     script = project_root / "scripts" / "z_generate_manuscript_variables.py"
     result = subprocess.run([sys.executable, str(script)], cwd=project_root, text=True, capture_output=True)
 

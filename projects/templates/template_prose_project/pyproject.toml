@@ -1,5 +1,5 @@
 # template_prose_project — exemplar prose-focused research project
-# Inherits workspace settings from the root pyproject.toml.
+# Runtime scripts use the declared Layer-1 package; local uv preparation resolves it here.
 
 [build-system]
 requires = ["setuptools>=61.0"]
@@ -7,12 +7,14 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "template_prose_project"
-version = "0.4.2"
+version = "0.5.0"
 license = {text = "MIT"}
 description = "Configurable prose-analysis pipeline (readability + structure + quality + reference checking) built on infrastructure/prose and infrastructure/reference."
 authors = [{name = "Daniel Ari Friedman", email = "daniel@activeinference.institute"}]
-requires-python = ">=3.10"
+requires-python = ">=3.12"
 dependencies = [
+    "research-project-template==4.0.1",
+    "requests>=2.31.0",
     "pyyaml>=6.0",
     "matplotlib>=3.7",
     "pillow>=12.3.0",
@@ -48,4 +50,13 @@ exclude_lines = [
 ]
 
 [tool.uv]
-# Inherits workspace settings from root pyproject.toml
+
+[tool.uv.sources]
+# Checkout preparation uses Layer 1 locally; installed acceptance requires its wheel.
+research-project-template = { path = "../../..", editable = true }
+
+# Compatibility contract for this independent exemplar release.
+[tool.template]
+platform_version = "4.0.1"
+tested_python_versions = ["3.12", "3.13", "3.14"]
+required_unpaid_capabilities = ["local-review"]

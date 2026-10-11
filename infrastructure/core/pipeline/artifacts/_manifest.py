@@ -189,6 +189,7 @@ def write_stage_artifact_manifest(
     stage_num: int,
     stage_name: str,
     contract: StageContract,
+    record_output_dir: Path | None = None,
 ) -> ArtifactManifest:
     """Write a stage-specific artifact manifest and return it."""
     output_dir = project_dir / "output"
@@ -199,7 +200,8 @@ def write_stage_artifact_manifest(
 
     if output_dir.is_symlink():
         raise ValueError(f"refusing to write a manifest through symlink output directory: {output_dir}")
-    sanitize_machine_local_paths(output_dir)
+    if record_output_dir is None:
+        sanitize_machine_local_paths(output_dir)
 
     for declared in declared_paths:
         if not declared.exists():
@@ -231,8 +233,9 @@ def write_stage_artifact_manifest(
         issues=tuple(issues),
         inventory_mode=inventory_mode,
     )
-    manifest_path = _stage_manifest_path(output_dir, stage_num, stage_name)
-    symlink_component = _first_symlink_component(output_dir, manifest_path)
+    storage = output_dir if record_output_dir is None else record_output_dir
+    manifest_path = _stage_manifest_path(storage, stage_num, stage_name)
+    symlink_component = _first_symlink_component(storage, manifest_path)
     if symlink_component is not None:
         raise ValueError(f"refusing to write a manifest through symlink: {symlink_component}")
     manifest_path.parent.mkdir(parents=True, exist_ok=True)
@@ -244,19 +247,21 @@ def aggregate_artifact_manifests(
     output_dir: Path,
     *,
     inventory_mode: OutputInventoryMode = STABLE_OUTPUT_INVENTORY_MODE,
+    inventory_output_dir: Path | None = None,
 ) -> ArtifactManifest:
     """Aggregate all stage manifests into ``output/reports/artifact_manifest.json``."""
     inventory_mode = parse_output_inventory_mode(inventory_mode)
     if output_dir.is_symlink():
         raise ValueError(f"refusing to aggregate through symlink output directory: {output_dir}")
     stage_dir = output_dir / ".pipeline" / "artifacts"
-    project_dir = output_dir.parent
+    inventory_root = output_dir if inventory_output_dir is None else inventory_output_dir
+    project_dir = inventory_root.parent
     entries: list[ArtifactManifestEntry] = []
     issues: list[str] = []
-    if output_dir.exists():
-        for path in sorted(output_dir.rglob("*")):
+    if inventory_root.exists():
+        for path in sorted(inventory_root.rglob("*")):
             if path.is_symlink():
-                issues.append(_symlink_issue(path, output_dir))
+                issues.append(_symlink_issue(path, inventory_root))
 
     stage_dir_is_safe = _first_symlink_component(output_dir, stage_dir) is None
     if stage_dir_is_safe and stage_dir.exists():
@@ -286,8 +291,8 @@ def aggregate_artifact_manifests(
             entries.extend(entry for entry in stage_manifest.entries if not _is_ignored_manifest_path(entry.path))
             issues.extend(stage_manifest.issues)
 
-    if not entries and output_dir.exists():
-        inventory = collect_stable_output_inventory(output_dir, inventory_mode=inventory_mode)
+    if not entries and inventory_root.exists():
+        inventory = collect_stable_output_inventory(inventory_root, inventory_mode=inventory_mode)
         issues.extend(inventory.issues)
         for path in inventory.files:
             entries.append(
@@ -481,6 +486,8 @@ def declared_output_paths(repo_root: Path, project_dir: Path, contract: StageCon
             raise ValueError(f"declared artifact path escapes confinement: {raw}")
         if rendered.startswith("projects/"):
             candidate = repo_root / rendered
+            if not candidate.absolute().is_relative_to(project_dir.absolute()):
+                raise ValueError("Cross-project outputs require an explicit custody contract")
         elif rendered == f"output/{project_slug}" or rendered.startswith(f"output/{project_slug}/"):
             candidate = repo_root / rendered
         elif rendered.startswith("output/"):

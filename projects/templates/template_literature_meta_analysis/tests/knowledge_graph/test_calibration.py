@@ -2,7 +2,10 @@
 
 from pathlib import Path
 
-from knowledge_graph.calibration import evaluate_calibration_cases, validate_calibration_fixture
+from template_literature_meta_analysis.knowledge_graph.calibration import (
+    evaluate_calibration_cases,
+    validate_calibration_fixture,
+)
 
 
 PROJECT = Path(__file__).resolve().parents[2]

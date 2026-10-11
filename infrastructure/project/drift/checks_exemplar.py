@@ -3,15 +3,12 @@
 from __future__ import annotations
 
 import re
-
-try:
-    import tomllib
-except ImportError:  # Python <3.11 — use backport
-    import tomli as tomllib  # type: ignore[no-redef]
+import tomllib
 from pathlib import Path
 
 from infrastructure.core.files.serialization import load_yaml_mapping as _load_yaml_mapping
 from infrastructure.core.files.serialization import relative_or_self as _rel
+from infrastructure.documentation.backlog import validate_exemplar_backlog
 from infrastructure.project.drift.models import Report
 from infrastructure.project.drift.checks_publication import (
     check_config_author_placeholders,
@@ -378,10 +375,8 @@ def check_required_files_exist(project_root: Path, report: Report, project: str)
         "pyproject.toml",
         ".gitignore",
         "scripts",
-        # TEST-ISOLATION-SYSPATH-1: tests/ is a rootdir directory (no
-        # tests/__init__.py — its presence collided exemplar conftests under
-        # one pytest run); src/__init__.py stays as the namespace shim.
-        "src/__init__.py",
+        # Tests are a rootdir directory; each exemplar runs independently.
+        "src",
         "tests",
         "manuscript/config.yaml",
         "manuscript/config.yaml.example",
@@ -409,6 +404,17 @@ def check_required_files_exist(project_root: Path, report: Report, project: str)
                 "missing_canonical_file",
                 f"{project}/{rel} is missing — exemplar contract broken",
             )
+    # A real nested package is sufficient. Requiring a second src namespace
+    # forces standalone wheels to carry an unconsumed compatibility interface.
+    package_init = project_root / "src" / project_root.name / "__init__.py"
+    flat_init = project_root / "src" / "__init__.py"
+    if not (package_init.is_file() or flat_init.is_file()):
+        report.add(
+            "ERROR",
+            project,
+            "missing_canonical_file",
+            f"{project}/src must contain its canonical package __init__.py",
+        )
 
 
 SignpostOption = str | tuple[str, ...]
@@ -427,14 +433,6 @@ _TEMPLATE_SIGNPOST_GROUPS: dict[str, dict[str, tuple[SignpostOption, ...]]] = {
         "source of truth or configuration": ("ground truth", "source of truth", "config.yaml", "configuration"),
         "commands or pipeline": ("uv run", "pipeline", "scripts/"),
         "contracts or boundaries": ("contract", "boundary", "do not", "publication", "todo"),
-    },
-    "TODO.md": {
-        "future-only backlog": ("future work only", "future-only", "forward-only backlog", "forward-only"),
-        "integrity and template-status gaps": ("integrity and template-status gaps",),
-        "configurable-surface gaps": ("configurable-surface gaps", "current configurable-surface contract"),
-        "documentation and signposting gaps": ("documentation and signposting gaps",),
-        "test and validator gaps": ("test and validator gaps", "current test and validator contract"),
-        "sized upcoming work": ("minor upcoming", "medium upcoming", "major upcoming"),
     },
 }
 
@@ -466,6 +464,17 @@ def check_template_signpost_contract(project_root: Path, report: Report, project
                 "missing_template_signpost",
                 f"{project}/{rel} lacks {group} signpost; accepted terms: {options}",
             )
+
+    backlog = project_root / "TODO.md"
+    if backlog.is_file():
+        for finding in validate_exemplar_backlog(backlog):
+            if finding.severity == "error":
+                report.add(
+                    "ERROR",
+                    project,
+                    "invalid_template_backlog",
+                    f"{project}/TODO.md:{finding.line} [{finding.rule}] {finding.message}",
+                )
 
 
 def check_config_example_parity(project_root: Path, report: Report, project: str) -> None:

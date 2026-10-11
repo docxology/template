@@ -18,6 +18,7 @@ subprocesses.
 from __future__ import annotations
 
 import contextlib
+import json
 import os
 import platform
 import signal
@@ -35,6 +36,8 @@ from infrastructure.core.execution_boundary import (
     run_bounded_subprocess,
     validate_hook_root,
 )
+
+from tests.helpers.owned_process import owned_process_fixture
 
 POSIX = platform.system() != "Windows"
 
@@ -162,123 +165,102 @@ class TestRunBoundedSubprocess:
         assert "hello" in result.stdout
 
     @pytest.mark.skipif(not POSIX, reason="killpg is POSIX-only")
+    @pytest.mark.timeout(90)
     def test_timeout_kills_process_group(self, tmp_path: Path) -> None:
-        # The child enters a separate session so process-group cleanup alone
-        # cannot reach it. The guardian must kill both processes and return
-        # before pytest's repository-wide 10-second per-test timeout.
-        marker = tmp_path / "detached-timeout-child-finished"
-        child_pid_path = tmp_path / "detached-timeout-child.pid"
-        child_code = (
-            "import pathlib,time; "
-            "time.sleep(2.0); "
-            f"pathlib.Path({str(marker)!r}).write_text('leaked', encoding='utf-8')"
-        )
-        script = tmp_path / "bomb.py"
-        _write_executable(
-            script,
-            "import pathlib,subprocess,sys,time\n"
-            f"child = subprocess.Popen([sys.executable, '-c', {child_code!r}], "
-            "start_new_session=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)\n"
-            f"pathlib.Path({str(child_pid_path)!r}).write_text(str(child.pid), encoding='utf-8')\n"
-            "time.sleep(300)\n",
-        )
+        """A genuinely started detached child must die at the real whole deadline."""
+        owned = owned_process_fixture(tmp_path)
         started = time.monotonic()
-        result = run_bounded_subprocess(
-            [sys.executable, str(script)],
-            cwd=tmp_path,
-            env=build_bounded_env(),
-            timeout=1,
-        )
-        elapsed = time.monotonic() - started
-
-        assert result.timed_out
-        assert result.returncode == -signal.SIGKILL
-        assert not result.command_error
-        assert elapsed < 9.0, f"timeout cleanup took {elapsed:.2f}s"
-        child_pid = int(child_pid_path.read_text(encoding="utf-8"))
-        child_state = subprocess.run(
-            ["ps", "-o", "stat=", "-p", str(child_pid)],
-            capture_output=True,
-            text=True,
-            check=False,
-            timeout=5,
-        ).stdout.strip()
-        assert not child_state or child_state.startswith("Z"), (
-            f"detached child PID {child_pid} survived timeout cleanup in state {child_state}"
-        )
-
-        # Wait until after the detached child's scheduled write. A surviving
-        # process would create this marker even if it disappeared before the
-        # process-table assertion above.
-        time.sleep(max(0.0, 2.5 - elapsed))
-        assert not marker.exists()
+        with owned:
+            result = run_bounded_subprocess(
+                owned.command,
+                cwd=tmp_path,
+                env=build_bounded_env(),
+                timeout=20,
+            )
+            assert result.timed_out
+            assert result.returncode == result.original_returncode == -signal.SIGKILL
+            assert not result.command_error
+            assert time.monotonic() - started < 40.0
+            owned.assert_cleaned()
 
     @pytest.mark.skipif(not POSIX, reason="process-group timeout semantics are POSIX-only")
+    @pytest.mark.timeout(90)
     def test_timeout_without_capture_still_kills_process_group(self, tmp_path: Path) -> None:
-        """The analysis-script mode cannot leave descendants when output is uncaptured."""
-        marker = tmp_path / "leaked.txt"
-        pid_file = tmp_path / "root.pid"
-        child_body = f"import pathlib,time; time.sleep(2); pathlib.Path({str(marker)!r}).write_text('leaked')"
-        script = tmp_path / "uncaptured_timeout.py"
-        _write_executable(
-            script,
-            "import os,pathlib,subprocess,sys,time\n"
-            f"pathlib.Path({str(pid_file)!r}).write_text(str(os.getpid()), encoding='utf-8')\n"
-            f"subprocess.Popen([sys.executable, '-c', {child_body!r}])\n"
-            "time.sleep(30)\n",
-        )
-
-        result = run_bounded_subprocess(
-            [sys.executable, str(script)],
-            cwd=tmp_path,
-            env=build_bounded_env(),
-            timeout=1,
-            capture_output=False,
-        )
-
-        assert result.timed_out
-        assert result.returncode == -signal.SIGKILL
-        import time as _time
-
-        _time.sleep(2.2)
-        assert not marker.exists()
-        root_pid = int(pid_file.read_text(encoding="utf-8"))
-        with pytest.raises(ChildProcessError):
-            os.waitpid(root_pid, os.WNOHANG)
+        """Uncaptured execution retains actual launch and ordinary group cleanup evidence."""
+        owned = owned_process_fixture(tmp_path, detached=False)
+        started = time.monotonic()
+        with owned:
+            result = run_bounded_subprocess(
+                owned.command,
+                cwd=tmp_path,
+                env=build_bounded_env(),
+                timeout=20,
+                capture_output=False,
+            )
+            assert result.timed_out
+            assert result.returncode == result.original_returncode == -signal.SIGKILL
+            assert not result.command_error
+            assert time.monotonic() - started < 40.0
+            owned.assert_cleaned()
+            observed = owned.observed()
+            with pytest.raises(ChildProcessError):
+                os.waitpid(observed["ppid"], os.WNOHANG)
 
     @pytest.mark.skipif(not POSIX, reason="detached POSIX session regression")
     @pytest.mark.parametrize("capture_output", [True, False])
+    @pytest.mark.timeout(60)
     def test_early_root_exit_cannot_leak_reparented_tagged_child(
         self,
         tmp_path: Path,
         capture_output: bool,
     ) -> None:
         """Run identity cleanup covers the PPID/process-group blind spot."""
-        import time as _time
-
         marker = tmp_path / "reparented-child-finished"
+        receipt = tmp_path / "reparented-child-started.json"
         child_code = (
-            "import pathlib,time; "
-            "time.sleep(1.5); "
+            "import json,os,pathlib,time; "
+            "deadline=time.monotonic()+10; "
+            "print(json.dumps({'pid':os.getpid(),'write_deadline':deadline}),flush=True); "
+            "time.sleep(max(0,deadline-time.monotonic())); "
             f"pathlib.Path({str(marker)!r}).write_text('leaked', encoding='utf-8')"
         )
         parent_code = (
-            "import subprocess,sys; subprocess.Popen([sys.executable, '-c', sys.argv[1]], start_new_session=True)"
+            "import json,os,subprocess,sys\nfrom pathlib import Path\n"
+            "child=subprocess.Popen([sys.executable,'-I','-c',sys.argv[1]], "
+            "start_new_session=True,stdout=subprocess.PIPE,text=True)\n"
+            "assert child.stdout is not None\n"
+            "try:\n"
+            "    observed=json.loads(child.stdout.readline())\n"
+            "    observed['root_pid']=os.getpid()\n"
+            "    Path(sys.argv[2]).write_text(json.dumps(observed),encoding='utf-8')\n"
+            "finally:\n"
+            "    child.stdout.close()\n"
         )
 
-        run_bounded_subprocess(
-            [sys.executable, "-c", parent_code, child_code],
+        result = run_bounded_subprocess(
+            [sys.executable, "-I", "-c", parent_code, child_code, str(receipt)],
             cwd=tmp_path,
             env=build_bounded_env(),
-            timeout=0.3,
+            timeout=30,
             capture_output=capture_output,
         )
-        # The safety property is descendant non-survival, not wall-clock speed:
-        # process-table scans can be delayed on loaded CI hosts even after the
-        # tagged child has already been terminated. A leaked child writes the
-        # marker after 1.5 seconds, so the post-boundary wait is the deterministic
-        # negative control for the original early-root-exit bug.
-        _time.sleep(1.6)
+        assert result.returncode == result.original_returncode == 0, result
+        assert not result.timed_out and not result.command_error
+        observed = json.loads(receipt.read_text(encoding="utf-8"))
+        assert observed["root_pid"] != observed["pid"]
+        child_state = subprocess.run(
+            ["ps", "-o", "stat=", "-p", str(observed["pid"])],
+            capture_output=True,
+            text=True,
+            check=False,
+            timeout=3,
+        ).stdout.strip()
+        assert not child_state or child_state.startswith("Z"), child_state
+        # This deadline came from the actual detached child before root exit.
+        # Observe beyond it so absent output cannot be a delayed-startup pass.
+        remaining = max(0.0, observed["write_deadline"] + 0.25 - time.monotonic())
+        assert remaining <= 10.25
+        time.sleep(remaining)
         assert not marker.exists()
 
     @pytest.mark.skipif(not POSIX, reason="independent guardian is POSIX-only")
@@ -433,20 +415,23 @@ class TestRunBoundedSubprocess:
                 with contextlib.suppress(ProcessLookupError):
                     os.kill(child_pid, signal.SIGKILL)
 
-    def test_egress_check_can_refuse_launch(self, tmp_path: Path) -> None:
-        def _refuse(argv, cwd, env):
-            raise RuntimeError("egress blocked")
+    def test_retired_callable_option_refuses_before_launch(self, tmp_path: Path) -> None:
+        called = []
 
-        result = run_bounded_subprocess(
-            [sys.executable, "-c", "print('never')"],
-            cwd=tmp_path,
-            env=build_bounded_env(),
-            timeout=30,
-            egress_check=_refuse,
-        )
-        assert result.command_error.startswith("refused by egress policy")
-        assert result.returncode == 1
-        assert "never" not in result.stdout
+        def _refuse(argv, cwd, env):
+            called.append(argv)
+
+        marker = tmp_path / "must-not-launch"
+        body = f"from pathlib import Path;Path({str(marker)!r}).write_text('launched')"
+        with pytest.raises(TypeError, match="egress_check"):
+            run_bounded_subprocess(
+                [sys.executable, "-I", "-c", body],
+                cwd=tmp_path,
+                env=build_bounded_env(),
+                timeout=30,
+                **{"egress_check": _refuse},
+            )
+        assert not called and not marker.exists()
 
     def test_missing_executable_reports_failure(self, tmp_path: Path) -> None:
         result = run_bounded_subprocess(

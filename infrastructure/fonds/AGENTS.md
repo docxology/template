@@ -26,7 +26,7 @@ The design mirrors `infrastructure/project/` adapted for passive data stores:
 | `fonds_info.py` | `FondInfo`, `build_fond_info` |
 | `validation.py` | `validate_fond_structure` |
 | `public_scope.py` | `PUBLIC_FOND_NAMES`, `public_fond_infos`, `public_fond_names`, `public_fond_data_paths` |
-| `linking.py` | `sync_private_fond_links`, `sync_active_fond_links`, `private_fonds_root`, `is_managed_symlink`, `LIFECYCLE_LINK_DIRS`, `LinkSyncResult` |
+| `linking.py` | `sync_private_fond_links`, `private_fonds_root`, `is_managed_symlink`, `LIFECYCLE_LINK_DIRS`, `LinkSyncResult` |
 | `__init__.py` | Re-exports: `FondInfo`, `build_fond_info`, `discover_fonds`, `resolve_fond_root`, `validate_fond_structure` |
 
 ## Public API
@@ -108,7 +108,6 @@ is_valid, message = validate_fond_structure(Path("fonds/my_bibliography"))
 - `sync_private_fond_links(repo_root, private_root=None, *, prune=True, dry_run=False) -> LinkSyncResult` —
   mirror private lifecycle folders into `fonds/working/` and `fonds/archive/`
   via symlinks. No-op when no private root is found.
-- `sync_active_fond_links(...)` — compatibility alias.
 - `private_fonds_root(repo_root) -> Path | None` — resolve private sidecar
   root: `$TEMPLATE_FONDS_ROOT` → `<repo_root>/.fonds_root` → sibling `../fonds`
   (requires `working/` + `archive/`).

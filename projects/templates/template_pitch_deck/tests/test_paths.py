@@ -8,11 +8,12 @@ from pathlib import Path
 
 import pytest
 
-from template_pitch_deck.paths import locate_repo_root, project_root
+from template_pitch_deck.paths import data_repo_root, locate_repo_root, project_root
 
 
 def test_locate_repo_root_finds_real_repo_from_this_project():
-    root = locate_repo_root(project_root())
+    root = data_repo_root(project_root())
+    assert locate_repo_root(root / "projects/templates/template_pitch_deck") == root
     assert (root / "infrastructure").is_dir()
     assert (root / "pyproject.toml").is_file()
 

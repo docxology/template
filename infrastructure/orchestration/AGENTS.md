@@ -2,7 +2,7 @@
 
 ## Purpose
 
-This package hosts the logic that historically lived almost entirely in `run.sh` and `secure_run.sh`. The shell scripts are thin: they bootstrap `uv` / `.venv` and delegate here via `python -m infrastructure.orchestration`.
+This package hosts the logic that historically lived almost entirely in `run.sh` and `secure_run.sh`. The shell scripts are thin: they select explicitly prepared Python and delegate through the audited finite `scripts/runner/prepared_dispatch.py` launcher. Missing or broken preparation blocks with 75; execution never installs or syncs dependencies.
 
 This package coordinates existing Layer-1 modules (`infrastructure.core.pipeline`, `infrastructure.project.discovery`, `infrastructure.steganography`, …). It does **not** re-implement DAG stages.
 
@@ -10,7 +10,7 @@ This package coordinates existing Layer-1 modules (`infrastructure.core.pipeline
 
 | File | Role |
 | --- | --- |
-| `cli.py` | Backward-compatible facade retaining `build_parser()` and `main()`. |
+| `cli.py` | Command facade retaining `build_parser()` and `main()`. |
 | `parser.py` | Pure argparse construction for non-interactive commands. |
 | `commands.py` | Non-interactive command handlers and dispatch table. |
 | `interactive.py` | TTY-only menu loop and project prompting. |
@@ -25,9 +25,10 @@ This package coordinates existing Layer-1 modules (`infrastructure.core.pipeline
 ## Contracts
 
 - **No pipeline stage logic.** Stage scripts remain under [`scripts/`](../../scripts/).
-- **Interactive menu keys `0`–`7`** dispatch single stages via [`stage_registry.MENU_KEY_TO_STAGE`](../core/pipeline/stage_registry.py) → [`execute_single_stage()`](../core/pipeline/single_stage.py) (direct subprocess to `scripts/NN_*.py`); they do not shell out to `execute_pipeline.py --stage`.
+- **Interactive menu keys `0`–`7`** dispatch single stages via [`stage_registry.MENU_KEY_TO_STAGE`](../core/pipeline/stage_registry.py) → [`execute_single_stage()`](../core/pipeline/single_stage.py), using the same immutable plan, executor, locking, prerequisites, and outcomes as complete runs. Keys `6`/`7` explicitly select live mode.
 - **Slug validation** rejects traversal (`..`), NUL bytes, `-` prefixes, unknown project names from `discover_projects()`.
 - **Qualified exemplar paths** resolve as `templates/<name>` and `active/<name>` under `projects/` (see [`docs/_generated/active_projects.md`](../../docs/_generated/active_projects.md)). Live counts link to [`docs/_generated/COUNTS.md`](../../docs/_generated/COUNTS.md).
+- **Modes:** `--mode core` is the default local run. `--mode live` explicitly selects live capabilities. Opt-in publication remains directly invoked. Both single and multi-project completion require exact expected stage contracts. Shared infrastructure runs once before serial or parallel project execution; failure prevents project execution.
 - **Tests:** [`tests/infra_tests/orchestration/`](../../tests/infra_tests/orchestration/).
 
 ## See also

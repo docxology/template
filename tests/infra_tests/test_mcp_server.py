@@ -92,7 +92,7 @@ class TestHandleRequest:
                 "jsonrpc": "2.0",
                 "id": 3,
                 "method": "tools/call",
-                "params": {"name": "describe_pipeline", "arguments": {"core_only": True}},
+                "params": {"name": "describe_pipeline", "arguments": {"mode": "core"}},
             }
         )
         payload = json.loads(resp["result"]["content"][0]["text"])
@@ -177,7 +177,7 @@ class TestDualEraProtocol:
                 "method": "tools/call",
                 "params": {
                     "name": "describe_pipeline",
-                    "arguments": {"core_only": True},
+                    "arguments": {"mode": "core"},
                     "_meta": _modern_meta(),
                 },
             }
@@ -263,7 +263,7 @@ class TestInvokeCli:
         out = invoke_cli("infrastructure.core.pipeline", ["describe-pipeline", "--format", "json"])
         assert out["exit_code"] == 0
         payload = json.loads(out["stdout"])
-        assert len(payload["stages"]) == _declared_stage_count()
+        assert len(payload["stages"]) == 8
 
     def test_read_only_single_file_cli_is_reachable(self) -> None:
         # R7: a documented single-file CLI (read_only) runs via invoke_cli.
@@ -365,7 +365,7 @@ class TestServeLoop:
         assert by_id[1]["result"]["protocolVersion"] == PROTOCOL_VERSION
         assert "tools" in by_id[2]["result"]
         pipeline_payload = json.loads(by_id[3]["result"]["content"][0]["text"])
-        assert len(pipeline_payload["stages"]) == _declared_stage_count()
+        assert len(pipeline_payload["stages"]) == 8
 
     def test_real_subprocess_modern_stdio(self) -> None:
         by_id = _run_stdio_subprocess(
@@ -388,7 +388,7 @@ class TestServeLoop:
                     "method": "tools/call",
                     "params": {
                         "name": "describe_pipeline",
-                        "arguments": {"core_only": True},
+                        "arguments": {"mode": "core"},
                         "_meta": _modern_meta(),
                     },
                 },

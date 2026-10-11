@@ -195,7 +195,7 @@ For code-centric algorithm work, see
 ## See also
 
 - [`quickstart.md`](quickstart.md) — 5-minute run of the bundled exoplanet-atmosphere instance
-- [`architecture.md`](architecture.md) — symlinked vs. project-specific module boundaries
+- [`architecture.md`](architecture.md) — declared provider vs. project-owned module boundaries
 - [`syntax_guide.md`](syntax_guide.md) — the phase-aware `{{TOKEN}}` system
 - [`output_inventory.md`](output_inventory.md) — producer/consumer graph of every artifact
 - [`testing_philosophy.md`](testing_philosophy.md) — the zero-mock standard

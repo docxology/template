@@ -11,13 +11,13 @@ import json
 
 from pytest_httpserver import HTTPServer
 
-from knowledge_graph.llm_config import LLMConfig
-from literature.fulltext_download import safe_filename
-from reproducibility.extraction import (
+from template_literature_meta_analysis.knowledge_graph.llm_config import LLMConfig
+from template_literature_meta_analysis.literature.fulltext_download import safe_filename
+from template_literature_meta_analysis.reproducibility.extraction import (
     extract_workflow_graphs_llm,
     extract_workflow_nodes,
 )
-from reproducibility.models import NodeType, WorkflowNode, build_workflow_graph
+from template_literature_meta_analysis.reproducibility.models import NodeType, WorkflowNode, build_workflow_graph
 from llm_extraction_fixtures import httpserver_base_url, make_paper
 
 
@@ -284,7 +284,7 @@ def test_extract_workflow_nodes_sends_reproducibility_system_prompt(httpserver: 
     # Inspect the actual request body sent to the HTTP server.
     request = httpserver.log[0][0]
     body = json.loads(request.data)
-    from reproducibility.prompts import _SYSTEM_PROMPT as _REPRO_PROMPT
+    from template_literature_meta_analysis.reproducibility.prompts import _SYSTEM_PROMPT as _REPRO_PROMPT
 
     assert body["system"] == _REPRO_PROMPT
     assert "workflow graph" in body["system"]
@@ -336,7 +336,7 @@ def test_extract_workflow_graphs_llm_resumes_from_output_path(httpserver: HTTPSe
         )
 
     # Pre-populate output_path with paper_a already processed.
-    from reproducibility.models import (
+    from template_literature_meta_analysis.reproducibility.models import (
         WorkflowNode,
         build_workflow_graph,
         serialize_workflow_graphs,

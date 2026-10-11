@@ -36,7 +36,7 @@ from pathlib import Path
 
 import pytest
 
-from helpers import PROJECT_DIR, REPO_ROOT
+from helpers import REPO_ROOT
 
 # ---------------------------------------------------------------------------
 # metrics.py edge cases
@@ -53,16 +53,13 @@ class TestCountTestFunctionsOSError:
         tests_dir.mkdir()
         # A good file contributes its count.
         (tests_dir / "test_good.py").write_text("def test_a():\n    pass\n", encoding="utf-8")
-        # An unreadable file (chmod 000) triggers the OSError branch.
-        bad = tests_dir / "test_bad.py"
-        bad.write_text("def test_b():\n    pass\n", encoding="utf-8")
-        bad.chmod(0o000)
-        try:
-            result = count_test_functions(tests_dir)
-            # We get at least 1 from the readable file; the bad one is skipped.
-            assert result == 1
-        finally:
-            bad.chmod(0o644)
+        # A matching path that cannot be read as a file triggers the OSError
+        # branch. A directory raises IsADirectoryError even for privileged
+        # users, unlike chmod 000, which root can still read.
+        (tests_dir / "test_bad.py").mkdir()
+        result = count_test_functions(tests_dir)
+        # We get exactly 1 from the readable file; the unreadable one is skipped.
+        assert result == 1
 
 
 class TestCountDocsMissingDir:
@@ -446,14 +443,11 @@ class TestRenderChapterOSError:
     def test_unreadable_source_raises_oserror(self, tmp_path: Path) -> None:
         from template_template.metrics.inject_metrics import render_chapter
 
+        # A directory cannot be read as a file, independent of privileges.
         src = tmp_path / "01_chapter.md"
-        src.write_text("content", encoding="utf-8")
-        src.chmod(0o000)
-        try:
-            with pytest.raises(OSError):
-                render_chapter(src, {}, tmp_path / "out")
-        finally:
-            src.chmod(0o644)
+        src.mkdir()
+        with pytest.raises(OSError):
+            render_chapter(src, {}, tmp_path / "out")
 
 
 class TestRenderAllChaptersEdgeCases:
@@ -493,16 +487,12 @@ class TestValidateAllResolvedOSError:
 
         out_dir = tmp_path / "rendered"
         out_dir.mkdir()
-        bad = out_dir / "01_chapter.md"
-        bad.write_text("content", encoding="utf-8")
-        bad.chmod(0o000)
-        try:
-            issues = validate_all_resolved(out_dir)
-            # Exactly one issue should be reported for the unreadable file.
-            assert len(issues) == 1
-            assert "could not read" in issues[0]
-        finally:
-            bad.chmod(0o644)
+        # A directory cannot be read as a file, independent of privileges.
+        (out_dir / "01_chapter.md").mkdir()
+        issues = validate_all_resolved(out_dir)
+        # Exactly one issue should be reported for the unreadable chapter.
+        assert len(issues) == 1
+        assert "could not read" in issues[0]
 
 
 # ---------------------------------------------------------------------------
@@ -576,7 +566,7 @@ class TestLocateRepoRootEdgeCases:
     def test_finds_repo_from_project_dir(self) -> None:
         from template_template.core.paths import locate_repo_root
 
-        result = locate_repo_root(PROJECT_DIR)
+        result = locate_repo_root(REPO_ROOT / "projects/templates/template_template")
         assert result == REPO_ROOT
         assert (result / "infrastructure").is_dir()
 

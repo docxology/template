@@ -1,6 +1,6 @@
 from __future__ import annotations
 from pathlib import Path
-from visualization.temporal_plots import plot_growth_curve, plot_subfield_timeline
+from template_literature_meta_analysis.visualization.temporal_plots import plot_growth_curve, plot_subfield_timeline
 
 
 class TestTemporalPlots:

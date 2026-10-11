@@ -1,50 +1,42 @@
 #!/usr/bin/env python3
-"""Materialize + validate one child per domain (archetypes)."""
+"""Execute the selected-domain child contract and fail on any producer failure."""
 
 from __future__ import annotations
 
+import argparse
+import importlib.util
 import sys
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from template_autopoiesis.core.grammar import KNOWN_DOMAINS, force_domain, load_grammar
-from template_autopoiesis.core.expand import enumerate_all, expand
-from template_autopoiesis.gates.materialize import materialize
-from template_autopoiesis.gates.realize import clear_generated_children, validate_child, run_analysis_stage
-from template_autopoiesis.core.project_paths import project_output_dirs
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
+_BOOTSTRAP = importlib.util.spec_from_file_location(
+    "autopoiesis_script_bootstrap", PROJECT_ROOT / "scripts/_bootstrap.py"
+)
+if _BOOTSTRAP is None or _BOOTSTRAP.loader is None:
+    raise ImportError("actual project bootstrap is unavailable")
+_bootstrap = importlib.util.module_from_spec(_BOOTSTRAP)
+_BOOTSTRAP.loader.exec_module(_bootstrap)
+_bootstrap.bootstrap_project(PROJECT_ROOT)
 
-PROJECT_ROOT = Path(__file__).parent.parent
+from template_autopoiesis.gates.realization_contract import realize_selected_children  # noqa: E402 - actual provider selection precedes own imports
+from template_autopoiesis.gates.child_execution import ChildCapabilityBlocked  # noqa: E402 - actual provider selection precedes own imports
 
 
-def main():
-    """CLI entry point."""
-    grammar = load_grammar(PROJECT_ROOT)
-    dirs = project_output_dirs(PROJECT_ROOT)
-    child_dir = dirs["children"]
-    removed = clear_generated_children(child_dir)
-    if removed:
-        print(f"  Removed {len(removed)} stale generated child tree(s)")
-    cells = enumerate_all(grammar)
-    selected_domains = {cell["primitive_domain"] for cell in cells if "primitive_domain" in cell}
-    if not selected_domains:
-        raise ValueError("Configured archetype filters select no primitive domains")
-
-    for domain in KNOWN_DOMAINS:
-        if domain not in selected_domains:
-            continue
-        g = force_domain(grammar, domain)
-        spec = expand(g)
-        result = materialize(spec, out_root=child_dir, template_root=PROJECT_ROOT, clean=True)
-        validation = validate_child(result.root)
-        analysis = run_analysis_stage(result.root)
-        status = "✓" if validation["valid"] and analysis["success"] else "✗"
-        print(f"  {status} {domain}: {result.name}")
-        if not validation["valid"]:
-            print(f"    Missing: {validation['missing']}")
-        if not analysis["success"]:
-            print(f"    Analysis error: {analysis.get('stderr', '')[:100]}")
+def main(argv: list[str] | None = None) -> int:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--project-root", type=Path, default=PROJECT_ROOT)
+    args = parser.parse_args(argv)
+    try:
+        print(realize_selected_children(args.project_root))
+    except ChildCapabilityBlocked as exc:
+        print(f"Required child execution blocked: {exc}", file=sys.stderr)
+        return 75
+    except (OSError, ValueError, TypeError, NotImplementedError) as exc:
+        print(f"Required child realization failed: {exc}", file=sys.stderr)
+        return 1
+    return 0
 
 
 if __name__ == "__main__":
-    main()
+    raise SystemExit(main())

@@ -12,21 +12,18 @@ import yaml
 from infrastructure.core.exceptions import RenderingError
 from infrastructure.core.logging.constants import BANNER_WIDTH
 from infrastructure.core.logging.utils import get_logger
-from infrastructure.rendering._pdf_combined_renderer import (
-    build_pandoc_tex_command,
-    discover_manuscript_bib_paths,
-    inject_bibliography,
-    fix_starred_section_nameref_labels,
-    inject_latex_preamble,
-    postprocess_latex,
-    preprocess_combined_markdown,
+from infrastructure.rendering._pdf_combined_pandoc import build_pandoc_tex_command, run_pandoc_conversion
+from infrastructure.rendering._pdf_combined_bibliography import discover_manuscript_bib_paths, inject_bibliography
+from infrastructure.rendering._pdf_combined_latex import fix_starred_section_nameref_labels, postprocess_latex
+from infrastructure.rendering._pdf_combined_preamble import inject_latex_preamble
+from infrastructure.rendering._pdf_combined_markdown import preprocess_combined_markdown
+from infrastructure.rendering._pdf_combined_prevalidate import (
     prevalidate_markdown,
     prevalidate_for_render,
-    run_pandoc_conversion,
     verify_figure_references,
 )
 from infrastructure.transmission.transmission_bookends import transmission_bookends_enabled
-from infrastructure.rendering._pdf_tex_transforms import fix_figure_paths
+from infrastructure.rendering._pdf_figure_paths import fix_figure_paths
 from infrastructure.rendering._pdf_latex_pipeline import (
     compile_latex_manuscript,
 )

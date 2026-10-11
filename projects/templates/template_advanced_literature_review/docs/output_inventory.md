@@ -8,30 +8,30 @@ Paths are relative to `projects/templates/template_advanced_literature_review/`.
 | `output/data/phase_2_jwst_corpus.jsonl` | Phase 2 (JWST-era) search results | `src/multi_phase/search.py` façade, with `models.py`/`llm_filter.py`, via `scripts/01_multi_phase_search.py` |
 | `output/data/phase_3_molecules_corpus.jsonl` | Phase 3 (molecular detection) search results | `src/multi_phase/search.py` façade, with `models.py`/`llm_filter.py`, via `scripts/01_multi_phase_search.py` |
 | `output/data/combined_corpus.jsonl` | Cross-phase deduplicated corpus | `src/multi_phase/search.py` façade + `src/multi_phase/models.py` + `src/literature/corpus.py` |
-| `output/data/corpus.jsonl` | Sibling-contract-compatible corpus mirror consumed by the symlinked analysis/KG modules | `scripts/01_multi_phase_search.py` |
+| `output/data/corpus.jsonl` | Provider-compatible corpus consumed by the declared Meta analysis/KG methods | `scripts/01_multi_phase_search.py` |
 | `output/data/phase_metadata.json` | Per-phase provenance and cross-phase overlap | `src/multi_phase/search.py` + `src/multi_phase/models.py` |
-| `output/data/subfield_classification.json` | Per-subfield counts | `src/analysis/pipeline_runner.py` (symlinked) via `scripts/02_meta_analysis_pipeline.py` |
-| `output/data/subfield_timeline.json` | Year-by-subfield matrix | `src/analysis/pipeline_runner.py` (symlinked) |
-| `output/data/temporal_analysis.json` | Publication growth metrics | `src/analysis/temporal_analysis.py` (symlinked) |
-| `output/data/tfidf_data.json` | TF-IDF matrix and labels | `src/analysis/text_processing.py` (symlinked) |
-| `output/data/topics.json` | NMF topic summaries | `src/analysis/topic_modeling.py` (symlinked) |
-| `output/data/entities.json`, `keyphrases.json` | Named entities and keyphrases | `src/analysis/` (symlinked) |
-| `output/data/embedding_analysis.json` | Corpus embeddings summary | `src/analysis/` (symlinked) |
-| `output/data/descriptive_stats.json` | Descriptive/meta-report statistics | `src/analysis/` (symlinked) |
-| `output/data/citation_network.json` | Citation graph metrics | `src/analysis/citation_network.py` (symlinked) |
-| `output/data/citation_graph.gml` | Citation graph exchange file | `src/analysis/citation_network.py` (symlinked) |
-| `output/data/nanopublications.jsonl`, `.trig` | Optional extracted assertions and RDF/TriG nanopublications | `src/knowledge_graph/` (symlinked) via `scripts/03_build_knowledge_graph.py` |
-| `output/data/hypothesis_scores.json` | Phase-scoped hypothesis scores (`hypothesis_definitions.*.relevant_phases`) | `src/knowledge_graph/hypothesis.py` (symlinked) |
-| `output/data/hypothesis_trends.json` | Evidence-over-time series | `src/knowledge_graph/hypothesis.py` (symlinked) |
-| `output/data/assertion_summary.json` | Assertion type and hypothesis counts | `src/knowledge_graph/` (symlinked) |
-| `output/data/reproducibility_scores.json`, `reproducibility_summary.json` | Optional reproducibility assessment | `src/reproducibility/` (symlinked) via `scripts/10_reproducibility_assessment.py` |
-| `output/data/workflow_graphs.jsonl` | Reproducibility workflow-graph extraction | `src/reproducibility/` (symlinked) |
+| `output/data/subfield_classification.json` | Per-subfield counts | `template_literature_meta_analysis.analysis.pipeline_runner` (provider) via `scripts/02_meta_analysis_pipeline.py` |
+| `output/data/subfield_timeline.json` | Year-by-subfield matrix | `template_literature_meta_analysis.analysis.pipeline_runner` (provider) |
+| `output/data/temporal_analysis.json` | Publication growth metrics | `template_literature_meta_analysis.analysis.temporal_analysis` (provider) |
+| `output/data/tfidf_data.json` | TF-IDF matrix and labels | `template_literature_meta_analysis.analysis.text_processing` (provider) |
+| `output/data/topics.json` | NMF topic summaries | `template_literature_meta_analysis.analysis.topic_modeling` (provider) |
+| `output/data/entities.json`, `keyphrases.json` | Named entities and keyphrases | `template_literature_meta_analysis.analysis` (provider) |
+| `output/data/embedding_analysis.json` | Corpus embeddings summary | `template_literature_meta_analysis.analysis` (provider) |
+| `output/data/descriptive_stats.json` | Descriptive/meta-report statistics | `template_literature_meta_analysis.analysis` (provider) |
+| `output/data/citation_network.json` | Citation graph metrics | `template_literature_meta_analysis.analysis.citation_network` (provider) |
+| `output/data/citation_graph.gml` | Citation graph exchange file | `template_literature_meta_analysis.analysis.citation_network` (provider) |
+| `output/data/nanopublications.jsonl`, `.trig` | Optional extracted assertions and RDF/TriG nanopublications | `template_literature_meta_analysis.knowledge_graph` (provider) via `scripts/03_build_knowledge_graph.py` |
+| `output/data/hypothesis_scores.json` | Phase-scoped hypothesis scores (`hypothesis_definitions.*.relevant_phases`) | `template_literature_meta_analysis.knowledge_graph.hypothesis` (provider) |
+| `output/data/hypothesis_trends.json` | Evidence-over-time series | `template_literature_meta_analysis.knowledge_graph.hypothesis` (provider) |
+| `output/data/assertion_summary.json` | Assertion type and hypothesis counts | `template_literature_meta_analysis.knowledge_graph` (provider) |
+| `output/data/reproducibility_scores.json`, `reproducibility_summary.json` | Optional reproducibility assessment | `template_literature_meta_analysis.reproducibility` (provider) via `scripts/10_reproducibility_assessment.py` |
+| `output/data/workflow_graphs.jsonl` | Reproducibility workflow-graph extraction | `template_literature_meta_analysis.reproducibility` (provider) |
 | `output/data/fulltext_assessment.json` | Full-text availability report | `scripts/06_fulltext_assessment.py` |
 | `output/data/literature_evaluation.json` | Literature evaluation harness output | `src/literature/evaluation.py` via `scripts/07_literature_evaluation.py` |
 | `output/data/deep_research_replay.json` | Deterministic offline deep-research replay | `src/deep_research/dispatch.py` via `scripts/08_deep_research_dispatch.py` |
 | `output/data/bibliography.bib` | Unified bibliography export | `src/literature/bibliography.py` via `scripts/09_export_bibliography.py` |
-| `output/figures/*.png` | Publication figures (field summary, subfield distribution, growth curve, citation network, topic bars, PCA embeddings, hypothesis dashboard, etc.) | `src/visualization/figure_runner.py` (symlinked) via `scripts/04_generate_figures.py` |
-| `output/figures/figure_registry.json` | Figure registry for downstream docs/rendering | `src/visualization/figure_runner.py` (symlinked) |
+| `output/figures/*.png` | Publication figures (field summary, subfield distribution, growth curve, citation network, topic bars, PCA embeddings, hypothesis dashboard, etc.) | `template_literature_meta_analysis.visualization.figure_runner` (provider) via `scripts/04_generate_figures.py` |
+| `output/figures/figure_registry.json` | Figure registry for downstream docs/rendering | `template_literature_meta_analysis.visualization.figure_runner` (provider) |
 | `output/manuscript/*.md` | Token-resolved manuscript sources, including phase-aware tokens | `src/manuscript/variables/` via `scripts/05_inject_variables.py` |
 | `output/fulltext/` | Optional full-text download/assessment artifacts | `scripts/11_fulltext_download.py` |
 | `output/reports/validation_report.json`, `validation_report.md` | Deterministic artifact-manifest + coverage validation report | `scripts/11_validate_outputs.py` |
@@ -39,4 +39,4 @@ Paths are relative to `projects/templates/template_advanced_literature_review/`.
 
 When adding an artifact, update this table, add or update tests for the
 producer, and record in `architecture.md` whether the producer is project-specific
-or one of the symlinked shared modules.
+or a method from the declared Meta provider.

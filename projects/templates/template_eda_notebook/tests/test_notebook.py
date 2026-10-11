@@ -3,7 +3,7 @@
 These tests enforce the *notebook -> tested src extraction* contract:
 
 1. The notebook is valid ``nbformat`` JSON.
-2. Every name imported ``from src`` exists in ``src.__all__``.
+2. Every name imported ``from src`` exists in ``template_eda_notebook.__all__``.
 3. No code cell defines its own ``def`` / ``class`` — logic stays in ``src/``.
 """
 
@@ -53,7 +53,7 @@ class TestNotebookSrcBinding:
         names = [n for n in names if n and n != ","]
         assert names, "expected at least one imported name"
         for name in names:
-            assert name in eda_pkg.__all__, f"{name} not exported by src.__all__"
+            assert name in eda_pkg.__all__, f"{name} not exported by template_eda_notebook.__all__"
 
     def test_cells_define_no_business_logic(self):
         nb = _load_notebook()

@@ -14,7 +14,7 @@ from __future__ import annotations
 
 import re
 
-from analysis.text_processing import STOPWORDS
+from template_literature_meta_analysis.analysis.text_processing import STOPWORDS
 
 # A "word" inside a candidate proper-noun phrase: a capitalized token that
 # may continue with lowercase letters and may contain internal hyphens or

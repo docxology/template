@@ -1,7 +1,10 @@
 from __future__ import annotations
 from pathlib import Path
 import networkx as nx
-from visualization.citation_plots import plot_citation_network, plot_degree_distribution
+from template_literature_meta_analysis.visualization.citation_plots import (
+    plot_citation_network,
+    plot_degree_distribution,
+)
 
 
 def _make_small_graph() -> nx.DiGraph:

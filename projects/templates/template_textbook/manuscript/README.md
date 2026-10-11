@@ -12,7 +12,7 @@ manuscript/
 │                        #   matter, appendices, labs, question banks, layout,
 │                        #   typography, numbering. Edit this to grow the book.
 ├── front_matter.md      # Dedication, "About This Template", navigation guide
-├── preface.md           # Preface STUB (purpose, audience, how to use the book)
+├── preface.md           # Authored preface (purpose, audience, how to use the book)
 ├── preamble.md          # LaTeX preamble (packages, margins) — fenced ```latex
 ├── references.bib       # BibTeX database; every [@key] must resolve here
 ├── glossary.md          # Master glossary; anchors {#gl:...} for [**term**] links

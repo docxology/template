@@ -4,7 +4,7 @@ This module sits between the YAML configuration and the ``PipelineExecutor``.
 It performs:
 
 1. YAML parsing & validation
-2. Tag-based filtering (e.g. exclude ``llm`` stages when ``--core-only``)
+2. Tag-based filtering (e.g. exclude ``llm`` stages when ``--mode core``)
 3. Topological ordering of stages respecting ``depends_on`` constraints
 4. Conversion to ``list[StageSpec]`` ready for the executor
 """
@@ -12,22 +12,26 @@ It performs:
 from __future__ import annotations
 
 from collections.abc import Mapping
-from dataclasses import dataclass, field
+from dataclasses import asdict, dataclass, field
 from pathlib import Path
-from typing import Any, Callable, cast
+import re
+from typing import TYPE_CHECKING, Any, Callable, cast
 
 import yaml
 
 from infrastructure.core.logging.utils import get_logger
 from infrastructure.core.pipeline.types import StageContract, StageHooks
 
+if TYPE_CHECKING:
+    from infrastructure.core.pipeline.outcomes import StageOutcome
+
 logger = get_logger(__name__)
 
 
 def opt_in_tags_from_mapping(data: Mapping[str, Any] | None) -> frozenset[str]:
     """Return the YAML ``opt_in_tags`` set, or empty when the key is absent."""
-    raw = (data or {}).get("opt_in_tags") or ()
-    return frozenset(str(tag) for tag in raw)
+    raw = (data or {}).get("opt_in_tags", [])
+    return frozenset(_string_list(raw, "pipeline opt_in_tags"))
 
 
 def load_opt_in_tags(yaml_path: Path) -> frozenset[str]:
@@ -42,6 +46,7 @@ _CONTRACT_KEYS = frozenset(
     {
         "input_artifacts",
         "output_artifacts",
+        "mutable_artifacts",
         "definition_of_done",
         "failure_code",
         "retry_policy",
@@ -61,18 +66,43 @@ _HOOK_KEYS = frozenset(
 )
 
 
-def _definition_from_entry(entry: Any, index: int, source: Path) -> "StageDefinition":
-    """Parse one stage entry, failing closed with the source location.
+_STAGE_KEYS = frozenset(
+    {"name", "key", "script", "method", "args", "allow_skip", "depends_on", "tags", "failure_mode", "contract", "hooks"}
+)
 
-    Shared by ``PipelineDAG.from_yaml`` and ``PipelineDAG.from_dict`` so both
-    construction paths validate identically.
-    """
+
+def _string_list(value: Any, label: str, *, nonempty: bool = True) -> list[str]:
+    if not isinstance(value, list) or not all(isinstance(item, str) for item in value):
+        raise ValueError(f"{label} must be a list of strings")
+    if nonempty and any(not item.strip() for item in value):
+        raise ValueError(f"{label} must contain non-empty strings")
+    return list(value)
+
+
+def _string(value: Any, label: str, *, optional: bool = False, empty: bool = False) -> str | None:
+    if optional and value is None:
+        return None
+    if not isinstance(value, str) or (not empty and not value.strip()):
+        raise ValueError(f"{label} must be a {'possibly empty' if empty else 'non-empty'} string")
+    return value
+
+
+def _integer(value: Any, label: str, *, minimum: int) -> int:
+    if type(value) is not int or value < minimum:
+        raise ValueError(f"{label} must be an integer >= {minimum}")
+    return value
+
+
+def parse_stage_definition(entry: Any, *, index: int = 1, source: Path = Path("<memory>")) -> "StageDefinition":
+    """Parse a strict core/plugin declaration without coercing YAML types."""
     if not isinstance(entry, dict):
         raise ValueError(f"Each pipeline stage entry must be a mapping (stage #{index} in {source})")
-    name = entry.get("name")
-    if not isinstance(name, str) or not name.strip():
-        raise ValueError(f"Pipeline stage #{index} in {source} is missing a non-empty 'name'")
-    return StageDefinition(
+    unknown = set(entry) - _STAGE_KEYS
+    if unknown:
+        raise ValueError(f"Pipeline stage #{index} has unsupported key(s): {sorted(map(str, unknown))}")
+    name = _string(entry.get("name"), f"Pipeline stage #{index} in {source} 'name'")
+    assert name is not None
+    stage = StageDefinition(
         name=name,
         key=entry.get("key"),
         script=entry.get("script"),
@@ -85,6 +115,57 @@ def _definition_from_entry(entry: Any, index: int, source: Path) -> "StageDefini
         contract=_parse_contract(entry.get("contract"), name),
         hooks=_parse_hooks(entry.get("hooks"), name),
     )
+    _validate_definition(stage)
+    return stage
+
+
+def _validate_definition(stage: "StageDefinition") -> None:
+    label = f"Stage '{stage.name}'"
+    _string(stage.name, f"{label} name")
+    if (stage.script is None) == (stage.method is None):
+        raise ValueError(f"{label} must declare exactly one of script or method, not both or neither")
+    if not isinstance(stage.key, str) or re.fullmatch(r"[a-z][a-z0-9_-]*", stage.key) is None:
+        raise ValueError(f"{label} key must be a stable lowercase identifier")
+    if stage.script is not None:
+        script = _string(stage.script, f"{label} script")
+        assert script is not None
+        path = Path(script)
+        if (
+            path.is_absolute()
+            or len(path.parts) < 2
+            or ".." in path.parts
+            or "\\" in script
+            or "\0" in script
+            or path.suffix != ".py"
+        ):
+            raise ValueError(f"{label} script must be a repository-relative Python path without traversal")
+    if stage.method is not None:
+        method = _string(stage.method, f"{label} method")
+        assert method is not None
+        if not method.isidentifier():
+            raise ValueError(f"{label} method must be a Python identifier")
+    _string_list(stage.args, f"{label} args", nonempty=False)
+    for key, value in (("depends_on", stage.depends_on), ("tags", stage.tags)):
+        _string_list(value, f"{label} {key}")
+        if len(value) != len(set(value)):
+            raise ValueError(f"{label} {key} contains duplicates")
+    if type(stage.allow_skip) is not bool:
+        raise ValueError(f"{label} allow_skip must be a boolean")
+    _string(stage.failure_mode, f"{label} failure_mode", optional=True)
+    if not isinstance(stage.contract, StageContract) or not isinstance(stage.hooks, StageHooks):
+        raise ValueError(f"{label} requires StageContract and StageHooks values")
+    contract = asdict(stage.contract)
+    for key in ("input_artifacts", "output_artifacts", "mutable_artifacts"):
+        if not isinstance(contract[key], tuple):
+            raise ValueError(f"{label} contract {key} must be a tuple of strings")
+        contract[key] = list(contract[key])
+    _parse_contract(contract, stage.name)
+    hooks = asdict(stage.hooks)
+    for key in ("pre_stage", "post_stage", "on_fail", "on_pause"):
+        if not isinstance(hooks[key], tuple) or any(not isinstance(command, tuple) for command in hooks[key]):
+            raise ValueError(f"{label} hooks {key} must be tuples of argv tuples")
+        hooks[key] = [list(command) for command in hooks[key]]
+    _parse_hooks(hooks, stage.name)
 
 
 @dataclass
@@ -110,14 +191,7 @@ class StageDefinition:
 
 
 class PipelineDAG:
-    """Parse and topologically sort a declarative pipeline definition.
-
-    Usage::
-
-        dag = PipelineDAG.from_yaml(Path("pipeline.yaml"))
-        dag.filter_tags(exclude={"llm"})
-        specs = dag.to_stage_specs(executor)
-    """
+    """Validate declarations, preserve explicit filtering, and topologically order stages."""
 
     def __init__(
         self,
@@ -139,28 +213,23 @@ class PipelineDAG:
         """Load a pipeline definition from a YAML file."""
         logger.info(f"Loading pipeline definition from {yaml_path}")
         raw = yaml.safe_load(yaml_path.read_text(encoding="utf-8"))
-        if not isinstance(raw, dict) or "stages" not in raw:
+        if not isinstance(raw, dict) or not isinstance(raw.get("stages"), list):
             raise ValueError(f"pipeline.yaml must have a top-level 'stages' list: {yaml_path}")
 
         definitions: list[StageDefinition] = []
         for index, entry in enumerate(raw["stages"], start=1):
-            definitions.append(_definition_from_entry(entry, index, yaml_path))
+            definitions.append(parse_stage_definition(entry, index=index, source=yaml_path))
         logger.debug(f"Parsed {len(definitions)} stage definition(s) from {yaml_path.name}")
         return cls(definitions, opt_in_tags=opt_in_tags_from_mapping(raw))
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> "PipelineDAG":
-        """Construct from an in-memory dict (useful for tests).
-
-        Applies the same fail-closed validation as :meth:`from_yaml` so a
-        malformed in-memory definition raises instead of silently yielding
-        an empty or partially-parsed DAG.
-        """
-        if not isinstance(data, dict) or "stages" not in data:
+        """Construct an in-memory definition with the same checks as YAML."""
+        if not isinstance(data, dict) or not isinstance(data.get("stages"), list):
             raise ValueError("pipeline definition must have a top-level 'stages' list")
         definitions: list[StageDefinition] = []
         for index, entry in enumerate(data["stages"], start=1):
-            definitions.append(_definition_from_entry(entry, index, Path("<memory>")))
+            definitions.append(parse_stage_definition(entry, index=index))
         return cls(definitions, opt_in_tags=opt_in_tags_from_mapping(data))
 
     # ── Filtering ────────────────────────────────────────────────────────
@@ -171,12 +240,7 @@ class PipelineDAG:
         exclude: set[str] | None = None,
         include_only: set[str] | None = None,
     ) -> None:
-        """Remove stages whose tags match exclusion rules.
-
-        Args:
-            exclude: Remove any stage that has at least one of these tags.
-            include_only: If provided, keep only stages that have at least one of these tags.
-        """
+        """Explicitly remove excluded stages or retain only included tags."""
         before = len(self.stages)
         if exclude:
             self.stages = [s for s in self.stages if not (set(s.tags) & exclude)]
@@ -193,11 +257,7 @@ class PipelineDAG:
     # ── Sorting ──────────────────────────────────────────────────────────
 
     def sorted_stages(self) -> list[StageDefinition]:
-        """Return stages in topological order respecting ``depends_on``.
-
-        Uses Kahn's algorithm. If the input is already linear, the original
-        order is preserved.
-        """
+        """Return a stable topological order and record intentionally removed edges."""
         name_to_stage = {s.name: s for s in self.stages}
         remaining_names = set(name_to_stage)
 
@@ -248,14 +308,7 @@ class PipelineDAG:
 
     @property
     def dropped_dependency_edges(self) -> list[tuple[str, str]]:
-        """``(stage, missing_dep)`` edges dropped by the most recent sort.
-
-        Populated by :meth:`sorted_stages`: each entry is a retained stage that
-        declares a ``depends_on`` target absent from the current (possibly
-        filtered) stage set. Empty when every declared dependency is present,
-        so callers can assert ``not dag.dropped_dependency_edges`` to detect
-        filtering that orphaned an ordering constraint.
-        """
+        """Edges removed by explicit filtering, as recorded by the latest sort."""
         return list(self._dropped_dependency_edges)
 
     # ── Conversion ───────────────────────────────────────────────────────
@@ -264,15 +317,7 @@ class PipelineDAG:
         self,
         executor: Any,
     ) -> list[Any]:
-        """Convert sorted stages into ``StageSpec`` tuples the executor can run.
-
-        For each ``StageDefinition``, resolves either:
-        - ``method``: calls ``getattr(executor, method)``
-        - ``script``: calls ``executor._run_script(script, *args)``
-
-        Returns:
-            List of ``StageSpec(name, func)`` tuples.
-        """
+        """Bind sorted declarations to executor callables without changing outcome types."""
         from infrastructure.core.pipeline.types import StageSpec
 
         sorted_stages = self.sorted_stages()
@@ -287,6 +332,7 @@ class PipelineDAG:
                     contract=stage.contract,
                     hooks=stage.hooks,
                     key=stage.key,
+                    allow_skip=stage.allow_skip,
                 )
             )
 
@@ -294,76 +340,55 @@ class PipelineDAG:
 
     # ── Internals ────────────────────────────────────────────────────────
 
-    def _resolve_stage_func(self, stage: StageDefinition, executor: Any) -> Callable[[], bool]:
+    def _resolve_stage_func(self, stage: StageDefinition, executor: Any) -> Callable[[], bool | StageOutcome]:
         """Build a zero-arg callable for a stage definition."""
         if stage.script:
             # Build a closure over the script + args
             script = stage.script
-            args_list = list(stage.args) + ["--project", executor.config.project_name]
+            args_list = list(stage.args)
+            if "--project" not in args_list:
+                args_list.extend(["--project", executor.config.project_name])
             allow_skip = stage.allow_skip
 
             def _run(
                 _script: str = script,
                 _args: list[str] = args_list,
                 _allow_skip: bool = allow_skip,
-            ) -> bool:
-                return bool(executor._run_script(_script, *_args, allow_skip_code=_allow_skip))
+            ) -> bool | StageOutcome:
+                return cast("bool | StageOutcome", executor._run_script(_script, *_args, allow_skip_code=_allow_skip))
 
             return _run
 
         if stage.method:
             method = getattr(executor, stage.method, None)
-            if method is None:
+            if not callable(method):
                 raise ValueError(
                     f"Stage '{stage.name}' references method '{stage.method}' but executor has no such method"
                 )
-            return cast(Callable[[], bool], method)
+            return cast("Callable[[], bool | StageOutcome]", method)
 
         raise ValueError(f"Stage '{stage.name}' must define either 'script' or 'method'")
 
     def _validate(self) -> None:
         """Ensure stage names are unique and deps reference existing stages."""
+        for stage in self.stages:
+            _validate_definition(stage)
         names = [s.name for s in self.stages]
         if len(names) != len(set(names)):
-            dupes = [n for n in names if names.count(n) > 1]
-            raise ValueError(f"Duplicate stage names: {set(dupes)}")
-
-        keys = [stage.key for stage in self.stages if stage.key is not None]
+            raise ValueError(f"Duplicate stage names: {sorted({n for n in names if names.count(n) > 1})}")
+        keys = [stage.key for stage in self.stages]
         if len(keys) != len(set(keys)):
-            duplicate_keys = {key for key in keys if keys.count(key) > 1}
-            raise ValueError(f"Duplicate stage keys: {duplicate_keys}")
-
-        name_set = set(names)
+            raise ValueError(f"Duplicate stage keys: {sorted(str(key) for key in keys if keys.count(key) > 1)}")
         for stage in self.stages:
             for dep in stage.depends_on:
-                if dep not in name_set:
-                    logger.debug(
-                        f"Stage '{stage.name}' depends on '{dep}' which is not in the "
-                        f"current stage set (may have been filtered)"
-                    )
+                if dep not in names:
+                    raise ValueError(f"Stage '{stage.name}' depends_on unknown stage '{dep}'")
+                if dep == stage.name:
+                    raise ValueError(f"Stage '{stage.name}' cannot depend on itself")
 
 
 def stage_label(stage_name: str, project_name: str = "project", repo_root: Path | None = None) -> str:
-    """Build a truthful stage label like ``"Stage N/M: <stage_name>"``.
-
-    Reads ``infrastructure/core/pipeline/pipeline.yaml`` (or the project-specific
-    override at ``projects/{project_name}/pipeline.yaml``, resolved relative to
-    ``repo_root``) and looks up the 1-based position of ``stage_name`` in the
-    declared ``stages:`` list. Falls back to ``"<stage_name> stage"`` if the YAML
-    cannot be parsed or the stage is missing — that way the banner never lies
-    about its stage number.
-
-    Args:
-        stage_name: The stage name to locate in the pipeline definition.
-        project_name: Project whose ``pipeline.yaml`` override is checked first.
-        repo_root: Repository root used to resolve the candidate YAML paths. When
-            ``None``, no lookup is attempted and the non-numeric fallback label is
-            returned immediately.
-
-    Returns:
-        ``"Stage N/M: <stage_name>"`` when the stage is found, otherwise
-        ``"<stage_name> stage"``.
-    """
+    """Return a stage position from the selected DAG, or a diagnostic fallback."""
     if repo_root is None:
         return f"{stage_name} stage"
 
@@ -396,11 +421,7 @@ def stage_label(stage_name: str, project_name: str = "project", repo_root: Path 
 
 
 def load_telemetry_config(yaml_path: Path) -> Any:
-    """Load the optional ``telemetry:`` block from a pipeline YAML file.
-
-    Returns:
-        A ``TelemetryConfig`` if the block exists, or ``None``.
-    """
+    """Load optional telemetry data; diagnostics remain nonblocking."""
     from infrastructure.core.telemetry.config import TelemetryConfig
 
     try:
@@ -416,60 +437,45 @@ def load_telemetry_config(yaml_path: Path) -> Any:
     return None
 
 
-def _as_str_tuple(value: Any, *, key: str, stage_name: str) -> tuple[str, ...]:
-    """Normalize a YAML scalar/list value to a tuple of strings."""
-    if value is None:
-        return ()
-    if isinstance(value, str):
-        return (value,)
-    if isinstance(value, list):
-        if not all(isinstance(item, str) for item in value):
-            raise ValueError(f"Stage '{stage_name}' contract key '{key}' must contain strings")
-        return tuple(value)
-    raise ValueError(f"Stage '{stage_name}' contract key '{key}' must be string or list")
-
-
 def _parse_contract(raw: Any, stage_name: str) -> StageContract:
-    """Parse and validate the optional ``contract:`` block for a stage."""
+    """Validate contract types, artifact paths and bounded retry counts."""
     if raw is None:
         return StageContract()
     if not isinstance(raw, dict):
         raise ValueError(f"Stage '{stage_name}' contract must be a mapping")
-
     unknown = set(raw) - _CONTRACT_KEYS
     if unknown:
-        names = ", ".join(sorted(unknown))
-        raise ValueError(f"Stage '{stage_name}' has unsupported contract key(s): {names}")
-
+        raise ValueError(f"Stage '{stage_name}' has unsupported contract key(s): {sorted(map(str, unknown))}")
+    artifacts: dict[str, tuple[str, ...]] = {}
+    for key in ("input_artifacts", "output_artifacts", "mutable_artifacts"):
+        values = _string_list(raw.get(key, []), f"Stage '{stage_name}' contract {key}")
+        for value in values:
+            if Path(value).is_absolute() or ".." in Path(value).parts or "\\" in value or "\0" in value:
+                raise ValueError(f"Stage '{stage_name}' contract {key} requires repository-relative paths")
+        artifacts[key] = tuple(values)
     return StageContract(
-        input_artifacts=_as_str_tuple(raw.get("input_artifacts"), key="input_artifacts", stage_name=stage_name),
-        output_artifacts=_as_str_tuple(raw.get("output_artifacts"), key="output_artifacts", stage_name=stage_name),
-        definition_of_done=str(raw.get("definition_of_done", "") or ""),
-        failure_code=str(raw.get("failure_code", "") or ""),
-        retry_policy=int(raw.get("retry_policy", 0) or 0),
-        gate=str(raw["gate"]) if raw.get("gate") is not None else None,
-        rollback_to=str(raw["rollback_to"]) if raw.get("rollback_to") is not None else None,
+        **artifacts,
+        definition_of_done=_string(raw.get("definition_of_done", ""), "definition_of_done", empty=True) or "",
+        failure_code=_string(raw.get("failure_code", ""), "failure_code", empty=True) or "",
+        retry_policy=_integer(raw.get("retry_policy", 0), "retry_policy", minimum=0),
+        gate=_string(raw.get("gate"), "gate", optional=True),
+        rollback_to=_string(raw.get("rollback_to"), "rollback_to", optional=True),
     )
 
 
 def _normalize_hook_commands(value: Any, *, key: str, stage_name: str) -> tuple[tuple[str, ...], ...]:
-    """Normalize hook command YAML to immutable argv tuples.
-
-    Accepted forms:
-    - ``["python", "script.py"]`` for one command
-    - ``[["python", "a.py"], ["python", "b.py"]]`` for many commands
-    - ``"python script.py"`` for a command that will be shell-split later
-    """
+    """Normalize a string, argv list, or list of argv commands to immutable tuples."""
     if value is None:
         return ()
     if isinstance(value, str):
+        _string(value, f"Stage '{stage_name}' hook {key}")
         return ((value,),)
     if not isinstance(value, list):
         raise ValueError(f"Stage '{stage_name}' hook key '{key}' must be string or list")
     if not value:
         return ()
     if all(isinstance(item, str) for item in value):
-        return (tuple(value),)
+        return (tuple(_string_list(value, f"Stage '{stage_name}' hook {key}")),)
     commands: list[tuple[str, ...]] = []
     for item in value:
         if isinstance(item, str):
@@ -477,7 +483,9 @@ def _normalize_hook_commands(value: Any, *, key: str, stage_name: str) -> tuple[
             continue
         if not isinstance(item, list) or not all(isinstance(part, str) for part in item):
             raise ValueError(f"Stage '{stage_name}' hook key '{key}' command entries must be strings or string lists")
-        commands.append(tuple(item))
+        if not item:
+            raise ValueError(f"Stage '{stage_name}' hook {key} command must not be empty")
+        commands.append(tuple(_string_list(item, f"Stage '{stage_name}' hook {key}")))
     return tuple(commands)
 
 
@@ -493,11 +501,13 @@ def _parse_hooks(raw: Any, stage_name: str) -> StageHooks:
         names = ", ".join(sorted(unknown))
         raise ValueError(f"Stage '{stage_name}' has unsupported hook key(s): {names}")
 
+    if type(raw.get("run_in_ci", False)) is not bool:
+        raise ValueError(f"Stage '{stage_name}' hook run_in_ci must be a boolean")
     return StageHooks(
         pre_stage=_normalize_hook_commands(raw.get("pre_stage"), key="pre_stage", stage_name=stage_name),
         post_stage=_normalize_hook_commands(raw.get("post_stage"), key="post_stage", stage_name=stage_name),
         on_fail=_normalize_hook_commands(raw.get("on_fail"), key="on_fail", stage_name=stage_name),
         on_pause=_normalize_hook_commands(raw.get("on_pause"), key="on_pause", stage_name=stage_name),
-        timeout_seconds=int(raw.get("timeout_seconds", 30) or 30),
-        run_in_ci=bool(raw.get("run_in_ci", False)),
+        timeout_seconds=_integer(raw.get("timeout_seconds", 30), "hook timeout_seconds", minimum=1),
+        run_in_ci=raw.get("run_in_ci", False),
     )

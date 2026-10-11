@@ -1,246 +1,162 @@
-"""Tests for infrastructure/core/runtime/setup_checks.py.
-
-Covers sync_workspace_dependencies, validate_project_discovery, and
-run_optional_setup_hook using real tmp_path fixtures and real subprocess
-calls.  No mocks, no MagicMock — strictly No-Mocks Policy.
-"""
+"""Prepared Stage00 availability, structure, and non-executing hook checks."""
 
 from __future__ import annotations
 
+import os
+import sys
 from pathlib import Path
 
+import pytest
+
+from infrastructure.core.pipeline.outcomes import StageStatus
+from infrastructure.core.runtime.prepared_runtime import PreparedRuntimeUnavailable, check_prepared_packages
 from infrastructure.core.runtime.setup_checks import (
+    SetupCheckResult,
     aggregate_check_results,
-    run_optional_setup_hook,
-    sync_workspace_dependencies,
+    check_setup_hook_prerequisites,
+    run_environment_setup_checks,
     validate_project_discovery,
 )
 
 
-# ---------------------------------------------------------------------------
-# aggregate_check_results
-# ---------------------------------------------------------------------------
-
-
-class TestAggregateCheckResults:
-    """Tests for the aggregate_check_results function."""
-
-    def test_all_pass_returns_true(self) -> None:
-        """all_passed is True when every result passed."""
-        results = [("Python version", True), ("Build tools", True)]
-        all_passed, lines = aggregate_check_results(results)
-        assert all_passed is True
-        assert len(lines) == 2
-
-    def test_any_fail_returns_false(self) -> None:
-        """all_passed is False when at least one result failed."""
-        results = [("Python version", True), ("Build tools", False), ("Deps", True)]
-        all_passed, lines = aggregate_check_results(results)
-        assert all_passed is False
-        assert len(lines) == 3
-
-    def test_lines_formatted_correctly(self) -> None:
-        """Lines use 'OK: <name>' for pass and 'FAIL: <name>' for fail."""
-        results = [("Python version", True), ("Build tools", False)]
-        _all_passed, lines = aggregate_check_results(results)
-        assert lines == ["OK: Python version", "FAIL: Build tools"]
-
-    def test_empty_results_returns_true_empty_lines(self) -> None:
-        """Empty results yield all_passed True and no lines."""
-        all_passed, lines = aggregate_check_results([])
-        assert all_passed is True
-        assert lines == []
-
-
-# ---------------------------------------------------------------------------
-# Helpers
-# ---------------------------------------------------------------------------
-
-
 def _make_valid_project(base: Path, name: str) -> Path:
-    """Create a minimal valid project tree under *base/<name>* and return it."""
-    proj = base / "projects" / "templates" / name
-    (proj / "src").mkdir(parents=True)
-    (proj / "tests").mkdir()
-    (proj / "scripts").mkdir()
-    (proj / "src" / "__init__.py").write_text("")
-    (proj / "tests" / "__init__.py").write_text("")
-    (proj / "tests" / "test_dummy.py").write_text("def test_ok(): assert True\n")
-    return proj
+    project = base / "projects/templates" / name
+    for directory in ("src", "tests", "scripts"):
+        (project / directory).mkdir(parents=True)
+    (project / "src/__init__.py").write_text("")
+    (project / "tests/__init__.py").write_text("")
+    (project / "tests/test_domain.py").write_text("def test_domain(): assert 17 == 17\n")
+    return project
 
 
-# ---------------------------------------------------------------------------
-# sync_workspace_dependencies
-# ---------------------------------------------------------------------------
+@pytest.mark.parametrize(
+    ("states", "expected"),
+    [
+        ([], 1),
+        ([StageStatus.SUCCEEDED], 0),
+        ([StageStatus.BLOCKED], 75),
+        ([StageStatus.FAILED], 1),
+        ([StageStatus.BLOCKED, StageStatus.FAILED], 1),
+    ],
+)
+def test_check_summary_preserves_preparation_and_failure(states: list[StageStatus], expected: int) -> None:
+    checks = [SetupCheckResult(f"check{index}", status, "observed") for index, status in enumerate(states)]
+    code, lines = aggregate_check_results(checks)
+    assert code == expected
+    assert len(lines) == len(checks)
+    assert all("observed" in line for line in lines)
 
 
-class TestSyncWorkspaceDependencies:
-    """Tests for the sync_workspace_dependencies function."""
-
-    def test_success_path_zero_exit_code(self, tmp_path: Path) -> None:
-        """Returns True when a real ``uv sync`` exits 0 in a synthetic workspace."""
-        # A zero-dependency project keeps the real uv subprocess while never
-        # mutating the shared checkout environment or requiring the network.
-        workspace = tmp_path / "workspace"
-        workspace.mkdir()
-        (workspace / "pyproject.toml").write_text(
-            "[project]\n"
-            'name = "setup-checks-fixture"\n'
-            'version = "0.0.0"\n'
-            'requires-python = ">=3.10"\n'
-            "dependencies = []\n"
-            "\n"
-            "[tool.uv]\n"
-            "package = false\n",
-            encoding="utf-8",
-        )
-        assert sync_workspace_dependencies(workspace) is True
-
-    def test_returns_bool(self, tmp_path: Path) -> None:
-        """sync_workspace_dependencies always returns a bool regardless of path."""
-        # Pass a tmp_path so uv sync will likely fail (no pyproject.toml),
-        # triggering the fallback branch.
-        result = sync_workspace_dependencies(tmp_path)
-        assert isinstance(result, bool)
-
-    def test_failure_fallback_when_no_pyproject(self, tmp_path: Path) -> None:
-        """Falls back to check_dependencies when uv sync fails (non-zero exit code)."""
-        # tmp_path has no pyproject.toml, so uv sync exits non-zero.
-        # The function must fall back and still return a bool (likely True because
-        # numpy/matplotlib/pytest are installed).
-        result = sync_workspace_dependencies(tmp_path)
-        assert isinstance(result, bool)
-
-    def test_fallback_all_present_no_install_step(self, tmp_path: Path) -> None:
-        """When fallback finds all packages present, returns True without installing."""
-        # With an empty dir, uv sync will fail → fallback → check_dependencies.
-        # Since core packages (numpy, matplotlib, pytest) are present in the venv,
-        # all_present=True and the install step is not reached.
-        result = sync_workspace_dependencies(tmp_path)
-        # Should be True (all default deps are installed) — deterministic in CI.
-        assert result is True
-
-    def test_timeout_falls_back_instead_of_claiming_success(self, tmp_path: Path) -> None:
-        """TimeoutExpired during uv sync must check packages, not log a false success."""
-        import subprocess as sp
-
-        def _raise_timeout(*args, **kwargs):
-            raise sp.TimeoutExpired(cmd=["uv", "sync"], timeout=30)
-
-        def _missing() -> tuple[bool, list[str]]:
-            return False, ["definitely_not_installed_xyz"]
-
-        def _install_fails(packages: list[str]) -> bool:
-            assert packages == ["definitely_not_installed_xyz"]
-            return False
-
-        result = sync_workspace_dependencies(
-            tmp_path,
-            process_runner=_raise_timeout,
-            dependency_checker=_missing,
-            package_installer=_install_fails,
-        )
-        assert result is False
-
-    def test_file_not_found_fallback(self, tmp_path: Path) -> None:
-        """FileNotFoundError (uv not in PATH) triggers fallback to check_dependencies."""
-
-        def _raise_fnf(*args, **kwargs):
-            raise FileNotFoundError("uv not found")
-
-        result = sync_workspace_dependencies(tmp_path, process_runner=_raise_fnf)
-        assert isinstance(result, bool)
-
-    def test_subprocess_error_fallback(self, tmp_path: Path) -> None:
-        """SubprocessError during uv sync triggers fallback to check_dependencies."""
-        import subprocess as sp
-
-        def _raise_sub(*args, **kwargs):
-            raise sp.SubprocessError("generic subprocess error")
-
-        result = sync_workspace_dependencies(tmp_path, process_runner=_raise_sub)
-        assert isinstance(result, bool)
+def test_prepared_packages_check_actual_distribution_version() -> None:
+    check_prepared_packages(["pytest>=7.0", "not-real-package; python_version < '3.0'"])
+    with pytest.raises(PreparedRuntimeUnavailable, match="installed"):
+        check_prepared_packages(["pytest>99999"])
+    with pytest.raises(PreparedRuntimeUnavailable, match="unavailable"):
+        check_prepared_packages(["template-deliberately-missing-prepared-requirement"])
 
 
-# ---------------------------------------------------------------------------
-# validate_project_discovery
-# ---------------------------------------------------------------------------
+def test_valid_project_discovery_and_missing_structure(tmp_path: Path) -> None:
+    _make_valid_project(tmp_path, "domain")
+    assert validate_project_discovery(tmp_path, "templates/domain")
+    assert not validate_project_discovery(tmp_path, "templates/missing")
 
 
-class TestValidateProjectDiscovery:
-    """Tests for the validate_project_discovery function."""
-
-    def test_valid_project_returns_true(self, tmp_path: Path) -> None:
-        """Returns True when a valid project exists and discovery finds it."""
-        proj_name = "test_proj_valid"
-        _make_valid_project(tmp_path, proj_name)
-        result = validate_project_discovery(tmp_path, proj_name)
-        assert result is True
-
-    def test_missing_project_returns_false(self, tmp_path: Path) -> None:
-        """Returns False when the named project does not have a valid structure."""
-        # projects/ dir exists but no named project inside it.
-        (tmp_path / "projects").mkdir()
-        result = validate_project_discovery(tmp_path, "nonexistent_project_xyz")
-        assert result is False
-
-    def test_oserror_branch_returns_false(self, tmp_path: Path) -> None:
-        """Returns False when project discovery raises an OSError."""
-
-        def _raise_oserror(path: Path):
-            raise OSError("simulated disk error")
-
-        # Provide a valid project so validate_project_structure passes first.
-        proj_name = "test_oserr"
-        _make_valid_project(tmp_path, proj_name)
-        result = validate_project_discovery(tmp_path, proj_name, project_discoverer=_raise_oserror)
-        assert result is False
-
-    def test_no_projects_directory_returns_false(self, tmp_path: Path) -> None:
-        """Returns False when projects/ directory does not exist at all."""
-        # tmp_path has no projects/ subdirectory.
-        result = validate_project_discovery(tmp_path, "any_project")
-        assert result is False
+def test_hook_prerequisites_never_execute_provisioner(tmp_path: Path) -> None:
+    project = _make_valid_project(tmp_path, "domain")
+    marker = project / "must-not-provision"
+    (project / "scripts/setup_hook.py").write_text(
+        f"from pathlib import Path\nPath({str(marker)!r}).write_text('installed')\nraise SystemExit(7)\n"
+    )
+    assert check_setup_hook_prerequisites(tmp_path, "templates/domain")
+    assert not marker.exists()
+    (project / "scripts/setup_hook.yaml").write_text("required_tools: [template-tool-deliberately-not-installed]\n")
+    assert not check_setup_hook_prerequisites(tmp_path, "templates/domain")
+    assert not marker.exists()
 
 
-# ---------------------------------------------------------------------------
-# run_optional_setup_hook
-# ---------------------------------------------------------------------------
+@pytest.mark.parametrize(
+    "metadata",
+    ["broken: [", "- not-a-mapping\n", "required_tools: tools\n", "timeout_sec: true\n", "misspelled_tools: []\n"],
+)
+def test_malformed_hook_metadata_is_structural_refusal(tmp_path: Path, metadata: str) -> None:
+    project = _make_valid_project(tmp_path, "domain")
+    (project / "scripts/setup_hook.py").write_text("raise SystemExit(7)\n")
+    (project / "scripts/setup_hook.yaml").write_text(metadata)
+    with pytest.raises(ValueError):
+        check_setup_hook_prerequisites(tmp_path, "templates/domain")
 
 
-class TestRunOptionalSetupHook:
-    """Tests for the run_optional_setup_hook function."""
+def test_hook_manifest_link_is_refused_without_external_mutation(tmp_path: Path) -> None:
+    project = _make_valid_project(tmp_path, "domain")
+    (project / "scripts/setup_hook.py").write_text("raise SystemExit(7)\n")
+    outside = tmp_path / "external-private-manifest"
+    outside.write_text("required_tools: []\n")
+    (project / "scripts/setup_hook.yaml").symlink_to(outside)
+    with pytest.raises((ValueError, OSError)):
+        check_setup_hook_prerequisites(tmp_path, "templates/domain")
+    assert outside.read_text() == "required_tools: []\n"
 
-    def test_non_directory_project_returns_true(self, tmp_path: Path) -> None:
-        """Returns True immediately when project_dir path is not a real directory."""
-        # resolve_project_root will return a path that does not exist as a dir.
-        # ghost_project directory is never created.
-        repo_root = tmp_path
-        result = run_optional_setup_hook(repo_root, "ghost_project")
-        assert result is True
 
-    def test_directory_without_hook_returns_true(self, tmp_path: Path) -> None:
-        """Returns True when project dir exists but has no setup_hook script."""
-        proj_name = "no_hook_proj"
-        _make_valid_project(tmp_path, proj_name)
-        # No setup_hook.py or setup_hook.sh inside scripts/.
-        result = run_optional_setup_hook(tmp_path, proj_name)
-        assert result is True
+@pytest.mark.parametrize("name", ["setup_hook.py", "setup_hook.sh"])
+@pytest.mark.parametrize("kind", ["directory", "fifo", "broken-link", "regular-link"])
+def test_declared_nonregular_hook_without_manifest_is_refused(tmp_path: Path, name: str, kind: str) -> None:
+    project = _make_valid_project(tmp_path, "domain")
+    hook = project / "scripts" / name
+    outside = tmp_path / "outside-hook"
+    outside.write_text("raise SystemExit(7)\n")
+    if kind == "directory":
+        hook.mkdir()
+    elif kind == "fifo":
+        os.mkfifo(hook)
+    else:
+        hook.symlink_to(outside if kind == "regular-link" else tmp_path / "absent-hook")
+    with pytest.raises((OSError, ValueError)):
+        check_setup_hook_prerequisites(tmp_path, "templates/domain")
+    assert outside.read_text() == "raise SystemExit(7)\n"
+    assert not (project / "scripts/setup_hook.yaml").exists()
 
-    def test_directory_with_succeeding_hook_returns_true(self, tmp_path: Path) -> None:
-        """Returns True when setup_hook.py exits with code 0."""
-        proj_name = "hook_ok_proj"
-        proj = _make_valid_project(tmp_path, proj_name)
-        hook = proj / "scripts" / "setup_hook.py"
-        hook.write_text("import sys; sys.exit(0)\n")
-        result = run_optional_setup_hook(tmp_path, proj_name)
-        assert result is True
 
-    def test_directory_with_failing_hook_returns_false(self, tmp_path: Path) -> None:
-        """Returns False when setup_hook.py exits with a non-zero exit code."""
-        proj_name = "hook_fail_proj"
-        proj = _make_valid_project(tmp_path, proj_name)
-        hook = proj / "scripts" / "setup_hook.py"
-        hook.write_text("import sys; sys.exit(1)\n")
-        result = run_optional_setup_hook(tmp_path, proj_name)
-        assert result is False
+def test_valid_preferred_hook_cannot_hide_malformed_fallback(tmp_path: Path) -> None:
+    project = _make_valid_project(tmp_path, "domain")
+    (project / "scripts/setup_hook.py").write_text("raise SystemExit(7)\n")
+    (project / "scripts/setup_hook.sh").mkdir()
+    with pytest.raises((OSError, ValueError)):
+        check_setup_hook_prerequisites(tmp_path, "templates/domain")
+
+
+def test_whole_check_registry_never_syncs_or_runs_hook(tmp_path: Path) -> None:
+    project = _make_valid_project(tmp_path, "domain")
+    (tmp_path / "infrastructure").mkdir()
+    marker = project / "must-not-provision"
+    (project / "scripts/setup_hook.py").write_text(
+        f"from pathlib import Path\nPath({str(marker)!r}).write_text('installed')\n"
+    )
+    (tmp_path / "pyproject.toml").write_text(
+        '[project]\nname="prepared-check"\nversion="0.0.0"\ndependencies=["template-deliberately-missing-prepared-requirement"]\n'
+    )
+    original = dict(os.environ)
+    try:
+        os.environ["TEMPLATE_ROOT_PYTHON"] = sys.executable
+        results = run_environment_setup_checks(tmp_path, "templates/domain")
+    finally:
+        os.environ.clear()
+        os.environ.update(original)
+    assert next(row for row in results if row.name == "Dependencies").status is StageStatus.BLOCKED
+    assert aggregate_check_results(results)[0] == 75
+    assert not marker.exists() and not (tmp_path / ".venv").exists()
+    assert not (tmp_path / "uv.lock").exists() and not (project / "output").exists()
+    assert not (tmp_path / "output").exists()
+
+
+def test_malformed_declared_dependencies_are_failure_not_unavailable(tmp_path: Path) -> None:
+    _make_valid_project(tmp_path, "domain")
+    (tmp_path / "pyproject.toml").write_text('[project]\nname="broken"\ndependencies="bad"\n')
+    original = dict(os.environ)
+    try:
+        os.environ["TEMPLATE_ROOT_PYTHON"] = sys.executable
+        results = run_environment_setup_checks(tmp_path, "templates/domain")
+    finally:
+        os.environ.clear()
+        os.environ.update(original)
+    assert next(row for row in results if row.name == "Dependencies").status is StageStatus.FAILED
+    assert aggregate_check_results(results)[0] == 1

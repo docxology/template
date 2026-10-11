@@ -112,7 +112,10 @@ def zenodo_version_test_server():
     """Zenodo server with deposition lookup and new-version endpoints."""
     server = HTTPServer()
     server.start()
-    base = server.url_for("")
+    # ``url_for("")`` ends in "/". Zenodo returns canonical absolute links, and
+    # the client accepts ``latest_draft`` only as an exact configured-API path,
+    # so the stand-in must not emit a doubled "//deposit/..." separator.
+    base = server.url_for("").rstrip("/")
 
     server.expect_request("/deposit/depositions", method="GET").respond_with_json(
         {
@@ -127,10 +130,14 @@ def zenodo_version_test_server():
         method="POST",
     ).respond_with_json(
         {
-            "id": 54321,
-            "links": {"bucket": f"{base}/files/bucket999"},
-            "metadata": {"title": "New version"},
-            "state": "unsubmitted",
+            "id": 999,
+            "links": {
+                "bucket": f"{base}/files/original-record-bucket",
+                "latest_draft": f"{base}/deposit/depositions/54321",
+            },
+            "metadata": {"title": "Original publication"},
+            "state": "done",
+            "submitted": True,
         }
     )
 
@@ -144,7 +151,10 @@ def zenodo_version_test_server():
     server.expect_request("/deposit/depositions/54321", method="GET").respond_with_json(
         {
             "id": 54321,
+            "links": {"bucket": f"{base}/files/bucket999"},
+            "metadata": {"title": "New version"},
             "state": "unsubmitted",
+            "submitted": False,
             "files": [
                 {
                     "id": "legacy-file-id",

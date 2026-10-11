@@ -6,3 +6,6 @@ allow_infrastructure_imports:
   - src/template_template/core/introspection.py
   - src/template_template/metrics/metrics.py
   - src/template_template/metrics/inject_metrics.py
+  # Whole-Root facts are read only through the platform public-reference session,
+  # which admits a clean public Root rather than an arbitrary parent checkout.
+  - src/template_template/core/paths.py

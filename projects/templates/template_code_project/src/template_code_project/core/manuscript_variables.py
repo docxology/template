@@ -20,6 +20,9 @@ import hashlib
 import json
 import os
 import platform
+import stat
+import sys
+from io import StringIO
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
@@ -28,11 +31,20 @@ import numpy as np
 import yaml
 
 try:
-    from ._runtime import get_logger
+    from ._runtime import (
+        analysis_metadata_observation,
+        get_logger,
+        project_root,
+        read_analysis_bytes,
+        retain_analysis_metadata,
+        write_analysis_bytes,
+    )
     from .experiment_config import load_experiment_config
     from .optimizer import quadratic_optimum
 except ImportError:  # pragma: no cover — standalone load (no package context)
-    from template_code_project.core._runtime import get_logger  # type: ignore[no-redef]
+    from template_code_project.core._runtime import get_logger, project_root, write_analysis_bytes  # type: ignore[no-redef]
+    from template_code_project.core._runtime import read_analysis_bytes  # type: ignore[no-redef]
+    from template_code_project.core._runtime import analysis_metadata_observation, retain_analysis_metadata  # type: ignore[no-redef]
     from template_code_project.core.experiment_config import load_experiment_config  # type: ignore[no-redef]
     from template_code_project.core.optimizer import quadratic_optimum  # type: ignore[no-redef]
 
@@ -74,7 +86,7 @@ _ANALYSIS_REPORT_FILENAMES: frozenset[str] = frozenset(
 )
 
 
-def _build_timestamp() -> str:
+def _build_timestamp(*, observation: dict[str, Any] | None = None) -> str:
     """Build timestamp, honoring ``SOURCE_DATE_EPOCH`` for reproducible builds.
 
     Domain ``src/`` must stay standalone (no ``infrastructure`` import — enforced
@@ -84,10 +96,21 @@ def _build_timestamp() -> str:
     work end-to-end without coupling the exemplar to Layer 1. Falls back to
     wall-clock UTC when unset.
     """
-    epoch = os.environ.get("SOURCE_DATE_EPOCH", "").strip()
+    raw_epoch = os.environ.get("SOURCE_DATE_EPOCH", "")
+    epoch = raw_epoch.strip()
+    before = datetime.now(timezone.utc) if observation is not None else None
     if epoch.isdigit():
-        return datetime.fromtimestamp(int(epoch), tz=timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
-    return datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+        returned = datetime.fromtimestamp(int(epoch), tz=timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+    else:
+        returned = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+    if observation is not None and before is not None:
+        observation["timestamp"] = {
+            "source_date_epoch": raw_epoch,
+            "before_utc": before.isoformat(),
+            "after_utc": datetime.now(timezone.utc).isoformat(),
+            "returned_utc": returned,
+        }
+    return returned
 
 
 # ---------------------------------------------------------------------------
@@ -100,8 +123,7 @@ def _load_config(project_root: Path) -> dict[str, Any]:
     if not config_path.exists():
         logger.warning("Config file not found: %s", config_path)
         return {}
-    with config_path.open("r") as f:
-        return yaml.safe_load(f) or {}
+    return yaml.safe_load(read_analysis_bytes(project_root, config_path)) or {}
 
 
 def _load_optimization_results(project_root: Path) -> list[dict[str, str]]:
@@ -109,8 +131,8 @@ def _load_optimization_results(project_root: Path) -> list[dict[str, str]]:
     if not csv_path.exists():
         logger.warning("Optimization results not found: %s", csv_path)
         return []
-    with csv_path.open("r") as f:
-        return list(csv.DictReader(f))
+    with StringIO(read_analysis_bytes(project_root, csv_path).decode(), newline=None) as body:
+        return list(csv.DictReader(body))
 
 
 def _load_json_report(project_root: Path, name: str) -> dict[str, Any]:
@@ -118,19 +140,18 @@ def _load_json_report(project_root: Path, name: str) -> dict[str, Any]:
     if not report_path.exists():
         logger.warning("Report not found: %s", report_path)
         return {}
-    with report_path.open("r") as f:
-        result: dict[str, Any] = json.load(f)
-        return result
+    result: dict[str, Any] = json.loads(read_analysis_bytes(project_root, report_path))
+    return result
 
 
 def _compute_config_hash(project_root: Path) -> str:
     config_path = project_root / "manuscript" / "config.yaml"
     if not config_path.exists():
         return "N/A"
-    return hashlib.sha256(config_path.read_bytes()).hexdigest()[:16]
+    return hashlib.sha256(read_analysis_bytes(project_root, config_path)).hexdigest()[:16]
 
 
-def _count_output_artifacts(project_root: Path) -> dict[str, int]:
+def _count_output_artifacts(project_root: Path, *, observation: dict[str, Any] | None = None) -> dict[str, int]:
     """Count registered Stage 02 artifacts without downstream feedback."""
     filenames_by_category: dict[str, frozenset[str]] = {
         "figures": _ANALYSIS_FIGURE_FILENAMES,
@@ -141,10 +162,71 @@ def _count_output_artifacts(project_root: Path) -> dict[str, int]:
     output_dir = project_root / "output"
     for subdir, filenames in filenames_by_category.items():
         dir_path = output_dir / subdir
-        if dir_path.is_dir():
-            counts[subdir] = sum(1 for path in dir_path.iterdir() if path.is_file() and path.name in filenames)
-        else:
-            counts[subdir] = 0
+        if observation is None:
+            if dir_path.is_dir():
+                counts[subdir] = sum(1 for path in dir_path.iterdir() if path.is_file() and path.name in filenames)
+            else:
+                counts[subdir] = 0
+            continue
+        parent_is_dir = dir_path.is_dir()
+        parent_before = dir_path.stat() if parent_is_dir else None
+        # Preserve the actual original basename-membership policy, including
+        # on case-insensitive hosts; direct lookup of a differently cased
+        # filename would count a name the original iterator did not select.
+        paths = {path.name: path for path in dir_path.iterdir() if path.name in filenames} if parent_is_dir else {}
+        rows = []
+        for name in sorted(filenames):
+            path = paths.get(name)
+            if path is None:
+                rows.append({"path": f"output/{subdir}/{name}", "kind": "absent", "is_file": False})
+                continue
+            before = path.lstat()
+            is_file = path.is_file()
+            after = path.lstat()
+            if (
+                before.st_dev,
+                before.st_ino,
+                before.st_mode,
+                before.st_size,
+                before.st_mtime_ns,
+                before.st_ctime_ns,
+            ) != (after.st_dev, after.st_ino, after.st_mode, after.st_size, after.st_mtime_ns, after.st_ctime_ns):
+                raise ValueError("Code selected artifact changed during its actual metadata type observation")
+            kind = (
+                "regular"
+                if stat.S_ISREG(before.st_mode)
+                else "directory"
+                if stat.S_ISDIR(before.st_mode)
+                else "symlink"
+                if stat.S_ISLNK(before.st_mode)
+                else "other"
+            )
+            rows.append({"path": f"output/{subdir}/{name}", "kind": kind, "is_file": is_file})
+        if parent_before is not None:
+            parent_after = dir_path.stat()
+            if (
+                parent_before.st_dev,
+                parent_before.st_ino,
+                parent_before.st_mode,
+                parent_before.st_mtime_ns,
+                parent_before.st_ctime_ns,
+            ) != (
+                parent_after.st_dev,
+                parent_after.st_ino,
+                parent_after.st_mode,
+                parent_after.st_mtime_ns,
+                parent_after.st_ctime_ns,
+            ):
+                raise ValueError("Code selected artifact directory changed during its actual census")
+        counts[subdir] = sum(1 for row in rows if row["is_file"])
+        observation.setdefault("artifact_census", []).append(
+            {
+                "category": subdir,
+                "parent_is_dir": parent_is_dir,
+                "parent_is_symlink": dir_path.is_symlink(),
+                "records": rows,
+            }
+        )
     return counts
 
 
@@ -231,7 +313,8 @@ def generate_variables(project_root: Path, *, require_analysis_outputs: bool = F
             "Run projects/templates/template_code_project/scripts/optimization_analysis.py first."
         )
     stability = _load_json_report(project_root, "stability_analysis.json")
-    artifact_counts = _count_output_artifacts(project_root)
+    metadata_observation = analysis_metadata_observation(project_root)
+    artifact_counts = _count_output_artifacts(project_root, observation=metadata_observation)
 
     variables: dict[str, str] = {}
 
@@ -357,10 +440,24 @@ def generate_variables(project_root: Path, *, require_analysis_outputs: bool = F
     variables["CONFIG_HASH"] = _compute_config_hash(project_root)
     # Deterministic when SOURCE_DATE_EPOCH is set (pipeline deterministic mode)
     # so the rendered manuscript is byte-stable; wall-clock otherwise.
-    variables["GENERATION_TIMESTAMP"] = _build_timestamp()
+    variables["GENERATION_TIMESTAMP"] = _build_timestamp(observation=metadata_observation)
     variables["PYTHON_VERSION"] = platform.python_version()
     variables["NUMPY_VERSION"] = np.__version__
-    variables["PLATFORM"] = f"{platform.system()} {platform.machine()}"
+    system, machine = platform.system(), platform.machine()
+    variables["PLATFORM"] = f"{system} {machine}"
+    if metadata_observation is not None:
+        metadata_observation["runtime"] = {
+            "python_version": variables["PYTHON_VERSION"],
+            "python_runtime_version": sys.version,
+            "numpy_version": variables["NUMPY_VERSION"],
+            "system": system,
+            "machine": machine,
+        }
+        # Retain the actual calls under the real completed write/read scope.
+        # The independent native join checks this companion and the eventual
+        # flat variables write. The companion is deliberately outside the
+        # fixed Stage02 artifact-name census, so hydration cannot count itself.
+        retain_analysis_metadata(project_root, metadata_observation)
 
     # ---- Author / keyword metadata ----
     authors = config.get("authors", [])
@@ -383,9 +480,10 @@ def save_variables(variables: dict[str, str], output_path: Path) -> Path:
         Resolved path to the written file.
     """
     output_path.parent.mkdir(parents=True, exist_ok=True)
-    output_path.write_text(
-        json.dumps(variables, indent=2, sort_keys=True, ensure_ascii=False),
-        encoding="utf-8",
+    write_analysis_bytes(
+        project_root(),
+        output_path,
+        json.dumps(variables, indent=2, sort_keys=True, ensure_ascii=False).replace("\n", os.linesep).encode("utf-8"),
     )
     logger.info("Saved %d variables to %s", len(variables), output_path)
     return output_path

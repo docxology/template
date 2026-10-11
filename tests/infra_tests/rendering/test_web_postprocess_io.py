@@ -61,14 +61,30 @@ def test_encoding_failure_preserves_original_and_cleans_owned_temporary(tmp_path
 
 
 def test_concurrent_html_updates_leave_one_complete_artifact(tmp_path: Path) -> None:
+    """Racing writers leave one complete, attested artifact and no temporaries.
+
+    After publication each writer verifies that the target still names the
+    inode it wrote. A writer superseded by a peer fails closed with that
+    refusal rather than reporting success, so the surviving page must come
+    from a writer that actually attested its own publication.
+    """
     page = tmp_path / "index.html"
     page.write_text("original", encoding="utf-8")
     contents = [f"<html>{str(index) * 100_000}</html>" for index in range(8)]
 
-    with ThreadPoolExecutor(max_workers=8) as pool:
-        list(pool.map(lambda content: write_if_changed(page, content), contents))
+    def attempt(content: str) -> str | None:
+        try:
+            write_if_changed(page, content)
+        except ValueError as exc:
+            assert str(exc) == "published target differs from the actual held written inode"
+            return None
+        return content
 
-    assert page.read_text(encoding="utf-8") in contents
+    with ThreadPoolExecutor(max_workers=8) as pool:
+        attested = [content for content in pool.map(attempt, contents) if content is not None]
+
+    assert attested
+    assert page.read_text(encoding="utf-8") in attested
     assert set(tmp_path.iterdir()) == {page}
 
 

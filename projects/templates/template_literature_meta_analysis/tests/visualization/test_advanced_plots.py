@@ -1,7 +1,7 @@
 from __future__ import annotations
 from pathlib import Path
 import numpy as np
-from visualization.advanced_plots import (
+from template_literature_meta_analysis.visualization.advanced_plots import (
     plot_word_cloud,
     plot_pca_embeddings,
     plot_term_heatmap,

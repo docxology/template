@@ -11,11 +11,13 @@ from pathlib import Path
 import pytest
 
 from infrastructure.core.exceptions import ValidationError
-from infrastructure.rendering.latex_package_validator import (
+from infrastructure.rendering.latex_discovery import (
     PackageStatus,
-    ValidationReport,
     check_latex_package,
     find_kpsewhich,
+)
+from infrastructure.rendering.latex_validation import (
+    ValidationReport,
     get_missing_packages_command,
     validate_packages,
     validate_preamble_packages,

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Build the interactive search-coverage dashboard for template_search_project.
 
-Reads ``output/corpus.json`` and (optionally) ``output/deep_search/aggregate.json``
+Reads ``output/corpus.json`` and an explicitly selected optional ``--aggregate``
 and emits:
 
   - 5 Plotly panels: per-source / per-year / per-venue distributions,
@@ -56,8 +56,8 @@ def _parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     p.add_argument(
         "--aggregate",
         type=Path,
-        default=OUTPUT / "deep_search" / "aggregate.json",
-        help="optional deep-search aggregate (default: output/deep_search/aggregate.json)",
+        default=None,
+        help="explicit optional deep-search aggregate; default core omits historical deep output",
     )
     p.add_argument("--year-min", type=int, default=None)
     p.add_argument("--year-max", type=int, default=None)

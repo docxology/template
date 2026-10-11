@@ -6,7 +6,7 @@
 ## Publication identity
 
 - Standalone repository: [docxology/template_prose_project](https://github.com/docxology/template_prose_project)
-- Config version: `0.4.2`
+- Intended / published version: `0.5.0 pending; last published 0.4.2`
 - Stable concept DOI: [10.5281/zenodo.20417104](https://doi.org/10.5281/zenodo.20417104)
 - Latest deposited version DOI: [10.5281/zenodo.20932047](https://zenodo.org/records/20932047)
 - Additional declared locations: [github_pages](https://docxology.github.io/template_prose_project/), [huggingface_hub](https://huggingface.co/datasets/ActiveInference/template_prose_project), [ipfs_pinata](https://gateway.pinata.cloud/ipfs/QmXXUgas1amP7Pd9rRoTdJQiNUzBqKQ4r3Jf85aaGEnjz4), [netlify](https://6a44425bbd23b314b04b0154--tranquil-kleicha-0c9203.netlify.app), [osf](https://osf.io/sh2r3/), [pypi](https://test.pypi.org/project/template-prose-project/0.4.2/), [software_heritage](https://archive.softwareheritage.org/browse/origin/?origin_url=https://github.com/docxology/template_prose_project)

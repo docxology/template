@@ -10,7 +10,11 @@ from pathlib import Path
 import networkx as nx
 import pytest
 
-from visualization.figure_runner import FIGURE_ALT_TEXT, FIGURE_CAPTIONS, generate_all_figures
+from template_literature_meta_analysis.visualization.figure_runner import (
+    FIGURE_ALT_TEXT,
+    FIGURE_CAPTIONS,
+    generate_all_figures,
+)
 
 TEMPLATE_ROOT = Path(__file__).resolve().parents[4]
 PROJECT_ROOT = Path(__file__).resolve().parents[2]

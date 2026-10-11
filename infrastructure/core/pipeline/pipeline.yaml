@@ -10,20 +10,20 @@
 #   script       — canonical repository-relative script path (or null for built-ins)
 #   method       — executor method name (for stages that don't use subprocess scripts)
 #   args         — extra CLI arguments passed to the script
-#   allow_skip   — treat exit-code 2 as success (graceful skip)
+#   allow_skip   — accept exit 2 only with a fresh policy-bound reason receipt
 #   depends_on   — list of stage names this stage must run after
 #   tags         — list of tags for conditional inclusion (e.g. "llm", "core")
 #   failure_mode — documentation-only label describing how this stage fails
 #                  (rendered into generated stage tables; not interpreted by
-#                  the executor). Examples: "hard fail", "soft fail",
-#                  "warning + report", "skipped if Ollama absent".
+#                  the executor). Executed failure prevents completion;
+#                  advisory diagnostics and policy-bound skips are identified explicitly.
 #   contract     — declarative stage contract: inputs, outputs, done criteria,
 #                  failure code, retry count, optional HITL gate, rollback target
 #   hooks        — optional explicit argv hooks: pre_stage, post_stage, on_fail,
 #                  on_pause; default timeout is 30s and CI execution is opt-in
 
 # Tags that mark a stage opt-in: the executor filters these out of default and
-# --core-only runs. Declared here as data because three separate places were
+# --mode core runs. Declared here as data because three separate places were
 # each keeping their own copy of this set — the executor, the stage vocabulary,
 # and the self-contained template_template exemplar, which by the two-layer rule
 # cannot import from infrastructure/. Adding `docxplus` to two of them left the
@@ -36,10 +36,11 @@ stages:
     key: clean
     method: _run_clean_outputs
     tags: [core, clean]
-    failure_mode: soft fail
+    failure_mode: failure prevents completion
     contract:
       input_artifacts: ["projects/{project}/output/"]
       output_artifacts: ["projects/{project}/output/"]
+      mutable_artifacts: ["projects/{project}/output/"]
       definition_of_done: "Previous generated outputs are removed or the clean step is skipped."
       failure_code: "CLEAN_OUTPUT_FAILED"
       retry_policy: 0
@@ -54,6 +55,7 @@ stages:
     contract:
       input_artifacts: ["pyproject.toml", "projects/{project}/"]
       output_artifacts: ["projects/{project}/output/"]
+      mutable_artifacts: ["projects/{project}/output/"]
       definition_of_done: "Interpreter, project directories, and required runtime paths are ready."
       failure_code: "ENVIRONMENT_SETUP_FAILED"
       retry_policy: 1
@@ -65,11 +67,11 @@ stages:
     args: [--infra-only, --verbose, --infra-scope, pipeline-smoke]
     depends_on: [Environment Setup]
     tags: [core, tests]
-    failure_mode: configurable tolerance
+    failure_mode: required tests and coverage must pass
     contract:
       input_artifacts: ["infrastructure/", "tests/infra_tests/"]
       output_artifacts: ["projects/{project}/output/"]
-      definition_of_done: "Focused pipeline-smoke infrastructure tests pass or report configured tolerance; project fixtures may refresh generated output artifacts; full repo coverage remains an explicit verification command."
+      definition_of_done: "Focused pipeline-smoke infrastructure tests pass; project fixtures may refresh generated output artifacts; full repo coverage remains an explicit verification command."
       failure_code: "INFRASTRUCTURE_TESTS_FAILED"
       retry_policy: 0
       rollback_to: "Environment Setup"
@@ -80,7 +82,7 @@ stages:
     args: [--project-only, --verbose]
     depends_on: [Environment Setup]
     tags: [core, tests]
-    failure_mode: configurable test-failure tolerance; zero-test, project-local coverage, verifier-receipt/evidence, and internal runner failures hard fail
+    failure_mode: required nonempty tests, project-local coverage, verifier evidence, and runner success must pass
     contract:
       input_artifacts: ["projects/{project}/src/", "projects/{project}/tests/"]
       output_artifacts: ["projects/{project}/output/"]
@@ -105,7 +107,7 @@ stages:
       gate: "experiment_method_design"
       rollback_to: "Project Tests"
 
-  # Opt-in science/provenance stages (skipped in --core-only and default runs).
+  # Opt-in science/provenance stages (skipped in --mode core and default runs).
   # Invoke directly when needed:
   #   uv run python scripts/pipeline/stage_08_connector_search.py --project <name>
   #   uv run python scripts/pipeline/stage_09_provenance_record.py --project <name> --stage "Connector Search"
@@ -114,13 +116,13 @@ stages:
     key: connector_search
     script: scripts/pipeline/stage_08_connector_search.py
     depends_on: [Project Analysis]
-    tags: [science]
+    tags: [science, live]
     allow_skip: true
-    failure_mode: skipped if not configured
+    failure_mode: absent configuration requires a fresh policy-bound skip receipt
     contract:
       input_artifacts: ["projects/{project}/manuscript/config.yaml"]
       output_artifacts: ["projects/{project}/output/data/connector_search/"]
-      definition_of_done: "Connector search completes or gracefully exits 2 when not configured; each configured connector returns results or an error."
+      definition_of_done: "Connector search completes or issues a fresh policy-bound reason receipt when not configured; each configured connector returns results or an error."
       failure_code: "CONNECTOR_SEARCH_FAILED"
       retry_policy: 1
       rollback_to: "Project Analysis"
@@ -132,11 +134,11 @@ stages:
     depends_on: [Connector Search]
     tags: [provenance]
     allow_skip: true
-    failure_mode: skipped if not configured
+    failure_mode: absent configuration requires a fresh policy-bound skip receipt
     contract:
       input_artifacts: ["projects/{project}/output/"]
       output_artifacts: [".provenance/graph.json"]
-      definition_of_done: "Pipeline stage artifacts are recorded as provenance nodes, or the stage is gracefully skipped when provenance is not configured."
+      definition_of_done: "Pipeline stage artifacts are recorded as provenance nodes, or a fresh policy-bound skip receipt records why provenance is not configured."
       failure_code: "PROVENANCE_RECORD_FAILED"
       retry_policy: 0
       rollback_to: "Connector Search"
@@ -150,6 +152,11 @@ stages:
     contract:
       input_artifacts: ["projects/{project}/manuscript/", "projects/{project}/output/data/"]
       output_artifacts: ["projects/{project}/output/"]
+      # Strict hydration refreshes these generated metadata records. Research
+      # datasets and every other consumed input retain immutable custody.
+      mutable_artifacts:
+        - "projects/{project}/output/data/artifact_contract_index.json"
+        - "projects/{project}/output/data/artifact_provenance.json"
       definition_of_done: "Every enabled canonical manuscript format is freshly rendered and verified from current inputs; renderer-owned canonical artifacts for disabled formats are absent."
       failure_code: "PDF_RENDERING_FAILED"
       retry_policy: 0
@@ -165,24 +172,25 @@ stages:
     contract:
       input_artifacts: ["projects/{project}/output/", "projects/{project}/manuscript/"]
       output_artifacts: ["projects/{project}/output/reports/"]
+      mutable_artifacts: ["projects/{project}/output/reports/"]
       definition_of_done: "Every enabled canonical render artifact and blocking release-evidence check passes; advisory checks are recorded in the validation report."
       failure_code: "OUTPUT_VALIDATION_FAILED"
       retry_policy: 0
       gate: "literature_source_quality"
       rollback_to: "PDF Rendering"
 
-  - name: LLM Scientific Review
+  - name: LLM Manuscript Review
     key: llm_reviews
     script: scripts/pipeline/stage_06_llm_review.py
     args: [--reviews-only]
     allow_skip: true
     depends_on: [Output Validation]
-    tags: [llm]
-    failure_mode: skipped if Ollama absent
+    tags: [llm, live]
+    failure_mode: fresh policy-bound skip; unavailable required live acceptance is blocked
     contract:
       input_artifacts: ["projects/{project}/manuscript/", "projects/{project}/output/pdf/"]
       output_artifacts: ["projects/{project}/output/llm/", "projects/{project}/output/translations/"]
-      definition_of_done: "Optional scientific review is written or gracefully skipped when unavailable."
+      definition_of_done: "Configured draft feedback is written; a skip requires a fresh policy-bound reason receipt."
       failure_code: "LLM_REVIEW_FAILED"
       retry_policy: 0
       rollback_to: "Output Validation"
@@ -193,12 +201,12 @@ stages:
     args: [--translations-only]
     allow_skip: true
     depends_on: [Output Validation]
-    tags: [llm]
-    failure_mode: skipped if Ollama absent
+    tags: [llm, live]
+    failure_mode: fresh policy-bound skip; unavailable required live acceptance is blocked
     contract:
       input_artifacts: ["projects/{project}/manuscript/"]
       output_artifacts: ["projects/{project}/output/llm/", "projects/{project}/output/translations/"]
-      definition_of_done: "Optional translations are written or gracefully skipped when unavailable."
+      definition_of_done: "Configured translations are written; a skip requires a fresh policy-bound reason receipt."
       failure_code: "LLM_TRANSLATION_FAILED"
       retry_policy: 0
       rollback_to: "Output Validation"
@@ -208,10 +216,11 @@ stages:
     script: scripts/pipeline/stage_05_copy.py
     depends_on: [Output Validation]
     tags: [core]
-    failure_mode: soft fail
+    failure_mode: failure prevents completion
     contract:
       input_artifacts: ["projects/{project}/output/"]
       output_artifacts: ["projects/{project}/output/reports/", "output/{project}/"]
+      mutable_artifacts: ["projects/{project}/output/reports/"]
       definition_of_done: "A fresh canonical top-level output tree is copied, renderer-owned artifacts for disabled formats are filtered from that copy, and every enabled canonical deliverable validates."
       failure_code: "COPY_OUTPUTS_FAILED"
       retry_policy: 0
@@ -237,11 +246,11 @@ stages:
     allow_skip: true
     depends_on: [PDF Rendering]
     tags: [core, ebook]
-    failure_mode: soft fail
+    failure_mode: failure prevents completion
     contract:
       input_artifacts: ["projects/{project}/output/"]
       output_artifacts: ["projects/{project}/output/ebook/"]
-      definition_of_done: "EPUB, MOBI, and DOCX ebook files are generated or the stage is gracefully skipped when the combined markdown is absent."
+      definition_of_done: "EPUB, MOBI, and DOCX ebook files are generated or a fresh policy-bound skip receipt records why the combined markdown is absent."
       failure_code: "EBOOK_GENERATION_FAILED"
       retry_policy: 0
       rollback_to: "PDF Rendering"
@@ -252,11 +261,11 @@ stages:
     allow_skip: true
     depends_on: [PDF Rendering]
     tags: [core, docxplus]
-    failure_mode: soft fail
+    failure_mode: failure prevents completion
     contract:
       input_artifacts: ["projects/{project}/"]
       output_artifacts: ["projects/{project}/output/docxplus/"]
-      definition_of_done: "A conforming .docx and .docxplus carrying the project source tree are written, or the stage is gracefully skipped when the optional docxplus extra is not installed."
+      definition_of_done: "A conforming .docx and .docxplus carrying the project source tree are written, or a fresh policy-bound skip receipt records why the optional docxplus extra is not installed."
       failure_code: "DOCXPLUS_EXPORT_FAILED"
       retry_policy: 0
       rollback_to: "PDF Rendering"
@@ -267,11 +276,11 @@ stages:
     allow_skip: true
     depends_on: [Copy Outputs]
     tags: [core, metadata]
-    failure_mode: soft fail
+    failure_mode: failure prevents completion
     contract:
       input_artifacts: ["projects/{project}/manuscript/config.yaml"]
       output_artifacts: ["projects/{project}/output/metadata/"]
-      definition_of_done: "ONIX XML, metadata.json, and OPF skeleton are written to output/metadata/ or the stage is gracefully skipped when config.yaml is absent."
+      definition_of_done: "ONIX XML, metadata.json, and OPF skeleton are written to output/metadata/ or a fresh policy-bound skip receipt records why config.yaml is absent."
       failure_code: "METADATA_PACKAGE_FAILED"
       retry_policy: 0
       rollback_to: "Copy Outputs"
@@ -282,11 +291,11 @@ stages:
     allow_skip: true
     depends_on: [PDF Rendering]
     tags: [bundle]
-    failure_mode: soft fail
+    failure_mode: failure prevents completion
     contract:
       input_artifacts: ["projects/{project}/", "projects/{project}/output/"]
       output_artifacts: ["projects/{project}/output/bundles/"]
-      definition_of_done: "Executable reproducibility bundle is written or reports why it was skipped."
+      definition_of_done: "Executable reproducibility bundle is written or a fresh policy-bound reason receipt records why it was skipped."
       failure_code: "EXECUTABLE_BUNDLE_FAILED"
       retry_policy: 0
       rollback_to: "PDF Rendering"
@@ -296,12 +305,12 @@ stages:
     script: scripts/runner/archive_publication.py
     allow_skip: true
     depends_on: [Executable Bundle]
-    tags: [archival]
-    failure_mode: soft fail
+    tags: [archival, live]
+    failure_mode: failure prevents completion
     contract:
       input_artifacts: ["projects/{project}/output/", "output/{project}/"]
       output_artifacts: ["projects/{project}/output/archive/"]
-      definition_of_done: "Archival publication manifest is generated or reports why it was skipped."
+      definition_of_done: "Archival publication manifest is generated or a fresh policy-bound reason receipt records why it was skipped."
       failure_code: "ARCHIVAL_PUBLICATION_FAILED"
       retry_policy: 0
       gate: "publication_readiness"

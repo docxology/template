@@ -61,7 +61,7 @@ def main() -> int:
         written[filename] = path.as_posix()
 
     print(json.dumps({"valid": report.valid, "readiness_score": report.readiness_score, "outputs": written}, indent=2))
-    return 0
+    return 0 if report.valid else 2
 
 
 if __name__ == "__main__":

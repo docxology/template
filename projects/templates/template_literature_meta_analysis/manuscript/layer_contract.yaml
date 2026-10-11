@@ -1,15 +1,21 @@
 # Literature meta-analysis exemplar: optional monorepo adapters only.
 #
-# The domain src/ stays standalone except for these files, which use shared
-# template infrastructure (logging + the figure-manager registry, and the
-# deep-research dispatch surface) exactly as the other exemplars do. Everything
-# else under src/ imports only stdlib + the scientific stack and is forkable as
-# an infrastructure-free package.
+# The declared platform dependency implements shared validation and optional
+# adapters. Domain analysis, variables and configured hypotheses remain Layer 2.
 #
 # src/deep_research/ deliberately wires infrastructure.search.deep_research to
 # demonstrate that capability via a deterministic, offline fixture-replay path
 # (no network, no key); the live capability is paid and non-deterministic.
 allow_infrastructure_imports:
+  - src/config_loader.py
+  - src/analysis/subfield_registry.py
+  - src/knowledge_graph/hypothesis.py
+  - src/config_validation.py
+  - src/literature/live_acceptance.py
   - src/manuscript/variables.py
   - src/visualization/figure_runner.py
   - src/deep_research/deep_research_adapter.py
+reason: >-
+  The declared platform provides config validation and named immutable UTF-8
+  streams so actual loaders, subfield classification, and configured hypotheses
+  consume the same admitted bytes. Their domain policies remain in Layer 2.

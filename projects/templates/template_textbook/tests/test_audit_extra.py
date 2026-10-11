@@ -127,3 +127,59 @@ def test_run_manuscript_audit_reports_missing_companion_stubs_when_complete(tmp_
 
     complete = run_manuscript_audit(tmp_path, config, require_complete=True)
     assert any("stub markers remaining" in p for p in complete.problems)
+
+
+def test_completion_counts_each_companion_once(tmp_path):
+    import copy
+    from textbook import content
+
+    manuscript = tmp_path / "manuscript"
+    part = manuscript / "part_I"
+    part.mkdir(parents=True)
+    _write_contract_satisfying_chapter(part / "a.md")
+    for category, filename in (("labs", "lab_a.md"), ("questions", "q_a.md")):
+        folder = manuscript / category / "part_I"
+        folder.mkdir(parents=True)
+        (folder / filename).write_text("# Filled companion\n", encoding="utf-8")
+    config = copy.deepcopy(_CONFIG_WITH_PROJECT)
+    config["appendices"] = {"labs": [{"unit": "part_I", "files": [{"file": "lab_a.md"}]}]}
+    report = run_manuscript_audit(tmp_path, config)
+    expected_words = sum(content.count_words(p.read_text()) for p in manuscript.rglob("*.md"))
+    assert report.total_words == expected_words
+    assert len(report.rows) == 3
+
+
+def test_completion_catches_front_matter_reference_lab_and_question_markers(tmp_path):
+    import shutil
+    from textbook.config import load_config
+
+    shutil.copytree(MANUSCRIPT, tmp_path / "manuscript")
+    config = load_config(tmp_path / "manuscript")
+    paths = [
+        "preface.md",
+        "front_matter.md",
+        "appendices/appendix_math_review.md",
+        "labs/part_0/lab_orientation.md",
+        "questions/part_0/q_orientation.md",
+    ]
+    for relative in paths:
+        path = tmp_path / "manuscript" / relative
+        path.write_text(path.read_text() + "\n<!-- STUB -->\n", encoding="utf-8")
+    report = run_manuscript_audit(tmp_path, config, require_complete=True)
+    assert report.total_stubs == len(paths)
+    for relative in paths:
+        assert any(relative in problem and "stub marker remaining" in problem for problem in report.problems)
+    assert sum("INCOMPLETE" in row for row in report.rows) == len(paths)
+
+
+def test_complete_requires_front_matter_even_when_lenient(tmp_path):
+    import shutil
+    from textbook.config import load_config
+
+    shutil.copytree(MANUSCRIPT, tmp_path / "manuscript")
+    config = load_config(tmp_path / "manuscript")
+    (tmp_path / "manuscript" / "preface.md").unlink()
+    lenient = run_manuscript_audit(tmp_path, config, require_present=False)
+    strict = run_manuscript_audit(tmp_path, config, require_present=False, require_complete=True)
+    assert lenient.problems == ()
+    assert any("missing configured front matter file: manuscript/preface.md" == p for p in strict.problems)

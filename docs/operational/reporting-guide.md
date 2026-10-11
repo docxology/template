@@ -101,7 +101,7 @@ ls -1 projects/{name}/output/reports/.history/
 jq . "$(ls -1t projects/{name}/output/reports/.history/telemetry-*.json | head -1)"
 
 # Override retention for a single run
-TELEMETRY_KEEP=25 uv run python scripts/runner/execute_pipeline.py --project {name} --core-only
+TELEMETRY_KEEP=25 uv run python scripts/runner/execute_pipeline.py --project {name} --mode core
 ```
 
 The rotation function is `infrastructure.core.telemetry.retention.rotate`
@@ -353,10 +353,11 @@ public contract: tests assert on their substring presence, downstream tooling
 greps for them, and they must not change without coordinated updates. New
 sections may be appended.
 
-After each multi-project run, the rendered block is also persisted verbatim to
-[`docs/_generated/last-run-summary.md`](../_generated/) so it can be diffed
-across runs for regression detection. The write is best-effort — a docs-write
-failure cannot crash the pipeline.
+Multi-project summaries are stored under ignored
+`output/multi_project_summary/last-run-summary.md`, with machine-readable
+companions. They are local execution evidence and may include private lifecycle
+projects; they must not be copied into tracked documentation. Report admission
+and its finite deadline contribute to the run's final outcome.
 
 ## Troubleshooting
 

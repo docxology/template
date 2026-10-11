@@ -36,7 +36,7 @@ _STAGE_ALIAS_TO_CANONICAL: dict[str, str] = {
     "validate": "Output Validation",
     "output validation": "Output Validation",
     "copy": "Copy Outputs",
-    "llm_reviews": "LLM Scientific Review",
+    "llm_reviews": "LLM Manuscript Review",
     "llm_translations": "LLM Translations",
 }
 
@@ -47,7 +47,7 @@ _SCRIPT_TO_CANONICAL: dict[str, str] = {
     "stage_03_render.py": "PDF Rendering",
     "stage_04_validate.py": "Output Validation",
     "stage_05_copy.py": "Copy Outputs",
-    "stage_06_llm_review.py": "LLM Scientific Review",
+    "stage_06_llm_review.py": "LLM Manuscript Review",
 }
 
 
@@ -79,8 +79,25 @@ def _opt_in_tags_for(yaml_path: Path) -> frozenset[str]:
         return _OPT_IN_TAGS
 
 
+def live_stage_names(*, yaml_path: Path | None = None) -> tuple[str, ...]:
+    """Default live stages: excludes opt-in and paid tags."""
+    path = yaml_path or _default_pipeline_yaml()
+    opt_in = _opt_in_tags_for(path)
+    names: list[str] = []
+    for stage in _load_stage_entries(str(path)):
+        name = stage.get("name")
+        if not name:
+            continue
+        raw_tags = stage.get("tags")
+        tags = {str(tag) for tag in raw_tags} if isinstance(raw_tags, list) else set()
+        if tags & opt_in or "paid" in tags:
+            continue
+        names.append(str(name))
+    return tuple(names)
+
+
 def core_stage_names(*, yaml_path: Path | None = None) -> tuple[str, ...]:
-    """Default-run stages: excludes opt-in tagged stages."""
+    """``--mode core`` stages: excludes opt-in, ``llm``, ``live`` and paid tags."""
     path = yaml_path or _default_pipeline_yaml()
     opt_in = _opt_in_tags_for(path)
     names: list[str] = []
@@ -90,45 +107,30 @@ def core_stage_names(*, yaml_path: Path | None = None) -> tuple[str, ...]:
             continue
         raw_tags = stage.get("tags")
         tags = {str(tag) for tag in raw_tags} if isinstance(raw_tags, list) else set()
-        if tags & opt_in:
+        if tags & opt_in or tags & {"llm", "live", "paid"}:
             continue
         names.append(str(name))
     return tuple(names)
 
 
-def core_only_stage_names(*, yaml_path: Path | None = None) -> tuple[str, ...]:
-    """``--core-only`` stages: excludes opt-in and ``llm``-tagged stages."""
-    path = yaml_path or _default_pipeline_yaml()
-    opt_in = _opt_in_tags_for(path)
-    names: list[str] = []
-    for stage in _load_stage_entries(str(path)):
-        name = stage.get("name")
-        if not name:
-            continue
-        raw_tags = stage.get("tags")
-        tags = {str(tag) for tag in raw_tags} if isinstance(raw_tags, list) else set()
-        if tags & opt_in or "llm" in tags:
-            continue
-        names.append(str(name))
-    return tuple(names)
-
-
-def default_run_stage_count(*, include_llm: bool, yaml_path: Path | None = None) -> int:
-    """Stage count for the default full run or ``--core-only``."""
-    if include_llm:
-        return len(core_stage_names(yaml_path=yaml_path))
-    return len(core_only_stage_names(yaml_path=yaml_path))
+def default_run_stage_count(*, mode: str = "core", yaml_path: Path | None = None) -> int:
+    """Stage count for the default full run or ``--mode core``."""
+    if mode not in {"core", "live"}:
+        raise ValueError("Execution mode must be core or live")
+    if mode == "live":
+        return len(live_stage_names(yaml_path=yaml_path))
+    return len(core_stage_names(yaml_path=yaml_path))
 
 
 def menu_stage_names(*, yaml_path: Path | None = None) -> tuple[str, ...]:
     """Stages shown in run.sh menu banners (excludes Clean Output Directories)."""
-    return tuple(n for n in core_stage_names(yaml_path=yaml_path) if n != "Clean Output Directories")
+    return tuple(n for n in live_stage_names(yaml_path=yaml_path) if n != "Clean Output Directories")
 
 
 def stage_aliases() -> dict[str, str]:
     """Map informal tokens to canonical stage labels."""
     aliases = dict(_STAGE_ALIAS_TO_CANONICAL)
-    for name in core_stage_names():
+    for name in live_stage_names():
         aliases[name.lower()] = name
     return aliases
 
@@ -150,4 +152,4 @@ def text_mentions_stage(text: str, canonical_name: str) -> bool:
 
 def text_mentions_any_stage(text: str) -> bool:
     """True when text references any canonical core stage."""
-    return any(text_mentions_stage(text, name) for name in core_stage_names())
+    return any(text_mentions_stage(text, name) for name in live_stage_names())

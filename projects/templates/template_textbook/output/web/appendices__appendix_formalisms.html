@@ -2,7 +2,7 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="utf-8" />
-  <meta name="generator" content="pandoc 3.11" />
+  <meta name="generator" content="pandoc 3.12" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
   <title>appendix_formalisms.md.web</title>
   <style>
@@ -11,7 +11,10 @@
     */
     html {
       color: #1a1a1a;
+      color: light-dark(#1a1a1a, #fdfdfd);
       background-color: #fdfdfd;
+      background-color: light-dark(#fdfdfd, #1a1a1a);
+      color-scheme: light dark;
     }
     body {
       margin: 0 auto;
@@ -36,11 +39,16 @@
     }
     @media print {
       html {
-        background-color: white;
+        color-scheme: light only;
       }
-      body {
+      html, body, pre, code {
         background-color: transparent;
+      }
+      body, a, a:visited, blockquote {
         color: black;
+      }
+      pre, code {
+        padding: 0;
       }
       p, h2, h3 {
         orphans: 3;
@@ -53,11 +61,8 @@
     p {
       margin: 1em 0;
     }
-    a {
-      color: #1a1a1a;
-    }
-    a:visited {
-      color: #1a1a1a;
+    a, a:visited {
+      color: inherit;
     }
     img {
       max-width: 100%;
@@ -86,8 +91,11 @@
     blockquote {
       margin: 1em 0 1em 1.7em;
       padding-left: 1em;
-      border-left: 2px solid #e6e6e6;
+      border-left: 2px solid;
+      border-color: #e6e6e6;
+      border-color: light-dark(#e6e6e6, #4c4c4c);
       color: #606060;
+      color: light-dark(#606060, #b6b6b6);
     }
     code {
       white-space: pre-wrap;
@@ -111,7 +119,7 @@
     }
     hr {
       border: none;
-      border-top: 1px solid #1a1a1a;
+      border-top: 1px solid currentColor;
       height: 1px;
       margin: 1em 0;
     }
@@ -128,11 +136,11 @@
     }
     tbody {
       margin-top: 0.5em;
-      border-top: 1px solid #1a1a1a;
-      border-bottom: 1px solid #1a1a1a;
+      border-top: 1px solid currentColor;
+      border-bottom: 1px solid currentColor;
     }
     th {
-      border-top: 1px solid #1a1a1a;
+      border-top: 1px solid currentColor;
       padding: 0.25em 0.5em 0.25em 0.5em;
     }
     td {
@@ -634,10 +642,12 @@ mjx-container[display="true"] {
 <p>A worked example of every <strong>formal</strong> element a technical
 book uses: definitions, theorems with proofs, lemmas, algorithms in
 pseudocode, step-by-step derivations, systems of numbered equations, and
-dimensioned quantities. Each maps to a tested function in
-<code>src/textbook/models.py</code>, so the prose and the code stay in
-agreement.
-<!-- STUB: replace these generic statements with your field's. --></p>
+dimensioned quantities. The growth, decay, and line-fit results connect
+to tested functions in <code>src/textbook/models.py</code>. The
+illustrative predator–prey equations demonstrate notation and are not
+implemented or empirically validated here. Each result applies under its
+stated mathematical assumptions; none is a claim that an observed system
+necessarily follows the model.</p>
 <blockquote>
 <p><strong>Convention.</strong> Theorem-like environments below use a
 portable bold-label block-quote form that renders in every target. If
@@ -680,18 +690,21 @@ denominator <span class="math inline">\(1 + A e^{-rt} \to 1\)</span>,
 and therefore <span class="math inline">\(N(t) \to K/1 = K\)</span>. The
 constant <span class="math inline">\(A \ge 0\)</span> follows from <span
 class="math inline">\(0 &lt; N_0 \le K\)</span>, so <span
-class="math inline">\(N(t)\)</span> is increasing and the limit is
-approached from below. <span
-class="math inline">\(\qquad\blacksquare\)</span></p>
+class="math inline">\(N(t)\)</span> is nondecreasing. When <span
+class="math inline">\(N_0&lt;K\)</span>, it approaches the limit from
+below; when <span class="math inline">\(N_0=K\)</span>, it is constant.
+<span class="math inline">\(\qquad\blacksquare\)</span></p>
 <p>This is exactly the asymptotic behaviour the test
 <code>tests/test_models.py::test_logistic_growth_starts_at_initial_and_approaches_capacity</code>
-verifies numerically — the proof and the test assert the same fact.</p>
+checks at finite sample values. That numerical check supports the
+implementation case; it does not prove the infinite-time limit.</p>
 <hr />
 <h2 id="a-lemma">3. A lemma</h2>
 <blockquote>
 <p><strong>Lemma 1 (Half-life).</strong> For exponential decay <span
 class="math inline">\(y(t) = y_0 e^{-\lambda t}\)</span> with <span
-class="math inline">\(\lambda &gt; 0\)</span>, the time at which <span
+class="math inline">\(\lambda &gt; 0\)</span> and <span
+class="math inline">\(y_0&gt;0\)</span>, the time at which <span
 class="math inline">\(y\)</span> falls to half its initial value is
 <span class="math inline">\(t_{1/2} = \ln 2 / \lambda\)</span>,
 independent of <span class="math inline">\(y_0\)</span>.</p>
@@ -709,7 +722,7 @@ class="math inline">\(\qquad\blacksquare\)</span></p>
 <p>Where the preamble provides an algorithm package, use it; otherwise
 this fenced form renders everywhere.</p>
 <pre class="text"><code>Algorithm 1: Ordinary least-squares line fit
-Input : points (x_i, y_i), i = 1..n,  n &gt;= 2
+Input : points (x_i, y_i), i = 1..n,  n &gt;= 2, with at least two distinct x values
 Output: slope m, intercept b, coefficient of determination R^2
 1  x_bar &lt;- mean(x);  y_bar &lt;- mean(y)
 2  m &lt;- sum((x_i - x_bar)(y_i - y_bar)) / sum((x_i - x_bar)^2)
@@ -723,8 +736,8 @@ case is covered by
 <code>tests/test_models.py::test_linear_fit_constant_y_gives_r_squared_one</code>.</p>
 <hr />
 <h2 id="a-step-by-step-derivation">5. A step-by-step derivation</h2>
-<p>Starting from the logistic differential equation and separating
-variables:</p>
+<p>For <span class="math inline">\(0&lt;N_0&lt;K\)</span>, separating
+variables in the logistic differential equation gives:</p>
 <p><span class="math display">\[
 \begin{aligned}
 \frac{dN}{dt} &amp;= rN\left(1 - \frac{N}{K}\right) \\
@@ -735,8 +748,10 @@ N(t) &amp;= \frac{K}{1 + A e^{-rt}}, \qquad A = e^{-C},
 \]</span></p>
 <p>which recovers <span class="citation"
 data-cites="eq:formalisms_logistic">[@eq:formalisms_logistic]</span>.
-Each line is one algebraic move; show your work at this granularity so
-readers can follow without gaps.</p>
+The boundary case <span class="math inline">\(N_0=K\)</span> has the
+constant solution and is handled separately because the logarithm above
+is undefined there. Each line is one algebraic move; show your work at
+this granularity so readers can follow without gaps.</p>
 <hr />
 <h2 id="a-system-of-numbered-equations">6. A system of numbered
 equations</h2>
@@ -791,8 +806,12 @@ values.</caption>
 </table></div>
 <hr />
 <h2 id="notation-summary">8. Notation summary</h2>
-<!-- STUB: maintain a running notation table; cross-reference Appendix B. -->
-<p>Symbols used throughout are collected in the notation appendix (<span
+<p>The notation and unit conventions are collected in <span
+class="citation"
+data-cites="sec:appendix_notation">[@sec:appendix_notation]</span>. Keep
+the mathematical domain distinct from a computational input restriction:
+a numerical helper may intentionally support a narrower class of inputs.
+Symbols used throughout are collected in the notation appendix (<span
 class="citation"
 data-cites="sec:appendix_notation">[@sec:appendix_notation]</span>);
 glossary definitions for narrative terms such as <a

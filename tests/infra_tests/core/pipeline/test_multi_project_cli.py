@@ -23,7 +23,10 @@ from infrastructure.core.pipeline.multi_project_cli import (
     build_arg_parser,
     main,
 )
-from tests._support.projects import make_repo
+from tests.infra_tests.orchestration._pipeline_fixture import scaffold_pipeline
+from infrastructure.core.pipeline.multi_project import MultiProjectResult
+from infrastructure.core.pipeline.types import PipelineStageResult
+from infrastructure.core.pipeline.outcomes import RunResult
 
 
 # ---------------------------------------------------------------------------
@@ -31,14 +34,28 @@ from tests._support.projects import make_repo
 # ---------------------------------------------------------------------------
 
 
-def _stage(success: bool, duration: float = 1.0) -> SimpleNamespace:
-    """Build a minimal stage-like object with ``success`` and ``duration``."""
-    return SimpleNamespace(success=success, duration=duration)
+def _stage(success: bool, duration: float = 1.0) -> PipelineStageResult:
+    """Construct a canonical result for pure reporting comparisons."""
+    return PipelineStageResult(
+        1,
+        "Analysis",
+        success=success,
+        duration=duration,
+        stage_key="analysis",
+        stage_completed=success,
+        exit_code=0 if success else 1,
+    )
 
 
-def _result(project_results: object) -> SimpleNamespace:
-    """Build a minimal result-like object with ``project_results``."""
-    return SimpleNamespace(project_results=project_results)
+def _result(project_results: dict[str, list[PipelineStageResult]]) -> MultiProjectResult:
+    contracts = {}
+    for name, stages in project_results.items():
+        if not isinstance(stages, list):
+            continue
+        for index, stage in enumerate(stages):
+            stage.stage_key = f"stage_{index}"
+        contracts[name] = RunResult.from_results(stages, tuple(stage.stage_key for stage in stages))
+    return MultiProjectResult(project_results, expected_projects=tuple(project_results), run_results=contracts)
 
 
 # ---------------------------------------------------------------------------
@@ -93,17 +110,9 @@ class TestFailedProjectNames:
         assert _failed_project_names(result) == []
 
     def test_non_dict_project_results(self) -> None:
-        """A non-dict ``project_results`` (e.g. a list) does not crash.
-
-        The function iterates ``.items()`` only when the value is a dict;
-        a list has no ``.items()`` so this exercises the guard path. Because
-        the implementation does not isinstance-check, passing a list will
-        raise AttributeError — we assert that the call surfaces the real
-        behavior rather than swallowing it.
-        """
-        result = SimpleNamespace(project_results=["not", "a", "dict"])
-        with pytest.raises(AttributeError):
-            _failed_project_names(result)
+        """Malformed display data cannot assert an expected project contract."""
+        result = SimpleNamespace(project_results=["not", "a", "dict"], expected_projects=("expected",))
+        assert _failed_project_names(result) == ["expected"]
 
     def test_empty_list_values_are_failures(self) -> None:
         """A project with an empty results list is considered failed."""
@@ -174,8 +183,7 @@ class TestBuildArgParser:
         """With no arguments, all flags default to False/None."""
         args = build_arg_parser().parse_args([])
         assert args.no_infra_tests is False
-        assert args.no_llm is False
-        assert args.no_executive_report is False
+        assert args.mode == "core"
         assert args.skip_infra is False
         assert args.parallel is False
         assert args.max_workers is None
@@ -185,13 +193,14 @@ class TestBuildArgParser:
         args = build_arg_parser().parse_args(["--no-infra-tests"])
         assert args.no_infra_tests is True
 
-    def test_no_llm_flag(self) -> None:
-        args = build_arg_parser().parse_args(["--no-llm"])
-        assert args.no_llm is True
+    def test_live_mode(self) -> None:
+        args = build_arg_parser().parse_args(["--mode", "core"])
+        assert args.mode == "core"
 
-    def test_no_executive_report_flag(self) -> None:
-        args = build_arg_parser().parse_args(["--no-executive-report"])
-        assert args.no_executive_report is True
+    def test_removed_report_flag_is_rejected(self) -> None:
+        with pytest.raises(SystemExit) as caught:
+            build_arg_parser().parse_args(["--no-executive-report"])
+        assert caught.value.code == 2
 
     def test_skip_infra_flag(self) -> None:
         args = build_arg_parser().parse_args(["--skip-infra"])
@@ -214,8 +223,8 @@ class TestBuildArgParser:
         args = build_arg_parser().parse_args(
             [
                 "--no-infra-tests",
-                "--no-llm",
-                "--no-executive-report",
+                "--mode",
+                "core",
                 "--skip-infra",
                 "--parallel",
                 "--max-workers",
@@ -224,8 +233,7 @@ class TestBuildArgParser:
             ]
         )
         assert args.no_infra_tests is True
-        assert args.no_llm is True
-        assert args.no_executive_report is True
+        assert args.mode == "core"
         assert args.skip_infra is True
         assert args.parallel is True
         assert args.max_workers == 8
@@ -237,69 +245,96 @@ class TestBuildArgParser:
 # ---------------------------------------------------------------------------
 
 
+@pytest.mark.timeout(120)
 class TestMain:
     def test_empty_repo_returns_one(self, tmp_path: Path) -> None:
         """A repo with no ``projects/`` directory returns exit code 1."""
         # tmp_path has no projects/ dir → discover_projects returns []
-        rc = main(["--no-infra-tests", "--no-llm"], repo_root=tmp_path)
+        rc = main(["--no-infra-tests", "--mode", "core"], repo_root=tmp_path)
         assert rc == 1
 
     def test_empty_projects_dir_returns_one(self, tmp_path: Path) -> None:
         """A repo with an empty ``projects/`` directory returns exit code 1."""
         (tmp_path / "projects").mkdir()
-        rc = main(["--no-infra-tests", "--no-llm"], repo_root=tmp_path)
+        rc = main(["--no-infra-tests", "--mode", "core"], repo_root=tmp_path)
         assert rc == 1
 
     @pytest.mark.slow
     def test_with_scaffolded_project(self, tmp_path: Path) -> None:
         """A repo with a valid scaffolded project returns 0 or 1.
 
-        With ``--no-infra-tests --no-llm`` the pipeline runs core-only stages.
+        With ``--no-infra-tests --mode core`` the pipeline runs local stages.
         The scaffold from ``make_project`` is minimal, so the run may succeed
         (0) or report failures (1) depending on which stages execute — but it
         must not crash with an unhandled exception.
         """
-        make_repo(tmp_path, names=("template_test",))
+        scaffold_pipeline(tmp_path, ("templates/template_test",))
         rc = main(
-            ["--no-infra-tests", "--no-llm"],
+            ["--no-infra-tests", "--mode", "core"],
             repo_root=tmp_path,
         )
         assert rc in (0, 1)
 
-    def test_no_llm_only_flag(self, tmp_path: Path) -> None:
-        """``--no-llm`` alone (infra tests still on) runs without crashing."""
-        make_repo(tmp_path, names=("template_test",))
-        rc = main(["--no-llm"], repo_root=tmp_path)
+    def test_default_core_with_shared_stage(self, tmp_path: Path) -> None:
+        """Core invocation runs its canonical shared gate before the project."""
+        scaffold_pipeline(tmp_path, ("templates/template_test",))
+        rc = main(["--mode", "core"], repo_root=tmp_path)
         assert rc in (0, 1)
 
     def test_skip_infra_flag(self, tmp_path: Path) -> None:
         """``--skip-infra`` runs without crashing."""
-        make_repo(tmp_path, names=("template_test",))
-        rc = main(["--no-llm", "--skip-infra"], repo_root=tmp_path)
+        scaffold_pipeline(tmp_path, ("templates/template_test",))
+        rc = main(["--mode", "core", "--skip-infra"], repo_root=tmp_path)
         assert rc in (0, 1)
 
-    def test_no_executive_report_flag(self, tmp_path: Path) -> None:
-        """``--no-executive-report`` runs without crashing."""
-        make_repo(tmp_path, names=("template_test",))
-        rc = main(
-            ["--no-infra-tests", "--no-llm", "--no-executive-report"],
-            repo_root=tmp_path,
-        )
-        assert rc in (0, 1)
+    def test_removed_report_flag_is_invocation_error(self, tmp_path: Path) -> None:
+        with pytest.raises(SystemExit) as caught:
+            main(["--no-executive-report"], repo_root=tmp_path)
+        assert caught.value.code == 2
 
     def test_parallel_empty_repo_returns_one(self, tmp_path: Path) -> None:
         """``--parallel`` with no projects returns 1."""
         rc = main(
-            ["--parallel", "--no-llm"],
+            ["--parallel", "--mode", "core"],
             repo_root=tmp_path,
         )
         assert rc == 1
 
     def test_parallel_with_scaffolded_project(self, tmp_path: Path) -> None:
         """``--parallel`` with a scaffolded project runs without crashing."""
-        make_repo(tmp_path, names=("template_test",))
+        scaffold_pipeline(tmp_path, ("templates/template_test",))
         rc = main(
-            ["--parallel", "--no-infra-tests", "--no-llm"],
+            ["--parallel", "--no-infra-tests", "--mode", "core"],
             repo_root=tmp_path,
         )
         assert rc in (0, 1)
+
+
+@pytest.mark.parametrize("value", ["0", "-1", "nan", "inf"])
+def test_invalid_run_budget_before_discovery(tmp_path: Path, value: str) -> None:
+    assert main(["--run-timeout", value], repo_root=tmp_path) == 2
+    assert not (tmp_path / "output").exists()
+
+
+@pytest.mark.timeout(120)
+def test_cli_actual_qualified_completion_and_summary(tmp_path: Path) -> None:
+    import json
+    from tests.infra_tests.orchestration._pipeline_fixture import scaffold_pipeline
+
+    scaffold_pipeline(tmp_path, ("templates/alpha",))
+    assert main(["--no-infra-tests", "--run-timeout", "90"], repo_root=tmp_path) == 0
+    path = tmp_path / "output/multi_project_summary/multi_project_summary.json"
+    summary = json.loads(path.read_text())
+    assert summary["complete"] is True and summary["exit_code"] == 0
+    project = summary["projects"]["templates/alpha"]
+    assert project["success"] is True and project["expected_stage_keys"] == ["analysis"]
+    assert project["outcomes"][0]["status"] == "succeeded"
+    assert (tmp_path / "output/multi_project_summary/last-run-summary.md").is_file()
+
+
+def test_expired_aggregate_reporting_refuses_before_launch(tmp_path: Path) -> None:
+    import time
+    from infrastructure.core.pipeline.multi_project_cli import _write_summary_reports
+
+    assert _write_summary_reports(MultiProjectResult({}), [], tmp_path, deadline=time.monotonic() - 1) == 124
+    assert not (tmp_path / "output").exists()

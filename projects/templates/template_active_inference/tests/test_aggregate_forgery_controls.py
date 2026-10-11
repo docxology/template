@@ -54,15 +54,15 @@ def test_validation_spine_provenance_record_forgeries_are_caught(project_root: P
         data["artifacts"][rel]["deterministic_seed"] = None
         data["all_seeded"] = True
 
-    def forge_uncommitted_record(data: dict) -> None:
+    def forge_unbound_source_inputs(data: dict) -> None:
         rel = next(iter(data["artifacts"]))
-        data["artifacts"][rel]["source_commit"] = ""
-        data["all_source_commits"] = True
+        data["artifacts"][rel]["source_input_sha256"] = ""
+        data["all_source_inputs_bound"] = True
 
     _assert_forgery_caught(path, forge_unhashed_record, validate_artifact_provenance, "all_hashed", project_root)
     _assert_forgery_caught(path, forge_unseeded_record, validate_artifact_provenance, "all_seeded", project_root)
     _assert_forgery_caught(
-        path, forge_uncommitted_record, validate_artifact_provenance, "all_source_commits", project_root
+        path, forge_unbound_source_inputs, validate_artifact_provenance, "all_source_inputs_bound", project_root
     )
 
 

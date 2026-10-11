@@ -5,6 +5,7 @@ test categories from pytest console output.
 """
 
 import re
+import sys
 from typing import Any
 
 _ANSI_ESCAPE_RE = re.compile(r"\x1b\[[0-9;]*[A-Za-z]")
@@ -15,8 +16,23 @@ def _strip_ansi(text: str) -> str:
     return _ANSI_ESCAPE_RE.sub("", text)
 
 
+def pytest_failure_diagnostic(stdout: str, stderr: str) -> str:
+    """Retain at most 20 captured lines and 8192 characters from a failed child."""
+    return "".join((stdout + "\n" + stderr).splitlines(keepends=True)[-20:])[-8192:].strip()
+
+
+def report_pytest_failure(exit_code: int, stdout: str, stderr: str, quiet: bool) -> tuple[int, str, str]:
+    """Show a failed quiet child's captured tail once, preserving its result."""
+    if quiet and exit_code != 0:
+        diagnostic = pytest_failure_diagnostic(stdout, stderr)
+        if diagnostic:
+            sys.stderr.write(f"\nPytest exited {exit_code}; captured diagnostic tail:\n{diagnostic}\n")
+    return exit_code, stdout, stderr
+
+
 def parse_pytest_output(stdout: str, stderr: str, exit_code: int) -> dict[str, Any]:
     """Parse pytest stdout/stderr and exit_code into structured test metrics."""
+    diagnostic = pytest_failure_diagnostic(stdout, stderr) if exit_code != 0 else ""
     stdout = _strip_ansi(stdout)
     stderr = _strip_ansi(stderr)
 
@@ -32,6 +48,9 @@ def parse_pytest_output(stdout: str, stderr: str, exit_code: int) -> dict[str, A
         "execution_phases": {},
         "test_categories": {},
     }
+
+    if exit_code != 0:
+        results["failure_diagnostic"] = diagnostic
 
     # Parse summary line (e.g., "1747 passed, 2 skipped, 41 deselected in 37.59s")
     # This handles both verbose and quiet modes

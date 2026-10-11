@@ -47,7 +47,7 @@ Testing metric ensuring all conditional branches (if/else, switch cases) are exe
 
 Automated sequence of operations orchestrated by `scripts/runner/execute_pipeline.py` using the declared DAG in `infrastructure/core/pipeline/pipeline.yaml`.
 
-`--core-only` selects the core-tagged path. A normal full run can additionally
+`--mode core` selects the core-tagged path. A normal full run can additionally
 select configured LLM stages, while other publication lanes remain opt-in. The
 declarative YAML and generated table are authoritative; avoid copying counts
 into long-lived prose.
@@ -342,7 +342,7 @@ figures, and tables across enabled formats.
 
 Another name for [Build Pipeline](#build-pipeline). The sequence from tests to final PDF.
 
-**Script**: `uv run python scripts/runner/execute_pipeline.py --project {name} --core-only`
+**Script**: `uv run python scripts/runner/execute_pipeline.py --project {name} --mode core`
 
 ### Reproducibility
 

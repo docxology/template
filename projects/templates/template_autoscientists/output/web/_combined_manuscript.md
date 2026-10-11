@@ -2,7 +2,7 @@
 
 Recent work on *AutoScientists* [@gao2026autoscientists] coordinates self-organizing teams of language-model agents through a small set of shared mechanisms: a champion-and-experiment-log shared state, a registry of retired dead-end directions, effect-size ranking of candidate directions, noise-band confirmation of claimed improvements, and stagnation-driven reorganization of teams. This exemplar provides a deterministic, standalone reference implementation of those mechanisms and studies them honestly as a *testbed* rather than as a performance claim.
 
-We make the comparison fair by holding the total number of objective evaluations fixed: coordinated teams *partition* a single sequential experiment budget rather than adding parallel compute. Under that matched budget, coordination cannot — and in our results does not — beat a single-thread baseline on the final champion metric; we report the actual numbers and claim no speedup. What the testbed *does* demonstrate are two distinct, independently measurable benefits. First, noise-robustness: because the objective is stochastic, a single observed gain can be a draw of evaluation noise, so we separate the *reported* champion metric from the *clean* noise-free ground truth and show that noise-band confirmation shrinks the gap between them by roughly an order of magnitude — with confirmation on, the final champion's reported metric sits $0.0012$ above its clean value, against $0.0156$ with confirmation removed, while every configuration reaches the same clean optimum. Second, search hygiene: the dead-end registry, consulted by the proposer, cuts redundant re-probes of retired directions from $36$ to $0$ and halts at $36$ of the $60$ experiments — the same clean answer, reached with less waste. A per-mechanism ablation isolates each component's contribution, and the language-model proposer is a clean plug-in seam: a deterministic rule-based agent drives the reproducible figures, and a live Hermes agent (served by Ollama) can be swapped in without touching the coordination loop.
+We make the comparison fair by holding the total number of objective evaluations fixed: coordinated teams *partition* a single sequential experiment budget rather than adding parallel compute. Under that matched budget, coordination cannot — and in our results does not — beat a single-thread baseline on the final champion metric; we report the actual numbers and claim no speedup. What the testbed *does* demonstrate are two distinct, independently measurable benefits. First, noise-robustness: because the objective is stochastic, a single observed gain can be a draw of evaluation noise, so we separate the *reported* champion metric from the *clean* noise-free ground truth and show that noise-band confirmation shrinks the gap between them by roughly an order of magnitude — with confirmation on, the final champion's reported metric sits $0.0012$ above its clean value, against $0.0156$ with confirmation removed, while every configuration reaches the same clean optimum. Second, search hygiene: the dead-end registry, consulted by the proposer, cuts redundant re-probes of retired directions from $36$ to $0$ and halts at $36$ of the $60$ experiments — the same clean answer, reached with less waste. A per-mechanism ablation isolates each component's contribution, and the language-model proposer is a clean plug-in seam: a deterministic rule-based agent drives the reproducible figures, and a bounded local model proposer (served by Ollama) can be swapped in without touching the coordination loop.
 
 
 
@@ -35,7 +35,7 @@ A configuration that accepts noise-inflated champions will show a large reported
 2. **An honest matched-budget comparison** of coordinated teams against a single-thread baseline that reports the actual numbers and makes no speedup claim.
 3. **A reported-vs-clean noise-robustness measurement** that quantifies the value of noise-band confirmation as a roughly order-of-magnitude reduction in accepted noise.
 4. **A search-hygiene measurement** that quantifies the dead-end registry as a reduction of redundant re-probes from $36$ to $0$ and an early halt at $36$ of $60$ experiments, with the clean optimum unchanged.
-5. **A language-model plug-in seam** (`Proposer` protocol) that lets a live Hermes agent replace the deterministic proposer without modifying the coordination loop, exercised by an opt-in `requires_ollama` test.
+5. **A language-model plug-in seam** (`Proposer` protocol) that lets a bounded local model proposer replace the deterministic proposer without modifying the coordination loop, exercised by an opt-in `requires_ollama` test.
 
 The remainder of the paper specifies the mechanisms (@sec:methodology), reports the matched-budget comparison and the per-mechanism ablation with the numbers our scripts actually produce (@sec:results), states the scope and limits of those claims (@sec:scope), and documents reproduction (@sec:reproducibility).
 
@@ -104,9 +104,9 @@ Every mechanism is gated by a boolean in `SearchConfig`. With all *structural* c
 The loop depends only on a `Proposer` protocol — `propose(state, axes, proposer_id, avoid=frozenset()) -> Proposal`, where `avoid` is the dead-end registry's retired `(axis, direction)` pairs so a faithful proposer steers clear of them. Two *real* implementations are provided (no mocks):
 
 - **`DeterministicProposer`** — a rule-based policy that probes the next assigned axis in the direction that most recently improved it, defaulting toward the origin. It drives every rendered figure and test.
-- **`HermesProposer`** — renders the shared state to a prompt, asks a Hermes model (served by Ollama) for the next `(axis, step, rationale)` as JSON, and parses the reply, rejecting any axis outside the assigned set. Its infrastructure-LLM import is lazy, so the deterministic core tests and renders with no Ollama dependency.
+- **`LiveProposer`** — sends the current public shared state and assigned axes to an explicitly selected installed local Ollama model. It accepts only finite bounded numeric proposals, checks installed model identity across generations and both arms, and retains provider request/response bytes, state, outcomes, and budgets.
 
-Swapping one for the other is the only change needed to turn the deterministic reference run into a live agentic one.
+The explicit live comparison runs both coordinated and single-agent arms under equal ceilings. Its scoped local numerical results are separate from the deterministic manuscript figures and do not establish general scientific-agent superiority.
 
 
 
@@ -190,7 +190,7 @@ Confirmation averages each candidate over seeds $(101, 202, 303)$ and tests agai
 
 ## Proposer
 
-The rendered figures and the JSON summaries are produced with `DeterministicProposer`, a rule-based agent that reads the shared state and emits a concrete proposal. No mock objects are used anywhere. The live `HermesProposer` path is not part of the rendered pipeline; it is exercised separately (see @sec:reproducibility).
+The rendered figures and the JSON summaries are produced with `DeterministicProposer`, a rule-based agent that reads the shared state and emits a concrete proposal. No mock objects are used anywhere. The bounded local `LiveProposer` path is not part of the rendered pipeline; it is exercised separately (see @sec:reproducibility).
 
 ## Outputs
 
@@ -231,23 +231,29 @@ uv run pytest projects/templates/template_autoscientists/tests/ \
     --cov=projects/templates/template_autoscientists/src --cov-fail-under=90
 ```
 
-The deterministic core is tested to full coverage. The live language-model path is excluded from the coverage gate (`# pragma: no cover`) because it requires an external service.
+Source coverage includes domain checks and real controlled HTTP transport. The opt-in installed-model run is separate evidence and fails when its selected capability is missing.
 
-## The live Hermes agent (opt-in)
+## Bounded local coordination (opt-in)
 
-`HermesProposer` calls a Hermes model served by Ollama. It is not part of the rendered pipeline and is exercised only by an opt-in test marked `requires_ollama`:
+The default `--mode core` preserves the deterministic figures. `--mode live`
+requires platform 4.0.0 and an explicitly selected already-installed Ollama model
+at a literal loopback endpoint. Both arms execute 3–6 proposals with equal
+experiment, token and request-time ceilings, and three-seed confirmation.
+Actual token consumption is recorded separately. The JSON proposal may alter
+one assigned axis by a finite nonzero step in `[-1,1]`; code and paths are forbidden.
 
 ```bash
-# One-time: start Ollama and pull a Hermes model
-ollama serve
-ollama pull hermes3
-
-# Run the live round-trip test
-uv run pytest projects/templates/template_autoscientists/tests/agents/test_hermes_live.py \
-    -m requires_ollama -v
+uv run python projects/templates/template_autoscientists/scripts/run_search_comparison.py \
+  --mode live --model llama3.2:1b --endpoint http://127.0.0.1:11434 \
+  --output-dir output/.pipeline/local_coordination/selected-run
 ```
 
-Because the loop depends only on the `Proposer` protocol, swapping `DeterministicProposer` for `HermesProposer` is the single change needed to turn the reproducible reference run into a live agentic one — the coordination mechanisms, ablation toggles, and confirmation logic are unchanged.
+The fresh ignored run retains source and active producer hashes, installed model
+digest, every prompt context, exact provider request/response text, proposals,
+observed outcomes and budgets. Null and negative differences remain successful
+contract outcomes. Missing capabilities return `75`; malformed generations or
+source drift return `1`. No acquisition, paid API, source application, or external
+publication occurs. Full instructions: `docs/live-coordination.md`.
 
 ## Shared estimator
 
@@ -267,13 +273,13 @@ The noise-band confirmation estimator is generic. A synchronized copy lives at `
 - Under a **matched sequential experiment budget**, coordinated teams reach the same clean optimum as a single-thread baseline (advantage $= 0.0000$).
 - **Noise-band confirmation** produces a measurable, reproducible reduction in accepted evaluation noise (a $\sim 13\times$ smaller reported-vs-clean gap on this objective).
 - The **dead-end registry** produces a measurable, reproducible search-hygiene gain: consulted by the proposer, it cuts redundant re-probes of retired directions from $36$ to $0$ and halts the search at $36$ of $60$ experiments, with the clean optimum unchanged.
-- The **language-model proposer is a clean plug-in seam**: a live Hermes agent can replace the deterministic proposer without changing the coordination loop.
+- The **language-model proposer is a clean plug-in seam**: a bounded local model proposer can replace the deterministic proposer without changing the coordination loop.
 
 ## What this exemplar does *not* claim
 
 - **No speedup.** Because coordinated teams partition one budget rather than adding parallel compute, this testbed is not evidence that coordination is faster or reaches better solutions. It is constructed so that no such claim would be honest, and the measured advantage is zero.
 - **No generalization of the magnitudes.** The $\sim 13\times$ noise-reduction figure, the $36 \to 0$ redundancy reduction, and the null effect of effect-size ranking and reorganization on every measured quantity are properties of *this* synthetic objective, budget, and deterministic proposer. They illustrate the measurement, not a universal constant.
-- **No agentic-quality claim.** The live Hermes path demonstrates that the seam works, not that an LLM proposer outperforms the rule-based one.
+- **No agentic-quality claim.** The bounded local coordination path demonstrates that the seam works, not that an LLM proposer outperforms the rule-based one.
 
 ## Relationship to AutoScientists
 
@@ -295,7 +301,7 @@ This exemplar re-implements the AutoScientists coordination mechanisms [@gao2026
 
 Two results are worth keeping. The first is the noise-robustness measurement: by separating the reported champion metric from the clean ground-truth metric — possible only because the objective is synthetic — the testbed quantifies noise-band confirmation as a roughly thirteenfold reduction in accepted noise, with the clean optimum reached either way. The second is search hygiene: the dead-end registry, consulted by the proposer, drives redundant re-probes of retired directions from $36$ to $0$ and lets the search halt at $36$ of the $60$ experiments instead of burning the full budget — without changing the clean answer. The remaining structural mechanisms (effect-size ranking, stagnation reorganization) are correctly implemented and independently testable, but on this separable objective they reshape the search path without changing its destination, noise, or efficiency within the budget; we report that rather than overstate it.
 
-Two properties make the artifact reusable. First, every mechanism is gated behind a single configuration object, so the ablation is a clean subtraction and the testbed extends naturally to harder objectives where the structural mechanisms have more to do. Second, the language-model proposer is a genuine plug-in seam: the deterministic proposer drives the reproducible figures, and a live Hermes agent can replace it without touching the coordination loop. The honest-testbed framing is the contribution — a small, fully reproducible instrument for attributing coordination effects to mechanisms and for distinguishing real gains from noise.
+Two properties make the artifact reusable. First, every mechanism is gated behind a single configuration object, so the ablation is a clean subtraction and the testbed extends naturally to harder objectives where the structural mechanisms have more to do. Second, the language-model proposer is a genuine plug-in seam: the deterministic proposer drives the reproducible figures, and a bounded local model proposer can replace it without touching the coordination loop. The honest-testbed framing is the contribution — a small, fully reproducible instrument for attributing coordination effects to mechanisms and for distinguishing real gains from noise.
 
 
 

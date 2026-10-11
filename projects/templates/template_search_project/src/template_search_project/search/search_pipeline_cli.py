@@ -13,6 +13,7 @@ import argparse
 import json
 from pathlib import Path
 
+from infrastructure.core.files.secure_write import atomic_write_text_confined
 from infrastructure.core.logging.utils import get_logger
 
 from template_search_project.publish.config import ProjectConfig
@@ -32,6 +33,7 @@ def run_search_pipeline_cli(
     llm_builder=build_llm_callable,
 ) -> int:
     """Run the search-pipeline CLI flow and return the process exit code."""
+    project_root = project_root.absolute()
     logger.info("Running literature pipeline for query: %r", config.search.query)
     artifacts = run_literature_pipeline(
         config,
@@ -52,9 +54,8 @@ def run_search_pipeline_cli(
         print(str(artifacts.corpus_path))
 
     # Write search result JSON for diagnostics.
-    diag_path = (project_root / "output" / "search" / "results.json").resolve()
-    diag_path.parent.mkdir(parents=True, exist_ok=True)
-    diag_path.write_text(artifacts.result.to_json(), encoding="utf-8")
+    diag_path = (project_root / "output" / "search" / "results.json").absolute()
+    atomic_write_text_confined(project_root, diag_path, artifacts.result.to_json())
     print(str(diag_path))
 
     # Citation keys built by the pipeline (collision-free).
@@ -76,9 +77,8 @@ def run_search_pipeline_cli(
             review_timeout=config.llm.review_timeout,
         )
     if llm is not None:
-        llm_dir = (project_root / config.llm.output_dir).resolve()
+        llm_dir = (project_root / config.llm.output_dir).absolute()
         per_paper_dir = llm_dir / "per_paper"
-        per_paper_dir.mkdir(parents=True, exist_ok=True)
 
         if config.llm.per_paper:
             logger.info("Running per-paper synthesis for %d papers", len(artifacts.papers))
@@ -86,7 +86,7 @@ def run_search_pipeline_cli(
                 key = citation_keys.get(paper.id, paper.id)
                 synth = synthesise_per_paper(paper, key, llm=llm)
                 safe_id = "".join(ch if ch.isalnum() else "_" for ch in paper.id)
-                (per_paper_dir / f"{safe_id}.md").write_text(synth.text, encoding="utf-8")
+                atomic_write_text_confined(project_root, per_paper_dir / f"{safe_id}.md", synth.text)
                 per_paper_results.append(synth)
             print(str(per_paper_dir))
 
@@ -94,14 +94,14 @@ def run_search_pipeline_cli(
             logger.info("Running corpus-level synthesis")
             corpus_result = synthesise_corpus(artifacts.papers, citation_keys, llm=llm)
             corpus_path = llm_dir / "synthesis.md"
-            corpus_path.write_text(corpus_result.text, encoding="utf-8")
+            atomic_write_text_confined(project_root, corpus_path, corpus_result.text)
             print(str(corpus_path))
     elif do_llm:
         logger.info("LLM stage requested but no LLM client is reachable; skipping synthesis.")
 
     # Final reading report.
     report_path = write_reading_report(
-        (project_root / config.report.output_path).resolve(),
+        (project_root / config.report.output_path).absolute(),
         search_result=artifacts.result,
         citation_keys=citation_keys,
         per_paper=per_paper_results if config.report.include_per_paper else (),
@@ -109,6 +109,7 @@ def run_search_pipeline_cli(
         title=config.title,
         fixture_only=bool(config.search.sources)
         and all(source.strip().lower() == "local" for source in config.search.sources),
+        project_root=project_root,
     )
     print(str(report_path))
 
@@ -137,9 +138,8 @@ def run_search_pipeline_cli(
             else "provider_results"
         ),
     }
-    summary_path = (project_root / "output" / "run_summary.json").resolve()
-    summary_path.parent.mkdir(parents=True, exist_ok=True)
-    summary_path.write_text(json.dumps(summary, indent=2, ensure_ascii=False), encoding="utf-8")
+    summary_path = (project_root / "output" / "run_summary.json").absolute()
+    atomic_write_text_confined(project_root, summary_path, json.dumps(summary, indent=2, ensure_ascii=False))
     print(str(summary_path))
     return 0
 

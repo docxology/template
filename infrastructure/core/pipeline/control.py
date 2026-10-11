@@ -51,7 +51,7 @@ def merge_control_configs(
 
 def control_config_from_dict(data: dict[str, Any] | None) -> PipelineControlConfig:
     """Parse a ``control:`` mapping into a typed config."""
-    if not data:
+    if data is None:
         return PipelineControlConfig()
     if not isinstance(data, dict):
         raise ValueError("control block must be a mapping")
@@ -63,8 +63,8 @@ def control_config_from_dict(data: dict[str, Any] | None) -> PipelineControlConf
 
     stage_policies, stage_policy_fields = _parse_stage_policies(data.get("stage_policies"))
     return PipelineControlConfig(
-        hitl_mode=str(data.get("hitl_mode", "full-auto") or "full-auto"),
-        smart_pause_action=str(data.get("smart_pause_action", "report") or "report"),
+        hitl_mode=data.get("hitl_mode", "full-auto"),
+        smart_pause_action=data.get("smart_pause_action", "report"),
         custom_gate_stages=_tuple_of_ints(data.get("custom_gate_stages")),
         stage_policies=stage_policies,
         stage_policy_fields=stage_policy_fields,
@@ -138,7 +138,11 @@ def _parse_stage_policies(raw: Any) -> tuple[dict[int, StagePolicy], dict[int, f
         if unknown:
             keys = ", ".join(sorted(str(key) for key in unknown))
             raise ValueError(f"unsupported stage policy key(s): {keys}")
+        if type(stage_key) is not int and not (isinstance(stage_key, str) and stage_key.isdecimal()):
+            raise ValueError("Stage policy keys must be positive integer identities")
         stage_num = int(stage_key)
+        if stage_num <= 0 or stage_num in policies:
+            raise ValueError("Stage policy keys must be unique positive integers")
         policies[stage_num] = StagePolicy(**payload)
         explicit_fields[stage_num] = frozenset(str(key) for key in payload)
     return policies, explicit_fields
@@ -156,8 +160,8 @@ def _non_default_stage_policy_fields(policy: StagePolicy) -> frozenset[str]:
 def _tuple_of_ints(value: Any) -> tuple[int, ...]:
     if value is None:
         return ()
-    if isinstance(value, int):
-        return (value,)
     if isinstance(value, list | tuple):
-        return tuple(int(item) for item in value)
-    raise ValueError("custom_gate_stages must be an integer or list of integers")
+        if any(type(item) is not int or item <= 0 for item in value) or len(set(value)) != len(value):
+            raise ValueError("custom_gate_stages must contain unique positive integers")
+        return tuple(value)
+    raise ValueError("custom_gate_stages must be a list of integers")

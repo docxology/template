@@ -25,7 +25,7 @@ This is a research project template with a test-driven development workflow, aut
 | Reproducible run matrix (project × stage; preferred over the menu for repeatable subset runs) | `cp run.config.example.yaml run.config` first (the CLI errors without one), then `uv run python scripts/runner/run_matrix.py` (reads `run.config`; `--dry-run` to preview, `--fail-fast` to stop on first failure; see [`run.config.example.yaml`](run.config.example.yaml)) |
 | Secure workflow via main shell (`secure` subcommand) | `./run.sh --secure-run` |
 | Full pipeline | `./run.sh --pipeline` |
-| Core pipeline (no LLM) | `uv run python scripts/runner/execute_pipeline.py --project {name} --core-only` |
+| Core pipeline (no LLM) | `uv run python scripts/runner/execute_pipeline.py --project {name} --mode core` |
 | Incremental pipeline (opt-in stage skipping) | `uv run python scripts/runner/execute_pipeline.py --project {name} --incremental` (also `python -m infrastructure.orchestration pipeline --project {name} --incremental`; default off) |
 | Project pipeline tests | `uv run python scripts/pipeline/stage_01_test.py --project {name}` |
 | Full infrastructure gate | `uv run python scripts/pipeline/stage_01_test.py --infra-only --infra-scope full` |
@@ -48,7 +48,7 @@ This is a research project template with a test-driven development workflow, aut
 | Regression tests (claim-binding tier) | `uv run pytest tests/regression/ -v` (claim-binding tier plus a public-roster pin; collected totals in [`docs/_generated/COUNTS.md`](docs/_generated/COUNTS.md), rationale in [`docs/maintenance/regression-testing.md`](docs/maintenance/regression-testing.md)) |
 | Repo-wide doc linter | `uv run python scripts/audit/lint_docs.py` |
 | Exemplar drift checker | `uv run python scripts/audit/check_template_drift.py` (add `--strict` to fail on warnings, including hardcoded doc counts) |
-| Re-measure exemplar coverage (slow; runs every suite) | `uv run python scripts/docgen/counts.py --verify-coverage` (add `--write` to rewrite the recorded percentages from the measurement, then `--refresh-coverage-provenance --write`) |
+| Re-measure exemplar coverage (slow; runs every suite) | `uv run python scripts/docgen/counts.py --verify-coverage`; refresh with `--write --coverage-snapshot-output <retained-data-copy>` using an independent byte-for-byte copy of the selected SDK's `counts_coverage.py` outside the repo and SDK. Preserve the original; review/apply only the measured literal delta after original terminal Source/Code/wheel closure, rebuild the SDK, then run `--refresh-coverage-provenance --write`. |
 | Module line count gate | `uv run python scripts/gates/module_line_count_check.py` |
 | CodeGraph local commands | `uv run python scripts/maintenance/codegraph_local.py commands .` (optional; see [`docs/guides/codegraph-local.md`](docs/guides/codegraph-local.md)) |
 | LEANN local semantic retrieval | Optional user-level companion only; see [`docs/guides/leann-local.md`](docs/guides/leann-local.md) |
@@ -59,7 +59,7 @@ This is a research project template with a test-driven development workflow, aut
 
 ### CI mirror (GitHub Actions)
 
-Workflow definitions: [`.github/workflows/ci.yml`](.github/workflows/ci.yml). Job names, matrix (Ubuntu × Python 3.10–3.14 plus macOS × 3.14), coverage floors (infra 60%, project 90%), and local reproduction commands: [`.github/AGENTS.md`](.github/AGENTS.md).
+Workflow definitions: [`.github/workflows/ci.yml`](.github/workflows/ci.yml). Job names, matrix (Ubuntu × Python 3.12–3.14 plus macOS × 3.14), coverage floors (infra 60%, project 90%), and local reproduction commands: [`.github/AGENTS.md`](.github/AGENTS.md).
 
 ## Common Commands
 
@@ -75,7 +75,7 @@ Workflow definitions: [`.github/workflows/ci.yml`](.github/workflows/ci.yml). Jo
 # Dedicated secure shell: ensures `uv sync --group steganography`, then `python -m infrastructure.orchestration secure`
 # Pipeline phase requires `--project`; omit `--project` only with `--steganography-only` (all discovered projects).
 ./secure_run.sh --project {project_name}
-./secure_run.sh --project {project_name} --core-only
+./secure_run.sh --project {project_name} --mode core
 ./secure_run.sh --steganography-only --project {project_name}
 ./secure_run.sh --steganography-only
 
@@ -83,7 +83,7 @@ Workflow definitions: [`.github/workflows/ci.yml`](.github/workflows/ci.yml). Jo
 ./run.sh --pipeline
 
 # Core pipeline only (LLM and opt-in stages excluded)
-uv run python scripts/runner/execute_pipeline.py --project {project_name} --core-only
+uv run python scripts/runner/execute_pipeline.py --project {project_name} --mode core
 
 # Resume from checkpoint
 ./run.sh --pipeline --resume
@@ -624,7 +624,7 @@ This prohibition is enforced, not aspirational: regenerated-artifact guards reje
 
 
 <!-- BEGIN:STAGE_SUMMARY -->
-The default [`pipeline.yaml`](infrastructure/core/pipeline/pipeline.yaml) declares **17 named stages** (indices 0–16). Default full runs execute **10** core+LLM stages; `--core-only` executes **8**. Opt-in tags (`archival`, `bundle`, `docxplus`, `ebook`, `metadata`, `provenance`, `science`) stay out of those default runs unless a stage is invoked directly. YAML stage indices do not match `stage_NN_*.py` prefixes.
+The default [`pipeline.yaml`](infrastructure/core/pipeline/pipeline.yaml) declares **17 named stages** (indices 0–16). Default `--mode core` runs execute **8** stages; explicit `--mode live` executes **10** selected core and live stages. Opt-in tags (`archival`, `bundle`, `docxplus`, `ebook`, `metadata`, `provenance`, `science`) stay out of these selections unless a stage is invoked directly. YAML stage indices do not match `stage_NN_*.py` prefixes.
 <!-- END:STAGE_SUMMARY -->
 
 <!-- BEGIN:STAGE_TABLE -->
@@ -632,21 +632,21 @@ The default [`pipeline.yaml`](infrastructure/core/pipeline/pipeline.yaml) declar
 
 | Stage | Script | Tags | Failure mode |
 | ----- | ------ | ---- | ------------ |
-| **0** Clean Output Directories | built-in `_run_clean_outputs` | `core`, `clean` | soft fail |
+| **0** Clean Output Directories | built-in `_run_clean_outputs` | `core`, `clean` | failure prevents completion |
 | **1** Environment Setup | `scripts/pipeline/stage_00_setup.py` | `core` | hard fail |
-| **2** Infrastructure Tests | `scripts/pipeline/stage_01_test.py --infra-only --verbose --infra-scope pipeline-smoke` | `core`, `tests` | configurable tolerance |
-| **3** Project Tests | `scripts/pipeline/stage_01_test.py --project-only --verbose` | `core`, `tests` | configurable test-failure tolerance; zero-test, project-local coverage, verifier-receipt/evidence, and internal runner failures hard fail |
+| **2** Infrastructure Tests | `scripts/pipeline/stage_01_test.py --infra-only --verbose --infra-scope pipeline-smoke` | `core`, `tests` | required tests and coverage must pass |
+| **3** Project Tests | `scripts/pipeline/stage_01_test.py --project-only --verbose` | `core`, `tests` | required nonempty tests, project-local coverage, verifier evidence, and runner success must pass |
 | **4** Project Analysis | `scripts/pipeline/stage_02_analysis.py` | `core` | hard fail |
-| **5** Connector Search | `scripts/pipeline/stage_08_connector_search.py` | `science` | skipped if not configured |
-| **6** Provenance Record | `scripts/pipeline/stage_09_provenance_record.py --stage Connector Search` | `provenance` | skipped if not configured |
+| **5** Connector Search | `scripts/pipeline/stage_08_connector_search.py` | `science`, `live` | absent configuration requires a fresh policy-bound skip receipt |
+| **6** Provenance Record | `scripts/pipeline/stage_09_provenance_record.py --stage Connector Search` | `provenance` | absent configuration requires a fresh policy-bound skip receipt |
 | **7** PDF Rendering | `scripts/pipeline/stage_03_render.py` | `core` | hard fail |
 | **8** Output Validation | `scripts/pipeline/stage_04_validate.py` | `core` | enabled-format, enabled-PDF bookend, and artifact/provenance failures block; markdown, general output structure, and prose-quality checks remain advisory |
-| **9** LLM Scientific Review | `scripts/pipeline/stage_06_llm_review.py --reviews-only` | `llm` | skipped if Ollama absent |
-| **10** LLM Translations | `scripts/pipeline/stage_06_llm_review.py --translations-only` | `llm` | skipped if Ollama absent |
-| **11** Copy Outputs | `scripts/pipeline/stage_05_copy.py` | `core` | soft fail |
-| **12** Ebook Generation | `scripts/pipeline/stage_11_ebook.py` | `core`, `ebook` | soft fail |
-| **13** docxplus Export | `scripts/pipeline/stage_13_docxplus.py` | `core`, `docxplus` | soft fail |
-| **14** Metadata Package | `scripts/pipeline/stage_12_metadata.py` | `core`, `metadata` | soft fail |
-| **15** Executable Bundle | `scripts/runner/bundle_executable.py` | `bundle` | soft fail |
-| **16** Archival Publication | `scripts/runner/archive_publication.py` | `archival` | soft fail |
+| **9** LLM Manuscript Review | `scripts/pipeline/stage_06_llm_review.py --reviews-only` | `llm`, `live` | fresh policy-bound skip; unavailable required live acceptance is blocked |
+| **10** LLM Translations | `scripts/pipeline/stage_06_llm_review.py --translations-only` | `llm`, `live` | fresh policy-bound skip; unavailable required live acceptance is blocked |
+| **11** Copy Outputs | `scripts/pipeline/stage_05_copy.py` | `core` | failure prevents completion |
+| **12** Ebook Generation | `scripts/pipeline/stage_11_ebook.py` | `core`, `ebook` | failure prevents completion |
+| **13** docxplus Export | `scripts/pipeline/stage_13_docxplus.py` | `core`, `docxplus` | failure prevents completion |
+| **14** Metadata Package | `scripts/pipeline/stage_12_metadata.py` | `core`, `metadata` | failure prevents completion |
+| **15** Executable Bundle | `scripts/runner/bundle_executable.py` | `bundle` | failure prevents completion |
+| **16** Archival Publication | `scripts/runner/archive_publication.py` | `archival`, `live` | failure prevents completion |
 <!-- END:STAGE_TABLE -->

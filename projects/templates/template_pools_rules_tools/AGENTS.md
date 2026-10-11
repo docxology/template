@@ -13,7 +13,7 @@ for directory-specific rules.
 Ground truth for integration and figure counts lives in
 `output/data/manuscript_variables.json`; configuration is owned by
 `manuscript/config.yaml`. Content-figure counts derive from
-`src/figures/figure_support.py::INTEGRATION_FIGURE_SPECS`, while the separately declared
+`src/template_pools_rules_tools/figures/figure_support.py::INTEGRATION_FIGURE_SPECS`, while the separately declared
 `COVER_FIGURE_FILENAMES` contract covers layout-only cover art.
 
 This exemplar shows how a project reads from the three top-level resource
@@ -25,6 +25,12 @@ directories:
 
 All resource directories are read-only from this project's perspective. Never
 write back to `fonds/`, `rules/`, or `tools/` from project code.
+
+`src/template_pools_rules_tools/resource_paths.py` owns source/export/installed
+resource selection and fail-closed bundle admission. `setup.py` is a thin build
+orchestrator. Installed wheels carry all declared public resource bytes under
+`template_pools_rules_tools/_template_resources/`; preserve this parity and
+reject private folders, credential files, and symlink ancestors when packaging.
 
 ---
 
@@ -43,16 +49,16 @@ write back to `fonds/`, `rules/`, or `tools/` from project code.
 
 | Module | Role |
 |---|---|
-| `src/tools/type_defs.py` | All TypedDict definitions — edit here first |
-| `src/tools/fonds_reader.py` | Reads `fonds/templates/template_bibliography`, `template_contacts`, `template_datasets` |
-| `src/rules/rules_applier.py` | Loads `rules/templates/template_project_rules` and `template_manuscript_rules` |
-| `src/rules/strong_rule_evaluator.py` | Semantic evaluation of strong rule YAML against a runtime context dict |
-| `src/tools/resource_schema.py` | Fail-closed shared-resource schema receipts |
-| `src/tools/tools_invoker.py` | Discovers `tools/templates/template_code_executor` and other tool manifests |
-| `src/tools/integration.py` | Orchestrates all three into a combined demo result dict |
-| `src/figures/manuscript_variables.py` | Generates `{{UPPERCASE_KEY}}` manuscript variables from a live integration run |
-| `src/figures/figure_support.py` | Figure themes, `INTEGRATION_FIGURE_SPECS`, and `COVER_FIGURE_FILENAMES` |
-| `src/figures/figures.py` / `src/figures/cover_figure.py` / `src/figures/rule_hierarchy_figure.py` | Figure façade and renderers |
+| `src/template_pools_rules_tools/tools/type_defs.py` | All TypedDict definitions — edit here first |
+| `src/template_pools_rules_tools/tools/fonds_reader.py` | Reads `fonds/templates/template_bibliography`, `template_contacts`, `template_datasets` |
+| `src/template_pools_rules_tools/rules/rules_applier.py` | Loads `rules/templates/template_project_rules` and `template_manuscript_rules` |
+| `src/template_pools_rules_tools/rules/strong_rule_evaluator.py` | Semantic evaluation of strong rule YAML against a runtime context dict |
+| `src/template_pools_rules_tools/tools/resource_schema.py` | Fail-closed shared-resource schema receipts |
+| `src/template_pools_rules_tools/tools/tools_invoker.py` | Discovers `tools/templates/template_code_executor` and other tool manifests |
+| `src/template_pools_rules_tools/tools/integration.py` | Orchestrates all three into a combined demo result dict |
+| `src/template_pools_rules_tools/figures/manuscript_variables.py` | Generates `{{UPPERCASE_KEY}}` manuscript variables from a live integration run |
+| `src/template_pools_rules_tools/figures/figure_support.py` | Figure themes, `INTEGRATION_FIGURE_SPECS`, and `COVER_FIGURE_FILENAMES` |
+| `src/template_pools_rules_tools/figures/figures.py` / `src/template_pools_rules_tools/figures/cover_figure.py` / `src/template_pools_rules_tools/figures/rule_hierarchy_figure.py` | Figure façade and renderers |
 
 ---
 

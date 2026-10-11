@@ -51,12 +51,7 @@ if TYPE_CHECKING:
         export_exemplar,
         plan_copy,
     )
-    from infrastructure.project.export_smoke import (
-        ExportSmokeResult,
-        discover_import_targets,
-        smoke_exported_exemplar,
-        smoke_public_exemplars,
-    )
+    from infrastructure.project.package_discovery import discover_import_targets
     from infrastructure.project.promotion import (
         PromotionAttestation,
         load_promotion_attestation,
@@ -84,12 +79,7 @@ _COPY_EXEMPLAR_EXPORTS = {
     "export_exemplar",
     "plan_copy",
 }
-_EXPORT_SMOKE_EXPORTS = {
-    "ExportSmokeResult",
-    "discover_import_targets",
-    "smoke_exported_exemplar",
-    "smoke_public_exemplars",
-}
+_PACKAGE_DISCOVERY_EXPORTS = {"discover_import_targets"}
 _PROMOTION_EXPORTS = {
     "PromotionAttestation",
     "load_promotion_attestation",
@@ -114,11 +104,11 @@ def __getattr__(name: str) -> Any:
 
         copy_exemplar_mod = import_module("infrastructure.project.copy_exemplar")
         return getattr(copy_exemplar_mod, name)
-    if name in _EXPORT_SMOKE_EXPORTS:
+    if name in _PACKAGE_DISCOVERY_EXPORTS:
         from importlib import import_module
 
-        export_smoke = import_module("infrastructure.project.export_smoke")
-        return getattr(export_smoke, name)
+        package_discovery = import_module("infrastructure.project.package_discovery")
+        return getattr(package_discovery, name)
     if name in _PROMOTION_EXPORTS:
         from importlib import import_module
 
@@ -133,7 +123,6 @@ __all__ = [
     "CodeGraphCommand",
     "CopyResult",
     "ExportManifest",
-    "ExportSmokeResult",
     "PromotionAttestation",
     "build_codegraph_files_command",
     "build_codegraph_init_command",
@@ -153,8 +142,6 @@ __all__ = [
     "load_promotion_attestation",
     "resolve_project_root",
     "run_project_setup_hook",
-    "smoke_exported_exemplar",
-    "smoke_public_exemplars",
     "validate_project_structure",
     "validate_promotion_attestation",
     "verify_codegraph_scope_payload",

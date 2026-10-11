@@ -13,6 +13,7 @@ import argparse
 import json
 from pathlib import Path
 
+from infrastructure.core.files.secure_write import atomic_write_text_confined
 from infrastructure.core.logging.utils import get_logger
 
 from template_search_project.publish.config import DeepSearchConfig, ProjectConfig
@@ -110,9 +111,8 @@ def run_deep_search_cli(
         "llm_used": deep_cfg.llm_per_paper and llm is not None,
         "errors_per_keyword": {kr.keyword: dict(kr.search_result.errors) for kr in artifacts.keyword_results},
     }
-    summary_path = (project_root / deep_cfg.output_dir / "run_summary.json").resolve()
-    summary_path.parent.mkdir(parents=True, exist_ok=True)
-    summary_path.write_text(json.dumps(summary, indent=2, ensure_ascii=False), encoding="utf-8")
+    summary_path = (project_root / deep_cfg.output_dir / "run_summary.json").absolute()
+    atomic_write_text_confined(project_root, summary_path, json.dumps(summary, indent=2, ensure_ascii=False))
     print(str(summary_path))
 
     logger.info(
@@ -122,7 +122,12 @@ def run_deep_search_cli(
         artifacts.unique_papers,
         artifacts.output_dir,
     )
-    return 0
+    return int(
+        any(
+            kr.search_result.errors or any(item.status == "error" for item in kr.enrichment_log)
+            for kr in artifacts.keyword_results
+        )
+    )
 
 
 __all__ = ["run_deep_search_cli"]

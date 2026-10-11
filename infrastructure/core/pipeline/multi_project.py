@@ -10,28 +10,26 @@ from __future__ import annotations
 
 import time
 from collections.abc import Sequence
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from pathlib import Path
-from typing import TYPE_CHECKING, Callable
+from typing import TYPE_CHECKING
 
-from infrastructure.core.logging.utils import get_logger, log_operation
-from infrastructure.core.errors import PROJECT_EXCEPTION, PROJECT_FAILED
-from infrastructure.core.pipeline.executor import PipelineExecutor
-from infrastructure.core.pipeline.types import PipelineConfig, PipelineStageResult
+from infrastructure.core.logging.utils import get_logger
+from infrastructure.core.pipeline.types import PipelineStageResult
+from infrastructure.core.pipeline.types import PipelineConfig
+from infrastructure.core.pipeline.outcomes import RunResult
+from infrastructure.core.pipeline.multi_project_support import (
+    aggregate_project_exit_code,
+    run_shared_infrastructure,
+    SharedInfrastructureResult,
+    validated_run_for_rows,
+)
 
 if TYPE_CHECKING:
     from infrastructure.project.project_info import ProjectInfo
+    from infrastructure.core.pipeline.multi_project_runtime import ProjectExecutionSpec
 
 logger = get_logger(__name__)
-
-
-def _projects_dir_for_project(repo_root: Path, project_path: Path) -> str:
-    """Return the repository-relative projects root for a discovered project."""
-    try:
-        relative_parts = project_path.resolve().relative_to(repo_root.resolve()).parts
-    except ValueError:
-        return "projects"
-    return relative_parts[0] if relative_parts else "projects"
 
 
 @dataclass
@@ -41,8 +39,10 @@ class MultiProjectConfig:
     repo_root: Path
     projects: list[ProjectInfo]
     run_infra_tests: bool = True
-    run_llm: bool = True
-    run_executive_report: bool = True
+    mode: str = "core"
+    resume: bool = False
+    run_timeout_seconds: float = 14400.0
+    deadline_monotonic: float | None = None
 
 
 @dataclass
@@ -54,6 +54,27 @@ class MultiProjectResult:
     total_duration: float = 0.0
     successful_projects: int = 0
     failed_projects: int = 0
+    expected_projects: tuple[str, ...] = ()
+    run_results: dict[str, RunResult] = field(default_factory=dict)
+    shared_infrastructure_exit_code: int = 0
+    shared_infrastructure_result: SharedInfrastructureResult | None = None
+
+    @property
+    def exit_code(self) -> int:
+        return aggregate_project_exit_code(
+            self.expected_projects,
+            self.run_results,
+            self.shared_infrastructure_exit_code,
+            project_results=self.project_results,
+            shared_result=self.shared_infrastructure_result,
+        )
+
+
+def validated_project_run(result: MultiProjectResult, name: str) -> RunResult | None:
+    """Only matching typed outcomes and their original expected selection grant completion."""
+    if not isinstance(result.project_results, dict):
+        return None
+    return validated_run_for_rows(result.project_results.get(name), result.run_results.get(name))
 
 
 def format_multi_project_outcome_lines(
@@ -69,7 +90,7 @@ def format_multi_project_outcome_lines(
 
     Args:
         ordered_projects: Projects in run order (same list passed to orchestrator config).
-        result: Aggregate result from ``execute_all_projects_*``.
+        result: Aggregate result from ``execute_all_projects``.
         hint_max_chars: Truncate first failing stage ``error_message`` to this length.
     """
     lines: list[str] = []
@@ -97,7 +118,8 @@ def format_multi_project_outcome_lines(
         if not stages:
             failed.append(f"{qn}: pipeline failed before stage results were recorded")
             continue
-        if all(stage.success for stage in stages):
+        run = validated_project_run(result, qn)
+        if run is not None and run.complete:
             succeeded.append(qn)
         else:
             first_bad = next((s for s in stages if not s.success), None)
@@ -124,210 +146,147 @@ def format_multi_project_outcome_lines(
 class MultiProjectOrchestrator:
     """Orchestrate pipeline execution across multiple projects."""
 
-    def __init__(
-        self,
-        config: MultiProjectConfig,
-        on_project_complete: Callable[[str, list[PipelineStageResult], Path], None] | None = None,
-    ) -> None:
-        """Initialize multi-project orchestrator.
-
-        Args:
-            config: Multi-project configuration
-            on_project_complete: Optional callback invoked after each project finishes.
-                Receives (project_name, stage_results, output_dir). Use this at the
-                call-site to generate reports without importing reporting modules here.
-        """
+    def __init__(self, config: MultiProjectConfig) -> None:
         self.config = config
-        self.on_project_complete = on_project_complete
 
-    def execute_all_projects_full(self) -> MultiProjectResult:
-        """Execute full pipeline for all projects (with infrastructure tests, with LLM).
+    def execute_all_projects(self) -> MultiProjectResult:
+        """Freeze all plans once, then execute that exact prepared contract."""
+        from infrastructure.core.pipeline.multi_project_runtime import (
+            freeze_project_plans,
+            freeze_shared_plan,
+            validate_budget,
+        )
+        from infrastructure.core.pipeline.execution_session import compose_run_deadline
 
-        Returns:
-            Multi-project execution result
+        started = time.monotonic()
+        validate_budget(self.config.run_timeout_seconds)
+        if self.config.mode not in {"core", "live"} or any(
+            type(getattr(self.config, name)) is not bool for name in ("run_infra_tests", "resume")
+        ):
+            raise ValueError("Prepared invocation requires the canonical mode and exact boolean policy")
+        deadline = compose_run_deadline(self.config.run_timeout_seconds, self.config.deadline_monotonic)
+        specs = freeze_project_plans(
+            self.config.projects,
+            self.config.repo_root,
+            mode=self.config.mode,
+            resume=self.config.resume,
+            timeout=self.config.run_timeout_seconds,
+        )
+        shared = freeze_shared_plan(specs) if self.config.run_infra_tests and specs else None
+        result = self.execute_prepared_projects(specs, shared, deadline_monotonic=deadline)
+        result.total_duration = time.monotonic() - started
+        return result
+
+    def _admit_prepared_spec(self, spec: ProjectExecutionSpec, expected: PipelineConfig) -> ProjectExecutionSpec:
+        """Bind typed transported identities without consulting a new definition."""
+        from infrastructure.core.pipeline.multi_project_runtime import ProjectExecutionSpec
+        from infrastructure.core.pipeline.plan import ExecutionPlan
+
+        if not isinstance(spec, ProjectExecutionSpec) or not isinstance(spec.config, PipelineConfig):
+            raise ValueError("Prepared projects require typed execution specifications")
+        if spec.config != expected or any(
+            type(getattr(spec.config, name)) is not bool for name in ("clean", "skip_infra", "resume")
+        ):
+            raise ValueError("Prepared project configuration differs from the selected invocation")
+        plan = spec.plan
+        if not isinstance(plan, ExecutionPlan):
+            raise ValueError("Prepared projects require typed execution plans")
+        admitted_plan = ExecutionPlan.from_dict(plan.to_dict(), expected_digest=plan.digest)
+        if (
+            plan.project != expected.project_name
+            or plan.mode != expected.mode
+            or plan.run_timeout_seconds != expected.run_timeout_seconds
+        ):
+            raise ValueError("Prepared plan identity differs from the selected invocation")
+        # Config is mutable: retain a privately constructed canonical copy so a
+        # caller cannot change the admitted transport while a worker is queued.
+        return ProjectExecutionSpec(expected, admitted_plan)
+
+    def execute_prepared_projects(
+        self,
+        specs: tuple[ProjectExecutionSpec, ...],
+        shared: ProjectExecutionSpec | None,
+        *,
+        deadline_monotonic: float | None = None,
+    ) -> MultiProjectResult:
+        """Validate and supervise the original plans; never recompile after preflight.
+
+        The existing worker source guards refuse mutations after preparation,
+        and the original supervising deadline includes caller preflight time.
         """
-        logger.info(f"Executing full pipeline for {len(self.config.projects)} projects")
-
-        return self._execute_multi_project_pipeline(run_infra_tests=True, run_llm=True)
-
-    def execute_all_projects_core(self) -> MultiProjectResult:
-        """Execute core pipeline for all projects (with infrastructure tests, no LLM).
-
-        Returns:
-            Multi-project execution result
-        """
-        logger.info(f"Executing core pipeline for {len(self.config.projects)} projects")
-
-        return self._execute_multi_project_pipeline(run_infra_tests=True, run_llm=False)
-
-    def execute_all_projects_full_no_infra(self) -> MultiProjectResult:
-        """Execute full pipeline for all projects (no infrastructure tests, with LLM).
-
-        Returns:
-            Multi-project execution result
-        """
-        logger.info(f"Executing full pipeline (no infra) for {len(self.config.projects)} projects")
-
-        return self._execute_multi_project_pipeline(run_infra_tests=False, run_llm=True)
-
-    def execute_all_projects_core_no_infra(self) -> MultiProjectResult:
-        """Execute core pipeline for all projects (no infrastructure tests, no LLM).
-
-        Returns:
-            Multi-project execution result
-        """
-        logger.info(f"Executing core pipeline (no infra) for {len(self.config.projects)} projects")
-
-        return self._execute_multi_project_pipeline(run_infra_tests=False, run_llm=False)
-
-    def _execute_multi_project_pipeline(self, run_infra_tests: bool, run_llm: bool) -> MultiProjectResult:
-        """Execute pipeline across multiple projects.
-
-        Args:
-            run_infra_tests: Whether to run infrastructure tests once at start
-            run_llm: Whether to include LLM stages
-
-        Returns:
-            Multi-project execution result
-        """
-        start_time = time.time()
-        project_results = {}
-
-        # Run infrastructure tests once at the beginning (if requested)
-        infra_duration = 0.0
-        if run_infra_tests:
-            if not self._run_infrastructure_tests_once():
-                logger.error("Infrastructure tests failed - aborting multi-project execution")
-                return MultiProjectResult(
-                    project_results={},
-                    infra_test_duration=infra_duration,
-                    total_duration=time.time() - start_time,
-                    successful_projects=0,
-                    failed_projects=len(self.config.projects),
-                )
-            infra_duration = time.time() - start_time
-            logger.info(f"✅ Infrastructure tests completed in {infra_duration:.1f}s")
-        else:
-            logger.info("Skipping infrastructure tests (already run or disabled)")
-
-        # Execute pipeline for each project
-        successful_projects = 0
-        failed_projects = 0
-
-        for i, project in enumerate(self.config.projects, 1):
-            # Use qualified_name to include program directory for nested projects
-            # e.g., 'cognitive_integrity/cogsec_multiagent_1_theory' instead of 'cogsec_multiagent_1_theory'  # noqa: E501
-            project_name = project.qualified_name
-            logger.info(f"Project {i}/{len(self.config.projects)}: {project_name}")
-
-            try:
-                with log_operation(f"Pipeline execution for {project_name}"):
-                    # Preserve qualified names for nested projects.  The
-                    # projects_dir remains the top-level pool (projects);
-                    # project_name carries any typed-subfolder/program subpath,
-                    # e.g. templates/template_code_project or active/cogsec.
-                    pipeline_config = PipelineConfig(
-                        project_name=project_name,
-                        repo_root=self.config.repo_root,
-                        projects_dir=_projects_dir_for_project(self.config.repo_root, project.path),
-                        skip_infra=True,  # Always skip infra tests for individual projects in multi-project mode  # noqa: E501
-                        skip_llm=not run_llm,
-                    )
-
-                    # Execute pipeline
-                    executor = PipelineExecutor(pipeline_config)
-                    method = executor.execute_full_pipeline if run_llm else executor.execute_core_pipeline
-                    results = method()
-
-                    project_results[project_name] = results
-
-                    # Notify call-site that this project finished (e.g. for report generation).
-                    # Reporting logic lives at the call-site to avoid a downward dependency
-                    # from core/ into the higher-level reporting/ layer.
-                    if self.on_project_complete is not None:
-                        output_dir = pipeline_config.project_dir / "output"
-                        try:
-                            self.on_project_complete(project_name, results, output_dir)
-                        except Exception as e:  # noqa: BLE001 - callback can raise anything
-                            logger.warning(
-                                f"Project completion callback failed for {project_name}: {e}",
-                                exc_info=True,
-                            )
-
-                    # Check if all stages succeeded
-                    all_success = bool(results) and all(r.success for r in results)
-                    if all_success:
-                        successful_projects += 1
-                        logger.info(f"✅ Project '{project_name}' completed successfully")
-                    else:
-                        failed_projects += 1
-                        logger.error(PROJECT_FAILED.format(project_name=project_name))
-                        # Continue with other projects even if one fails
-
-            except Exception as e:  # noqa: BLE001 - pipeline execution can raise varied exceptions
-                failed_projects += 1
-                logger.error(PROJECT_EXCEPTION.format(project_name=project_name, error=e))
-                project_results[project_name] = []
-
-        # Executive reporting is handled by the dedicated pipeline stage
-        # (scripts/pipeline/stage_07_executive_report.py), which runs as part of the stage executor.
-
-        total_duration = time.time() - start_time
-
-        logger.info(
-            f"Multi-project execution completed: {successful_projects} successful, {failed_projects} failed"  # noqa: E501
+        from infrastructure.core.pipeline.execution_session import compose_run_deadline
+        from infrastructure.core.pipeline.multi_project_runtime import (
+            execute_frozen_specs,
+            selected_project_config,
+            selected_shared_config,
+            validate_budget,
         )
 
-        return MultiProjectResult(
-            project_results=project_results,
-            infra_test_duration=infra_duration,
-            total_duration=total_duration,
-            successful_projects=successful_projects,
-            failed_projects=failed_projects,
-        )
-
-    def _run_infrastructure_tests_once(self) -> bool:
-        """Run infrastructure tests once before all projects.
-
-        Returns:
-            True if infrastructure tests passed, False otherwise
-        """
-        logger.info("Running infrastructure tests once for all projects...")
-
-        try:
-            # Use an existing project name so reports can be written under projects/{name}/output/reports/  # noqa: E501
-            # (the infrastructure test suite itself does not depend on project code).
-            # Use qualified_name for proper nested project path resolution.
-            fallback_project = self.config.projects[0].qualified_name if self.config.projects else "project"
-
-            # Create a config just to run infra tests
-            infra_config = PipelineConfig(
-                project_name=fallback_project,
-                repo_root=self.config.repo_root,
-                skip_infra=False,
-                skip_llm=True,
+        started = time.monotonic()
+        validate_budget(self.config.run_timeout_seconds)
+        if self.config.mode not in {"core", "live"} or any(
+            type(getattr(self.config, name)) is not bool for name in ("run_infra_tests", "resume")
+        ):
+            raise ValueError("Prepared invocation requires the canonical mode and exact boolean policy")
+        deadline = compose_run_deadline(self.config.run_timeout_seconds, self.config.deadline_monotonic)
+        if deadline_monotonic is not None:
+            deadline = min(deadline, compose_run_deadline(self.config.run_timeout_seconds, deadline_monotonic))
+        if not isinstance(specs, tuple) or len(specs) != len(self.config.projects):
+            raise ValueError("Prepared project selection differs from the selected invocation")
+        admitted = []
+        for project, spec in zip(tuple(self.config.projects), specs, strict=True):
+            expected_config = selected_project_config(
+                project,
+                self.config.repo_root,
+                mode=self.config.mode,
+                resume=self.config.resume,
+                timeout=self.config.run_timeout_seconds,
             )
+            spec = self._admit_prepared_spec(spec, expected_config)
+            from infrastructure.core.pipeline.target_contracts import canonical_target_contract
 
-            executor = PipelineExecutor(infra_config)
-
-            # Run only the infrastructure tests stage
-            success = executor.run_infrastructure_tests()
-
-            if success:
-                logger.info("✅ Infrastructure tests passed for all projects")
-                return True
-            else:
-                logger.error("❌ Infrastructure tests failed")
-                return False
-
-        except Exception as e:  # noqa: BLE001 - infra tests can raise varied exceptions
-            logger.error(f"❌ Infrastructure tests failed with exception: {e}")
-            return False
-
-
-__all__ = [
-    "MultiProjectConfig",
-    "MultiProjectOrchestrator",
-    "MultiProjectResult",
-    "format_multi_project_outcome_lines",
-]
+            if any(
+                stage.key == "infra_tests"
+                or canonical_target_contract(stage.script, stage.method, stage.arguments).infrastructure_tests
+                for stage in spec.plan.stages
+            ):
+                raise ValueError("Prepared project plans must leave shared infrastructure to the once-only gate")
+            admitted.append(spec)
+        specs = tuple(admitted)
+        expected = tuple(spec.plan.project for spec in specs)
+        if len(expected) != len(set(expected)):
+            raise ValueError("Duplicate prepared project identities")
+        if self.config.run_infra_tests and specs:
+            if shared is None:
+                raise ValueError("Prepared invocation is missing its shared infrastructure plan")
+            shared = self._admit_prepared_spec(shared, selected_shared_config(specs))
+            if (
+                shared.plan.expected_stage_keys != ("infra_tests",)
+                or shared.plan.provenance != "infrastructure/core/pipeline/pipeline.yaml"
+                or not canonical_target_contract(
+                    shared.plan.stages[0].script, shared.plan.stages[0].method, shared.plan.stages[0].arguments
+                ).infrastructure_tests
+            ):
+                raise ValueError("Prepared shared infrastructure policy differs from the canonical gate")
+        elif shared is not None:
+            raise ValueError("Prepared invocation includes an unselected shared infrastructure gate")
+        shared_started = time.monotonic()
+        shared_result = run_shared_infrastructure(shared, deadline=deadline) if shared is not None else None
+        shared_exit = shared_result.exit_code if shared_result is not None else 0
+        infra_duration = time.monotonic() - shared_started if shared is not None else 0.0
+        if shared_exit:
+            return MultiProjectResult(
+                {}, infra_duration, time.monotonic() - started, 0, len(specs), expected, {}, shared_exit, shared_result
+            )
+        rows, runs = execute_frozen_specs(specs, workers=1, deadline=deadline)
+        succeeded = sum(run.complete for run in runs.values())
+        return MultiProjectResult(
+            rows,
+            infra_duration,
+            time.monotonic() - started,
+            succeeded,
+            len(specs) - succeeded,
+            expected,
+            runs,
+            shared_infrastructure_result=shared_result,
+        )

@@ -33,10 +33,16 @@ def load_sampling_config(config: dict[str, Any]) -> tuple[float, int]:
         sampling block is present (i.e., no subsampling by default).
     """
     sampling_cfg = config.get("sampling", {}) or {}
-    fraction = float(sampling_cfg.get("fraction", 1.0))
-    seed = int(sampling_cfg.get("seed", 42))
-    # Clamp fraction to [0.0, 1.0].
-    fraction = max(0.0, min(1.0, fraction))
+    raw_fraction = sampling_cfg.get("fraction", 1.0)
+    raw_seed = sampling_cfg.get("seed", 42)
+    if isinstance(raw_fraction, bool) or not isinstance(raw_fraction, (int, float)):
+        raise ValueError("sampling.fraction must be numeric")
+    fraction = float(raw_fraction)
+    if not 0.0 < fraction <= 1.0:
+        raise ValueError("sampling.fraction must be greater than zero and at most one")
+    if type(raw_seed) is not int or raw_seed < 0:
+        raise ValueError("sampling.seed must be a non-negative integer")
+    seed = raw_seed
     return fraction, seed
 
 
@@ -50,8 +56,8 @@ def sample_papers(papers: list[Paper], *, fraction: float, seed: int) -> list[Pa
     - **Determinism**: same input + same seed + same fraction = same output.
     - **Idempotency**: re-running with the same config produces the same
       sample, so incremental resume works correctly.
-    - **Stability**: adding new papers to the corpus shifts the sample
-      minimally (most existing selections are preserved).
+    Selection is reproducible for a fixed corpus. Adding records can change
+    both the offset and stride selections; no membership-stability claim is made.
 
     Args:
         papers: Full list of papers to sample from.
@@ -59,7 +65,7 @@ def sample_papers(papers: list[Paper], *, fraction: float, seed: int) -> list[Pa
         seed: RNG seed for deterministic offset selection.
 
     Returns:
-        A subset of *papers* of size ``ceil(len(papers) * fraction)``.
+        A subset of *papers* of size ``max(1, round(len(papers) * fraction))``.
         When *fraction* >= 1.0, returns all papers unchanged.
     """
     if fraction >= 1.0 or not papers:

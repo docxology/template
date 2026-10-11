@@ -590,7 +590,7 @@ project's declared pipeline:
 
 ```bash
 uv run python scripts/runner/execute_pipeline.py \
-  --project <qualified-name> --core-only
+  --project <qualified-name> --mode core
 ```
 
 Use a qualified name such as `templates/template_code_project` or
@@ -659,7 +659,7 @@ vim projects/templates/template_code_project/scripts/my_figure.py
 
 # 5. Run build
 uv run python scripts/runner/execute_pipeline.py \
-  --project <qualified-name> --core-only
+  --project <qualified-name> --mode core
 
 # 6. View result (top-level output after copy outputs)
 open output/templates/template_code_project/pdf/template_code_project_combined.pdf
@@ -670,7 +670,7 @@ open output/templates/template_code_project/pdf/template_code_project_combined.p
 ```bash
 # 1. Full rebuild with validation (recommended declared core selection)
 uv run python scripts/runner/execute_pipeline.py \
-  --project <qualified-name> --core-only
+  --project <qualified-name> --mode core
 
 # Or use unified interactive menu
 ./run.sh

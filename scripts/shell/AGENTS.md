@@ -10,8 +10,9 @@ used by the repository's root wrappers and maintenance workflows.
 | Script | Purpose |
 |--------|---------|
 | `bash_utils.sh` | Shared shell helpers for backup/health scripts and integration tests |
-| `shell_bootstrap.sh` | Shared `uv` bootstrap and sandbox env vars; sourced by `run.sh` / `secure_run.sh` |
+| `shell_bootstrap.sh` | Finite nonce-bound prepared CPython/venv admission and sandbox env vars; sourced by `run.sh` / `secure_run.sh` |
 | `setup-system-deps.sh` | One-shot installer for the external toolchain: pandoc, XeLaTeX + missing LaTeX packages, uv (macOS/Debian; idempotent, `--check` verifies without installing) |
+| `prepare_native_epubcheck.py` | Finite exact-size/hash official EPUBCheck 5.4.0 download and bounded confined ZIP extraction into a fresh owned directory; no model or credential setup |
 | `ci_local.sh` | Local CI reproduction (`act` when available, else a documented fail-closed direct-command subset) |
 | `health-check.sh` | Pre-flight system health check (Python, uv, pandoc, xelatex, disk, Docker, repo) |
 | `backup-daily.sh` | Daily rsync backup tier |
@@ -28,6 +29,8 @@ bash scripts/shell/health-check.sh
 # One-shot system dependency setup (pandoc, xelatex + LaTeX packages, uv)
 bash scripts/shell/setup-system-deps.sh --check
 bash scripts/shell/setup-system-deps.sh
+# Hosted/advanced callers with an already locked environment:
+bash scripts/shell/setup-system-deps.sh --prepared-python .venv/bin/python
 
 # Local CI
 bash scripts/shell/ci_local.sh
@@ -73,3 +76,9 @@ bash scripts/shell/restore-test.sh backup pre-upgrade-2026-08-14
 
 - [`scripts/AGENTS.md`](../AGENTS.md) — full scripts inventory
 - [`scripts/backup/`](../backup/) — backup scripts directory
+
+`setup-system-deps.sh --prepared-python PATH` never bootstraps or syncs Python;
+it requires an executable CPython >=3.12 and uses that interpreter for the actual
+LaTeX package validator. The caller owns dependency preparation. `--check` can
+be combined with this selection and retains its no-install behavior. Ordinary
+standalone invocation keeps its existing uv setup, sync and validation.

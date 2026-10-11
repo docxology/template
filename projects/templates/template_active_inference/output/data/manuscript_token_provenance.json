@@ -466,7 +466,7 @@
     },
     {
       "consumer_kind": "manuscript_section",
-      "expected_value": "0.3251",
+      "expected_value": "0.0000",
       "generated_output_path": "output/manuscript/06_methods_pymdp.md",
       "hydrated_value_present": true,
       "mapped": true,
@@ -1714,7 +1714,7 @@
     },
     {
       "consumer_kind": "manuscript_section",
-      "expected_value": "0.3251",
+      "expected_value": "0",
       "generated_output_path": "output/manuscript/12_results_si_tmaze.md",
       "hydrated_value_present": true,
       "mapped": true,
@@ -2170,7 +2170,7 @@
     },
     {
       "consumer_kind": "manuscript_section",
-      "expected_value": "0.3251",
+      "expected_value": "0.0000",
       "generated_output_path": "output/manuscript/12_results_si_tmaze.md",
       "hydrated_value_present": true,
       "mapped": true,
@@ -2182,7 +2182,7 @@
     },
     {
       "consumer_kind": "manuscript_section",
-      "expected_value": "0.3251",
+      "expected_value": "0",
       "generated_output_path": "output/manuscript/12_results_si_tmaze.md",
       "hydrated_value_present": true,
       "mapped": true,
@@ -2194,7 +2194,7 @@
     },
     {
       "consumer_kind": "manuscript_section",
-      "expected_value": "0.3251",
+      "expected_value": "0",
       "generated_output_path": "output/manuscript/12_results_si_tmaze.md",
       "hydrated_value_present": true,
       "mapped": true,
@@ -2530,7 +2530,7 @@
     },
     {
       "consumer_kind": "manuscript_section",
-      "expected_value": "0.3251",
+      "expected_value": "0.0000",
       "generated_output_path": "output/manuscript/15_discussion_outlook.md",
       "hydrated_value_present": true,
       "mapped": true,
@@ -5014,7 +5014,7 @@
     },
     {
       "consumer_kind": "manuscript_section",
-      "expected_value": "0.3251",
+      "expected_value": "0.0000",
       "generated_output_path": "output/manuscript/00_00_sheaf_coverage.md",
       "hydrated_value_present": true,
       "mapped": true,
@@ -5542,7 +5542,7 @@
     },
     {
       "consumer_kind": "manuscript_section",
-      "expected_value": "0.3251",
+      "expected_value": "0.0000",
       "generated_output_path": "output/manuscript/00_00_sheaf_coverage.md",
       "hydrated_value_present": true,
       "mapped": true,
@@ -6910,7 +6910,7 @@
     },
     {
       "consumer_kind": "manuscript_section",
-      "expected_value": "0.3251",
+      "expected_value": "0",
       "generated_output_path": "output/manuscript/00_00_sheaf_coverage.md",
       "hydrated_value_present": true,
       "mapped": true,

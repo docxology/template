@@ -1,0 +1,8 @@
+# Scientific/core runtime stays standalone. The optional full verifier reuses
+# generic custody and supervision from its explicitly declared dev platform.
+allow_infrastructure_imports:
+  - src/orchestration/_verification_launcher.py
+reason: >-
+  The optional full-verification adapter uses the mature platform's prepared
+  selected-runtime probe and pre-import executed-code audit for real nested
+  scripts and pytest children. Scientific methods remain project-owned.

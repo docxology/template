@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="generator" content="pandoc 3.11" />
+  <meta name="generator" content="pandoc 3.12" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
   <meta name="author" content="Daniel Ari Friedman" />
   <meta name="description" content="Sheaf-Composed Manuscript with pymdp Sophisticated Inference" />
@@ -13,7 +13,10 @@
     */
     html {
       color: #1a1a1a;
+      color: light-dark(#1a1a1a, #fdfdfd);
       background-color: #fdfdfd;
+      background-color: light-dark(#fdfdfd, #1a1a1a);
+      color-scheme: light dark;
     }
     body {
       margin: 0 auto;
@@ -38,11 +41,16 @@
     }
     @media print {
       html {
-        background-color: white;
+        color-scheme: light only;
       }
-      body {
+      html, body, pre, code {
         background-color: transparent;
+      }
+      body, a, a:visited, blockquote {
         color: black;
+      }
+      pre, code {
+        padding: 0;
       }
       p, h2, h3 {
         orphans: 3;
@@ -55,11 +63,8 @@
     p {
       margin: 1em 0;
     }
-    a {
-      color: #1a1a1a;
-    }
-    a:visited {
-      color: #1a1a1a;
+    a, a:visited {
+      color: inherit;
     }
     img {
       max-width: 100%;
@@ -88,8 +93,11 @@
     blockquote {
       margin: 1em 0 1em 1.7em;
       padding-left: 1em;
-      border-left: 2px solid #e6e6e6;
+      border-left: 2px solid;
+      border-color: #e6e6e6;
+      border-color: light-dark(#e6e6e6, #4c4c4c);
       color: #606060;
+      color: light-dark(#606060, #b6b6b6);
     }
     code {
       white-space: pre-wrap;
@@ -113,7 +121,7 @@
     }
     hr {
       border: none;
-      border-top: 1px solid #1a1a1a;
+      border-top: 1px solid currentColor;
       height: 1px;
       margin: 1em 0;
     }
@@ -130,11 +138,11 @@
     }
     tbody {
       margin-top: 0.5em;
-      border-top: 1px solid #1a1a1a;
-      border-bottom: 1px solid #1a1a1a;
+      border-top: 1px solid currentColor;
+      border-bottom: 1px solid currentColor;
     }
     th {
-      border-top: 1px solid #1a1a1a;
+      border-top: 1px solid currentColor;
       padding: 0.25em 0.5em 0.25em 0.5em;
     }
     td {
@@ -930,7 +938,7 @@ URL)</p>
 </tr>
 <tr>
 <td>Version</td>
-<td>0.3.2</td>
+<td>0.4.0</td>
 </tr>
 <tr>
 <td>Concept DOI</td>
@@ -1306,7 +1314,7 @@ paper <span class="citation" data-cites="pymdp2024">(<a
 href="#ref-pymdp2024" role="doc-biblioref">Heins et al.
 2022</a>)</span>. The default <code>state_inference</code> rollout
 writes the summary/trace artifacts used in sec. <a
-href="#sec:results_si_tmaze">11</a>; mean belief entropy is 0.3251.</p>
+href="#sec:results_si_tmaze">11</a>; mean belief entropy is 0.0000.</p>
 <p>The method keeps runtime, posterior, and extension evidence separate.
 <code>output/data/si_policy_comparison.json</code> compares
 <code>state_inference</code> and <code>policy_inference</code> over
@@ -1884,7 +1892,7 @@ class="header-section-number">8.5</span> Sheaf fragment track
 registry</h2>
 <p>Compose order and renderer bindings from
 <code>manuscript/sheaf/tracks.yaml</code>.</p>
-<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable data table"><table style="width:100%;" data-responsive-table="true">
+<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable data table"><table style="width:99%;" data-responsive-table="true">
 <colgroup>
 <col style="width: 18%" />
 <col style="width: 13%" />
@@ -4403,10 +4411,10 @@ expected-free-energy policy posterior) is selectable via
 <code>mode: policy_inference</code> (sec. <a
 href="#sec:methods_pymdp">6</a>). Summary metrics land in
 <code>output/data/si_tmaze_summary.json</code>.</p>
-<p>Steps recorded: 2. Mean belief entropy: 0.3251. Belief entropy over
-the rollout is traced in fig. <a
-href="#fig:si_belief_entropy_curve">18</a>; the paired observation and
-action indices are in fig. <a href="#fig:si_obs_action_trace">19</a>.
+<p>Steps recorded: 2. Mean belief entropy: 0. Belief entropy over the
+rollout is traced in fig. <a href="#fig:si_belief_entropy_curve">18</a>;
+the paired observation and action indices are in fig. <a
+href="#fig:si_obs_action_trace">19</a>.
 <code>output/data/analysis_statistics.json</code> now records the trace
 as a small statistical object rather than a caption-only trace: action
 switches 1 times (rate 1.000 over adjacent steps), observation diversity
@@ -4556,11 +4564,11 @@ the run reaches the convergence tolerance at step 3 with final KL
 byte-reproducible.</figcaption>
 </figure>
 <figure id="fig:si_belief_entropy_curve">
-<a class="figure-full-size-link" href="../figures/si_belief_entropy_curve.png" target="_blank" rel="noopener" aria-label="Open full-size Figure 18, Belief entropy over time for the T-maze rollout (mean 0.3251 nats)."><img src="../figures/si_belief_entropy_curve.png" style="width:90.0%"
-data-fig-alt="Line plot of belief entropy in nats versus timestep for the pymdp T-maze rollout. Entropy ranges from 0.3251 to 0.3251 nats across 2 steps in state_inference mode."
-alt="Line plot of belief entropy in nats versus timestep for the pymdp T-maze rollout. Entropy ranges from 0.3251 to 0.3251 nats across 2 steps in state_inference mode." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
+<a class="figure-full-size-link" href="../figures/si_belief_entropy_curve.png" target="_blank" rel="noopener" aria-label="Open full-size Figure 18, Belief entropy over time for the T-maze rollout (mean 0.0000 nats)."><img src="../figures/si_belief_entropy_curve.png" style="width:90.0%"
+data-fig-alt="Line plot of belief entropy in nats versus timestep for the pymdp T-maze rollout. Entropy ranges from 0 to 0 nats across 2 steps in state_inference mode."
+alt="Line plot of belief entropy in nats versus timestep for the pymdp T-maze rollout. Entropy ranges from 0 to 0 nats across 2 steps in state_inference mode." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Figure 18: Belief entropy over time for
-the T-maze rollout (mean 0.3251 nats).</figcaption>
+the T-maze rollout (mean 0.0000 nats).</figcaption>
 </figure>
 <figure id="fig:si_obs_action_trace">
 <a class="figure-full-size-link" href="../figures/si_obs_action_trace.png" target="_blank" rel="noopener" aria-label="Open full-size Figure 19, Observation and action traces for the T-maze rollout (action diversity 2)."><img src="../figures/si_obs_action_trace.png" style="width:90.0%"
@@ -4706,7 +4714,7 @@ models, and <code>state_inference_mode</code> to the pymdp harness
 contract in sec. <a href="#sec:methods_pymdp">6</a>.</p>
 <!-- sheaf-track:simulation -->
 <p>Measured pymdp rollout (<code>state_inference</code>, config hash
-<code>133a13df72cfd8d8</code>): mean belief entropy 0.3251 nats over 2
+<code>133a13df72cfd8d8</code>): mean belief entropy 0.0000 nats over 2
 steps; goal reached flag 1; action diversity 2.</p>
 <p>Analytical sweep residual RMSE 0 nats (max residual 0). Coverage
 audit: 95 present / 95 bound / 0 missing cells on the IMRAD matrix.</p>
@@ -5203,7 +5211,7 @@ class="header-section-number">16</span> References</h1>
 <p>See <code>manuscript/references.bib</code> for bibliography entries
 cited in the composed sections.</p>
 <hr />
-<p><strong>Release:</strong> v0.3.2 · DOI
+<p><strong>Release:</strong> v0.4.0 · DOI
 <code>10.5281/zenodo.20417021</code> · SHA-256
 <code>f191b48f9439…</code> · pairing complete</p>
 <figure>

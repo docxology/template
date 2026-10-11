@@ -2,9 +2,9 @@
 
 from __future__ import annotations
 
-from literature.corpus import Corpus
-from literature.fulltext_assessment import assess_corpus, build_fulltext_inventory
-from literature.models import Paper
+from template_literature_meta_analysis.literature.corpus import Corpus
+from template_literature_meta_analysis.literature.fulltext_assessment import assess_corpus, build_fulltext_inventory
+from template_literature_meta_analysis.literature.models import Paper
 
 
 def test_assess_corpus_reports_coverage(sample_papers: list[Paper]) -> None:

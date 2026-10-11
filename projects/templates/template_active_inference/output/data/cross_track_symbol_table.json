@@ -2337,7 +2337,7 @@
       "dtype": "bool",
       "dtype_declared": true,
       "gnn_term": "",
-      "json_field": "$.provenance_all_source_commits",
+      "json_field": "$.provenance_all_source_inputs_bound",
       "lean_namespace": "",
       "model": "manuscript_variables",
       "ontology_declared": true,
@@ -2348,7 +2348,7 @@
       ],
       "shape_declared": true,
       "source_kind": "manuscript_variable",
-      "symbol": "provenance_all_source_commits",
+      "symbol": "provenance_all_source_inputs_bound",
       "term_consistent": true
     },
     {

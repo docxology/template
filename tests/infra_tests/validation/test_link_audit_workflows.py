@@ -1,10 +1,10 @@
 """Integration and workflow tests for check_links link audit."""
 
+from infrastructure.validation.content.discovery import discover_markdown_files
+from infrastructure.validation.docs.accuracy import extract_headings
 from infrastructure.validation.integrity import check_links
-from infrastructure.validation.integrity.check_links import (
+from infrastructure.validation.integrity.link_extract import (
     check_file_reference,
-    discover_markdown_files,
-    extract_headings,
     extract_links,
 )
 
@@ -285,7 +285,7 @@ class TestMainFunctionReporting:
         def patched_main():
             """Patched main to use tmp_path as repo root."""
             repo_root = tmp_path
-            md_files = check_links.discover_markdown_files(repo_root, scope="link_audit")
+            md_files = discover_markdown_files(repo_root, scope="link_audit")
 
             print(f"Found {len(md_files)} markdown files")
 
@@ -297,7 +297,7 @@ class TestMainFunctionReporting:
             for md_file in md_files:
                 try:
                     content = md_file.read_text(encoding="utf-8")
-                    all_headings[str(md_file.relative_to(repo_root))] = check_links.extract_headings(content)
+                    all_headings[str(md_file.relative_to(repo_root))] = extract_headings(content)
                 except Exception as e:
                     print(f"Error reading {md_file}: {e}")
 
@@ -305,7 +305,7 @@ class TestMainFunctionReporting:
             for md_file in md_files:
                 try:
                     content = md_file.read_text(encoding="utf-8")
-                    internal_links, external_links, file_refs = check_links.extract_links(content, md_file)
+                    internal_links, external_links, file_refs = extract_links(content, md_file)
 
                     # Check internal links
                     for link in internal_links:
@@ -328,7 +328,7 @@ class TestMainFunctionReporting:
                         if "#" in target:
                             target = target.split("#")[0]
                         if target:
-                            exists, msg = check_links.check_file_reference(target, md_file, repo_root)
+                            exists, msg = check_file_reference(target, md_file, repo_root)
                             if not exists:
                                 broken_file_refs.append(
                                     {
@@ -383,11 +383,11 @@ class TestMainFunctionReporting:
 
         # Extract and check the broken reference
         content = md_file.read_text()
-        internal, external, file_refs = check_links.extract_links(content, md_file)
+        internal, external, file_refs = extract_links(content, md_file)
 
         assert len(file_refs) == 1
 
-        exists, msg = check_links.check_file_reference(file_refs[0]["target"], md_file, tmp_path)
+        exists, msg = check_file_reference(file_refs[0]["target"], md_file, tmp_path)
         assert exists is False
         assert "does not exist" in msg.lower()
 
@@ -406,8 +406,8 @@ class TestMainFunctionReporting:
 
         # Extract and verify
         content = md_file.read_text()
-        internal, external, file_refs = check_links.extract_links(content, md_file)
+        internal, external, file_refs = extract_links(content, md_file)
 
         for ref in file_refs:
-            exists, msg = check_links.check_file_reference(ref["target"], md_file, tmp_path)
+            exists, msg = check_file_reference(ref["target"], md_file, tmp_path)
             assert exists is True

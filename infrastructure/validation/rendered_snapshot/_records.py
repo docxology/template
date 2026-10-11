@@ -14,7 +14,7 @@ from pathlib import Path
 from infrastructure.core.pipeline.artifacts import compute_sha256
 from infrastructure.core.project_paths import resolve_source_manuscript_dir
 from infrastructure.validation.rendered_snapshot._scan import (
-    CACHE_PARTS as _CACHE_PARTS,
+    CACHE_PARTS,
     FileRecord,
     Fingerprint,
     is_relative_to,
@@ -48,7 +48,7 @@ def _stage_records(repo_root: Path) -> list[FileRecord]:
             for record in iter_tree_files(
                 stage_root,
                 repo_root=repo_root,
-                excluded_parts=_CACHE_PARTS,
+                excluded_parts=CACHE_PARTS,
             )
         )
     cached = cached_records(records, repo_root)

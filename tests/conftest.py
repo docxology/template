@@ -76,39 +76,14 @@ from infrastructure import core as _real_core  # noqa: E402
 
 sys.modules["infrastructure.core"] = _real_core
 
-# Add src/ to path for scientific modules (if it exists)
-SRC = os.path.join(ROOT, "src")
-if os.path.exists(SRC) and SRC not in sys.path:
-    sys.path.insert(0, SRC)
+# Public collection admits only the canonical roster, in its declared order.
+# Selected infrastructure is already cached before any scientific import path.
+# Local lifecycle directories and external sidecars are never inspected here.
+from infrastructure.project.public_scope import public_project_source_roots  # noqa: E402
 
-
-# Add projects/*/src/ to path for project modules (active projects only)
-# Note: Only active projects in projects/ directory are added here.
-# Non-rendered lifecycle subfolders (projects/working|ongoing|published|archive|other/) are not rendered.
-# Projects are discovered dynamically from the projects/ directory.
-# Supports both top-level projects (projects/act_inf_metaanalysis/src/) and nested/program-grouped
-# projects (projects/cognitive_integrity/cogsec_multiagent_1_theory/src/).
-active_projects = []
-projects_dir = os.path.join(ROOT, "projects")
-if os.path.exists(projects_dir):
-    for item in os.listdir(projects_dir):
-        item_path = os.path.join(projects_dir, item)
-        if os.path.isdir(item_path) and not item.startswith((".", "_")):
-            active_projects.append(item)
-for project_name in active_projects:
-    project_src = os.path.join(ROOT, "projects", project_name, "src")
-    if os.path.exists(project_src) and project_src not in sys.path:
-        sys.path.insert(0, project_src)
-    else:
-        # Check for nested projects (program-grouped: projects/<program>/<subproject>/src/)
-        project_path = os.path.join(ROOT, "projects", project_name)
-        if os.path.isdir(project_path):
-            for sub_name in os.listdir(project_path):
-                if sub_name.startswith((".", "_")):
-                    continue
-                sub_src = os.path.join(project_path, sub_name, "src")
-                if os.path.isdir(sub_src) and sub_src not in sys.path:
-                    sys.path.insert(0, sub_src)
+_PUBLIC_SOURCE_ROOTS = public_project_source_roots(ROOT)
+_public_paths = [str(source) for source in _PUBLIC_SOURCE_ROOTS]
+sys.path[:] = _public_paths + [path for path in sys.path if path not in _public_paths]
 
 
 # ============================================================================
@@ -170,27 +145,14 @@ def skip_if_no_latex():
 
 
 # ============================================================================
-# Test Project Cleanup Fixtures
+# Test Workspace Ownership Guard
 # ============================================================================
 
 
 @pytest.fixture(scope="session", autouse=True)
-def cleanup_test_projects():
-    """Clean up any test projects created during test execution.
+def guard_persistent_test_workspaces():
+    """Detect persistent named test leaks while preserving every unowned path."""
+    from tests.helpers.workspace_ownership import guard_test_workspaces
 
-    This fixture runs after all tests complete and removes any test projects
-    that may have been accidentally created in the real projects/ directory.
-    """
-    yield  # Run tests first
-
-    # Cleanup after all tests
-    test_project_names = ["project1", "project2", "test", "test_project"]
-    projects_dir = Path(__file__).parent.parent / "projects"
-
-    for project_name in test_project_names:
-        project_path = projects_dir / project_name
-        if project_path.exists():
-            print(f"🧹 Removing test project: {project_name}")
-            import shutil
-
-            shutil.rmtree(project_path, ignore_errors=True)
+    with guard_test_workspaces(Path(ROOT) / "projects"):
+        yield

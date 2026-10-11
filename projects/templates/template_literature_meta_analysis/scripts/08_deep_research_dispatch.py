@@ -30,9 +30,9 @@ from _bootstrap import bootstrap_project
 # when the script is run standalone (outside the root pytest pythonpath).
 PROJECT_ROOT = bootstrap_project(include_infrastructure=True)
 
-from config import DATA_DIR as DEFAULT_DATA_DIR
+from template_literature_meta_analysis.config import DATA_DIR as DEFAULT_DATA_DIR
 
-from deep_research.deep_research_adapter import (
+from template_literature_meta_analysis.deep_research.deep_research_adapter import (
     build_offline_request,
     list_provider_profile,
     replay_recorded_report,

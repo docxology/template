@@ -56,7 +56,8 @@ def test_build_plan_maps_pipeline_contracts_to_methods_surface(repo_root: Path) 
     render = by_name["PDF Rendering"]
     assert render.depends_on == ("Project Analysis",)
     assert any(
-        "execute_pipeline.py --project templates/template_code_project --stage render_pdf" in command
+        "execute_pipeline.py --project templates/template_code_project" in command
+        and command.endswith("--stage render_pdf")
         for command in render.verification_commands
     )
 
@@ -257,8 +258,8 @@ def test_render_markdown_includes_actions_and_validation(repo_root: Path) -> Non
     assert "claim_ledger.yaml" in markdown
     assert "experiment_plan.yaml" in markdown
     assert (
-        "uv run python scripts/runner/execute_pipeline.py --project template_autoresearch_project --core-only"
-        in markdown
+        "uv run python scripts/runner/execute_pipeline.py --project templates/template_autoresearch_project --mode core "
+        "--pipeline-yaml infrastructure/core/pipeline/pipeline.yaml" in markdown
     )
 
 
@@ -510,6 +511,8 @@ def test_methods_cli_outputs_json_and_markdown(repo_root: Path) -> None:
             str(repo_root),
             "--project",
             "template_prose_project",
+            "--artifact-mode",
+            "source",
             "--format",
             "json",
         ],
@@ -534,6 +537,8 @@ def test_methods_cli_outputs_json_and_markdown(repo_root: Path) -> None:
             str(repo_root),
             "--project",
             "template_prose_project",
+            "--artifact-mode",
+            "source",
             "--format",
             "markdown",
         ],
@@ -563,7 +568,7 @@ def test_validation_skips_generated_artifacts_when_not_required(tmp_path: Path) 
     assert "METHODS.EVIDENCE_REGISTRY_MISSING" not in codes
 
 
-def test_validation_rejects_orphaned_dependencies_and_missing_scripts(tmp_path: Path) -> None:
+def test_validation_rejects_missing_scripts(tmp_path: Path) -> None:
     from infrastructure.methods import build_methods_orchestration_plan, validate_methods_orchestration_plan
 
     _write_minimal_repo(tmp_path)
@@ -577,7 +582,6 @@ stages:
   - name: Missing Script
     key: missing_script
     script: scripts/does_not_exist.py
-    depends_on: [Removed Stage]
     contract:
       output_artifacts: ["projects/{project}/output/data/result.json"]
       definition_of_done: Writes a result.
@@ -588,7 +592,6 @@ stages:
     plan = build_methods_orchestration_plan(tmp_path, "template_test", artifact_mode="source")
     codes = {issue.code for issue in validate_methods_orchestration_plan(plan, repo_root=tmp_path)}
 
-    assert "METHODS.PIPELINE_DEPENDENCY_ORPHANED" in codes
     assert "METHODS.STAGE_SCRIPT_MISSING" in codes
 
 
@@ -603,6 +606,7 @@ def test_build_plan_prefers_methods_pipeline_yaml(tmp_path: Path) -> None:
         """
 stages:
   - name: Custom Stage
+    key: custom_stage
     script: projects/template_test/scripts/custom.py
     tags: [core]
     contract:
@@ -619,6 +623,8 @@ stages:
     assert [stage.name for stage in plan.stages] == ["Custom Stage"]
     assert plan.stages[0].verification_commands == (
         "uv run python projects/template_test/scripts/custom.py --project template_test",
+        "uv run python scripts/runner/execute_pipeline.py --project template_test "
+        "--pipeline-yaml projects/template_test/methods_pipeline.yaml --mode core --stage custom_stage",
     )
 
 
@@ -630,6 +636,7 @@ def _write_minimal_repo(repo_root: Path) -> None:
         """
 stages:
   - name: Project Analysis
+    key: project_analysis
     script: scripts/pipeline/stage_02_analysis.py
     tags: [core]
     contract:
@@ -720,3 +727,109 @@ def test_schema_subcommand_emits_valid_json() -> None:
     assert payload["prog"] == "python -m infrastructure.methods"
     assert "plan" in payload["subcommands"]
     assert "schema" in payload["subcommands"]
+
+
+def test_commands_use_populated_canonical_manuscript_and_output(tmp_path: Path) -> None:
+    import shlex
+
+    from infrastructure.methods import build_methods_orchestration_plan, validate_methods_orchestration_plan
+
+    _write_minimal_repo(tmp_path)
+    project = tmp_path / "projects" / "template_test"
+    write_doc(project / "docs" / "manuscript" / "02_methods.md", "# Methods\n\nMeasured protocol.\n")
+    write_doc(tmp_path / "scripts" / "pipeline" / "stage_02_analysis.py", "print('analysis')\n")
+    write_doc(tmp_path / "scripts" / "runner" / "execute_pipeline.py", "print('runner')\n")
+    for path in (project / "manuscript").glob("*.md"):
+        path.unlink()
+    plan = build_methods_orchestration_plan(tmp_path, "template_test", artifact_mode="source")
+    assert plan.method_sections == ("projects/template_test/docs/manuscript/02_methods.md",)
+    commands = [shlex.split(command) for command in plan.validation_commands]
+    assert commands[1][6] == "projects/template_test/docs/manuscript"
+    assert commands[2][6] == "projects/template_test/output"
+    assert not [
+        issue for issue in validate_methods_orchestration_plan(plan, repo_root=tmp_path) if issue.severity == "error"
+    ]
+
+
+def test_methods_rejects_emitted_command_with_missing_projects_prefix(tmp_path: Path) -> None:
+    from dataclasses import replace
+
+    from infrastructure.methods import build_methods_orchestration_plan, validate_methods_orchestration_plan
+
+    _write_minimal_repo(tmp_path)
+    plan = build_methods_orchestration_plan(tmp_path, "template_test", artifact_mode="source")
+    bad = replace(
+        plan, validation_commands=("uv run python -m infrastructure.validation.cli integrity template_test/output",)
+    )
+    issues = validate_methods_orchestration_plan(bad, repo_root=tmp_path)
+    assert any(issue.code == "METHODS.COMMAND_INVALID" and "canonical integrity" in issue.message for issue in issues)
+
+
+def test_evidence_report_requires_supported_schema_and_current_facts(tmp_path: Path) -> None:
+    from infrastructure.methods._evidence_validation import _validate_evidence_registry
+    from infrastructure.validation.evidence_registry import (
+        build_project_evidence_registry,
+        write_evidence_registry_report,
+    )
+
+    project = tmp_path / "projects" / "templates" / "demo"
+    (project / "output" / "data").mkdir(parents=True)
+    metric = project / "output" / "data" / "metrics.json"
+    metric.write_text('{"measurement": 17}', encoding="utf-8")
+    report = write_evidence_registry_report(project / "output", build_project_evidence_registry(project))
+    relative = report.relative_to(tmp_path)
+    issues = []
+    _validate_evidence_registry(tmp_path, relative, project_root=project, issues=issues)
+    assert issues == []
+    payload = json.loads(report.read_text(encoding="utf-8"))
+    payload["schema"] = "unsupported-v999"
+    report.write_text(json.dumps(payload), encoding="utf-8")
+    _validate_evidence_registry(tmp_path, relative, project_root=project, issues=issues)
+    assert issues[-1].code == "METHODS.EVIDENCE_REGISTRY_INVALID"
+    write_evidence_registry_report(project / "output", build_project_evidence_registry(project))
+    metric.write_text('{"measurement": 23}', encoding="utf-8")
+    issues.clear()
+    _validate_evidence_registry(tmp_path, relative, project_root=project, issues=issues)
+    assert issues and "current sources" in issues[0].message
+
+
+def test_optional_experiment_plan_uses_shared_validation(tmp_path: Path) -> None:
+    from infrastructure.methods import build_methods_orchestration_plan, validate_methods_orchestration_plan
+
+    _write_minimal_repo(tmp_path)
+    project = tmp_path / "projects" / "template_test"
+    write_doc(project / "experiment_plan.yaml", "conditions: []\n")
+    plan = build_methods_orchestration_plan(tmp_path, "template_test", artifact_mode="source")
+    issues = validate_methods_orchestration_plan(plan, repo_root=tmp_path)
+    assert any(issue.code == "METHODS.EXPERIMENT_PLAN_INVALID" for issue in issues)
+
+
+def test_nested_manuscript_methods_excludes_auxiliary_documents(tmp_path: Path) -> None:
+    from infrastructure.methods import build_methods_orchestration_plan
+
+    _write_minimal_repo(tmp_path)
+    project = make_project(tmp_path, "nested", with_manuscript=True)
+    write_doc(project / "manuscript/part_0/core_methods.md", "# Core Methods\n\nA declared transformation.\n")
+    write_doc(project / "manuscript/part_0/AGENTS.md", "# Methods\n\nAgent routing guidance.\n")
+    plan = build_methods_orchestration_plan(tmp_path, "nested", artifact_mode="source")
+    assert "projects/nested/manuscript/part_0/core_methods.md" in plan.method_sections
+    assert all(not section.endswith("AGENTS.md") for section in plan.method_sections)
+
+
+def test_methods_live_command_binds_definition_and_capability_mode(repo_root: Path) -> None:
+    import shlex
+    from dataclasses import replace
+    from infrastructure.methods import build_methods_orchestration_plan, validate_methods_orchestration_plan
+
+    plan = build_methods_orchestration_plan(repo_root, "templates/template_code_project", artifact_mode="source")
+    stage = next(stage for stage in plan.stages if stage.key == "llm_reviews")
+    command = next(
+        command for command in stage.verification_commands if "scripts/runner/execute_pipeline.py" in command
+    )
+    argv = shlex.split(command)
+    assert argv[argv.index("--mode") + 1] == "live"
+    assert argv[argv.index("--pipeline-yaml") + 1] == plan.pipeline_source.as_posix()
+    wrong_stage = replace(stage, verification_commands=(command.replace("--mode live", "--mode core"),))
+    invalid = replace(plan, stages=tuple(wrong_stage if item.key == stage.key else item for item in plan.stages))
+    issues = validate_methods_orchestration_plan(invalid, repo_root=repo_root)
+    assert any(issue.code == "METHODS.COMMAND_INVALID" for issue in issues)

@@ -4,7 +4,6 @@ authors:
   given-names: Daniel Ari
   orcid: 0000-0001-6232-9096
 cff-version: 1.2.0
-date-released: '2026-07-17'
 keywords:
 - exoplanet atmospheres
 - literature review pipeline
@@ -17,8 +16,9 @@ keywords:
 - bibliometrics
 - cross-validation
 license: CC-BY-4.0
-message: If you use this software, please cite it using the metadata from this file.
+message: Unpublished draft metadata; this intended release has not been deposited
+  or published.
 repository-code: https://github.com/docxology/template_advanced_literature_review
 title: A Reproducible Multi-Phase Literature-Review Pipeline for Exoplanet Atmospheres
 type: software
-version: 0.1.0
+version: 0.2.0

@@ -44,7 +44,7 @@ Plus:
 3. **Install dependencies**: `uv sync`
 4. **List available projects**: `./run.sh list-projects`
 5. **Build the public control-positive exemplar**:
-   `./run.sh pipeline --project templates/template_code_project --core-only`
+   `./run.sh pipeline --project templates/template_code_project --mode core`
 
 That's it! You now have a research project structure.
 
@@ -326,7 +326,7 @@ Having issues? Here's where to look:
 for the project pipeline test contract,
 `uv run python scripts/pipeline/stage_01_test.py --infra-only --infra-scope full`
 for the full infrastructure gate, and
-`./run.sh pipeline --project templates/template_code_project --core-only` for
+`./run.sh pipeline --project templates/template_code_project --mode core` for
 the end-to-end core path.
 
 **Need help?** Start with **[Getting Started Guide](../guides/getting-started.md)** or check the **[FAQ](../reference/faq.md)**

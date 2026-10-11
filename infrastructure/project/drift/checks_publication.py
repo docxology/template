@@ -2,14 +2,11 @@
 
 from __future__ import annotations
 
+import ast
 import json
 import re
+import tomllib
 from pathlib import Path
-
-try:
-    import tomllib
-except ImportError:  # Python <3.11 — use backport
-    import tomli as tomllib  # type: ignore[no-redef]
 
 import yaml
 
@@ -241,6 +238,22 @@ def check_pyproject_publication_consistency(project_root: Path, report: Report, 
 
     cff_version = str(cff.get("version", "")).strip().strip("'\"")
     py_version = str(table.get("version", "")).strip()
+    if py_version and "version" not in dynamic_fields:
+        _check_runtime_version_exports(project_root, report, project, py_version)
+    config_path = project_root / "manuscript" / "config.yaml"
+    publication = _as_mapping(_load_yaml_mapping(config_path).get("publication")) if config_path.is_file() else {}
+    if str(publication.get("release_status", "")).lower() == "unreleased":
+        intended = str(publication.get("intended_version", "")).strip()
+        historical = str(publication.get("last_published_version", "")).strip()
+        if not intended or _version_key(py_version) != _version_key(intended):
+            report.add(
+                "ERROR",
+                project,
+                "publication_intended_version_drift",
+                "unreleased project package must match publication.intended_version",
+            )
+        if historical:
+            py_version = historical
     if py_version and cff_version and "version" not in dynamic_fields:
         if _version_key(py_version) != _version_key(cff_version):
             report.add(
@@ -291,6 +304,33 @@ def check_pyproject_publication_consistency(project_root: Path, report: Report, 
                 "would attribute the same release to different people"
             ),
         )
+
+
+def _check_runtime_version_exports(project_root: Path, report: Report, project: str, expected: str) -> None:
+    """Bind declared package version exports to the current source distribution."""
+    for path in sorted((project_root / "src").rglob("__init__.py")):
+        if path.is_symlink():
+            continue
+        try:
+            tree = ast.parse(_read(path), filename=str(path))
+        except (OSError, SyntaxError):
+            continue  # The public syntax gate reports invalid source separately.
+        for node in tree.body:
+            if not isinstance(node, ast.Assign) or not any(
+                isinstance(target, ast.Name) and target.id == "__version__" for target in node.targets
+            ):
+                continue
+            actual = node.value.value if isinstance(node.value, ast.Constant) else None
+            if not isinstance(actual, str) or _version_key(actual) != _version_key(expected):
+                report.add(
+                    "ERROR",
+                    project,
+                    "publication_runtime_version_drift",
+                    (
+                        f"{_rel(path, project_root)} __version__ {actual!r} must match "
+                        f"current package version {expected!r}"
+                    ),
+                )
 
 
 def check_license_file_present_and_consistent(project_root: Path, report: Report, project: str) -> None:
@@ -401,7 +441,25 @@ def check_publication_metadata_consistency(project_root: Path, report: Report, p
         "unpublished",
     }:
         return
-    paper_version = str(paper.get("version", "")).strip()
+    paper_version = str(paper.get("version") or _as_mapping(config.get("book")).get("version") or "").strip()
+    if str(publication.get("release_status", "")).lower() == "unreleased":
+        intended = str(publication.get("intended_version", "")).strip()
+        historical = str(publication.get("last_published_version", "")).strip()
+        if not intended or _version_key(paper_version) != _version_key(intended):
+            report.add(
+                "ERROR",
+                project,
+                "publication_intended_manuscript_version_drift",
+                "unreleased manuscript must match publication.intended_version",
+            )
+        if not historical:
+            report.add(
+                "ERROR",
+                project,
+                "publication_last_published_version_missing",
+                "unreleased project with historical publication evidence must declare last_published_version",
+            )
+        paper_version = historical
 
     concept_doi = _normalize_doi(publication.get("doi", ""))
     version_doi = _normalize_doi(publication.get("version_doi", ""))

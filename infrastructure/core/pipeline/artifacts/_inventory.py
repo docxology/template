@@ -3,9 +3,12 @@
 from __future__ import annotations
 
 import os
+import math
 import stat
+import time
 import subprocess
-from collections.abc import Mapping, Sequence
+import shutil
+from collections.abc import Iterator, Mapping, Sequence
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Literal
@@ -18,7 +21,9 @@ _IGNORED_OUTPUT_PARTS = frozenset(
         "logs",
         "hitl",
         "snapshots",
+        "telemetry",
         "__pycache__",
+        "node_modules",
         "fulltext",
         "llm",
         "translations",
@@ -39,6 +44,24 @@ _IGNORED_OUTPUT_FILENAMES = frozenset(
         "snapshot_compare.md",
         "validation_report.json",
         "validation_report.md",
+        "artifact_manifest_index.json",
+        "pipeline_report.json",
+        "pipeline_report.html",
+        "log_summary.txt",
+        "pipeline_report.txt",
+        "pipeline_report.md",
+        "pipeline_telemetry.json",
+        "pipeline_telemetry.txt",
+        "pause_recommendations.json",
+        "pause_recommendations.md",
+        "run_lessons.json",
+        "run_lessons.md",
+        "telemetry.json",
+        "telemetry.txt",
+        "telemetry.md",
+        "lessons.jsonl",
+        "lessons.md",
+        "next_run_context.md",
     }
 )
 OutputInventoryMode = Literal["stable-shippable-output-v1", "stable-local-output-v1"]
@@ -68,6 +91,48 @@ class _GitIgnoreEvaluation:
         return self.error is None
 
 
+def _inventory_remaining(original_deadline: float | None) -> float | None:
+    """Check the caller's live operation clock without starting a new budget."""
+    if original_deadline is None:
+        return None
+    if type(original_deadline) not in (int, float) or not math.isfinite(original_deadline):
+        raise ValueError("output inventory original deadline must be finite")
+    available = original_deadline - time.monotonic()
+    if available <= 0:
+        raise TimeoutError("output inventory exhausted the existing original deadline")
+    return available
+
+
+def iter_bounded_tree_paths(root: Path, *, max_paths: int, original_deadline: float | None = None) -> Iterator[Path]:
+    """Stream the full tree with bounded iterator depth and pre-yield count.
+
+    Unlike recursive globbing, this does not materialize a whole directory's
+    entries before checking its ceiling. Symlinks are yielded but never followed
+    so the existing strict inventory policy can report them independently.
+    """
+    if type(max_paths) is not int or not 0 < max_paths <= 100000:
+        raise ValueError("tree discovery path ceiling must be a positive bounded integer")
+    count = 0
+
+    def walk(directory: Path, depth: int) -> Iterator[Path]:
+        nonlocal count
+        _inventory_remaining(original_deadline)
+        if depth >= 64:
+            raise ValueError("complete tree discovery exceeds its held directory depth ceiling")
+        with os.scandir(directory) as entries:
+            for entry in entries:
+                _inventory_remaining(original_deadline)
+                if count >= max_paths:
+                    raise ValueError("complete tree discovery exceeds its held path ceiling")
+                count += 1
+                path = directory / entry.name
+                yield path
+                if entry.is_dir(follow_symlinks=False):
+                    yield from walk(path, depth + 1)
+
+    yield from walk(root, 0)
+
+
 def parse_output_inventory_mode(value: object) -> OutputInventoryMode:
     """Parse a stable-output inventory mode without silently widening scope."""
     if value == STABLE_OUTPUT_INVENTORY_MODE:
@@ -83,6 +148,8 @@ def collect_stable_output_inventory(
     git_ignore_output_dir: Path | None = None,
     git_ignore_path_overrides: Mapping[Path, Path] | None = None,
     inventory_mode: OutputInventoryMode = STABLE_OUTPUT_INVENTORY_MODE,
+    max_snapshot_paths: int | None = None,
+    original_deadline: float | None = None,
 ) -> StableOutputInventory:
     """Collect stable output files using publication and local-output semantics.
 
@@ -101,6 +168,9 @@ def collect_stable_output_inventory(
     lives under ``pdf/``.
     """
     output_dir = output_dir.absolute()
+    _inventory_remaining(original_deadline)
+    if max_snapshot_paths is not None and (type(max_snapshot_paths) is not int or not 0 < max_snapshot_paths <= 100000):
+        raise ValueError("stable inventory snapshot path ceiling must be a positive bounded integer")
     if output_dir.is_symlink():
         raise ValueError(f"refusing to collect through symlink output directory: {output_dir}")
     ignore_output_dir = (git_ignore_output_dir or output_dir).absolute()
@@ -111,10 +181,16 @@ def collect_stable_output_inventory(
     files: list[Path] = []
     issues: list[str] = []
     if output_dir.exists():
-        snapshot_paths = tuple(sorted(output_dir.rglob("*")))
+        discovered = (
+            output_dir.rglob("*")
+            if max_snapshot_paths is None
+            else iter_bounded_tree_paths(output_dir, max_paths=max_snapshot_paths, original_deadline=original_deadline)
+        )
+        snapshot_paths = tuple(sorted(discovered))
         candidate_metadata: dict[Path, os.stat_result] = {}
         snapshot_symlinks: set[Path] = set()
         for path in snapshot_paths:
+            _inventory_remaining(original_deadline)
             try:
                 metadata = path.lstat()
             except OSError:
@@ -131,12 +207,15 @@ def collect_stable_output_inventory(
         overrides = dict(git_ignore_path_overrides or {})
         git_candidates: dict[Path, list[Path]] = {}
         for path in candidates:
+            _inventory_remaining(original_deadline)
             relative = path.relative_to(output_dir)
             source_relative = overrides.get(relative, relative)
             if source_relative.is_absolute() or ".." in source_relative.parts:
                 raise ValueError(f"invalid Git-ignore path override: {relative} -> {source_relative}")
             git_candidates.setdefault(ignore_output_dir / source_relative, []).append(path)
-        candidate_evaluation = _git_ignore_matches(tuple(git_candidates), project_dir)
+        candidate_evaluation = _git_ignore_matches(
+            tuple(git_candidates), project_dir, original_deadline=original_deadline
+        )
         if not candidate_evaluation.ok and _git_worktree_marker(project_dir) is not None:
             issues.append(f"git ignore evaluation failed: {candidate_evaluation.error}")
             return StableOutputInventory(files=(), issues=tuple(issues), mode=inventory_mode)
@@ -152,7 +231,7 @@ def collect_stable_output_inventory(
                 ignore_output_dir / "__template_output_inventory_probe__" / "artifact.sentinel-b",
                 ignore_output_dir / "__template_output_inventory_probe__" / "nested" / "leaf",
             )
-            probe_evaluation = _git_ignore_matches(probes, project_dir)
+            probe_evaluation = _git_ignore_matches(probes, project_dir, original_deadline=original_deadline)
             if not probe_evaluation.ok and _git_worktree_marker(project_dir) is not None:
                 issues.append(f"git ignore evaluation failed: {probe_evaluation.error}")
                 return StableOutputInventory(files=(), issues=tuple(issues), mode=inventory_mode)
@@ -172,11 +251,13 @@ def collect_stable_output_inventory(
             raise ValueError(f"refusing to map Git ignores through symlink output directory: {ignore_output_dir}")
         symlinks = set(snapshot_symlinks)
         for path in snapshot_paths:
+            _inventory_remaining(original_deadline)
             symlink_component = _first_symlink_component(output_dir, path)
             if symlink_component is not None:
                 symlinks.add(symlink_component)
         issues.extend(_symlink_issue(path, output_dir) for path in sorted(symlinks))
         for path in candidates:
+            _inventory_remaining(original_deadline)
             if _first_symlink_component(output_dir, path) is not None:
                 continue
             try:
@@ -196,6 +277,7 @@ def collect_stable_output_inventory(
             if _is_ignored_output(path, output_dir) or path in ignored:
                 continue
             files.append(path)
+    _inventory_remaining(original_deadline)
     return StableOutputInventory(files=tuple(files), issues=tuple(dict.fromkeys(issues)), mode=inventory_mode)
 
 
@@ -251,23 +333,47 @@ def _git_ignore_matches(
     paths: "Sequence[Path]",
     project_dir: Path,
     *,
-    command: Sequence[str] = ("git",),
+    command: Sequence[str] | None = None,
+    original_deadline: float | None = None,
 ) -> _GitIgnoreEvaluation:
     """Return ignored paths with the exact Git rule that selected each path."""
+    _inventory_remaining(original_deadline)
     if not paths:
         return _GitIgnoreEvaluation(matches={})
     payload = b"\0".join(os.fsencode(path) for path in paths) + b"\0"
+    if command is None:
+        executable = shutil.which("git", path=os.defpath)
+        if executable is None:
+            return _GitIgnoreEvaluation(matches={}, error="native git check-ignore unavailable")
+        command = (executable, "--no-replace-objects", "-c", "core.fsmonitor=false")
+    environment = {
+        "PATH": os.defpath,
+        "LC_ALL": "C",
+        "GIT_CONFIG_NOSYSTEM": "1",
+        "GIT_CONFIG_GLOBAL": os.devnull,
+        "GIT_OPTIONAL_LOCKS": "0",
+        "GIT_NO_REPLACE_OBJECTS": "1",
+        "GIT_NO_LAZY_FETCH": "1",
+        "GIT_TERMINAL_PROMPT": "0",
+    }
+    if os.name == "nt" and "SystemRoot" in os.environ:
+        environment["SystemRoot"] = os.environ["SystemRoot"]
+    available = _inventory_remaining(original_deadline)
     try:
         proc = subprocess.run(  # noqa: S603 - fixed argv, no shell
             [*command, "-C", str(project_dir), "check-ignore", "-v", "-z", "--stdin"],
             input=payload,
             capture_output=True,
             check=False,
+            env=environment,
+            timeout=30 if available is None else min(30.0, available),
         )
-    except OSError:
+    except (OSError, subprocess.TimeoutExpired):
+        _inventory_remaining(original_deadline)
         return _GitIgnoreEvaluation(matches={}, error="git check-ignore unavailable")
     except ValueError:
         return _GitIgnoreEvaluation(matches={}, error="git check-ignore invocation invalid")
+    _inventory_remaining(original_deadline)
     # 0 = some paths ignored, 1 = none ignored; anything else means git could not
     # answer. The collector decides whether a genuine non-repository tree may
     # use static fallback or a detected worktree must fail closed.
@@ -283,6 +389,7 @@ def _git_ignore_matches(
         return _GitIgnoreEvaluation(matches={}, error="git check-ignore returned malformed output")
     matches: dict[Path, tuple[bytes, bytes, bytes]] = {}
     for index in range(0, len(fields), 4):
+        _inventory_remaining(original_deadline)
         source, line_number, pattern, raw_path = fields[index : index + 4]
         # Verbose check-ignore reports the final negation pattern for an
         # explicitly re-included path. Such a path is shippable and must not be
@@ -339,10 +446,16 @@ def _is_ignored_output_relative(relative: Path) -> bool:
         ".vrb",
     }:
         return True
-    if relative == Path("fulltext/fulltext_inventory.json"):
+    # Traversal must reach this single explicitly admitted fulltext receipt.
+    if relative in {Path("fulltext"), Path("fulltext/fulltext_inventory.json")}:
         return False
     return (
-        any(part in _IGNORED_OUTPUT_PARTS for part in rel_parts)
-        or relative.name in _IGNORED_OUTPUT_FILENAMES
-        or relative.suffix in _IGNORED_OUTPUT_SUFFIXES
+        bool(rel_parts)
+        and rel_parts[0] in _IGNORED_OUTPUT_PARTS
+        or (len(rel_parts) >= 2 and rel_parts[0] == "reports" and rel_parts[1] in _IGNORED_OUTPUT_PARTS)
+        or (
+            relative.name in _IGNORED_OUTPUT_FILENAMES
+            and (len(rel_parts) == 1 or (len(rel_parts) == 2 and rel_parts[0] == "reports"))
+        )
+        or (category in {"root", "pdf", "slides"} and relative.suffix in _IGNORED_OUTPUT_SUFFIXES)
     )

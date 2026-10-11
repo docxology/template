@@ -1,5 +1,5 @@
 domain: modular_textbook
-display_name: Modular Fillable Textbook Exemplar
+display_name: Authored Systems and Models Textbook
 required_packages:
   - matplotlib
   - pyyaml
@@ -15,18 +15,19 @@ validation_gates:
   - render_validation
   - publication_readiness
 figure_types:
-  - chapter_placeholder
+  - model_curve
+  - instructional_errorbar
   - gallery_figure
   - mermaid_diagram
 citation_policy: official_or_scholarly
 source_policy: >-
-  Treat manuscript/config.yaml as the structure source of truth. Stub markers
-  are intentional fillable surfaces and must not be rewritten into evidence
-  claims until an author supplies domain content.
+  Treat manuscript/config.yaml as the units structure source of truth. Canonical
+  content is authored; scaffold fixtures remain separate drafts. Instructional
+  data and model examples must not be presented as new empirical measurements.
 review_gates:
   - manuscript_structure
   - scaffold_integrity
-  - stub_honesty
+  - manuscript_completion
   - publication_readiness
 artifact_expectations:
   - output/data/worked_model_summary.json
@@ -38,14 +39,15 @@ benchmark_rubric:
   dimensions:
     - name: config_schema_validity
       weight: 2.0
-    - name: chapter_stub_completeness
+    - name: authored_content_completeness
       weight: 2.0
     - name: figure_generation
       weight: 1.0
-    - name: stub_claim_honesty
+    - name: evidence_claim_honesty
       weight: 1.5
     - name: render_success
       weight: 1.0
 llm_prompt_guidance: >-
-  Preserve explicit stub markers and fillable-language honesty. Do not convert
-  scaffold placeholders into claims of completed textbook content.
+  Check canonical content, computations, primary references, and explicit model
+  assumptions. Require completion across all configured sections. Keep new draft
+  scaffolds and historical publication evidence distinct from intended releases.

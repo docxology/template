@@ -31,8 +31,8 @@ from collections import Counter
 from statistics import mean
 from typing import Any, Sequence
 
-from literature.corpus import Corpus
-from literature.query_router import QueryRouter
+from template_literature_meta_analysis.literature.corpus import Corpus
+from template_literature_meta_analysis.literature.query_router import QueryRouter
 
 _SOURCE_KEYS = [
     "arxiv",

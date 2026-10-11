@@ -1,0 +1,33 @@
+# setup-acceptance-documents contract
+
+This composite action only orchestrates preparation of official document prerequisites.
+Do not call it on a shared workstation. It uses fresh `RUNNER_TEMP` storage
+and the disposable hosted runner's user font/tool directories. Third-party
+archives and model blobs must retain their exact source-pinned hashes and lengths.
+
+The model action binds an unoccupied loopback port, disables cloud operations
+and implicit model acquisition, and records its owned daemon PID and birth.
+Every caller of that action must perform identity-checked process-group cleanup
+in an `always()` step. No shared service may be stopped or replaced.
+
+`mode` defaults to `native`. Validate exactly `native` or `converter` before
+cache restoration, download or setup. Pandoc/crossref verification is
+unconditional; native package and JuliaMono preparation are conditioned only on
+that validated output. All infrastructure and genuine acceptance callers use
+native preparation. Ordinary project cells explicitly select native for EDA and
+converter elsewhere, according to their actual source-declared tests.
+
+Cache only official archives, with OS, architecture, validated mode and source
+identity in the key. Validate exact length and SHA-256 again before every use;
+cached data cannot supply test outcomes or acceptance.
+
+Run `actionlint` after edits and retain genuine failed preparation diagnostics.
+See [README.md](README.md) for usage.
+
+Native callers must first prepare their selected locked Python environment.
+`python-executable` defaults to `.venv/bin/python`; common acceptance explicitly
+selects its prepared `output/runtime-envs/3.14/bin/python`. The helper's
+`--prepared-python PATH` mode preserves that environment, checks actual CPython
+support, and runs the unchanged LaTeX package validator with it. It performs no
+Python bootstrap, dependency sync or implicit reconciliation. Missing runtime,
+native tools, packages or failed validation remain failures.

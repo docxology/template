@@ -1,6 +1,5 @@
 """Tests for latex_utils module."""
 
-import inspect
 import io
 import os
 import stat
@@ -21,14 +20,28 @@ from infrastructure.rendering.latex_utils import (
     canonicalize_pdf_for_determinism,
     compile_latex,
     ensure_pdf_at,
+    latex_compile_command,
     normalize_latex_sidecars,
 )
 
 
-def test_compile_latex_disables_shell_escape() -> None:
-    source = inspect.getsource(compile_latex)
-    assert '"-shell-escape",' not in source
-    assert "-no-shell-escape" in source
+def test_compile_latex_disables_shell_escape(tmp_path: Path) -> None:
+    tex = tmp_path / "source with spaces.tex"
+    output = tmp_path / "output with spaces"
+    for compiler in ("xelatex", "lualatex", "pdflatex"):
+        command = latex_compile_command(tex, output, compiler)
+        recorded = latex_compile_command(tex, output, compiler, recorder=True)
+        assert command == [
+            compiler,
+            "-interaction=nonstopmode",
+            "-no-shell-escape",
+            f"-output-directory={output}",
+            str(tex),
+        ]
+        assert recorded == command[:3] + ["-recorder"] + command[3:]
+        for selected in (command, recorded):
+            assert selected.count("-no-shell-escape") == 1
+            assert not any(argument.startswith(("-shell-escape", "--shell-escape")) for argument in selected)
 
 
 def _write_valid_pdf(path) -> None:

@@ -150,8 +150,11 @@ class TestIncrementalSkip:
         repo_root, project_dir = _make_repo(tmp_path)
         (project_dir / "manuscript" / "a.md").write_text("seed", encoding="utf-8")
 
-        # Independent downstream input file (not produced by Upstream).
-        extra = project_dir / "manuscript" / "extra.md"
+        # Independent downstream input file (not produced by Upstream). It is a
+        # data input under output/, not project source: any source edit binds
+        # every stage through the whole-project source fingerprint.
+        extra = project_dir / "output" / "inputs" / "extra.md"
+        extra.parent.mkdir(parents=True)
         extra.write_text("x", encoding="utf-8")
 
         up_out = project_dir / "output" / "up.txt"
@@ -179,7 +182,7 @@ class TestIncrementalSkip:
                     "Downstream",
                     run_downstream,
                     StageContract(
-                        input_artifacts=("manuscript/extra.md",),
+                        input_artifacts=("output/inputs/extra.md",),
                         output_artifacts=("output/down.txt",),
                     ),
                 ),

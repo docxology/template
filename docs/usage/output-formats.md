@@ -46,7 +46,7 @@ is rejected) — unknown keys under
 
 ```bash
 ENABLE_DOCX=1 ENABLE_EPUB=1 \
-  ./run.sh pipeline --project templates/template_code_project --core-only
+  ./run.sh pipeline --project templates/template_code_project --mode core
 ```
 
 | Env var | Type | Default | Effect |

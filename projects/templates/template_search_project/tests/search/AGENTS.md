@@ -1,7 +1,8 @@
 # tests/search/ — agent contract
 
 Behavior tests for `src/template_search_project/search/` (one-to-one mirror
-per SUBMODULAR-SEARCH-1). Pure-domain tests only: no mocks, no network;
+per SUBMODULAR-SEARCH-1). No mocks or external-service access. Enrichment controls may use the owned
+`pytest-httpserver` loopback server with actual PDF extraction and cache replay;
 subprocess invocations target this project's own entrypoints. Keep test
 files co-located with their subject module's subpackage; move a test only
 when its subject module moves, via `git mv`.

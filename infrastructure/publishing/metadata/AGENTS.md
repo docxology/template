@@ -15,13 +15,13 @@ generation). This family is publishing-side pipeline code.
 | `metadata_export.py` | `build_citation_cff`, `build_codemeta(_json)`, `build_zenodo(_json)`, `write_metadata_files` — generate `CITATION.cff`, `codemeta.json`, `.zenodo.json` from `manuscript/config.yaml` |
 | `metadata_export_cli.py` | `main` — `metadata-export` CLI (`python -m infrastructure.publishing.metadata.metadata_export_cli metadata-export --project <name>`) |
 | `metadata_from_config.py` | `publication_metadata_from_config(_dict)`, `load_publication_release_context` — single-parse metadata + deposit context + prior DOI |
-| `metadata_aggregate.py` | The historical `metadata.py` aggregator, re-exporting the `_metadata_extraction` / `_metadata_reporting` helpers |
+| `__init__.py` | Public metadata functions exported directly from `_metadata_extraction` and `_metadata_reporting` |
 
 ## Public API
 
-The package `__init__` re-exports the aggregate symbols so the historical
-`from infrastructure.publishing.metadata import <symbol>` path keeps
-resolving. The flat `metadata_*.py` paths remain as silent re-export shims.
+The package `__init__` exports its declared aggregate symbols. Import the
+stage, export, and CLI modules from this package; removed flat module paths
+do not resolve.
 
 ## Invariants
 

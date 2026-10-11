@@ -15,7 +15,7 @@ Usage:
 
 All config-override resolution, the LLM callable build, the deep-search
 call, artifact printing, and the run-summary write live in
-``src.deep_search_cli.run_deep_search_cli`` — this script only wires up
+``template_search_project.search.deep_search_cli.run_deep_search_cli`` — this script only wires up
 argparse and the config load per the thin-orchestrator pattern.
 """
 
@@ -30,7 +30,6 @@ _project_root = Path(__file__).resolve().parent.parent
 _repo_root = _project_root.parents[2]
 sys.path.insert(0, str(_project_root))
 sys.path.insert(0, str(_project_root / "src"))
-sys.path.insert(0, str(_project_root / "src" / "template_search_project"))
 sys.path.insert(0, str(_repo_root))
 
 from template_search_project.publish.config import load_project_config
@@ -84,7 +83,7 @@ def main(argv: list[str] | None = None) -> int:
     )
     args = parser.parse_args(argv)
 
-    project_root = Path(args.project_root).resolve()
+    project_root = Path(args.project_root).absolute()
     config = load_project_config(args.config)
     return run_deep_search_cli(args, project_root, config)
 

@@ -40,11 +40,14 @@ from infrastructure.core.testing.pytest_profiles import (
 from infrastructure.core.project_pyproject import (
     project_declared_coverage_floor,
     project_declared_test_command,
-    project_declares_dev_extra,
     resolve_project_cov_config,
 )
-from infrastructure.core.runtime.environment import get_python_command, resolve_test_python
 from infrastructure.core.runtime._tools import find_uv
+from infrastructure.core.testing.project_test_runtime import (
+    ProjectTestRuntimeError,
+    select_project_test_python,
+    build_audited_project_test_command,
+)
 
 logger = get_logger(__name__)
 
@@ -93,11 +96,15 @@ class TestSuiteResults(TypedDict, total=False):
     total: int
     warnings: int
     exit_code: int
+    original_exit_code: int | None
+    diagnostic: str
+    selected_runtime: dict[str, object]
     discovery_count: int
     collection_errors: int
     execution_phases: dict[str, float]
     test_categories: dict[str, int]
     coverage_percent: float
+    coverage_database: dict[str, str | int]
     failed_tests: list[dict[str, str]]
 
 
@@ -285,31 +292,15 @@ def make_coverage_subprocess_env(coverage_file_value: str, repo_root: Path) -> d
 
 
 def resolve_project_test_python(project_root: Path, cmd: list[str]) -> list[str]:
-    """Use project venv python when it can import pytest; otherwise workspace interpreter."""
-    try:
-        probe = subprocess.run(  # nosec B603
-            [*cmd, "-c", "import pytest"],
-            capture_output=True,
-            check=False,
-            timeout=30,
-        )
-        if probe.returncode == 0:
-            return cmd
-        logger.warning(
-            "Resolved interpreter %s cannot import pytest (project venv "
-            "%s/.venv is missing test deps — run `uv sync`). Falling back "
-            "to the workspace interpreter %s so the project suite actually runs.",
-            cmd,
-            project_root,
-            get_python_command(),
-        )
-    except (OSError, subprocess.SubprocessError) as probe_err:
-        logger.warning("pytest-availability probe failed (%s); using %s", probe_err, get_python_command())
-    return get_python_command()
+    """Require the nominated existing interpreter; never fall back or install."""
+    selected = [str(select_project_test_python(project_root))]
+    if cmd != selected:
+        raise ProjectTestRuntimeError("Test command differs from the nominated existing project runtime")
+    return selected
 
 
 def normalize_pytest_args_for_project(project_root: Path, pytest_args: list[str]) -> list[str]:
-    """Rewrite absolute paths under *project_root* to project-relative form for ``uv run --directory``."""
+    """Use project-relative positional paths for a project-working-directory invocation."""
     root = project_root.resolve()
     normalized: list[str] = []
     for arg in pytest_args:
@@ -326,50 +317,24 @@ def normalize_pytest_args_for_project(project_root: Path, pytest_args: list[str]
 
 
 def build_project_pytest_command(
-    project_root: Path,
-    pytest_args: list[str],
-    *,
-    inject_runner_dependencies: bool = True,
+    project_root: Path, pytest_args: list[str], *, interpreter: Path | None = None, deadline: float | None = None
 ) -> list[str]:
-    """Return argv for a project pytest suite using project-local deps when declared.
+    """Build Python-module argv for one existing prepared project interpreter.
 
-    Projects with ``pyproject.toml`` run via ``uv run --directory`` so pinned
-    dependencies (for example ``scikit-learn``) resolve from the project tree
-    instead of the workspace interpreter.
-
-    Test-runner packages (pytest plus coverage, timeout, xdist, and benchmark
-    plugins) are
-    By default, test-runner packages are injected via ``--with`` so they are
-    always available in the project's ephemeral env even when the project's own
-    ``pyproject.toml`` does not declare them. Collection-only callers that use a
-    declared project test environment may set ``inject_runner_dependencies`` to
-    ``False`` to avoid resolving a redundant overlay; interpreter resolution and
-    the relocation-safe ``python -m pytest`` invocation remain shared.
+    Execution adapters independently admit its exact runner versions. This
+    builder bounds provider discovery in that selected interpreter and never
+    installs dependencies or falls back from a broken venv.
     """
-    pyproject = project_root / "pyproject.toml"
-    uv_path = find_uv()
-    if pyproject.is_file() and uv_path:
-        resolved_root = project_root.resolve()
-        cmd: list[str] = [uv_path, "run", "--directory", str(resolved_root)]
-        # Inject test-runner deps so they are always available regardless of
-        # what the project itself declares (thin projects declare only runtime
-        # deps; pytest/cov/timeout stay in the workspace dev group).
-        if inject_runner_dependencies:
-            for dependency_spec in test_runner_dependency_specs():
-                cmd.extend(["--with", dependency_spec])
-        if project_declares_dev_extra(resolved_root):
-            cmd.extend(["--extra", "dev"])
-        cmd.extend(
-            [
-                "python",
-                "-m",
-                "pytest",
-                *normalize_pytest_args_for_project(resolved_root, pytest_args),
-            ]
+    selected = select_project_test_python(project_root) if interpreter is None else interpreter
+    return list(
+        build_audited_project_test_command(
+            project_root,
+            selected,
+            tuple(normalize_pytest_args_for_project(project_root, pytest_args)),
+            module="pytest",
+            deadline=deadline,
         )
-        return cmd
-    interpreter = resolve_project_test_python(project_root, resolve_test_python(project_root / ".venv"))
-    return interpreter + ["-m", "pytest", *pytest_args]
+    )
 
 
 def build_union_pytest_command(
@@ -394,8 +359,7 @@ def build_union_pytest_command(
     resolved_root = project_root.resolve()
     src_dir = resolved_root / "src"
     # Use the ABSOLUTE resolved path so that --cov resolves correctly even
-    # when pytest runs under ``uv run --directory <project>`` which sets the
-    # subprocess CWD to the project directory — making a repo-relative path
+    # when the subprocess CWD is the project directory — a repo-relative path
     # (e.g. ``projects/templates/.../src``) resolve to the wrong location and
     # collect 0% coverage.
     if src_dir.is_dir():
@@ -445,12 +409,12 @@ def enforce_project_suite_guards(
     """
     del project_threshold  # retained for call-site stability; pytest owns coverage gates
     ran_count = test_results.get("total", 0) or test_results.get("passed", 0)
-    if strict and project_has_test_files(project_root) and ran_count == 0:
+    if strict and exit_code == 0 and project_has_test_files(project_root) and ran_count == 0:
         tests_dir = project_root / "tests"
         logger.error(
             "Project '%s' has test files under %s but the run collected/ran "
             "0 tests — refusing to score this as PASSED. The project "
-            "interpreter is likely missing pytest/pytest-cov (run `uv sync`).",
+            "prepared test environment or test selection needs inspection.",
             project_name,
             tests_dir,
         )

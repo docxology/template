@@ -5,7 +5,10 @@ No mocks — all tests use real tmp_path directories and data.
 
 from __future__ import annotations
 
+import os
+import subprocess
 from pathlib import Path
+from infrastructure.publishing.publication_tree import PublicationTarget
 
 import pytest
 
@@ -18,6 +21,13 @@ from infrastructure.publishing.static_site import (
     SiteDeployResult,
     SiteHosting,
     get_adapter,
+)
+from infrastructure.publishing.static_site.github_pages import (
+    _copy_site,
+    _credential_environment,
+    _git,
+    _publish_tree,
+    _push_branch,
 )
 
 
@@ -204,6 +214,229 @@ def test_github_pages_no_token_real_deploy_returns_error(site_dir: Path) -> None
     assert result.error is not None
     # Should mention the token requirement
     assert "token" in result.error.lower() or "github" in result.error.lower()
+
+
+@pytest.mark.parametrize(
+    ("repo", "branch"),
+    [
+        ("https://user:fixture@github.com/owner/repo", "gh-pages"),
+        ("owner/repo/extra", "gh-pages"),
+        ("owner/repo", "--force"),
+        ("owner/repo", "heads/../main"),
+        ("owner/repo", "heads/main.lock"),
+    ],
+)
+def test_github_pages_rejects_invalid_target_before_execution(site_dir: Path, repo: str, branch: str) -> None:
+    config = SiteDeployConfig(hosting=SiteHosting.GITHUB_PAGES, site_dir=str(site_dir), repo=repo, branch=branch)
+    result = GitHubPagesAdapter(config).deploy(dry_run=True)
+    assert result.status == "error"
+    assert result.error is not None
+    assert "fixture" not in result.error
+
+
+def test_pages_askpass_real_git_credential_fill_is_scoped_and_removed(tmp_path: Path) -> None:
+    """Git itself invokes askpass; credential fill makes no network request."""
+    secret = "invented-pages-test-value"
+    with _credential_environment(secret, tmp_path) as env:
+        askpass = Path(env["GIT_ASKPASS"])
+        assert askpass.stat().st_mode & 0o777 == 0o700
+        assert secret not in askpass.read_text()
+        filled = subprocess.run(
+            ["git", "-c", "credential.helper=", "-c", "credential.useHttpPath=false", "credential", "fill"],
+            input="protocol=https\nhost=github.com\n\n",
+            cwd=tmp_path,
+            env=env,
+            capture_output=True,
+            text=True,
+            timeout=10,
+            check=True,
+        )
+        assert "username=x-access-token" in filled.stdout
+        assert f"password={secret}" in filled.stdout
+        refused = subprocess.run(
+            [str(askpass), "Password for 'https://x-access-token@github.com.evil': "],
+            env=env,
+            capture_output=True,
+            text=True,
+            timeout=5,
+            check=False,
+        )
+        assert refused.returncode != 0
+        assert refused.stdout == ""
+    assert not askpass.exists()
+    assert "TEMPLATE_PAGES_AUTH_TOKEN" not in env
+
+
+def test_pages_git_redacts_actual_child_diagnostics(tmp_path: Path) -> None:
+    secret = "invented-pages-test-value"
+    with _credential_environment(secret, tmp_path) as env:
+        result = _git(
+            [
+                "-c",
+                'alias.emit=!printf "%s\\n" "$TEMPLATE_PAGES_AUTH_TOKEN"; '
+                'printf "%s\\n" "$TEMPLATE_PAGES_AUTH_TOKEN" >&2; exit 7',
+                "emit",
+            ],
+            cwd=tmp_path,
+            env=env,
+            check=False,
+        )
+        assert result.returncode == 7
+        assert secret not in result.stdout + result.stderr
+        assert "[redacted]" in result.stdout
+        assert "[redacted]" in result.stderr
+
+
+def _local_git(args: list[str], cwd: Path) -> str:
+    env = {name: value for name, value in os.environ.items() if not name.startswith("GIT_")}
+    return subprocess.run(
+        ["git", *args], cwd=cwd, env=env, capture_output=True, text=True, timeout=10, check=True
+    ).stdout
+
+
+def test_pages_git_ignores_inherited_repository_and_index(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    outside, reviewed = tmp_path / "outside", tmp_path / "reviewed"
+    for root in (outside, reviewed):
+        root.mkdir()
+        _local_git(["init", "-q"], root)
+        (root / "file.txt").write_text(root.name)
+        _local_git(["add", "-A"], root)
+        _local_git(["-c", "user.name=Test", "-c", "user.email=test@example.com", "commit", "-qm", "initial"], root)
+    outside_head = _local_git(["rev-parse", "HEAD"], outside)
+    outside_index = (outside / ".git/index").read_bytes()
+    reviewed_head = _local_git(["rev-parse", "HEAD"], reviewed)
+    pollution = {
+        "GIT_DIR": str(outside / ".git"),
+        "GIT_WORK_TREE": str(outside),
+        "GIT_COMMON_DIR": str(outside / ".git"),
+        "GIT_INDEX_FILE": str(outside / ".git/index"),
+        "GIT_OBJECT_DIRECTORY": str(outside / ".git/objects"),
+        "GIT_ALTERNATE_OBJECT_DIRECTORIES": str(outside / ".git/objects"),
+        "GIT_CEILING_DIRECTORIES": str(tmp_path),
+        "GIT_DISCOVERY_ACROSS_FILESYSTEM": "1",
+    }
+    for name, value in pollution.items():
+        monkeypatch.setenv(name, value)
+    (reviewed / "file.txt").write_text("reviewed update\n")
+    with _credential_environment("invented-pages-test-value", tmp_path) as env:
+        assert not set(pollution) & env.keys()
+        # The action boundary also defends against a caller polluting the
+        # already-prepared environment after credential admission.
+        env.update(pollution)
+        _git(["add", "-A"], cwd=reviewed, env=env)
+        _git(
+            ["-c", "user.name=Test", "-c", "user.email=test@example.com", "commit", "-qm", "reviewed update"],
+            cwd=reviewed,
+            env=env,
+        )
+    assert _local_git(["rev-parse", "HEAD"], outside) == outside_head
+    assert (outside / ".git/index").read_bytes() == outside_index
+    assert _local_git(["rev-parse", "HEAD"], reviewed) != reviewed_head
+
+
+def test_pages_ordinary_push_rejects_real_remote_divergence(tmp_path: Path) -> None:
+    bare, seed, stale, advanced = (tmp_path / name for name in ("remote.git", "seed", "stale", "advanced"))
+    _local_git(["init", "--bare", str(bare)], tmp_path)
+    seed.mkdir()
+    _local_git(["init", "-b", "gh-pages"], seed)
+    (seed / "index.html").write_text("initial\n")
+    _local_git(["add", "-A"], seed)
+    _local_git(["-c", "user.name=Test", "-c", "user.email=test@example.com", "commit", "-qm", "initial"], seed)
+    _local_git(["remote", "add", "origin", str(bare)], seed)
+    _local_git(["push", "origin", "HEAD"], seed)
+    for clone in (stale, advanced):
+        _local_git(["clone", "--branch", "gh-pages", str(bare), str(clone)], tmp_path)
+        (clone / "index.html").write_text(clone.name + "\n")
+        _local_git(["add", "-A"], clone)
+        _local_git(["-c", "user.name=Test", "-c", "user.email=test@example.com", "commit", "-qm", clone.name], clone)
+    _local_git(["push", "origin", "HEAD"], advanced)
+    remote_head = _local_git(["rev-parse", "refs/heads/gh-pages"], bare)
+    # The real production Git boundary must reject stale authority rather
+    # than replace a concurrently published commit. No remote denial setting.
+    with _credential_environment("invented-pages-test-value", tmp_path) as env:
+        with pytest.raises(RuntimeError, match="git push failed"):
+            _push_branch(
+                stale, "gh-pages", env, remote=str(bare), revision=_local_git(["rev-parse", "HEAD"], stale).strip()
+            )
+    assert _local_git(["rev-parse", "refs/heads/gh-pages"], bare) == remote_head
+    assert _local_git(["show", "gh-pages:index.html"], bare) == "advanced\n"
+
+
+def test_pages_git_ignores_inherited_helper_path(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    selected_helpers = tmp_path / "selected-helpers"
+    selected_helpers.mkdir()
+    monkeypatch.setenv("GIT_EXEC_PATH", str(selected_helpers))
+    with _credential_environment("invented-pages-test-value", tmp_path) as env:
+        assert "GIT_EXEC_PATH" not in env
+        env["GIT_EXEC_PATH"] = str(selected_helpers)
+        actual = _git(["--exec-path"], cwd=tmp_path, env=env).stdout.strip()
+    assert Path(actual).is_dir()
+    assert Path(actual) != selected_helpers
+
+
+def test_pages_local_bare_git_preserves_history_artifacts_and_repeated_noop(site_dir: Path, tmp_path: Path) -> None:
+    bare = tmp_path / "remote.git"
+    _local_git(["init", "--bare", str(bare)], tmp_path)
+    _local_git(["config", "receive.denyNonFastForwards", "true"], bare)
+    first = tmp_path / "first"
+    first.mkdir()
+    (site_dir / "published.pdf").write_bytes(b"%PDF-1.7 invented publication fixture")
+    target = PublicationTarget("https://github.com/example/owned-pages-fixture", "gh-pages")
+    with _credential_environment("invented-pages-test-value", first) as env:
+        _publish_tree(site_dir, str(bare), "gh-pages", first, env, target=target)
+    original = _local_git(["rev-parse", "refs/heads/gh-pages"], bare).strip()
+    assert _local_git(["show", "gh-pages:index.html"], bare).startswith("<!doctype html>")
+
+    (site_dir / "published.pdf").unlink()
+    (site_dir / "index.html").write_text("updated public site\n")
+    second = tmp_path / "second"
+    second.mkdir()
+    with _credential_environment("invented-pages-test-value", second) as env:
+        _publish_tree(site_dir, str(bare), "gh-pages", second, env, target=target)
+    updated = _local_git(["rev-parse", "refs/heads/gh-pages"], bare).strip()
+    assert updated != original
+    _local_git(["merge-base", "--is-ancestor", original, updated], bare)
+    assert "invented publication fixture" in _local_git(["show", "gh-pages:published.pdf"], bare)
+    assert _local_git(["show", "gh-pages:index.html"], bare) == "updated public site\n"
+    assert "invented-pages-test-value" not in (second / "pages/.git/config").read_text()
+    third = tmp_path / "third"
+    third.mkdir()
+    with _credential_environment("invented-pages-test-value", third) as env:
+        _publish_tree(site_dir, str(bare), "gh-pages", third, env, target=target)
+    assert _local_git(["rev-parse", "refs/heads/gh-pages"], bare).strip() == updated
+
+
+def test_pages_branch_discovery_failure_never_creates_orphan(site_dir: Path, tmp_path: Path) -> None:
+    work = tmp_path / "work"
+    work.mkdir()
+    with _credential_environment("invented-pages-test-value", work) as env:
+        with pytest.raises(RuntimeError, match="branch discovery failed"):
+            _publish_tree(site_dir, str(tmp_path / "missing.git"), "gh-pages", work, env)
+    assert not (work / "pages").exists()
+
+
+@pytest.mark.parametrize("kind", ["symlink", "fifo", "git", "git_case"])
+def test_pages_copy_refuses_unsafe_site_content(site_dir: Path, tmp_path: Path, kind: str) -> None:
+    destination = tmp_path / "destination"
+    destination.mkdir()
+    (destination / ".git").mkdir()
+    config = destination / ".git/config"
+    config.write_text("preserved repository configuration\n")
+    outside = tmp_path / "invented-private.txt"
+    outside.write_text("invented private fixture\n")
+    if kind == "symlink":
+        (site_dir / "unsafe.txt").symlink_to(outside)
+    elif kind == "fifo":
+        os.mkfifo(site_dir / "unsafe.txt")
+    else:
+        git_component = ".GIT" if kind == "git_case" else ".git"
+        (site_dir / git_component).mkdir()
+        (site_dir / git_component / "config").write_text("invented Git control fixture\n")
+    with pytest.raises(ValueError, match="regular files|Git control"):
+        _copy_site(site_dir, destination)
+    assert not (destination / "unsafe.txt").exists()
+    assert outside.read_text() == "invented private fixture\n"
+    assert config.read_text() == "preserved repository configuration\n"
 
 
 # ---------------------------------------------------------------------------

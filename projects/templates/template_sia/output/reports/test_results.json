@@ -2,38 +2,38 @@
   "timestamp": "1970-01-01T00:00:00+00:00 (SOURCE_DATE_EPOCH unset)",
   "infrastructure": {},
   "project": {
-    "passed": 75,
+    "passed": 114,
     "failed": 0,
     "skipped": 0,
-    "total": 75,
+    "total": 114,
     "warnings": 0,
     "exit_code": 0,
-    "discovery_count": 77,
+    "discovery_count": 116,
     "collection_errors": 0,
     "execution_phases": {
-      "setup": 29.43,
-      "collection": 29.43,
-      "execution": 29.43
+      "setup": 36.39,
+      "collection": 36.39,
+      "execution": 36.39
     },
     "test_categories": {},
-    "coverage_percent": 94.3859649122807,
+    "coverage_percent": 92.93089753772836,
     "failed_tests": []
   },
   "summary": {
-    "total_passed": 75,
+    "total_passed": 114,
     "total_failed": 0,
     "total_skipped": 0,
-    "total_tests": 75,
+    "total_tests": 114,
     "all_passed": true,
-    "project_coverage": 94.3859649122807
+    "project_coverage": 92.93089753772836
   },
   "coverage_details": {
     "project": {
-      "overall_coverage": 94.3859649122807,
-      "total_executed": 684,
-      "total_missing": 23,
-      "total_excluded": 2,
-      "total_lines": 707,
+      "overall_coverage": 92.93089753772836,
+      "total_executed": 974,
+      "total_missing": 43,
+      "total_excluded": 4,
+      "total_lines": 1017,
       "file_coverage": {
         "src/template_sia/figures/figure_registry.py": {
           "coverage_percent": 91.17647058823529,
@@ -91,6 +91,13 @@
           "excluded_lines": 0,
           "total_lines": 52
         },
+        "src/template_sia/loop/live_proposals.py": {
+          "coverage_percent": 88.39779005524862,
+          "executed_lines": 131,
+          "missing_lines": 10,
+          "excluded_lines": 0,
+          "total_lines": 141
+        },
         "src/template_sia/loop/loop.py": {
           "coverage_percent": 100.0,
           "executed_lines": 36,
@@ -99,11 +106,32 @@
           "total_lines": 36
         },
         "src/template_sia/loop/loop_config.py": {
-          "coverage_percent": 82.14285714285714,
-          "executed_lines": 55,
+          "coverage_percent": 82.95454545454545,
+          "executed_lines": 57,
           "missing_lines": 7,
           "excluded_lines": 0,
-          "total_lines": 62
+          "total_lines": 64
+        },
+        "src/template_sia/loop/proposal_domain.py": {
+          "coverage_percent": 97.14285714285714,
+          "executed_lines": 51,
+          "missing_lines": 1,
+          "excluded_lines": 0,
+          "total_lines": 52
+        },
+        "src/template_sia/loop/proposal_sandbox.py": {
+          "coverage_percent": 80.43478260869566,
+          "executed_lines": 61,
+          "missing_lines": 9,
+          "excluded_lines": 0,
+          "total_lines": 70
+        },
+        "src/template_sia/loop/proposal_transport.py": {
+          "coverage_percent": 100.0,
+          "executed_lines": 45,
+          "missing_lines": 0,
+          "excluded_lines": 2,
+          "total_lines": 45
         },
         "src/template_sia/loop/reference_agent.py": {
           "coverage_percent": 100.0,

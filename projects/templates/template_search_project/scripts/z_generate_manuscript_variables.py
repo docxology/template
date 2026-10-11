@@ -26,15 +26,14 @@ _project_root = Path(__file__).resolve().parent.parent
 _repo_root = _project_root.parents[2]
 sys.path.insert(0, str(_project_root))
 sys.path.insert(0, str(_project_root / "src"))
-sys.path.insert(0, str(_project_root / "src" / "template_search_project"))
 sys.path.insert(0, str(_repo_root))
 
 from infrastructure.core.logging.utils import get_logger
 
 from template_search_project.publish.config import load_project_config
+from template_search_project.publish.deep_custody import admit_deep_producer
 from template_search_project.publish.manuscript_variables import (
     compute_variables,
-    load_aggregate_payload,
     load_search_result_payload,
     write_resolved_manuscript_tree,
     write_variables,
@@ -68,7 +67,7 @@ def main(argv: list[str] | None = None) -> int:
     )
     args = parser.parse_args(argv)
 
-    project_root = Path(args.project_root).resolve()
+    project_root = Path(args.project_root).absolute()
     results_path = Path(args.results).resolve() if args.results else project_root / "output" / "search" / "results.json"
     if not results_path.exists():
         logger.warning("No search results at %s; skipping.", results_path)
@@ -78,9 +77,14 @@ def main(argv: list[str] | None = None) -> int:
     config = load_project_config(config_path)
     payload = load_search_result_payload(results_path)
 
-    deep_dir = (project_root / config.deep_search.output_dir).resolve()
+    deep_dir = (project_root / config.deep_search.output_dir).absolute()
     aggregate_path = deep_dir / "aggregate.json"
-    aggregate = load_aggregate_payload(aggregate_path)
+    aggregate = None
+    if config.deep_search.enabled:
+        import json
+
+        admitted = admit_deep_producer(project_root, config.deep_search, deep_dir)
+        aggregate = json.loads(admitted[aggregate_path])
 
     variables = compute_variables(
         config_query=config.search.query,
@@ -92,12 +96,12 @@ def main(argv: list[str] | None = None) -> int:
     )
 
     out_path = (
-        Path(args.variables_output).resolve()
+        Path(args.variables_output).absolute()
         if args.variables_output
         else project_root / "output" / "data" / "manuscript_variables.json"
     )
-    write_variables(variables, out_path)
-    resolved_dir = write_resolved_manuscript_tree(project_root, variables)
+    write_variables(variables, out_path, project_root=project_root)
+    resolved_dir = write_resolved_manuscript_tree(project_root, variables, config=config)
 
     logger.info(
         "Wrote %d manuscript variables → %s; resolved manuscript → %s",

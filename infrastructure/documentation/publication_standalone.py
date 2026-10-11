@@ -20,6 +20,11 @@ class StandalonePublicationRecord(Protocol):
     published_artifacts: tuple[tuple[str, str], ...]
 
     @property
+    def version_display(self) -> str:
+        """Intended and historical version labels."""
+        ...
+
+    @property
     def github_display_label(self) -> str:
         """Human-readable label for the GitHub repository link."""
         ...
@@ -52,7 +57,7 @@ def render_standalone_publication_block(record: StandalonePublicationRecord) -> 
             "## Publication identity",
             "",
             f"- Standalone repository: {repository}",
-            f"- Config version: `{record.paper_version or 'n/a'}`",
+            f"- Intended / published version: `{record.version_display}`",
             f"- Stable concept DOI: {concept}",
             f"- Latest deposited version DOI: {version}",
             f"- Additional declared locations: {extra}",

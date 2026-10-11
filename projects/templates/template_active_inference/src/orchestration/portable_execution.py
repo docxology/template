@@ -27,6 +27,7 @@ class PortableSubprocessResult:
     stdout: str = ""
     stderr: str = ""
     command_error: str = ""
+    original_returncode: int | None = None
 
 
 _RUN_IDS_ENV = "TEMPLATE_BOUNDED_RUN_IDS"
@@ -61,6 +62,8 @@ def run_bounded_subprocess(
         stdout=subprocess.PIPE if capture_output else None,
         stderr=subprocess.PIPE if capture_output else None,
         text=True,
+        encoding="utf-8",
+        errors="replace",
     )
     try:
         stdout, stderr = process.communicate(timeout=timeout)
@@ -86,11 +89,18 @@ def run_bounded_subprocess(
             stderr=stderr or "",
             command_error=f"timed out after {timeout:g}s",
         )
+    except BaseException:
+        _terminate_process_tree(process.pid)
+        _terminate_tagged_processes(run_token)
+        with contextlib.suppress(OSError, ProcessLookupError, subprocess.TimeoutExpired):
+            process.communicate(timeout=5)
+        raise
     return PortableSubprocessResult(
         returncode=process.returncode or 0,
         timed_out=False,
         stdout=stdout or "",
         stderr=stderr or "",
+        original_returncode=process.returncode,
     )
 
 

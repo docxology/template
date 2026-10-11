@@ -10,7 +10,11 @@ The `scripts/` directory contains **Thin Orchestrators**. In the context of the 
 - **Integration examples**: Demonstrates how to use `src/` modules securely in research workflows.
 - **Automated figure generation**: Scripts generate publication-ready figures via `infrastructure.rendering`.
 - **Data export**: Structured data output for deterministic tracking.
-- **Alphabetical ordering hints (`y_*`, `z_*`)**: scripts whose filenames start with a letter prefix run **after** any plainly-named script (alphabetical order). `z_generate_manuscript_variables.py` consumes outputs from `optimization_analysis.py` (figures, data, reports) and emits `{{TOKEN}}` substitutions — so it must run last. The alphabetical prefix is a human-readable hint for manual invocation; the canonical pipeline (`scripts/runner/execute_pipeline.py`) enforces ordering via stage definitions, not filename. A forker introducing a script that should run between analysis and variable-hydration should name it `y_…` or rely on the pipeline stage list.
+- **Declared analysis order**: `manuscript/config.yaml` selects optimization,
+  benchmark, dashboard, API documentation, then manuscript variables.
+  `z_generate_manuscript_variables.py` consumes the fresh optimization
+  artifacts and runs last. Connector and provenance utilities are outside
+  this allowlist and require an explicit invocation.
 - **`z_generate_manuscript_variables.py` strict mode**: default invocation calls `generate_variables(..., require_analysis_outputs=True)` and fails when `output/data/optimization_results.csv` is absent. Use `--allow-draft` for early manuscript drafts that intentionally use `"N/A"` fallbacks.
 
 ## Directory Structure
@@ -26,7 +30,6 @@ flowchart LR
     SC --> BMS[04_benchmark_stage.py<br/>infrastructure.benchmark rubric demo]
     SC --> CSR[08_connector_search.py<br/>Connector search stage · opt-in science]
     SC --> PRR[09_provenance_record.py<br/>Provenance DAG record · opt-in]
-    SC --> RWF[10_research_workflow.py<br/>Research workflow dispatch · opt-in]
     SC --> INIT[__init__.py<br/>Package marker]
     SC --> DOCS[AGENTS.md · README.md · CONVENTIONS.md]
 
@@ -152,22 +155,16 @@ wall-clock timing logged as a runtime diagnostic only. See
 
 ### 08_connector_search.py
 
-Opt-in `science` pipeline stage (not in default runs): executes the
-`Connector Search` step declared in `infrastructure/core/pipeline/pipeline.yaml`
-for this exemplar when a connector is configured. Thin wrapper → infrastructure
-connector machinery; skipped cleanly when not configured.
+Explicit connector utility, outside the analysis allowlist. The canonical
+`Connector Search` stage is the repository's
+`scripts/pipeline/stage_08_connector_search.py` orchestrator, selected separately
+from core analysis; it requires configured connectors or a reason receipt.
 
 ### 09_provenance_record.py
 
-Opt-in `provenance` pipeline stage: records a provenance-DAG entry after the
-Connector Search stage. Thin wrapper → `infrastructure.provenance`; skipped
-cleanly when provenance recording is not configured.
-
-### 10_research_workflow.py
-
-Opt-in research-workflow dispatcher for LLM-backed research prompts
-(`infrastructure.research`). Runs only when explicitly invoked; not part of the
-default core DAG.
+Explicit provenance utility, outside the analysis allowlist. The canonical
+repository `scripts/pipeline/stage_09_provenance_record.py` orchestrator binds
+the configured stage's artifacts and reports missing configuration explicitly.
 
 ### z_generate_manuscript_variables.py
 

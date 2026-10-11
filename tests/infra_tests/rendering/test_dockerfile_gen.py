@@ -114,7 +114,7 @@ def test_build_dockerfile_sets_headless_matplotlib() -> None:
 def test_build_dockerfile_default_cmd_invokes_pipeline() -> None:
     text = build_dockerfile(DockerfileConfig(project_name="my_proj", python_version="3.12"))
     assert "--project my_proj" in text
-    assert "--core-only" in text
+    assert "--mode core" in text
 
 
 def test_build_dockerfile_includes_tlmgr_packages() -> None:

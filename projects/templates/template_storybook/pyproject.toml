@@ -4,11 +4,11 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "template_storybook"
-version = "0.1.0"
+version = "0.2.0"
 license = {text = "MIT"}
 description = "A full-page illustrated storybook exemplar with data-owned pages, shape-character generation, and ReportLab PDF assembly."
 authors = [{name = "Daniel Ari Friedman", email = "daniel@activeinference.institute"}]
-requires-python = ">=3.10"
+requires-python = ">=3.12"
 dependencies = [
     "Pillow>=12.3.0",
     "pyyaml>=6.0",
@@ -47,3 +47,9 @@ exclude_lines = [
 ]
 
 [tool.uv]
+
+# Compatibility contract for this independent exemplar release.
+[tool.template]
+platform_version = "4.0.1"
+tested_python_versions = ["3.12", "3.13", "3.14"]
+required_unpaid_capabilities = ["print-raster"]

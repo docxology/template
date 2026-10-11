@@ -89,8 +89,8 @@ class TestBuildStageTable:
             encoding="utf-8",
         )
         table = build_stage_table(yaml_path)
-        # llm-tag default = "skipped if Ollama absent"
-        assert "skipped if Ollama absent" in table
+        assert "fresh policy-bound skip" in table
+        assert "unavailable required live acceptance is blocked" in table
 
     def test_caption_warns_about_index_vs_filename(self, synthetic_yaml: Path) -> None:
         table = build_stage_table(synthetic_yaml)
@@ -262,8 +262,8 @@ stages:
     )
     summary = build_stage_summary(yaml_path)
     assert "**3 named stages**" in summary
-    assert "execute **2**" in summary
-    assert "`--core-only` executes **1**" in summary
+    assert "`--mode live` executes **2**" in summary
+    assert "`--mode core` runs execute **1**" in summary
     assert "`preview`" in summary
 
 

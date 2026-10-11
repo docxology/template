@@ -1,52 +1,20 @@
 #!/usr/bin/env python3
-"""Compose the deep-search outputs into a supplemental literature-review section.
+"""Compose current deep-search output into a generated supplemental section.
 
-Reads:
-  output/deep_search/aggregate.json
-  output/deep_search/aggregate_report.md
-  output/deep_search/<keyword_slug>/reading_report.md
-  output/deep_search/<keyword_slug>/per_paper/*.md
-  manuscript/references_deep.bib
+Requires output/deep_search/producer_receipt.json with matching current disk
+source/configuration and exact producer artifact bytes. This dependency record
+is separate from audited unpaid-provider acceptance. Missing or stale custody
+fails with exit1; absent deep output skips with exit2.
 
-Writes:
-  manuscript/S01_literature_review.md
-    A supplemental section (filename prefix ``S01_`` follows the Pandoc
-    supplemental convention used across this template). Pandoc orders
-    main sections (``01_*`` … ``99_references.md``) ahead of supplemental
-    sections (``S01_*`` … ``S99_*``), so the auto-composed literature
-    review renders at the back of the PDF as an appendix.
+The default writes output/manuscript/S02_generated_literature_review.md plus
+output/deep_search/composition_summary.json. The variable hydrator preserves the
+generated supplement and projects extra citations from output/bibliography into
+output/manuscript/generated_search.bib. Authored markdown and curated references
+remain unchanged. Explicit --output authoring is available only through direct
+invocation; this script is outside the default core analysis allowlist.
 
-    The section is fully traceable and citable:
-      - lists each keyword's coverage and per-source breakdown
-      - tabulates every paper with citation key + DOI/URL + year
-      - inlines the LLM-generated CONTRIBUTION + SIGNIFICANCE paragraphs
-        per paper (if present)
-      - cross-references manuscript/references_deep.bib so the combined-PDF
-        pipeline (Pandoc ``--natbib`` + BibTeX) resolves every [@key]
-
-  output/manuscript/S01_literature_review.md  (only when that directory
-    already exists — defensive parity write so a stale resolver copy
-    never references citation keys absent from the regenerated
-    ``references_deep.bib``).
-
-  output/deep_search/composition_summary.json
-    Machine-readable summary of what was composed.
-
-Execution order: this script must run **before**
-``z_generate_manuscript_variables.py`` (which copies
-``manuscript/`` → ``output/manuscript/``). The filename prefix ``s_``
-keeps it sorted after ``run_*`` and before ``y_*``/``z_*`` in
-``scripts/pipeline/stage_02_analysis.py`` lexicographic discovery.
-
-All composition logic (parsing, validation, markdown assembly, artifact
-writing) lives in ``src.composition.compose_literature_review`` — this
-script only wires up argparse and the config load per the thin-orchestrator
-pattern.
-
-Exit codes:
-  0   composed successfully (or skipped cleanly when deep_search disabled)
-  1   composition failed
-  2   no deep-search outputs to compose (graceful skip)
+All parsing, validation, assembly, and artifact writes live in the project src
+module; this script wires argparse and configuration to that implementation.
 """
 
 from __future__ import annotations
@@ -60,7 +28,6 @@ _project_root = Path(__file__).resolve().parent.parent
 _repo_root = _project_root.parents[2]
 sys.path.insert(0, str(_project_root))
 sys.path.insert(0, str(_project_root / "src"))
-sys.path.insert(0, str(_project_root / "src" / "template_search_project"))
 sys.path.insert(0, str(_repo_root))
 
 from template_search_project.pipeline.composition import compose_literature_review
@@ -84,12 +51,21 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument(
         "--output",
         default=None,
-        help="Output markdown path (defaults to manuscript/S01_literature_review.md).",
+        help="Output markdown path (defaults to output/manuscript/S02_generated_literature_review.md).",
     )
+    parser.add_argument("--enable", action="store_true", help="Match an explicit deep-producer --enable override.")
+    parser.add_argument("--keyword", action="append", help="Match the producer's explicit keyword list.")
+    parser.add_argument("--no-llm", action="store_true", help="Match an explicit deep-producer --no-llm override.")
     args = parser.parse_args(argv)
 
-    project_root = Path(args.project_root).resolve()
+    project_root = Path(args.project_root).absolute()
     config = load_project_config(args.config)
+    if args.enable:
+        config.deep_search.enabled = True
+    if args.keyword:
+        config.deep_search.keywords = list(args.keyword)
+    if args.no_llm:
+        config.deep_search.llm_per_paper = False
     return compose_literature_review(project_root, config, args.output)
 
 

@@ -7,9 +7,8 @@ Thin orchestrator over PipelineExecutor, post-run reporting, and HITL CLI.
 from __future__ import annotations
 
 import sys
-from collections.abc import Callable
+import time
 from pathlib import Path
-from typing import Any
 
 repo_root = Path(__file__).resolve().parents[2]
 if str(repo_root) not in sys.path:
@@ -17,11 +16,13 @@ if str(repo_root) not in sys.path:
 
 from infrastructure.core.logging.utils import get_logger, log_header, log_success
 from infrastructure.core.pipeline import PipelineConfig, PipelineExecutor
+from infrastructure.core.pipeline.plan import compile_execution_plan
 from infrastructure.core.pipeline.hitl_cli import PipelineArgs, handle_hitl_command
 from infrastructure.core.pipeline.incremental import IncrementalConfig
 from infrastructure.core.pipeline.single_stage import execute_single_stage
 from infrastructure.core.pipeline.stage_registry import known_stage_keys
 from infrastructure.core.runtime.environment import validate_interpreter
+from infrastructure.orchestration.discovery import validate_project_slug
 
 # Public imports for callers using the canonical runner module.
 __all__ = ["PipelineArgs", "handle_hitl_command", "execute_pipeline", "execute_single_stage", "main"]
@@ -33,47 +34,49 @@ def execute_pipeline(
     project_name: str,
     repo_root: Path,
     skip_infra: bool = False,
-    skip_llm: bool = False,
     resume: bool = False,
-    core_only: bool = False,
+    mode: str = "core",
     hitl_mode: str = "full-auto",
     incremental: bool = False,
     *,
     pipeline_path: Path | None = None,
-    executor_factory: Callable[[PipelineConfig], Any] = PipelineExecutor,
-    interpreter_validator: Callable[[], object] = validate_interpreter,
-    report_writer: Callable[..., None] | None = None,
 ) -> int:
     """Execute pipeline for a single project."""
+    execution_started = False
     try:
-        interpreter_validator()
+        if not isinstance(mode, str) or mode not in {"core", "live"}:
+            raise ValueError(f"Invalid execution mode: {mode}")
+        project_name = validate_project_slug(project_name, repo_root)
+        validate_interpreter()
         config = PipelineConfig(
             project_name=project_name,
             repo_root=repo_root,
             skip_infra=skip_infra,
-            skip_llm=skip_llm,
+            mode=mode,
             resume=resume,
             hitl_mode=hitl_mode,
             incremental=IncrementalConfig(enabled=incremental),
             pipeline_path=pipeline_path,
         )
-        executor = executor_factory(config)
-        results = executor.execute_core_pipeline() if core_only else executor.execute_full_pipeline()
-        if report_writer is None:
-            from infrastructure.core.pipeline.post_run_reporting import write_pipeline_post_run_reports
-
-            report_writer = write_pipeline_post_run_reports
-
-        report_writer(
-            results=results,
-            repo_root=repo_root,
-            project_name=project_name,
-            skip_infra=skip_infra,
-        )
+        deadline = time.monotonic() + config.run_timeout_seconds
+        plan = compile_execution_plan(config)
+        if time.monotonic() >= deadline:
+            raise TimeoutError("Pipeline deadline expired during plan preflight")
+        executor = PipelineExecutor(config)
+        execution_started = True
+        results = executor.execute_plan(plan, deadline_monotonic=deadline)
         if not results:
             logger.error("Pipeline produced no stage results; refusing an empty success")
             return 1
-        return 0 if all(r.success for r in results) else 1
+        return int(executor.run_result(results).exit_code)
+    except KeyboardInterrupt:
+        return 130
+    except TimeoutError as exc:
+        logger.error("Pipeline deadline expired: %s", exc)
+        return 124
+    except ValueError as exc:
+        logger.error("Invalid pipeline invocation: %s", exc)
+        return 1 if execution_started else 2
     except Exception as exc:
         logger.error("Pipeline execution failed: %s", exc)
         return 1
@@ -85,9 +88,10 @@ def main() -> int:
     parser = argparse.ArgumentParser(description="Execute research project pipeline")
     parser.add_argument("--project", required=True, help="Project name")
     parser.add_argument("--skip-infra", action="store_true", help="Skip infrastructure tests")
-    parser.add_argument("--skip-llm", action="store_true", help="Skip LLM stages")
     parser.add_argument("--resume", action="store_true", help="Resume from checkpoint")
-    parser.add_argument("--core-only", action="store_true", help="Run core pipeline only (no LLM)")
+    parser.add_argument(
+        "--mode", choices=("core", "live"), default="core", help="Core local stages or explicit live stages"
+    )
     parser.add_argument(
         "--incremental",
         action="store_true",
@@ -132,9 +136,8 @@ def main() -> int:
     args = PipelineArgs(
         project=raw_args.project,
         skip_infra=raw_args.skip_infra,
-        skip_llm=raw_args.skip_llm,
         resume=raw_args.resume,
-        core_only=raw_args.core_only,
+        mode=raw_args.mode,
         incremental=raw_args.incremental,
         pipeline_path=str(raw_args.pipeline_yaml) if raw_args.pipeline_yaml is not None else None,
         stage=raw_args.stage,
@@ -152,6 +155,7 @@ def main() -> int:
             args.project,
             repo_root,
             pipeline_path=args.pipeline_path,
+            mode=args.mode,
         )
     if args.hitl_command:
         return handle_hitl_command(args, repo_root)
@@ -160,9 +164,8 @@ def main() -> int:
         project_name=args.project,
         repo_root=repo_root,
         skip_infra=args.skip_infra,
-        skip_llm=args.skip_llm,
         resume=args.resume,
-        core_only=args.core_only,
+        mode=args.mode,
         hitl_mode=args.hitl_mode,
         incremental=args.incremental,
         pipeline_path=Path(args.pipeline_path) if args.pipeline_path is not None else None,

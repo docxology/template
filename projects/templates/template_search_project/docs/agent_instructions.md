@@ -28,7 +28,7 @@ For navigation, [`README.md`](README.md) lists every doc by audience.
 
 ## Rule 2: Coverage Gate — 90% Floor on `src/`
 
-Live test count and coverage are tracked in [`docs/_generated/COUNTS.md`](../../../../docs/_generated/COUNTS.md); the suite runs well above the 90% gate (set by the project `pyproject.toml` and re-enforced at the root pipeline).
+Live test count and coverage are tracked in [`docs/_generated/COUNTS.md`](../../../../docs/_generated/COUNTS.md); the declared floor is 90 percent branch coverage of the complete own-source surface. Earlier snapshots do not establish a current pass.
 
 Before modifying any file in `src/`, count the tests that exercise it. After modifying, run:
 
@@ -40,27 +40,23 @@ uv run pytest projects/templates/template_search_project/tests/ \
     -q
 ```
 
-The current margin leaves buffer before the gate; do not consume it gratuitously, and do not delete tests to make a number work — fix the gap.
+Report the actual executed selection and measured coverage. Do not omit source or delete tests to satisfy the floor.
 
 ---
 
-## Rule 3: The Thin-Orchestrator Boundary
+## Rule 3: The Declared Layer Boundary
 
-Unlike `template_code_project` (whose `src/` is `infrastructure`-free), this project's `src/` **does** import from infrastructure. The boundary is narrower and more specific:
+[`../manuscript/layer_contract.yaml`](../manuscript/layer_contract.yaml) names
+exact project adapters permitted to import generic platform APIs. Search
+orchestration delegates retrieval and enrichment to `infrastructure.search`;
+publication adapters use mature confined I/O, bibliography, and source-custody
+contracts. Domain algorithms remain in project `src/`; scripts invoke them.
+Do not maintain a contradictory second adapter allowlist in prose.
 
-| Module | May touch `infrastructure.search.*` | May touch `infrastructure.reference.citation.*` | May touch `infrastructure.llm.*` |
-|---|---|---|---|
-| `src/pipeline/pipeline.py` | yes | yes | no |
-| `src/search/deep_search.py` | yes | yes | no |
-| `src/pipeline/synthesis.py` | no | no | no — receives a duck-typed `llm: Callable[[str], str]` |
-| `src/pipeline/llm_runtime.py` | no | no | yes (builds the runtime adapter) |
-| `src/publish/figures.py`, `src/analysis/report.py`, `src/publish/manuscript_variables.py`, `src/analysis/analysis.py`, `src/search/search_invariants.py` | no | no | no |
-
-**`src/pipeline/pipeline.py` and `src/search/deep_search.py` are the only modules that touch `infrastructure.search.*`.** Every downstream module receives data through dataclass parameters or reads it from disk. This keeps the rest of the project testable without `pytest-httpserver` or a network connection.
-
-**`src/pipeline/synthesis.py` does not depend on Ollama.** Its public functions (`synthesise_per_paper`, `synthesise_corpus`) accept a callable of shape `(str) -> str`. Tests pass a deterministic local function. Runtime callers build a real adapter via `src/pipeline/llm_runtime.py::build_llm_callable`.
-
----
+`template_search_project.pipeline.synthesis` accepts a real
+`Callable[[str], str]`. A controlled callable tests synthesis behavior. Actual
+model acceptance separately binds transport, model identity, source/environment,
+consumed input, response, and finite budget evidence.
 
 ## Rule 4: "Show, Not Tell" Documentation
 
@@ -73,11 +69,11 @@ Our pipeline uses standard literature-search APIs and produces a citation list.
 
 **GOOD** (concrete, linkable):
 ```markdown
-`src/pipeline/pipeline.py::run_literature_pipeline` calls
+`src/template_search_project/pipeline/pipeline.py::run_literature_pipeline` calls
 `infrastructure.search.literature.LiteratureClient.search` against the backends
 listed in `project_config.search.sources`, then writes BibTeX entries via
 `infrastructure.reference.citation.paper_to_bibentry` to
-`projects/templates/template_search_project/manuscript/references.bib`.
+`projects/templates/template_search_project/output/bibliography/references.bib`.
 ```
 
 **BAD**:
@@ -87,43 +83,42 @@ The deep-search stage runs the LLM on every paper.
 
 **GOOD**:
 ```markdown
-`src/search/deep_search.py::run_deep_search` invokes the callable returned by
-`src/pipeline/llm_runtime.py::build_llm_callable` for each paper that survives
+`src/template_search_project/search/deep_search.py::run_deep_search` invokes the callable returned by
+`src/template_search_project/pipeline/llm_runtime.py::build_llm_callable` for each paper that survives
 enrichment, writing per-paper notes to
 `output/deep_search/<keyword_slug>/per_paper/<safe_id>.md`.
 ```
 
 ---
 
-## Rule 5: Determinism Policy
+## Rule 5: Core Defaults and Evidence
 
-This project is offline- and reproducibility-first. Four caches and one seeded LLM combine to produce byte-stable runs:
+Current `project_config` defaults are local search, abstract/fulltext enrichment
+disabled, `llm.enabled: false`, and `deep_search.enabled: false`. The core
+`analysis.scripts` allowlist is, in order:
 
-1. `infrastructure.search.literature.SearchCache` — keyed on canonical query identity; re-runs are cache hits.
-2. `infrastructure.search.literature.AbstractFetcher` — per-paper `<safe_id>.txt` under `output/cache/abs/`.
-3. `infrastructure.search.literature.FulltextFetcher` — per-paper `<safe_id>.{pdf,txt}` under `output/cache/pdf/`.
-4. BibTeX writer (`paper_to_bibentry` + `_disambiguate_citation_key`) — deterministic citation keys with alphabetical disambiguation.
-5. LLM — `seed=42`, `temperature=0.0`, model pinned via `config.llm.model` (default `gemma3:4b`).
+1. `run_search_pipeline.py`
+2. `y_generate_search_figures.py`
+3. `z_generate_manuscript_variables.py`
+4. `zz_generate_review_report.py`
+5. `zzz_build_dashboard.py`
 
-CI-safe defaults in `manuscript/config.yaml`:
+Deep search and composition require explicit direct invocation. A disk-source
+producer record binds current configuration and consumed artifact bytes; it does
+not establish loaded-code custody or successful live-provider acceptance.
+Composition additionally binds the producer receipt, inputs, and S02 SHA, and
+hydration refuses stale/manual dependencies.
 
-```yaml
-search:
-  sources: [local]      # data/corpus.json — no network
-llm:
-  enabled: false        # no Ollama dependency
-deep_search:
-  enabled: true          # runs by default; sources: [arxiv, crossref] (live network, no key required)
-```
-
-Tests assume these defaults. When changing them, also update `tests/publish/test_readme_config_consistency.py`.
-
----
+Local corpus/citation outputs can be compared for exact bytes with fixed inputs.
+Cache acquisition timestamps and actual provider/model receipts describe real
+operations. A model seed and temperature are configuration controls, not a
+promise of identical model responses. Canonical candidate jobs use the nominated
+candidate's measured `SOURCE_DATE_EPOCH` and retain its provenance.
 
 ## Rule 6: Style and Syntax Guides Govern Their Domains
 
 - [`style_guide.md`](style_guide.md) governs `src/*.py`, `tests/test_*.py`, `scripts/*.py` — mock prohibition, infrastructure-delegation table, dataclass standards, error-message format.
-- [`syntax_guide.md`](syntax_guide.md) governs `manuscript/*.md` — Pandoc-crossref labels, the live `{{TOKEN}}` registry from `src/publish/manuscript_variables.py`, the two-bib citation rule, and the figure label registry.
+- [`syntax_guide.md`](syntax_guide.md) governs `manuscript/*.md` — Pandoc-crossref labels, the live `{{TOKEN}}` registry from `src/template_search_project/publish/manuscript_variables.py`, the curated/generated citation rule, and the figure label registry.
 
 Do not apply code-style rules to manuscript prose, and do not apply manuscript syntax rules to Python source.
 
@@ -131,15 +126,15 @@ Do not apply code-style rules to manuscript prose, and do not apply manuscript s
 
 ## Rule 7: `output/` Is Disposable — Never Edit Generated Files
 
-The entire `projects/templates/template_search_project/output/` tree (and the auto-populated files `manuscript/references.bib`, `manuscript/references_deep.bib`, `manuscript/S01_literature_review.md`) is rewritten on every run. Editing those files has zero lasting effect.
+Generated outputs are regenerated from their declared producers. Authored `manuscript/*.md` and curated `manuscript/*.bib` remain source inputs; analysis preserves them. Historical published output is retained until a current producer run is explicitly admitted.
 
 If you need to change what a generated file contains, change the **generator**:
 
-- To change `manuscript/references.bib` → modify `src/pipeline/pipeline.py` or the inputs in `data/corpus.json` / `manuscript/config.yaml`.
-- To change `manuscript/references_deep.bib` → modify `src/search/deep_search.py` or `project_config.deep_search.keywords`.
-- To change `manuscript/S01_literature_review.md` → modify `scripts/s_compose_literature_review.py`.
-- To change `output/figures/*.png` → modify `src/publish/figures.py` and the matching call in `scripts/y_generate_search_figures.py`.
-- To change resolved tokens in `output/manuscript/*.md` → modify `src/publish/manuscript_variables.py` (token definitions) or `manuscript/*.md` (templates).
+- To change generated `output/bibliography/references.bib` → modify `src/template_search_project/pipeline/pipeline.py` or the inputs in `data/corpus.json` / `manuscript/config.yaml`.
+- To change generated `output/bibliography/references_deep.bib` → modify `src/template_search_project/search/deep_search.py` or `project_config.deep_search.keywords`.
+- To change generated `output/manuscript/S02_generated_literature_review.md` → modify its src composition module. Direct explicit `--output` authoring remains available.
+- To change `output/figures/*.png` → modify `src/template_search_project/publish/figures.py` and the matching call in `scripts/y_generate_search_figures.py`.
+- To change resolved tokens in `output/manuscript/*.md` → modify `src/template_search_project/publish/manuscript_variables.py` (token definitions) or `manuscript/*.md` (templates).
 
 See [`output_conventions.md`](output_conventions.md) for the complete producer / consumer mapping.
 
@@ -147,28 +142,16 @@ See [`output_conventions.md`](output_conventions.md) for the complete producer /
 
 ## Verification Checklist
 
-Run all four commands before submitting any change to this project:
+Run the declared project coverage gate, full public Ruff/type checks, repository
+no-mocks and layer-contract checks, and relevant real domain failure controls.
+Run this project separately from other `tests/` roots. Use `--cov-branch` and the
+90 percent floor; report actual outcomes, not stored counts. The optional review
+CLI is `scripts/review --list` from the project directory.
 
-```bash
-# 1. Tests pass and coverage gate is met
-uv run pytest projects/templates/template_search_project/tests/ \
-    --cov=projects/templates/template_search_project/src \
-    --cov-fail-under=90 -q
-
-# 2. No mocks anywhere in tests/
-grep -rE "unittest\.mock|MagicMock|@patch|create_autospec" \
-    projects/templates/template_search_project/tests/ || echo "Clean — no mocks found"
-
-# 3. src/ touches only the permitted infrastructure modules
-#    (search, reference.citation, llm — never .scientific / .reporting / .rendering)
-grep -rE "from infrastructure\.(scientific|reporting|rendering)" \
-    projects/templates/template_search_project/src/ || echo "Clean — src/ stays in its lane"
-
-# 4. The configurable review CLI is wired
-cd projects/templates/template_search_project && uv run python scripts/review --list
-```
-
-Checks 2 and 3 must produce the "Clean" message. Check 4 must list the nine review stages without raising.
+Controlled callable/protocol tests, actual unpaid-provider acceptance,
+installed-wheel acceptance, and rendered artifact evidence remain separate.
+Unsafe output/cache ancestry must refuse before external writes. Authored
+manuscript and curated bibliography bytes stay unchanged.
 
 ## Optional gap-filler search (Monid)
 

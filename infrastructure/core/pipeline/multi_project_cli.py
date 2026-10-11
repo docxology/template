@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import argparse
 import sys
+import time
 from pathlib import Path
 
 from infrastructure.core.logging.utils import get_logger, log_header, log_success
@@ -13,16 +14,14 @@ from infrastructure.core.pipeline.multi_project import (
     MultiProjectOrchestrator,
     MultiProjectResult,
 )
+from infrastructure.core.pipeline.multi_project_support import validated_run_for_rows
 from infrastructure.core.pipeline.multi_project_parallel import (
     ParallelRunResult,
     run_projects_in_parallel,
 )
 from infrastructure.project.discovery import discover_projects
 from infrastructure.project.project_info import ProjectInfo
-from infrastructure.reporting.multi_project_report import (
-    format_multi_project_detailed_report,
-    write_last_run_summary,
-)
+from infrastructure.core.pipeline.multi_project_runtime import validate_budget
 
 logger = get_logger(__name__)
 
@@ -30,12 +29,16 @@ logger = get_logger(__name__)
 def execute_multi_project_parallel(
     repo_root: Path,
     *,
-    run_llm: bool = True,
+    mode: str = "core",
     max_workers: int | None = None,
     resume: bool = False,
+    run_infra_tests: bool = True,
+    run_timeout_seconds: float = 14400.0,
 ) -> int:
     """Execute multi-project orchestration with bounded parallelism."""
     try:
+        validate_budget(run_timeout_seconds)
+        deadline = time.monotonic() + run_timeout_seconds
         projects = discover_projects(repo_root)
         if not projects:
             logger.error("No valid projects found")
@@ -51,9 +54,11 @@ def execute_multi_project_parallel(
             projects,
             repo_root=repo_root,
             max_workers=max_workers,
-            core_only=not run_llm,
-            skip_llm=not run_llm,
+            mode=mode,
+            run_infra_tests=run_infra_tests,
             resume=resume,
+            run_timeout_seconds=run_timeout_seconds,
+            deadline_monotonic=deadline,
         )
 
         log_header("MULTI-PROJECT EXECUTION RESULTS (PARALLEL)", logger)
@@ -62,15 +67,36 @@ def execute_multi_project_parallel(
         logger.info("Failed: %d", len(result.failed))
         logger.info("Total Duration: %.1fs", result.elapsed_seconds)
 
-        if result.failed:
+        aggregate = MultiProjectResult(
+            result.project_results,
+            result.infra_test_duration,
+            result.elapsed_seconds,
+            len(result.succeeded),
+            len(result.failed),
+            result.expected_projects,
+            result.run_results,
+            result.shared_infrastructure_exit_code,
+            result.shared_infrastructure_result,
+        )
+        report_exit = _write_summary_reports(aggregate, projects, repo_root, deadline=deadline)
+        exit_code = _combined_exit(result.exit_code, report_exit)
+        if exit_code != 0:
             logger.error("Failed projects:")
             for name in result.failed:
                 logger.error("  - %s", name)
-            return 1
+            return exit_code
 
         log_success("🎉 All projects completed successfully!", logger)
         return 0
 
+    except KeyboardInterrupt:
+        return 130
+    except TimeoutError as e:
+        logger.error("Parallel multi-project deadline expired: %s", e)
+        return 124
+    except ValueError as e:
+        logger.error("Invalid parallel invocation: %s", e)
+        return 2
     except Exception as e:  # noqa: BLE001 — top-level CLI boundary
         logger.error("Parallel multi-project execution failed: %s", e)
         return 1
@@ -87,7 +113,9 @@ def _log_project_status(result: object) -> None:
     for raw_name, proj_result in sorted(project_results.items(), key=lambda item: str(item[0])):
         proj_name = str(raw_name)
         if isinstance(proj_result, list) and proj_result:
-            all_success = all(bool(getattr(stage, "success", False)) for stage in proj_result)
+            contracts = getattr(result, "run_results", {})
+            run = validated_run_for_rows(proj_result, contracts.get(proj_name))
+            all_success = run is not None and run.complete
             duration = sum(float(getattr(stage, "duration", 0.0)) for stage in proj_result)
             status = "✅" if all_success else "❌"
             logger.info(f"  {status} {proj_name}: {len(proj_result)} stages, {duration:.1f}s")
@@ -95,64 +123,50 @@ def _log_project_status(result: object) -> None:
             logger.info(f"  ❓ {proj_name}: Unknown status")
 
 
+def _combined_exit(*codes: int) -> int:
+    return next((code for code in (130, 124, 1, 75) if code in codes), 0)
+
+
 def _write_summary_reports(
-    result: MultiProjectResult,
-    projects: list[ProjectInfo],
-    repo_root: Path,
-) -> None:
-    try:
-        from infrastructure.reporting.multi_project_reporter import generate_multi_project_summary_report
-
-        summary_output_dir = repo_root / "output" / "multi_project_summary"
-        summary_output_dir.mkdir(parents=True, exist_ok=True)
-        summary_files = generate_multi_project_summary_report(
-            result=result, projects=projects, output_dir=summary_output_dir
-        )
-        logger.info("Multi-project summary reports generated:")
-        for fmt, path in summary_files.items():
-            logger.info(f"  • {fmt.upper()}: {path}")
-    except ImportError:
-        logger.warning("Multi-project summary generation not available")
-    except Exception as e:
-        logger.warning(f"Failed to generate multi-project summary: {e}")
+    result: MultiProjectResult, projects: list[ProjectInfo], repo_root: Path, *, deadline: float
+) -> int:
+    from infrastructure.core.pipeline.multi_project_summary import write_summary_reports
 
     try:
-        summary_lines = format_multi_project_detailed_report(
-            result=result,
-            ordered_projects=projects,
-            repo_root=repo_root,
-        )
-        artifact = write_last_run_summary(summary_lines, repo_root)
-        if artifact is not None:
-            logger.info(f"  • LAST-RUN: {artifact}")
-    except Exception as e:
-        logger.warning(f"Failed to write last-run-summary.md: {e}")
+        return write_summary_reports(result, projects, repo_root, deadline=deadline)
+    except KeyboardInterrupt:
+        return 130
+    except (OSError, ValueError, TypeError, KeyError) as exc:
+        logger.error("Aggregate reporting failed: %s", exc)
+        return 1
 
 
 def _failed_project_names(result: object) -> list[str]:
     project_results = getattr(result, "project_results", None)
-    if not project_results:
-        return []
-    failed: list[str] = []
-    for name, results_list in project_results.items():
-        project_name = str(name)
-        if isinstance(results_list, list) and results_list:
-            if not all(bool(getattr(stage, "success", False)) for stage in results_list):
-                failed.append(project_name)
-        elif not results_list:
-            failed.append(project_name)
-    return failed
+    contracts = getattr(result, "run_results", {})
+    fallback = tuple(project_results) if isinstance(project_results, dict) else ()
+    expected = getattr(result, "expected_projects", fallback)
+    failures = []
+    for name in expected:
+        rows = project_results.get(name) if isinstance(project_results, dict) else None
+        run = validated_run_for_rows(rows, contracts.get(name))
+        if run is None or not run.complete:
+            failures.append(name)
+    return failures
 
 
 def execute_multi_project(
     repo_root: Path,
     run_infra_tests: bool = True,
-    run_llm: bool = True,
-    run_executive_report: bool = True,
+    mode: str = "core",
     skip_infra: bool = False,
+    resume: bool = False,
+    run_timeout_seconds: float = 14400.0,
 ) -> int:
     """Execute multi-project orchestration serially."""
     try:
+        validate_budget(run_timeout_seconds)
+        deadline = time.monotonic() + run_timeout_seconds
         projects = discover_projects(repo_root)
         if not projects:
             logger.error("No valid projects found")
@@ -163,27 +177,16 @@ def execute_multi_project(
         config = MultiProjectConfig(
             repo_root=repo_root,
             projects=projects,
-            run_infra_tests=run_infra_tests,
-            run_llm=run_llm,
-            run_executive_report=run_executive_report,
+            run_infra_tests=run_infra_tests and not skip_infra,
+            mode=mode,
+            resume=resume,
+            run_timeout_seconds=run_timeout_seconds,
+            deadline_monotonic=deadline,
         )
         orchestrator = MultiProjectOrchestrator(config)
 
-        if skip_infra:
-            result = orchestrator.execute_all_projects_full_no_infra()
-            operation_desc = "multi-project execution (no infra)"
-        elif run_llm and run_infra_tests:
-            result = orchestrator.execute_all_projects_full()
-            operation_desc = "multi-project full execution"
-        elif not run_llm and run_infra_tests:
-            result = orchestrator.execute_all_projects_core()
-            operation_desc = "multi-project core execution"
-        elif not run_llm and not run_infra_tests:
-            result = orchestrator.execute_all_projects_core_no_infra()
-            operation_desc = "multi-project core execution (no infra)"
-        else:
-            result = orchestrator.execute_all_projects_core()
-            operation_desc = "multi-project core execution"
+        result = orchestrator.execute_all_projects()
+        operation_desc = f"multi-project {mode} execution"
 
         total_projects = len(projects)
         success_rate = (result.successful_projects / total_projects * 100) if total_projects > 0 else 0
@@ -200,21 +203,32 @@ def execute_multi_project(
             logger.info(f"Average per Project: {result.total_duration / total_projects:.1f}s")
 
         if run_infra_tests and result.infra_test_duration > 0:
-            infra_percentage = result.infra_test_duration / result.total_duration * 100
+            infra_percentage = (
+                result.infra_test_duration / result.total_duration * 100 if result.total_duration else 0.0
+            )
             logger.info(f"Infrastructure Tests: {result.infra_test_duration:.1f}s ({infra_percentage:.1f}%)")
 
         _log_project_status(result)
-        _write_summary_reports(result, projects, repo_root)
+        report_exit = _write_summary_reports(result, projects, repo_root, deadline=deadline)
+        exit_code = _combined_exit(result.exit_code, report_exit)
 
-        if result.successful_projects == len(projects):
+        if exit_code == 0:
             log_success("🎉 All projects completed successfully!", logger)
             return 0
 
         logger.error("❌ Some projects failed")
         for proj_name in _failed_project_names(result):
             logger.error(f"     - {proj_name}")
-        return 1
+        return exit_code
 
+    except KeyboardInterrupt:
+        return 130
+    except TimeoutError as e:
+        logger.error("Multi-project deadline expired: %s", e)
+        return 124
+    except ValueError as e:
+        logger.error("Invalid multi-project invocation: %s", e)
+        return 2
     except Exception as e:
         logger.error(f"Multi-project execution failed: {e}")
         return 1
@@ -224,15 +238,14 @@ def build_arg_parser() -> argparse.ArgumentParser:
     """Build arg parser."""
     parser = argparse.ArgumentParser(description="Execute multi-project orchestration")
     parser.add_argument("--no-infra-tests", action="store_true", help="Skip infrastructure tests")
-    parser.add_argument("--no-llm", action="store_true", help="Skip LLM stages")
-    parser.add_argument("--no-executive-report", action="store_true", help="Skip executive report")
+    parser.add_argument("--mode", choices=("core", "live"), default="core")
     parser.add_argument("--skip-infra", action="store_true", help="Skip infra tests for individual projects")
     parser.add_argument(
         "--parallel",
         action="store_true",
         help=(
             "Run each project's pipeline in a separate worker process via "
-            "ProcessPoolExecutor. Default (without this flag) runs serially. "
+            "a finite subprocess scheduler. Default runs serially. "
             "MULTI_PROJECT_MAX_WORKERS env var sets the default pool size."
         ),
     )
@@ -251,6 +264,12 @@ def build_arg_parser() -> argparse.ArgumentParser:
         action="store_true",
         help="Resume each project from its last checkpoint.",
     )
+    parser.add_argument(
+        "--run-timeout",
+        type=float,
+        default=14400.0,
+        help="Whole-run seconds for shared verification, queue, workers and reporting.",
+    )
     return parser
 
 
@@ -262,17 +281,20 @@ def main(argv: list[str] | None = None, *, repo_root: Path | None = None) -> int
     if args.parallel:
         return execute_multi_project_parallel(
             root,
-            run_llm=not args.no_llm,
+            mode=args.mode,
+            run_infra_tests=not (args.no_infra_tests or args.skip_infra),
             max_workers=args.max_workers,
             resume=args.resume,
+            run_timeout_seconds=args.run_timeout,
         )
 
     return execute_multi_project(
         root,
         run_infra_tests=not args.no_infra_tests,
-        run_llm=not args.no_llm,
-        run_executive_report=not args.no_executive_report,
+        mode=args.mode,
+        resume=args.resume,
         skip_infra=args.skip_infra,
+        run_timeout_seconds=args.run_timeout,
     )
 
 

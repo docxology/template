@@ -13,14 +13,14 @@ flowchart TB
 
     subgraph L2 [Layer 2 - Project-specific orchestration]
         direction LR
-        CFG[src/publish/config.py<br/>typed YAML loader]
-        PIPE[src/pipeline/pipeline.py<br/>search → enrich → BibTeX]
-        DEEP[src/search/deep_search.py<br/>multi-keyword fan-out]
-        SYN[src/pipeline/synthesis.py<br/>prompts · LLM callable]
-        FIG[src/publish/figures.py<br/>matplotlib]
-        MV[src/publish/manuscript_variables.py<br/>substitution]
-        REP[src/analysis/report.py<br/>markdown assembly]
-        AN[src/analysis/analysis.py<br/>review-stage helpers]
+        CFG[src/template_search_project/publish/config.py<br/>typed YAML loader]
+        PIPE[src/template_search_project/pipeline/pipeline.py<br/>search → enrich → BibTeX]
+        DEEP[src/template_search_project/search/deep_search.py<br/>multi-keyword fan-out]
+        SYN[src/template_search_project/pipeline/synthesis.py<br/>prompts · LLM callable]
+        FIG[src/template_search_project/publish/figures.py<br/>matplotlib]
+        MV[src/template_search_project/publish/manuscript_variables.py<br/>substitution]
+        REP[src/template_search_project/analysis/report.py<br/>markdown assembly]
+        AN[src/template_search_project/analysis/analysis.py<br/>review-stage helpers]
     end
 
     subgraph SCR [Thin orchestrators - no logic]
@@ -40,7 +40,8 @@ flowchart TB
     PIPE -.uses.-> REF
     DEEP -.uses.-> SEARCH
     DEEP -.uses.-> REF
-    SYN  -.uses.-> LLM
+    ADAPTER[pipeline/llm_runtime.py] -.uses.-> LLM
+    SYN -.receives callable.-> ADAPTER
     S0   --> DEEP
     S1   --> PIPE
     S1   --> SYN
@@ -60,60 +61,38 @@ flowchart TB
 
 ## Module Responsibilities
 
-| Module | Pure? | Network? | Persistent state? |
-|---|---|---|---|
-| `config.py` | yes | no | reads YAML |
-| `pipeline.py` | partial — calls infra HTTP backends transitively | yes (only when sources include arxiv/crossref/paperclip) | writes corpus, BibTeX, enrichment log |
-| `deep_search.py` | partial — calls infra HTTP backends transitively | yes (only when sources include arxiv/crossref/paperclip) | writes per-keyword + aggregate JSON, deep BibTeX, per-paper notes |
-| `synthesis.py` | yes (LLM is a callable arg) | no | none |
-| `figures.py` | yes | no | writes PNG via callers |
-| `manuscript_variables.py` | yes | no | writes JSON / resolved markdown via callers |
-| `report.py` | yes | no | writes Markdown via callers |
-| `analysis.py` | yes | no | none (review-stage helpers) |
-| `dotenv.py` | yes | no | none (loads `.env` into `os.environ`) |
-| `composition.py` | yes | no | writes composed markdown via callers |
-| `dashboard.py` | yes | no | writes dashboard HTML/payload via callers |
-| `llm_runtime.py` | partial — Ollama client adapter | only when LLM enabled | none |
-| `review_report.py` | yes | no | writes review report via callers |
-| `search_invariants.py` | yes | no | none (pure invariant checks) |
-| `deep_search_cli.py` / `search_pipeline_cli.py` | yes | no | none (CLI arg shaping) |
+| Module family | Responsibility | I/O boundary |
+| --- | --- | --- |
+| `publish/config.py` | Typed domain configuration | Actual YAML loader and validation |
+| `pipeline/pipeline.py`, `search/deep_search.py` | Search, filtering, deduplication, enrichment, citation assembly | Generic retrieval and nominated confined caches/output |
+| `pipeline/synthesis.py` | Prompt/output assembly | Caller-supplied real callable |
+| `pipeline/llm_runtime.py` | Optional real Ollama adapter | Current platform `LLMClient.query_long` |
+| `publish/bibliography.py` | Compare/project curated and generated work definitions | Confined actual source/output bytes |
+| `publish/deep_custody.py` | Current deep artifact dependency | Bounded source/config/artifact snapshots |
+| `pipeline/composition.py`, `publish/manuscript_variables.py` | Generated S02 and manuscript hydration | Exact producer/input/supplement bindings, confined output |
+| Figure/report/dashboard modules | Domain presentation and diagnostics | Actual images, markdown, HTML, and JSON |
+| Analysis/invariant modules | Domain acceptance checks | Real domain values and files |
 
-The `pipeline.py` module is the *only* place that touches
-`infrastructure.search.*`; every other module receives data through
-parameters or reads it from disk. This keeps the rest of the project
-testable without `pytest-httpserver`.
+The exact generic adapter permissions are declared in
+`manuscript/layer_contract.yaml`. Source modules that write or read files are
+not pure merely because a script calls them. Controlled callable/local backend
+behavior and actual provider execution remain distinct evidence.
 
-## Why seven analysis scripts?
+## Explicit Core Analysis
 
-The infrastructure pipeline runner discovers and executes every `*.py`
-script in `scripts/` (excluding `_`-prefixed files) in **alphabetical
-order**. We exploit this:
+`analysis.scripts` in the live/example config declares five scripts:
 
-1. `run_deep_search.py` — runs first (alphabetically `r` < `s` < `y` < `z`);
-   produces `output/deep_search/aggregate.json` and
-   `manuscript/references_deep.bib`.
-2. `run_search_pipeline.py` — runs second; produces
-   `output/search/results.json` and `manuscript/references.bib`.
-3. `s_compose_literature_review.py` — runs third; consumes the deep-search
-   outputs to write `manuscript/S01_literature_review.md`.
-4. `y_generate_search_figures.py` — runs fourth; consumes the standard-pipeline
-   `results.json` to write the three diagnostic PNGs.
-5. `z_generate_manuscript_variables.py` — runs fifth; consumes both the standard
-   `results.json` and (when present) the deep-search aggregate to substitute
-   `{{TOKEN}}` markers and copy the resolved markdown / `*.bib` into
-   `output/manuscript/`.
-6. `zz_generate_review_report.py` — runs sixth; aggregates per-stage review
-   outputs into a single human-readable report.
-7. `zzz_build_dashboard.py` — runs last (`zzz` sorts after `zz`); consumes the
-   corpus and deep-search aggregate JSON to write an interactive
-   search-coverage dashboard (`output/web/dashboard.html`), a payload JSON
-   (`output/data/dashboard_payload.json`), and plaintext invariant reports
-   (`output/reports/dashboard_*.txt`).
+1. `run_search_pipeline.py` — local search and generated bibliography.
+2. `y_generate_search_figures.py` — figures from actual search results.
+3. `z_generate_manuscript_variables.py` — hydration and bibliography projection.
+4. `zz_generate_review_report.py` — current review diagnostics.
+5. `zzz_build_dashboard.py` — corpus dashboard and invariant reports.
 
-This means a contributor adding a new analysis stage only needs to drop
-in a new script with a name that sorts at the right point — no edits to
-`pipeline.yaml` are required. The composer (`s_…`) deliberately precedes
-the resolver (`z_…`) so the freshly composed S01 reaches the render stage.
+Adding a filename does not add it to this explicit allowlist. Deep search and
+`s_compose_literature_review.py` remain direct opt-in producers. Composition
+requires a current producer dependency receipt and writes generated S02;
+hydration checks its actual receipt/input/supplement SHA. Authored S01 remains
+source content. The default dashboard does not consume historical deep output.
 
 ## Citation-Key Determinism
 
@@ -124,27 +103,31 @@ The result is deterministic across runs and exposed via
 `LiteratureRunArtifacts.citation_keys` so the report and the BibTeX file
 agree.
 
-## Combined PDF and bibliographies
+## Hydrated Manuscript and Bibliographies
 
-The infrastructure `PDFRenderer.render_combined` path runs Pandoc with
-`--natbib`, emits a single LaTeX document, then BibTeX over
-`\bibliography{stem1,stem2,...}` built from every `manuscript/*.bib`
-(sorted). Pre-render citation checks union the same files so split
-`references.bib` / `references_deep.bib` projects validate without false
-“undefined citation” errors.
+Authored `manuscript/*.md` and curated `manuscript/*.bib` remain unchanged.
+Producers write full databases under `output/bibliography/`; hydration compares
+colliding work metadata, keeps curated annotations, and emits only additional
+keys to reserved `output/manuscript/generated_search.bib`. Meaningful conflicts
+fail. Renderers select the populated hydrated directory and consume its complete
+bibliography union.
 
-## Pipeline Idempotency
+`output/bibliography_projection.json` records consumed byte hashes and key
+origins. Explicit deep composition additionally binds the current producer
+receipt, input bytes, and generated S02 SHA. These dependency snapshots are
+separate from audited unpaid-provider or installed-runtime acceptance.
 
-* Search: `SearchCache` keyed on canonical query identity. Re-runs with
-  the same config produce byte-identical cache hits.
-* Enrichment: per-paper `<safe_id>.{txt,pdf}` files. Re-runs are file
-  reads.
-* BibTeX: regenerated every time from in-memory state. Always identical
-  for a given `corpus.json`.
-* Figures: regenerated every time. Matplotlib's PNG output is stable
-  across minor versions.
-* LLM synthesis: deterministic when `seed=42, temperature=0.0` and the
-  model version is pinned.
+## Repeatability Boundaries
+
+Local corpus, citation keys, and projected source bytes can be compared with
+fixed inputs. Cache acquisition timestamps and actual operation/model receipts
+retain real timing. Renderer/library versions can affect image/PDF bytes and
+must be bound when asserting exact artifact repeatability. A seed and temperature
+are model controls, not a guarantee of identical responses.
+
+Canonical candidate execution uses a measured nominated candidate epoch and
+explicit tool/source/artifact identities. Historical output and earlier test
+receipts do not establish a current candidate pass.
 
 ## See Also
 

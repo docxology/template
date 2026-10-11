@@ -5,28 +5,23 @@ documented entrypoints (``scripts/runner/execute_pipeline.py`` and
 ``python -m infrastructure.orchestration pipeline``) and that
 ``PipelineConfig.incremental.enabled`` is ``True`` only when the flag is passed.
 
-No mocks: the executor stand-in is a real hand-written class that records the
-config it receives; ``monkeypatch.setattr`` is plain attribute substitution,
-not a mocking framework.
+No mocks: the canonical entrypoints run real child processes twice and prove
+that reuse occurs only when incremental execution is explicitly enabled.
 """
 
 from __future__ import annotations
+
+import pytest
 
 import subprocess
 import sys
 from pathlib import Path
 
 from infrastructure.core.pipeline.hitl_cli import PipelineArgs
-from infrastructure.core.pipeline.types import PipelineStageResult
 from infrastructure.orchestration import build_parser
 from infrastructure.orchestration.pipeline_runner import PipelineInvocation
 
 REPO_ROOT = Path(__file__).resolve().parents[4]
-
-
-def _successful_stage_result() -> PipelineStageResult:
-    """Return a minimal real result so the empty-plan guard is exercised honestly."""
-    return PipelineStageResult(stage_num=1, stage_name="capture", success=True, duration=0.0)
 
 
 def test_pipeline_args_default_incremental_is_false() -> None:
@@ -47,91 +42,38 @@ def test_orchestration_parser_incremental_flag_sets_true() -> None:
     assert ns.incremental is True
 
 
-def _capture_config(*, incremental: bool):
-    """Run ``execute_pipeline`` with a real capture-executor; return the config."""
-    import scripts.runner.execute_pipeline as ep
-
-    captured: dict[str, object] = {}
-
-    class _CaptureExecutor:
-        def __init__(self, config: object) -> None:
-            captured["config"] = config
-
-        def execute_full_pipeline(self) -> list:
-            return [_successful_stage_result()]
-
-        def execute_core_pipeline(self) -> list:
-            return [_successful_stage_result()]
-
-    rc = ep.execute_pipeline(
-        project_name="demo",
-        repo_root=REPO_ROOT,
-        incremental=incremental,
-        executor_factory=_CaptureExecutor,
-        interpreter_validator=lambda: None,
-        report_writer=lambda **kwargs: None,
-    )
-    assert rc == 0
-    return captured["config"]
-
-
-def test_execute_pipeline_enables_incremental_only_with_flag() -> None:
-    enabled_cfg = _capture_config(incremental=True)
-    assert enabled_cfg.incremental.enabled is True
-
-
-def test_execute_pipeline_incremental_disabled_by_default() -> None:
-    default_cfg = _capture_config(incremental=False)
-    assert default_cfg.incremental.enabled is False
-
-
-def _capture_runner_config(tmp_path, *, incremental: bool, core_only: bool = False):
-    """Run PipelineRunner.run with a real capture-executor; return the config it built."""
+@pytest.mark.parametrize("entrypoint", ["runner", "orchestration"])
+@pytest.mark.parametrize("incremental", [False, True])
+@pytest.mark.timeout(90)
+def test_incremental_entrypoints_control_real_child_reuse(tmp_path: Path, entrypoint: str, incremental: bool) -> None:
     import io
+    from scripts.runner.execute_pipeline import execute_pipeline
+    from infrastructure.orchestration.pipeline_runner import PipelineRunner
+    from tests.infra_tests.orchestration._pipeline_fixture import scaffold_pipeline
 
-    import infrastructure.orchestration.pipeline_runner as pr
+    import yaml
 
-    captured: dict[str, object] = {}
-
-    class _CaptureExecutor:
-        def __init__(self, config: object) -> None:
-            captured["config"] = config
-
-        def execute_full_pipeline(self) -> list:
-            return [_successful_stage_result()]
-
-        def execute_core_pipeline(self) -> list:
-            return [_successful_stage_result()]
-
-    runner = pr.PipelineRunner(
-        repo_root=tmp_path,
-        stream=io.StringIO(),
-        executor_factory=_CaptureExecutor,
-    )
-    rc = runner.run(pr.PipelineInvocation(project="demo", incremental=incremental, core_only=core_only))
-    assert rc == 0
-    return captured["config"]
-
-
-def test_orchestration_runner_threads_incremental_into_config(tmp_path) -> None:
-    """PipelineRunner.run must propagate the flag to PipelineConfig.incremental.enabled.
-
-    This pins the orchestration threading that the parser-only tests miss: dropping
-    `incremental=invocation.incremental` in pipeline_runner.run would leave the
-    parser tests green but silently disable the feature for the documented
-    `python -m infrastructure.orchestration pipeline --incremental` entrypoint.
-    """
-    assert _capture_runner_config(tmp_path, incremental=True).incremental.enabled is True
-
-
-def test_orchestration_runner_incremental_disabled_by_default(tmp_path) -> None:
-    assert _capture_runner_config(tmp_path, incremental=False).incremental.enabled is False
-
-
-def test_orchestration_runner_incremental_with_core_only(tmp_path) -> None:
-    cfg = _capture_runner_config(tmp_path, incremental=True, core_only=True)
-    assert cfg.incremental.enabled is True
-    assert cfg.skip_llm is True  # core_only implies skip_llm; incremental is orthogonal
+    scaffold_pipeline(tmp_path)
+    # Analysis is never content-cached (its producer runtime is always re-admitted),
+    # so prove reuse through an ordinary cacheable project stage instead.
+    definition = tmp_path / "infrastructure/core/pipeline/pipeline.yaml"
+    declaration = yaml.safe_load(definition.read_text())
+    for stage in declaration["stages"]:
+        if stage["key"] == "analysis":
+            stage.update(key="summary", name="Project Summary")
+    definition.write_text(yaml.safe_dump(declaration))
+    for _ in range(2):
+        if entrypoint == "runner":
+            code = execute_pipeline("demo", tmp_path, skip_infra=True, incremental=incremental)
+        else:
+            code = PipelineRunner(tmp_path, stream=io.StringIO()).run(
+                PipelineInvocation("demo", skip_infra=True, incremental=incremental)
+            )
+        assert code == 0
+    rows = (tmp_path / "process_order.log").read_text().splitlines()
+    assert rows == ["demo:analysis"] * (1 if incremental else 2)
+    cache = tmp_path / "projects/demo/output/.pipeline/incremental.json"
+    assert cache.is_file() is incremental
 
 
 def test_execute_pipeline_help_advertises_incremental() -> None:

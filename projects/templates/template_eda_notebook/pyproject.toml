@@ -7,14 +7,18 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "template_eda_notebook"
-version = "1.0.0"
+version = "2.0.0"
 license = {text = "MIT"}
 description = "Fully-tested exploratory-data-analysis library with a computational-notebook walkthrough"
 authors = [
     {name = "Daniel Ari Friedman", email = "daniel@activeinference.institute"}
 ]
-requires-python = ">=3.10"
+requires-python = ">=3.12"
 dependencies = [
+    "research-project-template==4.0.1",
+    "nbclient>=0.10.0",
+    "nbformat>=5.10.0",
+    "ipykernel>=6.29.0",
     "numpy>=1.24.0",
     "pandas>=2.0.0",
     "matplotlib>=3.7.0",
@@ -24,13 +28,13 @@ dependencies = [
 
 [project.optional-dependencies]
 dev = [
+    "pytest-timeout>=2.4.0",
     "pytest>=7.4.0",
     "pytest-cov>=4.1.0",
 ]
 
 [tool.pytest.ini_options]
 # RASP Strict Assertion: Tests must be clearly separated and structurally identifiable
-pythonpath = [".", "src"]
 testpaths = ["tests"]
 python_files = ["test_*.py"]
 python_functions = ["test_*"]
@@ -62,3 +66,13 @@ exclude_lines = [
 
 [tool.uv]
 # Inherits workspace settings from root pyproject.toml
+
+[tool.uv.sources]
+# Checkout development only; standalone acceptance installs the genuine platform wheel.
+research-project-template = { path = "../../..", editable = true }
+
+# Compatibility contract for this independent exemplar release.
+[tool.template]
+platform_version = "4.0.1"
+tested_python_versions = ["3.12", "3.13", "3.14"]
+required_unpaid_capabilities = ["fresh-kernel"]

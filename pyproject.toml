@@ -18,11 +18,11 @@ build-backend = "hatchling.build"
 
 [project]
 name = "research-project-template"
-version = "3.8.0"
+version = "4.0.1"
 description = "A comprehensive template for research projects with test-driven development, automated PDF generation, and professional documentation structure"
 authors = [{ name = "Research Template Team" }]
 readme = "README.md"
-requires-python = ">=3.10"
+requires-python = ">=3.12"
 keywords = ["research", "template", "academic", "scientific", "documentation", "pdf-generation", "test-driven-development"]
 classifiers = [
     "Development Status :: 5 - Production/Stable",
@@ -30,8 +30,6 @@ classifiers = [
     "Intended Audience :: Developers",
     "License :: OSI Approved :: Apache Software License",
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.10",
-    "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
     "Programming Language :: Python :: 3.14",
@@ -47,10 +45,6 @@ dependencies = [
   # Publication placeholder audits need CommonMark block source maps so only
   # actual code blocks are excluded from fail-closed rendered-text scanning.
   "markdown-it-py>=4.0.0",
-  # tomllib was added to the stdlib in Python 3.11; backport for 3.10.
-  "tomli>=2.0; python_version < '3.11'",
-  # typing.NotRequired / datetime.UTC added in Python 3.11; backport for 3.10.
-  "typing-extensions>=4.0; python_version < '3.11'",
   "pillow>=12.3.0",
   "matplotlib>=3.7",
   # Archive rendering canonicalizes PDFs whenever SOURCE_DATE_EPOCH is set.
@@ -174,8 +168,8 @@ dev = [
     "types-requests>=2.32.4.20260107",
     "types-pyyaml>=6.0.12.20250915",
     "ruff>=0.15.21",
-    # Code-health scanner (Python 3.11+ only; template still supports 3.10 for projects)
-    "desloppify @ git+https://github.com/peteromallet/desloppify.git@19b9ebebcf449dd7074f30a7bdfdcd327d53cff6; python_version >= '3.11'",
+    # Pinned code-health scanner for the supported Python 3.12+ runtime.
+    "desloppify @ git+https://github.com/peteromallet/desloppify.git@19b9ebebcf449dd7074f30a7bdfdcd327d53cff6",
     "pytest-xdist>=3.5",
 ]
 deep-research = [
@@ -206,6 +200,14 @@ public-exemplars = [
     "seaborn>=0.12.0",
     "tqdm>=4.65.0",
     "urllib3>=2.0.0",
+    "nbclient>=0.10.0",
+    "nbformat>=5.10.0",
+    "ipykernel>=6.29.0",
+]
+installed-build = [
+    "hatchling==1.32.4",
+    "setuptools==83.0.0",
+    "wheel==0.48.0",
 ]
 
 [tool.uv]
@@ -244,6 +246,16 @@ exclude = [
 # PyPI, and one that has to be waived explicitly rather than worked around.
 allow-direct-references = true
 
+[tool.hatch.build]
+# Kmyth native build products belong to local provider custody, not the SDK.
+exclude = [
+    "/infrastructure/steganography/kmyth/bin",
+    "/infrastructure/steganography/kmyth/lib",
+    "/infrastructure/steganography/kmyth/obj",
+    "/infrastructure/steganography/kmyth/logger/obj",
+    "/infrastructure/steganography/kmyth/utils/obj",
+]
+
 [tool.hatch.build.targets.wheel]
 packages = ["infrastructure"]
 
@@ -268,6 +280,7 @@ addopts = "--import-mode=importlib --tb=short --strict-markers -W ignore::pytest
 timeout = 10  # Timeout individual tests after 10 seconds to prevent hanging
 timeout_method = "thread"  # Use thread-based timeout (safer for network operations)
 markers = [
+    "network: requires explicitly enabled live network access; provider eligibility and credentials must be verified before execution",
     "requires_ollama: requires a live Ollama server and model; excluded by default and explicitly opt in with -m requires_ollama. See docs/development/optional-dependencies.md",
     "requires_latex: requires a LaTeX engine (xelatex/pdflatex); SKIPS via skip_if_no_latex when absent. Opt out: -m 'not requires_latex'. See docs/development/optional-dependencies.md",
     "slow: mark test as slow running",
@@ -344,7 +357,7 @@ exclude_lines = [
 # ============================================================================
 
 [tool.ruff]
-target-version = "py310"
+target-version = "py312"
 line-length = 120
 
 [tool.ruff.format]
@@ -371,6 +384,17 @@ ignore = [
 "infrastructure/__init__.py" = ["E501"]  # Module inventory docstring
 # T20 (print ban) over infrastructure/: only legitimate CLI entrypoint, gate,
 # and human-report modules may print; library modules route through get_logger.
+"infrastructure/core/runtime/prepared_dispatch.py" = ["T201"]  # acceptance CLI / human report
+"infrastructure/project/public_acceptance_auxiliary_cli.py" = ["T201"]  # acceptance CLI / human report
+"infrastructure/project/public_acceptance_root.py" = ["T201"]  # acceptance CLI / human report
+"infrastructure/project/public_root_case_census.py" = ["T201"]  # acceptance CLI / human report
+"infrastructure/project/public_root_runtime_readback.py" = ["T201"]  # acceptance CLI / human report
+"infrastructure/publishing/release_acceptance.py" = ["T201"]  # acceptance CLI / human report
+"infrastructure/publishing/root_release_artifacts.py" = ["T201"]  # acceptance CLI / human report
+"infrastructure/reporting/native_dependency_preparation.py" = ["T201"]  # acceptance CLI / human report
+"infrastructure/reporting/native_epub_preparation.py" = ["T201"]  # acceptance CLI / human report
+"infrastructure/reporting/native_format_acceptance.py" = ["T201"]  # acceptance CLI / human report
+"infrastructure/reporting/required_acceptance_aggregate.py" = ["T201"]  # acceptance CLI / human report
 "infrastructure/autoresearch/cli.py" = ["T201"]
 "infrastructure/benchmark/template_harness.py" = ["T201"]
 "infrastructure/core/cli_handlers.py" = ["T201"]
@@ -378,7 +402,9 @@ ignore = [
 "infrastructure/core/health.py" = ["T201"]
 "infrastructure/core/health_benchmark.py" = ["T201"]
 "infrastructure/core/pipeline/hitl_cli.py" = ["T201"]
+"infrastructure/core/pipeline/report_worker.py" = ["T201"]  # supervised report CLI
 "infrastructure/core/pipeline/snapshot.py" = ["T201"]
+"infrastructure/core/pipeline/stage_worker.py" = ["T201"]  # supervised stage CLI
 "infrastructure/core/testing/test_performance.py" = ["T201"]
 "infrastructure/documentation/generate_glossary_cli.py" = ["T201"]
 "infrastructure/fonds/linking.py" = ["T201"]
@@ -479,3 +505,8 @@ exclude_dirs = [
 # B101: assert_used — asserts are used as internal invariants in infrastructure code.
 # Suppressing B101 reduces noise without compromising security review of real issues.
 skips = ["B101"]
+
+[tool.template.root_acceptance]
+schema_version = 3
+policy = "infrastructure/config/root-case-policy.json"
+prerequisites = "infrastructure/config/root-case-prerequisites.json"

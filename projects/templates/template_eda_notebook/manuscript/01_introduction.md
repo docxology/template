@@ -5,7 +5,7 @@ for the [Research Project Template](https://github.com/docxology/template)
 ecosystem, demonstrating how a computational notebook can stay reproducible by
 delegating every computation to a fully-tested library. The prose, the labelled
 figures, and the summary table are all produced through an auditable custody
-chain: a deterministic dataset, tested functions in `src/eda/`, a thin analysis
+chain: a deterministic dataset, tested functions in `src/template_eda_notebook/eda/`, a thin analysis
 script, and multi-format rendering.
 
 ## Why exploratory data analysis
@@ -28,7 +28,7 @@ tested library the moment a computation matters.** Concretely:
    (`notebooks/eda_walkthrough.ipynb`) imports from `src` and calls tested
    functions; it contains no business logic of its own.
 2. Each analytical step — loading, cleaning, summarizing, correlating, preparing
-   figure data — is a typed, documented function in `src/eda/` with a test that
+   figure data — is a typed, documented function in `src/template_eda_notebook/eda/` with a test that
    asserts an exact numeric property.
 3. A thin script (`scripts/eda_analysis.py`) runs the same pipeline headless and
    writes the figures and a summary CSV to `output/`.
@@ -37,7 +37,7 @@ tested library the moment a computation matters.** Concretely:
 
 The project sits on the repository's three pillars:
 
-1. **`src/eda/` library**: pure pandas/numpy data transforms — no plotting, no
+1. **`src/template_eda_notebook/eda/` library**: pure pandas/numpy data transforms — no plotting, no
    file I/O, no `infrastructure` imports. This purity is what makes the library
    forkable and trivially testable.
 2. **`tests/` framework**: a zero-mock suite that exercises the library against
@@ -58,7 +58,7 @@ missing-data path honestly.
 
 ## Reader's guide to the manuscript
 
-- **[@sec:methodology]** ties each EDA step to its function in `src/eda/`.
+- **[@sec:methodology]** ties each EDA step to its function in `src/template_eda_notebook/eda/`.
 - **[@sec:results]** is figure-centric: each panel names the figure-data
   preparer that produced it.
 - **[@sec:experimental_setup]** lists the dataset schema and software

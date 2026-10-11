@@ -136,11 +136,17 @@ def load_publication_records(repo_root: Path) -> list[PublicationRecord]:
                 citation_path=citation_path,
                 zenodo_json_path=zenodo_json_path,
                 codemeta_path=codemeta_path,
+                release_status=str(publication.get("release_status") or "published").strip().lower(),
+                intended_version=str(publication.get("intended_version") or "").strip(),
+                last_published_version=str(publication.get("last_published_version") or "").strip(),
+                publication_status=str(publication.get("status") or "published").strip().lower(),
                 citation_version=str(citation.get("version", "")).strip().strip("'\""),
                 citation_doi=str(citation.get("doi", "")).strip(),
                 zenodo_json_version=str(zenodo_json.get("version", "")).strip(),
                 sidecar_findings=_sidecar_findings(
-                    paper_version=paper_version,
+                    paper_version=str(publication.get("last_published_version") or paper_version)
+                    if publication.get("release_status") == "unreleased"
+                    else paper_version,
                     concept_doi=concept_doi,
                     citation=citation,
                     zenodo_json=zenodo_json,

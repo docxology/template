@@ -4,8 +4,7 @@ This is the **preferred import path** for review I/O helpers. It consolidates
 the public API of the ``review_analysis``, ``saving``, and ``metrics``
 sub-modules so callers do not need to know the internal split.
 
-All existing imports (``from infrastructure.llm.review.io import ...``)
-continue to work unchanged.
+Import these functions and ``SessionMetrics`` from this module.
 """
 
 from infrastructure.llm.review.review_analysis import (
@@ -19,12 +18,11 @@ from infrastructure.llm.review.saving import (
     save_single_review,
 )
 
-# Re-export SessionMetrics for backwards compatibility with:
-#   from infrastructure.llm.review.io import SessionMetrics
+# SessionMetrics belongs to the declared review I/O surface.
 from infrastructure.llm.review.metrics import SessionMetrics  # noqa: F401
 
 __all__ = [
-    # review_analysis (re-exported for backwards compat)
+    # review_analysis
     "calculate_format_compliance_summary",
     "calculate_quality_summary",
     "extract_action_items",
@@ -32,6 +30,6 @@ __all__ = [
     "generate_review_summary",
     "save_review_outputs",
     "save_single_review",
-    # metrics (re-exported for backwards compat)
+    # metrics
     "SessionMetrics",
 ]

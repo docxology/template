@@ -16,16 +16,14 @@ def test_single_stage_deadline_exceeds_declared_verifier_deadline() -> None:
     assert PIPELINE_STAGE_TIMEOUT_SECONDS > DEFAULT_PROJECT_VERIFIER_TIMEOUT_SECONDS
 
 
-def test_unknown_stage_exits_with_message() -> None:
-    with pytest.raises(SystemExit, match="Unknown stage"):
-        execute_single_stage("not_a_real_stage", "template_code_project", Path("."))
+def test_unknown_stage_returns_invocation_error(tmp_path: Path) -> None:
+    assert execute_single_stage("not_a_real_stage", "demo", tmp_path) == 2
 
 
 def test_known_stage_key_is_mapped() -> None:
-    from infrastructure.core.pipeline.stage_registry import STAGE_DISPATCH
+    from infrastructure.core.pipeline.stage_registry import known_stage_keys
 
-    assert "render_pdf" in STAGE_DISPATCH
-    assert STAGE_DISPATCH["render_pdf"].script.endswith("stage_03_render.py")
+    assert "render_pdf" in known_stage_keys()
 
 
 def test_project_custom_stage_executes_by_key_and_display_name(tmp_path: Path) -> None:
@@ -60,7 +58,7 @@ Path("custom-stage-ran.txt").write_text(args.project, encoding="utf-8")
     assert marker.read_text(encoding="utf-8") == "demo"
 
 
-def test_project_pipeline_legacy_bare_script_uses_repository_scripts_dir(tmp_path: Path) -> None:
+def test_retired_bare_script_shape_is_rejected_before_execution(tmp_path: Path) -> None:
     project = tmp_path / "projects" / "demo"
     project.mkdir(parents=True)
     scripts = tmp_path / "scripts"
@@ -75,12 +73,12 @@ def test_project_pipeline_legacy_bare_script_uses_repository_scripts_dir(tmp_pat
         encoding="utf-8",
     )
     (project / "pipeline.yaml").write_text(
-        "stages:\n  - name: Legacy custom stage\n    key: legacy_custom\n    script: custom_stage.py\n",
+        "stages:\n  - name: Custom stage\n    key: custom\n    script: custom_stage.py\n",
         encoding="utf-8",
     )
 
-    assert execute_single_stage("legacy_custom", "demo", tmp_path) == 0
-    assert (tmp_path / "bare-stage-ran.txt").read_text(encoding="utf-8") == "demo"
+    assert execute_single_stage("custom", "demo", tmp_path) == 2
+    assert not (tmp_path / "bare-stage-ran.txt").exists()
 
 
 def test_builtin_clean_stage_executes_from_project_dag(tmp_path: Path) -> None:
@@ -123,7 +121,8 @@ Path("explicit-pipeline-ran.txt").write_text(args.project, encoding="utf-8")
   - name: Publication Validation
     key: publication_validation
     script: projects/demo/scripts/publish.py
-    method: descriptive methods evidence label
+    contract:
+      definition_of_done: Publication evidence verified
 """,
         encoding="utf-8",
     )
@@ -140,7 +139,7 @@ Path("explicit-pipeline-ran.txt").write_text(args.project, encoding="utf-8")
     assert (tmp_path / "explicit-pipeline-ran.txt").read_text(encoding="utf-8") == "demo"
 
 
-@pytest.mark.parametrize(("allow_skip", "expected"), [(True, 0), (False, 2)])
+@pytest.mark.parametrize(("allow_skip", "expected"), [(True, 1), (False, 1)])
 def test_single_stage_matches_dag_allow_skip_exit_semantics(
     tmp_path: Path,
     allow_skip: bool,

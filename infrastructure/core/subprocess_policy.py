@@ -3,12 +3,15 @@
 from __future__ import annotations
 
 import os
+import math
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Sequence
 
 from infrastructure.core.execution_boundary import (
     BoundedSubprocessResult as BoundedSubprocessResult,
+    DEFAULT_GUARDIAN_STARTUP_TIMEOUT_SECONDS,
+    validate_guardian_startup_timeout,
     build_bounded_env,
     run_bounded_subprocess,
 )
@@ -36,6 +39,7 @@ class SubprocessPolicy:
     capture_output: bool = True
     credential_free: bool = True
     process_group: bool = True
+    guardian_startup_timeout_seconds: float = DEFAULT_GUARDIAN_STARTUP_TIMEOUT_SECONDS
 
     def validate(self, repo_root: Path | None = None) -> None:
         """Reject incomplete or unsafe policy declarations."""
@@ -43,8 +47,16 @@ class SubprocessPolicy:
             raise ValueError("subprocess policy id must not be empty")
         if not self.source_path.strip():
             raise ValueError(f"subprocess policy {self.policy_id!r} needs a source path")
-        if self.timeout_seconds <= 0:
-            raise ValueError(f"subprocess policy {self.policy_id!r} needs a positive timeout")
+        if (
+            type(self.timeout_seconds) not in (int, float)
+            or not math.isfinite(self.timeout_seconds)
+            or self.timeout_seconds <= 0
+        ):
+            raise ValueError(f"subprocess policy {self.policy_id!r} needs a positive finite timeout")
+        try:
+            validate_guardian_startup_timeout(self.guardian_startup_timeout_seconds)
+        except ValueError as exc:
+            raise ValueError(f"subprocess policy {self.policy_id!r}: {exc}") from exc
         if not self.process_group:
             raise ValueError(f"subprocess policy {self.policy_id!r} must use a process-group boundary")
         if repo_root is not None and not (repo_root / self.source_path).is_file():
@@ -63,10 +75,12 @@ class SubprocessPolicyRecord:
     capture_output: bool
     credential_free: bool
     process_group: bool
+    guardian_startup_timeout_seconds: float = DEFAULT_GUARDIAN_STARTUP_TIMEOUT_SECONDS
 
     @classmethod
     def from_policy(cls, policy: SubprocessPolicy) -> SubprocessPolicyRecord:
-        """Build an inventory record from a validated policy."""
+        """Validate and bind both whole-operation and startup budgets."""
+        policy.validate()
         return cls(
             policy_id=policy.policy_id,
             source_path=policy.source_path,
@@ -76,6 +90,7 @@ class SubprocessPolicyRecord:
             capture_output=policy.capture_output,
             credential_free=policy.credential_free,
             process_group=policy.process_group,
+            guardian_startup_timeout_seconds=policy.guardian_startup_timeout_seconds,
         )
 
 
@@ -275,6 +290,7 @@ def run_with_policy(
         env=safe_env,
         timeout=policy.timeout_seconds,
         capture_output=policy.capture_output,
+        guardian_startup_timeout_seconds=policy.guardian_startup_timeout_seconds,
     )
     if policy.check and result.returncode != 0:
         raise SubprocessPolicyError(policy.policy_id, result)

@@ -133,29 +133,21 @@ Keep tests, publication boundaries, and fork TODO evidence aligned.
         root / "TODO.md",
         """# Fake TODO
 
-## Current validation evidence
+Future work only.
 
-- Drift gate and tests are the current evidence.
+## Minor upcoming
 
-## Integrity and template-status gaps
+| ID | Status | Size | Dependency | Next action / unblock condition | Proving artifact | Acceptance command | Negative control |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| `FAKE-CONFIG-1` | open | Minor | Current config schema | Add placeholder-safe config cases | config-case receipt | `uv run pytest tests -q` | invalid config must fail |
 
-- Keep template integrity explicit.
+## Medium upcoming
 
-## Configurable-surface gaps
+No active rows are currently scoped at this size.
 
-- Keep config examples placeholder-safe.
+## Major upcoming
 
-## Documentation and signposting gaps
-
-- Keep README and AGENTS aligned.
-
-## Test and validator gaps
-
-- Add negative controls for new validators.
-
-## Ordered improvement ladder
-
-1. Keep the gate green.
+No active rows are currently scoped at this size.
 """,
     )
     write_doc(root / "pyproject.toml", "[tool.coverage.report]\nfail_under = 90\n")
@@ -209,6 +201,20 @@ def test_required_files_exist_clean_for_full_scaffold(drift_module, tmp_path):
     rep = drift_module.Report()
     drift_module.check_required_files_exist(root, rep, "fake_project")
     assert rep.findings == []
+
+
+def test_required_files_exist_accepts_real_nested_package_without_src_shim(drift_module, tmp_path):
+    root = _scaffold_minimal_project(tmp_path)
+    (root / "src/__init__.py").unlink()
+    package = root / "src" / root.name
+    package.mkdir()
+    (package / "__init__.py").write_text("__all__ = []\n", encoding="utf-8")
+    rep = drift_module.Report()
+    drift_module.check_required_files_exist(root, rep, "fake_project")
+    assert rep.findings == []
+    (package / "__init__.py").unlink()
+    drift_module.check_required_files_exist(root, rep, "fake_project")
+    assert any(f.rule == "missing_canonical_file" and "canonical package" in f.message for f in rep.findings)
 
 
 def test_required_files_exist_flags_missing_pyproject(drift_module, tmp_path):
@@ -310,14 +316,45 @@ def test_template_signpost_contract_flags_missing_readme_use_when(drift_module, 
     )
 
 
-def test_template_signpost_contract_flags_missing_todo_ladder(drift_module, tmp_path):
+def test_template_signpost_contract_flags_missing_future_work_contract(drift_module, tmp_path):
     root = _scaffold_minimal_project(tmp_path)
     (root / "TODO.md").write_text("# Fake TODO\n\n## Current validation evidence\n\n- Tests.\n", encoding="utf-8")
     rep = drift_module.Report()
     drift_module.check_template_signpost_contract(root, rep, "fake_project")
     assert any(
-        f.severity == "ERROR" and f.rule == "missing_template_signpost" and "TODO.md" in f.message for f in rep.findings
+        f.severity == "ERROR" and f.rule == "invalid_template_backlog" and "TODO.md" in f.message for f in rep.findings
     )
+
+
+def test_template_signpost_contract_accepts_future_only_scoped_work(drift_module, tmp_path):
+    root = _scaffold_minimal_project(tmp_path)
+    rep = drift_module.Report()
+    drift_module.check_template_signpost_contract(root, rep, "fake_project")
+    assert rep.findings == []
+
+
+@pytest.mark.parametrize("field", ["dependency", "proving artifact", "acceptance command", "negative control"])
+def test_template_signpost_contract_rejects_unscoped_future_work(drift_module, tmp_path, field):
+    root = _scaffold_minimal_project(tmp_path)
+    path = root / "TODO.md"
+    content = path.read_text()
+    row = next(line for line in content.splitlines() if line.startswith("| `FAKE-CONFIG-1`"))
+    cells = row.strip("|").split("|")
+    indices = {"dependency": 3, "proving artifact": 5, "acceptance command": 6, "negative control": 7}
+    cells[indices[field]] = " "
+    path.write_text(content.replace(row, "|" + "|".join(cells) + "|"))
+    rep = drift_module.Report()
+    drift_module.check_template_signpost_contract(root, rep, "fake_project")
+    assert any(f.rule == "invalid_template_backlog" and "empty_scope" in f.message for f in rep.findings)
+
+
+def test_template_signpost_contract_rejects_missing_stable_work_id(drift_module, tmp_path):
+    root = _scaffold_minimal_project(tmp_path)
+    path = root / "TODO.md"
+    path.write_text(path.read_text().replace("`FAKE-CONFIG-1`", "unidentified work"))
+    rep = drift_module.Report()
+    drift_module.check_template_signpost_contract(root, rep, "fake_project")
+    assert any(f.rule == "invalid_template_backlog" for f in rep.findings)
 
 
 def test_config_example_parity_flags_missing_top_level_section(drift_module, tmp_path):

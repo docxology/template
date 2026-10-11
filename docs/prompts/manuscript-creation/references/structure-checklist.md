@@ -23,4 +23,4 @@ Copy the closest exemplar listed in [`docs/_generated/active_projects.md`](../..
 
 ## Pipeline integration
 
-After scaffold: `./run.sh --project <name> --pipeline --core-only` (or project tests first).
+After scaffold: `./run.sh --project <name> --pipeline --mode core` (or project tests first).

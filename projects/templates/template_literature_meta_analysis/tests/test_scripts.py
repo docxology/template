@@ -96,7 +96,7 @@ class TestLiteratureSearchScript:
 
     def test_resume_loads_existing_corpus(self, sample_papers, tmp_output_dir):
         """Verify --resume loads an existing corpus before searching."""
-        from literature.corpus import Corpus
+        from template_literature_meta_analysis.literature.corpus import Corpus
 
         corpus = Corpus()
         for paper in sample_papers:
@@ -142,7 +142,7 @@ class TestMetaAnalysisPipelineScript:
 
     def test_main_with_sample_corpus(self, sample_papers, tmp_output_dir):
         """Verify meta-analysis pipeline runs on sample corpus."""
-        from literature.corpus import Corpus
+        from template_literature_meta_analysis.literature.corpus import Corpus
 
         corpus = Corpus()
         for paper in sample_papers:
@@ -172,7 +172,7 @@ class TestBuildKnowledgeGraphScript:
 
     def test_main_generates_llm_assertions(self, sample_papers, tmp_output_dir, httpserver):
         """Verify KG construction with LLM assertion extraction via local HTTP."""
-        from literature.corpus import Corpus
+        from template_literature_meta_analysis.literature.corpus import Corpus
 
         corpus = Corpus()
         for paper in sample_papers:
@@ -290,7 +290,7 @@ class TestLiteratureEvaluationScript:
 
     def test_fixture_honesty_passes_on_clean_manuscript(self, sample_papers, tmp_path):
         """--fixture-honesty runs to completion when the manuscript is clean."""
-        from literature.corpus import Corpus
+        from template_literature_meta_analysis.literature.corpus import Corpus
 
         manuscript_dir = tmp_path / "manuscript"
         manuscript_dir.mkdir()
@@ -324,7 +324,7 @@ class TestLiteratureEvaluationScript:
 
     def test_fixture_honesty_exits_nonzero_on_violation(self, sample_papers, tmp_path):
         """--fixture-honesty reports violations and exits 1 without raising."""
-        from literature.corpus import Corpus
+        from template_literature_meta_analysis.literature.corpus import Corpus
 
         manuscript_dir = tmp_path / "manuscript"
         manuscript_dir.mkdir()

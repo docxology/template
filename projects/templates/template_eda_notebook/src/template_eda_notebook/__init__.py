@@ -6,7 +6,7 @@ small, fully-tested library rather than burying logic in notebook cells. The
 notebook is the entry point a researcher reaches for first; the library is what
 keeps that exploration reproducible, covered, and reusable.
 
-All EDA logic lives in the ``src.eda`` subpackage and is re-exported here so
+All EDA logic lives in the ``template_eda_notebook.eda`` subpackage and is re-exported here so
 callers (notebook cells, thin scripts, tests) can write
 ``from template_eda_notebook import load_dataset, summary_statistics``.
 """

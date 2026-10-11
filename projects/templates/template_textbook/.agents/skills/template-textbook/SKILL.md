@@ -1,6 +1,6 @@
 ---
 name: template-textbook
-description: Modular fillable textbook scaffold — parts/chapters/labs/question banks from config.yaml, auto-numbering, deterministic figures, structural contract enforcement.
+description: Authored textbook and separate draft scaffolding — units, chapters, labs, question banks, deterministic figures, and completion checks.
 version: 0.1.0
 author: docxology
 license: Apache-2.0 AND CC-BY-4.0
@@ -27,7 +27,7 @@ Project-scoped skill for the in-repo exemplar at
 uv run pytest projects/templates/template_textbook/tests --cov=projects/templates/template_textbook/src --cov-fail-under=90
 # Structural scaffold gate (reports stubs but allows them)
 uv run python projects/templates/template_textbook/scripts/audit_textbook_quality.py
-# Filled-manuscript gate (fails until every audited section has zero stubs)
+# Canonical acceptance gate (requires zero draft markers in every configured section)
 uv run python projects/templates/template_textbook/scripts/audit_textbook_quality.py --require-complete
 uv run python scripts/pipeline/stage_02_analysis.py --project templates/template_textbook
 uv run python scripts/pipeline/stage_03_render.py --project templates/template_textbook
@@ -43,9 +43,10 @@ uv run python scripts/pipeline/stage_05_copy.py --project templates/template_tex
   computation.
 - **Outputs are disposable.** Never hand-edit `output/` — regenerate from
   source and config.
-- **Choose the audit mode deliberately.** The default audit validates a fillable
-  scaffold; `--require-complete` is the opt-in zero-stub gate for a filled
-  manuscript.
+- **Choose the audit mode deliberately.** The default audit validates structural drafts;
+  canonical acceptance uses `--require-complete` across chapters, companions,
+  front matter, and reference sections. Execute authored Python examples and
+  preserve source custody.
 - **Run from the repo root.** Commands assume the template monorepo root
   as working directory unless the child `AGENTS.md` states otherwise.
 

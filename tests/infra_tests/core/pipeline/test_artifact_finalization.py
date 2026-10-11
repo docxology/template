@@ -8,8 +8,8 @@ from pathlib import Path
 import pytest
 
 from infrastructure.core.pipeline import PipelineConfig, PipelineExecutor
-from infrastructure.core.pipeline.artifacts import aggregate_artifact_manifests
-from infrastructure.core.runtime.checkpoint import StageResult
+from infrastructure.core.pipeline.hitl import HitlController
+from infrastructure.core.pipeline.types import PipelineControlConfig, StagePolicy
 
 
 _PIPELINE_YAML = """\
@@ -78,9 +78,11 @@ raise SystemExit(0 if actual == expected else 9)
 """
 
 
-def _make_pipeline_repo(root: Path) -> tuple[Path, Path]:
+def _make_pipeline_repo(root: Path, *, validation_key: str = "validate") -> tuple[Path, Path]:
     project = root / "projects" / "template_test"
     (project / "output").mkdir(parents=True)
+    for name in ("src", "tests", "manuscript"):
+        (project / name).mkdir()
     scripts = root / "scripts" / "pipeline"
     scripts.mkdir(parents=True)
     (scripts / "stage_03_render.py").write_text(_RENDER_SCRIPT, encoding="utf-8")
@@ -88,7 +90,7 @@ def _make_pipeline_repo(root: Path) -> tuple[Path, Path]:
     (scripts / "stage_05_copy.py").write_text(_ASSERT_COMMITMENT_SCRIPT, encoding="utf-8")
     (scripts / "stage_06_llm_review.py").write_text(_ASSERT_COMMITMENT_SCRIPT, encoding="utf-8")
     pipeline_path = root / "pipeline.yaml"
-    pipeline_path.write_text(_PIPELINE_YAML, encoding="utf-8")
+    pipeline_path.write_text(_PIPELINE_YAML.replace("key: validate", f"key: {validation_key}"), encoding="utf-8")
     return project, pipeline_path
 
 
@@ -97,28 +99,63 @@ def _manifest_digest(project: Path) -> str:
     return hashlib.sha256(manifest.read_bytes()).hexdigest()
 
 
-@pytest.mark.timeout(120)
-@pytest.mark.parametrize("full_pipeline", [False, True])
+def test_duplicate_validation_display_name_is_rejected_before_child_execution(tmp_path: Path) -> None:
+    """Declarations cannot disguise two different keys with one validation name."""
+    project, pipeline_path = _make_pipeline_repo(tmp_path)
+    pipeline_path.write_text(
+        pipeline_path.read_text().replace("name: Render Outputs", "name: Provenance Commitment Gate")
+    )
+    executor = PipelineExecutor(PipelineConfig("template_test", tmp_path, pipeline_path=pipeline_path, clean=False))
+    with pytest.raises(ValueError, match="Duplicate stage names"):
+        executor.execute_pipeline()
+    assert not (project / "output/data/result.txt").exists()
+    assert not (tmp_path / "validation-manifest.sha256").exists()
+
+
+def test_direct_boundary_requires_the_planned_key_or_keyless_display_fallback(tmp_path: Path) -> None:
+    """An explicit nonboundary key cannot borrow a canonical validator's name."""
+    project, pipeline_path = _make_pipeline_repo(tmp_path, validation_key="commitment_check")
+    executor = PipelineExecutor(PipelineConfig("template_test", tmp_path, pipeline_path=pipeline_path, clean=False))
+    executor.preview_stage_names()
+    assert executor.execution_plan is not None
+    stages = executor.execution_plan.bind(executor)
+    render, validation = stages[:2]
+
+    executor._prepare_artifact_manifest_for_stage(render._replace(name=validation.name), [])
+
+    assert not executor._artifact_manifest_sealed
+    assert not (project / "output/reports/artifact_manifest.json").exists()
+    executor._prepare_artifact_manifest_for_stage(validation._replace(key=""), [])
+    assert executor._artifact_manifest_sealed
+
+
+@pytest.mark.parametrize(
+    "full_pipeline",
+    [pytest.param(False, marks=pytest.mark.timeout(120)), pytest.param(True, marks=pytest.mark.timeout(240))],
+)
+@pytest.mark.parametrize("validation_key", ["validate", "commitment_check"])
 def test_validation_seals_aggregate_before_core_and_full_downstream_stages(
     tmp_path: Path,
     full_pipeline: bool,
+    validation_key: str,
 ) -> None:
     """Validation observes the final aggregate, which downstream stages preserve."""
     root = tmp_path / "repo"
-    project, pipeline_path = _make_pipeline_repo(root)
+    project, pipeline_path = _make_pipeline_repo(root, validation_key=validation_key)
     executor = PipelineExecutor(
         PipelineConfig(
             project_name="template_test",
             repo_root=root,
             pipeline_path=pipeline_path,
             clean=False,
-            skip_llm=not full_pipeline,
+            mode="live" if full_pipeline else "core",
         )
     )
 
-    results = executor.execute_full_pipeline() if full_pipeline else executor.execute_core_pipeline()
+    results = executor.execute_pipeline()
 
     assert all(result.success for result in results)
+    assert executor.run_result(results).complete
     committed_digest = (root / "validation-manifest.sha256").read_text(encoding="utf-8").strip()
     assert _manifest_digest(project) == committed_digest
     stage_manifests = sorted((project / "output" / ".pipeline" / "artifacts").glob("stage-*.json"))
@@ -126,39 +163,30 @@ def test_validation_seals_aggregate_before_core_and_full_downstream_stages(
     assert "render-outputs" in stage_manifests[0].name
 
 
-def test_resume_after_validation_preserves_committed_aggregate(tmp_path: Path) -> None:
+@pytest.mark.timeout(120)
+@pytest.mark.parametrize("validation_key", ["validate", "commitment_check"])
+def test_resume_after_validation_preserves_committed_aggregate(tmp_path: Path, validation_key: str) -> None:
     """A resumed post-validation stage must not re-aggregate committed evidence."""
     root = tmp_path / "repo"
-    project, pipeline_path = _make_pipeline_repo(root)
-    artifact = project / "output" / "data" / "result.txt"
-    artifact.parent.mkdir(parents=True)
-    artifact.write_text("rendered\n", encoding="utf-8")
-    aggregate_artifact_manifests(project / "output")
-    committed_digest = _manifest_digest(project)
-    (root / "validation-manifest.sha256").write_text(committed_digest + "\n", encoding="utf-8")
-
+    project, pipeline_path = _make_pipeline_repo(root, validation_key=validation_key)
     executor = PipelineExecutor(
         PipelineConfig(
             project_name="template_test",
             repo_root=root,
             pipeline_path=pipeline_path,
             clean=False,
-            skip_llm=True,
-            resume=True,
             total_stages=3,
+            control=PipelineControlConfig(stage_policies={2: StagePolicy(pause_after=True)}),
         )
     )
-    executor.checkpoint_manager.save_checkpoint(
-        pipeline_start_time=0.0,
-        last_stage_completed=2,
-        stage_results=[
-            StageResult(name="Render Outputs", exit_code=0, duration=0.1),
-            StageResult(name="Provenance Commitment Gate", exit_code=0, duration=0.1),
-        ],
-        total_stages=3,
-    )
+    paused = executor.execute_pipeline()
+    assert executor.run_result(paused).exit_code == 75
+    committed_digest = _manifest_digest(project)
+    assert (root / "validation-manifest.sha256").read_text().strip() == committed_digest
+    HitlController(project_output_dir=project / "output").approve("Reviewed exact validation commitment")
+    executor.config.resume = True
 
-    results = executor.execute_core_pipeline()
+    results = executor.execute_pipeline()
 
     assert [result.stage_name for result in results] == [
         "Render Outputs",
@@ -166,5 +194,7 @@ def test_resume_after_validation_preserves_committed_aggregate(tmp_path: Path) -
         "Copy Outputs",
     ]
     assert all(result.success for result in results)
+    assert executor.run_result(results).complete
     assert _manifest_digest(project) == committed_digest
-    assert not (project / "output" / ".pipeline" / "artifacts").exists()
+    stage_manifests = sorted((project / "output" / ".pipeline" / "artifacts").glob("stage-*.json"))
+    assert len(stage_manifests) == 1 and "render-outputs" in stage_manifests[0].name

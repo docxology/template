@@ -4,10 +4,10 @@ Provides pytest streaming execution and a common retry/coverage-conflict
 loop used by both infrastructure and project test suites.
 """
 
-import collections
-import contextlib
 import os
+import math
 import select
+import signal
 import subprocess
 import sys
 from contextlib import nullcontext
@@ -18,6 +18,9 @@ from typing import Any
 
 from infrastructure.core._bounded_run_guardian import (
     start_bounded_run_guardian as _start_bounded_run_guardian,
+    BoundedRunGuardian,
+    DEFAULT_GUARDIAN_STARTUP_TIMEOUT_SECONDS,
+    validate_guardian_startup_timeout,
 )
 from infrastructure.core.execution_boundary import (
     _complete_bounded_run_cleanup,
@@ -36,7 +39,10 @@ from infrastructure.reporting.coverage_parser import (
     extract_coverage_percentage,
     extract_failed_tests,
 )
-from infrastructure.reporting.coverage_reporter import parse_pytest_output
+from infrastructure.reporting.pytest_output_parser import (
+    parse_pytest_output,
+    report_pytest_failure,
+)
 
 logger = get_logger(__name__)
 
@@ -117,6 +123,50 @@ def _terminate_stream_process(process: subprocess.Popen[bytes]) -> None:
     terminate_process_tree(process.pid, group_id=process.pid)
 
 
+def _stream_arming_failure(
+    process: subprocess.Popen[bytes],
+    guardian: BoundedRunGuardian | None,
+    run_token: str,
+    original: BaseException,
+) -> tuple[int, str, str]:
+    """Finish the actual failed ARM attempt; no ancestry-only cleanup claim."""
+    cleanup_error = ""
+    try:
+        try:
+            process.poll()  # Retain a child interruption already observable before kill.
+            _terminate_stream_process(process)
+        finally:
+            try:
+                if guardian is not None:
+                    guardian.close()
+            finally:
+                try:
+                    # ARM has no admitted acknowledgment: close that guardian
+                    # and use the same mature caller-side token sweep explicitly.
+                    _complete_bounded_run_cleanup(None, run_token)
+                finally:
+                    try:
+                        if process.stdout is not None:
+                            process.stdout.close()
+                    finally:
+                        process.wait(timeout=5)
+    except BaseException as secondary:
+        if not isinstance(original, Exception):
+            raise original from secondary
+        if not isinstance(secondary, Exception):
+            raise
+        cleanup_error = f"; failed ARM cleanup: {secondary}"
+    if not isinstance(original, Exception):
+        raise original
+    if process.returncode in {130, -signal.SIGINT}:
+        return 130, "", f"streaming child interrupted during guardian arming: {original}{cleanup_error}"
+    if isinstance(original, TimeoutError):
+        return 124, "", f"streaming subprocess timed out during guardian arming: {original}{cleanup_error}"
+    if isinstance(original, (OSError, RuntimeError)):
+        raise RuntimeError(f"failed to arm bounded-run guardian: {original}{cleanup_error}") from original
+    raise original
+
+
 def run_pytest_stream(
     cmd: list[str],
     repo_root: Path,
@@ -124,16 +174,27 @@ def run_pytest_stream(
     quiet: bool,
     *,
     timeout_seconds: float = DEFAULT_TEST_SUITE_TIMEOUT_SECONDS,
+    guardian_startup_timeout_seconds: float = DEFAULT_GUARDIAN_STARTUP_TIMEOUT_SECONDS,
 ) -> tuple[int, str, str]:
     """Run pytest with streaming output, a real deadline, and group cleanup."""
-    if timeout_seconds <= 0:
-        raise ValueError("timeout_seconds must be positive")
+    if type(timeout_seconds) not in (int, float) or not math.isfinite(timeout_seconds) or timeout_seconds <= 0:
+        raise ValueError("timeout_seconds must be positive and finite")
+    validate_guardian_startup_timeout(guardian_startup_timeout_seconds)
+    deadline = monotonic() + timeout_seconds
     stdout_buf: list[str] = []
-    recent_lines: collections.deque[str] = collections.deque(maxlen=10)
 
     base_env = build_bounded_env(env)
     process_env, run_token = build_bounded_run_env(base_env)
-    guardian = _start_bounded_run_guardian(base_env)
+    try:
+        guardian = _start_bounded_run_guardian(
+            base_env, deadline_monotonic=deadline, startup_timeout_seconds=guardian_startup_timeout_seconds
+        )
+    except TimeoutError as exc:
+        return 124, "", f"streaming subprocess timed out before command launch: {exc}"
+    if monotonic() >= deadline:
+        if guardian is not None:
+            guardian.close()
+        return 124, "", "streaming subprocess timed out before command launch"
     try:
         process = subprocess.Popen(
             cmd,
@@ -151,22 +212,15 @@ def run_pytest_stream(
         raise
     if guardian is not None:
         try:
-            guardian.arm(root_pid=process.pid, run_token=run_token)
+            guardian.arm(root_pid=process.pid, run_token=run_token, deadline_monotonic=deadline)
         except BaseException as exc:
-            _terminate_stream_process(process)
-            guardian.close()
-            with contextlib.suppress(OSError, subprocess.TimeoutExpired):
-                process.wait(timeout=5)
-            if isinstance(exc, (OSError, RuntimeError)):
-                raise RuntimeError(f"failed to arm bounded-run guardian: {exc}") from exc
-            raise
+            return _stream_arming_failure(process, guardian, run_token, exc)
 
     assert process.stdout is not None
     fd = process.stdout.fileno()
     os.set_blocking(fd, False)
 
     timed_out = False
-    deadline = monotonic() + timeout_seconds
     cleanup_error = ""
     try:
         current_line = ""
@@ -191,7 +245,6 @@ def run_pytest_stream(
                     if char == "\n" or (char == "." and not quiet):
                         if char == "\n" and not _is_internal_stack_line(current_line):
                             stdout_buf.append(current_line)
-                            recent_lines.append(current_line)
 
                         if _passes_quiet_filter(char, current_line, quiet):
                             sys.stdout.write(char if char == "." else current_line)
@@ -230,7 +283,13 @@ def run_pytest_stream(
 
     if cleanup_error:
         raise RuntimeError(cleanup_error)
-    return (124 if timed_out else process.returncode), "".join(stdout_buf), stderr_text
+    # Mandatory cleanup may exceed the original clock but cannot grant success.
+    expired = timed_out or monotonic() >= deadline
+    interrupted = process.returncode in {130, -signal.SIGINT}
+    if expired and not interrupted and not stderr_text:
+        stderr_text = f"streaming subprocess timed out after {timeout_seconds:g}s including cleanup"
+    exit_code = 130 if interrupted else 124 if expired else process.returncode
+    return report_pytest_failure(exit_code, "".join(stdout_buf), stderr_text, quiet)
 
 
 @dataclass
@@ -404,6 +463,7 @@ def run_test_suite(config: "TestSuiteConfig") -> tuple[int, dict[str, Any]]:
     if warning_count > 0:
         logger.warning(f"{config.label} tests completed with {warning_count} warning(s)")
 
+    test_results["original_exit_code"] = exit_code
     failed_count = test_results.get("failed", 0)
     should_halt, message = check_test_failures(
         failed_count,
@@ -416,7 +476,7 @@ def run_test_suite(config: "TestSuiteConfig") -> tuple[int, dict[str, Any]]:
     if exit_code != 0:
         if should_halt:
             logger.error(message)
-        elif failed_count > 0:
+        elif failed_count > 0 and exit_code not in (2, 75, 124, 130):
             # Tolerated test failures (failed_count within the configured max):
             # suppress the non-zero exit so the pipeline may continue.
             logger.warning(message)

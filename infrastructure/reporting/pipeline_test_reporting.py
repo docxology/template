@@ -8,7 +8,7 @@ from typing import Any
 from infrastructure.core.logging.constants import BANNER_WIDTH, TABLE_WIDTH
 from infrastructure.core.logging.helpers import format_duration as _format_duration
 from infrastructure.core.logging.utils import get_logger, log_header, log_success
-from infrastructure.reporting.coverage_reporter import (
+from infrastructure.reporting.coverage_analysis import (
     analyze_coverage_gaps,
     format_coverage_status,
     format_failure_suggestions,

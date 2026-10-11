@@ -1,6 +1,11 @@
 import argparse
 
-from literature.engine_dispatch import ENGINE_SPECS, EngineSpec, dispatch_ordered, engine_enabled
+from template_literature_meta_analysis.literature.engine_dispatch import (
+    ENGINE_SPECS,
+    EngineSpec,
+    dispatch_ordered,
+    engine_enabled,
+)
 
 
 def _args(**skip_flags: bool) -> argparse.Namespace:

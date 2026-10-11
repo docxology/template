@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 import os
+import platform
 import sys
 import tempfile
 from contextlib import ExitStack
@@ -22,7 +23,6 @@ from infrastructure.core.testing.pytest_orchestration import (
 from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
 
 PUBLIC_READINESS_SCHEMA = "template-public-readiness-v2"
-PUBLIC_READINESS_PYTHON = "3.14"
 PUBLIC_READINESS_STATUSES = frozenset({"pass", "fail", "skip"})
 PUBLIC_READINESS_SKIP_PREFIX = "PUBLIC_READINESS_SKIP:"
 _OUTPUT_TAIL_LIMIT = 4000
@@ -50,6 +50,8 @@ class PublicReadinessReport:
     expected_projects: tuple[str, ...]
     profile: TestProfileName = "release"
     project_workers: int = 1
+    python_version: str = f"{sys.version_info.major}.{sys.version_info.minor}"
+    interpreter: str = sys.executable
 
     @property
     def counts(self) -> dict[str, int]:
@@ -91,7 +93,10 @@ class PublicReadinessReport:
         """Serialize the report for CI and local tooling."""
         return {
             "schema_version": PUBLIC_READINESS_SCHEMA,
-            "python_version": PUBLIC_READINESS_PYTHON,
+            "diagnostic_only": True,
+            "python_version": self.python_version,
+            "python_full_version": platform.python_version(),
+            "interpreter": self.interpreter,
             "expected_projects": list(self.expected_projects),
             "profile": self.profile,
             "project_workers": self.project_workers,
@@ -112,7 +117,7 @@ def run_public_readiness(
 ) -> PublicReadinessReport:
     """Run one isolated project-test subprocess for every public exemplar.
 
-    The readiness lane defaults to the deterministic ``release`` profile,
+    This diagnostic lane defaults to the deterministic ``release`` profile,
     retaining the historical slow-test coverage while excluding long-running
     and live-service tests. ``project_workers`` controls only the outer
     project matrix; nested pytest-xdist is not introduced by this gate.
@@ -164,7 +169,7 @@ def run_public_readiness(
             env["COVERAGE_FILE"] = str(Path(temp_dir) / ".coverage")
             # Pin the interpreter used by nested ``uv run`` project commands
             # so readiness evidence remains reproducible across macOS hosts.
-            env["UV_PYTHON"] = PUBLIC_READINESS_PYTHON
+            env["UV_PYTHON"] = sys.executable
             commands[project] = command
             tasks.append(
                 ProjectTestTask(
@@ -228,7 +233,7 @@ def format_public_readiness(report: PublicReadinessReport) -> str:
     """Format a compact human-readable readiness summary."""
     lines = [
         (
-            f"Public readiness: {len(report.results)} expected exemplar(s) "
+            f"Public health diagnostic: {len(report.results)} expected exemplar(s) "
             f"[{report.profile}, workers={report.project_workers}]"
         ),
         *(
@@ -243,7 +248,6 @@ def format_public_readiness(report: PublicReadinessReport) -> str:
 
 __all__ = [
     "DEFAULT_TIMEOUT_SECONDS",
-    "PUBLIC_READINESS_PYTHON",
     "PUBLIC_READINESS_SCHEMA",
     "PUBLIC_READINESS_STATUSES",
     "PUBLIC_READINESS_SKIP_PREFIX",

@@ -11,18 +11,45 @@ import pytest
 # Force headless backend for matplotlib in tests
 os.environ.setdefault("MPLBACKEND", "Agg")
 
-# Add src/ AND the repo root to path so the documented per-project pytest command
-# works from a clean environment. The repo root is required because some
-# exemplar modules (e.g. deep_research.deep_research_adapter) import the
-# top-level ``infrastructure`` package, which only resolves when the repo root
-# is on sys.path (see sibling conftest.py files across projects/templates/*
-# for the same pattern).
+# Select the actual environment-provided SDK before registering own source.
+# Pytest may prepend this checkout's tests/root to its import paths. Those own
+# paths are not SDK providers, and a guessed ancestor is not a dependency.
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 SRC = os.path.join(ROOT, "src")
-REPO_ROOT = os.path.abspath(os.path.join(ROOT, "..", "..", ".."))
-for _path in (REPO_ROOT, SRC):
-    if _path not in sys.path:
-        sys.path.insert(0, _path)
+_own_root = Path(ROOT).resolve()
+_original_import_paths = sys.path[:]
+try:
+    sys.path[:] = [entry for entry in sys.path if not Path(entry or os.getcwd()).resolve().is_relative_to(_own_root)]
+    _sdk_spec = importlib.util.find_spec("infrastructure")
+    if _sdk_spec is None or _sdk_spec.origin is None:
+        raise ImportError("the declared research-project-template dependency is unavailable")
+    _sdk_origin = Path(_sdk_spec.origin).resolve(strict=True)
+    if _sdk_origin.is_relative_to(_own_root):
+        raise ImportError("own project source cannot provide the platform SDK")
+    import infrastructure  # noqa: E402
+finally:
+    sys.path[:] = _original_import_paths
+
+if infrastructure.__file__ is None or Path(infrastructure.__file__).resolve(strict=True) != _sdk_origin:
+    raise ImportError("the selected platform SDK changed during project startup")
+
+import tomllib  # noqa: E402
+
+_platform_version = tomllib.loads((Path(ROOT) / "pyproject.toml").read_text(encoding="utf-8"))["tool"]["template"][
+    "platform_version"
+]
+if infrastructure.__version__ != _platform_version:
+    raise ImportError(f"this project requires platform {_platform_version}; selected {infrastructure.__version__}")
+
+# Register the canonical own source namespace after binding the SDK package.
+
+_package_spec = importlib.util.spec_from_file_location(
+    "template_literature_meta_analysis", Path(SRC) / "__init__.py", submodule_search_locations=[SRC]
+)
+assert _package_spec is not None and _package_spec.loader is not None
+_package = importlib.util.module_from_spec(_package_spec)
+sys.modules["template_literature_meta_analysis"] = _package
+_package_spec.loader.exec_module(_package)
 
 # The repo root's tests/ package (tests/__init__.py) shadows any namespace
 # merge with this exemplar's tests/ tree, so ``from tests.knowledge_graph...``
@@ -53,7 +80,8 @@ for module_name, pkg_spec in REQUIRED_DEPENDENCIES:
 if missing_required:
     raise ImportError(
         f"Required dependencies not installed for the full test suite: {', '.join(missing_required)}. "
-        "Run: uv sync --extra dev (in the project directory)."
+        "Install the project's dev extra in its prepared environment (STANDALONE.md), "
+        "or use the monorepo Stage-01 project-only gate."
     )
 # --- End required dependency check ---
 
@@ -68,13 +96,13 @@ def _reset_configurable_globals() -> None:
     around every test keeps unit tests isolated and order-independent.
     """
     try:
-        from analysis.subfield_registry import configure_subfields
+        from template_literature_meta_analysis.analysis.subfield_registry import configure_subfields
 
         configure_subfields(None)
     except Exception as exc:  # pragma: no cover - defensive
         del exc
     try:
-        from knowledge_graph.hypothesis import configure_hypotheses
+        from template_literature_meta_analysis.knowledge_graph.hypothesis import configure_hypotheses
 
         configure_hypotheses(None)
     except Exception as exc:  # pragma: no cover - defensive
@@ -92,12 +120,14 @@ def _isolate_configurable_globals():
 @pytest.fixture
 def sample_papers():
     """Return a list of sample Paper objects for testing."""
-    from literature.models import Paper
+    from template_literature_meta_analysis.literature.models import Paper
 
     return [
         Paper(
             title="Active Inference: A Process Theory",
-            abstract="This paper presents active inference as a unified brain theory based on the free energy principle.",
+            abstract=(
+                "This paper presents active inference as a unified brain theory based on the free energy principle."
+            ),
             year=2017,
             doi="10.1162/NECO_a_00912",
             arxiv_id="1709.02341",
@@ -106,7 +136,9 @@ def sample_papers():
         ),
         Paper(
             title="Deep Active Inference Agents Using Monte-Carlo Methods",
-            abstract="We present deep active inference agents that scale to complex environments using neural networks.",
+            abstract=(
+                "We present deep active inference agents that scale to complex environments using neural networks."
+            ),
             year=2020,
             doi="10.5555/deep_aif_2020",
             citation_count=120,
@@ -126,7 +158,7 @@ def sample_papers():
 @pytest.fixture
 def sample_assertions():
     """Return a list of sample Assertion objects for testing."""
-    from knowledge_graph.nanopublication import Assertion
+    from template_literature_meta_analysis.knowledge_graph.nanopublication import Assertion
 
     return [
         Assertion(
@@ -172,7 +204,7 @@ def sample_corpus_path(sample_papers, tmp_output_dir):
 
     Returns the path to the created corpus.jsonl file.
     """
-    from literature.corpus import Corpus
+    from template_literature_meta_analysis.literature.corpus import Corpus
 
     corpus = Corpus()
     for paper in sample_papers:

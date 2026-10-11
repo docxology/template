@@ -94,12 +94,12 @@ pre-commit install --hook-type pre-push
 The canonical non-LLM pipeline run against `template_code_project`. This validates 8 stages: clean, setup, infra tests, project tests, analysis, render, validate, copy.
 
 ```bash
-./run.sh --pipeline --project templates/template_code_project --core-only
+./run.sh --pipeline --project templates/template_code_project --mode core
 ```
 
 **Equivalent explicit form:**
 ```bash
-uv run python scripts/runner/execute_pipeline.py --project templates/template_code_project --core-only
+uv run python scripts/runner/execute_pipeline.py --project templates/template_code_project --mode core
 ```
 
 **Expected stage log (abbreviated):**
@@ -201,7 +201,7 @@ ollama pull gemma3:4b
 ./run.sh --pipeline --project templates/template_code_project
 ```
 
-**Expected:** Two additional stages complete — LLM Scientific Review and LLM Translations — producing files under `output/templates/template_code_project/llm/`.
+**Expected:** Two additional stages complete — LLM Manuscript Review and LLM Translations — producing files under `output/templates/template_code_project/llm/`.
 
 LLM stages are skipped gracefully (not failed) when Ollama is absent.
 
@@ -213,7 +213,7 @@ After completing all phases, confirm every item:
 
 - [ ] `uv sync` exits 0
 - [ ] Pre-commit hooks installed at `.git/hooks/`
-- [ ] `./run.sh --pipeline --project templates/template_code_project --core-only` exits 0
+- [ ] `./run.sh --pipeline --project templates/template_code_project --mode core` exits 0
 - [ ] `uv run pytest projects/templates/template_code_project/tests/ --cov=... --cov-fail-under=90` passes
 - [ ] `output/templates/template_code_project/pdf/template_code_project_combined.pdf` exists
 - [ ] `uv run python scripts/pipeline/stage_04_validate.py --project templates/template_code_project` exits 0
@@ -273,7 +273,7 @@ Check which lines are uncovered and add tests for them.
 ```bash
 # Run with debug logging
 export LOG_LEVEL=0
-uv run python scripts/runner/execute_pipeline.py --project templates/template_code_project --core-only
+uv run python scripts/runner/execute_pipeline.py --project templates/template_code_project --mode core
 ```
 
 ### `pre-commit` not found after `uv sync`

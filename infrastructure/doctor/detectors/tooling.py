@@ -7,6 +7,7 @@ from pathlib import Path
 
 from infrastructure.doctor.models import Finding, RepairLevel, Severity, TherapyLevel
 from infrastructure.core.runtime._tools import find_uv
+from infrastructure.core.runtime._python_env import _python_version_supported
 
 
 def detect_uv_available(repo_root: Path) -> list[Finding]:
@@ -43,18 +44,18 @@ def detect_uv_available(repo_root: Path) -> list[Finding]:
 
 
 def detect_python_version(repo_root: Path) -> list[Finding]:
-    """Project requires Python 3.10+ (see pyproject.toml)."""
+    """Project requires Python 3.12+ (see pyproject.toml)."""
     import sys
 
     major, minor = sys.version_info[:2]
-    healthy = (major, minor) >= (3, 10)
+    healthy = _python_version_supported((major, minor))
     return [
         Finding(
             code="DOC102",
             title="Python version compatible",
             severity=Severity.INFO if healthy else Severity.ERROR,
             healthy=healthy,
-            description=(f"Project requires Python >= 3.10. Detected {major}.{minor}.{sys.version_info.micro}."),
+            description=(f"Project requires Python >= 3.12. Detected {major}.{minor}.{sys.version_info.micro}."),
             evidence={
                 "version": f"{major}.{minor}.{sys.version_info.micro}",
                 "executable": sys.executable,

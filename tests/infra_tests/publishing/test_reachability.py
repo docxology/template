@@ -189,6 +189,20 @@ def test_apply_reachability_downgrades_unreachable_published_row(tmp_path: Path)
     assert {p.name: p.state for p in report.platforms}["github"] is PublicationState.PUBLISHED
 
 
+def test_historical_reachability_does_not_promote_the_intended_release(tmp_path: Path) -> None:
+    cfg = CONFIG_YAML.replace(
+        "publication:\n",
+        "publication:\n  release_status: unreleased\n  intended_version: 2.0.0\n  last_published_version: 1.0.0\n",
+    )
+    report = compile_publishing_status(_project(tmp_path, cfg))
+    reachable = apply_reachability(report, (_check("github", STATUS_OK),))
+    assert reachable.published_count == 0
+    assert next(p for p in reachable.platforms if p.name == "github").state is PublicationState.HISTORICAL
+    unreachable = apply_reachability(report, (_check("github", STATUS_UNREACHABLE),))
+    assert unreachable.published_count == 0
+    assert next(p for p in unreachable.platforms if p.name == "github").state is PublicationState.UNREACHABLE
+
+
 def test_apply_reachability_error_and_ok_do_not_downgrade(tmp_path: Path) -> None:
     report = compile_publishing_status(_project(tmp_path))
     verified = apply_reachability(

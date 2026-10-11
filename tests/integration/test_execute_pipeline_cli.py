@@ -19,7 +19,7 @@ def test_execute_pipeline_help_includes_stage(repo_root: Path) -> None:
     )
     assert result.returncode == 0
     assert "--stage" in result.stdout
-    assert "--core-only" in result.stdout
+    assert "--mode" in result.stdout
 
 
 def test_execute_pipeline_unknown_stage_is_error(repo_root: Path) -> None:
@@ -52,8 +52,8 @@ def test_execute_pipeline_missing_project_is_error(repo_root: Path) -> None:
     assert "--project" in combined
 
 
-def test_execute_pipeline_help_mentions_core_only(repo_root: Path) -> None:
-    """--core-only flag must be documented in help text."""
+def test_execute_pipeline_help_declares_modes(repo_root: Path) -> None:
+    """Execution modes must be documented in help text."""
     script = repo_root / "scripts" / "runner" / "execute_pipeline.py"
     result = subprocess.run(
         ["python3", str(script), "--help"],
@@ -63,7 +63,7 @@ def test_execute_pipeline_help_mentions_core_only(repo_root: Path) -> None:
         text=True,
     )
     assert result.returncode == 0
-    assert "--core-only" in result.stdout
+    assert "--mode" in result.stdout
 
 
 def test_execute_pipeline_script_is_importable(repo_root: Path) -> None:

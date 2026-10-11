@@ -9,17 +9,23 @@ import json
 import re
 import shutil
 import subprocess
-import sys
+import time
+import tomllib
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Sequence
 
+from infrastructure.core.files.secure_write import read_bytes_confined
+from infrastructure.project.public_reference_git import (
+    _PARTIAL_CONFIGURATION,
+    GitReference,
+    GitFile,
+    blob_identity,
+    inventory,
+    native_git,
+    remaining,
+)
 from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
-
-if sys.version_info >= (3, 11):
-    import tomllib
-else:  # pragma: no cover - Python 3.10
-    import tomli as tomllib
 
 
 _IGNORED_NAMES = frozenset(
@@ -145,13 +151,17 @@ def export_exemplar(
     *,
     new_name: str | None = None,
     project_only: bool = False,
+    deadline_monotonic: float | None = None,
 ) -> CopyResult:
     """Clean-copy an exemplar and write a deterministic provenance manifest."""
+    deadline = time.monotonic() + 600 if deadline_monotonic is None else deadline_monotonic
+    remaining(deadline)
     root = Path(repo_root).resolve()
     result = copy_exemplar(root, source, dest, new_name=new_name)
     dependencies = () if project_only else _declared_resource_dependencies(result.source)
     for dependency in dependencies:
-        _copy_resource_dependency(root, dependency, result.destination)
+        _copy_resource_dependency(root, dependency, result.destination, deadline=deadline)
+    remaining(deadline)
     manifest = _build_export_manifest(
         root,
         result.destination,
@@ -159,7 +169,9 @@ def export_exemplar(
         exported_project=new_name or result.destination.name,
         resource_dependencies=dependencies,
     )
+    remaining(deadline)
     (result.destination / ".template-export.json").write_text(manifest.to_json(), encoding="utf-8")
+    remaining(deadline)
     return result
 
 
@@ -241,22 +253,59 @@ def _declared_resource_dependencies(source_root: Path) -> tuple[str, ...]:
     return dependencies
 
 
-def _copy_resource_dependency(repo_root: Path, dependency: str, destination: Path) -> None:
-    """Bundle one declared public resource tree under ``_template_resources``."""
-    source_root = (repo_root / dependency).resolve()
-    if not source_root.is_dir():
-        raise FileNotFoundError(f"declared resource dependency does not exist: {dependency}")
+def _resource_git_reference(repo_root: Path, dependency: str, deadline: float) -> GitReference | None:
+    """Admit actual Gitlinks through the existing pinned public reference contract."""
+    remaining(deadline)
+    if dependency != "infrastructure" or not (repo_root / ".git").exists():
+        return None
+    if native_git(repo_root, deadline, *_PARTIAL_CONFIGURATION):
+        raise ValueError("public reference refuses partial/promisor Git custody before object traversal")
+    records = native_git(repo_root, deadline, "ls-tree", "-rz", "--full-tree", "HEAD").split(b"\0")
+    if not any(record.startswith(b"160000 commit ") for record in records):
+        return None
+    commit = native_git(repo_root, deadline, "rev-parse", "--verify", "HEAD^{commit}").decode().strip()
+    return inventory(repo_root, commit, deadline)
+
+
+def _copy_resource_dependency(repo_root: Path, dependency: str, destination: Path, *, deadline: float) -> None:
+    """Copy the complete public inventory, including admitted pinned raw blobs."""
+    from infrastructure.reporting.readiness_receipts import public_resource_source_paths
+
+    reference = _resource_git_reference(repo_root, dependency, deadline)
+    paths = public_resource_source_paths(repo_root, dependency)
+    pinned: dict[str, tuple[GitFile, str]] = {}
+    if reference is not None:
+        for prefix, nested in reference.submodules:
+            pinned.update((prefix + "/" + row.path, (row, nested.object_format)) for row in nested.files)
+        observed = {path.relative_to(repo_root).as_posix() for path in paths}
+        for prefix, _ in reference.submodules:
+            if {name for name in observed if name.startswith(prefix + "/")} != set(pinned):
+                raise ValueError("public resource inventory differs from the complete pinned submodule")
     target_root = destination / "_template_resources" / dependency
-    files = _git_source_files(repo_root, source_root) or _walk_source_files(source_root)
-    for rel in sorted(path for path in files if _is_clean_resource_path(path, dependency)):
-        _copy_one(
-            source_root / rel,
-            _contained_destination(target_root, rel),
-            old_name=source_root.name,
-            new_name=None,
-            old_project_path=dependency,
-            new_project_path=dependency,
-        )
+    held = {}
+    for source in paths:
+        remaining(deadline)
+        relative = source.relative_to(repo_root).as_posix()
+        content = read_bytes_confined(repo_root, source, max_bytes=64 * 1024 * 1024)
+        if relative in pinned:
+            blob, object_format = pinned[relative]
+            if blob_identity(content, object_format) != blob.oid:
+                raise ValueError("pinned resource source bytes differ from their committed raw blob")
+        held[relative] = hashlib.sha256(content).hexdigest()
+        target = _contained_destination(target_root, source.relative_to(repo_root / dependency))
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_bytes(content)
+        shutil.copystat(source, target)
+    if public_resource_source_paths(repo_root, dependency) != paths:
+        raise ValueError("public resource inventory changed during export")
+    if reference is not None and inventory(repo_root, reference.commit, deadline) != reference:
+        raise ValueError("pinned resource Git custody changed during export")
+    for relative, digest in held.items():
+        remaining(deadline)
+        closing = read_bytes_confined(repo_root, repo_root / relative, max_bytes=64 * 1024 * 1024)
+        if hashlib.sha256(closing).hexdigest() != digest:
+            raise ValueError("public resource source changed during export")
+    remaining(deadline)
 
 
 def _is_clean_resource_path(path: Path, dependency: str) -> bool:
@@ -394,13 +443,18 @@ def _git_source_files(repo_root: Path, source_root: Path) -> tuple[Path, ...]:
     return tuple(rels)
 
 
-def _walk_source_files(source_root: Path) -> tuple[Path, ...]:
+def _walk_source_files(source_root: Path, *, resource_dependency: str | None = None) -> tuple[Path, ...]:
     files: list[Path] = []
     for path in source_root.rglob("*"):
         rel = path.relative_to(source_root)
         if path.is_dir():
             continue
-        if _is_clean_source_path(rel):
+        clean = (
+            _is_clean_source_path(rel)
+            if resource_dependency is None
+            else _is_clean_resource_path(rel, resource_dependency)
+        )
+        if clean:
             files.append(rel)
     return tuple(files)
 

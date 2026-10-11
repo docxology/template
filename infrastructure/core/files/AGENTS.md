@@ -11,6 +11,7 @@ The `infrastructure/core/files/` package contains file cleanup, inventory, and o
 - `portability.py` - sanitizes machine-local home prefixes from text publication artifacts before hashing/copying
 - `project_lock.py` - per-project POSIX advisory lock serializing pipeline/test runs on the same `output/` tree
 - `secure_write.py` - symlink-confined atomic UTF-8 writes for security-sensitive evidence
+- `archive_members.py` - bounded, traversal-safe ZIP member admission (`bounded_members`) shared by rendering, reporting, publishing and project acceptance so none of those layers imports another for it
 - `cleanup.py` - output cleanup coordination
 - `cleanup_helpers.py` - cleanup helpers
 - `cleanup_root.py` - root output cleanup

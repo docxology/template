@@ -20,6 +20,12 @@ from dataclasses import asdict
 from pathlib import Path
 from typing import Any
 
+from infrastructure.core.files.secure_write import (
+    atomic_write_text_confined,
+    confined_file_lock,
+    read_bytes_confined,
+    unlink_confined,
+)
 from infrastructure.search.literature.models import Paper, SearchQuery, SearchResult
 
 
@@ -103,10 +109,27 @@ class SearchCache:
             first access.
         ttl_seconds: Optional TTL. Hits older than ``now - ttl_seconds`` are
             treated as misses. ``None`` disables expiry.
+        confinement_root: Optional nominated project directory. Cache paths
+            remain lexical children of this directory; every opted-in read,
+            write and clear refuses symlink ancestors and leaves through the
+            platform's held-directory I/O. Unsafe reads raise instead of
+            becoming cache misses. Callers without a root retain ordinary
+            filesystem cache semantics.
     """
 
-    def __init__(self, cache_dir: Path | str, *, ttl_seconds: int | None = None) -> None:
+    def __init__(
+        self,
+        cache_dir: Path | str,
+        *,
+        ttl_seconds: int | None = None,
+        confinement_root: Path | str | None = None,
+    ) -> None:
+        self.confinement_root = Path(confinement_root).absolute() if confinement_root is not None else None
         self.cache_dir = Path(cache_dir)
+        if self.confinement_root is not None:
+            self.cache_dir = self.cache_dir if self.cache_dir.is_absolute() else self.confinement_root / self.cache_dir
+            if not self.cache_dir.is_relative_to(self.confinement_root) or ".." in self.cache_dir.parts:
+                raise ValueError("Search cache directory escapes nominated confinement root")
         self.ttl_seconds = ttl_seconds
 
     def path_for(self, query: SearchQuery) -> Path:
@@ -116,11 +139,20 @@ class SearchCache:
     def get(self, query: SearchQuery) -> SearchResult | None:
         """Get a cached value, or None if not present."""
         path = self.path_for(query)
-        if not path.exists():
+        if self.confinement_root is None and not path.exists():
             return None
         try:
-            payload = json.loads(path.read_text(encoding="utf-8"))
-        except (OSError, json.JSONDecodeError):
+            raw = (
+                read_bytes_confined(self.confinement_root, path).decode("utf-8")
+                if self.confinement_root is not None
+                else path.read_text(encoding="utf-8")
+            )
+            payload = json.loads(raw)
+        except (FileNotFoundError, json.JSONDecodeError):
+            return None
+        except OSError:
+            if self.confinement_root is not None:
+                raise
             return None
         if validate_cache_payload(payload, query):
             return None
@@ -142,7 +174,6 @@ class SearchCache:
 
     def put(self, result: SearchResult) -> Path:
         """Process put."""
-        self.cache_dir.mkdir(parents=True, exist_ok=True)
         payload = result.to_dict()
         payload["_schema_version"] = SEARCH_CACHE_SCHEMA_VERSION
         payload["_cache_key"] = query_cache_key(result.query)
@@ -152,14 +183,23 @@ class SearchCache:
         if not isinstance(payload["query"], dict):
             payload["query"] = asdict(result.query)
         path = self.path_for(result.query)
-        path.write_text(
-            json.dumps(payload, indent=2, ensure_ascii=False, sort_keys=False),
-            encoding="utf-8",
-        )
+        content = json.dumps(payload, indent=2, ensure_ascii=False, sort_keys=False)
+        if self.confinement_root is not None:
+            atomic_write_text_confined(self.confinement_root, path, content)
+        else:
+            self.cache_dir.mkdir(parents=True, exist_ok=True)
+            path.write_text(content, encoding="utf-8")
         return path
 
     def clear(self) -> int:
         """Delete every ``search_*.json`` entry. Returns the number removed."""
+        if self.confinement_root is not None:
+            with confined_file_lock(self.confinement_root, self.cache_dir / ".cache-clear.lock"):
+                count = 0
+                for path in self.cache_dir.glob("search_*.json"):
+                    unlink_confined(self.confinement_root, path)
+                    count += 1
+                return count
         if not self.cache_dir.exists():
             return 0
         count = 0

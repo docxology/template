@@ -12,6 +12,8 @@ runner workspace after `actions/checkout` runs.
 | --- | --- |
 | [`setup-python-env/`](setup-python-env/action.yml) | Provision `uv` (with cache) + Python — the setup block shared by every Python CI job. |
 | [`setup-docs-lint/`](setup-docs-lint/action.yml) | Provision Node, Mermaid CLI, and Chrome for every blocking docs-lint caller. |
+| [`setup-native-installed-readiness/`](setup-native-installed-readiness/README.md) | Prepare Source-locked native tools and cached inputs before the installed original/reader/handoff operation. |
+| [`upload-readiness-shards/`](upload-readiness-shards/README.md) | Check and upload exact bounded native/candidate transport or separately named failed diagnostics. |
 
 ## Conventions
 
@@ -20,3 +22,11 @@ runner workspace after `actions/checkout` runs.
 - Keep each action single-purpose; callers compose them with their own
   job-specific steps (`uv sync --group …`, pandoc, TeX Live, …).
 - `actionlint` validates these as part of the CI `actionlint` job.
+
+The complete hosted acceptance workflow also uses
+[`setup-acceptance-documents`](setup-acceptance-documents/README.md) and
+[`setup-acceptance-model`](setup-acceptance-model/README.md) to prepare its
+source-declared tools and one owned pinned local model before observations.
+
+[`setup-acceptance-fixtures`](setup-acceptance-fixtures/README.md) materializes
+identical pinned source inputs for all complete acceptance and release readers.

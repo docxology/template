@@ -7,7 +7,7 @@ import runpy
 import subprocess
 import sys
 
-from template_pitch_deck.paths import locate_repo_root, project_root
+from template_pitch_deck.paths import data_repo_root, project_root
 
 
 def test_diagram_sources_leave_newline_serialization_to_renderer():
@@ -21,7 +21,7 @@ def test_diagram_sources_leave_newline_serialization_to_renderer():
 
 def test_diagram_producer_fails_when_mmdc_is_unavailable():
     """Tracked PNGs must not turn a missing renderer into a successful Stage 02."""
-    repo_root = locate_repo_root(project_root())
+    repo_root = data_repo_root(project_root())
     script = project_root() / "scripts" / "15_generate_diagrams.py"
     env = os.environ.copy()
     env["PATH"] = ""

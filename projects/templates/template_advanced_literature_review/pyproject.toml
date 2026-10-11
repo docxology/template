@@ -1,23 +1,24 @@
 [project]
 name = "template-advanced-literature-review"
-version = "0.1.0"
+version = "0.2.0"
 description = "Multi-phase systematic literature review with LLM filtering"
 authors = [{name = "Daniel Ari Friedman", email = "daniel@activeinference.institute"}]
 license = {text = "CC-BY-4.0"}
 readme = "README.md"
-requires-python = ">=3.10"
+requires-python = ">=3.12"
 keywords = ["literature-review", "systematic-review", "multi-phase", "llm-filtering", "exoplanets"]
 classifiers = [
     "Development Status :: 4 - Beta",
     "Intended Audience :: Science/Research",
     "License :: OSI Approved :: MIT License",
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.10",
-    "Programming Language :: Python :: 3.11",
-    "Programming Language :: Python :: 3.12",
+            "Programming Language :: Python :: 3.12",
     "Topic :: Scientific/Engineering :: Information Analysis",
 ]
 dependencies = [
+    "template-literature-meta-analysis==0.2.0",
+    "research-project-template==4.0.1",
+    "pypdf>=6.16.1",
     "requests>=2.31.0",
     "defusedxml>=0.7.0",
     "pandas>=2.0.0",
@@ -41,6 +42,7 @@ dependencies = [
 
 [project.optional-dependencies]
 dev = [
+    "pytest-httpserver>=1.0.8",
     "pytest>=7.4.0",
     "pytest-cov>=4.1.0",
     "pytest-xdist>=3.3.0",
@@ -65,6 +67,9 @@ llm = [
 requires = ["setuptools>=61.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
+[tool.setuptools]
+py-modules = ["config", "config_loader", "config_validation"]
+
 [tool.setuptools.packages.find]
 where = ["src"]
 
@@ -78,7 +83,7 @@ addopts = [
     "--disable-warnings",
     "--tb=short",
     "--timeout=120",
-    "--cov=projects/templates/template_advanced_literature_review/src/multi_phase",
+    "--cov=src",
     "--cov-branch",
     "--cov-report=term-missing:skip-covered",
 ]
@@ -93,20 +98,13 @@ timeout = 120
 [tool.coverage.run]
 source = ["src"]
 branch = true
-# Shared literature/config/manuscript infrastructure is inherited from and
-# coverage-gated by template_literature_meta_analysis. This exemplar's 90% gate
-# measures the project-owned phase orchestration surface.
+# Coverage measures every Python module owned by this exemplar. The declared
+# meta-analysis engine has its own independent complete-source coverage gate.
 omit = [
     "*/tests/*",
     "*/test_*.py",
     "*/__pycache__/*",
     "*/.*",
-    "src/__init__.py",
-    "src/config.py",
-    "src/config_validation.py",
-    "src/literature/*",
-    "src/manuscript/*",
-    "*/template_literature_meta_analysis/src/*",
 ]
 
 [tool.coverage.report]
@@ -122,7 +120,7 @@ exclude_lines = [
 
 [tool.ruff]
 line-length = 120
-target-version = "py310"
+target-version = "py312"
 
 [tool.ruff.lint]
 select = [
@@ -147,7 +145,7 @@ unfixable = ["B"]
 "src/manuscript/variables/extractors/*" = ["E402"]
 
 [tool.mypy]
-python_version = "3.10"
+python_version = "3.12"
 warn_return_any = true
 warn_unused_configs = true
 disallow_untyped_defs = true
@@ -180,3 +178,14 @@ dev = [
     "pytest-timeout>=2.4.0",
     "ruff>=0.15.21",
 ]
+
+# Compatibility contract for this independent exemplar release.
+[tool.template]
+platform_version = "4.0.1"
+tested_python_versions = ["3.12", "3.13", "3.14"]
+required_unpaid_capabilities = ["retrieval", "screening", "local-classification", "licensed-fulltext"]
+
+# Checkout resolver only; wheels declare the real platform dependency above.
+[tool.uv.sources]
+template-literature-meta-analysis = { path = "../template_literature_meta_analysis", editable = true }
+research-project-template = { path = "../../..", editable = true }

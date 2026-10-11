@@ -73,15 +73,15 @@ def default_project_name(names: list[str]) -> str:
 
 
 def cmd_pipeline(ns: argparse.Namespace, *, runner_factory: Any = PipelineRunner) -> int:
-    """Run one project or route the all-projects compatibility flag."""
+    """Run one validated project or the explicit all-projects selection."""
     repo_root = resolve_repo_root(ns)
-    runner = runner_factory(repo_root=repo_root)
     if ns.all_projects:
+        runner = runner_factory(repo_root=repo_root)
         return int(
             runner.run_multi(
                 MultiProjectInvocation(
                     skip_infra=ns.skip_infra,
-                    skip_llm=ns.skip_llm or ns.core_only,
+                    mode=ns.mode,
                 )
             )
         )
@@ -92,15 +92,19 @@ def cmd_pipeline(ns: argparse.Namespace, *, runner_factory: Any = PipelineRunner
             return 1
         project = default_project_name(names)
     else:
-        project = validate_project_slug(ns.project, repo_root)
+        try:
+            project = validate_project_slug(ns.project, repo_root)
+        except ValueError as exc:
+            print(f"Invalid pipeline invocation: {exc}", file=sys.stderr)
+            return 2
+    runner = runner_factory(repo_root=repo_root)
     return int(
         runner.run(
             PipelineInvocation(
                 project=project,
                 skip_infra=ns.skip_infra,
-                skip_llm=ns.skip_llm,
                 resume=ns.resume,
-                core_only=ns.core_only,
+                mode=ns.mode,
                 incremental=ns.incremental,
             )
         )
@@ -114,8 +118,7 @@ def cmd_multi(ns: argparse.Namespace, *, runner_factory: Any = PipelineRunner) -
         runner.run_multi(
             MultiProjectInvocation(
                 skip_infra=ns.skip_infra,
-                skip_llm=ns.skip_llm or ns.core_only,
-                run_executive_report=not ns.no_executive_report,
+                mode=ns.mode,
             )
         )
     )
@@ -132,7 +135,7 @@ def cmd_secure(ns: argparse.Namespace, *, secure_runner: Any = run_secure_pipeli
                 project=ns.project,
                 steganography_only=ns.steganography_only,
                 skip_infra=ns.skip_infra,
-                core_only=ns.core_only,
+                mode=ns.mode,
                 resume=ns.resume,
                 validate_kmyth=ns.validate_kmyth,
             ),

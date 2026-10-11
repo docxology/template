@@ -40,6 +40,12 @@ flowchart TB
 | Layer 2 | `projects/templates/template_sia/src/` | Project config, fixture paths, `RunConfig` adapter, project artifact orchestration, manuscript variables, task-specific reference agent |
 | CLI | `scripts/` | Parse `--project-root` / `--live-sia`, call `template_sia.loop.loop.run_sia_loop_project()`, and print output paths |
 
+The separate `--live-proposals` entry calls `loop/live_proposals.py`: a local
+Ollama numeric proposer, Docker-only target execution, public-only selection,
+and one final frozen held-out evaluation. Domain validation, HTTP transport,
+and sandbox execution live in separate Layer-2 modules. The detailed artifact
+and isolation contract is in [`live-numeric-proposals.md`](live-numeric-proposals.md).
+
 ## Generation artifact tree
 
 Each run writes:

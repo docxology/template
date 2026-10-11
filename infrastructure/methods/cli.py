@@ -37,11 +37,6 @@ def build_parser() -> argparse.ArgumentParser:
         help="Validate source contracts only or require rendered evidence artifacts.",
     )
     plan.add_argument("--format", choices=("json", "markdown"), default="markdown")
-    plan.add_argument(
-        "--check",
-        action="store_true",
-        help="Compatibility flag; validation errors always exit 1.",
-    )
     sub.add_parser("schema", help="Print this CLI's parameter schema as JSON and exit.")
     return parser
 

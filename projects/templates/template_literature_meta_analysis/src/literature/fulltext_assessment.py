@@ -37,9 +37,9 @@ import hashlib
 from pathlib import Path
 from urllib.parse import urlparse
 
-from literature.corpus import Corpus
-from literature.fulltext_download import safe_filename
-from literature.models import Paper
+from template_literature_meta_analysis.literature.corpus import Corpus
+from template_literature_meta_analysis.literature.fulltext_download import safe_filename
+from template_literature_meta_analysis.literature.models import Paper
 
 FULLTEXT_INVENTORY_SCHEMA = "literature-meta-analysis/fulltext-inventory/1"
 

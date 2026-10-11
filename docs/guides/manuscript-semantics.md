@@ -428,4 +428,4 @@ Before committing a manuscript change:
 - [`projects/templates/template_code_project/manuscript/SYNTAX.md`](../../projects/templates/template_code_project/manuscript/SYNTAX.md) — code-exemplar-specific token table and figure registry.
 - [`projects/templates/template_prose_project/manuscript/SYNTAX.md`](../../projects/templates/template_prose_project/manuscript/SYNTAX.md) — prose-exemplar-specific syntax notes.
 - [`projects/templates/template_search_project/manuscript/SYNTAX.md`](../../projects/templates/template_search_project/manuscript/SYNTAX.md) — search-exemplar-specific BibTeX-automation notes.
-- [`infrastructure/rendering/_pdf_combined_pandoc.py`](../../infrastructure/rendering/_pdf_combined_pandoc.py) — Pandoc `--natbib` invocation (`build_pandoc_tex_command`); [`_pdf_combined_renderer.py`](../../infrastructure/rendering/_pdf_combined_renderer.py) is the backward-compatible re-export facade.
+- [`infrastructure/rendering/_pdf_combined_pandoc.py`](../../infrastructure/rendering/_pdf_combined_pandoc.py) — Pandoc `--natbib` invocation (`build_pandoc_tex_command`).

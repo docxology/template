@@ -99,11 +99,18 @@ __all__ = [
 DOC_RELATIVE_PATH = Path("docs/_generated/COUNTS.md")
 
 # Date the volatile-literal counts and module list were last refreshed (UTC).
-GENERATED_DATE = "2026-09-06"
+GENERATED_DATE = "2026-10-07"
 
 
-def tracked_infra_python_count(repo_root: Path) -> int:
-    """Count git-tracked ``infrastructure/`` Python files (matches the gate)."""
+def tracked_infra_python_count(repo_root: Path, *, tracked_paths: tuple[str, ...] | None = None) -> int:
+    """Count Root git-tracked infrastructure Python files (matches the gate).
+
+    An explicit tuple can come from an already admitted immutable Root index;
+    its caller owns that admission and final custody verification. Without that
+    input, ordinary checkout discovery retains its original Git behavior.
+    """
+    if tracked_paths is not None:
+        return sum(path.startswith("infrastructure/") and path.endswith(".py") for path in tracked_paths)
     tracked = subprocess.run(  # noqa: S603 - fixed argv, repo-local git
         ["git", "ls-files", "infrastructure"],
         cwd=repo_root,
@@ -364,11 +371,11 @@ uv run pytest tests/infra_tests/publishing/ --collect-only -q --no-cov
 
 Result: **{facts.project_tests}** project-scope infrastructure tests collected and **{facts.publishing_tests}** publishing tests collected. Full behavioral gates still live in CI and in the verification commands listed by the relevant `AGENTS.md` files.
 
-**Exemplar `pytest --collect-only` totals** (derived live in each project's declared environment; coverage snapshot last updated {EXEMPLAR_SNAPSHOT_DATE}; coverage values use the shared `release` test profile in each project's environment):
+**Exemplar `pytest --collect-only` totals** (derived live in each project's declared environment; coverage snapshot last updated {EXEMPLAR_SNAPSHOT_DATE}; coverage values use the shared `release` test profile):
 
 {_exemplar_table(facts.exemplar_tests)}
 
-Collection counts come from per-project `uv run pytest tests/ --collect-only -q --no-cov` runs; coverage values come from `uv run python scripts/docgen/counts.py --verify-coverage`, which invokes each project's own `uv` environment with the shared `release` marker profile and a bounded subprocess. After changing an inventoried project coverage input—including source, tests, scripts, configuration, data, manuscript content, or dependency locks—rerun the coverage verifier and then explicitly refresh provenance with `uv run python scripts/docgen/counts.py --refresh-coverage-provenance --write`; ordinary `--write` fails when coverage-input hashes no longer match. Generated output plus runtime, build, cache, and environment artifacts are excluded from that versioned inventory. `template_active_inference` pins its own `.venv`/toolchain, so its release-profile coverage is re-derived in that environment, not from the repo-root interpreter. Orchestration modules (`analysis.py`, `figures.py`, `dashboard.py`, `manuscript_variables.py`) are in the coverage denominator for the code exemplar; `experiment_config.py` is the shared loader for `manuscript/config.yaml` → `experiment:`.
+Collection counts come from per-project `uv run pytest tests/ --collect-only -q --no-cov` runs. Coverage snapshots use genuine `release`-profile measurements backed by retained coverage databases and current source-input hashes; the measurement evidence records the method and runtime origin. A successful canonical project batch can supply those measurements when its profile, project roster, coverage configuration and source inputs match, so the same suites need not run again. `uv run python scripts/docgen/counts.py --verify-coverage` remains the standalone measurement route using each project's declared environment, including `template_active_inference`'s project-owned toolchain. After changing an inventoried project coverage input—including source, tests, scripts, configuration, data, manuscript content, or dependency locks—rerun its coverage gate, then explicitly refresh provenance with `uv run python scripts/docgen/counts.py --refresh-coverage-provenance --write`; ordinary `--write` fails when coverage-input hashes no longer match. Generated output plus runtime, build, cache, and environment artifacts are excluded from that versioned inventory. Orchestration modules (`analysis.py`, `figures.py`, `dashboard.py`, `manuscript_variables.py`) are in the coverage denominator for the code exemplar; `experiment_config.py` is the shared loader for `manuscript/config.yaml` → `experiment:`.
 
 Drift-checker coverage: `uv run python scripts/audit/check_template_drift.py --strict`. Repo `scripts/` fat files emit **WARNING**; project `scripts/` fat files emit **ERROR** through the thin-orchestrator detectors. Per-exemplar detectors include function name drift, test class drift, `__all__` doc drift, coverage floor drift, dead links, oversize `src/*.py`, blanket `except Exception`, mocks in tests, and canonical-file presence.
 
@@ -398,7 +405,7 @@ uv run python scripts/pipeline/stage_01_test.py --project template_code_project
 Use `uv run` for reproducibility:
 
 - Tests: `uv run python scripts/pipeline/stage_01_test.py --project <name>`
-- Pipeline: `uv run python scripts/runner/execute_pipeline.py --project <name> --core-only`
+- Pipeline: `uv run python scripts/runner/execute_pipeline.py --project <name> --mode core`
 - Interactive: `./run.sh`
 - Specific test: `uv run pytest path/to/test.py::test_name -q`
 
@@ -441,7 +448,7 @@ Key signatures:
 
 ```bash
 uv run python -m infrastructure.validation.cli markdown projects/{{name}}/manuscript/
-uv run python -m infrastructure.validation.cli pdf output/{{name}}/pdf/
+uv run python -m infrastructure.validation.cli pdf --project {{name}} --repo-root .
 ```
 
 ## Structure

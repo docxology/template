@@ -35,7 +35,7 @@ Live test counts and coverage snapshots belong in `../../../../docs/_generated/C
 - `manuscript/config.yaml` → `project_config.llm_filters` and `project_config.phase_integration` own LLM-based content filtering and cross-phase deduplication/validation/quality-gate policy.
 - `src/multi_phase/` owns phase-aware search orchestration and provenance.
 - `src/literature/` owns per-engine retrieval clients, the canonical `Paper` model, and corpus persistence — the same contracts as the single-term sibling.
-- `src/analysis/`, `src/knowledge_graph/`, `src/reproducibility/`, `src/visualization/`, `src/config_loader.py` are **symlinks** into `template_literature_meta_analysis/src/` — see `architecture.md`. Edit them there, not here.
+- Shared analysis, knowledge-graph, reproducibility and figure methods come from the declared `template_literature_meta_analysis` distribution. Edit those methods in Meta's canonical `src/` and verify both consumers; Advanced owns its configuration loader. See `architecture.md` and `../STANDALONE.md` for the provider boundary.
 - `src/manuscript/variables/` owns phase-aware `{{TOKEN}}` computation (`extractors/multi_phase.py` in particular).
 - `src/deep_research/` owns the deterministic offline replay of the optional deep-research dispatch stage.
 - `scripts/` (11 numbered stages) are thin orchestrators only.

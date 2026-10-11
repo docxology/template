@@ -1,4 +1,4 @@
-# `template_eda_notebook/src/eda/` - agent guide
+# `template_eda_notebook/src/template_eda_notebook/eda/` - agent guide
 
 ## Purpose
 
@@ -15,8 +15,8 @@ scripts import from here.
   matplotlib stays in `scripts/` (thin-orchestrator contract).
 - Surface missingness explicitly (no silent imputation) and keep every transform
   side-effect-free so tests stay deterministic.
-- Re-export the public surface from `src/__init__.py` so callers write
-  `from src import load_dataset` regardless of internal layout.
+- Re-export the public surface from `src/template_eda_notebook/__init__.py` so callers write
+  `from template_eda_notebook import load_dataset` regardless of internal layout.
 
 ## See Also
 

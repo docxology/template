@@ -277,7 +277,7 @@ def _build_pattern_cache() -> None:
     }
 
 
-def load_subfields_from_config(config_path: Path) -> dict[str, dict]:
+def load_subfields_from_config(config_path: Path, *, source_bytes: bytes | None = None) -> dict[str, dict]:
     """Load subfield keyword definitions from a YAML config file."""
     try:
         import yaml
@@ -286,7 +286,11 @@ def load_subfields_from_config(config_path: Path) -> dict[str, dict]:
         return dict(GENERIC_DEFAULT_SUBFIELDS)
 
     try:
-        with open(config_path, encoding="utf-8") as handle:
+        from infrastructure.search.literature.configuration_sources import ConfigTextStream
+
+        with (
+            open(config_path, encoding="utf-8") if source_bytes is None else ConfigTextStream(config_path, source_bytes)
+        ) as handle:
             data = yaml.safe_load(handle) or {}
     except (OSError, yaml.YAMLError) as exc:
         logger.warning("Cannot read config %s: %s; using defaults", config_path, exc)
@@ -326,8 +330,8 @@ def load_subfields_from_config(config_path: Path) -> dict[str, dict]:
     return result
 
 
-def configure_subfields(config_path: Optional[Path] = None) -> dict[str, dict]:
-    """Set module-level SUBFIELDS from config or defaults.
+def configure_subfields(config_path: Optional[Path] = None, *, source_bytes: bytes | None = None) -> dict[str, dict]:
+    """Set module-level SUBFIELDS from template_literature_meta_analysis.config or defaults.
 
     Mutates the existing SUBFIELDS dict IN PLACE (clear + update) rather than
     rebinding it. Modules that did ``from ...subfield_registry import SUBFIELDS``
@@ -335,7 +339,13 @@ def configure_subfields(config_path: Optional[Path] = None) -> dict[str, dict]:
     the global here would leave their binding pointing at the stale default set,
     so the configured taxonomy would silently never apply at runtime.
     """
-    new = load_subfields_from_config(config_path) if config_path is not None else dict(GENERIC_DEFAULT_SUBFIELDS)
+    if source_bytes is not None and config_path is None:
+        raise ValueError("admitted subfield bytes require their config source path")
+    new = (
+        load_subfields_from_config(config_path, source_bytes=source_bytes)
+        if config_path is not None
+        else dict(GENERIC_DEFAULT_SUBFIELDS)
+    )
     SUBFIELDS.clear()
     SUBFIELDS.update(new)
     _build_pattern_cache()

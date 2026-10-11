@@ -192,7 +192,7 @@ flowchart TB
 
    ```bash
    # Core pipeline (eight stages: clean through copy outputs; LLM stages excluded)
-   uv run python scripts/runner/execute_pipeline.py --project {name} --core-only
+   uv run python scripts/runner/execute_pipeline.py --project {name} --mode core
 
    # Or use unified interactive menu
    ./run.sh
@@ -384,7 +384,7 @@ export PROJECT_TITLE="Impact of Machine Learning on Climate Prediction"
 export DOI="10.5281/zenodo.12345678"
 
 # Generate with your metadata
-uv run python scripts/runner/execute_pipeline.py --project {name} --core-only
+uv run python scripts/runner/execute_pipeline.py --project {name} --mode core
 ```
 
 #### Method 2: Create .env File
@@ -415,7 +415,7 @@ uv run python scripts/runner/execute_pipeline.py --project {name} --core-only
 
    ```bash
    source .env
-   uv run python scripts/runner/execute_pipeline.py --project {name} --core-only
+   uv run python scripts/runner/execute_pipeline.py --project {name} --mode core
    ```
 
 **What Gets Updated**:
@@ -510,7 +510,7 @@ The template uses `manuscript/preamble.md` for styling. You can modify:
 4. **Rebuild to see citations**
 
    ```bash
-   uv run python scripts/runner/execute_pipeline.py --project {name} --core-only
+   uv run python scripts/runner/execute_pipeline.py --project {name} --mode core
    ```
 
 ---
@@ -533,7 +533,7 @@ The template uses `manuscript/preamble.md` for styling. You can modify:
 | **Reference shows ??** | Check label spelling matches |
 | **Equation not numbered** | Use `\begin{equation}...\end{equation}` |
 | **Figure not found** | Check path is `../output/figures/` |
-| **PDF won't build** | Run `uv run python scripts/runner/execute_pipeline.py --project {name} --core-only` (includes cleanup) |
+| **PDF won't build** | Run `uv run python scripts/runner/execute_pipeline.py --project {name} --mode core` (includes cleanup) |
 
 ### Keyboard Shortcuts
 
@@ -564,7 +564,7 @@ The template uses `manuscript/preamble.md` for styling. You can modify:
 3. Clean and rebuild:
 
    ```bash
-   uv run python scripts/runner/execute_pipeline.py --project {name} --core-only
+   uv run python scripts/runner/execute_pipeline.py --project {name} --mode core
    ```
 
 ### Missing Dependencies
@@ -601,7 +601,7 @@ The template uses `manuscript/preamble.md` for styling. You can modify:
 3. Rebuild (references need multiple passes):
 
    ```bash
-   uv run python scripts/runner/execute_pipeline.py --project {name} --core-only
+   uv run python scripts/runner/execute_pipeline.py --project {name} --mode core
    ```
 
 ### Math Not Rendering
@@ -623,7 +623,7 @@ The template uses `manuscript/preamble.md` for styling. You can modify:
 
 1. Check relative path: `../output/figures/name.png`
 2. Verify file exists: `ls projects/{name}/output/figures/`
-3. Run pipeline (includes script execution): `uv run python scripts/runner/execute_pipeline.py --project {name} --core-only`
+3. Run pipeline (includes script execution): `uv run python scripts/runner/execute_pipeline.py --project {name} --mode core`
 
 ---
 

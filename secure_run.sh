@@ -2,7 +2,7 @@
 ################################################################################
 # Secure Run — Thin Shell Dispatcher
 #
-# Bootstrap uv, sync steganography extras, then exec the Python `secure`
+# Use explicitly prepared Python and steganography dependencies for the `secure`
 # subcommand (`python -m infrastructure.orchestration secure`). All flags —
 # including --deterministic — are owned by the Python argparse layer; this
 # script only handles bootstrap and env-var parity with run.sh.
@@ -10,7 +10,7 @@
 # Supported modes (forwarded verbatim to the Python orchestrator):
 #
 #   1) Full pipeline + steganography (one project)
-#        ./secure_run.sh --project <name> [--core-only|--skip-infra|--resume]
+#        ./secure_run.sh --project <name> [--mode core|live] [--skip-infra|--resume]
 #
 #   2) Steganography only — re-watermark existing PDFs, no re-render
 #        ./secure_run.sh --steganography-only [--project <name>]
@@ -24,7 +24,7 @@
 
 set -euo pipefail
 
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd -P)"
 # shellcheck source=scripts/shell/shell_bootstrap.sh
 source "$SCRIPT_DIR/scripts/shell/shell_bootstrap.sh"
 
@@ -34,16 +34,6 @@ cd "$SCRIPT_DIR"
 # Lean session workflows: parity with run.sh. Default on; honor an existing
 # value if the caller already set one. `--no-lean-workflows` below overrides.
 export FEP_LEAN_GAUSS_WORKFLOWS="${FEP_LEAN_GAUSS_WORKFLOWS:-1}"
-
-# Fast path: forward --help directly so users discover flags without paying
-# for `uv sync --group steganography`.
-if [[ "${1:-}" == "--help" || "${1:-}" == "-h" ]]; then
-    if ensure_uv; then
-        exec uv run python -m infrastructure.orchestration secure --help
-    fi
-    print_uv_install_instructions "secure_run.sh"
-    exit 1
-fi
 
 # Friendly hint when invoked with no args. The Python layer will still emit
 # the canonical error; this just helps first-time users see usage quickly.
@@ -75,18 +65,7 @@ for arg in "$@"; do
     esac
 done
 
-if ! ensure_uv; then
-    print_uv_install_instructions "secure_run.sh"
-    exit 1
-fi
-
-# Ensure steganography deps are present before we exec into Python.
-uv sync --group steganography || {
-    echo "ERROR: 'uv sync --group steganography' failed" >&2
-    exit 1
-}
-
 # Forward remaining args to the Python secure subcommand. argparse owns
-# --project, --steganography-only, --skip-infra, --core-only, --resume,
+# --project, --steganography-only, --skip-infra, --mode, --resume,
 # --deterministic, and --validate-kmyth; this script no longer parses them.
-exec uv run python -m infrastructure.orchestration secure ${FORWARD_ARGS[@]+"${FORWARD_ARGS[@]}"}
+dispatch_prepared_root_python "$SCRIPT_DIR" secure ${FORWARD_ARGS[@]+"${FORWARD_ARGS[@]}"}

@@ -8,9 +8,14 @@ from pathlib import Path
 
 from pytest_httpserver import HTTPServer
 
-from literature.corpus import Corpus
-from literature.models import Paper
-from literature.search_runner import RetrievalObservation, apply_relevance_filter, run_literature_search, search_source
+from template_literature_meta_analysis.literature.corpus import Corpus
+from template_literature_meta_analysis.literature.models import Paper
+from template_literature_meta_analysis.literature.search_runner import (
+    RetrievalObservation,
+    apply_relevance_filter,
+    run_literature_search,
+    search_source,
+)
 
 
 def _paper(title: str, abstract: str = "active inference study") -> Paper:

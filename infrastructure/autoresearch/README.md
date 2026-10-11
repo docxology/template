@@ -148,6 +148,10 @@ file paths to source-manifest artifacts the plan tracks.
 
 ## CLI
 
+Malformed pipeline/configuration declarations and missing plan inputs return
+exit `2`. A completed readiness check with issues returns `1`; successful
+commands return `0`. Planning refusals do not write successful plan reports.
+
 ```bash
 uv run python -m infrastructure.autoresearch.cli plan --project templates/template_autoresearch_project
 uv run python -m infrastructure.autoresearch.cli validate --project templates/template_code_project --fail-on-issues

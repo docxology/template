@@ -29,7 +29,7 @@
 | `upload_runner.py` | Reusable multi-platform upload dispatch (`UploadTargets`, `select_jobs`, `run_uploads`) |
 | `release_workflow.py` | Unified GitHub + Zenodo + re-render orchestration |
 | `release_workflow_zenodo.py` | Reserve-first DOI phase and Zenodo publish paths |
-| `platforms.py`, `api.py` | Backwards-compatible re-exports |
+| Platform subpackages | Canonical clients and adapters; the package root exports its declared public API |
 | `executable_bundle.py` | Opt-in executable bundle (`bundle_project`) |
 | `archival/` | Opt-in multi-target archival — see [`archival/README.md`](../../../infrastructure/publishing/archival/README.md) |
 | `cli.py`, `publish_cli.py`, `archival_cli.py` | CLI entry points |

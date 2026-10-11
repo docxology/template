@@ -1,4 +1,4 @@
-# `template_eda_notebook/src/eda/`
+# `template_eda_notebook/src/template_eda_notebook/eda/`
 
 Tested exploratory-data-analysis library for the notebook exemplar.
 
@@ -10,7 +10,7 @@ shell glue, so the EDA workflow is reproducible and unit-tested.
 
 | File | Role |
 | --- | --- |
-| `__init__.py` | Public EDA exports re-exported from `src/__init__.py`. |
+| `__init__.py` | Public EDA exports re-exported from `src/template_eda_notebook/__init__.py`. |
 | `dataset.py` | Load the deterministic CSV fixture; typed schema and numeric-column helpers. |
 | `cleaning.py` | Drop missing-value rows (reported, not imputed) and z-score normalize numeric columns. |
 | `statistics.py` | Per-column descriptive statistics and per-group means via `pandas`. |

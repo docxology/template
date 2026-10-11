@@ -7,7 +7,7 @@ import logging
 
 from pytest_httpserver import HTTPServer
 
-from knowledge_graph.llm_extraction import (
+from template_literature_meta_analysis.knowledge_graph.llm_extraction import (
     LLMConfig,
     extract_assertions_llm,
 )
@@ -24,7 +24,7 @@ _valid_llm_response = valid_llm_response
 class TestNanopubResume:
     def test_resume_skips_processed(self, httpserver: HTTPServer, tmp_path):
         """Resume skips papers already in the nanopubs file."""
-        from knowledge_graph.nanopublication import (
+        from template_literature_meta_analysis.knowledge_graph.nanopublication import (
             Assertion,
             create_nanopub,
             serialize_nanopubs,
@@ -97,7 +97,7 @@ class TestNanopubResume:
 
     def test_nanopub_file_updated_after_extraction(self, httpserver: HTTPServer, tmp_path):
         """After extraction, nanopub file on disk contains all results."""
-        from knowledge_graph.nanopublication import deserialize_nanopubs
+        from template_literature_meta_analysis.knowledge_graph.nanopublication import deserialize_nanopubs
 
         response_body = {
             "response": json.dumps(valid_llm_response()),
@@ -149,7 +149,7 @@ class TestNanopubResume:
 
     def test_logs_resume_info(self, httpserver: HTTPServer, tmp_path, caplog):
         """Resume run logs how many papers were already processed."""
-        from knowledge_graph.nanopublication import (
+        from template_literature_meta_analysis.knowledge_graph.nanopublication import (
             Assertion,
             create_nanopub,
             serialize_nanopubs,

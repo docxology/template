@@ -54,8 +54,12 @@ def _backend_flags() -> dict[str, Any]:
         return {"jax_backend_error": type(exc).__name__}
 
 
-def _numpy_factors(factors: list[Any]) -> list[np.ndarray]:
-    return [np.asarray(factor, dtype=np.float64) for factor in factors]
+def _numpy_factors(factors: list[Any], *, vectors: bool = False) -> list[np.ndarray]:
+    """Keep A/B tensors while adapting C/D columns to the Agent vector API."""
+    arrays = [np.asarray(factor, dtype=np.float64) for factor in factors]
+    if vectors:
+        return [array.reshape(-1) for array in arrays]
+    return arrays
 
 
 def _warning_record(warning: warnings.WarningMessage) -> dict[str, str | bool]:
@@ -88,8 +92,8 @@ def construct_agent_with_diagnostics(
         agent = agent_factory(
             A=_numpy_factors(model["A"]),
             B=_numpy_factors(model["B"]),
-            C=_numpy_factors(model["C"]),
-            D=_numpy_factors(model["D"]),
+            C=_numpy_factors(model["C"], vectors=True),
+            D=_numpy_factors(model["D"], vectors=True),
             policy_len=policy_len,
             inference_algo=config.agent.inference_algo,
             action_selection=config.agent.action_selection,

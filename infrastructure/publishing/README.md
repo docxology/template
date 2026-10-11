@@ -2,7 +2,7 @@
 
 Tools for academic publishing, citations, and platform integration.
 
-Repository metadata is normalized by `infrastructure/metadata/repository_metadata.py` (shim `repository_metadata.py` kept); non-dry-run
+Repository metadata is normalized by `infrastructure/metadata/repository_metadata.py`; non-dry-run
 payloads are validated and summarized without credential values by
 `preflight.py` before any publishing transport is invoked.
 `release/release_cli.py` owns the stable argument and credential-source resolution
@@ -112,7 +112,7 @@ graph TD
 - **zenodo/** - [Zenodo REST API](https://developers.zenodo.org/) client and publish workflow
 - **github/** - GitHub Releases API
 - **arxiv/** - arXiv submission tarball preparation
-- **pypi/** - PyPI / TestPyPI build, check, upload pipeline (`PyPIAdapter`, `build_dist`, `upload_dist`, `check_dist`, `verify_install`)
+- **pypi/** - PyPI / TestPyPI build, check, upload pipeline (`PyPIAdapter`)
 - **static_site/** - Static-site hosting adapters (`GitHubPagesAdapter`, `CloudflarePagesAdapter`, `NetlifyAdapter`, `get_adapter()`)
 - **archival/** - Multi-target long-horizon archival subpackage (`ZenodoProvider`, `IPFSPinataProvider`, `IPFSWeb3StorageProvider`, `SoftwareHeritageProvider`)
 - **registry.py** - `PLATFORM_REGISTRY`, `list_platforms()`, `get_platform()`, `PublishingTier` enum: 12 first-class
@@ -121,7 +121,7 @@ graph TD
 - **credential_check.py** - Read-only, non-destructive verification that publishing credentials authenticate (`run_probe()`, `check_all()`)
 - **upload_runner.py** - Reusable multi-platform upload dispatch (`UploadTargets`, `CORE_UPLOADERS`, `OPTIONAL_UPLOADERS`, `select_jobs()`, `run_uploads()` returning an `UploadRun`); the per-platform helpers + batch orchestrator extracted from `scripts/publish/upload_gold_refinement.py`, which is now a thin CLI
 - **transmission_models.py** - Shared dependency-light `TransmissionContext` value object used by barcode-strip and bookend generation without creating an import cycle
-- **platforms.py** / **api.py** - Backwards-compatible re-exports
+- **registry.py** - Canonical platform discovery; import implementations from their subpackages
 
 ## Key Classes
 
@@ -136,7 +136,7 @@ graph TD
 
 ### API clients
 
-- `ZenodoClient` / `ZenodoConfig` — [`zenodo/`](zenodo/) (also via `infrastructure.publishing.api`)
+- `ZenodoClient` / `ZenodoConfig` — [`zenodo/`](zenodo/)
 - `DepositionResult` — create-deposition result (id + bucket URL)
 - `PublishResult` — high-level Zenodo publish result (DOI + deposition id)
 - `PyPIAdapter` / `PyPIConfig` / `PyPIResult` — [`pypi/`](pypi/)

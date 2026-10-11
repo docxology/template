@@ -7,15 +7,15 @@ from infrastructure.orchestration.menu import STAGE_NAMES
 
 
 def test_project_analysis_in_core_stages() -> None:
-    names = sv.core_stage_names()
+    names = sv.live_stage_names()
     assert "Project Analysis" in names
     assert "PDF Rendering" in names
     assert "Output Validation" in names
     assert "docxplus Export" not in names
-    assert "docxplus Export" not in sv.core_only_stage_names()
-    assert "LLM Scientific Review" not in sv.core_only_stage_names()
-    assert sv.default_run_stage_count(include_llm=True) == len(names)
-    assert sv.default_run_stage_count(include_llm=False) == len(sv.core_only_stage_names())
+    assert "docxplus Export" not in sv.core_stage_names()
+    assert "LLM Manuscript Review" not in sv.core_stage_names()
+    assert sv.default_run_stage_count(mode="live") == len(names)
+    assert sv.default_run_stage_count(mode="core") == len(sv.core_stage_names())
 
 
 def test_menu_stage_names_match_menu_module() -> None:
@@ -45,6 +45,6 @@ def test_text_mentions_stage_by_alias() -> None:
 
 def test_no_numeric_stage_four_in_api() -> None:
     """Vocabulary uses canonical names, not transient numeric stage indices."""
-    for name in sv.core_stage_names():
+    for name in sv.live_stage_names():
         assert "stage 4" not in name.lower()
     assert "stage 4" not in str(sv.stage_aliases()).lower()

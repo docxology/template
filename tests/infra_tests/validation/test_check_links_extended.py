@@ -2,8 +2,12 @@
 
 from pathlib import Path
 
+from infrastructure.validation.content.discovery import discover_markdown_files
+from infrastructure.validation.docs.accuracy import extract_headings
 from infrastructure.validation.integrity import check_links
-from infrastructure.validation.integrity.check_links import (
+from infrastructure.validation.integrity.link_extract import (
+    check_file_reference,
+    extract_links,
     validate_python_imports,
 )
 
@@ -24,8 +28,11 @@ class TestCheckLinksCore:
             "validate_python_imports",
             "run_link_audit",
         }
-        assert expected <= set(check_links.__all__)
-        assert all(callable(getattr(check_links, name)) for name in expected)
+        from infrastructure.validation import integrity
+
+        expected.remove("run_link_audit")
+        assert all(callable(getattr(integrity, name)) for name in expected)
+        assert callable(check_links.run_link_audit)
 
 
 class TestLinkValidation:
@@ -38,7 +45,7 @@ class TestLinkValidation:
         source = tmp_path / "source.md"
         source.write_text("[Target](target.md)")
 
-        result, message = check_links.check_file_reference("target.md", source, tmp_path)
+        result, message = check_file_reference("target.md", source, tmp_path)
         assert result is True
         assert message == "target.md"
 
@@ -47,7 +54,7 @@ class TestLinkValidation:
         source = tmp_path / "source.md"
         source.write_text("[Missing](nonexistent.md)")
 
-        result, message = check_links.check_file_reference("nonexistent.md", source, tmp_path)
+        result, message = check_file_reference("nonexistent.md", source, tmp_path)
         assert result is False
         assert "does not exist" in message.lower()
 
@@ -62,7 +69,7 @@ class TestFileReferenceValidation:
         source = tmp_path / "doc.md"
         source.write_text("Link to file.txt")
 
-        result = check_links.check_file_reference("file.txt", source, tmp_path)
+        result = check_file_reference("file.txt", source, tmp_path)
         assert result == (True, "file.txt")
 
     def test_check_file_reference_missing(self, tmp_path):
@@ -70,7 +77,7 @@ class TestFileReferenceValidation:
         source = tmp_path / "doc.md"
         source.write_text("Link to missing.txt")
 
-        result = check_links.check_file_reference("missing.txt", source, tmp_path)
+        result = check_file_reference("missing.txt", source, tmp_path)
         assert result[0] is False
         assert "does not exist" in result[1].lower()
 
@@ -80,7 +87,7 @@ class TestFileReferenceValidation:
         img.write_bytes(b"\x89PNG")
         source = tmp_path / "doc.md"
 
-        result = check_links.check_file_reference("img.png", source, tmp_path)
+        result = check_file_reference("img.png", source, tmp_path)
         assert result == (True, "img.png")
 
 
@@ -96,7 +103,7 @@ class TestMarkdownLinkExtraction:
 [Link 2](https://example.com)
 ![Image](img.png)
 """
-        result = check_links.extract_links(md_content, md_file)
+        result = extract_links(md_content, md_file)
         assert isinstance(result, tuple)
         assert len(result) == 3
         internal_links, external_links, file_refs = result
@@ -109,7 +116,7 @@ class TestMarkdownLinkExtraction:
         md_file = tmp_path / "test.md"
         md_content = "[External](https://example.com)"
 
-        internal, external, file_refs = check_links.extract_links(md_content, md_file)
+        internal, external, file_refs = extract_links(md_content, md_file)
         assert internal == []
         assert len(external) == 1
         assert external[0]["target"] == "https://example.com"
@@ -120,7 +127,7 @@ class TestMarkdownLinkExtraction:
         md_file = tmp_path / "test.md"
         md_content = "[Section](#section-1)"
 
-        internal, external, file_refs = check_links.extract_links(md_content, md_file)
+        internal, external, file_refs = extract_links(md_content, md_file)
         assert len(internal) == 1
         assert internal[0]["target"] == "#section-1"
         assert external == []
@@ -131,7 +138,7 @@ class TestMarkdownLinkExtraction:
         md_file = tmp_path / "test.md"
         md_content = "[Other Doc](other.md)"
 
-        internal, external, file_refs = check_links.extract_links(md_content, md_file)
+        internal, external, file_refs = extract_links(md_content, md_file)
         assert internal == []
         assert external == []
         assert len(file_refs) == 1
@@ -149,7 +156,7 @@ echo example
 | `![alt](path)` |
 """
 
-        internal, external, file_refs = check_links.extract_links(md_content, md_file)
+        internal, external, file_refs = extract_links(md_content, md_file)
 
         assert internal == []
         assert external == []
@@ -169,7 +176,7 @@ class TestCheckFileReferenceEdgeCasesAdditional:
         outside_target = Path("/tmp/outside_file.txt")
 
         # Test with a path that resolves outside the repo
-        result, msg = check_links.check_file_reference(str(outside_target), source, tmp_path)
+        result, msg = check_file_reference(str(outside_target), source, tmp_path)
 
         # Should fail because path resolves outside repository
         assert result is False
@@ -183,7 +190,7 @@ class TestCheckFileReferenceEdgeCasesAdditional:
         source.write_text("content")
 
         # This should try to go way outside the repo
-        result, msg = check_links.check_file_reference("../../../../../../../../outside.md", source, tmp_path)
+        result, msg = check_file_reference("../../../../../../../../outside.md", source, tmp_path)
 
         # Should fail - either path outside repo or doesn't exist
         assert result is False
@@ -194,7 +201,7 @@ class TestCheckFileReferenceEdgeCasesAdditional:
         source.write_text("content")
 
         # Test with a path that might cause issues
-        result, msg = check_links.check_file_reference(
+        result, msg = check_file_reference(
             "\x00invalid\x00path",
             source,
             tmp_path,  # Null bytes should cause issues
@@ -211,7 +218,7 @@ class TestCheckFileReferenceEdgeCasesAdditional:
         source = tmp_path / "doc.md"
         source.write_text("content")
 
-        result, msg = check_links.check_file_reference("subdir", source, tmp_path)
+        result, msg = check_file_reference("subdir", source, tmp_path)
         assert result is True
 
     def test_relative_path_with_dot_prefix(self, tmp_path):
@@ -221,7 +228,7 @@ class TestCheckFileReferenceEdgeCasesAdditional:
         source = tmp_path / "source.md"
         source.write_text("content")
 
-        result, msg = check_links.check_file_reference("./target.md", source, tmp_path)
+        result, msg = check_file_reference("./target.md", source, tmp_path)
         assert result is True
 
     def test_markdown_file_without_extension(self, tmp_path):
@@ -231,7 +238,7 @@ class TestCheckFileReferenceEdgeCasesAdditional:
         source = tmp_path / "source.md"
         source.write_text("content")
 
-        result, msg = check_links.check_file_reference("target", source, tmp_path)
+        result, msg = check_file_reference("target", source, tmp_path)
         assert result is True, msg
         assert msg == "target.md"
 
@@ -246,7 +253,7 @@ class TestExtractHeadingsAdditional:
 ## Sub Heading {#sub}
 ### Another {#another-one}
 """
-        headings = check_links.extract_headings(content)
+        headings = extract_headings(content)
         assert "main" in headings
         assert "sub" in headings
         assert "another-one" in headings
@@ -258,7 +265,7 @@ class TestExtractHeadingsAdditional:
 ## Another Heading Here
 ### Multi Word Title
 """
-        headings = check_links.extract_headings(content)
+        headings = extract_headings(content)
         # Auto-generated anchors
         assert "simple-heading" in headings
         assert "another-heading-here" in headings
@@ -267,7 +274,7 @@ class TestExtractHeadingsAdditional:
     def test_extract_headings_with_special_chars(self):
         """Test heading extraction with special characters."""
         content = "# Heading with (parentheses) and [brackets]"
-        headings = check_links.extract_headings(content)
+        headings = extract_headings(content)
         # Should strip special chars
         assert len(headings) > 0
 
@@ -289,7 +296,7 @@ class TestMainFunctionEdgeCases:
 
         # Use real file operations instead of mocks
         content = md_file.read_text()
-        internal, external, file_refs = check_links.extract_links(content, md_file)
+        internal, external, file_refs = extract_links(content, md_file)
 
         # Should find the internal link
         assert len(internal) == 1
@@ -307,14 +314,14 @@ class TestMainFunctionEdgeCases:
         )
 
         content = md_file.read_text()
-        internal, external, file_refs = check_links.extract_links(content, md_file)
+        internal, external, file_refs = extract_links(content, md_file)
 
         # Should find the file reference
         assert len(file_refs) == 1
         assert file_refs[0]["target"] == "nonexistent_file.md"
 
         # Check file reference - should fail
-        result, msg = check_links.check_file_reference("nonexistent_file.md", md_file, tmp_path)
+        result, msg = check_file_reference("nonexistent_file.md", md_file, tmp_path)
         assert result is False
 
 
@@ -326,7 +333,7 @@ class TestExtractLinksEdgeCases:
         md_file = tmp_path / "test.md"
         content = "[Email](mailto:test@example.com)"
 
-        internal, external, file_refs = check_links.extract_links(content, md_file)
+        internal, external, file_refs = extract_links(content, md_file)
 
         assert len(external) == 1
         assert external[0]["target"] == "mailto:test@example.com"
@@ -336,7 +343,7 @@ class TestExtractLinksEdgeCases:
         md_file = tmp_path / "test.md"
         content = "[Section](other.md#section)"
 
-        internal, external, file_refs = check_links.extract_links(content, md_file)
+        internal, external, file_refs = extract_links(content, md_file)
 
         assert len(file_refs) == 1
         assert file_refs[0]["target"] == "other.md#section"
@@ -346,7 +353,7 @@ class TestExtractLinksEdgeCases:
         md_file = tmp_path / "test.md"
         content = "[Old Site](http://example.com)"
 
-        internal, external, file_refs = check_links.extract_links(content, md_file)
+        internal, external, file_refs = extract_links(content, md_file)
 
         assert len(external) == 1
         assert external[0]["target"] == "http://example.com"
@@ -367,7 +374,7 @@ class TestDiscoverMarkdownFilesLinkAuditAdditional:
         output.mkdir()
         (output / "generated.md").write_text("# Generated")
 
-        files = check_links.discover_markdown_files(tmp_path, scope="link_audit")
+        files = discover_markdown_files(tmp_path, scope="link_audit")
 
         # Should find docs/doc.md but not output/generated.md
         file_names = [f.name for f in files]
@@ -384,7 +391,7 @@ class TestDiscoverMarkdownFilesLinkAuditAdditional:
         htmlcov.mkdir()
         (htmlcov / "coverage.md").write_text("# Coverage")
 
-        files = check_links.discover_markdown_files(tmp_path, scope="link_audit")
+        files = discover_markdown_files(tmp_path, scope="link_audit")
 
         file_names = [f.name for f in files]
         assert "readme.md" in file_names

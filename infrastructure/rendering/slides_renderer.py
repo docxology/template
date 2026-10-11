@@ -4,7 +4,7 @@ Per-format preamble coverage
 ----------------------------
 This renderer drives Pandoc directly with ``-t beamer`` (or ``revealjs``)
 and intentionally **does not** route through
-:func:`infrastructure.rendering._pdf_combined_renderer.inject_latex_preamble`
+:func:`infrastructure.rendering._pdf_combined_preamble.inject_latex_preamble`
 — Beamer ships its own document class, so the manuscript's
 ``geometry`` / ``hyperref`` / ``titlepage`` machinery would clash.
 
@@ -18,7 +18,7 @@ slides clean rendering of ``\\mid``, ``\\ll``, ``\\gg``, etc. without
 inheriting the rest of the combined-PDF preamble.
 
 The combined-PDF gate
-(:func:`infrastructure.rendering._pdf_combined_renderer.prevalidate_for_render`)
+(:func:`infrastructure.rendering._pdf_combined_prevalidate.prevalidate_for_render`)
 is intentionally *not* invoked here because slides typically render a
 single section in isolation and have a different acceptable-citation
 set than the full manuscript.

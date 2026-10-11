@@ -6,58 +6,58 @@
   "bins": {
     "high_entropy": {
       "lower": 0.75,
-      "row_count": 0,
+      "row_count": 5,
       "upper": 10.0
     },
     "low_entropy": {
       "lower": 0.0,
-      "row_count": 5,
+      "row_count": 7,
       "upper": 0.25
     },
     "mid_entropy": {
       "lower": 0.25,
-      "row_count": 7,
+      "row_count": 0,
       "upper": 0.75
     }
   },
   "row_count": 12,
   "rows": [
     {
-      "belief_entropy": 0.32508314364563223,
-      "bin": "mid_entropy",
+      "belief_entropy": 2.8631110016483758e-11,
+      "bin": "low_entropy",
       "distribution": [
-        0.837458,
-        0.162542
+        1.0,
+        0.0
       ],
       "distribution_sum": 1.0,
-      "entropy": 0.44386115808307214,
+      "entropy": -0.0,
       "id": "belief_0",
       "normalized": true,
       "posterior": [
-        0.837458,
-        0.162542
+        1.0,
+        0.0
       ],
-      "posterior_concentration": 0.837458,
+      "posterior_concentration": 1.0,
       "posterior_sum": 1.0,
       "source": "si_tmaze_trace",
       "step": 0
     },
     {
-      "belief_entropy": 0.32508314364563223,
-      "bin": "mid_entropy",
+      "belief_entropy": 2.8631110016483758e-11,
+      "bin": "low_entropy",
       "distribution": [
-        0.837458,
-        0.162542
+        1.0,
+        0.0
       ],
       "distribution_sum": 1.0,
-      "entropy": 0.44386115808307214,
+      "entropy": -0.0,
       "id": "belief_1",
       "normalized": true,
       "posterior": [
-        0.837458,
-        0.162542
+        1.0,
+        0.0
       ],
-      "posterior_concentration": 0.837458,
+      "posterior_concentration": 1.0,
       "posterior_sum": 1.0,
       "source": "si_tmaze_trace",
       "step": 1
@@ -97,41 +97,49 @@
       "source": "output/data/pymdp_policy_posterior_grid.json"
     },
     {
-      "bin": "mid_entropy",
+      "bin": "high_entropy",
       "distribution": [
-        0.7584284501,
-        0.2415715499
+        0.4458993159,
+        0.4458993159,
+        0.0900255249,
+        0.0181758432
       ],
-      "distribution_sum": 1.0,
-      "entropy": 0.5528846613282445,
-      "fallback_reason": "agent.infer_policies unavailable (ValueError); used expected-utility fallback",
+      "distribution_sum": 0.9999999999,
+      "entropy": 1.009865629574548,
+      "fallback_reason": null,
       "id": "policy_2",
       "normalized": true,
       "posterior": [
-        0.7584284501,
-        0.2415715499
+        0.4458993159,
+        0.4458993159,
+        0.0900255249,
+        0.0181758432
       ],
-      "posterior_concentration": 0.7584284501,
-      "posterior_sum": 1.0,
+      "posterior_concentration": 0.4458993159,
+      "posterior_sum": 0.9999999999,
       "source": "output/data/pymdp_policy_posterior_grid.json"
     },
     {
-      "bin": "mid_entropy",
+      "bin": "high_entropy",
       "distribution": [
-        0.5196750309,
-        0.4803249691
+        0.4458993159,
+        0.4458993159,
+        0.0900255249,
+        0.0181758432
       ],
-      "distribution_sum": 1.0,
-      "entropy": 0.6923727669519839,
-      "fallback_reason": "agent.infer_policies unavailable (ValueError); used expected-utility fallback",
+      "distribution_sum": 0.9999999999,
+      "entropy": 1.009865629574548,
+      "fallback_reason": null,
       "id": "policy_3",
       "normalized": true,
       "posterior": [
-        0.5196750309,
-        0.4803249691
+        0.4458993159,
+        0.4458993159,
+        0.0900255249,
+        0.0181758432
       ],
-      "posterior_concentration": 0.5196750309,
-      "posterior_sum": 1.0,
+      "posterior_concentration": 0.4458993159,
+      "posterior_sum": 0.9999999999,
       "source": "output/data/pymdp_policy_posterior_grid.json"
     },
     {
@@ -186,60 +194,96 @@
       "source": "output/data/pymdp_policy_posterior_grid.json"
     },
     {
-      "bin": "mid_entropy",
+      "bin": "high_entropy",
       "distribution": [
-        0.7584284501,
-        0.2415715499
+        0.2245785437,
+        0.2245785437,
+        0.2245785437,
+        0.2245785437,
+        0.0453416398,
+        0.0453416398,
+        0.0091543203,
+        0.001848225
       ],
-      "distribution_sum": 1.0,
-      "entropy": 0.5528846613282445,
-      "fallback_reason": "agent.infer_policies unavailable (ValueError); used expected-utility fallback",
+      "distribution_sum": 0.9999999997,
+      "entropy": 1.6767882923730741,
+      "fallback_reason": null,
       "id": "policy_7",
       "normalized": true,
       "posterior": [
-        0.7584284501,
-        0.2415715499
+        0.2245785437,
+        0.2245785437,
+        0.2245785437,
+        0.2245785437,
+        0.0453416398,
+        0.0453416398,
+        0.0091543203,
+        0.001848225
       ],
-      "posterior_concentration": 0.7584284501,
-      "posterior_sum": 1.0,
+      "posterior_concentration": 0.2245785437,
+      "posterior_sum": 0.9999999997,
       "source": "output/data/pymdp_policy_posterior_grid.json"
     },
     {
-      "bin": "mid_entropy",
+      "bin": "high_entropy",
       "distribution": [
-        0.5196750309,
-        0.4803249691
+        0.2245785437,
+        0.2245785437,
+        0.2245785437,
+        0.2245785437,
+        0.0453416398,
+        0.0453416398,
+        0.0091543203,
+        0.001848225
       ],
-      "distribution_sum": 1.0,
-      "entropy": 0.6923727669519839,
-      "fallback_reason": "agent.infer_policies unavailable (ValueError); used expected-utility fallback",
+      "distribution_sum": 0.9999999997,
+      "entropy": 1.6767882923730741,
+      "fallback_reason": null,
       "id": "policy_8",
       "normalized": true,
       "posterior": [
-        0.5196750309,
-        0.4803249691
+        0.2245785437,
+        0.2245785437,
+        0.2245785437,
+        0.2245785437,
+        0.0453416398,
+        0.0453416398,
+        0.0091543203,
+        0.001848225
       ],
-      "posterior_concentration": 0.5196750309,
-      "posterior_sum": 1.0,
+      "posterior_concentration": 0.2245785437,
+      "posterior_sum": 0.9999999997,
       "source": "output/data/pymdp_policy_posterior_grid.json"
     },
     {
-      "bin": "mid_entropy",
+      "bin": "high_entropy",
       "distribution": [
-        0.7584284501,
-        0.2415715499
+        0.2245785437,
+        0.2245785437,
+        0.2245785437,
+        0.2245785437,
+        0.0453416398,
+        0.0453416398,
+        0.0091543203,
+        0.001848225
       ],
-      "distribution_sum": 1.0,
-      "entropy": 0.5528846613282445,
-      "fallback_reason": "agent.infer_policies unavailable (ValueError); used expected-utility fallback",
+      "distribution_sum": 0.9999999997,
+      "entropy": 1.6767882923730741,
+      "fallback_reason": null,
       "id": "policy_9",
       "normalized": true,
       "posterior": [
-        0.7584284501,
-        0.2415715499
+        0.2245785437,
+        0.2245785437,
+        0.2245785437,
+        0.2245785437,
+        0.0453416398,
+        0.0453416398,
+        0.0091543203,
+        0.001848225
       ],
-      "posterior_concentration": 0.7584284501,
-      "posterior_sum": 1.0,
+      "posterior_concentration": 0.2245785437,
+      "posterior_sum": 0.9999999997,
       "source": "output/data/pymdp_policy_posterior_grid.json"
     }
   ],

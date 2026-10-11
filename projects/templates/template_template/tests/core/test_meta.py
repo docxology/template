@@ -230,7 +230,7 @@ class TestResolveTemplateRepoRoot:
     """Tests for ``resolve_template_repo_root``."""
 
     def test_resolves_from_project_dir(self):
-        root = resolve_template_repo_root(PROJECT_DIR)
+        root = resolve_template_repo_root(REPO_ROOT / "projects/templates/template_template")
         assert (root / "infrastructure").is_dir()
         assert root == REPO_ROOT
 

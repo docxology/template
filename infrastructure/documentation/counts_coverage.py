@@ -50,10 +50,12 @@ from infrastructure.documentation._coverage_workspace import (
     _validated_public_exemplar_path as _validated_public_exemplar_path,
 )
 
+from infrastructure.documentation._coverage_snapshot_output import CoverageSnapshotOutput
+
 COVERAGE_PROVENANCE_RELATIVE_PATH = Path("docs/_generated/coverage_snapshot.json")
 COVERAGE_PROVENANCE_SCHEMA_VERSION = 5
 COVERAGE_SOURCE_INVENTORY_MODE = "tracked-and-nonignored-coverage-inputs-v3"
-EXEMPLAR_SNAPSHOT_DATE = "2026-09-11"
+EXEMPLAR_SNAPSHOT_DATE = "2026-10-07"
 COVERAGE_MEASUREMENT_TIMEOUT_SECONDS = 1800
 _ACTIVE_COVERAGE_PROJECT = "template_active_inference"
 
@@ -155,31 +157,31 @@ class ExemplarSnapshot:
 
 
 EXEMPLAR_SNAPSHOT: tuple[ExemplarSnapshot, ...] = (
-    ExemplarSnapshot("template_active_inference", "91.88 %"),
-    ExemplarSnapshot("template_advanced_literature_review", "91.96 %"),
-    ExemplarSnapshot("template_autopoiesis", "96.88 %"),
-    ExemplarSnapshot("template_autoresearch_project", "96.33 %"),
-    ExemplarSnapshot("template_autoscientists", "97.16 %"),
+    ExemplarSnapshot("template_active_inference", "91.36 %"),
+    ExemplarSnapshot("template_advanced_literature_review", "94.30 %"),
+    ExemplarSnapshot("template_autopoiesis", "94.75 %"),
+    ExemplarSnapshot("template_autoresearch_project", "96.37 %"),
+    ExemplarSnapshot("template_autoscientists", "92.66 %"),
     ExemplarSnapshot("template_code_project", "95.28 %"),
     ExemplarSnapshot("template_data_descriptor", "96.13 %"),
-    ExemplarSnapshot("template_eda_notebook", "90.03 %"),
+    ExemplarSnapshot("template_eda_notebook", "91.01 %"),
     ExemplarSnapshot("template_experiment_tree", "91.85 %"),
-    ExemplarSnapshot("template_formal", "94.50 %"),
-    ExemplarSnapshot("template_gold_refinement", "92.19 %"),
-    ExemplarSnapshot("template_literature_meta_analysis", "95.92 %"),
+    ExemplarSnapshot("template_formal", "90.41 %"),
+    ExemplarSnapshot("template_gold_refinement", "91.59 %"),
+    ExemplarSnapshot("template_literature_meta_analysis", "95.62 %"),
     ExemplarSnapshot("template_madlib", "99.11 %"),
     ExemplarSnapshot("template_methods_paper", "99.00 %"),
     ExemplarSnapshot("template_newspaper", "99.25 %"),
-    ExemplarSnapshot("template_pitch_deck", "97.27 %"),
-    ExemplarSnapshot("template_pools_rules_tools", "94.73 %"),
-    ExemplarSnapshot("template_prose_project", "95.87 %"),
+    ExemplarSnapshot("template_pitch_deck", "96.42 %"),
+    ExemplarSnapshot("template_pools_rules_tools", "94.68 %"),
+    ExemplarSnapshot("template_prose_project", "91.67 %"),
     ExemplarSnapshot("template_redacted_report", "97.03 %"),
-    ExemplarSnapshot("template_registered_report", "94.35 %"),
-    ExemplarSnapshot("template_search_project", "96.37 %"),
-    ExemplarSnapshot("template_sia", "94.39 %"),
+    ExemplarSnapshot("template_registered_report", "93.85 %"),
+    ExemplarSnapshot("template_search_project", "91.95 %"),
+    ExemplarSnapshot("template_sia", "92.48 %"),
     ExemplarSnapshot("template_storybook", "95.38 %"),
-    ExemplarSnapshot("template_template", "97.56 %"),
-    ExemplarSnapshot("template_textbook", "96.36 %"),
+    ExemplarSnapshot("template_template", "97.07 %"),
+    ExemplarSnapshot("template_textbook", "96.01 %"),
 )
 
 
@@ -191,20 +193,19 @@ def _coverage_measurement_command(
     """Build the bounded release-profile pytest command for one exemplar."""
     environment_project = project_dir if environment_project_dir is None else environment_project_dir
     override = COVERAGE_MEASUREMENT_POLICY_OVERRIDES.get(environment_project.name)
+    prefix = _coverage_run_prefix(project_dir, environment_project)
+    python = str(environment_project / ".venv/bin/python")
     if override is not None:
-        command = ["uv", "run", "--locked"]
-        if environment_project != project_dir:
-            command.extend(["--project", str(environment_project)])
-        command.extend(["--directory", str(project_dir), *override.uv_run_args])
-        return command
+        arguments = list(override.uv_run_args)
+        arguments[arguments.index("python")] = python
+        return [*prefix, *arguments]
 
     profile = resolve_test_profile("release")
     marker_expression = build_profile_marker_expression(profile)
     command = [
-        "uv",
-        "run",
-        "--directory",
-        str(project_dir),
+        *prefix,
+        python,
+        "-m",
         "pytest",
         "tests/",
         "--cov=src",
@@ -223,29 +224,31 @@ def _coverage_report_command(
 ) -> list[str]:
     """Build the coverage-report command for one measurement workspace."""
     environment_project = project_dir if environment_project_dir is None else environment_project_dir
-    if environment_project.name in COVERAGE_MEASUREMENT_POLICY_OVERRIDES:
-        return [
-            "uv",
-            "run",
-            "--locked",
-            "--project",
-            str(environment_project),
-            "--directory",
-            str(project_dir),
-            "--extra",
-            "dev",
-            "coverage",
-            "report",
-            "--precision=2",
-        ]
     return [
-        "uv",
-        "run",
-        "--directory",
-        str(project_dir),
+        *_coverage_run_prefix(project_dir, environment_project),
+        str(environment_project / ".venv/bin/python"),
+        "-m",
         "coverage",
         "report",
         "--precision=2",
+    ]
+
+
+def _coverage_run_prefix(project_dir: Path, environment_project: Path) -> list[str]:
+    """Select the explicitly prepared own environment without sync or downloads."""
+    return [
+        "uv",
+        "run",
+        "--locked",
+        "--no-sync",
+        "--offline",
+        "--no-python-downloads",
+        "--python",
+        str(environment_project / ".venv/bin/python"),
+        "--project",
+        str(environment_project),
+        "--directory",
+        str(project_dir),
     ]
 
 
@@ -339,11 +342,16 @@ def _coverage_measurement_environment(data_file: Path) -> dict[str, str]:
             "TEMPLATE_ACTIVE_INFERENCE_ALLOW_GATE_REBUILD",
             "UV_FROZEN",
             "UV_NO_SYNC",
+            "UV_PROJECT_ENVIRONMENT",
+            "UV_PYTHON",
+            "UV_ACTIVE",
+            "VIRTUAL_ENV",
         } or inherited_opt_in.startswith(_COVERAGE_GIT_ENVIRONMENT_PREFIXES):
             env.pop(inherited_opt_in, None)
     env["GIT_CONFIG_GLOBAL"] = os.devnull
     env["GIT_CONFIG_NOSYSTEM"] = "1"
     env["GIT_CONFIG_SYSTEM"] = os.devnull
+    env["GIT_NO_REPLACE_OBJECTS"] = "1"
     env["COVERAGE_FILE"] = str(data_file)
     return env
 
@@ -366,6 +374,12 @@ def measure_exemplar_coverage(repo_root: Path, name: str) -> str:
     canonical_project_dir = repo_root.resolve() / "projects" / "templates" / name
     if not canonical_project_dir.is_dir():
         raise RuntimeError(f"exemplar not checked out: {name}")
+    environment = canonical_project_dir / ".venv"
+    python = environment / "bin/python"
+    if not python.is_file() or not os.access(python, os.X_OK) or not (environment / "pyvenv.cfg").is_file():
+        raise RuntimeError(
+            f"prepared own Python environment is required for {name}; run locked setup before measurement"
+        )
     with _coverage_measurement_workspace(repo_root, name) as (environment_project, measurement_project):
         data_file = _fresh_coverage_measurement_data_file(measurement_project, name)
         env = _coverage_measurement_environment(data_file)
@@ -411,8 +425,18 @@ def verify_exemplar_coverage_result(
     repo_root: Path,
     *,
     rewrite: bool = False,
+    snapshot_output: Path | None = None,
 ) -> CoverageVerificationResult:
-    """Re-measure every exemplar and return a fail-closed structured result."""
+    """Re-measure every exemplar; write only an explicitly admitted DATA copy."""
+    if rewrite and snapshot_output is None:
+        raise ValueError("--verify-coverage --write requires --coverage-snapshot-output with a retained DATA copy")
+    if not rewrite and snapshot_output is not None:
+        raise ValueError("--coverage-snapshot-output requires --verify-coverage --write")
+    admitted_output = (
+        CoverageSnapshotOutput.admit(repo_root, snapshot_output, Path(__file__))
+        if snapshot_output is not None
+        else None
+    )
     measured: dict[str, str] = {}
     failures: list[str] = []
     for row in EXEMPLAR_SNAPSHOT:
@@ -425,6 +449,7 @@ def verify_exemplar_coverage_result(
         measured,
         failures,
         rewrite=rewrite,
+        snapshot_output=admitted_output,
     )
 
 
@@ -434,9 +459,11 @@ def _finalize_exemplar_coverage_result(
     *,
     rewrite: bool,
     snapshot: tuple[ExemplarSnapshot, ...] = EXEMPLAR_SNAPSHOT,
-    source_path: Path | None = None,
+    snapshot_output: CoverageSnapshotOutput | None = None,
 ) -> CoverageVerificationResult:
-    """Compare measurements and publish only a complete snapshot refresh."""
+    """Compare measurements and publish only a complete retained DATA refresh."""
+    if rewrite and snapshot_output is None:
+        raise ValueError("coverage snapshot rewrite requires an admitted retained DATA output")
     expected_names = {row.name for row in snapshot}
     measured_names = set(measured)
     effective_failures = list(failures)
@@ -465,8 +492,10 @@ def _finalize_exemplar_coverage_result(
     measurement_complete = not effective_failures and measured_names == expected_names
     snapshot_rewritten = rewrite and measurement_complete
     if snapshot_rewritten:
-        _rewrite_exemplar_snapshot(measured, source_path)
-        lines.append(f"\nrewrote EXEMPLAR_SNAPSHOT with {len(measured)} measured values")
+        assert snapshot_output is not None
+        _rewrite_exemplar_snapshot(measured, snapshot_output)
+        lines.append(f"\nwrote EXEMPLAR_SNAPSHOT DATA with {len(measured)} measured values: {snapshot_output.path}")
+        lines.append("review and apply the literal delta only after terminal Source/Code/wheel closure")
     elif rewrite and measured:
         lines.append("\nEXEMPLAR_SNAPSHOT not rewritten because the measurement set was incomplete")
     for failure in effective_failures:
@@ -483,16 +512,19 @@ def _finalize_exemplar_coverage_result(
     )
 
 
-def verify_exemplar_coverage(repo_root: Path, *, rewrite: bool = False) -> tuple[bool, str]:
+def verify_exemplar_coverage(
+    repo_root: Path, *, rewrite: bool = False, snapshot_output: Path | None = None
+) -> tuple[bool, str]:
     """Re-measure coverage while preserving the historical tuple interface."""
-    result = verify_exemplar_coverage_result(repo_root, rewrite=rewrite)
+    result = verify_exemplar_coverage_result(repo_root, rewrite=rewrite, snapshot_output=snapshot_output)
     return result.all_match, result.report
 
 
-def _rewrite_exemplar_snapshot(measured: dict[str, str], source_path: Path | None = None) -> None:
-    """Rewrite an ``EXEMPLAR_SNAPSHOT`` tuple with measured percentages."""
-    source_path = source_path or Path(__file__)
-    text = source_path.read_text(encoding="utf-8")
+def _rewrite_exemplar_snapshot(measured: dict[str, str], snapshot_output: CoverageSnapshotOutput | None = None) -> None:
+    """Use the existing literal rewrite on an admitted DATA copy only."""
+    if not isinstance(snapshot_output, CoverageSnapshotOutput):
+        raise ValueError("coverage snapshot rewrite requires an admitted retained DATA output")
+    text = snapshot_output.original_text()
 
     def _replace(match: re.Match[str]) -> str:
         name = match.group("name")
@@ -505,14 +537,19 @@ def _rewrite_exemplar_snapshot(measured: dict[str, str], source_path: Path | Non
         text,
     )
     if updated != text:
-        source_path.write_text(updated, encoding="utf-8")
+        snapshot_output.write_text(updated)
 
 
 def exemplar_source_hash(repo_root: Path, name: str) -> str:
     """Hash tracked and non-ignored project inputs that can affect coverage."""
+    return _hash_exemplar_inventory(repo_root, name)
+
+
+def _hash_exemplar_inventory(repo_root: Path, name: str, inventory: tuple[str, ...] | None = None) -> str:
+    """Hash one project using an admitted, invocation-local Git inventory."""
     project_root = repo_root / "projects" / "templates" / name
     digest = hashlib.sha256()
-    for logical_path, physical_path in _exemplar_source_files(repo_root, project_root):
+    for logical_path, physical_path in _exemplar_source_files(repo_root, project_root, inventory):
         if physical_path.is_symlink():
             target = _validated_coverage_input_symlink_target(repo_root, physical_path)
             digest.update(logical_path.relative_to(project_root).as_posix().encode("utf-8"))
@@ -545,17 +582,17 @@ def exemplar_source_hash(repo_root: Path, name: str) -> str:
     return digest.hexdigest()
 
 
-def _exemplar_source_files(repo_root: Path, project_root: Path) -> list[tuple[Path, Path]]:
-    """Return logical/physical project files for the coverage-input inventory."""
-    relative_root = project_root.relative_to(repo_root).as_posix()
+def _coverage_source_inventory(repo_root: Path, relative_root: str | tuple[str, ...]) -> tuple[str, ...]:
+    """Admit both complete Git inventories once for one source-selection scope."""
+    selected = (relative_root,) if isinstance(relative_root, str) else relative_root
     tracked = run_with_policy(
-        ["git", "ls-files", "-z", "--", relative_root],
+        ["git", "ls-files", "-z", "--", *selected],
         cwd=repo_root,
         env=_coverage_git_environment(),
         policy=_coverage_process_policy("coverage-source-inventory", 30),
     )
     untracked = run_with_policy(
-        ["git", "ls-files", "-z", "--others", "--exclude-standard", "--", relative_root],
+        ["git", "ls-files", "-z", "--others", "--exclude-standard", "--", *selected],
         cwd=repo_root,
         env=_coverage_git_environment(),
         policy=_coverage_process_policy("coverage-source-inventory", 30),
@@ -569,11 +606,24 @@ def _exemplar_source_files(repo_root: Path, project_root: Path) -> list[tuple[Pa
         or untracked.command_error
     ):
         raise RuntimeError("coverage input inventory requires successful Git tracked/nonignored queries")
-    relative_paths = sorted(
-        {
-            *_nul_delimited_git_paths(tracked.stdout, inventory="tracked coverage inputs"),
-            *_nul_delimited_git_paths(untracked.stdout, inventory="nonignored coverage inputs"),
-        }
+    return tuple(
+        sorted(
+            {
+                *_nul_delimited_git_paths(tracked.stdout, inventory="tracked coverage inputs"),
+                *_nul_delimited_git_paths(untracked.stdout, inventory="nonignored coverage inputs"),
+            }
+        )
+    )
+
+
+def _exemplar_source_files(
+    repo_root: Path, project_root: Path, inventory: tuple[str, ...] | None = None
+) -> list[tuple[Path, Path]]:
+    """Return logical/physical project files without repeating an admitted query."""
+    relative_paths = (
+        inventory
+        if inventory is not None
+        else _coverage_source_inventory(repo_root, project_root.relative_to(repo_root).as_posix())
     )
     candidates = [(repo_root / relative, repo_root / relative) for relative in relative_paths]
     return [
@@ -616,33 +666,12 @@ def _tracked_symlink_children(repo_root: Path, logical_path: Path, target_root: 
     """Return inventoried regular files reached through an in-repository symlink."""
     repo_root = repo_root.resolve()
     target_rel = target_root.relative_to(repo_root).as_posix()
-    tracked = run_with_policy(
-        ["git", "ls-files", "-z", "--", target_rel],
-        cwd=repo_root,
-        env=_coverage_git_environment(),
-        policy=_coverage_process_policy("coverage-source-inventory", 30),
-    )
-    untracked = run_with_policy(
-        ["git", "ls-files", "-z", "--others", "--exclude-standard", "--", target_rel],
-        cwd=repo_root,
-        env=_coverage_git_environment(),
-        policy=_coverage_process_policy("coverage-source-inventory", 30),
-    )
-    if (
-        tracked.timed_out
-        or untracked.timed_out
-        or tracked.returncode != 0
-        or untracked.returncode != 0
-        or tracked.command_error
-        or untracked.command_error
-    ):
-        raise RuntimeError("linked coverage input inventory requires successful Git tracked/nonignored queries")
-    relatives = sorted(
-        {
-            *_nul_delimited_git_paths(tracked.stdout, inventory="tracked linked coverage inputs"),
-            *_nul_delimited_git_paths(untracked.stdout, inventory="nonignored linked coverage inputs"),
-        }
-    )
+    try:
+        relatives = _coverage_source_inventory(repo_root, target_rel)
+    except RuntimeError as exc:
+        raise RuntimeError(
+            "linked coverage input inventory requires successful Git tracked/nonignored queries"
+        ) from exc
     children: list[tuple[Path, Path]] = []
     for relative in relatives:
         physical = repo_root / relative
@@ -680,7 +709,10 @@ def build_coverage_provenance(repo_root: Path) -> dict[str, object]:
     )
     if not source_revision:
         raise RuntimeError("could not resolve source commit: empty revision")
-    source_hashes = {row.name: exemplar_source_hash(repo_root, row.name) for row in EXEMPLAR_SNAPSHOT}
+    inventory = _coverage_source_inventory(
+        repo_root, tuple(f"projects/templates/{row.name}" for row in EXEMPLAR_SNAPSHOT)
+    )
+    source_hashes = {row.name: _hash_exemplar_inventory(repo_root, row.name, inventory) for row in EXEMPLAR_SNAPSHOT}
     measurement_support = {_ACTIVE_COVERAGE_PROJECT: _coverage_support_identity(repo_root)}
     return {
         "schema_version": COVERAGE_PROVENANCE_SCHEMA_VERSION,
@@ -745,13 +777,16 @@ def validate_coverage_provenance(repo_root: Path) -> None:
     expected_measurement_support = {_ACTIVE_COVERAGE_PROJECT: _coverage_support_identity(repo_root)}
     if measurement_support != expected_measurement_support:
         raise RuntimeError("coverage provenance measurement-support identity is stale or malformed")
+    inventory = _coverage_source_inventory(
+        repo_root, tuple(f"projects/templates/{row.name}" for row in EXEMPLAR_SNAPSHOT)
+    )
     for row in EXEMPLAR_SNAPSHOT:
         record = projects.get(row.name)
         if not isinstance(record, dict) or record.get("coverage_pct") != row.coverage_pct:
             raise RuntimeError(f"coverage provenance percentage mismatch: {row.name}")
         if record.get("source_hash") != source_hashes.get(row.name):
             raise RuntimeError(f"coverage provenance source-tree identity disagrees with project row: {row.name}")
-        if record.get("source_hash") != exemplar_source_hash(repo_root, row.name):
+        if record.get("source_hash") != _hash_exemplar_inventory(repo_root, row.name, inventory):
             raise RuntimeError(
                 f"stale coverage snapshot for {row.name}: source hash changed; "
                 "rerun its coverage gate, then refresh coverage provenance"

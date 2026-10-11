@@ -6,7 +6,7 @@
 ## Publication identity
 
 - Standalone repository: [docxology/template_autopoiesis](https://github.com/docxology/template_autopoiesis)
-- Config version: `1.0.1`
+- Intended / published version: `2.0.0 pending; last published 1.0.1`
 - Stable concept DOI: [10.5281/zenodo.21227869](https://doi.org/10.5281/zenodo.21227869)
 - Latest deposited version DOI: [10.5281/zenodo.21229620](https://zenodo.org/records/21229620)
 - Additional declared locations: [ipfs_pinata](https://gateway.pinata.cloud/ipfs/QmanoQUGKKFeYFtd5HRpB4ysE9jVxbzvaWpqgpWu5rRi8V), [osf](https://osf.io/ksmzp/)
@@ -31,7 +31,8 @@ When `materialize()` generates a child project, the following are vendored from 
 | `primitives/__init__.py` | `src/template_autopoiesis/primitives/__init__.py` | `primitives/__init__.py` |
 | `primitives/base.py` | `src/template_autopoiesis/primitives/base.py` | `primitives/base.py` |
 | `primitives/{domain}.py` | `src/template_autopoiesis/primitives/{domain}.py` | `primitives/{domain}.py` |
-| `figures.py` | `src/figures.py` | `figures.py` |
+| Domain oracle tests | `tests/primitives/test_primitives_{domain}.py` | `tests/test_primitives.py` |
+| Numerical analysis entrypoint | `src/template_autopoiesis/manuscript/emit_templates.py` | `analysis.py` |
 
 The child project does **not** require the parent `src/` at runtime — it runs entirely from its vendored sources.
 
@@ -50,13 +51,20 @@ Optional infrastructure modules (logging, glossary_gen, figure_manager, etc.) ar
 ## Running standalone (outside repo)
 
 ```bash
-# From the template_autopoiesis project directory:
-pip install numpy matplotlib pyyaml qrcode pillow
-pytest tests/ -q  # noqa: docs-lint — standalone pip/venv workflow, no uv-managed interpreter here
+# Python 3.12–3.14; from the standalone project directory:
+uv sync --extra dev
+uv run pytest tests/primitives tests/core/test_grammar_and_expand.py tests/gates/test_materialize.py --no-cov -q
 
 # To generate a child project:
-python scripts/autopoiesis.py materialize --out-root /tmp/children
+uv run python scripts/autopoiesis.py materialize --out-root /tmp/children
 ```
+
+The full selected-child execution capability requires the bound platform 4.0.1
+package or checkout for shared process supervision. Without it,
+`realize_archetypes.py` and `realize_child_full.py` preserve a blocked receipt and
+exit 75. Pure standalone generation remains available. Generated children declare
+their own numerical dependencies and `dev` extra for pytest/coverage, and do not
+import the parent platform during their standalone tests or analysis.
 
 ---
 
@@ -67,3 +75,4 @@ python scripts/autopoiesis.py materialize --out-root /tmp/children
 - **Multi-file vendor deps** are not supported — single-file stubs only
 - **Grammar config** must be at `manuscript/config.yaml` — path is not configurable at CLI level
 - **Infrastructure deps** (logging, glossary_gen, etc.) will be stubs if infrastructure tree is absent
+- **Current child execution exports** stay under ignored `output/.pipeline/child_realization/exports/`; historical `output/children/` evidence is preserved

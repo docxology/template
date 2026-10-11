@@ -9,6 +9,8 @@ from typing import Any
 
 from infrastructure.core.logging.constants import BANNER_WIDTH
 from infrastructure.core.logging.utils import get_logger
+from infrastructure.core.files.secure_write import read_text_confined
+from infrastructure.reporting.pipeline_io import _atomic_write_text
 
 logger = get_logger(__name__)
 
@@ -21,9 +23,6 @@ def _tally_log_level_counts(log_file: Path) -> dict[str, Any]:
         OSError: If the file cannot be read.
         UnicodeDecodeError: If the file contains invalid text.
     """
-    if not log_file.exists():
-        raise FileNotFoundError(f"Log file not found: {log_file}")
-
     stats: dict[str, Any] = {
         "counts": {"debug": 0, "info": 0, "warning": 0, "error": 0, "critical": 0},
         "total_lines": 0,
@@ -31,30 +30,28 @@ def _tally_log_level_counts(log_file: Path) -> dict[str, Any]:
         "warnings": [],
     }
 
-    with open(log_file, "r", encoding="utf-8") as f:
-        for line in f:
-            stats["total_lines"] += 1
-            line_lower = line.lower()
+    for line in read_text_confined(log_file.absolute().parent, log_file.absolute()).splitlines():
+        stats["total_lines"] += 1
+        line_lower = line.lower()
 
-            # Check critical before error: a critical line also contains "error"
-            # in many logging formats, so checking error first would misclassify it.
-            if "critical" in line_lower:
-                stats["counts"]["critical"] += 1
-                if len(stats["errors"]) < 10:
-                    stats["errors"].append(line.strip())
-            elif "error" in line_lower:
-                stats["counts"]["error"] += 1
-                if len(stats["errors"]) < 10:
-                    stats["errors"].append(line.strip())
-            elif "warning" in line_lower or "warn" in line_lower:
-                stats["counts"]["warning"] += 1
-                if len(stats["warnings"]) < 10:
-                    stats["warnings"].append(line.strip())
-            elif "info" in line_lower:
-                stats["counts"]["info"] += 1
-            elif "debug" in line_lower:
-                stats["counts"]["debug"] += 1
-
+        # Check critical before error: a critical line also contains "error"
+        # in many logging formats, so checking error first would misclassify it.
+        if "critical" in line_lower:
+            stats["counts"]["critical"] += 1
+            if len(stats["errors"]) < 10:
+                stats["errors"].append(line.strip())
+        elif "error" in line_lower:
+            stats["counts"]["error"] += 1
+            if len(stats["errors"]) < 10:
+                stats["errors"].append(line.strip())
+        elif "warning" in line_lower or "warn" in line_lower:
+            stats["counts"]["warning"] += 1
+            if len(stats["warnings"]) < 10:
+                stats["warnings"].append(line.strip())
+        elif "info" in line_lower:
+            stats["counts"]["info"] += 1
+        elif "debug" in line_lower:
+            stats["counts"]["debug"] += 1
     return stats
 
 
@@ -107,8 +104,6 @@ def generate_log_summary(log_file: Path, output_file: Path | None = None) -> str
     summary_text = "\n".join(lines)
 
     if output_file:
-        output_file.parent.mkdir(parents=True, exist_ok=True)
-        with open(output_file, "w", encoding="utf-8") as f:
-            f.write(summary_text)
+        _atomic_write_text(output_file, summary_text)
 
     return summary_text

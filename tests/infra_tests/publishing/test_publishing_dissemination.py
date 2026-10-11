@@ -14,8 +14,8 @@ class TestDissemination:
 
     def test_publish_to_zenodo(self, tmp_path, zenodo_test_server):
         """Test the Zenodo client workflow against a real local HTTP server."""
-        from infrastructure.publishing.api import ZenodoClient
-        from infrastructure.publishing.api import ZenodoConfig
+        from infrastructure.publishing.zenodo import ZenodoClient
+        from infrastructure.publishing.zenodo import ZenodoConfig
 
         # Create test PDF file
         file_path = tmp_path / "paper.pdf"

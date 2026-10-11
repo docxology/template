@@ -58,33 +58,34 @@ def _suppress_stdout_fd() -> Iterator[None]:
 
 def validate_pdf_command(args: argparse.Namespace) -> None:
     """Handle PDF validation."""
-    pdf_path = Path(args.pdf_path)
+    from infrastructure.validation.content.pdf_discovery import discover_combined_pdf
+    from infrastructure.validation.content.pdf_reporting import print_validation_report
 
-    if not pdf_path.exists():
-        logger.error(f"PDF not found: {pdf_path}")
-        raise SystemExit(1)
+    if args.preview_words <= 0:
+        logger.error("--preview-words must be positive")
+        raise SystemExit(2)
+    project = getattr(args, "project", None)
+    repo_root = Path(getattr(args, "repo_root", "."))
+    if args.pdf_path and project:
+        logger.error("Select an explicit PDF path or --project")
+        raise SystemExit(2)
+    try:
+        pdf_path = Path(args.pdf_path) if args.pdf_path else discover_combined_pdf(repo_root, project)
+    except ValueError as exc:
+        logger.error(str(exc))
+        raise SystemExit(2) from exc
+
+    if pdf_path is None or not pdf_path.is_file():
+        logger.error(f"PDF file not found: {pdf_path}; pass a PDF path or --project")
+        raise SystemExit(2)
 
     logger.info(f"Validating PDF: {pdf_path}")
-    report = validate_pdf_rendering(pdf_path, n_words=args.preview_words)
-
-    logger.info("\nValidation Results:")
-    logger.info(f"Total issues found: {report['issues']['total_issues']}")
-
-    # report['issues'] values are integers (counts), not lists
-    unresolved_refs_count = report["issues"].get("unresolved_references", 0)
-    if unresolved_refs_count > 0:
-        logger.info(f"Unresolved references: {unresolved_refs_count}")
-        if args.verbose:
-            logger.info("  (See PDF for details)")
-
-    missing_citations_count = report["issues"].get("missing_citations", 0)
-    if missing_citations_count > 0:
-        logger.info(f"Missing citations: {missing_citations_count}")
-
-    if args.verbose and report.get("first_words"):
-        words_preview = report["first_words"][:500] if report["first_words"] else ""
-        if words_preview:
-            logger.info(f"\nFirst words:\n{words_preview}")
+    try:
+        report = validate_pdf_rendering(pdf_path, n_words=args.preview_words)
+    except Exception as exc:
+        logger.error(f"PDF validation failed: {exc}")
+        raise SystemExit(1) from exc
+    print_validation_report(report, verbose=args.verbose)
 
     raise SystemExit(0 if not report["summary"]["has_issues"] else 1)
 
@@ -117,7 +118,7 @@ def validate_prerender_command(args: argparse.Namespace) -> None:
 
     Mirrors the gate that :func:`PDFRenderer.render_combined` runs before
     Pandoc/xelatex (see
-    ``infrastructure/rendering/_pdf_combined_renderer.py::prevalidate_for_render``).
+    ``infrastructure/rendering/_pdf_combined_prevalidate.py::prevalidate_for_render``).
     Useful as a pre-commit check or interactive verification step.
 
     Exits 0 when the manuscript is render-ready, 1 when any pitfall or
@@ -366,7 +367,9 @@ def build_parser() -> argparse.ArgumentParser:
 
     # PDF validation
     pdf_parser = subparsers.add_parser("pdf", help="Validate PDF rendering")
-    pdf_parser.add_argument("pdf_path", help="Path to PDF file")
+    pdf_parser.add_argument("pdf_path", nargs="?", help="Path to PDF file")
+    pdf_parser.add_argument("--project", help="Discover the named project's delivery PDF")
+    pdf_parser.add_argument("--repo-root", default=".")
     pdf_parser.add_argument("--preview-words", type=int, default=200, help="Number of words to preview")
     pdf_parser.add_argument("-v", "--verbose", action="store_true")
     pdf_parser.set_defaults(func=validate_pdf_command)

@@ -11,5 +11,7 @@
   run-bound receipt from the final coverage groups and settled postflight state.
   Those groups use the adapter's pinned interpreter and emit hardened-XML JUnit
   outcomes plus pytest sidecars with real warning and discovery counts.
+- `verification_refresh.py` — in-session fixed-point refresh bookkeeping;
+  persistent reuse still requires the enclosing execution contract.
 - `portable_execution.py` — standalone credential-redacted subprocess boundary;
   timeouts terminate the entire descendant tree, including nested sessions.

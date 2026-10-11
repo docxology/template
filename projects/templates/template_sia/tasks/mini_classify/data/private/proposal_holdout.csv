@@ -1,0 +1,9 @@
+id,feature_0,label
+holdout_0,0.01,negative
+holdout_1,0.25,negative
+holdout_2,0.40,negative
+holdout_3,0.49,negative
+holdout_4,0.51,positive
+holdout_5,0.60,positive
+holdout_6,0.75,positive
+holdout_7,0.99,positive

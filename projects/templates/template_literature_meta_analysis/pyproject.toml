@@ -13,14 +13,16 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "template_literature_meta_analysis"
-version = "0.1.0"
+version = "0.2.0"
 license = {text = "CC-BY-4.0"}
 description = "Generic, idempotent literature meta-analysis template: multi-engine dispatch, de-duplication, full-text, embeddings, and bibliometrics for any search term"
 authors = [
     {name = "Daniel Ari Friedman", email = "daniel@activeinference.institute"},
 ]
-requires-python = ">=3.10"
+requires-python = ">=3.12"
 dependencies = [
+    "research-project-template==4.0.1",
+    "pypdf>=6.16.1",
     "numpy>=1.24.0",
     "scipy>=1.10.0",
     "matplotlib>=3.7.0",
@@ -37,6 +39,7 @@ dependencies = [
 
 [project.optional-dependencies]
 dev = [
+    "pytest-timeout>=2.4.0",
     "pytest>=9.0.3",
     "pytest-cov>=4.1.0",
     "pytest-httpserver>=1.0.8",
@@ -57,7 +60,6 @@ llm = [
 ]
 
 [tool.pytest.ini_options]
-pythonpath = [".", "src"]
 testpaths = ["tests"]
 python_files = ["test_*.py"]
 python_functions = ["test_*"]
@@ -86,3 +88,34 @@ Documentation = "https://github.com/docxology/template_literature_meta_analysis/
 
 [tool.uv]
 # Inherits workspace settings from root pyproject.toml
+
+# Compatibility contract for this independent exemplar release.
+[tool.template]
+platform_version = "4.0.1"
+tested_python_versions = ["3.12", "3.13", "3.14"]
+required_unpaid_capabilities = ["retrieval", "fulltext", "extraction", "local-model", "kg"]
+
+# Checkout resolver only; wheels declare the real platform dependency above.
+[tool.uv.sources]
+research-project-template = { path = "../../..", editable = true }
+
+[tool.setuptools]
+packages = [
+    "template_literature_meta_analysis",
+    "template_literature_meta_analysis.analysis",
+    "template_literature_meta_analysis.deep_research",
+    "template_literature_meta_analysis.knowledge_graph",
+    "template_literature_meta_analysis.literature",
+    "template_literature_meta_analysis.manuscript",
+    "template_literature_meta_analysis.manuscript.variables",
+    "template_literature_meta_analysis.manuscript.variables.extractors",
+    "template_literature_meta_analysis.reproducibility",
+    "template_literature_meta_analysis.visualization",
+    "template_literature_meta_analysis.visualization.advanced",
+]
+
+[tool.setuptools.package-data]
+"template_literature_meta_analysis.deep_research" = ["fixtures/recorded_report.json"]
+
+[tool.setuptools.package-dir]
+template_literature_meta_analysis = "src"

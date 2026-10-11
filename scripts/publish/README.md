@@ -18,6 +18,13 @@ GitHub mirror, real Zenodo DOI, optional mirrors, and archival handoff, start at
 | `sync_standalone_mirrors.py` | Sync public exemplars into their standalone publication repositories (dry-run by default; `--commit` to push) |
 | `export_for_publishing.py` | **Bridge script** — bundle template/ outputs for the docxology/publishing repo |
 
+Standalone installation can explicitly use `--install-projection` to replace
+admitted monorepo provider paths with existing full Git commit pins. Advanced
+also needs `--meta-provider` and `--meta-commit` for the Meta projection committed
+from the same platform revision. Canonical source exports remain exact without
+the flag. See [installation projection](../../docs/guides/standalone-install-projection.md)
+for provenance, verification, and the separate public installation acceptance.
+
 ---
 
 ## Bridge: template/ → docxology/publishing
@@ -49,7 +56,7 @@ template/                          publishing/
 
 ```bash
 # Step 1: render (from template/ root)
-./run.sh --project templates/my_book --pipeline --core-only
+./run.sh --project templates/my_book --pipeline --mode core
 
 # Step 2: export
 uv run python scripts/publish/export_for_publishing.py \
@@ -158,7 +165,7 @@ uv sync --all-groups  # verify dependency resolution
 
 Run the pipeline first:
 ```bash
-./run.sh --project templates/my_book --pipeline --core-only
+./run.sh --project templates/my_book --pipeline --mode core
 ```
 
 Check that `output/pdf/` contains files after the render stage.

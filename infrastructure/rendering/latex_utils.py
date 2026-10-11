@@ -11,6 +11,7 @@ from infrastructure.core.determinism import deterministic_subprocess_env, resolv
 from infrastructure.core.exceptions import CompilationError
 from infrastructure.core.logging.utils import get_logger
 from infrastructure.rendering._pdf_latex_validation import validate_pdf_structure
+from infrastructure.rendering.native_render_custody import native_render_custody
 
 logger = get_logger(__name__)
 
@@ -211,6 +212,36 @@ def ensure_pdf_at(compiled: Path, target: Path) -> Path:
     return target
 
 
+def latex_compile_command(tex_path: Path, out_dir: Path, compiler: str, *, recorder: bool = False) -> list[str]:
+    """Share the actual section writer argv with independently compiled references."""
+    return [
+        compiler,
+        "-interaction=nonstopmode",
+        "-no-shell-escape",
+        *(["-recorder"] if recorder else []),
+        f"-output-directory={out_dir}",
+        str(tex_path),
+    ]
+
+
+def _run_latex_pass(command: list[str], tex_path: Path, timeout: int) -> subprocess.CompletedProcess[str]:
+    """Use genuine native stage custody when present, preserving the ordinary call."""
+    environment = deterministic_subprocess_env(repo_root=tex_path.parent)
+    custody = native_render_custody("native-origin section rendering lacks its actual Source owner")
+    native = (
+        None
+        if custody is None
+        else custody.tex_section_launcher()(
+            command, tex_path, Path(command[-2].removeprefix("-output-directory=")), environment=environment
+        )
+    )
+    if native is not None:
+        return native
+    return subprocess.run(
+        command, capture_output=True, text=True, timeout=timeout, cwd=tex_path.parent, env=environment
+    )
+
+
 def compile_latex(
     tex_file: Path | str,
     output_dir: Path | str | None = None,
@@ -238,13 +269,7 @@ def compile_latex(
     out_dir.mkdir(parents=True, exist_ok=True)
     _clean_stale_aux_files(out_dir, tex_path.stem)
 
-    cmd = [
-        compiler,
-        "-interaction=nonstopmode",
-        "-no-shell-escape",
-        f"-output-directory={out_dir}",
-        str(tex_path),
-    ]
+    cmd = latex_compile_command(tex_path, out_dir, compiler)
 
     logger.info(f"Compiling {tex_path} with {compiler}")
 
@@ -256,14 +281,7 @@ def compile_latex(
             pass_start = time.time()
             logger.debug(f"Pass {i + 1}/{max_passes}...")
 
-            result = subprocess.run(
-                cmd,
-                capture_output=True,
-                text=True,
-                timeout=timeout,
-                cwd=tex_path.parent,  # Run in file directory for imports
-                env=deterministic_subprocess_env(repo_root=tex_path.parent),
-            )
+            result = _run_latex_pass(cmd, tex_path, timeout)
 
             pass_duration = time.time() - pass_start
             logger.debug(f"Pass {i + 1} completed in {pass_duration:.2f}s")
@@ -283,14 +301,7 @@ def compile_latex(
                     if pdf_exists and not pdf_valid:
                         pdf_file_temp.unlink(missing_ok=True)
 
-                    recovery_result = subprocess.run(
-                        cmd,
-                        capture_output=True,
-                        text=True,
-                        timeout=timeout,
-                        cwd=tex_path.parent,
-                        env=deterministic_subprocess_env(repo_root=tex_path.parent),
-                    )
+                    recovery_result = _run_latex_pass(cmd, tex_path, timeout)
                     log_content = log_file.read_text(encoding="utf-8", errors="replace") if log_file.exists() else ""
                     pdf_exists = pdf_file_temp.exists()
                     pdf_valid = validate_pdf_structure(pdf_file_temp) if pdf_exists else False

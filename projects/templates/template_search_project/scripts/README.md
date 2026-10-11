@@ -1,14 +1,18 @@
 # scripts/
 
-Pipeline-facing entry points for this project. Order matters: discovery sorts `*.py` by name, so `run_*` … `s_*` … `y_*` … `z_*` … `zz_*` … `zzz_*`.
+The default core analysis list is declared in `manuscript/config.yaml`, in this order:
 
-- [run_deep_search.py](run_deep_search.py) — multi-keyword deep search (max 100 papers per keyword, see `manuscript/config.yaml`; full enrichment, optional per-paper LLM deep summary). See [the *Deep Search* manuscript section](../manuscript/07_deep_search.md).
-- [run_search_pipeline.py](run_search_pipeline.py) — main (single-query) search pipeline
-- [s_compose_literature_review.py](s_compose_literature_review.py) — composes `S01_literature_review.md` from the deep-search outputs (runs before the manuscript resolver)
-- [y_generate_search_figures.py](y_generate_search_figures.py) — plots
-- [z_generate_manuscript_variables.py](z_generate_manuscript_variables.py) — variables JSON + resolved `output/manuscript/`
-- [zz_generate_review_report.py](zz_generate_review_report.py) — review summary markdown
-- [zzz_build_dashboard.py](zzz_build_dashboard.py) — interactive search-coverage dashboard + plaintext invariants; runs last, writes `output/web/dashboard.html`, `output/data/dashboard_payload.json`, `output/reports/dashboard_*.txt`
-- [review](review) — configurable quality gate (`review_config.yaml`)
+1. [run_search_pipeline.py](run_search_pipeline.py) — configured single-query local search, corpus and generated bibliography
+2. [y_generate_search_figures.py](y_generate_search_figures.py) — numerical coverage figures
+3. [z_generate_manuscript_variables.py](z_generate_manuscript_variables.py) — variables, hydrated manuscript, and extra-citation projection
+4. [zz_generate_review_report.py](zz_generate_review_report.py) — review summary
+5. [zzz_build_dashboard.py](zzz_build_dashboard.py) — dashboard and output invariants
 
-Full table and review notes: [AGENTS.md](AGENTS.md).
+[run_deep_search.py](run_deep_search.py) and [s_compose_literature_review.py](s_compose_literature_review.py)
+are explicit opt-in commands. Composition requires a current producer dependency
+record and writes `output/manuscript/S02_generated_literature_review.md`; authored
+markdown and curated bibliography files remain unchanged. `--output` is an explicit
+direct authoring command. Audited unpaid live acceptance uses the separate
+`_run_unpaid_acceptance.py --mode live` entry point.
+
+[review](review) reads `review_config.yaml`. Details: [AGENTS.md](AGENTS.md).

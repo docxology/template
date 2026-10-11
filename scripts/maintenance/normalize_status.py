@@ -15,7 +15,7 @@ def _identity(subsystem: str) -> tuple[str, str, str]:
     if "pipeline orchestration" in lower:
         return (
             "STATUS-PIPELINE-1",
-            "`./run.sh --pipeline --project template_code_project --core-only --skip-infra`",
+            "`./run.sh --pipeline --project template_code_project --mode core --skip-infra`",
             "manual",
         )
     if "test runner" in lower:

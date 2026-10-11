@@ -2,8 +2,7 @@
 dataclasses and utilities, deterministic grammar expansion, grammar
 definition and parsing, the honesty manifest, and output-path helpers.
 
-These modules are re-exported from ``template_autopoiesis`` for backwards
-compatibility; import them from the package root.
+Import public symbols from their defining modules for explicit source custody.
 """
 
 from .cli import (

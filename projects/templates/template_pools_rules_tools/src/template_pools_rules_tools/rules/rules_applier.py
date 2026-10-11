@@ -3,7 +3,7 @@
 Supports both soft (guideline) and strong (constraint) rules. All functions
 use graceful fallbacks when paths are absent.
 
-Repo-root discovery: 4 levels up from this file.
+Resources resolve from the installed package, standalone export, or canonical public checkout.
 """
 
 from __future__ import annotations
@@ -13,6 +13,7 @@ import pathlib
 
 import yaml
 
+from ..resource_paths import public_resource_root
 from ..tools.type_defs import (
     AllRulesResult,
     RuleSetResult,
@@ -37,17 +38,8 @@ logger = logging.getLogger(__name__)
 # ---------------------------------------------------------------------------
 
 
-def _repo_root() -> pathlib.Path:
-    return pathlib.Path(__file__).resolve().parents[6]
-
-
 def _rules_root() -> pathlib.Path:
-    bundled = (
-        pathlib.Path(__file__).resolve().parents[2] / "_template_resources" / "rules" / "templates"
-    )
-    if bundled.is_dir():
-        return bundled
-    return _repo_root() / "rules" / "templates"
+    return public_resource_root("rules")
 
 
 # Expose for test use (not part of the main public API)

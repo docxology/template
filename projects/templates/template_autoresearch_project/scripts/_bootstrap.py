@@ -6,10 +6,10 @@ import sys
 from pathlib import Path
 
 
-def ensure_project_paths(project_root: Path) -> Path:
+def ensure_project_paths(project_root: Path, *, repo_root: Path | None = None) -> Path:
     """Insert project, src, and repo roots on ``sys.path`` and return repo root."""
     project_root = project_root.resolve()
-    repo_root = project_root.parents[2].resolve()
+    repo_root = (repo_root if repo_root is not None else project_root.parents[2]).resolve()
     for path in (project_root, project_root / "src", repo_root):
         path_text = str(path)
         if path_text not in sys.path:

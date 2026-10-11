@@ -67,9 +67,9 @@ rather than by hand.
 
 - Cite with `[@key]`; multiple citations with `[@a; @b]`.
 - Every `[@key]` MUST resolve in [`references.bib`](references.bib). The valid keys
-  are: `smith2020foundations`, `doe2019methods`, `lee2021systems`,
-  `garcia2022dynamics`, `patel2018models`, `nguyen2023synthesis`, `kim2020data`,
-  `brown2017principles`, `wilson2021analysis`, `taylor2019theory`.
+  are: `box1976science`, `sandve2013ten`, `nyquist1932regeneration`,
+  `lorenz1963deterministic`, `may1976simple`, `wilkinson2016fair`, `shannon1948mathematical`,
+  `turing1937computable`, `wilson2014best`, `taschuk2017ten`.
 - To cite a new source, add the entry to `references.bib` first.
 
 ## Glossary Rules

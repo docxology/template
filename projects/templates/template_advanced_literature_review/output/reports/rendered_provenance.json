@@ -112,7 +112,7 @@
       "rendered_path": "output/manuscript/06_appendix_tooling.md",
       "rendered_sha256": "89d9275db919718e099ee747fcbb10f8aa980ad56d723df02dcb4e7983d3d57f",
       "source_path": "manuscript/06_appendix_tooling.md",
-      "source_sha256": "89d9275db919718e099ee747fcbb10f8aa980ad56d723df02dcb4e7983d3d57f"
+      "source_sha256": "9a51f56f85001eb1fde9f36e05a3b8128d9943862e95063c24efe38996996d8c"
     },
     {
       "rendered_path": "output/manuscript/07_appendix_technical.md",
@@ -142,8 +142,8 @@
   "evidence_files": {
     "artifact_manifest": {
       "path": "output/reports/artifact_manifest.json",
-      "sha256": "1f66634f6472841d595193d4b03052b4fabdccf1d990a1a2bb99a09fe5d8a761",
-      "size_bytes": 30892
+      "sha256": "755b80e6171dd5d5b4a3c5573c02febaa6d9b1bb791cfc536343c20d00a61f3f",
+      "size_bytes": 33417
     },
     "combined_manuscript": {
       "path": "output/web/_combined_manuscript.md",
@@ -157,27 +157,27 @@
     },
     "validation_report": {
       "path": "output/reports/validation_report.json",
-      "sha256": "3f5bffb506f99010af428604d7014d74aaf39acf759703d8d2a65d33956735b9",
-      "size_bytes": 16070
+      "sha256": "874b209c825abc0d2c4ad543f72e28d9b7f60ae9555d68fcff3ed71b1318f615",
+      "size_bytes": 16071
     }
   },
   "evidence_mode": "validated-co-snapshot-fingerprint-bridge",
   "fingerprints": {
     "config": {
-      "file_count": 20,
-      "sha256": "df7540282a917b47c003be2c330f4062c4454141528538750b2a6cc537fcbfcf"
+      "file_count": 21,
+      "sha256": "2dfb68f903ae2c8000307ababee8548d9fdedf7e9995fe57318d03d8dd0dee38"
     },
     "output": {
       "file_count": 101,
       "sha256": "30e5e751ae9de394635ee2792f2e1b444312f5bcdc4d12c56dd5f696929a3784"
     },
     "source": {
-      "file_count": 99,
-      "sha256": "e78d47184987fe7457cbefc3258782cb9cc3068d6fa2ae3b1083a0396b9c32d0"
+      "file_count": 101,
+      "sha256": "7685d424a3021c7326c87aef6394775377dbecfd58866bbbf5befdf094f01a79"
     },
     "stage": {
-      "file_count": 1221,
-      "sha256": "71b358c43c0fa7acf048ba8020902f1fcb5ce82c36eba1e499184c58298db48d"
+      "file_count": 1541,
+      "sha256": "a0e13cf85765de437663aa69d9b08b95311dc1ffb386d6a84b88f74e27517ec0"
     }
   },
   "project": "templates/template_advanced_literature_review",

@@ -17,9 +17,9 @@ from _bootstrap import bootstrap_project
 
 bootstrap_project()
 
-from config import CORPUS_PATH as DEFAULT_CORPUS_PATH, DATA_DIR as DEFAULT_DATA_DIR
-from literature.corpus import Corpus
-from literature.fulltext_assessment import assess_corpus, build_fulltext_inventory
+from template_literature_meta_analysis.config import CORPUS_PATH as DEFAULT_CORPUS_PATH, DATA_DIR as DEFAULT_DATA_DIR
+from template_literature_meta_analysis.literature.corpus import Corpus
+from template_literature_meta_analysis.literature.fulltext_assessment import assess_corpus, build_fulltext_inventory
 
 
 def parse_args() -> argparse.Namespace:

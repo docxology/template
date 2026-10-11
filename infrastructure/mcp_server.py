@@ -41,7 +41,7 @@ import sys
 from pathlib import Path
 from typing import Any, Callable, Literal
 
-from infrastructure.core.pipeline.cli import CORE_ONLY_EXCLUDED_TAGS, DEFAULT_PIPELINE_YAML, stage_rows
+from infrastructure.core.pipeline.cli import pipeline_description
 from infrastructure.skills.discovery import (
     discover_skills,
     skill_descriptors_as_json_serializable,
@@ -103,9 +103,14 @@ def _tool_list_operations(_args: dict[str, Any]) -> dict[str, Any]:
 
 
 def _tool_describe_pipeline(args: dict[str, Any]) -> dict[str, Any]:
-    exclude = set(CORE_ONLY_EXCLUDED_TAGS) if args.get("core_only") else None
-    rows = stage_rows(DEFAULT_PIPELINE_YAML, exclude_tags=exclude)
-    return {"version": 1, "source": DEFAULT_PIPELINE_YAML.as_posix(), "stages": rows}
+    if set(args) - {"mode", "view", "project"}:
+        raise ValueError("Unsupported pipeline-description option")
+    return pipeline_description(
+        repo_root=_repo_root(),
+        mode=args.get("mode", "core"),
+        view=args.get("view", "execution"),
+        project=args.get("project"),
+    )
 
 
 def _tool_list_skills(_args: dict[str, Any]) -> dict[str, Any]:
@@ -190,10 +195,9 @@ _TOOLS: dict[str, tuple[Callable[[dict[str, Any]], dict[str, Any]], str, dict[st
         {
             "type": "object",
             "properties": {
-                "core_only": {
-                    "type": "boolean",
-                    "description": "Exclude LLM-tagged and opt-in publishing/archive stages",
-                }
+                "mode": {"type": "string", "enum": ["core", "live"], "default": "core"},
+                "view": {"type": "string", "enum": ["execution", "declared"], "default": "execution"},
+                "project": {"type": "string"},
             },
             "additionalProperties": False,
         },

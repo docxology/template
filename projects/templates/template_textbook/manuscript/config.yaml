@@ -3,8 +3,8 @@
 # Single source of truth for the book's structure. Everything downstream — the
 # table of contents, chapter auto-numbering, figure generation, lab/question
 # wiring, and manuscript-integrity tests — reads THIS file. To grow the book,
-# add parts and chapters here, then run `scripts/scaffold_chapter.py` to
-# materialise any missing stub files in the correct shape.
+# add units and chapters here, then run `scripts/scaffold_chapter.py` to
+# materialise any missing draft files in the correct shape.
 #
 # SECTIONS:
 #   book:         Bibliographic metadata (title, author, edition, license)
@@ -16,17 +16,17 @@
 #   front_matter: Front-matter files and ordering
 #   rendering:    Chapter/figure/equation auto-numbering
 #   units:        Part order and the chapters inside each part (THE STRUCTURE;
-#                 the key is `units:`, also accepted as `parts:`)
+#                 the live key is `units:`)
 #   appendices:   Labs, question banks, and reference appendices
 # =============================================================================
 
 book:
   title: "The Template Textbook"
-  subtitle: "A Modular, Fillable Scaffold for Book-Length Technical Works"
+  subtitle: "Systems, Models, and Reproducible Research"
   author: "Daniel Ari Friedman"
   orcid: "0000-0001-6232-9096"
   edition: "0.1"
-  version: "0.1.2"  # software/deposit version — matches CITATION.cff and .zenodo.json
+  version: "0.2.0"  # Intended software release; published sidecars retain publication.last_published_version
   year: 2026
   language: "en"
   license: "CC BY 4.0"
@@ -43,6 +43,10 @@ authors:
     corresponding: true
 
 publication:
+  release_status: "unreleased"
+  intended_version: "0.2.0"
+  platform_version: "4.0.1"
+  last_published_version: "0.1.2"
   doi: "10.5281/zenodo.20533125"  # Concept DOI — stable citation
   version_doi: "10.5281/zenodo.20932112" # Latest Zenodo deposit
   version_record: "https://zenodo.org/records/20932112"
@@ -59,7 +63,7 @@ publication:
     software_heritage: "https://archive.softwareheritage.org/browse/origin/?origin_url=https://github.com/docxology/template_textbook"
   # Deposit abstract: this book uses a front_matter/preface structure rather
   # than a 00_abstract.md, so supply the Zenodo description explicitly.
-  zenodo_description: "A modular, fillable scaffold for book-length technical works: a data-driven manuscript (parts/chapters/labs/questions), a tested computational backbone, deterministic figures and Mermaid diagrams, and a content scaffold/validation engine."
+  zenodo_description: "An authored open textbook on systems, models, quantitative reasoning, and reproducible research, with worked mathematics, twelve chapters, labs and solutions, verified primary references, deterministic figures, and a tested computational backbone."
   keywords:
     - "open textbook"
     - "modular manuscript"
@@ -115,11 +119,11 @@ front_matter:
     - file: preface.md
       title: "Preface"
   page_two_quote:
-    text: "“Form follows function—that has been misunderstood. Form and function should be one, joined in a spiritual union.”"
-    attribution: "Frank Lloyd Wright"
+    text: "A model becomes useful when its assumptions, computations, and limits can be inspected."
+    attribution: "The Template Textbook"
   page_two_acknowledgements:
     title: "Acknowledgements"
-    text: "This template textbook is a structural scaffold. Replace this acknowledgement with your own once the chapters are filled."
+    text: "This book draws on openly documented scientific computing practices and verified primary publications. Its numerical scenarios and bundled data are instructional examples; no new empirical study is claimed."
   include_front_matter: true
   include_preface: true
 
@@ -161,7 +165,7 @@ project_config:
 
 # ---------------------------------------------------------------------------
 # UNITS (a.k.a. parts) — the structure. Chapters number sequentially across the
-# whole book. The live key is `units:` (the loader also accepts `parts:`).
+# whole book. The live key is `units:`; old configurations must migrate to it.
 # Add a part: append a block here + a directory under manuscript/.
 # Skip a chapter without deleting it: add `enabled: false` to its entry.
 # ---------------------------------------------------------------------------
@@ -230,7 +234,7 @@ appendices:
 
   reference:
     - file: appendix_authoring_guide.md
-      title: "Appendix A — Authoring Guide: Filling the Stubs"
+      title: "Appendix A — Authoring and Verification"
     - file: appendix_notation.md
       title: "Appendix B — Notation and Symbols"
     - file: appendix_math_review.md

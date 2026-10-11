@@ -16,6 +16,8 @@ from pathlib import Path
 
 from infrastructure.documentation.counts_doc import infrastructure_packages, tracked_infra_python_count
 
+from template_pitch_deck.paths import reference_tracked_paths
+
 
 class InfraIntrospectionError(RuntimeError):
     """Raised when live introspection of ``infrastructure/`` fails.
@@ -32,21 +34,30 @@ def infra_subpackage_python_counts(repo_root: Path) -> list[tuple[str, int]]:
     """Return ``(subpackage_name, tracked_python_file_count)`` for every
     importable ``infrastructure/`` subpackage, sorted by count descending.
 
-    Uses ``git ls-files`` scoped to each subpackage directory — the same
-    tracked-file source `tracked_infra_python_count` uses for the repo-wide
-    total, just partitioned per subpackage instead of summed.
+    A bound DATA lane uses its already admitted original Root index paths;
+    ordinary development retains ``git ls-files`` scoped to each directory.
+    Both use the same membership as ``tracked_infra_python_count`` for the
+    repo-wide total, partitioned per subpackage rather than summed.
     """
+    try:
+        admitted_paths = reference_tracked_paths(repo_root)
+    except ValueError as exc:
+        raise InfraIntrospectionError("Repository locator differs from the admitted source DATA") from exc
     packages = infrastructure_packages(repo_root)
     rows: list[tuple[str, int]] = []
     for package in packages:
         try:
-            tracked = subprocess.run(  # noqa: S603 - fixed argv, repo-local git
-                ["git", "ls-files", f"infrastructure/{package}"],
-                cwd=repo_root,
-                capture_output=True,
-                text=True,
-                check=True,
-            ).stdout.splitlines()
+            if admitted_paths is None:
+                tracked = subprocess.run(  # noqa: S603 - fixed argv, repo-local git
+                    ["git", "ls-files", f"infrastructure/{package}"],
+                    cwd=repo_root,
+                    capture_output=True,
+                    text=True,
+                    check=True,
+                ).stdout.splitlines()
+            else:
+                prefix = f"infrastructure/{package}/"
+                tracked = [path for path in admitted_paths if path.startswith(prefix)]
         except (subprocess.CalledProcessError, FileNotFoundError) as exc:
             raise InfraIntrospectionError(
                 f"Could not list tracked files under infrastructure/{package} "
@@ -61,7 +72,7 @@ def infra_subpackage_python_counts(repo_root: Path) -> list[tuple[str, int]]:
 def build_infra_tokens(repo_root: Path) -> dict[str, str]:
     """Return `{{INFRA_*}}` token values, every one read live from the repo."""
     packages = infrastructure_packages(repo_root)
-    total_py = tracked_infra_python_count(repo_root)
+    total_py = tracked_infra_python_count(repo_root, tracked_paths=reference_tracked_paths(repo_root))
     subpackage_rows = infra_subpackage_python_counts(repo_root)
     top_three = sorted(subpackage_rows, key=lambda row: row[1], reverse=True)[:3]
     # The per-subpackage donut chart's total is the sum of only the rows

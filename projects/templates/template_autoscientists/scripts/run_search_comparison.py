@@ -12,9 +12,20 @@ computation lives in ``src``; this script only orchestrates, plots, and writes.
 
 from __future__ import annotations
 
+import argparse
 import json
 import sys
+import atexit
+import tempfile
 from pathlib import Path
+import hashlib
+import importlib.util
+import os
+import stat
+
+_BYTECODE_CACHE = tempfile.TemporaryDirectory(prefix="template-autoscientists-controller-cache-")
+sys.pycache_prefix = str(Path(_BYTECODE_CACHE.name).resolve())
+atexit.register(_BYTECODE_CACHE.cleanup)
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 REPO_ROOT = PROJECT_ROOT.parents[2]
@@ -23,6 +34,65 @@ for path in (PROJECT_ROOT, PROJECT_ROOT / "src", REPO_ROOT):
     if text not in sys.path:
         sys.path.insert(0, text)
 
+# Admit the actual stdlib-only audit hook before importing public packages.
+# This is startup I/O; the shared hook owns execution/cache custody logic.
+_audit_spec = importlib.util.find_spec("infrastructure")
+if _audit_spec is None or _audit_spec.origin is None:
+    raise SystemExit("the declared platform distribution is unavailable")
+_platform_source = Path(_audit_spec.origin).absolute().parent
+_audit_path = _platform_source / "core/bytecode_audit.py"
+_audit_descriptors = [os.open(_audit_path.anchor, os.O_RDONLY | os.O_DIRECTORY)]
+_audit_bindings = []
+_audit_directory = _audit_descriptors[0]
+try:
+    for _name in _audit_path.parts[1:-1]:
+        _child = os.open(_name, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW, dir_fd=_audit_directory)
+        _audit_descriptors.append(_child)
+        _audit_bindings.append((_audit_directory, _name, _child))
+        _audit_directory = _child
+    _audit_descriptor = os.open(_audit_path.name, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK, dir_fd=_audit_directory)
+    try:
+        _before = os.fstat(_audit_descriptor)
+        _audit_bytes = os.read(_audit_descriptor, 65537)
+        _after = os.fstat(_audit_descriptor)
+        _current = os.stat(_audit_path.name, dir_fd=_audit_directory, follow_symlinks=False)
+        _fields = ("st_dev", "st_ino", "st_size", "st_mtime_ns", "st_ctime_ns")
+        if (
+            not stat.S_ISREG(_before.st_mode)
+            or len(_audit_bytes) > 65536
+            or len(_audit_bytes) != _before.st_size
+            or any(
+                getattr(_before, field) != getattr(_after, field) or getattr(_after, field) != getattr(_current, field)
+                for field in _fields
+            )
+        ):
+            raise SystemExit("the selected audit source changed or is not bounded regular bytes")
+    finally:
+        os.close(_audit_descriptor)
+finally:
+    try:
+        for _parent, _name, _child in reversed(_audit_bindings):
+            _held = os.fstat(_child)
+            _named = os.stat(_name, dir_fd=_parent, follow_symlinks=False)
+            if not stat.S_ISDIR(_named.st_mode) or (_held.st_dev, _held.st_ino) != (_named.st_dev, _named.st_ino):
+                raise SystemExit("the selected audit source ancestor changed during consumption")
+    finally:
+        for _descriptor in reversed(_audit_descriptors):
+            os.close(_descriptor)
+_audit_roots = [PROJECT_ROOT / "src", PROJECT_ROOT / "scripts", _platform_source, _platform_source.parent / "scripts"]
+_provider_spec = importlib.util.find_spec("template_literature_meta_analysis")
+if _provider_spec is not None and _provider_spec.origin is not None:
+    _audit_roots.append(Path(_provider_spec.origin).absolute().parent)
+_audit_scope = {"__name__": "_template_bytecode_audit", "__file__": str(_audit_path)}
+# Execute only the trusted, bounded, no-follow startup source admitted above.
+exec(compile(_audit_bytes, str(_audit_path), "exec", dont_inherit=True), _audit_scope)  # nosec B102
+_audit_scope["install_bytecode_audit"](
+    tuple(str(root.absolute()) for root in _audit_roots),
+    fresh_pycache_prefix=sys.pycache_prefix,
+    source_sha256=hashlib.sha256(_audit_bytes).hexdigest(),
+    startup_code=sys._getframe().f_code,
+)
+
 from template_autoscientists.search.ablation import run_ablations  # noqa: E402
 from template_autoscientists.search.comparison import build_comparison_payload, build_objective, run_comparison  # noqa: E402
 from template_autoscientists.figures.figures import (
@@ -30,15 +100,47 @@ from template_autoscientists.figures.figures import (
     write_comparison_figure,
     write_figure_registry,
 )  # noqa: E402
+from template_autoscientists.agents.live_domain import LiveSettings  # noqa: E402
+from template_autoscientists.search.live_comparison import live_exit_code, run_live_comparison  # noqa: E402
 
 
-def main() -> int:
+def main(argv: list[str] | None = None) -> int:
     """CLI entry point."""
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--mode", choices=("core", "live"), default="core")
+    parser.add_argument("--model")
+    parser.add_argument("--endpoint", default="http://127.0.0.1:11434")
+    parser.add_argument("--experiments-per-arm", type=int, default=6)
+    parser.add_argument("--request-timeout-seconds", type=int, default=60)
+    parser.add_argument("--run-timeout-seconds", type=int, default=600)
+    parser.add_argument("--project-root", type=Path, default=PROJECT_ROOT)
+    parser.add_argument("--output-dir", type=Path)
+    args = parser.parse_args(argv)
+    if args.mode == "live":
+        if not args.model or args.output_dir is None:
+            parser.error("live mode requires --model and a fresh --output-dir")
+        try:
+            receipt = run_live_comparison(
+                args.project_root,
+                args.output_dir,
+                LiveSettings(
+                    model=args.model,
+                    endpoint=args.endpoint,
+                    experiments_per_arm=args.experiments_per_arm,
+                    request_timeout_seconds=args.request_timeout_seconds,
+                    run_timeout_seconds=args.run_timeout_seconds,
+                ),
+            )
+        except ValueError as exc:
+            parser.error(str(exc))
+        print(receipt)
+        return live_exit_code(receipt)
     objective = build_objective()
     coordinated, baseline = run_comparison(objective)
 
-    figures_dir = PROJECT_ROOT / "output" / "figures"
-    data_dir = PROJECT_ROOT / "output" / "data"
+    output_root = args.output_dir or args.project_root / "output"
+    figures_dir = output_root / "figures"
+    data_dir = output_root / "data"
     figures_dir.mkdir(parents=True, exist_ok=True)
     data_dir.mkdir(parents=True, exist_ok=True)
 

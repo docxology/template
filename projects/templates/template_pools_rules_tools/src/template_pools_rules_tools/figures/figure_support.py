@@ -84,8 +84,8 @@ INTEGRATION_FIGURE_SPECS: tuple[IntegrationFigureSpec, ...] = (
         caption="Soft and strong branches of the template rule hierarchy.",
         generated_by="src.figures.figures.generate_rule_hierarchy",
         alt_text=(
-            "Hierarchy diagram separating guidance-oriented soft rules from "
-            "machine-enforced strong rules."
+            "Hierarchy diagram separating guidance-oriented soft rules "
+            "from machine-enforced strong rules."
         ),
     ),
     IntegrationFigureSpec(

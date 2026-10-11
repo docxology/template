@@ -62,7 +62,7 @@ from typing import Callable, Optional
 
 import requests
 
-from literature.http import request_with_retry
+from template_literature_meta_analysis.literature.http import request_with_retry
 
 from .models import Author, Paper
 

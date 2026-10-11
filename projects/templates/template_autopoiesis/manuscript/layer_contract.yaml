@@ -1,0 +1,7 @@
+# The generated-child adapter shares the platform's supervised subprocess
+# policy. Primitive kernels and emitted children remain independent of it.
+allow_infrastructure_imports:
+  - src/template_autopoiesis/gates/child_execution.py
+  # The generator-custody gate binds the actual platform version and implementation
+  # custody digests of the supervisor that runs children; it never runs in a child.
+  - src/template_autopoiesis/gates/generator_custody.py

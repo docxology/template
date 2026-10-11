@@ -1,4 +1,4 @@
-"""Tests for infrastructure.publishing.platforms module.
+"""Tests for canonical arXiv, GitHub, and Zenodo integrations.
 
 Tests arXiv submission preparation (pure file operations).
 Network-dependent functions (Zenodo, GitHub) are tested with pytest-httpserver.
@@ -14,11 +14,9 @@ from pytest_httpserver import HTTPServer
 
 from infrastructure.core.exceptions import PublishingError
 from infrastructure.publishing.models import PublicationMetadata
-from infrastructure.publishing.platforms import (
-    create_github_release,
-    prepare_arxiv_submission,
-    publish_to_zenodo,
-)
+from infrastructure.publishing.arxiv import prepare_arxiv_submission
+from infrastructure.publishing.github import create_github_release
+from infrastructure.publishing.zenodo import publish_to_zenodo
 
 
 def _make_metadata(**kwargs) -> PublicationMetadata:
@@ -458,7 +456,7 @@ class TestCreateGithubRelease:
 
 
 class TestPublishToZenodo:
-    def test_end_to_end_via_platforms_shim(
+    def test_end_to_end_via_zenodo_package(
         self,
         tmp_path: Path,
         zenodo_test_server,

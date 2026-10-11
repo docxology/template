@@ -7,7 +7,7 @@ paper examples throughout.
 
 from datetime import date
 
-from literature.models import Author, Citation, Paper
+from template_literature_meta_analysis.literature.models import Author, Citation, Paper
 
 
 # ---------------------------------------------------------------------------
@@ -179,9 +179,15 @@ class TestPaperCanonicalId:
         from pathlib import Path
 
         src = str(Path(__file__).resolve().parents[2] / "src")
+        # The namespaced package maps onto ``src/``; register it exactly as
+        # tests/conftest.py does, since a bare ``src`` path cannot import it.
         snippet = (
-            "import sys; sys.path.insert(0, %r);"
-            "from literature.models import Paper;"
+            "import importlib.util, sys; from pathlib import Path; src = Path(%r);"
+            "spec = importlib.util.spec_from_file_location("
+            "'template_literature_meta_analysis', src / '__init__.py', submodule_search_locations=[str(src)]);"
+            "package = importlib.util.module_from_spec(spec);"
+            "sys.modules['template_literature_meta_analysis'] = package; spec.loader.exec_module(package);"
+            "from template_literature_meta_analysis.literature.models import Paper;"
             "print(Paper(title='No Identifiers Here At All').canonical_id)" % src
         )
 

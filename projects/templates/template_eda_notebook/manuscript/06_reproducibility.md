@@ -48,7 +48,7 @@ source of truth.
   always produce the same bin counts, correlation values, and group counts.
 - `clean_dataset()` reports exactly how many rows it removed, so the
   complete-case row count is a checkable invariant.
-- `generate_measurements()` (`src/eda/generate.py`) regenerates a deterministic
+- `generate_measurements()` (`src/template_eda_notebook/eda/generate.py`) regenerates a deterministic
   *sibling* of the dataset from a fixed NumPy seed: the same schema, 120 rows,
   the same missingness pattern, and the same correlation sign structure. The
   original fixture's exact random draw order is not recoverable, so the

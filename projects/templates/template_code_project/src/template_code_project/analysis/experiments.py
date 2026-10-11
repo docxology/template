@@ -4,6 +4,8 @@ from __future__ import annotations
 
 from collections.abc import Callable
 from pathlib import Path
+from io import StringIO
+from ..core._runtime import write_analysis_bytes
 
 try:
     from ..core.experiment_config import ExperimentConfig, load_experiment_config
@@ -64,7 +66,7 @@ def save_optimization_results(results: dict[float, OptimizationResult]) -> Path:
     output_dir.mkdir(parents=True, exist_ok=True)
     data_path = output_dir / "optimization_results.csv"
 
-    with open(data_path, "w", encoding="utf-8", newline="") as f:
+    with StringIO(newline="") as f:
         f.write("step_size,solution,objective_value,iterations,converged,gradient_norm,termination_reason\n")
         for step_size, result in results.items():
             solution_str = ";".join(f"{v:.6f}" for v in result.solution)
@@ -73,6 +75,9 @@ def save_optimization_results(results: dict[float, OptimizationResult]) -> Path:
                 f"{result.iterations},{result.converged},{result.gradient_norm:.2e},"
                 f"{result.termination_reason}\n"
             )
+
+        content = f.getvalue().encode("utf-8")
+    write_analysis_bytes(_project_root(), data_path, content)
 
     logger.info("Saved results to: %s", data_path)
     return data_path

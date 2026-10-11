@@ -11,12 +11,12 @@ import hashlib
 import json
 import shutil
 import stat as stat_module
-import subprocess
 import tempfile
 from pathlib import Path
 from typing import Any
 
 from template_active_inference.json_io import load_json_strict as _load_json
+from roadmap_tracks.fixed_point import _source_input_sha256
 from roadmap_tracks.sheaf_tracks_registry import HASH_CYCLE_AUTHORITY, hash_cycle_excluded
 from roadmap_tracks.image_content_hash import image_content_sha256, is_image_artifact
 from template_active_inference.yaml_io import load_yaml
@@ -119,20 +119,6 @@ def _deterministic_seed(root: Path) -> int:
     return int(seed)
 
 
-def _source_commit(root: Path, *, process_runner=subprocess.run) -> str:
-    try:
-        result = process_runner(
-            ["git", "-C", str(root), "rev-parse", "HEAD"],
-            check=True,
-            capture_output=True,
-            text=True,
-            timeout=5,
-        )
-    except (OSError, subprocess.CalledProcessError, subprocess.TimeoutExpired):
-        return "unknown"
-    return result.stdout.strip() or "unknown"
-
-
 def _artifact_record(
     root: Path,
     rel: str,
@@ -140,7 +126,7 @@ def _artifact_record(
     *,
     config_digest: str,
     seed: int,
-    source_commit: str,
+    source_input_sha256: str,
 ) -> dict[str, Any]:
     path = root / rel
     exists, size_bytes, sha256 = _file_fingerprint(path)
@@ -163,7 +149,7 @@ def _artifact_record(
         "deterministic_seed": seed,
         "config_digest": config_digest,
         "config_inputs": list(CONFIG_INPUTS),
-        "source_commit": source_commit,
+        "source_input_sha256": source_input_sha256,
     }
 
 
@@ -177,16 +163,12 @@ def _config_record(root: Path, rel: str) -> dict[str, Any]:
     }
 
 
-def build_artifact_provenance(
-    project_root: Path,
-    *,
-    source_commit_resolver=_source_commit,
-) -> dict[str, Any]:
+def build_artifact_provenance(project_root: Path) -> dict[str, Any]:
     """Build deterministic artifact lineage and hash records."""
     root = project_root.resolve()
     config_digest = _config_digest(root)
     seed = _deterministic_seed(root)
-    source_commit = source_commit_resolver(root)
+    source_input_sha256 = _source_input_sha256(root)
     artifacts = {
         rel: _artifact_record(
             root,
@@ -194,14 +176,14 @@ def build_artifact_provenance(
             producer,
             config_digest=config_digest,
             seed=seed,
-            source_commit=source_commit,
+            source_input_sha256=source_input_sha256,
         )
         for rel, producer in sorted(CORE_ARTIFACT_PRODUCERS.items())
     }
     configured = _configured_analysis_scripts(root)
     producer_coverage = {producer: producer in configured for producer in sorted(set(CORE_ARTIFACT_PRODUCERS.values()))}
     return {
-        "schema": "template_active_inference.artifact_provenance.v1",
+        "schema": "template_active_inference.artifact_provenance.v2",
         "configured_analysis_scripts": configured,
         "producer_coverage": producer_coverage,
         "config_inputs": {rel: _config_record(root, rel) for rel in CONFIG_INPUTS},
@@ -212,7 +194,8 @@ def build_artifact_provenance(
         ),
         "all_seeded": all(isinstance(record.get("deterministic_seed"), int) for record in artifacts.values()),
         "all_config_digests": all(record.get("config_digest") == config_digest for record in artifacts.values()),
-        "all_source_commits": all(bool(record.get("source_commit")) for record in artifacts.values()),
+        "all_source_inputs_bound": bool(artifacts)
+        and all(record.get("source_input_sha256") == source_input_sha256 for record in artifacts.values()),
         "all_producers_configured": all(producer_coverage.values()),
     }
 
@@ -332,7 +315,9 @@ def build_counterexample_matrix(project_root: Path) -> dict[str, Any]:
             "gate": "validate_outputs.si_graph_world_schema",
             "mutation": "change summary step count without changing trace rows",
             "expected_failure": True,
-            "test": "tests/test_semantic_extensions.py::test_validate_outputs_rejects_graph_world_summary_trace_mismatch",
+            "test": (
+                "tests/test_semantic_extensions.py::test_validate_outputs_rejects_graph_world_summary_trace_mismatch"
+            ),
         },
         {
             "id": "claim_expected_value_mismatch",
@@ -367,7 +352,10 @@ def build_counterexample_matrix(project_root: Path) -> dict[str, Any]:
             "gate": "validate_outputs.pymdp_runtime_diagnostics_schema",
             "mutation": "emit an uncatalogued warning during pymdp Agent construction",
             "expected_failure": True,
-            "test": "tests/test_semantic_extensions.py::test_pymdp_runtime_diagnostics_captures_known_warning_and_rejects_unexpected",
+            "test": (
+                "tests/test_semantic_extensions.py::"
+                "test_pymdp_runtime_diagnostics_captures_known_warning_and_rejects_unexpected"
+            ),
         },
         {
             "id": "unnormalized_policy_posterior",
@@ -444,7 +432,7 @@ def validate_artifact_provenance(project_root: Path) -> list[str]:
     saved = _load_json(path)
     live = build_artifact_provenance(root)
     issues: list[str] = []
-    if saved.get("schema") != "template_active_inference.artifact_provenance.v1":
+    if saved.get("schema") != "template_active_inference.artifact_provenance.v2":
         issues.append("artifact_provenance.json schema mismatch")
     # Re-derive each aggregate from the saved per-record ground truth exactly as
     # build_artifact_provenance computes it, so a record-only forgery (records
@@ -452,13 +440,16 @@ def validate_artifact_provenance(project_root: Path) -> list[str]:
     saved_records = [r for r in (saved.get("artifacts") or {}).values() if isinstance(r, dict)]
     live_records = [r for r in (live.get("artifacts") or {}).values() if isinstance(r, dict)]
     saved_config_digest = live_records[0].get("config_digest") if live_records else None
+    live_source_input_sha256 = live_records[0].get("source_input_sha256") if live_records else None
     derived = {
         "all_hashed": bool(saved_records)
         and all(r.get("exists") and (bool(r.get("sha256")) or r.get("cycle_excluded") is True) for r in saved_records),
         "all_seeded": bool(saved_records) and all(isinstance(r.get("deterministic_seed"), int) for r in saved_records),
         "all_config_digests": bool(saved_records)
         and all(r.get("config_digest") == saved_config_digest for r in saved_records),
-        "all_source_commits": bool(saved_records) and all(bool(r.get("source_commit")) for r in saved_records),
+        "all_source_inputs_bound": bool(saved_records)
+        and bool(live_records)
+        and all(r.get("source_input_sha256") == live_source_input_sha256 for r in saved_records),
     }
     for flag, recomputed in derived.items():
         if saved.get(flag) is not True or saved.get(flag) != recomputed:
@@ -483,8 +474,8 @@ def validate_artifact_provenance(project_root: Path) -> list[str]:
             issues.append(f"{rel}: deterministic seed mismatch")
         if saved_record.get("config_digest") != live_record.get("config_digest"):
             issues.append(f"{rel}: config digest mismatch")
-        if not saved_record.get("source_commit"):
-            issues.append(f"{rel}: missing source commit")
+        if saved_record.get("source_input_sha256") != live_record.get("source_input_sha256"):
+            issues.append(f"{rel}: source input digest mismatch")
     return issues
 
 

@@ -41,11 +41,10 @@ def test_placeholder_overview(tmp_path):
     assert path.name == "demo.png"
 
 
-def test_generate_chapter_placeholders_matches_config(tmp_path):
+def test_generate_chapter_figures_matches_config(tmp_path):
     config = load_config()
-    paths = plots.generate_chapter_placeholders(tmp_path, config)
-    # The legacy name retains one-file-per-chapter behavior while dispatching
-    # filled chapters to their bespoke renderers.
+    paths = plots.generate_chapter_figures(tmp_path, config)
+    # Every canonical chapter has a model or source-bound figure.
     assert len(paths) == len(iter_chapters(config))
     assert "part_III_case_studies.png" in {path.name for path in paths}
     for path in paths:
@@ -81,7 +80,7 @@ def test_generate_all_figures(tmp_path):
     assert len(paths) == len(worked) + len(iter_chapters(load_config()))
     names = {p.name for p in paths}
     assert "logistic_growth.png" in names  # a worked figure
-    assert "part_0_orientation.png" in names  # a chapter placeholder that is displayed
+    assert "part_0_orientation.png" in names  # a canonical model figure
     assert "part_III_case_studies.png" in names  # a bespoke, data-derived chapter figure
 
 
@@ -202,3 +201,20 @@ def test_figure_registry_extracts_from_output_figures_path(tmp_path):
     result = _figure_filename(image_path, resolved, figures_root)
     # Should extract "gallery/gallery_bar.png"
     assert result == "gallery/gallery_bar.png"
+
+
+def test_unknown_draft_chapter_retains_explicit_scaffold_figure(tmp_path):
+    config = {"units": [{"id": "new", "title": "New", "chapters": [{"file": "future.md", "title": "Future"}]}]}
+    paths = plots.generate_chapter_figures(tmp_path, config)
+    expected = plots.placeholder_overview("Future", tmp_path / "control", "new_future")
+    assert paths[0].read_bytes() == expected.read_bytes()
+    assert not hasattr(plots, "generate_chapter_placeholders")
+
+
+def test_all_canonical_figures_are_authored_and_deterministic(tmp_path):
+    first = plots.generate_chapter_figures(tmp_path / "first", load_config())
+    second = plots.generate_chapter_figures(tmp_path / "second", load_config())
+    for chapter, actual, repeated in zip(iter_chapters(load_config()), first, second, strict=True):
+        draft = plots.placeholder_overview(chapter.title, tmp_path / "draft", f"{chapter.part_id}_{chapter.stem}")
+        assert actual.read_bytes() != draft.read_bytes()
+        assert actual.read_bytes() == repeated.read_bytes()

@@ -25,14 +25,6 @@ keeps a capability blocked rather than silently promoting it.
 - Keep script, test, documentation, and `.agents/` catalog listings generated
   or checked against disk so future forks cannot silently omit a surface.
 
-## Current configurable-surface contract
-
-- `trim_size` supports the current configured and custom page dimensions; a
-  future trim variant must add a schema value and a rendering/negative-control
-  test in one scoped row.
-- Per-page caption placement supports the current top and bottom zones; future
-  zones require a schema, accessibility, and raster-contrast contract.
-
 ## Documentation and signposting gaps
 
 - Keep README examples clear that Stage 02 renders the storybook PDF, while
@@ -46,6 +38,29 @@ keeps a capability blocked rather than silently promoting it.
   and recording per-page results in the manifest; extend the palette contract
   before adding new overlay modes.
 
+## Platform 4 acceptance scope
+
+The rows below describe remaining acceptance and repairs, not a claim that
+existing implementations are missing. Inspect current source and the dated
+[program record](../../../docs/maintenance/platform-4-upgrade.md) first.
+Set `P4_PROJECT_ROOT` to this project's absolute canonical checkout and prepare
+its locked environment using the [runtime matrix guide](../../../docs/development/public-runtime-matrix.md).
+Run one project per pytest process under the producer's declared finite outer
+deadline and source-owned per-case limits. The whole-selection domain command
+is an explicit acceptance opt-in: prepare its declared unpaid tool/model
+prerequisites, disable test model pulls, and override default marker exclusions
+with `-m ""`. Own-source acceptance requires nonempty complete collection, real
+behavior and at least 90% branch coverage; a focused test or previous revision's
+result does not close the row. Missing preparation remains blocked.
+
+Native and live lanes additionally require actual producers, independent
+content/visual/domain checks and current source/tool/model identities; ordinary
+unit tests do not replace them. Apply the root `P4-RUNTIME-MATRIX`,
+`P4-INSTALLED-MATRIX`, `P4-UNPAID-CAPABILITIES` and publication contracts.
+Unavailable required tools/providers remain blocked. Independent intended
+versions come from the program record and package metadata, and remain separate
+from genuinely published versions.
+
 ## Minor upcoming
 
 | ID | Status | Size | Dependency | Next action / unblock condition | Proving artifact | Acceptance command | Negative control |
@@ -55,6 +70,11 @@ keeps a capability blocked rather than silently promoting it.
 
 | ID | Status | Size | Dependency | Next action / unblock condition | Proving artifact | Acceptance command | Negative control |
 | --- | --- | --- | --- | --- | --- | --- | --- |
+| `P4-STORYBOOK-DOMAIN-1` | partial | Medium | P4-REQUIRED-PROFILE-DEFINITION-1; native producer contract; pinned image/font/print tools | Regenerate every configured page, contact sheet, alt text, source-bound manifest and print PDF; independently check page completeness and actual print-size visual quality. | page/contact-sheet/manifest/alt-text and native print/raster receipts | `OLLAMA_SKIP_TEST_MODEL_PULL=1 uv run --locked --no-sync --offline --project "$P4_PROJECT_ROOT" --directory "$P4_PROJECT_ROOT" python -m pytest tests/ --cov=src --cov-branch --cov-fail-under=90 --timeout=120 -m ""`; execute each declared opt-in capability producer under the root acceptance profile | missing pages, wrong image sources, inaccessible artwork, incorrect trim/bleed or stale print artifacts must fail |
+| `P4-STORYBOOK-MANUSCRIPT-1` | open | Medium | P4-STORYBOOK-DOMAIN-1; reviewed per-project render/native producer contracts and prepared tools | Inspect page composition, typography and narrative continuity at print scale; validate content/configuration/manifest parity and all declared formats. Audit configurable inputs, thin orchestration, injected variables and accessibility; repair only verified gaps. | current analysis/hydration/source bindings, all declared format outputs and visual/content negative controls | `uv run --no-sync --offline python scripts/pipeline/stage_02_analysis.py --project templates/template_storybook`; then canonical `stage_03_render.py` and `stage_04_validate.py` with the same selection and the required native producer | stale variables, unresolved content, missing formats, incorrect figures/citations or wrong-source visual evidence must fail |
+| `P4-STORYBOOK-PORTABILITY-1` | open | Medium | P4-STORYBOOK-DOMAIN-1; P4-STORYBOOK-MANUSCRIPT-1; built genuine SDK/provider; reviewed packaging projection | Execute all supported runtime and installed-wheel cells and fresh disposable standalone setup/full own-suite/format replay before publication. Verify independent intended version, source/export digest, public resource completeness and reviewed packaging projection; remote promotion is a separate row. | complete runtime/installed and pre-push isolated export/reinstallation receipts | `uv run --no-sync --offline python scripts/gates/installed_public.py --project templates/template_storybook --python "3.12=$P4_PYTHON312" --python "3.13=$P4_PYTHON313" --python "3.14=$P4_PYTHON314"`; then complete isolated exported suite and declared formats | parent-relative imports, editable provider substitution, absent cells, incomplete exports, invented publication metadata or remote content mismatch must fail |
+
+| `P4-STORYBOOK-REMOTE-1` | open | Medium | P4-STORYBOOK-PORTABILITY-1; P4-STANDALONE-MAIN-1; actual publication authority | After pre-push acceptance and authorized destination promotion, independently verify remote main commit, retrieved export-content/artifact hashes, genuine published version and working declared repository/publication URLs; retain existing releases and deposits. Keep unpublished projects explicit until genuine first receipts. | actual destination/version/commit, retrieval-content parity and applicable DOI/URL receipts | `git ls-remote "$P4_DESTINATION" refs/heads/main`; retrieve/reinstall the actual promoted artifact and rerun the isolated own-suite and declared format checks | a planned version, nonexistent destination, fabricated DOI, stale remote parent or mismatched retrieved export must fail |
 
 ## Major upcoming
 

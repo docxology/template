@@ -7,6 +7,11 @@
 # infrastructure/project/drift/checks_boundary.py enforces. Paths updated to
 # the post-split subpackage layout (SUBMODULAR-SEARCH-1).
 allow_infrastructure_imports:
+  - src/template_search_project/publish/config.py
+  - src/template_search_project/publish/bibliography.py
+  - src/template_search_project/publish/deep_custody.py
+  - src/template_search_project/publish/manuscript_variables.py
+  - src/template_search_project/pipeline/live_acceptance.py
   - src/template_search_project/pipeline/composition.py
   - src/template_search_project/publish/dashboard.py
   - src/template_search_project/search/deep_search.py
@@ -17,3 +22,21 @@ allow_infrastructure_imports:
   - src/template_search_project/analysis/report.py
   - src/template_search_project/search/search_pipeline_cli.py
   - src/template_search_project/pipeline/synthesis.py
+  # Review/report custody: the deep-review report resolves the actually loaded
+  # platform package (provider_paths), reads own inputs through held confined
+  # observations (report_inputs) and runs bounded review stages under the
+  # platform subprocess guardian with confined atomic writes (review_execution,
+  # review_report). Review logic and findings remain Layer 2.
+  - src/template_search_project/analysis/provider_paths.py
+  - src/template_search_project/analysis/report_inputs.py
+  - src/template_search_project/analysis/review_execution.py
+  - src/template_search_project/analysis/review_report.py
+reason: >-
+  The typed domain config loader uses the declared platform's immutable UTF-8
+  stream to preserve exact admitted input bytes and ordinary loader semantics.
+  Bibliography projection uses mature citation parsing and confined atomic I/O
+  to preserve authored references. Deep composition uses the platform's held
+  no-follow source inventory for a current disk-source artifact dependency
+  record, separate from audited live-provider and installed-wheel acceptance.
+  Manuscript hydration uses the same confined atomic writes and confined
+  generated-file removal to keep active outputs from aliasing authored sources.

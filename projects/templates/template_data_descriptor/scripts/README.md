@@ -24,3 +24,7 @@ bundle manifest, and field-constraint summary:
 ```bash
 uv run python projects/templates/template_data_descriptor/scripts/generate_release_artifacts.py
 ```
+
+`generate_release_artifacts.py` exits 2 when the required domain report is invalid. It retains every
+diagnostic JSON artifact and the structured summary so failed runs remain inspectable;
+only valid inputs return 0.

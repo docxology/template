@@ -18,9 +18,16 @@ def _make_config(*, output_dir: str = "output/deep_search") -> ProjectConfig:
             keywords=["convex"],
             max_results_per_keyword=2,
             output_dir=output_dir,
-            unified_bibtex_path="manuscript/references_deep.bib",
+            unified_bibtex_path="output/bibliography/references_deep.bib",
         ),
     )
+
+
+def _seal(root: Path) -> None:
+    from template_search_project.publish.deep_custody import begin_deep_producer, finish_deep_producer
+
+    config = _make_config().deep_search
+    finish_deep_producer(root, config, begin_deep_producer(config), root / "output" / "deep_search")
 
 
 def _setup_iso_with_deep_search(tmp_path: Path) -> Path:
@@ -28,6 +35,7 @@ def _setup_iso_with_deep_search(tmp_path: Path) -> Path:
     iso = tmp_path / "iso"
     iso.mkdir()
     (iso / "manuscript").mkdir()
+    (iso / "output" / "bibliography").mkdir(parents=True)
 
     deep = iso / "output" / "deep_search"
     (deep / "convex" / "per_paper").mkdir(parents=True)
@@ -65,7 +73,7 @@ def _setup_iso_with_deep_search(tmp_path: Path) -> Path:
         "## Tags\n\nconvex, optimization\n",
         encoding="utf-8",
     )
-    (iso / "manuscript" / "references_deep.bib").write_text(
+    (iso / "output" / "bibliography" / "references_deep.bib").write_text(
         "@article{alice2020convexity,\n"
         "  title={On Convexity},\n"
         "  author={Alice and Bob},\n"
@@ -74,6 +82,7 @@ def _setup_iso_with_deep_search(tmp_path: Path) -> Path:
         "}\n",
         encoding="utf-8",
     )
+    _seal(iso)
     return iso
 
 
@@ -91,14 +100,14 @@ def test_writes_section_with_all_keys(tmp_path: Path):
     exit_code = compose_literature_review(iso, config)
     assert exit_code == 0
 
-    out_md = iso / "manuscript" / "S01_literature_review.md"
+    out_md = iso / "output" / "manuscript" / "S02_generated_literature_review.md"
     assert out_md.exists()
     text = out_md.read_text(encoding="utf-8")
     assert "[@alice2020convexity]" in text
     assert "On Convexity" in text
     assert "novel contribution paragraph" in text
     assert "Why this matters paragraph" in text
-    assert "Supplemental S1" in text
+    assert "Supplemental S2" in text
     assert "\\newpage" in text
     assert "keyword from local)" in text
 
@@ -111,14 +120,11 @@ def test_writes_section_with_all_keys(tmp_path: Path):
     assert summary["retrieval_sources"] == ["local"]
 
 
-def test_flags_missing_keys(tmp_path: Path):
+def test_changed_bibliography_is_refused(tmp_path: Path):
     iso = _setup_iso_with_deep_search(tmp_path)
-    (iso / "manuscript" / "references_deep.bib").write_text("% empty bib\n", encoding="utf-8")
-    config = _make_config()
-    exit_code = compose_literature_review(iso, config)
-    assert exit_code == 0
-    summary = json.loads((iso / "output" / "deep_search" / "composition_summary.json").read_text(encoding="utf-8"))
-    assert "alice2020convexity" in summary["missing_citation_keys"]
+    (iso / "output" / "bibliography" / "references_deep.bib").write_text("% changed bib\n", encoding="utf-8")
+    assert compose_literature_review(iso, _make_config()) == 1
+    assert not (iso / "output" / "manuscript" / "S02_generated_literature_review.md").exists()
 
 
 def test_custom_output_path(tmp_path: Path):
@@ -131,7 +137,7 @@ def test_custom_output_path(tmp_path: Path):
     assert "[@alice2020convexity]" in custom.read_text(encoding="utf-8")
 
 
-def test_writes_output_manuscript_parity_copy(tmp_path: Path):
+def test_default_writes_generated_supplement(tmp_path: Path):
     """When output/manuscript/ already exists, the composed section is
     mirrored there too (defensive parity write)."""
     iso = _setup_iso_with_deep_search(tmp_path)
@@ -139,7 +145,7 @@ def test_writes_output_manuscript_parity_copy(tmp_path: Path):
     config = _make_config()
     exit_code = compose_literature_review(iso, config)
     assert exit_code == 0
-    mirrored = iso / "output" / "manuscript" / "S01_literature_review.md"
+    mirrored = iso / "output" / "manuscript" / "S02_generated_literature_review.md"
     assert mirrored.exists()
     assert "[@alice2020convexity]" in mirrored.read_text(encoding="utf-8")
 
@@ -150,6 +156,7 @@ def test_no_per_paper_notes_adds_omission_note(tmp_path: Path):
     iso = tmp_path / "iso"
     iso.mkdir()
     (iso / "manuscript").mkdir()
+    (iso / "output" / "bibliography").mkdir(parents=True)
     deep = iso / "output" / "deep_search"
     (deep / "convex" / "per_paper").mkdir(parents=True)
     aggregate = {
@@ -171,11 +178,14 @@ def test_no_per_paper_notes_adds_omission_note(tmp_path: Path):
     )
     # Note without a Contribution section.
     (deep / "convex" / "per_paper" / "doi_10.1_x.md").write_text("# Notes\n\n## Tags\n\nconvex\n", encoding="utf-8")
-    (iso / "manuscript" / "references_deep.bib").write_text("% empty\n", encoding="utf-8")
+    (iso / "output" / "bibliography" / "references_deep.bib").write_text(
+        "@article{alice2020convexity, title={On Convexity}, year={2020}}\n", encoding="utf-8"
+    )
+    _seal(iso)
     config = _make_config()
     exit_code = compose_literature_review(iso, config)
     assert exit_code == 0
-    text = (iso / "manuscript" / "S01_literature_review.md").read_text(encoding="utf-8")
+    text = (iso / "output" / "manuscript" / "S02_generated_literature_review.md").read_text(encoding="utf-8")
     assert "Per-paper synthesis omitted" in text
     assert "sources were not declared in the replay artifacts" in text
     assert "from )" not in text

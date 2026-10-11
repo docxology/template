@@ -24,6 +24,8 @@ Domain glue only: configuration, pipeline orchestration over `infrastructure/`, 
 | [`search_pipeline_cli.py`](template_search_project/search/search_pipeline_cli.py) | `run_search_pipeline_cli` — CLI-orchestration body for `scripts/run_search_pipeline.py` |
 | [`search_invariants.py`](template_search_project/search/search_invariants.py) | Pure-compute coverage invariants over `output/deep_search/aggregate.json` and `output/corpus.json` |
 | [`review_report.py`](template_search_project/analysis/review_report.py) | `generate_review_report` — inventory/documentation/bibliography audits, body for `scripts/zz_generate_review_report.py` |
+| [`provider_paths.py`](template_search_project/analysis/provider_paths.py) | Actual selected platform origin and shared absolute-import inventory helpers |
+| [`review_execution.py`](template_search_project/analysis/review_execution.py) | Shared guardian boundaries, resolved review stages, whole-review deadline, and truthful final outcomes |
 
 ## Contracts
 

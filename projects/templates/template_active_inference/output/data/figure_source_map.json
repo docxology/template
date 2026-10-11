@@ -1130,7 +1130,7 @@
         "width": 1166
       },
       "figure_id": "si_belief_entropy_curve",
-      "image_sha256": "39bcaf1764b47e519c27739dc3f5870e0d50e93112b4db3da5ecb30275828b6c",
+      "image_sha256": "17cdf62c26e594ac569df28c895a3ac16f0e473e747db7defb7965d8ec35027d",
       "mapped": true,
       "pixel_provenance_ok": true,
       "renderer": "visualizations.figures.generate_all_figures",

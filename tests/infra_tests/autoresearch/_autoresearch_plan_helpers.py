@@ -15,7 +15,8 @@ def _write_repo_scaffold(tmp_path: Path) -> Path:
     (pipeline_dir / "pipeline.yaml").write_text(
         """
 stages:
-  - name: Environment Setup
+  - key: setup
+    name: Environment Setup
     script: scripts/pipeline/stage_00_setup.py
     contract:
       input_artifacts: ["projects/{project}/"]
@@ -23,7 +24,8 @@ stages:
       definition_of_done: "Environment is ready."
       failure_code: "ENVIRONMENT_SETUP_FAILED"
       retry_policy: 0
-  - name: Project Analysis
+  - key: analysis
+    name: Project Analysis
     script: scripts/pipeline/stage_02_analysis.py
     depends_on: [Environment Setup]
     contract:
@@ -33,7 +35,8 @@ stages:
       failure_code: "PROJECT_ANALYSIS_FAILED"
       retry_policy: 0
       gate: "experiment_method_design"
-  - name: Output Validation
+  - key: validate
+    name: Output Validation
     script: scripts/pipeline/stage_04_validate.py
     depends_on: [Project Analysis]
     contract:

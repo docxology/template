@@ -10,7 +10,7 @@ tested code instead of carrying logic.
 Operating as the EDA exemplar for the Research Project Template methodology, the
 project deployed the three foundational pillars:
 
-1. **`src/eda/` library**: pure pandas/numpy data transforms — loading,
+1. **`src/template_eda_notebook/eda/` library**: pure pandas/numpy data transforms — loading,
    cleaning, summary statistics, correlation, and figure-data preparation — with
    no plotting, no file I/O, and no `infrastructure` imports.
 2. **`tests/` integrity**: a zero-mock suite over the shipped dataset and
@@ -24,7 +24,7 @@ project deployed the three foundational pillars:
 ### The notebook -> tested src extraction workflow
 
 The hallmark of this exemplar is the discipline it teaches: explore fast in a
-cell, and the moment a computation matters, move it into `src/eda/` behind a
+cell, and the moment a computation matters, move it into `src/template_eda_notebook/eda/` behind a
 failing test. The walkthrough notebook imports only the library's public surface
 and defines no functions of its own, a property the test suite enforces
 structurally so it cannot regress.
@@ -41,7 +41,7 @@ assumption.
 1. **Reproducibility follows from testing fidelity**: every number in
    [@sec:results] is produced by a tested function and regenerated on demand, so
    prose and artifacts cannot drift.
-2. **Purity enables reuse**: because `src/eda/` returns plot-ready data and never
+2. **Purity enables reuse**: because `src/template_eda_notebook/eda/` returns plot-ready data and never
    touches a display backend, the same functions serve the notebook, the
    headless script, and the manuscript.
 3. **Missingness is information**: reporting dropped rows beats imputing them

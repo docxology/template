@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import pytest
+
 from template_sia.loop.approval import APPROVAL_SCHEMA, ApprovalContract, validate_approval_contract
 
 
@@ -47,3 +49,27 @@ def test_malformed_approval_payload_fails_closed() -> None:
     )
     assert any("SHA-256" in issue for issue in issues)
     assert any("approved" in issue for issue in issues)
+
+
+@pytest.mark.parametrize("invalid", [None, [], {}, True, 123])
+def test_null_and_container_approval_fields_never_become_string_evidence(invalid) -> None:
+    payload = ApprovalContract(
+        mode="live_apply",
+        sandbox_root="sandbox",
+        diff_sha256="a" * 64,
+        rollback_sha256="b" * 64,
+        approval_status="approved",
+        approval_receipt_id="owner-receipt",
+    ).to_dict()
+    for field in ("sandbox_root", "approval_receipt_id", "diff_sha256", "mode", "approval_status"):
+        candidate = {**payload, field: invalid}
+        assert validate_approval_contract(candidate) == (f"{field} must be a string",)
+    contract = ApprovalContract(
+        mode="live_apply",
+        sandbox_root=invalid,
+        diff_sha256="a" * 64,
+        rollback_sha256="b" * 64,
+        approval_status="approved",
+        approval_receipt_id="owner-receipt",
+    )
+    assert contract.validate() == ("sandbox_root must be a string",)

@@ -1002,7 +1002,7 @@ Parse, dispatch, and return a stable process exit code.
 *constant — defined in `infrastructure.orchestration.menu`*
 
 ```python
-MENU_OPTIONS: tuple[tuple[str, str, str], ...] = (('0', 'Environment Setup', 'stage_00_setup.py'), ('1', 'Run Tests', 'stage_0...
+MENU_OPTIONS: tuple[tuple[str, str, str], ...] = (('0', 'Environment Setup', 'stage_00_setup.py'), ('1', 'Run Project Tests', ...
 ```
 
 ### `PipelineRunner`
@@ -1113,10 +1113,6 @@ Discover all valid projects in the active projects directory.
 
 *symbol — defined in `infrastructure.project`*
 
-### `ExportSmokeResult`
-
-*symbol — defined in `infrastructure.project`*
-
 ### `find_setup_hook`
 
 *function — defined in `infrastructure.project.setup_hook`*
@@ -1150,7 +1146,7 @@ Extract metadata from project configuration files.
 *function — defined in `infrastructure.project.setup_hook`*
 
 ```python
-preflight_setup_hook(project_dir: Path) -> tuple[bool, list[str]]
+preflight_setup_hook(project_dir: Path, *, strict: bool=False) -> tuple[bool, list[str]]
 ```
 
 Validate the project's setup-hook prerequisites.
@@ -1208,14 +1204,6 @@ run_project_setup_hook(project_dir: Path) -> bool
 ```
 
 Run the project's setup hook, if present.
-
-### `smoke_exported_exemplar`
-
-*symbol — defined in `infrastructure.project`*
-
-### `smoke_public_exemplars`
-
-*symbol — defined in `infrastructure.project`*
 
 ### `validate_project_structure`
 
@@ -1879,16 +1867,6 @@ build_coverage_gap_snapshot(*, revision: str, infrastructure_percent: float | No
 
 Build a coverage receipt without coercing unavailable values to zero.
 
-### `build_dist`
-
-*function — defined in `infrastructure.publishing.pypi.build`*
-
-```python
-build_dist(project_root: Path, *, dist_dir: Path | None=None, clean: bool=True) -> Path
-```
-
-Build wheel + sdist using ``uv build``.
-
 ### `build_release_metadata_receipt`
 
 *function — defined in `infrastructure.publishing.release.release_receipts`*
@@ -1904,7 +1882,7 @@ Build a metadata receipt with all reproducibility fields explicit.
 *function — defined in `infrastructure.publishing.release.release_receipts`*
 
 ```python
-build_subprocess_policy_receipt(repo_root: Path | str | None=None) -> SubprocessPolicyReceipt
+build_subprocess_policy_receipt(repo_root: Path | str | None=None, *, policies: Sequence[SubprocessPolicy]=INTENTIONAL_SUBPROCESS_POLICIES) -> SubprocessPolicyReceipt
 ```
 
 Build a receipt from the source-owned intentional-wrapper inventory.
@@ -1918,16 +1896,6 @@ calculate_metadata_complexity_score(metadata: PublicationMetadata) -> int
 ```
 
 Calculate a complexity score for the publication.
-
-### `check_dist`
-
-*function — defined in `infrastructure.publishing.pypi.upload`*
-
-```python
-check_dist(dist_dir: Path) -> list[str]
-```
-
-Run ``twine check`` on all distribution files in *dist_dir*.
 
 ### `CitationStyle`
 
@@ -2161,13 +2129,7 @@ Return PlatformInfo by name. Raises KeyError if not found.
 
 ### `get_static_site_adapter`
 
-*function — defined in `infrastructure.publishing.static_site.registry`*
-
-```python
-get_adapter(config: SiteDeployConfig) -> GitHubPagesAdapter | CloudflarePagesAdapter | NetlifyAdapter
-```
-
-Return the right adapter instance for config.hosting.
+*symbol — defined in `infrastructure.publishing.static_site`*
 
 ### `GitHubPagesAdapter`
 
@@ -2177,7 +2139,7 @@ Return the right adapter instance for config.hosting.
 class GitHubPagesAdapter(config: SiteDeployConfig)
 ```
 
-Data container for GitHubPagesAdapter.
+Deploy a site using explicit credentials and a validated destination.
 
 ### `list_platforms`
 
@@ -2275,7 +2237,7 @@ Data container for PublishingTier.
 class PyPIAdapter(config: PyPIConfig | None=None, *, env: dict[str, str] | None=None)
 ```
 
-Build → check → upload orchestrator for PyPI / TestPyPI.
+Public operating adapter with bounded, source-bound platform admission.
 
 ### `ReleaseMetadataReceipt`
 
@@ -2326,16 +2288,6 @@ class SubprocessPolicyReceipt
 ```
 
 Versioned inventory of intentional subprocess wrappers.
-
-### `upload_dist`
-
-*function — defined in `infrastructure.publishing.pypi.upload`*
-
-```python
-upload_dist(dist_dir: Path, config: PyPIConfig, *, dry_run: bool=True) -> PyPIResult
-```
-
-Upload wheel + sdist artefacts to PyPI or TestPyPI via twine.
 
 ### `validate_doi`
 
@@ -2558,7 +2510,7 @@ File-backed incremental rendering cache.
 *function — defined in `infrastructure.rendering.docx_renderer`*
 
 ```python
-render_docx(combined_md: Path, output_path: Path, *, bibliography: Path | None=None, reference_doc: Path | None=None, title: str | None=None, author: str | None=None, pandoc_path: str='pandoc', extra_args: list[str] | None=None) -> DocxRenderResult
+render_docx(combined_md: Path, output_path: Path, *, bibliography: Path | None=None, reference_doc: Path | None=None, title: str | None=None, author: str | None=None, pandoc_path: str='pandoc', extra_args: list[str] | None=None, diagram_png_sha256: tuple[str, ...]=()) -> DocxRenderResult
 ```
 
 Render *combined_md* to a DOCX at *output_path*.
@@ -2687,11 +2639,7 @@ One interactive control (slider / dropdown / toggle).
 
 ### `DASHBOARD_AVAILABLE`
 
-*constant — defined in `infrastructure.reporting`*
-
-```python
-DASHBOARD_AVAILABLE = True
-```
+*symbol — defined in `infrastructure.reporting`*
 
 ### `ErrorAggregator`
 

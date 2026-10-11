@@ -7,22 +7,29 @@ from importlib import import_module
 from pathlib import Path
 from typing import Any
 
-from config import DEFAULT_ARXIV_QUERIES, DEFAULT_RELEVANCE_KEYWORDS, MANUSCRIPT_DIR
+from template_literature_meta_analysis.config import DEFAULT_ARXIV_QUERIES, DEFAULT_RELEVANCE_KEYWORDS, MANUSCRIPT_DIR
 
 
 def _load_yaml(
     path: Path,
     *,
     yaml_importer: Callable[[str], Any] = import_module,
+    source_bytes: bytes | None = None,
 ) -> dict[str, Any]:
     try:
         yaml = yaml_importer("yaml")
     except ImportError:
         return {}
-    if not path.exists():
-        return {}
-    with open(path, encoding="utf-8") as handle:
-        data = yaml.safe_load(handle) or {}
+    if source_bytes is None:
+        if not path.exists():
+            return {}
+        with open(path, encoding="utf-8") as handle:
+            data = yaml.safe_load(handle) or {}
+    else:
+        from infrastructure.search.literature.configuration_sources import ConfigTextStream
+
+        with ConfigTextStream(path, source_bytes) as handle:
+            data = yaml.safe_load(handle) or {}
     return data if isinstance(data, dict) else {}
 
 
@@ -31,14 +38,14 @@ def default_config_path() -> Path:
     return Path(MANUSCRIPT_DIR / "config.yaml")
 
 
-def load_project_config(config_path: Path | None = None) -> dict[str, Any]:
+def load_project_config(config_path: Path | None = None, *, source_bytes: bytes | None = None) -> dict[str, Any]:
     """Return the project-specific configuration mapping.
 
     Keeping this public boundary here prevents pipeline runners from reaching
     through the private YAML loader or duplicating the ``project_config``
     traversal.
     """
-    data = _load_yaml(config_path or default_config_path())
+    data = _load_yaml(config_path or default_config_path(), source_bytes=source_bytes)
     project_config = data.get("project_config", {})
     return project_config if isinstance(project_config, dict) else {}
 

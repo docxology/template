@@ -35,7 +35,7 @@ class SecureRunOptions:
     project: str | None = None
     steganography_only: bool = False
     skip_infra: bool = False
-    core_only: bool = False
+    mode: str = "core"
     resume: bool = False
     validate_kmyth: bool = False
 
@@ -261,7 +261,7 @@ def run_secure_pipeline(
         invocation = PipelineInvocation(
             project=validated,
             skip_infra=options.skip_infra,
-            core_only=options.core_only,
+            mode=options.mode,
             resume=options.resume,
         )
         rc = int(runner.run(invocation))

@@ -133,3 +133,10 @@ breaking change for downstream filters and must be released with notice.
 - [`../AGENTS.md`](../AGENTS.md)
 - [`../../rendering/AGENTS.md`](../../rendering/AGENTS.md) — `ensure_setmathfont`
   and `remap_prose_unicode` partner with these checks.
+
+## Release acceptance modules
+
+| Module | Role |
+| --- | --- |
+| `pdf_discovery.py` | Explicit combined-PDF discovery for canonical project names. |
+| `pdf_reporting.py` | Human-readable PDF diagnostics for the canonical validation CLI. |

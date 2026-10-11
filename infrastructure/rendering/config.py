@@ -97,6 +97,7 @@ class RenderingConfig:
     # Format specific
     slide_theme: str = "metropolis"
     web_theme: str = "simple"
+    web_asset_mode: Literal["cdn", "local"] = "cdn"
 
     # Presentation profiles are additive. ``archive`` preserves the historical
     # manuscript-to-Beamer/Reveal behavior. ``accessible`` composes both
@@ -130,6 +131,8 @@ class RenderingConfig:
     def __post_init__(self) -> None:
         """Validate the opt-in slide contract without changing legacy output."""
 
+        if self.web_asset_mode not in {"cdn", "local"}:
+            raise ValueError("web_asset_mode must be cdn or local")
         if self.security_profile not in {"trusted-local", "untrusted"}:
             raise ValueError("security_profile must be 'trusted-local' or 'untrusted'")
         if self.untrusted_temp_root is not None and (
@@ -298,6 +301,12 @@ class RenderingConfig:
                     format_value = _strict_yaml_bool(formats[yaml_key], yaml_key)
                     if env_vars.get(env_var) is None:
                         overrides[attr] = format_value
+
+        html_block = render_block.get("html") or {}
+        if not isinstance(html_block, dict) or set(html_block) - {"asset_mode"}:
+            raise ValueError("render.html permits only asset_mode")
+        if "asset_mode" in html_block:
+            overrides["web_asset_mode"] = html_block["asset_mode"]
 
         raw_slides = render_block.get("slides")
         slides = {} if raw_slides is None else raw_slides

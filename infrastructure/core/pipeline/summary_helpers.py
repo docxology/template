@@ -13,6 +13,7 @@ from typing import Any
 from infrastructure.core.files.inventory import FileInventoryEntry
 from infrastructure.core.logging.helpers import format_duration
 from infrastructure.core.pipeline.types import PipelineStageResult
+from infrastructure.core.pipeline.outcomes import outcome_for_result, StageStatus
 
 
 def format_stage_result(result: PipelineStageResult, total_duration: float, skip_infra: bool) -> str:
@@ -26,21 +27,21 @@ def format_stage_result(result: PipelineStageResult, total_duration: float, skip
     Returns:
         Formatted stage result string
     """
-    if not result.success and result.exit_code == 0:
-        # Skipped stage
+    outcome = outcome_for_result(result)
+    if outcome.status is StageStatus.SKIPPED and outcome.receipt_validated:
         return f"\u2298 Stage {result.stage_num}: {result.stage_name} (skipped)"
 
     duration_formatted = f"{result.duration:.1f}s"
     percentage = (result.duration * 100) / total_duration if total_duration > 0 else 0
 
-    if result.success:
+    if outcome.complete:
         # Highlight as bottleneck if this stage took more than 10 seconds
         if result.duration > 10:
             return f"\u2713 Stage {result.stage_num}: {result.stage_name} ({duration_formatted}, {percentage:.1f}%) \u26a0 bottleneck"  # noqa: E501
         else:
             return f"\u2713 Stage {result.stage_num}: {result.stage_name} ({duration_formatted}, {percentage:.1f}%)"  # noqa: E501
     else:
-        return f"\u2717 Stage {result.stage_num}: {result.stage_name} ({duration_formatted}) FAILED"
+        return f"\u2717 Stage {result.stage_num}: {result.stage_name} ({duration_formatted}) {outcome.status.value.upper()}"
 
 
 def stage_result_to_dict(result: PipelineStageResult | None) -> dict[str, Any] | None:
@@ -58,6 +59,10 @@ def stage_result_to_dict(result: PipelineStageResult | None) -> dict[str, Any] |
     return {
         "stage_num": result.stage_num,
         "stage_name": result.stage_name,
+        "stage_key": result.stage_key,
+        "outcome": outcome_for_result(result).to_dict(),
+        "input_digest": result.input_digest,
+        "output_digest": result.output_digest,
         "success": result.success,
         "duration": result.duration,
         "duration_formatted": format_duration(result.duration),

@@ -1,17 +1,18 @@
 #!/usr/bin/env python3
 """Environment setup orchestrator script.
 
-This thin orchestrator prepares the environment for the complete project pipeline:
+This thin orchestrator checks an explicitly prepared environment:
 1. Verifies Python version and dependencies
-2. Sets up directory structure
-3. Configures environment variables
-4. Validates build tools availability
+2. Validates project source structure and discovery
+3. Checks optional setup-hook prerequisites without invoking the hook
+4. Validates build tools availability without installing them
 
 Stage 00 of the pipeline orchestration.
 
 Exit codes:
     0: Setup succeeded (environment ready for downstream stages)
-    1: Setup failed (missing Python version, dependencies, or build tools)
+    1: Malformed or failed project structure/check
+    75: Required prepared Python, dependencies, or tools are unavailable
 
 These map to ``scripts.runner.exit_codes.ExitCode`` (SUCCESS=0 / FAILURE=1).
 """
@@ -59,16 +60,20 @@ def main() -> int:
     # Summary
     log_header("Setup Summary", logger)
 
-    all_passed, summary_lines = aggregate_check_results(results)
+    exit_code, summary_lines = aggregate_check_results(results)
     for line in summary_lines:
         logger.info(line)
 
-    if all_passed:
+    if exit_code == 0:
         log_success("\n✅ Environment setup complete - ready to proceed")
         return 0
     else:
         logger.error("\n❌ Environment setup failed - fix issues and try again")
-        return 1
+        if exit_code == 75:
+            logger.error(
+                "Prepare requirements explicitly: uv sync --locked; bash scripts/shell/setup-system-deps.sh --check"
+            )
+        return exit_code
 
 
 if __name__ == "__main__":

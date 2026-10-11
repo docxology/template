@@ -7,7 +7,7 @@ standalone default remains rendered mode so publication checks require the
 contract (every pipeline stage has a ``definition_of_done``, the manuscript
 carries a methods/methodology section, and the artifact-manifest / evidence
 registry surfaces exist) that nothing else enforces. This gate runs that
-``plan --check`` validation for one project or every public exemplar and exits
+``plan`` validation for one project or every public exemplar and exits
 non-zero when any blocking (``error``-severity) issue is found.
 """
 
@@ -27,7 +27,7 @@ from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES  # noqa: E4
 
 
 def _check_project(project: str, repo_root: Path, *, artifact_mode: str = "rendered") -> int:
-    """Validate one project's methods plan (mirrors ``plan --check``).
+    """Validate one project's methods plan (mirrors ``plan``).
 
     Returns ``1`` when any ``error``-severity issue exists, ``0`` otherwise.
     Prints each blocking issue so the gate output is actionable without

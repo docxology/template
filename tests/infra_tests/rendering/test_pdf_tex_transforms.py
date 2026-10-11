@@ -1,4 +1,4 @@
-"""Tests for infrastructure.rendering._pdf_tex_transforms module.
+"""Tests for figure-path and math-delimiter transformations.
 
 Tests fix_figure_paths and fix_math_delimiters using real string inputs
 and real temp directories (No Mocks Policy).
@@ -6,10 +6,8 @@ and real temp directories (No Mocks Policy).
 
 from __future__ import annotations
 
-from infrastructure.rendering._pdf_tex_transforms import (
-    fix_figure_paths,
-    fix_math_delimiters,
-)
+from infrastructure.rendering._pdf_figure_paths import fix_figure_paths
+from infrastructure.rendering._pdf_math_delimiters import fix_math_delimiters
 
 
 class TestFixFigurePaths:

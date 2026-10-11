@@ -266,7 +266,7 @@ vim manuscript/07_limitations.md
 # Content here...
 
 # Build and verify
-uv run python scripts/runner/execute_pipeline.py --project {name} --core-only
+uv run python scripts/runner/execute_pipeline.py --project {name} --mode core
 ```
 
 **Result:** Section appears between 06_conclusion.md and 08_acknowledgments.md.
@@ -286,7 +286,7 @@ vim manuscript/S03_supplemental_figures.md
 # See [@sec:supplemental_figures] for additional figures.
 
 # Build and verify
-uv run python scripts/runner/execute_pipeline.py --project {name} --core-only
+uv run python scripts/runner/execute_pipeline.py --project {name} --mode core
 ```
 
 **Result:** Section appears after S02 and before glossary (98).

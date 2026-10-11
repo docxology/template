@@ -28,3 +28,18 @@ tracked outputs, refresh it explicitly:
 ```bash
 uv run python scripts/maintenance/refresh_rendered_provenance.py --all-public
 ```
+
+The default published audit also requires all stable artifacts and publication
+receipts to be present and byte-clean in Git's index. Native Original and fresh
+Current execution each audit the independently held pristine Source reference
+before Core, retaining that actual report for readback. After Core, the explicit
+`validate_current_rendered_provenance` API checks the complete actual derived
+snapshot without comparing derived Output bytes to published Git blobs.
+
+`build_current_publication_audit` retains every Source and rendered checker and
+brackets them with genuine `NativeSourceContext` correspondence checks. Exact
+authored Source, full Git/index, selected SDK, owner, reader and native execution
+custody remain separate required predicates. Snapshot consistency alone cannot
+establish native acceptance, and the CLI continues to use the strict published
+audit. This separation permits legitimate native output differences without a
+second render or an index mutation.

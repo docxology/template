@@ -24,7 +24,7 @@ def test_autoresearch_orchestrator_execution(tmp_path: Path) -> None:
     # Minimal pipeline.yaml
     pipe_file = repo_root / "infrastructure" / "core" / "pipeline" / "pipeline.yaml"
     pipe_file.parent.mkdir(parents=True)
-    pipe_file.write_text("stages:\n  - name: Setup\n    script: stage_00_setup.py\n")
+    pipe_file.write_text("stages:\n  - key: setup\n    name: Setup\n    script: scripts/pipeline/stage_00_setup.py\n")
 
     orchestrator = AutoResearchOrchestrator(repo_root, "templates/test_proj")
     result = orchestrator.execute_plan(fail_on_extrinsic=False, write_reports=False)
@@ -54,7 +54,7 @@ def test_autoresearch_report_write_failure_is_fatal(tmp_path: Path) -> None:
     (proj_dir / "autoresearch.yaml").write_text("enabled: true\ntopic: 'Testing'\n")
     pipe_file = repo_root / "infrastructure" / "core" / "pipeline" / "pipeline.yaml"
     pipe_file.parent.mkdir(parents=True)
-    pipe_file.write_text("stages:\n  - name: Setup\n    script: stage_00_setup.py\n")
+    pipe_file.write_text("stages:\n  - key: setup\n    name: Setup\n    script: scripts/pipeline/stage_00_setup.py\n")
 
     output_dir = proj_dir / "output"
     output_dir.mkdir()
@@ -88,7 +88,7 @@ def test_autoresearch_cli_orchestrate(tmp_path: Path, capsys) -> None:
 
     pipe_file = repo_root / "infrastructure" / "core" / "pipeline" / "pipeline.yaml"
     pipe_file.parent.mkdir(parents=True)
-    pipe_file.write_text("stages:\n  - name: Setup\n    script: stage_00_setup.py\n")
+    pipe_file.write_text("stages:\n  - key: setup\n    name: Setup\n    script: scripts/pipeline/stage_00_setup.py\n")
 
     # Run orchestrate command
     rc = main(["orchestrate", "--project", "templates/test_proj", "--repo-root", str(repo_root), "--json"])

@@ -17,11 +17,16 @@ Architecture:
 Exit codes:
     0: All discovered analysis scripts completed successfully (or no scripts found).
     1: At least one analysis script failed, or an unrecoverable pipeline error.
+    2: Invalid configuration, before producer execution.
+    75: Execution blocked by source or runtime admission.
+    124: Analysis deadline expired.
+    130: Analysis interrupted.
 """
 
 from __future__ import annotations
 
 import argparse
+import os
 import sys
 from pathlib import Path
 
@@ -32,6 +37,8 @@ from scripts import ensure_repo_root_on_path  # noqa: E402
 ensure_repo_root_on_path()
 
 from infrastructure.core.analysis_pipeline import run_analysis_pipeline  # noqa: E402
+from infrastructure.core.analysis_timeout import analysis_run_timeout_seconds  # noqa: E402
+from infrastructure.core.execution_policy import apply_execution_policy  # noqa: E402
 from infrastructure.core.exceptions import PipelineError, ScriptExecutionError  # noqa: E402
 from infrastructure.core.logging.utils import (  # noqa: E402
     get_logger,
@@ -56,12 +63,19 @@ def main() -> int:
     )
     args = parser.parse_args()
 
+    repo_root = Path(__file__).resolve().parents[2]
+    try:
+        environment = apply_execution_policy(os.environ, repo_root)
+        scripts = discover_analysis_scripts(repo_root, args.project)
+        analysis_run_timeout_seconds(len(scripts), environment)
+    except ValueError as exc:
+        logger.error("Invalid analysis configuration: %s", exc)
+        return 2
+
     log_header(f"STAGE 02: Run Analysis (Project: {args.project})", logger)
     log_live_resource_usage("Analysis stage start", logger)
 
-    repo_root = Path(__file__).resolve().parents[2]
     try:
-        scripts = discover_analysis_scripts(repo_root, args.project)
         if not scripts:
             logger.info("  No analysis scripts found - skipping stage")
             return 0
@@ -72,7 +86,7 @@ def main() -> int:
             ", ".join(s.name for s in scripts),
         )
 
-        exit_code = run_analysis_pipeline(scripts, repo_root, args.project)
+        exit_code = run_analysis_pipeline(scripts, repo_root, args.project, base_env=environment)
 
         if exit_code == 0:
             if verify_analysis_outputs(repo_root, args.project):
@@ -84,6 +98,9 @@ def main() -> int:
             logger.error("\nAnalysis failed - fix issues and try again")
 
         return exit_code
+    except ValueError as e:
+        logger.error("Invalid analysis configuration: %s", e)
+        return 2
     except (ScriptExecutionError, PipelineError) as e:
         logger.error("Pipeline error: %s", e)
         return 1

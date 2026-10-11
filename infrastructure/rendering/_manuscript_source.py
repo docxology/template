@@ -17,7 +17,7 @@ from infrastructure.core.project_paths import resolve_source_manuscript_dir
 from infrastructure.core.progress import SubStageProgress
 from infrastructure.transmission.transmission_bookends import is_transmission_bookend
 from infrastructure.rendering import RenderManager
-from infrastructure.rendering.latex_package_validator import validate_preamble_packages
+from infrastructure.rendering.latex_validation import validate_preamble_packages
 from infrastructure.rendering.latex_validation import ValidationReport
 
 logger = get_logger(__name__)
@@ -187,24 +187,44 @@ def resolve_manuscript_dir(project_root: Path) -> Path:
 
 
 def run_override_script(project_root: Path, override_script: Path) -> int:
-    import os
+    """Run an admitted custom renderer within one bounded descendant lifetime."""
+    import math
 
-    from infrastructure.core.runtime.environment import get_python_command
+    from infrastructure.core.execution_boundary import run_bounded_subprocess
+    from infrastructure.core.runtime._python_env import build_analysis_script_cmd_and_env
+    from infrastructure.core.runtime.python_binding import AnalysisRuntimeUnavailable
 
-    logger.info(f"⚡ Found custom render override: {override_script.name}")
-    logger.info("Transferring control to project-specific renderer...")
-    cmd = get_python_command() + [str(override_script)]
-    override_timeout = int(os.environ.get("MANUSCRIPT_HYDRATION_TIMEOUT", "300"))
+    logger.info("Found custom render override: %s", override_script.name)
+    root = Path(__file__).absolute().parents[2]
     try:
-        result = subprocess.run(cmd, cwd=str(project_root), check=False, timeout=override_timeout)  # nosec B603
-        if result.returncode == 0:
-            log_success("Custom PDF rendering completed successfully", logger)
-        else:
-            logger.error(f"Custom PDF rendering failed (exit code {result.returncode})")
-        return result.returncode
-    except (subprocess.SubprocessError, OSError) as e:
-        logger.error(f"Failed to execute custom renderer: {e}")
-        return 1
+        timeout = float(os.environ.get("MANUSCRIPT_HYDRATION_TIMEOUT", "300"))
+        if not math.isfinite(timeout) or timeout <= 0:
+            raise ValueError("Custom render timeout must be positive finite")
+        cmd, env = build_analysis_script_cmd_and_env(override_script, project_root, root)
+    except AnalysisRuntimeUnavailable as exc:
+        logger.error("Custom render runtime unavailable; prepare it explicitly: %s", exc)
+        return 75
+    except (OSError, ValueError) as exc:
+        logger.error("Invalid custom renderer invocation: %s", exc)
+        return 2
+    result = run_bounded_subprocess(cmd, cwd=project_root, env=env, timeout=timeout, capture_output=False)
+    original = result.original_returncode
+    code = (
+        130
+        if original in {130, -2} or result.returncode == 130
+        else 124
+        if result.timed_out or original == 124
+        else original
+        if original is not None and original != 0
+        else result.returncode
+    )
+    if code == 0:
+        log_success("Custom PDF rendering completed successfully", logger)
+    else:
+        logger.error(
+            "Custom PDF renderer failed (original child exit %s, outcome %s): %s", original, code, result.command_error
+        )
+    return code
 
 
 def run_manuscript_variable_script(
@@ -212,36 +232,57 @@ def run_manuscript_variable_script(
     template_repo_root: Path | None = None,
 ) -> int:
     """Hydrate project manuscript variables before rendering, when available."""
+    import math
     import os
+    import time
 
-    from infrastructure.core.runtime.environment import resolve_test_python
+    from infrastructure.core.analysis_launch import launch_analysis_script
+    from infrastructure.core.pipeline.outcomes import RunResult
+    from infrastructure.core.runtime._python_env import build_analysis_script_cmd_and_env
+    from infrastructure.core.runtime.python_binding import AnalysisRuntimeUnavailable
 
     script = project_root / "scripts" / "z_generate_manuscript_variables.py"
-    if not script.is_file():
+    if not os.path.lexists(script):
         return 0
 
-    logger.info("Hydrating manuscript variables before render: %s", script.name)
-    cmd = resolve_test_python(project_root / ".venv") + [str(script)]
-    logger.info("Using manuscript hydration interpreter: %s", cmd[0])
+    started = time.monotonic()
+    root = template_repo_root or Path(__file__).absolute().parents[2]
     env = os.environ.copy()
     if template_repo_root is not None:
         env["TEMPLATE_REPO_ROOT"] = str(template_repo_root)
-    hydration_timeout = int(env.get("MANUSCRIPT_HYDRATION_TIMEOUT", "300"))
     try:
-        result = subprocess.run(  # nosec B603
-            cmd,
-            cwd=str(project_root),
-            env=env,
-            check=False,
-            timeout=hydration_timeout,
-        )
-    except (subprocess.SubprocessError, OSError) as exc:
-        logger.error("Manuscript variable hydration failed to execute: %s", exc)
-        return 1
+        hydration_timeout = float(env.get("MANUSCRIPT_HYDRATION_TIMEOUT", "300"))
+        if not math.isfinite(hydration_timeout) or hydration_timeout <= 0:
+            raise ValueError("Manuscript hydration timeout must be positive finite")
+        cmd, env = build_analysis_script_cmd_and_env(script, project_root, root, base_env=env)
+    except AnalysisRuntimeUnavailable as exc:
+        logger.error("Manuscript hydration runtime unavailable; prepare it explicitly: %s", exc)
+        return 75
+    except (OSError, ValueError) as exc:
+        logger.error("Invalid manuscript hydration invocation: %s", exc)
+        return 2
 
-    if result.returncode != 0:
-        logger.error("Manuscript variable hydration failed (exit code %s)", result.returncode)
-        return 1
+    logger.info("Hydrating manuscript variables before render: %s", script.name)
+    logger.info("Using manuscript hydration interpreter: %s", cmd[0])
+    outcome = launch_analysis_script(
+        script,
+        root,
+        project_root,
+        cmd,
+        env,
+        started + hydration_timeout,
+        stage_key="hydration:scripts/z_generate_manuscript_variables.py",
+        cwd=project_root,
+    )
+    code = RunResult((outcome.stage_key,), (outcome,)).exit_code
+    if code != 0:
+        logger.error(
+            "Manuscript hydration %s (original child exit %s): %s",
+            outcome.status,
+            outcome.child_exit_code,
+            outcome.diagnostic,
+        )
+        return code
     log_success("Manuscript variables hydrated", logger)
     return 0
 

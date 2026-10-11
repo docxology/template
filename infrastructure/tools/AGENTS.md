@@ -26,7 +26,7 @@ than passive data stores:
 | `tools_info.py` | `ToolInfo`, `build_tool_info` |
 | `validation.py` | `validate_tool_structure` |
 | `public_scope.py` | `PUBLIC_TOOL_NAMES`, `public_tool_infos`, `public_tool_names` |
-| `linking.py` | `sync_private_tool_links`, `sync_active_tool_links`, `private_tools_root`, `is_managed_symlink`, `LIFECYCLE_LINK_DIRS`, `LinkSyncResult` |
+| `linking.py` | `sync_private_tool_links`, `private_tools_root`, `is_managed_symlink`, `LIFECYCLE_LINK_DIRS`, `LinkSyncResult` |
 | `__init__.py` | Re-exports: `ToolInfo`, `build_tool_info`, `discover_tools`, `resolve_tool_root`, `validate_tool_structure` |
 
 ## Public API
@@ -105,7 +105,6 @@ is_valid, message = validate_tool_structure(Path("tools/templates/template_code_
 - `sync_private_tool_links(repo_root, private_root=None, *, prune=True, dry_run=False) -> LinkSyncResult` —
   mirror private lifecycle folders into `tools/working/` and `tools/archive/`
   via symlinks. No-op when no private root is found.
-- `sync_active_tool_links(...)` — compatibility alias.
 - `private_tools_root(repo_root) -> Path | None` — resolve private sidecar
   root: `$TEMPLATE_TOOLS_ROOT` → `<repo_root>/.tools_root` → sibling `../tools`
   (requires `working/` + `archive/`).

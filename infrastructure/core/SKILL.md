@@ -176,9 +176,12 @@ copy_final_deliverables(source, destination)
 
 ```python
 from infrastructure.core.pipeline.multi_project import MultiProjectConfig, MultiProjectOrchestrator
-config = MultiProjectConfig(projects=["proj_a", "proj_b"])
+from pathlib import Path
+from infrastructure.project.discovery import discover_projects
+repo_root = Path(".").resolve()
+config = MultiProjectConfig(repo_root=repo_root, projects=discover_projects(repo_root), mode="core")
 orchestrator = MultiProjectOrchestrator(config)
-result = orchestrator.execute_all_projects_core()  # or execute_all_projects_full()
+result = orchestrator.execute_all_projects()
 ```
 
 ## Health Checks (`runtime/health_check.py`)

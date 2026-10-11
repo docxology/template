@@ -5,11 +5,8 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-from infrastructure.reporting.coverage_reporter import (
-    generate_test_report,
-    parse_pytest_output,
-    save_test_report_to_files,
-)
+from infrastructure.reporting.report_generator import generate_test_report, save_test_report_to_files
+from infrastructure.reporting.pytest_output_parser import parse_pytest_output
 
 
 def test_parse_pytest_output_extracts_counts_and_coverage() -> None:

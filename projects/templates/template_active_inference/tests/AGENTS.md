@@ -50,10 +50,10 @@ sheaf negative controls and consolidation surface checks separate 1,800-second
 groups, then divides the former 59-module remainder into explicit 29-module,
 seven-module manuscript/pipeline, seven-module rendering/semantic-validation,
 eight-node semantic certificate-integrity, and seven-node semantic
-dependency/evidence/manuscript cohorts plus a computed 15-module terminal
+dependency/evidence/manuscript cohorts plus a computed terminal
 cohort. The semantic cohorts are explicit pytest node IDs whose union and order
 must equal the AST-derived set of supported top-level nonparametrized tests;
-unsupported dynamic or class-based collection fails closed. Only the 15-module
+unsupported dynamic or class-based collection fails closed. Only the computed
 terminal cohort reports and enforces the aggregate coverage floor. Every group
 other than fixed-point remains at 1,800 seconds, and the fixed-point exception
 must not spread to unrelated coverage or producer commands.

@@ -51,11 +51,17 @@ grep -r "unittest.mock\|MagicMock\|@patch" projects/templates/template_eda_noteb
 |---|---|---|
 | `src/template_eda_notebook/eda/*.py` | `numpy`, `pandas`, `dataclasses`, `typing` | **Anything from `infrastructure.*`; matplotlib; file writes** |
 | `scripts/eda_analysis.py` | `template_eda_notebook.eda`, `template_eda_notebook.project_paths`, `matplotlib` | Analysis math (statistics, correlations) |
+| `src/template_eda_notebook/notebook_execution.py` | Standard library, NBClient/nbformat/Jupyter client, pandas, independent oracle, the exact declared Layer1 custody/process adapter | Source-notebook rewrites; silently allowed errors |
 | `tests/test_*.py` | `template_eda_notebook.*`, `pandas`, `numpy`, `pytest` | `unittest.mock.*`, `infrastructure.*` |
 
-**Verify `src/` is clean**:
+The dataset loader and notebook binding receipt reader perform existing
+read-only I/O. Other EDA transformations and the independent notebook oracle
+remain pure. Notebook execution is an explicit runtime module outside `eda/`;
+its tests use real kernels and real temporary files.
+
+**Verify the declared boundary**:
 ```bash
-grep -r "from infrastructure\|import infrastructure" projects/templates/template_eda_notebook/src/ || echo "Clean"
+uv run python scripts/audit/check_template_drift.py --project templates/template_eda_notebook --strict
 ```
 
 ---
@@ -112,7 +118,7 @@ project root (see `src/template_eda_notebook/eda/dataset.py`).
 
 ## 6. Dataclass and Type Hint Standards
 
-- Use Python 3.10+ union syntax: `str | Path | None`, not `Optional[...]`.
+- Use Python 3.12+ union syntax: `str | Path | None`, not `Optional[...]`.
 - Use `pd.DataFrame` for tabular inputs; `@dataclass(frozen=True)` for structured
   returns (`DatasetSchema`, `ColumnSummary`, `CleaningReport`, the figure-data
   dataclasses).

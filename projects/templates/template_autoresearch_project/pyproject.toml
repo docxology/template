@@ -4,17 +4,17 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "template_autoresearch_project"
-version = "0.3.2"
+version = "0.4.0"
 license = {text = "MIT"}
 authors = [{name = "Daniel Ari Friedman", email = "daniel@activeinference.institute"}]
 description = "Deterministic bounded AutoResearch ML-loop exemplar for the template repository."
-requires-python = ">=3.10"
+requires-python = ">=3.12"
 dependencies = [
+    "research-project-template==4.0.1",
     "numpy>=1.26",
     "matplotlib>=3.7",
     "pillow>=12.3.0",
     "pyyaml>=6.0",
-    "tomli>=2.0; python_version < '3.11'",
 ]
 
 [project.optional-dependencies]
@@ -24,10 +24,11 @@ dev = [
 ]
 
 [tool.pytest.ini_options]
-# Project lives at projects/templates/<name>/; the repo root (which holds
-# `infrastructure/`) is three levels up, so the documented per-project pytest
-# command resolves `infrastructure` without an externally supplied PYTHONPATH.
-pythonpath = ["../../..", ".", "src"]
+# `infrastructure` resolves through the declared research-project-template
+# dependency installed in the prepared environment. A lexical "../../.." entry
+# would import platform modules through a non-normalized alias path that the
+# executed-bytecode audit cannot bind to its admitted platform root.
+pythonpath = [".", "src"]
 testpaths = ["tests"]
 python_files = ["test_*.py"]
 python_functions = ["test_*"]
@@ -50,3 +51,13 @@ exclude_lines = [
     "if __name__ == .__main__.:",
     "raise NotImplementedError",
 ]
+
+[tool.uv.sources]
+# Local preparation uses this checkout; standalone execution uses its admitted wheel.
+research-project-template = { path = "../../..", editable = true }
+
+# Compatibility contract for this independent exemplar release.
+[tool.template]
+platform_version = "4.0.1"
+tested_python_versions = ["3.12", "3.13", "3.14"]
+required_unpaid_capabilities = []

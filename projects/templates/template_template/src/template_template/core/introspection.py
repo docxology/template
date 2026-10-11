@@ -331,7 +331,7 @@ def _candidate_workspaces(projects_dir: Path) -> list[Path]:
 
 
 def discover_projects(repo_root: Path, *, public_only: bool = True) -> list[ProjectAnalysis]:
-    """Scan ``projects/`` (flat children + typed program subfolders) for workspaces.
+    """Scan canonical public projects, or all local workspaces when explicitly requested.
 
     The layout is uniform program-prefix: public exemplars live under
     ``projects/templates/<name>``, the hot-seat rendered set under
@@ -340,30 +340,27 @@ def discover_projects(repo_root: Path, *, public_only: bool = True) -> list[Proj
     bare leaf name (e.g. ``template_code_project``) so metric keys remain
     ``project_<leaf>_*``.
 
-    CONFIDENTIALITY: ``public_only`` defaults to True so this meta-template — which
-    is itself published as a public exemplar — only ever introspects the public
-    canonical exemplars (``infrastructure.project.public_scope.PUBLIC_PROJECT_NAMES``,
-    matched by leaf name) plus this meta-project itself (:data:`META_PROJECT_PUBLIC_NAME`),
-    and never embeds private/rotating project names into its metrics, figures, or
-    rendered manuscript. The allowed leaf set is the single source of truth; private
-    lifecycle trees outside ``projects/`` are never scanned. Set ``public_only=False``
-    only for local diagnostics that never get published.
+    CONFIDENTIALITY: ``public_only`` defaults to True and consumes only the
+    exact qualified canonical paths in ``PUBLIC_PROJECT_NAMES``. No lifecycle
+    or flat same-leaf alias is enumerated or opened. Redirected canonical
+    project directories are refused. ``public_only=False`` retains broader
+    local discovery for diagnostics that never get published.
     """
-    allowed: set[str] | None = None
-    if public_only:
-        from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
-
-        # Allowed names are the public exemplars' bare leaf names (PUBLIC_PROJECT_NAMES
-        # are slash-qualified, e.g. ``templates/template_code_project``) plus this
-        # meta-project's public identity.
-        allowed = {Path(name).name for name in PUBLIC_PROJECT_NAMES} | {META_PROJECT_PUBLIC_NAME}
-
     base = repo_root / "projects"
     combined: dict[str, ProjectAnalysis] = {}
     if base.is_dir():
-        for child in _candidate_workspaces(base):
-            if allowed is not None and child.name not in allowed:
-                continue
+        if public_only:
+            from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
+
+            templates = base / "templates"
+            if base.is_symlink() or templates.is_symlink():
+                raise ValueError("canonical public project directories cannot be redirected")
+            candidates = [base / name for name in PUBLIC_PROJECT_NAMES]
+        else:
+            candidates = _candidate_workspaces(base)
+        for child in candidates:
+            if public_only and child.is_symlink():
+                raise ValueError("canonical public project directories cannot be redirected")
             analysis = _project_analysis_from_workspace(child)
             if analysis is None:
                 continue

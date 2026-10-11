@@ -20,6 +20,7 @@ from infrastructure.core.execution_boundary import (
     build_bounded_env,
     run_bounded_subprocess,
 )
+from infrastructure.core.files.secure_write import atomic_write_text_confined
 from infrastructure.core.pipeline.types import StageHooks
 
 
@@ -42,6 +43,7 @@ class StageHookContext:
     run_dir: Path
     status: str
     error_message: str = ""
+    deadline_monotonic: float | None = None
 
     def to_dict(self) -> dict[str, str | int]:
         """Serialize the context into a JSON-safe mapping."""
@@ -67,6 +69,7 @@ class HookExecutionResult:
     stdout: str = ""
     stderr: str = ""
     error_message: str = ""
+    original_exit_code: int | None = None
 
 
 def run_stage_hooks(
@@ -101,24 +104,40 @@ def run_stage_hooks(
         if not argv:
             continue
         started = time.monotonic()
+        remaining = (
+            context.deadline_monotonic - started
+            if context.deadline_monotonic is not None
+            else float(hooks.timeout_seconds)
+        )
+        timeout = min(float(hooks.timeout_seconds), remaining)
+        if timeout <= 0:
+            results.append(
+                HookExecutionResult(
+                    event, argv, False, 0.0, 124, error_message="Run deadline expired before hook launch"
+                )
+            )
+            break
         completed = run_bounded_subprocess(
             argv,
             cwd=context.run_dir,
             env=bounded_env,
-            timeout=hooks.timeout_seconds,
+            timeout=timeout,
         )
-        if completed.command_error:
+        if completed.original_returncode in {130, -2} or completed.returncode in {130, -2}:
             results.append(
                 HookExecutionResult(
                     event=event,
                     command=argv,
                     success=False,
                     duration=time.monotonic() - started,
-                    exit_code=1,
-                    error_message=completed.command_error,
+                    exit_code=130,
+                    stdout=completed.stdout,
+                    stderr=completed.stderr,
+                    error_message=completed.command_error or "hook interrupted",
+                    original_exit_code=completed.original_returncode,
                 )
             )
-        elif completed.timed_out:
+        elif completed.timed_out or completed.original_returncode == 124 or completed.returncode == 124:
             results.append(
                 HookExecutionResult(
                     event=event,
@@ -128,7 +147,20 @@ def run_stage_hooks(
                     exit_code=124,
                     stdout=completed.stdout,
                     stderr=completed.stderr,
-                    error_message=f"hook timed out after {hooks.timeout_seconds}s",
+                    error_message=completed.command_error or f"hook timed out after {timeout:g}s",
+                    original_exit_code=completed.original_returncode,
+                )
+            )
+        elif completed.command_error:
+            results.append(
+                HookExecutionResult(
+                    event=event,
+                    command=argv,
+                    success=False,
+                    duration=time.monotonic() - started,
+                    exit_code=1,
+                    error_message=completed.command_error,
+                    original_exit_code=completed.original_returncode,
                 )
             )
         else:
@@ -142,8 +174,11 @@ def run_stage_hooks(
                     stdout=completed.stdout,
                     stderr=completed.stderr,
                     error_message=completed.stderr.strip(),
+                    original_exit_code=completed.original_returncode,
                 )
             )
+        if results[-1].exit_code in {130, 124}:
+            break
 
     return results
 
@@ -151,6 +186,12 @@ def run_stage_hooks(
 def any_hook_failed(results: list[HookExecutionResult]) -> bool:
     """Return true when at least one executed hook failed."""
     return any(not result.success for result in results)
+
+
+def hook_failure_exit_code(results: list[HookExecutionResult]) -> int:
+    """Preserve interruption and timeout precedence across hook diagnostics."""
+    codes = {result.exit_code for result in results if not result.success}
+    return 130 if 130 in codes else 124 if 124 in codes else 1
 
 
 def summarize_hook_failures(results: list[HookExecutionResult]) -> str:
@@ -186,9 +227,8 @@ def _normalize_command(command: tuple[str, ...]) -> tuple[str, ...]:
 
 def _write_context_file(context: StageHookContext) -> Path:
     hook_dir = context.run_dir / ".pipeline" / "hooks"
-    hook_dir.mkdir(parents=True, exist_ok=True)
     path = hook_dir / f"stage-{context.stage_num:02d}-{context.stage_name.lower().replace(' ', '-')}.json"
-    path.write_text(json.dumps(context.to_dict(), indent=2), encoding="utf-8")
+    atomic_write_text_confined(context.run_dir, path, json.dumps(context.to_dict(), indent=2), mode=0o600)
     return path
 
 

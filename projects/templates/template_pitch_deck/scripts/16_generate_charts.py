@@ -35,11 +35,11 @@ def main(argv: list[str] | None = None) -> int:
     )
     from template_pitch_deck.coverage_chart_data import read_all_exemplar_coverage
     from template_pitch_deck.infra_facts import infra_subpackage_python_counts
-    from template_pitch_deck.paths import locate_repo_root
+    from template_pitch_deck.paths import data_repo_root, verify_reference_inputs
     from template_pitch_deck.render_orchestration import _resolve_theme, load_deck_config
 
     root = project_root()
-    repo_root = locate_repo_root(root)
+    repo_root = data_repo_root(root)
     theme = _resolve_theme(load_deck_config(root))
     figures_dir = root / "output" / "figures"
     figures_dir.mkdir(parents=True, exist_ok=True)
@@ -61,6 +61,7 @@ def main(argv: list[str] | None = None) -> int:
     logger.info("Wrote chart: %s (%d subpackages)", donut_path, n_subpackages)
     print(donut_path)
 
+    verify_reference_inputs()
     return 0
 
 

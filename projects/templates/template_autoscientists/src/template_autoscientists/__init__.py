@@ -8,8 +8,8 @@ stagnation-driven team reorganization.
 
 The coordination loop depends only on the :class:`~.agents.Proposer` protocol.
 :class:`~.agents.DeterministicProposer` drives the reproducible exemplar runs;
-:class:`~.agents.HermesProposer` swaps in a live Hermes agent (served by Ollama)
-for the opt-in agentic demo.
+The explicit live comparison uses identity-checked local Ollama proposals under
+matched budgets and retains source, provider, and outcome receipts.
 """
 
 from __future__ import annotations
@@ -25,14 +25,6 @@ from .analysis.state import Champion, ExperimentOutcome, Proposal, SharedState
 from .analysis.transcript import TRANSCRIPT_SCHEMA, replay_transcript, transcript_digest, validate_transcript
 
 
-def __getattr__(name: str):  # pragma: no cover - lazy script-layer export
-    if name == "HermesProposer":
-        from hermes_proposer import HermesProposer
-
-        return HermesProposer
-    raise AttributeError(f"module {__name__!r} has no attribute {name!r}")
-
-
 __all__ = [
     "Champion",
     "Confirmation",
@@ -40,7 +32,6 @@ __all__ = [
     "DeadEndRegistry",
     "DeterministicProposer",
     "ExperimentOutcome",
-    "HermesProposer",
     "Proposal",
     "Proposer",
     "SearchConfig",

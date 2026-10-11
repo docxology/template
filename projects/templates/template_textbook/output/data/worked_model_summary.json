@@ -56,6 +56,33 @@
       0.6737946999085467
     ]
   },
+  "instructional_examples": {
+    "logistic_growth": {
+      "N": 17.58909041203891,
+      "exponent": -1.4,
+      "parameters": {
+        "carrying_capacity": 100.0,
+        "initial": 5.0,
+        "r": 0.7
+      },
+      "time": 2.0
+    },
+    "population_statistics": {
+      "inputs": [
+        2.0,
+        4.0,
+        6.0,
+        8.0
+      ],
+      "statistics": {
+        "count": 4.0,
+        "max": 8.0,
+        "mean": 5.0,
+        "min": 2.0,
+        "std": 2.23606797749979
+      }
+    }
+  },
   "logistic_growth": {
     "N": [
       5.0,

@@ -9,7 +9,6 @@ module: `python -m infrastructure.validation.cli <subcommand> ...`.
 ## Files
 
 - `main.py` — CLI dispatcher (argparse subparsers + handlers); the `markdown` subcommand (`python -m infrastructure.validation.cli markdown …`) is dispatched here
-- `pdf.py` — PDF validation CLI (`python -m infrastructure.validation.cli pdf …`)
 - `__main__.py` — module entry point (delegates to `main.main()`)
 - `__init__.py` — package marker
 
@@ -25,6 +24,17 @@ module: `python -m infrastructure.validation.cli <subcommand> ...`.
 | `evidence`  | `validate_evidence_command`      | Validate manuscript claims against the project evidence registry     |
 | `prose-quality` | `validate_prose_quality_command` | Scan prose for AI-writing fingerprints (advisory by default)     |
 | `publication-audit` | `publication_audit_command` | Audit public exemplars for publication readiness (optional `--rendered`, `--strict`, `--require-figure-accessibility`) |
+
+### `pdf`
+
+Select a PDF path, or a qualified project with `--project` and `--repo-root`.
+Automatic selection covers public delivery PDFs and refuses ambiguity.
+`--preview-words` controls the extracted-text preview. Invalid selections exit
+2; validation findings exit 1; a clean document exits 0.
+
+```bash
+uv run python -m infrastructure.validation.cli pdf --project templates/template_code_project --repo-root .
+```
 
 ### `publication-audit`
 
@@ -48,7 +58,7 @@ Exit codes: `0` when no blocking findings (and no `review_required` findings whe
 
 Mirrors the gate that `PDFRenderer.render_combined` runs before Pandoc/xelatex
 (`infrastructure/rendering/_pdf_combined_pandoc.py` via the
-`_pdf_combined_renderer` facade re-export). Useful as a fast pre-commit /
+`_pdf_combined_prevalidate` implementation). Useful as a fast pre-commit /
 interactive check that fires in milliseconds and fails the same way the renderer
 would, on the same source files.
 

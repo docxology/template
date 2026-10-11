@@ -6,7 +6,7 @@
 ## Publication identity
 
 - Standalone repository: [docxology/template-pitch-deck](https://github.com/docxology/template-pitch-deck)
-- Config version: `1.0.0`
+- Intended / published version: `2.0.0 pending; last published 1.0.0`
 - Stable concept DOI: [10.5281/zenodo.21281509](https://doi.org/10.5281/zenodo.21281509)
 - Latest deposited version DOI: [10.5281/zenodo.21281510](https://zenodo.org/records/21281510)
 - Additional declared locations: none declared

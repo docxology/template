@@ -298,11 +298,13 @@ def _clean_index_issues(
     return tuple(issues)
 
 
-def validate_rendered_provenance(
+def _validate_rendered_provenance(
     repo_root: Path | str,
     project: str,
+    *,
+    published_snapshot: bool,
 ) -> RenderedProvenanceValidation:
-    """Fail closed unless the stored receipt is well formed and exactly current."""
+    """Compare the complete receipt/snapshot under the selected internal role."""
     root = Path(repo_root).resolve()
     project_root = resolve_project_root(root, project)
     path = project_root / RECEIPT_RELATIVE_PATH
@@ -356,7 +358,7 @@ def validate_rendered_provenance(
             )
         if not issues:
             issues.append(RenderedProvenanceIssue("RECEIPT_DRIFT", "rendered receipt differs from current evidence"))
-    clean_index = _clean_index_issues(root, project_root)
+    clean_index = _clean_index_issues(root, project_root) if published_snapshot else ()
     if clean_index:
         issues.append(
             RenderedProvenanceIssue(
@@ -368,6 +370,28 @@ def validate_rendered_provenance(
     return RenderedProvenanceValidation(tuple(issues))
 
 
+def validate_rendered_provenance(
+    repo_root: Path | str,
+    project: str,
+) -> RenderedProvenanceValidation:
+    """Require a complete current receipt and byte-clean published Git evidence."""
+    return _validate_rendered_provenance(repo_root, project, published_snapshot=True)
+
+
+def validate_current_rendered_provenance(
+    repo_root: Path | str,
+    project: str,
+) -> RenderedProvenanceValidation:
+    """Require a complete coherent derived snapshot, without native authority.
+
+    Every receipt, source/config/stage/output fingerprint, green validation
+    report and consumed manuscript check is retained. Native consumers must
+    separately hold their genuine immutable Source/index and execution custody;
+    this consistency result never establishes execution or acceptance.
+    """
+    return _validate_rendered_provenance(repo_root, project, published_snapshot=False)
+
+
 __all__ = [
     "EVIDENCE_MODE",
     "RECEIPT_RELATIVE_PATH",
@@ -377,6 +401,7 @@ __all__ = [
     "RenderedProvenanceValidation",
     "build_rendered_provenance_receipt",
     "rendered_manuscript_paths",
+    "validate_current_rendered_provenance",
     "validate_rendered_provenance",
     "write_rendered_provenance_receipt",
 ]

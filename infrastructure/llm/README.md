@@ -2,7 +2,7 @@
 
 Local Large Language Model (LLM) integration for research workflows, providing **manuscript draft assistance**, summarization, and analysis capabilities using Ollama.
 
-> **Important (2026-05-20 relabeling).** What this module does is **draft assistance** — structural lint, style suggestions, translation of technical abstracts. **It is not "scientific review."** A small local model (`gemma3:4b` by default) is not capable of substantive peer review of technical research; treating its output as such would be misleading to readers and reviewers. The pipeline stages historically called "LLM Scientific Review" should be read as "LLM Structural Lint (Draft Assistance)" — this rename is reflected in [`docs/maintenance/toolchain-migration.md`](../../docs/maintenance/toolchain-migration.md). The `pipeline.yaml` stage name is preserved for backwards compatibility with existing project configs; the disclaimer here is the authoritative interpretation. To upgrade output quality, swap the model in your project config (the Ollama abstraction is model-agnostic — see "Migration path" in the toolchain guide).
+> This module produces model-assisted draft feedback, structural checks, style suggestions, and translations. Its output requires author verification and supplies no independent scientific acceptance. Live execution is explicit; model identity, reviewed source, inputs, responses, and budgets belong in the acceptance evidence.
 
 ## Quick Start
 
@@ -183,6 +183,10 @@ HTTP coverage (Ollama-compatible API, not the real daemon). Tests marked with
 `@pytest.mark.requires_ollama` use `ensure_ollama_for_tests` from `tests/conftest.py`,
 which can **auto-pull** `smollm2` (or `OLLAMA_TEST_PULL_MODEL`) when no small/fast
 preference model is present—unless `OLLAMA_SKIP_TEST_MODEL_PULL=1`. See `tests/README.md`.
+Root acceptance lanes (`infrastructure/project/public_root_lane_contract.py`) always
+pin `OLLAMA_SKIP_TEST_MODEL_PULL=1` after every caller and declared prerequisite
+overlay: acceptance never acquires a model and uses only explicitly prepared,
+already-installed models; missing declared preparation blocks before execution.
 
 ## See Also
 

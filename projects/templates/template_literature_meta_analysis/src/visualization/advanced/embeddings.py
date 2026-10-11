@@ -11,8 +11,8 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import numpy as np
 
-from visualization.advanced.labels import format_subfield_label
-from visualization.style import VIZ_CONFIG
+from template_literature_meta_analysis.visualization.advanced.labels import format_subfield_label
+from template_literature_meta_analysis.visualization.style import VIZ_CONFIG
 
 logger = logging.getLogger(__name__)
 

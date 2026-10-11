@@ -82,11 +82,22 @@ def test_yaml_loader_and_cli_emit_secret_free_json(tmp_path: Path, capsys: pytes
     )
 
     assert load_promotion_attestation(path).approved is True
-    assert main([str(path)]) == 0
+    assert main(["attestation", str(path)]) == 0
     output = capsys.readouterr().out
     result = json.loads(output)
     assert result["approved"] is True
     assert "password" not in output.lower()
+
+
+def test_retired_positional_route_is_invalid_before_loading(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
+    absent = tmp_path / "absent-attestation.yaml"
+    with pytest.raises(SystemExit) as exc:
+        main([str(absent)])
+    assert exc.value.code == 2
+    output = capsys.readouterr()
+    assert not output.out
+    assert "invalid choice" in output.err and "attestation" in output.err
+    assert not absent.exists()
 
 
 def test_explicit_attestation_command_uses_deterministic_audit_date(

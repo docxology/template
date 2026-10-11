@@ -71,7 +71,7 @@ def main() -> int:
     if not TARGETS.pdf.exists():
         print(
             f"ERROR: missing rendered PDF: {TARGETS.pdf}\n"
-            "Run: ./run.sh --project templates/template_gold_refinement --pipeline --core-only"
+            "Run: ./run.sh --project templates/template_gold_refinement --pipeline --mode core"
         )
         return 1
 

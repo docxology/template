@@ -14,10 +14,10 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Sequence
 
-from config import CORPUS_PATH as DEFAULT_CORPUS_PATH
-from config_loader import load_fulltext_config, resolve_fulltext_directory
-from literature.corpus import Corpus
-from literature.fulltext_download import (
+from template_literature_meta_analysis.config import CORPUS_PATH as DEFAULT_CORPUS_PATH
+from template_literature_meta_analysis.config_loader import load_fulltext_config, resolve_fulltext_directory
+from template_literature_meta_analysis.literature.corpus import Corpus
+from template_literature_meta_analysis.literature.fulltext_download import (
     assess_fulltext_extraction,
     download_and_extract_fulltext,
 )

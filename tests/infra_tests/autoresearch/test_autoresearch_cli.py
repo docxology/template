@@ -30,7 +30,8 @@ def _write_pipeline_yaml(repo_root: Path) -> Path:
     (pipeline_dir / "pipeline.yaml").write_text(
         """
 stages:
-  - name: Environment Setup
+  - key: setup
+    name: Environment Setup
     script: scripts/pipeline/stage_00_setup.py
     contract:
       input_artifacts: ["projects/{project}/"]
@@ -38,7 +39,8 @@ stages:
       definition_of_done: "Environment is ready."
       failure_code: "ENVIRONMENT_SETUP_FAILED"
       retry_policy: 0
-  - name: Project Analysis
+  - key: analysis
+    name: Project Analysis
     script: scripts/pipeline/stage_02_analysis.py
     depends_on: [Environment Setup]
     contract:
@@ -186,3 +188,24 @@ def test_main_benchmark_returns_zero(tmp_path: Path) -> None:
     exit_code = main(["benchmark", "--project", "template_test", "--repo-root", str(repo_root)])
 
     assert exit_code == 0
+
+
+@pytest.mark.parametrize("command", ["plan", "validate", "review-packet", "summarize", "benchmark", "orchestrate"])
+def test_invalid_stage_declaration_has_invocation_exit_two(tmp_path: Path, command: str) -> None:
+    repo_root = _scaffold_repo(tmp_path)
+    pipeline = repo_root / "infrastructure/core/pipeline/pipeline.yaml"
+    pipeline.write_text(pipeline.read_text().replace("  - key: setup\n", "  - key: Bad Key\n"))
+    assert main([command, "--project", "template_test", "--repo-root", str(repo_root)]) == 2
+    project = repo_root / "projects/template_test"
+    assert not (project / "output/data/autoresearch_plan.json").exists()
+    assert not (project / "output/reports/autoresearch_readiness.json").exists()
+
+
+def test_malformed_yaml_and_missing_plan_are_invalid_invocations(tmp_path: Path, capsys) -> None:
+    repo_root = _scaffold_repo(tmp_path)
+    pipeline = repo_root / "infrastructure/core/pipeline/pipeline.yaml"
+    pipeline.write_text("stages: [unterminated\n")
+    assert main(["plan", "--project", "template_test", "--repo-root", str(repo_root)]) == 2
+    assert "invocation rejected" in capsys.readouterr().out
+    pipeline.unlink()
+    assert main(["plan", "--project", "template_test", "--repo-root", str(repo_root)]) == 2

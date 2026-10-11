@@ -2,7 +2,7 @@
 
 All functions use graceful fallbacks when paths are absent.
 
-Repo-root discovery: 4 levels up from this file.
+Resources resolve from the installed package, standalone export, or canonical public checkout.
 """
 
 from __future__ import annotations
@@ -13,6 +13,7 @@ from pathlib import PurePosixPath
 
 import yaml
 
+from ..resource_paths import public_resource_root
 from .type_defs import (
     ToolEntry,
     ToolEntryWithValidation,
@@ -34,17 +35,8 @@ logger = logging.getLogger(__name__)
 # ---------------------------------------------------------------------------
 
 
-def _repo_root() -> pathlib.Path:
-    return pathlib.Path(__file__).resolve().parents[6]
-
-
 def _tools_root() -> pathlib.Path:
-    bundled = (
-        pathlib.Path(__file__).resolve().parents[2] / "_template_resources" / "tools" / "templates"
-    )
-    if bundled.is_dir():
-        return bundled
-    return _repo_root() / "tools" / "templates"
+    return public_resource_root("tools")
 
 
 # Expose for test use (not part of the main public API)

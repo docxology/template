@@ -57,3 +57,37 @@ for r in (0.4, 0.8, 1.2):
    [@eq:part_I_first_principles_model], explain in one sentence why it will not.
 3. If your measured data rose past $K$ and then fell back, what would that tell
    you about the adequacy of the logistic model for that system?
+
+## Worked Solution
+
+With $N_0=5$ and $K=100$, the continuous half-capacity time solves
+$1+19e^{-rt}=2$, so $t=\ln(19)/r$. At rates $0.4$, $0.8$, and $1.2$, these
+times are approximately $7.361$, $3.681$, and $2.454$. Sampling only integer
+times therefore first exceeds half-capacity at $8$, $4$, and $3$. The final
+sample at twelve is approximately $86.478$, $99.871$, and $99.999$ respectively.
+A higher rate advances the transition without changing the limiting value.
+
+Recovering a rate requires more than reading a final point. For values strictly
+between zero and $K$, the transformed quantity $\ln[N/(K-N)]$ equals
+$rt+\ln[N_0/(K-N_0)]$. Fit this transform against time for the generated
+trajectory; its slope recovers the known rate. This exact instructional case
+has no measurement error, so it does not establish the reliability of fitting
+noisy observations.
+
+```python
+import numpy as np
+from textbook import models
+
+t = np.arange(0., 13.)
+N = models.logistic_growth(t, r=.8, carrying_capacity=100., initial=5.)
+transformed = np.log(N / (100. - N))
+recovered = models.linear_fit(t, transformed)
+assert abs(recovered.slope - .8) < 1e-12
+assert abs(recovered.intercept + np.log(19.)) < 1e-12
+```
+
+The carrying capacity sets the asymptote under the model assumptions. The
+trajectory remains below that value because its denominator is greater than
+one. Overshoot followed by decline would contradict this particular monotone
+trajectory; possible revisions include a time-varying environment or another
+state variable, which would need separate assumptions and tests.

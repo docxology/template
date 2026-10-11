@@ -114,7 +114,7 @@ pre-commit install --hook-type pre-push
 ### Step 4: Run core pipeline on template_code_project
 
 ```bash
-./run.sh --pipeline --project templates/template_code_project --core-only
+./run.sh --pipeline --project templates/template_code_project --mode core
 ```
 
 This runs 8 core stages (no LLM required): clean, setup, infra tests, project tests, analysis, render, validate, copy. Wall-clock: 2–5 minutes.

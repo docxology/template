@@ -7,7 +7,124 @@ gitignore, or treat those trees as confidential); where entries mention
 `projects/`, they refer to **generic layout and tooling** defined by the template,
 not to the contents of any specific workspace.
 
-## [Unreleased]
+## [4.0.1] - 2026-10-10
+
+See the [illustrated release-intent notes](docs/releases/v4.0.1.md). The date
+freezes the intended 4.0.1 metadata before exact-revision acceptance; it does not
+record completed publication. The prepared 4.0.0 candidate was not published;
+v3.8.0 remains the preceding published root release. Tagging and publication
+require final-source acceptance, the authenticated handoff and remote verification.
+
+- Align the root SDK, all 25 platform bindings, exact provider requirements,
+  locks and installed/export checks with 4.0.1 while retaining each exemplar's
+  independent version and historical publications.
+- Clarify ordinary development and exact-revision release acceptance as two
+  routes. Remove four duplicated scan lanes from the default local fallback,
+  eliminating 16 duplicate top-level `uv` commands while retaining their owning
+  health checks, named lanes and hooks; no timing improvement is claimed.
+- Use the existing canonical 25-project batch entry point for isolated release-
+  profile tests and each project's coverage floor; a diagnostic batch does not
+  replace the complete runtime, native or installed acceptance matrices.
+- Reuse the authenticated installed acceptance handoff for Root 4+ publication
+  after a fresh installed reader; retain the exact tested wheel, fresh source
+  distribution and retrieved-asset verification.
+- Preserve source-relative manuscript section identity, original native PID/host
+  observations and timeout/interruption outcome precedence. Source-specific
+  scientific, browser, Office, print and portable controls still require genuine
+  final-source acceptance before they can authorize a release.
+- Select illustrated notes and image assets from the actual release tag while
+  preserving admitted installed-wheel and final distribution byte custody.
+
+## Prepared 4.0.0 candidate — unpublished
+
+See the retained [illustrated candidate notes](docs/releases/v4.0.0.md) for the
+repository architecture, update summary and release boundary. These changes
+remain part of the pending 4.0.1 work; this heading records no published release.
+
+- Require every authored SDK member in root wheels, including native source and
+  typing markers, with exact source bytes and complete RECORD validation. Reject
+  local native build products while preserving the authored SDK package surface.
+- Fail PDF rendering when the final compiler pass fails or the expected PDF is
+  invalid. Accept a recorded recovery only after its actual compiler process
+  succeeds and the required PDF passes validation.
+- Use installed font-family resolution for portable notebook and formal manuscript
+  composition while preserving Unicode and mathematical content.
+- Add genuine complete-SDK archive controls and independently reviewed case
+  classification while retaining all mandatory runtime/platform obligations.
+- Record scoped artifact validation and rendered-snapshot evidence at development
+  checkpoints. Further source changes require genuine evidence renewal; affected
+  project composition and the complete publication audit remain required.
+
+- Preserve original bounded process outcomes and source/runtime custody in Root,
+  auxiliary and native acceptance readers, including portable replay after the
+  producer paths are unavailable. Authenticate hosted release handoffs against
+  current repository, run, artifact and exact source revision observations.
+- Add source-only scientific, Office and print reference components with genuine
+  native regression controls. Keep unsupported source/layout obligations blocked;
+  these components do not establish complete release acceptance.
+- Reject malformed QR outcome/custody records, retain installed scanner/app file
+  observations without redistributing their binaries, and bound native raster
+  and image decoding before allocation.
+
+- Raise the platform and public exemplar runtime floor to Python 3.12; retain
+  Python 3.14 as the local default and prepare CI for Python 3.12–3.14.
+- Resolve execution into immutable contracts with stable stage identities;
+  preserve child outcomes and refuse incomplete, paused, stale, or incompatible
+  results as successful completion.
+- Version source-bound checkpoint and cache records, hash recursive directory
+  content, and bind human decisions to the reviewed run, plan, and artifacts.
+- Retire unused publishing/resource interfaces, enforce strict Methods
+  declarations, and distinguish intended exemplar versions from historical
+  publication metadata.
+- Keep reporting importable without plotting providers: the multi-project
+  dashboard generator and `DASHBOARD_AVAILABLE` now observe Matplotlib itself,
+  and a genuine no-site fixture proves the optional path.
+- Harden ordinary CI: test-infra and coverage-infra checkouts pin submodules
+  without persisted credentials; partition admission accepts escaped
+  parametrization IDs; shard refusals exit with invocation status two, including
+  from xdist workers; the coverage union uses an isolated data file; Advanced's
+  genuine Meta provider wheel is built from a source copy and installed before
+  its Stage 01 cell.
+- Canonicalize Root lane coverage keys to SDK-relative paths and pin
+  `OLLAMA_SKIP_TEST_MODEL_PULL=1` in Root lane producer and reader environments.
+- Bytecode audit re-enables bytecode writing inside its fresh prefix even when
+  `PYTHONDONTWRITEBYTECODE` is set; exemplar launchers keep an audited prefix.
+- Multi-project workers and shared report finalization receive the environment
+  their frozen plan identity was admitted with, while cleanup guardians keep a
+  sanitized environment (`run_bounded_subprocess(guardian_env=...)`); whether
+  credentials belong in that identity is tracked as `P4-CREDENTIAL-ENV-IDENTITY-1`.
+  The declared verifier reports a whole-budget validation kill as timeout (124)
+  unless cleanup custody refused (75).
+- Audited project test launches also audit the package roots of exactly pinned
+  public exemplar providers (`template-*==version`), so dependency custody can
+  verify Advanced's installed Meta engine; Active Inference's top-level
+  `conftest.py` opts out of assertion rewriting because it is an audited root,
+  and AutoResearch hydration no longer requires the sidecars it writes itself.
+- Root prerequisite inventories may no longer declare the platform-pinned
+  `OLLAMA_SKIP_TEST_MODEL_PULL` key, so the pin can never satisfy a declared
+  preparation requirement.
+- Declare four more exemplar infrastructure imports in `layer_contract.yaml`
+  allowlists (Autopoiesis, Search, Template, Pitch Deck) with stated reasons.
+- Provision the pinned elan bootstrap and each project's declared Lean
+  toolchain for the Active Inference and Formal test-project cells, whose
+  ordinary Stage 01 executes real Lean (and, for Formal, TLC) controls.
+- Three coverage-measurement controls that need a prepared Active Inference
+  `.venv` are marked `slow` and belong to the prepared measurement lane
+  (`P4-COUNTS-PREPARED-VENV-LANE-1`); they do not run in ordinary CI.
+- Align orchestration, summary, checkpoint, stage-key and fixture tests with the
+  receipt-validated outcome contracts. Process-exit assertions now accept an
+  unreapable zombie (hosts whose PID 1 never reaps orphans), and several timing
+  parameters were widened so startup under load cannot fail them.
+
+- Renew the exact TLC asset pin after upstream replacement while preserving
+  finite-model positives, the required invariant violation and tool/source
+  custody checks. Distinguish the download tag from the actual jar build.
+- Update the root and affected exemplar dependency locks to the audited security
+  fixes; retain all security checks and existing advisory policy. Prepare the
+  genuine Meta provider with an explicit locked interpreter for counts and
+  static health, and retain invalid pipeline invocation status two.
+
+### Earlier verified work
 
 - Closed `TEST-ISOLATION-SYSPATH-1`, `SLOW-PROFILE-1`, `CI-WIRING-1`,
   `CI-SLOWMARK-SHARD-1`, and `REHEARSAL-PARALLEL-1` as verified on main:

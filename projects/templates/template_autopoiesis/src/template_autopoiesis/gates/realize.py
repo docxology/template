@@ -8,14 +8,16 @@ gated behind availability checks.
 from __future__ import annotations
 
 import shutil
-import subprocess
 import sys
 from pathlib import Path
-from typing import Optional
+from typing import TYPE_CHECKING, Optional
 
-from ..core.expand import expand
-from ..core.grammar import load_grammar
 from .materialize import child_name
+from .child_execution import execute_child
+from .realization_contract import selected_specs
+
+if TYPE_CHECKING:
+    from .child_execution import BoundedSubprocessResult
 
 
 def clear_generated_children(children_root: Path) -> tuple[Path, ...]:
@@ -44,7 +46,7 @@ def clear_generated_children(children_root: Path) -> tuple[Path, ...]:
 
 def select_full_child(project_root: Path, children_root: Path) -> Path:
     """Return the materialized child selected by the project's live grammar."""
-    expected_name = child_name(expand(load_grammar(project_root)))
+    expected_name = child_name(selected_specs(project_root, single=True)[0])
     candidate = children_root / expected_name
     root = children_root.resolve()
     if candidate.is_symlink():
@@ -67,15 +69,9 @@ def run_child_stage(
     child_root: Path,
     script: str,
     timeout: int = 60,
-) -> subprocess.CompletedProcess:
+) -> BoundedSubprocessResult:
     """Run *script* inside *child_root* using the current Python interpreter."""
-    return subprocess.run(
-        [sys.executable, script],
-        cwd=child_root,
-        capture_output=True,
-        text=True,
-        timeout=timeout,
-    )
+    return execute_child(child_root, script, timeout)
 
 
 def run_analysis_stage(child_root: Path) -> dict[str, object]:
@@ -91,7 +87,7 @@ def run_analysis_stage(child_root: Path) -> dict[str, object]:
             "stderr": proc.stderr,
             "returncode": proc.returncode,
         }
-    except Exception as exc:  # noqa: BLE001  # safety net: child stage failures surface as dict errors
+    except (OSError, ValueError) as exc:
         return {"success": False, "error": str(exc)}
 
 

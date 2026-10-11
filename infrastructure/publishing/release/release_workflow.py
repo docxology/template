@@ -116,6 +116,7 @@ class ReleaseRequest:
     zenodo_token: str | None = None
     github_api_base_url: str = "https://api.github.com"
     zenodo_base_url: str | None = None
+    github_target_commit: str | None = None
 
 
 @dataclass
@@ -346,6 +347,7 @@ def run_github_release(
         request.github_token,
         request.github_repo,
         base_url=request.github_api_base_url,
+        target_commitish=request.github_target_commit or "main",
     )
 
 
@@ -421,6 +423,20 @@ def _persist_bundle_metadata(bundle: ReleaseBundle) -> None:
     )
 
 
+def _hold_reserved_final_pdf(request: ReleaseRequest, bundle: ReleaseBundle) -> str | None:
+    """Bind the actual rendered source and bundle before either reserved upload."""
+    if not request.reserve_doi_first or request.skip_zenodo or request.dry_run:
+        return None
+    source_pdf = resolve_combined_pdf(request.repo_root, request.project_name)
+    if (
+        source_pdf is None
+        or calculate_file_hash(source_pdf) != bundle.pdf_sha256
+        or calculate_file_hash(bundle.pdf_path) != bundle.pdf_sha256
+    ):
+        raise PublishingError("Final DOI-bearing rendered PDF differs from the upload bundle")
+    return bundle.pdf_sha256
+
+
 def run_release_workflow(
     request: ReleaseRequest,
     *,
@@ -439,6 +455,8 @@ def run_release_workflow(
         allow_draft_abstract=request.allow_draft_abstract,
     )
     existing_doi = release_context.prior_doi
+    if request.github_target_commit is not None and re.fullmatch(r"[0-9a-f]{40}", request.github_target_commit) is None:
+        raise PublishingError("GitHub target must be a full standalone commit SHA")
 
     github_url: str | None = None
     doi: str | None = existing_doi
@@ -479,6 +497,21 @@ def run_release_workflow(
                 raise
 
     bundle = prepare_release_bundle(request, release_context=release_context)
+    if (
+        request.reserve_doi_first
+        and request.new_version
+        and existing_doi
+        and not request.skip_zenodo
+        and not request.skip_github
+        and not request.dry_run
+        and (
+            request.github_target_commit is None or re.fullmatch(r"[0-9a-f]{40}", request.github_target_commit) is None
+        )
+    ):
+        raise PublishingError(
+            "Reserve-first new-version release requires an explicit full standalone GitHub commit after render"
+        )
+    final_rendered_pdf_sha256 = _hold_reserved_final_pdf(request, bundle)
 
     if not request.skip_zenodo:
         try:
@@ -522,6 +555,7 @@ def run_release_workflow(
 
     if not request.skip_github:
         try:
+            _hold_reserved_final_pdf(request, bundle)
             github_url = github_publisher(request, bundle, doi=doi)
         except PublishingError as exc:
             errors.append(f"github: {exc}")
@@ -553,12 +587,15 @@ def run_release_workflow(
         if render_exit_code != 0:
             errors.append(f"render: exit code {render_exit_code}")
 
+    _hold_reserved_final_pdf(request, bundle)
     receipt_path = bundle.bundle_dir / "RELEASE_RECEIPT.json"
     receipt = {
         "project": request.project_name,
         "tag": request.tag,
         "github_repo": request.github_repo,
         "github_release_url": github_url,
+        "github_target_commit": request.github_target_commit,
+        "final_rendered_pdf_sha256": final_rendered_pdf_sha256,
         "doi": doi,
         "concept_doi": concept_doi,
         "version_doi": version_doi,

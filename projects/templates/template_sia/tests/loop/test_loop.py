@@ -31,6 +31,13 @@ def test_settings_reject_unknown_approval_mode() -> None:
         SiaLoopSettings("task", 1, 1, False, 60, "", "unknown")  # type: ignore[arg-type]
 
 
+def test_settings_reject_unnamespaced_project_block(tmp_path: Path) -> None:
+    (tmp_path / "manuscript").mkdir()
+    (tmp_path / "manuscript/config.yaml").write_text("sia:\n  run_id: 2\n", encoding="utf-8")
+    with pytest.raises(ValueError, match="project_config.sia"):
+        load_sia_settings(tmp_path)
+
+
 def test_settings_reject_string_true_false_coercion(tmp_path: Path, copy_project_sandbox: Copy):
     project = tmp_path / "project"
     copy_project_sandbox(project)

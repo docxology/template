@@ -7,7 +7,7 @@ from pathlib import Path
 
 from infrastructure.reporting.multi_project_reporter import generate_multi_project_summary_report
 
-from ._pipeline_reporter_helpers import _MockProject, _MockResult, _MockStageResult
+from ._pipeline_reporter_helpers import _Project, _Result, _Stage
 
 
 class TestGenerateMultiProjectSummaryReport:
@@ -15,15 +15,15 @@ class TestGenerateMultiProjectSummaryReport:
 
     def test_generate_with_successful_projects(self, tmp_path: Path) -> None:
         """Test generating summary report with successful projects."""
-        projects = [_MockProject("project1"), _MockProject("project2")]
-        result = _MockResult(
+        projects = [_Project("project1"), _Project("project2")]
+        result = _Result(
             successful_projects=2,
             failed_projects=0,
             total_duration=10.0,
             infra_test_duration=2.0,
             project_results={
-                "project1": [_MockStageResult(True, 3.0), _MockStageResult(True, 2.0)],
-                "project2": [_MockStageResult(True, 2.5), _MockStageResult(True, 2.5)],
+                "project1": [_Stage(True, 3.0), _Stage(True, 2.0)],
+                "project2": [_Stage(True, 2.5), _Stage(True, 2.5)],
             },
         )
         output_dir = tmp_path / "output"
@@ -42,15 +42,15 @@ class TestGenerateMultiProjectSummaryReport:
 
     def test_generate_with_failed_projects(self, tmp_path: Path) -> None:
         """Test generating summary report with failed projects."""
-        projects = [_MockProject("project1"), _MockProject("project2")]
-        result = _MockResult(
+        projects = [_Project("project1"), _Project("project2")]
+        result = _Result(
             successful_projects=1,
             failed_projects=1,
             total_duration=8.0,
             infra_test_duration=0.0,
             project_results={
-                "project1": [_MockStageResult(True, 3.0)],
-                "project2": [_MockStageResult(False, 2.0, "Test failed", ["Error 1"])],
+                "project1": [_Stage(True, 3.0)],
+                "project2": [_Stage(False, 2.0, "Test failed", ["Error 1"])],
             },
         )
         output_dir = tmp_path / "output"
@@ -63,8 +63,8 @@ class TestGenerateMultiProjectSummaryReport:
 
     def test_generate_with_empty_project_results(self, tmp_path: Path) -> None:
         """Test generating summary report with empty project results."""
-        projects = [_MockProject("project1")]
-        result = _MockResult(
+        projects = [_Project("project1")]
+        result = _Result(
             successful_projects=0,
             failed_projects=1,
             total_duration=0.0,
@@ -85,8 +85,8 @@ class TestGenerateMultiProjectSummaryReport:
         The code defensively converts dict values to empty lists, so dict-style results
         will be treated as empty (unknown format).
         """
-        projects = [_MockProject("project1")]
-        result = _MockResult(
+        projects = [_Project("project1")]
+        result = _Result(
             successful_projects=1,
             failed_projects=0,
             total_duration=5.0,
@@ -105,13 +105,13 @@ class TestGenerateMultiProjectSummaryReport:
 
     def test_generate_with_performance_recommendation(self, tmp_path: Path) -> None:
         """Test summary report generates performance recommendation for slow projects."""
-        projects = [_MockProject("project1")]
-        result = _MockResult(
+        projects = [_Project("project1")]
+        result = _Result(
             successful_projects=1,
             failed_projects=0,
             total_duration=600.0,
             infra_test_duration=0.0,
-            project_results={"project1": [_MockStageResult(True, 400.0)]},
+            project_results={"project1": [_Stage(True, 400.0)]},
         )
         output_dir = tmp_path / "output"
 
@@ -125,8 +125,8 @@ class TestGenerateMultiProjectSummaryReport:
 
     def test_generate_with_non_dict_project_results(self, tmp_path: Path) -> None:
         """Test handling non-dict project_results attribute."""
-        projects = [_MockProject("project1")]
-        result = _MockResult(
+        projects = [_Project("project1")]
+        result = _Result(
             successful_projects=0,
             failed_projects=1,
             total_duration=0.0,

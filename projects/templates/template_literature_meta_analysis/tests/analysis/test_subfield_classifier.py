@@ -10,8 +10,8 @@ from pathlib import Path
 
 import pytest
 
-import analysis.subfield_classifier as subfield_classifier
-from analysis.subfield_classifier import (
+import template_literature_meta_analysis.analysis.subfield_classifier as subfield_classifier
+from template_literature_meta_analysis.analysis.subfield_classifier import (
     DEFAULT_SUBFIELDS,
     _get_default_field,
     classify_corpus,
@@ -19,7 +19,7 @@ from analysis.subfield_classifier import (
     configure_subfields,
     load_subfields_from_config,
 )
-from literature.models import Paper
+from template_literature_meta_analysis.literature.models import Paper
 
 
 # ── Fixtures ──────────────────────────────────────────────────────────
@@ -362,7 +362,7 @@ class TestConfigureSubfields:
     """Tests for configure_subfields."""
 
     def test_with_config_path(self, tmp_path: Path):
-        """configure_subfields loads from config and sets module subfield_classifier.SUBFIELDS."""
+        """configure_subfields loads from template_literature_meta_analysis.config and sets module subfield_classifier.SUBFIELDS."""
         config = tmp_path / "config.yaml"
         config.write_text(
             textwrap.dedent("""\

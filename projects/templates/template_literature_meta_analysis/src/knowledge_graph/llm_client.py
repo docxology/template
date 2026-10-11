@@ -9,8 +9,8 @@ from typing import Any
 
 import requests
 
-from knowledge_graph.llm_config import LLMConfig
-from knowledge_graph.llm_prompts import _SYSTEM_PROMPT
+from template_literature_meta_analysis.knowledge_graph.llm_config import LLMConfig
+from template_literature_meta_analysis.knowledge_graph.llm_prompts import _SYSTEM_PROMPT
 
 logger = logging.getLogger(__name__)
 

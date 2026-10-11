@@ -12,6 +12,18 @@ The research project template runs a multi-stage pipeline (e.g., clean → test 
 
 Define the pipeline as a **declarative DAG in YAML** (`pipeline.yaml`). Each stage declares its name, script, dependencies, and optional tags. The DAG executor validates the graph (no cycles) and runs stages in topological order.
 
+Current declarations also require a unique stable lowercase `key` and exactly
+one executable `script` or `method`. Scripts use explicit repository-relative
+Python paths. Prose method descriptions belong in `contract.definition_of_done`.
+Unknown fields, unknown original dependencies, duplicate identities, and YAML
+type coercions fail validation. Sequence fields use lists, boolean flags use
+booleans, retry counts are non-negative integers, and hook timeouts are positive
+integers. Explicit filtering retains a receipt of removed dependency edges.
+
+Project plugins use the same declaration parser and require an explicit output,
+acceptance, and failure-code contract. Plugin names and keys cannot replace core
+identities; a failed merge leaves the original DAG unchanged.
+
 ### Key Benefits
 
 - **Clarity:** DAG structure is human-readable in YAML
@@ -23,8 +35,8 @@ Define the pipeline as a **declarative DAG in YAML** (`pipeline.yaml`). Each sta
 
 This example records the core+LLM selection when the ADR was accepted; it is
 not the live stage inventory. The accepted decision is the YAML-owned DAG, not
-a fixed stage count. The current `pipeline.yaml` declares 17 stages, the normal
-full selection runs 10, and `--core-only` runs eight. Use the generated table in
+a fixed stage count. Current execution defaults to the offline `--mode core`
+selection; `--mode live` explicitly enables model-assisted stages. Use the generated table in
 [`docs/RUN_GUIDE.md`](../../RUN_GUIDE.md#core-pipeline-stages--executive-reporting)
 for current names, dependencies, tags, and failure modes.
 

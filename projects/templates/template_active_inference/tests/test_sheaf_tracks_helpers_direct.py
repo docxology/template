@@ -192,7 +192,7 @@ def test_canonical_artifact_rows_bind_known_project_copy_state(copied_root: Path
         context = _ProvenanceContext(
             config_digest="f" * 64,
             deterministic_seed=23,
-            source_commit="test-commit",
+            source_input_sha256="a" * 64,
         )
 
         rows = _canonical_artifact_rows(copied_root, context)
@@ -209,7 +209,7 @@ def test_canonical_artifact_rows_bind_known_project_copy_state(copied_root: Path
         assert len(row["sha256"]) == 64
         assert row["deterministic_seed"] == 23
         assert row["config_digest"] == "f" * 64
-        assert row["source_commit"] == "test-commit"
+        assert row["source_input_sha256"] == "a" * 64
         assert row["producer_configured"] is True
         assert row["consumers"]
         assert row["validation_gates"]

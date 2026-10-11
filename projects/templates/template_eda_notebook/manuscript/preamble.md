@@ -46,23 +46,10 @@ This file contains LaTeX packages and commands that are automatically injected i
 % JuliaMono (TeX Live 2026) covers the full math/Greek glyph set used in
 % scientific code blocks; the default lmmono lacks \alpha/\mu/\partial/\nabla.
 %
-% The hardcoded TeX Live 2026 path below is portable to most macOS / Linux
-% TeX Live installs that placed JuliaMono under the default texmf-dist path.
-% If your TeX Live version differs (e.g., 2025, 2027) or your distribution
-% installs fonts elsewhere, comment out the explicit Path = line — fontspec
-% will then search the system font path. If JuliaMono is not installed at
-% all, comment out the whole block; xelatex falls back to lmmono with
-% reduced Unicode coverage but the document still compiles.
+% Select the declared JuliaMono family through system font discovery.
+% The installed family preserves Unicode code glyphs across TeX layouts.
 \usepackage{fontspec}
-\setmonofont{JuliaMono-Regular}[
-  Path           = /usr/local/texlive/2026/texmf-dist/fonts/truetype/public/juliamono/,
-  Extension      = .ttf,
-  UprightFont    = *,
-  BoldFont       = JuliaMono-Bold,
-  ItalicFont     = JuliaMono-RegularItalic,
-  BoldItalicFont = JuliaMono-BoldItalic,
-  Scale          = MatchLowercase,
-]
+\setmonofont{JuliaMono}[Scale=MatchLowercase]
 
 % Math font for unicode-math: Latin Modern Math (TeX Live) has full BMP
 % coverage including U+2223 (\mid), U+226A/226B (\ll/\gg), and the Greek/

@@ -11,6 +11,7 @@ from infrastructure.core.pipeline.artifacts import snapshot_current_artifact_man
 from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
 from infrastructure.rendering.manuscript_composition import write_manuscript_composition
 from infrastructure.validation.cli.main import build_parser, publication_audit_command
+from infrastructure.validation.evidence_registry import build_project_evidence_registry
 from infrastructure.validation.publication import (
     PublicationAuditReport,
     PublicationFinding,
@@ -69,7 +70,11 @@ stages:
     write_doc(combined, manuscript)
     write_manuscript_composition(project, SYNTHETIC_PROJECT, [hydrated], combined)
     write_doc(project / "output" / "data" / "result.json", '{"status": "complete"}\n')
-    write_doc(project / "output" / "reports" / "evidence_registry.json", '{"claims": []}\n')
+    registry = build_project_evidence_registry(project)
+    write_doc(
+        project / "output" / "reports" / "evidence_registry.json",
+        json.dumps(registry.to_compact_dict(), indent=2, sort_keys=True) + "\n",
+    )
     snapshot_current_artifact_manifest(project / "output")
 
     snapshot = build_current_rendered_snapshot(root, SYNTHETIC_PROJECT)

@@ -10,12 +10,12 @@ import math
 
 import pytest
 
-from analysis.entities import (
+from template_literature_meta_analysis.analysis.entities import (
     corpus_entities,
     extract_entities,
     extract_keyphrases,
 )
-from literature.models import Paper
+from template_literature_meta_analysis.literature.models import Paper
 
 
 # ── extract_entities ──────────────────────────────────────────────────

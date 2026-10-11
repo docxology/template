@@ -50,7 +50,7 @@ flowchart TB
     MAN_DIR --> M_CFG[config.yaml<br/>single source of truth]
     MAN_DIR --> M_PRE[preamble.md]
     MAN_DIR --> M_SECTIONS[00_abstract.md … 07_deep_search.md ·<br/>S01_literature_review.md · 99_references.md]
-    MAN_DIR --> M_BIB[references.bib · references_deep.bib<br/>auto-generated where applicable]
+    MAN_DIR --> M_BIB[references.bib · references_deep.bib<br/>curated authored inputs]
 
     DATA_DIR --> D_CORPUS[corpus.json<br/>offline default]
 
@@ -68,23 +68,23 @@ flowchart TB
 
 ## Key contracts
 
-* `src/publish/config.py::ProjectConfig` — every knob is here. Adding a new flag
+* `src/template_search_project/publish/config.py::ProjectConfig` — every knob is here. Adding a new flag
   means: add a field to the dataclass, add YAML parsing in
   `from_dict`, add a default in `manuscript/config.yaml`. Tests live in
   `tests/publish/test_config.py`.
 
-* `src/pipeline/pipeline.py::run_literature_pipeline` — the single-query search →
+* `src/template_search_project/pipeline/pipeline.py::run_literature_pipeline` — the single-query search →
   enrich → BibTeX entry point into `infrastructure.search.*` (the
-  multi-keyword fan-out in `src/search/deep_search.py::run_deep_search` performs
+  multi-keyword fan-out in `src/template_search_project/search/deep_search.py::run_deep_search` performs
   the equivalent calls for the deep-search run mode). Returns a
   :class:`LiteratureRunArtifacts` so the script knows where every
   artefact landed without re-deriving paths.
 
-* `src/pipeline/synthesis.py` — duck-typed `llm: (str) -> str` callable lets
+* `src/template_search_project/pipeline/synthesis.py` — duck-typed `llm: (str) -> str` callable lets
   tests pass deterministic local functions and runtime callers pass an
   Ollama-backed adapter. Prompts are module-level constants.
 
-* `src/analysis/report.py::write_reading_report` — single function; takes a
+* `src/template_search_project/analysis/report.py::write_reading_report` — single function; takes a
   `SearchResult` + citation-key map + optional synthesis records.
 
 ## Run modes
@@ -105,12 +105,12 @@ Reads the `deep_search:` block of `config.yaml`. Each keyword runs its
 own `SearchQuery` (capped at `max_results_per_keyword`, default 100),
 every paper is fully enriched (abstract + fulltext), and each paper
 gets a multi-section markdown reading note (LLM-generated when enabled).
-See [`src/search/deep_search.py`](src/template_search_project/search/deep_search.py) and
+See [`src/template_search_project/search/deep_search.py`](src/template_search_project/search/deep_search.py) and
 [`manuscript/07_deep_search.md`](manuscript/07_deep_search.md).
 
 | Command | Behaviour |
 |---|---|
-| `python scripts/run_deep_search.py` | Honours `project_config.deep_search.enabled`; exits 2 if disabled. |
+| `python scripts/run_deep_search.py` | Honours `project_config.deep_search.enabled`; logs a skip and exits0 if disabled. |
 | `… --enable` | Force-enable regardless of config. |
 | `… --keyword "X" --keyword "Y"` | Override the keyword list at the CLI. |
 | `… --no-llm` | Skip per-paper LLM summaries even when config enables them. |
@@ -136,9 +136,9 @@ empirical assertion language in fixture-backed synthesis.
 * `template_search_project` has **no algorithm** — its `src/` is pure
   orchestration over `infrastructure/`. The "experiment" is the
   pipeline itself.
-* Both projects emit a Pandoc-ready `references.bib`; this project
-  populates it from a query, while `template_code_project` ships a hand-curated
-  one.
+* Search writes its full generated bibliography under `output/bibliography/`.
+  The hydrator projects only additional citations beside authored curated references;
+  meaningful key collisions fail and authored files remain unchanged.
 * Both projects produce a manuscript PDF via the standard pipeline.
 
 ## Extending
@@ -162,7 +162,7 @@ To use only a curated corpus (offline reproducibility):
 
 ## Review phase
 
-Configurable gate via [`scripts/review`](scripts/review) and [`review_config.yaml`](review_config.yaml). The project-analysis stage runs [`scripts/zz_generate_review_report.py`](scripts/zz_generate_review_report.py) last; if `output/review/summary.json` is absent it invokes `scripts/review` subprocess before writing `output/review/REVIEW_REPORT.md`.
+Configurable gate via [`scripts/review`](scripts/review) and [`review_config.yaml`](review_config.yaml). The project-analysis stage runs [`scripts/zz_generate_review_report.py`](scripts/zz_generate_review_report.py) last; it recomputes current source/domain findings for `output/review/REVIEW_REPORT.md`; `scripts/review` separately executes the configured stages and writes only local operational receipts.
 
 List stages:
 
@@ -184,18 +184,18 @@ uv run python projects/templates/template_search_project/scripts/review \
 | `prerender_validation` | Source markdown gate | `infrastructure.validation.cli prerender` (`--repo-root` is `.` with project `cwd`) |
 | `markdown_links` | Repo link scan | `infrastructure.validation.cli links` |
 | `bibtex_validation` | BibTeX strict | `infrastructure.reference.citation.cli validate` |
-| `bibliography_completeness` | `[@key]` ↔ `.bib` | `src.analysis` (subprocess) |
-| `variables_resolved` | `{{TOKENS}}` | `src.analysis` |
+| `bibliography_completeness` | `[@key]` ↔ `.bib` | `template_search_project.analysis.analysis` (subprocess) |
+| `variables_resolved` | `{{TOKENS}}` | `template_search_project.analysis.analysis` |
 | `output_integrity` | `output/` | `infrastructure.validation.cli integrity` |
 | `test_suite_health` | pytest + coverage | subprocess |
-| `infrastructure_usage` | `infrastructure.*` imports | `src.analysis` |
-| `determinism_check` | cache / seed / temperature | `src.analysis` |
+| `infrastructure_usage` | `infrastructure.*` imports | `template_search_project.analysis.analysis` |
+| `determinism_check` | cache / seed / temperature | `template_search_project.analysis.analysis` |
 
 Disable a stage with `enabled: false` in `review_config.yaml`.
 
 ### Custom stages
 
-Add `stage_type: custom` and wire the subprocess in `scripts/review` to `src.analysis` (see that file’s `run_custom_stage`).
+Add `stage_type: custom` and wire the subprocess in `scripts/review` to `template_search_project.analysis.analysis` (see that file’s `run_custom_stage`).
 
 ## Related Capabilities
 

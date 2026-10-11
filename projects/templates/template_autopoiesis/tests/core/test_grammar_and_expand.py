@@ -325,6 +325,22 @@ def test_load_grammar_reads_archetype_filters(tmp_path):
     assert enumerate_all(grammar) == [{"primitive_domain": "graph"}]
 
 
+@pytest.mark.parametrize(
+    "source", ["autopoiesis: {}\n", "[]\n", "project_config: []\n", "project_config: {autopoiesis: []}\n"]
+)
+def test_load_grammar_requires_the_current_namespaced_mapping(tmp_path, source):
+    manuscript = tmp_path / "manuscript"
+    manuscript.mkdir()
+    (manuscript / "config.yaml").write_text(source)
+    with pytest.raises(GrammarError, match="project_config.autopoiesis"):
+        load_grammar(tmp_path)
+
+
+def test_boolean_seed_is_not_an_integer_grammar_contract():
+    with pytest.raises(GrammarError, match="seed must be int"):
+        parse_grammar(_make_block(seed=True))
+
+
 # ---------------------------------------------------------------------------
 # Grammar.slot()
 # ---------------------------------------------------------------------------

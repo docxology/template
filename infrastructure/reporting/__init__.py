@@ -18,6 +18,8 @@ so that ``from infrastructure.reporting import X`` works for the typical caller.
 Prefer importing from the specific submodule when only one subsystem is needed.
 """
 
+from typing import TYPE_CHECKING, Any
+
 # Pipeline stage reporters (used during pipeline execution)
 from .error_aggregator import (
     ErrorAggregator,
@@ -66,14 +68,59 @@ from .interactive_dashboard import (
 )
 
 
-# Optional imports: _dashboard_matplotlib requires matplotlib/plotly which may not be installed
-try:
-    from ._dashboard_matplotlib import generate_all_dashboards, generate_plotly_dashboard
-    from ._dashboard_charts import generate_matplotlib_dashboard
+# Optional plotting providers are loaded only when their public exports or
+# availability are requested. Ordinary report generation stays independent of
+# plotting initialization while preserving the same provider functions.
+_DASHBOARD_EXPORTS = frozenset(
+    {"DASHBOARD_AVAILABLE", "generate_all_dashboards", "generate_plotly_dashboard", "generate_matplotlib_dashboard"}
+)
 
-    DASHBOARD_AVAILABLE = True
-except ImportError:
-    DASHBOARD_AVAILABLE = False
+if TYPE_CHECKING:
+    from ._dashboard_charts import generate_matplotlib_dashboard as generate_matplotlib_dashboard
+    from ._dashboard_matplotlib import generate_all_dashboards as generate_all_dashboards
+    from ._dashboard_matplotlib import generate_plotly_dashboard as generate_plotly_dashboard
+
+    DASHBOARD_AVAILABLE: bool
+
+
+def _load_dashboards() -> None:
+    """Observe optional imports once, including the existing partial-import semantics."""
+    if "DASHBOARD_AVAILABLE" in globals():
+        return
+    try:
+        # The dashboard modules guard their own Matplotlib imports, so their
+        # importability alone does not prove a plotting provider exists.
+        # Observe the actual provider first; a genuinely absent Matplotlib
+        # leaves the dashboards unavailable rather than silently degraded.
+        import matplotlib  # noqa: F401
+
+        from ._dashboard_matplotlib import generate_all_dashboards, generate_plotly_dashboard
+
+        globals().update(
+            generate_all_dashboards=generate_all_dashboards,
+            generate_plotly_dashboard=generate_plotly_dashboard,
+        )
+        from ._dashboard_charts import generate_matplotlib_dashboard
+
+        globals().update(generate_matplotlib_dashboard=generate_matplotlib_dashboard, DASHBOARD_AVAILABLE=True)
+    except ImportError:
+        globals()["DASHBOARD_AVAILABLE"] = False
+
+
+def __getattr__(name: str) -> Any:
+    if name not in _DASHBOARD_EXPORTS:
+        raise AttributeError(f"module {__name__!r} has no attribute {name!r}")
+    _load_dashboards()
+    if name not in globals():
+        raise AttributeError(f"module {__name__!r} has no attribute {name!r}")
+    return globals()[name]
+
+
+def __dir__() -> list[str]:
+    # Explicit enumeration observes availability, just as an explicit import
+    # does; normal pipeline-report imports never initialize optional plotting.
+    _load_dashboards()
+    return sorted(globals())
 
 
 __all__ = [

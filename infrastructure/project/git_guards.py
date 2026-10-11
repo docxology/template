@@ -293,6 +293,9 @@ def _offending_tracked_paths(
 def is_generated_artifact_path(path: str) -> bool:
     """Check whether generated artifact path."""
     normalized = path.replace("\\", "/")
+    parts = Path(normalized).parts
+    if len(parts) >= 4 and parts[:2] == ("projects", "templates") and parts[3] in {"build", "dist"}:
+        return True
     if any(fnmatch.fnmatch(normalized, pattern) for pattern in ALWAYS_GENERATED_ARTIFACT_PATTERNS):
         return True
     if is_public_template_output_path(normalized):

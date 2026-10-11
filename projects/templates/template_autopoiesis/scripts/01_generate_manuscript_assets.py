@@ -3,21 +3,28 @@
 
 from __future__ import annotations
 
-import sys
+import importlib.util
 from pathlib import Path
 
-PROJECT_ROOT = Path(__file__).parent.parent
-sys.path.insert(0, str(PROJECT_ROOT))
-sys.path.insert(0, str(PROJECT_ROOT.parents[2]))
 
-from infrastructure.documentation.generated_figure_registry import write_generated_figure_registry
-from template_autopoiesis.manuscript.manuscript_figures import (
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
+_BOOTSTRAP = importlib.util.spec_from_file_location(
+    "autopoiesis_script_bootstrap", PROJECT_ROOT / "scripts/_bootstrap.py"
+)
+if _BOOTSTRAP is None or _BOOTSTRAP.loader is None:
+    raise ImportError("actual project bootstrap is unavailable")
+_bootstrap = importlib.util.module_from_spec(_BOOTSTRAP)
+_BOOTSTRAP.loader.exec_module(_bootstrap)
+_bootstrap.bootstrap_project(PROJECT_ROOT)
+
+from infrastructure.documentation.generated_figure_registry import write_generated_figure_registry  # noqa: E402 - actual provider selection precedes own imports
+from template_autopoiesis.manuscript.manuscript_figures import (  # noqa: E402 - actual provider selection precedes own imports
     FIGURE_REGISTRY_SCHEMA,
     MANUSCRIPT_FIGURE_SPECS,
     fig_coverage_by_module,
     generate_manuscript_figures,
 )
-from template_autopoiesis.core.project_paths import project_output_dirs
+from template_autopoiesis.core.project_paths import project_output_dirs  # noqa: E402 - actual provider selection precedes own imports
 
 
 def generate_assets(

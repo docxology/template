@@ -1,4 +1,4 @@
-"""Lazy compatibility exports for core logging utilities."""
+"""Lazy public exports for core logging utilities."""
 
 from __future__ import annotations
 

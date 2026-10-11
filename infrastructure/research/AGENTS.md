@@ -1,94 +1,69 @@
 # Research Module — Agent Notes
 
-## Purpose
+`infrastructure.research` provides descriptive research-stage and configuration
+APIs. Its immutable stage descriptors are planning data. Status values and gate
+text do not prove that research was executed or reviewed.
 
-`infrastructure/research` provides a programmatic definition of the
-seven-stage research workflow and the agent-facing prompt text used to
-operate research-mode and literature-review sub-agents. It is the entry
-point for any AI agent doing scientific research within the template/
-research infrastructure.
+## Read order
 
-## Public API
+Read [`README.md`](README.md), then [`workflow.py`](workflow.py) and
+[`config.py`](config.py) before changing descriptors or configuration.
+Repository pipeline execution is governed by
+[`core/pipeline/pipeline.yaml`](../core/pipeline/pipeline.yaml).
+
+## Implemented API
 
 ```python
-from infrastructure.research import ResearchWorkflow, ResearchStage
+from infrastructure.research import ResearchWorkflow, ResearchStage, StageStatus
 
 workflow = ResearchWorkflow()
-
-# Markdown rendering of the full workflow (for agent context)
-md = workflow.describe()
-
-# Access individual stages (implemented stage names: scope, survey,
-# hypothesise, experiment, validate, review, write — see Note below)
 stage = workflow.stage("survey")
-print(stage.description)
+print(stage.description, stage.gate)
+print(workflow.describe())
+serialized = workflow.to_dict()
+ordered_stages = workflow.all_stages()
 ```
 
-> **Note (doc/code drift, tracked for follow-up):** the table below and the
-> rest of this file describe a richer OpenScience-ported 7-stage design
-> (SCOPE/LITERATURE/REASON/DESIGN/COMPUTE/SYNTHESIZE/WRITE with per-stage
-> sub-agent fan-out counts and template commands). The implemented
-> `ResearchWorkflow`/`ResearchStage` in `workflow.py` is a simpler 7-stage
-> descriptive model (`scope, survey, hypothesise, experiment, validate,
-> review, write` — no `parallel_subagents` or `template_commands` fields).
-> Treat the table and provenance-integration examples below as design intent,
-> not a verified API surface, until reconciled.
+Built-in names, in order, are `scope`, `survey`, `hypothesise`, `experiment`,
+`validate`, `review` and `write`. `ResearchStage` contains `name`, `label`,
+`description`, `inputs`, `outputs`, `gate`, `status` and `order`.
+`StageStatus` values are `pending`, `in_progress`, `complete`, `skipped` and
+`blocked`. There is no automatic status transition or gate evaluator here.
 
-## Workflow Stages
+Callers can construct their own descriptor list and pass
+`ResearchWorkflow(stages=descriptors)`. Changes to the built-in vocabulary
+must update `_STAGE_DEFS`, `ResearchWorkflow.STAGE_NAMES` and the validated
+configuration stage names together, with tests of actual descriptor behavior.
 
-| # | Stage | Required | Sub-agent | Key outputs |
-|---|-------|----------|-----------|-------------|
-| 1 | **SCOPE** | ✓ | — | `scope.md` |
-| 2 | **LITERATURE** | ✓ (skip only if asked) | `literature-review` (×5 parallel) | `literature-review.md` |
-| 3 | **REASON** | ✓ (skip only if asked) | — | `reasoning.md` |
-| 4 | **DESIGN** | ✓ (skip only if asked) | — | `design.md` |
-| 5 | **COMPUTE** | ✓ | — | `results.md`, `output/data/*` |
-| 6 | **SYNTHESIZE** | ✓ | — | `synthesis.md` |
-| 7 | **WRITE** | optional | `write` | `manuscript/*` |
+## Configuration boundaries
 
-## Prompt Files
+`load_research_workflow_config(project_dir)` reads optional
+`project_dir/research_workflow.yaml`, with `enabled`, `active_stage`,
+`skip_stages` and `strict` keys. Unknown keys and invalid names fail.
+The dataclass's tracking defaults are returned when the file is absent.
 
-| File | Purpose |
-|------|---------|
-| `prompts/research_workflow.md` | Full research-mode system prompt — load as agent context for primary research agents. |
-| `prompts/literature_review.md` | PRISMA-adapted sub-agent prompt — load as context when spawning `literature-review` sub-agents. |
+`scripts/pipeline/stage_10_research_workflow.py` is an inspection CLI. Its
+separate `manuscript/config.yaml` switch is `research_workflow.enabled`.
+`--describe` prints the full plan; `--stage survey` prints one descriptor when
+the inspection switch is enabled. Neither command dispatches research workers.
 
-## Key Infrastructure Dependencies
+Actual computations belong in domain source and the canonical execution DAG.
+Generic search, model, provenance and publication services retain their own
+explicit configuration, evidence and execution boundaries.
 
-| Capability | Module | Command |
-|-----------|--------|---------|
-| Literature search | `infrastructure.search.literature` | `uv run python -m infrastructure.search.literature search --query '...'` |
-| BibTeX export | `infrastructure.search.literature.cli` | `... to-bibtex '...' --output projects/{name}/manuscript/references.bib` |
-| Web/semantic search | `infrastructure.search.exa` | `uv run python -m infrastructure.search.exa search '...'` |
-| Deep research | `infrastructure.search.deep_research` | `uv run python -m infrastructure.search.deep_research submit ...` |
-| Pipeline execution | `scripts/runner/execute_pipeline.py` | `uv run python scripts/runner/execute_pipeline.py --project {name}` |
-| Provenance DAG | `infrastructure.provenance` | `uv run python -m infrastructure.provenance record run ...` |
-| Output validation | `scripts/pipeline/stage_04_validate.py` | `uv run python scripts/pipeline/stage_04_validate.py --project {name}` |
+## Optional prose guidance
 
-## Boundaries
+[`prompts/research_workflow.md`](prompts/research_workflow.md) and
+[`prompts/literature_review.md`](prompts/literature_review.md) are agent-context
+references. They do not implement Python prompt generation or execution APIs,
+and do not authorize external communications or paid provider calls.
 
-- This module is **read-only infrastructure** — it defines workflows, it does
-  not execute them. Execution happens via `scripts/runner/execute_pipeline.py` and
-  the numbered `scripts/NN_*.py` orchestrators.
-- No autonomous self-approval loops. Every paid compute step requires explicit
-  user approval (see "Cost Approval" in `prompts/research_workflow.md`).
-- No network calls at import time. `infrastructure.search.*` is opt-in.
-- Stage outputs go to `output/data/` and `output/reports/` under the project
-  directory, not into `infrastructure/research/` itself.
+## Verification
 
-## Adding a New Stage
+Run `uv run pytest tests/infra_tests/research/ --no-cov -q` after changes.
+Descriptor serialization and configuration errors have real tests; preserve
+source-owned gate wording and the distinction between plans and execution.
 
-1. Add a `ResearchStage(...)` entry to `ResearchWorkflow.STAGES` in
-   `workflow.py` with the correct `order` value.
-2. Update `prompts/research_workflow.md` with the corresponding stage
-   section.
-3. Update the stage table in this `AGENTS.md` and in `README.md`.
-
-## See Also
-
-- [`README.md`](README.md) — quick reference
-- [`prompts/research_workflow.md`](prompts/research_workflow.md) — full research prompt
-- [`prompts/literature_review.md`](prompts/literature_review.md) — PRISMA sub-agent prompt
-- [`infrastructure/search/AGENTS.md`](../search/AGENTS.md) — literature search module
-- [`infrastructure/autoresearch/AGENTS.md`](../autoresearch/AGENTS.md) — deterministic readiness checks
-- [`scripts/AGENTS.md`](../../scripts/AGENTS.md) — pipeline entry points
+See [`SKILL.md`](SKILL.md), [`search/AGENTS.md`](../search/AGENTS.md),
+[`autoresearch/AGENTS.md`](../autoresearch/AGENTS.md) and
+[`scripts/AGENTS.md`](../../scripts/AGENTS.md).

@@ -5,14 +5,15 @@ and verifying their outputs.
 
 Stage 02 executes each discovered script under a subprocess timeout configured by
 ``ANALYSIS_SCRIPT_TIMEOUT_SEC`` (see :mod:`infrastructure.core.analysis_timeout`).
-The default is **7200** seconds (2 hours) per script; set a higher value or
-``0``/``unlimited`` for no limit on very long Hermes or Lean batches.
+The default is **7200** seconds (2 hours) per script; overrides must be positive
+and finite. Configured producers are required declarations, not optional hints.
 """
 
 from pathlib import Path
 from typing import Any
 
 from infrastructure.core.exceptions import PipelineError
+from infrastructure.core.files.secure_write import read_text_confined
 from infrastructure.core.logging.utils import get_logger, log_success
 from infrastructure.core.project_paths import (
     resolve_project_root,
@@ -63,38 +64,46 @@ def _resolve_configured_script(project_scripts_dir: Path, item: str) -> Path | N
 def _configured_analysis_scripts(project_dir: Path, project_scripts_dir: Path) -> list[Path] | None:
     """Return config-declared analysis scripts, or ``None`` when no allowlist exists."""
     config_path = resolve_source_manuscript_dir(project_dir) / "config.yaml"
-    if not config_path.is_file():
+    try:
+        config_path.lstat()
+    except FileNotFoundError:
         return None
 
     try:
         import yaml
 
-        loaded: Any = yaml.safe_load(config_path.read_text(encoding="utf-8")) or {}
-    except Exception as exc:  # noqa: BLE001 - malformed optional config should fall back gracefully
-        logger.warning("Could not read analysis script allowlist from %s: %s", config_path, exc)
-        return None
+        loaded: Any = yaml.safe_load(read_text_confined(project_dir.resolve(), config_path.absolute()))
+    except (OSError, ValueError, yaml.YAMLError) as exc:
+        raise ValueError(f"Cannot admit analysis configuration at {config_path}: {exc}") from exc
 
+    if loaded is None:
+        loaded = {}
     if not isinstance(loaded, dict):
+        raise ValueError(f"Analysis configuration must be a mapping: {config_path}")
+    if "analysis" not in loaded:
         return None
     analysis = loaded.get("analysis")
-    if not isinstance(analysis, dict) or "scripts" not in analysis:
+    if not isinstance(analysis, dict):
+        raise ValueError(f"analysis must be a mapping: {config_path}")
+    if "scripts" not in analysis:
         return None
 
-    configured = analysis.get("scripts") or []
+    configured = analysis["scripts"]
     if not isinstance(configured, list):
-        logger.warning("Ignoring analysis.scripts in %s because it is not a list", config_path)
-        return None
+        raise ValueError(f"analysis.scripts must be a list: {config_path}")
 
     scripts: list[Path] = []
+    seen: set[Path] = set()
     for item in configured:
-        if not isinstance(item, str):
-            logger.warning("Ignoring non-string analysis script entry in %s: %r", config_path, item)
-            continue
+        if not isinstance(item, str) or not item.strip():
+            raise ValueError(f"analysis.scripts entries must be nonempty strings: {config_path}")
         script = _resolve_configured_script(project_scripts_dir, item)
-        if script is not None and _is_analysis_script(script):
-            scripts.append(script)
-        else:
-            logger.warning("Configured analysis script not found, confined, or not runnable: %s", item)
+        if script is None or not _is_analysis_script(script):
+            raise ValueError(f"Configured analysis script not found, confined, or runnable: {item}")
+        if script in seen:
+            raise ValueError(f"Duplicate configured analysis script: {item}")
+        seen.add(script)
+        scripts.append(script)
 
     return scripts
 
@@ -132,6 +141,7 @@ def discover_analysis_scripts(
     logger.info(f"[STAGE-02] Discovering analysis scripts in {display_dir}/...")
 
     project_scripts_dir = resolved_dir / "scripts"
+    configured_scripts = _configured_analysis_scripts(resolved_dir, project_scripts_dir)
 
     if not project_scripts_dir.exists():
         logger.info(
@@ -139,7 +149,6 @@ def discover_analysis_scripts(
         )
         return []
 
-    configured_scripts = _configured_analysis_scripts(resolved_dir, project_scripts_dir)
     if configured_scripts is not None:
         scripts = configured_scripts
         config_path = resolve_source_manuscript_dir(resolved_dir) / "config.yaml"
@@ -222,7 +231,7 @@ def verify_analysis_outputs(
 
     # Determine whether analysis scripts exist (so we know whether output is expected)
     scripts_dir = resolved_dir / "scripts"
-    configured_scripts = _configured_analysis_scripts(resolved_dir, scripts_dir) if scripts_dir.exists() else None
+    configured_scripts = _configured_analysis_scripts(resolved_dir, scripts_dir)
     if configured_scripts is not None:
         scripts_exist = bool(configured_scripts)
     else:

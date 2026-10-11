@@ -20,7 +20,7 @@ from pathlib import Path
 REPO_ROOT = Path(__file__).resolve().parent.parent.parent.parent
 sys.path.insert(0, str(REPO_ROOT))
 
-from manuscript.variables import (
+from template_literature_meta_analysis.manuscript.variables import (
     compute_variables,
 )
 

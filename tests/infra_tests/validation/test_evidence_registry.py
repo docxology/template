@@ -308,7 +308,7 @@ def test_build_project_registry_collects_config_reports_and_nested_run_artifacts
     (project / "output" / "runs" / "run_1").mkdir(parents=True)
     (project / "manuscript" / "config.yaml").write_text("sample_size: 64\n", encoding="utf-8")
     (project / "pyproject.toml").write_text(
-        '[project]\nrequires-python = ">=3.10"\n\n[tool.coverage.report]\nfail_under = 91\n',
+        '[project]\nrequires-python = ">=3.12"\n\n[tool.coverage.report]\nfail_under = 91\n',
         encoding="utf-8",
     )
     (project / "output" / "reports" / "analysis.json").write_text('{"accuracy": 0.85}', encoding="utf-8")
@@ -324,7 +324,7 @@ def test_build_project_registry_collects_config_reports_and_nested_run_artifacts
     registry = build_project_evidence_registry(project)
 
     assert registry.has("number", "64")
-    assert registry.has("number", "3.10")
+    assert registry.has("number", "3.12")
     assert registry.has("number", "91")
     assert registry.has("number", "85%")
     assert registry.has("number", "80")
@@ -332,7 +332,7 @@ def test_build_project_registry_collects_config_reports_and_nested_run_artifacts
     assert not registry.has("artifact", "output/reports/validation_report.json")
     assert not registry.has("artifact", "output/reports/validation_report.md")
     assert {fact.source_tier for fact in registry.lookup("number", "0.85")} == {"generated_metric"}
-    assert {fact.source_path for fact in registry.lookup("number", "3.10")} == {"pyproject.toml"}
+    assert {fact.source_path for fact in registry.lookup("number", "3.12")} == {"pyproject.toml"}
 
 
 def test_project_registry_is_invariant_to_ignored_runtime_and_control_reports(tmp_path: Path, monkeypatch) -> None:

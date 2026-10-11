@@ -1,15 +1,12 @@
 """Repository-boundary scan and Git-cache machinery for rendered snapshots.
 
-Split from :mod:`infrastructure.validation.rendered_snapshot` to keep module
-sizes inside the line-count gate; the parent module re-imports every moved
-name under its original spelling, so all existing import paths remain valid.
-This is a private companion module — the public API surface stays in
-``rendered_snapshot``.
+The public rendered-snapshot API stays in ``rendered_snapshot``; focused scan
+controls exercise these implementation helpers directly.
 """
 
 from __future__ import annotations
 
-import hashlib  # noqa: F401  (re-exported companion namespace)
+import os
 import subprocess
 from collections.abc import Iterable, Iterator
 from dataclasses import dataclass
@@ -27,7 +24,7 @@ class RenderedSnapshotError(ValueError):
         self.code = code
 
 
-_CACHE_PARTS = frozenset(
+CACHE_PARTS = frozenset(
     {
         ".git",
         ".mypy_cache",
@@ -41,21 +38,7 @@ _CACHE_PARTS = frozenset(
 )
 
 #: Path components skipped when walking project trees for snapshots.
-CACHE_PARTS = _CACHE_PARTS
-PROJECT_EXCLUDED_PARTS = _CACHE_PARTS | {"output", "tests"}
-
-_PROJECT_CACHE_PARTS = frozenset(
-    {
-        ".git",
-        ".mypy_cache",
-        ".pytest_cache",
-        ".ruff_cache",
-        ".tox",
-        ".venv",
-        "__pycache__",
-        "htmlcov",
-    }
-)
+PROJECT_EXCLUDED_PARTS = CACHE_PARTS | {"output", "tests"}
 
 
 @dataclass(frozen=True)
@@ -328,8 +311,10 @@ def source_repository_boundary(
     return project_repository
 
 
-def cached_paths(repo_root: Path) -> set[Path] | None:
-    """Return cached paths for one worktree, independent of global Git helpers."""
+def cached_paths(repo_root: Path, *, inherit_git_routing: bool = False) -> set[Path] | None:
+    """Read one worktree's membership, optionally retaining its own index routing."""
+    env = {key: value for key, value in os.environ.items() if inherit_git_routing or not key.startswith("GIT_")}
+    env.update(LC_ALL="C", GIT_OPTIONAL_LOCKS="0", GIT_NO_REPLACE_OBJECTS="1", GIT_NO_LAZY_FETCH="1")
     try:
         completed = subprocess.run(  # noqa: S603 - fixed argv, no shell
             [
@@ -347,6 +332,7 @@ def cached_paths(repo_root: Path) -> set[Path] | None:
             check=False,
             capture_output=True,
             timeout=30,
+            env=env,
         )
     except (OSError, subprocess.TimeoutExpired):
         return None
@@ -367,7 +353,9 @@ def cached_records(
     for record in candidates:
         root = repository_root_for(record.path, repo_root)
         by_root.setdefault(root, []).append(record)
-    cached_by_root = {root: cached_paths(root) for root in by_root}
+    cached_by_root = {
+        root: cached_paths(root, inherit_git_routing=(root.resolve() == repo_root.resolve())) for root in by_root
+    }
     if any(paths is None for paths in cached_by_root.values()):
         if require_worktrees:
             unavailable = sorted(str(root) for root, paths in cached_by_root.items() if paths is None)

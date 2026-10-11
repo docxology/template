@@ -11,6 +11,7 @@ Proves three things with real temp project trees (No Mocks):
 
 from __future__ import annotations
 
+import shutil
 from pathlib import Path
 
 import pytest
@@ -22,6 +23,12 @@ from infrastructure.core.pipeline.plugins import PluginStageError
 def _make_project_repo(tmp_path: Path) -> Path:
     repo_root = tmp_path / "repo"
     (repo_root / "projects" / "p" / "output").mkdir(parents=True)
+    # Resolved plans admit only existing canonical stage targets.
+    shutil.copytree(
+        Path(__file__).parents[4] / "scripts" / "pipeline",
+        repo_root / "scripts" / "pipeline",
+        ignore=shutil.ignore_patterns("__pycache__"),
+    )
     return repo_root
 
 
@@ -33,7 +40,12 @@ class TestExecutorPluginMerge:
             """
 plugins:
   - name: Fixture Plugin Stage
+    key: fixture_plugin
     method: run_project_tests
+    contract:
+      output_artifacts: [output/report.json]
+      definition_of_done: Tests pass.
+      failure_code: TESTS_FAILED
     depends_on: [Copy Outputs]
     tags: [plugin]
 """,
@@ -41,7 +53,7 @@ plugins:
         )
 
         executor = PipelineExecutor(PipelineConfig(project_name="p", repo_root=repo_root))
-        specs = executor._build_stage_list(include_llm=False, skip_clean=False)
+        specs = executor._build_stage_list(skip_clean=False)
         names = [s.name for s in specs]
 
         assert "Fixture Plugin Stage" in names
@@ -66,7 +78,7 @@ plugins:
 
         executor = PipelineExecutor(PipelineConfig(project_name="p", repo_root=repo_root))
         with pytest.raises(PluginStageError):
-            executor._build_stage_list(include_llm=False, skip_clean=False)
+            executor._build_stage_list(skip_clean=False)
 
     def test_invalid_plugin_missing_runner_rejected(self, tmp_path: Path) -> None:
         repo_root = _make_project_repo(tmp_path)
@@ -80,7 +92,7 @@ plugins:
         )
         executor = PipelineExecutor(PipelineConfig(project_name="p", repo_root=repo_root))
         with pytest.raises(PluginStageError):
-            executor._build_stage_list(include_llm=False, skip_clean=False)
+            executor._build_stage_list(skip_clean=False)
 
 
 class TestExecutorDefaultOff:
@@ -89,15 +101,15 @@ class TestExecutorDefaultOff:
         repo_root = _make_project_repo(tmp_path)
         executor = PipelineExecutor(PipelineConfig(project_name="p", repo_root=repo_root))
 
-        baseline = [s.name for s in executor._build_stage_list(include_llm=False, skip_clean=False)]
+        baseline = [s.name for s in executor._build_stage_list(skip_clean=False)]
 
         # Add the plugin file then remove it: confirms presence is the only switch.
         plugin_file = repo_root / "projects" / "p" / "pipeline_plugins.yaml"
         plugin_file.write_text("plugins: []\n", encoding="utf-8")
-        with_empty = [s.name for s in executor._build_stage_list(include_llm=False, skip_clean=False)]
+        with_empty = [s.name for s in executor._build_stage_list(skip_clean=False)]
 
         plugin_file.unlink()
-        after = [s.name for s in executor._build_stage_list(include_llm=False, skip_clean=False)]
+        after = [s.name for s in executor._build_stage_list(skip_clean=False)]
 
         assert baseline == after
         # An empty plugins block is also a no-op.

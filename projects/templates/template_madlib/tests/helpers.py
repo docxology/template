@@ -15,6 +15,7 @@ def base_payload() -> dict:
     return {
         "paper": {"title": "Test Madlib"},
         "madlib": {
+            "schema_version": 2,
             "seed": 7,
             "composition_depth": "deep",
             "hypothesis": "Tokens remain auditable.",

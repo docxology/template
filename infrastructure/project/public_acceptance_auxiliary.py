@@ -1,0 +1,552 @@
+"""Source-bound supervision for genuine auxiliary acceptance producers."""
+
+from __future__ import annotations
+
+import hashlib
+import json
+import os
+import platform
+import signal
+import subprocess
+import sys
+import time
+import uuid
+from pathlib import Path
+from typing import Any, Sequence
+
+from infrastructure.project.public_acceptance_evidence import (
+    cell_environment,
+    evidence_directory,
+    gate_payload,
+    read_json,
+    write_json,
+)
+from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
+from infrastructure.project.public_acceptance_auxiliary_validation import (
+    validate_auxiliary_process,
+    validate_sandbox_transfer,
+)
+from infrastructure.reporting.readiness_receipts import SCHEMA_VERSION, source_fingerprint
+from infrastructure.reporting.release_readiness_profile import required_profile
+from infrastructure.reporting.release_readiness_snapshot import SnapshotReader
+from infrastructure.reporting.release_readiness_validators import validate_acceptance
+
+PROCESS_SCHEMA = "template-auxiliary-process-v2"
+ROOT_GATES = (
+    "root:roster",
+    "root:docs_lint",
+    "root:methods",
+    "root:macos:process",
+    "root:macos:rendering",
+    "root:sandbox:transfer",
+)
+
+
+def supervise(
+    command: list[str], root: Path, directory: Path, deadline: float, *, environment: dict[str, str] | None = None
+) -> dict[str, Any]:
+    """Retain original exit and bounded raw streams; kill the owned group on timeout."""
+    if environment is not None:
+        from infrastructure.core.secrets import is_secret_env_name
+
+        if any(is_secret_env_name(key) or key in {"SSH_AUTH_SOCK", "GPG_AGENT_INFO"} for key in environment):
+            raise ValueError("explicit auxiliary child environment contains protected credential names")
+    directory = evidence_directory(root, directory)
+    directory.mkdir(parents=True, exist_ok=True)
+    started = time.monotonic()
+    executable = Path(command[0]).resolve(strict=True)
+    binary_hash = hashlib.sha256(executable.read_bytes()).hexdigest()
+    stdout = directory / "stdout.txt"
+    stderr = directory / "stderr.txt"
+    timeout = False
+    output_limit = False
+    with stdout.open("xb") as out, stderr.open("xb") as err:
+        environment = (
+            cell_environment(Path(command[0]).absolute(), directory, repo_root=root)
+            if environment is None
+            else dict(environment)
+        )
+        environment["PYTHONPYCACHEPREFIX"] = str(directory / "bytecode")
+        child = subprocess.Popen(
+            command,
+            cwd=root,
+            env=environment,
+            stdout=out,
+            stderr=err,
+            start_new_session=True,
+        )
+        try:
+            while True:
+                remaining = deadline - time.monotonic()
+                if remaining <= 0:
+                    raise subprocess.TimeoutExpired(command, 0)
+                if stdout.stat().st_size > 16 * 1024 * 1024 or stderr.stat().st_size > 16 * 1024 * 1024:
+                    output_limit = True
+                    os.killpg(child.pid, signal.SIGKILL)
+                    code = child.wait(timeout=5)
+                    break
+                try:
+                    code = child.wait(timeout=min(0.05, remaining))
+                    break
+                except subprocess.TimeoutExpired:
+                    continue
+        except subprocess.TimeoutExpired:
+            timeout = True
+            os.killpg(child.pid, signal.SIGKILL)
+            code = child.wait(timeout=5)
+        finally:
+            # A successful leader is not permission to leave grandchildren.
+            try:
+                os.killpg(child.pid, signal.SIGKILL)
+            except ProcessLookupError:
+                pass
+            child.wait(timeout=5)
+    import shutil
+
+    # The original fresh cache path is an observed runtime fact, not retained evidence.
+    # Remove only this owned cache after child cleanup, before source inventory scans.
+    shutil.rmtree(directory / "bytecode", ignore_errors=True)
+    artifacts = {}
+    for name, path in (("stdout", stdout), ("stderr", stderr)):
+        if path.stat().st_size > 16 * 1024 * 1024:
+            output_limit = True
+            # Retain the bounded leading bytes and explicitly fail the cell.
+            with path.open("r+b") as stream:
+                stream.truncate(16 * 1024 * 1024)
+        artifacts[name] = {
+            "path": path.relative_to(root).as_posix(),
+            "sha256": hashlib.sha256(path.read_bytes()).hexdigest(),
+        }
+    if hashlib.sha256(executable.read_bytes()).hexdigest() != binary_hash:
+        raise ValueError("selected executable changed during auxiliary execution")
+    return {
+        "schema_version": PROCESS_SCHEMA,
+        "command": command,
+        "cwd": str(root),
+        "pid": child.pid,
+        "executable": str(executable),
+        "executable_sha256": binary_hash,
+        "executable_sha256_before": binary_hash,
+        "executable_sha256_after": hashlib.sha256(executable.read_bytes()).hexdigest(),
+        "selected_interpreter": command[0],
+        "producer_root": str(root),
+        "host": {"system": platform.system(), "machine": platform.machine()},
+        "exit_code": code,
+        "timed_out": timeout,
+        "output_limit_exceeded": output_limit,
+        "duration_seconds": time.monotonic() - started,
+        "streams": artifacts,
+    }
+
+
+def run_auxiliary_acceptance(
+    root: Path,
+    *,
+    gates: Sequence[str] | None = None,
+    timeout_seconds: int = 600,
+    evidence_dir: Path | None = None,
+    interpreter: Path | None = None,
+    producer_inputs: dict[str, dict[str, Any]] | None = None,
+) -> dict[str, Any]:
+    """Run a finite serial selection, retaining independently readable child facts."""
+    if type(timeout_seconds) is not int or timeout_seconds <= 0:
+        raise ValueError("auxiliary deadline must be a positive integer")
+    root = root.resolve(strict=True)
+    fingerprint = source_fingerprint(root)
+    requirements, faults = required_profile(root, SnapshotReader(root), fingerprint)
+    if faults:
+        raise ValueError("source-owned auxiliary profile is invalid")
+    available = {
+        req.id: req
+        for req in requirements
+        if req.kind in {"roster", "docs", "oracle", "platform", "transfer", "pipeline", "domain", "live"}
+    }
+    selection = tuple(ROOT_GATES if gates is None else gates)
+    if not selection or len(set(selection)) != len(selection) or set(selection) - set(available):
+        raise ValueError("auxiliary selection must contain unique declared gate IDs")
+    directory = evidence_directory(
+        root, evidence_dir or root / "output/readiness" / f"auxiliary-{uuid.uuid4().hex}", fresh=True
+    )
+    python = (interpreter or Path(sys.executable)).absolute()
+    deadline = time.monotonic() + timeout_seconds
+    output: dict[str, Any] = {}
+    for index, gate in enumerate(selection):
+        requirement = available[gate]
+        cell = directory / f"{index:03d}"
+        status, details, blockers = "blocked", {}, []
+        if gate == "root:sandbox:transfer":
+            blockers = [
+                {
+                    "tool": "authorized remote sandbox",
+                    "reason": "select exact provider, sandbox destination and existing authorization; "
+                    "independently retrieve the admitted Root export",
+                }
+            ]
+        elif not python.is_file():
+            blockers = [
+                {
+                    "tool": "selected installed interpreter",
+                    "reason": "explicit executable is unavailable; acquisition is disabled",
+                }
+            ]
+        elif time.monotonic() >= deadline:
+            blockers = [{"tool": "auxiliary deadline", "reason": "whole-run deadline exhausted before child launch"}]
+        else:
+            before = source_fingerprint(root)
+            raw_path = cell / "facts.json"
+            spec = write_json(
+                root,
+                cell / "spec.json",
+                {
+                    "gate": gate,
+                    "budget": max(1, int(deadline - time.monotonic())),
+                    "raw_path": raw_path.relative_to(root).as_posix(),
+                    "producer_inputs": (producer_inputs or {}).get(requirement.scope, {}),
+                },
+            )
+            command = [
+                str(python),
+                "-m",
+                "infrastructure.project.public_acceptance_auxiliary_worker",
+                "--spec",
+                str(root / spec["path"]),
+            ]
+            process = supervise(command, root, cell / "execution", deadline)
+            after = source_fingerprint(root)
+            raw = read_json(root, raw_path) if raw_path.is_file() else {}
+            raw_binding = (
+                {
+                    "path": raw_path.relative_to(root).as_posix(),
+                    "sha256": hashlib.sha256(raw_path.read_bytes()).hexdigest(),
+                }
+                if raw
+                else None
+            )
+            process.update(
+                gate=gate,
+                source_fingerprint=fingerprint,
+                source_before=before,
+                source_after=after,
+                raw_artifact=raw_binding,
+                spec_artifact=spec,
+            )
+            binding = write_json(root, cell / "process.json", process)
+            details = {
+                **raw.get("details", {}),
+                "command": command,
+                "process_artifact": binding,
+                "raw_artifact": raw_binding,
+                "execution_exit_code": process["exit_code"],
+            }
+            status = (
+                "pass"
+                if process["exit_code"] == 0 and raw.get("status") == "pass"
+                else "blocked"
+                if process["exit_code"] == 75
+                else "fail"
+            )
+            if (
+                process["timed_out"]
+                or process["output_limit_exceeded"]
+                or before != fingerprint
+                or after != fingerprint
+                or raw.get("exit_code") != process["exit_code"]
+            ):
+                status = "fail"
+            if status == "blocked":
+                blockers = [{"tool": gate, "reason": raw.get("diagnostic", "actual auxiliary provider unavailable")}]
+            if (
+                status == "pass"
+                and requirement.kind in {"docs", "oracle", "platform", "domain", "live"}
+                and not details.get("negative_controls")
+            ):
+                negative = write_json(
+                    root,
+                    cell / "negative-spec.json",
+                    {
+                        "gate": gate,
+                        "negative": True,
+                        "budget": 10,
+                        "raw_path": (cell / "negative-facts.json").relative_to(root).as_posix(),
+                    },
+                )
+                negative_process = supervise(
+                    [
+                        str(python),
+                        "-m",
+                        "infrastructure.project.public_acceptance_auxiliary_worker",
+                        "--spec",
+                        str(root / negative["path"]),
+                    ],
+                    root,
+                    cell / "negative-execution",
+                    deadline,
+                )
+                facts_path = cell / "negative-facts.json"
+                facts = read_json(root, facts_path) if facts_path.is_file() else {}
+                control = write_json(
+                    root,
+                    cell / "negative.json",
+                    {
+                        **negative_process,
+                        "gate": gate,
+                        "source_fingerprint": fingerprint,
+                        "spec_artifact": negative,
+                        "raw_artifact": {
+                            "path": facts_path.relative_to(root).as_posix(),
+                            "sha256": hashlib.sha256(facts_path.read_bytes()).hexdigest(),
+                        }
+                        if facts
+                        else None,
+                        "raw_facts": facts,
+                    },
+                )
+                if negative_process["exit_code"] != 23 or facts.get("exit_code") != 23 or negative_process["timed_out"]:
+                    status = "fail"
+                details["negative_controls"] = [
+                    {
+                        "name": f"{gate}:invalid-input",
+                        "expected_exit_code": 23,
+                        "observed_exit_code": negative_process["exit_code"],
+                        "artifact": control,
+                    }
+                ]
+            if status == "pass":
+                try:
+                    validate_auxiliary_process(gate, fingerprint, details, SnapshotReader(root))
+                    validate_acceptance(
+                        requirement, gate_payload(requirement, fingerprint, status, details, []), SnapshotReader(root)
+                    )
+                except (OSError, ValueError, TypeError, KeyError) as error:
+                    status = "fail"
+                    details["diagnostic"] = str(error)
+        payload = gate_payload(requirement, fingerprint, status, details, blockers)
+        bound = write_json(root, cell / "gate.json", payload)
+        output[gate] = {
+            "status": status,
+            "command": details.get("command", ["auxiliary-preflight", gate]),
+            "artifact": bound["path"],
+            "artifact_sha256": bound["sha256"],
+        }
+    current = source_fingerprint(root) == fingerprint
+    report = {
+        "schema_version": SCHEMA_VERSION,
+        "platform_version": requirements[0].platform_version,
+        "source_fingerprint": fingerprint,
+        "roster": list(PUBLIC_PROJECT_NAMES),
+        "gates": output,
+        "source_current": current,
+        "exit_code": 1
+        if not current or any(item["status"] == "fail" for item in output.values())
+        else 75
+        if any(item["status"] == "blocked" for item in output.values())
+        else 0,
+    }
+    return {**report, "receipt": write_json(root, directory / "receipt.json", report)}
+
+
+def admitted_root_export(root: Path, receipt_path: Path, reader: SnapshotReader | None = None) -> dict[str, str]:
+    """Discover only Root ZIP bytes independently admitted against current source."""
+    reader = reader or SnapshotReader(root)
+    fingerprint = source_fingerprint(root)
+    profile, faults = required_profile(root, reader, fingerprint)
+    if faults:
+        raise ValueError("Root export profile is invalid")
+    requirement = next(item for item in profile if item.id == "root:export")
+    receipt = reader.read(receipt_path.relative_to(root).as_posix()).json_object()
+    entry = receipt["gates"]["root:export"]
+    snapshot = reader.read(entry["artifact"])
+    payload = snapshot.json_object()
+    expected = gate_payload(requirement, fingerprint, "pass", payload.get("details", {}), [])
+    if (
+        entry.get("status") != "pass"
+        or entry.get("artifact_sha256") != snapshot.sha256
+        or any(payload.get(key) != value for key, value in expected.items() if key != "details")
+    ):
+        raise ValueError("Root export receipt is stale or not source-bound passing evidence")
+    validate_acceptance(requirement, payload, reader)
+    return dict(payload["details"]["bundle_artifact"])
+
+
+def run_sandbox_transfer(
+    root: Path,
+    *,
+    export_receipt: Path,
+    upload_outputs: Path,
+    downloaded_directory: Path,
+    repository: str,
+    run_id: str,
+    source_commit: str,
+    evidence_dir: Path,
+    timeout_seconds: int = 60,
+) -> dict[str, Any]:
+    """Admit actual official upload/API facts and independently retrieved Root bytes."""
+    import re
+
+    if (
+        re.fullmatch(r"[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+", repository) is None
+        or re.fullmatch(r"[1-9][0-9]*", run_id) is None
+        or re.fullmatch(r"[0-9a-f]{40}", source_commit) is None
+    ):
+        raise ValueError("sandbox transfer requires an exact repository, run ID and source commit")
+    root = root.resolve(strict=True)
+    reader = SnapshotReader(root)
+    export = admitted_root_export(root, export_receipt.absolute(), reader)
+    upload_snapshot = reader.read(upload_outputs.absolute().relative_to(root).as_posix())
+    outputs = upload_snapshot.json_object()
+    if set(outputs) != {"artifact-id", "artifact-digest", "artifact-url"}:
+        raise ValueError("sandbox transfer requires original official upload outputs")
+    artifact_id = outputs["artifact-id"]
+    if not isinstance(artifact_id, str) or re.fullmatch(r"[1-9][0-9]*", artifact_id) is None:
+        raise ValueError("official upload omitted its exact artifact ID")
+    if outputs["artifact-url"] != f"https://github.com/{repository}/actions/runs/{run_id}/artifacts/{artifact_id}":
+        raise ValueError("official uploaded artifact URL belongs to another repository/run/artifact")
+    directory = evidence_directory(root, evidence_dir, fresh=True)
+    fingerprint = source_fingerprint(root)
+    deadline = time.monotonic() + timeout_seconds
+    import shutil
+
+    gh = shutil.which("gh")
+    if gh is None:
+        raise ValueError("actual scoped artifact API read requires existing gh CLI")
+    observations = {}
+    git = shutil.which("git")
+    if git is None:
+        raise ValueError("actual source commit observation requires existing git")
+    revision_process = supervise([git, "rev-parse", "HEAD"], root, directory / "revision", deadline)
+    revision_bytes = reader.read(revision_process["streams"]["stdout"]["path"]).content
+    if revision_process["exit_code"] != 0 or revision_bytes.decode().strip() != source_commit:
+        raise ValueError("actual checkout commit differs from nominated same-run source SHA")
+    for label, endpoint in (
+        ("artifact", f"repos/{repository}/actions/artifacts/{artifact_id}"),
+        ("repository", f"repos/{repository}"),
+    ):
+        process = supervise([gh, "api", "--hostname", "github.com", endpoint], root, directory / label, deadline)
+        if process["exit_code"] != 0 or process["timed_out"] or process["output_limit_exceeded"]:
+            raise ValueError("actual scoped GitHub artifact API read failed")
+        data = json.loads(reader.read(process["streams"]["stdout"]["path"]).content)
+        observations[label] = {"data": data, "process": write_json(root, directory / f"{label}-process.json", process)}
+    metadata = observations["artifact"]["data"]
+    repo = observations["repository"]["data"]
+    workflow = metadata.get("workflow_run", {})
+    if (
+        metadata.get("id") != int(artifact_id)
+        or metadata.get("name") != "root-candidate-export"
+        or metadata.get("expired") is not False
+        or workflow.get("id") != int(run_id)
+        or workflow.get("head_sha") != source_commit
+        or repo.get("full_name") != repository
+        or workflow.get("repository_id") != repo.get("id")
+        or workflow.get("head_repository_id") != repo.get("id")
+        or metadata.get("digest") != "sha256:" + outputs["artifact-digest"]
+    ):
+        raise ValueError("actual upload metadata differs from the exact repository/run/source/artifact digest")
+    downloaded = evidence_directory(root, downloaded_directory.absolute())
+    retrieved_path = downloaded / Path(export["path"]).name
+    if sorted(path.relative_to(downloaded).as_posix() for path in downloaded.rglob("*") if path.is_file()) != [
+        retrieved_path.name
+    ]:
+        raise ValueError("official download must contain exactly the admitted Root ZIP")
+    retrieved = reader.read(retrieved_path.relative_to(root).as_posix())
+    if retrieved.sha256 != export["sha256"] or source_fingerprint(root) != fingerprint:
+        raise ValueError("retrieved Root export differs or source changed during remote observation")
+    raw = write_json(
+        root,
+        directory / "transfer-facts.json",
+        {
+            "schema_version": "template-github-sandbox-transfer-v1",
+            "repository": repository,
+            "run_id": run_id,
+            "source_commit": source_commit,
+            "upload_outputs": outputs,
+            "upload_outputs_artifact": {"path": upload_snapshot.relative, "sha256": upload_snapshot.sha256},
+            "checkout_process": write_json(root, directory / "checkout-process.json", revision_process),
+            "api_observations": observations,
+            "export_artifact": export,
+            "retrieved_artifact": {"path": retrieved.relative, "sha256": retrieved.sha256},
+        },
+    )
+    profile, faults = required_profile(root, SnapshotReader(root), fingerprint)
+    if faults:
+        raise ValueError("sandbox transfer source profile became invalid")
+    requirement = next(item for item in profile if item.id == "root:sandbox:transfer")
+    details = {
+        "execution_exit_code": 0,
+        "destination_kind": "sandbox",
+        "remote_verified": True,
+        "export_artifact": export,
+        "retrieved_artifact": {"path": retrieved.relative, "sha256": retrieved.sha256},
+        "transfer_artifact": raw,
+        "command": ["official-github-artifact-roundtrip", repository, run_id, artifact_id],
+    }
+    validate_sandbox_transfer(details, reader)
+    validate_acceptance(requirement, gate_payload(requirement, fingerprint, "pass", details, []), reader)
+    binding = write_json(root, directory / "gate.json", gate_payload(requirement, fingerprint, "pass", details, []))
+    report = {
+        "schema_version": SCHEMA_VERSION,
+        "platform_version": requirement.platform_version,
+        "source_fingerprint": fingerprint,
+        "roster": list(PUBLIC_PROJECT_NAMES),
+        "gates": {
+            requirement.id: {
+                "status": "pass",
+                "command": details["command"],
+                "artifact": binding["path"],
+                "artifact_sha256": binding["sha256"],
+            }
+        },
+        "exit_code": 0,
+    }
+    return {**report, "receipt": write_json(root, directory / "receipt.json", report)}
+
+
+def admitted_runtime_providers(root: Path, receipt_path: Path) -> dict[str, Any]:
+    """Discover current providers from independently admitted installed evidence."""
+    from infrastructure.project.public_package_dependencies import local_dependency_closure
+    from infrastructure.project.installed_acceptance_artifacts import inspect_wheel_bytes
+
+    reader = SnapshotReader(root)
+    fingerprint = source_fingerprint(root)
+    profile, faults = required_profile(root, reader, fingerprint)
+    if faults:
+        raise ValueError("runtime provider source profile is invalid")
+    requirements = {item.id: item for item in profile}
+    receipt = reader.read(receipt_path.absolute().relative_to(root).as_posix()).json_object()
+    scopes = sorted(
+        {
+            provider
+            for scope in PUBLIC_PROJECT_NAMES
+            for provider in local_dependency_closure(root, scope, reader=reader)
+            if provider != "root"
+        }
+    )
+    providers = {}
+    for scope in scopes:
+        requirement = requirements[f"{scope}:installed"]
+        entry = receipt["gates"][requirement.id]
+        snapshot = reader.read(entry["artifact"])
+        payload = snapshot.json_object()
+        expected = gate_payload(requirement, fingerprint, "pass", payload.get("details", {}), [])
+        if (
+            entry.get("status") != "pass"
+            or entry.get("artifact_sha256") != snapshot.sha256
+            or any(payload.get(key) != value for key, value in expected.items() if key != "details")
+        ):
+            raise ValueError("runtime provider installed evidence is incomplete or stale")
+        validate_acceptance(requirement, payload, reader)
+        binding = payload["details"]["wheel_artifact"]
+        wheel = reader.read(binding["path"])
+        if wheel.sha256 != binding["sha256"]:
+            raise ValueError("runtime provider wheel differs from exact admitted installed bytes")
+        inspect_wheel_bytes(root, requirement, wheel.content, reader=reader)
+        providers[scope] = binding
+    if not reader.unchanged() or source_fingerprint(root) != fingerprint:
+        raise ValueError("runtime provider source/evidence changed during admission")
+    return {
+        "providers": providers,
+        "provider_wheel_arguments": [
+            argument
+            for scope, binding in providers.items()
+            for argument in ("--provider-wheel", f"{scope}={root / binding['path']}")
+        ],
+    }

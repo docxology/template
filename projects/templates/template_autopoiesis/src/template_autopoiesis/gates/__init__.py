@@ -2,8 +2,7 @@
 materialization, realization stages, QR/barcode sealing, and child-project
 verification.
 
-These modules are re-exported from ``template_autopoiesis`` for backwards
-compatibility; import them from the package root.
+Import public symbols from their defining modules for explicit source custody.
 """
 
 from .integrity import (

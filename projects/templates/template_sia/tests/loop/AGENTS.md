@@ -1,8 +1,12 @@
 # tests/loop/ — agent contract
 
 Behavior tests for `src/template_sia/loop/` (one-to-one mirror per
-SUBMODULAR-SIA-1). Pure-domain tests only: no mocks, no network;
-subprocess invocations target this project's own entrypoints. Keep test
+SUBMODULAR-SIA-1). Domain tests use no mocks. Transport controls may use a
+controlled loopback HTTP server, and sandbox controls execute real Docker
+containers using an already installed image. They never download dependencies
+or call a paid provider. Missing Docker/image preconditions skip those unit
+tests; that skip supplies no live acceptance. Actual Ollama acceptance is a
+separate explicitly selected model run. Keep test
 files co-located with their subject module's subpackage; move a test only
 when its subject module moves.
 

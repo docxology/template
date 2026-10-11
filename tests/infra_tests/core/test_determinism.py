@@ -9,6 +9,7 @@ monkeypatch.setenv (a pytest fixture, not a mock framework).
 from __future__ import annotations
 
 import subprocess
+import pytest
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -71,14 +72,11 @@ def test_preset_source_date_epoch_wins(monkeypatch) -> None:
     assert resolve_build_timestamp() == "2023-11-14T22:13:20Z"
 
 
-def test_preset_non_integer_is_ignored(tmp_path: Path, monkeypatch) -> None:
+def test_preset_non_integer_refuses(tmp_path: Path, monkeypatch) -> None:
     monkeypatch.setenv("SOURCE_DATE_EPOCH", "not-a-number")
     monkeypatch.delenv(TEMPLATE_DETERMINISTIC_ENV, raising=False)
-    # Invalid preset is not honored. The env var's mere presence flips
-    # is_deterministic_requested() on, so resolution then tries git in repo_root;
-    # against a non-git dir that fails and yields None — proving the bad preset
-    # was never used as the epoch.
-    assert resolve_source_date_epoch(repo_root=tmp_path) is None
+    with pytest.raises(ValueError, match="SOURCE_DATE_EPOCH"):
+        resolve_source_date_epoch(repo_root=tmp_path)
 
 
 def test_template_deterministic_uses_git_head(tmp_path: Path, monkeypatch) -> None:
@@ -98,11 +96,11 @@ def test_deterministic_is_stable_across_calls(tmp_path: Path, monkeypatch) -> No
     assert first == second  # byte-stable — the whole point
 
 
-def test_deterministic_without_git_falls_back(tmp_path: Path, monkeypatch) -> None:
+def test_deterministic_without_git_refuses(tmp_path: Path, monkeypatch) -> None:
     monkeypatch.delenv("SOURCE_DATE_EPOCH", raising=False)
     monkeypatch.setenv(TEMPLATE_DETERMINISTIC_ENV, "1")
-    # tmp_path is not a git repo → git lookup fails → wall-clock fallback (None epoch)
-    assert resolve_source_date_epoch(repo_root=tmp_path) is None
+    with pytest.raises(RuntimeError, match="Deterministic build failure"):
+        resolve_source_date_epoch(repo_root=tmp_path)
 
 
 def test_subprocess_env_injects_source_date_epoch(monkeypatch) -> None:

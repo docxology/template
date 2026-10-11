@@ -53,7 +53,7 @@ def test_load_default_config_has_units():
 
 
 def test_load_config_from_directory(tmp_path):
-    (tmp_path / "config.yaml").write_text("book:\n  title: T\nparts: []\n", encoding="utf-8")
+    (tmp_path / "config.yaml").write_text("book:\n  title: T\nunits: []\n", encoding="utf-8")
     config = load_config(tmp_path)
     assert config["book"]["title"] == "T"
 
@@ -90,7 +90,7 @@ def test_iter_chapters_default_and_disabled():
 
 def test_iter_chapters_respects_enabled_flag():
     config = {
-        "parts": [
+        "units": [
             {
                 "id": "p",
                 "label": "1",
@@ -127,7 +127,7 @@ def test_real_config_uses_only_shared_top_level_schema_keys():
 def test_validate_config_detects_problems():
     bad = {
         "book": {},
-        "parts": [
+        "units": [
             {"id": "x", "title": "", "chapters": [{"file": "a.md", "title": ""}]},
             {"id": "x", "title": "Dup", "chapters": [{"file": "a.md", "title": "A"}]},
             {"title": "noid", "chapters": []},
@@ -164,6 +164,7 @@ def test_iter_chapters_accepts_units_key():
 def test_unit_blocks_explicit_empty_units_do_not_fall_back_to_parts():
     """The canonical ``units`` key wins even when deliberately empty."""
     assert unit_blocks({"units": [], "parts": [{"id": "legacy"}]}) == []
+    assert unit_blocks({"parts": [{"id": "legacy"}]}) == []
 
 
 @pytest.mark.parametrize(
@@ -218,7 +219,7 @@ def test_validate_config_handles_malformed_entries_without_raising():
 def test_validate_config_chapter_without_file():
     cfg = {
         "book": {"title": "t"},
-        "parts": [{"id": "p", "title": "P", "chapters": [{"title": "no file"}]}],
+        "units": [{"id": "p", "title": "P", "chapters": [{"title": "no file"}]}],
     }
     assert any("chapter with no file" in i for i in validate_config(cfg))
 
@@ -227,7 +228,7 @@ def test_validate_config_part_with_empty_chapter_list():
     """A part with an empty chapters list is reported and no chapter loop runs."""
     cfg = {
         "book": {"title": "t"},
-        "parts": [{"id": "p", "title": "P", "chapters": []}],
+        "units": [{"id": "p", "title": "P", "chapters": []}],
     }
     issues = validate_config(cfg)
     assert any("has no chapters" in i for i in issues)
@@ -237,7 +238,7 @@ def test_validate_config_part_with_null_chapters():
     """A part whose 'chapters' key is missing or None is also reported."""
     cfg = {
         "book": {"title": "t"},
-        "parts": [{"id": "p", "title": "P"}],  # no 'chapters' key
+        "units": [{"id": "p", "title": "P"}],  # no 'chapters' key
     }
     issues = validate_config(cfg)
     assert any("has no chapters" in i for i in issues)
@@ -247,7 +248,7 @@ def test_validate_config_duplicate_chapter_file():
     """Two chapters with the same file within the same part are flagged."""
     cfg = {
         "book": {"title": "t"},
-        "parts": [
+        "units": [
             {
                 "id": "p",
                 "title": "P",
@@ -260,3 +261,11 @@ def test_validate_config_duplicate_chapter_file():
     }
     issues = validate_config(cfg)
     assert any("duplicate chapter file" in i for i in issues)
+
+
+def test_retired_parts_key_requires_explicit_migration(tmp_path):
+    path = tmp_path / "config.yaml"
+    path.write_text("book:\n  title: T\nparts: []\n", encoding="utf-8")
+    with pytest.raises(ValueError, match="parts is retired"):
+        load_config(path)
+    assert any("parts is retired" in issue for issue in validate_config({"book": {"title": "T"}, "parts": []}))

@@ -24,6 +24,7 @@ from pathlib import Path
 from infrastructure.core.exceptions import RenderingError
 from infrastructure.core.logging.utils import get_logger
 from infrastructure.rendering.chrome import resolve_chrome_executable
+from infrastructure.rendering.native_render_custody import native_render_custody
 from infrastructure.rendering.security import run_isolated_subprocess
 
 logger = get_logger(__name__)
@@ -94,7 +95,27 @@ def render_mermaid_png(
     env["PATH"] = os.pathsep.join(part for part in (env.get("PATH", ""), os.defpath) if part)
 
     try:
-        completed = run_isolated_subprocess(cmd, env=env, timeout=timeout)
+        custody = native_render_custody(
+            "native-origin Mermaid production lacks its independently admitted Source owner"
+        )
+        # The launcher is called from this frame: native custody verifies
+        # this exact function as its caller.
+        completed = (
+            None
+            if custody is None
+            else custody.mermaid_launcher()(
+                cmd,
+                mmd_sidecar,
+                output_path,
+                role="standalone",
+                raw_source=source,
+                input_paths=(mmd_sidecar, *((puppeteer_config,) if puppeteer_config is not None else ())),
+                environment=env,
+                timeout=timeout,
+            )
+        )
+        if completed is None:
+            completed = run_isolated_subprocess(cmd, env=env, timeout=timeout)
     except subprocess.TimeoutExpired as exc:
         raise RenderingError(f"mmdc timed out while rendering {output_path.name}") from exc
     except OSError as exc:

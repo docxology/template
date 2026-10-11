@@ -2,25 +2,32 @@
 
 ## Purpose
 
-Thin orchestrators executed in **lexicographic order** by `scripts/pipeline/stage_02_analysis.py`. No business logic beyond CLI and paths.
+Thin orchestrators selected in configured order by `scripts/pipeline/stage_02_analysis.py`. No business logic beyond CLI and paths.
 
-## Execution order (analysis stage)
+## Execution order (default core analysis)
+
+`analysis.scripts` in the manuscript config selects exactly these producers:
 
 | Order | Script | Role |
-|-------|--------|------|
-| 1 | [`run_deep_search.py`](run_deep_search.py) | Multi-keyword fan-out → unified `references_deep.bib` and `output/deep_search/aggregate.json` |
-| 2 | [`run_search_pipeline.py`](run_search_pipeline.py) | Single-query search → enrich → `references.bib` → `output/search/results.json` |
-| 3 | [`s_compose_literature_review.py`](s_compose_literature_review.py) | Auto-composes `manuscript/S01_literature_review.md` from the deep-search outputs (must run before the manuscript resolver below) |
-| 4 | [`y_generate_search_figures.py`](y_generate_search_figures.py) | Figures under `output/figures/` |
-| 5 | [`z_generate_manuscript_variables.py`](z_generate_manuscript_variables.py) | `output/data/manuscript_variables.json` and resolved `output/manuscript/` (the PDF-rendering stage prefers this tree when present) |
-| 6 | [`zz_generate_review_report.py`](zz_generate_review_report.py) | Runs `review` if needed; writes `output/review/REVIEW_REPORT.md` |
-| 7 | [`zzz_build_dashboard.py`](zzz_build_dashboard.py) | Interactive search-coverage dashboard + plaintext invariants (writes `output/web/dashboard.html`, `output/data/dashboard_payload.json`, `output/reports/dashboard_*.txt`). Runs **last** because it consumes the corpus + aggregate JSON produced by `run_search_pipeline.py` and `run_deep_search.py`. |
+|---|---|---|
+| 1 | [`run_search_pipeline.py`](run_search_pipeline.py) | Local query, corpus, generated bibliography, search result |
+| 2 | [`y_generate_search_figures.py`](y_generate_search_figures.py) | Coverage figures |
+| 3 | [`z_generate_manuscript_variables.py`](z_generate_manuscript_variables.py) | Variables, hydrated manuscript, collision-checked extra citations |
+| 4 | [`zz_generate_review_report.py`](zz_generate_review_report.py) | Review report |
+| 5 | [`zzz_build_dashboard.py`](zzz_build_dashboard.py) | Dashboard and output invariants |
 
-> Lexicographic ordering matters. The composer is named `s_*` (between
-> `run_*` and `y_*`/`z_*`) so `S01_literature_review.md` is fully written
-> *before* `z_generate_manuscript_variables.py` resolves the manuscript
-> tree into `output/manuscript/`. The dashboard is named `zzz_*` so it runs
-> after every script that writes its inputs.
+Deep search and composition are explicit opt-in commands outside this list.
+Run `run_deep_search.py --enable` with configured sources first, then
+`s_compose_literature_review.py`. Composition refuses missing or changed producer
+receipts, config/source snapshots, and artifact bytes. Its default output is
+`output/manuscript/S02_generated_literature_review.md`, which hydration preserves.
+Only explicit direct `--output` can author another path. Curated manuscript
+bibliographies remain inputs; generated databases live under `output/bibliography`.
+The hydrator emits only new entries into `output/manuscript/generated_search.bib`,
+so the actual renderer's bibliography union has one definition per citation key.
+
+The deep producer's disk-source snapshot is a dependency record, separate from
+fresh audited live-provider and installed-wheel acceptance.
 
 ## Review entrypoint
 

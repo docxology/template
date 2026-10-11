@@ -69,7 +69,7 @@ Run the local gates before touching public APIs:
 PROJECT=templates/template_code_project
 
 uv sync
-uv run python scripts/runner/execute_pipeline.py --project "$PROJECT" --core-only
+uv run python scripts/runner/execute_pipeline.py --project "$PROJECT" --mode core
 uv run python -m infrastructure.validation.cli prerender \
   "projects/$PROJECT/manuscript" --repo-root .
 uv run python -m infrastructure.reference.citation.cli validate \
@@ -100,13 +100,22 @@ sample/population, estimator, uncertainty/error-bar meaning, exclusions,
 missing-data treatment, transformations, multiplicity, and model/software
 identity. The pipeline and audits do not replace this scholarly review.
 
-Optional but useful for release notes and release dashboards:
+For the Platform 4 program, root promotion requires the complete source-owned
+candidate profile. Supply its exact bound receipt; a dashboard generated
+without one reports missing evidence and cannot authorize release:
 
 ```bash
-uv run python -m infrastructure.reporting.release_readiness \
+uv run --no-sync --offline python -m infrastructure.reporting.release_readiness \
+  --strict --profile candidate \
+  --readiness-receipt output/readiness/release-candidate/receipt.json \
   --out output/release_readiness.md
 uv run python scripts/docgen/publication_records.py --refresh-external
 ```
+
+The root release workflow separately admits the successful hosted run, exact
+artifact ID, receipt hash, and tagged revision. See the
+[root release boundary](../maintenance/release-boundary.md). Standalone
+exemplars retain their own versions and publication receipts.
 
 ## First real release
 
@@ -164,13 +173,41 @@ uv run python scripts/publish/publish_project_release.py \
   --tag "$TAG" \
   --repo "$REPO" \
   --production \
-  --new-version
+  --new-version \
+  --reserve-doi-first \
+  --github-target-commit "$FINAL_STANDALONE_COMMIT"
 ```
 
-The workflow keeps `publication.doi` stable and updates only
-`publication.version_doi` plus `publication.version_record`.
+Set `FINAL_STANDALONE_COMMIT` to the full 40-character commit SHA of the
+accepted standalone export in the destination repository. If the release tag
+already exists, independently verify that it resolves to this same commit;
+GitHub uses `target_commitish` when creating a missing tag. This value does not
+assert acceptance by itself. Supply it only after the final DOI-bearing source
+was rendered, checked and normally committed in the destination. If reservation
+changes those bodies, use the existing library reserve-first workflow with
+`skip_github=True` and a render callback that establishes that final standalone
+commit before the Zenodo upload; then use the existing GitHub release API with
+its actual commit SHA and the exact same final PDF bundle. The frozen accepted
+Root checkout remains separate from these publication-owner writes.
+
+The reserve-first route creates a new draft in the existing series, clears its
+inherited files, reserves the new version DOI, writes the DOI fields and renders
+before creating the upload bundle. It keeps `publication.doi` stable and updates
+`publication.version_doi` plus `publication.version_record`. A live new-version
+reserve-first release requires this explicit GitHub commit when GitHub is enabled
+and refuses `--skip-rerender`. The legacy `--new-version` route remains available.
+
+Check `final_rendered_pdf_sha256` and `pdf_sha256` in the release receipt, then
+retrieve the actual Zenodo and GitHub PDF assets and require their bytes/hash to
+match that final bundle. Publication API success alone is not retrieved-asset or
+released-profile acceptance; the existing released-profile checks still require
+verified source/export, tag/remote and retrieved-artifact parity.
 
 ## Standalone GitHub mirror
+
+Source removals use the destination-bound review and retained rollback contract
+in [Reviewed publication removals](publication-removals.md). Existing publication
+evidence and unrelated mirror-only records remain protected.
 
 The monorepo remains the render source of truth. The standalone repository is a
 publication mirror for source, DOI metadata, GitHub releases, and tracked public

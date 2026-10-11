@@ -18,7 +18,6 @@ def test_load_madlib_config_parses_valid_schema(tmp_path: Path) -> None:
 
     assert config.title == "Test Madlib"
     assert config.schema_version == 2
-    assert config.source_schema_version == 1
     assert config.seed == 7
     assert config.composition_depth == "deep"
     assert config.section_conditions["discussion"] is False
@@ -95,7 +94,6 @@ def test_current_schema_version_is_recorded(tmp_path: Path) -> None:
     config = load_madlib_config(tmp_path)
 
     assert config.schema_version == 2
-    assert config.source_schema_version == 2
 
 
 def test_unknown_schema_version_fails_closed(tmp_path: Path) -> None:
@@ -113,7 +111,7 @@ def test_boolean_schema_version_rejected(tmp_path: Path) -> None:
     payload["madlib"]["schema_version"] = True
     write_config(tmp_path, payload)
 
-    with pytest.raises(MadlibConfigError, match="madlib.schema_version must be an integer"):
+    with pytest.raises(MadlibConfigError, match="madlib.schema_version must be an explicit integer"):
         load_madlib_config(tmp_path)
 
 
@@ -122,7 +120,19 @@ def test_non_numeric_schema_version_rejected(tmp_path: Path) -> None:
     payload["madlib"]["schema_version"] = "not-a-version"
     write_config(tmp_path, payload)
 
-    with pytest.raises(MadlibConfigError, match="madlib.schema_version must be an integer"):
+    with pytest.raises(MadlibConfigError, match="madlib.schema_version must be an explicit integer"):
+        load_madlib_config(tmp_path)
+
+
+@pytest.mark.parametrize("value", [None, 1, "2", 2.0, 2.9, False])
+def test_only_exact_explicit_current_schema_is_supported(tmp_path: Path, value) -> None:
+    payload = base_payload()
+    if value is None:
+        payload["madlib"].pop("schema_version")
+    else:
+        payload["madlib"]["schema_version"] = value
+    write_config(tmp_path, payload)
+    with pytest.raises(MadlibConfigError, match="madlib.schema_version"):
         load_madlib_config(tmp_path)
 
 

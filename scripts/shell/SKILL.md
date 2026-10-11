@@ -32,7 +32,7 @@ Load this skill when you need to:
 |--------|---------|
 | `scripts/shell/health-check.sh` | Pre-flight check (Python, uv, disk, Docker, repo) |
 | `scripts/shell/ci_local.sh` | Local CI reproduction |
-| `scripts/shell/shell_bootstrap.sh` | uv bootstrap + sandbox env vars |
+| `scripts/shell/shell_bootstrap.sh` | prepared root-Python selection + sandbox env vars |
 | `scripts/shell/bash_utils.sh` | Shared helpers (do not source directly in pipeline) |
 | `scripts/shell/backup-daily.sh` | Site-configured daily `.hermes` rsync tier |
 | `scripts/shell/backup-weekly.sh` | Site-configured weekly repository-cache rsync tier |

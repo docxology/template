@@ -1,7 +1,7 @@
 # AGENTS.md — template_textbook
 
 Agent-facing reference for working inside the **template_textbook** exemplar: a
-modular, fillable book scaffold. Read this before editing anything. For the
+complete authored textbook with a separate draft scaffolding API. Read this before editing anything. For the
 human-facing overview and quick-start commands, see [`README.md`](README.md).
 
 Decision memory and verifier hardening follow [`docs/rules/memory_and_decision_records.md`](../../../docs/rules/memory_and_decision_records.md): use nearby `WHY:` comments only for surprising local choices, keep volatile counts generated, and add negative controls for verifier-like gates.
@@ -36,10 +36,10 @@ Decision memory and verifier hardening follow [`docs/rules/memory_and_decision_r
    a reference without its definition renders as a dangling `??`.
 
 5. **Citations and glossary links must resolve.** Every `[@key]` must match a key
-   in `manuscript/references.bib` (`smith2020foundations`, `doe2019methods`,
-   `lee2021systems`, `garcia2022dynamics`, `patel2018models`,
-   `nguyen2023synthesis`, `kim2020data`, `brown2017principles`,
-   `wilson2021analysis`, `taylor2019theory`). Glossary links use
+   in `manuscript/references.bib` (`box1976science`, `sandve2013ten`,
+   `nyquist1932regeneration`, `lorenz1963deterministic`, `may1976simple`,
+   `wilkinson2016fair`, `shannon1948mathematical`, `turing1937computable`,
+   `wilson2014best`, `taschuk2017ten`). Glossary links use
    `[**term**](#gl:<anchor>)` with anchors: `system`, `model`, `parameter`,
    `variable`, `equilibrium`, `feedback`, `gradient`, `threshold`, `network`,
    `dynamics`, `emergence`, `regulation`, `boundary`, `state`, `observable`.
@@ -77,28 +77,13 @@ Before claiming a change is done:
 - [ ] Before describing a fork as filled or complete,
       `scripts/audit_textbook_quality.py --require-complete` passes with zero
       per-section and total stub counts. The default mode intentionally allows
-      stubs in this fillable exemplar.
+      markers in deliberately generated draft fixtures. The canonical book must pass completion mode.
 
-## Frozen vs. fillable
+## Authored content and draft generation
 
-**Frozen — do not modify** (the engine and the structural contract):
+The canonical book is fully authored. Maintain its explanations, mathematics, labs, answers, primary references, and actual model figures together. Engine, schema, and namespace changes require corresponding tests and caller migration. The sole configuration key for the unit structure is `units:`; `parts:` is retired.
 
-- All `.py` under `src/` and `scripts/` — the content engine, models,
-  visualization, Mermaid renderer, and thin orchestrators.
-- `manuscript/config.yaml` — structure is changed by adding entries, but the
-  schema and existing keys are stable; treat it as the contract.
-- `manuscript/references.bib`, `manuscript/glossary.md` — the citation-key and
-  glossary-anchor namespaces other files depend on.
-- `tests/` — especially `test_manuscript_integrity.py`, which encodes the
-  contract.
-
-**Fillable — author here:**
-
-- The prose between stub markers in the chapter files under
-  `manuscript/part_*/`, the labs under `manuscript/labs/`, and the question banks
-  under `manuscript/questions/`. Keep the labelled headings and cross-references;
-  replace the `<!-- STUB -->` / `TODO:` / `TKTK` placeholders with real content.
-- New parts/chapters: add them to `config.yaml`, then scaffold and fill.
+The scaffold API is a separate authoring tool. Test generated draft outlines in temporary directories, preserve their explicit draft markers, and do not replace canonical content with generated outlines. Existing source files are preserved unless the author explicitly selects a destructive overwrite. For canonical acceptance, use `--require-complete` across all configured sections and execute the manuscript's Python examples.
 
 ## Key modules (for orientation)
 

@@ -44,7 +44,7 @@ metadata:
 
 5. **Docs** — AGENTS.md/README at affected dirs; no roster duplication.
 
-6. **Verify** — project or infra tests; optional `./run.sh --project <n> --core-only` slice.
+6. **Verify** — project or infra tests; optional `./run.sh --project <n> --mode core` slice.
 
 ## Deliverables
 
@@ -55,7 +55,7 @@ metadata:
 
 ```bash
 uv run python scripts/pipeline/stage_01_test.py --project <project>
-uv run python scripts/runner/execute_pipeline.py --project <project> --core-only
+uv run python scripts/runner/execute_pipeline.py --project <project> --mode core
 ```
 
 ## When NOT to use

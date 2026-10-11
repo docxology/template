@@ -20,6 +20,7 @@ from infrastructure.core.pipeline.summary_helpers import (
     stage_result_to_dict,
 )
 from infrastructure.core.pipeline.summary_models import PipelineSummary
+from infrastructure.core.pipeline.outcomes import outcome_for_result
 
 
 def format_text_summary(
@@ -43,9 +44,11 @@ def format_text_summary(
     lines.append("")
     if summary.failed_stages:
         failed_names = ", ".join(r.stage_name for r in summary.failed_stages)
-        lines.append(f"Pipeline completed with failures: {failed_names}")
+        lines.append(f"Execution has incomplete stages: {failed_names}")
     else:
-        lines.append("All stages completed successfully!")
+        lines.append(
+            "Recorded stages completed successfully" if summary.stage_results else "No stage execution recorded"
+        )
 
     # Log file info
     log_file_final = summary.log_file
@@ -76,7 +79,9 @@ def format_text_summary(
         lines.append(f"  Average Stage Time: {avg_time:.1f}s")
 
     if summary.slowest_stage:
-        slowest_pct = (summary.slowest_stage.duration * 100) / summary.total_duration
+        slowest_pct = (
+            (summary.slowest_stage.duration * 100) / summary.total_duration if summary.total_duration > 0 else 0
+        )
         lines.append(
             f"  Slowest Stage: Stage {summary.slowest_stage.stage_num} - {summary.slowest_stage.stage_name} "  # noqa: E501
             f"({format_duration(summary.slowest_stage.duration)}, {slowest_pct:.0f}%)"
@@ -122,9 +127,6 @@ def format_text_summary(
         lines.append("  \u2022 HTML: htmlcov/index.html")
 
     lines.append("")
-    lines.append("Pipeline complete - ready for deployment")
-    lines.append("")
-
     return "\n".join(lines)
 
 
@@ -142,18 +144,7 @@ def format_json_summary(
     data = {
         "total_duration": summary.total_duration,
         "total_duration_formatted": format_duration(summary.total_duration),
-        "stages": [
-            {
-                "stage_num": r.stage_num,
-                "stage_name": r.stage_name,
-                "success": r.success,
-                "duration": r.duration,
-                "duration_formatted": format_duration(r.duration),
-                "exit_code": r.exit_code,
-                "error_message": r.error_message,
-            }
-            for r in summary.stage_results
-        ],
+        "stages": [stage_result_to_dict(result) for result in summary.stage_results],
         "performance": {
             "slowest_stage": stage_result_to_dict(summary.slowest_stage),
             "fastest_stage": stage_result_to_dict(summary.fastest_stage),
@@ -199,9 +190,10 @@ def format_html_summary(
     html_parts.append("<h2>Pipeline Summary</h2>")
     if summary.failed_stages:
         failed_names = ", ".join(r.stage_name for r in summary.failed_stages)
-        html_parts.append(f"<p class='error'>Pipeline completed with failures: {failed_names}</p>")
+        html_parts.append(f"<p class='error'>Execution has incomplete stages: {failed_names}</p>")
     else:
-        html_parts.append("<p class='success'>All stages completed successfully!</p>")
+        message = "Recorded stages completed successfully" if summary.stage_results else "No stage execution recorded"
+        html_parts.append(f"<p class='success'>{message}</p>")
 
     if summary.log_file:
         log_file_final = get_final_log_path(summary.log_file)
@@ -213,14 +205,16 @@ def format_html_summary(
     html_parts.append("<ul class='stage-results'>")
 
     for result in summary.stage_results:
-        css_class = "success" if result.success else "error"
-        status_icon = "\u2713" if result.success else "\u2717"
+        outcome = outcome_for_result(result)
+        css_class = "success" if outcome.complete else "error"
+        status_icon = "\u2713" if outcome.complete else "\u2717"
         duration_formatted = format_duration(result.duration)
         percentage = (result.duration * 100) / summary.total_duration if summary.total_duration > 0 else 0
 
         html_parts.append(f"<li class='{css_class}'>")
         html_parts.append(f"  {status_icon} Stage {result.stage_num}: {result.stage_name} ")
         html_parts.append(f"  ({duration_formatted}, {percentage:.0f}%)")
+        html_parts.append(f"  {outcome.status.value}")
         if result.error_message:
             html_parts.append(f"  <br><em>Error: {result.error_message}</em>")
         html_parts.append("</li>")
@@ -237,7 +231,9 @@ def format_html_summary(
         html_parts.append(f"<li>Average Stage Time: {avg_time:.1f}s</li>")
 
     if summary.slowest_stage:
-        slowest_pct = (summary.slowest_stage.duration * 100) / summary.total_duration
+        slowest_pct = (
+            (summary.slowest_stage.duration * 100) / summary.total_duration if summary.total_duration > 0 else 0
+        )
         html_parts.append(
             f"<li>Slowest Stage: {summary.slowest_stage.stage_name} "
             f"({format_duration(summary.slowest_stage.duration)}, {slowest_pct:.0f}%)</li>"

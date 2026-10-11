@@ -7,12 +7,12 @@ from pathlib import Path
 import pytest
 
 from template_pitch_deck.coverage_chart_data import read_all_exemplar_coverage
-from template_pitch_deck.paths import locate_repo_root, project_root
+from template_pitch_deck.paths import data_repo_root, project_root
 
 
 @pytest.fixture(scope="module")
 def repo_root():
-    return locate_repo_root(project_root())
+    return data_repo_root(project_root())
 
 
 def test_read_all_exemplar_coverage_returns_real_rows(repo_root):

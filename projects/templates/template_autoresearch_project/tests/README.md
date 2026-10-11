@@ -2,9 +2,10 @@
 
 Tests for the deterministic bounded AutoResearch public exemplar.
 
-The suite runs against a session sandbox with a copied baseline output tree and
+The suite runs against a session sandbox with copied project inputs and
 real source/infrastructure paths, so full loop and subprocess tests cannot dirty
-tracked artifacts. Tests are mirrored one-to-one with the source subpackage
+tracked artifacts. Output consumers explicitly request the actual deterministic
+session loop; source-only exports do not need precomputed outputs. Tests are mirrored one-to-one with the source subpackage
 layout under `tests/<cluster>/` (SUBMODULAR-2).
 
 ## Quick Start
@@ -18,6 +19,27 @@ Pipeline parity:
 ```bash
 uv run python scripts/pipeline/stage_01_test.py --project template_autoresearch_project --project-only
 ```
+
+## Outside the monorepo
+
+Source-integration cases consume the real platform DAG, analysis scripts,
+build metadata, and canonical exemplar configuration. An installed platform
+wheel supplies Python imports but does not supply that checkout. Outside the
+canonical `projects/templates/template_autoresearch_project` layout, nominate
+both `TEMPLATE_AUTORESEARCH_SOURCE_ROOT` (an absolute public platform checkout)
+and `TEMPLATE_AUTORESEARCH_SOURCE_COMMIT` (its exact 40-character Git commit).
+The checkout must declare `research-project-template` 4.0.1, remain clean, and
+contain the actual committed input bytes. A nearby `infrastructure/` directory,
+the current working directory, and abbreviated revisions confer no authority.
+
+Use the prepared project interpreter and commands in
+[`../STANDALONE.md`](../STANDALONE.md#full-suite-source-integration). These cases
+are source integration; `loop/test_standalone_hydration.py` separately builds
+and admits a genuine platform wheel, installs it independently, and checks its
+installed import origin. Missing source/build tools or uncached dependencies
+fail the required case rather than skipping it. Local real-Git provider controls
+commit genuine current platform input bytes only in disposable fixtures; their
+commits are not public release evidence.
 
 ## Coverage
 

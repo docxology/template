@@ -9,7 +9,7 @@ contract is identical for every chapter in the book; the structure is defined in
 The structural constants live in `src/textbook/constants.py`.
 
 Do **not** edit `config.yaml`, the `src/` engine, `references.bib`, or
-`glossary.md` — those are frozen. Author the prose and the placeholders inside
+`glossary.md` — those are maintained as tested contracts. Author the prose and the placeholders inside
 the chapter, lab, and question files only.
 
 ## Required elements in every Part III chapter
@@ -58,9 +58,9 @@ Stub markers that must be replaced before a chapter is considered filled:
   `[@fig:...]`, `[@tbl:...]`, `[@eq:...]`, `[@sec:...]`. Synthesis chapters
   especially should cite earlier chapters by `[@sec:...]`.
 - **Citations** use `[@key]` and must resolve in `references.bib`. Available
-  keys: `smith2020foundations`, `doe2019methods`, `lee2021systems`,
-  `garcia2022dynamics`, `patel2018models`, `nguyen2023synthesis`, `kim2020data`,
-  `brown2017principles`, `wilson2021analysis`, `taylor2019theory`.
+  keys: `box1976science`, `sandve2013ten`, `nyquist1932regeneration`,
+  `lorenz1963deterministic`, `may1976simple`, `wilkinson2016fair`, `shannon1948mathematical`,
+  `turing1937computable`, `wilson2014best`, `taschuk2017ten`.
 - **Glossary terms** link as `[**term**](#gl:<anchor>)`. Valid anchors:
   `system`, `model`, `parameter`, `variable`, `equilibrium`, `feedback`,
   `gradient`, `threshold`, `network`, `dynamics`, `emergence`, `regulation`,

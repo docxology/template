@@ -89,6 +89,11 @@ The Core module provides fundamental foundation utilities used across the entire
 - Fails closed unless commit, clean-tree state, worker count, and exact gate-argv digest match; both runs execute the complete canonical gate registry, pass, and improve wall time by the declared threshold
 - Public API: `HealthRunSummary`, `HealthBenchmarkManifest`, `HealthBenchmarkError`, `load_health_report`, `build_health_benchmark_manifest`, `main`
 
+**ci_policy.py**
+- Derives the CI Gate's required job identities from the current workflow and rejects missing, duplicate, or incomplete dependencies.
+- The thin `scripts/gates/ci_policy.py` entrypoint emits this set for the workflow; the Gate admits only its exact observed set and the documented conditional skips.
+- Public API: `required_ci_jobs(repo_root)`
+
 **agent_memory.py**
 - Load/save gitignored continual-learning agent memory at `.cursor/hooks/state/continual-learning-memory.json`
 - Schema example (tracked): `.cursor/hooks/state/continual-learning-memory.example.json` — see [`.cursor/hooks/state/README.md`](../../.cursor/hooks/state/README.md)
@@ -137,7 +142,7 @@ still applies verbatim:
 - Shared bounded subprocess service for public readiness, per-project union coverage, and parallel documentation counts. ``run_project_test_matrix(tasks, workers=...)`` isolates each task, applies a hard timeout, continues after failure/timeout, captures bounded diagnostics when requested, and returns results in canonical input order regardless of completion order. Outer project workers must not be combined with inner pytest-xdist workers; the higher-level orchestration validators enforce that boundary.
 
 **subprocess_policy.py**
-- Source-owned typed policy inventory for intentional subprocess wrappers. `SubprocessPolicy` requires a positive timeout, existing source declaration, and process-group boundary; `run_with_policy` delegates to the shared bounded executor and can fail closed on non-zero exits. `INTENTIONAL_SUBPROCESS_POLICIES` covers the project matrix, renderer, git metadata, validation, and optional formal-spec lanes.
+- Source-owned typed policy inventory for intentional subprocess wrappers. `SubprocessPolicy` requires positive finite numeric whole-operation and guardian-startup budgets (booleans are invalid), an existing source declaration, and a process-group boundary. The shared guardian defaults to a 60-second startup phase from source admission through READY and ARM; the original run deadline always takes precedence, and each handshake consumes that same phase clock. Source-admission and READY timeout precede command launch and are not descendant-cleanup evidence; ARM failure occurs after child launch, cleans actual token holders, and preserves observed interruption. Serialized policy records include the startup budget; `run_with_policy` delegates to the shared bounded executor and can fail closed on non-zero exits. `INTENTIONAL_SUBPROCESS_POLICIES` covers the project matrix, renderer, git metadata, validation, and optional formal-spec lanes.
 
 **test_impact.py**
 - Read-only changed-surface classifier. `scripts/audit/test_impact.py` unions staged, unstaged, deleted, and non-ignored untracked paths before `classify_changed_paths()` reports infrastructure, documentation, public-exemplar, and local-only impacts, recommends the smallest safe lanes, and explicitly prohibits nested outer-project parallelism with inner pytest-xdist.
@@ -146,16 +151,17 @@ still applies verbatim:
 - Deterministic public-matrix receipt for per-project release lanes: records one bounded public-matrix run (per-project coverage floors, pass/fail, duration, resource profile, collection count, cache identity, and explicit skip reason) into a versioned contract, and fails closed when the on-disk output tree would drift from the receipt after the run. `write_public_matrix_receipt` lives here and is called from `test_runner.py`. Backs the `--receipt` public-matrix mode and the scheduled `public-matrix-receipt` CI job.
 
 **analysis_pipeline.py**
-- Stage-02 analysis-script runner: executes the discovered scripts under the standard subprocess contract (project-preferred interpreter, per-script timeout, sub-stage progress with EMA-based ETA), keeping `scripts/pipeline/stage_02_analysis.py` a thin orchestrator. Direct script paths are confined to the resolved project `scripts/` tree, and credential-like environment variables are redacted by default; set `ANALYSIS_ALLOW_SECRETS=1` only for an explicitly reviewed live integration.
-- Public API: `run_analysis_script(script_path, repo_root, project_name)`, `run_analysis_pipeline(scripts, repo_root, project_name)`
+- Stage-02 runs admitted producers through the audited held-source launcher with a positive finite deadline and the existing nominated interpreter. It does not resolve or acquire dependencies while executing. Original leaf outcomes remain typed; interruption, timeout, or runtime/source blockage stops later producers. Paths remain confined to the project's `scripts/` tree. Credential-like environment variables are redacted by default; set `ANALYSIS_ALLOW_SECRETS=1` only for an explicitly reviewed live integration.
+- Configured `analysis.scripts` entries are required: malformed configuration, missing producers, duplicates, non-Python utilities, and escapes refuse before execution. An explicit empty list declares no analysis; projects without an allowlist retain lexicographic discovery.
+- Public API: `run_analysis_script_outcome(script_path, repo_root, project_name)`, `run_analysis_script(script_path, repo_root, project_name)`, `run_analysis_pipeline(scripts, repo_root, project_name)`
 
 **execution_boundary.py**
 - Bounded subprocess execution for project hooks and analysis scripts (SECURE-RUN-1 / PROJECT-EXECUTION-BOUNDARY-1): `run_bounded_subprocess` launches a command in a fresh process group so a timeout can `killpg` the whole tree (no orphaned descendants); `build_bounded_env` strips credential-like env vars unless explicitly allow-listed; `validate_hook_root` enforces root confinement; `classify_lifecycle_link` distinguishes intentional lifecycle links from escapes. Wired into `infrastructure.project.setup_hook.run_project_setup_hook` and `infrastructure.core.pipeline.hooks.run_stage_hooks`.
 - Public API: `run_bounded_subprocess`, `build_bounded_env`, `validate_hook_root`, `classify_lifecycle_link`, `LinkClassification`, `BoundedSubprocessResult`
 
 **analysis_timeout.py**
-- Resolves the per-script Stage-02 subprocess timeout from `ANALYSIS_SCRIPT_TIMEOUT_SEC` (default 7200s; `0`/`none`/`unlimited`/`inf` disables it; invalid/negative falls back to the default)
-- Public API: `parse_analysis_script_timeout_sec(environ=None) -> float | None`
+- Resolves a positive finite Stage-02 deadline from `ANALYSIS_SCRIPT_TIMEOUT_SEC` (default 7200s). Invalid, nonpositive, nonfinite, and retired unlimited values fail configuration admission before producers run.
+- Public API: `parse_analysis_script_timeout_sec(environ=None) -> float`
 
 **coverage_policy.py**
 - Coverage-plugin capability probe with no reporting imports (Layer 1)
@@ -163,7 +169,8 @@ still applies verbatim:
 - `PYTEST_HELP_PROBE_TIMEOUT_SECONDS` — bounded 30-second startup budget; it is deliberately longer than the ordinary test timeout because xdist workers can contend during pytest import on macOS
 
 **determinism.py**
-- Build-time reproducibility resolution around the `SOURCE_DATE_EPOCH` standard; precedence is an already-set `SOURCE_DATE_EPOCH` env var, then deterministic mode (author-date epoch of `HEAD` via git), then wall clock
+- Canonical execution admits `core` or explicitly selected `live` and pins `SOURCE_DATE_EPOCH` before computing the effective environment identity. An explicit nonnegative epoch wins; otherwise the nominated Git candidate supplies its committer epoch and revision. Non-Git exports require an explicit candidate epoch. Invalid epochs and clock-disable settings refuse instead of falling back to wall clock. Operation timestamps remain actual observation times.
+- `execution_policy.apply_execution_policy` defines this admission. Direct timestamp utilities retain an explicit wall-clock API outside canonical execution; deterministic requests fail when their epoch is unavailable.
 - Public API: `is_deterministic_requested`, `resolve_source_date_epoch`, `resolve_build_timestamp`, `deterministic_subprocess_env`, constant `TEMPLATE_DETERMINISTIC_ENV`
 
 **install_commands.py**
@@ -181,7 +188,7 @@ still applies verbatim:
 **project_pyproject.py**
 - Cached single-read accessors for a project `pyproject.toml`'s test/coverage settings
 - Public API: `load_project_pyproject`, `project_declared_coverage_floor`, `project_declared_test_command`, `resolve_project_cov_config`, `project_declares_dev_extra`, dataclass `ProjectPyprojectConfig`
-- `[tool.template].project_test_command` is an explicit, default-off argv contract for the single-project Stage-01 lane; malformed declarations fail closed. Stage 01 overlays the workspace's exact pytest/Coverage runner versions, requires project-local coverage evidence plus real warning/discovery/outcome counts, and gives the verifier a 6,900-second deadline inside the tree-killing 7,200-second stage boundary. The `--all-projects --public-projects` union runner remains on isolated generic pytest, while GitHub's per-project public matrix invokes the same single-project Stage-01 contract and therefore honors an explicit verifier.
+- `[tool.template].project_test_command` is an explicit, default-off argv contract for the single-project Stage-01 lane; malformed declarations fail closed. Stage 01 admits one existing selected interpreter against the workspace's exact pytest/Coverage runner versions without acquisition, requires project-local coverage evidence plus real warning/discovery/outcome counts, and gives the verifier a 6,900-second deadline inside the tree-killing 7,200-second stage boundary. The `--all-projects --public-projects` union runner honors the same source-declared verifier contract, retains independently admitted isolated coverage bytes, and runs declared lanes serially after the bounded ordinary pytest matrix. GitHub's per-project public matrix also invokes the single-project Stage-01 contract.
 
 **sidecar_linking.py**
 - Generic sidecar lifecycle symlink sync for template checkouts: creates/updates/prunes managed symlinks under `projects/` from a resolved private root, honoring per-pool env/config overrides
@@ -275,8 +282,8 @@ still applies verbatim:
 
 **pipeline/pipeline.yaml**
 - Default declarative pipeline stage definitions
-- Declared / default-full / `--core-only` counts come from `pipeline.yaml` via `STAGE_SUMMARY` (see root `AGENTS.md`); `opt_in_tags` is the single exclude set for default and `--core-only` runs
-- Tag-based filtering for `--core-only` vs full pipeline
+- Declared / default-full / `--mode core` counts come from `pipeline.yaml` via `STAGE_SUMMARY` (see root `AGENTS.md`); `opt_in_tags` is the single exclude set for default and `--mode core` runs
+- Tag-based filtering for `--mode core` vs full pipeline
 - Stage metadata: name, script, description, dependencies, tags
 - Optional `telemetry:` configuration block
 
@@ -466,11 +473,11 @@ config = PipelineConfig(
     project_name="my_project",
     repo_root=Path("."),
     skip_infra=False,
-    skip_llm=True
+    mode="core"
 )
 
 executor = PipelineExecutor(config)
-results = executor.execute_core_pipeline()
+results = executor.execute_pipeline()
 
 for result in results:
     print(f"{result.name}: {result.exit_code} ({result.duration:.1f}s)")
@@ -486,11 +493,11 @@ config = MultiProjectConfig(
     repo_root=Path("."),
     projects=projects,
     run_infra_tests=True,
-    run_llm=False
+    mode="core"
 )
 
 orchestrator = MultiProjectOrchestrator(config)
-result = orchestrator.execute_all_projects_core()
+result = orchestrator.execute_all_projects()
 
 print(f"Successful: {result.successful_projects}, Failed: {result.failed_projects}")
 ```
@@ -652,3 +659,16 @@ Core module is imported by all other infrastructure modules for:
 - [README.md](README.md) - Quick reference guide
 - [`validation/`](../validation/) - Validation & quality assurance
 - [`../scripts/gates/AGENTS.md`](../../scripts/gates/AGENTS.md) - Opt-in gate scripts
+
+## Release acceptance modules
+
+| Module | Role |
+| --- | --- |
+| `analysis_data_custody.py` | Retain actual boundary data bytes around supervised analysis execution. |
+| `analysis_evidence.py` | Private, source-bound aggregate evidence for supervised analysis producers. |
+| `analysis_figure_custody.py` | Observe the existing six plotted figures inside the actual analysis scope. |
+| `analysis_launch.py` | Analysis adapter for the canonical audited Python stage supervisor. |
+| `analysis_read_custody.py` | Observe exact bytes returned by the real Source-owned project read API. |
+| `analysis_write_custody.py` | Observe actual completed Source API writes inside the genuine script scope. |
+| `bytecode_audit.py` | Stdlib-only pre-import audit of executed public code and its cache bytes. |
+| `implementation_custody.py` | Actual public implementation and installed-distribution custody. |

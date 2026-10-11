@@ -385,6 +385,9 @@ def render_epub(
         "--standalone",
         f"--metadata=lang:{language}",
     ]
+    from infrastructure.rendering.office_native_projection import office_semantics_filter_path
+
+    cmd.extend(["--lua-filter", str(office_semantics_filter_path())])
     if title is not None:
         cmd.append(f"--metadata=title:{title}")
     if author is not None:
@@ -395,6 +398,7 @@ def render_epub(
         cmd.append(f"--epub-cover-image={cover_image}")
     if extra_args:
         cmd.extend(extra_args)
+    cmd.extend(["--lua-filter", str(office_semantics_filter_path())])
     # This must remain after arbitrary extras: source YAML and
     # arbitrary extra_args may request an identifier, but the effective-package
     # finalizer requires its stable placeholder and replaces it authoritatively.

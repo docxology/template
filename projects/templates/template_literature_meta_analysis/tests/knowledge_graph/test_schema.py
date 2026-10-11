@@ -6,8 +6,8 @@ subfield URIs are well-formed and contain the expected entries.
 
 from __future__ import annotations
 
-import knowledge_graph.schema as schema
-from knowledge_graph.schema import (
+import template_literature_meta_analysis.knowledge_graph.schema as schema
+from template_literature_meta_analysis.knowledge_graph.schema import (
     AIF_NAMESPACE,
     ASSERTION_TYPES,
     SUBFIELD_URIS,

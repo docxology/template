@@ -1,8 +1,8 @@
 from __future__ import annotations
 import requests
 from werkzeug.wrappers import Response
-from literature.http import request_with_retry
-from literature.http import build_politeness_receipt
+from template_literature_meta_analysis.literature.http import request_with_retry
+from template_literature_meta_analysis.literature.http import build_politeness_receipt
 
 
 def test_request_with_retry_recovers_from_503(httpserver) -> None:

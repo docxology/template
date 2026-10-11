@@ -28,7 +28,7 @@ statistical machinery.
 ## What this project proves about the template
 
 The analytical steps here are standard. The **non-standard** contribution is
-procedural: the same tested functions in `src/eda/` back the interactive
+procedural: the same tested functions in `src/template_eda_notebook/eda/` back the interactive
 notebook, the headless analysis script, and this manuscript, so the figures and
 the summary table always refer to the same code. That pattern is what downstream
 projects should copy — whether the domain is survey data, sensor logs, or

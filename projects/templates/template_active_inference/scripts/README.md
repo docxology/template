@@ -28,7 +28,7 @@ Thin orchestrators that import from `../src/` and handle I/O only.
 - `check_documentation_contract.py` — run the fail-closed documentation contract
   oracle for Markdown links, generated-doc links, README/AGENTS pairs, command
   context, and historical evidence wording.
-- `inject_variables.py` / `z_generate_manuscript_variables.py` — hydrate
+- `z_generate_manuscript_variables.py` — hydrate
   manuscript variables from run outputs.
 - `compose_manuscript.py` — sheaf-compose the multi-track sections.
 - `validate_outputs.py` — run the validation gates over generated outputs.

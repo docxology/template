@@ -424,8 +424,7 @@ def test_build_claims_only_supports_existing_files(project_root: Path, repo_root
 
 
 @pytest.mark.slow
-def test_run_autoresearch_loop_on_clean_scaffold(tmp_path: Path) -> None:
-    repo_root = Path(__file__).resolve().parents[5]
+def test_run_autoresearch_loop_on_clean_scaffold(tmp_path: Path, repo_root: Path) -> None:
     project = tmp_path / "template_autoresearch_project"
     source = Path(__file__).resolve().parents[2]
     shutil.copytree(

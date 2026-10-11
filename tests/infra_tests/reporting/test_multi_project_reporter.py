@@ -8,7 +8,7 @@ from pathlib import Path
 
 import pytest
 
-from infrastructure.core.pipeline.multi_project import MultiProjectResult
+from tests._support.multi_project import bound_result
 from infrastructure.core.pipeline import PipelineStageResult
 from infrastructure.reporting.multi_project_reporter import (
     _build_summary_dict,
@@ -44,7 +44,7 @@ def test_build_summary_dict_two_projects_all_pass():
     projects = [_FakeProject("alpha"), _FakeProject("beta")]
     alpha_stages = [_make_stage("tests", True, 2.0), _make_stage("render", True, 3.0)]
     beta_stages = [_make_stage("tests", True, 1.5)]
-    result = MultiProjectResult(
+    result = bound_result(
         project_results={"alpha": alpha_stages, "beta": beta_stages},
         successful_projects=2,
         failed_projects=0,
@@ -68,7 +68,7 @@ def test_build_summary_dict_two_projects_all_pass():
 def test_build_summary_dict_one_failed_project():
     projects = [_FakeProject("x")]
     stages = [_make_stage("tests", False, 0.5)]
-    result = MultiProjectResult(
+    result = bound_result(
         project_results={"x": stages},
         successful_projects=0,
         failed_projects=1,
@@ -84,7 +84,7 @@ def test_build_summary_dict_one_failed_project():
 
 
 def test_build_summary_dict_empty_projects():
-    result = MultiProjectResult(
+    result = bound_result(
         project_results={},
         successful_projects=0,
         failed_projects=0,
@@ -101,7 +101,7 @@ def test_build_summary_dict_empty_projects():
 def test_generate_multi_project_summary_report_writes_files(tmp_path: Path):
     projects = [_FakeProject("proj1"), _FakeProject("proj2")]
     stages = [_make_stage("tests", True, 1.0)]
-    result = MultiProjectResult(
+    result = bound_result(
         project_results={"proj1": stages, "proj2": stages},
         successful_projects=2,
         failed_projects=0,
@@ -123,7 +123,7 @@ def test_generate_multi_project_summary_report_writes_files(tmp_path: Path):
 class TestBuildSummaryDict:
     def test_basic_summary(self):
         projects = [_FakeProject("proj_a")]
-        result = MultiProjectResult(
+        result = bound_result(
             project_results={"proj_a": [_make_stage("test", True, 5.0)]},
             successful_projects=1,
             failed_projects=0,
@@ -138,7 +138,7 @@ class TestBuildSummaryDict:
 
     def test_failed_project(self):
         projects = [_FakeProject("proj_a")]
-        result = MultiProjectResult(
+        result = bound_result(
             project_results={
                 "proj_a": [
                     _make_stage("test", True, 2.0),
@@ -158,7 +158,7 @@ class TestBuildSummaryDict:
 
     def test_multiple_projects(self):
         projects = [_FakeProject("proj_a"), _FakeProject("proj_b")]
-        result = MultiProjectResult(
+        result = bound_result(
             project_results={
                 "proj_a": [_make_stage("test", True, 4.0)],
                 "proj_b": [_make_stage("test", False, 6.0, error="Timeout")],
@@ -177,7 +177,7 @@ class TestBuildSummaryDict:
 
     def test_performance_analysis(self):
         projects = [_FakeProject("fast"), _FakeProject("slow")]
-        result = MultiProjectResult(
+        result = bound_result(
             project_results={
                 "fast": [_make_stage("test", True, 1.0)],
                 "slow": [_make_stage("test", True, 10.0)],
@@ -196,7 +196,7 @@ class TestBuildSummaryDict:
 
     def test_error_aggregation(self):
         projects = [_FakeProject("a"), _FakeProject("b")]
-        result = MultiProjectResult(
+        result = bound_result(
             project_results={
                 "a": [_make_stage("test", False, 1.0), _make_stage("render", False, 0.5)],
                 "b": [_make_stage("test", True, 1.0)],
@@ -213,7 +213,7 @@ class TestBuildSummaryDict:
 
     def test_recommendations_on_failure(self):
         projects = [_FakeProject("x")]
-        result = MultiProjectResult(
+        result = bound_result(
             project_results={"x": [_make_stage("test", False)]},
             successful_projects=0,
             failed_projects=1,
@@ -225,7 +225,7 @@ class TestBuildSummaryDict:
 
     def test_recommendations_on_slow_pipeline(self):
         projects = [_FakeProject("a")]
-        result = MultiProjectResult(
+        result = bound_result(
             project_results={"a": [_make_stage("test", True, 500.0)]},
             successful_projects=1,
             failed_projects=0,
@@ -238,7 +238,7 @@ class TestBuildSummaryDict:
     def test_project_not_in_results(self):
         """Project listed but not in project_results dict."""
         projects = [_FakeProject("missing")]
-        result = MultiProjectResult(
+        result = bound_result(
             project_results={},
             successful_projects=0,
             failed_projects=0,
@@ -254,7 +254,7 @@ class TestBuildSummaryDict:
     def test_non_dict_project_results(self):
         """project_results is not a dict (edge case)."""
         projects = [_FakeProject("a")]
-        result = MultiProjectResult(
+        result = bound_result(
             project_results="invalid",  # type: ignore[arg-type]
             successful_projects=0,
             failed_projects=0,
@@ -405,7 +405,7 @@ class TestGenerateReport:
     def test_creates_output_dir(self, tmp_path):
         out = tmp_path / "new_dir"
         projects = [_FakeProject("p")]
-        result = MultiProjectResult(
+        result = bound_result(
             project_results={"p": [_make_stage("t")]},
             successful_projects=1,
             failed_projects=0,
@@ -419,7 +419,7 @@ class TestGenerateReport:
 
     def test_generates_json_and_markdown(self, tmp_path):
         projects = [_FakeProject("proj_a")]
-        result = MultiProjectResult(
+        result = bound_result(
             project_results={"proj_a": [_make_stage("test", True, 5.0)]},
             successful_projects=1,
             failed_projects=0,
@@ -433,7 +433,7 @@ class TestGenerateReport:
 
     def test_creates_nested_output_dir(self, tmp_path):
         projects = [_FakeProject("proj_a")]
-        result = MultiProjectResult(
+        result = bound_result(
             project_results={"proj_a": [_make_stage("test", True, 1.0)]},
             successful_projects=1,
             failed_projects=0,
@@ -444,3 +444,39 @@ class TestGenerateReport:
         files = generate_multi_project_summary_report(result, projects, output_dir)
         assert output_dir.exists()
         assert files["json"].exists()
+
+
+def test_unbound_rows_and_incomplete_expected_set_never_pass() -> None:
+    from infrastructure.core.pipeline.multi_project import MultiProjectResult
+    from infrastructure.core.pipeline.outcomes import RunResult, StageOutcome, StageStatus
+
+    stage = PipelineStageResult(
+        1, "Analysis", True, 1.0, stage_key="analysis", outcome=StageOutcome("analysis", StageStatus.SUCCEEDED, 0)
+    )
+    for runs in ({}, {"alpha": RunResult(("analysis", "render"), (stage.outcome,))}):
+        result = MultiProjectResult(
+            {"alpha": [stage]}, successful_projects=99, expected_projects=("alpha",), run_results=runs
+        )
+        summary = _build_summary_dict(result, [_FakeProject("alpha")])
+        assert summary["complete"] is False and summary["exit_code"] == 1
+        assert summary["successful_projects"] == 0 and not summary["projects"]["alpha"]["success"]
+
+
+def test_typed_pause_preserves_child_zero_without_claiming_pass() -> None:
+    from infrastructure.core.pipeline.multi_project import MultiProjectResult
+    from infrastructure.core.pipeline.outcomes import RunResult, StageOutcome, StageStatus
+
+    outcome = StageOutcome("analysis", StageStatus.PAUSED, 0, "approval required")
+    stage = PipelineStageResult(
+        1, "Analysis", False, 1.0, 75, hitl_pause=True, stage_completed=False, stage_key="analysis", outcome=outcome
+    )
+    result = MultiProjectResult(
+        {"alpha": [stage]},
+        successful_projects=99,
+        expected_projects=("alpha",),
+        run_results={"alpha": RunResult(("analysis",), (outcome,))},
+    )
+    summary = _build_summary_dict(result, [_FakeProject("alpha")])
+    assert summary["exit_code"] == 75 and summary["successful_projects"] == 0
+    assert summary["projects"]["alpha"]["outcomes"][0]["child_exit_code"] == 0
+    assert summary["projects"]["alpha"]["outcomes"][0]["status"] == "paused"

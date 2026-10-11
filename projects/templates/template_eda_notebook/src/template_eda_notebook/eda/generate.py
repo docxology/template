@@ -9,7 +9,7 @@ the generator reproduces the fixture's *family* (schema, size, missingness
 pattern, correlation sign structure, and broad statistics) from a fixed seed,
 which is what a forked project needs to regenerate a deterministic dataset.
 
-Like the rest of ``src/eda``, this module is pure: it returns a DataFrame and
+Like the rest of ``src/template_eda_notebook/eda``, this module is pure: it returns a DataFrame and
 performs no file I/O and no plotting.
 """
 

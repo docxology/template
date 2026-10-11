@@ -44,7 +44,7 @@ class TestGeneratePipelineReport:
         assert report.total_duration == 45.0
         assert len(report.stages) == 3
         assert report.stages[0].name == "setup"
-        assert report.stages[0].status == "passed"
+        assert report.stages[0].status == "succeeded"
         assert report.stages[2].status == "failed"
 
     def test_with_test_results(self, tmp_path):

@@ -20,13 +20,11 @@ from typing import Any, Iterable, Iterator, Sequence
 
 import yaml
 
-try:
-    import tomllib
-except ImportError:  # Python 3.10 compatibility
-    import tomli as tomllib  # type: ignore[no-redef]
+import tomllib
 
+from infrastructure._version import __version__ as PLATFORM_VERSION
 from infrastructure.core.script_discovery import discover_analysis_scripts
-from infrastructure.project.export_smoke import discover_import_targets
+from infrastructure.project.package_discovery import discover_import_targets
 from infrastructure.project.public_capability_contracts import (
     PACKAGE_NAME_OVERRIDES,
     SkipContract,
@@ -44,7 +42,7 @@ from infrastructure.rendering.manuscript_discovery import discover_manuscript_fi
 REQUIRED_DIRECTORIES = ("src", "tests", "manuscript", "scripts", ".agents/skills")
 REQUIRED_FILES = ("README.md", "AGENTS.md", "pyproject.toml")
 CAPABILITY_MANIFEST_SCHEMA_VERSION = "template-public-capabilities-v1"
-CANONICAL_CI_PYTHON_VERSIONS = ("3.10", "3.14")
+CANONICAL_CI_PYTHON_VERSIONS = ("3.12", "3.13", "3.14")
 RENDER_FORMAT_NAMES = ("pdf", "html", "slides", "docx", "epub")
 
 _HYDRATION_TOKEN_RE = re.compile(r"\{\{[A-Z_][A-Z0-9_]*\}\}|\$\{[A-Za-z_][A-Za-z0-9_]*\}")
@@ -421,6 +419,16 @@ def _package_capability(
         else:
             issues.append("[project].requires-python must be a non-empty string")
 
+    template = payload.get("tool", {}).get("template", {}) if isinstance(payload.get("tool"), dict) else {}
+    if not isinstance(template, dict):
+        template = {}
+    platform_version = template.get("platform_version")
+    tested_versions = template.get("tested_python_versions")
+    if platform_version != PLATFORM_VERSION:
+        issues.append(f"[tool.template].platform_version must bind platform {PLATFORM_VERSION}")
+    if tested_versions != list(CANONICAL_CI_PYTHON_VERSIONS):
+        issues.append("[tool.template].tested_python_versions must match the canonical CI runtime range")
+
     normalized_name, expected_name, identity_issues, identity_evidence = package_identity_contract(
         project,
         name,
@@ -440,6 +448,8 @@ def _package_capability(
         f"name={name or '<missing>'}",
         *identity_evidence,
         f"requires-python={requires_python or '<missing>'}",
+        f"platform-version={platform_version or '<missing>'}",
+        f"tested-python-versions={tested_versions}",
         f"import-targets={','.join(import_targets) or '<none>'}",
     )
     return capability, issues, evidence
@@ -531,8 +541,12 @@ def _analysis_capability(
             if duplicate_entries:
                 issues.append(f"analysis.scripts contains duplicates: {', '.join(duplicate_entries)}")
 
-    with _silenced_loggers("infrastructure.core.script_discovery"):
-        discovered = discover_analysis_scripts(repo_root, project, project_dir=project_root)
+    try:
+        with _silenced_loggers("infrastructure.core.script_discovery"):
+            discovered = discover_analysis_scripts(repo_root, project, project_dir=project_root)
+    except (OSError, ValueError) as exc:
+        discovered = []
+        issues.append(f"could not admit confined runnable analysis entrypoints: {exc}")
     entrypoints = tuple(_relative(path, project_root) for path in discovered)
     if configured and tuple(declared) != entrypoints:
         issues.append(

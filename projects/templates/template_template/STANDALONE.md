@@ -6,7 +6,7 @@
 ## Publication identity
 
 - Standalone repository: [docxology/template_template](https://github.com/docxology/template_template)
-- Config version: `1.0.9`
+- Intended / published version: `2.0.0 pending; last published 1.0.9`
 - Stable concept DOI: [10.5281/zenodo.20419007](https://doi.org/10.5281/zenodo.20419007)
 - Latest deposited version DOI: [10.5281/zenodo.20976048](https://zenodo.org/records/20976048)
 - Additional declared locations: [github_pages](https://docxology.github.io/template_template/), [huggingface_hub](https://huggingface.co/datasets/ActiveInference/template_template), [ipfs_pinata](https://gateway.pinata.cloud/ipfs/QmVr4UREM1NeaSfY1pNJdjFjrRrGMZLvnNqCY2cRaGadry), [netlify](https://6a44431e738f1faeef68e5f6--tranquil-kleicha-0c9203.netlify.app), [osf](https://osf.io/byf23/), [pypi](https://test.pypi.org/project/template-template-meta-project/1.0.9/), [software_heritage](https://archive.softwareheritage.org/browse/origin/?origin_url=https://github.com/docxology/template_template)

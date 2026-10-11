@@ -1,0 +1,15 @@
+{
+  "schema_version": "template-unpaid-operation-eligibility-v1",
+  "provider": "monid",
+  "operation": "POST /v1/discover",
+  "billing": "unverified",
+  "verified_utc": "2026-10-06T23:00:25Z",
+  "valid_until_utc": "2026-10-20T23:00:25Z",
+  "primary_sources": [
+    "https://monid.ai/docs/api/discover",
+    "https://monid.ai/docs/guide/pricing"
+  ],
+  "environment_keys": [
+    "MONID_API_KEY"
+  ]
+}

@@ -32,10 +32,12 @@ from infrastructure.methods._plan_validation import (
     _validate_artifact_manifest,
     _validate_artifact_paths,
     _validate_executor_method,
-    _validate_json_object,
     _validate_stage_script,
     _validate_verification_commands,
 )
+from infrastructure.core.project_paths import resolve_source_manuscript_dir
+from infrastructure.methods._command_validation import _validate_plan_commands
+from infrastructure.methods._evidence_validation import _validate_evidence_registry, _validate_optional_evidence
 from infrastructure.methods.models import (
     MethodsAuditReport,
     MethodsIssue,
@@ -80,6 +82,12 @@ def build_methods_orchestration_plan(
     ).path
     dag = PipelineDAG.from_yaml(pipeline_source_abs)
     sorted_stage_definitions = dag.sorted_stages()
+    pipeline_source_display = _portable_project_path(
+        pipeline_source_abs,
+        repo_root=root,
+        project_root=project_root_abs,
+        project_display_root=project_root,
+    )
 
     # Compute the project key for ``{project}`` expansion: the path after
     # ``projects/`` so bare names like ``template_advanced_literature_review``
@@ -92,6 +100,7 @@ def build_methods_orchestration_plan(
             order=index,
             project_key=project_key,
             project_name=project_name,
+            pipeline_source=pipeline_source_display,
         )
         for index, stage in enumerate(sorted_stage_definitions, start=1)
     )
@@ -133,7 +142,12 @@ def build_methods_orchestration_plan(
         claim_ledger=claim_ledger,
         experiment_plan=experiment_plan,
         stages=stages,
-        validation_commands=_validation_commands(project_name, project_key),
+        validation_commands=_validation_commands(
+            project_key,
+            project_root,
+            project_root / resolve_source_manuscript_dir(project_root_abs).relative_to(project_root_abs),
+            pipeline_source_display,
+        ),
         dropped_dependency_edges=tuple(dag.dropped_dependency_edges),
         artifact_mode=artifact_mode,
     )
@@ -233,14 +247,11 @@ def validate_methods_orchestration_plan(
             project_root=project_root,
             issues=issues,
         )
-        _validate_json_object(
-            root,
-            plan.evidence_registry,
-            missing_code="METHODS.EVIDENCE_REGISTRY_MISSING",
-            invalid_code="METHODS.EVIDENCE_REGISTRY_INVALID",
-            label="evidence registry",
-            issues=issues,
-        )
+        _validate_evidence_registry(root, plan.evidence_registry, project_root=project_root, issues=issues)
+    _validate_optional_evidence(root, plan, project_root=project_root, issues=issues)
+    _validate_plan_commands(
+        root, plan, issues, external_boundary, require_generated_artifacts=require_generated_artifacts
+    )
     for stage in plan.stages:
         if not stage.key:
             issues.append(

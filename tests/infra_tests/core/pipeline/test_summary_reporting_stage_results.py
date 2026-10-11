@@ -20,7 +20,7 @@ from infrastructure.core.pipeline.summary_helpers import (
     stage_result_to_dict,
 )
 from infrastructure.core.pipeline.summary_models import PipelineSummary
-from ._summary_reporting_helpers import _result
+from ._summary_reporting_helpers import _result, _skipped
 
 
 class TestFormatStageResult:
@@ -48,10 +48,16 @@ class TestFormatStageResult:
         assert "5.0s" in formatted
 
     def test_skipped_stage(self) -> None:
-        """A stage that is not successful but has exit_code 0 is 'skipped'."""
+        """Only a validated skip receipt renders a stage as skipped."""
+        formatted = format_stage_result(_skipped("llm_review", stage_num=9), total_duration=10.0, skip_infra=False)
+        assert "⊘ Stage 9: llm_review (skipped)" in formatted
+
+    def test_unreceipted_exit_zero_failure_is_not_a_skip(self) -> None:
+        """A non-successful exit 0 without a skip receipt is incomplete, never skipped."""
         result = _result("llm_review", stage_num=9, success=False, duration=0.0, exit_code=0)
         formatted = format_stage_result(result, total_duration=10.0, skip_infra=False)
-        assert "⊘ Stage 9: llm_review (skipped)" in formatted
+        assert "(skipped)" not in formatted
+        assert "✗ Stage 9: llm_review" in formatted and "FAILED" in formatted
 
     def test_zero_total_duration_no_division_error(self) -> None:
         """When total_duration is 0, percentage falls back to 0 without ZeroDivisionError."""
@@ -165,7 +171,7 @@ class TestPipelineSummaryExecutedStages:
     def test_executed_stages_excludes_skipped(self) -> None:
         results = [
             _result("setup", stage_num=1, success=True, duration=1.0),
-            _result("skipped_stage", stage_num=2, success=False, duration=0.0, exit_code=0),
+            _skipped("skipped_stage", stage_num=2),
             _result("tests", stage_num=3, success=True, duration=2.0),
         ]
         summary = PipelineSummary(
@@ -197,9 +203,7 @@ class TestPipelineSummaryExecutedStages:
         assert len(summary.executed_stages) == 2
 
     def test_executed_stages_empty_when_all_skipped(self) -> None:
-        results = [
-            _result("a", stage_num=1, success=False, duration=0.0, exit_code=0),
-        ]
+        results = [_skipped("a", stage_num=1)]
         summary = PipelineSummary(
             total_duration=0.0,
             stage_results=results,

@@ -58,11 +58,10 @@ Project-level layer contract: [`../AGENTS.md`](../AGENTS.md).
    fill-in-the-blank copy for someone forking this template; keep both in
    sync structurally (same keys) when you add a new `config.yaml` field —
    diff them (`diff config.yaml config.yaml.example`) before committing either.
-5. **`preamble.md`'s JuliaMono/Latin-Modern-Math block is environment-
-   sensitive** (hardcoded TeX Live 2026 path). If a fresh clone's PDF render
-   fails on a missing font, that block — not the manuscript prose — is the
-   first thing to check; the file's own comments explain the fallback (comment
-   out the `Path =` line, or the whole `\setmonofont`/`\setmathfont` block).
+5. **`preamble.md` selects the installed JuliaMono font family** through
+   font discovery and Latin Modern Math through TeX. Prepare both fonts before
+   rendering; a missing font is a prerequisite failure. Preserve the Unicode
+   code and math glyphs when repairing environment-specific font lookup.
 
 ## Render / validate loop
 

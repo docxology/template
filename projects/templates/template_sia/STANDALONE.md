@@ -6,7 +6,7 @@
 ## Publication identity
 
 - Standalone repository: [docxology/template_sia](https://github.com/docxology/template_sia)
-- Config version: `0.1.2`
+- Intended / published version: `0.2.0 pending; last published 0.1.2`
 - Stable concept DOI: [10.5281/zenodo.20453879](https://doi.org/10.5281/zenodo.20453879)
 - Latest deposited version DOI: [10.5281/zenodo.20932066](https://zenodo.org/records/20932066)
 - Additional declared locations: [github_pages](https://docxology.github.io/template_sia/), [huggingface_hub](https://huggingface.co/datasets/ActiveInference/template_sia), [ipfs_pinata](https://gateway.pinata.cloud/ipfs/QmccbCX9YXJMd3fNfkZ3H59dnWRnB6xgeVCM8kmPGQtaBh), [netlify](https://6a4442bb57aaff1e1b2992d1--tranquil-kleicha-0c9203.netlify.app), [osf](https://osf.io/85bxe/), [pypi](https://test.pypi.org/project/template-sia/0.1.2/), [software_heritage](https://archive.softwareheritage.org/browse/origin/?origin_url=https://github.com/docxology/template_sia)

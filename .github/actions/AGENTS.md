@@ -19,6 +19,8 @@ Repository-local composite actions for the CI pipeline. See
 | --- | --- |
 | [`setup-python-env/action.yml`](setup-python-env/action.yml) | uv + Python provisioning (see its [`AGENTS.md`](setup-python-env/AGENTS.md)). |
 | [`setup-docs-lint/action.yml`](setup-docs-lint/action.yml) | Shared Node + Mermaid + Chrome provisioning for both blocking documentation-lint callers. |
+| [`setup-native-installed-readiness/`](setup-native-installed-readiness/README.md) | Prepare Source-locked native tools and cached inputs before the installed original/reader/handoff operation. |
+| [`upload-readiness-shards/`](upload-readiness-shards/README.md) | Check and upload exact bounded native/candidate transport or separately named failed diagnostics. |
 
 ## Editing
 
@@ -26,3 +28,11 @@ Repository-local composite actions for the CI pipeline. See
 - After any change, run `actionlint` (CI parity: the `actionlint` job).
 - Adding a new action directory requires its own `README.md` + `AGENTS.md`
   (the doc-pair invariant — `infrastructure/validation/docs/doc_pair_lint.py`).
+
+The complete hosted acceptance workflow also uses
+[`setup-acceptance-documents`](setup-acceptance-documents/README.md) and
+[`setup-acceptance-model`](setup-acceptance-model/README.md) to prepare its
+source-declared tools and one owned pinned local model before observations.
+
+[`setup-acceptance-fixtures`](setup-acceptance-fixtures/README.md) materializes
+identical pinned source inputs for all complete acceptance and release readers.

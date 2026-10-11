@@ -1,0 +1,462 @@
+name: Platform required acceptance
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: platform-required-acceptance-${{ github.run_id }}
+  cancel-in-progress: false
+
+env:
+  UV_FROZEN: "true"
+  MPLBACKEND: Agg
+  OLLAMA_SKIP_TEST_MODEL_PULL: "1"
+
+jobs:
+  root-original:
+    strategy:
+      fail-fast: false
+      matrix:
+        python: ["3.12", "3.13", "3.14"]
+        include:
+          - runner: ubuntu-latest
+            host: linux
+          - runner: macos-latest
+            host: darwin
+        runner: [ubuntu-latest, macos-latest]
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 180
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+          submodules: true
+      - uses: ./.github/actions/setup-python-env
+        with:
+          python-version: ${{ matrix.python }}
+      - name: Prepare selected locked environment
+        run: uv sync --locked --inexact --group dev --group installed-build --group timeseries-bench --group rendering-pptx --python '${{ matrix.python }}'
+      - uses: ./.github/actions/setup-acceptance-fixtures
+      - uses: ./.github/actions/setup-docs-lint
+      - uses: ./.github/actions/setup-acceptance-documents
+      - name: Prepare source-locked browser math dependencies
+        run: .venv/bin/python -m infrastructure.reporting.native_dependency_preparation --repo-root .
+      - uses: ./.github/actions/setup-acceptance-model
+      - name: Original complete Root observation
+        continue-on-error: true
+        env:
+          HOST: ${{ matrix.host }}
+          MINOR: ${{ matrix.python }}
+        run: >-
+          .venv/bin/python -m infrastructure.project.public_acceptance_root
+          --python "$MINOR=$PWD/.venv/bin/python" --mode live
+          --evidence-dir "output/readiness/root-$HOST-$MINOR"
+      - name: Original macOS process and rendering obligations
+        if: matrix.host == 'darwin' && matrix.python == '3.14'
+        continue-on-error: true
+        run: >-
+          .venv/bin/python -m infrastructure.project.public_acceptance_auxiliary_cli
+          --gate root:macos:process --gate root:macos:rendering
+          --evidence-dir output/readiness/auxiliary-darwin
+      - name: Stop only the owned model daemon and descendants
+        if: always()
+        shell: bash
+        run: |
+          python - <<'PYTHON'
+          import json, os, signal, subprocess, time
+          from pathlib import Path
+          def members(group):
+              rows = subprocess.check_output(["ps", "-axo", "pid=,pgid=,lstart=,stat="], text=True)
+              result = {}
+              for line in rows.splitlines():
+                  fields = line.split()
+                  if len(fields) >= 8 and int(fields[1]) == group and not fields[7].startswith("Z"):
+                      result[int(fields[0])] = " ".join(fields[2:7])
+              return result
+          directory = os.environ.get("TEMPLATE_ACCEPTANCE_MODEL_DIRECTORY")
+          owner = Path(directory) / "daemon-owner.json" if directory else None
+          if owner is not None and owner.is_file():
+              record = json.loads(owner.read_text())
+              group = record["pid"]
+              known = {int(pid): birth for pid, birth in record["members"].items()}
+              current = members(group)
+              if current:
+                  assert any(current.get(pid) == birth for pid, birth in known.items()), "Refuse an unverified or reused process group"
+                  known.update(current)
+                  os.killpg(group, signal.SIGTERM)
+                  deadline = time.monotonic() + 5
+                  while members(group) and time.monotonic() < deadline:
+                      time.sleep(0.1)
+                  current = members(group)
+                  if current:
+                      assert any(current.get(pid) == birth for pid, birth in known.items()), "Refuse a reused group during cleanup"
+                      os.killpg(group, signal.SIGKILL)
+                      deadline = time.monotonic() + 5
+                      while members(group) and time.monotonic() < deadline:
+                          time.sleep(0.1)
+                  assert not members(group), "Owned daemon descendants remain alive"
+              (Path(directory) / "daemon-cleanup.json").write_text(json.dumps({"owned_group": group, "live_members_remaining": members(group), "original_exit": 0}))
+          PYTHON
+      - name: Retain original source audit
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: required-source-root-${{ runner.os }}-${{ matrix.python }}
+          path: |
+            output/readiness/
+            !output/readiness/auxiliary-darwin/**
+          if-no-files-found: error
+          retention-days: 1
+      - name: Retain original designated macOS auxiliary audit
+        if: always() && matrix.host == 'darwin' && matrix.python == '3.14'
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: required-source-auxiliary-darwin
+          path: output/readiness/auxiliary-darwin/
+          if-no-files-found: error
+          retention-days: 1
+
+  common-original:
+    runs-on: ubuntu-latest
+    timeout-minutes: 360
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+          submodules: true
+      - uses: ./.github/actions/setup-acceptance-fixtures
+      - uses: ./.github/actions/setup-python-env
+      - name: Prepare three locked environments
+        shell: bash
+        run: |
+          for minor in 3.12 3.13 3.14; do
+            UV_PROJECT_ENVIRONMENT="output/runtime-envs/$minor" uv sync --locked --group dev --group installed-build --python "$minor"
+          done
+      - uses: ./.github/actions/setup-docs-lint
+      - uses: ./.github/actions/setup-acceptance-documents
+        with:
+          python-executable: output/runtime-envs/3.14/bin/python
+      - name: Prepare source-locked browser math dependencies
+        run: output/runtime-envs/3.14/bin/python -m infrastructure.reporting.native_dependency_preparation --repo-root .
+      - name: Prepare pinned Lean and TLC before formal observations
+        timeout-minutes: 20
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl --fail --location --retry 2 --max-time 60 --output "$RUNNER_TEMP/elan-init.sh" https://raw.githubusercontent.com/leanprover/elan/58e8d545e33641f66dbcbd22c4283109e71757be/elan-init.sh
+          echo "4bacca9502cb89736fe63d2685abc2947cfbf34dc87673504f1bb4c43eda9264  $RUNNER_TEMP/elan-init.sh" | shasum -a 256 --check --status
+          sh "$RUNNER_TEMP/elan-init.sh" -y --default-toolchain none
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          for pin in projects/templates/template_active_inference/lean/lean-toolchain projects/templates/template_formal/formal/lean/lean-toolchain; do
+            "$HOME/.elan/bin/elan" toolchain install "$(tr -d '[:space:]' < "$pin")"
+          done
+          sudo apt-get install -y --no-install-recommends default-jre-headless
+          java -version
+      - name: Warm exact locked offline wheel dependencies for every scope and minor
+        timeout-minutes: 30
+        shell: bash
+        run: |
+          set -euo pipefail
+          read -r -a projects <<< "$(output/runtime-envs/3.14/bin/python -m infrastructure.project.public_scope project-names)"
+          for minor in 3.12 3.13 3.14; do
+            interpreter="$GITHUB_WORKSPACE/output/runtime-envs/$minor/bin/python"
+            for scope in root "${projects[@]}"; do
+              metadata="$GITHUB_WORKSPACE"
+              if [ "$scope" != root ]; then metadata="$GITHUB_WORKSPACE/projects/$scope"; fi
+              requirements=$(mktemp "$RUNNER_TEMP/acceptance-requirements.XXXXXX")
+              environment=$(mktemp -d "$RUNNER_TEMP/acceptance-dependency-cache.XXXXXX")
+              uv export --directory "$metadata" --locked --no-default-groups --no-emit-project --no-emit-local --no-header --no-annotate --output-file "$requirements"
+              uv venv --no-project --no-python-downloads --python "$interpreter" "$environment"
+              uv pip sync --no-config --no-build --require-hashes --allow-empty-requirements --python "$environment/bin/python" "$requirements"
+              rm -r "$environment"
+              rm "$requirements"
+            done
+          done
+      - name: Prepare exact immutable SIA sandbox image
+        timeout-minutes: 10
+        shell: bash
+        env:
+          SIA_SANDBOX_IMAGE: python@sha256:51dafde81dbdb6ebde285137a295cf18a47ca95234fe388a343719cb97305b3d
+        run: |
+          set -euo pipefail
+          docker pull "$SIA_SANDBOX_IMAGE"
+          image=$(docker image inspect --format '{{.Id}}' "$SIA_SANDBOX_IMAGE")
+          echo "TEMPLATE_ACCEPTANCE_SIA_IMAGE_ID=$image" >> "$GITHUB_ENV"
+          echo "TEMPLATE_SIA_TEST_IMAGE=$image" >> "$GITHUB_ENV"
+      - uses: ./.github/actions/setup-acceptance-model
+      - name: Complete installed and export matrix
+        continue-on-error: true
+        run: >-
+          output/runtime-envs/3.14/bin/python -m infrastructure.project.public_acceptance_auxiliary_cli
+          --installed
+          --installed-interpreter "3.12=$PWD/output/runtime-envs/3.12/bin/python"
+          --installed-interpreter "3.13=$PWD/output/runtime-envs/3.13/bin/python"
+          --installed-interpreter "3.14=$PWD/output/runtime-envs/3.14/bin/python"
+          --evidence-dir output/readiness/installed
+      - name: Admit installed dependency providers and execute complete runtime matrix
+        continue-on-error: true
+        shell: bash
+        run: |
+          output/runtime-envs/3.14/bin/python -m infrastructure.project.public_acceptance_auxiliary_cli \
+            --prepare-runtime-providers --installed-receipt output/readiness/installed/receipt.json \
+            > output/readiness/runtime-provider-input.json
+          output/runtime-envs/3.14/bin/python - <<'PYTHON'
+          import json, subprocess, sys
+          from pathlib import Path
+          providers = json.loads(Path("output/readiness/runtime-provider-input.json").read_text())
+          wheels = [str(Path.cwd() / binding["path"]) for binding in providers["providers"].values()]
+          for minor in ("3.12", "3.13", "3.14"):
+              interpreter = Path.cwd() / f"output/runtime-envs/{minor}/bin/python"
+              if wheels:
+                  subprocess.run(["uv", "pip", "install", "--offline", "--no-deps", "--python", str(interpreter), *wheels], check=True)
+          command = [sys.executable, "scripts/gates/public_readiness.py", "--acceptance-matrix", "--project-workers", "3"]
+          for minor in ("3.12", "3.13", "3.14"):
+              command += ["--python", f"{minor}={Path.cwd()}/output/runtime-envs/{minor}/bin/python"]
+          command += providers["provider_wheel_arguments"]
+          command += ["--evidence-dir", "output/readiness/projects"]
+          raise SystemExit(subprocess.run(command, check=False).returncode)
+          PYTHON
+      - name: Every remaining source-owned obligation
+        continue-on-error: true
+        run: >-
+          output/runtime-envs/3.14/bin/python -m infrastructure.project.public_acceptance_auxiliary_cli
+          --all --local-model smollm2:135m --docker-image-id "$TEMPLATE_ACCEPTANCE_SIA_IMAGE_ID"
+          --timeout-seconds 1800 --evidence-dir output/readiness/auxiliary
+      - name: Independently admit original Root export before transfer
+        id: export_prepare
+        run: |
+          output/runtime-envs/3.14/bin/python -m infrastructure.project.public_acceptance_auxiliary_cli \
+            --prepare-transfer --export-receipt output/readiness/installed/receipt.json \
+            > output/readiness/export-upload-input.json
+          output/runtime-envs/3.14/bin/python -c 'import json,os;from pathlib import Path;v=json.loads(Path("output/readiness/export-upload-input.json").read_text());Path(os.environ["GITHUB_OUTPUT"]).open("a").write("upload_path="+v["upload_path"]+"\n")'
+      - name: Actual public Root export upload
+        id: export_upload
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: root-candidate-export
+          path: ${{ steps.export_prepare.outputs.upload_path }}
+          if-no-files-found: error
+          retention-days: 1
+      - name: Actual same artifact download
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c
+        with:
+          artifact-ids: ${{ steps.export_upload.outputs.artifact-id }}
+          path: output/readiness/sandbox-download
+      - name: Independently verify actual API and retrieved bytes
+        env:
+          UPLOAD_OUTPUTS: ${{ toJSON(steps.export_upload.outputs) }}
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          output/runtime-envs/3.14/bin/python -c 'import os;from pathlib import Path;Path("output/readiness/export-upload-outputs.json").write_text(os.environ["UPLOAD_OUTPUTS"])'
+          output/runtime-envs/3.14/bin/python -m infrastructure.project.public_acceptance_auxiliary_cli \
+            --emit-transfer --export-receipt output/readiness/installed/receipt.json \
+            --upload-outputs output/readiness/export-upload-outputs.json \
+            --downloaded-directory output/readiness/sandbox-download \
+            --repository "$GITHUB_REPOSITORY" --github-run-id "$GITHUB_RUN_ID" \
+            --source-commit "$GITHUB_SHA" --evidence-dir output/readiness/sandbox-transfer
+      - name: Stop only the owned model daemon and descendants
+        if: always()
+        shell: bash
+        run: |
+          python - <<'PYTHON'
+          import json, os, signal, subprocess, time
+          from pathlib import Path
+          def members(group):
+              rows = subprocess.check_output(["ps", "-axo", "pid=,pgid=,lstart=,stat="], text=True)
+              result = {}
+              for line in rows.splitlines():
+                  fields = line.split()
+                  if len(fields) >= 8 and int(fields[1]) == group and not fields[7].startswith("Z"):
+                      result[int(fields[0])] = " ".join(fields[2:7])
+              return result
+          directory = os.environ.get("TEMPLATE_ACCEPTANCE_MODEL_DIRECTORY")
+          owner = Path(directory) / "daemon-owner.json" if directory else None
+          if owner is not None and owner.is_file():
+              record = json.loads(owner.read_text())
+              group = record["pid"]
+              known = {int(pid): birth for pid, birth in record["members"].items()}
+              current = members(group)
+              if current:
+                  assert any(current.get(pid) == birth for pid, birth in known.items()), "Refuse an unverified or reused process group"
+                  known.update(current)
+                  os.killpg(group, signal.SIGTERM)
+                  deadline = time.monotonic() + 5
+                  while members(group) and time.monotonic() < deadline:
+                      time.sleep(0.1)
+                  current = members(group)
+                  if current:
+                      assert any(current.get(pid) == birth for pid, birth in known.items()), "Refuse a reused group during cleanup"
+                      os.killpg(group, signal.SIGKILL)
+                      deadline = time.monotonic() + 5
+                      while members(group) and time.monotonic() < deadline:
+                          time.sleep(0.1)
+                  assert not members(group), "Owned daemon descendants remain alive"
+              (Path(directory) / "daemon-cleanup.json").write_text(json.dumps({"owned_group": group, "live_members_remaining": members(group), "original_exit": 0}))
+          PYTHON
+      - name: Retain original source audit
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: required-source-common
+          path: output/readiness/
+          if-no-files-found: error
+          retention-days: 1
+
+  native-original:
+    runs-on: ubuntu-latest
+    timeout-minutes: 300
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+          submodules: true
+          fetch-depth: 0
+      - uses: ./.github/actions/setup-acceptance-fixtures
+      - uses: ./.github/actions/setup-python-env
+        with:
+          python-version: "3.14.4"
+      - uses: ./.github/actions/setup-native-installed-readiness
+      - name: Original authenticated installed native format inventory
+        id: native
+        run: >-
+          .venv/bin/python -m infrastructure.reporting.native_installed_launcher --mode original
+          --source-root "$GITHUB_WORKSPACE" --source-commit "$GITHUB_SHA"
+          --source-identity "$(.venv/bin/python -c 'from pathlib import Path;from infrastructure.reporting.readiness_receipts import source_fingerprint;print(source_fingerprint(Path.cwd()))')"
+          --python "$GITHUB_WORKSPACE/.venv/bin/python" --uv "$(command -v uv)"
+          --expected-platform Linux --timeout 14400
+          --mermaid-package-root "$GITHUB_WORKSPACE/node_modules/@mermaid-js/mermaid-cli"
+          --mermaid-dependency-root "$GITHUB_WORKSPACE/node_modules"
+          --mermaid-node-executable "$(command -v node)"
+          --mermaid-chrome-executable "$CHROME_EXECUTABLE_PATH"
+          --office-font-directory /usr/share/fonts/truetype
+          --office-font-directory "$HOME/.local/share/fonts/template-acceptance-juliamono"
+          --repository "$GITHUB_REPOSITORY" --run-id "$GITHUB_RUN_ID"
+          --current-root "$RUNNER_TEMP/template-native-original-root"
+          --scratch "$RUNNER_TEMP/template-native-original-scratch"
+          --epubcheck-jar "$TEMPLATE_NATIVE_EPUBCHECK" --java-executable "$TEMPLATE_NATIVE_JAVA"
+      - name: Retain exact independently admitted native shards
+        uses: ./.github/actions/upload-readiness-shards
+        with:
+          repo-root: ${{ runner.temp }}/template-native-original-root
+          directory: ${{ runner.temp }}/template-native-original-root/output/readiness/native-transport
+          kind: native
+      - name: Preserve failed original raw and Code evidence
+        if: always() && steps.native.outcome == 'failure'
+        run: >-
+          .venv/bin/python -m infrastructure.reporting.native_failed_transport
+          --repo-root "$GITHUB_WORKSPACE" --mirror "$RUNNER_TEMP/template-native-original-root"
+          --scratch "$RUNNER_TEMP/template-native-original-scratch"
+          --repository "$GITHUB_REPOSITORY" --run-id "$GITHUB_RUN_ID" --revision "$GITHUB_SHA"
+      - name: Retain bounded failed-native diagnostics without acceptance
+        if: always() && steps.native.outcome == 'failure'
+        uses: ./.github/actions/upload-readiness-shards
+        with:
+          repo-root: ${{ github.workspace }}
+          directory: ${{ github.workspace }}/output/readiness/failed-native-transport
+          kind: failed-native
+
+  complete:
+    needs: [root-original, common-original, native-original]
+    if: always() && !cancelled()
+    runs-on: ubuntu-latest
+    timeout-minutes: 300
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+          submodules: true
+          fetch-depth: 0
+      - uses: ./.github/actions/setup-acceptance-fixtures
+      - uses: ./.github/actions/setup-python-env
+        with:
+          python-version: "3.14.4"
+      - name: Read same-run original common DATA
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c
+        with:
+          name: required-source-common
+          path: output/readiness
+      - name: Read same-run original macOS auxiliary DATA
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c
+        with:
+          name: required-source-auxiliary-darwin
+          path: output/readiness/auxiliary-darwin
+      - uses: ./.github/actions/setup-native-installed-readiness
+      - name: Independently admit complete candidate through fresh installed Source
+        id: reader
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: >-
+          .venv/bin/python -m infrastructure.reporting.native_installed_launcher --mode reader
+          --source-root "$GITHUB_WORKSPACE" --source-commit "$GITHUB_SHA"
+          --source-identity "$(.venv/bin/python -c 'from pathlib import Path;from infrastructure.reporting.readiness_receipts import source_fingerprint;print(source_fingerprint(Path.cwd()))')"
+          --python "$GITHUB_WORKSPACE/.venv/bin/python" --uv "$(command -v uv)"
+          --expected-platform Linux --timeout 14400
+          --mermaid-package-root "$GITHUB_WORKSPACE/node_modules/@mermaid-js/mermaid-cli"
+          --mermaid-dependency-root "$GITHUB_WORKSPACE/node_modules"
+          --mermaid-node-executable "$(command -v node)"
+          --mermaid-chrome-executable "$CHROME_EXECUTABLE_PATH"
+          --office-font-directory /usr/share/fonts/truetype
+          --office-font-directory "$HOME/.local/share/fonts/template-acceptance-juliamono"
+          --repository "$GITHUB_REPOSITORY" --run-id "$GITHUB_RUN_ID"
+          --current-root "$RUNNER_TEMP/template-native-reader-root"
+          --scratch "$RUNNER_TEMP/template-native-reader-scratch" --stage-bundle
+          --epubcheck-jar "$TEMPLATE_NATIVE_EPUBCHECK" --java-executable "$TEMPLATE_NATIVE_JAVA"
+          --receipt output/readiness/projects/receipt.json
+          --receipt output/readiness/installed/receipt.json
+          --receipt output/readiness/sandbox-transfer/receipt.json
+          --auxiliary-receipt linux=output/readiness/auxiliary/receipt.json
+          --auxiliary-receipt darwin=output/readiness/auxiliary-darwin/receipt.json
+          --root-receipt linux/3.12=output/readiness/root-linux-3.12/receipt.json
+          --root-receipt linux/3.13=output/readiness/root-linux-3.13/receipt.json
+          --root-receipt linux/3.14=output/readiness/root-linux-3.14/receipt.json
+          --root-receipt darwin/3.12=output/readiness/root-darwin-3.12/receipt.json
+          --root-receipt darwin/3.13=output/readiness/root-darwin-3.13/receipt.json
+          --root-receipt darwin/3.14=output/readiness/root-darwin-3.14/receipt.json
+      - name: Complete passed exact-SHA candidate transport only
+        id: candidate_transport
+        uses: ./.github/actions/upload-readiness-shards
+        with:
+          repo-root: ${{ runner.temp }}/template-native-reader-root
+          directory: ${{ runner.temp }}/template-native-reader-root/output/readiness/candidate-transport
+          kind: candidate
+      - name: Preserve failed reader raw and Code evidence
+        if: always() && steps.reader.outcome == 'failure'
+        run: >-
+          .venv/bin/python -m infrastructure.reporting.native_failed_transport
+          --repo-root "$GITHUB_WORKSPACE" --mirror "$RUNNER_TEMP/template-native-reader-root"
+          --scratch "$RUNNER_TEMP/template-native-reader-scratch" --kind failed-reader
+          --repository "$GITHUB_REPOSITORY" --run-id "$GITHUB_RUN_ID" --revision "$GITHUB_SHA"
+      - name: Retain bounded failed-reader diagnostics without acceptance
+        id: diagnostic_transport
+        if: always() && steps.reader.outcome == 'failure'
+        uses: ./.github/actions/upload-readiness-shards
+        with:
+          repo-root: ${{ github.workspace }}
+          directory: ${{ github.workspace }}/output/readiness/failed-reader-transport
+          kind: failed-reader
+      - name: Summarize required acceptance outcomes
+        if: always()
+        shell: bash
+        env:
+          NEEDS_JSON: ${{ toJson(needs) }}
+          READER_OUTCOME: ${{ steps.reader.outcome }}
+          CANDIDATE_TRANSPORT: ${{ steps.candidate_transport.outcome }}
+          DIAGNOSTIC_TRANSPORT: ${{ steps.diagnostic_transport.outcome }}
+          JOB_STATUS: ${{ job.status }}
+        run: |
+          set -euo pipefail
+          # shellcheck disable=SC2016 # Backticks in printf formats are literal Markdown.
+          {
+            printf '### Required acceptance\n\nSource: `%s` · job: `%s`\n\n' "$GITHUB_SHA" "$JOB_STATUS"
+            printf '| Operation | Outcome |\n| --- | --- |\n'
+            jq -r 'to_entries[] | "| Original observation job: " + .key + " | " + .value.result + " |"' <<< "$NEEDS_JSON"
+            printf '| Fresh installed candidate readback | %s |\n' "${READER_OUTCOME:-not run}"
+            printf '| Passed candidate transport | %s |\n' "${CANDIDATE_TRANSPORT:-not run}"
+            printf '| Failed-reader diagnostic transport | %s |\n\n' "${DIAGNOSTIC_TRANSPORT:-not run}"
+            printf 'Original job outcomes are diagnostic; the fresh installed reader admits the complete candidate. Failed-reader diagnostics do not constitute acceptance.\n\n'
+            printf '[Retained run artifacts](https://github.com/%s/actions/runs/%s)\n' "$GITHUB_REPOSITORY" "$GITHUB_RUN_ID"
+          } >> "$GITHUB_STEP_SUMMARY"

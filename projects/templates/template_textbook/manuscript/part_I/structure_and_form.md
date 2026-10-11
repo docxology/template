@@ -1,99 +1,147 @@
 # Structure and Form {#sec:part_I_structure_and_form}
 
-![Overview schematic for "Structure and Form". Replace this generated placeholder with a real figure produced by `src/visualization/plots.py`.](../../output/figures/part_I_structure_and_form.png){#fig:part_I_structure_and_form width=90%}
+![Dimensionless static response curves illustrate how shape and scale are distinct choices.](../../output/figures/part_I_structure_and_form.png){#fig:part_I_structure_and_form width=90%}
 
-<!-- alt: Placeholder overview schematic for the chapter "Structure and Form". TODO: write descriptive alt text once the real figure exists. -->
+<!-- alt: Three response curves share the same output scale and midpoint but have different slopes near the midpoint; equal normalized range does not make the relationships identical. -->
 
 <!-- chapter-metadata-badge -->
-> Level 1/3 · 30 min read · 45 min lecture · Prerequisites: none
-
-## Learning Objectives
-
-By the end of this chapter you should be able to:
-
-1. <!-- STUB: objective --> TODO: state the first measurable learning objective.
-2. <!-- STUB: objective --> TODO: state the second learning objective.
-3. <!-- STUB: objective --> TODO: state the third learning objective.
+> Guided study · Prerequisites: basic arithmetic and the preceding unit's vocabulary
 
 <!-- curriculum-scaffold-start -->
 ### Study Blueprint
 
-- **Big idea:** <!-- STUB: one-sentence thesis for this chapter. -->
-- **Core concepts:** [**threshold**](#gl:threshold), [**network**](#gl:network), [**dynamics**](#gl:dynamics).
-- **Quantitative lens:** the worked formalism in [@eq:part_I_structure_and_form_model].
-- **Data skill:** <!-- STUB: which data move the reader practises here. -->
-- **Common misconception to repair:** <!-- STUB. -->
+- **Big idea:** Representation exposes some relationships and suppresses others; retain the mapping back to original quantities.
+- **Core concepts:** [**network**](#gl:network), [**boundary**](#gl:boundary), [**model**](#gl:model), [**variable**](#gl:variable).
+- **Quantitative lens:** [@eq:part_I_structure_and_form_model].
+- **Data skill:** Preserve units, reference bounds and identifiers when transforming a representation.
+- **Common misconception to repair:** Equal normalized values do not imply equal original quantities or equal mechanisms.
 - **Primary lab:** [@sec:lab_part_I_structure_and_form].
 - **Question bank:** [@sec:q_part_I_structure_and_form].
-- **Bridge to computation:** `textbook.models`.
+- **Bridge to computation:** `textbook.models.normalize_unit_interval`.
 <!-- curriculum-scaffold-end -->
 
----
+## Learning Objectives
 
-> **Opening Vignette: TKTK — a motivating story**
->
-> <!-- STUB: open with a concrete, specific example that makes the reader care. > Two to four sentences. Cite a primary source [@wilson2021analysis]. -->
+1. Distinguish an interaction structure from the values placed on it.
+2. Apply min-max normalization and interpret its degenerate case.
+3. Identify information a normalized display does not preserve.
 
----
+> **Opening example.** Three rooms have readings of ten, twenty and thirty units. A normalized display colors them zero, one half and one. A second building with one hundred, two hundred and three hundred units receives the same colors. The pattern is comparable, but the magnitude has disappeared. A useful representation keeps both the pattern and its reference scale available.
 
-## Orientation
+## Separate structure and state
 
-<!-- STUB: 2-4 paragraphs introducing the chapter. --> This section introduces
-the central ideas of *Structure and Form*. Foundational treatments include
-[@lee2021systems; @garcia2022dynamics]. Key terms such as [**threshold**](#gl:threshold), [**network**](#gl:network), [**dynamics**](#gl:dynamics) are defined in the glossary.
+A network describes elements and their relationships. Values on its nodes or
+edges describe a state or observation associated with that structure. A room
+adjacency network can stay fixed while temperatures change; a contact network
+can change while some node attributes remain fixed. Mixing these two layers
+makes it difficult to state what a model predicts. Define the node identity,
+edge meaning and associated quantity separately. A drawing's position or color
+is an encoding choice unless the study explicitly gives it a physical meaning.
+
+## A transformation is a model choice
+
+Min-max normalization uses the smallest and largest supplied observations as
+reference bounds. It preserves order for a collection with a nonzero range,
+and maps its endpoints to zero and one. This makes a representation convenient
+for comparing relative position within that collection. It removes the original
+unit scale unless the bounds are retained. The worked example deliberately
+uses an exact evenly spaced collection so the transformation can be checked
+without relying on an intricate plotting routine or a fitted parameter.
+
+## Degenerate forms need explicit rules
+
+If all observations are equal, the range is zero. The ordinary fraction would
+divide by zero, so the tested helper chooses all zeros. This is an interface
+convention describing a degenerate case. It is not evidence that every room is
+at a physically meaningful zero, nor that no measurement uncertainty exists.
+Document the convention in an output record. A downstream visualization can
+then distinguish a truly varying range from a constant collection instead of
+presenting identical colors as if they conveyed the same information.
+
+## Compare compatible representations
+
+Two independently normalized buildings each fill the entire zero-to-one color
+range. Comparing their colors as absolute temperatures would be an error.
+Choose shared reference bounds when the task concerns absolute comparisons;
+choose within-building bounds when the task concerns relative ordering, and
+label that choice. Neither choice is automatically superior. The scientific
+question determines which information must survive. The static response figure
+similarly shows several shapes on a common scale: equal range and midpoint
+do not imply that the functions have the same shape.
+
+## Keep identifiers through the pipeline
+
+A transformed value needs a route back to its source observation. Carry the
+room identifier, original units and reference bounds alongside normalized
+values; never depend solely on display position. Explicit reusable metadata is
+part of the FAIR guidance [@wilkinson2016fair]. Here, that idea becomes a small
+data table rather than a claim that a pretty plot is reusable. The lab asks
+you to normalize two differently scaled collections and explain exactly which
+similarity the shared output establishes and which difference it conceals.
 
 ## A Worked Formalism
 
-The recurring quantitative model for this chapter is shown in [@eq:part_I_structure_and_form_model]:
+$$ z_i=\frac{x_i-\min_j x_j}{\max_j x_j-\min_j x_j} $$ {#eq:part_I_structure_and_form_model}
 
-$$ N(t) = \frac{K}{1 + \left(\dfrac{K - N_0}{N_0}\right) e^{-rt}} $$ {#eq:part_I_structure_and_form_model}
-
-It is implemented and tested in `textbook.models.logistic_growth`; never retype
-the maths in prose or scripts — call the tested function. The parameters appear
-in [@tbl:part_I_structure_and_form_parameters].
-
-: Parameters of the worked model for this chapter. {#tbl:part_I_structure_and_form_parameters}
+: Quantities and conventions for this chapter's worked example. {#tbl:part_I_structure_and_form_parameters}
 
 | Symbol | Meaning | Units |
-| ------ | ------- | ----- |
-| $r$ | intrinsic rate | 1/time |
-| $K$ | carrying capacity | quantity |
-| $N_0$ | initial value | quantity |
+| --- | --- | --- |
+| $x_i$ | Original value | original units |
+| $\min x,\max x$ | Reference bounds | original units |
+| $z_i$ | Min-max normalized value | dimensionless |
 
-A concept map of how the pieces fit together:
+The reference range is twenty. Subtracting ten from the three observations gives zero, ten and twenty, and division by the range gives zero, one half and one. A constant collection has no nonzero range, so the tested function explicitly returns zeros. That convention prevents division by zero; it does not manufacture variation or an interpretable physical distance.
 
-```mermaid
-graph TD
-  A[Inputs / assumptions] --> B[Model]
-  B --> C[Predictions]
-  C --> D[Comparison with data]
-  D -->|revise| A
+```python
+import numpy as np
+from textbook.models import normalize_unit_interval
+
+z = normalize_unit_interval([10.0, 20.0, 30.0])
+assert np.allclose(z, [0.0, 0.5, 1.0])
+assert np.allclose(normalize_unit_interval([7.0, 7.0]), [0.0, 0.0])
+print(z)
 ```
 
-> **Note**
->
-> <!-- STUB: an aside, caveat, or historical note. -->
+The equation is evaluated by the tested `textbook.models.normalize_unit_interval`.
+The assertions above are independent expectations for this designed example;
+the displayed figure in [@fig:part_I_structure_and_form] is a deterministic illustration with its
+own explicitly stated inputs, not evidence collected from the opening scenario.
 
-## Going Deeper
+## Assumptions and Limits
 
-<!-- STUB: the substantive body of the chapter. Expand freely — figures,
-tables, equations, and subsections may repeat as needed. --> See the overview in
-[@fig:part_I_structure_and_form] and revisit the objectives above as you read. Further evidence:
-[@lee2021systems; @garcia2022dynamics].
+Scaling changes representation, not the evidence that generated it. Bounds estimated from one dataset must not be silently recalculated when comparing it with another. The function normalizes one supplied collection; fitting bounds on training data and applying them to future data requires a separately declared transformation. A visually neat scale can conceal these differences unless original units and bounds are retained.
+
+```mermaid
+flowchart LR
+  Q[Question and observation rule] --> I[Declared inputs and units]
+  I --> M[Tested model]
+  M --> P[Predicted quantities]
+  P --> C[Independent comparison]
+  C -->|record a revision| Q
+```
+
+This diagram records the direction of a modeling workflow. An arrow names a
+relationship to specify; it does not add an unimplemented physical mechanism.
+Keep the original prediction when making the recorded revision.
 
 ## Summary
 
-<!-- STUB: 3-5 sentence recap of the chapter's load-bearing claims. -->
+Representation exposes some relationships and suppresses others; retain the mapping back to original quantities. The worked example makes a narrow quantitative claim that can
+be checked with exact inputs and a tested function. Equal normalized values do not imply equal original quantities or equal mechanisms.
+State the assumptions, preserve the observation record and choose a comparison
+that can distinguish an arithmetic error from an inadequate model. Those habits
+make a result inspectable without expanding what its evidence establishes.
 
 ## Key Terms
 
-[**model**](#gl:model), [**parameter**](#gl:parameter), [**variable**](#gl:variable), [**equilibrium**](#gl:equilibrium).
+[**network**](#gl:network), [**boundary**](#gl:boundary), [**model**](#gl:model), [**variable**](#gl:variable).
 
 ## Further Reading
 
-- <!-- STUB: annotated pointer --> TODO: one-line annotation [@patel2018models].
+Wilkinson and colleagues [@wilkinson2016fair] describe metadata and reuse principles; consider which metadata makes a normalized value interpretable.
 
 ## Practice
 
-- **Lab:** [@sec:lab_part_I_structure_and_form]
-- **Question bank:** [@sec:q_part_I_structure_and_form]
+- **Lab:** [@sec:lab_part_I_structure_and_form] — execute the worked computation and its boundary control.
+- **Question bank:** [@sec:q_part_I_structure_and_form] — compare your reasoning with the supplied solutions.

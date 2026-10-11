@@ -15,9 +15,9 @@ from infrastructure.validation.publication.rendered_provenance import (
 )
 from infrastructure.validation.rendered_snapshot import (
     RenderedSnapshotError,
-    _source_repository_boundary,
     build_current_rendered_snapshot,
 )
+from infrastructure.validation.rendered_snapshot._scan import source_repository_boundary
 from infrastructure.validation.output.pipeline import execute_validation_pipeline
 from tests._support.projects import make_project, write_doc
 
@@ -281,7 +281,7 @@ def test_source_repository_boundary_rejects_alias_above_projects_root(tmp_path: 
     escaped_root.symlink_to(project_repo, target_is_directory=True)
 
     with pytest.raises(RenderedSnapshotError) as exc_info:
-        _source_repository_boundary(
+        source_repository_boundary(
             template_root,
             escaped_root,
             project_repo,

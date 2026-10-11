@@ -37,14 +37,19 @@ uv run python scripts/docgen/stage_table.py
 uv run python scripts/docgen/api_reference.py --check
 uv run python scripts/docgen/active_projects.py
 uv run python scripts/docgen/counts.py --write
-uv run python scripts/docgen/counts.py --verify-coverage --write
+uv run python scripts/docgen/counts.py --verify-coverage --write \
+  --coverage-snapshot-output /owned/retained/counts_coverage.snapshot.data
 uv run python scripts/docgen/publication_records.py --check
 ```
 
-Coverage refresh is transactional at the exemplar-set level: any measurement
-failure exits nonzero and leaves `EXEMPLAR_SNAPSHOT` unchanged. A complete run
-may refresh drifted percentages, after which provenance must be refreshed
-explicitly.
+Before measurement, the owner copies the selected SDK's `counts_coverage.py`
+byte-for-byte to an independent retained DATA file outside the repository and
+selected SDK, preserving its original bytes. Implicit `--verify-coverage
+--write` refuses before measurement without this nomination. A complete run
+updates only that DATA copy; incomplete measurements leave it unchanged.
+After the original process and Source/Code/wheel closure finish, review and
+apply only the measured literal delta in a separate source epoch, rebuild the
+SDK, and refresh provenance explicitly.
 
 The removed root-level `scripts/generate_*.py` wrappers are not part of the
 public interface. Use the canonical paths above in docs, CI, and automation;

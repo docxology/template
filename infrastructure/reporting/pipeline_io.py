@@ -10,6 +10,7 @@ from typing import Any
 
 from infrastructure.core.determinism import resolve_build_timestamp
 from infrastructure.core.logging.utils import get_logger
+from infrastructure.core.files.secure_write import atomic_write_text_confined
 
 from .pipeline_markdown import _generate_pipeline_markdown
 from .pipeline_html import generate_html_report
@@ -19,26 +20,16 @@ logger = get_logger(__name__)
 
 
 def _atomic_write_json(path: Path, data: dict[str, Any], **dump_kwargs: Any) -> None:
-    """Write *data* as JSON to *path* atomically via a .tmp intermediate file."""
-    _tmp = path.with_suffix(path.suffix + ".tmp")
-    try:
-        with open(_tmp, "w", encoding="utf-8") as f:
-            json.dump(data, f, indent=2, **dump_kwargs)
-        _tmp.replace(path)
-    except (OSError, ValueError):
-        _tmp.unlink(missing_ok=True)
-        raise
+    """Serialize finite JSON before a confined atomic write."""
+    dump_kwargs.setdefault("allow_nan", False)
+    _atomic_write_text(path, json.dumps(data, indent=2, **dump_kwargs))
 
 
 def _atomic_write_text(path: Path, content: str) -> None:
-    """Write *content* as text to *path* atomically via a .tmp intermediate file."""
-    _tmp = path.with_suffix(path.suffix + ".tmp")
-    try:
-        _tmp.write_text(content, encoding="utf-8")
-        _tmp.replace(path)
-    except OSError:
-        _tmp.unlink(missing_ok=True)
-        raise
+    """Create report directories and write through held no-follow descriptors."""
+    path = path.absolute()
+    root = next(parent for parent in path.parents if parent.exists() or parent.is_symlink())
+    atomic_write_text_confined(root, path, content)
 
 
 def save_pipeline_report(report: PipelineReport, output_dir: Path, formats: list[str] | None = None) -> dict[str, Path]:
@@ -54,7 +45,6 @@ def save_pipeline_report(report: PipelineReport, output_dir: Path, formats: list
 
     from dataclasses import asdict
 
-    output_dir.mkdir(parents=True, exist_ok=True)
     saved_files = {}
 
     report_dict = {
@@ -92,7 +82,6 @@ def save_pipeline_report(report: PipelineReport, output_dir: Path, formats: list
 
 def save_test_results(test_results: dict[str, Any], output_dir: Path) -> Path:
     """Write test_results dict to test_results.json and return the path."""
-    output_dir.mkdir(parents=True, exist_ok=True)
     report_path = output_dir / "test_results.json"
     _atomic_write_json(report_path, test_results, default=str)
     return report_path
@@ -100,7 +89,6 @@ def save_test_results(test_results: dict[str, Any], output_dir: Path) -> Path:
 
 def save_validation_report(validation_results: dict[str, Any], output_dir: Path) -> dict[str, Path]:
     """Generate validation report as JSON and Markdown; returns paths by format key."""
-    output_dir.mkdir(parents=True, exist_ok=True)
     saved_files = {}
 
     # Stamp generation time so downstream consumers (CI dashboards, manuscript
@@ -154,8 +142,6 @@ def generate_validation_markdown(results: dict[str, Any]) -> str:
 
 def save_performance_report(performance_metrics: dict[str, Any], output_dir: Path) -> Path:
     """Write performance_metrics dict to performance_report.json and return the path."""
-    output_dir.mkdir(parents=True, exist_ok=True)
-
     json_path = output_dir / "performance_report.json"
     try:
         _atomic_write_json(json_path, performance_metrics)
@@ -168,8 +154,6 @@ def save_performance_report(performance_metrics: dict[str, Any], output_dir: Pat
 
 def save_error_summary(errors: list[dict[str, Any]], output_dir: Path) -> dict[str, Any]:
     """Aggregate errors, write JSON and Markdown reports, and return the summary dict."""
-    output_dir.mkdir(parents=True, exist_ok=True)
-
     by_type: dict[str, list[dict[str, Any]]] = {}
     for error in errors:
         error_type = error.get("type", "unknown")

@@ -12,21 +12,35 @@ from __future__ import annotations
 
 import hashlib
 import io
+import argparse
 import json
 import math
 import os
 import tempfile
 import uuid
+import sys
 from pathlib import Path
-from typing import Any, cast
+from typing import Any, Mapping, cast
 
 from coverage import Coverage
 from coverage.exceptions import CoverageException
 
-from infrastructure.core.execution_boundary import validate_hook_root
+from infrastructure.core.execution_boundary import run_bounded_subprocess, validate_hook_root
+from infrastructure.core.files.secure_write import atomic_write_bytes_confined, read_bytes_confined
+from infrastructure.core.files.coverage_cleanup import clean_coverage_files
+from infrastructure.core.implementation_custody import bytecode_audit_bootstrap, verify_fresh_module_bytecode
+from infrastructure.core.runtime.python_binding import analysis_runtime_binding
+from infrastructure.core.testing.project_test_runtime import (
+    ProjectTestRuntimeError,
+    admit_project_test_runtime,
+    project_test_deadline,
+    remaining_test_budget,
+    build_audited_project_test_command,
+    project_test_audit_roots,
+    project_test_import_paths,
+)
 from infrastructure.core.logging.utils import get_logger
-from infrastructure.core.testing.pytest_orchestration import TestSuiteResults, build_pythonpath, prepend_uv_to_path
-from infrastructure.core.testing.pytest_profiles import test_runner_dependency_specs
+from infrastructure.core.testing.pytest_orchestration import TestSuiteResults, build_pythonpath
 from infrastructure.reporting.suite_runner import (
     DEFAULT_SINGLE_PROJECT_TEST_TIMEOUT_SECONDS,
     run_pytest_stream,
@@ -44,7 +58,12 @@ _MAX_RECEIPT_BYTES = 1_000_000
 
 
 class ProjectVerifierError(RuntimeError):
-    """Raised when a declared verifier violates its execution/evidence contract."""
+    """A typed verifier refusal that preserves the actual child exit outcome."""
+
+    def __init__(self, message: str, *, exit_code: int = 1, original_exit_code: int | None = None):
+        super().__init__(message)
+        self.exit_code = exit_code
+        self.original_exit_code = original_exit_code
 
 
 def project_test_command_sha256(command: tuple[str, ...]) -> str:
@@ -56,51 +75,54 @@ def project_test_command_sha256(command: tuple[str, ...]) -> str:
 def validate_project_test_command(project_root: Path, command: tuple[str, ...]) -> tuple[str, ...]:
     """Validate and return an explicit no-shell project verifier command.
 
-    The intentionally narrow ``uv run [--extra NAME] python
-    scripts/<entry>.py`` shape keeps the declaration portable, lets a clean
-    project install its declared verifier dependencies, and prevents a config
-    typo from silently turning Stage 01 into an arbitrary shell dispatch
-    surface. The project source is still trusted to execute code, just as its
-    pytest suite already is.
+    The portable declaration is ``python scripts/<entry>.py [args]``.
+    Stage 01 selects an existing prepared interpreter; declarations cannot
+    acquire packages, request extras, or dispatch a shell.
     """
-    if len(command) < 4 or command[:2] != ("uv", "run"):
-        raise ProjectVerifierError("project_test_command must use an explicit uv-run Python argv")
-    python_index = 2
-    if command[python_index] == "--extra":
-        if len(command) < 6 or not command[python_index + 1] or command[python_index + 1].startswith("-"):
-            raise ProjectVerifierError("project_test_command --extra requires one named project extra")
-        python_index += 2
-    if len(command) <= python_index + 1 or command[python_index] != "python":
+    if len(command) < 2 or any(not isinstance(part, str) or not part for part in command) or command[0] != "python":
+        raise ProjectVerifierError('project_test_command must use ["python", "scripts/<entry>.py", ...]', exit_code=2)
+    raw_entrypoint = Path(command[1])
+    if (
+        raw_entrypoint.is_absolute()
+        or not raw_entrypoint.parts
+        or raw_entrypoint.parts[0] != "scripts"
+        or ".." in raw_entrypoint.parts
+    ):
         raise ProjectVerifierError(
-            "project_test_command must be "
-            '["uv", "run", "python", ...] or '
-            '["uv", "run", "--extra", "<name>", "python", ...]'
+            "project_test_command entry point must be project-relative inside scripts", exit_code=2
         )
-    raw_entrypoint = Path(command[python_index + 1])
-    if raw_entrypoint.is_absolute():
-        raise ProjectVerifierError("project_test_command entry point must be project-relative")
     scripts_root = (project_root / "scripts").resolve()
     try:
         entrypoint = validate_hook_root(project_root / raw_entrypoint, hook_root=scripts_root)
     except ValueError as exc:
-        raise ProjectVerifierError(str(exc)) from exc
+        raise ProjectVerifierError(str(exc), exit_code=2) from exc
     if entrypoint.suffix != ".py" or not entrypoint.is_file():
-        raise ProjectVerifierError(f"project verifier must be an existing Python file: {raw_entrypoint}")
+        raise ProjectVerifierError(f"project verifier must be an existing Python file: {raw_entrypoint}", exit_code=2)
+    try:
+        read_bytes_confined(project_root, project_root / raw_entrypoint, max_bytes=16 * 1024 * 1024)
+    except (OSError, ValueError) as exc:
+        raise ProjectVerifierError(f"Project verifier source cannot be admitted: {exc}", exit_code=2) from exc
     return command
 
 
-def build_project_verifier_execution_command(command: tuple[str, ...]) -> tuple[str, ...]:
-    """Overlay the workspace's exact test-runner versions onto *command*.
-
-    The project verifier and the independent Stage-01 adapter both read the
-    same Coverage database. Pinning the shared runner stack prevents a clean
-    project environment from silently creating evidence with a different
-    Coverage/pytest implementation than the one validating it.
-    """
-    prefix: list[str] = ["uv", "run"]
-    for dependency in test_runner_dependency_specs():
-        prefix.extend(["--with", dependency])
-    return (*prefix, *command[2:])
+def build_project_verifier_execution_command(
+    command: tuple[str, ...],
+    project_root: Path,
+    *,
+    interpreter: Path | None = None,
+    deadline: float | None = None,
+    audit_roots: tuple[Path, ...] | None = None,
+) -> tuple[str, ...]:
+    """Bind portable argv to one existing interpreter; never run a resolver."""
+    selected = Path(sys.executable).absolute() if interpreter is None else interpreter
+    return build_audited_project_test_command(
+        project_root,
+        selected,
+        command[2:],
+        script=project_root.absolute() / command[1],
+        deadline=deadline,
+        audit_roots=audit_roots,
+    )
 
 
 def _require_nonnegative_int(mapping: dict[str, Any], key: str) -> int:
@@ -123,7 +145,7 @@ def _load_receipt(
     if receipt_path.stat().st_size > _MAX_RECEIPT_BYTES:
         raise ProjectVerifierError("project verifier receipt exceeds the 1 MB contract limit")
     try:
-        payload = json.loads(receipt_path.read_text(encoding="utf-8"))
+        payload = json.loads(read_bytes_confined(receipt_path.parent, receipt_path, max_bytes=_MAX_RECEIPT_BYTES))
     except (OSError, json.JSONDecodeError) as exc:
         raise ProjectVerifierError(f"project verifier receipt is unreadable: {exc}") from exc
     if not isinstance(payload, dict):
@@ -181,23 +203,31 @@ def _load_receipt(
     return results, float(raw_coverage)
 
 
-def _regenerate_coverage_json(project_root: Path) -> float:
+def _regenerate_coverage_json(project_root: Path) -> tuple[float, bytes]:
     """Read the fresh project coverage DB and write the canonical JSON report."""
     coverage_db = project_root / ".coverage"
     if coverage_db.is_symlink() or not coverage_db.is_file():
         raise ProjectVerifierError("project verifier did not produce a fresh .coverage database")
     config_file = project_root / "pyproject.toml"
     try:
-        coverage = Coverage(
-            data_file=str(coverage_db),
-            config_file=str(config_file) if config_file.is_file() else True,
-        )
-        coverage.load()
-        percent = float(coverage.report(file=io.StringIO(), ignore_errors=False))
-        coverage.json_report(outfile=str(project_root / "coverage_project.json"), pretty_print=True)
+        frozen_database = read_bytes_confined(project_root, coverage_db, max_bytes=64 * 1024 * 1024)
+        with tempfile.TemporaryDirectory(prefix="template-coverage-validation-") as temporary:
+            admitted_database = Path(temporary).resolve() / ".coverage"
+            admitted_database.write_bytes(frozen_database)
+            coverage = Coverage(
+                data_file=str(admitted_database),
+                config_file=str(config_file) if config_file.is_file() else True,
+            )
+            coverage.load()
+            percent = float(coverage.report(file=io.StringIO(), ignore_errors=False))
+            report_path = Path(temporary) / "coverage_project.json"
+            coverage.json_report(outfile=str(report_path), pretty_print=True)
+            if read_bytes_confined(project_root, coverage_db, max_bytes=64 * 1024 * 1024) != frozen_database:
+                raise ProjectVerifierError("Project coverage database changed during independent validation")
+            atomic_write_bytes_confined(project_root, project_root / "coverage_project.json", report_path.read_bytes())
     except (CoverageException, OSError, ValueError) as exc:
         raise ProjectVerifierError(f"cannot read project verifier coverage evidence: {exc}") from exc
-    return percent
+    return percent, frozen_database
 
 
 def run_declared_project_verifier(
@@ -208,15 +238,33 @@ def run_declared_project_verifier(
     *,
     coverage_floor: float,
     timeout_seconds: float = DEFAULT_PROJECT_VERIFIER_TIMEOUT_SECONDS,
+    environment: Mapping[str, str] | None = None,
+    coverage_destination: Path | None = None,
 ) -> tuple[int, TestSuiteResults]:
     """Run a declared verifier and return canonical Stage-01 test results."""
-    validated = validate_project_test_command(project_root, command)
-    execution_command = build_project_verifier_execution_command(validated)
-    if timeout_seconds <= 0:
-        raise ProjectVerifierError("project verifier timeout must be positive")
+    try:
+        deadline = project_test_deadline(timeout_seconds)
+        if (
+            isinstance(coverage_floor, bool)
+            or not isinstance(coverage_floor, (int, float))
+            or not math.isfinite(coverage_floor)
+            or not 0 <= coverage_floor <= 100
+        ):
+            raise ProjectVerifierError("Project coverage floor must be finite within 0–100", exit_code=2)
+        validated = validate_project_test_command(project_root, command)
+        selected, runtime = admit_project_test_runtime(project_root, deadline=deadline)
+        frozen_roots = project_test_audit_roots(project_root, interpreter=selected, deadline=deadline)
+        execution_command = build_project_verifier_execution_command(
+            validated, project_root, interpreter=selected, deadline=deadline, audit_roots=frozen_roots
+        )
+    except ProjectTestRuntimeError as exc:
+        raise ProjectVerifierError(
+            str(exc), exit_code=exc.exit_code, original_exit_code=exc.original_exit_code
+        ) from exc
     coverage_db = project_root / ".coverage"
     if coverage_db.is_symlink():
         raise ProjectVerifierError("project verifier refuses a symlinked .coverage database")
+    clean_coverage_files(repo_root, scope_dir=project_root)
     if coverage_db.exists():
         raise ProjectVerifierError("stale project .coverage survived Stage-01 cleanup")
     coverage_json = project_root / "coverage_project.json"
@@ -224,8 +272,9 @@ def run_declared_project_verifier(
     run_id = uuid.uuid4().hex
     command_sha = project_test_command_sha256(execution_command)
     with tempfile.TemporaryDirectory(prefix="template-project-verifier-") as temp_dir:
-        receipt_path = Path(temp_dir) / "receipt.json"
-        env = os.environ.copy()
+        temporary_root = Path(temp_dir).resolve()
+        receipt_path = temporary_root / "receipt.json"
+        env = dict(os.environ if environment is None else environment)
         env.pop("COVERAGE_FILE", None)
         for pytest_env in ("PYTEST_ADDOPTS", "PYTEST_PLUGINS", "PYTEST_DISABLE_PLUGIN_AUTOLOAD"):
             env.pop(pytest_env, None)
@@ -237,7 +286,6 @@ def run_declared_project_verifier(
             prepend=[str(project_root)],
             existing_pythonpath=env.get("PYTHONPATH"),
         )
-        prepend_uv_to_path(env)
         env.update(
             {
                 PROJECT_TEST_RECEIPT_ENV: str(receipt_path),
@@ -251,35 +299,198 @@ def run_declared_project_verifier(
             project_root,
             env,
             quiet=False,
-            timeout_seconds=timeout_seconds,
+            timeout_seconds=remaining_test_budget(deadline),
         )
         if exit_code != 0:
             detail = stderr.strip()
             suffix = f": {detail[-1000:]}" if detail else ""
-            raise ProjectVerifierError(f"declared project verifier exited {exit_code}{suffix}")
-        results, receipt_coverage = _load_receipt(
-            receipt_path,
-            project_name=project_name,
-            run_id=run_id,
-            command_sha256=command_sha,
+            raise ProjectVerifierError(
+                f"declared project verifier exited {exit_code}{suffix}",
+                exit_code=exit_code if exit_code in (75, 124, 130) else 1,
+                original_exit_code=exit_code,
+            )
+        try:
+            unchanged_runtime = analysis_runtime_binding(project_root, interpreter=selected) == runtime["binding"]
+        except (OSError, ValueError) as exc:
+            raise ProjectVerifierError(
+                f"Selected prepared test runtime custody refused after verifier: {exc}",
+                exit_code=75,
+                original_exit_code=0,
+            ) from exc
+        if not unchanged_runtime:
+            raise ProjectVerifierError(
+                "Selected prepared test runtime changed after actual verifier child", exit_code=75, original_exit_code=0
+            )
+        request_path = temporary_root / "validation.json"
+        result_path = temporary_root / "validation_result.json"
+        request_path.write_text(
+            json.dumps(
+                {
+                    "receipt_path": str(receipt_path),
+                    "project_root": str(project_root.absolute()),
+                    "project_name": project_name,
+                    "run_id": run_id,
+                    "command_sha256": command_sha,
+                    "coverage_floor": coverage_floor,
+                    "repository_root": str(repo_root.absolute()),
+                    "coverage_destination": str(coverage_destination.absolute())
+                    if coverage_destination is not None
+                    else None,
+                    "result_path": str(result_path),
+                    "audit_roots": [str(root) for root in frozen_roots],
+                    "selected_interpreter": str(selected),
+                    "deadline_monotonic": deadline,
+                }
+            ),
+            encoding="utf-8",
         )
-        measured_coverage = _regenerate_coverage_json(project_root)
-    if not math.isclose(receipt_coverage, measured_coverage, abs_tol=0.01):
-        raise ProjectVerifierError(
-            "project verifier receipt coverage does not match the independently read database: "
-            f"{receipt_coverage:.4f}% != {measured_coverage:.4f}%"
+        prefix = temporary_root / "validation-pycache"
+        prefix.mkdir(mode=0o700)
+        bootstrap = bytecode_audit_bootstrap(frozen_roots, prefix)
+        launch = (
+            "import sys,runpy; "
+            f"sys.path[:0]={[str(path) for path in project_test_import_paths(project_root)]!r}; "
+            "sys.argv=['project_verifier','--validate-receipt',sys.argv[1]]; "
+            + bootstrap
+            + "\nrunpy.run_module('infrastructure.reporting.project_verifier',run_name='__main__')"
         )
-    if measured_coverage + 1e-9 < coverage_floor:
-        raise ProjectVerifierError(
-            f"project verifier coverage {measured_coverage:.2f}% is below the declared {coverage_floor:.2f}% floor"
-        )
+        try:
+            checked = run_bounded_subprocess(
+                [
+                    str(selected),
+                    "-I",
+                    "-X",
+                    f"pycache_prefix={prefix}",
+                    "-c",
+                    launch,
+                    str(request_path),
+                ],
+                cwd=project_root,
+                env=env,
+                timeout=remaining_test_budget(deadline),
+            )
+            if checked.returncode != 0:
+                detail = checked.command_error or checked.stderr or checked.stdout
+                # A kill at the shared whole-budget deadline is a timeout, whatever
+                # signal status the reaped validation child reports; a cleanup
+                # custody refusal (a surviving descendant) still takes precedence.
+                validation_exit = 75 if checked.custody_refused else 124 if checked.timed_out else checked.returncode
+                raise ProjectVerifierError(
+                    f"Independent verifier evidence validation exited {checked.returncode}: {detail[-1000:]}",
+                    exit_code=validation_exit if validation_exit in (75, 124, 130) else 1,
+                    original_exit_code=0,
+                )
+            results = cast(
+                TestSuiteResults,
+                json.loads(read_bytes_confined(temporary_root, result_path, max_bytes=_MAX_RECEIPT_BYTES)),
+            )
+            measured_coverage = float(results["coverage_percent"])
+            if coverage_destination is not None:
+                admitted = results.get("coverage_database")
+                database = read_bytes_confined(repo_root, coverage_destination, max_bytes=64 * 1024 * 1024)
+                if admitted != {
+                    "path": str(coverage_destination.absolute()),
+                    "sha256": hashlib.sha256(database).hexdigest(),
+                    "bytes": len(database),
+                }:
+                    raise ProjectVerifierError(
+                        "Isolated verifier coverage differs from the independently admitted bytes",
+                        exit_code=75,
+                        original_exit_code=0,
+                    )
+            try:
+                unchanged_runtime = analysis_runtime_binding(project_root, interpreter=selected) == runtime["binding"]
+            except (OSError, ValueError) as exc:
+                raise ProjectVerifierError(
+                    f"Selected prepared test runtime custody refused: {exc}", exit_code=75, original_exit_code=0
+                ) from exc
+            if not unchanged_runtime:
+                raise ProjectVerifierError(
+                    "Selected prepared test runtime changed during verification", exit_code=75, original_exit_code=0
+                )
+            remaining_test_budget(deadline)
+        except ProjectTestRuntimeError as exc:
+            raise ProjectVerifierError(str(exc), exit_code=exc.exit_code, original_exit_code=0) from exc
     results["coverage_percent"] = measured_coverage
+    results["selected_runtime"] = runtime
+    results["original_exit_code"] = 0
     logger.info(
         "Declared project verifier passed: %d tests, %.2f%% coverage",
         results["total"],
         measured_coverage,
     )
     return 0, results
+
+
+def _validate_receipt_worker(request_path: Path) -> int:
+    """Independently validate receipt and Coverage inside the composed deadline."""
+    request = json.loads(read_bytes_confined(request_path.parent, request_path, max_bytes=_MAX_RECEIPT_BYTES))
+    project_root = Path(request["project_root"])
+    results, receipt_coverage = _load_receipt(
+        Path(request["receipt_path"]),
+        project_name=request["project_name"],
+        run_id=request["run_id"],
+        command_sha256=request["command_sha256"],
+    )
+    measured, frozen_database = _regenerate_coverage_json(project_root)
+    if not math.isclose(receipt_coverage, measured, abs_tol=0.01):
+        raise ProjectVerifierError("project verifier receipt coverage does not match the independently read database")
+    floor = request["coverage_floor"]
+    if isinstance(floor, bool) or not isinstance(floor, (int, float)) or not math.isfinite(floor):
+        raise ProjectVerifierError("Project coverage floor must be finite", exit_code=2)
+    if measured + 1e-9 < floor:
+        raise ProjectVerifierError(
+            f"project verifier coverage {measured:.2f}% is below the declared {floor:.2f}% floor"
+        )
+    results["coverage_percent"] = measured
+    frozen_roots = tuple(Path(root) for root in request["audit_roots"])
+    deadline = request["deadline_monotonic"]
+    selected = Path(request["selected_interpreter"])
+    remaining_test_budget(deadline)
+    if (
+        not selected.is_absolute()
+        or selected != Path(sys.executable).absolute()
+        or selected.resolve(strict=True) != Path(sys.executable).resolve(strict=True)
+    ):
+        raise ProjectVerifierError(
+            "Independent validation used a different actual selected child interpreter", exit_code=75
+        )
+    # The current validator must inspect its actual live import state.
+    # Parent nomination already used the selected interpreter; a fresh probe
+    # cannot detect a changed provider spec in this running child.
+    if project_test_audit_roots(project_root) != frozen_roots:
+        raise ProjectVerifierError("Project plugin-root set changed during independent validation", exit_code=75)
+    for root in frozen_roots:
+        verify_fresh_module_bytecode(root, Path(sys.pycache_prefix or ""))
+    destination = request.get("coverage_destination")
+    if destination is not None:
+        repository = Path(request["repository_root"])
+        coverage_destination = Path(destination)
+        if read_bytes_confined(project_root, project_root / ".coverage", max_bytes=64 * 1024 * 1024) != frozen_database:
+            raise ProjectVerifierError("Verified coverage bytes changed before isolated admission", exit_code=75)
+        atomic_write_bytes_confined(repository, coverage_destination, frozen_database)
+        if read_bytes_confined(repository, coverage_destination, max_bytes=64 * 1024 * 1024) != frozen_database:
+            raise ProjectVerifierError("Isolated verifier coverage changed during admission", exit_code=75)
+        results["coverage_database"] = {
+            "path": str(coverage_destination),
+            "sha256": hashlib.sha256(frozen_database).hexdigest(),
+            "bytes": len(frozen_database),
+        }
+    remaining_test_budget(deadline)
+    atomic_write_bytes_confined(request_path.parent, Path(request["result_path"]), json.dumps(results).encode("utf-8"))
+    remaining_test_budget(deadline)
+    return 0
+
+
+def _main() -> int:
+    parser = argparse.ArgumentParser(description="Bounded internal Stage01 receipt validation")
+    parser.add_argument("--validate-receipt", type=Path, required=True)
+    args = parser.parse_args()
+    try:
+        return _validate_receipt_worker(args.validate_receipt)
+    except (OSError, ValueError, ProjectVerifierError, ProjectTestRuntimeError) as exc:
+        logger.error("Independent project evidence validation refused: %s", exc)
+        return getattr(exc, "exit_code", 1)
 
 
 __all__ = [
@@ -295,3 +506,7 @@ __all__ = [
     "run_declared_project_verifier",
     "validate_project_test_command",
 ]
+
+
+if __name__ == "__main__":
+    raise SystemExit(_main())

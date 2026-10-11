@@ -4,8 +4,10 @@ Generates HTML-formatted reports from PipelineReport data.
 """
 
 from typing import TYPE_CHECKING
+from html import escape
 
 from infrastructure.core.logging.helpers import format_duration
+from .pipeline_report_model import stage_is_complete
 
 if TYPE_CHECKING:
     from .pipeline_report_model import PipelineReport
@@ -14,8 +16,8 @@ if TYPE_CHECKING:
 def generate_html_report(report: "PipelineReport") -> str:
     """Generate HTML format pipeline report."""
     # Calculate summary statistics
-    passed = sum(1 for s in report.stages if s.status == "passed")
-    failed = sum(1 for s in report.stages if s.status == "failed")
+    passed = sum(stage_is_complete(stage) for stage in report.stages)
+    failed = len(report.stages) - passed
     total = len(report.stages)
     success_rate = (passed / total * 100) if total > 0 else 0
 
@@ -162,10 +164,11 @@ def generate_html_report(report: "PipelineReport") -> str:
 """
 
     for stage in report.stages:
-        status_class = "status-passed" if stage.status == "passed" else "status-failed"
-        status_text = "\u2705 Passed" if stage.status == "passed" else "\u274c Failed"
+        completed = stage_is_complete(stage)
+        status_class = "status-passed" if completed else "status-failed"
+        status_text = f"{'✅' if completed else '❌'} {escape(stage.status)}"
         html += f"""                <tr>
-                    <td>{stage.name}</td>
+                    <td>{escape(stage.name)}</td>
                     <td class="{status_class}">{status_text}</td>
                     <td>{format_duration(stage.duration)}</td>
                     <td>{stage.exit_code}</td>

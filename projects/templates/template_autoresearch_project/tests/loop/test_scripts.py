@@ -54,7 +54,7 @@ def test_regenerate_mnist_fixture_script_is_thin_orchestrator(project_root: Path
     assert "regenerate_mnist_fixture(PROJECT_ROOT)" in source
 
 
-def test_manuscript_variable_script_writes_resolved_sources(project_root: Path) -> None:
+def test_manuscript_variable_script_writes_resolved_sources(project_root: Path, autoresearch_loop_result) -> None:
     script = project_root / "scripts" / "z_generate_manuscript_variables.py"
     env = {
         key: value

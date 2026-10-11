@@ -31,7 +31,7 @@ def test_generate_pipeline_report_status_and_fields(tmp_path: Path) -> None:
     )
 
     assert report.total_duration == pytest.approx(7.0)
-    assert [s.status for s in report.stages] == ["passed", "failed", "passed"]
+    assert [s.status for s in report.stages] == ["succeeded", "failed", "succeeded"]
     assert report.test_results == test_results
     assert report.validation_results == validation_results
     assert report.error_summary == {"total_errors": 1}
@@ -53,7 +53,7 @@ def test_save_pipeline_report_creates_all_formats(tmp_path: Path) -> None:
 
     md_content = md_path.read_text()
     assert "Pipeline Execution Report" in md_content
-    assert "| setup | ✅ passed" in md_content
+    assert "| setup | ✅ succeeded" in md_content
 
     html_content = html_path.read_text()
     assert "Pipeline Execution Report" in html_content

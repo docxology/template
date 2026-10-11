@@ -3,6 +3,10 @@
 from __future__ import annotations
 
 from pathlib import Path
+import json
+import shutil
+import subprocess
+import sys
 import pytest
 from infrastructure.rendering.ebook_bundle import (
     EbookBundleManager,
@@ -10,7 +14,6 @@ from infrastructure.rendering.ebook_bundle import (
     _find_cover_image,
 )
 from ._ebook_fallbacks_helpers import (
-    _CALIBRE,
     needs_pandoc,
     SAMPLE_MD,
     _MINIMAL_MD,
@@ -65,7 +68,6 @@ class TestEbookBundleManagerFallbacks:
         assert outputs["opf"].exists()
 
     @needs_pandoc
-    @pytest.mark.skipif(_CALIBRE is not None, reason="calibre is installed — test the absence path only")
     def test_calibre_absent_skips_mobi_but_produces_others(self, tmp_path: Path) -> None:
         """When calibre is absent, MOBI fails but EPUB and DOCX still succeed.
 
@@ -78,12 +80,30 @@ class TestEbookBundleManagerFallbacks:
         project_root.mkdir()
         output_dir = tmp_path / "output" / "ebook"
 
-        manager = EbookBundleManager()
-        outputs = manager.generate_all(
-            project_root=project_root,
-            combined_md=src,
-            output_dir=output_dir,
+        binaries = tmp_path / "actual-pandoc-only"
+        binaries.mkdir()
+        pandoc = shutil.which("pandoc")
+        assert pandoc is not None
+        (binaries / "pandoc").symlink_to(Path(pandoc).resolve())
+        assert shutil.which("ebook-convert", path=str(binaries)) is None
+        code = (
+            "import json,sys;from pathlib import Path;"
+            "from infrastructure.rendering.ebook_bundle import EbookBundleManager;"
+            "values=EbookBundleManager().generate_all(project_root=Path(sys.argv[1]),"
+            "combined_md=Path(sys.argv[2]),output_dir=Path(sys.argv[3]));"
+            "Path(sys.argv[4]).write_text(json.dumps({key:str(path) for key,path in values.items()}))"
         )
+        observed = tmp_path / "original-output.json"
+        original = subprocess.run(
+            [sys.executable, "-I", "-c", code, str(project_root), str(src), str(output_dir), str(observed)],
+            env={"PATH": str(binaries), "LC_ALL": "C", "TZ": "UTC"},
+            capture_output=True,
+            text=True,
+            timeout=120,
+            check=False,
+        )
+        assert original.returncode == 0, (original.stdout, original.stderr)
+        outputs = {key: Path(path) for key, path in json.loads(observed.read_text()).items()}
         # EPUB and DOCX succeed (pandoc present), MOBI fails (calibre absent).
         assert "epub" in outputs
         assert "docx" in outputs

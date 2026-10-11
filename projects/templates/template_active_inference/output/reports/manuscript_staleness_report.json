@@ -269,7 +269,7 @@
       "token": "pymdp_mode"
     },
     {
-      "expected": "0.3251",
+      "expected": "0.0000",
       "fresh": true,
       "resolved_path": "output/manuscript/06_methods_pymdp.md",
       "section": "manuscript/06_methods_pymdp.md",
@@ -997,7 +997,7 @@
       "token": "si_tmaze_steps"
     },
     {
-      "expected": "0.3251",
+      "expected": "0",
       "fresh": true,
       "resolved_path": "output/manuscript/12_results_si_tmaze.md",
       "section": "manuscript/12_results_si_tmaze.md",
@@ -1263,21 +1263,21 @@
       "token": "dirichlet_steps_to_converge"
     },
     {
-      "expected": "0.3251",
+      "expected": "0.0000",
       "fresh": true,
       "resolved_path": "output/manuscript/12_results_si_tmaze.md",
       "section": "manuscript/12_results_si_tmaze.md",
       "token": "si_tmaze_mean_belief_entropy_formatted"
     },
     {
-      "expected": "0.3251",
+      "expected": "0",
       "fresh": true,
       "resolved_path": "output/manuscript/12_results_si_tmaze.md",
       "section": "manuscript/12_results_si_tmaze.md",
       "token": "si_entropy_min"
     },
     {
-      "expected": "0.3251",
+      "expected": "0",
       "fresh": true,
       "resolved_path": "output/manuscript/12_results_si_tmaze.md",
       "section": "manuscript/12_results_si_tmaze.md",
@@ -1473,7 +1473,7 @@
       "token": "pymdp_config_hash"
     },
     {
-      "expected": "0.3251",
+      "expected": "0.0000",
       "fresh": true,
       "resolved_path": "output/manuscript/15_discussion_outlook.md",
       "section": "manuscript/15_discussion_outlook.md",

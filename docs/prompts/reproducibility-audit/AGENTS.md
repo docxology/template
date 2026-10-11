@@ -13,7 +13,7 @@ Agent skill `template-reproducibility-audit` — Determinism and regenerate-from
 ## Verification
 
 ```bash
-./run.sh --project template_code_project --pipeline --core-only
+./run.sh --project template_code_project --pipeline --mode core
 ```
 
 ## See also

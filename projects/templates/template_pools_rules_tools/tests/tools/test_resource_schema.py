@@ -1,9 +1,8 @@
 """Typed resource-manifest and evaluator negative controls."""
 
-from pathlib import Path
-
 import pytest
 
+from template_pools_rules_tools.resource_paths import public_resource_root
 from template_pools_rules_tools.tools.resource_schema import (
     REQUIRED_MANIFEST_KEYS,
     build_resource_schema_receipt,
@@ -11,22 +10,19 @@ from template_pools_rules_tools.tools.resource_schema import (
     validate_resource_manifest,
 )
 
-PROJECT = Path(__file__).resolve().parents[2]
-REPO_ROOT = PROJECT.parents[2]
-
 
 def test_public_resource_manifests_have_a_passing_receipt():
     resources = [
-        ("bibliography", REPO_ROOT / "fonds" / "templates" / "template_bibliography", "fond"),
-        ("contacts", REPO_ROOT / "fonds" / "templates" / "template_contacts", "fond"),
-        ("datasets", REPO_ROOT / "fonds" / "templates" / "template_datasets", "fond"),
-        ("project-rules", REPO_ROOT / "rules" / "templates" / "template_project_rules", "rules"),
+        ("bibliography", public_resource_root("fonds") / "template_bibliography", "fond"),
+        ("contacts", public_resource_root("fonds") / "template_contacts", "fond"),
+        ("datasets", public_resource_root("fonds") / "template_datasets", "fond"),
+        ("project-rules", public_resource_root("rules") / "template_project_rules", "rules"),
         (
             "manuscript-rules",
-            REPO_ROOT / "rules" / "templates" / "template_manuscript_rules",
+            public_resource_root("rules") / "template_manuscript_rules",
             "rules",
         ),
-        ("code-executor", REPO_ROOT / "tools" / "templates" / "template_code_executor", "tools"),
+        ("code-executor", public_resource_root("tools") / "template_code_executor", "tools"),
     ]
     receipt = build_resource_schema_receipt(resources)
     assert receipt["status"] == "pass"
@@ -162,10 +158,7 @@ def test_validate_resource_directory_rejects_symlinked_entrypoint(tmp_path):
 
 def test_validate_resource_directory_rejects_escaping_entrypoint(tmp_path):
     (tmp_path / "tools.yaml").write_text(
-        "type: code_executor\n"
-        "description: x\n"
-        "version: '1'\n"
-        "license: MIT\n"
+        "type: code_executor\ndescription: x\nversion: '1'\nlicense: MIT\n"
         "entrypoints: ['../escape.py']\n",
         encoding="utf-8",
     )
@@ -175,10 +168,7 @@ def test_validate_resource_directory_rejects_escaping_entrypoint(tmp_path):
 
 def test_validate_resource_directory_reports_missing_entrypoint_file(tmp_path):
     (tmp_path / "tools.yaml").write_text(
-        "type: code_executor\n"
-        "description: x\n"
-        "version: '1'\n"
-        "license: MIT\n"
+        "type: code_executor\ndescription: x\nversion: '1'\nlicense: MIT\n"
         "entrypoints: [missing.py]\n",
         encoding="utf-8",
     )

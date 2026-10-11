@@ -4,6 +4,8 @@ from __future__ import annotations
 
 from pathlib import Path
 
+from template_template.core.paths import data_repo_root
+
 
 def resolve_template_repo_root(start: Path | None = None) -> Path:
     """Walk parents from *start* until ``infrastructure/`` and ``pyproject.toml`` exist."""
@@ -17,5 +19,5 @@ def resolve_template_repo_root(start: Path | None = None) -> Path:
     raise FileNotFoundError(f"Could not locate template repo root from {resolved}")
 
 
-REPO_ROOT = resolve_template_repo_root()
 PROJECT_DIR = Path(__file__).resolve().parent.parent
+REPO_ROOT = data_repo_root(PROJECT_DIR)

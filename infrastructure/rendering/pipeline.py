@@ -147,8 +147,10 @@ def _render_pipeline_impl(
 
     if skip_manuscript_hydration:
         logger.info("Skipping manuscript-variable hydration (--skip-manuscript-hydration)")
-    elif deps.hydrate_manuscript(project_root, template_repo_root=root) != 0:
-        return 1
+    else:
+        hydration_exit = deps.hydrate_manuscript(project_root, template_repo_root=root)
+        if hydration_exit != 0:
+            return hydration_exit
 
     try:
         manuscript_dir = resolve_manuscript_dir(project_root)

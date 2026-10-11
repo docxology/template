@@ -13,6 +13,7 @@ from template_prose_project.pipeline.llm_review import (
     LLM_TRANSCRIPT_SCHEMA_VERSION,
     build_llm_review_receipt,
     validate_transcript,
+    REVIEW_INSTRUCTION,
 )
 
 
@@ -21,30 +22,52 @@ def _digest(value: str) -> str:
 
 
 def _transcript() -> dict[str, object]:
+    prompt = REVIEW_INSTRUCTION + "SOURCE manuscript/00_abstract.md\noriginal"
+    request = json.dumps(
+        {
+            "model": "fixture-model",
+            "prompt": prompt,
+            "stream": False,
+            "options": {"seed": 0, "temperature": 0.0, "num_predict": 1024},
+        }
+    )
+    response = json.dumps({"model": "fixture-model", "eval_count": 3, "done": True, "response": "response"})
     return {
         "schema_version": LLM_TRANSCRIPT_SCHEMA_VERSION,
         "provider": "local_transcript",
         "model": "fixture-model",
-        "prompt_digest": _digest("prompt"),
+        "prompt_digest": _digest(prompt),
         "response_digest": _digest("response"),
         "reviewer": "fixture-reviewer",
         "reviewed_paths": ["manuscript/00_abstract.md"],
         "status": "completed",
+        "prompt": prompt,
+        "response": "response",
+        "model_digest": _digest("model bytes"),
+        "reviewed_sources": {"manuscript/00_abstract.md": _digest("original")},
+        "request_json": request,
+        "response_json": response,
+        "request_digest": _digest(request),
+        "raw_response_digest": _digest(response),
+        "budget": {"timeout_seconds": 120.0, "num_predict": 1024, "seed": 0, "temperature": 0.0},
     }
 
 
 def test_disabled_review_is_explicit_and_offline(tmp_path: Path) -> None:
     receipt = build_llm_review_receipt(LLMReviewConfig(), project_root=tmp_path)
     assert receipt == {
-        "schema_version": "template-prose/llm-review/1",
+        "schema_version": "template-prose/llm-review/2",
         "status": "skipped",
         "reason": "disabled_by_config",
     }
 
 
 def test_enabled_review_verifies_local_transcript(tmp_path: Path) -> None:
-    transcript = tmp_path / "output" / "llm_review.json"
-    transcript.parent.mkdir()
+    source = tmp_path / "manuscript" / "00_abstract.md"
+    source.parent.mkdir()
+    source.write_text("original")
+    transcript = tmp_path / "output" / ".pipeline" / "prose_review" / "latest.json"
+    transcript.parent.mkdir(parents=True)
     transcript.write_text(json.dumps(_transcript()), encoding="utf-8")
     config = LLMReviewConfig(
         enabled=True,
@@ -53,7 +76,7 @@ def test_enabled_review_verifies_local_transcript(tmp_path: Path) -> None:
     )
     receipt = build_llm_review_receipt(config, project_root=tmp_path)
     assert receipt["status"] == "verified"
-    assert receipt["execution"] == "transcript_only"
+    assert receipt["execution"] == "source_bound_transcript"
     assert len(str(receipt["transcript_digest"])) == 64
 
 
@@ -66,8 +89,8 @@ def test_enabled_review_missing_transcript_fails_closed(tmp_path: Path) -> None:
 def test_transcript_provider_drift_fails_closed(tmp_path: Path) -> None:
     payload = _transcript()
     payload["provider"] = "other-provider"
-    transcript = tmp_path / "output" / "llm_review.json"
-    transcript.parent.mkdir()
+    transcript = tmp_path / "output" / ".pipeline" / "prose_review" / "latest.json"
+    transcript.parent.mkdir(parents=True)
     transcript.write_text(json.dumps(payload), encoding="utf-8")
     config = LLMReviewConfig(enabled=True, provider="local_transcript", model="fixture-model")
     with pytest.raises(ValueError, match="provider/model"):
@@ -167,8 +190,8 @@ def test_validate_transcript_accepts_well_formed_payload() -> None:
 
 def test_enabled_review_rejects_malformed_transcript_json(tmp_path: Path) -> None:
     """A transcript file that is not valid JSON must fail closed, not silently pass."""
-    transcript = tmp_path / "output" / "llm_review.json"
-    transcript.parent.mkdir()
+    transcript = tmp_path / "output" / ".pipeline" / "prose_review" / "latest.json"
+    transcript.parent.mkdir(parents=True)
     transcript.write_text("{not valid json", encoding="utf-8")
     config = LLMReviewConfig(enabled=True, provider="local_transcript", model="fixture-model")
     with pytest.raises(ValueError, match="not valid JSON"):
@@ -177,8 +200,8 @@ def test_enabled_review_rejects_malformed_transcript_json(tmp_path: Path) -> Non
 
 def test_enabled_review_rejects_non_object_transcript(tmp_path: Path) -> None:
     """A transcript file containing a JSON array (not an object) must fail closed."""
-    transcript = tmp_path / "output" / "llm_review.json"
-    transcript.parent.mkdir()
+    transcript = tmp_path / "output" / ".pipeline" / "prose_review" / "latest.json"
+    transcript.parent.mkdir(parents=True)
     transcript.write_text(json.dumps([1, 2, 3]), encoding="utf-8")
     config = LLMReviewConfig(enabled=True, provider="local_transcript", model="fixture-model")
     with pytest.raises(ValueError, match="must be a JSON object"):

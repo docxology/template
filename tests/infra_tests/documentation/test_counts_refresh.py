@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import os
+import shutil
 import subprocess
 import sys
 import venv
@@ -15,9 +16,9 @@ from infrastructure.documentation.counts_doc import (
     _exemplar_collected_count,
 )
 from infrastructure.documentation.counts_coverage import (
-    ExemplarSnapshot,
     _finalize_exemplar_coverage_result,
 )
+from infrastructure.documentation._coverage_snapshot_output import CoverageSnapshotOutput
 
 from tests.infra_tests.documentation._counts_doc_helpers import (
     _repo_root,
@@ -48,7 +49,40 @@ def test_exemplar_collection_ignores_stale_relocated_pytest_wrapper(tmp_path: Pa
     tests.mkdir(parents=True)
     (tests / "test_moved.py").write_text("def test_moved():\n    assert True\n", encoding="utf-8")
 
-    venv.EnvBuilder(with_pip=False, system_site_packages=True).create(project / ".venv")
+    venv.EnvBuilder(with_pip=False, symlinks=True).create(project / ".venv")
+    selected = project / ".venv" / ("Scripts/python.exe" if os.name == "nt" else "bin/python")
+    uv = shutil.which("uv")
+    assert uv is not None
+    environment = dict(os.environ)
+    # `--locked` verifies the lockfile itself; an inherited UV_FROZEN conflicts with it.
+    environment.pop("UV_FROZEN", None)
+    environment["UV_PROJECT_ENVIRONMENT"] = str(project / ".venv")
+    # Locked sync consumes authenticated wheel URLs without needing cached index discovery.
+    # Exclude the source project and optional Git scanner; install genuine Rootdev runners.
+    installed = subprocess.run(
+        [
+            uv,
+            "sync",
+            "--project",
+            str(_repo_root()),
+            "--locked",
+            "--offline",
+            "--no-python-downloads",
+            "--only-group",
+            "dev",
+            "--no-install-project",
+            "--no-install-package",
+            "desloppify",
+            "--python",
+            str(selected),
+        ],
+        env=environment,
+        capture_output=True,
+        text=True,
+        check=False,
+        timeout=15,
+    )
+    assert installed.returncode == 0, installed.stderr
     wrapper = project / ".venv" / "bin" / "pytest"
     stale_contents = b"#!/checkout/that/no/longer/exists/.venv/bin/python\n"
     wrapper.write_bytes(stale_contents)
@@ -58,58 +92,57 @@ def test_exemplar_collection_ignores_stale_relocated_pytest_wrapper(tmp_path: Pa
     assert wrapper.read_bytes() == stale_contents
 
 
-def test_exemplar_snapshot_rewrite_updates_only_named_rows(tmp_path: Path) -> None:
-    """`--verify-coverage --write` must rewrite measured rows and leave others alone.
+def _snapshot_data(tmp_path: Path) -> tuple[CoverageSnapshotOutput, bytes]:
+    from infrastructure.documentation import counts_coverage
 
-    The recorded percentages were unverifiable until 2026-07-27: provenance only
-    checked that the source had not changed since a number was written, never that
-    the number was right. Two exemplars were found ~1.4pp and ~0.6pp adrift. This
-    guards the rewrite path that now refreshes them from a real measurement.
-    """
+    protected_repo = tmp_path / "repo"
+    protected_repo.mkdir()
+    selected_source = Path(counts_coverage.__file__)
+    data_copy = tmp_path / "counts_coverage.snapshot.data"
+    shutil.copy2(selected_source, data_copy)
+    original = data_copy.read_bytes()
+    return CoverageSnapshotOutput.admit(protected_repo, data_copy, selected_source), original
+
+
+def test_exemplar_snapshot_rewrite_updates_only_named_rows(tmp_path: Path) -> None:
+    """The existing writer changes retained DATA and preserves consumed Source."""
     from infrastructure.documentation import counts_doc
 
-    module_copy = tmp_path / "counts_doc_copy.py"
-    module_copy.write_text(
-        'ExemplarSnapshot("template_alpha", "10.00 %"),\n'
-        'ExemplarSnapshot("template_beta", "20.00 %"),\n'
-        'ExemplarSnapshot("template_gamma", "30.00 %"),\n',
-        encoding="utf-8",
-    )
-    counts_doc._rewrite_exemplar_snapshot({"template_beta": "77.77 %"}, module_copy)
+    output, original = _snapshot_data(tmp_path)
+    name = EXEMPLAR_SNAPSHOT[0].name
+    counts_doc._rewrite_exemplar_snapshot({name: "77.77 %"}, output)
 
-    rewritten = module_copy.read_text(encoding="utf-8")
-    assert 'ExemplarSnapshot("template_beta", "77.77 %")' in rewritten
-    assert 'ExemplarSnapshot("template_alpha", "10.00 %")' in rewritten
-    assert 'ExemplarSnapshot("template_gamma", "30.00 %")' in rewritten
+    rewritten = output.path.read_text(encoding="utf-8")
+    expected = original.decode().replace(
+        f'ExemplarSnapshot("{name}", "{EXEMPLAR_SNAPSHOT[0].coverage_pct}")',
+        f'ExemplarSnapshot("{name}", "77.77 %")',
+    )
+    assert rewritten == expected
+    assert output.source.read_bytes() == original
+    assert output.path.stat().st_nlink == 1
 
 
 def test_exemplar_snapshot_rewrite_is_a_noop_without_measurements(tmp_path: Path) -> None:
-    """An empty measurement map must not blank out the recorded values."""
+    """An empty measurement map preserves the admitted copy and Source."""
     from infrastructure.documentation import counts_doc
 
-    module_copy = tmp_path / "counts_doc_copy.py"
-    original = 'ExemplarSnapshot("template_alpha", "10.00 %"),\n'
-    module_copy.write_text(original, encoding="utf-8")
-    counts_doc._rewrite_exemplar_snapshot({}, module_copy)
-    assert module_copy.read_text(encoding="utf-8") == original
+    output, original = _snapshot_data(tmp_path)
+    counts_doc._rewrite_exemplar_snapshot({}, output)
+    assert output.path.read_bytes() == original
+    assert output.source.read_bytes() == original
 
 
 def test_coverage_refresh_does_not_publish_partial_measurements(tmp_path: Path) -> None:
-    """One failed exemplar leaves the complete recorded snapshot untouched."""
-    snapshot = (
-        ExemplarSnapshot("template_alpha", "10.00 %"),
-        ExemplarSnapshot("template_beta", "20.00 %"),
-    )
-    module_copy = tmp_path / "counts_coverage_copy.py"
-    original = 'ExemplarSnapshot("template_alpha", "10.00 %"),\nExemplarSnapshot("template_beta", "20.00 %"),\n'
-    module_copy.write_text(original, encoding="utf-8")
+    """One failed exemplar leaves the complete retained DATA snapshot untouched."""
+    output, original = _snapshot_data(tmp_path)
+    snapshot = EXEMPLAR_SNAPSHOT[:2]
 
     result = _finalize_exemplar_coverage_result(
-        {"template_alpha": "77.77 %"},
-        ["template_beta: coverage process failed"],
+        {snapshot[0].name: "77.77 %"},
+        [f"{snapshot[1].name}: coverage process failed"],
         rewrite=True,
         snapshot=snapshot,
-        source_path=module_copy,
+        snapshot_output=output,
     )
 
     assert not result.all_match
@@ -118,27 +151,20 @@ def test_coverage_refresh_does_not_publish_partial_measurements(tmp_path: Path) 
     assert result.failed_count == 1
     assert result.measured_count == 1
     assert "EXEMPLAR_SNAPSHOT not rewritten" in result.report
-    assert module_copy.read_text(encoding="utf-8") == original
+    assert output.path.read_bytes() == original
+    assert output.source.read_bytes() == original
 
 
 def test_coverage_refresh_publishes_complete_measurement_set(tmp_path: Path) -> None:
-    """A complete measurement may replace every drifted recorded value."""
-    snapshot = (
-        ExemplarSnapshot("template_alpha", "10.00 %"),
-        ExemplarSnapshot("template_beta", "20.00 %"),
-    )
-    module_copy = tmp_path / "counts_coverage_copy.py"
-    module_copy.write_text(
-        'ExemplarSnapshot("template_alpha", "10.00 %"),\nExemplarSnapshot("template_beta", "20.00 %"),\n',
-        encoding="utf-8",
-    )
-
+    """The real finalizer writes DATA only for its complete nominated row set."""
+    output, original = _snapshot_data(tmp_path)
+    snapshot = EXEMPLAR_SNAPSHOT[:2]
     result = _finalize_exemplar_coverage_result(
-        {"template_alpha": "77.77 %", "template_beta": "88.88 %"},
+        {snapshot[0].name: "77.77 %", snapshot[1].name: "88.88 %"},
         [],
         rewrite=True,
         snapshot=snapshot,
-        source_path=module_copy,
+        snapshot_output=output,
     )
 
     assert not result.all_match
@@ -146,16 +172,17 @@ def test_coverage_refresh_publishes_complete_measurement_set(tmp_path: Path) -> 
     assert result.snapshot_rewritten
     assert result.failed_count == 0
     assert result.drifted_count == 2
-    rewritten = module_copy.read_text(encoding="utf-8")
-    assert 'ExemplarSnapshot("template_alpha", "77.77 %")' in rewritten
-    assert 'ExemplarSnapshot("template_beta", "88.88 %")' in rewritten
+    rewritten = output.path.read_text(encoding="utf-8")
+    assert f'ExemplarSnapshot("{snapshot[0].name}", "77.77 %")' in rewritten
+    assert f'ExemplarSnapshot("{snapshot[1].name}", "88.88 %")' in rewritten
+    assert output.source.read_bytes() == original
 
 
 def test_counts_cli_fails_when_coverage_measurements_are_missing(tmp_path: Path) -> None:
     """The real CLI exits nonzero and writes nothing for an incomplete checkout."""
     repo_root = _repo_root()
     source_script = repo_root / "scripts" / "docgen" / "counts.py"
-    copied_script = tmp_path / "scripts" / "docgen" / "counts.py"
+    copied_script = tmp_path / "checkout" / "scripts" / "docgen" / "counts.py"
     copied_script.parent.mkdir(parents=True)
     copied_script.write_bytes(source_script.read_bytes())
     before = copied_script.read_bytes()
@@ -165,8 +192,20 @@ def test_counts_cli_fails_when_coverage_measurements_are_missing(tmp_path: Path)
         f"{repo_root}{os.pathsep}{existing_pythonpath}" if existing_pythonpath else str(repo_root)
     )
 
+    from infrastructure.documentation import counts_coverage
+
+    retained_data = tmp_path / "counts_coverage.snapshot.data"
+    shutil.copy2(Path(counts_coverage.__file__), retained_data)
+    original_data = retained_data.read_bytes()
     run = subprocess.run(
-        [sys.executable, str(copied_script), "--verify-coverage", "--write"],
+        [
+            sys.executable,
+            str(copied_script),
+            "--verify-coverage",
+            "--write",
+            "--coverage-snapshot-output",
+            str(retained_data),
+        ],
         cwd=tmp_path,
         env=environment,
         capture_output=True,
@@ -180,3 +219,4 @@ def test_counts_cli_fails_when_coverage_measurements_are_missing(tmp_path: Path)
     assert "coverage snapshot not refreshed" in run.stdout
     assert not (tmp_path / "docs").exists()
     assert copied_script.read_bytes() == before
+    assert retained_data.read_bytes() == original_data

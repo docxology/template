@@ -100,10 +100,7 @@ def build_llm_callable(
         return None
 
     def _call(prompt: str) -> str:
-        try:
-            response = client.query_long(prompt)
-        except AttributeError:  # pragma: no cover - older LLMClient versions
-            response = client.query(prompt)
+        response = client.query_long(prompt)
         return response if isinstance(response, str) else getattr(response, "text", str(response))
 
     return _call

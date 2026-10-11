@@ -28,27 +28,26 @@ pytestmark = [pytest.mark.requires_gate_artifacts, pytest.mark.timeout(600)]
 
 
 @pytest.mark.long_running
-def test_sheaf_track_writer_looks_up_source_commit_once(
-    project_root: Path,
-) -> None:
+def test_sheaf_track_writer_binds_actual_source_input_identity(project_root: Path) -> None:
     from roadmap_tracks import sheaf_tracks
+    from roadmap_tracks.fixed_point import _source_input_sha256
 
     ensure_gate_artifacts(project_root)
-    calls = 0
-
-    def fake_source_commit(root: Path) -> str:
-        nonlocal calls
-        calls += 1
-        assert root == project_root.resolve()
-        return "test-source-commit"
-
-    sheaf_tracks.write_sheaf_track_artifacts(
-        project_root,
-        finalize=False,
-        source_commit_resolver=fake_source_commit,
-    )
-
-    assert calls == 1
+    sheaf_tracks.write_sheaf_track_artifacts(project_root, finalize=False)
+    provenance = _load(project_root / sheaf_tracks.CANONICAL_ARTIFACTS["provenance"])
+    expected = _source_input_sha256(project_root)
+    assert provenance["all_source_inputs_bound"] is True
+    assert {row["source_input_sha256"] for row in provenance["rows"]} == {expected}
+    assert {row["source_input_sha256"] for row in provenance["field_provenance_rows"]} == {expected}
+    source = project_root / "pymdp.yaml"
+    original = source.read_bytes()
+    try:
+        source.write_bytes(original + b"\n")
+        issues = sheaf_tracks.validate_sheaf_track_artifacts(project_root)
+        assert any("unbound source inputs" in issue for issue in issues)
+    finally:
+        source.write_bytes(original)
+    assert _source_input_sha256(project_root) == expected
 
 
 @pytest.mark.long_running
@@ -412,6 +411,16 @@ def test_canonical_sheaf_row_only_forgeries_are_caught(project_root: Path) -> No
         assert any(
             "incomplete provenance rows or bundles" in issue for issue in validate_sheaf_track_artifacts(project_root)
         )
+        paths["provenance"].write_text(originals[paths["provenance"]], encoding="utf-8")
+
+        # A valid-looking false input digest must fail even when all three
+        # saved row surfaces and the aggregate agree with the forged value.
+        data = _load(paths["provenance"])
+        for row in data["rows"] + data["field_provenance_rows"] + list(data["artifacts"].values()):
+            row["source_input_sha256"] = "0" * 64
+        data["all_source_inputs_bound"] = True
+        _write(paths["provenance"], data)
+        assert any("unbound source inputs" in issue for issue in validate_sheaf_track_artifacts(project_root))
         paths["provenance"].write_text(originals[paths["provenance"]], encoding="utf-8")
 
         # dependency: drop a required edge type while leaving the flag True.

@@ -7,7 +7,7 @@ from pathlib import Path
 
 import pytest
 
-from config_validation import (
+from template_literature_meta_analysis.config_validation import (
     ConfigValidationError,
     check_config_health,
     require_valid_config,
@@ -21,7 +21,7 @@ from config_validation import (
     validate_sampling_config,
     validate_search_config,
 )
-from literature.search_runner import run_literature_search
+from template_literature_meta_analysis.literature.search_runner import run_literature_search
 
 
 @pytest.mark.parametrize("payload", ["", "[]\n", "42\n", '"config"\n'])

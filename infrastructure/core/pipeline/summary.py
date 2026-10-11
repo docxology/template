@@ -66,7 +66,9 @@ class PipelineSummaryGenerator:
         # Calculate performance metrics
         slowest_stage = self._find_slowest_stage(stage_results)
         fastest_stage = self._find_fastest_stage(stage_results)
-        failed_stages = [r for r in stage_results if not r.success]
+        from infrastructure.core.pipeline.outcomes import outcome_for_result
+
+        failed_stages = [r for r in stage_results if not outcome_for_result(r).complete]
 
         # Collect file inventory
         inventory = self.file_inventory_manager.collect_output_files(output_dir)

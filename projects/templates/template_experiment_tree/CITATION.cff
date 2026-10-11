@@ -1,0 +1,19 @@
+authors:
+- affiliation: Active Inference Institute
+  family-names: Friedman
+  given-names: Daniel Ari
+  orcid: 0000-0001-6232-9096
+cff-version: 1.2.0
+keywords:
+- reproducible research
+- experiment tracking
+- preregistration
+- living documents
+license: MIT
+message: Unpublished draft metadata; this intended release has not been deposited
+  or published.
+repository-code: https://github.com/docxology/template_experiment_tree
+title: 'A Living Research Record: Version-Controlled Experiment Trees with Frozen
+  Nodes'
+type: software
+version: 0.2.0

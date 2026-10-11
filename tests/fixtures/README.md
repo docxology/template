@@ -10,6 +10,7 @@
 |-----------|-------------|
 | [`real_codebases/`](real_codebases/) | Shallow-cloned real GitHub repos (requests, fastapi) — required for `external_fixture` integration tests |
 | [`private_project/cogant/`](private_project/cogant/) | Committed COGANT tool + manuscript stubs for `private_project` infra tests (staging tree overrides when present) |
+| [`timeseries_seed/`](timeseries_seed/README.md) | Genuine seeded synthetic benchmark snapshot for consistent hosted source custody |
 | `timeseries/` | M4/synthetic series — created by `download_timeseries_benchmarks.py` (required for `bench` integration tests) |
 
 ## Setup

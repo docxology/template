@@ -6,7 +6,7 @@
 ## Publication identity
 
 - Standalone repository: [docxology/template_autoresearch_project](https://github.com/docxology/template_autoresearch_project)
-- Config version: `0.3.2`
+- Intended / published version: `0.4.0 pending; last published 0.3.2`
 - Stable concept DOI: [10.5281/zenodo.20417016](https://doi.org/10.5281/zenodo.20417016)
 - Latest deposited version DOI: [10.5281/zenodo.20931907](https://zenodo.org/records/20931907)
 - Additional declared locations: [github_pages](https://docxology.github.io/template_autoresearch_project/), [huggingface_hub](https://huggingface.co/datasets/ActiveInference/template_autoresearch_project), [ipfs_pinata](https://gateway.pinata.cloud/ipfs/QmZvS2v7ZpqS4T8ZufeW9sA4gNBteAdVfmLH4LcoAqrUhv), [netlify](https://6a443f868786d30c7d8ea014--tranquil-kleicha-0c9203.netlify.app), [osf](https://osf.io/geykb/), [pypi](https://test.pypi.org/project/template-autoresearch-project/0.3.2/), [software_heritage](https://archive.softwareheritage.org/browse/origin/?origin_url=https://github.com/docxology/template_autoresearch_project)
@@ -58,30 +58,75 @@ rsync -a \
 
 ## Validation Commands
 
-Run from the template repository root after copying into `projects/working/` or
-another full template checkout:
-
-```bash
-uv run pytest projects/working/my_autoresearch_project/tests/ \
-  --cov=projects/working/my_autoresearch_project/src --cov-fail-under=90
-uv run python projects/working/my_autoresearch_project/scripts/check_source_ledger.py
-uv run python projects/working/my_autoresearch_project/scripts/run_autoresearch_loop.py
-```
-
-For the public exemplar:
+Run the public exemplar's complete tests from the canonical platform checkout:
 
 ```bash
 uv run pytest projects/templates/template_autoresearch_project/tests/ \
   --cov=projects/templates/template_autoresearch_project/src --cov-fail-under=90
+uv run python projects/templates/template_autoresearch_project/scripts/check_source_ledger.py
+uv run python projects/templates/template_autoresearch_project/scripts/run_autoresearch_loop.py
 ```
 
-## Intentional Non-Standalone Dependencies
+For a canonical public standalone export, use the explicit source-provider
+contract below. A renamed working fork needs its own reviewed source/configuration
+binding before claiming full-suite acceptance; the clean-copy commands above
+provide authoring scaffolds rather than evidence for such a fork.
+
+## Full-suite source integration
+
+The whole test suite needs an explicitly selected platform source checkout in
+addition to the genuine installed `research-project-template==4.0.1` package.
+Source integration reads the platform DAG and canonical configuration and
+builds the actual platform wheel for its separate installed-origin controls.
+The seed export excludes generated output; the session loop regenerates the
+output used by artifact assertions in an isolated copy.
+
+After platform 4.0.1 has been integrated and pushed, clone the actual public
+platform revision recorded for the export into a separate directory. Check it
+out by its complete commit ID and verify that its root package metadata says
+4.0.1. Use that platform commit, rather than the standalone repository's commit:
+
+```bash
+export TEMPLATE_AUTORESEARCH_SOURCE_ROOT="/absolute/path/to/platform-source"
+export TEMPLATE_AUTORESEARCH_SOURCE_COMMIT="<exact public platform commit, 40 hex characters>"
+git -C "$TEMPLATE_AUTORESEARCH_SOURCE_ROOT" checkout --detach "$TEMPLATE_AUTORESEARCH_SOURCE_COMMIT"
+git -C "$TEMPLATE_AUTORESEARCH_SOURCE_ROOT" status --short
+```
+
+Prepare an independent project environment with this project's locked runtime
+and `dev` dependencies and an actual platform 4.0.1 wheel built from that
+checkout. Do not resolve the tracked monorepo convenience entry
+`[tool.uv.sources] research-project-template.path = '../../..'` from a
+standalone clone. Export the locked project requirements from the canonical
+project path in the nominated checkout using `uv export --locked --extra dev
+--no-default-groups --no-emit-project --no-emit-local`, install those hashes
+into the project environment, and install the separately admitted platform
+wheel. Prepare the platform's locked `installed-build` tools and runtime cache
+before execution: the suite's genuine wheel fixture requires them offline.
+Keep dependency preparation distinct from the test run, and preserve the
+project's own pytest versions rather than installing the root test stack.
+
+From the standalone project, with that environment prepared:
+
+```bash
+env -u PYTHONPATH -u PYTHONHOME .venv/bin/python -m pytest tests/ \
+  --cov=src --cov-fail-under=90
+```
+
+The source provider is required to be clean, match its nominated Git HEAD and
+committed input bytes, and retain its original source identity through the
+suite. The canonical monorepo can still run bounded diagnostics against its
+current source, including deliberate uncommitted edits. Neither mode turns
+source-integration results into installed-package or publication evidence;
+the separate installed-wheel tests retain their actual origin checks.
+
+## Shared platform dependency
 
 This exemplar intentionally imports reusable Layer-1 infrastructure such as
 `infrastructure.autoresearch`, artifact hashing, and evidence-registry helpers.
-It is forkable as a project in a template-style checkout. It is not advertised as
-a self-contained package that runs after copying only this directory outside the
-template infrastructure.
+It is forkable in a template-style checkout or with the explicitly nominated
+source provider and independently installed platform package above. Copying
+this directory alone does not supply those shared platform inputs.
 
 ## What Not To Claim
 

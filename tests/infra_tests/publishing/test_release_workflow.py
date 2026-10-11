@@ -142,9 +142,12 @@ class TestMetadataFromConfig:
         assert "Test abstract" in metadata.abstract
         assert "testing" in metadata.keywords
 
-    def test_loads_hydrated_abstract_from_config(self, tmp_path: Path) -> None:
+    @pytest.mark.parametrize("abstract_filename", ["00_abstract.md", "01_abstract.md"])
+    def test_loads_hydrated_abstract_from_config(self, tmp_path: Path, abstract_filename: str) -> None:
         config_path = _write_minimal_project(tmp_path)
-        abstract_path = config_path.parent / "00_abstract.md"
+        abstract_path = config_path.parent / abstract_filename
+        if abstract_filename != "00_abstract.md":
+            (config_path.parent / "00_abstract.md").rename(abstract_path)
         abstract_path.write_text(
             "# Abstract\n\nThis release binds {{track_count}} tracks.\n",
             encoding="utf-8",
@@ -152,11 +155,27 @@ class TestMetadataFromConfig:
         variables_path = tmp_path / "projects" / "test_release" / "output" / "data" / "manuscript_variables.json"
         variables_path.parent.mkdir(parents=True)
         variables_path.write_text(json.dumps({"track_count": 7}), encoding="utf-8")
+        if abstract_filename == "01_abstract.md":
+            output_manuscript = config_path.parent.parent / "output" / "manuscript"
+            output_manuscript.mkdir()
+            (output_manuscript / abstract_filename).write_text(
+                "# Abstract\n\nHydrated selected 7 tracks.\n", encoding="utf-8"
+            )
+            (output_manuscript / "00_abstract.md").write_text(
+                "# Abstract\n\nStale counterpart 999 tracks.\n", encoding="utf-8"
+            )
 
         metadata = publication_metadata_from_config(config_path)
 
         assert "7 tracks" in metadata.abstract
         assert "{{" not in metadata.abstract
+        bundle = prepare_release_bundle(
+            ReleaseRequest(
+                repo_root=tmp_path, project_name="test_release", tag="v1.0", github_repo="owner/repo", dry_run=True
+            )
+        )
+        assert "7 tracks" in bundle.metadata.deposit_description
+        assert "{{" not in bundle.metadata.deposit_description
 
     def test_prefers_output_abstract_from_config(self, tmp_path: Path) -> None:
         config_path = _write_minimal_project(tmp_path)

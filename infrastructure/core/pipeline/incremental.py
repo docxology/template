@@ -1,52 +1,13 @@
-"""Content-hash stage skipping for the pipeline (INCREMENTAL-PIPELINE-1).
+"""Opt-in content-bound stage reuse.
 
-This module lets the executor SKIP a stage whose declared inputs have not
-changed since a previous successful run, instead of re-running every stage on
-every invocation.
-
-DEFAULT-OFF / OPT-IN contract
------------------------------
-The feature is gated entirely on :class:`IncrementalConfig.enabled`, which
-defaults to ``False``. When disabled:
-
-- :func:`should_skip_stage` always returns "do not skip";
-- the executor never reads or writes the hash manifest;
-- execution is byte-identical to today — every stage runs.
-
-So with no opt-in, nothing about the default pipeline path changes.
-
-How skipping is decided (only when enabled)
--------------------------------------------
-For each stage the executor:
-
-1. Computes a deterministic *input hash* over the stage's declared
-   ``input_artifacts`` (file contents) PLUS the recorded *output hashes* of the
-   stages it depends on (``upstream_output_hashes``) PLUS the stage name.
-2. Skips the stage ONLY when ALL of the following hold:
-   - a hash was previously recorded for this stage, AND
-   - the recorded input hash equals the freshly computed one, AND
-   - the stage declares at least one output, AND
-   - every declared output file currently exists (fail-safe).
-3. Otherwise runs the stage and records the new input hash plus an output hash
-   computed over the (now present) declared outputs.
-
-Invalidation is transitive without any explicit dependency walk: because a
-downstream stage's input hash folds in its upstream stages' recorded *output*
-hashes, mutating an upstream input changes the upstream output, which changes
-the recorded upstream output hash, which changes the downstream input hash —
-so the downstream stage re-runs as well.
-
-Determinism
------------
-Hashes are SHA-256 over a canonical, sorted serialization of declared paths and
-their byte contents. No wall-clock or randomness enters any recorded artifact.
-
-Part of the infrastructure layer (Layer 1) — reusable across all projects.
+Cache schema versions are independent of platform releases. Reuse requires an
+exact contract, recursive input/source/configuration/tool identity, and validated
+stable output bytes. Unsupported or malformed records are misses. Cleanup,
+publication, and live effects are excluded by the resolved plan.
 """
 
 from __future__ import annotations
 
-import hashlib
 import json
 from dataclasses import dataclass
 from pathlib import Path
@@ -54,6 +15,15 @@ from pathlib import Path
 from infrastructure.core.logging.utils import get_logger
 from infrastructure.core.pipeline.artifacts import declared_output_paths
 from infrastructure.core.pipeline.types import StageContract
+from infrastructure.core.pipeline.fingerprints import (
+    canonical_digest,
+    paths_digest,
+    source_fingerprint,
+    tool_reuse_refusal,
+)
+from infrastructure.core.files.secure_write import atomic_write_text_confined, read_text_confined
+from infrastructure.core.pipeline.execution_environment import effective_environment_identity
+from infrastructure.core.pipeline.artifact_contracts import declared_input_paths
 
 logger = get_logger(__name__)
 
@@ -62,7 +32,8 @@ INCREMENTAL_MANIFEST_RELPATH = Path(".pipeline") / "incremental.json"
 
 #: Sentinel mixed into the hash for declared-but-missing input files. Keeps the
 #: hash deterministic (and distinct from an empty/zero-byte file) without raising.
-_MISSING_INPUT_SENTINEL = b"\x00<missing>\x00"
+CACHE_SCHEMA_VERSION = 3
+_MANIFEST_READ_BUDGET = 1024 * 1024
 
 
 @dataclass(frozen=True)
@@ -123,7 +94,7 @@ class HashManifest:
     def to_dict(self) -> dict[str, object]:
         """Serialize this object to a plain dict for JSON output."""
         return {
-            "version": 1,
+            "version": CACHE_SCHEMA_VERSION,
             "stages": {
                 name: {"input_hash": rec.input_hash, "output_hash": rec.output_hash}
                 for name, rec in sorted(self._records.items())
@@ -145,34 +116,42 @@ def load_hash_manifest(output_dir: Path) -> HashManifest:
     manifest (so every stage looks "unseen" and therefore re-runs).
     """
     path = _manifest_path(output_dir)
-    if not path.exists():
-        return HashManifest()
     try:
-        payload = json.loads(path.read_text(encoding="utf-8"))
-    except (OSError, json.JSONDecodeError) as exc:
+        payload = json.loads(read_text_confined(output_dir, path, max_bytes=_MANIFEST_READ_BUDGET))
+    except FileNotFoundError:
+        return HashManifest()
+    except (OSError, ValueError, RecursionError) as exc:
         logger.warning("Ignoring unreadable incremental manifest %s: %s", path, exc)
         return HashManifest()
-    if not isinstance(payload, dict):
+    if (
+        not isinstance(payload, dict)
+        or type(payload.get("version")) is not int
+        or payload["version"] != CACHE_SCHEMA_VERSION
+    ):
         return HashManifest()
     stages = payload.get("stages", {})
     if not isinstance(stages, dict):
         return HashManifest()
     records: dict[str, StageHashRecord] = {}
     for name, row in stages.items():
-        if not isinstance(name, str) or not isinstance(row, dict):
-            continue
+        if not isinstance(name, str) or not name or not isinstance(row, dict):
+            return HashManifest()
         input_hash = row.get("input_hash")
         output_hash = row.get("output_hash")
-        if isinstance(input_hash, str) and isinstance(output_hash, str):
-            records[name] = StageHashRecord(input_hash=input_hash, output_hash=output_hash)
+        if not all(
+            isinstance(value, str) and len(value) == 64 and all(char in "0123456789abcdef" for char in value)
+            for value in (input_hash, output_hash)
+        ):
+            return HashManifest()
+        assert isinstance(input_hash, str) and isinstance(output_hash, str)
+        records[name] = StageHashRecord(input_hash=input_hash, output_hash=output_hash)
     return HashManifest(records)
 
 
 def save_hash_manifest(output_dir: Path, manifest: HashManifest) -> None:
     """Persist the hash manifest deterministically (sorted keys, trailing newline)."""
     path = _manifest_path(output_dir)
-    path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(json.dumps(manifest.to_dict(), indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    atomic_write_text_confined(output_dir, path, json.dumps(manifest.to_dict(), indent=2, sort_keys=True) + "\n")
 
 
 # -- Path resolution ---------------------------------------------------------
@@ -184,33 +163,12 @@ def _resolve_input_paths(repo_root: Path, project_dir: Path, contract: StageCont
     Reuses the same rendering rules as declared outputs so ``{project}``
     placeholders and ``projects/``/``output/`` prefixes resolve identically.
     """
-    proxy = StageContract(output_artifacts=contract.input_artifacts)
-    return declared_output_paths(repo_root, project_dir, proxy)
+    return declared_input_paths(repo_root, project_dir, contract)
 
 
-def _hash_paths(paths: tuple[Path, ...]) -> str:
-    """Hash a set of files by their relative-order-independent content digest.
-
-    Each path contributes ``<resolved-path>\\0<sha256-of-bytes-or-sentinel>``.
-    Missing files contribute a fixed sentinel so the hash stays deterministic.
-    Entries are sorted so ordering of the declared tuple does not matter.
-    """
-    digest = hashlib.sha256()
-    parts: list[str] = []
-    for path in paths:
-        key = path.as_posix()
-        if path.is_file():
-            file_digest = hashlib.sha256()
-            with path.open("rb") as fh:
-                for chunk in iter(lambda: fh.read(1024 * 1024), b""):
-                    file_digest.update(chunk)
-            parts.append(f"{key}\x00{file_digest.hexdigest()}")
-        else:
-            parts.append(f"{key}\x00{hashlib.sha256(_MISSING_INPUT_SENTINEL).hexdigest()}")
-    for part in sorted(parts):
-        digest.update(part.encode("utf-8"))
-        digest.update(b"\x1e")  # record separator
-    return digest.hexdigest()
+def _hash_paths(paths: tuple[Path, ...], *, output_roots: tuple[Path, ...] = ()) -> str:
+    """Hash recursive contents, additions, deletions, and renames."""
+    return paths_digest(paths, output_roots=output_roots)
 
 
 # -- Public hashing API ------------------------------------------------------
@@ -223,6 +181,8 @@ def compute_stage_input_hash(
     stage_name: str,
     contract: StageContract,
     upstream_output_hashes: dict[str, str],
+    execution_identity: str = "",
+    mode: str | None = None,
 ) -> str:
     """Compute a deterministic input hash for a stage.
 
@@ -230,25 +190,21 @@ def compute_stage_input_hash(
     artifacts, and the recorded output hashes of dependency stages
     (``upstream_output_hashes``). Any change to those flips the hash.
     """
-    digest = hashlib.sha256()
-    digest.update(b"stage\x00")
-    digest.update(stage_name.encode("utf-8"))
-    digest.update(b"\x1e")
-    digest.update(b"inputs\x00")
-    digest.update(_hash_paths(_resolve_input_paths(repo_root, project_dir, contract)).encode("ascii"))
-    digest.update(b"\x1e")
-    digest.update(b"upstream\x00")
-    # A stage never folds its OWN recorded output hash into its input hash, only
-    # those of other (upstream) stages. Otherwise re-recording a stage would
-    # perturb its own input hash and break skip detection.
-    for dep_name in sorted(upstream_output_hashes):
-        if dep_name == stage_name:
-            continue
-        digest.update(dep_name.encode("utf-8"))
-        digest.update(b"=")
-        digest.update(upstream_output_hashes[dep_name].encode("ascii", errors="replace"))
-        digest.update(b"\x1e")
-    return digest.hexdigest()
+    from dataclasses import asdict
+
+    return canonical_digest(
+        {
+            "stage": stage_name,
+            "contract": asdict(contract),
+            "inputs": _hash_paths(
+                _resolve_input_paths(repo_root, project_dir, contract), output_roots=(project_dir / "output",)
+            ),
+            "source": source_fingerprint(repo_root, project_dir),
+            "environment": effective_environment_identity(repo_root, project_dir, mode=mode),
+            "execution": execution_identity,
+            "upstream": {key: value for key, value in upstream_output_hashes.items() if key != stage_name},
+        }
+    )
 
 
 def compute_stage_output_hash(
@@ -258,7 +214,11 @@ def compute_stage_output_hash(
     contract: StageContract,
 ) -> str:
     """Compute a deterministic content hash over a stage's declared outputs."""
-    return _hash_paths(declared_output_paths(repo_root, project_dir, contract))
+    return paths_digest(
+        declared_output_paths(repo_root, project_dir, contract),
+        stable_output=True,
+        output_roots=(project_dir / "output",),
+    )
 
 
 def declared_outputs_present(
@@ -275,7 +235,7 @@ def declared_outputs_present(
     paths = declared_output_paths(repo_root, project_dir, contract)
     if not paths:
         return False
-    return all(path.exists() for path in paths)
+    return all(path.exists() and not path.is_symlink() for path in paths)
 
 
 def should_skip_stage(
@@ -286,15 +246,26 @@ def should_skip_stage(
     project_dir: Path,
     stage_name: str,
     contract: StageContract,
+    execution_identity: str = "",
+    stage_script: str | None = None,
+    mode: str | None = None,
 ) -> SkipDecision:
     """Decide whether a stage may be skipped under incremental mode.
 
     Returns ``SkipDecision(skip=False)`` immediately when the feature is
-    disabled (the default), guaranteeing the legacy behavior. When enabled, the
+    disabled (the default), so every selected stage executes. When enabled, the
     stage is skippable only when the recorded input hash matches, all declared
     outputs are present, AND the current output hash matches the recorded one.
     """
     if not config.enabled:
+        return SkipDecision(skip=False)
+    if contract.mutable_artifacts:
+        return SkipDecision(skip=False)
+    from infrastructure.core.runtime.python_binding import is_analysis_capability
+
+    if is_analysis_capability(stage_name, stage_script):
+        return SkipDecision(skip=False)
+    if tool_reuse_refusal(repo_root, project_dir) is not None:
         return SkipDecision(skip=False)
 
     # Transitive invalidation is carried by declared-input *content*: a downstream
@@ -309,6 +280,8 @@ def should_skip_stage(
         stage_name=stage_name,
         contract=contract,
         upstream_output_hashes={},
+        execution_identity=execution_identity,
+        mode=mode,
     )
     record = manifest.get(stage_name)
     if record is None or record.input_hash != input_hash:
@@ -336,6 +309,8 @@ def record_stage_hash(
     contract: StageContract,
     upstream_output_hashes: dict[str, str],
     input_hash: str | None = None,
+    execution_identity: str = "",
+    mode: str | None = None,
 ) -> None:
     """Record a stage's input and output hashes into the manifest.
 
@@ -349,6 +324,8 @@ def record_stage_hash(
             stage_name=stage_name,
             contract=contract,
             upstream_output_hashes=upstream_output_hashes,
+            execution_identity=execution_identity,
+            mode=mode,
         )
     output_hash = compute_stage_output_hash(repo_root=repo_root, project_dir=project_dir, contract=contract)
     manifest.record(stage_name, input_hash=input_hash, output_hash=output_hash)

@@ -4,7 +4,6 @@ from __future__ import annotations
 
 import argparse
 import json
-import sys
 from datetime import date
 from pathlib import Path
 
@@ -30,11 +29,8 @@ def build_parser() -> argparse.ArgumentParser:
 
 
 def main(argv: list[str] | None = None) -> int:
-    """Run an explicit subcommand or the compatible legacy positional form."""
-    raw = list(argv) if argv is not None else sys.argv[1:]
-    if raw and raw[0] not in {"attestation", "candidate"}:
-        raw.insert(0, "attestation")
-    args = build_parser().parse_args(raw)
+    """Run an explicit attestation or candidate subcommand."""
+    args = build_parser().parse_args(argv)
     if args.command == "attestation":
         try:
             result = load_promotion_attestation(args.path, as_of=args.as_of)

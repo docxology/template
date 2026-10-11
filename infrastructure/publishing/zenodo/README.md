@@ -16,6 +16,7 @@ client.upload_file(dep.bucket_url, Path("paper.pdf"))
 doi = client.publish(dep.deposition_id)
 ```
 
-Backwards-compatible imports remain at `infrastructure.publishing.api` and `infrastructure.publishing`.
+Import clients and workflow helpers from `infrastructure.publishing.zenodo`.
+The package root also exports its declared publishing API.
 
 See [AGENTS.md](AGENTS.md) for API details.

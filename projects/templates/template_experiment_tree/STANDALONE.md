@@ -6,7 +6,7 @@
 ## Publication identity
 
 - Standalone repository: [docxology/template_experiment_tree](https://github.com/docxology/template_experiment_tree)
-- Config version: `1.0`
+- Intended / published version: `0.2.0 pending; unpublished draft`
 - Stable concept DOI: n/a
 - Latest deposited version DOI: n/a
 - Additional declared locations: none declared

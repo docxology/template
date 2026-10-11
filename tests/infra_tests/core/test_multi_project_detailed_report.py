@@ -9,7 +9,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from infrastructure.core.pipeline.multi_project import MultiProjectResult
+from tests._support.multi_project import bound_result
 from infrastructure.core.pipeline.types import PipelineStageResult
 from infrastructure.project.project_info import ProjectInfo
 from infrastructure.reporting.multi_project_report import format_multi_project_detailed_report, write_last_run_summary
@@ -37,7 +37,7 @@ def _bad(num: int, name: str, dur: float, msg: str) -> PipelineStageResult:
 
 def test_detailed_report_all_succeeded() -> None:
     projs = (_p("alpha"), _p("beta"))
-    result = MultiProjectResult(
+    result = bound_result(
         project_results={
             "alpha": [_ok(1, "Environment Setup"), _ok(2, "Project Tests", 2.0)],
             "beta": [_ok(1, "Environment Setup"), _ok(2, "Project Tests", 3.0)],
@@ -58,7 +58,7 @@ def test_detailed_report_all_succeeded() -> None:
 
 def test_detailed_report_mixed_outcomes_shows_failure_section() -> None:
     projs = (_p("alpha"), _p("beta"))
-    result = MultiProjectResult(
+    result = bound_result(
         project_results={
             "alpha": [_ok(1, "Environment Setup"), _ok(2, "Project Tests")],
             "beta": [
@@ -81,7 +81,7 @@ def test_detailed_report_mixed_outcomes_shows_failure_section() -> None:
 
 def test_detailed_report_renders_stage_breakdown_sorted_by_total_time() -> None:
     projs = (_p("alpha"),)
-    result = MultiProjectResult(
+    result = bound_result(
         project_results={
             "alpha": [
                 _ok(1, "Environment Setup", 5.0),
@@ -109,7 +109,7 @@ def test_detailed_report_renders_stage_breakdown_sorted_by_total_time() -> None:
 
 def test_detailed_report_includes_next_steps_when_repo_root_provided(tmp_path: Path) -> None:
     projs = (_p("alpha"),)
-    result = MultiProjectResult(
+    result = bound_result(
         project_results={
             "alpha": [
                 _bad(1, "Project Analysis", 0.5, "boom"),
@@ -127,7 +127,7 @@ def test_detailed_report_includes_next_steps_when_repo_root_provided(tmp_path: P
 
 
 def test_detailed_report_handles_empty_project_list() -> None:
-    result = MultiProjectResult(
+    result = bound_result(
         project_results={},
         total_duration=0.0,
         successful_projects=0,
@@ -147,3 +147,15 @@ def test_last_run_summary_is_explicitly_historical(tmp_path: Path) -> None:
     content = artifact.read_text(encoding="utf-8")
     assert "Last Recorded Pipeline Run" in content
     assert "historical evidence, not a current health claim" in content
+
+
+def test_current_runtime_summary_is_local_only_and_confined(tmp_path: Path) -> None:
+    import pytest
+
+    outside = tmp_path / "outside"
+    outside.mkdir()
+    (tmp_path / "output").symlink_to(outside, target_is_directory=True)
+    with pytest.raises(ValueError, match="symlink"):
+        write_last_run_summary(["private fixture identity"], tmp_path)
+    assert list(outside.iterdir()) == []
+    assert not (tmp_path / "docs").exists()

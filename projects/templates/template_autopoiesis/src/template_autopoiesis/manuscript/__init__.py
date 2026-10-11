@@ -2,9 +2,11 @@
 readiness contract, manuscript figure writers, manuscript variable
 generation, and the @@KEY@@-templated file bodies for generated children.
 
-These modules are re-exported from ``template_autopoiesis`` for backwards
-compatibility; import them from the package root.
+Import public symbols from their defining modules for explicit source custody.
 """
+
+from importlib import import_module
+from typing import Any
 
 from .emit_templates import (
     TEMPLATE_PATHS,
@@ -18,16 +20,6 @@ from .manuscript_contract import (
     REQUIRED_MANUSCRIPT_FILES,
     REQUIRED_SPEC_PHASES,
     validate_phase10_contract,
-)
-from .manuscript_figures import (
-    FIGURE_REGISTRY_SCHEMA,
-    MANUSCRIPT_FIGURE_SPECS,
-    ManuscriptFigureSpec,
-    fig_coverage_by_module,
-    fig_domain_coverage,
-    fig_product_space_annotation,
-    fig_stacked_product,
-    generate_manuscript_figures,
 )
 from .manuscript_variables import (
     generate_variables,
@@ -57,3 +49,30 @@ __all__ = [
     "save_variables",
     "validate_phase10_contract",
 ]
+
+
+_FIGURE_EXPORTS = frozenset(
+    {
+        "FIGURE_REGISTRY_SCHEMA",
+        "MANUSCRIPT_FIGURE_SPECS",
+        "ManuscriptFigureSpec",
+        "fig_coverage_by_module",
+        "fig_domain_coverage",
+        "fig_product_space_annotation",
+        "fig_stacked_product",
+        "generate_manuscript_figures",
+    }
+)
+
+
+def __getattr__(name: str) -> Any:
+    """Load plotting only when its actual public figure API is requested."""
+    if name not in _FIGURE_EXPORTS:
+        raise AttributeError(f"module {__name__!r} has no attribute {name!r}")
+    value = getattr(import_module(".manuscript_figures", __name__), name)
+    globals()[name] = value
+    return value
+
+
+def __dir__() -> list[str]:
+    return sorted(set(globals()) | set(__all__))

@@ -20,9 +20,9 @@ from pathlib import Path
 
 import pytest
 
-from literature.corpus import Corpus
-from literature.fulltext_download_cli import run_fulltext_download
-from literature.models import Paper
+from template_literature_meta_analysis.literature.corpus import Corpus
+from template_literature_meta_analysis.literature.fulltext_download_cli import run_fulltext_download
+from template_literature_meta_analysis.literature.models import Paper
 
 pytest_httpserver = pytest.importorskip("pytest_httpserver")
 reportlab = pytest.importorskip("reportlab")

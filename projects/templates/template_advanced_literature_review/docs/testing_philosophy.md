@@ -17,9 +17,10 @@ merely that the wiring was invoked.
 
 ## What each layer tests (this project's own `tests/`)
 
-Symlinked modules (`src/analysis/`, `src/knowledge_graph/`,
-`src/reproducibility/`, `src/visualization/`) are covered by
-`template_literature_meta_analysis`'s own test suite, not duplicated here.
+Shared `template_literature_meta_analysis` analysis, knowledge-graph,
+reproducibility and visualization methods have the Meta project's own complete
+source test and coverage gate. Advanced's consumer contracts verify integration
+with that declared provider; installed acceptance binds its genuine wheel.
 This project's `tests/` directory covers the project-specific surface:
 
 | File | Representative classes / test count | Covers |

@@ -6,9 +6,13 @@ import argparse
 import json
 from pathlib import Path
 
-from knowledge_graph.kg_runner import run_knowledge_graph_pipeline
-from knowledge_graph.nanopublication import Assertion, create_nanopub, serialize_nanopubs
-from literature.corpus import Corpus
+from template_literature_meta_analysis.knowledge_graph.kg_runner import run_knowledge_graph_pipeline
+from template_literature_meta_analysis.knowledge_graph.nanopublication import (
+    Assertion,
+    create_nanopub,
+    serialize_nanopubs,
+)
+from template_literature_meta_analysis.literature.corpus import Corpus
 
 
 def _seed_nanopubs(corpus: Corpus, nanopub_path: Path) -> None:

@@ -16,10 +16,10 @@ import logging
 from pathlib import Path
 from typing import Optional
 
-from literature.models import Paper
+from template_literature_meta_analysis.literature.models import Paper
 
-from analysis.subfield_defaults import DEFAULT_SUBFIELDS
-from analysis.subfield_registry import (
+from template_literature_meta_analysis.analysis.subfield_defaults import DEFAULT_SUBFIELDS
+from template_literature_meta_analysis.analysis.subfield_registry import (
     SUBFIELDS,
     configure_subfields,
     get_pattern_cache,
@@ -87,10 +87,14 @@ def classify_paper(paper: Paper) -> str:
 def classify_corpus(
     papers: list[Paper],
     config_path: Optional[Path] = None,
+    *,
+    config_source_bytes: bytes | None = None,
 ) -> dict[str, list[Paper]]:
     """Classify all papers in a corpus into domains."""
     if config_path is not None:
-        configure_subfields(config_path)
+        configure_subfields(config_path, source_bytes=config_source_bytes)
+    elif config_source_bytes is not None:
+        raise ValueError("admitted classification bytes require their config source path")
 
     result: dict[str, list[Paper]] = {name: [] for name in SUBFIELDS}
     for paper in papers:

@@ -18,7 +18,6 @@ from template_search_project.analysis.review_report import (
 )
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
-REPO_ROOT = PROJECT_ROOT.parents[2]
 
 
 # ---------------------------------------------------------------------------
@@ -27,27 +26,23 @@ REPO_ROOT = PROJECT_ROOT.parents[2]
 
 
 def test_subprocess_env_without_existing_pythonpath(monkeypatch):
-    """When PYTHONPATH is unset, _subprocess_env sets it to the template root
-    alone (line 64, the ``if p else ""`` False branch).
-    """
+    """An unset import path stays unset; no repository ancestry is inserted."""
     monkeypatch.delenv("PYTHONPATH", raising=False)
-    env = _subprocess_env()
-    assert "PYTHONPATH" in env
-    # The template root is the repo root (contains pyproject.toml)
-    template_root = Path(env["PYTHONPATH"])
-    assert (template_root / "pyproject.toml").exists()
+    assert "PYTHONPATH" not in _subprocess_env()
 
 
-def test_subprocess_env_preserves_existing_pythonpath(monkeypatch):
-    """When PYTHONPATH is already set, the template root is prepended and the
-    existing value is appended after a colon (line 64, True branch).
-    """
+def test_subprocess_env_removes_ambient_pythonpath(monkeypatch):
+    """Application settings survive while ambient Python imports do not."""
     monkeypatch.setenv("PYTHONPATH", "/custom/existing/path")
+    monkeypatch.setenv("SOURCE_DATE_EPOCH", "0")
     env = _subprocess_env()
-    parts = env["PYTHONPATH"].split(":")
-    template_root = Path(parts[0])
-    assert (template_root / "pyproject.toml").exists()
-    assert "/custom/existing/path" in parts
+    assert "PYTHONPATH" not in env
+    assert env["SOURCE_DATE_EPOCH"] == "0"
+
+
+def test_subprocess_env_explicit_empty_environment_does_not_inherit(monkeypatch):
+    monkeypatch.setenv("PYTHONPATH", "/custom/existing/path")
+    assert _subprocess_env({}) == {}
 
 
 # ---------------------------------------------------------------------------
@@ -63,14 +58,14 @@ def test_ensure_review_summary_subprocess_writes_summary(tmp_path: Path):
     project_root = tmp_path / "proj"
     scripts_dir = project_root / "scripts"
     scripts_dir.mkdir(parents=True)
-    review_dir = project_root / "output" / "review"
+    review_dir = project_root / "output" / ".pipeline" / "review"
 
     review_exe = scripts_dir / "review"
     review_exe.write_text(
         "#!/usr/bin/env python3\n"
         "import json, os, sys\n"
         "project_root = os.getcwd()\n"
-        "review_dir = os.path.join(project_root, 'output', 'review')\n"
+        "review_dir = os.path.join(project_root, 'output', '.pipeline', 'review')\n"
         "os.makedirs(review_dir, exist_ok=True)\n"
         "summary = {'total': 2, 'passed': 2, 'failed': 0, 'skipped': 0, 'overall_exit_code': 0}\n"
         "with open(os.path.join(review_dir, 'summary.json'), 'w') as f:\n"
@@ -96,7 +91,7 @@ def test_ensure_review_summary_subprocess_without_summary(tmp_path: Path):
     project_root = tmp_path / "proj"
     scripts_dir = project_root / "scripts"
     scripts_dir.mkdir(parents=True)
-    review_dir = project_root / "output" / "review"
+    review_dir = project_root / "output" / ".pipeline" / "review"
 
     review_exe = scripts_dir / "review"
     review_exe.write_text(
@@ -130,7 +125,7 @@ def test_collect_infra_imports_skips_syntax_error(tmp_path: Path):
         "from infrastructure.core.logging.utils import get_logger\n",
         encoding="utf-8",
     )
-    result = collect_infra_imports(tmp_path, REPO_ROOT)
+    result = collect_infra_imports(tmp_path)
     assert "infrastructure.core.logging.utils" in result
     assert result["infrastructure.core.logging.utils"] == {"good.py"}
 
@@ -219,7 +214,7 @@ def _make_project(tmp_path: Path) -> Path:
 # ---------------------------------------------------------------------------
 
 
-def test_generate_review_report_shows_review_notes_when_nonempty(tmp_path: Path):
+def test_generate_review_report_omits_operational_notes_when_unavailable(tmp_path: Path):
     """When ensure_review_summary returns non-empty notes (e.g. missing
     scripts/review), the report header includes a 'Review subprocess notes'
     line (line 172).
@@ -229,12 +224,13 @@ def test_generate_review_report_shows_review_notes_when_nonempty(tmp_path: Path)
     (project_root / "output" / "review" / "summary.json").unlink()
     (project_root / "scripts" / "review").unlink()
 
-    exit_code = generate_review_report(project_root, REPO_ROOT, project_root / "output" / "review")
+    exit_code = generate_review_report(project_root, project_root / "output" / "review")
     assert exit_code == 0
 
     text = (project_root / "output" / "review" / "REVIEW_REPORT.md").read_text(encoding="utf-8")
-    assert "Review subprocess notes:" in text
-    assert "scripts/review missing" in text
+    assert "Review subprocess notes:" not in text
+    assert "scripts/review missing" not in text
+    assert "informational current-source findings" in text
 
 
 # ---------------------------------------------------------------------------
@@ -251,7 +247,7 @@ def test_generate_review_report_no_infra_imports(tmp_path: Path):
     for py in (project_root / "src").glob("*.py"):
         py.write_text("x = 1\n", encoding="utf-8")
 
-    exit_code = generate_review_report(project_root, REPO_ROOT, project_root / "output" / "review")
+    exit_code = generate_review_report(project_root, project_root / "output" / "review")
     assert exit_code == 0
 
     text = (project_root / "output" / "review" / "REVIEW_REPORT.md").read_text(encoding="utf-8")
@@ -273,11 +269,13 @@ def test_generate_review_report_stage_status_skipped(tmp_path: Path):
         json.dumps({"status": "skipped", "success": False}), encoding="utf-8"
     )
 
-    exit_code = generate_review_report(project_root, REPO_ROOT, project_root / "output" / "review")
+    exit_code = generate_review_report(project_root, project_root / "output" / "review")
     assert exit_code == 0
 
     text = (project_root / "output" / "review" / "REVIEW_REPORT.md").read_text(encoding="utf-8")
-    assert "SKIP  bibliography_completeness" in text
+    assert "ENABLED  bibliography_completeness" in text
+    assert "Bibliography completeness:** passed" in text
+    assert "SKIP  bibliography_completeness" not in text
 
 
 # ---------------------------------------------------------------------------
@@ -296,8 +294,9 @@ def test_generate_review_report_disabled_stage_with_file(tmp_path: Path):
         json.dumps({"status": "ok", "success": False}), encoding="utf-8"
     )
 
-    exit_code = generate_review_report(project_root, REPO_ROOT, project_root / "output" / "review")
+    exit_code = generate_review_report(project_root, project_root / "output" / "review")
     assert exit_code == 0
 
     text = (project_root / "output" / "review" / "REVIEW_REPORT.md").read_text(encoding="utf-8")
-    assert "SKIP  skipped_stage" in text
+    assert "DISABLED  skipped_stage" in text
+    assert "SKIP  skipped_stage" not in text

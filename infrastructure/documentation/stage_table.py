@@ -12,7 +12,7 @@ reusing :func:`infrastructure.documentation.glossary_gen.inject_between_markers`
 The public entry points are:
 
 * :func:`build_stage_table` — render a Markdown table from the YAML.
-* :func:`build_stage_summary` — one-line declared / default-full / core-only counts.
+* :func:`build_stage_summary` — declared / default core / explicitly selected live counts.
 * :func:`inject_stage_table` — replace a marked block in a Markdown file.
 
 The generator is **idempotent**: running it twice with no YAML change makes
@@ -33,8 +33,8 @@ from infrastructure.core.logging.utils import get_logger
 from infrastructure.core.pipeline.dag import opt_in_tags_from_mapping
 from infrastructure.core.pipeline.stage_vocabulary import (
     all_stage_names,
-    core_only_stage_names,
     core_stage_names,
+    live_stage_names,
 )
 from infrastructure.documentation.glossary_gen import inject_between_markers
 
@@ -55,9 +55,10 @@ DEFAULT_STAGE_TABLE_TARGETS = (
 
 _DEFAULT_FAILURE_MODES: dict[str, str] = {
     "core": "hard fail",
-    "llm": "skipped if Ollama absent",
-    "clean": "soft fail",
-    "tests": "configurable tolerance",
+    "llm": "fresh policy-bound skip; unavailable required live acceptance is blocked",
+    "live": "unavailable required live acceptance is blocked",
+    "clean": "failure prevents completion",
+    "tests": "required tests and coverage must pass",
 }
 
 
@@ -127,8 +128,7 @@ def _stage_table_caption(yaml_link: str) -> str:
     )
 
 
-# Default caption used when no relative path is supplied. Kept for backwards
-# compatibility with callers that pre-date the per-target relative resolver.
+# Default caption used for documentation outside the repository root.
 _STAGE_TABLE_CAPTION = _stage_table_caption(f"../{_PIPELINE_YAML_REL}")
 
 
@@ -146,32 +146,32 @@ def build_stage_summary(
     *,
     target_rel_to_repo: Path | None = None,
 ) -> str:
-    """Render the one-line declared / default-full / core-only stage counts."""
+    """Render declared, default core, and explicitly selected live counts."""
     if not yaml_path.exists():
         raise FileNotFoundError(f"pipeline.yaml not found: {yaml_path}")
     raw = yaml.safe_load(yaml_path.read_text(encoding="utf-8")) or {}
     if not isinstance(raw, dict) or "stages" not in raw:
         raise ValueError(f"pipeline.yaml must have a top-level 'stages' list: {yaml_path}")
     declared = len(all_stage_names(yaml_path=yaml_path))
-    default_full = len(core_stage_names(yaml_path=yaml_path))
-    core_only = len(core_only_stage_names(yaml_path=yaml_path))
+    live_count = len(live_stage_names(yaml_path=yaml_path))
+    core_count = len(core_stage_names(yaml_path=yaml_path))
     last_index = max(declared - 1, 0)
     opt_in = ", ".join(f"`{tag}`" for tag in sorted(opt_in_tags_from_mapping(raw)))
     opt_in_clause = ""
     if opt_in:
-        opt_in_clause = f" Opt-in tags ({opt_in}) stay out of those default runs unless a stage is invoked directly."
+        opt_in_clause = f" Opt-in tags ({opt_in}) stay out of these selections unless a stage is invoked directly."
     href = _yaml_href(target_rel_to_repo)
     return (
         f"The default [`pipeline.yaml`]({href}) declares **{declared} named stages** "
-        f"(indices 0–{last_index}). Default full runs execute **{default_full}** "
-        f"core+LLM stages; `--core-only` executes **{core_only}**.{opt_in_clause} "
+        f"(indices 0–{last_index}). Default `--mode core` runs execute **{core_count}** stages; "
+        f"explicit `--mode live` executes **{live_count}** selected core and live stages.{opt_in_clause} "
         "YAML stage indices do not match `stage_NN_*.py` prefixes."
     )
 
 
 def _default_failure_mode(tags: list[str]) -> str:
     """Pick a sensible default failure-mode label from a stage's tags."""
-    for tag in ("clean", "llm", "tests", "core"):
+    for tag in ("clean", "llm", "live", "tests", "core"):
         if tag in tags:
             return _DEFAULT_FAILURE_MODES[tag]
     return "—"
@@ -207,15 +207,15 @@ def build_stage_table(
 
     The returned string is a fenced HTML caption followed by a four-column
     Markdown table: ``Stage | Script | Tags | Failure mode``. Stage indices
-    are 0-based positions in the YAML (so ``Clean Output Directories`` is
-    stage 0 and the nine numbered stages follow as 1–9).
+    are 0-based positions in the YAML. The number and identity of stages are
+    derived from that declaration rather than repeated in this generator.
 
     Args:
         yaml_path: Path to ``pipeline.yaml``.
         target_rel_to_repo: Optional Markdown target path (relative to the
             repo root). Used to compute a correct relative URL for the
             ``pipeline.yaml`` link in the caption. When ``None``, the caption
-            uses the legacy ``../infrastructure/...`` form.
+            assumes a document one directory below the root.
         repo_root: Optional repo-root path, only used when *target_rel_to_repo*
             is provided.
 

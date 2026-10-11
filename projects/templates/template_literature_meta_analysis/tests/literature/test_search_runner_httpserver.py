@@ -8,8 +8,8 @@ from pathlib import Path
 
 from pytest_httpserver import HTTPServer
 
-from literature.corpus import Corpus
-from literature.search_runner import run_literature_search
+from template_literature_meta_analysis.literature.corpus import Corpus
+from template_literature_meta_analysis.literature.search_runner import run_literature_search
 
 ARXIV_ENTRY = """\
 <?xml version="1.0" encoding="UTF-8"?>

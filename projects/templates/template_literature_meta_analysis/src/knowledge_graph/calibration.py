@@ -6,8 +6,8 @@ import json
 from pathlib import Path
 from typing import Any
 
-from knowledge_graph.hypothesis import score_hypothesis
-from knowledge_graph.nanopublication import Assertion
+from template_literature_meta_analysis.knowledge_graph.hypothesis import score_hypothesis
+from template_literature_meta_analysis.knowledge_graph.nanopublication import Assertion
 
 
 def evaluate_calibration_cases(cases: list[dict[str, Any]]) -> dict[str, Any]:

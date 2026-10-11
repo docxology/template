@@ -16,7 +16,10 @@ Decision memory and verifier hardening follow [`docs/rules/memory_and_decision_r
 | [`search/dead_ends.py`](src/template_autoscientists/search/dead_ends.py) | `DeadEndRegistry` — retires an `(axis, direction)` after `threshold` consecutive non-improving experiments. `retired_keys()` exposes the set agents consult to steer away. |
 | [`search/ranking.py`](src/template_autoscientists/search/ranking.py) | `axis_effect_sizes` / `rank_axes` — deterministic axis ordering (untried-first, then descending effect). |
 | [`search/stagnation.py`](src/template_autoscientists/search/stagnation.py) | `StagnationDetector` + `reorganize_axes` — fires when the champion stalls for a window and re-deals live axes across teams. |
-| [`agents/agents.py`](src/template_autoscientists/agents/agents.py) | `Proposer` protocol and `DeterministicProposer` (rule-based, registry-consulting). By design, the live implementation — `HermesProposer` (Ollama, `# pragma: no cover`) — lives in [`scripts/hermes_proposer.py`](scripts/hermes_proposer.py) instead, so `src/` stays infrastructure-free. |
+| [`agents/agents.py`](src/template_autoscientists/agents/agents.py) | Standalone `Proposer` protocol and deterministic reference policy. |
+| [`agents/live_domain.py`](src/template_autoscientists/agents/live_domain.py) | Exact typed budgets, public state prompts and strict numeric proposal validation. |
+| [`agents/live_transport.py`](src/template_autoscientists/agents/live_transport.py) | Supervised provider adapter and request/response/model custody. |
+| [`search/live_comparison.py`](src/template_autoscientists/search/live_comparison.py) | Actual paired multi-step searches, equal ceilings, outcomes and source/artifact receipts. |
 | [`search/search.py`](src/template_autoscientists/search/search.py) | `SearchConfig` (toggles + budgets), `SearchResult`, and the `_Runner` propose→filter→evaluate→confirm→promote→reorganize loop. `run_search(objective, proposer, config)` is the entry point. |
 | [`search/ablation.py`](src/template_autoscientists/search/ablation.py) | Canonical single-mechanism ablation matrix, measured rows, and derived noise-inflation ratio used by output generation and tests. |
 | [`search/comparison.py`](src/template_autoscientists/search/comparison.py) | Canonical matched-budget coordinated/baseline experiment and honest result summaries. |
@@ -32,8 +35,8 @@ reorganize if stagnant. With every *structural* coordination toggle off and one
 team — confirmation stays on — the loop reduces exactly to the single-thread
 baseline (`SearchConfig.single_thread_baseline`, which sets `use_confirmation=True`).
 
-The loop is deterministic given `(objective, proposer, config)`, so trajectories
-and figures are byte-reproducible.
+The core loop is deterministic given `(objective, proposer, config)`. Live model
+generations retain provider evidence and are not promised byte-reproducible.
 
 ## Honest instrumentation (`SearchResult`)
 
@@ -67,8 +70,8 @@ re-probes. Two figures: `ablation.png` (metric/noise) and
 - **No mocks** (absolute): real deterministic objects only.
 - **Coverage**: `src/` gated at 90% (`fail_under = 90`); the suite covers it
   comfortably above the floor — read the `TOTAL` line of the coverage report for
-  the live figure rather than trusting a pinned number. The live Hermes network
-  boundary is `# pragma: no cover`; Protocol stub bodies (`...`) are excluded.
+  the current measurement rather than trusting a pinned number. Live adapter
+  controls are included; Protocol stub bodies (`...`) are excluded.
 - **Thin orchestrators**: scripts never implement algorithms; they import from
   `src/`, plot, and print output paths for manifest collection.
 - **Qualified-name pipeline invocation**: render via
@@ -85,3 +88,5 @@ quick reference commands, and pitfalls.
 # Publishing
 
 - [Publishing guide](../../../docs/guides/publishing-guide.md) · [Publishing module reference](../../../infrastructure/publishing/README.md) · [Zenodo DOI strategy](../../../docs/guides/zenodo-doi-strategy.md) · [Archival targets](../../../docs/maintenance/archival-targets.md)
+
+The bounded live contract is in [docs/live-coordination.md](docs/live-coordination.md).

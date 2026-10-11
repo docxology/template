@@ -109,7 +109,7 @@ Run from the repository root:
 ```bash
 uv run pytest projects/templates/<name>/tests --cov=projects/templates/<name>/src --cov-fail-under=90
 uv run python -m infrastructure.validation.cli prerender projects/templates/<name>/manuscript --repo-root .
-uv run python scripts/runner/execute_pipeline.py --project templates/<name> --core-only
+uv run python scripts/runner/execute_pipeline.py --project templates/<name> --mode core
 uv run python scripts/pipeline/stage_02_analysis.py --project templates/<name>
 uv run python scripts/pipeline/stage_03_render.py --project templates/<name>
 uv run python scripts/pipeline/stage_04_validate.py --project templates/<name>

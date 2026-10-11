@@ -60,11 +60,34 @@ def test_gate_passes_for_fully_specified_project(tmp_path: Path) -> None:
             '"inventory_mode": "stable-local-output-v1", "issues": []}\n'
         ),
     )
-    write_doc(reports / "evidence_registry.json", '{"claims": []}\n')
+    # Build the registry from the project's actual current sources with the
+    # shared producer, then write it with the shared writer (current schema).
+    from infrastructure.core.pipeline.artifacts import output_inventory_mode_for_project
+    from infrastructure.validation.evidence_registry import (
+        build_project_evidence_registry,
+        write_evidence_registry_report,
+    )
+
+    registry = build_project_evidence_registry(
+        project, output_inventory_mode=output_inventory_mode_for_project(tmp_path, project)
+    )
+    write_evidence_registry_report(project / "output", registry)
 
     exit_code = gate_main(["--repo-root", str(tmp_path), "--project", "template_test"])
 
     assert exit_code == 0
+
+
+def test_gate_refuses_hand_written_stale_evidence_registry(tmp_path: Path) -> None:
+    """A registry that does not use the shared schema/producer must block the gate."""
+    _write_pipeline(tmp_path)
+    project = make_project(tmp_path, "template_test", with_manuscript=True, with_scripts=True)
+    write_doc(project / "scripts" / "pipeline" / "stage_02_analysis.py", "print('synthetic analysis')\n")
+    write_doc(tmp_path / "scripts" / "runner" / "execute_pipeline.py", "print('synthetic runner')\n")
+    write_doc(project / "manuscript" / "02_methodology.md", "# Methodology\n\nWe did X.\n")
+    write_doc(project / "output" / "reports" / "evidence_registry.json", '{"claims": []}\n')
+
+    assert gate_main(["--repo-root", str(tmp_path), "--project", "template_test"]) == 1
 
 
 def test_gate_fails_when_methods_contract_unmet(tmp_path: Path) -> None:

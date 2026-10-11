@@ -35,7 +35,7 @@ except ImportError:
     PROMPT_LOADER_AVAILABLE = False
 
 # ResponseMode is defined in config.py (alongside GenerationOptions) to avoid
-# a validation->client import cycle. Re-exported here for backwards compatibility.
+# a validation->client import cycle. It is also part of this public client API.
 __all__ = ["LLMClient", "ResponseMode"]
 
 

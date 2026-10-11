@@ -6,8 +6,8 @@ This EDA exemplar strictly forbids mocking in data-analysis validation.
 
 The core insight is architectural: if a function requires a mock to be tested,
 it is doing I/O, plotting, or producing side-effects — which means it belongs in
-`scripts/` (a thin orchestrator) or a notebook cell, not in `src/eda/` (pure
-data logic). The purity of `src/eda/` is what makes zero-mock testing
+`scripts/` (a thin orchestrator) or a notebook cell, not in `src/template_eda_notebook/eda/` (pure
+data logic). The purity of `src/template_eda_notebook/eda/` is what makes zero-mock testing
 achievable. Every function takes a DataFrame (or array) in and returns data out,
 so tests simply call functions with the real shipped CSV or a tiny real frame
 and verify real numeric outputs.
@@ -26,13 +26,14 @@ signal: move that code to `scripts/` and test the `src/` boundary directly.
 | `test_figures.py` | Figure-data preparers: histogram bins, heatmap values, group counts |
 | `test_project_paths.py` | `project_output_dirs` and `resolve_project_root` path plumbing |
 | `test_eda_analysis_script.py` | Thin script `run_eda()` writes real figures + summary CSV to a temp root |
-| `test_notebook.py` | Notebook is valid nbformat; imports bind to `src.__all__`; cells define no logic |
+| `test_notebook.py` | Notebook is valid nbformat; imports bind to `template_eda_notebook.__all__`; cells define no logic |
+| `test_notebook_execution.py` | Fresh selected-interpreter kernel, independent numerical oracle, errors, skipped cells, startup/cell/total deadlines and unchanged source/input hashes |
 
 Configuration: `projects/templates/template_eda_notebook/pyproject.toml`
 (`fail_under = 90`, matching the root pipeline gate).
 
 Conftest: `projects/templates/template_eda_notebook/tests/conftest.py`
-(sets `MPLBACKEND=Agg`, adds `src/` and the repo root to `sys.path`).
+(sets `MPLBACKEND=Agg`, selects the declared SDK from the environment before adding own `src/`).
 
 Live test count and coverage percentage:
 [`docs/_generated/COUNTS.md`](../../../../docs/_generated/COUNTS.md)
@@ -64,9 +65,19 @@ exist.
 | `TestGenerateMeasurements` | `test_generate_measurements_data.py` | Deterministic generator binds to the shipped fixture contract (schema, size, missingness, correlations) |
 | `TestGenerateMeasurementsScript` | `test_generate_measurements_data.py` | `generate_measurements_file()` artifact writing |
 | `TestNotebookStructure` | `test_notebook.py` | Valid nbformat; markdown + code cells present |
-| `TestNotebookSrcBinding` | `test_notebook.py` | Imports resolve to `src.__all__`; no logic in cells |
+| `TestNotebookSrcBinding` | `test_notebook.py` | Imports resolve to `template_eda_notebook.__all__`; no logic in cells |
+| `TestNotebookExecution` | `test_notebook_execution.py` | Real-kernel acceptance, finite deadlines and custody rejection controls |
+| `TestNotebookOracle` | `test_notebook_execution.py` | Independent numerical/shape reference rejects altered values, non-finite data and malformed observations |
 
 ## Coverage Mechanics
+
+Notebook acceptance executes every code cell and reads values from that same
+fresh kernel; stored outputs and counts are cleared. The NumPy/Pandas oracle
+imports no EDA computation functions. Deliberately incorrect group means,
+error-tagged exceptions, skipped cells and changed dataset bytes must fail.
+Timeout controls launch real sleeping processes/kernels and verify termination.
+These tests are local runtime evidence; they do not establish hosted CI or
+publication acceptance.
 
 ```toml
 [tool.coverage.run]
@@ -88,7 +99,7 @@ uv run pytest tests/ --cov=src --cov-report=term-missing --cov-fail-under=90
 ## Zero-Mock Checklist
 
 - [ ] Test uses the real shipped CSV or a real DataFrame / temp CSV as input.
-- [ ] Test calls `src/eda/` functions directly with real data.
+- [ ] Test calls `src/template_eda_notebook/eda/` functions directly with real data.
 - [ ] Test asserts numeric properties (exact stats, correlation signs, bin
       counts), not call counts.
 - [ ] No `unittest.mock`, `MagicMock`, `create_autospec`, `@patch`, or mock
@@ -97,7 +108,7 @@ uv run pytest tests/ --cov=src --cov-report=term-missing --cov-fail-under=90
 
 ## Structural Rule: If You Need a Mock, Move the Code
 
-- **`src/eda/*`** — pure data transforms; no plotting, no file I/O, no
+- **`src/template_eda_notebook/eda/*`** — pure data transforms; no plotting, no file I/O, no
   `infrastructure.*` imports.
 - **`scripts/eda_analysis.py`** — the only place matplotlib and file writes
   live; tested by `test_eda_analysis_script.py` against a temp root.

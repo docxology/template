@@ -522,7 +522,7 @@ def test_verify_binds_safe_project_name_to_its_own_artifact_set(tmp_path: Path) 
     manifest_path = out_dir / BUNDLE_MANIFEST_NAME
     payload = json.loads(manifest_path.read_text(encoding="utf-8"))
     payload["project"] = other_name
-    payload["reproduce"] = [f"uv run python scripts/runner/execute_pipeline.py --project {other_name} --core-only"]
+    payload["reproduce"] = [f"uv run python scripts/runner/execute_pipeline.py --project {other_name} --mode core"]
     manifest_path.write_text(json.dumps(payload), encoding="utf-8")
 
     report = verify_repro_bundle(manifest_path, checkout_root=tmp_path)

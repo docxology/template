@@ -7,10 +7,15 @@ report and deterministic Markdown/HTML render. Absent inputs must degrade to
 
 from __future__ import annotations
 
+import hashlib
 import json
+
+import pytest
 from pathlib import Path
 
 from infrastructure.reporting import release_readiness as rr
+from infrastructure.reporting.readiness_receipts import SCHEMA_VERSION, source_fingerprint
+from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
 
 FIXED_TS = "2026-06-06T00:00:00Z"
 NOT_AVAILABLE_LOWER = "not available"
@@ -209,13 +214,100 @@ def test_report_to_dict_is_byte_stable_json(tmp_path: Path) -> None:
 # --------------------------------------------------------------------------- #
 
 
-def test_overall_ready_when_all_green(tmp_path: Path) -> None:
-    _write_canonical_facts(tmp_path)
-    _write_pyproject(tmp_path, "1.2.3")
-    _write_pipeline_report(tmp_path)
-    _write_evidence_graph(tmp_path)
+def _write_green_evidence(repo_root: Path) -> tuple[Path, Path]:
+    _write_canonical_facts(repo_root)
+    counts = repo_root / "docs/_generated/COUNTS.md"
+    additional = [
+        name.split("/")[-1]
+        for name in PUBLIC_PROJECT_NAMES
+        if not name.endswith(("template_code_project", "template_prose_project"))
+    ]
+    counts.write_text(
+        counts.read_text() + "".join(f"| `{name}` | 10 | 95.00 % |\n" for name in additional), encoding="utf-8"
+    )
+    _write_pyproject(repo_root, "1.2.3")
+    (repo_root / "CHANGELOG.md").write_text("## [1.2.3] — intended release\n", encoding="utf-8")
+    _write_pipeline_report(repo_root)
+    _write_evidence_graph(repo_root)
+    docs = repo_root / "docs_lint.json"
+    docs.write_text(
+        json.dumps({key: [] for key in ("mermaid", "broken_links", "consistency", "doc_pairs")}), encoding="utf-8"
+    )
+    artifact_paths = {
+        "release": repo_root / "pyproject.toml",
+        "coverage": counts,
+        "pipeline": repo_root / "output/template_code_project/reports/pipeline_report.json",
+        "evidence_graph": repo_root / "output/template_code_project/reports/evidence_graph.json",
+        "docs_lint": docs,
+    }
+    receipt = repo_root / "readiness_receipt.json"
+    receipt.write_text(
+        json.dumps(
+            {
+                "schema_version": SCHEMA_VERSION,
+                "source_fingerprint": source_fingerprint(repo_root),
+                "gates": {
+                    key: {
+                        "status": "passed",
+                        "command": f"test {key}",
+                        "artifact_sha256": hashlib.sha256(path.read_bytes()).hexdigest(),
+                    }
+                    for key, path in artifact_paths.items()
+                },
+            }
+        ),
+        encoding="utf-8",
+    )
+    return docs, receipt
+
+
+def test_five_structural_snapshots_cannot_grant_full_roster_readiness(tmp_path: Path) -> None:
+    docs, receipt = _write_green_evidence(tmp_path)
+    report = rr.collect_release_readiness(
+        tmp_path, docs_lint_json=docs, readiness_receipt=receipt, generated_at=FIXED_TS
+    )
+    assert report.overall_ready is False
+    assert report.candidate_ready is False
+    assert report.status == "fail"
+
+
+def test_missing_evidence_is_incomplete_not_ready(tmp_path: Path) -> None:
     report = rr.collect_release_readiness(tmp_path, generated_at=FIXED_TS)
-    assert report.overall_ready is True
+    assert not report.overall_ready
+    assert report.status == "unknown"
+    assert rr.main(["--repo-root", str(tmp_path), "--strict"]) == 2
+
+
+def test_stale_source_or_artifact_cannot_pass_readiness(tmp_path: Path) -> None:
+    docs, receipt = _write_green_evidence(tmp_path)
+    (tmp_path / "README.md").write_text("changed release inputs", encoding="utf-8")
+    report = rr.collect_release_readiness(tmp_path, docs_lint_json=docs, readiness_receipt=receipt)
+    assert not report.overall_ready
+    assert any("source-stale" in issue for issue in report.evidence.issues)
+    (tmp_path / "README.md").unlink()
+    docs.write_text('{"mermaid":[],"broken_links":[],"consistency":[],"doc_pairs":[]}\n', encoding="utf-8")
+    report = rr.collect_release_readiness(tmp_path, docs_lint_json=docs, readiness_receipt=receipt)
+    assert not report.overall_ready
+    assert any("malformed" in issue for issue in report.evidence.issues)
+
+
+def test_skipped_or_malformed_pipeline_stages_cannot_pass(tmp_path: Path) -> None:
+    _write_pipeline_report(tmp_path)
+    path = tmp_path / "output/template_code_project/reports/pipeline_report.json"
+    for stages in [[{"exit_code": 0, "status": "skipped"}], ["bad"], [{"exit_code": False, "status": "passed"}]]:
+        path.write_text(json.dumps({"stages": stages}), encoding="utf-8")
+        assert not rr.collect_pipeline_state(tmp_path).ready
+
+
+def test_empty_docs_object_cannot_pass(tmp_path: Path) -> None:
+    docs = tmp_path / "lint.json"
+    docs.write_text("{}", encoding="utf-8")
+    assert not rr.collect_docs_lint(docs).ready
+
+
+def test_partial_coverage_roster_cannot_pass(tmp_path: Path) -> None:
+    _write_canonical_facts(tmp_path)
+    assert not rr.collect_coverage_facts(tmp_path).ready
 
 
 def test_overall_not_ready_when_pipeline_failing(tmp_path: Path) -> None:
@@ -314,7 +406,7 @@ def test_explicit_latest_tag_overrides_changelog(tmp_path: Path) -> None:
 
 
 def test_evidence_graph_missing_lists_degrades(tmp_path: Path) -> None:
-    eg = tmp_path / "output" / "p" / "reports" / "evidence_graph.json"
+    eg = tmp_path / "output" / "template_code_project" / "reports" / "evidence_graph.json"
     eg.parent.mkdir(parents=True, exist_ok=True)
     eg.write_text(json.dumps({"meta": "no node/edge lists"}), encoding="utf-8")
     report = rr.collect_release_readiness(tmp_path, generated_at=FIXED_TS)
@@ -330,6 +422,7 @@ def test_html_renders_not_available_when_empty(tmp_path: Path) -> None:
     assert "<!DOCTYPE html>" in html
 
 
+@pytest.mark.timeout(180)
 def test_documented_module_invocation_writes_report(tmp_path: Path) -> None:
     """DASHBOARD-CLI-1: the documented ``python -m`` command writes a report and exits 0.
 
@@ -358,10 +451,18 @@ def test_documented_module_invocation_writes_report(tmp_path: Path) -> None:
 
     # Assert a NON-static, repo-derived field so a fully-degraded report can't
     # green-wash this: the report's release version must reflect the real repo.
-    try:
-        import tomllib
-    except ModuleNotFoundError:  # Python 3.10 uses the declared tomli backport.
-        import tomli as tomllib  # type: ignore[no-redef]
+    import tomllib
 
     version = tomllib.loads((repo_root / "pyproject.toml").read_text(encoding="utf-8"))["project"]["version"]
     assert version in text, f"expected repo version {version} in the rendered report"
+
+
+def test_private_pipeline_snapshots_do_not_enter_public_readiness(tmp_path: Path) -> None:
+    private = tmp_path / "output/private_workspace/reports"
+    private.mkdir(parents=True)
+    (private / "pipeline_report.json").write_text(
+        json.dumps({"stages": [{"exit_code": 0, "status": "passed"}]}), encoding="utf-8"
+    )
+    report = rr.collect_release_readiness(tmp_path)
+    assert not report.pipeline.available
+    assert "private_workspace" not in rr.render_markdown(report)

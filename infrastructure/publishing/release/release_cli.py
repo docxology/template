@@ -14,6 +14,7 @@ def build_release_parser() -> argparse.ArgumentParser:
     parser.add_argument("--project", required=True, help="Project name under projects/")
     parser.add_argument("--tag", required=True, help="Git tag for the GitHub release")
     parser.add_argument("--repo", help="GitHub repository owner/name (default: GITHUB_REPO env)")
+    parser.add_argument("--github-target-commit", help="Full standalone commit SHA for the GitHub release")
     parser.add_argument("--release-name", help="GitHub release title (default: paper title + tag)")
     parser.add_argument("--production", action="store_true", help="Use production Zenodo (default: sandbox)")
     parser.add_argument(

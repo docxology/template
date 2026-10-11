@@ -1,39 +1,42 @@
 #!/usr/bin/env python3
-"""04_seal.py — seal the most-recently materialized child project."""
+"""Seal the manifest-selected current runtime export; preserve published children."""
 
 from __future__ import annotations
 
+import argparse
+import importlib.util
 import sys
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).parent.parent))
-# `scripts` is not a package here (no __init__.py), and the repo root's own
-# top-level `scripts/` package shadows it on sys.path — `from scripts.seal_child
-# import ...` silently resolves to the wrong package. Import this project's
-# scripts/ directory directly instead.
-sys.path.insert(0, str(Path(__file__).parent))
 
-from seal_child import seal_child
-from template_autopoiesis.core.project_paths import project_output_dirs
-from template_autopoiesis.gates.realize import select_full_child
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
+_BOOTSTRAP = importlib.util.spec_from_file_location(
+    "autopoiesis_script_bootstrap", PROJECT_ROOT / "scripts/_bootstrap.py"
+)
+if _BOOTSTRAP is None or _BOOTSTRAP.loader is None:
+    raise ImportError("actual project bootstrap is unavailable")
+_bootstrap = importlib.util.module_from_spec(_BOOTSTRAP)
+_BOOTSTRAP.loader.exec_module(_bootstrap)
+_bootstrap.bootstrap_project(PROJECT_ROOT)
 
-PROJECT_ROOT = Path(__file__).parent.parent
+from template_autopoiesis.gates.custody_paths import confined_path  # noqa: E402 - actual provider selection precedes own imports
+from template_autopoiesis.gates.realize import select_full_child  # noqa: E402 - actual provider selection precedes own imports
+from template_autopoiesis.gates.sealing import seal_verified_child  # noqa: E402 - actual provider selection precedes own imports
 
 
-def main():
-    """CLI entry point."""
-    dirs = project_output_dirs(PROJECT_ROOT)
-    child_dir = dirs["children"]
-    if not child_dir.exists():
-        print("No children found. Run realize_child_full.py first.", file=sys.stderr)
-        sys.exit(1)
+def main(argv: list[str] | None = None) -> int:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--project-root", type=Path, default=PROJECT_ROOT)
+    args = parser.parse_args(argv)
     try:
-        full_child = select_full_child(PROJECT_ROOT, child_dir)
-    except (FileNotFoundError, ValueError) as exc:
-        print(str(exc), file=sys.stderr)
-        sys.exit(1)
-    seal_child(full_child)
+        exports = confined_path(args.project_root, "output/.pipeline/child_realization/exports")
+        child = select_full_child(args.project_root, exports)
+        print(f"Sealed: {seal_verified_child(child)}")
+    except (OSError, ValueError, TypeError) as exc:
+        print(f"Required child seal failed: {exc}", file=sys.stderr)
+        return 1
+    return 0
 
 
 if __name__ == "__main__":
-    main()
+    raise SystemExit(main())

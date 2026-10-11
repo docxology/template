@@ -5,12 +5,12 @@ from __future__ import annotations
 import pytest
 
 from template_pitch_deck.infra_facts import InfraIntrospectionError, build_infra_tokens, infra_subpackage_python_counts
-from template_pitch_deck.paths import locate_repo_root, project_root
+from template_pitch_deck.paths import data_repo_root, project_root, reference_tracked_paths
 
 
 @pytest.fixture(scope="module")
 def repo_root():
-    return locate_repo_root(project_root())
+    return data_repo_root(project_root())
 
 
 def test_infra_subpackage_python_counts_returns_real_rows(repo_root):
@@ -32,7 +32,7 @@ def test_infra_subpackage_python_counts_sum_is_plausible_vs_total(repo_root):
     from infrastructure.documentation.counts_doc import tracked_infra_python_count
 
     rows = infra_subpackage_python_counts(repo_root)
-    total = tracked_infra_python_count(repo_root)
+    total = tracked_infra_python_count(repo_root, tracked_paths=reference_tracked_paths(repo_root))
     # Per-subpackage sum can be <= the repo-wide total (top-level infra/*.py
     # files outside any subpackage aren't attributed to a subpackage here),
     # but must never exceed it.

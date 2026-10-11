@@ -2,8 +2,8 @@
 
 from __future__ import annotations
 
-import knowledge_graph.hypothesis as _hypothesis_module
-from literature.models import Paper
+import template_literature_meta_analysis.knowledge_graph.hypothesis as _hypothesis_module
+from template_literature_meta_analysis.literature.models import Paper
 
 _SYSTEM_PROMPT = """\
 You are a scientific literature analyst specialising in scientific literature \

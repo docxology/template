@@ -9,7 +9,7 @@ import math
 import numpy as np
 import pytest
 
-from analysis.text_processing import (
+from template_literature_meta_analysis.analysis.text_processing import (
     STOPWORDS,
     build_tfidf_matrix,
     remove_stopwords,

@@ -22,7 +22,7 @@ class TestCheckPythonVersion:
 
     def test_python_version_check_succeeds(self):
         """Test that Python version check succeeds on current system."""
-        # We're running on Python 3.11+, so this should pass
+        # The supported project runtime is Python 3.12+.
         result = check_python_version()
 
         assert result is True

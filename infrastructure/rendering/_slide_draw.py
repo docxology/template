@@ -16,6 +16,11 @@ from reportlab.lib.utils import ImageReader
 from reportlab.pdfgen import canvas
 
 from infrastructure.core.logging.utils import get_logger
+from infrastructure.rendering._slide_font_encoding import (
+    DECK_HELVETICA,
+    DECK_HELVETICA_BOLD,
+    DECK_HELVETICA_OBLIQUE,
+)
 from infrastructure.rendering.slide_deck import (
     CONTENT_BODY_FONT_SIZE,
     CONTENT_HEADER_FONT_SIZE,
@@ -44,6 +49,8 @@ from infrastructure.rendering.slide_deck import (
     source_url,
 )
 
+from infrastructure.rendering._slide_figure_layout import fit_slide_figure
+
 logger = get_logger(__name__)
 
 
@@ -52,7 +59,7 @@ def _draw_source_footer(c: canvas.Canvas, width: float, slide: Slide, theme: Dec
         return
     url = source_url(slide.source, source_base_url)
     label = f"Source: {slide.source}"
-    font_name, font_size = "Helvetica-Oblique", SOURCE_FOOTER_FONT_SIZE
+    font_name, font_size = DECK_HELVETICA_OBLIQUE, SOURCE_FOOTER_FONT_SIZE
     c.setFont(font_name, font_size)
     c.setFillColor(colors.HexColor("#8a8f99"))
     text_x, text_y = MARGIN, 0.22 * inch
@@ -95,7 +102,7 @@ def _draw_title_page(
         width - 2 * MARGIN,
         42,
         theme.white_c,
-        "Helvetica-Bold",
+        DECK_HELVETICA_BOLD,
         font_size=TITLE_FONT_SIZE,
     )
     if subtitle:
@@ -110,7 +117,7 @@ def _draw_title_page(
             width - 2 * MARGIN,
             22,
             colors.HexColor("#c9c9c9"),
-            "Helvetica",
+            DECK_HELVETICA,
             font_size=SUBTITLE_FONT_SIZE,
         )
 
@@ -130,7 +137,7 @@ def _draw_section_slide(c: canvas.Canvas, width: float, height: float, title: st
     section_font_size = fit_helvetica_bold_single_line_font_size(
         title, max_width_pt=SLIDE_TEXT_WIDTH_PT, start_size_pt=SECTION_FONT_SIZE
     )
-    c.setFont("Helvetica-Bold", section_font_size)
+    c.setFont(DECK_HELVETICA_BOLD, section_font_size)
     c.setFillColor(theme.black_c)
     c.drawString(MARGIN, SECTION_TITLE_BASELINE_PT, title)
 
@@ -155,13 +162,13 @@ def _draw_content_slide(
         max_width_pt=SLIDE_TEXT_WIDTH_PT,
         start_size_pt=CONTENT_HEADER_FONT_SIZE,
     )
-    c.setFont("Helvetica-Bold", title_font_size)
+    c.setFont(DECK_HELVETICA_BOLD, title_font_size)
     c.drawString(MARGIN, height - 0.62 * inch, slide.title)
     c.setFillColor(theme.highlight_1_c)
     c.rect(0, height - 0.92 * inch, width, 0.04 * inch, fill=1, stroke=0)
 
     # Bullets
-    c.setFont("Helvetica", CONTENT_BODY_FONT_SIZE)
+    c.setFont(DECK_HELVETICA, CONTENT_BODY_FONT_SIZE)
     for lines, baselines in zip(layout.bullet_lines, layout.line_baselines_pt, strict=True):
         for line, baseline in zip(lines, baselines, strict=True):
             c.setFillColor(theme.black_c)
@@ -171,17 +178,15 @@ def _draw_content_slide(
         if slide.figure_path.is_file():
             if layout.figure_y_pt is None or layout.figure_height_pt is None:
                 raise RenderingError("Missing content-figure layout", context={"slide_title": slide.title})
-            fig_width = width - 2 * MARGIN
-            fig_height = layout.figure_height_pt
-            fig_y = layout.figure_y_pt
+            fig_x, fig_y, fig_width, fig_height = fit_slide_figure(
+                slide.figure_path, (MARGIN, layout.figure_y_pt, width - 2 * MARGIN, layout.figure_height_pt)
+            )
             c.drawImage(
                 str(slide.figure_path),
-                MARGIN,
+                fig_x,
                 fig_y,
                 width=fig_width,
                 height=fig_height,
-                preserveAspectRatio=True,
-                anchor="c",
             )
         else:
             logger.warning(
@@ -196,12 +201,12 @@ def _draw_stat_slide(c: canvas.Canvas, width: float, height: float, slide: Slide
     c.setFillColor(theme.white_c)
     c.rect(0, 0, width, height, fill=1, stroke=0)
     c.setFillColor(theme.black_c)
-    c.setFont("Helvetica-Bold", STAT_TITLE_FONT_SIZE)
+    c.setFont(DECK_HELVETICA_BOLD, STAT_TITLE_FONT_SIZE)
     c.drawString(MARGIN, height - 0.7 * inch, slide.title)
 
     value = slide.stat_value or (slide.bullets[0] if slide.bullets else "")
     c.setFillColor(theme.highlight_2_c)
-    c.setFont("Helvetica-Bold", STAT_VALUE_FONT_SIZE)
+    c.setFont(DECK_HELVETICA_BOLD, STAT_VALUE_FONT_SIZE)
     c.drawString(MARGIN, height / 2 - 0.1 * inch, value)
 
     if slide.stat_label:
@@ -214,7 +219,7 @@ def _draw_stat_slide(c: canvas.Canvas, width: float, height: float, slide: Slide
             width - 2 * MARGIN,
             22,
             theme.black_c,
-            "Helvetica",
+            DECK_HELVETICA,
             font_size=STAT_LABEL_FONT_SIZE,
         )
 
@@ -233,12 +238,12 @@ def _draw_quote_slide(c: canvas.Canvas, width: float, height: float, slide: Slid
         width - 2 * MARGIN,
         31,
         theme.white_c,
-        "Helvetica-Oblique",
+        DECK_HELVETICA_OBLIQUE,
         font_size=QUOTE_FONT_SIZE,
     )
     if slide.quote_attribution:
         c.setFillColor(theme.highlight_3_c)
-        c.setFont("Helvetica-Bold", QUOTE_ATTRIBUTION_FONT_SIZE)
+        c.setFont(DECK_HELVETICA_BOLD, QUOTE_ATTRIBUTION_FONT_SIZE)
         c.drawString(MARGIN, quote_bottom - 0.15 * inch, f"— {slide.quote_attribution}")
 
 
@@ -253,7 +258,7 @@ def _draw_diagram_slide(c: canvas.Canvas, width: float, height: float, slide: Sl
         max_width_pt=SLIDE_TEXT_WIDTH_PT,
         start_size_pt=DIAGRAM_HEADER_FONT_SIZE,
     )
-    c.setFont("Helvetica-Bold", diagram_title_font_size)
+    c.setFont(DECK_HELVETICA_BOLD, diagram_title_font_size)
     c.drawString(MARGIN, height - 0.51 * inch, slide.title)
     c.setFillColor(theme.highlight_2_c)
     c.rect(0, height - 0.77 * inch, width, 0.04 * inch, fill=1, stroke=0)

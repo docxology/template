@@ -531,7 +531,7 @@ The template provides **three entry points** for pipeline execution:
 # Interactive menu with manuscript operations
 ./run.sh
 
-# Non-interactive: default full pipeline (core+LLM). Opt-in tags stay out unless invoked directly. --core-only drops LLM and opt-in stages. See STAGE_SUMMARY.
+# Non-interactive: default offline core pipeline. Opt-in tags stay out unless invoked directly. --mode core drops LLM and opt-in stages. See STAGE_SUMMARY.
 ./run.sh --pipeline
 ```
 
@@ -561,11 +561,11 @@ For argv shaping into the `secure` subcommand from the same thin shell as `./run
 # Interactive path that forwards to the secure subcommand (same orchestration CLI as ./run.sh)
 ./run.sh --secure-run
 
-# Full pipeline + steganography for one project
+# Default offline core pipeline + steganography for one project
 ./secure_run.sh --project template_code_project
 
-# Core DAG only (no LLM stages) + steganography
-./secure_run.sh --project template_code_project --core-only
+# Explicit live stages + steganography (requires prepared live tools)
+./secure_run.sh --project template_code_project --mode live
 
 # Re-process existing PDFs only (omit --project to cover every discovered project)
 ./secure_run.sh --steganography-only --project template_code_project
@@ -615,28 +615,22 @@ steganography:
 
 #### Entry Point Comparison
 
-- **`./run.sh`**: Main entry point — interactive menu or pipeline run. Progress banners are generic `[i/N]` lines emitted from the resolved DAG (see [`PipelineRunner._banner`](infrastructure/orchestration/pipeline_runner.py)): the default full run is **10** stages and `--core-only` is **8**, per the generated `STAGE_SUMMARY` below (kept in sync with [`pipeline.yaml`](infrastructure/core/pipeline/pipeline.yaml)).
-- **`./run.sh --pipeline`**: Non-interactive full DAG; optional LLM stages may skip if Ollama is unavailable.
+- **`./run.sh`**: Main entry point — interactive menu or pipeline run. Progress banners are generic `[i/N]` lines emitted from the resolved DAG (see [`PipelineRunner._banner`](infrastructure/orchestration/pipeline_runner.py)): the default `--mode core` run is **8** stages and explicit `--mode live` includes **10**, per the generated `STAGE_SUMMARY` below (kept in sync with [`pipeline.yaml`](infrastructure/core/pipeline/pipeline.yaml)).
+- **`./run.sh --pipeline`**: Non-interactive selected execution plan; `--mode core` is the offline default, and `--mode live` explicitly includes declared live stages.
 - **`./run.sh --secure-run`**: Forwards to the `secure` orchestration subcommand (same Python CLI as bare `./run.sh`; use when you want argv shaping from the main shell).
-- **`./secure_run.sh`**: Ensures steganography extras (`uv sync --group steganography`), then `python -m infrastructure.orchestration secure`. **`--project`** is required when running the pipeline phase (omit only for `--steganography-only` across all projects). See [Secure Pipeline](#secure-pipeline-secure_runsh) above.
-- **`uv run python scripts/runner/execute_pipeline.py --project {name} --core-only`**: Core DAG only — LLM-tagged and opt-in stages excluded (counts in the generated `STAGE_SUMMARY` below).
+- **`./secure_run.sh`**: Admits an explicitly prepared root Python environment and steganography dependencies, then dispatches `python -m infrastructure.orchestration secure`; `--mode core` is default and `--mode live` is explicit. **`--project`** is required when running the pipeline phase (omit only for `--steganography-only` across all projects). See [Secure Pipeline](#secure-pipeline-secure_runsh) above.
+- **`uv run python scripts/runner/execute_pipeline.py --project {name} --mode core`**: Core DAG only — LLM-tagged and opt-in stages excluded (counts in the generated `STAGE_SUMMARY` below).
 
 ### Pipeline Stages
 
-**Full Pipeline Stages** — counts come from the generated `STAGE_SUMMARY` at the end of this file. `run.sh` shows `[0/N]` for clean and `[1/N]`–`[N/N]` for the numbered default-run stages (labels from [`STAGE_NAMES`](infrastructure/orchestration/menu.py)). `--core-only` drops LLM-tagged and opt-in stages.
+Stage counts, order and failure modes come from the generated `STAGE_SUMMARY`
+and `STAGE_TABLE` below and their source, [`pipeline.yaml`](infrastructure/core/pipeline/pipeline.yaml).
+The default core selection includes cleanup, setup, shared infrastructure tests,
+project tests, analysis, rendering, validation and copying. Explicit live mode
+additionally selects the declared LLM stages. Progress banners follow the
+resolved selection; YAML positions differ from script prefixes.
 
-- **[1/10] Clean Output Directories** - Clean working and final output directories (first default-run stage)
-1. **Environment Setup** - Verify system requirements and dependencies
-2. **Infrastructure Tests** - Run the focused `pipeline-smoke` infrastructure contract (may be skipped; full coverage gate is explicit)
-3. **Project Tests** - Run project test suite (90% coverage minimum)
-4. **Project Analysis** - Execute `projects/{name}/scripts/` analysis workflows
-5. **PDF Rendering** - Historical stage label; render every enabled manuscript format from current inputs
-6. **Output Validation** - Validate every enabled canonical format and blocking release evidence
-7. **LLM Scientific Review** - AI-powered manuscript analysis (optional, requires Ollama)
-8. **LLM Translations** - Multi-language technical abstract generation (optional, requires Ollama)
-9. **Copy Outputs** - Copy, filter disabled renderer-owned formats, and validate final deliverables in root `output/`
-
-**Opt-in long-horizon stages** (NOT in default core or `--core-only` runs — there is no `--tags` CLI flag; invoke the stage or runner script directly):
+**Opt-in long-horizon stages** (NOT in default core or `--mode core` runs — there is no `--tags` CLI flag; invoke the stage or runner script directly):
 
 - **Ebook Generation** (`scripts/pipeline/stage_11_ebook.py`, tag `ebook`) — Generate EPUB, MOBI, and DOCX ebooks from the combined markdown manuscript. Gracefully skips (exit 2) when the combined markdown is absent. Invoke: `uv run python scripts/pipeline/stage_11_ebook.py --project <name>`.
 - **docxplus Export** (`scripts/pipeline/stage_13_docxplus.py`, tag `docxplus`) — Export the project as a conforming `.docx`/`.docxplus` that carries its own source tree. Soft-fail: skips when the optional `docxplus` extra is not installed (`uv sync --extra docxplus`). Invoke: `uv run python scripts/pipeline/stage_13_docxplus.py --project <name>`.
@@ -1211,7 +1205,7 @@ wall time; a project can fail there yet pass when re-run on its own. Triage:
 
 ```bash
 # Re-run only the failed project (the multi-project summary prints this command)
-./run.sh --project {name} --pipeline --core-only --skip-infra
+./run.sh --project {name} --pipeline --mode core --skip-infra
 
 # Or resume the whole run from the last good checkpoint
 ./run.sh --all-projects --pipeline --resume
@@ -1410,11 +1404,11 @@ The pipeline includes automatic checkpointing for resume capability:
 
 ```bash
 # Resume from last checkpoint
-uv run python scripts/runner/execute_pipeline.py --project {name} --core-only --resume
+uv run python scripts/runner/execute_pipeline.py --project {name} --mode core --resume
 ./run.sh --pipeline --resume
 
 # Start fresh (clears checkpoint on success)
-uv run python scripts/runner/execute_pipeline.py --project {name} --core-only
+uv run python scripts/runner/execute_pipeline.py --project {name} --mode core
 ./run.sh --pipeline
 ```
 
@@ -1482,18 +1476,13 @@ See [`docs/operational/config/checkpoint-resume.md`](docs/operational/config/che
 
 ---
 
-## ✅ System Status: OPERATIONAL
+## Current verification evidence
 
-**All systems confirmed functional with exemplar projects:**
-
-- ✅ **Multi-project pipeline**: default **10**-stage DAG in `pipeline.yaml` (including LLM stages) + optional executive reporting for `--all-projects`
-- ✅ **Test coverage excellence**: All active projects meet coverage requirements
-- ✅ **Publication-quality outputs**: Professional PDFs, cross-referenced manuscripts, automated figures
-- ✅ **Mathematical rigor**: Advanced equations, theorem proofs, convergence analysis
-- ✅ **Testing**: Edge cases, performance benchmarks, type safety validation
-- ✅ **Documentation**: AGENTS.md/README.md across all directories
-- ✅ **Data testing**: Zero mocks, integration testing
-- ✅ **Infrastructure robustness**: Fixed critical bugs, improved error handling
+Current subsystem evidence and follow-ups live in [`STATUS.md`](STATUS.md).
+The [Platform 4 program record](docs/maintenance/platform-4-upgrade.md) separates
+dated scoped local receipts from required candidate, live and publication lanes;
+those lanes retain their recorded states. Generated measurements live in
+[`docs/_generated/COUNTS.md`](docs/_generated/COUNTS.md).
 
 **Environment Management:**
 
@@ -1519,7 +1508,7 @@ See [`docs/operational/config/checkpoint-resume.md`](docs/operational/config/che
 - ✅ Zero mock methods - all tests use data and HTTP calls
 - ✅ All .cursorrules standards implemented
 - ✅ compliance with thin orchestrator pattern
-- ✅ Production-ready build pipeline (core pipeline + full pipeline with optional LLM stages)
+- Pipeline selection is resolved through core/live; acceptance follows the evidence links above.
 - ✅ Reproducible outputs (deterministic with fixed seeds)
 - ✅ Graceful degradation for optional features
 - ✅ Multi-project support (projects/{name}/ structure)
@@ -1528,7 +1517,7 @@ See [`docs/operational/config/checkpoint-resume.md`](docs/operational/config/che
 
 
 <!-- BEGIN:STAGE_SUMMARY -->
-The default [`pipeline.yaml`](infrastructure/core/pipeline/pipeline.yaml) declares **17 named stages** (indices 0–16). Default full runs execute **10** core+LLM stages; `--core-only` executes **8**. Opt-in tags (`archival`, `bundle`, `docxplus`, `ebook`, `metadata`, `provenance`, `science`) stay out of those default runs unless a stage is invoked directly. YAML stage indices do not match `stage_NN_*.py` prefixes.
+The default [`pipeline.yaml`](infrastructure/core/pipeline/pipeline.yaml) declares **17 named stages** (indices 0–16). Default `--mode core` runs execute **8** stages; explicit `--mode live` executes **10** selected core and live stages. Opt-in tags (`archival`, `bundle`, `docxplus`, `ebook`, `metadata`, `provenance`, `science`) stay out of these selections unless a stage is invoked directly. YAML stage indices do not match `stage_NN_*.py` prefixes.
 <!-- END:STAGE_SUMMARY -->
 
 <!-- BEGIN:STAGE_TABLE -->
@@ -1536,23 +1525,23 @@ The default [`pipeline.yaml`](infrastructure/core/pipeline/pipeline.yaml) declar
 
 | Stage | Script | Tags | Failure mode |
 | ----- | ------ | ---- | ------------ |
-| **0** Clean Output Directories | built-in `_run_clean_outputs` | `core`, `clean` | soft fail |
+| **0** Clean Output Directories | built-in `_run_clean_outputs` | `core`, `clean` | failure prevents completion |
 | **1** Environment Setup | `scripts/pipeline/stage_00_setup.py` | `core` | hard fail |
-| **2** Infrastructure Tests | `scripts/pipeline/stage_01_test.py --infra-only --verbose --infra-scope pipeline-smoke` | `core`, `tests` | configurable tolerance |
-| **3** Project Tests | `scripts/pipeline/stage_01_test.py --project-only --verbose` | `core`, `tests` | configurable test-failure tolerance; zero-test, project-local coverage, verifier-receipt/evidence, and internal runner failures hard fail |
+| **2** Infrastructure Tests | `scripts/pipeline/stage_01_test.py --infra-only --verbose --infra-scope pipeline-smoke` | `core`, `tests` | required tests and coverage must pass |
+| **3** Project Tests | `scripts/pipeline/stage_01_test.py --project-only --verbose` | `core`, `tests` | required nonempty tests, project-local coverage, verifier evidence, and runner success must pass |
 | **4** Project Analysis | `scripts/pipeline/stage_02_analysis.py` | `core` | hard fail |
-| **5** Connector Search | `scripts/pipeline/stage_08_connector_search.py` | `science` | skipped if not configured |
-| **6** Provenance Record | `scripts/pipeline/stage_09_provenance_record.py --stage Connector Search` | `provenance` | skipped if not configured |
+| **5** Connector Search | `scripts/pipeline/stage_08_connector_search.py` | `science`, `live` | absent configuration requires a fresh policy-bound skip receipt |
+| **6** Provenance Record | `scripts/pipeline/stage_09_provenance_record.py --stage Connector Search` | `provenance` | absent configuration requires a fresh policy-bound skip receipt |
 | **7** PDF Rendering | `scripts/pipeline/stage_03_render.py` | `core` | hard fail |
 | **8** Output Validation | `scripts/pipeline/stage_04_validate.py` | `core` | enabled-format, enabled-PDF bookend, and artifact/provenance failures block; markdown, general output structure, and prose-quality checks remain advisory |
-| **9** LLM Scientific Review | `scripts/pipeline/stage_06_llm_review.py --reviews-only` | `llm` | skipped if Ollama absent |
-| **10** LLM Translations | `scripts/pipeline/stage_06_llm_review.py --translations-only` | `llm` | skipped if Ollama absent |
-| **11** Copy Outputs | `scripts/pipeline/stage_05_copy.py` | `core` | soft fail |
-| **12** Ebook Generation | `scripts/pipeline/stage_11_ebook.py` | `core`, `ebook` | soft fail |
-| **13** docxplus Export | `scripts/pipeline/stage_13_docxplus.py` | `core`, `docxplus` | soft fail |
-| **14** Metadata Package | `scripts/pipeline/stage_12_metadata.py` | `core`, `metadata` | soft fail |
-| **15** Executable Bundle | `scripts/runner/bundle_executable.py` | `bundle` | soft fail |
-| **16** Archival Publication | `scripts/runner/archive_publication.py` | `archival` | soft fail |
+| **9** LLM Manuscript Review | `scripts/pipeline/stage_06_llm_review.py --reviews-only` | `llm`, `live` | fresh policy-bound skip; unavailable required live acceptance is blocked |
+| **10** LLM Translations | `scripts/pipeline/stage_06_llm_review.py --translations-only` | `llm`, `live` | fresh policy-bound skip; unavailable required live acceptance is blocked |
+| **11** Copy Outputs | `scripts/pipeline/stage_05_copy.py` | `core` | failure prevents completion |
+| **12** Ebook Generation | `scripts/pipeline/stage_11_ebook.py` | `core`, `ebook` | failure prevents completion |
+| **13** docxplus Export | `scripts/pipeline/stage_13_docxplus.py` | `core`, `docxplus` | failure prevents completion |
+| **14** Metadata Package | `scripts/pipeline/stage_12_metadata.py` | `core`, `metadata` | failure prevents completion |
+| **15** Executable Bundle | `scripts/runner/bundle_executable.py` | `bundle` | failure prevents completion |
+| **16** Archival Publication | `scripts/runner/archive_publication.py` | `archival`, `live` | failure prevents completion |
 <!-- END:STAGE_TABLE -->
 
 <!-- foam-orphan-nav:start (hand-maintained: links sub-docs so they are reachable; no generator refreshes or validates this block) -->

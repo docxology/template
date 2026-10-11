@@ -2,9 +2,9 @@
 
 from __future__ import annotations
 
-from manuscript.variables._logging import logger
-from manuscript.variables.context import ExtractContext
-from manuscript.variables.formatters import latex_number
+from template_literature_meta_analysis.manuscript.variables._logging import logger
+from template_literature_meta_analysis.manuscript.variables.context import ExtractContext
+from template_literature_meta_analysis.manuscript.variables.formatters import latex_number
 
 
 def extract_hypotheses(ctx: ExtractContext) -> dict[str, str]:
@@ -60,7 +60,7 @@ def extract_hypotheses(ctx: ExtractContext) -> dict[str, str]:
             elif isinstance(sv, dict) and isinstance(sv.get("score"), (int, float)):
                 score_lookup[hid] = float(sv["score"])
     try:
-        from knowledge_graph.hypothesis import config_key_to_hypothesis_id
+        from template_literature_meta_analysis.knowledge_graph.hypothesis import config_key_to_hypothesis_id
     except ImportError:  # pragma: no cover
 
         def config_key_to_hypothesis_id(key: str, name: str = "") -> str:

@@ -6,21 +6,26 @@ refactor): the script now only wires up argparse and calls
 validation, markdown assembly, and artifact-writing logic.
 
 See the script's module docstring for the full read/write contract
-(``output/deep_search/aggregate.json`` in, ``manuscript/S01_literature_review.md``
+(``output/deep_search/aggregate.json`` in, ``output/manuscript/S02_generated_literature_review.md``
 + ``output/deep_search/composition_summary.json`` out) and the exit-code
 semantics (0 composed, 2 no deep-search outputs to compose).
 """
 
 from __future__ import annotations
 
+import hashlib
 import json
 import re
+import sys
 from pathlib import Path
 
 from infrastructure.core.logging.utils import get_logger
-from infrastructure.reference.citation import parse_bibfile
+from infrastructure.core.files.secure_write import atomic_write_text_confined, read_bytes_confined
+from infrastructure.reference.citation import parse_bibtex
 
 from template_search_project.publish.config import ProjectConfig
+from template_search_project.publish.bibliography import GENERATED_SUPPLEMENT_NAME, generated_path
+from template_search_project.publish.deep_custody import admit_deep_producer
 
 logger = get_logger(__name__)
 
@@ -82,13 +87,13 @@ def _reported_retrieval_sources(
     keywords: list[str],
     configured_sources: list[str],
     unique_papers: list[dict],
+    admitted: dict[Path, bytes] | None = None,
 ) -> list[str]:
     """Return deterministic source labels from the evidence being composed.
 
-    A replay may be composed while live deep search is disabled and therefore
-    has no currently configured sources.  Prefer the per-keyword retrieval
-    counts in that replay, then fall back to configuration and per-paper
-    provenance.  Empty labels are never admitted.
+    Prefer the admitted per-keyword retrieval counts, then configuration and
+    per-paper provenance. Composition separately requires the current producer
+    dependency receipt; historical files alone are never admitted.
     """
     observed: dict[str, str] = {}
 
@@ -102,7 +107,10 @@ def _reported_retrieval_sources(
         papers_path = deep_dir / slug / "papers.json"
         if not papers_path.exists():
             continue
-        keyword_payload = json.loads(papers_path.read_text(encoding="utf-8"))
+        keyword_text = (
+            admitted[papers_path].decode("utf-8") if admitted is not None else papers_path.read_text(encoding="utf-8")
+        )
+        keyword_payload = json.loads(keyword_text)
         per_source_counts = keyword_payload.get("per_source_counts") or {}
         if isinstance(per_source_counts, dict):
             for source, count in per_source_counts.items():
@@ -128,9 +136,11 @@ def compose_literature_review(
 
     Returns the process exit code:
       0   composed successfully
+      1   invalid or stale producer inputs (diagnostic on stderr)
       2   no deep-search outputs to compose (graceful skip)
     """
-    deep_dir = (project_root / config.deep_search.output_dir).resolve()
+    project_root = project_root.absolute()
+    deep_dir = (project_root / config.deep_search.output_dir).absolute()
 
     aggregate_json = deep_dir / "aggregate.json"
     if not aggregate_json.exists():
@@ -140,7 +150,13 @@ def compose_literature_review(
         )
         return 2
 
-    payload = json.loads(aggregate_json.read_text(encoding="utf-8"))
+    try:
+        admitted = admit_deep_producer(project_root, config.deep_search, deep_dir)
+    except (OSError, ValueError) as exc:
+        print(f"Deep-search producer is not current: {exc}", file=sys.stderr)
+        return 1
+
+    payload = json.loads(admitted[aggregate_json].decode("utf-8"))
     keywords: list[str] = list(payload.get("keywords") or [])
     unique_papers: list[dict] = list(payload.get("unique_papers") or [])
     citation_keys: dict[str, str] = dict(payload.get("citation_keys") or {})
@@ -149,6 +165,7 @@ def compose_literature_review(
         keywords,
         config.deep_search.sources,
         unique_papers,
+        admitted,
     )
     retrieval_source_clause = (
         f" from {', '.join(retrieval_sources)}"
@@ -157,19 +174,18 @@ def compose_literature_review(
     )
 
     # Validate every cited key exists in the unified BibTeX file.
-    bib_path = (project_root / config.deep_search.unified_bibtex_path).resolve()
+    bib_path = generated_path(project_root, config.deep_search.unified_bibtex_path)
     bib_keys: set[str] = set()
     if bib_path.exists():
-        bib_db = parse_bibfile(bib_path)
+        bib_db = parse_bibtex(admitted[bib_path].decode("utf-8"))
         bib_keys = set(bib_db.keys())
     missing_keys = sorted(key for key in citation_keys.values() if key and key not in bib_keys)
     if missing_keys:
-        logger.warning(
-            "%d citation key(s) absent from %s: %s",
-            len(missing_keys),
-            bib_path,
-            ", ".join(missing_keys[:10]),
+        print(
+            f"{len(missing_keys)} citation key(s) absent from {bib_path}: {', '.join(missing_keys[:10])}",
+            file=sys.stderr,
         )
+        return 1
 
     # Gather per-paper notes by paper id.
     per_paper_notes: dict[str, str] = {}
@@ -181,17 +197,22 @@ def compose_literature_review(
         for paper in unique_papers:
             note_path = note_dir / (_safe_id(paper["id"]) + ".md")
             if note_path.exists() and paper["id"] not in per_paper_notes:
-                per_paper_notes[paper["id"]] = note_path.read_text(encoding="utf-8")
+                per_paper_notes[paper["id"]] = admitted[note_path].decode("utf-8")
 
     # Compose the literature-review section.
-    out_path = Path(output) if output else (project_root / "manuscript" / "S01_literature_review.md")
+    out_path = Path(output) if output else (project_root / "output" / "manuscript" / GENERATED_SUPPLEMENT_NAME)
+    if output is None and (project_root / "manuscript" / GENERATED_SUPPLEMENT_NAME).exists():
+        print("Authored manuscript uses reserved generated supplement name", file=sys.stderr)
+        return 1
 
     lines: list[str] = []
     # Pandoc-friendly supplemental break: forces a new page and opens a
     # clearly labelled appendix section in the rendered PDF.
     lines.append("\\newpage")
     lines.append("")
-    lines.append("# Supplemental S1 — Literature Review (auto-composed from deep search) {#sec:supplemental_s1}")
+    lines.append(
+        "# Supplemental S2 — Literature Review (auto-composed from deep search) {#sec:generated_literature_review}"
+    )
     lines.append("")
     lines.append(
         "_Composed by `scripts/s_compose_literature_review.py` from the most "
@@ -206,7 +227,7 @@ def compose_literature_review(
         f"keyword{retrieval_source_clause}). All references "
         f"are stored in `{config.deep_search.unified_bibtex_path}` and resolved "
         f"by the combined-PDF pipeline (Pandoc `--natbib` + BibTeX over "
-        f"all `manuscript/*.bib` files)."
+        f"the hydrated bibliography union in `output/manuscript/*.bib`)."
     )
     lines.append("")
 
@@ -217,7 +238,7 @@ def compose_literature_review(
         kw_papers_path = kw_dir / "papers.json"
         if not kw_papers_path.exists():
             continue
-        kw_data = json.loads(kw_papers_path.read_text(encoding="utf-8"))
+        kw_data = json.loads(admitted[kw_papers_path].decode("utf-8"))
         kw_papers = list(kw_data.get("papers") or [])
 
         lines.append(f"## {kw}")
@@ -294,23 +315,34 @@ def compose_literature_review(
     )
     lines.append("")
 
-    out_path.parent.mkdir(parents=True, exist_ok=True)
     composed_text = "\n".join(lines).rstrip() + "\n"
-    out_path.write_text(composed_text, encoding="utf-8")
+    try:
+        if admit_deep_producer(project_root, config.deep_search, deep_dir) != admitted:
+            raise ValueError("Deep-search producer artifacts changed during composition")
+    except (OSError, ValueError) as exc:
+        print(f"Deep-search producer is not current: {exc}", file=sys.stderr)
+        return 1
+    if output is None:
+        atomic_write_text_confined(project_root, out_path, composed_text)
+    else:
+        out_path.parent.mkdir(parents=True, exist_ok=True)
+        out_path.write_text(composed_text, encoding="utf-8")
 
-    # Defensive parity write. ``z_generate_manuscript_variables.py``
-    # normally runs *after* this script and copies ``manuscript/`` →
-    # ``output/manuscript/`` so the freshly composed S01 reaches the
-    # render stage. If a previous run already populated
-    # ``output/manuscript/`` (e.g. when the user reran only this
-    # script), mirror the new text there too so the combined-PDF
-    # validator never sees a stale copy referencing citation keys that
-    # were dropped in the latest ``references_deep.bib``.
-    resolved_dir = project_root / "output" / "manuscript"
-    if resolved_dir.is_dir():
-        resolved_dir.joinpath(out_path.name).write_text(composed_text, encoding="utf-8")
+    # The default is already a generated supplemental manuscript. Explicit
+    # --output remains a direct authoring command; it never implicitly mirrors
+    # or overwrites another authored or hydrated section.
 
     summary = {
+        "schema_version": 1,
+        "kind": "deep-search-composition",
+        "generated_supplement": output is None,
+        "producer_receipt_sha256": hashlib.sha256(
+            read_bytes_confined(project_root, deep_dir / "producer_receipt.json")
+        ).hexdigest(),
+        "producer_inputs": {
+            path.relative_to(project_root).as_posix(): hashlib.sha256(raw).hexdigest() for path, raw in admitted.items()
+        },
+        "supplement_sha256": hashlib.sha256(composed_text.encode("utf-8")).hexdigest(),
         # Paths are written relative to the repository root using the
         # `<repo-root>` placeholder so tracked publication evidence stays
         # clone-independent (never machine-local).
@@ -324,7 +356,7 @@ def compose_literature_review(
         "retrieval_sources": retrieval_sources,
     }
     summary_path = deep_dir / "composition_summary.json"
-    summary_path.write_text(json.dumps(summary, indent=2, ensure_ascii=False), encoding="utf-8")
+    atomic_write_text_confined(project_root, summary_path, json.dumps(summary, indent=2, ensure_ascii=False))
 
     print(str(out_path))
     print(str(summary_path))

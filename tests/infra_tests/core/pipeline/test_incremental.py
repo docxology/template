@@ -9,6 +9,9 @@ hashes and asserting byte-stable equality.
 from __future__ import annotations
 
 from pathlib import Path
+import os
+
+import pytest
 
 from infrastructure.core.pipeline.incremental import (
     IncrementalConfig,
@@ -142,14 +145,14 @@ class TestManifestRoundTrip:
     def test_save_and_load_round_trip(self, tmp_path: Path) -> None:
         _, project_dir = _make_repo(tmp_path)
         manifest = HashManifest()
-        manifest.record("Stage A", input_hash="abc", output_hash="def")
+        manifest.record("Stage A", input_hash="a" * 64, output_hash="b" * 64)
         save_hash_manifest(project_dir / "output", manifest)
 
         loaded = load_hash_manifest(project_dir / "output")
         rec = loaded.get("Stage A")
         assert rec is not None
-        assert rec.input_hash == "abc"
-        assert rec.output_hash == "def"
+        assert rec.input_hash == "a" * 64
+        assert rec.output_hash == "b" * 64
 
     def test_load_missing_manifest_is_empty(self, tmp_path: Path) -> None:
         _, project_dir = _make_repo(tmp_path)
@@ -164,6 +167,63 @@ class TestManifestRoundTrip:
         loaded = load_hash_manifest(project_dir / "output")
         # Fail-safe: corrupt manifest behaves like absent (forces re-run).
         assert loaded.get("Stage A") is None
+
+    @pytest.mark.parametrize("kind", ["fifo", "directory", "symlink", "broken-symlink", "oversized", "non-utf8"])
+    def test_unsafe_manifest_is_a_cache_miss(self, tmp_path: Path, kind: str) -> None:
+        """Unavailable control bytes cannot block or authorize stage reuse."""
+        _, project_dir = _make_repo(tmp_path)
+        path = project_dir / "output/.pipeline/incremental.json"
+        path.parent.mkdir()
+        external = tmp_path / "external-cache.json"
+        external.write_text(
+            '{"version": 3, "stages": {"Stage A": {"input_hash": "'
+            + "a" * 64
+            + '", "output_hash": "'
+            + "b" * 64
+            + '"}}}',
+            encoding="utf-8",
+        )
+        external_bytes = external.read_bytes()
+        if kind == "fifo":
+            if not hasattr(os, "mkfifo"):
+                pytest.skip("Filesystem FIFO control requires POSIX")
+            os.mkfifo(path)
+        elif kind == "directory":
+            path.mkdir()
+        elif kind == "symlink":
+            path.symlink_to(external)
+        elif kind == "broken-symlink":
+            path.symlink_to(tmp_path / "absent-cache.json")
+        elif kind == "oversized":
+            path.write_bytes(b" " * (1024 * 1024 + 1))
+        else:
+            path.write_bytes(b"\xff")
+
+        assert load_hash_manifest(project_dir / "output").get("Stage A") is None
+        assert external.read_bytes() == external_bytes
+        assert os.path.lexists(path)
+
+    def test_linked_manifest_parent_is_a_cache_miss_and_refuses_write(self, tmp_path: Path) -> None:
+        _, project_dir = _make_repo(tmp_path)
+        external = tmp_path / "external-control"
+        external.mkdir()
+        path = external / "incremental.json"
+        path.write_text('{"version": 3, "stages": {}}', encoding="utf-8")
+        original = path.read_bytes()
+        (project_dir / "output/.pipeline").symlink_to(external, target_is_directory=True)
+
+        assert load_hash_manifest(project_dir / "output").output_hashes() == {}
+        with pytest.raises((OSError, ValueError)):
+            save_hash_manifest(project_dir / "output", HashManifest())
+        assert path.read_bytes() == original
+        assert sorted(child.name for child in external.iterdir()) == ["incremental.json"]
+
+    def test_deeply_malformed_manifest_is_a_cache_miss(self, tmp_path: Path) -> None:
+        _, project_dir = _make_repo(tmp_path)
+        path = project_dir / "output/.pipeline/incremental.json"
+        path.parent.mkdir()
+        path.write_text("[" * 5000 + "]" * 5000, encoding="utf-8")
+        assert load_hash_manifest(project_dir / "output").output_hashes() == {}
 
 
 class TestShouldSkipStage:

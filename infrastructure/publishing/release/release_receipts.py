@@ -14,11 +14,12 @@ import re
 from dataclasses import asdict, dataclass, field
 from datetime import date
 from pathlib import Path
-from typing import Literal, Mapping, cast
+from typing import Literal, Mapping, Sequence, cast
 
 from infrastructure.core.subprocess_policy import (
     INTENTIONAL_SUBPROCESS_POLICIES,
     SubprocessPolicyRecord,
+    SubprocessPolicy,
     validate_policy_inventory,
 )
 
@@ -439,10 +440,10 @@ class SubprocessPolicyReceipt:
         if len(ids) != len(set(ids)):
             errors.append("subprocess policy IDs must be unique")
         for policy in self.policies:
-            if policy.timeout_seconds <= 0:
-                errors.append(f"policy {policy.policy_id} has a non-positive timeout")
-            if not policy.process_group:
-                errors.append(f"policy {policy.policy_id} lacks a process-group boundary")
+            try:
+                SubprocessPolicy(**asdict(policy)).validate()
+            except ValueError as exc:
+                errors.append(f"policy {policy.policy_id} is invalid: {exc}")
         return errors
 
     def to_dict(self) -> dict[str, object]:
@@ -452,16 +453,23 @@ class SubprocessPolicyReceipt:
         }
 
 
-def build_subprocess_policy_receipt(repo_root: Path | str | None = None) -> SubprocessPolicyReceipt:
+def build_subprocess_policy_receipt(
+    repo_root: Path | str | None = None,
+    *,
+    policies: Sequence[SubprocessPolicy] = INTENTIONAL_SUBPROCESS_POLICIES,
+) -> SubprocessPolicyReceipt:
     """Build a receipt from the source-owned intentional-wrapper inventory.
 
     A missing or invalid source declaration becomes ``blocked`` with its
     actionable diagnostics; it is never represented as a passing empty list.
     """
     root = Path(repo_root).resolve() if repo_root is not None else None
-    errors = validate_policy_inventory(INTENTIONAL_SUBPROCESS_POLICIES, root)
+    errors = validate_policy_inventory(policies, root)
+    if not policies:
+        errors.append("MISSING-POLICY-INVENTORY: at least one source-owned policy is required")
     return SubprocessPolicyReceipt(
-        policies=tuple(SubprocessPolicyRecord.from_policy(policy) for policy in INTENTIONAL_SUBPROCESS_POLICIES),
+        # An inadmissible complete inventory is blocked, never a partial pass.
+        policies=tuple(SubprocessPolicyRecord.from_policy(policy) for policy in policies) if not errors else (),
         status="pass" if not errors else "blocked",
         skip_reason="" if not errors else "; ".join(errors),
     )

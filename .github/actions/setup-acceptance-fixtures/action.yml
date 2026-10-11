@@ -1,0 +1,40 @@
+name: Prepare identical pinned acceptance source fixtures
+description: Materialize exact official codebase and TLC inputs plus the genuine committed synthetic seed before every producer and release reader.
+runs:
+  using: composite
+  steps:
+    - name: Prepare the immutable external codebase inputs
+      shell: bash
+      run: |
+        set -euo pipefail
+        scratch=$(mktemp -d "$RUNNER_TEMP/template-source-fixtures.XXXXXX")
+        curl --fail --location --retry 2 --max-time 180 --output "$scratch/requests.tar.gz" https://codeload.github.com/psf/requests/tar.gz/611c6162cbc4ac2020a2f91c7cfa4f3abf9bbb60
+        test "$(wc -c < "$scratch/requests.tar.gz" | tr -d ' ')" = 3333948
+        echo "83a67e83356762c4dfac7e75387826178fbf1041e2d2cd57259f4a5593474aa3  $scratch/requests.tar.gz" | shasum -a 256 --check --status
+        test ! -e tests/fixtures/real_codebases/requests
+        mkdir tests/fixtures/real_codebases/requests
+        tar -xzf "$scratch/requests.tar.gz" --strip-components=1 -C tests/fixtures/real_codebases/requests requests-611c6162cbc4ac2020a2f91c7cfa4f3abf9bbb60/src/requests requests-611c6162cbc4ac2020a2f91c7cfa4f3abf9bbb60/LICENSE
+        curl --fail --location --retry 2 --max-time 180 --output "$scratch/fastapi.tar.gz" https://codeload.github.com/fastapi/fastapi/tar.gz/94918c1d40afb27065c64d523219ed2ad9822f76
+        test "$(wc -c < "$scratch/fastapi.tar.gz" | tr -d ' ')" = 17980370
+        echo "da352fa4cfe2175391b4c008830feb1b7a3be967aa5a4c9f174446443ee1d642  $scratch/fastapi.tar.gz" | shasum -a 256 --check --status
+        test ! -e tests/fixtures/real_codebases/fastapi
+        mkdir tests/fixtures/real_codebases/fastapi
+        tar -xzf "$scratch/fastapi.tar.gz" --strip-components=1 -C tests/fixtures/real_codebases/fastapi fastapi-94918c1d40afb27065c64d523219ed2ad9822f76/fastapi fastapi-94918c1d40afb27065c64d523219ed2ad9822f76/LICENSE
+    - name: Prepare identical seeded benchmark inputs
+      shell: bash
+      run: |
+        set -euo pipefail
+        test ! -e tests/fixtures/timeseries
+        mkdir -p tests/fixtures/timeseries/synthetic
+        (cd tests/fixtures/timeseries_seed && shasum -a 256 --check --status SHA256SUMS)
+        cp tests/fixtures/timeseries_seed/synthetic_*.json tests/fixtures/timeseries/synthetic/
+    - name: Prepare the exact authenticated TLC tool input
+      shell: bash
+      run: |
+        set -euo pipefail
+        tool=$(mktemp -d "$RUNNER_TEMP/template-tlc-tools.XXXXXX")
+        jar="$tool/tla2tools.jar"
+        curl --fail --location --retry 2 --max-time 120 --output "$jar" https://github.com/tlaplus/tlaplus/releases/download/v1.8.0/tla2tools.jar
+        test "$(wc -c < "$jar" | tr -d ' ')" = 4501960
+        echo "7beec0f04818732a62fa193731711a99aa4f11279499b2360a7d156c519ea78d  $jar" | shasum -a 256 --check --status
+        echo "TEMPLATE_FORMAL_TLC_JAR=$jar" >> "$GITHUB_ENV"

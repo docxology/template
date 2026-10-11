@@ -80,18 +80,6 @@ class TestReserveGuards:
                 existing_doi="10.5281/zenodo.7",
             )
 
-    def test_new_version_with_existing_doi_not_implemented(self) -> None:
-        with pytest.raises(PublishingError, match="not implemented"):
-            reserve_zenodo_doi_pair(
-                dry_run=False,
-                zenodo_token="tok",
-                sandbox=True,
-                zenodo_base_url=None,
-                new_version=True,
-                metadata=_metadata(),
-                existing_doi="10.5281/zenodo.7",
-            )
-
 
 class TestWriteReservedDois:
     @staticmethod

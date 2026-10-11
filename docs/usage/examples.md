@@ -164,7 +164,7 @@ export DOI="10.5281/zenodo.12345678"  # Optional
 
 ```bash
 # Pipeline automatically handles cleanup
-uv run python scripts/runner/execute_pipeline.py --project {name} --core-only
+uv run python scripts/runner/execute_pipeline.py --project {name} --mode core
 ```
 
 ### 3. Customize Further

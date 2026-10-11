@@ -1,18 +1,6 @@
-# template_search_project — exemplar literature-search project.
-#
-# This pyproject is consumed two ways:
-#
-#   1. Workspace mode (the common case). The project is loaded from the
-#      monorepo root via the workspace's pythonpath; `infrastructure.*`
-#      is resolved via the root pyproject's `[tool.pytest.ini_options]`
-#      pythonpath and is therefore NOT listed in `dependencies` below
-#      (declaring it would be a phantom dependency since the repo does
-#      not publish `infrastructure` to PyPI).
-#
-#   2. Standalone clone (rare). If you copy this directory out of the
-#      monorepo, you MUST also bring `infrastructure/` along and add it
-#      to the Python path (e.g. with `pip install -e ./infrastructure`
-#      after writing a thin pyproject for it). See `docs/quickstart.md`.
+# Search uses the platform distribution as an explicit runtime dependency.
+# The local uv resolver supports this checkout; standalone installs use an admitted
+# platform 4.0.0 wheel and this project's wheel in a fresh selected environment.
 
 [build-system]
 requires = ["setuptools>=61.0"]
@@ -20,19 +8,19 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "template_search_project"
-# Must match CITATION.cff / codemeta.json / .zenodo.json / manuscript/config.yaml,
-# which all read `0.1` — the string form of the published Zenodo deposits
-# (concept 10.5281/zenodo.21298894, version 10.5281/zenodo.21298895).
-version = "0.1"
+# Intended independent release; historical sidecars retain their published version.
+version = "0.2.0"
 description = "Configurable literature-search → BibTeX → LLM-synthesis pipeline built on infrastructure/search and infrastructure/reference."
 authors = [{name = "Daniel Ari Friedman", email = "daniel@activeinference.institute"}]
 license = {text = "MIT"}
 readme = "README.md"
-requires-python = ">=3.10"
+requires-python = ">=3.12"
 
 # Runtime dependencies for the *project-local* code in `src/`.
-# `infrastructure.*` is intentionally NOT listed (see header note).
 dependencies = [
+    "requests>=2.32.0",
+    "research-project-template==4.0.1",
+    "pypdf>=6.16.1",
     "pyyaml>=6.0,<7.0",
     "matplotlib>=3.7,<4.0",
     "pillow>=12.3.0",
@@ -48,6 +36,7 @@ dependencies = [
 # Test surface — `pytest-httpserver` is used to drive the HTTP backends
 # in `infrastructure/search/literature/` without mocking network calls.
 dev = [
+    "pytest-timeout>=2.4.0",
     "pytest>=7.4.0",
     "pytest-cov>=4.1.0",
     "pytest-httpserver>=1.0.8",
@@ -99,3 +88,12 @@ exclude_lines = [
 
 [tool.uv]
 # Inherits workspace settings from root pyproject.toml
+
+# Compatibility contract for this independent exemplar release.
+[tool.template]
+platform_version = "4.0.1"
+tested_python_versions = ["3.12", "3.13", "3.14"]
+required_unpaid_capabilities = ["retrieval", "fulltext", "local-synthesis"]
+
+[tool.uv.sources]
+research-project-template = { path = "../../..", editable = true }

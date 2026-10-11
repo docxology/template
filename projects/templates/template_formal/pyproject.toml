@@ -7,13 +7,13 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "template_formal"
-version = "0.1.0"
+version = "0.2.0"
 license = {text = "MIT"}
 description = "Strongly-typed multiagent ant-robot colony: ADTs, session-typed protocols, affine-discipline resource handles"
 authors = [
     {name = "Daniel Ari Friedman", email = "daniel@activeinference.institute"}
 ]
-requires-python = ">=3.10"
+requires-python = ">=3.12"
 dependencies = [
     "pyyaml>=6.0",
     "pillow>=12.3.0",
@@ -22,9 +22,13 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
+formal-tools = [
+    "research-project-template==4.0.1",
+]
 dev = [
     "pytest>=7.4.0",
     "pytest-cov>=4.1.0",
+    "pytest-timeout>=2.4.0",
     "pytest-xdist>=3.6.0",
     "mypy>=1.17.1",
     "types-PyYAML>=6.0.12",
@@ -66,3 +70,13 @@ explicit_package_bases = true
 namespace_packages = true
 
 [tool.uv]
+
+[tool.uv.sources]
+# Optional tool execution uses the genuine platform wheel outside this checkout.
+research-project-template = { path = "../../..", editable = true }
+
+# Compatibility contract for this independent exemplar release.
+[tool.template]
+platform_version = "4.0.1"
+tested_python_versions = ["3.12", "3.13", "3.14"]
+required_unpaid_capabilities = ["network-faults", "lean", "tlc"]

@@ -71,20 +71,14 @@ def load_config(path: Path | str | None = None) -> dict[str, Any]:
     data = yaml.safe_load(config_path.read_text(encoding="utf-8"))
     if not isinstance(data, dict):
         raise ValueError(f"config root must be a mapping: {config_path}")
+    if "parts" in data:
+        raise ValueError("parts is retired; migrate the book structure to units")
     return data
 
 
 def unit_blocks(config: dict[str, Any]) -> list[dict[str, Any]]:
-    """Return the book's structural blocks.
-
-    The shared renderer (``infrastructure/rendering``) reads the key ``units``;
-    this template uses "Part" as the human-facing term, so ``parts`` is accepted
-    as an alias. ``units`` wins if both are present.
-    """
-    # Presence, rather than truthiness, is significant here: an author who
-    # explicitly declares ``units: []`` must not silently fall back to a stale
-    # legacy ``parts:`` block elsewhere in the file.
-    blocks = config["units"] if "units" in config else config.get("parts")
+    """Return structural blocks from the canonical ``units`` key."""
+    blocks = config.get("units")
     return blocks if isinstance(blocks, list) else []
 
 
@@ -190,6 +184,8 @@ def declared_appendix_paths(manuscript_dir: Path, config: dict[str, Any], catego
 def validate_config(config: dict[str, Any]) -> list[str]:
     """Return a list of human-readable structural problems (empty == valid)."""
     issues: list[str] = []
+    if "parts" in config:
+        issues.append("parts is retired; migrate the book structure to units")
 
     book = config.get("book")
     if not isinstance(book, dict) or not book.get("title"):

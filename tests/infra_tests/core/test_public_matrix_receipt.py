@@ -211,11 +211,14 @@ def test_validate_allows_lane_without_floor_but_requires_combined_coverage() -> 
         collection_count=1,
         **_lane_metadata(),
     )
-    receipt = _receipt((no_floor, no_coverage, _passing_lane("templates/template_c")))
+    valid_lanes = (no_floor, _passing_lane("templates/template_b"), _passing_lane("templates/template_c"))
+    receipt = _receipt(valid_lanes)
     assert receipt.validate(ROSTER) == []
+    missing_lane_coverage = _receipt((no_floor, no_coverage, _passing_lane("templates/template_c")))
+    assert any("MISSING-LANE-COVERAGE" in error for error in missing_lane_coverage.validate(ROSTER))
 
     missing_combined = _receipt(
-        (no_floor, no_coverage, _passing_lane("templates/template_c")),
+        valid_lanes,
         combined_coverage_percent=None,
     )
     assert any("MISSING-COMBINED-COVERAGE" in error for error in missing_combined.validate(ROSTER))
@@ -329,6 +332,7 @@ def test_matrix_cache_key_is_order_independent_but_plan_bound() -> None:
     assert first != changed
 
 
+@pytest.mark.timeout(240)
 def test_error_skip_reason_logs_and_forces_exit(tmp_path: Path, caplog: pytest.LogCaptureFixture) -> None:
     """``error:``-prefixed skip reasons must log before forcing exit 1.
 

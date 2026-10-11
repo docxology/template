@@ -7,12 +7,13 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "template_pitch_deck"
-version = "1.0.0"
+version = "2.0.0"
 license = {text = "MIT"}
 description = "Reproducible short/medium/long PDF+PPTX pitch decks — token-validated, cliche-linted content built on infrastructure/rendering's generic slide-deck renderers. Flagship deck pitches template_template as meta-science research infrastructure."
 authors = [{name = "Daniel Ari Friedman", email = "daniel@activeinference.institute"}]
-requires-python = ">=3.10"
+requires-python = ">=3.12"
 dependencies = [
+    "research-project-template==4.0.1",
     "pyyaml>=6.0",
     # `src/content_loader.py`/`src/render_orchestration.py` import
     # `infrastructure.rendering.slide_deck` — importing any single submodule
@@ -21,7 +22,7 @@ dependencies = [
     # dependency several layers deep in `infrastructure/publishing/`).
     # Workspace mode picks these up transitively through the root repo's
     # `rendering` optional group; project-local venvs (used by
-    # `execute_pipeline.py --core-only`) need them declared explicitly —
+    # `execute_pipeline.py --mode core`) need them declared explicitly —
     # same pattern as `template_search_project`/`template_newspaper`.
     "reportlab>=4.0.0",
     "pypdf>=6.16.1",
@@ -56,7 +57,6 @@ dev = [
 where = ["src"]
 
 [tool.pytest.ini_options]
-pythonpath = [".", "src"]
 testpaths = ["tests"]
 python_files = ["test_*.py"]
 python_functions = ["test_*"]
@@ -82,3 +82,13 @@ exclude_lines = [
 
 [tool.uv]
 # Inherits workspace settings from root pyproject.toml
+
+[tool.uv.sources]
+# Local preparation uses this checkout; standalone execution uses its admitted wheel.
+research-project-template = { path = "../../..", editable = true }
+
+# Compatibility contract for this independent exemplar release.
+[tool.template]
+platform_version = "4.0.1"
+tested_python_versions = ["3.12", "3.13", "3.14"]
+required_unpaid_capabilities = ["pdf-pptx"]

@@ -6,11 +6,8 @@ implementations are provided:
 * :class:`DeterministicProposer` — a rule-based policy used for the
   reproducible exemplar runs, tests, and the rendered figures. No mocks: it is
   a genuine proposer that reads the shared state and emits a concrete proposal.
-* :class:`HermesProposer` — the live AutoScientists agent (implemented in
-  ``scripts/hermes_proposer.py`` so ``src/`` stays infrastructure-free).
-
-Swapping ``DeterministicProposer`` for ``HermesProposer`` is the only change
-needed to turn the deterministic reference run into a live agentic one.
+The bounded local-model adapter lives in ``agents/live_transport.py``. Its
+paired-run orchestration and custody are separate from this pure reference policy.
 """
 
 from __future__ import annotations
@@ -103,22 +100,3 @@ class DeterministicProposer:
         # Default: probe toward the origin from the current champion.
         current = state.champion.params[axis]
         return -1.0 if current > 0 else 1.0
-
-
-def _extract_json(raw: str) -> str:
-    """Pull the first JSON object out of a model reply.
-
-    Finds the first ``{`` and the *last* ``}`` in ``raw`` and returns the
-    substring between them (inclusive).  This handles replies that wrap a JSON
-    object in conversational text (e.g. "Sure! Here: {...} Hope that helps.")
-    and also replies whose JSON value itself contains nested objects, because
-    the outermost brace pair brackets the whole object.
-
-    Raises :class:`ValueError` if no ``{`` or no ``}`` is found, or if the
-    last ``}`` precedes the first ``{``.
-    """
-    start = raw.find("{")
-    end = raw.rfind("}")
-    if start == -1 or end == -1 or end < start:
-        raise ValueError("no JSON object found in model reply")
-    return raw[start : end + 1]

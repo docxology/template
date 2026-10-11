@@ -31,7 +31,7 @@ each table and in the generated stage documentation.
 ### Python
 
 ```bash
-uv run python scripts/runner/execute_pipeline.py --project template_code_project --core-only
+uv run python scripts/runner/execute_pipeline.py --project template_code_project --mode core
 uv run python scripts/runner/execute_multi_project.py --no-llm
 uv run python scripts/pipeline/stage_07_executive_report.py
 ```
@@ -77,7 +77,7 @@ uv run python scripts/pipeline/stage_07_executive_report.py
 - `shell/ci_local.sh` - local CI reproduction (`act` when available, otherwise a pure-Python CI fallback; see [`../docs/maintenance/ci-local.md`](../docs/maintenance/ci-local.md))
 - Maintenance helpers now live under [`maintenance/`](maintenance/) - `manage_workspace.py`, `show_project_info.py`, `render_working_projects.py`, `rerender_working_pdfs.py`, `organize_executive_outputs.py`, `merge_test_supplements.py`, `batch_cogsec_improve.py`, `setup_pre_commit.py`, `codegraph_local.py`, `refresh_artifact_manifests.py` (see [`maintenance/README.md`](maintenance/README.md) and [`maintenance/AGENTS.md`](maintenance/AGENTS.md)). `show_project_info.py` is a standalone project metadata CLI; it is **not** invoked by `run.sh` (the menu's `i` key prints only the current project name).
 - `shell/bash_utils.sh` - shared shell helpers for backup/health scripts and integration tests (not sourced by `run.sh` / `secure_run.sh`)
-- `shell/shell_bootstrap.sh` - shared `uv` bootstrap and sandbox env vars sourced by `run.sh` and `secure_run.sh`
+- `shell/shell_bootstrap.sh` - shared prepared-Python selection and sandbox env vars sourced by `run.sh` and `secure_run.sh`
 - `shell/backup-daily.sh` / `shell/backup-weekly.sh` - site-configured rsync backup tiers
 - `shell/backup-full.sh` - named, metadata-bearing `.hermes`/`.cache`/`output` snapshots
 - `shell/restore-test.sh` - private-scratch metadata and transfer-consistency verification
@@ -113,7 +113,7 @@ See [`docs/architecture/thin-orchestrator-summary.md`](../docs/architecture/thin
 - Project-specific analysis scripts belong in `projects/{name}/scripts/`.
 - The subpackage scripts stay generic and work with any active project discovered from `projects/`.
 - Use `uv run` for direct Python entry points (`runner/execute_pipeline.py`, `runner/execute_multi_project.py`, `pipeline/stage_07_executive_report.py`).
-- `run.sh` and `secure_run.sh` are thin bootstrap shells: they source `shell/shell_bootstrap.sh`, then `exec uv run python -m infrastructure.orchestration` (menu, pipeline, and secure subcommands live in Python). Bare `./run.sh` relies on `uv run` to sync the workspace; pipeline-flag invocations also run `uv sync` when `.venv` is missing.
+- `run.sh` and `secure_run.sh` select an existing root `.venv/bin/python` or explicit absolute `TEMPLATE_ROOT_PYTHON`, then use the audited finite `runner/prepared_dispatch.py` launcher. Menu, pipeline, and secure subcommands remain in Python. Unavailable preparation returns 75; ordinary dispatch never installs tools or syncs dependencies. Prepare explicitly with `uv sync --locked` and, for secure PDF operations, `uv sync --locked --group steganography`.
 
 ## See Also
 

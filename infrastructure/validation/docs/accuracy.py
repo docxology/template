@@ -26,11 +26,6 @@ _TERMINOLOGY_RULES: tuple[tuple[re.Pattern[str], str, str], ...] = (
         "no mocks",
         "Repository policy uses 'no mocks' (see tests/AGENTS.md).",
     ),
-    (
-        re.compile(r"\b8\s+stage(?:s)?\b(?![^\n]{0,40}(?:core-only|excluding|exclude))", re.IGNORECASE),
-        "stage-count phrasing",
-        "Default full pipeline is 10 core+LLM stages; 8 applies only with --core-only.",
-    ),
 )
 
 

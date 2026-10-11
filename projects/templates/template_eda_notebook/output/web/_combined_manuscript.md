@@ -13,7 +13,7 @@ cells.
 We ship a deterministic dataset (`data/measurements.csv`) with a designed
 correlation structure and a handful of missing values, then load, clean,
 summarize, correlate, and visualize it entirely through tested functions in
-`src/eda/`. The library is side-effect-free — no plotting and no file I/O — and
+`src/template_eda_notebook/eda/`. The library is side-effect-free — no plotting and no file I/O — and
 standalone (numpy and pandas only), so it is covered above the 90% project gate
 and reused identically from the notebook, the thin analysis script
 (`scripts/eda_analysis.py`), and this manuscript.
@@ -40,7 +40,7 @@ for the [Research Project Template](https://github.com/docxology/template)
 ecosystem, demonstrating how a computational notebook can stay reproducible by
 delegating every computation to a fully-tested library. The prose, the labelled
 figures, and the summary table are all produced through an auditable custody
-chain: a deterministic dataset, tested functions in `src/eda/`, a thin analysis
+chain: a deterministic dataset, tested functions in `src/template_eda_notebook/eda/`, a thin analysis
 script, and multi-format rendering.
 
 ## Why exploratory data analysis
@@ -63,7 +63,7 @@ tested library the moment a computation matters.** Concretely:
    (`notebooks/eda_walkthrough.ipynb`) imports from `src` and calls tested
    functions; it contains no business logic of its own.
 2. Each analytical step — loading, cleaning, summarizing, correlating, preparing
-   figure data — is a typed, documented function in `src/eda/` with a test that
+   figure data — is a typed, documented function in `src/template_eda_notebook/eda/` with a test that
    asserts an exact numeric property.
 3. A thin script (`scripts/eda_analysis.py`) runs the same pipeline headless and
    writes the figures and a summary CSV to `output/`.
@@ -72,7 +72,7 @@ tested library the moment a computation matters.** Concretely:
 
 The project sits on the repository's three pillars:
 
-1. **`src/eda/` library**: pure pandas/numpy data transforms — no plotting, no
+1. **`src/template_eda_notebook/eda/` library**: pure pandas/numpy data transforms — no plotting, no
    file I/O, no `infrastructure` imports. This purity is what makes the library
    forkable and trivially testable.
 2. **`tests/` framework**: a zero-mock suite that exercises the library against
@@ -93,7 +93,7 @@ missing-data path honestly.
 
 ## Reader's guide to the manuscript
 
-- **[@sec:methodology]** ties each EDA step to its function in `src/eda/`.
+- **[@sec:methodology]** ties each EDA step to its function in `src/template_eda_notebook/eda/`.
 - **[@sec:results]** is figure-centric: each panel names the figure-data
   preparer that produced it.
 - **[@sec:experimental_setup]** lists the dataset schema and software
@@ -317,7 +317,7 @@ tested code instead of carrying logic.
 Operating as the EDA exemplar for the Research Project Template methodology, the
 project deployed the three foundational pillars:
 
-1. **`src/eda/` library**: pure pandas/numpy data transforms — loading,
+1. **`src/template_eda_notebook/eda/` library**: pure pandas/numpy data transforms — loading,
    cleaning, summary statistics, correlation, and figure-data preparation — with
    no plotting, no file I/O, and no `infrastructure` imports.
 2. **`tests/` integrity**: a zero-mock suite over the shipped dataset and
@@ -331,7 +331,7 @@ project deployed the three foundational pillars:
 ### The notebook -> tested src extraction workflow
 
 The hallmark of this exemplar is the discipline it teaches: explore fast in a
-cell, and the moment a computation matters, move it into `src/eda/` behind a
+cell, and the moment a computation matters, move it into `src/template_eda_notebook/eda/` behind a
 failing test. The walkthrough notebook imports only the library's public surface
 and defines no functions of its own, a property the test suite enforces
 structurally so it cannot regress.
@@ -348,7 +348,7 @@ assumption.
 1. **Reproducibility follows from testing fidelity**: every number in
    [@sec:results] is produced by a tested function and regenerated on demand, so
    prose and artifacts cannot drift.
-2. **Purity enables reuse**: because `src/eda/` returns plot-ready data and never
+2. **Purity enables reuse**: because `src/template_eda_notebook/eda/` returns plot-ready data and never
    touches a display backend, the same functions serve the notebook, the
    headless script, and the manuscript.
 3. **Missingness is information**: reporting dropped rows beats imputing them
@@ -505,7 +505,7 @@ source of truth.
   always produce the same bin counts, correlation values, and group counts.
 - `clean_dataset()` reports exactly how many rows it removed, so the
   complete-case row count is a checkable invariant.
-- `generate_measurements()` (`src/eda/generate.py`) regenerates a deterministic
+- `generate_measurements()` (`src/template_eda_notebook/eda/generate.py`) regenerates a deterministic
   *sibling* of the dataset from a fixed NumPy seed: the same schema, 120 rows,
   the same missingness pattern, and the same correlation sign structure. The
   original fixture's exact random draw order is not recoverable, so the
@@ -558,7 +558,7 @@ statistical machinery.
 ## What this project proves about the template
 
 The analytical steps here are standard. The **non-standard** contribution is
-procedural: the same tested functions in `src/eda/` back the interactive
+procedural: the same tested functions in `src/template_eda_notebook/eda/` back the interactive
 notebook, the headless analysis script, and this manuscript, so the figures and
 the summary table always refer to the same code. That pattern is what downstream
 projects should copy — whether the domain is survey data, sensor logs, or

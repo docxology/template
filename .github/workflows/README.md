@@ -1,3 +1,17 @@
+## Fast functional CI
+
+`ci.yml` runs on main pushes, pull requests and manual dispatch. It uses Linux
+and Python 3.14: lint/types and public data/security guards, pipeline smoke,
+a standalone wheel build and focused behavioral tests for every public template,
+and the required `CI Gate`. `.github/project-smoke.json` names the actual tests;
+the smoke runner refuses missing projects, empty selections and escaping paths.
+These are functional checks, with no full-suite coverage or native acceptance claim.
+
+The former cross-version/full-suite matrix remains in `hardening.yml`, invoked
+manually. `platform-required-acceptance.yml` is also manual-only; its original
+custody requirements remain mandatory for formal release acceptance. Further
+hardening choices and the local commands are in [`docs/development/ci.md`](../../docs/development/ci.md).
+
 # workflows/ — CI/CD Pipelines
 
 GitHub Actions workflows for automated quality assurance, testing, and deployment. Enforces development standards across Python versions and environments.
@@ -8,31 +22,33 @@ For Dependabot, issue/PR templates, and the full GitHub integration picture, see
 
 | File | Trigger | Purpose |
 |---|---|---|
-| [`ci.yml`](ci.yml) | push/PR to `main`, weekly, manual | **16 jobs** (2 conditional via the `detect` job's outputs — `needs.detect.outputs.*`: **`fep-lean`** and **`setup-hook-windows-smoke`**; plus 1 schedule/manual-only **`public-matrix-receipt`**; job-level `hashFiles()` is invalid and was removed; see [`AGENTS.md`](AGENTS.md)) |
+| [`hardening.yml`](hardening.yml) | manual only | **20 jobs** (2 conditional via the `detect` job's outputs — `needs.detect.outputs.*`: **`fep-lean`** and **`setup-hook-windows-smoke`**; 2 schedule/manual-only lanes: **`test-infra-slow`** and **`public-matrix-receipt`**; see [`AGENTS.md`](AGENTS.md)) |
 | [`stale.yml`](stale.yml) | Daily 01:00 UTC | Auto-label and close stale issues/PRs |
 | [`release.yml`](release.yml) | `v*.*.*` tag push or manual | Generate GitHub Release with changelog |
+| [`platform-required-acceptance.yml`](platform-required-acceptance.yml) | manual only | Original required-profile observations and strict exact-source acceptance bundle |
 | [`dependabot-automerge.yml`](dependabot-automerge.yml) | `pull_request_target` (Dependabot only) | Auto-merge safe (minor/patch) Dependabot PRs after all required checks pass |
 
-## CI Pipeline (`ci.yml`)
+## Optional exhaustive hardening (`hardening.yml`)
 
 ### Job Graph
 
-`health`, `validate`, `security`, and `docs-lint` fan out from **`lint`**; `verify-no-mocks` gates the test matrix; **`performance`** waits on **`test-infra`** + **`test-project`**. See [`AGENTS.md`](AGENTS.md).
+`health`, `validate`, `security`, and `docs-lint` run independently alongside **`lint`**; `verify-no-mocks` gates the test matrix. Every job remains required by **`ci-gate`**. See [`AGENTS.md`](AGENTS.md).
 
 ```mermaid
 flowchart TB
-    LINT[lint<br/>Ruff + mypy + exports audit] --> HEALTH[health<br/>blocking static JSON report]
-    LINT --> VNM[verify-no-mocks]
-    LINT --> VAL[validate<br/>markdown + api-ref check + imports]
-    LINT --> SEC[security<br/>pip-audit + bandit -c bandit.yaml]
-    LINT --> DL[docs-lint<br/>mermaid + links + consistency]
+    LINT[lint<br/>Ruff + mypy + exports audit]
+    HEALTH[health<br/>blocking static JSON report]
+    VNM[verify-no-mocks]
+    VAL[validate<br/>markdown + api-ref check + imports]
+    SEC[security<br/>pip-audit + bandit -c bandit.yaml]
+    DL[docs-lint<br/>mermaid + links + consistency]
     VNM --> SHW[setup-hook-windows-smoke<br/>conditional · Windows]
-    VNM --> TI[test-infra<br/>ubuntu × py310–314 + macOS × py314<br/>≥ 60% coverage]
+    VNM --> TI[test-infra<br/>ubuntu × py312–314 + macOS × py314<br/>four complete shards per environment]
+    TI --> IC[coverage-infra<br/>complete py314 Linux union ≥ 60%]
     VNM --> TR[test-regression<br/>claim-binding pins]
     VNM --> TP[test-project<br/>validated capability matrix<br/>each ≥ 90% own src/]
     VNM --> FL[fep-lean optional<br/>gauss + lake · timeout 60m]
-    TI --> PERF[performance<br/>import time ≤ 5 s]
-    TP --> PERF
+    PERF[performance<br/>independent · import time ≤ 5 s]
 
     classDef gate fill:#1e3a8a,stroke:#0f172a,color:#fff
     classDef matrix fill:#0f766e,stroke:#0f172a,color:#fff
@@ -40,9 +56,15 @@ flowchart TB
     classDef info fill:#334155,stroke:#0f172a,color:#fff
     class LINT,VNM gate
     class TI,TP,FL,SHW matrix
-    class VAL,SEC,DL,PERF terminal
+    class VAL,SEC,DL,PERF,IC terminal
     class HEALTH info
 ```
+
+`test-infra` retains its 90-minute hosted budget and unchanged per-case
+timeouts. Its Linux/macOS cells invoke the shared
+[`setup-acceptance-documents`](../actions/setup-acceptance-documents/action.yml)
+once before the tests; pinned archive verification, native package preparation,
+and actual executable probes remain required.
 
 ### Quality Gates
 
@@ -116,20 +138,58 @@ Exempt labels: `pinned` · `security` · `in-progress` · `blocked` · `do-not-c
 
 Triggered on `v*.*.*` tag push or `workflow_dispatch`. The workflow resolves
 the tag before checkout, checks out that exact ref, proves `HEAD` matches the
-dereferenced tag commit, runs the root release contract, and requires
-the no-mocks gate plus the bounded pipeline-smoke infra test lane on the tagged
-SHA, the public capability manifest, clean exported-package install/import
-smoke, and `publication-audit --all-public --strict --rendered` before
-building. The
-source gates fail closed on package/Python, source/test syntax, hydration, and
-standalone import drift; the rendered gate verifies each exemplar's
-deterministic source/config/output and manuscript-consumption receipt. It
-writes a git-log excerpt to the release body (`generate_release_notes: false`)
-and uses
-`softprops/action-gh-release@v3.0.2`. Tags containing
-`-rc`/`-beta`/`-alpha` are auto-marked as pre-release.
+dereferenced tag commit, runs the root release contract, and requires the
+no-mocks gate, bounded pipeline-smoke infra lane, public capability manifest,
+complete installed-wheel matrix on supported runtimes, and
+`publication-audit --all-public --strict --rendered` before building. Root
+major versions 4 and later additionally require an explicit hosted acceptance
+handoff before those checks: the successful run ID, exact
+`platform-required-acceptance` artifact ID, and aggregate receipt SHA256.
+Tag pushes without this handoff stop; use manual dispatch after acceptance.
+The artifact must come from this repository at the tagged SHA and contain only
+bounded, previously absent `output/readiness` files. Its canonical
+`output/readiness/release-candidate/receipt.json` must bind that commit and pass
+every source-owned candidate requirement, including live, sandbox, macOS,
+runtime, domain, installed-package, and format evidence. Partial matrices or
+green static checks cannot substitute for missing requirements.
 
-Current pinned GitHub Actions use the Node 20 action runtime. GitHub-hosted runners satisfy this; self-hosted runners must be Actions runner `v2.327.1` or newer.
+For root 4+, the fresh installed reader authenticates the complete installed
+matrix from that exact hosted candidate. Release asset admission revalidates
+its source, versions, full roster, three runtimes, original process and Code
+observations, dependency providers, and wheel bytes, then publishes that already
+tested wheel from the reader mirror. It does not rebuild the installed matrix
+after the handoff. Earlier majors still run the complete installed matrix in
+the release job. Both paths build and admit a fresh source distribution and
+recheck the selected assets before and after publication.
+
+The candidate implementation includes
+[`platform-required-acceptance.yml`](platform-required-acceptance.yml). Its four
+jobs cover six original Root units (Python 3.12/3.13/3.14 on macOS/Linux), common
+installed/export/runtime and auxiliary observations, the native-format
+inventory, and an independent collector. The collector uploads
+`platform-required-acceptance` only after every required exact-source gate passes.
+The workflow's presence does not establish a successful hosted run, integration
+into `main`, or publication. Ordinary CI uploads cannot substitute for this
+handoff, and a version heading does not authorize release. The 4.0.1 candidate
+remains Unreleased; the prepared 4.0.0 candidate was not published.
+The evidence handoff verifies custody and required acceptance; it does not
+perform sandbox or production transfers itself.
+
+For root 4+, the release body uses `docs/releases/<tag>.md` for its actual tag,
+such as the [4.0.1 candidate notes](../../docs/releases/v4.0.1.md), and appends
+the accepted commit, hosted run and receipt SHA256. Assets are the admitted
+installed wheel, exact final source distribution, tag-selected overview PNG and
+byte manifest; retrieved asset hashes must match. Earlier major tags retain the
+git-log excerpt. The workflow uses
+`softprops/action-gh-release@v3.0.3` with `generate_release_notes: false`.
+Tags containing `-rc`/`-beta`/`-alpha` are auto-marked as pre-release.
+
+The pinned [checkout action](https://raw.githubusercontent.com/actions/checkout/3d3c42e5aac5ba805825da76410c181273ba90b1/action.yml) and
+[release action](https://raw.githubusercontent.com/softprops/action-gh-release/efb35369e0ad2afab669f228072c1b0d510eae64/action.yml) use the Node 24 JavaScript action runtime.
+This is separate from the Node 20 document toolchain selected by
+[`setup-docs-lint`](../actions/setup-docs-lint/action.yml).
+GitHub-hosted runners satisfy the documented runtime requirement; self-hosted
+runners must be Actions runner `v2.327.1` or newer.
 
 ## Troubleshooting
 

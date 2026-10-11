@@ -63,7 +63,7 @@ HYPOTHESIS_NAMES: dict[str, str] = {
 
 
 def load_viz_labels_from_config(project_root: Path) -> None:
-    """Overlay subfield and hypothesis labels from manuscript config when present."""
+    """Overlay subfield and hypothesis labels from template_literature_meta_analysis.manuscript config when present."""
     config_path = project_root / "manuscript" / "config.yaml"
     if not config_path.exists():
         return

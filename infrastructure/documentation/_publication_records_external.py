@@ -56,7 +56,7 @@ def refresh_external_records(records: list[PublicationRecord], *, timeout: float
             record.github_latest_release_url = str(release_payload.get("html_url") or "")
             record.github_latest_release_published_at = str(release_payload.get("published_at") or "")
 
-            expected_tag = f"v{record.paper_version}" if record.paper_version else ""
+            expected_tag = f"v{record.metadata_version}" if record.metadata_version else ""
             if expected_tag and record.github_latest_release_tag and record.github_latest_release_tag != expected_tag:
                 findings.append(f"GitHub latest {record.github_latest_release_tag} != config {expected_tag}")
         else:
@@ -82,9 +82,13 @@ def refresh_external_records(records: list[PublicationRecord], *, timeout: float
             if record.version_doi and record.zenodo_record_doi:
                 if record.version_doi != record.zenodo_record_doi:
                     findings.append(f"Zenodo DOI {record.zenodo_record_doi} != config {record.version_doi}")
-            if record.paper_version and record.zenodo_record_version:
-                if record.paper_version != record.zenodo_record_version:
-                    findings.append(f"Zenodo version {record.zenodo_record_version} != config {record.paper_version}")
+            if record.metadata_version and record.zenodo_record_version:
+                if record.metadata_version != record.zenodo_record_version:
+                    findings.append(
+                        f"Zenodo version {record.zenodo_record_version} != config {record.metadata_version}"
+                    )
+        elif record.publication_status in {"draft", "unpublished"}:
+            record.zenodo_status = "unpublished draft"
         elif record.version_doi:
             record.zenodo_status = "invalid version DOI"
             findings.append("invalid version_doi")

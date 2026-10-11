@@ -149,13 +149,13 @@ def run_project_pipeline(
         repo_root=repo,
         projects_dir=WORKING_DIR,
         skip_infra=skip_infra,
-        skip_llm=True,
+        mode="core",
         resume=False,
         clean=True,
     )
     start = time.time()
     executor = PipelineExecutor(config)
-    results = executor.execute_core_pipeline()
+    results = executor.execute_pipeline()
     return results, time.time() - start
 
 

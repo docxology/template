@@ -596,7 +596,7 @@ the individual checks and their boundaries.
 The secure pipeline can embed hashes/watermarks into emitted PDFs:
 
 ```bash
-./secure_run.sh --project <qualified-name> --core-only --deterministic
+./secure_run.sh --project <qualified-name> --mode core --deterministic
 ```
 
 This helps identify byte changes and associate a document with recorded

@@ -19,8 +19,12 @@ from _bootstrap import bootstrap_project
 
 bootstrap_project(include_infrastructure=True)
 
-from config import DATA_DIR as DEFAULT_DATA_DIR, DEFAULT_DPI, FIGURES_DIR as DEFAULT_FIGURES_DIR
-from visualization.figure_runner import generate_all_figures
+from template_literature_meta_analysis.config import (
+    DATA_DIR as DEFAULT_DATA_DIR,
+    DEFAULT_DPI,
+    FIGURES_DIR as DEFAULT_FIGURES_DIR,
+)
+from template_literature_meta_analysis.visualization.figure_runner import generate_all_figures
 
 
 def parse_args() -> argparse.Namespace:

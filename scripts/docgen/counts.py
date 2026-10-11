@@ -14,7 +14,8 @@ Usage::
 
     uv run python scripts/docgen/counts.py --write   # apply
     uv run python scripts/docgen/counts.py --check    # CI, no write
-    uv run python scripts/docgen/counts.py --verify-coverage --write
+    uv run python scripts/docgen/counts.py --verify-coverage --write \
+        --coverage-snapshot-output /owned/retained/counts_coverage.snapshot.data
 
 Exit codes:
     0: write succeeded (``--write``) or doc in sync (``--check``).
@@ -58,9 +59,14 @@ def main(argv: list[str] | None = None) -> int:
         help=(
             "re-measure every exemplar's standalone release-profile coverage and "
             "compare against the recorded percentage (slow — runs every release "
-            "profile suite); combine with --write to rewrite all recorded values "
-            "only after every measurement succeeds"
+            "profile suite); combine with --write and --coverage-snapshot-output "
+            "to write a retained DATA copy only after every measurement succeeds"
         ),
+    )
+    parser.add_argument(
+        "--coverage-snapshot-output",
+        type=Path,
+        help="existing independent exact copy of selected counts_coverage.py outside the repo and SDK",
     )
     parser.add_argument(
         "--project-workers",
@@ -69,16 +75,26 @@ def main(argv: list[str] | None = None) -> int:
     )
     args = parser.parse_args(argv)
 
+    if args.coverage_snapshot_output is not None and not (args.verify_coverage and args.write):
+        parser.error("--coverage-snapshot-output requires --verify-coverage --write")
+    if args.verify_coverage and args.write and args.coverage_snapshot_output is None:
+        parser.error("--verify-coverage --write requires --coverage-snapshot-output with a retained DATA copy")
+
     if args.verify_coverage:
-        result = verify_exemplar_coverage_result(REPO_ROOT, rewrite=args.write)
+        try:
+            result = verify_exemplar_coverage_result(
+                REPO_ROOT, rewrite=args.write, snapshot_output=args.coverage_snapshot_output
+            )
+        except (ValueError, OSError, UnicodeError) as exc:
+            parser.error(str(exc))
         print(result.report)
         if not result.measurement_complete:
             print("\ncoverage snapshot not refreshed — resolve every measurement failure and rerun")
             return 1
         if args.write and result.drifted_count:
-            # A complete measurement refreshed every value, so the tree is now
-            # consistent even though the previously recorded numbers had drifted.
-            print("\nrecorded values refreshed — rerun with --refresh-coverage-provenance --write")
+            # The retained DATA copy holds measured literals; executable Source
+            # remains unchanged until the owner reviews a new Source epoch.
+            print("\nDATA prepared — review/apply after terminal closure, then rebuild and refresh provenance")
             return 0
         return 0 if result.all_match else 1
 

@@ -1,6 +1,9 @@
 from __future__ import annotations
 
+import copy
 import json
+import os
+from collections.abc import Callable
 from dataclasses import asdict
 from pathlib import Path
 from typing import Any, cast
@@ -19,6 +22,7 @@ from registered_report import (
     validate_sensitivity_table,
     validate_registration,
 )
+from registered_report.protocol import _verify_frozen_record_binding, persist_frozen_registration
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
@@ -45,14 +49,160 @@ def test_freeze_registration_adds_content_hash_without_mutating_source() -> None
     assert frozen["schema_version"] == REGISTRATION_SCHEMA_VERSION
 
 
-def test_legacy_registration_migrates_without_filling_dropped_fields() -> None:
+@pytest.mark.parametrize("schema", [None, "template-registered-report/1"])
+def test_legacy_registration_migrates_without_filling_dropped_fields(schema: str | None) -> None:
     legacy = load_registration()
+    if schema is not None:
+        legacy["schema_version"] = schema
     migrated = migrate_registration(legacy)
     assert migrated["schema_version"] == REGISTRATION_SCHEMA_VERSION
     assert migrated["hypotheses"] == legacy["hypotheses"]
     broken = dict(legacy)
     broken.pop("outcomes")
     assert any(f.code == "missing_section" for f in validate_registration(migrate_registration(broken)))
+
+
+@pytest.mark.parametrize("schema", [None, "template-registered-report/1", REGISTRATION_SCHEMA_VERSION])
+def test_frozen_records_preserve_original_schema_hash_and_nested_intent(schema: str | None) -> None:
+    archived = load_registration()
+    if schema is not None:
+        archived["schema_version"] = schema
+    archived["registration_hash"] = registration_hash(archived)
+    original = copy.deepcopy(archived)
+
+    for operation in (migrate_registration, freeze_registration):
+        preserved = operation(archived)
+        assert preserved == original
+        assert preserved is not archived
+        preserved["hypotheses"][0]["claim"] = "Changed outside the archived record"
+        assert archived == original
+
+
+@pytest.mark.parametrize("operation", [migrate_registration, freeze_registration])
+@pytest.mark.parametrize("target", ["hypothesis", "outcome", "analysis"])
+def test_changed_frozen_intent_cannot_be_recertified(
+    operation: Callable[[dict[str, Any]], dict[str, Any]], target: str
+) -> None:
+    frozen = freeze_registration(load_registration())
+    if target == "hypothesis":
+        frozen["hypotheses"][0]["claim"] = "A result-selected replacement hypothesis"
+    elif target == "outcome":
+        frozen["outcomes"][0]["name"] = "result_selected_outcome"
+    else:
+        frozen["analysis_plan"]["primary_model"] = "result_selected_model"
+    supplied = copy.deepcopy(frozen)
+
+    with pytest.raises(ValueError, match="Frozen registration hash"):
+        operation(frozen)
+    assert frozen == supplied
+
+
+@pytest.mark.parametrize("operation", [migrate_registration, freeze_registration])
+@pytest.mark.parametrize("supplied", [None, True, 0, "", "f" * 64])
+def test_invalid_supplied_frozen_hash_is_not_replaced(
+    operation: Callable[[dict[str, Any]], dict[str, Any]], supplied: Any
+) -> None:
+    frozen = freeze_registration(load_registration())
+    frozen["registration_hash"] = supplied
+    original = copy.deepcopy(frozen)
+    with pytest.raises(ValueError, match="Frozen registration hash"):
+        operation(frozen)
+    assert frozen == original
+
+
+def test_stored_frozen_registration_keeps_exact_schema_hash_and_file_bytes() -> None:
+    path = PROJECT_ROOT / "output" / "reports" / "frozen_registration.json"
+    original_bytes = path.read_bytes()
+    archived = json.loads(original_bytes)
+    assert migrate_registration(archived) == archived
+    assert freeze_registration(archived) == archived
+    assert path.read_bytes() == original_bytes
+
+
+def test_hash_valid_unknown_frozen_schema_refuses_without_replacement() -> None:
+    frozen = load_registration()
+    frozen["schema_version"] = "unsupported-future-schema"
+    frozen["registration_hash"] = registration_hash(frozen)
+    original = copy.deepcopy(frozen)
+    for operation in (migrate_registration, freeze_registration):
+        with pytest.raises(ValueError, match="Unsupported frozen registration schema"):
+            operation(frozen)
+    assert frozen == original
+
+
+def test_bounded_frozen_record_rejects_oversized_new_intent_without_creating_a_file(tmp_path: Path) -> None:
+    registration = load_registration()
+    registration["title"] = "x" * (1024 * 1024)
+    path = tmp_path / "frozen_registration.json"
+    with pytest.raises(ValueError, match="bounded record size"):
+        persist_frozen_registration(path, registration)
+    assert not path.exists()
+
+
+def test_frozen_record_destination_rejects_parent_traversal(tmp_path: Path) -> None:
+    with pytest.raises(ValueError, match="parent traversal"):
+        persist_frozen_registration(tmp_path / ".." / "frozen_registration.json", load_registration())
+    assert not (tmp_path.parent / "frozen_registration.json").exists()
+
+
+def test_persistence_preserves_exact_existing_bytes_and_refuses_changed_intent(tmp_path: Path) -> None:
+    path = tmp_path / "frozen_registration.json"
+    archived = persist_frozen_registration(path, load_registration())
+    original = (json.dumps(archived, indent=4) + "\n\n").encode("utf-8")
+    path.write_bytes(original)
+    assert persist_frozen_registration(path, archived) == archived
+    assert path.read_bytes() == original
+    changed = load_registration()
+    changed["hypotheses"][0]["claim"] = "Different prospective intent"
+    with pytest.raises(ValueError, match="new versioned output directory"):
+        persist_frozen_registration(path, changed)
+    assert path.read_bytes() == original
+
+
+@pytest.mark.parametrize("replacement", ["leaf", "parent", "ancestor", "same_inode_content"])
+def test_frozen_record_binding_refuses_real_named_replacements_without_touching_foreign_bytes(
+    tmp_path: Path, replacement: str
+) -> None:
+    authority = tmp_path / "authority"
+    reports = authority / "reports"
+    reports.mkdir(parents=True)
+    path = reports / "frozen_registration.json"
+    persist_frozen_registration(path, load_registration())
+    original = path.read_bytes()
+    flags = os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW
+    root_fd = os.open(tmp_path, flags)
+    authority_fd = os.open("authority", flags, dir_fd=root_fd)
+    reports_fd = os.open("reports", flags, dir_fd=authority_fd)
+    record_fd = os.open(path.name, os.O_RDONLY | os.O_NOFOLLOW, dir_fd=reports_fd)
+    expected = os.fstat(record_fd)
+    bindings = [(root_fd, "authority", authority_fd), (authority_fd, "reports", reports_fd)]
+    try:
+        if replacement == "leaf":
+            retained = reports / "retained-original.json"
+            path.rename(retained)
+        elif replacement == "parent":
+            retained_parent = authority / "retained-reports"
+            reports.rename(retained_parent)
+            retained = retained_parent / path.name
+            reports.mkdir()
+        elif replacement == "ancestor":
+            retained_ancestor = tmp_path / "retained-authority"
+            authority.rename(retained_ancestor)
+            retained = retained_ancestor / "reports" / path.name
+            reports.mkdir(parents=True)
+        else:
+            retained = path
+        path.write_bytes(b"foreign replacement must remain untouched")
+
+        with pytest.raises(ValueError, match="new versioned output directory"):
+            _verify_frozen_record_binding(reports_fd, path.name, record_fd, bindings, expected)
+
+        if replacement != "same_inode_content":
+            assert retained.read_bytes() == original
+        assert path.read_bytes() == b"foreign replacement must remain untouched"
+    finally:
+        for descriptor in (record_fd, reports_fd, authority_fd, root_fd):
+            os.close(descriptor)
 
 
 def test_publication_receipt_requires_owner_authority_and_matching_payload() -> None:

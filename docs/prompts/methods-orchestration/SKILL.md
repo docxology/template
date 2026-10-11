@@ -39,7 +39,7 @@ metadata:
 3. **Repair source layers** - update `src/`, thin scripts, manuscript source, or
    stage contracts. Do not edit generated `output/` as a fix.
 4. **Regenerate and validate** - run core pipeline or focused stage commands,
-   then rerun methods plan with `--check`.
+   then rerun methods plan.
 5. **Document routing** - update AGENTS/README when method ownership or commands
    changed.
 
@@ -47,10 +47,10 @@ metadata:
 
 ```bash
 uv run python -m infrastructure.methods plan --project <project> --format markdown
-uv run python -m infrastructure.methods plan --project <project> --format json --check
+uv run python -m infrastructure.methods plan --project <project> --format json
 uv run python -m infrastructure.methods plan --all-public --artifact-mode source --format json
 uv run python -m infrastructure.methods plan --all-public --artifact-mode rendered --format json
-uv run python scripts/runner/execute_pipeline.py --project <project> --core-only
+uv run python scripts/runner/execute_pipeline.py --project <project> --mode core
 uv run python -m infrastructure.validation.cli prerender projects/<project>/manuscript --repo-root .
 uv run pytest tests/infra_tests/methods -q
 ```

@@ -10,7 +10,7 @@ import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
-from visualization.style import VIZ_CONFIG
+from template_literature_meta_analysis.visualization.style import VIZ_CONFIG
 
 logger = logging.getLogger(__name__)
 

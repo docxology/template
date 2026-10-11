@@ -9,7 +9,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from knowledge_graph.nanopublication import (
+from template_literature_meta_analysis.knowledge_graph.nanopublication import (
     Assertion,
     Nanopublication,
     create_nanopub,

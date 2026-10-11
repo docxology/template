@@ -17,10 +17,10 @@ from _bootstrap import bootstrap_project
 
 PROJECT_ROOT = bootstrap_project()
 
-from config import CORPUS_PATH as DEFAULT_CORPUS_PATH, DATA_DIR as DEFAULT_DATA_DIR
-from literature.corpus import Corpus
-from literature.evaluation import evaluate_corpus
-from literature.fixture_honesty import validate_fixture_honesty
+from template_literature_meta_analysis.config import CORPUS_PATH as DEFAULT_CORPUS_PATH, DATA_DIR as DEFAULT_DATA_DIR
+from template_literature_meta_analysis.literature.corpus import Corpus
+from template_literature_meta_analysis.literature.evaluation import evaluate_corpus
+from template_literature_meta_analysis.literature.fixture_honesty import validate_fixture_honesty
 
 
 def parse_args() -> argparse.Namespace:

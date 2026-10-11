@@ -11,7 +11,7 @@ The canonical, repo-wide manuscript-semantics reference is [`docs/guides/manuscr
 Hyperlinks must be informative. Never use placeholder text.
 
 - **BAD**: [this link](../src/template_search_project/pipeline/pipeline.py) describes the pipeline.
-- **GOOD**: See [`src/pipeline/pipeline.py`](../src/template_search_project/pipeline/pipeline.py) for the orchestrator.
+- **GOOD**: See [`src/template_search_project/pipeline/pipeline.py`](../src/template_search_project/pipeline/pipeline.py) for the orchestrator.
 
 For internal cross-references inside `manuscript/`, prefer relative paths to source files; the pre-render link checker (`infrastructure.validation.cli links`) walks them.
 
@@ -27,9 +27,9 @@ Inside `manuscript/` files, use Pandoc-crossref `[@label]` syntax for cross-refe
 
 ### Figure Label Registry
 
-The three diagnostic figures are produced by `scripts/y_generate_search_figures.py` (which calls into `src/publish/figures.py`) and embedded in `03_results.md`:
+The three diagnostic figures are produced by `scripts/y_generate_search_figures.py` (which calls into `src/template_search_project/publish/figures.py`) and embedded in `03_results.md`:
 
-| Anchor (in `03_results.md`) | PNG Filename | Generator (in `src/publish/figures.py`) |
+| Anchor (in `03_results.md`) | PNG Filename | Generator (in `src/template_search_project/publish/figures.py`) |
 |---|---|---|
 | `{#fig:papers_per_source}` | `output/figures/papers_per_source.png` | `plot_papers_per_source` |
 | `{#fig:year_histogram}` | `output/figures/year_histogram.png` | `plot_year_histogram` |
@@ -47,7 +47,7 @@ The three diagnostic figures are produced by `scripts/y_generate_search_figures.
 | `05_pipeline_internals.md` | Pipeline Internals | `{#sec:pipeline_internals}` |
 | `06_reproducibility.md` | Reproducibility | `{#sec:reproducibility}` |
 | `07_deep_search.md` | Deep Search | `{#sec:deep_search}` |
-| `S01_literature_review.md` (auto-composed) | Supplemental S1 | `{#sec:supplemental_s1}` |
+| `S01_literature_review.md` (authored source) | Supplemental S1 | `{#sec:supplemental_s1}` |
 | `99_references.md` | References | `{#sec:references}` |
 
 Always use **underscored** labels — Pandoc-crossref accepts dashes, but mixed conventions confuse downstream tooling.
@@ -56,14 +56,14 @@ Always use **underscored** labels — Pandoc-crossref accepts dashes, but mixed 
 
 ## 3. Variable Injection (Madlibs)
 
-When specifying numeric results in the manuscript, use the `{{TOKEN_NAME}}` syntax. Values are hydrated by `scripts/z_generate_manuscript_variables.py`, which calls into `src/publish/manuscript_variables.py::compute_variables` and writes resolved markdown into `output/manuscript/`. Never hardcode a number that will change when configuration or corpus changes.
+When specifying numeric results in the manuscript, use the `{{TOKEN_NAME}}` syntax. Values are hydrated by `scripts/z_generate_manuscript_variables.py`, which calls into `src/template_search_project/publish/manuscript_variables.py::compute_variables` and writes resolved markdown into `output/manuscript/`. Never hardcode a number that will change when configuration or corpus changes.
 
 - **BAD**: The query returned 47 papers across 2 sources.
 - **GOOD**: The query returned `{{RESULT_NUM_PAPERS}}` papers across `{{RESULT_NUM_SOURCES}}` sources.
 
 ### Complete `{{TOKEN}}` Registry
 
-The live token list is defined by the fields of `ManuscriptVariables` in `src/publish/manuscript_variables.py`. Tokens are uppercase versions of the field name wrapped in double curly braces.
+The live token list is defined by the fields of `ManuscriptVariables` in `src/template_search_project/publish/manuscript_variables.py`. Tokens are uppercase versions of the field name wrapped in double curly braces.
 
 **CONFIG_* — Derived from `manuscript/config.yaml`**
 
@@ -86,7 +86,7 @@ The live token list is defined by the fields of `ManuscriptVariables` in `src/pu
 | `{{RESULT_WITH_ABSTRACT}}` | papers carrying a non-empty `abstract` |
 | `{{RESULT_WITH_DOI}}` | papers carrying a non-empty `doi` |
 
-**DEEP_* — Derived from `project_config.deep_search` and `output/deep_search/aggregate.json`**
+**DEEP_* — Derived from `project_config.deep_search` and an admitted current aggregate when deep search is enabled**
 
 | Token | Source |
 |---|---|
@@ -94,13 +94,13 @@ The live token list is defined by the fields of `ManuscriptVariables` in `src/pu
 | `{{DEEP_KEYWORD_COUNT}}` | `len(project_config.deep_search.keywords)` |
 | `{{DEEP_KEYWORDS_JOINED}}` | keywords joined with `; ` |
 | `{{DEEP_SOURCES}}` | `project_config.deep_search.sources`, joined with `, ` |
-| `{{DEEP_UNIQUE_PAPERS}}` | `len(aggregate.unique_papers)`, or the literal string `<deep-search not run>` when no aggregate exists |
+| `{{DEEP_UNIQUE_PAPERS}}` | `len(aggregate.unique_papers)`, or the literal string `<deep-search not run>` when deep search is disabled or no aggregate is admitted |
 
 The "not run" sentinel is intentional: a missing aggregate produces a discoverable string rather than a silent dash, so reviewers can `grep '<deep-search not run>'` to spot stale renders.
 
 ### Adding a New Variable
 
-1. Add a field to `ManuscriptVariables` in `src/publish/manuscript_variables.py`.
+1. Add a field to `ManuscriptVariables` in `src/template_search_project/publish/manuscript_variables.py`.
 2. Populate it inside `compute_variables`.
 3. Reference it in a manuscript `.md` file as `{{NEW_TOKEN}}` (the substitution lower-cases internally then uppercases the marker key, so the field name `new_token` becomes `{{NEW_TOKEN}}`).
 4. Run `scripts/z_generate_manuscript_variables.py` and verify the JSON contains the key:
@@ -119,7 +119,7 @@ grep -rn "{{[A-Z_]*}}" projects/templates/template_search_project/output/manuscr
   && echo "UNRESOLVED TOKENS FOUND" || echo "All tokens resolved"
 ```
 
-The `variables_resolved` review stage (`scripts/review --stage variables_resolved`) automates this check; see `src/analysis/analysis.py::validate_variables_resolved`.
+The `variables_resolved` review stage (`scripts/review --stage variables_resolved`) automates this check; see `src/template_search_project/analysis/analysis.py::validate_variables_resolved`.
 
 ---
 
@@ -143,7 +143,7 @@ search:
   sources: [local]
 ```
 
-For inline code referencing file paths, use single backticks: `projects/templates/template_search_project/src/pipeline/pipeline.py`.
+For inline code referencing file paths, use single backticks: `projects/templates/template_search_project/src/template_search_project/pipeline/pipeline.py`.
 
 ---
 
@@ -168,7 +168,7 @@ Do not use a `Table:` prefix — Pandoc infers the type from placement. Do not h
 
 To add a figure that appears in `03_results.md`:
 
-1. Add a generator function in `src/publish/figures.py` following the existing pattern (write a PNG to `output/figures/` with a fixed filename).
+1. Add a generator function in `src/template_search_project/publish/figures.py` following the existing pattern (write a PNG to `output/figures/` with a fixed filename).
 2. Register the generator in `scripts/y_generate_search_figures.py`.
 3. Add the Pandoc image reference in `03_results.md`:
    ```markdown
@@ -194,18 +194,22 @@ Reference in text: `[@eq:score_definition]`. Never use a raw `\begin{equation}..
 
 ---
 
-## 8. Two-Bibliography Citation Rule
+## 8. Curated and Generated Citation Rule
 
-Unlike `template_code_project` (single hand-curated `references.bib`), this project carries **two** auto-populated bibliographies that coexist in `manuscript/`:
+Authored `manuscript/*.bib` files remain curated source inputs. Standard search
+writes its full database under `output/bibliography/references.bib`; explicit deep
+search writes `output/bibliography/references_deep.bib`. Neither producer edits
+curated source. The hydrator compares work metadata for colliding keys, keeps
+curated annotations, and emits only additional entries into
+`output/manuscript/generated_search.bib`. Conflicting work metadata fails rather
+than allowing citation tools to choose different definitions.
 
-| File | Generated by | Pipeline |
-|---|---|---|
-| `manuscript/references.bib` | `src/pipeline/pipeline.py` (via `scripts/run_search_pipeline.py`) | Single-query workflow |
-| `manuscript/references_deep.bib` | `src/search/deep_search.py` (via `scripts/run_deep_search.py`) | Multi-keyword fan-out |
-
-`infrastructure.rendering.PDFRenderer.render_combined` runs Pandoc with `--natbib`; BibTeX is then invoked over `\bibliography{stem1,stem2,...}` constructed from every `manuscript/*.bib` (sorted). The pre-render citation gate (`infrastructure.validation.cli prerender`) unions the same files, so writing `[@key_only_in_deep]` resolves cleanly even though the key is absent from `references.bib`.
-
-**Consequence**: do not hand-edit either `.bib` file. Both are regenerated. Add curated entries by editing `data/corpus.json` (for the standard pipeline) or by extending `project_config.deep_search.keywords` (for the deep pipeline).
+All renderers consume the deterministic `output/manuscript/*.bib` union. Curated
+files are copied under their own names; the generated extra database has a reserved
+unique name. `output/bibliography_projection.json` binds its actual source bytes,
+key origins, and projected bytes. Default core analysis uses the local corpus;
+explicit deep composition additionally requires a current producer dependency
+record and writes `output/manuscript/S02_generated_literature_review.md`.
 
 Validate keys before render:
 

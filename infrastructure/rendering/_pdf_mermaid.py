@@ -13,6 +13,7 @@ import os
 import re
 import shutil
 import subprocess
+import time
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Final
@@ -21,6 +22,15 @@ from infrastructure.core.exceptions import RenderingError
 from infrastructure.core.logging.utils import get_logger
 from infrastructure.rendering.chrome import resolve_chrome_executable as _resolve_chrome_executable
 from infrastructure.rendering._pdf_title_page_latex import _latex_graphic_alt_text
+from infrastructure.rendering import _mermaid_v11
+from infrastructure.rendering._mermaid_source_font_default import (
+    PROFILE_NAME,
+    SCRIPT_NAME,
+    default_font_profile_bytes,
+    default_font_script_bytes,
+)
+from infrastructure.rendering._mermaid_v12 import POLICY, adapter_bytes, request_bytes, selected_package
+from infrastructure.rendering.native_render_custody import native_render_custody
 from infrastructure.rendering.security import run_isolated_subprocess
 
 logger = get_logger(__name__)
@@ -119,22 +129,13 @@ def replace_inline_mermaid(
                 stem=stem,
                 source=source,
                 puppeteer_config=puppeteer_config,
+                original_source=match.group("source"),
             )
         except RenderingError as exc:
             logger.warning("%s", exc)
             return _mermaid_fallback_figure(fallback_source, caption)
         diagrams_rendered += 1
-        rel_path = f"../figures/mermaid_inline/{png_path.name}"
-        escaped_caption = _latex_caption(caption)
-        escaped_alt = _latex_graphic_alt_text(alt)
-        return (
-            "\n\\begin{figure}[htbp]\n"
-            "\\centering\n"
-            "\\includegraphics[width=0.82\\linewidth,height=4.2in,keepaspectratio,"
-            f"alt={{{escaped_alt}}}]{{{rel_path}}}\n"
-            f"\\caption{{{escaped_caption}}}\n"
-            "\\end{figure}\n"
-        )
+        return inline_mermaid_figure_markdown(match, png_path.name)
 
     try:
         rewritten = _MERMAID_BLOCK_RE.sub(_replace, content)
@@ -152,6 +153,24 @@ def replace_inline_mermaid(
             )
     logger.info("Rendered %d inline Mermaid diagram(s) for PDF output", diagrams_rendered)
     return MermaidReplacementResult(rewritten, diagrams_rendered)
+
+
+def inline_mermaid_figure_markdown(match: re.Match[str], png_name: str) -> str:
+    """Return the Source positive replacement; no render or native admission."""
+    caption_text = _caption_text(match)
+    alt = _first_alt(match.group("alts")) or caption_text or "Mermaid diagram"
+    caption = _caption_for_markdown(caption_text or alt)
+    rel_path = f"../figures/mermaid_inline/{png_name}"
+    escaped_caption = _latex_caption(caption)
+    escaped_alt = _latex_graphic_alt_text(alt)
+    return (
+        "\n\\begin{figure}[htbp]\n"
+        "\\centering\n"
+        "\\includegraphics[width=0.82\\linewidth,height=4.2in,keepaspectratio,"
+        f"alt={{{escaped_alt}}}]{{{rel_path}}}\n"
+        f"\\caption{{{escaped_caption}}}\n"
+        "\\end{figure}\n"
+    )
 
 
 def _inline_mermaid_dir(manuscript_dir: Path) -> Path:
@@ -465,48 +484,165 @@ def _render_mermaid(
     stem: str,
     source: str,
     puppeteer_config: Path | None,
+    original_source: str | None = None,
 ) -> Path:
     """Render one Mermaid source string to PNG with strict failure handling."""
     mmd_path = output_dir / f"{stem}.mmd"
     png_path = output_dir / f"{stem}.png"
-    if png_path.is_file() and png_path.stat().st_size > 0 and mmd_path.is_file():
-        if mmd_path.read_text(encoding="utf-8").rstrip("\n") == source:
-            return png_path
+    # Native profile and font inputs are reconstructed before cache admission.
 
     mmd_path.write_text(source + "\n", encoding="utf-8")
-    cmd = [
-        mmdc,
-        "--input",
-        str(mmd_path),
-        "--output",
-        str(png_path),
-        "--width",
-        "1400",
-        "--height",
-        "900",
-        "--backgroundColor",
-        "white",
-        "--quiet",
-    ]
-    if puppeteer_config is not None:
-        cmd.extend(["--puppeteerConfigFile", str(puppeteer_config)])
+    use_api12 = False
+    use_api11 = False
+    policy = "template-mermaid-original-legacy-cli-1400x900-unverified-v1"
+    inputs: tuple[Path, ...] = (mmd_path, *((puppeteer_config,) if puppeteer_config is not None else ()))
+    try:
+        entry = Path(mmdc).resolve(strict=True)
+        manifest = entry.parent.parent / "package.json"
+        if entry.name == "cli.js" and entry.parent.name == "src" and manifest.is_file():
+            if manifest.stat().st_size > 1024 * 1024:
+                raise ValueError("selected Mermaid package declaration exceeds its finite profile bound")
+            metadata = json.loads(manifest.read_bytes())
+            use_api11 = (
+                isinstance(metadata, dict)
+                and metadata.get("name") == "@mermaid-js/mermaid-cli"
+                and metadata.get("version") == "11.16.0"
+            )
+            use_api12 = (
+                isinstance(metadata, dict)
+                and metadata.get("name") == "@mermaid-js/mermaid-cli"
+                and metadata.get("version") == "12.0.0"
+            )
+        if use_api12 or use_api11:
+            module = _mermaid_v11 if use_api11 else None
+            package = module.selected_package(mmdc) if module is not None else selected_package(mmdc)
+            node = shutil.which("node")
+            if node is None:
+                raise ValueError("the selected Mermaid12 API requires its admitted Node executable")
+            api_version = "v11" if use_api11 else "v12"
+            adapter = output_dir / f"{stem}.mermaid-{api_version}.mjs"
+            request = output_dir / f"{stem}.mermaid-{api_version}-request.json"
+            if use_api11:
+                helper = output_dir / SCRIPT_NAME
+                fonts = output_dir / PROFILE_NAME
+                helper.write_bytes(default_font_script_bytes())
+                fonts.write_bytes(default_font_profile_bytes())
+                inputs = (*inputs, helper, fonts)
+            adapter.write_bytes(module.adapter_bytes() if module is not None else adapter_bytes())
+            request.write_bytes(
+                (module.request_bytes if module is not None else request_bytes)(
+                    package,
+                    mmd_path.absolute(),
+                    png_path.absolute(),
+                    "png",
+                    puppeteer_config.absolute() if puppeteer_config is not None else None,
+                )
+            )
+            cmd = [str(Path(node).resolve(strict=True)), str(adapter.absolute()), str(request.absolute())]
+            inputs = (*inputs, adapter, request)
+            policy = module.POLICY if module is not None else POLICY
+        else:
+            # Keep ordinary supported legacy tools and standalone executables on
+            # the exact existing CLI path; this is not runtime/source admission.
+            cmd = [
+                mmdc,
+                "--input",
+                str(mmd_path),
+                "--output",
+                str(png_path),
+                "--width",
+                "1400",
+                "--height",
+                "900",
+                "--backgroundColor",
+                "white",
+                "--quiet",
+            ]
+            if puppeteer_config is not None:
+                cmd.extend(["--puppeteerConfigFile", str(puppeteer_config)])
+    except (OSError, ValueError) as exc:
+        raise RenderingError(f"Mermaid12 rectangular viewport compatibility admission failed: {exc}") from exc
     env = os.environ.copy()
     env["PATH"] = os.pathsep.join(part for part in (env.get("PATH", ""), os.defpath) if part)
+    if (use_api12 or use_api11) and (env.get("NODE_OPTIONS") or env.get("NODE_PATH")):
+        raise RenderingError("Mermaid12 profile cannot admit environment-supplied JavaScript/module overrides")
+
+    before = {str(path.absolute()): hashlib.sha256(path.read_bytes()).hexdigest() for path in inputs}
+    cache = output_dir / f"{stem}.mermaid-cache.json"
+    cache_binding = {"policy": policy, "inputs": before, "source": source, "mmdc": str(Path(mmdc).resolve(strict=True))}
+    if png_path.is_file() and png_path.stat().st_size > 0 and cache.is_file():
+        try:
+            cached = json.loads(cache.read_bytes())
+        except (ValueError, OSError):
+            cached = None
+        if cached == {**cache_binding, "png_sha256": hashlib.sha256(png_path.read_bytes()).hexdigest()}:
+            return png_path
+    started_at_monotonic = time.monotonic()
 
     try:
         # Intentionally convert every mmdc execution failure into a documented
         # caller-side fallback so combined PDF rendering can continue.
-        completed = run_isolated_subprocess(cmd, env=env, timeout=90)
+        custody = native_render_custody(
+            "native-origin Mermaid production lacks its independently admitted Source owner"
+        )
+        # The launcher is called from this frame: native custody verifies
+        # this exact function as its caller.
+        completed = (
+            None
+            if custody is None
+            else custody.mermaid_launcher()(
+                cmd,
+                mmd_path,
+                png_path,
+                role="inline",
+                raw_source=source if original_source is None else original_source,
+                input_paths=inputs,
+                environment=env,
+                timeout=90,
+            )
+        )
+        if completed is None:
+            completed = run_isolated_subprocess(cmd, env=env, timeout=90)
     except subprocess.TimeoutExpired as exc:
         raise RenderingError(f"mmdc timed out while rendering {stem}") from exc
     except OSError as exc:
         raise RenderingError(f"Could not execute mmdc while rendering {stem}: {exc}") from exc
+
+    after = {str(path.absolute()): hashlib.sha256(path.read_bytes()).hexdigest() for path in inputs}
+    (output_dir / f"{stem}.mermaid-process.json").write_text(
+        json.dumps(
+            {
+                "role": "actual parent launch observation; enclosing genuine custody admission required",
+                "invocation_policy": policy,
+                "command": completed.args,
+                "pid": completed.pid,
+                "original_exit_code": completed.returncode,
+                "stdout": completed.stdout,
+                "stderr": completed.stderr,
+                "started_at_monotonic": started_at_monotonic,
+                "duration_seconds": time.monotonic() - started_at_monotonic,
+                "original_child_timeout_seconds": 90,
+                "input_sha256_before": before,
+                "input_sha256_after": after,
+            },
+            sort_keys=True,
+            allow_nan=False,
+        )
+        + "\n",
+        encoding="utf-8",
+    )
+    if before != after:
+        raise RenderingError("Mermaid original source/adapter/request/config changed during native rendering")
 
     if completed.returncode != 0:
         stderr = completed.stderr.strip() or completed.stdout.strip()
         raise RenderingError(f"mmdc failed for {stem}: {stderr[:800]}")
     if not png_path.is_file() or png_path.stat().st_size == 0:
         raise RenderingError(f"mmdc reported success for {stem} but did not produce a PNG")
+    cache.write_text(
+        json.dumps({**cache_binding, "png_sha256": hashlib.sha256(png_path.read_bytes()).hexdigest()}, sort_keys=True)
+        + "\n"
+    )
     return png_path
 
 

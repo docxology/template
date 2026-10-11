@@ -11,12 +11,12 @@ from template_pitch_deck.deck_tokens import (
     _validate_project_name,
     build_deck_tokens,
 )
-from template_pitch_deck.paths import locate_repo_root, project_root
+from template_pitch_deck.paths import data_repo_root, project_root
 
 
 @pytest.fixture(scope="module")
 def repo_root():
-    return locate_repo_root(project_root())
+    return data_repo_root(project_root())
 
 
 def test_build_deck_tokens_returns_all_expected_keys(repo_root):
@@ -152,7 +152,7 @@ def test_published_platform_names_labels_testpypi_as_sandbox_honestly(repo_root)
     embarrassing false-advertising risk a skeptical reviewer would catch
     (red-team finding, 2026-07-09)."""
     tokens = build_deck_tokens(repo_root, pitch_subject="template_template")
-    names = tokens["PITCH_SUBJECT_PUBLISHED_PLATFORM_NAMES"]
+    names = tokens["PITCH_SUBJECT_LAST_PUBLISHED_PLATFORM_NAMES"]
     assert "PyPI (sandbox)" in names
     assert "PyPI," not in names  # never claim bare "PyPI" alongside the sandbox one
 
@@ -163,8 +163,12 @@ def test_published_platform_names_count_matches_the_count_token(repo_root):
     — both are now derived from the same `compile_publishing_status()` call,
     so they cannot silently diverge the way the prior ad hoc formula could."""
     tokens = build_deck_tokens(repo_root, pitch_subject="template_template")
-    names = [n.strip() for n in tokens["PITCH_SUBJECT_PUBLISHED_PLATFORM_NAMES"].split(",") if n.strip()]
-    assert len(names) == int(tokens["PITCH_SUBJECT_PUBLISHED_PLATFORM_COUNT"])
+    names = [n.strip() for n in tokens["PITCH_SUBJECT_LAST_PUBLISHED_PLATFORM_NAMES"].split(",") if n.strip()]
+    assert len(names) == int(tokens["PITCH_SUBJECT_LAST_PUBLISHED_PLATFORM_COUNT"])
+    assert tokens["PITCH_SUBJECT_PUBLISHED_PLATFORM_COUNT"] == "0"
+    assert tokens["PITCH_SUBJECT_PUBLISHED_PLATFORM_NAMES"] == ""
+    assert tokens["PITCH_SUBJECT_RELEASE_STATUS"] == "unreleased"
+    assert tokens["PITCH_SUBJECT_LAST_PUBLISHED_VERSION"] != tokens["PITCH_SUBJECT_VERSION"]
     # Zenodo must be counted once (not twice for concept-DOI + version-DOI),
     # and github must be credited if github_repository is set — the exact
     # double-count/never-counted bug this replaces.

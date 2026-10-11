@@ -6,7 +6,7 @@
 ## Publication identity
 
 - Standalone repository: [docxology/template_pools_rules_tools](https://github.com/docxology/template_pools_rules_tools)
-- Config version: `1.0.0`
+- Intended / published version: `2.0.0 pending; last published 1.0.0`
 - Stable concept DOI: [10.5281/zenodo.21298888](https://doi.org/10.5281/zenodo.21298888)
 - Latest deposited version DOI: [10.5281/zenodo.21298889](https://zenodo.org/records/21298889)
 - Additional declared locations: none declared
@@ -16,234 +16,85 @@ Additional locations are config-declared publication evidence; the central index
 
 <!-- END:PUBLICATION_INDEX -->
 
-Instructions for using this project **outside the monorepo** as a
-self-contained package.
+This project packages the public fonds, rules, and tools needed for its domain
+computation. Source exports and installed wheels use the same resource paths.
 
----
+## Export and build
 
-## What this project does
-
-`template_pools_rules_tools` reads from three sibling resource directories
-(`fonds/`, `rules/`, `tools/`) and returns typed, structured results. It is
-primarily an exemplar for the [template repository](https://github.com/docxology/template)
-but the `src/` package is fully forkable.
-
----
-
-## Directory layout (standalone copy)
-
-When forking, replicate this layout:
-
-```
-my_project/
-├── pyproject.toml          # copy from this exemplar, adjust name/version
-├── STANDALONE.md           # this file
-├── CLAUDE.md               # agent guidance
-├── fonds/
-│   └── templates/
-│       ├── template_bibliography/
-│       │   ├── fonds.yaml
-│       │   └── data/
-│       │       ├── references.bib
-│       │       └── references.csv
-│       ├── template_contacts/
-│       │   ├── fonds.yaml
-│       │   └── data/
-│       │       └── contacts.yaml
-│       └── template_datasets/
-│           ├── fonds.yaml
-│           └── data/
-│               └── datasets.yaml
-├── rules/
-│   └── templates/
-│       ├── template_project_rules/
-│       │   ├── rules.yaml
-│       │   ├── soft/           # *.md guideline files
-│       │   └── strong/         # *.yaml constraint files
-│       └── template_manuscript_rules/
-│           ├── rules.yaml
-│           ├── soft/
-│           └── strong/
-├── tools/
-│   └── templates/
-│       └── template_code_executor/
-│           └── tools.yaml
-└── src/
-    ├── __init__.py               # namespace shim — the real package lives at src/template_pools_rules_tools/
-    └── template_pools_rules_tools/
-            ├── __init__.py           # re-exports the public API (imports figures/figures.py)
-            ├── py.typed
-            ├── tools/
-            │   ├── type_defs.py
-            │   ├── fonds_reader.py
-            │   ├── tools_invoker.py
-            │   └── integration.py    # imports rules/strong_rule_evaluator.py
-            ├── rules/
-            │   ├── rules_applier.py
-            │   └── strong_rule_evaluator.py
-            └── figures/
-                ├── figures.py        # imports cover_figure.py + rule_hierarchy_figure.py
-                ├── cover_figure.py
-                ├── rule_hierarchy_figure.py
-                └── manuscript_variables.py
-```
-
-(`src/template_pools_rules_tools/__init__.py` imports `figures/figures.py`; `tools/integration.py` imports
-`rules/strong_rule_evaluator.py`), so omitting any of them makes the Quick start
-below fail with `ModuleNotFoundError` before any of this project's own code
-runs.
-
----
-
-## Adjusting repo-root resolution
-
-The `src/` modules resolve the repo root using:
-
-```python
-pathlib.Path(__file__).resolve().parents[6]
-```
-
-This assumes the source file sits at depth 7 from the repo root:
-`projects/templates/template_pools_rules_tools/src/template_pools_rules_tools/<subpackage>/<module>.py`.
-
-**When you fork**, if your layout is different (e.g. `src/<module>.py` sits
-only 1 level deep), update the `_repo_root()` helper in each module to use
-the correct parent index, or replace it with an environment variable:
-
-```python
-import os
-
-def _repo_root() -> pathlib.Path:
-    env = os.environ.get("POOLS_RULES_TOOLS_ROOT")
-    if env:
-        return pathlib.Path(env).resolve()
-    # fallback: <depth> levels above this file
-    return pathlib.Path(__file__).resolve().parents[1]
-```
-
-Set `POOLS_RULES_TOOLS_ROOT=/path/to/my_project` before running.
-
----
-
-## Installation
+From the monorepo root, use the canonical exporter so declared public resources
+travel with the standalone project:
 
 ```bash
-# Minimal — runtime only
-pip install pyyaml
-
-# Development (tests + type-checking)
-pip install pyyaml pytest pytest-cov mypy
+uv run python -m infrastructure.project.copy_exemplar \
+  --source templates/template_pools_rules_tools \
+  --dest /tmp/template_pools_rules_tools
 ```
 
-Or with [uv](https://github.com/astral-sh/uv):
+The exported tree contains `src/template_pools_rules_tools/`, `setup.py`, its
+locked metadata, and `_template_resources/{fonds,rules,tools}/templates/`.
+Private `working/`, `archive/`, and lifecycle mirrors are excluded. The generated
+`.template-export.json` binds the actual source commit and copied bytes.
+
+Use an installed Python >=3.12, then from the export:
 
 ```bash
-uv sync
+uv sync --locked
+uv build --wheel
 ```
 
----
+`setup.py` delegates resource admission and copying to the tested
+`resource_paths.bundle_public_resources` implementation. The wheel includes
+`template_pools_rules_tools/_template_resources/`; it needs no sibling checkout
+for its integration computation. A project-only export without these declared
+resources cannot build the complete standalone wheel.
 
-## Quick start
+## Installed use
+
+Install the resulting wheel into a fresh environment with its declared runtime
+dependencies. Run from outside the source tree:
 
 ```python
 from template_pools_rules_tools.tools.integration import run_integration_demo
 
 result = run_integration_demo()
-
 print(result["summary"])
-# {
-#   "fonds_loaded": 3,
-#   "rules_sets_ok": 2,
-#   "rules_sets_total": 2,
-#   "tools_discovered": 1,
-#   "tools_valid": 1,
-#   "bib_entries": 8,
-#   "contacts": 5,
-#   "datasets": 5,
-# }
-
-from template_pools_rules_tools.tools.integration import generate_figure_data
-rows = generate_figure_data(result)
-for row in rows:
-    print(row["label"], row["count"], row["status"])
 ```
 
-The fonds and tools counts are discovered at runtime from whatever you actually
-copied. The rules-set counts are the exception: `rules_sets_total` is
-`len(_DEFAULT_RULE_SETS)` in [`src/template_pools_rules_tools/tools/integration.py`](src/template_pools_rules_tools/tools/integration.py), a
-fixed two-entry demo list (`template_project_rules`, `template_manuscript_rules`),
-so adding a rule set under `rules/` does not raise that total until you extend
-that list. The values shown match the minimal fork layout in
-"Directory layout" above, which copies a single tool manifest. Run inside the
-template monorepo, where `tools/templates/` holds four manifests,
-`tools_discovered` and `tools_valid` are both `4` instead.
+`resource_paths.public_resource_root` selects package-owned wheel resources,
+then the canonical export bundle, then public `templates/` resources in the
+monorepo. Arbitrary ancestor directories are not inferred. Resource counts are
+computed from the actual manifests; adding a rule set also requires extending
+`integration._DEFAULT_RULE_SETS` to include it in the demo.
 
----
+The bundled code executor uses POSIX Python process supervision with finite
+budgets and inherited-descendant cleanup. It executes trusted code under the
+current user; operating-system isolation is a separate responsibility. Select
+its installed interpreter through `TEMPLATE_PYTHON`. GNU `timeout` and `jq` are
+unnecessary.
 
-## Running tests
+## Verification
+
+From the standalone project root:
 
 ```bash
-# From the project root (standalone copy):
-pytest tests/ -v --cov=src --cov-fail-under=90  # noqa: docs-lint — standalone pip/venv workflow, no uv-managed interpreter here
+uv run pytest tests/ --cov=src --cov-branch --cov-fail-under=90
+uv run mypy src/ --strict
 ```
 
----
+The monorepo's `scripts/gates/installed_public.py` creates unique locked build and
+runtime environments, builds and installs actual wheels, and runs isolated
+Python outside the checkout. It checks exact wheel/source/RECORD bytes and
+package-owned resource paths, then executes the domain integration and bundled
+code executor. Preparation or source-import smoke is separate evidence from
+this actual installed-wheel run.
 
-## Type-checking
-
-```bash
-mypy src/ --strict
-```
-
-Expected output with a complete resource layout: **0 errors**.
-
----
-
-## Minimal fonds.yaml schema
-
-```yaml
-name: my_bibliography
-version: "1.0"
-description: "My references fond"
-```
-
----
-
-## Minimal rules.yaml schema
-
-```yaml
-name: my_project_rules
-version: "1.0"
-description: "My governance rules"
-```
-
----
-
-## Minimal tools.yaml schema
-
-```yaml
-name: my_tool
-version: "1.0"
-description: "My executable tool"
-entrypoints:
-  - scripts/run.py
-```
-
----
-
-## Resilience guarantees
-
-- All reader functions return `None` or empty collections when files are absent.
-- No function raises on missing paths — they log a `WARNING` and return a safe
-  default instead.
-- Check `RuleSetResult["warnings"]` for structured error reports.
-
----
+Readers can return structured absence warnings for exploratory inputs. Required
+public resource and installed acceptance gates refuse missing, unbound, or
+private data; absence is not a successful standalone verification.
 
 ## Licence
 
-CC-BY-4.0, declared in [`CITATION.cff`](CITATION.cff) (`license:`) and in
-[`manuscript/config.yaml`](manuscript/config.yaml) (`publication.license`).
-The grant travels with a fork: this exemplar ships its own
-[`LICENSE`](LICENSE). Note that the parent template repository's root `LICENSE`
-is Apache-2.0, which is a different licence from this project's declared one.
+CC-BY-4.0 is declared by this project's `LICENSE` and publication metadata.
+Bundled resources retain their individual manifest and licence files. Historical
+publication identifiers above describe the deposited release, while the local
+metadata identifies the pending intended release.

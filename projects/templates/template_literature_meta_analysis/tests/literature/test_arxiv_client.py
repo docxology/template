@@ -10,7 +10,7 @@ import xml.etree.ElementTree as ET
 import pytest
 from pytest_httpserver import HTTPServer
 
-from literature.arxiv_client import (
+from template_literature_meta_analysis.literature.arxiv_client import (
     parse_arxiv_response,
     search_arxiv,
 )

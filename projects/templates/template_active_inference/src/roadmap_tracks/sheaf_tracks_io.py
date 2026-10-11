@@ -3,8 +3,6 @@
 from __future__ import annotations
 
 import hashlib
-import os
-import subprocess
 from pathlib import Path
 from typing import Any
 
@@ -12,6 +10,7 @@ from typing import Any
 # Re-exported for the sheaf-track builder modules that import ``_load_json`` /
 # ``_write_json`` from this module; the canonical implementations live in
 # ``json_io`` so read/write behaviour stays identical across the package.
+from roadmap_tracks.fixed_point import _source_input_sha256 as _source_input_sha256
 from template_active_inference.json_io import load_json as _load_json
 from template_active_inference.json_io import write_json as _write_json  # noqa: F401  (re-exported for sheaf_tracks_write)
 
@@ -112,31 +111,6 @@ def _artifact_maps() -> tuple[dict[str, str], dict[str, tuple[str, ...]], dict[s
     from manuscript.sheaf.semantic import ARTIFACT_CONSUMERS, ARTIFACT_GATES, ARTIFACT_PRODUCERS
 
     return ARTIFACT_PRODUCERS, ARTIFACT_CONSUMERS, ARTIFACT_GATES
-
-
-def _source_commit(root: Path, *, process_runner=subprocess.run) -> str:
-    environment = os.environ.copy()
-    for variable in (
-        "GIT_ALTERNATE_OBJECT_DIRECTORIES",
-        "GIT_COMMON_DIR",
-        "GIT_DIR",
-        "GIT_INDEX_FILE",
-        "GIT_OBJECT_DIRECTORY",
-        "GIT_WORK_TREE",
-    ):
-        environment.pop(variable, None)
-    try:
-        result = process_runner(
-            ["git", "-C", str(root), "rev-parse", "HEAD"],
-            check=True,
-            capture_output=True,
-            text=True,
-            timeout=5,
-            env=environment,
-        )
-    except (OSError, subprocess.CalledProcessError, subprocess.TimeoutExpired):
-        return "unknown"
-    return result.stdout.strip() or "unknown"
 
 
 def _deterministic_seed(root: Path) -> int:

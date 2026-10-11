@@ -45,7 +45,7 @@ class TestPipelineConfig:
         assert config.projects_dir == "projects"
         assert config.clean is True
         assert config.skip_infra is False
-        assert config.skip_llm is False
+        assert config.mode == "core"
         assert config.resume is False
         assert config.total_stages == 10
 
@@ -56,13 +56,13 @@ class TestPipelineConfig:
             repo_root=tmp_path,
             clean=False,
             skip_infra=True,
-            skip_llm=True,
+            mode="live",
             resume=True,
             total_stages=5,
         )
         assert config.clean is False
         assert config.skip_infra is True
-        assert config.skip_llm is True
+        assert config.mode == "live"
         assert config.resume is True
         assert config.total_stages == 5
 
@@ -90,10 +90,10 @@ class TestPipelineStageResult:
         result = PipelineStageResult(stage_num=1, stage_name="test", success=False, duration=0.5, exit_code=1)
         assert result.is_skipped is False
 
-    def test_is_skipped_true_on_failure_with_zero_exit(self):
-        """Failed stage with zero exit code is skipped."""
+    def test_unclassified_failure_with_zero_exit_is_not_skip(self):
+        """A zero exit code alone cannot authorize a policy skip."""
         result = PipelineStageResult(stage_num=1, stage_name="test", success=False, duration=0.0, exit_code=0)
-        assert result.is_skipped is True
+        assert result.is_skipped is False
 
     def test_default_exit_code_zero(self):
         """Default exit_code is 0."""

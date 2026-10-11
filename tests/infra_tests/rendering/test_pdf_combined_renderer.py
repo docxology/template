@@ -1,23 +1,23 @@
-"""Tests for infrastructure.rendering._pdf_combined_renderer — comprehensive coverage."""
+"""Tests for the combined manuscript rendering implementations."""
 
 import pytest
 import yaml
 
 from infrastructure.core.exceptions import RenderingError
-from infrastructure.rendering._pdf_combined_renderer import (
+from infrastructure.rendering._pdf_combined_markdown import (
     CombinedMarkdownResult,
-    discover_manuscript_bib_paths,
     flatten_manuscript_vars,
     substitute_manuscript_var_placeholders,
     preprocess_combined_markdown,
-    postprocess_latex,
-    fix_starred_section_nameref_labels,
-    inject_bibliography,
+)
+from infrastructure.rendering._pdf_combined_bibliography import discover_manuscript_bib_paths, inject_bibliography
+from infrastructure.rendering._pdf_combined_latex import postprocess_latex, fix_starred_section_nameref_labels
+from infrastructure.rendering._pdf_combined_prevalidate import (
     verify_figure_references,
     prevalidate_markdown,
     prevalidate_for_render,
-    inject_latex_preamble,
 )
+from infrastructure.rendering._pdf_combined_preamble import inject_latex_preamble
 
 
 class TestFlattenManuscriptVars:

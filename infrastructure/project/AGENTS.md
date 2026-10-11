@@ -21,8 +21,6 @@ The `infrastructure/project/` module provides project discovery, validation, and
   without authenticating or accessing a private project.
 - `load_promotion_attestation(path)` - Load the same contract from an offline
   YAML fixture or private-project change record.
-- `python -m infrastructure.project.promotion <attestation.yaml>` - Retained
-  positional form for a secret-free offline attestation decision.
 - `python -m infrastructure.project.promotion attestation <path> --as-of YYYY-MM-DD`
   - Explicit, deterministic attestation validation.
 - `python -m infrastructure.project.promotion candidate --project-root <path>`
@@ -40,7 +38,7 @@ Single source of truth for which projects are public and which paths CI checks. 
 - `public_project_names(repo_root)` / `public_project_infos(repo_root)` - resolve roster to names / `ProjectInfo` objects present in the checkout
 - `public_ci_lint_paths(repo_root)` - public source, tests, scripts, and notebooks fed to Ruff
 - `public_ci_source_paths(repo_root)` - import-safe public `src/` paths fed to mypy
-- `main(argv=None)` - CLI entry point for `lint-paths`, `source-paths`, and roster subcommands
+- `main(argv=None)` - CLI entry point for `lint-paths`, `source-paths`, `ci-paths`, and roster subcommands. `ci-paths` prints the same lint/source scopes as ordered `lint_paths=` / `source_paths=` lines for direct CI output redirection.
 
 ### Public Template Contract (`public_template_contract.py`)
 
@@ -64,13 +62,32 @@ Implements the private-projects sidecar symlink sync documented in root `CLAUDE.
 - `collect_entries(repo_root)` - build `ExemplarEntry` records from each public exemplar's README (H1 title + "When to use this template" section)
 - `ExemplarEntry` - structured roster entry; backs `docs/_generated/exemplar_roster.md`
 
-### Clean Export Smoke (`export_smoke.py`)
+### Package Discovery and Installed Acceptance
 
-- `smoke_exported_exemplar(...)` - export one exemplar into a clean tree, install it with its own `pyproject.toml`/lock, and import every top-level `src` target.
-- `smoke_public_exemplars(...)` - apply the same isolated contract to the canonical public roster.
-- Thin gate: `uv run python scripts/gates/exemplar_export_smoke.py` (use repeated `--project` for a focused run).
+- `package_discovery.discover_import_targets(src_root)` describes static source
+  import targets without executing or installing project code.
+- `installed_acceptance.run_installed_acceptance(...)` executes genuine admitted
+  root/public wheels across Python3.12–3.14 with locked transitives and declared
+  provider topology. The complete selection is78 cells; a diagnostic subset
+  cannot establish complete-matrix acceptance.
+- Thin gate: `scripts/gates/installed_public.py`; select each installed minor with
+  repeated `--python MINOR=/absolute/env/bin/python`, nominate the candidate build
+  epoch/provenance, and retain a fresh ignored evidence directory. See
+  [`docs/development/installed-wheel-matrix.md`](../../docs/development/installed-wheel-matrix.md).
+- `copy_exemplar`/`export_exemplar` remain the canonical source/resource copying
+  APIs. A source export or source-path import is distinct from installed evidence.
 
 ### Public Readiness (`public_readiness.py`)
+
+- `scripts/gates/public_readiness.py --acceptance-matrix` extends the same
+  bounded isolated matrix with source-bound runtime and own-source branch
+  coverage gates for every supported minor. Select dedicated installed
+  environments with repeated `--python MINOR=/absolute/env/bin/python`.
+  Whole collection, exact chunk union, actual child exits, finite deadlines,
+  project output locks, and source/deliverable custody are required; skips and
+  deselection cannot pass. Missing selected interpreters/test tools are blocked.
+  See [`public-runtime-matrix.md`](../../docs/development/public-runtime-matrix.md)
+  for setup, raw receipts, diagnostic scope, and proof boundaries.
 
 - `run_public_readiness(repo_root)` runs one isolated `stage_01_test.py`
   subprocess for every `PUBLIC_PROJECT_NAMES` entry and records stable
@@ -102,7 +119,7 @@ Implements the private-projects sidecar symlink sync documented in root `CLAUDE.
   `template_template` distribution-name exception, Python-series proof,
   fail-closed source/test parsing, direct hydration compile/main-guard smoke,
   and `@pytest.mark.skip` parsing.
-- `build_ci_matrix()` / `validate_ci_matrix()` own the Python 3.10/3.14 matrix
+- `build_ci_matrix()` / `validate_ci_matrix()` own the supported Python runtime matrix
   contract consumed by `.github/workflows/ci.yml`.
 - Thin gate: `uv run python scripts/gates/public_capabilities.py`; it is also
   part of the unified health registry. `--json` emits the full stable manifest;
@@ -176,7 +193,7 @@ committed. The generated-artifact guard treats `.codegraph/*` as an offender.
 skip_combined_pytest = true  # omit from combined multi-project pytest union
 # Optional single-project Stage-01 verifier. The generic runner requires a
 # fresh structured receipt and independently rechecks the declared coverage floor.
-project_test_command = ["uv", "run", "--extra", "dev", "python", "scripts/run_full_verification.py"]
+project_test_command = ["python", "scripts/run_full_verification.py"]
 ```
 
 `project_test_command` is not filename auto-discovery and is not used by the
@@ -185,7 +202,7 @@ matrix does use the single-project Stage-01 lane and therefore honors the
 declaration. Its Python entry point must resolve within the project's `scripts/`
 tree; shell strings, traversal, symlink escape, missing or stale receipts,
 zero-test receipts, and missing/below-floor coverage all fail.
-The adapter overlays the workspace's pinned pytest/Coverage stack, writes and
+The adapter validates the existing interpreter against the workspace's exact pytest/Coverage stack without installation, writes and
 reads only the selected project's `coverage_project.json`, and requires real
 JUnit outcomes plus pytest-produced warning and discovery counts. Its
 6,900-second verifier deadline remains below the shared 7,200-second stage
@@ -626,3 +643,59 @@ The `infrastructure/project/` module enables multi-project support by:
 - ✅ Providing ProjectInfo dataclass for project information
 - ✅ Supporting both default and custom projects
 - ✅ Enabling project selection in pipeline scripts
+
+## Release acceptance modules
+
+| Module | Role |
+| --- | --- |
+| `installed_acceptance_artifacts.py` | Exact public exports and installed-wheel provenance for isolated acceptance. |
+| `installed_acceptance_runtime.py` | Locked dependency installation without editable/source provider substitution. |
+| `installed_acceptance_validation.py` | Require bound actual installed observations across every supported minor. |
+| `installed_acceptance_worker.py` | One bounded locked build and outside-source installed-wheel execution. |
+| `installed_domain_acceptance.py` | Functional installed execution with exported project inputs kept as data. |
+| `installed_reference_oracle.py` | Bounded current-reference recomputation, distinct from installed execution. |
+| `native_format_library_custody.py` | Bounded installed decoder file observations; hashes alone do not attest origin. |
+| `native_linux_calibre_custody.py` | Bounded sparse installed-package DATA for the selected Linux Calibre reader. |
+| `native_reader_runtime_custody.py` | Complete bounded native app file observations, independent of loaded-memory claims. |
+| `public_acceptance.py` | Source-bound 25-project × supported-runtime acceptance using the existing matrix. |
+| `public_acceptance_auxiliary.py` | Source-bound supervision for genuine auxiliary acceptance producers. |
+| `public_acceptance_auxiliary_cli.py` | Explicit CLI for source-bound auxiliary acceptance; never publishes. |
+| `public_acceptance_auxiliary_domains.py` | Concrete deterministic domain computations and independent raw-value admission. |
+| `public_acceptance_auxiliary_native.py` | Adapters for native scientific producers, retaining their complete raw facts. |
+| `public_acceptance_auxiliary_pipeline.py` | Portable custody of a genuine complete core pipeline in disposable public source. |
+| `public_acceptance_auxiliary_validation.py` | Independent admission of raw auxiliary process and scientific evidence. |
+| `public_acceptance_auxiliary_worker.py` | Real source-owned auxiliary checks executed only in a supervised child. |
+| `public_acceptance_case_observer.py` | Actual Root collection metadata, without invoking fixtures or test cases. |
+| `public_acceptance_case_policy.py` | Closed Root case classification; plans do not themselves grant acceptance. |
+| `public_acceptance_cases.py` | Source-owned pytest invocation and consumed-source contracts for runtime cells. |
+| `public_acceptance_cli.py` | Reusable argument contracts for public diagnostics and runtime acceptance. |
+| `public_acceptance_dependencies.py` | Actual installed public providers consumed by source-suite pytest children. |
+| `public_acceptance_evidence.py` | Confined evidence and whole-collection accounting for public runtime cells. |
+| `public_acceptance_pytest.py` | Real pytest execution with nonce-bound complete collection and case evidence. |
+| `public_acceptance_root.py` | Source-bound root runtime cells; unresolved root case policy blocks execution. |
+| `public_acceptance_scope.py` | One source-owned path, identity and coverage contract for runtime cells. |
+| `public_acceptance_worker.py` | One locked, bounded full-selection public project/runtime acceptance cell. |
+| `public_hosted_origin.py` | Exact-run GitHub artifact custody; hosted handoff must authenticate its binding. |
+| `public_package_dependencies.py` | Source-owned canonical public package dependency declarations and closure. |
+| `public_reference.py` | Complete committed public source DATA, distinct from the loaded platform SDK. |
+| `public_reference_git.py` | Read-only native Git custody for an explicitly nominated public reference. |
+| `public_reference_session.py` | One finite source DATA admission shared by an own project's consumers. |
+| `public_root_case_acceptance.py` | All required Root v2 case cells, original prepared-runtime execution and truthful gates. |
+| `public_root_case_admission.py` | Source-owned Root v2 policy, operation eligibility and exact plan admission. |
+| `public_root_case_census.py` | Bounded canonical Root collection and independent readback; never runtime acceptance. |
+| `public_root_case_contract.py` | Source-owned exact Root census specifications and confined evidence validation. |
+| `public_root_case_readback.py` | Independent canonical Root collection evidence reader, separate from producer claims. |
+| `public_root_case_units.py` | Source-owned case applicability units; every declared target stays required. |
+| `public_root_census_encoding.py` | Lossless original census JSON DAG; limits and every observation remain intact. |
+| `public_root_lane_contract.py` | Exact Root v2 lane admission and source-owned pytest invocations. |
+| `public_root_lane_coverage.py` | Real in-memory coverage observations, exact source mapping and confined JSON. |
+| `public_root_lane_producer.py` | Whole-budget Root v2 lane API; only original supervised outcomes can pass. |
+| `public_root_lane_readback.py` | Independently validate exact Root v2 lane processes, source policy and case reports. |
+| `public_root_lane_worker.py` | Real exact-node Root v2 execution, guarded chunks and original case outcomes. |
+| `public_root_policy_authoring.py` | Draft literal policy only from original census and exhaustive reviewed decisions. |
+| `public_root_policy_encoding.py` | Lossless bounded source-policy parts; serialization never grants acceptance. |
+| `public_root_portable.py` | Portable Root observations authenticated by the exact hosted artifact origin. |
+| `public_root_runtime_contract.py` | Exact source, interpreter and finite budget contract for a Root v2 runtime cohort. |
+| `public_root_runtime_producer.py` | Supervised prepared-interpreter Root v2 execution and genuine selected-interpreter readback. |
+| `public_root_runtime_readback.py` | Independent Root runtime readback in the genuinely selected interpreter; no cross-minor reconstruction. |
+| `public_root_runtime_worker.py` | One genuine full census and exact applicability units in the selected Root interpreter. |

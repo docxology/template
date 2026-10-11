@@ -38,7 +38,7 @@ cd my-research
 
 # 2. Install and run
 uv sync
-./run.sh --pipeline --project templates/template_code_project --core-only
+./run.sh --pipeline --project templates/template_code_project --mode core
 ```
 
 The tracked control-positive exemplar is ready to exercise the DAG, tests,
@@ -175,14 +175,14 @@ The template is **composable** — you can adopt any subset:
 
 - Don't need steganography? Skip `infrastructure.steganography` and
   `secure_run.sh`.
-- Don't need LLM stages? Run `--core-only` and skip `infrastructure.llm`.
+- Don't need LLM stages? Run `--mode core` and skip `infrastructure.llm`.
 - Don't need publishing? Skip `infrastructure.publishing` and
   `scripts/publish/`.
 - Don't need literature search? Skip `infrastructure.search`.
 - Don't want the MCP server? Skip `infrastructure.mcp_server.py`.
 
 The pipeline respects the tags and selection flags in `pipeline.yaml`. The
-default full and `--core-only` selections are documented in
+default full and `--mode core` selections are documented in
 [`RUN_GUIDE.md`](RUN_GUIDE.md); opt-in science, provenance, ebook, metadata,
 bundle, and archival paths must be selected and configured deliberately.
 

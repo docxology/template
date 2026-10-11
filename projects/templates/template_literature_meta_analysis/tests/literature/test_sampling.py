@@ -4,8 +4,8 @@ from __future__ import annotations
 
 import pytest
 
-from literature.models import Paper
-from literature.sampling import load_sampling_config, sample_papers
+from template_literature_meta_analysis.literature.models import Paper
+from template_literature_meta_analysis.literature.sampling import load_sampling_config, sample_papers
 
 
 def test_load_sampling_config_defaults() -> None:

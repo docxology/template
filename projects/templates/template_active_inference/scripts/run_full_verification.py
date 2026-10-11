@@ -4,16 +4,22 @@ from __future__ import annotations
 
 import argparse
 import sys
+import tempfile
 from pathlib import Path
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(PROJECT_ROOT / "src"))
 
-from orchestration.full_verification import run_coverage_only, run_verification
 
-
-def main() -> int:
+def _run_cli() -> int:
     """CLI entry point."""
+    from orchestration.full_verification import run_coverage_only, run_verification
+    from orchestration.verification_execution import (
+        VerificationCommandFailed,
+        VerificationDeadlineExceeded,
+        VerificationRuntimeUnavailable,
+    )
+
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
         "--skip-chunks",
@@ -23,7 +29,7 @@ def main() -> int:
     parser.add_argument(
         "--monolithic-coverage",
         action="store_true",
-        help="Use the legacy single pytest coverage process instead of chunked coverage subprocesses.",
+        help="Use one pytest coverage process instead of chunked coverage subprocesses.",
     )
     parser.add_argument(
         "--coverage-only",
@@ -53,11 +59,45 @@ def main() -> int:
                 monolithic_coverage=args.monolithic_coverage,
                 profile=args.profile,
             )
+    except KeyboardInterrupt:
+        print("\nINTERRUPTED: verification stopped by the controller")
+        return 130
+    except VerificationCommandFailed as exc:
+        print(f"\nFAILED: {exc}")
+        return exc.exit_code
+    except VerificationRuntimeUnavailable as exc:
+        print(f"\nBLOCKED: {exc}")
+        return 75
+    except VerificationDeadlineExceeded as exc:
+        print(f"\nTIMEOUT: {exc}")
+        return 124
     except RuntimeError as exc:
         print(f"\nERROR: {exc}")
         return 1
+    except ValueError as exc:
+        print(f"\nINVALID: {exc}")
+        return 2
     print("\nVerification workflow completed successfully.")
     return 0
+
+
+def main() -> int:
+    """Import the controller from a fresh private cache before audited children.
+
+    Under the platform's audited launcher the interpreter already runs with a
+    fresh private prefix to which every public import is bound; replacing it
+    here would place caches outside the audited prefix. Only a standalone
+    invocation creates its own temporary prefix.
+    """
+    if getattr(sys, "_template_executed_bytecode_audit", None) is not None:
+        return _run_cli()
+    prior = sys.pycache_prefix
+    try:
+        with tempfile.TemporaryDirectory(prefix="template-active-verifier-controller-") as temporary:
+            sys.pycache_prefix = str(Path(temporary).resolve())
+            return _run_cli()
+    finally:
+        sys.pycache_prefix = prior
 
 
 if __name__ == "__main__":

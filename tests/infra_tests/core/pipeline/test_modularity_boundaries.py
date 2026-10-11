@@ -3,6 +3,7 @@
 
 from __future__ import annotations
 
+import shutil
 import subprocess
 import sys
 from pathlib import Path
@@ -12,6 +13,7 @@ import pytest
 
 from infrastructure.core.pipeline.dag import PipelineDAG
 from infrastructure.core.pipeline.executor import PipelineConfig, PipelineExecutor
+from infrastructure.core.pipeline.outcomes import StageStatus
 
 
 @pytest.mark.slow
@@ -33,10 +35,19 @@ def test_built_wheel_contains_canonical_pipeline_yaml(tmp_path: Path) -> None:
         assert "infrastructure/core/pipeline/pipeline.yaml" in archive.namelist()
 
 
-def test_missing_repository_yaml_uses_packaged_canonical_dag(tmp_path: Path) -> None:
+def test_missing_repository_yaml_uses_packaged_canonical_dag(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """A minimal checkout cannot silently select a second Python stage list."""
     repo_root = tmp_path / "minimal-fork"
     (repo_root / "projects" / "p" / "output").mkdir(parents=True)
+    # The resolved plan admits only existing canonical stage targets, and an
+    # exported (non-Git) checkout must nominate its build epoch explicitly.
+    shutil.copytree(
+        Path(__file__).parents[4] / "scripts" / "pipeline",
+        repo_root / "scripts" / "pipeline",
+        ignore=shutil.ignore_patterns("__pycache__"),
+    )
+    assert not (repo_root / "infrastructure").exists()
+    monkeypatch.setenv("SOURCE_DATE_EPOCH", "1700000000")
     executor = PipelineExecutor(PipelineConfig(project_name="p", repo_root=repo_root))
 
     resolved = executor._resolve_pipeline_yaml()
@@ -45,7 +56,7 @@ def test_missing_repository_yaml_uses_packaged_canonical_dag(tmp_path: Path) -> 
     expected = PipelineDAG.from_yaml(resolved)
     expected.filter_tags(exclude=set(expected.opt_in_tags) | {"llm"})
     expected_names = [stage.name for stage in expected.sorted_stages()]
-    actual_names = [stage.name for stage in executor._build_stage_list(include_llm=False, skip_clean=False)]
+    actual_names = [stage.name for stage in executor._build_stage_list(skip_clean=False)]
     assert actual_names == expected_names
 
 
@@ -56,10 +67,14 @@ def test_missing_canonical_stage_does_not_run_unrelated_root_copy(tmp_path: Path
     project_dir.mkdir(parents=True)
     unrelated = repo_root / "scripts" / "02_run_analysis.py"
     unrelated.parent.mkdir(parents=True)
-    unrelated.write_text("raise SystemExit(0)\n", encoding="utf-8")
+    sentinel = tmp_path / "unrelated-root-copy-ran"
+    unrelated.write_text(f"from pathlib import Path\nPath({str(sentinel)!r}).write_text('ran')\n", encoding="utf-8")
 
     executor = PipelineExecutor(PipelineConfig(project_name="p", repo_root=repo_root))
-    assert executor._run_script("scripts/pipeline/stage_02_analysis.py", "--project", "p") is False
+    outcome = executor._run_script("scripts/pipeline/stage_02_analysis.py", "--project", "p")
+    assert not outcome
+    assert outcome.status is StageStatus.BLOCKED and outcome.child_exit_code is None
+    assert not sentinel.exists()
 
 
 def test_canonical_entrypoints_export_their_own_implementations() -> None:

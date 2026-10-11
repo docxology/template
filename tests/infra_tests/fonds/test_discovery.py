@@ -57,7 +57,7 @@ def test_discover_fonds_skips_working_and_archive(tmp_path: Path) -> None:
     assert "secret" not in names and "old" not in names and "visible" in names
 
 
-def test_resolve_fond_root_returns_path_for_public_exemplar() -> None:
+def test_resolve_fond_root_returns_path_for_public_exemplar(tmp_path: Path) -> None:
     import subprocess
 
     try:
@@ -70,7 +70,11 @@ def test_resolve_fond_root_returns_path_for_public_exemplar() -> None:
     except (subprocess.CalledProcessError, FileNotFoundError):
         pytest.skip("git not available or not inside a git repo")
     if not PUBLIC_FOND_NAMES:
-        pytest.skip("no fonds")
+        fixture = _make_fond(tmp_path / "fonds/templates/owned_bibliography")
+        found = discover_fonds(tmp_path)
+        assert [item.qualified_name for item in found] == ["templates/owned_bibliography"]
+        assert resolve_fond_root(tmp_path, found[0].qualified_name) == fixture
+        return
     resolved = resolve_fond_root(repo_root, PUBLIC_FOND_NAMES[0])
     assert resolved.is_dir() and (resolved / "fonds.yaml").is_file()
 
@@ -257,9 +261,24 @@ def test_offending_tracked_fonds_allows_public_fond_dirs(tmp_path: Path) -> None
         ALLOWED_FONDS_TOPLEVEL_FILES,
     )
 
-    # Only meaningful when there are public fonds
     if not ALLOWED_FOND_DIRS:
-        pytest.skip("No public fonds registered in PUBLIC_FOND_NAMES; skip path-prefix test")
+        import subprocess
+        from infrastructure.project.git_guards import _offending_tracked_paths
+
+        fixture = _make_fond(tmp_path / "fonds/templates/owned_bibliography")
+        assert discover_fonds(tmp_path)[0].path == fixture
+        subprocess.run(["git", "init", "-q", str(tmp_path)], check=True, timeout=10)
+        subprocess.run(["git", "-C", str(tmp_path), "add", "fonds"], check=True, timeout=10)
+        assert (
+            _offending_tracked_paths(
+                tmp_path,
+                path_prefix="fonds/",
+                allowed_toplevel=frozenset(),
+                allowed_dirs=("fonds/templates/owned_bibliography/",),
+            )
+            == []
+        )
+        return
 
     allowed_paths = [f"{prefix}fonds.yaml" for prefix in ALLOWED_FOND_DIRS]
 

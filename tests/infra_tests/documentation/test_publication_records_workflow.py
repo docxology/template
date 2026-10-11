@@ -702,3 +702,29 @@ def test_write_then_check_with_refreshed_external(tmp_path: Path) -> None:
 
     differences = check_publication_records_doc(tmp_path, refresh_external=False, update_github_readme=True)
     assert differences == []
+
+
+def test_pending_release_preserves_and_labels_published_evidence(tmp_path: Path) -> None:
+    _scaffold_all_public_projects(tmp_path)
+    name = PUBLIC_PROJECT_NAMES[0]
+    config = tmp_path / "projects" / name / "manuscript/config.yaml"
+    config.write_text(
+        config.read_text()
+        .replace("version: '1.0.0'", "version: '2.0.0'")
+        .replace(
+            "publication:\n",
+            "publication:\n  release_status: unreleased\n"
+            "  intended_version: '2.0.0'\n  last_published_version: '1.0.0'\n",
+        ),
+        encoding="utf-8",
+    )
+    records = load_publication_records(tmp_path)
+    record = next(record for record in records if record.project_name == name)
+    assert record.paper_version == "2.0.0"
+    assert record.metadata_version == record.citation_version == "1.0.0"
+    assert not record.sidecar_findings
+    assert "pending; last published 1.0.0" in record.version_display
+    assert "intended release pending" in record.external_status
+    rendered = render_publication_records_doc(tmp_path, records)
+    assert "2.0.0 pending; last published 1.0.0" in rendered
+    assert record.version_doi in rendered

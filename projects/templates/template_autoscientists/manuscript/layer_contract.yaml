@@ -1,0 +1,9 @@
+allow_infrastructure_imports:
+  - src/template_autoscientists/agents/live_custody.py
+  - src/template_autoscientists/agents/live_transport.py
+  - src/template_autoscientists/search/live_comparison.py
+reason: >-
+  Explicit live adapters use the platform process guardian and identity-checked
+  local Ollama transport plus actual executed-source and distribution custody.
+  The deterministic objective, proposer, and search
+  primitives remain standalone. No provider acquisition or paid calls occur.

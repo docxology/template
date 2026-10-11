@@ -5,6 +5,8 @@ from __future__ import annotations
 import argparse
 from pathlib import Path
 
+import yaml
+
 from infrastructure.autoresearch.planner import build_autoresearch_plan
 from infrastructure.autoresearch.reports import (
     write_autoresearch_plan,
@@ -53,6 +55,18 @@ def main(argv: list[str] | None = None) -> int:
     parser = build_parser()
 
     args = parser.parse_args(argv)
+    try:
+        return _dispatch(args)
+    except (ValueError, yaml.YAMLError, FileNotFoundError) as error:
+        print(f"AutoResearch invocation rejected: {error}")
+        return 2
+    except OSError as error:
+        print(f"AutoResearch output failed: {error}")
+        return 1
+
+
+def _dispatch(args: argparse.Namespace) -> int:
+    """Keep invalid source declarations separate from readiness failures."""
     if args.command == "schema":
         return emit_schema(build_parser())
     if args.command == "plan":
@@ -131,7 +145,7 @@ def _orchestrate(repo_root: Path, project: str, projects_dir: str, as_json: bool
         print(f"  Project: {result.project_name}")
         print(f"  Phase Reached: {result.phase_reached}")
         print(f"  Events Logged: {len(result.events)}")
-    return 0 if result.success else 1
+    return 2 if result.phase_reached == "planning" else 0 if result.success else 1
 
 
 if __name__ == "__main__":

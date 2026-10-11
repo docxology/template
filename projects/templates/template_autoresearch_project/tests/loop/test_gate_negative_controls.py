@@ -352,3 +352,20 @@ def test_dedicated_ml_grade_not_clobbered_by_auto_grade(
     assert "accepted_candidate_id" in json.dumps(ml)
     # readiness-smoke IS the auto-grade and must reflect measured readiness.
     assert "checks" in readiness and "failed_checks" in readiness
+
+
+def test_pre_hydration_requirement_excludes_only_hydration_outputs(tmp_path: Path) -> None:
+    """Hydration may create its own sidecars, but a missing domain output still fails."""
+    from template_autoresearch_project.manuscript.manuscript_tokens_core import _validate_required_artifacts
+
+    domain = "output/data/ml_task_results.json"
+    sidecar = "output/data/manuscript_variables.json"
+    manifest = "output/reports/artifact_manifest.json"
+    payload = {"config": {"required_artifacts": [domain, sidecar, manifest]}}
+    (tmp_path / "output/data").mkdir(parents=True)
+    (tmp_path / domain).write_text("{}", encoding="utf-8")
+    _validate_required_artifacts(tmp_path, payload)  # positive: only post-hydration files absent
+
+    (tmp_path / domain).unlink()
+    with pytest.raises(ValueError, match="ml_task_results.json"):
+        _validate_required_artifacts(tmp_path, payload)

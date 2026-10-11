@@ -35,6 +35,7 @@ flowchart LR
 | [`style_guide.md`](style_guide.md) | Thin orchestrator and determinism conventions |
 | [`syntax_guide.md`](syntax_guide.md) | `{{SIA_*}}` tokens and task directory layout |
 | [`quickstart.md`](quickstart.md) | First-run commands |
+| [`live-numeric-proposals.md`](live-numeric-proposals.md) | Bounded local Ollama/Docker proposal, holdout, diff, rollback, and approval contract |
 | [`output_conventions.md`](output_conventions.md) | Where loop artifacts land on disk |
 | [`troubleshooting.md`](troubleshooting.md) | Diagnostic flow for failed stages |
 | [`faq.md`](faq.md) | SIA harness vs AutoResearch; live mode |

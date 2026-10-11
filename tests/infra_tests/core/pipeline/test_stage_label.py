@@ -12,7 +12,10 @@ def _write_pipeline_yaml(repo_root: Path, stage_names: list[str]) -> None:
     """Write a minimal pipeline.yaml at the infrastructure default location."""
     pipeline_dir = repo_root / "infrastructure" / "core" / "pipeline"
     pipeline_dir.mkdir(parents=True, exist_ok=True)
-    stages = "\n".join(f"  - name: {name}\n    method: noop_{i}" for i, name in enumerate(stage_names))
+    # Every declared stage carries the stable lowercase key the DAG requires.
+    stages = "\n".join(
+        f"  - name: {name}\n    key: stage_{i}\n    method: noop_{i}" for i, name in enumerate(stage_names)
+    )
     (pipeline_dir / "pipeline.yaml").write_text(f"stages:\n{stages}\n", encoding="utf-8")
 
 
@@ -36,4 +39,4 @@ def test_stage_label_fallback_when_stage_missing(tmp_path: Path) -> None:
 
 def test_stage_label_fallback_when_repo_root_none() -> None:
     """With no repo_root, the lookup is skipped and the fallback is returned."""
-    assert stage_label("LLM Scientific Review", repo_root=None) == "LLM Scientific Review stage"
+    assert stage_label("LLM Manuscript Review", repo_root=None) == "LLM Manuscript Review stage"

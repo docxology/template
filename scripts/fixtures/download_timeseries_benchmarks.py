@@ -122,6 +122,7 @@ def generate_synthetic_timeseries() -> None:
                     },
                 }
             )
+            + "\n"
         )
         print(f"  ✓ Generated synthetic series {i + 1}/{NUM_SERIES}: {outpath.name} ({len(values)} points)")
 

@@ -6,7 +6,7 @@
 ## Publication identity
 
 - Standalone repository: [docxology/template_formal](https://github.com/docxology/template_formal)
-- Config version: `0.1.0`
+- Intended / published version: `0.2.0 pending; last published 0.1.0`
 - Stable concept DOI: [10.5281/zenodo.21298885](https://doi.org/10.5281/zenodo.21298885)
 - Latest deposited version DOI: [10.5281/zenodo.21298886](https://zenodo.org/records/21298886)
 - Additional declared locations: none declared

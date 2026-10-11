@@ -3,4 +3,4 @@
 A systematic literature review framework with multi-phase search and LLM filtering.
 """
 
-__version__ = "0.1.0"
+__version__ = "0.2.0"

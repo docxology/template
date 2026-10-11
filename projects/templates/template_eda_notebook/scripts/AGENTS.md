@@ -4,7 +4,7 @@
 
 The `scripts/` directory contains **thin orchestrators**. A thin orchestrator
 strictly coordinates without implementing analysis logic: all EDA computation
-lives in the tested `src/eda/` library. Scripts import from `src/`, plot the
+lives in the tested `src/template_eda_notebook/eda/` library. Scripts import from `src/`, plot the
 returned data with matplotlib, and write artifacts to `output/`.
 
 ## Key Concepts
@@ -50,7 +50,7 @@ This script:
 3. Plots three figures with matplotlib and writes them to `output/figures/`.
 4. Writes a per-column summary CSV to `output/data/summary_statistics.csv`.
 5. Writes `output/figures/figure_registry.json` from the immutable specs in
-   `src/eda/figures.py`, after verifying all three PNGs exist.
+   `src/template_eda_notebook/eda/figures.py`, after verifying all three PNGs exist.
 6. Prints every output path for manifest collection.
 
 ### generate_measurements_data.py
@@ -58,7 +58,7 @@ This script:
 Regenerates a deterministic **sibling** of the shipped dataset fixture
 (`data/measurements.csv`) — same schema, 120 rows, same missingness pattern
 (1 height / 2 weight / 1 resting), same group labels, and the same correlation
-sign structure — from a fixed NumPy seed (`src/eda/generate.py::generate_measurements`).
+sign structure — from a fixed NumPy seed (`src/template_eda_notebook/eda/generate.py::generate_measurements`).
 The original fixture's random draw order is not recoverable, so the generator
 reproduces the fixture's *family*, not a byte-exact clone. Writes
 `output/data/measurements_generated.csv` and prints the path for manifest
@@ -67,6 +67,23 @@ utility runs on each canonical pipeline run — the generated CSV is therefore a
 deterministic, regenerable artifact, not a hand-maintained snapshot.
 
 ## API Reference
+
+### execute_notebook.py
+
+`run_notebook()` launches the package's `worker_main()` through the shared
+subprocess guardian. Installed callers supply an explicit exported project root;
+the worker imports the actual installed namespace without a checkout script.
+`--python` selects the actual kernel interpreter; startup,
+cell and total deadlines must be positive and finite. A local-only
+`output/.pipeline/notebook_execution.json` receipt is written after fresh-kernel
+execution, independent numerical agreement and source/input custody succeed.
+The public `output/reports/notebook_execution.json` summary preserves measured
+computations and relative source identities, with no absolute machine paths or
+kernel PID. Its interpreter-path hash identifies the recorded string, not the
+binary. Exact previous receipts are retained in ignored local history before
+stale latest-success pointers are removed. The source notebook stays unchanged.
+The canonical analysis stage discovers the public script; the package worker
+is separate from ordinary script discovery.
 
 ### eda_analysis.py
 
@@ -82,7 +99,7 @@ deterministic, regenerable artifact, not a hand-maintained snapshot.
 | `generate_measurements_file(project_root=None)` | Writes `measurements_generated.csv` under `output/data/`. Accepts an output-root override for tests. |
 | `main()` | Calls `generate_measurements_file()` against the real project root and prints the path. |
 
-All analysis logic is in `src/eda/`; these scripts only orchestrate. Tested by
+All analysis logic is in `src/template_eda_notebook/eda/`; these scripts only orchestrate. Tested by
 [`../tests/test_eda_analysis_script.py`](../tests/test_eda_analysis_script.py)
 and [`../tests/test_generate_measurements_data.py`](../tests/test_generate_measurements_data.py),
 which run the orchestrator functions against a temporary output root.
@@ -90,14 +107,14 @@ which run the orchestrator functions against a temporary output root.
 ## Configuration
 
 - **Histogram bins**: 10 (passed to `histogram_data`).
-- **Output directories**: resolved via `src/project_paths.py::project_output_dirs`.
+- **Output directories**: resolved via `src/template_eda_notebook/project_paths.py::project_output_dirs`.
 - **Plotting backend**: `Agg` (set before importing pyplot).
 
 ## Best Practices
 
 - Use `pathlib.Path` for all file paths; never hardcode an absolute path.
 - Verify generated files exist and have content (the script test asserts this).
-- Keep all computation in `src/eda/` so the script stays trivially thin.
+- Keep all computation in `src/template_eda_notebook/eda/` so the script stays trivially thin.
 
 ## See Also
 

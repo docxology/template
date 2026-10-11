@@ -1,4 +1,4 @@
-"""Static Python 3.10 syntax and standard-library compatibility audit."""
+"""Static Python 3.12 syntax and standard-library compatibility audit."""
 
 from __future__ import annotations
 
@@ -10,7 +10,7 @@ from typing import Iterable
 
 @dataclass(frozen=True)
 class PythonCompatibilityIssue:
-    """One unguarded source construct unavailable on Python 3.10."""
+    """One unguarded source construct unavailable on Python 3.12."""
 
     path: str
     line: int
@@ -18,63 +18,49 @@ class PythonCompatibilityIssue:
     message: str
 
 
-_POST_310_IMPORTS: dict[str, frozenset[str]] = {
-    "asyncio": frozenset({"TaskGroup"}),
-    "datetime": frozenset({"UTC"}),
-    "enum": frozenset({"StrEnum"}),
-    "typing": frozenset({"LiteralString", "NotRequired", "Required", "Self", "TypeVarTuple", "Unpack"}),
+_POST_312_IMPORTS: dict[str, frozenset[str]] = {
+    "asyncio": frozenset({"QueueShutDown"}),
+    "datetime": frozenset(),
+    "enum": frozenset(),
+    "typing": frozenset({"TypeIs", "ReadOnly"}),
 }
-_POST_310_ATTRIBUTES: dict[str, frozenset[str]] = {
-    "asyncio": frozenset({"TaskGroup"}),
-    "datetime": frozenset({"UTC"}),
-    "enum": frozenset({"StrEnum"}),
-    "typing": frozenset({"LiteralString", "NotRequired", "Required", "Self", "TypeVarTuple", "Unpack"}),
+_POST_312_ATTRIBUTES: dict[str, frozenset[str]] = {
+    "asyncio": frozenset({"QueueShutDown"}),
+    "datetime": frozenset(),
+    "enum": frozenset(),
+    "typing": frozenset({"TypeIs", "ReadOnly"}),
 }
 
 
-def scan_python_310_compatibility(
+def scan_python_312_compatibility(
     paths: Iterable[Path],
     *,
     repo_root: Path,
 ) -> tuple[PythonCompatibilityIssue, ...]:
-    """Scan Python files for 3.10-incompatible syntax and unguarded APIs."""
+    """Scan Python files for 3.12-incompatible syntax and unguarded APIs."""
     issues: list[PythonCompatibilityIssue] = []
     resolved_root = repo_root.resolve()
     for source_path, display in _python_files_and_displays(paths, resolved_root):
         try:
             source = source_path.read_text(encoding="utf-8")
-            tree = ast.parse(source, filename=str(source_path), feature_version=(3, 10))
+            tree = ast.parse(source, filename=str(source_path), feature_version=(3, 12))
         except SyntaxError as exc:
             issues.append(
                 PythonCompatibilityIssue(
                     display,
                     exc.lineno or 0,
-                    "PY310.SYNTAX",
+                    "PY312.SYNTAX",
                     exc.msg,
                 )
             )
             continue
         except (OSError, UnicodeError) as exc:
-            issues.append(PythonCompatibilityIssue(display, 0, "PY310.READ", str(exc)))
+            issues.append(PythonCompatibilityIssue(display, 0, "PY312.READ", str(exc)))
             continue
 
         # Fast path: only build parent map and inspect AST nodes if the source
-        # contains potential post-3.10 identifiers or imports.
-        if any(
-            token in source
-            for token in (
-                "tomllib",
-                "TaskGroup",
-                "UTC",
-                "StrEnum",
-                "LiteralString",
-                "NotRequired",
-                "Required",
-                "Self",
-                "TypeVarTuple",
-                "Unpack",
-            )
-        ):
+        # contains potential post-3.12 identifiers or imports.
+        if any(token in source for token in ("QueueShutDown", "TypeIs", "ReadOnly", "annotationlib")):
             parents = _parent_map(tree)
             issues.extend(_api_issues(tree, parents, display))
     return tuple(sorted(issues, key=lambda issue: (issue.path, issue.line, issue.rule)))
@@ -85,7 +71,7 @@ def _python_files_and_displays(paths: Iterable[Path], resolved_root: Path) -> tu
 
     Each candidate is resolved a single time; the resolved path keys the
     de-duplication dict and the resolved path + ``resolved_root`` produce the
-    display string, so ``scan_python_310_compatibility`` performs no second
+    display string, so ``scan_python_312_compatibility`` performs no second
     filesystem resolution pass over the source tree.
     """
     entries: dict[str, tuple[Path, str]] = {}
@@ -112,15 +98,15 @@ def _api_issues(
     for node in ast.walk(tree):
         if isinstance(node, ast.Import):
             for alias in node.names:
-                if alias.name == "tomllib" and not _is_compatibility_guarded(node, parents):
-                    issues.append(_api_issue(path, node, "tomllib"))
+                if alias.name == "annotationlib" and not _is_compatibility_guarded(node, parents):
+                    issues.append(_api_issue(path, node, "annotationlib"))
         elif isinstance(node, ast.ImportFrom):
-            unavailable = _POST_310_IMPORTS.get(node.module or "", frozenset())
+            unavailable = _POST_312_IMPORTS.get(node.module or "", frozenset())
             for alias in node.names:
                 if alias.name in unavailable and not _is_compatibility_guarded(node, parents):
                     issues.append(_api_issue(path, node, f"{node.module}.{alias.name}"))
         elif isinstance(node, ast.Attribute) and isinstance(node.value, ast.Name):
-            unavailable = _POST_310_ATTRIBUTES.get(node.value.id, frozenset())
+            unavailable = _POST_312_ATTRIBUTES.get(node.value.id, frozenset())
             if node.attr in unavailable and not _is_compatibility_guarded(node, parents):
                 issues.append(_api_issue(path, node, f"{node.value.id}.{node.attr}"))
     return issues
@@ -150,8 +136,8 @@ def _api_issue(path: str, node: ast.AST, api: str) -> PythonCompatibilityIssue:
     return PythonCompatibilityIssue(
         path,
         getattr(node, "lineno", 0),
-        "PY310.API",
-        f"{api} requires Python 3.11+; guard it and provide a 3.10 fallback",
+        "PY312.API",
+        f"{api} requires Python 3.13+; guard it and provide a 3.12 fallback",
     )
 
 
@@ -167,4 +153,4 @@ def _display_path(path: Path, resolved_root: Path) -> str:
         return path.as_posix()
 
 
-__all__ = ["PythonCompatibilityIssue", "scan_python_310_compatibility"]
+__all__ = ["PythonCompatibilityIssue", "scan_python_312_compatibility"]

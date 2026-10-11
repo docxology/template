@@ -238,7 +238,7 @@ uv run python scripts/pipeline/stage_03_render.py \
      --project templates/template_code_project
 
    # Or run full pipeline up to PDF stage
-   uv run python scripts/runner/execute_pipeline.py --project {name} --core-only
+   uv run python scripts/runner/execute_pipeline.py --project {name} --mode core
    ```
 
 2. **Verify PDF location:**

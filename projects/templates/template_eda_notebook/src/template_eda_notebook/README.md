@@ -1,14 +1,16 @@
 # src/ — EDA Library
 
 The tested exploratory-data-analysis logic for the exemplar. All functions live
-in the `src.eda` subpackage and are re-exported from `src/__init__.py`. The
-library is standalone: numpy and pandas only, no `infrastructure.*` imports, no
-plotting, no file I/O.
+in the `template_eda_notebook.eda` subpackage and are re-exported from `src/template_eda_notebook/__init__.py`. The
+domain computations use NumPy/Pandas without `infrastructure.*` imports or
+plotting. Dataset and binding readers perform read-only I/O. The separate
+`notebook_execution.py` runtime uses NBClient/nbformat and a temporary fresh
+kernel; its computations are checked by an independent NumPy/Pandas oracle.
 
 ## Quick Start
 
 ```python
-from src import load_dataset, clean_dataset, summary_statistics, correlation_matrix
+from template_eda_notebook import load_dataset, clean_dataset, summary_statistics, correlation_matrix
 
 raw = load_dataset()                 # shipped CSV, NaNs preserved
 clean, report = clean_dataset(raw)   # report.dropped = rows removed
