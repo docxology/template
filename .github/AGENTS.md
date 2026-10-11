@@ -48,7 +48,8 @@ flowchart TB
     ITPL --> ITPL_F[config.yml · bug_report.md ·<br/>feature_request.md · documentation.md]
 
     WF --> WF_DOCS[AGENTS.md · README.md]
-    WF --> WF_CI[hardening.yml<br/>20 jobs — 2 conditional via detect outputs — fep-lean, setup-hook-windows-smoke — 2 schedule/dispatch-only — public-matrix-receipt, test-infra-slow — 1 aggregation gate — ci-gate]
+    WF --> WF_FAST[ci.yml<br/>Linux/Python 3.14 functional checks · CI Gate]
+    WF --> WF_CI[hardening.yml<br/>20 jobs — 2 conditional via detect outputs — fep-lean, setup-hook-windows-smoke — manual-only lanes — public-matrix-receipt, test-infra-slow — 1 aggregation gate — ci-gate]
     WF --> WF_STALE[stale.yml<br/>Auto-label/close stale issues/PRs]
     WF --> WF_REL[release.yml<br/>GitHub Releases on version tags]
     WF --> WF_REQUIRED[platform-required-acceptance.yml<br/>Original observations + strict candidate collector]
@@ -59,7 +60,7 @@ flowchart TB
     classDef f fill:#0f766e,stroke:#0f172a,color:#fff
     class GH d
     class ITPL,WF pkg
-    class META,DEP,PRT,ITPL_F,WF_DOCS,WF_CI,WF_STALE,WF_REL,WF_REQUIRED f
+    class META,DEP,PRT,ITPL_F,WF_DOCS,WF_FAST,WF_CI,WF_STALE,WF_REL,WF_REQUIRED f
 ```
 
 ## Continuous Integration (CI/CD)
@@ -67,7 +68,7 @@ flowchart TB
 ### Optional exhaustive hardening (`workflows/hardening.yml`)
 
 **Triggers:** manual **`workflow_dispatch`** only.
-**Concurrency:** Superseded PR runs are cancelled by PR ref. Main pushes, scheduled runs, and manual runs each retain a unique run group so later commits cannot cancel exact-commit verification.
+**Concurrency:** Each manual hardening run retains its unique run group so later commits or dispatches cannot cancel exact-commit verification.
 
 **Pipeline jobs** (job ids in `hardening.yml`; display names differ — use `name:` for branch protection):
 

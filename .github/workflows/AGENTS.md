@@ -24,7 +24,8 @@ The `workflows/` directory contains GitHub Actions workflows that automate the c
 flowchart LR
     W[.github/workflows/]
     W --> META[AGENTS.md · README.md]
-    W --> CI[hardening.yml<br/>20 jobs · 2 conditional via detect outputs<br/>2 schedule/manual-only lanes: test-infra-slow, public-matrix-receipt]
+    W --> FAST[ci.yml<br/>Linux/Python 3.14 functional checks · CI Gate]
+    W --> CI[hardening.yml<br/>20 jobs · 2 conditional via detect outputs<br/>manual-only lanes: test-infra-slow, public-matrix-receipt]
     W --> STALE[stale.yml<br/>Auto-label/close stale issues/PRs]
     W --> REL[release.yml<br/>Create GitHub Releases on version tags]
     W --> REQUIRED[platform-required-acceptance.yml<br/>Original observations + strict candidate collector]
@@ -34,7 +35,7 @@ flowchart LR
     classDef code fill:#1e3a8a,stroke:#0f172a,color:#fff
     classDef doc fill:#0f766e,stroke:#0f172a,color:#fff
     class W d
-    class CI,STALE,REL,REQUIRED code
+    class FAST,CI,STALE,REL,REQUIRED code
     class META doc
 ```
 
@@ -159,7 +160,7 @@ A negative control backs this contract: deliberately breaking any represented st
 - **Budgets:** The job is 90 minutes, pytest remains `--timeout=120`, and every existing per-case timeout override remains effective. Linux retains `-n auto`, macOS retains `-n 2`, and both use `--dist loadscope`. Faster completion is a hypothesis until fresh hosted timings establish it; additional jobs repeat preparation and may increase total runner minutes.
 - **Coverage:** Only the four Python 3.14/Linux shards instrument execution. Per-shard thresholds are replaced by the required `coverage-infra` complete-union gate at the same ≥60% floor. The gate refuses missing/extra/duplicate/stale/failed selection records, incomplete case unions and changed coverage bytes, then merges genuine branch measurements in memory and writes confined JSON/XML. Codecov upload remains nonblocking after this required local threshold passes.
 - **Receipt scope:** Ordinary selection records bind infrastructure/scripts/infra tests/CI configuration source bytes. They do not replace full public source custody, installed-wheel, live, platform or release acceptance; missing Root release policy remains blocked.
-- **MathJax live viewport:** The scheduled/manual browser spec runs once on shard 0 of Python 3.14/Linux. Its existing tool provisioning, completed-typesetting checks and failure policy remain unchanged.
+- **MathJax live viewport:** The manual hardening browser spec runs once on shard 0 of Python 3.14/Linux. Its existing tool provisioning, completed-typesetting checks and failure policy remain unchanged.
 
 For an unpartitioned local check, the existing full `pytest tests/infra_tests/` command remains supported without this explicit plugin. An exact shard invocation requires a fresh owned checkout and uses `-p infrastructure.core.testing.ci_infra_shard_plugin --infra-ci-shard N` with the workflow's marker expression. The selection receipt is local execution state, not a cache or resume authorization.
 

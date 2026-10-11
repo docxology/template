@@ -48,7 +48,10 @@ run separately. A local dashboard or focused pass cannot authorize publication.
 
 ## Why this guide exists
 
-The repo's infrastructure CI matrix (Ubuntu × Python 3.12–3.14 plus a macOS 3.14 smoke) runs on GitHub Actions free-tier minutes. macOS minutes cost 10× Linux. GitHub's free-tier policy has tightened twice since 2020. On a multi-decade horizon, **the inability to reproduce CI locally is a vendor-lock-in risk** — if the free tier compresses, the project either pays or moves CI providers.
+Default functional CI uses Linux and Python 3.14. Manual Optional Hardening
+retains the complete Ubuntu × Python 3.12–3.14 and macOS × Python 3.14
+infrastructure matrix. Local reproduction helps diagnose these jobs and reduces
+dependence on hosted runner availability and pricing.
 
 This guide documents the **`act`-based local reproduction path**, which decouples the workflow YAML (the documentation of intent) from the GitHub Actions runtime (the current implementation).
 
@@ -80,14 +83,16 @@ docker info >/dev/null     # should succeed
 ## Running CI locally
 
 ```bash
-# Run the full default workflow (everything on push to main)
+# Run default functional CI (the push workflow)
 ./scripts/shell/ci_local.sh
 
-# Run a specific job (job IDs match .github/workflows/hardening.yml)
+# Run a default functional job
 ./scripts/shell/ci_local.sh -j lint
-./scripts/shell/ci_local.sh -j test-infra
-./scripts/shell/ci_local.sh -j test-project
-./scripts/shell/ci_local.sh -j security
+
+# Select the manual exhaustive workflow explicitly when using act
+act workflow_dispatch -W .github/workflows/hardening.yml -j test-infra
+act workflow_dispatch -W .github/workflows/hardening.yml -j test-project
+act workflow_dispatch -W .github/workflows/hardening.yml -j security
 
 # Run every canonical public exemplar in isolated subprocesses
 ./scripts/shell/ci_local.sh --no-act -j public-readiness
@@ -95,8 +100,11 @@ docker info >/dev/null     # should succeed
 # Dry-run (show what would execute without running)
 ./scripts/shell/ci_local.sh --dryrun
 
-# List all available jobs
+# List default push jobs (or direct fallback lanes when act is unavailable)
 ./scripts/shell/ci_local.sh --list
+
+# List jobs in manual Optional Hardening
+act workflow_dispatch -W .github/workflows/hardening.yml --list
 ```
 
 See [`scripts/shell/ci_local.sh`](../../scripts/shell/ci_local.sh) for the wrapper details.
@@ -148,7 +156,7 @@ Add `.secrets` to `.gitignore` if you need to test secret-dependent jobs locally
 | `test-integration` (run.sh + secure_run.sh + pipeline CLI) | ✅ Yes | Fully Linux-portable; needs `verify-no-mocks`; mirrors `test-regression` (CI-WIRING-1) |
 | `fep-lean` (gauss + lake, conditional) | ✅ Yes | Linux-only, `if: needs.detect.outputs.fep_lean == 'true'`; heavy (60 min timeout) |
 | `setup-hook-windows-smoke` | ❌ No | Runs on `windows-latest` — `act` only reproduces Linux containers; treat the real CI run as source of truth (same caveat as the macOS jobs above) |
-| `test-infra-slow` (`pytest.mark.slow` lane, schedule/manual only) | ✅ Yes | `uv run pytest tests/infra_tests/ -m slow` locally; heavy real-render suite (pandoc + TeX Live), no coverage upload |
+| `test-infra-slow` (`pytest.mark.slow` lane, manual Optional Hardening only) | ✅ Yes | `uv run pytest tests/infra_tests/ -m slow` locally; heavy real-render suite (pandoc + TeX Live), no coverage upload |
 
 ## Fallback: fail-closed direct commands
 

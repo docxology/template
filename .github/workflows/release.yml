@@ -171,8 +171,9 @@ jobs:
           # Release gates must execute the real test contract on the exact
           # tagged SHA, not merely static contracts. The bounded pipeline-smoke
           # infra lane (the same contract project pipelines run) plus the
-          # no-mocks gate provide executable evidence without the 30-minute
-          # full matrix (which CI already runs per commit).
+          # no-mocks gate provide focused executable evidence. The manual
+          # Optional Hardening matrix and authenticated root 4+ required
+          # acceptance remain separate publication obligations.
           uv run --no-sync --offline python scripts/audit/verify_no_mocks.py
           uv run --no-sync --offline python scripts/pipeline/stage_01_test.py --infra-only --infra-scope pipeline-smoke
 

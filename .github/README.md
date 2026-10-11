@@ -906,7 +906,8 @@ Long-horizon viability — toolchain migration, local CI, archival targets, regr
 
 | Workflow | Trigger | Purpose |
 | --- | --- | --- |
-| [`hardening.yml`](workflows/hardening.yml) | manual only | **20 jobs** (2 conditional · 2 schedule/dispatch-only · 1 aggregation gate) — see the full table below |
+| [`ci.yml`](workflows/ci.yml) | main push, pull request, or manual | Linux/Python 3.14 functional checks, public project wheel builds and focused behavioral tests, with required `CI Gate` |
+| [`hardening.yml`](workflows/hardening.yml) | manual only | **20 jobs** (2 conditional · manual-only lanes · 1 aggregation gate) — see the full table below |
 | [`stale.yml`](workflows/stale.yml) | Daily schedule | Close inactive issues/PRs (`actions/stale`) |
 | [`release.yml`](workflows/release.yml) | `v*.*.*` tag · manual dispatch | Exact-tag gates, root 4+ full required-acceptance handoff, installed-wheel matrix, rendered evidence, and release build |
 | [`platform-required-acceptance.yml`](workflows/platform-required-acceptance.yml) | manual only | Original Root/common/native observations and strict complete candidate handoff; implementation presence is not acceptance or publication proof |

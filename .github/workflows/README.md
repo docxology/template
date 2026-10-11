@@ -22,7 +22,8 @@ For Dependabot, issue/PR templates, and the full GitHub integration picture, see
 
 | File | Trigger | Purpose |
 |---|---|---|
-| [`hardening.yml`](hardening.yml) | manual only | **20 jobs** (2 conditional via the `detect` job's outputs — `needs.detect.outputs.*`: **`fep-lean`** and **`setup-hook-windows-smoke`**; 2 schedule/manual-only lanes: **`test-infra-slow`** and **`public-matrix-receipt`**; see [`AGENTS.md`](AGENTS.md)) |
+| [`ci.yml`](ci.yml) | main push, pull request, or manual | Linux/Python 3.14 functional checks, all public project wheel builds and focused behavioral tests, aggregated by `CI Gate` |
+| [`hardening.yml`](hardening.yml) | manual only | **20 jobs** (2 conditional via the `detect` job's outputs — `needs.detect.outputs.*`: **`fep-lean`** and **`setup-hook-windows-smoke`**; manual-only lanes: **`test-infra-slow`** and **`public-matrix-receipt`**; see [`AGENTS.md`](AGENTS.md)) |
 | [`stale.yml`](stale.yml) | Daily 01:00 UTC | Auto-label and close stale issues/PRs |
 | [`release.yml`](release.yml) | `v*.*.*` tag push or manual | Generate GitHub Release with changelog |
 | [`platform-required-acceptance.yml`](platform-required-acceptance.yml) | manual only | Original required-profile observations and strict exact-source acceptance bundle |
@@ -171,7 +172,8 @@ inventory, and an independent collector. The collector uploads
 The workflow's presence does not establish a successful hosted run, integration
 into `main`, or publication. Ordinary CI uploads cannot substitute for this
 handoff, and a version heading does not authorize release. The 4.0.1 candidate
-remains Unreleased; the prepared 4.0.0 candidate was not published.
+has frozen release-intent metadata and remains unpublished; the prepared 4.0.0
+candidate was not published.
 The evidence handoff verifies custody and required acceptance; it does not
 perform sandbox or production transfers itself.
 
