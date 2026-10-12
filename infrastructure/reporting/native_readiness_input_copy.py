@@ -9,7 +9,7 @@ from pathlib import Path
 
 from infrastructure.core.files.secure_write import atomic_write_bytes_confined
 from infrastructure.core.pipeline.fingerprints import tree_records
-from infrastructure.project.public_reference import MAX_REFERENCE_BYTES
+from infrastructure.project.public_reference import MAX_REFERENCE_BYTES, _directory
 from infrastructure.project.public_reference_git import MAX_FILES, remaining
 from infrastructure.reporting.readiness_receipts import (
     _READINESS_SOURCE_METADATA_NAMES,
@@ -46,7 +46,11 @@ def copy_source_mirror_data(source: Path, destination: Path, *, expected_identit
             remaining(deadline)
             path = base if label == "." else base / label
             relative = path.relative_to(source).as_posix()
-            target = SnapshotReader(destination).public_path(relative)
+            target = (
+                _directory(SnapshotReader(destination), relative)
+                if kind == "directory"
+                else SnapshotReader(destination).public_path(relative)
+            )
             observed += 1
             if observed > MAX_FILES:
                 raise ValueError("source mirror DATA exceeds the existing Source census")

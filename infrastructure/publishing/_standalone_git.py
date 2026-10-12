@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import re
 import subprocess
 import sys
 from pathlib import Path
@@ -218,3 +219,201 @@ print(prefix+'END',flush=True)
     if output != prefix + "END\n":
         raise ValueError("native Git source inventory has trailing output")
     return [path for path in records["TRACKED"].split("\0") if path], records["TREE"]
+
+
+# Only adjacent admission reads share this fresh guardian. Native stdout still
+# streams into its bounded supervisor; the observer retains two tiny commit
+# identities, a dirty-status flag, or two probe-line counters, never an inventory.
+_ADMISSION_STREAM = """
+import codecs,json,os,re,signal,subprocess,sys,threading
+prefix=sys.argv[1]
+def read(label,args,observe=None,expected=()):
+    print(prefix+label,flush=True)
+    read_fd,write_fd=os.pipe()
+    identity=bytearray()
+    invalid_identity=False
+    dirty=False
+    counts=[0,0]
+    invalid_probe=False
+    line=''
+    line_overflow=False
+    failures=[]
+    probe=expected[0].split('\\t',1)[0]+'\\t' if expected else ''
+    line_limit=max(map(len,expected),default=0)
+    def complete_line():
+        nonlocal line,line_overflow,invalid_probe
+        if line.startswith(probe):
+            if line_overflow or line not in expected:
+                invalid_probe=True
+            else:
+                index=expected.index(line)
+                counts[index]=min(2,counts[index]+1)
+        line=''
+        line_overflow=False
+    def observe_text(text):
+        nonlocal dirty,line,line_overflow
+        if observe=='status':
+            dirty=dirty or bool(text.strip())
+        elif observe=='probe':
+            for character in text:
+                if character in '\\n\\r\\v\\f\\x1c\\x1d\\x1e\\x85\\u2028\\u2029':
+                    complete_line()
+                elif len(line)<line_limit:
+                    line+=character
+                else:
+                    line_overflow=True
+    def drain():
+        nonlocal invalid_identity
+        decoder=codecs.getincrementaldecoder('utf-8')(errors='replace')
+        try:
+            with os.fdopen(read_fd,'rb',buffering=0) as stream:
+                while True:
+                    chunk=stream.read(65536)
+                    if not chunk:
+                        break
+                    sys.stdout.buffer.write(chunk)
+                    sys.stdout.buffer.flush()
+                    if observe=='identity':
+                        remaining=512-len(identity)
+                        identity.extend(chunk[:remaining])
+                        invalid_identity=invalid_identity or len(chunk)>remaining
+                    elif observe in ('status','probe'):
+                        observe_text(decoder.decode(chunk))
+                if observe in ('status','probe'):
+                    observe_text(decoder.decode(b'',final=True))
+                if observe=='probe' and (line or line_overflow):
+                    complete_line()
+        except BaseException as error:
+            failures.append(error)
+    reader=threading.Thread(target=drain)
+    reader.start()
+    try:
+        result=subprocess.run(
+            ['git','--no-replace-objects','-c','core.hooksPath=/dev/null','-c','core.fsmonitor=false',*args],
+            stdout=write_fd,check=False,timeout=60,
+        )
+    except subprocess.TimeoutExpired:
+        print('original native Git read exceeded its 60-second deadline',file=sys.stderr,flush=True)
+        raise SystemExit(124)
+    finally:
+        os.close(write_fd)
+        reader.join()
+    if failures:
+        raise failures[0]
+    if result.returncode:
+        print('original native Git return code: '+str(result.returncode),file=sys.stderr,flush=True)
+        if result.returncode<0:
+            signum=-result.returncode
+            if signum!=signal.SIGKILL:
+                signal.signal(signum,signal.SIG_DFL)
+            os.kill(os.getpid(),signum)
+            raise SystemExit(1)
+        raise SystemExit(result.returncode)
+    if observe=='identity':
+        return None if invalid_identity else identity.decode('utf-8',errors='replace').strip()
+    if observe=='status':
+        return dirty
+    if observe=='probe':
+        return not invalid_probe and counts==[1,1]
+def refuse():
+    # All native reads completed successfully. The parent repeats the original
+    # admission predicate and raises its original ValueError before consumption.
+    print(prefix+'REFUSED',flush=True)
+    raise SystemExit(0)
+"""
+
+
+def _admission_records(output: str, prefix: str, labels: tuple[str, ...]) -> dict[str, str]:
+    records: dict[str, str] = {}
+    for index, label in enumerate(labels[:-1]):
+        marker = prefix + label + "\n"
+        following = prefix + labels[index + 1] + "\n"
+        if not output.startswith(marker) or output.count(following) != 1:
+            raise ValueError("native Git admission read framing is malformed or ambiguous")
+        records[label], output = output[len(marker) :].split(following, 1)
+        output = following + output
+    if output != prefix + labels[-1] + "\n":
+        raise ValueError("native Git admission read has trailing output")
+    return records
+
+
+def _clean_source_records(head: str, resolved: str | None, status: str, supplied: str | None) -> str:
+    """Repeat the existing clean-HEAD admission before consuming an inventory."""
+    if not re.fullmatch(r"[0-9a-f]{40}|[0-9a-f]{64}", head):
+        raise ValueError("standalone source HEAD has an unsupported commit identity")
+    if supplied is not None and resolved != head:
+        raise ValueError("standalone source revision differs from current HEAD")
+    if status.strip():
+        raise ValueError("standalone publication requires a clean source working tree")
+    return head
+
+
+def _git_clean_source_inventory(cwd: Path, supplied: str) -> tuple[str, list[str], str]:
+    """Admit clean HEAD, then read its tracked/tree inventory in one fresh60s cohort."""
+    if not re.fullmatch(r"[0-9a-f]{7,64}", supplied):
+        raise ValueError("standalone source revision must be an actual hexadecimal HEAD identity")
+    prefix = "template-git-clean-source-inventory-v1:"
+    script = (
+        _ADMISSION_STREAM
+        + """
+supplied=sys.argv[2]
+head=read('HEAD',['rev-parse','--verify','HEAD^{commit}'],'identity')
+resolved=read('LABEL',['rev-parse','--verify',supplied+'^{commit}'],'identity')
+dirty=read('STATUS',['status','--porcelain','--untracked-files=all'],'status')
+if head is None or not re.fullmatch(r'[0-9a-f]{40}|[0-9a-f]{64}',head) or resolved!=head or dirty:
+    refuse()
+read('TRACKED',['ls-files','-z','--','.'])
+read('TREE',['ls-tree','-r','-z',head,'--',*json.loads(sys.argv[3])])
+print(prefix+'END',flush=True)
+"""
+    )
+    roots = [*(root.as_posix() for root in _PUBLIC_ROOTS), "infrastructure", "pyproject.toml"]
+    result = run_bounded_subprocess(
+        [sys.executable, "-I", "-S", "-c", script, prefix, supplied, json.dumps(roots)],
+        cwd=cwd,
+        env=_git_environment(),
+        timeout=60,
+    )
+    if result.returncode != 0:
+        raise RuntimeError(
+            f"git clean source inventory batch failed in {cwd}: {(result.stderr or result.command_error).strip()}"
+        )
+    refused = result.stdout.endswith(prefix + "REFUSED\n")
+    labels = (
+        ("HEAD", "LABEL", "STATUS", "REFUSED") if refused else ("HEAD", "LABEL", "STATUS", "TRACKED", "TREE", "END")
+    )
+    records = _admission_records(result.stdout, prefix, labels)
+    head = _clean_source_records(records["HEAD"].strip(), records["LABEL"].strip(), records["STATUS"], supplied)
+    if refused:
+        raise ValueError("native Git admission observer refused an otherwise valid source record")
+    return head, [path for path in records["TRACKED"].split("\0") if path], records["TREE"]
+
+
+def _git_destination_inventory(cwd: Path, admitted: str, probe: str) -> tuple[str, str | None]:
+    """Read direct routing, then origin routing, with no intervening mutable operation."""
+    prefix = "template-git-destination-inventory-v1:"
+    script = (
+        _ADMISSION_STREAM
+        + """
+admitted,probe=sys.argv[2:]
+expected=(probe+'\\t'+admitted+' (fetch)',probe+'\\t'+admitted+' (push)')
+if not read('INVENTORY',['-c','remote.'+probe+'.url='+admitted,'remote','-v'],'probe',expected):
+    refuse()
+read('ORIGIN',['remote','get-url','--push','--all','origin'])
+print(prefix+'END',flush=True)
+"""
+    )
+    result = run_bounded_subprocess(
+        [sys.executable, "-I", "-S", "-c", script, prefix, admitted, probe],
+        cwd=cwd,
+        env=_git_environment(),
+        timeout=60,
+    )
+    if result.returncode != 0:
+        raise RuntimeError(
+            f"git destination inventory batch failed in {cwd}: {(result.stderr or result.command_error).strip()}"
+        )
+    refused = result.stdout.endswith(prefix + "REFUSED\n")
+    labels = ("INVENTORY", "REFUSED") if refused else ("INVENTORY", "ORIGIN", "END")
+    records = _admission_records(result.stdout, prefix, labels)
+    return records["INVENTORY"], records.get("ORIGIN")

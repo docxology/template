@@ -14,7 +14,10 @@ import pytest
 import yaml
 
 from infrastructure.core.subprocess_policy import SubprocessPolicy, run_with_policy
-from infrastructure.core.testing.ci_infra_coverage import ARTIFACT_DIRECTORY, merge_shards
+from infrastructure.core.testing.ci_infra_coverage import (
+    ARTIFACT_DIRECTORY,
+    merge_shards,
+)
 from infrastructure.core.testing.ci_infra_partition import (
     INFRA_MARKERS,
     RESERVED_MODULES,
@@ -30,7 +33,11 @@ from infrastructure.core.testing.ci_infra_partition import (
     validate_receipts,
 )
 from infrastructure.project.public_capabilities import CANONICAL_CI_PYTHON_VERSIONS
-from infrastructure.project.public_reference_git import _PINNED_SUBMODULE, _PINNED_SUBMODULE_URL, native_git
+from infrastructure.project.public_reference_git import (
+    _PINNED_SUBMODULE,
+    _PINNED_SUBMODULE_URL,
+    native_git,
+)
 
 SDK_ROOT = Path(__file__).resolve().parents[3]
 
@@ -135,7 +142,10 @@ def test_declared_matrix_retains_every_environment_and_shard() -> None:
     cells = ci_matrix()["include"]
     expected = {
         (runner, version, shard)
-        for runner, versions in (("ubuntu-latest", CANONICAL_CI_PYTHON_VERSIONS), ("macos-latest", ("3.14",)))
+        for runner, versions in (
+            ("ubuntu-latest", CANONICAL_CI_PYTHON_VERSIONS),
+            ("macos-latest", ("3.14",)),
+        )
         for version in versions
         for shard in range(SHARD_COUNT)
     }
@@ -176,13 +186,17 @@ def test_partition_admits_escaped_parametrization_ids_from_actual_collection() -
         ["tests/infra_tests/core/test_x.py::test_a[\0]"],
     ],
 )
-def test_partition_refuses_empty_duplicate_or_noncanonical_collection(ids: list[str]) -> None:
+def test_partition_refuses_empty_duplicate_or_noncanonical_collection(
+    ids: list[str],
+) -> None:
     with pytest.raises(ValueError):
         partition(ids)
 
 
 @pytest.mark.timeout(120)
-def test_actual_serial_shards_execute_exact_union_and_enforce_real_branch_coverage(tmp_path: Path) -> None:
+def test_actual_serial_shards_execute_exact_union_and_enforce_real_branch_coverage(
+    tmp_path: Path,
+) -> None:
     root = _fixture(tmp_path)
     result = _native(
         root,
@@ -237,7 +251,13 @@ def test_actual_serial_shards_execute_exact_union_and_enforce_real_branch_covera
     assert sorted((root / "executed.txt").read_text().splitlines()) == [f"case-{index}" for index in range(4)]
     records = [read_receipt(root, receipt_path(root, shard)) for shard in range(SHARD_COUNT)]
     assert (
-        len(validate_receipts(records, expected_source=selection_source(root), expected_runtime=selected_runtime()))
+        len(
+            validate_receipts(
+                records,
+                expected_source=selection_source(root),
+                expected_runtime=selected_runtime(),
+            )
+        )
         == 4
     )
     union = read_receipt(root, root / "output/readiness/ordinary-infra-ci/union.json")
@@ -276,15 +296,40 @@ def test_actual_serial_shards_execute_exact_union_and_enforce_real_branch_covera
 
 
 @pytest.mark.timeout(120)
-def test_actual_xdist_workers_agree_and_only_execute_the_assigned_cases(tmp_path: Path) -> None:
+def test_actual_xdist_workers_agree_and_only_execute_the_assigned_cases(
+    tmp_path: Path,
+) -> None:
     root = _fixture(tmp_path)
-    result = _native(root, "raise SystemExit(pytest.main(command(0) + ['-n', '2', '--dist', 'loadscope']))\n")
+    module = root / next(iter(RESERVED_MODULES))
+    module.write_text(
+        module.read_text()
+        + "\n@pytest.mark.parametrize('private_value', [str(ROOT/'PRIVATE_PARAMETER_SENTINEL')])\n"
+        + "def test_actual_parameter_privacy(private_value):\n"
+        + "    assert private_value.endswith('PRIVATE_PARAMETER_SENTINEL')\n"
+    )
+    result = _native(
+        root,
+        "raise SystemExit(pytest.main(command(0) + ['-n', '2', '--dist', 'loadscope']))\n",
+    )
     assert result.returncode == 0, result.stderr + result.stdout
     record = read_receipt(root, receipt_path(root, 0))
     assert record["original_pytest_exit_code"] == record["exit_code"] == 0
     assert record["complete"] is True and record["diagnostics"] == []
     assert record["completed_node_ids"] == record["assigned_node_ids"]
     assert (root / "executed.txt").read_text().splitlines() == ["case-0"]
+    diagnostics = _diagnostic_record(root, "0")
+    assert diagnostics["active_cases"] == []
+    assert diagnostics["first_failure_events"] == []
+    assert diagnostics["recent_events"][-1]["event"] == "session_finish"
+    assert any(event.get("last_observed_report_phase") == "teardown" for event in diagnostics["recent_events"])
+    serialized = json.dumps(diagnostics)
+    assert str(root) not in serialized and "PRIVATE_PARAMETER_SENTINEL" not in serialized
+    member = next(node for node in record["assigned_node_ids"] if "test_actual_parameter_privacy[" in node)
+    assert "PRIVATE_PARAMETER_SENTINEL" in member
+    assert any(
+        event.get("case_identity_sha256") == hashlib.sha256(member.encode()).hexdigest()
+        for event in diagnostics["recent_events"]
+    )
 
 
 @pytest.mark.timeout(120)
@@ -312,12 +357,22 @@ def test_actual_failure_preserves_original_pytest_one(tmp_path: Path) -> None:
     record = read_receipt(root, receipt_path(root, 0))
     assert record["original_pytest_exit_code"] == record["exit_code"] == 1
     assert record["complete"] is False
+    diagnostics = _diagnostic_record(root, "0")
+    assert any(
+        event.get("public_family", "").endswith("::test_actual_failure") and event.get("observed_outcome") == "failed"
+        for event in diagnostics["first_failure_events"]
+    )
 
 
 @pytest.mark.timeout(120)
 @pytest.mark.parametrize(
     "consumed_source",
-    ["infrastructure/arithmetic.py", "conftest.py", "tests/conftest.py", "tests/helpers/owned_fixture.py"],
+    [
+        "infrastructure/arithmetic.py",
+        "conftest.py",
+        "tests/conftest.py",
+        "tests/helpers/owned_fixture.py",
+    ],
 )
 def test_actual_source_edit_during_execution_refuses_completion(tmp_path: Path, consumed_source: str) -> None:
     root = _fixture(tmp_path)
@@ -391,7 +446,11 @@ def test_complete_merge_admission_refuses_invalid_selection_records(fault: str) 
     else:
         records[0]["marker_expression"] = "slow"
     with pytest.raises(ValueError):
-        validate_receipts(records, expected_source="actual-fixture-source", expected_runtime=selected_runtime())
+        validate_receipts(
+            records,
+            expected_source="actual-fixture-source",
+            expected_runtime=selected_runtime(),
+        )
 
 
 def test_ci_workflow_consumes_partition_and_keeps_the_union_gate_required() -> None:
@@ -409,6 +468,23 @@ def test_ci_workflow_consumes_partition_and_keeps_the_union_gate_required() -> N
     assert any("--merge-coverage" in step.get("run", "") for step in jobs["coverage-infra"]["steps"])
     assert "coverage-infra" in jobs["ci-gate"]["needs"]
     assert set(jobs["ci-gate"]["needs"]) == set(jobs) - {"ci-gate"}
+    diagnostics = next(
+        step for step in infra["steps"] if step.get("name") == "Preserve partial infrastructure controller diagnostics"
+    )
+    assert diagnostics["if"] == "${{ always() }}" and diagnostics["continue-on-error"] is True
+    assert diagnostics["with"]["if-no-files-found"] == "warn"
+    assert "/diagnostics/" in diagnostics["with"]["path"]
+    slow = jobs["test-infra-slow"]
+    slow_execution = next(step for step in slow["steps"] if step.get("name") == "Run slow-marked infrastructure tests")
+    assert slow["timeout-minutes"] == 90
+    assert "--timeout=1200" in slow_execution["run"] and "-n auto" in slow_execution["run"]
+    assert "-m slow" in slow_execution["run"] and "--dist loadscope" in slow_execution["run"]
+    assert "--infra-ci-observer-only slow" in slow_execution["run"] and "--infra-ci-shard" not in slow_execution["run"]
+    slow_diagnostics = next(
+        step for step in slow["steps"] if step.get("name") == "Preserve partial slow-lane controller diagnostics"
+    )
+    assert slow_diagnostics["if"] == "${{ always() }}" and slow_diagnostics["continue-on-error"] is True
+    assert slow_diagnostics["with"]["if-no-files-found"] == "warn"
 
 
 def test_ci_infra_checkouts_prepare_the_declared_public_pin_before_source_observation() -> None:
@@ -459,12 +535,17 @@ def test_actual_zero_collection_refuses_vacuous_success(tmp_path: Path) -> None:
 
 
 @pytest.mark.timeout(120)
-def test_actual_xdist_zero_collection_refuses_without_worker_restarts(tmp_path: Path) -> None:
+def test_actual_xdist_zero_collection_refuses_without_worker_restarts(
+    tmp_path: Path,
+) -> None:
     """Under xdist the refusal travels through workeroutput; workers never crash."""
     root = _fixture(tmp_path)
     for module in RESERVED_MODULES:
         (root / module).write_text("VALUE = 1\n")
-    result = _native(root, "raise SystemExit(pytest.main(command(0) + ['-n', '2', '--dist', 'loadscope']))\n")
+    result = _native(
+        root,
+        "raise SystemExit(pytest.main(command(0) + ['-n', '2', '--dist', 'loadscope']))\n",
+    )
     assert result.returncode == 2, result.stdout + result.stderr
     record = read_receipt(root, receipt_path(root, 0))
     assert record["exit_code"] == 2 and record["complete"] is False
@@ -474,7 +555,9 @@ def test_actual_xdist_zero_collection_refuses_without_worker_restarts(tmp_path: 
 
 
 @pytest.mark.timeout(120)
-def test_actual_root_replacement_cannot_publish_into_the_replacement(tmp_path: Path) -> None:
+def test_actual_root_replacement_cannot_publish_into_the_replacement(
+    tmp_path: Path,
+) -> None:
     root = _fixture(tmp_path)
     module = root / next(iter(RESERVED_MODULES))
     original = tmp_path / "original-owned-root"
@@ -489,3 +572,196 @@ def test_actual_root_replacement_cannot_publish_into_the_replacement(tmp_path: P
     assert "confinement root changed" in result.stdout + result.stderr
     assert original.is_dir() and root.is_dir()
     assert not receipt_path(root, 0).exists() and not receipt_path(original, 0).exists()
+
+
+def _diagnostic_record(root: Path, lane: str) -> dict[str, object]:
+    path = root / "output/readiness/ordinary-infra-ci/diagnostics" / f"shard-{lane}.json"
+    assert path.stat().st_mode & 0o777 == 0o600
+    value = json.loads(path.read_text())
+    assert value["schema_version"] == "template-ordinary-infra-ci-controller-diagnostics-v1"
+    assert value["diagnostics_only"] is True
+    assert "complete" not in value and "completed_node_ids" not in value and "exit_code" not in value
+    assert len(value["recent_events"]) <= value["recent_event_limit"]
+    assert len(value["first_failure_events"]) <= value["first_failure_limit"]
+    assert len(value["active_cases"]) <= value["active_case_limit"]
+    return value
+
+
+def _lane_program(lane: str) -> str:
+    if lane == "ordinary":
+        return "args = command(0)\n"
+    return (
+        "args = command(0)\n"
+        "at = args.index('--infra-ci-shard'); del args[at:at+2]\n"
+        "args[args.index('-m')+1] = 'slow'\n"
+        "args += ['--infra-ci-observer-only', 'slow']\n"
+    )
+
+
+@pytest.mark.timeout(120)
+@pytest.mark.parametrize("lane", ["ordinary", "slow"])
+def test_actual_xdist_crash_retains_partial_controller_diagnostics(tmp_path: Path, lane: str) -> None:
+    root = _fixture(tmp_path)
+    if lane == "slow":
+        for name in RESERVED_MODULES:
+            module = root / name
+            module.write_text(
+                module.read_text().replace(
+                    "raise AssertionError('the original marker exclusion must remain')",
+                    "assert 19 == 19",
+                )
+            )
+    module = root / next(iter(RESERVED_MODULES))
+    module.write_text(
+        module.read_text()
+        + "\n"
+        + ("@pytest.mark.slow\n" if lane == "slow" else "")
+        + "def test_actual_worker_exit():\n    import os\n    os._exit(19)\n"
+    )
+    supervision = ""
+    if lane == "slow":
+        # The existing last-case worker-crash mechanics can leave xdist waiting
+        # for its replacement worker. Observe the real partial failure, then
+        # explicitly terminate only this owned controller within five seconds.
+        # Missing failure DATA still fails the assertions below.
+        supervision = (
+            "import os, signal, threading, time\n"
+            "def interrupt_owned_controller():\n"
+            "    deadline = time.monotonic() + 5.0\n"
+            "    diagnostic = root/'output/readiness/ordinary-infra-ci/diagnostics/shard-slow.json'\n"
+            "    while time.monotonic() < deadline:\n"
+            "        if diagnostic.exists():\n"
+            "            failures = json.loads(diagnostic.read_text())['first_failure_events']\n"
+            "            crashed = any(event.get('worker_error_present') is True for event in failures)\n"
+            "            reported = any(event.get('public_family', '').endswith('::test_actual_worker_exit') and event.get('observed_outcome') == 'failed' for event in failures)\n"
+            "            if crashed and reported: break\n"
+            "        time.sleep(0.01)\n"
+            "    os.kill(os.getpid(), signal.SIGTERM)\n"
+            "threading.Thread(target=interrupt_owned_controller, daemon=True).start()\n"
+        )
+    result = _native(
+        root,
+        _lane_program(lane)
+        + supervision
+        + "raise SystemExit(pytest.main(args + ['-n', '2', '--dist', 'loadscope']))\n",
+    )
+    assert result.returncode == (1 if lane == "ordinary" else -15), result.stdout + result.stderr
+    assert "node down" in result.stdout + result.stderr
+    diagnostics = _diagnostic_record(root, "0" if lane == "ordinary" else "slow")
+    assert any(event.get("worker_error_present") is True for event in diagnostics["first_failure_events"])
+    assert any(
+        event.get("public_family", "").endswith("::test_actual_worker_exit")
+        and event.get("observed_outcome") == "failed"
+        for event in diagnostics["first_failure_events"]
+    )
+    assert "test_actual_worker_exit" in result.stdout + result.stderr
+    if lane == "ordinary":
+        selection = read_receipt(root, receipt_path(root, 0))
+        assert selection["complete"] is False and selection["exit_code"] == 1
+    else:
+        assert not any(receipt_path(root, shard).exists() for shard in range(SHARD_COUNT))
+
+
+@pytest.mark.timeout(120)
+@pytest.mark.parametrize("lane", ["ordinary", "slow"])
+def test_actual_controller_interruption_retains_started_case(tmp_path: Path, lane: str) -> None:
+    root = _fixture(tmp_path)
+    if lane == "slow":
+        for name in RESERVED_MODULES:
+            module = root / name
+            module.write_text(
+                module.read_text().replace(
+                    "raise AssertionError('the original marker exclusion must remain')",
+                    "assert 19 == 19",
+                )
+            )
+    module = root / next(iter(RESERVED_MODULES))
+    module.write_text(
+        module.read_text()
+        + "\n"
+        + ("@pytest.mark.slow\n" if lane == "slow" else "")
+        + "def test_actual_controller_interrupt():\n"
+        + "    import os, signal, time\n"
+        + "    controller = int((ROOT/'controller.pid').read_text())\n"
+        + "    assert controller == os.getppid() and controller != os.getpid()\n"
+        + "    import json\n"
+        + "    diagnostic = ROOT/'output/readiness/ordinary-infra-ci/diagnostics'/"
+        + repr("shard-0.json" if lane == "ordinary" else "shard-slow.json")
+        + "\n"
+        + "    deadline = time.monotonic() + 5.0\n"
+        + "    observed = False\n"
+        + "    while time.monotonic() < deadline:\n"
+        + "        events = json.loads(diagnostic.read_text())['active_cases']\n"
+        + "        observed = any(event.get('public_family', '').endswith('::test_actual_controller_interrupt') and event.get('last_observed_report_phase') == 'setup' for event in events)\n"
+        + "        if observed: break\n"
+        + "        time.sleep(0.01)\n"
+        + "    assert observed, 'owned controller did not retain actual setup within original fixture observation deadline'\n"
+        + "    os.kill(controller, signal.SIGTERM)\n"
+        + "    time.sleep(60)\n"
+    )
+    result = _native(
+        root,
+        "import os\n(root/'controller.pid').write_text(str(os.getpid()))\n"
+        + _lane_program(lane)
+        + "raise SystemExit(pytest.main(args + ['-n', '2', '--dist', 'loadscope']))\n",
+    )
+    assert result.returncode == -15, result.stdout + result.stderr
+    diagnostics = _diagnostic_record(root, "0" if lane == "ordinary" else "slow")
+    active = [
+        event
+        for event in diagnostics["active_cases"]
+        if event.get("public_family", "").endswith("::test_actual_controller_interrupt")
+    ]
+    assert len(active) == 1 and active[0].get("last_observed_report_phase") == "setup"
+    assert not any(event["event"] == "session_finish" for event in diagnostics["recent_events"])
+    assert not any(receipt_path(root, shard).exists() for shard in range(SHARD_COUNT))
+
+
+@pytest.mark.timeout(120)
+@pytest.mark.parametrize("outcome", ["passed", "failed"])
+def test_actual_slow_observer_only_retains_original_behavior(tmp_path: Path, outcome: str) -> None:
+    root = _fixture(tmp_path)
+    if outcome == "passed":
+        for name in RESERVED_MODULES:
+            module = root / name
+            module.write_text(
+                module.read_text().replace(
+                    "raise AssertionError('the original marker exclusion must remain')",
+                    "assert 19 == 19",
+                )
+            )
+    program = (
+        "invalid = command(0); invalid[invalid.index('-m')+1] = 'slow'\n"
+        "invalid += ['--infra-ci-observer-only', 'slow']\n"
+        "assert pytest.main(invalid) == 2\n"
+        "assert not (root/'executed.txt').exists()\n"
+        + _lane_program("slow")
+        + "raise SystemExit(pytest.main(args + ['-n', '2', '--dist', 'loadscope']))\n"
+    )
+    result = _native(root, program)
+    assert result.returncode == (0 if outcome == "passed" else 1), result.stdout + result.stderr
+    assert not (root / "executed.txt").exists()
+    assert not any(receipt_path(root, shard).exists() for shard in range(SHARD_COUNT))
+    diagnostics = _diagnostic_record(root, "slow")
+    assert diagnostics["recent_events"][-1]["observed_pytest_exit_code"] == result.returncode
+    assert diagnostics["active_cases"] == []
+    assert bool(diagnostics["first_failure_events"]) is (outcome == "failed")
+
+
+@pytest.mark.timeout(120)
+def test_actual_diagnostic_sink_refusal_preserves_test_outcome(tmp_path: Path) -> None:
+    root = _fixture(tmp_path)
+    outside = tmp_path / "owned-outside-diagnostics"
+    outside.mkdir()
+    sentinel = outside / "sentinel.txt"
+    sentinel.write_bytes(b"retained private fixture sentinel")
+    parent = root / "output/readiness/ordinary-infra-ci"
+    parent.mkdir(parents=True)
+    (parent / "diagnostics").symlink_to(outside, target_is_directory=True)
+    result = _native(root, "raise SystemExit(pytest.main(command(0)))\n")
+    assert result.returncode == 0, result.stdout + result.stderr
+    selection = read_receipt(root, receipt_path(root, 0))
+    assert selection["complete"] is True and selection["exit_code"] == 0
+    assert "Infrastructure CI" in result.stdout + result.stderr and "diagnostics" in result.stdout + result.stderr
+    assert sentinel.read_bytes() == b"retained private fixture sentinel"
+    assert sorted(path.name for path in outside.iterdir()) == ["sentinel.txt"]

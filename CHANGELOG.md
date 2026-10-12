@@ -55,6 +55,13 @@ require final-source acceptance, the authenticated handoff and remote verificati
   Reject non-boolean authorization in MCP requests and the public Python
   invocation API while preserving the configured environment opt-in.
 
+- Admit canonical directories when copying native readiness Source inputs, retaining file custody, digests, closure limits and deadline refusals.
+- Restore Search's direct-file CLI startup after infrastructure admission without changing stage APIs or ordinary package imports.
+- Keep hosted macOS TeX Live manager self-update and package installation on one fixed HTTPS CTAN mirror.
+- Batch adjacent fresh Git custody reads for standalone exemplar mirroring while preserving native failures, index/configuration custody, origin/destination refusals and original timeouts.
+- Retain bounded controller case/phase/failure/worker diagnostic DATA for ordinary shards and the slow lane. Public records use declared families and member hashes; diagnostics cannot grant selection or acceptance. Existing deadlines and gates remain enforced.
+- Reconcile generated policy metadata for 14 new families and 25 members, retaining existing classifications and all 28 prerequisite definitions. Fresh hosted validation and publication require final-source acceptance; original failure observations remain separate.
+
 ## Prepared 4.0.0 candidate — unpublished
 
 See the retained [illustrated candidate notes](docs/releases/v4.0.0.md) for the
