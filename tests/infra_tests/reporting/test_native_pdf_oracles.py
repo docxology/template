@@ -40,12 +40,8 @@ REPO = Path(__file__).resolve().parents[3]
 # externally admitted Source and original launch custodian. Receipt DATA and a
 # bare SnapshotReader never hold them, so replay refuses at the baseline's first
 # raster tool receipt. Checks before that point are asserted for their own
-# reason; checks after it are listed as explicit custody-gated skips.
+# reason; shared checks after it are exercised as candidate DATA only.
 UNADMITTED = "externally admitted source and original launch custody"
-CUSTODY_GATED = (
-    "requires original launch custody, which unit tests cannot construct; reachable only "
-    "under the platform-required-acceptance native-original/complete jobs"
-)
 pytestmark = pytest.mark.timeout(600)
 
 
@@ -265,11 +261,67 @@ def test_missing_baseline_cannot_count(actual_pdf_controls: dict[str, Any]) -> N
 
 
 @pytest.mark.parametrize("obligation", ["forged-negative-observation", "wrong-process-exit-code"])
-def test_pdf_control_tamper_rejection_needs_original_launch_custody(obligation: str) -> None:
-    """Uncovered here: replay compares a control's semantic/geometry/pixel observation
-    and its process exit codes only after the baseline's raster tool receipts are
-    admitted against original launch custody."""
-    pytest.skip(f"{obligation}: {CUSTODY_GATED}")
+def test_pdf_control_tamper_rejection_needs_original_launch_custody(
+    obligation: str, actual_pdf_controls: dict[str, Any]
+) -> None:
+    """Shared pure candidate DATA checks reject changes without granting custody."""
+    from infrastructure.reporting.native_format_pdf_control_replay import _validate_pdf_control_candidate_observation
+    from infrastructure.reporting.native_format_acceptance_validation import _process
+    from infrastructure.reporting.native_format_acceptance_contracts import WORKER_MODULE
+    from infrastructure.reporting.native_format_portable_custody import producer_bootstrap, producer_path
+
+    fixture = actual_pdf_controls
+    control = next(item for item in fixture["controls"] if item["name"] == "changed-number")
+    reader = SnapshotReader(fixture["root"])
+    recorded_file = reader.read(control["artifact"]["path"])
+    observed = recorded_file.json_object()
+    pdf = reader.read(observed["artifact"]["path"])
+    pixels = tuple(reader.read(item["path"]).content for item in observed["artifact"]["raster"]["rasters"])
+    independent = inspect_pdf_content(pdf.content, pixels, pdf_control_contract(), deadline=fixture["deadline"])
+    _validate_pdf_control_candidate_observation(observed["pdf_content"], independent)
+    code = require_pdf_control_result("changed-number", independent)
+    process = reader.read(control["process_artifact"]["path"]).json_object()
+    args = [
+        "--root",
+        fixture["custody"]["root"],
+        "--pdf-oracle-control",
+        "changed-number",
+        "--run-id",
+        fixture["nonce"],
+        "--control-output",
+        str(producer_path(fixture["custody"], reader.root, recorded_file.path)),
+        "--deadline-monotonic",
+        str(fixture["deadline"]),
+    ]
+    command = producer_bootstrap(fixture["custody"], reader.root, fixture["runtime"], WORKER_MODULE, *args)
+    _process(process, fixture["nonce"], command, code)
+    controls = copy.deepcopy(fixture["controls"])
+    changed_control = next(item for item in controls if item["name"] == "changed-number")
+    if obligation == "forged-negative-observation":
+        changed = copy.deepcopy(observed)
+        changed["pdf_content"]["findings"] = []
+        with pytest.raises(ValueError, match="semantic/geometry/pixel observations changed") as refused:
+            _validate_pdf_control_candidate_observation(changed["pdf_content"], independent)
+        path = recorded_file.path
+        saved = path.read_bytes()
+        changed_control["artifact"] = write_json(reader.root, path, changed)
+    else:
+        changed = copy.deepcopy(process)
+        changed["original_exit_code"] = 0
+        assert code != changed["original_exit_code"]
+        with pytest.raises(ValueError, match="bound original outcome") as refused:
+            _process(changed, fixture["nonce"], command, code)
+        path = reader.root / control["process_artifact"]["path"]
+        saved = path.read_bytes()
+        changed_control["process_artifact"] = write_json(reader.root, path, changed)
+    assert not isinstance(refused.value, ProjectionSourceUnsupported)
+    try:
+        with pytest.raises(ProjectionSourceUnsupported, match=UNADMITTED):
+            _replay_controls(fixture, controls)
+    finally:
+        path.write_bytes(saved)
+    with pytest.raises(ProjectionSourceUnsupported, match=UNADMITTED):
+        _replay_controls(fixture, fixture["controls"])
 
 
 def test_changed_consumed_source_cannot_reuse_positive_observation(actual_pdf_controls: dict[str, Any]) -> None:

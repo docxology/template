@@ -531,7 +531,7 @@ def test_coverage_provenance_rejects_legacy_source_inventory_mode(tmp_path: Path
         validate_coverage_provenance(tmp_path)
 
     assert COVERAGE_SOURCE_INVENTORY_MODE == "tracked-and-nonignored-coverage-inputs-v3"
-    assert COVERAGE_SUPPORT_IDENTITY_MODE == "explicit-public-documentation-support-v1"
+    assert COVERAGE_SUPPORT_IDENTITY_MODE == "explicit-public-documentation-support-v2"
 
 
 def test_coverage_provenance_requires_source_tree_identity(tmp_path: Path) -> None:

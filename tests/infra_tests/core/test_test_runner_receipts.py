@@ -68,12 +68,22 @@ def test_receipt_is_written_and_validates_for_green_run(synthetic_repo: Path, mo
 
 
 def test_receipt_captures_failure_and_is_written_on_error(
-    synthetic_repo: Path, monkeypatch: pytest.MonkeyPatch
+    synthetic_repo: Path, monkeypatch: pytest.MonkeyPatch, caplog: pytest.LogCaptureFixture
 ) -> None:
     """A failing lane must still produce a receipt recording the failure."""
     monkeypatch.delenv("COVERAGE_FILE", raising=False)
     _write_project(synthetic_repo, "alpha", fail=False, extra_module="mod_alpha")
     _write_project(synthetic_repo, "beta", fail=True, extra_module="mod_beta")
+    # The real failed child includes a stable intended reason and both local
+    # checkout/private paths. The adapter must retain a bounded redacted tail,
+    # while the public receipt continues to exclude subprocess diagnostics.
+    failure = synthetic_repo / "projects/beta/tests/test_basic.py"
+    failure.write_text(
+        "from mod_beta import value\n"
+        "def test_value():\n"
+        f"    assert value()==999, 'matrix-original-failure {synthetic_repo}/own-file /private/diagnostic-fixture'\n",
+        encoding="utf-8",
+    )
 
     receipt_path = synthetic_repo / "public-matrix-receipt.json"
     rc = run_per_project_pytest(
@@ -94,6 +104,18 @@ def test_receipt_captures_failure_and_is_written_on_error(
     assert receipt.overall_exit != 0
     errors = receipt.validate(["alpha", "beta"])
     assert any("EXIT-STATUS" in error and "beta" in error for error in errors)
+
+    diagnostics = [
+        record.getMessage() for record in caplog.records if "captured failure diagnostics" in record.getMessage()
+    ]
+    assert len(diagnostics) == 1
+    assert "matrix-original-failure" in diagnostics[0]
+    assert str(synthetic_repo) not in diagnostics[0]
+    assert "/private/diagnostic-fixture" not in diagnostics[0]
+    assert "<checkout>" in diagnostics[0] and "<absolute-path>" in diagnostics[0]
+    assert len(diagnostics[0].split("bounded tail):\n", 1)[1]) <= 4000
+    assert "output_tail" not in receipt_path.read_text()
+    assert "matrix-original-failure" not in receipt_path.read_text()
 
 
 def test_receipt_rejects_test_generated_output_drift(synthetic_repo: Path, monkeypatch: pytest.MonkeyPatch) -> None:

@@ -13,6 +13,7 @@ from infrastructure.core.files.secure_write import atomic_write_bytes_confined
 from infrastructure.core.pipeline.fingerprints import tree_records
 from infrastructure.project.installed_acceptance_artifacts import AdmittedWheel, admit_provider_wheel, write_binary
 from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
+from infrastructure.project.locked_dependency_export import normalize_locked_dependency_export
 from infrastructure.project.public_package_dependencies import declared_local_dependencies, local_dependency_closure
 from infrastructure.reporting.release_readiness_profile import Requirement
 from infrastructure.reporting.release_readiness_snapshot import SnapshotReader
@@ -171,6 +172,7 @@ def install_runtime(
         ),
         "runtime-lock",
     )
+    normalize_locked_dependency_export(metadata_root, dependencies)
     if not metadata.unchanged():
         raise ValueError("private locked metadata changed during dependency export")
     write_binary(root, directory / dependencies.name, dependencies.read_bytes())

@@ -53,6 +53,7 @@ from infrastructure.core.logging.utils import (
     log_success,
 )
 from infrastructure.core.testing.project_test_matrix import ProjectTestTask, run_project_test_matrix
+from infrastructure.core.testing.test_performance import _redact_output_tail
 from infrastructure.core.execution_boundary import build_bounded_env
 from infrastructure.core.files.secure_write import read_bytes_confined
 import hashlib
@@ -139,6 +140,7 @@ class ProjectPytestResult:
     subprocess_timeout_seconds: float | None = None
     coverage_database: dict[str, str | int] | None = None
     original_exit_code: int | None = None
+    output_tail: str = ""  # Memory/log diagnostics only; never serialized into the public receipt.
 
 
 def discover_skip_combined_pytest_projects(repo_root: Path) -> tuple[str, ...]:
@@ -235,6 +237,7 @@ def _execute_project_pytest_matrix(
             coverage_file=coverage_by_index[result.index],
             timed_out=result.timed_out,
             detail=result.detail,
+            output_tail=_redact_output_tail(result.output_tail, repo_root),
             duration_seconds=result.duration_seconds,
             collection_count=result.collection_count,
             subprocess_timeout_seconds=subprocess_timeout_seconds,
@@ -604,6 +607,10 @@ def run_per_project_pytest(
         else:
             logger.error("Project '%s' tests failed (exit=%d)", result.project_name, result.exit_code)
             overall_exit = result.exit_code or overall_exit or 1
+        if result.exit_code != 0 and result.output_tail:
+            logger.error(
+                "Project '%s' captured failure diagnostics (bounded tail):\n%s", result.project_name, result.output_tail
+            )
         if result.exit_code == 0 and not result.coverage_file.is_file():
             logger.error(
                 "Project '%s' reported success but did not produce isolated coverage file %s",

@@ -23,6 +23,7 @@ from infrastructure.project.public_acceptance_scope import RuntimeScope
 from infrastructure.project.public_reference_git import committed_blobs, inventory, blob_identity, remaining
 from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
 from infrastructure.project.public_package_dependencies import local_dependency_closure
+from infrastructure.project.locked_dependency_export import normalize_locked_dependency_export
 from infrastructure.reporting.readiness_receipts import source_fingerprint
 from infrastructure.reporting.release_readiness_profile import required_profile
 from infrastructure.reporting.release_readiness_snapshot import SnapshotReader, json_object_from_bytes
@@ -341,6 +342,9 @@ def prepare_native_installed_runtime(
         ),
         "runtime-lock",
     )
+    normalize_locked_dependency_export(metadata.root, runtime_requirements)
+    if not metadata.unchanged():
+        raise ValueError("native preparation locked Source changed during dependency export normalization")
     # This runtime observes native formats with the Root SDK. It is not the
     # independent installed/export/runtime project matrix. Keep every project
     # wheel frozen as Source DATA; install only the actual Source-declared

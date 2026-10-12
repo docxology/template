@@ -76,6 +76,18 @@ Implements the private-projects sidecar symlink sync documented in root `CLAUDE.
   [`docs/development/installed-wheel-matrix.md`](../../docs/development/installed-wheel-matrix.md).
 - `copy_exemplar`/`export_exemplar` remain the canonical source/resource copying
   APIs. A source export or source-path import is distinct from installed evidence.
+- `locked_dependency_export.normalize_locked_dependency_export(metadata_root,
+  requirements)` binds a wheel-less registry requirement to the same frozen
+  scope's exact public PyPI sdist URL and original SHA256. The required hosted
+  warmers, `installed_acceptance_runtime.install_runtime`, and native installed
+  preparation share this internal transform. It preserves exact versions,
+  markers, extras and other requirement rows; ambiguous locks, alternate URLs,
+  hash differences and linked files fail closed. Cold installation retains
+  `--offline --no-config --no-build --require-hashes`. Prepare in a fresh private
+  job-owned cache with only hash-locked `installed-build` tools visible to the
+  source backend, then retain that cache's owner custody through cold execution.
+  The locked source archive hash does not authenticate mutable derived cache
+  bytes or establish complete installed/native acceptance.
 
 ### Public Readiness (`public_readiness.py`)
 

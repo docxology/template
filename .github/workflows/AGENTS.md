@@ -24,7 +24,8 @@ The `workflows/` directory contains GitHub Actions workflows that automate the c
 flowchart LR
     W[.github/workflows/]
     W --> META[AGENTS.md · README.md]
-    W --> CI[hardening.yml<br/>20 jobs · 2 conditional via detect outputs<br/>2 schedule/manual-only lanes: test-infra-slow, public-matrix-receipt]
+    W --> FAST[ci.yml<br/>Linux/Python 3.14 functional checks · CI Gate]
+    W --> CI[hardening.yml<br/>20 jobs · 2 conditional via detect outputs<br/>manual-only lanes: test-infra-slow, public-matrix-receipt]
     W --> STALE[stale.yml<br/>Auto-label/close stale issues/PRs]
     W --> REL[release.yml<br/>Create GitHub Releases on version tags]
     W --> REQUIRED[platform-required-acceptance.yml<br/>Original observations + strict candidate collector]
@@ -34,7 +35,7 @@ flowchart LR
     classDef code fill:#1e3a8a,stroke:#0f172a,color:#fff
     classDef doc fill:#0f766e,stroke:#0f172a,color:#fff
     class W d
-    class CI,STALE,REL,REQUIRED code
+    class FAST,CI,STALE,REL,REQUIRED code
     class META doc
 ```
 
@@ -150,7 +151,7 @@ A negative control backs this contract: deliberately breaking any represented st
 
 #### 4. Infrastructure Tests (`test-infra`)
 
-- **Pinned source setup:** `test-infra` and `coverage-infra` both initialize the direct submodule declared by the actual Root gitlink and `.gitmodules` using the pinned checkout action's `submodules: true`. This checks out the committed kmyth object; the declaration's branch is not used to advance it. Initialization is an explicit network-capable setup boundary before Python setup and source observation. Tests subsequently clone this actual local checkout without network. Both jobs use `persist-credentials: false`, so setup credentials are removed before test or merge code runs. The merge runner receives the same complete source bytes as the coverage workers; missing pins remain failures, with no fixture fabrication or skip. The canonical workflow guard in `tests/infra_tests/core/test_ci_infra_partition.py` checks both setup declarations against the actual native Git index and public submodule declaration.
+- **Pinned source setup:** `test-infra` and `coverage-infra` both initialize the direct submodule declared by the actual Root gitlink and `.gitmodules` using the pinned checkout action's `submodules: true`. This checks out the committed kmyth object; the declaration's branch is not used to advance it. Initialization is an explicit network-capable setup boundary before Python setup and source observation. Tests subsequently clone this actual local checkout without network. Both jobs use `persist-credentials: false`, so setup credentials are removed before test or merge code runs. The merge runner receives the same complete source bytes as the coverage workers; missing pins remain failures, with no fixture fabrication or skip. The canonical workflow guard in `tests/infra_tests/core/test_ci_infra_partition.py` checks both setup declarations against the actual native Git index and public submodule declaration. `test-project`, `test-infra-slow`, and `public-matrix-receipt` use the same pinned, credential-free checkout contract before their genuine standalone export controls.
 - **Sync:** `uv sync --locked --group public-exemplars --group installed-build`. Genuine wheel/sdist controls use the prepared, locked build backend.
 - **Offline warm:** a scratch `uv sync --frozen` against the selected interpreter re-populates the uv cache with every locked default-group wheel (setup-uv prunes registry wheels from the saved cache), so infra tests that build fresh environments with `uv sync --locked --offline` do not depend on a cold or pruned cache. The scratch environment is deleted.
 - **Document tools:** Both platforms invoke [`setup-acceptance-documents`](../actions/setup-acceptance-documents/action.yml) once. It verifies exact pinned Pandoc/crossref/font archives, prepares the complete TeX and native-reader package union, and probes the selected executables. Linux installs `poppler-utils`; macOS installs `poppler`. Both lanes directly check `pdftoppm` and `pdffonts` before the actual PDF controls. Package caches cannot certify preparation or acceptance.
@@ -159,7 +160,7 @@ A negative control backs this contract: deliberately breaking any represented st
 - **Budgets:** The job is 90 minutes, pytest remains `--timeout=120`, and every existing per-case timeout override remains effective. Linux retains `-n auto`, macOS retains `-n 2`, and both use `--dist loadscope`. Faster completion is a hypothesis until fresh hosted timings establish it; additional jobs repeat preparation and may increase total runner minutes.
 - **Coverage:** Only the four Python 3.14/Linux shards instrument execution. Per-shard thresholds are replaced by the required `coverage-infra` complete-union gate at the same ≥60% floor. The gate refuses missing/extra/duplicate/stale/failed selection records, incomplete case unions and changed coverage bytes, then merges genuine branch measurements in memory and writes confined JSON/XML. Codecov upload remains nonblocking after this required local threshold passes.
 - **Receipt scope:** Ordinary selection records bind infrastructure/scripts/infra tests/CI configuration source bytes. They do not replace full public source custody, installed-wheel, live, platform or release acceptance; missing Root release policy remains blocked.
-- **MathJax live viewport:** The scheduled/manual browser spec runs once on shard 0 of Python 3.14/Linux. Its existing tool provisioning, completed-typesetting checks and failure policy remain unchanged.
+- **MathJax live viewport:** The manual hardening browser spec runs once on shard 0 of Python 3.14/Linux. Its existing tool provisioning, completed-typesetting checks and failure policy remain unchanged.
 
 For an unpartitioned local check, the existing full `pytest tests/infra_tests/` command remains supported without this explicit plugin. An exact shard invocation requires a fresh owned checkout and uses `-p infrastructure.core.testing.ci_infra_shard_plugin --infra-ci-shard N` with the workflow's marker expression. The selection receipt is local execution state, not a cache or resume authorization.
 

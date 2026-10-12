@@ -122,6 +122,7 @@ SOURCE_RENDER_ENV_NAMES = frozenset(
         "DOCX_DIR",
         "EPUB_DIR",
         "LATEX_COMPILER",
+        "TTFONTS",
         "PANDOC_PATH",
         "TEMPLATE_DIR",
         "SLIDE_THEME",

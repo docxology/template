@@ -6,6 +6,7 @@ import sys
 from pathlib import Path
 
 import pytest
+import yaml
 
 if sys.version_info >= (3, 11):
     import tomllib
@@ -35,9 +36,9 @@ def test_default_pipeline_is_a_packaged_resource() -> None:
 def test_lint_toolchain_is_locked_and_shared_by_ci_and_hooks(capsys: pytest.CaptureFixture[str]) -> None:
     """CI and the pre-commit hook lint the same public scope with the locked ruff.
 
-    CI resolves both of its scopes in one ``public_scope ci-paths`` step, so a
-    failure cannot publish one output without the other; the hook asks for
-    ``public_scope lint-paths`` directly. Both must name the identical paths.
+    CI validates both scopes with ``public_scope ci-paths``, then resolves each
+    lint command through ``public_scope lint-paths`` under ``pipefail``. The hook
+    resolves the same lint paths, and both must name the identical public scope.
     """
     from infrastructure.project.public_scope import main as public_scope_main
 
@@ -59,8 +60,14 @@ def test_lint_toolchain_is_locked_and_shared_by_ci_and_hooks(capsys: pytest.Capt
         assert "uvx ruff" not in config
 
     ci = (REPO_ROOT / ".github/workflows/ci.yml").read_text(encoding="utf-8")
-    assert "uv run ruff check ${{ steps.public-scope.outputs.lint_paths }}" in ci
-    assert "uv run ruff format --check ${{ steps.public-scope.outputs.lint_paths }}" in ci
+    lint_steps = yaml.safe_load(ci)["jobs"]["lint"]["steps"]
+    check_source = next(step["run"] for step in lint_steps if step.get("name") == "Check public source")
+    assert check_source.strip().splitlines() == [
+        "set -euo pipefail",
+        "uv run python -m infrastructure.project.public_scope lint-paths | xargs uv run ruff check",
+        "uv run python -m infrastructure.project.public_scope lint-paths | xargs uv run ruff format --check",
+        "uv run python -m infrastructure.project.public_scope source-paths | xargs uv run mypy",
+    ]
 
     assert public_scope_main(["ci-paths", "--repo-root", str(REPO_ROOT)]) == 0
     ci_outputs = dict(line.split("=", 1) for line in capsys.readouterr().out.splitlines())

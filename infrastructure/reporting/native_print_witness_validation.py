@@ -28,6 +28,30 @@ from infrastructure.reporting.native_print_witness import KINDS, SCHEMA, source_
 from infrastructure.reporting.release_readiness_snapshot import SnapshotReader
 
 
+def _validate_print_candidate_raster_closure(recorded: object, rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    """Check candidate DATA closure; no file read or native admission occurs."""
+    raster_artifacts: list[dict[str, Any]] = []
+    for row in rows:
+        groups = [row.get("raster", {})] + (
+            [row.get("source", {}).get("raster", {})] if row["kind"] == "newspaper" else []
+        )
+        for group in groups:
+            raster_artifacts.extend(
+                {"path": page.get("path"), "sha256": page.get("sha256")}
+                for page in group.get("rasters", [])
+                if isinstance(page, dict)
+            )
+    if recorded != raster_artifacts:
+        raise ValueError("complete original print page artifact closure is missing or changed")
+    return raster_artifacts
+
+
+def _validate_print_candidate_page_inventory(recorded: object, observation: dict[str, Any]) -> None:
+    """Compare actual parsed PDF candidate DATA; no capability is returned."""
+    if recorded != observation:
+        raise ValueError("original print page inventory differs from actual PDF bytes")
+
+
 def validate_print_witness(
     binding: object,
     reader: SnapshotReader,
@@ -117,19 +141,7 @@ def validate_print_witness(
         rows = raw["prints"]
         if not isinstance(rows, list) or [row.get("kind") for row in rows if isinstance(row, dict)] != list(KINDS):
             raise ValueError("original print editions are missing, reordered or duplicated")
-        raster_artifacts: list[dict[str, Any]] = []
-        for row in rows:
-            groups = [row.get("raster", {})] + (
-                [row.get("source", {}).get("raster", {})] if row["kind"] == "newspaper" else []
-            )
-            for group in groups:
-                raster_artifacts.extend(
-                    {"path": page.get("path"), "sha256": page.get("sha256")}
-                    for page in group.get("rasters", [])
-                    if isinstance(page, dict)
-                )
-        if raw["raster_artifacts"] != raster_artifacts:
-            raise ValueError("complete original print page artifact closure is missing or changed")
+        raster_artifacts = _validate_print_candidate_raster_closure(raw["raster_artifacts"], rows)
         for artifact in raster_artifacts:
             _file(artifact, reader)
         custody = {"root": producer_root}
@@ -148,8 +160,7 @@ def validate_print_witness(
                 max_bytes=250 * 1024 * 1024 if kind == "storybook" else 64 * 1024 * 1024,
             )
             observation = parse_native_bytes("pdf", candidate.content)
-            if row["observation"] != observation:
-                raise ValueError("original print page inventory differs from actual PDF bytes")
+            _validate_print_candidate_page_inventory(row["observation"], observation)
             _admit_raster(row, candidate, ordinal, directory, reader, nonce, versions, custody, deadline)
             source = row["source"]
             if not isinstance(source, dict) or source.get("source_sha256") != source_identity(project):

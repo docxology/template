@@ -1,8 +1,9 @@
 # Release boundary
 
-The root package metadata declares the **4.0.1** candidate. Its changelog
-heading remains **Unreleased** during development. Final release-intent metadata
-must be included in the exact revision submitted for release acceptance.
+The root package metadata declares the **4.0.1** candidate. Its dated changelog
+entry records the frozen release intent; publication remains pending until the
+acceptance and publication steps below pass. Final release-intent metadata must
+be included in the exact revision submitted for release acceptance.
 The prepared 4.0.0 candidate was not published; its notes are retained. Tagging and publication require the verified
 acceptance and publication steps below. The earlier recorded root release is `3.8.0` /
 `v3.8.0`; its original publication evidence is retained in

@@ -26,10 +26,6 @@ from infrastructure.reporting.native_projection_contracts import ProjectionSourc
 from infrastructure.reporting.release_readiness_snapshot import SnapshotReader
 
 UNADMITTED = "externally admitted source and original launch custody"
-CUSTODY_GATED = (
-    "requires original launch custody, which unit tests cannot construct; reachable only "
-    "under the platform-required-acceptance native-original/complete jobs"
-)
 
 
 def test_current_source_projection_fixtures_exact_repeat_and_real_parse() -> None:
@@ -95,16 +91,39 @@ def test_original_executable_deleted_portable_actual_tool_closure(tmp_path: Path
         assert not isinstance(refused.value, ProjectionSourceUnsupported)
     # The custody diagnostic is compared only after original launch custody
     # admits the receipt. Here the changed diagnostic fails closed at that gate;
-    # its own rejection is the explicit skip below, not coverage claimed here.
+    # its DATA predicate is tested separately below without native admission.
     binding = write_json(reader_root, path, {**original, "diagnostic": "custody lost"})
     with pytest.raises(ProjectionSourceUnsupported, match=UNADMITTED):
         _closure(binding, SnapshotReader(reader_root), relocated, "actual-control-custody")
 
 
-def test_changed_custody_diagnostic_rejection_needs_original_launch_custody() -> None:
-    """Uncovered here: _closure rejects a non-empty control tool diagnostic only
-    after _tool admits the receipt against original launch custody."""
-    pytest.skip(f"changed-custody-diagnostic: {CUSTODY_GATED}")
+def test_changed_custody_diagnostic_rejection_needs_original_launch_custody(tmp_path: Path) -> None:
+    """Real process candidate DATA checks the predicate without granting custody."""
+    from infrastructure.reporting.native_format_control_replay import _validate_control_candidate_run_diagnostic
+
+    directory = tmp_path / "output/readiness/controls"
+    directory.mkdir(mode=0o700, parents=True)
+    result = native_tool_record(
+        tmp_path,
+        directory,
+        sys.executable,
+        ["-I", "-c", "print(42)"],
+        env=os.environ.copy(),
+        deadline=time.monotonic() + 20,
+        run_id="actual-control-custody",
+        purpose="fixture",
+    )
+    assert result["exit_code"] == result["original_exit_code"] == 0
+    raw = SnapshotReader(tmp_path).read(result["artifact"]["path"]).json_object()
+    assert raw["stdout"] == "42\n"
+    _validate_control_candidate_run_diagnostic(raw, "actual-control-custody")
+    for changed, run_id in (({**raw, "diagnostic": "custody lost"}, "actual-control-custody"), (raw, "different-run")):
+        with pytest.raises(ValueError, match="run or custody diagnostic changed") as refused:
+            _validate_control_candidate_run_diagnostic(changed, run_id)
+        assert not isinstance(refused.value, ProjectionSourceUnsupported)
+    binding = write_json(tmp_path, tmp_path / result["artifact"]["path"], {**raw, "diagnostic": "custody lost"})
+    with pytest.raises(ProjectionSourceUnsupported, match=UNADMITTED):
+        _closure(binding, SnapshotReader(tmp_path), directory, "actual-control-custody")
 
 
 def test_source_suite_cannot_be_missing_duplicate_unknown_or_bare_pass(tmp_path: Path) -> None:

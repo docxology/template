@@ -1,5 +1,10 @@
 """Tests for infrastructure.reporting.pytest_output_parser."""
 
+import os
+import re
+import subprocess
+import sys
+
 from infrastructure.reporting.pytest_output_parser import parse_pytest_output
 
 
@@ -64,10 +69,48 @@ class TestParsePytestOutput:
         result = parse_pytest_output(stdout, "", exit_code=0)
         assert result.get("coverage_percent") == 75.50
 
-    def test_execution_phase_timing(self):
+    def test_execution_phase_timing(self, tmp_path):
         stdout = "===== 50 passed in 12.5s ====="
         result = parse_pytest_output(stdout, "", exit_code=0)
-        assert result["execution_phases"].get("execution") == 12.5
+        assert result["execution_phases"] == {"execution": 12.5}
+
+        # Genuine verbose pytest emits session/collection banners and one
+        # measured session summary. Those banners must not multiply the same
+        # observed duration into invented setup and collection measurements.
+        child = tmp_path / "test_observed_duration.py"
+        child.write_text("def test_actual_child():\n    assert 2 + 2 == 4\n", encoding="utf-8")
+        environment = dict(os.environ)
+        for key in ("PYTHONPATH", "PYTHONHOME", "PYTEST_ADDOPTS", "PYTEST_PLUGINS"):
+            environment.pop(key, None)
+        actual = subprocess.run(
+            [
+                sys.executable,
+                "-I",
+                "-m",
+                "pytest",
+                "-vv",
+                "-o",
+                "addopts=",
+                "-o",
+                f"cache_dir={tmp_path / 'pytest-cache'}",
+                str(child),
+            ],
+            cwd=tmp_path,
+            env=environment,
+            capture_output=True,
+            text=True,
+            timeout=30,
+            check=False,
+        )
+        assert actual.returncode == 0, actual.stdout + actual.stderr
+        assert "test session starts" in actual.stdout and "collecting" in actual.stdout
+        summary = re.search(r"\b1 passed in ([\d.]+)s\b", actual.stdout)
+        assert summary is not None, actual.stdout
+        observed = float(summary.group(1))
+        parsed = parse_pytest_output(actual.stdout, actual.stderr, actual.returncode)
+        assert parsed["passed"] == 1 and parsed["failed"] == 0 and parsed["exit_code"] == 0
+        assert parsed["execution_phases"] == {"execution": observed}, actual.stdout
+        assert sum(parsed["execution_phases"].values()) == observed
 
     def test_warnings_counted(self):
         stdout = "===== 10 passed, 3 warning in 5.0s ====="

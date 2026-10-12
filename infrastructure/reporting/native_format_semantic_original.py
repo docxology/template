@@ -202,6 +202,12 @@ def observe_original_source(
     }
 
 
+def _validate_survival_candidate_witness(recorded: object, survival: dict[str, Any]) -> None:
+    """Compare candidate DATA only; this cannot admit original launch custody."""
+    if recorded != survival:
+        raise ValueError("original source occurrence/survival obligations changed")
+
+
 def replay_original_source(
     root: Path,
     directory: Path,
@@ -239,8 +245,7 @@ def replay_original_source(
     if transcript.get("stdout", "").encode() != ast.content:
         raise ValueError("original source AST differs from actual original parse stdout")
     survival = inspect_original_source(projected.artifact_id, sources, ast.content, projected)
-    if raw.get("survival") != survival:
-        raise ValueError("original source occurrence/survival obligations changed")
+    _validate_survival_candidate_witness(raw.get("survival"), survival)
     with current_pandoc_reader(root, reader, env=env, deadline=deadline, purpose="html-original-ast") as current:
         local_source = current.runtime.freeze("source.md", content)
         process = current.tool("pandoc", [str(local_source), *args[1:]], "current-html-original-ast")

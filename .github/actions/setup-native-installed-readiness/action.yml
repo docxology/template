@@ -15,7 +15,8 @@ runs:
       run: |
         set -euo pipefail
         sudo -n apt-get -o Acquire::Retries=2 -o Acquire::http::Timeout=60 install -y --no-install-recommends libreoffice-writer libreoffice-calc libreoffice-impress calibre default-jre-headless zbar-tools
-        destination=$(mktemp -d "$RUNNER_TEMP/template-native-tools.XXXXXX")
+        tool_parent=$(mktemp -d "$RUNNER_TEMP/template-native-tools.XXXXXX")
+        destination="$tool_parent/epubcheck"
         java_executable=$(readlink -f "$(command -v java)")
         .venv/bin/python scripts/shell/prepare_native_epubcheck.py --destination "$destination"
         "$java_executable" -jar "$destination/epubcheck-5.4.0/epubcheck.jar" --version
@@ -41,7 +42,17 @@ runs:
       shell: bash
       run: |
         set -euo pipefail
+        for variable in "${!UV_@}" "${!PIP_@}"; do unset "$variable"; done
+        unset PYTHONPATH PYTHONHOME VIRTUAL_ENV
+        # Source archive hashes do not attest restored derived cache bytes.
+        # Keep this fresh job-owned cache through the unchanged cold operation.
+        cache=$(mktemp -d "$RUNNER_TEMP/native-installed-cache.XXXXXX")
+        chmod 700 "$cache"
+        export UV_CACHE_DIR="$cache" UV_LINK_MODE=copy
+        echo "UV_CACHE_DIR=$cache" >> "$GITHUB_ENV"
         interpreter="$GITHUB_WORKSPACE/.venv/bin/python"
+        build_requirements=$(mktemp "$RUNNER_TEMP/native-build-requirements.XXXXXX")
+        uv export --directory "$GITHUB_WORKSPACE" --locked --only-group installed-build --no-emit-project --no-emit-local --no-header --no-annotate --output-file "$build_requirements"
         for scope in root; do
           metadata="$GITHUB_WORKSPACE"
           if [ "$scope" != root ]; then metadata="$GITHUB_WORKSPACE/projects/$scope"; fi
@@ -52,8 +63,11 @@ runs:
           else
             uv export --directory "$metadata" --locked --no-default-groups --no-emit-project --no-emit-local --no-header --no-annotate --output-file "$requirements"
           fi
+          "$interpreter" -m infrastructure.project.locked_dependency_export --metadata-root "$metadata" --requirements "$requirements"
           uv venv --no-project --no-python-downloads --python "$interpreter" "$environment"
-          uv pip sync --no-config --no-build --require-hashes --allow-empty-requirements --python "$environment/bin/python" "$requirements"
+          uv pip sync --no-config --no-build --require-hashes --python "$environment/bin/python" "$build_requirements"
+          uv pip install --no-config --no-build-isolation --no-deps --require-hashes --python "$environment/bin/python" --target "$environment/prepared-dependencies" --requirements "$requirements"
           rm -r "$environment"
           rm "$requirements"
         done
+        rm "$build_requirements"

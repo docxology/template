@@ -34,12 +34,8 @@ from tests.infra_tests.reporting._audited_browser_child import audited_browser_a
 # Source and the original launch custodian. Receipt DATA and a bare relocated
 # SnapshotReader never hold either, so replay refuses at the first native tool
 # receipt. Checks before that point are asserted for their own reason; checks
-# after it are listed as explicit custody-gated skips.
+# after it use private DATA predicates without granting native admission.
 UNADMITTED = "externally admitted source and original launch custody"
-CUSTODY_GATED = (
-    "requires original launch custody, which unit tests cannot construct; reachable only "
-    "under the platform-required-acceptance native-original/complete jobs"
-)
 
 
 SOURCE = (
@@ -157,7 +153,7 @@ def test_actual_original_source_receipts_and_portable_replay(tmp_path: Path) -> 
     changed = ((sources[0][0], SOURCE.replace(b"-9.25", b"-8.25")),)
     _refused_before_custody("belongs to another source projection", lambda: replay(raw, replay_sources=changed))
     # A forged survival witness is compared only after the Pandoc receipt is
-    # admitted; here it fails closed at the custody gate (see explicit skip).
+    # admitted; here it fails closed at the custody gate (the DATA predicate is tested separately).
     forged = copy.deepcopy(raw)
     forged["survival"]["contract"]["source_occurrences"].pop()
     with pytest.raises(ProjectionSourceUnsupported, match=UNADMITTED):
@@ -271,16 +267,108 @@ def test_actual_structure_and_alpha_browser_controls(tmp_path: Path, name: str, 
     assert without_cell.digest != independent.digest
     _refused_before_custody("source/policy identity changed", lambda: replay(raw, without_cell))
     # A forged structure witness is compared only after the native browser
-    # receipt is admitted; here it fails closed at the custody gate (see skip).
+    # receipt is admitted; here it fails closed at the custody gate (the DATA predicate is tested separately).
     forged = copy.deepcopy(raw)
     forged["viewports"][0]["structure"]["tables"][0]["cells"].pop()
     with pytest.raises(ProjectionSourceUnsupported, match=UNADMITTED):
         replay(forged)
 
 
+@pytest.mark.timeout(240)
 @pytest.mark.parametrize("obligation", ["forged-original-survival-witness", "forged-browser-structure-witness"])
-def test_forged_semantic_witness_rejection_needs_original_launch_custody(obligation: str) -> None:
-    """Uncovered here: replay_original_source compares the survival witness, and
-    replay_browser_observation the per-viewport structure witness, only after the
-    retained native tool receipt is admitted against original launch custody."""
-    pytest.skip(f"{obligation}: {CUSTODY_GATED}")
+def test_forged_semantic_witness_rejection_needs_original_launch_custody(tmp_path: Path, obligation: str) -> None:
+    """Real retained candidate DATA exercises the shared post-admission predicate.
+
+    These pure comparisons grant no Source or Original capability. The complete
+    replay still refuses both genuine and tampered DATA without launch custody.
+    """
+    from infrastructure.reporting.native_format_semantic_original import _validate_survival_candidate_witness
+    from infrastructure.reporting.native_format_browser_replay import _validate_browser_candidate_semantic_witness
+    from infrastructure.reporting.native_format_browser_oracles import inspect_browser_pixels
+    from infrastructure.reporting.native_format_browser_figures import inspect_browser_figures
+
+    fixture = tmp_path / "output/readiness/fixture"
+    fixture.mkdir(mode=0o700, parents=True)
+    source = fixture / "source.md"
+    source.write_bytes(SOURCE)
+    ast = _parse(source)
+    sources = ((source.relative_to(tmp_path).as_posix(), SOURCE),)
+    contract = semantic_content_contract_from_ast("invented:html", sources, ast)
+    evidence = tmp_path / "output/readiness/observation"
+    evidence.mkdir(mode=0o700)
+    deadline = time.monotonic() + 120
+    if obligation == "forged-original-survival-witness":
+        _, raw = observe_original_source(
+            tmp_path, evidence, sources, contract, env=build_bounded_env(), deadline=deadline, run_id="d" * 32
+        )
+        retained_ast = SnapshotReader(tmp_path).read(raw["ast"]["path"]).content
+        independent = inspect_original_source(contract.artifact_id, sources, retained_ast, contract)
+        _validate_survival_candidate_witness(raw["survival"], independent)
+        forged = copy.deepcopy(raw)
+        forged["survival"]["contract"]["source_occurrences"].pop()
+        with pytest.raises(ValueError, match="occurrence/survival obligations changed") as refused:
+            _validate_survival_candidate_witness(forged["survival"], independent)
+        assert not isinstance(refused.value, ProjectionSourceUnsupported)
+        for candidate in (raw, forged):
+            with pytest.raises(ProjectionSourceUnsupported, match=UNADMITTED):
+                replay_original_source(
+                    tmp_path,
+                    evidence,
+                    sources,
+                    contract,
+                    candidate,
+                    SnapshotReader(tmp_path),
+                    run_id="d" * 32,
+                    custody={"root": str(tmp_path)},
+                    env=build_bounded_env(),
+                    deadline=deadline,
+                )
+    else:
+        original = fixture / "original.html"
+        _parse(source, html=original)
+        (fixture / "alpha.png").write_bytes(alpha_figure_bytes())
+        snapshot = SnapshotReader(tmp_path).read(original.relative_to(tmp_path).as_posix())
+        raw = audited_browser_artifact(
+            tmp_path,
+            evidence,
+            snapshot.relative,
+            sources=(sources[0][0],),
+            artifact_id=contract.artifact_id,
+            ast=ast,
+            workspace=tmp_path / "audited-child",
+            deadline=deadline,
+            run_id="d" * 32,
+        )
+        assert not raw["blockers"]
+        forged = copy.deepcopy(raw)
+        for viewport, changed in zip(raw["viewports"], forged["viewports"], strict=True):
+            independent = inspect_browser_dom(viewport["dom"], contract, None)
+            reader = SnapshotReader(tmp_path)
+            pixels = reader.read(viewport["screenshot"]["path"]).content
+            localized = inspect_browser_pixels(viewport["dom"], pixels, independent["source_text_indices"])
+            figures = inspect_browser_figures(viewport["dom"], pixels, contract, snapshot, reader)
+            independent["findings"].extend(figures["findings"])
+            independent["blockers"].extend(figures["blockers"])
+            independent["findings"].extend(localized["findings"])
+            independent["blockers"].extend(localized["blockers"])
+            independent["status"] = (
+                "fail" if independent["findings"] else "blocked" if independent["blockers"] else independent["status"]
+            )
+            _validate_browser_candidate_semantic_witness(viewport, independent)
+            changed["structure"]["tables"][0]["cells"].pop()
+            with pytest.raises(ValueError, match="semantic/layout observations differ") as refused:
+                _validate_browser_candidate_semantic_witness(changed, independent)
+            assert not isinstance(refused.value, ProjectionSourceUnsupported)
+        for candidate in (raw, forged):
+            with pytest.raises(ProjectionSourceUnsupported, match=UNADMITTED):
+                replay_browser_observation(
+                    tmp_path,
+                    evidence,
+                    snapshot,
+                    contract,
+                    candidate,
+                    SnapshotReader(tmp_path),
+                    run_id="d" * 32,
+                    custody={"root": str(tmp_path)},
+                    runtime={"executable": sys.executable},
+                )

@@ -1,8 +1,9 @@
-"""Genuine frozen producer deletion and independent source replay controls.
+"""Genuine producer/archive deletion and independent source replay controls.
 
-The fixture compiles a real source-only XeTeX reference, deletes its copied
-compiler and producer directory, and relocates the retained bytes to another
-base. Ordinary infra CI constructs no NativeSourceContext, NativeOriginalLaunch
+The fixture compiles with actual installed XeTeX, archives its observed runtime
+bytes without nominating those archives as providers, deletes the owner archive
+and producer directory, and relocates retained reference bytes to another base.
+Installed compiler paths remain available and unchanged. Ordinary infra CI constructs no NativeSourceContext, NativeOriginalLaunch
 or live producer owner, so the replay/reproduction entry points must refuse
 before consuming any custody-gated native byte; reachable DATA predicates are
 exercised against the genuine retained records. Positive replay remains an
@@ -54,13 +55,10 @@ def original_reference(tmp_path_factory: pytest.TempPathFactory):
     base = ROOT / "output/readiness" / ("scientific-replay-" + uuid.uuid4().hex)
     directory = base / "original"
     directory.mkdir(parents=True)
-    tools = base / "tools"
-    tools.mkdir()
     for name in ("xelatex", "xdvipdfmx", "kpsewhich"):
         executable = shutil.which(name)
         if executable is None:
             pytest.fail(f"actual prepared {name} prerequisite missing")
-        shutil.copy2(Path(executable).resolve(), tools / name)
     source = b"Complex $\\sum_{i=1}^{n}\\frac{x_i^2}{1+\\exp(-\\lambda x_i)}$ expression.\n\n$$\\int_0^1 x^2\\,dx=\\frac{1}{3}$$\n"
     markdown = directory / "input.md"
     markdown.write_bytes(source)
@@ -69,25 +67,6 @@ def original_reference(tmp_path_factory: pytest.TempPathFactory):
     )
     environment = native_environment(ROOT, Path(sys.executable), directory)
     run_id = base.name
-    for variable in ("TEXMFROOT", "TEXMFDIST", "TEXMFCNF"):
-        tool = native_tool_record(
-            ROOT,
-            directory,
-            str(Path(shutil.which("kpsewhich")).resolve()),
-            [f"--var-value={variable}"],
-            env=environment,
-            deadline=time.monotonic() + 30,
-            run_id=run_id,
-            purpose=f"original-installed-{variable.lower()}",
-        )
-        process = json.loads((ROOT / tool["artifact"]["path"]).read_bytes())
-        assert process["original_exit_code"] == process["exit_code"] == 0
-        value = process["stdout"].strip()
-        assert value, f"actual installed TeX configuration missing {variable}"
-        if variable != "TEXMFCNF":
-            assert Path(value).is_absolute() and Path(value).resolve(strict=True).is_dir()
-        environment[variable] = value
-    environment["PATH"] = str(tools) + ":" + environment["PATH"]
     ast_tool = native_tool_record(
         ROOT,
         directory,
@@ -130,9 +109,23 @@ def original_reference(tmp_path_factory: pytest.TempPathFactory):
     # Finite closure incl. the distribution's preloaded format: xelatex.fmt is
     # ~5.4 MB in TeX Live 2026 and ~9.1 MB in Ubuntu's TeX Live 2023.
     assert sum(original_files.values()) < 32 * 1024**2
-    compiler_paths = [Path(row["path"]) for row in raw["runtime_before"].values()]
+    # The actual provider stays installed. These owner-created archive bytes
+    # are never put on PATH and cannot nominate a TeX distribution or runtime.
+    archive = base / "archived-runtime"
+    archive.mkdir(mode=0o700)
+    archived_compilers = []
+    for name, runtime in raw["runtime_before"].items():
+        provider = Path(runtime["path"])
+        content = provider.read_bytes()
+        assert hashlib.sha256(content).hexdigest() == runtime["sha256"]
+        owned = archive / name
+        owned.write_bytes(content)
+        owned.chmod(0o600)
+        archived_compilers.append(owned)
     shutil.rmtree(base)
-    assert not directory.exists() and all(not path.exists() for path in compiler_paths)
+    assert not directory.exists() and all(not path.exists() for path in archived_compilers)
+    for runtime in raw["runtime_before"].values():
+        assert hashlib.sha256(Path(runtime["path"]).read_bytes()).hexdigest() == runtime["sha256"]
     assert reader_root != ROOT
     yield {
         "root": reader_root,
@@ -207,7 +200,7 @@ def _data_only_readers(fixture):
     return (SnapshotReader(root), SnapshotReader(root, native_operation=copy.deepcopy(fixture["raw"])))
 
 
-def test_deleted_original_compiler_and_producer_replay_requires_launch_custody(original_reference):
+def test_deleted_owner_runtime_archive_and_producer_replay_requires_launch_custody(original_reference):
     raw, root = original_reference["raw"], original_reference["root"]
     directory = original_reference["original_directory"]
     assert not directory.exists()

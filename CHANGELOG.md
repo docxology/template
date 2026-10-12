@@ -34,6 +34,26 @@ require final-source acceptance, the authenticated handoff and remote verificati
   final-source acceptance before they can authorize a release.
 - Select illustrated notes and image assets from the actual release tag while
   preserving admitted installed-wheel and final distribution byte custody.
+- Prepare wheel-less locked dependencies in a fresh private cache with exact
+  source archive hashes and isolated build tools; retain offline, no-build,
+  hash-checked cold installation. Keep cache ownership distinct from source
+  hash verification.
+- Prepare the pinned public submodule for standalone export controls in every
+  affected hardening lane, use a fresh EPUBCheck destination, and include the
+  CI documentation link in Active's versioned coverage support closure.
+- Reconcile the Root case policy with genuine canonical collection, preserving
+  existing lanes and obligations while binding explicitly required tools.
+- Execute genuine retained-DATA native comparisons in place of unconditional
+  placeholders, preserving original custody requirements and replay refusals.
+  Select the installed Linux Chrome runtime, retain actual browser exit
+  diagnostics, and exclude ambient font-search configuration from rendering.
+- Retain bounded, redacted project failure diagnostics and report the one
+  observed pytest session duration without duplicating it as inferred phases.
+
+- Admit only reviewed read-only CLI modules without agent-surface opt-in;
+  require explicit opt-in for file-writing, external/paid and unaudited routes.
+  Reject non-boolean authorization in MCP requests and the public Python
+  invocation API while preserving the configured environment opt-in.
 
 ## Prepared 4.0.0 candidate — unpublished
 

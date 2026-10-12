@@ -364,15 +364,119 @@ print(json.dumps(report))
         assert "print_witness" not in observation
 
 
-@pytest.mark.parametrize("fault", ["pages", "closure"])
-def test_print_witness_page_and_closure_tamper_needs_original_launch_custody(fault: str) -> None:
-    """Uncovered here: validate_print_witness checks the edition page inventory and
-    the raster page closure only after it admits the version tool receipts against
-    original launch custody, so retained witness DATA cannot reach either check."""
-    pytest.skip(
-        f"print-witness {fault} tamper: requires original launch custody, which unit tests cannot construct; "
-        "reachable only under a custody-holding platform-required-acceptance reader"
+@pytest.fixture(scope="module")
+def print_candidate_data(tmp_path_factory: pytest.TempPathFactory) -> tuple[list[dict], list[dict]]:
+    """Actual bounded Pandoc/XeTeX/PDF raster DATA; no complete print witness claim.
+
+    A finite invented two-page manuscript exercises the shared PDF inventory and full raster closure predicates
+    on every platform, independently of Darwin-only print witness admission.
+    """
+    from infrastructure.reporting.native_format_acceptance_checks import (
+        audit_pdf_raster,
+        native_tool_record,
+        parse_native_bytes,
     )
+    from infrastructure.reporting.native_format_acceptance_contracts import native_environment
+    from infrastructure.reporting.release_readiness_snapshot import SnapshotReader
+
+    root = tmp_path_factory.mktemp("actual-print-candidate")
+    directory = root / "output/readiness/candidate"
+    directory.mkdir(mode=0o700, parents=True)
+    deadline = time.monotonic() + 60
+    env = native_environment(Path(__file__).resolve().parents[3], Path(sys.executable), directory)
+    rows = []
+    closure = []
+    for ordinal, kind in enumerate(("storybook", "newspaper")):
+        work = directory / kind
+        work.mkdir(mode=0o700)
+        pdf = work / "candidate.pdf"
+        source = work / "source.md"
+        source.write_text(
+            f"# Invented {kind} candidate\n\nFinite first source page.\n\n\\newpage\n\nFinite second source page.\n"
+        )
+        tool = native_tool_record(
+            root,
+            work,
+            "pandoc",
+            [str(source), "--from=markdown+raw_tex", "--standalone", "--pdf-engine=xelatex", "--output", str(pdf)],
+            env=env,
+            deadline=deadline,
+            run_id="d" * 32,
+            purpose="actual-print-candidate-source",
+        )
+        assert tool["exit_code"] == tool["original_exit_code"] == 0
+        snapshot = SnapshotReader(root).read(pdf.relative_to(root).as_posix())
+        observed = parse_native_bytes("pdf", snapshot.content)
+        assert observed["pages"] == 2
+        raster = audit_pdf_raster(
+            root,
+            work,
+            snapshot,
+            observed,
+            env=env,
+            deadline=deadline,
+            run_id="d" * 32,
+            ordinal=ordinal,
+        )
+        assert len(raster["rasters"]) == 2
+        row = {"kind": kind, "observation": observed, "raster": raster, "source": {}}
+        groups = [raster]
+        if kind == "newspaper":
+            source_raster = audit_pdf_raster(
+                root,
+                work,
+                snapshot,
+                observed,
+                env=env,
+                deadline=deadline,
+                run_id="d" * 32,
+                ordinal=3,
+            )
+            row["source"]["raster"] = source_raster
+            groups.append(source_raster)
+        for group in groups:
+            for page in group["rasters"]:
+                retained = SnapshotReader(root).read(page["path"])
+                assert retained.sha256 == page["sha256"]
+                closure.append({"path": retained.relative, "sha256": retained.sha256})
+        # Reparse retained native bytes rather than trusting the recorded outcome.
+        row["independent_observation"] = parse_native_bytes("pdf", SnapshotReader(root).read(snapshot.relative).content)
+        rows.append(row)
+    return rows, closure
+
+
+@pytest.mark.parametrize("fault", ["pages", "closure"])
+def test_print_witness_page_and_closure_tamper_needs_original_launch_custody(
+    fault: str, print_candidate_data: tuple[list[dict], list[dict]]
+) -> None:
+    """Shared candidate DATA predicates reject genuine retained observation tampering.
+
+    No Source/Original capability is created. Complete witness custody refusal
+    remains separately asserted by the actual portable auxiliary worker test.
+    """
+    import copy
+    from infrastructure.reporting.native_print_witness_validation import (
+        _validate_print_candidate_page_inventory,
+        _validate_print_candidate_raster_closure,
+    )
+    from infrastructure.reporting.native_projection_contracts import ProjectionSourceUnsupported
+
+    rows, closure = print_candidate_data
+    assert len(closure) == 6
+    assert _validate_print_candidate_raster_closure(closure, rows) == closure
+    for row in rows:
+        _validate_print_candidate_page_inventory(row["observation"], row["independent_observation"])
+    if fault == "pages":
+        changed = copy.deepcopy(rows[0]["observation"])
+        changed["pages"] += 1
+        with pytest.raises(ValueError, match="page inventory differs from actual PDF bytes") as refused:
+            _validate_print_candidate_page_inventory(changed, rows[0]["independent_observation"])
+    else:
+        changed = copy.deepcopy(closure)
+        changed.pop()
+        with pytest.raises(ValueError, match="page artifact closure is missing or changed") as refused:
+            _validate_print_candidate_raster_closure(changed, rows)
+    assert not isinstance(refused.value, ProjectionSourceUnsupported)
 
 
 def test_mandatory_raw_custody_rejects_bare_success_flags(tmp_path: Path) -> None:

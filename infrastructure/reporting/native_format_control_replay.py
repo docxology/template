@@ -196,6 +196,12 @@ def _projection_pixels(
     return independent
 
 
+def _validate_control_candidate_run_diagnostic(raw: dict[str, Any], run_id: str) -> None:
+    """Check candidate DATA only, after the caller's unchanged custody gate."""
+    if raw["run_id"] != run_id or raw["diagnostic"] != "":
+        raise ValueError("native control tool run or custody diagnostic changed")
+
+
 def _closure(
     raw: object,
     reader: SnapshotReader,
@@ -249,8 +255,7 @@ def _closure(
             _tool(
                 tool_binding, reader, run_id, raw["tool"], raw["purpose"], raw["command"][1:], raw["original_exit_code"]
             )
-            if raw["run_id"] != run_id or raw["diagnostic"] != "":
-                raise ValueError("native control tool run or custody diagnostic changed")
+            _validate_control_candidate_run_diagnostic(raw, run_id)
             for field in ("executable_observation_before", "executable_observation_after"):
                 validate_executable_observation(raw[field], raw["executable"], raw["executable_sha256"])
             # The existing native tool reader authenticates the original OS

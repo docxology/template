@@ -27,7 +27,7 @@ import sys
 from collections.abc import Sequence
 from contextlib import contextmanager
 from pathlib import Path
-from typing import Any, Iterator
+from typing import Any, Iterator, TextIO
 
 from infrastructure.core.cli_scaffold import add_schema_flag, emit_schema
 from infrastructure.core.logging.utils import get_logger
@@ -48,20 +48,34 @@ logger = get_logger(__name__)
 
 
 @contextmanager
-def _quiet_dag_logging() -> Iterator[None]:
-    """Silence the dag loader's INFO line so JSON/table output to stdout stays clean.
+def _preview_logging() -> Iterator[None]:
+    """Keep preview diagnostics on stderr and restore their console streams.
 
-    ``PipelineDAG.from_yaml`` emits an INFO log that the project's logging config
-    routes to stdout; for a machine-readable catalog command that would corrupt
-    the JSON stream. Raise the dag logger to WARNING for the duration.
+    Initialize the genuine script-discovery logger before compilation lazily
+    imports it. Only stdout console handlers on the two resolution loggers are
+    routed; file/capture handlers, levels, filters and propagation stay intact.
+    Ordinary pipeline execution keeps its configured logging outside this scope.
     """
-    dag_logger = logging.getLogger("infrastructure.core.pipeline.dag")
-    previous = dag_logger.level
-    dag_logger.setLevel(logging.WARNING)
+    from infrastructure.core.script_discovery import logger as discovery_logger
+
+    loggers = (logging.getLogger("infrastructure.core.pipeline.dag"), discovery_logger)
+    streams: list[tuple[logging.StreamHandler[Any], TextIO]] = []
+    for selected in loggers:
+        for handler in selected.handlers:
+            if (
+                isinstance(handler, logging.StreamHandler)
+                and not isinstance(handler, logging.FileHandler)
+                and (handler.stream is sys.stdout or handler.stream is sys.__stdout__)
+                and all(existing is not handler for existing, _stream in streams)
+            ):
+                streams.append((handler, handler.stream))
     try:
+        for handler, _stream in streams:
+            handler.setStream(sys.stderr)
         yield
     finally:
-        dag_logger.setLevel(previous)
+        for handler, stream in reversed(streams):
+            handler.setStream(stream)
 
 
 DEFAULT_PIPELINE_YAML = Path(__file__).resolve().parent / "pipeline.yaml"
@@ -110,11 +124,10 @@ def stage_rows(
     Returns:
         A list of dicts derived purely from the YAML — never hand-maintained.
 
-    The DAG loader logs to stdout; this function silences that for the duration
-    so every caller (CLI ``--format json`` AND the MCP ``describe_pipeline`` tool)
-    gets a clean stream without each having to remember the guard.
+    Resolution diagnostics use stderr within this scope so CLI and MCP callers
+    receive clean stdout without discarding the configured logger messages.
     """
-    with _quiet_dag_logging():
+    with _preview_logging():
         dag = PipelineDAG.from_yaml(yaml_path)
         if exclude_tags or include_only:
             dag.filter_tags(exclude=exclude_tags or None, include_only=include_only or None)
@@ -193,7 +206,7 @@ def pipeline_description(
             argparse.Namespace(repo_root=config.repo_root, project=config.project_name, yaml=yaml_path)
         )
         return {"version": 2, "view": view, "source": str(path), "stages": stage_rows(path)}
-    with _quiet_dag_logging():
+    with _preview_logging():
         plan = compile_execution_plan(config)
     rows = [
         {

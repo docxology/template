@@ -36,6 +36,7 @@ KINDS = (
 _ORDINARY_MARKERS = frozenset(
     {
         "parametrize",
+        "usefixtures",
         "timeout",
         "skipif",
         "hypothesis",

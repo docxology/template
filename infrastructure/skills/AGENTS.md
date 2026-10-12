@@ -52,7 +52,9 @@ Static (AST-only; never imports the target modules) catalog of agent-invocable `
 
 - `OperationDescriptor` — one invocable CLI: `module`, `invocation`, `source_path`, `purpose`, `subcommands`, `exports`, `effect`
 - `SubcommandInfo` — one statically-parsed `add_parser(name, help=...)` subcommand
-- `MUTATING_OPERATIONS` — allowlist of dotted modules whose CLIs mutate external state / incur cost (everything else is `read_only`)
+- `MUTATING_OPERATIONS` — explicit reviewed modules with file-writing, external/paid, or broker routes
+- Effect classification uses one private helper for both package and single-file discovery: known mutators take precedence, only a private reviewed module whitelist is `read_only`, and every other/new operation is conservatively `mutating`. That fallback requires agent-surface opt-in without asserting an observed write. The descriptor default is also `mutating`; the public fields and manifest schema are unchanged.
+- The tier covers the whole module, including help/schema/dry-run forms. MCP invocation requires a boolean `allow_mutating`; malformed values are refused before dispatch. Literal `true` or the existing configured environment opt-in admits the guarded tier. Direct CLIs and their own admission/custody checks retain their behavior.
 - `discover_operations(repo_root, *, search_roots=None) -> list[OperationDescriptor]`
 - `build_operations_payload(ops) -> dict` / `operation_descriptors_as_json_serializable(ops) -> list[dict]`
 - `write_operations_manifest(repo_root, output_path=None, *, search_roots=None) -> Path` — default `.cursor/operations_manifest.json`

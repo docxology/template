@@ -33,10 +33,12 @@ holds, both statically detectable and dependency-free:
   ``infrastructure.documentation.generate_glossary_cli`` and
   ``infrastructure.reporting.release_readiness`` — reachable.
 
-Each descriptor also carries an :attr:`OperationDescriptor.effect` tier
-(``read_only`` by default, ``mutating`` for the small allowlist of publish /
-upload / paid CLIs in :data:`MUTATING_OPERATIONS`) so an agent surface can refuse
-side-effecting operations unless explicitly opted in.
+Each descriptor also carries an :attr:`OperationDescriptor.effect` tier.
+``read_only`` is reserved for an explicit reviewed module whitelist. Known local
+file writers, external updates, brokers and paid CLIs in :data:`MUTATING_OPERATIONS`
+are ``mutating``; every other or newly discovered module conservatively receives
+that tier too. The tier requires agent-surface opt-in, including for help and
+dry-run forms; conservative tagging does not assert that an unaudited CLI writes.
 """
 
 from __future__ import annotations
@@ -67,18 +69,113 @@ DEFAULT_OPERATION_SEARCH_ROOTS: tuple[str, ...] = ("infrastructure",)
 # Effect tier for the capability surface.
 Effect = Literal["read_only", "mutating"]
 
-# Explicit allowlist of dotted module paths whose CLIs write state, mutate
-# external systems, or incur cost. Everything else is
-# treated as ``read_only``. Kept deliberately small and hand-maintained — an
-# agent surface may refuse these unless a caller explicitly opts in.
+# Explicit reviewed modules whose intended routes write local files, mutate
+# external systems, broker those operations, or incur cost. Their existing
+# admission, custody, and provider guards remain independently required.
 MUTATING_OPERATIONS: frozenset[str] = frozenset(
     {
+        "infrastructure.autoresearch",
+        "infrastructure.benchmark",
+        "infrastructure.core._bounded_run_guardian",
+        "infrastructure.core.cli",
         "infrastructure.core.health_benchmark",  # writes the requested evidence manifest
+        "infrastructure.doctor",
+        "infrastructure.documentation.generate_glossary_cli",
+        "infrastructure.fonds.linking",
+        "infrastructure.llm.cli",
+        "infrastructure.mcp_server",
+        "infrastructure.orchestration",
+        "infrastructure.project.linking",
+        "infrastructure.project.locked_dependency_export",
+        "infrastructure.project.public_acceptance_auxiliary_cli",
+        "infrastructure.project.public_acceptance_auxiliary_worker",
+        "infrastructure.project.public_acceptance_pytest",
+        "infrastructure.project.public_acceptance_root",
+        "infrastructure.project.public_acceptance_worker",
+        "infrastructure.project.public_root_case_census",
+        "infrastructure.project.public_root_lane_producer",
+        "infrastructure.project.public_root_lane_worker",
+        "infrastructure.project.public_root_runtime_worker",
+        "infrastructure.prose",
+        "infrastructure.provenance",
         "infrastructure.publishing",  # DOI / Zenodo / arXiv publish + archival CLIs
+        "infrastructure.publishing.metadata.metadata_export_cli",
+        "infrastructure.reference.citation",
+        "infrastructure.reference.verification",
+        "infrastructure.rendering",
+        "infrastructure.reporting.evidence_graph",
+        "infrastructure.reporting.native_crossref_worker",
+        "infrastructure.reporting.native_dependency_preparation",
+        "infrastructure.reporting.native_epub_observer",
+        "infrastructure.reporting.native_epub_preparation",
+        "infrastructure.reporting.native_failed_transport",
+        "infrastructure.reporting.native_format_acceptance",
+        "infrastructure.reporting.native_format_acceptance_worker",
+        "infrastructure.reporting.native_format_browser_driver",
+        "infrastructure.reporting.native_format_browser_oracles",
+        "infrastructure.reporting.native_format_browser_semantic_controls",
+        "infrastructure.reporting.native_hosted_reader",
+        "infrastructure.reporting.native_installed_custody_capture",
+        "infrastructure.reporting.native_installed_launcher",
+        "infrastructure.reporting.native_mermaid_all_source_worker",
+        "infrastructure.reporting.native_mermaid_svg_controls",
+        "infrastructure.reporting.native_office_diagram_control_worker",
+        "infrastructure.reporting.native_office_observer",
+        "infrastructure.reporting.native_office_scientific_controls",
+        "infrastructure.reporting.native_pdf_citation_replay",
+        "infrastructure.reporting.native_pdf_whole_control_worker",
+        "infrastructure.reporting.native_pitch_control_worker",
+        "infrastructure.reporting.native_print_artifact_controls",
+        "infrastructure.reporting.native_projection_checks",
+        "infrastructure.reporting.native_slide_controls",
+        "infrastructure.reporting.native_stage_child_worker",
+        "infrastructure.reporting.project_verifier",
+        "infrastructure.reporting.release_readiness",
+        "infrastructure.reporting.required_acceptance_aggregate",
+        "infrastructure.rules.linking",
         "infrastructure.search.deep_research",  # PAID deep-research dispatch
+        "infrastructure.search.exa",
+        "infrastructure.search.literature",
+        "infrastructure.search.monid",
         "infrastructure.skills",  # manifests plus user-level runtime links + backups
+        "infrastructure.steganography.start_tpm_backend",
+        "infrastructure.steganography.swtpm_mssim_proxy",
+        "infrastructure.tools.linking",
+        "infrastructure.validation.cli",
+        "infrastructure.validation.docs.scanner",
+        "infrastructure.validation.integrity.link_validator",
+        "infrastructure.validation.repo.scanner",
     }
 )
+
+# Reviewed module-level CLI routes that inspect/read or emit to stdout. New or
+# unreviewed modules require opt-in; future Source edits need renewed review.
+# Health preparation and Fontconfig cache initialization remain conservative
+# exclusions, without claiming an observed write from those conditional paths.
+_READ_ONLY_OPERATIONS: frozenset[str] = frozenset(
+    {
+        "infrastructure.core.config",
+        "infrastructure.core.pipeline",
+        "infrastructure.methods",
+        "infrastructure.project.promotion",
+        "infrastructure.project.public_root_runtime_readback",
+        "infrastructure.project.public_scope",
+        "infrastructure.reporting.native_workflow_transport",
+        "infrastructure.search.connectors",
+        "infrastructure.sia",
+        "infrastructure.transmission.transmission_page_check",
+        "infrastructure.validation.integrity.check_links",
+    }
+)
+
+
+def _operation_effect(module: str) -> Effect:
+    """Require opt-in unless the whole CLI has an explicit read-only review."""
+    if module in MUTATING_OPERATIONS:
+        return "mutating"
+    if module in _READ_ONLY_OPERATIONS:
+        return "read_only"
+    return "mutating"
 
 
 @dataclass(frozen=True, slots=True)
@@ -104,8 +201,8 @@ class OperationDescriptor:
     subcommands: tuple[SubcommandInfo, ...] = field(default_factory=tuple)
     exports: tuple[str, ...] = field(default_factory=tuple)
     """``__all__`` of the owning package (or single-file module) — its public API."""
-    effect: Effect = "read_only"
-    """Capability tier: ``read_only`` (default) or ``mutating`` (see :data:`MUTATING_OPERATIONS`)."""
+    effect: Effect = "mutating"
+    """Capability tier: explicit reviewed ``read_only`` or conservative ``mutating``."""
 
 
 def _dotted_path(repo_root: Path, package_dir: Path) -> str:
@@ -252,8 +349,9 @@ def discover_operations(
       ``if __name__ == "__main__":`` guard whose directory is *not* itself an
       invocable package — parsed the same way, with the module's own ``__all__``.
 
-    Each descriptor is tagged with an :attr:`OperationDescriptor.effect` tier from
-    :data:`MUTATING_OPERATIONS`.
+    Each descriptor receives the same conservative effect classification: known
+    mutators take precedence, only reviewed modules are ``read_only``, and all
+    other modules require opt-in as ``mutating``.
     """
     root = Path(repo_root).resolve()
     roots = tuple(search_roots) if search_roots is not None else DEFAULT_OPERATION_SEARCH_ROOTS
@@ -280,7 +378,7 @@ def discover_operations(
                     purpose=_module_docstring_first_line(source),
                     subcommands=_extract_subcommands(source),
                     exports=_extract_dunder_all(package_dir / "__init__.py"),
-                    effect="mutating" if dotted in MUTATING_OPERATIONS else "read_only",
+                    effect=_operation_effect(dotted),
                 )
             )
     for root_name in roots:
@@ -311,7 +409,7 @@ def discover_operations(
                     purpose=_module_docstring_first_line(source),
                     subcommands=_extract_subcommands(source),
                     exports=_dunder_all_from_source(source),
-                    effect="mutating" if dotted in MUTATING_OPERATIONS else "read_only",
+                    effect=_operation_effect(dotted),
                 )
             )
     descriptors.sort(key=lambda d: d.module)

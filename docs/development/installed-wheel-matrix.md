@@ -16,12 +16,36 @@ uv run --no-sync --offline python scripts/gates/installed_public.py \
 ```
 
 Prepare the exact locked nonlocal dependency and build-tool cache explicitly
-before execution. The release workflow's
-[`Prepare locked installed-matrix dependency cache`](../../.github/workflows/release.yml)
+before execution. The required acceptance workflow's
+[`Warm exact locked offline wheel dependencies for every scope and minor`](../../.github/workflows/platform-required-acceptance.yml)
 step shows separate metadata exports and dependency environments for each scope
 and runtime. An offline local preparation uses already cached packages; prepare
 missing packages explicitly before restarting acceptance. It does not justify
 resolving or installing dependencies during ordinary execution.
+
+For a locked public PyPI package whose release has no registry wheels, use the
+shared `infrastructure.project.locked_dependency_export` CLI after the canonical
+export. It names only the same scope lock's exact sdist URL and original SHA256;
+versions, extras, markers and unrelated wheel rows retain their bindings. Both
+the online warmer and actual cold producer apply this transform before consuming
+the export. For example, with the selected scope's frozen metadata directory and
+the generated export:
+
+```bash
+python -m infrastructure.project.locked_dependency_export \
+  --metadata-root "$P4_METADATA" --requirements "$P4_REQUIREMENTS"
+```
+
+Follow the workflow's preparation boundary: create a fresh private job-owned
+`UV_CACHE_DIR`, seed a fresh builder only from the root's hash-locked
+`installed-build` group, and warm dependencies with `--no-build-isolation
+--no-deps --require-hashes` into a separate target outside the builder's imports.
+Retain the same cache under the owner's custody through cold execution, which
+still requires `--offline --no-config --no-build --require-hashes`. Do not restore
+derived source-build cache entries into that preparation cache. The archive hash
+authenticates source bytes; it does not authenticate mutable derived cached wheel
+bytes. This cache ownership boundary is an explicit prerequisite, and a successful
+dependency preparation alone establishes no full installed or native acceptance.
 
 The runner creates separate private build and runtime environments for each
 cell. Build tools come from the platform's locked `installed-build` group;
