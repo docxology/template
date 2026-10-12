@@ -50,6 +50,11 @@ require final-source acceptance, the authenticated handoff and remote verificati
 - Retain bounded, redacted project failure diagnostics and report the one
   observed pytest session duration without duplicating it as inferred phases.
 
+- Admit only reviewed read-only CLI modules without agent-surface opt-in;
+  require explicit opt-in for file-writing, external/paid and unaudited routes.
+  Reject non-boolean authorization in MCP requests and the public Python
+  invocation API while preserving the configured environment opt-in.
+
 ## Prepared 4.0.0 candidate — unpublished
 
 See the retained [illustrated candidate notes](docs/releases/v4.0.0.md) for the

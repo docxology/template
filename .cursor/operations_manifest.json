@@ -67,7 +67,7 @@
         "validate_autoresearch_plan",
         "write_autoresearch_report"
       ],
-      "effect": "read_only"
+      "effect": "mutating"
     },
     {
       "module": "infrastructure.benchmark",
@@ -89,7 +89,7 @@
         "scores_to_markdown",
         "write_default_manifest"
       ],
-      "effect": "read_only"
+      "effect": "mutating"
     },
     {
       "module": "infrastructure.core._bounded_run_guardian",
@@ -98,7 +98,7 @@
       "purpose": "Independent POSIX guardian for token-bound subprocess cleanup.",
       "subcommands": [],
       "exports": [],
-      "effect": "read_only"
+      "effect": "mutating"
     },
     {
       "module": "infrastructure.core.cli",
@@ -114,7 +114,7 @@
         "handle_pipeline_command",
         "main"
       ],
-      "effect": "read_only"
+      "effect": "mutating"
     },
     {
       "module": "infrastructure.core.config",
@@ -152,7 +152,7 @@
         "format_report_table",
         "main"
       ],
-      "effect": "read_only"
+      "effect": "mutating"
     },
     {
       "module": "infrastructure.core.health_benchmark",
@@ -284,7 +284,7 @@
         "EXIT_REGRESSION",
         "EXIT_USAGE"
       ],
-      "effect": "read_only"
+      "effect": "mutating"
     },
     {
       "module": "infrastructure.documentation.generate_glossary_cli",
@@ -293,7 +293,7 @@
       "purpose": "Glossary generation script for building API index from source code.",
       "subcommands": [],
       "exports": [],
-      "effect": "read_only"
+      "effect": "mutating"
     },
     {
       "module": "infrastructure.fonds.linking",
@@ -302,7 +302,7 @@
       "purpose": "Symlink private lifecycle fonds into the template checkout.",
       "subcommands": [],
       "exports": [],
-      "effect": "read_only"
+      "effect": "mutating"
     },
     {
       "module": "infrastructure.llm.cli",
@@ -311,7 +311,7 @@
       "purpose": "``python -m infrastructure.llm.cli`` entry point.",
       "subcommands": [],
       "exports": [],
-      "effect": "read_only"
+      "effect": "mutating"
     },
     {
       "module": "infrastructure.mcp_server",
@@ -331,7 +331,7 @@
         "main",
         "serve"
       ],
-      "effect": "read_only"
+      "effect": "mutating"
     },
     {
       "module": "infrastructure.methods",
@@ -412,7 +412,7 @@
         "setup_stage_log",
         "validate_project_slug"
       ],
-      "effect": "read_only"
+      "effect": "mutating"
     },
     {
       "module": "infrastructure.project.linking",
@@ -421,7 +421,16 @@
       "purpose": "Symlink private lifecycle projects into the template checkout.",
       "subcommands": [],
       "exports": [],
-      "effect": "read_only"
+      "effect": "mutating"
+    },
+    {
+      "module": "infrastructure.project.locked_dependency_export",
+      "invocation": "python -m infrastructure.project.locked_dependency_export",
+      "source_path": "infrastructure/project/locked_dependency_export.py",
+      "purpose": "Retain exact locked sdists as explicit artifacts for cold wheel reuse.",
+      "subcommands": [],
+      "exports": [],
+      "effect": "mutating"
     },
     {
       "module": "infrastructure.project.promotion",
@@ -463,7 +472,7 @@
       "purpose": "Explicit CLI for source-bound auxiliary acceptance; never publishes.",
       "subcommands": [],
       "exports": [],
-      "effect": "read_only"
+      "effect": "mutating"
     },
     {
       "module": "infrastructure.project.public_acceptance_auxiliary_worker",
@@ -472,7 +481,7 @@
       "purpose": "Real source-owned auxiliary checks executed only in a supervised child.",
       "subcommands": [],
       "exports": [],
-      "effect": "read_only"
+      "effect": "mutating"
     },
     {
       "module": "infrastructure.project.public_acceptance_pytest",
@@ -481,7 +490,7 @@
       "purpose": "Real pytest execution with nonce-bound complete collection and case evidence.",
       "subcommands": [],
       "exports": [],
-      "effect": "read_only"
+      "effect": "mutating"
     },
     {
       "module": "infrastructure.project.public_acceptance_root",
@@ -490,7 +499,7 @@
       "purpose": "Source-bound root runtime cells; unresolved root case policy blocks execution.",
       "subcommands": [],
       "exports": [],
-      "effect": "read_only"
+      "effect": "mutating"
     },
     {
       "module": "infrastructure.project.public_acceptance_worker",
@@ -499,7 +508,7 @@
       "purpose": "One locked, bounded full-selection public project/runtime acceptance cell.",
       "subcommands": [],
       "exports": [],
-      "effect": "read_only"
+      "effect": "mutating"
     },
     {
       "module": "infrastructure.project.public_root_case_census",
@@ -508,7 +517,7 @@
       "purpose": "Bounded canonical Root collection and independent readback; never runtime acceptance.",
       "subcommands": [],
       "exports": [],
-      "effect": "read_only"
+      "effect": "mutating"
     },
     {
       "module": "infrastructure.project.public_root_lane_producer",
@@ -517,7 +526,7 @@
       "purpose": "Whole-budget Root v2 lane API; only original supervised outcomes can pass.",
       "subcommands": [],
       "exports": [],
-      "effect": "read_only"
+      "effect": "mutating"
     },
     {
       "module": "infrastructure.project.public_root_lane_worker",
@@ -526,7 +535,7 @@
       "purpose": "Real exact-node Root v2 execution, guarded chunks and original case outcomes.",
       "subcommands": [],
       "exports": [],
-      "effect": "read_only"
+      "effect": "mutating"
     },
     {
       "module": "infrastructure.project.public_root_runtime_readback",
@@ -544,7 +553,7 @@
       "purpose": "One genuine full census and exact applicability units in the selected Root interpreter.",
       "subcommands": [],
       "exports": [],
-      "effect": "read_only"
+      "effect": "mutating"
     },
     {
       "module": "infrastructure.project.public_scope",
@@ -625,7 +634,7 @@
         "write_report",
         "load_report_json"
       ],
-      "effect": "read_only"
+      "effect": "mutating"
     },
     {
       "module": "infrastructure.provenance",
@@ -691,7 +700,7 @@
         "ProvenanceValidationReport",
         "validate_provenance_dag"
       ],
-      "effect": "read_only"
+      "effect": "mutating"
     },
     {
       "module": "infrastructure.publishing",
@@ -784,7 +793,7 @@
         }
       ],
       "exports": [],
-      "effect": "read_only"
+      "effect": "mutating"
     },
     {
       "module": "infrastructure.reference.citation",
@@ -825,7 +834,7 @@
         "escape_latex",
         "unescape_latex"
       ],
-      "effect": "read_only"
+      "effect": "mutating"
     },
     {
       "module": "infrastructure.reference.verification",
@@ -863,7 +872,7 @@
         "verify_database",
         "verify_entry"
       ],
-      "effect": "read_only"
+      "effect": "mutating"
     },
     {
       "module": "infrastructure.rendering",
@@ -912,7 +921,7 @@
         "verify_figures_exist",
         "write_resolved_manuscript_tree"
       ],
-      "effect": "read_only"
+      "effect": "mutating"
     },
     {
       "module": "infrastructure.reporting.evidence_graph",
@@ -935,7 +944,7 @@
         "graph_to_json",
         "main"
       ],
-      "effect": "read_only"
+      "effect": "mutating"
     },
     {
       "module": "infrastructure.reporting.native_crossref_worker",
@@ -944,7 +953,7 @@
       "purpose": "Actual Source-audited Pandoc filter child; stdout contains only filter JSON.",
       "subcommands": [],
       "exports": [],
-      "effect": "read_only"
+      "effect": "mutating"
     },
     {
       "module": "infrastructure.reporting.native_dependency_preparation",
@@ -953,7 +962,7 @@
       "purpose": "Finite official npm asset preparation, bound to exact source lock integrity.",
       "subcommands": [],
       "exports": [],
-      "effect": "read_only"
+      "effect": "mutating"
     },
     {
       "module": "infrastructure.reporting.native_epub_observer",
@@ -962,7 +971,7 @@
       "purpose": "Real EPUBCheck and native reader conversion with exact byte custody.",
       "subcommands": [],
       "exports": [],
-      "effect": "read_only"
+      "effect": "mutating"
     },
     {
       "module": "infrastructure.reporting.native_epub_preparation",
@@ -971,7 +980,7 @@
       "purpose": "Prepare the pinned official EPUBCheck bundle in a fresh owned directory.",
       "subcommands": [],
       "exports": [],
-      "effect": "read_only"
+      "effect": "mutating"
     },
     {
       "module": "infrastructure.reporting.native_failed_transport",
@@ -980,7 +989,7 @@
       "purpose": "Bounded preservation of failed cold-launch evidence, without acceptance.",
       "subcommands": [],
       "exports": [],
-      "effect": "read_only"
+      "effect": "mutating"
     },
     {
       "module": "infrastructure.reporting.native_format_acceptance",
@@ -989,7 +998,7 @@
       "purpose": "Supervised fresh native rendering; incomplete visual acceptance stays blocked.",
       "subcommands": [],
       "exports": [],
-      "effect": "read_only"
+      "effect": "mutating"
     },
     {
       "module": "infrastructure.reporting.native_format_acceptance_worker",
@@ -998,7 +1007,7 @@
       "purpose": "Fresh core execution and native observers for one admitted public project.",
       "subcommands": [],
       "exports": [],
-      "effect": "read_only"
+      "effect": "mutating"
     },
     {
       "module": "infrastructure.reporting.native_format_browser_driver",
@@ -1007,7 +1016,7 @@
       "purpose": "Finite loopback-only Chromium DevTools driver using the standard library.",
       "subcommands": [],
       "exports": [],
-      "effect": "read_only"
+      "effect": "mutating"
     },
     {
       "module": "infrastructure.reporting.native_format_browser_oracles",
@@ -1016,7 +1025,7 @@
       "purpose": "Real isolated Chromium DOM, reflow and screenshot observations.",
       "subcommands": [],
       "exports": [],
-      "effect": "read_only"
+      "effect": "mutating"
     },
     {
       "module": "infrastructure.reporting.native_format_browser_semantic_controls",
@@ -1025,7 +1034,7 @@
       "purpose": "Real supervised math, citation and source-figure native browser controls.",
       "subcommands": [],
       "exports": [],
-      "effect": "read_only"
+      "effect": "mutating"
     },
     {
       "module": "infrastructure.reporting.native_format_html_platform_font_probe",
@@ -1034,7 +1043,7 @@
       "purpose": "Actual Darwin/Linux font-file resolution and source-codepoint glyph observations.",
       "subcommands": [],
       "exports": [],
-      "effect": "read_only"
+      "effect": "mutating"
     },
     {
       "module": "infrastructure.reporting.native_hosted_reader",
@@ -1043,7 +1052,7 @@
       "purpose": "Cold installed Source reader with actual authenticated original custody.",
       "subcommands": [],
       "exports": [],
-      "effect": "read_only"
+      "effect": "mutating"
     },
     {
       "module": "infrastructure.reporting.native_installed_custody_capture",
@@ -1052,7 +1061,7 @@
       "purpose": "Observe the real cold installed SDK against its separately admitted wheel.",
       "subcommands": [],
       "exports": [],
-      "effect": "read_only"
+      "effect": "mutating"
     },
     {
       "module": "infrastructure.reporting.native_installed_launcher",
@@ -1061,7 +1070,7 @@
       "purpose": "Prepare a fresh Source4.0.1 wheel and supervise its cold native role.",
       "subcommands": [],
       "exports": [],
-      "effect": "read_only"
+      "effect": "mutating"
     },
     {
       "module": "infrastructure.reporting.native_mermaid_all_source_worker",
@@ -1070,7 +1079,7 @@
       "purpose": "Thin installed-SDK entry point for the original complete28 Source component.",
       "subcommands": [],
       "exports": [],
-      "effect": "read_only"
+      "effect": "mutating"
     },
     {
       "module": "infrastructure.reporting.native_mermaid_svg_controls",
@@ -1079,7 +1088,7 @@
       "purpose": "Source-owned controls mutating actual original Mermaid SVG output bytes.",
       "subcommands": [],
       "exports": [],
-      "effect": "read_only"
+      "effect": "mutating"
     },
     {
       "module": "infrastructure.reporting.native_office_diagram_control_worker",
@@ -1088,7 +1097,7 @@
       "purpose": "One actual Source-owned Office child, invoked only by its original supervisor.",
       "subcommands": [],
       "exports": [],
-      "effect": "read_only"
+      "effect": "mutating"
     },
     {
       "module": "infrastructure.reporting.native_office_observer",
@@ -1097,7 +1106,7 @@
       "purpose": "Bounded native Office conversion; package parsing never grants layout acceptance.",
       "subcommands": [],
       "exports": [],
-      "effect": "read_only"
+      "effect": "mutating"
     },
     {
       "module": "infrastructure.reporting.native_office_scientific_controls",
@@ -1106,7 +1115,7 @@
       "purpose": "Genuine bounded scientific native Office controls, including preserved-content ink mutants.",
       "subcommands": [],
       "exports": [],
-      "effect": "read_only"
+      "effect": "mutating"
     },
     {
       "module": "infrastructure.reporting.native_pdf_citation_replay",
@@ -1115,7 +1124,7 @@
       "purpose": "Current-reader citation regeneration and exact native glyph/ink observations.",
       "subcommands": [],
       "exports": [],
-      "effect": "read_only"
+      "effect": "mutating"
     },
     {
       "module": "infrastructure.reporting.native_pdf_whole_control_worker",
@@ -1124,7 +1133,7 @@
       "purpose": "Fixed selected-SDK original whole-PDF page/occurrence control child.",
       "subcommands": [],
       "exports": [],
-      "effect": "read_only"
+      "effect": "mutating"
     },
     {
       "module": "infrastructure.reporting.native_pitch_control_worker",
@@ -1133,7 +1142,7 @@
       "purpose": "One fixed selected-SDK child for a complete configured Pitch control axis.",
       "subcommands": [],
       "exports": [],
-      "effect": "read_only"
+      "effect": "mutating"
     },
     {
       "module": "infrastructure.reporting.native_print_artifact_controls",
@@ -1142,7 +1151,7 @@
       "purpose": "Actual subprocess controls over configured print outputs and source witnesses.",
       "subcommands": [],
       "exports": [],
-      "effect": "read_only"
+      "effect": "mutating"
     },
     {
       "module": "infrastructure.reporting.native_projection_checks",
@@ -1151,7 +1160,7 @@
       "purpose": "Actual per-page projected glyph checks, retaining unsupported visual gates.",
       "subcommands": [],
       "exports": [],
-      "effect": "read_only"
+      "effect": "mutating"
     },
     {
       "module": "infrastructure.reporting.native_slide_controls",
@@ -1160,7 +1169,7 @@
       "purpose": "Actual baseline/later-page generic slide source/font/clipping/pixel controls.",
       "subcommands": [],
       "exports": [],
-      "effect": "read_only"
+      "effect": "mutating"
     },
     {
       "module": "infrastructure.reporting.native_stage_child_worker",
@@ -1169,7 +1178,7 @@
       "purpose": "One fixed child that independently admits Source before an existing stage.",
       "subcommands": [],
       "exports": [],
-      "effect": "read_only"
+      "effect": "mutating"
     },
     {
       "module": "infrastructure.reporting.native_workflow_transport",
@@ -1199,7 +1208,7 @@
         "run_declared_project_verifier",
         "validate_project_test_command"
       ],
-      "effect": "read_only"
+      "effect": "mutating"
     },
     {
       "module": "infrastructure.reporting.release_readiness",
@@ -1225,7 +1234,7 @@
         "render_html",
         "render_markdown"
       ],
-      "effect": "read_only"
+      "effect": "mutating"
     },
     {
       "module": "infrastructure.reporting.required_acceptance_aggregate",
@@ -1234,7 +1243,7 @@
       "purpose": "Combine original required evidence; publish only independently passed candidates.",
       "subcommands": [],
       "exports": [],
-      "effect": "read_only"
+      "effect": "mutating"
     },
     {
       "module": "infrastructure.rules.linking",
@@ -1243,7 +1252,7 @@
       "purpose": "Symlink private lifecycle rules into the template checkout.",
       "subcommands": [],
       "exports": [],
-      "effect": "read_only"
+      "effect": "mutating"
     },
     {
       "module": "infrastructure.search.connectors",
@@ -1398,7 +1407,7 @@
         "SearchResponse",
         "UrllibExaHttpClient"
       ],
-      "effect": "read_only"
+      "effect": "mutating"
     },
     {
       "module": "infrastructure.search.literature",
@@ -1445,7 +1454,7 @@
         "enrich_papers",
         "write_corpus"
       ],
-      "effect": "read_only"
+      "effect": "mutating"
     },
     {
       "module": "infrastructure.search.monid",
@@ -1504,7 +1513,7 @@
         "format_pricing_table",
         "sorted_by_cost"
       ],
-      "effect": "read_only"
+      "effect": "mutating"
     },
     {
       "module": "infrastructure.sia",
@@ -1630,7 +1639,7 @@
       "purpose": "Start a software TPM backend for Kmyth seal/unseal on macOS.",
       "subcommands": [],
       "exports": [],
-      "effect": "read_only"
+      "effect": "mutating"
     },
     {
       "module": "infrastructure.steganography.swtpm_mssim_proxy",
@@ -1639,7 +1648,7 @@
       "purpose": "TCP proxy that bridges the Microsoft TPM Simulator (mssim) TCTI protocol",
       "subcommands": [],
       "exports": [],
-      "effect": "read_only"
+      "effect": "mutating"
     },
     {
       "module": "infrastructure.tools.linking",
@@ -1648,7 +1657,7 @@
       "purpose": "Symlink private lifecycle tools into the template checkout.",
       "subcommands": [],
       "exports": [],
-      "effect": "read_only"
+      "effect": "mutating"
     },
     {
       "module": "infrastructure.transmission.transmission_page_check",
@@ -1666,7 +1675,7 @@
       "purpose": "Allow `python -m infrastructure.validation.cli`.",
       "subcommands": [],
       "exports": [],
-      "effect": "read_only"
+      "effect": "mutating"
     },
     {
       "module": "infrastructure.validation.docs.scanner",
@@ -1683,7 +1692,7 @@
         "QualityIssue",
         "ScanResults"
       ],
-      "effect": "read_only"
+      "effect": "mutating"
     },
     {
       "module": "infrastructure.validation.integrity.check_links",
@@ -1704,7 +1713,7 @@
       "purpose": "Link validation utilities for documentation.",
       "subcommands": [],
       "exports": [],
-      "effect": "read_only"
+      "effect": "mutating"
     },
     {
       "module": "infrastructure.validation.repo.scanner",
@@ -1713,7 +1722,7 @@
       "purpose": "Repository-wide accuracy and completeness scan.",
       "subcommands": [],
       "exports": [],
-      "effect": "read_only"
+      "effect": "mutating"
     }
   ]
 }

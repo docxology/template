@@ -73,9 +73,18 @@ dual-era client can choose the modern version or fall back to legacy initialize.
 `invoke_cli` is curated: it refuses any module that is not `infrastructure.*` and
 not reported invocable by the operation registry — it is a vetted tool surface,
 not an arbitrary shell. It is also **capability-tiered**: each operation carries an
-`effect` (`read_only` by default, `mutating` for the publish / upload / paid CLIs
-in the registry's `MUTATING_OPERATIONS` allowlist), and a `mutating` op is refused
-unless the caller passes `allow_mutating=true` or sets `TEMPLATE_MCP_ALLOW_MUTATING=1`.
+`effect`. Only explicitly reviewed module routes are `read_only`. Known local
+file writers, external/paid dispatchers and brokers are `mutating`; every other
+or newly discovered CLI receives that tier conservatively. This is an opt-in
+requirement for unaudited operations, not a claim that they actually write.
+The tier applies to the whole module, including help/schema/dry-run forms.
+
+Both the MCP tool and the public Python `invoke_cli` API require `allow_mutating`
+to be a boolean; strings, numbers, null and containers are refused before
+discovery or dispatch. Missing authorization defaults to `false`. Literal
+`allow_mutating=true` or the existing configured `TEMPLATE_MCP_ALLOW_MUTATING=1`
+opt-in admits the guarded tier; a valid `false` retains that configured behavior.
+Direct CLI commands keep their own admission and custody rules.
 
 The operation registry discovers both **packages** (a directory with `__main__.py`)
 and **single-file CLIs** (a `foo.py` with an `if __name__ == "__main__":` guard whose

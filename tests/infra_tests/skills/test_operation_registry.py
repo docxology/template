@@ -57,6 +57,12 @@ class TestDiscoverOperations:
         assert dict((s.name, s.help) for s in op.subcommands)["run"] == "Run foo"
         assert op.exports == ("alpha", "beta")
         assert op.source_path == "infrastructure/foo/cli.py"
+        # New packages require opt-in, even when no writer is known yet.
+        assert op.effect == "mutating"
+        assert (
+            OperationDescriptor(module=op.module, invocation=op.invocation, source_path=op.source_path).effect
+            == "mutating"
+        )
 
     def test_ignores_pycache(self, tmp_path: Path) -> None:
         _make_fake_cli_package(tmp_path)
@@ -98,7 +104,7 @@ class TestDiscoverOperations:
         pkg = tmp_path / "infrastructure" / "reporting"
         pkg.mkdir(parents=True)
         (pkg / "__init__.py").write_text("\n", encoding="utf-8")
-        (pkg / "release_readiness.py").write_text(
+        (pkg / "unclassified_dashboard.py").write_text(
             '"""Release-readiness dashboard.\n\nMore prose.\n"""\n'
             '__all__ = ["build_dashboard"]\n\n\n'
             "def build_dashboard():\n    return {}\n\n\n"
@@ -108,12 +114,13 @@ class TestDiscoverOperations:
         ops = discover_operations(tmp_path)
         assert len(ops) == 1
         op = ops[0]
-        assert op.module == "infrastructure.reporting.release_readiness"
-        assert op.invocation == "python -m infrastructure.reporting.release_readiness"
-        assert op.source_path == "infrastructure/reporting/release_readiness.py"
+        assert op.module == "infrastructure.reporting.unclassified_dashboard"
+        assert op.invocation == "python -m infrastructure.reporting.unclassified_dashboard"
+        assert op.source_path == "infrastructure/reporting/unclassified_dashboard.py"
         assert op.purpose == "Release-readiness dashboard."
         assert op.exports == ("build_dashboard",)
-        assert op.effect == "read_only"
+        # New single-file CLIs receive the same conservative tier as packages.
+        assert op.effect == "mutating"
 
     def test_single_file_without_main_guard_is_ignored(self, tmp_path: Path) -> None:
         pkg = tmp_path / "infrastructure" / "helpers"
@@ -213,11 +220,30 @@ class TestAgainstLiveRepo:
         by_module = {o.module: o for o in ops}
         # Every descriptor carries a valid effect tier.
         assert all(o.effect in {"read_only", "mutating"} for o in ops)
-        # The publish/upload CLI is tiered mutating; a plain read-only CLI is not.
-        assert by_module["infrastructure.publishing"].effect == "mutating"
-        assert by_module["infrastructure.skills"].effect == "mutating"
-        assert by_module["infrastructure.core.health_benchmark"].effect == "mutating"
-        assert by_module["infrastructure.core.health"].effect == "read_only"
+        # Actual audited module routes alone are admitted without opt-in.
+        read_only_modules = {
+            "infrastructure.core.config",
+            "infrastructure.core.pipeline",
+            "infrastructure.methods",
+            "infrastructure.project.promotion",
+            "infrastructure.project.public_root_runtime_readback",
+            "infrastructure.project.public_scope",
+            "infrastructure.reporting.native_workflow_transport",
+            "infrastructure.search.connectors",
+            "infrastructure.sia",
+            "infrastructure.transmission.transmission_page_check",
+            "infrastructure.validation.integrity.check_links",
+        }
+        assert {op.module for op in ops if op.effect == "read_only"} == read_only_modules
+        assert MUTATING_OPERATIONS <= by_module.keys()
+        assert all(by_module[module].effect == "mutating" for module in MUTATING_OPERATIONS)
+        # Conditional health/font preparation stays guarded without an actual-write claim.
+        for module in (
+            "infrastructure.core.health",
+            "infrastructure.reporting.native_format_html_platform_font_probe",
+        ):
+            assert module not in MUTATING_OPERATIONS
+            assert by_module[module].effect == "mutating"
 
     def test_cli_list_json_round_trips(self, capsys) -> None:
         rc = skills_cli_main(["operations-list-json", "--repo-root", str(_template_repo_root())])

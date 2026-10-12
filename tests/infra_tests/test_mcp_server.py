@@ -272,20 +272,106 @@ class TestInvokeCli:
         assert out["stdout"].strip()
 
     def test_refuses_mutating_op_by_default(self) -> None:
-        # R18: a publish/paid (mutating) op is refused without opt-in — and never spawned.
-        out = invoke_cli("infrastructure.publishing", ["--help"])
-        assert out["exit_code"] == 2
-        assert "mutating" in out["stderr"]
+        # Safe help still requires opt-in for the whole guarded CLI module.
+        for module in ("infrastructure.publishing", "infrastructure.project.locked_dependency_export"):
+            out = invoke_cli(module, ["--help"])
+            assert out["exit_code"] == 2
+            assert out["stdout"] == ""
+            assert "mutating" in out["stderr"]
+        for modern in (False, True):
+            for include_authorization in (False, True):
+                params: dict[str, Any] = {
+                    "name": "invoke_cli",
+                    "arguments": {"module": "infrastructure.publishing", "args": ["--help"]},
+                }
+                if include_authorization:
+                    params["arguments"]["allow_mutating"] = False
+                if modern:
+                    params["_meta"] = _modern_meta()
+                response = handle_request(
+                    json.loads(json.dumps({"jsonrpc": "2.0", "id": 1, "method": "tools/call", "params": params}))
+                )
+                assert response is not None
+                payload = json.loads(response["result"]["content"][0]["text"])
+                assert payload["exit_code"] == 2
+                assert payload["stdout"] == ""
+                assert "mutating" in payload["stderr"]
+        # Malformed authorization must never be coerced into consent.
+        malformed_values: list[Any] = ["false", "true", 0, 1, 0.0, None, [], {}]
+        for value in malformed_values:
+            out = invoke_cli("infrastructure.publishing", ["--help"], allow_mutating=value)
+            assert out == {"exit_code": 2, "stdout": "", "stderr": "allow_mutating must be a boolean"}
+            for modern in (False, True):
+                params: dict[str, Any] = {
+                    "name": "invoke_cli",
+                    "arguments": {
+                        "module": "infrastructure.publishing",
+                        "args": ["--help"],
+                        "allow_mutating": value,
+                    },
+                }
+                if modern:
+                    params["_meta"] = _modern_meta()
+                response = handle_request(
+                    json.loads(json.dumps({"jsonrpc": "2.0", "id": 1, "method": "tools/call", "params": params}))
+                )
+                assert response is not None
+                assert json.loads(response["result"]["content"][0]["text"]) == out
 
     def test_mutating_op_allowed_with_flag(self) -> None:
-        # --help is side-effect free; opt-in must bypass the tier refusal.
+        # Actual --help is side-effect free; literal True admits the guarded tier.
         out = invoke_cli("infrastructure.publishing", ["--help"], allow_mutating=True)
+        assert out["exit_code"] == 0
         assert "mutating" not in out["stderr"]
+        for modern in (False, True):
+            params: dict[str, Any] = {
+                "name": "invoke_cli",
+                "arguments": {
+                    "module": "infrastructure.publishing",
+                    "args": ["--help"],
+                    "allow_mutating": True,
+                },
+            }
+            if modern:
+                params["_meta"] = _modern_meta()
+            response = handle_request(
+                json.loads(json.dumps({"jsonrpc": "2.0", "id": 1, "method": "tools/call", "params": params}))
+            )
+            assert response is not None
+            payload = json.loads(response["result"]["content"][0]["text"])
+            assert payload["exit_code"] == 0
+            assert "mutating" not in payload["stderr"]
 
     def test_mutating_op_allowed_with_env(self, monkeypatch) -> None:
         monkeypatch.setenv(ALLOW_MUTATING_ENV, "1")
-        out = invoke_cli("infrastructure.publishing", ["--help"])
+        out = invoke_cli("infrastructure.publishing", ["--help"], allow_mutating=False)
+        assert out["exit_code"] == 0
         assert "mutating" not in out["stderr"]
+        malformed_value: Any = "false"
+        malformed = invoke_cli("infrastructure.publishing", ["--help"], allow_mutating=malformed_value)
+        assert malformed == {"exit_code": 2, "stdout": "", "stderr": "allow_mutating must be a boolean"}
+        for modern in (False, True):
+            for value in (False, "false"):
+                params: dict[str, Any] = {
+                    "name": "invoke_cli",
+                    "arguments": {
+                        "module": "infrastructure.publishing",
+                        "args": ["--help"],
+                        "allow_mutating": value,
+                    },
+                }
+                if modern:
+                    params["_meta"] = _modern_meta()
+                response = handle_request(
+                    json.loads(json.dumps({"jsonrpc": "2.0", "id": 1, "method": "tools/call", "params": params}))
+                )
+                assert response is not None
+                payload = json.loads(response["result"]["content"][0]["text"])
+                if value is False:
+                    assert payload["exit_code"] == 0
+                    assert "mutating" not in payload["stderr"]
+                else:
+                    assert payload == malformed
 
 
 class TestServeLoop:

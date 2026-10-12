@@ -52,8 +52,8 @@ from infrastructure.skills.operation_registry import (
     discover_operations,
 )
 
-# Env var that opts an agent into running ``mutating`` (publish / upload / paid)
-# CLIs through :func:`invoke_cli`. Any truthy value enables it.
+# Configured opt-in for file-writing, external/paid, or unaudited CLI modules.
+# The existing parser admits only the declared true strings.
 ALLOW_MUTATING_ENV = "TEMPLATE_MCP_ALLOW_MUTATING"
 
 __all__ = [
@@ -139,11 +139,14 @@ def invoke_cli(
     ``infrastructure.*`` or not reported as invocable by the operation registry —
     this is a curated tool surface, not an arbitrary shell.
 
-    Capability tiering: a ``mutating`` operation (publish / upload / paid CLI, per
-    the operation registry's ``effect`` tier) is refused unless the caller passes
-    ``allow_mutating=True`` or sets the ``TEMPLATE_MCP_ALLOW_MUTATING`` env var.
-    ``read_only`` operations run unconditionally.
+    Capability tiering: known file-writing, external/paid and unaudited operations
+    require opt-in. Only explicitly reviewed ``read_only`` modules run without it.
+    ``allow_mutating`` must be a boolean; literal ``True`` or the existing configured
+    ``TEMPLATE_MCP_ALLOW_MUTATING`` opt-in authorizes the guarded tier. A valid
+    ``False`` does not disable that configured opt-in; malformed values are refused.
     """
+    if type(allow_mutating) is not bool:
+        return {"exit_code": 2, "stdout": "", "stderr": "allow_mutating must be a boolean"}
     args = list(args or [])
     if not module.startswith("infrastructure."):
         return {"exit_code": 2, "stdout": "", "stderr": f"refused: {module!r} is not an infrastructure.* module"}
@@ -160,7 +163,7 @@ def invoke_cli(
             "exit_code": 2,
             "stdout": "",
             "stderr": (
-                f"refused: {module!r} is a mutating/paid operation; re-invoke with "
+                f"refused: {module!r} is a mutating or unaudited operation; re-invoke with "
                 f"allow_mutating=true (or set {ALLOW_MUTATING_ENV}=1) to opt in"
             ),
         }
@@ -175,11 +178,14 @@ def invoke_cli(
 
 
 def _tool_invoke_cli(args: dict[str, Any]) -> dict[str, Any]:
+    allow_mutating = args.get("allow_mutating", False)
+    if type(allow_mutating) is not bool:
+        return {"exit_code": 2, "stdout": "", "stderr": "allow_mutating must be a boolean"}
     module = str(args.get("module", ""))
     cli_args = args.get("args") or []
     if not isinstance(cli_args, list):
         return {"exit_code": 2, "stdout": "", "stderr": "args must be a list of strings"}
-    return invoke_cli(module, [str(a) for a in cli_args], allow_mutating=bool(args.get("allow_mutating", False)))
+    return invoke_cli(module, [str(a) for a in cli_args], allow_mutating=allow_mutating)
 
 
 # name -> (handler, description, inputSchema)
@@ -210,7 +216,8 @@ _TOOLS: dict[str, tuple[Callable[[dict[str, Any]], dict[str, Any]], str, dict[st
     "invoke_cli": (
         _tool_invoke_cli,
         "Run a registered infrastructure.* CLI via 'python -m <module>' and return exit_code/stdout/stderr. "
-        "Mutating/paid CLIs are refused unless allow_mutating is true.",
+        "Only audited read-only modules run without opt-in; other CLIs require boolean allow_mutating=true "
+        "or the configured environment opt-in.",
         {
             "type": "object",
             "properties": {
@@ -218,7 +225,7 @@ _TOOLS: dict[str, tuple[Callable[[dict[str, Any]], dict[str, Any]], str, dict[st
                 "args": {"type": "array", "items": {"type": "string"}, "description": "CLI arguments"},
                 "allow_mutating": {
                     "type": "boolean",
-                    "description": "Opt in to running a mutating/paid (publish/upload) operation",
+                    "description": "Explicit boolean opt-in for file-writing, external/paid, or unaudited operations",
                 },
             },
             "required": ["module"],
