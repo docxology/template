@@ -31,14 +31,38 @@ runs:
         fi
         rm "$destination/$asset"
         echo "TEMPLATE_ACCEPTANCE_MODEL_DIRECTORY=$destination" >> "$GITHUB_ENV"
+    - name: Restore source-pinned model bytes
+      uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+      with:
+        path: |
+          ${{ runner.temp }}/template-acceptance-model-cache/manifests/registry.ollama.ai/library/smollm2/135m
+          ${{ runner.temp }}/template-acceptance-model-cache/blobs/sha256-b0f58c4c1a3ca56f34a7673b353d7d09b773a1abce00451a58d5ebd2541331cf
+          ${{ runner.temp }}/template-acceptance-model-cache/blobs/sha256-f535f83ec568d040f88ddc04a199fa6da90923bbb41d4dcaed02caa924d6ef57
+          ${{ runner.temp }}/template-acceptance-model-cache/blobs/sha256-fbacade46b4da804e0398c339c64b944d4b954452adf77cf050b49420116129e
+          ${{ runner.temp }}/template-acceptance-model-cache/blobs/sha256-d502d55c1d609104ae6127aee92eb940e51e15c56dfb26dbd067e2771ee746f1
+          ${{ runner.temp }}/template-acceptance-model-cache/blobs/sha256-58d1e17ffe5109a7ae296caafcadfdbe6a7d176f0bc4ab01e12a689b0499d8bd
+          ${{ runner.temp }}/template-acceptance-model-cache/blobs/sha256-f02dd72bb2423204352eabc5637b44d79d17f109fdb510a7c51455892aa2d216
+        key: acceptance-model-bytes-v1-${{ runner.os }}-9077fe9d2ae1a4a41a868836b56b8163731a8fe16621397028c2c76f838c6907-${{ hashFiles('.github/actions/setup-acceptance-model/action.yml') }}
     - name: Authenticate exact manifest and every fixed model blob
       shell: bash
       run: |
         set -euo pipefail
-        destination="$TEMPLATE_ACCEPTANCE_MODEL_DIRECTORY/models"
-        mkdir -p "$destination/blobs" "$destination/manifests/registry.ollama.ai/library/smollm2"
+        destination="$RUNNER_TEMP/template-acceptance-model-cache"
+        for relative in '' blobs manifests manifests/registry.ollama.ai manifests/registry.ollama.ai/library manifests/registry.ollama.ai/library/smollm2; do
+          directory="$destination${relative:+/$relative}"
+          if [ -e "$directory" ] || [ -L "$directory" ]; then
+            test -d "$directory"
+            test ! -L "$directory"
+          else
+            mkdir "$directory"
+          fi
+        done
         manifest="$destination/manifests/registry.ollama.ai/library/smollm2/135m"
-        curl --fail --location --retry 2 --max-time 60 --output "$manifest" https://registry.ollama.ai/v2/library/smollm2/manifests/135m
+        if [ ! -e "$manifest" ] && [ ! -L "$manifest" ]; then
+          curl --fail --location --retry 2 --max-time 60 --output "$manifest" https://registry.ollama.ai/v2/library/smollm2/manifests/135m
+        fi
+        test -f "$manifest"
+        test ! -L "$manifest"
         test "$(wc -c < "$manifest" | tr -d ' ')" = 1124
         echo "9077fe9d2ae1a4a41a868836b56b8163731a8fe16621397028c2c76f838c6907  $manifest" | shasum -a 256 --check --status
         python - "$manifest" > "$TEMPLATE_ACCEPTANCE_MODEL_DIRECTORY/blob-inputs.txt" <<'PYTHON'
@@ -52,7 +76,11 @@ runs:
         PYTHON
         while read -r digest size; do
           blob="$destination/blobs/sha256-$digest"
-          curl --fail --location --retry 2 --max-time 300 --output "$blob" "https://registry.ollama.ai/v2/library/smollm2/blobs/sha256:$digest"
+          if [ ! -e "$blob" ] && [ ! -L "$blob" ]; then
+            curl --fail --location --retry 2 --max-time 300 --output "$blob" "https://registry.ollama.ai/v2/library/smollm2/blobs/sha256:$digest"
+          fi
+          test -f "$blob"
+          test ! -L "$blob"
           test "$(wc -c < "$blob" | tr -d ' ')" = "$size"
           echo "$digest  $blob" | shasum -a 256 --check --status
         done < "$TEMPLATE_ACCEPTANCE_MODEL_DIRECTORY/blob-inputs.txt"

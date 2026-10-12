@@ -51,14 +51,19 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: ./.github/actions/setup-python-env
       - run: uv sync --locked
-      - name: Resolve public CI paths
-        run: uv run python -m infrastructure.project.public_scope ci-paths
       - name: Check public source
         run: |
           set -euo pipefail
-          uv run python -m infrastructure.project.public_scope lint-paths | xargs uv run ruff check
-          uv run python -m infrastructure.project.public_scope lint-paths | xargs uv run ruff format --check
-          uv run python -m infrastructure.project.public_scope source-paths | xargs uv run mypy
+          PUBLIC_CI_PATHS=$(uv run python -m infrastructure.project.public_scope ci-paths)
+          PUBLIC_CI_LINT_ROW=${PUBLIC_CI_PATHS%%$'\n'*}
+          PUBLIC_CI_SOURCE_ROW=${PUBLIC_CI_PATHS#*$'\n'}
+          [[ "$PUBLIC_CI_LINT_ROW" == lint_paths=* && "$PUBLIC_CI_SOURCE_ROW" == source_paths=* ]]
+          read -r -a PUBLIC_CI_LINT_PATHS <<<"${PUBLIC_CI_LINT_ROW#lint_paths=}"
+          read -r -a PUBLIC_CI_SOURCE_PATHS <<<"${PUBLIC_CI_SOURCE_ROW#source_paths=}"
+          [[ ${#PUBLIC_CI_LINT_PATHS[@]} -gt 0 && ${#PUBLIC_CI_SOURCE_PATHS[@]} -gt 0 ]]
+          uv run ruff check "${PUBLIC_CI_LINT_PATHS[@]}"
+          uv run ruff format --check "${PUBLIC_CI_LINT_PATHS[@]}"
+          uv run mypy "${PUBLIC_CI_SOURCE_PATHS[@]}"
       - name: Guard public data and secrets
         run: |
           set -euo pipefail
@@ -105,7 +110,10 @@ jobs:
           paths = resolve_infrastructure_test_paths(Path.cwd(), "pipeline-smoke")
           paths.extend([
               "tests/infra_tests/core/test_ci_smoke.py",
+              "tests/infra_tests/config/test_acceptance_model.py",
+              "tests/infra_tests/project/test_distribution_contract.py",
               "tests/infra_tests/reporting/test_native_tex_root_admission.py",
+              "tests/infra_tests/reporting/test_native_installed_preparation_source.py",
           ])
           raise SystemExit(subprocess.run([
               sys.executable, "-m", "pytest", *paths, "--no-cov", "-q",

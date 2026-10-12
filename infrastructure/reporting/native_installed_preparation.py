@@ -15,18 +15,35 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
+from infrastructure.core.pipeline.artifacts._inventory import _is_ignored_output_relative
+from infrastructure.core.pipeline.fingerprints import _ROOT_SOURCE_CONTROLS
 from infrastructure.core.files.secure_write import read_bytes_confined
 from infrastructure.core.implementation_custody import _format_bytecode_audit_bootstrap, source_file_bytes
 from infrastructure.project.installed_acceptance_artifacts import AdmittedWheel, freeze_wheel_bytes, prepare_export
 from infrastructure.project.installed_acceptance_runtime import freeze_locked_metadata, install_admitted_wheels
 from infrastructure.project.public_acceptance_scope import RuntimeScope
-from infrastructure.project.public_reference_git import committed_blobs, inventory, blob_identity, remaining
+from infrastructure.project.public_reference import _canonical_inventory
+from infrastructure.project.public_reference_git import (
+    GitReference,
+    blob_identity,
+    committed_blobs,
+    inventory,
+    remaining,
+)
 from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
 from infrastructure.project.public_package_dependencies import local_dependency_closure
 from infrastructure.project.locked_dependency_export import normalize_locked_dependency_export
-from infrastructure.reporting.readiness_receipts import source_fingerprint
+from infrastructure.reporting.readiness_receipts import (
+    _READINESS_SOURCE_METADATA_NAMES,
+    _public_roots,
+    source_fingerprint,
+)
 from infrastructure.reporting.release_readiness_profile import required_profile
-from infrastructure.reporting.release_readiness_snapshot import SnapshotReader, json_object_from_bytes
+from infrastructure.reporting.release_readiness_snapshot import (
+    PUBLIC_ROOT_FILES,
+    SnapshotReader,
+    json_object_from_bytes,
+)
 from infrastructure.reporting.native_tool_process import run_native_tool_process
 
 SCHEMA = "template-native-prepared-installed-runtime-v1"
@@ -169,6 +186,86 @@ def _execute(
     return result
 
 
+def _committed_public_bodies(source_root: Path, reference: GitReference, deadline: float) -> set[str]:
+    """Select committed paths lexically, including deleted canonical bodies.
+
+    Reuse the canonical source/output exclusions before any public read. The
+    current filesystem cannot nominate which committed bodies are required.
+    """
+    roots, excluded = _public_roots(source_root)
+    prefixes = tuple(root.relative_to(source_root).as_posix() + "/" for root in roots)
+    exclusions = {root.relative_to(source_root).as_posix() for root in excluded}
+    excluded_prefixes = tuple(root + "/" for root in exclusions)
+    outputs = tuple("projects/" + scope + "/output/" for scope in PUBLIC_PROJECT_NAMES)
+    selected = set()
+    for relative in committed_blobs(reference):
+        remaining(deadline)
+        if relative in PUBLIC_ROOT_FILES:
+            selected.add(relative)
+            continue
+        output = next((prefix for prefix in outputs if relative.startswith(prefix)), None)
+        if output is not None:
+            if not _is_ignored_output_relative(Path(relative[len(output) :])):
+                selected.add(relative)
+            continue
+        base = next((prefix for prefix in prefixes if relative.startswith(prefix)), None)
+        if base is None or relative in exclusions or relative.startswith(excluded_prefixes):
+            continue
+        parts = relative[len(base) :].split("/")
+        if (
+            any(part in _READINESS_SOURCE_METADATA_NAMES | {"__pycache__"} for part in parts)
+            or any(Path(part).suffix in {".pyc", ".pyo"} for part in parts)
+            or parts[0] in _ROOT_SOURCE_CONTROLS
+            or len(parts) >= 2
+            and parts[0] == "src"
+            and parts[1].endswith(".egg-info")
+        ):
+            continue
+        selected.add(relative)
+    return selected
+
+
+def admitted_source_files(
+    source_root: Path,
+    reader: SnapshotReader,
+    reference: GitReference,
+    deadline: float,
+) -> dict[str, str]:
+    """Bind every canonical public source body to its committed blob.
+
+    Only the canonical public inventory is read through the public reader, as
+    the public reference admission does. Tracked files outside that policy
+    (agent, editor and resource-root documents) are never public DATA here;
+    an untracked, substituted or edited public body refuses preparation.
+    """
+    committed = committed_blobs(reference)
+    records = _canonical_inventory(source_root)
+    observed = {relative for relative, kind, _ in records if kind in {"file", "deliverable"}}
+    expected = _committed_public_bodies(source_root, reference, deadline)
+    if expected - observed:
+        raise ValueError("native preparation Source is missing a committed canonical body")
+    source_files: dict[str, str] = {}
+    for relative, kind, digest in records:
+        remaining(deadline)
+        if kind == "missing":
+            raise ValueError("native preparation Source has a missing canonical source root")
+        if kind not in {"file", "deliverable"}:
+            continue
+        binding = committed.get(relative)
+        if binding is None:
+            raise ValueError("native preparation Source body is untracked or differs from the committed blob")
+        record, object_format = binding
+        snapshot = reader.read(relative)
+        if kind == "file" and snapshot.sha256 != digest:
+            raise ValueError("native preparation Source body changed between inventory and admission")
+        if blob_identity(snapshot.content, object_format) != record.oid:
+            raise ValueError("native preparation Source body differs from its original committed blob")
+        source_files[relative] = snapshot.sha256
+    if not source_files:
+        raise ValueError("native preparation requires a nonempty canonical public source inventory")
+    return source_files
+
+
 def prepare_native_installed_runtime(
     source_root: Path,
     current_root: Path,
@@ -216,13 +313,7 @@ def prepare_native_installed_runtime(
     lookup = {row.scope: row for row in rows if row.kind == "installed"}
     if lookup["root"].version != "4.0.1" or lookup["root"].package != "research-project-template":
         raise ValueError("native preparation requires genuine intended Source4.0.1 metadata")
-    source_files: dict[str, str] = {}
-    for relative, (record, object_format) in committed_blobs(reference).items():
-        remaining(deadline)
-        snapshot = reader.read(relative)
-        if blob_identity(snapshot.content, object_format) != record.oid:
-            raise ValueError("native preparation Source body differs from its original committed blob")
-        source_files[relative] = snapshot.sha256
+    source_files = admitted_source_files(source_root, reader, reference, deadline)
     metadata = freeze_locked_metadata(source_root, scratch)
     selected_env = dict(env, UV_LINK_MODE="copy")
     for key in ("PYTHONPATH", "PYTHONHOME", "VIRTUAL_ENV", "PYTHONPYCACHEPREFIX", "PYTHONDONTWRITEBYTECODE"):
