@@ -19,6 +19,13 @@ from infrastructure.reporting.native_format_html_child_custody import validate_r
 from infrastructure.reporting.release_readiness_snapshot import ArtifactSnapshot, SnapshotReader
 
 
+def _validate_browser_candidate_semantic_witness(viewport: dict[str, Any], observation: dict[str, Any]) -> None:
+    """Compare candidate DATA in original order; no native admission is granted."""
+    for key in ("findings", "blockers", "status", "source_text_indices", "structure", "metadata"):
+        if viewport.get(key) != observation[key]:
+            raise ValueError("browser independently recomputed semantic/layout observations differ")
+
+
 def replay_browser_observation(
     root: Path,
     directory: Path,
@@ -295,9 +302,7 @@ def replay_browser_observation(
         observation["status"] = (
             "fail" if observation["findings"] else "blocked" if observation["blockers"] else observation["status"]
         )
-        for key in ("findings", "blockers", "status", "source_text_indices", "structure", "metadata"):
-            if viewport.get(key) != observation[key]:
-                raise ValueError("browser independently recomputed semantic/layout observations differ")
+        _validate_browser_candidate_semantic_witness(viewport, observation)
         if viewport.get("pixels") != localized:
             raise ValueError("browser independently recomputed localized pixels differ")
         fresh_viewports.append(

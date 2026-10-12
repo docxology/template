@@ -111,6 +111,15 @@ runs:
       run: |
         set -euo pipefail
         if [ "$RUNNER_OS" = Linux ]; then
+          # The runner also exposes a development Chromium snapshot. Native
+          # observations need the installed Google Chrome runtime and sandbox.
+          chrome=/opt/google/chrome/chrome
+          if [ ! -f "$chrome" ] || [ ! -x "$chrome" ] || [ -L "$chrome" ] || [ ! -f /opt/google/chrome/resources.pak ]; then
+            echo "native document preparation requires the installed Google Chrome runtime" >&2
+            exit 1
+          fi
+          "$chrome" --version
+          echo "CHROME_EXECUTABLE_PATH=$chrome" >> "$GITHUB_ENV"
           sudo apt-get update
           sudo apt-get install -y --no-install-recommends \
             poppler-utils zbar-tools texlive-luatex texlive-science \

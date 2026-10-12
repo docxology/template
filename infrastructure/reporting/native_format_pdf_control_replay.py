@@ -19,6 +19,12 @@ from infrastructure.reporting.native_format_pdf_oracles import (
 from infrastructure.reporting.release_readiness_snapshot import SnapshotReader
 
 
+def _validate_pdf_control_candidate_observation(recorded: object, oracle: dict[str, Any]) -> None:
+    """Compare candidate DATA only; original native admission is unchanged."""
+    if recorded != oracle:
+        raise ValueError("valid-PDF control semantic/geometry/pixel observations changed")
+
+
 def replay_pdf_controls(
     raw: dict[str, Any],
     reader: SnapshotReader,
@@ -69,8 +75,7 @@ def replay_pdf_controls(
             contract,
             deadline=deadline,
         )
-        if observed.get("pdf_content") != oracle:
-            raise ValueError("valid-PDF control semantic/geometry/pixel observations changed")
+        _validate_pdf_control_candidate_observation(observed.get("pdf_content"), oracle)
         code = require_pdf_control_result(name, oracle)
         if (
             type(observed.get("exit_code")) is not int

@@ -131,11 +131,29 @@ if __name__ == "__main__":
 MAX_MESSAGE = 128 * 1024 * 1024
 
 
-def _browser_endpoint(endpoint: Path, browser: subprocess.Popen[Any], deadline: float) -> tuple[int, str]:
-    """Wait for Chrome's complete endpoint publication within the original deadline."""
+def _browser_endpoint(
+    endpoint: Path, browser: subprocess.Popen[Any], deadline: float, *, stderr_fd: int | None = None
+) -> tuple[int, str]:
+    """Keep actual early signed exits distinct from the original startup clock."""
+
+    def stderr_tail() -> str:
+        if stderr_fd is None:
+            return ""
+        observed = os.fstat(stderr_fd)
+        if not stat.S_ISREG(observed.st_mode):
+            raise ValueError("Chrome startup diagnostic requires its owned regular stderr")
+        maximum = 2048
+        content = os.pread(stderr_fd, min(maximum, observed.st_size), max(0, observed.st_size - maximum))
+        return "; Chrome stderr tail: " + repr(content.decode("utf-8", errors="replace"))
+
     while True:
-        if time.monotonic() >= deadline or browser.poll() is not None:
-            raise TimeoutError("fresh Chrome did not publish its endpoint within original deadline")
+        if time.monotonic() >= deadline:
+            raise TimeoutError("fresh Chrome did not publish its endpoint within original deadline" + stderr_tail())
+        original_exit = browser.poll()
+        if original_exit is not None:
+            raise RuntimeError(
+                f"fresh Chrome exited before endpoint publication; original signed exit={original_exit}" + stderr_tail()
+            )
         try:
             lines = endpoint.read_text().splitlines()
         except FileNotFoundError:
@@ -377,11 +395,11 @@ def observe(
     started = time.monotonic()
     stdout = output.with_suffix(".stdout")
     stderr = output.with_suffix(".stderr")
-    with stdout.open("xb") as out, stderr.open("xb") as err:
+    with stdout.open("xb") as out, stderr.open("xb+") as err:
         try:
             browser = subprocess.Popen(command, stdout=out, stderr=err)  # nosec B603 - admitted fixed command, fresh isolated profile
             endpoint = profile / "DevToolsActivePort"
-            port, route = _browser_endpoint(endpoint, browser, deadline)
+            port, route = _browser_endpoint(endpoint, browser, deadline, stderr_fd=err.fileno())
             client = DevTools(port, route, deadline)
             client.allowed_origin = origin
             if cdn_map is not None:

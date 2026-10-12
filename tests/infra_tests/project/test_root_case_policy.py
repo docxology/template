@@ -61,16 +61,18 @@ def _collect_fixture(tmp_path_factory: pytest.TempPathFactory, fault: str = "hea
     )
     (root / "tests/conftest.py").write_text(
         "from pathlib import Path\nimport pytest\n"
-        "@pytest.fixture(autouse=True)\ndef owned_fixture():\n"
+        "@pytest.fixture\ndef owned_fixture():\n"
         f"    Path({str(marker)!r}).write_text('actual fixture executed')\n",
         encoding="utf-8",
     )
     (root / "tests/test_owned.py").write_text(
         "from pathlib import Path\nimport pytest\n"
+        "@pytest.mark.usefixtures('owned_fixture')\n"
         "@pytest.mark.parametrize('number',[1,2],ids=['one','two'])\n"
         "def test_core(number):\n"
         f"    Path({str(marker)!r}).write_text('actual case executed')\n"
         "    assert number>0\n"
+        "@pytest.mark.usefixtures('owned_fixture')\n"
         "@pytest.mark.requires_ollama\n"
         "class TestInheritedLive:\n"
         "    def test_model(self):\n        raise AssertionError('collection must not execute this case')\n",
@@ -161,8 +163,11 @@ def test_actual_collection_preserves_parameter_ids_class_marks_and_fixture_sourc
     assert {lane.id: len(lane.nodeids) for lane in plan.lanes} == {"core": 2, "live-unpaid": 1}
     assert set(plan.nodeids) == set(census["nodeids"])
     live = next(case for case in actual_census["cases"] if case["family"].endswith("::test_model"))
-    assert live["markers"][0]["name"] == "requires_ollama"
-    assert live["markers"][0]["inherited_from"].endswith("::TestInheritedLive")
+    markers = {row["name"]: row for row in live["markers"]}
+    assert markers["requires_ollama"]["inherited_from"].endswith("::TestInheritedLive")
+    assert markers["usefixtures"]["inherited_from"].endswith("::TestInheritedLive")
+    assert markers["usefixtures"]["args"] == [{"type": "source-bound-string"}]
+    assert all("usefixtures" in family["markers"] for family in census["families"])
     source = live["fixtures"]["owned_fixture"][0]["origin"]
     assert source["scope"] == "public-owned" and source["path"] == "tests/conftest.py"
     assert len(source["sha256"]) == 64

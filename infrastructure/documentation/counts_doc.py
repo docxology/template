@@ -21,7 +21,8 @@ back out via the markers ``Last refreshed count: **N**`` and
 
 Per-exemplar collection totals are derived live with ``pytest --collect-only``.
 Coverage remains a separately labelled measured snapshot because recomputing all
-24 coverage gates during every documentation check would be prohibitively slow.
+public exemplar coverage gates during every documentation check would be
+prohibitively slow.
 The snapshot verifier uses the shared ``release`` test profile (slow tests are
 included; long-running, benchmark, and live-service tests remain explicit) so
 its method matches the public release matrix and has a bounded subprocess.

@@ -61,6 +61,7 @@ def test_active_coverage_support_closure_exactly_matches_outward_documentation_l
         "docs/RUN_GUIDE.md",
         "docs/_generated/COUNTS.md",
         "docs/_generated/COUNTS.md",
+        "docs/development/ci.md",
         "docs/guides/manuscript-semantics.md",
         "docs/guides/publishing-guide.md",
         "docs/guides/zenodo-doi-strategy.md",

@@ -336,6 +336,17 @@
         "hatchling",
         "mypy"
       ]
+    },
+    {
+      "environment_keys": [],
+      "executables": [
+        "jq"
+      ],
+      "id": "jq",
+      "kind": "tool",
+      "packages": [],
+      "paths": [],
+      "platforms": []
     }
   ]
 }

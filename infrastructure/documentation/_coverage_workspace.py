@@ -22,7 +22,7 @@ from pathlib import Path
 from infrastructure.core.runtime.environment import get_subprocess_env
 from infrastructure.core.subprocess_policy import SubprocessPolicy, run_with_policy
 
-COVERAGE_SUPPORT_IDENTITY_MODE = "explicit-public-documentation-support-v1"
+COVERAGE_SUPPORT_IDENTITY_MODE = "explicit-public-documentation-support-v2"
 _COVERAGE_COPY_EXCLUDED_NAMES = frozenset(
     {
         ".benchmarks",
@@ -76,6 +76,7 @@ _COVERAGE_COPY_SUPPORT_SPECS = (
     _CoverageSupportSpec(Path("docs/guides/manuscript-semantics.md"), "file", True),
     _CoverageSupportSpec(Path("docs/maintenance/archival-targets.md"), "file", True),
     _CoverageSupportSpec(Path("docs/maintenance/exemplar-backlog-history.md"), "file", True),
+    _CoverageSupportSpec(Path("docs/development/ci.md"), "file", True),
     _CoverageSupportSpec(Path("docs/development/public-runtime-matrix.md"), "file", True),
     # The dated program ledger is a link target only; its prose changes with every
     # receipt, so its bytes do not bind exemplar coverage provenance.

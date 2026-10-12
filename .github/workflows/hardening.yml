@@ -513,6 +513,9 @@ jobs:
       contents: read
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          submodules: true
+          persist-credentials: false
 
       - uses: ./.github/actions/setup-python-env
 
@@ -692,6 +695,10 @@ jobs:
       matrix: ${{ fromJSON(needs.detect-projects.outputs.matrix) }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          # Standalone exports admit the committed public resource gitlink.
+          submodules: true
+          persist-credentials: false
 
       - uses: ./.github/actions/setup-python-env
         with:
@@ -1366,6 +1373,9 @@ jobs:
       contents: read
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          submodules: true
+          persist-credentials: false
 
       - uses: ./.github/actions/setup-python-env
         with:
