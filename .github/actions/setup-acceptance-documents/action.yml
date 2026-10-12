@@ -129,6 +129,13 @@ runs:
           brew install poppler zbar
           export PATH="/Library/TeX/texbin:$PATH"
           echo /Library/TeX/texbin >> "$GITHUB_PATH"
+          if [ ! -x /Library/TeX/texbin/xelatex ]; then
+            brew install --cask basictex
+          fi
+          # Keep self-update and all package installs on one HTTPS CTAN mirror.
+          # The redirector can select mirrors with different tlmgr revisions.
+          sudo /Library/TeX/texbin/tlmgr option repository https://ctan.math.illinois.edu/systems/texlive/tlnet
+          sudo /Library/TeX/texbin/tlmgr update --self
         fi
         # The prior step supplies the exact pinned Pandoc on PATH. The full
         # Linux package union prevents a second TeX installation; macOS still

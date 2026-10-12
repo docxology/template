@@ -423,6 +423,15 @@ jobs:
             -m "not requires_ollama and not requires_docker and not network and not slow and not bench and not benchmark and not performance" \
             --timeout=120
 
+      - name: Preserve partial infrastructure controller diagnostics
+        if: ${{ always() }}
+        continue-on-error: true
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: infra-diagnostics-${{ matrix.os }}-${{ matrix.python-version }}-${{ matrix.shard }}
+          path: output/readiness/ordinary-infra-ci/diagnostics/shard-${{ matrix.shard }}.json
+          if-no-files-found: warn
+
       # CI-PLAYWRIGHT-SCHEDULE-1: browser provisioning costs several minutes,
       # so PR and push runs skip it; the MathJax live-viewport spec still runs
       # on the weekly scheduled (and manually dispatched) lanes.
@@ -551,11 +560,22 @@ jobs:
         run: >-
           uv run pytest tests/infra_tests/
           -m slow
+          -p infrastructure.core.testing.ci_infra_shard_plugin
+          --infra-ci-observer-only slow
           -n auto
           --dist loadscope
           --benchmark-disable
           --durations=10
           --timeout=1200
+
+      - name: Preserve partial slow-lane controller diagnostics
+        if: ${{ always() }}
+        continue-on-error: true
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: infra-diagnostics-slow
+          path: output/readiness/ordinary-infra-ci/diagnostics/shard-slow.json
+          if-no-files-found: warn
 
 # ─────────────────────────────────────────────────────────────────────────────
 # Job — Regression tier (claim-binding pins across all public exemplars)

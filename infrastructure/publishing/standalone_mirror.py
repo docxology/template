@@ -54,7 +54,10 @@ from infrastructure.publishing._standalone_export import canonical_snapshot_expo
 from infrastructure.publishing._standalone_git import (
     _GIT_LOCAL_ENVIRONMENT as _GIT_LOCAL_ENVIRONMENT,
     _PUBLIC_ROOTS as _PUBLIC_ROOTS,
+    _clean_source_records as _clean_source_records,
     _git as _git,
+    _git_clean_source_inventory as _git_clean_source_inventory,
+    _git_destination_inventory as _git_destination_inventory,
     _git_environment as _git_environment,
     _git_head_status as _git_head_status,
     _git_source_inventory as _git_source_inventory,
@@ -115,11 +118,28 @@ def validate_git_destination(
     # get-url requires a repository-configured remote. The verbose inventory
     # resolves command-owned fetch and push URLs without editing local config.
     inventory = git(["-c", f"remote.{probe}.url={admitted}", "remote", "-v"]).stdout.splitlines()
+    _validate_destination_inventory(admitted, probe, inventory)
+    if require_origin and git(["remote", "get-url", "--push", "--all", "origin"]).stdout.splitlines() != [admitted]:
+        raise ValueError("Git origin push destination differs from the admitted publication target")
+
+
+def _validate_destination_inventory(admitted: str, probe: str, inventory: list[str]) -> None:
     effective = [line for line in inventory if line.startswith(probe + "\t")]
     expected = [f"{probe}\t{admitted} (fetch)", f"{probe}\t{admitted} (push)"]
     if sorted(effective) != sorted(expected):
         raise ValueError("Git rewrites the admitted publication destination; promotion refused")
-    if require_origin and git(["remote", "get-url", "--push", "--all", "origin"]).stdout.splitlines() != [admitted]:
+
+
+def _validate_git_destination_current(admitted: str, cwd: Path) -> None:
+    """Keep the same routing predicates in a fresh adjacent-read guardian cohort."""
+    if not admitted or any(character in admitted for character in "\r\n\0"):
+        raise ValueError("publication transport must have one exact admitted destination")
+    probe = f"template-admission-{uuid.uuid4().hex}"
+    inventory, origin = _git_destination_inventory(cwd, admitted, probe)
+    _validate_destination_inventory(admitted, probe, inventory.splitlines())
+    if origin is None:
+        raise ValueError("native Git admission observer refused otherwise valid destination routing")
+    if origin.splitlines() != [admitted]:
         raise ValueError("Git origin push destination differs from the admitted publication target")
 
 
@@ -244,13 +264,7 @@ def clean_source_revision(repo_root: Path, supplied: str | None = None) -> str:
     if supplied is not None and not re.fullmatch(r"[0-9a-f]{7,64}", supplied):
         raise ValueError("standalone source revision must be an actual hexadecimal HEAD identity")
     head, resolved, status = _git_head_status(repo_root, supplied)
-    if not re.fullmatch(r"[0-9a-f]{40}|[0-9a-f]{64}", head):
-        raise ValueError("standalone source HEAD has an unsupported commit identity")
-    if supplied is not None and resolved != head:
-        raise ValueError("standalone source revision differs from current HEAD")
-    if status.strip():
-        raise ValueError("standalone publication requires a clean source working tree")
-    return head
+    return _clean_source_records(head, resolved, status, supplied)
 
 
 def _committed_files(
@@ -381,14 +395,12 @@ def populate_mirror_tree(
     budget = _Budget()
     repo_root = repo_root.resolve()
     project_root = _project_root(repo_root, project_rel)
-    if source_revision is not None:
-        source_revision = clean_source_revision(repo_root, source_revision)
     destination = destination.absolute()
     listed = None
     if source_revision is None:
         tracked_paths = _tracked_paths(repo_root, ".")
     else:
-        tracked_paths, listed = _git_source_inventory(repo_root, source_revision)
+        source_revision, tracked_paths, listed = _git_clean_source_inventory(repo_root, source_revision)
     tracked = frozenset(tracked_paths)
     if len(tracked) > budget.limits.max_files:
         raise ValueError("tracked mirror input exceeds its finite entry limit")
@@ -800,7 +812,7 @@ def sync_exemplar(
         branch = _git(["symbolic-ref", "--short", "HEAD"], cwd=work).stdout.strip()
         destination_revision = _git(["rev-parse", "--verify", "HEAD^{commit}"], cwd=work).stdout.strip()
         target = PublicationTarget(repository, branch)
-        validate_git_destination(admitted, lambda args: _git(args, cwd=work))
+        _validate_git_destination_current(admitted, work)
         update = update_publication_tree(
             export,
             work,
@@ -839,7 +851,7 @@ def sync_exemplar(
             raise ValueError("standalone destination HEAD changed during synchronization")
         if added + modified + deleted == 0:
             validate_publication_commit(work, update, destination_revision)
-            validate_git_destination(admitted, lambda args: _git(args, cwd=work))
+            _validate_git_destination_current(admitted, work)
             return MirrorResult(exemplar, repository, "up to date", **evidence)
         if not commit:
             return MirrorResult(exemplar, repository, "WOULD SYNC", added, modified, deleted, **evidence)
@@ -869,7 +881,7 @@ def sync_exemplar(
         validate_publication_commit(work, update, destination_revision)
         if _git(["symbolic-ref", "--short", "HEAD"], cwd=work).stdout.strip() != branch:
             raise ValueError("standalone destination branch changed before push")
-        validate_git_destination(admitted, lambda args: _git(args, cwd=work))
+        _validate_git_destination_current(admitted, work)
         push = push_admitted_commit(work, admitted, destination_revision, branch)
         if push.returncode != 0:
             return MirrorResult(exemplar, repository, "PUSH FAILED", added, modified, deleted, **evidence)

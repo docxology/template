@@ -16,6 +16,14 @@ from collections.abc import Callable
 from dataclasses import dataclass
 from pathlib import Path
 
+
+# Direct-file CLI calls have only analysis/ on their import path. Admit the
+# selected platform before exposing this file's own domain source, as review does.
+if __name__ == "__main__" and not __package__:
+    import infrastructure  # noqa: F401
+
+    sys.path.insert(0, str(Path(__file__).resolve(strict=True).parents[2]))
+
 from template_search_project.analysis.provider_paths import (
     platform_import_modules,
     platform_module_exists,

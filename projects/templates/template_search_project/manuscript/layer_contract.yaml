@@ -31,6 +31,11 @@ allow_infrastructure_imports:
   - src/template_search_project/analysis/report_inputs.py
   - src/template_search_project/analysis/review_execution.py
   - src/template_search_project/analysis/review_report.py
+  # Direct-file CLI startup (python src/.../analysis/analysis.py) has only
+  # analysis/ on sys.path; the module admits the selected platform package
+  # first, exactly as review_execution's child bootstrap does, before exposing
+  # its own source root. Package and -m imports never execute that block.
+  - src/template_search_project/analysis/analysis.py
 reason: >-
   The typed domain config loader uses the declared platform's immutable UTF-8
   stream to preserve exact admitted input bytes and ordinary loader semantics.
