@@ -5,6 +5,11 @@ Do not call it on a shared workstation. It uses fresh `RUNNER_TEMP` storage
 and the disposable hosted runner's user font/tool directories. Third-party
 archives and model blobs must retain their exact source-pinned hashes and lengths.
 
+The cache contains only the fixed manifest and model blobs. Cache hits never
+bypass byte-length, SHA-256 or regular-file checks; corrupt or symlinked entries
+fail before daemon startup rather than being replaced. Runtime/daemon custody
+and inference records always remain in the fresh owned directory.
+
 The model action binds an unoccupied loopback port, disables cloud operations
 and implicit model acquisition, and records its owned daemon PID and birth.
 Every caller of that action must perform identity-checked process-group cleanup

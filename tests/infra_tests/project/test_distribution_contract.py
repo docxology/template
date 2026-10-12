@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import os
+import subprocess
 import sys
 from pathlib import Path
 
@@ -33,12 +35,14 @@ def test_default_pipeline_is_a_packaged_resource() -> None:
     assert "stages:" in pipeline.read_text(encoding="utf-8")
 
 
-def test_lint_toolchain_is_locked_and_shared_by_ci_and_hooks(capsys: pytest.CaptureFixture[str]) -> None:
+def test_lint_toolchain_is_locked_and_shared_by_ci_and_hooks(
+    capsys: pytest.CaptureFixture[str], tmp_path: Path
+) -> None:
     """CI and the pre-commit hook lint the same public scope with the locked ruff.
 
-    CI validates both scopes with ``public_scope ci-paths``, then resolves each
-    lint command through ``public_scope lint-paths`` under ``pipefail``. The hook
-    resolves the same lint paths, and both must name the identical public scope.
+    The actual CI Bash resolves both scopes once, preserves producer failure,
+    and passes the same nonempty lint array to both Ruff commands. The hook
+    resolves the same public scope through its legacy single-value command.
     """
     from infrastructure.project.public_scope import main as public_scope_main
 
@@ -62,12 +66,11 @@ def test_lint_toolchain_is_locked_and_shared_by_ci_and_hooks(capsys: pytest.Capt
     ci = (REPO_ROOT / ".github/workflows/ci.yml").read_text(encoding="utf-8")
     lint_steps = yaml.safe_load(ci)["jobs"]["lint"]["steps"]
     check_source = next(step["run"] for step in lint_steps if step.get("name") == "Check public source")
-    assert check_source.strip().splitlines() == [
-        "set -euo pipefail",
-        "uv run python -m infrastructure.project.public_scope lint-paths | xargs uv run ruff check",
-        "uv run python -m infrastructure.project.public_scope lint-paths | xargs uv run ruff format --check",
-        "uv run python -m infrastructure.project.public_scope source-paths | xargs uv run mypy",
-    ]
+    assert check_source.count("public_scope ci-paths") == 1
+    assert 'uv run ruff check "${PUBLIC_CI_LINT_PATHS[@]}"' in check_source
+    assert 'uv run ruff format --check "${PUBLIC_CI_LINT_PATHS[@]}"' in check_source
+    assert 'uv run mypy "${PUBLIC_CI_SOURCE_PATHS[@]}"' in check_source
+    scope_preparation = check_source.split("uv run ruff check", 1)[0]
 
     assert public_scope_main(["ci-paths", "--repo-root", str(REPO_ROOT)]) == 0
     ci_outputs = dict(line.split("=", 1) for line in capsys.readouterr().out.splitlines())
@@ -75,3 +78,32 @@ def test_lint_toolchain_is_locked_and_shared_by_ci_and_hooks(capsys: pytest.Capt
     hook_lint_paths = capsys.readouterr().out.strip()
     assert set(ci_outputs) == {"lint_paths", "source_paths"}
     assert ci_outputs["lint_paths"] == hook_lint_paths != ""
+
+    for name, key in (("PUBLIC_CI_LINT_PATHS", "lint_paths"), ("PUBLIC_CI_SOURCE_PATHS", "source_paths")):
+        result = subprocess.run(
+            ["bash", "-c", scope_preparation + f'printf "%s\\0" "${{{name}[@]}}"'],
+            cwd=REPO_ROOT,
+            env=dict(os.environ, UV_FROZEN="true"),
+            capture_output=True,
+            text=True,
+            timeout=30,
+            check=False,
+        )
+        assert result.returncode == 0, result.stderr
+        assert result.stdout.split("\0")[:-1] == ci_outputs[key].split()
+
+    marker = tmp_path / "consumer-reached"
+    # A genuinely rejected CLI command exercises the producer's real nonzero
+    # exit; no lint/type executable or dependency is replaced by this control.
+    failed_producer = scope_preparation.replace("public_scope ci-paths", "public_scope invalid-ci-paths")
+    result = subprocess.run(
+        ["bash", "-c", failed_producer + 'touch "$CONSUMER_MARKER"'],
+        cwd=REPO_ROOT,
+        env=dict(os.environ, UV_FROZEN="true", CONSUMER_MARKER=str(marker)),
+        capture_output=True,
+        text=True,
+        timeout=30,
+        check=False,
+    )
+    assert result.returncode != 0 and "invalid choice" in result.stderr
+    assert not marker.exists(), "CI continued after the source-scope producer failed"

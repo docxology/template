@@ -61,6 +61,15 @@ require final-source acceptance, the authenticated handoff and remote verificati
 - Batch adjacent fresh Git custody reads for standalone exemplar mirroring while preserving native failures, index/configuration custody, origin/destination refusals and original timeouts.
 - Retain bounded controller case/phase/failure/worker diagnostic DATA for ordinary shards and the slow lane. Public records use declared families and member hashes; diagnostics cannot grant selection or acceptance. Existing deadlines and gates remain enforced.
 - Reconcile generated policy metadata for 14 new families and 25 members, retaining existing classifications and all 28 prerequisite definitions. Fresh hosted validation and publication require final-source acceptance; original failure observations remain separate.
+- Bind native preparation to the complete committed canonical public inventory,
+  rejecting edited, untracked and deleted bodies while keeping excluded tracked
+  documents outside public artifact admission. Run these real-Git controls in
+  default CI.
+- Resolve the CI lint/type paths once for all three checks and verify the actual
+  Bash path handling and producer-failure behavior. Cache only the pinned model
+  manifest and blobs, rechecking every length and digest before genuine inference.
+  Runtime downloads and owned daemon setup remain separate; no measured speedup
+  or successful final-source acceptance is implied.
 
 ## Prepared 4.0.0 candidate — unpublished
 
