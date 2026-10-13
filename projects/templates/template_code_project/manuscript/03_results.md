@@ -98,7 +98,7 @@ The results show a clear trade-off between step size and convergence speed:
 - Target solution: $x = {{RESULT_OPTIMUM_X}}$ (relative error $< 10^{-4}$ for converged settings)
 - Target objective: $f(x) = {{RESULT_OPTIMUM_F}}$ (absolute error $< {{CONFIG_CONVERGENCE_TOL}}$ for converged settings)
 
-Divergent step sizes ($\alpha \geq 2$) confirm the theoretical instability boundary, demonstrating that gradient descent with fixed step size requires $\alpha < 2/\lambda_{\max}$ for convergence on quadratic objectives.
+For a positive-definite quadratic, contraction requires $0 < \alpha < 2/\lambda_{\max}$. At the unit-Hessian boundary $\alpha=2$, the error alternates without contracting; for $\alpha>2$, it grows when the initial point is not already the optimum. The configured divergent runs therefore illustrate the instability region rather than uniform convergence.
 
 ## Algorithm Characteristics
 
@@ -163,10 +163,10 @@ The implementation was validated through the comprehensive `tests/` suite:
 - **Infrastructure tests** covering all underlying mechanisms across `infrastructure.reporting`, `infrastructure.validation`, and `infrastructure.rendering`.
 - **Numerical accuracy** checks verified systematically using PyTest.
 
-All tests pass with coverage exceeding the 90% threshold, ensuring implementation correctness across core logic, convergence detection, and logging pathways without the use of mocks.
+Passing the declared suite and its 90% coverage floor provides evidence for the tested core logic, convergence detection, and logging pathways. It does not prove correctness for every input or replace scientific validation.
 
 ## Discussion
 
-The experimental results validate the gradient descent implementation and confirm the theoretical convergence predictions from [@sec:methodology]. The monotonic relationship between step size and iteration count ([@tbl:opt_results]) aligns with the convergence factor analysis in [@eq:convergence_factor], while the uniform solution accuracy across all step sizes demonstrates the robustness of the convergence criterion $\|\nabla f(x)\| < \epsilon$. The automated analysis pipeline successfully generated six publication-quality visualizations and structured numerical outputs, validating the template's end-to-end research workflow from algorithmic implementation through automated infrastructure-driven reporting and manuscript integration.
+The configured results distinguish convergence, iteration-cap termination, and non-finite updates. Iteration counts are not monotonic in step size: the unit-Hessian contraction factor $\rho(\alpha)=|1-\alpha|$ decreases toward $\alpha=1$ and increases afterward. Accuracy claims apply to converged rows; capped and unstable runs must retain their termination status. The generated table and figures document this finite sweep, not all possible objectives or parameter choices. The analysis pipeline integrates those results into manuscript outputs through the declared configuration and variable injection.
 
-*As a meta-architectural note: the perfect embedding of these outputs into this document, including all dynamic references (e.g., [@fig:stability]), confirms the absolute reliability of the `infrastructure/rendering/pdf_renderer.py` module handling the Pandoc conversion.*
+Successful generation and reference resolution establish this artifact path for the tested candidate; they do not establish absolute renderer reliability or replace visual inspection of its output.
