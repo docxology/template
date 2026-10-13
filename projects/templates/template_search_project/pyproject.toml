@@ -54,6 +54,10 @@ llm = [
     "urllib3>=2.7.0",
 ]
 
+[tool.setuptools]
+# Retain the authored source-root initializer in the installed wheel.
+py-modules = ["__init__"]
+
 [tool.setuptools.packages.find]
 # Explicit src-anchored discovery: the exemplar's importable package lives at
 # `src/template_search_project` (nested unique-package layout), so an

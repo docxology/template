@@ -54,18 +54,18 @@ def test_build_dockerfile_uses_custom_latex_packages() -> None:
 
 def test_build_dockerfile_installs_uv() -> None:
     text = build_dockerfile(DockerfileConfig(project_name="x", python_version="3.12"))
-    assert "astral.sh/uv/" in text
-    assert "install.sh" in text
+    assert "github.com/astral-sh/uv/releases/download/" in text
+    assert "uv-installer.sh" in text
 
 
 def test_build_dockerfile_pins_uv_version_by_default() -> None:
     text = build_dockerfile(DockerfileConfig(project_name="x", python_version="3.12"))
     # Default config pins uv: the installer URL is versioned, not the floating endpoint.
-    assert f"https://astral.sh/uv/{DEFAULT_UV_VERSION}/install.sh" in text
+    assert f"https://github.com/astral-sh/uv/releases/download/{DEFAULT_UV_VERSION}/uv-installer.sh" in text
     assert "https://astral.sh/uv/install.sh" not in text
     assert DEFAULT_UV_INSTALL_SHA256 in text
     assert "sha256sum -c -" in text
-    assert "curl -fsSL" in text
+    assert "curl --proto '=https' --tlsv1.2 -fsSL" in text
     assert "curl -fsSL https://astral.sh/uv/0.12.0/install.sh | sh" not in text
 
 
@@ -77,7 +77,7 @@ def test_build_dockerfile_latest_uses_unversioned_installer() -> None:
 
 def test_build_dockerfile_requires_digest_for_concrete_custom_uv() -> None:
     with pytest.raises(ValueError, match="uv_sha256"):
-        build_dockerfile(DockerfileConfig(project_name="x", python_version="3.12", uv_version="0.13.0", uv_sha256=None))
+        build_dockerfile(DockerfileConfig(project_name="x", python_version="3.12", uv_version="0.12.0", uv_sha256=None))
 
     with pytest.raises(ValueError, match="64 hexadecimal"):
         build_dockerfile(DockerfileConfig(project_name="x", python_version="3.12", uv_sha256="not-a-digest"))
@@ -86,9 +86,9 @@ def test_build_dockerfile_requires_digest_for_concrete_custom_uv() -> None:
 def test_build_dockerfile_accepts_digest_for_concrete_custom_uv() -> None:
     digest = "a" * 64
     text = build_dockerfile(
-        DockerfileConfig(project_name="x", python_version="3.12", uv_version="0.13.0", uv_sha256=digest)
+        DockerfileConfig(project_name="x", python_version="3.12", uv_version="0.12.0", uv_sha256=digest)
     )
-    assert "https://astral.sh/uv/0.13.0/install.sh" in text
+    assert "https://github.com/astral-sh/uv/releases/download/0.12.0/uv-installer.sh" in text
     assert digest in text
 
 
@@ -167,3 +167,26 @@ def test_dockerfile_config_immutable() -> None:
     cfg = DockerfileConfig(project_name="x", python_version="3.12")
     with pytest.raises((AttributeError, Exception)):
         cfg.project_name = "y"  # type: ignore[misc]
+
+
+@pytest.mark.parametrize("version", ["3.15", "3.14"])
+def test_build_dockerfile_binds_selected_python(version: str) -> None:
+    text = build_dockerfile(DockerfileConfig(project_name="x", python_version=version))
+    assert f"UV_PYTHON={version}" in text
+    assert "UV_UNMANAGED_INSTALL=/usr/local/bin" in text
+    assert "uv 0.13.0" in text
+    assert "--proto '=https' --tlsv1.2" in text
+
+
+@pytest.mark.parametrize("version", ["3.15\nRUN false", "latest", "python3.15"])
+def test_build_dockerfile_rejects_invalid_python_tag(version: str) -> None:
+    with pytest.raises(ValueError, match="python_version"):
+        build_dockerfile(DockerfileConfig(project_name="x", python_version=version))
+
+
+@pytest.mark.parametrize("version", ["0.13.0;false", "0.13.0\nRUN false"])
+def test_build_dockerfile_rejects_invalid_uv_version(version: str) -> None:
+    with pytest.raises(ValueError, match="uv_version"):
+        build_dockerfile(
+            DockerfileConfig(project_name="x", python_version="3.15", uv_version=version, uv_sha256="a" * 64)
+        )

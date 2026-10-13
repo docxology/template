@@ -24,10 +24,8 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--project", required=True, help="Project name under projects/")
     parser.add_argument(
         "--python-version",
-        # ubuntu:24.04 ships 3.12; other tags require the deadsnakes PPA
-        # (dockerfile_gen bootstraps it automatically).
-        default="3.12",
-        help="Python version tag for the Dockerfile base (default: 3.12)",
+        default=None,
+        help="Explicit Python override; otherwise use the project's pin and any required packaged root profile",
     )
     args = parser.parse_args(argv)
 

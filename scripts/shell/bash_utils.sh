@@ -507,28 +507,32 @@ check_uv() {
 # Ensure uv is installed — auto-installs via a versioned official installer if
 # missing. Safe to call on headless servers; idempotent if uv already present.
 ensure_uv() {
+    local uv_install_version="${UV_INSTALL_VERSION:-0.13.0}"
     if check_uv; then
-        log_info "uv $(uv --version 2>/dev/null) detected"
+        log_info "$(uv --version 2>/dev/null) detected"
         return 0
     fi
 
+    if [[ ! "$uv_install_version" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+        log_error "UV_INSTALL_VERSION must be an explicit release version."
+        return 1
+    fi
     log_warning "uv not found — attempting automatic installation..."
     log_info "See: https://docs.astral.sh/uv/getting-started/installation/"
 
-    local uv_install_version="${UV_INSTALL_VERSION:-0.12.0}"
     local uv_install_sha256="${UV_INSTALL_SHA256:-}"
-    if [[ "$uv_install_version" == "0.12.0" && -z "$uv_install_sha256" ]]; then
-        uv_install_sha256="b67e385074fddc9b99cd152b838fd91046d9fbc261b2c45f448a983ad23b8764"
+    if [[ "$uv_install_version" == "0.13.0" && -z "$uv_install_sha256" ]]; then
+        uv_install_sha256="283cbef4bdaca819bd896b0dacb8a085c4c05dbc880642aa5001d97bc4db74ba"
     elif [[ -z "$uv_install_sha256" ]]; then
         log_error "Cannot verify uv ${uv_install_version}: set UV_INSTALL_SHA256 to the official installer digest."
         return 1
     fi
-    local installer_url="https://astral.sh/uv/${uv_install_version}/install.sh"
+    local installer_url="https://github.com/astral-sh/uv/releases/download/${uv_install_version}/uv-installer.sh"
     local installer_file
     installer_file="$(mktemp "${TMPDIR:-/tmp}/uv-install.XXXXXX")" || return 1
     local install_failed=0
     if command -v curl >/dev/null 2>&1; then
-        curl -fsSL "$installer_url" -o "$installer_file" || install_failed=1
+        curl --proto '=https' --tlsv1.2 -fsSL "$installer_url" -o "$installer_file" || install_failed=1
     elif command -v wget >/dev/null 2>&1; then
         wget -qO "$installer_file" "$installer_url" || install_failed=1
     else
@@ -576,8 +580,14 @@ ensure_uv() {
     export PATH="$HOME/.local/bin:$PATH"
 
     if check_uv; then
-        log_success "uv installed: $(uv --version)"
-        return 0
+        local installed_uv
+        installed_uv="$(uv --version)" || return 1
+        if [[ "$installed_uv" == "uv $uv_install_version" || "$installed_uv" == "uv $uv_install_version "* ]]; then
+            log_success "uv installed: $installed_uv"
+            return 0
+        fi
+        log_error "uv installer did not provide the requested version: $installed_uv."
+        return 1
     else
         log_error "uv installation succeeded but uv is still not on PATH."
         log_info "Add '$HOME/.local/bin' to your PATH and re-run."
