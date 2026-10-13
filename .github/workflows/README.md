@@ -10,9 +10,9 @@ These are functional checks, with no full-suite coverage or native acceptance cl
 The lint job resolves its public lint/type scopes once and passes nonempty Bash
 arrays to Ruff and mypy. A failed scope producer stops before either tool runs.
 Infrastructure smoke exercises that failure, corrupt model-cache refusal,
-native source copying and the TeX admission boundary without preparing a model
-or native tools. These focused tests keep preparation and gate regressions on
-the ordinary push path.
+fixture preparation and source binding, native source copying and the TeX
+admission boundary without preparing a model or native tools. These focused
+tests keep preparation and gate regressions on the ordinary push path.
 
 The former cross-version/full-suite matrix remains in `hardening.yml`, invoked
 manually. `platform-required-acceptance.yml` is also manual-only; its original

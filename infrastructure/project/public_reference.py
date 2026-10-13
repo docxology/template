@@ -19,12 +19,14 @@ from infrastructure.project.public_acceptance_scope import RuntimeScope
 from infrastructure.project.public_reference_git import (
     GitReference,
     MAX_FILES,
-    blob_identity,
-    committed_blobs,
     inventory,
     remaining,
 )
 from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
+from infrastructure.project.public_source_body_admission import (
+    FixtureAdmission,
+    admit_source_bodies,
+)
 from infrastructure.project.public_template_contract import validate_public_template_contract
 from infrastructure.reporting.readiness_receipts import _READINESS_SOURCE_METADATA_NAMES, _public_roots
 from infrastructure.reporting.release_readiness_snapshot import SnapshotReader
@@ -110,6 +112,7 @@ class PublicReference:
     commit: str
     source_identity: str
     reader: SnapshotReader
+    fixtures: FixtureAdmission
     git: GitReference
     records: tuple[tuple[str, str, str], ...]
     directories: tuple[tuple[str, tuple[int, int, int, int, int]], ...]
@@ -146,6 +149,7 @@ class PublicReference:
             raise ValueError("complete public source DATA fingerprint changed after admission")
         if inventory(self.root, self.commit, deadline) != self.git:
             raise ValueError("native committed public source DATA custody changed")
+        self.fixtures.verify(deadline)
         verify_implementation_custody(self.implementation, fresh_pycache_prefix=self.fresh_pycache_prefix)
         if not self.reader.unchanged():
             raise ValueError("public source DATA changed during final custody verification")
@@ -203,7 +207,7 @@ def admit_public_reference(
             name.startswith(scripts) and name.endswith(".py") for name in files
         ):
             raise ValueError("complete source DATA requires every actual public manuscript and script scope")
-    committed = committed_blobs(git)
+    _, fixtures = admit_source_bodies(root, reader, git, records, deadline)
     directories = []
     total = 0
     observed_python = {}
@@ -214,22 +218,12 @@ def admit_public_reference(
         if kind == "directory":
             directories.append((relative, _identity(_directory(reader, relative))))
             continue
-        path = reader.public_path(relative)
         actual = reader.read(relative)
         total += len(actual.content)
         if total > MAX_REFERENCE_BYTES:
             raise ValueError("complete public source DATA exceeds its held-byte bound")
         if kind == "file" and actual.sha256 != digest:
             raise ValueError("public source DATA changed between inventory and held byte admission")
-        binding = committed.get(relative)
-        if binding is None:
-            raise ValueError("public source DATA is untracked or differs from the committed raw blob")
-        row, object_format = binding
-        if blob_identity(actual.content, object_format) != row.oid:
-            raise ValueError("public source DATA is untracked or differs from the committed raw blob")
-        executable = bool(path.stat().st_mode & 0o111)
-        if executable != (row.mode == "100755"):
-            raise ValueError("public source DATA mode differs from its committed blob")
         if relative.startswith("infrastructure/") and relative.endswith(".py"):
             observed_python[relative] = actual.sha256
     selected_python = {
@@ -242,6 +236,7 @@ def admit_public_reference(
         expected_commit,
         expected_source_identity,
         reader,
+        fixtures,
         git,
         records,
         tuple(directories),

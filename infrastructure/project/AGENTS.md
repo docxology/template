@@ -6,6 +6,20 @@ The `infrastructure/project/` module provides project discovery, validation, and
 
 ## Key Components
 
+### Acceptance Fixture Preparation (`acceptance_fixture_preparation.py`)
+
+- `parse_fixture_manifest(content)` is the strict stdlib parser shared by the
+  preparation action and complete Source readers after Git authentication.
+- `prepare_acceptance_fixtures(root, archives=...)` verifies committed manifest
+  and seed bytes, exact official archive/member rosters and confined new targets.
+  Archive nominations remain subject to every source-pinned check.
+- `scripts/fixtures/prepare_acceptance.py` runs before dependency setup with
+  `python3 -S`; it neither imports the platform package nor grants acceptance.
+- `public_source_body_admission.admit_source_bodies` returns held body hashes
+  and `FixtureAdmission`: raw Git/manifest bindings, complete physical fixture
+  census and subsequent held directory/absent-group verification. Downloaded
+  DATA never overrides a mismatched tracked Git blob or grants import authority.
+
 ### Project Discovery (`discovery.py`)
 
 **Core Functions:**

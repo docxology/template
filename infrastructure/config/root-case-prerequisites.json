@@ -347,6 +347,17 @@
       "packages": [],
       "paths": [],
       "platforms": []
+    },
+    {
+      "id": "python3",
+      "kind": "tool",
+      "environment_keys": [],
+      "executables": [
+        "python3"
+      ],
+      "platforms": [],
+      "paths": [],
+      "packages": []
     }
   ]
 }
