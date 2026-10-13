@@ -134,7 +134,7 @@ Result: **1239** project-scope infrastructure tests collected and **1206** publi
 | `template_data_descriptor` | 78 | 96.13 % |
 | `template_eda_notebook` | 132 | 91.01 % |
 | `template_experiment_tree` | 29 | 91.85 % |
-| `template_formal` | 369 | 90.41 % |
+| `template_formal` | 369 | 90.26 % |
 | `template_gold_refinement` | 337 | 91.59 % |
 | `template_literature_meta_analysis` | 1244 | 95.62 % |
 | `template_madlib` | 198 | 98.95 % |
