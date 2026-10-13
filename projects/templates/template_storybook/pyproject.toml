@@ -21,6 +21,10 @@ dev = [
     "pytest-cov>=4.1.0",
 ]
 
+[tool.setuptools]
+# Retain the authored source-root initializer in the installed wheel.
+py-modules = ["__init__"]
+
 [tool.setuptools.packages.find]
 where = ["src"]
 

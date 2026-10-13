@@ -214,3 +214,63 @@ def test_bundle_receipt_rejects_payload_symlink(tmp_path: Path) -> None:
 
     with pytest.raises(ValueError, match="symlinked"):
         verify_bundle_receipt(out_dir)
+
+
+@pytest.mark.parametrize(
+    ("project_pin", "root_pin", "override", "expected", "profile"),
+    [
+        (None, None, None, "3.14", "repository"),
+        ("3.15\n", "3.14\n", None, "3.15", "project"),
+        ("3.15\n", "# Python exception: required locked JAX wheel\n3.14\n", None, "3.15", "project"),
+        ("# Python exception: required scientific build\n3.14\n", "3.15\n", None, "3.14", "project"),
+        ("3.15\n", "# Python exception: required locked JAX wheel\n3.14\n", "3.13", "3.13", "override"),
+    ],
+)
+def test_bundle_runtime_records_selected_and_required_profiles(
+    tmp_path: Path, project_pin: str | None, root_pin: str | None, override: str | None, expected: str, profile: str
+) -> None:
+    name = "template_code_project"
+    _scaffold_bundle_project(tmp_path, name)
+    project = tmp_path / "projects" / "templates" / name
+    if project_pin is not None:
+        (project / ".python-version").write_text(project_pin, encoding="utf-8")
+    if root_pin is not None:
+        (tmp_path / ".python-version").write_text(root_pin, encoding="utf-8")
+    out = bundle_project(tmp_path, f"templates/{name}", python_version=override)
+    runtime = json.loads((out / "runtime.json").read_text(encoding="utf-8"))
+    assert runtime["project_python"] == ("3.14" if project_pin is None or "3.14" in project_pin else "3.15")
+    assert runtime["python_version"] == expected
+    assert runtime["profile_source"] == profile
+    assert (out / ".python-version").read_text(encoding="utf-8") == expected + "\n"
+    assert f"UV_PYTHON={expected}" in (out / "Dockerfile").read_text(encoding="utf-8")
+    assert "actual build and runtime check" in (out / "README.md").read_text(encoding="utf-8")
+    verify_bundle_receipt(out)
+
+
+@pytest.mark.parametrize("pin", ["3.15\n3.14\n", "3.15\nRUN false\n", "latest\n"])
+def test_bundle_refuses_invalid_pin_before_output(tmp_path: Path, pin: str) -> None:
+    name = "template_code_project"
+    _scaffold_bundle_project(tmp_path, name)
+    (tmp_path / "projects" / "templates" / name / ".python-version").write_text(pin, encoding="utf-8")
+    with pytest.raises(ValueError, match="runtime pin"):
+        bundle_project(tmp_path, f"templates/{name}")
+    assert not (tmp_path / "output").exists()
+
+
+def test_bundle_refuses_symlinked_runtime_pin(tmp_path: Path) -> None:
+    name = "template_code_project"
+    _scaffold_bundle_project(tmp_path, name)
+    external = tmp_path / "external-pin"
+    external.write_text("3.14\n", encoding="utf-8")
+    (tmp_path / "projects" / "templates" / name / ".python-version").symlink_to(external)
+    with pytest.raises(ValueError, match="runtime pin must not be symlinked"):
+        bundle_project(tmp_path, f"templates/{name}")
+    assert not (tmp_path / "output").exists()
+
+
+def test_bundle_accepts_explicit_project_runtime(tmp_path: Path) -> None:
+    name = "template_code_project"
+    _scaffold_bundle_project(tmp_path, name)
+    (tmp_path / "projects" / "templates" / name / ".python-version").write_text("3.13\n", encoding="utf-8")
+    out = bundle_project(tmp_path, f"templates/{name}")
+    assert json.loads((out / "runtime.json").read_text())["python_version"] == "3.13"

@@ -142,7 +142,7 @@ def validate_wheel_source(scope: str, archive: zipfile.ZipFile, reader: Snapshot
             if path.suffix == ".py":
                 python_files.append(candidates)
         elif path.parent == base and re.fullmatch(
-            r"(?:LICENSE|LICENCE|COPYING|NOTICE)(?:\.[A-Za-z0-9_-]+)?", path.name
+            r"(?:LICENSE|LICENCE|COPYING|NOTICE)(?:[.-][A-Za-z0-9_.-]+)?", path.name
         ):
             licenses[path.name] = reader.read(path.relative_to(reader.root).as_posix()).content
     if not python_files:

@@ -133,6 +133,9 @@ repos:
         always_run: true
         verbose: true
 
+      # Run current-tree artifact and secret scans once in the mandatory
+      # commands below; skip their duplicate smoke invocations. Hosted CI
+      # still executes the full smoke suite, including those two tests.
       - id: pre-push-quick
         name: generated-artifact + mirror-shape guards + strict no-stand-ins policy + hook smoke pytest
         entry: bash
@@ -152,6 +155,8 @@ repos:
             uv run python scripts/audit/verify_no_mocks.py
             --inventory --max-dependency-replacements 0 &&
             uv run pytest tests/infra_tests/git_hook_smoke/
+            --deselect=tests/infra_tests/git_hook_smoke/test_tracked_generated_artifacts.py::test_current_repo_has_no_tracked_generated_artifacts
+            --deselect=tests/infra_tests/git_hook_smoke/test_tracked_generated_artifacts.py::test_current_repo_has_no_high_confidence_tracked_secrets
             -q --maxfail=1 --import-mode=importlib
         language: system
         pass_filenames: false

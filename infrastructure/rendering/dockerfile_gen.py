@@ -40,8 +40,9 @@ _BASE_IMAGE_NATIVE_PYTHON: Final[dict[str, str]] = {
 # ``latest``) is what makes the default Stage-10 bundle reproducible: the same
 # project state always resolves the same uv toolchain. Bump deliberately when
 # the repo's toolchain moves; pass ``uv_version="latest"`` explicitly to opt out.
-DEFAULT_UV_VERSION: Final[str] = "0.12.0"
-DEFAULT_UV_INSTALL_SHA256: Final[str] = "b67e385074fddc9b99cd152b838fd91046d9fbc261b2c45f448a983ad23b8764"
+DEFAULT_UV_VERSION: Final[str] = "0.13.0"
+# Immutable official release asset; see releases/expanded_assets/0.13.0.
+DEFAULT_UV_INSTALL_SHA256: Final[str] = "283cbef4bdaca819bd896b0dacb8a085c4c05dbc880642aa5001d97bc4db74ba"
 
 # LaTeX packages this template's PDF rendering depends on at minimum.
 # Mirror of the troubleshooting list in docs/operational/troubleshooting/.
@@ -93,7 +94,9 @@ def build_dockerfile(config: DockerfileConfig) -> str:
     7. Defaults to running the project's ``run.sh --pipeline --project <name> --mode core``
     """
 
-    py_version_tag = config.python_version
+    if re.fullmatch(r"3\.\d+(?:\.\d+)?", config.python_version) is None:
+        raise ValueError("python_version must be an explicit Python 3 version")
+    py_version_tag = ".".join(config.python_version.split(".")[:2])
     latex_pkg_line = " \\\n    ".join(config.latex_packages)
     tlmgr_pkg_line = " ".join(config.tlmgr_packages)
 
@@ -124,7 +127,9 @@ def build_dockerfile(config: DockerfileConfig) -> str:
     if config.uv_version == "latest":
         uv_install_url = "https://astral.sh/uv/install.sh"
     else:
-        uv_install_url = f"https://astral.sh/uv/{config.uv_version}/install.sh"
+        if re.fullmatch(r"\d+\.\d+\.\d+(?:[-+][0-9A-Za-z.-]+)?", config.uv_version) is None:
+            raise ValueError("uv_version must be a release version or the explicit latest alias")
+        uv_install_url = f"https://github.com/astral-sh/uv/releases/download/{config.uv_version}/uv-installer.sh"
         uv_install_sha256 = config.uv_sha256
         if config.uv_version == DEFAULT_UV_VERSION and uv_install_sha256 is None:
             uv_install_sha256 = DEFAULT_UV_INSTALL_SHA256
@@ -144,6 +149,7 @@ def build_dockerfile(config: DockerfileConfig) -> str:
         "ENV DEBIAN_FRONTEND=noninteractive \\",
         "    PYTHONDONTWRITEBYTECODE=1 \\",
         "    PYTHONUNBUFFERED=1 \\",
+        f"    UV_PYTHON={config.python_version} \\",
         "    MPLBACKEND=Agg",
         "",
         "RUN apt-get update && apt-get install -y --no-install-recommends \\",
@@ -163,11 +169,12 @@ def build_dockerfile(config: DockerfileConfig) -> str:
         f"# Install uv ({config.uv_version})",
         *(
             [
-                f"RUN curl -fsSL {uv_install_url} -o /tmp/uv-install.sh",
+                f"RUN curl --proto '=https' --tlsv1.2 -fsSL {uv_install_url} -o /tmp/uv-install.sh",
                 (
                     f"RUN echo '{uv_install_sha256}  /tmp/uv-install.sh' | sha256sum -c - "
-                    "&& sh /tmp/uv-install.sh && rm -f /tmp/uv-install.sh"
+                    "&& UV_UNMANAGED_INSTALL=/usr/local/bin sh /tmp/uv-install.sh && rm -f /tmp/uv-install.sh"
                 ),
+                f'RUN test "$(uv --version | cut -d \' \' -f 1-2)" = "uv {config.uv_version}"',
             ]
             if config.uv_version != "latest"
             else [

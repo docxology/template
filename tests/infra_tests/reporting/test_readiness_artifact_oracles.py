@@ -107,7 +107,7 @@ def test_docx_member_names_do_not_substitute_for_native_xml(tmp_path: Path) -> N
     details = {"execution_exit_code": 0, "formats": {"docx": dict(binding, validated=True)}}
     with pytest.raises(ValueError, match="native docx parser"):
         parse_native_bytes("docx", body)
-    with pytest.raises(ValueError, match="exact artifact"):
+    with pytest.raises(ValueError, match="externally admitted source and original launch custody"):
         validate_acceptance(_requirement("formats", formats=("docx",)), {"details": details}, SnapshotReader(tmp_path))
 
 
@@ -116,7 +116,7 @@ def test_header_only_pdf_does_not_substitute_for_native_pages(tmp_path: Path) ->
     details = {"execution_exit_code": 0, "formats": {"pdf": dict(binding, validated=True)}}
     with pytest.raises(ValueError, match="native pdf parser"):
         parse_native_bytes("pdf", (tmp_path / binding["path"]).read_bytes())
-    with pytest.raises(ValueError, match="exact artifact"):
+    with pytest.raises(ValueError, match="externally admitted source and original launch custody"):
         validate_acceptance(_requirement("formats", formats=("pdf",)), {"details": details}, SnapshotReader(tmp_path))
 
 
@@ -596,3 +596,19 @@ def test_root_wheel_requires_authored_sdk_bytes_and_excludes_local_native_produc
         with pytest.raises(ValueError, match=expected):
             inspect_wheel_bytes(tmp_path, requirement, content)
     assert all((tmp_path / name).read_bytes() == content for name, content in (authored | native).items())
+
+
+@pytest.mark.parametrize("change", ["current", "changed", "unbound"])
+def test_hyphenated_wheel_license_requires_exact_public_source(tmp_path: Path, change: str) -> None:
+    implementation = b"VALUE = 2\n"
+    _file(tmp_path, f"projects/{PROJECT}/src/model.py", implementation)
+    if change != "unbound":
+        _file(tmp_path, f"projects/{PROJECT}/LICENSE-CONTENT.md", b"Authored content license\n")
+    license_bytes = b"Changed license\n" if change == "changed" else b"Authored content license\n"
+    wheel = _wheel(implementation, {"exemplar-2.0.0.dist-info/licenses/LICENSE-CONTENT.md": license_bytes})
+    with zipfile.ZipFile(BytesIO(wheel)) as archive:
+        if change == "current":
+            validate_wheel_source(PROJECT, archive, SnapshotReader(tmp_path))
+        else:
+            with pytest.raises(ValueError, match="license bytes|unbound or private"):
+                validate_wheel_source(PROJECT, archive, SnapshotReader(tmp_path))
