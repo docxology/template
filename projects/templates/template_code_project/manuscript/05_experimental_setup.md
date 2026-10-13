@@ -23,7 +23,7 @@ All runs start from the initial point $x_0 = {{CONFIG_INITIAL_POINT}}$ and use a
 
 ## Numerical Stability Grid
 
-To validate robustness, the optimizer is exercised across a grid of {{CONFIG_NUM_STABILITY_STARTS}} starting points and {{CONFIG_NUM_STABILITY_STEPS}} step sizes, producing {{CONFIG_STABILITY_CELLS}} total evaluations. This comprehensive sweep confirms that convergence is not an artifact of a narrow parameter choice. The stability metric is computed for the `{{STABILITY_FUNCTION}}` objective via `infrastructure.scientific.stability.check_numerical_stability()`.
+To validate robustness, the optimizer is exercised across a grid of {{CONFIG_NUM_STABILITY_STARTS}} starting points and {{CONFIG_NUM_STABILITY_STEPS}} step sizes, producing {{CONFIG_STABILITY_CELLS}} total evaluations. This finite sweep measures sensitivity to the selected initial points and step sizes; it does not establish convergence outside the contractive region or before every iteration cap. The stability metric is computed for the `{{STABILITY_FUNCTION}}` objective via `infrastructure.scientific.stability.check_numerical_stability()`.
 
 ## Dimensional Scaling
 
