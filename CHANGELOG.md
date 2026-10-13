@@ -77,6 +77,10 @@ require final-source acceptance, the authenticated handoff and remote verificati
   bytes while retaining every fixture in the source inventory. Add core controls
   and a preinstalled-Python prerequisite while preserving prior classifications.
   Include the exact acceptance artifact in the published release handoff notes.
+- Pin the exact TLC input to the stable official v1.7.4 asset after upstream
+  rebuilt the rolling v1.8.0 pre-release in place again. Derive CI download,
+  byte-count and digest checks from one source-owned pin, retaining exact input
+  authentication, frozen execution and genuine invariant-violation controls.
 
 ## Prepared 4.0.0 candidate — unpublished
 

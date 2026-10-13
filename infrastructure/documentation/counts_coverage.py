@@ -166,7 +166,7 @@ EXEMPLAR_SNAPSHOT: tuple[ExemplarSnapshot, ...] = (
     ExemplarSnapshot("template_data_descriptor", "96.13 %"),
     ExemplarSnapshot("template_eda_notebook", "91.01 %"),
     ExemplarSnapshot("template_experiment_tree", "91.85 %"),
-    ExemplarSnapshot("template_formal", "90.41 %"),
+    ExemplarSnapshot("template_formal", "90.26 %"),
     ExemplarSnapshot("template_gold_refinement", "91.59 %"),
     ExemplarSnapshot("template_literature_meta_analysis", "95.62 %"),
     ExemplarSnapshot("template_madlib", "98.95 %"),

@@ -6,18 +6,20 @@ Parent layer contract: [`../AGENTS.md`](../AGENTS.md).
 
 The canonical wrapper delegates acquisition and execution to
 [`template_formal.tool_acceptance`](../../src/template_formal/tool_acceptance.py).
-Only explicit `--acquire` downloads the fixed release URL. The current official
-v1.8.0 asset614143604 has source-owned SHA256
-`7beec0f04818732a62fa193731711a99aa4f11279499b2360a7d156c519ea78d`, verified
-against both official API metadata and exact downloaded bytes on2026-10-08.
-The jar identifies itself as TLC2.0 (2026-10-06); v1.8.0 is the download locator.
-The previous source checksum and stale release-page SHA1 were rejected. Preserve
+Only explicit `--acquire` downloads the fixed release URL. The stable official
+v1.7.4 asset 184694200 has 2,274,532 bytes and source-owned SHA256
+`936a262061c914694dfd669a543be24573c45d5aa0ff20a8b96b23d01e050e88`, verified
+through two complete downloads on 2026-10-13 UTC, from commit
+`5a47802b5c391f59ecdd44117981f4ff8c0656ba`. The rolling v1.8.0 pre-release is
+rebuilt in place and is not pinned; its earlier digests are historical.
+The Python module owns all three literal pins; both hosted shell routes read
+them with stdlib `ast` before setup. Preserve
 this distinction when refreshing a pin: matching a moving release URL is
 insufficient, and a mismatch must never execute an unverified cached jar.
 
 Every check revalidates the cache and final byte custody. TLC scratch state is
-outside source and `-noGenerateSpecTE` prevents counterexample trace files from
-changing the public specification. The negative control must produce exit12
+outside source, and TLC 1.7.4 writes no counterexample trace specification, so
+model checking cannot change the public specification. The negative control must produce exit12
 and its exact `NoFalseEstablishment` violation within the same total deadline.
 
 ## Deadlock disabling is a documented decision, not a workaround

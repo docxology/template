@@ -50,11 +50,15 @@ invalid declarations2, failed checks1, and deadline exhaustion124. No missing
 tool or formal source can become a successful skip.
 
 Acquisition is explicit through `--acquire`; ordinary checks never implicitly
-install a Lean toolchain. The same `v1.8.0` TLC release asset is bound to exact
-SHA256 `7beec0f04818732a62fa193731711a99aa4f11279499b2360a7d156c519ea78d`.
-The previous asset601828751 is unavailable. These replacement bytes match the
-official release API's asset614143604 and an independent download on2026-10-08.
-The v1.8.0 tag is a locator; the jar identifies itself as TLC2.0 (2026-10-06).
+install a Lean toolchain. The single `TLC_URL`/`TLC_BYTES`/`TLC_SHA256` tuple in
+[`tool_acceptance.py`](../src/template_formal/tool_acceptance.py) binds the current
+2,274,532-byte stable official asset 184694200 (`v1.7.4`) to SHA256
+`936a262061c914694dfd669a543be24573c45d5aa0ff20a8b96b23d01e050e88`.
+These full bytes match two independent download paths on 2026-10-13 UTC.
+Both hosted shell preparations read those literals without importing the SDK.
+The JAR manifest names commit `5a47802b5c391f59ecdd44117981f4ff8c0656ba`. The
+rolling v1.8.0 pre-release was rebuilt in place three times between 2026-10-08
+and 2026-10-13, so its earlier pins are historical and it is no longer pinned.
 A release-page label or stale SHA1 is insufficient to admit the current asset. Cached bytes are
 verified on every run; mismatches fail without executing them. Public receipts
 contain actual commands, outcomes, source hashes and model output.

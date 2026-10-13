@@ -12,8 +12,20 @@ symlink ancestors, corrupt archives and unexpected selected members refuse
 preparation. Source readers retain these bodies in their full source inventory
 and independently authenticate each binding; preparation cannot grant acceptance.
 
-The official TLC jar is authenticated by its source-owned hash and selected from
-owned external storage through `TEMPLATE_FORMAL_TLC_JAR`; it is not authored source.
+The official TLC jar uses the single literal `TLC_URL`/`TLC_BYTES`/`TLC_SHA256`
+tuple in [`template_formal.tool_acceptance`](../../../projects/templates/template_formal/src/template_formal/tool_acceptance.py).
+This action and the optional hardening preparation read and validate those
+top-level literals with preinstalled `python3 -S` and stdlib `ast`; they do not
+import the project or SDK. Invalid, missing, duplicate or dynamic pins stop the
+shell before acquisition. Both preparation routes authenticate the complete
+selected size and SHA-256 before exporting `TEMPLATE_FORMAL_TLC_JAR` from owned
+external storage. Tool bytes are not authored source.
+
+The current tuple was independently matched to stable official asset 184694200
+(`v1.7.4`, unchanged since 2024-08-08) on 2026-10-13 UTC: 2,274,532 bytes from
+commit `5a47802b5c391f59ecdd44117981f4ff8c0656ba`. The rolling `v1.8.0`
+pre-release is rebuilt in place and is not pinned; any replaced body must fail the
+exact byte guards until its full binding and genuine model controls are reviewed.
 The genuine committed time-series seed is copied without host-dependent numerical
 regeneration. Preparation failure blocks the observation. The legacy shallow-clone
 downloader is a local exploration tool; its mutable HEAD and `.git` metadata do

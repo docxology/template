@@ -22,10 +22,11 @@ from template_formal._tool_execution import build_bounded_env, run_bounded_subpr
 from ._tool_sources import materialize, snapshot_file, snapshot_tree
 
 LEAN_TOOLCHAIN = "leanprover/lean4:v4.28.0"
-TLC_URL = "https://github.com/tlaplus/tlaplus/releases/download/v1.8.0/tla2tools.jar"
-# Official release API asset614143604 digest, independently matched to downloaded
-# bytes on2026-10-08. The v1.8.0 locator now contains TLC 2.0 (2026-10-06).
-TLC_SHA256 = "7beec0f04818732a62fa193731711a99aa4f11279499b2360a7d156c519ea78d"
+TLC_URL = "https://github.com/tlaplus/tlaplus/releases/download/v1.7.4/tla2tools.jar"
+# Stable v1.7.4 asset 184694200 (unchanged since 2024-08-08), commit 5a47802b5c391f59ecdd44117981f4ff8c0656ba.
+# Full bytes matched through two download paths on 2026-10-13 UTC. The v1.8.0 tag is a rolling pre-release.
+TLC_BYTES = 2274532
+TLC_SHA256 = "936a262061c914694dfd669a543be24573c45d5aa0ff20a8b96b23d01e050e88"
 
 
 @dataclass(frozen=True)
@@ -143,6 +144,8 @@ def _acquire_jar(root: Path, deadline: float) -> ToolCheck:
                 "--location",
                 "--proto",
                 "=https",
+                "--proto-redir",
+                "=https",
                 "--connect-timeout",
                 "15",
                 "--max-time",
@@ -166,6 +169,14 @@ def _acquire_jar(root: Path, deadline: float) -> ToolCheck:
                 check.diagnostic,
             )
         content = _jar_snapshot(temporary, deadline)
+        if len(content) != TLC_BYTES:
+            return ToolCheck(
+                check.name,
+                "failed",
+                check.argv,
+                check.exit_code,
+                diagnostic=f"pinned TLC byte length mismatch: expected {TLC_BYTES}, got {len(content)}",
+            )
         if hashlib.sha256(content).hexdigest() != TLC_SHA256:
             return ToolCheck(check.name, "failed", check.argv, check.exit_code, diagnostic="pinned TLC SHA256 mismatch")
         os.replace(temporary, target)
@@ -283,7 +294,7 @@ def _execute_formal_tools(
     jar_timed_out = False
     try:
         jar_bytes = _jar_snapshot(jar, deadline)
-        jar_valid = hashlib.sha256(jar_bytes).hexdigest() == TLC_SHA256
+        jar_valid = len(jar_bytes) == TLC_BYTES and hashlib.sha256(jar_bytes).hexdigest() == TLC_SHA256
     except TimeoutError:
         jar_bytes, jar_valid, jar_timed_out = b"", False, True
     except (OSError, ValueError):
@@ -320,7 +331,6 @@ def _execute_formal_tools(
                             "-XX:+UseSerialGC",
                             "-jar",
                             str(frozen_jar),
-                            "-noGenerateSpecTE",
                             "-workers",
                             "1",
                             "-metadir",
