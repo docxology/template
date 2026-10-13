@@ -193,14 +193,14 @@ def source_web_font_bundle(*, deadline: float | None = None) -> tuple[list[dict[
     return bodies, license_bytes.decode("utf-8")
 
 
-def source_web_font_script() -> str:
-    """Use actual FontFace buffers; retain constructor hashes in the document."""
+def _source_web_font_payload() -> str:
     bodies, license_text = source_web_font_bundle()
     payload = json.dumps({"faces": bodies, "license": license_text}, separators=(",", ":"))
-    payload = payload.replace("<", "\\u003c")
+    return payload.replace("<", "\\u003c")
+
+
+def _source_web_font_loader() -> str:
     return (
-        '<script type="application/json" id="template-source-font-bodies">' + payload + "</script>\n"
-        "<script data-template-source-font-loader>\n"
         "window.templateSourceFontsPromise=(async()=>{\n"
         "const payload=JSON.parse(document.getElementById('template-source-font-bodies').textContent);\n"
         "const observations=[];\n"
@@ -217,5 +217,27 @@ def source_web_font_script() -> str:
         "await document.fonts.ready;window.templateSourceFontBuffers=observations;return observations;\n"
         "})();\n"
         "window.templateSourceFontsPromise.catch(error=>{window.templateSourceFontError=String(error)});\n"
-        "</script>\n"
+    )
+
+
+def source_web_font_script() -> str:
+    """Use actual FontFace buffers; retain constructor hashes in the document."""
+    return (
+        '<script type="application/json" id="template-source-font-bodies">'
+        + _source_web_font_payload()
+        + "</script>\n<script data-template-source-font-loader>\n"
+        + _source_web_font_loader()
+        + "</script>\n"
+    )
+
+
+def source_web_font_javascript() -> str:
+    """Publish the same payload and loader as one local classic-script asset."""
+    return (
+        '(()=>{const node=document.createElement("script");'
+        'node.type="application/json";node.id="template-source-font-bodies";'
+        "node.textContent=JSON.stringify("
+        + _source_web_font_payload()
+        + ");document.head.appendChild(node);})();\n"
+        + _source_web_font_loader()
     )

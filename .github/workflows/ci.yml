@@ -117,6 +117,7 @@ jobs:
           paths = resolve_infrastructure_test_paths(Path.cwd(), "pipeline-smoke")
           paths.extend([
               "tests/infra_tests/core/test_ci_smoke.py",
+              "tests/infra_tests/core/test_secure_write.py",
               "tests/infra_tests/config/test_acceptance_model.py",
               "tests/infra_tests/project/test_distribution_contract.py",
               "tests/infra_tests/project/test_acceptance_fixture_preparation.py",
@@ -124,6 +125,7 @@ jobs:
               "tests/infra_tests/reporting/test_native_tex_root_admission.py",
               "tests/infra_tests/reporting/test_native_installed_preparation_source.py",
               "tests/infra_tests/rendering/test_literature_hydration.py",
+              "tests/infra_tests/rendering/test_shared_web_fonts.py",
           ])
           raise SystemExit(subprocess.run([
               sys.executable, "-m", "pytest", *paths, "--no-cov", "-q",

@@ -24,6 +24,21 @@ def test_binary_publication_retains_exact_bytes_and_private_mode(tmp_path: Path)
     assert {path.name for path in target.parent.iterdir()} == {target.name}
 
 
+@pytest.mark.parametrize("filename", ["a" * 248 + ".md", "章" * 80 + ".md"])
+def test_confined_publication_supports_long_destination_components(tmp_path: Path, filename: str) -> None:
+    """Temporary allocation must not extend a valid destination's name."""
+    from infrastructure.core.files.secure_write import atomic_write_bytes_confined, read_bytes_confined
+
+    target = tmp_path / filename
+    content = b"exact publication bytes\x00\xff"
+    atomic_write_bytes_confined(tmp_path, target, content, mode=0o600)
+    assert read_bytes_confined(tmp_path, target) == content
+    assert stat.S_IMODE(target.stat().st_mode) == 0o600
+    atomic_write_bytes_confined(tmp_path, target, content + b" replacement", mode=0o600)
+    assert read_bytes_confined(tmp_path, target) == content + b" replacement"
+    assert set(tmp_path.iterdir()) == {target}
+
+
 @pytest.mark.parametrize("component", ["target", "parent"])
 def test_binary_publication_refuses_symlink_without_overwriting_sentinel(tmp_path: Path, component: str) -> None:
     from infrastructure.core.files.secure_write import atomic_write_bytes_confined
