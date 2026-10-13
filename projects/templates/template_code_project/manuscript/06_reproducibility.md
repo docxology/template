@@ -40,7 +40,7 @@ Within the configured grid, **{{RESULT_NUM_CONVERGED}}** of **{{CONFIG_NUM_STEP_
 
 Stability score from `infrastructure.scientific.stability`: **{{STABILITY_SCORE}}** (out of 1.00)
 
-The stability analysis tested {{CONFIG_STABILITY_CELLS}} parameter combinations ({{CONFIG_NUM_STABILITY_STARTS}} starting points $\times$ {{CONFIG_NUM_STABILITY_STEPS}} step sizes), confirming uniform convergence across the entire parameter space.
+The stability analysis tested {{CONFIG_STABILITY_CELLS}} parameter combinations ({{CONFIG_NUM_STABILITY_STARTS}} starting points $\times$ {{CONFIG_NUM_STABILITY_STEPS}} step sizes), recording termination accuracy across this finite gradient-descent grid. This is distinct from the reported stability score, which checks scalar objective evaluations and does not certify convergence of every optimization trajectory.
 
 ### Benchmark Demonstration
 
