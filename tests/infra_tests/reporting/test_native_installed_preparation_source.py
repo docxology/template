@@ -103,5 +103,7 @@ def test_admitted_source_files_refuse_untracked_or_edited_public_body(tmp_path: 
         target.unlink()
         refusal = "missing a committed canonical body"
     reference = inventory(root, commit, time.monotonic() + 60)
-    with pytest.raises(ValueError, match=refusal):
+    with pytest.raises(ValueError, match=refusal) as observed:
         admitted_source_files(root, SnapshotReader(root), reference, time.monotonic() + 60)
+    if fault == "untracked":
+        assert "'infrastructure/extra.py' (file)" in str(observed.value)

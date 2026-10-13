@@ -70,6 +70,13 @@ require final-source acceptance, the authenticated handoff and remote verificati
   manifest and blobs, rechecking every length and digest before genuine inference.
   Runtime downloads and owned daemon setup remain separate; no measured speedup
   or successful final-source acceptance is implied.
+- Bind prepared Requests/FastAPI fixtures to one committed manifest of exact
+  archive members and bind synthetic copies to their committed seed bytes.
+  Native preparation and public reference admission share the same complete
+  body checks, rejecting partial fixture groups, extra entries and altered
+  bytes while retaining every fixture in the source inventory. Add core controls
+  and a preinstalled-Python prerequisite while preserving prior classifications.
+  Include the exact acceptance artifact in the published release handoff notes.
 
 ## Prepared 4.0.0 candidate — unpublished
 

@@ -5,6 +5,16 @@ Project discovery, validation, and metadata extraction for multi-project support
 `codeowners.py` generates and validates the public-exemplar and sensitive-area
 ownership block in `.github/CODEOWNERS` from the canonical public scope.
 
+`acceptance_fixture_preparation.py` is the stdlib fixture producer and strict
+shared manifest parser. Run its thin entry point with
+`python3 -S scripts/fixtures/prepare_acceptance.py` on a fresh owned checkout.
+It authenticates the manifest and seed bytes against Git, selects exact pinned
+archive members, and refuses existing targets. Source admission independently
+validates the resulting ignored DATA; preparation itself grants no acceptance.
+`public_source_body_admission.admit_source_bodies` returns held hashes and a
+`FixtureAdmission` closure. It authenticates Git/manifest bindings, inventories
+every physical fixture member and rechecks held directory identities after use.
+
 ## Overview
 
 The project module enables the template to manage multiple independent research projects within a single repository. It provides utilities for discovering, validating, and extracting metadata from projects.

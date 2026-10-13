@@ -10,6 +10,7 @@ Technical guide for `scripts/fixtures/` — scripts that download or generate te
 |------|---------|
 | `download_real_codebases.py` | Shallow-clones real GitHub repos (requests, fastapi) via sparse-checkout into `tests/fixtures/real_codebases/` |
 | `download_timeseries_benchmarks.py` | Downloads M4 monthly timeseries data from Hugging Face, with synthetic fallback, into `tests/fixtures/timeseries/` |
+| `prepare_acceptance.py` | Thin stdlib entry point for exact Git-bound acceptance fixture preparation; existing targets are refused |
 
 ## Key Conventions
 
@@ -17,6 +18,9 @@ Technical guide for `scripts/fixtures/` — scripts that download or generate te
 - Run from repo root: `python scripts/fixtures/download_real_codebases.py`
 - Fixtures are stored under `tests/fixtures/` and consumed by test suites in `tests/`.
 - The `requests` and `fastapi` repos use `--depth=1` and git sparse-checkout to minimize disk usage.
+- Those legacy downloads are local exploration inputs. Fixed acceptance fixtures
+  use `python3 -S scripts/fixtures/prepare_acceptance.py` and the shared committed
+  manifest; mutable clone HEAD and hidden `.git` files cannot satisfy that contract.
 
 ## See Also
 

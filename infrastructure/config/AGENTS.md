@@ -10,6 +10,7 @@ Configuration files used by infrastructure components (repo-scoped defaults).
 | --- | --- |
 | `.env.template` | Example environment variables (non-secret) |
 | `secure_config.yaml` | Default secure/steganography configuration |
+| `acceptance-source-fixtures.json` | Git-bound exact official fixture archive/member roster and committed seed-copy mappings |
 
 ### Notes
 
