@@ -188,6 +188,23 @@ that would fail CI fail locally first:
 | `all-exports-check` | `infrastructure.skills check-all-exports` (lint job MED5 gate) | <1 s |
 | `skill-reachability-check` | docs-lint skill front-door and index completeness gate | <1 s |
 
+As of 2026-10-13, `docs-contract-guard` does not run `COUNTS.md`
+synchronization and dated coverage provenance checks on every push. All its
+other documentation commands remain
+blocking, alongside the separate security, public tracking, no-mocks and
+behavioral hooks. A branch may need to be pushed to obtain genuine hosted
+coverage when its required local tools are unavailable.
+
+`uv run python scripts/docgen/counts.py --check` still rejects stale coverage
+provenance in the owning `counts` health gate and full-hardening documentation
+job. The counts writer and explicit provenance refresh retain their existing
+validation. A requested hosted measurement must pass its job, CI Gate and the
+whole workflow; verify the retrieved artifact's exact source commit and project
+input hash before refreshing the dated snapshot. Functional CI passing alone
+does not promote older coverage measurements to a current claim. Release's
+exact-source acceptance and coverage custody requirements remain separate and
+unchanged.
+
 The lint job also runs the deterministic source-only publication audit across
 the generated public roster:
 
