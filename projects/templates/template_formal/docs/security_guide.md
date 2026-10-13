@@ -17,14 +17,13 @@ silently-republished release asset would run unverified).
 [`template_formal.tool_acceptance`](../src/template_formal/tool_acceptance.py);
 [`scripts/check_formal_specs.sh`](../scripts/check_formal_specs.sh) delegates to it.
 
-- Explicit `--acquire` fetches the fixed `v1.8.0` release URL, never `latest`.
-  Its current official asset 635357747 is 4,501,961 bytes. The jar identifies
-  itself as TLC 2.0 (2026-10-13), from commit
-  `5737c4758703f9fc4ef4ce1ff5dd912fe37d78d3`; the mutable tag label does not establish version
-  or integrity.
+- Explicit `--acquire` fetches the fixed stable `v1.7.4` release URL, never `latest`
+  or the rolling `v1.8.0` pre-release. Its official asset 184694200 is 2,274,532
+  bytes, from commit `5a47802b5c391f59ecdd44117981f4ff8c0656ba`; the tag label
+  does not establish version or integrity.
 - The single source-owned `TLC_URL`/`TLC_BYTES`/`TLC_SHA256` tuple binds SHA-256
-  `baf125a62e192f8d9df38035b8283b9d05f08dbf01860b2df40af489b894563d`
-  independently matched to official API metadata and downloaded bytes on
+  `936a262061c914694dfd669a543be24573c45d5aa0ff20a8b96b23d01e050e88`
+  independently matched through the release download and the asset API on
   2026-10-13 UTC. Hosted preparation reads those exact literals with stdlib `ast`
   before dependency setup. Acquisition verifies the full length and hash before
   replacing the local cache; no trimming or normalization can satisfy a pin.

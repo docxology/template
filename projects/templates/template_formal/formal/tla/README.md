@@ -83,10 +83,10 @@ were violated.
 `tla2tools.jar` is **not committed** — a multi-MB binary has no place in a
 strongly-typed *source* template. `scripts/check_formal_specs.sh` acquires it
 only with explicit `--acquire` from a pinned, dated release tag
-(`tlaplus/tlaplus` `v1.8.0`, never `latest`) and verifies its SHA-256 before
-ever invoking it (see [`../AGENTS.md`](../AGENTS.md)). This mutable tag currently
-locates asset 635357747, whose JAR identifies itself as TLC 2.0 (2026-10-13), from
-commit `5737c4758703f9fc4ef4ce1ff5dd912fe37d78d3`. The complete 4,501,961-byte body
+(`tlaplus/tlaplus` `v1.7.4`, never `latest` or the rolling `v1.8.0` pre-release)
+and verifies its SHA-256 before ever invoking it (see [`../AGENTS.md`](../AGENTS.md)).
+This stable tag locates asset 184694200, built from commit
+`5a47802b5c391f59ecdd44117981f4ff8c0656ba`. The complete 2,274,532-byte body
 was verified on 2026-10-13 UTC. The single literal URL/length/SHA256 tuple in
 [`tool_acceptance.py`](../../src/template_formal/tool_acceptance.py), rather than
 the tag label, admits executable bytes; hosted preparation reads the same tuple. Once
@@ -98,10 +98,10 @@ spec directly without the wrapper:
 cd projects/templates/template_formal/formal/tla
 
 # Ideal single-peer model (safety + liveness)
-java -jar tla2tools.jar -noGenerateSpecTE -config AntProtocol.cfg AntProtocol.tla
+java -jar tla2tools.jar -config AntProtocol.cfg AntProtocol.tla
 
 # Fault-injected two-peer model (safety only)
-java -jar tla2tools.jar -noGenerateSpecTE -config AntProtocolFaulty.cfg AntProtocolFaulty.tla
+java -jar tla2tools.jar -config AntProtocolFaulty.cfg AntProtocolFaulty.tla
 ```
 
 A successful run ends with `Model checking completed. No error has been

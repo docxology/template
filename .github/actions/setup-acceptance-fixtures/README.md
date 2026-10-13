@@ -21,10 +21,10 @@ shell before acquisition. Both preparation routes authenticate the complete
 selected size and SHA-256 before exporting `TEMPLATE_FORMAL_TLC_JAR` from owned
 external storage. Tool bytes are not authored source.
 
-The current tuple was independently matched to official asset 635357747 on
-2026-10-13 UTC: 4,501,961 bytes from commit
-`5737c4758703f9fc4ef4ce1ff5dd912fe37d78d3`, identified by its manifest as TLC 2.0
-(2026-10-13). The `v1.8.0` URL is a mutable locator; a replacement must fail the
+The current tuple was independently matched to stable official asset 184694200
+(`v1.7.4`, unchanged since 2024-08-08) on 2026-10-13 UTC: 2,274,532 bytes from
+commit `5a47802b5c391f59ecdd44117981f4ff8c0656ba`. The rolling `v1.8.0`
+pre-release is rebuilt in place and is not pinned; any replaced body must fail the
 exact byte guards until its full binding and genuine model controls are reviewed.
 The genuine committed time-series seed is copied without host-dependent numerical
 regeneration. Preparation failure blocks the observation. The legacy shallow-clone

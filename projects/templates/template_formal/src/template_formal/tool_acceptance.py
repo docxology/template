@@ -22,11 +22,11 @@ from template_formal._tool_execution import build_bounded_env, run_bounded_subpr
 from ._tool_sources import materialize, snapshot_file, snapshot_tree
 
 LEAN_TOOLCHAIN = "leanprover/lean4:v4.28.0"
-TLC_URL = "https://github.com/tlaplus/tlaplus/releases/download/v1.8.0/tla2tools.jar"
-# Official asset 635357747 length/digest matched to full bytes on 2026-10-13 UTC.
-# Mutable v1.8.0 locator; TLC 2.0 build from 5737c4758703f9fc4ef4ce1ff5dd912fe37d78d3.
-TLC_BYTES = 4501961
-TLC_SHA256 = "baf125a62e192f8d9df38035b8283b9d05f08dbf01860b2df40af489b894563d"
+TLC_URL = "https://github.com/tlaplus/tlaplus/releases/download/v1.7.4/tla2tools.jar"
+# Stable v1.7.4 asset 184694200 (unchanged since 2024-08-08), commit 5a47802b5c391f59ecdd44117981f4ff8c0656ba.
+# Full bytes matched through two download paths on 2026-10-13 UTC. The v1.8.0 tag is a rolling pre-release.
+TLC_BYTES = 2274532
+TLC_SHA256 = "936a262061c914694dfd669a543be24573c45d5aa0ff20a8b96b23d01e050e88"
 
 
 @dataclass(frozen=True)
@@ -331,7 +331,6 @@ def _execute_formal_tools(
                             "-XX:+UseSerialGC",
                             "-jar",
                             str(frozen_jar),
-                            "-noGenerateSpecTE",
                             "-workers",
                             "1",
                             "-metadir",
