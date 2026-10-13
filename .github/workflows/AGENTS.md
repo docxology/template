@@ -7,6 +7,13 @@ and the required `CI Gate`. `.github/project-smoke.json` names the actual tests;
 the smoke runner refuses missing projects, empty selections and escaping paths.
 These are functional checks, with no full-suite coverage or native acceptance claim.
 
+Manual CI dispatch optionally selects coverage-project by its exact canonical
+public qualified name. The separate own-exemplar-coverage job runs the existing
+own locked release-profile measurement and retains its commit/input-hash bound
+artifact. Verify that job, the whole workflow and the retrieved artifact before
+admitting its percentage. CI Gate covers all six declared jobs: five functional
+successes, plus coverage success when requested or its skip when unrequested.
+
 The former cross-version/full-suite matrix remains in `hardening.yml`, invoked
 manually. `platform-required-acceptance.yml` is also manual-only; its original
 custody requirements remain mandatory for formal release acceptance. Further

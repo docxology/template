@@ -1,13 +1,20 @@
 name: Prepare declared Meta provider
-description: Build and install the genuine noneditable public Meta wheel into the prepared root interpreter.
+description: Build the genuine noneditable public Meta wheel with the locked root backend and install it into the selected prepared interpreter.
+inputs:
+  python-executable:
+    description: Prepared interpreter that needs the provider; the root interpreter owns the locked build backend.
+    required: false
+    default: .venv/bin/python
 runs:
   using: composite
   steps:
     - name: Build and install the current provider wheel
       shell: bash
+      env:
+        PROVIDER_PYTHON: ${{ inputs.python-executable }}
       run: |
         set -euo pipefail
         wheels=$(mktemp -d "$RUNNER_TEMP/template-meta-provider.XXXXXX")
         uv build --wheel --no-build-isolation --python .venv/bin/python \
           --out-dir "$wheels" projects/templates/template_literature_meta_analysis
-        uv pip install --python .venv/bin/python --no-deps --reinstall "$wheels"/*.whl
+        uv pip install --python "$PROVIDER_PYTHON" --no-deps --reinstall "$wheels"/*.whl

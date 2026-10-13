@@ -6,6 +6,12 @@ on:
   pull_request:
     branches: [main]
   workflow_dispatch:
+    inputs:
+      coverage-project:
+        description: Optional exact public qualified name for own release-profile coverage
+        required: false
+        default: ""
+        type: string
 
 permissions:
   contents: read
@@ -154,17 +160,150 @@ jobs:
           PROJECT: ${{ matrix.project }}
         run: .venv/bin/python scripts/gates/ci_smoke.py --project "$PROJECT"
 
+  own-exemplar-coverage:
+    name: Requested exemplar coverage
+    if: github.event_name == 'workflow_dispatch' && inputs.coverage-project != ''
+    runs-on: ubuntu-latest
+    timeout-minutes: 135
+    env:
+      COVERAGE_PROJECT: ${{ inputs.coverage-project }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          submodules: true
+          persist-credentials: false
+      - uses: ./.github/actions/setup-python-env
+      - run: uv sync --locked --group installed-build
+      - name: Validate the requested public project
+        run: |
+          .venv/bin/python - <<'PYTHON'
+          import os
+          from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
+          if os.environ["COVERAGE_PROJECT"] not in PUBLIC_PROJECT_NAMES:
+              raise SystemExit("coverage-project must be an exact canonical public qualified name")
+          PYTHON
+      - name: Prepare the own locked development environment
+        run: |
+          .venv/bin/python - <<'PYTHON'
+          import os, subprocess
+          from pathlib import Path
+          project = os.environ["COVERAGE_PROJECT"]
+          command = ["uv", "sync", "--project", str(Path("projects") / project),
+                     "--locked", "--extra", "dev", "--python", ".venv/bin/python"]
+          if project == "templates/template_formal":
+              command.extend(["--extra", "formal-tools"])
+          subprocess.run(command, check=True)
+          PYTHON
+      - name: Warm the exact Autoresearch standalone dependencies
+        if: inputs.coverage-project == 'templates/template_autoresearch_project'
+        timeout-minutes: 5
+        run: |
+          set -euo pipefail
+          uv export --locked --only-group installed-build --no-emit-project --no-emit-local \
+            --no-header --no-annotate --output-file "$RUNNER_TEMP/autoresearch-build-requirements.txt"
+          uv export --project projects/templates/template_autoresearch_project \
+            --locked --no-default-groups --no-emit-project --no-emit-local \
+            --no-header --no-annotate --output-file "$RUNNER_TEMP/autoresearch-runtime-requirements.txt"
+          for kind in build runtime; do
+            uv venv --no-project --no-python-downloads --python .venv/bin/python \
+              "$RUNNER_TEMP/autoresearch-$kind-preparation"
+            uv pip sync --no-config --no-build --require-hashes \
+              --python "$RUNNER_TEMP/autoresearch-$kind-preparation/bin/python" \
+              "$RUNNER_TEMP/autoresearch-$kind-requirements.txt"
+          done
+      - uses: ./.github/actions/setup-meta-provider
+        if: inputs.coverage-project == 'templates/template_advanced_literature_review'
+        with:
+          python-executable: projects/${{ inputs.coverage-project }}/.venv/bin/python
+      - uses: ./.github/actions/setup-acceptance-documents
+        with:
+          mode: ${{ inputs.coverage-project == 'templates/template_eda_notebook' && 'native' || 'converter' }}
+      - name: Prepare the selected pinned Lean toolchain
+        if: inputs.coverage-project == 'templates/template_active_inference' || inputs.coverage-project == 'templates/template_formal'
+        timeout-minutes: 15
+        run: |
+          set -euo pipefail
+          curl --fail --location --retry 2 --max-time 60 \
+            https://raw.githubusercontent.com/leanprover/elan/58e8d545e33641f66dbcbd22c4283109e71757be/elan-init.sh \
+            -o "$RUNNER_TEMP/elan-init.sh"
+          echo "4bacca9502cb89736fe63d2685abc2947cfbf34dc87673504f1bb4c43eda9264  $RUNNER_TEMP/elan-init.sh" | sha256sum --check --status
+          sh "$RUNNER_TEMP/elan-init.sh" -y --default-toolchain none
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          if [ "$COVERAGE_PROJECT" = templates/template_formal ]; then
+            pin=projects/templates/template_formal/formal/lean/lean-toolchain
+          else
+            pin=projects/templates/template_active_inference/lean/lean-toolchain
+          fi
+          "$HOME/.elan/bin/elan" toolchain install "$(tr -d '[:space:]' < "$pin")"
+          if [ "$COVERAGE_PROJECT" = templates/template_formal ]; then java -version; fi
+      - name: Acquire and verify Formal's exact declared tools
+        if: inputs.coverage-project == 'templates/template_formal'
+        timeout-minutes: 10
+        run: >-
+          projects/templates/template_formal/.venv/bin/python
+          -m template_formal.tool_acceptance
+          --project-root "$PWD/projects/templates/template_formal"
+          --timeout 300 --acquire
+      - name: Prepare the pinned SIA sandbox image
+        if: inputs.coverage-project == 'templates/template_sia'
+        env:
+          SIA_SANDBOX_IMAGE: python@sha256:51dafde81dbdb6ebde285137a295cf18a47ca95234fe388a343719cb97305b3d
+        run: |
+          set -euo pipefail
+          docker pull "$SIA_SANDBOX_IMAGE"
+          docker image inspect "$SIA_SANDBOX_IMAGE" --format '{{.Id}}'
+          echo "TEMPLATE_SIA_TEST_IMAGE=$SIA_SANDBOX_IMAGE" >> "$GITHUB_ENV"
+      - name: Measure the complete own release-profile coverage
+        run: |
+          .venv/bin/python - <<'PYTHON'
+          import json, os, subprocess
+          from pathlib import Path
+          from infrastructure.documentation.counts_coverage import exemplar_source_hash, measure_exemplar_coverage
+          root = Path.cwd()
+          project = os.environ["COVERAGE_PROJECT"]
+          name = Path(project).name
+          source_hash = exemplar_source_hash(root, name)
+          measured = measure_exemplar_coverage(root, name)
+          if exemplar_source_hash(root, name) != source_hash:
+              raise SystemExit("coverage inputs changed during the measurement")
+          output = root / "output/readiness/requested-exemplar-coverage.json"
+          output.parent.mkdir(parents=True, exist_ok=True)
+          output.write_text(json.dumps({
+              "schema_version": "template-requested-exemplar-coverage/v1",
+              "project": project, "profile": "release",
+              "source_commit": subprocess.check_output(["git", "rev-parse", "HEAD"], text=True).strip(),
+              "source_hash": source_hash, "coverage_pct": measured,
+          }, indent=2, sort_keys=True) + "\n")
+          print(output.read_text())
+          PYTHON
+      - name: Retain the requested measurement
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: requested-exemplar-coverage
+          path: output/readiness/requested-exemplar-coverage.json
+          if-no-files-found: error
+
   ci-gate:
     name: CI Gate
     if: always()
-    needs: [actionlint, lint, detect-projects, test-infra, test-project]
+    needs: [actionlint, lint, detect-projects, test-infra, test-project, own-exemplar-coverage]
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
-      - name: Require every functional job to succeed
+      - name: Require every functional job and the declared coverage outcome
         env:
+          COVERAGE_REQUESTED: ${{ github.event_name == 'workflow_dispatch' && inputs.coverage-project != '' }}
           NEEDS_JSON: ${{ toJson(needs) }}
         run: |
           set -euo pipefail
-          jq -e 'type == "object" and keys == ["actionlint", "detect-projects", "lint", "test-infra", "test-project"] and all(.[]; .result == "success")' <<< "$NEEDS_JSON"
-          echo "Functional CI passed. Exhaustive acceptance is the optional hardening workflow." >> "$GITHUB_STEP_SUMMARY"
+          case "$COVERAGE_REQUESTED" in
+            true|false) ;;
+            *) echo "coverage request must be the exact declared boolean" >&2; exit 1 ;;
+          esac
+          jq -e --arg requested "$COVERAGE_REQUESTED" '
+            type == "object"
+            and keys == ["actionlint", "detect-projects", "lint", "own-exemplar-coverage", "test-infra", "test-project"]
+            and (del(."own-exemplar-coverage") | all(.[]; .result == "success"))
+            and (."own-exemplar-coverage".result == (if $requested == "true" then "success" else "skipped" end))
+          ' <<< "$NEEDS_JSON"
+          echo "CI Gate passed for the functional jobs and declared coverage request." >> "$GITHUB_STEP_SUMMARY"

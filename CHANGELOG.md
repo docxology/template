@@ -81,6 +81,19 @@ require final-source acceptance, the authenticated handoff and remote verificati
   rebuilt the rolling v1.8.0 pre-release in place again. Derive CI download,
   byte-count and digest checks from one source-owned pin, retaining exact input
   authentication, frozen execution and genuine invariant-violation controls.
+- Align bundle defaults with the declared project/repository Python pin and
+  preserve an explicit runtime override. Include each authored initializer and
+  license in its exact-source wheel admission.
+- Share validated, bounded manuscript hydration between the literature
+  exemplars: validate before writes, make dry runs write-free, preserve unrelated
+  output, and refuse removal of edited stale sections.
+- Select the declared SDK before exposing exemplar source paths; retain genuine
+  SDK wheels inside own environments and refuse project-source shadows.
+- Correct current exemplar pipeline and development commands. Reuse genuine
+  Meta provider preparation in functional CI and offer explicitly requested
+  own-project coverage without invoking the exhaustive hardening matrix.
+- Remove only duplicate local pre-push census tests while retaining the actual
+  public tracking scanners, negative controls and complete hosted selections.
 
 ## Prepared 4.0.0 candidate — unpublished
 
