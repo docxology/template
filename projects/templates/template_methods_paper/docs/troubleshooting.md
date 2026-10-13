@@ -19,7 +19,7 @@ uv run python scripts/pipeline/stage_03_render.py --project templates/template_m
 Or re-run the full pipeline:
 
 ```bash
-uv run python scripts/runner/execute_pipeline.py --project templates/template_methods_paper --core-only
+uv run python scripts/runner/execute_pipeline.py --project templates/template_methods_paper --mode core
 ```
 
 ## `MethodValidationError: method '...' failed validation`

@@ -91,6 +91,22 @@ MYPYPATH=projects/templates/template_formal/src \
 
 ## Intentional Non-Standalone Dependencies
 
+The complete own development suite requires both `dev` and `formal-tools`.
+`research-project-template==4.0.1` is declared only in `formal-tools`, not the
+pure domain runtime. Inside the template checkout, prepare the public exemplar
+from the repository root with:
+
+```bash
+uv sync --project projects/templates/template_formal --locked --extra dev --extra formal-tools
+```
+
+For a copied tree inside the checkout, select its own project path instead.
+After package metadata changes, refresh its lock before using `--locked`.
+An independent exported clone must remove the checkout-local `tool.uv.sources`
+resolver and prepare its environment with an explicitly built SDK 4.0.1 wheel
+and its declared development dependencies. SDK 4.0.1 is an unreleased candidate;
+do not assume it is on PyPI or substitute an arbitrary ancestor checkout.
+
 The manuscript renders through the shared `infrastructure/rendering/` and
 `infrastructure/validation/` pipeline, and `scripts/pipeline/stage_00_setup.py`
 imports `infrastructure.rendering.preflight`. `src/template_formal/` itself
@@ -99,10 +115,10 @@ agent/colony module is pure, project-local Python — so the source package is
 standalone even though the manuscript pipeline is not.
 
 The optional formal side-spec (`formal/lean/`, `formal/tla/`) requires
-`lake`/`elan` (Lean 4) and a Java runtime (TLA+ TLC) respectively; neither is
-part of `--core-only` pipeline runs, the coverage gate, or a forkable
-project's minimum requirements. Fork without them if the formal side-spec
-does not apply to your domain.
+`lake`/`elan` (Lean 4) and a Java runtime (TLA+ TLC) respectively. The complete
+own suite includes real formal-tool checks, so those cases also require the
+native tools and authenticated TLC provider described in [formal/AGENTS.md](formal/AGENTS.md).
+The pure domain package can be used without the formal side-spec or its native tools.
 
 ## What Not To Claim
 

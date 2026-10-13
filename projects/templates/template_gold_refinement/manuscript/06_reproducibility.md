@@ -32,7 +32,7 @@ uv run python projects/templates/template_gold_refinement/scripts/refinement_ana
 uv run python projects/templates/template_gold_refinement/scripts/z_generate_manuscript_variables.py
 
 # Full pipeline (from repo root)
-./run.sh --project templates/template_gold_refinement --pipeline --core-only
+./run.sh --project templates/template_gold_refinement --pipeline --mode core
 ```
 
 A reproduction report should record command exit status, the source revision, `{{CONFIG_HASH}}`, Python {{PYTHON_VERSION}}, and whether the generated registries pass. Matching prose alone is insufficient if the token plan, claim registry, or figure registry differs. Conversely, timestamp or renderer metadata differences should be interpreted separately from substantive differences in source-owned values.

@@ -84,12 +84,14 @@ cd "projects/working/$NEW"
 # 2. Replace manuscript/*.md with your prose; keep H1-per-section + {{TOKEN}} conventions
 # 3. Curate manuscript/references.bib (validated, never auto-written)
 # 4. Adjust src/ only if you need new checks — keep pipeline/ as the sole infra seam
+# Return to the template repository root for these qualified commands
+cd ../../..
 uv run pytest "projects/working/$NEW/tests/" --cov="projects/working/$NEW/src" --cov-fail-under=90
-uv run python scripts/runner/execute_pipeline.py --project "working/$NEW" --core-only
+uv run python scripts/runner/execute_pipeline.py --project "working/$NEW" --mode core
 ```
 
-Because the copied tree already has `src/` Python files and `tests/`, the
-project is then auto-discovered; the repo-level
+The copied project remains in the local-only `working/` tree and is selected
+explicitly by `--project "working/$NEW"`; the repo-level
 [`docs/guides/new-project-setup.md`](../../../../docs/guides/new-project-setup.md)
 covers the full workflow.
 

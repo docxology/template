@@ -77,7 +77,7 @@ This manuscript uses `${variable}` tokens that are replaced with live values dur
 | `${module_count}` | Infrastructure subpackages discovered live |
 | `${pipeline_stages_declared}` | YAML contract stage count (16 as of 2026-07-07; live re-derived) |
 | `${pipeline_stages_default_full}` | Default full run (10) |
-| `${pipeline_stages_core_only}` | `--core-only` run (8) |
+| `${pipeline_stages_core_only}` | `--mode core` run (8) |
 | `${stage_count}` | Numbered `scripts/NN_*.py` files only |
 | `${public_exemplar_list}` | Git-tracked exemplar slugs from `public_scope` |
 | `${docs_file_count}` | Markdown files under `docs/` |

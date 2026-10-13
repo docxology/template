@@ -29,7 +29,7 @@ is the project):
 ```bash
 uv run pytest projects/templates/template_autopoiesis/tests \
     --cov=projects/templates/template_autopoiesis/src --cov-fail-under=90
-uv run python scripts/runner/execute_pipeline.py --project templates/template_autopoiesis --core-only
+uv run python scripts/runner/execute_pipeline.py --project templates/template_autopoiesis --mode core
 ```
 
 Project-local scripts (see `scripts/README.md`):

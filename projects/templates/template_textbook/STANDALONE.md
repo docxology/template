@@ -59,29 +59,44 @@ rsync -a \
 
 ## Validation Commands
 
-From the copied project root:
+From a copied project root inside the template checkout:
 
 ```bash
-uv run pytest tests/ --cov=src --cov-fail-under=90
+uv sync --locked --extra dev
+uv run --locked pytest tests/ --cov=src --cov-fail-under=90
 uv run python scripts/scaffold_chapter.py
 uv run python scripts/generate_figures.py
 uv run python scripts/generate_diagrams.py
 uv run python scripts/audit_textbook_quality.py
 ```
 
-For the public exemplar from the template repository root:
+For the public exemplar from the template repository root, using its own
+locked development environment:
 
 ```bash
-uv run pytest projects/templates/template_textbook/tests/ \
+uv sync --project projects/templates/template_textbook --locked --extra dev
+uv run --project projects/templates/template_textbook --locked --extra dev \
+  python -m pytest projects/templates/template_textbook/tests/ \
   --cov=projects/templates/template_textbook/src --cov-fail-under=90
 ```
 
 ## Intentional Non-Standalone Dependencies
 
-The project-local scaffold, tests, figures, and diagrams do not require the
-template infrastructure layer. The monorepo renderer can add publication polish,
-but the fillable scaffold remains intentionally stub-heavy until a fork supplies
-domain content.
+The project-local scaffold, figures, and diagrams do not require the template
+infrastructure layer. The full development suite includes SDK integration checks
+and declares `research-project-template==4.0.1` in its `dev` extra.
+
+Inside the template checkout, the explicit `tool.uv.sources` entry prepares that
+SDK from the repository root. An independent exported clone must remove that
+checkout-local resolver and prepare its development environment with an explicitly
+built platform 4.0.1 wheel and the exported project dependencies. This SDK version
+is an unreleased candidate; do not assume it exists on PyPI or substitute an
+arbitrary ancestor checkout. After the declared provider is installed, run
+`.venv/bin/python -m pytest tests/ --cov=src --cov-fail-under=90` from the exported
+project root. Runtime-only scaffold and figure use does not require the `dev` extra.
+
+The monorepo renderer supplies publication rendering; a new fork keeps draft
+markers until it replaces scaffolding with reviewed domain content.
 
 ## What Not To Claim
 

@@ -21,7 +21,7 @@ uv run python scripts/audit/check_template_drift.py --project templates/template
 ```
 
 This project participates in the standard multi-project pipeline like any
-other public exemplar (`./run.sh --project templates/template_pitch_deck --pipeline --core-only`)
+other public exemplar (`./run.sh --project templates/template_pitch_deck --pipeline --mode core`)
 and requires no LLM/Ollama stage — deck content is authored and
 token-resolved, not generated at render time by a model call, which keeps
 the artifact deterministic and the core pipeline Ollama-optional.

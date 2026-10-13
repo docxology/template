@@ -30,7 +30,7 @@ flowchart LR
 ## Full pipeline
 
 ```bash
-uv run python scripts/runner/execute_pipeline.py --project templates/template_sia --core-only --skip-infra
+uv run python scripts/runner/execute_pipeline.py --project templates/template_sia --mode core --skip-infra
 ```
 
 Analysis must complete before variables generation — `z_generate_manuscript_variables.py` fails fast if `output/runs/run_1/run_summary.json` is missing.

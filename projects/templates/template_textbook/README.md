@@ -126,7 +126,12 @@ chapters in all.
 
 ## Quick start
 
-All commands assume `uv` (never `pip`/`npm`). Run them from the monorepo root.
+All commands assume `uv` (never `pip`/`npm`). Run them from the monorepo root. The
+project-local scaffold, figures, and diagrams also run independently. The full
+development suite includes declared SDK 4.0.1 integration checks; its own `dev`
+extra selects the SDK from this checkout. An exported clone needs an explicitly
+prepared SDK wheel rather than an ancestor checkout or an assumed PyPI release;
+see [the standalone development boundary](STANDALONE.md#intentional-non-standalone-dependencies).
 
 ```bash
 # 1. Install dependencies for the workspace
@@ -140,9 +145,10 @@ uv run python projects/templates/template_textbook/scripts/generate_figures.py
 uv run python projects/templates/template_textbook/scripts/generate_diagrams.py
 
 # 4. Run the test suite with coverage (must collect >0 tests, ≥90% coverage)
-#    From the monorepo root, `dev` is a default dependency-group (plain `uv run`);
-#    the `--extra dev` form only works from inside the project dir.
-uv run python -m pytest projects/templates/template_textbook/tests/ \
+#    Prepare and select this project's own declared development dependencies.
+uv sync --project projects/templates/template_textbook --locked --extra dev
+uv run --project projects/templates/template_textbook --locked --extra dev \
+  python -m pytest projects/templates/template_textbook/tests/ \
   --cov=projects/templates/template_textbook/src --cov-fail-under=90
 
 # 5. Audit the complete canonical book

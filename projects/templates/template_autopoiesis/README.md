@@ -39,7 +39,7 @@ See [`SYNTAX.md`](SYNTAX.md) for grammar syntax, [`config.yaml.example`](manuscr
 This project is a **canonical template exemplar**. To use it:
 1. Fork or copy the `projects/templates/template_autopoiesis/` directory
 2. Edit `manuscript/config.yaml` with your own grammar and metadata
-3. Run `uv sync && uv run pytest` to verify
+3. From the copied project directory inside a template checkout, run `uv sync --locked --extra dev && uv run --locked pytest` to verify the full own suite with its declared platform dependency.
 
 Standalone usage is documented in [`STANDALONE.md`](STANDALONE.md).
 
@@ -121,7 +121,7 @@ uv run python scripts/generate_cover_art.py
 uv run python scripts/z_generate_manuscript_variables.py
 
 # Full pipeline (from repo root)
-uv run python scripts/runner/execute_pipeline.py --project templates/template_autopoiesis --core-only
+uv run python scripts/runner/execute_pipeline.py --project templates/template_autopoiesis --mode core
 ```
 
 > **Chrome / Puppeteer note:** The parent manuscript uses the shared rendering pipeline. Child acceptance executes domain tests and numerical analysis. Child manuscript PDF rendering is unsupported.

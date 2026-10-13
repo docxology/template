@@ -58,7 +58,7 @@ stages, since `llm.reviews.enabled`/`llm.translations.enabled` are both
 `false` in `config.yaml`):
 
 ```bash
-uv run python scripts/runner/execute_pipeline.py --project templates/template_formal --core-only
+uv run python scripts/runner/execute_pipeline.py --project templates/template_formal --mode core
 open output/templates/template_formal/pdf/template_formal_combined.pdf
 ```
 

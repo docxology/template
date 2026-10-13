@@ -60,7 +60,7 @@ uv run python scripts/pipeline/stage_03_render.py --project templates/template_c
 Or just re-run the full pipeline:
 
 ```bash
-uv run python scripts/runner/execute_pipeline.py --project templates/template_code_project --core-only
+uv run python scripts/runner/execute_pipeline.py --project templates/template_code_project --mode core
 ```
 
 ## `Figure ???` in the rendered PDF

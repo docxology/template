@@ -100,7 +100,8 @@ jobs:
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: ./.github/actions/setup-python-env
-      - run: uv sync --locked
+      - run: uv sync --locked --group installed-build
+      - uses: ./.github/actions/setup-meta-provider
       - name: Run pipeline and CI behavior tests
         run: |
           uv run python - <<'PYTHON'
@@ -116,6 +117,7 @@ jobs:
               "tests/infra_tests/project/test_public_source_body_admission.py",
               "tests/infra_tests/reporting/test_native_tex_root_admission.py",
               "tests/infra_tests/reporting/test_native_installed_preparation_source.py",
+              "tests/infra_tests/rendering/test_literature_hydration.py",
           ])
           raise SystemExit(subprocess.run([
               sys.executable, "-m", "pytest", *paths, "--no-cov", "-q",
@@ -141,9 +143,7 @@ jobs:
         run: uv build --wheel --no-build-isolation --python .venv/bin/python --out-dir "$RUNNER_TEMP/wheels" "projects/$PROJECT"
       - name: Prepare the declared Meta provider for Advanced Literature Review
         if: matrix.project == 'templates/template_advanced_literature_review'
-        run: |
-          uv build --wheel --no-build-isolation --python .venv/bin/python --out-dir "$RUNNER_TEMP/provider" projects/templates/template_literature_meta_analysis
-          uv pip install --python .venv/bin/python --no-deps "$RUNNER_TEMP/provider"/*.whl
+        uses: ./.github/actions/setup-meta-provider
       - name: Prepare the bibliography converter for Search Project
         if: matrix.project == 'templates/template_search_project'
         uses: ./.github/actions/setup-acceptance-documents

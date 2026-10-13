@@ -38,5 +38,5 @@ uv run pytest tests/ --cov=src --cov-fail-under=90
 From the template repository root:
 
 ```bash
-./run.sh --pipeline --project templates/template_active_inference --core-only --skip-infra
+./run.sh --pipeline --project templates/template_active_inference --mode core --skip-infra
 ```

@@ -125,11 +125,21 @@ not asserted:
 
 ## Dependencies
 
-Run `uv sync` at the **repository root** — step 0 before anything below;
-that environment is what CI, `./run.sh`, and every command in Quick Start
-use. [`pyproject.toml`](pyproject.toml) in this directory pins
-pytest/coverage/mypy settings (plus `matplotlib` for the optional demo
-figures) for isolated runs of this project's tests.
+Run `uv sync` at the **repository root** for the monorepo commands below.
+[`pyproject.toml`](pyproject.toml) also declares the isolated project environment.
+Its complete development suite requires both `dev` and `formal-tools`: the SDK
+4.0.1 dependency is declared in `formal-tools`, while the domain runtime remains
+independent of infrastructure. Prepare that own environment from the repository
+root with:
+
+```bash
+uv sync --project projects/templates/template_formal --locked --extra dev --extra formal-tools
+```
+
+An exported clone requires an explicitly prepared SDK 4.0.1 wheel; see
+[the standalone dependency boundary](STANDALONE.md#intentional-non-standalone-dependencies).
+Actual Lean/TLC checks also need their declared native tools and authenticated
+TLC provider, as documented in [the formal guide](formal/AGENTS.md).
 
 ## Quick Start
 

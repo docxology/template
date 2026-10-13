@@ -75,7 +75,7 @@ analysis artifact, update the relevant registry and this inventory deliberately.
    - **Reports** → `src/template_code_project/dashboard/dashboard.py` or `infrastructure.reporting.*`
 2. Append a row to the table above naming the file, role, generator, and pipeline stage.
 3. If the new artifact is consumed by the manuscript, add a `{{TOKEN}}` to `src/template_code_project/core/manuscript_variables.py::generate_variables()` and reference it in the appropriate `manuscript/*.md` section.
-4. Re-run the pipeline (`./run.sh --pipeline --project templates/template_code_project --core-only` or `uv run python scripts/runner/execute_pipeline.py --project templates/template_code_project --core-only`) and confirm the new file appears.
+4. Re-run the pipeline (`./run.sh --pipeline --project templates/template_code_project --mode core` or `uv run python scripts/runner/execute_pipeline.py --project templates/template_code_project --mode core`) and confirm the new file appears.
 
 ## Regeneration Sequence
 
@@ -101,7 +101,7 @@ uv run python scripts/pipeline/stage_05_copy.py --project templates/template_cod
 Or, equivalently, the full pipeline:
 
 ```bash
-uv run python scripts/runner/execute_pipeline.py --project templates/template_code_project --core-only
+uv run python scripts/runner/execute_pipeline.py --project templates/template_code_project --mode core
 ```
 
 ## See Also

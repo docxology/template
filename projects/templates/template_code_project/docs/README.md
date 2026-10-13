@@ -74,12 +74,14 @@ cd "projects/working/$NEW"
 # 3. Edit manuscript/config.yaml (title, authors, thresholds) — the only policy knob
 # 4. Replace manuscript/*.md with your narrative; keep {{TOKEN}} + figure-label conventions
 # 5. Point scripts/ at your src/ functions (thin orchestrators only)
+# Return to the template repository root for these qualified commands
+cd ../../..
 uv run pytest "projects/working/$NEW/tests/" --cov="projects/working/$NEW/src" --cov-fail-under=90
-uv run python scripts/runner/execute_pipeline.py --project "working/$NEW" --core-only
+uv run python scripts/runner/execute_pipeline.py --project "working/$NEW" --mode core
 ```
 
-Then the project is discovered automatically (`discover_projects()`); the
-repo-level guide [`docs/guides/new-project-setup.md`](../../../../docs/guides/new-project-setup.md)
+The copied project remains in the local-only `working/` tree and is selected
+explicitly by `--project "working/$NEW"`; the repo-level guide [`docs/guides/new-project-setup.md`](../../../../docs/guides/new-project-setup.md)
 covers the full workflow.
 
 **Prerequisites to know before referencing the render path:** combined-PDF
