@@ -415,6 +415,21 @@
       "effect": "mutating"
     },
     {
+      "module": "infrastructure.project.acceptance_fixture_preparation",
+      "invocation": "python -m infrastructure.project.acceptance_fixture_preparation",
+      "source_path": "infrastructure/project/acceptance_fixture_preparation.py",
+      "purpose": "Prepare exact public fixture DATA from committed declarations, using stdlib only.",
+      "subcommands": [],
+      "exports": [
+        "MANIFEST_PATH",
+        "SCHEMA_VERSION",
+        "parse_fixture_manifest",
+        "prepare_acceptance_fixtures",
+        "main"
+      ],
+      "effect": "mutating"
+    },
+    {
       "module": "infrastructure.project.linking",
       "invocation": "python -m infrastructure.project.linking",
       "source_path": "infrastructure/project/linking.py",
