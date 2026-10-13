@@ -18,19 +18,27 @@ silently-republished release asset would run unverified).
 [`scripts/check_formal_specs.sh`](../scripts/check_formal_specs.sh) delegates to it.
 
 - Explicit `--acquire` fetches the fixed `v1.8.0` release URL, never `latest`.
-  Its current official asset614143604 is 4,501,960 bytes. The jar identifies
-  itself as TLC2.0 (2026-10-06); the mutable tag label does not establish version
+  Its current official asset 635357747 is 4,501,961 bytes. The jar identifies
+  itself as TLC 2.0 (2026-10-13), from commit
+  `5737c4758703f9fc4ef4ce1ff5dd912fe37d78d3`; the mutable tag label does not establish version
   or integrity.
-- Source-owned SHA-256
-  `7beec0f04818732a62fa193731711a99aa4f11279499b2360a7d156c519ea78d`
-  was independently matched to official API metadata and downloaded bytes on
-  2026-10-08. Acquisition verifies bytes before replacing the local cache.
+- The single source-owned `TLC_URL`/`TLC_BYTES`/`TLC_SHA256` tuple binds SHA-256
+  `baf125a62e192f8d9df38035b8283b9d05f08dbf01860b2df40af489b894563d`
+  independently matched to official API metadata and downloaded bytes on
+  2026-10-13 UTC. Hosted preparation reads those exact literals with stdlib `ast`
+  before dependency setup. Acquisition verifies the full length and hash before
+  replacing the local cache; no trimming or normalization can satisfy a pin.
 - Every run verifies the selected jar, freezes its bytes before execution and
   rechecks source and tool custody after execution. A changed or unverified
   provider fails; no mismatch executes. Ordinary checks do not acquire tools.
 - `TEMPLATE_FORMAL_TLC_JAR` can select an authenticated external provider when
   the local cache is absent. Tool bytes and scratch state remain outside
   authored source and exports. The compiled jar is never committed.
+
+The 2026-10-08 observation bound the previous asset 614143604. That historical
+asset's metadata returned HTTP 404 on 2026-10-13 UTC, and its digest does not
+admit the current full JAR. Prior model evidence remains historical; the current
+pin still requires actual positive model checks and the invariant negative control.
 
 ## Construction-time SQL-identifier validation (ISC-70)
 

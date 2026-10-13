@@ -7,11 +7,14 @@ Parent layer contract: [`../AGENTS.md`](../AGENTS.md).
 The canonical wrapper delegates acquisition and execution to
 [`template_formal.tool_acceptance`](../../src/template_formal/tool_acceptance.py).
 Only explicit `--acquire` downloads the fixed release URL. The current official
-v1.8.0 asset614143604 has source-owned SHA256
-`7beec0f04818732a62fa193731711a99aa4f11279499b2360a7d156c519ea78d`, verified
-against both official API metadata and exact downloaded bytes on2026-10-08.
-The jar identifies itself as TLC2.0 (2026-10-06); v1.8.0 is the download locator.
-The previous source checksum and stale release-page SHA1 were rejected. Preserve
+v1.8.0 asset 635357747 has 4,501,961 bytes and source-owned SHA256
+`baf125a62e192f8d9df38035b8283b9d05f08dbf01860b2df40af489b894563d`, verified
+against official API metadata and the complete download on 2026-10-13 UTC.
+The JAR identifies itself as TLC 2.0 (2026-10-13), from commit
+`5737c4758703f9fc4ef4ce1ff5dd912fe37d78d3`; v1.8.0 is a mutable locator.
+The Python module owns all three literal pins; both hosted shell routes read
+them with stdlib `ast` before setup. Earlier asset 614143604 was bound on
+2026-10-08 and is historical; its old digest does not admit this JAR. Preserve
 this distinction when refreshing a pin: matching a moving release URL is
 insufficient, and a mismatch must never execute an unverified cached jar.
 

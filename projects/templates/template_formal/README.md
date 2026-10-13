@@ -289,8 +289,11 @@ quick reference commands, and pitfalls.
 
 For prepared hosted/exported execution, `TEMPLATE_FORMAL_TLC_JAR` may name an
 absolute external jar from the `v1.8.0` asset locator when no project cache
-exists. The admitted asset is the TLC2.0 build dated 2026-10-06; the release
-locator alone does not establish engine identity. The same exact hash,
+exists. The admitted asset is 635357747: the full 4,501,961-byte TLC 2.0 build dated
+2026-10-13, from commit `5737c4758703f9fc4ef4ce1ff5dd912fe37d78d3`, independently
+verified on 2026-10-13 UTC. The release locator alone does not establish engine
+identity. [`tool_acceptance.py`](src/template_formal/tool_acceptance.py) owns the
+literal URL/length/SHA256 tuple also read by both hosted preparations. The same exact hash,
 regular-file, frozen-copy and final custody checks apply. Explicit acquisition
 never writes to that external provider. A present local cache remains checked
 and cannot silently fall through to an external tool.
