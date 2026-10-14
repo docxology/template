@@ -106,7 +106,7 @@ def build_module_inventory_table(modules: list[ModuleInfo]) -> str:
         "benchmark": "Template harness scoring + comparative gates",
         "core": "`get_logger`, `load_config`, `TemplateError`",
         "doctor": "Checkout diagnose/fix/undo repairs",
-        "documentation": "`FigureManager`, `generate_glossary`",
+        "documentation": "`FigureManager`, `build_api_index`, `generate_markdown_table`",
         "llm": "Ollama helpers, sanitization, review + translation pipelines",
         "metadata": "`normalized_repository_url`, `generate_metadata_package`",
         "methods": "`build_methods_orchestration_plan`, methods-stage contracts + validation",

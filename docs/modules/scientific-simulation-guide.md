@@ -261,60 +261,41 @@ ax = plot_line(x, y, label="Data")
 ax = plot_convergence(iterations, values, target=0.0)
 ```
 
-### Figure Management (`src/figure_manager.py`)
+### Figure metadata and generated registries
 
-Manages figures with automatic numbering, captioning, and cross-referencing.
+Project code computes and plots its results. The supported infrastructure
+publisher validates the produced files against project-owned specifications:
 
-**Key Classes:**
-- `FigureManager`: Manages figure registry
-- `FigureMetadata`: Figure metadata
-
-**Usage:**
 ```python
-from infrastructure.documentation import FigureManager
+from infrastructure.documentation import publish_generated_figures
 
-manager = FigureManager()
-fig_meta = manager.register_figure(
-    filename="figure.png",
-    caption="Figure caption",
-    section="experimental_results"
+written = publish_generated_figures(
+    output_dir,
+    PROJECT_FIGURE_SPECS,
+    generated_paths,
+    schema_version="my-project-figure-registry-v1",
 )
-latex_block = manager.generate_latex_figure_block(fig_meta.label)
 ```
 
-## Image Management
+Specifications bind `fig:` labels, filenames, visible captions, qualified
+generator names, and alt text to actual output files. Missing or duplicate files
+fail before a complete registry is published. `FigureManager` remains available
+for metadata registration, lookup, persistence, and Markdown inventory lists.
 
-### Image Manager (`src/image_manager.py`)
+## Manuscript images
 
-Automatically inserts figures into markdown files with captions and references.
+Use Pandoc image syntax and bracket-cite cross-references:
 
-**Key Classes:**
-- `ImageManager`: Manages image insertion
+```markdown
+![Measured simulation trajectory.](../output/figures/trajectory.png){#fig:trajectory width=80%}
 
-**Usage:**
-```python
-from image_manager import ImageManager
-
-manager = ImageManager()
-manager.insert_figure(markdown_file, figure_label, section="Results")
-manager.insert_reference(markdown_file, figure_label)
+[@fig:trajectory] shows the simulation results.
 ```
 
-### Markdown Integration (`src/markdown_integration.py`)
-
-Integrates figures and references into markdown files.
-
-**Key Classes:**
-- `MarkdownIntegration`: Markdown integration system
-
-**Usage:**
-```python
-from markdown_integration import MarkdownIntegration
-
-integration = MarkdownIntegration(manuscript_dir="manuscript")
-integration.insert_figure_in_section(markdown_file, figure_label, "Results")
-integration.validate_manuscript()
-```
+Inject changing caption statistics from the analysis outputs. See
+[Visualization Guide](../usage/visualization-guide.md) and
+[Image Management](../usage/image-management.md) for a complete generated-registry
+example, accessible descriptions, and manuscript preflight.
 
 ## Example Scripts
 

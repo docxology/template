@@ -60,16 +60,3 @@ def empirical_mutual_information(lam: float) -> float:
     figures/prose describe it as an "exact recomputation", never as an empirical estimate.
     """
     return float(total_correlation(ising_joint_posterior(lam)))
-
-
-def lambda_sweep_values(num_points: int = 21, *, lambda_max: float | None = None) -> list[float]:
-    """Backward-compatible sweep grid; delegates to ``lambda_grid`` SSOT."""
-    from .hyperparameters import Hyperparameters, lambda_grid
-
-    if num_points < 2:
-        raise ValueError("num_points must be at least 2")
-    hp = Hyperparameters(
-        lambda_grid_points=num_points,
-        lambda_max=lambda_max if lambda_max is not None else Hyperparameters().lambda_max,
-    )
-    return lambda_grid(hp)

@@ -12,10 +12,8 @@ from PIL import Image
 import pytest
 
 from infrastructure.core.exceptions import RenderingError
-from infrastructure.rendering._slides_accessibility import (
-    AccessibleSlidePolicy,
-    compose_accessible_pandoc_document,
-)
+from infrastructure.rendering._slides_accessibility_contracts import AccessibleSlidePolicy
+from infrastructure.rendering._slides_accessibility_composition import compose_accessible_pandoc_document
 from infrastructure.rendering._slides_accessibility_composition import _with_inline_writer_fallbacks
 from infrastructure.rendering._slides_accessibility_image_io import (
     MAX_INTRINSIC_IMAGE_BYTES,

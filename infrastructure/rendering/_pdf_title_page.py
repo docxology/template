@@ -1,15 +1,13 @@
 """Config-driven LaTeX title page, book cover, and publishing front matter.
 
-Facade module. The implementation is split across cohesive private
-siblings to keep each module within the advisory line-count budget:
+Title-page assembly uses focused helpers:
 
 - ``_pdf_title_page_latex``     — LaTeX text-escaping helpers.
 - ``_pdf_title_page_config``    — config loading and metadata normalization.
 - ``_pdf_title_page_images``    — cover-image resolution and includegraphics.
 - ``_pdf_title_page_publishing``— publishing-page and book-cover blocks.
 
-Public and cross-module names are re-exported here so importers can keep
-using ``infrastructure.rendering._pdf_title_page`` as the single path.
+Configuration and image consumers import those helper modules directly.
 """
 
 from __future__ import annotations
@@ -20,21 +18,12 @@ import yaml
 
 from infrastructure.core.logging.utils import get_logger
 from infrastructure.rendering._pdf_title_page_config import (
+    _load_render_config,
     _metadata_from_config,
     _rendering_options,
-    build_pandoc_metadata,
-)
-
-# Re-exported for existing importers (e.g. _combined_exports); the explicit
-# ``as`` alias marks it an intentional re-export so `mypy --strict` accepts the
-# private-name import at the call sites.
-from infrastructure.rendering._pdf_title_page_config import (
-    _load_render_config as _load_render_config,
 )
 from infrastructure.rendering._pdf_title_page_images import (
-    _cover_image_alt as _cover_image_alt,
     _cover_image_block,
-    _cover_image_path as _cover_image_path,
     _has_available_paper_cover,
 )
 from infrastructure.rendering._pdf_title_page_latex import (
@@ -48,7 +37,6 @@ from infrastructure.rendering._pdf_title_page_publishing import (
 )
 
 __all__ = [
-    "build_pandoc_metadata",
     "generate_title_page_body",
     "generate_title_page_preamble",
 ]

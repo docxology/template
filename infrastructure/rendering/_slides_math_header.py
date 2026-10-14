@@ -23,7 +23,7 @@ from infrastructure.core.exceptions import RenderingError
 logger = get_logger(__name__)
 
 if TYPE_CHECKING:
-    from infrastructure.rendering._slides_accessibility import AccessibleSlidePolicy
+    from infrastructure.rendering._slides_accessibility_contracts import AccessibleSlidePolicy
 
 
 def _latex_href(value: str) -> str:

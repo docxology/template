@@ -249,7 +249,10 @@ fallback environment.
 WebRenderer font-bearing pages share one local `assets/source-web-fonts.js`
 per output directory instead of repeating twelve font bodies in every HTML
 file. The exact Source font bytes, full OFL notice, constructor hashes, and
-loading observations are preserved. Export the complete `output/web/` tree,
+loading observations are preserved. The shared asset uses deterministic gzip
+transport; the browser decompresses each body before checking its length and
+SHA-256 and constructing the font. This requires `DecompressionStream` support.
+Export the complete `output/web/` tree,
 including assets, for plain-file and HTTP reading; copying an HTML file alone
 omits its fonts. Canonical output copying retains this directory tree. The
 inline font API for independent native controls and slide typography are
@@ -753,8 +756,7 @@ graph TD
 |--------|---------|----------------------|-------------|
 | **core.py** | Main rendering orchestration | `RenderManager` - Unified API for all formats | All other modules |
 | **pdf_renderer.py** | PDF document generation | `PDFRenderer.render_combined_pdf()` - LaTeX compilation | latex_utils, manuscript_discovery |
-| **slides_renderer.py** | Presentation slides | `SlidesRenderer` - Beamer and Reveal.js support; archive mode chooses an adaptive `--slide-level` in the 2–4 range and applies `_beamer_allowframebreaks.lua`, while accessible mode consumes the semantic Pandoc AST from `_slides_accessibility.py` | latex_utils, Pandoc, semantic slide composer |
-| **_slides_accessibility.py** | Accessible presentation composition facade | Public policy, frame, and diagnostic exports plus semantic frame composition | `_slides_accessibility_*`, shared HTML accessibility postprocessor |
+| **slides_renderer.py** | Presentation slides | `SlidesRenderer` - Beamer and Reveal.js support; archive mode chooses an adaptive `--slide-level` in the 2–4 range and applies `_beamer_allowframebreaks.lua`, while accessible mode consumes the semantic Pandoc AST from `_slides_accessibility_composition.py` | latex_utils, Pandoc, semantic slide composer |
 | **_slides_accessibility_composition.py** | Semantic composition boundary | Validates the complete document, applies writer-specific formal-content fallbacks, and constructs projection frames without mutating canonical source | Pandoc JSON AST, contracts, figures, tables, text geometry |
 | **_slides_accessibility_contracts.py** | Projection policy and diagnostics | Owns the opt-in 16:9 typography, density, table, and figure contracts plus stable fail-closed diagnostic construction | Rendering configuration, Pandoc node helpers |
 | **_slides_accessibility_figures.py** | Figure-led frame composition | Prices figure allocation, validates writer-visible targets, and reads bounded intrinsic raster geometry only through the confined image boundary | `_slides_accessibility_image_io.py`, Pandoc JSON AST |

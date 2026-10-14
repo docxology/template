@@ -11,19 +11,42 @@ import hashlib
 import importlib.util
 import os
 import stat
+import importlib
+import sysconfig
+from types import MappingProxyType
 
-_BYTECODE_CACHE = tempfile.TemporaryDirectory(prefix="template-literature-controller-cache-")
-sys.pycache_prefix = str(Path(_BYTECODE_CACHE.name).resolve())
-atexit.register(_BYTECODE_CACHE.cleanup)
+# The pipeline launcher already owns a pre-import audit and its private cache.
+# Replacing that prefix would invalidate the launcher's actual execution records.
+_active_audit = getattr(sys, "_template_executed_bytecode_audit", None)
+if _active_audit is None:
+    _BYTECODE_CACHE = tempfile.TemporaryDirectory(prefix="template-literature-controller-cache-")
+    sys.pycache_prefix = str(Path(_BYTECODE_CACHE.name).resolve())
+    atexit.register(_BYTECODE_CACHE.cleanup)
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
-sys.path[:0] = [str(PROJECT_ROOT / "src"), str(PROJECT_ROOT.parents[2])]
+_provider_roots = tuple(Path(sysconfig.get_path(kind)).resolve(strict=True) for kind in ("purelib", "platlib"))
+
+
+def _own_source(path: Path) -> bool:
+    resolved = path.resolve()
+    return resolved.is_relative_to(PROJECT_ROOT) and not any(
+        resolved.is_relative_to(provider) for provider in _provider_roots
+    )
+
+
+_original_import_paths = sys.path[:]
+try:
+    sys.path[:] = [entry for entry in _original_import_paths if not _own_source(Path(entry or os.getcwd()))]
+    _audit_spec = importlib.util.find_spec("infrastructure")
+finally:
+    sys.path[:] = _original_import_paths
 
 # Admit the actual stdlib-only audit hook before importing public packages.
 # This is startup I/O; the shared hook owns execution/cache custody logic.
-_audit_spec = importlib.util.find_spec("infrastructure")
 if _audit_spec is None or _audit_spec.origin is None:
     raise SystemExit("the declared platform distribution is unavailable")
+if _own_source(Path(_audit_spec.origin).resolve(strict=True)):
+    raise SystemExit("own project source cannot provide the declared platform SDK")
 _platform_source = Path(_audit_spec.origin).absolute().parent
 _audit_path = _platform_source / "core/bytecode_audit.py"
 _audit_descriptors = [os.open(_audit_path.anchor, os.O_RDONLY | os.O_DIRECTORY)]
@@ -71,12 +94,43 @@ if _provider_spec is not None and _provider_spec.origin is not None:
 _audit_scope = {"__name__": "_template_bytecode_audit", "__file__": str(_audit_path)}
 # Execute only the trusted, bounded, no-follow startup source admitted above.
 exec(compile(_audit_bytes, str(_audit_path), "exec", dont_inherit=True), _audit_scope)  # nosec B102
-_audit_scope["install_bytecode_audit"](
-    tuple(str(root.absolute()) for root in _audit_roots),
-    fresh_pycache_prefix=sys.pycache_prefix,
-    source_sha256=hashlib.sha256(_audit_bytes).hexdigest(),
-    startup_code=sys._getframe().f_code,
-)
+if _active_audit is None:
+    _audit_scope["install_bytecode_audit"](
+        tuple(str(root.absolute()) for root in _audit_roots),
+        fresh_pycache_prefix=sys.pycache_prefix,
+        source_sha256=hashlib.sha256(_audit_bytes).hexdigest(),
+        startup_code=sys._getframe().f_code,
+    )
+else:
+    if (
+        not isinstance(_active_audit, MappingProxyType)
+        or _active_audit.get("schema_version") != _audit_scope["SCHEMA"]
+        or _active_audit.get("hook_source_path") != str(_audit_path)
+        or _active_audit.get("hook_source_sha256") != hashlib.sha256(_audit_bytes).hexdigest()
+        or sys.pycache_prefix is None
+        or _active_audit.get("prefix") != str(Path(sys.pycache_prefix).absolute())
+    ):
+        raise SystemExit("the active audit differs from the selected platform or cache")
+    for _root in _audit_roots:
+        _audit_scope["verify_executed_source_code"](_root, Path(sys.pycache_prefix))
+
+try:
+    sys.path[:] = [entry for entry in _original_import_paths if not _own_source(Path(entry or os.getcwd()))]
+    _selected_sdk = importlib.import_module("infrastructure")
+    if Path(_selected_sdk.__file__).resolve(strict=True) != Path(_audit_spec.origin).resolve(strict=True):
+        raise SystemExit("the selected platform source origin changed during startup")
+finally:
+    sys.path[:] = _original_import_paths
+# Select the declared SDK before exposing domain source; no ancestor imports.
+_original_import_paths = sys.path[:]
+try:
+    sys.path.insert(0, str(PROJECT_ROOT / "scripts"))
+    from _search_sdk_bootstrap import select_platform_sdk
+
+    select_platform_sdk(PROJECT_ROOT)
+finally:
+    sys.path[:] = _original_import_paths
+sys.path.insert(0, str(PROJECT_ROOT / "src"))
 
 from template_search_project.pipeline.live_acceptance import main
 

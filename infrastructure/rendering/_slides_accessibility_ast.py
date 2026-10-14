@@ -1,7 +1,4 @@
-"""Pandoc block classification, semantic splitting, and frame geometry for accessible slides.
-
-Figure helpers remain re-exported here for compatibility.
-"""
+"""Pandoc block classification, semantic splitting, and frame geometry for accessible slides."""
 
 from __future__ import annotations
 
@@ -26,13 +23,7 @@ from infrastructure.rendering._slides_accessibility_contracts import (
     proportional_text_width_units,
 )
 from infrastructure.rendering._slides_accessibility_figures import (
-    _allocate_figure_area as _allocate_figure_area,
-    _has_projection_hard_line_break as _has_projection_hard_line_break,
-    _image_nodes as _image_nodes,
-    _image_width_percent as _image_width_percent,
-    _is_projection_image_only as _is_projection_image_only,
     shorten_figure_caption,
-    _validate_projection_image_row as _validate_projection_image_row,
 )
 from infrastructure.rendering._slides_accessibility_raw_tex import _validate_raw_tex_geometry
 from infrastructure.rendering._slides_accessibility_text_geometry import (

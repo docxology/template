@@ -21,7 +21,8 @@ import matplotlib.pyplot as plt  # noqa: E402
 if TYPE_CHECKING:  # pragma: no cover
     from ..search.search import SearchResult
 
-from ..search.ablation import AblationRow
+from ..search.ablation import AblationRow, run_ablations
+from ..search.comparison import build_comparison_payload, build_objective, run_comparison
 
 
 @dataclass(frozen=True)
@@ -289,6 +290,29 @@ def write_comparison_figure(coordinated: SearchResult, baseline: SearchResult, p
     _save(fig, path)
 
 
+def write_comparison_outputs(output_root: Path) -> tuple[Path, Path, Path]:
+    """Produce the matched-budget figure, registry, and report in one output tree."""
+    objective = build_objective()
+    coordinated, baseline = run_comparison(objective)
+    figures_dir = output_root / "figures"
+    data_dir = output_root / "data"
+    figures_dir.mkdir(parents=True, exist_ok=True)
+    data_dir.mkdir(parents=True, exist_ok=True)
+
+    figure_path = figures_dir / "search_comparison.png"
+    data_path = data_dir / "search_comparison.json"
+    write_comparison_figure(coordinated, baseline, figure_path)
+    registry_path = write_figure_registry(
+        figures_dir,
+        figure_specs_for_results(coordinated, baseline, run_ablations()),
+    )
+    data_path.write_text(
+        json.dumps(build_comparison_payload(objective, coordinated, baseline), indent=2, sort_keys=True) + "\n",
+        encoding="utf-8",
+    )
+    return figure_path, registry_path, data_path
+
+
 __all__ = [
     "AblationRow",
     "FIGURE_SPECS",
@@ -302,6 +326,7 @@ __all__ = [
     "figure_specs_for_results",
     "write_ablation_figure",
     "write_comparison_figure",
+    "write_comparison_outputs",
     "write_efficiency_figure",
     "write_figure_registry",
 ]

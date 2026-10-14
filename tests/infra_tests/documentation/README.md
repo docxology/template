@@ -1,150 +1,53 @@
-# Documentation Infrastructure Tests - Quick Reference
+# Documentation Infrastructure Tests
 
-tests for documentation generation and figure management.
+Tests exercise figure metadata persistence, generated-file registries,
+source-derived documentation, publication records, and measured-fact producers.
 
-## Overview
-
-Tests for documentation module including figure management, image handling, glossary generation, and markdown integration.
-
-## Quick Start
-
-```bash
-# Run all documentation tests
-uv run pytest tests/infra_tests/documentation/ -v
-
-# Run specific test module
-uv run pytest tests/infra_tests/documentation/test_figure_manager.py -v
-```
-
-## Test Modules
-
-### Figure Manager Tests (`test_figure_manager.py`)
-
-Figure registration and management:
-
-```bash
-uv run pytest tests/infra_tests/documentation/test_figure_manager.py -v
-```
-
-**Test Coverage:**
-- Figure registration
-- Label management
-- Registry operations
-- Cross-reference handling
-
-### Image Manager Tests (`test_image_manager.py`)
-
-Image handling in markdown:
-
-```bash
-uv run pytest tests/infra_tests/documentation/test_image_manager.py -v
-```
-
-**Test Coverage:**
-- Image path resolution
-- Image validation
-- Markdown image syntax
-- Path normalization
-
-### Glossary Generation Tests (`test_glossary_gen.py`)
-
-API glossary generation:
-
-```bash
-uv run pytest tests/infra_tests/documentation/test_glossary_gen.py -v
-```
-
-**Test Coverage:**
-- AST parsing
-- Symbol extraction
-- Glossary formatting
-- Markdown generation
-
-### Backlog Contract Tests (`test_backlog.py`)
-
-The backlog contract verifies required future-work sections, duplicate stable
-IDs, and accidental references to private or rotating project paths.
-
-## Test Categories
-
-### Unit Tests
-
-Individual function testing:
-
-```bash
-# Test figure registration
-uv run pytest tests/infra_tests/documentation/test_figure_manager.py::test_register_figure -v
-```
-
-### Integration Tests
-
-End-to-end workflows:
-
-```bash
-# Full glossary generation
-uv run pytest tests/infra_tests/documentation/test_glossary_gen.py::test_generate_glossary -v
-```
-
-## Common Test Patterns
-
-### Figure Management Testing
-
-```python
-# test_figure_manager.py pattern
-def test_register_figure():
-    fm = FigureManager()
-    fm.register_figure("figure.png", label="fig:test")
-    assert fm.has_figure("fig:test")
-```
-
-### Image Handling Testing
-
-```python
-# test_image_manager.py pattern
-def test_resolve_image_path():
-    resolved = resolve_image_path("figures/image.png", repo_root)
-    assert resolved.exists()
-```
-
-## Running Tests
-
-### All Documentation Tests
+## Commands
 
 ```bash
 uv run pytest tests/infra_tests/documentation/ -v
+uv run pytest tests/infra_tests/documentation/test_figure_manager.py tests/infra_tests/documentation/test_generated_figure_registry.py -v
+uv run pytest tests/infra_tests/documentation/ --cov=infrastructure.documentation --cov-report=term
 ```
 
-### With Coverage
+## Test map
 
-```bash
-uv run pytest tests/infra_tests/documentation/ \
-    --cov=infrastructure.documentation \
-    --cov-report=term
+| Modules | Verified behavior |
+| --- | --- |
+| `test_figure_manager.py` | Real registration, labels, metadata serialization, JSON reload, Markdown inventories, and corrupt-registry recovery. |
+| `test_generated_figure_registry.py` | Missing/deleted outputs, duplicate labels or filenames, invalid specifications, deterministic writes, and refusal before partial publication. |
+| `test_glossary_gen.py`, `test_generate_glossary_cli.py` | Source AST extraction, API tables, marker replacement, and actual CLI execution. |
+| `test_api_reference_gen.py`, `test_stage_table.py` | Declared export resolution and YAML-derived documentation. |
+| `test_counts_*.py`, `test_coverage_snapshot_output.py` | Measured counts, coverage-input provenance, isolated measurement, and exact independent snapshot handling. |
+| `test_active_projects_doc.py`, `test_architecture_overview.py` | Canonical public roster and architecture generation. |
+| `test_publication_records*.py` | Publication identities, source records, workflow inputs, and rendered tables. |
+| `test_backlog.py`, `test_security_policy.py`, `test_maintenance_doc_reachability.py` | Future-work contracts, documented policies, and maintenance documentation reachability. |
+
+## Real metadata test pattern
+
+Use a unique temporary registry and assert its persisted behavior:
+
+```python
+from infrastructure.documentation import FigureManager
+
+
+def test_registry_round_trip(tmp_path):
+    path = tmp_path / "registry.json"
+    manager = FigureManager(str(path))
+    original = manager.register_figure(
+        filename="figure.png", caption="Measured result.", label="fig:result"
+    )
+    restored = FigureManager(str(path)).get_figure("fig:result")
+    assert restored == original
 ```
 
-## Architecture
-
-```mermaid
-graph TD
-    A[Documentation Tests] --> B[Figure Manager Tests]
-    A --> C[Image Manager Tests]
-    A --> D[Glossary Generation Tests]
-
-    B --> E[Figure Registration]
-    B --> F[Label Management]
-    B --> G[Registry Operations]
-
-    C --> H[Path Resolution]
-    C --> I[Image Validation]
-    C --> J[Markdown Integration]
-
-    D --> K[AST Parsing]
-    D --> L[Symbol Extraction]
-    D --> M[Glossary Formatting]
-```
+Generated-registry tests additionally create actual output files, remove or
+corrupt required inputs, and assert publication refusal. Keep filesystem and
+Source DATA mutations confined to each test's owned temporary paths.
 
 ## See Also
 
-- [AGENTS.md](AGENTS.md) - test documentation
-- [../../../infrastructure/documentation/README.md](../../../infrastructure/documentation/README.md) - Documentation module overview
-- [../../../tests/README.md](../../../tests/README.md) - Test suite overview
+- [Agent test contract](AGENTS.md)
+- [Documentation module](../../../infrastructure/documentation/README.md)
+- [Infrastructure tests](../README.md)

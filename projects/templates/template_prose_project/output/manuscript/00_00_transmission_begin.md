@@ -10,9 +10,11 @@
 \section*{BEGINNING OF TRANSMISSION}\label{beginning-of-transmission}
 ```
 
-**State:** published
+**State:** unpublished / pending pairing
 
-**Pairing:** complete (DOI, GitHub, SHA-256, Zenodo URL)
+**Pairing:** pending — unresolved:
+- ✗ GitHub release URL: `pending`
+- ✗ PDF SHA-256: `pending`
 
 ```{=latex}
 \subsubsection*{Release metadata}
@@ -21,12 +23,11 @@
 | Field | Value |
 | --- | --- |
 | Title | Editorial Quality at Scale: A Reproducible Prose-Review Pipeline |
-| Version | 0.4.2 |
+| Version | 0.5.0 |
 | Concept DOI | 10.5281/zenodo.20417104 |
-| Version DOI | 10.5281/zenodo.20932047 |
-| GitHub | [https://github.com/docxology/template_prose_project/releases/tag/v0.4.2](https://github.com/docxology/template_prose_project/releases/tag/v0.4.2) |
+| GitHub | docxology/template_prose_project |
 | Zenodo | [https://zenodo.org/records/20417104](https://zenodo.org/records/20417104) |
-| SHA-256 | `290d21b10bd588b9…` |
+| SHA-256 | pending |
 | SHA-512 | pending |
 
 ```{=latex}

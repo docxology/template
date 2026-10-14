@@ -42,11 +42,11 @@ from infrastructure.rendering._slides_crossref import (
     transform_tex_prose,
 )
 from infrastructure.rendering._slides_codelisting import make_codelisting_slide_safe as make_codelisting_slide_safe
-from infrastructure.rendering._slides_accessibility import (
+from infrastructure.rendering._slides_accessibility_reveal import (
     accessible_reveal_output_issues,
     enhance_accessible_reveal,
-    load_and_compose_pandoc_json,
 )
+from infrastructure.rendering._slides_accessibility_composition import load_and_compose_pandoc_json
 from infrastructure.rendering._slides_framebreaks import split_long_slide_frames as split_long_slide_frames
 from infrastructure.rendering._slides_beamer import (
     _ACCESSIBLE_BEAMER_ASPECT_RATIO as _ACCESSIBLE_BEAMER_ASPECT_RATIO,

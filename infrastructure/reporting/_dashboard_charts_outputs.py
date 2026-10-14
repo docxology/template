@@ -18,11 +18,11 @@ except ImportError:
 
 from infrastructure.core.logging.utils import get_logger
 from infrastructure.reporting._dashboard_constants import COLORS
-from infrastructure.reporting.executive_reporter import (
+from infrastructure.reporting._executive_models import (
     ExecutiveSummary,
     ProjectMetrics,
-    calculate_project_health_score,
 )
+from infrastructure.reporting._executive_health import calculate_project_health_score
 from infrastructure.reporting.output_organizer import FileType, OutputOrganizer
 
 logger = get_logger(__name__)

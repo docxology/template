@@ -2,7 +2,7 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="utf-8" />
-  <meta name="generator" content="pandoc 3.12" />
+  <meta name="generator" content="pandoc 3.12.1" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
   <title>16_appendix_full_sheaf.md.web</title>
   <style>
@@ -422,6 +422,9 @@ pre {
 }
 
 pre code {
+  background-color: transparent;
+  padding: 0;
+  border-radius: 0;
   overflow-wrap: inherit;
   white-space: inherit;
   word-break: inherit;
@@ -634,6 +637,7 @@ mjx-container[display="true"] {
 }
 
 </style>
+<script data-template-source-font-loader src="assets/source-web-fonts.js"></script>
 </head>
 <body>
 <a class="skip-link" href="#main-content">Skip to main content</a>
@@ -665,9 +669,8 @@ Generated renderers such as <code>section_figures</code> and markdown
 renderers pass through the same <code>resolve_track_body()</code>
 dispatch, so the appendix exercises the common compose interface rather
 than a bespoke appendix path.</p>
-<p><span class="math display">\[
-|\mathcal{T}_{\mathrm{Full}}| = 33
-\]</span> {#eq:appendix_track_count}</p>
+<p><span class="math display">\[|\mathcal{T}_{\mathrm{Full}}| =
+33\]</span> {#eq:appendix_track_count}</p>
 <p>The fragment registry defines 34 composable track types; optional
 <code>layers</code> is bound on the methods sheaf section only. Optional
 <code>animation</code> is bound in this appendix proof; the

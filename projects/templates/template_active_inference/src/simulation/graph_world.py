@@ -48,8 +48,3 @@ def write_graph_world_artifacts(project_root: Path) -> dict[str, Path]:
     summary_path.write_text(json.dumps(summary, indent=2) + "\n", encoding="utf-8")
     trace_path.write_text(json.dumps({"steps": trace}, indent=2) + "\n", encoding="utf-8")
     return {"summary": summary_path, "trace": trace_path}
-
-
-def write_graph_world_stub(project_root: Path) -> Path:
-    """Backward-compatible wrapper returning the summary artifact path."""
-    return write_graph_world_artifacts(project_root)["summary"]

@@ -31,8 +31,8 @@ This research template implements a clear two-layer architecture separating gene
 - Build artifact verification
 - Environment reproducibility tracking
 - Academic publishing assistance
-- Figure and image management
-- Markdown integration
+- Figure metadata and generated-file registries
+- Source-derived API and pipeline documentation
 
 **Modules:**
 
@@ -41,7 +41,7 @@ flowchart TB
     INFRA[infrastructure]
     INFRA --> CORE[core<br/>exceptions · logging · config_loader]
     INFRA --> VAL[validation<br/>pdf · markdown · integrity]
-    INFRA --> DOC[documentation<br/>figure · image · markdown integration · glossary]
+    INFRA --> DOC[documentation<br/>metadata · generated registries · glossary]
     INFRA --> PUB[publishing<br/>academic publishing tools]
     INFRA --> LLM[llm<br/>LLM integration · literature workflows]
     INFRA --> REND[rendering<br/>multi-format · PDF · HTML · slides · DOCX · EPUB]
@@ -79,16 +79,14 @@ flowchart TB
 **Usage Pattern:**
 
 ```python
-# Infrastructure usage from scripts
-from infrastructure.documentation import FigureManager
-from infrastructure.documentation import MarkdownIntegration
+from infrastructure.documentation import publish_generated_figures
 
-# These manage the document structure, not the science
-fm = FigureManager()
-fm.register_figure(
-    filename="convergence_plot.png",
-    caption="Algorithm convergence comparison",
-    label="fig:convergence"
+# Project code provides the specifications and actual generated paths.
+written = publish_generated_figures(
+    output_dir,
+    PROJECT_FIGURE_SPECS,
+    generated_paths,
+    schema_version="my-project-figure-registry-v1",
 )
 ```
 
@@ -226,7 +224,7 @@ graph TB
 
 ```python
 from infrastructure.documentation import FigureManager
-from infrastructure.documentation import ImageManager
+from infrastructure.documentation import write_generated_figure_registry
 ```
 
 **✅ Layer 2 → Layer 1:** Project code can import infrastructure

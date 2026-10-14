@@ -71,7 +71,7 @@ The slide contract is partitioned across `test_slides_bibliography.py`,
 `test_slides_frame_splitting.py`, `test_slides_math_header.py`,
 `test_slides_module_contract.py`, `test_slides_render_executions.py`,
 `test_slides_tex_figures.py`,
-`test_slides_accessibility.py`, `test_slides_accessibility_reveal_regressions.py`,
+`test_slides_accessibility_profile.py`, `test_slides_reveal_crossrefs_mathjax.py`,
 `test_slides_beamer_accessibility.py`, `test_slides_beamer_safe_area.py`,
 `test_slides_crossref.py`, `test_slides_figure_area.py`,
 `test_slides_formal_content.py`, and `test_slides_identifier_integrity.py`.
@@ -86,8 +86,8 @@ uv run pytest \
   tests/infra_tests/rendering/test_slides_module_contract.py \
   tests/infra_tests/rendering/test_slides_render_executions.py \
   tests/infra_tests/rendering/test_slides_tex_figures.py \
-  tests/infra_tests/rendering/test_slides_accessibility.py \
-  tests/infra_tests/rendering/test_slides_accessibility_reveal_regressions.py \
+  tests/infra_tests/rendering/test_slides_accessibility_profile.py \
+  tests/infra_tests/rendering/test_slides_reveal_crossrefs_mathjax.py \
   tests/infra_tests/rendering/test_slides_beamer_accessibility.py \
   tests/infra_tests/rendering/test_slides_beamer_safe_area.py \
   tests/infra_tests/rendering/test_slides_crossref.py \
@@ -101,7 +101,7 @@ uv run pytest \
 - Reveal.js HTML slides
 - Slide structure
 - Content formatting
-- Archive-profile backwards compatibility
+- Archive-profile output contracts
 - Semantic block-boundary composition and stable density diagnostics
 - 80-word prose, eight-row table, 70% figure-area, and 28/20/16-point contracts
 - Reveal.js headings, landmarks, keyboard support, figure alternatives, long descriptions, and manuscript links

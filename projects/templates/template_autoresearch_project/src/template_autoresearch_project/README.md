@@ -4,8 +4,8 @@ Reusable AutoResearch project logic lives here. See [`AGENTS.md`](AGENTS.md) for
 
 ## Core loop
 
-- `config.py` — loop configuration from `autoresearch.yaml` + manuscript settings
-- `loop.py` — deterministic plan/evidence/claim/artifact/readiness orchestration
+- `loop/config.py` — loop configuration from `autoresearch.yaml` + manuscript settings
+- `loop/loop.py` — deterministic plan/evidence/claim/artifact/readiness orchestration
 - `writers/io.py`, `writers/manifests.py`, `writers/payloads.py` — artifact I/O; `writers/figure_dispatch.py` (`FIGURE_DISPATCH`, `render_figure_batch`); `writers/benchmark.py` — benchmark grading (`writers/__init__.py` facade)
 
 ## ML task
@@ -23,11 +23,11 @@ Reusable AutoResearch project logic lives here. See [`AGENTS.md`](AGENTS.md) for
 
 ## Manuscript hydration
 
-- `manuscript/manuscript_tokens_{core,ml,figures,format}.py` — render-time `{{TOKEN}}` values (`manuscript_variables.py` facade)
-- `manuscript/manuscript_tables_{builders,format}.py` — registry-backed tables (imported as `template_autoresearch_project.manuscript.manuscript_tables`, e.g. `from template_autoresearch_project.manuscript.manuscript_tables import ...` with the project's `src/` directory on `sys.path`; there is no top-level `manuscript_tables.py` facade — unlike `manuscript_variables.py` above, callers import this one directly from `manuscript/`)
-- `reports.py` — loop and review markdown renderers
+- `manuscript/manuscript_tokens_{core,ml,figures,format}.py` — render-time `{{TOKEN}}` values (`manuscript/manuscript_variables.py` API)
+- `manuscript/manuscript_tables_{builders,format}.py` — registry-backed tables; the supported table API is `template_autoresearch_project.manuscript.manuscript_tables`.
+- `writers/reports.py` — loop and review markdown renderers
 
 ## Governance
 
-- `source_ledger.py`, `artifact_schemas.py`, `research_object.py` — citation ledgers and local manifests
+- `diagnostics/source_ledger.py`, `writers/artifact_schemas.py`, `writers/research_object.py` — citation ledgers and local manifests
 - `security/{artifacts,payloads,render}.py` — deterministic security profile and attestation artifacts

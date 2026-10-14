@@ -11,7 +11,7 @@ from ..core._runtime import save_analysis_figure
 from ..core.optimizer import quadratic_optimum
 from ..core.sweeps import sensitivity_sweep
 from .viz_config import VIZ_CONFIG
-from ._common import experiment_config, get_logger, project_root
+from ..core._runtime import experiment_config, get_logger, project_root
 
 
 def generate_step_size_sensitivity_plot(results: Any, config: ExperimentConfig | None = None) -> Any:
@@ -108,10 +108,10 @@ def generate_step_size_sensitivity_plot(results: Any, config: ExperimentConfig |
     ax2.set_ylim(f_star - 0.1, 0.1)
     plt.tight_layout()
 
-    output_dir = project_root() / "output" / "figures"
+    output_dir = project_root("src.figures") / "output" / "figures"
     output_dir.mkdir(parents=True, exist_ok=True)
     plot_path = output_dir / "step_size_sensitivity.png"
-    if not save_analysis_figure(project_root(), plot_path, fig):
+    if not save_analysis_figure(project_root("src.figures"), plot_path, fig):
         plt.savefig(plot_path, dpi=300, bbox_inches="tight", facecolor="white", edgecolor="none")
     plt.close()
 

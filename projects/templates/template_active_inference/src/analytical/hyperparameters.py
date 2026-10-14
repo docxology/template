@@ -27,8 +27,10 @@ def load_hyperparameters() -> Hyperparameters:
 
 
 def lambda_grid(hp: Hyperparameters | None = None) -> list[float]:
-    """Process lambda grid."""
+    """Return the configured sweep, requiring at least two grid points."""
     params = hp or load_hyperparameters()
+    if params.lambda_grid_points < 2:
+        raise ValueError("lambda_grid_points must be at least 2")
     import numpy as np
 
     return [float(x) for x in np.linspace(0.0, params.lambda_max, params.lambda_grid_points)]

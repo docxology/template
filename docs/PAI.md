@@ -152,7 +152,6 @@ Active project slugs: see [_generated/active_projects.md](_generated/active_proj
 | `UV_FROZEN` | unset locally; `true` in CI/containers | Refuse lockfile mutation in controlled environments. Local `uv run` follows the normal workspace policy unless explicitly frozen. |
 | `LOG_LEVEL` | `1` | 0=DEBUG 1=INFO 2=WARN 3=ERROR |
 | `LOG_TERMINAL_VERBOSE` | unset | Set to restore the verbose `[ts] [LEVEL]` prefix on terminal output (file always has it). See [operational/logging/output-design.md](operational/logging/output-design.md). |
-| `FEP_LEAN_GAUSS_WORKFLOWS` | `1` | OpenGauss Lean session workflows; `--no-lean-workflows` or `0` disables |
 | `OLLAMA_HOST` | `http://localhost:11434` | LLM server URL |
 | `LLM_MAX_INPUT_LENGTH` | `500000` | Max chars per LLM prompt |
 | `ENABLE_PDF` / `ENABLE_HTML` / `ENABLE_SLIDES` | `1` | Per-format render toggles. Set `0` to skip. See [usage/output-formats.md](usage/output-formats.md). |

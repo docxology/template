@@ -33,11 +33,6 @@ def main(argv: list[str] | None = None) -> int:
         action="store_true",
         help="Downgrade over-set pages from a hard failure to a warning (default fails closed).",
     )
-    parser.add_argument(
-        "--strict",
-        action="store_true",
-        help="(deprecated; over-set now fails by default) accepted for backward compatibility.",
-    )
     args = parser.parse_args(argv)
 
     root = Path(args.project_root).resolve()

@@ -1,4 +1,5 @@
 {
+  "schema_version": "template-registered-report/2",
   "title": "Example preregistered robustness study",
   "version": "0.1.0",
   "registered_report_stage": "stage_1",

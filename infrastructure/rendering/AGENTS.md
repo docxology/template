@@ -7,7 +7,9 @@ combined PDFs, slides, web HTML, DOCX, and EPUB. It coordinates format-specific
 renderers without owning validation policy or project analysis.
 
 WebRenderer pages share one `assets/source-web-fonts.js` per output directory,
-containing the unchanged twelve Source font bodies and full OFL notice. Copy
+containing losslessly gzip-compressed transport for the unchanged twelve Source
+font bodies and full OFL notice. The browser must support `DecompressionStream`;
+decoded lengths and hashes are checked before font construction. Copy
 the complete web directory, including assets, for offline/file or HTTP reading;
 an HTML file alone is no longer the complete font-bearing export. The inline
 `source_web_font_script()` API remains available to independent native controls.
@@ -22,7 +24,7 @@ not a claim of complete native-format acceptance.
 | Facade | `core.py`, `config.py` | `RenderManager` and rendering configuration. |
 | Security profile | `security.py` | Trusted-local and isolated untrusted subprocess options, credential-free environments, and bounded output roots. |
 | PDF pipeline | `pdf_renderer.py`, `_pdf_combined_*.py`, `_pdf_title_page.py`, `_pdf_latex_helpers.py` | Combined PDF assembly, title/publishing pages, LaTeX helpers. |
-| Format renderers | `slides_renderer.py`, `_slides_accessibility.py`, `_slides_accessibility_ast.py`, `_slides_accessibility_composition.py`, `_slides_accessibility_contracts.py`, `_slides_accessibility_figures.py`, `_slides_accessibility_image_io.py`, `_slides_accessibility_limits.py`, `_slides_presentation_variants.py`, `_slides_accessibility_tables.py`, `_slides_accessibility_text_geometry.py`, `_slides_accessibility_raw_tex.py`, `_slides_accessibility_reveal.py`, `_slides_accessibility_reveal_controls.py`, `_slides_math_header.py`, `_slides_tex_figures.py`, `_slides_tex_tables.py`, `_slides_beamer_geometry.py`, `_slides_codelisting.py`, `_slides_framebreaks.py`, `web_renderer.py`, `_web_markdown_preprocess.py`, `_web_postprocess.py`, `_web_figure_details.py`, `docx_renderer.py`, `epub_renderer.py`, `pptx_deck.py`, `slide_deck.py`, `_slide_draw.py`, `_slide_font_encoding.py`, `_slide_figure_layout.py`, `mermaid_figure.py` | Slides, opt-in semantic accessible-slide composition and fail-closed geometry, bounded Pandoc trees, confined local-raster inspection, figure allocation and intrinsic-raster checks, writer-specific formal-content fallback, Reveal navigation/zoom controls, Beamer math-header and figure/table safe-area helpers, rendered Beamer coordinate validation, profile-aware captioned listings and archive frame splitting, HTML orchestration, web-only Markdown preprocessing (citations/theorems), deterministic HTML post-processing and structured figure-detail association, dedicated DOCX and EPUB rendering, PPTX deck rendering, slide deck helpers, and Mermaid figure rendering. |
+| Format renderers | `slides_renderer.py`, `_slides_accessibility_ast.py`, `_slides_accessibility_composition.py`, `_slides_accessibility_contracts.py`, `_slides_accessibility_figures.py`, `_slides_accessibility_image_io.py`, `_slides_accessibility_limits.py`, `_slides_presentation_variants.py`, `_slides_accessibility_tables.py`, `_slides_accessibility_text_geometry.py`, `_slides_accessibility_raw_tex.py`, `_slides_accessibility_reveal.py`, `_slides_accessibility_reveal_controls.py`, `_slides_math_header.py`, `_slides_tex_figures.py`, `_slides_tex_tables.py`, `_slides_beamer_geometry.py`, `_slides_codelisting.py`, `_slides_framebreaks.py`, `web_renderer.py`, `_web_markdown_preprocess.py`, `_web_postprocess.py`, `_web_figure_details.py`, `docx_renderer.py`, `epub_renderer.py`, `pptx_deck.py`, `slide_deck.py`, `_slide_draw.py`, `_slide_font_encoding.py`, `_slide_figure_layout.py`, `mermaid_figure.py` | Slides, opt-in semantic accessible-slide composition and fail-closed geometry, bounded Pandoc trees, confined local-raster inspection, figure allocation and intrinsic-raster checks, writer-specific formal-content fallback, Reveal navigation/zoom controls, Beamer math-header and figure/table safe-area helpers, rendered Beamer coordinate validation, profile-aware captioned listings and archive frame splitting, HTML orchestration, web-only Markdown preprocessing (citations/theorems), deterministic HTML post-processing and structured figure-detail association, dedicated DOCX and EPUB rendering, PPTX deck rendering, slide deck helpers, and Mermaid figure rendering. |
 | Pandoc filters | `_pandoc_filters.py`, `_pandoc_args.py`, `formalism.lua`, `convert_latex_images.lua`, `_beamer_allowframebreaks.lua` | `_pandoc_filters.py` resolves the repo-shipped Lua filters for every writer; `formalism.lua` numbers Definition/Proposition/Theorem blocks and resolves `[@def:...]`. `_pandoc_args.combined_pandoc_args` assembles the shared combined-edition extra args (resource-path triple, formalism filter, crossref probe, citeproc+bibliography) for the DOCX/EPUB/ebook lanes. |
 | Bibliographies | `_bibliography.py`, `_pdf_combined_bibliography.py` | Shared sorted `manuscript/*.bib` discovery, repeated/symlink-path deduplication, duplicate-key rejection, Pandoc arguments, and PDF bibliography injection. |
 | Manuscript source | `manuscript_discovery.py`, `manuscript_injection.py`, `_manuscript_source.py`, `manuscript_composition.py`, `render_cache.py` | Section ordering, substitutions, resolved manuscript trees, render-boundary composition evidence (`manuscript_composition.py`), and modular section caching (`render_cache.py`). |
@@ -43,6 +45,9 @@ not a claim of complete native-format acceptance.
   `_slides_accessibility_tables.py` composes whole-row excerpts.
 - `_slides_beamer.py` prepares Pandoc arguments, applies ordered TeX transforms,
   and rejects overflow. `SlidesRenderer` retains execution and output lifecycle.
+- Slide callers import policy from `_slides_accessibility_contracts.py`,
+  composition from `_slides_accessibility_composition.py`, and Reveal checks
+  from `_slides_accessibility_reveal.py`.
 - `_web_assets.py` owns reader assets/styles, `_web_links.py` resolves and
   validates links, `_web_io.py` uses the shared confined atomic writer, and
   `_web_postprocess.py` owns HTML/figure transformations. Existing helper import
@@ -313,7 +318,7 @@ uv run python -m infrastructure.rendering.cli web manuscript.md
 
 ```bash
 uv run pytest tests/infra_tests/rendering -q
-uv run pytest tests/infra_tests/rendering/test_slides_accessibility.py -q -m slow
+uv run pytest tests/infra_tests/rendering/test_slides_beamer_accessibility.py -q -m slow
 uv run pytest projects/templates/template_textbook/tests/test_mermaid.py -q
 ```
 

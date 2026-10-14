@@ -232,11 +232,6 @@ def figure_si_tmaze_actions(project_root: Path) -> Path:
     return out
 
 
-def figure_si_summary(project_root: Path) -> Path:
-    """Deprecated alias for ``figure_si_tmaze_actions``."""
-    return figure_si_tmaze_actions(project_root)
-
-
 def figure_free_energy_curve(project_root: Path) -> Path:
     """Process figure free energy curve."""
     root = project_root.resolve()

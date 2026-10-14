@@ -2,7 +2,7 @@
   "consumed_manuscript": [
     {
       "rendered_path": "output/manuscript/00_00_transmission_begin.md",
-      "rendered_sha256": "89d1126ba576cbc35c36004927041432f25d8a428661f7af6115abd8871d7ac5",
+      "rendered_sha256": "24b43fc7244db40a5c7db32f274e12e0ac0884bec22e35dd8859cc27e502d9b3",
       "source_path": null,
       "source_sha256": null
     },
@@ -44,7 +44,7 @@
     },
     {
       "rendered_path": "output/manuscript/99_zz_transmission_end.md",
-      "rendered_sha256": "729c54987b84839234b2e24f269418ef426773c3f1242a27745d86cb40cc419a",
+      "rendered_sha256": "0a98389dfb38c92f785f8e12d73a82294b73b723db1cabc448aa02d8d4148c1d",
       "source_path": null,
       "source_sha256": null
     }
@@ -52,42 +52,42 @@
   "evidence_files": {
     "artifact_manifest": {
       "path": "output/reports/artifact_manifest.json",
-      "sha256": "9a1a7628adab50d5105b79b7ba5b4963881ed4f07ba3eebae7e2abe8ceda7d9f",
-      "size_bytes": 38288
+      "sha256": "dad2557237800fbc2400f201d7c15fadfa7921c161d8a20b3ee09bc9356e6759",
+      "size_bytes": 35666
     },
     "combined_manuscript": {
       "path": "output/web/_combined_manuscript.md",
-      "sha256": "41f65f970c5443cd045da355ca8fb3a577ead46f590abe3e12b75ba4cb01af96",
-      "size_bytes": 81482
+      "sha256": "9b069d35aef8a5bc63f5fb445b8d12f3772b14a3904023797b3bd6092978922b",
+      "size_bytes": 81364
     },
     "composition_manifest": {
       "path": "output/reports/manuscript_composition.json",
-      "sha256": "456a377e93ce5b2b7254148d257d5af422437d02745aee68ad7be5024be4e80e",
+      "sha256": "1913b0c4f8f8cc23d87b88921b062ead5dfd76f54e0aae63e56ca19a8adaba66",
       "size_bytes": 2149
     },
     "validation_report": {
       "path": "output/reports/validation_report.json",
-      "sha256": "39a3398ec72c73940a29040fb08ede0e7c620b45bc11e75d56b024a2512b0476",
-      "size_bytes": 11290
+      "sha256": "14f474e65cdb28aef853f694131e7c3b24137148bd98d20d360d3a25d239204b",
+      "size_bytes": 11323
     }
   },
   "evidence_mode": "validated-co-snapshot-fingerprint-bridge",
   "fingerprints": {
     "config": {
       "file_count": 23,
-      "sha256": "7d0ff006efcd43b1256d77292a741d27b2357d4a6c9042878404bf117eedfc31"
+      "sha256": "30888cbec23100545559c68b34e8b0e468f5eed28f16bd1d998aba1b81f52906"
     },
     "output": {
-      "file_count": 117,
-      "sha256": "c435cc301f7bb2709d71525cf2d7724830bfbd0db30941fd50f1082539865b14"
+      "file_count": 118,
+      "sha256": "630203f9f9e976c86fb5254811418c2904fdce0834d05f2d9bfff5c63f0fc725"
     },
     "source": {
-      "file_count": 88,
-      "sha256": "74a11172a8687f9b204ae51f9fdaa78b7bdc45a91df9d1be9e3f271184fa7024"
+      "file_count": 87,
+      "sha256": "b9b4dc9685fca48bda818ede2fdb14df06a48e1c192249273c7c2fbb7ce7a9f9"
     },
     "stage": {
-      "file_count": 1869,
-      "sha256": "4d222c921ab04723eca955e99f9af79e7b829c415a2e718e171110046ccc414f"
+      "file_count": 1863,
+      "sha256": "390c6b1c19e5a3a4ad8562a5ae1c83e4b473fa445c16d339b6217b0b27800a7d"
     }
   },
   "project": "templates/template_autoresearch_project",

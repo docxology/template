@@ -7,7 +7,7 @@
 2. **Output statistics** — file counts, sizes, output manifest:
    ``infrastructure.reporting.output_statistics``
 3. **Executive summaries** — cross-project metrics and ProjectMetrics model:
-   ``infrastructure.reporting.executive_reporter``
+   ``infrastructure.reporting._executive_models``, ``_executive_collectors``, ``_executive_renderers``
 4. **Test suite summaries** — markdown test reports, result loading:
    ``infrastructure.reporting.markdown_formatter``, ``report_builder``, ``result_loaders``
 5. **Error aggregation** — in-process error collector (ErrorAggregator):
@@ -45,10 +45,12 @@ from .output_statistics import (
 )
 
 # Executive & multi-project reporters (cross-project summaries)
-from .executive_reporter import (
+from infrastructure.reporting._executive_models import (
     ExecutiveSummary,
     ProjectMetrics,
-    collect_project_metrics,
+)
+from infrastructure.reporting._executive_collectors import collect_project_metrics
+from infrastructure.reporting._executive_renderers import (
     generate_executive_summary,
     save_executive_summary,
 )
@@ -76,7 +78,9 @@ _DASHBOARD_EXPORTS = frozenset(
 )
 
 if TYPE_CHECKING:
-    from ._dashboard_charts import generate_matplotlib_dashboard as generate_matplotlib_dashboard
+    from infrastructure.reporting._dashboard_charts_outputs import (
+        generate_matplotlib_dashboard as generate_matplotlib_dashboard,
+    )
     from ._dashboard_matplotlib import generate_all_dashboards as generate_all_dashboards
     from ._dashboard_matplotlib import generate_plotly_dashboard as generate_plotly_dashboard
 
@@ -100,7 +104,7 @@ def _load_dashboards() -> None:
             generate_all_dashboards=generate_all_dashboards,
             generate_plotly_dashboard=generate_plotly_dashboard,
         )
-        from ._dashboard_charts import generate_matplotlib_dashboard
+        from infrastructure.reporting._dashboard_charts_outputs import generate_matplotlib_dashboard
 
         globals().update(generate_matplotlib_dashboard=generate_matplotlib_dashboard, DASHBOARD_AVAILABLE=True)
     except ImportError:

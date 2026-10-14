@@ -386,6 +386,6 @@ def test_assess_fulltext_extraction_empty_dir(tmp_path: Path) -> None:
 
 
 def _safe_filename_for(paper: Paper) -> str:
-    from template_literature_meta_analysis.literature.fulltext_download import _safe_filename
+    from template_literature_meta_analysis.literature.fulltext_download import safe_filename
 
-    return _safe_filename(paper.canonical_id)
+    return safe_filename(paper.canonical_id)

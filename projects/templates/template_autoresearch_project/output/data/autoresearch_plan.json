@@ -149,7 +149,7 @@
       "output/reports/evidence_registry.json",
       "manuscript/source_ledger.yaml"
     ],
-    "source_path": "<home>/Documents/GitHub/template/projects/templates/template_autoresearch_project/autoresearch.yaml",
+    "source_path": "<home>/Documents/GitHub/HumOS/projects/platform/hum-docxology/repos/public/template/projects/templates/template_autoresearch_project/autoresearch.yaml",
     "stage_gates": [
       "Project Tests",
       "Project Analysis",
@@ -174,7 +174,7 @@
   ],
   "experiment_protocol": "Load the local balanced small MNIST subset, evaluate bounded numpy neural-network candidates without external calls or runtime downloads, select the highest test accuracy with deterministic parameter-count tie-breaking, then require readiness reports and evidence-linked claims to pass.",
   "project_name": "template_autoresearch_project",
-  "project_root": "<home>/Documents/GitHub/template/projects/templates/template_autoresearch_project",
+  "project_root": "<home>/Documents/GitHub/HumOS/projects/platform/hum-docxology/repos/public/template/projects/templates/template_autoresearch_project",
   "quality_checks": [
     "domain_profile",
     "experiment_plan",
@@ -188,7 +188,7 @@
     "ai_disclosure",
     "security_profile"
   ],
-  "repo_root": "<home>/Documents/GitHub/template",
+  "repo_root": "<home>/Documents/GitHub/HumOS/projects/platform/hum-docxology/repos/public/template",
   "required_artifacts": [
     "output/data/autoresearch_plan.json",
     "output/data/autoresearch_loop.json",
@@ -306,7 +306,7 @@
       ]
     },
     {
-      "definition_of_done": "Focused pipeline-smoke infrastructure tests pass or report configured tolerance; project fixtures may refresh generated output artifacts; full repo coverage remains an explicit verification command.",
+      "definition_of_done": "Focused pipeline-smoke infrastructure tests pass; project fixtures may refresh generated output artifacts; full repo coverage remains an explicit verification command.",
       "depends_on": [
         "Environment Setup"
       ],
@@ -354,7 +354,7 @@
       ]
     },
     {
-      "definition_of_done": "Connector search completes or gracefully exits 2 when not configured; each configured connector returns results or an error.",
+      "definition_of_done": "Connector search completes or issues a fresh policy-bound reason receipt when not configured; each configured connector returns results or an error.",
       "depends_on": [
         "Project Analysis"
       ],
@@ -385,7 +385,7 @@
       ]
     },
     {
-      "definition_of_done": "Pipeline stage artifacts are recorded as provenance nodes, or the stage is gracefully skipped when provenance is not configured.",
+      "definition_of_done": "Pipeline stage artifacts are recorded as provenance nodes, or a fresh policy-bound skip receipt records why provenance is not configured.",
       "depends_on": [
         "Connector Search"
       ],
@@ -416,7 +416,7 @@
       ]
     },
     {
-      "definition_of_done": "EPUB, MOBI, and DOCX ebook files are generated or the stage is gracefully skipped when the combined markdown is absent.",
+      "definition_of_done": "EPUB, MOBI, and DOCX ebook files are generated or a fresh policy-bound skip receipt records why the combined markdown is absent.",
       "depends_on": [
         "PDF Rendering"
       ],
@@ -431,7 +431,22 @@
       ]
     },
     {
-      "definition_of_done": "Executable reproducibility bundle is written or reports why it was skipped.",
+      "definition_of_done": "A conforming .docx and .docxplus carrying the project source tree are written, or a fresh policy-bound skip receipt records why the optional docxplus extra is not installed.",
+      "depends_on": [
+        "PDF Rendering"
+      ],
+      "failure_code": "DOCXPLUS_EXPORT_FAILED",
+      "gate": null,
+      "input_artifacts": [
+        "projects/{project}/"
+      ],
+      "name": "docxplus Export",
+      "output_artifacts": [
+        "projects/{project}/output/docxplus/"
+      ]
+    },
+    {
+      "definition_of_done": "Executable reproducibility bundle is written or a fresh policy-bound reason receipt records why it was skipped.",
       "depends_on": [
         "PDF Rendering"
       ],
@@ -447,7 +462,7 @@
       ]
     },
     {
-      "definition_of_done": "Optional scientific review is written or gracefully skipped when unavailable.",
+      "definition_of_done": "Configured draft feedback is written; a skip requires a fresh policy-bound reason receipt.",
       "depends_on": [
         "Output Validation"
       ],
@@ -457,14 +472,14 @@
         "projects/{project}/manuscript/",
         "projects/{project}/output/pdf/"
       ],
-      "name": "LLM Scientific Review",
+      "name": "LLM Manuscript Review",
       "output_artifacts": [
         "projects/{project}/output/llm/",
         "projects/{project}/output/translations/"
       ]
     },
     {
-      "definition_of_done": "Optional translations are written or gracefully skipped when unavailable.",
+      "definition_of_done": "Configured translations are written; a skip requires a fresh policy-bound reason receipt.",
       "depends_on": [
         "Output Validation"
       ],
@@ -496,7 +511,7 @@
       ]
     },
     {
-      "definition_of_done": "Archival publication manifest is generated or reports why it was skipped.",
+      "definition_of_done": "Archival publication manifest is generated or a fresh policy-bound reason receipt records why it was skipped.",
       "depends_on": [
         "Executable Bundle"
       ],
@@ -512,7 +527,7 @@
       ]
     },
     {
-      "definition_of_done": "ONIX XML, metadata.json, and OPF skeleton are written to output/metadata/ or the stage is gracefully skipped when config.yaml is absent.",
+      "definition_of_done": "ONIX XML, metadata.json, and OPF skeleton are written to output/metadata/ or a fresh policy-bound skip receipt records why config.yaml is absent.",
       "depends_on": [
         "Copy Outputs"
       ],

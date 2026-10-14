@@ -29,6 +29,7 @@ from template_autoscientists.figures.figures import (  # noqa: E402
     figure_specs_for_results,
     write_ablation_figure,
     write_comparison_figure,
+    write_comparison_outputs,
     write_efficiency_figure,
     write_figure_registry,
 )
@@ -83,6 +84,8 @@ def test_write_efficiency_figure(tmp_path: Path) -> None:
 
 
 def test_write_comparison_figure(tmp_path: Path) -> None:
+    import json
+
     objective = SyntheticObjective(dimensions=4, noise_scale=0.02)
     proposer = DeterministicProposer()
     coordinated = run_search(objective, proposer, SearchConfig(budget=30))
@@ -91,6 +94,26 @@ def test_write_comparison_figure(tmp_path: Path) -> None:
     path = tmp_path / "comparison.png"
     write_comparison_figure(coordinated, baseline, path)
     _assert_png(path)
+
+    publication = tmp_path / "publication"
+    figure, registry, data = write_comparison_outputs(publication)
+    assert (figure, registry, data) == (
+        publication / "figures/search_comparison.png",
+        publication / "figures/figure_registry.json",
+        publication / "data/search_comparison.json",
+    )
+    _assert_png(figure)
+    summary = json.loads(data.read_text())
+    assert summary["budget"] == 60 and summary["clean_metric_advantage"] == 0.0
+    assert summary["coordinated"]["experiments_used"] == 36
+    assert summary["baseline"]["experiments_used"] == 60
+    comparison = next(
+        record for record in json.loads(registry.read_text())["figures"] if record["label"] == "fig:comparison"
+    )
+    assert comparison["filename"] == figure.name
+    assert comparison["generated_by"] == "scripts/run_search_comparison.py"
+    assert "solid coordinated-teams line contains 36 points" in comparison["metadata"]["alt_text"]
+    assert "dashed single-thread baseline line contains 60 points" in comparison["metadata"]["alt_text"]
 
 
 # --- Content assertions (catch axis/label/linestyle regressions a PNG-exists check misses) ---

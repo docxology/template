@@ -2,7 +2,8 @@
 
 The registration in `data/example_registration.json` declares its hypotheses,
 outcomes, exclusion rules, and analysis plan before any result is observed. It
-is frozen under a SHA-256 content hash (prefix `96a34a11d132`); the validator in
+is frozen under a SHA-256 content hash recorded in
+`output/reports/frozen_registration.json`; the validator in
 `registered_report.protocol.validate_registration` confirms the payload carries
 every required section with no structural findings.
 

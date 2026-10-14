@@ -55,9 +55,8 @@ The composer *performs* gluing; `laws.py` *verifies the axioms it assumes*, turn
 
 The semantic gluing certificate — cross-track disagreement checks the structural
 sheaf laws do not cover, plus the JSON certificate and its writers/validators —
-is split into focused modules. `semantic.py` is the public entrypoint;
-`semantic_core.py` is a backward-compatible facade re-exporting the same names so
-existing `from manuscript.sheaf.semantic_core import X` imports keep working.
+is split into focused modules. `semantic.py` is the public entrypoint and imports
+those implementations directly.
 
 | Module | Public API | Depends on (intra-package) |
 | --- | --- | --- |
@@ -68,8 +67,7 @@ existing `from manuscript.sheaf.semantic_core import X` imports keep working.
 | `semantic_refresh.py` | `_refresh_hydrated_manuscript`, `_refresh_artifact_contract_outputs`, `_refresh_animation_outputs` | — (late imports only) |
 | `semantic_certificate.py` | `build_semantic_gluing_certificate`, `write_semantic_gluing_certificate` | `coverage`, `semantic_evidence`, `semantic_issues`, `semantic_maps`, `semantic_refresh`, `semantic_restrictions` |
 | `semantic_gluing_outputs.py` | `write_semantic_gluing_outputs`, `validate_semantic_gluing`, `_stable_artifact_graph`, `_stable_certificate_fields`, `_semantic_lane_summary_issues` | `semantic_certificate`, `semantic_evidence`, `semantic_issues`, `semantic_maps`, `semantic_refresh`, `semantic_restrictions` |
-| `semantic_core.py` | facade re-exporting the public surface above | `semantic_certificate`, `semantic_evidence`, `semantic_gluing_outputs`, `semantic_issues` |
-| `semantic.py` | public entrypoint (`__all__` for the sheaf package) | `semantic_core`, `semantic_maps` |
+| `semantic.py` | public entrypoint (`__all__` for the sheaf package) | `semantic_certificate`, `semantic_evidence`, `semantic_gluing_outputs`, `semantic_issues`, `semantic_maps` |
 
 Cross-module imports sit at the top of each file. Late (in-function) imports are
 used only to break genuine cycles with `roadmap_tracks.*`, `validation_spine`,

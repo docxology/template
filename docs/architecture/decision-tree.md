@@ -64,36 +64,28 @@ flowchart TD
 
 - PDF generation and LaTeX compilation
 - Markdown file processing and validation
-- Figure numbering and cross-referencing
-- Image file management and insertion
+- Figure metadata and generated-file registry validation
+- Pandoc image and cross-reference validation
 - Document quality checking
 - Cross-reference validation
 
-**Example: Figure Manager**
+**Example: Generated figure registry**
+
+Project-owned specifications and files are inputs to a reusable publisher:
 
 ```python
-# infrastructure/documentation/figure_manager.py
+from infrastructure.documentation import publish_generated_figures
 
-class FigureManager:
-    """Manage figure numbering and references.
-
-    This is infrastructure - works for ANY research project.
-    """
-    def register_figure(
-        self,
-        filename: str,
-        caption: str,
-        label: Optional[str] = None,
-        section: Optional[str] = None,
-        **kwargs
-    ) -> FigureMetadata:
-        """Register a figure with automatic numbering."""
-        pass
-
-    def generate_latex_figure_block(self, label: str) -> str:
-        """Generate LaTeX figure block."""
-        pass
+written = publish_generated_figures(
+    output_dir,
+    PROJECT_FIGURE_SPECS,
+    generated_paths,
+    schema_version="my-project-figure-registry-v1",
+)
 ```
+
+Manuscript source uses `![caption](path){#fig:label}` with `[@fig:label]`.
+The publisher validates files and metadata; rendering assigns visible numbers.
 
 **Publishing and Metadata:**
 
@@ -413,13 +405,13 @@ Rule: If it can be tested independently, it goes in src/.
 
 ```python
 # projects/{name}/src/my_analysis.py
-from infrastructure.documentation import FigureManager, MarkdownIntegration
+from infrastructure.documentation import FigureManager
 
 def analyze_and_report(data):
     # Scientific computation
     results = run_analysis(data)
 
-    # Use infrastructure for document management
+    # Persist metadata through the reusable infrastructure API
     fm = FigureManager()
     fm.register_figure(
         filename="results.png",

@@ -17,7 +17,7 @@ except ImportError:
 
 from infrastructure.core.logging.utils import get_logger
 from infrastructure.reporting._dashboard_constants import COLORS
-from infrastructure.reporting.executive_reporter import ExecutiveSummary
+from infrastructure.reporting._executive_models import ExecutiveSummary
 from infrastructure.reporting.output_organizer import FileType, OutputOrganizer
 
 logger = get_logger(__name__)

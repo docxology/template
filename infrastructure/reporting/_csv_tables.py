@@ -9,7 +9,7 @@ from pathlib import Path
 from typing import Any
 
 from infrastructure.core.logging.utils import get_logger
-from infrastructure.reporting.executive_reporter import ExecutiveSummary
+from infrastructure.reporting._executive_models import ExecutiveSummary
 from infrastructure.reporting.output_organizer import FileType, OutputOrganizer
 
 logger = get_logger(__name__)
@@ -162,7 +162,7 @@ def generate_csv_data_tables(summary: ExecutiveSummary, output_dir: Path) -> dic
 
 def _write_project_metrics_csv(summary: ExecutiveSummary, output_dir: Path, organizer: OutputOrganizer) -> Path:
     """Write per-project metrics CSV."""
-    from infrastructure.reporting.executive_reporter import calculate_project_health_score
+    from infrastructure.reporting._executive_health import calculate_project_health_score
 
     metrics_csv = organizer.get_output_path("project_metrics.csv", output_dir, FileType.CSV)
     with open(metrics_csv, "w", newline="", encoding="utf-8") as f:

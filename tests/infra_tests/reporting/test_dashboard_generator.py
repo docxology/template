@@ -7,18 +7,22 @@ from pathlib import Path
 
 import pytest
 
-from infrastructure.reporting._dashboard_matplotlib import (
+from infrastructure.reporting._dashboard_charts_health import (
     create_coverage_chart,
+    create_test_count_chart,
+)
+from infrastructure.reporting._dashboard_charts_outputs import (
     create_manuscript_size_chart,
     create_output_distribution_chart,
-    create_pipeline_duration_chart,
     create_summary_table,
-    create_test_count_chart,
-    generate_all_dashboards,
     generate_matplotlib_dashboard,
+)
+from infrastructure.reporting._dashboard_charts_pipeline import create_pipeline_duration_chart
+from infrastructure.reporting._dashboard_matplotlib import (
+    generate_all_dashboards,
     generate_plotly_dashboard,
 )
-from infrastructure.reporting.executive_reporter import (
+from infrastructure.reporting._executive_models import (
     CodebaseMetrics,
     ExecutiveSummary,
     ManuscriptMetrics,
@@ -26,8 +30,8 @@ from infrastructure.reporting.executive_reporter import (
     PipelineMetrics,
     ProjectMetrics,
     TestMetrics as MetricsModel,
-    calculate_project_health_score,
 )
+from infrastructure.reporting._executive_health import calculate_project_health_score
 
 
 @pytest.fixture

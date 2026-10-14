@@ -78,6 +78,73 @@ def _standalone_source_copy(destination: Path) -> Path:
     return destination
 
 
+def _conftest_child_program() -> str:
+    """Load the actual canonical startup with pytest's authored paths present."""
+    assert infrastructure.__file__ is not None
+    sdk_origin = Path(infrastructure.__file__).resolve(strict=True)
+    return (
+        "import importlib,importlib.util,json,sys;from pathlib import Path;"
+        f"project=Path({str(PROJECT_ROOT)!r});"
+        "sys.path[:0]=[str(project),str(project/'src'),str(project/'tests')];before=sys.path[:];"
+        "spec=importlib.util.spec_from_file_location('actual_project_conftest',project/'tests/conftest.py');"
+        "assert spec is not None and spec.loader is not None;"
+        "startup=importlib.util.module_from_spec(spec);spec.loader.exec_module(startup);"
+        "assert sys.path==before;import infrastructure;"
+        f"assert Path(infrastructure.__file__).resolve()==Path({str(sdk_origin)!r});"
+        f"assert infrastructure.__version__=={infrastructure.__version__!r};"
+    )
+
+
+def _run_conftest_child(program: str):
+    environment = build_bounded_env(dict(os.environ))
+    for name in ("PYTHONPATH", "PYTEST_ADDOPTS", "PYTEST_PLUGINS"):
+        environment.pop(name, None)
+    return run_bounded_subprocess([sys.executable, "-I", "-c", program], cwd=PROJECT_ROOT, env=environment, timeout=90)
+
+
+def test_canonical_startup_preserves_genuine_selected_environment_and_domain() -> None:
+    """The real project-local SDK survives filtering and runs actual corpus logic."""
+    program = _conftest_child_program() + (
+        "from template_literature_meta_analysis.literature.corpus import Corpus;"
+        "from template_literature_meta_analysis.literature.models import Paper;"
+        "corpus=Corpus([Paper(title='One',doi='10.5555/same'),Paper(title='One again',doi='10.5555/same')]);"
+        "assert len(corpus)==1;"
+        "print(json.dumps({'origin':str(Path(infrastructure.__file__).resolve()),"
+        "'version':infrastructure.__version__,'deduplicated':len(corpus)}));"
+    )
+    actual = _run_conftest_child(program)
+    assert actual.returncode == actual.original_returncode == 0, actual.stdout + actual.stderr + actual.command_error
+    assert not actual.timed_out and not actual.custody_refused
+    receipts = [json.loads(line) for line in actual.stdout.splitlines() if line.startswith("{")]
+    assert infrastructure.__file__ is not None
+    assert receipts == [
+        {
+            "origin": str(Path(infrastructure.__file__).resolve(strict=True)),
+            "version": infrastructure.__version__,
+            "deduplicated": 1,
+        }
+    ]
+
+
+def test_canonical_startup_rejects_actual_authored_namespace_cached_as_sdk() -> None:
+    """A genuine own module under the SDK fullname cannot gain provider authority."""
+    program = _conftest_child_program() + (
+        "sys.modules['infrastructure']=importlib.import_module('template_literature_meta_analysis');\n"
+        "try:\n"
+        "    spec.loader.exec_module(startup)\n"
+        "except ImportError as error:\n"
+        "    assert 'own project source cannot provide' in str(error)\n"
+        "    assert sys.path==before\n"
+        "    print('actual authored cached provider refused')\n"
+        "else:\n"
+        "    raise AssertionError('actual own namespace admitted as SDK')\n"
+    )
+    actual = _run_conftest_child(program)
+    assert actual.returncode == actual.original_returncode == 0, actual.stdout + actual.stderr + actual.command_error
+    assert not actual.timed_out and not actual.custody_refused
+    assert actual.stdout.strip() == "actual authored cached provider refused"
+
+
 @pytest.mark.timeout(120)
 @pytest.mark.parametrize("case", ("corpus-oracles", "sdk-shadows", "wrong-domain-result", "empty-scope"))
 def test_configured_pytest_runs_in_standalone_source_copy(tmp_path: Path, case: str) -> None:

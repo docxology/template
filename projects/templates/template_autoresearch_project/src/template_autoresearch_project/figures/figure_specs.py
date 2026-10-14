@@ -8,7 +8,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
-from . import figures_ml, figures_process
+from . import figures_ml_calibration, figures_ml_candidates, figures_ml_matrices, figures_ml_mnist, figures_process
 from .figures_security import write_security_control_matrix_figure, write_security_integrity_chain_figure
 from ..loop.json_coerce import mapping
 from ..ml.task import MLTaskResult
@@ -110,39 +110,41 @@ def build_figure_dispatch() -> dict[str, FigureDispatchEntry]:
         "fig:ml_candidate_scores": FigureDispatchEntry(
             "ml_candidate_scores.png",
             False,
-            lambda ctx: figures_ml.write_ml_candidate_scores_figure(
+            lambda ctx: figures_ml_candidates.write_ml_candidate_scores_figure(
                 ctx.figures_dir, ctx.ml_result, ctx.diagnostics["candidate_intervals"]
             ),
         ),
         "fig:ml_confusion_matrix": FigureDispatchEntry(
             "ml_confusion_matrix.png",
             False,
-            lambda ctx: figures_ml.write_ml_confusion_matrix_figure(ctx.figures_dir, ctx.ml_result),
+            lambda ctx: figures_ml_matrices.write_ml_confusion_matrix_figure(ctx.figures_dir, ctx.ml_result),
         ),
         "fig:ml_per_class_accuracy": FigureDispatchEntry(
             "ml_per_class_accuracy.png",
             False,
-            lambda ctx: figures_ml.write_ml_per_class_accuracy_figure(ctx.figures_dir, ctx.ml_result),
+            lambda ctx: figures_ml_matrices.write_ml_per_class_accuracy_figure(ctx.figures_dir, ctx.ml_result),
         ),
         "fig:ml_learning_curves": FigureDispatchEntry(
             "ml_learning_curves.png",
             False,
-            lambda ctx: figures_ml.write_ml_learning_curve_figure(ctx.figures_dir, ctx.ml_result),
+            lambda ctx: figures_ml_candidates.write_ml_learning_curve_figure(ctx.figures_dir, ctx.ml_result),
         ),
         "fig:ml_complexity_accuracy": FigureDispatchEntry(
             "ml_complexity_accuracy.png",
             False,
-            lambda ctx: figures_ml.write_ml_complexity_accuracy_figure(ctx.figures_dir, ctx.ml_result),
+            lambda ctx: figures_ml_candidates.write_ml_complexity_accuracy_figure(ctx.figures_dir, ctx.ml_result),
         ),
         "fig:mnist_error_examples": FigureDispatchEntry(
             "mnist_error_examples.png",
             False,
-            lambda ctx: figures_ml.write_mnist_error_examples_figure(ctx.project_root, ctx.figures_dir, ctx.ml_result),
+            lambda ctx: figures_ml_mnist.write_mnist_error_examples_figure(
+                ctx.project_root, ctx.figures_dir, ctx.ml_result
+            ),
         ),
         "fig:ml_calibration_reliability": FigureDispatchEntry(
             "ml_calibration_reliability.png",
             False,
-            lambda ctx: figures_ml.write_ml_calibration_reliability_figure(
+            lambda ctx: figures_ml_calibration.write_ml_calibration_reliability_figure(
                 ctx.figures_dir,
                 ctx.diagnostics["calibration_report"],
                 ctx.diagnostics["calibration_bin_intervals"],
@@ -151,77 +153,77 @@ def build_figure_dispatch() -> dict[str, FigureDispatchEntry]:
         "fig:ml_classification_metrics_heatmap": FigureDispatchEntry(
             "ml_classification_metrics_heatmap.png",
             False,
-            lambda ctx: figures_ml.write_ml_classification_metrics_heatmap(
+            lambda ctx: figures_ml_matrices.write_ml_classification_metrics_heatmap(
                 ctx.figures_dir, ctx.diagnostics["classification_diagnostics"]
             ),
         ),
         "fig:ml_confusion_pairs": FigureDispatchEntry(
             "ml_confusion_pairs.png",
             False,
-            lambda ctx: figures_ml.write_ml_confusion_pairs_figure(
+            lambda ctx: figures_ml_matrices.write_ml_confusion_pairs_figure(
                 ctx.figures_dir, ctx.diagnostics["classification_diagnostics"]
             ),
         ),
         "fig:ml_generalization_gap": FigureDispatchEntry(
             "ml_generalization_gap.png",
             False,
-            lambda ctx: figures_ml.write_ml_generalization_gap_figure(
+            lambda ctx: figures_ml_matrices.write_ml_generalization_gap_figure(
                 ctx.figures_dir, ctx.diagnostics["classification_diagnostics"]
             ),
         ),
         "fig:ml_robustness_matrix": FigureDispatchEntry(
             "ml_robustness_matrix.png",
             False,
-            lambda ctx: figures_ml.write_ml_robustness_matrix_figure(
+            lambda ctx: figures_ml_matrices.write_ml_robustness_matrix_figure(
                 ctx.figures_dir, ctx.diagnostics["robustness_report"]
             ),
         ),
         "fig:ml_probability_margin_distribution": FigureDispatchEntry(
             "ml_probability_margin_distribution.png",
             False,
-            lambda ctx: figures_ml.write_ml_probability_margin_figure(
+            lambda ctx: figures_ml_calibration.write_ml_probability_margin_figure(
                 ctx.figures_dir, ctx.diagnostics["probability_diagnostics"]
             ),
         ),
         "fig:ml_bootstrap_intervals": FigureDispatchEntry(
             "ml_bootstrap_intervals.png",
             False,
-            lambda ctx: figures_ml.write_ml_bootstrap_intervals_figure(
+            lambda ctx: figures_ml_matrices.write_ml_bootstrap_intervals_figure(
                 ctx.figures_dir, ctx.diagnostics["bootstrap_intervals"]
             ),
         ),
         "fig:ml_paired_correctness": FigureDispatchEntry(
             "ml_paired_correctness.png",
             False,
-            lambda ctx: figures_ml.write_ml_paired_correctness_figure(
+            lambda ctx: figures_ml_matrices.write_ml_paired_correctness_figure(
                 ctx.figures_dir, ctx.diagnostics["paired_comparison"]
             ),
         ),
         "fig:ml_selective_accuracy": FigureDispatchEntry(
             "ml_selective_accuracy.png",
             False,
-            lambda ctx: figures_ml.write_ml_selective_accuracy_figure(
+            lambda ctx: figures_ml_calibration.write_ml_selective_accuracy_figure(
                 ctx.figures_dir, ctx.diagnostics["statistical_summary"]
             ),
         ),
         "fig:ml_probability_quality": FigureDispatchEntry(
             "ml_probability_quality.png",
             False,
-            lambda ctx: figures_ml.write_ml_probability_quality_figure(
+            lambda ctx: figures_ml_calibration.write_ml_probability_quality_figure(
                 ctx.figures_dir, ctx.diagnostics["statistical_summary"]
             ),
         ),
         "fig:ml_training_dynamics": FigureDispatchEntry(
             "ml_training_dynamics.png",
             False,
-            lambda ctx: figures_ml.write_ml_training_dynamics_figure(
+            lambda ctx: figures_ml_candidates.write_ml_training_dynamics_figure(
                 ctx.figures_dir, ctx.diagnostics["training_diagnostics"]
             ),
         ),
         "fig:ml_candidate_rank_stability": FigureDispatchEntry(
             "ml_candidate_rank_stability.png",
             False,
-            lambda ctx: figures_ml.write_ml_candidate_rank_stability_figure(
+            lambda ctx: figures_ml_candidates.write_ml_candidate_rank_stability_figure(
                 ctx.figures_dir, ctx.diagnostics["candidate_rank_stability"]
             ),
         ),
@@ -233,12 +235,14 @@ def build_figure_dispatch() -> dict[str, FigureDispatchEntry]:
         "fig:mnist_class_balance": FigureDispatchEntry(
             "mnist_class_balance.png",
             False,
-            lambda ctx: figures_ml.write_mnist_class_balance_figure(ctx.figures_dir, ctx.diagnostics["class_balance"]),
+            lambda ctx: figures_ml_mnist.write_mnist_class_balance_figure(
+                ctx.figures_dir, ctx.diagnostics["class_balance"]
+            ),
         ),
         "fig:mnist_subset_contact_sheet": FigureDispatchEntry(
             "mnist_subset_contact_sheet.png",
             False,
-            lambda ctx: figures_ml.write_mnist_subset_contact_sheet_figure(
+            lambda ctx: figures_ml_mnist.write_mnist_subset_contact_sheet_figure(
                 ctx.project_root, ctx.figures_dir, ctx.ml_result
             ),
         ),

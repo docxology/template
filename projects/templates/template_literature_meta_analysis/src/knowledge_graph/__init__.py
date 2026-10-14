@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from .schema import AIF_NAMESPACE
+from .schema import ONTOLOGY_NAMESPACE
 from .nanopublication import Assertion, Nanopublication
 from .hypothesis import Hypothesis, score_hypothesis
 from .graph_builder import KnowledgeGraph
@@ -17,7 +17,7 @@ from .query import (
 )
 
 __all__ = [
-    "AIF_NAMESPACE",
+    "ONTOLOGY_NAMESPACE",
     "Assertion",
     "Nanopublication",
     "Hypothesis",

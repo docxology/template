@@ -35,18 +35,8 @@ from redacted_report.profiles import (  # noqa: F401 - canonical matrix-axis re-
     normalize_pdf_background,
     normalize_redaction_style,
 )
-from redacted_report._proof_renderer import (  # noqa: F401 - compatibility re-exports
-    _SECTION_MAP,
-    _ProofPDFRenderer,
-    _decisions_by_segment,
-    _draw_blurred_text,
-    _draw_redaction_box,
-    _draw_segment,
-    _redaction_parts,
-    _split_keep_spaces,
-)
-from redacted_report.kmyth_support import _kmyth_help_error, _kmyth_seal_probe_error  # noqa: F401
-from redacted_report.kmyth_support import _resolve_kmyth_status
+from redacted_report._proof_renderer import _ProofPDFRenderer, _decisions_by_segment
+from redacted_report.kmyth_support import resolve_kmyth_status
 
 
 def style_redaction_decisions(
@@ -412,7 +402,7 @@ def write_dev_variant_pdfs(
 ) -> dict[str, object]:
     """Write one proof PDF per visual combination plus optional secure variants."""
     output_dir.mkdir(parents=True, exist_ok=True)
-    kmyth_status = _resolve_kmyth_status(
+    kmyth_status = resolve_kmyth_status(
         include_kmyth=include_kmyth and include_steganography,
         binary_dir=kmyth_binary_dir,
         seal_probe_timeout_seconds=min(kmyth_timeout_seconds, 15),

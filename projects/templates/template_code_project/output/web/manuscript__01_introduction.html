@@ -704,11 +704,11 @@ host-dependent timings.</li>
 <code>infrastructure.validation</code> components
 (<code>markdown_validator</code>, <code>output_validator</code>) to
 ensure generated artifacts are structurally valid and traceable.</li>
-<li><strong>Reporting &amp; Rendering</strong>: Employing
-<code>infrastructure.rendering.pdf_renderer</code> and
-<code>infrastructure.reporting.executive_reporter</code> to
-automatically transform code outputs into this finalized
-manuscript.</li>
+<li><strong>Reporting &amp; Rendering</strong>: The project hydrates
+manuscript variables from its analysis outputs, then
+<code>infrastructure.rendering.pdf_renderer</code> compiles the
+manuscript. The supported <code>infrastructure.reporting</code> API
+produces separate pipeline and cross-project summaries.</li>
 </ul>
 <h2 id="algorithm-overview">Algorithm Overview</h2>
 <p>The reference gradient descent algorithm iteratively updates the

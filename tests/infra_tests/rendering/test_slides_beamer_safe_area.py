@@ -12,7 +12,7 @@ import pytest
 from reportlab.pdfgen import canvas
 
 from infrastructure.core.exceptions import RenderingError
-from infrastructure.rendering._slides_accessibility import AccessibleSlidePolicy
+from infrastructure.rendering._slides_accessibility_contracts import AccessibleSlidePolicy
 from infrastructure.rendering._slides_accessibility_contracts import (
     ACCESSIBLE_BEAMER_FOOTER_BOTTOM_SKIP_PT,
     ACCESSIBLE_BEAMER_FOOTER_FONT_PT,

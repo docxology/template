@@ -13,7 +13,7 @@ operation in the pipeline — use incremental mode (the default) whenever possib
   Deleting it triggers full LLM re-extraction (~hours on local Ollama).
 - **Confidence floor**: `min_confidence: 0.6` is the validated extraction threshold. Do not lower
   it without re-running the calibration study (`κ > 0.70` requirement).
-- **RDF namespace stability**: `AIF_NAMESPACE = "http://activeinference.institute/ontology/"` is
+- **RDF namespace stability**: `ONTOLOGY_NAMESPACE = "http://example.org/litmeta/ontology/"` is
   published in the nanopub.trig output. Never change it without a migration script that rewrites
   all existing nanopublications.
 - **Score range**: `score_hypothesis()` returns a value in [−1, +1]. A return of `0.0` is
@@ -69,6 +69,6 @@ Ollama must be running at `http://localhost:11434` with `gemma3:4b` pulled.
   with its own extraction/scoring pipeline (`scripts/10_reproducibility_assessment.py`), not a
   patch to `llm_extraction.py` — this module's own abstract-only limitation is unchanged.
 - **JSON parsing fragility**: LLM responses with nested JSON or escaped quotes may fail parsing.
-  `_parse_llm_response()` strips markdown fences but has no fallback tokenizer.
+  `parse_llm_response()` strips markdown fences but has no fallback tokenizer.
 - **Assertion ID collision**: IDs use `f"llm_{paper_id}_{hypothesis_id}"`. Reprocessing the
   same paper creates a duplicate that `merge_nanopubs` deduplicates by overwrite.

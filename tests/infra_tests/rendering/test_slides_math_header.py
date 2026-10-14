@@ -15,7 +15,7 @@ import pytest
 from pypdf import PdfWriter
 
 from infrastructure.rendering import slides_renderer
-from infrastructure.rendering._slides_accessibility import AccessibleSlidePolicy
+from infrastructure.rendering._slides_accessibility_contracts import AccessibleSlidePolicy
 from infrastructure.rendering._slides_math_header import write_slides_math_header
 from infrastructure.rendering.config import RenderingConfig
 from infrastructure.rendering.slides_renderer import SlidesRenderer

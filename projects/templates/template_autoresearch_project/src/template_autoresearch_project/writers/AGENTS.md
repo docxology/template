@@ -6,7 +6,7 @@
 | `loop_artifacts.py` | Core loop JSON/CSV/report writers |
 | `ml_artifacts.py` | ML task output tree |
 | `figure_artifacts.py` | Figure render context and loop-bound figures |
-| `payloads.py` | `refresh_loop_payloads` (+ legacy aliases) |
+| `payloads.py` | `refresh_loop_payloads` |
 | `manifests.py` | Artifact manifest, schema manifest, phase ledger |
 | `benchmark.py`, `figure_dispatch.py` | Benchmark grading and figure batch dispatch |
 

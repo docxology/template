@@ -25,7 +25,6 @@
 | Title | Convergence Analysis of Gradient Descent Optimization |
 | Version | 3.0.0 |
 | Concept DOI | 10.5281/zenodo.20417136 |
-| Version DOI | 10.5281/zenodo.20931934 |
 | GitHub | docxology/template_code_project |
 | Zenodo | [https://zenodo.org/records/20417136](https://zenodo.org/records/20417136) |
 | SHA-256 | pending |

@@ -48,7 +48,7 @@ def test_actual_pipeline_and_interactive_imports_leave_plotting_unloaded(tmp_pat
         "assert save_pipeline_report is actual_save and InteractiveDashboard is actual_dashboard\n"
         "assert not any(name == 'matplotlib' or name.startswith('matplotlib.') for name in sys.modules)\n"
         "assert 'infrastructure.reporting._dashboard_matplotlib' not in sys.modules\n"
-        "assert 'infrastructure.reporting._dashboard_charts' not in sys.modules\n"
+        "assert 'infrastructure.reporting._dashboard_charts_outputs' not in sys.modules\n"
         "print('actual-ordinary-providers-without-plotting')\n",
         tmp_path,
     )
@@ -63,7 +63,7 @@ def test_actual_optional_exports_and_enumeration_retain_original_function_identi
         "import infrastructure.reporting as reporting\n"
         "assert reporting.DASHBOARD_AVAILABLE is True\n"
         "from infrastructure.reporting._dashboard_matplotlib import generate_all_dashboards, generate_plotly_dashboard\n"
-        "from infrastructure.reporting._dashboard_charts import generate_matplotlib_dashboard\n"
+        "from infrastructure.reporting._dashboard_charts_outputs import generate_matplotlib_dashboard\n"
         "assert reporting.generate_all_dashboards is generate_all_dashboards\n"
         "assert reporting.generate_plotly_dashboard is generate_plotly_dashboard\n"
         "assert reporting.generate_matplotlib_dashboard is generate_matplotlib_dashboard\n"

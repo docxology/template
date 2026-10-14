@@ -91,7 +91,7 @@
       "metric_name": "readiness_valid",
       "status": "deferred",
       "touched_paths": [
-        "projects/templates/template_autoresearch_project/src/loop.py"
+        "projects/templates/template_autoresearch_project/src/template_autoresearch_project/loop/loop.py"
       ]
     },
     {
@@ -104,11 +104,11 @@
       "metric_name": "benchmark_status",
       "status": "deferred",
       "touched_paths": [
-        "projects/templates/template_autoresearch_project/src/reports.py"
+        "projects/templates/template_autoresearch_project/src/template_autoresearch_project/writers/reports.py"
       ]
     }
   ],
-  "generated_at": "2026-08-14T14:20:53+00:00",
+  "generated_at": "2026-10-14T14:49:00+00:00",
   "ideas": [
     {
       "evidence_links": [

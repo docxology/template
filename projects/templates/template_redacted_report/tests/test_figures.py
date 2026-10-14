@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import sys
 from pathlib import Path
 
 import pytest
@@ -95,10 +96,9 @@ def test_figure_types_match_domain_profile() -> None:
 def test_committed_figures_match_regenerated_geometry() -> None:
     """Tracked evidence must match the fresh pipeline's registry and geometry.
 
-    The canonical Stage 02 producer runs the figure builder through the
-    project's own environment (``uv run`` from the project root), so this test
-    spawns that exact producer instead of importing under the test runner's
-    environment. PNG raster bytes can legitimately vary with the host's
+    The figure builder runs with this gate's explicitly selected interpreter.
+    Real isolated readbacks bind its runtime, installed SDK and dependencies
+    before and after execution. PNG raster bytes can legitimately vary with the host's
     FreeType/font backend even when the locked matplotlib version is identical;
     same-environment byte determinism is covered separately above. This gate
     therefore compares the source-bound registry and rendered canvas geometry.
@@ -108,10 +108,32 @@ def test_committed_figures_match_regenerated_geometry() -> None:
 
     from PIL import Image
 
+    provider_program = (
+        "import hashlib,importlib.metadata as m,json,sys;from pathlib import Path;import infrastructure;"
+        "print(json.dumps({'python':sys.version,'executable':str(Path(sys.executable).resolve()),"
+        "'prefix':sys.prefix,'sdk_origin':str(Path(infrastructure.__file__).resolve()),"
+        "'sdk_sha256':hashlib.sha256(Path(infrastructure.__file__).read_bytes()).hexdigest(),"
+        "'packages':{name:m.version(name) for name in "
+        "('research-project-template','reportlab','pytest','coverage')}}));"
+    )
+
+    def read_runtime_provider() -> dict[str, object]:
+        observed = subprocess.run(
+            [sys.executable, "-I", "-c", provider_program],
+            cwd=PROJECT_ROOT,
+            capture_output=True,
+            text=True,
+            check=False,
+            timeout=30,
+        )
+        assert observed.returncode == 0, observed.stderr
+        return json.loads(observed.stdout)
+
+    runtime_before = read_runtime_provider()
     with tempfile.TemporaryDirectory(prefix="redacted-fig-check-") as tmp:
         out_dir = Path(tmp) / "figures"
         completed = subprocess.run(
-            ["uv", "run", "python", "scripts/02_build_figures.py", "--output-dir", str(out_dir)],
+            [sys.executable, "scripts/02_build_figures.py", "--output-dir", str(out_dir)],
             cwd=PROJECT_ROOT,
             capture_output=True,
             text=True,
@@ -119,6 +141,7 @@ def test_committed_figures_match_regenerated_geometry() -> None:
             timeout=300,
         )
         assert completed.returncode == 0, completed.stderr
+        assert read_runtime_provider() == runtime_before, "figure producer changed the selected runtime/provider"
         registry = json.loads((out_dir / "figure_registry.json").read_text(encoding="utf-8"))
         on_disk_registry = json.loads((FIGURES_DIR / "figure_registry.json").read_text(encoding="utf-8"))
         assert registry == on_disk_registry, "tracked figure_registry.json drifted from source"

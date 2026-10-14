@@ -12,14 +12,16 @@ from .hypothesis_charts import (
     plot_assertion_type_breakdown,
     plot_assertion_summary,
 )
-from .advanced_plots import (
-    plot_word_cloud,
+from template_literature_meta_analysis.visualization.advanced.embeddings import (
     plot_pca_embeddings,
     plot_term_heatmap,
     plot_dendrogram,
+)
+from template_literature_meta_analysis.visualization.advanced.topics import (
     plot_topic_term_bars,
     plot_cooccurrence_matrix,
 )
+from template_literature_meta_analysis.visualization.advanced.word_cloud import plot_word_cloud
 
 __all__ = [
     "VIZ_CONFIG",

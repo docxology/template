@@ -3,8 +3,8 @@ import numpy as np
 from analytical.bernoulli_toy import (
     empirical_mutual_information,
     ising_mutual_information,
-    lambda_sweep_values,
 )
+from analytical.hyperparameters import Hyperparameters, lambda_grid
 
 
 def test_ising_mi_zero_at_lambda_zero() -> None:
@@ -16,5 +16,5 @@ def test_ising_mi_saturates() -> None:
 
 
 def test_empirical_matches_closed_form_on_grid() -> None:
-    for lam in lambda_sweep_values(11):
+    for lam in lambda_grid(Hyperparameters(lambda_grid_points=11)):
         assert abs(ising_mutual_information(lam) - empirical_mutual_information(lam)) < 1e-9

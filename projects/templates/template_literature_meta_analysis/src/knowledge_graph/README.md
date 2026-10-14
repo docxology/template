@@ -6,7 +6,7 @@ assertions into RDF/TriG nanopublications and computes citation-weighted hypothe
 ## Components
 
 ### `schema.py`
-RDF namespace and URI definitions. `AIF_NAMESPACE` (`http://activeinference.institute/ontology/`),
+RDF namespace and URI definitions. `ONTOLOGY_NAMESPACE` (`http://example.org/litmeta/ontology/`),
 `ASSERTION_TYPES` (predicate URIs for supports/contradicts/neutral), `HYPOTHESIS_CATEGORIES`, and
 `SUBFIELD_URIS`. Call `configure_hypothesis_categories(hypothesis_ids)` to sync after changing
 the active hypothesis set.

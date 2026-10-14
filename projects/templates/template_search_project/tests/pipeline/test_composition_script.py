@@ -7,10 +7,10 @@ import subprocess
 import sys
 from pathlib import Path
 
+import pytest
+
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
-# Project lives at projects/templates/<name>/; repo root is three levels up.
-REPO_ROOT = PROJECT_ROOT.parents[2]
 
 
 def _run(args: list[str]) -> subprocess.CompletedProcess[str]:
@@ -20,7 +20,7 @@ def _run(args: list[str]) -> subprocess.CompletedProcess[str]:
             str(PROJECT_ROOT / "scripts" / "s_compose_literature_review.py"),
             *args,
         ],
-        cwd=REPO_ROOT,
+        cwd=PROJECT_ROOT,
         capture_output=True,
         text=True,
     )
@@ -180,3 +180,33 @@ def test_composition_custom_output_path(tmp_path: Path):
     assert result.returncode == 0, result.stderr
     assert custom.exists()
     assert "[@alice2020convexity]" in custom.read_text(encoding="utf-8")
+
+
+@pytest.mark.parametrize("fault", ["authored-source", "missing-origin"])
+def test_composition_refuses_changed_genuine_sdk_origin_before_outputs(tmp_path: Path, fault: str) -> None:
+    """A real preloaded SDK cannot become an authored or nonexistent provider."""
+    script = PROJECT_ROOT / "scripts/s_compose_literature_review.py"
+    origin = script if fault == "authored-source" else tmp_path / "absent-sdk.py"
+    output = tmp_path / "never-created.md"
+    launch = (
+        "import infrastructure,runpy,sys;infrastructure.__file__=sys.argv.pop(1);"
+        "script=sys.argv.pop(1);before=sys.path[:];sys.argv[0]=script\n"
+        "try:\n"
+        " runpy.run_path(script,run_name='__main__')\n"
+        "except (ImportError,FileNotFoundError) as error:\n"
+        " assert sys.path==before\n"
+        " print(type(error).__name__+': '+str(error),file=sys.stderr)\n"
+        " raise SystemExit(1)\n"
+        "raise AssertionError('changed SDK origin was accepted')\n"
+    )
+    result = subprocess.run(
+        [sys.executable, "-I", "-c", launch, str(origin), str(script), "--output", str(output)],
+        cwd=tmp_path,
+        capture_output=True,
+        text=True,
+        timeout=30,
+    )
+    assert result.returncode == 1, result.stdout + result.stderr
+    expected = "own project source cannot provide" if fault == "authored-source" else "FileNotFoundError"
+    assert expected in result.stderr
+    assert not output.exists()

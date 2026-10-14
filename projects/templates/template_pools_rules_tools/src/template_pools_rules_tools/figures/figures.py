@@ -17,7 +17,6 @@ generate_resilience_layers(output_dir=None, filename="resilience_layers.png")
 generate_pipeline_flow(output_dir=None, filename="pipeline_flow.png")
 generate_cover_art(output_dir=None, filename="cover_art.png")
 all_figures(output_dir=None, integration_result=None) -> dict[str, Path]
-generate_all_figures(...)  -- alias for all_figures
 
 All functions return pathlib.Path (or None if matplotlib unavailable).
 """
@@ -734,6 +733,3 @@ def all_figures(
         "pipeline_flow": pipeline,
         **covers,
     }
-
-
-generate_all_figures = all_figures  # alias for script use

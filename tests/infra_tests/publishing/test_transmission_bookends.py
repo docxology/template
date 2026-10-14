@@ -5,6 +5,8 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
+import pytest
+
 from infrastructure.transmission.transmission_barcode_strip import MIN_STRIP_HEIGHT, MIN_STRIP_WIDTH, STRIP_FILENAME
 from infrastructure.transmission.transmission_bookends import (
     BEGIN_FILENAME,
@@ -123,6 +125,107 @@ class TestTransmissionBookends:
         assert "Prior:" in end_markdown
         assert "### Release metadata" not in end_markdown
         assert "SHA-512" not in end_markdown
+
+    def test_unreleased_context_keeps_receipts_in_history(self, tmp_path: Path) -> None:
+        project_root = tmp_path / "demo"
+        _write_project(project_root, doi="10.5281/zenodo.12345")
+        config_path = project_root / "manuscript/config.yaml"
+        config_path.write_text(
+            config_path.read_text().replace(
+                "publication:\n",
+                "publication:\n  release_status: unreleased\n  intended_version: '1.0'\n"
+                "  last_published_version: '0.9'\n  version_doi: '10.5281/zenodo.98765'\n",
+            )
+        )
+        ledger_path = project_root / "output/data/publication_ledger.json"
+        ledger_path.parent.mkdir(parents=True)
+        ledger_bytes = json.dumps(
+            {
+                "schema": "template-publication-ledger-v1",
+                "releases": [
+                    {
+                        "tag": "v0.9",
+                        "doi": "10.5281/zenodo.98765",
+                        "github_release_url": "https://github.com/owner/demo/releases/tag/v0.9",
+                        "pdf_sha256": "a" * 64,
+                        "dry_run": False,
+                        "sandbox": False,
+                    }
+                ],
+            }
+        ).encode()
+        ledger_path.write_bytes(ledger_bytes)
+        context = build_transmission_context(project_root, "demo", repo_root=tmp_path)
+        assert context is not None
+        assert context.version == "1.0"
+        assert context.published is False and context.pairing_valid is False
+        assert context.github_release_url is None and context.pdf_sha256 is None
+        assert context.version_doi is None and context.version_record is None
+        assert "v0.9" in context.prior_compact
+        assert "10.5281/zenodo.98765" in context.prior_compact
+        assert ledger_path.read_bytes() == ledger_bytes
+        manifest = json.loads((project_root / "output/data/transmission_manifest.json").read_text())
+        assert manifest["published"] is False and manifest["pdf_sha256"] is None
+        begin = render_transmission_markdown(context, boundary="begin")
+        end = render_transmission_markdown(context, boundary="end")
+        assert "**State:** unpublished" in begin and "**Pairing:** pending" in begin
+        assert "**Release:** v1.0" in end and "pairing pending" in end
+
+    def test_other_version_receipt_cannot_publish_current_manuscript(self, tmp_path: Path) -> None:
+        project_root = tmp_path / "demo"
+        _write_project(project_root, doi="10.5281/zenodo.12345")
+        ledger_path = project_root / "output/data/publication_ledger.json"
+        ledger_path.parent.mkdir(parents=True)
+        ledger_path.write_text(
+            json.dumps(
+                {
+                    "schema": "template-publication-ledger-v1",
+                    "releases": [
+                        {
+                            "tag": "v0.9",
+                            "doi": "10.5281/zenodo.12345",
+                            "github_release_url": "https://github.com/owner/demo/releases/tag/v0.9",
+                            "pdf_sha256": "a" * 64,
+                        }
+                    ],
+                }
+            )
+        )
+        context = build_transmission_context(project_root, "demo", repo_root=tmp_path)
+        assert context is not None
+        assert context.published is False and context.pairing_valid is False
+        assert context.pdf_sha256 is None and context.github_release_url is None
+        assert "v0.9" in context.prior_compact
+
+    @pytest.mark.parametrize("flag,value", [("dry_run", True), ("sandbox", True), ("dry_run", "false")])
+    def test_simulated_receipts_cannot_publish_current_manuscript(
+        self, tmp_path: Path, flag: str, value: bool | str
+    ) -> None:
+        project_root = tmp_path / "demo"
+        _write_project(project_root, doi="10.5281/zenodo.12345")
+        ledger_path = project_root / "output/data/publication_ledger.json"
+        ledger_path.parent.mkdir(parents=True)
+        ledger_path.write_text(
+            json.dumps(
+                {
+                    "schema": "template-publication-ledger-v1",
+                    "releases": [
+                        {
+                            "tag": "v1.0.0",
+                            "doi": "10.5281/zenodo.12345",
+                            "github_release_url": "https://github.com/owner/demo/releases/tag/v1.0.0",
+                            "pdf_sha256": "a" * 64,
+                            flag: value,
+                        }
+                    ],
+                }
+            )
+        )
+        context = build_transmission_context(project_root, "demo", repo_root=tmp_path)
+        assert context is not None
+        assert context.published is False and context.pairing_valid is False
+        assert context.pdf_sha256 is None and context.github_release_url is None
+        assert context.prior_compact == "_No prior releases._"
 
     def test_write_transmission_bookends_and_discovery_order(self, tmp_path: Path) -> None:
         project_root = tmp_path / "demo"

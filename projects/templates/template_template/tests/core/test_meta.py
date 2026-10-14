@@ -14,7 +14,6 @@ from template_template import (
     ProjectAnalysis,
     analyze_test_coverage_config,
     build_infrastructure_report,
-    count_pipeline_stages,
     discover_infrastructure_modules,
     discover_projects,
     enumerate_numbered_scripts,
@@ -139,49 +138,49 @@ class TestDiscoverProjects:
 
 
 # ---------------------------------------------------------------------------
-# count_pipeline_stages
+# enumerate_numbered_scripts
 # ---------------------------------------------------------------------------
 
 
 class TestCountPipelineStages:
-    """Tests for ``count_pipeline_stages``."""
+    """Tests for ``enumerate_numbered_scripts``."""
 
     def test_returns_list_of_stages(self):
-        stages = count_pipeline_stages(REPO_ROOT / "scripts")
+        stages = enumerate_numbered_scripts(REPO_ROOT / "scripts")
         assert isinstance(stages, list)
         assert all(isinstance(s, PipelineStage) for s in stages)
 
     def test_discovers_minimum_stages(self):
         """Pipeline must have at least 5 numbered stages."""
-        stages = count_pipeline_stages(REPO_ROOT / "scripts")
+        stages = enumerate_numbered_scripts(REPO_ROOT / "scripts")
         assert len(stages) >= 5, f"Expected ≥5 stages, got {len(stages)}"
 
     def test_stages_are_sequential(self):
         """Canonical pipeline stage numbers must never regress."""
-        stages = count_pipeline_stages(REPO_ROOT / "scripts")
+        stages = enumerate_numbered_scripts(REPO_ROOT / "scripts")
         numbers = [s.number for s in stages]
         for i in range(1, len(numbers)):
             assert numbers[i] >= numbers[i - 1], f"Stages not non-decreasing: {numbers}"
 
     def test_stage_zero_is_setup(self):
-        stages = count_pipeline_stages(REPO_ROOT / "scripts")
+        stages = enumerate_numbered_scripts(REPO_ROOT / "scripts")
         stage_map = {s.number: s for s in stages}
         assert 0 in stage_map, "Stage 0 (setup) not found"
         assert "setup" in stage_map[0].script_name.lower()
 
     def test_stage_one_is_tests(self):
-        stages = count_pipeline_stages(REPO_ROOT / "scripts")
+        stages = enumerate_numbered_scripts(REPO_ROOT / "scripts")
         stage_map = {s.number: s for s in stages}
         assert 1 in stage_map, "Stage 1 (tests) not found"
         assert "test" in stage_map[1].script_name.lower()
 
     def test_each_stage_has_script_path(self):
-        stages = count_pipeline_stages(REPO_ROOT / "scripts")
+        stages = enumerate_numbered_scripts(REPO_ROOT / "scripts")
         for stage in stages:
             assert stage.script_path.is_file(), f"Stage {stage.number} script missing: {stage.script_path}"
 
     def test_invalid_dir_returns_empty(self):
-        result = count_pipeline_stages(Path("/nonexistent/path"))
+        result = enumerate_numbered_scripts(Path("/nonexistent/path"))
         assert result == []
 
 
@@ -236,11 +235,7 @@ class TestResolveTemplateRepoRoot:
 
 
 class TestEnumerateNumberedScripts:
-    """Tests for ``enumerate_numbered_scripts`` and alias."""
-
-    def test_alias_matches_enumerate(self):
-        scripts_dir = REPO_ROOT / "scripts"
-        assert count_pipeline_stages(scripts_dir) == enumerate_numbered_scripts(scripts_dir)
+    """Tests for ``enumerate_numbered_scripts``."""
 
     def test_numbered_scripts_have_two_digit_prefix(self):
         stages = enumerate_numbered_scripts(REPO_ROOT / "scripts")

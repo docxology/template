@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from typing import Any
 import pytest
-from infrastructure.rendering._slides_accessibility import AccessibleSlidePolicy
+from infrastructure.rendering._slides_accessibility_contracts import AccessibleSlidePolicy
 from infrastructure.rendering.config import RenderingConfig
 
 

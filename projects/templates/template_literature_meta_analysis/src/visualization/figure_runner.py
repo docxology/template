@@ -14,14 +14,16 @@ import numpy as np
 
 os.environ.setdefault("MPLBACKEND", "Agg")
 
-from template_literature_meta_analysis.visualization.advanced_plots import (
-    plot_cooccurrence_matrix,
+from template_literature_meta_analysis.visualization.advanced.embeddings import (
     plot_dendrogram,
     plot_pca_embeddings,
     plot_term_heatmap,
-    plot_topic_term_bars,
-    plot_word_cloud,
 )
+from template_literature_meta_analysis.visualization.advanced.topics import (
+    plot_cooccurrence_matrix,
+    plot_topic_term_bars,
+)
+from template_literature_meta_analysis.visualization.advanced.word_cloud import plot_word_cloud
 from template_literature_meta_analysis.visualization.citation_plots import (
     plot_citation_network,
     plot_degree_distribution,

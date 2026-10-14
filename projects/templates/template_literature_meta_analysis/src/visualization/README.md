@@ -35,7 +35,10 @@ Key exports:
 - `plot_assertion_type_breakdown(assertion_counts, output_path)` — stacked horizontal bars (supports/neutral/contradicts)
 - `plot_assertion_summary(total, type_counts, hypothesis_counts, output_path)` — pie + bar multi-panel
 
-### `advanced_plots.py`
+### `advanced/`
+
+Implementations live in `embeddings.py`, `topics.py`, and `word_cloud.py`;
+`visualization/__init__.py` declares the supported package exports.
 - `plot_word_cloud(word_weights, output_path, max_words)` — viridis colormap word cloud
 - `plot_pca_embeddings(tfidf_matrix, labels, feature_names, output_path)` — 2-D PCA scatter with loading arrows
 - `plot_term_heatmap(tfidf_matrix, feature_names, labels, output_path, n_terms)` — YlOrRd heatmap; terms selected by **between-subfield variance** (discriminative, not globally frequent)

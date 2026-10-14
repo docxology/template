@@ -10,7 +10,7 @@ from pathlib import Path
 from typing import TYPE_CHECKING, Any, Protocol
 
 from infrastructure.core.logging.utils import get_logger
-from infrastructure.reporting.executive_reporter import ExecutiveSummary
+from infrastructure.reporting._executive_models import ExecutiveSummary
 from infrastructure.reporting.output_organizer import FileType, OutputOrganizer
 
 if TYPE_CHECKING:

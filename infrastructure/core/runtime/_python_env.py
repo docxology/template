@@ -11,7 +11,7 @@ import sys
 from pathlib import Path
 from collections.abc import Mapping
 
-from infrastructure.core.secrets import is_secret_env_name, strip_secret_env
+from infrastructure.core.secrets import strip_secret_env
 from infrastructure.core.files.secure_write import read_bytes_confined
 from infrastructure.core.runtime.python_binding import select_analysis_python
 from infrastructure.core.logging.utils import get_logger, log_success
@@ -203,30 +203,6 @@ def build_analysis_script_cmd_and_env(
     )
     env["PROJECT_DIR"] = str(project_root)
     env.pop("VIRTUAL_ENV", None)
-
-    # ── Pass-through: project-specific and API key variables ─────────────────
-    # Any FEP_LEAN_* variables set in the parent shell (e.g. run.sh exporting
-    # FEP_LEAN_GAUSS_WORKFLOWS=1) are forwarded verbatim.  This ensures that
-    # enabling live Lean 4 / Hermes workflows from run.sh works end-to-end
-    # without requiring modifications to the project scripts themselves.
-    # API key variables are also forwarded so HermesConfig.from_settings()
-    # can resolve them even when ~/.gauss/.env is not on the subprocess PATH.
-    _PASSTHROUGH_PREFIXES = ("FEP_LEAN_",)
-    _PASSTHROUGH_KEYS = (
-        "OPENROUTER_API_KEY",
-        "ANTHROPIC_API_KEY",
-        "OPENAI_API_KEY",
-        "GAUSS_HOME",
-        "HERMES_MODEL",
-        "HERMES_API_BASE",
-        "OPENAI_BASE_URL",
-        "ELAN_HOME",
-    )
-    for key, val in source_env.items():
-        if (any(key.startswith(p) for p in _PASSTHROUGH_PREFIXES) or key in _PASSTHROUGH_KEYS) and (
-            allow_secret_env or not is_secret_env_name(key)
-        ):
-            env[key] = val
 
     from infrastructure.core.execution_policy import apply_execution_policy
 

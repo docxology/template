@@ -4,9 +4,9 @@ This module is the single entry point for generating all dashboard formats.
 Chart generators, specialized visualizations, and CSV exports are delegated
 to extracted submodules:
 
-  - ``_dashboard_charts``       — base chart functions + multi-panel dashboard
+  - ``_dashboard_charts_health``, ``_dashboard_charts_outputs``, ``_dashboard_charts_pipeline`` — chart families
   - ``_dashboard_health`` / ``_dashboard_pipeline`` / ``_dashboard_outputs`` / ``_dashboard_codebase`` — specialized charts
-  - ``_dashboard_csv``          — CSV export: project breakdowns, comparative analysis, recommendations
+  - ``_csv_project_breakdown``, ``_csv_comparative``, ``_csv_tables`` — CSV exports
 
 The Plotly interactive dashboard generator lives in this module because it
 has no other downstream consumers and is small enough not to warrant a file.
@@ -16,48 +16,37 @@ from pathlib import Path
 from typing import Any
 
 from infrastructure.core.logging.utils import get_logger
-from infrastructure.reporting.executive_reporter import ExecutiveSummary
+from infrastructure.reporting._executive_models import ExecutiveSummary
 from infrastructure.reporting.manuscript_overview import generate_all_manuscript_overviews
 
-# ── Re-exports from extracted modules ────────────────────────────────────────
-# Callers that previously imported from this module will continue to work.
-from infrastructure.reporting._dashboard_charts import (  # noqa: F401
-    COLORS,
-    create_coverage_chart,
-    create_manuscript_complexity_chart,
-    create_manuscript_size_chart,
-    create_output_distribution_chart,
-    create_performance_timeline_chart,
-    create_pipeline_duration_chart,
-    create_summary_table,
-    create_test_count_chart,
-    generate_matplotlib_dashboard,
-)
-from infrastructure.reporting._dashboard_codebase import (  # noqa: F401
+from infrastructure.reporting._dashboard_charts_outputs import generate_matplotlib_dashboard
+from infrastructure.reporting._dashboard_codebase import (
     generate_codebase_comparison_chart,
     generate_codebase_complexity_chart,
 )
-from infrastructure.reporting._dashboard_health import (  # noqa: F401
+from infrastructure.reporting._dashboard_health import (
     generate_health_comparison_chart,
     generate_health_radar_chart,
     generate_project_breakdowns,
 )
-from infrastructure.reporting._dashboard_outputs import (  # noqa: F401
+from infrastructure.reporting._dashboard_outputs import (
     generate_output_comparison_chart,
     generate_output_distribution_charts,
 )
-from infrastructure.reporting._dashboard_pipeline import (  # noqa: F401
+from infrastructure.reporting._dashboard_pipeline import (
     generate_pipeline_bottlenecks_chart,
     generate_pipeline_efficiency_chart,
 )
-from infrastructure.reporting._dashboard_csv import (  # noqa: F401
-    generate_comparative_analysis_csv,
+from infrastructure.reporting._csv_comparative import generate_comparative_analysis_csv
+from infrastructure.reporting._csv_tables import (
     generate_csv_data_tables,
-    generate_detailed_project_breakdown_csv,
     generate_prioritized_recommendations_csv,
 )
+from infrastructure.reporting._csv_project_breakdown import generate_detailed_project_breakdown_csv
 
 logger = get_logger(__name__)
+
+__all__ = ["generate_all_dashboards", "generate_plotly_dashboard"]
 
 
 # ── Plotly dashboard (kept inline — no need for a separate file) ─────────────

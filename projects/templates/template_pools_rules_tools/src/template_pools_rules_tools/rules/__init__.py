@@ -3,7 +3,7 @@ loading and application, plus semantic evaluation of strong rule
 constraints.
 
 These modules are re-exported from ``template_pools_rules_tools`` for
-backwards compatibility; import them from the package root.
+the supported public API; import them from the package root.
 """
 
 from .rules_applier import (

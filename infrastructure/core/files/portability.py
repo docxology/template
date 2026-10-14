@@ -16,12 +16,14 @@ def sanitize_machine_local_paths(root: Path) -> tuple[Path, ...]:
 
     The replacement preserves the remainder of each path, so diagnostics stay
     useful while checked publication evidence remains clone-independent.
-    Unreadable or non-UTF-8 files are left untouched.
+    Hidden runtime state, unreadable files and non-UTF-8 files are left untouched.
     """
     if not root.is_dir() or root.is_symlink():
         return ()
     changed: list[Path] = []
     for path in sorted(root.rglob("*")):
+        if any(part.startswith(".") for part in path.relative_to(root).parts):
+            continue
         if path.is_symlink() or not path.is_file():
             continue
         if path.suffix.lower() not in PUBLICATION_TEXT_SUFFIXES:

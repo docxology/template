@@ -588,7 +588,7 @@ and data-versioning tools track artifacts. <code>template/</code>
 combines those concerns with test and provenance gates by applying
 Infrastructure as Code to the research lifecycle. Its Two-Layer
 Architecture separates 31 infrastructure subdirectories (28 importable
-Python packages, ~1285 modules, validated by ~12,235 tests) from
+Python packages, ~1279 modules, validated by ~12,193 tests) from
 self-contained project workspaces. A YAML-declared pipeline (17 stages;
 10 in a default full run) coordinates environment checks, test
 execution, analysis, Pandoc/XeLaTeX rendering, SHA-256 hashing with
@@ -630,11 +630,11 @@ capabilities from versioned interfaces.</p>
 control-positive layouts, including optimization
 (<code>template_code_project</code>, 263 discovered tests), prose
 (<code>template_prose_project</code>, 165 discovered tests), and
-AutoResearch readiness (<code>template_autoresearch_project</code>, 317
+AutoResearch readiness (<code>template_autoresearch_project</code>, 318
 discovered tests). Each declares the same 90% project-source floor and
 consumes the shared pipeline without project-to-project imports. This
 manuscript adds a reflexive artifact: <code>template_template</code>
-(151 discovered tests) follows the same analysis and render path while
+(152 discovered tests) follows the same analysis and render path while
 injecting repository counters and figures from live introspection. The
 result is a self-documenting build whose quantitative repository claims
 are generated artifacts, whose manuscript claims are checked against an

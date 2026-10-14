@@ -5,10 +5,8 @@ from __future__ import annotations
 from typing import Any
 import pytest
 from infrastructure.core.exceptions import RenderingError
-from infrastructure.rendering._slides_accessibility import (
-    AccessibleSlidePolicy,
-    compose_accessible_pandoc_document,
-)
+from infrastructure.rendering._slides_accessibility_contracts import AccessibleSlidePolicy
+from infrastructure.rendering._slides_accessibility_composition import compose_accessible_pandoc_document
 from infrastructure.rendering._slides_accessibility_contracts import proportional_text_width_units
 from ._slides_accessibility_helpers import (
     _inlines,

@@ -6,8 +6,8 @@ import re
 from pathlib import Path
 import pytest
 from infrastructure.core.exceptions import RenderingError
-from infrastructure.rendering._slides_accessibility import (
-    AccessibleSlidePolicy,
+from infrastructure.rendering._slides_accessibility_contracts import AccessibleSlidePolicy
+from infrastructure.rendering._slides_accessibility_reveal import (
     accessible_reveal_output_issues,
     enhance_accessible_reveal,
 )

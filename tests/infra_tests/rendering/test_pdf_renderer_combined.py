@@ -14,7 +14,7 @@ import pytest
 import yaml
 
 from infrastructure.core.exceptions import RenderingError
-from infrastructure.rendering._pdf_latex_helpers import (
+from infrastructure.rendering._pdf_title_page import (
     generate_title_page_body,
     generate_title_page_preamble,
 )

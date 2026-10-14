@@ -84,7 +84,7 @@ Generic, Layer-1 facts for working in this repository.
 
 ## Confidentiality invariant (this is a PUBLIC repo)
 
-`.gitignore` ignores `projects/*` and negates **only** the public canonical exemplar trees under `projects/templates/` (plus the repo-level `projects/*.md` docs). The public exemplar roster is derived from `infrastructure.project.public_scope.PUBLIC_PROJECT_NAMES` and documented in [`docs/_generated/active_projects.md`](docs/_generated/active_projects.md); do not hand-maintain a second allowlist in prose. Those public canonical exemplars are the **only** project trees ever git-tracked/pushed. Confidential/private work lives in a **separate, external private repository** whose location is configured with `TEMPLATE_PRIVATE_PROJECTS_ROOT` or `.private_projects_root`; the simplified sidecar normally has `working/` and `archive/`, with optional `ongoing/` (long-lived projects with no publication target) and optional legacy `active/` folders still supported by the linker. `run.sh`/`infrastructure.orchestration` sync existing lifecycle folders into matching typed subfolders under `projects/`: `working/*` → `projects/working/*`, `ongoing/*` → `projects/ongoing/*`, `archive/*` → `projects/archive/*`, and optional `active/*` → `projects/active/*` (rendered). Only `projects/templates/*` and optional `projects/active/*` are discovered/rendered by default.
+`.gitignore` ignores `projects/*` and negates **only** the public canonical exemplar trees under `projects/templates/` (plus the repo-level `projects/*.md` docs). The public exemplar roster is derived from `infrastructure.project.public_scope.PUBLIC_PROJECT_NAMES` and documented in [`docs/_generated/active_projects.md`](docs/_generated/active_projects.md); do not hand-maintain a second allowlist in prose. Those public canonical exemplars are the **only** project trees ever git-tracked/pushed. Confidential/private work lives in a **separate, external private repository** whose location is configured with `TEMPLATE_PRIVATE_PROJECTS_ROOT` or `.private_projects_root`; the simplified sidecar normally has `working/` and `archive/`, with optional `ongoing/` (long-lived projects with no publication target) and optional `active/` folders still supported by the linker. `run.sh`/`infrastructure.orchestration` sync existing lifecycle folders into matching typed subfolders under `projects/`: `working/*` → `projects/working/*`, `ongoing/*` → `projects/ongoing/*`, `archive/*` → `projects/archive/*`, and optional `active/*` → `projects/active/*` (rendered). Only `projects/templates/*` and optional `projects/active/*` are discovered/rendered by default.
 
 Every path under `projects/` other than `templates/` — especially the local-only `working/`, `archive/`, and optional `active/` mirrors — is **local-only and must never be committed**. This is enforced, not conventional: `scripts/audit/check_tracked_all.py` fails the CI `lint` job and the pre-push `pre-push-quick` hook if any non-template project path is tracked (a `git add -f` cannot slip past it). Negative control: `test_offending_tracked_projects_flags_non_exemplar` and `test_offending_tracked_projects_flags_unknown_templates_toplevel_doc` in [`tests/infra_tests/project/test_git_guards.py`](tests/infra_tests/project/test_git_guards.py) construct known-wrong tracked paths and assert the guard fails. Consult [`docs/_generated/active_projects.md`](docs/_generated/active_projects.md) before hard-coding any project path in docs.
 
@@ -171,13 +171,13 @@ The template now supports **multiple independent projects** within a single repo
 - Run individual projects: `--project {name}`
 - Run all projects sequentially: `--all-projects`
 - Interactive project selection menu
-- Backward compatibility with single-project workflows
+- Standalone and multi-project workflows
 
 **Active projects** (under `projects/`): the set **rotates** as workspaces are promoted, archived, or moved. Authoritative names **at any moment** are only in [`docs/_generated/active_projects.md`](docs/_generated/active_projects.md) (regenerate after layout changes). The **only** path **guaranteed** to remain the **control-positive** exemplar for docs and commands is `projects/templates/template_code_project/` (optimization research exemplar).
 
 Private projects normally live in a separate external private repository
 (location configurable via `TEMPLATE_PRIVATE_PROJECTS_ROOT` or `.private_projects_root`) and are symlinked by lifecycle into matching typed subfolders under `projects/`.
-The simplified private sidecar uses `working/` and `archive/` by default; optional `ongoing/` (long-lived projects with no publication target) and legacy `active/` folders are still recognized when present. `working/*` mirrors into `projects/working/*`, `ongoing/*` into `projects/ongoing/*`, and `archive/*` into `projects/archive/*` for explicit inspection/rendering; optional `active/*` mirrors into `projects/active/*` for discovery/rendering. Use
+The simplified private sidecar uses `working/` and `archive/` by default; optional `ongoing/` (long-lived projects with no publication target) and optional `active/` folders are still recognized when present. `working/*` mirrors into `projects/working/*`, `ongoing/*` into `projects/ongoing/*`, and `archive/*` into `projects/archive/*` for explicit inspection/rendering; optional `active/*` mirrors into `projects/active/*` for discovery/rendering. Use
 `uv run python -m infrastructure.orchestration link-projects --dry-run` to
 inspect the planned links, `TEMPLATE_PRIVATE_PROJECTS_ROOT` or
 `.private_projects_root` to override the sibling repo, and
@@ -196,7 +196,7 @@ Projects under `projects/templates/` (tracked exemplars) and `projects/active/` 
 - **Executed** by the canonical pipeline stages under `scripts/pipeline/` (for example, `stage_01_test.py` and `stage_02_analysis.py`)
 - **Outputs** generated in `projects/<subfolder>/{name}/output/` and copied to `output/<subfolder>/{name}/`
 
-### Non-Rendered Projects (`working/`, `ongoing/`, `archive/`, optional legacy mirrors)
+### Non-Rendered Projects (`working/`, `ongoing/`, `archive/`, optional mirrors)
 
 Projects under `projects/working/`, `projects/ongoing/`, and `projects/archive/` are **preserved for explicit targeted work but not executed by default**:
 

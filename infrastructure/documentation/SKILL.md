@@ -1,13 +1,13 @@
 ---
 name: infrastructure-documentation
-description: Skill for the documentation infrastructure module providing figure management, image handling, markdown integration, and API glossary generation. Use when managing research figures, inserting images into manuscripts, auto-numbering figures, or generating API documentation.
+description: Figure metadata, deterministic generated-figure registries, and source-derived API documentation. Use when publishing figure inventories, validating generated image files, or maintaining API glossaries.
 ---
 
 # Documentation Module
 
-Figure management, image handling, and documentation integration for research manuscripts.
+Figure metadata, file-bound publication registries, and source-derived documentation.
 
-## GeneratedFigureRegistry (`generated_figure_registry.py`)
+## Generated figure registries (`generated_figure_registry.py`)
 
 Use the fail-closed writer for deterministic project pipelines. Figure labels,
 filenames, captions, and qualified generator names remain project-owned; the
@@ -27,7 +27,7 @@ written = publish_generated_figures(
 
 ## FigureManager (`figure_manager.py`)
 
-Automatic figure numbering, cross-referencing, and metadata tracking:
+Label-indexed metadata registration and persistence:
 
 ```python
 from infrastructure.documentation import FigureManager, FigureMetadata
@@ -46,36 +46,20 @@ manager.register_figure(
 meta = manager.get_figure("fig:results")  # Returns FigureMetadata | None
 ```
 
-## ImageManager (`image_manager.py`)
+## Manuscript figures
 
-Image file management and processing:
+Author images and references in Pandoc form; pandoc-crossref assigns presentation
+numbers during rendering:
 
-```python
-from pathlib import Path
-from infrastructure.documentation import ImageManager, FigureManager
+```markdown
+![Measured analysis results.](../output/figures/results.png){#fig:results width=80%}
 
-img_manager = ImageManager(FigureManager())
-
-# Insert a registered figure into a markdown file under a section
-img_manager.insert_figure(Path("manuscript/01_intro.md"), "fig:results", section="Results")
-
-# Validate that referenced figures exist and labels are registered
-errors = img_manager.validate_figures(Path("manuscript/01_intro.md"))  # list[(label, error)]
+[@fig:results] summarizes the analysis.
 ```
 
-## MarkdownIntegration (`markdown_integration.py`)
-
-Auto-insertion of figures and content into markdown manuscripts:
-
-```python
-from pathlib import Path
-from infrastructure.documentation import MarkdownIntegration, FigureManager
-
-integrator = MarkdownIntegration(Path("manuscript"), FigureManager())
-
-# Insert a figure into a named section of a markdown file
-integrator.insert_figure_in_section(Path("manuscript/01_intro.md"), "fig:results", "Results")
-```
+Bind captions and alt text to the same analysis outputs as the figure. Use
+`publish_generated_figures` or `write_generated_figure_registry` to validate actual
+files before publication; metadata registration alone does not validate them.
 
 ## Glossary & API Documentation (`glossary_gen.py`)
 
@@ -107,5 +91,4 @@ updated_text = inject_between_markers(
 uv run python -m infrastructure.documentation.generate_glossary_cli \
   projects/{name}/src projects/{name}/manuscript/98_symbols_glossary.md
 
-# With no args, defaults to <repo>/project/src and <repo>/project/manuscript/98_symbols_glossary.md
 ```

@@ -8,13 +8,8 @@ from pathlib import Path
 import pytest
 
 from template_code_project.core.experiment_config import ExperimentConfig, load_experiment_config
-from template_code_project.dashboard import (
-    _compute_payload,
-    _load_yaml_defaults,
-    CFG_DEFAULT,
-    cli_main as dashboard_main,
-    parse_dashboard_args as _parse_args,
-)
+from template_code_project.dashboard import CFG_DEFAULT, cli_main as dashboard_main, parse_dashboard_args as _parse_args
+from template_code_project.dashboard.dashboard_payload import compute_payload, load_yaml_defaults
 from template_code_project.dashboard.dashboard_payload import validate_dashboard_payload
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
@@ -22,7 +17,7 @@ PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
 
 class TestDashboardConfig:
     def test_yaml_defaults_match_experiment_config(self):
-        cfg = _load_yaml_defaults(CFG_DEFAULT)
+        cfg = load_yaml_defaults(CFG_DEFAULT)
         expected = load_experiment_config(PROJECT_ROOT)
         assert cfg.step_sizes == expected.step_sizes
         assert cfg.tolerance == expected.tolerance
@@ -77,13 +72,13 @@ class TestDashboardPayload:
                 "50",
             ]
         )
-        payload = _compute_payload(args)
+        payload = compute_payload(args)
         assert any(payload["alpha_sweep"]["diverged"])
         assert any(d > 1e3 for d in payload["alpha_sweep"]["final_dist"])
 
     def test_dashboard_schema_rejects_missing_chart_field(self):
         args = _parse_args(["--step-sizes", "0.1", "--A", "1.0", "--b", "1.0", "--x0", "0.0"])
-        payload = _compute_payload(args)
+        payload = compute_payload(args)
         del payload["alpha_sweep"]["final_obj"]
 
         issues = validate_dashboard_payload(payload)
@@ -129,7 +124,7 @@ class TestDashboardPayload:
                 "50",
             ]
         )
-        payload = _compute_payload(args, sweep_runner=_run_sweep)
+        payload = compute_payload(args, sweep_runner=_run_sweep)
         sweep = payload["alpha_sweep"]
         assert float("inf") in sweep["final_dist"]
         assert True in sweep["diverged"]

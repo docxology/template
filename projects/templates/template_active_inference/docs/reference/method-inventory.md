@@ -2,7 +2,7 @@
 
 Generated documentation coverage for every Python `def` and `class` under `src/` and `scripts/`. Entries marked `inventory fallback` have no inline docstring yet, but remain documented here by path, line, kind, and qualified name.
 
-Total documented definitions: 892
+Total documented definitions: 889
 
 ## `src/analytical/bernoulli_toy.py`
 
@@ -13,7 +13,6 @@ Total documented definitions: 892
 | 29 | `function` | `ising_mutual_information` | docstring | Process ising mutual information. |
 | 44 | `function` | `ising_joint_posterior` | docstring | Process ising joint posterior. |
 | 52 | `function` | `empirical_mutual_information` | docstring | Mutual information recomputed independently from the joint via total correlation. |
-| 65 | `function` | `lambda_sweep_values` | docstring | Backward-compatible sweep grid; delegates to ``lambda_grid`` SSOT. |
 
 ## `src/analytical/coupling.py`
 
@@ -55,7 +54,7 @@ Total documented definitions: 892
 | ---: | --- | --- | --- | --- |
 | 14 | `class` | `Hyperparameters` | docstring | Data container for Hyperparameters. |
 | 24 | `function` | `load_hyperparameters` | docstring | Load hyperparameters from a file. |
-| 29 | `function` | `lambda_grid` | docstring | Process lambda grid. |
+| 29 | `function` | `lambda_grid` | docstring | Return the configured sweep, requiring at least two grid points. |
 
 ## `src/analytical/invariants.py`
 
@@ -1106,7 +1105,6 @@ Total documented definitions: 892
 | ---: | --- | --- | --- | --- |
 | 10 | `function` | `_graph_world_trace` | inventory fallback | Inventory fallback for function `_graph_world_trace` defined at `src/simulation/graph_world.py:10`. |
 | 28 | `function` | `write_graph_world_artifacts` | docstring | Write deterministic graph-world summary and trace artifacts. |
-| 53 | `function` | `write_graph_world_stub` | docstring | Backward-compatible wrapper returning the summary artifact path. |
 
 ## `src/simulation/invariants.py`
 
@@ -1369,10 +1367,9 @@ Total documented definitions: 892
 | 128 | `function` | `figure_si_belief_entropy_curve` | docstring | Process figure si belief entropy curve. |
 | 165 | `function` | `figure_si_obs_action_trace` | docstring | Process figure si obs action trace. |
 | 199 | `function` | `figure_si_tmaze_actions` | docstring | Process figure si tmaze actions. |
-| 235 | `function` | `figure_si_summary` | docstring | Deprecated alias for ``figure_si_tmaze_actions``. |
-| 240 | `function` | `figure_free_energy_curve` | docstring | Process figure free energy curve. |
-| 309 | `function` | `run_figure` | docstring | Dispatch a registry figure id to its generator. |
-| 322 | `function` | `generate_all_figures` | docstring | Generate all image artifacts; manuscript hydration owns registry JSON. |
+| 235 | `function` | `figure_free_energy_curve` | docstring | Process figure free energy curve. |
+| 304 | `function` | `run_figure` | docstring | Dispatch a registry figure id to its generator. |
+| 317 | `function` | `generate_all_figures` | docstring | Generate all image artifacts; manuscript hydration owns registry JSON. |
 
 ## `src/visualizations/figures_diagrams.py`
 

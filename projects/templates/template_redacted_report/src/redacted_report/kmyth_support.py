@@ -141,11 +141,3 @@ def kmyth_seal_probe_error(
         if not output_path.exists():
             return f"{tool_path.name} exited successfully but did not write a sidecar"
     return ""
-
-
-# Keep the private helper names importable from ``redacted_report.visuals`` for
-# existing project-local tests and scripts while the implementation lives in a
-# focused optional-tool module.
-_resolve_kmyth_status = resolve_kmyth_status
-_kmyth_help_error = kmyth_help_error
-_kmyth_seal_probe_error = kmyth_seal_probe_error

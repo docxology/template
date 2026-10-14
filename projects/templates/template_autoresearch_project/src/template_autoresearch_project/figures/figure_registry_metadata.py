@@ -24,7 +24,7 @@ FIGURE_RECORD_SPECS: dict[str, FigureRecordSpec] = {
         section="Results",
         width="0.8\\textwidth",
         placement="h",
-        generated_by="src.figures.write_stage_matrix_figure",
+        generated_by="template_autoresearch_project.figures.figures_process.write_stage_matrix_figure",
         metadata={
             "source": "output/data/autoresearch_loop.json",
             "alt_text": "Horizontal bar chart showing configured stages, supported claims, and required artifacts.",
@@ -36,7 +36,7 @@ FIGURE_RECORD_SPECS: dict[str, FigureRecordSpec] = {
         section="Results",
         width="0.8\\textwidth",
         placement="h",
-        generated_by="src.figures.write_ml_candidate_scores_figure",
+        generated_by="template_autoresearch_project.figures.figures_ml_candidates.write_ml_candidate_scores_figure",
         metadata={
             "source": "output/data/ml_candidate_intervals.json",
             "source_results": "output/data/ml_task_results.json",
@@ -49,7 +49,7 @@ FIGURE_RECORD_SPECS: dict[str, FigureRecordSpec] = {
         section="Results",
         width="0.72\\textwidth",
         placement="h",
-        generated_by="src.figures.write_ml_confusion_matrix_figure",
+        generated_by="template_autoresearch_project.figures.figures_ml_matrices.write_ml_confusion_matrix_figure",
         metadata={
             "source": "output/data/ml_confusion_matrix.csv",
             "alt_text": "Ten-by-ten confusion matrix for the accepted candidate on the local test split.",
@@ -61,7 +61,7 @@ FIGURE_RECORD_SPECS: dict[str, FigureRecordSpec] = {
         section="Results",
         width="0.95\\textwidth",
         placement="h",
-        generated_by="src.figures.write_closure_flow_figure",
+        generated_by="template_autoresearch_project.figures.figures_process.write_closure_flow_figure",
         metadata={
             "source": "output/data/autoresearch_loop.json",
             "alt_text": "Flow diagram linking program, proposals, evaluation, ledgers, claims, manuscript, readiness, and review.",
@@ -73,7 +73,7 @@ FIGURE_RECORD_SPECS: dict[str, FigureRecordSpec] = {
         section="Results",
         width="0.78\\textwidth",
         placement="h",
-        generated_by="src.figures.write_ml_per_class_accuracy_figure",
+        generated_by="template_autoresearch_project.figures.figures_ml_matrices.write_ml_per_class_accuracy_figure",
         metadata={
             "source": "output/data/ml_confusion_matrix.csv",
             "alt_text": "Bar chart of accepted-candidate accuracy for each true digit class.",
@@ -85,7 +85,7 @@ FIGURE_RECORD_SPECS: dict[str, FigureRecordSpec] = {
         section="Results",
         width="0.82\\textwidth",
         placement="h",
-        generated_by="src.figures.write_ml_learning_curve_figure",
+        generated_by="template_autoresearch_project.figures.figures_ml_candidates.write_ml_learning_curve_figure",
         metadata={
             "source": "output/data/ml_training_history.csv",
             "alt_text": "Line chart of held-out accuracy by epoch for each evaluated candidate.",
@@ -97,7 +97,7 @@ FIGURE_RECORD_SPECS: dict[str, FigureRecordSpec] = {
         section="Results",
         width="0.78\\textwidth",
         placement="h",
-        generated_by="src.figures.write_ml_complexity_accuracy_figure",
+        generated_by="template_autoresearch_project.figures.figures_ml_candidates.write_ml_complexity_accuracy_figure",
         metadata={
             "source": "output/data/ml_task_results.json",
             "alt_text": "Scatter plot comparing parameter count and held-out accuracy.",
@@ -109,7 +109,7 @@ FIGURE_RECORD_SPECS: dict[str, FigureRecordSpec] = {
         section="Results",
         width="0.82\\textwidth",
         placement="h",
-        generated_by="src.figures.write_mnist_error_examples_figure",
+        generated_by="template_autoresearch_project.figures.figures_ml_mnist.write_mnist_error_examples_figure",
         metadata={
             "source": "output/data/ml_error_examples.json",
             "source_images": "data/mnist_small.npz",
@@ -122,7 +122,7 @@ FIGURE_RECORD_SPECS: dict[str, FigureRecordSpec] = {
         section="Results",
         width="0.82\\textwidth",
         placement="h",
-        generated_by="src.figures.write_ml_calibration_reliability_figure",
+        generated_by="template_autoresearch_project.figures.figures_ml_calibration.write_ml_calibration_reliability_figure",
         metadata={
             "source": "output/data/ml_calibration_report.json",
             "alt_text": "Reliability curve with accepted-candidate confidence-bin counts.",
@@ -134,7 +134,7 @@ FIGURE_RECORD_SPECS: dict[str, FigureRecordSpec] = {
         section="Results",
         width="0.76\\textwidth",
         placement="h",
-        generated_by="src.figures.write_ml_classification_metrics_heatmap",
+        generated_by="template_autoresearch_project.figures.figures_ml_matrices.write_ml_classification_metrics_heatmap",
         metadata={
             "source": "output/data/ml_classification_diagnostics.json",
             "alt_text": "Heatmap of per-class precision, recall, and F1 for the accepted candidate.",
@@ -146,7 +146,7 @@ FIGURE_RECORD_SPECS: dict[str, FigureRecordSpec] = {
         section="Results",
         width="0.82\\textwidth",
         placement="h",
-        generated_by="src.figures.write_ml_confusion_pairs_figure",
+        generated_by="template_autoresearch_project.figures.figures_ml_matrices.write_ml_confusion_pairs_figure",
         metadata={
             "source": "output/data/ml_classification_diagnostics.json",
             "alt_text": "Horizontal bar chart of the most frequent non-diagonal confusion pairs.",
@@ -158,7 +158,7 @@ FIGURE_RECORD_SPECS: dict[str, FigureRecordSpec] = {
         section="Results",
         width="0.82\\textwidth",
         placement="h",
-        generated_by="src.figures.write_ml_generalization_gap_figure",
+        generated_by="template_autoresearch_project.figures.figures_ml_matrices.write_ml_generalization_gap_figure",
         metadata={
             "source": "output/data/ml_classification_diagnostics.json",
             "alt_text": "Grouped bars comparing train and test accuracy and loss by candidate.",
@@ -170,7 +170,7 @@ FIGURE_RECORD_SPECS: dict[str, FigureRecordSpec] = {
         section="Results",
         width="0.84\\textwidth",
         placement="h",
-        generated_by="src.figures.write_ml_robustness_matrix_figure",
+        generated_by="template_autoresearch_project.figures.figures_ml_matrices.write_ml_robustness_matrix_figure",
         metadata={
             "source": "output/data/ml_robustness_report.json",
             "alt_text": "Heatmap of candidate accuracy under identity, shift, and low-contrast transforms.",
@@ -182,7 +182,7 @@ FIGURE_RECORD_SPECS: dict[str, FigureRecordSpec] = {
         section="Results",
         width="0.82\\textwidth",
         placement="h",
-        generated_by="src.figures.write_ml_probability_margin_figure",
+        generated_by="template_autoresearch_project.figures.figures_ml_calibration.write_ml_probability_margin_figure",
         metadata={
             "source": "output/data/ml_probability_diagnostics.json",
             "source_predictions": "output/data/ml_prediction_records.json",
@@ -195,7 +195,7 @@ FIGURE_RECORD_SPECS: dict[str, FigureRecordSpec] = {
         section="Results",
         width="0.78\\textwidth",
         placement="h",
-        generated_by="src.figures.write_ml_bootstrap_intervals_figure",
+        generated_by="template_autoresearch_project.figures.figures_ml_matrices.write_ml_bootstrap_intervals_figure",
         metadata={
             "source": "output/data/ml_bootstrap_intervals.json",
             "alt_text": "Horizontal interval chart for accepted-candidate accuracy and macro F1.",
@@ -207,7 +207,7 @@ FIGURE_RECORD_SPECS: dict[str, FigureRecordSpec] = {
         section="Results",
         width="0.66\\textwidth",
         placement="h",
-        generated_by="src.figures.write_ml_paired_correctness_figure",
+        generated_by="template_autoresearch_project.figures.figures_ml_matrices.write_ml_paired_correctness_figure",
         metadata={
             "source": "output/data/ml_paired_comparison.json",
             "alt_text": "Two-by-two heatmap of baseline and accepted-candidate correctness on matched examples.",
@@ -219,7 +219,7 @@ FIGURE_RECORD_SPECS: dict[str, FigureRecordSpec] = {
         section="Results",
         width="0.76\\textwidth",
         placement="h",
-        generated_by="src.figures.write_ml_selective_accuracy_figure",
+        generated_by="template_autoresearch_project.figures.figures_ml_calibration.write_ml_selective_accuracy_figure",
         metadata={
             "source": "output/data/ml_statistical_summary.json",
             "alt_text": "Line chart comparing coverage, selective accuracy, and overall accuracy by confidence threshold.",
@@ -231,7 +231,7 @@ FIGURE_RECORD_SPECS: dict[str, FigureRecordSpec] = {
         section="Results",
         width="0.82\\textwidth",
         placement="h",
-        generated_by="src.figures.write_ml_probability_quality_figure",
+        generated_by="template_autoresearch_project.figures.figures_ml_calibration.write_ml_probability_quality_figure",
         metadata={
             "source": "output/data/ml_statistical_summary.json",
             "alt_text": "Paired horizontal bar charts of Brier score and negative log likelihood with the accepted candidate highlighted.",
@@ -243,7 +243,7 @@ FIGURE_RECORD_SPECS: dict[str, FigureRecordSpec] = {
         section="Results",
         width="0.84\\textwidth",
         placement="h",
-        generated_by="src.figures.write_ml_training_dynamics_figure",
+        generated_by="template_autoresearch_project.figures.figures_ml_candidates.write_ml_training_dynamics_figure",
         metadata={
             "source": "output/data/ml_training_diagnostics.json",
             "source_history": "output/data/ml_training_history.csv",
@@ -256,7 +256,7 @@ FIGURE_RECORD_SPECS: dict[str, FigureRecordSpec] = {
         section="Results",
         width="0.82\\textwidth",
         placement="h",
-        generated_by="src.figures.write_ml_candidate_rank_stability_figure",
+        generated_by="template_autoresearch_project.figures.figures_ml_candidates.write_ml_candidate_rank_stability_figure",
         metadata={
             "source": "output/data/ml_candidate_rank_stability.json",
             "source_results": "output/data/ml_task_results.json",
@@ -269,7 +269,7 @@ FIGURE_RECORD_SPECS: dict[str, FigureRecordSpec] = {
         section="Results",
         width="0.78\\textwidth",
         placement="h",
-        generated_by="src.figures.write_candidate_lifecycle_figure",
+        generated_by="template_autoresearch_project.figures.figures_process.write_candidate_lifecycle_figure",
         metadata={
             "source": "output/data/ml_candidate_ledger.json",
             "alt_text": "Bar chart of proposed, evaluated, accepted, rejected, and deferred candidate counts.",
@@ -281,7 +281,7 @@ FIGURE_RECORD_SPECS: dict[str, FigureRecordSpec] = {
         section="Methodology",
         width="0.78\\textwidth",
         placement="h",
-        generated_by="src.figures.write_mnist_class_balance_figure",
+        generated_by="template_autoresearch_project.figures.figures_ml_mnist.write_mnist_class_balance_figure",
         metadata={
             "source": "output/data/ml_class_balance.json",
             "source_fixture": "data/mnist_small.npz",
@@ -295,7 +295,7 @@ FIGURE_RECORD_SPECS: dict[str, FigureRecordSpec] = {
         section="Methodology",
         width="0.78\\textwidth",
         placement="h",
-        generated_by="src.figures.write_mnist_subset_contact_sheet_figure",
+        generated_by="template_autoresearch_project.figures.figures_ml_mnist.write_mnist_subset_contact_sheet_figure",
         metadata={
             "source": "data/mnist_small.npz",
             "source_provenance": "data/mnist_small_provenance.json",
@@ -308,7 +308,7 @@ FIGURE_RECORD_SPECS: dict[str, FigureRecordSpec] = {
         section="Methodology",
         width="0.84\\textwidth",
         placement="h",
-        generated_by="src.figures.write_security_control_matrix_figure",
+        generated_by="template_autoresearch_project.figures.figures_security.write_security_control_matrix_figure",
         metadata={
             "source": "output/data/autoresearch_threat_model.json",
             "alt_text": "Matrix of local security controls mapped to framework-inspired evidence surfaces and status.",
@@ -320,7 +320,7 @@ FIGURE_RECORD_SPECS: dict[str, FigureRecordSpec] = {
         section="Results",
         width="0.84\\textwidth",
         placement="h",
-        generated_by="src.figures.write_security_integrity_chain_figure",
+        generated_by="template_autoresearch_project.figures.figures_security.write_security_integrity_chain_figure",
         metadata={
             "source": "output/data/autoresearch_integrity_attestation.json",
             "source_inventory": "output/data/autoresearch_supply_chain_inventory.json",

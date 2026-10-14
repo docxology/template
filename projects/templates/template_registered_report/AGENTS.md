@@ -17,4 +17,6 @@ MPLBACKEND=Agg uv run python projects/templates/template_registered_report/scrip
 
 Do not let post-run result prose rewrite preregistered intent. Keep confirmatory claims, deviations, sensitivity checks, ethics/stage metadata, and exploratory claims separated in source, tests, review packets, and manuscript.
 
+New registration drafts must explicitly declare `schema_version: "template-registered-report/2"` before freezing. Already-frozen records retain their original schema and verified hash; persistence preserves existing file bytes and requires a new versioned directory for changed intent.
+
 Decision memory and verifier hardening follow [`docs/rules/memory_and_decision_records.md`](../../../docs/rules/memory_and_decision_records.md): use nearby `WHY:` comments only for surprising local choices, keep volatile counts generated, and add negative controls for verifier-like gates.

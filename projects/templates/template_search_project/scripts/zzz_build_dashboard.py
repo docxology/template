@@ -26,8 +26,16 @@ THIS_DIR = Path(__file__).resolve().parent
 PROJECT_ROOT = THIS_DIR.parent
 # PROJECT_ROOT is projects/templates/<name>/; repo root is three levels above it.
 REPO_ROOT = PROJECT_ROOT.parents[2]
+# Select the declared SDK before exposing domain source; no ancestor imports.
+_original_import_paths = sys.path[:]
+try:
+    sys.path.insert(0, str(PROJECT_ROOT / "scripts"))
+    from _search_sdk_bootstrap import select_platform_sdk
+
+    select_platform_sdk(PROJECT_ROOT)
+finally:
+    sys.path[:] = _original_import_paths
 sys.path.insert(0, str(PROJECT_ROOT / "src"))
-sys.path.insert(0, str(REPO_ROOT))
 
 from template_search_project.publish.dashboard import (  # noqa: E402
     build_dashboard,

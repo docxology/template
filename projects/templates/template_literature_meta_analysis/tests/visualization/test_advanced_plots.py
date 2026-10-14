@@ -1,14 +1,16 @@
 from __future__ import annotations
 from pathlib import Path
 import numpy as np
-from template_literature_meta_analysis.visualization.advanced_plots import (
-    plot_word_cloud,
+from template_literature_meta_analysis.visualization.advanced.embeddings import (
     plot_pca_embeddings,
     plot_term_heatmap,
     plot_dendrogram,
+)
+from template_literature_meta_analysis.visualization.advanced.topics import (
     plot_topic_term_bars,
     plot_cooccurrence_matrix,
 )
+from template_literature_meta_analysis.visualization.advanced.word_cloud import plot_word_cloud
 
 
 def _make_synthetic_tfidf(

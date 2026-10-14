@@ -138,15 +138,11 @@ def resolve_fulltext_url(
         return None
 
 
-def _safe_filename(canonical_id: str) -> str:
+def safe_filename(canonical_id: str) -> str:
     """Deterministic, filesystem-safe filename stem from a canonical id."""
     stem = re.sub(r"[^A-Za-z0-9._-]+", "_", canonical_id).strip("_")
     return stem or "record"
 
-
-# Public alias so other modules (e.g. reproducibility.extraction) can derive the
-# same deterministic on-disk filename stem without importing a private name.
-safe_filename = _safe_filename
 
 _PDF_MEDIA_TYPES = {
     "application/pdf",
@@ -195,7 +191,7 @@ def download_fulltext(
         return None
     dest_dir = Path(dest_dir)
     dest_dir.mkdir(parents=True, exist_ok=True)
-    out_path = dest_dir / f"{_safe_filename(paper.canonical_id)}.pdf"
+    out_path = dest_dir / f"{safe_filename(paper.canonical_id)}.pdf"
     tmp_path = out_path.with_suffix(".pdf.part")
     try:
         content = resp.content if hasattr(resp, "content") else resp.read()
@@ -348,7 +344,7 @@ def download_and_extract_fulltext(
         return result
 
     dest_dir = Path(dest_dir)
-    stem = _safe_filename(paper.canonical_id)
+    stem = safe_filename(paper.canonical_id)
 
     text = extract_fulltext_text(pdf_path)
     if text is not None:
@@ -376,7 +372,7 @@ def assess_fulltext_extraction(corpus: Corpus, fulltext_dir: Path) -> dict[str, 
     with_text = 0
     with_figures = 0
     for paper in papers:
-        stem = _safe_filename(paper.canonical_id)
+        stem = safe_filename(paper.canonical_id)
         if (fulltext_dir / f"{stem}.txt").is_file():
             with_text += 1
         if figures_dir.is_dir() and any(figures_dir.glob(f"{stem}_fig*.*")):

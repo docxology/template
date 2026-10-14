@@ -2,7 +2,7 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="utf-8" />
-  <meta name="generator" content="pandoc 3.12" />
+  <meta name="generator" content="pandoc 3.12.1" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
   <title>08_methods_sheaf.md.web</title>
   <style>
@@ -487,6 +487,9 @@ pre {
 }
 
 pre code {
+  background-color: transparent;
+  padding: 0;
+  border-radius: 0;
   overflow-wrap: inherit;
   white-space: inherit;
   word-break: inherit;
@@ -699,6 +702,7 @@ mjx-container[display="true"] {
 }
 
 </style>
+<script data-template-source-font-loader src="assets/source-web-fonts.js"></script>
 </head>
 <body>
 <a class="skip-link" href="#main-content">Skip to main content</a>
@@ -800,10 +804,9 @@ validation consumers that read each shared symbol.</p>
 poset. Let the <strong>base</strong> <span
 class="math inline">\(P\)</span> be the IMRAD blocks ordered as a
 chain,</p>
-<p><span class="math display">\[
-\mathsf{Introduction} \prec \mathsf{Methods} \prec \mathsf{Results}
-\prec \mathsf{Discussion} \prec \mathsf{Appendix},
-\]</span> {#eq:imrad_chain}</p>
+<p><span class="math display">\[\mathsf{Introduction} \prec
+\mathsf{Methods} \prec \mathsf{Results} \prec \mathsf{Discussion} \prec
+\mathsf{Appendix},\]</span> {#eq:imrad_chain}</p>
 <p>with, in each block, a <em>group</em> node above its <em>section</em>
 nodes (written <span class="math inline">\(G \sqsupseteq s\)</span>).
 <span class="math inline">\(P\)</span> is therefore a finite poset
@@ -831,9 +834,8 @@ map. Restriction along <span class="math inline">\(G \sqsupseteq
 s\)</span> is projection onto a section’s own bindings; group nodes
 carry the empty assignment and do not compose.</p>
 <p>The coverage cell is</p>
-<p><span class="math display">\[
-B(s,t) \in \{\mathrm{P}, \mathrm{—}, \mathrm{M}\}
-\]</span> {#eq:coverage_cell}</p>
+<p><span class="math display">\[B(s,t) \in \{\mathrm{P}, \mathrm{—},
+\mathrm{M}\}\]</span> {#eq:coverage_cell}</p>
 <p>derived from <span class="math inline">\(F_s(t)\)</span> and
 filesystem existence at compose time: <strong>P</strong> when a bound
 fragment exists, <strong>—</strong> when the track is unbound for that

@@ -41,12 +41,6 @@ def test_slide_defaults():
     assert slide.figure_path is None
 
 
-def test_deck_sections_alias_matches_slides():
-    deck = _make_deck(3)
-    assert deck.sections == deck.slides
-    assert len(deck.sections) == 3
-
-
 def test_slide_budget_max_slides():
     assert SlideBudget.SHORT.max_slides == 11
     assert SlideBudget.MEDIUM.max_slides == 38

@@ -75,9 +75,6 @@ from manuscript.sheaf.status import (
     write_sheaf_status_outputs,
 )
 
-# Backward-compatible alias for tests importing private helper.
-_parse_missing = parse_missing
-
 __all__ = [
     "COVERAGE_COLORS",
     "DEFAULT_MANIFEST_REL",
@@ -105,7 +102,6 @@ __all__ = [
     "SheafSection",
     "TrackRegistry",
     "TrackSpec",
-    "_parse_missing",
     "build_coverage_report",
     "build_coverage_matrix",
     "classify_cell",

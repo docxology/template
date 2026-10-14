@@ -185,7 +185,6 @@ The tracked [`projects/templates/template_active_inference/`](../../../projects/
 
 | Variable | Default | Description |
 | -------- | ------- | ----------- |
-| `FEP_LEAN_GAUSS_WORKFLOWS` | (unset) | **Legacy alias** retained by `run.sh` / `secure_run.sh`; when truthy, enables Lean-heavy analysis paths. Prefer `./run.sh --no-lean-workflows` to disable. Not specific to any single project name. |
 | `GAUSS_HOME` | `~/.gauss` | Writable directory checked for math-inc tooling layout |
 
 Name disambiguation: [`docs/reference/opengauss-naming.md`](../../reference/opengauss-naming.md). Lean build: [`projects/templates/template_active_inference/lean/`](../../../projects/templates/template_active_inference/lean/).

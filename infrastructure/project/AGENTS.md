@@ -362,11 +362,11 @@ All projects live under typed subfolders of `projects/`. The infrastructure dist
 - **Listed** in `run.sh` interactive menu
 - **Executed** by pipeline scripts
 
-#### ❌ **Non-Rendered Subfolders (`projects/working/`, `projects/archive/`, optional legacy mirrors)**
+#### ❌ **Non-Rendered Subfolders (`projects/working/`, `projects/archive/`, optional mirrors)**
 - **NOT scanned** by `discover_projects()` (skipped via `NON_RENDERED_SUBDIRS`)
 - **NOT listed** in `run.sh` menu
 - **NOT executed** by pipeline scripts
-- **Preserved** for working, archived, or optional legacy sidecar work
+- **Preserved** for working, archived, or optional sidecar work
 
 ```python
 # discover_projects() scans projects/ and treats templates/ + optional active/ as program directories;

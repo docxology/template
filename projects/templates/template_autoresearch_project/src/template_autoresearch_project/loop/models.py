@@ -46,7 +46,7 @@ class AutoResearchLoopResult:
     populated ``output_paths``.
 
     ``ml_task`` is a free-form summary dict serialized from
-    :class:`~src.ml.task.MLTaskResult` via its ``to_summary_dict`` method.
+    :class:`~template_autoresearch_project.ml.task.MLTaskResult` via its ``to_summary_dict`` method.
     It is always present but may be empty ``{}`` in unit-test stubs.
     """
 

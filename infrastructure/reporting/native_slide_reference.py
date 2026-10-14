@@ -220,7 +220,7 @@ def compile_beamer_source_reference(
     """
     import yaml
     from infrastructure.rendering.config import RenderingConfig
-    from infrastructure.rendering._slides_accessibility import compose_accessible_pandoc_document
+    from infrastructure.rendering._slides_accessibility_composition import compose_accessible_pandoc_document
     from infrastructure.reporting.native_format_acceptance_contracts import create_private_native_directory
 
     create_private_native_directory(root, directory)

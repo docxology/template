@@ -31,7 +31,6 @@ from infrastructure.project.linking import (
     WORKING_SUBDIR,
     is_managed_symlink,
     private_projects_root,
-    sync_active_links,
     sync_private_project_links,
 )
 from infrastructure.project.validation import validate_project_structure
@@ -272,18 +271,6 @@ def test_is_managed_symlink_true_for_synced_link(tmp_path: Path) -> None:
     sync_private_project_links(repo, private)
     link = repo / "projects" / "active" / "alpha"
     assert is_managed_symlink(link, private.resolve())
-
-
-# --- sync_active_links alias ------------------------------------------------
-
-
-def test_sync_active_links_is_alias_for_sync_private(tmp_path: Path) -> None:
-    """sync_active_links delegates to sync_private_project_links."""
-    repo = _make_repo(tmp_path)
-    private = _make_private(tmp_path, active=["beta"], name="priv")
-    result = sync_active_links(repo, private)
-    assert result.created == ["projects/active/beta"]
-    assert (repo / "projects" / "active" / "beta").is_symlink()
 
 
 def test_sync_no_op_when_private_root_none(tmp_path: Path, monkeypatch) -> None:

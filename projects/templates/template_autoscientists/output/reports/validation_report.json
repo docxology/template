@@ -88,7 +88,7 @@
           "file_count": 13,
           "largest_file": "source-web-fonts.js",
           "largest_file_path": "web/assets/source-web-fonts.js",
-          "size_mb": "5.82"
+          "size_mb": "3.29"
         }
       },
       "file_counts": {
@@ -201,7 +201,7 @@
             "optional": false,
             "readable": true,
             "required": true,
-            "size_mb": 5.82
+            "size_mb": 3.29
           }
         },
         "inventory_mode": "stable-shippable-output-v1",
@@ -211,7 +211,7 @@
         "valid": true,
         "warnings": []
       },
-      "total_size_mb": 6.284239768981934
+      "total_size_mb": 3.7568044662475586
     },
     "figures": {
       "files": 4,
@@ -246,12 +246,12 @@
         },
         "web": {
           "files": 13,
-          "size_bytes": 6100552
+          "size_bytes": 3450344
         }
       },
       "mode": "stable-shippable-output-v1",
       "total_files": 26,
-      "total_size_bytes": 6589503
+      "total_size_bytes": 3939295
     }
   },
   "recommendations": [],
@@ -262,12 +262,12 @@
     "passed": 9,
     "total_checks": 9
   },
-  "timestamp": "2026-10-14T13:53:31Z",
+  "timestamp": "2026-10-14T14:49:00Z",
   "validated_inputs": {
     "artifact_manifest": {
       "path": "output/reports/artifact_manifest.json",
-      "sha256": "144690f52a11e7ebed923dfe99836b13b30dad19c30336437f8ca131f391ba9a",
-      "size_bytes": 8515
+      "sha256": "3d2204df43183510ec74c5ecce3434b46438aa5df7b3234b4716e20647cc7702",
+      "size_bytes": 7865
     },
     "combined_manuscript": {
       "path": "output/web/_combined_manuscript.md",
@@ -338,19 +338,19 @@
     "fingerprints": {
       "config": {
         "file_count": 15,
-        "sha256": "669d13dc6161258e7459b5a18d530adcb859cbd6f866e58a9f376a33d53f58a3"
+        "sha256": "6a9be844762de62ed3755464b3d0bc09b6a414534a0f1fb005f93552c7b5ef21"
       },
       "output": {
         "file_count": 26,
-        "sha256": "cd2b6484efb0edb1615b66f776bed8efdf459bad64f56662670ff2a5b01b9cae"
+        "sha256": "f843b4960a0ca7bb3c0eb9aa763cb4688a5bd6be56277c07b164a93401ad8d26"
       },
       "source": {
         "file_count": 40,
-        "sha256": "6cb481c127921e9686adc3b7a96ba95cff995715d07e582747e1bb03af5de35f"
+        "sha256": "a51c6474f14f9e44a5a99fb509a6829614b4b417125ded9fa2ee89a25a2f5bab"
       },
       "stage": {
-        "file_count": 1869,
-        "sha256": "4d222c921ab04723eca955e99f9af79e7b829c415a2e718e171110046ccc414f"
+        "file_count": 1863,
+        "sha256": "390c6b1c19e5a3a4ad8562a5ae1c83e4b473fa445c16d339b6217b0b27800a7d"
       }
     },
     "project": "templates/template_autoscientists",

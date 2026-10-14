@@ -56,7 +56,7 @@ def _standalone_project(tmp_path: Path) -> tuple[Path, Path]:
     project = tmp_path / "standalone"
     scripts = project / "scripts"
     scripts.mkdir(parents=True)
-    for filename in ("review", "zz_generate_review_report.py"):
+    for filename in ("review", "zz_generate_review_report.py", "_search_sdk_bootstrap.py"):
         shutil.copy2(PROJECT / "scripts" / filename, scripts / filename)
     shutil.copytree(
         PROJECT / "src/template_search_project",

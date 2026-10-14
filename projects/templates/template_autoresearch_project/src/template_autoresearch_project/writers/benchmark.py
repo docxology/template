@@ -17,7 +17,7 @@ from ..loop.config import AutoResearchLoopConfig
 
 # Core artifacts the loop must have emitted (and filled with real content) by the
 # time method-contract benchmark grading runs (after write_core_loop_artifacts,
-# write_ml_task_artifacts, and finalize_loop_payloads; before research_program.json).
+# write_ml_task_artifacts, and refresh_loop_payloads; before research_program.json).
 # Used to grade an otherwise-absent benchmark from REAL evidence instead of
 # asserting success by fiat.
 _BENCHMARK_CORE_ARTIFACTS: tuple[str, ...] = (

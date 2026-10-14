@@ -9,8 +9,12 @@ by two interpretation stages that run only after the deviation ledger is built.
 
 ## Frozen registration
 
-`freeze_registration` deep-copies the registration, strips any pre-existing
-hash, and stamps a canonical SHA-256 hash over the sorted-key JSON encoding.
+`freeze_registration` requires the declared current schema for a new draft,
+deep-copies its content, and stamps a canonical SHA-256 hash over the sorted-key
+JSON encoding. An already frozen record retains its original schema, content
+and hash after verification. `persist_frozen_registration` creates a new record
+exclusively, preserves an identical existing record, and refuses replacement
+of changed frozen intent or writes through symlinked paths.
 `validate_registration` then checks that `title`, `version`, `hypotheses`,
 `outcomes`, `exclusion_rules`, and `analysis_plan` are present; that each
 hypothesis has a unique `id` and a `claim`; that each outcome names a `measure`

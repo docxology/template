@@ -15,8 +15,8 @@ import numpy as np
 
 from ..core.experiment_config import load_experiment_config
 from ..core.project_paths import _DEFAULT_ROOT as PROJECT_ROOT, project_output_dirs
-from .dashboard_panels import REPO_ROOT, build_dashboard, to_dashboard_invariant
-from .dashboard_payload import compute_payload, load_yaml_defaults, to_diagonal_A
+from .dashboard_panels import REPO_ROOT, build_dashboard
+from .dashboard_payload import compute_payload, load_yaml_defaults
 
 _OUTPUT_DIRS = project_output_dirs(PROJECT_ROOT)
 OUTPUT = _OUTPUT_DIRS["output"]
@@ -24,13 +24,6 @@ WEB_DIR = _OUTPUT_DIRS["web"]
 DATA_DIR = _OUTPUT_DIRS["data"]
 REP_DIR = _OUTPUT_DIRS["reports"]
 CFG_DEFAULT = PROJECT_ROOT / "manuscript" / "config.yaml"
-
-# Backward-compatible private aliases used by scripts/tests.
-_load_yaml_defaults = load_yaml_defaults
-_compute_payload = compute_payload
-_build_dashboard = build_dashboard
-_to_dashboard_invariant = to_dashboard_invariant
-_to_diagonal_A = to_diagonal_A
 
 
 def build_dashboard_html(project_root: Path | None = None) -> Path:
@@ -137,11 +130,6 @@ __all__ = [
     "REP_DIR",
     "REPO_ROOT",
     "WEB_DIR",
-    "_build_dashboard",
-    "_compute_payload",
-    "_load_yaml_defaults",
-    "_to_dashboard_invariant",
-    "_to_diagonal_A",
     "build_dashboard_html",
     "cli_main",
     "parse_dashboard_args",

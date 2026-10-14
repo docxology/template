@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from pathlib import Path
 from typing import Any, Literal
 
@@ -89,12 +89,30 @@ def _load_raw_config(config_path: Path) -> dict[str, Any]:
     return dict(config) if isinstance(config, dict) else {}
 
 
-def _latest_release(ledger: dict[str, Any]) -> dict[str, Any] | None:
+def _published_releases(ledger: dict[str, Any]) -> list[dict[str, Any]]:
+    """Return recorded releases, excluding dry runs and sandbox publications."""
     releases = ledger.get("releases") or []
-    if not isinstance(releases, list) or not releases:
-        return None
-    last = releases[-1]
-    return last if isinstance(last, dict) else None
+    if not isinstance(releases, list):
+        return []
+    return [
+        entry
+        for entry in releases
+        if isinstance(entry, dict)
+        and all(entry.get(flag) is None or entry.get(flag) is False for flag in ("dry_run", "sandbox"))
+    ]
+
+
+def _matches_version(entry: dict[str, Any], version: str | None) -> bool:
+    """Bind a recorded release tag to the manuscript's declared version."""
+    from packaging.version import InvalidVersion, Version
+
+    tag = entry.get("tag")
+    if not isinstance(tag, str) or not isinstance(version, str) or not version:
+        return False
+    try:
+        return Version(tag) == Version(version)
+    except InvalidVersion:
+        return False
 
 
 def _format_steganography_one_liner(config: dict[str, Any]) -> str:
@@ -107,10 +125,6 @@ def _format_steganography_one_liner(config: dict[str, Any]) -> str:
         f"barcodes {'on' if stego.barcodes_enabled else 'off'} | XMP {'on' if stego.metadata_enabled else 'off'} | "
         f"manifest {'on' if stego.hashing_enabled and stego.manifest_enabled else 'off'} → `./secure_run.sh`"
     )
-
-
-def _format_steganography_summary(config: dict[str, Any]) -> str:
-    return _format_steganography_one_liner(config)
 
 
 def _format_prior_releases_compact(releases: list[dict[str, Any]], *, max_rows: int) -> str:
@@ -219,22 +233,6 @@ def _verification_steps() -> str:
     )
 
 
-def _format_metadata_lines(context: TransmissionContext) -> list[str]:
-    lines = [
-        f"- **Title:** {context.title}",
-        f"- **Version:** {context.version or '—'}",
-        f"- **DOI:** {context.doi or 'pending'}",
-        f"- **GitHub:** {context.github_release_url or context.github_repository or 'pending'}",
-    ]
-    if context.zenodo_record_url:
-        lines.append(f"- **Zenodo:** {context.zenodo_record_url}")
-    if context.pdf_sha256:
-        lines.append(f"- **SHA-256:** `{context.pdf_sha256}`")
-    if context.pdf_sha512:
-        lines.append(f"- **SHA-512:** `{context.pdf_sha512}`")
-    return lines
-
-
 def _manifest_snippet(context: TransmissionContext) -> str:
     hash_prefix = (context.pdf_sha256 or "pending")[:16]
     doi = context.doi or "pending"
@@ -295,10 +293,19 @@ def transmission_context_from_inputs(
     settings = _bookend_settings(raw_config)
     if not settings.enabled:
         return None
+    publication = raw_config.get("publication") or {}
+    unpublished = isinstance(publication, dict) and publication.get("release_status") == "unreleased"
+    releases = _published_releases(ledger)
+    latest = (
+        None if unpublished else next((entry for entry in reversed(releases) if _matches_version(entry, version)), None)
+    )
     version_doi, version_record = _publication_version_fields(raw_config)
+    if unpublished:
+        # Existing version identifiers belong to publication history while the
+        # configuration explicitly declares this manuscript unreleased.
+        version_doi, version_record = None, None
     if version_doi and not version_record:
         version_record = zenodo_record_url_from_doi(version_doi)
-    latest = _latest_release(ledger)
 
     doi = doi or (str(latest.get("doi")) if latest else None)
     github_release_url_value = (
@@ -325,14 +332,14 @@ def transmission_context_from_inputs(
     figure_markdown = f"![Publication pairing flow](../figures/{FIGURE_NAME}){{width={FIGURE_WIDTH}}}"
 
     stego_one_liner = _format_steganography_one_liner(raw_config) if settings.show_steganography else ""
-    releases = [item for item in (ledger.get("releases") or []) if isinstance(item, dict)]
+    prior_releases = [entry for entry in releases if entry is not latest]
     prior_table = _format_prior_releases_table(
-        releases[:-1],
+        prior_releases,
         max_rows=settings.max_prior_releases,
         end_page=True,
     )
     prior_compact = _format_prior_releases_compact(
-        releases[:-1],
+        prior_releases,
         max_rows=settings.max_prior_releases,
     )
 
@@ -361,29 +368,9 @@ def transmission_context_from_inputs(
         published=bool(latest and doi and github_release_url_value and pdf_sha256 and pairing.valid),
     )
 
-    return TransmissionContext(
-        title=draft_context.title,
-        version=draft_context.version,
-        doi=draft_context.doi,
-        version_doi=draft_context.version_doi,
-        version_record=draft_context.version_record,
-        github_release_url=draft_context.github_release_url,
-        github_repository=draft_context.github_repository,
-        pdf_sha256=draft_context.pdf_sha256,
-        pdf_sha512=draft_context.pdf_sha512,
-        zenodo_record_url=draft_context.zenodo_record_url,
-        pairing_valid=draft_context.pairing_valid,
-        pairing_checklist=draft_context.pairing_checklist,
-        pairing_compact=draft_context.pairing_compact,
-        steganography_summary=draft_context.steganography_summary,
-        steganography_one_liner=draft_context.steganography_one_liner,
-        figure_markdown=draft_context.figure_markdown,
-        integrity_strip_markdown=draft_context.integrity_strip_markdown,
+    return replace(
+        draft_context,
         manifest_snippet=_manifest_snippet(draft_context),
-        manifest_path=draft_context.manifest_path,
-        prior_releases_table=draft_context.prior_releases_table,
-        prior_compact=draft_context.prior_compact,
-        published=draft_context.published,
     )
 
 

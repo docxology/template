@@ -11,7 +11,7 @@ tree instead of copying volatile literals into prose.
 
 | Area | Files | Role |
 | --- | --- | --- |
-| Figures and manuscript helpers | `figure_manager.py`, `generated_figure_registry.py`, `image_manager.py`, `markdown_integration.py` | Interactive figure management plus deterministic, fail-closed pipeline registries, insertion, table-of-figures, and cross-reference helpers. |
+| Figure metadata and registries | `figure_manager.py`, `generated_figure_registry.py` | Label-indexed metadata persistence plus deterministic, fail-closed registries derived from the files emitted by project pipelines. Manuscripts use Pandoc image syntax and bracket-cite cross-references. |
 | API docs | `api_reference_gen.py`, `glossary_gen.py` | AST-derived public API docs and marker injection. |
 | Pipeline docs | `stage_table.py` | Stage table and `STAGE_SUMMARY` counts rendered from `core/pipeline/pipeline.yaml`. |
 | Generated facts | `counts_doc.py`, `counts_coverage.py`, `active_projects_doc.py`, `architecture_overview.py` | `docs/_generated/COUNTS.md`, source-bound coverage provenance, active projects, architecture diagram and accessible topology summary. |

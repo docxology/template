@@ -8,10 +8,6 @@ import re
 from pathlib import Path
 
 from infrastructure.core.logging.utils import get_logger
-from infrastructure.rendering._pdf_title_page import (
-    generate_title_page_body,
-    generate_title_page_preamble,
-)
 
 logger = get_logger(__name__)
 
@@ -21,8 +17,6 @@ __all__ = [
     "extract_command_fallbacks",
     "extract_math_font_preamble",
     "extract_preamble",
-    "generate_title_page_body",
-    "generate_title_page_preamble",
     "parse_missing_latex_package_from_log",
 ]
 

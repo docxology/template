@@ -2,7 +2,7 @@
 
 The Standalone Project Paradigm enables horizontal scaling: adding a new project requires creating a directory with `manuscript/config.yaml` and nothing else. No infrastructure code changes, no `pyproject.toml` modifications, no CI configuration updates. The `run.sh` orchestrator automatically discovers new projects and presents them in its interactive menu.
 
-We have validated scaling with 25 canonical exemplars under `projects/templates/`—always present for onboarding and tooling—and with this manuscript from `projects/templates/template_template` (151 tests) as a git-tracked public exemplar in the same automated discovery menus.
+We have validated scaling with 25 canonical exemplars under `projects/templates/`—always present for onboarding and tooling—and with this manuscript from `projects/templates/template_template` (152 tests) as a git-tracked public exemplar in the same automated discovery menus.
 
 Canonical trio:
 
@@ -12,7 +12,7 @@ Canonical trio:
 
 Meta manuscript (**`projects/templates/template_template`**) analyzes the repository via `src/template_template/` introspection metrics; it now lives alongside the other public exemplars under `projects/templates/`.
 
-These workspaces share no project-level code—only Layer 1 (31 infrastructure subdirectories, ~1285 Python files)—validating insulation between domain repos and reusable services.
+These workspaces share no project-level code—only Layer 1 (31 infrastructure subdirectories, ~1279 Python files)—validating insulation between domain repos and reusable services.
 
 ### Multi-Project Orchestration
 
@@ -22,9 +22,9 @@ When the `--all-projects` flag is passed to `run.sh`, the pipeline executes each
 
 | Metric | `template_code_project` | `template_prose_project` | `template_autoresearch_project` |
 |--------|:--------------:|:------------------------:|:----------:|
-| Source modules | 26 | 8 | 60 |
+| Source modules | 25 | 8 | 59 |
 | Test files | 16 | 13 | 23 |
-| Test count | 263 | 165 | 317 |
+| Test count | 263 | 165 | 318 |
 | Manuscript chapters | 9 | 8 | 6 |
 | Analysis scripts | 9 | 5 | 5 |
 | Figures (auto-generated) | 9 | 5 | 27 |

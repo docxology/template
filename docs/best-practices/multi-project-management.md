@@ -31,7 +31,7 @@ The repository uses typed subfolders under `projects/` to manage projects at dif
 **Rules:**
 
 - `./run.sh` only discovers projects under the rendered subfolders `projects/templates/` and optional `projects/active/`. The non-rendered subfolders are ignored by default discovery.
-- The simplified private sidecar requires `working/` and `archive/`; optional `ongoing/` (long-lived projects with no publication target) and legacy `active/` folders are still supported when present.
+- The simplified private sidecar requires `working/` and `archive/`; optional `ongoing/` (long-lived projects with no publication target) and optional `active/` folders are still supported when present.
 - A project retains its full structure (src/, manuscript/, tests/, output/) in any subfolder, so it can be rendered explicitly with a qualified name such as `working/<name>` without entering the default render set.
 - Use `projects/working/` while actively writing; restore to optional `projects/active/` only when it should appear in the normal menu and all-project runs.
 - Use `projects/archive/` for completed or low-priority projects so they do not increase pipeline runtime.

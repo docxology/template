@@ -26,7 +26,7 @@ The `infrastructure/` package provides generic, reusable functionality for resea
 | `docker/` | `Dockerfile`, `docker-compose.yml` for container runs | (CLI / `docs/CLOUD_DEPLOY.md`) |
 | `validation/` | PDF/Markdown/output validation, link checking, audits | `validate_pdf_rendering`, `validate_markdown`, `verify_output_integrity` |
 | `rendering/` | Multi-format output (PDF, HTML, slides) | `RenderManager`, `RenderingConfig` |
-| `documentation/` | Figure/image management, markdown integration, glossary | `FigureManager`, `ImageManager`, `MarkdownIntegration` |
+| `documentation/` | Figure metadata, generated-file registries, source-derived glossary | `FigureManager`, `publish_generated_figures`, `build_api_index` |
 | `llm/` | Local LLM integration via Ollama | `LLMClient`, `OllamaClientConfig`, `detect_repetition`, `check_format_compliance` |
 | `methods/` | Methods orchestration plans over DAG, manuscript methods, artifacts, and evidence | `build_methods_orchestration_plan`, `validate_methods_orchestration_plan` |
 | `orchestration/` | Pipeline CLI, menu, project discovery, stage logging, secure-run wrapper (backs `run.sh`/`secure_run.sh`) | `build_parser`, `PipelineRunner`, `validate_project_slug`, `run_secure_pipeline` |

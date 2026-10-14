@@ -13,7 +13,7 @@ from infrastructure.rendering.security import RenderSecurityProfile
 logger = get_logger(__name__)
 
 if TYPE_CHECKING:
-    from infrastructure.rendering._slides_accessibility import AccessibleSlidePolicy
+    from infrastructure.rendering._slides_accessibility_contracts import AccessibleSlidePolicy
 
 
 _FORMAT_TOGGLES = {
@@ -172,7 +172,7 @@ class RenderingConfig:
     def accessible_slide_policy(self) -> AccessibleSlidePolicy:
         """Return the typed policy consumed by the semantic slide composer."""
 
-        from infrastructure.rendering._slides_accessibility import AccessibleSlidePolicy
+        from infrastructure.rendering._slides_accessibility_contracts import AccessibleSlidePolicy
 
         return AccessibleSlidePolicy(
             max_prose_words=self.slides_max_prose_words,

@@ -35,14 +35,6 @@ def _arguments(argv: list[str] | None = None) -> argparse.Namespace:
     return arguments
 
 
-def _platform_checkout() -> Path | None:
-    """Nominate only this adapter's canonical public checkout when present."""
-    candidate = Path(__file__).absolute().parents[5]
-    if (candidate / "infrastructure/core/implementation_custody.py").is_file():
-        return candidate
-    return None
-
-
 def worker_main(prefix: Path, deadline: float, pending: Path) -> int:
     """Publish a tool receipt only after actual pre-import code verification."""
     from importlib.metadata import version
@@ -123,9 +115,6 @@ def _launch(arguments: argparse.Namespace, deadline: float) -> int:
         if getattr(sys, "_template_executed_bytecode_audit", None) is None:
             sys.pycache_prefix = str(controller_prefix)
             sys.dont_write_bytecode = False
-        checkout = _platform_checkout()
-        if checkout is not None:
-            sys.path.insert(0, str(checkout))
         try:
             from importlib.metadata import PackageNotFoundError, version
 
@@ -158,10 +147,11 @@ def _launch(arguments: argparse.Namespace, deadline: float) -> int:
         prefix = scratch / "worker-bytecode"
         prefix.mkdir(mode=0o700)
         pending = scratch / "pending.json"
-        platform = Path(infrastructure.__file__).absolute().parent
+        platform = Path(infrastructure.__file__).resolve(strict=True).parent
         bootstrap = bytecode_audit_bootstrap((platform, project_source), prefix)
-        if checkout is not None:
-            bootstrap += f"sys.path.insert(0,{str(checkout)!r})\n"
+        # The isolated child uses the actual provider already selected above.
+        # Inferring a checkout would contradict this provider's audit roots.
+        bootstrap += f"sys.path.insert(0,{str(platform.parent)!r})\n"
         bootstrap += (
             f"sys.path.insert(0,{str(project_source)!r})\n"
             "from pathlib import Path\nfrom template_formal._tool_launcher import worker_main\n"

@@ -2,7 +2,7 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="utf-8" />
-  <meta name="generator" content="pandoc 3.12" />
+  <meta name="generator" content="pandoc 3.12.1" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
   <title>05_methods_analytical.md.web</title>
   <style>
@@ -422,6 +422,9 @@ pre {
 }
 
 pre code {
+  background-color: transparent;
+  padding: 0;
+  border-radius: 0;
   overflow-wrap: inherit;
   white-space: inherit;
   word-break: inherit;
@@ -634,6 +637,7 @@ mjx-container[display="true"] {
 }
 
 </style>
+<script data-template-source-font-loader src="assets/source-web-fonts.js"></script>
 </head>
 <body>
 <a class="skip-link" href="#main-content">Skip to main content</a>
@@ -662,9 +666,8 @@ state-space, aligned with mathematical FEP reviews
 the merged invariant report records 12 / 12 passing checks.</p>
 <!-- sheaf-track:formalism -->
 <p>The entangled joint over binary policies satisfies</p>
-<p><span class="math display">\[
-q_\lambda(\pi) \propto E(\pi)\,\exp(\lambda J(\pi)),
-\]</span> {#eq:entangled_joint}</p>
+<p><span class="math display">\[q_\lambda(\pi) \propto
+E(\pi)\,\exp(\lambda J(\pi)),\]</span> {#eq:entangled_joint}</p>
 <p>with symmetric Ising coupling <span class="math inline">\(J\)</span>
 and deformation parameter <span class="math inline">\(\lambda\)</span>.
 Let <span
@@ -676,9 +679,8 @@ class="math inline">\(H_b(p)=-p\log p-(1-p)\log(1-p)\)</span> in nats,
 the joint entropy is <span class="math inline">\(H(q_\lambda)=\log 2 +
 H_b(\sigma(\lambda))\)</span> while each marginal contributes <span
 class="math inline">\(\log 2\)</span>, so the mutual information is</p>
-<p><span class="math display">\[
-I(\lambda)=\sum_k H(q_k)-H(q_\lambda)=\log 2 - H_b(\sigma(\lambda)),
-\]</span></p>
+<p><span class="math display">\[I(\lambda)=\sum_k
+H(q_k)-H(q_\lambda)=\log 2 - H_b(\sigma(\lambda)),\]</span></p>
 <p>vanishing at <span class="math inline">\(\lambda=0\)</span> (<span
 class="math inline">\(\sigma=\tfrac12\)</span>, independent streams) and
 saturating at <span class="math inline">\(\log 2\)</span> as <span

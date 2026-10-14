@@ -8,7 +8,7 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-from simulation.graph_world import write_graph_world_artifacts, write_graph_world_stub
+from simulation.graph_world import write_graph_world_artifacts
 
 
 def test_write_graph_world_artifacts_creates_both_files(tmp_path: Path) -> None:
@@ -75,9 +75,9 @@ def test_graph_world_goal_probability_increases(tmp_path: Path) -> None:
         assert cur >= prev
 
 
-def test_write_graph_world_stub_returns_summary_path(tmp_path: Path) -> None:
-    """write_graph_world_stub is a backward-compatible wrapper returning the summary path."""
-    summary_path = write_graph_world_stub(tmp_path)
+def test_graph_world_summary_and_trace_paths(tmp_path: Path) -> None:
+    """The current graph-world writer returns the persisted summary path."""
+    summary_path = write_graph_world_artifacts(tmp_path)["summary"]
     assert summary_path.exists()
     summary = json.loads(summary_path.read_text(encoding="utf-8"))
     assert summary["status"] == "ok"

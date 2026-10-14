@@ -5,11 +5,10 @@ from .bernoulli_toy import (
     ising_coupling,
     ising_joint_posterior,
     ising_mutual_information,
-    lambda_sweep_values,
     symmetric_mean_field_prior,
 )
 from .decomposition import DecompositionTerms, decomposition_identity_holds, entanglement_decomposition_rhs
-from .hyperparameters import Hyperparameters, load_hyperparameters
+from .hyperparameters import Hyperparameters, lambda_grid, load_hyperparameters
 from .invariants import CORE_INVARIANTS, InvariantFn, all_invariants_pass, run_invariants
 
 __all__ = [
@@ -24,7 +23,7 @@ __all__ = [
     "ising_coupling",
     "ising_joint_posterior",
     "ising_mutual_information",
-    "lambda_sweep_values",
+    "lambda_grid",
     "load_hyperparameters",
     "run_invariants",
     "symmetric_mean_field_prior",

@@ -182,16 +182,16 @@ class TestBuildAnalysisScriptCmdAndEnv:
         baseline = {
             "SOURCE_DATE_EPOCH": "1700000001",
             "TEMPLATE_EXECUTION_MODE": "live",
-            "FEP_LEAN_CONTROL": "original",
+            "TEMPLATE_PROJECT_OPTION": "original",
             "PAPERCLIP_API_KEY": "private-test-value",
         }
         original = dict(baseline)
         monkeypatch.setenv("SOURCE_DATE_EPOCH", "1700000002")
         monkeypatch.setenv("TEMPLATE_EXECUTION_MODE", "core")
-        monkeypatch.setenv("FEP_LEAN_CONTROL", "changed")
+        monkeypatch.setenv("TEMPLATE_PROJECT_OPTION", "changed")
         _, env = build_analysis_script_cmd_and_env(script, project_root, tmp_path, base_env=baseline)
         assert env["SOURCE_DATE_EPOCH"] == "1700000001" and env["TEMPLATE_EXECUTION_MODE"] == "live"
-        assert env["FEP_LEAN_CONTROL"] == "original" and "PAPERCLIP_API_KEY" not in env
+        assert env["TEMPLATE_PROJECT_OPTION"] == "original" and "PAPERCLIP_API_KEY" not in env
         assert baseline == original
 
 

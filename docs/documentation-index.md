@@ -202,7 +202,7 @@ Development standards are documented in **`docs/rules/`**. The Cursor IDE entry 
 - **[development/code-review-checklist.md](development/code-review-checklist.md)** - Eight-criterion review checklist (clarity, composability, functionality/SSOT, testability, validation, documentation, conventions, reproducibility)
 - **[development/optional-dependencies.md](development/optional-dependencies.md)** - Optional dependency + capability matrix (which extras unlock which features)
 - **[maintenance/README.md](maintenance/README.md)** - Maintenance hub index
-- **[maintenance/private-projects-repo.md](maintenance/private-projects-repo.md)** - Sibling private project lifecycle (required `working/` + `archive/`, optional legacy `active/`) and symlink sync into `projects/`
+- **[maintenance/private-projects-repo.md](maintenance/private-projects-repo.md)** - Sibling private project lifecycle (required `working/` + `archive/`, optional `active/`) and symlink sync into `projects/`
 - **[maintenance/toolchain-migration.md](maintenance/toolchain-migration.md)** - Toolchain migration notes
 - **[maintenance/regression-testing.md](maintenance/regression-testing.md)** - Regression testing workflow
 - **[maintenance/archival-targets.md](maintenance/archival-targets.md)** - Archival providers for the opt-in archival stage (stage index: see the generated stage table)

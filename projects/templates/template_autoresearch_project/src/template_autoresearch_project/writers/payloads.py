@@ -42,16 +42,6 @@ def refresh_loop_payloads(project_root: Path, result: AutoResearchLoopResult) ->
     ]
 
 
-def finalize_loop_payloads(project_root: Path, result: AutoResearchLoopResult) -> list[Path]:
-    """Compatibility alias for ``refresh_loop_payloads``."""
-    return refresh_loop_payloads(project_root, result)
-
-
-def update_result_payloads(project_root: Path, result: AutoResearchLoopResult) -> list[Path]:
-    """Compatibility alias for ``refresh_loop_payloads``."""
-    return refresh_loop_payloads(project_root, result)
-
-
 def write_loop_payloads(
     project_root: Path,
     plan_payload: dict[str, object],

@@ -20,12 +20,12 @@ from infrastructure.reporting.coverage_parser import (
     _parse_failures_timeout,
     _parse_failures_verbose,
     _wait_for_coverage_file,
-    check_cov_datafile_support,
     check_test_failures,
     extract_coverage_percentage,
     extract_failed_tests,
     extract_timeout_errors,
 )
+from infrastructure.core.testing.coverage_policy import check_cov_datafile_support
 
 
 FAILURES_SECTION_OUTPUT = """\
