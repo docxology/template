@@ -98,6 +98,9 @@ require final-source acceptance, the authenticated handoff and remote verificati
   AutoScientists, while retaining a fresh standalone audit and refusing changed
   hook identities or missing source roots. Renew public rendered validation
   snapshots and regenerate its corrected 4.0.1 manuscript composition.
+- Include exact snapshot-admitted retained publication proofs in acceptance
+  exports while preserving clean fork copies. Reject missing authored members,
+  changed bytes and extra export members before independent archive admission.
 
 ## Prepared 4.0.0 candidate — unpublished
 
