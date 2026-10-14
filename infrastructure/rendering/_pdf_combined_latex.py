@@ -12,6 +12,7 @@ from infrastructure.rendering.latex_texttt import (
     constrain_includegraphics_textheight,
     make_known_literals_breakable,
     make_long_texttt_breakable,
+    make_plain_table_paths_breakable,
 )
 
 logger = get_logger(__name__)
@@ -263,6 +264,9 @@ def postprocess_latex(
         tex_content, texttt_replacements = make_long_texttt_breakable(tex_content)
         if texttt_replacements:
             logger.info("✓ Made %d long monospace path span(s) breakable", texttt_replacements)
+        tex_content, table_path_replacements = make_plain_table_paths_breakable(tex_content)
+        if table_path_replacements:
+            logger.info("✓ Made %d plain paragraph-table path span(s) breakable", table_path_replacements)
         tex_content, literal_replacements = make_known_literals_breakable(tex_content)
         if literal_replacements:
             logger.info("✓ Made %d recurring long label(s) breakable", literal_replacements)

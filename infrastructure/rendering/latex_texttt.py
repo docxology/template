@@ -99,6 +99,245 @@ def make_long_texttt_breakable(
     return updated, replacements
 
 
+_PANDOC_PARAGRAPH_COLUMN = (
+    r">\{\\(?:raggedright|raggedleft|centering)\\arraybackslash\}"
+    r"p\{\(\\linewidth - [0-9]{1,3}\\tabcolsep\) \* \\real\{(?:0\.[0-9]{1,6}|1\.0{1,6})\}\}"
+)
+_PANDOC_PARAGRAPH_COLUMNS = re.compile(r"@\{\}\s*(?:" + _PANDOC_PARAGRAPH_COLUMN + r"\s*){2,32}@\{\}")
+_PLAIN_TABLE_CELL = re.compile(r"(?:[A-Za-z0-9 .,;:!?()/=+@'\"-]|\\_)*")
+_PLAIN_TABLE_TOKEN = re.compile(r"(?<![A-Za-z0-9\\])[A-Za-z0-9]+(?:[./]|\\_)[A-Za-z0-9./-]*(?:(?:\\_)[A-Za-z0-9./-]*)*")
+_TABLE_STRUCTURE = frozenset(
+    (
+        r"\toprule\noalign{}",
+        r"\midrule\noalign{}",
+        r"\bottomrule\noalign{}",
+        r"\endfirsthead",
+        r"\endhead",
+        r"\endlastfoot",
+        r"\endfoot",
+    )
+)
+_RAW_TEX_ENVIRONMENTS = frozenset(("verbatim", "Verbatim", "Highlighting", "lstlisting", "minted"))
+_TEX_COMMAND = re.compile(r"\\(?:[A-Za-z]+|.)")
+_TEX_ENVIRONMENT = re.compile(r"\\(begin|end)\{([^{}\\\r\n]{1,64})\}")
+_PANDOC_TABLE_COMMANDS = frozenset(
+    (
+        r"\begin",
+        r"\end",
+        r"\caption",
+        r"\label",
+        r"\tabularnewline",
+        r"\toprule",
+        r"\midrule",
+        r"\bottomrule",
+        r"\noalign",
+        r"\raggedright",
+        r"\raggedleft",
+        r"\centering",
+        r"\linewidth",
+        r"\endfirsthead",
+        r"\endhead",
+        r"\endfoot",
+        r"\endlastfoot",
+        r"\_",
+        r"\\",
+    )
+)
+
+
+def _simple_table_body(text: str) -> bool:
+    """Abstain on math, comments, raw content or unknown commands anywhere."""
+    if "$" in text or "%" in text:
+        return False
+    if any(match[0] not in _PANDOC_TABLE_COMMANDS for match in _TEX_COMMAND.finditer(text)):
+        return False
+    if not all(match[1] == "minipage" for match in re.finditer(r"\\(?:begin|end)\{([^{}]*)\}", text)):
+        return False
+    depth = 0
+    environments = 0
+    index = 0
+    while index < len(text):
+        if text[index] == "\\":
+            environment = _TEX_ENVIRONMENT.match(text, index)
+            if environment:
+                environments += 1 if environment[1] == "begin" else -1
+                if not 0 <= environments <= 8:
+                    return False
+                index = environment.end()
+                continue
+            command = _TEX_COMMAND.match(text, index)
+            if command:
+                if command[0] in (r"\begin", r"\end"):
+                    return False
+                if command[0] == r"\\" and (depth or environments):
+                    return False
+                index = command.end()
+                continue
+        if text[index] == "{":
+            depth += 1
+        elif text[index] == "}":
+            depth -= 1
+        if not 0 <= depth <= 8:
+            return False
+        index += 1
+    return depth == environments == 0
+
+
+def _unescaped_delimiter(text: str, delimiter: str, start: int) -> int:
+    while start < len(text):
+        if text.startswith(delimiter, start):
+            return start
+        if text[start] == "%":
+            newline = text.find("\n", start)
+            if newline < 0:
+                return -1
+            start = newline + 1
+        else:
+            start += 2 if text[start] == "\\" else 1
+    return -1
+
+
+def _balanced_table_columns(text: str, start: int) -> int | None:
+    """Read one finite, balanced column specification, never arbitrary TeX."""
+    depth = 0
+    for index in range(start, min(len(text), start + 4096)):
+        character = text[index]
+        if character == "{" and (index == 0 or text[index - 1] != "\\"):
+            depth += 1
+            if depth > 8:
+                return None
+        elif character == "}" and (index == 0 or text[index - 1] != "\\"):
+            depth -= 1
+            if depth == 0:
+                return index + 1
+    return None
+
+
+def _plain_paragraph_tables(text: str) -> list[tuple[int, int, int]]:
+    """Locate top-level Pandoc tables outside groups, math and raw environments."""
+    ranges: list[tuple[int, int, int]] = []
+    environments: list[str] = []
+    depth = 0
+    index = 0
+    while index < len(text):
+        character = text[index]
+        if character == "%":
+            end = text.find("\n", index)
+            index = len(text) if end < 0 else end + 1
+            continue
+        if character == "$" or text.startswith((r"\(", r"\["), index):
+            delimiter = "$$" if text.startswith("$$", index) else "$"
+            if character == "\\":
+                delimiter = r"\)" if text.startswith(r"\(", index) else r"\]"
+            end = _unescaped_delimiter(text, delimiter, index + (2 if delimiter != "$" else 1))
+            if end < 0:
+                break
+            index = end + len(delimiter)
+            continue
+        if character == "\\":
+            verb = re.match(r"\\verb\*?([^A-Za-z\s])", text[index : index + 8])
+            if verb:
+                end = text.find(verb[1], index + len(verb[0]))
+                if end < 0:
+                    break
+                index = end + 1
+                continue
+            environment = _TEX_ENVIRONMENT.match(text, index)
+            if environment:
+                operation, name = environment.groups()
+                after = index + len(environment[0])
+                if operation == "begin" and name.removesuffix("*") in _RAW_TEX_ENVIRONMENTS:
+                    end = text.find(r"\end{" + name + "}", after)
+                    if end < 0:
+                        break
+                    index = end + len(name) + 6
+                    continue
+                if operation == "begin" and name == "longtable" and depth == 0 and environments in ([], ["document"]):
+                    start = after + 2 if text.startswith("[]", after) else after
+                    if start < len(text) and text[start] == "{":
+                        columns_end = _balanced_table_columns(text, start)
+                        if columns_end is not None and _PANDOC_PARAGRAPH_COLUMNS.fullmatch(
+                            text[start + 1 : columns_end - 1]
+                        ):
+                            end = text.find(r"\end{longtable}", columns_end, columns_end + 1024 * 1024)
+                            if end >= 0 and _simple_table_body(text[columns_end:end]):
+                                column_count = len(
+                                    re.findall(_PANDOC_PARAGRAPH_COLUMN, text[start + 1 : columns_end - 1])
+                                )
+                                ranges.append((columns_end, end, column_count))
+                                if len(ranges) >= 256:
+                                    break
+                                index = end + len(r"\end{longtable}")
+                                continue
+                if depth == 0:
+                    if operation == "begin":
+                        environments.append(name)
+                        if len(environments) > 32:
+                            break
+                    elif not environments or environments.pop() != name:
+                        break
+                index = after
+                continue
+            command = _TEX_COMMAND.match(text, index)
+            if command and command[0] in (r"\begin", r"\end"):
+                break  # An unfamiliar opener cannot establish a safe outer scope.
+            index += len(command[0]) if command else 1
+            continue
+        if character == "{":
+            depth += 1
+            if depth > 32:
+                break
+        elif character == "}":
+            depth -= 1
+            if depth < 0:
+                break
+        index += 1
+    return ranges
+
+
+def make_plain_table_paths_breakable(tex_content: str) -> tuple[str, int]:
+    """Add font-preserving breaks only to simple paths in Pandoc paragraph cells.
+
+    A bounded lexical scan excludes math, macro bodies and raw environments.
+    Exact paragraph-column syntax admits tables; a plain ASCII cell allowlist
+    excludes comments, commands and unfamiliar TeX. Natural-width tables and
+    prose are untouched. Characters, column widths and alignment never change.
+    """
+    if len(tex_content) > 16 * 1024 * 1024:
+        return tex_content, 0
+    replacements = 0
+
+    def token(match: re.Match[str]) -> str:
+        nonlocal replacements
+        value = match[0]
+        if len(value.replace(r"\_", "_")) < LONG_TEXTTT_BREAK_MIN_CHARACTERS:
+            return value
+        replacements += 1
+        return r"\breakseq{" + value + "}"
+
+    def row(value: str, column_count: int) -> str:
+        prefix_length = 0
+        for line in value.splitlines(keepends=True):
+            if not line.strip() or line.strip() in _TABLE_STRUCTURE:
+                prefix_length += len(line)
+            else:
+                break
+        cells = value[prefix_length:].split("&")
+        if len(cells) != column_count or not all(
+            _PLAIN_TABLE_CELL.fullmatch(cell.replace("\n", " ")) for cell in cells
+        ):
+            return value
+        return value[:prefix_length] + "&".join(_PLAIN_TABLE_TOKEN.sub(token, cell) for cell in cells)
+
+    for start, end, column_count in reversed(_plain_paragraph_tables(tex_content)):
+        rows = tex_content[start:end].split(r"\\")
+        body = r"\\".join([row(value, column_count) for value in rows[:-1]] + rows[-1:])
+        tex_content = tex_content[:start] + body + tex_content[end:]
+    if replacements:
+        tex_content = _ensure_breaktt_preamble(tex_content)
+    return tex_content, replacements
+
+
 def constrain_includegraphics_textheight(
     tex_content: str,
     fraction: str,

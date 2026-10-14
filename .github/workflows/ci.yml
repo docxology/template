@@ -126,6 +126,7 @@ jobs:
               "tests/infra_tests/reporting/test_native_installed_preparation_source.py",
               "tests/infra_tests/rendering/test_literature_hydration.py",
               "tests/infra_tests/rendering/test_shared_web_fonts.py",
+              "tests/infra_tests/rendering/test_latex_texttt.py",
           ])
           raise SystemExit(subprocess.run([
               sys.executable, "-m", "pytest", *paths, "--no-cov", "-q",
