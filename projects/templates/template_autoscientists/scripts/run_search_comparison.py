@@ -22,10 +22,15 @@ import hashlib
 import importlib.util
 import os
 import stat
+from types import MappingProxyType
 
-_BYTECODE_CACHE = tempfile.TemporaryDirectory(prefix="template-autoscientists-controller-cache-")
-sys.pycache_prefix = str(Path(_BYTECODE_CACHE.name).resolve())
-atexit.register(_BYTECODE_CACHE.cleanup)
+# The pipeline launcher already owns a pre-import audit and its private cache.
+# Replacing that prefix would invalidate the launcher's actual execution records.
+_active_audit = getattr(sys, "_template_executed_bytecode_audit", None)
+if _active_audit is None:
+    _BYTECODE_CACHE = tempfile.TemporaryDirectory(prefix="template-autoscientists-controller-cache-")
+    sys.pycache_prefix = str(Path(_BYTECODE_CACHE.name).resolve())
+    atexit.register(_BYTECODE_CACHE.cleanup)
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 REPO_ROOT = PROJECT_ROOT.parents[2]
@@ -86,12 +91,25 @@ if _provider_spec is not None and _provider_spec.origin is not None:
 _audit_scope = {"__name__": "_template_bytecode_audit", "__file__": str(_audit_path)}
 # Execute only the trusted, bounded, no-follow startup source admitted above.
 exec(compile(_audit_bytes, str(_audit_path), "exec", dont_inherit=True), _audit_scope)  # nosec B102
-_audit_scope["install_bytecode_audit"](
-    tuple(str(root.absolute()) for root in _audit_roots),
-    fresh_pycache_prefix=sys.pycache_prefix,
-    source_sha256=hashlib.sha256(_audit_bytes).hexdigest(),
-    startup_code=sys._getframe().f_code,
-)
+if _active_audit is None:
+    _audit_scope["install_bytecode_audit"](
+        tuple(str(root.absolute()) for root in _audit_roots),
+        fresh_pycache_prefix=sys.pycache_prefix,
+        source_sha256=hashlib.sha256(_audit_bytes).hexdigest(),
+        startup_code=sys._getframe().f_code,
+    )
+else:
+    if (
+        not isinstance(_active_audit, MappingProxyType)
+        or _active_audit.get("schema_version") != _audit_scope["SCHEMA"]
+        or _active_audit.get("hook_source_path") != str(_audit_path)
+        or _active_audit.get("hook_source_sha256") != hashlib.sha256(_audit_bytes).hexdigest()
+        or sys.pycache_prefix is None
+        or _active_audit.get("prefix") != str(Path(sys.pycache_prefix).absolute())
+    ):
+        raise SystemExit("the active audit differs from the selected platform or cache")
+    for _root in _audit_roots:
+        _audit_scope["verify_executed_source_code"](_root, Path(sys.pycache_prefix))
 
 from template_autoscientists.search.ablation import run_ablations  # noqa: E402
 from template_autoscientists.search.comparison import build_comparison_payload, build_objective, run_comparison  # noqa: E402

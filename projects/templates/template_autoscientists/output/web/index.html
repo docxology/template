@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="generator" content="pandoc 3.12" />
+  <meta name="generator" content="pandoc 3.12.1" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
   <meta name="author" content="Daniel Ari Friedman" />
   <meta name="description" content="Ablatable Mechanisms and Measurable Noise-Robustness under a Matched Experiment Budget" />
@@ -509,6 +509,9 @@ pre {
 }
 
 pre code {
+  background-color: transparent;
+  padding: 0;
+  border-radius: 0;
   overflow-wrap: inherit;
   white-space: inherit;
   word-break: inherit;
@@ -721,6 +724,7 @@ mjx-container[display="true"] {
 }
 
 </style>
+<script data-template-source-font-loader src="assets/source-web-fonts.js"></script>
 </head>
 <body>
 <a class="skip-link" href="#main-content">Skip to main content</a>
@@ -972,20 +976,16 @@ reproducible.</p>
 <p>For a parameter vector <span class="math inline">\(x \in
 \mathbb{R}^d\)</span> with optimum at the origin, the
 <strong>clean</strong> (noise-free) value is</p>
-<p><span class="math display">\[
-f(x) = -\sum_{i=1}^{d} \left[ x_i^2 + \rho\,\bigl(1 - \cos(2\pi
-x_i)\bigr) \right],
-\]</span></p>
+<p><span class="math display">\[f(x) = -\sum_{i=1}^{d} \left[ x_i^2 +
+\rho\,\bigl(1 - \cos(2\pi x_i)\bigr) \right],\]</span></p>
 <p>a smooth global peak at <span class="math inline">\(x = 0\)</span>
 (where <span class="math inline">\(f = 0\)</span>) minus shallow cosine
 ripples of amplitude <span class="math inline">\(\rho\)</span> that
 create deceptive local optima along each axis. Higher is better. A
 single noisy <strong>observation</strong> adds a seeded, zero-centred
 perturbation:</p>
-<p><span class="math display">\[
-\tilde{f}(x, s) = f(x) + \varepsilon(x, s), \qquad |\varepsilon| \le
-\sigma_{\text{noise}},
-\]</span></p>
+<p><span class="math display">\[\tilde{f}(x, s) = f(x) + \varepsilon(x,
+s), \qquad |\varepsilon| \le \sigma_{\text{noise}},\]</span></p>
 <p>where <span class="math inline">\(\varepsilon(x, s)\)</span> is
 derived deterministically from a hash of the rounded <span
 class="math inline">\(x\)</span> and the seed <span
@@ -1431,7 +1431,7 @@ when its selected capability is missing.</p>
 class="header-section-number">6.3</span> Bounded local coordination
 (opt-in)</h2>
 <p>The default <code>--mode core</code> preserves the deterministic
-figures. <code>--mode live</code> requires platform 4.0.0 and an
+figures. <code>--mode live</code> requires platform 4.0.1 and an
 explicitly selected already-installed Ollama model at a literal loopback
 endpoint. Both arms execute 3–6 proposals with equal experiment, token
 and request-time ceilings, and three-seed confirmation. Actual token

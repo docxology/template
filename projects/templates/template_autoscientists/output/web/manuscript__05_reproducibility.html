@@ -2,7 +2,7 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="utf-8" />
-  <meta name="generator" content="pandoc 3.12" />
+  <meta name="generator" content="pandoc 3.12.1" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
   <title>05_reproducibility.md.web</title>
   <style>
@@ -422,6 +422,9 @@ pre {
 }
 
 pre code {
+  background-color: transparent;
+  padding: 0;
+  border-radius: 0;
   overflow-wrap: inherit;
   white-space: inherit;
   word-break: inherit;
@@ -634,6 +637,7 @@ mjx-container[display="true"] {
 }
 
 </style>
+<script data-template-source-font-loader src="assets/source-web-fonts.js"></script>
 </head>
 <body>
 <a class="skip-link" href="#main-content">Skip to main content</a>
@@ -666,7 +670,7 @@ when its selected capability is missing.</p>
 <h2 id="bounded-local-coordination-opt-in">Bounded local coordination
 (opt-in)</h2>
 <p>The default <code>--mode core</code> preserves the deterministic
-figures. <code>--mode live</code> requires platform 4.0.0 and an
+figures. <code>--mode live</code> requires platform 4.0.1 and an
 explicitly selected already-installed Ollama model at a literal loopback
 endpoint. Both arms execute 3–6 proposals with equal experiment, token
 and request-time ceilings, and three-seed confirmation. Actual token
