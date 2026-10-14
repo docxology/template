@@ -4,7 +4,7 @@ from dataclasses import asdict, dataclass
 import re
 
 _DISPLAY_CODE_TOKEN = re.compile(r"`[^`\n]*`|[A-Za-z_][A-Za-z0-9_./:#*-]*")
-_DISPLAY_CAMELCASE = re.compile(r"[A-Z][a-z]+(?:[A-Z][A-Za-z0-9]+)+")
+_DISPLAY_CAMELCASE = re.compile(r"[A-Z][a-z]+[A-Z][A-Za-z0-9]+")
 _DISPLAY_DOTTED_IDENTIFIER = re.compile(r"[A-Za-z_][A-Za-z0-9_]+\.(?:[A-Za-z_][A-Za-z0-9_]+\.)*[A-Za-z_][A-Za-z0-9_]+")
 
 

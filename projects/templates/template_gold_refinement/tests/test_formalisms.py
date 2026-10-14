@@ -71,6 +71,7 @@ def test_traceability_rows_include_sources():
         ("[malformed_source.py", "[malformed_source.py"),
         ("output/figures/*.png", "`output/figures/*.png`"),
         ("folder/*file.py*", "folder/*file.py*"),
+        ("Aa" + "A" * 300 + "-", "Aa" + "A" * 300 + "-"),
         ("src/refinery.py::run_refinery()", "`src/refinery.py::run_refinery`()"),
     ):
         projected = format_table_code(original)
