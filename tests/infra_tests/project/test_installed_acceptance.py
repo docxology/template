@@ -16,6 +16,7 @@ import uuid
 from dataclasses import asdict
 from io import BytesIO, StringIO
 from pathlib import Path
+from types import FrameType
 
 import pytest
 
@@ -27,8 +28,10 @@ from infrastructure.project.installed_acceptance_artifacts import (
     admit_provider_wheel,
     freeze_wheel_bytes,
     inspect_wheel,
+    prepare_export,
     write_binary,
 )
+from infrastructure.project.copy_exemplar import export_exemplar
 from infrastructure.project.installed_acceptance_runtime import (
     declared_local_dependencies,
     freeze_locked_metadata,
@@ -38,6 +41,84 @@ from infrastructure.project.installed_acceptance_runtime import (
 from infrastructure.project.installed_acceptance_worker import _environment, _run
 from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
 from infrastructure.reporting.release_readiness_profile import Requirement
+
+
+def _export_repository(tmp_path: Path) -> tuple[Path, Requirement, Path, Path]:
+    root = tmp_path / "repository"
+    project = root / "projects/templates/template_code_project"
+    (project / "rendered").mkdir(parents=True)
+    (project / "README.md").write_text("# Authored project\n")
+    (project / "pyproject.toml").write_text("[project]\nname = 'template-code-project'\nversion = '1.0.0'\n")
+    (project / "rendered/proof.pdf").write_bytes(b"retained deposited proof\x00\xff")
+    (root / "pyproject.toml").write_text("[project]\nname = 'research-project-template'\nversion = '4.0.1'\n")
+    for arguments in (
+        ("init",),
+        ("config", "user.email", "fixture@example.com"),
+        ("config", "user.name", "Fixture"),
+        ("add", "."),
+        ("commit", "-m", "owned export fixture"),
+    ):
+        subprocess.run(["git", "-c", "core.fsmonitor=false", *arguments], cwd=root, check=True, capture_output=True)
+    requirement = Requirement("code:export", "export", "templates/template_code_project", "1.0.0", "4.0.1", "a" * 64)
+    scratch = tmp_path / "scratch"
+    scratch.mkdir()
+    return root, requirement, scratch, root / "output/readiness/export"
+
+
+def test_acceptance_export_retains_exact_proofs_without_changing_fork_copy(tmp_path: Path) -> None:
+    root, requirement, scratch, directory = _export_repository(tmp_path)
+    fork = tmp_path / "ordinary-fork"
+    export_exemplar(root, requirement.scope, fork)
+    assert not (fork / "rendered").exists()
+
+    destination, details = prepare_export(root, requirement, scratch, directory)
+
+    proof = (root / "projects" / requirement.scope / "rendered/proof.pdf").read_bytes()
+    manifest = json.loads((root / details["manifest_artifact"]["path"]).read_bytes())
+    with zipfile.ZipFile(root / details["bundle_artifact"]["path"]) as archive:
+        embedded = json.loads(archive.read(".template-export.json"))
+        assert archive.read("rendered/proof.pdf") == proof
+        assert embedded["files"] == manifest["files"]
+        assert embedded["files"]["rendered/proof.pdf"] == hashlib.sha256(proof).hexdigest()
+    assert (destination / "rendered/proof.pdf").read_bytes() == proof
+
+
+def test_acceptance_export_refuses_missing_bytes_outside_root_proofs(tmp_path: Path) -> None:
+    root, requirement, scratch, directory = _export_repository(tmp_path)
+    nested = root / "projects" / requirement.scope / "docs/rendered/authored.md"
+    nested.parent.mkdir(parents=True)
+    nested.write_text("Authored nested input, excluded by ordinary fork copying.\n")
+    subprocess.run(["git", "add", str(nested)], cwd=root, check=True, capture_output=True)
+
+    with pytest.raises(ValueError, match="differs outside retained publication proofs"):
+        prepare_export(root, requirement, scratch, directory)
+    assert not (directory / "source.zip").exists()
+
+
+@pytest.mark.parametrize("changed_path", ["source-proof", "copied-readme"])
+def test_acceptance_export_refuses_actual_byte_changes_during_copy(tmp_path: Path, changed_path: str) -> None:
+    root, requirement, scratch, directory = _export_repository(tmp_path)
+    observed = []
+
+    def change_owned_file(frame: FrameType, event: str, argument: object) -> None:
+        if event == "return" and frame.f_code is export_exemplar.__code__:
+            target = (
+                root / "projects" / requirement.scope / "rendered/proof.pdf"
+                if changed_path == "source-proof"
+                else scratch / "template_code_project/README.md"
+            )
+            target.write_bytes(b"changed after original export\n")
+            observed.append(target)
+
+    previous = sys.getprofile()
+    try:
+        sys.setprofile(change_owned_file)
+        with pytest.raises(ValueError, match="canonical export differs"):
+            prepare_export(root, requirement, scratch, directory)
+    finally:
+        sys.setprofile(previous)
+    assert len(observed) == 1
+    assert not (directory / "source.zip").exists()
 
 
 def _wheel(

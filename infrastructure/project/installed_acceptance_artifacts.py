@@ -63,6 +63,32 @@ def prepare_export(
             for path in public_resource_source_paths(root, dependency):
                 source = reader.read(path.relative_to(root).as_posix())
                 expected[f"_template_resources/{dependency}/{path.relative_to(resource).as_posix()}"] = source.sha256
+        copied = {
+            path.relative_to(destination).as_posix(): hashlib.sha256(path.read_bytes()).hexdigest()
+            for path in destination.rglob("*")
+            if path.is_file() and path.name != ".template-export.json"
+        }
+        missing = expected.keys() - copied.keys()
+        if (
+            embedded.get("files") != copied
+            or copied.keys() - expected.keys()
+            or any(copied[path] != expected[path] for path in copied.keys() & expected.keys())
+            or any(Path(path).parts[0] != "rendered" for path in missing)
+        ):
+            raise ValueError("canonical export differs outside retained publication proofs")
+        # Forks intentionally omit deposited proofs. Acceptance archives must
+        # still bind those exact public snapshot bytes, without inheriting any
+        # other ignored or missing source member from the copier.
+        for relative in sorted(missing):
+            held = reader.read((base / relative).relative_to(root).as_posix())
+            atomic_write_bytes_confined(destination, destination / relative, held.content)
+            embedded["files"][relative] = held.sha256
+        if missing:
+            atomic_write_bytes_confined(
+                destination,
+                destination / ".template-export.json",
+                (json.dumps(embedded, indent=2, sort_keys=True) + "\n").encode(),
+            )
     actual = {
         path.relative_to(destination).as_posix(): hashlib.sha256(path.read_bytes()).hexdigest()
         for path in destination.rglob("*")
