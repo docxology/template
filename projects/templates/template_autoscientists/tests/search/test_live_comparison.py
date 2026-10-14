@@ -403,6 +403,68 @@ def test_actual_fresh_standalone_controller_runs_controlled_model_workers(tmp_pa
     assert all(arm["generation_calls_used"] == 3 for arm in receipt["arms"].values())
 
 
+@pytest.mark.parametrize("fault", [None, "missing-project-root", "changed-hook-digest"])
+def test_core_controller_preserves_and_authenticates_launcher_audit(tmp_path, fault) -> None:
+    """Run the real script under a real pre-import hook, including refusal controls."""
+    root = project_copy(tmp_path)
+    output = root / "output/launcher-reference"
+    script = PROJECT / "scripts/run_search_comparison.py"
+    platform_root = Path(platform_custody.__file__).resolve().parents[2]
+    prefix = tmp_path.resolve() / "launcher-cache"
+    prefix.mkdir()
+    roots = (platform_root / "infrastructure", platform_root / "scripts", PROJECT / "scripts")
+    if fault != "missing-project-root":
+        roots += (PROJECT / "src",)
+    bootstrap = bytecode_audit_bootstrap(roots, prefix)
+    if fault == "changed-hook-digest":
+        bootstrap += (
+            "from types import MappingProxyType;"
+            "record=dict(sys._template_executed_bytecode_audit);"
+            "record['hook_source_sha256']='0'*64;"
+            "sys._template_executed_bytecode_audit=MappingProxyType(record);"
+        )
+    bootstrap += (
+        "import runpy,sys;script=sys.argv.pop(1);"
+        "prior_prefix=sys.pycache_prefix;prior_audit=sys._template_executed_bytecode_audit\n"
+        "try:\n"
+        " runpy.run_path(script,run_name='__main__')\n"
+        "except SystemExit as error:\n"
+        " if error.code not in (None,0): raise\n"
+        "assert sys.pycache_prefix==prior_prefix\n"
+        "assert sys._template_executed_bytecode_audit is prior_audit\n"
+    )
+    result = subprocess.run(
+        [
+            sys.executable,
+            "-I",
+            "-X",
+            f"pycache_prefix={prefix}",
+            "-c",
+            bootstrap,
+            str(script),
+            "--project-root",
+            str(root),
+            "--output-dir",
+            str(output),
+        ],
+        cwd=tmp_path,
+        capture_output=True,
+        text=True,
+        timeout=60,
+    )
+    if fault is not None:
+        assert result.returncode != 0, result.stdout + result.stderr
+        expected = "outside the pre-import audit roots" if fault == "missing-project-root" else "active audit differs"
+        assert expected in result.stderr
+        assert not output.exists()
+    else:
+        assert result.returncode == 0, result.stdout + result.stderr
+        summary = json.loads((output / "data/search_comparison.json").read_text())
+        assert summary["budget"] == 60
+        assert summary["clean_metric_advantage"] == 0.0
+        assert (output / "figures/search_comparison.png").is_file()
+
+
 @pytest.mark.parametrize("location", ["output/data/run", "output/.pipeline/local_coordination", "../outside"])
 def test_output_is_confined_to_fresh_ignored_runs(tmp_path, location) -> None:
     root = project_copy(tmp_path)

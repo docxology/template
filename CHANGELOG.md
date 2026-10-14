@@ -94,6 +94,10 @@ require final-source acceptance, the authenticated handoff and remote verificati
   own-project coverage without invoking the exhaustive hardening matrix.
 - Remove only duplicate local pre-push census tests while retaining the actual
   public tracking scanners, negative controls and complete hosted selections.
+- Preserve and authenticate the pipeline launcher's active bytecode audit in
+  AutoScientists, while retaining a fresh standalone audit and refusing changed
+  hook identities or missing source roots. Renew public rendered validation
+  snapshots and regenerate its corrected 4.0.1 manuscript composition.
 
 ## Prepared 4.0.0 candidate — unpublished
 
