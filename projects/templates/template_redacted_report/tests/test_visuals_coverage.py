@@ -9,6 +9,8 @@ drive the kmyth subprocess branches without any mocking framework.
 
 from __future__ import annotations
 
+from redacted_report import kmyth_support
+
 import hashlib
 import json
 import shutil
@@ -494,14 +496,14 @@ def test_render_pdf_smoke_reports_missing_source_pdf(tmp_path: Path) -> None:
 
 
 def test_kmyth_help_error_with_nonexistent_binary() -> None:
-    result = visuals._kmyth_help_error(Path("/nonexistent/kmyth-seal-should-not-exist"))
+    result = kmyth_support.kmyth_help_error(Path("/nonexistent/kmyth-seal-should-not-exist"))
 
     assert "kmyth-seal-should-not-exist" in result
 
 
 @pytest.mark.skipif(not Path("/usr/bin/false").exists(), reason="requires /usr/bin/false")
 def test_kmyth_help_error_with_failing_binary() -> None:
-    result = visuals._kmyth_help_error(Path("/usr/bin/false"))
+    result = kmyth_support.kmyth_help_error(Path("/usr/bin/false"))
 
     assert result != ""
     assert "false" in result
@@ -509,18 +511,18 @@ def test_kmyth_help_error_with_failing_binary() -> None:
 
 @pytest.mark.skipif(not Path("/usr/bin/true").exists(), reason="requires /usr/bin/true")
 def test_kmyth_help_error_with_succeeding_binary() -> None:
-    assert visuals._kmyth_help_error(Path("/usr/bin/true")) == ""
+    assert kmyth_support.kmyth_help_error(Path("/usr/bin/true")) == ""
 
 
 def test_kmyth_seal_probe_error_with_nonexistent_binary() -> None:
-    result = visuals._kmyth_seal_probe_error(Path("/nonexistent/kmyth-seal-should-not-exist"), timeout_seconds=5)
+    result = kmyth_support.kmyth_seal_probe_error(Path("/nonexistent/kmyth-seal-should-not-exist"), timeout_seconds=5)
 
     assert result != ""
 
 
 @pytest.mark.skipif(not Path("/usr/bin/false").exists(), reason="requires /usr/bin/false")
 def test_kmyth_seal_probe_error_with_failing_binary() -> None:
-    result = visuals._kmyth_seal_probe_error(Path("/usr/bin/false"), timeout_seconds=5)
+    result = kmyth_support.kmyth_seal_probe_error(Path("/usr/bin/false"), timeout_seconds=5)
 
     assert result != ""
 
@@ -528,7 +530,7 @@ def test_kmyth_seal_probe_error_with_failing_binary() -> None:
 @pytest.mark.skipif(not Path("/usr/bin/true").exists(), reason="requires /usr/bin/true")
 def test_kmyth_seal_probe_error_when_tool_writes_no_sidecar() -> None:
     # /usr/bin/true ignores args, exits 0, and never writes the requested --output.
-    result = visuals._kmyth_seal_probe_error(Path("/usr/bin/true"), timeout_seconds=5)
+    result = kmyth_support.kmyth_seal_probe_error(Path("/usr/bin/true"), timeout_seconds=5)
 
     assert "did not write a sidecar" in result
 
@@ -542,7 +544,7 @@ def test_resolve_kmyth_status_reports_tools_found_but_not_runnable() -> None:
         def summary(self) -> str:
             return "kmyth present"
 
-    status = visuals._resolve_kmyth_status(
+    status = kmyth_support.resolve_kmyth_status(
         include_kmyth=True,
         binary_dir="bin",
         seal_probe_timeout_seconds=1,

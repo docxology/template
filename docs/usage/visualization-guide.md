@@ -69,47 +69,25 @@ write_generated_figure_registry(
 Use the same analysis outputs to inject any changing statistics into the
 caption or nearby prose. Do not copy numbers from a plot into manuscript text.
 
-## Legacy figure management
+## Figure metadata registration
 
-`FigureManager` is a real infrastructure utility, but it emits raw LaTeX and
-is not wired into the default Pandoc manuscript workflow. Retain it only for a
-legacy integration that explicitly requires those outputs.
+`FigureManager` stores label-indexed metadata and registry identifiers for
+interactive or project-owned registration. Its supported operations are
+`register_figure`, `get_figure`, `get_all_figures`, and `generate_figure_list`;
+constructing a manager reloads its persisted JSON registry.
 
-### Registering figures
+Pipeline publication uses the generated-registry APIs in the canonical example
+above so a missing output cannot acquire a complete publication registry.
+Manuscript images use Pandoc syntax and bracket-cite references:
 
-```python
-from infrastructure.documentation import FigureManager
+```markdown
+![Objective value by optimization iteration.](../output/figures/convergence.png){#fig:convergence width=80%}
 
-manager = FigureManager()
-fig_meta = manager.register_figure(
-    filename="convergence.png",
-    caption="Convergence analysis showing exponential decay",
-    section="experimental_results",
-    generated_by="my_script.py"
-)
+[@fig:convergence] shows the optimization trajectory.
 ```
 
-### Generating LaTeX blocks
-
-```python
-latex_block = manager.generate_latex_figure_block("fig:convergence")
-```
-
-### Cross-references
-
-```python
-ref = manager.generate_reference("fig:convergence")
-# Returns: \ref{fig:convergence}
-```
-
-**Caveat:** `FigureManager.generate_reference()` and `generate_latex_figure_block()`
-emit raw LaTeX (`\ref{}`, `\begin{figure}`), not the Pandoc bracket-cite
-syntax (`[@fig:name]`, `![caption](path){#fig:name}`) that the actual render
-pipeline and every exemplar manuscript use (see
-[Manuscript Semantics](../guides/manuscript-semantics.md)). This utility is
-not wired into the default pipeline — do not use its output directly in
-manuscript source; write `[@fig:name]` and `![...](path){#fig:name}` by hand
-instead.
+See [Image Management](image-management.md) for metadata registration,
+cover artwork, and manuscript preflight.
 
 ## Scientific and accessibility checks
 

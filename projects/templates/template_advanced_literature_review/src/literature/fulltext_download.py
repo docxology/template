@@ -19,9 +19,6 @@ from template_literature_meta_analysis.literature.fulltext_download import (
     _request_with_retry as _request_with_retry,
 )
 from template_literature_meta_analysis.literature.fulltext_download import (
-    _safe_filename as _safe_filename,
-)
-from template_literature_meta_analysis.literature.fulltext_download import (
     assess_fulltext_availability as assess_fulltext_availability,
 )
 from template_literature_meta_analysis.literature.fulltext_download import (
@@ -42,6 +39,9 @@ from template_literature_meta_analysis.literature.fulltext_download import (
 from template_literature_meta_analysis.literature.fulltext_download import (
     resolve_fulltext_url as resolve_fulltext_url,
 )
+from template_literature_meta_analysis.literature.fulltext_download import (
+    safe_filename as safe_filename,
+)
 
 __all__ = [
     "MAX_RETRIES",
@@ -50,7 +50,6 @@ __all__ = [
     "_BLANK_LINES_RE",
     "_parse_unpaywall",
     "_request_with_retry",
-    "_safe_filename",
     "assess_fulltext_availability",
     "assess_fulltext_extraction",
     "download_and_extract_fulltext",
@@ -58,4 +57,5 @@ __all__ = [
     "extract_figures",
     "extract_fulltext_text",
     "resolve_fulltext_url",
+    "safe_filename",
 ]

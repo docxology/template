@@ -10,9 +10,11 @@
 \section*{BEGINNING OF TRANSMISSION}\label{beginning-of-transmission}
 ```
 
-**State:** published
+**State:** unpublished / pending pairing
 
-**Pairing:** complete (DOI, GitHub, SHA-256, Zenodo URL)
+**Pairing:** pending — unresolved:
+- ✗ GitHub release URL: `pending`
+- ✗ PDF SHA-256: `pending`
 
 ```{=latex}
 \subsubsection*{Release metadata}
@@ -23,10 +25,9 @@
 | Title | Active Inference Multi-Track Exemplar |
 | Version | 0.4.0 |
 | Concept DOI | 10.5281/zenodo.20417021 |
-| Version DOI | 10.5281/zenodo.20931870 |
-| GitHub | [https://github.com/docxology/template_active_inference/releases/tag/v0.3.2](https://github.com/docxology/template_active_inference/releases/tag/v0.3.2) |
+| GitHub | docxology/template_active_inference |
 | Zenodo | [https://zenodo.org/records/20417021](https://zenodo.org/records/20417021) |
-| SHA-256 | `f191b48f94394cab…` |
+| SHA-256 | pending |
 | SHA-512 | pending |
 
 ```{=latex}

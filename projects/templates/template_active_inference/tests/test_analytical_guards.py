@@ -6,7 +6,8 @@ from __future__ import annotations
 import numpy as np
 import pytest
 
-from analytical.bernoulli_toy import ising_coupling, ising_mutual_information, lambda_sweep_values
+from analytical.bernoulli_toy import ising_coupling, ising_mutual_information
+from analytical.hyperparameters import Hyperparameters, lambda_grid
 from analytical.coupling import entangled_posterior, entangled_prior_unnormalised, expected_value
 from analytical.joint_dist import joint_marginal, mean_field_to_joint, normalize
 
@@ -22,9 +23,9 @@ def test_ising_mutual_information_negative_lambda_branch() -> None:
     assert ising_mutual_information(-0.5) > 0.0
 
 
-def test_lambda_sweep_values_requires_two_points() -> None:
+def test_lambda_grid_requires_two_points() -> None:
     with pytest.raises(ValueError, match="at least 2"):
-        lambda_sweep_values(num_points=1)
+        lambda_grid(Hyperparameters(lambda_grid_points=1))
 
 
 def test_entangled_prior_rejects_shape_mismatch() -> None:

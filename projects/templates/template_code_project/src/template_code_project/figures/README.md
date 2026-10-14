@@ -12,7 +12,7 @@ in `src/optimizer.py` and `src/invariants.py`, and keep CLI parsing in
 | File | Role |
 | --- | --- |
 | `__init__.py` | Public figure-builder exports. |
-| `_common.py` | Shared plotting helpers. |
+| `../core/_runtime.py` | Shared runtime helpers imported directly by the generators. |
 | `convergence.py` | Convergence and rate-comparison figures. |
 | `scientific.py` | Benchmark and stability figures. |
 | `sensitivity.py` | Step-size sensitivity figures. |

@@ -273,6 +273,14 @@ projects/templates/*/output/.pipeline/
 # Matplotlib's atomic PNG normalization leaves hidden temporary payloads if a
 # render is interrupted; these are never portable publication evidence.
 projects/templates/*/output/**/.*.png
+# Inline Mermaid launch/cache files are recreated from SDK assets; retain .mmd/PNG.
+projects/templates/*/output/figures/mermaid_inline/_mermaid_source_font_default.mjs
+projects/templates/*/output/figures/mermaid_inline/source-font-default.json
+projects/templates/*/output/figures/mermaid_inline/inline_mermaid_*.mermaid-v1[12].mjs
+projects/templates/*/output/figures/mermaid_inline/inline_mermaid_*.mermaid-v1[12]-request.json
+projects/templates/*/output/figures/mermaid_inline/inline_mermaid_*.mermaid-process.json
+projects/templates/*/output/figures/mermaid_inline/inline_mermaid_*.mermaid-cache.json
+projects/templates/*/output/figures/mermaid_inline/inline_mermaid_*.png.source-fonts.json
 projects/templates/*/output/logs/
 projects/templates/*/output/reports/snapshots/
 projects/templates/*/output/reports/lessons.jsonl

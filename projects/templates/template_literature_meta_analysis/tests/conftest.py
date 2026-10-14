@@ -3,6 +3,7 @@
 import importlib.util
 import os
 import sys
+import sysconfig
 import tempfile
 from pathlib import Path
 
@@ -17,14 +18,23 @@ os.environ.setdefault("MPLBACKEND", "Agg")
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 SRC = os.path.join(ROOT, "src")
 _own_root = Path(ROOT).resolve()
+_runtime_paths = sysconfig.get_paths()
+_runtime_sites = {Path(_runtime_paths[key]).resolve(strict=True) for key in ("purelib", "platlib")}
 _original_import_paths = sys.path[:]
 try:
-    sys.path[:] = [entry for entry in sys.path if not Path(entry or os.getcwd()).resolve().is_relative_to(_own_root)]
+    sys.path[:] = [
+        entry
+        for entry in sys.path
+        if Path(entry or os.getcwd()).resolve() in _runtime_sites
+        or not Path(entry or os.getcwd()).resolve().is_relative_to(_own_root)
+    ]
     _sdk_spec = importlib.util.find_spec("infrastructure")
     if _sdk_spec is None or _sdk_spec.origin is None:
         raise ImportError("the declared research-project-template dependency is unavailable")
     _sdk_origin = Path(_sdk_spec.origin).resolve(strict=True)
-    if _sdk_origin.is_relative_to(_own_root):
+    if _sdk_origin.is_relative_to(_own_root) and not any(
+        _sdk_origin.is_relative_to(site_root) for site_root in _runtime_sites
+    ):
         raise ImportError("own project source cannot provide the platform SDK")
     import infrastructure  # noqa: E402
 finally:

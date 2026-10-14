@@ -21,9 +21,7 @@ A page is **over-set** — content was dropped off the bottom of the last column
 `oversets` names the page and how many flowables didn't fit. Shorten the copy or
 move an item to another page. `20_render_newspaper.py` fails the stage on
 over-set **by default** (dropped copy cannot ship silently); pass
-`--allow-overset` to downgrade it to a warning instead. The script's `--strict`
-flag is deprecated and accepted only for backward compatibility — it has no
-effect, since failing on over-set is now the default behavior.
+`--allow-overset` to downgrade it to a warning instead.
 
 ### A figure shows a gray "photo" box
 The image path didn't resolve (relative to the project root). Run

@@ -12,12 +12,9 @@ from .scientific import (
 )
 from .sensitivity import generate_step_size_sensitivity_plot
 
-# Backward-compatible alias used by legacy imports/tests.
-_agency_category = agency_category
-
 __all__ = [
     "VIZ_CONFIG",
-    "_agency_category",
+    "agency_category",
     "apply_visualization_style",
     "generate_benchmark_visualization",
     "generate_complexity_visualization",

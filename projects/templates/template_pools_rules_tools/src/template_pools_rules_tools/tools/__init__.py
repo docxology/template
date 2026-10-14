@@ -3,7 +3,7 @@ reading, rules/tools manifests, schema receipts, typed definitions, and
 the end-to-end integration orchestrator.
 
 These modules are re-exported from ``template_pools_rules_tools`` for
-backwards compatibility; import them from the package root.
+the supported public API; import them from the package root.
 """
 
 from .fonds_reader import (

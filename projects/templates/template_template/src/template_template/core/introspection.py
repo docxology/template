@@ -403,9 +403,6 @@ def enumerate_numbered_scripts(scripts_dir: Path) -> list[PipelineStage]:
     return stages
 
 
-count_pipeline_stages = enumerate_numbered_scripts
-
-
 def _load_opt_in_tags(repo_root: Path) -> frozenset[str]:
     """Read the opt-in tag set declared in pipeline.yaml.
 

@@ -1,4 +1,4 @@
-"""Tests for infrastructure.reporting._dashboard_charts — comprehensive coverage."""
+"""Behavior tests for the dashboard output and pipeline chart implementations."""
 
 import matplotlib
 
@@ -7,11 +7,11 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 from matplotlib.figure import Figure
 
-from infrastructure.reporting._dashboard_charts import (
+from infrastructure.reporting._dashboard_charts_outputs import (
     create_manuscript_complexity_chart,
-    create_performance_timeline_chart,
     create_summary_table,
 )
+from infrastructure.reporting._dashboard_charts_pipeline import create_performance_timeline_chart
 from infrastructure.reporting._executive_models import (
     ProjectMetrics,
     ManuscriptMetrics,

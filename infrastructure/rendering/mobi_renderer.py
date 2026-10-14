@@ -1,6 +1,6 @@
 """MOBI rendering via pandoc (EPUB intermediate) + calibre ebook-convert.
 
-kindlegen is deprecated; this module uses calibre's ``ebook-convert`` CLI to
+This module uses calibre's ``ebook-convert`` CLI to
 produce MOBI output.  The pipeline is:
 
     combined.md  →  (pandoc)  →  intermediate.epub  →  (ebook-convert)  →  output.mobi

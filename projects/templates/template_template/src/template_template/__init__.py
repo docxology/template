@@ -3,7 +3,7 @@
 Introspection API:
     discover_infrastructure_modules — scan infrastructure/ subpackages
     discover_projects — scan projects/ workspaces
-    count_pipeline_stages — enumerate numbered pipeline scripts
+    enumerate_numbered_scripts — enumerate numbered pipeline scripts
     analyze_test_coverage_config — extract testing thresholds
     build_infrastructure_report — aggregate all above into one report
 
@@ -35,7 +35,6 @@ from .core.introspection import (
     ProjectAnalysis,
     analyze_test_coverage_config,
     build_infrastructure_report,
-    count_pipeline_stages,
     discover_infrastructure_modules,
     discover_projects,
     enumerate_numbered_scripts,
@@ -69,7 +68,6 @@ __all__ = [
     # Introspection functions
     "discover_infrastructure_modules",
     "discover_projects",
-    "count_pipeline_stages",
     "enumerate_numbered_scripts",
     "load_pipeline_stages_from_yaml",
     "resolve_template_repo_root",

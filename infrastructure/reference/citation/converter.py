@@ -17,7 +17,6 @@ from collections import OrderedDict
 from typing import TYPE_CHECKING
 
 from infrastructure.core.text_slug import (
-    TITLE_STOP_WORDS,
     extract_surname,
     slugify_token,
     title_key_word,
@@ -26,12 +25,6 @@ from infrastructure.reference.citation.models import BibEntry
 
 if TYPE_CHECKING:
     from infrastructure.search.literature.models import Paper
-
-# Backward-compatible aliases for internal call sites in this module.
-_TITLE_STOP_WORDS = TITLE_STOP_WORDS
-_slugify_token = slugify_token
-_surname = extract_surname
-_title_key_word = title_key_word
 
 # Map literature-source / venue type → BibTeX entry type.
 _SOURCE_TO_ENTRY_TYPE: dict[str, str] = {
@@ -70,9 +63,9 @@ def generate_citation_key(
     Falls back to *fallback* + ``year`` + title-word when there are no
     authors. Returns ``"anon"`` only as an absolute last resort.
     """
-    surname = _slugify_token(_surname(authors[0])) if authors else ""
+    surname = slugify_token(extract_surname(authors[0])) if authors else ""
     year_str = str(year) if year is not None else ""
-    title_word = _title_key_word(title)
+    title_word = title_key_word(title)
     head = surname or fallback
     pieces = [piece for piece in (head, year_str, title_word) if piece]
     key = "".join(pieces) or fallback

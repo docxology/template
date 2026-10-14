@@ -7,22 +7,13 @@ Follows No Mocks Policy - all tests use real data and real execution.
 from __future__ import annotations
 
 import sys
-from pathlib import Path
+
+import pytest
 
 from infrastructure.documentation.generate_glossary_cli import (
     _ensure_glossary_file,
-    _repo_root,
     main,
 )
-
-
-class TestRepoRoot:
-    """Test _repo_root helper."""
-
-    def test_returns_path(self):
-        """Should return a Path object."""
-        result = _repo_root()
-        assert isinstance(result, Path)
 
 
 class TestEnsureGlossaryFile:
@@ -82,15 +73,19 @@ class TestMainFunction:
         finally:
             sys.argv = old_argv
 
-    def test_main_with_no_args_uses_defaults(self):
-        """Should run main with default args (may use repo structure)."""
-        old_argv = sys.argv
-        try:
-            sys.argv = ["generate_glossary_cli.py"]
-            result = main()
-            assert result == 0
-        finally:
-            sys.argv = old_argv
+    def test_main_requires_explicit_paths(self):
+        """Missing paths must fail before any implicit destination is created."""
+        with pytest.raises(SystemExit) as failure:
+            main([])
+        assert failure.value.code == 2
+
+    def test_missing_source_refuses_before_writing(self, tmp_path):
+        """A mistaken source path must not produce a misleading empty glossary."""
+        glossary = tmp_path / "manuscript" / "glossary.md"
+        with pytest.raises(SystemExit) as failure:
+            main([str(tmp_path / "missing"), str(glossary)])
+        assert failure.value.code == 2
+        assert not glossary.parent.exists()
 
     def test_main_with_empty_src(self, tmp_path):
         """Should handle empty src directory."""

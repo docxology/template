@@ -682,7 +682,7 @@
     },
     {
       "name": "infrastructure-documentation",
-      "description": "Skill for the documentation infrastructure module providing figure management, image handling, markdown integration, and API glossary generation. Use when managing research figures, inserting images into manuscripts, auto-numbering figures, or generating API documentation.",
+      "description": "Figure metadata, deterministic generated-figure registries, and source-derived API documentation. Use when publishing figure inventories, validating generated image files, or maintaining API glossaries.",
       "path": "infrastructure/documentation/SKILL.md",
       "cursor_at": "infrastructure/documentation/SKILL.md"
     },

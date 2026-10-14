@@ -8,15 +8,15 @@ import subprocess
 import sys
 from pathlib import Path
 
+import pytest
+
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
-# Project lives at projects/templates/<name>/; repo root is three levels up.
-REPO_ROOT = PROJECT_ROOT.parents[2]
 
 
 def _run(script: str, args: list[str]) -> subprocess.CompletedProcess[str]:
     return subprocess.run(
         [sys.executable, str(PROJECT_ROOT / "scripts" / script), *args],
-        cwd=REPO_ROOT,
+        cwd=PROJECT_ROOT,
         capture_output=True,
         text=True,
     )
@@ -187,3 +187,61 @@ def test_run_deep_search_enabled_with_corpus(tmp_path: Path):
     assert result.returncode == 0, result.stderr
     assert (iso / "output" / "deep_search" / "convex" / "papers.json").exists()
     assert (iso / "output" / "bibliography" / "refs.bib").exists()
+
+
+@pytest.mark.parametrize("fault", ["fresh-startup", None, "missing-project-root", "changed-hook-digest"])
+def test_unpaid_core_controller_preserves_authentic_launcher_custody(tmp_path: Path, fault: str | None) -> None:
+    """The real controller reads its real fixture; audit refusals remain fatal."""
+    import infrastructure
+    from infrastructure.core.implementation_custody import bytecode_audit_bootstrap
+
+    script = PROJECT_ROOT / "scripts/_run_unpaid_acceptance.py"
+    if fault == "fresh-startup":
+        command = [sys.executable, str(script), "--mode", "core"]
+    else:
+        platform = Path(infrastructure.__file__).resolve().parent.parent
+        prefix = tmp_path / "launcher-cache"
+        prefix.mkdir()
+        roots = (PROJECT_ROOT / "scripts", platform / "infrastructure", platform / "scripts")
+        if fault != "missing-project-root":
+            roots += (PROJECT_ROOT / "src",)
+        bootstrap = bytecode_audit_bootstrap(roots, prefix)
+        if fault == "changed-hook-digest":
+            bootstrap += (
+                "from types import MappingProxyType;record=dict(sys._template_executed_bytecode_audit);"
+                "record['hook_source_sha256']='0'*64;"
+                "sys._template_executed_bytecode_audit=MappingProxyType(record)\n"
+            )
+        bootstrap += (
+            "import runpy,sys;script=sys.argv.pop(1);before=sys.pycache_prefix;"
+            "registry=sys._template_executed_bytecode_audit\n"
+            "try:\n"
+            " runpy.run_path(script,run_name='__main__')\n"
+            "except SystemExit as error:\n"
+            " if error.code not in (None,0):raise\n"
+            "assert sys.pycache_prefix==before\n"
+            "assert sys._template_executed_bytecode_audit is registry\n"
+        )
+        command = [
+            sys.executable,
+            "-I",
+            "-X",
+            f"pycache_prefix={prefix}",
+            "-c",
+            bootstrap,
+            str(script),
+            "--mode",
+            "core",
+        ]
+    result = subprocess.run(command, cwd=tmp_path, capture_output=True, text=True, timeout=60)
+    if fault in ("missing-project-root", "changed-hook-digest"):
+        assert result.returncode != 0, result.stdout + result.stderr
+        expected = "outside the pre-import audit roots" if fault == "missing-project-root" else "active audit differs"
+        assert expected in result.stderr
+        assert not result.stdout
+    else:
+        assert result.returncode == 0, result.stdout + result.stderr
+        payload = json.loads(result.stdout)
+        assert payload["status"] == "passed" and payload["execution_mode"] == "core-reference"
+        assert payload["live_capabilities_tested"] == []
+        assert payload["size_bytes"] == (PROJECT_ROOT / "data/corpus.json").stat().st_size

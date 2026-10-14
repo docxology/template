@@ -33,8 +33,7 @@ rendering-side prohibition.
 | `transmission_barcode_strip.py` | Transmission integrity barcode strip. |
 | `transmission_page_check.py` | Bookend single-page-span validation. |
 
-## Backwards compatibility
-
-`infrastructure/publishing/transmission_*.py` remain as explicit re-export
-shims so historical imports keep resolving; new code imports from
-`infrastructure.transmission` directly.
+Callers import from `infrastructure.transmission` directly. Bookends only use a
+published receipt whose tag matches the manuscript version. Explicitly
+unreleased manuscripts retain real published receipts in the prior-release
+section; dry runs and sandbox receipts cannot establish current publication.

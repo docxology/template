@@ -36,3 +36,21 @@ def test_sanitize_machine_local_paths_skips_binary_and_symlink(tmp_path: Path) -
     assert sanitize_machine_local_paths(output) == ()
     assert binary.read_bytes() == b"/Users/alice/private"
     assert "/Users/alice/" in outside.read_text(encoding="utf-8")
+
+
+def test_publication_sanitation_preserves_hidden_runtime_receipts(tmp_path: Path) -> None:
+    output = tmp_path / "output"
+    receipt = output / ".pipeline" / "analysis" / "original.json"
+    receipt.parent.mkdir(parents=True)
+    original = b'{"cwd": "/Users/alice/research", "custody": "verified"}\n'
+    receipt.write_bytes(original)
+    hidden_file = output / ".local.json"
+    hidden_file.write_bytes(original)
+    public = output / "data" / "analysis.json"
+    public.parent.mkdir()
+    public.write_bytes(original)
+
+    assert sanitize_machine_local_paths(output) == (public,)
+    assert receipt.read_bytes() == original
+    assert hidden_file.read_bytes() == original
+    assert b"<home>/research" in public.read_bytes()

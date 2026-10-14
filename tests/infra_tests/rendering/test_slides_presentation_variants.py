@@ -15,7 +15,8 @@ import pytest
 from reportlab.pdfgen.canvas import Canvas
 
 from infrastructure.core.exceptions import RenderingError
-from infrastructure.rendering._slides_accessibility import AccessibleSlidePolicy, compose_accessible_pandoc_document
+from infrastructure.rendering._slides_accessibility_contracts import AccessibleSlidePolicy
+from infrastructure.rendering._slides_accessibility_composition import compose_accessible_pandoc_document
 from infrastructure.rendering._slides_accessibility_figures import _image_nodes
 from infrastructure.rendering._slides_presentation_variants import reject_small_embedded_labels
 from infrastructure.rendering.config import RenderingConfig

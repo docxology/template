@@ -10,7 +10,7 @@ from typing import Any
 
 from infrastructure.core.logging.utils import get_logger
 from infrastructure.core.pipeline.multi_project import MultiProjectResult, validated_project_run
-from infrastructure.reporting.executive_reporter import (
+from infrastructure.reporting._executive_renderers import (
     generate_executive_summary,
     save_executive_summary,
 )

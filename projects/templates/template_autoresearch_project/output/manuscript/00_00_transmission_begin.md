@@ -10,9 +10,11 @@
 \section*{BEGINNING OF TRANSMISSION}\label{beginning-of-transmission}
 ```
 
-**State:** published
+**State:** unpublished / pending pairing
 
-**Pairing:** complete (DOI, GitHub, SHA-256, Zenodo URL)
+**Pairing:** pending — unresolved:
+- ✗ GitHub release URL: `pending`
+- ✗ PDF SHA-256: `pending`
 
 ```{=latex}
 \subsubsection*{Release metadata}
@@ -21,12 +23,11 @@
 | Field | Value |
 | --- | --- |
 | Title | Bounded AutoResearch for a Tiny Reproducible Machine-Learning Task |
-| Version | 0.3.2 |
+| Version | 0.4.0 |
 | Concept DOI | 10.5281/zenodo.20417016 |
-| Version DOI | 10.5281/zenodo.20931907 |
-| GitHub | [https://github.com/docxology/template_autoresearch_project/releases/tag/v0.3.2](https://github.com/docxology/template_autoresearch_project/releases/tag/v0.3.2) |
+| GitHub | docxology/template_autoresearch_project |
 | Zenodo | [https://zenodo.org/records/20417016](https://zenodo.org/records/20417016) |
-| SHA-256 | `e07b62850a199593…` |
+| SHA-256 | pending |
 | SHA-512 | pending |
 
 ```{=latex}

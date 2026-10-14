@@ -25,7 +25,7 @@ Rather than existing as isolated scripts, this project extensively leverages the
 
 - **Scientific Utilities**: Utilizing `infrastructure.scientific.stability` and `infrastructure.scientific.benchmarking` to check numerical boundaries and exercise runtime performance diagnostics without pinning host-dependent timings.
 - **Hermetic Validation**: Deploying `infrastructure.validation` components (`markdown_validator`, `output_validator`) to ensure generated artifacts are structurally valid and traceable.
-- **Reporting & Rendering**: Employing `infrastructure.rendering.pdf_renderer` and `infrastructure.reporting.executive_reporter` to automatically transform code outputs into this finalized manuscript.
+- **Reporting & Rendering**: The project hydrates manuscript variables from its analysis outputs, then `infrastructure.rendering.pdf_renderer` compiles the manuscript. The supported `infrastructure.reporting` API produces separate pipeline and cross-project summaries.
 
 ## Algorithm Overview
 

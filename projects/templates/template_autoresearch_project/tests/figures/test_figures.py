@@ -172,6 +172,24 @@ def test_figure_label_parity_across_specs_dispatch_contract_records(autoresearch
         assert metadata.get("source")
 
 
+def test_registry_generators_resolve_to_genuine_implementation_functions() -> None:
+    """Every published generator route names its actual own implementation."""
+    from importlib import import_module
+    from inspect import isfunction
+
+    registry = figure_registry_payload()
+    assert set(registry) == set(ALL_FIGURE_LABELS)
+    for label, record in registry.items():
+        route = str(record["generated_by"])
+        module_name, function_name = route.rsplit(".", 1)
+        assert module_name.startswith("template_autoresearch_project.figures."), label
+        module = import_module(module_name)
+        function = getattr(module, function_name)
+        assert isfunction(function), route
+        assert function.__module__ == module_name, route
+        assert function.__qualname__ == function_name, route
+
+
 def test_figure_calls_cover_every_registered_figure(autoresearch_loop_result, ml_result, diagnostics, tmp_path):
     """The test's call map must cover exactly the registry's 25 figure filenames."""
     registry = figure_registry_payload(autoresearch_loop_result, ml_result)

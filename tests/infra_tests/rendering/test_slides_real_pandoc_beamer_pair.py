@@ -8,7 +8,7 @@ import subprocess
 from pathlib import Path
 import pytest
 from infrastructure.core.exceptions import RenderingError
-from infrastructure.rendering._slides_accessibility import accessible_reveal_output_issues
+from infrastructure.rendering._slides_accessibility_reveal import accessible_reveal_output_issues
 from infrastructure.rendering.config import RenderingConfig
 from infrastructure.rendering.slides_renderer import SlidesRenderer
 from ._slides_accessibility_helpers import (

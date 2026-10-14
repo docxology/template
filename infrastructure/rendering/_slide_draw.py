@@ -291,23 +291,17 @@ def _draw_wrapped(
     line_height: float,
     color: colors.Color,
     font_name: str,
-    font_size: float | None = None,
+    font_size: float,
 ) -> float:
     """Word-wrap ``text`` within ``max_width`` and draw it starting at ``(x, y)``.
 
-    ``font_size`` defaults to a size proportional to ``line_height`` when not
-    given explicitly (kept for backward compatibility); every call site in
-    this module now passes ``font_size`` explicitly from the module-level
-    font-size constants, so multi-line wrapping is always driven by one real
-    measurement, never an inferred size.
+    Each caller supplies ``font_size`` from the module-level font-size
+    constants so drawing and wrapping use the same measured size.
 
     Returns the y-coordinate just below the last drawn line, for stacking
     subsequent content (e.g. placing a subtitle beneath a title that may have
     wrapped to more than one line).
     """
-    if font_size is None:
-        font_size = 13 if line_height <= 15 else 26
-
     c.setFont(font_name, font_size)
     words = text.split()
     lines: list[str] = []

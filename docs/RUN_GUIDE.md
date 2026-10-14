@@ -150,7 +150,7 @@ in the normal menu.
 
 Private work normally lives in the sibling repo configured by
 `$TEMPLATE_PRIVATE_PROJECTS_ROOT`. The simplified sidecar uses `working/` and
-`archive/` by default; optional legacy `active/`
+`archive/` by default; optional `active/`
 folders are still linked when present. `run.sh` auto-syncs existing lifecycle
 folders into matching `template/projects/<subfolder>/` symlinks before
 discovery. Use
@@ -205,7 +205,6 @@ Both [`run.sh`](../run.sh) and [`secure_run.sh`](../secure_run.sh) source
 - No resolver or installer is invoked by ordinary dispatch. `TEMPLATE_DISPATCH_TIMEOUT_SECONDS` is a positive finite whole-dispatch budget (default 14400 seconds); startup probes are capped at 30 seconds.
 - Admission and supervisor/guardian startup use `-I -S` to defer `.pth` and `sitecustomize` execution. The actual CLI child's normal `-I` site startup runs under the guardian's finite deadline and descendant cleanup.
 - **Argv shaping:** `--pipeline` / `--all-projects` → prepend `pipeline` subcommand; `--secure-run` → prepend `secure`; other flags forward verbatim to `python -m infrastructure.orchestration`.
-- **`FEP_LEAN_GAUSS_WORKFLOWS`:** defaults to `1`; `--no-lean-workflows` sets it to `0`.
 
 **`secure_run.sh`-specific behaviour:**
 

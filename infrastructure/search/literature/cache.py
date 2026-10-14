@@ -96,11 +96,6 @@ def validate_cache_payload(payload: Any, query: SearchQuery | None = None) -> li
     return errors
 
 
-def _query_hash(query: SearchQuery) -> str:
-    """Backward-compatible private alias for the canonical cache key."""
-    return query_cache_key(query)
-
-
 class SearchCache:
     """JSON-file cache for :class:`SearchResult` objects.
 
@@ -134,7 +129,7 @@ class SearchCache:
 
     def path_for(self, query: SearchQuery) -> Path:
         """Process path for."""
-        return self.cache_dir / f"search_{_query_hash(query)}.json"
+        return self.cache_dir / f"search_{query_cache_key(query)}.json"
 
     def get(self, query: SearchQuery) -> SearchResult | None:
         """Get a cached value, or None if not present."""

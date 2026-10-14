@@ -10,9 +10,11 @@
 \section*{BEGINNING OF TRANSMISSION}\label{beginning-of-transmission}
 ```
 
-**State:** published
+**State:** unpublished / pending pairing
 
-**Pairing:** complete (DOI, GitHub, SHA-256, Zenodo URL)
+**Pairing:** pending — unresolved:
+- ✗ GitHub release URL: `pending`
+- ✗ PDF SHA-256: `pending`
 
 ```{=latex}
 \subsubsection*{Release metadata}
@@ -23,10 +25,9 @@
 | Title | A template/ approach to Reproducible Generative Research |
 | Version | 2.0.0 |
 | Concept DOI | 10.5281/zenodo.20419007 |
-| Version DOI | 10.5281/zenodo.20976048 |
-| GitHub | [https://github.com/docxology/template_template/releases/tag/v1.0.9](https://github.com/docxology/template_template/releases/tag/v1.0.9) |
+| GitHub | docxology/template_template |
 | Zenodo | [https://zenodo.org/records/20419007](https://zenodo.org/records/20419007) |
-| SHA-256 | `535bd80943d0ae9f…` |
+| SHA-256 | pending |
 | SHA-512 | pending |
 
 ```{=latex}
@@ -61,9 +62,9 @@ Structured manifest: `../data/transmission_manifest.json`
 
 # Abstract
 
-The reproducibility problem in computational research is partly structural: research artifacts are often distributed across editors, notebooks, scripts, and manual publication steps without a shared mechanism that keeps code, data, and manuscript synchronized. Existing tools address important parts of this lifecycle: workflow managers orchestrate computation, literate-programming systems render documents, and data-versioning tools track artifacts. `template/` combines those concerns with test and provenance gates by applying Infrastructure as Code to the research lifecycle. Its Two-Layer Architecture separates 31 infrastructure subdirectories (28 importable Python packages, ~1285 modules, validated by ~12,235 tests) from self-contained project workspaces. A YAML-declared pipeline (17 stages; 10 in a default full run) coordinates environment checks, test execution, analysis, Pandoc/XeLaTeX rendering, SHA-256 hashing with optional steganographic watermarking, structural validation, and optional LLM review. The declared quality floors—90% for project source and 60% for infrastructure source—are injected from executable configuration rather than copied into the manuscript. Documentation Duality equips repository directories with human-facing `README.md` and agent-facing `AGENTS.md` files; skill-enabled infrastructure packages additionally expose structured `SKILL.md` descriptors so agents can discover supported capabilities from versioned interfaces.
+The reproducibility problem in computational research is partly structural: research artifacts are often distributed across editors, notebooks, scripts, and manual publication steps without a shared mechanism that keeps code, data, and manuscript synchronized. Existing tools address important parts of this lifecycle: workflow managers orchestrate computation, literate-programming systems render documents, and data-versioning tools track artifacts. `template/` combines those concerns with test and provenance gates by applying Infrastructure as Code to the research lifecycle. Its Two-Layer Architecture separates 31 infrastructure subdirectories (28 importable Python packages, ~1279 modules, validated by ~12,193 tests) from self-contained project workspaces. A YAML-declared pipeline (17 stages; 10 in a default full run) coordinates environment checks, test execution, analysis, Pandoc/XeLaTeX rendering, SHA-256 hashing with optional steganographic watermarking, structural validation, and optional LLM review. The declared quality floors—90% for project source and 60% for infrastructure source—are injected from executable configuration rather than copied into the manuscript. Documentation Duality equips repository directories with human-facing `README.md` and agent-facing `AGENTS.md` files; skill-enabled infrastructure packages additionally expose structured `SKILL.md` descriptors so agents can discover supported capabilities from versioned interfaces.
 
-The generated public exemplar roster (`templates/template_active_inference`, `templates/template_advanced_literature_review`, `templates/template_autopoiesis`, `templates/template_autoresearch_project`, `templates/template_autoscientists`, `templates/template_code_project`, `templates/template_data_descriptor`, `templates/template_eda_notebook`, `templates/template_experiment_tree`, `templates/template_formal`, `templates/template_gold_refinement`, `templates/template_literature_meta_analysis`, `templates/template_madlib`, `templates/template_methods_paper`, `templates/template_newspaper`, `templates/template_pitch_deck`, `templates/template_pools_rules_tools`, `templates/template_prose_project`, `templates/template_redacted_report`, `templates/template_registered_report`, `templates/template_search_project`, `templates/template_sia`, `templates/template_storybook`, `templates/template_template`, `templates/template_textbook`) supplies heterogeneous control-positive layouts, including optimization (`template_code_project`, 263 discovered tests), prose (`template_prose_project`, 165 discovered tests), and AutoResearch readiness (`template_autoresearch_project`, 317 discovered tests). Each declares the same 90% project-source floor and consumes the shared pipeline without project-to-project imports. This manuscript adds a reflexive artifact: `template_template` (151 discovered tests) follows the same analysis and render path while injecting repository counters and figures from live introspection. The result is a self-documenting build whose quantitative repository claims are generated artifacts, whose manuscript claims are checked against an evidence registry, and whose output can be validated and optionally watermarked. A versioned comparative matrix situates `template/` against peer tools across the capabilities represented in Figure 4. Code is released under the Apache License 2.0 at `github.com/docxology/template`; the work remains open-ended.
+The generated public exemplar roster (`templates/template_active_inference`, `templates/template_advanced_literature_review`, `templates/template_autopoiesis`, `templates/template_autoresearch_project`, `templates/template_autoscientists`, `templates/template_code_project`, `templates/template_data_descriptor`, `templates/template_eda_notebook`, `templates/template_experiment_tree`, `templates/template_formal`, `templates/template_gold_refinement`, `templates/template_literature_meta_analysis`, `templates/template_madlib`, `templates/template_methods_paper`, `templates/template_newspaper`, `templates/template_pitch_deck`, `templates/template_pools_rules_tools`, `templates/template_prose_project`, `templates/template_redacted_report`, `templates/template_registered_report`, `templates/template_search_project`, `templates/template_sia`, `templates/template_storybook`, `templates/template_template`, `templates/template_textbook`) supplies heterogeneous control-positive layouts, including optimization (`template_code_project`, 263 discovered tests), prose (`template_prose_project`, 165 discovered tests), and AutoResearch readiness (`template_autoresearch_project`, 318 discovered tests). Each declares the same 90% project-source floor and consumes the shared pipeline without project-to-project imports. This manuscript adds a reflexive artifact: `template_template` (152 discovered tests) follows the same analysis and render path while injecting repository counters and figures from live introspection. The result is a self-documenting build whose quantitative repository claims are generated artifacts, whose manuscript claims are checked against an evidence registry, and whose output can be validated and optionally watermarked. A versioned comparative matrix situates `template/` against peer tools across the capabilities represented in Figure 4. Code is released under the Apache License 2.0 at `github.com/docxology/template`; the work remains open-ended.
 
 
 
@@ -135,9 +136,9 @@ No existing system addresses all six concerns within a single enforced pipeline.
 
 `template/` was conceived as a structural antidote to this fragmentation. Rather than adding reproducibility as an afterthought—a Docker container wrapping an already-disjointed workflow [@boettiger2015docker]—the template enforces integrity at the architectural level. It realizes Gentleman and Temple Lang's research compendium vision [@gentleman2007research] at repository scale, bundling code, data, tests, manuscripts, and provenance into a single, pipeline-enforced system with version-controlled infrastructure [@ram2013git]. It stands on four primary pillars:
 
-1. **Ergonomic Modularity**: A Two-Layer Architecture cleanly separates globally shared infrastructure (logging, rendering, validation, steganography) from project-specific logic (manuscripts, scripts, data). 31 infrastructure subdirectories (28 importable packages) comprising ~1285 Python modules provide reusable services; projects consume them without modification.
+1. **Ergonomic Modularity**: A Two-Layer Architecture cleanly separates globally shared infrastructure (logging, rendering, validation, steganography) from project-specific logic (manuscripts, scripts, data). 31 infrastructure subdirectories (28 importable packages) comprising ~1279 Python modules provide reusable services; projects consume them without modification.
 
-2. **Execution Integrity**: Pipeline advancement is contingent on test passage. The configured source-coverage floors are 60% for infrastructure and 90% for each project. The static gate rejects prohibited mock-framework imports, while the suites exercise real filesystem and subprocess behavior and use local protocol servers or explicitly enabled live services for network boundaries. ~12,235 infrastructure tests and 6278+ project tests are discovered by the introspection build.
+2. **Execution Integrity**: Pipeline advancement is contingent on test passage. The configured source-coverage floors are 60% for infrastructure and 90% for each project. The static gate rejects prohibited mock-framework imports, while the suites exercise real filesystem and subprocess behavior and use local protocol servers or explicitly enabled live services for network boundaries. ~12,193 infrastructure tests and 6288+ project tests are discovered by the introspection build.
 
 3. **Automated Provenance**: Steganographic watermarking and cryptographic hashing are integrated directly into the rendering pipeline. Every generated PDF carries SHA-256 (and, when enabled, SHA-512) fingerprints, an alpha-channel watermark (configurable text or QR overlay), per-page provenance footers and barcode strips, and embedded PDF metadata recording the build timestamp, document identifier, and Git commit hash. Provenance is not asserted by policy; it is enforced by architecture.
 
@@ -172,7 +173,7 @@ The `template/` architecture is deliberately bifurcated into a globally shared `
 
 The repository is organized into two strictly separated layers:
 
-**Infrastructure Layer** (`infrastructure/`): 31 infrastructure subdirectories—28 of them independently-importable Python packages—comprising ~1285 modules and providing reusable services. Each importable package has its own `__init__.py`, `AGENTS.md`, and `README.md`, and exports a well-defined public API (the remaining subdirectories, e.g. `config/`, hold shared configuration). The infrastructure layer knows nothing about any specific project---it provides generic capabilities (logging, rendering, validation, steganography) that any project may consume.
+**Infrastructure Layer** (`infrastructure/`): 31 infrastructure subdirectories—28 of them independently-importable Python packages—comprising ~1279 modules and providing reusable services. Each importable package has its own `__init__.py`, `AGENTS.md`, and `README.md`, and exports a well-defined public API (the remaining subdirectories, e.g. `config/`, hold shared configuration). The infrastructure layer knows nothing about any specific project---it provides generic capabilities (logging, rendering, validation, steganography) that any project may consume.
 
 **Project Layer** (`projects/`): Self-contained research workspaces. Each project directory contains:
 
@@ -405,8 +406,8 @@ These thresholds are enforced at Stage 01 of the pipeline. A project test run be
 
 The repository maintains three test suites:
 
-- **Infrastructure tests** (`tests/`): ~12,235 tests validating the 31 infrastructure subdirectories, covering logging, rendering, validation, steganography, reporting, and LLM integration.
-- **Project tests** (`projects/*/tests/`): Per-project suites whose sizes scale with each exemplar's surface area — for example 317 tests in `template_autoresearch_project` and 263 in `template_code_project`, with several exemplars larger still. (A true min/max span would require dedicated `project_test_count_min`/`project_test_count_max` tokens in `build_manuscript_metrics_dict`; see the meta-template's generator backlog.)
+- **Infrastructure tests** (`tests/`): ~12,193 tests validating the 31 infrastructure subdirectories, covering logging, rendering, validation, steganography, reporting, and LLM integration.
+- **Project tests** (`projects/*/tests/`): Per-project suites whose sizes scale with each exemplar's surface area — for example 318 tests in `template_autoresearch_project` and 263 in `template_code_project`, with several exemplars larger still. (A true min/max span would require dedicated `project_test_count_min`/`project_test_count_max` tokens in `build_manuscript_metrics_dict`; see the meta-template's generator backlog.)
 - **Integration tests**: Embedded within infrastructure tests, these exercise full pipeline stages against real manuscript inputs, validating end-to-end behavior from Markdown source to rendered PDF.
 
 ### Visualization Standards
@@ -439,7 +440,7 @@ The `./run.sh` interactive orchestrator can execute the public roster through th
 |---------|-----------------------|-----------------:|-----------------------:|
 | `template_code_project` | 8 | 263 | 90% |
 | `template_prose_project` | 8 | 165 | 90% |
-| `template_autoresearch_project` | 8 | 317 | 90% |
+| `template_autoresearch_project` | 8 | 318 | 90% |
 
 ¹“Core-only” excludes LLM-tagged and other opt-in stages according to the YAML stage tags. A fresh run must be used to establish completion status or wall-clock performance for a particular machine and dependency set.
 
@@ -447,8 +448,8 @@ The `./run.sh` interactive orchestrator can execute the public roster through th
 
 | Metric | Value |
 |--------|-------|
-| Test files | 902+ |
-| Total tests | ~12,235 |
+| Test files | 900+ |
+| Total tests | ~12,193 |
 | Infrastructure coverage gate | ≥60% configured floor |
 | Prohibited mock-framework imports | Checked by the static no-mocks gate |
 
@@ -466,7 +467,7 @@ The introspection module (`template_template.core.introspection`) emits the auth
 | `core` | 187 | ✓ | ✓ | `get_logger`, `load_config`, `TemplateError` |
 | `docker` | 0 | ✓ | ✓ | Containerisation scaffolding |
 | `doctor` | 14 | ✓ | ✓ | Checkout diagnose/fix/undo repairs |
-| `documentation` | 25 | ✓ | ✓ | `FigureManager`, `generate_glossary` |
+| `documentation` | 23 | ✓ | ✓ | `FigureManager`, `build_api_index`, `generate_markdown_table` |
 | `fonds` | 6 | ✓ | ✓ | — |
 | `formal_contracts` | 5 | ✓ | ✓ | — |
 | `llm` | 57 | ✓ | ✓ | Ollama helpers, sanitization, review + translation pipelines |
@@ -479,8 +480,8 @@ The introspection module (`template_template.core.introspection`) emits the auth
 | `provenance` | 9 | ✓ | ✓ | — |
 | `publishing` | 80 | ✓ | ✓ | Zenodo, executable bundle, archival targets |
 | `reference` | 16 | ✓ | ✓ | BibTeX models, parsers, converters |
-| `rendering` | 121 | ✓ | ✓ | PDF/HTML/slide rendering, Pandoc filters |
-| `reporting` | 399 | ✓ | ✓ | Coverage parsers, dashboards, executive artefacts |
+| `rendering` | 120 | ✓ | ✓ | PDF/HTML/slide rendering, Pandoc filters |
+| `reporting` | 396 | ✓ | ✓ | Coverage parsers, dashboards, executive artefacts |
 | `research` | 3 | ✓ | ✓ | — |
 | `rules` | 6 | ✓ | ✓ | — |
 | `scientific` | 4 | ✓ | ✓ | `check_numerical_stability`, `benchmark_function` |
@@ -581,7 +582,7 @@ Figure 4 summarizes the Appendix F capability matrix.
 
 ## The Zero-Mock Tradeoff
 
-The [Zero-Mock testing policy](03e_quality.md#zero-mock-testing-policy) is `template/`'s most distinctive design decision. By prohibiting all mock objects, we gain confidence that tests exercise real code paths---a pytest run against the template genuinely invokes `pandoc`, writes to disk, and parses real YAML. The cost is test duration: the full infrastructure test suite (~12,235 tests) runs for minutes rather than the sub-second execution typical of heavily-mocked suites. This manuscript deliberately reports no wall-clock figure, consistent with the Results section's discipline of declining timing claims without a versioned benchmark artifact.
+The [Zero-Mock testing policy](03e_quality.md#zero-mock-testing-policy) is `template/`'s most distinctive design decision. By prohibiting all mock objects, we gain confidence that tests exercise real code paths---a pytest run against the template genuinely invokes `pandoc`, writes to disk, and parses real YAML. The cost is test duration: the full infrastructure test suite (~12,193 tests) runs for minutes rather than the sub-second execution typical of heavily-mocked suites. This manuscript deliberately reports no wall-clock figure, consistent with the Results section's discipline of declining timing claims without a versioned benchmark artifact.
 
 We argue this tradeoff is strongly favorable for research software. Unlike web applications where millisecond latency and thousands of daily deploys demand fast feedback loops, research pipelines run infrequently (once per manuscript revision) and correctness vastly outweighs speed. A mocked test that passes while the real renderer fails is worse than a slow test that catches the failure. The analogy to statistical methodology is precise: just as Simmons et al.'s *researcher degrees of freedom* [@simmons2011falsepositive] inflate false-positive rates through undisclosed analytical flexibility, mock objects create *testing degrees of freedom* that make integration failures invisible. The Zero-Mock policy closes this loophole by the same mechanism that pre-registration [@nosek2018preregistration] closes the p-hacking loophole: removing flexibility before the fact. As Peng [@peng2011reproducible] argues, computational reproducibility requires independent verification---and mock-only tests verify assumptions rather than results. Garijo et al.'s FAIRsoft evaluator [@garijo2024fairsoft] identifies *executability* as a primary quality indicator; the Zero-Mock policy operationalizes executability at the unit level.
 
@@ -609,7 +610,7 @@ However, the policy requires careful management of external dependencies. Tests 
 
 The Standalone Project Paradigm enables horizontal scaling: adding a new project requires creating a directory with `manuscript/config.yaml` and nothing else. No infrastructure code changes, no `pyproject.toml` modifications, no CI configuration updates. The `run.sh` orchestrator automatically discovers new projects and presents them in its interactive menu.
 
-We have validated scaling with 25 canonical exemplars under `projects/templates/`—always present for onboarding and tooling—and with this manuscript from `projects/templates/template_template` (151 tests) as a git-tracked public exemplar in the same automated discovery menus.
+We have validated scaling with 25 canonical exemplars under `projects/templates/`—always present for onboarding and tooling—and with this manuscript from `projects/templates/template_template` (152 tests) as a git-tracked public exemplar in the same automated discovery menus.
 
 Canonical trio:
 
@@ -619,7 +620,7 @@ Canonical trio:
 
 Meta manuscript (**`projects/templates/template_template`**) analyzes the repository via `src/template_template/` introspection metrics; it now lives alongside the other public exemplars under `projects/templates/`.
 
-These workspaces share no project-level code—only Layer 1 (31 infrastructure subdirectories, ~1285 Python files)—validating insulation between domain repos and reusable services.
+These workspaces share no project-level code—only Layer 1 (31 infrastructure subdirectories, ~1279 Python files)—validating insulation between domain repos and reusable services.
 
 ### Multi-Project Orchestration
 
@@ -629,9 +630,9 @@ When the `--all-projects` flag is passed to `run.sh`, the pipeline executes each
 
 | Metric | `template_code_project` | `template_prose_project` | `template_autoresearch_project` |
 |--------|:--------------:|:------------------------:|:----------:|
-| Source modules | 26 | 8 | 60 |
+| Source modules | 25 | 8 | 59 |
 | Test files | 16 | 13 | 23 |
-| Test count | 263 | 165 | 317 |
+| Test count | 263 | 165 | 318 |
 | Manuscript chapters | 9 | 8 | 6 |
 | Analysis scripts | 9 | 5 | 5 |
 | Figures (auto-generated) | 9 | 5 | 27 |
@@ -725,7 +726,7 @@ The template is not merely a build tool; it is an epistemological commitment. It
 
 # Infrastructure Module Reference
 
-This section inventories every Layer‑1 subdirectory returned by `31` `discover_infrastructure_modules(repo_root)`. File totals use `1285` Python sources across infra + `12,235` infra tests guarding them. Documentation Duality = paired `README.md` + `AGENTS.md`; optional `SKILL.md` manifests feed `python -m infrastructure.skills`.
+This section inventories every Layer‑1 subdirectory returned by `31` `discover_infrastructure_modules(repo_root)`. File totals use `1279` Python sources across infra + `12,193` infra tests guarding them. Documentation Duality = paired `README.md` + `AGENTS.md`; optional `SKILL.md` manifests feed `python -m infrastructure.skills`.
 
 | Module | Python Files | Has AGENTS.md | Has README.md | Key Exports |
 |--------|:-----------:|:-------------:|:-------------:|-------------|
@@ -735,7 +736,7 @@ This section inventories every Layer‑1 subdirectory returned by `31` `discover
 | `core` | 187 | ✓ | ✓ | `get_logger`, `load_config`, `TemplateError` |
 | `docker` | 0 | ✓ | ✓ | Containerisation scaffolding |
 | `doctor` | 14 | ✓ | ✓ | Checkout diagnose/fix/undo repairs |
-| `documentation` | 25 | ✓ | ✓ | `FigureManager`, `generate_glossary` |
+| `documentation` | 23 | ✓ | ✓ | `FigureManager`, `build_api_index`, `generate_markdown_table` |
 | `fonds` | 6 | ✓ | ✓ | — |
 | `formal_contracts` | 5 | ✓ | ✓ | — |
 | `llm` | 57 | ✓ | ✓ | Ollama helpers, sanitization, review + translation pipelines |
@@ -748,8 +749,8 @@ This section inventories every Layer‑1 subdirectory returned by `31` `discover
 | `provenance` | 9 | ✓ | ✓ | — |
 | `publishing` | 80 | ✓ | ✓ | Zenodo, executable bundle, archival targets |
 | `reference` | 16 | ✓ | ✓ | BibTeX models, parsers, converters |
-| `rendering` | 121 | ✓ | ✓ | PDF/HTML/slide rendering, Pandoc filters |
-| `reporting` | 399 | ✓ | ✓ | Coverage parsers, dashboards, executive artefacts |
+| `rendering` | 120 | ✓ | ✓ | PDF/HTML/slide rendering, Pandoc filters |
+| `reporting` | 396 | ✓ | ✓ | Coverage parsers, dashboards, executive artefacts |
 | `research` | 3 | ✓ | ✓ | — |
 | `rules` | 6 | ✓ | ✓ | — |
 | `scientific` | 4 | ✓ | ✓ | `check_numerical_stability`, `benchmark_function` |
@@ -789,7 +790,7 @@ Checkout diagnose/fix/undo repairs for broken local workspace states.
 
 Pinned images / compose scaffolding for reproducible CI + remote builds.
 
-### `infrastructure.documentation` (25 files)
+### `infrastructure.documentation` (23 files)
 
 Figure registries plus glossary tooling feeding manuscript automation.
 
@@ -841,11 +842,11 @@ Metadata models, APA/BibTeX/MLA formatters, optional Zenodo clients.
 
 Citation/BibTeX parsing + conversion utilities leveraged by manuscripts and retrieval scripts.
 
-### `infrastructure.rendering` (121 files)
+### `infrastructure.rendering` (120 files)
 
 Pandoc shim, Unicode/XeLaTeX postprocessors, combined PDF/HTML/slide exporters.
 
-### `infrastructure.reporting` (399 files)
+### `infrastructure.reporting` (396 files)
 
 Parses pytest + coverage artefacts for dashboards; pairs with Stage 01 summaries and downstream executive exports.
 
@@ -1153,7 +1154,7 @@ template/
 │   ├── archive/                 # Non-rendered retired (symlinked, private)
 │   └── other/                   # Non-rendered misc (symlinked, private)
 ├── docs/ (20 top-level areas, 374+ markdown files per live counter)
-├── tests/                       # Infra suites (902+ files)
+├── tests/                       # Infra suites (900+ files)
 ├── AGENTS.md / README.md / CLAUDE.md / pyproject.toml
 ├── run.sh / secure_run.sh
 └── output/ …                    # Mirrors after copy stage
@@ -1181,7 +1182,7 @@ The full public exemplar roster is: `templates/template_active_inference`, `temp
 |--------------|---------|------------|:-----:|:-----------------------|
 | `template_code_project` | Optimization tutorial | Convex demo figures, scripted tables | 263 discovered tests; 90% declared gate | Controlled matplotlib exports |
 | `template_prose_project` | Prose-heavy workflow | Validates narrative-only repos | 165 | Lightweight / optional plots |
-| `template_autoresearch_project` | AutoResearch readiness | Planner + validation CLI | 317 | Readiness reports from Stage 02 |
+| `template_autoresearch_project` | AutoResearch readiness | Planner + validation CLI | 318 | Readiness reports from Stage 02 |
 
 **Meta manuscript location:** introspective study lives in `projects/templates/template_template/` beside the public exemplar set. Discovery now follows the typed `projects/` layout—`projects/templates/**` and `projects/active/**` are discovered/rendered, while `projects/working/**`, `projects/ongoing/**`, and `projects/archive/**` remain non-rendered—see root `CLAUDE.md` for invocation patterns (`resolve_project_root`).
 
@@ -1274,11 +1275,11 @@ This matrix is a versioned manuscript snapshot, not a continuously updated produ
 \section*{END OF TRANSMISSION}\label{end-of-transmission}
 ```
 
-**Release:** v2.0.0 · DOI `10.5281/zenodo.20419007` · SHA-256 `535bd80943d0…` · pairing complete
+**Release:** v2.0.0 · DOI `10.5281/zenodo.20419007` · SHA-256 `pending…` · pairing pending
 
 ![Integrity QR strip](../figures/transmission_integrity_strip.png){width=88%}
 
-**Prior:** `v1.0.7` · `10.5281/zenodo.20419007` · `cc674248…` · `v1.0.8` · `10.5281/zenodo.20932076` · `b9bc5cf3…`
+**Prior:** `v1.0.8` · `10.5281/zenodo.20932076` · `b9bc5cf3…`
 
 ```{=latex}
 \end{samepage}

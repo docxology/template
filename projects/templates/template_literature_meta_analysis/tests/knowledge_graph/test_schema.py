@@ -8,7 +8,7 @@ from __future__ import annotations
 
 import template_literature_meta_analysis.knowledge_graph.schema as schema
 from template_literature_meta_analysis.knowledge_graph.schema import (
-    AIF_NAMESPACE,
+    ONTOLOGY_NAMESPACE,
     ASSERTION_TYPES,
     SUBFIELD_URIS,
 )
@@ -18,16 +18,16 @@ class TestAIFNamespace:
     """Validate the base namespace URI."""
 
     def test_namespace_is_string(self) -> None:
-        """AIF_NAMESPACE should be a plain string."""
-        assert isinstance(AIF_NAMESPACE, str)
+        """ONTOLOGY_NAMESPACE should be a plain string."""
+        assert isinstance(ONTOLOGY_NAMESPACE, str)
 
     def test_namespace_ends_with_slash(self) -> None:
         """URI namespaces should end with a trailing slash."""
-        assert AIF_NAMESPACE.endswith("/")
+        assert ONTOLOGY_NAMESPACE.endswith("/")
 
     def test_namespace_starts_with_http(self) -> None:
         """URI should use the http scheme."""
-        assert AIF_NAMESPACE.startswith("http://")
+        assert ONTOLOGY_NAMESPACE.startswith("http://")
 
 
 class TestAssertionTypes:
@@ -45,7 +45,7 @@ class TestAssertionTypes:
     def test_values_are_well_formed_uris(self) -> None:
         """Each predicate URI must start with the base namespace."""
         for key, uri in ASSERTION_TYPES.items():
-            assert uri.startswith(AIF_NAMESPACE), f"{key}: {uri}"
+            assert uri.startswith(ONTOLOGY_NAMESPACE), f"{key}: {uri}"
 
     def test_values_are_unique(self) -> None:
         """No two predicates should share the same URI."""
@@ -77,7 +77,7 @@ class TestHypothesisCategories:
     def test_values_are_well_formed_uris(self) -> None:
         """Each hypothesis URI must start with the base namespace."""
         for key, uri in schema.HYPOTHESIS_CATEGORIES.items():
-            assert uri.startswith(AIF_NAMESPACE), f"{key}: {uri}"
+            assert uri.startswith(ONTOLOGY_NAMESPACE), f"{key}: {uri}"
             assert "/hypothesis/" in uri, f"{key} URI missing /hypothesis/ segment"
 
     def test_values_are_unique(self) -> None:
@@ -110,7 +110,7 @@ class TestSubfieldURIs:
     def test_values_are_well_formed_uris(self) -> None:
         """Each subfield URI must start with the base namespace."""
         for key, uri in SUBFIELD_URIS.items():
-            assert uri.startswith(AIF_NAMESPACE), f"{key}: {uri}"
+            assert uri.startswith(ONTOLOGY_NAMESPACE), f"{key}: {uri}"
             assert "/subfield/" in uri, f"{key} URI missing /subfield/ segment"
 
     def test_values_are_unique(self) -> None:

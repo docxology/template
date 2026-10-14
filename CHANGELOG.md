@@ -101,6 +101,28 @@ require final-source acceptance, the authenticated handoff and remote verificati
 - Include exact snapshot-admitted retained publication proofs in acceptance
   exports while preserving clean fork copies. Reject missing authored members,
   changed bytes and extra export members before independent archive admission.
+- Remove obsolete SDK and exemplar forwarding modules, private aliases and
+  raw-LaTeX figure generators after migrating their callers to current owners.
+  Keep figure metadata and the file-bound generated-figure registry as the
+  supported documentation routes, and require explicit glossary source and
+  destination paths before writing.
+- Require the current schema for new registration drafts while verifying and
+  preserving historical frozen registrations without altering their intent.
+  Correct authored pipeline descriptions and AutoResearch generator provenance
+  to name the modules that actually perform the work.
+- Admit the genuine selected runtime's site-packages during exemplar startup,
+  retaining refusals for SDK shadows supplied by authored project source.
+  Preserve the selected interpreter during subprocess figure verification.
+- Preserve hidden runtime receipts during publication-path sanitation, so a
+  later manifest snapshot cannot rewrite an already admitted analysis leaf.
+  Keep the aggregate's original receipt hashes and actual execution checks.
+- Bind transmission bookends to the current manuscript version and publication
+  state. Retain historical receipts separately from unreleased drafts; dry runs
+  and sandbox records cannot establish publication.
+- Compress shared web-font transport deterministically while preserving exact
+  decoded font bytes, constructor hashes and the complete license. Keep the
+  aggregate public output within its existing size limit; browsers verify the
+  decompressed buffers before constructing fonts.
 
 ## Prepared 4.0.0 candidate — unpublished
 

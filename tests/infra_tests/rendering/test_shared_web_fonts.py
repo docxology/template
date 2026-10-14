@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import base64
+import gzip
 import hashlib
 import json
 from pathlib import Path
@@ -15,7 +16,9 @@ from infrastructure.rendering._web_font_assets import (
     FONT_BODIES,
     FONT_BUFFER_SCHEMA,
     LICENSE_SHA256,
+    source_web_font_bundle,
     source_web_font_directory,
+    source_web_font_javascript,
     source_web_font_script,
 )
 
@@ -29,7 +32,11 @@ def test_shared_asset_retains_all_exact_font_bodies_and_full_license(tmp_path: P
     assert hashlib.sha256(payload["license"].encode()).hexdigest() == LICENSE_SHA256
     for face in payload["faces"]:
         original = FONT_BODIES[face["postscript_name"]]
-        body = base64.b64decode(face["data"], validate=True)
+        assert face["encoding"] == "gzip-base64"
+        packed = base64.b64decode(face["data"], validate=True)
+        assert packed[4:8] == b"\0\0\0\0"  # No build-time gzip timestamp.
+        assert packed[9] == 255  # No platform-dependent gzip OS marker.
+        body = gzip.decompress(packed)
         assert body == (source_web_font_directory() / original["filename"]).read_bytes()
         assert len(body) == face["bytes"] == original["bytes"]
         assert hashlib.sha256(body).hexdigest() == face["sha256"] == original["sha256"]
@@ -38,6 +45,23 @@ def test_shared_asset_retains_all_exact_font_bodies_and_full_license(tmp_path: P
     inline = source_web_font_script()
     loader = inline.split("<script data-template-source-font-loader>\n", 1)[1].removesuffix("</script>\n")
     assert script.endswith(loader)
+
+
+def test_shared_transport_is_deterministic_and_preserves_raw_bundle_api() -> None:
+    first = source_web_font_javascript()
+    assert source_web_font_javascript() == first
+    # Ten canonical web exports must fit the existing aggregate evidence budget.
+    assert len(first.encode()) < 3_200_000
+    assert len(first.encode()) < 0.6 * len(source_web_font_script().encode())
+    raw_faces, _ = source_web_font_bundle()
+    inline = source_web_font_script().split('id="template-source-font-bodies">', 1)[1].split("</script>", 1)[0]
+    assert json.loads(inline)["faces"] == raw_faces
+    for face in raw_faces:
+        assert "encoding" not in face
+        assert (
+            base64.b64decode(face["data"], validate=True)
+            == (source_web_font_directory() / FONT_BODIES[face["postscript_name"]]["filename"]).read_bytes()
+        )
 
 
 def test_multiple_real_html_pages_share_one_idempotent_bounded_asset(tmp_path: Path) -> None:

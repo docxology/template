@@ -73,6 +73,35 @@ def _bootstrap_program(project: Path) -> str:
     )
 
 
+def test_canonical_project_bootstrap_keeps_genuine_selected_runtime_sdk() -> None:
+    """A prepared project-local environment must retain its real installed SDK."""
+    actual = _native(PROJECT, _bootstrap_program(PROJECT) + DOMAIN_PROGRAM)
+    assert actual.returncode == 0, actual.stderr or actual.stdout
+    rows = [json.loads(line) for line in actual.stdout.splitlines() if line.startswith("{")]
+    assert len(rows) == 1 and rows[0]["provider_origin"] == str(SDK_ORIGIN)
+    assert rows[0]["provider_version"] == "4.0.1"
+    assert rows[0]["domain"] == DOMAIN_EXPECTATION
+
+
+def test_cached_authored_own_namespace_cannot_supply_platform_sdk(tmp_path: Path) -> None:
+    """A real own module cached under the provider fullname must be refused."""
+    project = _copy_project(tmp_path)
+    program = (
+        _bootstrap_program(project)
+        + f"sys.modules['infrastructure']=importlib.import_module({PACKAGE!r});"
+        + "\ntry:\n"
+        + "    bootstrap.bootstrap_project(project)\n"
+        + "except ImportError as error:\n"
+        + "    assert 'own project source' in str(error)\n"
+        + "    print('actual authored cached provider refused')\n"
+        + "else:\n"
+        + "    raise AssertionError('authored own namespace admitted as platform SDK')\n"
+    )
+    actual = _native(project, program)
+    assert actual.returncode == 0, actual.stderr or actual.stdout
+    assert "actual authored cached provider refused" in actual.stdout
+
+
 @pytest.mark.parametrize("shadow_location", ["own-root", "own-src"])
 def test_selected_sdk_precedes_actual_own_shadow_and_executes_domain(tmp_path: Path, shadow_location: str) -> None:
     project = _copy_project(tmp_path)

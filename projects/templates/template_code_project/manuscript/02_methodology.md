@@ -51,7 +51,7 @@ Step sizes are not chosen ad hoc in the manuscript: they are read from `experime
 
 {{CONFIG_STEP_SIZES_BULLETS}}
 
-Labels follow the same agency taxonomy used for plot colours (`_agency_category` in the analysis script): **conservative** (small $\alpha$, slow but stable on $H=I$), **near-optimal** (including $\alpha=1$ where the method reaches $x^\ast$ in one step for this quadratic), **aggressive** ($1 < \alpha < 2$, still linearly contracting in $|x-x^\ast|$ but oscillatory in sign), and **divergent** ($|1-\alpha| \geq 1$).
+Labels follow the same agency taxonomy used for plot colours (`agency_category` in `template_code_project.figures.viz_config`): **conservative** (small $\alpha$, slow but stable on $H=I$), **near-optimal** (including $\alpha=1$ where the method reaches $x^\ast$ in one step for this quadratic), **aggressive** ($1 < \alpha < 2$, still linearly contracting in $|x-x^\ast|$ but oscillatory in sign), and **divergent** ($|1-\alpha| \geq 1$).
 
 ### Zero-Mock Testing Methodology
 

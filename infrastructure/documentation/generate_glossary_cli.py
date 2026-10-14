@@ -5,7 +5,7 @@ This module provides functionality to automatically generate a glossary of
 public APIs from the src/ directory and inject it into markdown files.
 """
 
-import sys
+import argparse
 from pathlib import Path
 
 from infrastructure.core.logging.utils import get_logger
@@ -16,10 +16,6 @@ from infrastructure.documentation.glossary_gen import (
 )
 
 logger = get_logger(__name__)
-
-
-def _repo_root() -> Path:
-    return Path(__file__).parent.parent
 
 
 def _ensure_glossary_file(path: Path) -> None:
@@ -42,33 +38,19 @@ def _ensure_glossary_file(path: Path) -> None:
         raise
 
 
-def main() -> int:
+def main(argv: list[str] | None = None) -> int:
     """Main function to generate and update the API glossary.
 
     Returns:
         0 on success, 1 on failure
     """
-    args = sys.argv[1:]
-    if args and args[0] in ("-h", "--help"):
-        print(
-            "Usage: python -m infrastructure.documentation.generate_glossary_cli "
-            "[SRC_DIR GLOSSARY_MD]\n\n"
-            "Regenerate the AUTO-API-GLOSSARY table between markers in the "
-            "project glossary.\n"
-            "With no args: defaults to <repo>/project/src and "
-            "<repo>/project/manuscript/98_symbols_glossary.md.\n"
-            "Exit 0 on success (including 'already up-to-date'), 1 on failure."
-        )
-        return 0
-    if len(args) >= 2:
-        src_dir = Path(args[0])
-        glossary_md = Path(args[1])
-        repo = src_dir.parent.parent
-    else:
-        repo = _repo_root()
-        project_dir = repo / "project"
-        src_dir = project_dir / "src"
-        glossary_md = project_dir / "manuscript" / "98_symbols_glossary.md"
+    parser = argparse.ArgumentParser(description="Regenerate a project's API glossary.")
+    parser.add_argument("src_dir", metavar="SRC_DIR", type=Path)
+    parser.add_argument("glossary_md", metavar="GLOSSARY_MD", type=Path)
+    args = parser.parse_args(argv)
+    src_dir, glossary_md = args.src_dir, args.glossary_md
+    if not src_dir.is_dir():
+        parser.error(f"source directory does not exist: {src_dir}")
 
     _ensure_glossary_file(glossary_md)
 

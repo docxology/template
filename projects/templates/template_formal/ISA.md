@@ -720,3 +720,15 @@ Coverage (round 20, cumulative): 123/123 ISC groups passed, 123/123 artifact-bac
 **Release preparation criterion (2026-10-07, scoped controls verified):**
 
 - [x] ISC-124: A prepared external TLC jar may be explicitly selected by `TEMPLATE_FORMAL_TLC_JAR` when the project has no local cache. It must retain exact regular-file, length/hash, frozen-copy and final byte-custody checks. A corrupt or linked local cache cannot fall through to a valid external provider. No implicit acquisition may target the external path. Genuine positive execution and missing/corrupt/relative/symlink/refreshed-custody negatives must remain executable; external runtime tools must not enter authored source exports.
+
+
+**Selected-runtime provider criterion (2026-10-14, verification pending):**
+
+- [ ] ISC-125: The optional Formal tool controller and worker must use the
+  actual SDK provider selected by the caller's runtime, including in-process
+  API calls. No inferred monorepo ancestor may replace that provider. Actual
+  pre-import audit roots must cover the selected SDK and project source;
+  missing or changed SDK origins, unavailable optional dependencies, stale
+  code/cache custody and invalid receipts must still refuse without promotion.
+  Genuine direct-API native success, caller-state/source preservation and
+  exclusive receipt rollback controls must pass under the installed SDK.

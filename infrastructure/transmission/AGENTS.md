@@ -7,9 +7,8 @@ workflow bookends). Extracted from `infrastructure/publishing/` by
 
 ## Invariants
 
-1. `infrastructure/publishing/transmission_*.py` shims re-export this
-   package's surface; old import paths keep resolving. New code imports
-   `infrastructure.transmission.<module>`.
+1. Rendering and publishing callers import
+   `infrastructure.transmission.<module>` directly.
 2. `tests/infra_tests/rendering/test_layering.py` fails if any
    `infrastructure/rendering` module imports `infrastructure.publishing` or
    `infrastructure.reporting`.
@@ -24,6 +23,10 @@ workflow bookends). Extracted from `infrastructure/publishing/` by
 `BEGIN_FILENAME`, `END_FILENAME`, `TransmissionContext`,
 `write_transmission_diagram`, `write_transmission_barcode_strip`,
 `validate_transmission_bookend_pages` (see `README.md` module table).
+
+Bookends bind current release receipts to the manuscript version. Explicitly
+unreleased manuscripts keep published receipts in history; dry runs and sandbox
+receipts cannot establish publication or supply a current PDF hash.
 
 ## Cross-refs
 

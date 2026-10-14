@@ -489,7 +489,7 @@ Build a deterministic registry after checking every declared figure.
 class FigureManager(registry_file: str | None=None)
 ```
 
-Manages figures with automatic numbering and cross-referencing.
+Register, retrieve, and persist figure metadata by label.
 
 ### `FigureMetadata`
 
@@ -530,26 +530,6 @@ generate_markdown_table(entries: list[ApiEntry]) -> str
 ```
 
 Generate a Markdown table from API entries.
-
-### `ImageManager`
-
-*class — defined in `infrastructure.documentation.image_manager`*
-
-```python
-class ImageManager(figure_manager: FigureManager | None=None)
-```
-
-Manages image insertion and cross-referencing in markdown files.
-
-### `MarkdownIntegration`
-
-*class — defined in `infrastructure.documentation.markdown_integration`*
-
-```python
-class MarkdownIntegration(manuscript_dir: Path | None=None, figure_manager: FigureManager | None=None)
-```
-
-Integrates figures and references into markdown files.
 
 ### `publish_generated_figures`
 

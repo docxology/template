@@ -3,7 +3,6 @@ from __future__ import annotations
 import copy
 import json
 import os
-from collections.abc import Callable
 from dataclasses import asdict
 from pathlib import Path
 from typing import Any, cast
@@ -16,7 +15,6 @@ from registered_report import (
     build_review_packet,
     compare_analysis_to_registration,
     freeze_registration,
-    migrate_registration,
     REGISTRATION_SCHEMA_VERSION,
     registration_hash,
     validate_sensitivity_table,
@@ -49,40 +47,45 @@ def test_freeze_registration_adds_content_hash_without_mutating_source() -> None
     assert frozen["schema_version"] == REGISTRATION_SCHEMA_VERSION
 
 
-@pytest.mark.parametrize("schema", [None, "template-registered-report/1"])
-def test_legacy_registration_migrates_without_filling_dropped_fields(schema: str | None) -> None:
-    legacy = load_registration()
-    if schema is not None:
-        legacy["schema_version"] = schema
-    migrated = migrate_registration(legacy)
-    assert migrated["schema_version"] == REGISTRATION_SCHEMA_VERSION
-    assert migrated["hypotheses"] == legacy["hypotheses"]
-    broken = dict(legacy)
-    broken.pop("outcomes")
-    assert any(f.code == "missing_section" for f in validate_registration(migrate_registration(broken)))
+@pytest.mark.parametrize("schema", [None, "template-registered-report/1", "unsupported-future-schema"])
+def test_new_drafts_require_explicit_current_schema(schema: str | None, tmp_path: Path) -> None:
+    registration = load_registration()
+    if schema is None:
+        registration.pop("schema_version")
+    else:
+        registration["schema_version"] = schema
+    original = copy.deepcopy(registration)
+    path = tmp_path / "frozen_registration.json"
+
+    with pytest.raises(ValueError, match="New registration drafts must declare"):
+        freeze_registration(registration)
+    with pytest.raises(ValueError, match="New registration drafts must declare"):
+        persist_frozen_registration(path, registration)
+    assert any(f.code == "unsupported_schema" for f in validate_registration(registration))
+    assert registration == original
+    assert not path.exists()
 
 
 @pytest.mark.parametrize("schema", [None, "template-registered-report/1", REGISTRATION_SCHEMA_VERSION])
 def test_frozen_records_preserve_original_schema_hash_and_nested_intent(schema: str | None) -> None:
     archived = load_registration()
-    if schema is not None:
+    if schema is None:
+        archived.pop("schema_version")
+    else:
         archived["schema_version"] = schema
     archived["registration_hash"] = registration_hash(archived)
     original = copy.deepcopy(archived)
 
-    for operation in (migrate_registration, freeze_registration):
-        preserved = operation(archived)
-        assert preserved == original
-        assert preserved is not archived
-        preserved["hypotheses"][0]["claim"] = "Changed outside the archived record"
-        assert archived == original
+    preserved = freeze_registration(archived)
+    assert preserved == original
+    assert preserved is not archived
+    assert validate_registration(preserved) == ()
+    preserved["hypotheses"][0]["claim"] = "Changed outside the archived record"
+    assert archived == original
 
 
-@pytest.mark.parametrize("operation", [migrate_registration, freeze_registration])
 @pytest.mark.parametrize("target", ["hypothesis", "outcome", "analysis"])
-def test_changed_frozen_intent_cannot_be_recertified(
-    operation: Callable[[dict[str, Any]], dict[str, Any]], target: str
-) -> None:
+def test_changed_frozen_intent_cannot_be_recertified(target: str) -> None:
     frozen = freeze_registration(load_registration())
     if target == "hypothesis":
         frozen["hypotheses"][0]["claim"] = "A result-selected replacement hypothesis"
@@ -93,20 +96,17 @@ def test_changed_frozen_intent_cannot_be_recertified(
     supplied = copy.deepcopy(frozen)
 
     with pytest.raises(ValueError, match="Frozen registration hash"):
-        operation(frozen)
+        freeze_registration(frozen)
     assert frozen == supplied
 
 
-@pytest.mark.parametrize("operation", [migrate_registration, freeze_registration])
 @pytest.mark.parametrize("supplied", [None, True, 0, "", "f" * 64])
-def test_invalid_supplied_frozen_hash_is_not_replaced(
-    operation: Callable[[dict[str, Any]], dict[str, Any]], supplied: Any
-) -> None:
+def test_invalid_supplied_frozen_hash_is_not_replaced(supplied: Any) -> None:
     frozen = freeze_registration(load_registration())
     frozen["registration_hash"] = supplied
     original = copy.deepcopy(frozen)
     with pytest.raises(ValueError, match="Frozen registration hash"):
-        operation(frozen)
+        freeze_registration(frozen)
     assert frozen == original
 
 
@@ -114,7 +114,6 @@ def test_stored_frozen_registration_keeps_exact_schema_hash_and_file_bytes() -> 
     path = PROJECT_ROOT / "output" / "reports" / "frozen_registration.json"
     original_bytes = path.read_bytes()
     archived = json.loads(original_bytes)
-    assert migrate_registration(archived) == archived
     assert freeze_registration(archived) == archived
     assert path.read_bytes() == original_bytes
 
@@ -124,9 +123,9 @@ def test_hash_valid_unknown_frozen_schema_refuses_without_replacement() -> None:
     frozen["schema_version"] = "unsupported-future-schema"
     frozen["registration_hash"] = registration_hash(frozen)
     original = copy.deepcopy(frozen)
-    for operation in (migrate_registration, freeze_registration):
-        with pytest.raises(ValueError, match="Unsupported frozen registration schema"):
-            operation(frozen)
+    with pytest.raises(ValueError, match="Unsupported frozen registration schema"):
+        freeze_registration(frozen)
+    assert any(f.code == "unsupported_schema" for f in validate_registration(frozen))
     assert frozen == original
 
 

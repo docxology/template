@@ -36,9 +36,7 @@ from .manifests import (
 )
 from .ml_artifacts import write_ml_task_artifacts
 from .payloads import (
-    finalize_loop_payloads,
     refresh_loop_payloads,
-    update_result_payloads,
     write_loop_payloads,
 )
 
@@ -55,13 +53,11 @@ __all__ = [
     "_ml_accuracy_improved",
     "_write_benchmark_grading_reports",
     "build_figure_render_context",
-    "finalize_loop_payloads",
     "refresh_loop_payloads",
     "relative_path",
     "render_all_figures",
     "render_figure_batch",
     "render_security_figures",
-    "update_result_payloads",
     "write_artifact_manifest",
     "write_autoresearch_phase_ledger",
     "write_benchmark_boundary",

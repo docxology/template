@@ -167,7 +167,9 @@ def test_producer_preserves_valid_historical_schema_hash_and_noncanonical_bytes(
 ) -> None:
     registration = _copy_registration(tmp_path)
     archived = json.loads(registration.read_text(encoding="utf-8"))
-    if schema is not None:
+    if schema is None:
+        archived.pop("schema_version")
+    else:
         archived["schema_version"] = schema
     archived["registration_hash"] = registration_hash(archived)
     original = (json.dumps(archived, indent=4, sort_keys=False) + "\n\n").encode("utf-8")

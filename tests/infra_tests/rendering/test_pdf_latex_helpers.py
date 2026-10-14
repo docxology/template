@@ -14,9 +14,11 @@ from infrastructure.rendering._pdf_latex_helpers import (
     extract_command_fallbacks,
     extract_math_font_preamble,
     extract_preamble,
+    parse_missing_latex_package_from_log,
+)
+from infrastructure.rendering._pdf_title_page import (
     generate_title_page_body,
     generate_title_page_preamble,
-    parse_missing_latex_package_from_log,
 )
 
 

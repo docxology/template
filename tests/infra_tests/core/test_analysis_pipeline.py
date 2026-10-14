@@ -132,6 +132,32 @@ def test_run_analysis_pipeline_reports_failure(tmp_path: Path) -> None:
     assert run_analysis_pipeline([s_ok, s_bad], tmp_path, "p") == 1
 
 
+def test_manifest_snapshot_preserves_prior_analysis_receipt(tmp_path: Path) -> None:
+    """A later publication snapshot must not rewrite an admitted first leaf."""
+    project = _make_project(tmp_path)
+    first = _write_script(project / "scripts", "01_first.py", "print('first producer')")
+    second = _write_script(
+        project / "scripts",
+        "02_snapshot.py",
+        f"""
+        from pathlib import Path
+        from infrastructure.core.pipeline.artifacts import snapshot_current_artifact_manifest
+        output = Path({str(project / "output")!r})
+        output.mkdir(exist_ok=True)
+        snapshot_current_artifact_manifest(output)
+        """,
+    )
+
+    assert run_analysis_pipeline([first, second], tmp_path, "p") == 0
+    runs = list((project / "output" / ".pipeline" / "analysis").glob("*/run.json"))
+    assert len(runs) == 1
+    record = json.loads(runs[0].read_text())
+    assert record["complete"] is True
+    for key, expected in record["leaf_sha256"].items():
+        leaf = analysis_receipt_path(project, record["run_id"], key)
+        assert hashlib.sha256(leaf.read_bytes()).hexdigest() == expected
+
+
 def test_run_analysis_script_missing_file_returns_python_exit(tmp_path: Path) -> None:
     """A non-existent script is rejected before subprocess execution."""
     project = _make_project(tmp_path)

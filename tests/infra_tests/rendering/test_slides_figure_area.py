@@ -11,11 +11,9 @@ from PIL import Image
 import pytest
 
 from infrastructure.core.exceptions import RenderingError
-from infrastructure.rendering._slides_accessibility import (
-    AccessibleSlidePolicy,
-    accessible_reveal_output_issues,
-    compose_accessible_pandoc_document,
-)
+from infrastructure.rendering._slides_accessibility_contracts import AccessibleSlidePolicy
+from infrastructure.rendering._slides_accessibility_reveal import accessible_reveal_output_issues
+from infrastructure.rendering._slides_accessibility_composition import compose_accessible_pandoc_document
 from infrastructure.rendering.config import RenderingConfig
 from infrastructure.rendering.slides_renderer import SlidesRenderer
 

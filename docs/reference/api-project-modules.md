@@ -121,9 +121,11 @@ imports or I/O:
 
 ## Figure and manuscript APIs are infrastructure services
 
-`FigureManager` is an infrastructure utility, not a project module, and it
-emits legacy raw-LaTeX blocks. New manuscript pipelines should use Pandoc image
-syntax plus the deterministic generated-figure registry. See the
+`FigureManager` stores and retrieves figure metadata through the infrastructure
+API. Pipeline publication uses `build_generated_figure_registry`,
+`write_generated_figure_registry`, or `publish_generated_figures` to bind declared
+figures to actual generated files. Manuscripts use Pandoc image syntax and
+bracket-cite references such as `[@fig:convergence]`. See the
 [Visualization Guide](../usage/visualization-guide.md) and
 [Manuscript Semantics](../guides/manuscript-semantics.md).
 

@@ -205,7 +205,7 @@ and `core/invariants.py` — do not duplicate sweep logic elsewhere.
 
 - `viz_config.py` — `VIZ_CONFIG`, `apply_visualization_style`, `agency_category`
 - `figures/convergence.py`, `figures/sensitivity.py`, `figures/scientific.py` (barrel → `scientific_complexity.py`, `scientific_stability.py`)
-- `figures/_common.py` — shim to `core/_runtime.py` for `project_root`, `get_logger`, `experiment_config`, `save_figure_data`
+- `core/_runtime.py` — shared `project_root`, `get_logger`, `experiment_config`, and `save_figure_data` used directly by figure generators
 - `figures/__init__.py` — re-export barrel (`from template_code_project.figures import …`)
 
 ### analysis/ package

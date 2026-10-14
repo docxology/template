@@ -58,7 +58,7 @@ saved = aggregator.save_report(output_dir)
 reset_error_aggregator()
 ```
 
-## Executive Summaries (`executive_reporter.py`)
+## Executive Summaries (`_executive_models.py`, `_executive_collectors.py`, `_executive_renderers.py`)
 
 ```python
 from infrastructure.reporting import (

@@ -20,28 +20,27 @@ logger = logging.getLogger(__name__)
 
 # Base namespace URI for the meta-analysis ontology. Generic by default; override
 # by editing this constant for a project-specific ontology host.
-# (``AIF_NAMESPACE`` symbol name retained for backward-compatible imports.)
-AIF_NAMESPACE: str = "http://example.org/litmeta/ontology/"
+ONTOLOGY_NAMESPACE: str = "http://example.org/litmeta/ontology/"
 
 # Assertion types (predicate URIs)
 ASSERTION_TYPES: dict[str, str] = {
-    "asserts": f"{AIF_NAMESPACE}asserts",
-    "cites": f"{AIF_NAMESPACE}cites",
-    "belongsTo": f"{AIF_NAMESPACE}belongsTo",
-    "supports": f"{AIF_NAMESPACE}supports",
-    "contradicts": f"{AIF_NAMESPACE}contradicts",
+    "asserts": f"{ONTOLOGY_NAMESPACE}asserts",
+    "cites": f"{ONTOLOGY_NAMESPACE}cites",
+    "belongsTo": f"{ONTOLOGY_NAMESPACE}belongsTo",
+    "supports": f"{ONTOLOGY_NAMESPACE}supports",
+    "contradicts": f"{ONTOLOGY_NAMESPACE}contradicts",
 }
 
 # Default hypothesis category URIs — one per standard hypothesis
 DEFAULT_HYPOTHESIS_CATEGORIES: dict[str, str] = {
-    "PRIMARY_EFFICACY": f"{AIF_NAMESPACE}hypothesis/primary_efficacy",
-    "OPTIMAL_PERFORMANCE": f"{AIF_NAMESPACE}hypothesis/optimal_performance",
-    "MECHANISTIC_BASIS": f"{AIF_NAMESPACE}hypothesis/mechanistic_basis",
-    "PROCESS_MODEL": f"{AIF_NAMESPACE}hypothesis/process_model",
-    "SCALABILITY": f"{AIF_NAMESPACE}hypothesis/scalability",
-    "CLINICAL_UTILITY": f"{AIF_NAMESPACE}hypothesis/clinical_utility",
-    "BIOLOGICAL_BASIS": f"{AIF_NAMESPACE}hypothesis/biological_basis",
-    "DOMAIN_GENERALIZATION": f"{AIF_NAMESPACE}hypothesis/domain_generalization",
+    "PRIMARY_EFFICACY": f"{ONTOLOGY_NAMESPACE}hypothesis/primary_efficacy",
+    "OPTIMAL_PERFORMANCE": f"{ONTOLOGY_NAMESPACE}hypothesis/optimal_performance",
+    "MECHANISTIC_BASIS": f"{ONTOLOGY_NAMESPACE}hypothesis/mechanistic_basis",
+    "PROCESS_MODEL": f"{ONTOLOGY_NAMESPACE}hypothesis/process_model",
+    "SCALABILITY": f"{ONTOLOGY_NAMESPACE}hypothesis/scalability",
+    "CLINICAL_UTILITY": f"{ONTOLOGY_NAMESPACE}hypothesis/clinical_utility",
+    "BIOLOGICAL_BASIS": f"{ONTOLOGY_NAMESPACE}hypothesis/biological_basis",
+    "DOMAIN_GENERALIZATION": f"{ONTOLOGY_NAMESPACE}hypothesis/domain_generalization",
 }
 
 # Module-level active categories (overridden by configure_hypothesis_categories)
@@ -52,7 +51,7 @@ def configure_hypothesis_categories(hypothesis_ids: list[str]) -> dict[str, str]
     """Rebuild HYPOTHESIS_CATEGORIES from a list of hypothesis IDs.
 
     Known IDs reuse their default URI; unknown IDs get a generated URI
-    under the ``AIF_NAMESPACE``.
+    under the ``ONTOLOGY_NAMESPACE``.
 
     Args:
         hypothesis_ids: List of hypothesis identifier strings.
@@ -66,7 +65,7 @@ def configure_hypothesis_categories(hypothesis_ids: list[str]) -> dict[str, str]
         if h_id in DEFAULT_HYPOTHESIS_CATEGORIES:
             new_cats[h_id] = DEFAULT_HYPOTHESIS_CATEGORIES[h_id]
         else:
-            new_cats[h_id] = f"{AIF_NAMESPACE}hypothesis/{h_id.lower()}"
+            new_cats[h_id] = f"{ONTOLOGY_NAMESPACE}hypothesis/{h_id.lower()}"
     HYPOTHESIS_CATEGORIES = new_cats
     logger.info(
         "Configured %d hypothesis categories: %s",
@@ -78,12 +77,12 @@ def configure_hypothesis_categories(hypothesis_ids: list[str]) -> dict[str, str]
 
 # Domain URIs for classifying papers by research area (A/B/C taxonomy)
 SUBFIELD_URIS: dict[str, str] = {
-    "A1_formal": f"{AIF_NAMESPACE}subfield/A1_formal",
-    "A2_philosophy": f"{AIF_NAMESPACE}subfield/A2_philosophy",
-    "B_tools": f"{AIF_NAMESPACE}subfield/B_tools",
-    "C1_neuroscience": f"{AIF_NAMESPACE}subfield/C1_neuroscience",
-    "C2_robotics": f"{AIF_NAMESPACE}subfield/C2_robotics",
-    "C3_language": f"{AIF_NAMESPACE}subfield/C3_language",
-    "C4_psychiatry": f"{AIF_NAMESPACE}subfield/C4_psychiatry",
-    "C5_biology": f"{AIF_NAMESPACE}subfield/C5_biology",
+    "A1_formal": f"{ONTOLOGY_NAMESPACE}subfield/A1_formal",
+    "A2_philosophy": f"{ONTOLOGY_NAMESPACE}subfield/A2_philosophy",
+    "B_tools": f"{ONTOLOGY_NAMESPACE}subfield/B_tools",
+    "C1_neuroscience": f"{ONTOLOGY_NAMESPACE}subfield/C1_neuroscience",
+    "C2_robotics": f"{ONTOLOGY_NAMESPACE}subfield/C2_robotics",
+    "C3_language": f"{ONTOLOGY_NAMESPACE}subfield/C3_language",
+    "C4_psychiatry": f"{ONTOLOGY_NAMESPACE}subfield/C4_psychiatry",
+    "C5_biology": f"{ONTOLOGY_NAMESPACE}subfield/C5_biology",
 }

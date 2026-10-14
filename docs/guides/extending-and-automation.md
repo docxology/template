@@ -464,7 +464,7 @@ git push origin feature/new-algorithm
 1. **Maintain thin orchestrator pattern**
 2. **Maintain required test coverage**
 3. **Document all extensions**
-4. **Preserve backward compatibility**
+4. **Migrate callers and remove obsolete APIs in the same change**
 5. **Use semantic versioning**
 
 ### CI/CD Best Practices

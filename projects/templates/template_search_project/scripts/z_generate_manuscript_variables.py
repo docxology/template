@@ -22,11 +22,16 @@ import sys
 from pathlib import Path
 
 _project_root = Path(__file__).resolve().parent.parent
-# Project lives at projects/templates/<name>/; repo root is three levels up.
-_repo_root = _project_root.parents[2]
-sys.path.insert(0, str(_project_root))
+# Select the declared SDK before exposing domain source; no ancestor imports.
+_original_import_paths = sys.path[:]
+try:
+    sys.path.insert(0, str(_project_root / "scripts"))
+    from _search_sdk_bootstrap import select_platform_sdk
+
+    select_platform_sdk(_project_root)
+finally:
+    sys.path[:] = _original_import_paths
 sys.path.insert(0, str(_project_root / "src"))
-sys.path.insert(0, str(_repo_root))
 
 from infrastructure.core.logging.utils import get_logger
 

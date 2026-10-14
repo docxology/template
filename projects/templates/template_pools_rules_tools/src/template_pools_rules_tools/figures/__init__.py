@@ -3,7 +3,7 @@ figure façade, shared theme/spec support, cover art, the rule-hierarchy
 renderer, and manuscript variable hydration.
 
 These modules are re-exported from ``template_pools_rules_tools`` for
-backwards compatibility; import them from the package root.
+the supported public API; import them from the package root.
 """
 
 from .cover_figure import generate_cover_art

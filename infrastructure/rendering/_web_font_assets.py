@@ -8,7 +8,9 @@ decoder, shaping, dependency or native-runtime admission.
 from __future__ import annotations
 
 import base64
+import gzip
 import hashlib
+import io
 import json
 import math
 import time
@@ -193,8 +195,15 @@ def source_web_font_bundle(*, deadline: float | None = None) -> tuple[list[dict[
     return bodies, license_bytes.decode("utf-8")
 
 
-def _source_web_font_payload() -> str:
+def _source_web_font_payload(*, compressed: bool = False) -> str:
     bodies, license_text = source_web_font_bundle()
+    if compressed:
+        for face in bodies:
+            buffer = io.BytesIO()
+            with gzip.GzipFile(fileobj=buffer, mode="wb", compresslevel=9, mtime=0, filename="") as archive:
+                archive.write(base64.b64decode(face["data"], validate=True))
+            face["data"] = base64.b64encode(buffer.getvalue()).decode("ascii")
+            face["encoding"] = "gzip-base64"
     payload = json.dumps({"faces": bodies, "license": license_text}, separators=(",", ":"))
     return payload.replace("<", "\\u003c")
 
@@ -205,7 +214,14 @@ def _source_web_font_loader() -> str:
         "const payload=JSON.parse(document.getElementById('template-source-font-bodies').textContent);\n"
         "const observations=[];\n"
         "for(const face of payload.faces){\n"
-        "const raw=Uint8Array.from(atob(face.data),c=>c.charCodeAt(0));\n"
+        "const encoded=Uint8Array.from(atob(face.data),c=>c.charCodeAt(0));\n"
+        "const encoding=face.encoding===undefined?'base64':face.encoding;\n"
+        "let raw;\n"
+        "if(encoding==='base64')raw=encoded;\n"
+        "else if(encoding==='gzip-base64'){\n"
+        "const stream=new Blob([encoded]).stream().pipeThrough(new DecompressionStream('gzip'));\n"
+        "raw=new Uint8Array(await new Response(stream).arrayBuffer());\n"
+        "}else throw Error('Unsupported Source font transport encoding');\n"
         "const hash=Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',raw)))"
         ".map(n=>n.toString(16).padStart(2,'0')).join('');\n"
         "if(raw.length!==face.bytes||hash!==face.sha256)throw Error('Source font buffer changed');\n"
@@ -232,12 +248,12 @@ def source_web_font_script() -> str:
 
 
 def source_web_font_javascript() -> str:
-    """Publish the same payload and loader as one local classic-script asset."""
+    """Publish losslessly compressed bodies and the loader as one local asset."""
     return (
         '(()=>{const node=document.createElement("script");'
         'node.type="application/json";node.id="template-source-font-bodies";'
         "node.textContent=JSON.stringify("
-        + _source_web_font_payload()
+        + _source_web_font_payload(compressed=True)
         + ");document.head.appendChild(node);})();\n"
         + _source_web_font_loader()
     )

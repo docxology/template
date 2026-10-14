@@ -64,6 +64,107 @@ def _run(generator: Path, reference: Path, *, bootstrap: bool = False) -> subpro
     )
 
 
+def test_fresh_own_bootstrap_accepts_actual_environment_sdk_and_executes_primitive(tmp_path: Path) -> None:
+    """An installed SDK inside the own environment is a provider, not authored source."""
+    script = (
+        "import importlib.util,json,sys,sysconfig;from pathlib import Path;"
+        "assert 'infrastructure' not in sys.modules;"
+        f"project=Path({str(PROJECT)!r});"
+        "original=sys.path[:];"
+        "spec=importlib.util.spec_from_file_location('actual_own_bootstrap',project/'scripts/_bootstrap.py');"
+        "assert spec is not None and spec.loader is not None;"
+        "bootstrap=importlib.util.module_from_spec(spec);spec.loader.exec_module(bootstrap);"
+        "sdk=bootstrap.bootstrap_project(project);"
+        f"assert Path(sdk.__file__).resolve()==Path({str(SDK_PACKAGE / '__init__.py')!r});"
+        "assert sdk.__version__=='4.0.1';assert sys.path==original;"
+        "origin=Path(sdk.__file__).resolve();"
+        "providers=[Path(sysconfig.get_path(kind)).resolve() for kind in ('purelib','platlib')];"
+        "assert not origin.is_relative_to(project) or any(origin.is_relative_to(path) for path in providers);"
+        "from template_autopoiesis.primitives.optimization import gradient_descent;"
+        "assert gradient_descent.__module__=='template_autopoiesis.primitives.optimization';"
+        "result=gradient_descent({'A':[[2.0]],'c':[3.0],'x0':[0.0],'lr':0.5,'steps':1});"
+        "assert result['x_final'].tolist()==[3.0];"
+        "print(json.dumps({'provider':str(origin),'result':result['x_final'].tolist()}))"
+    )
+    observed = subprocess.run(
+        [sys.executable, "-I", "-c", script], cwd=tmp_path, capture_output=True, text=True, timeout=30, check=False
+    )
+    assert observed.returncode == 0, observed.stdout + observed.stderr
+    result = json.loads(observed.stdout)
+    assert result == {"provider": str(SDK_PACKAGE / "__init__.py"), "result": [3.0]}
+
+
+@pytest.mark.parametrize("shadow_location", ["own-root", "own-src"])
+def test_actual_cached_authored_sdk_is_refused_outside_active_provider_roots(
+    tmp_path: Path, shadow_location: str
+) -> None:
+    """The provider exception must not admit an already executed authored shadow."""
+    generator = _copy_project(tmp_path / "generator")
+    location = generator if shadow_location == "own-root" else generator / "src"
+    shadow = location / "infrastructure"
+    shadow.mkdir()
+    marker = tmp_path / "authored-sdk-executed"
+    (shadow / "__init__.py").write_text(
+        f"from pathlib import Path\nPath({str(marker)!r}).write_text('actual authored provider ran')\n"
+        "__version__='4.0.1'\n",
+        encoding="utf-8",
+    )
+    script = (
+        "import importlib.util,sys;from pathlib import Path;"
+        f"project=Path({str(generator)!r});sys.path.insert(0,{str(location)!r});"
+        "import infrastructure;"
+        f"assert Path(infrastructure.__file__).resolve()==Path({str(shadow / '__init__.py')!r});"
+        "spec=importlib.util.spec_from_file_location('actual_own_bootstrap',project/'scripts/_bootstrap.py');"
+        "assert spec is not None and spec.loader is not None;"
+        "bootstrap=importlib.util.module_from_spec(spec);spec.loader.exec_module(bootstrap);"
+        "original=sys.path[:];\n"
+        "try:\n"
+        "    bootstrap.bootstrap_project(project)\n"
+        "except ImportError as error:\n"
+        "    assert 'own project source cannot provide' in str(error)\n"
+        "else:\n"
+        "    raise AssertionError('authored SDK was accepted as active provider')\n"
+        "assert sys.path==original\n"
+    )
+    observed = subprocess.run(
+        [sys.executable, "-I", "-c", script], cwd=tmp_path, capture_output=True, text=True, timeout=30, check=False
+    )
+    assert observed.returncode == 0, observed.stdout + observed.stderr
+    assert marker.read_text() == "actual authored provider ran"
+    assert not (generator / "output").exists()
+
+
+def test_actual_loaded_sdk_missing_origin_is_refused_and_paths_are_restored(tmp_path: Path) -> None:
+    """A genuine cached provider must retain an existing source origin."""
+    missing = tmp_path / "absent-provider" / "__init__.py"
+    script = (
+        "import importlib.util,sys;from pathlib import Path;import infrastructure;"
+        f"assert Path(infrastructure.__file__).resolve(strict=True)==Path({str(SDK_PACKAGE / '__init__.py')!r});"
+        "assert infrastructure.__version__=='4.0.1';"
+        f"project=Path({str(PROJECT)!r});"
+        "spec=importlib.util.spec_from_file_location('actual_own_bootstrap',project/'scripts/_bootstrap.py');"
+        "assert spec is not None and spec.loader is not None;"
+        "bootstrap=importlib.util.module_from_spec(spec);spec.loader.exec_module(bootstrap);"
+        f"infrastructure.__file__={str(missing)!r};assert not Path(infrastructure.__file__).exists();"
+        "original=sys.path[:];\n"
+        "try:\n"
+        "    bootstrap.bootstrap_project(project)\n"
+        "except FileNotFoundError:\n"
+        "    pass\n"
+        "else:\n"
+        "    raise AssertionError('missing genuine SDK source origin was accepted')\n"
+        "assert sys.path==original\n"
+        "assert sys.modules['infrastructure'] is infrastructure\n"
+        "print('missing genuine SDK origin refused')\n"
+    )
+    observed = subprocess.run(
+        [sys.executable, "-I", "-c", script], cwd=tmp_path, capture_output=True, text=True, timeout=30, check=False
+    )
+    assert observed.returncode == 0, observed.stdout + observed.stderr
+    assert observed.stdout.strip() == "missing genuine SDK origin refused"
+    assert not missing.parent.exists()
+
+
 def test_loaded_generator_custody_is_distinct_from_supplied_reference_inputs(tmp_path: Path) -> None:
     reference = _copy_project(tmp_path / "reference")
     generator, platform = capture_execution_custody()
@@ -96,7 +197,10 @@ def test_loaded_generator_custody_is_distinct_from_supplied_reference_inputs(tmp
                 platform["distribution"][field]
                 == hashlib.sha256(Path(selected.locate_file(relative)).read_bytes()).hexdigest()
             )
-        assert platform["distribution"]["public_python"] == platform["files"]
+        assert {
+            "infrastructure/" + relative: digest
+            for relative, digest in platform["distribution"]["public_python"].items()
+        } == platform["files"]
 
     reference_before = source_custody(reference)
     config = reference / "manuscript/config.yaml"

@@ -1,4 +1,4 @@
-"""Comprehensive tests for src/figure_manager.py to ensure 100% coverage."""
+"""Real figure metadata registration, persistence, retrieval, and corruption controls."""
 
 import json
 
@@ -91,22 +91,6 @@ class TestFigureManager:
         all_figures = manager.get_all_figures()
         assert len(all_figures) == 2
 
-    def test_generate_latex_figure_block(self, tmp_path):
-        """Test generating LaTeX figure block."""
-        manager = FigureManager(registry_file=str(tmp_path / "registry.json"))
-        manager.register_figure(filename="test.png", caption="Test caption", label="fig:test")
-        latex = manager.generate_latex_figure_block("fig:test")
-        assert "\\begin{figure}" in latex
-        assert "\\includegraphics" in latex
-        assert "\\caption{Test caption}" in latex
-        assert "\\label{fig:test}" in latex
-
-    def test_generate_reference(self, tmp_path):
-        """Test generating reference."""
-        manager = FigureManager(registry_file=str(tmp_path / "registry.json"))
-        ref = manager.generate_reference("fig:test")
-        assert ref == "\\ref{fig:test}"
-
     def test_generate_figure_list(self, tmp_path):
         """Test generating figure list."""
         manager = FigureManager(registry_file=str(tmp_path / "registry.json"))
@@ -180,29 +164,12 @@ class TestFigureManager:
         assert len(manager.figures) == 0
         assert manager.counter == 0
 
-    def test_generate_latex_figure_block_not_found(self, tmp_path):
-        """Test generating LaTeX block for non-existent figure."""
-        manager = FigureManager(registry_file=str(tmp_path / "registry.json"))
-        latex = manager.generate_latex_figure_block("fig:nonexistent")
-        assert "% Figure fig:nonexistent not found in registry" in latex
-
     def test_generate_figure_list_with_section(self, tmp_path):
         """Test generating figure list with section."""
         manager = FigureManager(registry_file=str(tmp_path / "registry.json"))
         manager.register_figure("test.png", "Test caption", label="fig:test", section="Introduction")
         figure_list = manager.generate_figure_list()
         assert "Section: Introduction" in figure_list
-
-    def test_generate_table_of_figures(self, tmp_path):
-        """Test generating table of figures."""
-        manager = FigureManager(registry_file=str(tmp_path / "registry.json"))
-        manager.register_figure("test1.png", "Caption 1", label="fig:test1")
-        manager.register_figure("test2.png", "Caption 2", label="fig:test2")
-        table = manager.generate_table_of_figures()
-        assert "\\listoffigures" in table
-        assert "\\begin{figure}" in table
-        assert "fig:test1" in table
-        assert "fig:test2" in table
 
     def test_register_figure_with_metadata(self, tmp_path):
         """Test registering figure with metadata."""

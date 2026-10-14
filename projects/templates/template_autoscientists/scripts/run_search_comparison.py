@@ -13,15 +13,16 @@ computation lives in ``src``; this script only orchestrates, plots, and writes.
 from __future__ import annotations
 
 import argparse
-import json
 import sys
 import atexit
 import tempfile
 from pathlib import Path
 import hashlib
 import importlib.util
+import importlib
 import os
 import stat
+import sysconfig
 from types import MappingProxyType
 
 # The pipeline launcher already owns a pre-import audit and its private cache.
@@ -33,17 +34,35 @@ if _active_audit is None:
     atexit.register(_BYTECODE_CACHE.cleanup)
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
-REPO_ROOT = PROJECT_ROOT.parents[2]
-for path in (PROJECT_ROOT, PROJECT_ROOT / "src", REPO_ROOT):
-    text = str(path)
-    if text not in sys.path:
-        sys.path.insert(0, text)
+_provider_roots = tuple(Path(sysconfig.get_path(kind)).resolve(strict=True) for kind in ("purelib", "platlib"))
+
+
+_original_import_paths = sys.path[:]
+# Capture provider lookup paths and their physical bindings before public code.
+# Reuse that surface for lookup and import, refusing changed path bindings.
+_provider_import_paths = []
+for _entry in _original_import_paths:
+    _candidate = Path(_entry or os.getcwd()).resolve()
+    if not (
+        _candidate.is_relative_to(PROJECT_ROOT)
+        and not any(_candidate.is_relative_to(provider) for provider in _provider_roots)
+    ):
+        _provider_import_paths.append((_entry, _candidate))
+try:
+    sys.path[:] = [str(candidate) for _, candidate in _provider_import_paths]
+    _audit_spec = importlib.util.find_spec("infrastructure")
+finally:
+    sys.path[:] = _original_import_paths
 
 # Admit the actual stdlib-only audit hook before importing public packages.
 # This is startup I/O; the shared hook owns execution/cache custody logic.
-_audit_spec = importlib.util.find_spec("infrastructure")
 if _audit_spec is None or _audit_spec.origin is None:
     raise SystemExit("the declared platform distribution is unavailable")
+_audit_origin = Path(_audit_spec.origin).resolve(strict=True)
+if _audit_origin.is_relative_to(PROJECT_ROOT) and not any(
+    _audit_origin.is_relative_to(provider) for provider in _provider_roots
+):
+    raise SystemExit("own project source cannot provide the declared platform SDK")
 _platform_source = Path(_audit_spec.origin).absolute().parent
 _audit_path = _platform_source / "core/bytecode_audit.py"
 _audit_descriptors = [os.open(_audit_path.anchor, os.O_RDONLY | os.O_DIRECTORY)]
@@ -111,13 +130,22 @@ else:
     for _root in _audit_roots:
         _audit_scope["verify_executed_source_code"](_root, Path(sys.pycache_prefix))
 
-from template_autoscientists.search.ablation import run_ablations  # noqa: E402
-from template_autoscientists.search.comparison import build_comparison_payload, build_objective, run_comparison  # noqa: E402
-from template_autoscientists.figures.figures import (
-    figure_specs_for_results,
-    write_comparison_figure,
-    write_figure_registry,
-)  # noqa: E402
+try:
+    for _entry, _candidate in _provider_import_paths:
+        if Path(_entry or os.getcwd()).resolve() != _candidate:
+            raise SystemExit("the selected provider import path changed during startup")
+    sys.path[:] = [str(candidate) for _, candidate in _provider_import_paths]
+    _selected_sdk = importlib.import_module("infrastructure")
+    if Path(_selected_sdk.__file__).resolve(strict=True) != _audit_origin:
+        raise SystemExit("the selected platform source origin changed during startup")
+finally:
+    sys.path[:] = _original_import_paths
+for path in (PROJECT_ROOT, PROJECT_ROOT / "src"):
+    text = str(path)
+    if text not in sys.path:
+        sys.path.insert(0, text)
+
+from template_autoscientists.figures.figures import write_comparison_outputs  # noqa: E402
 from template_autoscientists.agents.live_domain import LiveSettings  # noqa: E402
 from template_autoscientists.search.live_comparison import live_exit_code, run_live_comparison  # noqa: E402
 
@@ -153,30 +181,8 @@ def main(argv: list[str] | None = None) -> int:
             parser.error(str(exc))
         print(receipt)
         return live_exit_code(receipt)
-    objective = build_objective()
-    coordinated, baseline = run_comparison(objective)
-
-    output_root = args.output_dir or args.project_root / "output"
-    figures_dir = output_root / "figures"
-    data_dir = output_root / "data"
-    figures_dir.mkdir(parents=True, exist_ok=True)
-    data_dir.mkdir(parents=True, exist_ok=True)
-
-    figure_path = figures_dir / "search_comparison.png"
-    data_path = data_dir / "search_comparison.json"
-    write_comparison_figure(coordinated, baseline, figure_path)
-    registry_path = write_figure_registry(
-        figures_dir,
-        figure_specs_for_results(coordinated, baseline, run_ablations()),
-    )
-    data_path.write_text(
-        json.dumps(build_comparison_payload(objective, coordinated, baseline), indent=2, sort_keys=True) + "\n",
-        encoding="utf-8",
-    )
-
-    print(figure_path)
-    print(registry_path)
-    print(data_path)
+    for path in write_comparison_outputs(args.output_dir or args.project_root / "output"):
+        print(path)
     return 0
 
 

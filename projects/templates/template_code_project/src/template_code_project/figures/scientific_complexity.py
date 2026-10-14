@@ -12,7 +12,7 @@ from ..core.experiment_config import ExperimentConfig
 from ..core._runtime import save_analysis_figure
 from ..core.optimizer import quadratic_optimum
 from .viz_config import VIZ_CONFIG, agency_category
-from ._common import experiment_config, get_logger, project_root
+from ..core._runtime import experiment_config, get_logger, project_root
 
 
 # ---------------------------------------------------------------------------
@@ -556,10 +556,10 @@ def generate_complexity_visualization(
     # Save
     # ------------------------------------------------------------------
     plt.tight_layout()
-    output_dir = project_root() / "output" / "figures"
+    output_dir = project_root("src.figures") / "output" / "figures"
     output_dir.mkdir(parents=True, exist_ok=True)
     plot_path = output_dir / "algorithm_complexity.png"
-    if not save_analysis_figure(project_root(), plot_path, fig):
+    if not save_analysis_figure(project_root("src.figures"), plot_path, fig):
         plt.savefig(plot_path, dpi=300, bbox_inches="tight", facecolor="white", edgecolor="none")
     plt.close()
 

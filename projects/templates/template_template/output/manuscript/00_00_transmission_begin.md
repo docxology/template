@@ -10,9 +10,11 @@
 \section*{BEGINNING OF TRANSMISSION}\label{beginning-of-transmission}
 ```
 
-**State:** published
+**State:** unpublished / pending pairing
 
-**Pairing:** complete (DOI, GitHub, SHA-256, Zenodo URL)
+**Pairing:** pending — unresolved:
+- ✗ GitHub release URL: `pending`
+- ✗ PDF SHA-256: `pending`
 
 ```{=latex}
 \subsubsection*{Release metadata}
@@ -23,10 +25,9 @@
 | Title | A template/ approach to Reproducible Generative Research |
 | Version | 2.0.0 |
 | Concept DOI | 10.5281/zenodo.20419007 |
-| Version DOI | 10.5281/zenodo.20976048 |
-| GitHub | [https://github.com/docxology/template_template/releases/tag/v1.0.9](https://github.com/docxology/template_template/releases/tag/v1.0.9) |
+| GitHub | docxology/template_template |
 | Zenodo | [https://zenodo.org/records/20419007](https://zenodo.org/records/20419007) |
-| SHA-256 | `535bd80943d0ae9f…` |
+| SHA-256 | pending |
 | SHA-512 | pending |
 
 ```{=latex}

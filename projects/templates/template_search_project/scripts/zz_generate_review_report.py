@@ -13,9 +13,15 @@ import sys
 from pathlib import Path
 
 _project_root = Path(__file__).resolve().parent.parent
-# Admit the selected platform before exposing the own domain source.
-import infrastructure  # noqa: E402,F401
+# Select the declared SDK before exposing domain source; no ancestor imports.
+_original_import_paths = sys.path[:]
+try:
+    sys.path.insert(0, str(_project_root / "scripts"))
+    from _search_sdk_bootstrap import select_platform_sdk
 
+    select_platform_sdk(_project_root)
+finally:
+    sys.path[:] = _original_import_paths
 sys.path.insert(0, str(_project_root / "src"))
 
 from template_search_project.analysis.review_report import generate_review_report, project_paths  # noqa: E402

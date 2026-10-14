@@ -10,9 +10,11 @@
 \section*{BEGINNING OF TRANSMISSION}\label{beginning-of-transmission}
 ```
 
-**State:** published
+**State:** unpublished / pending pairing
 
-**Pairing:** complete (DOI, GitHub, SHA-256, Zenodo URL)
+**Pairing:** pending — unresolved:
+- ✗ GitHub release URL: `pending`
+- ✗ PDF SHA-256: `pending`
 
 ```{=latex}
 \subsubsection*{Release metadata}
@@ -23,10 +25,9 @@
 | Title | Active Inference Multi-Track Exemplar |
 | Version | 0.4.0 |
 | Concept DOI | 10.5281/zenodo.20417021 |
-| Version DOI | 10.5281/zenodo.20931870 |
-| GitHub | [https://github.com/docxology/template_active_inference/releases/tag/v0.3.2](https://github.com/docxology/template_active_inference/releases/tag/v0.3.2) |
+| GitHub | docxology/template_active_inference |
 | Zenodo | [https://zenodo.org/records/20417021](https://zenodo.org/records/20417021) |
-| SHA-256 | `f191b48f94394cab…` |
+| SHA-256 | pending |
 | SHA-512 | pending |
 
 ```{=latex}
@@ -1622,11 +1623,11 @@ See `manuscript/references.bib` for bibliography entries cited in the composed s
 \section*{END OF TRANSMISSION}\label{end-of-transmission}
 ```
 
-**Release:** v0.4.0 · DOI `10.5281/zenodo.20417021` · SHA-256 `f191b48f9439…` · pairing complete
+**Release:** v0.4.0 · DOI `10.5281/zenodo.20417021` · SHA-256 `pending…` · pairing pending
 
 ![Integrity QR strip](../figures/transmission_integrity_strip.png){width=88%}
 
-**Prior:** _No prior releases._
+**Prior:** `v0.3.2` · `10.5281/zenodo.20931870` · `f191b48f…`
 
 ```{=latex}
 \end{samepage}

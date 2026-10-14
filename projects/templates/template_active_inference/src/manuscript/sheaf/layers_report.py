@@ -425,7 +425,3 @@ def render_sheaf_layers_markdown(project_root: Path) -> str:
         render_track_improvement_scope_table(project_root),
     ]
     return "\n".join(parts)
-
-
-# Backward-compatible alias for callers predating the rename.
-render_methods_sheaf_layers_markdown = render_sheaf_layers_markdown

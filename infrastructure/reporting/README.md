@@ -43,7 +43,7 @@ graph TD
     subgraph ReportingModules["Reporting Modules"]
         PIPELINE_REP[report_generator.py<br/>Pipeline report generation]
         ERROR_AGG[error_aggregator.py<br/>Error collection & categorization]
-        EXEC_REP[executive_reporter.py<br/>Cross-project summaries]
+        EXEC_REP[_executive_renderers.py<br/>Cross-project summaries]
         DASHBOARD[_dashboard_matplotlib.py<br/>Visual dashboards]
         OUTPUT_ORG[output_organizer.py<br/>File organization]
     end

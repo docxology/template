@@ -25,11 +25,6 @@ logger = logging.getLogger(__name__)
 
 _VALID_DIRECTIONS = {"supports", "contradicts", "neutral", "irrelevant"}
 
-# Backward-compatible private aliases used by tests
-_call_ollama = call_ollama
-_parse_llm_response = parse_llm_response
-_hypothesis_dicts = hypothesis_dicts
-
 
 def assess_paper_hypotheses(
     paper: Paper,
@@ -208,7 +203,4 @@ __all__ = [
     "assess_paper_hypotheses",
     "build_prompt",
     "extract_assertions_llm",
-    "_call_ollama",
-    "_hypothesis_dicts",
-    "_parse_llm_response",
 ]

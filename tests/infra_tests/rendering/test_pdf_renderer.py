@@ -13,9 +13,11 @@ from infrastructure.rendering import pdf_renderer
 from infrastructure.rendering._pdf_latex_helpers import (
     check_latex_log_for_graphics_errors,
     extract_preamble,
+    parse_missing_latex_package_from_log,
+)
+from infrastructure.rendering._pdf_title_page import (
     generate_title_page_body,
     generate_title_page_preamble,
-    parse_missing_latex_package_from_log,
 )
 from infrastructure.rendering._pdf_figure_paths import fix_figure_paths
 from infrastructure.rendering._pdf_math_delimiters import fix_math_delimiters
@@ -632,6 +634,8 @@ class TestModuleLevel:
         from infrastructure.rendering._pdf_latex_helpers import (
             extract_preamble,
             check_latex_log_for_graphics_errors,
+        )
+        from infrastructure.rendering._pdf_title_page import (
             generate_title_page_preamble,
             generate_title_page_body,
         )

@@ -22,7 +22,7 @@ _REGISTERED_REPORT_STAGES = {
 _ETHICS_STATUSES = {"not_required", "approved", "exempt", "pending"}
 _SENSITIVITY_DECISIONS = {"robust", "fragile", "exploratory", "not_applicable"}
 REGISTRATION_SCHEMA_VERSION = "template-registered-report/2"
-_LEGACY_REGISTRATION_SCHEMA_VERSION = "template-registered-report/1"
+_FROZEN_REGISTRATION_SCHEMAS = (None, "template-registered-report/1", REGISTRATION_SCHEMA_VERSION)
 _MAX_FROZEN_RECORD_BYTES = 1024 * 1024
 _FROZEN_RECORD_REMEDIATION = (
     "Existing frozen registration cannot be replaced; preserve it and choose a new versioned output directory."
@@ -66,38 +66,27 @@ def registration_hash(registration: dict[str, Any]) -> str:
     return hashlib.sha256(payload.encode("utf-8")).hexdigest()
 
 
-def migrate_registration(registration: dict[str, Any]) -> dict[str, Any]:
-    """Upgrade a mutable draft without inventing missing evidence.
-
-    Version 1 fixtures predate an explicit schema marker. Migration only adds
-    that marker and preserves every registered field; structural validation
-    remains responsible for rejecting dropped hypotheses, outcomes, or plans.
-    Frozen records are validated and copied unchanged, including their original
-    schema and hash; draft migration cannot authorize replacing frozen intent.
-    """
-    migrated = copy.deepcopy(registration)
-    schema = migrated.get("schema_version")
-    if "registration_hash" in migrated:
-        unhashed = dict(migrated)
-        supplied = unhashed.pop("registration_hash")
-        if not isinstance(supplied, str) or supplied != registration_hash(unhashed):
-            raise ValueError("Frozen registration hash does not match its unchanged content")
-        if schema not in (None, _LEGACY_REGISTRATION_SCHEMA_VERSION, REGISTRATION_SCHEMA_VERSION):
-            raise ValueError(f"Unsupported frozen registration schema: {schema!r}")
-        return migrated
-    if schema in (None, _LEGACY_REGISTRATION_SCHEMA_VERSION):
-        migrated["schema_version"] = REGISTRATION_SCHEMA_VERSION
-        return migrated
-    if schema != REGISTRATION_SCHEMA_VERSION:
-        raise ValueError(f"Unsupported registration schema: {schema!r}")
-    return migrated
+def _copy_frozen_registration(registration: dict[str, Any]) -> dict[str, Any]:
+    """Validate archived hash/schema bindings and preserve the exact original intent."""
+    preserved = copy.deepcopy(registration)
+    unhashed = dict(preserved)
+    supplied = unhashed.pop("registration_hash", None)
+    if not isinstance(supplied, str) or supplied != registration_hash(unhashed):
+        raise ValueError("Frozen registration hash does not match its unchanged content")
+    schema = preserved.get("schema_version")
+    if schema not in _FROZEN_REGISTRATION_SCHEMAS:
+        raise ValueError(f"Unsupported frozen registration schema: {schema!r}")
+    return preserved
 
 
 def freeze_registration(registration: dict[str, Any]) -> dict[str, Any]:
-    """Freeze a new draft, or preserve a valid already-frozen record exactly."""
-    frozen = migrate_registration(registration)
-    if "registration_hash" not in frozen:
-        frozen["registration_hash"] = registration_hash(frozen)
+    """Hash an explicitly current draft, or preserve an already-frozen record."""
+    if "registration_hash" in registration:
+        return _copy_frozen_registration(registration)
+    frozen = copy.deepcopy(registration)
+    if frozen.get("schema_version") != REGISTRATION_SCHEMA_VERSION:
+        raise ValueError(f"New registration drafts must declare schema_version {REGISTRATION_SCHEMA_VERSION!r}")
+    frozen["registration_hash"] = registration_hash(frozen)
     return frozen
 
 
@@ -188,7 +177,7 @@ def _preserve_frozen_record(
             archived = json.loads(encoded)
             if not isinstance(archived, dict) or "registration_hash" not in archived:
                 raise ValueError("Existing record is not a frozen registration")
-            preserved = freeze_registration(archived)
+            preserved = _copy_frozen_registration(archived)
             if preserved != frozen:
                 raise ValueError("New intent differs from the existing frozen registration")
             after = os.fstat(record.fileno())
@@ -207,10 +196,11 @@ def validate_registration(registration: dict[str, Any]) -> tuple[RegistrationFin
     """Validate preregistration completeness before results are known."""
     findings: list[RegistrationFinding] = []
     schema = registration.get("schema_version")
-    if schema not in (None, REGISTRATION_SCHEMA_VERSION, _LEGACY_REGISTRATION_SCHEMA_VERSION):
+    accepted_schemas = (
+        _FROZEN_REGISTRATION_SCHEMAS if "registration_hash" in registration else (REGISTRATION_SCHEMA_VERSION,)
+    )
+    if schema not in accepted_schemas:
         findings.append(RegistrationFinding("error", "unsupported_schema", f"unsupported schema: {schema}"))
-    elif schema == _LEGACY_REGISTRATION_SCHEMA_VERSION:
-        findings.append(RegistrationFinding("warning", "legacy_schema", "registration should be migrated to v2"))
     for section in _REQUIRED_SECTIONS:
         if section not in registration:
             findings.append(RegistrationFinding("error", "missing_section", f"missing section: {section}"))
@@ -220,8 +210,8 @@ def validate_registration(registration: dict[str, Any]) -> tuple[RegistrationFin
     _check_stage_metadata(registration, findings)
     if "registration_hash" in registration:
         unhashed = dict(registration)
-        supplied = str(unhashed.pop("registration_hash", ""))
-        if supplied != registration_hash(unhashed):
+        supplied = unhashed.pop("registration_hash", "")
+        if not isinstance(supplied, str) or supplied != registration_hash(unhashed):
             findings.append(RegistrationFinding("error", "hash_mismatch", "registration_hash does not match content"))
     return tuple(findings)
 

@@ -219,11 +219,6 @@ class DeckContent:
     slides: tuple[Slide, ...] = field(default_factory=tuple)
     metadata: dict[str, str] = field(default_factory=dict)
 
-    @property
-    def sections(self) -> tuple[Slide, ...]:
-        """Alias for ``slides`` — content-slide count, used for PDF/PPTX parity checks."""
-        return self.slides
-
 
 @dataclass(frozen=True)
 class ContentSlideLayout:

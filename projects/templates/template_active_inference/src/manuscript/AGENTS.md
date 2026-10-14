@@ -35,7 +35,8 @@ After compose or late artifact writes, call
 | `settle_manuscript_artifacts(root)` | Hash/settle contract artifacts after final writes (fixed-point track) |
 
 Used by `roadmap_tracks/fixed_point.py`, `sheaf_tracks_helpers.py`, and
-`manuscript/sheaf/semantic_core.py` instead of duplicated local helpers.
+the owning `manuscript/sheaf/semantic_{evidence,certificate,issues,gluing_outputs}.py`
+modules instead of duplicating local helpers.
 
 ## Editing workflow
 

@@ -197,7 +197,7 @@ def render_combined_docx(
     )
 
     import yaml as _yaml
-    from infrastructure.rendering._pdf_title_page import _load_render_config
+    from infrastructure.rendering._pdf_title_page_config import _load_render_config
     from infrastructure.rendering.office_native_projection import office_pandoc_metadata
 
     config, _ = _load_render_config(manuscript_dir)
@@ -275,11 +275,11 @@ def render_combined_epub(
         edition="EPUB",
     )
 
-    from infrastructure.rendering._pdf_title_page import (
+    from infrastructure.rendering._pdf_title_page_images import (
         _cover_image_alt,
         _cover_image_path,
-        _load_render_config,
     )
+    from infrastructure.rendering._pdf_title_page_config import _load_render_config
 
     from infrastructure.rendering.office_native_projection import office_pandoc_metadata
 

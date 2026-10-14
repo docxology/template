@@ -3,6 +3,8 @@
 from __future__ import annotations
 
 import json
+import hashlib
+import importlib.metadata
 import os
 import shutil
 import socket
@@ -13,7 +15,9 @@ import time
 from contextlib import contextmanager
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
+from email.parser import BytesParser
 
+from packaging.requirements import Requirement
 import pytest
 
 from infrastructure.core import implementation_custody as platform_custody
@@ -337,6 +341,8 @@ def test_cli_live_missing_service_exits_75_and_core_remains_default(tmp_path) ->
                 "fixture:latest",
                 "--endpoint",
                 endpoint,
+                "--run-timeout-seconds",
+                "120",
                 "--project-root",
                 str(root),
                 "--output-dir",
@@ -345,11 +351,15 @@ def test_cli_live_missing_service_exits_75_and_core_remains_default(tmp_path) ->
             cwd=tmp_path,
             capture_output=True,
             text=True,
-            timeout=90,
+            # Installed RECORD admission and final source custody are real
+            # work outside the request budget; retain a finite outer allowance.
+            timeout=180,
         )
     assert result.returncode == 75, result.stderr
     receipt = json.loads((root / "output/.pipeline/local_coordination/cli/coordination_receipt.json").read_text())
-    assert receipt["status"] == "blocked"
+    assert receipt["status"] == "blocked" and receipt["source_unchanged"] is True
+    execution = receipt["arms"]["coordinated"]["calls"][0]["execution"]
+    assert execution["returncode"] == 75 and not execution["timed_out"]
     output = root / "output/core-reference"
     result = subprocess.run(
         [sys.executable, str(script), "--project-root", str(root), "--output-dir", str(output)],
@@ -603,7 +613,37 @@ def test_transitive_platform_and_worker_environment_are_required() -> None:
     sources, environment = platform_sources(), environment_identity()
     assert "infrastructure/core/subprocess_policy.py" in sources
     assert "infrastructure/core/execution_boundary.py" in sources
-    assert "uv.lock" in sources
+    custody = implementation_custody()
+    if custody["binding_kind"] == "source-checkout":
+        assert "uv.lock" in sources
+    else:
+        assert custody["binding_kind"] == "installed-distribution"
+        selected = importlib.metadata.distribution("research-project-template")
+        assert selected.version == "4.0.1" and selected.files is not None
+        records = [path for path in selected.files if str(path).endswith(".dist-info/RECORD")]
+        assert len(records) == 1
+        record_path = Path(selected.locate_file(records[0]))
+        metadata_path = Path(selected.locate_file(records[0].parent / "METADATA"))
+        assert sources["distribution/RECORD"] == hashlib.sha256(record_path.read_bytes()).hexdigest()
+        metadata_bytes = metadata_path.read_bytes()
+        assert sources["distribution/METADATA"] == hashlib.sha256(metadata_bytes).hexdigest()
+        metadata = BytesParser().parsebytes(metadata_bytes)
+        assert metadata.get_all("Name") == ["research-project-template"]
+        assert metadata.get_all("Version") == ["4.0.1"]
+        assert metadata.get_all("Requires-Python") == [">=3.12"]
+        requirements = metadata.get_all("Requires-Dist")
+        assert requirements
+        for declared in requirements:
+            requirement = Requirement(declared)
+            if requirement.marker is None or requirement.marker.evaluate({"extra": ""}):
+                assert importlib.metadata.version(requirement.name) in requirement.specifier
+        assert {
+            "infrastructure/" + relative: digest
+            for relative, digest in custody["distribution"]["public_python"].items()
+        } == custody["files"]
+        for field in ("distribution/RECORD", "distribution/METADATA"):
+            with pytest.raises(ValueError, match="changed"):
+                verify_custody(dict(sources, **{field: "0" * 64}), environment)
     changed = dict(sources, **{"infrastructure/core/subprocess_policy.py": "0" * 64})
     with pytest.raises(ValueError, match="changed"):
         verify_custody(changed, environment)

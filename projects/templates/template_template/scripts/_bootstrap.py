@@ -10,6 +10,7 @@ import importlib
 import importlib.util
 import os
 import sys
+import sysconfig
 from pathlib import Path
 from types import ModuleType
 
@@ -65,16 +66,24 @@ def bootstrap_project(project: Path) -> ModuleType:
     project = project.resolve(strict=True)
     owner = Path(__file__).resolve(strict=True).parent.parent
     own_roots = (project, owner)
+    # The selected own environment can live under project/.venv. Keep only its
+    # actual runtime site roots when filtering authored project import paths.
+    runtime_paths = sysconfig.get_paths()
+    runtime_sites = {Path(runtime_paths[key]).resolve(strict=True) for key in ("purelib", "platlib")}
     original = sys.path[:]
     try:
         sys.path[:] = [
             entry
             for entry in original
-            if not any(Path(entry or os.getcwd()).resolve().is_relative_to(own) for own in own_roots)
+            if Path(entry or os.getcwd()).resolve() in runtime_sites
+            or not any(Path(entry or os.getcwd()).resolve().is_relative_to(own) for own in own_roots)
         ]
         sdk = importlib.import_module("infrastructure")
-        if not isinstance(sdk.__file__, str) or any(
-            Path(sdk.__file__).resolve(strict=True).is_relative_to(own) for own in own_roots
+        if not isinstance(sdk.__file__, str):
+            raise ImportError("declared platform SDK requires its actual source origin")
+        sdk_origin = Path(sdk.__file__).resolve(strict=True)
+        if any(sdk_origin.is_relative_to(own) for own in own_roots) and not any(
+            sdk_origin.is_relative_to(site) for site in runtime_sites
         ):
             raise ImportError("own project source cannot provide the declared platform SDK")
         if sdk.__version__ != "4.0.1":

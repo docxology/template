@@ -10,7 +10,7 @@ The `./run.sh` interactive orchestrator can execute the public roster through th
 |---------|-----------------------|-----------------:|-----------------------:|
 | `template_code_project` | 8 | 263 | 90% |
 | `template_prose_project` | 8 | 165 | 90% |
-| `template_autoresearch_project` | 8 | 317 | 90% |
+| `template_autoresearch_project` | 8 | 318 | 90% |
 
 ¹“Core-only” excludes LLM-tagged and other opt-in stages according to the YAML stage tags. A fresh run must be used to establish completion status or wall-clock performance for a particular machine and dependency set.
 
@@ -18,8 +18,8 @@ The `./run.sh` interactive orchestrator can execute the public roster through th
 
 | Metric | Value |
 |--------|-------|
-| Test files | 902+ |
-| Total tests | ~12,235 |
+| Test files | 900+ |
+| Total tests | ~12,193 |
 | Infrastructure coverage gate | ≥60% configured floor |
 | Prohibited mock-framework imports | Checked by the static no-mocks gate |
 
@@ -37,7 +37,7 @@ The introspection module (`template_template.core.introspection`) emits the auth
 | `core` | 187 | ✓ | ✓ | `get_logger`, `load_config`, `TemplateError` |
 | `docker` | 0 | ✓ | ✓ | Containerisation scaffolding |
 | `doctor` | 14 | ✓ | ✓ | Checkout diagnose/fix/undo repairs |
-| `documentation` | 25 | ✓ | ✓ | `FigureManager`, `generate_glossary` |
+| `documentation` | 23 | ✓ | ✓ | `FigureManager`, `build_api_index`, `generate_markdown_table` |
 | `fonds` | 6 | ✓ | ✓ | — |
 | `formal_contracts` | 5 | ✓ | ✓ | — |
 | `llm` | 57 | ✓ | ✓ | Ollama helpers, sanitization, review + translation pipelines |
@@ -50,8 +50,8 @@ The introspection module (`template_template.core.introspection`) emits the auth
 | `provenance` | 9 | ✓ | ✓ | — |
 | `publishing` | 80 | ✓ | ✓ | Zenodo, executable bundle, archival targets |
 | `reference` | 16 | ✓ | ✓ | BibTeX models, parsers, converters |
-| `rendering` | 121 | ✓ | ✓ | PDF/HTML/slide rendering, Pandoc filters |
-| `reporting` | 399 | ✓ | ✓ | Coverage parsers, dashboards, executive artefacts |
+| `rendering` | 120 | ✓ | ✓ | PDF/HTML/slide rendering, Pandoc filters |
+| `reporting` | 396 | ✓ | ✓ | Coverage parsers, dashboards, executive artefacts |
 | `research` | 3 | ✓ | ✓ | — |
 | `rules` | 6 | ✓ | ✓ | — |
 | `scientific` | 4 | ✓ | ✓ | `check_numerical_stability`, `benchmark_function` |

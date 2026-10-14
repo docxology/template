@@ -18,7 +18,6 @@ from manuscript.sheaf import (
 from manuscript.sheaf.cli import build_parser, run_compose_cli
 from manuscript.sheaf.renderers import _render_ontology
 
-_parse_missing = parse_missing
 pytestmark = [pytest.mark.timeout(120)]
 _ABSOLUTE_OUTSIDE_TRACK = str(Path(Path.cwd().anchor) / "tmp" / "outside.md")
 
@@ -228,8 +227,8 @@ def test_compose_single_section_filter(tmp_path: Path) -> None:
 
 
 def test_parse_missing_invalid_falls_back() -> None:
-    assert _parse_missing("not-a-policy", MissingTrackPolicy.SKIP) == MissingTrackPolicy.SKIP
-    assert _parse_missing(None, MissingTrackPolicy.ERROR) == MissingTrackPolicy.ERROR
+    assert parse_missing("not-a-policy", MissingTrackPolicy.SKIP) == MissingTrackPolicy.SKIP
+    assert parse_missing(None, MissingTrackPolicy.ERROR) == MissingTrackPolicy.ERROR
 
 
 def test_compose_cli_validate_only_strict() -> None:

@@ -1,7 +1,8 @@
 """Figure management for scientific computing.
 
-This module provides automatic figure numbering, caption generation,
-cross-reference management, figure registry, and LaTeX integration.
+This module stores figure metadata, assigns registry identifiers, and persists
+caption, source, and project-specific fields. Manuscript figure numbering and
+cross-references are owned by Pandoc and pandoc-crossref.
 """
 
 from __future__ import annotations
@@ -78,7 +79,7 @@ class FigureMetadata:
 
 
 class FigureManager:
-    """Manages figures with automatic numbering and cross-referencing."""
+    """Register, retrieve, and persist figure metadata by label."""
 
     def __init__(self, registry_file: str | None = None):
         """Initialize figure manager.
@@ -210,42 +211,6 @@ class FigureManager:
         """Get all registered figures."""
         return list(self.figures.values())
 
-    def generate_latex_figure_block(self, label: str) -> str:
-        """Generate LaTeX figure block.
-
-        Args:
-            label: Figure label
-
-        Returns:
-            LaTeX code for figure block
-        """
-        fig_meta = self.get_figure(label)
-        if fig_meta is None:
-            return f"% Figure {label} not found in registry"
-
-        # Determine relative path (assuming figures are in output/figures/)
-        figure_path = f"../output/figures/{fig_meta.filename}"
-
-        latex = f"""\\begin{{figure}}[{fig_meta.placement}]
-\\centering
-\\includegraphics[width={fig_meta.width}]{{{figure_path}}}
-\\caption{{{fig_meta.caption}}}
-\\label{{{fig_meta.label}}}
-\\end{{figure}}"""
-
-        return latex
-
-    def generate_reference(self, label: str) -> str:
-        """Generate LaTeX reference to figure.
-
-        Args:
-            label: Figure label
-
-        Returns:
-            LaTeX reference code
-        """
-        return f"\\ref{{{label}}}"
-
     def generate_figure_list(self) -> str:
         """Generate list of all figures.
 
@@ -259,20 +224,6 @@ class FigureManager:
             if fig_meta.section:
                 lines.append(f"  - Section: {fig_meta.section}")
             lines.append(f"  - File: `{fig_meta.filename}`")
-            lines.append("")
-
-        return "\n".join(lines)
-
-    def generate_table_of_figures(self) -> str:
-        """Generate LaTeX table of figures.
-
-        Returns:
-            LaTeX code for table of figures
-        """
-        lines = ["\\listoffigures", "", "% Individual figures:", ""]
-
-        for fig_meta in sorted(self.figures.values(), key=lambda f: f.figure_id):
-            lines.append(self.generate_latex_figure_block(fig_meta.label))
             lines.append("")
 
         return "\n".join(lines)

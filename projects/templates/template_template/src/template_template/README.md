@@ -18,7 +18,7 @@ print(f"{report.module_count} modules, {report.project_count} projects")
 |----------|---------|-------------|
 | `discover_infrastructure_modules(root)` | `list[ModuleInfo]` | Scan `infrastructure/` subpackages |
 | `discover_projects(root)` | `list[ProjectAnalysis]` | Find valid project workspaces |
-| `count_pipeline_stages(scripts_dir)` | `list[PipelineStage]` | Enumerate `NN_name.py` scripts |
+| `enumerate_numbered_scripts(scripts_dir)` | `list[PipelineStage]` | Enumerate `NN_name.py` scripts |
 | `analyze_test_coverage_config(project_dir)` | `CoverageConfig \| None` | Parse testing thresholds |
 | `build_infrastructure_report(root)` | `InfrastructureReport` | Aggregate all above |
 

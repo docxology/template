@@ -2,7 +2,7 @@
 Plotly panel assembly, and the thin facade plus CLI entry point.
 
 These modules are re-exported from ``template_code_project`` for
-backwards compatibility; import them from the package root.
+the supported public API; import them from the package root.
 """
 
 from .dashboard import (
@@ -13,11 +13,6 @@ from .dashboard import (
     REP_DIR,
     REPO_ROOT,
     WEB_DIR,
-    _build_dashboard,
-    _compute_payload,
-    _load_yaml_defaults,
-    _to_dashboard_invariant,
-    _to_diagonal_A,
     build_dashboard_html,
     cli_main,
     parse_dashboard_args,
@@ -42,11 +37,6 @@ __all__ = [
     "REP_DIR",
     "REPO_ROOT",
     "WEB_DIR",
-    "_build_dashboard",
-    "_compute_payload",
-    "_load_yaml_defaults",
-    "_to_dashboard_invariant",
-    "_to_diagonal_A",
     "build_dashboard",
     "build_dashboard_html",
     "cli_main",

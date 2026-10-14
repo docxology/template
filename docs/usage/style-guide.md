@@ -353,6 +353,6 @@ syntax is the one form that renders correctly in PDF, HTML, and EPUB alike
 - **[Manuscript Style Reference](../rules/manuscript_style.md)** — Exhaustive formatting rules (1000+ lines)
 - **[Markdown Template Guide](markdown-template-guide.md)** — Cross-referencing system and build process
 - **[Figures and Analysis Guide](../guides/figures-and-analysis.md)** — Creating figure scripts with the thin orchestrator pattern
-- **[Image Management](image-management.md)** — Programmatic `ImageManager` and `FigureManager` APIs
+- **[Image Management](image-management.md)** — Figure metadata, generated-file registries, and Pandoc image authoring
 - **[Visualization Guide](visualization-guide.md)** — `VisualizationEngine` for publication-quality figures
 - **[Manuscript Numbering](manuscript-numbering-system.md)** — Section numbering conventions (01-09, S01-S0N, 98-99)

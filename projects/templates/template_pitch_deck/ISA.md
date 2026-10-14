@@ -58,7 +58,7 @@ Ship `projects/templates/template_pitch_deck/` as a fully registered public exem
 ### Group A — Infrastructure rendering primitives (new, thin, reusable)
 
 - [x] ISC-1: `Slide` dataclass (title, bullets, notes, kind — plus stat/quote/source fields added mid-session) — `infrastructure/rendering/slide_deck.py:107-133`.
-- [x] ISC-2: `DeckContent` dataclass (title, subtitle, slides, metadata; `.sections` alias) — `slide_deck.py:136-149`.
+- [x] ISC-2: `DeckContent` dataclass (title, subtitle, slides, metadata); `slides` owns the ordered collection in `infrastructure/rendering/slide_deck.py`.
 - [x] ISC-3: `SlideBudget` enum (SHORT=10, MEDIUM=25, LONG=48 — bumped from 22/45 mid-session, see Decisions) — `slide_deck.py:152-161`.
 - [x] ISC-4: `filter_deck_for_budget` purity — `tests/infra_tests/rendering/test_slide_deck.py::test_filter_deck_for_budget_is_idempotent_and_pure` PASSED.
 - [x] ISC-5: `render_pdf` via ReportLab — real render confirmed, `output/pdf/*.pdf` 59-84KB on disk, `pdfinfo` confirms 720x405pt 16:9 pages (Forge-verified).
@@ -190,6 +190,10 @@ Ship `projects/templates/template_pitch_deck/` as a fully registered public exem
 | determinism-pass | two-run diff + figure/seed checks | ISC-62..65 | pipeline-wiring | no |
 
 ## Decisions
+
+- 2026-10-14: Supersede ISC-2's duplicate collection accessor. All authored
+  consumers use `slides`; remove the unused `sections` alias and its exclusive
+  parity test. Keep actual PDF/PPTX page-count, layout and rendering controls.
 
 - 2026-07-08T21:38 — Chose ReportLab (not LaTeX/pandoc) for the PDF path, mirroring `template_newspaper`'s precedent for layout-heavy non-manuscript output — slide decks need free-form box/rule layout, not academic section flow. Confirmed by cross-referencing root `CLAUDE.md`'s description of `template_newspaper` as a "ReportLab broadsheet."
 - 2026-07-08T21:38 — Chose `python-pptx` as an opt-in dependency group rather than a hard dependency, matching the existing `discopy`/`steganography` opt-in pattern in root `pyproject.toml`, to avoid inflating `uv sync` for users who don't touch this template.

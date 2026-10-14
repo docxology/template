@@ -21,7 +21,7 @@ import networkx as nx
 import template_literature_meta_analysis.knowledge_graph.schema as _schema
 from template_literature_meta_analysis.knowledge_graph.nanopublication import Assertion
 from template_literature_meta_analysis.knowledge_graph.schema import (
-    AIF_NAMESPACE,
+    ONTOLOGY_NAMESPACE,
     ASSERTION_TYPES,
     SUBFIELD_URIS,
 )
@@ -48,7 +48,7 @@ def _paper_uri(paper_id: str) -> str:
         Full URI string.
     """
     safe_id = paper_id.replace(":", "_").replace("/", "_")
-    return f"{AIF_NAMESPACE}paper/{safe_id}"
+    return f"{ONTOLOGY_NAMESPACE}paper/{safe_id}"
 
 
 def _assertion_uri(assertion_id: str) -> str:
@@ -61,7 +61,7 @@ def _assertion_uri(assertion_id: str) -> str:
         Full URI string.
     """
     safe_id = assertion_id.replace(":", "_").replace("/", "_")
-    return f"{AIF_NAMESPACE}assertion/{safe_id}"
+    return f"{ONTOLOGY_NAMESPACE}assertion/{safe_id}"
 
 
 class KnowledgeGraph:
@@ -88,7 +88,7 @@ class KnowledgeGraph:
 
         if self._use_rdflib:
             self._rdf_graph: RDFGraph = rdflib.Graph()
-            self._aif = Namespace(AIF_NAMESPACE)
+            self._aif = Namespace(ONTOLOGY_NAMESPACE)
             self._rdf_graph.bind("aif", self._aif)
         else:
             self._nx_graph: nx.DiGraph = nx.DiGraph()
@@ -112,8 +112,8 @@ class KnowledgeGraph:
 
         if self._use_rdflib:
             subj = URIRef(_paper_uri(pid))
-            self._rdf_graph.add((subj, URIRef(f"{AIF_NAMESPACE}type"), URIRef(f"{AIF_NAMESPACE}Paper")))
-            self._rdf_graph.add((subj, URIRef(f"{AIF_NAMESPACE}title"), Literal(paper.title)))
+            self._rdf_graph.add((subj, URIRef(f"{ONTOLOGY_NAMESPACE}type"), URIRef(f"{ONTOLOGY_NAMESPACE}Paper")))
+            self._rdf_graph.add((subj, URIRef(f"{ONTOLOGY_NAMESPACE}title"), Literal(paper.title)))
         else:
             self._nx_graph.add_node(_paper_uri(pid), node_type="Paper", title=paper.title, paper_id=pid)
 
@@ -155,11 +155,11 @@ class KnowledgeGraph:
             self._rdf_graph.add(
                 (
                     URIRef(a_uri),
-                    URIRef(f"{AIF_NAMESPACE}type"),
-                    URIRef(f"{AIF_NAMESPACE}Assertion"),
+                    URIRef(f"{ONTOLOGY_NAMESPACE}type"),
+                    URIRef(f"{ONTOLOGY_NAMESPACE}Assertion"),
                 )
             )
-            self._rdf_graph.add((URIRef(a_uri), URIRef(f"{AIF_NAMESPACE}claim"), Literal(assertion.claim)))
+            self._rdf_graph.add((URIRef(a_uri), URIRef(f"{ONTOLOGY_NAMESPACE}claim"), Literal(assertion.claim)))
             if rel_pred and h_uri:
                 self._rdf_graph.add((URIRef(a_uri), URIRef(rel_pred), URIRef(h_uri)))
         else:
@@ -203,7 +203,7 @@ class KnowledgeGraph:
         """
         p_uri = _paper_uri(paper_id)
         belongs_pred = ASSERTION_TYPES["belongsTo"]
-        sf_uri = SUBFIELD_URIS.get(subfield, f"{AIF_NAMESPACE}subfield/{subfield}")
+        sf_uri = SUBFIELD_URIS.get(subfield, f"{ONTOLOGY_NAMESPACE}subfield/{subfield}")
 
         if self._use_rdflib:
             self._rdf_graph.add((URIRef(p_uri), URIRef(belongs_pred), URIRef(sf_uri)))

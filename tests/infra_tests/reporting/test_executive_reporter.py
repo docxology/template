@@ -1,4 +1,4 @@
-"""Tests for executive reporter module.
+"""Tests for the executive reporting implementations.
 
 Tests comprehensive metrics collection across projects and executive summary generation.
 """
@@ -7,7 +7,7 @@ import json
 
 import pytest
 
-from infrastructure.reporting.executive_reporter import (
+from infrastructure.reporting._executive_models import (
     CodebaseMetrics,
     ExecutiveSummary,
     ManuscriptMetrics,
@@ -15,17 +15,21 @@ from infrastructure.reporting.executive_reporter import (
     PipelineMetrics,
     ProjectMetrics,
     TestMetrics as MetricsModel,
+)
+from infrastructure.reporting._executive_collectors import (
     collect_codebase_metrics,
     collect_manuscript_metrics,
     collect_output_metrics,
     collect_pipeline_metrics,
     collect_project_metrics,
     collect_test_metrics,
+)
+from infrastructure.reporting._executive_analysis import (
     generate_aggregate_metrics,
     generate_comparative_tables,
-    generate_recommendations,
-    save_executive_summary,
 )
+from infrastructure.reporting._executive_health import generate_recommendations
+from infrastructure.reporting._executive_renderers import save_executive_summary
 
 
 @pytest.fixture

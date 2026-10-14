@@ -1,31 +1,66 @@
 # Image Management Guide
 
-## Overview
+## Manuscript figures
 
-This guide covers the current manuscript image contract and the legacy image
-insertion utilities.
+Generate scientific figures from tested project code and save the files under
+that project's `output/figures/`. Declare each figure's `fig:` label, filename,
+visible caption, generating function, and concise alt text in a project-owned
+specification. Publish the registry from the files emitted by the same run.
 
-## Current manuscript workflow
-
-Generate every scientific figure from tested project code, save it under the
-project's `output/figures/`, and publish a deterministic
-`figure_registry.json`. Each registry record binds a `fig:` label, filename,
-visible caption, generating function, and `metadata.alt_text` to the produced
-file. The registry writer fails closed when a declared file is missing.
-
-In manuscript source, use:
+Manuscript source uses Pandoc image syntax and bracket-cite cross-references:
 
 ```markdown
-![Visible caption whose changing statistics are injected from analysis output.](../output/figures/convergence.png){#fig:convergence width=80%}
+![Objective value by optimization iteration.](../output/figures/convergence.png){#fig:convergence width=80% fig-alt="Line plot of objective value against iteration."}
 
 [@fig:convergence] summarizes the analysis.
 ```
 
-The caption remains visible content. Concise alt text describes the image for
-nonvisual use; it is not a duplicate caption, and a complex figure also needs a
-nearby prose or appendix description. See
-[Manuscript Semantics](../guides/manuscript-semantics.md) and the
+The visible caption and alt text serve different reading needs. Inject changing
+statistics from analysis output into the caption or nearby prose. A complex
+figure also needs a nearby prose or appendix description of its relationships.
+See [Manuscript Semantics](../guides/manuscript-semantics.md) and the
 [Visualization Guide](visualization-guide.md).
+
+## Generated figure registries
+
+The supported APIs live in `infrastructure.documentation`:
+
+| API | Purpose |
+| --- | --- |
+| `build_generated_figure_registry(specs, generated_paths, schema_version=...)` | Validate declared specifications and the files produced by the current run. |
+| `write_generated_figure_registry(registry_path, specs, generated_paths, schema_version=...)` | Validate and atomically persist registry JSON. |
+| `publish_generated_figures(output_dir, specs, generated_paths, schema_version=...)` | Validate the source set, mirror its files, and write the registry. |
+
+Specifications provide `label`, `filename`, `caption`, and `generated_by`;
+`alt_text` is recorded under `metadata.alt_text` when provided. Duplicate labels
+or filenames, missing files, empty captions, and empty generator names fail
+before a registry is published. Keep every manuscript label aligned with its
+project-owned specification. The [Visualization Guide](visualization-guide.md)
+contains a complete plotting and registry example.
+
+## Figure metadata
+
+`FigureManager` records metadata for interactive or project-owned registration:
+
+```python
+from infrastructure.documentation import FigureManager
+
+manager = FigureManager("output/figures/figure_metadata.json")
+manager.register_figure(
+    filename="convergence.png",
+    caption="Objective value by optimization iteration.",
+    label="fig:convergence",
+    generated_by="project.analysis:generate_convergence",
+)
+record = manager.get_figure("fig:convergence")
+records = manager.get_all_figures()
+figure_list = manager.generate_figure_list()
+```
+
+The manager retains metadata and registry identifiers. The generated-registry
+APIs above validate the actual files for pipeline publication. Figure labels
+and manuscript references are authored in Pandoc form; pandoc-crossref assigns
+presentation numbers during rendering.
 
 ### Title-page covers
 
@@ -47,155 +82,26 @@ fails before replacing an existing PDF when the selected configured cover has
 no valid alt string. Tagged metadata is only one PDF/UA prerequisite; inspect
 the complete structure tree and reading order before release.
 
-## Legacy utilities
+## Validation and troubleshooting
 
-`ImageManager`/`FigureManager`/`MarkdownIntegration` (below) generate
-raw LaTeX (`\ref{}`, `\begin{figure}`) and are not wired into the default
-render pipeline, which uses Pandoc image syntax (`![caption](path){#fig:name}`)
-and bracket-cite cross-references (`[@fig:name]`) exclusively — see
-[Manuscript Semantics](../guides/manuscript-semantics.md). Write manuscript
-figures and references by hand in the Pandoc form; treat this module as a
-legacy utility, not the manuscript-authoring convention.
+Run manuscript preflight from the repository root:
 
-## Image Manager
-
-The `ImageManager` class handles automatic insertion of figures into markdown files:
-
-```python
-from infrastructure.documentation import ImageManager, FigureManager
-
-figure_manager = FigureManager()
-image_manager = ImageManager(figure_manager)
+```bash
+uv run python -m infrastructure.validation.cli prerender projects/templates/template_code_project/manuscript --repo-root .
 ```
 
-### Inserting Figures
+If a figure is missing, check that analysis produced the declared file and that
+its filename matches the specification. Fix the source or generation step, then
+regenerate the registry. A `??` cross-reference calls for checking the matching
+`{#fig:label}` identifier and `[@fig:label]` reference.
 
-```python
-markdown_file = Path("manuscript/04_experimental_results.md")
-image_manager.insert_figure(
-    markdown_file,
-    figure_label="fig:convergence",
-    section="Experimental Results",
-    position="after_section"
-)
-```
-
-### Inserting References
-
-```python
-image_manager.insert_reference(
-    markdown_file,
-    figure_label="fig:convergence",
-    text="As shown in"
-)
-```
-
-### Validating Figures
-
-```python
-errors = image_manager.validate_figures(markdown_file)
-for label, error in errors:
-    print(f"{label}: {error}")
-```
-
-## Markdown Integration
-
-The `MarkdownIntegration` class provides high-level integration:
-
-```python
-from infrastructure.documentation import MarkdownIntegration
-
-integration = MarkdownIntegration(manuscript_dir="manuscript")
-```
-
-### Detecting Sections
-
-```python
-sections = integration.detect_sections(markdown_file)
-for section in sections:
-    print(f"{section['name']} (level {section['level']})")
-```
-
-### Inserting Figures in Sections
-
-```python
-integration.insert_figure_in_section(
-    markdown_file,
-    figure_label="fig:convergence",
-    section_name="Results",
-    position="after"
-)
-```
-
-### Validating Manuscript
-
-```python
-validation_results = integration.validate_manuscript()
-for file_path, errors in validation_results.items():
-    print(f"{file_path}: {len(errors)} errors")
-```
-
-### Getting Statistics
-
-```python
-stats = integration.get_figure_statistics()
-print(f"Total figures: {stats['total_figures']}")
-print(f"By section: {stats['figures_by_section']}")
-```
-
-## Legacy workflow
-
-1. **Generate figures** using visualization modules
-2. **Register figures** with `FigureManager`
-3. **Insert figures** into markdown using ImageManager
-4. **Update references** automatically
-5. **Validate** all figures and references
-
-## Best Practices
-
-1. **Register before inserting** - Always register figures first
-2. **Use descriptive labels** - Use meaningful figure labels (e.g., `fig:convergence_curve`, not `fig:plot1`)
-3. **Validate regularly** - Check figures after insertion
-4. **Maintain registry** - Keep figure registry up to date
-5. **Check paths** - Ensure relative paths are correct
-6. **Use consistent naming** - Follow naming conventions: `{section_number}_{figure_name}.png`
-7. **Test in isolation** - Validate figures before building PDF
-
-## Common Issues
-
-### Missing Figures
-
-**Symptom**: `Figure not found: fig:example`
-
-**Solution**:
-```python
-# Verify figure exists
-from pathlib import Path
-figure_path = Path("output/figures/example.png")
-assert figure_path.exists(), f"Figure not found: {figure_path}"
-```
-
-### Broken References
-
-**Symptom**: Reference shows as `??` in PDF
-
-**Solution**:
-```python
-# Validate all references
-errors = image_manager.validate_figures(markdown_file)
-# Fix any errors before building PDF
-```
-
-### Path Issues
-
-**Symptom**: Figures render but wrong location in PDF
-
-**Solution**: Ensure relative paths are correct — manuscript source paths are
-relative to `manuscript/`, so use `../output/figures/` not `output/figures/`
-(see [Manuscript Semantics](../guides/manuscript-semantics.md)).
+Image paths in authored manuscript files are relative to `manuscript/`, such as
+`../output/figures/convergence.png`. Inspect each figure at final render size for
+clipping, labels, fonts, and accessible descriptions.
 
 ## See Also
 
-- [`docs/operational/troubleshooting/common-errors.md`](../operational/troubleshooting/common-errors.md) - General troubleshooting
-- [`docs/guides/figures-and-analysis.md`](../guides/figures-and-analysis.md) - Figure generation guide
-- [`infrastructure/documentation/figure_manager.py`](../../infrastructure/documentation/figure_manager.py) - Figure manager source
+- [General troubleshooting](../operational/troubleshooting/common-errors.md)
+- [Figure generation guide](../guides/figures-and-analysis.md)
+- [Generated registry source](../../infrastructure/documentation/generated_figure_registry.py)
+- [Figure metadata source](../../infrastructure/documentation/figure_manager.py)

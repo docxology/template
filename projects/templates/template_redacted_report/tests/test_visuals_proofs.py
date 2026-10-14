@@ -8,6 +8,9 @@ No mocking frameworks are used.
 
 from __future__ import annotations
 
+from redacted_report import _proof_renderer as proof_renderer
+from redacted_report import kmyth_support
+
 import hashlib
 import json
 import os
@@ -278,7 +281,7 @@ def test_renderer_paginates_on_small_pages_and_skips_unknown_sections(
     segments, decisions = packet
     stressed = [*segments, RedactionSegment("s99", "UNCLASSIFIED", "Unmapped trailing segment.")]
     output_pdf = tmp_path / "stress.pdf"
-    renderer = visuals._ProofPDFRenderer(
+    renderer = proof_renderer._ProofPDFRenderer(
         output_pdf=output_pdf,
         style=normalize_redaction_style("blur"),
         background=normalize_pdf_background("blur"),
@@ -321,7 +324,7 @@ def test_rendered_pdf_text_layer_never_leaks_redacted_source_tokens(
         drawn_by_design |= _selector_tokens(segment.classification)
         drawn_by_design |= _selector_tokens(" ".join(segment.source_controls))
         redacted_tokens |= _selector_tokens(segment.text) - _selector_tokens(public_text)
-    for header, intro in visuals._SECTION_MAP.values():
+    for header, intro in proof_renderer._SECTION_MAP.values():
         drawn_by_design |= _selector_tokens(header) | _selector_tokens(intro)
     for decision in decisions:
         drawn_by_design |= _selector_tokens(decision.reason.replace("_", " "))
@@ -357,7 +360,7 @@ def test_rendered_pdf_text_layer_never_leaks_redacted_source_tokens(
 
 def test_redaction_parts_and_space_preserving_split() -> None:
     decisions = [RedactionDecision("s1", 0, 6, "privacy"), RedactionDecision("s1", 11, 15, "privacy")]
-    parts = visuals._redaction_parts("secret and tail end", decisions)
+    parts = proof_renderer._redaction_parts("secret and tail end", decisions)
 
     assert parts == (
         ("redaction", "secret"),
@@ -365,8 +368,8 @@ def test_redaction_parts_and_space_preserving_split() -> None:
         ("redaction", "tail"),
         ("text", " end"),
     )
-    assert visuals._split_keep_spaces("alpha beta") == ("alpha", " beta")
-    assert visuals._split_keep_spaces(" lead") == (" lead",)
+    assert proof_renderer._split_keep_spaces("alpha beta") == ("alpha", " beta")
+    assert proof_renderer._split_keep_spaces(" lead") == (" lead",)
 
 
 # --- Variant-matrix option branches ---
@@ -664,8 +667,8 @@ def test_kmyth_help_and_seal_probe_succeed_with_real_tool(tmp_path: Path) -> Non
         "    open(argv[argv.index('--output') + 1], 'w').write('sealed')\n",
     )
 
-    assert visuals._kmyth_help_error(tool) == ""
-    assert visuals._kmyth_seal_probe_error(tool, timeout_seconds=10) == ""
+    assert kmyth_support.kmyth_help_error(tool) == ""
+    assert kmyth_support.kmyth_seal_probe_error(tool, timeout_seconds=10) == ""
 
 
 def test_kmyth_helpers_report_failures_oserrors_and_missing_sidecars(tmp_path: Path) -> None:
@@ -675,18 +678,18 @@ def test_kmyth_helpers_report_failures_oserrors_and_missing_sidecars(tmp_path: P
     silent = _write_executable(tmp_path / "kmyth-silent", "pass\n")
     missing = tmp_path / "kmyth-missing"
 
-    assert "tpm unavailable" in visuals._kmyth_help_error(failing)
-    assert "tpm unavailable" in visuals._kmyth_seal_probe_error(failing, timeout_seconds=10)
-    assert "did not write a sidecar" in visuals._kmyth_seal_probe_error(silent, timeout_seconds=10)
-    assert visuals._kmyth_help_error(missing) != ""
-    assert visuals._kmyth_seal_probe_error(missing, timeout_seconds=10) != ""
+    assert "tpm unavailable" in kmyth_support.kmyth_help_error(failing)
+    assert "tpm unavailable" in kmyth_support.kmyth_seal_probe_error(failing, timeout_seconds=10)
+    assert "did not write a sidecar" in kmyth_support.kmyth_seal_probe_error(silent, timeout_seconds=10)
+    assert kmyth_support.kmyth_help_error(missing) != ""
+    assert kmyth_support.kmyth_seal_probe_error(missing, timeout_seconds=10) != ""
 
 
 @pytest.mark.slow
 def test_kmyth_seal_probe_times_out_on_hung_tool(tmp_path: Path) -> None:
     sleeper = _write_executable(tmp_path / "kmyth-sleep", "import time\ntime.sleep(5)\n")
 
-    assert visuals._kmyth_seal_probe_error(sleeper, timeout_seconds=1) != ""
+    assert kmyth_support.kmyth_seal_probe_error(sleeper, timeout_seconds=1) != ""
 
 
 def test_resolve_kmyth_status_reports_unrunnable_and_runnable_tools(
@@ -710,7 +713,7 @@ def test_resolve_kmyth_status_reports_unrunnable_and_runnable_tools(
         def summary(self) -> str:
             return "kmyth tools discovered"
 
-    unrunnable = visuals._resolve_kmyth_status(
+    unrunnable = kmyth_support.resolve_kmyth_status(
         include_kmyth=True,
         binary_dir=tmp_path,
         seal_probe_timeout_seconds=5,
@@ -720,7 +723,7 @@ def test_resolve_kmyth_status_reports_unrunnable_and_runnable_tools(
     assert unrunnable["tools_runnable"] is False
     assert "not runnable" in str(unrunnable["summary"])
 
-    runnable = visuals._resolve_kmyth_status(
+    runnable = kmyth_support.resolve_kmyth_status(
         include_kmyth=True,
         binary_dir=tmp_path,
         seal_probe_timeout_seconds=10,

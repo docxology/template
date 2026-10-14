@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from redacted_report import kmyth_support
+
 import hashlib
 import json
 import re
@@ -209,7 +211,7 @@ def test_kmyth_status_resolution_distinguishes_tool_and_seal_readiness() -> None
         def summary(self) -> str:
             return "test kmyth summary"
 
-    skipped = visuals._resolve_kmyth_status(
+    skipped = kmyth_support.resolve_kmyth_status(
         include_kmyth=False,
         binary_dir=None,
         seal_probe_timeout_seconds=1,
@@ -218,7 +220,7 @@ def test_kmyth_status_resolution_distinguishes_tool_and_seal_readiness() -> None
     assert skipped["summary"] == "Kmyth not requested."
 
     unavailable = AvailabilityProbe(False)
-    missing = visuals._resolve_kmyth_status(
+    missing = kmyth_support.resolve_kmyth_status(
         include_kmyth=True,
         binary_dir="bin",
         seal_probe_timeout_seconds=1,
@@ -228,7 +230,7 @@ def test_kmyth_status_resolution_distinguishes_tool_and_seal_readiness() -> None
     assert missing["tools_runnable"] is False
 
     available = AvailabilityProbe(True)
-    no_tpm = visuals._resolve_kmyth_status(
+    no_tpm = kmyth_support.resolve_kmyth_status(
         include_kmyth=True,
         binary_dir="bin",
         seal_probe_timeout_seconds=1,
@@ -240,7 +242,7 @@ def test_kmyth_status_resolution_distinguishes_tool_and_seal_readiness() -> None
     assert no_tpm["tools_runnable"] is True
     assert "TPM seal probe failed" in str(no_tpm["summary"])
 
-    ready = visuals._resolve_kmyth_status(
+    ready = kmyth_support.resolve_kmyth_status(
         include_kmyth=True,
         binary_dir="bin",
         seal_probe_timeout_seconds=1,
@@ -258,14 +260,14 @@ def test_kmyth_subprocess_helpers_and_sidecar_names() -> None:
             Path(argv[argv.index("--output") + 1]).write_text("sealed", encoding="utf-8")
         return SimpleNamespace(returncode=0, stdout="", stderr="")
 
-    assert visuals._kmyth_help_error(Path("kmyth-seal"), runner=successful_run) == ""
-    assert visuals._kmyth_seal_probe_error(Path("kmyth-seal"), timeout_seconds=1, runner=successful_run) == ""
+    assert kmyth_support.kmyth_help_error(Path("kmyth-seal"), runner=successful_run) == ""
+    assert kmyth_support.kmyth_seal_probe_error(Path("kmyth-seal"), timeout_seconds=1, runner=successful_run) == ""
 
     def failed_run(_argv, **_kwargs):
         return SimpleNamespace(returncode=1, stdout="", stderr="no tpm")
 
-    assert "no tpm" in visuals._kmyth_help_error(Path("kmyth-seal"), runner=failed_run)
-    assert "no tpm" in visuals._kmyth_seal_probe_error(Path("kmyth-seal"), timeout_seconds=1, runner=failed_run)
+    assert "no tpm" in kmyth_support.kmyth_help_error(Path("kmyth-seal"), runner=failed_run)
+    assert "no tpm" in kmyth_support.kmyth_seal_probe_error(Path("kmyth-seal"), timeout_seconds=1, runner=failed_run)
 
     sidecars = visuals._kmyth_sidecars_for(Path("base.pdf"), Path("base_steganography.pdf"))
     assert sidecars["hash_manifest"].name == "base.hashes.json.ski"

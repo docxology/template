@@ -42,9 +42,9 @@ def test_write_belief_trajectory_gif_uses_trace_artifact(tmp_path: Path) -> None
 
 
 def test_simulate_si_graph_world_writes_deterministic_artifacts(project_root: Path) -> None:
-    from simulation.graph_world import write_graph_world_stub
+    from simulation.graph_world import write_graph_world_artifacts
 
-    out = write_graph_world_stub(project_root)
+    out = write_graph_world_artifacts(project_root)["summary"]
     assert out.is_file()
     payload = json.loads(out.read_text(encoding="utf-8"))
     assert payload.get("status") == "ok"

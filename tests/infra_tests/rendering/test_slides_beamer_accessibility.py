@@ -7,10 +7,8 @@ from typing import Any
 import pytest
 
 from infrastructure.core.exceptions import RenderingError
-from infrastructure.rendering._slides_accessibility import (
-    AccessibleSlidePolicy,
-    compose_accessible_pandoc_document,
-)
+from infrastructure.rendering._slides_accessibility_contracts import AccessibleSlidePolicy
+from infrastructure.rendering._slides_accessibility_composition import compose_accessible_pandoc_document
 from infrastructure.rendering._slides_beamer import transform_beamer_latex
 from infrastructure.rendering.config import RenderingConfig
 

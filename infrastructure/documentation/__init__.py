@@ -1,13 +1,12 @@
 """Documentation module - Documentation & figure management tools.
 
-This module contains utilities for managing figures, images, and documentation
-integration in research manuscripts.
+This module provides figure metadata persistence, generated-figure registries,
+and source-derived documentation indexes. Manuscripts use Pandoc image syntax
+and bracket-cite cross-references.
 
 Modules:
-    figure_manager: Automatic figure numbering and cross-referencing
+    figure_manager: Figure metadata registration and persistence
     generated_figure_registry: Fail-closed registries for pipeline-generated figures
-    image_manager: Image file management and insertion
-    markdown_integration: Figure integration into markdown files
     glossary_gen: API documentation generation
 """
 
@@ -20,8 +19,6 @@ from .generated_figure_registry import (
     write_generated_figure_registry,
 )
 from .glossary_gen import ApiEntry, build_api_index, generate_markdown_table
-from .image_manager import ImageManager
-from .markdown_integration import MarkdownIntegration
 
 __all__ = [
     "FigureManager",
@@ -34,6 +31,4 @@ __all__ = [
     "ApiEntry",
     "build_api_index",
     "generate_markdown_table",
-    "ImageManager",
-    "MarkdownIntegration",
 ]

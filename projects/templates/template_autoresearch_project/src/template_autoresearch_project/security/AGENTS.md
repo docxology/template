@@ -8,4 +8,4 @@
 | `artifacts.py` | `write_security_artifacts` orchestration |
 | `__init__.py` | Test-facing re-exports |
 
-Import via `from src.security import …` (no root `security.py` stub).
+Import the declared API from `template_autoresearch_project.security`.

@@ -8,20 +8,22 @@ import matplotlib.pyplot as plt
 from matplotlib.axes import Axes
 from matplotlib.figure import Figure
 
-from infrastructure.reporting._dashboard_charts import (
+from infrastructure.reporting._dashboard_charts_health import (
     draw_coverage_on_axes,
+    draw_test_count_on_axes,
+)
+from infrastructure.reporting._dashboard_charts_outputs import (
     draw_executive_summary_on_axes,
     draw_manuscript_complexity_scatter_on_axes,
     draw_output_distribution_on_axes,
-    draw_pipeline_duration_on_axes,
-    draw_test_count_on_axes,
 )
+from infrastructure.reporting._dashboard_charts_pipeline import draw_pipeline_duration_on_axes
 from infrastructure.reporting._dashboard_constants import COLORS
-from infrastructure.reporting.executive_reporter import (
+from infrastructure.reporting._executive_models import (
     ExecutiveSummary,
     ProjectMetrics,
-    calculate_project_health_score,
 )
+from infrastructure.reporting._executive_health import calculate_project_health_score
 
 PanelBuilder = Callable[[Axes], None]
 

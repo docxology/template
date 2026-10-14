@@ -71,7 +71,7 @@ def observe_manuscript_projection(
     if plan.profile == "accessible":
         import yaml
         from infrastructure.rendering.config import RenderingConfig
-        from infrastructure.rendering._slides_accessibility import compose_accessible_pandoc_document
+        from infrastructure.rendering._slides_accessibility_composition import compose_accessible_pandoc_document
 
         config = RenderingConfig.from_project_config(yaml.safe_load(plan.config[1]), env={})
         composed = compose_accessible_pandoc_document(

@@ -2,7 +2,7 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="utf-8" />
-  <meta name="generator" content="pandoc 3.11" />
+  <meta name="generator" content="pandoc 3.12.1" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
   <title>05_pipeline_internals.md.web</title>
   <style>
@@ -11,7 +11,10 @@
     */
     html {
       color: #1a1a1a;
+      color: light-dark(#1a1a1a, #fdfdfd);
       background-color: #fdfdfd;
+      background-color: light-dark(#fdfdfd, #1a1a1a);
+      color-scheme: light dark;
     }
     body {
       margin: 0 auto;
@@ -36,11 +39,16 @@
     }
     @media print {
       html {
-        background-color: white;
+        color-scheme: light only;
       }
-      body {
+      html, body, pre, code {
         background-color: transparent;
+      }
+      body, a, a:visited, blockquote {
         color: black;
+      }
+      pre, code {
+        padding: 0;
       }
       p, h2, h3 {
         orphans: 3;
@@ -53,11 +61,8 @@
     p {
       margin: 1em 0;
     }
-    a {
-      color: #1a1a1a;
-    }
-    a:visited {
-      color: #1a1a1a;
+    a, a:visited {
+      color: inherit;
     }
     img {
       max-width: 100%;
@@ -86,8 +91,11 @@
     blockquote {
       margin: 1em 0 1em 1.7em;
       padding-left: 1em;
-      border-left: 2px solid #e6e6e6;
+      border-left: 2px solid;
+      border-color: #e6e6e6;
+      border-color: light-dark(#e6e6e6, #4c4c4c);
       color: #606060;
+      color: light-dark(#606060, #b6b6b6);
     }
     code {
       white-space: pre-wrap;
@@ -111,7 +119,7 @@
     }
     hr {
       border: none;
-      border-top: 1px solid #1a1a1a;
+      border-top: 1px solid currentColor;
       height: 1px;
       margin: 1em 0;
     }
@@ -128,11 +136,11 @@
     }
     tbody {
       margin-top: 0.5em;
-      border-top: 1px solid #1a1a1a;
-      border-bottom: 1px solid #1a1a1a;
+      border-top: 1px solid currentColor;
+      border-bottom: 1px solid currentColor;
     }
     th {
-      border-top: 1px solid #1a1a1a;
+      border-top: 1px solid currentColor;
       padding: 0.25em 0.5em 0.25em 0.5em;
     }
     td {
@@ -171,6 +179,71 @@
       margin: 0 0.8em 0.2em -1.6em;
       vertical-align: middle;
     }
+    /* CSS for syntax highlighting */
+    html { -webkit-text-size-adjust: 100%; }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { color: #008000; } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { color: #008000; font-weight: bold; } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
   </style>
 
 <link data-template-favicon rel="icon" href="favicon.ico">
@@ -349,6 +422,9 @@ pre {
 }
 
 pre code {
+  background-color: transparent;
+  padding: 0;
+  border-radius: 0;
   overflow-wrap: inherit;
   white-space: inherit;
   word-break: inherit;
@@ -561,6 +637,7 @@ mjx-container[display="true"] {
 }
 
 </style>
+<script data-template-source-font-loader src="assets/source-web-fonts.js"></script>
 </head>
 <body>
 <a class="skip-link" href="#main-content">Skip to main content</a>
@@ -568,92 +645,94 @@ mjx-container[display="true"] {
 <h1 id="sec:pipeline_internals">Pipeline Internals</h1>
 <p>This section documents the artefacts produced by the prose-review
 run.</p>
-<pre class="mermaid"><code>flowchart TB
-    P[projects/templates/template_prose_project/]
-    P --&gt; M[manuscript/]
-    P --&gt; OUT[output/&lt;br/&gt;tracked public artifacts · regenerable]
-
-    M --&gt; M_CFG[config.yaml&lt;br/&gt;single source of truth]
-    M --&gt; M_PRE[preamble.md&lt;br/&gt;LaTeX preamble]
-    M --&gt; M_SEC[00_abstract → 04_conclusion ·&lt;br/&gt;05_pipeline_internals · 06_reproducibility]
-    M --&gt; M_BIB[references.bib&lt;br/&gt;read-only · validated by pipeline]
-
-    OUT --&gt; O_REP[manuscript_report.json&lt;br/&gt;ManuscriptReport JSON]
-    OUT --&gt; O_CK[checks.json&lt;br/&gt;list of CheckResult]
-    OUT --&gt; O_RR[review_report.md&lt;br/&gt;final markdown report]
-    OUT --&gt; O_DATA[data/manuscript_variables.json]
-    OUT --&gt; O_FIG[figures/&lt;br/&gt;section_word_counts.png ·&lt;br/&gt;readability_metrics.png ·&lt;br/&gt;citation_density.png]
-    OUT --&gt; O_RS[run_summary.json]
-
-    classDef d fill:#0f172a,stroke:#0f172a,color:#fff
-    classDef src fill:#1e3a8a,stroke:#0f172a,color:#fff
-    classDef gen fill:#0f766e,stroke:#0f172a,color:#fff
-    class P,M,OUT d
-    class M_CFG,M_PRE,M_SEC,M_BIB src
-    class O_REP,O_CK,O_RR,O_DATA,O_FIG,O_RS gen</code></pre>
+<div class="sourceCode" id="cb1"><pre
+class="sourceCode mermaid"><code class="sourceCode mermaid"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">flowchart</span> <span class="cn">TB</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>    <span class="dt">P</span>[<span class="vs">projects/templates/template_prose_project/</span>]</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">P</span> <span class="pp">--&gt;</span> <span class="dt">M</span>[<span class="vs">manuscript/</span>]</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">P</span> <span class="pp">--&gt;</span> <span class="dt">OUT</span>[<span class="vs">output/</span><span class="sc">&lt;br/&gt;</span><span class="vs">tracked public artifacts · regenerable</span>]</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    <span class="dt">M</span> <span class="pp">--&gt;</span> <span class="dt">M_CFG</span>[<span class="vs">config.yaml</span><span class="sc">&lt;br/&gt;</span><span class="vs">single source of truth</span>]</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    <span class="dt">M</span> <span class="pp">--&gt;</span> <span class="dt">M_PRE</span>[<span class="vs">preamble.md</span><span class="sc">&lt;br/&gt;</span><span class="vs">LaTeX preamble</span>]</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    <span class="dt">M</span> <span class="pp">--&gt;</span> <span class="dt">M_SEC</span>[<span class="vs">00_abstract → 04_conclusion ·</span><span class="sc">&lt;br/&gt;</span><span class="vs">05_pipeline_internals · 06_reproducibility</span>]</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>    <span class="dt">M</span> <span class="pp">--&gt;</span> <span class="dt">M_BIB</span>[<span class="vs">references.bib</span><span class="sc">&lt;br/&gt;</span><span class="vs">read-only · validated by pipeline</span>]</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>    <span class="dt">OUT</span> <span class="pp">--&gt;</span> <span class="dt">O_REP</span>[<span class="vs">manuscript_report.json</span><span class="sc">&lt;br/&gt;</span><span class="vs">ManuscriptReport JSON</span>]</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>    <span class="dt">OUT</span> <span class="pp">--&gt;</span> <span class="dt">O_CK</span>[<span class="vs">checks.json</span><span class="sc">&lt;br/&gt;</span><span class="vs">list of CheckResult</span>]</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>    <span class="dt">OUT</span> <span class="pp">--&gt;</span> <span class="dt">O_RR</span>[<span class="vs">review_report.md</span><span class="sc">&lt;br/&gt;</span><span class="vs">final markdown report</span>]</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>    <span class="dt">OUT</span> <span class="pp">--&gt;</span> <span class="dt">O_DATA</span>[<span class="vs">data/manuscript_variables.json</span>]</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>    <span class="dt">OUT</span> <span class="pp">--&gt;</span> <span class="dt">O_FIG</span>[<span class="vs">figures/</span><span class="sc">&lt;br/&gt;</span><span class="vs">section_word_counts.png ·</span><span class="sc">&lt;br/&gt;</span><span class="vs">readability_metrics.png ·</span><span class="sc">&lt;br/&gt;</span><span class="vs">citation_density.png</span>]</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>    <span class="dt">OUT</span> <span class="pp">--&gt;</span> <span class="dt">O_RS</span>[<span class="vs">run_summary.json</span>]</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>    <span class="kw">classDef</span> <span class="fu">d</span> <span class="at">fill:</span><span class="im">#0f172a</span>,<span class="at">stroke:</span><span class="im">#0f172a</span>,<span class="at">color:</span><span class="im">#fff</span></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>    <span class="kw">classDef</span> <span class="fu">src</span> <span class="at">fill:</span><span class="im">#1e3a8a</span>,<span class="at">stroke:</span><span class="im">#0f172a</span>,<span class="at">color:</span><span class="im">#fff</span></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>    <span class="kw">classDef</span> <span class="fu">gen</span> <span class="at">fill:</span><span class="im">#0f766e</span>,<span class="at">stroke:</span><span class="im">#0f172a</span>,<span class="at">color:</span><span class="im">#fff</span></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>    <span class="kw">class</span> <span class="dt">P</span>,<span class="dt">M</span>,<span class="dt">OUT</span> <span class="fu">d</span></span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>    <span class="kw">class</span> <span class="dt">M_CFG</span>,<span class="dt">M_PRE</span>,<span class="dt">M_SEC</span>,<span class="dt">M_BIB</span> <span class="fu">src</span></span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>    <span class="kw">class</span> <span class="dt">O_REP</span>,<span class="dt">O_CK</span>,<span class="dt">O_RR</span>,<span class="dt">O_DATA</span>,<span class="dt">O_FIG</span>,<span class="dt">O_RS</span> <span class="fu">gen</span></span></code></pre></div>
 <h2 id="data-structures">Data structures</h2>
-<pre class="mermaid"><code>classDiagram
-    class ManuscriptReport {
-        +list~FileReport~ files
-        +int total_words
-        +int total_sentences
-        +int total_paragraphs
-        +float avg_flesch_reading_ease
-        +float avg_flesch_kincaid_grade
-        +float avg_gunning_fog
-        +list~str~ citation_keys
-    }
-
-    class FileReport {
-        +str name
-        +ProseMetrics metrics
-        +StructureReport structure
-        +QualityReport quality
-    }
-
-    class ProseMetrics {
-        +int word_count
-        +int sentence_count
-        +int paragraph_count
-        +float flesch_reading_ease
-        +float flesch_kincaid_grade
-        +float gunning_fog
-    }
-
-    class StructureReport {
-        +list~Heading~ headings
-        +list~Section~ sections
-        +int max_depth
-        +bool has_h1
-        +bool has_skipped_level
-    }
-
-    class QualityReport {
-        +int passive_count
-        +int hedge_count
-        +int citation_count
-        +int long_sentence_count
-        +float citation_density_per_1000
-    }
-
-    class CheckResult {
-        +str name
-        +bool passed
-        +str message
-    }
-
-    class ProseRunArtifacts {
-        +ManuscriptReport manuscript_report
-        +list~CheckResult~ checks
-        +bool all_passed
-    }
-
-    ManuscriptReport --&gt; &quot;*&quot; FileReport
-    FileReport --&gt; ProseMetrics
-    FileReport --&gt; StructureReport
-    FileReport --&gt; QualityReport
-    ProseRunArtifacts --&gt; ManuscriptReport
-    ProseRunArtifacts --&gt; &quot;*&quot; CheckResult</code></pre>
+<div class="sourceCode" id="cb2"><pre
+class="sourceCode mermaid"><code class="sourceCode mermaid"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">classDiagram</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">class</span><span class="dt"> ManuscriptReport {</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>        <span class="kw">+</span>list<span class="fu">~</span>FileReport<span class="fu">~</span> files</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>        <span class="kw">+</span>int total_words</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>        <span class="kw">+</span>int total_sentences</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>        <span class="kw">+</span>int total_paragraphs</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>        <span class="kw">+</span>float avg_flesch_reading_ease</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>        <span class="kw">+</span>float avg_flesch_kincaid_grade</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>        <span class="kw">+</span>float avg_gunning_fog</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>        <span class="kw">+</span>list<span class="fu">~</span>str<span class="fu">~</span> citation_keys</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>    <span class="dt">}</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>    <span class="kw">class</span><span class="dt"> FileReport {</span></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>        <span class="kw">+</span>str name</span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>        <span class="kw">+</span>ProseMetrics metrics</span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>        <span class="kw">+</span>StructureReport structure</span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>        <span class="kw">+</span>QualityReport quality</span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>    <span class="dt">}</span></span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>    <span class="kw">class</span><span class="dt"> ProseMetrics {</span></span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>        <span class="kw">+</span>int word_count</span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>        <span class="kw">+</span>int sentence_count</span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>        <span class="kw">+</span>int paragraph_count</span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>        <span class="kw">+</span>float flesch_reading_ease</span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>        <span class="kw">+</span>float flesch_kincaid_grade</span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>        <span class="kw">+</span>float gunning_fog</span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a>    <span class="dt">}</span></span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a>    <span class="kw">class</span><span class="dt"> StructureReport {</span></span>
+<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a>        <span class="kw">+</span>list<span class="fu">~</span>Heading<span class="fu">~</span> headings</span>
+<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a>        <span class="kw">+</span>list<span class="fu">~</span>Section<span class="fu">~</span> sections</span>
+<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a>        <span class="kw">+</span>int max_depth</span>
+<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a>        <span class="kw">+</span>bool has_h1</span>
+<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a>        <span class="kw">+</span>bool has_skipped_level</span>
+<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a>    <span class="dt">}</span></span>
+<span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-37"><a href="#cb2-37" aria-hidden="true" tabindex="-1"></a>    <span class="kw">class</span><span class="dt"> QualityReport {</span></span>
+<span id="cb2-38"><a href="#cb2-38" aria-hidden="true" tabindex="-1"></a>        <span class="kw">+</span>int passive_count</span>
+<span id="cb2-39"><a href="#cb2-39" aria-hidden="true" tabindex="-1"></a>        <span class="kw">+</span>int hedge_count</span>
+<span id="cb2-40"><a href="#cb2-40" aria-hidden="true" tabindex="-1"></a>        <span class="kw">+</span>int citation_count</span>
+<span id="cb2-41"><a href="#cb2-41" aria-hidden="true" tabindex="-1"></a>        <span class="kw">+</span>int long_sentence_count</span>
+<span id="cb2-42"><a href="#cb2-42" aria-hidden="true" tabindex="-1"></a>        <span class="kw">+</span>float citation_density_per_1000</span>
+<span id="cb2-43"><a href="#cb2-43" aria-hidden="true" tabindex="-1"></a>    <span class="dt">}</span></span>
+<span id="cb2-44"><a href="#cb2-44" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-45"><a href="#cb2-45" aria-hidden="true" tabindex="-1"></a>    <span class="kw">class</span><span class="dt"> CheckResult {</span></span>
+<span id="cb2-46"><a href="#cb2-46" aria-hidden="true" tabindex="-1"></a>        <span class="kw">+</span>str name</span>
+<span id="cb2-47"><a href="#cb2-47" aria-hidden="true" tabindex="-1"></a>        <span class="kw">+</span>bool passed</span>
+<span id="cb2-48"><a href="#cb2-48" aria-hidden="true" tabindex="-1"></a>        <span class="kw">+</span>str message</span>
+<span id="cb2-49"><a href="#cb2-49" aria-hidden="true" tabindex="-1"></a>    <span class="dt">}</span></span>
+<span id="cb2-50"><a href="#cb2-50" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-51"><a href="#cb2-51" aria-hidden="true" tabindex="-1"></a>    <span class="kw">class</span><span class="dt"> ProseRunArtifacts {</span></span>
+<span id="cb2-52"><a href="#cb2-52" aria-hidden="true" tabindex="-1"></a>        <span class="kw">+</span>ManuscriptReport manuscript_report</span>
+<span id="cb2-53"><a href="#cb2-53" aria-hidden="true" tabindex="-1"></a>        <span class="kw">+</span>list<span class="fu">~</span>CheckResult<span class="fu">~</span> checks</span>
+<span id="cb2-54"><a href="#cb2-54" aria-hidden="true" tabindex="-1"></a>        <span class="kw">+</span>bool all_passed</span>
+<span id="cb2-55"><a href="#cb2-55" aria-hidden="true" tabindex="-1"></a>    <span class="dt">}</span></span>
+<span id="cb2-56"><a href="#cb2-56" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-57"><a href="#cb2-57" aria-hidden="true" tabindex="-1"></a>    <span class="dt">ManuscriptReport</span> <span class="pp">--&gt;</span> <span class="st">&quot;</span><span class="sc">*</span><span class="st">&quot;</span> <span class="dt">FileReport</span></span>
+<span id="cb2-58"><a href="#cb2-58" aria-hidden="true" tabindex="-1"></a>    <span class="dt">FileReport</span> <span class="pp">--&gt;</span> <span class="dt">ProseMetrics</span></span>
+<span id="cb2-59"><a href="#cb2-59" aria-hidden="true" tabindex="-1"></a>    <span class="dt">FileReport</span> <span class="pp">--&gt;</span> <span class="dt">StructureReport</span></span>
+<span id="cb2-60"><a href="#cb2-60" aria-hidden="true" tabindex="-1"></a>    <span class="dt">FileReport</span> <span class="pp">--&gt;</span> <span class="dt">QualityReport</span></span>
+<span id="cb2-61"><a href="#cb2-61" aria-hidden="true" tabindex="-1"></a>    <span class="dt">ProseRunArtifacts</span> <span class="pp">--&gt;</span> <span class="dt">ManuscriptReport</span></span>
+<span id="cb2-62"><a href="#cb2-62" aria-hidden="true" tabindex="-1"></a>    <span class="dt">ProseRunArtifacts</span> <span class="pp">--&gt;</span> <span class="st">&quot;</span><span class="sc">*</span><span class="st">&quot;</span> <span class="dt">CheckResult</span></span></code></pre></div>
 </main>
 </body>
 </html>

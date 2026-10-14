@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="generator" content="pandoc 3.12" />
+  <meta name="generator" content="pandoc 3.12.1" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
   <meta name="author" content="Daniel Ari Friedman" />
   <meta name="description" content="Sheaf-Composed Manuscript with pymdp Sophisticated Inference" />
@@ -508,6 +508,9 @@ pre {
 }
 
 pre code {
+  background-color: transparent;
+  padding: 0;
+  border-radius: 0;
   overflow-wrap: inherit;
   white-space: inherit;
   word-break: inherit;
@@ -720,6 +723,7 @@ mjx-container[display="true"] {
 }
 
 </style>
+<script data-template-source-font-loader src="assets/source-web-fonts.js"></script>
 </head>
 <body>
 <a class="skip-link" href="#main-content">Skip to main content</a>
@@ -917,9 +921,9 @@ class="toc-section-number">16</span> References</a></li>
 </ul>
 </nav>
 <main id="main-content" tabindex="-1">
-<p><strong>State:</strong> published</p>
-<p><strong>Pairing:</strong> complete (DOI, GitHub, SHA-256, Zenodo
-URL)</p>
+<p><strong>State:</strong> unpublished / pending pairing</p>
+<p><strong>Pairing:</strong> pending — unresolved: - ✗ GitHub release
+URL: <code>pending</code> - ✗ PDF SHA-256: <code>pending</code></p>
 <div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable data table"><table data-responsive-table="true">
 <colgroup>
 <col style="width: 50%" />
@@ -945,13 +949,8 @@ URL)</p>
 <td>10.5281/zenodo.20417021</td>
 </tr>
 <tr>
-<td>Version DOI</td>
-<td>10.5281/zenodo.20931870</td>
-</tr>
-<tr>
 <td>GitHub</td>
-<td><a
-href="https://github.com/docxology/template_active_inference/releases/tag/v0.3.2">https://github.com/docxology/template_active_inference/releases/tag/v0.3.2</a></td>
+<td>docxology/template_active_inference</td>
 </tr>
 <tr>
 <td>Zenodo</td>
@@ -960,7 +959,7 @@ href="https://zenodo.org/records/20417021">https://zenodo.org/records/20417021</
 </tr>
 <tr>
 <td>SHA-256</td>
-<td><code>f191b48f94394cab…</code></td>
+<td>pending</td>
 </tr>
 <tr>
 <td>SHA-512</td>
@@ -1204,9 +1203,9 @@ href="#ref-gershman2019fepbrain" role="doc-biblioref">Gershman
 merged invariant report records 12 / 12 passing checks.</p>
 <!-- sheaf-track:formalism -->
 <p>The entangled joint over binary policies satisfies</p>
-<p><span id="eq:entangled_joint"><span class="math display">\[
-q_\lambda(\pi) \propto E(\pi)\,\exp(\lambda J(\pi)),
-\qquad{(1)}\]</span></span></p>
+<p><span id="eq:entangled_joint"><span
+class="math display">\[q_\lambda(\pi) \propto E(\pi)\,\exp(\lambda
+J(\pi)),\qquad{(1)}\]</span></span></p>
 <p>with symmetric Ising coupling <span class="math inline">\(J\)</span>
 and deformation parameter <span class="math inline">\(\lambda\)</span>.
 Let <span
@@ -1218,9 +1217,8 @@ class="math inline">\(H_b(p)=-p\log p-(1-p)\log(1-p)\)</span> in nats,
 the joint entropy is <span class="math inline">\(H(q_\lambda)=\log 2 +
 H_b(\sigma(\lambda))\)</span> while each marginal contributes <span
 class="math inline">\(\log 2\)</span>, so the mutual information is</p>
-<p><span class="math display">\[
-I(\lambda)=\sum_k H(q_k)-H(q_\lambda)=\log 2 - H_b(\sigma(\lambda)),
-\]</span></p>
+<p><span class="math display">\[I(\lambda)=\sum_k
+H(q_k)-H(q_\lambda)=\log 2 - H_b(\sigma(\lambda)),\]</span></p>
 <p>vanishing at <span class="math inline">\(\lambda=0\)</span> (<span
 class="math inline">\(\sigma=\tfrac12\)</span>, independent streams) and
 saturating at <span class="math inline">\(\log 2\)</span> as <span
@@ -1569,10 +1567,10 @@ class="header-section-number">8.4.1</span> Base poset and presheaf</h3>
 poset. Let the <strong>base</strong> <span
 class="math inline">\(P\)</span> be the IMRAD blocks ordered as a
 chain,</p>
-<p><span id="eq:imrad_chain"><span class="math display">\[
-\mathsf{Introduction} \prec \mathsf{Methods} \prec \mathsf{Results}
-\prec \mathsf{Discussion} \prec \mathsf{Appendix},
-\qquad{(2)}\]</span></span></p>
+<p><span id="eq:imrad_chain"><span
+class="math display">\[\mathsf{Introduction} \prec \mathsf{Methods}
+\prec \mathsf{Results} \prec \mathsf{Discussion} \prec
+\mathsf{Appendix},\qquad{(2)}\]</span></span></p>
 <p>with, in each block, a <em>group</em> node above its <em>section</em>
 nodes (written <span class="math inline">\(G \sqsupseteq s\)</span>).
 <span class="math inline">\(P\)</span> is therefore a finite poset
@@ -1600,9 +1598,8 @@ map. Restriction along <span class="math inline">\(G \sqsupseteq
 s\)</span> is projection onto a section’s own bindings; group nodes
 carry the empty assignment and do not compose.</p>
 <p>The coverage cell is</p>
-<p><span id="eq:coverage_cell"><span class="math display">\[
-B(s,t) \in \{\mathrm{P}, \mathrm{—}, \mathrm{M}\}
-\qquad{(3)}\]</span></span></p>
+<p><span id="eq:coverage_cell"><span class="math display">\[B(s,t) \in
+\{\mathrm{P}, \mathrm{—}, \mathrm{M}\}\qquad{(3)}\]</span></span></p>
 <p>derived from <span class="math inline">\(F_s(t)\)</span> and
 filesystem existence at compose time: <strong>P</strong> when a bound
 fragment exists, <strong>—</strong> when the track is unbound for that
@@ -4782,9 +4779,9 @@ Generated renderers such as <code>section_figures</code> and markdown
 renderers pass through the same <code>resolve_track_body()</code>
 dispatch, so the appendix exercises the common compose interface rather
 than a bespoke appendix path.</p>
-<p><span id="eq:appendix_track_count"><span class="math display">\[
-|\mathcal{T}_{\mathrm{Full}}| = 33
-\qquad{(4)}\]</span></span></p>
+<p><span id="eq:appendix_track_count"><span
+class="math display">\[|\mathcal{T}_{\mathrm{Full}}| =
+33\qquad{(4)}\]</span></span></p>
 <p>The fragment registry defines 34 composable track types; optional
 <code>layers</code> is bound on the methods sheaf section only. Optional
 <code>animation</code> is bound in this appendix proof; the
@@ -5212,14 +5209,15 @@ class="header-section-number">16</span> References</h1>
 cited in the composed sections.</p>
 <hr />
 <p><strong>Release:</strong> v0.4.0 · DOI
-<code>10.5281/zenodo.20417021</code> · SHA-256
-<code>f191b48f9439…</code> · pairing complete</p>
+<code>10.5281/zenodo.20417021</code> · SHA-256 <code>pending…</code> ·
+pairing pending</p>
 <figure>
 <a class="figure-full-size-link" href="../figures/transmission_integrity_strip.png" target="_blank" rel="noopener" aria-label="Open full-size figure, Integrity QR strip"><img src="../figures/transmission_integrity_strip.png"
 style="width:88.0%" alt="Integrity QR strip" /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Integrity QR strip</figcaption>
 </figure>
-<p><strong>Prior:</strong> <em>No prior releases.</em></p>
+<p><strong>Prior:</strong> <code>v0.3.2</code> ·
+<code>10.5281/zenodo.20931870</code> · <code>f191b48f…</code></p>
 <!-- END OF TRANSMISSION -->
 <div id="refs" class="references csl-bib-body hanging-indent"
 role="list">

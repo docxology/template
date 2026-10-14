@@ -17,25 +17,15 @@ from typing import TYPE_CHECKING
 from infrastructure.core.exceptions import PDFValidationError
 from infrastructure.core.logging.utils import get_logger
 
-# Re-export all public symbols so existing imports continue to work
 from infrastructure.reporting.page_grid import _save_image_as_pdf, create_page_grid
-from infrastructure.reporting.page_rendering import (
-    _render_pages_simple,
-    _render_pages_with_reportlab,
-    extract_pdf_pages_as_images,
-)
+from infrastructure.reporting.page_rendering import extract_pdf_pages_as_images
 
 if TYPE_CHECKING:
-    from infrastructure.reporting.executive_reporter import ExecutiveSummary
+    from infrastructure.reporting._executive_models import ExecutiveSummary
 
 logger = get_logger(__name__)
 
 __all__ = [
-    "extract_pdf_pages_as_images",
-    "_render_pages_with_reportlab",
-    "_render_pages_simple",
-    "create_page_grid",
-    "_save_image_as_pdf",
     "generate_manuscript_overview",
     "generate_all_manuscript_overviews",
 ]

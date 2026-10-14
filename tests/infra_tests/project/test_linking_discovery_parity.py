@@ -1,7 +1,7 @@
 """Discovery, validation, and import parity through symlinks (formerly part of test_linking.py).
 
 The core promise: linked lifecycle projects are discoverable, validate, and
-import through the symlink; legacy and non-active lifecycles stay compatible.
+import through the symlink; working and archived lifecycles remain explicit.
 """
 
 from __future__ import annotations
@@ -19,7 +19,6 @@ from infrastructure.project.linking import (
     ONGOING_SUBDIR,
     PROTECTED_NAMES,
     WORKING_SUBDIR,
-    sync_active_links,
     sync_private_project_links,
 )
 from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
@@ -92,14 +91,14 @@ def test_protected_names_are_public_exemplars(name: str) -> None:
 
 
 @pytest.mark.slow
-def test_legacy_sync_active_links_wrapper_syncs_all_lifecycles(tmp_path: Path) -> None:
-    """The old public function name remains lifecycle-aware for compatibility."""
+def test_private_sync_creates_all_configured_lifecycle_links(tmp_path: Path) -> None:
+    """One synchronization creates active, working and archived mirrors."""
     repo = _make_repo(tmp_path)
     private = _make_private(tmp_path, active=["alpha"], name="priv")
     _make_project(private / WORKING_SUBDIR / "notes")
     _make_project(private / ARCHIVE_SUBDIR / "old")
 
-    result = sync_active_links(repo, private)
+    result = sync_private_project_links(repo, private)
 
     assert result.created == [
         "projects/active/alpha",

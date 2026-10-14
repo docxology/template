@@ -10,6 +10,7 @@ import importlib
 import importlib.util
 import os
 import sys
+import sysconfig
 from pathlib import Path
 from types import ModuleType
 
@@ -63,9 +64,19 @@ def _verify_cached_namespace(source: Path) -> ModuleType | None:
 
 def bootstrap_project(project: Path) -> ModuleType | None:
     project = project.resolve(strict=True)
+    owner = Path(__file__).resolve(strict=True).parent.parent
+    own_roots = (project, owner)
+    provider_roots = tuple(Path(sysconfig.get_path(kind)).resolve(strict=True) for kind in ("purelib", "platlib"))
+
+    def own_source(path: Path) -> bool:
+        resolved = path.resolve()
+        return any(resolved.is_relative_to(own) for own in own_roots) and not any(
+            resolved.is_relative_to(provider) for provider in provider_roots
+        )
+
     original = sys.path[:]
     try:
-        sys.path[:] = [entry for entry in original if not Path(entry or os.getcwd()).resolve().is_relative_to(project)]
+        sys.path[:] = [entry for entry in original if not own_source(Path(entry or os.getcwd()))]
         try:
             sdk = importlib.import_module("infrastructure")
         except ModuleNotFoundError as error:
@@ -73,7 +84,7 @@ def bootstrap_project(project: Path) -> ModuleType | None:
                 raise
             sdk = None
         if sdk is not None:
-            if not isinstance(sdk.__file__, str) or Path(sdk.__file__).resolve(strict=True).is_relative_to(project):
+            if not isinstance(sdk.__file__, str) or own_source(Path(sdk.__file__).resolve(strict=True)):
                 raise ImportError("own project source cannot provide the declared platform SDK")
     finally:
         sys.path[:] = original

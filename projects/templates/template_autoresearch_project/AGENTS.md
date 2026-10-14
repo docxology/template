@@ -12,8 +12,8 @@ Decision memory and verifier hardening follow [`docs/rules/memory_and_decision_r
 - Business logic: [`src/`](src/) — see [`src/AGENTS.md`](src/template_autoresearch_project/AGENTS.md) for package layout and conventions.
 
 Implementation lives in typed packages under `src/`; each package's `__init__.py`
-is the public facade (import `src.<package>` or a specific submodule). There are no
-root-level `src/*.py` compatibility stubs — the flat→package migration is complete.
+declares its public API (import `template_autoresearch_project.<package>` or a
+specific implementation module).
 
 | Package | Role | Key submodules |
 | --- | --- | --- |
@@ -50,13 +50,13 @@ existing infrastructure modules:
 3. `write_core_loop_artifacts()` — plan JSON, loop markdown, stage matrix CSV, figure
 4. `write_evidence_registry_report()` — first registry snapshot from on-disk artifacts
 5. `run_bounded_ml_task()` + `write_ml_task_artifacts()` — deterministic ML results, candidate ledger, shared diagnostic bundle, selection audit, boundary report, benchmark score, figures, and figure-quality report
-6. `build_claims()` + `finalize_loop_payloads()` — file-backed claims and loop JSON/review payloads
+6. `build_claims()` + `refresh_loop_payloads()` — file-backed claims and loop JSON/review payloads
 7. `write_method_contract_artifacts()` — research program, idea ledger, run ledger, deferred review decisions, benchmark scores
-8. `update_result_payloads()` — provisional refresh (`readiness_valid=False`)
+8. `refresh_loop_payloads()` — provisional refresh (`readiness_valid=False`)
 9. `write_security_artifacts()` + schema/research-object manifests + phase ledger + `write_artifact_manifest()` — local security profile, threat model, inventory, attestation, review, and manifest passes
 10. `validate_autoresearch_plan(..., phase="extrinsic")` — evidence, artifacts, method ledgers, review gates, benchmarks, security artifacts
 11. `write_autoresearch_report()` — combined intrinsic + extrinsic readiness
-12. `build_claims()` + `update_result_payloads()` — final refresh with `readiness_valid`, readiness evidence, and output paths
+12. `build_claims()` + `refresh_loop_payloads()` — final refresh with `readiness_valid`, readiness evidence, and output paths
 13. `write_final_visual_artifacts()` — regenerate captions and figures from the final validated loop state
 14. `write_manuscript_hydration_artifacts()` — write variables, figure-blocks, and token provenance sidecars
 15. `write_evidence_registry_report()` + `write_security_artifacts()` + phase ledger + schema/research-object manifests + `write_artifact_manifest()` — final registry, local security evidence, settlement ledger, and manifests

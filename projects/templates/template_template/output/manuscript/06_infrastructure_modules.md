@@ -1,6 +1,6 @@
 # Infrastructure Module Reference
 
-This section inventories every Layer‑1 subdirectory returned by `31` `discover_infrastructure_modules(repo_root)`. File totals use `1285` Python sources across infra + `12,235` infra tests guarding them. Documentation Duality = paired `README.md` + `AGENTS.md`; optional `SKILL.md` manifests feed `python -m infrastructure.skills`.
+This section inventories every Layer‑1 subdirectory returned by `31` `discover_infrastructure_modules(repo_root)`. File totals use `1279` Python sources across infra + `12,193` infra tests guarding them. Documentation Duality = paired `README.md` + `AGENTS.md`; optional `SKILL.md` manifests feed `python -m infrastructure.skills`.
 
 | Module | Python Files | Has AGENTS.md | Has README.md | Key Exports |
 |--------|:-----------:|:-------------:|:-------------:|-------------|
@@ -10,7 +10,7 @@ This section inventories every Layer‑1 subdirectory returned by `31` `discover
 | `core` | 187 | ✓ | ✓ | `get_logger`, `load_config`, `TemplateError` |
 | `docker` | 0 | ✓ | ✓ | Containerisation scaffolding |
 | `doctor` | 14 | ✓ | ✓ | Checkout diagnose/fix/undo repairs |
-| `documentation` | 25 | ✓ | ✓ | `FigureManager`, `generate_glossary` |
+| `documentation` | 23 | ✓ | ✓ | `FigureManager`, `build_api_index`, `generate_markdown_table` |
 | `fonds` | 6 | ✓ | ✓ | — |
 | `formal_contracts` | 5 | ✓ | ✓ | — |
 | `llm` | 57 | ✓ | ✓ | Ollama helpers, sanitization, review + translation pipelines |
@@ -23,8 +23,8 @@ This section inventories every Layer‑1 subdirectory returned by `31` `discover
 | `provenance` | 9 | ✓ | ✓ | — |
 | `publishing` | 80 | ✓ | ✓ | Zenodo, executable bundle, archival targets |
 | `reference` | 16 | ✓ | ✓ | BibTeX models, parsers, converters |
-| `rendering` | 121 | ✓ | ✓ | PDF/HTML/slide rendering, Pandoc filters |
-| `reporting` | 399 | ✓ | ✓ | Coverage parsers, dashboards, executive artefacts |
+| `rendering` | 120 | ✓ | ✓ | PDF/HTML/slide rendering, Pandoc filters |
+| `reporting` | 396 | ✓ | ✓ | Coverage parsers, dashboards, executive artefacts |
 | `research` | 3 | ✓ | ✓ | — |
 | `rules` | 6 | ✓ | ✓ | — |
 | `scientific` | 4 | ✓ | ✓ | `check_numerical_stability`, `benchmark_function` |
@@ -64,7 +64,7 @@ Checkout diagnose/fix/undo repairs for broken local workspace states.
 
 Pinned images / compose scaffolding for reproducible CI + remote builds.
 
-### `infrastructure.documentation` (25 files)
+### `infrastructure.documentation` (23 files)
 
 Figure registries plus glossary tooling feeding manuscript automation.
 
@@ -116,11 +116,11 @@ Metadata models, APA/BibTeX/MLA formatters, optional Zenodo clients.
 
 Citation/BibTeX parsing + conversion utilities leveraged by manuscripts and retrieval scripts.
 
-### `infrastructure.rendering` (121 files)
+### `infrastructure.rendering` (120 files)
 
 Pandoc shim, Unicode/XeLaTeX postprocessors, combined PDF/HTML/slide exporters.
 
-### `infrastructure.reporting` (399 files)
+### `infrastructure.reporting` (396 files)
 
 Parses pytest + coverage artefacts for dashboards; pairs with Stage 01 summaries and downstream executive exports.
 

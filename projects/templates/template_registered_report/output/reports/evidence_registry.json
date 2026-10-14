@@ -1,15 +1,15 @@
 {
   "claim_boundary": "Compact evidence summary for manuscript validation; full fact dumps are opt-in debug output.",
-  "fact_count": 210,
+  "fact_count": 211,
   "freshness_warnings": [],
   "kind_counts": {
-    "artifact": 33,
+    "artifact": 34,
     "citation": 5,
     "figure": 8,
     "number": 156,
     "section": 8
   },
-  "omitted_fact_count": 10,
+  "omitted_fact_count": 11,
   "sample_facts": [
     {
       "active": true,
@@ -1225,7 +1225,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-08-14T14:20:53Z",
+      "checked_at": "2026-10-14T14:49:00Z",
       "kind": "number",
       "source": "output/reports/manuscript_composition.json:$.combined_size_bytes",
       "source_field": "$.combined_size_bytes",
@@ -1233,11 +1233,11 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "18057"
+      "value": "18385"
     },
     {
       "active": true,
-      "checked_at": "2026-08-14T14:20:53Z",
+      "checked_at": "2026-10-14T14:49:00Z",
       "kind": "number",
       "source": "output/reports/manuscript_composition.json:$.combined_size_bytes (numeric variant)",
       "source_field": "$.combined_size_bytes",
@@ -1245,7 +1245,7 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "180.57"
+      "value": "183.85"
     },
     {
       "active": true,
@@ -1345,7 +1345,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-08-14T14:20:53Z",
+      "checked_at": "2026-10-14T14:49:00Z",
       "kind": "number",
       "source": "output/reports/manuscript_composition.json:$.ordered_inputs[2].size_bytes",
       "source_field": "$.ordered_inputs[2].size_bytes",
@@ -1353,11 +1353,11 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "2074"
+      "value": "2104"
     },
     {
       "active": true,
-      "checked_at": "2026-08-14T14:20:53Z",
+      "checked_at": "2026-10-14T14:49:00Z",
       "kind": "number",
       "source": "output/reports/manuscript_composition.json:$.ordered_inputs[2].size_bytes (numeric variant)",
       "source_field": "$.ordered_inputs[2].size_bytes",
@@ -1365,7 +1365,7 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "20.74"
+      "value": "21.04"
     },
     {
       "active": true,
@@ -1393,7 +1393,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-08-14T14:20:53Z",
+      "checked_at": "2026-10-14T14:49:00Z",
       "kind": "number",
       "source": "output/reports/manuscript_composition.json:$.ordered_inputs[3].size_bytes",
       "source_field": "$.ordered_inputs[3].size_bytes",
@@ -1401,11 +1401,11 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "3006"
+      "value": "3304"
     },
     {
       "active": true,
-      "checked_at": "2026-08-14T14:20:53Z",
+      "checked_at": "2026-10-14T14:49:00Z",
       "kind": "number",
       "source": "output/reports/manuscript_composition.json:$.ordered_inputs[3].size_bytes (numeric variant)",
       "source_field": "$.ordered_inputs[3].size_bytes",
@@ -1413,7 +1413,7 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "30.06"
+      "value": "33.04"
     },
     {
       "active": true,
@@ -2414,7 +2414,7 @@
   ],
   "schema": "template-evidence-registry-report-v1",
   "source_tiers": {
-    "artifact": 49,
+    "artifact": 50,
     "bibliography": 5,
     "configuration": 13,
     "data_source": 12,

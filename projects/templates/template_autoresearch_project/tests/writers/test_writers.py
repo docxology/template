@@ -152,12 +152,9 @@ def test_write_method_contract_artifacts_uses_human_review_state(tmp_path: Path)
     assert payload["decisions"][0]["decision"] == "approved"
 
 
-def test_refresh_loop_payloads_matches_legacy_aliases(tmp_path: Path) -> None:
-    from template_autoresearch_project.writers import (
-        finalize_loop_payloads,
-        refresh_loop_payloads,
-        update_result_payloads,
-    )
+def test_refresh_loop_payloads_updates_current_state(tmp_path: Path) -> None:
+    from dataclasses import replace
+    from template_autoresearch_project.writers import refresh_loop_payloads
 
     config = AutoResearchLoopConfig(
         topic="Demo",
@@ -177,8 +174,18 @@ def test_refresh_loop_payloads_matches_legacy_aliases(tmp_path: Path) -> None:
         output_paths=(),
     )
     refresh_paths = {path.resolve() for path in refresh_loop_payloads(tmp_path, result)}
-    assert refresh_paths == {path.resolve() for path in finalize_loop_payloads(tmp_path, result)}
-    assert refresh_paths == {path.resolve() for path in update_result_payloads(tmp_path, result)}
+    loop_path = tmp_path / "output/data/autoresearch_loop.json"
+    review_path = tmp_path / "output/data/autoresearch_review_packet.json"
+    assert json.loads(loop_path.read_text())["metrics"]["readiness_valid"] is False
+    assert json.loads(review_path.read_text())["human_review"]["ready_for_review"] is False
+    refreshed = replace(result, readiness_valid=True, output_paths=("output/data/evidence.json",))
+    assert refresh_paths == {path.resolve() for path in refresh_loop_payloads(tmp_path, refreshed)}
+    payload = json.loads(loop_path.read_text())
+    assert payload["metrics"]["readiness_valid"] is True
+    assert payload["output_paths"] == ["output/data/evidence.json"]
+    review = json.loads(review_path.read_text())["human_review"]
+    assert review["ready_for_review"] is True
+    assert review["publication_approved"] is False
 
 
 def test_build_figure_render_context_reuses_diagnostics(project_root: Path) -> None:

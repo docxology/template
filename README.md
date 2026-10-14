@@ -301,8 +301,8 @@ autonomous agents.
 **Private lifecycle projects.** In Daniel's working checkout, confidential
 projects live outside this public repo at `$TEMPLATE_PRIVATE_PROJECTS_ROOT`.
 The simplified sidecar uses `working/` and `archive/`; optional `ongoing/`
-(long-lived projects with no publication target) plus legacy
-`active/` folder is still supported when present.
+(long-lived projects with no publication target) and optional
+`active/` hot-seat folders support explicit work and default rendering.
 `run.sh` and `python -m infrastructure.orchestration` auto-sync existing folders
 into matching typed subfolders under `projects/`: `working/*` into
 `projects/working/*`, `ongoing/*` into `projects/ongoing/*`, `archive/*` into

@@ -13,8 +13,8 @@ from typing import Any
 import pytest
 
 from infrastructure.core.exceptions import RenderingError
-from infrastructure.rendering._slides_accessibility import (
-    AccessibleSlidePolicy,
+from infrastructure.rendering._slides_accessibility_contracts import AccessibleSlidePolicy
+from infrastructure.rendering._slides_accessibility_composition import (
     compose_accessible_pandoc_document,
     load_and_compose_pandoc_json,
 )
