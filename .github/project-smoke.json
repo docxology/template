@@ -21,7 +21,9 @@
   ],
   "templates/template_code_project": [
     "tests/core/test_optimizer.py",
-    "tests/core/test_optimizer_gradient_descent.py"
+    "tests/core/test_optimizer_gradient_descent.py",
+    "tests/core/test_manuscript_variables.py",
+    "tests/core/test_native_value_predicate.py"
   ],
   "templates/template_data_descriptor": [
     "tests/test_descriptor.py",
@@ -41,7 +43,9 @@
   ],
   "templates/template_gold_refinement": [
     "tests/test_domain_adapter.py",
-    "tests/test_coercion.py"
+    "tests/test_coercion.py",
+    "tests/test_formalisms.py",
+    "tests/test_manuscript_variables.py"
   ],
   "templates/template_literature_meta_analysis": [
     "tests/test_config_validation.py",

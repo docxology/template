@@ -32,6 +32,7 @@ try:
         formalism_equation_blocks,
         formalism_table_rows,
         formalism_traceability_rows,
+        format_table_code,
     )
     from .integrity import (
         build_evidence_tiers,
@@ -60,6 +61,7 @@ except ImportError:  # pragma: no cover
         formalism_equation_blocks,
         formalism_table_rows,
         formalism_traceability_rows,
+        format_table_code,
     )
     from template_gold_refinement.integrity import (  # type: ignore[no-redef]
         build_evidence_tiers,
@@ -197,7 +199,8 @@ def _add_token_variables(variables: dict[str, str], token_plan: Any) -> None:
     prov_rows = []
     for var_name, prov in sorted(token_plan.provenance.items()):
         prov_rows.append(
-            f"| {var_name} | {prov['category']} | {prov['value']} | {prov['section']} | {prov['source']} |"
+            f"| {format_table_code(var_name)} | {format_table_code(prov['category'])} | {prov['value']} "
+            f"| {format_table_code(prov['section'])} | {format_table_code(prov['source'])} |"
         )
     variables["TOKEN_PROVENANCE_TABLE"] = "\n".join(prov_rows)
 
@@ -281,10 +284,10 @@ def _add_claim_and_evidence_variables(variables: dict[str, str], gr_config: Any,
     for phase in gr_config.pipeline_phases:
         phase_rows.append(
             f"| {phase.get('name', '')} "
-            f"| {phase.get('input_artifact', '')} "
-            f"| {phase.get('transformation', '')} "
-            f"| {phase.get('output_artifact', '')} "
-            f"| {phase.get('guard', '')} |"
+            f"| {format_table_code(phase.get('input_artifact', ''))} "
+            f"| {format_table_code(phase.get('transformation', ''))} "
+            f"| {format_table_code(phase.get('output_artifact', ''))} "
+            f"| {format_table_code(phase.get('guard', ''))} |"
         )
     variables["PIPELINE_PHASES_TABLE"] = "\n".join(phase_rows)
 
@@ -303,8 +306,8 @@ def _add_claim_and_evidence_variables(variables: dict[str, str], gr_config: Any,
         probe_rows.append(
             f"| {probe.get('name', '')} "
             f"| {probe.get('question', '')} "
-            f"| {probe.get('passing_signal', '')} "
-            f"| {probe.get('artifact', '')} |"
+            f"| {format_table_code(probe.get('passing_signal', ''))} "
+            f"| {format_table_code(probe.get('artifact', ''))} |"
         )
     variables["QUALITY_PROBES_TABLE"] = "\n".join(probe_rows)
 

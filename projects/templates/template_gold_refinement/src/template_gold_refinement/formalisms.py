@@ -1,6 +1,54 @@
 from __future__ import annotations
 
 from dataclasses import asdict, dataclass
+import re
+
+_DISPLAY_CODE_TOKEN = re.compile(r"`[^`\n]*`|[A-Za-z_][A-Za-z0-9_./:#*-]*")
+_DISPLAY_CAMELCASE = re.compile(r"[A-Z][a-z]+(?:[A-Z][A-Za-z0-9]+)+")
+_DISPLAY_DOTTED_IDENTIFIER = re.compile(r"[A-Za-z_][A-Za-z0-9_]+\.(?:[A-Za-z_][A-Za-z0-9_]+\.)*[A-Za-z_][A-Za-z0-9_]+")
+
+
+def format_table_code(value: str) -> str:
+    """Mark code identifiers in declared display fields without changing data.
+
+    Existing inline code is retained. Square-bracket indices remain outside
+    the code span so Pandoc emits the anchor prefix as simple breakable texttt.
+    This presentation pass adds only backticks, never rewrites source anchors.
+    """
+    if len(value) > 8192 or "\n" in value or "``" in value or value.count("`") % 2:
+        return value
+    plain = re.sub(r"`[^`\n]*`", "", value)
+    # Refuse authored Markdown syntax rather than rewriting inside its delimiters.
+    # Only a plain numeric provenance suffix is admitted outside existing code.
+    plain = re.sub(r"(?<=[A-Za-z0-9_])\[[0-9]{1,6}\]", "", plain)
+    if any(character in plain for character in r"\{}$<>|[]") or "**" in plain or "://" in plain:
+        return value
+    if re.search(r"(?<!\w)_[^\s]*_(?!\w)|(?:^|\s)[#!]", plain):
+        return value
+    for word in plain.split():
+        if "*" in word and (
+            word.count("*") != 1
+            or "/" not in word
+            or re.fullmatch(r"[A-Za-z0-9_./:#-]+\*[A-Za-z0-9_./:#*-]*", word) is None
+        ):
+            return value
+
+    def replace(match: re.Match[str]) -> str:
+        token = match[0]
+        if token.startswith("`"):
+            return token
+        identifier = token.rstrip(".")
+        if (
+            "/" in identifier
+            or "_" in identifier
+            or ("::" in identifier and not identifier.endswith(":"))
+            or _DISPLAY_DOTTED_IDENTIFIER.fullmatch(identifier)
+            or _DISPLAY_CAMELCASE.fullmatch(identifier)
+        ):
+            return "`" + identifier + "`" + token[len(identifier) :]
+        return token
+
+    return _DISPLAY_CODE_TOKEN.sub(replace, value)
 
 
 @dataclass(frozen=True)
@@ -126,7 +174,8 @@ def formalism_equation_blocks() -> str:
 def formalism_traceability_rows() -> str:
     """Process formalism traceability rows."""
     return "\n".join(
-        f"| {item.formalism_id} | {item.equation_label} | {item.source} | {item.statement} |" for item in FORMALISMS
+        f"| {item.formalism_id} | {item.equation_label} | {format_table_code(item.source)} | {item.statement} |"
+        for item in FORMALISMS
     )
 
 
@@ -144,4 +193,5 @@ __all__ = [
     "formalism_records",
     "formalism_table_rows",
     "formalism_traceability_rows",
+    "format_table_code",
 ]

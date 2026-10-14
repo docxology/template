@@ -73,6 +73,16 @@ def test_entire_actual_scalar_grid_and_variable_mapping(actual_code_bodies) -> N
     assert "CONFIG_STABILITY_CELLS" in checked
     assert "STABILITY_SCORE" not in checked
     assert "GENERATION_TIMESTAMP" not in checked
+    last_display = variables["RESULT_TABLE_ROWS"].splitlines()[-1]
+    assert "-1.8028e+154" in last_display
+    assert "1.6250e+308" in last_display
+    assert len(last_display) < 150
+    with pytest.raises(ValueError, match="RESULT_TABLE_ROWS"):
+        validate_scalar_variables(
+            config,
+            body,
+            {**variables, "RESULT_TABLE_ROWS": variables["RESULT_TABLE_ROWS"].replace("1.6250e+308", "1.6251e+308")},
+        )
 
 
 @pytest.mark.parametrize("field", range(7))

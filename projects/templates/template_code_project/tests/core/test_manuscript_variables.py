@@ -254,6 +254,11 @@ def test_result_derived_values(tmp_path):
 
 def test_vector_solution_rows_are_rendered_without_scalar_coercion(tmp_path):
     """Hydration accepts the semicolon-delimited n-D solution CSV format."""
+    from template_code_project.core.manuscript_variables import _format_solution_vector, _format_table_number
+
+    assert _format_solution_vector([1e6], precision=1) == "1000000.0"
+    assert _format_table_number(999999.0) == "999999.0000"
+    assert _format_table_number(-1e6) == "-1.0000e+06"
     rows = [
         {
             "step_size": "0.1",
@@ -268,6 +273,16 @@ def test_vector_solution_rows_are_rendered_without_scalar_coercion(tmp_path):
     variables = generate_variables(root)
 
     assert "[1.0000, 2.0000]" in variables["RESULT_TABLE_ROWS"]
+
+    rows[0].update(
+        solution="-1.8028e154;2.0", objective_value="1.625e308", converged="False", termination_reason="non_finite"
+    )
+    root = _make_project_with_rows(tmp_path / "divergent", rows)
+    displayed = generate_variables(root)["RESULT_TABLE_ROWS"]
+    assert "[-1.8028e+154, 2.0000]" in displayed
+    assert "1.6250e+308" in displayed
+    assert "non_finite" in displayed
+    assert len(displayed) < 160
 
 
 def test_stability_derived(tmp_path):
