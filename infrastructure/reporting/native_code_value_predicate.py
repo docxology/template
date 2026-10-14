@@ -339,9 +339,12 @@ def _expected_variables(
     for row in rows:
         _clock(deadline)
         alpha = float(row[0])
-        solution = f"{float(row[1]):.4f}"
+        # Independently derive the declared compact display from the signed CSV.
+        solution_value, objective_value = float(row[1]), float(row[2])
+        solution = format(solution_value, ".4e" if abs(solution_value) >= 1e6 else ".4f")
+        objective = format(objective_value, ".4e" if abs(objective_value) >= 1e6 else ".4f")
         table.append(
-            f"| {alpha:.2f}          | {solution:<16} | {float(row[2]):.4f}          "
+            f"| {alpha:.2f}          | {solution:<16} | {objective}          "
             f"| {int(row[3]):<10} | {'Yes' if row[4] == 'True' else 'No':<9} | {row[6]:<16} |"
         )
         rho = abs(1 - alpha * config.coefficient)

@@ -15,6 +15,8 @@ from infrastructure.rendering._html_attributes import (
     remove_unquoted_whitespace_only_lines,
 )
 from infrastructure.rendering._web_io import write_if_changed
+from infrastructure.core.files.secure_write import read_text_confined
+from infrastructure.rendering._shared_web_fonts import shared_web_font_script
 from infrastructure.rendering._web_font_assets import source_web_font_script
 
 # Keep the existing diagnostic namespace for callers and log consumers.
@@ -268,8 +270,16 @@ def embed_css(html_file: Path, css_file: Path) -> None:
             logger.warning("CSS file not found: %s, skipping CSS embedding", css_file)
             return
         css_content = SHARED_DESIGN_TOKENS_CSS + "\n" + css_file.read_text(encoding="utf-8")
-        content = html_file.read_text(encoding="utf-8")
-        style_tag = f"\n<style>\n{css_content}\n</style>\n" + source_web_font_script()
+        content = read_text_confined(html_file.parent, html_file, max_bytes=64 * 1024 * 1024)
+        if "</head>" not in content and "<head>" not in content:
+            logger.warning("Could not find <head> tag in HTML, CSS not embedded")
+            return
+        font_script = shared_web_font_script(html_file.parent)
+        # Migrate only the exact renderer-owned inline cohort. Authored scripts stay.
+        content = content.replace(source_web_font_script(), "")
+        # A repeated CSS projection must not execute the shared font loader twice.
+        content = content.replace(font_script, "")
+        style_tag = f"\n<style>\n{css_content}\n</style>\n" + font_script
         if "</head>" in content:
             updated = content.replace("</head>", style_tag + "</head>", 1)
         elif "<head>" in content:

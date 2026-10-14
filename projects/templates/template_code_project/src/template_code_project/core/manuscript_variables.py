@@ -18,6 +18,7 @@ from __future__ import annotations
 import csv
 import hashlib
 import json
+import math
 import os
 import platform
 import stat
@@ -270,9 +271,17 @@ def _parse_solution_vector(value: str) -> list[float]:
     return solution
 
 
-def _format_solution_vector(solution: list[float], *, precision: int = 4) -> str:
+def _format_table_number(value: float, *, precision: int = 4) -> str:
+    """Keep large finite research values readable without changing their data."""
+    return f"{value:.{precision}e}" if math.isfinite(value) and abs(value) >= 1e6 else f"{value:.{precision}f}"
+
+
+def _format_solution_vector(solution: list[float], *, precision: int = 4, compact_large: bool = False) -> str:
     """Format scalar solutions compactly and vector solutions unambiguously."""
-    formatted = [f"{value:.{precision}f}" for value in solution]
+    formatted = [
+        _format_table_number(value, precision=precision) if compact_large else f"{value:.{precision}f}"
+        for value in solution
+    ]
     return formatted[0] if len(formatted) == 1 else "[" + ", ".join(formatted) + "]"
 
 
@@ -375,7 +384,7 @@ def generate_variables(project_root: Path, *, require_analysis_outputs: bool = F
 
         table_rows = []
         for r in results:
-            sol = _format_solution_vector(_parse_solution_vector(r["solution"]))
+            sol = _format_solution_vector(_parse_solution_vector(r["solution"]), compact_large=True)
             obj = float(r["objective_value"])
             iters = int(r["iterations"])
             conv = "Yes" if r["converged"] == "True" else "No"
@@ -383,7 +392,7 @@ def generate_variables(project_root: Path, *, require_analysis_outputs: bool = F
             table_rows.append(
                 f"| {float(r['step_size']):.2f}          "
                 f"| {sol:<16} "
-                f"| {obj:.4f}          "
+                f"| {_format_table_number(obj)}          "
                 f"| {iters:<10} "
                 f"| {conv:<9} | {termination_reason:<16} |"
             )

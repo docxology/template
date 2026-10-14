@@ -158,14 +158,14 @@ Karat grades map purity fractions to a gold-fineness vocabulary used here as an 
 
 | Phase | Input | Transformation | Output | Guard |
 |-------|-------|----------------|--------|-------|
-| Schema intake | manuscript/config.yaml | Load and validate gold_refinement block | GoldRefinementConfig | config schema tests |
-| Refinery execution | GoldRefinementConfig | Run five refinery stages with monotone purity | RefineryResult | monotone purity test |
-| Token planning | GoldRefinementConfig | Expand slots into deterministic token choices | TokenPlan | seed-stability tests |
-| Figure generation | RefineryResult and TokenPlan | Generate purity progression, karat grading, and token density figures | output/figures/*.png | nonblank figure tests |
-| Integrity risk modeling | audit rules, failure modes, claims, and shared evidence registry | Score integrity dimensions and summarize evidence tiers | integrity tables and risk visualizations | tests/test_integrity.py |
-| Security assay | gold_refinement.security_assay | Map adversarial threats and standards to source-owned evidence and claim boundaries | security assay table and variables | tests/test_security_assay.py |
-| Manuscript hydration | manuscript shells and manuscript_variables.json | Resolve `{{TOKEN}}` placeholders into output/manuscript/ | hydrated Markdown manuscript | unresolved-token scan |
-| Render and validate | output/manuscript | Render PDF, HTML through shared template pipeline | output/pdf and output/web | render command |
+| Schema intake | `manuscript/config.yaml` | Load and validate `gold_refinement` block | `GoldRefinementConfig` | config schema tests |
+| Refinery execution | `GoldRefinementConfig` | Run five refinery stages with monotone purity | `RefineryResult` | monotone purity test |
+| Token planning | `GoldRefinementConfig` | Expand slots into deterministic token choices | `TokenPlan` | seed-stability tests |
+| Figure generation | `RefineryResult` and `TokenPlan` | Generate purity progression, karat grading, and token density figures | `output/figures/*.png` | nonblank figure tests |
+| Integrity risk modeling | audit rules, failure modes, claims, and shared evidence registry | Score integrity dimensions and summarize evidence tiers | integrity tables and risk visualizations | `tests/test_integrity.py` |
+| Security assay | `gold_refinement.security_assay` | Map adversarial threats and standards to source-owned evidence and claim boundaries | security assay table and variables | `tests/test_security_assay.py` |
+| Manuscript hydration | manuscript shells and `manuscript_variables.json` | Resolve `{{TOKEN}}` placeholders into `output/manuscript/` | hydrated Markdown manuscript | unresolved-token scan |
+| Render and validate | `output/manuscript` | Render PDF, HTML through shared template pipeline | `output/pdf` and `output/web` | render command |
 
 For each run, the procedure is:
 

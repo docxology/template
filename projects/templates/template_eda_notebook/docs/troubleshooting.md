@@ -18,7 +18,7 @@ uv run python scripts/pipeline/stage_03_render.py --project templates/template_e
 Or re-run the full pipeline:
 
 ```bash
-uv run python scripts/runner/execute_pipeline.py --project templates/template_eda_notebook --core-only
+uv run python scripts/runner/execute_pipeline.py --project templates/template_eda_notebook --mode core
 ```
 
 ## `FileNotFoundError: dataset CSV not found`

@@ -8,7 +8,7 @@
 
 ---
 
-**Source:** [projects/templates/template_pitch_deck/src/diligence_audit.py](https://github.com/docxology/template/blob/main/projects/templates/template_pitch_deck/src/diligence_audit.py)
+**Source:** [projects/templates/template_pitch_deck/src/template_pitch_deck/diligence_audit.py](https://github.com/docxology/template/blob/main/projects/templates/template_pitch_deck/src/template_pitch_deck/diligence_audit.py)
 
 **Full deck:** [PDF](../../pdf/template_template_pitch_long.pdf) · [PPTX](../../pptx/template_template_pitch_long.pptx)
 **Deck content source:** [manuscript/deck_content_long.yaml](../../../manuscript/deck_content_long.yaml)

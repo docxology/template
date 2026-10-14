@@ -9,6 +9,7 @@ from __future__ import annotations
 import importlib
 import importlib.util
 import os
+import site
 import sys
 from pathlib import Path
 from types import ModuleType
@@ -66,17 +67,19 @@ def bootstrap_project(project: Path) -> ModuleType:
     project = project.resolve(strict=True)
     owner = Path(__file__).resolve(strict=True).parent.parent
     own_roots = (project, owner)
+    site_roots = tuple(Path(path).resolve() for path in site.getsitepackages())
+
+    def own_source(path: Path) -> bool:
+        resolved = path.resolve()
+        return any(resolved.is_relative_to(own) for own in own_roots) and not any(
+            resolved.is_relative_to(library) for library in site_roots
+        )
+
     original = sys.path[:]
     try:
-        sys.path[:] = [
-            entry
-            for entry in original
-            if not any(Path(entry or os.getcwd()).resolve().is_relative_to(own) for own in own_roots)
-        ]
+        sys.path[:] = [entry for entry in original if not own_source(Path(entry or os.getcwd()))]
         sdk = importlib.import_module("infrastructure")
-        if not isinstance(sdk.__file__, str) or any(
-            Path(sdk.__file__).resolve(strict=True).is_relative_to(own) for own in own_roots
-        ):
+        if not isinstance(sdk.__file__, str) or own_source(Path(sdk.__file__)):
             raise ImportError("own project source cannot provide the declared platform SDK")
         if sdk.__version__ != "4.0.1":
             raise ImportError("the own project requires its declared platform 4.0.1 SDK")

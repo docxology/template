@@ -7,6 +7,14 @@ and the required `CI Gate`. `.github/project-smoke.json` names the actual tests;
 the smoke runner refuses missing projects, empty selections and escaping paths.
 These are functional checks, with no full-suite coverage or native acceptance claim.
 
+Manual CI dispatch accepts an optional coverage-project, such as
+templates/template_sia. That adds one own-project release-profile coverage job
+on Linux/Python 3.14, with its locked development environment and declared tools.
+The requested job and the whole workflow must succeed; retrieve
+requested-exemplar-coverage and verify its commit and project input hash before
+refreshing a coverage snapshot. CI Gate requires all five functional jobs and
+the requested coverage result, accepting that leaf's skip only when unrequested.
+
 The lint job resolves its public lint/type scopes once and passes nonempty Bash
 arrays to Ruff and mypy. A failed scope producer stops before either tool runs.
 Infrastructure smoke exercises that failure, corrupt model-cache refusal,

@@ -141,9 +141,12 @@ def _reject_existing_symlink(parent_fd: int, filename: str) -> None:
         raise ValueError(f"refusing to replace directory write target: {filename}")
 
 
-def _create_temporary(parent_fd: int, filename: str) -> tuple[int, str]:
+def _create_temporary(parent_fd: int) -> tuple[int, str]:
     for _ in range(64):
-        temporary = f".{filename}.{secrets.token_hex(12)}.tmp"
+        # A valid destination can already approach the filesystem's component
+        # limit, especially with multibyte names. Keep the sibling temporary
+        # name independent of it while retaining exclusive random allocation.
+        temporary = f".template-write-{secrets.token_hex(12)}.tmp"
         try:
             return os.open(temporary, _FILE_FLAGS, 0o600, dir_fd=parent_fd), temporary
         except FileExistsError:
@@ -233,7 +236,7 @@ def _atomic_write_bytes_confined(
     temporary_name = ""
     try:
         _reject_existing_symlink(parent_fd, filename)
-        temporary_fd, temporary_name = _create_temporary(parent_fd, filename)
+        temporary_fd, temporary_name = _create_temporary(parent_fd)
         _write_all(temporary_fd, content, mode)
         if not _directory_identity_matches(lexical_root, parent_parts, parent_fd, expected_root_identity):
             raise ValueError("write parent changed during confined atomic write")

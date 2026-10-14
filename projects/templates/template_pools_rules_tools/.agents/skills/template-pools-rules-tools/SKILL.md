@@ -39,7 +39,7 @@ uv run python projects/templates/template_pools_rules_tools/scripts/z_generate_m
 
 uv run python scripts/pipeline/stage_02_analysis.py --project templates/template_pools_rules_tools
 uv run python scripts/pipeline/stage_03_render.py --project templates/template_pools_rules_tools
-uv run python scripts/runner/execute_pipeline.py --project templates/template_pools_rules_tools --core-only
+uv run python scripts/runner/execute_pipeline.py --project templates/template_pools_rules_tools --mode core
 ```
 
 ## Pitfalls

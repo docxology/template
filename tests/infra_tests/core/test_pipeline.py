@@ -12,6 +12,10 @@ from infrastructure.core.runtime.checkpoint import CheckpointManager
 from infrastructure.core.pipeline import PipelineConfig, PipelineExecutor, PipelineStageResult
 
 _CANONICAL_PIPELINE_DECLARATION = Path(__file__).resolve().parents[3] / "infrastructure/core/pipeline/pipeline.yaml"
+# Whole-pipeline fixtures run up to eight cold, source-verified children and a
+# separate report worker. Keep their composition bounded without cutting off
+# successful reporting; single-child and first-failure controls retain 60 seconds.
+_PIPELINE_TEST_TIMEOUT_SECONDS = 120
 
 
 class TestPipelineConfig:
@@ -307,7 +311,7 @@ sys.exit(1)
         assert result2.success is False
         assert "bad value" in result2.error_message
 
-    @pytest.mark.timeout(60)
+    @pytest.mark.timeout(_PIPELINE_TEST_TIMEOUT_SECONDS)
     def test_execute_full_pipeline_success(self, tmp_path: Path):
         """Test successful full pipeline execution."""
         repo_root = self._create_fake_repo(tmp_path / "repo", "test", include_llm=True)
@@ -353,7 +357,7 @@ sys.exit(1)
         assert "--infra-scope" in infra_invocations[0]["args"]
         assert "pipeline-smoke" in infra_invocations[0]["args"]
 
-    @pytest.mark.timeout(60)
+    @pytest.mark.timeout(_PIPELINE_TEST_TIMEOUT_SECONDS)
     def test_execute_core_pipeline_success(self, tmp_path: Path):
         """Test successful core pipeline execution."""
         repo_root = self._create_fake_repo(tmp_path / "repo", "test", include_llm=False)
@@ -384,7 +388,7 @@ sys.exit(1)
         assert "LLM Manuscript Review" not in stage_names
         assert "LLM Translations" not in stage_names
 
-    @pytest.mark.timeout(60)
+    @pytest.mark.timeout(_PIPELINE_TEST_TIMEOUT_SECONDS)
     def test_skip_infra_execution(self, tmp_path: Path):
         """Test that infrastructure tests are skipped when configured."""
         repo_root = self._create_fake_repo(tmp_path / "repo", "test", include_llm=False)
@@ -397,7 +401,7 @@ sys.exit(1)
         infra_calls = [i for i in invocations if i["script"] == "stage_01_test.py" and "--infra-only" in i["args"]]
         assert infra_calls == []
 
-    @pytest.mark.timeout(60)
+    @pytest.mark.timeout(_PIPELINE_TEST_TIMEOUT_SECONDS)
     def test_skip_llm_execution(self, tmp_path: Path):
         """Test that LLM stages are skipped when configured."""
         repo_root = self._create_fake_repo(tmp_path / "repo", "test", include_llm=False)
@@ -416,6 +420,7 @@ sys.exit(1)
         llm_calls = [i for i in invocations if i["script"] == "stage_06_llm_review.py"]
         assert llm_calls == []
 
+    @pytest.mark.timeout(_PIPELINE_TEST_TIMEOUT_SECONDS)
     def test_resume_pipeline_missing_checkpoint_runs_fresh(self, tmp_path: Path):
         """If no valid checkpoint exists, resume falls back to a fresh run."""
         repo_root = self._create_fake_repo(tmp_path / "repo", "test", include_llm=False)
@@ -474,7 +479,7 @@ sys.exit(0)
         assert "stage_01_test.py" not in invoked
         assert "stage_02_analysis.py" not in invoked
 
-    @pytest.mark.timeout(60)
+    @pytest.mark.timeout(_PIPELINE_TEST_TIMEOUT_SECONDS)
     def test_llm_stage_exit_code_2_without_receipt_fails(self, tmp_path: Path):
         """An arbitrary child exit 2 cannot authorize a skip."""
         repo_root = self._create_fake_repo(tmp_path / "repo", "test", include_llm=True)
@@ -504,7 +509,7 @@ sys.exit(0)
         assert results[-1].exit_code == 2
         assert executor.run_result(results).exit_code == 1
 
-    @pytest.mark.timeout(60)
+    @pytest.mark.timeout(_PIPELINE_TEST_TIMEOUT_SECONDS)
     def test_resume_pipeline_valid_checkpoint_skips_completed_stages(self, tmp_path: Path):
         """Resume with a valid checkpoint skips completed stages and runs remaining ones."""
         from infrastructure.core.runtime.checkpoint import StageResult

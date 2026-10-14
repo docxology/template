@@ -2,7 +2,7 @@
 
 *Slide 7 of 11 — template_template pitch, short deck — kind: `content`*
 
-- Concept DOI 10.5281/zenodo.20419007, 9 durable publication records already on file: Zenodo, GitHub, PyPI (sandbox), IPFS, Software Heritage, GitHub Pages, Netlify, Hugging Face, OSF.
+- Concept DOI 10.5281/zenodo.20419007. Intended v2.0.0 is unreleased; prior v1.0.9 has 9 historical publication references.
 - Licensed Apache-2.0 — the introspection code, not only the prose, is available for a science-integrity team to audit directly.
 
 ---

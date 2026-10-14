@@ -23,7 +23,7 @@
 | Field | Value |
 | --- | --- |
 | Title | Convergence Analysis of Gradient Descent Optimization |
-| Version | 2.5.2 |
+| Version | 3.0.0 |
 | Concept DOI | 10.5281/zenodo.20417136 |
 | Version DOI | 10.5281/zenodo.20931934 |
 | GitHub | docxology/template_code_project |
@@ -281,7 +281,7 @@ The optimization results for different step sizes are synthesized computationall
 | 0.50          | 1.0000           | -0.5000          | 27         | Yes       | converged        |
 | 1.00          | 1.0000           | -0.5000          | 1          | Yes       | converged        |
 | 1.50          | 1.0000           | -0.5000          | 27         | Yes       | converged        |
-| 2.50          | -18027808360396904929014313133756094602021490593623455934143098782085898358268968910321926429082931340564236187769460640748166785144621899661251320903368704.0000 | 162500937139598269661779749391931612290431672893591152510335296183621559147095059174363943753278426469403184325060604037672721111493697147195103358138591980698705733738747223639633375614563987655337958785982898164996799665358767974385539800466556596391365426397418791309924510722911320257856182821332197572608.0000          | 876        | No        | non_finite       |
+| 2.50          | -1.8028e+154     | 1.6250e+308          | 876        | No        | non_finite       |
 
 : Gradient descent outcomes per configured step size: state at termination, iteration count capped by $N_{\max} = 1000$, the `converged` flag from `gradient_descent()` using $\|\nabla f\| < 10^{-8}$, and its structured termination reason. A `non_finite` row stops before an overflowing update is serialized and retains the last finite iterate. {#tbl:opt_results}
 
@@ -356,7 +356,7 @@ The results show a clear trade-off between step size and convergence speed:
 - Target solution: $x = 1.0$ (relative error $< 10^{-4}$ for converged settings)
 - Target objective: $f(x) = -0.5$ (absolute error $< 10^{-8}$ for converged settings)
 
-Divergent step sizes ($\alpha \geq 2$) confirm the theoretical instability boundary, demonstrating that gradient descent with fixed step size requires $\alpha < 2/\lambda_{\max}$ for convergence on quadratic objectives.
+For a positive-definite quadratic, contraction requires $0 < \alpha < 2/\lambda_{\max}$. At the unit-Hessian boundary $\alpha=2$, the error alternates without contracting; for $\alpha>2$, it grows when the initial point is not already the optimum. The configured divergent runs therefore illustrate the instability region rather than uniform convergence.
 
 ## Algorithm Characteristics
 
@@ -397,7 +397,7 @@ The algorithm demonstrates efficient performance for small-scale optimization pr
 
 [@fig:stability] maps the optimizer's accuracy across a grid of 8 starting points ($x_0 \in [-50, 50]$) and 6 step sizes ($\alpha \in [0.01, 0.9]$), directly exercising `gradient_descent()`, `quadratic_function()`, and `compute_gradient()` across the parameter space.
 
-![Numerical stability heatmap from `generate_stability_visualization()`. Each cell shows $\log_{10}|f(x)-f(x^\ast)|$ at termination for one (starting point $x_0$, step size $\alpha$) combination, evaluated by `gradient_descent()` over the 8-by-6 grid (48 cells). The leftmost column ($\alpha=0.01$, conservative) reaches only $10^{-6}$ to $10^{-9}$ within the iteration cap, while every other column saturates at machine precision ($10^{-16}$) regardless of how far $x_0$ starts from the optimum (range $[-50, 50]$). The right panel summarises this uniformity as the aggregate stability score of 1.00/1.00 returned by `infrastructure.scientific.stability.check_numerical_stability()`, which exercises the same objective with extreme inputs (NaN, $\pm\infty$, $\pm 10^{10}$).](../figures/stability_analysis.png){#fig:stability}
+![Numerical stability heatmap from `generate_stability_visualization()`. Each cell shows $\log_{10}|f(x)-f(x^\ast)|$ at termination for one (starting point $x_0$, step size $\alpha$) combination, evaluated by `gradient_descent()` over the 8-by-6 grid (48 cells). The leftmost column ($\alpha=0.01$, conservative) reaches only $10^{-6}$ to $10^{-9}$ within the iteration cap, while every other column saturates at machine precision ($10^{-16}$) regardless of how far $x_0$ starts from the optimum (range $[-50, 50]$). The right panel reports the separate numerical-stability score of 1.00/1.00 from `infrastructure.scientific.stability.check_numerical_stability()`: it evaluates the scalar quadratic objective at the first four configured starting points and scores finite values for magnitude and near-underflow. This objective-evaluation check is distinct from the heatmap's gradient-descent sweep.](../figures/stability_analysis.png){#fig:stability}
 
 ### Performance Metrics Summary
 
@@ -421,13 +421,13 @@ The implementation was validated through the comprehensive `tests/` suite:
 - **Infrastructure tests** covering all underlying mechanisms across `infrastructure.reporting`, `infrastructure.validation`, and `infrastructure.rendering`.
 - **Numerical accuracy** checks verified systematically using PyTest.
 
-All tests pass with coverage exceeding the 90% threshold, ensuring implementation correctness across core logic, convergence detection, and logging pathways without the use of mocks.
+Passing the declared suite and its 90% coverage floor provides evidence for the tested core logic, convergence detection, and logging pathways. It does not prove correctness for every input or replace scientific validation.
 
 ## Discussion
 
-The experimental results validate the gradient descent implementation and confirm the theoretical convergence predictions from [@sec:methodology]. The monotonic relationship between step size and iteration count ([@tbl:opt_results]) aligns with the convergence factor analysis in [@eq:convergence_factor], while the uniform solution accuracy across all step sizes demonstrates the robustness of the convergence criterion $\|\nabla f(x)\| < \epsilon$. The automated analysis pipeline successfully generated six publication-quality visualizations and structured numerical outputs, validating the template's end-to-end research workflow from algorithmic implementation through automated infrastructure-driven reporting and manuscript integration.
+The configured results distinguish convergence, iteration-cap termination, and non-finite updates. Iteration counts are not monotonic in step size: the unit-Hessian contraction factor $\rho(\alpha)=|1-\alpha|$ decreases toward $\alpha=1$ and increases afterward. Accuracy claims apply to converged rows; capped and unstable runs must retain their termination status. The generated table and figures document this finite sweep, not all possible objectives or parameter choices. The analysis pipeline integrates those results into manuscript outputs through the declared configuration and variable injection.
 
-*As a meta-architectural note: the perfect embedding of these outputs into this document, including all dynamic references (e.g., [@fig:stability]), confirms the absolute reliability of the `infrastructure/rendering/pdf_renderer.py` module handling the Pandoc conversion.*
+Successful generation and reference resolution establish this artifact path for the tested candidate; they do not establish absolute renderer reliability or replace visual inspection of its output.
 
 
 
@@ -531,7 +531,7 @@ All runs start from the initial point $x_0 = 0.0$ and use a convergence toleranc
 
 ## Numerical Stability Grid
 
-To validate robustness, the optimizer is exercised across a grid of 8 starting points and 6 step sizes, producing 48 total evaluations. This comprehensive sweep confirms that convergence is not an artifact of a narrow parameter choice. The stability metric is computed for the `quadratic_function` objective via `infrastructure.scientific.stability.check_numerical_stability()`.
+To validate robustness, the optimizer is exercised across a grid of 8 starting points and 6 step sizes, producing 48 total evaluations. This finite sweep measures sensitivity to the selected initial points and step sizes; it does not establish convergence outside the contractive region or before every iteration cap. The stability metric is computed for the `quadratic_function` objective via `infrastructure.scientific.stability.check_numerical_stability()`.
 
 ## Dimensional Scaling
 
@@ -539,10 +539,10 @@ Performance benchmarking spans problem dimensions $d \in \{1, 2, 5, 10, 20, 50\}
 
 ## Computational Environment
 
-- **Python**: 3.14.6
-- **NumPy**: 2.4.1
+- **Python**: 3.14.4
+- **NumPy**: 2.4.2
 - **Platform**: Darwin arm64
-- **Generated**: 2026-09-28T17:16:20Z
+- **Generated**: 2026-10-14T00:59:41Z
 
 ## Pipeline ordering
 
@@ -582,8 +582,8 @@ This section provides a machine-verifiable reproducibility certificate for the c
 
 | Property                          | Value                 |
 | --------------------------------- | --------------------- |
-| Config hash (SHA-256, truncated)  | `292643985e5af3f2`     |
-| Paper version                     | 2.5.2    |
+| Config hash (SHA-256, truncated)  | `55b948844dfd7b70`     |
+| Paper version                     | 3.0.0    |
 | First author                      | Daniel Ari Friedman |
 | Keywords                          | optimization algorithms, gradient descent, convergence analysis, numerical methods, mathematical programming, reproducible research, infrastructure automation   |
 
@@ -616,7 +616,7 @@ Within the configured grid, **4** of **6** runs satisfied `gradient_descent()` c
 
 Stability score from `infrastructure.scientific.stability`: **1.00** (out of 1.00)
 
-The stability analysis tested 48 parameter combinations (8 starting points $\times$ 6 step sizes), confirming uniform convergence across the entire parameter space.
+The stability analysis tested 48 parameter combinations (8 starting points $\times$ 6 step sizes), recording termination accuracy across this finite gradient-descent grid. This is distinct from the reported stability score, which checks scalar objective evaluations and does not certify convergence of every optimization trajectory.
 
 ### Benchmark Demonstration
 
@@ -704,7 +704,7 @@ uv run python -m infrastructure.reference.citation.cli validate \
 \section*{END OF TRANSMISSION}\label{end-of-transmission}
 ```
 
-**Release:** v2.5.2 · DOI `10.5281/zenodo.20417136` · SHA-256 `pending…` · pairing pending
+**Release:** v3.0.0 · DOI `10.5281/zenodo.20417136` · SHA-256 `pending…` · pairing pending
 
 ![Integrity QR strip](../figures/transmission_integrity_strip.png){width=88%}
 

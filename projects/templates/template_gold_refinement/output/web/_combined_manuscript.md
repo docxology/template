@@ -18,7 +18,7 @@ This paper presents a deterministic, artifact-based methods demonstration that m
 
 The analogy is load-bearing in a restricted, testable sense: each stage has an executable owner, ordered input and output states, generated evidence, and a failure condition. A reverse assay identifies the shortest ordered stage prefix that reaches a requested target, while a multi-objective purity vector keeps stage completion, claim support, token provenance, and figure quality distinct. The mega-madlib engine selects 24 configured terms by a seeded SHA-256 digest, recording each choice with its slot, category, ordinal, section, and source path.
 
-The contribution is also formalized: 7 equation-backed formalisms define purity, monotone refinement, token selection, claim support, gate vectors, and certification. This positions the manuscript as a research-compendium artifact in the lineage of literate programming, dynamic reports, and reproducible computational research [@knuth1984literate; @leisch2002sweave; @peng2011reproducible; @sandve2013ten]. The project-local claim assay reports 9/9 supported contribution claims (100.00%, passing), while the integrity model exposes 9 source-owned risk dimensions and the shared template evidence registry contributes 957 source-tiered facts when the validation gate has run.
+The contribution is also formalized: 7 equation-backed formalisms define purity, monotone refinement, token selection, claim support, gate vectors, and certification. This positions the manuscript as a research-compendium artifact in the lineage of literate programming, dynamic reports, and reproducible computational research [@knuth1984literate; @leisch2002sweave; @peng2011reproducible; @sandve2013ten]. The project-local claim assay reports 9/9 supported contribution claims (100.00%, passing), while the integrity model exposes 9 source-owned risk dimensions and the shared template evidence registry contributes 960 source-tiered facts when the validation gate has run.
 
 **Results:** The canonical run reaches 99.9999999% (nine-nines) (24K (nine-nines certified)), with a designed total gain of 90.00%; local nine-nines predicate: Yes. The project-local claim assay reports 9/9 registered claims supported. These are internal workflow results, not estimates of reader-perceived quality, scientific truth, security compliance, or external validity.
 
@@ -234,14 +234,14 @@ Karat grades map purity fractions to a gold-fineness vocabulary used here as an 
 
 | Phase | Input | Transformation | Output | Guard |
 |-------|-------|----------------|--------|-------|
-| Schema intake | manuscript/config.yaml | Load and validate gold_refinement block | GoldRefinementConfig | config schema tests |
-| Refinery execution | GoldRefinementConfig | Run five refinery stages with monotone purity | RefineryResult | monotone purity test |
-| Token planning | GoldRefinementConfig | Expand slots into deterministic token choices | TokenPlan | seed-stability tests |
-| Figure generation | RefineryResult and TokenPlan | Generate purity progression, karat grading, and token density figures | ../figures/*.png | nonblank figure tests |
-| Integrity risk modeling | audit rules, failure modes, claims, and shared evidence registry | Score integrity dimensions and summarize evidence tiers | integrity tables and risk visualizations | tests/test_integrity.py |
-| Security assay | gold_refinement.security_assay | Map adversarial threats and standards to source-owned evidence and claim boundaries | security assay table and variables | tests/test_security_assay.py |
-| Manuscript hydration | manuscript shells and manuscript_variables.json | Resolve `{{TOKEN}}` placeholders into output/manuscript/ | hydrated Markdown manuscript | unresolved-token scan |
-| Render and validate | output/manuscript | Render PDF, HTML through shared template pipeline | output/pdf and output/web | render command |
+| Schema intake | `manuscript/config.yaml` | Load and validate `gold_refinement` block | `GoldRefinementConfig` | config schema tests |
+| Refinery execution | `GoldRefinementConfig` | Run five refinery stages with monotone purity | `RefineryResult` | monotone purity test |
+| Token planning | `GoldRefinementConfig` | Expand slots into deterministic token choices | `TokenPlan` | seed-stability tests |
+| Figure generation | `RefineryResult` and `TokenPlan` | Generate purity progression, karat grading, and token density figures | `../figures/*.png` | nonblank figure tests |
+| Integrity risk modeling | audit rules, failure modes, claims, and shared evidence registry | Score integrity dimensions and summarize evidence tiers | integrity tables and risk visualizations | `tests/test_integrity.py` |
+| Security assay | `gold_refinement.security_assay` | Map adversarial threats and standards to source-owned evidence and claim boundaries | security assay table and variables | `tests/test_security_assay.py` |
+| Manuscript hydration | manuscript shells and `manuscript_variables.json` | Resolve `{{TOKEN}}` placeholders into `output/manuscript/` | hydrated Markdown manuscript | unresolved-token scan |
+| Render and validate | `output/manuscript` | Render PDF, HTML through shared template pipeline | `output/pdf` and `output/web` | render command |
 
 For each run, the procedure is:
 
@@ -387,30 +387,30 @@ The mega-madlib engine generated 24 tokens from seed 431 across 8 lexicon catego
 
 | Variable | Category | Value | Section | Source |
 |----------|----------|-------|---------|--------|
-| AUTHORING_BOUNDARY_TERM_1 | boundary_terms | analogy boundary | authoring_contract | manuscript/config.yaml#gold_refinement.lexicon.boundary_terms[1] |
-| AUTHORING_BOUNDARY_TERM_2 | boundary_terms | non-claim | authoring_contract | manuscript/config.yaml#gold_refinement.lexicon.boundary_terms[4] |
-| DISCUSSION_BOUNDARY_TERM_1 | boundary_terms | fork obligation | discussion | manuscript/config.yaml#gold_refinement.lexicon.boundary_terms[2] |
-| DISCUSSION_BOUNDARY_TERM_2 | boundary_terms | domain validator | discussion | manuscript/config.yaml#gold_refinement.lexicon.boundary_terms[3] |
-| DISCUSSION_REFINEMENT_VERB | refinement_verbs | smelting | discussion | manuscript/config.yaml#gold_refinement.lexicon.refinement_verbs[3] |
-| EVALUATION_GATE_TERM_1 | gate_terms | prerender | evaluation | manuscript/config.yaml#gold_refinement.lexicon.gate_terms[0] |
-| EVALUATION_GATE_TERM_2 | gate_terms | citation validation | evaluation | manuscript/config.yaml#gold_refinement.lexicon.gate_terms[3] |
-| INTRO_INTEGRITY_TERM_1 | integrity_terms | source tier | introduction | manuscript/config.yaml#gold_refinement.lexicon.integrity_terms[1] |
-| INTRO_INTEGRITY_TERM_2 | integrity_terms | evidence spine | introduction | manuscript/config.yaml#gold_refinement.lexicon.integrity_terms[0] |
-| METHOD_GATE_TERM_1 | gate_terms | evidence validation | methodology | manuscript/config.yaml#gold_refinement.lexicon.gate_terms[1] |
-| METHOD_GATE_TERM_2 | gate_terms | figure registry check | methodology | manuscript/config.yaml#gold_refinement.lexicon.gate_terms[2] |
-| METHOD_GATE_TERM_3 | gate_terms | citation validation | methodology | manuscript/config.yaml#gold_refinement.lexicon.gate_terms[3] |
-| METHOD_MANUSCRIPT_TERM_1 | manuscript_terms | evidence | methodology | manuscript/config.yaml#gold_refinement.lexicon.manuscript_terms[4] |
-| METHOD_MANUSCRIPT_TERM_2 | manuscript_terms | evidence | methodology | manuscript/config.yaml#gold_refinement.lexicon.manuscript_terms[4] |
-| METHOD_METAL_TERM_1 | metallurgical_terms | assaying | methodology | manuscript/config.yaml#gold_refinement.lexicon.metallurgical_terms[1] |
-| METHOD_METAL_TERM_2 | metallurgical_terms | parting | methodology | manuscript/config.yaml#gold_refinement.lexicon.metallurgical_terms[3] |
-| METHOD_METAL_TERM_3 | metallurgical_terms | smelting | methodology | manuscript/config.yaml#gold_refinement.lexicon.metallurgical_terms[2] |
-| REPRO_EVIDENCE_TERM_1 | evidence_terms | fact registry | reproducibility | manuscript/config.yaml#gold_refinement.lexicon.evidence_terms[0] |
-| REPRO_EVIDENCE_TERM_2 | evidence_terms | figure registry | reproducibility | manuscript/config.yaml#gold_refinement.lexicon.evidence_terms[3] |
-| RESULTS_EVIDENCE_TERM_1 | evidence_terms | artifact manifest | results | manuscript/config.yaml#gold_refinement.lexicon.evidence_terms[1] |
-| RESULTS_EVIDENCE_TERM_2 | evidence_terms | figure registry | results | manuscript/config.yaml#gold_refinement.lexicon.evidence_terms[3] |
-| RESULTS_EVIDENCE_TERM_3 | evidence_terms | token provenance | results | manuscript/config.yaml#gold_refinement.lexicon.evidence_terms[4] |
-| RESULTS_PURITY_ADJ_1 | purity_adjectives | unrefined | results | manuscript/config.yaml#gold_refinement.lexicon.purity_adjectives[0] |
-| RESULTS_PURITY_ADJ_2 | purity_adjectives | purified | results | manuscript/config.yaml#gold_refinement.lexicon.purity_adjectives[1] |
+| `AUTHORING_BOUNDARY_TERM_1` | `boundary_terms` | analogy boundary | `authoring_contract` | `manuscript/config.yaml#gold_refinement.lexicon.boundary_terms`[1] |
+| `AUTHORING_BOUNDARY_TERM_2` | `boundary_terms` | non-claim | `authoring_contract` | `manuscript/config.yaml#gold_refinement.lexicon.boundary_terms`[4] |
+| `DISCUSSION_BOUNDARY_TERM_1` | `boundary_terms` | fork obligation | discussion | `manuscript/config.yaml#gold_refinement.lexicon.boundary_terms`[2] |
+| `DISCUSSION_BOUNDARY_TERM_2` | `boundary_terms` | domain validator | discussion | `manuscript/config.yaml#gold_refinement.lexicon.boundary_terms`[3] |
+| `DISCUSSION_REFINEMENT_VERB` | `refinement_verbs` | smelting | discussion | `manuscript/config.yaml#gold_refinement.lexicon.refinement_verbs`[3] |
+| `EVALUATION_GATE_TERM_1` | `gate_terms` | prerender | evaluation | `manuscript/config.yaml#gold_refinement.lexicon.gate_terms`[0] |
+| `EVALUATION_GATE_TERM_2` | `gate_terms` | citation validation | evaluation | `manuscript/config.yaml#gold_refinement.lexicon.gate_terms`[3] |
+| `INTRO_INTEGRITY_TERM_1` | `integrity_terms` | source tier | introduction | `manuscript/config.yaml#gold_refinement.lexicon.integrity_terms`[1] |
+| `INTRO_INTEGRITY_TERM_2` | `integrity_terms` | evidence spine | introduction | `manuscript/config.yaml#gold_refinement.lexicon.integrity_terms`[0] |
+| `METHOD_GATE_TERM_1` | `gate_terms` | evidence validation | methodology | `manuscript/config.yaml#gold_refinement.lexicon.gate_terms`[1] |
+| `METHOD_GATE_TERM_2` | `gate_terms` | figure registry check | methodology | `manuscript/config.yaml#gold_refinement.lexicon.gate_terms`[2] |
+| `METHOD_GATE_TERM_3` | `gate_terms` | citation validation | methodology | `manuscript/config.yaml#gold_refinement.lexicon.gate_terms`[3] |
+| `METHOD_MANUSCRIPT_TERM_1` | `manuscript_terms` | evidence | methodology | `manuscript/config.yaml#gold_refinement.lexicon.manuscript_terms`[4] |
+| `METHOD_MANUSCRIPT_TERM_2` | `manuscript_terms` | evidence | methodology | `manuscript/config.yaml#gold_refinement.lexicon.manuscript_terms`[4] |
+| `METHOD_METAL_TERM_1` | `metallurgical_terms` | assaying | methodology | `manuscript/config.yaml#gold_refinement.lexicon.metallurgical_terms`[1] |
+| `METHOD_METAL_TERM_2` | `metallurgical_terms` | parting | methodology | `manuscript/config.yaml#gold_refinement.lexicon.metallurgical_terms`[3] |
+| `METHOD_METAL_TERM_3` | `metallurgical_terms` | smelting | methodology | `manuscript/config.yaml#gold_refinement.lexicon.metallurgical_terms`[2] |
+| `REPRO_EVIDENCE_TERM_1` | `evidence_terms` | fact registry | reproducibility | `manuscript/config.yaml#gold_refinement.lexicon.evidence_terms`[0] |
+| `REPRO_EVIDENCE_TERM_2` | `evidence_terms` | figure registry | reproducibility | `manuscript/config.yaml#gold_refinement.lexicon.evidence_terms`[3] |
+| `RESULTS_EVIDENCE_TERM_1` | `evidence_terms` | artifact manifest | results | `manuscript/config.yaml#gold_refinement.lexicon.evidence_terms`[1] |
+| `RESULTS_EVIDENCE_TERM_2` | `evidence_terms` | figure registry | results | `manuscript/config.yaml#gold_refinement.lexicon.evidence_terms`[3] |
+| `RESULTS_EVIDENCE_TERM_3` | `evidence_terms` | token provenance | results | `manuscript/config.yaml#gold_refinement.lexicon.evidence_terms`[4] |
+| `RESULTS_PURITY_ADJ_1` | `purity_adjectives` | unrefined | results | `manuscript/config.yaml#gold_refinement.lexicon.purity_adjectives`[0] |
+| `RESULTS_PURITY_ADJ_2` | `purity_adjectives` | purified | results | `manuscript/config.yaml#gold_refinement.lexicon.purity_adjectives`[1] |
 
 Selected purity adjectives for this section: unrefined, purified. Selected evidence terms: artifact manifest, figure registry, token provenance.
 
@@ -586,7 +586,7 @@ The evidence-tier ladder in [@fig:evidence_tier_ladder] summarizes the evidence 
 
 The ladder complements the risk matrix by counting source tiers rather than
 plotting risks. When the shared evidence registry is available, the manuscript
-can report 957 source-tiered facts to the validation
+can report 960 source-tiered facts to the validation
 surface. When that registry is not available, the same figure falls back to the
 integrity model's configured tiers. Either way, the reader sees the evidentiary
 mix instead of receiving an undifferentiated assurance that evidence exists.
@@ -605,8 +605,8 @@ also which source tiers make their claims inspectable.
 
 | Source tier | Count | Role |
 |-------------|-------|------|
-| generated_metric | 722 | Numbers regenerated from project analysis |
-| artifact | 116 | Generated artifacts exposed to readers |
+| generated_metric | 724 | Numbers regenerated from project analysis |
+| artifact | 117 | Generated artifacts exposed to readers |
 | configuration | 55 | Evidence source tier |
 | bibliography | 47 | Reference records and citation metadata |
 | claim_ledger | 17 | Source-owned claim and fact declarations |
@@ -618,8 +618,8 @@ The adversarial assay reports 5 adversarial assay rows, 5 schema-complete, mappi
 
 | ID | Threat | Standard or guidance | Evidence surface | Validator or gate | Claim boundary |
 |----|--------|----------------------|------------------|-------------------|----------------|
-| S1 | implicit trust in generated artifacts | NIST SP 800-207 zero trust | output/reports/evidence_registry.json and src/template_gold_refinement/security_assay.py | infrastructure.validation.cli evidence --fail-on-issues | documents a verification posture, not a deployed zero-trust architecture |
-| S2 | incomplete secure-development evidence | NIST SP 800-218 secure software development framework | tests/, pre-render validation, and claim ledger | project test suite and template validation gates | maps local practices to SSDF concepts without claiming SSDF compliance |
+| S1 | implicit trust in generated artifacts | NIST SP 800-207 zero trust | `output/reports/evidence_registry.json` and `src/template_gold_refinement/security_assay.py` | `infrastructure.validation.cli` evidence --fail-on-issues | documents a verification posture, not a deployed zero-trust architecture |
+| S2 | incomplete secure-development evidence | NIST SP 800-218 secure software development framework | `tests/`, pre-render validation, and claim ledger | project test suite and template validation gates | maps local practices to SSDF concepts without claiming SSDF compliance |
 | S3 | supply-chain or build provenance compromise | SLSA v1.2, Sigstore, SPDX, and CycloneDX | config hash, artifact counts, and publication metadata | pipeline regeneration and artifact registry checks | identifies provenance requirements but does not assert signed SBOM or provenance is present |
 | S4 | unvalidated vulnerability narrative | MITRE ATT&CK and Codex Security scan phases | security assay table and future scan artifacts | Codex Security threat-model, discovery, validation, and attack-path receipts when run | no real scan finding is claimed in this manuscript pass |
 | S5 | secure-by-design overclaim | CISA Secure by Design | authoring contract and scope limitations | human source review plus citation and evidence validation | uses guidance to bound responsibilities, not to certify product security |
@@ -629,29 +629,29 @@ The adversarial assay reports 5 adversarial assay rows, 5 schema-complete, mappi
 
 | Claim | Statement | Evidence | Boundary |
 |-------|-----------|----------|----------|
-| Five-stage refinery | The refinery pipeline has 5 canonical stages from ore to nine-nines. | src/template_gold_refinement/refinery.py::CANONICAL_STAGES | local |
-| Monotone purity | Purity increases strictly across all refinery stages. | src/template_gold_refinement/purity.py::assert_monotone_increase | local |
-| Nine-nines certification | The certification stage achieves 99.9999999% purity. | src/template_gold_refinement/purity.py::NINE_NINES_PURITY | local |
-| Deterministic tokens | Token selection is deterministic via seeded SHA-256 digest. | src/template_gold_refinement/composition.py::_choose_value | local |
-| Formalism registry | The manuscript exposes 7 source-owned formalisms with equation labels. | src/template_gold_refinement/formalisms.py::FORMALISMS | local |
-| Claim-support report separation | The project-local contribution-claim report is written to claim_support_registry.json. | scripts/refinement_analysis.py::CLAIM_SUPPORT_REGISTRY_NAME | local |
-| Implementation-linked visualizations | The manuscript includes generated visualizations that link the refinery analogy to source code, variables, evidence, and validation gates. | src/figures/diagrams.py::generate_implementation_circuit | local |
-| Scientific-integrity risk model | The manuscript includes a source-owned integrity risk model linking failure modes, validators, evidence surfaces, and fork obligations. | src/template_gold_refinement/integrity.py::build_integrity_dimensions | local |
-| Adversarial security assay | The manuscript includes a source-owned security assay mapping adversarial threats and standards to local evidence surfaces, validators, and claim boundaries. | src/template_gold_refinement/security_assay.py::build_security_assay | local |
+| Five-stage refinery | The refinery pipeline has 5 canonical stages from ore to nine-nines. | `src/template_gold_refinement/refinery.py::CANONICAL_STAGES` | local |
+| Monotone purity | Purity increases strictly across all refinery stages. | `src/template_gold_refinement/purity.py::assert_monotone_increase` | local |
+| Nine-nines certification | The certification stage achieves 99.9999999% purity. | `src/template_gold_refinement/purity.py::NINE_NINES_PURITY` | local |
+| Deterministic tokens | Token selection is deterministic via seeded SHA-256 digest. | `src/template_gold_refinement/composition.py::_choose_value` | local |
+| Formalism registry | The manuscript exposes 7 source-owned formalisms with equation labels. | `src/template_gold_refinement/formalisms.py::FORMALISMS` | local |
+| Claim-support report separation | The project-local contribution-claim report is written to claim_support_registry.json. | `scripts/refinement_analysis.py::CLAIM_SUPPORT_REGISTRY_NAME` | local |
+| Implementation-linked visualizations | The manuscript includes generated visualizations that link the refinery analogy to source code, variables, evidence, and validation gates. | `src/figures/diagrams.py::generate_implementation_circuit` | local |
+| Scientific-integrity risk model | The manuscript includes a source-owned integrity risk model linking failure modes, validators, evidence surfaces, and fork obligations. | `src/template_gold_refinement/integrity.py::build_integrity_dimensions` | local |
+| Adversarial security assay | The manuscript includes a source-owned security assay mapping adversarial threats and standards to local evidence surfaces, validators, and claim boundaries. | `src/template_gold_refinement/security_assay.py::build_security_assay` | local |
 
 The project-local claim-support assay reports 9 supported claims out of 9 total claims, for 100.00% support. Unsupported claims: 0. The generated project report path is `output/reports/claim_support_registry.json`; the shared template evidence report remains `output/reports/evidence_registry.json`.
 
 ## Shared evidence registry summary
 
-When the template evidence gate has run, the shared registry supplies source-tiered facts used by the evidence validator. Current fact count available to this variable pass: 957.
+When the template evidence gate has run, the shared registry supplies source-tiered facts used by the evidence validator. Current fact count available to this variable pass: 960.
 
 | Fact kind | Count |
 |-----------|-------|
-| artifact | 72 |
+| artifact | 73 |
 | citation | 47 |
 | equation | 8 |
 | figure | 28 |
-| number | 785 |
+| number | 787 |
 | section | 10 |
 | table | 7 |
 : Shared evidence-registry fact kinds when available. {#tbl:shared_evidence_kinds}
@@ -662,8 +662,8 @@ The visualization registry is paired with `output/reports/figure_quality_report.
 
 | Figure | PNG | SVG | Dimensions | Nonwhite | Variance | Status |
 |--------|-----|-----|------------|----------|----------|--------|
-| claim_evidence_assay | yes | yes | 3947x2038 | 0.218 | 0.06041014 | pass |
-| evidence_tier_ladder | yes | yes | 3419x1447 | 0.114 | 0.04048412 | pass |
+| claim_evidence_assay | yes | yes | 3947x2038 | 0.218 | 0.06067066 | pass |
+| evidence_tier_ladder | yes | yes | 3419x1447 | 0.114 | 0.04050338 | pass |
 | formalism_traceability | yes | yes | 3315x1797 | 0.140 | 0.04409869 | pass |
 | implementation_circuit | yes | yes | 2966x1842 | 0.068 | 0.02214905 | pass |
 | integrity_gate_matrix | yes | yes | 1833x2060 | 0.406 | 0.16147143 | pass |
@@ -708,14 +708,14 @@ The same caution applies to checklist-shaped infrastructure. Reporting guideline
 
 | Mode | Risk | Detection | Mitigation |
 |------|------|-----------|------------|
-| Non-monotone purity | A stage has lower output purity than input. | assert_monotone_increase raises ValueError. | Fix stage purity targets in src/template_gold_refinement/refinery.py. |
-| Empty lexicon category | A required lexicon category is empty or missing. | Config validation raises GoldRefinementConfigError. | Add vocabulary to manuscript/config.yaml. |
-| Unresolved token | A manuscript placeholder has no generated variable. | test_all_manuscript_tokens_are_generated fails. | Add variable in src/template_gold_refinement/manuscript_variables.py. |
+| Non-monotone purity | A stage has lower output purity than input. | `assert_monotone_increase` raises `ValueError`. | Fix stage purity targets in `src/template_gold_refinement/refinery.py`. |
+| Empty lexicon category | A required lexicon category is empty or missing. | Config validation raises `GoldRefinementConfigError`. | Add vocabulary to `manuscript/config.yaml`. |
+| Unresolved token | A manuscript placeholder has no generated variable. | `test_all_manuscript_tokens_are_generated` fails. | Add variable in `src/template_gold_refinement/manuscript_variables.py`. |
 | Rhetorical-only analogy | The analogy is decorative with no operational mapping. | Review that each stage maps to a real infrastructure operation. | Connect stages to template pipeline operations. |
-| Undetected integrity gap | A high-severity failure mode is present but no owner, validator, or generated artifact makes it visible. | build_integrity_dimensions lists severity, detectability, owner, validator, and evidence surface. | Add or revise the source-owned integrity dimension before promoting the manuscript. |
+| Undetected integrity gap | A high-severity failure mode is present but no owner, validator, or generated artifact makes it visible. | `build_integrity_dimensions` lists severity, detectability, owner, validator, and evidence surface. | Add or revise the source-owned integrity dimension before promoting the manuscript. |
 | Citation laundering | A real citation is used to make a stronger claim than the source supports. | Scope and evaluation prose separate analogy support, reproducibility support, and domain-evidence support. | Lower the claim boundary or add a source-owned validator before using certification language. |
 | Checklist theater | A fork treats filled reporting rows or passed template gates as proof of scientific validity. | Methods, scope, discussion, and evaluation prose separate completeness, traceability, and reproducibility from domain truth. | Add the field's reporting guideline, domain validators, and independent evidence before making compliance or validity claims. |
-| Executable-package ambiguity | A fork publishes a rendered manuscript without enough software, metadata, or version identity to rebuild the object. | Reproducibility, scope, evaluation, and authoring-contract prose require source-owned metadata, exact release citation, and regenerated output reports. | Record software/template release identity, preserve source-owned metadata, and rerun the full pipeline before publishing. |
+| Executable-package ambiguity | A fork publishes a rendered manuscript without enough software, metadata, or version identity to rebuild the object. | Reproducibility, scope, evaluation, and authoring-contract prose require source-owned metadata, exact release citation, and regenerated output reports. | Record `software/template` release identity, preserve source-owned metadata, and rerun the full pipeline before publishing. |
 | Security theater | Security language is presented as compliance, secure-by-design proof, or scan evidence without generated artifacts. | Security assay rows require a threat, standard, evidence surface, validator, and claim boundary. | Keep security claims bounded to the configured assay unless validated scan receipts exist. |
 | Scan result laundering | A future scan summary is imported as prose without the artifact, receipt, and validator that produced it. | Authoring-contract and evaluation prose require scan artifacts before real Codex Security or Deep Security Scan findings are claimed. | Integrate only generated scan reports with evidence-registry alignment and explicit claim boundaries. |
 
@@ -764,7 +764,7 @@ The gold-refinery pipeline demonstrates that a metallurgical analogy can be made
 - 5 refinery stages from ore (9K) to certification (nine-nines)
 - Final purity: 99.9999999% (nine-nines) (24K (nine-nines certified))
 - 24 tokens generated deterministically from seed 431
-- Config hash: 1dc0b6fceacf6b95
+- Config hash: b5b9d5392172fbbe
 - 7 source-owned formalisms with equation labels: eq:purity_functional, eq:monotone_refinery, eq:token_digest, eq:claim_support, eq:integrity_vector, eq:certification_predicate, eq:adversarial_assay
 - Claim-support status: 9/9 supported (passing)
 - 9 integrity dimensions with residual-risk scoring and owner/validator links.
@@ -802,9 +802,9 @@ The refinery pipeline is fully deterministic. Given the same `manuscript/config.
 Executable-publication scholarship sharpens that norm. Executable research compendia and executable papers treat an article as a package of narrative, code, data, environment, and rendered outputs rather than as a static document with detachable supplements [@nuest2017erc; @lasser2020executable]. The present exemplar is smaller and more template-specific: it does not provide a universal executable-paper format, but it does make the manuscript variables, figures, reports, and rendered PDF/HTML products rebuildable from source-owned inputs.
 
 - **Seed:** 431
-- **Config hash:** 1dc0b6fceacf6b95
-- **Generation timestamp:** 2026-09-28T17:07:22Z
-- **Python version:** 3.14.6
+- **Config hash:** b5b9d5392172fbbe
+- **Generation timestamp:** 2026-10-14T01:12:21Z
+- **Python version:** 3.14.4
 
 ## Artifact inventory
 
@@ -825,10 +825,10 @@ uv run python projects/templates/template_gold_refinement/scripts/refinement_ana
 uv run python projects/templates/template_gold_refinement/scripts/z_generate_manuscript_variables.py
 
 # Full pipeline (from repo root)
-./run.sh --project templates/template_gold_refinement --pipeline --core-only
+./run.sh --project templates/template_gold_refinement --pipeline --mode core
 ```
 
-A reproduction report should record command exit status, the source revision, `1dc0b6fceacf6b95`, Python 3.14.6, and whether the generated registries pass. Matching prose alone is insufficient if the token plan, claim registry, or figure registry differs. Conversely, timestamp or renderer metadata differences should be interpreted separately from substantive differences in source-owned values.
+A reproduction report should record command exit status, the source revision, `b5b9d5392172fbbe`, Python 3.14.4, and whether the generated registries pass. Matching prose alone is insufficient if the token plan, claim registry, or figure registry differs. Conversely, timestamp or renderer metadata differences should be interpreted separately from substantive differences in source-owned values.
 
 ## Config ownership
 
@@ -836,7 +836,7 @@ All vocabulary, slots, section conditions, steganography toggles, and optional L
 
 `src/template_gold_refinement/pipeline_policy.py` turns those policy blocks into an explicit secure-pipeline hook. That keeps the optional hardening path visible before execution instead of burying it in shell glue or prose.
 
-The reproducibility spine uses fact registry and figure registry as generated artifacts rather than reader trust signals. Variable generation records `1dc0b6fceacf6b95`; analysis writes refinery, token, claim-support, dashboard, and figure artifacts; validation may add the shared evidence registry used by template scientific-integrity checks.
+The reproducibility spine uses fact registry and figure registry as generated artifacts rather than reader trust signals. Variable generation records `b5b9d5392172fbbe`; analysis writes refinery, token, claim-support, dashboard, and figure artifacts; validation may add the shared evidence registry used by template scientific-integrity checks.
 
 The implementation circuit gives a reproducibility checklist for future forks. A reader should be able to start at any rendered figure or claim, follow it to a generated variable or report, follow that artifact to `src/` or `manuscript/config.yaml`, and rerun the same stage command. If that path is broken, the fork has produced a static illustration rather than a reproducible refinement pipeline.
 
@@ -918,14 +918,14 @@ The software improvements in this version do not remove these limitations. Enfor
 
 | Probe | Question | Passing signal | Artifact |
 |-------|----------|---------------|----------|
-| Monotone purity | Does purity increase strictly across all refinery stages? | assert_monotone_increase passes on the purity sequence. | src/template_gold_refinement/refinery.py and output/data/refinery_results.json |
-| Token provenance | Can every selected token be traced to a category, section, value, and config key? | The token plan contains one row for each generated token. | output/reports/token_plan.json |
-| Karat grade correctness | Does each stage map to the correct karat grade? | karat_for_purity returns the expected grade for each stage. | src/template_gold_refinement/purity.py |
-| Integrity risk visibility | Can the manuscript identify high-severity integrity failures and the validator or artifact that detects them? | The integrity risk model emits dimensions, owners, residual risk scores, and evidence-tier rows. | src/template_gold_refinement/integrity.py and ../figures/integrity_risk_matrix.png |
-| Scholarship boundary | Do pre-1800 metallurgy references support the analogy, reproducibility, provenance, and source-domain framing without being used as evidence for universal manuscript-quality claims? | The scope, discussion, and evaluation sections cite historically bounded metallurgy scholarship while keeping certification local to source-owned gates. | manuscript/references.bib and manuscript/07_scope.md |
-| Reporting-guideline completeness | Does the manuscript distinguish checklist-style completeness from methodological validity? | The methods, scope, discussion, and evaluation sections cite reporting-guideline scholarship while explicitly limiting what the local gates prove. | manuscript/02_methodology.md, manuscript/04_discussion.md, manuscript/07_scope.md, and manuscript/08_evaluation.md |
-| Executable-compendium identity | Can a reader identify the executable package, metadata stack, software release, and generated artifacts needed to rebuild the manuscript? | The reproducibility, scope, evaluation, and authoring-contract sections cite executable-publication and software-citation scholarship while keeping preservation and portability claims bounded. | manuscript/06_reproducibility.md, manuscript/07_scope.md, manuscript/08_evaluation.md, manuscript/09_authoring_contract.md, output/reports/evidence_registry.json, and output/reports/output_statistics.json |
-| Adversarial assay boundary | Does security language distinguish declared threat scope from real scan evidence and external compliance? | The security assay emits threats, standards, evidence surfaces, validators, and claim boundaries without claiming Codex Security findings. | src/template_gold_refinement/security_assay.py, manuscript/config.yaml, and manuscript/03_results.md |
+| Monotone purity | Does purity increase strictly across all refinery stages? | `assert_monotone_increase` passes on the purity sequence. | `src/template_gold_refinement/refinery.py` and `output/data/refinery_results.json` |
+| Token provenance | Can every selected token be traced to a category, section, value, and config key? | The token plan contains one row for each generated token. | `output/reports/token_plan.json` |
+| Karat grade correctness | Does each stage map to the correct karat grade? | `karat_for_purity` returns the expected grade for each stage. | `src/template_gold_refinement/purity.py` |
+| Integrity risk visibility | Can the manuscript identify high-severity integrity failures and the validator or artifact that detects them? | The integrity risk model emits dimensions, owners, residual risk scores, and evidence-tier rows. | `src/template_gold_refinement/integrity.py` and `../figures/integrity_risk_matrix.png` |
+| Scholarship boundary | Do pre-1800 metallurgy references support the analogy, reproducibility, provenance, and source-domain framing without being used as evidence for universal manuscript-quality claims? | The scope, discussion, and evaluation sections cite historically bounded metallurgy scholarship while keeping certification local to source-owned gates. | `manuscript/references.bib` and `manuscript/07_scope.md` |
+| Reporting-guideline completeness | Does the manuscript distinguish checklist-style completeness from methodological validity? | The methods, scope, discussion, and evaluation sections cite reporting-guideline scholarship while explicitly limiting what the local gates prove. | `manuscript/02_methodology.md`, `manuscript/04_discussion.md`, `manuscript/07_scope.md`, and `manuscript/08_evaluation.md` |
+| Executable-compendium identity | Can a reader identify the executable package, metadata stack, software release, and generated artifacts needed to rebuild the manuscript? | The reproducibility, scope, evaluation, and authoring-contract sections cite executable-publication and software-citation scholarship while keeping preservation and portability claims bounded. | `manuscript/06_reproducibility.md`, `manuscript/07_scope.md`, `manuscript/08_evaluation.md`, `manuscript/09_authoring_contract.md`, `output/reports/evidence_registry.json`, and `output/reports/output_statistics.json` |
+| Adversarial assay boundary | Does security language distinguish declared threat scope from real scan evidence and external compliance? | The security assay emits threats, standards, evidence surfaces, validators, and claim boundaries without claiming Codex Security findings. | `src/template_gold_refinement/security_assay.py`, `manuscript/config.yaml`, and `manuscript/03_results.md` |
 
 The selected evaluation gate terms are prerender and citation validation. They are intentionally narrower than peer review: they check source ownership, token coverage, figure registration, claim support, and rendering integrity before a human reviewer assesses the substantive analogy.
 

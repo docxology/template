@@ -23,7 +23,7 @@ uv run pytest projects/templates/template_gold_refinement/tests/ -v
 ## Full pipeline (from repo root)
 
 ```bash
-./run.sh --project templates/template_gold_refinement --pipeline --core-only
+./run.sh --project templates/template_gold_refinement --pipeline --mode core
 ```
 
 ## Verify outputs

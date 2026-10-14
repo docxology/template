@@ -6,6 +6,15 @@ Rendering turns manuscript sources and project outputs into publication formats:
 combined PDFs, slides, web HTML, DOCX, and EPUB. It coordinates format-specific
 renderers without owning validation policy or project analysis.
 
+WebRenderer pages share one `assets/source-web-fonts.js` per output directory,
+containing the unchanged twelve Source font bodies and full OFL notice. Copy
+the complete web directory, including assets, for offline/file or HTTP reading;
+an HTML file alone is no longer the complete font-bearing export. The inline
+`source_web_font_script()` API remains available to independent native controls.
+Generic slide typography is unchanged. Shared publication uses confined atomic
+writes and never follows asset symlinks; browser font hashes remain observations,
+not a claim of complete native-format acceptance.
+
 ## Map
 
 | Area | Files | Role |

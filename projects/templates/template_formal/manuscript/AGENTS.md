@@ -80,7 +80,7 @@ uv run python -m infrastructure.validation.cli pdf output/templates/template_for
 ```
 
 Or run stages 2-4 together via the core pipeline:
-`uv run python scripts/runner/execute_pipeline.py --project templates/template_formal --core-only`.
+`uv run python scripts/runner/execute_pipeline.py --project templates/template_formal --mode core`.
 
 ## See also
 

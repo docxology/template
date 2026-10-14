@@ -40,7 +40,7 @@ Supporting assets: `preamble.md`, `config.yaml`, `references.bib`.
 | `${importable_package_count}` | Subdirectories that are importable Python packages (carry `__init__.py`) |
 | `${pipeline_stages_declared}` | YAML stage count, re-derived from the live DAG |
 | `${pipeline_stages_default_full}` | Default full-run stage count after tag filtering |
-| `${pipeline_stages_core_only}` | `--core-only` stage count after tag filtering |
+| `${pipeline_stages_core_only}` | `--mode core` stage count after tag filtering |
 | `${coverage_floor_infrastructure}` | Infrastructure coverage default from `ResolvedTestingConfig` |
 | `${coverage_floor_project}` | This exemplar's declared `pyproject.toml` floor |
 | `${figure_font_floor_pt}` | Shared primary-text constant from `figures/viz_palette.py` |

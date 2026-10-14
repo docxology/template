@@ -12,7 +12,7 @@
 \section*{END OF TRANSMISSION}\label{end-of-transmission}
 ```
 
-**Release:** v1.0.9 · DOI `10.5281/zenodo.20419007` · SHA-256 `535bd80943d0…` · pairing complete
+**Release:** v2.0.0 · DOI `10.5281/zenodo.20419007` · SHA-256 `535bd80943d0…` · pairing complete
 
 ![Integrity QR strip](../figures/transmission_integrity_strip.png){width=88%}
 

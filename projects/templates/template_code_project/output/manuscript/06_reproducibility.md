@@ -6,8 +6,8 @@ This section provides a machine-verifiable reproducibility certificate for the c
 
 | Property                          | Value                 |
 | --------------------------------- | --------------------- |
-| Config hash (SHA-256, truncated)  | `292643985e5af3f2`     |
-| Paper version                     | 2.5.2    |
+| Config hash (SHA-256, truncated)  | `55b948844dfd7b70`     |
+| Paper version                     | 3.0.0    |
 | First author                      | Daniel Ari Friedman |
 | Keywords                          | optimization algorithms, gradient descent, convergence analysis, numerical methods, mathematical programming, reproducible research, infrastructure automation   |
 
@@ -40,7 +40,7 @@ Within the configured grid, **4** of **6** runs satisfied `gradient_descent()` c
 
 Stability score from `infrastructure.scientific.stability`: **1.00** (out of 1.00)
 
-The stability analysis tested 48 parameter combinations (8 starting points $\times$ 6 step sizes), confirming uniform convergence across the entire parameter space.
+The stability analysis tested 48 parameter combinations (8 starting points $\times$ 6 step sizes), recording termination accuracy across this finite gradient-descent grid. This is distinct from the reported stability score, which checks scalar objective evaluations and does not certify convergence of every optimization trajectory.
 
 ### Benchmark Demonstration
 

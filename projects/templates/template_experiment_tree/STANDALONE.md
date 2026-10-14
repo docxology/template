@@ -20,15 +20,21 @@ Additional locations are config-declared publication evidence; the central index
 Living research record with a version-controlled experiment tree with frozen nodes.
 
 ## Clean copy
+
+From the template repository root:
+
 ```bash
 uv run python scripts/audit/copy_exemplar.py \
   --source templates/template_experiment_tree --dest projects/working/my_record --new-name my_research
 ```
 
-## Intentional dependencies (monorepo-only)
-- None: the engine is project-local (`src/template_experiment_tree`) with no
+## Standalone engine and configuration
+
+- The engine is project-local (`src/template_experiment_tree`) with no
   `infrastructure/` imports — the exemplar is standalone by construction.
-- Fork config: copy `manuscript/config.yaml.example` to `config.yaml`.
+- Fork config: copy `manuscript/config.yaml.example` to `manuscript/config.yaml`.
+- Shared manuscript rendering and repository audits require the template monorepo;
+  the project-local engine and its tests run from an exported project.
 
 ## Claim boundaries
 - The exemplar demonstrates the frozen-node discipline; it does not claim
@@ -36,9 +42,19 @@ uv run python scripts/audit/copy_exemplar.py \
 - No network, no LLM calls, no runtime dataset downloads.
 
 ## Validation commands
+
+From the copied or exported project directory:
+
 ```bash
-uv run pytest projects/templates/template_experiment_tree/tests \
-  --cov=projects/templates/template_experiment_tree/src --cov-fail-under=90
+uv sync --locked --extra dev
+uv run --locked pytest tests/ --cov=src --cov-fail-under=90
+```
+
+For repository-wide checks, return to the template repository root:
+
+```bash
 uv run python scripts/audit/check_template_drift.py --strict
 uv run python scripts/gates/public_capabilities.py
 ```
+
+Those audit scripts are monorepo checks and are not included in a standalone copy.

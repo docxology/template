@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="generator" content="pandoc 3.11" />
+  <meta name="generator" content="pandoc 3.12.1" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
   <meta name="author" content="Daniel Ari Friedman" />
   <meta name="description" content="From Ore to Nine-Nines Purity via Mega-Madlib Token Injection" />
@@ -14,7 +14,10 @@ Manuscript Composition</title>
     */
     html {
       color: #1a1a1a;
+      color: light-dark(#1a1a1a, #fdfdfd);
       background-color: #fdfdfd;
+      background-color: light-dark(#fdfdfd, #1a1a1a);
+      color-scheme: light dark;
     }
     body {
       margin: 0 auto;
@@ -39,11 +42,16 @@ Manuscript Composition</title>
     }
     @media print {
       html {
-        background-color: white;
+        color-scheme: light only;
       }
-      body {
+      html, body, pre, code {
         background-color: transparent;
+      }
+      body, a, a:visited, blockquote {
         color: black;
+      }
+      pre, code {
+        padding: 0;
       }
       p, h2, h3 {
         orphans: 3;
@@ -56,11 +64,8 @@ Manuscript Composition</title>
     p {
       margin: 1em 0;
     }
-    a {
-      color: #1a1a1a;
-    }
-    a:visited {
-      color: #1a1a1a;
+    a, a:visited {
+      color: inherit;
     }
     img {
       max-width: 100%;
@@ -89,8 +94,11 @@ Manuscript Composition</title>
     blockquote {
       margin: 1em 0 1em 1.7em;
       padding-left: 1em;
-      border-left: 2px solid #e6e6e6;
+      border-left: 2px solid;
+      border-color: #e6e6e6;
+      border-color: light-dark(#e6e6e6, #4c4c4c);
       color: #606060;
+      color: light-dark(#606060, #b6b6b6);
     }
     code {
       white-space: pre-wrap;
@@ -114,7 +122,7 @@ Manuscript Composition</title>
     }
     hr {
       border: none;
-      border-top: 1px solid #1a1a1a;
+      border-top: 1px solid currentColor;
       height: 1px;
       margin: 1em 0;
     }
@@ -131,11 +139,11 @@ Manuscript Composition</title>
     }
     tbody {
       margin-top: 0.5em;
-      border-top: 1px solid #1a1a1a;
-      border-bottom: 1px solid #1a1a1a;
+      border-top: 1px solid currentColor;
+      border-bottom: 1px solid currentColor;
     }
     th {
-      border-top: 1px solid #1a1a1a;
+      border-top: 1px solid currentColor;
       padding: 0.25em 0.5em 0.25em 0.5em;
     }
     td {
@@ -501,6 +509,9 @@ pre {
 }
 
 pre code {
+  background-color: transparent;
+  padding: 0;
+  border-radius: 0;
   overflow-wrap: inherit;
   white-space: inherit;
   word-break: inherit;
@@ -713,6 +724,7 @@ mjx-container[display="true"] {
 }
 
 </style>
+<script data-template-source-font-loader src="assets/source-web-fonts.js"></script>
 </head>
 <body>
 <a class="skip-link" href="#main-content">Skip to main content</a>
@@ -996,7 +1008,7 @@ href="#ref-sandve2013ten" role="doc-biblioref">Sandve et al.
 2013</a>)</span>. The project-local claim assay reports 9/9 supported
 contribution claims (100.00%, passing), while the integrity model
 exposes 9 source-owned risk dimensions and the shared template evidence
-registry contributes 957 source-tiered facts when the validation gate
+registry contributes 960 source-tiered facts when the validation gate
 has run.</p>
 <p><strong>Results:</strong> The canonical run reaches 99.9999999%
 (nine-nines) (24K (nine-nines certified)), with a designed total gain of
@@ -1338,11 +1350,9 @@ if a state fails to exceed its predecessor; <code>run_refinery()</code>
 also rejects empty pipelines, nonsequential order, and any stage whose
 input differs from the preceding output. For stages <span
 class="math inline">\(s_1, \ldots, s_n\)</span>:</p>
-<p><span class="math display">\[
-p_{\text{out}}^{(i)} &gt; p_{\text{in}}^{(i)} \quad \text{and} \quad
-p_{\text{in}}^{(i+1)} = p_{\text{out}}^{(i)} \quad \forall i \in \{1,
-\ldots, n-1\}
-\]</span></p>
+<p><span class="math display">\[p_{\text{out}}^{(i)} &gt;
+p_{\text{in}}^{(i)} \quad \text{and} \quad p_{\text{in}}^{(i+1)} =
+p_{\text{out}}^{(i)} \quad \forall i \in \{1, \ldots, n-1\}\]</span></p>
 <p>The reverse-assay function <code>stages_to_target()</code> returns
 the shortest ordered prefix whose terminal output reaches a requested
 purity. Prefix restriction is essential: later stages depend on earlier
@@ -1421,64 +1431,61 @@ auto-numbered by the renderer.</p>
 </table></div>
 <p><strong>F1: Purity functional.</strong> Manuscript purity is treated
 as a bounded fraction mapped to a reader-facing grade.</p>
-<p><span id="eq:purity_functional"><span class="math display">\[
-\pi(s) \in [0, 1], \qquad g(s) = \operatorname{karat}(\pi(s))
-\qquad{(1)}\]</span></span></p>
+<p><span id="eq:purity_functional"><span class="math display">\[\pi(s)
+\in [0, 1], \qquad g(s) =
+\operatorname{karat}(\pi(s))\qquad{(1)}\]</span></span></p>
 <p>The value is descriptive: it summarizes local validation state rather
 than external quality. Source:
 <code>src/template_gold_refinement/purity.py::format_purity</code>.</p>
 <p><strong>F2: Monotone refinement.</strong> A valid refinery run
 requires every stage to improve the previous purity state.</p>
-<p><span id="eq:monotone_refinery"><span class="math display">\[
-\pi_0 &lt; \pi_1 &lt; \cdots &lt; \pi_n
-\qquad{(2)}\]</span></span></p>
+<p><span id="eq:monotone_refinery"><span class="math display">\[\pi_0
+&lt; \pi_1 &lt; \cdots &lt; \pi_n\qquad{(2)}\]</span></span></p>
 <p>The test suite rejects equal or decreasing stage outputs. Source:
 <code>src/template_gold_refinement/purity.py::assert_monotone_increase</code>.</p>
 <p><strong>F3: Token-selection digest.</strong> Every mega-madlib token
 is selected from config-owned inventory by a deterministic digest.</p>
-<p><span id="eq:token_digest"><span class="math display">\[
-i = \operatorname{int}(\operatorname{SHA256}(seed \Vert slot \Vert
-category \Vert ordinal \Vert inventory)_{0:12}, 16) \bmod \lvert
-inventory \rvert
-\qquad{(3)}\]</span></span></p>
+<p><span id="eq:token_digest"><span class="math display">\[i =
+\operatorname{int}(\operatorname{SHA256}(seed \Vert slot \Vert category
+\Vert ordinal \Vert inventory)_{0:12}, 16) \bmod \lvert inventory
+\rvert\qquad{(3)}\]</span></span></p>
 <p>Changing the seed or inventory changes the plan; replaying both
 reproduces it. Source:
 <code>src/template_gold_refinement/composition.py::_choose_value</code>.</p>
 <p><strong>F4: Claim-support fraction.</strong> Contribution claims are
 assayed by counting supported local evidence pointers.</p>
-<p><span id="eq:claim_support"><span class="math display">\[
-\sigma = \frac{\lvert\{c \in C : supported(c)\}\rvert}{\lvert C \rvert}
-\qquad{(4)}\]</span></span></p>
+<p><span id="eq:claim_support"><span class="math display">\[\sigma =
+\frac{\lvert\{c \in C : supported(c)\}\rvert}{\lvert C
+\rvert}\qquad{(4)}\]</span></span></p>
 <p>The numerator and denominator come from the project-local
 claim-support registry. Source:
 <code>src/template_gold_refinement/evidence.py::EvidenceRegistry.support_rate</code>.</p>
 <p><strong>F5: Integrity vector.</strong> Scientific integrity is
 represented as a vector of gate outcomes rather than one scalar
 badge.</p>
-<p><span id="eq:integrity_vector"><span class="math display">\[
-\mathbf{v} = (v_{tokens}, v_{figures}, v_{claims}, v_{render},
-v_{references}, v_{security})
-\qquad{(5)}\]</span></span></p>
+<p><span id="eq:integrity_vector"><span
+class="math display">\[\mathbf{v} = (v_{tokens}, v_{figures},
+v_{claims}, v_{render}, v_{references},
+v_{security})\qquad{(5)}\]</span></span></p>
 <p>A publication claim is only as strong as the weakest required gate.
 Source:
 <code>manuscript/config.yaml#gold_refinement.audit_rules</code>.</p>
 <p><strong>F6: Certification predicate.</strong> Certification is a
 predicate over final purity and validation readiness.</p>
-<p><span id="eq:certification_predicate"><span class="math display">\[
-\operatorname{certified}(r) \iff \pi_{final}(r) \geq 0.999999999 \land
-gates(r)
-\qquad{(6)}\]</span></span></p>
+<p><span id="eq:certification_predicate"><span
+class="math display">\[\operatorname{certified}(r) \iff \pi_{final}(r)
+\geq 0.999999999 \land gates(r)\qquad{(6)}\]</span></span></p>
 <p>The predicate binds the nine-nines metaphor to the actual validation
 chain. Source:
 <code>src/template_gold_refinement/refinery.py::RefineryResult.is_nine_nines_certified</code>.</p>
 <p><strong>F7: Adversarial assay.</strong> Certification requires an
 explicit adversarial and supply-chain scope, not only ordinary gate
 success.</p>
-<p><span id="eq:adversarial_assay"><span class="math display">\[
-\operatorname{certified}_{adv}(r) \iff \operatorname{certified}(r) \land
-\forall a \in A_r:\ threat(a) \land standard(a) \land evidence(a) \land
-validator(a) \land boundary(a)
-\qquad{(7)}\]</span></span></p>
+<p><span id="eq:adversarial_assay"><span
+class="math display">\[\operatorname{certified}_{adv}(r) \iff
+\operatorname{certified}(r) \land \forall a \in A_r:\ threat(a) \land
+standard(a) \land evidence(a) \land validator(a) \land
+boundary(a)\qquad{(7)}\]</span></span></p>
 <p>The adversarial assay defines scope and evidence requirements; it is
 not proof of compliance or live scan findings. Source:
 <code>src/template_gold_refinement/security_assay.py::build_security_assay</code>.</p>
@@ -1487,11 +1494,10 @@ class="header-section-number">4.7</span> Deterministic token
 composition</h2>
 <p>The mega-madlib engine selects tokens from config-owned lexicon
 categories using a deterministic digest:</p>
-<p><span class="math display">\[
-\text{index} = \text{int}\left(\text{SHA-256}\left(\text{seed} \mid
-\text{slot} \mid \text{category} \mid \text{ordinal} \mid
-\text{inventory}\right)[:12], 16\right) \mod n
-\]</span></p>
+<p><span class="math display">\[\text{index} =
+\text{int}\left(\text{SHA-256}\left(\text{seed} \mid \text{slot} \mid
+\text{category} \mid \text{ordinal} \mid \text{inventory}\right)[:12],
+16\right) \mod n\]</span></p>
 <p>where <span class="math inline">\(n\)</span> is the inventory size.
 For each declared slot, the procedure concatenates the seed, slot name,
 category, one-based ordinal, and the complete ordered inventory; hashes
@@ -1618,31 +1624,31 @@ class="header-section-number">4.10</span> Execution procedure</h2>
 <tbody>
 <tr>
 <td>Schema intake</td>
-<td>manuscript/config.yaml</td>
-<td>Load and validate gold_refinement block</td>
-<td>GoldRefinementConfig</td>
+<td><code>manuscript/config.yaml</code></td>
+<td>Load and validate <code>gold_refinement</code> block</td>
+<td><code>GoldRefinementConfig</code></td>
 <td>config schema tests</td>
 </tr>
 <tr>
 <td>Refinery execution</td>
-<td>GoldRefinementConfig</td>
+<td><code>GoldRefinementConfig</code></td>
 <td>Run five refinery stages with monotone purity</td>
-<td>RefineryResult</td>
+<td><code>RefineryResult</code></td>
 <td>monotone purity test</td>
 </tr>
 <tr>
 <td>Token planning</td>
-<td>GoldRefinementConfig</td>
+<td><code>GoldRefinementConfig</code></td>
 <td>Expand slots into deterministic token choices</td>
-<td>TokenPlan</td>
+<td><code>TokenPlan</code></td>
 <td>seed-stability tests</td>
 </tr>
 <tr>
 <td>Figure generation</td>
-<td>RefineryResult and TokenPlan</td>
+<td><code>RefineryResult</code> and <code>TokenPlan</code></td>
 <td>Generate purity progression, karat grading, and token density
 figures</td>
-<td>../figures/*.png</td>
+<td><code>../figures/*.png</code></td>
 <td>nonblank figure tests</td>
 </tr>
 <tr>
@@ -1651,29 +1657,29 @@ figures</td>
 registry</td>
 <td>Score integrity dimensions and summarize evidence tiers</td>
 <td>integrity tables and risk visualizations</td>
-<td>tests/test_integrity.py</td>
+<td><code>tests/test_integrity.py</code></td>
 </tr>
 <tr>
 <td>Security assay</td>
-<td>gold_refinement.security_assay</td>
+<td><code>gold_refinement.security_assay</code></td>
 <td>Map adversarial threats and standards to source-owned evidence and
 claim boundaries</td>
 <td>security assay table and variables</td>
-<td>tests/test_security_assay.py</td>
+<td><code>tests/test_security_assay.py</code></td>
 </tr>
 <tr>
 <td>Manuscript hydration</td>
-<td>manuscript shells and manuscript_variables.json</td>
+<td>manuscript shells and <code>manuscript_variables.json</code></td>
 <td>Resolve <code>{{TOKEN}}</code> placeholders into
-output/manuscript/</td>
+<code>output/manuscript/</code></td>
 <td>hydrated Markdown manuscript</td>
 <td>unresolved-token scan</td>
 </tr>
 <tr>
 <td>Render and validate</td>
-<td>output/manuscript</td>
+<td><code>output/manuscript</code></td>
 <td>Render PDF, HTML through shared template pipeline</td>
-<td>output/pdf and output/web</td>
+<td><code>output/pdf</code> and <code>output/web</code></td>
 <td>render command</td>
 </tr>
 </tbody>
@@ -1991,7 +1997,7 @@ alt="Bars and a cumulative line rise monotonically across ore, smelting, assayin
 five refinery stages from ore (9K) to nine-nines
 certification.</figcaption>
 </figure>
-<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable data table"><table style="width:100%;" data-responsive-table="true">
+<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable data table"><table style="width:99%;" data-responsive-table="true">
 <colgroup>
 <col style="width: 17%" />
 <col style="width: 15%" />
@@ -2178,172 +2184,172 @@ class="header-section-number">5.4.3</span> Provenance trace</h3>
 </thead>
 <tbody>
 <tr>
-<td>AUTHORING_BOUNDARY_TERM_1</td>
-<td>boundary_terms</td>
+<td><code>AUTHORING_BOUNDARY_TERM_1</code></td>
+<td><code>boundary_terms</code></td>
 <td>analogy boundary</td>
-<td>authoring_contract</td>
-<td>manuscript/config.yaml#gold_refinement.lexicon.boundary_terms[1]</td>
+<td><code>authoring_contract</code></td>
+<td><code>manuscript/config.yaml#gold_refinement.lexicon.boundary_terms</code>[1]</td>
 </tr>
 <tr>
-<td>AUTHORING_BOUNDARY_TERM_2</td>
-<td>boundary_terms</td>
+<td><code>AUTHORING_BOUNDARY_TERM_2</code></td>
+<td><code>boundary_terms</code></td>
 <td>non-claim</td>
-<td>authoring_contract</td>
-<td>manuscript/config.yaml#gold_refinement.lexicon.boundary_terms[4]</td>
+<td><code>authoring_contract</code></td>
+<td><code>manuscript/config.yaml#gold_refinement.lexicon.boundary_terms</code>[4]</td>
 </tr>
 <tr>
-<td>DISCUSSION_BOUNDARY_TERM_1</td>
-<td>boundary_terms</td>
+<td><code>DISCUSSION_BOUNDARY_TERM_1</code></td>
+<td><code>boundary_terms</code></td>
 <td>fork obligation</td>
 <td>discussion</td>
-<td>manuscript/config.yaml#gold_refinement.lexicon.boundary_terms[2]</td>
+<td><code>manuscript/config.yaml#gold_refinement.lexicon.boundary_terms</code>[2]</td>
 </tr>
 <tr>
-<td>DISCUSSION_BOUNDARY_TERM_2</td>
-<td>boundary_terms</td>
+<td><code>DISCUSSION_BOUNDARY_TERM_2</code></td>
+<td><code>boundary_terms</code></td>
 <td>domain validator</td>
 <td>discussion</td>
-<td>manuscript/config.yaml#gold_refinement.lexicon.boundary_terms[3]</td>
+<td><code>manuscript/config.yaml#gold_refinement.lexicon.boundary_terms</code>[3]</td>
 </tr>
 <tr>
-<td>DISCUSSION_REFINEMENT_VERB</td>
-<td>refinement_verbs</td>
+<td><code>DISCUSSION_REFINEMENT_VERB</code></td>
+<td><code>refinement_verbs</code></td>
 <td>smelting</td>
 <td>discussion</td>
-<td>manuscript/config.yaml#gold_refinement.lexicon.refinement_verbs[3]</td>
+<td><code>manuscript/config.yaml#gold_refinement.lexicon.refinement_verbs</code>[3]</td>
 </tr>
 <tr>
-<td>EVALUATION_GATE_TERM_1</td>
-<td>gate_terms</td>
+<td><code>EVALUATION_GATE_TERM_1</code></td>
+<td><code>gate_terms</code></td>
 <td>prerender</td>
 <td>evaluation</td>
-<td>manuscript/config.yaml#gold_refinement.lexicon.gate_terms[0]</td>
+<td><code>manuscript/config.yaml#gold_refinement.lexicon.gate_terms</code>[0]</td>
 </tr>
 <tr>
-<td>EVALUATION_GATE_TERM_2</td>
-<td>gate_terms</td>
+<td><code>EVALUATION_GATE_TERM_2</code></td>
+<td><code>gate_terms</code></td>
 <td>citation validation</td>
 <td>evaluation</td>
-<td>manuscript/config.yaml#gold_refinement.lexicon.gate_terms[3]</td>
+<td><code>manuscript/config.yaml#gold_refinement.lexicon.gate_terms</code>[3]</td>
 </tr>
 <tr>
-<td>INTRO_INTEGRITY_TERM_1</td>
-<td>integrity_terms</td>
+<td><code>INTRO_INTEGRITY_TERM_1</code></td>
+<td><code>integrity_terms</code></td>
 <td>source tier</td>
 <td>introduction</td>
-<td>manuscript/config.yaml#gold_refinement.lexicon.integrity_terms[1]</td>
+<td><code>manuscript/config.yaml#gold_refinement.lexicon.integrity_terms</code>[1]</td>
 </tr>
 <tr>
-<td>INTRO_INTEGRITY_TERM_2</td>
-<td>integrity_terms</td>
+<td><code>INTRO_INTEGRITY_TERM_2</code></td>
+<td><code>integrity_terms</code></td>
 <td>evidence spine</td>
 <td>introduction</td>
-<td>manuscript/config.yaml#gold_refinement.lexicon.integrity_terms[0]</td>
+<td><code>manuscript/config.yaml#gold_refinement.lexicon.integrity_terms</code>[0]</td>
 </tr>
 <tr>
-<td>METHOD_GATE_TERM_1</td>
-<td>gate_terms</td>
+<td><code>METHOD_GATE_TERM_1</code></td>
+<td><code>gate_terms</code></td>
 <td>evidence validation</td>
 <td>methodology</td>
-<td>manuscript/config.yaml#gold_refinement.lexicon.gate_terms[1]</td>
+<td><code>manuscript/config.yaml#gold_refinement.lexicon.gate_terms</code>[1]</td>
 </tr>
 <tr>
-<td>METHOD_GATE_TERM_2</td>
-<td>gate_terms</td>
+<td><code>METHOD_GATE_TERM_2</code></td>
+<td><code>gate_terms</code></td>
 <td>figure registry check</td>
 <td>methodology</td>
-<td>manuscript/config.yaml#gold_refinement.lexicon.gate_terms[2]</td>
+<td><code>manuscript/config.yaml#gold_refinement.lexicon.gate_terms</code>[2]</td>
 </tr>
 <tr>
-<td>METHOD_GATE_TERM_3</td>
-<td>gate_terms</td>
+<td><code>METHOD_GATE_TERM_3</code></td>
+<td><code>gate_terms</code></td>
 <td>citation validation</td>
 <td>methodology</td>
-<td>manuscript/config.yaml#gold_refinement.lexicon.gate_terms[3]</td>
+<td><code>manuscript/config.yaml#gold_refinement.lexicon.gate_terms</code>[3]</td>
 </tr>
 <tr>
-<td>METHOD_MANUSCRIPT_TERM_1</td>
-<td>manuscript_terms</td>
+<td><code>METHOD_MANUSCRIPT_TERM_1</code></td>
+<td><code>manuscript_terms</code></td>
 <td>evidence</td>
 <td>methodology</td>
-<td>manuscript/config.yaml#gold_refinement.lexicon.manuscript_terms[4]</td>
+<td><code>manuscript/config.yaml#gold_refinement.lexicon.manuscript_terms</code>[4]</td>
 </tr>
 <tr>
-<td>METHOD_MANUSCRIPT_TERM_2</td>
-<td>manuscript_terms</td>
+<td><code>METHOD_MANUSCRIPT_TERM_2</code></td>
+<td><code>manuscript_terms</code></td>
 <td>evidence</td>
 <td>methodology</td>
-<td>manuscript/config.yaml#gold_refinement.lexicon.manuscript_terms[4]</td>
+<td><code>manuscript/config.yaml#gold_refinement.lexicon.manuscript_terms</code>[4]</td>
 </tr>
 <tr>
-<td>METHOD_METAL_TERM_1</td>
-<td>metallurgical_terms</td>
+<td><code>METHOD_METAL_TERM_1</code></td>
+<td><code>metallurgical_terms</code></td>
 <td>assaying</td>
 <td>methodology</td>
-<td>manuscript/config.yaml#gold_refinement.lexicon.metallurgical_terms[1]</td>
+<td><code>manuscript/config.yaml#gold_refinement.lexicon.metallurgical_terms</code>[1]</td>
 </tr>
 <tr>
-<td>METHOD_METAL_TERM_2</td>
-<td>metallurgical_terms</td>
+<td><code>METHOD_METAL_TERM_2</code></td>
+<td><code>metallurgical_terms</code></td>
 <td>parting</td>
 <td>methodology</td>
-<td>manuscript/config.yaml#gold_refinement.lexicon.metallurgical_terms[3]</td>
+<td><code>manuscript/config.yaml#gold_refinement.lexicon.metallurgical_terms</code>[3]</td>
 </tr>
 <tr>
-<td>METHOD_METAL_TERM_3</td>
-<td>metallurgical_terms</td>
+<td><code>METHOD_METAL_TERM_3</code></td>
+<td><code>metallurgical_terms</code></td>
 <td>smelting</td>
 <td>methodology</td>
-<td>manuscript/config.yaml#gold_refinement.lexicon.metallurgical_terms[2]</td>
+<td><code>manuscript/config.yaml#gold_refinement.lexicon.metallurgical_terms</code>[2]</td>
 </tr>
 <tr>
-<td>REPRO_EVIDENCE_TERM_1</td>
-<td>evidence_terms</td>
+<td><code>REPRO_EVIDENCE_TERM_1</code></td>
+<td><code>evidence_terms</code></td>
 <td>fact registry</td>
 <td>reproducibility</td>
-<td>manuscript/config.yaml#gold_refinement.lexicon.evidence_terms[0]</td>
+<td><code>manuscript/config.yaml#gold_refinement.lexicon.evidence_terms</code>[0]</td>
 </tr>
 <tr>
-<td>REPRO_EVIDENCE_TERM_2</td>
-<td>evidence_terms</td>
+<td><code>REPRO_EVIDENCE_TERM_2</code></td>
+<td><code>evidence_terms</code></td>
 <td>figure registry</td>
 <td>reproducibility</td>
-<td>manuscript/config.yaml#gold_refinement.lexicon.evidence_terms[3]</td>
+<td><code>manuscript/config.yaml#gold_refinement.lexicon.evidence_terms</code>[3]</td>
 </tr>
 <tr>
-<td>RESULTS_EVIDENCE_TERM_1</td>
-<td>evidence_terms</td>
+<td><code>RESULTS_EVIDENCE_TERM_1</code></td>
+<td><code>evidence_terms</code></td>
 <td>artifact manifest</td>
 <td>results</td>
-<td>manuscript/config.yaml#gold_refinement.lexicon.evidence_terms[1]</td>
+<td><code>manuscript/config.yaml#gold_refinement.lexicon.evidence_terms</code>[1]</td>
 </tr>
 <tr>
-<td>RESULTS_EVIDENCE_TERM_2</td>
-<td>evidence_terms</td>
+<td><code>RESULTS_EVIDENCE_TERM_2</code></td>
+<td><code>evidence_terms</code></td>
 <td>figure registry</td>
 <td>results</td>
-<td>manuscript/config.yaml#gold_refinement.lexicon.evidence_terms[3]</td>
+<td><code>manuscript/config.yaml#gold_refinement.lexicon.evidence_terms</code>[3]</td>
 </tr>
 <tr>
-<td>RESULTS_EVIDENCE_TERM_3</td>
-<td>evidence_terms</td>
+<td><code>RESULTS_EVIDENCE_TERM_3</code></td>
+<td><code>evidence_terms</code></td>
 <td>token provenance</td>
 <td>results</td>
-<td>manuscript/config.yaml#gold_refinement.lexicon.evidence_terms[4]</td>
+<td><code>manuscript/config.yaml#gold_refinement.lexicon.evidence_terms</code>[4]</td>
 </tr>
 <tr>
-<td>RESULTS_PURITY_ADJ_1</td>
-<td>purity_adjectives</td>
+<td><code>RESULTS_PURITY_ADJ_1</code></td>
+<td><code>purity_adjectives</code></td>
 <td>unrefined</td>
 <td>results</td>
-<td>manuscript/config.yaml#gold_refinement.lexicon.purity_adjectives[0]</td>
+<td><code>manuscript/config.yaml#gold_refinement.lexicon.purity_adjectives</code>[0]</td>
 </tr>
 <tr>
-<td>RESULTS_PURITY_ADJ_2</td>
-<td>purity_adjectives</td>
+<td><code>RESULTS_PURITY_ADJ_2</code></td>
+<td><code>purity_adjectives</code></td>
 <td>purified</td>
 <td>results</td>
-<td>manuscript/config.yaml#gold_refinement.lexicon.purity_adjectives[1]</td>
+<td><code>manuscript/config.yaml#gold_refinement.lexicon.purity_adjectives</code>[1]</td>
 </tr>
 </tbody>
 </table></div>
@@ -2606,7 +2612,7 @@ claim-ledger facts, bibliography records, source code, or disposable
 artifacts.</p>
 <p>The ladder complements the risk matrix by counting source tiers
 rather than plotting risks. When the shared evidence registry is
-available, the manuscript can report 957 source-tiered facts to the
+available, the manuscript can report 960 source-tiered facts to the
 validation surface. When that registry is not available, the same figure
 falls back to the integrity model’s configured tiers. Either way, the
 reader sees the evidentiary mix instead of receiving an undifferentiated
@@ -2641,12 +2647,12 @@ registry when available.</caption>
 <tbody>
 <tr>
 <td>generated_metric</td>
-<td>722</td>
+<td>724</td>
 <td>Numbers regenerated from project analysis</td>
 </tr>
 <tr>
 <td>artifact</td>
-<td>116</td>
+<td>117</td>
 <td>Generated artifacts exposed to readers</td>
 </tr>
 <tr>
@@ -2703,9 +2709,10 @@ the stable 12-figure contract.</p>
 <td>S1</td>
 <td>implicit trust in generated artifacts</td>
 <td>NIST SP 800-207 zero trust</td>
-<td>output/reports/evidence_registry.json and
-src/template_gold_refinement/security_assay.py</td>
-<td>infrastructure.validation.cli evidence –fail-on-issues</td>
+<td><code>output/reports/evidence_registry.json</code> and
+<code>src/template_gold_refinement/security_assay.py</code></td>
+<td><code>infrastructure.validation.cli</code> evidence
+–fail-on-issues</td>
 <td>documents a verification posture, not a deployed zero-trust
 architecture</td>
 </tr>
@@ -2713,7 +2720,7 @@ architecture</td>
 <td>S2</td>
 <td>incomplete secure-development evidence</td>
 <td>NIST SP 800-218 secure software development framework</td>
-<td>tests/, pre-render validation, and claim ledger</td>
+<td><code>tests/</code>, pre-render validation, and claim ledger</td>
 <td>project test suite and template validation gates</td>
 <td>maps local practices to SSDF concepts without claiming SSDF
 compliance</td>
@@ -2769,39 +2776,39 @@ class="header-section-number">5.15</span> Contribution claims</h2>
 <td>Five-stage refinery</td>
 <td>The refinery pipeline has 5 canonical stages from ore to
 nine-nines.</td>
-<td>src/template_gold_refinement/refinery.py::CANONICAL_STAGES</td>
+<td><code>src/template_gold_refinement/refinery.py::CANONICAL_STAGES</code></td>
 <td>local</td>
 </tr>
 <tr>
 <td>Monotone purity</td>
 <td>Purity increases strictly across all refinery stages.</td>
-<td>src/template_gold_refinement/purity.py::assert_monotone_increase</td>
+<td><code>src/template_gold_refinement/purity.py::assert_monotone_increase</code></td>
 <td>local</td>
 </tr>
 <tr>
 <td>Nine-nines certification</td>
 <td>The certification stage achieves 99.9999999% purity.</td>
-<td>src/template_gold_refinement/purity.py::NINE_NINES_PURITY</td>
+<td><code>src/template_gold_refinement/purity.py::NINE_NINES_PURITY</code></td>
 <td>local</td>
 </tr>
 <tr>
 <td>Deterministic tokens</td>
 <td>Token selection is deterministic via seeded SHA-256 digest.</td>
-<td>src/template_gold_refinement/composition.py::_choose_value</td>
+<td><code>src/template_gold_refinement/composition.py::_choose_value</code></td>
 <td>local</td>
 </tr>
 <tr>
 <td>Formalism registry</td>
 <td>The manuscript exposes 7 source-owned formalisms with equation
 labels.</td>
-<td>src/template_gold_refinement/formalisms.py::FORMALISMS</td>
+<td><code>src/template_gold_refinement/formalisms.py::FORMALISMS</code></td>
 <td>local</td>
 </tr>
 <tr>
 <td>Claim-support report separation</td>
 <td>The project-local contribution-claim report is written to
 claim_support_registry.json.</td>
-<td>scripts/refinement_analysis.py::CLAIM_SUPPORT_REGISTRY_NAME</td>
+<td><code>scripts/refinement_analysis.py::CLAIM_SUPPORT_REGISTRY_NAME</code></td>
 <td>local</td>
 </tr>
 <tr>
@@ -2809,14 +2816,14 @@ claim_support_registry.json.</td>
 <td>The manuscript includes generated visualizations that link the
 refinery analogy to source code, variables, evidence, and validation
 gates.</td>
-<td>src/figures/diagrams.py::generate_implementation_circuit</td>
+<td><code>src/figures/diagrams.py::generate_implementation_circuit</code></td>
 <td>local</td>
 </tr>
 <tr>
 <td>Scientific-integrity risk model</td>
 <td>The manuscript includes a source-owned integrity risk model linking
 failure modes, validators, evidence surfaces, and fork obligations.</td>
-<td>src/template_gold_refinement/integrity.py::build_integrity_dimensions</td>
+<td><code>src/template_gold_refinement/integrity.py::build_integrity_dimensions</code></td>
 <td>local</td>
 </tr>
 <tr>
@@ -2824,7 +2831,7 @@ failure modes, validators, evidence surfaces, and fork obligations.</td>
 <td>The manuscript includes a source-owned security assay mapping
 adversarial threats and standards to local evidence surfaces,
 validators, and claim boundaries.</td>
-<td>src/template_gold_refinement/security_assay.py::build_security_assay</td>
+<td><code>src/template_gold_refinement/security_assay.py::build_security_assay</code></td>
 <td>local</td>
 </tr>
 </tbody>
@@ -2840,7 +2847,7 @@ class="header-section-number">5.16</span> Shared evidence registry
 summary</h2>
 <p>When the template evidence gate has run, the shared registry supplies
 source-tiered facts used by the evidence validator. Current fact count
-available to this variable pass: 957.</p>
+available to this variable pass: 960.</p>
 <div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable table: Table 6: Shared evidence-registry fact kinds when available."><table id="tbl:shared_evidence_kinds" data-responsive-table="true">
 <caption>Table 6: Shared evidence-registry fact kinds when
 available.</caption>
@@ -2853,7 +2860,7 @@ available.</caption>
 <tbody>
 <tr>
 <td>artifact</td>
-<td>72</td>
+<td>73</td>
 </tr>
 <tr>
 <td>citation</td>
@@ -2869,7 +2876,7 @@ available.</caption>
 </tr>
 <tr>
 <td>number</td>
-<td>785</td>
+<td>787</td>
 </tr>
 <tr>
 <td>section</td>
@@ -2922,7 +2929,7 @@ figure specs.</caption>
 <td>yes</td>
 <td>3947x2038</td>
 <td>0.218</td>
-<td>0.06041014</td>
+<td>0.06067066</td>
 <td>pass</td>
 </tr>
 <tr>
@@ -2931,7 +2938,7 @@ figure specs.</caption>
 <td>yes</td>
 <td>3419x1447</td>
 <td>0.114</td>
-<td>0.04048412</td>
+<td>0.04050338</td>
 <td>pass</td>
 </tr>
 <tr>
@@ -3143,22 +3150,24 @@ class="header-section-number">6.3</span> Misuse modes</h2>
 <tr>
 <td>Non-monotone purity</td>
 <td>A stage has lower output purity than input.</td>
-<td>assert_monotone_increase raises ValueError.</td>
+<td><code>assert_monotone_increase</code> raises
+<code>ValueError</code>.</td>
 <td>Fix stage purity targets in
-src/template_gold_refinement/refinery.py.</td>
+<code>src/template_gold_refinement/refinery.py</code>.</td>
 </tr>
 <tr>
 <td>Empty lexicon category</td>
 <td>A required lexicon category is empty or missing.</td>
-<td>Config validation raises GoldRefinementConfigError.</td>
-<td>Add vocabulary to manuscript/config.yaml.</td>
+<td>Config validation raises
+<code>GoldRefinementConfigError</code>.</td>
+<td>Add vocabulary to <code>manuscript/config.yaml</code>.</td>
 </tr>
 <tr>
 <td>Unresolved token</td>
 <td>A manuscript placeholder has no generated variable.</td>
-<td>test_all_manuscript_tokens_are_generated fails.</td>
+<td><code>test_all_manuscript_tokens_are_generated</code> fails.</td>
 <td>Add variable in
-src/template_gold_refinement/manuscript_variables.py.</td>
+<code>src/template_gold_refinement/manuscript_variables.py</code>.</td>
 </tr>
 <tr>
 <td>Rhetorical-only analogy</td>
@@ -3170,8 +3179,8 @@ src/template_gold_refinement/manuscript_variables.py.</td>
 <td>Undetected integrity gap</td>
 <td>A high-severity failure mode is present but no owner, validator, or
 generated artifact makes it visible.</td>
-<td>build_integrity_dimensions lists severity, detectability, owner,
-validator, and evidence surface.</td>
+<td><code>build_integrity_dimensions</code> lists severity,
+detectability, owner, validator, and evidence surface.</td>
 <td>Add or revise the source-owned integrity dimension before promoting
 the manuscript.</td>
 </tr>
@@ -3200,8 +3209,9 @@ metadata, or version identity to rebuild the object.</td>
 <td>Reproducibility, scope, evaluation, and authoring-contract prose
 require source-owned metadata, exact release citation, and regenerated
 output reports.</td>
-<td>Record software/template release identity, preserve source-owned
-metadata, and rerun the full pipeline before publishing.</td>
+<td>Record <code>software/template</code> release identity, preserve
+source-owned metadata, and rerun the full pipeline before
+publishing.</td>
 </tr>
 <tr>
 <td>Security theater</td>
@@ -3377,7 +3387,7 @@ class="header-section-number">7.1</span> Summary</h2>
 <li>Final purity: 99.9999999% (nine-nines) (24K (nine-nines
 certified))</li>
 <li>24 tokens generated deterministically from seed 431</li>
-<li>Config hash: 1dc0b6fceacf6b95</li>
+<li>Config hash: b5b9d5392172fbbe</li>
 <li>7 source-owned formalisms with equation labels:
 eq:purity_functional, eq:monotone_refinery, eq:token_digest,
 eq:claim_support, eq:integrity_vector, eq:certification_predicate,
@@ -3457,9 +3467,9 @@ format, but it does make the manuscript variables, figures, reports, and
 rendered PDF/HTML products rebuildable from source-owned inputs.</p>
 <ul>
 <li><strong>Seed:</strong> 431</li>
-<li><strong>Config hash:</strong> 1dc0b6fceacf6b95</li>
-<li><strong>Generation timestamp:</strong> 2026-09-28T17:07:22Z</li>
-<li><strong>Python version:</strong> 3.14.6</li>
+<li><strong>Config hash:</strong> b5b9d5392172fbbe</li>
+<li><strong>Generation timestamp:</strong> 2026-10-14T01:12:21Z</li>
+<li><strong>Python version:</strong> 3.14.4</li>
 </ul>
 <h2 data-number="8.2" id="artifact-inventory"><span
 class="header-section-number">8.2</span> Artifact inventory</h2>
@@ -3499,9 +3509,9 @@ class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python projects/templates/template_gold_refinement/scripts/z_generate_manuscript_variables.py</span>
 <span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Full pipeline (from repo root)</span></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="ex">./run.sh</span> <span class="at">--project</span> templates/template_gold_refinement <span class="at">--pipeline</span> <span class="at">--core-only</span></span></code></pre></div>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="ex">./run.sh</span> <span class="at">--project</span> templates/template_gold_refinement <span class="at">--pipeline</span> <span class="at">--mode</span> core</span></code></pre></div>
 <p>A reproduction report should record command exit status, the source
-revision, <code>1dc0b6fceacf6b95</code>, Python 3.14.6, and whether the
+revision, <code>b5b9d5392172fbbe</code>, Python 3.14.4, and whether the
 generated registries pass. Matching prose alone is insufficient if the
 token plan, claim registry, or figure registry differs. Conversely,
 timestamp or renderer metadata differences should be interpreted
@@ -3519,7 +3529,7 @@ the optional hardening path visible before execution instead of burying
 it in shell glue or prose.</p>
 <p>The reproducibility spine uses fact registry and figure registry as
 generated artifacts rather than reader trust signals. Variable
-generation records <code>1dc0b6fceacf6b95</code>; analysis writes
+generation records <code>b5b9d5392172fbbe</code>; analysis writes
 refinery, token, claim-support, dashboard, and figure artifacts;
 validation may add the shared evidence registry used by template
 scientific-integrity checks.</p>
@@ -3797,22 +3807,24 @@ class="header-section-number">10.1</span> QA probes</h2>
 <tr>
 <td>Monotone purity</td>
 <td>Does purity increase strictly across all refinery stages?</td>
-<td>assert_monotone_increase passes on the purity sequence.</td>
-<td>src/template_gold_refinement/refinery.py and
-output/data/refinery_results.json</td>
+<td><code>assert_monotone_increase</code> passes on the purity
+sequence.</td>
+<td><code>src/template_gold_refinement/refinery.py</code> and
+<code>output/data/refinery_results.json</code></td>
 </tr>
 <tr>
 <td>Token provenance</td>
 <td>Can every selected token be traced to a category, section, value,
 and config key?</td>
 <td>The token plan contains one row for each generated token.</td>
-<td>output/reports/token_plan.json</td>
+<td><code>output/reports/token_plan.json</code></td>
 </tr>
 <tr>
 <td>Karat grade correctness</td>
 <td>Does each stage map to the correct karat grade?</td>
-<td>karat_for_purity returns the expected grade for each stage.</td>
-<td>src/template_gold_refinement/purity.py</td>
+<td><code>karat_for_purity</code> returns the expected grade for each
+stage.</td>
+<td><code>src/template_gold_refinement/purity.py</code></td>
 </tr>
 <tr>
 <td>Integrity risk visibility</td>
@@ -3820,8 +3832,8 @@ and config key?</td>
 validator or artifact that detects them?</td>
 <td>The integrity risk model emits dimensions, owners, residual risk
 scores, and evidence-tier rows.</td>
-<td>src/template_gold_refinement/integrity.py and
-../figures/integrity_risk_matrix.png</td>
+<td><code>src/template_gold_refinement/integrity.py</code> and
+<code>../figures/integrity_risk_matrix.png</code></td>
 </tr>
 <tr>
 <td>Scholarship boundary</td>
@@ -3831,7 +3843,8 @@ used as evidence for universal manuscript-quality claims?</td>
 <td>The scope, discussion, and evaluation sections cite historically
 bounded metallurgy scholarship while keeping certification local to
 source-owned gates.</td>
-<td>manuscript/references.bib and manuscript/07_scope.md</td>
+<td><code>manuscript/references.bib</code> and
+<code>manuscript/07_scope.md</code></td>
 </tr>
 <tr>
 <td>Reporting-guideline completeness</td>
@@ -3840,8 +3853,10 @@ methodological validity?</td>
 <td>The methods, scope, discussion, and evaluation sections cite
 reporting-guideline scholarship while explicitly limiting what the local
 gates prove.</td>
-<td>manuscript/02_methodology.md, manuscript/04_discussion.md,
-manuscript/07_scope.md, and manuscript/08_evaluation.md</td>
+<td><code>manuscript/02_methodology.md</code>,
+<code>manuscript/04_discussion.md</code>,
+<code>manuscript/07_scope.md</code>, and
+<code>manuscript/08_evaluation.md</code></td>
 </tr>
 <tr>
 <td>Executable-compendium identity</td>
@@ -3851,10 +3866,12 @@ manuscript?</td>
 <td>The reproducibility, scope, evaluation, and authoring-contract
 sections cite executable-publication and software-citation scholarship
 while keeping preservation and portability claims bounded.</td>
-<td>manuscript/06_reproducibility.md, manuscript/07_scope.md,
-manuscript/08_evaluation.md, manuscript/09_authoring_contract.md,
-output/reports/evidence_registry.json, and
-output/reports/output_statistics.json</td>
+<td><code>manuscript/06_reproducibility.md</code>,
+<code>manuscript/07_scope.md</code>,
+<code>manuscript/08_evaluation.md</code>,
+<code>manuscript/09_authoring_contract.md</code>,
+<code>output/reports/evidence_registry.json</code>, and
+<code>output/reports/output_statistics.json</code></td>
 </tr>
 <tr>
 <td>Adversarial assay boundary</td>
@@ -3863,8 +3880,9 @@ scan evidence and external compliance?</td>
 <td>The security assay emits threats, standards, evidence surfaces,
 validators, and claim boundaries without claiming Codex Security
 findings.</td>
-<td>src/template_gold_refinement/security_assay.py,
-manuscript/config.yaml, and manuscript/03_results.md</td>
+<td><code>src/template_gold_refinement/security_assay.py</code>,
+<code>manuscript/config.yaml</code>, and
+<code>manuscript/03_results.md</code></td>
 </tr>
 </tbody>
 </table></div>
@@ -3883,7 +3901,7 @@ applicable levels; a pass at one level cannot compensate for failure at
 another.</p>
 <h2 data-number="10.2" id="audit-rules"><span
 class="header-section-number">10.2</span> Audit rules</h2>
-<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable data table"><table style="width:100%;" data-responsive-table="true">
+<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable data table"><table style="width:99%;" data-responsive-table="true">
 <colgroup>
 <col style="width: 31%" />
 <col style="width: 36%" />

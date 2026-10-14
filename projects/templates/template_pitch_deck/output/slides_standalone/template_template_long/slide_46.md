@@ -2,14 +2,14 @@
 
 *Slide 46 of 57 — template_template pitch, long deck — kind: `content`*
 
-- 25 importable subpackages, 752 tracked Python files total under infrastructure/ — a real inventory anyone can `git ls-files` themselves, not a claimed abstraction.
-- The largest single subpackage, core, holds 129 files — still a minority of the whole, not a monolith wearing a modular label.
+- 28 importable subpackages, 1302 tracked Python files total under infrastructure/ — a real inventory anyone can `git ls-files` themselves, not a claimed abstraction.
+- The largest single subpackage, reporting, holds 399 files — still a minority of the whole, not a monolith wearing a modular label.
 - Every number on this slide is computed live by src/infra_facts.py at render time, reusing the exact same counters docs/_generated/COUNTS.md is built from.
-- The next chart narrows the total to importable subpackages, excluding 2 top-level file(s): infrastructure/__init__.py and mcp_server.py.
+- The next chart narrows the total to importable subpackages, excluding 3 top-level file(s): infrastructure/__init__.py and mcp_server.py.
 
 ---
 
-**Source:** [projects/templates/template_pitch_deck/src/infra_facts.py](https://github.com/docxology/template/blob/main/projects/templates/template_pitch_deck/src/infra_facts.py)
+**Source:** [projects/templates/template_pitch_deck/src/template_pitch_deck/infra_facts.py](https://github.com/docxology/template/blob/main/projects/templates/template_pitch_deck/src/template_pitch_deck/infra_facts.py)
 
 **Full deck:** [PDF](../../pdf/template_template_pitch_long.pdf) · [PPTX](../../pptx/template_template_pitch_long.pptx)
 **Deck content source:** [manuscript/deck_content_long.yaml](../../../manuscript/deck_content_long.yaml)

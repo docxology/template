@@ -168,8 +168,9 @@ Project-local outputs are authoritative during generation. After a root pipeline
 run, verify copied root output parity as well:
 
 ```bash
-./run.sh --project templates/template_active_inference --pipeline --core-only
-uv run python scripts/validate_outputs.py
+# From the template repository root
+./run.sh --project templates/template_active_inference --pipeline --mode core
+uv run python projects/templates/template_active_inference/scripts/validate_outputs.py
 ```
 
 The semantic and release-bundle reports allow render-deferred PDF/web rows before

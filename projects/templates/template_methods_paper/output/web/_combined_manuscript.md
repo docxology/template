@@ -48,8 +48,8 @@ architecture side, the DSL is exercised by a zero-mock test suite under the
 repository's configured project coverage gate, generates 19 artifacts
 (1 figures, 7 data files,
 11 reports) per pipeline run, and injects reproducibility
-metadata (configuration hash `a0f000565bef6a79`, build timestamp
-`2026-09-28T17:17:39Z`) into [@sec:reproducibility].
+metadata (configuration hash `0f14847547c04626`, build timestamp
+`2026-10-14T00:59:41Z`) into [@sec:reproducibility].
 
 **Keywords:** methods paper, domain-specific language, controlled methods, deterministic compilation, staged validation, dimensional analysis
 
@@ -538,7 +538,7 @@ evaluations a method's steps satisfy.
 
 ## Computational environment
 
-- **Language**: Python 3.14.6 on Darwin arm64 (see root
+- **Language**: Python 3.14.4 on Darwin arm64 (see root
   `pyproject.toml` for the supported version range).
 - **Core dependencies**: `pyyaml`, `matplotlib` (declared in
   `domain_profile.yaml::required_packages`); the DSL library itself
@@ -611,7 +611,7 @@ uv run python scripts/pipeline/stage_03_render.py --project templates/template_m
 Or, end to end via the orchestrated pipeline:
 
 ```bash
-uv run python scripts/runner/execute_pipeline.py --project templates/template_methods_paper --core-only
+uv run python scripts/runner/execute_pipeline.py --project templates/template_methods_paper --mode core
 ```
 
 ## Generated artifact registry
@@ -652,9 +652,9 @@ Every quantitative claim in [@sec:results] is either a generated variable
 sourced from a live analysis output or registered in `data/claim_ledger.yaml` for
 evidence-registry validation. The manuscript intentionally does not
 hand-transcribe volatile values, so prose and artifacts cannot disagree.
-Configuration provenance is itself injected: `a0f000565bef6a79` is the
+Configuration provenance is itself injected: `0f14847547c04626` is the
 SHA-256 of `manuscript/config.yaml` at build time, and
-`2026-09-28T17:17:39Z` records when the variables were generated
+`2026-10-14T00:59:41Z` records when the variables were generated
 (honoring `SOURCE_DATE_EPOCH` for byte-reproducible builds).
 
 

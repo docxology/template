@@ -246,6 +246,16 @@ fallback environment.
 
 ### Web link post-processing
 
+WebRenderer font-bearing pages share one local `assets/source-web-fonts.js`
+per output directory instead of repeating twelve font bodies in every HTML
+file. The exact Source font bytes, full OFL notice, constructor hashes, and
+loading observations are preserved. Export the complete `output/web/` tree,
+including assets, for plain-file and HTTP reading; copying an HTML file alone
+omits its fonts. Canonical output copying retains this directory tree. The
+inline font API for independent native controls and slide typography are
+unchanged. This reduces repeated bytes without relaxing publication budgets
+or establishing full native-format acceptance.
+
 The HTML renderer performs a final, source-aware anchor pass after Pandoc and
 the accessibility/figure post-processors have run. Renderer-owned pages and
 fragments remain local to `output/web`; links from manuscript sections to

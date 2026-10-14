@@ -13,6 +13,8 @@ from pathlib import Path
 import pytest
 import yaml
 
+from template_gold_refinement.composition import generate_token_plan
+from template_gold_refinement.config import load_gold_refinement_config
 from template_gold_refinement.manuscript_variables import generate_variables, save_variables
 
 # --------------------------------------------------------------------------- #
@@ -183,6 +185,44 @@ def test_real_project_expanded_token_surface():
         "AUTHORING_BOUNDARY_TERM_2",
     ):
         assert token in v
+    config_bytes = (project_root / "manuscript/config.yaml").read_bytes()
+    config = load_gold_refinement_config(project_root)
+    plan = generate_token_plan(config)
+    original_rows = {
+        "CONTRIBUTION_CLAIMS_TABLE": "\n".join(
+            f"| {row['name']} | {row['claim']} | {row['evidence']} | {row['boundary']} |"
+            for row in config.contribution_claims
+        ),
+        "FAILURE_MODES_TABLE": "\n".join(
+            f"| {row['name']} | {row['risk']} | {row['detection']} | {row['mitigation']} |"
+            for row in config.failure_modes
+        ),
+        "TOKEN_PROVENANCE_TABLE": "\n".join(
+            f"| {name} | {row['category']} | {row['value']} | {row['section']} | {row['source']} |"
+            for name, row in sorted(plan.provenance.items())
+        ),
+        "PIPELINE_PHASES_TABLE": "\n".join(
+            f"| {row['name']} | {row['input_artifact']} | {row['transformation']} "
+            f"| {row['output_artifact']} | {row['guard']} |"
+            for row in config.pipeline_phases
+        ),
+        "QUALITY_PROBES_TABLE": "\n".join(
+            f"| {row['name']} | {row['question']} | {row['passing_signal']} | {row['artifact']} |"
+            for row in config.quality_probes
+        ),
+    }
+    for key, original in original_rows.items():
+        assert v[key].replace("`", "") == original.replace("`", "")
+    assert "`GoldRefinementConfig`" in v["PIPELINE_PHASES_TABLE"]
+    assert "`tests/test_security_assay.py`" in v["PIPELINE_PHASES_TABLE"]
+    assert "`src/template_gold_refinement/refinery.py`" in v["QUALITY_PROBES_TABLE"]
+    for name, row in plan.provenance.items():
+        assert f"`{name}`" in v["TOKEN_PROVENANCE_TABLE"]
+        prefix, index = str(row["source"]).rsplit("[", 1)
+        assert f"`{prefix}`[{index}" in v["TOKEN_PROVENANCE_TABLE"]
+        assert v[name] == row["value"]
+    assert (project_root / "manuscript/config.yaml").read_bytes() == config_bytes
+    assert generate_token_plan(config) == plan
 
 
 def test_formalism_and_claim_support_variables_present(tmp_path):

@@ -4,7 +4,7 @@ Run the full deterministic AutoResearch exemplar through the main template
 orchestrator:
 
 ```bash
-./run.sh --pipeline --project template_autoresearch_project --core-only --skip-infra
+./run.sh --pipeline --project template_autoresearch_project --mode core --skip-infra
 ```
 
 The command executes the standard project stages:

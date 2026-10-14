@@ -21,9 +21,13 @@ directory contains markdown (see
 """
 
 import re
+import hashlib
+import json
+from collections.abc import Callable
 import shutil
 from pathlib import Path
 
+from infrastructure.core.files.secure_write import atomic_write_bytes_confined, read_bytes_confined, unlink_confined
 from infrastructure.core.logging.utils import get_logger
 from infrastructure.core.project_paths import resolve_source_manuscript_dir
 
@@ -156,3 +160,156 @@ def write_resolved_manuscript_tree(
         logger.warning("Transmission bookend generation skipped: %s", exc)
 
     return out_dir
+
+
+_HYDRATION_MANIFEST = "hydration_manifest.json"
+_HYDRATION_SCHEMA = "template-hydrated-manuscript/v1"
+_HYDRATION_FILE_BYTES = 8 * 1024 * 1024
+_HYDRATION_TOTAL_BYTES = 64 * 1024 * 1024
+_HYDRATION_MANIFEST_BYTES = 512 * 1024
+
+
+def _hydration_member(name: str) -> bool:
+    """Source code owns numbered sections and these finite rendering auxiliaries."""
+    return (
+        name in {"config.yaml", "preamble.md", "references.bib"}
+        or re.fullmatch(r"[0-9]{2}[a-z]?_.+\.md", name) is not None
+    )
+
+
+def validate_project_selection(project_root: Path, supplied: str) -> Path:
+    """Admit only the executing project, never a second project or path traversal."""
+    root = project_root.absolute()
+    if root.is_symlink() or root.resolve(strict=True) != root:
+        raise ValueError("project selection requires its actual regular project root")
+    allowed = {root.name, f"{root.parent.name}/{root.name}"}
+    if supplied not in allowed:
+        raise ValueError(f"this project-local entrypoint only supports {sorted(allowed)!r}; received {supplied!r}")
+    return root
+
+
+def validate_hydration_paths(project_root: Path) -> None:
+    """Refuse linked input/output directories before project variable computation."""
+    root = validate_project_selection(project_root, project_root.name)
+    source = root / "manuscript"
+    if not source.is_dir() or source.is_symlink():
+        raise ValueError("hydration requires a regular source manuscript directory")
+    entries = list(source.iterdir())
+    if len(entries) > 512 or any(path.is_symlink() for path in entries):
+        raise ValueError("hydration refuses linked or unbounded manuscript source entries")
+    for directory in (root / "output", root / "output" / "manuscript"):
+        if directory.is_symlink() or directory.exists() and not directory.is_dir():
+            raise ValueError("hydration refuses linked or non-directory output paths")
+
+
+def hydrate_manuscript_tree(
+    project_root: Path,
+    render: Callable[[str, str], str],
+    *,
+    dry_run: bool = False,
+) -> tuple[int, int]:
+    """Prepare every source before confined writes; retain unrelated destination files.
+
+    ``render(filename, content)`` owns the project's substitution and strictness.
+    Source code admits numbered sections and config.yaml/preamble.md/references.bib;
+    a manifest records their prior bytes but cannot grant new deletion authority.
+    Legacy numbered sections are removed without a manifest; unknown files stay.
+    Dry runs perform the same validation and never create output directories.
+    """
+    validate_hydration_paths(project_root)
+    root = project_root.absolute()
+    source = root / "manuscript"
+    destination = root / "output" / "manuscript"
+    entries = sorted(source.iterdir())
+    if len(entries) > 512:
+        raise ValueError("hydration source exceeds its file-count budget")
+    prepared: dict[str, bytes] = {}
+    originals: dict[str, bytes] = {}
+    changed = injected = total = 0
+    for path in entries:
+        if path.is_symlink():
+            raise ValueError("hydration refuses linked manuscript source entries")
+        if not path.is_file() or path.name in EXCLUDED_DOC_FILENAMES or not _hydration_member(path.name):
+            continue
+        content = read_bytes_confined(root, path, max_bytes=_HYDRATION_FILE_BYTES)
+        originals[path.name] = content
+        if path.suffix == ".md":
+            text = content.decode("utf-8")
+            result = render(path.name, text)
+            if not isinstance(result, str):
+                raise ValueError("manuscript renderer must return text")
+            changed += result != text
+            injected += len(re.findall(r"\{\{(\w+)\}\}", text)) - len(re.findall(r"\{\{(\w+)\}\}", result))
+            content = result.encode("utf-8")
+        if len(content) > _HYDRATION_FILE_BYTES:
+            raise ValueError("hydrated member exceeds its file-size budget")
+        total += len(content) + len(originals[path.name])
+        if total > _HYDRATION_TOTAL_BYTES:
+            raise ValueError("hydration exceeds its aggregate byte budget")
+        prepared[path.name] = content
+    previous: dict[str, str] = {}
+    manifest_path = destination / _HYDRATION_MANIFEST
+    stale: list[tuple[Path, str]] = []
+    if destination.exists():
+        observed = sorted(destination.iterdir())
+        if len(observed) > 1024:
+            raise ValueError("hydration destination exceeds its file-count budget")
+        if any(path.is_symlink() for path in observed):
+            raise ValueError("hydration refuses linked destination entries")
+        if manifest_path.exists():
+            manifest = json.loads(read_bytes_confined(root, manifest_path, max_bytes=_HYDRATION_MANIFEST_BYTES))
+            if (
+                not isinstance(manifest, dict)
+                or set(manifest) != {"schema_version", "files"}
+                or manifest["schema_version"] != _HYDRATION_SCHEMA
+                or not isinstance(manifest["files"], dict)
+                or len(manifest["files"]) > 512
+            ):
+                raise ValueError("hydration ownership manifest is invalid")
+            for name, digest in manifest["files"].items():
+                if (
+                    not isinstance(name, str)
+                    or Path(name).name != name
+                    or not _hydration_member(name)
+                    or not isinstance(digest, str)
+                    or re.fullmatch(r"[0-9a-f]{64}", digest) is None
+                ):
+                    raise ValueError("hydration ownership manifest contains an invalid file binding")
+                previous[name] = digest
+        for path in observed:
+            if path.name in prepared or path.name == _HYDRATION_MANIFEST:
+                if not path.is_file():
+                    raise ValueError("hydration target must be a regular file")
+                continue
+            if path.name in previous:
+                content = read_bytes_confined(root, path, max_bytes=_HYDRATION_FILE_BYTES)
+                if hashlib.sha256(content).hexdigest() != previous[path.name]:
+                    raise ValueError("stale generated manuscript was edited; refusing removal")
+                stale.append((path, previous[path.name]))
+            elif not manifest_path.exists() and re.fullmatch(r"[0-9]{2}[a-z]?_.+\.md", path.name):
+                content = read_bytes_confined(root, path, max_bytes=_HYDRATION_FILE_BYTES)
+                stale.append((path, hashlib.sha256(content).hexdigest()))
+    # Re-read through no-follow descriptors before any mutation, including dry runs.
+    for name, content in originals.items():
+        if read_bytes_confined(root, source / name, max_bytes=_HYDRATION_FILE_BYTES) != content:
+            raise ValueError("manuscript source changed during hydration")
+    manifest = {
+        "schema_version": _HYDRATION_SCHEMA,
+        "files": {name: hashlib.sha256(content).hexdigest() for name, content in sorted(prepared.items())},
+    }
+    manifest_bytes = (json.dumps(manifest, sort_keys=True) + "\n").encode()
+    if len(manifest_bytes) > _HYDRATION_MANIFEST_BYTES:
+        raise ValueError("hydration ownership manifest exceeds its byte budget")
+    if dry_run:
+        return changed, injected
+    for name, content in prepared.items():
+        atomic_write_bytes_confined(root, destination / name, content)
+    for path, digest in stale:
+        # This retains a late regular-file edit/replacement diagnostic. These
+        # per-file writes/deletions are neither a tree transaction nor CAS.
+        content = read_bytes_confined(root, path, max_bytes=_HYDRATION_FILE_BYTES)
+        if hashlib.sha256(content).hexdigest() != digest:
+            raise ValueError("stale generated manuscript changed before removal")
+        unlink_confined(root, path)
+    atomic_write_bytes_confined(root, manifest_path, manifest_bytes)
+    return changed, injected

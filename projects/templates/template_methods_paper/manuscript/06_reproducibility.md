@@ -28,7 +28,7 @@ uv run python scripts/pipeline/stage_03_render.py --project templates/template_m
 Or, end to end via the orchestrated pipeline:
 
 ```bash
-uv run python scripts/runner/execute_pipeline.py --project templates/template_methods_paper --core-only
+uv run python scripts/runner/execute_pipeline.py --project templates/template_methods_paper --mode core
 ```
 
 ## Generated artifact registry

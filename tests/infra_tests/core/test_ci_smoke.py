@@ -43,28 +43,67 @@ def test_invalid_smoke_selection_fails_before_running_a_project(tmp_path: Path, 
         project_smoke_matrix(tmp_path)
 
 
-@pytest.mark.parametrize("fault", ["none", "failure", "cancelled", "skipped", "omitted", "extra"])
-def test_actual_fast_gate_requires_success_from_every_declared_job(tmp_path: Path, fault: str) -> None:
+@pytest.mark.parametrize(
+    ("coverage_requested", "fault"),
+    [
+        ("false", "none"),
+        ("true", "none"),
+        *(
+            (request, fault)
+            for request in ("false", "true")
+            for fault in ("failure", "cancelled", "skipped", "omitted", "extra", "malformed")
+        ),
+        ("true", "coverage-failure"),
+        ("true", "coverage-cancelled"),
+        ("true", "coverage-skipped"),
+        ("true", "coverage-omitted"),
+        ("false", "coverage-success"),
+        ("false", "coverage-failure"),
+        ("false", "coverage-cancelled"),
+        ("false", "coverage-omitted"),
+        ("", "none"),
+        ("invalid", "none"),
+        ("TRUE", "none"),
+        ("false\n", "none"),
+        ("$(exit 0)", "none"),
+    ],
+)
+def test_actual_fast_gate_requires_success_from_every_declared_job(
+    tmp_path: Path, coverage_requested: str, fault: str
+) -> None:
     workflow = yaml.safe_load((REPO / ".github/workflows/ci.yml").read_text())
     gate = workflow["jobs"]["ci-gate"]
     required = required_ci_jobs(REPO)
     values = {name: {"result": "success"} for name in required}
+    values["own-exemplar-coverage"]["result"] = "skipped" if coverage_requested == "false" else "success"
     if fault == "omitted":
         values.pop("lint")
     elif fault == "extra":
         values["unrelated"] = {"result": "success"}
-    elif fault != "none":
+    elif fault == "coverage-omitted":
+        values.pop("own-exemplar-coverage")
+    elif fault.startswith("coverage-"):
+        values["own-exemplar-coverage"]["result"] = fault.removeprefix("coverage-")
+    elif fault not in {"none", "malformed"}:
         values["lint"]["result"] = fault
     step = gate["steps"][0]
+    assert step["env"]["COVERAGE_REQUESTED"] == (
+        "${{ github.event_name == 'workflow_dispatch' && inputs.coverage-project != '' }}"
+    )
     result = subprocess.run(
         ["bash", "-e", "-o", "pipefail", "-c", step["run"]],
-        env={**os.environ, "NEEDS_JSON": json.dumps(values), "GITHUB_STEP_SUMMARY": str(tmp_path / "summary.md")},
+        env={
+            **os.environ,
+            "COVERAGE_REQUESTED": coverage_requested,
+            "NEEDS_JSON": "null" if fault == "malformed" else json.dumps(values),
+            "GITHUB_STEP_SUMMARY": str(tmp_path / "summary.md"),
+        },
         capture_output=True,
         text=True,
         timeout=10,
         check=False,
     )
-    assert (result.returncode == 0) == (fault == "none"), result.stderr
+    assert (result.returncode == 0) == (fault == "none" and coverage_requested in {"true", "false"}), result.stderr
 
 
 def test_full_hardening_is_explicit_and_keeps_its_complete_aggregate() -> None:
@@ -98,3 +137,36 @@ def test_search_render_smoke_gets_converter_only_preparation_before_execution() 
     assert preparation["with"]["mode"] == "converter"
     execution = next(i for i, step in enumerate(steps) if step.get("name") == "Run focused behavioral tests")
     assert index < execution
+
+
+@pytest.mark.parametrize(
+    "project",
+    [
+        "templates/template_sia",
+        "active/private",
+        "templates/../template_sia",
+        "/private/template_sia",
+        "template_sia",
+        "$(exit 0)",
+        "templates/template_sia\nactive/private",
+        "",
+    ],
+)
+def test_requested_coverage_checks_public_input_before_environment_setup(project: str) -> None:
+    workflow = yaml.safe_load((REPO / ".github/workflows/ci.yml").read_text())
+    steps = workflow["jobs"]["own-exemplar-coverage"]["steps"]
+    validation = next(i for i, step in enumerate(steps) if step.get("name") == "Validate the requested public project")
+    setup = next(
+        i for i, step in enumerate(steps) if step.get("name") == "Prepare the own locked development environment"
+    )
+    assert validation < setup
+    result = subprocess.run(
+        ["bash", "-e", "-o", "pipefail", "-c", steps[validation]["run"]],
+        cwd=REPO,
+        env={**os.environ, "COVERAGE_PROJECT": project},
+        capture_output=True,
+        text=True,
+        timeout=15,
+        check=False,
+    )
+    assert (result.returncode == 0) == (project in PUBLIC_PROJECT_NAMES), result.stderr

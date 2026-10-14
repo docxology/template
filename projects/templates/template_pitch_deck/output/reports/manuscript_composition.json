@@ -1,8 +1,8 @@
 {
   "algorithm": "web-renderer-combine-v1",
-  "binding_sha256": "ccb88a7045487eed56bd9dfeb779aff0d70062c73ad3e0308ee411d1d7728ae6",
+  "binding_sha256": "27d3bacef8d327d0d13997ce2e30c8bd35fac5a4f17f89da98ce97aef32ca5a6",
   "combined_path": "output/web/_combined_manuscript.md",
-  "combined_sha256": "524d00eb32240f2fdcf774803f1846010f7dfb166093171978cbbb7274e07cf0",
+  "combined_sha256": "c76ae115b2efea71ba5f1bb367db758408ee4cfb9c9aec1e396009623c8bbb98",
   "combined_size_bytes": 13435,
   "input_root_kind": "source",
   "ordered_inputs": [
@@ -33,7 +33,7 @@
     {
       "ordinal": 5,
       "path": "manuscript/04_reproducibility.md",
-      "sha256": "60183cfc22d29e60b6bbaba62cb16c958495c3ddc79f418d5d3d5caa9750e8b8",
+      "sha256": "3bb3290d785c741f855c4022127c27fa14d896872bd02c455572dd6b66a8f4c9",
       "size_bytes": 1461
     },
     {
@@ -49,7 +49,7 @@
       "size_bytes": 48
     }
   ],
-  "ordered_inputs_sha256": "40379b94bbec8b316c5bbe34ebbc4c5426d0f57284da0dbd44976f287f1ef1a2",
+  "ordered_inputs_sha256": "8a7b684662c925a6ffa742495ebea0bfc0c97db8944e7b133c7aee3ca09dd2e7",
   "project": "templates/template_pitch_deck",
   "schema_version": "template-manuscript-composition-v1"
 }

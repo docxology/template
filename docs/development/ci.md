@@ -29,6 +29,30 @@ A project wheel
 build is packaging evidence; these source-tree tests do not certify installation
 outside the checkout, publication, native rendering, or scientific validity.
 
+## Push-time checks and measurement provenance
+
+As of 2026-10-13, normal pre-push checks retain security, public tracking,
+no-mocks, behavioral smoke and documentation contracts. `COUNTS.md`
+synchronization and dated coverage provenance checks run explicitly through
+the `counts` health gate and the full-hardening documentation job, rather than
+on every push. This permits
+publishing a verification branch when a required local tool is unavailable.
+
+Run the strict snapshot check with:
+
+```bash
+uv run python scripts/docgen/counts.py --check
+```
+
+Stale provenance remains a failure in those owning checks; the counts writer
+and provenance refresh are unchanged. To obtain hosted evidence, manually
+dispatch CI with an exact public `coverage-project`. Its requested coverage
+job, CI Gate and whole workflow must pass. Retrieve the measurement artifact
+and verify its source commit and project input hash before refreshing the
+snapshot. Until then, retain the dated measurement and report the outstanding
+verification. Release's exact-source acceptance and coverage custody still
+apply independently.
+
 ## Further hardening
 
 Use the manual **Optional Hardening** workflow for the former complete

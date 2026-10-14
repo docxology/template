@@ -4,8 +4,6 @@
 from __future__ import annotations
 
 import argparse
-import re
-import shutil
 import sys
 from pathlib import Path
 
@@ -18,6 +16,11 @@ from _bootstrap import bootstrap_project
 PROJECT_ROOT = bootstrap_project(include_infrastructure=True)
 
 from infrastructure.core.logging.utils import get_logger, log_operation
+from infrastructure.rendering.manuscript_injection import (
+    hydrate_manuscript_tree,
+    validate_hydration_paths,
+    validate_project_selection,
+)
 
 from config import PROJECT_NAME
 from manuscript.variables import compute_variables, inject_variables
@@ -32,14 +35,10 @@ def main() -> int:
     parser.add_argument("--dry-run", action="store_true")
     args = parser.parse_args()
 
-    if Path(args.project).name != PROJECT_NAME:
-        parser.error(
-            f"this project-local entrypoint only renders {PROJECT_NAME!r}; use the target project's own stage-05 script"
-        )
+    validate_project_selection(PROJECT_ROOT, args.project)
 
     manuscript_dir = PROJECT_ROOT / "manuscript"
     output_dir = PROJECT_ROOT / "output"
-    rendered_dir = output_dir / "manuscript"
     if not manuscript_dir.is_dir():
         logger.error("Manuscript directory not found: %s", manuscript_dir)
         return 1
@@ -47,35 +46,17 @@ def main() -> int:
         logger.error("Output directory not found: %s", output_dir)
         return 1
 
+    validate_hydration_paths(PROJECT_ROOT)
+
     with log_operation("Manuscript variable injection"):
         variables = compute_variables(output_dir)
-        rendered_dir.mkdir(parents=True, exist_ok=True)
-        files_changed = 0
-        total_injected = 0
-        skip_docs = {"README.md", "AGENTS.md", "SYNTAX.md"}
 
-        for md_file in sorted(manuscript_dir.glob("*.md")):
-            if md_file.name in skip_docs:
-                continue
-            content = md_file.read_text(encoding="utf-8")
-            rendered = inject_variables(
-                content,
-                variables,
-                filename=md_file.name,
-                lenient=md_file.name == "02e_methods_viz_injection.md",
+        def render(filename: str, content: str) -> str:
+            return inject_variables(
+                content, variables, filename=filename, lenient=filename == "02e_methods_viz_injection.md"
             )
-            if rendered != content:
-                files_changed += 1
-                total_injected += len(re.findall(r"\{\{(\w+)\}\}", content)) - len(
-                    re.findall(r"\{\{(\w+)\}\}", rendered)
-                )
-            if not args.dry_run:
-                (rendered_dir / md_file.name).write_text(rendered, encoding="utf-8")
 
-        if not args.dry_run:
-            for other_file in manuscript_dir.iterdir():
-                if other_file.suffix != ".md" and other_file.is_file():
-                    shutil.copy2(other_file, rendered_dir / other_file.name)
+        files_changed, total_injected = hydrate_manuscript_tree(PROJECT_ROOT, render, dry_run=args.dry_run)
 
         logger.info(
             "Variable injection complete: %d variables across %d files",

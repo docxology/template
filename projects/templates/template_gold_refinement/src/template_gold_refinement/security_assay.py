@@ -3,6 +3,8 @@ from __future__ import annotations
 from dataclasses import asdict, dataclass
 from typing import Any
 
+from .formalisms import format_table_code
+
 
 @dataclass(frozen=True)
 class SecurityAssayRecord:
@@ -61,8 +63,8 @@ def security_assay_table_rows(records: tuple[SecurityAssayRecord, ...]) -> str:
         return "| not configured | not configured | not configured | not configured | not configured | not configured |"
     return "\n".join(
         "| "
-        f"{item.assay_id} | {item.threat} | {item.standard} | {item.evidence_surface} | "
-        f"{item.validator} | {item.claim_boundary} |"
+        f"{item.assay_id} | {item.threat} | {item.standard} | {format_table_code(item.evidence_surface)} | "
+        f"{format_table_code(item.validator)} | {item.claim_boundary} |"
         for item in records
     )
 
