@@ -45,7 +45,8 @@
     "tests/test_domain_adapter.py",
     "tests/test_coercion.py",
     "tests/test_formalisms.py",
-    "tests/test_manuscript_variables.py"
+    "tests/test_manuscript_variables.py",
+    "tests/test_security_assay.py"
   ],
   "templates/template_literature_meta_analysis": [
     "tests/test_config_validation.py",

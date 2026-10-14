@@ -275,7 +275,7 @@ def _add_claim_and_evidence_variables(variables: dict[str, str], gr_config: Any,
         claim_rows.append(
             f"| {claim.get('name', '')} "
             f"| {claim.get('claim', '')} "
-            f"| {claim.get('evidence', '')} "
+            f"| {format_table_code(claim.get('evidence', ''))} "
             f"| {claim.get('boundary', '')} |"
         )
     variables["CONTRIBUTION_CLAIMS_TABLE"] = "\n".join(claim_rows)
@@ -314,7 +314,8 @@ def _add_claim_and_evidence_variables(variables: dict[str, str], gr_config: Any,
     failure_rows = []
     for fm in gr_config.failure_modes:
         failure_rows.append(
-            f"| {fm.get('name', '')} | {fm.get('risk', '')} | {fm.get('detection', '')} | {fm.get('mitigation', '')} |"
+            f"| {fm.get('name', '')} | {fm.get('risk', '')} "
+            f"| {format_table_code(fm.get('detection', ''))} | {format_table_code(fm.get('mitigation', ''))} |"
         )
     variables["FAILURE_MODES_TABLE"] = "\n".join(failure_rows)
 

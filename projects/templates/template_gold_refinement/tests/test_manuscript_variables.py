@@ -189,6 +189,14 @@ def test_real_project_expanded_token_surface():
     config = load_gold_refinement_config(project_root)
     plan = generate_token_plan(config)
     original_rows = {
+        "CONTRIBUTION_CLAIMS_TABLE": "\n".join(
+            f"| {row['name']} | {row['claim']} | {row['evidence']} | {row['boundary']} |"
+            for row in config.contribution_claims
+        ),
+        "FAILURE_MODES_TABLE": "\n".join(
+            f"| {row['name']} | {row['risk']} | {row['detection']} | {row['mitigation']} |"
+            for row in config.failure_modes
+        ),
         "TOKEN_PROVENANCE_TABLE": "\n".join(
             f"| {name} | {row['category']} | {row['value']} | {row['section']} | {row['source']} |"
             for name, row in sorted(plan.provenance.items())

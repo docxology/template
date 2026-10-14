@@ -31,6 +31,12 @@ def test_security_assay_table_and_summary_bound_scan_claims():
     records = build_security_assay(cfg)
     rows = security_assay_table_rows(records)
     summary = security_assay_summary_line(records)
+    assert rows.replace("`", "") == "\n".join(
+        f"| {item.assay_id} | {item.threat} | {item.standard} | {item.evidence_surface} | "
+        f"{item.validator} | {item.claim_boundary} |"
+        for item in records
+    )
+    assert "`src/template_gold_refinement/security_assay.py`" in rows
     assert "NIST SP 800-207" in rows
     assert "SLSA v1.2" in rows
     assert "MITRE ATT&CK" in rows
