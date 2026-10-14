@@ -148,12 +148,12 @@
       "svg_path": "claim_evidence_assay.svg",
       "png_exists": true,
       "svg_exists": true,
-      "png_bytes": 679002,
-      "svg_bytes": 136827,
+      "png_bytes": 688592,
+      "svg_bytes": 139963,
       "width_px": 3947,
       "height_px": 2038,
       "nonwhite_fraction": 0.217565,
-      "color_variance": 0.06041014,
+      "color_variance": 0.06067066,
       "passes_quality": true
     },
     {
@@ -178,12 +178,12 @@
       "svg_path": "evidence_tier_ladder.svg",
       "png_exists": true,
       "svg_exists": true,
-      "png_bytes": 123371,
-      "svg_bytes": 52166,
+      "png_bytes": 123410,
+      "svg_bytes": 52158,
       "width_px": 3419,
       "height_px": 1447,
-      "nonwhite_fraction": 0.113781,
-      "color_variance": 0.04048412,
+      "nonwhite_fraction": 0.113834,
+      "color_variance": 0.04050338,
       "passes_quality": true
     }
   ]

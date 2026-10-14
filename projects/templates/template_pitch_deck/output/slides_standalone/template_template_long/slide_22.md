@@ -2,9 +2,9 @@
 
 *Slide 22 of 57 — template_template pitch, long deck — kind: `stat`*
 
-## 9 platforms
+## 9 historical references
 
-Durable publication records already on file (concept DOI 10.5281/zenodo.20419007): Zenodo, GitHub, PyPI (sandbox), IPFS, Software Heritage, GitHub Pages, Netlify, Hugging Face, OSF. Licensed Apache-2.0.
+Prior v1.0.9 references: Zenodo, GitHub, PyPI (sandbox), IPFS, Software Heritage, GitHub Pages, Netlify, Hugging Face, OSF. Intended v2.0.0 is unreleased. Licensed Apache-2.0.
 
 ---
 

@@ -3,7 +3,7 @@
 *Slide 26 of 57 — template_template pitch, long deck — kind: `content`*
 
 - template_active_inference is called out here only as one concrete instance to point to — every name in that list is an independently-built exemplar following the identical two-layer architecture, not a hand-picked best case.
-- Neither exemplar's coverage gate or drift check required any special-casing to add — the contract is uniform across all 24 projects, and the folder itself is the evidence, not a claim about it.
+- Neither exemplar's coverage gate or drift check required any special-casing to add — the contract is uniform across all 25 projects, and the folder itself is the evidence, not a claim about it.
 
 ---
 

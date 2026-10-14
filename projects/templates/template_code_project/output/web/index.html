@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="generator" content="pandoc 3.11" />
+  <meta name="generator" content="pandoc 3.12.1" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
   <meta name="author" content="Daniel Ari Friedman" />
   <meta name="description" content="Theoretical Bounds and Empirical Performance in Quadratic Minimization" />
@@ -13,7 +13,10 @@
     */
     html {
       color: #1a1a1a;
+      color: light-dark(#1a1a1a, #fdfdfd);
       background-color: #fdfdfd;
+      background-color: light-dark(#fdfdfd, #1a1a1a);
+      color-scheme: light dark;
     }
     body {
       margin: 0 auto;
@@ -38,11 +41,16 @@
     }
     @media print {
       html {
-        background-color: white;
+        color-scheme: light only;
       }
-      body {
+      html, body, pre, code {
         background-color: transparent;
+      }
+      body, a, a:visited, blockquote {
         color: black;
+      }
+      pre, code {
+        padding: 0;
       }
       p, h2, h3 {
         orphans: 3;
@@ -55,11 +63,8 @@
     p {
       margin: 1em 0;
     }
-    a {
-      color: #1a1a1a;
-    }
-    a:visited {
-      color: #1a1a1a;
+    a, a:visited {
+      color: inherit;
     }
     img {
       max-width: 100%;
@@ -88,8 +93,11 @@
     blockquote {
       margin: 1em 0 1em 1.7em;
       padding-left: 1em;
-      border-left: 2px solid #e6e6e6;
+      border-left: 2px solid;
+      border-color: #e6e6e6;
+      border-color: light-dark(#e6e6e6, #4c4c4c);
       color: #606060;
+      color: light-dark(#606060, #b6b6b6);
     }
     code {
       white-space: pre-wrap;
@@ -113,7 +121,7 @@
     }
     hr {
       border: none;
-      border-top: 1px solid #1a1a1a;
+      border-top: 1px solid currentColor;
       height: 1px;
       margin: 1em 0;
     }
@@ -130,11 +138,11 @@
     }
     tbody {
       margin-top: 0.5em;
-      border-top: 1px solid #1a1a1a;
-      border-bottom: 1px solid #1a1a1a;
+      border-top: 1px solid currentColor;
+      border-bottom: 1px solid currentColor;
     }
     th {
-      border-top: 1px solid #1a1a1a;
+      border-top: 1px solid currentColor;
       padding: 0.25em 0.5em 0.25em 0.5em;
     }
     td {
@@ -500,6 +508,9 @@ pre {
 }
 
 pre code {
+  background-color: transparent;
+  padding: 0;
+  border-radius: 0;
   overflow-wrap: inherit;
   white-space: inherit;
   word-break: inherit;
@@ -712,6 +723,7 @@ mjx-container[display="true"] {
 }
 
 </style>
+<script data-template-source-font-loader src="assets/source-web-fonts.js"></script>
 </head>
 <body>
 <a class="skip-link" href="#main-content">Skip to main content</a>
@@ -1000,7 +1012,7 @@ URL: <code>pending</code> - ✗ PDF SHA-256: <code>pending</code></p>
 </tr>
 <tr>
 <td>Version</td>
-<td>2.5.2</td>
+<td>3.0.0</td>
 </tr>
 <tr>
 <td>Concept DOI</td>
@@ -1562,7 +1574,7 @@ follow <code>experiment.step_sizes</code> in <code>config.yaml</code>;
 the body rows below are injected at render time from that CSV
 (<code>RESULT_TABLE_ROWS</code> in
 <code>scripts/z_generate_manuscript_variables.py</code>).</p>
-<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable table: Table 1: Gradient descent outcomes per configured step size: state at termination, iteration count capped by \(N_{\ma…"><table id="tbl:opt_results" style="width:100%;" data-responsive-table="true">
+<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable table: Table 1: Gradient descent outcomes per configured step size: state at termination, iteration count capped by \(N_{\ma…"><table id="tbl:opt_results" style="width:99%;" data-responsive-table="true">
 <caption>Table 1: Gradient descent outcomes per configured step size:
 state at termination, iteration count capped by <span
 class="math inline">\(N_{\max} = 1000\)</span>, the
@@ -1632,8 +1644,8 @@ iterate.</caption>
 </tr>
 <tr>
 <td>2.50</td>
-<td>-18027808360396904929014313133756094602021490593623455934143098782085898358268968910321926429082931340564236187769460640748166785144621899661251320903368704.0000</td>
-<td>162500937139598269661779749391931612290431672893591152510335296183621559147095059174363943753278426469403184325060604037672721111493697147195103358138591980698705733738747223639633375614563987655337958785982898164996799665358767974385539800466556596391365426397418791309924510722911320257856182821332197572608.0000</td>
+<td>-1.8028e+154</td>
+<td>1.6250e+308</td>
 <td>876</td>
 <td>No</td>
 <td>non_finite</td>
@@ -1792,11 +1804,14 @@ converged settings)</li>
 (absolute error <span class="math inline">\(&lt; 10^{-8}\)</span> for
 converged settings)</li>
 </ul>
-<p>Divergent step sizes (<span class="math inline">\(\alpha \geq
-2\)</span>) confirm the theoretical instability boundary, demonstrating
-that gradient descent with fixed step size requires <span
-class="math inline">\(\alpha &lt; 2/\lambda_{\max}\)</span> for
-convergence on quadratic objectives.</p>
+<p>For a positive-definite quadratic, contraction requires <span
+class="math inline">\(0 &lt; \alpha &lt; 2/\lambda_{\max}\)</span>. At
+the unit-Hessian boundary <span class="math inline">\(\alpha=2\)</span>,
+the error alternates without contracting; for <span
+class="math inline">\(\alpha&gt;2\)</span>, it grows when the initial
+point is not already the optimum. The configured divergent runs
+therefore illustrate the instability region rather than uniform
+convergence.</p>
 <h2 data-number="4.5" id="algorithm-characteristics"><span
 class="header-section-number">4.5</span> Algorithm Characteristics</h2>
 <h3 data-number="4.5.1" id="strengths"><span
@@ -1931,13 +1946,13 @@ to <span class="math inline">\(10^{-9}\)</span> within the iteration
 cap, while every other column saturates at machine precision (<span
 class="math inline">\(10^{-16}\)</span>) regardless of how far <span
 class="math inline">\(x_0\)</span> starts from the optimum (range <span
-class="math inline">\([-50, 50]\)</span>). The right panel summarises
-this uniformity as the aggregate stability score of 1.00/1.00 returned
-by
-<code>infrastructure.scientific.stability.check_numerical_stability()</code>,
-which exercises the same objective with extreme inputs (NaN, <span
-class="math inline">\(\pm\infty\)</span>, <span
-class="math inline">\(\pm 10^{10}\)</span>).</figcaption>
+class="math inline">\([-50, 50]\)</span>). The right panel reports the
+separate numerical-stability score of 1.00/1.00 from
+<code>infrastructure.scientific.stability.check_numerical_stability()</code>:
+it evaluates the scalar quadratic objective at the first four configured
+starting points and scores finite values for magnitude and
+near-underflow. This objective-evaluation check is distinct from the
+heatmap’s gradient-descent sweep.</figcaption>
 </figure>
 <h3 data-number="4.6.4" id="performance-metrics-summary"><span
 class="header-section-number">4.6.4</span> Performance Metrics
@@ -1973,29 +1988,25 @@ mechanisms across <code>infrastructure.reporting</code>,
 <li><strong>Numerical accuracy</strong> checks verified systematically
 using PyTest.</li>
 </ul>
-<p>All tests pass with coverage exceeding the 90% threshold, ensuring
-implementation correctness across core logic, convergence detection, and
-logging pathways without the use of mocks.</p>
+<p>Passing the declared suite and its 90% coverage floor provides
+evidence for the tested core logic, convergence detection, and logging
+pathways. It does not prove correctness for every input or replace
+scientific validation.</p>
 <h2 data-number="4.8" id="discussion"><span
 class="header-section-number">4.8</span> Discussion</h2>
-<p>The experimental results validate the gradient descent implementation
-and confirm the theoretical convergence predictions from sec. <a
-href="#sec:methodology">3</a>. The monotonic relationship between step
-size and iteration count (tbl. <a href="#tbl:opt_results">1</a>) aligns
-with the convergence factor analysis in
-eq. <strong>¿eq:convergence_factor?</strong>, while the uniform solution
-accuracy across all step sizes demonstrates the robustness of the
-convergence criterion <span class="math inline">\(\|\nabla f(x)\| &lt;
-\epsilon\)</span>. The automated analysis pipeline successfully
-generated six publication-quality visualizations and structured
-numerical outputs, validating the template’s end-to-end research
-workflow from algorithmic implementation through automated
-infrastructure-driven reporting and manuscript integration.</p>
-<p><em>As a meta-architectural note: the perfect embedding of these
-outputs into this document, including all dynamic references (e.g.,
-fig. <a href="#fig:stability">6</a>), confirms the absolute reliability
-of the <code>infrastructure/rendering/pdf_renderer.py</code> module
-handling the Pandoc conversion.</em></p>
+<p>The configured results distinguish convergence, iteration-cap
+termination, and non-finite updates. Iteration counts are not monotonic
+in step size: the unit-Hessian contraction factor <span
+class="math inline">\(\rho(\alpha)=|1-\alpha|\)</span> decreases toward
+<span class="math inline">\(\alpha=1\)</span> and increases afterward.
+Accuracy claims apply to converged rows; capped and unstable runs must
+retain their termination status. The generated table and figures
+document this finite sweep, not all possible objectives or parameter
+choices. The analysis pipeline integrates those results into manuscript
+outputs through the declared configuration and variable injection.</p>
+<p>Successful generation and reference resolution establish this
+artifact path for the tested candidate; they do not establish absolute
+renderer reliability or replace visual inspection of its output.</p>
 <hr />
 <h1 data-number="5" id="sec:conclusion"><span
 class="header-section-number">5</span> Conclusion</h1>
@@ -2164,9 +2175,10 @@ maximum iteration limit of <span class="math inline">\(N_{\max} =
 class="header-section-number">6.3</span> Numerical Stability Grid</h2>
 <p>To validate robustness, the optimizer is exercised across a grid of 8
 starting points and 6 step sizes, producing 48 total evaluations. This
-comprehensive sweep confirms that convergence is not an artifact of a
-narrow parameter choice. The stability metric is computed for the
-<code>quadratic_function</code> objective via
+finite sweep measures sensitivity to the selected initial points and
+step sizes; it does not establish convergence outside the contractive
+region or before every iteration cap. The stability metric is computed
+for the <code>quadratic_function</code> objective via
 <code>infrastructure.scientific.stability.check_numerical_stability()</code>.</p>
 <h2 data-number="6.4" id="dimensional-scaling"><span
 class="header-section-number">6.4</span> Dimensional Scaling</h2>
@@ -2183,10 +2195,10 @@ make microsecond values unsuitable as pinned reproducibility claims.</p>
 <h2 data-number="6.5" id="computational-environment"><span
 class="header-section-number">6.5</span> Computational Environment</h2>
 <ul>
-<li><strong>Python</strong>: 3.14.6</li>
-<li><strong>NumPy</strong>: 2.4.1</li>
+<li><strong>Python</strong>: 3.14.4</li>
+<li><strong>NumPy</strong>: 2.4.2</li>
 <li><strong>Platform</strong>: Darwin arm64</li>
-<li><strong>Generated</strong>: 2026-09-28T17:16:20Z</li>
+<li><strong>Generated</strong>: 2026-10-14T00:59:41Z</li>
 </ul>
 <h2 data-number="6.6" id="pipeline-ordering"><span
 class="header-section-number">6.6</span> Pipeline ordering</h2>
@@ -2281,11 +2293,11 @@ class="header-section-number">7.1</span> Configuration Provenance</h2>
 <tbody>
 <tr>
 <td>Config hash (SHA-256, truncated)</td>
-<td><code>292643985e5af3f2</code></td>
+<td><code>55b948844dfd7b70</code></td>
 </tr>
 <tr>
 <td>Paper version</td>
-<td>2.5.2</td>
+<td>3.0.0</td>
 </tr>
 <tr>
 <td>First author</td>
@@ -2359,7 +2371,10 @@ class="header-section-number">7.3.2</span> Numerical Stability</h3>
 (out of 1.00)</p>
 <p>The stability analysis tested 48 parameter combinations (8 starting
 points <span class="math inline">\(\times\)</span> 6 step sizes),
-confirming uniform convergence across the entire parameter space.</p>
+recording termination accuracy across this finite gradient-descent grid.
+This is distinct from the reported stability score, which checks scalar
+objective evaluations and does not certify convergence of every
+optimization trajectory.</p>
 <h3 data-number="7.3.3" id="benchmark-demonstration"><span
 class="header-section-number">7.3.3</span> Benchmark Demonstration</h3>
 <p>This exemplar also demonstrates
@@ -2494,7 +2509,7 @@ and contains the required fields per entry type:</p>
 class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python <span class="at">-m</span> infrastructure.reference.citation.cli validate <span class="dt">\</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>    projects/templates/template_code_project/manuscript/references.bib <span class="at">--strict</span></span></code></pre></div>
 <hr />
-<p><strong>Release:</strong> v2.5.2 · DOI
+<p><strong>Release:</strong> v3.0.0 · DOI
 <code>10.5281/zenodo.20417136</code> · SHA-256 <code>pending…</code> ·
 pairing pending</p>
 <figure>

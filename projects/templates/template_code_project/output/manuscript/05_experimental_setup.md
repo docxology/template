@@ -28,7 +28,7 @@ All runs start from the initial point $x_0 = 0.0$ and use a convergence toleranc
 
 ## Numerical Stability Grid
 
-To validate robustness, the optimizer is exercised across a grid of 8 starting points and 6 step sizes, producing 48 total evaluations. This comprehensive sweep confirms that convergence is not an artifact of a narrow parameter choice. The stability metric is computed for the `quadratic_function` objective via `infrastructure.scientific.stability.check_numerical_stability()`.
+To validate robustness, the optimizer is exercised across a grid of 8 starting points and 6 step sizes, producing 48 total evaluations. This finite sweep measures sensitivity to the selected initial points and step sizes; it does not establish convergence outside the contractive region or before every iteration cap. The stability metric is computed for the `quadratic_function` objective via `infrastructure.scientific.stability.check_numerical_stability()`.
 
 ## Dimensional Scaling
 
@@ -36,10 +36,10 @@ Performance benchmarking spans problem dimensions $d \in \{1, 2, 5, 10, 20, 50\}
 
 ## Computational Environment
 
-- **Python**: 3.14.6
-- **NumPy**: 2.4.1
+- **Python**: 3.14.4
+- **NumPy**: 2.4.2
 - **Platform**: Darwin arm64
-- **Generated**: 2026-09-28T17:16:20Z
+- **Generated**: 2026-10-14T00:59:41Z
 
 ## Pipeline ordering
 
