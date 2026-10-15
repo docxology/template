@@ -13,7 +13,7 @@ import time
 import types
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Protocol
+from typing import TYPE_CHECKING, Any, Protocol
 
 from infrastructure.core.bytecode_audit import verify_executed_source_code
 from infrastructure.project.public_acceptance_evidence import write_json
@@ -32,6 +32,10 @@ from infrastructure.reporting.native_source_external_admission import (
     NativeSourceContext,
 )
 from infrastructure.reporting.release_readiness_snapshot import SnapshotReader
+
+if TYPE_CHECKING:
+    from infrastructure.reporting.native_full_worker_pdfium import NativePDFiumSelection
+
 
 EVENT_SCHEMA = "template-office-original-inline-pdfium-event-v1"
 _LIVE_ADMISSION = object()
@@ -316,6 +320,116 @@ def admit_pdfium_runtime(
         image_before_import,
     )
     result.verify()
+    return result
+
+
+def _pdfium_batch_runtime_observation(
+    site: Path, members: dict[str, bytes], prefix: Path, deadline: float
+) -> tuple[dict[str, Any], dict[str, Any], dict[str, Any]]:
+    """Observe local physical/audit DATA only; never mint a runtime capability."""
+    installed = _installed(site, members, deadline)
+    executable = Path(sys.executable).resolve(strict=True)
+    body, identity = _file(executable, deadline)
+    interpreter = {"path": str(executable), "sha256": _sha(body), "identity": identity}
+    libraries = [
+        site / name
+        for name in members
+        if name.startswith("pypdfium2_raw/") and Path(name).suffix.lower() in {".dylib", ".dll", ".so"}
+    ]
+    if len(libraries) != 1:
+        raise ValueError("PDFium Source wheel has an ambiguous native library selection")
+    image = _loaded_image(libraries[0], deadline, require=False)
+    if image["images"]:
+        raise ValueError("PDFium native library was loaded before batch provider admission")
+    for name in PROVIDERS:
+        verify_executed_source_code(site / name, prefix)
+    return installed, interpreter, image
+
+
+def admit_pdfium_runtimes(
+    source: NativeSourceContext,
+    selections: tuple[tuple[str, NativePDFiumSelection], ...],
+    *,
+    deadline: float,
+) -> dict[str, PDFiumRuntimeAdmission]:
+    """Hold actual preimport/audit facts for one fixed, wholly closed batch."""
+    from infrastructure.reporting.native_pdfium_source_wheel import (
+        _validate_pdfium_batch_inputs,
+        inspect_pdfium_locked_wheel,
+    )
+    from infrastructure.reporting.native_preparation_progress import preparation_progress
+
+    _validate_pdfium_batch_inputs(source, selections, deadline)
+    owner_pid = os.getpid()
+    if any(name == package or name.startswith(package + ".") for name in sys.modules for package in PROVIDERS):
+        raise ValueError("PDFium runtime batch must precede actual namespace imports")
+    prefix = source.fresh_pycache_prefix
+    registry = getattr(sys, "_template_executed_bytecode_audit", None)
+    if prefix is None or not isinstance(registry, types.MappingProxyType) or registry.get("prefix") != str(prefix):
+        raise ValueError("PDFium batch needs the launcher's real fresh preimport audit")
+    preparation_progress("pdfium-runtimes", "source-opening", deadline)
+    source.verify_correspondence(source.reference, source.bindings.current_root, source.current_source_reader, deadline)
+    lock = source.current_source_reader.read("uv.lock").content
+    pending = []
+    for scope, selection in selections:
+        preparation_progress("pdfium-runtimes", "selection", deadline, scope)
+        site, wheel = selection.site.absolute(), selection.wheel.absolute()
+        if any(
+            not any((site / name).is_relative_to(Path(root)) for root in registry["source_roots"]) for name in PROVIDERS
+        ):
+            raise ValueError("PDFium batch providers are outside the original preimport audit roots")
+        raw, identity = _file(wheel, deadline)
+        members, declared = inspect_pdfium_locked_wheel(wheel.name, raw, lock, deadline=deadline)
+        observation = {"path": str(wheel), **declared, "identity": identity}
+        before, interpreter, image = _pdfium_batch_runtime_observation(site, members, prefix, deadline)
+        if before["selection"]["version"] != observation["version"]:
+            raise ValueError("PDFium selected installed version differs from Source-nominated wheel")
+        pending.append((scope, site, wheel, members, observation, before, interpreter, image))
+    preparation_progress("pdfium-runtimes", "source-closing", deadline)
+    source.verify_correspondence(source.reference, source.bindings.current_root, source.current_source_reader, deadline)
+    for scope, site, wheel, members, observation, before, interpreter, image in pending:
+        preparation_progress("pdfium-runtimes", "selection-closing", deadline, scope)
+        raw, identity = _file(wheel, deadline)
+        if (
+            _sha(raw) != observation["sha256"]
+            or identity != observation["identity"]
+            or _pdfium_batch_runtime_observation(site, members, prefix, deadline) != (before, interpreter, image)
+        ):
+            raise ValueError("PDFium batch wheel/provider/interpreter/audit/image custody changed")
+    if os.getpid() != owner_pid or any(
+        name == package or name.startswith(package + ".") for name in sys.modules for package in PROVIDERS
+    ):
+        raise ValueError("PDFium batch lost its original PID or preimport namespace absence")
+    preparation_progress("pdfium-runtimes", "source-closing", deadline)
+    source.verify_correspondence(source.reference, source.bindings.current_root, source.current_source_reader, deadline)
+    if os.getpid() != owner_pid or any(
+        name == package or name.startswith(package + ".") for name in sys.modules for package in PROVIDERS
+    ):
+        raise ValueError("PDFium batch changed PID or namespace during final Source closing")
+    remaining(deadline)
+    result = {}
+    for scope, site, wheel, members, observation, before, interpreter, image in pending:
+        seal = _runtime_seal(
+            source, scope, site, wheel, members, observation, before, interpreter, owner_pid, prefix, deadline, image
+        )
+        result[scope] = PDFiumRuntimeAdmission(
+            source,
+            scope,
+            site,
+            wheel,
+            members,
+            observation,
+            before,
+            owner_pid,
+            interpreter,
+            prefix,
+            deadline,
+            seal,
+            _LIVE_ADMISSION,
+            None,
+            image,
+        )
+    preparation_progress("pdfium-runtimes", "completed", deadline)
     return result
 
 

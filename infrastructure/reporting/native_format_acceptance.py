@@ -40,7 +40,6 @@ from infrastructure.reporting.native_format_joint_source import (
     JOINT_SCHEMA,
     NativeSDKSelection,
     admit_native_source_operation,
-    admitted_native_providers,
     source_environment,
     worker_arguments,
 )
@@ -72,7 +71,8 @@ from infrastructure.reporting.release_readiness_profile import Requirement
 from infrastructure.reporting.release_readiness_snapshot import SnapshotReader
 
 
-from infrastructure.reporting.native_full_worker_pdfium import NativePDFiumSelection, admit_full_worker_pdfium_provider
+from infrastructure.reporting.native_full_worker_pdfium import NativePDFiumSelection, admit_full_worker_pdfium_providers
+from infrastructure.reporting.native_project_provider_batch import admitted_native_provider_batch
 from infrastructure.reporting.native_hosted_original_producer import NativeHostedTransportRequest
 
 
@@ -328,27 +328,16 @@ def _run_original_native_cells(
     # Admit every provider before the first reader imports a PDFium namespace.
     # Scope factories intentionally refuse post-import admission. Reusing a held
     # pre-import capability keeps subsequent cells inside that original boundary.
-    prepared_providers = {
-        scope: admitted_native_providers(
-            source_context, scope, provider_wheels or {}, Path(sys.executable), deadline=deadline
-        )
-        for scope in selected
-    }
-    prepared_pdfium = {
-        scope: admit_full_worker_pdfium_provider(pdfium_selection, source_context, scope=scope, deadline=deadline)
-        for scope in selected
-    }
-    from infrastructure.reporting.native_office_diagram_runtime import admit_pdfium_runtime
+    prepared_providers = admitted_native_provider_batch(
+        source_context, selected, provider_wheels or {}, Path(sys.executable), deadline=deadline
+    )
+    selections = tuple((scope, pdfium_selection) for scope in selected)
+    prepared_pdfium = admit_full_worker_pdfium_providers(source_context, selections, deadline=deadline)
+    from infrastructure.reporting.native_office_diagram_runtime import admit_pdfium_runtimes
 
-    # Keep actual pre-import absence and SDK/audit ownership for every reader
-    # scope. A later cell must reuse this genuine admission, never create a
-    # post-import substitute or repeat an absence assertion from receipt DATA.
-    prepared_reader_runtimes = {
-        scope: admit_pdfium_runtime(
-            source_context, scope=scope, site=provider.selection.site, wheel=provider.selection.wheel, deadline=deadline
-        )
-        for scope, provider in prepared_pdfium.items()
-    }
+    # Every scope holds its own genuine preimport admission. The complete fixed
+    # selection closes Source custody before any provider capability escapes.
+    prepared_reader_runtimes = admit_pdfium_runtimes(source_context, selections, deadline=deadline)
     _state.update(
         original_provider_bindings={scope: prepared_providers[scope][0] for scope in selected},
         office_reader_selection=office_reader_selection,

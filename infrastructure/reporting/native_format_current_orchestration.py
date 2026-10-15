@@ -383,30 +383,28 @@ def finish_native_format_acceptance(
                         )
                         from infrastructure.reporting.native_full_worker_pdfium import (
                             NativePDFiumProvider,
-                            admit_full_worker_pdfium_provider,
+                            admit_full_worker_pdfium_providers,
                         )
-                        from infrastructure.reporting.native_office_diagram_runtime import admit_pdfium_runtime
+                        from infrastructure.reporting.native_office_diagram_runtime import admit_pdfium_runtimes
 
                         # Admit ALL Current scopes before the first Current Core
                         # or retained-reader PDFium namespace import. These are
                         # fresh factory results for the actual separate Source;
                         # Original provider objects nominate physical paths only.
+                        nominations = {}
                         for original_item in admitted:
                             current_scope = original_item["scope"]
                             nominee = original_item["pdfium_provider"]
-                            if not isinstance(nominee, NativePDFiumProvider) or current_scope in current_pdfium:
+                            if not isinstance(nominee, NativePDFiumProvider) or current_scope in nominations:
                                 raise ValueError("Current PDFium needs one genuine Original nominee per admitted scope")
-                            current_pdfium[current_scope] = admit_full_worker_pdfium_provider(
-                                nominee.selection, current_source, scope=current_scope, deadline=deadline
-                            )
-                        for current_scope, current_provider in current_pdfium.items():
-                            current_pdfium_runtimes[current_scope] = admit_pdfium_runtime(
-                                current_source,
-                                scope=current_scope,
-                                site=current_provider.selection.site,
-                                wheel=current_provider.selection.wheel,
-                                deadline=deadline,
-                            )
+                            nominations[current_scope] = nominee.selection
+                        selections = tuple(nominations.items())
+                        current_pdfium.update(
+                            admit_full_worker_pdfium_providers(current_source, selections, deadline=deadline)
+                        )
+                        current_pdfium_runtimes.update(
+                            admit_pdfium_runtimes(current_source, selections, deadline=deadline)
+                        )
                         from infrastructure.reporting.native_current_epub_engine_data import (
                             prepare_current_epub_observer_tools,
                         )

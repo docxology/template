@@ -53,7 +53,7 @@ from infrastructure.reporting.release_readiness_snapshot import json_object_from
 from infrastructure.reporting.native_full_worker_pdfium import (
     NativePDFiumSelection,
     NativePDFiumProvider,
-    admit_full_worker_pdfium_provider,
+    admit_full_worker_pdfium_providers,
     pdfium_worker_arguments,
     retained_pdfium_code_sources,
 )
@@ -241,18 +241,11 @@ def admit_native_reader_operation(
     This factory never derives them from receipt fields or starts a clock.
     """
     source = admit_native_source_operation(root, sdk, run_id=run_id, deadline=deadline, environment=environment)
-    providers = {
-        scope: admit_full_worker_pdfium_provider(pdfium_selection, source, scope=scope, deadline=deadline)
-        for scope in originals
-    }
-    from infrastructure.reporting.native_office_diagram_runtime import admit_pdfium_runtime
+    selections = tuple((scope, pdfium_selection) for scope in originals)
+    providers = admit_full_worker_pdfium_providers(source, selections, deadline=deadline)
+    from infrastructure.reporting.native_office_diagram_runtime import admit_pdfium_runtimes
 
-    runtimes = {
-        scope: admit_pdfium_runtime(
-            source, scope=scope, site=provider.selection.site, wheel=provider.selection.wheel, deadline=deadline
-        )
-        for scope, provider in providers.items()
-    }
+    runtimes = admit_pdfium_runtimes(source, selections, deadline=deadline)
     operation = NativeReaderOperation(
         source,
         deadline,
