@@ -180,7 +180,7 @@ def _source11_live_node_reports(process: dict[str, Any]) -> None:
             or type(report.get("owner_pid")) is not int
             or report["owner_pid"] != process["owner_pid"]
             or not isinstance(report.get("node_version"), str)
-            or not re.fullmatch(r"v20\.[0-9]+\.[0-9]+", report["node_version"])
+            or not re.fullmatch(r"v24\.[0-9]+\.[0-9]+", report["node_version"])
             or report.get("platform") not in {"linux", "darwin"}
             or report.get("architecture") not in {"arm64", "x64"}
             or report.get("remaining_admission")
@@ -510,10 +510,10 @@ def _admit_source11_version_proof(
     admit_original_process: ProcessAdmitter,
 ) -> None:
     if not isinstance(proof, dict) or set(proof) != {"artifact", "process"}:
-        raise ValueError("Source11 reference lacks its actual original Node20 process proof")
+        raise ValueError("Source11 reference lacks its actual original Node24 process proof")
     binding, process = proof["artifact"], proof["process"]
     if not isinstance(binding, dict) or set(binding) != {"path", "sha256"} or not isinstance(process, dict):
-        raise ValueError("Source11 Node20 ToolAPI process binding differs")
+        raise ValueError("Source11 Node24 ToolAPI process binding differs")
     content = artifact_reader(binding)
     if (
         len(content) > 64 * 1024 * 1024
@@ -532,11 +532,11 @@ def _admit_source11_version_proof(
         or process.get("timed_out") is not False
         or process.get("custody_refused") is not False
         or not isinstance(process.get("stdout"), str)
-        or not re.fullmatch(r"v20\.[0-9]+\.[0-9]+\n?", process["stdout"])
+        or not re.fullmatch(r"v24\.[0-9]+\.[0-9]+\n?", process["stdout"])
         or process.get("stderr")
         or process.get("diagnostic")
     ):
-        raise ValueError("Source11 Node20 exact original successful native invocation differs")
+        raise ValueError("Source11 Node24 exact original successful native invocation differs")
     admit_original_process(process)
 
 
@@ -569,7 +569,7 @@ def validate_original_mermaid_sources(
     if version == "11.16.0":
         _admit_source11_version_proof(proof, original["runtime_before"], artifact_reader, admit_original_process)
     elif proof is not None:
-        raise ValueError("historical Mermaid12 record cannot borrow a Source11 Node20 runtime proof")
+        raise ValueError("historical Mermaid12 record cannot borrow a Source11 Node24 runtime proof")
     rows = original["occurrences"]
     if not isinstance(rows, list) or len(rows) != len(sources) or original["blockers"]:
         raise ValueError("portable original Mermaid source census retains unresolved diagrams")

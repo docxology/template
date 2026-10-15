@@ -1,12 +1,12 @@
 # Standalone Fork Guide
 
-The intended 0.2.0 package declares `research-project-template==4.0.1` as a real
+The intended 0.2.0 package declares `research-project-template==4.0.2` as a real
 runtime dependency for its shared validator and platform adapters, and
 `template-literature-meta-analysis==0.2.0` for its canonical literature,
 bibliometric, knowledge-graph and reproducibility engines. The checkout's
 `tool.uv.sources` entries resolve these dependencies to the public monorepo; an
 independent source clone must remove that local resolver and install an explicitly
-built platform 4.0.1 wheel and canonical meta-analysis 0.2.0 wheel alongside the exemplar wheel. These are unreleased
+built platform 4.0.2 wheel and canonical meta-analysis 0.2.0 wheel alongside the exemplar wheel. These are unreleased
 candidate packages, so do not assume they exist on PyPI. Core validator imports
 must work from the installed distributions outside the checkout.
 
@@ -158,4 +158,4 @@ flat exemplar wheels into one environment is not the standalone acceptance
 contract. Config-loader value/error/output parity was checked against the
 previous actual loader before migration. Domain-specific configuration remains
 in this exemplar, while only the identical validation functions use the declared
-platform 4.0.1 dependency.
+platform 4.0.2 dependency.

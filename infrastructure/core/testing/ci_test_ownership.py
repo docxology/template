@@ -5,6 +5,19 @@ their runtime fits the smoke deadline. Unlisted helpers retain broad fallback.
 """
 
 SOURCE_TEST_OWNERS: dict[str, tuple[str, ...]] = {
+    "infrastructure/reporting/native_mermaid_runtime_selection.py": (
+        "tests/infra_tests/reporting/test_native_mermaid_runtime_profile.py",
+    ),
+    "infrastructure/reporting/native_mermaid_source_reference.py": (
+        "tests/infra_tests/reporting/test_native_mermaid_runtime_profile.py",
+    ),
+    "infrastructure/rendering/_mermaid_v11.py": ("tests/infra_tests/reporting/test_native_mermaid_runtime_profile.py",),
+    "infrastructure/rendering/_mermaid_v11_adapter.mjs": (
+        "tests/infra_tests/reporting/test_native_mermaid_runtime_profile.py",
+    ),
+    "infrastructure/rendering/_mermaid_v11_batch_adapter.mjs": (
+        "tests/infra_tests/reporting/test_native_mermaid_runtime_profile.py",
+    ),
     "infrastructure/reporting/native_format_acceptance_contracts.py": (
         "tests/infra_tests/reporting/test_native_original_launch_correctness.py",
         "tests/infra_tests/reporting/test_native_format_acceptance.py",

@@ -126,6 +126,13 @@ jobs:
           dependency-group: installed-build
       - run: uv sync --locked --group installed-build
       - uses: ./.github/actions/setup-meta-provider
+      - name: Prepare genuine PDF raster tools for behavioral controls
+        run: |
+          set -euo pipefail
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends poppler-utils
+          pdftoppm -v
+          pdffonts -v
       - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
         with:
           name: functional-selection
@@ -168,6 +175,25 @@ jobs:
         if: matrix.shard != -1
       - uses: ./.github/actions/setup-meta-provider
         if: matrix.shard != -1
+      - name: Prepare actual auxiliary PDF producers and readers
+        if: matrix.module == 'tests/infra_tests/project/test_public_acceptance_auxiliary.py'
+        uses: ./.github/actions/setup-acceptance-documents
+        with:
+          mode: native
+      - name: Warm locked offline wheels for native portability
+        if: matrix.module == 'tests/infra_tests/reporting/test_native_whole_portability.py'
+        timeout-minutes: 10
+        run: |
+          set -euo pipefail
+          # A restored .venv does not supply the fresh offline fixture's wheel cache.
+          # Match that fixture's Root lock, default groups and dev group exactly.
+          unset UV_FROZEN
+          native_contract_scratch=$(mktemp -d "$RUNNER_TEMP/native-contract-warm.XXXXXX")
+          df -h "$RUNNER_TEMP"
+          UV_PROJECT_ENVIRONMENT="$native_contract_scratch/venv" \
+            uv sync --locked --group dev --no-python-downloads --python .venv/bin/python
+          rm -r -- "$native_contract_scratch"
+          df -h "$RUNNER_TEMP"
       - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
         if: matrix.shard != -1
         with:

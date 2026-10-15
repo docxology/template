@@ -17,10 +17,16 @@ and historical notes remain preserved.
 - Partition functional infrastructure feedback into complete complementary smoke
   shards and required full-module contract jobs, with original pytest member,
   outcome and JUnit receipts. Add conservative project impact selection.
+- Restore the declared full-infrastructure 120-second contract default without
+  changing explicit markers or nested producer defaults. Prepare genuine native
+  test tools and locked offline wheel archives in their consuming jobs.
 - Bind caches to compatible locked inputs and strengthen independent cold/warm
   serial/parallel benchmark comparisons without claiming unmeasured speedups.
 - Add a cold native diagnostic preflight and batch repeated runtime/Current
   revalidation while preserving all live ownership and closing custody checks.
+- Retain preflight preparation and launch-failure diagnostics; align the strict
+  native Mermaid runtime and actual adapters with Node 24.22.0 LTS, preserving
+  npm 11.20.0 and third-party package records.
 - Bind native stages to the selected cold interpreter and exact environment;
   preserve the original stage deadline and stop after a retained native failure.
   Add fixed phase and remaining-time diagnostics for subsequent qualification.

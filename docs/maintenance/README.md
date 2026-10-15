@@ -13,7 +13,7 @@
 | Guide | Addresses | Created |
 | --- | --- | --- |
 | [`platform-4-upgrade.md`](platform-4-upgrade.md) | Platform 4.0 implementation packages, hypotheses, exact acceptance boundaries, and pending release evidence | 2026-09-30 |
-| [`mermaid-source-typography.md`](mermaid-source-typography.md) | Template 4.0.1's bundled Liberation Sans Mermaid default, which authored settings still override it, and why a typography change requires canonical output renewal and native acceptance | 2026-10-08 |
+| [`mermaid-source-typography.md`](mermaid-source-typography.md) | Template's bundled Liberation Sans Mermaid default, which authored settings still override it, and why a typography change requires canonical output renewal and native acceptance | 2026-10-08 |
 | [`toolchain-migration.md`](toolchain-migration.md) | Pin the *interface* not the *tool* — how to swap uv, ruff, mypy, etc. without rewriting the repo | 2026-05-20 |
 | [`regression-testing.md`](regression-testing.md) | Convert "90% coverage" hygiene into actual scientific-claim binding via pinned numerical outputs for figures/tables | 2026-05-20 |
 | [`archival-targets.md`](archival-targets.md) | Insurance against Zenodo / arXiv / DOI vendor concentration via IPFS + Software Heritage parallel pins | 2026-05-20 |

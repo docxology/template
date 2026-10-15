@@ -2,39 +2,40 @@
 OUTPUT STATISTICS REPORT
 ============================================================
 
-Output Directory: output
+Output Directory: output/templates/template_madlib
+Inventory Mode: stable-shippable-output-v1
+Inventory Scope: stage5-delivery-mirror
+Inventory Root: output/templates/template_madlib
 
-Total Files: 148
-Total Size: 4.48 MB
+Total Files: 69
+Total Size: 7.58 MB
 
 Files by Category:
-  • pdf: 10 files (1.21 MB)
-  • web: 15 files (0.31 MB)
-  • slides: 94 files (1.87 MB)
-  • figures: 10 files (0.81 MB)
+  • pdf: 1 files (0.99 MB)
+  • web: 16 files (3.45 MB)
+  • slides: 12 files (1.05 MB)
+  • figures: 10 files (0.83 MB)
   • data: 5 files (0.14 MB)
-  • reports: 14 files (0.13 MB)
+  • reports: 7 files (0.02 MB)
+  • manuscript: 15 files (0.11 MB)
+  • release: 2 files (0.00 MB)
+  • root: 1 files (0.99 MB)
 
 Largest Files:
-  • template_madlib_combined.pdf: 0.94 MB (pdf)
-  • 03_results_slides.pdf: 0.27 MB (slides)
+  • source-web-fonts.js: 3.02 MB (web)
+  • template_madlib_combined.pdf: 0.99 MB (pdf)
+  • template_madlib_combined.pdf: 0.99 MB (root)
+  • 03_results_slides.pdf: 0.30 MB (slides)
   • 05_experimental_setup_slides.pdf: 0.24 MB (slides)
-  • 06_evaluation_slides.pdf: 0.16 MB (slides)
-  • madlib_cover_overview.png: 0.15 MB (figures)
-
-Missing Expected Files:
-  ⚠  simulations/ directory
-  ⚠  llm/ directory
-  ⚠  logs/ directory
 
 File Types:
-  • .json: 15 file(s)
-  • .log: 14 file(s)
-  • .tex: 14 file(s)
-  • .aux: 13 file(s)
-  • .pdf: 13 file(s)
-  • .toc: 13 file(s)
+  • .md: 17 file(s)
+  • .pdf: 14 file(s)
   • .html: 13 file(s)
-  • .nav: 12 file(s)
-  • .snm: 12 file(s)
-  • .vrb: 9 file(s)
+  • .json: 11 file(s)
+  • .png: 9 file(s)
+  • .js: 1 file(s)
+  • .ico: 1 file(s)
+  • .yaml: 1 file(s)
+  • .bib: 1 file(s)
+  • .txt: 1 file(s)

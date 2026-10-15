@@ -1,8 +1,8 @@
 {
   "algorithm": "web-renderer-combine-v1",
-  "binding_sha256": "9ac2a93ba145bed3cebfe00edf635d8374f7a21e9db3335ebdea00712a681025",
+  "binding_sha256": "38011e243d1489a2af0f3130ac9921ab8cc5d423787b7f3911b7e1756ef6b12c",
   "combined_path": "output/web/_combined_manuscript.md",
-  "combined_sha256": "0b17c3847f1508af52766d86ff277bec93f055da34bcac07d242178866a94b2d",
+  "combined_sha256": "41ad49d27fcafb17c4da30655fdc1ab916004ce62434dc6e3f04a04d682a4c82",
   "combined_size_bytes": 30868,
   "input_root_kind": "source",
   "ordered_inputs": [
@@ -39,7 +39,7 @@
     {
       "ordinal": 6,
       "path": "manuscript/05_reproducibility.md",
-      "sha256": "126b14a386a6232b58930eb8ad41496a56a103f642ff1921d65e2ef77a8cf630",
+      "sha256": "2780ffc84871f71a0a937d2519654546aa2c654eb1b0396a73224cefc158aea3",
       "size_bytes": 2973
     },
     {
@@ -61,7 +61,7 @@
       "size_bytes": 618
     }
   ],
-  "ordered_inputs_sha256": "29b02183df3a8a87e10c85e0d2df5deddf3dfab55000091d36e197f44ac2f78f",
+  "ordered_inputs_sha256": "e98e62623eb3f0aff467f3243131bf7a97ce38825a1fe0830ff0c50bd6fbb7e0",
   "project": "templates/template_autoscientists",
   "schema_version": "template-manuscript-composition-v1"
 }

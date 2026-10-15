@@ -21,8 +21,8 @@ function keys(value, expected) {
   return value !== null && !Array.isArray(value) && typeof value === "object" &&
     JSON.stringify(Object.keys(value).sort()) === JSON.stringify([...expected].sort());
 }
-if (process.argv.length !== 3 || !/^20\.[0-9]+\.[0-9]+$/.test(process.versions.node)) {
-  throw new Error("ordered Source11 adapter requires actual Node20 and one literal request");
+if (process.argv.length !== 3 || !/^24\.[0-9]+\.[0-9]+$/.test(process.versions.node)) {
+  throw new Error("ordered Source11 adapter requires actual Node24 and one literal request");
 }
 const request = JSON.parse(literalFile(process.argv[2], 1024 * 1024));
 if (!keys(request, ["schema_version", "package_root", "dependency_root", "puppeteer_config", "render_profile", "occurrences", "result_output", "font_profile", "font_profile_sha256"]) ||

@@ -18,7 +18,7 @@ acceptance and independent review, where required, have passed.
 - One resolved execution plan; stable stage keys; truthful typed outcomes;
   source-bound reuse; no success for incomplete or missing required evidence.
 - Each public exemplar has an independent intended version and acceptance
-  binding to platform 4.0.1 and actual source content.
+  binding to platform 4.0.2 and actual source content.
 - Real sandbox transfer and retrieval precede reviewed production promotion.
   Missing providers, credentials, tools, or hardware are blockers.
 

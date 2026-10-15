@@ -336,7 +336,7 @@ nominated runtime blocks with exit 75 and expiry exits 124.
 
 Use `--monolithic-coverage` only when diagnosing behavior that specifically
 requires a single pytest coverage process. Full verification requires the explicitly
-prepared `dev` extra, including platform 4.0.1, and blocks with exit 75 when it is
+prepared `dev` extra, including platform 4.0.2, and blocks with exit 75 when it is
 unavailable. Its producer and pytest children reuse the platform's pre-import
 source audit. The direct CLI controller uses a fresh private cache; Stage 01
 provides separate audited controller execution. This does not establish custody

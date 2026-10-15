@@ -28,6 +28,10 @@ def test_actual_shards_are_nonempty_disjoint_complete_and_include_changed_source
     assert "tests/infra_tests/core/test_ci_infra.py" in files
     assert set(infrastructure_files(ROOT)) <= set(files)
     assert shards == infrastructure_shards(ROOT, changed)
+    for asset in ("_mermaid_v11_adapter.mjs", "_mermaid_v11_batch_adapter.mjs"):
+        asset_files = infrastructure_files(ROOT, ("infrastructure/rendering/" + asset,))
+        assert "tests/infra_tests/reporting/test_native_mermaid_runtime_profile.py" in asset_files
+        assert set(infrastructure_files(ROOT)) <= set(asset_files)
 
 
 def test_deleted_test_routes_existing_owner_without_executing_nonexistent_path() -> None:

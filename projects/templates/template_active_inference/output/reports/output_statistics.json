@@ -4,12 +4,12 @@
       "exists": true,
       "file_count": 1,
       "size_mb": "4.03",
-      "total_size_bytes": 4226446,
+      "total_size_bytes": 4225833,
       "largest_files": [
         {
           "name": "template_active_inference_combined.pdf",
           "size_mb": "4.03",
-          "size_bytes": 4226446,
+          "size_bytes": 4225833,
           "path": "pdf/template_active_inference_combined.pdf"
         }
       ],
@@ -19,31 +19,32 @@
     },
     "web": {
       "exists": true,
-      "file_count": 19,
-      "size_mb": "0.66",
-      "total_size_bytes": 689285,
+      "file_count": 20,
+      "size_mb": "3.77",
+      "total_size_bytes": 3953338,
       "largest_files": [
         {
+          "name": "source-web-fonts.js",
+          "size_mb": "3.02",
+          "size_bytes": 3170848,
+          "path": "web/assets/source-web-fonts.js"
+        },
+        {
           "name": "index.html",
-          "size_mb": "0.21",
-          "size_bytes": 224218,
+          "size_mb": "0.23",
+          "size_bytes": 236623,
           "path": "web/index.html"
         },
         {
           "name": "_combined_manuscript.md",
-          "size_mb": "0.12",
-          "size_bytes": 128994,
+          "size_mb": "0.13",
+          "size_bytes": 138097,
           "path": "web/_combined_manuscript.md"
-        },
-        {
-          "name": "manuscript__08_methods_sheaf.html",
-          "size_mb": "0.11",
-          "size_bytes": 118721,
-          "path": "web/manuscript__08_methods_sheaf.html"
         }
       ],
       "extensions": {
         ".md": 1,
+        ".js": 1,
         ".ico": 1,
         ".html": 17
       }
@@ -70,7 +71,7 @@
       "exists": true,
       "file_count": 27,
       "size_mb": "3.79",
-      "total_size_bytes": 3969539,
+      "total_size_bytes": 3971327,
       "largest_files": [
         {
           "name": "sheaf_layers_overview.png",
@@ -79,16 +80,16 @@
           "path": "figures/sheaf_layers_overview.png"
         },
         {
+          "name": "artifact_contract_map.png",
+          "size_mb": "0.45",
+          "size_bytes": 472268,
+          "path": "figures/artifact_contract_map.png"
+        },
+        {
           "name": "scholarship_source_map.png",
           "size_mb": "0.45",
           "size_bytes": 470707,
           "path": "figures/scholarship_source_map.png"
-        },
-        {
-          "name": "artifact_contract_map.png",
-          "size_mb": "0.44",
-          "size_bytes": 466540,
-          "path": "figures/artifact_contract_map.png"
         }
       ],
       "extensions": {
@@ -100,25 +101,25 @@
     "data": {
       "exists": true,
       "file_count": 48,
-      "size_mb": "2.79",
-      "total_size_bytes": 2927912,
+      "size_mb": "2.82",
+      "total_size_bytes": 2954186,
       "largest_files": [
         {
           "name": "sheaf_section_status_matrix.json",
-          "size_mb": "0.76",
-          "size_bytes": 801239,
+          "size_mb": "0.77",
+          "size_bytes": 804979,
           "path": "data/sheaf_section_status_matrix.json"
         },
         {
           "name": "validation_dependency_graph.json",
           "size_mb": "0.37",
-          "size_bytes": 386145,
+          "size_bytes": 387454,
           "path": "data/validation_dependency_graph.json"
         },
         {
           "name": "manuscript_token_provenance.json",
           "size_mb": "0.28",
-          "size_bytes": 290393,
+          "size_bytes": 290373,
           "path": "data/manuscript_token_provenance.json"
         }
       ],
@@ -131,12 +132,12 @@
       "exists": true,
       "file_count": 32,
       "size_mb": "0.41",
-      "total_size_bytes": 429061,
+      "total_size_bytes": 431702,
       "largest_files": [
         {
           "name": "manuscript_staleness_report.json",
           "size_mb": "0.07",
-          "size_bytes": 72360,
+          "size_bytes": 72345,
           "path": "reports/manuscript_staleness_report.json"
         },
         {
@@ -148,7 +149,7 @@
         {
           "name": "visualization_quality_audit.json",
           "size_mb": "0.04",
-          "size_bytes": 40026,
+          "size_bytes": 40025,
           "path": "reports/visualization_quality_audit.json"
         }
       ],
@@ -210,25 +211,25 @@
     "manuscript": {
       "exists": true,
       "file_count": 21,
-      "size_mb": "0.13",
-      "total_size_bytes": 138377,
+      "size_mb": "0.14",
+      "total_size_bytes": 147593,
       "largest_files": [
         {
           "name": "08_methods_sheaf.md",
-          "size_mb": "0.06",
-          "size_bytes": 64024,
+          "size_mb": "0.07",
+          "size_bytes": 72884,
           "path": "manuscript/08_methods_sheaf.md"
         },
         {
           "name": "16_appendix_full_sheaf.md",
           "size_mb": "0.02",
-          "size_bytes": 20202,
+          "size_bytes": 20268,
           "path": "manuscript/16_appendix_full_sheaf.md"
         },
         {
           "name": "12_results_si_tmaze.md",
           "size_mb": "0.01",
-          "size_bytes": 11128,
+          "size_bytes": 11113,
           "path": "manuscript/12_results_si_tmaze.md"
         }
       ],
@@ -242,12 +243,12 @@
       "exists": true,
       "file_count": 2,
       "size_mb": "7.47",
-      "total_size_bytes": 7832534,
+      "total_size_bytes": 7831921,
       "largest_files": [
         {
           "name": "template_active_inference_combined.pdf",
           "size_mb": "4.03",
-          "size_bytes": 4226446,
+          "size_bytes": 4225833,
           "path": "template_active_inference_combined.pdf"
         },
         {
@@ -263,20 +264,20 @@
       }
     }
   },
-  "total_files": 178,
-  "total_size_mb": 23.20164394378662,
+  "total_files": 179,
+  "total_size_mb": 26.351387977600098,
   "largest_files": [
     {
       "name": "template_active_inference_combined.pdf",
       "size_mb": "4.03",
-      "size_bytes": 4226446,
+      "size_bytes": 4225833,
       "category": "pdf",
       "path": "pdf/template_active_inference_combined.pdf"
     },
     {
       "name": "template_active_inference_combined.pdf",
       "size_mb": "4.03",
-      "size_bytes": 4226446,
+      "size_bytes": 4225833,
       "category": "root",
       "path": "template_active_inference_combined.pdf"
     },
@@ -288,9 +289,16 @@
       "path": "arxiv_submission_20260814.tar.gz"
     },
     {
+      "name": "source-web-fonts.js",
+      "size_mb": "3.02",
+      "size_bytes": 3170848,
+      "category": "web",
+      "path": "web/assets/source-web-fonts.js"
+    },
+    {
       "name": "sheaf_section_status_matrix.json",
-      "size_mb": "0.76",
-      "size_bytes": 801239,
+      "size_mb": "0.77",
+      "size_bytes": 804979,
       "category": "data",
       "path": "data/sheaf_section_status_matrix.json"
     },
@@ -309,6 +317,13 @@
       "path": "figures/sheaf_layers_overview.png"
     },
     {
+      "name": "artifact_contract_map.png",
+      "size_mb": "0.45",
+      "size_bytes": 472268,
+      "category": "figures",
+      "path": "figures/artifact_contract_map.png"
+    },
+    {
       "name": "scholarship_source_map.png",
       "size_mb": "0.45",
       "size_bytes": 470707,
@@ -321,32 +336,18 @@
       "size_bytes": 470707,
       "category": "figures",
       "path": "figures/scholarship_source_map.png"
-    },
-    {
-      "name": "artifact_contract_map.png",
-      "size_mb": "0.44",
-      "size_bytes": 466540,
-      "category": "arxiv_submission",
-      "path": "arxiv_submission/figures/artifact_contract_map.png"
-    },
-    {
-      "name": "artifact_contract_map.png",
-      "size_mb": "0.44",
-      "size_bytes": 466540,
-      "category": "figures",
-      "path": "figures/artifact_contract_map.png"
     }
   ],
   "missing_expected_files": [],
   "sizes_by_category": {
-    "pdf": 4.03065299987793,
-    "web": 0.657353401184082,
-    "figures": 3.785647392272949,
-    "data": 2.7922744750976562,
-    "reports": 0.40918445587158203,
+    "pdf": 4.030068397521973,
+    "web": 3.7701969146728516,
+    "figures": 3.7873525619506836,
+    "data": 2.817331314086914,
+    "reports": 0.41170310974121094,
     "arxiv_submission": 3.9248781204223633,
-    "manuscript": 0.13196659088134766,
-    "root": 7.469686508178711
+    "manuscript": 0.14075565338134766,
+    "root": 7.469101905822754
   },
   "inventory_mode": "stable-shippable-output-v1",
   "inventory_scope": "stage5-delivery-mirror",
@@ -354,6 +355,7 @@
   "file_counts_by_type": {
     ".pdf": 2,
     ".md": 21,
+    ".js": 1,
     ".ico": 1,
     ".html": 17,
     ".png": 50,

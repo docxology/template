@@ -7,25 +7,25 @@ Inventory Mode: stable-shippable-output-v1
 Inventory Scope: stage5-delivery-mirror
 Inventory Root: output/templates/template_active_inference
 
-Total Files: 178
-Total Size: 23.20 MB
+Total Files: 179
+Total Size: 26.35 MB
 
 Files by Category:
   • pdf: 1 files (4.03 MB)
-  • web: 19 files (0.66 MB)
+  • web: 20 files (3.77 MB)
   • figures: 27 files (3.79 MB)
-  • data: 48 files (2.79 MB)
+  • data: 48 files (2.82 MB)
   • reports: 32 files (0.41 MB)
   • arxiv_submission: 28 files (3.92 MB)
-  • manuscript: 21 files (0.13 MB)
+  • manuscript: 21 files (0.14 MB)
   • root: 2 files (7.47 MB)
 
 Largest Files:
   • template_active_inference_combined.pdf: 4.03 MB (pdf)
   • template_active_inference_combined.pdf: 4.03 MB (root)
   • arxiv_submission_20260814.tar.gz: 3.44 MB (root)
-  • sheaf_section_status_matrix.json: 0.76 MB (data)
-  • sheaf_layers_overview.png: 0.54 MB (arxiv_submission)
+  • source-web-fonts.js: 3.02 MB (web)
+  • sheaf_section_status_matrix.json: 0.77 MB (data)
 
 File Types:
   • .json: 79 file(s)
@@ -34,7 +34,7 @@ File Types:
   • .html: 17 file(s)
   • .pdf: 2 file(s)
   • .bib: 2 file(s)
+  • .js: 1 file(s)
   • .ico: 1 file(s)
   • .gif: 1 file(s)
   • .csv: 1 file(s)
-  • .bbl: 1 file(s)

@@ -54,7 +54,7 @@ def infrastructure_files(root: Path, changed: tuple[str, ...] = ()) -> tuple[str
                 while not selected.exists() and selected != root / "tests":
                     selected = selected.parent
             paths.append(selected)
-        elif name.startswith("infrastructure/") and relative.suffix == ".py":
+        elif name in SOURCE_TEST_OWNERS or (name.startswith("infrastructure/") and relative.suffix == ".py"):
             owners = (
                 tuple(root / owner for owner in SOURCE_TEST_OWNERS[name])
                 if name in SOURCE_TEST_OWNERS
@@ -135,8 +135,9 @@ def run_shard(root: Path, plan: dict, shard: int, directory: Path) -> int:
         "--junitxml=" + str(directory / "junit.xml"),
     ]
     is_contract = shard >= len(plan["infra_shards"])
-    if not is_contract:
-        command.append("--timeout=60")
+    # Full contracts use the established infrastructure harness default.
+    # A CLI option preserves test markers without changing nested child environments.
+    command.append("--timeout=120" if is_contract else "--timeout=60")
     result = subprocess.run(
         command, cwd=root, env=environment, check=False, timeout=CONTRACT_SECONDS if is_contract else 540
     )

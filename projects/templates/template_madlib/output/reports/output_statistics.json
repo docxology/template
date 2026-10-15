@@ -2,119 +2,117 @@
   "directories": {
     "pdf": {
       "exists": true,
-      "file_count": 10,
-      "size_mb": "1.21",
-      "total_size_bytes": 1266476,
+      "file_count": 1,
+      "size_mb": "0.99",
+      "total_size_bytes": 1040239,
       "largest_files": [
         {
           "name": "template_madlib_combined.pdf",
-          "size_mb": "0.94",
+          "size_mb": "0.99",
+          "size_bytes": 1040239,
           "path": "pdf/template_madlib_combined.pdf"
-        },
-        {
-          "name": "_combined_manuscript.tex",
-          "size_mb": "0.09",
-          "path": "pdf/_combined_manuscript.tex"
-        },
-        {
-          "name": "_combined_manuscript.log",
-          "size_mb": "0.07",
-          "path": "pdf/_combined_manuscript.log"
         }
       ],
       "extensions": {
-        ".md": 1,
-        ".log": 2,
-        ".aux": 1,
-        ".blg": 1,
-        ".bib": 1,
-        ".pdf": 1,
-        ".tex": 1,
-        ".toc": 1,
-        ".bbl": 1
+        ".pdf": 1
       }
     },
     "web": {
       "exists": true,
-      "file_count": 15,
-      "size_mb": "0.31",
-      "total_size_bytes": 329792,
+      "file_count": 16,
+      "size_mb": "3.45",
+      "total_size_bytes": 3614070,
       "largest_files": [
         {
+          "name": "source-web-fonts.js",
+          "size_mb": "3.02",
+          "size_bytes": 3170848,
+          "path": "web/assets/source-web-fonts.js"
+        },
+        {
           "name": "index.html",
-          "size_mb": "0.11",
+          "size_mb": "0.12",
+          "size_bytes": 126121,
           "path": "web/index.html"
         },
         {
           "name": "_combined_manuscript.md",
           "size_mb": "0.07",
+          "size_bytes": 73013,
           "path": "web/_combined_manuscript.md"
-        },
-        {
-          "name": "manuscript__02_methodology.html",
-          "size_mb": "0.03",
-          "path": "web/manuscript__02_methodology.html"
         }
       ],
       "extensions": {
         ".md": 1,
+        ".js": 1,
         ".ico": 1,
         ".html": 13
       }
     },
     "slides": {
       "exists": true,
-      "file_count": 94,
-      "size_mb": "1.87",
-      "total_size_bytes": 1965463,
+      "file_count": 12,
+      "size_mb": "1.05",
+      "total_size_bytes": 1099492,
       "largest_files": [
         {
           "name": "03_results_slides.pdf",
-          "size_mb": "0.27",
+          "size_mb": "0.30",
+          "size_bytes": 316884,
           "path": "slides/03_results_slides.pdf"
         },
         {
           "name": "05_experimental_setup_slides.pdf",
           "size_mb": "0.24",
+          "size_bytes": 254823,
           "path": "slides/05_experimental_setup_slides.pdf"
         },
         {
           "name": "06_evaluation_slides.pdf",
-          "size_mb": "0.16",
+          "size_mb": "0.18",
+          "size_bytes": 186504,
           "path": "slides/06_evaluation_slides.pdf"
         }
       ],
       "extensions": {
-        ".nav": 12,
-        ".vrb": 9,
-        ".pdf": 12,
-        ".tex": 13,
-        ".toc": 12,
-        ".log": 12,
-        ".snm": 12,
-        ".aux": 12
+        ".pdf": 12
       }
+    },
+    "docx": {
+      "exists": false,
+      "file_count": 0,
+      "size_mb": "0.00",
+      "total_size_bytes": 0
+    },
+    "epub": {
+      "exists": false,
+      "file_count": 0,
+      "size_mb": "0.00",
+      "total_size_bytes": 0
     },
     "figures": {
       "exists": true,
       "file_count": 10,
-      "size_mb": "0.81",
-      "total_size_bytes": 853599,
+      "size_mb": "0.83",
+      "total_size_bytes": 870538,
       "largest_files": [
         {
           "name": "madlib_cover_overview.png",
-          "size_mb": "0.15",
+          "size_mb": "0.16",
+          "size_bytes": 167035,
           "path": "figures/madlib_cover_overview.png"
         },
         {
           "name": "quality_gate_matrix.png",
           "size_mb": "0.14",
+          "size_bytes": 150980,
           "path": "figures/quality_gate_matrix.png"
         },
         {
-          "name": "section_configuration_heatmap.png",
-          "size_mb": "0.11",
-          "path": "figures/section_configuration_heatmap.png"
+          "name": "provenance_trace_map.png",
+          "size_mb": "0.10",
+          "size_bytes": 109301,
+          "path": "figures/provenance_trace_map.png"
         }
       ],
       "extensions": {
@@ -126,21 +124,24 @@
       "exists": true,
       "file_count": 5,
       "size_mb": "0.14",
-      "total_size_bytes": 147811,
+      "total_size_bytes": 148116,
       "largest_files": [
         {
           "name": "manuscript_variables.json",
           "size_mb": "0.07",
+          "size_bytes": 76467,
           "path": "data/manuscript_variables.json"
         },
         {
           "name": "section_plan.json",
           "size_mb": "0.04",
+          "size_bytes": 41126,
           "path": "data/section_plan.json"
         },
         {
           "name": "configured_field_inventory.json",
           "size_mb": "0.02",
+          "size_bytes": 18957,
           "path": "data/configured_field_inventory.json"
         }
       ],
@@ -150,30 +151,32 @@
     },
     "reports": {
       "exists": true,
-      "file_count": 14,
-      "size_mb": "0.13",
-      "total_size_bytes": 139112,
+      "file_count": 7,
+      "size_mb": "0.02",
+      "total_size_bytes": 19550,
       "largest_files": [
         {
-          "name": "evidence_registry.json",
-          "size_mb": "0.08",
-          "path": "reports/evidence_registry.json"
-        },
-        {
-          "name": "artifact_manifest.json",
-          "size_mb": "0.02",
-          "path": "reports/artifact_manifest.json"
-        },
-        {
-          "name": "validation_report.json",
+          "name": "injection_trace.json",
           "size_mb": "0.01",
-          "path": "reports/validation_report.json"
+          "size_bytes": 8049,
+          "path": "reports/injection_trace.json"
+        },
+        {
+          "name": "test_results.json",
+          "size_mb": "0.00",
+          "size_bytes": 4892,
+          "path": "reports/test_results.json"
+        },
+        {
+          "name": "manuscript_composition.json",
+          "size_mb": "0.00",
+          "size_bytes": 2928,
+          "path": "reports/manuscript_composition.json"
         }
       ],
       "extensions": {
-        ".json": 9,
-        ".txt": 1,
-        ".md": 4
+        ".md": 3,
+        ".json": 4
       }
     },
     "simulations": {
@@ -193,102 +196,179 @@
       "file_count": 0,
       "size_mb": "0.00",
       "total_size_bytes": 0
+    },
+    "manuscript": {
+      "exists": true,
+      "file_count": 15,
+      "size_mb": "0.11",
+      "total_size_bytes": 114632,
+      "largest_files": [
+        {
+          "name": "config.yaml",
+          "size_mb": "0.04",
+          "size_bytes": 38818,
+          "path": "manuscript/config.yaml"
+        },
+        {
+          "name": "02_methodology.md",
+          "size_mb": "0.03",
+          "size_bytes": 26526,
+          "path": "manuscript/02_methodology.md"
+        },
+        {
+          "name": "05_experimental_setup.md",
+          "size_mb": "0.01",
+          "size_bytes": 14009,
+          "path": "manuscript/05_experimental_setup.md"
+        }
+      ],
+      "extensions": {
+        ".md": 13,
+        ".yaml": 1,
+        ".bib": 1
+      }
+    },
+    "release": {
+      "exists": true,
+      "file_count": 2,
+      "size_mb": "0.00",
+      "total_size_bytes": 1965,
+      "largest_files": [
+        {
+          "name": "upload_receipts.json",
+          "size_mb": "0.00",
+          "size_bytes": 1920,
+          "path": "release/upload_receipts.json"
+        },
+        {
+          "name": "swh_repo_url.txt",
+          "size_mb": "0.00",
+          "size_bytes": 45,
+          "path": "release/swh_repo_url.txt"
+        }
+      ],
+      "extensions": {
+        ".txt": 1,
+        ".json": 1
+      }
+    },
+    "root": {
+      "exists": true,
+      "file_count": 1,
+      "size_mb": "0.99",
+      "total_size_bytes": 1040239,
+      "largest_files": [
+        {
+          "name": "template_madlib_combined.pdf",
+          "size_mb": "0.99",
+          "size_bytes": 1040239,
+          "path": "template_madlib_combined.pdf"
+        }
+      ],
+      "extensions": {
+        ".pdf": 1
+      }
     }
   },
-  "total_files": 148,
-  "total_size_mb": 4.484417915344238,
+  "total_files": 69,
+  "total_size_mb": 7.580605506896973,
   "largest_files": [
     {
+      "name": "source-web-fonts.js",
+      "size_mb": "3.02",
+      "size_bytes": 3170848,
+      "category": "web",
+      "path": "web/assets/source-web-fonts.js"
+    },
+    {
       "name": "template_madlib_combined.pdf",
-      "size_mb": "0.94",
+      "size_mb": "0.99",
+      "size_bytes": 1040239,
       "category": "pdf",
       "path": "pdf/template_madlib_combined.pdf"
     },
     {
+      "name": "template_madlib_combined.pdf",
+      "size_mb": "0.99",
+      "size_bytes": 1040239,
+      "category": "root",
+      "path": "template_madlib_combined.pdf"
+    },
+    {
       "name": "03_results_slides.pdf",
-      "size_mb": "0.27",
+      "size_mb": "0.30",
+      "size_bytes": 316884,
       "category": "slides",
       "path": "slides/03_results_slides.pdf"
     },
     {
       "name": "05_experimental_setup_slides.pdf",
       "size_mb": "0.24",
+      "size_bytes": 254823,
       "category": "slides",
       "path": "slides/05_experimental_setup_slides.pdf"
     },
     {
       "name": "06_evaluation_slides.pdf",
-      "size_mb": "0.16",
+      "size_mb": "0.18",
+      "size_bytes": 186504,
       "category": "slides",
       "path": "slides/06_evaluation_slides.pdf"
     },
     {
+      "name": "02_methodology_slides.pdf",
+      "size_mb": "0.17",
+      "size_bytes": 178174,
+      "category": "slides",
+      "path": "slides/02_methodology_slides.pdf"
+    },
+    {
       "name": "madlib_cover_overview.png",
-      "size_mb": "0.15",
+      "size_mb": "0.16",
+      "size_bytes": 167035,
       "category": "figures",
       "path": "figures/madlib_cover_overview.png"
     },
     {
       "name": "quality_gate_matrix.png",
       "size_mb": "0.14",
+      "size_bytes": 150980,
       "category": "figures",
       "path": "figures/quality_gate_matrix.png"
     },
     {
       "name": "index.html",
-      "size_mb": "0.11",
+      "size_mb": "0.12",
+      "size_bytes": 126121,
       "category": "web",
       "path": "web/index.html"
-    },
-    {
-      "name": "section_configuration_heatmap.png",
-      "size_mb": "0.11",
-      "category": "figures",
-      "path": "figures/section_configuration_heatmap.png"
-    },
-    {
-      "name": "_combined_manuscript.tex",
-      "size_mb": "0.09",
-      "category": "pdf",
-      "path": "pdf/_combined_manuscript.tex"
-    },
-    {
-      "name": "evidence_registry.json",
-      "size_mb": "0.08",
-      "category": "reports",
-      "path": "reports/evidence_registry.json"
     }
   ],
-  "missing_expected_files": [
-    "simulations/ directory",
-    "llm/ directory",
-    "logs/ directory"
-  ],
+  "missing_expected_files": [],
   "sizes_by_category": {
-    "pdf": 1.2078056335449219,
-    "web": 0.31451416015625,
-    "slides": 1.8744115829467773,
-    "figures": 0.8140554428100586,
-    "data": 0.14096355438232422,
-    "reports": 0.13266754150390625
+    "pdf": 0.9920492172241211,
+    "web": 3.446645736694336,
+    "slides": 1.0485572814941406,
+    "figures": 0.8302097320556641,
+    "data": 0.14125442504882812,
+    "reports": 0.018644332885742188,
+    "manuscript": 0.10932159423828125,
+    "release": 0.0018739700317382812,
+    "root": 0.9920492172241211
   },
+  "inventory_mode": "stable-shippable-output-v1",
+  "inventory_scope": "stage5-delivery-mirror",
+  "inventory_root": "output/templates/template_madlib",
   "file_counts_by_type": {
-    ".md": 6,
-    ".log": 14,
-    ".aux": 13,
-    ".blg": 1,
-    ".bib": 1,
-    ".pdf": 13,
-    ".tex": 14,
-    ".toc": 13,
-    ".bbl": 1,
+    ".pdf": 14,
+    ".md": 17,
+    ".js": 1,
     ".ico": 1,
     ".html": 13,
-    ".nav": 12,
-    ".vrb": 9,
-    ".snm": 12,
     ".png": 9,
-    ".json": 15,
+    ".json": 11,
+    ".yaml": 1,
+    ".bib": 1,
     ".txt": 1
   }
 }

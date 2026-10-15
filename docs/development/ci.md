@@ -17,8 +17,11 @@ Infrastructure preserves the complete legacy smoke union, adds changed tests and
 declared Source owners, and splits the selection into three complementary file
 shards. Expensive selected full modules run in a separate required contract
 matrix. Smoke keeps its 540-second child budget and ten-minute job limit;
-contract jobs retain test-owned timeout markers and a separate 6600-second
-whole-module ceiling below the existing Root acceptance budget. Both lanes emit
+contract jobs use the existing full-infrastructure 120-second per-test default,
+retain explicit test-owned timeout markers, and have a separate 6600-second
+whole-module ceiling below the existing Root acceptance budget. The explicit
+pytest option applies to this test process; nested producer environments retain
+their original timeout settings. Both lanes emit
 nonce-bound original pytest selection/outcome receipts and JUnit diagnostics.
 The final gate checks the exact combined union and rejects missing, duplicated
 or overlapping members. Neither lane replaces complete release acceptance.
@@ -32,6 +35,13 @@ The environment cache includes the resolved Python version, OS, architecture,
 dependency group and root lock/package/Python-selector inputs. Every caller
 still runs its declared locked reconciliation. Reused downloads or environments
 are preparation inputs, never accepted runtime results.
+
+Infrastructure smoke prepares genuine Poppler tools for raster controls. The
+auxiliary contract additionally prepares the declared Pandoc/XeTeX document
+producers and readers. The native portability contract warms the exact Root
+lockfile's default and dev groups in a fresh job-owned environment before its
+unchanged offline fixture runs; a restored environment alone does not establish
+that the required wheel archives remain cached.
 
 Run a project's same selection locally after locked root setup:
 

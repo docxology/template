@@ -43,7 +43,12 @@ def test_shared_helper_routes_every_focused_or_protocol_owner_without_broad_pack
         imports = {node.module for node in ast.walk(syntax) if isinstance(node, ast.ImportFrom)} | {
             alias.name for node in ast.walk(syntax) if isinstance(node, ast.Import) for alias in node.names
         }
-        if source not in PROTOCOL_SOURCES:
+        if source.endswith(".mjs"):
+            assert any(isinstance(node, ast.Constant) and node.value == source for node in ast.walk(syntax)), (
+                source,
+                owner,
+            )
+        elif source not in PROTOCOL_SOURCES:
             assert module in imports, (source, owner)
     selected = set(infrastructure_files(ROOT, (source,)))
     assert selected == set(infrastructure_files(ROOT)) | set(owners)

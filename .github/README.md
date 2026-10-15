@@ -1089,7 +1089,9 @@ native auto-merge (`gh pr merge --auto --squash`), and never checks out or
 executes PR HEAD code. Major bumps are left for human review. Auto-merge must
 also be enabled in repository settings.
 
-Current pinned GitHub Actions use the Node 20 action runtime. GitHub-hosted runners satisfy this; self-hosted runners must be Actions runner `v2.327.1` or newer.
+Each JavaScript action declares its runtime in the pinned `action.yml`; consult that revision's documentation for self-hosted runner requirements.
+The pinned [checkout](https://raw.githubusercontent.com/actions/checkout/3d3c42e5aac5ba805825da76410c181273ba90b1/action.yml) and [release](https://raw.githubusercontent.com/softprops/action-gh-release/efb35369e0ad2afab669f228072c1b0d510eae64/action.yml) actions declare `runs.using: node24`.
+Separately, [`setup-docs-lint`](actions/setup-docs-lint/action.yml) selects Node `24.22.0` for documentation tools and the native Mermaid 11 profile; this toolchain selection is independent of the JavaScript action runtime.
 
 ---
 

@@ -109,7 +109,7 @@ Install the monorepo command environment from the **repository root** with
 `uv sync` (see root [`pyproject.toml`](../../../pyproject.toml)). For the complete
 isolated project development suite, prepare
 `uv sync --project projects/templates/template_formal --locked --extra dev --extra formal-tools`.
-The SDK 4.0.1 dependency belongs to `formal-tools`; selecting `dev` alone does
+The SDK 4.0.2 dependency belongs to `formal-tools`; selecting `dev` alone does
 not prepare that integration dependency. Independent exported setup requires the
 explicit SDK wheel described in [STANDALONE.md](STANDALONE.md#intentional-non-standalone-dependencies).
 Native Lean/TLC checks retain the prerequisites in [formal/AGENTS.md](formal/AGENTS.md).

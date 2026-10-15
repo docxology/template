@@ -32,8 +32,8 @@ if (request === null || Array.isArray(request) ||
 // Source-pinned CLI11 has no fontEmbed API. Its declared default theme,
 // platform fonts and exact source paint are admitted independently; this
 // profile never borrows CLI12 font embedding or native proof.
-if (!/^20\.[0-9]+\.[0-9]+$/.test(process.versions.node)) {
-  throw new Error("Source-pinned Mermaid11 requires its genuinely selected Node20 profile");
+if (!/^24\.[0-9]+\.[0-9]+$/.test(process.versions.node)) {
+  throw new Error("Source-pinned Mermaid11 requires its genuinely selected Node24 profile");
 }
 const expectedProfile = {
   theme: "default", font_embed: false, background_color: "white",

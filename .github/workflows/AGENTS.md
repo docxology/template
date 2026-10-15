@@ -228,7 +228,7 @@ For an unpartitioned local check, the existing full `pytest tests/infra_tests/` 
 
 #### 9. Documentation Lint (`docs-lint`)
 
-- **Runner:** `ubuntu-latest` / Python 3.14 / Node 20
+- **Runner:** `ubuntu-latest` / Python 3.14 / Node 24
 - **Depends on:** nothing; the job performs its own checkout and setup alongside `lint`.
 - **Timeout:** 15 minutes
 - **External tools (real, not mocked):**
@@ -307,7 +307,7 @@ a dated version heading is not proof of successful acceptance, integration into
 
 The pinned [checkout action](https://raw.githubusercontent.com/actions/checkout/3d3c42e5aac5ba805825da76410c181273ba90b1/action.yml) and
 [release action](https://raw.githubusercontent.com/softprops/action-gh-release/efb35369e0ad2afab669f228072c1b0d510eae64/action.yml) use the Node 24 JavaScript action runtime.
-This is separate from the Node 20 document toolchain selected by
+The JavaScript action runtime is independent of the Node 24 document toolchain selected by
 [`setup-docs-lint`](../actions/setup-docs-lint/action.yml).
 GitHub-hosted runners satisfy the documented runtime requirement; self-hosted
 runners must be Actions runner `v2.327.1` or newer.

@@ -18,7 +18,7 @@ uv run python projects/templates/template_literature_meta_analysis/scripts/_run_
 `core` inspects the committed corpus and declares no live capability execution;
 the numbered scripts remain the complete offline analysis route. The separate
 underscore-prefixed acceptance command is excluded from default script discovery.
-Live execution requires platform 4.0.1, Python 3.12–3.14, the project's installed
+Live execution requires platform 4.0.2, Python 3.12–3.14, the project's installed
 dependencies including `pypdf` and `rdflib`, and a loopback Ollama service with the
 selected model.
 
@@ -77,5 +77,5 @@ the exact immutable bytes admitted at freeze time, including hypotheses and
 classification where those are declared; reopening a changed snapshot cannot
 change the consumed config. Its persisted snapshot is still verified at promotion.
 No absent checkout lock is fabricated inside a wheel. The project declares the
-platform 4.0.1 dependency; standalone execution installs an admitted platform wheel
+platform 4.0.2 dependency; standalone execution installs an admitted platform wheel
 and the exemplar wheel into the selected environment.

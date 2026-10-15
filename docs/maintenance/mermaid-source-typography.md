@@ -1,4 +1,4 @@
-# Mermaid typography in template4.0.1
+# Mermaid typography in template/
 
 The Source-pinned Mermaid11.16.0 renderer declares **Template Liberation Sans** as its default diagram family. It uses the packaged, unchanged Liberation2.1.5 regular, bold, italic and bold-italic bodies under their included SIL Open Font License. This intentionally changes the previous system-dependent Trebuchet/Arial/Verdana default. Diagrams should be regenerated when adopting this release; the PNG cache binds the rendering policy and exact font inputs.
 

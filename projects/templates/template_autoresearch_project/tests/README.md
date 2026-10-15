@@ -28,7 +28,7 @@ wheel supplies Python imports but does not supply that checkout. Outside the
 canonical `projects/templates/template_autoresearch_project` layout, nominate
 both `TEMPLATE_AUTORESEARCH_SOURCE_ROOT` (an absolute public platform checkout)
 and `TEMPLATE_AUTORESEARCH_SOURCE_COMMIT` (its exact 40-character Git commit).
-The checkout must declare `research-project-template` 4.0.1, remain clean, and
+The checkout must declare `research-project-template` 4.0.2, remain clean, and
 contain the actual committed input bytes. A nearby `infrastructure/` directory,
 the current working directory, and abbreviated revisions confer no authority.
 

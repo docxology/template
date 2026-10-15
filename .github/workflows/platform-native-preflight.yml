@@ -7,6 +7,7 @@ on:
     paths:
       - 'infrastructure/reporting/native_*.py'
       - 'infrastructure/reporting/release_readiness_*.py'
+      - 'infrastructure/rendering/_mermaid_v11*'
       - '.github/actions/setup-native-installed-readiness/**'
       - '.github/actions/setup-docs-lint/**'
       - '.github/workflows/platform-native-preflight.yml'
@@ -66,7 +67,10 @@ jobs:
           name: native-preflight-diagnostics
           path: |
             ${{ runner.temp }}/template-native-preflight-root/output/readiness/native-preflight/
+            ${{ runner.temp }}/template-native-preflight-root/output/readiness/native-preparation/
             ${{ runner.temp }}/template-native-preflight-scratch/outer-processes/
+            ${{ runner.temp }}/template-native-preflight-scratch/failed-installed-launch.json
+            ${{ runner.temp }}/template-native-preflight-scratch/completed-installed-launch.json
           if-no-files-found: warn
           retention-days: 7
       - name: State the diagnostic boundary

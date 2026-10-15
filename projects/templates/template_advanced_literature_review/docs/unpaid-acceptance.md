@@ -18,7 +18,7 @@ uv run python projects/templates/template_advanced_literature_review/scripts/_ru
 `core` inspects the committed reference corpus and reports no live execution;
 the normal fixture/analysis scripts retain the complete offline route. The
 underscore-prefixed acceptance orchestrator is excluded from automatic analysis
-discovery. Live execution requires platform 4.0.1, Python 3.12–3.14, installed
+discovery. Live execution requires platform 4.0.2, Python 3.12–3.14, installed
 project dependencies including `pypdf`, and an already available loopback Ollama
 service containing the selected model.
 
@@ -76,5 +76,5 @@ the exact immutable bytes admitted at freeze time, including hypotheses and
 classification where those are declared; reopening a changed snapshot cannot
 change the consumed config. Its persisted snapshot is still verified at promotion.
 No absent checkout lock is fabricated inside a wheel. The project declares the
-platform 4.0.1 dependency; standalone execution installs an admitted platform wheel
+platform 4.0.2 dependency; standalone execution installs an admitted platform wheel
 and the exemplar wheel into the selected environment.
