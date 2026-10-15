@@ -47,6 +47,15 @@ authenticates source bytes; it does not authenticate mutable derived cached whee
 bytes. This cache ownership boundary is an explicit prerequisite, and a successful
 dependency preparation alone establishes no full installed or native acceptance.
 
+The installed native original and current reader export the Root lock's default
+execution dependencies plus PPTX rendering. These supply the actual test stack,
+type checker and scientific providers required by full-suite replay. The export
+omits only `desloppify`, a Git-based repository lint scanner with no native or
+exemplar caller; it cannot enter the hash-required runtime as an unhashed Git
+requirement. The native setup action warms this same profile before cold offline
+execution and explicitly prepares the common source-pinned Lean 4.35.0 compiler.
+Each standalone project matrix cell retains its own declared lock.
+
 The runner creates separate private build and runtime environments for each
 cell. Build tools come from the platform's locked `installed-build` group;
 runtime dependencies come from a private read-only snapshot of the selected

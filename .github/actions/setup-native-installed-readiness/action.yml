@@ -7,6 +7,21 @@ runs:
       run: uv sync --locked --inexact --group dev --group public-exemplars --group installed-build --group rendering --group rendering-pptx
     - uses: ./.github/actions/setup-docs-lint
     - uses: ./.github/actions/setup-acceptance-documents
+    - name: Prepare the source-pinned Lean compiler for full-suite replay
+      shell: bash
+      run: |
+        set -euo pipefail
+        pin=$(cat projects/templates/template_active_inference/lean/lean-toolchain)
+        formal_pin=$(cat projects/templates/template_formal/formal/lean/lean-toolchain)
+        test "$pin" = 'leanprover/lean4:v4.35.0'
+        test "$formal_pin" = "$pin"
+        installer=$(mktemp "$RUNNER_TEMP/native-elan-init.XXXXXX")
+        curl --fail --location --retry 2 --max-time 60 --output "$installer" https://raw.githubusercontent.com/leanprover/elan/58e8d545e33641f66dbcbd22c4283109e71757be/elan-init.sh
+        echo "4bacca9502cb89736fe63d2685abc2947cfbf34dc87673504f1bb4c43eda9264  $installer" | shasum -a 256 --check --status
+        sh "$installer" -y --default-toolchain none
+        "$HOME/.elan/bin/elan" toolchain install "$pin"
+        "$HOME/.elan/bin/elan" run "$pin" lean --version
+        echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
     - name: Prepare official native reader tools
       shell: bash
       env:
@@ -59,7 +74,7 @@ runs:
           requirements=$(mktemp "$RUNNER_TEMP/native-requirements.XXXXXX")
           environment=$(mktemp -d "$RUNNER_TEMP/native-dependency-cache.XXXXXX")
           if [ "$scope" = root ]; then
-            uv export --directory "$metadata" --locked --no-default-groups --group public-exemplars --group rendering --group rendering-pptx --group installed-build --no-emit-project --no-emit-local --no-header --no-annotate --output-file "$requirements"
+            uv export --directory "$metadata" --locked --group public-exemplars --group rendering --group rendering-pptx --no-emit-package desloppify --group installed-build --no-emit-project --no-emit-local --no-header --no-annotate --output-file "$requirements"
           else
             uv export --directory "$metadata" --locked --no-default-groups --no-emit-project --no-emit-local --no-header --no-annotate --output-file "$requirements"
           fi

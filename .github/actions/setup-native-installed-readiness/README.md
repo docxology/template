@@ -10,6 +10,9 @@ workspace, before the cold operation starts its unchanged 14400-second budget.
 The action warms locked Root development, wheel-build and native rendering
 dependencies, reuses the existing Node/Mermaid/Chrome and document-tool actions,
 and prepares LibreOffice, Calibre, Java, zbar and the Source-pinned EPUBCheck.
+It verifies that both formal exemplars declare Lean 4.35.0 and prepares that
+compiler through the existing hash-pinned elan bootstrap before full-suite replay.
+The preceding source-fixture action supplies the authenticated TLC input.
 Browser math inputs are prepared or independently inspected as Source DATA.
 Temporary cache-warming environments contain only Root-locked dependencies;
 independent project locks are preserved.
