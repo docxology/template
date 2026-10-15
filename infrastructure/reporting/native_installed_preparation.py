@@ -52,6 +52,32 @@ _LOCATION_PROBE = (
 )
 
 
+def native_runtime_export_command(uv: Path, metadata_root: Path, requirements: Path) -> tuple[str, ...]:
+    """Export Root execution defaults, excluding the unused Git-only lint scanner."""
+    return (
+        str(uv),
+        "export",
+        "--directory",
+        str(metadata_root),
+        "--locked",
+        "--offline",
+        "--group",
+        "public-exemplars",
+        "--group",
+        "rendering",
+        "--group",
+        "rendering-pptx",
+        "--no-emit-package",
+        "desloppify",
+        "--no-emit-project",
+        "--no-emit-local",
+        "--no-header",
+        "--no-annotate",
+        "--output-file",
+        str(requirements),
+    )
+
+
 class NativePreparationFailure(RuntimeError):
     """Retain genuine signed preparation failures for the actual outer caller."""
 
@@ -341,35 +367,12 @@ def prepare_native_installed_runtime(
             reader=reader,
         )
     runtime_requirements = scratch / "runtime-requirements.txt"
-    run(
-        (
-            str(uv),
-            "export",
-            "--directory",
-            str(metadata.root),
-            "--locked",
-            "--offline",
-            "--no-default-groups",
-            "--group",
-            "public-exemplars",
-            "--group",
-            "rendering",
-            "--group",
-            "rendering-pptx",
-            "--no-emit-project",
-            "--no-emit-local",
-            "--no-header",
-            "--no-annotate",
-            "--output-file",
-            str(runtime_requirements),
-        ),
-        "runtime-lock",
-    )
+    run(native_runtime_export_command(uv, metadata.root, runtime_requirements), "runtime-lock")
     normalize_locked_dependency_export(metadata.root, runtime_requirements)
     if not metadata.unchanged():
         raise ValueError("native preparation locked Source changed during dependency export normalization")
-    # This runtime observes native formats with the Root SDK. It is not the
-    # independent installed/export/runtime project matrix. Keep every project
+    # Current native replay executes full suites using its Root-locked execution profile.
+    # This is not the independent installed/export/runtime project matrix. Keep every project
     # wheel frozen as Source DATA; install only the actual Source-declared
     # namespaced local providers required by native callers. Never combine the
     # independent project's third-party lock pins or resolve a precedence.

@@ -123,6 +123,11 @@ require final-source acceptance, the authenticated handoff and remote verificati
   decoded font bytes, constructor hashes and the complete license. Keep the
   aggregate public output within its existing size limit; browsers verify the
   decompressed buffers before constructing fonts.
+- Prepare the installed native reader with the existing Root-locked execution
+  dependencies required by its full project-suite replay, including pytest and
+  coverage. Warm the same profile before cold offline execution, excluding its unused
+  Git-only repository lint scanner from the hash-required runtime. Prepare the
+  shared source-pinned Lean 4.35.0 compiler before native full-suite replay.
 - Authenticate current native-mirror fixture trees against their committed
   manifest before comparing file modes. Prepared untracked fixtures use their
   exact admitted declarations; committed files retain raw Git mode authority.

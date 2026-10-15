@@ -25,3 +25,30 @@ acceptance. Current follow-ups live in [STATUS.md](../../STATUS.md) and the
 | STATUS-REGRESSION-1 | Regression tests (`tests/regression/`) | 2026-07-15 | Daniel (agent session) | The source-re-derived claim-binding regression tier runs as an explicit hosted CI job; its historical 55-test/15-exemplar count is not a current roster claim. Public-exemplar structural and coverage contracts are additionally enforced per project. See `docs/maintenance/regression-testing.md`. | `uv run pytest tests/regression/ -q --no-cov --timeout=120` | docs/_generated/status_evidence.json | external | 🟡 external required-check configuration remains open |
 | STATUS-AUTORESEARCH-1 | AutoResearch exemplar (`projects/templates/template_autoresearch_project/`) | 2026-06-13 | Codex | `uv run pytest projects/templates/template_autoresearch_project/tests/ -q` passed 224 tests after adding evidence overview, benchmark-boundary, and source-ledger contract checks | `uv run pytest projects/templates/template_autoresearch_project/tests -q --no-cov --timeout=120` | docs/_generated/status_evidence.json | automated | 🟢 healthy | <!-- noqa: drift-counts -- dated historical receipt: 2026-06-13 -->
 | STATUS-RENDER-RECOVERY-1 | Rendering internals, checkpoint recovery, and local exports | 2026-09-05 | Codex | Real accessible-slide and Beamer suites passed 65 tests; normalized render output remained identical. Checkpoint and export negative controls passed, including a fresh reviewer's source-swap probes. Pixel capture completed 2026-09-05 via managed-Chromium compositor screenshots at 390×844 and 1200×800: narrow scroll-mode content measured 374.4px with no horizontal overflow and MathJax loaded with zero error nodes. Point-in-time receipts removed 2026-09-11; recover via git history. | `uv run pytest tests/infra_tests/rendering/test_slides_accessibility.py -m slow -q --no-cov --timeout=120` | docs/_generated/status_evidence.json | automated | 🟢 tested contracts, live Chrome layout/navigation, and compositor pixel evidence all passed | <!-- noqa: drift-counts -- dated historical receipt: 2026-09-05 -->
+
+
+## 2026-10-14 Active output refresh and main integration
+
+Retired `P4-ACTIVE-OUTPUT-REFRESH-1` after canonical Active Inference
+regeneration, genuine SI simulation and the exact own-environment release-profile
+coverage API completed. The saved simulation outputs replayed byte-identically;
+seven semantic/audit reports were refreshed. Output validation passed 176 checks
+and manuscript validation passed 24 checks. Coverage measured 91.41%; eleven
+coverage groups exited zero and one declared bounded-profile slice selected no
+tests. The 488 authored files remained unchanged during this verification.
+No manuscript variables, hydrated text, figures or rendered deliverables changed.
+<!-- noqa: drift-counts -- dated historical receipt: 2026-10-14 -->
+
+The verified Active coverage-input hash is
+`099cf69f41e98af71aa8d831ee3d7fed4d35495e52dcad68bca7a71cc5253233`,
+recorded in the generated coverage snapshot. These outputs and the Lean 4.35.0
+repair landed through [PR #143](https://github.com/docxology/template/pull/143),
+commit `b3e9ea8528557d4cc60c970962c579573d84fa62`; exact-main
+[CI 38661838365](https://github.com/docxology/template/actions/runs/38661838365)
+passed at merge commit `36a4d12372fa5c63862cb28257f3e9d6a2cd7383`.
+
+These local project results and ordinary hosted CI establish their stated
+scopes. Platform required acceptance, native installed-reader execution, live
+capabilities and root v4.0.1 publication remain separate pending outcomes. The
+release TODO stays open until the authenticated handoff and retrieved-asset
+verification succeed.

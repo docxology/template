@@ -41,6 +41,8 @@ from infrastructure.project.installed_acceptance_runtime import (
 from infrastructure.project.installed_acceptance_worker import _environment, _run
 from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
 from infrastructure.reporting.release_readiness_profile import Requirement
+from infrastructure.reporting.native_installed_preparation import native_runtime_export_command
+from infrastructure.core.testing.pytest_profiles import TEST_RUNNER_BASE_DEPS
 
 
 def _export_repository(tmp_path: Path) -> tuple[Path, Requirement, Path, Path]:
@@ -674,6 +676,49 @@ def test_real_locked_exports_consume_private_metadata_despite_checkout_aba(tmp_p
     runtime = (scratch / "runtime.txt").read_text()
     assert "requests==" in runtime and "--hash=sha256:" in runtime
     assert str(repository) not in runtime and "-e " not in runtime
+
+
+@pytest.mark.timeout(120)
+def test_native_locked_export_retains_real_full_suite_execution_dependencies(tmp_path: Path) -> None:
+    """Actual locked exports distinguish the execution profile from format-only inputs."""
+    source = Path(__file__).resolve().parents[3]
+    snapshot = freeze_locked_metadata(source, tmp_path)
+    uv = shutil.which("uv")
+    assert uv is not None
+    names = []
+    for index, format_only in enumerate((False, True)):
+        requirements = tmp_path / f"runtime-{index}.txt"
+        command = native_runtime_export_command(Path(uv), snapshot.root, requirements)
+        if format_only:
+            command += ("--no-default-groups",)
+        result = run_project_test_matrix(
+            [
+                ProjectTestTask(
+                    index,
+                    "native-locked-export",
+                    command,
+                    tmp_path,
+                    _environment(Path(sys.executable), tmp_path),
+                    30,
+                    True,
+                )
+            ]
+        )[0]
+        assert result.returncode == 0 and not result.timed_out, result.output_tail
+        text = requirements.read_text()
+        names.append(
+            {
+                line.split("==", 1)[0].strip().replace("_", "-").lower()
+                for line in text.splitlines()
+                if line and not line[0].isspace() and "==" in line
+            }
+        )
+        assert "--hash=sha256:" in text and "-e " not in text and str(source) not in text
+        assert "git+" not in text and "desloppify" not in text, "native runtime excludes its unused Git lint scanner"
+    required = {*TEST_RUNNER_BASE_DEPS, "coverage", "mypy", "inferactively-pymdp", "discopy", "cryptography"}
+    assert required <= names[0]
+    assert "coverage" not in names[1] and "pytest" not in names[1]
+    assert snapshot.unchanged()
 
 
 def test_private_metadata_mutation_refuses_original_snapshot_identity(tmp_path: Path) -> None:
