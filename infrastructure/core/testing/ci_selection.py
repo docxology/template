@@ -1,0 +1,160 @@
+"""Conservative PR functional selection; complete release gates are separate."""
+
+from __future__ import annotations
+
+import argparse
+import json
+import os
+import re
+import subprocess
+import shutil
+from pathlib import Path
+from typing import Any
+
+from infrastructure.project.public_package_dependencies import declared_local_dependencies
+from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
+
+
+def changed_git_paths(root: Path, base: str) -> tuple[tuple[str, ...], bool]:
+    """Observe real NUL-delimited changes; ambiguity/rename/delete means full."""
+    if re.fullmatch(r"[0-9a-f]{40}|[0-9a-f]{64}", base) is None:
+        return (), True
+    git = shutil.which("git", path=os.defpath)
+    if git is None:
+        return (), True
+    try:
+        result = subprocess.run(
+            [
+                git,
+                "--no-replace-objects",
+                "--no-pager",
+                "-c",
+                "core.hooksPath=" + os.devnull,
+                "-c",
+                "core.fsmonitor=false",
+                "diff",
+                "--name-status",
+                "-z",
+                "--find-renames",
+                base + "...HEAD",
+                "--",
+            ],
+            cwd=root,
+            capture_output=True,
+            timeout=30,
+            check=False,
+            env={"PATH": os.defpath, "LC_ALL": "C", "GIT_CONFIG_NOSYSTEM": "1", "GIT_CONFIG_GLOBAL": os.devnull},
+        )
+    except (OSError, subprocess.TimeoutExpired):
+        return (), True
+    if result.returncode:
+        return (), True
+    return _parse_changed_paths(result.stdout)
+
+
+def _parse_changed_paths(output: bytes) -> tuple[tuple[str, ...], bool]:
+    if not output:
+        return (), False
+    if not output.endswith(b"\0"):
+        return (), True
+    try:
+        fields = iter(output.decode("utf-8").split("\0")[:-1])
+    except UnicodeError:
+        return (), True
+    paths: list[str] = []
+    ambiguous = False
+    for status in fields:
+        if re.fullmatch(r"[AMDTUXB]|[RC][0-9]{1,3}", status) is None:
+            return (), True
+        count = 2 if status.startswith(("R", "C")) else 1
+        if status not in {"A", "M"}:
+            ambiguous = True
+        for _ in range(count):
+            path = next(fields, None)
+            if not path or Path(path).is_absolute() or ".." in Path(path).parts or "\\" in path:
+                return (), True
+            paths.append(path)
+    return tuple(sorted(set(paths))), ambiguous
+
+
+def affected_projects(root: Path, paths: tuple[str, ...], *, full: bool = False) -> tuple[tuple[str, ...], str]:
+    """Only exact project-owned A/M changes may reduce the functional roster."""
+    all_projects = tuple(sorted(PUBLIC_PROJECT_NAMES))
+    if full or not paths:
+        return all_projects, "full event or unavailable/ambiguous change base"
+    changed = set()
+    for name in paths:
+        parts = Path(name).parts
+        if len(parts) < 4 or parts[:2] != ("projects", "templates"):
+            return all_projects, "global, documentation, control or unknown changed path"
+        scope = "/".join(parts[1:3])
+        if scope not in PUBLIC_PROJECT_NAMES:
+            return all_projects, "unknown public scope"
+        changed.add(scope)
+    try:
+        dependencies = {scope: set(declared_local_dependencies(root, scope)) for scope in all_projects}
+    except (ValueError, OSError, KeyError):
+        return all_projects, "dependency declarations unavailable"
+    while True:
+        expanded = changed | {scope for scope, providers in dependencies.items() if providers & changed}
+        if expanded == changed:
+            break
+        changed = expanded
+    return tuple(sorted(changed)), "exact project changes plus transitive reverse dependencies"
+
+
+def functional_selection(root: Path, event: str, base: str = "") -> dict[str, Any]:
+    paths, ambiguous = changed_git_paths(root, base) if event in {"pull_request", "push"} else ((), True)
+    projects, reason = affected_projects(root, paths, full=ambiguous or event != "pull_request")
+    return {
+        "schema_version": "template-functional-selection/v1",
+        "projects": list(projects),
+        "changed_paths": list(paths),
+        "change_roster_available": not (ambiguous and not paths) if event in {"pull_request", "push"} else True,
+        "full": len(projects) == len(PUBLIC_PROJECT_NAMES),
+        "reason": reason,
+    }
+
+
+def main() -> int:
+    from infrastructure.core.testing.ci_infra import infrastructure_shards
+    from infrastructure.core.testing.ci_infra import infrastructure_files
+    from infrastructure.core.testing.ci_contracts import contract_files
+    from infrastructure.core.testing.ci_smoke import project_smoke_matrix
+
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--output", type=Path, required=True)
+    args = parser.parse_args()
+    root = Path.cwd()
+    project_smoke_matrix(root)  # Validate every public behavioral selection even for a reduced PR.
+    plan = functional_selection(root, os.environ.get("CI_EVENT", ""), os.environ.get("CI_BASE", ""))
+    if not plan["change_roster_available"]:
+        raise ValueError("change roster unavailable or malformed; cannot safely route changed infrastructure tests")
+    plan["infra_shards"] = infrastructure_shards(root, tuple(plan["changed_paths"]))
+    plan["contract_modules"] = list(
+        contract_files(infrastructure_files(root, tuple(plan["changed_paths"])), infrastructure_files(root))
+    )
+    args.output.parent.mkdir(parents=True, exist_ok=True)
+    args.output.write_text(json.dumps(plan, sort_keys=True, indent=2) + "\n")
+    print("matrix=" + json.dumps(project_smoke_matrix(root, tuple(plan["projects"]))))
+    print("infra=" + json.dumps({"include": [{"shard": i} for i in range(len(plan["infra_shards"]))]}))
+    print(
+        "contracts="
+        + json.dumps(
+            {
+                "include": [
+                    {"shard": len(plan["infra_shards"]) + i, "module": name}
+                    for i, name in enumerate(plan["contract_modules"])
+                ]
+                or [{"shard": -1, "module": "none"}]
+            }
+        )
+    )
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
+
+
+__all__ = ["changed_git_paths", "affected_projects", "functional_selection"]

@@ -678,6 +678,7 @@ The `infrastructure/project/` module enables multi-project support by:
 | `installed_acceptance_runtime.py` | Locked dependency installation without editable/source provider substitution. |
 | `installed_acceptance_validation.py` | Require bound actual installed observations across every supported minor. |
 | `installed_acceptance_worker.py` | One bounded locked build and outside-source installed-wheel execution. |
+| `acceptance_payload.py` | Exact readonly payload and small isolated launcher with held physical/hash observations and closing checks; preserves original exits. |
 | `installed_domain_acceptance.py` | Functional installed execution with exported project inputs kept as data. |
 | `installed_reference_oracle.py` | Bounded current-reference recomputation, distinct from installed execution. |
 | `native_format_library_custody.py` | Bounded installed decoder file observations; hashes alone do not attest origin. |
@@ -685,10 +686,15 @@ The `infrastructure/project/` module enables multi-project support by:
 | `native_reader_runtime_custody.py` | Complete bounded native app file observations, independent of loaded-memory claims. |
 | `public_acceptance.py` | Source-bound 25-project × supported-runtime acceptance using the existing matrix. |
 | `public_acceptance_auxiliary.py` | Source-bound supervision for genuine auxiliary acceptance producers. |
+| `public_acceptance_auxiliary_bootstrap.py` | Install the Source-owned executed-code audit before auxiliary imports in genuine and portable children. |
 | `public_acceptance_auxiliary_cli.py` | Explicit CLI for source-bound auxiliary acceptance; never publishes. |
 | `public_acceptance_auxiliary_domains.py` | Concrete deterministic domain computations and independent raw-value admission. |
 | `public_acceptance_auxiliary_native.py` | Adapters for native scientific producers, retaining their complete raw facts. |
 | `public_acceptance_auxiliary_pipeline.py` | Portable custody of a genuine complete core pipeline in disposable public source. |
+| `public_acceptance_auxiliary_pipeline_environment.py` | Source-confined disposable pipeline setup and its declared environment. |
+| `public_acceptance_auxiliary_pipeline_failure.py` | Preserve failed child facts, streams and exit outcomes before positive-report validation. |
+| `public_acceptance_auxiliary_supervision.py` | Actual auxiliary child launch and bounded supervision using exact audited payloads. |
+| `public_acceptance_auxiliary_transfer_validation.py` | Independent confinement and envelope validation for portable sandbox evidence. |
 | `public_acceptance_auxiliary_validation.py` | Independent admission of raw auxiliary process and scientific evidence. |
 | `public_acceptance_auxiliary_worker.py` | Real source-owned auxiliary checks executed only in a supervised child. |
 | `public_acceptance_case_observer.py` | Actual Root collection metadata, without invoking fixtures or test cases. |

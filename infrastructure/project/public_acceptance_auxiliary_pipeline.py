@@ -8,6 +8,7 @@ aggregate environment digest. General pipeline/cache identities are unchanged.
 from __future__ import annotations
 
 import hashlib
+import argparse
 import json
 import os
 import platform
@@ -19,188 +20,27 @@ from dataclasses import replace
 from pathlib import Path
 from typing import Any
 
-from infrastructure.core.pipeline.fingerprints import canonical_digest, source_fingerprint_components
+from infrastructure.core.pipeline.fingerprints import canonical_digest
 from infrastructure.project.public_acceptance_evidence import evidence_directory, write_json
 from infrastructure.project.installed_acceptance_artifacts import write_binary
 from infrastructure.reporting.release_readiness_snapshot import SnapshotReader
 
+from infrastructure.project.public_acceptance_auxiliary_pipeline_failure import (
+    AuxiliaryPipelineFailure as AuxiliaryPipelineFailure,
+    _retain_pipeline_child_facts as _retain_pipeline_child_facts,
+)
+from infrastructure.project.public_acceptance_auxiliary_pipeline_environment import (
+    _LABELS as _LABELS,
+    _clean_environment as _clean_environment,
+    _components as _components,
+    _read_logical_plan as _read_logical_plan,
+    _source_records as _source_records,
+    environment_observation as environment_observation,
+)
+
+
 SCHEMA = "template-auxiliary-pipeline-portable-v1"
 _REQUIRED = frozenset({"setup", "project_tests", "analysis", "render_pdf", "validate", "copy"})
-_LABELS = (
-    "PATH",
-    "UV_PYTHON",
-    "UV_OFFLINE",
-    "COVERAGE_FILE",
-    "HYPOTHESIS_STORAGE_DIRECTORY",
-    "PYTHONPYCACHEPREFIX",
-    "MPLCONFIGDIR",
-    "TEMPLATE_SKIP_LINK_SYNC",
-    "SOURCE_DATE_EPOCH",
-    "TEMPLATE_ROOT_PYTHON",
-    "PYTEST_ADDOPTS",
-)
-
-
-_SAFE_ENV = frozenset(
-    {
-        "HOME",
-        "PATH",
-        "TMPDIR",
-        "TMP",
-        "TEMP",
-        "LANG",
-        "TZ",
-        "SOURCE_DATE_EPOCH",
-        "UV_CACHE_DIR",
-        "UV_PYTHON",
-        "UV_OFFLINE",
-        "UV_NO_SYNC",
-        "UV_NO_MANAGED_PYTHON",
-        "UV_PYTHON_DOWNLOADS",
-        "PANDOC_PATH",
-        "LATEX_COMPILER",
-        "FORMAL_JAVA_BIN",
-        "JAVA_HOME",
-        "ELAN_HOME",
-        "ELAN_TOOLCHAIN",
-        "MPLBACKEND",
-        "MPLCONFIGDIR",
-        "PYTHONUNBUFFERED",
-        "PYTHONIOENCODING",
-        "PYTHONHASHSEED",
-        "PYTHONPYCACHEPREFIX",
-        "COVERAGE_FILE",
-        "HYPOTHESIS_STORAGE_DIRECTORY",
-        "OMP_NUM_THREADS",
-        "OPENBLAS_NUM_THREADS",
-        "MKL_NUM_THREADS",
-        "CI",
-        "GITHUB_ACTIONS",
-        "GITHUB_SHA",
-        "GITHUB_REPOSITORY",
-        "GITHUB_RUN_ID",
-        "GITHUB_RUN_ATTEMPT",
-        "TEXMFHOME",
-        "TEXMFVAR",
-        "TEXMFCACHE",
-    }
-)
-
-
-def _clean_environment() -> dict[str, str]:
-    from infrastructure.core.secrets import is_secret_env_name
-
-    def admitted(name: str) -> bool:
-        return (
-            (name in _SAFE_ENV or name.startswith(("ANALYSIS_", "TEMPLATE_", "LC_")))
-            and not is_secret_env_name(name)
-            and "AUTH" not in name.upper()
-            and "ACCESS_KEY" not in name.upper()
-            and not name.startswith("TEMPLATE_PROJECT_LOCK_")
-        )
-
-    return {name: os.environ[name] for name in os.environ if admitted(name)}
-
-
-def _read_logical_plan(root: Path, scope: str, budget: float, epoch: str) -> dict[str, Any]:
-    """Compile only current reader source in a fresh credential-free reader child."""
-    from infrastructure.core.execution_policy import apply_execution_policy
-
-    with tempfile.TemporaryDirectory(prefix="pipeline-logical-reader-") as temporary:
-        directory = Path(temporary)
-        result_file = directory / "plan.json"
-        sites = [path for path in sys.path if Path(path).name in {"site-packages", "dist-packages"}]
-        bootstrap = (
-            "import sys,json,pathlib; sys.path[:0]=json.loads(sys.argv[1]); "
-            "from infrastructure.core.pipeline.plan import compile_execution_plan; "
-            "from infrastructure.core.pipeline.types import PipelineConfig; "
-            "from infrastructure.project.public_acceptance_auxiliary_pipeline import _components,_source_records; "
-            "root=pathlib.Path(sys.argv[2]); scope=sys.argv[3]; "
-            "config=PipelineConfig(scope,root,mode='core',clean=False,skip_infra=True); "
-            "config.run_timeout_seconds=json.loads(sys.argv[4]); plan=compile_execution_plan(config); "
-            "pathlib.Path(sys.argv[5]).write_text(json.dumps({'plan':plan.to_dict(),"
-            "'components':_components(root,scope),'source_records':_source_records(root,scope)}))"
-        )
-        environment = _clean_environment()
-        environment.update(SOURCE_DATE_EPOCH=epoch, UV_OFFLINE="1", UV_PYTHON=sys.executable)
-        environment = apply_execution_policy(environment, root, mode="core")
-        result = subprocess.run(
-            [
-                sys.executable,
-                "-I",
-                "-X",
-                f"pycache_prefix={directory / 'bytecode'}",
-                "-c",
-                bootstrap,
-                json.dumps([str(root), *sites]),
-                str(root),
-                scope,
-                json.dumps(budget),
-                str(result_file),
-            ],
-            cwd=root,
-            env=environment,
-            capture_output=True,
-            timeout=60,
-            check=False,
-        )
-        if result.returncode != 0 or not result_file.is_file() or result_file.stat().st_size > 16 * 1024 * 1024:
-            raise ValueError(
-                "independent logical pipeline reader failed: " + result.stderr.decode(errors="replace")[-1000:]
-            )
-        return dict(json.loads(result_file.read_text()))
-
-
-def _components(root: Path, scope: str) -> dict[str, object]:
-    from infrastructure.core.pipeline.definition import PipelinePurpose, resolve_pipeline_source
-
-    project = root / "projects" / scope
-    declaration = resolve_pipeline_source(root, project, purpose=PipelinePurpose.EXECUTION).path
-    return source_fingerprint_components(root, project, definition_path=declaration)
-
-
-def _source_records(root: Path, scope: str) -> list[Any]:
-    from infrastructure.core.pipeline.definition import PipelinePurpose, resolve_pipeline_source
-    from infrastructure.core.pipeline.fingerprints import tree_records
-
-    project = root / "projects" / scope
-    declaration = resolve_pipeline_source(root, project, purpose=PipelinePurpose.EXECUTION).path
-    paths = {
-        root / "infrastructure",
-        root / "scripts",
-        project,
-        declaration,
-        *(root / name for name in ("pyproject.toml", "uv.lock", ".python-version", "pipeline.yaml")),
-    }
-    return [
-        (
-            path.relative_to(root).as_posix(),
-            tree_records(path, source=True, excluded_roots=frozenset({(project / "output").absolute()})),
-        )
-        for path in sorted(paths)
-    ]
-
-
-def environment_observation(root: Path, scope: str) -> dict[str, Any]:
-    from infrastructure.core.files.project_lock import _env_var, _lock_key
-    from infrastructure.core.pipeline.execution_environment import VOLATILE_CONTROL_KEYS, environment_digest
-    from infrastructure.core.pipeline.stages import build_stage_subprocess_env
-    from infrastructure.core.secrets import is_secret_env_name
-
-    project = root / "projects" / scope
-    environment = build_stage_subprocess_env(root, project, mode="core")
-    if any(is_secret_env_name(key) or key in {"SSH_AUTH_SOCK", "GPG_AGENT_INFO"} for key in environment):
-        raise ValueError("pipeline child environment contains protected credential names")
-    excluded = VOLATILE_CONTROL_KEYS | {_env_var(_lock_key(project))}
-    hashes = {
-        key: hashlib.sha256(value.encode()).hexdigest() for key, value in environment.items() if key not in excluded
-    }
-    return {
-        "aggregate_digest": environment_digest(environment, project_dir=project),
-        "key_hashes": hashes,
-        "key_hashes_digest": canonical_digest(hashes),
-        "labels": {key: environment[key] for key in _LABELS if key in environment},
-    }
 
 
 def child(spec_path: str) -> int:
@@ -247,6 +87,46 @@ def child(spec_path: str) -> int:
     }
     Path(spec["result_path"]).write_text(json.dumps(result, indent=2, sort_keys=True) + "\n")
     return int(result["original_exit_code"])
+
+
+def main() -> int:
+    """Fixed audited module entrypoints for actual execution or logical DATA."""
+    parser = argparse.ArgumentParser()
+    mode = parser.add_mutually_exclusive_group(required=True)
+    mode.add_argument("--child-spec")
+    mode.add_argument("--logical-root", type=Path)
+    parser.add_argument("--scope")
+    parser.add_argument("--budget")
+    parser.add_argument("--result", type=Path)
+    args = parser.parse_args()
+    if args.child_spec is not None:
+        return child(args.child_spec)
+    from infrastructure.core.pipeline.plan import compile_execution_plan
+    from infrastructure.core.pipeline.types import PipelineConfig
+    from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
+
+    root = args.logical_root
+    if (
+        root != Path.cwd()
+        or Path(__file__).resolve().parents[1] != root / "infrastructure"
+        or args.scope not in PUBLIC_PROJECT_NAMES
+        or args.result is None
+        or args.budget is None
+    ):
+        raise ValueError("logical pipeline reader needs the exact Source root and declared scope")
+    config = PipelineConfig(args.scope, root, mode="core", clean=False, skip_infra=True)
+    config.run_timeout_seconds = json.loads(args.budget)
+    plan = compile_execution_plan(config)
+    args.result.write_text(
+        json.dumps(
+            {
+                "plan": plan.to_dict(),
+                "components": _components(root, args.scope),
+                "source_records": _source_records(root, args.scope),
+            }
+        )
+    )
+    return 0
 
 
 def run_pipeline(root: Path, scope: str, directory: Path, budget: int) -> dict[str, Any]:
@@ -336,22 +216,23 @@ def run_pipeline(root: Path, scope: str, directory: Path, budget: int) -> dict[s
         environment["PATH"] = str(Path(sys.executable).parent) + os.pathsep + environment.get("PATH", "")
         environment = apply_execution_policy(environment, root, mode="core")
         environment = apply_execution_policy(environment, copied, mode="core")
-        bootstrap = (
-            "import sys; sys.path.insert(0,sys.argv[1]); "
-            "from infrastructure.project.public_acceptance_auxiliary_pipeline import child; "
-            "raise SystemExit(child(sys.argv[2]))"
+        from infrastructure.project.public_acceptance_auxiliary_bootstrap import (
+            PIPELINE,
+            PAYLOAD,
+            prepare_audited_auxiliary_command,
         )
-        command = [
-            sys.executable,
-            "-I",
-            "-X",
-            f"pycache_prefix={inner / 'execution/bytecode'}",
-            "-c",
-            bootstrap,
-            str(copied),
-            str(spec_path),
-        ]
-        process = supervise(command, copied, inner / "execution", time.monotonic() + budget, environment=environment)
+
+        command, payload = prepare_audited_auxiliary_command(
+            Path(sys.executable), copied, PIPELINE, ("--child-spec", str(spec_path)), inner / "execution"
+        )
+        process = supervise(
+            command,
+            copied,
+            inner / "execution",
+            time.monotonic() + budget,
+            environment=environment,
+            bootstrap_payload=payload,
+        )
         retained_streams = {
             name: write_binary(
                 root, directory / "pipeline-child" / f"{name}.txt", (copied / binding["path"]).read_bytes()
@@ -360,13 +241,21 @@ def run_pipeline(root: Path, scope: str, directory: Path, budget: int) -> dict[s
         }
         process_binding = write_json(root, directory / "pipeline-child-process.json", process)
         spec_binding = write_binary(root, directory / "pipeline-child-spec.json", spec_path.read_bytes())
-        if not (inner / "facts.json").is_file():
-            raise ValueError(
-                "actual core pipeline child omitted original facts: "
-                + (copied / process["streams"]["stderr"]["path"]).read_text()[-2000:]
-            )
-        facts = json.loads((inner / "facts.json").read_text())
-        facts_binding = write_binary(root, directory / "pipeline-child-facts.json", (inner / "facts.json").read_bytes())
+        bootstrap_binding = write_binary(
+            root, directory / "pipeline-child-bootstrap.payload", (inner / "execution" / PAYLOAD).read_bytes()
+        )
+        facts, facts_binding = _retain_pipeline_child_facts(
+            root,
+            directory,
+            inner,
+            process,
+            {
+                "process_artifact": process_binding,
+                "spec_artifact": spec_binding,
+                "streams": retained_streams,
+                "bootstrap_artifact": bootstrap_binding,
+            },
+        )
         artifacts: list[dict[str, Any]] = []
         size = 0
         for relative, kind, digest in tree_records(output):
@@ -402,6 +291,7 @@ def run_pipeline(root: Path, scope: str, directory: Path, budget: int) -> dict[s
                     "process_artifact": process_binding,
                     "spec_artifact": spec_binding,
                     "facts_artifact": facts_binding,
+                    "bootstrap_artifact": bootstrap_binding,
                     "retained_streams": retained_streams,
                     "output_before": baseline,
                     "output_after": artifacts,
@@ -468,22 +358,19 @@ def validate_portable_pipeline(scope: str, details: dict[str, Any], reader: Snap
         or facts["runtime"]["executable"] != process["selected_interpreter"]
     ):
         raise ValueError("portable pipeline original child/process/spec/exit custody differs")
-    bootstrap = (
-        "import sys; sys.path.insert(0,sys.argv[1]); "
-        "from infrastructure.project.public_acceptance_auxiliary_pipeline import child; "
-        "raise SystemExit(child(sys.argv[2]))"
+    from infrastructure.project.public_acceptance_auxiliary_bootstrap import (
+        PIPELINE,
+        validate_audited_auxiliary_command,
     )
-    if process["command"] != [
-        process["selected_interpreter"],
-        "-I",
-        "-X",
-        f"pycache_prefix={Path(producer) / 'output/readiness/pipeline-child/execution/bytecode'}",
-        "-c",
-        bootstrap,
-        producer,
-        str(Path(producer) / "output/readiness/pipeline-child/spec.json"),
-    ]:
-        raise ValueError("portable pipeline original command differs from the source-owned child")
+
+    validate_audited_auxiliary_command(
+        reader,
+        process,
+        module=PIPELINE,
+        arguments=("--child-spec", str(Path(producer) / "output/readiness/pipeline-child/spec.json")),
+        execution_relative="output/readiness/pipeline-child/execution",
+        retained_payload=custody["bootstrap_artifact"],
+    )
     for name, binding in custody["retained_streams"].items():
         if artifact(binding).sha256 != process["streams"][name]["sha256"]:
             raise ValueError("portable pipeline original streams changed")
@@ -583,3 +470,7 @@ def validate_portable_pipeline(scope: str, details: dict[str, Any], reader: Snap
     execution_file = next((row for row in files if row["relative"] == ".pipeline/execution.json"), None)
     if execution_file is None or artifact(execution_file["binding"]).json_object() != execution:
         raise ValueError("portable pipeline omitted its original complete execution record")
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

@@ -11,6 +11,7 @@ from pathlib import Path
 from typing import TYPE_CHECKING, Any
 
 from infrastructure.core.implementation_custody import _format_bytecode_audit_bootstrap
+from infrastructure.project.acceptance_payload import format_acceptance_payload_loader, validate_acceptance_payload
 from infrastructure.project.installed_acceptance_artifacts import INSTALLED_PROBE
 from infrastructure.project.installed_acceptance_artifacts import inspect_wheel_bytes
 from infrastructure.project.installed_domain_acceptance import validate_autopoiesis_observation
@@ -234,13 +235,30 @@ def _cell(requirement: Requirement, cell: dict[str, Any], reader: SnapshotReader
     bootstrap = _format_bytecode_audit_bootstrap(
         hook.content, Path(audit["path"]), tuple(Path(path) for path in audit["roots"]), Path(audit["prefix"])
     )
+    payload_bytes = (bootstrap + "\n" + INSTALLED_PROBE).encode()
+    payload_binding = details.get("probe_payload_artifact")
+    if not isinstance(payload_binding, dict) or set(payload_binding) != {"path", "sha256"}:
+        raise ValueError("installed probe requires its exact retained Source payload artifact")
+    expected_artifact = (Path(details["probe_spec_artifact"]["path"]).parent / "installed-probe-payload.py").as_posix()
+    if payload_binding["path"] != expected_artifact:
+        raise ValueError("installed probe payload artifact has a different fixed evidence path")
+    held_payload = reader.read(payload_binding["path"])
+    if held_payload.content != payload_bytes or held_payload.sha256 != payload_binding["sha256"]:
+        raise ValueError("installed probe payload artifact differs from the regenerated Source body")
+    payload = validate_acceptance_payload(
+        payload_bytes,
+        spec.get("probe_payload"),
+        expected_path=Path(raw["spec_path"]).parent / "installed-probe-payload.py",
+    )
+    if any(Path(payload["path"]).is_relative_to(Path(root)) for root in spec.get("forbidden_roots", [])):
+        raise ValueError("installed probe payload is inside a forbidden Source tree")
     expected_command = [
         raw.get("interpreter"),
         "-I",
         "-X",
         f"pycache_prefix={audit['prefix']}",
         "-c",
-        bootstrap + "\n" + INSTALLED_PROBE,
+        format_acceptance_payload_loader(payload),
         raw.get("spec_path"),
         raw.get("observation_path"),
     ]

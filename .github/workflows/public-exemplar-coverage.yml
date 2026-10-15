@@ -1,0 +1,78 @@
+name: Public exemplar coverage
+
+on:
+  workflow_dispatch:
+    inputs:
+      coverage-project:
+        description: Optional exact public qualified project; empty measures the complete Source roster
+        required: false
+        type: string
+        default: ""
+
+permissions:
+  contents: read
+
+concurrency:
+  group: public-exemplar-coverage-${{ github.run_id }}
+  cancel-in-progress: false
+
+jobs:
+  select:
+    name: Source-derived coverage roster
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      matrix: ${{ steps.roster.outputs.matrix }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: ./.github/actions/setup-python-env
+      - run: uv sync --locked
+      - name: Select the exact public Source roster
+        id: roster
+        env:
+          COVERAGE_PROJECT: ${{ inputs.coverage-project }}
+        run: |
+          .venv/bin/python - <<'PYTHON' >> "$GITHUB_OUTPUT"
+          import json, os, re
+          from pathlib import PurePosixPath
+          from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
+          requested = os.environ["COVERAGE_PROJECT"]
+          if requested and requested not in PUBLIC_PROJECT_NAMES:
+              raise SystemExit("coverage-project must be an exact canonical public qualified name")
+          selected = (requested,) if requested else PUBLIC_PROJECT_NAMES
+          rows = [{"name": PurePosixPath(project).name, "project": project} for project in selected]
+          if (not rows or len({row["name"] for row in rows}) != len(rows)
+              or any(re.fullmatch(r"[A-Za-z0-9_-]+", row["name"]) is None for row in rows)):
+              raise SystemExit("public coverage artifact names must be nonempty, unique and path-free")
+          print("matrix=" + json.dumps({"include": rows}, separators=(",", ":")))
+          PYTHON
+
+  coverage:
+    name: Own coverage (${{ matrix.name }})
+    needs: select
+    strategy:
+      fail-fast: false
+      max-parallel: 4
+      matrix: ${{ fromJSON(needs.select.outputs.matrix) }}
+    uses: ./.github/workflows/exemplar-coverage.yml
+    permissions:
+      contents: read
+    with:
+      coverage-project: ${{ matrix.project }}
+      artifact-name: public-exemplar-coverage-${{ matrix.name }}
+
+  coverage-complete:
+    name: Public exemplar coverage complete
+    if: always()
+    needs: [select, coverage]
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Require the complete selected matrix
+        env:
+          NEEDS_JSON: ${{ toJson(needs) }}
+        run: |
+          jq -e 'type == "object" and keys == ["coverage", "select"]
+            and all(.[]; .result == "success")' <<< "$NEEDS_JSON"

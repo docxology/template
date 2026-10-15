@@ -88,3 +88,9 @@ def test_git_impact_unions_staged_and_unstaged_paths(tmp_path) -> None:
     unstaged.write_text("VALUE = 3\n", encoding="utf-8")
 
     assert _git_changed_paths(tmp_path) == ["infrastructure/staged.py", "tests/unstaged.py"]
+
+
+def test_unknown_template_name_is_a_control_change_not_an_executable_project() -> None:
+    plan = classify_changed_paths(["projects/templates/unregistered/src/input.py"])
+    assert plan.project_names == ()
+    assert plan.repository_control_changed

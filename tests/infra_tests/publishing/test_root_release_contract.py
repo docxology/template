@@ -144,7 +144,7 @@ def test_runtime_version_is_read_without_executing_source(tmp_path: Path) -> Non
 def test_current_source_versions_agree() -> None:
     from infrastructure import __version__
 
-    assert validate_root_versions(REPO_ROOT) == __version__ == "4.0.1"
+    assert validate_root_versions(REPO_ROOT) == __version__
 
 
 @pytest.mark.parametrize(

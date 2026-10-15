@@ -14,6 +14,7 @@ from infrastructure.reporting.native_source_provider_bootstrap import (
     NATIVE_CAPTURE_MODULE,
     NATIVE_CONTROLLER_MODULE,
     NATIVE_READER_MODULE,
+    NATIVE_PREFLIGHT_MODULE,
     format_selected_sdk_native_bootstrap,
 )
 from infrastructure.reporting.native_tool_process import run_native_tool_process
@@ -121,7 +122,7 @@ def launch_prepared_native(
     environment: dict[str, str],
 ) -> dict[str, Any]:
     """Run exactly the Source-owned original controller or independent reader."""
-    if role not in (NATIVE_CONTROLLER_MODULE, NATIVE_READER_MODULE):
+    if role not in (NATIVE_CONTROLLER_MODULE, NATIVE_READER_MODULE, NATIVE_PREFLIGHT_MODULE):
         raise ValueError("prepared launch permits only the exact controller or independent-reader role")
     prepared.verify()
     if source_file_bytes(implementation) != raw:
@@ -136,7 +137,12 @@ def launch_prepared_native(
     }
     provider_sources.update(pdfium_sources)
     roots = tuple(dict.fromkeys((*roots, *pdfium_roots)))
-    closure = prepared.evidence / ("controller-code" if role == NATIVE_CONTROLLER_MODULE else "reader-code")
+    role_name = {
+        NATIVE_CONTROLLER_MODULE: "controller",
+        NATIVE_READER_MODULE: "reader",
+        NATIVE_PREFLIGHT_MODULE: "preflight",
+    }[role]
+    closure = prepared.evidence / f"{role_name}-code"
     closure.mkdir(mode=0o700)
     identity = closure.stat().st_dev, closure.stat().st_ino
     hook = source_file_bytes(prepared.sdk_package_root / "core/bytecode_audit.py")
@@ -158,7 +164,7 @@ def launch_prepared_native(
         cwd=prepared.current_root,
         env=environment,
         deadline=prepared.deadline,
-        purpose="actual-native-controller" if role == NATIVE_CONTROLLER_MODULE else "actual-native-reader",
+        purpose=f"actual-native-{role_name}",
         preserve_nominated_launcher=True,
     )
     # A native refusal/nonzero remains the real observed result. A retention

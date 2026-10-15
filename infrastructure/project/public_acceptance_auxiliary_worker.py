@@ -379,6 +379,8 @@ def run_specification(root: Path, spec: dict[str, Any]) -> int:
         "implementation": platform.python_implementation(),
         "pycache_prefix": sys.pycache_prefix,
     }
+    from infrastructure.project.public_acceptance_auxiliary_pipeline import AuxiliaryPipelineFailure
+
     try:
         if spec.get("negative"):
             code = negative_control(root, spec["gate"])
@@ -395,6 +397,9 @@ def run_specification(root: Path, spec: dict[str, Any]) -> int:
                 status="pass",
             )
             code = 0
+    except AuxiliaryPipelineFailure as error:
+        result.update(error.worker_observation)
+        code = error.code
     except MissingAuxiliaryProvider as error:
         result.update(status="blocked", diagnostic=str(error))
         code = 75

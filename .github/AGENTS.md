@@ -1,11 +1,19 @@
 ## Fast functional CI
 
 `ci.yml` runs on main pushes, pull requests and manual dispatch. It uses Linux
-and Python 3.14: lint/types and public data/security guards, pipeline smoke,
-a standalone wheel build and focused behavioral tests for every public template,
+and Python 3.14: lint/types and public data/security guards, complementary pipeline smoke
+shards and required selected full-module contract jobs, standalone wheel builds and focused behavioral tests,
 and the required `CI Gate`. `.github/project-smoke.json` names the actual tests;
 the smoke runner refuses missing projects, empty selections and escaping paths.
 These are functional checks, with no full-suite coverage or native acceptance claim.
+
+Main/manual runs select every public project. Exact project-only PRs include
+transitive consumers; shared, unknown or ambiguous changes select the full roster.
+Infrastructure includes changed tests and declared Source owners without dropping
+the legacy union. `CI Gate` requires both test lanes and checks their original
+pytest selection/outcome receipts for an exact disjoint union. JUnit is diagnostic.
+`platform-native-preflight.yml` adds an incomplete cold installed diagnostic;
+its bounded one-exemplar result never qualifies full release acceptance.
 
 The former cross-version/full-suite matrix remains in `hardening.yml`, invoked
 manually. `platform-required-acceptance.yml` is also manual-only; its original
@@ -131,12 +139,12 @@ six original Root minor/platform units, common and native observations, and a
 strict collector that uploads only the passed complete exact-source bundle.
 Its presence does not establish successful hosted acceptance, integration into
 `main`, or publication; ordinary CI uploads cannot authorize this handoff.
-Tag pushes without the explicit handoff stop. The 4.0.1 candidate remains Unreleased during development. Final changelog and
+Tag pushes without the explicit handoff stop. The 4.0.2 candidate remains Unreleased during development. Final changelog and
 release-intent metadata must be frozen before exact-revision acceptance; those
 bytes do not establish publication. The prepared 4.0.0 candidate was not published.
 The release uses `softprops/action-gh-release@v3.0.3` with
 **`generate_release_notes`** off. Root 4+ reads `docs/releases/<tag>.md` for its
-actual tag, such as the [4.0.1 candidate notes](../docs/releases/v4.0.1.md), and
+actual tag, such as the [4.0.2 candidate notes](../docs/releases/v4.0.2.md), and
 adds accepted-commit, hosted-run and receipt-hash bindings. It publishes the
 admitted installed wheel, exact final source distribution, tag-selected overview
 PNG and byte manifest, then verifies retrieved asset hashes. Earlier major tags

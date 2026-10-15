@@ -619,7 +619,7 @@ def test_transitive_platform_and_worker_environment_are_required() -> None:
     else:
         assert custody["binding_kind"] == "installed-distribution"
         selected = importlib.metadata.distribution("research-project-template")
-        assert selected.version == "4.0.1" and selected.files is not None
+        assert selected.version == "4.0.2" and selected.files is not None
         records = [path for path in selected.files if str(path).endswith(".dist-info/RECORD")]
         assert len(records) == 1
         record_path = Path(selected.locate_file(records[0]))
@@ -629,7 +629,7 @@ def test_transitive_platform_and_worker_environment_are_required() -> None:
         assert sources["distribution/METADATA"] == hashlib.sha256(metadata_bytes).hexdigest()
         metadata = BytesParser().parsebytes(metadata_bytes)
         assert metadata.get_all("Name") == ["research-project-template"]
-        assert metadata.get_all("Version") == ["4.0.1"]
+        assert metadata.get_all("Version") == ["4.0.2"]
         assert metadata.get_all("Requires-Python") == [">=3.12"]
         requirements = metadata.get_all("Requires-Dist")
         assert requirements

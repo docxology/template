@@ -146,14 +146,18 @@ def test_real_process_readback_after_producer_root_and_wrapper_deleted(tmp_path:
         refused_directory / "spec.json",
         {"gate": "root:macos:rendering", "budget": 180, "raw_path": "output/readiness/unsupported-print/raw.json"},
     )
-    refused_command = [
-        str(interpreter),
-        "-m",
-        "infrastructure.project.public_acceptance_auxiliary_worker",
-        "--spec",
-        str(producer / refused_spec["path"]),
-    ]
-    refused = supervise(refused_command, producer, refused_directory / "execution", time.monotonic() + 180)
+    from infrastructure.project.public_acceptance_auxiliary_bootstrap import WORKER, prepare_audited_auxiliary_command
+
+    refused_command, refused_payload = prepare_audited_auxiliary_command(
+        interpreter, producer, WORKER, ("--spec", str(producer / refused_spec["path"])), refused_directory / "execution"
+    )
+    refused = supervise(
+        refused_command,
+        producer,
+        refused_directory / "execution",
+        time.monotonic() + 180,
+        bootstrap_payload=refused_payload,
+    )
     actual_refusal = json.loads((refused_directory / "raw.json").read_text())
     assert refused["timed_out"] is False
     assert not actual_refusal.get("details", {}).get("print_witness_artifact")
@@ -186,14 +190,10 @@ def test_real_process_readback_after_producer_root_and_wrapper_deleted(tmp_path:
         directory / "spec.json",
         {"gate": gate, "budget": 180, "raw_path": "output/readiness/portable/raw.json"},
     )
-    command = [
-        str(interpreter),
-        "-m",
-        "infrastructure.project.public_acceptance_auxiliary_worker",
-        "--spec",
-        str(producer / spec["path"]),
-    ]
-    process = supervise(command, producer, directory / "execution", time.monotonic() + 180)
+    command, payload = prepare_audited_auxiliary_command(
+        interpreter, producer, WORKER, ("--spec", str(producer / spec["path"])), directory / "execution"
+    )
+    process = supervise(command, producer, directory / "execution", time.monotonic() + 180, bootstrap_payload=payload)
     assert process["exit_code"] == 0, (directory / "raw.json").read_text()
     raw_binding = {
         "path": "output/readiness/portable/raw.json",

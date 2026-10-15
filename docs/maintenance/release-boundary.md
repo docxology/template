@@ -1,16 +1,27 @@
 # Release boundary
 
-The root package metadata declares the **4.0.1** candidate. Its dated changelog
+The root package metadata declares the **4.0.2** candidate. Its dated changelog
 entry records the frozen release intent; publication remains pending until the
 acceptance and publication steps below pass. Final release-intent metadata must
 be included in the exact revision submitted for release acceptance.
-The prepared 4.0.0 candidate was not published; its notes are retained. Tagging and publication require the verified
+The prepared 4.0.0 and 4.0.1 candidates were not published; their notes are retained. Tagging and publication require the verified
 acceptance and publication steps below. The earlier recorded root release is `3.8.0` /
 `v3.8.0`; its original publication evidence is retained in
 [subsystem history](subsystem-status-history.md). Historical standalone release
 entries do not version the root package.
 
 Before the next root release, reconcile these surfaces together:
+
+For the metadata preparation in step 1, use
+`scripts/maintenance/coordinated_release.py --repo-root . plan --from-version <current> --to-version <next-patch>`.
+Review the canonical JSON and its SHA256, then run `check` and `apply` with that
+exact plan, `--reviewed-sha256` and a fresh private `--journal` outside the checkout.
+The transaction binds package/lock inputs and every canonical manuscript
+publication binding. It preserves exemplar own versions and third-party lock
+records, and retains exact compensating rollback bytes. Concurrent metadata
+writers are unsupported; stale inputs or foreign rollback edits are refused.
+Executable version guards and authored documentation must also be reconciled
+before the final Source freeze. The command creates no tag, release or acceptance.
 
 1. Finish scoped implementation and independent review. Resolve the intended
    root version, each exemplar's own version/DOI metadata, dependency locks,
@@ -57,7 +68,7 @@ provider-specific publishing steps.
 
 ## Development checkpoint
 
-Work on the 4.0.1 acceptance adapters may be committed on a development branch
+Work on the 4.0.2 acceptance adapters may be committed on a development branch
 while acceptance remains incomplete. Such a checkpoint preserves reviewed source
 and focused regression checks; it is not a candidate acceptance receipt or a
 release authorization. Unsupported source occurrences and missing native,

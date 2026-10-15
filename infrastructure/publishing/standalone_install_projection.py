@@ -97,7 +97,9 @@ def _admit_provider(provider: GitInstallProvider, package: str, version: str) ->
     }
 
 
-def _assert_canonical_original(original: Path, root: GitInstallProvider) -> tuple[str, dict[str, dict[str, Any]]]:
+def _assert_canonical_original(
+    original: Path, root: GitInstallProvider, platform_version: str
+) -> tuple[str, dict[str, dict[str, Any]]]:
     from infrastructure.publishing.standalone_mirror import populate_mirror_tree
 
     before = _records(original, _Budget())
@@ -108,7 +110,7 @@ def _assert_canonical_original(original: Path, root: GitInstallProvider) -> tupl
         manifest.get("schema_version") != 2
         or scope not in PUBLIC_PROJECT_NAMES
         or manifest.get("source_commit") != root.commit
-        or manifest.get("infrastructure_version") != "4.0.1"
+        or manifest.get("infrastructure_version") != platform_version
         or manifest.get("files")
         != {name: row["sha256"] for name, row in before.items() if name != ".template-export.json"}
     ):
@@ -247,8 +249,13 @@ def _admit_meta_provider(
 def _expected(
     original: Path, root: GitInstallProvider, meta: GitInstallProvider | None
 ) -> tuple[dict[str, Any], dict[str, bytes]]:
-    platform = _admit_provider(root, ROOT_PACKAGE, "4.0.1")
-    scope, records = _assert_canonical_original(original, root)
+    from infrastructure.publishing.root_release_contract import root_package_version
+
+    platform_version = root_package_version(root.checkout)
+    if re.fullmatch(r"4\.\d+\.\d+", platform_version) is None:
+        raise ValueError("installation projection requires genuine platform 4 Source metadata")
+    platform = _admit_provider(root, ROOT_PACKAGE, platform_version)
+    scope, records = _assert_canonical_original(original, root, platform_version)
     versions = checkout_providers(
         read_bytes_confined(original, original / "pyproject.toml", max_bytes=4 * 1024 * 1024),
         read_bytes_confined(original, original / "uv.lock", max_bytes=64 * 1024 * 1024),
@@ -266,7 +273,7 @@ def _expected(
     if META_PACKAGE in pins:
         if meta is None or _admit_meta_provider(meta, root, platform, "0.2.0") != pins[META_PACKAGE]:
             raise ValueError("Meta provider changed while preparing installation fields")
-    if _admit_provider(root, ROOT_PACKAGE, "4.0.1") != platform:
+    if _admit_provider(root, ROOT_PACKAGE, platform_version) != platform:
         raise ValueError("Root provider changed during installation projection")
     return manifest, edits
 

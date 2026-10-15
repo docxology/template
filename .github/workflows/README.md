@@ -7,13 +7,15 @@ and the required `CI Gate`. `.github/project-smoke.json` names the actual tests;
 the smoke runner refuses missing projects, empty selections and escaping paths.
 These are functional checks, with no full-suite coverage or native acceptance claim.
 
-Manual CI dispatch accepts an optional coverage-project, such as
-templates/template_sia. That adds one own-project release-profile coverage job
-on Linux/Python 3.14, with its locked development environment and declared tools.
-The requested job and the whole workflow must succeed; retrieve
-requested-exemplar-coverage and verify its commit and project input hash before
-refreshing a coverage snapshot. CI Gate requires all five functional jobs and
-the requested coverage result, accepting that leaf's skip only when unrequested.
+Manual CI dispatch accepts an optional exact public `coverage-project` and calls
+`exemplar-coverage.yml` for its own locked release-profile measurement. The
+**Public exemplar coverage** workflow calls the same job across the complete
+Source-derived roster in one dispatch, with four concurrent projects and separate
+commit/input-hash bound artifacts. Its optional project input selects exactly
+one public exemplar. Require every selected measurement and the final matrix
+gate, then verify the retrieved artifacts before updating coverage provenance.
+The ordinary `CI Gate` also requires both complementary infrastructure lanes and
+accepts the optional coverage job's skip only when unrequested.
 
 The lint job resolves its public lint/type scopes once and passes nonempty Bash
 arrays to Ruff and mypy. A failed scope producer stops before either tool runs.
@@ -186,14 +188,14 @@ inventory, and an independent collector. The collector uploads
 `platform-required-acceptance` only after every required exact-source gate passes.
 The workflow's presence does not establish a successful hosted run, integration
 into `main`, or publication. Ordinary CI uploads cannot substitute for this
-handoff, and a version heading does not authorize release. The 4.0.1 candidate
+handoff, and a version heading does not authorize release. The 4.0.2 candidate
 has frozen release-intent metadata and remains unpublished; the prepared 4.0.0
 candidate was not published.
 The evidence handoff verifies custody and required acceptance; it does not
 perform sandbox or production transfers itself.
 
 For root 4+, the release body uses `docs/releases/<tag>.md` for its actual tag,
-such as the [4.0.1 candidate notes](../../docs/releases/v4.0.1.md), and appends
+such as the [4.0.2 candidate notes](../../docs/releases/v4.0.2.md), and appends
 the accepted commit, hosted run and receipt SHA256. Assets are the admitted
 installed wheel, exact final source distribution, tag-selected overview PNG and
 byte manifest; retrieved asset hashes must match. Earlier major tags retain the

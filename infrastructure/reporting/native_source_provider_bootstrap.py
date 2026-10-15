@@ -44,6 +44,7 @@ OFFICE_CONTROL_WORKER_MODULE = "infrastructure.reporting.native_office_diagram_c
 MERMAID_SOURCE_WORKER_MODULE = "infrastructure.reporting.native_mermaid_all_source_worker"
 NATIVE_CONTROLLER_MODULE = "infrastructure.reporting.native_format_acceptance"
 NATIVE_READER_MODULE = "infrastructure.reporting.native_hosted_reader"
+NATIVE_PREFLIGHT_MODULE = "infrastructure.reporting.native_installed_preflight"
 NATIVE_CAPTURE_MODULE = "infrastructure.reporting.native_installed_custody_capture"
 PRINT_CONTROL_WORKER_MODULE = "infrastructure.reporting.native_print_artifact_controls"
 SLIDE_CONTROL_WORKER_MODULE = "infrastructure.reporting.native_slide_controls"
@@ -63,6 +64,7 @@ def _worker_module(value: str) -> str:
         MERMAID_SOURCE_WORKER_MODULE,
         NATIVE_CONTROLLER_MODULE,
         NATIVE_READER_MODULE,
+        NATIVE_PREFLIGHT_MODULE,
         NATIVE_CAPTURE_MODULE,
         PRINT_CONTROL_WORKER_MODULE,
         SLIDE_CONTROL_WORKER_MODULE,

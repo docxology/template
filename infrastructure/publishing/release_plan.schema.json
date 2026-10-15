@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:template:coordinated-release-plan:v1",
+  "title": "Coordinated release metadata preparation plan",
+  "description": "Shape only. check_release_plan reconstructs exact package, lock and canonical publication-platform inputs and writes. Exemplar own/intended versions stay unchanged. This schema grants no execution or publication authority.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "role", "base_commit", "root_before", "root_after", "public_roster", "packages", "provider_order", "inputs", "changes", "required_followup"],
+  "properties": {
+    "schema_version": {"const": "template-coordinated-release-plan-v1"},
+    "role": {"const": "metadata-preparation-only"},
+    "base_commit": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+    "root_before": {"type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"},
+    "root_after": {"type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"},
+    "public_roster": {"$ref": "#/$defs/scopes"},
+    "provider_order": {"$ref": "#/$defs/scopes"},
+    "required_followup": {"type": "array", "items": {"type": "string"}, "minItems": 1, "uniqueItems": true},
+    "packages": {"type": "array", "minItems": 1, "items": {"type": "object", "additionalProperties": false, "required": ["scope", "package", "own_version", "sdk_before", "sdk_after"], "properties": {"scope": {"type": "string"}, "package": {"type": "string"}, "own_version": {"type": "string"}, "sdk_before": {"type": "string"}, "sdk_after": {"type": "string"}}}},
+    "inputs": {"type": "array", "minItems": 1, "items": {"type": "object", "additionalProperties": false, "required": ["path", "sha256", "mode"], "properties": {"path": {"type": "string"}, "sha256": {"$ref": "#/$defs/hash"}, "mode": {"type": "integer", "minimum": 0, "maximum": 511}}}},
+    "changes": {"type": "array", "minItems": 1, "items": {"type": "object", "additionalProperties": false, "required": ["path", "before_sha256", "after_sha256"], "properties": {"path": {"type": "string"}, "before_sha256": {"$ref": "#/$defs/hash"}, "after_sha256": {"$ref": "#/$defs/hash"}}}}
+  },
+  "$defs": {
+    "hash": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "scopes": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string"}}
+  }
+}

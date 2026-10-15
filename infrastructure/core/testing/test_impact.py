@@ -13,6 +13,8 @@ from dataclasses import dataclass
 from pathlib import PurePosixPath
 from typing import Iterable
 
+from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
+
 
 @dataclass(frozen=True)
 class TestImpactPlan:
@@ -33,7 +35,8 @@ def _project_name(path: PurePosixPath) -> str | None:
     """Return a qualified public exemplar name for a project path."""
     parts = path.parts
     if len(parts) >= 3 and parts[0:2] == ("projects", "templates"):
-        return "/".join(parts[1:3])
+        name = "/".join(parts[1:3])
+        return name if name in PUBLIC_PROJECT_NAMES else None
     return None
 
 
@@ -50,6 +53,8 @@ def classify_changed_paths(paths: Iterable[str]) -> TestImpactPlan:
     for raw_path in normalized:
         path = PurePosixPath(raw_path)
         project_name = _project_name(path)
+        if path.parts[:2] == ("projects", "templates") and project_name is None:
+            repository_control_changed = True
         if project_name is not None:
             projects.add(project_name)
         if path.parts and path.parts[0] in {"infrastructure", "scripts", "tests"}:

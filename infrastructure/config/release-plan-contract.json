@@ -1,0 +1,17 @@
+{
+  "schema_version": "template-release-plan-contract-v1",
+  "root_package": "research-project-template",
+  "version_rule": "root-4+-next-patch; preserve-exemplar-own-versions",
+  "public_roster_authority": "infrastructure.project.public_scope.PUBLIC_PROJECT_NAMES",
+  "lock_rule": "root-editable-version-only; no-resolution-or-third-party-delta",
+  "publication_rule": "all-canonical-publication-platform-bindings-only; preserve-intended-and-own-versions",
+  "required_followup": [
+    "locked-offline-metadata-checks",
+    "source-bound-coverage-and-publication-validation",
+    "all-public-wheel-admission",
+    "fresh-final-source-census-and-policy-admission",
+    "exact-main-all-29-obligations",
+    "independent-installed-release-handoff",
+    "explicit-GitHub-publication"
+  ]
+}

@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
     inputs:
       tag:
-        description: "Existing root tag to release (e.g. v4.0.1)"
+        description: "Existing root tag to release (e.g. v4.0.2)"
         required: true
       acceptance_run_id:
         description: "Successful exact-tag-SHA run that uploaded required acceptance (root 4+)"

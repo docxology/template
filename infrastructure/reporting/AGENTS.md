@@ -170,6 +170,7 @@ observations alone do not establish complete execution or a universal speedup.
 | `native_crossref_worker.py` | Actual Source-audited Pandoc filter child; stdout contains only filter JSON. |
 | `native_current_artifact_join.py` | Observe the actual artifacts of the already executed fresh Current Core. |
 | `native_current_epub_engine_data.py` | Retain the one selected EPUBCheck bundle in the separate Current root. |
+| `native_current_nomination_batch.py` | Fixed Current nomination batch with opening/middle/final Source observations and every member's original checks. |
 | `native_current_reader_inputs.py` | Immutable Current execution nominations held by the actual native reader. |
 | `native_dependency_preparation.py` | Finite official npm asset preparation, bound to exact source lock integrity. |
 | `native_environment_custody.py` | Exact selected, bounded and audited Popen environment commitments. |
@@ -280,8 +281,10 @@ observations alone do not establish complete execution or a universal speedup.
 | `native_hydration_reconstruction.py` | Actual Source/SDK-bound hydration and combined-byte reconstruction. |
 | `native_installed_custody_capture.py` | Observe the real cold installed SDK against its separately admitted wheel. |
 | `native_installed_invocation.py` | Cold installed SDK capture/controller invocation under the original clock. |
-| `native_installed_launcher.py` | Prepare a fresh Source4.0.1 wheel and supervise its cold native role. |
+| `native_installed_launcher.py` | Prepare a fresh Source-declared SDK wheel and supervise its cold native role. |
+| `native_installed_preflight.py` | Bounded cold installed diagnostic across all providers and one real exemplar; its incomplete scope cannot authorize publication. |
 | `native_installed_preparation.py` | Source-locked fresh wheel/runtime preparation for the genuine native launcher. |
+| `native_original_progress.py` | Fixed public phase, PID and original remaining-time diagnostics; no execution or custody authority. |
 | `native_linux_calibre_runtime.py` | Actual Source-selected Linux Calibre package/embedded-Qt observations. |
 | `native_loader_build.py` | Compile the one Source-owned Linux auditor through the actual native ToolAPI. |
 | `native_loader_compilation_replay.py` | Exact compiler/header/body DATA reconstruction under enclosing Tool custody. |
@@ -392,6 +395,9 @@ observations alone do not establish complete execution or a universal speedup.
 | `native_pdf_whole_source_witness.py` | Complete PDF Source occurrence predicates with actual whole-reference bytes. |
 | `native_pdf_whole_worker.py` | Fixed original whole-PDF producer sequence under the existing live Source owner. |
 | `native_pdfium_source_wheel.py` | Source-lock-authenticate nominated wheel bytes without importing its code. |
+| `native_pdfium_provider_data.py`, `native_pdfium_runtime_data.py`, `native_pdfium_revalidation.py` | Reobserve held PDFium lock, wheel, installed file and runtime DATA without granting Source or executable authority. |
+| `native_revalidation_progress.py` | Preserve original per-member and closing verification progress within existing deadlines. |
+| `original_job_outcome.py` | Fail producing jobs on incomplete required original cells; diagnostic summaries cannot grant acceptance. |
 | `native_pitch_control_custody.py` | One fixed Pitch child role in the existing Source control custodian. |
 | `native_pitch_control_mutations.py` | Single-target valid native mutations of actual configured Pitch bytes. |
 | `native_pitch_control_plan.py` | Complete Source-selected Pitch pair/page control targets, without admission. |

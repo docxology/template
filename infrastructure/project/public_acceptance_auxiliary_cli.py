@@ -33,6 +33,13 @@ def main() -> int:
     from infrastructure.project.public_acceptance_cli import interpreter
 
     parser.add_argument("--installed-interpreter", type=interpreter, action="append", default=[])
+    parser.add_argument(
+        "--installed-workers",
+        type=int,
+        choices=(1, 2, 3),
+        default=1,
+        help="Bounded isolated installed package workers; preserves all runtime cells",
+    )
     parser.add_argument("--export-receipt", type=Path)
     parser.add_argument("--installed-receipt", type=Path)
     parser.add_argument("--upload-outputs", type=Path)
@@ -47,7 +54,11 @@ def main() -> int:
         from infrastructure.project.installed_acceptance import run_installed_acceptance
 
         report = run_installed_acceptance(
-            root, dict(args.installed_interpreter), timeout_seconds=args.timeout_seconds, evidence_dir=args.evidence_dir
+            root,
+            dict(args.installed_interpreter),
+            project_workers=args.installed_workers,
+            timeout_seconds=args.timeout_seconds,
+            evidence_dir=args.evidence_dir,
         )
         print(json.dumps(report, indent=2, sort_keys=True))
         return int(report["exit_code"])

@@ -49,7 +49,7 @@ def _run(generator: Path, reference: Path, *, bootstrap: bool = False) -> subpro
     script = (
         "import sys,importlib.util;from pathlib import Path;import infrastructure;"
         f"assert Path(infrastructure.__file__).resolve()==Path({str(SDK_PACKAGE / '__init__.py')!r});"
-        "assert infrastructure.__version__=='4.0.1';"
+        "assert infrastructure.__version__=='4.0.2';"
         + registration
         + "from template_autopoiesis.gates.realization_contract import realize_selected_children;"
         f"realize_selected_children(Path({str(reference)!r}),single=True)"
@@ -76,7 +76,7 @@ def test_fresh_own_bootstrap_accepts_actual_environment_sdk_and_executes_primiti
         "bootstrap=importlib.util.module_from_spec(spec);spec.loader.exec_module(bootstrap);"
         "sdk=bootstrap.bootstrap_project(project);"
         f"assert Path(sdk.__file__).resolve()==Path({str(SDK_PACKAGE / '__init__.py')!r});"
-        "assert sdk.__version__=='4.0.1';assert sys.path==original;"
+        "assert sdk.__version__=='4.0.2';assert sys.path==original;"
         "origin=Path(sdk.__file__).resolve();"
         "providers=[Path(sysconfig.get_path(kind)).resolve() for kind in ('purelib','platlib')];"
         "assert not origin.is_relative_to(project) or any(origin.is_relative_to(path) for path in providers);"
@@ -106,7 +106,7 @@ def test_actual_cached_authored_sdk_is_refused_outside_active_provider_roots(
     marker = tmp_path / "authored-sdk-executed"
     (shadow / "__init__.py").write_text(
         f"from pathlib import Path\nPath({str(marker)!r}).write_text('actual authored provider ran')\n"
-        "__version__='4.0.1'\n",
+        "__version__='4.0.2'\n",
         encoding="utf-8",
     )
     script = (
@@ -140,7 +140,7 @@ def test_actual_loaded_sdk_missing_origin_is_refused_and_paths_are_restored(tmp_
     script = (
         "import importlib.util,sys;from pathlib import Path;import infrastructure;"
         f"assert Path(infrastructure.__file__).resolve(strict=True)==Path({str(SDK_PACKAGE / '__init__.py')!r});"
-        "assert infrastructure.__version__=='4.0.1';"
+        "assert infrastructure.__version__=='4.0.2';"
         f"project=Path({str(PROJECT)!r});"
         "spec=importlib.util.spec_from_file_location('actual_own_bootstrap',project/'scripts/_bootstrap.py');"
         "assert spec is not None and spec.loader is not None;"
@@ -176,7 +176,7 @@ def test_loaded_generator_custody_is_distinct_from_supplied_reference_inputs(tmp
     )
     assert generator["files"]["checkout/uv.lock"] == hashlib.sha256((PROJECT / "uv.lock").read_bytes()).hexdigest()
     assert platform["files"] and generator["bytecode_binding"] == "loaded-baseline"
-    assert infrastructure.__version__ == "4.0.1"
+    assert infrastructure.__version__ == "4.0.2"
     assert (
         platform["files"]["infrastructure/__init__.py"]
         == hashlib.sha256((SDK_PACKAGE / "__init__.py").read_bytes()).hexdigest()
@@ -189,7 +189,7 @@ def test_loaded_generator_custody_is_distinct_from_supplied_reference_inputs(tmp
     else:
         assert platform["binding_kind"] == "installed-distribution"
         selected = importlib.metadata.distribution("research-project-template")
-        assert selected.version == "4.0.1" and selected.files is not None
+        assert selected.version == "4.0.2" and selected.files is not None
         records = [path for path in selected.files if str(path).endswith(".dist-info/RECORD")]
         assert len(records) == 1
         for field, relative in (("record_sha256", records[0]), ("metadata_sha256", records[0].parent / "METADATA")):
@@ -309,7 +309,7 @@ def test_actual_cached_own_namespace_preserves_canonical_modules_and_refuses_wro
     script = (
         "import importlib,importlib.util,sys;from pathlib import Path;import infrastructure;"
         f"assert Path(infrastructure.__file__).resolve()==Path({str(SDK_PACKAGE / '__init__.py')!r});"
-        "assert infrastructure.__version__=='4.0.1';"
+        "assert infrastructure.__version__=='4.0.2';"
         f"spec=importlib.util.spec_from_file_location('actual_auto_bootstrap',{str(generator / 'scripts/_bootstrap.py')!r});"
         "assert spec is not None and spec.loader is not None;bootstrap=importlib.util.module_from_spec(spec);"
         "spec.loader.exec_module(bootstrap);"

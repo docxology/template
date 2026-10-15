@@ -7,6 +7,7 @@ from pathlib import Path
 import subprocess
 import sys
 import shutil
+import os
 from tempfile import TemporaryDirectory
 
 from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
@@ -51,9 +52,17 @@ def _project_smoke_selection(repo_root: Path) -> dict[str, list[str]]:
     return selection
 
 
-def project_smoke_matrix(repo_root: Path) -> dict[str, list[dict[str, str]]]:
-    """Emit the validated complete public functional selection."""
-    return {"include": [{"project": project} for project in sorted(_project_smoke_selection(repo_root))]}
+def project_smoke_matrix(repo_root: Path, projects: tuple[str, ...] | None = None) -> dict[str, list[dict[str, str]]]:
+    """Validate the whole roster before emitting a complete or exact PR subset."""
+    all_projects = _project_smoke_selection(repo_root)
+    if projects is not None and (
+        not isinstance(projects, tuple)
+        or not projects
+        or len(projects) != len(set(projects))
+        or any(project not in all_projects for project in projects)
+    ):
+        raise ValueError("functional project subset must be nonempty, unique and public")
+    return {"include": [{"project": project} for project in sorted(all_projects if projects is None else projects)]}
 
 
 def run_project_smoke(repo_root: Path, project: str) -> int:
@@ -62,6 +71,12 @@ def run_project_smoke(repo_root: Path, project: str) -> int:
     selection = _project_smoke_selection(root)
     if project not in selection:
         raise ValueError("functional smoke project is not public")
+    reports = os.environ.get("TEMPLATE_CI_JUNIT_DIRECTORY")
+    report_args: list[str] = []
+    if reports:
+        directory = Path(reports)
+        directory.mkdir(parents=True, exist_ok=True)
+        report_args = ["--junitxml=" + str(directory / (project.replace("/", "__") + ".xml"))]
     # Some real project tests regenerate outputs. Keep those writes disposable,
     # including on a developer's checkout, without altering their test behavior.
     with TemporaryDirectory(prefix="template-functional-") as scratch:
@@ -86,6 +101,7 @@ def run_project_smoke(repo_root: Path, project: str) -> int:
                 "-q",
                 "--timeout=60",
                 "--benchmark-disable",
+                *report_args,
             ],
             cwd=work,
             timeout=180,

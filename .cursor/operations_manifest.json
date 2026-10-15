@@ -219,6 +219,34 @@
       "effect": "read_only"
     },
     {
+      "module": "infrastructure.core.testing.ci_infra",
+      "invocation": "python -m infrastructure.core.testing.ci_infra",
+      "source_path": "infrastructure/core/testing/ci_infra.py",
+      "purpose": "One complete functional infrastructure roster, complementary shards and receipts.",
+      "subcommands": [],
+      "exports": [
+        "infrastructure_files",
+        "infrastructure_shards",
+        "validate_shards",
+        "verify_shard_receipts",
+        "run_shard"
+      ],
+      "effect": "mutating"
+    },
+    {
+      "module": "infrastructure.core.testing.ci_selection",
+      "invocation": "python -m infrastructure.core.testing.ci_selection",
+      "source_path": "infrastructure/core/testing/ci_selection.py",
+      "purpose": "Conservative PR functional selection; complete release gates are separate.",
+      "subcommands": [],
+      "exports": [
+        "changed_git_paths",
+        "affected_projects",
+        "functional_selection"
+      ],
+      "effect": "mutating"
+    },
+    {
       "module": "infrastructure.doctor",
       "invocation": "python -m infrastructure.doctor",
       "source_path": "infrastructure/doctor/cli.py",
@@ -485,6 +513,15 @@
       "invocation": "python -m infrastructure.project.public_acceptance_auxiliary_cli",
       "source_path": "infrastructure/project/public_acceptance_auxiliary_cli.py",
       "purpose": "Explicit CLI for source-bound auxiliary acceptance; never publishes.",
+      "subcommands": [],
+      "exports": [],
+      "effect": "mutating"
+    },
+    {
+      "module": "infrastructure.project.public_acceptance_auxiliary_pipeline",
+      "invocation": "python -m infrastructure.project.public_acceptance_auxiliary_pipeline",
+      "source_path": "infrastructure/project/public_acceptance_auxiliary_pipeline.py",
+      "purpose": "Portable custody of a genuine complete core pipeline in disposable public source.",
       "subcommands": [],
       "exports": [],
       "effect": "mutating"
@@ -1082,7 +1119,16 @@
       "module": "infrastructure.reporting.native_installed_launcher",
       "invocation": "python -m infrastructure.reporting.native_installed_launcher",
       "source_path": "infrastructure/reporting/native_installed_launcher.py",
-      "purpose": "Prepare a fresh Source4.0.1 wheel and supervise its cold native role.",
+      "purpose": "Prepare a fresh Source-declared wheel and supervise its cold native role.",
+      "subcommands": [],
+      "exports": [],
+      "effect": "mutating"
+    },
+    {
+      "module": "infrastructure.reporting.native_installed_preflight",
+      "invocation": "python -m infrastructure.reporting.native_installed_preflight",
+      "source_path": "infrastructure/reporting/native_installed_preflight.py",
+      "purpose": "Genuine cold native diagnostic lifecycle; never a complete release receipt.",
       "subcommands": [],
       "exports": [],
       "effect": "mutating"
@@ -1203,6 +1249,15 @@
       "subcommands": [],
       "exports": [],
       "effect": "read_only"
+    },
+    {
+      "module": "infrastructure.reporting.original_job_outcome",
+      "invocation": "python -m infrastructure.reporting.original_job_outcome",
+      "source_path": "infrastructure/reporting/original_job_outcome.py",
+      "purpose": "Surface original job failures early; this summary never grants acceptance.",
+      "subcommands": [],
+      "exports": [],
+      "effect": "mutating"
     },
     {
       "module": "infrastructure.reporting.project_verifier",

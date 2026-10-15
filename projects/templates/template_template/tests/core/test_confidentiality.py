@@ -247,7 +247,7 @@ def test_same_public_leaf_local_alias_is_live_only_in_explicit_local_discovery(t
         "bootstrap=importlib.util.module_from_spec(spec);spec.loader.exec_module(bootstrap);"
         "sdk=bootstrap.bootstrap_project(project);"
         f"assert Path(sdk.__file__).resolve()==Path({str(selected_sdk)!r});"
-        "assert sdk.__version__=='4.0.1';"
+        "assert sdk.__version__=='4.0.2';"
         "from template_template.core.introspection import discover_projects;\n"
         f"watched={watched!r}\nmarker=Path({str(marker)!r})\n"
         "def audit(event,args):\n"

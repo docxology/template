@@ -1,0 +1,75 @@
+name: Native candidate preflight
+
+on:
+  workflow_dispatch:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'infrastructure/reporting/native_*.py'
+      - 'infrastructure/reporting/release_readiness_*.py'
+      - '.github/actions/setup-native-installed-readiness/**'
+      - '.github/actions/setup-docs-lint/**'
+      - '.github/workflows/platform-native-preflight.yml'
+      - 'pyproject.toml'
+      - 'uv.lock'
+      - 'package.json'
+      - 'package-lock.json'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: native-preflight-${{ github.event_name == 'pull_request' && github.ref || github.run_id }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+env:
+  UV_FROZEN: 'true'
+  MPLBACKEND: Agg
+
+jobs:
+  native-preflight:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+          submodules: true
+          fetch-depth: 0
+      - uses: ./.github/actions/setup-acceptance-fixtures
+      - uses: ./.github/actions/setup-python-env
+        with:
+          python-version: "3.14.4"
+      - uses: ./.github/actions/setup-native-installed-readiness
+      - name: Bounded cold diagnostic native lifecycle
+        id: preflight
+        run: >-
+          .venv/bin/python -m infrastructure.reporting.native_installed_launcher --mode preflight
+          --source-root "$GITHUB_WORKSPACE" --source-commit "$GITHUB_SHA"
+          --source-identity "$(.venv/bin/python -c 'from pathlib import Path;from infrastructure.reporting.readiness_receipts import source_fingerprint;print(source_fingerprint(Path.cwd()))')"
+          --python "$GITHUB_WORKSPACE/.venv/bin/python" --uv "$(command -v uv)"
+          --expected-platform Linux --timeout 900
+          --mermaid-package-root "$GITHUB_WORKSPACE/node_modules/@mermaid-js/mermaid-cli"
+          --mermaid-dependency-root "$GITHUB_WORKSPACE/node_modules"
+          --mermaid-node-executable "$(command -v node)"
+          --mermaid-chrome-executable "$CHROME_EXECUTABLE_PATH"
+          --office-font-directory /usr/share/fonts/truetype
+          --office-font-directory "$HOME/.local/share/fonts/template-acceptance-juliamono"
+          --repository "$GITHUB_REPOSITORY" --run-id "$GITHUB_RUN_ID"
+          --current-root "$RUNNER_TEMP/template-native-preflight-root"
+          --scratch "$RUNNER_TEMP/template-native-preflight-scratch"
+          --epubcheck-jar "$TEMPLATE_NATIVE_EPUBCHECK" --java-executable "$TEMPLATE_NATIVE_JAVA"
+      - name: Retain bounded diagnostic evidence
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
+        with:
+          name: native-preflight-diagnostics
+          path: |
+            ${{ runner.temp }}/template-native-preflight-root/output/readiness/native-preflight/
+            ${{ runner.temp }}/template-native-preflight-scratch/outer-processes/
+          if-no-files-found: warn
+          retention-days: 7
+      - name: State the diagnostic boundary
+        if: always()
+        shell: bash
+        run: echo 'Native preflight is diagnostic feedback; complete same-SHA required acceptance still authorizes release.' >> "$GITHUB_STEP_SUMMARY"

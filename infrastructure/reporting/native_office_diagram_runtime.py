@@ -111,68 +111,17 @@ class PDFiumRuntimeAdmission:
     image_before_import: dict[str, Any]
 
     def verify(self, *, loaded: Path | None = None) -> dict[str, Any]:
+        from infrastructure.reporting.native_pdfium_runtime_data import observe_runtime_data, validate_runtime_owner
+
         remaining(self.deadline)
-        if (
-            self.live_key is not _LIVE_ADMISSION
-            or _runtime_seal(
-                self.source,
-                self.scope,
-                self.site,
-                self.wheel,
-                self.members,
-                self.wheel_observation,
-                self.before,
-                self.interpreter,
-                self.owner_pid,
-                self.prefix,
-                self.deadline,
-                self.image_before_import,
-            )
-            != self.seal
-        ):
-            raise ValueError("PDFium runtime admission is not the launcher's unchanged live capability")
-        if os.getpid() != self.owner_pid:
-            raise ValueError("PDFium live provider admission was moved to another original process")
+        validate_runtime_owner(self)
         self.source.verify_correspondence(
             self.source.reference,
             self.source.bindings.current_root,
             self.source.current_source_reader,
             self.deadline,
         )
-        raw, identity = _file(self.wheel, self.deadline)
-        if _sha(raw) != self.wheel_observation["sha256"] or identity != self.wheel_observation["identity"]:
-            raise ValueError("PDFium Source-nominated wheel identity changed")
-        after = _installed(self.site, self.members, self.deadline)
-        if after != self.before:
-            raise ValueError("PDFium actual selected installed provider/DLL changed")
-        for name in PROVIDERS:
-            root = self.site / name
-            verify_executed_source_code(root, self.prefix)
-            for key, module in tuple(sys.modules.items()):
-                if key == name or key.startswith(name + "."):
-                    location = getattr(module, "__file__", None)
-                    if not isinstance(location, str) or not Path(location).absolute().is_relative_to(root):
-                        raise ValueError("PDFium actual loaded Python provider escaped its admitted package")
-        if loaded is not None:
-            label = loaded.relative_to(self.site).as_posix()
-            if label not in self.before["files"] or loaded.suffix.lower() not in {
-                ".dylib",
-                ".dll",
-                ".so",
-            }:
-                raise ValueError("PDFium actual selected loaded library is outside admitted wheel/RECORD")
-            body, facts = _file(loaded, self.deadline)
-            held = self.before["files"][label]
-            if _sha(body) != held["sha256"] or facts != held["identity"]:
-                raise ValueError("PDFium actual loaded library body/physical identity changed")
-        executable = Path(sys.executable).resolve(strict=True)
-        body, facts = _file(executable, self.deadline)
-        if self.interpreter != {
-            "path": str(executable),
-            "sha256": _sha(body),
-            "identity": facts,
-        }:
-            raise ValueError("PDFium enclosing selected original interpreter changed")
+        after = observe_runtime_data(self, loaded=loaded)
         self.source.verify_correspondence(
             self.source.reference,
             self.source.bindings.current_root,

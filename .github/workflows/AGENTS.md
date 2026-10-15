@@ -7,12 +7,15 @@ and the required `CI Gate`. `.github/project-smoke.json` names the actual tests;
 the smoke runner refuses missing projects, empty selections and escaping paths.
 These are functional checks, with no full-suite coverage or native acceptance claim.
 
-Manual CI dispatch optionally selects coverage-project by its exact canonical
-public qualified name. The separate own-exemplar-coverage job runs the existing
-own locked release-profile measurement and retains its commit/input-hash bound
-artifact. Verify that job, the whole workflow and the retrieved artifact before
-admitting its percentage. CI Gate covers all six declared jobs: five functional
-successes, plus coverage success when requested or its skip when unrequested.
+Manual CI dispatch accepts an optional exact public `coverage-project` and calls
+`exemplar-coverage.yml` for its own locked release-profile measurement. The
+**Public exemplar coverage** workflow calls the same job across the complete
+Source-derived roster in one dispatch, with four concurrent projects and separate
+commit/input-hash bound artifacts. Its optional project input selects exactly
+one public exemplar. Require every selected measurement and the final matrix
+gate, then verify the retrieved artifacts before updating coverage provenance.
+The ordinary `CI Gate` also requires both complementary infrastructure lanes and
+accepts the optional coverage job's skip only when unrequested.
 
 The former cross-version/full-suite matrix remains in `hardening.yml`, invoked
 manually. `platform-required-acceptance.yml` is also manual-only; its original
@@ -291,7 +294,7 @@ Triggers on `v*.*.*` tag push or `workflow_dispatch` (with tag input). Both trig
 4. Runs the tagged-SHA no-mocks and bounded pipeline-smoke gates, root release contract and fail-closed public capability manifest
 5. Earlier major tags retain the clean-export, install and import-smoke matrix on Python 3.12/3.13/3.14. Root 4+ already authenticated its retained complete matrix in step 3. Preparation and acceptance stay distinct
 6. Builds the final source distribution and admits its exact final bytes alongside the wheel already accepted by the installed matrix; the pristine published audit has already passed before derived execution
-7. For root 4+, selects `docs/releases/<tag>.md` for the actual tag, such as the [4.0.1 candidate notes](../../docs/releases/v4.0.1.md), and adds accepted-commit, hosted-run and receipt-hash bindings; earlier major tags use the commit-based git-log excerpt
+7. For root 4+, selects `docs/releases/<tag>.md` for the actual tag, such as the [4.0.2 candidate notes](../../docs/releases/v4.0.2.md), and adds accepted-commit, hosted-run and receipt-hash bindings; earlier major tags use the commit-based git-log excerpt
 8. Creates a GitHub Release using `softprops/action-gh-release@v3.0.3` with **`generate_release_notes: false`** and attaches the admitted distributions, tag-selected overview PNG and byte manifest
 9. Retrieves the published assets and requires exact admitted hashes; auto-marks as pre-release if the tag contains `-rc`, `-beta`, or `-alpha`
 

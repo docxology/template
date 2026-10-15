@@ -118,6 +118,13 @@ class NativeReaderOperation:
 
     def __post_init__(self) -> None:
         remaining(self.deadline)
+        # Freeze nominated maps before Source I/O; each held member still
+        # undergoes genuine physical revalidation in this construction window.
+        object.__setattr__(self, "originals", types.MappingProxyType(dict(self.originals)))
+        object.__setattr__(self, "pdfium_providers", types.MappingProxyType(dict(self.pdfium_providers)))
+        object.__setattr__(
+            self, "pdfium_runtime_admissions", types.MappingProxyType(dict(self.pdfium_runtime_admissions))
+        )
         if self.current_analysis is not None:
             from infrastructure.reporting.native_current_reader_inputs import NativeCurrentAnalysisInputs
 
@@ -134,27 +141,18 @@ class NativeReaderOperation:
 
             if not isinstance(self.office_reader_selection, NativeOfficeReaderSelection):
                 raise ValueError("native reader requires an independently supplied typed Office selection")
-        from infrastructure.reporting.native_office_diagram_runtime import PDFiumRuntimeAdmission
+        from infrastructure.reporting.native_pdfium_revalidation import validate_reader_runtime_binding
 
         for scope, runtime in self.pdfium_runtime_admissions.items():
-            provider = self.pdfium_providers.get(scope)
-            if (
-                not isinstance(runtime, PDFiumRuntimeAdmission)
-                or not isinstance(provider, NativePDFiumProvider)
-                or runtime.source is not self.source
-                or runtime.scope != scope
-                or runtime.site != provider.selection.site
-                or runtime.wheel != provider.selection.wheel
-                or runtime.owner_pid != os.getpid()
-                or runtime.deadline != self.deadline
-            ):
-                raise ValueError("native reader needs its actual per-scope preimport PDFium runtime owner")
-            runtime.verify()
-        object.__setattr__(self, "originals", types.MappingProxyType(dict(self.originals)))
-        object.__setattr__(self, "pdfium_providers", types.MappingProxyType(dict(self.pdfium_providers)))
-        object.__setattr__(
-            self, "pdfium_runtime_admissions", types.MappingProxyType(dict(self.pdfium_runtime_admissions))
-        )
+            validate_reader_runtime_binding(
+                self.source, self.pdfium_providers.get(scope), runtime, scope=scope, deadline=self.deadline
+            )
+        if self.pdfium_runtime_admissions:
+            from infrastructure.reporting.native_pdfium_revalidation import verify_reader_runtime_batch
+
+            verify_reader_runtime_batch(
+                self.source, tuple(self.pdfium_runtime_admissions.values()), deadline=self.deadline
+            )
 
     def verify(self, reader: SnapshotReader) -> None:
         remaining(self.deadline)
@@ -202,13 +200,17 @@ def admit_native_source_operation(
 
 
 def _require_installed_sdk(raw: bytes) -> None:
+    from infrastructure import __version__ as installed_version
+
     selected = json_object_from_bytes(raw)
     distribution = selected.get("distribution")
     if selected.get("binding_kind") != "installed-distribution" or not isinstance(distribution, dict):
         raise ProjectionSourceUnsupported(
             "native joint source execution requires genuine selected installed SDK custody"
         )
-    if distribution.get("name") != "research-project-template" or distribution.get("version") != "4.0.1":
+    # Actual loaded SDK metadata/Source equality is enforced by the unchanged
+    # implementation-custody and genuine public-reference admission guards.
+    if distribution.get("name") != "research-project-template" or distribution.get("version") != installed_version:
         raise ValueError("native selected SDK distribution identity is invalid")
 
 

@@ -4,10 +4,6 @@ from __future__ import annotations
 
 import hashlib
 import json
-import os
-import platform
-import signal
-import subprocess
 import sys
 import time
 import uuid
@@ -15,7 +11,6 @@ from pathlib import Path
 from typing import Any, Sequence
 
 from infrastructure.project.public_acceptance_evidence import (
-    cell_environment,
     evidence_directory,
     gate_payload,
     read_json,
@@ -31,7 +26,11 @@ from infrastructure.reporting.release_readiness_profile import required_profile
 from infrastructure.reporting.release_readiness_snapshot import SnapshotReader
 from infrastructure.reporting.release_readiness_validators import validate_acceptance
 
-PROCESS_SCHEMA = "template-auxiliary-process-v2"
+from infrastructure.project.public_acceptance_auxiliary_supervision import (
+    PROCESS_SCHEMA as PROCESS_SCHEMA,
+    supervise as supervise,
+)
+
 ROOT_GATES = (
     "root:roster",
     "root:docs_lint",
@@ -40,103 +39,6 @@ ROOT_GATES = (
     "root:macos:rendering",
     "root:sandbox:transfer",
 )
-
-
-def supervise(
-    command: list[str], root: Path, directory: Path, deadline: float, *, environment: dict[str, str] | None = None
-) -> dict[str, Any]:
-    """Retain original exit and bounded raw streams; kill the owned group on timeout."""
-    if environment is not None:
-        from infrastructure.core.secrets import is_secret_env_name
-
-        if any(is_secret_env_name(key) or key in {"SSH_AUTH_SOCK", "GPG_AGENT_INFO"} for key in environment):
-            raise ValueError("explicit auxiliary child environment contains protected credential names")
-    directory = evidence_directory(root, directory)
-    directory.mkdir(parents=True, exist_ok=True)
-    started = time.monotonic()
-    executable = Path(command[0]).resolve(strict=True)
-    binary_hash = hashlib.sha256(executable.read_bytes()).hexdigest()
-    stdout = directory / "stdout.txt"
-    stderr = directory / "stderr.txt"
-    timeout = False
-    output_limit = False
-    with stdout.open("xb") as out, stderr.open("xb") as err:
-        environment = (
-            cell_environment(Path(command[0]).absolute(), directory, repo_root=root)
-            if environment is None
-            else dict(environment)
-        )
-        environment["PYTHONPYCACHEPREFIX"] = str(directory / "bytecode")
-        child = subprocess.Popen(
-            command,
-            cwd=root,
-            env=environment,
-            stdout=out,
-            stderr=err,
-            start_new_session=True,
-        )
-        try:
-            while True:
-                remaining = deadline - time.monotonic()
-                if remaining <= 0:
-                    raise subprocess.TimeoutExpired(command, 0)
-                if stdout.stat().st_size > 16 * 1024 * 1024 or stderr.stat().st_size > 16 * 1024 * 1024:
-                    output_limit = True
-                    os.killpg(child.pid, signal.SIGKILL)
-                    code = child.wait(timeout=5)
-                    break
-                try:
-                    code = child.wait(timeout=min(0.05, remaining))
-                    break
-                except subprocess.TimeoutExpired:
-                    continue
-        except subprocess.TimeoutExpired:
-            timeout = True
-            os.killpg(child.pid, signal.SIGKILL)
-            code = child.wait(timeout=5)
-        finally:
-            # A successful leader is not permission to leave grandchildren.
-            try:
-                os.killpg(child.pid, signal.SIGKILL)
-            except ProcessLookupError:
-                pass
-            child.wait(timeout=5)
-    import shutil
-
-    # The original fresh cache path is an observed runtime fact, not retained evidence.
-    # Remove only this owned cache after child cleanup, before source inventory scans.
-    shutil.rmtree(directory / "bytecode", ignore_errors=True)
-    artifacts = {}
-    for name, path in (("stdout", stdout), ("stderr", stderr)):
-        if path.stat().st_size > 16 * 1024 * 1024:
-            output_limit = True
-            # Retain the bounded leading bytes and explicitly fail the cell.
-            with path.open("r+b") as stream:
-                stream.truncate(16 * 1024 * 1024)
-        artifacts[name] = {
-            "path": path.relative_to(root).as_posix(),
-            "sha256": hashlib.sha256(path.read_bytes()).hexdigest(),
-        }
-    if hashlib.sha256(executable.read_bytes()).hexdigest() != binary_hash:
-        raise ValueError("selected executable changed during auxiliary execution")
-    return {
-        "schema_version": PROCESS_SCHEMA,
-        "command": command,
-        "cwd": str(root),
-        "pid": child.pid,
-        "executable": str(executable),
-        "executable_sha256": binary_hash,
-        "executable_sha256_before": binary_hash,
-        "executable_sha256_after": hashlib.sha256(executable.read_bytes()).hexdigest(),
-        "selected_interpreter": command[0],
-        "producer_root": str(root),
-        "host": {"system": platform.system(), "machine": platform.machine()},
-        "exit_code": code,
-        "timed_out": timeout,
-        "output_limit_exceeded": output_limit,
-        "duration_seconds": time.monotonic() - started,
-        "streams": artifacts,
-    }
 
 
 def run_auxiliary_acceptance(
@@ -204,14 +106,15 @@ def run_auxiliary_acceptance(
                     "producer_inputs": (producer_inputs or {}).get(requirement.scope, {}),
                 },
             )
-            command = [
-                str(python),
-                "-m",
-                "infrastructure.project.public_acceptance_auxiliary_worker",
-                "--spec",
-                str(root / spec["path"]),
-            ]
-            process = supervise(command, root, cell / "execution", deadline)
+            from infrastructure.project.public_acceptance_auxiliary_bootstrap import (
+                WORKER,
+                prepare_audited_auxiliary_command,
+            )
+
+            command, payload = prepare_audited_auxiliary_command(
+                python, root, WORKER, ("--spec", str(root / spec["path"])), cell / "execution"
+            )
+            process = supervise(command, root, cell / "execution", deadline, bootstrap_payload=payload)
             after = source_fingerprint(root)
             raw = read_json(root, raw_path) if raw_path.is_file() else {}
             raw_binding = (
@@ -255,6 +158,14 @@ def run_auxiliary_acceptance(
                 status = "fail"
             if status == "blocked":
                 blockers = [{"tool": gate, "reason": raw.get("diagnostic", "actual auxiliary provider unavailable")}]
+            if status == "fail":
+                details["original_failure"] = {
+                    "diagnostic": raw.get("diagnostic", "actual auxiliary child failed before raw facts"),
+                    "failure_class": raw.get("failure_class"),
+                    "original_pipeline_failure": raw.get("original_pipeline_failure"),
+                    "original_exit_code": process["exit_code"],
+                    "timed_out": process["timed_out"],
+                }
             if (
                 status == "pass"
                 and requirement.kind in {"docs", "oracle", "platform", "domain", "live"}
@@ -270,17 +181,15 @@ def run_auxiliary_acceptance(
                         "raw_path": (cell / "negative-facts.json").relative_to(root).as_posix(),
                     },
                 )
+                negative_command, negative_payload = prepare_audited_auxiliary_command(
+                    python, root, WORKER, ("--spec", str(root / negative["path"])), cell / "negative-execution"
+                )
                 negative_process = supervise(
-                    [
-                        str(python),
-                        "-m",
-                        "infrastructure.project.public_acceptance_auxiliary_worker",
-                        "--spec",
-                        str(root / negative["path"]),
-                    ],
+                    negative_command,
                     root,
                     cell / "negative-execution",
                     deadline,
+                    bootstrap_payload=negative_payload,
                 )
                 facts_path = cell / "negative-facts.json"
                 facts = read_json(root, facts_path) if facts_path.is_file() else {}

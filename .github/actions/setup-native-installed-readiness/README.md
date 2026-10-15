@@ -29,7 +29,7 @@ committed lock before provisioning the remaining tools. The actual native
 operation repeats its own full dependency, byte and custody admission.
 
 The cold launcher subsequently builds and freezes all 25 project wheels plus the
-4.0.1 SDK, selects a fresh installed runtime and independently admits actual
+Source-declared SDK, selects a fresh installed runtime and independently admits actual
 providers. Tool preparation or cached bytes alone establish no native or release
 acceptance. Failures block the calling job.
 
