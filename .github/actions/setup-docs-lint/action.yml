@@ -15,6 +15,20 @@ runs:
         # package-lock.json automatically.
         cache: npm
 
+    - name: Install the exact source-declared npm serializer
+      shell: bash
+      working-directory: ${{ github.workspace }}
+      run: |
+        set -euo pipefail
+        node -e "const [major, minor] = process.versions.node.split('.').map(Number); if (major !== 20 || minor < 17) throw new Error('npm preparation requires the Node 20 profile at 20.17 or newer')"
+        manager=$(node -p "require('./package.json').packageManager")
+        if [[ ! "$manager" =~ ^npm@[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+          echo "packageManager must declare an exact npm registry version" >&2
+          exit 1
+        fi
+        npm install --global "$manager" --registry=https://registry.npmjs.org --ignore-scripts --no-audit --no-fund
+        test "$(npm --version)" = "${manager#npm@}"
+
     - name: Cache puppeteer / chrome-headless-shell
       uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
       with:

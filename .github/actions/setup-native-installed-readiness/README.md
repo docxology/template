@@ -23,6 +23,10 @@ no runtime configuration, security file or bundle dependency is omitted.
 Browser math inputs are prepared or independently inspected as Source DATA.
 Temporary cache-warming environments contain only Root-locked dependencies;
 independent project locks are preserved.
+The documentation setup installs the Source-declared npm serializer. Native
+preparation checks every installed hidden-lock row against the unchanged
+committed lock before provisioning the remaining tools. The actual native
+operation repeats its own full dependency, byte and custody admission.
 
 The cold launcher subsequently builds and freezes all 25 project wheels plus the
 4.0.1 SDK, selects a fresh installed runtime and independently admits actual

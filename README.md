@@ -37,7 +37,8 @@ For deeper guidance see [`docs/guides/getting-started.md`](docs/guides/getting-s
 
 **Local hooks:** After `uv sync`, run `pre-commit install` and `pre-commit install --hook-type pre-push` to mirror Ruff, mypy, Bandit, and smoke tests locally (see [`.pre-commit-config.yaml`](.pre-commit-config.yaml)).
 
-**Strict Mermaid/PDF checks:** Run `npm ci` at the repository root. The Python
+**Strict Mermaid/PDF checks:** Use the exact npm version declared by
+`packageManager` in `package.json`, then run `npm ci` at the repository root. The Python
 documentation and rendering gates automatically resolve the pinned
 `node_modules/.bin/mmdc`; add that directory to `PATH` only when invoking
 `mmdc` directly. The existing Chrome resolver supplies the browser executable.

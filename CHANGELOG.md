@@ -128,6 +128,9 @@ require final-source acceptance, the authenticated handoff and remote verificati
   coverage. Warm the same profile before cold offline execution, excluding its unused
   Git-only repository lint scanner from the hash-required runtime. Prepare the
   shared source-pinned Lean 4.35.0 compiler before native full-suite replay.
+- Pin the npm serializer through Root `packageManager` and check complete
+  installed lock rows before native preparation. Preserve Linux libc metadata
+  without weakening the exact package, resolution or integrity comparison.
 - Select the exact self-contained Temurin Java reader runtime for EPUBCheck and
   verify its complete confined binding before native execution. Distribution
   configuration symlinks remain refused by the unchanged engine binder.
