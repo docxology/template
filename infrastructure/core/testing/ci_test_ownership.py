@@ -5,6 +5,10 @@ their runtime fits the smoke deadline. Unlisted helpers retain broad fallback.
 """
 
 SOURCE_TEST_OWNERS: dict[str, tuple[str, ...]] = {
+    "infrastructure/publishing/_standalone_git.py": ("tests/infra_tests/publishing/test_standalone_git_reads.py",),
+    "infrastructure/publishing/_standalone_provider_admission.py": (
+        "tests/infra_tests/publishing/test_standalone_install_projection.py",
+    ),
     "infrastructure/reporting/native_mermaid_runtime_selection.py": (
         "tests/infra_tests/reporting/test_native_mermaid_runtime_profile.py",
     ),
@@ -106,6 +110,9 @@ SOURCE_TEST_OWNERS: dict[str, tuple[str, ...]] = {
     ),
     "infrastructure/reporting/native_source_provider_bootstrap.py": (
         "tests/infra_tests/reporting/test_native_stage_child_contracts.py",
+    ),
+    "infrastructure/reporting/release_readiness_snapshot.py": (
+        "tests/infra_tests/reporting/test_readiness_snapshot.py",
     ),
     "infrastructure/reporting/release_readiness_validators.py": (
         "tests/infra_tests/reporting/test_native_format_acceptance.py",

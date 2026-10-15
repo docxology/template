@@ -9,14 +9,14 @@ from pathlib import Path
 
 import pytest
 
-from infrastructure.publishing.standalone_mirror import (
+from infrastructure.publishing._standalone_git import (
     _git,
     _git_environment,
     _git_clean_source_inventory,
     _git_head_status,
     _git_source_inventory,
-    _validate_git_destination_current,
 )
+from infrastructure.publishing.standalone_mirror import _validate_git_destination_current
 
 
 def _index_identity(path: Path) -> tuple[int, int, int, int, int, int, str]:

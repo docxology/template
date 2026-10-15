@@ -138,9 +138,25 @@ def run_shard(root: Path, plan: dict, shard: int, directory: Path) -> int:
     # Full contracts use the established infrastructure harness default.
     # A CLI option preserves test markers without changing nested child environments.
     command.append("--timeout=120" if is_contract else "--timeout=60")
-    result = subprocess.run(
-        command, cwd=root, env=environment, check=False, timeout=CONTRACT_SECONDS if is_contract else 540
-    )
+    timeout = CONTRACT_SECONDS if is_contract else 540
+    # A hard pytest exit cannot write terminal receipts. Retain its request
+    # before launch; this diagnostic cannot stand in for execution outcomes.
+    with (directory / "request.json").open("x") as stream:
+        json.dump(
+            {
+                "schema_version": "template-functional-pytest-request/v1",
+                "role": "diagnostic-request-only",
+                "shard": shard,
+                "nonce": nonce,
+                "files": shards[shard],
+                "command": command,
+                "timeout_seconds": timeout,
+            },
+            stream,
+            sort_keys=True,
+            indent=2,
+        )
+    result = subprocess.run(command, cwd=root, env=environment, check=False, timeout=timeout)
     if result.returncode:
         return result.returncode
     selected, outcomes = read_execution_receipts(directory / "execution", nonce)

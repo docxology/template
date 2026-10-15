@@ -5,6 +5,7 @@ from __future__ import annotations
 import hashlib
 import json
 from dataclasses import dataclass
+from itertools import chain
 from pathlib import Path
 from typing import Any
 
@@ -160,7 +161,7 @@ class SnapshotReader:
         }:
             raise ValueError("artifact path is outside public evidence roots")
         absolute = self.root / path
-        for component in (absolute, *absolute.parents):
+        for component in chain((absolute,), absolute.parents):
             if component == self.root:
                 break
             if component.is_symlink():

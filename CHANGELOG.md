@@ -17,6 +17,12 @@ and historical notes remain preserved.
 - Partition functional infrastructure feedback into complete complementary smoke
   shards and required full-module contract jobs, with original pytest member,
   outcome and JUnit receipts. Add conservative project impact selection.
+- Retain diagnostic requests before pytest launch so abrupt exits leave their
+  selected files, nonce and declared timeouts without substituting for outcome receipts.
+- Reuse each admitted Meta tree inventory and group adjacent standalone-provider
+  Git reads, preserving physical-file, committed-mode and fresh closing checks.
+- Avoid constructing unused source-path ancestors during readiness checks while
+  retaining every fresh symlink, containment and file-identity observation.
 - Restore the declared full-infrastructure 120-second contract default without
   changing explicit markers or nested producer defaults. Prepare genuine native
   test tools and locked offline wheel archives in their consuming jobs.

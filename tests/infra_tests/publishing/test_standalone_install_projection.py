@@ -224,6 +224,36 @@ def test_original_manifest_tampering_cannot_authorize_source_changes(committed_r
         project_standalone_installation(original, tmp_path.resolve() / "refused", root_provider=committed_root)
 
 
+def test_provider_admission_windows_recheck_dirty_and_advanced_head(committed_root):
+    from infrastructure.publishing._standalone_provider_admission import (
+        _git_provider_closing,
+        _git_provider_opening,
+    )
+
+    parent = committed_root.checkout.parent
+    for index in range(4):
+        parent /= f"provider {index}-" + "é" * 52
+    parent.mkdir(parents=True)
+    checkout = committed_root.checkout.rename(parent / "root")
+    assert len(os.fsencode(str(checkout))) > 512
+    revision = committed_root.commit
+    repository = PROVIDER_URLS[ROOT_PACKAGE]
+    assert _git_provider_opening(checkout, revision, repository) == repository
+    assert _git_provider_closing(checkout, revision) == _git(checkout, "rev-parse", f"{revision}^{{tree}}")
+    target = checkout / "projects/templates/template_code_project/src/science.py"
+    target.write_text("RESULT = 11\n")
+    with pytest.raises(ValueError, match="clean source working tree"):
+        _git_provider_closing(checkout, revision)
+    _git(checkout, "add", "--", "projects/templates/template_code_project/src/science.py")
+    _git(checkout, "commit", "-qm", "Advance the invented provider after admission")
+    advanced = _git(checkout, "rev-parse", "HEAD")
+    assert advanced != revision
+    with pytest.raises(ValueError, match="differs from current HEAD"):
+        _git_provider_closing(checkout, revision)
+    assert _git_provider_opening(checkout, advanced, repository) == repository
+    assert _git_provider_closing(checkout, advanced) == _git(checkout, "rev-parse", f"{advanced}^{{tree}}")
+
+
 def test_advanced_requires_actual_meta_projection_from_same_root(committed_root, tmp_path):
     meta_original = _original(committed_root, tmp_path / "meta-original")
     meta_checkout = tmp_path.resolve() / "meta-provider"
@@ -245,6 +275,35 @@ def test_advanced_requires_actual_meta_projection_from_same_root(committed_root,
     (meta.checkout / "src/science.py").write_text("RESULT = -7\n")
     with pytest.raises(ValueError, match="exact reviewed projection"):
         validate_standalone_installation(advanced, projected, root_provider=committed_root, meta_provider=meta)
+
+
+@pytest.mark.parametrize("fault", ["missing-committed-path", "committed-mode"])
+def test_advanced_refuses_meta_worktree_hiding_a_committed_path_or_mode(committed_root, tmp_path, fault):
+    original = _original(committed_root, tmp_path / "meta-original")
+    checkout = tmp_path.resolve() / "meta-provider"
+    project_standalone_installation(original, checkout, root_provider=committed_root)
+    _commit(checkout, PROVIDER_URLS[META_PACKAGE])
+    target = checkout / "src/science.py"
+    content = target.read_bytes()
+    if fault == "missing-committed-path":
+        _git(checkout, "rm", "--cached", "--", "src/science.py")
+        with (checkout / ".git/info/exclude").open("a") as stream:
+            stream.write("\nsrc/science.py\n")
+    else:
+        _git(checkout, "config", "core.fileMode", "false")
+        _git(checkout, "update-index", "--chmod=-x", "src/science.py")
+    _git(checkout, "commit", "-qm", "Commit invented provider index divergence")
+    revision = _git(checkout, "rev-parse", "HEAD")
+    assert _git(checkout, "status", "--porcelain", "--untracked-files=all") == ""
+    assert target.read_bytes() == content
+    assert target.stat().st_mode & 0o111
+    advanced = _original(committed_root, tmp_path / "advanced-original", "template_advanced_literature_review")
+    destination = tmp_path.resolve() / "refused"
+    with pytest.raises(ValueError, match="committed path or mode"):
+        project_standalone_installation(
+            advanced, destination, root_provider=committed_root, meta_provider=GitInstallProvider(checkout, revision)
+        )
+    assert not destination.exists()
 
 
 @pytest.mark.parametrize(
