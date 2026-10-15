@@ -208,6 +208,16 @@ def test_invalid_pin_and_source_custody_refuse_before_execution(tmp_path: Path, 
         run_formal_tools(root, timeout=2)
 
 
+@pytest.mark.parametrize("pin", ["v4.14.0", "v4.28.0", "v4.35.01", "v4.35.0-nightly"])
+def test_previous_and_lookalike_toolchain_pins_refuse_before_execution(tmp_path: Path, pin: str) -> None:
+    """Compiler consolidation cannot weaken exact source-owned pin admission."""
+    root = _copy(tmp_path)
+    (root / "formal/lean/lean-toolchain").write_text(f"leanprover/lean4:{pin}\n")
+    with pytest.raises(ValueError, match="pin"):
+        run_formal_tools(root, timeout=2)
+    assert not (root / "formal/lean/.lake").exists()
+
+
 def test_named_states_and_extra_jar_are_bound_source_inputs(tmp_path: Path) -> None:
     (tmp_path / "states").mkdir()
     state = tmp_path / "states/model.py"

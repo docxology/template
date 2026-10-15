@@ -29,10 +29,9 @@ copy of the project tree built by `direct_recompute_support.copy_project_tree()`
   Settle first, then assert the non-rewriting fast path.
 - Mutations of a copy restore byte-for-byte in `finally`, against the state
   written THIS session (not the tracked bytes).
-- `gates/lean.py` subprocess/parse paths are driven by a scripted stub `lake`
-  executable on `PATH` (a real subprocess with test-scripted responses — the
-  CLI analogue of the sanctioned `pytest-httpserver` pattern), so they stay
-  covered on CI runners with no Lean toolchain.
+- `test_lean_gate_direct.py` exercises `gates/lean.py` with genuine exact-pinned
+  Lean elaboration and axiom audits. Prepare the declared compiler explicitly
+  before running these controls; gates do not silently acquire a toolchain.
 - Focused selections containing only `test_*_direct.py` modules skip the
   real-tree gate-artifact prewarm. Mixed and full-suite selections still run
   the prewarm once, before per-test timeout accounting starts.

@@ -386,12 +386,12 @@
         "output/reports/artifact_diffoscope.json": "c56baedd9c354f7bff13c043810186cc98279677695b39f5e1f855b53ef1823b",
         "output/reports/artifact_license_audit.json": "e3bb1fa9bb7a21782048e79f414928873bad7750750d3001c24a6ce80b93769d",
         "output/reports/claim_evidence_audit.json": "84b5df7a8d29a4075dfbcfeb1c9ea4534f4729939fd1cde934f205108092ce95",
-        "output/reports/figure_hash_manifest.json": "4a668d49b251776716f0971b7d0206b6f1125eff8733d726fb0002e84c0a250a",
+        "output/reports/figure_hash_manifest.json": "66b02e7611b5bbe220c9bac73584a5d2b5d87322174584332b424eb7860dc84f",
         "output/reports/producer_completeness.json": "b599fad7d9b546d3f98a0d77f3efd2cc9c27d1d59ea3ba4338a41d329ad127b4",
         "output/reports/release_notes_evidence.json": "3b5af3ab9c0c215c392aa191a0b8aa9730ebac0bfde3845f68e61d0fa7d3491e",
         "output/reports/scope_boundary_audit.json": "178246924d4af6ddde249a4b7a9219e476008005e0ce0f3c3a4f032a91cdbf12",
         "output/reports/stale_artifact_report.json": "bb78b50e19c8e00c346ba9f1a4df4c0fc92cffebea16a57381ed8dc925d3e57b",
-        "output/reports/visualization_quality_audit.json": "03d763e6908cdd5a23a68f9701a3dd9bd299d083398a7aca716eadd5bceca0ae"
+        "output/reports/visualization_quality_audit.json": "f7999387758bfa4e8a64d4ce3ca601ee85a493e7a14a5a3e900c7d4aa688309b"
       },
       "producer_script": "generate_integration_audit.py",
       "replay_method": "artifact_fingerprint"
@@ -474,8 +474,8 @@
         "output/reports/blocked_scope_manifest.json": "b1198f578ac61f5f75a1da8eae54fc22d6241ad10023c848b0b94ef11433d022",
         "output/reports/counterexample_matrix.json": "75f80abc1e2c8cb1053f637727b2fd3f161831b6f39e48bec76c399b2df7c3a2",
         "output/reports/model_checking_witnesses.json": "b46a37c57334270ce00fae37b89657b1f2a9bde11dadb5e06aa6a294bcc34eef",
-        "output/reports/release_attestation.json": "9e80c9196e73de3e6fe3d6a8f537cc55de8288c9ebe28cfa241825982862e905",
-        "output/reports/release_bundle_manifest.json": "af4db24923ff66ba732c3a7aa64a89cd111d4713a1943c3360bf96e0fb8ec0bb",
+        "output/reports/release_attestation.json": "c179526f954e8a2e8c016c9814b0015f465efab39eb13bfa08237730422c8234",
+        "output/reports/release_bundle_manifest.json": "bf1df9f7e97e583fae8cf2dd44249313bfb2e37ac0443f1a0ce38c09d7556e97",
         "output/reports/security_posture_audit.json": "c615bae1a3bb573d673c1489ed7da190d56f473cf16492a7ada78abecbd5f8fe",
         "output/reports/sheaf_render_log.json": "32ba5733e8ea1f5100bf8d263c5695ed4382e16d93b855ba8fc3b8d4d3a846b6"
       },

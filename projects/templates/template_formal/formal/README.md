@@ -73,7 +73,7 @@ domain package remains standalone; absence of the optional platform blocks75.
 Set
 `FORMAL_PYTHON_BIN` when the project interpreter is not `python3` on PATH and
 `FORMAL_JAVA_BIN` when Java is elsewhere. It never silently upgrades the declared
-Lean4.28.0 toolchain or dependency-free manifest. Acquisition admits only the
+Lean4.35.0 toolchain or dependency-free manifest. Acquisition admits only the
 exact TLC release bytes declared in `template_formal.tool_acceptance`.
 
 Fresh Lean elaboration must produce all seven clean axiom audits. Both positive

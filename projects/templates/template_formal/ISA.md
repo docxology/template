@@ -732,3 +732,9 @@ Coverage (round 20, cumulative): 123/123 ISC groups passed, 123/123 artifact-bac
   code/cache custody and invalid receipts must still refuse without promotion.
   Genuine direct-API native success, caller-state/source preservation and
   exclusive receipt rollback controls must pass under the installed SDK.
+
+
+## Lean 4.35.0 harmonization (2026-10-14)
+
+- **ISC-126**: The maintained formal Lean declaration and standalone native-tool admission select exactly `leanprover/lean4:v4.35.0`; successful verification still includes all declared theorem axiom audits and TLC proof-of-detection controls. Historical receipts retain their original toolchain epoch.
+- **ISC-127**: Compiler diagnostics derive from the source-owned compiler pin; different versions, prereleases, missing tools, changed sources and unproved declarations continue to fail closed. Shared CI preparation rejects disagreement between the formal and active-inference exemplar pins and installs their common compiler once.

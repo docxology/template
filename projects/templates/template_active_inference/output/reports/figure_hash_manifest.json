@@ -172,18 +172,18 @@
       "size_bytes": 194060
     },
     {
-      "content_sha256": "67f2f83090772330f97dc72e38eb66b20cf73f9634fb4819e9db6e63a91399b2",
+      "content_sha256": "2b23d22bde9205ff605cfd6886359671a53258546a1654a0e6b7197f759016e5",
       "fresh": true,
       "path": "output/figures/transmission_integrity_strip.png",
-      "sha256": "8f87fbc420defc8d02cf5aa3a98b50d786e1bbfacd5b3c33104753e8b506853e",
-      "size_bytes": 18293
+      "sha256": "4fbf9a3e43a4a071ecde8c40f72b98ca0f01864cbbefafb3fee8a8f9816ca6cd",
+      "size_bytes": 17318
     },
     {
-      "content_sha256": "7471182fe2d49ad9fdbe596a543a15c908eefd133e49a5dcc10f890503135a9c",
+      "content_sha256": "c2b04423b3cc8bded4206533acb348a01176ed9423b2518c2c8db8377b2d6f1a",
       "fresh": true,
       "path": "output/figures/transmission_pairing.png",
-      "sha256": "822c155a3e43e3beb3a7ca5b87672b91472e25890be989ff7f0f0254bd96ed19",
-      "size_bytes": 10950
+      "sha256": "7a62bfb1f16ddad1c450854243516a3c359d57077b9f611c6b80d3c17f7e284f",
+      "size_bytes": 10573
     }
   ],
   "schema": "template_active_inference.figure_hash_manifest.v2"

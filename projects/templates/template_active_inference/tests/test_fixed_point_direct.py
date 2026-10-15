@@ -25,6 +25,7 @@ from roadmap_tracks.fixed_point import (
     _fingerprint,
     _observed_output_rels,
     _refresh_animation_outputs,
+    _source_input_sha256,
     _validate_fixed_point,
     _write_fingerprint_cache,
     run_semantic_fixed_point,
@@ -134,6 +135,50 @@ def test_fingerprint_tracks_generation_source_bytes(copied_root: Path) -> None:
         finally:
             source.write_bytes(original)
     assert _fingerprint(copied_root) == first
+
+
+def test_generation_source_hash_ignores_only_direct_src_installation_metadata(tmp_path: Path) -> None:
+    """Local setuptools metadata cannot change the authored-source binding."""
+    authored_paths = (
+        tmp_path / "src" / "authored.py",
+        tmp_path / "lean" / "lean-toolchain",
+        tmp_path / "data" / "authored.egg-info" / "witness.txt",
+        tmp_path / "src" / "package" / "nested.egg-info" / "witness.txt",
+    )
+    for path in authored_paths:
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text("authored input\n")
+    initial = _source_input_sha256(tmp_path)
+    metadata = tmp_path / "src" / "template_active_inference.egg-info"
+    metadata.mkdir()
+    record = metadata / "SOURCES.txt"
+    record.write_text("local installed members\n")
+    assert _source_input_sha256(tmp_path) == initial
+    record.write_text("changed local installed members\n")
+    assert _source_input_sha256(tmp_path) == initial
+    record.unlink()
+    metadata.rmdir()
+    assert _source_input_sha256(tmp_path) == initial
+    for path in authored_paths:
+        original = path.read_bytes()
+        path.write_bytes(original + b"changed\n")
+        assert _source_input_sha256(tmp_path) != initial, path
+        path.write_bytes(original)
+        assert _source_input_sha256(tmp_path) == initial
+
+
+def test_generation_source_hash_refuses_linked_direct_src_metadata(tmp_path: Path) -> None:
+    """Installation metadata names cannot waive the existing symlink refusal."""
+    source = tmp_path / "src"
+    source.mkdir()
+    outside = tmp_path / "outside"
+    outside.mkdir()
+    sentinel = outside / "SOURCES.txt"
+    sentinel.write_text("outside source remains unchanged\n")
+    (source / "redirect.egg-info").symlink_to(outside, target_is_directory=True)
+    with pytest.raises(RuntimeError, match="must not contain symlinks"):
+        _source_input_sha256(tmp_path)
+    assert sentinel.read_text() == "outside source remains unchanged\n"
 
 
 def test_fingerprint_tracks_complete_registry_derived_output_inventory(copied_root: Path) -> None:

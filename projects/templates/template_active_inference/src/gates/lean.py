@@ -15,7 +15,8 @@ from orchestration.portable_execution import build_bounded_env, run_bounded_subp
 from orchestration.portable_sources import materialize, snapshot_tree
 
 _AXIOM_WHITELIST = frozenset({"propext", "Classical.choice", "Quot.sound"})
-_TOOLCHAIN = "leanprover/lean4:v4.14.0"
+_TOOLCHAIN = "leanprover/lean4:v4.35.0"
+_VERSION = _TOOLCHAIN.split(":v", 1)[1]
 _DEFAULT_AUDITED_DECLS = (
     "TemplateActiveInference.sophisticated_requires_horizon",
     "TemplateActiveInference.efe_additive_identity_from_relations",
@@ -39,7 +40,7 @@ def _source_snapshot(lean: Path, deadline: float | None = None) -> dict[Path, by
         raise ValueError("Lean project declarations are missing")
     snapshot = {lean / name: content for name, content in admitted.items()}
     if snapshot[lean / "lean-toolchain"].decode().strip() != _TOOLCHAIN:
-        raise ValueError("Lean toolchain differs from the exact source-owned4.14.0 pin")
+        raise ValueError(f"Lean toolchain differs from the exact source-owned {_VERSION} pin")
     manifest = json.loads(snapshot[lean / "lake-manifest.json"])
     if (
         not isinstance(manifest, dict)
@@ -71,8 +72,8 @@ def _execute(lean: Path, arguments: list[str], snapshot: dict[Path, bytes], dead
     probe = run_bounded_subprocess(command + ["lean", "--version"], cwd=lean, env=environment, timeout=remaining)
     if probe.timed_out:
         return 124, probe.stdout + probe.stderr + probe.command_error
-    if probe.returncode or "version 4.14.0" not in probe.stdout:
-        return 75, "blocked: exact Lean4.14.0 unavailable\n" + probe.stdout + probe.stderr
+    if probe.returncode or re.search(rf"\bversion {re.escape(_VERSION)}(?:,|\))", probe.stdout) is None:
+        return 75, f"blocked: exact Lean {_VERSION} unavailable\n" + probe.stdout + probe.stderr
     remaining = deadline - time.monotonic()
     if remaining <= 0:
         return 124, "total Lean deadline exhausted"

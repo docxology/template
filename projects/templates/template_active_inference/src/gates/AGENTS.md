@@ -16,7 +16,7 @@ proven to reject bad input, not just accept good input.
 | [`output_checks_promoted.py`](output_checks_promoted.py) | Promoted artifact schema checks; `set_experiment_plan_metrics` |
 | [`manuscript_checks.py`](manuscript_checks.py) | Sheaf manifest, tokens, hydration, layers markers |
 | [`claim_ledger.py`](claim_ledger.py) | Claim ledger vs on-disk artifacts (`data/claim_ledger.yaml` required) |
-| [`lean.py`](lean.py) | Exact installed Lean4.14.0, bounded builds and complete axiom audits |
+| [`lean.py`](lean.py) | Exact installed Lean4.35.0, bounded builds and complete axiom audits |
 | [`documentation_contract.py`](documentation_contract.py) | Markdown links, generated-doc links, README/AGENTS pairs, command context, and historical evidence wording |
 | [`method_inventory.py`](method_inventory.py) | AST-backed report for every `def` and `class` under `src/` and `scripts/` |
 
@@ -56,7 +56,7 @@ Negative controls: `test_validate_outputs_negative_missing_sweep`, `test_validat
 | Helper | Contract |
 | --- | --- |
 | `lean_project_present(root)` | `True` when `lean/lakefile.lean` exists |
-| `build_lean(root)` | Runs the explicit declared target with installed pinned Lean4.14.0 and a shared deadline; absent declarations/tools are blocked75 |
+| `build_lean(root)` | Runs the explicit declared target with installed pinned Lean4.35.0 and a shared deadline; absent declarations/tools are blocked75 |
 
 Negative controls: `test_build_lean_when_present_must_succeed`, `test_build_lean_blocks_without_lakefile`, `test_validate_manuscript_gnn_concordance_negative`, `test_validate_manuscript_claim_ledger_negative`, `test_validate_manuscript_claim_ledger_missing_file_negative`, `test_validate_manuscript_tokens_registered_negative`.
 

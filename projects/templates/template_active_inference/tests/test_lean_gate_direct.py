@@ -19,7 +19,7 @@ def _project(root: Path, proof: str = "trivial") -> Path:
     lean = root / "lean"
     modules = lean / "TemplateActiveInference"
     modules.mkdir(parents=True)
-    (lean / "lean-toolchain").write_text("leanprover/lean4:v4.14.0\n")
+    (lean / "lean-toolchain").write_text("leanprover/lean4:v4.35.0\n")
     (lean / "lake-manifest.json").write_text(
         json.dumps(
             {
@@ -82,10 +82,22 @@ def test_changed_pin_and_missing_installed_tool_are_not_silent_acquisition(
     (root / "lean" / "lean-toolchain").write_text("leanprover/lean4:v4.34.1\n")
     code, output = build_lean(root)
     assert code == 2 and "pin" in output
-    (root / "lean" / "lean-toolchain").write_text("leanprover/lean4:v4.14.0\n")
+    (root / "lean" / "lean-toolchain").write_text("leanprover/lean4:v4.35.0\n")
     monkeypatch.setenv("PATH", str(tmp_path / "no-tools"))
     code, output = build_lean(root)
     assert code == 75 and "blocked" in output
+
+
+@pytest.mark.parametrize("pin", ["v4.14.0", "v4.28.0", "v4.35.01", "v4.35.0-nightly"])
+def test_previous_and_lookalike_toolchain_pins_are_rejected(tmp_path: Path, pin: str) -> None:
+    """Harmonization preserves exact source-owned admission, including suffixes."""
+    root = _project(tmp_path)
+    (root / "lean" / "lean-toolchain").write_text(f"leanprover/lean4:{pin}\n")
+    code, output = build_lean(root)
+    assert code == 2 and "pin" in output
+    accepted, output = lean_axioms_clean(root, declarations=("TemplateActiveInference.thm",))
+    assert not accepted and "pin" in output
+    assert not (root / "lean" / ".lake").exists()
 
 
 def test_zero_deadline_is_invalid(tmp_path: Path) -> None:

@@ -1472,7 +1472,7 @@ jobs:
 
       - uses: ./.github/actions/setup-acceptance-documents
 
-      - name: Prepare the two exact declared Lean toolchains
+      - name: Prepare the exact harmonized Lean toolchain
         timeout-minutes: 20
         run: |
           set -euo pipefail
@@ -1482,9 +1482,10 @@ jobs:
           echo "4bacca9502cb89736fe63d2685abc2947cfbf34dc87673504f1bb4c43eda9264  $RUNNER_TEMP/elan-init.sh" | sha256sum --check --status
           sh "$RUNNER_TEMP/elan-init.sh" -y --default-toolchain none
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
-          for pin in projects/templates/template_active_inference/lean/lean-toolchain projects/templates/template_formal/formal/lean/lean-toolchain; do
-            "$HOME/.elan/bin/elan" toolchain install "$(tr -d '[:space:]' < "$pin")"
-          done
+          active_pin=$(cat projects/templates/template_active_inference/lean/lean-toolchain)
+          formal_pin=$(cat projects/templates/template_formal/formal/lean/lean-toolchain)
+          test -n "$active_pin" && test "$active_pin" = "$formal_pin"
+          "$HOME/.elan/bin/elan" toolchain install "$active_pin"
           java -version
 
       - name: Install the genuine selected Meta provider wheel

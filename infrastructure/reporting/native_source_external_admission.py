@@ -30,11 +30,13 @@ from infrastructure.project.public_reference import (
     reference_binding,
 )
 from infrastructure.project.public_reference_git import (
+    GitReference,
     MAX_FILES,
     committed_blobs,
     inventory,
     remaining,
 )
+from infrastructure.project.public_source_body_admission import FixtureAdmission, admit_source_fixtures
 from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
 from infrastructure.reporting.native_projection_contracts import (
     ProjectionSourceUnsupported,
@@ -183,6 +185,31 @@ def _pure_source_records(root: Path, reader: SnapshotReader, deadline: float) ->
     return result
 
 
+def _verify_current_source_modes(
+    root: Path, reader: SnapshotReader, git: GitReference, records: SourceRecords, deadline: float
+) -> FixtureAdmission:
+    """Census current fixture DATA before checking raw-Git or declared modes."""
+    fixtures = admit_source_fixtures(root, reader, git, deadline)
+    fixture_files = dict(fixtures.files)
+    blobs = committed_blobs(git)
+    for relative, kind, _ in records:
+        remaining(deadline)
+        if kind != "file":
+            continue
+        binding = blobs.get(relative)
+        if binding is not None:
+            executable = binding[0].mode == "100755"
+        elif relative in fixture_files:
+            executable = fixture_files[relative][2]
+        else:
+            raise ValueError("native current source lacks a committed blob or admitted fixture body")
+        metadata = reader.read(relative).path.lstat()
+        if not stat.S_ISREG(metadata.st_mode) or bool(metadata.st_mode & 0o111) != executable:
+            raise ValueError("native current mirror source type/mode differs from its admitted source")
+    fixtures.verify(deadline)
+    return fixtures
+
+
 @dataclass(frozen=True)
 class NativeSourceContext:
     """Held immutable reference plus exact current full-Git source correspondence."""
@@ -201,7 +228,12 @@ class NativeSourceContext:
         records = _pure_source_records(root, self.current_source_reader, deadline)
         if records != self.source_records:
             raise ValueError("native current mirror directory/negative/file source inventory differs")
-        blobs = committed_blobs(self.reference.git)
+        fixtures = _verify_current_source_modes(root, self.current_source_reader, self.reference.git, records, deadline)
+        if (fixtures.files, fixtures.absent_groups) != (
+            self.reference.fixtures.files,
+            self.reference.fixtures.absent_groups,
+        ):
+            raise ValueError("native current fixture census differs from admitted original source")
         for relative, kind, _ in records:
             remaining(deadline)
             if kind != "file":
@@ -209,15 +241,12 @@ class NativeSourceContext:
             actual = self.current_source_reader.read(relative)
             if actual.content != self.reference.read(relative):
                 raise ValueError("native current mirror source bytes differ from admitted original source")
-            row, _ = blobs[relative]
-            metadata = actual.path.lstat()
-            if not stat.S_ISREG(metadata.st_mode) or bool(metadata.st_mode & 0o111) != (row.mode == "100755"):
-                raise ValueError("native current mirror source type/mode differs from its committed source blob")
         if not self.current_source_reader.unchanged() or not current_reader.unchanged():
             raise ValueError("native current source/artifact snapshots changed during correspondence")
         if _physical_directory(root) != self.bindings.current_root_identity:
             raise ValueError("native current mirror was replaced during correspondence")
         _verify_source_directory_identities(self.current_source_directories, deadline)
+        fixtures.verify(deadline)
         remaining(deadline)
 
     def verify_correspondence(

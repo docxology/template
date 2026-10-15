@@ -300,7 +300,7 @@
     {
       "contract_match": true,
       "path": "output/data/artifact_contract_index.json",
-      "sha256": "7d5ee2a065cc83ea9dda9aa1c3864586ec5f35972543a5e43b9f0f96b0e3be1d",
+      "sha256": "81f0181c00094e8d1557aa2c5d27edb8037ed88f3469204e7dc73f05000a5e1a",
       "size_bytes": 104401,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
@@ -309,7 +309,7 @@
     {
       "contract_match": true,
       "path": "output/data/artifact_provenance.json",
-      "sha256": "217ecccac2148e7fde4979165dc06adaaec43bc74795fcb890bb12fb83a34e8f",
+      "sha256": "ca2c0f7fd65d39c5812aa2f5f021da9a9a009373519a239f9e11cf4fff4c93f7",
       "size_bytes": 194783,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
@@ -1200,7 +1200,7 @@
     {
       "contract_match": true,
       "path": "output/reports/figure_hash_manifest.json",
-      "sha256": "4a668d49b251776716f0971b7d0206b6f1125eff8733d726fb0002e84c0a250a",
+      "sha256": "66b02e7611b5bbe220c9bac73584a5d2b5d87322174584332b424eb7860dc84f",
       "size_bytes": 7813,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
@@ -1299,7 +1299,7 @@
     {
       "contract_match": true,
       "path": "output/reports/release_attestation.json",
-      "sha256": "9e80c9196e73de3e6fe3d6a8f537cc55de8288c9ebe28cfa241825982862e905",
+      "sha256": "c179526f954e8a2e8c016c9814b0015f465efab39eb13bfa08237730422c8234",
       "size_bytes": 1985,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
@@ -1308,7 +1308,7 @@
     {
       "contract_match": true,
       "path": "output/reports/release_bundle_manifest.json",
-      "sha256": "af4db24923ff66ba732c3a7aa64a89cd111d4713a1943c3360bf96e0fb8ec0bb",
+      "sha256": "bf1df9f7e97e583fae8cf2dd44249313bfb2e37ac0443f1a0ce38c09d7556e97",
       "size_bytes": 31383,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
@@ -1326,7 +1326,7 @@
     {
       "contract_match": true,
       "path": "output/reports/replay_matrix.json",
-      "sha256": "f3899c810c2a0a0178c5069895e47b99184e93ed6e7ab74ca76be440a3483c87",
+      "sha256": "2e3065acfdedb3f6b13c5f89f6551e1f8fd780c4856116fe82a4689b078e499f",
       "size_bytes": 27762,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
@@ -1416,7 +1416,7 @@
     {
       "contract_match": true,
       "path": "output/reports/visualization_quality_audit.json",
-      "sha256": "03d763e6908cdd5a23a68f9701a3dd9bd299d083398a7aca716eadd5bceca0ae",
+      "sha256": "f7999387758bfa4e8a64d4ce3ca601ee85a493e7a14a5a3e900c7d4aa688309b",
       "size_bytes": 40025,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
