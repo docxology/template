@@ -22,6 +22,14 @@ runs:
         "$HOME/.elan/bin/elan" toolchain install "$pin"
         "$HOME/.elan/bin/elan" run "$pin" lean --version
         echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+    - name: Prepare the exact self-contained Java reader runtime
+      uses: actions/setup-java@b843ebf9b913146b38da2eaa7aeddf76074ae1ad
+      with:
+        distribution: temurin
+        java-version: '21.0.12.1+1'
+        java-package: jre
+        architecture: x64
+        force-download: true
     - name: Prepare official native reader tools
       shell: bash
       env:
@@ -32,9 +40,18 @@ runs:
         sudo -n apt-get -o Acquire::Retries=2 -o Acquire::http::Timeout=60 install -y --no-install-recommends libreoffice-writer libreoffice-calc libreoffice-impress calibre default-jre-headless zbar-tools
         tool_parent=$(mktemp -d "$RUNNER_TEMP/template-native-tools.XXXXXX")
         destination="$tool_parent/epubcheck"
-        java_executable=$(readlink -f "$(command -v java)")
+        java_executable=$(readlink -f "$JAVA_HOME/bin/java")
         .venv/bin/python scripts/shell/prepare_native_epubcheck.py --destination "$destination"
+        "$java_executable" -version
         "$java_executable" -jar "$destination/epubcheck-5.4.0/epubcheck.jar" --version
+        .venv/bin/python - "$java_executable" "$destination/epubcheck-5.4.0/epubcheck.jar" <<'PYTHON'
+        from pathlib import Path
+        import sys
+        import time
+        from infrastructure.reporting.native_epub_observer import bind_epubcheck_engine
+        engine = bind_epubcheck_engine(Path(sys.argv[2]), Path(sys.argv[1]), deadline=time.monotonic() + 120)
+        print(f"Prepared complete confined Java/EPUBCheck binding: {len(engine['files'])} files")
+        PYTHON
         echo "TEMPLATE_NATIVE_JAVA=$java_executable" >> "$GITHUB_ENV"
         echo "TEMPLATE_NATIVE_EPUBCHECK=$destination/epubcheck-5.4.0/epubcheck.jar" >> "$GITHUB_ENV"
     - name: Prepare or independently inspect exact browser math DATA
