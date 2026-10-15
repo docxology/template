@@ -108,6 +108,62 @@ def test_only_direct_source_package_metadata_is_a_control(tmp_path: Path) -> Non
     assert paths_digest((root,), source=True) != first
 
 
+@pytest.mark.parametrize("source", [False, True])
+@pytest.mark.parametrize(
+    ("nominated", "package_root", "source_files"),
+    [
+        (
+            "fixture é with spaces",
+            "src",
+            ("plain.txt", "kept.egg-info/PKG-INFO", "nested/build", "src/fixtures/owned.egg-info/PKG-INFO"),
+        ),
+        (
+            "src",
+            "SRC",
+            (
+                "plain.txt",
+                "kept.egg-info/PKG-INFO",
+                "nested/build",
+                "SRC/owned.egg-info/PKG-INFO",
+                "SRC/fixtures/owned.egg-info/PKG-INFO",
+            ),
+        ),
+    ],
+)
+def test_source_control_depths_case_and_explicit_exclusions_preserve_literal_inventory(
+    tmp_path: Path, source: bool, nominated: str, package_root: str, source_files: tuple[str, ...]
+) -> None:
+    root = tmp_path / nominated
+    contents = {
+        "plain.txt": b"public input",
+        "build": b"root packaging control",
+        "kept.egg-info/PKG-INFO": b"authored root metadata",
+        "nested/build": b"authored nested input",
+        f"{package_root}/owned.egg-info/PKG-INFO": b"direct package metadata",
+        f"{package_root}/fixtures/owned.egg-info/PKG-INFO": b"authored package fixture",
+        "__pycache__/ignored.py": b"root cache",
+        "nested/__pycache__/ignored.py": b"nested cache",
+        "nested/cache.pyc": b"compiled cache",
+        "excluded subtree/input.txt": b"explicitly excluded tree",
+        "nested/drop.name": b"explicitly excluded name",
+    }
+    for name, content in contents.items():
+        target = root / name
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_bytes(content)
+    rows = tree_records(
+        root,
+        source=source,
+        excluded_roots=frozenset({root.absolute(), (root / "excluded subtree").absolute()}),
+        excluded_names=frozenset({"drop.name"}),
+    )
+    assert rows[0] == (".", "directory", "")
+    expected = source_files if source else tuple(contents)[:-2]
+    assert {name: digest for name, kind, digest in rows if kind == "file"} == {
+        "./" + name: hashlib.sha256(contents[name]).hexdigest() for name in expected
+    }
+
+
 @pytest.mark.parametrize("name", ["build", "dist"])
 def test_packaging_controls_do_not_hide_explicit_consumed_inputs(tmp_path: Path, name: str) -> None:
     root = tmp_path / "project"

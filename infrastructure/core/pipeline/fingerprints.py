@@ -78,16 +78,15 @@ def tree_records(
     if output_tree and output_root is None:
         output_root = lexical_path if path.is_dir() else lexical_path.parent
 
-    def included(child: Path) -> bool:
+    def included(child: Path, root_child: bool, source_child: bool) -> bool:
         if child.name in excluded_names or child.absolute() in excluded_roots:
             return False
         if source:
-            relative = child.absolute().relative_to(lexical_path)
             if (
                 child.name == "__pycache__"
                 or child.suffix in {".pyc", ".pyo"}
-                or (len(relative.parts) == 1 and child.name in _ROOT_SOURCE_CONTROLS)
-                or (len(relative.parts) == 2 and relative.parts[0] == "src" and child.name.endswith(".egg-info"))
+                or (root_child and child.name in _ROOT_SOURCE_CONTROLS)
+                or (source_child and child.name.endswith(".egg-info"))
             ):
                 return False
         if output_tree:
@@ -99,7 +98,13 @@ def tree_records(
         return True
 
     def names(descriptor: int, current: Path) -> tuple[str, ...]:
-        return tuple(name for name in sorted(os.listdir(descriptor)) if included(current / name))
+        # Every child is constructed beneath this lexical directory. Derive
+        # control depth once per census, retaining both fresh filesystem reads.
+        root_child = current == lexical_path
+        source_child = current.name == "src" and current.parent == lexical_path
+        return tuple(
+            name for name in sorted(os.listdir(descriptor)) if included(current / name, root_child, source_child)
+        )
 
     def visit(current: Path, relative: str, parent: int, name: str) -> None:
         if path_admission is not None:

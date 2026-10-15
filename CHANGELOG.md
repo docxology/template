@@ -23,6 +23,8 @@ and historical notes remain preserved.
   Git reads, preserving physical-file, committed-mode and fresh closing checks.
 - Avoid constructing unused source-path ancestors during readiness checks while
   retaining every fresh symlink, containment and file-identity observation.
+- Compute source-exclusion depth once per directory census, preserving exact-case
+  controls, fresh filesystem observations and audited subprocess boundaries.
 - Restore the declared full-infrastructure 120-second contract default without
   changing explicit markers or nested producer defaults. Prepare genuine native
   test tools and locked offline wheel archives in their consuming jobs.
