@@ -172,6 +172,88 @@ def admit_full_worker_pdfium_provider(
     return result
 
 
+def admit_full_worker_pdfium_providers(
+    source: NativeSourceContext,
+    selections: tuple[tuple[str, NativePDFiumSelection], ...],
+    *,
+    deadline: float,
+) -> dict[str, NativePDFiumProvider]:
+    """Close one fixed preimport batch before constructing any scope capability."""
+    from infrastructure.reporting.native_pdfium_source_wheel import (
+        _validate_pdfium_batch_inputs,
+        inspect_pdfium_locked_wheel,
+    )
+    from infrastructure.reporting.native_office_pdfium_provider import _file, _sha
+    from infrastructure.reporting.native_preparation_progress import preparation_progress
+
+    _validate_pdfium_batch_inputs(source, selections, deadline)
+    owner_pid = os.getpid()
+    if any(name == package or name.startswith(package + ".") for name in sys.modules for package in PROVIDERS):
+        raise ValueError("PDFium batch must precede actual namespace imports")
+    preparation_progress("pdfium-providers", "source-opening", deadline)
+    source.verify_correspondence(source.reference, source.bindings.current_root, source.current_source_reader, deadline)
+    lock = source.current_source_reader.read("uv.lock").content
+    pending = []
+    for scope, selection in selections:
+        preparation_progress("pdfium-providers", "selection", deadline, scope)
+        raw, identity = _file(selection.wheel, deadline)
+        members, declared = inspect_pdfium_locked_wheel(selection.wheel.name, raw, lock, deadline=deadline)
+        wheel = {"path": str(selection.wheel), **declared, "identity": identity}
+        installed = _installed(selection.site, members, deadline)
+        if installed["selection"]["version"] != wheel["version"]:
+            raise ValueError("actual selected installed PDFium version differs from Source locked wheel")
+        pending.append((scope, selection, members, wheel, installed))
+    preparation_progress("pdfium-providers", "source-closing", deadline)
+    source.verify_correspondence(source.reference, source.bindings.current_root, source.current_source_reader, deadline)
+    for scope, selection, members, wheel, installed in pending:
+        preparation_progress("pdfium-providers", "selection-closing", deadline, scope)
+        raw, identity = _file(selection.wheel, deadline)
+        if (
+            _sha(raw) != wheel["sha256"]
+            or identity != wheel["identity"]
+            or _installed(selection.site, members, deadline) != installed
+        ):
+            raise ValueError("PDFium batch selected wheel/installed physical closure changed")
+    if os.getpid() != owner_pid or any(
+        name == package or name.startswith(package + ".") for name in sys.modules for package in PROVIDERS
+    ):
+        raise ValueError("PDFium batch lost its original PID or preimport namespace absence")
+    preparation_progress("pdfium-providers", "source-closing", deadline)
+    source.verify_correspondence(source.reference, source.bindings.current_root, source.current_source_reader, deadline)
+    if os.getpid() != owner_pid or any(
+        name == package or name.startswith(package + ".") for name in sys.modules for package in PROVIDERS
+    ):
+        raise ValueError("PDFium batch changed PID or namespace during final Source closing")
+    remaining(deadline)
+    result = {}
+    for scope, selection, members, wheel, installed in pending:
+        value = {
+            "schema_version": SCHEMA,
+            "scope": scope,
+            "site": str(selection.site),
+            "wheel_path": str(selection.wheel),
+            "wheel": wheel,
+            "installed": installed,
+            "source_commit": source.reference.commit,
+            "source_identity": source.reference.source_identity,
+            "member_hashes": {name: hashlib.sha256(raw).hexdigest() for name, raw in members.items()},
+        }
+        result[scope] = NativePDFiumProvider(
+            source,
+            scope,
+            selection,
+            MappingProxyType(members),
+            wheel,
+            installed,
+            _digest(value),
+            time.monotonic(),
+            deadline,
+            _KEY,
+        )
+    preparation_progress("pdfium-providers", "completed", deadline)
+    return result
+
+
 def pdfium_worker_arguments(
     provider: NativePDFiumProvider | NativeAuthenticatedOriginalPDFium,
 ) -> tuple[str, ...]:

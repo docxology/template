@@ -18,6 +18,9 @@ require final-source acceptance, the authenticated handoff and remote verificati
 - Align the root SDK, all 25 platform bindings, exact provider requirements,
   locks and installed/export checks with 4.0.1 while retaining each exemplar's
   independent version and historical publications.
+- Admit fixed preimport provider batches inside complete Source custody checks,
+  retaining per-scope wheel, installed-file and later-use verification. Record
+  bounded preparation phases under the original native acceptance deadline.
 - Clarify ordinary development and exact-revision release acceptance as two
   routes. Remove four duplicated scan lanes from the default local fallback,
   eliminating 16 duplicate top-level `uv` commands while retaining their owning

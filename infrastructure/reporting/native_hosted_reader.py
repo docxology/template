@@ -29,19 +29,18 @@ from infrastructure.reporting.native_format_acceptance_contracts import (
 from infrastructure.reporting.native_format_joint_source import (
     NativeReaderOperation,
     NativeSDKSelection,
-    admitted_native_providers,
     admit_native_source_operation,
 )
 from infrastructure.reporting.native_format_pdf_source_decode_bounds import (
     MAX_SOURCE_IMAGE_OCCURRENCES,
     SourceImageDecodeBudget,
 )
-from infrastructure.reporting.native_full_worker_pdfium import NativePDFiumSelection, admit_full_worker_pdfium_provider
+from infrastructure.reporting.native_full_worker_pdfium import NativePDFiumSelection, admit_full_worker_pdfium_providers
 from infrastructure.reporting.native_hosted_original_custody import collect_native_hosted_originals
 from infrastructure.reporting.native_mermaid_runtime_selection import (
     NativeMermaidSelection,
 )
-from infrastructure.reporting.native_office_diagram_runtime import admit_pdfium_runtime
+from infrastructure.reporting.native_office_diagram_runtime import admit_pdfium_runtimes
 from infrastructure.reporting.native_office_full_worker_context import NativeOfficeReaderSelection
 from infrastructure.reporting.required_acceptance_aggregate import produce_aggregate
 from infrastructure.reporting.required_candidate_transport import RequiredCandidatePackingInputs
@@ -122,22 +121,16 @@ def main(argv: list[str] | None = None) -> int:
         wheels = {str(scope): Path(path) for scope, path in provider_paths.items()}
         # Admit all installed project providers and both PDFium namespaces before
         # any current payload. Receipt paths never select import providers.
-        provider_bindings = {}
-        for scope in PUBLIC_PROJECT_NAMES:
-            provider_bindings[scope], _ = admitted_native_providers(
-                source, scope, wheels, Path(sys.executable), deadline=deadline
-            )
+        from infrastructure.reporting.native_project_provider_batch import admitted_native_provider_batch
+
+        prepared = admitted_native_provider_batch(
+            source, tuple(PUBLIC_PROJECT_NAMES), wheels, Path(sys.executable), deadline=deadline
+        )
+        provider_bindings = {scope: facts[0] for scope, facts in prepared.items()}
         selection = NativePDFiumSelection(args.pdfium_site, args.pdfium_wheel)
-        providers = {
-            scope: admit_full_worker_pdfium_provider(selection, source, scope=scope, deadline=deadline)
-            for scope in PUBLIC_PROJECT_NAMES
-        }
-        runtimes = {
-            scope: admit_pdfium_runtime(
-                source, scope=scope, site=selection.site, wheel=selection.wheel, deadline=deadline
-            )
-            for scope in PUBLIC_PROJECT_NAMES
-        }
+        selections = tuple((scope, selection) for scope in PUBLIC_PROJECT_NAMES)
+        providers = admit_full_worker_pdfium_providers(source, selections, deadline=deadline)
+        runtimes = admit_pdfium_runtimes(source, selections, deadline=deadline)
         mermaid = NativeMermaidSelection(
             args.mermaid_package_root,
             args.mermaid_dependency_root,
@@ -163,16 +156,9 @@ def main(argv: list[str] | None = None) -> int:
             source, sdk, args.current_analysis_root, attempts, wheels
         )
         # Admit every Current scope before its first Core or reader import.
-        current_providers = {
-            scope: admit_full_worker_pdfium_provider(selection, current_source, scope=scope, deadline=deadline)
-            for scope in originals
-        }
-        current_runtimes = {
-            scope: admit_pdfium_runtime(
-                current_source, scope=scope, site=selection.site, wheel=selection.wheel, deadline=deadline
-            )
-            for scope in originals
-        }
+        current_selections = tuple((scope, selection) for scope in originals)
+        current_providers = admit_full_worker_pdfium_providers(current_source, current_selections, deadline=deadline)
+        current_runtimes = admit_pdfium_runtimes(current_source, current_selections, deadline=deadline)
         original_operation = NativeReaderOperation(source, deadline, originals, providers, fonts, runtimes)
         original_reader = SnapshotReader(root, native_operation=original_operation)
         from infrastructure.reporting.release_readiness_profile import required_profile
