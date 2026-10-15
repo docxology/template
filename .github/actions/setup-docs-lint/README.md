@@ -2,6 +2,11 @@
 
 Repository-local composite action that installs the real Mermaid CLI and
 Puppeteer `chrome-headless-shell`, then exports `CHROME_EXECUTABLE_PATH`.
+It explicitly installs and verifies the exact npm version declared by Root
+`package.json`'s `packageManager` before `npm ci`. npm 11 preserves the locked
+Linux `libc` declaration that npm 10 omits from its installed hidden lock.
+The complete native lock comparison remains strict; no metadata is fabricated
+or discarded after installation.
 
 ```yaml
 - uses: actions/checkout@<pinned-sha>

@@ -6,6 +6,19 @@ runs:
     - shell: bash
       run: uv sync --locked --inexact --group dev --group public-exemplars --group installed-build --group rendering --group rendering-pptx
     - uses: ./.github/actions/setup-docs-lint
+    - name: Verify the complete installed npm lock before native preparation
+      shell: bash
+      run: |
+        .venv/bin/python - <<'PYTHON'
+        import json
+        import time
+        from pathlib import Path
+        from infrastructure.reporting.native_mermaid_runtime_selection import _installation
+        root = Path.cwd()
+        lock = json.loads((root / "package-lock.json").read_text())
+        installed = _installation(root / "node_modules", lock, time.monotonic() + 120)
+        print(f"Prepared exact Source npm rows: {len(installed['locked_installed_packages'])}")
+        PYTHON
     - uses: ./.github/actions/setup-acceptance-documents
     - name: Prepare the source-pinned Lean compiler for full-suite replay
       shell: bash
