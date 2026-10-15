@@ -16,6 +16,56 @@ from infrastructure.reporting.readiness_receipts import (
     source_fingerprint,
 )
 from infrastructure.reporting.release_readiness_snapshot import SnapshotReader
+from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
+
+
+def test_every_public_project_and_output_scope_retains_real_file_custody(tmp_path: Path) -> None:
+    reader = SnapshotReader(tmp_path)
+    prefixes = {"output/readiness"}
+    for name in PUBLIC_PROJECT_NAMES:
+        prefixes.update((f"projects/{name}", f"output/{name}", f"output/{Path(name).name}"))
+    for prefix in sorted(prefixes):
+        relative = f"{prefix}/nested/evidence.json"
+        target = tmp_path / relative
+        target.parent.mkdir(parents=True)
+        target.write_bytes(b'{"observed": true}\n')
+        assert reader.read(relative).json_object() == {"observed": True}
+    assert reader.unchanged()
+    target.write_bytes(b'{"observed": false}\n')
+    assert reader.unchanged() is False
+
+
+def test_public_scope_prefixes_require_complete_components(tmp_path: Path) -> None:
+    reader = SnapshotReader(tmp_path)
+    refused = {"projects", "projects/templates", "output", "output/templates", "output/readiness-other/evidence.json"}
+    for name in PUBLIC_PROJECT_NAMES:
+        refused.update(
+            (
+                f"projects/{name}-other/evidence.json",
+                f"projects/{name}_other/evidence.json",
+                f"output/{name}-other/evidence.json",
+                f"output/{Path(name).name}_other/evidence.json",
+                f"projects/{name}/../evidence.json",
+            )
+        )
+    for relative in sorted(refused):
+        with pytest.raises(ValueError):
+            reader.public_path(relative)
+
+
+def test_public_scope_admission_rechecks_symlinked_parent_after_snapshot(tmp_path: Path) -> None:
+    relative = f"projects/{PUBLIC_PROJECT_NAMES[0]}/nested/evidence.json"
+    target = tmp_path / relative
+    target.parent.mkdir(parents=True)
+    target.write_bytes(b"{}")
+    reader = SnapshotReader(tmp_path)
+    reader.read(relative)
+    original = target.parent.with_name("original")
+    target.parent.rename(original)
+    target.parent.symlink_to(original, target_is_directory=True)
+    assert reader.unchanged() is False
+    with pytest.raises(ValueError, match="symlink"):
+        reader.read(relative)
 
 
 def test_facts_and_digest_use_the_same_bytes_after_file_replacement(tmp_path: Path) -> None:

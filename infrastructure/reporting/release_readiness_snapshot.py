@@ -46,6 +46,19 @@ PUBLIC_ROOT_FILES = frozenset(
     }
 )
 _ROOT_OBSERVATIONS = frozenset({"docs_lint.json", "lint.json", "readiness_receipt.json"})
+_PROJECT_PREFIXES = frozenset(Path(name).parts for name in PUBLIC_PROJECT_NAMES)
+_OUTPUT_PREFIXES = _PROJECT_PREFIXES | frozenset((Path(name).name,) for name in PUBLIC_PROJECT_NAMES) | {("readiness",)}
+_PROJECT_PREFIX_DEPTHS = frozenset(len(prefix) for prefix in _PROJECT_PREFIXES)
+_OUTPUT_PREFIX_DEPTHS = frozenset(len(prefix) for prefix in _OUTPUT_PREFIXES)
+
+
+def _has_public_prefix(parts: tuple[str, ...], prefixes: frozenset[tuple[str, ...]], depths: frozenset[int]) -> bool:
+    """Compare lexical components without reconstructing every public project path.
+
+    These immutable sets derive only from Source's roster. Filesystem custody
+    remains a fresh observation for every path and every unchanged check.
+    """
+    return any(parts[:depth] in prefixes for depth in depths)
 
 
 def json_object_from_bytes(content: bytes) -> dict[str, Any]:
@@ -124,17 +137,9 @@ class SnapshotReader:
             raise ValueError("artifact references a private credential/control filename")
         if len(parts) == 1 and parts[0] not in PUBLIC_ROOT_FILES | _ROOT_OBSERVATIONS:
             raise ValueError("root artifact is outside the source-owned public file policy")
-        if parts[0] == "projects" and not any(
-            path.is_relative_to(Path("projects") / name) for name in PUBLIC_PROJECT_NAMES
-        ):
+        if parts[0] == "projects" and not _has_public_prefix(parts[1:], _PROJECT_PREFIXES, _PROJECT_PREFIX_DEPTHS):
             raise ValueError("artifact path references a private or unknown project")
-        if parts[0] == "output" and not (
-            path.is_relative_to(Path("output/readiness"))
-            or any(
-                path.is_relative_to(Path("output") / name) or path.is_relative_to(Path("output") / Path(name).name)
-                for name in PUBLIC_PROJECT_NAMES
-            )
-        ):
+        if parts[0] == "output" and not _has_public_prefix(parts[1:], _OUTPUT_PREFIXES, _OUTPUT_PREFIX_DEPTHS):
             raise ValueError("artifact path references private or unknown output")
         if parts[0] in {"fonds", "rules", "tools"} and not path.is_relative_to(Path(parts[0]) / "templates"):
             raise ValueError("artifact references private resource state")
