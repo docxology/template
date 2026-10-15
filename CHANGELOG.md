@@ -123,6 +123,15 @@ require final-source acceptance, the authenticated handoff and remote verificati
   decoded font bytes, constructor hashes and the complete license. Keep the
   aggregate public output within its existing size limit; browsers verify the
   decompressed buffers before constructing fonts.
+- Authenticate current native-mirror fixture trees against their committed
+  manifest before comparing file modes. Prepared untracked fixtures use their
+  exact admitted declarations; committed files retain raw Git mode authority.
+  Hidden entries and undeclared bodies remain refused.
+- Pin both public Lean projects and their tool admission to Lean 4.35.0 only,
+  with older-version and lookalike refusal controls. Active Inference's default
+  Lake target now elaborates its library.
+- Keep generated setuptools metadata out of Active Inference's semantic source
+  fingerprint while retaining authored source, configuration and Lean inputs.
 
 ## Prepared 4.0.0 candidate — unpublished
 

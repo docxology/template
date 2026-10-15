@@ -21,6 +21,7 @@ from infrastructure.project.public_source_body_admission import (
     admit_source_fixtures,
 )
 from infrastructure.reporting.native_installed_preparation import admitted_source_files
+from infrastructure.reporting.native_source_external_admission import _verify_current_source_modes
 from infrastructure.reporting.readiness_receipts import _public_roots
 from infrastructure.reporting.release_readiness_snapshot import SnapshotReader
 
@@ -177,6 +178,44 @@ def test_absent_fixture_groups_still_authenticate_the_committed_declaration(tmp_
     manifest.write_bytes(manifest.read_bytes() + b" ")
     with pytest.raises(ValueError, match="original committed blob"):
         admit_source_fixtures(root, SnapshotReader(root), reference, deadline)
+
+
+@pytest.mark.parametrize("fault", ["none", "tracked-mode", "fixture-mode", "hidden-entry", "unknown-body"])
+def test_native_current_modes_admit_only_git_or_complete_manifest_fixture_data(tmp_path: Path, fault: str) -> None:
+    root, _, bodies = _source(tmp_path)
+    manifest = root / MANIFEST_PATH
+    declaration = json.loads(manifest.read_text())
+    declaration["groups"][0]["files"][0]["executable"] = True
+    manifest.write_text(json.dumps(declaration))
+    commit = _commit(root)
+    _prepare(root, bodies)
+    executable = root / "tests/fixtures/real_codebases/requests/LICENSE"
+    executable.chmod(0o700)
+    deadline = time.monotonic() + 60
+    git = inventory(root, commit, deadline)
+    reader = SnapshotReader(root)
+    _, original = admit_source_bodies(root, reader, git, _canonical_inventory(root), deadline)
+    records = tuple(row for row in _canonical_inventory(root) if row[1] != "deliverable")
+    current = _verify_current_source_modes(root, SnapshotReader(root), git, records, deadline)
+    assert current.files == original.files
+    assert dict(current.files)["tests/fixtures/real_codebases/fastapi/LICENSE"][2] is False
+    assert dict(current.files)[executable.relative_to(root).as_posix()][2] is True
+    if fault == "none":
+        return
+    if fault == "tracked-mode":
+        (root / "README.md").chmod(0o700)
+    elif fault == "fixture-mode":
+        executable.chmod(0o600)
+    elif fault == "hidden-entry":
+        hidden = executable.parent / "__pycache__/body.pyc"
+        hidden.parent.mkdir()
+        hidden.write_bytes(b"Undeclared fixture DATA\n")
+        assert tuple(row for row in _canonical_inventory(root) if row[1] != "deliverable") == records
+    else:
+        (root / "tests/fixtures/unknown-body.txt").write_bytes(b"Undeclared source DATA\n")
+    records = tuple(row for row in _canonical_inventory(root) if row[1] != "deliverable")
+    with pytest.raises(ValueError):
+        _verify_current_source_modes(root, SnapshotReader(root), git, records, deadline)
 
 
 @pytest.mark.parametrize(

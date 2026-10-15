@@ -156,8 +156,8 @@ def test_exact_declared_lean_and_lake_backend_bytes_bind_without_launch(
     monkeypatch.setenv("ELAN_HOME", str(home))
     project = tmp_path / "repo/projects/demo"
     (project / "lean").mkdir(parents=True)
-    (project / "lean/lean-toolchain").write_text("leanprover/lean4:v4.28.0\n")
-    backend = home / "toolchains/leanprover--lean4---v4.28.0/bin"
+    (project / "lean/lean-toolchain").write_text("leanprover/lean4:v4.35.0\n")
+    backend = home / "toolchains/leanprover--lean4---v4.35.0/bin"
     _tool(backend / "lean")
     _tool(backend / "lake")
     for name in ("lean", "lake"):
@@ -172,7 +172,7 @@ def test_missing_elan_home_keeps_declared_backend_unavailable(tmp_path: Path) ->
     _tool(bin_dir / "elan")
     project = tmp_path / "project"
     (project / "lean").mkdir(parents=True)
-    (project / "lean/lean-toolchain").write_text("leanprover/lean4:v4.28.0\n")
+    (project / "lean/lean-toolchain").write_text("leanprover/lean4:v4.35.0\n")
     environment = {**os.environ, "PATH": str(bin_dir), "ELAN_HOME": str(tmp_path / "cold-home")}
     environment.pop("ELAN_TOOLCHAIN", None)
     rows = tool_identities(project_dir=project, environment=environment)

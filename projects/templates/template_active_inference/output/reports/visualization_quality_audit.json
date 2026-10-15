@@ -40,7 +40,7 @@
       "aspect_ratio": 2.6405228758169934,
       "classification": "auxiliary_transmission_check",
       "classified": true,
-      "content_sha256": "67f2f83090772330f97dc72e38eb66b20cf73f9634fb4819e9db6e63a91399b2",
+      "content_sha256": "2b23d22bde9205ff605cfd6886359671a53258546a1654a0e6b7197f759016e5",
       "exists": true,
       "filename": "transmission_integrity_strip.png",
       "height_px": 306,
@@ -50,14 +50,14 @@
       "producer": "infrastructure.publishing.transmission_barcode_strip.write_transmission_barcode_strip",
       "reason": "infrastructure-generated integrity strip for transmission bookends",
       "rendered": true,
-      "size_bytes": 18293,
+      "size_bytes": 17318,
       "width_px": 808
     },
     {
       "aspect_ratio": 1.75,
       "classification": "auxiliary_transmission_check",
       "classified": true,
-      "content_sha256": "7471182fe2d49ad9fdbe596a543a15c908eefd133e49a5dcc10f890503135a9c",
+      "content_sha256": "c2b04423b3cc8bded4206533acb348a01176ed9423b2518c2c8db8377b2d6f1a",
       "exists": true,
       "filename": "transmission_pairing.png",
       "height_px": 300,
@@ -67,7 +67,7 @@
       "producer": "infrastructure.publishing.transmission_figure.write_transmission_diagram",
       "reason": "infrastructure-generated release-pairing diagram for transmission bookends",
       "rendered": true,
-      "size_bytes": 10950,
+      "size_bytes": 10573,
       "width_px": 525
     }
   ],

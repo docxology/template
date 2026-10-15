@@ -66,7 +66,7 @@ cd projects/templates/template_formal/formal/lean
 lake build
 ```
 
-Pinned toolchain: `leanprover/lean4:v4.28.0` (`lean-toolchain`). The
+Pinned toolchain: `leanprover/lean4:v4.35.0` (`lean-toolchain`). The
 `lakefile.lean` declares a minimal package (`ant_protocol`) with a single
 `lean_lib` target (`AntProtocol`) and zero external dependencies — `lake
 build` does not fetch mathlib or anything else, so it stays fast (single

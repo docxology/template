@@ -21,7 +21,8 @@ from pathlib import Path
 from template_formal._tool_execution import build_bounded_env, run_bounded_subprocess
 from ._tool_sources import materialize, snapshot_file, snapshot_tree
 
-LEAN_TOOLCHAIN = "leanprover/lean4:v4.28.0"
+LEAN_TOOLCHAIN = "leanprover/lean4:v4.35.0"
+_LEAN_VERSION = LEAN_TOOLCHAIN.split(":v", 1)[1]
 TLC_URL = "https://github.com/tlaplus/tlaplus/releases/download/v1.7.4/tla2tools.jar"
 # Stable v1.7.4 asset 184694200 (unchanged since 2024-08-08), commit 5a47802b5c391f59ecdd44117981f4ff8c0656ba.
 # Full bytes matched through two download paths on 2026-10-13 UTC. The v1.8.0 tag is a rolling pre-release.
@@ -246,7 +247,10 @@ def _execute_formal_tools(
         if acquire and probe.status == "failed":
             checks.append(_run("lean-acquire", [elan, "toolchain", "install", LEAN_TOOLCHAIN], lean, deadline))
             probe = _run("lean-version", [elan, "run", LEAN_TOOLCHAIN, "lean", "--version"], lean, deadline)
-        if probe.status != "passed" or "version 4.28.0" not in probe.stdout:
+        if (
+            probe.status != "passed"
+            or re.search(rf"\bversion {re.escape(_LEAN_VERSION)}(?:,|\))", probe.stdout) is None
+        ):
             checks.append(
                 ToolCheck(
                     "lean-build",
@@ -255,7 +259,7 @@ def _execute_formal_tools(
                     probe.exit_code,
                     probe.stdout,
                     probe.stderr,
-                    "pinned Lean4.28.0 is unavailable",
+                    f"pinned Lean {_LEAN_VERSION} is unavailable",
                 )
             )
         else:

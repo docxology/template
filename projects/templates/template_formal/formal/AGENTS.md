@@ -36,7 +36,7 @@ worker additionally receives the platform pre-import executed-code audit before
 calling `template_formal.tool_acceptance`. The domain package stays standalone;
 the direct tool command requires the `formal-tools` platform4.0.1 extra and
 blocks75 if it is unavailable. It uses the
-exact source-owned Lean4.28.0 and dependency-free Lake manifest, then freshly
+exact source-owned Lean4.35.0 and dependency-free Lake manifest, then freshly
 elaborates `AntProtocol.lean` and checks all seven printed axiom audits. TLC
 checks the ideal model, fault-injected model, and deliberately broken negative
 control independently. The negative control requires both exit12 and the exact

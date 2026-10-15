@@ -150,6 +150,10 @@ def _walk_generation_inputs(root: Path, dirname: str) -> set[str]:
                 if entry.is_symlink():
                     raise RuntimeError(f"semantic fixed-point input tree must not contain symlinks: {path}")
                 if entry.is_dir(follow_symlinks=False):
+                    # Setuptools writes installation metadata beside src packages;
+                    # it is runtime state, not authored generation input.
+                    if directory == root / "src" and entry.name.endswith(".egg-info"):
+                        continue
                     rels.add(rel)
                     pending.append(path)
                 elif entry.is_file(follow_symlinks=False):

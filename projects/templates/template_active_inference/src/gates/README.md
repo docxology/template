@@ -10,7 +10,7 @@ across the multi-track exemplar before manuscript validation and rendering.
   README/AGENTS pairs, command context, and historical evidence wording.
 - `method_inventory.py` — AST-backed source/script method inventory for
   documentation coverage.
-- `lean.py` — exact installed Lean4.14.0 build and complete requested-declaration
+- `lean.py` — exact installed Lean4.35.0 build and complete requested-declaration
   axiom audit. Source admission starts within the total deadline and refuses
   nonregular inputs and ancestor links. Builds consume private read-only copies
   of the admitted source and pins with a fresh Lake cache; the result records
