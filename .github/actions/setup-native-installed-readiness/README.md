@@ -17,8 +17,8 @@ The EPUBCheck reader uses the exact Temurin 21.0.12.1+1 Linux x64 JRE from the
 SHA-pinned official Java setup action, with a fresh vendor download rather than
 a preinstalled runtime selection. It nominates `JAVA_HOME/bin/java`, checks
 Java and EPUBCheck, and binds their complete confined trees before the cold clock.
-This self-contained runtime avoids distribution-managed configuration links that
-escape a Debian Java tree. The strict engine binder still rejects escaping links;
+This self-contained runtime avoids distribution-managed links that escape a
+system-installed Java tree and prevents PATH from selecting another JDK. The strict engine binder still rejects escaping links;
 no runtime configuration, security file or bundle dependency is omitted.
 Browser math inputs are prepared or independently inspected as Source DATA.
 Temporary cache-warming environments contain only Root-locked dependencies;
