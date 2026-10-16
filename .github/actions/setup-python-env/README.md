@@ -1,7 +1,7 @@
 # `setup-python-env` composite action
 
 Shared CI setup: provision [`uv`](https://github.com/astral-sh/setup-uv) (with a
-`uv.lock`-keyed cache) and install Python via `actions/setup-python`. Factored
+compatible locked-input cache) and install Python via `actions/setup-python`. Factored
 out of [`../../workflows/ci.yml`](../../workflows/ci.yml) so the pinned action
 SHAs and cache configuration live in one place instead of being copy-pasted
 across ~12 jobs.
@@ -25,6 +25,7 @@ present in the workspace after checkout.
 | Input | Default | Description |
 | --- | --- | --- |
 | `python-version` | `"3.14"` | Version passed to `actions/setup-python`. Matrix jobs pass `${{ matrix.python-version }}`. |
+| `dependency-group` | `default` | Explicit dependency group reconciled by the caller; separates cache compatibility. |
 
 ## Scope
 
@@ -32,3 +33,8 @@ Used by every Python job in `ci.yml`. The `detect` and `actionlint` jobs are
 checkout-only and do not use it. Each calling job keeps its own `uv sync …`
 line so optional groups (`rendering` / `monitoring` / `discopy`) remain visible
 per job.
+
+The environment cache key includes OS, architecture, exact resolved Python,
+dependency group and hashes of root `uv.lock`, `pyproject.toml` and `.python-version`.
+Every caller still performs locked reconciliation. Cache hits are preparation,
+not acceptance evidence.

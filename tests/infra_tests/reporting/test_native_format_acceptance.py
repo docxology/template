@@ -241,6 +241,7 @@ def test_raster_tools_consume_held_pdf_bytes_after_original_output_changes(tmp_p
     env = native_environment(REPO, Path(sys.executable), directory)
     missing = [name for name in ("pdftoppm", "pdffonts") if not shutil.which(name, path=env["PATH"])]
     if missing:
+        create_private_native_directory(tmp_path, directory)
         with pytest.raises(NativeToolUnavailable):
             native_tool_record(
                 tmp_path,

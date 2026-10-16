@@ -163,10 +163,9 @@ def _formats(requirement: Requirement, details: dict[str, Any], reader: Snapshot
         raise ValueError("full native acceptance needs the actual reader's distinct admitted Current Source inputs")
     if current.terminal_failure_exit() is not None:
         raise ValueError("a genuine Current interruption/timeout ended execution for the remaining format scopes")
-    current.verify(operation.source, set(operation.originals), operation.deadline)
-    if requirement.scope not in current.scope_directories:
-        raise ValueError("Current native acceptance scope is absent from the complete actual selection")
-    provider, runtime, fonts, tools = current.nominees(requirement.scope)
+    provider, runtime, fonts, tools = current.verified_nominees(
+        operation.source, set(operation.originals), requirement.scope, operation.deadline
+    )
     try:
         validate_native_acceptance(
             requirement,

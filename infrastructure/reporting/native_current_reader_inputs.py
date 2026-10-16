@@ -152,42 +152,18 @@ class NativeCurrentAnalysisInputs:
                 object.__setattr__(self, name, types.MappingProxyType(dict(value)))
 
     def verify(self, original: NativeSourceContext, scopes: set[str], deadline: float) -> None:
-        """Close real Source/SDK/root/directory/wheel correspondence before use."""
-        remaining(deadline)
-        if (
-            not isinstance(original, NativeSourceContext)
-            or deadline != self.deadline
-            or set(self.scope_directories) != scopes
-        ):
-            raise ValueError("Current nomination differs from the actual reader's clock or full scope selection")
-        current, prior = self.source.bindings, original.bindings
-        if (
-            current.current_root_identity == prior.current_root_identity
-            or current.run_id == prior.run_id
-            or current.expected_commit != prior.expected_commit
-            or current.expected_source_identity != prior.expected_source_identity
-            or current.selected_sdk_package_root != prior.selected_sdk_package_root
-            or current.expected_implementation_bytes != prior.expected_implementation_bytes
-            or self.source.reference.commit != original.reference.commit
-            or self.source.reference.source_identity != original.reference.source_identity
-        ):
-            raise ValueError(
-                "Current Source requires distinct physical ownership and the identical admitted Source/SDK"
-            )
-        for protected in (prior.current_root, original.reference.root, prior.selected_sdk_package_root):
-            if current.current_root.is_relative_to(protected) or protected.is_relative_to(current.current_root):
-                raise ValueError("Current Source physically overlaps the original reader, reference or installed SDK")
-        for scope, directory in self.scope_directories.items():
-            remaining(deadline)
-            self.nominees(scope)
-            if _physical_directory(directory) != self._directory_identities[scope]:
-                raise ValueError("Current scope evidence directory was replaced after actual nomination")
-            metadata = directory.lstat()
-            if metadata.st_uid != os.getuid() or stat.S_IMODE(metadata.st_mode) != 0o700:
-                raise ValueError("Current scope evidence directory lost private ownership")
-        if not self._wheel_reader.unchanged():
-            raise ValueError("Current provider wheel bodies changed after actual nomination")
-        self.source.verify_correspondence(
-            self.source.reference, current.current_root, SnapshotReader(current.current_root), deadline
-        )
-        remaining(deadline)
+        """Reobserve the entire genuine nomination set in this actual use window."""
+        from infrastructure.reporting.native_current_nomination_batch import verify_current_nomination_batch
+
+        verify_current_nomination_batch(self, original, frozenset(scopes), deadline=deadline)
+
+    def verified_nominees(
+        self, original: NativeSourceContext, scopes: set[str], scope: str, deadline: float
+    ) -> tuple[NativePDFiumProvider, PDFiumRuntimeAdmission, tuple[Path, ...], Mapping[str, Path | None]]:
+        """Close whole-map and later selected-member checks together, without caching GO."""
+        from infrastructure.reporting.native_current_nomination_batch import verify_current_nomination_batch
+
+        result = verify_current_nomination_batch(self, original, frozenset(scopes), deadline=deadline, selected=scope)
+        if result is None:
+            raise ValueError("Current selected nominee lacks its closed fixed-batch observation")
+        return result

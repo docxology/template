@@ -38,7 +38,7 @@ for idempotent generator refreshes. The controller consumes its `RefreshCache`;
 this does not authorize persistent analysis reuse or replace enclosing source
 and runtime checks.
 
-The full verifier's explicitly prepared `dev` extra includes platform 4.0.1.
+The full verifier's explicitly prepared `dev` extra includes platform 4.0.2.
 `_verification_launcher.py` is its sole optional Layer-1 adapter: it reuses the
 bounded selected-runtime version probe and mature pre-import source audit for
 each producer and pytest child. The direct CLI imports its controller under an

@@ -3077,7 +3077,7 @@ wheels = [
 
 [[package]]
 name = "research-project-template"
-version = "4.0.1"
+version = "4.0.2"
 source = { editable = "." }
 default-groups = ["active-inference", "dev", "discopy", "public-exemplars", "rendering", "steganography"]
 dependencies = [

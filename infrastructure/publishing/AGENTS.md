@@ -20,6 +20,7 @@ The Publishing module provides tools for academic publishing workflows. It enabl
 | `release/release_workflow.py` | Unified GitHub + Zenodo + DOI + re-render orchestration |
 | `release/release_workflow_zenodo.py` | Reserve-first DOI phase + `publish_zenodo_for_release` (leaf of release workflow) |
 | `root_release_contract.py` | Fail-closed root tag/package/changelog identity gate; exemplar releases stay on standalone repositories |
+| `release_plan.py`, `release_plan_transaction.py` | Exact-input coordinated Root patch plan, locked SDK/manuscript bindings and retained compensating rollback; stale inputs or foreign edits refuse application. Planning and application grant no publication authority. |
 | `release_acceptance.py` | Root 4+ hosted handoff admission: exact same-repository run/revision, bounded public evidence archive, aggregate receipt hash, and complete source-owned candidate profile |
 | `deposit_filename.py` | `build_deposit_filename`, `DepositPublishContext`, `deposit_context_from_config` — metadata-driven Zenodo/GitHub upload basename |
 | `publication_ledger.py` | Append-only release ledger for transmission bookends |

@@ -2,64 +2,51 @@
   "directories": {
     "pdf": {
       "exists": true,
-      "file_count": 10,
-      "size_mb": "5.11",
-      "total_size_bytes": 5362900,
+      "file_count": 1,
+      "size_mb": "5.05",
+      "total_size_bytes": 5291119,
       "largest_files": [
         {
           "name": "template_gold_refinement_combined.pdf",
-          "size_mb": "4.73",
+          "size_mb": "5.05",
+          "size_bytes": 5291119,
           "path": "pdf/template_gold_refinement_combined.pdf"
-        },
-        {
-          "name": "_combined_manuscript.tex",
-          "size_mb": "0.13",
-          "path": "pdf/_combined_manuscript.tex"
-        },
-        {
-          "name": "_combined_manuscript.md",
-          "size_mb": "0.10",
-          "path": "pdf/_combined_manuscript.md"
         }
       ],
       "extensions": {
-        ".md": 1,
-        ".log": 2,
-        ".aux": 1,
-        ".blg": 1,
-        ".bib": 1,
-        ".tex": 1,
-        ".toc": 1,
-        ".bbl": 1,
         ".pdf": 1
       }
     },
     "web": {
       "exists": true,
-      "file_count": 13,
-      "size_mb": "0.43",
-      "total_size_bytes": 451522,
+      "file_count": 16,
+      "size_mb": "3.58",
+      "total_size_bytes": 3755424,
       "largest_files": [
         {
+          "name": "source-web-fonts.js",
+          "size_mb": "3.02",
+          "size_bytes": 3170848,
+          "path": "web/assets/source-web-fonts.js"
+        },
+        {
           "name": "index.html",
-          "size_mb": "0.17",
+          "size_mb": "0.19",
+          "size_bytes": 196703,
           "path": "web/index.html"
         },
         {
           "name": "_combined_manuscript.md",
           "size_mb": "0.10",
+          "size_bytes": 104040,
           "path": "web/_combined_manuscript.md"
-        },
-        {
-          "name": "manuscript__03_results.html",
-          "size_mb": "0.04",
-          "path": "web/manuscript__03_results.html"
         }
       ],
       "extensions": {
         ".md": 1,
+        ".js": 1,
         ".ico": 1,
-        ".html": 11
+        ".html": 13
       }
     },
     "slides": {
@@ -68,31 +55,46 @@
       "size_mb": "0.00",
       "total_size_bytes": 0
     },
+    "docx": {
+      "exists": false,
+      "file_count": 0,
+      "size_mb": "0.00",
+      "total_size_bytes": 0
+    },
+    "epub": {
+      "exists": false,
+      "file_count": 0,
+      "size_mb": "0.00",
+      "total_size_bytes": 0
+    },
     "figures": {
       "exists": true,
       "file_count": 27,
-      "size_mb": "6.16",
-      "total_size_bytes": 6461365,
+      "size_mb": "6.31",
+      "total_size_bytes": 6616068,
       "largest_files": [
         {
           "name": "cover_visualization.png",
-          "size_mb": "1.72",
+          "size_mb": "1.71",
+          "size_bytes": 1793549,
           "path": "figures/cover_visualization.png"
         },
         {
           "name": "claim_evidence_assay.png",
-          "size_mb": "0.65",
+          "size_mb": "0.67",
+          "size_bytes": 707362,
           "path": "figures/claim_evidence_assay.png"
         },
         {
           "name": "cover_visualization.svg",
           "size_mb": "0.48",
+          "size_bytes": 506416,
           "path": "figures/cover_visualization.svg"
         }
       ],
       "extensions": {
-        ".svg": 13,
         ".png": 13,
+        ".svg": 13,
         ".json": 1
       }
     },
@@ -100,21 +102,24 @@
       "exists": true,
       "file_count": 3,
       "size_mb": "0.04",
-      "total_size_bytes": 37639,
+      "total_size_bytes": 38759,
       "largest_files": [
         {
           "name": "manuscript_variables.json",
           "size_mb": "0.03",
+          "size_bytes": 35945,
           "path": "data/manuscript_variables.json"
         },
         {
           "name": "refinery_results.json",
           "size_mb": "0.00",
+          "size_bytes": 1879,
           "path": "data/refinery_results.json"
         },
         {
           "name": "publication_ledger.json",
           "size_mb": "0.00",
+          "size_bytes": 935,
           "path": "data/publication_ledger.json"
         }
       ],
@@ -124,30 +129,32 @@
     },
     "reports": {
       "exists": true,
-      "file_count": 14,
-      "size_mb": "0.14",
-      "total_size_bytes": 143844,
+      "file_count": 10,
+      "size_mb": "0.02",
+      "total_size_bytes": 21913,
       "largest_files": [
         {
-          "name": "evidence_registry.json",
-          "size_mb": "0.08",
-          "path": "reports/evidence_registry.json"
-        },
-        {
-          "name": "artifact_manifest.json",
-          "size_mb": "0.02",
-          "path": "reports/artifact_manifest.json"
-        },
-        {
-          "name": "validation_report.json",
+          "name": "token_plan.json",
           "size_mb": "0.01",
-          "path": "reports/validation_report.json"
+          "size_bytes": 7979,
+          "path": "reports/token_plan.json"
+        },
+        {
+          "name": "figure_quality_report.json",
+          "size_mb": "0.01",
+          "size_bytes": 5411,
+          "path": "reports/figure_quality_report.json"
+        },
+        {
+          "name": "claim_support_registry.json",
+          "size_mb": "0.00",
+          "size_bytes": 3205,
+          "path": "reports/claim_support_registry.json"
         }
       ],
       "extensions": {
-        ".json": 11,
-        ".txt": 1,
-        ".md": 2
+        ".json": 9,
+        ".md": 1
       }
     },
     "simulations": {
@@ -167,100 +174,178 @@
       "file_count": 0,
       "size_mb": "0.00",
       "total_size_bytes": 0
+    },
+    "manuscript": {
+      "exists": true,
+      "file_count": 15,
+      "size_mb": "0.14",
+      "total_size_bytes": 145895,
+      "largest_files": [
+        {
+          "name": "03_results.md",
+          "size_mb": "0.03",
+          "size_bytes": 26920,
+          "path": "manuscript/03_results.md"
+        },
+        {
+          "name": "config.yaml",
+          "size_mb": "0.02",
+          "size_bytes": 25562,
+          "path": "manuscript/config.yaml"
+        },
+        {
+          "name": "02_methodology.md",
+          "size_mb": "0.02",
+          "size_bytes": 24829,
+          "path": "manuscript/02_methodology.md"
+        }
+      ],
+      "extensions": {
+        ".md": 13,
+        ".yaml": 1,
+        ".bib": 1
+      }
+    },
+    "release": {
+      "exists": true,
+      "file_count": 1,
+      "size_mb": "0.00",
+      "total_size_bytes": 298,
+      "largest_files": [
+        {
+          "name": "upload_receipts.json",
+          "size_mb": "0.00",
+          "size_bytes": 298,
+          "path": "release/upload_receipts.json"
+        }
+      ],
+      "extensions": {
+        ".json": 1
+      }
+    },
+    "root": {
+      "exists": true,
+      "file_count": 2,
+      "size_mb": "5.05",
+      "total_size_bytes": 5295237,
+      "largest_files": [
+        {
+          "name": "template_gold_refinement_combined.pdf",
+          "size_mb": "5.05",
+          "size_bytes": 5291119,
+          "path": "template_gold_refinement_combined.pdf"
+        },
+        {
+          "name": "dashboard.html",
+          "size_mb": "0.00",
+          "size_bytes": 4118,
+          "path": "dashboard.html"
+        }
+      ],
+      "extensions": {
+        ".html": 1,
+        ".pdf": 1
+      }
     }
   },
-  "total_files": 67,
-  "total_size_mb": 11.880178451538086,
+  "total_files": 75,
+  "total_size_mb": 20.184243202209473,
   "largest_files": [
     {
       "name": "template_gold_refinement_combined.pdf",
-      "size_mb": "4.73",
+      "size_mb": "5.05",
+      "size_bytes": 5291119,
       "category": "pdf",
       "path": "pdf/template_gold_refinement_combined.pdf"
     },
     {
+      "name": "template_gold_refinement_combined.pdf",
+      "size_mb": "5.05",
+      "size_bytes": 5291119,
+      "category": "root",
+      "path": "template_gold_refinement_combined.pdf"
+    },
+    {
+      "name": "source-web-fonts.js",
+      "size_mb": "3.02",
+      "size_bytes": 3170848,
+      "category": "web",
+      "path": "web/assets/source-web-fonts.js"
+    },
+    {
       "name": "cover_visualization.png",
-      "size_mb": "1.72",
+      "size_mb": "1.71",
+      "size_bytes": 1793549,
       "category": "figures",
       "path": "figures/cover_visualization.png"
     },
     {
       "name": "claim_evidence_assay.png",
-      "size_mb": "0.65",
+      "size_mb": "0.67",
+      "size_bytes": 707362,
       "category": "figures",
       "path": "figures/claim_evidence_assay.png"
     },
     {
       "name": "cover_visualization.svg",
       "size_mb": "0.48",
+      "size_bytes": 506416,
       "category": "figures",
       "path": "figures/cover_visualization.svg"
     },
     {
-      "name": "index.html",
-      "size_mb": "0.17",
-      "category": "web",
-      "path": "web/index.html"
+      "name": "formalism_traceability.png",
+      "size_mb": "0.42",
+      "size_bytes": 441228,
+      "category": "figures",
+      "path": "figures/formalism_traceability.png"
     },
     {
-      "name": "_combined_manuscript.tex",
-      "size_mb": "0.13",
-      "category": "pdf",
-      "path": "pdf/_combined_manuscript.tex"
+      "name": "purity_progression.png",
+      "size_mb": "0.32",
+      "size_bytes": 340434,
+      "category": "figures",
+      "path": "figures/purity_progression.png"
     },
     {
-      "name": "_combined_manuscript.md",
-      "size_mb": "0.10",
-      "category": "pdf",
-      "path": "pdf/_combined_manuscript.md"
+      "name": "implementation_circuit.png",
+      "size_mb": "0.30",
+      "size_bytes": 310260,
+      "category": "figures",
+      "path": "figures/implementation_circuit.png"
     },
     {
-      "name": "_combined_manuscript.md",
-      "size_mb": "0.10",
-      "category": "web",
-      "path": "web/_combined_manuscript.md"
-    },
-    {
-      "name": "evidence_registry.json",
-      "size_mb": "0.08",
-      "category": "reports",
-      "path": "reports/evidence_registry.json"
-    },
-    {
-      "name": "manuscript__03_results.html",
-      "size_mb": "0.04",
-      "category": "web",
-      "path": "web/manuscript__03_results.html"
+      "name": "token_heatmap.png",
+      "size_mb": "0.26",
+      "size_bytes": 271065,
+      "category": "figures",
+      "path": "figures/token_heatmap.png"
     }
   ],
-  "missing_expected_files": [
-    "slides/ directory",
-    "simulations/ directory",
-    "llm/ directory",
-    "logs/ directory"
-  ],
+  "missing_expected_files": [],
   "sizes_by_category": {
-    "pdf": 5.114459991455078,
-    "web": 0.4306049346923828,
-    "figures": 6.1620378494262695,
-    "data": 0.035895347595214844,
-    "reports": 0.13718032836914062
+    "pdf": 5.046004295349121,
+    "web": 3.581451416015625,
+    "figures": 6.309574127197266,
+    "data": 0.036963462829589844,
+    "reports": 0.020897865295410156,
+    "manuscript": 0.13913631439208984,
+    "release": 0.0002841949462890625,
+    "root": 5.049931526184082
   },
+  "inventory_mode": "stable-shippable-output-v1",
+  "inventory_scope": "stage5-delivery-mirror",
+  "inventory_root": "output/templates/template_gold_refinement",
   "file_counts_by_type": {
-    ".md": 4,
-    ".log": 2,
-    ".aux": 1,
-    ".blg": 1,
-    ".bib": 1,
-    ".tex": 1,
-    ".toc": 1,
-    ".bbl": 1,
-    ".pdf": 1,
+    ".pdf": 2,
+    ".md": 15,
+    ".js": 1,
     ".ico": 1,
-    ".html": 11,
-    ".svg": 13,
+    ".html": 14,
     ".png": 13,
-    ".json": 15,
-    ".txt": 1
+    ".svg": 13,
+    ".json": 14,
+    ".yaml": 1,
+    ".bib": 1
   }
 }

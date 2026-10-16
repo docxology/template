@@ -11,31 +11,39 @@ inputs:
     required: false
     default: "3.14"
 
+  dependency-group:
+    description: Explicit root dependency group reconciled by the caller.
+    required: false
+    default: default
+
 runs:
   using: composite
   steps:
-    # CI-UV-CACHE-1: restore the uv-managed virtualenv keyed on the lockfile
-    # hash so the ~9 `uv sync` call sites stop re-downloading the environment
-    # on every run. `uv sync` reconciles the restored venv against uv.lock, so
-    # a stale restore (restore-keys fallback) is self-correcting. actions/cache
-    # tolerates a missing `.venv` on the first run — no mkdir guard needed.
-    - name: Cache uv environment (uv.lock-keyed)
-      uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
-      with:
-        path: .venv
-        key: uv-venv-${{ runner.os }}-${{ inputs.python-version }}-${{ hashFiles('**/uv.lock') }}
-        restore-keys: |
-          uv-venv-${{ runner.os }}-${{ inputs.python-version }}-
     - uses: astral-sh/setup-uv@c771a70e6277c0a99b617c7a806ffedaca235ff9 # v9.0.0
       with:
         version: "0.13.0"
         enable-cache: true
         prune-cache: true
-        cache-dependency-glob: "**/uv.lock"
+        cache-dependency-glob: |
+          uv.lock
+          pyproject.toml
+          .python-version
 
-    - uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v6.2.0
+    - id: python
+      uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v6.2.0
       with:
         python-version: ${{ inputs.python-version }}
+
+    # Cache only compatible root inputs, exact resolved Python, host and group.
+    # Every caller still performs its declared locked reconciliation; this is
+    # installation acceleration, never proof of source or runtime acceptance.
+    - name: Cache uv environment (uv.lock-keyed)
+      uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+      with:
+        path: .venv
+        key: uv-venv-v2-${{ runner.os }}-${{ runner.arch }}-${{ steps.python.outputs.python-version }}-${{ inputs.dependency-group }}-${{ hashFiles('uv.lock', 'pyproject.toml', '.python-version') }}
+        restore-keys: |
+          uv-venv-v2-${{ runner.os }}-${{ runner.arch }}-${{ steps.python.outputs.python-version }}-${{ inputs.dependency-group }}-
 
     - name: Set SOURCE_DATE_EPOCH for deterministic LaTeX builds
       shell: bash

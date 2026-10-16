@@ -99,9 +99,11 @@ def _validate_source_inputs(inputs: object) -> tuple[dict[str, Any], dict[str, A
         raise ValueError("Source npm lock lacks its finite complete v3 package map")
     if packages.get("", {}).get("devDependencies") != package.get("devDependencies"):
         raise ValueError("Source npm package and locked direct dependency declarations differ")
+    if package.get("engines") != {"node": "24.x"} or packages.get("", {}).get("engines") != package["engines"]:
+        raise ValueError("Source npm package and locked Root Node24 engine declarations differ")
     cli = packages.get("node_modules/" + CLI_RELATIVE, {})
     if cli.get("version") != CLI_VERSION or cli.get("engines", {}).get("node") != "^18.19 || >=20.0":
-        raise ValueError("Source Mermaid lock differs from the exact Node20-compatible profile")
+        raise ValueError("Source Mermaid lock differs from the exact Source-pinned Mermaid11 package profile")
     for relative, row in packages.items():
         if relative == "":
             continue
@@ -302,15 +304,15 @@ class NativeMermaidRuntimeAdmission:
         return current
 
     def admit_node_version_process(self, record: dict[str, Any]) -> None:
-        """Admit only the actual retained generic ToolAPI Node20 invocation."""
+        """Admit only the actual retained generic ToolAPI Node24 invocation."""
         reader = SnapshotReader(self.source.bindings.current_root, native_producer_operation=self.producer)
         self.producer.verify(reader, run_id=self.source.bindings.run_id, deadline=self.deadline)
         snapshot = reader.read(self.node_version_artifact["path"])
         if snapshot.sha256 != self.node_version_artifact["sha256"] or snapshot.json_object() != record:
-            raise ValueError("Source11 Node20 process differs from its actual original invocation")
+            raise ValueError("Source11 Node24 process differs from its actual original invocation")
         self.producer.validate_tool(self.node_version_artifact, record, reader, run_id=self.source.bindings.run_id)
         if not reader.unchanged():
-            raise ValueError("Source11 original Node20 process custody changed")
+            raise ValueError("Source11 original Node24 process custody changed")
 
     def node_version_proof(self) -> dict[str, Any]:
         reader = SnapshotReader(self.source.bindings.current_root, native_producer_operation=self.producer)
@@ -331,7 +333,7 @@ def admit_source_mermaid_selection(
     directory: Path,
     env: dict[str, str],
 ) -> NativeMermaidRuntimeAdmission:
-    """Admit Source11 plus actual Node20 using registered original ToolAPI facts."""
+    """Admit Source11 plus actual Node24 using registered original ToolAPI facts."""
     producer = current_native_producer_operation()
     if not isinstance(selection, NativeMermaidSelection) or not isinstance(source, NativeSourceContext):
         raise ValueError("Mermaid selection requires independently held nominations and genuine Source")
@@ -364,13 +366,13 @@ def admit_source_mermaid_selection(
         or raw["command"] != [before["node_executable_label"], "--version"]
         or raw["original_exit_code"] != 0
         or raw["exit_code"] != 0
-        or not re.fullmatch(r"v20\.[0-9]+\.[0-9]+\n?", raw["stdout"])
+        or not re.fullmatch(r"v24\.[0-9]+\.[0-9]+\n?", raw["stdout"])
         or raw["stderr"]
     ):
-        raise ValueError("actual Source-nominated Node process is not the genuine successful Node20 profile")
+        raise ValueError("actual Source-nominated Node process is not the genuine successful Node24 profile")
     after = _observe(selection, source, deadline)
     if before != after or not reader.unchanged():
-        raise ValueError("Source Mermaid runtime changed during actual Node20 process admission")
+        raise ValueError("Source Mermaid runtime changed during actual Node24 process admission")
     producer.verify(reader, run_id=source.bindings.run_id, deadline=deadline)
     return NativeMermaidRuntimeAdmission(selection, source, producer, before, dict(proof["artifact"]), deadline, _SEAL)
 

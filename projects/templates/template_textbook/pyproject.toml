@@ -27,7 +27,7 @@ dependencies = [
 
 [project.optional-dependencies]
 dev = [
-    "research-project-template==4.0.1",
+    "research-project-template==4.0.2",
     "pytest>=7.4.0",
     "pytest-cov>=4.1.0",
 ]
@@ -69,6 +69,6 @@ research-project-template = { path = "../../..", editable = true }
 
 # Compatibility contract for this independent exemplar release.
 [tool.template]
-platform_version = "4.0.1"
+platform_version = "4.0.2"
 tested_python_versions = ["3.12", "3.13", "3.14"]
 required_unpaid_capabilities = []

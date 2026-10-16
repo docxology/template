@@ -18,6 +18,7 @@ from infrastructure.core.implementation_custody import bytecode_audit_bootstrap,
 from infrastructure.core.pipeline.fingerprints import tree_records
 from infrastructure.core.runtime._tools import find_uv
 from infrastructure.core.testing.project_test_matrix import ProjectTestTask, run_project_test_matrix
+from infrastructure.project.acceptance_payload import format_acceptance_payload_loader, write_acceptance_payload
 from infrastructure.project.installed_acceptance_artifacts import (
     INSTALLED_PROBE,
     freeze_wheel_bytes,
@@ -273,6 +274,12 @@ def run_installed_cell(
             "prefix": str(bytecode.absolute()),
             "sha256": hashlib.sha256(source_file_bytes(audit_path)).hexdigest(),
         }
+        payload_bytes = (audit + "\n" + INSTALLED_PROBE).encode()
+        payload = write_acceptance_payload(
+            scratch, outside / "installed-probe-payload.py", payload_bytes, forbidden_roots=(root, source)
+        )
+        payload_binding = write_binary(root, directory / "installed-probe-payload.py", payload_bytes)
+        spec["probe_payload"] = payload
         spec_bytes = json.dumps(spec, sort_keys=True).encode()
         atomic_write_bytes_confined(scratch, outside / "probe-spec.json", spec_bytes, mode=0o400)
         spec_binding = write_binary(root, directory / "probe-spec.json", spec_bytes)
@@ -282,7 +289,7 @@ def run_installed_cell(
             "-X",
             f"pycache_prefix={bytecode}",
             "-c",
-            audit + "\n" + INSTALLED_PROBE,
+            format_acceptance_payload_loader(payload),
             str(outside / "probe-spec.json"),
             str(observation),
         )
@@ -328,6 +335,7 @@ def run_installed_cell(
             command=list(command),
             process_artifact=write_json(root, directory / "installed-process.json", process),
             probe_spec_artifact=spec_binding,
+            probe_payload_artifact=payload_binding,
             runtime_artifact=write_json(root, directory / "installed-probe.json", details),
         )
         if time.monotonic() >= deadline:

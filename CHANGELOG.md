@@ -7,6 +7,49 @@ gitignore, or treat those trees as confidential); where entries mention
 `projects/`, they refer to **generic layout and tooling** defined by the template,
 not to the contents of any specific workspace.
 
+## [4.0.2] - 2026-10-15
+
+See the [versioned release-intent notes](docs/releases/v4.0.2.md). Publication
+requires complete exact-revision acceptance and the authenticated release handoff.
+The prepared 4.0.0 and 4.0.1 candidates were not published; their implementation
+and historical notes remain preserved.
+
+- Partition functional infrastructure feedback into complete complementary smoke
+  shards and required full-module contract jobs, with original pytest member,
+  outcome and JUnit receipts. Add conservative project impact selection.
+- Retain diagnostic requests before pytest launch so abrupt exits leave their
+  selected files, nonce and declared timeouts without substituting for outcome receipts.
+- Reuse each admitted Meta tree inventory and group adjacent standalone-provider
+  Git reads, preserving physical-file, committed-mode and fresh closing checks.
+- Share genuine immutable projection fixtures across tests while cloning fresh
+  providers for mutations; retain independent producer, verifier and tamper controls
+  under the unchanged test deadlines.
+- Avoid constructing unused source-path ancestors during readiness checks while
+  retaining every fresh symlink, containment and file-identity observation.
+- Compute source-exclusion depth once per directory census, preserving exact-case
+  controls, fresh filesystem observations and audited subprocess boundaries.
+- Restore the declared full-infrastructure 120-second contract default without
+  changing explicit markers or nested producer defaults. Prepare genuine native
+  test tools and locked offline wheel archives in their consuming jobs.
+- Bind caches to compatible locked inputs and strengthen independent cold/warm
+  serial/parallel benchmark comparisons without claiming unmeasured speedups.
+- Add a cold native diagnostic preflight and batch repeated runtime/Current
+  revalidation while preserving all live ownership and closing custody checks.
+- Retain preflight preparation and launch-failure diagnostics; align the strict
+  native Mermaid runtime and actual adapters with Node 24.22.0 LTS, preserving
+  npm 11.20.0 and third-party package records.
+- Bind native stages to the selected cold interpreter and exact environment;
+  preserve the original stage deadline and stop after a retained native failure.
+  Add fixed phase and remaining-time diagnostics for subsequent qualification.
+- Overlap Linux auxiliary and installed qualification; use bounded dependency-aware
+  installed workers and fail producer jobs on their required original outcomes.
+- Replace oversized installed command arguments with exact readonly payloads;
+  restore auxiliary preimport auditing and preserve failed-child/timeout evidence.
+- Coordinate the 4.0.2 SDK, compatibility, publication and executable bindings
+  while preserving independent exemplar versions and Lean 4.35.0.
+- Add reviewed metadata planning, exact-input checking, retained compensating
+  rollback and strict refusal of ambiguous publication configuration.
+
 ## [4.0.1] - 2026-10-10
 
 See the [illustrated release-intent notes](docs/releases/v4.0.1.md). The date

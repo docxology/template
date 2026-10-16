@@ -1,4 +1,4 @@
-"""Prepare a fresh Source4.0.1 wheel and supervise its cold native role.
+"""Prepare a fresh Source-declared wheel and supervise its cold native role.
 
 This outer build/transport harness nominates inputs and retains genuine process
 results. Original/native authority is constructed only inside the separately
@@ -27,7 +27,11 @@ from infrastructure.reporting.native_installed_preparation import (
     prepare_native_installed_runtime,
 )
 from infrastructure.reporting.native_prepared_pdfium import prepare_pdfium_nomination
-from infrastructure.reporting.native_source_provider_bootstrap import NATIVE_CONTROLLER_MODULE, NATIVE_READER_MODULE
+from infrastructure.reporting.native_source_provider_bootstrap import (
+    NATIVE_CONTROLLER_MODULE,
+    NATIVE_READER_MODULE,
+    NATIVE_PREFLIGHT_MODULE,
+)
 from infrastructure.reporting.native_tool_process import run_native_tool_process
 from infrastructure.reporting.native_preparation_resources import PREPARATION_PEAK_BYTES, require_native_capacity
 from infrastructure.reporting.native_readiness_input_copy import copy_original_common_readiness, copy_source_mirror_data
@@ -46,7 +50,7 @@ def _signed_failure(result: dict[str, object]) -> int:
 
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--mode", required=True, choices=("original", "reader", "handoff"))
+    parser.add_argument("--mode", required=True, choices=("original", "reader", "handoff", "preflight"))
     parser.add_argument("--source-root", required=True, type=Path)
     parser.add_argument("--source-commit", required=True)
     parser.add_argument("--source-identity", required=True)
@@ -77,6 +81,8 @@ def main(argv: list[str] | None = None) -> int:
     started = time.monotonic()
     if not 0 < args.timeout <= 14400:
         parser.error("native installed launch requires the existing whole-operation budget")
+    if args.mode == "preflight" and args.timeout > 900:
+        parser.error("diagnostic preflight requires an explicit timeout at most 900 seconds")
     deadline = started + args.timeout
     source = args.source_root.resolve(strict=True)
     mirror = args.current_root.absolute()
@@ -176,7 +182,7 @@ def main(argv: list[str] | None = None) -> int:
             "--timeout",
             str(args.timeout),
         )
-        if args.mode == "original":
+        if args.mode in {"original", "preflight"}:
             arguments = (
                 "--repo-root",
                 str(mirror),
@@ -185,15 +191,18 @@ def main(argv: list[str] | None = None) -> int:
                 "--current-analysis-root",
                 str(scratch / "native-analysis-current"),
                 "--evidence-dir",
-                str(mirror / "output/readiness/native"),
-                "--hosted-transport-dir",
-                str(mirror / "output/readiness/native-transport"),
-                "--hosted-repository",
-                args.repository,
-                "--hosted-run-id",
-                str(args.run_id),
+                str(mirror / "output/readiness" / ("native-preflight" if args.mode == "preflight" else "native")),
                 *common,
             )
+            if args.mode == "original":
+                arguments += (
+                    "--hosted-transport-dir",
+                    str(mirror / "output/readiness/native-transport"),
+                    "--hosted-repository",
+                    args.repository,
+                    "--hosted-run-id",
+                    str(args.run_id),
+                )
             if args.epubcheck_jar is not None or args.java_executable is not None:
                 if args.epubcheck_jar is None or args.java_executable is None:
                     raise ValueError("actual EPUB tools require both explicit nominations")
@@ -203,7 +212,7 @@ def main(argv: list[str] | None = None) -> int:
                     "--java-executable",
                     str(args.java_executable),
                 )
-            role = NATIVE_CONTROLLER_MODULE
+            role = NATIVE_PREFLIGHT_MODULE if args.mode == "preflight" else NATIVE_CONTROLLER_MODULE
         else:
             arguments = (
                 "--repo-root",

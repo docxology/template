@@ -5,7 +5,10 @@ from __future__ import annotations
 import hashlib
 import json
 import os
+import shutil
+import stat
 import subprocess
+from collections.abc import Iterator
 from pathlib import Path
 
 import pytest
@@ -29,7 +32,9 @@ from infrastructure.publishing.standalone_mirror import (
 
 def _git(root: Path, *args: str) -> str:
     environment = {key: value for key, value in os.environ.items() if not key.startswith("GIT_")}
-    environment.update(GIT_CONFIG_GLOBAL=os.devnull, GIT_CONFIG_NOSYSTEM="1", GIT_TERMINAL_PROMPT="0")
+    environment.update(
+        GIT_CONFIG_GLOBAL=os.devnull, GIT_CONFIG_NOSYSTEM="1", GIT_TERMINAL_PROMPT="0", GIT_OPTIONAL_LOCKS="0"
+    )
     return subprocess.run(
         ["git", "-c", "core.hooksPath=/dev/null", *args],
         cwd=root,
@@ -91,16 +96,164 @@ def _project(root: Path, slug: str, *, with_root: bool = True, with_meta: bool =
     return project
 
 
-@pytest.fixture
-def committed_root(tmp_path: Path) -> GitInstallProvider:
-    root = tmp_path.resolve() / "root"
+def _tree_signature(root: Path) -> tuple:
+    records = []
+    for path in sorted(root.rglob("*")):
+        relative = path.relative_to(root)
+        if ".git" in relative.parts:
+            continue
+        metadata = path.lstat()
+        assert not path.is_symlink()
+        if stat.S_ISREG(metadata.st_mode):
+            records.append(
+                (relative.as_posix(), hashlib.sha256(path.read_bytes()).hexdigest(), stat.S_IMODE(metadata.st_mode))
+            )
+        else:
+            assert stat.S_ISDIR(metadata.st_mode)
+    return tuple(records)
+
+
+def _provider_signature(provider: GitInstallProvider) -> tuple:
+    root = provider.checkout
+    assert root == root.resolve(strict=True) and (root / ".git").is_dir()
+    assert _git(root, "rev-parse", "HEAD") == provider.commit
+    assert _git(root, "status", "--porcelain", "--untracked-files=all") == ""
+    return (
+        _tree_signature(root),
+        _git(root, "ls-files", "--stage", "-z"),
+        _git(root, "ls-files", "-v", "-z"),
+        (root / ".git/config").read_bytes(),
+        (root / ".git/index").read_bytes(),
+    )
+
+
+def _assert_baseline(baseline: tuple) -> None:
+    root, meta, original, root_signature, meta_signature, original_signature = baseline
+    assert _provider_signature(root) == root_signature
+    assert _provider_signature(meta) == meta_signature
+    assert _tree_signature(original) == original_signature
+
+
+def _clone_provider(provider: GitInstallProvider, destination: Path, package: str) -> GitInstallProvider:
+    before = _provider_signature(provider)
+    _git(
+        destination.parent, "clone", "--quiet", "--no-local", "--no-hardlinks", str(provider.checkout), str(destination)
+    )
+    assert (destination / ".git").is_dir()
+    assert not (destination / ".git/objects/info/alternates").exists()
+    assert not tuple((destination / ".git").glob("sharedindex.*"))
+    _git(destination, "remote", "set-url", "origin", PROVIDER_URLS[package])
+    _git(destination, "config", "user.name", "Public fixture")
+    _git(destination, "config", "user.email", "fixture@example.invalid")
+    assert _git(destination, "rev-parse", "HEAD") == provider.commit
+    assert _git(destination, "ls-files", "--stage", "-z") == _git(provider.checkout, "ls-files", "--stage", "-z")
+    assert all(row.startswith("H ") for row in _git(destination, "ls-files", "-v", "-z").split("\0") if row)
+    for relative, _, _ in _tree_signature(provider.checkout):
+        source, copied = (provider.checkout / relative).stat(), (destination / relative).stat()
+        assert (source.st_dev, source.st_ino) != (copied.st_dev, copied.st_ino)
+    source_objects = {
+        (path.stat().st_dev, path.stat().st_ino)
+        for path in (provider.checkout / ".git/objects").rglob("*")
+        if path.is_file()
+    }
+    assert all(
+        (path.stat().st_dev, path.stat().st_ino) not in source_objects
+        for path in (destination / ".git/objects").rglob("*")
+        if path.is_file()
+    )
+    source_index, copied_index = (provider.checkout / ".git/index").stat(), (destination / ".git/index").stat()
+    assert (source_index.st_dev, source_index.st_ino) != (copied_index.st_dev, copied_index.st_ino)
+    assert _provider_signature(provider) == before
+    return GitInstallProvider(destination, provider.commit)
+
+
+def _copy_fixture_tree(source: Path, destination: Path) -> None:
+    before = _tree_signature(source)
+    shutil.copytree(source, destination, copy_function=shutil.copy2, ignore=shutil.ignore_patterns(".git"))
+    assert _tree_signature(destination) == before == _tree_signature(source)
+    for relative, _, _ in before:
+        original, copied = (source / relative).stat(), (destination / relative).stat()
+        assert (original.st_dev, original.st_ino) != (copied.st_dev, copied.st_ino)
+
+
+def _commit_changes(root: Path, message: str) -> str:
+    _git(root, "add", "-A")
+    _git(root, "commit", "-qm", message)
+    return _git(root, "rev-parse", "HEAD")
+
+
+@pytest.fixture(scope="module", autouse=True)
+def _projection_baseline(tmp_path_factory):
+    # Real production setup is paid once, including when only one case is selected.
+    parent = tmp_path_factory.mktemp("standalone-projection-baseline").resolve()
+    root = parent / "root"
     root.mkdir()
     (root / "pyproject.toml").write_text('[project]\nname = "research-project-template"\nversion = "4.0.1"\n')
     _project(root, "template_code_project", with_root=False)
     _project(root, "template_literature_meta_analysis")
     _project(root, "template_advanced_literature_review", with_meta=True)
-    revision = _commit(root, PROVIDER_URLS[ROOT_PACKAGE])
-    return GitInstallProvider(root, revision)
+    provider = GitInstallProvider(root, _commit(root, PROVIDER_URLS[ROOT_PACKAGE]))
+    original = _original(provider, parent / "meta-original")
+    checkout = parent / "meta-provider"
+    manifest = project_standalone_installation(original, checkout, root_provider=provider)
+    assert json.loads((checkout / PROJECTION_NAME).read_text()) == manifest
+    meta = GitInstallProvider(checkout, _commit(checkout, PROVIDER_URLS[META_PACKAGE]))
+    baseline = (
+        provider,
+        meta,
+        original,
+        _provider_signature(provider),
+        _provider_signature(meta),
+        _tree_signature(original),
+    )
+    yield baseline
+    _assert_baseline(baseline)
+
+
+@pytest.fixture
+def committed_root(_projection_baseline, tmp_path: Path) -> Iterator[GitInstallProvider]:
+    _assert_baseline(_projection_baseline)
+    yield _clone_provider(_projection_baseline[0], tmp_path.resolve() / "root", ROOT_PACKAGE)
+    _assert_baseline(_projection_baseline)
+
+
+@pytest.fixture
+def committed_meta(_projection_baseline, committed_root, tmp_path):
+    assert committed_root.commit == _projection_baseline[0].commit
+    return _clone_provider(_projection_baseline[1], tmp_path.resolve() / "meta-provider", META_PACKAGE)
+
+
+@pytest.fixture
+def prepared_meta_projection(_projection_baseline, committed_root, tmp_path):
+    assert committed_root.commit == _projection_baseline[0].commit
+    original, projected = tmp_path.resolve() / "original", tmp_path.resolve() / "projected"
+    _copy_fixture_tree(_projection_baseline[2], original)
+    _copy_fixture_tree(_projection_baseline[1].checkout, projected)
+    return original, projected, json.loads((projected / PROJECTION_NAME).read_text())
+
+
+@pytest.fixture(scope="module")
+def _advanced_projection_seed(_projection_baseline, tmp_path_factory):
+    # The first selected case needing Advanced pays this real setup.
+    root, meta = _projection_baseline[:2]
+    _assert_baseline(_projection_baseline)
+    parent = tmp_path_factory.mktemp("standalone-advanced-projection").resolve()
+    original = _original(root, parent / "original", "template_advanced_literature_review")
+    projected = parent / "projected"
+    manifest = project_standalone_installation(original, projected, root_provider=root, meta_provider=meta)
+    assert json.loads((projected / PROJECTION_NAME).read_text()) == manifest
+    signature = (_tree_signature(original), _tree_signature(projected))
+    yield original, projected, (projected / PROJECTION_NAME).read_bytes()
+    assert (_tree_signature(original), _tree_signature(projected)) == signature
+    _assert_baseline(_projection_baseline)
+
+
+@pytest.fixture
+def prepared_advanced_projection(_advanced_projection_seed, committed_root, committed_meta, tmp_path):
+    original, projected = tmp_path.resolve() / "advanced-original", tmp_path.resolve() / "advanced"
+    _copy_fixture_tree(_advanced_projection_seed[0], original)
+    _copy_fixture_tree(_advanced_projection_seed[1], projected)
+    return original, projected, json.loads(_advanced_projection_seed[2])
 
 
 def _original(provider: GitInstallProvider, parent: Path, slug: str = "template_literature_meta_analysis") -> Path:
@@ -141,8 +294,10 @@ def test_source_only_exemplar_has_explicit_empty_transformation(committed_root, 
 
 
 @pytest.mark.parametrize("fault", ["source", "lock", "manifest", "missing", "extra", "mode", "link"])
-def test_verifier_refuses_changed_projected_bytes_names_modes_and_provenance(committed_root, tmp_path, fault):
-    original, projected, _ = _projection(committed_root, tmp_path)
+def test_verifier_refuses_changed_projected_bytes_names_modes_and_provenance(
+    committed_root, prepared_meta_projection, fault
+):
+    original, projected, _ = prepared_meta_projection
     target = projected / "src/science.py"
     if fault == "source":
         target.write_text("RESULT = -7\n")
@@ -224,27 +379,116 @@ def test_original_manifest_tampering_cannot_authorize_source_changes(committed_r
         project_standalone_installation(original, tmp_path.resolve() / "refused", root_provider=committed_root)
 
 
-def test_advanced_requires_actual_meta_projection_from_same_root(committed_root, tmp_path):
-    meta_original = _original(committed_root, tmp_path / "meta-original")
-    meta_checkout = tmp_path.resolve() / "meta-provider"
-    project_standalone_installation(meta_original, meta_checkout, root_provider=committed_root)
-    meta_revision = _commit(meta_checkout, PROVIDER_URLS[META_PACKAGE])
-    meta = GitInstallProvider(meta_checkout, meta_revision)
-    advanced = _original(committed_root, tmp_path / "advanced-original", "template_advanced_literature_review")
-    with pytest.raises(ValueError, match="actual committed Meta provider"):
-        project_standalone_installation(advanced, tmp_path.resolve() / "missing-meta", root_provider=committed_root)
-    projected = tmp_path.resolve() / "advanced"
-    manifest = project_standalone_installation(advanced, projected, root_provider=committed_root, meta_provider=meta)
-    assert manifest["install_providers"][META_PACKAGE]["commit"] == meta_revision
+def test_provider_admission_windows_recheck_dirty_and_advanced_head(committed_root):
+    from infrastructure.publishing._standalone_provider_admission import (
+        _git_provider_closing,
+        _git_provider_opening,
+    )
+
+    parent = committed_root.checkout.parent
+    for index in range(4):
+        parent /= f"provider {index}-" + "é" * 52
+    parent.mkdir(parents=True)
+    checkout = committed_root.checkout.rename(parent / "root")
+    assert len(os.fsencode(str(checkout))) > 512
+    revision = committed_root.commit
+    repository = PROVIDER_URLS[ROOT_PACKAGE]
+    assert _git_provider_opening(checkout, revision, repository) == repository
+    assert _git_provider_closing(checkout, revision) == _git(checkout, "rev-parse", f"{revision}^{{tree}}")
+    target = checkout / "projects/templates/template_code_project/src/science.py"
+    target.write_text("RESULT = 11\n")
+    with pytest.raises(ValueError, match="clean source working tree"):
+        _git_provider_closing(checkout, revision)
+    _git(checkout, "add", "--", "projects/templates/template_code_project/src/science.py")
+    _git(checkout, "commit", "-qm", "Advance the invented provider after admission")
+    advanced = _git(checkout, "rev-parse", "HEAD")
+    assert advanced != revision
+    with pytest.raises(ValueError, match="differs from current HEAD"):
+        _git_provider_closing(checkout, revision)
+    assert _git_provider_opening(checkout, advanced, repository) == repository
+    assert _git_provider_closing(checkout, advanced) == _git(checkout, "rev-parse", f"{advanced}^{{tree}}")
+
+
+def test_advanced_requires_actual_meta_projection_from_same_root(
+    committed_root, committed_meta, prepared_advanced_projection
+):
+    _, _, manifest = prepared_advanced_projection
+    assert manifest["install_providers"][META_PACKAGE]["commit"] == committed_meta.commit
     assert manifest["install_providers"][ROOT_PACKAGE]["commit"] == committed_root.commit
+
+
+def test_advanced_requires_actual_meta_provider_before_destination_creation(committed_root, tmp_path):
+    advanced = _original(committed_root, tmp_path / "advanced-original", "template_advanced_literature_review")
+    destination = tmp_path.resolve() / "missing-meta"
+    with pytest.raises(ValueError, match="actual committed Meta provider"):
+        project_standalone_installation(advanced, destination, root_provider=committed_root)
+    assert not destination.exists()
+
+
+def test_advanced_independent_verifier_rebuilds_from_actual_providers(
+    committed_root, committed_meta, prepared_advanced_projection
+):
+    advanced, projected, manifest = prepared_advanced_projection
     assert (
-        validate_standalone_installation(advanced, projected, root_provider=committed_root, meta_provider=meta)
+        validate_standalone_installation(
+            advanced, projected, root_provider=committed_root, meta_provider=committed_meta
+        )
         == manifest
     )
-    _git(meta.checkout, "update-index", "--assume-unchanged", "src/science.py")
-    (meta.checkout / "src/science.py").write_text("RESULT = -7\n")
+
+
+def test_advanced_verifier_refuses_hidden_meta_source_change(
+    committed_root, committed_meta, prepared_advanced_projection
+):
+    advanced, projected, _ = prepared_advanced_projection
+    _git(committed_meta.checkout, "update-index", "--assume-unchanged", "src/science.py")
+    (committed_meta.checkout / "src/science.py").write_text("RESULT = -7\n")
     with pytest.raises(ValueError, match="exact reviewed projection"):
-        validate_standalone_installation(advanced, projected, root_provider=committed_root, meta_provider=meta)
+        validate_standalone_installation(
+            advanced, projected, root_provider=committed_root, meta_provider=committed_meta
+        )
+
+
+def test_prepared_meta_provider_cannot_follow_a_different_root_commit(committed_root, committed_meta, tmp_path):
+    _git(committed_root.checkout, "commit", "--allow-empty", "-qm", "Advance actual Root identity only")
+    revision = _git(committed_root.checkout, "rev-parse", "HEAD")
+    assert revision != committed_root.commit
+    advanced_root = GitInstallProvider(committed_root.checkout, revision)
+    advanced = _original(advanced_root, tmp_path / "advanced-original", "template_advanced_literature_review")
+    destination = tmp_path.resolve() / "refused"
+    with pytest.raises(ValueError, match="exact reviewed projection"):
+        project_standalone_installation(
+            advanced, destination, root_provider=advanced_root, meta_provider=committed_meta
+        )
+    assert not destination.exists()
+
+
+@pytest.mark.parametrize("fault", ["missing-committed-path", "committed-mode"])
+def test_advanced_refuses_meta_worktree_hiding_a_committed_path_or_mode(
+    committed_root, committed_meta, tmp_path, fault
+):
+    checkout = committed_meta.checkout
+    target = checkout / "src/science.py"
+    content = target.read_bytes()
+    if fault == "missing-committed-path":
+        _git(checkout, "rm", "--cached", "--", "src/science.py")
+        with (checkout / ".git/info/exclude").open("a") as stream:
+            stream.write("\nsrc/science.py\n")
+    else:
+        _git(checkout, "config", "core.fileMode", "false")
+        _git(checkout, "update-index", "--chmod=-x", "src/science.py")
+    _git(checkout, "commit", "-qm", "Commit invented provider index divergence")
+    revision = _git(checkout, "rev-parse", "HEAD")
+    assert _git(checkout, "status", "--porcelain", "--untracked-files=all") == ""
+    assert target.read_bytes() == content
+    assert target.stat().st_mode & 0o111
+    advanced = _original(committed_root, tmp_path / "advanced-original", "template_advanced_literature_review")
+    destination = tmp_path.resolve() / "refused"
+    with pytest.raises(ValueError, match="committed path or mode"):
+        project_standalone_installation(
+            advanced, destination, root_provider=committed_root, meta_provider=GitInstallProvider(checkout, revision)
+        )
+    assert not destination.exists()
 
 
 @pytest.mark.parametrize(
@@ -261,14 +505,12 @@ def test_advanced_requires_actual_meta_projection_from_same_root(committed_root,
         "unreviewed_build_helper.py",
     ],
 )
-def test_advanced_refuses_extra_committed_meta_installation_inputs(committed_root, tmp_path, extra):
-    original = _original(committed_root, tmp_path / "meta-original")
-    checkout = tmp_path.resolve() / "meta-provider"
-    project_standalone_installation(original, checkout, root_provider=committed_root)
+def test_advanced_refuses_extra_committed_meta_installation_inputs(committed_root, committed_meta, tmp_path, extra):
+    checkout = committed_meta.checkout
     target = checkout / extra
     target.parent.mkdir(parents=True, exist_ok=True)
     target.write_text("UNREVIEWED = True\n")
-    revision = _commit(checkout, PROVIDER_URLS[META_PACKAGE])
+    revision = _commit_changes(checkout, "Commit actual Meta fixture divergence")
     advanced = _original(committed_root, tmp_path / "advanced-original", "template_advanced_literature_review")
     destination = tmp_path.resolve() / "refused"
     with pytest.raises(ValueError, match="installation inputs outside"):
@@ -278,16 +520,16 @@ def test_advanced_refuses_extra_committed_meta_installation_inputs(committed_roo
     assert not destination.exists()
 
 
-def test_advanced_keeps_committed_meta_publication_evidence_outside_package_inputs(committed_root, tmp_path):
-    original = _original(committed_root, tmp_path / "meta-original")
-    checkout = tmp_path.resolve() / "meta-provider"
-    project_standalone_installation(original, checkout, root_provider=committed_root)
+def test_advanced_keeps_committed_meta_publication_evidence_outside_package_inputs(
+    committed_root, committed_meta, tmp_path
+):
+    checkout = committed_meta.checkout
     evidence = checkout / "output/history/invented-publication.pdf"
     evidence.parent.mkdir(parents=True)
     evidence.write_bytes(b"invented retained publication fixture\n")
     inventory = checkout / ".template-publication-tree.json"
     inventory.write_text('{"invented_fixture": "retained publication ownership"}\n')
-    revision = _commit(checkout, PROVIDER_URLS[META_PACKAGE])
+    revision = _commit_changes(checkout, "Commit actual Meta fixture divergence")
     advanced = _original(committed_root, tmp_path / "advanced-original", "template_advanced_literature_review")
     meta = GitInstallProvider(checkout, revision)
     manifest = project_standalone_installation(
@@ -298,14 +540,14 @@ def test_advanced_keeps_committed_meta_publication_evidence_outside_package_inpu
     assert json.loads(inventory.read_text()) == {"invented_fixture": "retained publication ownership"}
 
 
-def test_advanced_refuses_committed_link_disguised_as_retained_publication_evidence(committed_root, tmp_path):
-    original = _original(committed_root, tmp_path / "meta-original")
-    checkout = tmp_path.resolve() / "meta-provider"
-    project_standalone_installation(original, checkout, root_provider=committed_root)
+def test_advanced_refuses_committed_link_disguised_as_retained_publication_evidence(
+    committed_root, committed_meta, tmp_path
+):
+    checkout = committed_meta.checkout
     evidence = checkout / "output/history/invented-publication.pdf"
     evidence.parent.mkdir(parents=True)
     evidence.symlink_to(checkout / "src/science.py")
-    revision = _commit(checkout, PROVIDER_URLS[META_PACKAGE])
+    revision = _commit_changes(checkout, "Commit actual Meta fixture divergence")
     advanced = _original(committed_root, tmp_path / "advanced-original", "template_advanced_literature_review")
     destination = tmp_path.resolve() / "refused"
     with pytest.raises(ValueError, match="regular committed source"):

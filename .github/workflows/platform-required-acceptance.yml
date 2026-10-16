@@ -202,16 +202,19 @@ jobs:
           echo "TEMPLATE_SIA_TEST_IMAGE=$image" >> "$GITHUB_ENV"
       - uses: ./.github/actions/setup-acceptance-model
       - name: Complete installed and export matrix
-        continue-on-error: true
+        id: installed
         run: >-
           output/runtime-envs/3.14/bin/python -m infrastructure.project.public_acceptance_auxiliary_cli
-          --installed
+          --installed --installed-workers 3
           --installed-interpreter "3.12=$PWD/output/runtime-envs/3.12/bin/python"
           --installed-interpreter "3.13=$PWD/output/runtime-envs/3.13/bin/python"
           --installed-interpreter "3.14=$PWD/output/runtime-envs/3.14/bin/python"
           --evidence-dir output/readiness/installed
+      - name: Verify every original installed cell before dependent work
+        run: >-
+          output/runtime-envs/3.14/bin/python -m infrastructure.reporting.original_job_outcome
+          --kind installed --receipt output/readiness/installed/receipt.json
       - name: Admit installed dependency providers and execute complete runtime matrix
-        continue-on-error: true
         shell: bash
         run: |
           output/runtime-envs/3.14/bin/python -m infrastructure.project.public_acceptance_auxiliary_cli \
@@ -233,12 +236,6 @@ jobs:
           command += ["--evidence-dir", "output/readiness/projects"]
           raise SystemExit(subprocess.run(command, check=False).returncode)
           PYTHON
-      - name: Every remaining source-owned obligation
-        continue-on-error: true
-        run: >-
-          output/runtime-envs/3.14/bin/python -m infrastructure.project.public_acceptance_auxiliary_cli
-          --all --local-model smollm2:135m --docker-image-id "$TEMPLATE_ACCEPTANCE_SIA_IMAGE_ID"
-          --timeout-seconds 1800 --evidence-dir output/readiness/auxiliary
       - name: Independently admit original Root export before transfer
         id: export_prepare
         run: |
@@ -319,6 +316,108 @@ jobs:
           if-no-files-found: error
           retention-days: 1
 
+  auxiliary-original:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+          submodules: true
+      - uses: ./.github/actions/setup-acceptance-fixtures
+      - uses: ./.github/actions/setup-python-env
+      - name: Prepare the locked auxiliary environment
+        run: uv sync --locked --inexact --group dev --group installed-build --group timeseries-bench --group rendering-pptx
+      - uses: ./.github/actions/setup-meta-provider
+      - uses: ./.github/actions/setup-docs-lint
+      - uses: ./.github/actions/setup-acceptance-documents
+      - name: Prepare source-locked browser math dependencies
+        run: .venv/bin/python -m infrastructure.reporting.native_dependency_preparation --repo-root .
+      - name: Prepare pinned formal tools
+        timeout-minutes: 20
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl --fail --location --retry 2 --max-time 60 --output "$RUNNER_TEMP/elan-init.sh" https://raw.githubusercontent.com/leanprover/elan/58e8d545e33641f66dbcbd22c4283109e71757be/elan-init.sh
+          echo "4bacca9502cb89736fe63d2685abc2947cfbf34dc87673504f1bb4c43eda9264  $RUNNER_TEMP/elan-init.sh" | shasum -a 256 --check --status
+          sh "$RUNNER_TEMP/elan-init.sh" -y --default-toolchain none
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          for pin in projects/templates/template_active_inference/lean/lean-toolchain projects/templates/template_formal/formal/lean/lean-toolchain; do
+            "$HOME/.elan/bin/elan" toolchain install "$(tr -d '[:space:]' < "$pin")"
+          done
+          sudo apt-get install -y --no-install-recommends default-jre-headless
+      - name: Prepare the exact immutable SIA sandbox image
+        timeout-minutes: 10
+        shell: bash
+        env:
+          SIA_SANDBOX_IMAGE: python@sha256:51dafde81dbdb6ebde285137a295cf18a47ca95234fe388a343719cb97305b3d
+        run: |
+          set -euo pipefail
+          docker pull "$SIA_SANDBOX_IMAGE"
+          image=$(docker image inspect --format '{{.Id}}' "$SIA_SANDBOX_IMAGE")
+          echo "TEMPLATE_ACCEPTANCE_SIA_IMAGE_ID=$image" >> "$GITHUB_ENV"
+          echo "TEMPLATE_SIA_TEST_IMAGE=$image" >> "$GITHUB_ENV"
+      - uses: ./.github/actions/setup-acceptance-model
+      - name: Every remaining source-owned obligation
+        id: auxiliary
+        continue-on-error: true
+        run: >-
+          .venv/bin/python -m infrastructure.project.public_acceptance_auxiliary_cli
+          --all --local-model smollm2:135m --docker-image-id "$TEMPLATE_ACCEPTANCE_SIA_IMAGE_ID"
+          --timeout-seconds 1800 --evidence-dir output/readiness/auxiliary
+      - name: Fail promptly for any unpassed Linux-owned auxiliary obligation
+        if: always()
+        run: >-
+          .venv/bin/python -m infrastructure.reporting.original_job_outcome
+          --kind auxiliary --receipt output/readiness/auxiliary/receipt.json
+      - name: Stop only the owned model daemon and descendants
+        if: always()
+        shell: bash
+        run: |
+          python - <<'PYTHON'
+          import json, os, signal, subprocess, time
+          from pathlib import Path
+          def members(group):
+              rows = subprocess.check_output(["ps", "-axo", "pid=,pgid=,lstart=,stat="], text=True)
+              result = {}
+              for line in rows.splitlines():
+                  fields = line.split()
+                  if len(fields) >= 8 and int(fields[1]) == group and not fields[7].startswith("Z"):
+                      result[int(fields[0])] = " ".join(fields[2:7])
+              return result
+          directory = os.environ.get("TEMPLATE_ACCEPTANCE_MODEL_DIRECTORY")
+          owner = Path(directory) / "daemon-owner.json" if directory else None
+          if owner is not None and owner.is_file():
+              record = json.loads(owner.read_text())
+              group = record["pid"]
+              known = {int(pid): birth for pid, birth in record["members"].items()}
+              current = members(group)
+              if current:
+                  assert any(current.get(pid) == birth for pid, birth in known.items()), "Refuse an unverified or reused process group"
+                  known.update(current)
+                  os.killpg(group, signal.SIGTERM)
+                  deadline = time.monotonic() + 5
+                  while members(group) and time.monotonic() < deadline:
+                      time.sleep(0.1)
+                  current = members(group)
+                  if current:
+                      assert any(current.get(pid) == birth for pid, birth in known.items()), "Refuse a reused group during cleanup"
+                      os.killpg(group, signal.SIGKILL)
+                      deadline = time.monotonic() + 5
+                      while members(group) and time.monotonic() < deadline:
+                          time.sleep(0.1)
+                  assert not members(group), "Owned daemon descendants remain alive"
+              (Path(directory) / "daemon-cleanup.json").write_text(json.dumps({"owned_group": group, "live_members_remaining": members(group), "original_exit": 0}))
+          PYTHON
+      - name: Retain original auxiliary audit
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
+        with:
+          name: required-source-auxiliary-linux
+          path: output/readiness/auxiliary/
+          if-no-files-found: error
+          retention-days: 1
+
   native-original:
     runs-on: ubuntu-latest
     timeout-minutes: 300
@@ -373,7 +472,7 @@ jobs:
           kind: failed-native
 
   complete:
-    needs: [root-original, common-original, native-original]
+    needs: [root-original, common-original, auxiliary-original, native-original]
     if: always() && !cancelled()
     runs-on: ubuntu-latest
     timeout-minutes: 300
@@ -392,6 +491,11 @@ jobs:
         with:
           name: required-source-common
           path: output/readiness
+      - name: Read same-run original Linux auxiliary DATA
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333
+        with:
+          name: required-source-auxiliary-linux
+          path: output/readiness/auxiliary
       - name: Read same-run original macOS auxiliary DATA
         uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333
         with:

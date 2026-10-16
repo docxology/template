@@ -10,7 +10,9 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import re
 import sys
+import tomllib
 from pathlib import Path
 
 from infrastructure.core.files.secure_write import atomic_write_bytes_confined, read_bytes_confined
@@ -34,8 +36,16 @@ def main(argv: list[str] | None = None) -> int:
     if hashlib.sha256(raw).hexdigest() != args.core_wheel_sha256:
         raise ValueError("cold SDK input differs from the parent's actual Source-admitted wheel")
     reader = SnapshotReader(args.root)
+    metadata = tomllib.loads(reader.read("pyproject.toml").content.decode())
+    expected_version = metadata.get("project", {}).get("version")
+    if (
+        metadata.get("project", {}).get("name") != "research-project-template"
+        or not isinstance(expected_version, str)
+        or re.fullmatch(r"4\.\d+\.\d+", expected_version) is None
+    ):
+        raise ValueError("cold SDK capture requires genuine platform 4 Source metadata")
     requirement = Requirement(
-        "root:installed", "installed", "root", "4.0.1", "", "", package="research-project-template"
+        "root:installed", "installed", "root", expected_version, "", "", package="research-project-template"
     )
     targets, members = inspect_wheel_bytes(args.root, requirement, raw, reader=reader)
     prefix = Path(sys.pycache_prefix) if sys.pycache_prefix else None
@@ -47,10 +57,10 @@ def main(argv: list[str] | None = None) -> int:
     }
     if (
         value["binding_kind"] != "installed-distribution"
-        or value["distribution"]["version"] != "4.0.1"
+        or value["distribution"]["version"] != expected_version
         or value["files"] != expected
     ):
-        raise ValueError("cold installed SDK metadata/RECORD/body differs from actual admitted Source4.0.1")
+        raise ValueError("cold installed SDK metadata/RECORD/body differs from actual admitted Source version")
     verify_implementation_custody(value, fresh_pycache_prefix=prefix)
     if not reader.unchanged():
         raise ValueError("cold SDK capture Source changed")

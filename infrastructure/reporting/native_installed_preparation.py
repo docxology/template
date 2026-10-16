@@ -8,8 +8,10 @@ admission. The selected installed controller must independently admit those.
 from __future__ import annotations
 
 import hashlib
+import re
 import stat
 import types
+import tomllib
 from collections.abc import Mapping
 from dataclasses import dataclass
 from pathlib import Path
@@ -237,7 +239,7 @@ def prepare_native_installed_runtime(
     env: dict[str, str],
     scopes: tuple[str, ...] = PUBLIC_PROJECT_NAMES,
 ) -> NativePreparedRuntime:
-    """Build exact4.0.1 plus actual public provider wheels, then offline install.
+    """Build the exact Source SDK plus actual public provider wheels, then offline install.
 
     The outer Source harness nominates both real full-Git roots, exact commit,
     Source fingerprint and already-live clock. This function never computes and
@@ -267,8 +269,9 @@ def prepare_native_installed_runtime(
     if faults:
         raise ValueError("native preparation requires the complete valid source-owned release profile")
     lookup = {row.scope: row for row in rows if row.kind == "installed"}
-    if lookup["root"].version != "4.0.1" or lookup["root"].package != "research-project-template":
-        raise ValueError("native preparation requires genuine intended Source4.0.1 metadata")
+    expected_version = lookup["root"].version
+    if re.fullmatch(r"4\.\d+\.\d+", expected_version) is None or lookup["root"].package != "research-project-template":
+        raise ValueError("native preparation requires genuine intended platform 4 Source metadata")
     source_files, source_fixtures = admit_source_bodies(
         source_root, reader, reference, _canonical_inventory(source_root), deadline
     )
@@ -424,7 +427,7 @@ def prepare_native_installed_runtime(
         preserve_python=True,
     )
     observed = json_object_from_bytes(location["stdout"].encode())
-    if observed["version"] != "4.0.1" or observed["executable"] != str(installed_python):
+    if observed["version"] != expected_version or observed["executable"] != str(installed_python):
         raise ValueError("prepared Python selected another distribution/launcher")
     sdk = Path(observed["sdk"]).parent
     site = Path(observed["site"])
@@ -470,6 +473,9 @@ def format_prepared_implementation_capture(
     expected_hook = prepared.core_wheel.members["infrastructure/core/bytecode_audit.py"]
     if hashlib.sha256(hook).hexdigest() != expected_hook:
         raise ValueError("implementation capture hook differs from Source-admitted wheel")
+    expected_version = tomllib.loads(source_file_bytes(prepared.source_root / "pyproject.toml").decode("utf-8"))[
+        "project"
+    ]["version"]
     audit = _format_bytecode_audit_bootstrap(
         hook, prepared.sdk_package_root / "core/bytecode_audit.py", (prepared.sdk_package_root,), prefix
     )
@@ -482,8 +488,8 @@ def format_prepared_implementation_capture(
         "capture_implementation_custody,verify_implementation_custody\n"
         "from infrastructure.core.files.secure_write import atomic_write_bytes_confined\n"
         "value=capture_implementation_custody(fresh_pycache_prefix=Path(sys.pycache_prefix))\n"
-        "if value['binding_kind']!='installed-distribution' or value['distribution']['version']!='4.0.1':"
-        "raise ValueError('actual installed4.0.1 required')\n"
+        f"if value['binding_kind']!='installed-distribution' or value['distribution']['version']!={expected_version!r}:"
+        "raise ValueError('actual installed SDK must match Source version')\n"
         f"atomic_write_bytes_confined(Path({str(prepared.scratch)!r}),Path({str(destination)!r}),(json.dumps(value,sort_keys=True,separators=(',',':'))+'\\n').encode(),mode=0o600)\n"
         "verify_implementation_custody(value,fresh_pycache_prefix=Path(sys.pycache_prefix))\n"
     )

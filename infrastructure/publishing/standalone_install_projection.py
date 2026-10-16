@@ -55,49 +55,42 @@ def _git(provider: GitInstallProvider, args: list[str]) -> str:
 
 
 def _admit_provider(provider: GitInstallProvider, package: str, version: str) -> dict[str, str]:
-    from infrastructure.publishing.standalone_mirror import (
-        _verify_committed,
-        clean_source_revision,
-        validate_git_destination,
+    from infrastructure.publishing._standalone_provider_admission import (
+        _git_provider_closing_metadata,
+        _git_provider_opening,
     )
+    from infrastructure.publishing.standalone_mirror import _verify_committed
 
     checkout = provider.checkout.absolute()
     if checkout.resolve(strict=True) != checkout or not checkout.is_dir():
         raise ValueError("install provider must be a real no-follow checkout")
     if not re.fullmatch(r"[0-9a-f]{40}|[0-9a-f]{64}", provider.commit):
         raise ValueError("install provider requires its existing full commit identity")
-    if Path(_git(provider, ["rev-parse", "--show-toplevel"]).strip()).resolve() != checkout:
-        raise ValueError("install provider cannot inherit an ancestor repository")
-    if clean_source_revision(checkout, provider.commit) != provider.commit:
-        raise ValueError("install provider differs from its admitted commit")
     repository = PROVIDER_URLS[package]
-    declared = _git(provider, ["config", "--get", "remote.origin.url"]).strip()
-    if declared not in {repository, repository + ".git"}:
-        raise ValueError("install provider origin is not its canonical public repository")
-    from infrastructure.publishing.standalone_mirror import _git as actual_git
-
-    validate_git_destination(declared, lambda args: actual_git(args, checkout), require_origin=False)
+    _git_provider_opening(checkout, provider.commit, repository)
     content = read_bytes_confined(checkout, checkout / "pyproject.toml", max_bytes=4 * 1024 * 1024)
     metadata = tomllib.loads(content.decode("utf-8"))
     if normalized_name(metadata["project"]["name"]) != package or metadata["project"].get("version") != version:
         raise ValueError("install provider committed package identity/version disagrees with the source lock")
-    header, path = _git(provider, ["ls-tree", "-z", provider.commit, "--", "pyproject.toml"]).rstrip("\0").split("\t")
+    metadata_record, tree = _git_provider_closing_metadata(checkout, provider.commit)
+    header, path = metadata_record.rstrip("\0").split("\t")
     mode, kind, identity = header.split()
     if kind != "blob" or mode not in {"100644", "100755"}:
         raise ValueError("install provider metadata must be a committed regular file")
     _verify_committed(path, content, mode, {path: (mode, identity)})
-    clean_source_revision(checkout, provider.commit)
     return {
         "package": package,
         "version": version,
         "repository": repository,
         "commit": provider.commit,
-        "tree": _git(provider, ["rev-parse", f"{provider.commit}^{{tree}}"]).strip(),
+        "tree": tree,
         "metadata_sha256": hashlib.sha256(content).hexdigest(),
     }
 
 
-def _assert_canonical_original(original: Path, root: GitInstallProvider) -> tuple[str, dict[str, dict[str, Any]]]:
+def _assert_canonical_original(
+    original: Path, root: GitInstallProvider, platform_version: str
+) -> tuple[str, dict[str, dict[str, Any]]]:
     from infrastructure.publishing.standalone_mirror import populate_mirror_tree
 
     before = _records(original, _Budget())
@@ -108,7 +101,7 @@ def _assert_canonical_original(original: Path, root: GitInstallProvider) -> tupl
         manifest.get("schema_version") != 2
         or scope not in PUBLIC_PROJECT_NAMES
         or manifest.get("source_commit") != root.commit
-        or manifest.get("infrastructure_version") != "4.0.1"
+        or manifest.get("infrastructure_version") != platform_version
         or manifest.get("files")
         != {name: row["sha256"] for name, row in before.items() if name != ".template-export.json"}
     ):
@@ -207,6 +200,7 @@ def _admit_meta_provider(
             raise ValueError("Meta installation source roots must be confined explicit directories")
         # Publication extras may remain in a mirror. They cannot enlarge any
         # package tree or add conventional executable/build/license inputs.
+        committed: dict[str, tuple[str, str]] = {}
         for count, entry in enumerate(_git(meta, ["ls-tree", "-r", "-z", meta.commit]).split("\0"), start=1):
             if not entry:
                 continue
@@ -214,9 +208,12 @@ def _admit_meta_provider(
             if count > budget.limits.max_files:
                 raise ValueError("Meta committed provider exceeds its finite file inventory")
             header, name = entry.split("\t", 1)
-            mode, kind, _ = header.split()
+            mode, kind, object_identity = header.split()
             if kind != "blob" or mode not in {"100644", "100755"}:
                 raise ValueError("Meta provider requires regular committed source and publication evidence")
+            if name in committed or re.fullmatch(r"[0-9a-f]{40}|[0-9a-f]{64}", object_identity) is None:
+                raise ValueError("Meta provider has a repeated path or invalid committed object identity")
+            committed[name] = (mode, object_identity)
             install_path = Path(name)
             build_input = (
                 any(install_path.is_relative_to(source) for source in source_roots)
@@ -231,14 +228,10 @@ def _admit_meta_provider(
         for name, record in expected.items():
             if _file(checkout, name, identity, budget) != record:
                 raise ValueError("Meta provider is not the exact reviewed projection of this Root revision")
-            header, path = _git(meta, ["ls-tree", "-z", meta.commit, "--", name]).rstrip("\0").split("\t")
-            mode, kind, object_identity = header.split()
-            if kind != "blob":
-                raise ValueError("Meta projection has an unsupported committed provider")
             content = read_bytes_confined(checkout, checkout / name, max_bytes=64 * 1024 * 1024)
-            _verify_committed(
-                path, content, "100755" if record["mode"] == 0o755 else "100644", {path: (mode, object_identity)}
-            )
+            # Reuse only this admission's full committed tree. Physical bytes,
+            # modes and closing provider admission are still checked afresh.
+            _verify_committed(name, content, "100755" if record["mode"] == 0o755 else "100644", committed)
     if _admit_provider(meta, META_PACKAGE, version) != admitted:
         raise ValueError("Meta provider changed during projection admission")
     return admitted
@@ -247,8 +240,13 @@ def _admit_meta_provider(
 def _expected(
     original: Path, root: GitInstallProvider, meta: GitInstallProvider | None
 ) -> tuple[dict[str, Any], dict[str, bytes]]:
-    platform = _admit_provider(root, ROOT_PACKAGE, "4.0.1")
-    scope, records = _assert_canonical_original(original, root)
+    from infrastructure.publishing.root_release_contract import root_package_version
+
+    platform_version = root_package_version(root.checkout)
+    if re.fullmatch(r"4\.\d+\.\d+", platform_version) is None:
+        raise ValueError("installation projection requires genuine platform 4 Source metadata")
+    platform = _admit_provider(root, ROOT_PACKAGE, platform_version)
+    scope, records = _assert_canonical_original(original, root, platform_version)
     versions = checkout_providers(
         read_bytes_confined(original, original / "pyproject.toml", max_bytes=4 * 1024 * 1024),
         read_bytes_confined(original, original / "uv.lock", max_bytes=64 * 1024 * 1024),
@@ -266,7 +264,7 @@ def _expected(
     if META_PACKAGE in pins:
         if meta is None or _admit_meta_provider(meta, root, platform, "0.2.0") != pins[META_PACKAGE]:
             raise ValueError("Meta provider changed while preparing installation fields")
-    if _admit_provider(root, ROOT_PACKAGE, "4.0.1") != platform:
+    if _admit_provider(root, ROOT_PACKAGE, platform_version) != platform:
         raise ValueError("Root provider changed during installation projection")
     return manifest, edits
 

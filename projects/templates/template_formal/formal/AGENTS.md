@@ -34,7 +34,7 @@ The shell wrapper starts the optional platform-backed `_tool_launcher.py`
 filesystem main. Its controller uses a private fresh cache; its supervised
 worker additionally receives the platform pre-import executed-code audit before
 calling `template_formal.tool_acceptance`. The domain package stays standalone;
-the direct tool command requires the `formal-tools` platform4.0.1 extra and
+the direct tool command requires the `formal-tools` platform4.0.2 extra and
 blocks75 if it is unavailable. It uses the
 exact source-owned Lean4.35.0 and dependency-free Lake manifest, then freshly
 elaborates `AntProtocol.lean` and checks all seven printed axiom audits. TLC

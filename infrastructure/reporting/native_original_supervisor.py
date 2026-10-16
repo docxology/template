@@ -13,6 +13,7 @@ import time
 from pathlib import Path
 from typing import Any
 
+from infrastructure.core.pipeline.fingerprints import canonical_digest
 from infrastructure.project.public_reference_git import remaining
 from infrastructure.reporting.native_format_acceptance_contracts import PROCESS_SCHEMA
 from infrastructure.reporting.native_format_joint_source import (
@@ -30,6 +31,12 @@ from infrastructure.reporting.release_readiness_snapshot import ArtifactSnapshot
 
 
 from infrastructure.reporting.native_full_worker_pdfium import NativePDFiumProvider
+
+
+def _worker_environment(environment: dict[str, str]) -> tuple[dict[str, str], str]:
+    """Hold the exact Source map passed to Popen and its existing DATA digest."""
+    selected = dict(environment)
+    return selected, canonical_digest(selected)
 
 
 class NativeOriginalSupervisor:
@@ -104,12 +111,13 @@ class NativeOriginalSupervisor:
             raise ValueError("native original supervisor cannot launch twice")
         self._verify()
         before = native_host_observation()
+        selected_environment, environment_digest = _worker_environment(environment)
         result = run_native_tool_process(
             directory,
             self.command[0],
             list(self.command[1:]),
             cwd=self.root,
-            env=environment,
+            env=selected_environment,
             deadline=self.deadline,
             purpose="original-native-worker",
             preserve_nominated_launcher=True,
@@ -142,6 +150,7 @@ class NativeOriginalSupervisor:
             "run_id": self.source.bindings.run_id,
             "command": list(self.command),
             "selected_interpreter": self.command[0],
+            "environment_digest": environment_digest,
             "source_environment": source_environment(self.source),
             "sdk_closure_artifact": None,
             "completed_monotonic": self._completion,

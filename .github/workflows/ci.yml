@@ -88,51 +88,130 @@ jobs:
     timeout-minutes: 5
     outputs:
       matrix: ${{ steps.matrix.outputs.matrix }}
+      infra: ${{ steps.matrix.outputs.infra }}
+      contracts: ${{ steps.matrix.outputs.contracts }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
       - uses: ./.github/actions/setup-python-env
       - run: uv sync --locked
       - name: Validate public templates and smoke roster
         id: matrix
+        env:
+          CI_EVENT: ${{ github.event_name }}
+          CI_BASE: ${{ github.event.pull_request.base.sha || github.event.before }}
         run: |
           set -euo pipefail
           uv run python scripts/gates/public_capabilities.py --ci-matrix-json > /dev/null
-          echo "matrix=$(uv run python scripts/gates/ci_smoke.py --matrix)" >> "$GITHUB_OUTPUT"
+          uv run python -m infrastructure.core.testing.ci_selection --output functional-selection.json >> "$GITHUB_OUTPUT"
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: functional-selection
+          path: functional-selection.json
+          if-no-files-found: error
 
   test-infra:
-    name: Infrastructure Smoke
+    name: "Infrastructure Smoke (${{ matrix.shard }})"
+    needs: detect-projects
     runs-on: ubuntu-latest
     timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix: ${{ fromJSON(needs.detect-projects.outputs.infra) }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: ./.github/actions/setup-python-env
+        with:
+          dependency-group: installed-build
       - run: uv sync --locked --group installed-build
       - uses: ./.github/actions/setup-meta-provider
-      - name: Run pipeline and CI behavior tests
+      - name: Prepare genuine PDF raster tools for behavioral controls
         run: |
-          uv run python - <<'PYTHON'
-          import subprocess, sys
-          from pathlib import Path
-          from infrastructure.core.testing.pytest_orchestration import resolve_infrastructure_test_paths
-          paths = resolve_infrastructure_test_paths(Path.cwd(), "pipeline-smoke")
-          paths.extend([
-              "tests/infra_tests/core/test_ci_smoke.py",
-              "tests/infra_tests/core/test_secure_write.py",
-              "tests/infra_tests/config/test_acceptance_model.py",
-              "tests/infra_tests/project/test_distribution_contract.py",
-              "tests/infra_tests/project/test_acceptance_fixture_preparation.py",
-              "tests/infra_tests/project/test_public_source_body_admission.py",
-              "tests/infra_tests/reporting/test_native_tex_root_admission.py",
-              "tests/infra_tests/reporting/test_native_installed_preparation_source.py",
-              "tests/infra_tests/rendering/test_literature_hydration.py",
-              "tests/infra_tests/rendering/test_shared_web_fonts.py",
-              "tests/infra_tests/rendering/test_latex_texttt.py",
-          ])
-          raise SystemExit(subprocess.run([
-              sys.executable, "-m", "pytest", *paths, "--no-cov", "-q",
-              "--timeout=60", "--benchmark-disable",
-          ], check=False).returncode)
-          PYTHON
+          set -euo pipefail
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends poppler-utils
+          pdftoppm -v
+          pdffonts -v
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: functional-selection
+      - name: Run exact functional shard with original pytest observations
+        env:
+          SHARD: ${{ matrix.shard }}
+        run: |
+          .venv/bin/python -m infrastructure.core.testing.ci_infra \
+            --plan functional-selection.json --shard "$SHARD" \
+            --directory "output/readiness/functional-infra/shard-$SHARD"
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        if: always()
+        with:
+          name: functional-infra-${{ matrix.shard }}
+          path: output/readiness/functional-infra/
+          if-no-files-found: error
+
+  test-contract:
+    name: "Changed contract (${{ matrix.module }})"
+    needs: detect-projects
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    strategy:
+      fail-fast: false
+      max-parallel: 3
+      matrix: ${{ fromJSON(needs.detect-projects.outputs.contracts) }}
+    steps:
+      - name: Explicit no changed deep contract module
+        if: matrix.shard == -1
+        run: echo "No selected deep contract module; full release acceptance remains separate."
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        if: matrix.shard != -1
+        with:
+          submodules: true
+      - uses: ./.github/actions/setup-python-env
+        if: matrix.shard != -1
+        with:
+          dependency-group: installed-build
+      - run: uv sync --locked --group installed-build
+        if: matrix.shard != -1
+      - uses: ./.github/actions/setup-meta-provider
+        if: matrix.shard != -1
+      - name: Prepare actual auxiliary PDF producers and readers
+        if: matrix.module == 'tests/infra_tests/project/test_public_acceptance_auxiliary.py'
+        uses: ./.github/actions/setup-acceptance-documents
+        with:
+          mode: native
+      - name: Warm locked offline wheels for native portability
+        if: matrix.module == 'tests/infra_tests/reporting/test_native_whole_portability.py'
+        timeout-minutes: 10
+        run: |
+          set -euo pipefail
+          # A restored .venv does not supply the fresh offline fixture's wheel cache.
+          # Match that fixture's Root lock, default groups and dev group exactly.
+          unset UV_FROZEN
+          native_contract_scratch=$(mktemp -d "$RUNNER_TEMP/native-contract-warm.XXXXXX")
+          df -h "$RUNNER_TEMP"
+          UV_PROJECT_ENVIRONMENT="$native_contract_scratch/venv" \
+            uv sync --locked --group dev --no-python-downloads --python .venv/bin/python
+          rm -r -- "$native_contract_scratch"
+          df -h "$RUNNER_TEMP"
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        if: matrix.shard != -1
+        with:
+          name: functional-selection
+      - name: Run one complete changed contract module with declared markers
+        if: matrix.shard != -1
+        env:
+          SHARD: ${{ matrix.shard }}
+        run: |
+          .venv/bin/python -m infrastructure.core.testing.ci_infra \
+            --plan functional-selection.json --shard "$SHARD" \
+            --directory "output/readiness/functional-infra/contract-$SHARD"
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        if: always() && matrix.shard != -1
+        with:
+          name: functional-infra-contract-${{ matrix.shard }}
+          path: output/readiness/functional-infra/
+          if-no-files-found: error
 
   test-project:
     name: "Project Smoke (${{ matrix.project }})"
@@ -145,6 +224,8 @@ jobs:
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: ./.github/actions/setup-python-env
+        with:
+          dependency-group: installed-build
       - run: uv sync --locked --group installed-build
       - name: Build the standalone project wheel
         env:
@@ -160,136 +241,29 @@ jobs:
           mode: converter
       - name: Run focused behavioral tests
         env:
+          TEMPLATE_CI_JUNIT_DIRECTORY: ${{ runner.temp }}/functional-project
           PROJECT: ${{ matrix.project }}
         run: .venv/bin/python scripts/gates/ci_smoke.py --project "$PROJECT"
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        if: always()
+        with:
+          name: functional-project-junit-${{ strategy.job-index }}
+          path: ${{ runner.temp }}/functional-project/
+          if-no-files-found: error
 
   own-exemplar-coverage:
     name: Requested exemplar coverage
     if: github.event_name == 'workflow_dispatch' && inputs.coverage-project != ''
-    runs-on: ubuntu-latest
-    timeout-minutes: 135
-    env:
-      COVERAGE_PROJECT: ${{ inputs.coverage-project }}
-    steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          submodules: true
-          persist-credentials: false
-      - uses: ./.github/actions/setup-python-env
-      - run: uv sync --locked --group installed-build
-      - name: Validate the requested public project
-        run: |
-          .venv/bin/python - <<'PYTHON'
-          import os
-          from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
-          if os.environ["COVERAGE_PROJECT"] not in PUBLIC_PROJECT_NAMES:
-              raise SystemExit("coverage-project must be an exact canonical public qualified name")
-          PYTHON
-      - name: Prepare the own locked development environment
-        run: |
-          .venv/bin/python - <<'PYTHON'
-          import os, subprocess
-          from pathlib import Path
-          project = os.environ["COVERAGE_PROJECT"]
-          command = ["uv", "sync", "--project", str(Path("projects") / project),
-                     "--locked", "--extra", "dev", "--python", ".venv/bin/python"]
-          if project == "templates/template_formal":
-              command.extend(["--extra", "formal-tools"])
-          subprocess.run(command, check=True)
-          PYTHON
-      - name: Warm the exact Autoresearch standalone dependencies
-        if: inputs.coverage-project == 'templates/template_autoresearch_project'
-        timeout-minutes: 5
-        run: |
-          set -euo pipefail
-          uv export --locked --only-group installed-build --no-emit-project --no-emit-local \
-            --no-header --no-annotate --output-file "$RUNNER_TEMP/autoresearch-build-requirements.txt"
-          uv export --project projects/templates/template_autoresearch_project \
-            --locked --no-default-groups --no-emit-project --no-emit-local \
-            --no-header --no-annotate --output-file "$RUNNER_TEMP/autoresearch-runtime-requirements.txt"
-          for kind in build runtime; do
-            uv venv --no-project --no-python-downloads --python .venv/bin/python \
-              "$RUNNER_TEMP/autoresearch-$kind-preparation"
-            uv pip sync --no-config --no-build --require-hashes \
-              --python "$RUNNER_TEMP/autoresearch-$kind-preparation/bin/python" \
-              "$RUNNER_TEMP/autoresearch-$kind-requirements.txt"
-          done
-      - uses: ./.github/actions/setup-meta-provider
-        if: inputs.coverage-project == 'templates/template_advanced_literature_review'
-        with:
-          python-executable: projects/${{ inputs.coverage-project }}/.venv/bin/python
-      - uses: ./.github/actions/setup-acceptance-documents
-        with:
-          mode: ${{ inputs.coverage-project == 'templates/template_eda_notebook' && 'native' || 'converter' }}
-      - name: Prepare the selected pinned Lean toolchain
-        if: inputs.coverage-project == 'templates/template_active_inference' || inputs.coverage-project == 'templates/template_formal'
-        timeout-minutes: 15
-        run: |
-          set -euo pipefail
-          curl --fail --location --retry 2 --max-time 60 \
-            https://raw.githubusercontent.com/leanprover/elan/58e8d545e33641f66dbcbd22c4283109e71757be/elan-init.sh \
-            -o "$RUNNER_TEMP/elan-init.sh"
-          echo "4bacca9502cb89736fe63d2685abc2947cfbf34dc87673504f1bb4c43eda9264  $RUNNER_TEMP/elan-init.sh" | sha256sum --check --status
-          sh "$RUNNER_TEMP/elan-init.sh" -y --default-toolchain none
-          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
-          if [ "$COVERAGE_PROJECT" = templates/template_formal ]; then
-            pin=projects/templates/template_formal/formal/lean/lean-toolchain
-          else
-            pin=projects/templates/template_active_inference/lean/lean-toolchain
-          fi
-          "$HOME/.elan/bin/elan" toolchain install "$(tr -d '[:space:]' < "$pin")"
-          if [ "$COVERAGE_PROJECT" = templates/template_formal ]; then java -version; fi
-      - name: Acquire and verify Formal's exact declared tools
-        if: inputs.coverage-project == 'templates/template_formal'
-        timeout-minutes: 10
-        run: >-
-          projects/templates/template_formal/.venv/bin/python
-          -m template_formal.tool_acceptance
-          --project-root "$PWD/projects/templates/template_formal"
-          --timeout 300 --acquire
-      - name: Prepare the pinned SIA sandbox image
-        if: inputs.coverage-project == 'templates/template_sia'
-        env:
-          SIA_SANDBOX_IMAGE: python@sha256:51dafde81dbdb6ebde285137a295cf18a47ca95234fe388a343719cb97305b3d
-        run: |
-          set -euo pipefail
-          docker pull "$SIA_SANDBOX_IMAGE"
-          docker image inspect "$SIA_SANDBOX_IMAGE" --format '{{.Id}}'
-          echo "TEMPLATE_SIA_TEST_IMAGE=$SIA_SANDBOX_IMAGE" >> "$GITHUB_ENV"
-      - name: Measure the complete own release-profile coverage
-        run: |
-          .venv/bin/python - <<'PYTHON'
-          import json, os, subprocess
-          from pathlib import Path
-          from infrastructure.documentation.counts_coverage import exemplar_source_hash, measure_exemplar_coverage
-          root = Path.cwd()
-          project = os.environ["COVERAGE_PROJECT"]
-          name = Path(project).name
-          source_hash = exemplar_source_hash(root, name)
-          measured = measure_exemplar_coverage(root, name)
-          if exemplar_source_hash(root, name) != source_hash:
-              raise SystemExit("coverage inputs changed during the measurement")
-          output = root / "output/readiness/requested-exemplar-coverage.json"
-          output.parent.mkdir(parents=True, exist_ok=True)
-          output.write_text(json.dumps({
-              "schema_version": "template-requested-exemplar-coverage/v1",
-              "project": project, "profile": "release",
-              "source_commit": subprocess.check_output(["git", "rev-parse", "HEAD"], text=True).strip(),
-              "source_hash": source_hash, "coverage_pct": measured,
-          }, indent=2, sort_keys=True) + "\n")
-          print(output.read_text())
-          PYTHON
-      - name: Retain the requested measurement
-        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
-        with:
-          name: requested-exemplar-coverage
-          path: output/readiness/requested-exemplar-coverage.json
-          if-no-files-found: error
+    uses: ./.github/workflows/exemplar-coverage.yml
+    permissions:
+      contents: read
+    with:
+      coverage-project: ${{ inputs.coverage-project }}
 
   ci-gate:
     name: CI Gate
     if: always()
-    needs: [actionlint, lint, detect-projects, test-infra, test-project, own-exemplar-coverage]
+    needs: [actionlint, lint, detect-projects, test-infra, test-contract, test-project, own-exemplar-coverage]
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
@@ -305,8 +279,22 @@ jobs:
           esac
           jq -e --arg requested "$COVERAGE_REQUESTED" '
             type == "object"
-            and keys == ["actionlint", "detect-projects", "lint", "own-exemplar-coverage", "test-infra", "test-project"]
+            and keys == ["actionlint", "detect-projects", "lint", "own-exemplar-coverage", "test-contract", "test-infra", "test-project"]
             and (del(."own-exemplar-coverage") | all(.[]; .result == "success"))
             and (."own-exemplar-coverage".result == (if $requested == "true" then "success" else "skipped" end))
           ' <<< "$NEEDS_JSON"
           echo "CI Gate passed for the functional jobs and declared coverage request." >> "$GITHUB_STEP_SUMMARY"
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: ./.github/actions/setup-python-env
+      - run: uv sync --locked
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: functional-selection
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          pattern: functional-infra-*
+          path: functional-infra-receipts
+      - name: Require complete disjoint functional member receipts
+        run: |
+          .venv/bin/python -m infrastructure.core.testing.ci_infra \
+            --plan functional-selection.json --directory functional-infra-receipts

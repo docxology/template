@@ -227,7 +227,7 @@ print(prefix+'END',flush=True)
 _ADMISSION_STREAM = """
 import codecs,json,os,re,signal,subprocess,sys,threading
 prefix=sys.argv[1]
-def read(label,args,observe=None,expected=()):
+def read(label,args,observe=None,expected=(),identity_limit=512):
     print(prefix+label,flush=True)
     read_fd,write_fd=os.pipe()
     identity=bytearray()
@@ -274,7 +274,7 @@ def read(label,args,observe=None,expected=()):
                     sys.stdout.buffer.write(chunk)
                     sys.stdout.buffer.flush()
                     if observe=='identity':
-                        remaining=512-len(identity)
+                        remaining=identity_limit-len(identity)
                         identity.extend(chunk[:remaining])
                         invalid_identity=invalid_identity or len(chunk)>remaining
                     elif observe in ('status','probe'):

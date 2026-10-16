@@ -109,7 +109,7 @@ def _assert_provider_observations(project: Path, *, minimum: int) -> None:
     observations = sorted((project / "provider-observations").glob("*.json"))
     assert len(observations) >= minimum
     expected = _provider_identity()
-    assert expected["version"] == "4.0.1"
+    assert expected["version"] == "4.0.2"
     assert all(json.loads(path.read_text()) == expected for path in observations)
 
 
@@ -185,7 +185,7 @@ def test_review_child_uses_selected_provider_without_ambient_startup_code(tmp_pa
     summary, exit_code, _ = ensure_review_summary(project, project / "output/.pipeline/review")
     assert exit_code == 0 and not marker.exists()
     assert summary["provider"] == _provider_identity()
-    assert summary["provider"]["version"] == "4.0.1"
+    assert summary["provider"]["version"] == "4.0.2"
 
 
 def test_real_standalone_review_runs_infra_and_custom_stages_and_rejects_domain_fault(tmp_path):

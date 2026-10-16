@@ -23,13 +23,16 @@ no runtime configuration, security file or bundle dependency is omitted.
 Browser math inputs are prepared or independently inspected as Source DATA.
 Temporary cache-warming environments contain only Root-locked dependencies;
 independent project locks are preserved.
-The documentation setup installs the Source-declared npm serializer. Native
+The documentation setup selects Node 24.22.0 LTS and installs the
+Source-declared npm serializer. The current native Mermaid11 profile requires
+actual Node 24 in both original version proofs and live loaded-library reports;
+earlier Node 20 proofs cannot qualify this profile. Native
 preparation checks every installed hidden-lock row against the unchanged
 committed lock before provisioning the remaining tools. The actual native
 operation repeats its own full dependency, byte and custody admission.
 
 The cold launcher subsequently builds and freezes all 25 project wheels plus the
-4.0.1 SDK, selects a fresh installed runtime and independently admits actual
+Source-declared SDK, selects a fresh installed runtime and independently admits actual
 providers. Tool preparation or cached bytes alone establish no native or release
 acceptance. Failures block the calling job.
 

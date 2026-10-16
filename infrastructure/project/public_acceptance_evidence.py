@@ -180,6 +180,7 @@ def bootstrap_command(
     command_root: Path | None = None,
     implementation_root: Path | None = None,
     command_audit_roots: tuple[Path, ...] | None = None,
+    fresh_pycache_prefix: Path | None = None,
 ) -> tuple[str, ...]:
     """Use the exact interpreter with isolated startup and explicit trusted source."""
     from infrastructure.core.implementation_custody import bytecode_audit_bootstrap, _format_bytecode_audit_bootstrap
@@ -218,10 +219,33 @@ def bootstrap_command(
         raw = read_bytes_confined(hook.parent, hook, max_bytes=1024 * 1024)
         audit = _format_bytecode_audit_bootstrap(raw, origin / "core/bytecode_audit.py", projected, None)
         root = command_root
-    bootstrap = (
+    cache_header = (
         "import runpy,sys,tempfile\nfrom pathlib import Path\n"
         "with tempfile.TemporaryDirectory(prefix='template-acceptance-bytecode-') as cache:\n"
-        " sys.pycache_prefix=str(Path(cache).resolve())\n"
+    )
+    if fresh_pycache_prefix is not None:
+        if (
+            not isinstance(fresh_pycache_prefix, Path)
+            or not fresh_pycache_prefix.is_absolute()
+            or ".." in fresh_pycache_prefix.parts
+            or str(fresh_pycache_prefix) != os.path.normpath(str(fresh_pycache_prefix))
+        ):
+            raise ValueError("fresh bytecode prefix requires an absolute canonical path")
+        # Generation is also used for portable readback after cleanup. Only the
+        # actual child checks physical freshness; a path string grants no custody.
+        cache_header = (
+            "import runpy,sys,os,stat\nfrom pathlib import Path\n"
+            f"cache={str(fresh_pycache_prefix)!r}\n"
+            "if True:\n"
+            " prefix=Path(cache); metadata=prefix.lstat()\n"
+            " if prefix.resolve(strict=True)!=prefix or not stat.S_ISDIR(metadata.st_mode) "
+            "or metadata.st_uid!=os.getuid() or stat.S_IMODE(metadata.st_mode)!=0o700 "
+            "or any(prefix.iterdir()):\n"
+            "  raise ValueError('fresh bytecode prefix is not an empty private owned directory')\n"
+        )
+    bootstrap = (
+        cache_header
+        + " sys.pycache_prefix=str(Path(cache).resolve())\n"
         + "\n".join(" " + line for line in audit.splitlines())
         + "\n"
         # A wheel-backed caller must keep its admitted implementation when the

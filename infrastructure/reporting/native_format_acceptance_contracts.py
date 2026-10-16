@@ -148,7 +148,11 @@ def native_environment(root: Path, interpreter: Path, directory: Path) -> dict[s
     from infrastructure.core.execution_boundary import build_bounded_env
     from infrastructure.project.public_acceptance_evidence import cell_environment
 
-    env = build_bounded_env(cell_environment(interpreter, directory, repo_root=root))
+    selected = cell_environment(interpreter, directory, repo_root=root)
+    # The cold mirror deliberately has no inferred .venv. This actual selected
+    # launcher owns Root setup as well as its downstream core stages.
+    selected["TEMPLATE_ROOT_PYTHON"] = str(interpreter)
+    env = build_bounded_env(selected)
     for key in tuple(env):
         if key in SOURCE_RENDER_ENV_NAMES or key.startswith("SLIDES_"):
             env.pop(key)

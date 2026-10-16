@@ -23,7 +23,7 @@ dependencies = [
 
 [project.optional-dependencies]
 formal-tools = [
-    "research-project-template==4.0.1",
+    "research-project-template==4.0.2",
 ]
 dev = [
     "pytest>=7.4.0",
@@ -77,6 +77,6 @@ research-project-template = { path = "../../..", editable = true }
 
 # Compatibility contract for this independent exemplar release.
 [tool.template]
-platform_version = "4.0.1"
+platform_version = "4.0.2"
 tested_python_versions = ["3.12", "3.13", "3.14"]
 required_unpaid_capabilities = ["network-faults", "lean", "tlc"]

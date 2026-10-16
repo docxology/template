@@ -309,7 +309,7 @@
     {
       "contract_match": true,
       "path": "output/data/artifact_provenance.json",
-      "sha256": "ca2c0f7fd65d39c5812aa2f5f021da9a9a009373519a239f9e11cf4fff4c93f7",
+      "sha256": "de221f4d57326a9544cfa3b5b2d340db2f7d104665af1ff6c2a5c9586a0414fa",
       "size_bytes": 194783,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
@@ -1101,7 +1101,7 @@
     {
       "contract_match": true,
       "path": "output/manuscript/config.yaml",
-      "sha256": "7e681ee703e8f1892ccca141aa5901965425eb3751f9a6e0fd9fe4e779524d40",
+      "sha256": "824d6806970778d998630fed537d806b73788f316c6554b00cb0a23fea793f2c",
       "size_bytes": 2888,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
@@ -1128,8 +1128,8 @@
     {
       "contract_match": true,
       "path": "output/pdf/template_active_inference_combined.pdf",
-      "sha256": "522759bc2977edaeb74f7a9399c5d8ba56d15b90a59e913d85e19268431337b7",
-      "size_bytes": 4225483,
+      "sha256": "3a328d34099a997d062e1930fb275440aa512e9012920e500040c2370879a834",
+      "size_bytes": 4225833,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
@@ -1326,7 +1326,7 @@
     {
       "contract_match": true,
       "path": "output/reports/replay_matrix.json",
-      "sha256": "2e3065acfdedb3f6b13c5f89f6551e1f8fd780c4856116fe82a4689b078e499f",
+      "sha256": "0732ab6fe1f56220f404699805845f529627529ceaaf881b17975f2a3df05e56",
       "size_bytes": 27762,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,

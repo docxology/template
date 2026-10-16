@@ -39,6 +39,7 @@ from infrastructure.project.installed_acceptance_runtime import (
     local_dependency_closure,
 )
 from infrastructure.project.installed_acceptance_worker import _environment, _run
+from infrastructure.project.acceptance_payload import format_acceptance_payload_loader, write_acceptance_payload
 from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
 from infrastructure.reporting.release_readiness_profile import Requirement
 from infrastructure.reporting.native_installed_preparation import native_runtime_export_command
@@ -325,6 +326,7 @@ def installed_environment(tmp_path: Path) -> tuple[Path, Requirement, Path, dict
     requirement, wheel, members = _wheel(root)
     environment = tmp_path / "environment"
     env = _environment(Path(sys.executable), tmp_path)
+    env["UV_LINK_MODE"] = "copy"
     uv = shutil.which("uv")
     assert uv is not None
     commands = [
@@ -398,6 +400,12 @@ def _probe(
         "prefix": str(bytecode),
         "sha256": hashlib.sha256(hook).hexdigest(),
     }
+    spec["probe_payload"] = write_acceptance_payload(
+        outside,
+        outside / "installed-probe-payload.py",
+        (audit + "\n" + INSTALLED_PROBE).encode(),
+        forbidden_roots=(root,),
+    )
     (outside / "spec.json").write_text(json.dumps(spec, sort_keys=True))
     command = (
         str(environment / "bin/python"),
@@ -405,7 +413,7 @@ def _probe(
         "-X",
         f"pycache_prefix={bytecode}",
         "-c",
-        audit + "\n" + INSTALLED_PROBE,
+        format_acceptance_payload_loader(spec["probe_payload"]),
         str(outside / "spec.json"),
         str(observation),
     )
@@ -453,6 +461,9 @@ def test_actual_installed_cell_reader_requires_bound_process_and_complete_minor_
         "runtime_artifact": bound("probe.json", observation.read_bytes()),
         "process_artifact": bound("process.json", json.dumps(process).encode()),
         "probe_spec_artifact": bound("spec.json", json.dumps(spec).encode()),
+        "probe_payload_artifact": bound(
+            "installed-probe-payload.py", (outside / "installed-probe-payload.py").read_bytes()
+        ),
         "selected_interpreter_sha256": raw["interpreter_sha256"],
         "command": process["command"],
     }
@@ -462,6 +473,45 @@ def test_actual_installed_cell_reader_requires_bound_process_and_complete_minor_
         forged = bound("bad-process.json", json.dumps({**process, **change}).encode())
         with pytest.raises(ValueError, match="successful bound isolated child process"):
             _cell(requirement, {**cell, "details": {**details, "process_artifact": forged}}, SnapshotReader(root))
+    payload_body = (outside / "installed-probe-payload.py").read_bytes()
+    for filename, body, diagnostic in (
+        ("installed-probe-payload.py", payload_body + b"\n# changed retained body\n", "regenerated Source body"),
+        ("alternate-payload.py", payload_body, "fixed evidence path"),
+    ):
+        with pytest.raises(ValueError, match=diagnostic):
+            _cell(
+                requirement,
+                {**cell, "details": {**details, "probe_payload_artifact": bound(filename, body)}},
+                SnapshotReader(root),
+            )
+    # Restore the canonical retained artifact after the intentionally wrong body.
+    bound("installed-probe-payload.py", payload_body)
+    for change in ("path", "hash", "identity"):
+        payload = {**spec["probe_payload"]}
+        if change == "path":
+            payload["path"] = str(outside / "foreign.py")
+        elif change == "hash":
+            payload["sha256"] = "0" * 64
+        else:
+            payload["identity"] = {**payload["identity"], "inode": payload["identity"]["inode"] + 1}
+        wrong_spec = {**spec, "probe_payload": payload}
+        wrong_spec_binding = bound("wrong-spec.json", json.dumps(wrong_spec).encode())
+        wrong_raw = {**raw, "probe_spec_sha256": wrong_spec_binding["sha256"]}
+        with pytest.raises(
+            ValueError, match="Source body or fixed outside path|successful bound isolated child process"
+        ):
+            _cell(
+                requirement,
+                {
+                    **cell,
+                    "details": {
+                        **details,
+                        "probe_spec_artifact": wrong_spec_binding,
+                        "runtime_artifact": bound("wrong-probe.json", json.dumps(wrong_raw).encode()),
+                    },
+                },
+                SnapshotReader(root),
+            )
     # This real different zero-exit child reaches no probe but retains the
     # earlier actual positive observation. A suffix match cannot bind it.
     early_command = list(process["command"])

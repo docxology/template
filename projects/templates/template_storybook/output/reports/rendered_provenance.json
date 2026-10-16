@@ -55,7 +55,7 @@
     },
     "validation_report": {
       "path": "output/reports/validation_report.json",
-      "sha256": "9bccc99b8888a3e36c71f7250411f3edb4275c5fd7090af3b04c98100e46c652",
+      "sha256": "e4dda3db35c1ccfec6cd64bd9147592b9ac7ddbf33427855473d55cbe156f4a7",
       "size_bytes": 9762
     }
   },
@@ -63,7 +63,7 @@
   "fingerprints": {
     "config": {
       "file_count": 15,
-      "sha256": "6de57fbf405f0c5d57f7bc5f8aa1c08ea6cbb19d8155e11b96954d64dbcfc454"
+      "sha256": "2f4c2e6c78ee9dc85f6901d70dae4f8a71b6593750cc1b72cedf8125e8ef0e28"
     },
     "output": {
       "file_count": 37,
@@ -74,8 +74,8 @@
       "sha256": "5e2252c9831dbe5a4f6f5778c880f1e01a33e7670938ec454e0a45aa2fe72fc0"
     },
     "stage": {
-      "file_count": 1865,
-      "sha256": "71351f0a2e913e3a1dd2c87bc3599093b38c5ce5e6c1f54b23409299d42e41fa"
+      "file_count": 1891,
+      "sha256": "43779611664fa8fbd5f382f9877cefb7ad712275a024ffd0628d1b94037c80b6"
     }
   },
   "project": "templates/template_storybook",

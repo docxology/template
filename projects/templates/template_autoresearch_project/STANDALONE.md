@@ -75,16 +75,16 @@ provide authoring scaffolds rather than evidence for such a fork.
 ## Full-suite source integration
 
 The whole test suite needs an explicitly selected platform source checkout in
-addition to the genuine installed `research-project-template==4.0.1` package.
+addition to the genuine installed `research-project-template==4.0.2` package.
 Source integration reads the platform DAG and canonical configuration and
 builds the actual platform wheel for its separate installed-origin controls.
 The seed export excludes generated output; the session loop regenerates the
 output used by artifact assertions in an isolated copy.
 
-After platform 4.0.1 has been integrated and pushed, clone the actual public
+After platform 4.0.2 has been integrated and pushed, clone the actual public
 platform revision recorded for the export into a separate directory. Check it
 out by its complete commit ID and verify that its root package metadata says
-4.0.1. Use that platform commit, rather than the standalone repository's commit:
+4.0.2. Use that platform commit, rather than the standalone repository's commit:
 
 ```bash
 export TEMPLATE_AUTORESEARCH_SOURCE_ROOT="/absolute/path/to/platform-source"
@@ -94,7 +94,7 @@ git -C "$TEMPLATE_AUTORESEARCH_SOURCE_ROOT" status --short
 ```
 
 Prepare an independent project environment with this project's locked runtime
-and `dev` dependencies and an actual platform 4.0.1 wheel built from that
+and `dev` dependencies and an actual platform 4.0.2 wheel built from that
 checkout. Do not resolve the tracked monorepo convenience entry
 `[tool.uv.sources] research-project-template.path = '../../..'` from a
 standalone clone. Export the locked project requirements from the canonical

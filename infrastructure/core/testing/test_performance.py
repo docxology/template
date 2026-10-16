@@ -13,11 +13,16 @@ from dataclasses import asdict, dataclass
 from pathlib import Path
 from time import monotonic
 from typing import Literal, Sequence
+from uuid import uuid4
+import os
+import math
+
+from infrastructure.core.testing.pytest_observations import DIRECTORY_ENV, NONCE_ENV, ROOT_ENV, read_execution_receipts
 
 from infrastructure.core.testing.pytest_orchestration import resolve_project_matrix_workers
 
 TestBenchmarkTarget = Literal["pipeline-smoke", "infrastructure", "public-projects"]
-TEST_BENCHMARK_SCHEMA = "template-test-performance-v1"
+TEST_BENCHMARK_SCHEMA = "template-test-performance-v2"
 _ABSOLUTE_PATH_RE = re.compile(r"(?<![\w])(?:/(?:[^/\s]+/)*[^/\s]+|[A-Za-z]:\\(?:[^\\\s]+\\)*[^\\\s]+)")
 
 
@@ -38,6 +43,8 @@ class TestRunSummary:
     wall_elapsed_seconds: float
     repo_commit: str
     output_tail: str = ""
+    outcomes: tuple[str, ...] = ()
+    cache_state: str = "cold-workspace"
 
 
 @dataclass(frozen=True)
@@ -60,6 +67,8 @@ class TestPerformanceManifest:
     clean_checkout: bool
     both_runs_passed: bool
     acceptance_passed: bool
+    additional_runs: tuple[TestRunSummary, ...]
+    cold_and_warm_verified: bool
 
     def to_dict(self) -> dict[str, object]:
         """Serialize the manifest with stable nested dataclass fields."""
@@ -72,6 +81,8 @@ class TestPerformanceManifest:
             lane_payload = payload.get(lane)
             if isinstance(lane_payload, dict):
                 lane_payload.pop("output_tail", None)
+        for extra in payload.get("additional_runs", ()):
+            extra.pop("output_tail", None)
         for argv_key in ("serial_argv", "parallel_argv"):
             argv = payload.get(argv_key)
             if isinstance(argv, (list, tuple)):
@@ -169,12 +180,20 @@ def _run_test_command(
     workers: int,
     commit: str,
     timeout_seconds: float,
+    cache_state: str = "cold-workspace",
 ) -> TestRunSummary:
+    nonce = uuid4().hex
+    receipt_directory = repo_root.parent / (repo_root.name + "-receipts-" + nonce)
+    environment = {**os.environ, DIRECTORY_ENV: str(receipt_directory), NONCE_ENV: nonce, ROOT_ENV: str(repo_root)}
+    environment["PYTEST_ADDOPTS"] = (
+        environment.get("PYTEST_ADDOPTS", "") + " -p infrastructure.core.testing.pytest_receipt"
+    )
     started = monotonic()
     try:
         process = subprocess.run(  # noqa: S603 - fixed repository command
             command,
             cwd=repo_root,
+            env=environment,
             capture_output=True,
             text=True,
             check=False,
@@ -182,17 +201,24 @@ def _run_test_command(
         )
     except subprocess.TimeoutExpired as exc:
         raise TestBenchmarkError(f"test benchmark timed out: {' '.join(command)}") from exc
+    elapsed = monotonic() - started
     output = f"{process.stdout}\n{process.stderr}".strip()
+    try:
+        selected, outcomes = read_execution_receipts(receipt_directory, nonce)
+    except (ValueError, OSError) as exc:
+        raise TestBenchmarkError("test benchmark lacks original complete pytest observations") from exc
     return TestRunSummary(
         target=target,
         profile=profile,
-        selection=(target, profile),
+        selection=selected,
         axis="serial" if serial else "parallel",
         workers=1 if serial else workers,
         returncode=process.returncode,
-        wall_elapsed_seconds=round(monotonic() - started, 3),
+        wall_elapsed_seconds=round(elapsed, 3),
         repo_commit=commit,
         output_tail=_redact_output_tail(output, repo_root),
+        outcomes=outcomes,
+        cache_state=cache_state,
     )
 
 
@@ -205,6 +231,7 @@ def build_test_performance_manifest(
     parallel_argv: tuple[str, ...],
     minimum_improvement_percent: float = 30.0,
     current_checkout_clean: bool = True,
+    additional_runs: Sequence[TestRunSummary] = (),
 ) -> TestPerformanceManifest:
     """Compare owned run summaries and compute a fail-closed acceptance result."""
     if serial.axis != "serial" or serial.workers != 1:
@@ -213,20 +240,45 @@ def build_test_performance_manifest(
         raise TestBenchmarkError("parallel evidence must use more than one worker")
     if serial.wall_elapsed_seconds <= 0 or parallel.wall_elapsed_seconds <= 0:
         raise TestBenchmarkError("test benchmark wall times must be positive")
-    if minimum_improvement_percent < 0 or minimum_improvement_percent >= 100:
+    if not math.isfinite(minimum_improvement_percent) or not 0 <= minimum_improvement_percent < 100:
         raise TestBenchmarkError("minimum improvement must be in the range [0, 100)")
-    improvement = (serial.wall_elapsed_seconds - parallel.wall_elapsed_seconds) / serial.wall_elapsed_seconds * 100.0
+    observations = (serial, parallel, *additional_runs)
+    if any(not math.isfinite(row.wall_elapsed_seconds) or row.wall_elapsed_seconds <= 0 for row in observations):
+        raise TestBenchmarkError("test benchmark wall times must be finite and positive")
+    if any(
+        (row.axis == "serial" and row.workers != 1) or (row.axis == "parallel" and row.workers <= 1)
+        for row in observations
+    ):
+        raise TestBenchmarkError("test benchmark axes differ from actual worker declarations")
+    by_state = {(row.cache_state, row.axis): row for row in observations}
+    expected_axes = {(state, axis) for state in ("cold-workspace", "warm-workspace") for axis in ("serial", "parallel")}
+    cold_and_warm = len(observations) == 4 and set(by_state) == expected_axes
+    improvements = [(serial.wall_elapsed_seconds - parallel.wall_elapsed_seconds) / serial.wall_elapsed_seconds * 100.0]
+    if cold_and_warm:
+        for state in ("cold-workspace", "warm-workspace"):
+            before, after = by_state[state, "serial"], by_state[state, "parallel"]
+            if before.wall_elapsed_seconds <= 0 or after.wall_elapsed_seconds <= 0:
+                raise TestBenchmarkError("test benchmark wall times must be positive")
+            improvements.append(
+                (before.wall_elapsed_seconds - after.wall_elapsed_seconds) / before.wall_elapsed_seconds * 100.0
+            )
+    improvement = min(improvements)
     selection_matches = (
         serial.target == parallel.target
         and serial.profile == parallel.profile
-        and serial.selection == parallel.selection
+        and all(row.target == serial.target and row.profile == serial.profile for row in observations)
+        and all(row.workers == parallel.workers for row in observations if row.axis == "parallel")
+        and bool(serial.selection)
+        and bool(serial.outcomes)
+        and all(row.selection == serial.selection and row.outcomes == serial.outcomes for row in observations)
+        and len(serial.selection) == len(serial.outcomes)
     )
     provenance_matches = (
-        serial.repo_commit == parallel.repo_commit == benchmarked_commit
+        all(row.repo_commit == benchmarked_commit for row in observations)
         and serial.target == parallel.target
         and current_checkout_clean
     )
-    both_runs_passed = serial.returncode == 0 and parallel.returncode == 0
+    both_runs_passed = all(row.returncode == 0 for row in observations)
     return TestPerformanceManifest(
         schema_version=TEST_BENCHMARK_SCHEMA,
         target=serial.target,
@@ -243,14 +295,25 @@ def build_test_performance_manifest(
         provenance_matches=provenance_matches,
         clean_checkout=current_checkout_clean,
         both_runs_passed=both_runs_passed,
+        additional_runs=tuple(additional_runs),
+        cold_and_warm_verified=cold_and_warm,
         acceptance_passed=(
             current_checkout_clean
+            and cold_and_warm
             and selection_matches
             and provenance_matches
             and both_runs_passed
             and improvement >= minimum_improvement_percent
         ),
     )
+
+
+def _check_warmup(warmup: TestRunSummary, measured: TestRunSummary) -> None:
+    if warmup.returncode != 0 or any(
+        getattr(warmup, field) != getattr(measured, field)
+        for field in ("selection", "outcomes", "axis", "workers", "target", "profile", "repo_commit")
+    ):
+        raise TestBenchmarkError("warmup failed or differs from its measured execution")
 
 
 def run_test_benchmark(
@@ -273,46 +336,58 @@ def run_test_benchmark(
     if status_before:
         raise TestBenchmarkError("test benchmark requires a clean checkout before execution")
     commit_before = _git_output(root, "rev-parse", "HEAD")
+    observations: list[TestRunSummary] = []
+    commands: dict[str, tuple[str, ...]] = {}
+    # Independent worktrees prevent the serial run warming the parallel run.
+    # Reverse the axis order for warm observations; each warm run gets its own
+    # same-command untimed prewarm. "Cold" describes workspace state, not OS caches.
     with tempfile.TemporaryDirectory(prefix="template-test-benchmark-") as temp_dir:
-        benchmark_root = Path(temp_dir) / "checkout"
-        _run_git_command(root, "worktree", "add", "--detach", "--quiet", str(benchmark_root), commit_before)
-        try:
-            serial_argv = build_test_command(
-                benchmark_root,
-                target=target,
-                profile=profile,
-                serial=True,
-                parallel_workers=workers,
-            )
-            parallel_argv = build_test_command(
-                benchmark_root,
-                target=target,
-                profile=profile,
-                serial=False,
-                parallel_workers=workers,
-            )
-            serial = _run_test_command(
-                benchmark_root,
-                serial_argv,
-                target=target,
-                profile=profile,
-                serial=True,
-                workers=workers,
-                commit=commit_before,
-                timeout_seconds=timeout_seconds,
-            )
-            parallel = _run_test_command(
-                benchmark_root,
-                parallel_argv,
-                target=target,
-                profile=profile,
-                serial=False,
-                workers=workers,
-                commit=commit_before,
-                timeout_seconds=timeout_seconds,
-            )
-        finally:
-            _run_git_command(root, "worktree", "remove", "--force", str(benchmark_root))
+        for ordinal, (state, serial_axis) in enumerate(
+            (("cold-workspace", True), ("cold-workspace", False), ("warm-workspace", False), ("warm-workspace", True))
+        ):
+            benchmark_root = Path(temp_dir) / f"checkout-{ordinal}"
+            _run_git_command(root, "worktree", "add", "--detach", "--quiet", str(benchmark_root), commit_before)
+            try:
+                command = build_test_command(
+                    benchmark_root, target=target, profile=profile, serial=serial_axis, parallel_workers=workers
+                )
+                commands["serial" if serial_axis else "parallel"] = command
+                warmup = None
+                if state == "warm-workspace":
+                    warmup = _run_test_command(
+                        benchmark_root,
+                        command,
+                        target=target,
+                        profile=profile,
+                        serial=serial_axis,
+                        workers=workers,
+                        commit=commit_before,
+                        timeout_seconds=timeout_seconds,
+                        cache_state="untimed-warmup",
+                    )
+                    if warmup.returncode != 0:
+                        raise TestBenchmarkError("warmup controller failed after pytest execution")
+                    if _git_output(benchmark_root, "status", "--porcelain", "--untracked-files=no"):
+                        raise TestBenchmarkError("warmup changed tracked benchmark inputs")
+                observations.append(
+                    _run_test_command(
+                        benchmark_root,
+                        command,
+                        target=target,
+                        profile=profile,
+                        serial=serial_axis,
+                        workers=workers,
+                        commit=commit_before,
+                        timeout_seconds=timeout_seconds,
+                        cache_state=state,
+                    )
+                )
+                if warmup is not None:
+                    _check_warmup(warmup, observations[-1])
+                if _git_output(benchmark_root, "status", "--porcelain", "--untracked-files=no"):
+                    raise TestBenchmarkError("test run changed tracked benchmark inputs")
+            finally:
+                _run_git_command(root, "worktree", "remove", "--force", str(benchmark_root))
 
     status_after = _git_output(root, "status", "--porcelain", "--untracked-files=normal")
     commit_after = _git_output(root, "rev-parse", "HEAD")
@@ -320,13 +395,14 @@ def run_test_benchmark(
     if not checkout_unchanged:
         raise TestBenchmarkError("checkout changed during test benchmark")
     return build_test_performance_manifest(
-        serial,
-        parallel,
+        observations[0],
+        observations[1],
         benchmarked_commit=commit_before,
-        serial_argv=serial_argv,
-        parallel_argv=parallel_argv,
+        serial_argv=commands["serial"],
+        parallel_argv=commands["parallel"],
         minimum_improvement_percent=minimum_improvement_percent,
         current_checkout_clean=checkout_unchanged,
+        additional_runs=observations[2:],
     )
 
 

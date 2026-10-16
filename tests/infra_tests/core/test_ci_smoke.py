@@ -152,9 +152,21 @@ def test_search_render_smoke_gets_converter_only_preparation_before_execution() 
         "",
     ],
 )
-def test_requested_coverage_checks_public_input_before_environment_setup(project: str) -> None:
+def test_requested_coverage_checks_public_input_before_environment_setup(project: str, tmp_path: Path) -> None:
     workflow = yaml.safe_load((REPO / ".github/workflows/ci.yml").read_text())
-    steps = workflow["jobs"]["own-exemplar-coverage"]["steps"]
+    caller = workflow["jobs"]["own-exemplar-coverage"]
+    assert caller["uses"] == "./.github/workflows/exemplar-coverage.yml"
+    assert caller["if"] == "github.event_name == 'workflow_dispatch' && inputs.coverage-project != ''"
+    assert caller["with"] == {"coverage-project": "${{ inputs.coverage-project }}"}
+    assert caller["permissions"] == {"contents": "read"}
+    assert "env" not in caller and "own-exemplar-coverage" in workflow["jobs"]["ci-gate"]["needs"]
+    reusable = yaml.load((REPO / ".github/workflows/exemplar-coverage.yml").read_text(), Loader=yaml.BaseLoader)
+    inputs = reusable["on"]["workflow_call"]["inputs"]
+    assert inputs["coverage-project"]["required"] == "true"
+    assert inputs["artifact-name"]["default"] == "requested-exemplar-coverage"
+    job = reusable["jobs"]["own-exemplar-coverage"]
+    assert job["timeout-minutes"] == "135"
+    steps = job["steps"]
     validation = next(i for i, step in enumerate(steps) if step.get("name") == "Validate the requested public project")
     setup = next(
         i for i, step in enumerate(steps) if step.get("name") == "Prepare the own locked development environment"
@@ -170,3 +182,61 @@ def test_requested_coverage_checks_public_input_before_environment_setup(project
         check=False,
     )
     assert (result.returncode == 0) == (project in PUBLIC_PROJECT_NAMES), result.stderr
+    measurement = next(
+        step["run"] for step in steps if step.get("name") == "Measure the complete own release-profile coverage"
+    )
+    assert 'commit != os.environ["GITHUB_SHA"]' in measurement
+    assert '"source_commit": commit' in measurement
+    assert "if (exemplar_source_hash(root, name) != source_hash" in measurement
+    assert "text=True).strip() != commit" in measurement
+    manual = yaml.safe_load((REPO / ".github/workflows/public-exemplar-coverage.yml").read_text())
+    coverage = manual["jobs"]["coverage"]
+    assert coverage["uses"] == caller["uses"] and coverage["strategy"]["max-parallel"] == 4
+    assert coverage["with"]["artifact-name"] == "public-exemplar-coverage-${{ matrix.name }}"
+    selector = manual["jobs"]["select"]["steps"][-1]["run"]
+    output = tmp_path / "github-output"
+    selected = subprocess.run(
+        ["bash", "-e", "-o", "pipefail", "-c", selector],
+        cwd=REPO,
+        env={**os.environ, "COVERAGE_PROJECT": project, "GITHUB_OUTPUT": str(output)},
+        capture_output=True,
+        text=True,
+        timeout=15,
+        check=False,
+    )
+    assert (selected.returncode == 0) == (not project or project in PUBLIC_PROJECT_NAMES), selected.stderr
+    if selected.returncode == 0:
+        rows = json.loads(output.read_text().removeprefix("matrix="))["include"]
+        assert [row["project"] for row in rows] == ([project] if project else list(PUBLIC_PROJECT_NAMES))
+        assert len({row["name"] for row in rows}) == len(rows)
+        assert all("/" not in row["name"] for row in rows)
+
+
+def test_cache_uses_actual_resolved_python_and_root_inputs_before_locked_reconciliation() -> None:
+    action = yaml.safe_load((REPO / ".github/actions/setup-python-env/action.yml").read_text())
+    steps = action["runs"]["steps"]
+    python = next(i for i, step in enumerate(steps) if step.get("id") == "python")
+    cache = next((i, step) for i, step in enumerate(steps) if str(step.get("uses", "")).startswith("actions/cache@"))
+    assert python < cache[0]
+    key = cache[1]["with"]["key"]
+    assert "runner.arch" in key and "steps.python.outputs.python-version" in key and "inputs.dependency-group" in key
+    assert "**/uv.lock" not in key
+    workflow = yaml.safe_load((REPO / ".github/workflows/ci.yml").read_text())
+    for job in ("test-infra", "test-project"):
+        assert any(
+            step.get("run") == "uv sync --locked --group installed-build" for step in workflow["jobs"][job]["steps"]
+        )
+    assert workflow["jobs"]["test-infra"]["timeout-minutes"] == 10
+    assert any(
+        "verify" in str(step.get("name", "")).lower() or "disjoint" in str(step.get("name", ""))
+        for step in workflow["jobs"]["ci-gate"]["steps"]
+    )
+
+
+@pytest.mark.parametrize("projects", [(), ("templates/template_code_project",) * 2, ("working/private",)])
+def test_executable_smoke_subset_never_accepts_empty_duplicate_or_private_scopes(projects: tuple[str, ...]) -> None:
+    with pytest.raises(ValueError):
+        project_smoke_matrix(REPO, projects)
+    assert project_smoke_matrix(REPO, ("templates/template_code_project",)) == {
+        "include": [{"project": "templates/template_code_project"}]
+    }

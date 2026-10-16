@@ -73,6 +73,7 @@ from infrastructure.reporting.release_readiness_snapshot import SnapshotReader
 
 from infrastructure.reporting.native_full_worker_pdfium import NativePDFiumSelection, admit_full_worker_pdfium_providers
 from infrastructure.reporting.native_project_provider_batch import admitted_native_provider_batch
+from infrastructure.reporting.native_original_progress import original_cell_progress
 from infrastructure.reporting.native_hosted_original_producer import NativeHostedTransportRequest
 
 
@@ -344,6 +345,7 @@ def _run_original_native_cells(
         prepared_reader_runtimes=prepared_reader_runtimes,
     )
     for scope in selected:
+        original_cell_progress("selection-start", scope, deadline)
         cell = directory / scope
         create_private_native_directory(root, cell)
         providers, provider_roots = prepared_providers[scope]
@@ -479,6 +481,7 @@ def _run_original_native_cells(
             try:
                 worker_env = native_environment(root, Path(sys.executable), cell)
                 worker_env.update(source_environment(source_context))
+                original_cell_progress("worker-start", scope, deadline)
                 observation.update(supervisor.launch(cell, worker_env))
             except KeyboardInterrupt:
                 observation.update(
@@ -487,6 +490,8 @@ def _run_original_native_cells(
                     timed_out=False,
                     diagnostic="native supervisor interrupted",
                 )
+        if observation["pid"] is not None:
+            original_cell_progress("worker-completed", scope, deadline)
         observation["host_after"] = native_host_observation()
         if observation["completed_monotonic"] is None:
             observation["completed_monotonic"] = time.monotonic()
@@ -533,7 +538,8 @@ def _run_original_native_cells(
                 observation["diagnostic"] = str(error)
                 process = write_json(root, cell / "process.json", observation)
                 item["process"] = process
-        if observation["exit_code"] in {124, 130}:
+        original_cell_progress("terminal-observed", scope, deadline)
+        if observation["exit_code"] != 0 or observation["custody_refused"]:
             break
 
 

@@ -43,6 +43,8 @@ def artifact_object(value: object) -> dict[str, Any]:
 
 def validate_autopoiesis_observation(value: object) -> dict[str, Any]:
     """Require all selected real child producers, coverage and independent results."""
+    from infrastructure import __version__ as platform_version
+
     if not isinstance(value, dict) or value.get("schema_version") != AUTOPOIESIS_SCHEMA:
         raise ValueError("installed Autopoiesis requires its actual functional observation")
     receipt = artifact_object(value.get("receipt"))
@@ -54,12 +56,12 @@ def validate_autopoiesis_observation(value: object) -> dict[str, Any]:
         or receipt.get("selection_scope") != "one-per-selected-domain"
         or type(receipt.get("selected_count")) is not int
         or receipt["selected_count"] != len(expected)
-        or receipt.get("platform_version") != "4.0.1"
+        or receipt.get("platform_version") != platform_version
     ):
         raise ValueError("installed Autopoiesis omitted its required selected-child execution")
     generator = receipt.get("active_generator_custody", {})
     platform = receipt.get("platform_custody", {})
-    for custody, version in ((generator, "2.0.0"), (platform, "4.0.1")):
+    for custody, version in ((generator, "2.0.0"), (platform, platform_version)):
         distribution = custody.get("distribution") if isinstance(custody, dict) else None
         if (
             not isinstance(custody, dict)

@@ -13,7 +13,8 @@ This file contains LaTeX packages and commands that are automatically injected i
 
 % Document layout
 \usepackage{geometry}
-\geometry{margin=0.25in}
+% Include the page-number footer inside the declared physical page margins.
+\geometry{margin=0.25in,includefoot}
 \usepackage{float}
 \usepackage{graphicx}
 
@@ -43,19 +44,16 @@ This file contains LaTeX packages and commands that are automatically injected i
 \usepackage{natbib}
 
 % ── Unicode-capable mono font for code listings ──────────────────────
-% JuliaMono (TeX Live 2026) covers the full math/Greek glyph set used in
+% JuliaMono covers the full math/Greek glyph set used in
 % scientific code blocks; the default lmmono lacks \alpha/\mu/\partial/\nabla.
 %
-% The hardcoded TeX Live 2026 path below is portable to most macOS / Linux
-% TeX Live installs that placed JuliaMono under the default texmf-dist path.
-% If your TeX Live version differs (e.g., 2025, 2027) or your distribution
-% installs fonts elsewhere, comment out the explicit Path = line — fontspec
-% will then search the system font path. If JuliaMono is not installed at
-% all, comment out the whole block; xelatex falls back to lmmono with
-% reduced Unicode coverage but the document still compiles.
+% JuliaMono's four face files must be available through the normal TeX
+% font search path (kpathsea / TTFONTS), without a machine-specific Path.
+% Hosted acceptance prepares the pinned family and its TTFONTS directory.
+% Local installs must expose JuliaMono-*.ttf through their TeX font search
+% path; missing faces remain a compilation error.
 \usepackage{fontspec}
 \setmonofont{JuliaMono-Regular}[
-  Path           = /usr/local/texlive/2026/texmf-dist/fonts/truetype/public/juliamono/,
   Extension      = .ttf,
   UprightFont    = *,
   BoldFont       = JuliaMono-Bold,

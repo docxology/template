@@ -34,6 +34,11 @@ logger = get_logger(__name__)
 PIPELINE_STAGE_TIMEOUT_SECONDS = 7200.0
 
 
+def _stage_launch_deadline(deadline: float) -> float:
+    """Clamp directly to the original clock without renewing elapsed time."""
+    return min(deadline, time.monotonic() + PIPELINE_STAGE_TIMEOUT_SECONDS)
+
+
 def resolve_pipeline_script_path(repo_root: Path, script_name: str) -> Path:
     """Resolve explicit repository-relative scripts inside the public operating surface."""
     relative = Path(script_name)
@@ -172,10 +177,9 @@ class PipelineStageMixin(ABC):
             }
         )
         deadline = float(getattr(self, "_stage_deadline", 0.0)) or time.monotonic() + PIPELINE_STAGE_TIMEOUT_SECONDS
-        timeout = min(PIPELINE_STAGE_TIMEOUT_SECONDS, deadline - time.monotonic())
-        if timeout <= 0:
+        launch_deadline = _stage_launch_deadline(deadline)
+        if launch_deadline <= time.monotonic():
             return StageOutcome(stage_key, StageStatus.TIMED_OUT, None, "Deadline expired before child launch")
-        launch_deadline = time.monotonic() + timeout
 
         plan = getattr(self, "execution_plan", None)
         definition = self.config.repo_root / plan.provenance if plan is not None else None

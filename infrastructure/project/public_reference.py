@@ -185,16 +185,17 @@ def admit_public_reference(
     metadata = tomllib.loads(reader.read("pyproject.toml").content.decode("utf-8"))
     if (
         metadata.get("project", {}).get("name") != "research-project-template"
-        or metadata.get("project", {}).get("version") != "4.0.1"
+        or not isinstance(metadata.get("project", {}).get("version"), str)
+        or re.fullmatch(r"4\.\d+\.\d+", metadata["project"]["version"]) is None
     ):
-        raise ValueError("public reference requires genuine platform 4.0.1 source metadata")
+        raise ValueError("public reference requires genuine platform 4 release source metadata")
     for required in ("uv.lock", ".python-version"):
         reader.read(required)
     implementation = capture_implementation_custody(fresh_pycache_prefix=fresh_pycache_prefix)
     import infrastructure
 
-    if getattr(infrastructure, "__version__", None) != "4.0.1":
-        raise ValueError("public reference requires the actual selected platform 4.0.1 SDK")
+    if getattr(infrastructure, "__version__", None) != metadata["project"]["version"]:
+        raise ValueError("public reference requires the actual selected SDK to match admitted Source metadata")
     if RuntimeScope(root, "root").source_identity(path_admission=_path_admission(reader)) != expected_source_identity:
         raise ValueError("public reference source differs from its external admitted fingerprint")
     records = _canonical_inventory(root)

@@ -662,18 +662,18 @@ The visualization registry is paired with `output/reports/figure_quality_report.
 
 | Figure | PNG | SVG | Dimensions | Nonwhite | Variance | Status |
 |--------|-----|-----|------------|----------|----------|--------|
-| claim_evidence_assay | yes | yes | 3947x2038 | 0.218 | 0.06067066 | pass |
-| evidence_tier_ladder | yes | yes | 3419x1447 | 0.114 | 0.04050338 | pass |
-| formalism_traceability | yes | yes | 3315x1797 | 0.140 | 0.04409869 | pass |
-| implementation_circuit | yes | yes | 2966x1842 | 0.068 | 0.02214905 | pass |
-| integrity_gate_matrix | yes | yes | 1833x2060 | 0.406 | 0.16147143 | pass |
-| integrity_risk_matrix | yes | yes | 2499x1909 | 0.379 | 0.01892053 | pass |
-| karat_grading | yes | yes | 2956x1699 | 0.279 | 0.07296687 | pass |
-| provenance_sankey | yes | yes | 2850x1461 | 0.070 | 0.02170098 | pass |
-| purity_claim_scatter | yes | yes | 2343x1745 | 0.034 | 0.01594966 | pass |
-| purity_progression | yes | yes | 3029x2125 | 0.182 | 0.03971092 | pass |
-| token_density | yes | yes | 3288x1858 | 0.234 | 0.06696808 | pass |
-| token_heatmap | yes | yes | 2406x2412 | 0.621 | 0.12867696 | pass |
+| claim_evidence_assay | yes | yes | 3952x2038 | 0.217 | 0.06049260 | pass |
+| evidence_tier_ladder | yes | yes | 3430x1448 | 0.113 | 0.04049412 | pass |
+| formalism_traceability | yes | yes | 3315x1797 | 0.140 | 0.04434550 | pass |
+| implementation_circuit | yes | yes | 2966x1843 | 0.068 | 0.02205485 | pass |
+| integrity_gate_matrix | yes | yes | 1818x2060 | 0.409 | 0.16204936 | pass |
+| integrity_risk_matrix | yes | yes | 2499x1910 | 0.380 | 0.01852528 | pass |
+| karat_grading | yes | yes | 2961x1698 | 0.279 | 0.07300982 | pass |
+| provenance_sankey | yes | yes | 2850x1461 | 0.070 | 0.02178809 | pass |
+| purity_claim_scatter | yes | yes | 2336x1744 | 0.034 | 0.01607749 | pass |
+| purity_progression | yes | yes | 3024x2125 | 0.182 | 0.03967814 | pass |
+| token_density | yes | yes | 3289x1856 | 0.234 | 0.06699486 | pass |
+| token_heatmap | yes | yes | 2397x2399 | 0.627 | 0.12908659 | pass |
 : Figure-quality report generated from source-owned figure specs. {#tbl:figure_quality}
 
 
@@ -764,7 +764,7 @@ The gold-refinery pipeline demonstrates that a metallurgical analogy can be made
 - 5 refinery stages from ore (9K) to certification (nine-nines)
 - Final purity: 99.9999999% (nine-nines) (24K (nine-nines certified))
 - 24 tokens generated deterministically from seed 431
-- Config hash: b5b9d5392172fbbe
+- Config hash: f07f54804db53e6d
 - 7 source-owned formalisms with equation labels: eq:purity_functional, eq:monotone_refinery, eq:token_digest, eq:claim_support, eq:integrity_vector, eq:certification_predicate, eq:adversarial_assay
 - Claim-support status: 9/9 supported (passing)
 - 9 integrity dimensions with residual-risk scoring and owner/validator links.
@@ -802,8 +802,8 @@ The refinery pipeline is fully deterministic. Given the same `manuscript/config.
 Executable-publication scholarship sharpens that norm. Executable research compendia and executable papers treat an article as a package of narrative, code, data, environment, and rendered outputs rather than as a static document with detachable supplements [@nuest2017erc; @lasser2020executable]. The present exemplar is smaller and more template-specific: it does not provide a universal executable-paper format, but it does make the manuscript variables, figures, reports, and rendered PDF/HTML products rebuildable from source-owned inputs.
 
 - **Seed:** 431
-- **Config hash:** b5b9d5392172fbbe
-- **Generation timestamp:** 2026-10-14T01:12:21Z
+- **Config hash:** f07f54804db53e6d
+- **Generation timestamp:** 2026-10-15T18:40:52Z
 - **Python version:** 3.14.4
 
 ## Artifact inventory
@@ -828,7 +828,7 @@ uv run python projects/templates/template_gold_refinement/scripts/z_generate_man
 ./run.sh --project templates/template_gold_refinement --pipeline --mode core
 ```
 
-A reproduction report should record command exit status, the source revision, `b5b9d5392172fbbe`, Python 3.14.4, and whether the generated registries pass. Matching prose alone is insufficient if the token plan, claim registry, or figure registry differs. Conversely, timestamp or renderer metadata differences should be interpreted separately from substantive differences in source-owned values.
+A reproduction report should record command exit status, the source revision, `f07f54804db53e6d`, Python 3.14.4, and whether the generated registries pass. Matching prose alone is insufficient if the token plan, claim registry, or figure registry differs. Conversely, timestamp or renderer metadata differences should be interpreted separately from substantive differences in source-owned values.
 
 ## Config ownership
 
@@ -836,7 +836,7 @@ All vocabulary, slots, section conditions, steganography toggles, and optional L
 
 `src/template_gold_refinement/pipeline_policy.py` turns those policy blocks into an explicit secure-pipeline hook. That keeps the optional hardening path visible before execution instead of burying it in shell glue or prose.
 
-The reproducibility spine uses fact registry and figure registry as generated artifacts rather than reader trust signals. Variable generation records `b5b9d5392172fbbe`; analysis writes refinery, token, claim-support, dashboard, and figure artifacts; validation may add the shared evidence registry used by template scientific-integrity checks.
+The reproducibility spine uses fact registry and figure registry as generated artifacts rather than reader trust signals. Variable generation records `f07f54804db53e6d`; analysis writes refinery, token, claim-support, dashboard, and figure artifacts; validation may add the shared evidence registry used by template scientific-integrity checks.
 
 The implementation circuit gives a reproducibility checklist for future forks. A reader should be able to start at any rendered figure or claim, follow it to a generated variable or report, follow that artifact to `src/` or `manuscript/config.yaml`, and rerun the same stage command. If that path is broken, the fork has produced a static illustration rather than a reproducible refinement pipeline.
 

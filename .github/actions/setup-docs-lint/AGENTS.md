@@ -7,6 +7,9 @@ must call this action before running `scripts/audit/lint_docs.py`.
 ## Invariants
 
 - `actions/setup-node` and `actions/cache` remain pinned to full SHAs.
+- Select exactly Node 24.22.0 LTS; Root's `24.x` engine and native
+  Mermaid11 admission require the same major. Preserve the Source-declared
+  npm serializer and every third-party lock record.
 - `setup-node` enables `cache: npm` (CI-FAST-DOCSLINT-NPM-1): the npm
   download cache is keyed on the lockfile by the official action; `npm ci`
   semantics stay unchanged (deterministic reinstall), only tarball

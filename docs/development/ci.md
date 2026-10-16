@@ -4,15 +4,44 @@ The public template should be easy to install and use. Default CI checks that
 contract on Linux/Python 3.14, without starting Docker, Lean, a browser, or a
 native document acceptance matrix.
 
-Every public template builds a wheel and runs the real behavioral tests listed
+On main and manual runs, every public template builds a wheel and runs the real behavioral tests listed
 in `.github/project-smoke.json`, in a separate pytest process. Most tests use a disposable project copy; tests
 whose fixtures require genuine monorepo source/DATA run from their canonical
 project and use their existing disposable fixtures. The selection
 must cover the complete public roster and contain existing project-local tests.
-Infrastructure runs its existing pipeline smoke selection. Lint/type checks,
+Project-only pull requests select changed projects and their declared transitive
+consumers. Shared or unknown paths, renames, deletions and ambiguous changes
+select every public project. An unreadable Git change roster fails selection.
+
+Infrastructure preserves the complete legacy smoke union, adds changed tests and
+declared Source owners, and splits the selection into three complementary file
+shards. Expensive selected full modules run in a separate required contract
+matrix. Smoke keeps its 540-second child budget and ten-minute job limit;
+contract jobs use the existing full-infrastructure 120-second per-test default,
+retain explicit test-owned timeout markers, and have a separate 6600-second
+whole-module ceiling below the existing Root acceptance budget. The explicit
+pytest option applies to this test process; nested producer environments retain
+their original timeout settings. Both lanes emit
+nonce-bound original pytest selection/outcome receipts and JUnit diagnostics.
+The final gate checks the exact combined union and rejects missing, duplicated
+or overlapping members. Neither lane replaces complete release acceptance.
+
+Lint/type checks,
 Bandit, secret scanning and the public tracking boundary remain blocking. The
 `CI Gate` requires every functional job to succeed; a missing, cancelled,
 skipped or failed required job cannot turn green.
+
+The environment cache includes the resolved Python version, OS, architecture,
+dependency group and root lock/package/Python-selector inputs. Every caller
+still runs its declared locked reconciliation. Reused downloads or environments
+are preparation inputs, never accepted runtime results.
+
+Infrastructure smoke prepares genuine Poppler tools for raster controls. The
+auxiliary contract additionally prepares the declared Pandoc/XeTeX document
+producers and readers. The native portability contract warms the exact Root
+lockfile's default and dev groups in a fresh job-owned environment before its
+unchanged offline fixture runs; a restored environment alone does not establish
+that the required wheel archives remain cached.
 
 Run a project's same selection locally after locked root setup:
 
@@ -44,16 +73,44 @@ Run the strict snapshot check with:
 uv run python scripts/docgen/counts.py --check
 ```
 
-Stale provenance remains a failure in those owning checks; the counts writer
-and provenance refresh are unchanged. To obtain hosted evidence, manually
-dispatch CI with an exact public `coverage-project`. Its requested coverage
-job, CI Gate and whole workflow must pass. Retrieve the measurement artifact
-and verify its source commit and project input hash before refreshing the
-snapshot. Until then, retain the dated measurement and report the outstanding
-verification. Release's exact-source acceptance and coverage custody still
-apply independently.
+Stale provenance remains a failure in those owning checks. Manually dispatch
+**Public exemplar coverage** to measure the complete Source-derived public roster
+in one run, with at most four projects executing concurrently. An optional exact
+qualified `coverage-project` limits an investigative run to one public exemplar.
+The reusable coverage job preserves each project's tools, locked profile, full
+suite, coverage floor and original timeout. It checks the checkout commit before
+and after measurement and uploads a separate artifact per project. The final
+matrix gate requires every selected project to pass.
+
+CI's existing optional `coverage-project` input calls the same reusable job.
+For either route, retrieve the original measurement artifact and verify its
+source commit, project input hash and complete passing measurement before
+updating the snapshot and provenance together. Until then, retain the dated
+measurement and report the outstanding verification. Release's exact-source
+acceptance and coverage custody still apply independently.
 
 ## Further hardening
+
+`platform-native-preflight.yml` runs for relevant native/dependency pull-request
+changes and manual dispatch. After tool preparation, its cold installed operation
+has at most 900 seconds on one original clock. It prepares the complete provider
+selection, rechecks first/last providers and runs the Code exemplar through real
+Original and independent Current analysis. The receipt explicitly records
+incomplete release selection and cannot authorize a tag or publication.
+
+Native core stages explicitly use the nominated cold interpreter, and terminal
+readback requires the exact selected environment commitment. Stage launch
+deadlines stay within the original clock. An unsuccessful Original stops further
+original launches after its process and raw evidence are retained; the missing
+remainder keeps the complete release selection failing. Fixed public phase,
+PID and remaining-time diagnostics locate delays without authorizing acceptance.
+
+The full required-acceptance workflow runs Linux auxiliary originals alongside
+common installed/runtime originals, Root jobs and native originals. Installed
+cells use the existing dependency-aware executor with three bounded workers.
+Each producer exposes its own required failures; the final collector still
+requires the complete Source-owned profile, every host/runtime obligation and
+the independent installed reader. All original operation deadlines remain enforced.
 
 Use the manual **Optional Hardening** workflow for the former complete
 infrastructure shards, Python 3.12–3.14 project suites, aggregate coverage,
