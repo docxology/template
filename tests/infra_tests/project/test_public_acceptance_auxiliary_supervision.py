@@ -89,6 +89,8 @@ def test_deadline_must_be_finite_before_evidence_or_launch(tmp_path: Path, deadl
 
 
 def test_original_failure_streams_binary_and_bootstrap_are_preserved(tmp_path: Path) -> None:
+    from infrastructure.project.public_acceptance_auxiliary_validation import _supervision_diagnostic
+
     bootstrap = {"declared": "actual control"}
     observation = supervise(
         [
@@ -105,7 +107,8 @@ def test_original_failure_streams_binary_and_bootstrap_are_preserved(tmp_path: P
     )
     assert type(observation["pid"]) is int
     assert observation["exit_code"] == 17
-    assert complete_auxiliary_observation(observation) is True
+    complete = complete_auxiliary_observation(observation)
+    assert complete is True, _supervision_diagnostic(observation)
     for incomplete in (
         observation | {"accepted": False},
         observation | {"cleanup": {"verified": False}},
