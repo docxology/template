@@ -45,6 +45,8 @@ def _report(kind, requirements):
                 for minor in CANONICAL_CI_PYTHON_VERSIONS
             ],
         }
+    else:
+        data.update(source_current=True, deadline_exhausted=False, exit_code=0)
     return data
 
 
@@ -62,10 +64,32 @@ def test_linux_ignores_only_other_declared_owners(declared_requirements, status)
     report = _report("auxiliary", declared_requirements)
     for gate in OTHER_AUXILIARY_OWNERS:
         report["gates"][gate]["status"] = status
+    # Other owners' blocked obligations retain the producer's actual75 outcome.
+    report["exit_code"] = 75
     assert evaluate_original_outcome("auxiliary", report, declared_requirements, fingerprint="a" * 64)["exit_code"] == 0
     report["gates"]["root:docs_lint"]["status"] = status
     result = evaluate_original_outcome("auxiliary", report, declared_requirements, fingerprint="a" * 64)
     assert result["exit_code"] == 1 and result["unpassed_gates"] == ["root:docs_lint"]
+
+
+@pytest.mark.parametrize(
+    ("field", "value"),
+    [
+        ("deadline_exhausted", True),
+        ("deadline_exhausted", None),
+        ("deadline_exhausted", 0),
+        ("source_current", False),
+        ("exit_code", 1),
+        ("exit_code", False),
+    ],
+)
+def test_auxiliary_operation_closure_cannot_be_hidden_by_passing_gates(declared_requirements, field, value):
+    # These are job-control DATA, never evidence of an actual acceptance run.
+    report = _report("auxiliary", declared_requirements)
+    assert all(row["status"] == "pass" for row in report["gates"].values())
+    report[field] = value
+    with pytest.raises(ValueError, match="auxiliary operation did not close"):
+        evaluate_original_outcome("auxiliary", report, declared_requirements, fingerprint="a" * 64)
 
 
 @pytest.mark.parametrize("mutation", ["gate", "cell", "duplicate", "missing", "stale", "invalid"])

@@ -12,6 +12,7 @@ from collections.abc import Iterator
 from pathlib import Path
 
 _DIRECTORY_FLAGS = os.O_RDONLY | getattr(os, "O_DIRECTORY", 0) | getattr(os, "O_NOFOLLOW", 0)
+_ANCESTOR_FLAGS = getattr(os, "O_PATH", os.O_RDONLY) | getattr(os, "O_DIRECTORY", 0) | getattr(os, "O_NOFOLLOW", 0)
 _FILE_FLAGS = os.O_WRONLY | os.O_CREAT | os.O_EXCL | getattr(os, "O_NOFOLLOW", 0)
 
 
@@ -35,9 +36,10 @@ def _relative_target(root: Path, target: Path) -> tuple[Path, tuple[str, ...], s
     return lexical_root, relative.parts[:-1], relative.parts[-1]
 
 
-def _open_directory(parent_fd: int, name: str, *, create: bool) -> int:
+def _open_directory(parent_fd: int, name: str, *, create: bool, ancestor: bool = False) -> int:
+    flags = _ANCESTOR_FLAGS if ancestor else _DIRECTORY_FLAGS
     try:
-        return os.open(name, _DIRECTORY_FLAGS, dir_fd=parent_fd)
+        return os.open(name, flags, dir_fd=parent_fd)
     except FileNotFoundError:
         if not create:
             raise
@@ -46,7 +48,7 @@ def _open_directory(parent_fd: int, name: str, *, create: bool) -> int:
         except FileExistsError:
             pass
         try:
-            return os.open(name, _DIRECTORY_FLAGS, dir_fd=parent_fd)
+            return os.open(name, flags, dir_fd=parent_fd)
         except OSError as exc:
             raise ValueError(f"refusing symlink component or non-directory write component: {name}") from exc
     except OSError as exc:
@@ -67,16 +69,19 @@ def _open_parent(
         or any(type(value) is not int or value < 0 for value in expected_root_identity)
     ):
         raise ValueError("expected_root_identity must be an exact nonnegative integer pair")
+    # Strict ancestors need search only. The selected root and its descendants
+    # keep readable handles, including the final parent used by fsync.
+    root_parts = root.parts[1:]
     try:
-        anchor_fd = os.open(root.anchor, _DIRECTORY_FLAGS)
+        anchor_fd = os.open(root.anchor, _ANCESTOR_FLAGS if root_parts else _DIRECTORY_FLAGS)
     except OSError as exc:
         raise ValueError(f"cannot open confinement root without following symlinks: {root}") from exc
     opened = [anchor_fd]
     current = anchor_fd
     bindings: list[tuple[int, str, int]] = []
     try:
-        for part in root.parts[1:]:
-            child = _open_directory(current, part, create=False)
+        for index, part in enumerate(root_parts):
+            child = _open_directory(current, part, create=False, ancestor=index < len(root_parts) - 1)
             bindings.append((current, part, child))
             current = child
             opened.append(current)

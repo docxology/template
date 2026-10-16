@@ -219,6 +219,15 @@
       "effect": "read_only"
     },
     {
+      "module": "infrastructure.core.testing.ci_execution_user",
+      "invocation": "python -m infrastructure.core.testing.ci_execution_user",
+      "source_path": "infrastructure/core/testing/ci_execution_user.py",
+      "purpose": "A fresh unprivileged execution UID for disposable GitHub-hosted Linux jobs.",
+      "subcommands": [],
+      "exports": [],
+      "effect": "mutating"
+    },
+    {
       "module": "infrastructure.core.testing.ci_infra",
       "invocation": "python -m infrastructure.core.testing.ci_infra",
       "source_path": "infrastructure/core/testing/ci_infra.py",

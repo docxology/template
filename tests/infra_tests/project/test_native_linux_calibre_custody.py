@@ -7,6 +7,8 @@ dpkg/Calibre nor qualify a native Linux runtime. Genuine host tests are separate
 from __future__ import annotations
 
 import copy
+import hashlib
+import os
 import shutil
 import time
 from pathlib import Path
@@ -16,6 +18,7 @@ import pytest
 
 from infrastructure.project.native_linux_calibre_custody import (
     ROLE_NAMES,
+    _held_parent,
     canonical_linux_member,
     linux_calibre_body_projection,
     observe_linux_calibre_packages,
@@ -160,3 +163,55 @@ def test_exact_signed_output_parsers_reject_ambiguity_and_path_guesses(tmp_path:
             '{"schema_version":"template-calibre-qt-platform-selection-v1","platform":"offscreen","plugins":[]}',
             candidates,
         )
+
+
+def test_sparse_package_bytes_require_search_but_no_ancestor_listing(tmp_path: Path) -> None:
+    ancestor = tmp_path.resolve(strict=True) / "search-only"
+    ancestor.mkdir()
+    packages, roles, root = _files(ancestor)
+    nonroot_posix = os.name == "posix" and os.geteuid() != 0
+    ancestor.chmod(0o111)
+    try:
+        if nonroot_posix:
+            with pytest.raises(PermissionError):
+                list(ancestor.iterdir())
+        if nonroot_posix and not hasattr(os, "O_PATH"):
+            with pytest.raises(PermissionError):
+                observe_linux_calibre_packages(packages, roles, deadline=time.monotonic() + 5)
+        else:
+            before = observe_linux_calibre_packages(packages, roles, deadline=time.monotonic() + 5)
+            after = observe_linux_calibre_packages(packages, roles, deadline=time.monotonic() + 5)
+            validate_linux_calibre_packages(before, after)
+            indexed = {row["path"]: row for row in before["files"]}
+            for label in roles.values():
+                selected = Path(label)
+                current = selected.stat()
+                assert indexed[label]["sha256"] == hashlib.sha256(selected.read_bytes()).hexdigest()
+                assert indexed[label]["metadata"] == {
+                    "dev": current.st_dev,
+                    "ino": current.st_ino,
+                    "mode": current.st_mode,
+                    "size": current.st_size,
+                    "mtime_ns": current.st_mtime_ns,
+                    "ctime_ns": current.st_ctime_ns,
+                }
+            assert indexed[str(ancestor)]["metadata"]["mode"] == ancestor.stat().st_mode
+    finally:
+        ancestor.chmod(0o755)
+    if nonroot_posix:
+        selected = Path(roles["launcher"])
+        original_mode = selected.stat().st_mode & 0o777
+        selected.chmod(0)
+        try:
+            with pytest.raises(PermissionError):
+                observe_linux_calibre_packages(packages, roles, deadline=time.monotonic() + 5)
+        finally:
+            selected.chmod(original_mode)
+    alias = ancestor.parent / "linked-prefix"
+    alias.symlink_to(ancestor, target_is_directory=True)
+    with pytest.raises(OSError):
+        _held_parent(alias / root.name / "launcher")
+    not_directory = ancestor.parent / "not-directory"
+    not_directory.write_bytes(b"regular file cannot be an ancestor")
+    with pytest.raises(NotADirectoryError):
+        _held_parent(not_directory / "launcher")

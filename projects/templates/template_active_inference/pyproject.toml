@@ -34,7 +34,7 @@ dev = [
 pythonpath = [".", "src"]
 testpaths = ["tests"]
 python_files = ["test_*.py"]
-addopts = "-v --tb=short --strict-markers"
+addopts = "-v --tb=short --strict-markers --benchmark-storage=file://./output/.pipeline/benchmarks"
 markers = [
     "requires_pymdp: tests that import inferactively-pymdp",
     "long_running: end-to-end or heavy test families that take minutes",

@@ -237,10 +237,20 @@ def test_real_failed_child_without_complete_facts_preserves_os_outcome(
         assert (tmp_path / caught.value.observation["facts_artifact"]["path"]).read_text() == content
     # A zero exit never admits missing or malformed facts as positive evidence.
     if content is None or content == "{truncated":
-        with pytest.raises(ValueError, match="original facts"):
-            _retain_pipeline_child_facts(
-                tmp_path, tmp_path / "output/readiness/positive", inner, {"exit_code": 0, "timed_out": False}, {}
-            )
+        from infrastructure.project.public_acceptance_auxiliary_supervision import complete_auxiliary_observation
+
+        positive_directory = tmp_path / "output/readiness/positive"
+        successful = supervise(
+            [sys.executable, "-I", "-c", "pass"],
+            tmp_path,
+            positive_directory / "execution",
+            time.monotonic() + 15,
+        )
+        assert successful["exit_code"] == 0
+        assert complete_auxiliary_observation(successful), "zero-exit control lacks complete supervision"
+        with pytest.raises(ValueError, match="original facts") as incomplete:
+            _retain_pipeline_child_facts(tmp_path, positive_directory, inner, successful, {})
+        assert type(incomplete.value) is ValueError
 
 
 def test_audited_launch_refuses_changed_source_hook_before_executing(source: Path) -> None:

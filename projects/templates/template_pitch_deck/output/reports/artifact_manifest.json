@@ -12,8 +12,8 @@
     {
       "contract_match": true,
       "path": "output/figures/infra_subpackage_sizes.png",
-      "sha256": "0f220b939643d15c57659527e6c22740fd2e5875221c732791998d0a5ce9bfe4",
-      "size_bytes": 97014,
+      "sha256": "1101f20aa56e9639397482d7f221d3ea28b0790839276265ee28f33850af9bfc",
+      "size_bytes": 98778,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
@@ -57,8 +57,8 @@
     {
       "contract_match": true,
       "path": "output/figures/test_count_vs_coverage.png",
-      "sha256": "ac2c33a328d27f2932e9c276fd1f20b496288277db484e6c8c1b26f8575b50ea",
-      "size_bytes": 54991,
+      "sha256": "dda16c55e51156cc867a679bc7f8845fda903bf27795634f4411cdf6ac8f6dc8",
+      "size_bytes": 55019,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
@@ -93,8 +93,8 @@
     {
       "contract_match": true,
       "path": "output/pdf/template_template_pitch_long.pdf",
-      "sha256": "8cebad9f6f8d064dfd85882c8e012a864822f000ef39fe96e1487fb8fe08f5e5",
-      "size_bytes": 677844,
+      "sha256": "ad1c92c75cca5bc6750957041fd20dea1af4efabad456391ad92bd2620c4aad4",
+      "size_bytes": 679695,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
@@ -102,8 +102,8 @@
     {
       "contract_match": true,
       "path": "output/pdf/template_template_pitch_medium.pdf",
-      "sha256": "601a726d1b5415fd88df3a85ff983dbd9217cc298af91b39491b5a4a6464c00b",
-      "size_bytes": 589251,
+      "sha256": "fd145dd81032ef401b5fadbbfacc603ee4898159c5748534d024cddedcb900ba",
+      "size_bytes": 591102,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
@@ -111,7 +111,7 @@
     {
       "contract_match": true,
       "path": "output/pdf/template_template_pitch_short.pdf",
-      "sha256": "8eb8c4cf930abd45873025f8edbd8b22941c79d4fd6ee00a5a1c46628ba4360c",
+      "sha256": "360952dea80e8040420e7021fce59af180e402d2b9b0fe18273482a99ce7d90e",
       "size_bytes": 103172,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
@@ -120,8 +120,8 @@
     {
       "contract_match": true,
       "path": "output/pptx/template_template_pitch_long.pptx",
-      "sha256": "acaf8323026751cb1e4268734dfd7910f834dcb465b8edc578c3035116e5ba36",
-      "size_bytes": 547864,
+      "sha256": "d03e9f2bd0fe0f42dcb4d6b3d75a28e4b27d0c50822fdd6a2f8fafdfc8f08886",
+      "size_bytes": 549672,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
@@ -129,8 +129,8 @@
     {
       "contract_match": true,
       "path": "output/pptx/template_template_pitch_medium.pptx",
-      "sha256": "6d270cf9a43c953a56ee61aadc3dd2d178349d6c65d63940f11772bb16329d89",
-      "size_bytes": 495353,
+      "sha256": "b7fa4daa948af109cf9e7e8931c7146c795a144496a803060ffc1be7915983a2",
+      "size_bytes": 497161,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
@@ -606,7 +606,7 @@
     {
       "contract_match": true,
       "path": "output/slides_standalone/template_template_long/slide_46.md",
-      "sha256": "6392811efd1a9848d8bb534e461a636bf0b069be2e465bdc58740ae103223e8a",
+      "sha256": "19013dbaeb68c20533802e2222aab727c9f09d4be9f9e722bae62cb7346a0da3",
       "size_bytes": 1367,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
@@ -993,7 +993,7 @@
     {
       "contract_match": true,
       "path": "output/slides_standalone/template_template_medium/slide_32.md",
-      "sha256": "f7a9f6f697098d85f4327be95cd992065c2c7f73c5ec4f8b24bb53870723d186",
+      "sha256": "607d9de582a073ed56dad2eb48078bdcfc0852ae84239f6bf18f005632f3e78b",
       "size_bytes": 1377,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,

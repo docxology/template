@@ -46,15 +46,23 @@ jobs:
       - name: Prepare source-locked browser math dependencies
         run: .venv/bin/python -m infrastructure.reporting.native_dependency_preparation --repo-root .
       - uses: ./.github/actions/setup-acceptance-model
+      - uses: ./.github/actions/setup-ci-execution-user
+        if: runner.os == 'Linux'
       - name: Original complete Root observation
         continue-on-error: true
         env:
           HOST: ${{ matrix.host }}
           MINOR: ${{ matrix.python }}
-        run: >-
-          .venv/bin/python -m infrastructure.project.public_acceptance_root
-          --python "$MINOR=$PWD/.venv/bin/python" --mode live
-          --evidence-dir "output/readiness/root-$HOST-$MINOR"
+        run: |
+          set -euo pipefail
+          root_command=(.venv/bin/python -m infrastructure.project.public_acceptance_root
+            --python "$MINOR=$PWD/.venv/bin/python" --mode live
+            --evidence-dir "output/readiness/root-$HOST-$MINOR")
+          if [ "$RUNNER_OS" = Linux ]; then
+            exec .venv/bin/python -m infrastructure.core.testing.ci_execution_user run \
+              --state "$RUNNER_TEMP/template-ci-execution/state.json" -- "${root_command[@]}"
+          fi
+          exec "${root_command[@]}"
       - name: Original macOS process and rendering obligations
         if: matrix.host == 'darwin' && matrix.python == '3.14'
         continue-on-error: true
@@ -101,14 +109,19 @@ jobs:
                   assert not members(group), "Owned daemon descendants remain alive"
               (Path(directory) / "daemon-cleanup.json").write_text(json.dumps({"owned_group": group, "live_members_remaining": members(group), "original_exit": 0}))
           PYTHON
+      - name: Export original Linux readiness bytes for the artifact reader
+        if: always() && runner.os == 'Linux'
+        run: >-
+          .venv/bin/python -m infrastructure.core.testing.ci_execution_user export
+          --state "$RUNNER_TEMP/template-ci-execution/state.json"
       - name: Retain original source audit
         if: always()
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
         with:
           name: required-source-root-${{ runner.os }}-${{ matrix.python }}
           path: |
-            output/readiness/
-            !output/readiness/auxiliary-darwin/**
+            ${{ env.TEMPLATE_CI_ARTIFACT_DIRECTORY || 'output/readiness' }}/
+            !${{ env.TEMPLATE_CI_ARTIFACT_DIRECTORY || 'output/readiness' }}/auxiliary-darwin/**
           if-no-files-found: error
           retention-days: 1
       - name: Retain original designated macOS auxiliary audit
@@ -358,16 +371,24 @@ jobs:
           echo "TEMPLATE_ACCEPTANCE_SIA_IMAGE_ID=$image" >> "$GITHUB_ENV"
           echo "TEMPLATE_SIA_TEST_IMAGE=$image" >> "$GITHUB_ENV"
       - uses: ./.github/actions/setup-acceptance-model
+      - uses: ./.github/actions/setup-ci-execution-user
+        with:
+          docker: "true"
       - name: Every remaining source-owned obligation
         id: auxiliary
         continue-on-error: true
         run: >-
+          .venv/bin/python -m infrastructure.core.testing.ci_execution_user run
+          --state "$RUNNER_TEMP/template-ci-execution/state.json" --
           .venv/bin/python -m infrastructure.project.public_acceptance_auxiliary_cli
           --all --local-model smollm2:135m --docker-image-id "$TEMPLATE_ACCEPTANCE_SIA_IMAGE_ID"
+          --auxiliary-workers 3
           --timeout-seconds 1800 --evidence-dir output/readiness/auxiliary
       - name: Fail promptly for any unpassed Linux-owned auxiliary obligation
         if: always()
         run: >-
+          .venv/bin/python -m infrastructure.core.testing.ci_execution_user run
+          --state "$RUNNER_TEMP/template-ci-execution/state.json" --
           .venv/bin/python -m infrastructure.reporting.original_job_outcome
           --kind auxiliary --receipt output/readiness/auxiliary/receipt.json
       - name: Stop only the owned model daemon and descendants
@@ -409,12 +430,17 @@ jobs:
                   assert not members(group), "Owned daemon descendants remain alive"
               (Path(directory) / "daemon-cleanup.json").write_text(json.dumps({"owned_group": group, "live_members_remaining": members(group), "original_exit": 0}))
           PYTHON
+      - name: Export original Linux readiness bytes for the artifact reader
+        if: always()
+        run: >-
+          .venv/bin/python -m infrastructure.core.testing.ci_execution_user export
+          --state "$RUNNER_TEMP/template-ci-execution/state.json"
       - name: Retain original auxiliary audit
         if: always()
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
         with:
           name: required-source-auxiliary-linux
-          path: output/readiness/auxiliary/
+          path: ${{ env.TEMPLATE_CI_ARTIFACT_DIRECTORY }}/auxiliary/
           if-no-files-found: error
           retention-days: 1
 

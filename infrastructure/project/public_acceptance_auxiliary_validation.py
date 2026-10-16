@@ -8,12 +8,88 @@ import json
 from pathlib import Path
 from typing import Any
 
+from infrastructure.project.public_acceptance_auxiliary_supervision import (
+    PROCESS_SCHEMA,
+    _CENSUS_DIAGNOSTIC_ENUMS,
+    _CENSUS_DIAGNOSTIC_INTS,
+    complete_auxiliary_observation,
+)
+
 from infrastructure.reporting.release_readiness_snapshot import SnapshotReader
 
 
 from infrastructure.project.public_acceptance_auxiliary_transfer_validation import (
     validate_sandbox_transfer as validate_sandbox_transfer,
 )
+
+
+def _supervision_diagnostic(process: dict[str, Any]) -> str:
+    """Bound refusal facts without rendering arbitrary retained process DATA."""
+    observed: dict[str, Any] = {"schema_matches": process.get("schema_version") == PROCESS_SCHEMA}
+    for key in ("accepted", "timed_out", "output_limit_exceeded"):
+        value = process.get(key)
+        observed[key] = value if type(value) is bool else "invalid"
+    for key in ("pid", "exit_code"):
+        value = process.get(key)
+        observed[key] = value if value is None or type(value) is int and -(2**31) <= value < 2**31 else "invalid"
+    cleanup = process.get("cleanup")
+    if not isinstance(cleanup, dict):
+        observed["cleanup"] = "invalid"
+    else:
+        facts: dict[str, Any] = {}
+        for key in (
+            "guardian_armed",
+            "guardian_finished",
+            "root_reaped",
+            "final_census_succeeded",
+            "deadline_exceeded",
+            "verified",
+        ):
+            value = cleanup.get(key)
+            facts[key] = value if type(value) is bool else "invalid"
+        for key in ("final_token_sweep_matched_pids", "final_census_matched_pids", "diagnostics"):
+            value = cleanup.get(key)
+            facts[key + "_count"] = len(value) if type(value) is list else "invalid"
+        for key in ("guardian_pid", "guardian_exit_code"):
+            value = cleanup.get(key)
+            facts[key] = value if value is None or type(value) is int and -(2**31) <= value < 2**31 else "invalid"
+        for label in ("guardian_error", "final_census_error"):
+            error = cleanup.get(label)
+            if not isinstance(error, dict):
+                continue
+            allowed = {
+                "OSError",
+                "PermissionError",
+                "FileNotFoundError",
+                "ProcessLookupError",
+                "RuntimeError",
+                "ValueError",
+                "TimeoutError",
+                "TimeoutExpired",
+                "SubprocessError",
+                "CalledProcessError",
+                "GuardianCustodyError",
+            }
+            for key in ("type", "cause"):
+                value = error.get(key)
+                facts[label + "_" + key] = value if type(value) is str and value in allowed else "unknown"
+            value = error.get("errno")
+            facts[label + "_errno"] = value if type(value) is int and 0 <= value <= 4095 else None
+            procfs = error.get("procfs")
+            if label == "final_census_error" and isinstance(procfs, dict):
+                safe_procfs: dict[str, Any] = {
+                    key: value
+                    for key, lower, upper in _CENSUS_DIAGNOSTIC_INTS
+                    if type(value := procfs.get(key)) is int and lower <= value <= upper
+                }
+                safe_procfs.update(
+                    (key, value)
+                    for key, allowed in _CENSUS_DIAGNOSTIC_ENUMS
+                    if type(value := procfs.get(key)) is str and value in allowed
+                )
+                facts[label + "_procfs"] = safe_procfs
+        observed["cleanup"] = facts
+    return json.dumps(observed, sort_keys=True)[:2048]
 
 
 def validate_auxiliary_process(gate: str, fingerprint: str, details: dict[str, Any], reader: SnapshotReader) -> None:
@@ -36,9 +112,15 @@ def validate_auxiliary_process(gate: str, fingerprint: str, details: dict[str, A
     spec_binding = process.get("spec_artifact")
     spec = artifact(spec_binding).json_object()
     original_spec = str(Path(producer_root) / spec_binding["path"])
+    if not complete_auxiliary_observation(process):
+        # Keep the original refusal actionable after its producer was deleted.
+        # Commands, environment values and process streams stay in bound DATA.
+        raise ValueError(
+            "auxiliary process does not establish actual complete source-bound execution: supervision "
+            + _supervision_diagnostic(process)
+        )
     if (
-        process.get("schema_version") != "template-auxiliary-process-v2"
-        or process.get("gate") != gate
+        process.get("gate") != gate
         or any(process.get(key) != fingerprint for key in ("source_fingerprint", "source_before", "source_after"))
         or process.get("cwd") != producer_root
         or type(process.get("exit_code")) is not int
@@ -124,7 +206,7 @@ def validate_auxiliary_process(gate: str, fingerprint: str, details: dict[str, A
             raise ValueError("macOS process acceptance omitted real descendant timeout/cleanup")
     for control in details.get("negative_controls", []):
         negative = artifact(control.get("artifact")).json_object()
-        if negative.get("schema_version") != "template-auxiliary-process-v2":
+        if negative.get("schema_version") != PROCESS_SCHEMA:
             # Native formal controls are exact records inside the already-bound native execution.
             native_controls = artifact(details.get("native_artifact")).json_object().get("checks", [])
             if not any(
@@ -148,6 +230,7 @@ def validate_auxiliary_process(gate: str, fingerprint: str, details: dict[str, A
             or facts.get("gate") != gate
             or facts.get("status") != "negative-control"
             or facts.get("exit_code") != 23
+            or not complete_auxiliary_observation(negative)
             or negative.get("exit_code") != 23
             or negative.get("timed_out") is not False
             or negative.get("output_limit_exceeded") is not False

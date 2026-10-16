@@ -136,12 +136,12 @@ Total documented definitions: 889
 
 | line | kind | name | documentation source | summary |
 | ---: | --- | --- | --- | --- |
-| 25 | `function` | `lean_project_present` | docstring | True when the declared Lake root exists. |
-| 30 | `function` | `_source_snapshot` | docstring | Capture exact declared pins and all Lean implementation sources once. |
-| 53 | `function` | `_deadline` | docstring | Start the total budget before any declared source admission. |
-| 60 | `function` | `_execute` | docstring | Use a total deadline, forbid implicit acquisition, and recheck source bytes. |
-| 113 | `function` | `build_lean` | docstring | Build the exact installed toolchain; missing declarations/tools are blocked. |
-| 128 | `function` | `lean_axioms_clean` | docstring | Require every requested declaration's actual audit with only kernel axioms. |
+| 26 | `function` | `lean_project_present` | docstring | True when the declared Lake root exists. |
+| 31 | `function` | `_source_snapshot` | docstring | Capture exact declared pins and all Lean implementation sources once. |
+| 54 | `function` | `_deadline` | docstring | Start the total budget before any declared source admission. |
+| 61 | `function` | `_execute` | docstring | Use a total deadline, forbid implicit acquisition, and recheck source bytes. |
+| 114 | `function` | `build_lean` | docstring | Build the exact installed toolchain; missing declarations/tools are blocked. |
+| 129 | `function` | `lean_axioms_clean` | docstring | Require every requested declaration's actual audit with only kernel axioms. |
 
 ## `src/gates/manuscript_checks.py`
 
@@ -689,22 +689,22 @@ Total documented definitions: 889
 | 74 | `function` | `_normalized_rel` | inventory fallback | Inventory fallback for function `_normalized_rel` defined at `src/roadmap_tracks/fixed_point.py:74`. |
 | 81 | `function` | `_confined_path_state` | docstring | Return a race-checked state token without following any symlink. |
 | 134 | `function` | `_walk_generation_inputs` | docstring | Walk one declared input tree without following directory symlinks. |
-| 165 | `function` | `_generation_input_rels` | docstring | Return deterministic source/config inputs that can change generated evidence. |
-| 173 | `function` | `_source_input_sha256` | docstring | Bind the exact confined generation-input file inventory and bytes. |
-| 193 | `function` | `_observed_output_rels` | docstring | Derive the complete positive, negative, and hydrated output inventory from SSOTs. |
-| 237 | `function` | `_cached_fingerprint_matches` | docstring | Return whether the disposable cache exactly binds the current state. |
-| 246 | `function` | `_refresh_animation_outputs` | inventory fallback | Inventory fallback for function `_refresh_animation_outputs` defined at `src/roadmap_tracks/fixed_point.py:246`. |
-| 258 | `function` | `_refresh_hydrated_manuscript` | inventory fallback | Inventory fallback for function `_refresh_hydrated_manuscript` defined at `src/roadmap_tracks/fixed_point.py:258`. |
-| 265 | `function` | `_write_sheaf_owned_artifacts` | inventory fallback | Inventory fallback for function `_write_sheaf_owned_artifacts` defined at `src/roadmap_tracks/fixed_point.py:265`. |
-| 272 | `function` | `_write_semantic_core` | inventory fallback | Inventory fallback for function `_write_semantic_core` defined at `src/roadmap_tracks/fixed_point.py:272`. |
-| 279 | `function` | `_write_contract_artifacts` | inventory fallback | Inventory fallback for function `_write_contract_artifacts` defined at `src/roadmap_tracks/fixed_point.py:279`. |
-| 296 | `function` | `_fingerprint` | inventory fallback | Inventory fallback for function `_fingerprint` defined at `src/roadmap_tracks/fixed_point.py:296`. |
-| 315 | `function` | `_validate_fixed_point` | inventory fallback | Inventory fallback for function `_validate_fixed_point` defined at `src/roadmap_tracks/fixed_point.py:315`. |
-| 343 | `function` | `_source_contract_issues` | docstring | Return source defects that generated-artifact settlement cannot repair. |
-| 358 | `function` | `_existing_fixed_point_paths` | inventory fallback | Inventory fallback for function `_existing_fixed_point_paths` defined at `src/roadmap_tracks/fixed_point.py:358`. |
-| 380 | `function` | `_write_fixed_point_pass` | inventory fallback | Inventory fallback for function `_write_fixed_point_pass` defined at `src/roadmap_tracks/fixed_point.py:380`. |
-| 400 | `function` | `_write_final_validation_pass` | docstring | Refresh self-referential reports and write the certificate from the final live state. |
-| 432 | `function` | `run_semantic_fixed_point` | docstring | Settle manuscript, semantic, and contract artifacts to a validated fixed point. |
+| 169 | `function` | `_generation_input_rels` | docstring | Return deterministic source/config inputs that can change generated evidence. |
+| 177 | `function` | `_source_input_sha256` | docstring | Bind the exact confined generation-input file inventory and bytes. |
+| 197 | `function` | `_observed_output_rels` | docstring | Derive the complete positive, negative, and hydrated output inventory from SSOTs. |
+| 241 | `function` | `_cached_fingerprint_matches` | docstring | Return whether the disposable cache exactly binds the current state. |
+| 250 | `function` | `_refresh_animation_outputs` | inventory fallback | Inventory fallback for function `_refresh_animation_outputs` defined at `src/roadmap_tracks/fixed_point.py:250`. |
+| 262 | `function` | `_refresh_hydrated_manuscript` | inventory fallback | Inventory fallback for function `_refresh_hydrated_manuscript` defined at `src/roadmap_tracks/fixed_point.py:262`. |
+| 269 | `function` | `_write_sheaf_owned_artifacts` | inventory fallback | Inventory fallback for function `_write_sheaf_owned_artifacts` defined at `src/roadmap_tracks/fixed_point.py:269`. |
+| 276 | `function` | `_write_semantic_core` | inventory fallback | Inventory fallback for function `_write_semantic_core` defined at `src/roadmap_tracks/fixed_point.py:276`. |
+| 283 | `function` | `_write_contract_artifacts` | inventory fallback | Inventory fallback for function `_write_contract_artifacts` defined at `src/roadmap_tracks/fixed_point.py:283`. |
+| 300 | `function` | `_fingerprint` | inventory fallback | Inventory fallback for function `_fingerprint` defined at `src/roadmap_tracks/fixed_point.py:300`. |
+| 319 | `function` | `_validate_fixed_point` | inventory fallback | Inventory fallback for function `_validate_fixed_point` defined at `src/roadmap_tracks/fixed_point.py:319`. |
+| 347 | `function` | `_source_contract_issues` | docstring | Return source defects that generated-artifact settlement cannot repair. |
+| 362 | `function` | `_existing_fixed_point_paths` | inventory fallback | Inventory fallback for function `_existing_fixed_point_paths` defined at `src/roadmap_tracks/fixed_point.py:362`. |
+| 384 | `function` | `_write_fixed_point_pass` | inventory fallback | Inventory fallback for function `_write_fixed_point_pass` defined at `src/roadmap_tracks/fixed_point.py:384`. |
+| 404 | `function` | `_write_final_validation_pass` | docstring | Refresh self-referential reports and write the certificate from the final live state. |
+| 436 | `function` | `run_semantic_fixed_point` | docstring | Settle manuscript, semantic, and contract artifacts to a validated fixed point. |
 
 ## `src/roadmap_tracks/formal_interop.py`
 

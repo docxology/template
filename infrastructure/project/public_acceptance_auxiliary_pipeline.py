@@ -20,6 +20,8 @@ from dataclasses import replace
 from pathlib import Path
 from typing import Any
 
+from infrastructure.project.public_acceptance_auxiliary_supervision import complete_auxiliary_observation
+
 from infrastructure.core.pipeline.fingerprints import canonical_digest
 from infrastructure.project.public_acceptance_evidence import evidence_directory, write_json
 from infrastructure.project.installed_acceptance_artifacts import write_binary
@@ -334,7 +336,7 @@ def validate_portable_pipeline(scope: str, details: dict[str, Any], reader: Snap
     producer = facts["producer_root"]
     executable_hash = process.get("executable_sha256")
     if (
-        process.get("schema_version") != "template-auxiliary-process-v2"
+        not complete_auxiliary_observation(process)
         or process.get("producer_root") != producer
         or process.get("cwd") != producer
         or process.get("exit_code") != 0

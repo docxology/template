@@ -38,6 +38,7 @@ _ROOTS = {
 _SOURCES = {"requests": "psf/requests", "fastapi": "fastapi/fastapi"}
 _SELECTIONS = {"requests": ["LICENSE", "src/requests"], "fastapi": ["LICENSE", "fastapi"]}
 _DIRECTORY_FLAGS = os.O_RDONLY | getattr(os, "O_DIRECTORY", 0) | getattr(os, "O_NOFOLLOW", 0)
+_ANCESTOR_FLAGS = getattr(os, "O_PATH", os.O_RDONLY) | getattr(os, "O_DIRECTORY", 0) | getattr(os, "O_NOFOLLOW", 0)
 
 
 def _relative(value: Any) -> str:
@@ -194,7 +195,7 @@ def _held_parent(
 ) -> Iterator[tuple[int, str]]:
     """Retain the full named chain, including every ancestor above Root."""
     parts = _relative(relative).split("/")
-    opened = [os.open(root.anchor, _DIRECTORY_FLAGS)]
+    opened = [os.open(root.anchor, _DIRECTORY_FLAGS if len(root.parts) == 1 else _ANCESTOR_FLAGS)]
     bindings: list[tuple[int, str, int]] = []
 
     def verify() -> None:
@@ -207,20 +208,20 @@ def _held_parent(
             if actual != expected:
                 raise ValueError("fixture ancestor namespace changed")
 
-    def descend(name: str, *, make: bool) -> None:
+    def descend(name: str, *, make: bool, ancestor: bool = False) -> None:
         parent = opened[-1]
         if make:
             try:
                 os.mkdir(name, mode=0o755, dir_fd=parent)
             except FileExistsError:
                 pass
-        descriptor = os.open(name, _DIRECTORY_FLAGS, dir_fd=parent)
+        descriptor = os.open(name, _ANCESTOR_FLAGS if ancestor else _DIRECTORY_FLAGS, dir_fd=parent)
         bindings.append((parent, name, descriptor))
         opened.append(descriptor)
 
     try:
-        for part in root.parts[1:]:
-            descend(part, make=False)
+        for index, part in enumerate(root.parts[1:], start=1):
+            descend(part, make=False, ancestor=index < len(root.parts) - 1)
         if expected_root is not None and _directory_identity(os.fstat(opened[-1])) != expected_root:
             raise ValueError("fixture nominated Root changed after operation entry")
         for part in parts[:-1]:

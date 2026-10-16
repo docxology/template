@@ -6,6 +6,8 @@ import json
 from pathlib import Path
 from typing import Any
 
+from infrastructure.project.public_acceptance_auxiliary_supervision import complete_auxiliary_observation
+
 from infrastructure.project.installed_acceptance_artifacts import write_binary
 
 
@@ -65,7 +67,7 @@ def _retain_pipeline_child_facts(
             else:
                 facts_error = "actual core pipeline child left non-object original facts"
     diagnostic = {**bindings, "facts_artifact": facts_binding, "facts_error": facts_error}
-    if process["exit_code"] != 0 or process["timed_out"]:
+    if not complete_auxiliary_observation(process) or process["exit_code"] != 0:
         raise AuxiliaryPipelineFailure(process, facts, diagnostic)
     if facts_error:
         raise ValueError(facts_error)

@@ -94,8 +94,13 @@ def test_auxiliary_fixed_owners_retain_original_blocked_audits_and_separate_tran
     ]
     gates = {item.id: {"status": "blocked"} for item in requirements}
     values = {
-        "linux": _receipt(gates),
-        "darwin": _receipt({key: {"status": "pass"} for key in gates if "macos" in key}),
+        "linux": {**_receipt(gates), "source_current": True, "deadline_exhausted": False, "exit_code": 75},
+        "darwin": {
+            **_receipt({key: {"status": "pass"} for key in gates if "macos" in key}),
+            "source_current": True,
+            "deadline_exhausted": False,
+            "exit_code": 0,
+        },
     }
     projected = auxiliary_owned_projection(values, requirements)
     assert projected[0]["gates"] == {"root:roster": {"status": "blocked"}}
@@ -104,6 +109,41 @@ def test_auxiliary_fixed_owners_retain_original_blocked_audits_and_separate_tran
     values["darwin"]["gates"]["root:roster"] = {"status": "pass"}
     with pytest.raises(ValueError, match="omitted or invented"):
         auxiliary_owned_projection(values, requirements)
+
+
+@pytest.mark.parametrize("host", ["linux", "darwin"])
+def test_auxiliary_projection_rejects_late_operation_even_with_all_passing_gates(host):
+    from types import SimpleNamespace
+    from infrastructure.reporting.required_acceptance_aggregate import auxiliary_owned_projection
+
+    kinds = {
+        "root:roster": "roster",
+        "root:macos:process": "platform",
+        "root:macos:rendering": "platform",
+        "root:sandbox:transfer": "transfer",
+    }
+    requirements = [SimpleNamespace(id=key, kind=kind) for key, kind in kinds.items()]
+    closed = {"source_current": True, "deadline_exhausted": False, "exit_code": 0}
+    values = {
+        "linux": {**_receipt({key: {"status": "pass"} for key in kinds}), **closed},
+        "darwin": {**_receipt({key: {"status": "pass"} for key in kinds if "macos" in key}), **closed},
+    }
+    assert len(auxiliary_owned_projection(values, requirements)) == 2
+    values[host].update(deadline_exhausted=True, exit_code=1)
+    with pytest.raises(ValueError, match="auxiliary operation did not close"):
+        auxiliary_owned_projection(values, requirements)
+
+
+def test_generic_merge_cannot_discard_auxiliary_deadline_failure():
+    value = {
+        **_receipt({"root:one": {"status": "pass"}}),
+        "source_current": True,
+        "deadline_exhausted": True,
+        "exit_code": 1,
+        "auxiliary_workers": 3,
+    }
+    with pytest.raises(ValueError, match="auxiliary operation did not close"):
+        _merge([value])
 
 
 def test_complete_archive_closure_retains_native_raster_rows_and_refuses_changed_pixels(tmp_path):

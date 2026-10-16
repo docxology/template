@@ -2,6 +2,10 @@
 
 from __future__ import annotations
 
+import errno
+import os
+import shutil
+import stat
 import sys
 import time
 from pathlib import Path
@@ -25,6 +29,66 @@ PRINT_WITNESS_FAULTS = {
 }
 
 
+def _copy_prepared_runtime_file(original: str, copied: str) -> str:
+    """Retain prepared bytes without hard-linking another owner's runtime inode."""
+    try:
+        os.lstat(copied)
+    except FileNotFoundError:
+        pass
+    else:
+        raise FileExistsError(errno.EEXIST, os.strerror(errno.EEXIST), copied)
+    metadata = os.lstat(original)
+    if os.name == "posix" and stat.S_ISREG(metadata.st_mode) and metadata.st_uid == os.geteuid():
+        try:
+            os.link(original, copied)
+        except OSError as error:
+            if error.errno not in {errno.EPERM, errno.EXDEV}:
+                raise
+        else:
+            return copied
+    return shutil.copy2(original, copied)
+
+
+@pytest.mark.skipif(os.name != "posix" or os.geteuid() == 0, reason="requires actual nonroot POSIX file ownership")
+def test_prepared_runtime_copy_preserves_owned_and_foreign_file_boundaries(tmp_path: Path) -> None:
+    owned = tmp_path / "owned-runtime"
+    owned.write_bytes(b"actual owned prepared runtime")
+    owned.chmod(0o640)
+    owned_copy = tmp_path / "owned-copy"
+    assert _copy_prepared_runtime_file(str(owned), str(owned_copy)) == str(owned_copy)
+    assert (owned.stat().st_dev, owned.stat().st_ino) == (owned_copy.stat().st_dev, owned_copy.stat().st_ino)
+    assert owned.stat().st_nlink == owned_copy.stat().st_nlink == 2
+    assert owned_copy.read_bytes() == owned.read_bytes()
+    assert stat.S_IMODE(owned_copy.stat().st_mode) == 0o640
+
+    foreign = Path("/usr/share/zoneinfo/UTC").resolve(strict=True)
+    metadata = foreign.stat()
+    assert stat.S_ISREG(metadata.st_mode) and metadata.st_uid == 0 != os.geteuid()
+    assert 0 < metadata.st_size <= 65536
+    fields = ("st_uid", "st_dev", "st_ino", "st_nlink", "st_size", "st_mtime_ns", "st_ctime_ns")
+    before = tuple(getattr(metadata, field) for field in fields)
+    contents = foreign.read_bytes()
+    foreign_copy = tmp_path / "foreign-copy"
+    assert _copy_prepared_runtime_file(str(foreign), str(foreign_copy)) == str(foreign_copy)
+    copied = foreign_copy.stat()
+    assert foreign_copy.read_bytes() == contents
+    assert stat.S_IMODE(copied.st_mode) == stat.S_IMODE(metadata.st_mode)
+    assert (copied.st_dev, copied.st_ino) != (metadata.st_dev, metadata.st_ino)
+    assert copied.st_uid == os.geteuid() and copied.st_nlink == 1
+
+    sentinel = tmp_path / "existing-destination"
+    sentinel.write_bytes(b"must not overwrite")
+    for original in (owned, foreign):
+        with pytest.raises(FileExistsError):
+            _copy_prepared_runtime_file(str(original), str(sentinel))
+        assert sentinel.read_bytes() == b"must not overwrite"
+    absent_copy = tmp_path / "absent-copy"
+    with pytest.raises(FileNotFoundError):
+        _copy_prepared_runtime_file(str(tmp_path / "missing-source"), str(absent_copy))
+    assert not absent_copy.exists()
+    assert tuple(getattr(foreign.stat(), field) for field in fields) == before
+
+
 def test_supervision_preserves_original_failure_and_bound_streams(tmp_path: Path) -> None:
     process = supervise(
         [sys.executable, "-I", "-c", "print('actual child'); raise SystemExit(17)"],
@@ -38,16 +102,19 @@ def test_supervision_preserves_original_failure_and_bound_streams(tmp_path: Path
     assert stdout.read_text() == "actual child\n"
 
 
+@pytest.mark.timeout(20)
 def test_supervision_kills_actual_timeout(tmp_path: Path) -> None:
     process = supervise(
         [sys.executable, "-I", "-c", "import time; time.sleep(30)"],
         tmp_path,
         tmp_path / "output/readiness/timeout",
-        time.monotonic() + 0.2,
+        time.monotonic() + 10,
     )
+    assert type(process["pid"]) is int
     assert process["timed_out"] is True
     assert process["exit_code"] < 0
-    assert process["duration_seconds"] < 5
+    assert process["accepted"] is process["cleanup"]["verified"] is False
+    assert process["duration_seconds"] < 15
 
 
 def test_supervision_refuses_evidence_escape(tmp_path: Path) -> None:
@@ -94,6 +161,8 @@ def test_real_process_readback_after_producer_root_and_wrapper_deleted(tmp_path:
     import subprocess
 
     from infrastructure.project.public_acceptance_evidence import write_json
+    from infrastructure.project.public_acceptance_auxiliary_supervision import complete_auxiliary_observation
+    from infrastructure.project.public_acceptance_auxiliary_validation import _supervision_diagnostic
     from infrastructure.reporting.readiness_receipts import source_fingerprint
 
     source = Path.cwd()
@@ -119,17 +188,17 @@ def test_real_process_readback_after_producer_root_and_wrapper_deleted(tmp_path:
     library = environment / f"lib/python{sys.version_info.major}.{sys.version_info.minor}"
     library.mkdir(parents=True)
     # Complete genuine installed RECORD files need regular held directories.
-    # Hard links retain exact prepared bytes without another environment install
-    # or copying its large data allocation; the producer never writes them.
+    # Reuse owned regular inodes when permitted; copy foreign-owned runtime
+    # files with their metadata. The producer never writes prepared files.
     shutil.copytree(
         prepared / f"lib/python{sys.version_info.major}.{sys.version_info.minor}/site-packages",
         library / "site-packages",
-        copy_function=os.link,
+        copy_function=_copy_prepared_runtime_file,
     )
-    shutil.copytree(prepared / "share", environment / "share", copy_function=os.link)
+    shutil.copytree(prepared / "share", environment / "share", copy_function=_copy_prepared_runtime_file)
     for entrypoint in (prepared / "bin").iterdir():
         if entrypoint.is_file() and not entrypoint.is_symlink() and entrypoint.name != "python":
-            os.link(entrypoint, environment / "bin" / entrypoint.name)
+            _copy_prepared_runtime_file(str(entrypoint), str(environment / "bin" / entrypoint.name))
     directory = producer / "output/readiness/portable"
     gate = "root:roster"
     from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
@@ -195,6 +264,8 @@ def test_real_process_readback_after_producer_root_and_wrapper_deleted(tmp_path:
     )
     process = supervise(command, producer, directory / "execution", time.monotonic() + 180, bootstrap_payload=payload)
     assert process["exit_code"] == 0, (directory / "raw.json").read_text()
+    complete = complete_auxiliary_observation(process)
+    assert complete, _supervision_diagnostic(process)
     raw_binding = {
         "path": "output/readiness/portable/raw.json",
         "sha256": __import__("hashlib").sha256((directory / "raw.json").read_bytes()).hexdigest(),
@@ -251,7 +322,7 @@ def test_real_process_readback_after_producer_root_and_wrapper_deleted(tmp_path:
     alternate = reader_runtime / binary.relative_to(prefix)
     assert alternate.is_file() and alternate.resolve() != Path(sys.executable).resolve()
     script = r"""
-import sys,json,pathlib
+import sys,json,pathlib,hashlib
 sys.path[:0]=sys.argv[1:3]
 from infrastructure.reporting.release_readiness_snapshot import SnapshotReader
 from infrastructure.project.public_acceptance_auxiliary_validation import validate_auxiliary_process
@@ -261,6 +332,35 @@ root=pathlib.Path(sys.argv[1])
 details=json.loads((root/'output/readiness/portable/details.json').read_text())
 gate,refusal_code,refusal_status,print_controls=sys.argv[4],int(sys.argv[5]),sys.argv[6],sys.argv[7]
 assert source_fingerprint(root)==sys.argv[3]
+validate_auxiliary_process(gate,sys.argv[3],details,SnapshotReader(root))
+process_path=root/details['process_artifact']['path'];original_process=process_path.read_bytes()
+original_process_binding=dict(details['process_artifact'])
+for field in ('accepted','cleanup','private-malformed'):
+    changed=json.loads(original_process)
+    if field=='accepted':changed[field]=False
+    elif field=='cleanup':changed['cleanup']['verified']=False
+    else:
+        # Invented private/oversize DATA must never be rendered into failure logs.
+        private='invented-private-diagnostic-marker'
+        changed.update(accepted={'TOKEN':private},pid=private,exit_code=2**256,
+                       timed_out=[private],output_limit_exceeded={'TOKEN':private})
+        changed['cleanup']={'verified':False,'environment':{'TOKEN':private},
+                            'guardian_armed':{'TOKEN':private},'diagnostics':[private*10000],
+                            'final_census_error':{'type':[private],'cause':private*10000,'errno':True,
+                                'procfs':{'pid':private,'uid_real':2**256,'caller_euid':True,
+                                          'comm':private*10000,'probe_status':[private],
+                                          'environment':{'TOKEN':private}}}}
+    body=(json.dumps(changed,indent=2,sort_keys=True)+'\n').encode()
+    process_path.write_bytes(body)
+    details['process_artifact']['sha256']=hashlib.sha256(body).hexdigest()
+    try:validate_auxiliary_process(gate,sys.argv[3],details,SnapshotReader(root))
+    except ValueError as error:
+        if field=='private-malformed':
+            assert private not in str(error) and len(str(error))<=2200
+    else:raise AssertionError('unverified process cleanup admitted')
+    finally:
+        process_path.write_bytes(original_process)
+        details['process_artifact']=dict(original_process_binding)
 validate_auxiliary_process(gate,sys.argv[3],details,SnapshotReader(root))
 observations=details['source_roster_observations']
 assert details['projects']==list(PUBLIC_PROJECT_NAMES)

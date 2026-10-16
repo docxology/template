@@ -12,6 +12,7 @@ from types import FrameType
 import pytest
 
 from infrastructure.core.pipeline.fingerprints import paths_digest, tree_records
+from infrastructure.core.pipeline.fingerprint_files import anchored_parent, open_directory
 
 
 def _recorded_hash(path: Path) -> str:
@@ -203,6 +204,55 @@ def test_symlink_ancestor_cannot_admit_external_content(tmp_path: Path) -> None:
     with pytest.raises(ValueError, match="symlink"):
         tree_records(source / "linked" / "model.py")
     assert (outside / "model.py").read_text() == "private sentinel"
+    ancestor = tmp_path.resolve(strict=True) / "search-only"
+    selected = ancestor / "selected"
+    selected.mkdir(parents=True)
+    item = selected / "model.py"
+    content = b"readable selected Source bytes\n"
+    item.write_bytes(content)
+    expected = hashlib.sha256(content).hexdigest()
+    if os.name == "posix" and os.geteuid() != 0:
+        ancestor.chmod(0o111)
+        try:
+            with pytest.raises(PermissionError):
+                list(ancestor.iterdir())
+            if hasattr(os, "O_PATH"):
+                assert _recorded_hash(item) == expected
+                assert tree_records(selected) == ((".", "directory", ""), ("./model.py", "file", expected))
+            else:
+                with pytest.raises(ValueError, match="ancestor") as refusal:
+                    tree_records(item)
+                assert isinstance(refusal.value.__cause__, PermissionError)
+        finally:
+            ancestor.chmod(0o755)
+        selected.chmod(0o111)
+        try:
+            with anchored_parent(selected) as parent:
+                assert parent is not None
+                with pytest.raises(ValueError, match="non-directory component") as refusal:
+                    with open_directory(parent, selected.name):
+                        pytest.fail("unreadable nominated Source directory was admitted")
+                assert isinstance(refusal.value.__cause__, PermissionError)
+            with pytest.raises(ValueError, match="non-directory component") as refusal:
+                tree_records(selected)
+            assert isinstance(refusal.value.__cause__, PermissionError)
+        finally:
+            selected.chmod(0o755)
+    not_directory = ancestor / "not-directory"
+    not_directory.write_bytes(b"a file cannot be an ancestor")
+    with pytest.raises(ValueError, match="non-directory ancestor"):
+        tree_records(not_directory / "model.py")
+    with pytest.raises(ValueError, match="directory changed"):
+        with anchored_parent(item) as parent:
+            assert parent is not None
+            with open_directory(parent, ".") as directory:
+                assert os.fstat(directory).st_ino == selected.stat().st_ino
+                with os.scandir(directory) as entries:
+                    assert [entry.name for entry in entries] == ["model.py"]
+            selected.rename(ancestor / "held-selected")
+            selected.mkdir()
+            item.write_bytes(b"replacement selected Source bytes\n")
+    assert _recorded_hash(item) == hashlib.sha256(b"replacement selected Source bytes\n").hexdigest() != expected
 
 
 @pytest.mark.skipif(os.name != "posix", reason="FIFO is a POSIX filesystem control")

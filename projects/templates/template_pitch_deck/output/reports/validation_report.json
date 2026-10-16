@@ -243,30 +243,30 @@
         "valid": true,
         "warnings": []
       },
-      "total_size_mb": 6.20970344543457
+      "total_size_mb": 6.218391418457031
     },
     "figures": {
       "files": 9,
-      "size_mb": 0.3820152282714844
+      "size_mb": 0.3837242126464844
     },
     "inventory_mode": "stable-shippable-output-v1",
     "pdf": {
       "files": 4,
-      "size_mb": 1.391087532043457
+      "size_mb": 1.394618034362793
     },
     "stable_inventory": {
       "categories": {
         "figures": {
           "files": 9,
-          "size_bytes": 400572
+          "size_bytes": 402364
         },
         "pdf": {
           "files": 4,
-          "size_bytes": 1458661
+          "size_bytes": 1462363
         },
         "pptx": {
           "files": 3,
-          "size_bytes": 1153663
+          "size_bytes": 1157279
         },
         "release_bundle": {
           "files": 3,
@@ -287,7 +287,7 @@
       },
       "mode": "stable-shippable-output-v1",
       "total_files": 139,
-      "total_size_bytes": 6511346
+      "total_size_bytes": 6520456
     }
   },
   "recommendations": [],
@@ -298,11 +298,11 @@
     "passed": 9,
     "total_checks": 9
   },
-  "timestamp": "2026-10-16T05:47:19Z",
+  "timestamp": "2026-10-16T15:27:50Z",
   "validated_inputs": {
     "artifact_manifest": {
       "path": "output/reports/artifact_manifest.json",
-      "sha256": "30c7f5a139649adaacb24dddb058742651e4f9cc83743a6d497a4accb69d7807",
+      "sha256": "af598086ec00224893a251c80258eadc9571cedbf72c28c546c08da0e1b5973d",
       "size_bytes": 44130
     },
     "combined_manuscript": {
@@ -366,15 +366,15 @@
       },
       "output": {
         "file_count": 139,
-        "sha256": "878aede6337681a550ce2f855617a51b3111194ef238d88d948a95ed4c373794"
+        "sha256": "5284b2de575cee86dd07a80ed080690434757d7fb2e58a42715680ab19d1de42"
       },
       "source": {
         "file_count": 34,
         "sha256": "42f74cd4126c64c8daaea41be7c22d1ffda8e6b87ca00e964ba6e0538add49b5"
       },
       "stage": {
-        "file_count": 1891,
-        "sha256": "65ede49846df8fbde3f26750dfe14625456ebae29a1e99c063696c4f59fbeaef"
+        "file_count": 1894,
+        "sha256": "27bf97e491d7cd5b1ac5bcb67c2d1f16f11ebcfb2679c4e2aab314bbe0b09aa8"
       }
     },
     "project": "templates/template_pitch_deck",

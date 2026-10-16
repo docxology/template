@@ -12,6 +12,15 @@ import pytest
 
 @pytest.mark.parametrize("workers", ("0", "4", "-1", "many"))
 def test_actual_auxiliary_cli_refuses_invalid_worker_count_without_outputs(tmp_path: Path, workers: str) -> None:
+    _assert_invalid_worker_count(tmp_path, workers, "--installed-workers")
+
+
+@pytest.mark.parametrize("workers", ("0", "4", "-1", "many"))
+def test_actual_auxiliary_cli_refuses_invalid_auxiliary_workers_without_outputs(tmp_path: Path, workers: str) -> None:
+    _assert_invalid_worker_count(tmp_path, workers, "--auxiliary-workers")
+
+
+def _assert_invalid_worker_count(tmp_path: Path, workers: str, flag: str) -> None:
     root = Path(__file__).resolve().parents[3]
     evidence = tmp_path / "never-created"
     result = subprocess.run(
@@ -22,7 +31,7 @@ def test_actual_auxiliary_cli_refuses_invalid_worker_count_without_outputs(tmp_p
             "--repo-root",
             str(tmp_path / "absent-source"),
             "--installed",
-            "--installed-workers",
+            flag,
             workers,
             "--evidence-dir",
             str(evidence),
@@ -35,6 +44,6 @@ def test_actual_auxiliary_cli_refuses_invalid_worker_count_without_outputs(tmp_p
         timeout=30,
     )
     assert result.returncode == 2
-    assert "--installed-workers" in result.stderr
+    assert flag in result.stderr
     assert "invalid choice" in result.stderr or "invalid int value" in result.stderr
     assert not tuple(tmp_path.iterdir())

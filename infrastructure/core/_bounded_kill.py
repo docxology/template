@@ -9,10 +9,12 @@ from __future__ import annotations
 
 import contextlib
 import ctypes
+import math
 import os
 import signal
 import subprocess  # nosec B404
 import sys
+import time
 from pathlib import Path
 
 from infrastructure.core._bounded_run_guardian import (
@@ -21,6 +23,90 @@ from infrastructure.core._bounded_run_guardian import (
 )
 
 _RUN_IDS_ENV = "TEMPLATE_BOUNDED_RUN_IDS"
+
+
+def _census_remaining(deadline: float) -> float:
+    if type(deadline) not in (int, float) or not math.isfinite(deadline):
+        raise ValueError("bounded-run census requires a finite original deadline")
+    remaining = deadline - time.monotonic()
+    if remaining <= 0:
+        raise TimeoutError("original bounded-run census deadline exhausted")
+    return remaining
+
+
+def _census_snapshot(deadline: float, pid: int | None = None) -> dict[int, str]:
+    """Read numeric same-owner process states; query failure never means absence."""
+    selection = ["-x"] if pid is None else ["-p", str(pid)]
+    result = subprocess.run(  # nosec B603 - fixed numeric process-state query
+        ["/bin/ps", *selection, "-o", "pid=,uid=,stat="],
+        capture_output=True,
+        text=True,
+        check=False,
+        timeout=_census_remaining(deadline),
+    )
+    _census_remaining(deadline)
+    if result.returncode != 0:
+        if pid is not None and result.returncode == 1 and not result.stdout.strip() and not result.stderr.strip():
+            return {}
+        raise RuntimeError(f"bounded-run census ps returned {result.returncode}")
+    states = {}
+    for row in result.stdout.splitlines():
+        fields = row.split()
+        if len(fields) != 3 or not fields[0].isdigit() or not fields[1].isdigit() or int(fields[0]) <= 0:
+            raise ValueError("bounded-run census received a malformed process-state row")
+        observed_pid, uid = int(fields[0]), int(fields[1])
+        if observed_pid in states or pid is not None and observed_pid != pid:
+            raise ValueError("bounded-run census received duplicate or unexpected process identity")
+        if uid == os.geteuid():
+            states[observed_pid] = fields[2]
+    if pid is None and not states:
+        raise RuntimeError("bounded-run census returned no observable same-owner processes")
+    return states
+
+
+def observe_bounded_run_processes(run_token: str, *, deadline: float) -> set[int]:
+    """Strictly observe live same-owner token holders; this is no containment or reaping proof."""
+    _census_remaining(deadline)
+    if not isinstance(run_token, str) or len(run_token) != 32 or any(c not in "0123456789abcdef" for c in run_token):
+        raise ValueError("bounded-run census requires an exact generated run token")
+    if os.name != "posix" or sys.platform not in {"darwin", "linux"}:
+        raise ValueError("strict bounded-run census requires Darwin or Linux")
+    states = _census_snapshot(deadline)
+    query = ctypes.CDLL(None, use_errno=True).sysctl if sys.platform == "darwin" else None
+    matches: set[int] = set()
+    prefix = f"{_RUN_IDS_ENV}=".encode("ascii")
+    token = run_token.encode("ascii")
+    for pid, state in states.items():
+        _census_remaining(deadline)
+        if state.startswith("Z"):
+            continue
+        try:
+            if query is not None:
+                raw = _darwin_process_args(query, pid, deadline=deadline)
+                if raw is None:
+                    raise RuntimeError("bounded-run census could not obtain process arguments")
+                matched = _darwin_args_have_run_token(raw, run_token, strict=True)
+            else:
+                raw = Path(f"/proc/{pid}/environ").read_bytes()
+                if raw and not raw.endswith(b"\0"):
+                    raise ValueError("bounded-run census received an incomplete process environment")
+                matched = any(
+                    entry.startswith(prefix) and token in entry[len(prefix) :].split(b":") for entry in raw.split(b"\0")
+                )
+            _census_remaining(deadline)
+        except (OSError, RuntimeError, ValueError) as error:
+            # A fresh successful OS observation may confirm exit or UID change.
+            current = _census_snapshot(deadline, pid)
+            if pid not in current or current[pid].startswith("Z"):
+                continue
+            raise RuntimeError(
+                f"bounded-run census cannot observe live same-owner PID {pid} "
+                f"(cause={type(error).__name__}, errno={getattr(error, 'errno', None)})"
+            ) from error
+        if matched:
+            matches.add(pid)
+    _census_remaining(deadline)
+    return matches
 
 
 def _terminate_process_group(group_id: int) -> None:
@@ -299,43 +385,61 @@ def _darwin_tagged_process_pids(run_token: str) -> set[int]:
     return matches
 
 
-def _darwin_process_args(sysctl: object, pid: int) -> bytes | None:
+def _darwin_process_args(sysctl: object, pid: int, *, deadline: float | None = None) -> bytes | None:
     """Return one process's ``KERN_PROCARGS2`` buffer, if still available."""
     query = sysctl
     if not callable(query):
         return None
     mib = (ctypes.c_int * 3)(1, 49, pid)  # CTL_KERN, KERN_PROCARGS2, pid
     for _ in range(2):
+        if deadline is not None:
+            _census_remaining(deadline)
         size = ctypes.c_size_t(0)
-        if query(mib, 3, None, ctypes.byref(size), None, 0) != 0 or size.value == 0:
+        result = query(mib, 3, None, ctypes.byref(size), None, 0)
+        if deadline is not None:
+            _census_remaining(deadline)
+        if result != 0 or size.value == 0:
             return None
         buffer = ctypes.create_string_buffer(size.value)
-        if query(mib, 3, buffer, ctypes.byref(size), None, 0) == 0:
+        if deadline is not None:
+            _census_remaining(deadline)
+        result = query(mib, 3, buffer, ctypes.byref(size), None, 0)
+        if deadline is not None:
+            _census_remaining(deadline)
+        if result == 0:
             return bytes(buffer.raw[: size.value])
         # An exec between the sizing and data calls can change the required
         # buffer size. Retry once against the process's new argument image.
     return None
 
 
-def _darwin_args_have_run_token(raw_args: bytes, run_token: str) -> bool:
+def _invalid_darwin_args(strict: bool) -> bool:
+    if strict:
+        raise ValueError("bounded-run census received malformed Darwin process arguments")
+    return False
+
+
+def _darwin_args_have_run_token(raw_args: bytes, run_token: str, *, strict: bool = False) -> bool:
     """Return whether parsed ``KERN_PROCARGS2`` environment has *run_token*."""
     int_size = ctypes.sizeof(ctypes.c_int)
     if len(raw_args) < int_size:
-        return False
+        return _invalid_darwin_args(strict)
     argc = int.from_bytes(raw_args[:int_size], byteorder=sys.byteorder, signed=True)
     if argc < 0:
-        return False
+        return _invalid_darwin_args(strict)
+    if strict and (not raw_args.endswith(b"\0") or argc > len(raw_args)):
+        return _invalid_darwin_args(strict)
 
     cursor = raw_args.find(b"\0", int_size)
     if cursor < 0:
-        return False
+        return _invalid_darwin_args(strict)
     cursor += 1
     while cursor < len(raw_args) and raw_args[cursor] == 0:
         cursor += 1
     for _ in range(argc):
         cursor = raw_args.find(b"\0", cursor)
         if cursor < 0:
-            return False
+            return _invalid_darwin_args(strict)
         cursor += 1
     while cursor < len(raw_args) and raw_args[cursor] == 0:
         cursor += 1

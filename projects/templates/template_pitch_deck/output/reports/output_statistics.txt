@@ -8,7 +8,7 @@ Inventory Scope: stage5-delivery-mirror
 Inventory Root: output/templates/template_pitch_deck
 
 Total Files: 140
-Total Size: 6.29 MB
+Total Size: 6.30 MB
 
 Files by Category:
   • pdf: 4 files (1.39 MB)

@@ -1,0 +1,35 @@
+name: Prepare an unprivileged Linux execution account
+description: Keep strict process observation separate from the hosted runner account without changing the observer or granting payload privileges.
+inputs:
+  docker:
+    description: Preserve the caller's existing Docker group access for the required auxiliary payload.
+    required: false
+    default: "false"
+runs:
+  using: composite
+  steps:
+    - name: Prepare the scoped execution account before source custody
+      shell: bash
+      env:
+        EXECUTION_DOCKER: ${{ inputs.docker }}
+      run: |
+        set -euo pipefail
+        test "$RUNNER_OS" = Linux
+        case "$EXECUTION_DOCKER" in
+          true|false) ;;
+          *) echo "docker must be true or false" >&2; exit 1 ;;
+        esac
+        echo "TEMPLATE_CI_ARTIFACT_DIRECTORY=$RUNNER_TEMP/template-ci-execution/artifacts" >> "$GITHUB_ENV"
+        if ! command -v setfacl >/dev/null; then
+          sudo apt-get install -y --no-install-recommends acl
+        fi
+        execution_args=(prepare --state "$RUNNER_TEMP/template-ci-execution/state.json")
+        if [ "$EXECUTION_DOCKER" = true ]; then execution_args+=(--docker); fi
+        PYTHONDONTWRITEBYTECODE=1 .venv/bin/python -m infrastructure.core.testing.ci_execution_user "${execution_args[@]}"
+        execution_run=(.venv/bin/python -m infrastructure.core.testing.ci_execution_user run
+          --state "$RUNNER_TEMP/template-ci-execution/state.json" --)
+        "${execution_run[@]}" .venv/bin/python -I -c \
+          'import os; assert not {"GITHUB_TOKEN", "GH_TOKEN", "ACTIONS_RUNTIME_TOKEN", "LD_PRELOAD", "BASH_ENV"}.intersection(os.environ)'
+        execution_exit=0
+        "${execution_run[@]}" .venv/bin/python -I -c 'raise SystemExit(17)' || execution_exit=$?
+        test "$execution_exit" -eq 17

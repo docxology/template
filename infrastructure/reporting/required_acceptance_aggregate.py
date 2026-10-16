@@ -17,6 +17,7 @@ from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
 from infrastructure.project.public_hosted_origin import HostedReadbackContext
 from infrastructure.publishing.release_acceptance import RECEIPT_PATH, _checkout_revision
 from infrastructure.reporting.readiness_receipts import SCHEMA_VERSION, source_fingerprint
+from infrastructure.reporting.original_job_outcome import validate_auxiliary_receipt_closure
 from infrastructure.reporting.release_readiness_profile import collect_profile, required_profile
 from infrastructure.reporting.release_readiness_snapshot import ArtifactSnapshot, SnapshotReader
 from infrastructure.reporting.native_format_joint_source import NativeReaderOperation
@@ -75,6 +76,8 @@ def auxiliary_owned_projection(values: dict[str, dict[str, Any]], requirements: 
         raise ValueError("auxiliary source-owned profile lacks mandatory host/transfer obligations")
     if set(values["linux"].get("gates", {})) != full or set(values["darwin"].get("gates", {})) != macos:
         raise ValueError("auxiliary original owner omitted or invented source-owned gates")
+    for value in values.values():
+        validate_auxiliary_receipt_closure(value)
     return [
         {
             **values["linux"],
@@ -225,6 +228,8 @@ def merge_receipts(
         raise ValueError("aggregate needs the exact Git revision")
     gates: dict[str, Any] = {}
     for value in values:
+        if "auxiliary_workers" in value or "deadline_exhausted" in value:
+            validate_auxiliary_receipt_closure(value)
         if (
             value.get("schema_version") != SCHEMA_VERSION
             or value.get("platform_version") != version

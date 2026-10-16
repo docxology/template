@@ -24,6 +24,13 @@ def main() -> int:
     parser.add_argument("--evidence-dir", type=Path)
     parser.add_argument("--interpreter", type=Path)
     parser.add_argument("--local-model", help="Explicit already-installed loopback Ollama model for literature gates")
+    parser.add_argument(
+        "--auxiliary-workers",
+        type=int,
+        choices=(1, 2, 3),
+        default=1,
+        help="Bounded owned auxiliary child supervisors; one gate per project, one original deadline",
+    )
     mode = parser.add_mutually_exclusive_group()
     mode.add_argument("--prepare-transfer", action="store_true")
     mode.add_argument("--prepare-runtime-providers", action="store_true")
@@ -120,6 +127,7 @@ def main() -> int:
         timeout_seconds=args.timeout_seconds,
         evidence_dir=args.evidence_dir,
         interpreter=args.interpreter,
+        workers=args.auxiliary_workers,
         producer_inputs={
             scope: {"model": args.local_model, "image_id": args.docker_image_id}
             for scope in (

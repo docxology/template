@@ -17,17 +17,23 @@ from infrastructure.project.public_acceptance_evidence import (
     write_json,
 )
 from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
+from infrastructure.project.public_acceptance_auxiliary_parallel import (
+    AuxiliaryOperation,
+    AuxiliaryProcess,
+    execute_auxiliary_operations,
+)
 from infrastructure.project.public_acceptance_auxiliary_validation import (
     validate_auxiliary_process,
     validate_sandbox_transfer,
 )
 from infrastructure.reporting.readiness_receipts import SCHEMA_VERSION, source_fingerprint
-from infrastructure.reporting.release_readiness_profile import required_profile
+from infrastructure.reporting.release_readiness_profile import Requirement, required_profile
 from infrastructure.reporting.release_readiness_snapshot import SnapshotReader
 from infrastructure.reporting.release_readiness_validators import validate_acceptance
 
 from infrastructure.project.public_acceptance_auxiliary_supervision import (
     PROCESS_SCHEMA as PROCESS_SCHEMA,
+    complete_auxiliary_observation,
     supervise as supervise,
 )
 
@@ -41,6 +47,185 @@ ROOT_GATES = (
 )
 
 
+def _auxiliary_gate_operation(
+    root: Path,
+    requirement: Requirement,
+    index: int,
+    directory: Path,
+    python: Path,
+    deadline: float,
+    fingerprint: str,
+    producer_inputs: dict[str, dict[str, Any]] | None,
+) -> AuxiliaryOperation:
+    """Prepare and admit one genuine gate entirely on the controller thread."""
+    gate = requirement.id
+    cell = directory / f"{index:03d}"
+    status, details, blockers = "blocked", {}, []
+    if gate == "root:sandbox:transfer":
+        blockers = [
+            {
+                "tool": "authorized remote sandbox",
+                "reason": "select exact provider, sandbox destination and existing authorization; "
+                "independently retrieve the admitted Root export",
+            }
+        ]
+    elif not python.is_file():
+        blockers = [
+            {
+                "tool": "selected installed interpreter",
+                "reason": "explicit executable is unavailable; acquisition is disabled",
+            }
+        ]
+    elif time.monotonic() >= deadline:
+        blockers = [{"tool": "auxiliary deadline", "reason": "whole-run deadline exhausted before child launch"}]
+    else:
+        before = source_fingerprint(root)
+        raw_path = cell / "facts.json"
+        spec = write_json(
+            root,
+            cell / "spec.json",
+            {
+                "gate": gate,
+                "budget": max(1, int(deadline - time.monotonic())),
+                "raw_path": raw_path.relative_to(root).as_posix(),
+                "producer_inputs": (producer_inputs or {}).get(requirement.scope, {}),
+            },
+        )
+        from infrastructure.project.public_acceptance_auxiliary_bootstrap import (
+            WORKER,
+            prepare_audited_auxiliary_command,
+        )
+
+        command, payload = prepare_audited_auxiliary_command(
+            python, root, WORKER, ("--spec", str(root / spec["path"])), cell / "execution"
+        )
+        process = yield AuxiliaryProcess(command, root, cell / "execution", deadline, payload)
+        after = source_fingerprint(root)
+        raw = read_json(root, raw_path) if raw_path.is_file() else {}
+        raw_binding = (
+            {
+                "path": raw_path.relative_to(root).as_posix(),
+                "sha256": hashlib.sha256(raw_path.read_bytes()).hexdigest(),
+            }
+            if raw
+            else None
+        )
+        process.update(
+            gate=gate,
+            source_fingerprint=fingerprint,
+            source_before=before,
+            source_after=after,
+            raw_artifact=raw_binding,
+            spec_artifact=spec,
+        )
+        binding = write_json(root, cell / "process.json", process)
+        details = {
+            **raw.get("details", {}),
+            "command": command,
+            "process_artifact": binding,
+            "raw_artifact": raw_binding,
+            "execution_exit_code": process["exit_code"],
+        }
+        status = (
+            "pass"
+            if process["exit_code"] == 0 and raw.get("status") == "pass"
+            else "blocked"
+            if process["exit_code"] == 75
+            else "fail"
+        )
+        if (
+            not complete_auxiliary_observation(process)
+            or process["timed_out"]
+            or process["output_limit_exceeded"]
+            or before != fingerprint
+            or after != fingerprint
+            or raw.get("exit_code") != process["exit_code"]
+        ):
+            status = "fail"
+        if status == "blocked":
+            blockers = [{"tool": gate, "reason": raw.get("diagnostic", "actual auxiliary provider unavailable")}]
+        if status == "fail":
+            details["original_failure"] = {
+                "diagnostic": raw.get("diagnostic", "actual auxiliary child failed before raw facts"),
+                "failure_class": raw.get("failure_class"),
+                "original_pipeline_failure": raw.get("original_pipeline_failure"),
+                "original_exit_code": process["exit_code"],
+                "timed_out": process["timed_out"],
+            }
+        if (
+            status == "pass"
+            and requirement.kind in {"docs", "oracle", "platform", "domain", "live"}
+            and not details.get("negative_controls")
+        ):
+            negative = write_json(
+                root,
+                cell / "negative-spec.json",
+                {
+                    "gate": gate,
+                    "negative": True,
+                    "budget": 10,
+                    "raw_path": (cell / "negative-facts.json").relative_to(root).as_posix(),
+                },
+            )
+            negative_command, negative_payload = prepare_audited_auxiliary_command(
+                python, root, WORKER, ("--spec", str(root / negative["path"])), cell / "negative-execution"
+            )
+            negative_process = yield AuxiliaryProcess(
+                negative_command, root, cell / "negative-execution", deadline, negative_payload
+            )
+            facts_path = cell / "negative-facts.json"
+            facts = read_json(root, facts_path) if facts_path.is_file() else {}
+            control = write_json(
+                root,
+                cell / "negative.json",
+                {
+                    **negative_process,
+                    "gate": gate,
+                    "source_fingerprint": fingerprint,
+                    "spec_artifact": negative,
+                    "raw_artifact": {
+                        "path": facts_path.relative_to(root).as_posix(),
+                        "sha256": hashlib.sha256(facts_path.read_bytes()).hexdigest(),
+                    }
+                    if facts
+                    else None,
+                    "raw_facts": facts,
+                },
+            )
+            if (
+                not complete_auxiliary_observation(negative_process)
+                or negative_process["exit_code"] != 23
+                or facts.get("exit_code") != 23
+                or negative_process["timed_out"]
+            ):
+                status = "fail"
+            details["negative_controls"] = [
+                {
+                    "name": f"{gate}:invalid-input",
+                    "expected_exit_code": 23,
+                    "observed_exit_code": negative_process["exit_code"],
+                    "artifact": control,
+                }
+            ]
+        if status == "pass":
+            try:
+                validate_auxiliary_process(gate, fingerprint, details, SnapshotReader(root))
+                validate_acceptance(
+                    requirement, gate_payload(requirement, fingerprint, status, details, []), SnapshotReader(root)
+                )
+            except (OSError, ValueError, TypeError, KeyError) as error:
+                status = "fail"
+                details["diagnostic"] = str(error)
+    payload = gate_payload(requirement, fingerprint, status, details, blockers)
+    bound = write_json(root, cell / "gate.json", payload)
+    return gate, {
+        "status": status,
+        "command": details.get("command", ["auxiliary-preflight", gate]),
+        "artifact": bound["path"],
+        "artifact_sha256": bound["sha256"],
+    }
+
+
 def run_auxiliary_acceptance(
     root: Path,
     *,
@@ -49,10 +234,14 @@ def run_auxiliary_acceptance(
     evidence_dir: Path | None = None,
     interpreter: Path | None = None,
     producer_inputs: dict[str, dict[str, Any]] | None = None,
+    workers: int = 1,
 ) -> dict[str, Any]:
-    """Run a finite serial selection, retaining independently readable child facts."""
+    """Run a complete bounded selection with serial Source admission per scope."""
+    if type(workers) is not int or workers not in (1, 2, 3):
+        raise ValueError("auxiliary workers must be one, two or three")
     if type(timeout_seconds) is not int or timeout_seconds <= 0:
         raise ValueError("auxiliary deadline must be a positive integer")
+    deadline = time.monotonic() + timeout_seconds
     root = root.resolve(strict=True)
     fingerprint = source_fingerprint(root)
     requirements, faults = required_profile(root, SnapshotReader(root), fingerprint)
@@ -70,174 +259,30 @@ def run_auxiliary_acceptance(
         root, evidence_dir or root / "output/readiness" / f"auxiliary-{uuid.uuid4().hex}", fresh=True
     )
     python = (interpreter or Path(sys.executable)).absolute()
-    deadline = time.monotonic() + timeout_seconds
-    output: dict[str, Any] = {}
-    for index, gate in enumerate(selection):
-        requirement = available[gate]
-        cell = directory / f"{index:03d}"
-        status, details, blockers = "blocked", {}, []
-        if gate == "root:sandbox:transfer":
-            blockers = [
-                {
-                    "tool": "authorized remote sandbox",
-                    "reason": "select exact provider, sandbox destination and existing authorization; "
-                    "independently retrieve the admitted Root export",
-                }
-            ]
-        elif not python.is_file():
-            blockers = [
-                {
-                    "tool": "selected installed interpreter",
-                    "reason": "explicit executable is unavailable; acquisition is disabled",
-                }
-            ]
-        elif time.monotonic() >= deadline:
-            blockers = [{"tool": "auxiliary deadline", "reason": "whole-run deadline exhausted before child launch"}]
-        else:
-            before = source_fingerprint(root)
-            raw_path = cell / "facts.json"
-            spec = write_json(
-                root,
-                cell / "spec.json",
-                {
-                    "gate": gate,
-                    "budget": max(1, int(deadline - time.monotonic())),
-                    "raw_path": raw_path.relative_to(root).as_posix(),
-                    "producer_inputs": (producer_inputs or {}).get(requirement.scope, {}),
-                },
-            )
-            from infrastructure.project.public_acceptance_auxiliary_bootstrap import (
-                WORKER,
-                prepare_audited_auxiliary_command,
-            )
-
-            command, payload = prepare_audited_auxiliary_command(
-                python, root, WORKER, ("--spec", str(root / spec["path"])), cell / "execution"
-            )
-            process = supervise(command, root, cell / "execution", deadline, bootstrap_payload=payload)
-            after = source_fingerprint(root)
-            raw = read_json(root, raw_path) if raw_path.is_file() else {}
-            raw_binding = (
-                {
-                    "path": raw_path.relative_to(root).as_posix(),
-                    "sha256": hashlib.sha256(raw_path.read_bytes()).hexdigest(),
-                }
-                if raw
-                else None
-            )
-            process.update(
-                gate=gate,
-                source_fingerprint=fingerprint,
-                source_before=before,
-                source_after=after,
-                raw_artifact=raw_binding,
-                spec_artifact=spec,
-            )
-            binding = write_json(root, cell / "process.json", process)
-            details = {
-                **raw.get("details", {}),
-                "command": command,
-                "process_artifact": binding,
-                "raw_artifact": raw_binding,
-                "execution_exit_code": process["exit_code"],
-            }
-            status = (
-                "pass"
-                if process["exit_code"] == 0 and raw.get("status") == "pass"
-                else "blocked"
-                if process["exit_code"] == 75
-                else "fail"
-            )
-            if (
-                process["timed_out"]
-                or process["output_limit_exceeded"]
-                or before != fingerprint
-                or after != fingerprint
-                or raw.get("exit_code") != process["exit_code"]
-            ):
-                status = "fail"
-            if status == "blocked":
-                blockers = [{"tool": gate, "reason": raw.get("diagnostic", "actual auxiliary provider unavailable")}]
-            if status == "fail":
-                details["original_failure"] = {
-                    "diagnostic": raw.get("diagnostic", "actual auxiliary child failed before raw facts"),
-                    "failure_class": raw.get("failure_class"),
-                    "original_pipeline_failure": raw.get("original_pipeline_failure"),
-                    "original_exit_code": process["exit_code"],
-                    "timed_out": process["timed_out"],
-                }
-            if (
-                status == "pass"
-                and requirement.kind in {"docs", "oracle", "platform", "domain", "live"}
-                and not details.get("negative_controls")
-            ):
-                negative = write_json(
-                    root,
-                    cell / "negative-spec.json",
-                    {
-                        "gate": gate,
-                        "negative": True,
-                        "budget": 10,
-                        "raw_path": (cell / "negative-facts.json").relative_to(root).as_posix(),
-                    },
-                )
-                negative_command, negative_payload = prepare_audited_auxiliary_command(
-                    python, root, WORKER, ("--spec", str(root / negative["path"])), cell / "negative-execution"
-                )
-                negative_process = supervise(
-                    negative_command,
-                    root,
-                    cell / "negative-execution",
-                    deadline,
-                    bootstrap_payload=negative_payload,
-                )
-                facts_path = cell / "negative-facts.json"
-                facts = read_json(root, facts_path) if facts_path.is_file() else {}
-                control = write_json(
-                    root,
-                    cell / "negative.json",
-                    {
-                        **negative_process,
-                        "gate": gate,
-                        "source_fingerprint": fingerprint,
-                        "spec_artifact": negative,
-                        "raw_artifact": {
-                            "path": facts_path.relative_to(root).as_posix(),
-                            "sha256": hashlib.sha256(facts_path.read_bytes()).hexdigest(),
-                        }
-                        if facts
-                        else None,
-                        "raw_facts": facts,
-                    },
-                )
-                if negative_process["exit_code"] != 23 or facts.get("exit_code") != 23 or negative_process["timed_out"]:
-                    status = "fail"
-                details["negative_controls"] = [
-                    {
-                        "name": f"{gate}:invalid-input",
-                        "expected_exit_code": 23,
-                        "observed_exit_code": negative_process["exit_code"],
-                        "artifact": control,
-                    }
-                ]
-            if status == "pass":
-                try:
-                    validate_auxiliary_process(gate, fingerprint, details, SnapshotReader(root))
-                    validate_acceptance(
-                        requirement, gate_payload(requirement, fingerprint, status, details, []), SnapshotReader(root)
-                    )
-                except (OSError, ValueError, TypeError, KeyError) as error:
-                    status = "fail"
-                    details["diagnostic"] = str(error)
-        payload = gate_payload(requirement, fingerprint, status, details, blockers)
-        bound = write_json(root, cell / "gate.json", payload)
-        output[gate] = {
-            "status": status,
-            "command": details.get("command", ["auxiliary-preflight", gate]),
-            "artifact": bound["path"],
-            "artifact_sha256": bound["sha256"],
-        }
+    operations = [
+        (
+            available[gate].scope,
+            _auxiliary_gate_operation(
+                root, available[gate], index, directory, python, deadline, fingerprint, producer_inputs
+            ),
+        )
+        for index, gate in enumerate(selection)
+    ]
+    if workers == 1:
+        # Preserve the original complete serial selection, including explicit
+        # selections that interleave Root and project obligations.
+        observed = execute_auxiliary_operations(operations, workers=1, deadline=deadline)
+    else:
+        # Root preflights close before parallel project work. Each project's
+        # positive, negative and final admission remain one serial operation.
+        roots = [item for item in operations if item[0] == "root"]
+        projects = [item for item in operations if item[0] != "root"]
+        observed = execute_auxiliary_operations(roots, workers=1, deadline=deadline)
+        observed += execute_auxiliary_operations(projects, workers=workers, deadline=deadline)
+    by_gate = dict(observed)
+    output = {gate: by_gate[gate] for gate in selection}
     current = source_fingerprint(root) == fingerprint
+    expired = time.monotonic() >= deadline
     report = {
         "schema_version": SCHEMA_VERSION,
         "platform_version": requirements[0].platform_version,
@@ -245,13 +290,21 @@ def run_auxiliary_acceptance(
         "roster": list(PUBLIC_PROJECT_NAMES),
         "gates": output,
         "source_current": current,
+        "auxiliary_workers": workers,
+        "deadline_exhausted": expired,
         "exit_code": 1
-        if not current or any(item["status"] == "fail" for item in output.values())
+        if expired or not current or any(item["status"] == "fail" for item in output.values())
         else 75
         if any(item["status"] == "blocked" for item in output.values())
         else 0,
     }
-    return {**report, "receipt": write_json(root, directory / "receipt.json", report)}
+    receipt = write_json(root, directory / "receipt.json", report)
+    if time.monotonic() >= deadline and not report["deadline_exhausted"]:
+        # Retention may finish late, but it can retain only a failed outcome.
+        # Same-run collection occurs after this producer's actual job outcome.
+        report.update(deadline_exhausted=True, exit_code=1)
+        receipt = write_json(root, directory / "receipt.json", report)
+    return {**report, "receipt": receipt}
 
 
 def admitted_root_export(root: Path, receipt_path: Path, reader: SnapshotReader | None = None) -> dict[str, str]:
@@ -324,14 +377,18 @@ def run_sandbox_transfer(
         raise ValueError("actual source commit observation requires existing git")
     revision_process = supervise([git, "rev-parse", "HEAD"], root, directory / "revision", deadline)
     revision_bytes = reader.read(revision_process["streams"]["stdout"]["path"]).content
-    if revision_process["exit_code"] != 0 or revision_bytes.decode().strip() != source_commit:
+    if (
+        not complete_auxiliary_observation(revision_process)
+        or revision_process["exit_code"] != 0
+        or revision_bytes.decode().strip() != source_commit
+    ):
         raise ValueError("actual checkout commit differs from nominated same-run source SHA")
     for label, endpoint in (
         ("artifact", f"repos/{repository}/actions/artifacts/{artifact_id}"),
         ("repository", f"repos/{repository}"),
     ):
         process = supervise([gh, "api", "--hostname", "github.com", endpoint], root, directory / label, deadline)
-        if process["exit_code"] != 0 or process["timed_out"] or process["output_limit_exceeded"]:
+        if not complete_auxiliary_observation(process) or process["exit_code"] != 0:
             raise ValueError("actual scoped GitHub artifact API read failed")
         data = json.loads(reader.read(process["streams"]["stdout"]["path"]).content)
         observations[label] = {"data": data, "process": write_json(root, directory / f"{label}-process.json", process)}

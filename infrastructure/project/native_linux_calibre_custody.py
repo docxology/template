@@ -28,6 +28,7 @@ ROLE_NAMES = {
     "qt_module",
     "platform_plugin",
 }
+_ANCESTOR_FLAGS = getattr(os, "O_PATH", os.O_RDONLY) | os.O_DIRECTORY | os.O_NOFOLLOW
 
 
 def canonical_linux_member(label: object) -> Path:
@@ -80,11 +81,11 @@ def _parents(path: Path) -> tuple[Path, ...]:
 
 def _held_parent(path: Path) -> tuple[int, list[tuple[int, dict[str, int]]]]:
     """Hold canonical ancestors without allowing a directory traversal census."""
-    fd = os.open("/", os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW)
+    fd = os.open("/", _ANCESTOR_FLAGS)
     held = [(fd, _metadata(os.fstat(fd)))]
     try:
         for part in path.parent.parts[1:]:
-            fd = os.open(part, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW, dir_fd=fd)
+            fd = os.open(part, _ANCESTOR_FLAGS, dir_fd=fd)
             held.append((fd, _metadata(os.fstat(fd))))
         return fd, held
     except BaseException:

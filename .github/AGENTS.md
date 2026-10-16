@@ -23,6 +23,27 @@ manually. `platform-required-acceptance.yml` is also manual-only; its original
 custody requirements remain mandatory for formal release acceptance. Further
 hardening choices and the local commands are in [`docs/development/ci.md`](../docs/development/ci.md).
 
+Required Linux auxiliary qualification uses `--auxiliary-workers 3`. Only real
+child supervision overlaps; Root preflights and Source preparation/admission stay
+serial, with one complete gate at a time per project. All workers share the
+original whole-run deadline. Passing auxiliary observations require verified
+guardian cleanup; deadline refusals retain absent child IDs and exit codes.
+Cleanup admission also requires a successful final token census: an observation
+error cannot stand in for verified absence.
+
+Functional infrastructure smoke and selected contract jobs, complete Linux Root
+observations, and Linux auxiliary acceptance prepare a fresh unprivileged
+execution account before custody. The strict census keeps its global process
+view and same-owner rule. Setup detaches shared cache hardlinks before scoped
+ownership changes and forwards only declared runtime inputs. Original commands
+retain their arguments and exit status; an always-run export copies readiness
+bytes for the runner's artifact reader without changing captured permissions.
+Source-declared disposable pytest scratch is excluded from that transport;
+the exclusion record grants no observation or receipt authority.
+Prepared model services keep their original runner-owned cleanup. Hosted checks
+must verify the profile; setup and local tests alone establish no Linux or release
+acceptance.
+
 # GitHub Integration
 
 ## Overview
