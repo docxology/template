@@ -37,6 +37,10 @@ def test_required_contract_job_keeps_whole_root_budget_and_explicit_empty_outcom
 
 def test_actual_deep_owner_cannot_be_moved_back_into_smoke_or_omitted() -> None:
     for module in (
+        "tests/infra_tests/documentation/test_counts_coverage_measurement.py",
+        "tests/infra_tests/documentation/test_counts_coverage_support.py",
+        "tests/infra_tests/documentation/test_counts_provenance.py",
+        "tests/infra_tests/documentation/test_counts_refresh.py",
         "tests/infra_tests/project/test_public_reference.py",
         "tests/infra_tests/publishing/test_standalone_install_projection.py",
     ):
