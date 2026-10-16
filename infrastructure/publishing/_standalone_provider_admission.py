@@ -129,3 +129,28 @@ print(prefix+'END',flush=True)
     if refused:
         raise ValueError("native Git observer refused an otherwise valid provider commit")
     return records["TREE"].strip()
+
+
+def _git_provider_closing_metadata(cwd: Path, supplied: str) -> tuple[str, str]:
+    """Read committed metadata, then recheck clean HEAD and read its tree."""
+    if not re.fullmatch(r"[0-9a-f]{40}|[0-9a-f]{64}", supplied):
+        raise ValueError("install provider requires its existing full commit identity")
+    prefix = "template-git-provider-closing-metadata-v1:" + uuid.uuid4().hex + ":"
+    script = """
+supplied=sys.argv[2]
+read('METADATA',['ls-tree','-z',supplied,'--','pyproject.toml'])
+head=read('HEAD',['rev-parse','--verify','HEAD^{commit}'],'identity')
+resolved=read('LABEL',['rev-parse','--verify',supplied+'^{commit}'],'identity')
+dirty=read('STATUS',['status','--porcelain','--untracked-files=all'],'status')
+if head is None or not re.fullmatch(r'[0-9a-f]{40}|[0-9a-f]{64}',head) or resolved!=head or dirty:
+    refuse()
+read('TREE',['rev-parse',supplied+'^{tree}'])
+print(prefix+'END',flush=True)
+"""
+    records, refused = _provider_records(
+        cwd, script, prefix, [supplied], ("METADATA", "HEAD", "LABEL", "STATUS", "TREE"), (4,)
+    )
+    _clean_source_records(records["HEAD"].strip(), records["LABEL"].strip(), records["STATUS"], supplied)
+    if refused:
+        raise ValueError("native Git observer refused an otherwise valid provider commit")
+    return records["METADATA"], records["TREE"].strip()

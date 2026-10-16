@@ -55,7 +55,10 @@ def _git(provider: GitInstallProvider, args: list[str]) -> str:
 
 
 def _admit_provider(provider: GitInstallProvider, package: str, version: str) -> dict[str, str]:
-    from infrastructure.publishing._standalone_provider_admission import _git_provider_closing, _git_provider_opening
+    from infrastructure.publishing._standalone_provider_admission import (
+        _git_provider_closing_metadata,
+        _git_provider_opening,
+    )
     from infrastructure.publishing.standalone_mirror import _verify_committed
 
     checkout = provider.checkout.absolute()
@@ -69,12 +72,12 @@ def _admit_provider(provider: GitInstallProvider, package: str, version: str) ->
     metadata = tomllib.loads(content.decode("utf-8"))
     if normalized_name(metadata["project"]["name"]) != package or metadata["project"].get("version") != version:
         raise ValueError("install provider committed package identity/version disagrees with the source lock")
-    header, path = _git(provider, ["ls-tree", "-z", provider.commit, "--", "pyproject.toml"]).rstrip("\0").split("\t")
+    metadata_record, tree = _git_provider_closing_metadata(checkout, provider.commit)
+    header, path = metadata_record.rstrip("\0").split("\t")
     mode, kind, identity = header.split()
     if kind != "blob" or mode not in {"100644", "100755"}:
         raise ValueError("install provider metadata must be a committed regular file")
     _verify_committed(path, content, mode, {path: (mode, identity)})
-    tree = _git_provider_closing(checkout, provider.commit)
     return {
         "package": package,
         "version": version,

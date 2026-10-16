@@ -11,6 +11,7 @@ SOURCE_TEST_OWNERS: dict[str, tuple[str, ...]] = {
     "infrastructure/publishing/_standalone_git.py": ("tests/infra_tests/publishing/test_standalone_git_reads.py",),
     "infrastructure/publishing/_standalone_provider_admission.py": (
         "tests/infra_tests/publishing/test_standalone_install_projection.py",
+        "tests/infra_tests/publishing/test_standalone_git_reads.py",
     ),
     "infrastructure/reporting/native_mermaid_runtime_selection.py": (
         "tests/infra_tests/reporting/test_native_mermaid_runtime_profile.py",

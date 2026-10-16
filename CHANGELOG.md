@@ -21,6 +21,9 @@ and historical notes remain preserved.
   selected files, nonce and declared timeouts without substituting for outcome receipts.
 - Reuse each admitted Meta tree inventory and group adjacent standalone-provider
   Git reads, preserving physical-file, committed-mode and fresh closing checks.
+- Share genuine immutable projection fixtures across tests while cloning fresh
+  providers for mutations; retain independent producer, verifier and tamper controls
+  under the unchanged test deadlines.
 - Avoid constructing unused source-path ancestors during readiness checks while
   retaining every fresh symlink, containment and file-identity observation.
 - Compute source-exclusion depth once per directory census, preserving exact-case
