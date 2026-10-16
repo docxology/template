@@ -1123,3 +1123,33 @@ blocker until a fresh final-source native run succeeds; functional CI, coverage,
 policy/census admission and publication snapshot checks do not close it. Complete
 exact-main hosted acceptance must precede the version tag and authenticated
 release workflow handoff. Root 4.0.2 remains release intent until that publication.
+
+<a id="ordinary-main-integration-pr151-2026-10-16"></a>
+
+## Ordinary main integration and open acceptance — 2026-10-16 UTC
+
+`P4-MAIN-INTEGRATION-1` is complete for the ordinary
+[PR151](https://github.com/docxology/template/pull/151) integration epoch.
+[Required PR CI](https://github.com/docxology/template/actions/runs/38856377738)
+succeeded at `7a077be46d79304bdbe09e53ddb0cfc1b6d09096`. The normal merge landed
+on main as
+[`65ab291ded62cc6ae11829605413430adfa064f8`](https://github.com/docxology/template/commit/65ab291ded62cc6ae11829605413430adfa064f8),
+with the identical Git tree `f4bce3e83103c4811da80b6f0b2080a6b65f0d8b`.
+[Main CI](https://github.com/docxology/template/actions/runs/38857606387)
+also completed successfully at that main revision.
+
+Ordinary CI routes functional tests through three smoke shards and selected
+required full-module contract jobs. The manual `Optional Hardening` workflow's
+`Infra Tests`, `Infrastructure Union Coverage` and `Hardening Gate` remain
+separate, as do the full Root observations in `Platform required acceptance`.
+Their broader acceptance requirements remain open.
+
+The
+[native diagnostic preflight](https://github.com/docxology/template/actions/runs/38856377662/job/116828652206)
+at `7a077be46d79304bdbe09e53ddb0cfc1b6d09096` completed with failure and original
+exit code 124. Its declared 900-second observation deadline remains unchanged;
+the failure does not establish a cause or native acceptance. Runtime, installed,
+native, live, standalone and release acceptance remain open. Later changes need
+fresh reviewed integration and the declared exact-main acceptance before a
+version tag or release handoff; ordinary integration does not establish those
+outcomes.

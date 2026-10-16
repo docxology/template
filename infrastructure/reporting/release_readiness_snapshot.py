@@ -4,8 +4,8 @@ from __future__ import annotations
 
 import hashlib
 import json
+import os
 from dataclasses import dataclass
-from itertools import chain
 from pathlib import Path
 from typing import Any
 
@@ -161,12 +161,18 @@ class SnapshotReader:
         }:
             raise ValueError("artifact path is outside public evidence roots")
         absolute = self.root / path
-        for component in chain((absolute,), absolute.parents):
-            if component == self.root:
-                break
+        component = absolute
+        # Admission fixes exactly len(parts) lexical components below root.
+        for _ in parts:
             if component.is_symlink():
                 raise ValueError("artifact path contains a symlink")
-        if not absolute.resolve().is_relative_to(self.root):
+            component = component.parent
+        resolved = absolute.resolve()
+        try:
+            common: str | None = os.path.commonpath((resolved, self.root))
+        except ValueError:
+            common = None
+        if common is None or Path(common) != self.root:
             raise ValueError("artifact path escapes the repository")
         return absolute
 
