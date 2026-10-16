@@ -6,7 +6,7 @@ The `template/` architecture is deliberately bifurcated into a globally shared `
 
 The repository is organized into two strictly separated layers:
 
-**Infrastructure Layer** (`infrastructure/`): 31 infrastructure subdirectories—28 of them independently-importable Python packages—comprising ~1279 modules and providing reusable services. Each importable package has its own `__init__.py`, `AGENTS.md`, and `README.md`, and exports a well-defined public API (the remaining subdirectories, e.g. `config/`, hold shared configuration). The infrastructure layer knows nothing about any specific project---it provides generic capabilities (logging, rendering, validation, steganography) that any project may consume.
+**Infrastructure Layer** (`infrastructure/`): 31 infrastructure subdirectories—28 of them independently-importable Python packages—comprising ~1304 modules and providing reusable services. Each importable package has its own `__init__.py`, `AGENTS.md`, and `README.md`, and exports a well-defined public API (the remaining subdirectories, e.g. `config/`, hold shared configuration). The infrastructure layer knows nothing about any specific project---it provides generic capabilities (logging, rendering, validation, steganography) that any project may consume.
 
 **Project Layer** (`projects/`): Self-contained research workspaces. Each project directory contains:
 

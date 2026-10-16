@@ -2,39 +2,41 @@
 OUTPUT STATISTICS REPORT
 ============================================================
 
-Output Directory: output
+Output Directory: output/templates/template_template
+Inventory Mode: stable-shippable-output-v1
+Inventory Scope: stage5-delivery-mirror
+Inventory Root: output/templates/template_template
 
-Total Files: 236
-Total Size: 7.75 MB
+Total Files: 96
+Total Size: 12.67 MB
 
 Files by Category:
-  • pdf: 10 files (2.01 MB)
-  • web: 24 files (0.58 MB)
-  • slides: 169 files (3.66 MB)
-  • figures: 6 files (1.32 MB)
+  • pdf: 1 files (1.80 MB)
+  • web: 25 files (3.78 MB)
+  • slides: 21 files (2.40 MB)
+  • figures: 6 files (1.38 MB)
   • data: 3 files (0.02 MB)
-  • reports: 23 files (0.16 MB)
-  • logs: 1 files (0.00 MB)
+  • reports: 3 files (0.01 MB)
+  • manuscript: 30 files (0.14 MB)
+  • release: 2 files (0.00 MB)
+  • release_bundle: 4 files (1.35 MB)
+  • root: 1 files (1.80 MB)
 
 Largest Files:
-  • template_template_combined.pdf: 1.57 MB (pdf)
-  • 04_results_slides.pdf: 1.34 MB (slides)
-  • architecture_overview.png: 0.47 MB (figures)
-  • comparative_feature_matrix.png: 0.34 MB (figures)
-  • module_inventory.png: 0.32 MB (figures)
-
-Missing Expected Files:
-  ⚠  simulations/ directory
-  ⚠  llm/ directory
+  • source-web-fonts.js: 3.02 MB (web)
+  • template_template_combined.pdf: 1.80 MB (pdf)
+  • template_template_combined.pdf: 1.80 MB (root)
+  • 04_results_slides.pdf: 1.44 MB (slides)
+  • Friedman_2026_Template_535bd809.pdf: 1.33 MB (release_bundle)
 
 File Types:
-  • .log: 24 file(s)
-  • .tex: 23 file(s)
-  • .html: 23 file(s)
-  • .aux: 22 file(s)
-  • .pdf: 22 file(s)
-  • .toc: 22 file(s)
-  • .vrb: 21 file(s)
-  • .snm: 21 file(s)
-  • .nav: 21 file(s)
-  • .json: 16 file(s)
+  • .md: 28 file(s)
+  • .pdf: 24 file(s)
+  • .html: 22 file(s)
+  • .json: 9 file(s)
+  • .png: 6 file(s)
+  • .yaml: 2 file(s)
+  • .js: 1 file(s)
+  • .ico: 1 file(s)
+  • .example: 1 file(s)
+  • .bib: 1 file(s)

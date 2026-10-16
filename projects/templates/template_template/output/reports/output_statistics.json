@@ -2,118 +2,116 @@
   "directories": {
     "pdf": {
       "exists": true,
-      "file_count": 10,
-      "size_mb": "2.01",
-      "total_size_bytes": 2112704,
+      "file_count": 1,
+      "size_mb": "1.80",
+      "total_size_bytes": 1885338,
       "largest_files": [
         {
           "name": "template_template_combined.pdf",
-          "size_mb": "1.57",
+          "size_mb": "1.80",
+          "size_bytes": 1885338,
           "path": "pdf/template_template_combined.pdf"
-        },
-        {
-          "name": "_combined_manuscript.tex",
-          "size_mb": "0.16",
-          "path": "pdf/_combined_manuscript.tex"
-        },
-        {
-          "name": "_combined_manuscript.md",
-          "size_mb": "0.11",
-          "path": "pdf/_combined_manuscript.md"
         }
       ],
       "extensions": {
-        ".md": 1,
-        ".log": 2,
-        ".aux": 1,
-        ".blg": 1,
-        ".pdf": 1,
-        ".bib": 1,
-        ".tex": 1,
-        ".toc": 1,
-        ".bbl": 1
+        ".pdf": 1
       }
     },
     "web": {
       "exists": true,
-      "file_count": 24,
-      "size_mb": "0.58",
-      "total_size_bytes": 607108,
+      "file_count": 25,
+      "size_mb": "3.78",
+      "total_size_bytes": 3962522,
       "largest_files": [
         {
+          "name": "source-web-fonts.js",
+          "size_mb": "3.02",
+          "size_bytes": 3170848,
+          "path": "web/assets/source-web-fonts.js"
+        },
+        {
           "name": "index.html",
-          "size_mb": "0.22",
+          "size_mb": "0.24",
+          "size_bytes": 248418,
           "path": "web/index.html"
         },
         {
           "name": "_combined_manuscript.md",
           "size_mb": "0.11",
+          "size_bytes": 117266,
           "path": "web/_combined_manuscript.md"
-        },
-        {
-          "name": "manuscript__02_introduction.html",
-          "size_mb": "0.02",
-          "path": "web/manuscript__02_introduction.html"
         }
       ],
       "extensions": {
-        ".html": 22,
         ".md": 1,
-        ".ico": 1
+        ".js": 1,
+        ".ico": 1,
+        ".html": 22
       }
     },
     "slides": {
       "exists": true,
-      "file_count": 169,
-      "size_mb": "3.66",
-      "total_size_bytes": 3841825,
+      "file_count": 21,
+      "size_mb": "2.40",
+      "total_size_bytes": 2517287,
       "largest_files": [
         {
           "name": "04_results_slides.pdf",
-          "size_mb": "1.34",
+          "size_mb": "1.44",
+          "size_bytes": 1507867,
           "path": "slides/04_results_slides.pdf"
         },
         {
-          "name": "04_results_slides.log",
-          "size_mb": "0.07",
-          "path": "slides/04_results_slides.log"
+          "name": "02_introduction_slides.pdf",
+          "size_mb": "0.10",
+          "size_bytes": 100845,
+          "path": "slides/02_introduction_slides.pdf"
         },
         {
-          "name": "06_infrastructure_modules_slides.log",
-          "size_mb": "0.07",
-          "path": "slides/06_infrastructure_modules_slides.log"
+          "name": "07_security_provenance_slides.pdf",
+          "size_mb": "0.09",
+          "size_bytes": 97386,
+          "path": "slides/07_security_provenance_slides.pdf"
         }
       ],
       "extensions": {
-        ".pdf": 21,
-        ".vrb": 21,
-        ".toc": 21,
-        ".tex": 22,
-        ".log": 21,
-        ".snm": 21,
-        ".aux": 21,
-        ".nav": 21
+        ".pdf": 21
       }
+    },
+    "docx": {
+      "exists": false,
+      "file_count": 0,
+      "size_mb": "0.00",
+      "total_size_bytes": 0
+    },
+    "epub": {
+      "exists": false,
+      "file_count": 0,
+      "size_mb": "0.00",
+      "total_size_bytes": 0
     },
     "figures": {
       "exists": true,
       "file_count": 6,
-      "size_mb": "1.32",
-      "total_size_bytes": 1384862,
+      "size_mb": "1.38",
+      "total_size_bytes": 1444045,
       "largest_files": [
         {
           "name": "architecture_overview.png",
-          "size_mb": "0.47",
+          "size_mb": "0.49",
+          "size_bytes": 517957,
           "path": "figures/architecture_overview.png"
         },
         {
           "name": "comparative_feature_matrix.png",
           "size_mb": "0.34",
+          "size_bytes": 360086,
           "path": "figures/comparative_feature_matrix.png"
         },
         {
           "name": "module_inventory.png",
-          "size_mb": "0.32",
+          "size_mb": "0.34",
+          "size_bytes": 351422,
           "path": "figures/module_inventory.png"
         }
       ],
@@ -125,21 +123,24 @@
       "exists": true,
       "file_count": 3,
       "size_mb": "0.02",
-      "total_size_bytes": 17307,
+      "total_size_bytes": 18249,
       "largest_files": [
         {
           "name": "metrics.json",
-          "size_mb": "0.01",
+          "size_mb": "0.02",
+          "size_bytes": 16504,
           "path": "data/metrics.json"
         },
         {
           "name": "publication_ledger.json",
           "size_mb": "0.00",
+          "size_bytes": 1401,
           "path": "data/publication_ledger.json"
         },
         {
           "name": "transmission_manifest.json",
           "size_mb": "0.00",
+          "size_bytes": 344,
           "path": "data/transmission_manifest.json"
         }
       ],
@@ -149,32 +150,32 @@
     },
     "reports": {
       "exists": true,
-      "file_count": 23,
-      "size_mb": "0.16",
-      "total_size_bytes": 167540,
+      "file_count": 3,
+      "size_mb": "0.01",
+      "total_size_bytes": 9285,
       "largest_files": [
         {
-          "name": "evidence_registry.json",
-          "size_mb": "0.08",
-          "path": "reports/evidence_registry.json"
+          "name": "manuscript_composition.json",
+          "size_mb": "0.00",
+          "size_bytes": 5155,
+          "path": "reports/manuscript_composition.json"
         },
         {
-          "name": "artifact_manifest.json",
-          "size_mb": "0.03",
-          "path": "reports/artifact_manifest.json"
+          "name": "test_results.json",
+          "size_mb": "0.00",
+          "size_bytes": 3838,
+          "path": "reports/test_results.json"
         },
         {
-          "name": "validation_report.json",
-          "size_mb": "0.01",
-          "path": "reports/validation_report.json"
+          "name": "test_results.md",
+          "size_mb": "0.00",
+          "size_bytes": 292,
+          "path": "reports/test_results.md"
         }
       ],
       "extensions": {
-        ".json": 13,
-        ".jsonl": 1,
-        ".txt": 3,
-        ".md": 5,
-        ".html": 1
+        ".json": 2,
+        ".md": 1
       }
     },
     "simulations": {
@@ -190,117 +191,216 @@
       "total_size_bytes": 0
     },
     "logs": {
-      "exists": true,
-      "file_count": 1,
+      "exists": false,
+      "file_count": 0,
       "size_mb": "0.00",
-      "total_size_bytes": 291,
+      "total_size_bytes": 0
+    },
+    "manuscript": {
+      "exists": true,
+      "file_count": 30,
+      "size_mb": "0.14",
+      "total_size_bytes": 151338,
       "largest_files": [
         {
-          "name": "pipeline.log",
-          "size_mb": "0.00",
-          "path": "logs/pipeline.log"
+          "name": "references.bib",
+          "size_mb": "0.02",
+          "size_bytes": 25191,
+          "path": "manuscript/references.bib"
+        },
+        {
+          "name": "02_introduction.md",
+          "size_mb": "0.02",
+          "size_bytes": 18573,
+          "path": "manuscript/02_introduction.md"
+        },
+        {
+          "name": "06_infrastructure_modules.md",
+          "size_mb": "0.01",
+          "size_bytes": 10142,
+          "path": "manuscript/06_infrastructure_modules.md"
         }
       ],
       "extensions": {
-        ".log": 1
+        ".md": 26,
+        ".yaml": 2,
+        ".example": 1,
+        ".bib": 1
+      }
+    },
+    "release": {
+      "exists": true,
+      "file_count": 2,
+      "size_mb": "0.00",
+      "total_size_bytes": 2005,
+      "largest_files": [
+        {
+          "name": "upload_receipts.json",
+          "size_mb": "0.00",
+          "size_bytes": 1958,
+          "path": "release/upload_receipts.json"
+        },
+        {
+          "name": "swh_repo_url.txt",
+          "size_mb": "0.00",
+          "size_bytes": 47,
+          "path": "release/swh_repo_url.txt"
+        }
+      ],
+      "extensions": {
+        ".txt": 1,
+        ".json": 1
+      }
+    },
+    "release_bundle": {
+      "exists": true,
+      "file_count": 4,
+      "size_mb": "1.35",
+      "total_size_bytes": 1410550,
+      "largest_files": [
+        {
+          "name": "Friedman_2026_Template_535bd809.pdf",
+          "size_mb": "1.33",
+          "size_bytes": 1389726,
+          "path": "release_bundle/Friedman_2026_Template_535bd809.pdf"
+        },
+        {
+          "name": "manifest.json",
+          "size_mb": "0.01",
+          "size_bytes": 10401,
+          "path": "release_bundle/manifest.json"
+        },
+        {
+          "name": "publication_metadata.json",
+          "size_mb": "0.01",
+          "size_bytes": 9559,
+          "path": "release_bundle/publication_metadata.json"
+        }
+      ],
+      "extensions": {
+        ".pdf": 1,
+        ".json": 3
+      }
+    },
+    "root": {
+      "exists": true,
+      "file_count": 1,
+      "size_mb": "1.80",
+      "total_size_bytes": 1885338,
+      "largest_files": [
+        {
+          "name": "template_template_combined.pdf",
+          "size_mb": "1.80",
+          "size_bytes": 1885338,
+          "path": "template_template_combined.pdf"
+        }
+      ],
+      "extensions": {
+        ".pdf": 1
       }
     }
   },
-  "total_files": 236,
-  "total_size_mb": 7.7549333572387695,
+  "total_files": 96,
+  "total_size_mb": 12.670475959777832,
   "largest_files": [
     {
+      "name": "source-web-fonts.js",
+      "size_mb": "3.02",
+      "size_bytes": 3170848,
+      "category": "web",
+      "path": "web/assets/source-web-fonts.js"
+    },
+    {
       "name": "template_template_combined.pdf",
-      "size_mb": "1.57",
+      "size_mb": "1.80",
+      "size_bytes": 1885338,
       "category": "pdf",
       "path": "pdf/template_template_combined.pdf"
     },
     {
+      "name": "template_template_combined.pdf",
+      "size_mb": "1.80",
+      "size_bytes": 1885338,
+      "category": "root",
+      "path": "template_template_combined.pdf"
+    },
+    {
       "name": "04_results_slides.pdf",
-      "size_mb": "1.34",
+      "size_mb": "1.44",
+      "size_bytes": 1507867,
       "category": "slides",
       "path": "slides/04_results_slides.pdf"
     },
     {
+      "name": "Friedman_2026_Template_535bd809.pdf",
+      "size_mb": "1.33",
+      "size_bytes": 1389726,
+      "category": "release_bundle",
+      "path": "release_bundle/Friedman_2026_Template_535bd809.pdf"
+    },
+    {
       "name": "architecture_overview.png",
-      "size_mb": "0.47",
+      "size_mb": "0.49",
+      "size_bytes": 517957,
       "category": "figures",
       "path": "figures/architecture_overview.png"
     },
     {
       "name": "comparative_feature_matrix.png",
       "size_mb": "0.34",
+      "size_bytes": 360086,
       "category": "figures",
       "path": "figures/comparative_feature_matrix.png"
     },
     {
       "name": "module_inventory.png",
-      "size_mb": "0.32",
+      "size_mb": "0.34",
+      "size_bytes": 351422,
       "category": "figures",
       "path": "figures/module_inventory.png"
     },
     {
       "name": "index.html",
-      "size_mb": "0.22",
+      "size_mb": "0.24",
+      "size_bytes": 248418,
       "category": "web",
       "path": "web/index.html"
     },
     {
-      "name": "_combined_manuscript.tex",
-      "size_mb": "0.16",
-      "category": "pdf",
-      "path": "pdf/_combined_manuscript.tex"
-    },
-    {
-      "name": "_combined_manuscript.md",
-      "size_mb": "0.11",
-      "category": "pdf",
-      "path": "pdf/_combined_manuscript.md"
-    },
-    {
-      "name": "_combined_manuscript.md",
-      "size_mb": "0.11",
-      "category": "web",
-      "path": "web/_combined_manuscript.md"
-    },
-    {
-      "name": "evidence_registry.json",
-      "size_mb": "0.08",
-      "category": "reports",
-      "path": "reports/evidence_registry.json"
+      "name": "pipeline_stages.png",
+      "size_mb": "0.18",
+      "size_bytes": 186613,
+      "category": "figures",
+      "path": "figures/pipeline_stages.png"
     }
   ],
-  "missing_expected_files": [
-    "simulations/ directory",
-    "llm/ directory"
-  ],
+  "missing_expected_files": [],
   "sizes_by_category": {
-    "pdf": 2.01483154296875,
-    "web": 0.5789833068847656,
-    "slides": 3.6638498306274414,
-    "figures": 1.3207073211669922,
-    "data": 0.01650524139404297,
-    "reports": 0.15977859497070312,
-    "logs": 0.00027751922607421875
+    "pdf": 1.7979984283447266,
+    "web": 3.7789554595947266,
+    "slides": 2.40067195892334,
+    "figures": 1.3771486282348633,
+    "data": 0.017403602600097656,
+    "reports": 0.008854866027832031,
+    "manuscript": 0.14432716369628906,
+    "release": 0.0019121170043945312,
+    "release_bundle": 1.345205307006836,
+    "root": 1.7979984283447266
   },
+  "inventory_mode": "stable-shippable-output-v1",
+  "inventory_scope": "stage5-delivery-mirror",
+  "inventory_root": "output/templates/template_template",
   "file_counts_by_type": {
-    ".md": 7,
-    ".log": 24,
-    ".aux": 22,
-    ".blg": 1,
-    ".pdf": 22,
-    ".bib": 1,
-    ".tex": 23,
-    ".toc": 22,
-    ".bbl": 1,
-    ".html": 23,
+    ".pdf": 24,
+    ".md": 28,
+    ".js": 1,
     ".ico": 1,
-    ".vrb": 21,
-    ".snm": 21,
-    ".nav": 21,
+    ".html": 22,
     ".png": 6,
-    ".json": 16,
-    ".jsonl": 1,
-    ".txt": 3
+    ".json": 9,
+    ".yaml": 2,
+    ".example": 1,
+    ".bib": 1,
+    ".txt": 1
   }
 }

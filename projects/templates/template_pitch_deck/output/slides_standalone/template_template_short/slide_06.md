@@ -2,7 +2,7 @@
 
 *Slide 6 of 11 — template_template pitch, short deck — kind: `stat`*
 
-## 153 tests
+## 154 tests
 
 97.07% coverage on template_template's own source — the same gate every exemplar in the repo must pass.
 

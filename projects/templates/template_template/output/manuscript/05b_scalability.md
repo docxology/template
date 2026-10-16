@@ -12,7 +12,7 @@ Canonical trio:
 
 Meta manuscript (**`projects/templates/template_template`**) analyzes the repository via `src/template_template/` introspection metrics; it now lives alongside the other public exemplars under `projects/templates/`.
 
-These workspaces share no project-level code—only Layer 1 (31 infrastructure subdirectories, ~1279 Python files)—validating insulation between domain repos and reusable services.
+These workspaces share no project-level code—only Layer 1 (31 infrastructure subdirectories, ~1304 Python files)—validating insulation between domain repos and reusable services.
 
 ### Multi-Project Orchestration
 
