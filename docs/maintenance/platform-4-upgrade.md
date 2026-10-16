@@ -1084,3 +1084,42 @@ consistency tests. The handoff state already carried these stale counts.
 No commit, push, pull request, tag, release, sandbox transfer or publication
 occurred in this continuation; the candidate is delivered for review as a
 baseline commit plus a continuation commit on `codex/platform-4`.
+
+
+## 4.0.2 coverage and publication continuation — 2026-10-16 UTC
+
+PR [150](https://github.com/docxology/template/pull/150) merged as
+`1cd127565ca00a1a1cc7390c1c0594ffb4fdc41a`; its required PR checks and
+[exact-main CI](https://github.com/docxology/template/actions/runs/38841553351)
+passed. The narrow workflow repair installs the freshly built, noneditable Root
+SDK into Redacted's own locked coverage interpreter; its original isolated
+provider subprocess and tests remain authoritative.
+
+The original complete
+[coverage workflow](https://github.com/docxology/template/actions/runs/38837636848)
+at `d3acc580ce496075dcfceaae41a2783c2dcd1878` (attempt 1) failed: 24 project
+measurements succeeded, while Redacted's provider case and the dependent aggregate
+failed. The targeted
+[Redacted workflow](https://github.com/docxology/template/actions/runs/38841632942)
+at `1cd127565ca00a1a1cc7390c1c0594ffb4fdc41a` (attempt 1) succeeded, including
+its aggregate. Artifact `12021194385` has archive SHA-256
+`06899612bd757c2dd1619e7e822f9a5eca2c92ed0a509dfab51b489708d9c9d0`.
+
+The combined snapshot authenticates the original API/job/upload records and all
+25 original archive digests, CRCs and strict project/profile/source/percentage
+receipts. Independent review rederived every current project-input hash and
+verified that the intervening change was the reviewed workflow repair. Only nine
+coverage literals and the UTC snapshot date changed. The generated provenance's
+`source_commit` records the snapshot-generation checkout; the two workflow heads
+above record where the measurements actually ran. No single successful full
+25-project workflow or retained coverage database is claimed.
+
+The remaining publication refresh regenerates Meta's analysis/manuscript/rendered
+outputs and Pitch's counts-dependent charts and decks through their producers.
+It preserves the other completed producer payloads and all authored exemplar
+inputs. Native export begin/end diagnostics retain the original clock and
+failure semantics. The prior 900-second native timeout remains an acceptance
+blocker until a fresh final-source native run succeeds; functional CI, coverage,
+policy/census admission and publication snapshot checks do not close it. Complete
+exact-main hosted acceptance must precede the version tag and authenticated
+release workflow handoff. Root 4.0.2 remains release intent until that publication.

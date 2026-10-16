@@ -43,12 +43,20 @@ def test_active_coverage_support_closure_exactly_matches_outward_documentation_l
     split_target = contract["_split_link_target"]
     skip_parts = contract["SKIP_PARTS"]
     outward_targets: list[str] = []
+    remote_roster_references: list[str] = []
     for path in sorted(project.rglob("*.md")):
         if any(part in skip_parts for part in path.relative_to(project).parts):
             continue
         text = path.read_text(encoding="utf-8")
         for _, raw_target in iter_targets(text):
-            target, _ = split_target(raw_target)
+            target, fragment = split_target(raw_target)
+            if (
+                target == "https://github.com/docxology/template/blob/main/projects/AGENTS.md"
+                and fragment == "permanent-canonical-exemplars"
+            ):
+                outward_targets.append("projects/AGENTS.md")
+                remote_roster_references.append(path.relative_to(project).as_posix())
+                continue
             if not target or re.match(r"^[a-z][a-z0-9+.-]*:", target):
                 continue
             candidate = (path.parent / target).resolve()
@@ -77,6 +85,10 @@ def test_active_coverage_support_closure_exactly_matches_outward_documentation_l
     ]
     declared_targets = {_repo_root_anchor(spec) for spec in _COVERAGE_COPY_SUPPORT_SPECS}
 
+    assert sorted(remote_roster_references) == [
+        ".agents/skills/template-active-inference/SKILL.md",
+        "README.md",
+    ]
     assert sorted(outward_targets) == sorted(expected_targets)
     assert set(outward_targets) == declared_targets
 

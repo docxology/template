@@ -49,6 +49,11 @@ and historical notes remain preserved.
   while preserving independent exemplar versions and Lean 4.35.0.
 - Add reviewed metadata planning, exact-input checking, retained compensating
   rollback and strict refusal of ambiguous publication configuration.
+- Refresh coverage from authenticated original measurements for all public
+  exemplars; preserve the failed full workflow and successful Redacted follow-up
+  as distinct evidence. Correct the retained-database claim in generated counts.
+- Install the genuine Root SDK in Redacted's coverage environment and add bounded
+  export timing diagnostics under the unchanged native acceptance deadline.
 
 ## [4.0.1] - 2026-10-10
 

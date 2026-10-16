@@ -23,11 +23,7 @@ from infrastructure.project.installed_acceptance_artifacts import AdmittedWheel,
 from infrastructure.project.installed_acceptance_runtime import freeze_locked_metadata, install_admitted_wheels
 from infrastructure.project.public_acceptance_scope import RuntimeScope
 from infrastructure.project.public_reference import _canonical_inventory
-from infrastructure.project.public_reference_git import (
-    GitReference,
-    inventory,
-    remaining,
-)
+from infrastructure.project.public_reference_git import GitReference, inventory, remaining
 from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
 from infrastructure.project.public_source_body_admission import (
     FixtureAdmission,
@@ -42,6 +38,7 @@ from infrastructure.reporting.release_readiness_snapshot import (
     json_object_from_bytes,
 )
 from infrastructure.reporting.native_tool_process import run_native_tool_process
+from infrastructure.reporting.native_preparation_progress import export_timing_progress
 
 SCHEMA = "template-native-prepared-installed-runtime-v1"
 MAX_WHEEL = 64 * 1024 * 1024
@@ -333,6 +330,7 @@ def prepare_native_installed_runtime(
         cell.mkdir(mode=0o700)
         cell_evidence = evidence / f"scope-{ordinal:03d}"
         cell_evidence.mkdir(mode=0o700)
+        export_timing_progress("begin", ordinal, scope, deadline)
         source, _ = prepare_export(
             current_root,
             lookup[scope],
@@ -340,6 +338,7 @@ def prepare_native_installed_runtime(
             current_root / "output/readiness" / f"native-preparation-{scratch.name}" / f"scope-{ordinal:03d}",
             deadline_monotonic=deadline,
         )
+        export_timing_progress("end", ordinal, scope, deadline)
         wheel_dir = cell / "wheels"
         run(
             (

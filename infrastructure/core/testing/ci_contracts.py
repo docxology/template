@@ -7,6 +7,10 @@ from __future__ import annotations
 CONTRACT_SECONDS = 6600
 CONTRACT_MODULES = frozenset(
     {
+        "tests/infra_tests/documentation/test_counts_coverage_measurement.py",
+        "tests/infra_tests/documentation/test_counts_coverage_support.py",
+        "tests/infra_tests/documentation/test_counts_provenance.py",
+        "tests/infra_tests/documentation/test_counts_refresh.py",
         "tests/infra_tests/project/test_installed_acceptance.py",
         "tests/infra_tests/project/test_public_acceptance_auxiliary.py",
         "tests/infra_tests/project/test_public_reference.py",

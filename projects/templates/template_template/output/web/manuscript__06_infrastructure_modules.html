@@ -581,8 +581,8 @@ mjx-container[display="true"] {
 Reference</h1>
 <p>This section inventories every Layer‑1 subdirectory returned by
 <code>31</code> <code>discover_infrastructure_modules(repo_root)</code>.
-File totals use <code>1279</code> Python sources across infra +
-<code>12,193</code> infra tests guarding them. Documentation Duality =
+File totals use <code>1304</code> Python sources across infra +
+<code>12,305</code> infra tests guarding them. Documentation Duality =
 paired <code>README.md</code> + <code>AGENTS.md</code>; optional
 <code>SKILL.md</code> manifests feed
 <code>python -m infrastructure.skills</code>.</p>
@@ -627,7 +627,7 @@ paired <code>README.md</code> + <code>AGENTS.md</code>; optional
 </tr>
 <tr>
 <td><code>core</code></td>
-<td style="text-align: center;">187</td>
+<td style="text-align: center;">193</td>
 <td style="text-align: center;">✓</td>
 <td style="text-align: center;">✓</td>
 <td><code>get_logger</code>, <code>load_config</code>,
@@ -709,7 +709,7 @@ contracts + validation</td>
 </tr>
 <tr>
 <td><code>project</code></td>
-<td style="text-align: center;">97</td>
+<td style="text-align: center;">103</td>
 <td style="text-align: center;">✓</td>
 <td style="text-align: center;">✓</td>
 <td><code>discover_projects</code>, workspace management</td>
@@ -730,7 +730,7 @@ contracts + validation</td>
 </tr>
 <tr>
 <td><code>publishing</code></td>
-<td style="text-align: center;">80</td>
+<td style="text-align: center;">83</td>
 <td style="text-align: center;">✓</td>
 <td style="text-align: center;">✓</td>
 <td>Zenodo, executable bundle, archival targets</td>
@@ -751,7 +751,7 @@ contracts + validation</td>
 </tr>
 <tr>
 <td><code>reporting</code></td>
-<td style="text-align: center;">396</td>
+<td style="text-align: center;">406</td>
 <td style="text-align: center;">✓</td>
 <td style="text-align: center;">✓</td>
 <td>Coverage parsers, dashboards, executive artefacts</td>
@@ -851,8 +851,8 @@ id="infrastructureconfig-non-package-subdirectory"><code>infrastructure/config</
 (<code>.env.template</code>, hardened defaults referenced by Docker +
 CLI). <code>config/</code> carries no <code>__init__.py</code>, so it is
 a configuration subdirectory rather than an importable package.</p>
-<h3 id="infrastructure.core-187-files"><code>infrastructure.core</code>
-(187 files)</h3>
+<h3 id="infrastructure.core-193-files"><code>infrastructure.core</code>
+(193 files)</h3>
 <p>Checkpointing, logging, pipeline YAML parsing, telemetry bridges,
 filesystem helpers, hardened exceptions. Everything else imports logging
 + error taxonomy from here first.</p>
@@ -915,8 +915,8 @@ interactive menus, subprocess wiring for thin shell wrappers
 (<code>run.sh</code>, <code>secure_run.sh</code>), and stubs used in CI
 for menu parsing tests.</p>
 <h3
-id="infrastructure.project-97-files"><code>infrastructure.project</code>
-(97 files)</h3>
+id="infrastructure.project-103-files"><code>infrastructure.project</code>
+(103 files)</h3>
 <p>Canonical discovery (<code>discover_projects</code>) enforcing
 <code>src/</code> + <code>tests/</code>, slug validation, nested WIP
 namespaces.</p>
@@ -935,8 +935,8 @@ structured Review system with severity (blocking/major/minor/info) and
 verdict (refutes/supports). Features a CLI and pipeline integration
 hooks for automatic lineage recording after every stage.</p>
 <h3
-id="infrastructure.publishing-80-files"><code>infrastructure.publishing</code>
-(80 files)</h3>
+id="infrastructure.publishing-83-files"><code>infrastructure.publishing</code>
+(83 files)</h3>
 <p>Metadata models, APA/BibTeX/MLA formatters, optional Zenodo
 clients.</p>
 <h3
@@ -950,8 +950,8 @@ id="infrastructure.rendering-120-files"><code>infrastructure.rendering</code>
 <p>Pandoc shim, Unicode/XeLaTeX postprocessors, combined PDF/HTML/slide
 exporters.</p>
 <h3
-id="infrastructure.reporting-396-files"><code>infrastructure.reporting</code>
-(396 files)</h3>
+id="infrastructure.reporting-406-files"><code>infrastructure.reporting</code>
+(406 files)</h3>
 <p>Parses pytest + coverage artefacts for dashboards; pairs with
 Stage 01 summaries and downstream executive exports.</p>
 <h3
