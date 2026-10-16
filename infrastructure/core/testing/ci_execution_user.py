@@ -363,7 +363,9 @@ def _root_prepare(path: Path) -> None:
     os.chown(artifacts, account.pw_uid, account.pw_gid)
     os.chown(request_path, 0, 0)
     os.chown(path.parent, 0, 0)
-    os.chmod(path.parent, 0o755)
+    os.chmod(path.parent, 0o700)
+    _acl([path.parent], caller, "--x", deadline)
+    _acl([path.parent], account.pw_uid, "--x", deadline)
     _files._phase("state")
     with path.open("x") as output:
         json.dump(data, output, sort_keys=True)
