@@ -10,6 +10,7 @@ from contextlib import contextmanager
 from pathlib import Path
 
 _DIRECTORY_FLAGS = os.O_RDONLY | getattr(os, "O_DIRECTORY", 0) | getattr(os, "O_NOFOLLOW", 0)
+_ANCESTOR_FLAGS = getattr(os, "O_PATH", os.O_RDONLY) | getattr(os, "O_DIRECTORY", 0) | getattr(os, "O_NOFOLLOW", 0)
 _FILE_FLAGS = os.O_RDONLY | getattr(os, "O_NOFOLLOW", 0) | os.O_NONBLOCK
 _DIGESTS: dict[tuple[object, ...], str] = {}
 
@@ -53,14 +54,14 @@ def anchored_parent(path: Path) -> Iterator[int | None]:
     path = path.absolute()
     if ".." in path.parts:
         raise ValueError("Fingerprint paths cannot contain parent traversal")
-    descriptors = [os.open(path.anchor, _DIRECTORY_FLAGS)]
+    descriptors = [os.open(path.anchor, _ANCESTOR_FLAGS)]
     bindings: list[tuple[int, str, int]] = []
     current: int | None = descriptors[0]
     try:
         for name in path.parent.parts[1:]:
             assert current is not None
             try:
-                child = os.open(name, _DIRECTORY_FLAGS, dir_fd=current)
+                child = os.open(name, _ANCESTOR_FLAGS, dir_fd=current)
             except FileNotFoundError:
                 current = None
                 break

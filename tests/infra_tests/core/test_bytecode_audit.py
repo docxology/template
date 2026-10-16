@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import os
+import stat
 import subprocess
 import sys
 import types
@@ -9,7 +11,7 @@ from pathlib import Path
 
 import pytest
 
-from infrastructure.core.bytecode_audit import canonical_code
+from infrastructure.core.bytecode_audit import canonical_code, _read_cache
 from infrastructure.core.implementation_custody import bytecode_audit_bootstrap
 
 
@@ -296,3 +298,32 @@ def test_startup_seed_cannot_admit_an_already_imported_sibling_module(tmp_path: 
         timeout=30,
     )
     assert result.returncode != 0 and "must precede public imports" in result.stderr
+
+
+@pytest.mark.skipif(os.name != "posix" or os.geteuid() == 0, reason="requires real nonroot POSIX permission checks")
+def test_cache_read_traverses_search_only_ancestors_without_listing(tmp_path: Path) -> None:
+    ancestor = tmp_path.resolve() / "search-only"
+    root = ancestor / "selected"
+    root.mkdir(parents=True)
+    root.chmod(0o755)
+    target = root / "cache.pyc"
+    content = b"actual held cache bytes\x00\xff"
+    target.write_bytes(content)
+    target.chmod(0o600)
+    ancestor.chmod(0o111)
+    try:
+        with pytest.raises(PermissionError):
+            list(ancestor.iterdir())
+        if hasattr(os, "O_PATH"):
+            assert _read_cache(target) == content
+        else:
+            with pytest.raises(PermissionError):
+                _read_cache(target)
+        assert stat.S_IMODE(ancestor.stat().st_mode) == 0o111
+        assert stat.S_IMODE(root.stat().st_mode) == 0o755
+        assert stat.S_IMODE(target.stat().st_mode) == 0o600
+    finally:
+        ancestor.chmod(0o700)
+    assert target.read_bytes() == content
+    assert set(ancestor.iterdir()) == {root}
+    assert set(root.iterdir()) == {target}

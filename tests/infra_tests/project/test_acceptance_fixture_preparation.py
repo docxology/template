@@ -151,6 +151,50 @@ def test_preparation_retains_exact_committed_seed_and_archive_bodies(tmp_path: P
         prepare_acceptance_fixtures(root, archives=archives)
 
 
+def test_search_only_ancestors_preserve_fixture_bytes_and_readable_root_boundary(tmp_path: Path) -> None:
+    ancestor = tmp_path.resolve(strict=True) / "search-only"
+    ancestor.mkdir()
+    root, archives, manifest, _ = _owned_fixture(ancestor)
+    if os.name == "posix" and os.geteuid() != 0:
+        ancestor.chmod(0o111)
+        try:
+            with pytest.raises(PermissionError):
+                list(ancestor.iterdir())
+            if hasattr(os, "O_PATH"):
+                result = prepare_acceptance_fixtures(root, archives=archives)
+                assert result["groups"] == {"requests": 2, "fastapi": 2, "timeseries": 10}
+                assert result["acceptance"] is False
+                for group in manifest["groups"]:
+                    for record in group["files"]:
+                        target = root / group["root"] / record["path"]
+                        assert target.is_file() and not target.is_symlink()
+                        if group["id"] == "timeseries":
+                            assert target.read_bytes() == (root / record["source"]).read_bytes()
+                        else:
+                            assert len(target.read_bytes()) == record["bytes"]
+                            assert hashlib.sha256(target.read_bytes()).hexdigest() == record["sha256"]
+                        assert not target.stat().st_mode & 0o111
+                with pytest.raises(ValueError, match="existing target"):
+                    prepare_acceptance_fixtures(root, archives=archives)
+            else:
+                with pytest.raises(PermissionError):
+                    with _held_parent(root, MANIFEST_PATH):
+                        pytest.fail("read-only ancestor descriptors admitted an unreadable directory")
+        finally:
+            ancestor.chmod(0o755)
+        root.chmod(0o111)
+        try:
+            with pytest.raises(PermissionError):
+                with _held_parent(root, MANIFEST_PATH):
+                    pytest.fail("unreadable nominated fixture Root was admitted")
+        finally:
+            root.chmod(0o755)
+    with _held_parent(Path(root.anchor), "owned-fixture-root-probe") as (descriptor, name):
+        assert os.fstat(descriptor).st_ino == Path(root.anchor).stat().st_ino
+        os.listdir(descriptor)
+        assert name == "owned-fixture-root-probe"
+
+
 def test_preparation_refuses_changed_git_inputs_and_existing_or_linked_paths(tmp_path: Path) -> None:
     for fault in ("manifest", "seed", "seed-symlink", "parent-symlink", "existing-target"):
         case = tmp_path / fault

@@ -1,7 +1,8 @@
 """Permission contract for the shared confined publication writer."""
 
-from pathlib import Path
+import os
 import stat
+from pathlib import Path
 
 import pytest
 
@@ -230,3 +231,81 @@ def test_held_lock_refuses_replaced_ancestor_of_nominated_root(tmp_path: Path) -
             ancestor.symlink_to(external.parent, target_is_directory=True)
     assert sentinel.read_text() == "private sentinel"
     assert {path.name for path in external.iterdir()} == {sentinel.name}
+
+
+@pytest.mark.skipif(os.name != "posix" or os.geteuid() == 0, reason="requires real nonroot POSIX permission checks")
+@pytest.mark.parametrize("operation", ["text", "binary", "read", "append", "lock", "unlink"])
+def test_confined_operations_traverse_search_only_ancestors_without_listing(tmp_path: Path, operation: str) -> None:
+    from infrastructure.core.files.secure_write import atomic_write_bytes_confined, read_bytes_confined, unlink_confined
+
+    ancestor = tmp_path.resolve() / "search-only"
+    root = ancestor / "selected"
+    parent = root / "data"
+    parent.mkdir(parents=True)
+    root.chmod(0o755)
+    parent.chmod(0o750)
+    target = parent / "state"
+    target.write_bytes(b"original")
+    target.chmod(0o640)
+    identity = root.stat().st_dev, root.stat().st_ino
+
+    def perform() -> None:
+        if operation == "text":
+            atomic_write_text_confined(root, target, "updated", mode=0o600, expected_root_identity=identity)
+        elif operation == "binary":
+            atomic_write_bytes_confined(root, target, b"updated\x00", mode=0o600, expected_root_identity=identity)
+        elif operation == "read":
+            assert read_bytes_confined(root, target, expected_root_identity=identity) == b"original"
+        elif operation == "append":
+            append_text_confined(root, target, "updated", expected_root_identity=identity)
+        elif operation == "unlink":
+            unlink_confined(root, target)
+        else:
+            with confined_file_lock(root, target, expected_root_identity=identity):
+                assert target.read_bytes() == b"original"
+
+    ancestor.chmod(0o111)
+    try:
+        with pytest.raises(PermissionError):
+            list(ancestor.iterdir())
+        if hasattr(os, "O_PATH"):
+            perform()
+        else:
+            with pytest.raises((OSError, ValueError)):
+                perform()
+        assert stat.S_IMODE(ancestor.stat().st_mode) == 0o111
+        assert stat.S_IMODE(root.stat().st_mode) == 0o755
+        assert stat.S_IMODE(parent.stat().st_mode) == 0o750
+    finally:
+        ancestor.chmod(0o700)
+    assert set(ancestor.iterdir()) == {root}
+    expected = {"data"}
+    if not hasattr(os, "O_PATH") or operation != "unlink":
+        expected.add("data/state")
+        content = (
+            {
+                "text": b"updated",
+                "binary": b"updated\x00",
+                "append": b"originalupdated",
+            }.get(operation, b"original")
+            if hasattr(os, "O_PATH")
+            else b"original"
+        )
+        assert target.read_bytes() == content
+        mode = 0o600 if hasattr(os, "O_PATH") and operation in {"text", "binary", "append"} else 0o640
+        assert stat.S_IMODE(target.stat().st_mode) == mode
+    if hasattr(os, "O_PATH") and operation == "append":
+        expected.add("data/state.append.lock")
+        assert stat.S_IMODE((parent / "state.append.lock").stat().st_mode) == 0o600
+    assert {path.relative_to(root).as_posix() for path in root.rglob("*")} == expected
+    if operation == "read":
+        # Search-only handles must never replace readable handles at/below the
+        # selected confinement root, even on platforms with O_PATH.
+        for required_readable in (root, parent):
+            mode = stat.S_IMODE(required_readable.stat().st_mode)
+            required_readable.chmod(0o111)
+            try:
+                with pytest.raises((OSError, ValueError)):
+                    read_bytes_confined(root, target)
+            finally:
+                required_readable.chmod(mode)

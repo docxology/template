@@ -30,10 +30,12 @@ def _metadata(value: os.stat_result) -> dict[str, int]:
 
 
 def _directory(path: Path) -> int:
-    fd = os.open("/", os.O_RDONLY | os.O_DIRECTORY)
+    ancestor_flags = getattr(os, "O_PATH", os.O_RDONLY) | os.O_DIRECTORY | os.O_NOFOLLOW
+    fd = os.open("/", os.O_RDONLY | os.O_DIRECTORY if path == Path("/") else ancestor_flags)
     try:
-        for part in path.parts[1:]:
-            child = os.open(part, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW, dir_fd=fd)
+        for index, part in enumerate(path.parts[1:], 1):
+            flags = os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW if index == len(path.parts) - 1 else ancestor_flags
+            child = os.open(part, flags, dir_fd=fd)
             os.close(fd)
             fd = child
         return fd

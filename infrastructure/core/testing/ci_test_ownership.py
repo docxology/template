@@ -16,6 +16,9 @@ SOURCE_TEST_OWNERS: dict[str, tuple[str, ...]] = {
         "tests/infra_tests/core/pipeline/test_stage_source_launch.py",
         "tests/infra_tests/reporting/test_native_original_launch_correctness.py",
     ),
+    "infrastructure/core/pipeline/fingerprint_files.py": (
+        "tests/infra_tests/core/pipeline/test_fingerprint_observations.py",
+    ),
     "infrastructure/core/pipeline/fingerprints.py": (
         "tests/infra_tests/core/pipeline/test_fingerprint_observations.py",
     ),

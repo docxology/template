@@ -22,6 +22,7 @@ SCHEMA = "template/executed-bytecode-audit/1"
 REGISTRY_ATTRIBUTE = "_template_executed_bytecode_audit"
 MAX_CACHE_BYTES = 64 * 1024 * 1024
 MAX_EXECUTIONS = 10000
+_ANCESTOR_FLAGS = getattr(os, "O_PATH", os.O_RDONLY) | os.O_DIRECTORY | os.O_NOFOLLOW
 
 
 def _read_cache(path: Path) -> bytes:
@@ -29,12 +30,12 @@ def _read_cache(path: Path) -> bytes:
     path = path.absolute()
     if ".." in path.parts:
         raise ValueError("audit paths cannot contain parent traversal")
-    descriptors = [os.open(path.anchor, os.O_RDONLY | os.O_DIRECTORY)]
+    descriptors = [os.open(path.anchor, _ANCESTOR_FLAGS)]
     bindings = []
     directory = descriptors[0]
     try:
         for name in path.parts[1:-1]:
-            child = os.open(name, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW, dir_fd=directory)
+            child = os.open(name, _ANCESTOR_FLAGS, dir_fd=directory)
             descriptors.append(child)
             bindings.append((directory, name, child))
             directory = child
