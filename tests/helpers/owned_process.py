@@ -51,7 +51,7 @@ class OwnedProcessFixture:
         assert all(type(child[key]) is int and child[key] > 0 for key in ("pid", "ppid", "session_id"))
         assert child["token"] == self.token
         assert all(type(child[key]) is float and math.isfinite(child[key]) for key in ("started", "write_deadline"))
-        assert child["write_deadline"] - child["started"] == self.write_delay_seconds
+        assert child["write_deadline"] == child["started"] + self.write_delay_seconds
         assert parent["child"] == child and parent["root_pid"] == child["ppid"] != child["pid"]
         assert type(parent["root_session_id"]) is int and parent["root_session_id"] > 0
         expected_session = child["pid"] if self.detached else parent["root_session_id"]

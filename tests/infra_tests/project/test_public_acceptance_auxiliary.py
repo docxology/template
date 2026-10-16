@@ -2,6 +2,10 @@
 
 from __future__ import annotations
 
+import errno
+import os
+import shutil
+import stat
 import sys
 import time
 from pathlib import Path
@@ -23,6 +27,66 @@ PRINT_WITNESS_FAULTS = {
     "library-files": "native decoder provider file custody changed",
     "tool": "actual native tool command/run/outcome differs",
 }
+
+
+def _copy_prepared_runtime_file(original: str, copied: str) -> str:
+    """Retain prepared bytes without hard-linking another owner's runtime inode."""
+    try:
+        os.lstat(copied)
+    except FileNotFoundError:
+        pass
+    else:
+        raise FileExistsError(errno.EEXIST, os.strerror(errno.EEXIST), copied)
+    metadata = os.lstat(original)
+    if os.name == "posix" and stat.S_ISREG(metadata.st_mode) and metadata.st_uid == os.geteuid():
+        try:
+            os.link(original, copied)
+        except OSError as error:
+            if error.errno not in {errno.EPERM, errno.EXDEV}:
+                raise
+        else:
+            return copied
+    return shutil.copy2(original, copied)
+
+
+@pytest.mark.skipif(os.name != "posix" or os.geteuid() == 0, reason="requires actual nonroot POSIX file ownership")
+def test_prepared_runtime_copy_preserves_owned_and_foreign_file_boundaries(tmp_path: Path) -> None:
+    owned = tmp_path / "owned-runtime"
+    owned.write_bytes(b"actual owned prepared runtime")
+    owned.chmod(0o640)
+    owned_copy = tmp_path / "owned-copy"
+    assert _copy_prepared_runtime_file(str(owned), str(owned_copy)) == str(owned_copy)
+    assert (owned.stat().st_dev, owned.stat().st_ino) == (owned_copy.stat().st_dev, owned_copy.stat().st_ino)
+    assert owned.stat().st_nlink == owned_copy.stat().st_nlink == 2
+    assert owned_copy.read_bytes() == owned.read_bytes()
+    assert stat.S_IMODE(owned_copy.stat().st_mode) == 0o640
+
+    foreign = Path("/usr/share/zoneinfo/UTC").resolve(strict=True)
+    metadata = foreign.stat()
+    assert stat.S_ISREG(metadata.st_mode) and metadata.st_uid == 0 != os.geteuid()
+    assert 0 < metadata.st_size <= 65536
+    fields = ("st_uid", "st_dev", "st_ino", "st_nlink", "st_size", "st_mtime_ns", "st_ctime_ns")
+    before = tuple(getattr(metadata, field) for field in fields)
+    contents = foreign.read_bytes()
+    foreign_copy = tmp_path / "foreign-copy"
+    assert _copy_prepared_runtime_file(str(foreign), str(foreign_copy)) == str(foreign_copy)
+    copied = foreign_copy.stat()
+    assert foreign_copy.read_bytes() == contents
+    assert stat.S_IMODE(copied.st_mode) == stat.S_IMODE(metadata.st_mode)
+    assert (copied.st_dev, copied.st_ino) != (metadata.st_dev, metadata.st_ino)
+    assert copied.st_uid == os.geteuid() and copied.st_nlink == 1
+
+    sentinel = tmp_path / "existing-destination"
+    sentinel.write_bytes(b"must not overwrite")
+    for original in (owned, foreign):
+        with pytest.raises(FileExistsError):
+            _copy_prepared_runtime_file(str(original), str(sentinel))
+        assert sentinel.read_bytes() == b"must not overwrite"
+    absent_copy = tmp_path / "absent-copy"
+    with pytest.raises(FileNotFoundError):
+        _copy_prepared_runtime_file(str(tmp_path / "missing-source"), str(absent_copy))
+    assert not absent_copy.exists()
+    assert tuple(getattr(foreign.stat(), field) for field in fields) == before
 
 
 def test_supervision_preserves_original_failure_and_bound_streams(tmp_path: Path) -> None:
@@ -124,17 +188,17 @@ def test_real_process_readback_after_producer_root_and_wrapper_deleted(tmp_path:
     library = environment / f"lib/python{sys.version_info.major}.{sys.version_info.minor}"
     library.mkdir(parents=True)
     # Complete genuine installed RECORD files need regular held directories.
-    # Hard links retain exact prepared bytes without another environment install
-    # or copying its large data allocation; the producer never writes them.
+    # Reuse owned regular inodes when permitted; copy foreign-owned runtime
+    # files with their metadata. The producer never writes prepared files.
     shutil.copytree(
         prepared / f"lib/python{sys.version_info.major}.{sys.version_info.minor}/site-packages",
         library / "site-packages",
-        copy_function=os.link,
+        copy_function=_copy_prepared_runtime_file,
     )
-    shutil.copytree(prepared / "share", environment / "share", copy_function=os.link)
+    shutil.copytree(prepared / "share", environment / "share", copy_function=_copy_prepared_runtime_file)
     for entrypoint in (prepared / "bin").iterdir():
         if entrypoint.is_file() and not entrypoint.is_symlink() and entrypoint.name != "python":
-            os.link(entrypoint, environment / "bin" / entrypoint.name)
+            _copy_prepared_runtime_file(str(entrypoint), str(environment / "bin" / entrypoint.name))
     directory = producer / "output/readiness/portable"
     gate = "root:roster"
     from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
