@@ -54,6 +54,10 @@ and historical notes remain preserved.
   as distinct evidence. Correct the retained-database claim in generated counts.
 - Install the genuine Root SDK in Redacted's coverage environment and add bounded
   export timing diagnostics under the unchanged native acceptance deadline.
+- Isolate Linux functional tests under their prepared execution account, retain
+  setup failures, and preserve strict process-census and cleanup requirements.
+- Read pinned Source and native inputs through search-only ancestors while
+  retaining selected-root, file identity, digest and closing checks.
 
 ## [4.0.1] - 2026-10-10
 

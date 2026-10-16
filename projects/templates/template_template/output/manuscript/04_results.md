@@ -18,8 +18,8 @@ The `./run.sh` interactive orchestrator can execute the public roster through th
 
 | Metric | Value |
 |--------|-------|
-| Test files | 922+ |
-| Total tests | ~12,305 |
+| Test files | 925+ |
+| Total tests | ~12,341 |
 | Infrastructure coverage gate | ≥60% configured floor |
 | Prohibited mock-framework imports | Checked by the static no-mocks gate |
 
@@ -34,7 +34,7 @@ The introspection module (`template_template.core.introspection`) emits the auth
 | `autoresearch` | 11 | ✓ | ✓ | `build_autoresearch_plan`, readiness validation CLI |
 | `benchmark` | 4 | ✓ | ✓ | Template harness scoring + comparative gates |
 | `config` | 0 | ✓ | ✓ | Repository defaults + hardened templates |
-| `core` | 193 | ✓ | ✓ | `get_logger`, `load_config`, `TemplateError` |
+| `core` | 195 | ✓ | ✓ | `get_logger`, `load_config`, `TemplateError` |
 | `docker` | 0 | ✓ | ✓ | Containerisation scaffolding |
 | `doctor` | 14 | ✓ | ✓ | Checkout diagnose/fix/undo repairs |
 | `documentation` | 23 | ✓ | ✓ | `FigureManager`, `build_api_index`, `generate_markdown_table` |
@@ -45,7 +45,7 @@ The introspection module (`template_template.core.introspection`) emits the auth
 | `metadata` | 3 | ✓ | ✓ | `normalized_repository_url`, `generate_metadata_package` |
 | `methods` | 10 | ✓ | ✓ | `build_methods_orchestration_plan`, methods-stage contracts + validation |
 | `orchestration` | 14 | ✓ | ✓ | `PipelineRunner`, entry point for `./run.sh` |
-| `project` | 103 | ✓ | ✓ | `discover_projects`, workspace management |
+| `project` | 104 | ✓ | ✓ | `discover_projects`, workspace management |
 | `prose` | 9 | ✓ | ✓ | Markdown readability + prose tooling |
 | `provenance` | 9 | ✓ | ✓ | — |
 | `publishing` | 83 | ✓ | ✓ | Zenodo, executable bundle, archival targets |
