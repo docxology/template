@@ -4,9 +4,13 @@ from __future__ import annotations
 
 import hashlib
 import math
+import os
 import platform
+import re
 import shutil
+import stat
 import subprocess
+import sys
 import time
 from pathlib import Path
 from typing import Any
@@ -28,6 +32,32 @@ from infrastructure.project.public_acceptance_evidence import cell_environment, 
 
 PROCESS_SCHEMA = "template-auxiliary-process-v3"
 MAX_STREAM_BYTES = 16 * 1024 * 1024
+_CENSUS_DIAGNOSTIC_INTS = (
+    ("pid", 1, 2**31 - 1),
+    ("caller_uid", 0, 2**32 - 1),
+    ("caller_euid", 0, 2**32 - 1),
+    ("caller_gid", 0, 2**32 - 1),
+    ("caller_egid", 0, 2**32 - 1),
+    ("uid_real", 0, 2**32 - 1),
+    ("uid_effective", 0, 2**32 - 1),
+    ("uid_saved", 0, 2**32 - 1),
+    ("uid_fs", 0, 2**32 - 1),
+    ("gid_real", 0, 2**32 - 1),
+    ("gid_effective", 0, 2**32 - 1),
+    ("gid_saved", 0, 2**32 - 1),
+    ("gid_fs", 0, 2**32 - 1),
+    ("ppid", 0, 2**31 - 1),
+    ("tracer_pid", 0, 2**31 - 1),
+    ("cap_prm", 0, 2**64 - 1),
+    ("cap_eff", 0, 2**64 - 1),
+    ("environ_uid", 0, 2**32 - 1),
+    ("environ_gid", 0, 2**32 - 1),
+    ("environ_mode", 0, 0o7777),
+)
+_CENSUS_DIAGNOSTIC_ENUMS = (
+    ("comm", frozenset({"python", "ps", "node", "Runner.Worker", "ssh-agent", "gpg-agent", "other"})),
+    ("probe_status", frozenset({"collected", "partial", "unavailable", "deadline"})),
+)
 
 
 def complete_auxiliary_observation(process: Any) -> bool:
@@ -53,6 +83,110 @@ def _remaining(deadline: float) -> float:
     if remaining <= 0:
         raise TimeoutError("original auxiliary deadline exhausted before launch or completion")
     return remaining
+
+
+def _census_error_diagnostic(error: BaseException, deadline: float) -> dict[str, Any]:
+    """Retain optional post-refusal kernel DATA without granting census authority."""
+    cause = error.__cause__ if error.__cause__ is not None else error
+    result: dict[str, Any] = {
+        "type": type(error).__name__,
+        "cause": type(error.__cause__).__name__ if error.__cause__ is not None else None,
+        "errno": getattr(cause, "errno", None),
+    }
+    filename = getattr(cause, "filename", None)
+    match = re.fullmatch(r"/proc/([1-9][0-9]{0,9})/environ", filename) if type(filename) is str else None
+    if sys.platform != "linux" or match is None or int(match[1]) >= 2**31:
+        return result
+    pid = int(match[1])
+    facts: dict[str, Any] = {"pid": pid, "probe_status": "unavailable"}
+    result["procfs"] = facts
+
+    def read_leaf(name: str, limit: int) -> bytes:
+        _remaining(deadline)
+        descriptor = os.open(f"/proc/{pid}/{name}", os.O_RDONLY | os.O_CLOEXEC | os.O_NOFOLLOW | os.O_NONBLOCK)
+        try:
+            _remaining(deadline)
+            if not stat.S_ISREG(os.fstat(descriptor).st_mode):
+                raise ValueError("diagnostic proc leaf is not regular")
+            _remaining(deadline)
+            raw = os.read(descriptor, limit)
+            _remaining(deadline)
+            if len(raw) == limit:
+                raise ValueError("diagnostic proc leaf exceeds its bound")
+            return raw
+        finally:
+            os.close(descriptor)
+
+    failures = 0
+    try:
+        if type(deadline) not in (int, float) or not math.isfinite(deadline):
+            return result
+        _remaining(deadline)
+        for name, getter in (("uid", os.getuid), ("euid", os.geteuid), ("gid", os.getgid), ("egid", os.getegid)):
+            facts["caller_" + name] = getter()
+        _remaining(deadline)
+        try:
+            raw = read_leaf("status", 16 * 1024)
+            for line in raw.splitlines():
+                key, _, value = line.partition(b":")
+                words = value.split()
+                if key in {b"Uid", b"Gid"} and len(words) == 4:
+                    if all(re.fullmatch(rb"[0-9]{1,10}", word) and int(word) < 2**32 for word in words):
+                        for suffix, word in zip(("real", "effective", "saved", "fs"), words, strict=True):
+                            facts[key.decode().lower() + "_" + suffix] = int(word)
+                elif key in {b"PPid", b"TracerPid"} and len(words) == 1:
+                    if re.fullmatch(rb"[0-9]{1,10}", words[0]) and int(words[0]) < 2**31:
+                        facts["ppid" if key == b"PPid" else "tracer_pid"] = int(words[0])
+                elif key in {b"CapPrm", b"CapEff"} and len(words) == 1:
+                    if re.fullmatch(rb"[0-9a-fA-F]{1,16}", words[0]):
+                        facts["cap_prm" if key == b"CapPrm" else "cap_eff"] = int(words[0], 16)
+            if not all(
+                prefix + "_" + suffix in facts
+                for prefix in ("uid", "gid")
+                for suffix in ("real", "effective", "saved", "fs")
+            ):
+                failures += 1
+        except TimeoutError:
+            raise
+        except Exception:
+            failures += 1
+        try:
+            _remaining(deadline)
+            metadata = os.stat(f"/proc/{pid}/environ", follow_symlinks=False)
+            _remaining(deadline)
+            facts.update(
+                environ_uid=metadata.st_uid, environ_gid=metadata.st_gid, environ_mode=stat.S_IMODE(metadata.st_mode)
+            )
+        except TimeoutError:
+            raise
+        except Exception:
+            failures += 1
+        try:
+            comm = read_leaf("comm", 64).rstrip(b"\n")
+            categories = {
+                b"python": "python",
+                b"python3": "python",
+                b"python3.12": "python",
+                b"python3.13": "python",
+                b"python3.14": "python",
+                b"ps": "ps",
+                b"node": "node",
+                b"Runner.Worker": "Runner.Worker",
+                b"ssh-agent": "ssh-agent",
+                b"gpg-agent": "gpg-agent",
+            }
+            facts["comm"] = categories.get(comm, "other")
+        except TimeoutError:
+            raise
+        except Exception:
+            failures += 1
+        _remaining(deadline)
+        facts["probe_status"] = "partial" if failures else "collected"
+    except TimeoutError:
+        facts["probe_status"] = "deadline"
+    except Exception:
+        facts["probe_status"] = "partial" if len(facts) > 2 else "unavailable"
+    return result
 
 
 def _cleanup(
@@ -122,11 +256,7 @@ def _cleanup(
             cleanup["final_census_succeeded"] = True
         except (OSError, RuntimeError, ValueError, subprocess.SubprocessError) as error:
             cleanup["diagnostics"].append(f"final census {type(error).__name__}: {error}")
-            cleanup["final_census_error"] = {
-                "type": type(error).__name__,
-                "cause": type(error.__cause__).__name__ if error.__cause__ is not None else None,
-                "errno": getattr(error.__cause__ if error.__cause__ is not None else error, "errno", None),
-            }
+            cleanup["final_census_error"] = _census_error_diagnostic(error, deadline)
     cleanup["deadline_exceeded"] = time.monotonic() >= deadline
     cleanup["verified"] = (
         cleanup["root_reaped"]

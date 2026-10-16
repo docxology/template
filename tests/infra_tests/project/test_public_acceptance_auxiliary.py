@@ -97,6 +97,8 @@ def test_real_process_readback_after_producer_root_and_wrapper_deleted(tmp_path:
     import subprocess
 
     from infrastructure.project.public_acceptance_evidence import write_json
+    from infrastructure.project.public_acceptance_auxiliary_supervision import complete_auxiliary_observation
+    from infrastructure.project.public_acceptance_auxiliary_validation import _supervision_diagnostic
     from infrastructure.reporting.readiness_receipts import source_fingerprint
 
     source = Path.cwd()
@@ -198,6 +200,8 @@ def test_real_process_readback_after_producer_root_and_wrapper_deleted(tmp_path:
     )
     process = supervise(command, producer, directory / "execution", time.monotonic() + 180, bootstrap_payload=payload)
     assert process["exit_code"] == 0, (directory / "raw.json").read_text()
+    complete = complete_auxiliary_observation(process)
+    assert complete, _supervision_diagnostic(process)
     raw_binding = {
         "path": "output/readiness/portable/raw.json",
         "sha256": __import__("hashlib").sha256((directory / "raw.json").read_bytes()).hexdigest(),
@@ -278,7 +282,10 @@ for field in ('accepted','cleanup','private-malformed'):
                        timed_out=[private],output_limit_exceeded={'TOKEN':private})
         changed['cleanup']={'verified':False,'environment':{'TOKEN':private},
                             'guardian_armed':{'TOKEN':private},'diagnostics':[private*10000],
-                            'final_census_error':{'type':[private],'cause':private*10000,'errno':True}}
+                            'final_census_error':{'type':[private],'cause':private*10000,'errno':True,
+                                'procfs':{'pid':private,'uid_real':2**256,'caller_euid':True,
+                                          'comm':private*10000,'probe_status':[private],
+                                          'environment':{'TOKEN':private}}}}
     body=(json.dumps(changed,indent=2,sort_keys=True)+'\n').encode()
     process_path.write_bytes(body)
     details['process_artifact']['sha256']=hashlib.sha256(body).hexdigest()

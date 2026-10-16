@@ -10,6 +10,8 @@ from typing import Any
 
 from infrastructure.project.public_acceptance_auxiliary_supervision import (
     PROCESS_SCHEMA,
+    _CENSUS_DIAGNOSTIC_ENUMS,
+    _CENSUS_DIAGNOSTIC_INTS,
     complete_auxiliary_observation,
 )
 
@@ -73,6 +75,19 @@ def _supervision_diagnostic(process: dict[str, Any]) -> str:
                 facts[label + "_" + key] = value if type(value) is str and value in allowed else "unknown"
             value = error.get("errno")
             facts[label + "_errno"] = value if type(value) is int and 0 <= value <= 4095 else None
+            procfs = error.get("procfs")
+            if label == "final_census_error" and isinstance(procfs, dict):
+                safe_procfs: dict[str, Any] = {
+                    key: value
+                    for key, lower, upper in _CENSUS_DIAGNOSTIC_INTS
+                    if type(value := procfs.get(key)) is int and lower <= value <= upper
+                }
+                safe_procfs.update(
+                    (key, value)
+                    for key, allowed in _CENSUS_DIAGNOSTIC_ENUMS
+                    if type(value := procfs.get(key)) is str and value in allowed
+                )
+                facts[label + "_procfs"] = safe_procfs
         observed["cleanup"] = facts
     return json.dumps(observed, sort_keys=True)[:2048]
 

@@ -242,6 +242,120 @@ def test_strict_census_observes_token_holders_without_killing_them() -> None:
         holder.wait(timeout=5)
     assert observe_bounded_run_processes(token, deadline=time.monotonic() + 5) == set()
 
+    if sys.platform == "linux":
+        import errno
+        import select
+        import stat
+
+        from infrastructure.project.public_acceptance_auxiliary_supervision import _census_error_diagnostic
+
+        environment, token = build_bounded_run_env({"PATH": os.defpath})
+        body = """
+import ctypes,os,time
+libc=ctypes.CDLL(None,use_errno=True)
+libc.prctl.argtypes=[ctypes.c_int,*([ctypes.c_ulong]*4)]
+libc.prctl.restype=ctypes.c_int
+if libc.prctl(4,0,0,0,0)!=0:
+    raise OSError(ctypes.get_errno(),'PR_SET_DUMPABLE failed')
+print(os.getpid(),flush=True)
+time.sleep(30)
+"""
+        deadline = time.monotonic() + 5
+        restricted = subprocess.Popen(
+            [sys.executable, "-I", "-c", body],
+            env=environment,
+            stdin=subprocess.DEVNULL,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.DEVNULL,
+            start_new_session=True,
+        )
+        try:
+            assert restricted.stdout is not None
+            ready = bytearray()
+            while b"\n" not in ready:
+                remaining = deadline - time.monotonic()
+                assert remaining > 0, "owned non-dumpable child did not become ready inside its original deadline"
+                assert select.select([restricted.stdout], [], [], remaining)[0]
+                chunk = os.read(restricted.stdout.fileno(), 64)
+                assert chunk, "owned non-dumpable child exited before readiness"
+                ready.extend(chunk)
+                assert len(ready) <= 64
+            assert ready == f"{restricted.pid}\n".encode()
+            assert restricted.poll() is None
+            identity = psutil.Process(restricted.pid)
+            birth = identity.create_time()
+            assert identity.ppid() == os.getpid()
+            proc = Path(f"/proc/{restricted.pid}")
+            environ = proc / "environ"
+            try:
+                environ.read_bytes()
+            except PermissionError as denied:
+                assert denied.errno == errno.EACCES
+                assert denied.filename == str(environ)
+                with pytest.raises(RuntimeError) as refused:
+                    observe_bounded_run_processes(token, deadline=deadline)
+                cause = refused.value.__cause__
+                if not isinstance(cause, PermissionError) or cause.filename != str(environ):
+                    pytest.fail("strict census refusal preempted the owned Linux permission control")
+                assert cause.errno == errno.EACCES
+                diagnostic = _census_error_diagnostic(refused.value, deadline)
+                assert set(diagnostic) == {"type", "cause", "errno", "procfs"}
+                assert diagnostic["type"] == "RuntimeError"
+                assert diagnostic["cause"] == "PermissionError"
+                assert type(diagnostic["errno"]) is int and diagnostic["errno"] == errno.EACCES
+                status_bytes = (proc / "status").read_bytes()
+                assert len(status_bytes) <= 16 * 1024
+                status = dict(line.split(":", 1) for line in status_bytes.decode().splitlines() if ":" in line)
+                uid, gid = (
+                    [int(value) for value in status["Uid"].split()],
+                    [int(value) for value in status["Gid"].split()],
+                )
+                assert len(uid) == len(gid) == 4
+                ownership = environ.stat()
+                expected = {
+                    "pid": restricted.pid,
+                    "caller_uid": os.getuid(),
+                    "caller_euid": os.geteuid(),
+                    "caller_gid": os.getgid(),
+                    "caller_egid": os.getegid(),
+                    "ppid": int(status["PPid"]),
+                    "tracer_pid": int(status["TracerPid"]),
+                    "cap_prm": int(status["CapPrm"], 16),
+                    "cap_eff": int(status["CapEff"], 16),
+                    "environ_uid": ownership.st_uid,
+                    "environ_gid": ownership.st_gid,
+                    "environ_mode": stat.S_IMODE(ownership.st_mode),
+                    **{
+                        f"uid_{name}": value
+                        for name, value in zip(("real", "effective", "saved", "fs"), uid, strict=True)
+                    },
+                    **{
+                        f"gid_{name}": value
+                        for name, value in zip(("real", "effective", "saved", "fs"), gid, strict=True)
+                    },
+                }
+                observed = diagnostic["procfs"]
+                assert set(observed) == {*expected, "comm", "probe_status"}
+                assert all(type(observed[key]) is int and observed[key] == value for key, value in expected.items())
+                assert observed["probe_status"] == "collected"
+                comm = (proc / "comm").read_bytes()
+                assert len(comm) <= 64
+                python_names = {"python", "python3", "python3.12", "python3.13", "python3.14"}
+                assert observed["comm"] == ("python" if comm.decode().strip() in python_names else "other")
+                assert len(json.dumps(diagnostic)) <= 2048
+                assert restricted.poll() is None and identity.create_time() == birth
+            else:
+                # A privileged caller may read this real process; that is not a refusal.
+                assert observe_bounded_run_processes(token, deadline=deadline) == {restricted.pid}
+                assert restricted.poll() is None and identity.create_time() == birth
+        finally:
+            # This retained, unreaped direct child cannot be a reused foreign PID.
+            if restricted.poll() is None:
+                restricted.kill()
+            restricted.wait(timeout=5)
+            if restricted.stdout is not None:
+                restricted.stdout.close()
+
 
 @pytest.mark.timeout(40)
 def test_real_fd_exhaustion_cannot_turn_failed_census_into_cleanup_acceptance(tmp_path: Path) -> None:
