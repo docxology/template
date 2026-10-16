@@ -67,6 +67,23 @@ def test_public_scope_admission_rechecks_symlinked_parent_after_snapshot(tmp_pat
     with pytest.raises(ValueError, match="symlink"):
         reader.read(relative)
 
+    # A root replacement keeps the leaf intact and exercises resolved containment.
+    repository = tmp_path / "repository"
+    evidence = repository / "docs/nested/evidence.json"
+    evidence.parent.mkdir(parents=True)
+    evidence.write_bytes(b"{}")
+    rooted = SnapshotReader(repository)
+    held = rooted.read("docs/nested/evidence.json")
+    assert rooted.public_path("docs//./nested/evidence.json") == evidence
+    relocated = tmp_path / "relocated-source"
+    repository.rename(relocated)
+    repository.symlink_to(relocated, target_is_directory=True)
+    assert evidence.stat().st_ino == held.identity[0]
+    assert evidence.read_bytes() == held.content
+    assert rooted.unchanged() is False
+    with pytest.raises(ValueError, match="escapes"):
+        rooted.public_path("docs/nested/evidence.json")
+
 
 def test_facts_and_digest_use_the_same_bytes_after_file_replacement(tmp_path: Path) -> None:
     evidence = tmp_path / "output/readiness/check.json"
