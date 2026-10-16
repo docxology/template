@@ -1153,3 +1153,38 @@ native, live, standalone and release acceptance remain open. Later changes need
 fresh reviewed integration and the declared exact-main acceptance before a
 version tag or release handoff; ordinary integration does not establish those
 outcomes.
+
+
+## Auxiliary acceptance repair — 2026-10-16 UTC
+
+PR #152 merged at `e692858d`, whose ordinary main CI passed in
+[run 38867575123](https://github.com/docxology/template/actions/runs/38867575123).
+The complete required acceptance was dispatched once at that exact main in
+[run 38869250922](https://github.com/docxology/template/actions/runs/38869250922).
+Its first completed failure was the Linux auxiliary job. The first canonical
+pipeline's project verifier passed 932 tests at 90.67% coverage, then the pipeline <!-- noqa: drift-counts -->
+correctly refused changed Source: pytest created an empty `.benchmarks` directory
+and the method-inventory producer repaired 22 stale line references. The inventory
+still described the same 889 definitions. The following pipeline exhausted the
+shared auxiliary clock; later gates remained blocked. These observations establish
+neither complete pipeline success nor release acceptance.
+
+The repair declares pytest benchmark storage inside Active's runtime output tree,
+commits the actual regenerated inventory, and checks committed documentation before
+its producer can repair it. Auxiliary child supervisors may overlap with a bound of
+three; Root preflights, Source preparation/admission, and each project's full gate
+sequence remain serial. The same complete selection, coverage floors and original
+whole-run deadline remain required. Actual guardian cleanup and child exits are
+retained and checked on producing and reading process observations. Final cleanup
+requires a successful independent token census; process observation errors fail
+closed. The one-worker default retains the original full selection order. Parent
+admission and final receipt closure must also complete within the original clock.
+Parallel interruption still waits for active bounded children during executor
+shutdown; prompt parallel cancellation remains unverified. The deliberate
+macOS timeout fixture allows Source/guardian startup within its enclosing gate's
+budget; a prelaunch refusal cannot establish its descendant observation.
+
+Focused local controls and independent review qualify only their stated scope.
+Complete final-main hosted acceptance, authenticated aggregate receipt and release
+asset retrieval remain open. No version tag, release publication or legacy cleanup
+is authorized by ordinary CI or these local observations alone.

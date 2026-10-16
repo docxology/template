@@ -364,6 +364,7 @@ jobs:
         run: >-
           .venv/bin/python -m infrastructure.project.public_acceptance_auxiliary_cli
           --all --local-model smollm2:135m --docker-image-id "$TEMPLATE_ACCEPTANCE_SIA_IMAGE_ID"
+          --auxiliary-workers 3
           --timeout-seconds 1800 --evidence-dir output/readiness/auxiliary
       - name: Fail promptly for any unpassed Linux-owned auxiliary obligation
         if: always()

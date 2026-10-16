@@ -8,6 +8,11 @@ import json
 from pathlib import Path
 from typing import Any
 
+from infrastructure.project.public_acceptance_auxiliary_supervision import (
+    PROCESS_SCHEMA,
+    complete_auxiliary_observation,
+)
+
 from infrastructure.reporting.release_readiness_snapshot import SnapshotReader
 
 
@@ -37,7 +42,7 @@ def validate_auxiliary_process(gate: str, fingerprint: str, details: dict[str, A
     spec = artifact(spec_binding).json_object()
     original_spec = str(Path(producer_root) / spec_binding["path"])
     if (
-        process.get("schema_version") != "template-auxiliary-process-v2"
+        not complete_auxiliary_observation(process)
         or process.get("gate") != gate
         or any(process.get(key) != fingerprint for key in ("source_fingerprint", "source_before", "source_after"))
         or process.get("cwd") != producer_root
@@ -124,7 +129,7 @@ def validate_auxiliary_process(gate: str, fingerprint: str, details: dict[str, A
             raise ValueError("macOS process acceptance omitted real descendant timeout/cleanup")
     for control in details.get("negative_controls", []):
         negative = artifact(control.get("artifact")).json_object()
-        if negative.get("schema_version") != "template-auxiliary-process-v2":
+        if negative.get("schema_version") != PROCESS_SCHEMA:
             # Native formal controls are exact records inside the already-bound native execution.
             native_controls = artifact(details.get("native_artifact")).json_object().get("checks", [])
             if not any(
@@ -148,6 +153,7 @@ def validate_auxiliary_process(gate: str, fingerprint: str, details: dict[str, A
             or facts.get("gate") != gate
             or facts.get("status") != "negative-control"
             or facts.get("exit_code") != 23
+            or not complete_auxiliary_observation(negative)
             or negative.get("exit_code") != 23
             or negative.get("timed_out") is not False
             or negative.get("output_limit_exceeded") is not False

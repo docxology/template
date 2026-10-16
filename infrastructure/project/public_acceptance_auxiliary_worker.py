@@ -110,7 +110,12 @@ def execute(
                     "p=subprocess.Popen([sys.executable,'-I','-c','import time; time.sleep(30)']); "
                     "print(p.pid,flush=True); time.sleep(30)",
                 ]
-                process = supervise(command, root, directory / "descendant", time.monotonic() + 0.5)
+                # This intentional timeout must first admit Source and ARM the
+                # independent guardian. It remains inside the enclosing gate's
+                # original clock; a startup refusal proves no descendant cleanup.
+                process = supervise(command, root, directory / "descendant", time.monotonic() + min(10, budget))
+                if type(process.get("pid")) is not int or type(process.get("exit_code")) is not int:
+                    raise ValueError("macOS descendant control did not launch and observe an actual child")
                 pid = int((root / process["streams"]["stdout"]["path"]).read_text().strip())
                 try:
                     descendant = psutil.Process(pid)

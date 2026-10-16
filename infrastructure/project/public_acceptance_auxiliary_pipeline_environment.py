@@ -95,7 +95,7 @@ def _read_logical_plan(root: Path, scope: str, budget: float, epoch: str) -> dic
     from infrastructure.core.execution_policy import apply_execution_policy
 
     with tempfile.TemporaryDirectory(prefix="pipeline-logical-reader-") as temporary:
-        directory = Path(temporary)
+        directory = Path(temporary).resolve(strict=True)
         result_file = directory / "plan.json"
         from infrastructure.project.public_acceptance_auxiliary_bootstrap import (
             PIPELINE,

@@ -18,6 +18,17 @@ AUXILIARY_KINDS = frozenset({"roster", "docs", "oracle", "platform", "transfer",
 OTHER_AUXILIARY_OWNERS = frozenset({"root:macos:process", "root:macos:rendering", "root:sandbox:transfer"})
 
 
+def validate_auxiliary_receipt_closure(report: dict[str, Any]) -> None:
+    """Require complete operation closure before individual auxiliary gates are used."""
+    if (
+        report.get("source_current") is not True
+        or report.get("deadline_exhausted") is not False
+        or type(report.get("exit_code")) is not int
+        or report["exit_code"] not in (0, 75)
+    ):
+        raise ValueError("auxiliary operation did not close with current Source inside its original deadline")
+
+
 def evaluate_original_outcome(
     kind: str, report: dict[str, Any], requirements: Sequence[Requirement], *, fingerprint: str
 ) -> dict[str, Any]:
@@ -64,6 +75,7 @@ def evaluate_original_outcome(
             raise ValueError("installed original job repeated or narrowed its actual runtime selection")
         cell_failures = sum(cell.get("status") != "pass" for cell in cells)
     else:
+        validate_auxiliary_receipt_closure(report)
         cell_failures = 0
     failures = sorted(key for key in owned if gates[key]["status"] != "pass")
     return {

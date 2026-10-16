@@ -38,16 +38,19 @@ def test_supervision_preserves_original_failure_and_bound_streams(tmp_path: Path
     assert stdout.read_text() == "actual child\n"
 
 
+@pytest.mark.timeout(20)
 def test_supervision_kills_actual_timeout(tmp_path: Path) -> None:
     process = supervise(
         [sys.executable, "-I", "-c", "import time; time.sleep(30)"],
         tmp_path,
         tmp_path / "output/readiness/timeout",
-        time.monotonic() + 0.2,
+        time.monotonic() + 10,
     )
+    assert type(process["pid"]) is int
     assert process["timed_out"] is True
     assert process["exit_code"] < 0
-    assert process["duration_seconds"] < 5
+    assert process["accepted"] is process["cleanup"]["verified"] is False
+    assert process["duration_seconds"] < 15
 
 
 def test_supervision_refuses_evidence_escape(tmp_path: Path) -> None:
@@ -251,7 +254,7 @@ def test_real_process_readback_after_producer_root_and_wrapper_deleted(tmp_path:
     alternate = reader_runtime / binary.relative_to(prefix)
     assert alternate.is_file() and alternate.resolve() != Path(sys.executable).resolve()
     script = r"""
-import sys,json,pathlib
+import sys,json,pathlib,hashlib
 sys.path[:0]=sys.argv[1:3]
 from infrastructure.reporting.release_readiness_snapshot import SnapshotReader
 from infrastructure.project.public_acceptance_auxiliary_validation import validate_auxiliary_process
@@ -261,6 +264,22 @@ root=pathlib.Path(sys.argv[1])
 details=json.loads((root/'output/readiness/portable/details.json').read_text())
 gate,refusal_code,refusal_status,print_controls=sys.argv[4],int(sys.argv[5]),sys.argv[6],sys.argv[7]
 assert source_fingerprint(root)==sys.argv[3]
+validate_auxiliary_process(gate,sys.argv[3],details,SnapshotReader(root))
+process_path=root/details['process_artifact']['path'];original_process=process_path.read_bytes()
+original_process_binding=dict(details['process_artifact'])
+for field in ('accepted','cleanup'):
+    changed=json.loads(original_process)
+    if field=='accepted':changed[field]=False
+    else:changed['cleanup']['verified']=False
+    body=(json.dumps(changed,indent=2,sort_keys=True)+'\n').encode()
+    process_path.write_bytes(body)
+    details['process_artifact']['sha256']=hashlib.sha256(body).hexdigest()
+    try:validate_auxiliary_process(gate,sys.argv[3],details,SnapshotReader(root))
+    except ValueError:pass
+    else:raise AssertionError('unverified process cleanup admitted')
+    finally:
+        process_path.write_bytes(original_process)
+        details['process_artifact']=dict(original_process_binding)
 validate_auxiliary_process(gate,sys.argv[3],details,SnapshotReader(root))
 observations=details['source_roster_observations']
 assert details['projects']==list(PUBLIC_PROJECT_NAMES)

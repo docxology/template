@@ -6,6 +6,8 @@ import json
 import re
 from typing import Any
 
+from infrastructure.project.public_acceptance_auxiliary_supervision import complete_auxiliary_observation
+
 from infrastructure.reporting.release_readiness_snapshot import SnapshotReader
 
 
@@ -50,7 +52,8 @@ def validate_sandbox_transfer(details: dict[str, Any], reader: SnapshotReader) -
     checkout = bound(raw.get("checkout_process")).json_object()
     command = checkout.get("command", [])
     if (
-        len(command) != 3
+        not complete_auxiliary_observation(checkout)
+        or len(command) != 3
         or command[1:] != ["rev-parse", "HEAD"]
         or checkout.get("exit_code") != 0
         or checkout.get("timed_out") is not False
@@ -69,7 +72,8 @@ def validate_sandbox_transfer(details: dict[str, Any], reader: SnapshotReader) -
         process = bound(observation.get("process")).json_object()
         command = process.get("command")
         if (
-            not isinstance(command, list)
+            not complete_auxiliary_observation(process)
+            or not isinstance(command, list)
             or len(command) != 5
             or command[1:] != ["api", "--hostname", "github.com", endpoint]
             or process.get("exit_code") != 0

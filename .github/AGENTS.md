@@ -23,6 +23,14 @@ manually. `platform-required-acceptance.yml` is also manual-only; its original
 custody requirements remain mandatory for formal release acceptance. Further
 hardening choices and the local commands are in [`docs/development/ci.md`](../docs/development/ci.md).
 
+Required Linux auxiliary qualification uses `--auxiliary-workers 3`. Only real
+child supervision overlaps; Root preflights and Source preparation/admission stay
+serial, with one complete gate at a time per project. All workers share the
+original whole-run deadline. Passing auxiliary observations require verified
+guardian cleanup; deadline refusals retain absent child IDs and exit codes.
+Cleanup admission also requires a successful final token census: an observation
+error cannot stand in for verified absence.
+
 # GitHub Integration
 
 ## Overview
