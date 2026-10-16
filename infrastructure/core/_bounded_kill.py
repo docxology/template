@@ -99,7 +99,10 @@ def observe_bounded_run_processes(run_token: str, *, deadline: float) -> set[int
             current = _census_snapshot(deadline, pid)
             if pid not in current or current[pid].startswith("Z"):
                 continue
-            raise RuntimeError(f"bounded-run census cannot observe live same-owner PID {pid}") from error
+            raise RuntimeError(
+                f"bounded-run census cannot observe live same-owner PID {pid} "
+                f"(cause={type(error).__name__}, errno={getattr(error, 'errno', None)})"
+            ) from error
         if matched:
             matches.add(pid)
     _census_remaining(deadline)

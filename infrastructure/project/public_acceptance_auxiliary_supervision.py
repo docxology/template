@@ -89,6 +89,11 @@ def _cleanup(
             guardian.finished = True
     except (OSError, RuntimeError, TimeoutError, ValueError, subprocess.SubprocessError) as error:
         cleanup["diagnostics"].append(f"{type(error).__name__}: {error}")
+        cleanup["guardian_error"] = {
+            "type": type(error).__name__,
+            "cause": type(error.__cause__).__name__ if error.__cause__ is not None else None,
+            "errno": getattr(error.__cause__ if error.__cause__ is not None else error, "errno", None),
+        }
     finally:
         try:
             cleanup["final_token_sweep_matched_pids"] = (
@@ -117,6 +122,11 @@ def _cleanup(
             cleanup["final_census_succeeded"] = True
         except (OSError, RuntimeError, ValueError, subprocess.SubprocessError) as error:
             cleanup["diagnostics"].append(f"final census {type(error).__name__}: {error}")
+            cleanup["final_census_error"] = {
+                "type": type(error).__name__,
+                "cause": type(error.__cause__).__name__ if error.__cause__ is not None else None,
+                "errno": getattr(error.__cause__ if error.__cause__ is not None else error, "errno", None),
+            }
     cleanup["deadline_exceeded"] = time.monotonic() >= deadline
     cleanup["verified"] = (
         cleanup["root_reaped"]

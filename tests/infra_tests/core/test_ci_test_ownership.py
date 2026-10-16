@@ -15,6 +15,8 @@ ROOT = Path(__file__).resolve().parents[3]
 # These owners exercise the integration protocol or a real module CLI rather
 # than importing each internal leaf directly. Their full modules remain selected.
 PROTOCOL_SOURCES = {
+    # Cleanup owners exercise execution_boundary reexports and copied Source/Code custody.
+    "infrastructure/core/_bounded_kill.py",
     "infrastructure/project/public_acceptance_auxiliary_pipeline_failure.py",
     "infrastructure/project/public_acceptance_auxiliary_pipeline_environment.py",
     "infrastructure/project/public_acceptance_auxiliary_supervision.py",

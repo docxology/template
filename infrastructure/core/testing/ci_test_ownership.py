@@ -5,6 +5,17 @@ their runtime fits the smoke deadline. Unlisted helpers retain broad fallback.
 """
 
 SOURCE_TEST_OWNERS: dict[str, tuple[str, ...]] = {
+    "infrastructure/core/_bounded_kill.py": (
+        "tests/infra_tests/project/test_public_acceptance_auxiliary_supervision.py",
+        "tests/infra_tests/core/test_execution_boundary.py",
+        "tests/infra_tests/core/test_execution_custody_boundary.py",
+        "tests/infra_tests/core/test_bounded_run_guardian.py",
+        "tests/infra_tests/core/test_guardian_startup_budget.py",
+        "tests/infra_tests/core/test_pipeline_control_extensions.py",
+        "tests/infra_tests/core/pipeline/test_multi_project_guardian_custody.py",
+        "tests/infra_tests/core/pipeline/test_stage_source_launch.py",
+        "tests/infra_tests/reporting/test_native_original_launch_correctness.py",
+    ),
     "infrastructure/core/pipeline/fingerprints.py": (
         "tests/infra_tests/core/pipeline/test_fingerprint_observations.py",
     ),

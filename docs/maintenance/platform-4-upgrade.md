@@ -1188,3 +1188,27 @@ Focused local controls and independent review qualify only their stated scope.
 Complete final-main hosted acceptance, authenticated aggregate receipt and release
 asset retrieval remain open. No version tag, release publication or legacy cleanup
 is authorized by ordinary CI or these local observations alone.
+
+## Functional CI follow-through — 2026-10-16 UTC
+
+The PR #153 candidate `c09dc3d` failed ordinary
+[CI run 38889517970](https://github.com/docxology/template/actions/runs/38889517970).
+The portable process-reader control refused its retained receipt after the
+producing roster child exited zero. That log did not identify the particular
+refused supervision fact, so it does not establish a Linux process-census cause.
+Refusals now expose only bounded, typed process and cleanup observations.
+Unknown nested data and raw diagnostics remain in their bound artifacts.
+An actual independent reader exercises invented malformed and oversized private
+data without copying that data into its error message.
+
+All three infrastructure smoke shards also reached their existing 540-second
+limit. The exact selection and original commands showed that the unlisted
+`_bounded_kill.py` helper had expanded selection to the whole core package.
+Its explicit ownership now includes the complete cleanup, interruption, guardian,
+Source-custody and native-launch protocol test modules. The original baseline,
+every changed infrastructure test, existing full-module contracts, unknown-helper
+fallback and all original clocks remain required. Static selection is distinct
+from measured hosted runtime fit.
+
+Final-main complete hosted acceptance and authenticated release publication remain
+open. This follow-through does not qualify a release from the failed candidate.

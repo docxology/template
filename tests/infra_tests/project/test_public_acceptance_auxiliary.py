@@ -267,15 +267,25 @@ assert source_fingerprint(root)==sys.argv[3]
 validate_auxiliary_process(gate,sys.argv[3],details,SnapshotReader(root))
 process_path=root/details['process_artifact']['path'];original_process=process_path.read_bytes()
 original_process_binding=dict(details['process_artifact'])
-for field in ('accepted','cleanup'):
+for field in ('accepted','cleanup','private-malformed'):
     changed=json.loads(original_process)
     if field=='accepted':changed[field]=False
-    else:changed['cleanup']['verified']=False
+    elif field=='cleanup':changed['cleanup']['verified']=False
+    else:
+        # Invented private/oversize DATA must never be rendered into failure logs.
+        private='invented-private-diagnostic-marker'
+        changed.update(accepted={'TOKEN':private},pid=private,exit_code=2**256,
+                       timed_out=[private],output_limit_exceeded={'TOKEN':private})
+        changed['cleanup']={'verified':False,'environment':{'TOKEN':private},
+                            'guardian_armed':{'TOKEN':private},'diagnostics':[private*10000],
+                            'final_census_error':{'type':[private],'cause':private*10000,'errno':True}}
     body=(json.dumps(changed,indent=2,sort_keys=True)+'\n').encode()
     process_path.write_bytes(body)
     details['process_artifact']['sha256']=hashlib.sha256(body).hexdigest()
     try:validate_auxiliary_process(gate,sys.argv[3],details,SnapshotReader(root))
-    except ValueError:pass
+    except ValueError as error:
+        if field=='private-malformed':
+            assert private not in str(error) and len(str(error))<=2200
     else:raise AssertionError('unverified process cleanup admitted')
     finally:
         process_path.write_bytes(original_process)
