@@ -54,6 +54,34 @@ jobs:
               command.extend(["--extra", "formal-tools"])
           subprocess.run(command, check=True)
           PYTHON
+      - name: Prepare the current Root SDK for Redacted's isolated release gate
+        if: inputs.coverage-project == 'templates/template_redacted_report'
+        run: |
+          set -euo pipefail
+          shopt -s nullglob
+          wheels=$(mktemp -d "$RUNNER_TEMP/template-redacted-root-sdk.XXXXXX")
+          uv build --wheel --no-build-isolation --python .venv/bin/python \
+            --out-dir "$wheels" .
+          wheel_files=("$wheels"/*.whl)
+          test "${#wheel_files[@]}" -eq 1
+          sha256sum "${wheel_files[0]}"
+          uv pip install --python projects/templates/template_redacted_report/.venv/bin/python \
+            --no-deps --reinstall "${wheel_files[0]}"
+          projects/templates/template_redacted_report/.venv/bin/python -I - <<'PYTHON'
+          import importlib.metadata as metadata
+          import json, sys, tomllib
+          from pathlib import Path
+          import infrastructure
+          expected = tomllib.loads(Path("pyproject.toml").read_text())["project"]
+          distribution = metadata.distribution(expected["name"])
+          origin = Path(infrastructure.__file__).resolve()
+          assert distribution.version == infrastructure.__version__ == expected["version"]
+          assert origin.is_relative_to(Path(sys.prefix).resolve())
+          direct_url = json.loads(distribution.read_text("direct_url.json"))
+          assert direct_url.get("dir_info", {}).get("editable") is not True
+          print(json.dumps({"version": distribution.version, "sdk_origin": str(origin),
+                            "prefix": sys.prefix, "direct_url": direct_url}, sort_keys=True))
+          PYTHON
       - name: Warm the exact Autoresearch standalone dependencies
         if: inputs.coverage-project == 'templates/template_autoresearch_project'
         timeout-minutes: 5
