@@ -189,7 +189,23 @@ def _ancestor_search(paths: list[Path], uid: int, deadline: float) -> None:
     _acl(selected, uid, "--x", deadline)
 
 
-def _handoff(root: Path, uid: int, gid: int, caller: int, deadline: float) -> None:
+def _checkout_link(path: Path, root: Path, managed_python: Path | None) -> Path:
+    relative = path.relative_to(root)
+    in_venv = bool(relative.parts and relative.parts[0] == ".venv")
+    resolved = path.resolve(strict=True)
+    runtime_roots: tuple[Path, ...] = (Path("/opt/hostedtoolcache"), Path("/usr"), Path("/lib"))
+    if managed_python is not None:
+        runtime_roots += (managed_python,)
+    _require(
+        resolved.is_relative_to(root) or in_venv and any(resolved.is_relative_to(base) for base in runtime_roots),
+        "escaping checkout symlink refused",
+    )
+    return resolved
+
+
+def _handoff(
+    root: Path, uid: int, gid: int, caller: int, deadline: float, *, managed_python: Path | None = None
+) -> None:
     venv_dirs, git_entries = [], []
     for path in _entries(root, deadline):
         _remaining(deadline)
@@ -197,15 +213,7 @@ def _handoff(root: Path, uid: int, gid: int, caller: int, deadline: float) -> No
         current = path.lstat()
         in_venv = bool(relative.parts and relative.parts[0] == ".venv")
         if stat.S_ISLNK(current.st_mode):
-            resolved = path.resolve(strict=True)
-            _require(
-                resolved.is_relative_to(root)
-                or in_venv
-                and any(
-                    resolved.is_relative_to(base) for base in (Path("/opt/hostedtoolcache"), Path("/usr"), Path("/lib"))
-                ),
-                "escaping checkout symlink refused",
-            )
+            _checkout_link(path, root, managed_python)
             os.chown(path, uid, gid, follow_symlinks=False)
         elif stat.S_ISREG(current.st_mode):
             if (
@@ -277,3 +285,77 @@ def _export(root: Path, destination: Path, deadline: float, *, exclusions: list[
     if exclusions is not None:
         exclusions.extend(excluded)
     return total
+
+
+def _tool_assets(
+    environment: dict[str, str], path_parts: list[str], temporary: Path, private: Path
+) -> tuple[dict[str, str], list[str], set[Path], Path | None]:
+    _physical(temporary)
+    expected = temporary / "uv-python-dir"
+    declared = environment.get("UV_PYTHON_INSTALL_DIR")
+    _require(declared is None or declared == str(expected), "unrecognized managed Python root refused")
+    managed_python = None
+    environment = dict(environment)
+    if declared is not None:
+        try:
+            current = expected.lstat()
+        except FileNotFoundError:
+            # setup-uv proactively adds this exact unused leaf to PATH.
+            environment.pop("UV_PYTHON_INSTALL_DIR")
+            path_parts = [value for value in path_parts if value != str(expected)]
+        else:
+            _physical(expected)
+            _require(stat.S_ISDIR(current.st_mode), "managed Python root must be a physical directory")
+            managed_python = expected
+    environment["PATH"] = os.pathsep.join(path_parts)
+    assets = set()
+    for value in (*environment.values(), *path_parts):
+        for component in value.split(os.pathsep):
+            candidate = Path(component.rstrip("/"))
+            if (
+                candidate.is_absolute()
+                and candidate.is_relative_to(temporary)
+                and not candidate.is_relative_to(private)
+            ):
+                relative = candidate.relative_to(temporary)
+                if candidate.is_relative_to(expected):
+                    _require(
+                        managed_python == expected and ".." not in candidate.parts,
+                        "managed Python path has no admitted physical root",
+                    )
+                    assets.add(expected)
+                else:
+                    _require(
+                        bool(relative.parts) and relative.parts[0].startswith("template-"),
+                        "unrecognized job tool root refused",
+                    )
+                    assets.add(temporary / relative.parts[0])
+    return environment, path_parts, assets, managed_python
+
+
+def _tool_entries(assets: set[Path], managed_python: Path | None, deadline: float) -> list[Path]:
+    entries = []
+    for asset in assets:
+        _physical(asset)
+        for entry in _entries(asset, deadline):
+            if asset == managed_python:
+                _require(
+                    entry.name not in {".netrc", ".git-credentials", ".npmrc", ".ssh", ".aws", ".gnupg"},
+                    "credential/config managed Python entry refused",
+                )
+            if entry.is_symlink():
+                _require(entry.resolve(strict=True).is_relative_to(asset), "escaping job tool link refused")
+                continue
+            if asset == managed_python:
+                current = entry.lstat()
+                if (
+                    stat.S_ISDIR(current.st_mode)
+                    and current.st_mode & 0o005 == 0o005
+                    or stat.S_ISREG(current.st_mode)
+                    and current.st_mode & stat.S_IROTH
+                    and (not current.st_mode & 0o111 or current.st_mode & stat.S_IXOTH)
+                ):
+                    continue  # Already accessible public runtime inodes need no ACL mutation.
+            _require(entry.is_dir() or entry.is_file() and entry.stat().st_nlink == 1, "unsafe job tool entry refused")
+            entries.append(entry)
+    return entries

@@ -3,6 +3,8 @@
 Prepare this action after checkout, locked dependencies, tools, services and
 downloaded test plans, and before the first source or runtime observation.
 Callers must disable checkout credential persistence.
+The artifact root is declared before preparation so a setup refusal retains the
+scoped upload destination. Missing setup state never admits a payload or export.
 
 The action delegates setup to
 `infrastructure.core.testing.ci_execution_user`. Its fresh unprivileged account

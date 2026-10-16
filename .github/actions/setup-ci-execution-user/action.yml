@@ -19,6 +19,7 @@ runs:
           true|false) ;;
           *) echo "docker must be true or false" >&2; exit 1 ;;
         esac
+        echo "TEMPLATE_CI_ARTIFACT_DIRECTORY=$RUNNER_TEMP/template-ci-execution/artifacts" >> "$GITHUB_ENV"
         if ! command -v setfacl >/dev/null; then
           sudo apt-get install -y --no-install-recommends acl
         fi
@@ -32,4 +33,3 @@ runs:
         execution_exit=0
         "${execution_run[@]}" .venv/bin/python -I -c 'raise SystemExit(17)' || execution_exit=$?
         test "$execution_exit" -eq 17
-        echo "TEMPLATE_CI_ARTIFACT_DIRECTORY=$RUNNER_TEMP/template-ci-execution/artifacts" >> "$GITHUB_ENV"

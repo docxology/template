@@ -50,7 +50,8 @@ ACCOUNT = "template-ci"
 ENV_KEYS = frozenset(
     "CI GITHUB_ACTIONS GITHUB_SHA GITHUB_REF GITHUB_REF_NAME GITHUB_EVENT_NAME GITHUB_REPOSITORY "
     "GITHUB_RUN_ID GITHUB_RUN_ATTEMPT GITHUB_JOB RUNNER_OS RUNNER_ARCH RUNNER_ENVIRONMENT "
-    "SOURCE_DATE_EPOCH TZ LANG LC_ALL UV_FROZEN UV_OFFLINE UV_LINK_MODE MPLBACKEND SHARD HOST MINOR "
+    "SOURCE_DATE_EPOCH TZ LANG LC_ALL UV_FROZEN UV_OFFLINE UV_LINK_MODE UV_PYTHON_INSTALL_DIR "
+    "MPLBACKEND SHARD HOST MINOR "
     "CHROME_EXECUTABLE_PATH TTFONTS JAVA_HOME TEMPLATE_NATIVE_JAVA TEMPLATE_NATIVE_EPUBCHECK "
     "TEMPLATE_ACCEPTANCE_OLLAMA TEMPLATE_ACCEPTANCE_MODEL_DIRECTORY TEMPLATE_ACCEPTANCE_SIA_IMAGE_ID "
     "TEMPLATE_SIA_TEST_IMAGE TEMPLATE_FORMAL_TLC_JAR OLLAMA_MODELS OLLAMA_HOST OLLAMA_NO_CLOUD OLLAMA_NOPRUNE "
@@ -326,35 +327,16 @@ def _root_prepare(path: Path) -> None:
     data["env"] = environment
     # Only action-created public asset roots receive read/search ACLs.
     _files._phase("assets")
-    assets = set()
-    for value in (*environment.values(), *path_parts):
-        for component in value.split(os.pathsep):
-            candidate = Path(component.rstrip("/"))
-            if (
-                candidate.is_absolute()
-                and candidate.is_relative_to(temporary)
-                and not candidate.is_relative_to(path.parent)
-            ):
-                relative = candidate.relative_to(temporary)
-                _require(
-                    bool(relative.parts) and relative.parts[0].startswith("template-"),
-                    "unrecognized job tool root refused",
-                )
-                assets.add(temporary / relative.parts[0])
+    environment, path_parts, assets, managed_python = _files._tool_assets(
+        environment, path_parts, temporary, path.parent
+    )
+    data["env"] = environment
     _acl([temporary], account.pw_uid, "--x", deadline)
     _ancestor_search([root, temporary], account.pw_uid, deadline)
-    asset_entries = []
-    for asset in assets:
-        _physical(asset)
-        for entry in _entries(asset, deadline):
-            if entry.is_symlink():
-                _require(entry.resolve(strict=True).is_relative_to(asset), "escaping job tool link refused")
-                continue
-            _require(entry.is_dir() or entry.is_file() and entry.stat().st_nlink == 1, "unsafe job tool entry refused")
-            asset_entries.append(entry)
+    asset_entries = _files._tool_entries(assets, managed_python, deadline)
     _acl(asset_entries, account.pw_uid, "r-X", deadline)
     _files._phase("handoff")
-    _handoff(root, account.pw_uid, account.pw_gid, caller, deadline)
+    _handoff(root, account.pw_uid, account.pw_gid, caller, deadline, managed_python=managed_python)
     for entry in _entries(home, deadline):
         _remaining(deadline)
         os.chown(entry, account.pw_uid, account.pw_gid, follow_symlinks=False)

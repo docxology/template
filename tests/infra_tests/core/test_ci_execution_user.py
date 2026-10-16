@@ -18,6 +18,7 @@ import pytest
 
 from infrastructure.core.testing.ci_execution_user import _environment, _git, _hosted, _payload
 from infrastructure.core.testing._ci_execution_files import (
+    _checkout_link,
     _copy_cache,
     _detach,
     _export,
@@ -25,6 +26,8 @@ from infrastructure.core.testing._ci_execution_files import (
     _physical,
     _signature,
     _stable_copy,
+    _tool_assets,
+    _tool_entries,
 )
 
 
@@ -33,6 +36,7 @@ def test_environment_carries_declared_runtime_data_without_credentials() -> None
         "GITHUB_SHA": "a" * 40,
         "TEMPLATE_FORMAL_TLC_JAR": "/tmp/template-fixtures/tla2tools.jar",
         "UV_FROZEN": "true",
+        "UV_PYTHON_INSTALL_DIR": "/tmp/runner-temp/uv-python-dir",
         "GITHUB_TOKEN": "private-token",
         "AWS_SECRET_ACCESS_KEY": "private-key",
         "LD_PRELOAD": "/private/injection.so",
@@ -40,7 +44,9 @@ def test_environment_carries_declared_runtime_data_without_credentials() -> None
         "PYTHONHOME": "/private/runtime",
         "HOME": "/private/original-home",
     }
-    assert _environment(values) == {key: values[key] for key in ("GITHUB_SHA", "TEMPLATE_FORMAL_TLC_JAR", "UV_FROZEN")}
+    assert _environment(values) == {
+        key: values[key] for key in ("GITHUB_SHA", "TEMPLATE_FORMAL_TLC_JAR", "UV_FROZEN", "UV_PYTHON_INSTALL_DIR")
+    }
     with pytest.raises(ValueError, match="invalid runtime DATA"):
         _environment({"SHARD": "1\nGITHUB_TOKEN=secret"})
 
@@ -59,6 +65,109 @@ def test_physical_paths_and_descriptor_reads_refuse_real_parent_symlinks(tmp_pat
         _open_physical(link / "private", os.O_RDONLY)
     with pytest.raises(ValueError, match="absolute physical"):
         _physical(Path("relative"))
+    temporary = root / "runner-temp"
+    temporary.mkdir()
+    managed = temporary / "uv-python-dir"
+    environment, selected, assets, admitted = _tool_assets(
+        {"UV_PYTHON_INSTALL_DIR": str(managed)},
+        ["/usr/bin", str(managed)],
+        temporary,
+        temporary / "template-ci-execution",
+    )
+    assert selected == ["/usr/bin"] and assets == set() and admitted is None
+    assert "UV_PYTHON_INSTALL_DIR" not in environment
+    managed.mkdir()
+    managed.chmod(0o755)
+    (managed / "bin").mkdir()
+    (managed / "bin").chmod(0o755)
+    executable = managed / "bin/python"
+    executable.write_bytes(b"public tool fixture, never executed")
+    executable.chmod(0o755)
+    public = root / "public-runtime-donor"
+    public.write_bytes(b"shared public runtime bytes")
+    public.chmod(0o644)
+    shared = managed / "shared-library"
+    shared.hardlink_to(public)
+    shared_before = _signature(public.stat())
+    environment, selected, assets, admitted = _tool_assets(
+        {"UV_PYTHON_INSTALL_DIR": str(managed)},
+        ["/usr/bin", str(managed)],
+        temporary,
+        temporary / "template-ci-execution",
+    )
+    assert environment["UV_PYTHON_INSTALL_DIR"] == str(managed)
+    assert selected == ["/usr/bin", str(managed)] and assets == {managed} and admitted == managed
+    assert _tool_entries(assets, admitted, time.monotonic() + 10) == []
+    assert _signature(public.stat()) == shared_before
+    checkout = root / "checkout"
+    venv_bin = checkout / ".venv/bin"
+    venv_bin.mkdir(parents=True)
+    python = venv_bin / "python"
+    python.symlink_to(executable)
+    assert _checkout_link(python, checkout, admitted) == executable
+    with pytest.raises(ValueError, match="escaping checkout"):
+        _checkout_link(python, checkout, None)
+    (checkout / "outside-venv").symlink_to(executable)
+    with pytest.raises(ValueError, match="escaping checkout"):
+        _checkout_link(checkout / "outside-venv", checkout, admitted)
+    with pytest.raises(ValueError, match="unrecognized job tool root"):
+        _tool_assets(environment, [str(temporary / "unrelated")], temporary, temporary / "template-ci-execution")
+    with pytest.raises(ValueError, match="unrecognized managed Python root"):
+        _tool_assets(
+            {"UV_PYTHON_INSTALL_DIR": str(outside)}, [str(outside)], temporary, temporary / "template-ci-execution"
+        )
+    with pytest.raises(ValueError, match="no admitted physical root"):
+        _tool_assets({}, [str(managed)], temporary, temporary / "template-ci-execution")
+    with pytest.raises(ValueError, match="no admitted physical root"):
+        _tool_assets(environment, [str(managed / "../unrelated")], temporary, temporary / "template-ci-execution")
+    private_runtime = managed / "private-runtime"
+    private_runtime.write_bytes(b"public runtime requiring a read ACL")
+    private_runtime.chmod(0o600)
+    assert _tool_entries(assets, admitted, time.monotonic() + 10) == [private_runtime]
+    private_link = root / "private-runtime-donor"
+    private_link.hardlink_to(private_runtime)
+    with pytest.raises(ValueError, match="unsafe job tool entry"):
+        _tool_entries(assets, admitted, time.monotonic() + 10)
+    private_link.unlink()
+    (managed / "credential-link").symlink_to(outside / "private")
+    with pytest.raises(ValueError, match="escaping job tool link"):
+        _tool_entries(assets, admitted, time.monotonic() + 10)
+    (managed / "credential-link").unlink()
+    (managed / ".netrc").write_bytes(b"credential fixture")
+    with pytest.raises(ValueError, match="credential/config managed Python"):
+        _tool_entries(assets, admitted, time.monotonic() + 10)
+    symlink_temp = root / "symlink-temp"
+    symlink_temp.mkdir()
+    symlink_python = symlink_temp / "uv-python-dir"
+    symlink_python.symlink_to(managed, target_is_directory=True)
+    with pytest.raises(ValueError, match="symlinked or noncanonical"):
+        _tool_assets(
+            {"UV_PYTHON_INSTALL_DIR": str(symlink_python)},
+            [str(symlink_python)],
+            symlink_temp,
+            symlink_temp / "template-ci-execution",
+        )
+    symlink_python.unlink()
+    symlink_python.symlink_to(symlink_temp / "missing", target_is_directory=True)
+    with pytest.raises(FileNotFoundError):
+        _tool_assets(
+            {"UV_PYTHON_INSTALL_DIR": str(symlink_python)},
+            [str(symlink_python)],
+            symlink_temp,
+            symlink_temp / "template-ci-execution",
+        )
+    if os.geteuid() != 0:
+        symlink_temp.chmod(0)
+        try:
+            with pytest.raises(PermissionError):
+                _tool_assets(
+                    {"UV_PYTHON_INSTALL_DIR": str(symlink_python)},
+                    [str(symlink_python)],
+                    symlink_temp,
+                    symlink_temp / "template-ci-execution",
+                )
+        finally:
+            symlink_temp.chmod(0o700)
 
 
 def test_actual_cold_copy_ignores_atime_and_preserves_source_identity(tmp_path: Path) -> None:
