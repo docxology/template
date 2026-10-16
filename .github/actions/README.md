@@ -12,6 +12,7 @@ runner workspace after `actions/checkout` runs.
 | --- | --- |
 | [`setup-python-env/`](setup-python-env/action.yml) | Provision `uv` (with cache) + Python — the setup block shared by every Python CI job. |
 | [`setup-docs-lint/`](setup-docs-lint/action.yml) | Provision Node, Mermaid CLI, and Chrome for every blocking docs-lint caller. |
+| [`setup-ci-execution-user/`](setup-ci-execution-user/README.md) | Prepare the unprivileged Linux execution account before strict process observations and export original readiness bytes. |
 | [`setup-native-installed-readiness/`](setup-native-installed-readiness/README.md) | Prepare Source-locked native tools and cached inputs before the installed original/reader/handoff operation. |
 | [`upload-readiness-shards/`](upload-readiness-shards/README.md) | Check and upload exact bounded native/candidate transport or separately named failed diagnostics. |
 

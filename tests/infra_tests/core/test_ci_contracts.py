@@ -34,6 +34,44 @@ def test_required_contract_job_keeps_whole_root_budget_and_explicit_empty_outcom
     assert contract["steps"][0]["if"] == "matrix.shard == -1"
     assert any(step.get("if") == "always() && matrix.shard != -1" for step in contract["steps"])
 
+    # The original command still produces each receipt. Identity preparation
+    # precedes it, and independent readable transport follows even a failure.
+    for name in ("test-infra", "test-contract"):
+        steps = jobs[name]["steps"]
+        checkout = next(step for step in steps if step.get("uses", "").startswith("actions/checkout@"))
+        assert checkout["with"]["persist-credentials"] is False
+        prepare = next(
+            index for index, step in enumerate(steps) if step.get("uses") == "./.github/actions/setup-ci-execution-user"
+        )
+        run = next(index for index, step in enumerate(steps) if "ci_infra" in step.get("run", ""))
+        export = next(index for index, step in enumerate(steps) if "ci_execution_user export" in step.get("run", ""))
+        upload = next(
+            index for index, step in enumerate(steps) if step.get("uses", "").startswith("actions/upload-artifact@")
+        )
+        assert prepare < run < export < upload
+        assert "ci_execution_user run" in steps[run]["run"]
+        assert '--state "$RUNNER_TEMP/template-ci-execution/state.json" --' in steps[run]["run"]
+        assert steps[export]["if"].startswith("always()")
+        assert steps[upload]["with"]["path"] == "${{ env.TEMPLATE_CI_ARTIFACT_DIRECTORY }}/functional-infra/"
+
+    required = yaml.safe_load((ROOT / ".github/workflows/platform-required-acceptance.yml").read_bytes())["jobs"]
+    for name in ("root-original", "auxiliary-original"):
+        steps = required[name]["steps"]
+        prepare = next(step for step in steps if step.get("uses") == "./.github/actions/setup-ci-execution-user")
+        if name == "root-original":
+            assert prepare["if"] == "runner.os == 'Linux'"
+            observation = next(step for step in steps if step.get("name") == "Original complete Root observation")
+            assert 'if [ "$RUNNER_OS" = Linux ]' in observation["run"]
+            assert 'exec "${root_command[@]}"' in observation["run"]
+        else:
+            assert prepare["with"]["docker"] == "true"
+            observation = next(step for step in steps if step.get("id") == "auxiliary")
+        assert "ci_execution_user run" in observation["run"]
+        assert observation["continue-on-error"] is True
+        assert any(
+            "ci_execution_user export" in step.get("run", "") and step["if"].startswith("always()") for step in steps
+        )
+
 
 def test_actual_deep_owner_cannot_be_moved_back_into_smoke_or_omitted() -> None:
     for module in (

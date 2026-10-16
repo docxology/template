@@ -34,3 +34,10 @@ See `README.md` for the module table. Key entry points:
 | `project_test_runtime.py` | Admission of an already prepared project test interpreter; never a resolver. |
 
 Default functional CI uses `ci_smoke.py` and the explicit `.github/project-smoke.json` selections. Full matrices and coverage union remain available in the manual hardening workflow.
+
+`ci_execution_user.py` is an explicit hosted Linux setup/launch/transport
+boundary. Keep privilege confined to scoped preparation; payloads use a fresh
+unprivileged account, explicit runtime inputs and the unchanged global census.
+Preserve shared cache inodes, source bytes/modes, original exits and failed
+evidence. Transport cannot grant runtime or release acceptance. Changes require
+independent review and genuine affected hosted execution.

@@ -121,6 +121,8 @@ jobs:
       matrix: ${{ fromJSON(needs.detect-projects.outputs.infra) }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
       - uses: ./.github/actions/setup-python-env
         with:
           dependency-group: installed-build
@@ -136,18 +138,26 @@ jobs:
       - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
         with:
           name: functional-selection
+      - uses: ./.github/actions/setup-ci-execution-user
       - name: Run exact functional shard with original pytest observations
         env:
           SHARD: ${{ matrix.shard }}
         run: |
-          .venv/bin/python -m infrastructure.core.testing.ci_infra \
+          .venv/bin/python -m infrastructure.core.testing.ci_execution_user run \
+            --state "$RUNNER_TEMP/template-ci-execution/state.json" -- \
+            .venv/bin/python -m infrastructure.core.testing.ci_infra \
             --plan functional-selection.json --shard "$SHARD" \
             --directory "output/readiness/functional-infra/shard-$SHARD"
+      - name: Export original readiness bytes for the artifact reader
+        if: always()
+        run: >-
+          .venv/bin/python -m infrastructure.core.testing.ci_execution_user export
+          --state "$RUNNER_TEMP/template-ci-execution/state.json"
       - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         if: always()
         with:
           name: functional-infra-${{ matrix.shard }}
-          path: output/readiness/functional-infra/
+          path: ${{ env.TEMPLATE_CI_ARTIFACT_DIRECTORY }}/functional-infra/
           if-no-files-found: error
 
   test-contract:
@@ -166,6 +176,7 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         if: matrix.shard != -1
         with:
+          persist-credentials: false
           submodules: true
       - uses: ./.github/actions/setup-python-env
         if: matrix.shard != -1
@@ -211,19 +222,28 @@ jobs:
         if: matrix.shard != -1
         with:
           name: functional-selection
+      - uses: ./.github/actions/setup-ci-execution-user
+        if: matrix.shard != -1
       - name: Run one complete changed contract module with declared markers
         if: matrix.shard != -1
         env:
           SHARD: ${{ matrix.shard }}
         run: |
-          .venv/bin/python -m infrastructure.core.testing.ci_infra \
+          .venv/bin/python -m infrastructure.core.testing.ci_execution_user run \
+            --state "$RUNNER_TEMP/template-ci-execution/state.json" -- \
+            .venv/bin/python -m infrastructure.core.testing.ci_infra \
             --plan functional-selection.json --shard "$SHARD" \
             --directory "output/readiness/functional-infra/contract-$SHARD"
+      - name: Export original readiness bytes for the artifact reader
+        if: always() && matrix.shard != -1
+        run: >-
+          .venv/bin/python -m infrastructure.core.testing.ci_execution_user export
+          --state "$RUNNER_TEMP/template-ci-execution/state.json"
       - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         if: always() && matrix.shard != -1
         with:
           name: functional-infra-contract-${{ matrix.shard }}
-          path: output/readiness/functional-infra/
+          path: ${{ env.TEMPLATE_CI_ARTIFACT_DIRECTORY }}/functional-infra/
           if-no-files-found: error
 
   test-project:
