@@ -194,6 +194,19 @@ jobs:
             uv sync --locked --group dev --no-python-downloads --python .venv/bin/python
           rm -r -- "$native_contract_scratch"
           df -h "$RUNNER_TEMP"
+      - name: Warm locked offline wheels for the relocated-runner contract
+        if: matrix.module == 'tests/infra_tests/documentation/test_counts_refresh.py'
+        timeout-minutes: 10
+        run: |
+          set -euo pipefail
+          # Restoring .venv does not populate the fresh offline fixture's wheel cache.
+          # Match its exact dev-only sync while leaving the restored environment intact.
+          unset UV_FROZEN
+          counts_contract_scratch=$(mktemp -d "$RUNNER_TEMP/counts-contract-warm.XXXXXX")
+          UV_PROJECT_ENVIRONMENT="$counts_contract_scratch/venv" \
+            uv sync --locked --only-group dev --no-install-project \
+              --no-install-package desloppify --no-python-downloads --python .venv/bin/python
+          rm -r -- "$counts_contract_scratch"
       - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
         if: matrix.shard != -1
         with:
