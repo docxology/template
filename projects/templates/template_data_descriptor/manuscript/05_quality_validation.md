@@ -19,7 +19,7 @@ against a deliberately-perturbed copy produced by `demo_broken_descriptor()`
 unit). The clean fixture produces zero findings; the perturbed demo produces
 several errors and warnings.
 
-![Quality gate: validation findings by severity for the clean fixture descriptor (left, zero findings) versus a deliberately-broken demonstration copy (right). The demonstration perturbation is clearly named in code and never treated as real data — it exists only to prove the gate reacts. Counts come from `severity_counts()`.](figures/quality_gate.png){#fig:quality_gate}
+![Quality gate: validation findings by severity for the clean fixture descriptor (left, zero findings) versus a deliberately-broken demonstration copy (right). The demonstration perturbation is clearly named in code and never treated as real data — it exists only to prove the gate reacts. Counts come from `severity_counts()`.](../output/figures/quality_gate.png){#fig:quality_gate}
 
 ## Descriptor↔file verification
 
@@ -35,7 +35,7 @@ is what makes the metadata-only release boundary honest.
 both files verify, declared and actual row counts agree, and each recomputed
 checksum matches its declaration, so the readiness score is unpenalised.
 
-![Descriptor↔file verification: declared versus recomputed row counts and checksum agreement per file, from `verify_descriptor_files()`. Both shipped fixture files verify against their bytes on disk; the title reports the descriptor's readiness score. If a fixture file were edited without updating the descriptor, the corresponding row would flip to a mismatch status and the test suite would fail.](figures/checksum_verification.png){#fig:checksum_verification}
+![Descriptor↔file verification: declared versus recomputed row counts and checksum agreement per file, from `verify_descriptor_files()`. Both shipped fixture files verify against their bytes on disk; the title reports the descriptor's readiness score. If a fixture file were edited without updating the descriptor, the corresponding row would flip to a mismatch status and the test suite would fail.](../output/figures/checksum_verification.png){#fig:checksum_verification}
 
 ## Machine-readable release manifest
 

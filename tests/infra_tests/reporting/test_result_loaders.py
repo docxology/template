@@ -258,3 +258,21 @@ class TestLoadInfrastructureResultsFromResultLoaders:
         (tmp_path / "infrastructure_validation_report.json").write_text(json.dumps(report))
         result = load_infrastructure_results(tmp_path)
         assert result["exit_code"] == 1
+
+
+def test_runtime_test_outcome_takes_precedence_without_rewriting_publication(tmp_path):
+    from infrastructure.reporting._executive_collectors import collect_test_metrics
+
+    project = tmp_path / "projects" / "demo"
+    reports = project / "output" / "reports"
+    runtime = project / "output" / ".pipeline" / "tests"
+    reports.mkdir(parents=True)
+    runtime.mkdir(parents=True)
+    retained = reports / "test_results.json"
+    retained.write_text(json.dumps({"project": {"total": 1, "passed": 1, "failed": 0}}))
+    fields = ("st_dev", "st_ino", "st_mode", "st_size", "st_mtime_ns", "st_ctime_ns")
+    before = retained.read_bytes(), tuple(getattr(retained.stat(), field) for field in fields)
+    (runtime / "test_results.json").write_text(json.dumps({"project": {"total": 1, "passed": 0, "failed": 1}}))
+    assert load_test_results("demo", repo_root=tmp_path)["failed"] == 1
+    assert collect_test_metrics(reports, project_root=project).failed == 1
+    assert (retained.read_bytes(), tuple(getattr(retained.stat(), field) for field in fields)) == before

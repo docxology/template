@@ -480,3 +480,35 @@ def test_budgeted_manifest_still_refuses_linked_nonpython_directory(tmp_path):
     (root / "not-python").symlink_to(cache, target_is_directory=True)
     with pytest.raises(ValueError, match="symlinks"):
         source_file_manifest(root, frozenset({".py"}), max_entries=8, max_depth=8)
+
+
+@pytest.mark.parametrize("control", ("allowed", "not-selected", "changed-bytes", "unrelated-module"))
+def test_installed_dependency_companion_requires_nomination_and_exact_record(tmp_path: Path, control: str) -> None:
+    site = installed_fixture(tmp_path)
+    companion = site / "__init__.py"
+    source = ROOT / "projects/templates/template_autopoiesis/src/__init__.py"
+    companion.write_bytes(source.read_bytes())
+    if control == "unrelated-module":
+        (site / "unselected.py").write_text("VALUE = 7\n")
+    update_record(site)
+    if control == "changed-bytes":
+        companion.write_bytes(companion.read_bytes() + b"\n# actual altered distribution bytes\n")
+    selected = frozenset() if control == "not-selected" else frozenset({"__init__"})
+    program = (
+        "from pathlib import Path;import infrastructure;"
+        "from infrastructure.core.implementation_custody import capture_dependency_custody;"
+        "observation=capture_dependency_custody('research-project-template',"
+        f"Path(infrastructure.__file__).parent,public_modules={selected!r});"
+        "assert '__init__.py' in observation['distribution']['file_sha256'];"
+        "assert observation['binding_kind']=='installed-distribution';"
+        "print('actual declared companion admitted')"
+    )
+    observed = probe(site, tmp_path, program)
+    if control == "allowed":
+        assert observed.returncode == 0, observed.stderr
+        assert observed.stdout.strip() == "actual declared companion admitted"
+    else:
+        assert observed.returncode != 0
+        expected = "RECORD size" if control == "changed-bytes" else "RECORD escapes"
+        assert expected in observed.stderr
+        assert "actual declared companion admitted" not in observed.stdout

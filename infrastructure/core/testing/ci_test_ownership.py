@@ -5,6 +5,34 @@ their runtime fits the smoke deadline. Unlisted helpers retain broad fallback.
 """
 
 SOURCE_TEST_OWNERS: dict[str, tuple[str, ...]] = {
+    "infrastructure/core/testing/pytest_receipt.py": (
+        "tests/infra_tests/core/test_pytest_receipt.py",
+        "tests/infra_tests/core/test_ci_infra.py",
+    ),
+    "infrastructure/core/testing/pytest_observations.py": (
+        "tests/infra_tests/core/test_pytest_observations.py",
+        "tests/infra_tests/core/test_pytest_receipt.py",
+        "tests/infra_tests/core/test_ci_infra.py",
+    ),
+    "infrastructure/core/testing/ci_infra.py": (
+        "tests/infra_tests/core/test_ci_infra.py",
+        "tests/infra_tests/core/test_ci_infra_partition.py",
+        "tests/infra_tests/core/test_pytest_receipt.py",
+    ),
+    "infrastructure/core/pipeline/artifact_contracts.py": (
+        "tests/infra_tests/core/pipeline/test_artifact_contracts.py",
+        "tests/infra_tests/core/pipeline/test_stage_attempt_admission.py",
+    ),
+    "infrastructure/core/pipeline/stage_admission.py": (
+        "tests/infra_tests/core/pipeline/test_artifact_contracts.py",
+        "tests/infra_tests/core/pipeline/test_stage_attempt_admission.py",
+    ),
+    "infrastructure/core/testing/test_runner_outputs.py": (
+        "tests/infra_tests/core/test_test_runner_receipts.py",
+        "tests/infra_tests/reporting/test_result_loaders.py",
+        "tests/infra_tests/reporting/test_project_verifier.py",
+        "tests/infra_tests/reporting/test_pipeline_test_runner_integration.py",
+    ),
     "infrastructure/core/_bounded_kill.py": (
         "tests/infra_tests/project/test_public_acceptance_auxiliary_supervision.py",
         "tests/infra_tests/core/test_execution_boundary.py",
@@ -52,6 +80,18 @@ SOURCE_TEST_OWNERS: dict[str, tuple[str, ...]] = {
         "tests/infra_tests/reporting/test_native_original_launch_correctness.py",
         "tests/infra_tests/core/pipeline/test_stage_attempt_admission.py",
     ),
+    "infrastructure/rendering/latex_texttt.py": (
+        "tests/infra_tests/rendering/test_latex_texttt.py",
+        "tests/infra_tests/rendering/test_latex_texttt_native.py",
+    ),
+    "infrastructure/rendering/latex_utils.py": (
+        "tests/infra_tests/rendering/test_latex_utils.py",
+        "tests/infra_tests/rendering/test_latex_texttt_native.py",
+    ),
+    "infrastructure/rendering/_slides_math_header.py": (
+        "tests/infra_tests/rendering/test_slides_math_header.py",
+        "tests/infra_tests/rendering/test_latex_texttt_native.py",
+    ),
     "infrastructure/project/public_acceptance_auxiliary_pipeline_failure.py": (
         "tests/infra_tests/project/test_public_acceptance_auxiliary.py",
         "tests/infra_tests/project/test_auxiliary_audited_bootstrap.py",
@@ -59,6 +99,7 @@ SOURCE_TEST_OWNERS: dict[str, tuple[str, ...]] = {
     "infrastructure/project/public_acceptance_auxiliary_pipeline_environment.py": (
         "tests/infra_tests/project/test_public_acceptance_auxiliary.py",
         "tests/infra_tests/project/test_auxiliary_audited_bootstrap.py",
+        "tests/infra_tests/project/test_public_acceptance_auxiliary_cli.py",
     ),
     "infrastructure/project/public_acceptance_auxiliary_supervision.py": (
         "tests/infra_tests/project/test_public_acceptance_auxiliary.py",

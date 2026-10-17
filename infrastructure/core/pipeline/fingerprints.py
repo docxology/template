@@ -83,7 +83,7 @@ def tree_records(
             return False
         if source:
             if (
-                child.name == "__pycache__"
+                child.name in {".git", ".DS_Store", "__pycache__"}
                 or child.suffix in {".pyc", ".pyo"}
                 or (root_child and child.name in _ROOT_SOURCE_CONTROLS)
                 or (source_child and child.name.endswith(".egg-info"))
@@ -269,7 +269,16 @@ def tool_reuse_refusal(repo_root: Path, project_dir: Path) -> str | None:
 
 _LOADED_IMPLEMENTATION_ROOT = Path(__file__).resolve().parents[2]
 _LOADED_IMPLEMENTATION_PATHS = (_LOADED_IMPLEMENTATION_ROOT, _LOADED_IMPLEMENTATION_ROOT.parent / "scripts")
-_LOADED_IMPLEMENTATION_DIGEST = paths_digest(_LOADED_IMPLEMENTATION_PATHS, source=True)
+_LOADED_IMPLEMENTATION_BASE = Path(os.path.commonpath([str(path.parent) for path in _LOADED_IMPLEMENTATION_PATHS]))
+# Original rows explain a refusal. Only a new complete census can authorize a
+# current boundary; these rows never substitute for that fresh observation.
+_LOADED_IMPLEMENTATION_ROWS = {path: tree_records(path, source=True) for path in _LOADED_IMPLEMENTATION_PATHS}
+_LOADED_IMPLEMENTATION_DIGEST = canonical_digest(
+    [
+        (str(path.relative_to(_LOADED_IMPLEMENTATION_BASE)), rows)
+        for path, rows in sorted(_LOADED_IMPLEMENTATION_ROWS.items())
+    ]
+)
 
 
 def _observe_loaded_implementation() -> dict[Path, tuple[tuple[str, str, str], ...]]:
@@ -289,7 +298,21 @@ def _observe_loaded_implementation() -> dict[Path, tuple[tuple[str, str, str], .
         ]
     )
     if digest != _LOADED_IMPLEMENTATION_DIGEST:
-        raise ValueError("Loaded infrastructure changed after import; restart the worker before resolving a new plan")
+        original = {
+            f"{path.name}/{relative}": (kind, value)
+            for path, rows in _LOADED_IMPLEMENTATION_ROWS.items()
+            for relative, kind, value in rows
+        }
+        current = {
+            f"{path.name}/{relative}": (kind, value)
+            for path, rows in observed.items()
+            for relative, kind, value in rows
+        }
+        changed = sorted(name for name in original.keys() | current.keys() if original.get(name) != current.get(name))
+        raise ValueError(
+            "Loaded infrastructure changed after import; restart the worker before resolving a new plan; "
+            f"changed implementation members: {changed[:8]}"
+        )
     return observed
 
 

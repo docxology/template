@@ -16,15 +16,17 @@ from gates.documentation_contract import (
 )
 
 
-def test_rendering_reproducibility_reference_is_signposted(project_root: Path) -> None:
-    issues = check_documentation_contract(project_root)
+def test_rendering_reproducibility_reference_is_signposted() -> None:
+    # This read-only contract deliberately checks the repository-shaped source
+    # tree, including its genuine parent documentation closure.
+    issues = check_documentation_contract(Path(__file__).resolve().parents[1])
     assert issues == []
 
 
-def test_documentation_contract_cli(project_root: Path) -> None:
+def test_documentation_contract_cli() -> None:
     result = subprocess.run(
         [sys.executable, "scripts/check_documentation_contract.py", "--check"],
-        cwd=project_root,
+        cwd=Path(__file__).resolve().parents[1],
         text=True,
         capture_output=True,
         check=False,

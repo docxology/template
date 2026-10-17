@@ -46,6 +46,9 @@ def test_renderer_writes_complete_byte_deterministic_real_png_set(tmp_path: Path
     second_root = tmp_path / "second"
     shutil.copytree(PROJECT_ROOT / "data", first_root / "data")
     shutil.copytree(PROJECT_ROOT / "data", second_root / "data")
+    authored = first_root / "manuscript" / "figures" / "schema_overview.png"
+    authored.parent.mkdir(parents=True)
+    authored.write_bytes(b"authored figure must remain unchanged")
 
     first = render_descriptor_figures(first_root)
     second = render_descriptor_figures(second_root)
@@ -55,6 +58,9 @@ def test_renderer_writes_complete_byte_deterministic_real_png_set(tmp_path: Path
     second_bytes = {path.name: path.read_bytes() for path in second.rendered_paths}
     assert first_bytes == second_bytes
     assert all(payload.startswith(b"\x89PNG\r\n\x1a\n") for payload in first_bytes.values())
+    assert all(path.parent == first_root / "output" / "figures" for path in first.rendered_paths)
+    assert authored.read_bytes() == b"authored figure must remain unchanged"
+    assert not (second_root / "manuscript").exists()
 
 
 def test_full_source_producer_publishes_exact_run_and_truthful_alternate_text(tmp_path: Path) -> None:
@@ -144,7 +150,7 @@ def test_incomplete_render_run_fails_before_creating_publication_directory(tmp_p
     with pytest.raises(FigureRegistryError, match="missing generated figure file"):
         publish_descriptor_figure_run(tmp_path, incomplete)
 
-    assert not (tmp_path / "output").exists()
+    assert not (tmp_path / "output" / "figures" / "figure_registry.json").exists()
 
 
 def test_publication_uses_descriptions_bound_at_render_time(tmp_path: Path) -> None:
@@ -169,6 +175,12 @@ def test_generate_assets_is_the_complete_typed_producer(tmp_path: Path) -> None:
 
     written = generate_descriptor_figure_assets(tmp_path)
 
-    assert len(written) == (len(EXPECTED_FILENAMES) * 2) + 1
-    assert {path.name for path in written[:-1]} == EXPECTED_FILENAMES
-    assert written[-1] == tmp_path / "output" / "figures" / "figure_registry.json"
+    assert len(written) == len(EXPECTED_FILENAMES) + 2
+    assert len(set(written)) == len(written)
+    assert {path.name for path in written[:-2]} == EXPECTED_FILENAMES
+    assert written[-2] == tmp_path / "output" / "figures" / "figure_registry.json"
+    assert written[-1] == tmp_path / "output" / "data" / "descriptor_figure_inputs.json"
+    inputs = json.loads(written[-1].read_text())
+    assert inputs["descriptor"] == _load_fixture()
+    assert inputs["readiness_score"] == 1.0
+    assert [row["status"] for row in inputs["checks"]] == ["verified", "verified"]

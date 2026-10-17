@@ -8,6 +8,7 @@ from typing import TYPE_CHECKING
 
 from infrastructure.core.logging.constants import BANNER_WIDTH
 from infrastructure.core.logging.utils import get_logger
+from infrastructure.core.testing.test_runner_outputs import project_test_report_paths
 from infrastructure.core.pipeline.multi_project import validated_project_run
 
 if TYPE_CHECKING:
@@ -197,7 +198,8 @@ def format_multi_project_detailed_report(
                     except ValueError:
                         rel = log_path
                     out.append(f"     Log   : {rel}")
-                report_path = repo_root / "projects" / qn / "output" / "reports" / "test_results.md"
+                candidates = project_test_report_paths(repo_root / "projects" / qn, "test_results.md")
+                report_path = next((path for path in candidates if path.exists()), candidates[0])
                 if report_path.exists():
                     try:
                         rel = report_path.relative_to(repo_root)

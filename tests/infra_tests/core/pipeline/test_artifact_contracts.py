@@ -19,7 +19,12 @@ def test_repository_inputs_resolve_to_repository_and_mutation_is_detected(tmp_pa
     contract = StageContract(input_artifacts=("infrastructure/",))
     assert declared_input_paths(tmp_path, project, contract) == (source,)
     snapshot = capture_inputs(PipelineConfig("demo", tmp_path), contract)
+    from infrastructure.core.pipeline.fingerprints import canonical_digest, paths_digest
+
+    assert snapshot.digest == canonical_digest([(0, paths_digest((source,), source=True))])
+    original_members = snapshot.diagnostic_members()
     consumed.write_text("value = 2\n")
+    assert snapshot.diagnostic_members() == original_members
     assert snapshot.current_digest() != snapshot.digest
 
 
@@ -100,3 +105,35 @@ def test_semantically_corrupt_consumption_refuses_replay(tmp_path: Path, record:
     controller.decisions_path.write_text("\n".join((*rows[:-1], record)) + "\n")
     with pytest.raises(ValueError, match="authorization refused"):
         HitlController(project_output_dir=output, run_id="run", plan_digest="plan").decision_for_stage(spec)
+
+
+def test_canonical_render_contract_owns_metadata_without_allowing_dataset_changes(tmp_path: Path) -> None:
+    import yaml
+    from infrastructure.core.pipeline.artifact_contracts import InputContractError
+    from infrastructure.core.pipeline.stage_admission import original_stage_admission, validate_stage_admission
+
+    definition = Path(__file__).resolve().parents[4] / "infrastructure/core/pipeline/pipeline.yaml"
+    raw = next(
+        row["contract"] for row in yaml.safe_load(definition.read_text())["stages"] if row["key"] == "render_pdf"
+    )
+    contract = StageContract(
+        input_artifacts=tuple(raw["input_artifacts"]),
+        output_artifacts=tuple(raw["output_artifacts"]),
+        mutable_artifacts=tuple(raw["mutable_artifacts"]),
+    )
+    project = tmp_path / "projects" / "demo"
+    (project / "manuscript").mkdir(parents=True)
+    data = project / "output" / "data"
+    data.mkdir(parents=True)
+    dataset = data / "observations.csv"
+    dataset.write_text("value\n1\n")
+    config = PipelineConfig("demo", tmp_path)
+    stage = StageSpec("Render", lambda: True, contract, key="render_pdf")
+    controller = HitlController(project_output_dir=project / "output", run_id="render-run", plan_digest="a" * 64)
+    admission = original_stage_admission(capture_inputs(config, contract), stage, controller)
+    (data / "manuscript_metadata.json").write_text('{"title":"actual render metadata"}')
+    arguments = dict(repo=tmp_path, project=project, run_id="render-run", plan_digest="a" * 64, stage_key="render_pdf")
+    validate_stage_admission(admission, **arguments)
+    dataset.write_text("value\n2\n")
+    with pytest.raises(InputContractError, match="observations.csv"):
+        validate_stage_admission(admission, **arguments)

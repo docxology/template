@@ -7,6 +7,7 @@ owned complete-public-source fixture. They do not grant installed acceptance.
 from __future__ import annotations
 
 import json
+import os
 import shutil
 import subprocess
 import sys
@@ -29,10 +30,48 @@ from infrastructure.reporting.native_source_external_admission import (
     NativeExternalSourceBindings,
     NativeSourceContext,
     admit_external_native_source,
+    _anchored_directory_identity,
+    _verify_source_directory_identities,
 )
 from tests.infra_tests.project.test_public_reference import complete_reference as complete_reference
 
 pytestmark = pytest.mark.timeout(1800)
+
+
+@pytest.mark.parametrize("control", ("search-only", "symlink", "replacement"))
+def test_native_directory_identity_keeps_confined_search_only_witnesses(tmp_path: Path, control: str) -> None:
+    directory = tmp_path.resolve() / "runner"
+    directory.mkdir()
+    deadline = time.monotonic() + 30
+    expected = directory.stat().st_dev, directory.stat().st_ino
+    assert _anchored_directory_identity(directory, deadline) == expected
+    if control == "search-only":
+        directory.chmod(0o111)
+        try:
+            if os.geteuid() != 0:
+                with pytest.raises(PermissionError):
+                    tuple(directory.iterdir())
+            if hasattr(os, "O_PATH") or os.geteuid() == 0:
+                assert _anchored_directory_identity(directory, deadline) == expected
+                _verify_source_directory_identities(((directory, expected),), deadline)
+            else:
+                # Platforms without search-only descriptors retain the
+                # existing readable-directory fallback and fail closed.
+                with pytest.raises(ValueError):
+                    _anchored_directory_identity(directory, deadline)
+            assert directory.stat().st_mode & 0o777 == 0o111
+        finally:
+            directory.chmod(0o700)
+    elif control == "symlink":
+        alias = directory.with_name("runner-alias")
+        alias.symlink_to(directory, target_is_directory=True)
+        with pytest.raises(ValueError, match="aliased locator"):
+            _anchored_directory_identity(alias, deadline)
+    else:
+        directory.rename(directory.with_name("runner-original"))
+        directory.mkdir()
+        with pytest.raises(ValueError, match="physically replaced"):
+            _verify_source_directory_identities(((directory, expected),), deadline)
 
 
 class _ABANominations(Mapping[str, Path]):

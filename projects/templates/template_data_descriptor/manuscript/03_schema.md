@@ -6,7 +6,7 @@ optional unit, and value constraints. [@fig:schema_overview] renders this
 dictionary directly from the descriptor via `schema_table_rows()` in
 `src/data_descriptor/figures.py`.
 
-![Field schema / data dictionary: one row per declared field, with type, nullability, unit, and a compact constraint label, from `schema_table_rows()`. Identifier fields carry regular-expression patterns; the categorical fields carry closed enumerations; the quantitative field carries a unit and numeric bounds. The table is generated from `data/example_descriptor.json` and cannot silently disagree with it.](figures/schema_overview.png){#fig:schema_overview}
+![Field schema / data dictionary: one row per declared field, with type, nullability, unit, and a compact constraint label, from `schema_table_rows()`. Identifier fields carry regular-expression patterns; the categorical fields carry closed enumerations; the quantitative field carries a unit and numeric bounds. The table is generated from `data/example_descriptor.json` and cannot silently disagree with it.](../output/figures/schema_overview.png){#fig:schema_overview}
 
 ## Field contract
 

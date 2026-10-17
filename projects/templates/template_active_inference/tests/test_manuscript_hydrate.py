@@ -8,8 +8,8 @@ from manuscript.variables import generate_variables
 _TOKEN_RE = re.compile(r"\{\{[a-z][a-z0-9_]*(?::\.[0-9]+f)?\}\}")
 
 
-def test_generate_variables_includes_structural_counts() -> None:
-    root = Path(__file__).resolve().parents[1]
+def test_generate_variables_includes_structural_counts(project_root: Path) -> None:
+    root = project_root
     vars_ = generate_variables(root, require_analysis_outputs=False)
     assert vars_["pipeline_track_count"] == 31
     assert vars_["sheaf_track_count"] == 34
@@ -35,8 +35,8 @@ def test_substitute_snake_case_tokens_supports_precision() -> None:
     assert resolved == "entropy 1.2346"
 
 
-def test_validate_manuscript_tokens_flags_unknown() -> None:
-    root = Path(__file__).resolve().parents[1]
+def test_validate_manuscript_tokens_flags_unknown(project_root: Path) -> None:
+    root = project_root
     from manuscript.hydrate import validate_manuscript_tokens
 
     keys = set(generate_variables(root, require_analysis_outputs=False))
@@ -81,8 +81,8 @@ def test_write_resolved_manuscript_raises_on_unknown_token(tmp_path: Path) -> No
         write_resolved_manuscript(tmp_path, {"pipeline_track_count": 16})
 
 
-def test_write_resolved_manuscript_removes_tokens(tmp_path: Path) -> None:
-    root = Path(__file__).resolve().parents[1]
+def test_write_resolved_manuscript_removes_tokens(project_root: Path, tmp_path: Path) -> None:
+    root = project_root
     manuscript = tmp_path / "manuscript"
     manuscript.mkdir()
     (manuscript / "00_abstract.md").write_text(

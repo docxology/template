@@ -36,6 +36,34 @@ def _native(program: str, cwd: Path, *, without_site: bool = False):
 
 
 @pytest.mark.timeout(120)
+@pytest.mark.parametrize(
+    "leaf",
+    ("infrastructure.reporting.readiness_receipts", "infrastructure.validation.xml_parser_policy"),
+)
+def test_actual_leaf_imports_need_no_unrelated_providers(tmp_path: Path, leaf: str) -> None:
+    result = _native(
+        "import importlib\n"
+        f"importlib.import_module({leaf!r})\n"
+        "import infrastructure.reporting as reporting\n"
+        "import infrastructure.validation as validation\n"
+        "assert 'yaml' not in sys.modules and 'PIL' not in sys.modules\n"
+        "assert 'infrastructure.rendering' not in sys.modules\n"
+        "assert 'infrastructure.reporting._executive_collectors' not in sys.modules\n"
+        "assert set(validation.__all__) <= set(dir(validation))\n"
+        "assert 'generate_pipeline_report' in reporting.__all__\n"
+        "try: validation.actual_nonexistent_owned_attribute\n"
+        "except AttributeError: pass\n"
+        "else: raise AssertionError('unknown export was accepted')\n"
+        "print('actual-stdlib-leaf-without-unrelated-providers')\n",
+        tmp_path,
+        without_site=True,
+    )
+    assert result.returncode == result.original_returncode == 0, result.stderr
+    assert not result.timed_out and not result.custody_refused
+    assert "actual-stdlib-leaf-without-unrelated-providers" in result.stdout
+
+
+@pytest.mark.timeout(120)
 def test_actual_pipeline_and_interactive_imports_leave_plotting_unloaded(tmp_path: Path) -> None:
     result = _native(
         "import infrastructure.reporting as reporting\n"

@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import ast
+import hashlib
 import os
 import stat
 import subprocess
@@ -17,6 +19,38 @@ from infrastructure.core.implementation_custody import bytecode_audit_bootstrap
 
 def test_default_hook_origin_from_actual_aliased_import_executes_audited_source(tmp_path: Path):
     repository = Path(__file__).resolve().parents[3]
+    # Hook changes must fail their focused owner before a costly browser run.
+    # Check all three independent consumer pins against the actual hook bytes.
+    expected_hook = hashlib.sha256((repository / "infrastructure/core/bytecode_audit.py").read_bytes()).hexdigest()
+    custody = ast.parse((repository / "infrastructure/reporting/native_format_html_child_custody.py").read_bytes())
+    parent_pins = [
+        node.value.value
+        for node in ast.walk(custody)
+        if isinstance(node, ast.Assign)
+        and isinstance(node.value, ast.Constant)
+        and any(isinstance(target, ast.Name) and target.id == "HOOK_SHA256" for target in node.targets)
+    ]
+    driver = ast.parse((repository / "infrastructure/reporting/native_format_browser_driver.py").read_bytes())
+    startup_pins = [
+        comparator.value
+        for node in ast.walk(driver)
+        if isinstance(node, ast.Compare)
+        and isinstance(node.left, ast.Subscript)
+        and isinstance(node.left.value, ast.Name)
+        and node.left.value.id == "_hook_before"
+        and isinstance(node.left.slice, ast.Constant)
+        and node.left.slice.value == "sha256"
+        for comparator in node.comparators
+        if isinstance(comparator, ast.Constant)
+    ]
+    closing_pins = [
+        value.value
+        for node in ast.walk(driver)
+        if isinstance(node, ast.Dict)
+        for key, value in zip(node.keys, node.values, strict=True)
+        if isinstance(key, ast.Constant) and key.value == "audit_hook_sha256" and isinstance(value, ast.Constant)
+    ]
+    assert parent_pins == startup_pins == closing_pins == [expected_hook]
     root = tmp_path.resolve() / "source"
     root.mkdir()
     (root / "domain.py").write_text("VALUE = 42\n")

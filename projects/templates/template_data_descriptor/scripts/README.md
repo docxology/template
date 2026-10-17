@@ -8,7 +8,7 @@ Use the monorepo pipeline scripts from the repository root for normal
 test/render stages. Two project-local scripts are provided:
 
 `generate_figures.py` delegates to `generate_descriptor_figure_assets()`, which
-renders the five manuscript figures into `manuscript/figures/` from
+renders the five manuscript figures into `output/figures/` from
 `data/example_descriptor.json` and the fixture bytes, then mirrors and registers
 the exact run under `output/figures/` (schema overview, file inventory,
 provenance flow, quality gate, checksum verification):

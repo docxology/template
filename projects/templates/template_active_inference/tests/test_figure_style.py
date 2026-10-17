@@ -293,7 +293,7 @@ def test_render_figure_markdown_pandoc_owns_numbering() -> None:
     assert "Sheaf layers overview" in md
 
 
-def test_no_orphan_hand_figure_labels_in_composed_manuscript() -> None:
+def test_no_orphan_hand_figure_labels_in_composed_manuscript(project_root: Path) -> None:
     """No composed section may carry a hand-written ``*Figure N ...*`` caption line.
 
     Render-aware guard (not source-blind): pandoc-crossref numbers figures, so a leftover
@@ -303,7 +303,7 @@ def test_no_orphan_hand_figure_labels_in_composed_manuscript() -> None:
 
     from manuscript.sheaf import compose_all_sections
 
-    root = Path(__file__).resolve().parents[1]
+    root = project_root
     compose_all_sections(root)
     offenders = []
     for md in sorted((root / "manuscript").glob("[0-9][0-9]_*.md")):

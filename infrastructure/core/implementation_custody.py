@@ -198,6 +198,7 @@ def _distribution_custody(
     entrypoints: frozenset[str] = frozenset(
         {"research-template", "research-template.exe", "research-template-script.py"}
     ),
+    public_modules: frozenset[str] = frozenset(),
 ) -> dict[str, Any] | None:
     try:
         selected = distribution(package)
@@ -232,6 +233,7 @@ def _distribution_custody(
     metadata_directory = PurePosixPath(record_name).parent
     site_root = Path(str(selected.locate_file(""))).absolute()
     scripts_root = Path(sysconfig.get_path("scripts")).absolute()
+    module_files = frozenset(name + ".py" for name in public_modules)
     for row in csv.reader(io.StringIO(record.decode("utf-8"))):
         if (
             len(row) != 3
@@ -248,13 +250,14 @@ def _distribution_custody(
         in_package = location.is_relative_to(package_root)
         in_metadata = location.is_relative_to(site_root / metadata_directory)
         entrypoint = location.parent == scripts_root and location.name in entrypoints
+        public_module = location.parent == site_root and location.name in module_files
         editable = (
             not installed
             and location.parent == site_root
             and package.replace("-", "_") in location.name
             and location.suffix in {".pth", ".py"}
         )
-        if not (in_package or in_metadata or entrypoint or editable):
+        if not (in_package or in_metadata or entrypoint or editable or public_module):
             raise ValueError("selected platform RECORD escapes its public package/metadata/entrypoint scope")
         entries[name] = [declared_hash, declared_size]
         # Installers may append cache files with empty hash/size. Fresh owned
@@ -281,6 +284,8 @@ def _distribution_custody(
     if set(entries) != {str(path) for path in files}:
         raise ValueError("selected distribution file set differs from its RECORD")
     if installed:
+        if not module_files.issubset(entries):
+            raise ValueError("installed dependency omitted a declared companion module")
         actual_source = _python_files(package_root)
         if source_files != actual_source:
             raise ValueError("installed public Python differs from the declared distribution source file set")
@@ -296,7 +301,12 @@ def _distribution_custody(
 
 
 def capture_dependency_custody(
-    package: str, source_root: Path, *, checkout_root: Path | None = None, fresh_pycache_prefix: Path | None = None
+    package: str,
+    source_root: Path,
+    *,
+    checkout_root: Path | None = None,
+    fresh_pycache_prefix: Path | None = None,
+    public_modules: frozenset[str] = frozenset(),
 ) -> dict[str, Any]:
     """Bind an explicitly selected real dependency without inventing checkout files.
 
@@ -306,6 +316,10 @@ def capture_dependency_custody(
     """
     if not isinstance(package, str) or not package or any(value in package for value in ("/", "\\", "\x00")):
         raise ValueError("dependency custody requires an explicit package identity")
+    if type(public_modules) is not frozenset or any(
+        not isinstance(name, str) or not name.isidentifier() for name in public_modules
+    ):
+        raise ValueError("dependency companion modules require exact top-level Python identifiers")
     source_root = source_root.absolute()
     files = _python_files(source_root)
     if not files:
@@ -322,7 +336,11 @@ def capture_dependency_custody(
         for name in ("pyproject.toml", "uv.lock"):
             files["checkout/" + name] = source_file_digest(root / name)
     metadata = _distribution_custody(
-        source_root, installed=checkout_root is None, package=package, entrypoints=frozenset()
+        source_root,
+        installed=checkout_root is None,
+        package=package,
+        entrypoints=frozenset(),
+        public_modules=public_modules,
     )
     if checkout_root is not None and metadata is not None and declared.get("version") != metadata["version"]:
         raise ValueError("dependency checkout version differs from selected installed metadata")

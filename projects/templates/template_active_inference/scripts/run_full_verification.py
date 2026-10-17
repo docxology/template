@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import os
 import sys
 import tempfile
 from pathlib import Path
@@ -34,7 +35,7 @@ def _run_cli() -> int:
     parser.add_argument(
         "--coverage-only",
         action="store_true",
-        help="Run only the coverage groups, omitting verifier-owned refresh and receipt phases.",
+        help="Run the complete coverage groups on prepared artifacts without research/publication refresh.",
     )
     parser.add_argument(
         "--profile",
@@ -45,13 +46,15 @@ def _run_cli() -> int:
         ),
     )
     args = parser.parse_args()
-    if args.coverage_only and args.profile is None:
-        parser.error("--coverage-only requires an explicit --profile")
     if args.coverage_only and (args.skip_chunks or args.monolithic_coverage):
         parser.error("--coverage-only cannot be combined with --skip-chunks or --monolithic-coverage")
     try:
         if args.coverage_only:
-            run_coverage_only(PROJECT_ROOT, profile=args.profile)
+            run_coverage_only(
+                PROJECT_ROOT,
+                profile=args.profile,
+                stage_receipt=bool(os.environ.get("TEMPLATE_PROJECT_TEST_RECEIPT")),
+            )
         else:
             run_verification(
                 PROJECT_ROOT,

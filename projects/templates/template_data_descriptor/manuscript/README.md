@@ -12,8 +12,9 @@ pipeline (Pandoc). Sections, in render order:
 - `06_usage_notes.md` — regenerating artifacts and forking guidance
 - `99_references.md` — references
 
-Figures live under [`figures/`](figures/README.md) and are embedded in prose with
-blocks such as `![Schema overview](figures/schema_overview.png){#fig:schema_overview}`. Configuration lives in
+Figures are generated under [`output/figures/`](../output/figures/)
+(see the [figure guide](figures/README.md)) and are embedded in prose with
+blocks such as `![Schema overview](../output/figures/schema_overview.png){#fig:schema_overview}`. Configuration lives in
 `config.yaml` (forkable defaults in `config.yaml.example`). Every quantitative
 claim is derived from `data/example_descriptor.json` and the tested
 `src/data_descriptor/` package — the prose transcribes no volatile numbers.

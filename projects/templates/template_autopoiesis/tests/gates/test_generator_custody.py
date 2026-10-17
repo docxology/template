@@ -20,6 +20,22 @@ PROJECT = Path(__file__).resolve().parents[2]
 SDK_PACKAGE = Path(infrastructure.__file__).resolve(strict=True).parent
 
 
+def _isolated_sdk_package() -> Path:
+    """Select the real -I environment provider, separately from this test's Source SDK."""
+    observed = subprocess.run(
+        [sys.executable, "-I", "-c", "import infrastructure; print(infrastructure.__file__)"],
+        capture_output=True,
+        text=True,
+        timeout=30,
+        check=False,
+    )
+    assert observed.returncode == 0, observed.stdout + observed.stderr
+    return Path(observed.stdout.strip()).resolve(strict=True).parent
+
+
+ISOLATED_SDK_PACKAGE = _isolated_sdk_package()
+
+
 def _copy_project(destination: Path) -> Path:
     shutil.copytree(
         PROJECT,
@@ -48,7 +64,7 @@ def _run(generator: Path, reference: Path, *, bootstrap: bool = False) -> subpro
         )
     script = (
         "import sys,importlib.util;from pathlib import Path;import infrastructure;"
-        f"assert Path(infrastructure.__file__).resolve()==Path({str(SDK_PACKAGE / '__init__.py')!r});"
+        f"assert Path(infrastructure.__file__).resolve()==Path({str(ISOLATED_SDK_PACKAGE / '__init__.py')!r});"
         "assert infrastructure.__version__=='4.0.2';"
         + registration
         + "from template_autopoiesis.gates.realization_contract import realize_selected_children;"
@@ -75,7 +91,7 @@ def test_fresh_own_bootstrap_accepts_actual_environment_sdk_and_executes_primiti
         "assert spec is not None and spec.loader is not None;"
         "bootstrap=importlib.util.module_from_spec(spec);spec.loader.exec_module(bootstrap);"
         "sdk=bootstrap.bootstrap_project(project);"
-        f"assert Path(sdk.__file__).resolve()==Path({str(SDK_PACKAGE / '__init__.py')!r});"
+        f"assert Path(sdk.__file__).resolve()==Path({str(ISOLATED_SDK_PACKAGE / '__init__.py')!r});"
         "assert sdk.__version__=='4.0.2';assert sys.path==original;"
         "origin=Path(sdk.__file__).resolve();"
         "providers=[Path(sysconfig.get_path(kind)).resolve() for kind in ('purelib','platlib')];"
@@ -91,7 +107,7 @@ def test_fresh_own_bootstrap_accepts_actual_environment_sdk_and_executes_primiti
     )
     assert observed.returncode == 0, observed.stdout + observed.stderr
     result = json.loads(observed.stdout)
-    assert result == {"provider": str(SDK_PACKAGE / "__init__.py"), "result": [3.0]}
+    assert result == {"provider": str(ISOLATED_SDK_PACKAGE / "__init__.py"), "result": [3.0]}
 
 
 @pytest.mark.parametrize("shadow_location", ["own-root", "own-src"])
@@ -139,7 +155,7 @@ def test_actual_loaded_sdk_missing_origin_is_refused_and_paths_are_restored(tmp_
     missing = tmp_path / "absent-provider" / "__init__.py"
     script = (
         "import importlib.util,sys;from pathlib import Path;import infrastructure;"
-        f"assert Path(infrastructure.__file__).resolve(strict=True)==Path({str(SDK_PACKAGE / '__init__.py')!r});"
+        f"assert Path(infrastructure.__file__).resolve(strict=True)==Path({str(ISOLATED_SDK_PACKAGE / '__init__.py')!r});"
         "assert infrastructure.__version__=='4.0.2';"
         f"project=Path({str(PROJECT)!r});"
         "spec=importlib.util.spec_from_file_location('actual_own_bootstrap',project/'scripts/_bootstrap.py');"
@@ -308,7 +324,7 @@ def test_actual_cached_own_namespace_preserves_canonical_modules_and_refuses_wro
     )
     script = (
         "import importlib,importlib.util,sys;from pathlib import Path;import infrastructure;"
-        f"assert Path(infrastructure.__file__).resolve()==Path({str(SDK_PACKAGE / '__init__.py')!r});"
+        f"assert Path(infrastructure.__file__).resolve()==Path({str(ISOLATED_SDK_PACKAGE / '__init__.py')!r});"
         "assert infrastructure.__version__=='4.0.2';"
         f"spec=importlib.util.spec_from_file_location('actual_auto_bootstrap',{str(generator / 'scripts/_bootstrap.py')!r});"
         "assert spec is not None and spec.loader is not None;bootstrap=importlib.util.module_from_spec(spec);"
@@ -378,7 +394,7 @@ def test_actual_redirected_own_initializer_is_refused_before_execution(tmp_path:
     marker.unlink()
     script = (
         "import importlib.util;from pathlib import Path;import infrastructure;"
-        f"assert Path(infrastructure.__file__).resolve()==Path({str(SDK_PACKAGE / '__init__.py')!r});"
+        f"assert Path(infrastructure.__file__).resolve()==Path({str(ISOLATED_SDK_PACKAGE / '__init__.py')!r});"
         f'spec=importlib.util.spec_from_file_location("actual_auto_bootstrap",{str(generator / "scripts/_bootstrap.py")!r});'
         "assert spec is not None and spec.loader is not None;bootstrap=importlib.util.module_from_spec(spec);"
         "spec.loader.exec_module(bootstrap);"

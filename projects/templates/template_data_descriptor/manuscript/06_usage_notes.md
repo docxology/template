@@ -9,7 +9,7 @@ uv run python projects/templates/template_data_descriptor/scripts/generate_figur
 uv run python projects/templates/template_data_descriptor/scripts/generate_release_artifacts.py
 ```
 
-The first writes the five figures under `manuscript/figures/`; the second writes
+The first writes the five figures under `output/figures/`; the second writes
 the descriptor readiness report, field-constraint summary, and metadata-only
 release manifest under `output/reports/`. Both are thin orchestrators: all
 computation lives in the tested `src/data_descriptor/` package.

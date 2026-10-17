@@ -101,8 +101,40 @@ def _parse_init(init_path: Path) -> tuple[list[str], dict[str, str]]:
 
     all_list: list[str] | None = None
     symbol_to_module: dict[str, str] = {}
+    runtime_names: set[str] = set()
 
-    for node in tree.body:
+    # Lazy facades retain their concrete re-exports under the standard typing
+    # guard. Observe those declarations without importing optional providers or
+    # interpreting arbitrary runtime conditionals as public API declarations.
+    declarations = [(node, False) for node in tree.body]
+    for statement in tree.body:
+        if isinstance(statement, ast.If) and (
+            isinstance(statement.test, ast.Name)
+            and statement.test.id == "TYPE_CHECKING"
+            or isinstance(statement.test, ast.Attribute)
+            and isinstance(statement.test.value, ast.Name)
+            and statement.test.value.id == "typing"
+            and statement.test.attr == "TYPE_CHECKING"
+        ):
+            declarations.extend((node, True) for node in statement.body if isinstance(node, ast.ImportFrom))
+    for node, guarded in declarations:
+        if not guarded:
+            bound: set[str] = set()
+            if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef)):
+                bound.add(node.name)
+            elif isinstance(node, (ast.Assign, ast.AnnAssign, ast.AugAssign)):
+                targets = node.targets if isinstance(node, ast.Assign) else [node.target]
+                bound.update(
+                    item.id
+                    for target in targets
+                    for item in ast.walk(target)
+                    if isinstance(item, ast.Name) and isinstance(item.ctx, ast.Store)
+                )
+            elif isinstance(node, ast.Import):
+                bound.update(alias.asname or alias.name.split(".")[0] for alias in node.names)
+            runtime_names.update(bound)
+            for name in bound:
+                symbol_to_module.pop(name, None)
         # __all__ = [...]
         if isinstance(node, ast.Assign):
             for target in node.targets:
@@ -125,7 +157,11 @@ def _parse_init(init_path: Path) -> tuple[list[str], dict[str, str]]:
                 module_full = node.module
             for alias in node.names:
                 exposed = alias.asname or alias.name
-                symbol_to_module[exposed] = module_full
+                if guarded:
+                    if exposed not in runtime_names:
+                        symbol_to_module.setdefault(exposed, module_full)
+                else:
+                    symbol_to_module[exposed] = module_full
 
     if all_list is None:
         raise ValueError(f"No literal __all__ list found in {init_path}")

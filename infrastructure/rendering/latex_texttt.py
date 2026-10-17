@@ -8,7 +8,8 @@ import string
 _TEXTTT_RE = re.compile(r"\\texttt\{(?P<value>[^{}]+)\}")
 _PANDOC_REF_RE = re.compile(r"\{\[\}@(?P<target>[^{}]+)\{\]\}")
 _BREAKTT_PREAMBLE = r"""
-\IfFileExists{seqsplit.sty}{\usepackage{seqsplit}}{\newcommand{\seqsplit}[1]{#1}}
+\IfFileExists{seqsplit.sty}{\usepackage{seqsplit}}{}
+\providecommand{\seqsplit}[1]{#1}
 \protected\def\breakseq#1{\seqsplit{#1}}
 \protected\def\breaktt#1{\begingroup\ttfamily\seqsplit{#1}\endgroup}
 """.strip()

@@ -157,6 +157,7 @@ stages:
       mutable_artifacts:
         - "projects/{project}/output/data/artifact_contract_index.json"
         - "projects/{project}/output/data/artifact_provenance.json"
+        - "projects/{project}/output/data/manuscript_metadata.json"
       definition_of_done: "Every enabled canonical manuscript format is freshly rendered and verified from current inputs; renderer-owned canonical artifacts for disabled formats are absent."
       failure_code: "PDF_RENDERING_FAILED"
       retry_policy: 0

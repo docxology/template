@@ -26,6 +26,12 @@ def _bytes_to_mb(b: int | None) -> float | None:
     return b / (1024 * 1024) if b is not None else None
 
 
+def _memory_mb_label(memory: int | None) -> str:
+    """Format measured memory consistently, including a genuine zero."""
+    value = _bytes_to_mb(memory)
+    return f"{value:.2f}" if value is not None else "N/A"
+
+
 @dataclass
 class ProfilingMetrics:
     """Container for function-level performance measurement results.
@@ -66,7 +72,7 @@ class CodeProfiler:
     @contextmanager
     def monitor(self, operation_name: str, track_memory: bool = True) -> Iterator[None]:
         """Context manager for monitoring operation performance."""
-        start_time = time.time()
+        start_time = time.perf_counter()
         cpu_start = time.process_time()
 
         we_started_tracing = False
@@ -77,7 +83,7 @@ class CodeProfiler:
         try:
             yield
         finally:
-            execution_time = time.time() - start_time
+            execution_time = time.perf_counter() - start_time
             cpu_time = time.process_time() - cpu_start
 
             metrics = ProfilingMetrics(
@@ -95,7 +101,7 @@ class CodeProfiler:
 
             self.metrics_history.append(metrics)
 
-            peak_mb = f"{metrics.memory_peak / (1024 * 1024):.2f}" if metrics.memory_peak else "N/A"
+            peak_mb = _memory_mb_label(metrics.memory_peak)
             logger.debug(
                 f"Performance: {operation_name} completed in {execution_time:.3f}s "
                 f"(CPU: {cpu_time:.3f}s, Peak memory: {peak_mb}MB)"
@@ -124,6 +130,10 @@ class CodeProfiler:
         **kwargs: Any,
     ) -> dict[str, float | list[float]]:
         """Benchmark function performance over multiple iterations."""
+        if type(iterations) is not int or iterations <= 0:
+            raise ValueError("iterations must be a positive integer")
+        if type(warmup_iterations) is not int or warmup_iterations < 0:
+            raise ValueError("warmup_iterations must be a nonnegative integer")
         for _ in range(warmup_iterations):
             func(*args, **kwargs)
 
@@ -156,7 +166,9 @@ class CodeProfiler:
 
     def get_recent_metrics(self, limit: int = 10) -> list[ProfilingMetrics]:
         """Return the most recent performance metrics."""
-        return self.metrics_history[-limit:]
+        if type(limit) is not int or limit < 0:
+            raise ValueError("limit must be a nonnegative integer")
+        return self.metrics_history[-limit:] if limit else []
 
     def clear_metrics_history(self) -> None:
         """Clear the metrics history."""
@@ -178,15 +190,16 @@ class CodeProfiler:
         total_time = sum(m.execution_time for m in self.metrics_history)
         avg_time = total_time / len(self.metrics_history)
         max_memory = max(
-            (m.memory_peak for m in self.metrics_history if m.memory_peak),
+            (m.memory_peak for m in self.metrics_history if m.memory_peak is not None),
             default=None,
         )
+        peak_mb = _memory_mb_label(max_memory)
 
         report_lines.extend(
             [
                 f"- Total execution time: {total_time:.3f}s",
                 f"- Average execution time: {avg_time:.3f}s",
-                f"- Peak memory usage: {max_memory or 'N/A'} MB",
+                f"- Peak memory usage: {peak_mb} MB",
                 "",
                 "## Recent Operations",
                 "| Operation | Time (s) | Peak Memory (MB) |",
@@ -195,9 +208,8 @@ class CodeProfiler:
         )
 
         for metric in self.metrics_history[-10:]:
-            report_lines.append(
-                f"| {metric.operation_name} | {metric.execution_time:.3f} | {metric.memory_peak or 'N/A'} |"  # noqa: E501
-            )
+            memory_mb = _memory_mb_label(metric.memory_peak)
+            report_lines.append(f"| {metric.operation_name} | {metric.execution_time:.3f} | {memory_mb} |")
 
         return "\n".join(report_lines)
 

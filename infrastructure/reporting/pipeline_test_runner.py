@@ -17,6 +17,7 @@ from infrastructure.core.config.queries import get_testing_config
 from infrastructure.core.files.coverage_cleanup import clean_coverage_files
 from infrastructure.core.files.project_lock import project_output_lock
 from infrastructure.core.logging.utils import get_logger, log_header, log_substep, log_success
+from infrastructure.core.testing.test_runner_outputs import project_test_report_directory
 from infrastructure.core.testing.pytest_orchestration import (
     DEFAULT_TEST_PROFILE,
     INFRASTRUCTURE_TEST_SCOPES,
@@ -642,7 +643,7 @@ def execute_test_pipeline(
             include_infrastructure_coverage=run_infra,
             project_root=resolve_project_root(repo_root, project_name),
         )
-        output_dir = resolve_project_root(repo_root, project_name) / "output" / "reports"
+        output_dir = project_test_report_directory(resolve_project_root(repo_root, project_name))
         save_test_report_to_files(report, output_dir)
         report_results(infra_exit, project_exit, infra_results, project_results, report, project_name)
     elif run_infra:

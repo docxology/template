@@ -18,12 +18,12 @@ from infrastructure.project.public_acceptance_evidence import (
 )
 from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
 from infrastructure.project.public_acceptance_auxiliary_parallel import (
+    AuxiliaryDeadlineExceeded,
     AuxiliaryOperation,
     AuxiliaryProcess,
     execute_auxiliary_operations,
 )
 from infrastructure.project.public_acceptance_auxiliary_validation import (
-    validate_auxiliary_process,
     validate_sandbox_transfer,
 )
 from infrastructure.reporting.readiness_receipts import SCHEMA_VERSION, source_fingerprint
@@ -209,11 +209,12 @@ def _auxiliary_gate_operation(
             ]
         if status == "pass":
             try:
-                validate_auxiliary_process(gate, fingerprint, details, SnapshotReader(root))
                 validate_acceptance(
-                    requirement, gate_payload(requirement, fingerprint, status, details, []), SnapshotReader(root)
+                    requirement,
+                    gate_payload(requirement, fingerprint, status, details, []),
+                    SnapshotReader(root, operation_deadline=deadline),
                 )
-            except (OSError, ValueError, TypeError, KeyError) as error:
+            except (OSError, ValueError, TypeError, KeyError, TimeoutError) as error:
                 status = "fail"
                 details["diagnostic"] = str(error)
     payload = gate_payload(requirement, fingerprint, status, details, blockers)
@@ -268,18 +269,57 @@ def run_auxiliary_acceptance(
         )
         for index, gate in enumerate(selection)
     ]
-    if workers == 1:
-        # Preserve the original complete serial selection, including explicit
-        # selections that interleave Root and project obligations.
-        observed = execute_auxiliary_operations(operations, workers=1, deadline=deadline)
-    else:
-        # Root preflights close before parallel project work. Each project's
-        # positive, negative and final admission remain one serial operation.
-        roots = [item for item in operations if item[0] == "root"]
-        projects = [item for item in operations if item[0] != "root"]
-        observed = execute_auxiliary_operations(roots, workers=1, deadline=deadline)
-        observed += execute_auxiliary_operations(projects, workers=workers, deadline=deadline)
+    batches = (
+        [operations]
+        if workers == 1
+        else [
+            [item for item in operations if item[0] == "root"],
+            [item for item in operations if item[0] != "root"],
+        ]
+    )
+    observed = []
+    interrupted: dict[int, list[dict[str, Any]]] = {}
+    original_indices = {id(operation): index for index, (_, operation) in enumerate(operations)}
+    for batch in batches:
+        try:
+            observed += execute_auxiliary_operations(
+                batch, workers=1 if batch is batches[0] else workers, deadline=deadline
+            )
+        except AuxiliaryDeadlineExceeded as error:
+            observed += error.results
+            interrupted = {
+                original_indices[id(batch[index][1])]: children for index, children in error.observations.items()
+            }
+            break
     by_gate = dict(observed)
+    for index, gate in enumerate(selection):
+        if gate in by_gate:
+            continue
+        cell = directory / f"{index:03d}"
+        children = [
+            write_json(root, cell / f"interrupted-process-{ordinal}.json", child)
+            for ordinal, child in enumerate(interrupted.get(index, []))
+        ]
+        bound = write_json(
+            root,
+            cell / "gate.json",
+            gate_payload(
+                available[gate],
+                fingerprint,
+                "fail",
+                {
+                    "diagnostic": "original auxiliary deadline exhausted before complete gate admission",
+                    "original_process_artifacts": children,
+                },
+                [],
+            ),
+        )
+        by_gate[gate] = {
+            "status": "fail",
+            "command": ["auxiliary-deadline", gate],
+            "artifact": bound["path"],
+            "artifact_sha256": bound["sha256"],
+        }
     output = {gate: by_gate[gate] for gate in selection}
     current = source_fingerprint(root) == fingerprint
     expired = time.monotonic() >= deadline

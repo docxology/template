@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import copy
+from functools import cache
 import hashlib
 import importlib.metadata
 import json
@@ -37,11 +38,18 @@ PROJECT = Path(__file__).resolve().parents[1]
 NOTEBOOK = "notebooks/eda_walkthrough.ipynb"
 
 
+@cache
 def _selected_platform_source() -> Path:
-    import infrastructure
-
-    assert isinstance(infrastructure.__file__, str)
-    return Path(infrastructure.__file__).resolve(strict=True).parent
+    """Bind the actual isolated environment, which can differ from copied Source."""
+    result = subprocess.run(
+        [sys.executable, "-I", "-c", "import infrastructure; print(infrastructure.__file__)"],
+        capture_output=True,
+        text=True,
+        timeout=30,
+        check=False,
+    )
+    assert result.returncode == 0, result.stdout + result.stderr
+    return Path(result.stdout.strip()).resolve(strict=True).parent
 
 
 def _copy_selected_platform(root: Path) -> Path:

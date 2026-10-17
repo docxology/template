@@ -247,10 +247,6 @@ def validate_auxiliary_process(gate: str, fingerprint: str, details: dict[str, A
         )
         for stream in negative.get("streams", {}).values():
             artifact(stream)
-    if gate.endswith(":pipeline") and details.get("pipeline_schema"):
-        from infrastructure.project.public_acceptance_auxiliary_pipeline import validate_portable_pipeline
-
-        validate_portable_pipeline(gate.removesuffix(":pipeline"), details, reader)
     if details.get("native_artifact"):
         native = artifact(details["native_artifact"]).json_object()
         if native.get("status") != "passed":

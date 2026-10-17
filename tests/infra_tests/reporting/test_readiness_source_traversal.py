@@ -12,6 +12,7 @@ from pathlib import Path
 import pytest
 
 from infrastructure.core.pipeline.fingerprints import paths_digest, tree_records
+from infrastructure.core.pipeline.fingerprint_files import digest_path
 from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
 from infrastructure.reporting.readiness_receipts import (
     _public_roots,
@@ -23,6 +24,55 @@ from infrastructure.reporting.readiness_receipts import (
 
 _NAMES = frozenset({".DS_Store"})
 _SCOPE = "templates/template_code_project"
+
+
+@pytest.mark.parametrize("traversal", [False, True])
+def test_deliverable_identity_refuses_outside_project_scope(tmp_path: Path, traversal: bool) -> None:
+    root = tmp_path / "repo"
+    root.mkdir()
+    outside = tmp_path / "outside"
+    (outside / "output").mkdir(parents=True)
+    sentinel = outside / "output/result.txt"
+    sentinel.write_bytes(b"outside evidence must stay outside")
+    (root / "projects").mkdir()
+    scope = "../../outside" if traversal else str(outside)
+    with pytest.raises(ValueError, match="confined|confinement"):
+        deliverable_identity(root, scope)
+    assert sentinel.read_bytes() == b"outside evidence must stay outside"
+
+
+def test_bounded_digest_reobserves_same_size_bytes_even_with_restored_mtime(tmp_path: Path) -> None:
+    path = tmp_path / "observed.bin"
+    path.write_bytes(b"original")
+    original = path.stat()
+    assert digest_path(tmp_path, path, max_bytes=8) == hashlib.sha256(b"original").hexdigest()
+    assert digest_path(tmp_path, path, max_bytes=8) == hashlib.sha256(b"original").hexdigest()
+    path.write_bytes(b"replaced")
+    os.utime(path, ns=(original.st_atime_ns, original.st_mtime_ns))
+    assert digest_path(tmp_path, path, max_bytes=8) == hashlib.sha256(b"replaced").hexdigest()
+    with pytest.raises(ValueError, match="read budget"):
+        digest_path(tmp_path, path, max_bytes=7)
+
+
+@pytest.mark.parametrize("ancestor", [False, True])
+def test_bounded_digest_refuses_symlink_after_warm_observation(tmp_path: Path, ancestor: bool) -> None:
+    directory = tmp_path / "current"
+    directory.mkdir()
+    path = directory / "observed.bin"
+    path.write_bytes(b"original")
+    digest_path(tmp_path, path, max_bytes=8)
+    outside = tmp_path / "outside"
+    outside.mkdir()
+    (outside / path.name).write_bytes(b"outside!")
+    if ancestor:
+        directory.rename(tmp_path / "held-original")
+        directory.symlink_to(outside, target_is_directory=True)
+    else:
+        path.unlink()
+        path.symlink_to(outside / path.name)
+    with pytest.raises(ValueError, match="symlink|regular file"):
+        digest_path(tmp_path, path, max_bytes=8)
+    assert (outside / path.name).read_bytes() == b"outside!"
 
 
 def _source(root: Path) -> Path:
@@ -115,13 +165,15 @@ def test_only_exact_metadata_names_change_readiness_behavior(tmp_path: Path) -> 
     default = paths_digest((source,), source=True)
     metadata.write_bytes(b"changed actual metadata")
     assert paths_digest((source,), source=True, excluded_names=_NAMES) == ignored
-    assert paths_digest((source,), source=True) != default
+    assert paths_digest((source,), source=True) == default
     neighbor = source / ".DS_Store.py"
     neighbor.write_bytes(b"changed authored source")
     assert paths_digest((source,), source=True, excluded_names=_NAMES) != ignored
     scope_source = _public(tmp_path)
     before = project_source_identity(tmp_path, _SCOPE)
-    (scope_source / ".DS_Store").write_bytes(b"changed metadata remains bound by generic project identity")
+    (scope_source / ".DS_Store").write_bytes(b"changed Finder metadata remains outside source identity")
+    assert project_source_identity(tmp_path, _SCOPE) == before
+    (scope_source / ".DS_Store.py").write_bytes(b"authored neighboring source stays bound")
     assert project_source_identity(tmp_path, _SCOPE) != before
 
 

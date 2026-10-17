@@ -1,5 +1,13 @@
 """Tests for infrastructure.core.runtime.function_profiler."""
 
+import time
+import tracemalloc
+import subprocess
+import sys
+from pathlib import Path
+
+import pytest
+
 from infrastructure.core.runtime.function_profiler import (
     CodeProfiler,
     ProfilingMetrics,
@@ -161,6 +169,123 @@ class TestCodeProfiler:
         assert "op2" in report
         assert "Total operations monitored: 2" in report
         assert "Total execution time" in report
+
+    def test_monitor_retains_original_exception_and_external_tracing(self):
+        profiler = CodeProfiler()
+        error = RuntimeError("actual monitored failure")
+        already_tracing = tracemalloc.is_tracing()
+        if not already_tracing:
+            tracemalloc.start()
+        before = time.perf_counter()
+        try:
+            with pytest.raises(RuntimeError) as raised:
+                with profiler.monitor("failed real operation"):
+                    time.sleep(0.01)
+                    raise error
+            elapsed = time.perf_counter() - before
+            assert raised.value is error
+            assert tracemalloc.is_tracing(), "the caller retains ownership of its tracing session"
+            assert len(profiler.metrics_history) == 1
+            metric = profiler.metrics_history[0]
+            assert 0.01 <= metric.execution_time <= elapsed
+            assert metric.memory_peak is not None
+        finally:
+            if not already_tracing:
+                tracemalloc.stop()
+
+    def test_monitor_closes_owned_tracing_after_failure(self):
+        # A fresh isolated interpreter owns no caller's existing trace session.
+        program = """
+import sys
+sys.path.insert(0, sys.argv[1])
+import tracemalloc
+from infrastructure.core.runtime.function_profiler import CodeProfiler
+assert not tracemalloc.is_tracing()
+profiler = CodeProfiler()
+error = ValueError("actual monitored failure")
+try:
+    with profiler.monitor("owned tracing"):
+        assert tracemalloc.is_tracing()
+        raise error
+except ValueError as observed:
+    assert observed is error
+else:
+    raise AssertionError("the monitored exception was swallowed")
+assert not tracemalloc.is_tracing()
+assert len(profiler.metrics_history) == 1
+"""
+        observed = subprocess.run(
+            [sys.executable, "-I", "-c", program, str(Path(__file__).resolve().parents[3])],
+            capture_output=True,
+            text=True,
+            timeout=30,
+            check=False,
+        )
+        assert observed.returncode == 0, observed.stderr
+
+    @pytest.mark.parametrize("iterations", (0, -1, True, False, 1.5, "3", None))
+    def test_invalid_iterations_refuse_before_warmup(self, iterations):
+        calls = []
+        with pytest.raises(ValueError, match="iterations must be a positive integer"):
+            CodeProfiler().benchmark_function(lambda: calls.append("ran"), iterations=iterations)
+        assert calls == []
+
+    @pytest.mark.parametrize("warmup", (-1, True, False, 1.5, "2", None))
+    def test_invalid_warmup_refuses_before_execution(self, warmup):
+        calls = []
+        with pytest.raises(ValueError, match="warmup_iterations must be a nonnegative integer"):
+            CodeProfiler().benchmark_function(lambda: calls.append("ran"), warmup_iterations=warmup)
+        assert calls == []
+
+    def test_benchmark_runs_exact_declared_count_with_zero_warmup(self):
+        calls = []
+        result = CodeProfiler().benchmark_function(
+            lambda value: calls.append(value), 7, iterations=3, warmup_iterations=0
+        )
+        assert calls == [7, 7, 7]
+        assert len(result["all_times"]) == 3
+
+    def test_benchmark_preserves_exception_and_stops_later_iterations(self):
+        calls = []
+        error = RuntimeError("actual benchmark failure")
+
+        def failing():
+            calls.append("ran")
+            raise error
+
+        with pytest.raises(RuntimeError) as raised:
+            CodeProfiler().benchmark_function(failing, iterations=3, warmup_iterations=0)
+        assert raised.value is error
+        assert calls == ["ran"]
+
+    @pytest.mark.parametrize("limit", (-1, True, False, 1.5, "2", None))
+    def test_invalid_recent_limit_refused(self, limit):
+        with pytest.raises(ValueError, match="limit must be a nonnegative integer"):
+            CodeProfiler().get_recent_metrics(limit)
+
+    def test_zero_recent_limit_returns_no_metrics_without_clearing_history(self):
+        profiler = CodeProfiler()
+        with profiler.monitor("retained", track_memory=False):
+            sum(range(10))
+        assert profiler.get_recent_metrics(0) == []
+        assert profiler.get_recent_metrics(1) == profiler.metrics_history
+
+    def test_report_converts_bytes_and_distinguishes_zero_from_unmeasured(self):
+        profiler = CodeProfiler()
+        profiler.metrics_history.extend(
+            [
+                ProfilingMetrics("allocated", 0.1, memory_peak=1536 * 1024),
+                ProfilingMetrics("zero", 0.2, memory_peak=0),
+                ProfilingMetrics("unmeasured", 0.3),
+            ]
+        )
+        report = profiler.generate_performance_report()
+        assert "Peak memory usage: 1.50 MB" in report
+        assert "| allocated | 0.100 | 1.50 |" in report
+        assert "| zero | 0.200 | 0.00 |" in report
+        assert "| unmeasured | 0.300 | N/A |" in report
+        profiler.metrics_history[:] = [ProfilingMetrics("zero", 0.2, memory_peak=0)]
+        assert "Peak memory usage: 0.00 MB" in profiler.generate_performance_report()
 
 
 class TestGetCodeProfiler:

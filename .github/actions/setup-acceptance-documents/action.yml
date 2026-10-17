@@ -142,7 +142,7 @@ runs:
         # provisions BasicTeX and audits the actual LaTeX package inventory.
         bash scripts/shell/setup-system-deps.sh --prepared-python "$PREPARED_PYTHON"
         if [ "$RUNNER_OS" = macOS ]; then
-          sudo /Library/TeX/texbin/tlmgr install fontsize soul algorithm2e placeins ifoddpage relsize
+          sudo /Library/TeX/texbin/tlmgr install fontsize soul algorithm2e placeins ifoddpage relsize seqsplit
         fi
         pdftoppm -v
         pdffonts -v
@@ -171,12 +171,19 @@ runs:
           exit 1
         }
         if [ "$RUNNER_OS" = Linux ]; then
-          fonts="$HOME/.local/share/fonts/template-acceptance-juliamono"
+          # The payload account has its own HOME. Register the verified family
+          # in the disposable runner's system font scope before Source custody.
+          fonts=/usr/local/share/fonts/template-acceptance-juliamono
+          test ! -e "$fonts"
+          sudo install -d -m 755 "$fonts"
+          sudo tar -xzf "$archive" -C "$fonts"
+          sudo fc-cache -f "$fonts"
+          font_probe_home=$(mktemp -d "$RUNNER_TEMP/template-font-probe.XXXXXX")
+          HOME="$font_probe_home" fc-match --format '%{family}\n' JuliaMono | grep -Fx JuliaMono
         else
           fonts="$HOME/Library/Fonts/template-acceptance-juliamono"
+          mkdir -p "$(dirname "$fonts")"
+          mkdir "$fonts"
+          tar -xzf "$archive" -C "$fonts"
         fi
-        mkdir -p "$(dirname "$fonts")"
-        mkdir "$fonts"
-        tar -xzf "$archive" -C "$fonts"
-        if [ "$RUNNER_OS" = Linux ]; then fc-cache -f "$fonts"; fi
         echo "TTFONTS=$fonts//:" >> "$GITHUB_ENV"

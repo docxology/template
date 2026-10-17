@@ -21,53 +21,91 @@ Prefer importing from the specific submodule when only one subsystem is needed.
 from typing import TYPE_CHECKING, Any
 
 # Pipeline stage reporters (used during pipeline execution)
-from .error_aggregator import (
-    ErrorAggregator,
-    ErrorEntry,
-    get_error_aggregator,
-    reset_error_aggregator,
-)
-from .pipeline_io import (
-    save_error_summary,
-    save_performance_report,
-    save_pipeline_report,
-    save_test_results,
-    save_validation_report,
-)
-from .pipeline_report_model import generate_pipeline_report
+from importlib import import_module
 
-# Output & statistics reporters (post-pipeline)
-from .output_organizer import FileType, OutputOrganizer
-from .output_statistics import (
-    collect_output_statistics,
-    log_output_summary,
-    write_output_statistics_reports,
-)
+# Resolve each stable export only when requested; submodule imports stay composable.
+_EXPORTS = {
+    "ErrorAggregator": (".error_aggregator", "ErrorAggregator"),
+    "ErrorEntry": (".error_aggregator", "ErrorEntry"),
+    "get_error_aggregator": (".error_aggregator", "get_error_aggregator"),
+    "reset_error_aggregator": (".error_aggregator", "reset_error_aggregator"),
+    "save_error_summary": (".pipeline_io", "save_error_summary"),
+    "save_performance_report": (".pipeline_io", "save_performance_report"),
+    "save_pipeline_report": (".pipeline_io", "save_pipeline_report"),
+    "save_test_results": (".pipeline_io", "save_test_results"),
+    "save_validation_report": (".pipeline_io", "save_validation_report"),
+    "generate_pipeline_report": (".pipeline_report_model", "generate_pipeline_report"),
+    "FileType": (".output_organizer", "FileType"),
+    "OutputOrganizer": (".output_organizer", "OutputOrganizer"),
+    "collect_output_statistics": (".output_statistics", "collect_output_statistics"),
+    "log_output_summary": (".output_statistics", "log_output_summary"),
+    "write_output_statistics_reports": (".output_statistics", "write_output_statistics_reports"),
+    "ExecutiveSummary": ("infrastructure.reporting._executive_models", "ExecutiveSummary"),
+    "ProjectMetrics": ("infrastructure.reporting._executive_models", "ProjectMetrics"),
+    "collect_project_metrics": ("infrastructure.reporting._executive_collectors", "collect_project_metrics"),
+    "generate_executive_summary": ("infrastructure.reporting._executive_renderers", "generate_executive_summary"),
+    "save_executive_summary": ("infrastructure.reporting._executive_renderers", "save_executive_summary"),
+    "generate_multi_project_report": (".multi_project_reporter", "generate_multi_project_report"),
+    "generate_multi_project_summary_report": (".multi_project_reporter", "generate_multi_project_summary_report"),
+    "generate_markdown_report": (".markdown_formatter", "generate_markdown_report"),
+    "run_test_summary_generation": (".markdown_formatter", "run_test_summary_generation"),
+    "generate_summary_report": (".report_builder", "generate_summary_report"),
+    "load_infrastructure_results": (".result_loaders", "load_infrastructure_results"),
+    "load_test_results": (".result_loaders", "load_test_results"),
+    "Control": (".interactive_dashboard", "Control"),
+    "InteractiveDashboard": (".interactive_dashboard", "InteractiveDashboard"),
+    "Invariant": (".interactive_dashboard", "Invariant"),
+    "Panel": (".interactive_dashboard", "Panel"),
+}
 
-# Executive & multi-project reporters (cross-project summaries)
-from infrastructure.reporting._executive_models import (
-    ExecutiveSummary,
-    ProjectMetrics,
-)
-from infrastructure.reporting._executive_collectors import collect_project_metrics
-from infrastructure.reporting._executive_renderers import (
-    generate_executive_summary,
-    save_executive_summary,
-)
-from .multi_project_reporter import generate_multi_project_report, generate_multi_project_summary_report
+if TYPE_CHECKING:
+    from .error_aggregator import (
+        ErrorAggregator,
+        ErrorEntry,
+        get_error_aggregator,
+        reset_error_aggregator,
+    )
+    from .pipeline_io import (
+        save_error_summary,
+        save_performance_report,
+        save_pipeline_report,
+        save_test_results,
+        save_validation_report,
+    )
+    from .pipeline_report_model import generate_pipeline_report
 
-# Test suite summary
-from .markdown_formatter import generate_markdown_report, run_test_summary_generation
-from .report_builder import generate_summary_report
-from .result_loaders import load_infrastructure_results, load_test_results
+    # Output & statistics reporters (post-pipeline)
+    from .output_organizer import FileType, OutputOrganizer
+    from .output_statistics import (
+        collect_output_statistics,
+        log_output_summary,
+        write_output_statistics_reports,
+    )
 
-# Project-agnostic interactive simulation dashboard (stdlib-only, no plotly dep)
-from .interactive_dashboard import (
-    Control,
-    InteractiveDashboard,
-    Invariant,
-    Panel,
-)
+    # Executive & multi-project reporters (cross-project summaries)
+    from infrastructure.reporting._executive_models import (
+        ExecutiveSummary,
+        ProjectMetrics,
+    )
+    from infrastructure.reporting._executive_collectors import collect_project_metrics
+    from infrastructure.reporting._executive_renderers import (
+        generate_executive_summary,
+        save_executive_summary,
+    )
+    from .multi_project_reporter import generate_multi_project_report, generate_multi_project_summary_report
+
+    # Test suite summary
+    from .markdown_formatter import generate_markdown_report, run_test_summary_generation
+    from .report_builder import generate_summary_report
+    from .result_loaders import load_infrastructure_results, load_test_results
+
+    # Project-agnostic interactive simulation dashboard (stdlib-only, no plotly dep)
+    from .interactive_dashboard import (
+        Control,
+        InteractiveDashboard,
+        Invariant,
+        Panel,
+    )
 
 
 # Optional plotting providers are loaded only when their public exports or
@@ -112,6 +150,11 @@ def _load_dashboards() -> None:
 
 
 def __getattr__(name: str) -> Any:
+    if name in _EXPORTS:
+        module, attribute = _EXPORTS[name]
+        value = getattr(import_module(module, __name__), attribute)
+        globals()[name] = value
+        return value
     if name not in _DASHBOARD_EXPORTS:
         raise AttributeError(f"module {__name__!r} has no attribute {name!r}")
     _load_dashboards()
@@ -124,7 +167,7 @@ def __dir__() -> list[str]:
     # Explicit enumeration observes availability, just as an explicit import
     # does; normal pipeline-report imports never initialize optional plotting.
     _load_dashboards()
-    return sorted(globals())
+    return sorted(set(globals()) | _EXPORTS.keys())
 
 
 __all__ = [

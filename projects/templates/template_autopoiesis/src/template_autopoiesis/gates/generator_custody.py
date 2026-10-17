@@ -52,5 +52,8 @@ def capture_execution_custody(*, fresh_pycache_prefix: Path | None = None) -> tu
         package_root,
         checkout_root=checkout_root,
         fresh_pycache_prefix=fresh_pycache_prefix,
+        # The complete source wheel also retains its authored src/__init__.py.
+        # Admit only that declared companion; every RECORD byte is still checked.
+        public_modules=frozenset({"__init__"}),
     )
     return {"schema_version": GENERATOR_CUSTODY_SCHEMA, **generator}, platform

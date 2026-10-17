@@ -2,14 +2,13 @@
 
 from __future__ import annotations
 
-import hashlib
 from collections.abc import Callable
 from dataclasses import asdict, dataclass
 from pathlib import Path
 from typing import Literal
 
 from infrastructure.core.pipeline.fingerprints import canonical_digest, paths_digest, tree_records
-from infrastructure.core.files.secure_write import read_bytes_confined
+from infrastructure.core.pipeline.fingerprint_files import digest_path
 from infrastructure.core.pipeline.artifacts._inventory import collect_stable_output_inventory
 from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
 from infrastructure.reporting.release_readiness_snapshot import PUBLIC_ROOT_FILES, SnapshotReader
@@ -89,7 +88,7 @@ def deliverable_identity(repo_root: Path, project: str, *, path_admission: Calla
         [
             (
                 path.relative_to(root).as_posix(),
-                hashlib.sha256(read_bytes_confined(repo_root, path, max_bytes=64 * 1024 * 1024)).hexdigest(),
+                digest_path(repo_root, path, max_bytes=64 * 1024 * 1024),
             )
             for path in inventory.files
         ]

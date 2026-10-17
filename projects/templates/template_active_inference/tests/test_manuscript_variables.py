@@ -15,8 +15,8 @@ from manuscript.variables import generate_variables
 pytestmark = [pytest.mark.requires_gate_artifacts, pytest.mark.timeout(600)]
 
 
-def test_generate_variables_with_outputs() -> None:
-    root = Path(__file__).resolve().parents[1]
+def test_generate_variables_with_outputs(project_root: Path) -> None:
+    root = project_root
     from gate_support import ensure_gate_artifacts
 
     ensure_gate_artifacts(root)
@@ -73,8 +73,8 @@ def test_generate_variables_is_deterministic_and_matches_artifact_key_surface(pr
     assert repeated == actual
 
 
-def test_invariant_counts_include_simulation_when_merged() -> None:
-    root = Path(__file__).resolve().parents[1]
+def test_invariant_counts_include_simulation_when_merged(project_root: Path) -> None:
+    root = project_root
     inv_path = root / "output" / "reports" / "invariants.json"
     if not inv_path.is_file():
         from template_active_inference.analysis import run_analysis
@@ -130,8 +130,8 @@ def test_invariant_counts_fall_back_to_si_invariants(project_root: Path, tmp_pat
         inv_path.write_text(inv_backup.read_text(encoding="utf-8"), encoding="utf-8")
 
 
-def test_ising_mi_saturation_from_sweep() -> None:
-    root = Path(__file__).resolve().parents[1]
+def test_ising_mi_saturation_from_sweep(project_root: Path) -> None:
+    root = project_root
     import csv
 
     sweep_path = root / "output" / "data" / "parameter_sweep.csv"

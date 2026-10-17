@@ -11,6 +11,7 @@ import re
 from pathlib import Path
 
 from infrastructure.core.logging.utils import get_logger
+from infrastructure.core.testing.test_runner_outputs import project_test_report_paths
 
 from ._executive_models import (
     CodebaseMetrics,
@@ -132,7 +133,7 @@ def collect_codebase_metrics(src_dir: Path, scripts_dir: Path | None = None) -> 
     return metrics
 
 
-def collect_test_metrics(reports_dir: Path) -> TestMetrics:
+def collect_test_metrics(reports_dir: Path, *, project_root: Path | None = None) -> TestMetrics:
     """Collect test metrics from test reports.
 
     Args:
@@ -143,7 +144,10 @@ def collect_test_metrics(reports_dir: Path) -> TestMetrics:
     """
     metrics = TestMetrics()
 
-    test_report_path = reports_dir / "test_results.json"
+    candidates = (
+        project_test_report_paths(project_root) if project_root is not None else (reports_dir / "test_results.json",)
+    )
+    test_report_path = next((path for path in candidates if path.exists()), candidates[0])
 
     if not test_report_path.exists():
         logger.warning(f"Test report not found: {test_report_path} - test metrics will show as unavailable")
@@ -307,7 +311,7 @@ def collect_project_metrics(
     # Collect all metrics
     manuscript = collect_manuscript_metrics(project_root / "manuscript")
     codebase = collect_codebase_metrics(project_root / "src", project_root / "scripts")
-    tests = collect_test_metrics(project_root / "output" / "reports")
+    tests = collect_test_metrics(project_root / "output" / "reports", project_root=project_root)
     outputs = collect_output_metrics(repo_root / "output" / project_name)
     pipeline = collect_pipeline_metrics(project_root / "output" / "reports")
 

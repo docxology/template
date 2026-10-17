@@ -2,7 +2,7 @@
   "all_copied_outputs_match_or_deferred": true,
   "all_required_sources_present": true,
   "artifact_count": 36,
-  "bundle_hash": "e9bbcb9423ff66700fb3783e2ebd1264793b211d44a54484137e9ffd408d198f",
+  "bundle_hash": "5a22f6d3efadef61405454aa6a6f82b4156a310d44a1e89064b1d942b43e1f58",
   "copied_output_parity": {
     "all_copied_outputs_match": false,
     "all_copied_outputs_match_or_deferred": true,
@@ -654,7 +654,7 @@
       "hash_cycle_excluded": false,
       "required_deliverable": true,
       "source_exists": true,
-      "source_sha256": "c615bae1a3bb573d673c1489ed7da190d56f473cf16492a7ada78abecbd5f8fe"
+      "source_sha256": "8109f0fef3610603ca319f2fa2ce2f120d16a8c4713c193f7a20eb722413cfaa"
     },
     {
       "artifact": "output/data/track_lane_matrix.json",
@@ -744,7 +744,7 @@
       "hash_cycle_excluded": false,
       "required_deliverable": true,
       "source_exists": true,
-      "source_sha256": "f7999387758bfa4e8a64d4ce3ca601ee85a493e7a14a5a3e900c7d4aa688309b"
+      "source_sha256": "fbb9e16d4d1f0de2ebb2d098cdf6b18d6f0b07bf007b09eb14edc594d27f6723"
     },
     {
       "artifact": "output/data/statistical_visualization_bridge.json",

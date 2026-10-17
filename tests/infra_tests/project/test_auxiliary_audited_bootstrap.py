@@ -260,3 +260,61 @@ def test_audited_launch_refuses_changed_source_hook_before_executing(source: Pat
     with pytest.raises(ValueError, match="nominated Source body"):
         prepare_audited_auxiliary_command(Path(sys.executable), source, WORKER, (), directory)
     assert not (directory / PAYLOAD).exists()
+
+
+def test_zero_exit_with_failed_logical_validation_retains_original_facts(tmp_path: Path) -> None:
+    process = supervise(
+        [sys.executable, "-I", "-c", "print('actual successful pipeline child')"],
+        tmp_path,
+        tmp_path / "output/readiness/diagnostic/execution",
+        time.monotonic() + 15,
+    )
+    assert process["exit_code"] == 0
+    facts = {"original_exit_code": 0, "execution": {"outcomes": [{"stage_key": "copy", "status": "succeeded"}]}}
+    error = AuxiliaryPipelineFailure(
+        process,
+        facts,
+        {"logical_plan_artifact": {"path": "output/readiness/diagnostic/plan.json", "sha256": "a" * 64}},
+        validation_error="actual logical source differs",
+    )
+    assert error.code == 1
+    observation = error.worker_observation
+    assert observation["status"] == "fail"
+    assert "actual logical source differs" in observation["diagnostic"]
+    assert observation["original_pipeline_failure"]["original_exit_code"] == 0
+    assert observation["original_pipeline_failure"]["outcomes"] == facts["execution"]["outcomes"]
+    assert observation["original_pipeline_failure"]["logical_plan_artifact"]["path"].endswith("plan.json")
+
+
+def test_combined_render_failure_logs_retain_exact_bytes_without_following_links(tmp_path: Path) -> None:
+    from infrastructure.project.public_acceptance_auxiliary_pipeline_failure import retain_pipeline_failure_logs
+
+    copied = tmp_path / "copied"
+    output = copied / "projects/templates/template_code_project/output"
+    pdf = output / "pdf"
+    pdf.mkdir(parents=True)
+    log = pdf / "_combined_manuscript.log"
+    log.write_bytes(b"! Actual compiler diagnostic\n")
+    external = tmp_path / "outside.tex"
+    external.write_bytes(b"must not be disclosed")
+    (pdf / "_combined_manuscript.tex").symlink_to(external)
+    rows = retain_pipeline_failure_logs(tmp_path, tmp_path / "output/readiness/failed", copied, output)
+    assert len(rows) == 2
+    assert (tmp_path / rows[0]["artifact"]["path"]).read_bytes() == log.read_bytes()
+    assert "artifact" not in rows[1] and rows[1]["diagnostic"]
+    assert external.read_bytes() == b"must not be disclosed"
+    assert not any(b"must not be disclosed" in p.read_bytes() for p in (tmp_path / "output").rglob("*.*"))
+
+
+def test_oversized_compiler_diagnostic_cannot_hide_the_original_failure(tmp_path: Path) -> None:
+    from infrastructure.project.public_acceptance_auxiliary_pipeline_failure import retain_pipeline_failure_logs
+
+    copied = tmp_path / "copied"
+    output = copied / "projects/templates/template_code_project/output"
+    pdf = output / "pdf"
+    pdf.mkdir(parents=True)
+    (pdf / "_combined_manuscript.log").write_bytes(b"x" * (2 * 1024 * 1024 + 1))
+    rows = retain_pipeline_failure_logs(tmp_path, tmp_path / "output/readiness/failed", copied, output)
+    assert len(rows) == 1 and "read budget" in rows[0]["diagnostic"]
+    assert "artifact" not in rows[0]
+    assert not (tmp_path / "output").exists()

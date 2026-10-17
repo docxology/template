@@ -113,3 +113,28 @@ def digest_file(path: Path, parent: int, name: str, original: os.stat_result, *,
         _DIGESTS.clear()
     _DIGESTS[key] = result
     return result
+
+
+def digest_path(root: Path, path: Path, *, max_bytes: int) -> str:
+    """Digest one bounded file with fresh no-follow ancestry and file observations.
+
+    Repeated calls share only the existing exact-observation byte digest. Each
+    call still checks the byte ceiling, named inode, clocks, mode and ancestors.
+    """
+    if type(max_bytes) is not int or max_bytes < 0:
+        raise ValueError("Fingerprint read budget must be a nonnegative integer")
+    root = root.absolute()
+    path = path.absolute()
+    if ".." in root.parts:
+        raise ValueError("Fingerprint confinement root cannot contain parent traversal")
+    try:
+        relative = path.relative_to(root)
+    except ValueError as exc:
+        raise ValueError("Fingerprint target escapes confinement root") from exc
+    if not relative.parts or ".." in relative.parts:
+        raise ValueError("Fingerprint target must name a confined file")
+    with anchored_parent(path) as parent:
+        if parent is None:
+            raise FileNotFoundError(path)
+        original = os.stat(path.name, dir_fd=parent, follow_symlinks=False)
+        return digest_file(path, parent, path.name, original, max_bytes=max_bytes)

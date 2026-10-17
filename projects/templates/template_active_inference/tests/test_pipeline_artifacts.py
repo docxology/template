@@ -6,15 +6,15 @@ from visualizations.figures import generate_all_figures
 from simulation.si_runner import pymdp_available, run_and_persist
 
 
-def test_analytical_sweep_writes_csv(tmp_path: Path) -> None:
-    root = Path(__file__).resolve().parents[1]
+def test_analytical_sweep_writes_csv(project_root: Path, tmp_path: Path) -> None:
+    root = project_root
     # use project root logic but write under tmp by copying approach
     paths = run_analysis(root)
     assert paths["parameter_sweep"].exists()
 
 
-def test_figures_after_pipeline_artifacts() -> None:
-    root = Path(__file__).resolve().parents[1]
+def test_figures_after_pipeline_artifacts(project_root: Path) -> None:
+    root = project_root
     from manuscript.sheaf import compose_all_sections
 
     if pymdp_available():

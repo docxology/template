@@ -5,7 +5,7 @@ list is an ordered chain of steps, each naming the agent responsible.
 [@fig:provenance_flow] renders that chain via `provenance_steps()` in
 `src/data_descriptor/figures.py`.
 
-![Provenance chain: the ordered steps that produced the release, from `provenance_steps()`. Each box is a declared step; the label beneath is the responsible agent. The chain runs left to right from raw collection to the packaged, metadata-only release manifest.](figures/provenance_flow.png){#fig:provenance_flow}
+![Provenance chain: the ordered steps that produced the release, from `provenance_steps()`. Each box is a declared step; the label beneath is the responsible agent. The chain runs left to right from raw collection to the packaged, metadata-only release manifest.](../output/figures/provenance_flow.png){#fig:provenance_flow}
 
 ## Methods: the provenance chain
 

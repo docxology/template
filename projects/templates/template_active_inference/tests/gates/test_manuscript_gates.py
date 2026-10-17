@@ -17,7 +17,7 @@ pytestmark = [pytest.mark.requires_gate_artifacts, pytest.mark.timeout(600)]
 
 
 @pytest.fixture(scope="module")
-def composed_methods_sheaf() -> Path:
+def composed_methods_sheaf(project_root: Path) -> Path:
     """Compose every manuscript section once for the module's methods-sheaf checks.
 
     The methods-sheaf marker negatives only mutate the *composed*
@@ -25,13 +25,11 @@ def composed_methods_sheaf() -> Path:
     ``_restore_mutable_project_state`` fixture in ``conftest`` restores after
     each test), so composing once at module scope removes the repeated
     ``compose_all_sections`` cost from every parametrized case. Module-scoped
-    fixtures cannot depend on the function-scoped ``project_root`` fixture, so
-    the project root is read from ``conftest.PROJECT_ROOT`` directly.
+    fixtures share the session's disposable ``project_root``. The canonical
+    source tree and its retained publication bytes are never mutation targets.
     """
-    from conftest import PROJECT_ROOT
-
-    compose_all_sections(PROJECT_ROOT)
-    return PROJECT_ROOT
+    compose_all_sections(project_root)
+    return project_root
 
 
 @pytest.mark.timeout(900)

@@ -202,7 +202,7 @@ def test_shared_infrastructure_failure_blocks_real_project_child(tmp_path: Path,
     assert code == (child_exit if child_exit in (75, 124, 130) else 1)
     assert not project_marker.exists()
     assert prior_coverage.read_bytes() == b"project evidence was never touched"
-    report = json.loads((project / "output" / "reports" / "test_results.json").read_text())
+    report = json.loads((project / "output" / ".pipeline" / "tests" / "test_results.json").read_text())
     assert report["infrastructure"]["original_exit_code"] == child_exit
     assert report["project"]["original_exit_code"] is None
     assert report["project"]["exit_code"] == 75
