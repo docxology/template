@@ -358,7 +358,7 @@ def _session_project_root(config: pytest.Config) -> Path:
 
         temporary = tempfile.TemporaryDirectory(prefix="active-gate-project-")
         config.add_cleanup(temporary.cleanup)
-        config.stash[_PROJECT_COPY] = copy_project_tree(Path(temporary.name) / PROJECT_ROOT.name)
+        config.stash[_PROJECT_COPY] = copy_project_tree(Path(temporary.name).resolve() / PROJECT_ROOT.name)
     return config.stash[_PROJECT_COPY]
 
 

@@ -512,6 +512,7 @@ def test_gate_mutations_use_disposable_source_with_exact_canonical_bytes(project
     copied = project_root / "manuscript" / "config.yaml"
     assert not project_root.is_relative_to(original.parents[1])
     assert project_root.name == original.parents[1].name
+    assert project_root == project_root.resolve()
     before, metadata = original.read_bytes(), original.stat()
     assert copied.read_bytes() == before
     try:
