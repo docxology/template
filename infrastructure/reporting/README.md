@@ -7,6 +7,11 @@ provider objects. Importing a reporting leaf does not initialize executive,
 document-validation, rendering, or plotting providers. Optional dashboard
 availability is still observed when its exports or package enumeration request it.
 
+`native_project_provider_batch.py` admits a fixed public provider selection under
+one held Source boundary, then closes the original Source, SDK and fixture checks
+before returning. `native_preparation_progress.py` emits bounded phase labels and
+remaining time for diagnostics; progress output never grants native admission.
+
 ## Overview
 
 The reporting module provides reporting capabilities for pipeline execution, including:

@@ -5,6 +5,10 @@ Project discovery, validation, and metadata extraction for multi-project support
 `codeowners.py` generates and validates the public-exemplar and sensitive-area
 ownership block in `.github/CODEOWNERS` from the canonical public scope.
 
+`public_acceptance_auxiliary_parallel.py` overlaps owned subprocess supervision
+while resuming Source controllers serially. Its deadline exception retains
+completed results and original child observations without granting acceptance.
+
 `acceptance_fixture_preparation.py` is the stdlib fixture producer and strict
 shared manifest parser. Run its thin entry point with
 `python3 -S scripts/fixtures/prepare_acceptance.py` on a fresh owned checkout.

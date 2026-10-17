@@ -80,13 +80,18 @@ def infrastructure_files(root: Path, changed: tuple[str, ...] = ()) -> tuple[str
     return tuple(sorted(files))
 
 
-def infrastructure_shards(root: Path, changed: tuple[str, ...] = (), count: int = 3) -> list[list[str]]:
-    """Stable largest-file-first balancing; sizes are estimates, not measured speedups."""
-    if type(count) is not int or not 1 <= count <= 8:
+def infrastructure_shards(root: Path, changed: tuple[str, ...] = (), count: int | None = None) -> list[list[str]]:
+    """Bound broad selections before size balancing; neither estimates runtime."""
+    if count is not None and (type(count) is not int or not 1 <= count <= 8):
         raise ValueError("functional shard count must be between one and eight")
     files = infrastructure_files(root, changed)
     contracts = contract_files(files, infrastructure_files(root))
     files = tuple(name for name in files if name not in contracts)
+    if count is None:
+        # Package-level ownership can expand the routine roster by an order of
+        # magnitude. Keep its complete selection and original 540-second clock,
+        # with at most eight jobs and a nominal 32-module target per job.
+        count = min(8, max(3, (len(files) + 31) // 32))
     shards: list[list[str]] = [[] for _ in range(min(count, len(files)))]
     loads = [0] * len(shards)
     for name in sorted(files, key=lambda p: (-(root / p).stat().st_size, p)):

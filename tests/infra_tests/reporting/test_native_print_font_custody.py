@@ -7,9 +7,24 @@ import subprocess
 import sys
 from pathlib import Path
 import pytest
-from infrastructure.reporting.native_print_font_custody import observe_print_fonts, validate_print_fonts
+from infrastructure.reporting.native_print_font_custody import (
+    _builtin_newspaper_font,
+    observe_print_fonts,
+    validate_print_fonts,
+)
 
 ROOT = Path(__file__).resolve().parents[3]
+
+
+def test_actual_reportlab_base14_integer_flag_retains_provider_identity():
+    from reportlab.pdfbase import pdfmetrics
+
+    for name in pdfmetrics.standardFonts:
+        face = pdfmetrics.getFont(name).face
+        assert type(face.builtIn) is int and face.builtIn == 1
+        assert _builtin_newspaper_font(face, name)
+        assert not _builtin_newspaper_font(face, "unregistered-external-face")
+    assert not _builtin_newspaper_font(object(), "Times-Roman")
 
 
 @pytest.fixture(scope="module", params=("storybook", "newspaper"))

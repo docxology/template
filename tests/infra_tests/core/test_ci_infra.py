@@ -42,6 +42,25 @@ def test_deleted_test_routes_existing_owner_without_executing_nonexistent_path()
     assert all((ROOT / name).is_file() for name in files)
 
 
+def test_broad_package_ownership_scales_shards_without_losing_selected_work() -> None:
+    from infrastructure.core.testing.ci_contracts import combined_groups, contract_files
+
+    changed = ("infrastructure/reporting/__init__.py", "infrastructure/validation/__init__.py")
+    files = infrastructure_files(ROOT, changed)
+    shards = infrastructure_shards(ROOT, changed)
+    assert 3 < len(shards) <= 8
+    plan = {"infra_shards": shards, "contract_modules": list(contract_files(files, infrastructure_files(ROOT)))}
+    validate_shards(combined_groups(plan), files)
+    assert shards == infrastructure_shards(ROOT, changed)
+    for count in (1, 3, 8):
+        explicit = infrastructure_shards(ROOT, changed, count)
+        validate_shards(combined_groups({**plan, "infra_shards": explicit}), files)
+        assert len(explicit) == count
+    for invalid in (0, 9, True, 1.5):
+        with pytest.raises(ValueError, match="between one and eight"):
+            infrastructure_shards(ROOT, changed, invalid)
+
+
 @pytest.mark.parametrize("fault", ["missing", "duplicate", "empty", "extra"])
 def test_shard_manifest_refuses_missing_duplicate_empty_and_extra_work(fault: str) -> None:
     shards = [["one.py"], ["two.py"]]
