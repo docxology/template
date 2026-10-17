@@ -364,8 +364,8 @@ Recovered document.
 
     fake_compiler = tmp_path / "fake_xelatex.py"
     fake_compiler.write_text(
-        r"""#!/usr/bin/env python3
-import pathlib
+        f"#!{sys.executable}\n"
+        + r"""import pathlib
 import sys
 
 from pypdf import PdfWriter
