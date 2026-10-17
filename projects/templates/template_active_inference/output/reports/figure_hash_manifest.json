@@ -172,11 +172,11 @@
       "size_bytes": 194060
     },
     {
-      "content_sha256": "2b23d22bde9205ff605cfd6886359671a53258546a1654a0e6b7197f759016e5",
+      "content_sha256": "3edf1f9c793ff97dffeceae439cd51d4ca3c6844005f93f69851f926d8c4475f",
       "fresh": true,
       "path": "output/figures/transmission_integrity_strip.png",
-      "sha256": "4fbf9a3e43a4a071ecde8c40f72b98ca0f01864cbbefafb3fee8a8f9816ca6cd",
-      "size_bytes": 17318
+      "sha256": "5e25a09d9468e517c24a0b67c25f4023f93026e84de1da11d5562d940bc84473",
+      "size_bytes": 17367
     },
     {
       "content_sha256": "c2b04423b3cc8bded4206533acb348a01176ed9423b2518c2c8db8377b2d6f1a",

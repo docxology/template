@@ -200,16 +200,17 @@ def test_strict_validate_fails_on_gray(tmp_path: Path) -> None:
     assert any(i.code == "coverage_missing" for i in validation)
 
 
-def test_group_rows_skip_compose(tmp_path: Path) -> None:
-    root = Path(__file__).resolve().parents[1]
+def test_group_rows_skip_compose(project_root: Path, tmp_path: Path) -> None:
+    root = project_root
     result = compose_all_sections(root, manuscript_dir=tmp_path / "manuscript")
     names = {p.name for p in result.paths}
     assert "_group_intro.md" not in names
     assert "02_intro_motivation.md" in names
 
 
-def test_validate_manuscript_strict_coverage() -> None:
-    root = Path(__file__).resolve().parents[1]
+@pytest.mark.requires_gate_artifacts
+def test_validate_manuscript_strict_coverage(project_root: Path) -> None:
+    root = project_root
     ensure_gate_artifacts(root)
     checks = validate_manuscript(root)
     if not checks["claim_ledger_valid"]:

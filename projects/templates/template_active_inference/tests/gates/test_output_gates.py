@@ -126,8 +126,8 @@ SELF_REFERENTIAL_STABILITY_EXEMPT_OUTPUTS = {
 }
 
 
-def test_validate_outputs_after_analysis() -> None:
-    root = Path(__file__).resolve().parents[2]
+def test_validate_outputs_after_analysis(project_root: Path) -> None:
+    root = project_root
     from template_active_inference.analysis import run_analysis
 
     run_analysis(root)

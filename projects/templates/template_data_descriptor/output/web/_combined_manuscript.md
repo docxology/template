@@ -89,9 +89,9 @@ descriptor by `file_inventory_rows()` in `src/data_descriptor/figures.py` and
 plotted by the thin analysis script
 [`scripts/generate_figures.py`](../scripts/generate_figures.py).
 
-![File inventory: declared row counts per file, from `file_inventory_rows()`. The measurement table is the larger of the two files; the subject table is its dimension companion. Both are declared as `text/csv`. The bar values are the row counts recorded in the descriptor, not re-derived here — the quality gate ([@sec:quality]) is where declared and actual counts are reconciled.](figures/file_inventory.png){#fig:file_inventory}
+![File inventory: declared row counts per file, from `file_inventory_rows()`. The measurement table is the larger of the two files; the subject table is its dimension companion. Both are declared as `text/csv`. The bar values are the row counts recorded in the descriptor, not re-derived here — the quality gate ([@sec:quality]) is where declared and actual counts are reconciled.](../figures/file_inventory.png){#fig:file_inventory}
 
-Running the script regenerates the figures under `manuscript/figures/`; the prose
+Running the script regenerates the figures under `../figures/`; the prose
 below and in later sections describes what those artifacts show. Because the
 figures are produced from the descriptor and the fixture bytes, they cannot drift
 from the data without the tests and the quality gate noticing.
@@ -119,7 +119,7 @@ optional unit, and value constraints. [@fig:schema_overview] renders this
 dictionary directly from the descriptor via `schema_table_rows()` in
 `src/data_descriptor/figures.py`.
 
-![Field schema / data dictionary: one row per declared field, with type, nullability, unit, and a compact constraint label, from `schema_table_rows()`. Identifier fields carry regular-expression patterns; the categorical fields carry closed enumerations; the quantitative field carries a unit and numeric bounds. The table is generated from `data/example_descriptor.json` and cannot silently disagree with it.](figures/schema_overview.png){#fig:schema_overview}
+![Field schema / data dictionary: one row per declared field, with type, nullability, unit, and a compact constraint label, from `schema_table_rows()`. Identifier fields carry regular-expression patterns; the categorical fields carry closed enumerations; the quantitative field carries a unit and numeric bounds. The table is generated from `data/example_descriptor.json` and cannot silently disagree with it.](../figures/schema_overview.png){#fig:schema_overview}
 
 ## Field contract
 
@@ -168,7 +168,7 @@ list is an ordered chain of steps, each naming the agent responsible.
 [@fig:provenance_flow] renders that chain via `provenance_steps()` in
 `src/data_descriptor/figures.py`.
 
-![Provenance chain: the ordered steps that produced the release, from `provenance_steps()`. Each box is a declared step; the label beneath is the responsible agent. The chain runs left to right from raw collection to the packaged, metadata-only release manifest.](figures/provenance_flow.png){#fig:provenance_flow}
+![Provenance chain: the ordered steps that produced the release, from `provenance_steps()`. Each box is a declared step; the label beneath is the responsible agent. The chain runs left to right from raw collection to the packaged, metadata-only release manifest.](../figures/provenance_flow.png){#fig:provenance_flow}
 
 ## Methods: the provenance chain
 
@@ -225,7 +225,7 @@ against a deliberately-perturbed copy produced by `demo_broken_descriptor()`
 unit). The clean fixture produces zero findings; the perturbed demo produces
 several errors and warnings.
 
-![Quality gate: validation findings by severity for the clean fixture descriptor (left, zero findings) versus a deliberately-broken demonstration copy (right). The demonstration perturbation is clearly named in code and never treated as real data — it exists only to prove the gate reacts. Counts come from `severity_counts()`.](figures/quality_gate.png){#fig:quality_gate}
+![Quality gate: validation findings by severity for the clean fixture descriptor (left, zero findings) versus a deliberately-broken demonstration copy (right). The demonstration perturbation is clearly named in code and never treated as real data — it exists only to prove the gate reacts. Counts come from `severity_counts()`.](../figures/quality_gate.png){#fig:quality_gate}
 
 ## Descriptor↔file verification
 
@@ -241,7 +241,7 @@ is what makes the metadata-only release boundary honest.
 both files verify, declared and actual row counts agree, and each recomputed
 checksum matches its declaration, so the readiness score is unpenalised.
 
-![Descriptor↔file verification: declared versus recomputed row counts and checksum agreement per file, from `verify_descriptor_files()`. Both shipped fixture files verify against their bytes on disk; the title reports the descriptor's readiness score. If a fixture file were edited without updating the descriptor, the corresponding row would flip to a mismatch status and the test suite would fail.](figures/checksum_verification.png){#fig:checksum_verification}
+![Descriptor↔file verification: declared versus recomputed row counts and checksum agreement per file, from `verify_descriptor_files()`. Both shipped fixture files verify against their bytes on disk; the title reports the descriptor's readiness score. If a fixture file were edited without updating the descriptor, the corresponding row would flip to a mismatch status and the test suite would fail.](../figures/checksum_verification.png){#fig:checksum_verification}
 
 ## Machine-readable release manifest
 
@@ -279,7 +279,7 @@ uv run python projects/templates/template_data_descriptor/scripts/generate_figur
 uv run python projects/templates/template_data_descriptor/scripts/generate_release_artifacts.py
 ```
 
-The first writes the five figures under `manuscript/figures/`; the second writes
+The first writes the five figures under `../figures/`; the second writes
 the descriptor readiness report, field-constraint summary, and metadata-only
 release manifest under `output/reports/`. Both are thin orchestrators: all
 computation lives in the tested `src/data_descriptor/` package.

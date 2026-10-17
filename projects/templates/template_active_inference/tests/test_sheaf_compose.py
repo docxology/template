@@ -22,8 +22,8 @@ pytestmark = [pytest.mark.timeout(120)]
 _ABSOLUTE_OUTSIDE_TRACK = str(Path(Path.cwd().anchor) / "tmp" / "outside.md")
 
 
-def test_compose_writes_markdown_sections(tmp_path: Path) -> None:
-    root = Path(__file__).resolve().parents[1]
+def test_compose_writes_markdown_sections(project_root: Path, tmp_path: Path) -> None:
+    root = project_root
     out = tmp_path / "manuscript"
     result = compose_all_sections(root, manuscript_dir=out)
     assert len(result.paths) == 12
@@ -38,8 +38,8 @@ def test_compose_writes_markdown_sections(tmp_path: Path) -> None:
     assert {path: tuple(getattr(path.stat(), field) for field in fields) for path in result.paths} == original
 
 
-def test_discussion_ontology_renders_labels_not_raw_yaml() -> None:
-    root = Path(__file__).resolve().parents[1]
+def test_discussion_ontology_renders_labels_not_raw_yaml(project_root: Path) -> None:
+    root = project_root
     manifest = load_manifest(root / "manuscript" / "sheaf" / "manifest.yaml")
     registry = load_track_registry(root / "manuscript" / "sheaf" / "tracks.yaml")
     section = next(s for s in manifest.sections if s.id == "discussion_outlook")
@@ -48,8 +48,8 @@ def test_discussion_ontology_renders_labels_not_raw_yaml() -> None:
     assert "label:" not in text
 
 
-def test_ontology_renderer_keeps_normal_markdown_inside_pdf_only_samepage() -> None:
-    root = Path(__file__).resolve().parents[1]
+def test_ontology_renderer_keeps_normal_markdown_inside_pdf_only_samepage(project_root: Path) -> None:
+    root = project_root
     ontology = root / "manuscript" / "sections" / "imrad" / "methods_pymdp" / "ontology.yaml"
     text = _render_ontology(ontology)
     latex_begin = "```{=latex}\n\\begin{samepage}\n```"
@@ -71,8 +71,8 @@ def test_ontology_renderer_keeps_normal_markdown_inside_pdf_only_samepage() -> N
     ]
 
 
-def test_compose_filters_enabled_tracks() -> None:
-    root = Path(__file__).resolve().parents[1]
+def test_compose_filters_enabled_tracks(project_root: Path) -> None:
+    root = project_root
     manifest = load_manifest(root / "manuscript" / "sheaf" / "manifest.yaml")
     registry = load_track_registry(root / "manuscript" / "sheaf" / "tracks.yaml")
     section = next(s for s in manifest.sections if s.id == "intro_contributions")
@@ -86,8 +86,8 @@ def test_compose_filters_enabled_tracks() -> None:
     assert "sheaf-track:ontology" not in text
 
 
-def test_strict_compose_raises_on_validation_error(tmp_path: Path) -> None:
-    root = Path(__file__).resolve().parents[1]
+def test_strict_compose_raises_on_validation_error(project_root: Path, tmp_path: Path) -> None:
+    root = project_root
     bad_manifest = tmp_path / "manifest.yaml"
     bad_manifest.write_text(
         """
@@ -112,8 +112,8 @@ sections:
         )
 
 
-def test_missing_track_error_policy() -> None:
-    root = Path(__file__).resolve().parents[1]
+def test_missing_track_error_policy(project_root: Path) -> None:
+    root = project_root
     manifest = load_manifest(root / "manuscript" / "sheaf" / "manifest.yaml")
     registry = load_track_registry(root / "manuscript" / "sheaf" / "tracks.yaml")
     section = next(s for s in manifest.sections if s.id == "intro_motivation")
@@ -138,8 +138,8 @@ def test_missing_track_error_policy() -> None:
         )
 
 
-def test_compose_warn_policy_records_issue() -> None:
-    root = Path(__file__).resolve().parents[1]
+def test_compose_warn_policy_records_issue(project_root: Path) -> None:
+    root = project_root
     registry = load_track_registry(root / "manuscript" / "sheaf" / "tracks.yaml")
     section = SheafSection(
         id="warn",
@@ -162,7 +162,7 @@ def test_compose_warn_policy_records_issue() -> None:
 
 
 @pytest.mark.parametrize("track_path", ["../outside.md", _ABSOLUTE_OUTSIDE_TRACK, "linked/outside.md"])
-def test_compose_section_rejects_unsafe_track_paths(tmp_path: Path, track_path: str) -> None:
+def test_compose_section_rejects_unsafe_track_paths(project_root: Path, tmp_path: Path, track_path: str) -> None:
     if track_path == _ABSOLUTE_OUTSIDE_TRACK:
         assert Path(track_path).is_absolute()
     root = tmp_path / "project"
@@ -171,7 +171,7 @@ def test_compose_section_rejects_unsafe_track_paths(tmp_path: Path, track_path: 
     outside.mkdir()
     (outside / "outside.md").write_text("outside\n", encoding="utf-8")
     (root / "linked").symlink_to(outside, target_is_directory=True)
-    registry = load_track_registry(Path(__file__).resolve().parents[1] / "manuscript" / "sheaf" / "tracks.yaml")
+    registry = load_track_registry(project_root / "manuscript" / "sheaf" / "tracks.yaml")
     section = SheafSection(
         id="unsafe",
         title="Unsafe",
@@ -220,8 +220,8 @@ def test_compose_rejects_symlink_component_in_output_directory(tmp_path: Path) -
     assert not (outside / "nested").exists()
 
 
-def test_compose_single_section_filter(tmp_path: Path) -> None:
-    root = Path(__file__).resolve().parents[1]
+def test_compose_single_section_filter(project_root: Path, tmp_path: Path) -> None:
+    root = project_root
     result = compose_all_sections(
         root,
         manuscript_dir=tmp_path / "manuscript",
@@ -236,8 +236,8 @@ def test_parse_missing_invalid_falls_back() -> None:
     assert parse_missing(None, MissingTrackPolicy.ERROR) == MissingTrackPolicy.ERROR
 
 
-def test_compose_cli_validate_only_strict() -> None:
-    root = Path(__file__).resolve().parents[1]
+def test_compose_cli_validate_only_strict(project_root: Path) -> None:
+    root = project_root
     result = subprocess.run(
         [sys.executable, str(root / "scripts" / "compose_manuscript.py"), "--validate-only", "--strict"],
         cwd=root,
@@ -327,8 +327,8 @@ sections:
     assert "missing" in captured.err
 
 
-def test_full_section_compose_contains_all_markers() -> None:
-    root = Path(__file__).resolve().parents[1]
+def test_full_section_compose_contains_all_markers(project_root: Path) -> None:
+    root = project_root
     manifest = load_manifest(root / "manuscript" / "sheaf" / "manifest.yaml")
     registry = load_track_registry(root / "manuscript" / "sheaf" / "tracks.yaml")
     section = next(s for s in manifest.sections if s.id == "appendix_full_sheaf")
@@ -337,8 +337,8 @@ def test_full_section_compose_contains_all_markers() -> None:
         assert f"sheaf-track:{track_id}" in text
 
 
-def test_compose_emits_imrad_dividers_and_section_labels(tmp_path: Path) -> None:
-    root = Path(__file__).resolve().parents[1]
+def test_compose_emits_imrad_dividers_and_section_labels(project_root: Path, tmp_path: Path) -> None:
+    root = project_root
     out = tmp_path / "manuscript"
     compose_all_sections(root, manuscript_dir=out)
     methods_text = (out / "05_methods_analytical.md").read_text(encoding="utf-8")
@@ -349,8 +349,8 @@ def test_compose_emits_imrad_dividers_and_section_labels(tmp_path: Path) -> None
     assert "{#sec:intro_motivation}" in intro_text
 
 
-def test_composed_methods_sheaf_contains_figure_and_tables(tmp_path: Path) -> None:
-    root = Path(__file__).resolve().parents[1]
+def test_composed_methods_sheaf_contains_figure_and_tables(project_root: Path, tmp_path: Path) -> None:
+    root = project_root
     out = tmp_path / "manuscript"
     compose_all_sections(root, manuscript_dir=out)
     text = (out / "08_methods_sheaf.md").read_text(encoding="utf-8")

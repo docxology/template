@@ -489,7 +489,7 @@ jobs:
           --mermaid-node-executable "$(command -v node)"
           --mermaid-chrome-executable "$CHROME_EXECUTABLE_PATH"
           --office-font-directory /usr/share/fonts/truetype
-          --office-font-directory "$HOME/.local/share/fonts/template-acceptance-juliamono"
+          --office-font-directory "/usr/local/share/fonts/template-acceptance-juliamono"
           --repository "$GITHUB_REPOSITORY" --run-id "$GITHUB_RUN_ID"
           --current-root "$RUNNER_TEMP/template-native-original-root"
           --scratch "$RUNNER_TEMP/template-native-original-scratch"
@@ -561,7 +561,7 @@ jobs:
           --mermaid-node-executable "$(command -v node)"
           --mermaid-chrome-executable "$CHROME_EXECUTABLE_PATH"
           --office-font-directory /usr/share/fonts/truetype
-          --office-font-directory "$HOME/.local/share/fonts/template-acceptance-juliamono"
+          --office-font-directory "/usr/local/share/fonts/template-acceptance-juliamono"
           --repository "$GITHUB_REPOSITORY" --run-id "$GITHUB_RUN_ID"
           --current-root "$RUNNER_TEMP/template-native-reader-root"
           --scratch "$RUNNER_TEMP/template-native-reader-scratch" --stage-bundle
