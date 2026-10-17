@@ -17,6 +17,8 @@ from infrastructure.core.testing.pytest_observations import DIRECTORY_ENV, NONCE
 
 _ACTIVE_ENV = "TEMPLATE_PYTEST_RECEIPT_ACTIVE"
 _selected: set[str] = set()
+_collected: set[str] = set()
+_deselected: set[str] = set()
 _reports: dict[str, dict[str, str]] = {}
 _timings: dict[str, dict[str, float]] = {}
 _collection_errors = 0
@@ -32,6 +34,8 @@ def pytest_sessionstart(session: Any) -> None:
         # masquerade as another original Stage-01/project controller receipt.
         os.environ[_ACTIVE_ENV] = str(nonce)
     _selected.clear()
+    _collected.clear()
+    _deselected.clear()
     _reports.clear()
     _timings.clear()
     _collection_errors = 0
@@ -39,6 +43,14 @@ def pytest_sessionstart(session: Any) -> None:
 
 def pytest_collection_finish(session: Any) -> None:
     _selected.update(item.nodeid for item in session.items)
+
+
+def pytest_itemcollected(item: Any) -> None:
+    _collected.add(item.nodeid)
+
+
+def pytest_deselected(items: list[Any]) -> None:
+    _deselected.update(item.nodeid for item in items)
 
 
 @pytest.hookimpl(optionalhook=True)
@@ -77,6 +89,15 @@ def pytest_sessionfinish(session: Any, exitstatus: int) -> None:
         "nonce": nonce,
         "worker": os.environ.get("PYTEST_XDIST_WORKER", "controller"),
         "selected": sorted(qualify(node) for node in _selected),
+        "collected": sorted(qualify(node) for node in _collected),
+        "deselected": sorted(qualify(node) for node in _deselected),
+        "selection_profile": {
+            "arguments": list(session.config.invocation_params.args),
+            "marker_expression": session.config.option.markexpr,
+            "keyword_expression": session.config.option.keyword,
+            "workers": getattr(session.config.option, "numprocesses", None),
+            "ambient_addopts": bool(os.environ.get("PYTEST_ADDOPTS", "").strip()),
+        },
         "reports": {qualify(node): phases for node, phases in _reports.items()},
         "timings": {qualify(node): phases for node, phases in _timings.items()},
         "collection_errors": _collection_errors,

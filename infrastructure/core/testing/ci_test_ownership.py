@@ -5,6 +5,20 @@ their runtime fits the smoke deadline. Unlisted helpers retain broad fallback.
 """
 
 SOURCE_TEST_OWNERS: dict[str, tuple[str, ...]] = {
+    "infrastructure/core/testing/pytest_receipt.py": (
+        "tests/infra_tests/core/test_pytest_receipt.py",
+        "tests/infra_tests/core/test_ci_infra.py",
+    ),
+    "infrastructure/core/testing/pytest_observations.py": (
+        "tests/infra_tests/core/test_pytest_observations.py",
+        "tests/infra_tests/core/test_pytest_receipt.py",
+        "tests/infra_tests/core/test_ci_infra.py",
+    ),
+    "infrastructure/core/testing/ci_infra.py": (
+        "tests/infra_tests/core/test_ci_infra.py",
+        "tests/infra_tests/core/test_ci_infra_partition.py",
+        "tests/infra_tests/core/test_pytest_receipt.py",
+    ),
     "infrastructure/core/pipeline/artifact_contracts.py": (
         "tests/infra_tests/core/pipeline/test_artifact_contracts.py",
         "tests/infra_tests/core/pipeline/test_stage_attempt_admission.py",

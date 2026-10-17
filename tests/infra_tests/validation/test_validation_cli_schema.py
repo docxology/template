@@ -28,12 +28,14 @@ class TestSchemaSubcommand:
         assert "pdf" in payload["subcommands"]
         assert "markdown" in payload["subcommands"]
 
-    def test_existing_subcommand_still_parses(self, tmp_path):
-        """An existing subcommand still dispatches and exits with its own code."""
+    def test_existing_subcommand_still_parses(self, tmp_path, caplog):
+        """Schema support preserves PDF dispatch and its invalid-selection refusal."""
         missing = tmp_path / "nope.pdf"
         with pytest.raises(SystemExit) as exc:
             cli.main(["pdf", str(missing)])
-        assert exc.value.code == 1
+        assert exc.value.code == 2
+        assert "PDF file not found" in caplog.text
+        assert str(missing) in caplog.text
 
     def test_help_still_exits_zero(self):
         """`--help` remains unchanged (no regression)."""

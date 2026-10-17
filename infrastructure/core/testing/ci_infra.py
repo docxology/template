@@ -5,8 +5,10 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import shlex
 import subprocess
 import sys
+import tomllib
 from pathlib import Path
 from uuid import uuid4
 
@@ -19,6 +21,7 @@ from infrastructure.core.testing.pytest_observations import (
     NONCE_ENV,
     ROOT_ENV,
     member_digest,
+    read_execution_collection,
     read_execution_receipts,
 )
 
@@ -119,7 +122,51 @@ def validate_plan(root: Path, plan: dict) -> None:
     validate_shards(combined_groups(plan), expected)
 
 
+def _functional_selection(root: Path) -> dict[str, str]:
+    """Resolve the Source-owned ordinary marker/keyword defaults without pytest."""
+    metadata = tomllib.loads((root / "pyproject.toml").read_text(encoding="utf-8"))
+    options = metadata.get("tool", {}).get("pytest", {}).get("ini_options", {}).get("addopts", "")
+    if isinstance(options, str):
+        arguments = shlex.split(options)
+    elif isinstance(options, list) and all(isinstance(item, str) for item in options):
+        arguments = options
+    else:
+        raise ValueError("functional CI requires Source-owned pytest argument defaults")
+    parser = argparse.ArgumentParser(add_help=False, allow_abbrev=False, exit_on_error=False)
+    parser.add_argument("-m", dest="marker_expression", default="")
+    parser.add_argument("-k", dest="keyword_expression", default="")
+    profile, _ = parser.parse_known_args(arguments)
+    return vars(profile)
+
+
+def _shard_collection(directory: Path, nonce: str, files: list[str], root: Path, *, is_contract: bool = False) -> dict:
+    collected, deselected, profile = read_execution_collection(directory, nonce)
+    if {node.split("::", 1)[0] for node in collected} != set(files):
+        raise ValueError("functional shard omitted a requested test file from original collection")
+    fixed = [*files, "--no-cov", "-q", "--benchmark-disable", "-p", "infrastructure.core.testing.pytest_receipt"]
+    actual = profile["arguments"]
+    if (
+        len(actual) != len(fixed) + 2
+        or actual[: len(fixed)] != fixed
+        or not actual[-2].startswith("--junitxml=")
+        or not actual[-2].removeprefix("--junitxml=")
+        or actual[-1] != ("--timeout=120" if is_contract else "--timeout=60")
+        or profile["ambient_addopts"]
+        or any(profile[key] != expected for key, expected in _functional_selection(root).items())
+    ):
+        raise ValueError("functional collection invocation/profile differs from Source-owned defaults")
+    return {
+        "collected": list(collected),
+        "deselected": list(deselected),
+        "selection_profile": profile,
+        "collection_sha256": member_digest(collected),
+        "deselected_sha256": member_digest(deselected),
+    }
+
+
 def run_shard(root: Path, plan: dict, shard: int, directory: Path) -> int:
+    if os.environ.get("PYTEST_ADDOPTS", "").strip():
+        raise ValueError("functional CI refuses ambient pytest arguments")
     shards = combined_groups(plan)
     validate_plan(root, plan)
     if type(shard) is not int or not 0 <= shard < len(shards):
@@ -165,8 +212,7 @@ def run_shard(root: Path, plan: dict, shard: int, directory: Path) -> int:
     if result.returncode:
         return result.returncode
     selected, outcomes = read_execution_receipts(directory / "execution", nonce)
-    if {node.split("::", 1)[0] for node in selected} != set(shards[shard]):
-        raise ValueError("functional shard omitted a selected test file")
+    collection = _shard_collection(directory / "execution", nonce, shards[shard], root, is_contract=is_contract)
     payload = {
         "shard": shard,
         "nonce": nonce,
@@ -175,12 +221,13 @@ def run_shard(root: Path, plan: dict, shard: int, directory: Path) -> int:
         "outcomes": outcomes,
         "member_sha256": member_digest(selected),
         "outcome_sha256": member_digest(outcomes),
+        **collection,
     }
     (directory / "summary.json").write_text(json.dumps(payload, sort_keys=True, indent=2) + "\n")
     return 0
 
 
-def verify_shard_receipts(plan: dict, directory: Path) -> dict:
+def verify_shard_receipts(plan: dict, directory: Path, *, root: Path | None = None) -> dict:
     paths = sorted(directory.glob("**/summary.json"))
     summaries = [json.loads(path.read_bytes()) for path in paths]
     expected = combined_groups(plan)
@@ -193,8 +240,15 @@ def verify_shard_receipts(plan: dict, directory: Path) -> dict:
             raise ValueError("functional summary differs from original pytest observations")
         if row["files"] != expected[row["shard"]] or member_digest(tuple(row["selected"])) != row["member_sha256"]:
             raise ValueError("functional receipt differs from its selected shard")
-        if {n.split("::", 1)[0] for n in row["selected"]} != set(row["files"]):
-            raise ValueError("functional receipt is missing selected files")
+        collection = _shard_collection(
+            path.parent / "execution",
+            row["nonce"],
+            row["files"],
+            root or Path.cwd(),
+            is_contract=row["shard"] >= len(plan["infra_shards"]),
+        )
+        if any(row.get(key) != value for key, value in collection.items()):
+            raise ValueError("functional summary differs from original collection/profile observations")
         if member_digest(tuple(row["outcomes"])) != row["outcome_sha256"] or len(row["outcomes"]) != len(
             row["selected"]
         ):

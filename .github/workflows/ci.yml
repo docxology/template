@@ -197,18 +197,31 @@ jobs:
         if: matrix.shard != -1
       - uses: ./.github/actions/setup-meta-provider
         if: matrix.shard != -1
-      - name: Prepare actual auxiliary PDF producers and readers
-        if: matrix.module == 'tests/infra_tests/project/test_public_acceptance_auxiliary.py'
+      - name: Prepare pinned document tools for the selected native consumer
+        if: matrix.documents != 'none'
         uses: ./.github/actions/setup-acceptance-documents
         with:
-          mode: native
-      - name: Prepare actual TeX for changed wrapping-header contracts
-        if: matrix.module == 'tests/infra_tests/rendering/test_latex_texttt_native.py' || matrix.module == 'tests/infra_tests/rendering/test_latex_utils.py'
+          mode: ${{ matrix.documents }}
+      - name: Prepare actual TeX and PDF readers for selected native contracts
+        if: matrix.tex
         run: |
           set -euo pipefail
           sudo apt-get update
-          sudo apt-get install -y --no-install-recommends texlive-xetex texlive-latex-extra texlive-fonts-recommended
+          sudo apt-get install -y --no-install-recommends texlive-xetex texlive-latex-extra texlive-fonts-recommended poppler-utils
           xelatex --version
+          bibtex --version
+          kpsewhich plainnat.bst
+          kpsewhich seqsplit.sty
+          for tool in xdvipdfmx pdffonts pdftotext pdftoppm; do command -v "$tool"; done
+      - name: Select the installed browser for the selected native consumer
+        if: matrix.browser
+        run: |
+          set -euo pipefail
+          chrome=/opt/google/chrome/chrome
+          test -f "$chrome" && test -x "$chrome" && test ! -L "$chrome"
+          test -f /opt/google/chrome/resources.pak
+          "$chrome" --version
+          echo "CHROME_EXECUTABLE_PATH=$chrome" >> "$GITHUB_ENV"
       - name: Warm locked offline wheels for native portability
         if: matrix.module == 'tests/infra_tests/reporting/test_native_whole_portability.py'
         timeout-minutes: 10

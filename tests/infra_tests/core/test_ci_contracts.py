@@ -5,8 +5,18 @@ from pathlib import Path
 import yaml
 import pytest
 
-from infrastructure.core.testing.ci_contracts import CONTRACT_SECONDS, combined_groups, contract_files
-from infrastructure.core.testing.ci_infra import infrastructure_shards, validate_plan, validate_shards
+from infrastructure.core.testing.ci_contracts import (
+    CONTRACT_SECONDS,
+    combined_groups,
+    contract_files,
+    contract_preparation,
+)
+from infrastructure.core.testing.ci_infra import (
+    infrastructure_files,
+    infrastructure_shards,
+    validate_plan,
+    validate_shards,
+)
 
 ROOT = Path(__file__).resolve().parents[3]
 
@@ -33,6 +43,45 @@ def test_required_contract_job_keeps_whole_root_budget_and_explicit_empty_outcom
     assert contract["strategy"]["max-parallel"] == 3
     assert contract["steps"][0]["if"] == "matrix.shard == -1"
     assert any(step.get("if") == "always() && matrix.shard != -1" for step in contract["steps"])
+    pdf_modules = (
+        "tests/infra_tests/reporting/test_native_pdf_citations.py",
+        "tests/infra_tests/reporting/test_native_pdf_math.py",
+        "tests/infra_tests/reporting/test_native_pdf_source_witness.py",
+        "tests/infra_tests/reporting/test_pdf_raw_natbib_source.py",
+    )
+    converter = next(
+        step
+        for step in contract["steps"]
+        if step.get("uses") == "./.github/actions/setup-acceptance-documents"
+        and step.get("with", {}).get("mode") == "${{ matrix.documents }}"
+    )
+    tex = next(step for step in contract["steps"] if "texlive-xetex" in step.get("run", ""))
+    browser = next(step for step in contract["steps"] if step.get("if") == "matrix.browser")
+    assert converter["if"] == "matrix.documents != 'none'" and tex["if"] == "matrix.tex"
+    for module in pdf_modules:
+        assert contract_preparation(module) == {"documents": "converter", "tex": True, "browser": False}
+    for module in (
+        "tests/infra_tests/reporting/test_native_browser_oracles.py",
+        "tests/infra_tests/reporting/test_native_browser_scientific_structure.py",
+    ):
+        assert contract_preparation(module) == {"documents": "converter", "tex": False, "browser": True}
+    assert contract_preparation("none") == {"documents": "none", "tex": False, "browser": False}
+    assert (
+        contract_preparation("tests/infra_tests/project/test_public_acceptance_auxiliary.py")["documents"] == "native"
+    )
+    for module in ("test_latex_texttt_native.py", "test_latex_utils.py"):
+        assert contract_preparation("tests/infra_tests/rendering/" + module)["tex"] is True
+    assert 'echo "CHROME_EXECUTABLE_PATH=$chrome" >> "$GITHUB_ENV"' in browser["run"]
+    assert 'test ! -L "$chrome"' in browser["run"] and "resources.pak" in browser["run"]
+    assert "poppler-utils" in tex["run"] and "kpsewhich plainnat.bst" in tex["run"]
+    assert not any("texlive-" in step.get("run", "") for step in jobs["test-infra"]["steps"])
+    prepare_account = next(
+        index
+        for index, step in enumerate(contract["steps"])
+        if step.get("uses") == "./.github/actions/setup-ci-execution-user"
+    )
+    assert contract["steps"].index(converter) < contract["steps"].index(tex) < prepare_account
+    assert contract["steps"].index(browser) < prepare_account
 
     # The original command still produces each receipt. Identity preparation
     # precedes it, and independent readable transport follows even a failure.
@@ -81,8 +130,15 @@ def test_actual_deep_owner_cannot_be_moved_back_into_smoke_or_omitted() -> None:
         "tests/infra_tests/documentation/test_counts_refresh.py",
         "tests/infra_tests/project/test_public_reference.py",
         "tests/infra_tests/publishing/test_standalone_install_projection.py",
+        "tests/infra_tests/reporting/test_native_browser_oracles.py",
+        "tests/infra_tests/reporting/test_native_browser_scientific_structure.py",
+        "tests/infra_tests/reporting/test_native_pdf_citations.py",
+        "tests/infra_tests/reporting/test_native_pdf_math.py",
+        "tests/infra_tests/reporting/test_native_pdf_source_witness.py",
+        "tests/infra_tests/reporting/test_pdf_raw_natbib_source.py",
     ):
         changed = (module,)
+        assert module not in infrastructure_files(ROOT)
         plan = {
             "changed_paths": changed,
             "infra_shards": infrastructure_shards(ROOT, changed),
