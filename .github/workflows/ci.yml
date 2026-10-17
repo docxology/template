@@ -207,11 +207,12 @@ jobs:
         run: |
           set -euo pipefail
           sudo apt-get update
-          sudo apt-get install -y --no-install-recommends texlive-xetex texlive-latex-extra texlive-fonts-recommended poppler-utils
+          sudo apt-get install -y --no-install-recommends texlive-xetex texlive-latex-extra texlive-fonts-recommended lmodern poppler-utils
           xelatex --version
           bibtex --version
           kpsewhich plainnat.bst
           kpsewhich seqsplit.sty
+          kpsewhich lmodern.sty
           for tool in xdvipdfmx pdffonts pdftotext pdftoppm; do command -v "$tool"; done
       - name: Select the installed browser for the selected native consumer
         if: matrix.browser
