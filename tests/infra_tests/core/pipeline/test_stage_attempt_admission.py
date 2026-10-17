@@ -110,6 +110,8 @@ def test_real_worker_refuses_substitution_after_original_admission(tmp_path: Pat
     else:
         assert outcome.status is StageStatus.BLOCKED and outcome.child_exit_code is None
         assert outcome.diagnostic
+        if mutation == "input":
+            assert "reviewed.txt" in outcome.diagnostic
         assert not marker.exists(), "changed inputs must be refused before the actual child body"
 
 

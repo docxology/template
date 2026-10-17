@@ -109,6 +109,29 @@ def test_only_direct_source_package_metadata_is_a_control(tmp_path: Path) -> Non
     assert paths_digest((root,), source=True) != first
 
 
+@pytest.mark.parametrize("name", (".git", ".DS_Store"))
+def test_nested_repository_metadata_is_not_authored_source(tmp_path: Path, name: str) -> None:
+    root = tmp_path / "source"
+    nested = root / "infrastructure" / "vendor"
+    nested.mkdir(parents=True)
+    authored = nested / "model.py"
+    authored.write_text("result = 1\n")
+    before = paths_digest((root,), source=True)
+    metadata = nested / name
+    metadata.write_text("local repository metadata")
+    assert paths_digest((root,), source=True) == before
+    assert any(row[0].endswith(name) for row in tree_records(root))
+    metadata.unlink()
+    metadata.mkdir()
+    (metadata / "HEAD").write_text("local repository revision")
+    assert paths_digest((root,), source=True) == before
+    authored.write_text("result = 2\n")
+    assert paths_digest((root,), source=True) != before
+    before = paths_digest((root,), source=True)
+    (nested / (name + "-authored")).write_text("public authored input")
+    assert paths_digest((root,), source=True) != before
+
+
 @pytest.mark.parametrize("source", [False, True])
 @pytest.mark.parametrize(
     ("nominated", "package_root", "source_files"),

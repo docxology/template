@@ -18,6 +18,7 @@ CONTRACT_MODULES = frozenset(
         "tests/infra_tests/publishing/test_standalone_install_projection.py",
         "tests/infra_tests/reporting/test_native_whole_portability.py",
         "tests/infra_tests/reporting/test_native_project_provider_batch.py",
+        "tests/infra_tests/reporting/test_project_verifier.py",
         "tests/infra_tests/project/test_root_case_lanes.py",
         "tests/infra_tests/project/test_root_no_model_acquisition.py",
         "tests/infra_tests/project/test_root_optional_external.py",

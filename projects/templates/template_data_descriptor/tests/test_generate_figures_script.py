@@ -62,7 +62,7 @@ class TestGenerateFigures:
         for path in written:
             assert path.is_file()
             assert path.read_bytes()[:8] == b"\x89PNG\r\n\x1a\n"
-            assert path.parent == tmp_path / "manuscript" / "figures"
+            assert path.parent == tmp_path / "output" / "figures"
 
     def test_figures_are_non_empty_and_five(self, tmp_path: Path) -> None:
         shutil.copytree(PROJECT_ROOT / "data", tmp_path / "data")
@@ -120,7 +120,7 @@ class TestGenerateFigures:
         with pytest.raises(ValueError, match="missing generated figure file"):
             module.dd.publish_descriptor_figure_run(tmp_path, incomplete)
 
-        assert not output_figures.exists()
+        assert not (output_figures / "figure_registry.json").exists()
 
     def test_validator_rejects_deleted_registered_figure(self, tmp_path: Path) -> None:
         shutil.copytree(PROJECT_ROOT / "data", tmp_path / "data")

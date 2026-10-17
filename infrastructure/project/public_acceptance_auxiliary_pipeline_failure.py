@@ -14,12 +14,20 @@ from infrastructure.project.installed_acceptance_artifacts import write_binary
 class AuxiliaryPipelineFailure(ValueError):
     """Keep the actual failed child/stage observation before positive readback."""
 
-    def __init__(self, process: dict[str, Any], facts: dict[str, Any], bindings: dict[str, Any]) -> None:
+    def __init__(
+        self,
+        process: dict[str, Any],
+        facts: dict[str, Any],
+        bindings: dict[str, Any],
+        *,
+        validation_error: str = "",
+    ) -> None:
         self.observation = {
             "role": "failed-pipeline-diagnostic-only",
             "original_exit_code": process["exit_code"],
             "timed_out": process["timed_out"],
             "facts_exit_code": facts.get("original_exit_code"),
+            "validation_error": validation_error,
             "outcomes": [],
             **bindings,
         }
@@ -32,7 +40,9 @@ class AuxiliaryPipelineFailure(ValueError):
             for row in self.observation["outcomes"]
             if row.get("status") != "succeeded"
         ]
-        super().__init__(f"actual portable pipeline child exited {process['exit_code']}; " + "; ".join(failed))
+        super().__init__(
+            f"actual portable pipeline child exited {process['exit_code']}; " + (validation_error or "; ".join(failed))
+        )
 
     @property
     def worker_observation(self) -> dict[str, Any]:

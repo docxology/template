@@ -5,13 +5,36 @@ from __future__ import annotations
 import hashlib
 import json
 import os
+import stat
 from pathlib import Path
 import subprocess
 import sys
 import tempfile
+import time
+import math
 from typing import Any
 
 from infrastructure.core.pipeline.fingerprints import canonical_digest, source_fingerprint_components
+from infrastructure.reporting.release_readiness_snapshot import SnapshotReader
+
+
+def copy_public_pipeline_source(root: Path, destination: Path, reader: SnapshotReader) -> list[dict[str, Any]]:
+    """Copy admitted bytes and executable roles; never export local Git metadata."""
+    from infrastructure.reporting.readiness_receipts import public_source_paths
+
+    files = []
+    for path in public_source_paths(root):
+        relative = path.relative_to(root).as_posix()
+        snapshot = reader.read(relative)
+        executable = bool(path.stat(follow_symlinks=False).st_mode & stat.S_IXUSR)
+        target = destination / relative
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_bytes(snapshot.content)
+        target.chmod(0o755 if executable else 0o644)
+        files.append({"path": relative, "sha256": snapshot.sha256, "executable": executable})
+    if not reader.unchanged():
+        raise ValueError("public pipeline source changed during confined export")
+    return files
 
 
 _LABELS = (
@@ -71,6 +94,7 @@ _SAFE_ENV = frozenset(
         "TEXMFHOME",
         "TEXMFVAR",
         "TEXMFCACHE",
+        "TTFONTS",
     }
 )
 
@@ -90,10 +114,17 @@ def _clean_environment() -> dict[str, str]:
     return {name: os.environ[name] for name in os.environ if admitted(name)}
 
 
-def _read_logical_plan(root: Path, scope: str, budget: float, epoch: str) -> dict[str, Any]:
+def _read_logical_plan(
+    root: Path, scope: str, budget: float, epoch: str, *, deadline: float | None = None
+) -> dict[str, Any]:
     """Compile only current reader source in a fresh credential-free reader child."""
     from infrastructure.core.execution_policy import apply_execution_policy
 
+    if deadline is not None and (type(deadline) not in (int, float) or not math.isfinite(deadline)):
+        raise ValueError("logical pipeline reader requires a finite original deadline")
+    end = min(time.monotonic() + 60, deadline) if deadline is not None else time.monotonic() + 60
+    if time.monotonic() >= end:
+        raise TimeoutError("original auxiliary deadline exhausted before logical reader admission")
     with tempfile.TemporaryDirectory(prefix="pipeline-logical-reader-") as temporary:
         directory = Path(temporary).resolve(strict=True)
         result_file = directory / "plan.json"
@@ -112,14 +143,22 @@ def _read_logical_plan(root: Path, scope: str, budget: float, epoch: str) -> dic
         environment = _clean_environment()
         environment.update(SOURCE_DATE_EPOCH=epoch, UV_OFFLINE="1", UV_PYTHON=sys.executable)
         environment = apply_execution_policy(environment, root, mode="core")
-        result = subprocess.run(
-            command,
-            cwd=root,
-            env=environment,
-            capture_output=True,
-            timeout=60,
-            check=False,
-        )
+        remaining = end - time.monotonic()
+        if remaining <= 0:
+            raise TimeoutError("original auxiliary deadline exhausted before logical reader launch")
+        try:
+            result = subprocess.run(
+                command,
+                cwd=root,
+                env=environment,
+                capture_output=True,
+                timeout=remaining,
+                check=False,
+            )
+        except subprocess.TimeoutExpired as error:
+            raise TimeoutError("logical pipeline reader exhausted its bounded original window") from error
+        if time.monotonic() >= end:
+            raise TimeoutError("original auxiliary deadline exhausted during logical reader execution")
         if result.returncode != 0 or not result_file.is_file() or result_file.stat().st_size > 16 * 1024 * 1024:
             raise ValueError(
                 "independent logical pipeline reader failed: " + result.stderr.decode(errors="replace")[-1000:]

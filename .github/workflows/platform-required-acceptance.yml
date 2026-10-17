@@ -341,6 +341,24 @@ jobs:
       - uses: ./.github/actions/setup-python-env
       - name: Prepare the locked auxiliary environment
         run: uv sync --locked --inexact --group dev --group installed-build --group timeseries-bench --group rendering-pptx
+      - name: Populate the locked build-tool cache for offline auxiliary fixtures
+        run: |
+          set -euo pipefail
+          unset UV_FROZEN
+          auxiliary_build_cache=$(mktemp -d "$RUNNER_TEMP/template-auxiliary-build-cache.XXXXXX")
+          # Offline fixtures resolve hashed registry requirements. A restored
+          # environment or URL-based lock sync alone does not prepare that cache.
+          uv export --locked --only-group installed-build --no-emit-project --no-emit-local \
+            --no-header --no-annotate --output-file "$auxiliary_build_cache/build.txt"
+          uv export --project projects/templates/template_autoresearch_project --locked \
+            --no-default-groups --no-emit-project --no-emit-local --no-header --no-annotate \
+            --output-file "$auxiliary_build_cache/runtime.txt"
+          for kind in build runtime; do
+            uv venv --no-project --no-python-downloads --python .venv/bin/python "$auxiliary_build_cache/$kind"
+            uv pip sync --no-config --no-build --require-hashes \
+              --python "$auxiliary_build_cache/$kind/bin/python" "$auxiliary_build_cache/$kind.txt"
+          done
+          rm -r -- "$auxiliary_build_cache"
       - uses: ./.github/actions/setup-meta-provider
       - uses: ./.github/actions/setup-docs-lint
       - uses: ./.github/actions/setup-acceptance-documents

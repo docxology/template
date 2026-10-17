@@ -18,9 +18,9 @@ descriptor by `file_inventory_rows()` in `src/data_descriptor/figures.py` and
 plotted by the thin analysis script
 [`scripts/generate_figures.py`](../scripts/generate_figures.py).
 
-![File inventory: declared row counts per file, from `file_inventory_rows()`. The measurement table is the larger of the two files; the subject table is its dimension companion. Both are declared as `text/csv`. The bar values are the row counts recorded in the descriptor, not re-derived here — the quality gate ([@sec:quality]) is where declared and actual counts are reconciled.](figures/file_inventory.png){#fig:file_inventory}
+![File inventory: declared row counts per file, from `file_inventory_rows()`. The measurement table is the larger of the two files; the subject table is its dimension companion. Both are declared as `text/csv`. The bar values are the row counts recorded in the descriptor, not re-derived here — the quality gate ([@sec:quality]) is where declared and actual counts are reconciled.](../output/figures/file_inventory.png){#fig:file_inventory}
 
-Running the script regenerates the figures under `manuscript/figures/`; the prose
+Running the script regenerates the figures under `output/figures/`; the prose
 below and in later sections describes what those artifacts show. Because the
 figures are produced from the descriptor and the fixture bytes, they cannot drift
 from the data without the tests and the quality gate noticing.

@@ -29,6 +29,15 @@ AuxiliaryResult = tuple[str, dict[str, Any]]
 AuxiliaryOperation = Generator[AuxiliaryProcess, dict[str, Any], AuxiliaryResult]
 
 
+class AuxiliaryDeadlineExceeded(TimeoutError):
+    """Retain admitted results and actual child observations without granting acceptance."""
+
+    def __init__(self, results: list[AuxiliaryResult], observations: dict[int, list[dict[str, Any]]]) -> None:
+        super().__init__("original auxiliary deadline exhausted during controller admission")
+        self.results = results
+        self.observations = observations
+
+
 def execute_auxiliary_operations(
     operations: Sequence[tuple[str, AuxiliaryOperation]], *, workers: int, deadline: float
 ) -> list[AuxiliaryResult]:
@@ -43,9 +52,12 @@ def execute_auxiliary_operations(
     if type(deadline) not in (int, float) or not math.isfinite(deadline):
         raise ValueError("auxiliary controller requires its original finite deadline")
 
+    results: list[AuxiliaryResult | None] = [None] * len(operations)
+    observations: dict[int, list[dict[str, Any]]] = defaultdict(list)
+
     def remaining() -> None:
         if time.monotonic() >= deadline:
-            raise TimeoutError("original auxiliary deadline exhausted during controller admission")
+            raise AuxiliaryDeadlineExceeded([result for result in results if result is not None], dict(observations))
 
     remaining()
     if any(not isinstance(scope, str) or not scope for scope, _ in operations):
@@ -59,7 +71,6 @@ def execute_auxiliary_operations(
         queue = str(index) if workers == 1 else scope
         queues[queue].append((index, operation))
     ready = deque(queues)
-    results: list[AuxiliaryResult | None] = [None] * len(operations)
     pending: dict[Future[dict[str, Any]], tuple[str, int, AuxiliaryOperation]] = {}
 
     with ThreadPoolExecutor(max_workers=workers, thread_name_prefix="auxiliary-child") as executor:
@@ -92,16 +103,28 @@ def execute_auxiliary_operations(
             )
             pending[future] = (scope, index, operation)
 
-        while ready or pending:
-            while ready and len(pending) < workers:
-                scope = ready.popleft()
-                index, operation = queues[scope].popleft()
-                advance(scope, index, operation)
-            if pending:
-                completed, _ = wait(pending, return_when=FIRST_COMPLETED)
-                for future in sorted(completed, key=lambda item: pending[item][1]):
-                    scope, index, operation = pending.pop(future)
-                    advance(scope, index, operation, future.result())
+        try:
+            while ready or pending:
+                while ready and len(pending) < workers:
+                    scope = ready.popleft()
+                    index, operation = queues[scope].popleft()
+                    advance(scope, index, operation)
+                if pending:
+                    completed, _ = wait(pending, return_when=FIRST_COMPLETED)
+                    for future in sorted(completed, key=lambda item: pending[item][1]):
+                        scope, index, operation = pending.pop(future)
+                        observation = future.result()
+                        observations[index].append(observation)
+                        advance(scope, index, operation, observation)
+        except AuxiliaryDeadlineExceeded as error:
+            # Guardians retain their original deadline and finish cleanup. Do
+            # not resume controllers or launch another positive/negative child.
+            for future, (_, index, _) in pending.items():
+                observations[index].append(future.result())
+            error.observations = dict(observations)
+            for _, operation in operations:
+                operation.close()
+            raise
     if any(result is None for result in results):
         raise ValueError("auxiliary controller omitted an original operation result")
     remaining()

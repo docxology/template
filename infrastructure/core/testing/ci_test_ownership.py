@@ -5,6 +5,20 @@ their runtime fits the smoke deadline. Unlisted helpers retain broad fallback.
 """
 
 SOURCE_TEST_OWNERS: dict[str, tuple[str, ...]] = {
+    "infrastructure/core/pipeline/artifact_contracts.py": (
+        "tests/infra_tests/core/pipeline/test_artifact_contracts.py",
+        "tests/infra_tests/core/pipeline/test_stage_attempt_admission.py",
+    ),
+    "infrastructure/core/pipeline/stage_admission.py": (
+        "tests/infra_tests/core/pipeline/test_artifact_contracts.py",
+        "tests/infra_tests/core/pipeline/test_stage_attempt_admission.py",
+    ),
+    "infrastructure/core/testing/test_runner_outputs.py": (
+        "tests/infra_tests/core/test_test_runner_receipts.py",
+        "tests/infra_tests/reporting/test_result_loaders.py",
+        "tests/infra_tests/reporting/test_project_verifier.py",
+        "tests/infra_tests/reporting/test_pipeline_test_runner_integration.py",
+    ),
     "infrastructure/core/_bounded_kill.py": (
         "tests/infra_tests/project/test_public_acceptance_auxiliary_supervision.py",
         "tests/infra_tests/core/test_execution_boundary.py",
@@ -59,6 +73,7 @@ SOURCE_TEST_OWNERS: dict[str, tuple[str, ...]] = {
     "infrastructure/project/public_acceptance_auxiliary_pipeline_environment.py": (
         "tests/infra_tests/project/test_public_acceptance_auxiliary.py",
         "tests/infra_tests/project/test_auxiliary_audited_bootstrap.py",
+        "tests/infra_tests/project/test_public_acceptance_auxiliary_cli.py",
     ),
     "infrastructure/project/public_acceptance_auxiliary_supervision.py": (
         "tests/infra_tests/project/test_public_acceptance_auxiliary.py",

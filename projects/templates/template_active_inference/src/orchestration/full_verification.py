@@ -725,28 +725,41 @@ def _run_chunked_coverage(
 def run_coverage_only(
     project_root: Path,
     *,
-    profile: VerificationProfile,
+    profile: VerificationProfile | None = None,
     command_runner: Callable[..., None] = _run,
     deadline_monotonic: float | None = None,
+    stage_receipt: bool = False,
 ) -> None:
-    """Run canonical coverage groups without verifier-owned producer phases."""
+    """Test prepared artifacts once, optionally closing the actual Stage-01 receipt."""
     started = time.monotonic()
+    if type(stage_receipt) is not bool:
+        raise ValueError("Stage-01 receipt selection must be a boolean")
+    receipt_context = _project_test_receipt_context() if stage_receipt else None
+    if stage_receipt and receipt_context is None:
+        raise RuntimeError("Stage-01 receipt requested without its actual caller context")
     coverage_groups = _validated_coverage_test_groups(project_root)
-    python = selected_verification_python(project_root)
+    python = selected_verification_python(project_root, receipt_bound=receipt_context is not None)
     deadline = verification_deadline(
         started,
         [_command_timeout_seconds(f"Coverage pass: {label}") for label, _ in coverage_groups],
         requested=deadline_monotonic,
     )
     command_runner = _bounded_session_runner(project_root, python, deadline, command_runner)
-    _run_chunked_coverage(
+    junit_paths, evidence_paths = _run_chunked_coverage(
         project_root,
         coverage_groups,
         profile=profile,
-        receipt_context=None,
+        receipt_context=receipt_context,
         command_runner=command_runner,
     )
     remaining_verification_budget(deadline)
+    if receipt_context is not None:
+        try:
+            _write_project_test_receipt(project_root, receipt_context, junit_paths, evidence_paths)
+            remaining_verification_budget(deadline)
+        except BaseException:
+            receipt_context[0].unlink(missing_ok=True)
+            raise
 
 
 def run_verification(

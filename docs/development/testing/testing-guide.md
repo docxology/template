@@ -137,13 +137,13 @@ def test_llm_query(ollama_test_server):
 
 The test orchestrator (`scripts/pipeline/stage_01_test.py`) generates structured reports:
 
-- **JSON Report**: `projects/{name}/output/reports/test_results.json`
+- **JSON Report**: `projects/{name}/output/.pipeline/tests/test_results.json`
   - Test counts (passed/failed/skipped)
   - Coverage metrics per module
   - Execution time per test file
   - Failure details with stack traces
 
-- **Markdown Report**: `projects/{name}/output/reports/test_results.md`
+- **Markdown Report**: `projects/{name}/output/.pipeline/tests/test_results.md`
   - Human-readable summary
   - Test statistics
   - Coverage summary

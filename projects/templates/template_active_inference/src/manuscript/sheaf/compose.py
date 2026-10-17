@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from pathlib import Path
+from manuscript.compilation_io import write_compiled_text
 
 from manuscript.sheaf.coverage import build_coverage_matrix, emit_coverage_artifacts, validate_coverage_strict
 from manuscript.sheaf.manifest import (
@@ -249,7 +250,7 @@ def compose_all_sections(
         # hooks.  Some final track bodies intentionally have inconsistent
         # trailing newlines; normalize the composed page boundary so
         # rerendering is stable and diff-clean.
-        target.write_text(f"{content.rstrip()}\n", encoding="utf-8")
+        write_compiled_text(target, f"{content.rstrip()}\n")
         written.append(target)
     emit_coverage_artifacts(root)
     return ComposeResult(paths=written, issues=issues)

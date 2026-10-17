@@ -260,3 +260,27 @@ def test_audited_launch_refuses_changed_source_hook_before_executing(source: Pat
     with pytest.raises(ValueError, match="nominated Source body"):
         prepare_audited_auxiliary_command(Path(sys.executable), source, WORKER, (), directory)
     assert not (directory / PAYLOAD).exists()
+
+
+def test_zero_exit_with_failed_logical_validation_retains_original_facts(tmp_path: Path) -> None:
+    process = supervise(
+        [sys.executable, "-I", "-c", "print('actual successful pipeline child')"],
+        tmp_path,
+        tmp_path / "output/readiness/diagnostic/execution",
+        time.monotonic() + 15,
+    )
+    assert process["exit_code"] == 0
+    facts = {"original_exit_code": 0, "execution": {"outcomes": [{"stage_key": "copy", "status": "succeeded"}]}}
+    error = AuxiliaryPipelineFailure(
+        process,
+        facts,
+        {"logical_plan_artifact": {"path": "output/readiness/diagnostic/plan.json", "sha256": "a" * 64}},
+        validation_error="actual logical source differs",
+    )
+    assert error.code == 1
+    observation = error.worker_observation
+    assert observation["status"] == "fail"
+    assert "actual logical source differs" in observation["diagnostic"]
+    assert observation["original_pipeline_failure"]["original_exit_code"] == 0
+    assert observation["original_pipeline_failure"]["outcomes"] == facts["execution"]["outcomes"]
+    assert observation["original_pipeline_failure"]["logical_plan_artifact"]["path"].endswith("plan.json")

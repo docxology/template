@@ -13,6 +13,18 @@ from infrastructure.core.subprocess_policy import SubprocessPolicy, run_with_pol
 logger = get_logger(__name__)
 
 
+def project_test_report_directory(project_root: Path) -> Path:
+    """Keep test-run diagnostics outside retained publication evidence."""
+    return project_root / "output" / ".pipeline" / "tests"
+
+
+def project_test_report_paths(project_root: Path, filename: str = "test_results.json") -> tuple[Path, Path]:
+    """Prefer current runtime facts; retain read compatibility with published snapshots."""
+    if filename not in {"test_results.json", "test_results.md"}:
+        raise ValueError("project test reports require a declared JSON or Markdown filename")
+    return project_test_report_directory(project_root) / filename, project_root / "output" / "reports" / filename
+
+
 def declared_output_relpaths(project_root: Path) -> frozenset[str]:
     """Return the project-relative paths the artifact manifest declares as outputs.
 
@@ -166,4 +178,9 @@ def output_tree_digest(project_root: Path, *, exclude: frozenset[str] | None = N
     return digest.hexdigest()
 
 
-__all__ = ["declared_output_relpaths", "output_tree_digest"]
+__all__ = [
+    "declared_output_relpaths",
+    "output_tree_digest",
+    "project_test_report_directory",
+    "project_test_report_paths",
+]

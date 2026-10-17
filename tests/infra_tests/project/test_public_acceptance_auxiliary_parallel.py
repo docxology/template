@@ -14,6 +14,7 @@ import pytest
 
 from infrastructure.core.pipeline.fingerprints import tree_records
 from infrastructure.project.public_acceptance_auxiliary_parallel import (
+    AuxiliaryDeadlineExceeded,
     AuxiliaryOperation,
     AuxiliaryProcess,
     execute_auxiliary_operations,
@@ -123,8 +124,30 @@ def test_real_controller_refuses_admission_completed_after_original_deadline(tmp
             time.sleep(0.005)
         return "late", observation
 
-    with pytest.raises(TimeoutError, match="original auxiliary deadline"):
-        execute_auxiliary_operations([("scope", operation())], workers=1, deadline=deadline)
+    def early() -> AuxiliaryOperation:
+        observed = yield AuxiliaryProcess(
+            [sys.executable, "-I", "-c", "print('original early child')"],
+            tmp_path,
+            tmp_path / "output/readiness/early-admission",
+            deadline,
+        )
+        return "early", observed
+
+    def never() -> AuxiliaryOperation:
+        (tmp_path / "must-not-launch").write_text("late queued controller")
+        yield AuxiliaryProcess([], tmp_path, tmp_path, deadline)
+        return "unreachable", {}
+
+    with pytest.raises(AuxiliaryDeadlineExceeded, match="original auxiliary deadline") as observed:
+        execute_auxiliary_operations(
+            [("scope", early()), ("scope", operation()), ("scope", never())], workers=1, deadline=deadline
+        )
+    assert len(observed.value.results) == 1 and observed.value.results[0][0] == "early"
+    assert observed.value.results[0][1]["exit_code"] == 0
+    assert not (tmp_path / "must-not-launch").exists()
+    child = observed.value.observations[1][0]
+    assert child["exit_code"] == 0
+    assert (tmp_path / child["streams"]["stdout"]["path"]).read_text() == "original child completed\n"
 
 
 def test_declared_pytest_benchmark_storage_preserves_cold_source(tmp_path: Path) -> None:

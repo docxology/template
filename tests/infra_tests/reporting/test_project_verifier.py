@@ -144,6 +144,11 @@ def test_declared_verifier_requires_real_receipt_and_independent_coverage(
 @pytest.mark.timeout(180)
 def test_single_project_stage_dispatches_declared_verifier_and_writes_report(tmp_path: Path) -> None:
     project = _write_verifier_project(tmp_path)
+    retained = project / "output" / "reports" / "test_results.json"
+    retained.parent.mkdir()
+    original = b'{"historical_publication_snapshot": true}\n'
+    retained.write_bytes(original)
+    identity = retained.stat()
 
     exit_code = execute_test_pipeline(
         "active/demo",
@@ -158,9 +163,14 @@ def test_single_project_stage_dispatches_declared_verifier_and_writes_report(tmp
     )
 
     assert exit_code == 0
-    report = json.loads((project / "output" / "reports" / "test_results.json").read_text(encoding="utf-8"))
+    report = json.loads((project / "output" / ".pipeline" / "tests" / "test_results.json").read_text(encoding="utf-8"))
     assert report["summary"]["all_passed"] is True
     assert report["summary"]["total_tests"] == 1
+    assert retained.read_bytes() == original
+    fields = ("st_dev", "st_ino", "st_mode", "st_size", "st_mtime_ns", "st_ctime_ns")
+    assert tuple(getattr(retained.stat(), field) for field in fields) == tuple(
+        getattr(identity, field) for field in fields
+    )
     assert report["summary"]["project_coverage"] >= 90
 
 
@@ -771,7 +781,7 @@ def test_actual_stage_forwards_only_the_declared_named_profile(tmp_path: Path, p
     assert exit_code == 0
     observed = json.loads((project / "scripts/observed-profile.json").read_text())
     assert observed == {"profile": profile}
-    report = json.loads((project / "output/reports/test_results.json").read_text())
+    report = json.loads((project / "output/.pipeline/tests/test_results.json").read_text())
     assert report["summary"]["all_passed"] is True and report["project"]["passed"] == 1
     assert report["project"]["exit_code"] == 0 and report["summary"]["project_coverage"] >= 90
 

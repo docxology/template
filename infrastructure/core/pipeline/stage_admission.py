@@ -10,7 +10,7 @@ from infrastructure.core.pipeline.hitl import HitlController
 from infrastructure.core.pipeline.hitl_context import reviewed_content_digest
 from infrastructure.core.pipeline.types import StageContract, StageSpec
 
-SCHEMA = "template-stage-admission/1"
+SCHEMA = "template-stage-admission/2"
 
 
 def original_stage_admission(
@@ -30,6 +30,7 @@ def original_stage_admission(
         "output_artifacts": list(stage.contract.output_artifacts),
         "mutable_artifacts": list(stage.contract.mutable_artifacts),
         "input_digest": snapshot.digest,
+        "input_members": snapshot.diagnostic_members(),
         "approval": controller.approved_binding(stage),
         "shared_infrastructure": shared_infrastructure,
     }
@@ -55,6 +56,7 @@ def validate_stage_admission(
         "output_artifacts",
         "mutable_artifacts",
         "input_digest",
+        "input_members",
         "approval",
         "shared_infrastructure",
     }
@@ -67,6 +69,9 @@ def validate_stage_admission(
         or payload["stage_key"] != stage_key
         or not isinstance(payload["input_digest"], str)
         or len(payload["input_digest"]) != 64
+        or not isinstance(payload["input_members"], dict)
+        or len(payload["input_members"]) > 512
+        or any(not isinstance(k, str) or not isinstance(v, str) for k, v in payload["input_members"].items())
         or any(
             not isinstance(payload[key], list) or any(not isinstance(item, str) for item in payload[key])
             for key in ("input_artifacts", "output_artifacts", "mutable_artifacts")
@@ -81,8 +86,16 @@ def validate_stage_admission(
         output_artifacts=tuple(payload["output_artifacts"]),
         mutable_artifacts=tuple(payload["mutable_artifacts"]),
     )
-    if capture_inputs_at(repo, project, contract).digest != payload["input_digest"]:
-        raise InputContractError("Consumed input contents changed before the actual attempt")
+    current = capture_inputs_at(repo, project, contract)
+    if current.digest != payload["input_digest"]:
+        members = current.diagnostic_members()
+        changed = sorted(
+            key
+            for key in members.keys() | payload["input_members"].keys()
+            if members.get(key) != payload["input_members"].get(key)
+        )
+        detail = f"; changed input members (input index:relative path): {changed[:8]}" if changed else ""
+        raise InputContractError("Consumed input contents changed before the actual attempt" + detail)
     approval: dict[str, Any] | None = payload["approval"]
     if before_attempt and approval is not None:
         runtime_root = (

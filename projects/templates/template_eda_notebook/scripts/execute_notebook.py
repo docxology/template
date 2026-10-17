@@ -27,12 +27,14 @@ _platform_source = Path(_audit_spec.origin).absolute().parent
 if getattr(sys, "_template_executed_bytecode_audit", None) is None:
     # Startup I/O admits the selected platform's stdlib-only hook before public imports.
     _audit_path = _platform_source / "core/bytecode_audit.py"
-    _audit_directory = os.open(_audit_path.anchor, os.O_RDONLY | os.O_DIRECTORY)
+    _audit_directory = os.open(_audit_path.anchor, getattr(os, "O_PATH", os.O_RDONLY) | os.O_DIRECTORY)
     _audit_directories = [_audit_directory]
     _audit_bindings = []
     try:
         for _name in _audit_path.parts[1:-1]:
-            _child = os.open(_name, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW, dir_fd=_audit_directory)
+            _child = os.open(
+                _name, getattr(os, "O_PATH", os.O_RDONLY) | os.O_DIRECTORY | os.O_NOFOLLOW, dir_fd=_audit_directory
+            )
             _audit_bindings.append((_audit_directory, _name, os.fstat(_child)))
             _audit_directories.append(_child)
             _audit_directory = _child

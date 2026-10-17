@@ -59,6 +59,23 @@ and historical notes remain preserved.
 - Read pinned Source and native inputs through search-only ancestors while
   retaining selected-root, file identity, digest and closing checks.
 
+- Preserve completed auxiliary observations and a full failed receipt when the
+  original deadline expires; remove duplicate portable validation and charge
+  independent logical reads to the enclosing deadline. Retain logical-plan
+  diagnostics without granting acceptance to a failed comparison.
+- Preserve executable roles in public source exports, exclude nested Git
+  metadata consistently, and diagnose changed input members from the same
+  complete census used for admission.
+- Keep Stage-01 test reports under `output/.pipeline/tests/` so verification
+  does not overwrite retained publication reports; readers prefer current
+  runtime results and retain historical report compatibility.
+- Run Active Inference's complete coverage partition once on prepared artifacts;
+  isolate gate prewarming and mutations in one disposable session tree. Keep
+  explicit full research verification and the unchanged coverage/deadline gates.
+- Generate Data Descriptor figures and their input facts under `output/`, preserve
+  unchanged compiled manuscript bytes, and verify isolated SDK origins in child
+  startup tests. Prepare fonts and locked build wheels for their actual consumers.
+
 ## [4.0.1] - 2026-10-10
 
 See the [illustrated release-intent notes](docs/releases/v4.0.1.md). The date

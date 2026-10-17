@@ -31,6 +31,11 @@ def test_compose_writes_markdown_sections(tmp_path: Path) -> None:
     assert "pymdp simulation harness" in text
     assert "sheaf-track:pymdp" in text
     assert all(path.read_bytes().endswith(b"\n") for path in result.paths)
+    fields = ("st_dev", "st_ino", "st_mode", "st_size", "st_mtime_ns", "st_ctime_ns")
+    original = {path: tuple(getattr(path.stat(), field) for field in fields) for path in result.paths}
+    again = compose_all_sections(root, manuscript_dir=out)
+    assert again.paths == result.paths
+    assert {path: tuple(getattr(path.stat(), field) for field in fields) for path in result.paths} == original
 
 
 def test_discussion_ontology_renders_labels_not_raw_yaml() -> None:

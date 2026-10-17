@@ -15,6 +15,7 @@ from __future__ import annotations
 import os
 import stat
 import sys
+import tempfile
 from collections.abc import Callable, Iterator
 from pathlib import Path
 
@@ -58,18 +59,9 @@ def pytest_collection_modifyitems(
     is only meaningful inside a test's execution -- swallow it here and let
     each test's own ``ensure_gate_artifacts()`` call skip normally.
 
-    The bootstrap (``compose_all_sections`` etc.) hydrates tracked
-    ``manuscript/**/*.md`` sources as a side effect -- exactly what the
-    ``_restore_mutable_project_sources`` fixture below exists to undo after
-    each test. But that fixture's snapshot is only taken lazily, on the
-    *first test's* setup phase; running the pre-warm here, before any test
-    has started, would hydrate those files before the snapshot captures
-    "original" content, permanently drifting the git-tracked source. Snapshot
-    and restore the same mutable-source set around the pre-warm call so the
-    real snapshot fixture still captures pristine content afterward. The
-    signature cache this pre-warm populates is keyed on ``output/`` artifacts
-    only (see ``_REQUIRED_GATE_ARTIFACTS``), not manuscript source, so
-    restoring the manuscript files does not invalidate it.
+    Collection and execution share one disposable project tree. Even an
+    explicitly enabled rebuild writes only that copy, preserving the admitted
+    source's bytes and physical identity throughout the enclosing pipeline.
     Gate-consuming tests opt into the ``requires_gate_artifacts`` marker. This
     keeps the prewarm tied to the actual consumer rather than to the filename
     of every non-direct test. Gate consumers are also marked ``slow``; a quick
@@ -118,25 +110,22 @@ def _prewarm_gate_artifacts(
     try:
         from gate_support import ensure_gate_artifacts
 
-        iterator = _iter_mutable_project_sources if source_iterator is None else source_iterator
+        root = _session_project_root(session.config)
+        iterator = (lambda: _iter_mutable_project_sources(root)) if source_iterator is None else source_iterator
         initial_paths, snapshots = _capture_snapshots(iterator())
         try:
-            ensure_gate_artifacts(PROJECT_ROOT)
+            ensure_gate_artifacts(root)
         finally:
-            _remove_new_regular_files(PROJECT_ROOT, initial_paths, iterator())
-            _restore_snapshots(PROJECT_ROOT, snapshots)
+            _remove_new_regular_files(root, initial_paths, iterator())
+            _restore_snapshots(root, snapshots)
     except pytest.skip.Exception:
         pass
     except AssertionError as exc:
         pytest.exit(str(exc), returncode=1)
 
 
-# Tracked source files whose composed/regenerated content embeds live output/
-# artifact state. Gate tests call compose_all_sections / ensure_coverage_artifacts
-# on the real project root, and negative controls temporarily mutate source
-# contracts such as GNN and ontology files. Restore these files after every test
-# so long full-suite runs do not let one mutation or compose pass leak into the
-# next test.
+# Gate controls and composition operate on the shared disposable project copy.
+# Restore its mutable inputs between tests so one control cannot affect another.
 _MUTABLE_PROJECT_SOURCE_GLOBS = (
     "manuscript/**/*.md",
     "manuscript/**/*.yaml",
@@ -223,16 +212,16 @@ def _iter_declared_mutable_files(
             yield path
 
 
-def _iter_mutable_project_sources() -> Iterator[Path]:
+def _iter_mutable_project_sources(root: Path = PROJECT_ROOT) -> Iterator[Path]:
     yield from _iter_declared_mutable_files(
-        PROJECT_ROOT,
+        root,
         _MUTABLE_PROJECT_SOURCE_GLOBS,
         _MUTABLE_PROJECT_SOURCE_FILES,
     )
 
 
-def _iter_mutable_project_outputs() -> Iterator[Path]:
-    yield from _iter_declared_mutable_files(PROJECT_ROOT, _MUTABLE_PROJECT_OUTPUT_GLOBS)
+def _iter_mutable_project_outputs(root: Path = PROJECT_ROOT) -> Iterator[Path]:
+    yield from _iter_declared_mutable_files(root, _MUTABLE_PROJECT_OUTPUT_GLOBS)
 
 
 def _snapshot_paths(paths: Iterator[Path]) -> dict[Path, bytes]:
@@ -319,13 +308,13 @@ def _capture_stat_signatures(snapshots: dict[Path, bytes]) -> _MutableFileStats:
 
 
 @pytest.fixture(scope="session")
-def _mutable_project_source_snapshots() -> _MutableFileSnapshot:
-    return _capture_snapshots(_iter_mutable_project_sources())
+def _mutable_project_source_snapshots(project_root: Path) -> _MutableFileSnapshot:
+    return _capture_snapshots(_iter_mutable_project_sources(project_root))
 
 
 @pytest.fixture(scope="session")
-def _mutable_project_output_snapshots() -> _MutableFileSnapshot:
-    return _capture_snapshots(_iter_mutable_project_outputs())
+def _mutable_project_output_snapshots(project_root: Path) -> _MutableFileSnapshot:
+    return _capture_snapshots(_iter_mutable_project_outputs(project_root))
 
 
 @pytest.fixture(scope="session")
@@ -344,6 +333,7 @@ def _mutable_project_output_stats(
 
 @pytest.fixture(autouse=True)
 def _restore_mutable_project_state(
+    project_root: Path,
     _mutable_project_source_snapshots: _MutableFileSnapshot,
     _mutable_project_output_snapshots: _MutableFileSnapshot,
     _mutable_project_source_stats: _MutableFileStats,
@@ -352,15 +342,30 @@ def _restore_mutable_project_state(
     yield
     source_paths, source_snapshots = _mutable_project_source_snapshots
     output_paths, output_snapshots = _mutable_project_output_snapshots
-    _remove_new_regular_files(PROJECT_ROOT, source_paths, _iter_mutable_project_sources())
-    _remove_new_regular_files(PROJECT_ROOT, output_paths, _iter_mutable_project_outputs())
-    _restore_snapshots(PROJECT_ROOT, source_snapshots, _mutable_project_source_stats)
-    _restore_snapshots(PROJECT_ROOT, output_snapshots, _mutable_project_output_stats)
+    _remove_new_regular_files(project_root, source_paths, _iter_mutable_project_sources(project_root))
+    _remove_new_regular_files(project_root, output_paths, _iter_mutable_project_outputs(project_root))
+    _restore_snapshots(project_root, source_snapshots, _mutable_project_source_stats)
+    _restore_snapshots(project_root, output_snapshots, _mutable_project_output_stats)
 
 
-@pytest.fixture
-def project_root() -> Path:
-    return PROJECT_ROOT
+_PROJECT_COPY = pytest.StashKey[Path]()
+
+
+def _session_project_root(config: pytest.Config) -> Path:
+    """Share one owned copy between collection prewarm and test fixtures."""
+    if _PROJECT_COPY not in config.stash:
+        from direct_recompute_support import copy_project_tree
+
+        temporary = tempfile.TemporaryDirectory(prefix="active-gate-project-")
+        config.add_cleanup(temporary.cleanup)
+        config.stash[_PROJECT_COPY] = copy_project_tree(Path(temporary.name))
+    return config.stash[_PROJECT_COPY]
+
+
+@pytest.fixture(scope="session")
+def project_root(pytestconfig: pytest.Config) -> Path:
+    """Keep destructive gate controls outside admitted source and publication bytes."""
+    return _session_project_root(pytestconfig)
 
 
 @pytest.fixture

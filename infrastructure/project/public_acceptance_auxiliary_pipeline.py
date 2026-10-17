@@ -12,6 +12,7 @@ import argparse
 import json
 import os
 import platform
+import stat
 import subprocess
 import sys
 import tempfile
@@ -38,6 +39,7 @@ from infrastructure.project.public_acceptance_auxiliary_pipeline_environment imp
     _read_logical_plan as _read_logical_plan,
     _source_records as _source_records,
     environment_observation as environment_observation,
+    copy_public_pipeline_source,
 )
 
 
@@ -135,21 +137,14 @@ def run_pipeline(root: Path, scope: str, directory: Path, budget: int) -> dict[s
     from infrastructure.core.execution_policy import apply_execution_policy
     from infrastructure.core.pipeline.fingerprints import tree_records
     from infrastructure.project.public_acceptance_auxiliary import supervise
-    from infrastructure.reporting.readiness_receipts import public_source_paths
 
+    deadline = time.monotonic() + budget
     directory = evidence_directory(root, directory)
-    reader = SnapshotReader(root)
+    reader = SnapshotReader(root, operation_deadline=deadline)
     with tempfile.TemporaryDirectory(prefix="pipeline-source-") as temporary:
         copied = Path(temporary).resolve() / "source"
         copied.mkdir()
-        files = []
-        for path in public_source_paths(root):
-            relative = path.relative_to(root).as_posix()
-            snapshot = reader.read(relative)
-            destination = copied / relative
-            destination.parent.mkdir(parents=True, exist_ok=True)
-            destination.write_bytes(snapshot.content)
-            files.append({"path": relative, "sha256": snapshot.sha256})
+        files = copy_public_pipeline_source(root, copied, reader)
         # File-only exports omit authored empty directories that enter the unchanged compiler's identity.
         for source_root, rows in _source_records(root, scope):
             for relative, kind, _ in rows:
@@ -231,7 +226,7 @@ def run_pipeline(root: Path, scope: str, directory: Path, budget: int) -> dict[s
             command,
             copied,
             inner / "execution",
-            time.monotonic() + budget,
+            deadline,
             environment=environment,
             bootstrap_payload=payload,
         )
@@ -300,11 +295,35 @@ def run_pipeline(root: Path, scope: str, directory: Path, budget: int) -> dict[s
                 },
             ),
         }
-        validate_portable_pipeline(scope, details, SnapshotReader(root))
+        logical_observations: list[dict[str, Any]] = []
+        try:
+            validate_portable_pipeline(
+                scope,
+                details,
+                SnapshotReader(root, operation_deadline=deadline),
+                logical_observations=logical_observations,
+            )
+        except (OSError, ValueError, TypeError, KeyError, TimeoutError) as error:
+            diagnostic_bindings: dict[str, Any] = {
+                "process_artifact": process_binding,
+                "facts_artifact": facts_binding,
+                "portable_pipeline_artifact": details["portable_pipeline_artifact"],
+            }
+            if logical_observations:
+                diagnostic_bindings["logical_plan_artifact"] = write_json(
+                    root, directory / "pipeline-logical-plan.json", logical_observations[-1]
+                )
+            raise AuxiliaryPipelineFailure(process, facts, diagnostic_bindings, validation_error=str(error)) from error
         return details
 
 
-def validate_portable_pipeline(scope: str, details: dict[str, Any], reader: SnapshotReader) -> None:
+def validate_portable_pipeline(
+    scope: str,
+    details: dict[str, Any],
+    reader: SnapshotReader,
+    *,
+    logical_observations: list[dict[str, Any]] | None = None,
+) -> None:
     from infrastructure.core.pipeline.outcomes import RunResult, StageOutcome, StageStatus
     from infrastructure.core.pipeline.plan import ExecutionPlan
     from infrastructure.reporting.readiness_receipts import public_source_paths
@@ -329,7 +348,11 @@ def validate_portable_pipeline(scope: str, details: dict[str, Any], reader: Snap
     if len(bound_files) != len(expected_files) or {row["path"] for row in bound_files} != expected_files:
         raise ValueError("portable pipeline omitted or duplicated current public source")
     for binding in bound_files:
-        artifact(binding)
+        snapshot = artifact(binding)
+        if type(binding.get("executable")) is not bool or binding["executable"] != bool(
+            snapshot.path.stat(follow_symlinks=False).st_mode & stat.S_IXUSR
+        ):
+            raise ValueError("portable pipeline changed a public source executable role")
     process = artifact(custody["process_artifact"]).json_object()
     spec = artifact(custody["spec_artifact"]).json_object()
     facts = artifact(custody["facts_artifact"]).json_object()
@@ -434,8 +457,16 @@ def validate_portable_pipeline(scope: str, details: dict[str, Any], reader: Snap
             raise ValueError("portable pipeline baseline is outside current public output scope")
         artifact(binding)
     logical = _read_logical_plan(
-        reader.root, scope, original.run_timeout_seconds, env_before["labels"]["SOURCE_DATE_EPOCH"]
+        reader.root,
+        scope,
+        original.run_timeout_seconds,
+        env_before["labels"]["SOURCE_DATE_EPOCH"],
+        deadline=reader.operation_deadline,
     )
+    if logical_observations is not None:
+        # Diagnostic DATA only: preserve the actual independently compiled plan
+        # before comparing identities. It can never authorize a failed gate.
+        logical_observations.append(logical)
     current = ExecutionPlan.from_dict(logical["plan"])
     current_components = logical["components"]
     if current_components["source"] != before["source"] or logical["source_records"] != facts["source_records_before"]:
