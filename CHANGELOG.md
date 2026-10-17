@@ -70,7 +70,8 @@ and historical notes remain preserved.
   does not overwrite retained publication reports; readers prefer current
   runtime results and retain historical report compatibility.
 - Run Active Inference's complete coverage partition once on prepared artifacts;
-  isolate gate prewarming and mutations in one disposable session tree. Keep
+  isolate gate prewarming and mutations in one disposable session tree with its
+  canonical basename and physical path. Keep
   explicit full research verification and the unchanged coverage/deadline gates.
 - Generate Data Descriptor figures and their input facts under `output/`, preserve
   unchanged compiled manuscript bytes, and verify isolated SDK origins in child

@@ -2,16 +2,16 @@
   "measured_at": "2026-10-16",
   "projects": {
     "template_active_inference": {
-      "coverage_pct": "91.41 %",
-      "source_hash": "c4eb04bb1339e163ea60ec1b3bbe60f92c918a516c3bef75eee3bed30b7255fe"
+      "coverage_pct": "91.00 %",
+      "source_hash": "25dcd44b1524c17bd544000455ea352e81f383afb492ddc65d75dae55f50b47d"
     },
     "template_advanced_literature_review": {
       "coverage_pct": "94.30 %",
-      "source_hash": "925668ceb2d06bf1a74f3725097dc82f14624b6621fee3993f7a7836532eac0b"
+      "source_hash": "c59f372a1e79f39918157c75fe5f0117dee9754f4204f7a8d8196aee965b96a2"
     },
     "template_autopoiesis": {
       "coverage_pct": "94.75 %",
-      "source_hash": "36273b9644c232be5c73d651ce92b8a5abd360a97db8b70271cf6b93fc8fa7ee"
+      "source_hash": "2e86ada02e9ea8cea98ab8619df61ad5b39914ce19a2ba9142504d7998dd100c"
     },
     "template_autoresearch_project": {
       "coverage_pct": "96.36 %",
@@ -19,19 +19,19 @@
     },
     "template_autoscientists": {
       "coverage_pct": "92.93 %",
-      "source_hash": "679664719505a55d6aaf52819a7491dcd642dffbda1a534c96768dd27de11a0a"
+      "source_hash": "da381586b3c2e85814c93e70a7f8a99c7c9c059d9bf75a4345663dcc4443079f"
     },
     "template_code_project": {
       "coverage_pct": "93.78 %",
       "source_hash": "c0c1488547ebe876740da0ec61eeecd2cc3732f15589248d0e777f5e29bff0ac"
     },
     "template_data_descriptor": {
-      "coverage_pct": "96.13 %",
-      "source_hash": "bdc0b8d24d724408b29f936d3fecb2e67662ee65be8288ec5c39293faf94aa33"
+      "coverage_pct": "96.26 %",
+      "source_hash": "a3b23d23384a27853cbc73ebe4b45706bd3a0d3e398a8088afd2b4e0a58fd036"
     },
     "template_eda_notebook": {
       "coverage_pct": "91.01 %",
-      "source_hash": "a628dceb1e1c33dc6f999898e1bf88e5350afcd96c3d7f1767151c0a554020cc"
+      "source_hash": "8c3f3be67c572e1ce39fe850f57cdc24cb0ac71d2a48b03842658ddbcdba573d"
     },
     "template_experiment_tree": {
       "coverage_pct": "91.85 %",
@@ -47,7 +47,7 @@
     },
     "template_literature_meta_analysis": {
       "coverage_pct": "95.61 %",
-      "source_hash": "ac0ec8c2425e545351d4c467e38cb2ab02b0eace4011cc99157f17be5529490b"
+      "source_hash": "326e0e30549473735f106bbcd79bcca4637bb3c52577b196369b2813a55a61ae"
     },
     "template_madlib": {
       "coverage_pct": "98.95 %",
@@ -71,7 +71,7 @@
     },
     "template_prose_project": {
       "coverage_pct": "91.67 %",
-      "source_hash": "bac97267e701f161b0218a12602ad3f43badc16553ff3e6526a593e16bb34eb0"
+      "source_hash": "6c0df30187f107e92aad714725f62c30ba5928c48e6eba3159152576da5b0f00"
     },
     "template_redacted_report": {
       "coverage_pct": "97.03 %",
@@ -83,10 +83,10 @@
     },
     "template_search_project": {
       "coverage_pct": "91.94 %",
-      "source_hash": "48494b4b17213adadf2c493df0898af57104df4d1f20d10ff5265ed86692553b"
+      "source_hash": "bc67c64a9d433de3936326a8d1435ec26f98ac516b8dc4acdc930e5fd8c80271"
     },
     "template_sia": {
-      "coverage_pct": "92.91 %",
+      "coverage_pct": "92.48 %",
       "source_hash": "7ec0504feefb761d507c374c7bec1dfac748f32e356d02d0c29db8305c9fd80d"
     },
     "template_storybook": {
@@ -103,7 +103,7 @@
     }
   },
   "schema_version": 5,
-  "source_commit": "0d4a602df71aeee053f7128ada852ccd3526cfb9",
+  "source_commit": "b0352cb2556ab39b84334859aefc7a6e2b7109db",
   "source_inventory_mode": "tracked-and-nonignored-coverage-inputs-v3",
   "source_tree_identity": {
     "algorithm": "sha256",
@@ -205,27 +205,27 @@
       }
     },
     "projects": {
-      "template_active_inference": "c4eb04bb1339e163ea60ec1b3bbe60f92c918a516c3bef75eee3bed30b7255fe",
-      "template_advanced_literature_review": "925668ceb2d06bf1a74f3725097dc82f14624b6621fee3993f7a7836532eac0b",
-      "template_autopoiesis": "36273b9644c232be5c73d651ce92b8a5abd360a97db8b70271cf6b93fc8fa7ee",
+      "template_active_inference": "25dcd44b1524c17bd544000455ea352e81f383afb492ddc65d75dae55f50b47d",
+      "template_advanced_literature_review": "c59f372a1e79f39918157c75fe5f0117dee9754f4204f7a8d8196aee965b96a2",
+      "template_autopoiesis": "2e86ada02e9ea8cea98ab8619df61ad5b39914ce19a2ba9142504d7998dd100c",
       "template_autoresearch_project": "cb0757779ac8dda9bd88a11b16c735e790ca76c25dc525e6b2cf7412c7c59fb3",
-      "template_autoscientists": "679664719505a55d6aaf52819a7491dcd642dffbda1a534c96768dd27de11a0a",
+      "template_autoscientists": "da381586b3c2e85814c93e70a7f8a99c7c9c059d9bf75a4345663dcc4443079f",
       "template_code_project": "c0c1488547ebe876740da0ec61eeecd2cc3732f15589248d0e777f5e29bff0ac",
-      "template_data_descriptor": "bdc0b8d24d724408b29f936d3fecb2e67662ee65be8288ec5c39293faf94aa33",
-      "template_eda_notebook": "a628dceb1e1c33dc6f999898e1bf88e5350afcd96c3d7f1767151c0a554020cc",
+      "template_data_descriptor": "a3b23d23384a27853cbc73ebe4b45706bd3a0d3e398a8088afd2b4e0a58fd036",
+      "template_eda_notebook": "8c3f3be67c572e1ce39fe850f57cdc24cb0ac71d2a48b03842658ddbcdba573d",
       "template_experiment_tree": "db280d497285aab683e24d0da3a4d00c580e207bc885f8d3020c7422f16e52b5",
       "template_formal": "068a0d403c7909708c9281b3cc553848554a3ce8e0cc12c7b46686e25b040206",
       "template_gold_refinement": "fa3b93bc06fa1febadfa20974186d671b5286b5355a8d19fb4714c136bb7b6e8",
-      "template_literature_meta_analysis": "ac0ec8c2425e545351d4c467e38cb2ab02b0eace4011cc99157f17be5529490b",
+      "template_literature_meta_analysis": "326e0e30549473735f106bbcd79bcca4637bb3c52577b196369b2813a55a61ae",
       "template_madlib": "655382fd22c2d76b61d545b574c4fadc46b8c135aefef6c9644e264dd6d84f98",
       "template_methods_paper": "0ebd7b0e9a4f9d4843173a8ac88adf8fae62daa78f8c69c5caed9fab95eef76a",
       "template_newspaper": "73bfd4dcb13aa4ad48371a0ae9c692c27fc7a1d7057edcfb381f6b2c0de8fe82",
       "template_pitch_deck": "25f49b2760da68c895717a33dff389ef20fd0da947ff1f0bbcb57a162e3d7223",
       "template_pools_rules_tools": "e9e5db5d10a1da6d4cc282a3b7d306fdb59c452d0dc4e0e5566fc4c5608b37b8",
-      "template_prose_project": "bac97267e701f161b0218a12602ad3f43badc16553ff3e6526a593e16bb34eb0",
+      "template_prose_project": "6c0df30187f107e92aad714725f62c30ba5928c48e6eba3159152576da5b0f00",
       "template_redacted_report": "ef9e8b2bc0d2889d7f183e4004ba4af0040239a44e110bfdef4ceb5b33bf0430",
       "template_registered_report": "4d921e91348ddbd1d65036d46ed0afc9438c2fcaa91e18e3007863a7ac465bca",
-      "template_search_project": "48494b4b17213adadf2c493df0898af57104df4d1f20d10ff5265ed86692553b",
+      "template_search_project": "bc67c64a9d433de3936326a8d1435ec26f98ac516b8dc4acdc930e5fd8c80271",
       "template_sia": "7ec0504feefb761d507c374c7bec1dfac748f32e356d02d0c29db8305c9fd80d",
       "template_storybook": "c66f9d88e52376a42a610d25ac649f9282ff77b48b9e77abc727ab8c8ddef2ef",
       "template_template": "2808cab0c8a842998824ddb290d35aacb141259af65d3e5af81ddc5a719e04c2",
