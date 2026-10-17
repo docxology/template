@@ -191,6 +191,13 @@ jobs:
         uses: ./.github/actions/setup-acceptance-documents
         with:
           mode: native
+      - name: Prepare actual TeX for changed wrapping-header contracts
+        if: matrix.module == 'tests/infra_tests/rendering/test_latex_texttt_native.py' || matrix.module == 'tests/infra_tests/rendering/test_latex_utils.py'
+        run: |
+          set -euo pipefail
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends texlive-xetex texlive-latex-extra
+          xelatex --version
       - name: Warm locked offline wheels for native portability
         if: matrix.module == 'tests/infra_tests/reporting/test_native_whole_portability.py'
         timeout-minutes: 10

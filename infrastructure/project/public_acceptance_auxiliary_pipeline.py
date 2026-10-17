@@ -31,6 +31,7 @@ from infrastructure.reporting.release_readiness_snapshot import SnapshotReader
 from infrastructure.project.public_acceptance_auxiliary_pipeline_failure import (
     AuxiliaryPipelineFailure as AuxiliaryPipelineFailure,
     _retain_pipeline_child_facts as _retain_pipeline_child_facts,
+    retain_pipeline_failure_logs,
 )
 from infrastructure.project.public_acceptance_auxiliary_pipeline_environment import (
     _LABELS as _LABELS,
@@ -241,18 +242,22 @@ def run_pipeline(root: Path, scope: str, directory: Path, budget: int) -> dict[s
         bootstrap_binding = write_binary(
             root, directory / "pipeline-child-bootstrap.payload", (inner / "execution" / PAYLOAD).read_bytes()
         )
-        facts, facts_binding = _retain_pipeline_child_facts(
-            root,
-            directory,
-            inner,
-            process,
-            {
-                "process_artifact": process_binding,
-                "spec_artifact": spec_binding,
-                "streams": retained_streams,
-                "bootstrap_artifact": bootstrap_binding,
-            },
-        )
+        try:
+            facts, facts_binding = _retain_pipeline_child_facts(
+                root,
+                directory,
+                inner,
+                process,
+                {
+                    "process_artifact": process_binding,
+                    "spec_artifact": spec_binding,
+                    "streams": retained_streams,
+                    "bootstrap_artifact": bootstrap_binding,
+                },
+            )
+        except AuxiliaryPipelineFailure as error:
+            error.observation["retained_failure_logs"] = retain_pipeline_failure_logs(root, directory, copied, output)
+            raise
         artifacts: list[dict[str, Any]] = []
         size = 0
         for relative, kind, digest in tree_records(output):

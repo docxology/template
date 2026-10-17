@@ -284,3 +284,37 @@ def test_zero_exit_with_failed_logical_validation_retains_original_facts(tmp_pat
     assert observation["original_pipeline_failure"]["original_exit_code"] == 0
     assert observation["original_pipeline_failure"]["outcomes"] == facts["execution"]["outcomes"]
     assert observation["original_pipeline_failure"]["logical_plan_artifact"]["path"].endswith("plan.json")
+
+
+def test_combined_render_failure_logs_retain_exact_bytes_without_following_links(tmp_path: Path) -> None:
+    from infrastructure.project.public_acceptance_auxiliary_pipeline_failure import retain_pipeline_failure_logs
+
+    copied = tmp_path / "copied"
+    output = copied / "projects/templates/template_code_project/output"
+    pdf = output / "pdf"
+    pdf.mkdir(parents=True)
+    log = pdf / "_combined_manuscript.log"
+    log.write_bytes(b"! Actual compiler diagnostic\n")
+    external = tmp_path / "outside.tex"
+    external.write_bytes(b"must not be disclosed")
+    (pdf / "_combined_manuscript.tex").symlink_to(external)
+    rows = retain_pipeline_failure_logs(tmp_path, tmp_path / "output/readiness/failed", copied, output)
+    assert len(rows) == 2
+    assert (tmp_path / rows[0]["artifact"]["path"]).read_bytes() == log.read_bytes()
+    assert "artifact" not in rows[1] and rows[1]["diagnostic"]
+    assert external.read_bytes() == b"must not be disclosed"
+    assert not any(b"must not be disclosed" in p.read_bytes() for p in (tmp_path / "output").rglob("*.*"))
+
+
+def test_oversized_compiler_diagnostic_cannot_hide_the_original_failure(tmp_path: Path) -> None:
+    from infrastructure.project.public_acceptance_auxiliary_pipeline_failure import retain_pipeline_failure_logs
+
+    copied = tmp_path / "copied"
+    output = copied / "projects/templates/template_code_project/output"
+    pdf = output / "pdf"
+    pdf.mkdir(parents=True)
+    (pdf / "_combined_manuscript.log").write_bytes(b"x" * (2 * 1024 * 1024 + 1))
+    rows = retain_pipeline_failure_logs(tmp_path, tmp_path / "output/readiness/failed", copied, output)
+    assert len(rows) == 1 and "read budget" in rows[0]["diagnostic"]
+    assert "artifact" not in rows[0]
+    assert not (tmp_path / "output").exists()

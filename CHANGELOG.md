@@ -76,6 +76,12 @@ and historical notes remain preserved.
   unchanged compiled manuscript bytes, and verify isolated SDK origins in child
   startup tests. Prepare fonts and locked build wheels for their actual consumers.
 
+- Share a safe wrapping-macro header between PDF and slides, remove the
+  nonzero-compiler-exit waiver, and verify actual article/Beamer compilation and
+  rejection of error-bearing PDFs in a dedicated changed-contract CI lane.
+- Retain bounded, confined combined-render compiler logs on pipeline failures
+  before disposable source cleanup, without granting those diagnostics acceptance.
+
 ## [4.0.1] - 2026-10-10
 
 See the [illustrated release-intent notes](docs/releases/v4.0.1.md). The date

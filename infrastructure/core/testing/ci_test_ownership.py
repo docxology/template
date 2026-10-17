@@ -66,6 +66,18 @@ SOURCE_TEST_OWNERS: dict[str, tuple[str, ...]] = {
         "tests/infra_tests/reporting/test_native_original_launch_correctness.py",
         "tests/infra_tests/core/pipeline/test_stage_attempt_admission.py",
     ),
+    "infrastructure/rendering/latex_texttt.py": (
+        "tests/infra_tests/rendering/test_latex_texttt.py",
+        "tests/infra_tests/rendering/test_latex_texttt_native.py",
+    ),
+    "infrastructure/rendering/latex_utils.py": (
+        "tests/infra_tests/rendering/test_latex_utils.py",
+        "tests/infra_tests/rendering/test_latex_texttt_native.py",
+    ),
+    "infrastructure/rendering/_slides_math_header.py": (
+        "tests/infra_tests/rendering/test_slides_math_header.py",
+        "tests/infra_tests/rendering/test_latex_texttt_native.py",
+    ),
     "infrastructure/project/public_acceptance_auxiliary_pipeline_failure.py": (
         "tests/infra_tests/project/test_public_acceptance_auxiliary.py",
         "tests/infra_tests/project/test_auxiliary_audited_bootstrap.py",

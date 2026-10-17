@@ -346,3 +346,10 @@ confined atomic writer for combined Markdown. Predictable legacy temporary
 paths are never opened or removed; failures propagate without falling back to
 unprocessed source. The real-Pandoc regression probes live in
 `tests/infra_tests/rendering/test_web_renderer.py`.
+
+The PDF and slide wrapping headers share the same conditional `seqsplit` loader
+and an unconditional `providecommand` fallback. Do not nest parameterized macro
+definitions inside `IfFileExists` arguments. Compiler nonzero exits remain
+failures even when TeX writes a structurally valid PDF; no log signature grants
+an error waiver. Real article/Beamer and erroneous-document controls live in
+`tests/infra_tests/rendering/test_latex_texttt_native.py`.

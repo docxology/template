@@ -142,7 +142,7 @@ runs:
         # provisions BasicTeX and audits the actual LaTeX package inventory.
         bash scripts/shell/setup-system-deps.sh --prepared-python "$PREPARED_PYTHON"
         if [ "$RUNNER_OS" = macOS ]; then
-          sudo /Library/TeX/texbin/tlmgr install fontsize soul algorithm2e placeins ifoddpage relsize
+          sudo /Library/TeX/texbin/tlmgr install fontsize soul algorithm2e placeins ifoddpage relsize seqsplit
         fi
         pdftoppm -v
         pdffonts -v

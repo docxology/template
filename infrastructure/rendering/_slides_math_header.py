@@ -19,6 +19,7 @@ from infrastructure.rendering._pdf_latex_helpers import (
     extract_preamble,
 )
 from infrastructure.core.exceptions import RenderingError
+from infrastructure.rendering.latex_texttt import _BREAKTT_PREAMBLE
 
 logger = get_logger(__name__)
 
@@ -136,10 +137,7 @@ def write_slides_math_header(
     snippet_parts.append(
         "% Slide layout defaults for warning-clean scientific decks.\n"
         "\\usepackage{etoolbox}\n"
-        "\\IfFileExists{xurl.sty}{\\usepackage{xurl}}{}\n"
-        "\\IfFileExists{seqsplit.sty}{\\usepackage{seqsplit}}{\\newcommand{\\seqsplit}[1]{#1}}\n"
-        "\\protected\\def\\breakseq#1{\\seqsplit{#1}}\n"
-        "\\protected\\def\\breaktt#1{\\begingroup\\ttfamily\\seqsplit{#1}\\endgroup}\n"
+        "\\IfFileExists{xurl.sty}{\\usepackage{xurl}}{}\n" + _BREAKTT_PREAMBLE + "\n"
         "\\setlength{\\emergencystretch}{6em}\n"
         "\\tolerance=5000\n"
         "\\hbadness=10000\n"

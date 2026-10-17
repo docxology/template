@@ -9,6 +9,7 @@ from typing import Any
 from infrastructure.project.public_acceptance_auxiliary_supervision import complete_auxiliary_observation
 
 from infrastructure.project.installed_acceptance_artifacts import write_binary
+from infrastructure.core.files.secure_write import read_bytes_confined
 
 
 class AuxiliaryPipelineFailure(ValueError):
@@ -84,3 +85,28 @@ def _retain_pipeline_child_facts(
     if facts.get("original_exit_code") != 0:
         raise AuxiliaryPipelineFailure(process, facts, diagnostic)
     return facts, facts_binding
+
+
+def retain_pipeline_failure_logs(root: Path, directory: Path, copied: Path, output: Path) -> list[dict[str, Any]]:
+    """Retain bounded actual combined-render diagnostics without following links.
+
+    These failure-only artifacts cannot establish successful pipeline custody.
+    A missing, oversized, or unsafe log must never hide the original OS outcome.
+    """
+    retained: list[dict[str, Any]] = []
+    for filename in ("_combined_manuscript.log", "_combined_manuscript.tex"):
+        path = output / "pdf" / filename
+        try:
+            content = read_bytes_confined(copied, path, max_bytes=2 * 1024 * 1024)
+        except FileNotFoundError:
+            continue
+        except (OSError, ValueError) as error:
+            retained.append({"relative": "pdf/" + filename, "diagnostic": str(error)})
+        else:
+            retained.append(
+                {
+                    "relative": "pdf/" + filename,
+                    "artifact": write_binary(root, directory / "pipeline-failure-logs" / filename, content),
+                }
+            )
+    return retained
