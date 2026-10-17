@@ -69,7 +69,7 @@ def test_real_wrapping_header_compiles_without_nested_parameter_errors(
     assert token in "".join("".join(page.extract_text().split()) for page in pdf.pages)
 
 
-@pytest.mark.parametrize("failure", ("nested-parameter", "nested-and-undefined", "missing-input"))
+@pytest.mark.parametrize("failure", ("nested-parameter", "nested-and-undefined", "undefined-only", "missing-input"))
 def test_nonzero_real_tex_exit_cannot_promote_even_a_valid_pdf(tmp_path: Path, failure: str) -> None:
     compiler = shutil.which("xelatex")
     assert compiler is not None, "prepare the declared actual XeLaTeX provider"
@@ -79,10 +79,12 @@ def test_nonzero_real_tex_exit_cannot_promote_even_a_valid_pdf(tmp_path: Path, f
         r"\IfFileExists{template-absent-seqsplit-regression.sty}{}"
         r"{\newcommand{\seqsplit}[1]{#1}}"
     )
+    if failure == "undefined-only":
+        broken_header = ""
     if failure == "missing-input":
         broken_header = r"\input{template-absent-fatal-input.tex}"
     body = r"Actual output."
-    if failure == "nested-and-undefined":
+    if failure in {"nested-and-undefined", "undefined-only"}:
         body += r"\TemplateUndefinedCommand"
     document = tmp_path / "refused.tex"
     document.write_text(
@@ -94,4 +96,8 @@ def test_nonzero_real_tex_exit_cannot_promote_even_a_valid_pdf(tmp_path: Path, f
     if failure != "missing-input":
         assert caught.value.context["pdf_exists"] is True
         assert caught.value.context["pdf_structure_valid"] is True
-        assert "Illegal parameter number" in (tmp_path / "compiled/refused.log").read_text(errors="replace")
+        log = (tmp_path / "compiled/refused.log").read_text(errors="replace")
+        if failure == "undefined-only":
+            assert "Undefined control sequence" in log
+        else:
+            assert "Illegal parameter number" in log
