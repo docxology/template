@@ -2,6 +2,11 @@
 
 Pipeline reporting and error aggregation utilities.
 
+The package facade resolves stable exports on first use and returns the original
+provider objects. Importing a reporting leaf does not initialize executive,
+document-validation, rendering, or plotting providers. Optional dashboard
+availability is still observed when its exports or package enumeration request it.
+
 ## Overview
 
 The reporting module provides reporting capabilities for pipeline execution, including:

@@ -2,6 +2,17 @@
 
 Environment, checkpoint, retry, profiling, and dependency helpers.
 
+`CodeProfiler` measures elapsed time with a monotonic clock and reports memory in
+MB, retaining zero measurements. Benchmark iteration and warmup counts must be
+exact integers (positive iterations, nonnegative warmup); requesting zero recent
+metrics returns an empty list. Monitoring retains the caller's existing
+`tracemalloc` session and records failures without replacing their exceptions.
+
+Python 3.15's standard-library `profiling.tracing` can retain deterministic call
+profiles without the process-memory access required by `profiling.sampling`.
+These diagnostic profiles do not replace the supported Python 3.12–3.14 release
+gates or authorize cache reuse, changed timeouts, or coverage exceptions.
+
 ## Files
 
 - `_python_env.py` — Python environment helpers; Stage-02 scripts must resolve
