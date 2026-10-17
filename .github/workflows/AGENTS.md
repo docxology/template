@@ -24,6 +24,12 @@ hardening choices and the local commands are in [`docs/development/ci.md`](../..
 
 # CI/CD Workflows
 
+Changed wrapping-header contracts run `test_latex_texttt_native.py` in the
+existing deep-contract lane with a prepared real XeLaTeX provider. Pure rendering
+smoke remains separate; the native regression requires zero compiler errors for
+both the selected-package and absent-package fallback document inputs.
+
+
 ## Overview
 
 The `workflows/` directory contains GitHub Actions workflows that automate the continuous integration and delivery pipeline for the Research Project Template. These workflows ensure code quality, test reliability, and compatibility across environments.

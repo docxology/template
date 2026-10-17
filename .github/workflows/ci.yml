@@ -135,6 +135,17 @@ jobs:
           sudo apt-get install -y --no-install-recommends poppler-utils
           pdftoppm -v
           pdffonts -v
+      - uses: ./.github/actions/setup-acceptance-documents
+        with:
+          mode: converter
+      - name: Select the installed browser for actual native controls
+        run: |
+          set -euo pipefail
+          chrome=/opt/google/chrome/chrome
+          test -f "$chrome" && test -x "$chrome" && test ! -L "$chrome"
+          test -f /opt/google/chrome/resources.pak
+          "$chrome" --version
+          echo "CHROME_EXECUTABLE_PATH=$chrome" >> "$GITHUB_ENV"
       - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
         with:
           name: functional-selection
@@ -186,11 +197,32 @@ jobs:
         if: matrix.shard != -1
       - uses: ./.github/actions/setup-meta-provider
         if: matrix.shard != -1
-      - name: Prepare actual auxiliary PDF producers and readers
-        if: matrix.module == 'tests/infra_tests/project/test_public_acceptance_auxiliary.py'
+      - name: Prepare pinned document tools for the selected native consumer
+        if: matrix.documents != 'none'
         uses: ./.github/actions/setup-acceptance-documents
         with:
-          mode: native
+          mode: ${{ matrix.documents }}
+      - name: Prepare actual TeX and PDF readers for selected native contracts
+        if: matrix.tex
+        run: |
+          set -euo pipefail
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends texlive-xetex texlive-latex-extra texlive-fonts-recommended lmodern poppler-utils
+          xelatex --version
+          bibtex --version
+          kpsewhich plainnat.bst
+          kpsewhich seqsplit.sty
+          kpsewhich lmodern.sty
+          for tool in xdvipdfmx pdffonts pdftotext pdftoppm; do command -v "$tool"; done
+      - name: Select the installed browser for the selected native consumer
+        if: matrix.browser
+        run: |
+          set -euo pipefail
+          chrome=/opt/google/chrome/chrome
+          test -f "$chrome" && test -x "$chrome" && test ! -L "$chrome"
+          test -f /opt/google/chrome/resources.pak
+          "$chrome" --version
+          echo "CHROME_EXECUTABLE_PATH=$chrome" >> "$GITHUB_ENV"
       - name: Warm locked offline wheels for native portability
         if: matrix.module == 'tests/infra_tests/reporting/test_native_whole_portability.py'
         timeout-minutes: 10

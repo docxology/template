@@ -57,23 +57,11 @@ terminal cohort reports and enforces the aggregate coverage floor. Every group
 other than fixed-point remains at 1,800 seconds, and the fixed-point exception
 must not spread to unrelated coverage or producer commands.
 
-This suite is NOT xdist-safe: gate tests compose and validate the REAL project
-tree (a known-wrong parallel run is a counterexample already on record: `-n 6`
-corrupted readiness mid-run) and the autouse conftest fixture restores tracked sources/outputs after
-every test, so parallel workers race each other (observed corrupting readiness
-mid-run under `-n 6`) — and any test that merely READS the real tree races
-with another worker's restore-writes. Run it serially. The safe multi-core
-design, if wall-clock ever matters more than simplicity, is per-worker
-whole-tree copies (each worker gets its own project copy and a coverage
-`[paths]` remap), not in-process `-n N`.
-
-The gate tests call `compose_all_sections` / `ensure_coverage_artifacts` on the
-real project root, which rewrites tracked manuscript, GNN, ontology, and config
-sources to reflect whatever artifacts the run produced. The autouse fixture in
-`conftest.py` snapshots mutable tracked project sources at session start and
-restores them after every test, so long runs do not let a mutation or composed
-status table leak into later checks. Never `git commit -a` a degraded status
-table after a run.
+Run the suite serially within each project process. Collection prewarm and
+fixtures share one disposable whole-project session copy. Gate controls and
+composition restore that copy's mutable inputs after each test; they never
+rewrite canonical source or publication bytes. This provides process isolation
+for the existing coverage groups; it does not establish xdist compatibility.
 
 Run full verification from this project root:
 `uv run --extra dev python scripts/run_full_verification.py`. It runs gate-heavy coverage in
@@ -82,8 +70,10 @@ focused `-q` commands only for package-local development loops. The legacy
 single-process coverage run is available as `--monolithic-coverage` for
 diagnostics only.
 
-The project `pyproject.toml` explicitly assigns that command to the
-single-project template Stage-01 lane. The adapter does not infer it from the
+The project `pyproject.toml` assigns `scripts/run_full_verification.py
+--coverage-only` to the single-project template Stage-01 lane. This runs the
+complete coverage partition once on prepared artifacts, omitting research
+preparation and duplicate noncoverage passes. The adapter does not infer it from the
 filename and does not lower the floor: it requires a fresh nonce-bound receipt,
 aggregates real JUnit outcomes from the final coverage groups once, and reads
 the resulting coverage database independently. The all-project union runner
@@ -97,11 +87,12 @@ argv. For an intentional bounded direct loop use
 the intended evidence. The declared pipeline command omits `--profile` and
 therefore preserves this project's historical comprehensive selection.
 
-Standard pytest expects the committed gate-artifact snapshot under `output/` to
+Standard pytest expects the prepared gate-artifact snapshot under `output/` to
 be present and semantically current. It fails fast when the snapshot is stale
 instead of rebuilding the full research pipeline inside test collection. Set
 `TEMPLATE_ACTIVE_INFERENCE_ALLOW_GATE_REBUILD=1` only for an intentional local
-refresh run that will regenerate and review the tracked outputs.
+refresh run. Test collection rebuilds only its disposable session copy;
+publication generation commands refresh the canonical outputs explicitly.
 
 `--collect-only` discovery must remain read-only and skip gate prewarming. As a
 negative control, `tests/test_gate_support_contracts.py::test_session_prewarm_skips_collect_only`
@@ -111,9 +102,8 @@ skip path is proven rather than assumed. The
 real test process performs the readiness check; discovery timeouts must not
 leave partially refreshed artifacts behind for the run that follows.
 
-Long in-process runs restore tracked `output/` snapshots after each test. Tests
-may exercise real writers against the project tree, but they must not leave
-canonical gate artifacts stale for later `ensure_gate_artifacts()` calls.
+Long in-process runs restore the disposable session copy's output snapshots
+after each test so one negative control cannot invalidate the next test.
 
 Coverage-only documentation measurement is therefore run from a symlink-free
 disposable copy owned by the outer counts process. Per-test teardown is not a

@@ -21,7 +21,6 @@ from infrastructure.core.implementation_custody import verify_implementation_cus
 from infrastructure.core.pipeline.fingerprints import canonical_digest, tree_records
 from infrastructure.core.pipeline.fingerprint_files import (
     anchored_parent,
-    open_directory,
 )
 from infrastructure.project.public_reference import (
     MAX_REFERENCE_BYTES,
@@ -103,12 +102,15 @@ def _anchored_directory_identity(path: Path, deadline: float) -> tuple[int, int]
         raise ValueError("current source directory witness refuses an aliased locator")
     if path == Path(path.anchor):
         return _physical_directory(path)
-    with anchored_parent(path) as parent:
-        if parent is None:
+    # Identity witnesses do not enumerate this directory. Hold it as an
+    # ancestor of an unexamined lexical child so the existing search-only
+    # policy applies, including named-inode closing checks on the directory.
+    # Actual Source enumeration still requires its own readable handles.
+    with anchored_parent(path / ".native-directory-identity") as descriptor:
+        if descriptor is None:
             raise ValueError("current source directory witness has a missing ancestor")
-        with open_directory(parent, path.name) as descriptor:
-            observed = os.fstat(descriptor)
-            result = observed.st_dev, observed.st_ino
+        observed = os.fstat(descriptor)
+        result = observed.st_dev, observed.st_ino
     remaining(deadline)
     return result
 

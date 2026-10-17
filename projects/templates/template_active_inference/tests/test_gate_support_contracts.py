@@ -505,3 +505,22 @@ def test_fixed_point_pass_env_override_is_fail_closed(monkeypatch) -> None:
 
     monkeypatch.setenv("TEMPLATE_ACTIVE_INFERENCE_FIXED_POINT_PASSES", "3")
     assert gate_support._fixed_point_passes() == 3
+
+
+def test_gate_mutations_use_disposable_source_with_exact_canonical_bytes(project_root: Path) -> None:
+    original = Path(__file__).resolve().parents[1] / "manuscript" / "config.yaml"
+    copied = project_root / "manuscript" / "config.yaml"
+    assert not project_root.is_relative_to(original.parents[1])
+    assert project_root.name == original.parents[1].name
+    assert project_root == project_root.resolve()
+    before, metadata = original.read_bytes(), original.stat()
+    assert copied.read_bytes() == before
+    try:
+        copied.write_bytes(before + b"\n# actual fixture mutation\n")
+        assert copied.read_bytes() != original.read_bytes()
+    finally:
+        copied.write_bytes(before)
+    assert original.read_bytes() == before
+    after = original.stat()
+    for field in ("st_dev", "st_ino", "st_mode", "st_size", "st_mtime_ns", "st_ctime_ns"):
+        assert getattr(after, field) == getattr(metadata, field)

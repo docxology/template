@@ -19,14 +19,15 @@ stale output tree. It also regenerates the source-derived method inventory
 before checking it, so adding a documented method cannot leave the verification
 lane permanently stale.
 
-The project explicitly declares this script as its single-project Stage-01
-verifier because the 90% branch-coverage contract is reached through isolated
+The project declares this script's `--coverage-only` route as its Stage-01
+verifier on prepared artifacts because the 90% branch-coverage contract is reached through isolated
 `--cov-append` groups, not the diagnostic monolithic quick lane. When the
 generic runner supplies `TEMPLATE_PROJECT_TEST_RECEIPT`, the verifier records
-JUnit outcomes only from the final coverage groups (never the duplicate
-pre-pass), parses them with `defusedxml`, combines pytest-produced warning and
-discovery sidecars, and writes the nonce-bound receipt after every postflight
-gate has passed. Coverage groups use the outer adapter's exact pinned
+JUnit outcomes from the complete coverage groups, parses them with
+`defusedxml`, combines pytest-produced warning and discovery sidecars, and writes
+the nonce-bound receipt after coverage and the enclosing deadline checks pass.
+Research/publication preparation remains the explicit full-verification command;
+Stage 01 does not repeat its producers or noncoverage prepass. Coverage groups use the outer adapter's exact pinned
 interpreter rather than a nested resolver environment. Direct invocations use
 the existing lexical project `.venv` interpreter when nominated, otherwise the
 current interpreter; a missing nominated runtime blocks with exit 75. Every
@@ -63,8 +64,11 @@ and enforces the floor. The selector validator rejects missing, duplicate,
 invented, dynamically generated, class-based, parametrized, or bare-module
 semantic selections while keeping every ordinary test module exact-once. Both
 the coverage-only route and the receipt-bearing full verifier use this validated
-partition. It omits verifier-owned refresh, hydration, output-gate, and receipt
-phases. The documentation counts measurer invokes this route only from a
+partition. It omits verifier-owned refresh, hydration, and output-gate phases.
+When invoked by Stage 01 it closes the actual nonce-bound receipt; standalone
+coverage measurement does not create a receipt. Gate controls and collection
+prewarm use the same disposable session copy and never restore canonical source
+after mutating it. The documentation counts measurer invokes this route only from a
 disposable copy of the complete project tree; do not point it at the canonical
 publication tree when measuring release coverage.
 The exact fixed-point coverage group has a 2,400-second inner ceiling aligned

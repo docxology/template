@@ -62,6 +62,20 @@ def _name(value: object) -> str:
     return value
 
 
+def _builtin_newspaper_font(face: object, name: str) -> bool:
+    """Recognize the actual ReportLab base-14 provider and its integer flag."""
+    from reportlab.pdfbase import pdfmetrics
+
+    flag = getattr(face, "builtIn", None)
+    return (
+        type(face) is pdfmetrics.TypeFace
+        and type(flag) in (bool, int)
+        and flag == 1
+        and name in pdfmetrics.standardFonts
+        and face.name == name
+    )
+
+
 def observe_print_fonts(project: Path, kind: str) -> dict[str, Any]:
     """Observe real provider choices with original resource bytes before/after.
 
@@ -165,7 +179,7 @@ def observe_print_fonts(project: Path, kind: str) -> dict[str, Any]:
                         "index": None,
                     }
                 )
-            elif getattr(face, "builtIn", False) is True:
+            elif _builtin_newspaper_font(face, name):
                 roles.append(
                     {
                         "role": role,

@@ -2,7 +2,7 @@
 
 Generated documentation coverage for every Python `def` and `class` under `src/` and `scripts/`. Entries marked `inventory fallback` have no inline docstring yet, but remain documented here by path, line, kind, and qualified name.
 
-Total documented definitions: 889
+Total documented definitions: 890
 
 ## `src/analytical/bernoulli_toy.py`
 
@@ -240,6 +240,12 @@ Total documented definitions: 889
 | 164 | `function` | `parse_gnn` | docstring | Parse gnn. |
 | 196 | `function` | `parse_gnn_file` | docstring | Parse gnn file. |
 
+## `src/manuscript/compilation_io.py`
+
+| line | kind | name | documentation source | summary |
+| ---: | --- | --- | --- | --- |
+| 8 | `function` | `write_compiled_text` | docstring | Preserve physical source custody when compilation yields identical bytes. |
+
 ## `src/manuscript/hydrate.py`
 
 | line | kind | name | documentation source | summary |
@@ -291,13 +297,13 @@ Total documented definitions: 889
 
 | line | kind | name | documentation source | summary |
 | ---: | --- | --- | --- | --- |
-| 29 | `function` | `issues_have_errors` | docstring | Process issues have errors. |
-| 34 | `function` | `validate_manifest` | docstring | Validate manifest. |
-| 129 | `function` | `sheaf_law_issues` | docstring | Surface sheaf-law violations as error-level manifest issues for the strict gate. |
-| 138 | `function` | `_imrad_group_titles` | inventory fallback | Inventory fallback for function `_imrad_group_titles` defined at `src/manuscript/sheaf/compose.py:138`. |
-| 146 | `function` | `_imrad_divider_markdown` | inventory fallback | Inventory fallback for function `_imrad_divider_markdown` defined at `src/manuscript/sheaf/compose.py:146`. |
-| 156 | `function` | `compose_section` | docstring | Process compose section. |
-| 194 | `function` | `compose_all_sections` | docstring | Process compose all sections. |
+| 30 | `function` | `issues_have_errors` | docstring | Process issues have errors. |
+| 35 | `function` | `validate_manifest` | docstring | Validate manifest. |
+| 130 | `function` | `sheaf_law_issues` | docstring | Surface sheaf-law violations as error-level manifest issues for the strict gate. |
+| 139 | `function` | `_imrad_group_titles` | inventory fallback | Inventory fallback for function `_imrad_group_titles` defined at `src/manuscript/sheaf/compose.py:139`. |
+| 147 | `function` | `_imrad_divider_markdown` | inventory fallback | Inventory fallback for function `_imrad_divider_markdown` defined at `src/manuscript/sheaf/compose.py:147`. |
+| 157 | `function` | `compose_section` | docstring | Process compose section. |
+| 195 | `function` | `compose_all_sections` | docstring | Process compose all sections. |
 
 ## `src/manuscript/sheaf/counts.py`
 
@@ -422,17 +428,17 @@ Total documented definitions: 889
 
 | line | kind | name | documentation source | summary |
 | ---: | --- | --- | --- | --- |
-| 15 | `class` | `HeatmapConfig` | docstring | Data container for HeatmapConfig. |
-| 26 | `class` | `CoverageColorConfig` | docstring | Data container for CoverageColorConfig. |
-| 35 | `class` | `ReportConfig` | docstring | Data container for ReportConfig. |
-| 46 | `class` | `CoverageConfig` | docstring | Data container for CoverageConfig. |
-| 55 | `class` | `CoverageReport` | docstring | Data container for CoverageReport. |
-| 67 | `function` | `load_coverage_config` | docstring | Load coverage config from a file. |
-| 115 | `function` | `default_coverage_config_path` | docstring | Process default coverage config path. |
-| 120 | `function` | `build_coverage_report` | docstring | Build coverage report. |
-| 152 | `function` | `_imrad_heading` | inventory fallback | Inventory fallback for function `_imrad_heading` defined at `src/manuscript/sheaf/report.py:152`. |
-| 156 | `function` | `render_report_markdown` | docstring | Render report markdown. |
-| 209 | `function` | `write_coverage_page` | docstring | Write coverage page to the output path. |
+| 16 | `class` | `HeatmapConfig` | docstring | Data container for HeatmapConfig. |
+| 27 | `class` | `CoverageColorConfig` | docstring | Data container for CoverageColorConfig. |
+| 36 | `class` | `ReportConfig` | docstring | Data container for ReportConfig. |
+| 47 | `class` | `CoverageConfig` | docstring | Data container for CoverageConfig. |
+| 56 | `class` | `CoverageReport` | docstring | Data container for CoverageReport. |
+| 68 | `function` | `load_coverage_config` | docstring | Load coverage config from a file. |
+| 116 | `function` | `default_coverage_config_path` | docstring | Process default coverage config path. |
+| 121 | `function` | `build_coverage_report` | docstring | Build coverage report. |
+| 153 | `function` | `_imrad_heading` | inventory fallback | Inventory fallback for function `_imrad_heading` defined at `src/manuscript/sheaf/report.py:153`. |
+| 157 | `function` | `render_report_markdown` | docstring | Render report markdown. |
+| 210 | `function` | `write_coverage_page` | docstring | Write coverage page to the output path. |
 
 ## `src/manuscript/sheaf/semantic_certificate.py`
 
@@ -602,8 +608,8 @@ Total documented definitions: 889
 | 614 | `function` | `_write_empty_coverage_evidence` | docstring | Write valid zero-test sidecars for a profile-empty coverage group. |
 | 650 | `function` | `_run_chunked_prepasses` | docstring | Retain actual failures while accounting for bounded-profile empty slices. |
 | 675 | `function` | `_run_chunked_coverage` | docstring | Run one fresh then append-only coverage subprocess per test group. |
-| 725 | `function` | `run_coverage_only` | docstring | Run canonical coverage groups without verifier-owned producer phases. |
-| 752 | `function` | `run_verification` | docstring | Run verification, optionally applying a typed pytest profile. |
+| 725 | `function` | `run_coverage_only` | docstring | Test prepared artifacts once, optionally closing the actual Stage-01 receipt. |
+| 765 | `function` | `run_verification` | docstring | Run verification, optionally applying a typed pytest profile. |
 
 ## `src/orchestration/pipeline_manifest.py`
 
@@ -1530,8 +1536,8 @@ Total documented definitions: 889
 
 | line | kind | name | documentation source | summary |
 | ---: | --- | --- | --- | --- |
-| 14 | `function` | `_run_cli` | docstring | CLI entry point. |
-| 84 | `function` | `main` | docstring | Import the controller from a fresh private cache before audited children. |
+| 15 | `function` | `_run_cli` | docstring | CLI entry point. |
+| 87 | `function` | `main` | docstring | Import the controller from a fresh private cache before audited children. |
 
 ## `scripts/simulate_si_graph_world.py`
 

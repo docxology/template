@@ -36,8 +36,8 @@ def test_coverage_matrix_colors() -> None:
     )
 
 
-def test_heatmap_writes_png(tmp_path: Path) -> None:
-    root = Path(__file__).resolve().parents[1]
+def test_heatmap_writes_png(project_root: Path, tmp_path: Path) -> None:
+    root = project_root
     manifest = load_manifest(root / "manuscript" / "sheaf" / "manifest.yaml")
     registry = load_track_registry(root / "manuscript" / "sheaf" / "tracks.yaml")
     matrix = build_coverage_matrix(registry, manifest, root)
@@ -49,8 +49,8 @@ def test_heatmap_writes_png(tmp_path: Path) -> None:
     assert out.stat().st_size > 0
 
 
-def test_emit_coverage_artifacts_writes_json_only(tmp_path: Path) -> None:
-    root = Path(__file__).resolve().parents[1]
+def test_emit_coverage_artifacts_writes_json_only(project_root: Path, tmp_path: Path) -> None:
+    root = project_root
     json_path = tmp_path / "output" / "data" / "matrix.json"
     json_out = emit_coverage_artifacts(root, json_path=json_path)
     assert json_out == json_path.resolve()
@@ -60,8 +60,8 @@ def test_emit_coverage_artifacts_writes_json_only(tmp_path: Path) -> None:
     assert data.get("sections")
 
 
-def test_run_coverage_pipeline_writes_json_and_png() -> None:
-    root = Path(__file__).resolve().parents[1]
+def test_run_coverage_pipeline_writes_json_and_png(project_root: Path) -> None:
+    root = project_root
     json_out, png_out, page_out = run_coverage_pipeline(root)
     assert json_out.exists()
     assert png_out is not None
@@ -69,8 +69,8 @@ def test_run_coverage_pipeline_writes_json_and_png() -> None:
     assert page_out is not None
 
 
-def test_coverage_json_has_zero_gray_on_clean_tree() -> None:
-    root = Path(__file__).resolve().parents[1]
+def test_coverage_json_has_zero_gray_on_clean_tree(project_root: Path) -> None:
+    root = project_root
     json_path = emit_coverage_artifacts(root)
     data = load_coverage_json(json_path)
     assert gray_cell_count_from_json(data) == 0
@@ -80,8 +80,8 @@ def test_coverage_json_has_zero_gray_on_clean_tree() -> None:
     assert not any(i.level == "error" for i in issues)
 
 
-def test_coverage_json_includes_imrad_metadata() -> None:
-    root = Path(__file__).resolve().parents[1]
+def test_coverage_json_includes_imrad_metadata(project_root: Path) -> None:
+    root = project_root
     json_path = emit_coverage_artifacts(root)
     data = load_coverage_json(json_path)
     first = (data.get("sections") or [])[0]
@@ -90,8 +90,8 @@ def test_coverage_json_includes_imrad_metadata() -> None:
     assert first.get("depth") == 0
 
 
-def test_write_coverage_page() -> None:
-    root = Path(__file__).resolve().parents[1]
+def test_write_coverage_page(project_root: Path) -> None:
+    root = project_root
     _json_path, _png_path, path = run_coverage_pipeline(root)
     assert path is not None
     text = path.read_text(encoding="utf-8")
@@ -110,8 +110,8 @@ def test_write_coverage_page() -> None:
     assert "{{coverage_present}}" in text
 
 
-def test_figure_registry_includes_si_and_layers_figures() -> None:
-    root = Path(__file__).resolve().parents[1]
+def test_figure_registry_includes_si_and_layers_figures(project_root: Path) -> None:
+    root = project_root
     registry = load_figure_registry(root)
     assert "si_belief_entropy_curve" in registry
     assert "si_obs_action_trace" in registry

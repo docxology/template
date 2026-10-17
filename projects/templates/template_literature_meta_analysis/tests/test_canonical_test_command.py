@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+from functools import cache
 import os
 import shlex
 import shutil
@@ -78,10 +79,25 @@ def _standalone_source_copy(destination: Path) -> Path:
     return destination
 
 
+@cache
+def _isolated_sdk_origin() -> Path:
+    """Observe the selected environment before testing its own-source exclusions."""
+    environment = build_bounded_env(dict(os.environ))
+    observed = run_bounded_subprocess(
+        [sys.executable, "-I", "-c", "import infrastructure; print(infrastructure.__file__)"],
+        cwd=PROJECT_ROOT,
+        env=environment,
+        timeout=30,
+    )
+    assert observed.returncode == observed.original_returncode == 0, observed.stdout + observed.stderr
+    assert not observed.timed_out and not observed.custody_refused
+    return Path(observed.stdout.strip()).resolve(strict=True)
+
+
 def _conftest_child_program() -> str:
     """Load the actual canonical startup with pytest's authored paths present."""
     assert infrastructure.__file__ is not None
-    sdk_origin = Path(infrastructure.__file__).resolve(strict=True)
+    sdk_origin = _isolated_sdk_origin()
     return (
         "import importlib,importlib.util,json,sys;from pathlib import Path;"
         f"project=Path({str(PROJECT_ROOT)!r});"
@@ -119,7 +135,7 @@ def test_canonical_startup_preserves_genuine_selected_environment_and_domain() -
     assert infrastructure.__file__ is not None
     assert receipts == [
         {
-            "origin": str(Path(infrastructure.__file__).resolve(strict=True)),
+            "origin": str(_isolated_sdk_origin()),
             "version": infrastructure.__version__,
             "deduplicated": 1,
         }
@@ -158,7 +174,7 @@ def test_configured_pytest_runs_in_standalone_source_copy(tmp_path: Path, case: 
     origin = standalone / "tests" / "test_owned_domain.py"
     provider_receipt = standalone / "actual-sdk-provider.json"
     assert infrastructure.__file__ is not None
-    sdk_origin = Path(infrastructure.__file__).resolve(strict=True)
+    sdk_origin = _isolated_sdk_origin()
     sdk_version = infrastructure.__version__
     shadow_markers: list[Path] = []
     if case == "sdk-shadows":

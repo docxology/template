@@ -13,6 +13,8 @@ is materialised under ``tmp_path``; the generator must:
 from __future__ import annotations
 
 import textwrap
+import subprocess
+import sys
 from pathlib import Path
 
 import pytest
@@ -23,6 +25,67 @@ from infrastructure.documentation.api_reference_gen import (
     inject_api_reference,
     walk_public_api,
 )
+
+
+@pytest.mark.parametrize("guard", ["TYPE_CHECKING", "typing.TYPE_CHECKING"])
+@pytest.mark.parametrize("binding", ["lazy", "import", "local", "constant"])
+def test_lazy_facade_keeps_source_api_without_importing_provider(tmp_path: Path, guard: str, binding: str) -> None:
+    package = _write_package(
+        tmp_path,
+        "lazy",
+        "provider",
+        'raise RuntimeError("API generation must never execute provider imports")\n'
+        'def calculate(value: int) -> int:\n    """Calculate the owned value."""\n    return value + 1\n',
+        ["calculate"],
+    )
+    runtime_definition = {
+        "lazy": "",
+        "import": "from .runtime_provider import calculate\n",
+        "local": 'def calculate(value: str) -> str:\n    """Calculate the runtime value."""\n    return value.upper()\n',
+        "constant": "calculate = 41\n",
+    }[binding]
+    (package / "__init__.py").write_text(
+        "import typing\nfrom typing import TYPE_CHECKING\n"
+        f"if {guard}:\n    from .provider import calculate\n    __all__ = ['wrong']\n"
+        + runtime_definition
+        + "__all__ = ['calculate']\n",
+        encoding="utf-8",
+    )
+    (package / "runtime_provider.py").write_text(
+        'def calculate(value: str) -> str:\n    """Calculate the runtime value."""\n    return value.upper()\n',
+        encoding="utf-8",
+    )
+    entries = walk_public_api(package)
+    assert len(entries) == 1
+    assert entries[0].name == "calculate"
+    if binding == "lazy":
+        assert entries[0].kind == "function"
+        assert entries[0].module == "infrastructure.lazy.provider"
+        assert entries[0].signature == "calculate(value: int) -> int"
+        assert entries[0].summary == "Calculate the owned value."
+    else:
+        owner = "infrastructure.lazy.runtime_provider" if binding == "import" else "infrastructure.lazy"
+        assert entries[0].module == owner
+        if binding == "constant":
+            assert entries[0].kind == "constant" and entries[0].signature == "calculate = 41"
+            check = "assert calculate == 41"
+        else:
+            assert entries[0].kind == "function"
+            assert entries[0].signature == "calculate(value: str) -> str"
+            assert entries[0].summary == "Calculate the runtime value."
+            check = f"assert calculate('owned') == 'OWNED';assert calculate.__module__ == {owner!r}"
+        actual = subprocess.run(
+            [
+                sys.executable,
+                "-I",
+                "-c",
+                f"import sys;sys.path.insert(0,{str(tmp_path)!r});from infrastructure.lazy import calculate;" + check,
+            ],
+            capture_output=True,
+            text=True,
+            timeout=30,
+        )
+        assert actual.returncode == 0, actual.stdout + actual.stderr
 
 
 # ---------------------------------------------------------------------------

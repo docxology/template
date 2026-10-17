@@ -119,7 +119,7 @@ def functional_selection(root: Path, event: str, base: str = "") -> dict[str, An
 def main() -> int:
     from infrastructure.core.testing.ci_infra import infrastructure_shards
     from infrastructure.core.testing.ci_infra import infrastructure_files
-    from infrastructure.core.testing.ci_contracts import contract_files
+    from infrastructure.core.testing.ci_contracts import contract_files, contract_preparation
     from infrastructure.core.testing.ci_smoke import project_smoke_matrix
 
     parser = argparse.ArgumentParser(description=__doc__)
@@ -143,10 +143,10 @@ def main() -> int:
         + json.dumps(
             {
                 "include": [
-                    {"shard": len(plan["infra_shards"]) + i, "module": name}
+                    {"shard": len(plan["infra_shards"]) + i, "module": name, **contract_preparation(name)}
                     for i, name in enumerate(plan["contract_modules"])
                 ]
-                or [{"shard": -1, "module": "none"}]
+                or [{"shard": -1, "module": "none", **contract_preparation("none")}]
             }
         )
     )

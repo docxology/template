@@ -342,8 +342,13 @@ source audit. The direct CLI controller uses a fresh private cache; Stage 01
 provides separate audited controller execution. This does not establish custody
 of every installed dependency's member bytes.
 
-The same command is explicitly declared in `pyproject.toml` for the template's
-single-project Stage-01 lane. That adapter accepts success only with a fresh
+`pyproject.toml` declares `scripts/run_full_verification.py --coverage-only` for
+the single-project Stage-01 lane. It runs every validated coverage group once on
+prepared artifacts, without repeating research generation or a noncoverage
+prepass. Use `--coverage-only --profile release` for the same test-only gate
+locally; omit the profile for the complete historical selection. Gate controls
+and collection prewarm share a disposable project copy, preserving canonical
+source and publication bytes throughout the test stage. That adapter accepts success only with a fresh
 run-bound receipt containing real final-group outcomes and coverage that the
 template independently rereads at the unchanged 90% floor. The all-project
 union runner retains its generic isolated pytest policy; GitHub's per-project

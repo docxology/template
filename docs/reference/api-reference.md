@@ -141,15 +141,33 @@ The per-package symbol listings below are generated between the
 
 ### `BenchmarkCheckResult`
 
-*symbol — defined in `infrastructure.benchmark`*
+*class — defined in `infrastructure.benchmark.template_harness`*
+
+```python
+class BenchmarkCheckResult
+```
+
+Result and weight for one named benchmark dimension.
 
 ### `BenchmarkManifest`
 
-*symbol — defined in `infrastructure.benchmark`*
+*class — defined in `infrastructure.benchmark.template_harness`*
+
+```python
+class BenchmarkManifest
+```
+
+Declarative benchmark manifest.
 
 ### `BenchmarkScore`
 
-*symbol — defined in `infrastructure.benchmark`*
+*class — defined in `infrastructure.benchmark.template_harness`*
+
+```python
+class BenchmarkScore
+```
+
+Score for one project against a manifest.
 
 ### `load_benchmark_manifest`
 
@@ -157,11 +175,23 @@ The per-package symbol listings below are generated between the
 
 ### `RubricScore`
 
-*symbol — defined in `infrastructure.benchmark`*
+*class — defined in `infrastructure.benchmark.rubrics`*
+
+```python
+class RubricScore
+```
+
+Weighted score result for a rubric.
 
 ### `RubricSet`
 
-*symbol — defined in `infrastructure.benchmark`*
+*class — defined in `infrastructure.benchmark.rubrics`*
+
+```python
+class RubricSet
+```
+
+A named set of weighted benchmark dimensions.
 
 ### `run_benchmark_manifest`
 
@@ -1049,31 +1079,73 @@ Validate a user-supplied project slug against discovered projects.
 
 ### `build_codegraph_files_command`
 
-*symbol — defined in `infrastructure.project`*
+*function — defined in `infrastructure.project.codegraph`*
+
+```python
+build_codegraph_files_command(path: Path) -> CodeGraphCommand
+```
+
+Build a JSON file-list command for scope verification.
 
 ### `build_codegraph_init_command`
 
-*symbol — defined in `infrastructure.project`*
+*function — defined in `infrastructure.project.codegraph`*
+
+```python
+build_codegraph_init_command(path: Path, *, index: bool=True) -> CodeGraphCommand
+```
+
+Build the recommended CodeGraph initialization command for ``path``.
 
 ### `build_scope_check_command`
 
-*symbol — defined in `infrastructure.project`*
+*function — defined in `infrastructure.project.codegraph`*
+
+```python
+build_scope_check_command(path: Path) -> CodeGraphCommand
+```
+
+Build the first command in the CodeGraph scope verification workflow.
 
 ### `CodeGraphCommand`
 
-*symbol — defined in `infrastructure.project`*
+*class — defined in `infrastructure.project.codegraph`*
+
+```python
+class CodeGraphCommand
+```
+
+A shell command recommendation without executing it.
 
 ### `copy_exemplar`
 
-*symbol — defined in `infrastructure.project`*
+*function — defined in `infrastructure.project.copy_exemplar`*
+
+```python
+copy_exemplar(repo_root: Path | str, source: str, dest: Path | str, *, new_name: str | None=None) -> CopyResult
+```
+
+Clean-copy a public exemplar to ``dest``.
 
 ### `CopyResult`
 
-*symbol — defined in `infrastructure.project`*
+*class — defined in `infrastructure.project.copy_exemplar`*
+
+```python
+class CopyResult
+```
+
+Summary of an exemplar copy operation.
 
 ### `discover_import_targets`
 
-*symbol — defined in `infrastructure.project`*
+*function — defined in `infrastructure.project.package_discovery`*
+
+```python
+discover_import_targets(src_root: Path) -> tuple[str, ...]
+```
+
+Return importable top-level modules and packages under ``src_root``.
 
 ### `discover_projects`
 
@@ -1087,11 +1159,23 @@ Discover all valid projects in the active projects directory.
 
 ### `export_exemplar`
 
-*symbol — defined in `infrastructure.project`*
+*function — defined in `infrastructure.project.copy_exemplar`*
+
+```python
+export_exemplar(repo_root: Path | str, source: str, dest: Path | str, *, new_name: str | None=None, project_only: bool=False, deadline_monotonic: float | None=None) -> CopyResult
+```
+
+Clean-copy an exemplar and write a deterministic provenance manifest.
 
 ### `ExportManifest`
 
-*symbol — defined in `infrastructure.project`*
+*class — defined in `infrastructure.project.copy_exemplar`*
+
+```python
+class ExportManifest
+```
+
+Content-addressed provenance for one standalone exemplar export.
 
 ### `find_setup_hook`
 
@@ -1115,11 +1199,23 @@ Extract metadata from project configuration files.
 
 ### `load_promotion_attestation`
 
-*symbol — defined in `infrastructure.project`*
+*function — defined in `infrastructure.project.promotion.attestation`*
+
+```python
+load_promotion_attestation(path: Path, *, as_of: date | None=None) -> PromotionAttestation
+```
+
+Load and validate one YAML attestation from an offline fixture or project.
 
 ### `plan_copy`
 
-*symbol — defined in `infrastructure.project`*
+*function — defined in `infrastructure.project.copy_exemplar`*
+
+```python
+plan_copy(repo_root: Path | str, source: str, dest: Path | str, *, new_name: str | None=None, dry_run: bool=False) -> CopyResult
+```
+
+Return the clean-copy plan and optionally create the destination tree.
 
 ### `preflight_setup_hook`
 
@@ -1143,27 +1239,61 @@ Information about a discovered project.
 
 ### `PromotionAttestation`
 
-*symbol — defined in `infrastructure.project`*
+*class — defined in `infrastructure.project.promotion.models`*
+
+```python
+class PromotionAttestation
+```
+
+Validated, non-secret promotion evidence for orchestration.
 
 ### `public_ci_lint_paths`
 
-*symbol — defined in `infrastructure.project`*
+*function — defined in `infrastructure.project.public_scope`*
+
+```python
+public_ci_lint_paths(repo_root: Path | str) -> list[Path]
+```
+
+Return every public Python/notebook tree that Ruff must check.
 
 ### `public_ci_source_paths`
 
-*symbol — defined in `infrastructure.project`*
+*function — defined in `infrastructure.project.public_scope`*
+
+```python
+public_ci_source_paths(repo_root: Path | str) -> list[Path]
+```
+
+Return source paths for public CI type checks.
 
 ### `public_project_infos`
 
-*symbol — defined in `infrastructure.project`*
+*function — defined in `infrastructure.project.public_scope`*
+
+```python
+public_project_infos(repo_root: Path | str) -> list[ProjectInfo]
+```
+
+Return discovered projects that are part of the public template repo.
 
 ### `PUBLIC_PROJECT_NAMES`
 
-*symbol — defined in `infrastructure.project`*
+*constant — defined in `infrastructure.project.public_scope`*
+
+```python
+PUBLIC_PROJECT_NAMES: tuple[str, ...] = ('templates/template_active_inference', 'templates/template_advanced_literatu...
+```
 
 ### `public_project_names`
 
-*symbol — defined in `infrastructure.project`*
+*function — defined in `infrastructure.project.public_scope`*
+
+```python
+public_project_names(repo_root: Path | str) -> list[str]
+```
+
+Return public template project names present in this checkout.
 
 ### `resolve_project_root`
 
@@ -1197,11 +1327,23 @@ Validate that project has required directory structure.
 
 ### `validate_promotion_attestation`
 
-*symbol — defined in `infrastructure.project`*
+*function — defined in `infrastructure.project.promotion.attestation`*
+
+```python
+validate_promotion_attestation(payload: Mapping[str, Any], *, as_of: date | None=None) -> PromotionAttestation
+```
+
+Validate a promotion mapping without authenticating or accessing a project.
 
 ### `verify_codegraph_scope_payload`
 
-*symbol — defined in `infrastructure.project`*
+*function — defined in `infrastructure.project.codegraph`*
+
+```python
+verify_codegraph_scope_payload(payload: str) -> list[str]
+```
+
+Return private/local project paths found in a CodeGraph files payload.
 
 ## Package: `infrastructure.prose`
 

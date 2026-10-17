@@ -12,6 +12,7 @@ from pathlib import Path
 from typing import Any, TypedDict, cast
 
 from infrastructure.core.logging.utils import get_logger
+from infrastructure.core.testing.test_runner_outputs import project_test_report_paths
 
 logger = get_logger(__name__)
 
@@ -65,7 +66,8 @@ def load_test_results(
     """
     root = repo_root or Path.cwd()
     _base = project_dir if project_dir is not None else root / "projects" / project_name
-    results_file = _base / "output" / "reports" / "test_results.json"
+    candidates = project_test_report_paths(_base)
+    results_file = next((path for path in candidates if path.exists()), candidates[0])
 
     if results_file.exists():
         try:

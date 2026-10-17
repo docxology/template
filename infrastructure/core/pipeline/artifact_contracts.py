@@ -2,11 +2,11 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass, replace
+from dataclasses import dataclass, field, replace
 from pathlib import Path
 
 from infrastructure.core.pipeline.artifacts import declared_output_paths
-from infrastructure.core.pipeline.fingerprints import canonical_digest, paths_digest
+from infrastructure.core.pipeline.fingerprints import canonical_digest, paths_digest, tree_records
 from infrastructure.core.pipeline.outcomes import StageOutcome, StageStatus
 from infrastructure.core.pipeline.types import PipelineConfig, PipelineStageResult, StageContract, StageSpec
 
@@ -79,21 +79,32 @@ class InputSnapshot:
     mutable_paths: frozenset[Path]
     output_root: Path
     digest: str
+    members: dict[str, str] = field(default_factory=dict)
 
-    def current_digest(self) -> str:
+    def diagnostic_members(self) -> dict[str, str]:
+        """Return the original observation's bounded, non-authoritative diagnostics."""
+        return dict(self.members)
+
+    def _observation(self) -> tuple[str, dict[str, str]]:
+        """Derive the unchanged complete identity and diagnostics from one census."""
         rows: list[tuple[int, str]] = []
-        for path in self.paths:
+        members: dict[str, str] = {}
+        for index, path in enumerate(self.paths):
             if path.absolute() in self.mutable_paths:
                 continue
             source = not path.absolute().is_relative_to(self.output_root)
             excluded = self.mutable_paths | (frozenset({self.output_root}) if source else frozenset())
-            rows.append(
-                (
-                    len(rows),
-                    paths_digest((path,), source=source, excluded_roots=excluded, output_roots=(self.output_root,)),
-                )
-            )
-        return canonical_digest(rows)
+            records = tree_records(path, source=source, excluded_roots=excluded, output_roots=(self.output_root,))
+            # paths_digest((path,)) uses path.parent as its lexical base. Keep
+            # that identity while sharing this boundary's actual file census.
+            rows.append((len(rows), canonical_digest([(path.name, records)])))
+            for relative, kind, digest in records:
+                if len(members) < 512:
+                    members[f"{index}:{path.name if relative == '.' else relative}"] = f"{kind}:{digest}"
+        return canonical_digest(rows), members
+
+    def current_digest(self) -> str:
+        return self._observation()[0]
 
 
 def capture_inputs(config: PipelineConfig, contract: StageContract) -> InputSnapshot:
@@ -117,7 +128,8 @@ def capture_inputs_at(repo_root: Path, project_dir: Path, contract: StageContrac
         if not path.exists() and path.absolute() not in mutable:
             raise InputContractError(f"Required input artifact is missing: {path}")
     snapshot = InputSnapshot(paths, mutable, (project_dir / "output").absolute(), "")
-    return replace(snapshot, digest=snapshot.current_digest())
+    digest, members = snapshot._observation()
+    return replace(snapshot, digest=digest, members=members)
 
 
 def require_outputs(config: PipelineConfig, contract: StageContract) -> str:

@@ -1,0 +1,130 @@
+{
+  "checks": [
+    {
+      "actual_checksum": "sha256:fe37ddd309a14dabcebf2c6bde455b8a87683cff1715bc086754a093192b6912",
+      "actual_rows": 12,
+      "checksum_ok": true,
+      "declared_checksum": "sha256:fe37ddd309a14dabcebf2c6bde455b8a87683cff1715bc086754a093192b6912",
+      "declared_rows": 12,
+      "path": "fixtures/measurements.csv",
+      "rows_ok": true,
+      "status": "verified"
+    },
+    {
+      "actual_checksum": "sha256:82e7f56156b2c7795c2b618a8a5050599f6bd8b2e015a08fd3b8ed7394f04080",
+      "actual_rows": 6,
+      "checksum_ok": true,
+      "declared_checksum": "sha256:82e7f56156b2c7795c2b618a8a5050599f6bd8b2e015a08fd3b8ed7394f04080",
+      "declared_rows": 6,
+      "path": "fixtures/subjects.csv",
+      "rows_ok": true,
+      "status": "verified"
+    }
+  ],
+  "descriptor": {
+    "fields": [
+      {
+        "constraints": {
+          "pattern": "^S[0-9]{3}$"
+        },
+        "description": "Stable synthetic sample identifier",
+        "name": "sample_id",
+        "nullable": false,
+        "type": "string"
+      },
+      {
+        "constraints": {
+          "pattern": "^P[0-9]{3}$"
+        },
+        "description": "Foreign key into fixtures/subjects.csv",
+        "name": "subject_id",
+        "nullable": false,
+        "type": "string"
+      },
+      {
+        "constraints": {
+          "allowed_values": [
+            "control",
+            "treatment"
+          ]
+        },
+        "description": "Synthetic assignment group",
+        "name": "group",
+        "nullable": false,
+        "type": "category"
+      },
+      {
+        "constraints": {
+          "maximum": 1,
+          "minimum": 0
+        },
+        "description": "Bounded synthetic measurement",
+        "name": "value",
+        "nullable": false,
+        "type": "number",
+        "unit": "normalized_score"
+      },
+      {
+        "description": "ISO-8601 collection date",
+        "name": "collected_on",
+        "nullable": false,
+        "type": "date"
+      },
+      {
+        "constraints": {
+          "allowed_values": [
+            "sensor_a",
+            "sensor_b"
+          ]
+        },
+        "description": "Synthetic capture device",
+        "name": "instrument",
+        "nullable": false,
+        "type": "category"
+      }
+    ],
+    "files": [
+      {
+        "checksum": "sha256:fe37ddd309a14dabcebf2c6bde455b8a87683cff1715bc086754a093192b6912",
+        "media_type": "text/csv",
+        "path": "fixtures/measurements.csv",
+        "rows": 12
+      },
+      {
+        "checksum": "sha256:82e7f56156b2c7795c2b618a8a5050599f6bd8b2e015a08fd3b8ed7394f04080",
+        "media_type": "text/csv",
+        "path": "fixtures/subjects.csv",
+        "rows": 6
+      }
+    ],
+    "license": "CC-BY-4.0",
+    "name": "example_measurements",
+    "primary_key": [
+      "sample_id"
+    ],
+    "provenance": [
+      {
+        "agent": "synthetic fixture generator",
+        "description": "Emit deterministic measurement and subject tables.",
+        "step": "collect"
+      },
+      {
+        "agent": "template_data_descriptor",
+        "description": "Normalize identifiers and bound the measurement range.",
+        "step": "clean"
+      },
+      {
+        "agent": "template_data_descriptor",
+        "description": "Run schema, constraint, and byte-level checks.",
+        "step": "validate"
+      },
+      {
+        "agent": "template_data_descriptor",
+        "description": "Emit the metadata-only release manifest.",
+        "step": "package"
+      }
+    ],
+    "version": "0.1.0"
+  },
+  "readiness_score": 1.0
+}

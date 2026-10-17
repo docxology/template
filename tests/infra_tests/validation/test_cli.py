@@ -54,15 +54,16 @@ class TestValidatePdfCommand:
     """Test validate_pdf_command function."""
 
     def test_pdf_not_found_exits(self, tmp_path, caplog):
-        """Test validate_pdf_command exits with error for missing PDF."""
+        """A missing explicit PDF is an invalid selection, not a validation finding."""
         args = argparse.Namespace(pdf_path=str(tmp_path / "nonexistent.pdf"), preview_words=200, verbose=False)
 
         with caplog.at_level(logging.ERROR):
             with pytest.raises(SystemExit) as exc_info:
                 validate_pdf_command(args)
 
-        assert exc_info.value.code == 1
-        assert "PDF not found" in caplog.text
+        assert exc_info.value.code == 2
+        assert "PDF file not found" in caplog.text
+        assert str(tmp_path / "nonexistent.pdf") in caplog.text
 
     def test_pdf_validation_non_verbose(self, tmp_path, caplog):
         """Test validate_pdf_command in non-verbose mode (covers branch 31->35)."""

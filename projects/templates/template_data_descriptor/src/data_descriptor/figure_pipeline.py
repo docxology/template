@@ -15,7 +15,7 @@ from __future__ import annotations
 import json
 import os
 from collections.abc import Iterable
-from dataclasses import dataclass
+from dataclasses import asdict, dataclass
 from pathlib import Path
 from typing import TYPE_CHECKING, Any, Protocol, cast
 
@@ -114,7 +114,7 @@ def render_descriptor_figures(
         prepared.checks,
         readiness_score=prepared.readiness_score,
     )
-    figures_dir = root / "manuscript" / "figures"
+    figures_dir = root / "output" / "figures"
     figures_dir.mkdir(parents=True, exist_ok=True)
     written: list[Path] = []
 
@@ -232,10 +232,13 @@ def publish_descriptor_figure_run(
 
 
 def generate_descriptor_figure_assets(project_root: Path) -> tuple[Path, ...]:
-    """Render, mirror, and register the complete canonical figure run."""
+    """Publish the complete figure run and its reproducible analysis inputs."""
     run = render_descriptor_figures(project_root)
     published = publish_descriptor_figure_run(project_root, run)
-    return (*run.rendered_paths, *published)
+    inputs_path = Path(project_root) / "output" / "data" / "descriptor_figure_inputs.json"
+    inputs_path.parent.mkdir(parents=True, exist_ok=True)
+    inputs_path.write_text(json.dumps(asdict(run.inputs), indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    return (*published, inputs_path)
 
 
 def _style_table(table: Table, column_count: int, *, scale: float) -> None:

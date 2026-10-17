@@ -2,6 +2,10 @@
 
 Advanced validation tools for research documents, ensuring PDF integrity, markdown structure validity, and output quality assurance.
 
+The package facade resolves stable exports on first use. Importing a validation
+leaf does not initialize unrelated document, repository-audit, or rendering
+providers; explicit facade imports still return the original provider objects.
+
 ## Architecture Overview
 
 ```mermaid

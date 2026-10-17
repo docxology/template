@@ -49,12 +49,14 @@ if _own_source(Path(_audit_spec.origin).resolve(strict=True)):
     raise SystemExit("own project source cannot provide the declared platform SDK")
 _platform_source = Path(_audit_spec.origin).absolute().parent
 _audit_path = _platform_source / "core/bytecode_audit.py"
-_audit_descriptors = [os.open(_audit_path.anchor, os.O_RDONLY | os.O_DIRECTORY)]
+_audit_descriptors = [os.open(_audit_path.anchor, getattr(os, "O_PATH", os.O_RDONLY) | os.O_DIRECTORY)]
 _audit_bindings = []
 _audit_directory = _audit_descriptors[0]
 try:
     for _name in _audit_path.parts[1:-1]:
-        _child = os.open(_name, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW, dir_fd=_audit_directory)
+        _child = os.open(
+            _name, getattr(os, "O_PATH", os.O_RDONLY) | os.O_DIRECTORY | os.O_NOFOLLOW, dir_fd=_audit_directory
+        )
         _audit_descriptors.append(_child)
         _audit_bindings.append((_audit_directory, _name, _child))
         _audit_directory = _child

@@ -9,17 +9,26 @@ from typing import Any
 from infrastructure.project.public_acceptance_auxiliary_supervision import complete_auxiliary_observation
 
 from infrastructure.project.installed_acceptance_artifacts import write_binary
+from infrastructure.core.files.secure_write import read_bytes_confined
 
 
 class AuxiliaryPipelineFailure(ValueError):
     """Keep the actual failed child/stage observation before positive readback."""
 
-    def __init__(self, process: dict[str, Any], facts: dict[str, Any], bindings: dict[str, Any]) -> None:
+    def __init__(
+        self,
+        process: dict[str, Any],
+        facts: dict[str, Any],
+        bindings: dict[str, Any],
+        *,
+        validation_error: str = "",
+    ) -> None:
         self.observation = {
             "role": "failed-pipeline-diagnostic-only",
             "original_exit_code": process["exit_code"],
             "timed_out": process["timed_out"],
             "facts_exit_code": facts.get("original_exit_code"),
+            "validation_error": validation_error,
             "outcomes": [],
             **bindings,
         }
@@ -32,7 +41,9 @@ class AuxiliaryPipelineFailure(ValueError):
             for row in self.observation["outcomes"]
             if row.get("status") != "succeeded"
         ]
-        super().__init__(f"actual portable pipeline child exited {process['exit_code']}; " + "; ".join(failed))
+        super().__init__(
+            f"actual portable pipeline child exited {process['exit_code']}; " + (validation_error or "; ".join(failed))
+        )
 
     @property
     def worker_observation(self) -> dict[str, Any]:
@@ -74,3 +85,28 @@ def _retain_pipeline_child_facts(
     if facts.get("original_exit_code") != 0:
         raise AuxiliaryPipelineFailure(process, facts, diagnostic)
     return facts, facts_binding
+
+
+def retain_pipeline_failure_logs(root: Path, directory: Path, copied: Path, output: Path) -> list[dict[str, Any]]:
+    """Retain bounded actual combined-render diagnostics without following links.
+
+    These failure-only artifacts cannot establish successful pipeline custody.
+    A missing, oversized, or unsafe log must never hide the original OS outcome.
+    """
+    retained: list[dict[str, Any]] = []
+    for filename in ("_combined_manuscript.log", "_combined_manuscript.tex"):
+        path = output / "pdf" / filename
+        try:
+            content = read_bytes_confined(copied, path, max_bytes=2 * 1024 * 1024)
+        except FileNotFoundError:
+            continue
+        except (OSError, ValueError) as error:
+            retained.append({"relative": "pdf/" + filename, "diagnostic": str(error)})
+        else:
+            retained.append(
+                {
+                    "relative": "pdf/" + filename,
+                    "artifact": write_binary(root, directory / "pipeline-failure-logs" / filename, content),
+                }
+            )
+    return retained

@@ -5,6 +5,7 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
+from manuscript.compilation_io import write_compiled_text
 
 
 from .models import CoverageMatrix, ImradBlock, SheafManifest
@@ -215,5 +216,5 @@ def write_coverage_page(project_root: Path) -> Path:
     config = load_coverage_config(default_coverage_config_path(root), project_root=root)
     report = build_coverage_report(ctx.matrix, ctx.manifest, config)
     out = root / "manuscript" / "00_00_sheaf_coverage.md"
-    out.write_text(render_report_markdown(report, project_root=root), encoding="utf-8")
+    write_compiled_text(out, render_report_markdown(report, project_root=root))
     return out

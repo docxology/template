@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import math
 import os
 from dataclasses import dataclass
 from pathlib import Path
@@ -105,8 +106,14 @@ class SnapshotReader:
         native_operation: Any = None,
         native_producer_operation: Any = None,
         native_control_operation: Any = None,
+        operation_deadline: float | None = None,
     ) -> None:
+        if operation_deadline is not None and (
+            type(operation_deadline) not in (int, float) or not math.isfinite(operation_deadline)
+        ):
+            raise ValueError("snapshot reader needs an original finite operation deadline")
         self.root = repo_root.resolve()
+        self.operation_deadline = operation_deadline
         self.hosted_origin = hosted_origin
         # Live external context only; receipt decoding never populates this.
         self.native_operation = native_operation
