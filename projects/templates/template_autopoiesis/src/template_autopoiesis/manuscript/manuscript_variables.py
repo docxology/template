@@ -31,25 +31,22 @@ def measure_test_summary(
 
     Returns ``(test_count, coverage_pct)`` derived from an actual pytest +
     coverage run against ``project_root/tests`` and ``project_root/src`` — never
-    a hardcoded literal. On any failure to run or parse, returns
+    a hardcoded literal. Standalone execution or parse failures return
     ``("pending", "pending")`` rather than fabricating a plausible-looking value.
 
-    Passes ``--cov-branch`` explicitly so the reported percentage matches the
-    authoritative CI/CLAUDE.md gate command (repo-root ``pyproject.toml`` sets
-    ``branch = true``; this project's own ``pyproject.toml`` does not, so
-    without this flag the two would silently disagree on methodology).
+    A present executor-held same-run Project Tests measurement is validated
+    and consumed; altered present evidence raises rather than rerunning tests.
+    Otherwise the standalone path executes pytest with ``--cov-branch``, matching
+    this project's branch-enabled coverage configuration. The percentage combines
+    statements and branch exits; it is not a pure branch-exit percentage.
 
-    If *full_report_out* is given, the complete per-module ``coverage.json``
-    (not just the aggregate totals) is copied there before the temporary
-    report is discarded — used by ``fig_coverage_by_module`` to plot real,
-    per-module coverage rather than a single aggregate number.
+    If *full_report_out* is given, the complete per-module coverage JSON from
+    that same measurement is copied there for the figure producer.
 
-    Uses the monorepo root's own ``.venv`` interpreter, not ``sys.executable``:
-    when the pipeline invokes this project's scripts via ``uv run --directory
-    <project_root>`` (a non-workspace-member project gets its own isolated
-    ``.venv`` per `uv`'s workspace rules), ``sys.executable`` resolves to that
-    project-local venv, which has no ``pytest``/``coverage`` installed — the
-    subprocess then fails silently into the ``"pending"`` path.
+    The legacy standalone path prefers the monorepo root's existing ``.venv``
+    interpreter after probing pytest/coverage, then falls back to
+    ``sys.executable``. That selection does not itself establish a normal
+    own-lock qualification; runtime identity must be recorded separately.
     """
     project_root = Path(project_root)
     if "PIPELINE_TEST_MEASUREMENT_SHA256" in os.environ:

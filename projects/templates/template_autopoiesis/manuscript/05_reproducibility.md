@@ -5,9 +5,12 @@ property the code enforces on every run. Every number that appears below the
 Determinism heading — {{GRAMMAR_HASH}}, {{GRAMMAR_SEED}}, {{TEST_COUNT}},
 {{COVERAGE_PCT}} — is a token substituted at render time by
 `src/template_autopoiesis/manuscript/manuscript_variables.py::generate_variables()` from a live grammar load
-and a live pytest run (`src/template_autopoiesis/manuscript/manuscript_variables.py::measure_test_summary()`).
-Neither function accepts a hardcoded literal as a fallback: if the subprocess
-pytest run cannot be parsed, `measure_test_summary` returns the string
+and a genuine current pytest measurement consumed or produced by
+`src/template_autopoiesis/manuscript/manuscript_variables.py::measure_test_summary()`.
+A validated same-run Project Tests handoff reuses its original measurement;
+altered present evidence fails closed. Without that handoff, the standalone path
+executes pytest. No hardcoded numeric fallback is accepted: if that subprocess
+cannot be parsed, `measure_test_summary` returns the string
 `"pending"` for both the test count and the coverage percentage rather than a
 plausible-looking number [@reproducible_builds]. This design choice is a direct
 consequence of an earlier failure mode in this project — a manuscript draft
@@ -200,11 +203,10 @@ uv run pytest projects/templates/template_autopoiesis/tests/ \
   --cov-fail-under=90
 ```
 
-This is the same command family `measure_test_summary()` runs internally
-(with `--cov-branch` added explicitly, matching the repo-root
-`pyproject.toml`'s `branch = true` setting rather than this project's own,
-so the reported {{COVERAGE_PCT}} agrees with the authoritative CI gate
-methodology rather than silently using a different one) to produce the
-{{TEST_COUNT}} and {{COVERAGE_PCT}} tokens substituted above — the same
-build, not a paraphrase of it, is the source of both this document's prose
-and its own regeneration.
+This command family uses branch instrumentation, explicitly selected by
+`measure_test_summary()` and enabled in this project's own coverage configuration.
+The reported percentage combines statements and branch exits under the aggregate
+90% floor. A pipeline that already completed a qualified Project Tests stage
+reuses that stage's original same-run measurement instead of running the suite
+again; standalone analysis produces a fresh measurement. The full per-module
+report and aggregate tokens remain tied to that one original run.

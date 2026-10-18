@@ -175,10 +175,10 @@ not yet published.
   show `Figure 4`/`Figure 5`/`Figure 6` with real captions (not placeholder
   alt text).
 - [x] ISC-22: A new figure (`fig_coverage_by_module`) plots real per-module
-  branch coverage, sourced from the same `coverage_full.json` artifact
+  combined statement and branch coverage, sourced from the same `coverage_full.json` artifact
   `measure_test_summary()` produces for `{{TEST_COUNT}}`/`{{COVERAGE_PCT}}` —
-  not a second, independently-computed view that could drift — verified:
-  rendered PDF page shows the bar chart with `sealing.py` (~51%), `cli.py`
+  not a second, independently-computed view that could drift. In that earlier
+  recorded verification, the retained PDF page showed the bar chart with `sealing.py` (~51%), `cli.py`
   (~75%), `common.py` (~74%), `figures.py` (~81%), `verify.py` (~88%) in red
   below the 90% line, matching the coverage table from the direct `pytest
   --cov` gate run.

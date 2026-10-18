@@ -25,8 +25,8 @@ live measurement rather than hand-typed as a literal.
 
 Across {{DOMAIN_COUNT}} heterogeneous primitive domains
 ({{DOMAIN_BULLETS}}), {{TEST_COUNT}} tests exercise both fixed ground-truth
-checks and Hypothesis-driven property invariants at {{COVERAGE_PCT}}% branch
-coverage, with an explicit negative control per domain distinguishing the
+checks and Hypothesis-driven property invariants at {{COVERAGE_PCT}}% combined
+statement and branch coverage, with an explicit negative control per domain distinguishing the
 real kernel from a deliberately-wrong one.
 
 ### Generation pipeline

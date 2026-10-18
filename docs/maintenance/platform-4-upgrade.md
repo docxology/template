@@ -1257,3 +1257,30 @@ negative-control deadlines are unchanged.
 Fresh final-main complete acceptance and authenticated release publication remain
 required. Current measured inventory and coverage belong in the generated
 [`COUNTS.md`](../_generated/COUNTS.md), not in these historical observations.
+
+
+## Installed-reader and native custody repairs — 2026-10-18 UTC
+
+The original required run also exposed missing installed Python companions,
+missing hosted-reader credentials after ordinary environment sanitization,
+Darwin print replay without original producer authority, and excessive native
+controller verification. These failures remain distinct from deadline-exhausted
+or unlaunched cases; the failed aggregate collector did not produce a passing
+release receipt.
+
+The repair confines credentials to the fixed independently installed reader and
+same-repository API transport, retains typed original print/tool/code custody,
+confines evidence paths before directory creation, and preserves fresh code and
+Source checks for cacheless imports. Snapshot traversal shares fresh held
+ancestry within one invocation. Fixed native stage preparation composes one full
+opening/closing verification; later public checks remain fresh and Source or
+physical-scope mutation cannot publish prepared authority.
+
+Both Source-declared Lake roots now consistently exclude only their physical
+build directories across Root, project and pipeline fingerprints. Manifests,
+toolchains, implementations and unrelated nested names remain authored Source.
+Normal independent Git clones replace copying live object databases in genuine
+installed fixtures. Author controls, independent mutation checks and the genuine
+installed reader launch passed their recorded component scopes under the original
+operation deadlines. Those observations do not authorize publication; fresh
+exact-main required acceptance and authenticated handoff remain required.

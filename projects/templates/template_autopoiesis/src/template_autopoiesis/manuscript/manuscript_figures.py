@@ -60,11 +60,11 @@ MANUSCRIPT_FIGURE_SPECS: tuple[ManuscriptFigureSpec, ...] = (
     ManuscriptFigureSpec(
         label="fig:coverage_by_module",
         filename="fig_coverage_by_module.png",
-        caption="Measured branch coverage by source module with the 90 percent floor marked.",
+        caption="Measured combined statement and branch coverage by source module with the aggregate gate marked.",
         generated_by="src.manuscript_figures.fig_coverage_by_module",
         alt_text=(
-            "Horizontal bars rank source modules by measured branch coverage against a dashed 90 percent "
-            "floor; modules below the threshold, if any, are distinguished in red."
+            "Horizontal bars rank source modules by combined statement and branch coverage against a dashed 90 percent "
+            "aggregate gate; modules below that reference line are distinguished in red."
         ),
     ),
 )
@@ -206,11 +206,11 @@ def fig_product_space_annotation(project_root: Path, out_dir: Path) -> Path:
 
 
 def fig_coverage_by_module(coverage_full_json: Path, out_dir: Path) -> Path:
-    """Horizontal bar chart of real per-module branch coverage.
+    """Horizontal bar chart of real per-module combined statement/branch coverage.
 
     Reads the persisted ``coverage.json`` written by
     ``measure_test_summary(..., full_report_out=...)`` — never invents
-    per-module numbers. Modules below the repo's 90% floor are drawn in a
+    per-module numbers. Modules below the aggregate gate's 90% reference are drawn in a
     distinct warning color so the figure is honest about known gaps rather
     than only showing the passing aggregate.
     """
@@ -232,9 +232,9 @@ def fig_coverage_by_module(coverage_full_json: Path, out_dir: Path) -> Path:
     fig, ax = plt.subplots(figsize=(8, max(3, 0.28 * len(names))))
     ax.barh(names, pcts, color=colors)
     ax.axvline(90, color="#334155", linestyle="--", linewidth=1)
-    ax.text(90.5, len(names) - 0.5, "90% floor", fontsize=8, color="#334155", va="top")
+    ax.text(90.5, len(names) - 0.5, "90% aggregate gate", fontsize=8, color="#334155", va="top")
     ax.set_xlim(0, 105)
-    ax.set_xlabel("Branch coverage (%)")
+    ax.set_xlabel("Combined statement + branch coverage (%)")
     ax.set_title("Per-module test coverage (real, measured this build)")
     fig.tight_layout()
     out = out_dir / _SPEC_BY_LABEL["fig:coverage_by_module"].filename
