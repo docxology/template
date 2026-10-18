@@ -5,6 +5,17 @@ their runtime fits the smoke deadline. Unlisted helpers retain broad fallback.
 """
 
 SOURCE_TEST_OWNERS: dict[str, tuple[str, ...]] = {
+    "infrastructure/core/testing/_pytest_runtime_controls.py": (
+        "tests/infra_tests/core/test_pytest_runtime_controls.py",
+        "tests/infra_tests/reporting/test_pipeline_test_runner_integration.py",
+        "tests/infra_tests/core/test_project_test_measurement.py",
+    ),
+    "infrastructure/reporting/pipeline_test_runner.py": (
+        "tests/infra_tests/reporting/test_pipeline_test_runner.py",
+        "tests/infra_tests/reporting/test_pipeline_test_runner_integration.py",
+        "tests/infra_tests/reporting/test_project_verifier.py",
+        "tests/infra_tests/core/test_project_test_measurement.py",
+    ),
     "infrastructure/project/public_root_lane_worker.py": ("tests/infra_tests/project/test_root_case_lanes.py",),
     "infrastructure/project/public_root_lane_readback.py": ("tests/infra_tests/project/test_root_case_lanes.py",),
     "infrastructure/core/testing/pytest_receipt.py": (

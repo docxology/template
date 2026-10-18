@@ -19,6 +19,7 @@ from infrastructure.reporting.pipeline_test_runner import (
     _test_child_exit_code,
 )
 from infrastructure.core.pipeline.outcomes import RunResult
+from infrastructure.core.pipeline.fingerprints import source_content_fingerprint
 
 
 def _write_minimal_project(repo_root: Path, name: str = "demo") -> Path:
@@ -122,6 +123,8 @@ def test_run_project_tests_real_subprocess(repo_root: Path) -> None:
     """Project runner executes pytest with declared coverage floor from pyproject."""
     project_root = repo_root / "projects" / "demo"
     declared = project_declared_coverage_floor(project_root)
+    resolved_project = repo_root / "projects" / "active" / "demo"
+    before = source_content_fingerprint(repo_root, resolved_project)
     exit_code, results = run_project_tests(
         repo_root,
         project_name="demo",
@@ -134,11 +137,13 @@ def test_run_project_tests_real_subprocess(repo_root: Path) -> None:
     threshold = declared if declared is not None else 90.0
     coverage = results.get("coverage_percent", 0.0)
     assert coverage >= threshold or results.get("passed", 0) > 0
-    resolved_project = repo_root / "projects" / "active" / "demo"
     assert (resolved_project / "coverage_project.json").is_file()
     assert (resolved_project / ".coverage.project").is_file()
     assert not (repo_root / "coverage_project.json").exists()
     assert not (repo_root / ".coverage.project").exists()
+    assert not (resolved_project / ".benchmarks").exists()
+    assert (resolved_project / "output/.pipeline/benchmarks").is_dir()
+    assert source_content_fingerprint(repo_root, resolved_project) == before
 
 
 @pytest.mark.timeout(90)

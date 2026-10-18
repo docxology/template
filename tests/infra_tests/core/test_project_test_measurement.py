@@ -256,9 +256,10 @@ def test_actual_stage_completion_carries_original_publication(tmp_path: Path, re
         PIPELINE_STAGE_KEY="project_tests",
         PIPELINE_PLAN_DIGEST="a" * 64,
         SOURCE_DATE_EPOCH="1700000000",
-        PYTEST_ADDOPTS=f"--benchmark-storage={project / 'output/.pipeline/benchmarks'}",
+        PYTEST_ADDOPTS="",
     )
     publication: dict[str, str] = {}
+    source_before = source_fingerprint(repo, project)
     outcome = launch_python_stage(
         repo=repo,
         project=project,
@@ -267,13 +268,20 @@ def test_actual_stage_completion_carries_original_publication(tmp_path: Path, re
         deadline=time.monotonic() + 60,
         stage_key="project_tests",
         run_id="actual-stage",
-        source_digest=source_fingerprint(repo, project),
+        source_digest=source_before,
         definition=None,
         skip_path=project / "output/unused.json",
         allow_skip=False,
         project_test_measurement=publication,
     )
     assert outcome.complete, outcome.diagnostic
+    assert source_fingerprint(repo, project) == source_before
+    assert not (project / ".benchmarks").exists()
+    measurement = json.loads(measurement_path(project, env["PIPELINE_RUN_ID"]).read_bytes())
+    arguments = measurement["arguments"]
+    hook = "infrastructure.core.testing._pytest_runtime_controls"
+    assert arguments.count(hook) == 1 and arguments[arguments.index(hook) - 1] == "-p"
+    assert arguments.count(f"--template-benchmark-storage={project / 'output/.pipeline/benchmarks'}") == 1
     assert len(publication["sha256"]) == 64
     if resign_before_return:
         with pytest.raises(ValueError, match="executor-held"):

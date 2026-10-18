@@ -19,7 +19,7 @@ import sysconfig
 import time
 import tomllib
 from email.parser import BytesParser
-from importlib.metadata import PackageNotFoundError, distribution, distributions
+from importlib.metadata import distributions
 from pathlib import Path, PurePosixPath
 from typing import Any
 
@@ -199,13 +199,26 @@ def _distribution_custody(
         {"research-template", "research-template.exe", "research-template-script.py"}
     ),
     public_modules: frozenset[str] = frozenset(),
+    checkout_root: Path | None = None,
 ) -> dict[str, Any] | None:
-    try:
-        selected = distribution(package)
-    except PackageNotFoundError:
+    # A checkout's generated src/*.egg-info may precede its installed editable
+    # metadata on sys.path. Only the actual runtime's installation sites may
+    # nominate that supplementary distribution. Installed/custom-target source
+    # instead nominates its own real provider parent, never another sys.path
+    # provider with the same name.
+    roots = (
+        sorted({sysconfig.get_path("purelib"), sysconfig.get_path("platlib")})
+        if checkout_root is not None
+        else [str(package_root.parent)]
+    )
+    candidates = tuple(distributions(name=package, path=roots))
+    if not candidates:
         if installed:
             raise ValueError("installed implementation lacks selected distribution metadata") from None
         return None
+    if len(candidates) != 1:
+        raise ValueError("selected platform distribution metadata is ambiguous")
+    selected = candidates[0]
     files = selected.files
     if files is None:
         raise ValueError("selected platform distribution lacks its declared file set")
@@ -341,6 +354,7 @@ def capture_dependency_custody(
         package=package,
         entrypoints=frozenset(),
         public_modules=public_modules,
+        checkout_root=checkout_root,
     )
     if checkout_root is not None and metadata is not None and declared.get("version") != metadata["version"]:
         raise ValueError("dependency checkout version differs from selected installed metadata")
@@ -389,7 +403,7 @@ def capture_implementation_custody(*, fresh_pycache_prefix: Path | None = None) 
         if prefix.is_symlink() or any(parent.is_symlink() for parent in prefix.parents):
             raise ValueError("fresh bytecode prefix cannot traverse symlinks")
         verify_fresh_module_bytecode(package_root, prefix)
-    metadata = _distribution_custody(package_root, installed=not checkout)
+    metadata = _distribution_custody(package_root, installed=not checkout, checkout_root=root if checkout else None)
     if checkout:
         declared = tomllib.loads(_regular_bytes(root / "pyproject.toml").decode("utf-8"))["project"]
         if declared.get("name") != PACKAGE or declared.get("version") != infrastructure.__version__:

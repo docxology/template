@@ -15,6 +15,10 @@ ROOT = Path(__file__).resolve().parents[3]
 # These owners exercise the integration protocol or a real module CLI rather
 # than importing each internal leaf directly. Their full modules remain selected.
 PROTOCOL_SOURCES = {
+    # Real project runner and measurement subprocesses load this private plugin.
+    "infrastructure/core/testing/_pytest_runtime_controls.py",
+    # The measurement owner imports the runner in its actual stage child Source.
+    "infrastructure/reporting/pipeline_test_runner.py",
     # Actual source-owned subprocess/case controls exercise the worker through
     # produce_root_lane, while the same complete module directly reads results.
     "infrastructure/project/public_root_lane_worker.py",

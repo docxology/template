@@ -16,6 +16,7 @@ from typing import Any, cast
 from infrastructure.core.config.queries import get_testing_config
 from infrastructure.core.files.coverage_cleanup import clean_coverage_files
 from infrastructure.core.files.project_lock import project_output_lock
+from infrastructure.core.files.secure_write import atomic_write_bytes_confined
 from infrastructure.core.logging.utils import get_logger, log_header, log_substep, log_success
 from infrastructure.core.testing.test_runner_outputs import project_test_report_directory
 from infrastructure.core.testing.pytest_orchestration import (
@@ -462,6 +463,17 @@ def _run_project_tests_impl(
             f"--cov-report=json:{project_root / 'coverage_project.json'}",
             f"--cov-fail-under={project_threshold}",
             "--tb=short",
+        ]
+    )
+    # Nominate confined runtime storage without requiring the optional plugin
+    # to load or replacing an explicitly selected nondefault user destination.
+    benchmark_store = project_root / "output/.pipeline/benchmarks"
+    atomic_write_bytes_confined(project_root, benchmark_store / ".owner", b"template-project-benchmark-storage\n")
+    cmd.extend(
+        [
+            "-p",
+            "infrastructure.core.testing._pytest_runtime_controls",
+            f"--template-benchmark-storage={benchmark_store}",
         ]
     )
     # Opt-in live LLM tests (``@pytest.mark.requires_ollama``) are excluded from
