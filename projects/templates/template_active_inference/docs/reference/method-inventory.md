@@ -438,7 +438,7 @@ Total documented definitions: 890
 | 121 | `function` | `build_coverage_report` | docstring | Build coverage report. |
 | 153 | `function` | `_imrad_heading` | inventory fallback | Inventory fallback for function `_imrad_heading` defined at `src/manuscript/sheaf/report.py:153`. |
 | 157 | `function` | `render_report_markdown` | docstring | Render report markdown. |
-| 210 | `function` | `write_coverage_page` | docstring | Write coverage page to the output path. |
+| 212 | `function` | `write_coverage_page` | docstring | Write coverage page to the output path. |
 
 ## `src/manuscript/sheaf/semantic_certificate.py`
 

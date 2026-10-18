@@ -248,8 +248,15 @@ def aggregate_artifact_manifests(
     *,
     inventory_mode: OutputInventoryMode = STABLE_OUTPUT_INVENTORY_MODE,
     inventory_output_dir: Path | None = None,
+    latest_stage: tuple[int, str] | None = None,
 ) -> ArtifactManifest:
-    """Aggregate all stage manifests into ``output/reports/artifact_manifest.json``."""
+    """Aggregate records, preferring the executor's latest complete stage snapshot.
+
+    Stage ordinals belong to one selected plan, not cross-run chronology. A
+    freshly completed stage inventories the entire stable output tree, so its
+    record supplies both the current path set and final digests. Older records
+    retain declaration ownership only for paths still in that complete set.
+    """
     inventory_mode = parse_output_inventory_mode(inventory_mode)
     if output_dir.is_symlink():
         raise ValueError(f"refusing to aggregate through symlink output directory: {output_dir}")
@@ -264,8 +271,31 @@ def aggregate_artifact_manifests(
                 issues.append(_symlink_issue(path, inventory_root))
 
     stage_dir_is_safe = _first_symlink_component(output_dir, stage_dir) is None
+    latest_path: Path | None = None
+    latest_paths: set[str] | None = None
+    if latest_stage is not None:
+        if (
+            type(latest_stage) is not tuple
+            or len(latest_stage) != 2
+            or type(latest_stage[0]) is not int
+            or latest_stage[0] <= 0
+            or not isinstance(latest_stage[1], str)
+            or not latest_stage[1].strip()
+        ):
+            raise ValueError("latest stage must name an actual positive ordinal and display name")
+        latest_path = _stage_manifest_path(output_dir, *latest_stage)
+        if (
+            not stage_dir_is_safe
+            or _first_symlink_component(output_dir, latest_path) is not None
+            or not latest_path.is_file()
+        ):
+            raise ValueError("latest stage manifest is missing or unsafe")
     if stage_dir_is_safe and stage_dir.exists():
-        for manifest_path in sorted(stage_dir.glob("stage-*.json")):
+        manifest_paths = sorted(stage_dir.glob("stage-*.json"))
+        if latest_path is not None:
+            manifest_paths.remove(latest_path)
+            manifest_paths.append(latest_path)
+        for manifest_path in manifest_paths:
             if manifest_path.is_symlink():
                 continue
             try:
@@ -281,6 +311,12 @@ def aggregate_artifact_manifests(
             except ValueError as exc:
                 issues.append(f"cannot read stage artifact manifest: {manifest_path.name}: {exc}")
                 continue
+            if manifest_path == latest_path:
+                if any((entry.stage_num, entry.stage_name) != latest_stage for entry in stage_manifest.entries):
+                    raise ValueError("latest stage manifest metadata differs from its completed stage")
+                latest_paths = {
+                    entry.path for entry in stage_manifest.entries if not _is_ignored_manifest_path(entry.path)
+                }
             if "inventory_mode" in payload:
                 stage_inventory_mode = stage_manifest.inventory_mode
                 if stage_inventory_mode != inventory_mode:
@@ -291,7 +327,11 @@ def aggregate_artifact_manifests(
             entries.extend(entry for entry in stage_manifest.entries if not _is_ignored_manifest_path(entry.path))
             issues.extend(stage_manifest.issues)
 
-    if not entries and inventory_root.exists():
+    if latest_path is not None:
+        if latest_paths is None:
+            raise ValueError("latest stage manifest cannot be parsed")
+        entries = [entry for entry in entries if entry.path in latest_paths]
+    if not entries and inventory_root.exists() and latest_path is None:
         inventory = collect_stable_output_inventory(inventory_root, inventory_mode=inventory_mode)
         issues.extend(inventory.issues)
         for path in inventory.files:

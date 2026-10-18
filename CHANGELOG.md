@@ -14,6 +14,13 @@ requires complete exact-revision acceptance and the authenticated release handof
 The prepared 4.0.0 and 4.0.1 candidates were not published; their implementation
 and historical notes remain preserved.
 
+- Aggregate the latest completed stage's full artifact inventory after targeted
+  execution, preserving historical manifests while refusing stale or retired
+  output bindings. Keep missing or mismatched stage records fail-closed.
+- Separate generated IMRAD headings from preceding lists so the rendered report
+  retains real section headings; regenerate its manuscript through the producer.
+- Declare actual artifact, executor and test-ownership consumers explicitly,
+  preserving complete contract tests while keeping ownership-map changes focused.
 - Partition functional infrastructure feedback into complete complementary smoke
   shards and required full-module contract jobs, with original pytest member,
   outcome and JUnit receipts. Add conservative project impact selection.

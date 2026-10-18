@@ -15,6 +15,7 @@ This page summarizes which **sheaf fragment tracks** are bound for each IMRAD ro
 - **Introduction** *(group)*
 -   **Motivation and scope**
 -   **Contributions**
+
 ## Methods
 
 - **Methods** *(group)*
@@ -22,6 +23,7 @@ This page summarizes which **sheaf fragment tracks** are bound for each IMRAD ro
 -   **pymdp simulation harness**
 -   **Lean formalization boundary**
 -   **Sheaf composition**
+
 ## Results
 
 - **Results** *(group)*
@@ -29,10 +31,12 @@ This page summarizes which **sheaf fragment tracks** are bound for each IMRAD ro
 -   **Free-energy decomposition**
 -   **T-maze active-inference rollout**
 -   **Validation invariants**
+
 ## Discussion
 
 - **Discussion** *(group)*
 -   **Limitations and outlook**
+
 ## Appendix
 
 - **Appendix** *(group)*

@@ -179,6 +179,8 @@ def render_report_markdown(report: CoverageReport, *, project_root: Path) -> str
         current_imrad: ImradBlock | None = None
         for section in report.manifest.sections:
             if section.imrad != current_imrad:
+                if current_imrad is not None:
+                    lines.append("")
                 current_imrad = section.imrad
                 lines.append(f"## {_imrad_heading(section.imrad)}")
                 lines.append("")
