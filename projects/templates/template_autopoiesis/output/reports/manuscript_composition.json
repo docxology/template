@@ -56,6 +56,6 @@
     }
   ],
   "ordered_inputs_sha256": "bf81bdae0124bb9e9be6728de9bd40efd4ed97f48015a3f21116eb68ffdd6f3a",
-  "project": "template_autopoiesis",
+  "project": "templates/template_autopoiesis",
   "schema_version": "template-manuscript-composition-v1"
 }

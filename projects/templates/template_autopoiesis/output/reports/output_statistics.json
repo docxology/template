@@ -131,7 +131,7 @@
       "exists": true,
       "file_count": 3,
       "size_mb": "0.01",
-      "total_size_bytes": 10267,
+      "total_size_bytes": 10277,
       "largest_files": [
         {
           "name": "test_results.json",
@@ -142,7 +142,7 @@
         {
           "name": "manuscript_composition.json",
           "size_mb": "0.00",
-          "size_bytes": 2114,
+          "size_bytes": 2124,
           "path": "reports/manuscript_composition.json"
         },
         {
@@ -257,7 +257,7 @@
     }
   },
   "total_files": 123,
-  "total_size_mb": 5.385514259338379,
+  "total_size_mb": 5.385523796081543,
   "largest_files": [
     {
       "name": "source-web-fonts.js",
@@ -336,7 +336,7 @@
     "web": 3.444025993347168,
     "figures": 0.44089412689208984,
     "data": 0.0022029876708984375,
-    "reports": 0.009791374206542969,
+    "reports": 0.009800910949707031,
     "children": 0.04832744598388672,
     "manuscript": 0.08751773834228516,
     "root": 0.6763772964477539

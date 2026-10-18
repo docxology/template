@@ -5,3 +5,7 @@ allow_infrastructure_imports:
   # The generator-custody gate binds the actual platform version and implementation
   # custody digests of the supervisor that runs children; it never runs in a child.
   - src/template_autopoiesis/gates/generator_custody.py
+  # Manuscript reporting consumes the platform's validated same-run Project Tests
+  # measurement only when explicitly nominated by the pipeline; standalone
+  # measurement and generated numerical children retain their independent paths.
+  - src/template_autopoiesis/manuscript/manuscript_variables.py

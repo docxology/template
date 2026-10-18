@@ -132,7 +132,7 @@
       "exists": true,
       "file_count": 32,
       "size_mb": "0.41",
-      "total_size_bytes": 431692,
+      "total_size_bytes": 431702,
       "largest_files": [
         {
           "name": "manuscript_staleness_report.json",
@@ -241,31 +241,24 @@
     },
     "root": {
       "exists": true,
-      "file_count": 2,
-      "size_mb": "7.47",
-      "total_size_bytes": 7832149,
+      "file_count": 1,
+      "size_mb": "4.03",
+      "total_size_bytes": 4226061,
       "largest_files": [
         {
           "name": "template_active_inference_combined.pdf",
           "size_mb": "4.03",
           "size_bytes": 4226061,
           "path": "template_active_inference_combined.pdf"
-        },
-        {
-          "name": "arxiv_submission_20260814.tar.gz",
-          "size_mb": "3.44",
-          "size_bytes": 3606088,
-          "path": "arxiv_submission_20260814.tar.gz"
         }
       ],
       "extensions": {
-        ".gz": 1,
         ".pdf": 1
       }
     }
   },
-  "total_files": 179,
-  "total_size_mb": 26.35186004638672,
+  "total_files": 178,
+  "total_size_mb": 22.9128360748291,
   "largest_files": [
     {
       "name": "template_active_inference_combined.pdf",
@@ -280,13 +273,6 @@
       "size_bytes": 4226061,
       "category": "root",
       "path": "template_active_inference_combined.pdf"
-    },
-    {
-      "name": "arxiv_submission_20260814.tar.gz",
-      "size_mb": "3.44",
-      "size_bytes": 3606088,
-      "category": "root",
-      "path": "arxiv_submission_20260814.tar.gz"
     },
     {
       "name": "source-web-fonts.js",
@@ -336,6 +322,13 @@
       "size_bytes": 470707,
       "category": "figures",
       "path": "figures/scholarship_source_map.png"
+    },
+    {
+      "name": "artifact_contract_map.png",
+      "size_mb": "0.44",
+      "size_bytes": 466540,
+      "category": "arxiv_submission",
+      "path": "arxiv_submission/figures/artifact_contract_map.png"
     }
   ],
   "missing_expected_files": [],
@@ -344,10 +337,10 @@
     "web": 3.7701969146728516,
     "figures": 3.7873992919921875,
     "data": 2.817331314086914,
-    "reports": 0.4116935729980469,
+    "reports": 0.41170310974121094,
     "arxiv_submission": 3.9248781204223633,
     "manuscript": 0.14075565338134766,
-    "root": 7.4693193435668945
+    "root": 4.030285835266113
   },
   "inventory_mode": "stable-shippable-output-v1",
   "inventory_scope": "stage5-delivery-mirror",
@@ -365,7 +358,6 @@
     ".bbl": 1,
     ".tex": 1,
     ".bib": 2,
-    ".yaml": 1,
-    ".gz": 1
+    ".yaml": 1
   }
 }
