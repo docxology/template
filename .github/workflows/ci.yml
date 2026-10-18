@@ -223,12 +223,22 @@ jobs:
           test -f /opt/google/chrome/resources.pak
           "$chrome" --version
           echo "CHROME_EXECUTABLE_PATH=$chrome" >> "$GITHUB_ENV"
-      - name: Prepare hash-required offline cache for independently installed native contracts
-        if: >-
-          matrix.module == 'tests/infra_tests/reporting/test_native_whole_portability.py' ||
-          matrix.module == 'tests/infra_tests/reporting/test_native_hosted_credentials.py'
+      - name: Prepare hash-required offline cache for the installed credential contract
+        if: matrix.module == 'tests/infra_tests/reporting/test_native_hosted_credentials.py'
         timeout-minutes: 10
         uses: ./.github/actions/setup-native-offline-cache
+      - name: Prepare full locked project-sync cache for the relocated native contract
+        if: matrix.module == 'tests/infra_tests/reporting/test_native_whole_portability.py'
+        timeout-minutes: 10
+        run: |
+          set -euo pipefail
+          # This fixture consumes registry and VCS metadata through uv sync, not pip export.
+          # Warm its actual Root defaults in a disposable environment before offline execution.
+          unset UV_FROZEN
+          native_contract_scratch=$(mktemp -d "$RUNNER_TEMP/native-contract-warm.XXXXXX")
+          UV_PROJECT_ENVIRONMENT="$native_contract_scratch/venv" \
+            uv sync --locked --group dev --group installed-build --no-python-downloads --python "$PWD/.venv/bin/python"
+          rm -r -- "$native_contract_scratch"
       - name: Prepare the Active exemplar own locked environment for coverage probes
         if: >-
           matrix.module == 'tests/infra_tests/documentation/test_counts_coverage_support.py' ||
