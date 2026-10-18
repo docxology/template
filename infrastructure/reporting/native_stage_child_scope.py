@@ -60,30 +60,67 @@ class _StageScope:
     artifacts: dict[str, str] = field(default_factory=dict)
 
     def verify(self) -> SnapshotReader:
+        owner, source, specification, directory = self.owner, self.source, self.specification, self.directory
+        artifacts, current_scope = self.artifacts, _CURRENT.get()
+        held_artifacts = dict(artifacts)
+
+        def check_scope() -> None:
+            if (
+                self.owner is not owner
+                or self.source is not source
+                or self.specification is not specification
+                or self.directory is not directory
+                or self.artifacts is not artifacts
+                or artifacts != held_artifacts
+                or _CURRENT.get() is not current_scope
+                or current_native_producer_operation() is not owner
+                or owner.source is not source
+                or owner.owner_pid != os.getpid()
+            ):
+                raise ValueError(
+                    "native stage DATA scope differs from its actual live independently admitted child owner"
+                )
+
+        check_scope()
+        reader = SnapshotReader(source.bindings.current_root, native_producer_operation=owner)
+        with owner._verification_guard(reader, run_id=owner.run_id, deadline=owner.deadline):
+            check_scope()
+            try:
+                self._verify_data(reader, owner, source, specification, directory)
+            finally:
+                check_scope()
+        check_scope()
+        self._verify_data(reader, owner, source, specification, directory)
+        if not reader.unchanged():
+            raise ValueError("native stage DATA scope changed during complete Source closure")
+        return reader
+
+    def _verify_data(
+        self,
+        reader: SnapshotReader,
+        owner: NativeProducerOperation,
+        source: NativeSourceContext,
+        specification: ArtifactSnapshot,
+        directory: Path,
+    ) -> None:
+        """Fixed scope comparisons; no Source admission or returned authority."""
         from infrastructure.reporting.native_stage_child import directory_identity
 
-        if (
-            current_native_producer_operation() is not self.owner
-            or self.owner.source is not self.source
-            or self.owner.owner_pid != os.getpid()
-        ):
-            raise ValueError("native stage DATA scope differs from its actual live independently admitted child owner")
-        reader = SnapshotReader(self.source.bindings.current_root, native_producer_operation=self.owner)
-        self.owner.verify(reader, run_id=self.owner.run_id, deadline=self.owner.deadline)
-        held = reader.read(self.specification.relative)
+        held = reader.read(specification.relative)
         spec = held.json_object()
         validate_specification(spec)
         if (
-            held.sha256 != self.specification.sha256
-            or spec["run_id"] != self.owner.run_id
-            or spec["source"] != json.loads(self.source.descriptor(spec["scope"], deadline=self.owner.deadline))
+            held.sha256 != specification.sha256
+            or held.content != specification.content
+            or spec["run_id"] != owner.run_id
+            or spec["source"] != json.loads(source._descriptor_data(spec["scope"], deadline=owner.deadline))
             or spec["parent_pid"] != os.getppid()
-            or self.directory != reader.root / spec["directory"]
-            or self.directory != self.owner.stage_scope_directory(spec["scope"])
-            or directory_identity(self.directory) != tuple(spec["directory_identity"])
+            or spec["deadline_monotonic"] != owner.deadline
+            or directory != reader.root / spec["directory"]
+            or directory != owner._stage_scope_directory_data(spec["scope"])
+            or directory_identity(directory) != tuple(spec["directory_identity"])
         ):
             raise ValueError("native stage DATA scope lost its actual parent specification or physical directory")
-        return reader
 
 
 _CURRENT: ContextVar[_StageScope | None] = ContextVar("template_actual_native_stage_scope", default=None)

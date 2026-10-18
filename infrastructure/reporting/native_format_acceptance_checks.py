@@ -189,8 +189,16 @@ def native_tool_record(
         if producer is not None:
             raise ValueError("fixed auxiliary print and full native owners cannot be combined")
         auxiliary_print.verify()
-    if producer is not None:
+    if producer is not None and prepared_stage is None:
         producer.verify(SnapshotReader(root), run_id=run_id, deadline=deadline)
+    elif prepared_stage is not None and producer is not None:
+        if (
+            run_id != producer.run_id
+            or type(deadline) not in (int, float)
+            or not math.isfinite(deadline)
+            or deadline > producer.deadline
+        ):
+            raise ValueError("native prepared-stage ToolAPI run or original clock differs")
     # Existing callers keep their finite 120-second phase. A Source-owned
     # complete-suite/analysis controller may supply its already-live phase clock.
     # No callback, status or serialized original is accepted as authority.
@@ -211,7 +219,12 @@ def native_tool_record(
     if prepared_stage is not None:
         from infrastructure.reporting.native_stage_child import NativeStageChildPreparation
 
-        if type(prepared_stage) is not NativeStageChildPreparation or producer is None or html_child is not None:
+        if (
+            type(prepared_stage) is not NativeStageChildPreparation
+            or producer is None
+            or prepared_stage.owner is not producer
+            or html_child is not None
+        ):
             raise ValueError("native stage requires its exact actual factory; child roles cannot be combined")
         working_directory = prepared_stage.verify_tool_launch(
             root, directory, name, arguments, env, operation_deadline, purpose

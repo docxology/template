@@ -144,8 +144,21 @@ class NativeStageChildPreparation:
         purpose: str,
     ) -> Path:
         """Called before actual ToolAPI Popen; no generic cwd or role override."""
-        reader = SnapshotReader(root, native_producer_operation=self.owner)
+        owner, source, scope = self.owner, self.source, self.scope
+        original_deadline = self.deadline
+        command, environment, cwd = self.command, self.environment, self.cwd
+        registry = _PREPARED
+        reader = SnapshotReader(root, native_producer_operation=owner)
         self.verify_owner(reader)
+        self._verify_factory_data(reader, owner, source, scope, original_deadline)
+        self._verify_owner_data(reader)
+        if (
+            _PREPARED is not registry
+            or self.command is not command
+            or self.environment is not environment
+            or self.cwd is not cwd
+        ):
+            raise ValueError("native stage launch factory changed during complete Source closure")
         if (
             root != self.source.bindings.current_root
             or directory != self.directory
@@ -223,6 +236,7 @@ def prepare_native_stage_child(
     if owner is None or owner.source is not source or type(deadline) not in (float, int) or not math.isfinite(deadline):
         raise ValueError("native stage factory requires the actual live Source owner and original finite deadline")
     root = source.bindings.current_root
+    registry, original_registry = _PREPARED, dict(_PREPARED)
     reader = SnapshotReader(root, native_producer_operation=owner)
     # All preparation is fixed synchronous DATA work. The actual Source
     # correspondence closes before the factory enters the live registry.
@@ -237,11 +251,42 @@ def prepare_native_stage_child(
             owner=owner,
             reader=reader,
         )
+        execution = (
+            prepared.command,
+            tuple(prepared.command),
+            prepared.environment,
+            dict(prepared.environment),
+            prepared.cwd,
+            str(prepared.cwd),
+        )
         prepared._verify_owner_data(reader)
         if not reader.unchanged():
             raise ValueError("native stage fixed prelaunch Source/request changed during preparation")
+    if (
+        _PREPARED is not registry
+        or len(registry) != len(original_registry)
+        or any(registry.get(key) is not value for key, value in original_registry.items())
+        or current_native_producer_operation() is not owner
+        or owner.source is not source
+        or prepared._key is not _FACTORY_KEY
+        or prepared.owner is not owner
+        or prepared.source is not source
+        or prepared.scope != scope
+        or prepared.deadline != deadline
+        or id(prepared) in registry
+        or prepared.command is not execution[0]
+        or tuple(prepared.command) != execution[1]
+        or prepared.environment is not execution[2]
+        or dict(prepared.environment) != execution[3]
+        or prepared.cwd is not execution[4]
+        or str(prepared.cwd) != execution[5]
+    ):
+        raise ValueError("native stage unpublished factory changed during complete Source closure")
+    prepared._verify_owner_data(reader)
+    if not reader.unchanged():
+        raise ValueError("native stage physical inputs changed during final Source closure")
     remaining(deadline)
-    _PREPARED[id(prepared)] = prepared
+    registry[id(prepared)] = prepared
     return prepared
 
 

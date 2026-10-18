@@ -45,64 +45,120 @@ def launch_owned_native_stage(
         return None
     from infrastructure.reporting.native_format_acceptance_checks import native_tool_record
     from infrastructure.reporting.native_format_acceptance_contracts import create_private_native_directory
-    from infrastructure.reporting.native_stage_child import prepare_native_stage_child
-    from infrastructure.reporting.native_stage_child_contracts import PURPOSE
+    from infrastructure.reporting import native_stage_child as factory
+    from infrastructure.reporting.native_stage_child_contracts import PURPOSE, STAGE_SCRIPTS
+    from infrastructure.project.public_reference_git import remaining
 
-    if repo != owner.source.bindings.current_root:
+    source = owner.source
+    if repo != source.bindings.current_root:
         raise ValueError("native stage actual repository differs from its live Source owner")
     scope = project.relative_to(repo / "projects").as_posix()
-    identity = SnapshotReader._identity(request)
-    held = read_bytes_confined(request.parent, request, max_bytes=16 * 1024 * 1024)
-    if identity != SnapshotReader._identity(request):
-        raise ValueError("native stage controller request changed during its actual confined read")
-    payload = json_object_from_bytes(held)
-    owner.verify(SnapshotReader(repo), run_id=owner.run_id, deadline=deadline)
-    scope_directory = owner.stage_scope_directory(scope)
-    from infrastructure.reporting.native_stage_child_contracts import STAGE_SCRIPTS
-
-    protocol = payload.get("schema")
-    if protocol == "template-python-stage/3":
-        argv = payload.get("argv")
-        if (
-            not isinstance(argv, list)
-            or not argv
-            or not isinstance(argv[0], str)
-            or not Path(argv[0]).is_absolute()
-            or ".." in Path(argv[0]).parts
-        ):
-            raise ValueError("native stage selector lacks its actual absolute Source script")
-        selected = Path(argv[0]).relative_to(repo).as_posix()
-        if selected in {
-            "scripts/pipeline/stage_00_setup.py",
-            "scripts/pipeline/stage_01_test.py",
-            "scripts/pipeline/stage_05_copy.py",
-        }:
-            # Only these exact Source core scripts keep the ordinary supervisor.
-            # They receive no fixed child capability. Unknown stage selection
-            # and every eligible/analysis factory refusal remain fail-closed.
-            return None
-        if selected not in STAGE_SCRIPTS:
-            raise ValueError("native stage selector refuses an unknown Source core script")
-    elif protocol != "template-python-analysis/4":
-        raise ValueError("native stage selector cannot downgrade an unknown protocol")
-    directory = (
-        scope_directory
-        / "native-stage"
-        / hashlib.sha256(owner.run_id.encode()).hexdigest()
-        / hashlib.sha256(str(payload.get("stage_key")).encode()).hexdigest()
-        / secrets.token_hex(16)
-    )
-    owner.verify(SnapshotReader(repo), run_id=owner.run_id, deadline=deadline)
-    create_private_native_directory(repo, directory)
-    copied = directory / "parent-request.json"
-    atomic_write_bytes_confined(repo, copied, held, mode=0o600)
+    registry, original_registry = factory._PREPARED, dict(factory._PREPARED)
     reader = SnapshotReader(repo, native_producer_operation=owner)
-    copied_request = reader.read(copied.relative_to(repo).as_posix())
-    if copied_request.content != held or identity != SnapshotReader._identity(request):
-        raise ValueError("native stage controller request changed during parent custody transfer")
-    prepared = prepare_native_stage_child(
-        owner.source, scope, copied_request, directory, deadline=deadline, environment=env
-    )
+    prepared = None
+    execution = None
+    original_environment = dict(env)
+    with owner._verification_guard(reader, run_id=owner.run_id, deadline=deadline):
+        identity = SnapshotReader._identity(request)
+        held = read_bytes_confined(request.parent, request, max_bytes=16 * 1024 * 1024)
+        if identity != SnapshotReader._identity(request):
+            raise ValueError("native stage controller request changed during its actual confined read")
+        payload = json_object_from_bytes(held)
+        scope_directory = owner._stage_scope_directory_data(scope)
+        protocol = payload.get("schema")
+        ordinary_stage = False
+        if protocol == "template-python-stage/3":
+            argv = payload.get("argv")
+            if (
+                not isinstance(argv, list)
+                or not argv
+                or not isinstance(argv[0], str)
+                or not Path(argv[0]).is_absolute()
+                or ".." in Path(argv[0]).parts
+            ):
+                raise ValueError("native stage selector lacks its actual absolute Source script")
+            selected = Path(argv[0]).relative_to(repo).as_posix()
+            ordinary_stage = selected in {
+                "scripts/pipeline/stage_00_setup.py",
+                "scripts/pipeline/stage_01_test.py",
+                "scripts/pipeline/stage_05_copy.py",
+            }
+            if not ordinary_stage and selected not in STAGE_SCRIPTS:
+                raise ValueError("native stage selector refuses an unknown Source core script")
+        elif protocol != "template-python-analysis/4":
+            raise ValueError("native stage selector cannot downgrade an unknown protocol")
+        if not ordinary_stage:
+            directory = (
+                scope_directory
+                / "native-stage"
+                / hashlib.sha256(owner.run_id.encode()).hexdigest()
+                / hashlib.sha256(str(payload.get("stage_key")).encode()).hexdigest()
+                / secrets.token_hex(16)
+            )
+            create_private_native_directory(repo, directory)
+            copied = directory / "parent-request.json"
+            atomic_write_bytes_confined(repo, copied, held, mode=0o600)
+            copied_request = reader.read(copied.relative_to(repo).as_posix())
+            if copied_request.content != held or identity != SnapshotReader._identity(request):
+                raise ValueError("native stage controller request changed during parent custody transfer")
+            prepared = factory._prepare_native_stage_child_data(
+                source,
+                scope,
+                copied_request,
+                directory,
+                deadline=deadline,
+                environment=original_environment,
+                owner=owner,
+                reader=reader,
+            )
+            execution = (
+                prepared.command,
+                tuple(prepared.command),
+                prepared.environment,
+                dict(prepared.environment),
+                prepared.cwd,
+                str(prepared.cwd),
+            )
+            prepared._verify_owner_data(reader)
+        if not reader.unchanged():
+            raise ValueError("native dispatcher inputs changed before complete Source closure")
+    if (
+        current_native_producer_operation() is not owner
+        or owner.source is not source
+        or factory._PREPARED is not registry
+        or len(registry) != len(original_registry)
+        or any(registry.get(key) is not value for key, value in original_registry.items())
+        or dict(env) != original_environment
+        or identity != SnapshotReader._identity(request)
+        or read_bytes_confined(request.parent, request, max_bytes=16 * 1024 * 1024) != held
+    ):
+        raise ValueError("native dispatcher owner/request/registry changed during Source closure")
+    if prepared is not None:
+        if (
+            prepared._key is not factory._FACTORY_KEY
+            or prepared.owner is not owner
+            or prepared.source is not source
+            or prepared.scope != scope
+            or prepared.deadline != deadline
+            or id(prepared) in registry
+            or execution is None
+            or prepared.command is not execution[0]
+            or tuple(prepared.command) != execution[1]
+            or prepared.environment is not execution[2]
+            or dict(prepared.environment) != execution[3]
+            or prepared.cwd is not execution[4]
+            or str(prepared.cwd) != execution[5]
+        ):
+            raise ValueError("native dispatcher did not retain its one unpublished actual factory")
+        prepared._verify_owner_data(reader)
+    if not reader.unchanged():
+        raise ValueError("native dispatcher physical inputs changed during final Source closure")
+    remaining(deadline)
+    if prepared is None:
+        # Only the three exact Source core scripts retain their ordinary
+        # supervisor, after this fresh boundary has completely closed.
+        return None
+    registry[id(prepared)] = prepared
     observed_tools: list[dict[str, Any]] = []
     child_binding = None
     failure: Exception | None = None
