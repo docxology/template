@@ -31,6 +31,7 @@ _ISOLATED_ROUTINE_MODULES = frozenset(
     {
         "tests/infra_tests/core/test_execution_contract.py",
         "tests/infra_tests/core/test_project_test_measurement.py",
+        "tests/infra_tests/project/test_root_acceptance.py",
     }
 )
 
@@ -61,7 +62,10 @@ def infrastructure_files(root: Path, changed: tuple[str, ...] = ()) -> tuple[str
             paths.append(root / "tests/infra_tests")
         elif name.startswith(("tests/infra_tests/", "tests/integration/")) and relative.suffix == ".py":
             selected = root / relative
-            if relative.name == "conftest.py" or not selected.exists():
+            # Helpers are dependencies of the containing test package, not
+            # collectable modules. Preserve its complete test_*.py consumer
+            # roster, matching the Source-owned pytest python_files pattern.
+            if not relative.match("test_*.py") or not selected.exists():
                 selected = selected.parent
                 while not selected.exists() and selected != root / "tests":
                     selected = selected.parent
@@ -104,8 +108,8 @@ def infrastructure_shards(root: Path, changed: tuple[str, ...] = (), count: int 
     if count is None:
         # Package-level ownership can expand the routine roster by an order of
         # magnitude. Keep its complete selection and original 540-second clock,
-        # with at most eight jobs and a nominal 20-module target per job.
-        count = min(8 - len(isolated), max(3, (len(files) + 19) // 20))
+        # with at most ten jobs and a nominal 20-module target per job.
+        count = min(10 - len(isolated), max(3, (len(files) + 19) // 20))
     shards: list[list[str]] = [[] for _ in range(min(count, len(files)))]
     loads = [0] * len(shards)
     for name in sorted(files, key=lambda p: (-(root / p).stat().st_size, p)):

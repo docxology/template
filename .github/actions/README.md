@@ -31,3 +31,7 @@ source-declared tools and one owned pinned local model before observations.
 
 [`setup-acceptance-fixtures`](setup-acceptance-fixtures/README.md) materializes
 identical pinned source inputs for all complete acceptance and release readers.
+
+[`setup-native-offline-cache`](setup-native-offline-cache/README.md) shares the
+Source-locked hash-required cache preparation between functional installed
+contracts and complete native readiness.

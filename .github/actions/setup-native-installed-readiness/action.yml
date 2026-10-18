@@ -84,35 +84,4 @@ runs:
         PYTHON
         fi
     - name: Warm exact Source-locked offline dependencies for cold installed wheels
-      shell: bash
-      run: |
-        set -euo pipefail
-        for variable in "${!UV_@}" "${!PIP_@}"; do unset "$variable"; done
-        unset PYTHONPATH PYTHONHOME VIRTUAL_ENV
-        # Source archive hashes do not attest restored derived cache bytes.
-        # Keep this fresh job-owned cache through the unchanged cold operation.
-        cache=$(mktemp -d "$RUNNER_TEMP/native-installed-cache.XXXXXX")
-        chmod 700 "$cache"
-        export UV_CACHE_DIR="$cache" UV_LINK_MODE=copy
-        echo "UV_CACHE_DIR=$cache" >> "$GITHUB_ENV"
-        interpreter="$GITHUB_WORKSPACE/.venv/bin/python"
-        build_requirements=$(mktemp "$RUNNER_TEMP/native-build-requirements.XXXXXX")
-        uv export --directory "$GITHUB_WORKSPACE" --locked --only-group installed-build --no-emit-project --no-emit-local --no-header --no-annotate --output-file "$build_requirements"
-        for scope in root; do
-          metadata="$GITHUB_WORKSPACE"
-          if [ "$scope" != root ]; then metadata="$GITHUB_WORKSPACE/projects/$scope"; fi
-          requirements=$(mktemp "$RUNNER_TEMP/native-requirements.XXXXXX")
-          environment=$(mktemp -d "$RUNNER_TEMP/native-dependency-cache.XXXXXX")
-          if [ "$scope" = root ]; then
-            uv export --directory "$metadata" --locked --group public-exemplars --group rendering --group rendering-pptx --no-emit-package desloppify --group installed-build --no-emit-project --no-emit-local --no-header --no-annotate --output-file "$requirements"
-          else
-            uv export --directory "$metadata" --locked --no-default-groups --no-emit-project --no-emit-local --no-header --no-annotate --output-file "$requirements"
-          fi
-          "$interpreter" -m infrastructure.project.locked_dependency_export --metadata-root "$metadata" --requirements "$requirements"
-          uv venv --no-project --no-python-downloads --python "$interpreter" "$environment"
-          uv pip sync --no-config --no-build --require-hashes --python "$environment/bin/python" "$build_requirements"
-          uv pip install --no-config --no-build-isolation --no-deps --require-hashes --python "$environment/bin/python" --target "$environment/prepared-dependencies" --requirements "$requirements"
-          rm -r "$environment"
-          rm "$requirements"
-        done
-        rm "$build_requirements"
+      uses: ./.github/actions/setup-native-offline-cache

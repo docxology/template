@@ -2,15 +2,22 @@
 
 from __future__ import annotations
 
+import hashlib
 import json
 import shutil
 import subprocess
 import sys
+import sysconfig
+import tomllib
+import venv
+from importlib.metadata import distribution
 from pathlib import Path
 
 import pytest
+from packaging.requirements import Requirement as PackageRequirement
 
 from infrastructure.core.implementation_custody import bytecode_audit_bootstrap
+from infrastructure.core.testing.pytest_profiles import TEST_RUNNER_BASE_DEPS
 from infrastructure.project.public_acceptance_dependencies import MissingRuntimeProvider, admit_runtime_providers
 from infrastructure.project.public_acceptance_evidence import (
     aggregate_pytest,
@@ -44,7 +51,9 @@ def _producer(
     body: str,
     installed: bool = True,
     conftest: str | None = None,
+    selected_runtime: tuple[Path, dict] | None = None,
 ) -> dict:
+    python, actual_runtime = selected_runtime or (Path(sys.executable), runtime_identity())
     project = root / "projects" / PROJECT
     (project / "src").mkdir(exist_ok=True)
     (project / "tests").mkdir(exist_ok=True)
@@ -93,13 +102,13 @@ def _producer(
         "source_identity": project_source_identity(root, PROJECT),
         "deliverables_identity": deliverable_identity(root, PROJECT),
         "source_hashes": project_python_hashes(root, PROJECT),
-        "runtime": runtime_identity(),
+        "runtime": actual_runtime,
         "dependency_providers": providers,
         "audit_roots": [str(site / MODULE)],
     }
     spec_binding = write_json(root, execution_spec, spec_value)
     canonical = pytest_command(
-        Path(sys.executable),
+        python,
         root,
         directory,
         "actual-provider-producer",
@@ -114,7 +123,7 @@ def _producer(
     )
     result = subprocess.run(
         [
-            sys.executable,
+            str(python),
             "-I",
             "-X",
             f"pycache_prefix={prefix}",
@@ -138,7 +147,7 @@ def _producer(
             *canonical[canonical.index("--") + 1 :],
         ],
         cwd=root.parent,
-        env=cell_environment(Path(sys.executable), directory),
+        env=cell_environment(python, directory),
         capture_output=True,
         text=True,
         timeout=30,
@@ -254,7 +263,87 @@ def test_missing_admitted_provider_wheel_is_a_typed_blocker(provider_evidence) -
         admit_runtime_providers(root, PROJECT, {}, {}, SnapshotReader(root))
 
 
-def test_actual_missing_installed_provider_does_not_execute_pytest(provider_evidence) -> None:
+@pytest.fixture(scope="module")
+def provider_absent_runtime(tmp_path_factory: pytest.TempPathFactory) -> tuple[Path, dict]:
+    """A real separate interpreter stays provider-free even when CI installs it."""
+    runtime = tmp_path_factory.mktemp("provider-absent-runtime").resolve()
+    venv.EnvBuilder(with_pip=False).create(runtime)
+    python = runtime / "bin/python"
+    # Copy actual required distribution bodies/metadata from this same-ABI
+    # runtime, without inheriting its site directory or requiring a wheel cache.
+    requirements = tomllib.loads((ROOT / "pyproject.toml").read_text())["project"]["dependencies"]
+    pending = [PackageRequirement(item) for item in (*requirements, *TEST_RUNNER_BASE_DEPS, "coverage")]
+    visited: set[tuple[str, tuple[str, ...]]] = set()
+    selected = {}
+    while pending:
+        requirement = pending.pop()
+        if requirement.marker is not None and not requirement.marker.evaluate():
+            continue
+        installed = distribution(requirement.name)
+        assert requirement.specifier.contains(installed.version, prereleases=True)
+        extras = tuple(sorted(requirement.extras))
+        key = (installed.metadata["Name"], extras)
+        if key in visited:
+            continue
+        visited.add(key)
+        selected[key[0]] = installed
+        for raw in installed.requires or ():
+            dependency = PackageRequirement(raw)
+            if dependency.marker is None or any(
+                dependency.marker.evaluate({"extra": extra}) for extra in ("", *extras)
+            ):
+                dependency.marker = None
+                pending.append(dependency)
+    assert PACKAGE not in {name.lower().replace("_", "-") for name in selected}
+    site = Path(sysconfig.get_path("purelib")).resolve()
+    selected_site = runtime / "lib" / f"python{sys.version_info.major}.{sys.version_info.minor}" / "site-packages"
+    for installed in selected.values():
+        assert installed.files
+        for member in installed.files:
+            origin = Path(str(installed.locate_file(member))).absolute()
+            # Entry-point scripts outside purelib are unnecessary for -m/-c.
+            if ".." in member.parts or not origin.is_relative_to(site) or origin.suffix == ".pyc":
+                continue
+            assert not origin.is_symlink() and origin.resolve().is_relative_to(site) and origin.is_file()
+            destination = selected_site / origin.relative_to(site)
+            destination.parent.mkdir(parents=True, exist_ok=True)
+            before = hashlib.sha256(origin.read_bytes()).digest()
+            if not destination.exists():
+                shutil.copyfile(origin, destination, follow_symlinks=False)
+            assert hashlib.sha256(destination.read_bytes()).digest() == before
+            assert hashlib.sha256(origin.read_bytes()).digest() == before
+    environment = cell_environment(python, runtime)
+    observed = subprocess.run(
+        [
+            str(python),
+            "-I",
+            "-c",
+            (
+                "import importlib.util,importlib.metadata,json,sys\n"
+                f"assert importlib.util.find_spec({MODULE!r}) is None\n"
+                "try:\n"
+                f" importlib.metadata.distribution({PACKAGE!r})\n"
+                "except importlib.metadata.PackageNotFoundError:\n pass\n"
+                "else:\n raise AssertionError('provider unexpectedly installed')\n"
+                f"sys.path.insert(0,{str(ROOT)!r})\n"
+                "from infrastructure.project.public_acceptance_evidence import runtime_identity\n"
+                "print(json.dumps(runtime_identity()))\n"
+            ),
+        ],
+        capture_output=True,
+        text=True,
+        timeout=20,
+        env=environment,
+    )
+    assert observed.returncode == 0, observed.stdout + observed.stderr
+    identity = json.loads(observed.stdout)
+    assert identity["executable"] == str(python) and identity["missing"] == []
+    return python, identity
+
+
+def test_actual_missing_installed_provider_does_not_execute_pytest(
+    provider_evidence, provider_absent_runtime: tuple[Path, dict]
+) -> None:
     root, existing = provider_evidence
     result = _producer(
         root,
@@ -263,7 +352,9 @@ def test_actual_missing_installed_provider_does_not_execute_pytest(provider_evid
         collect=False,
         body="def test_must_not_run():\n    raise AssertionError('missing provider reached tests')\n",
         installed=False,
+        selected_runtime=provider_absent_runtime,
     )
-    assert result["raw"]["exit_code"] == 75
+    assert result["raw"]["exit_code"] == 75, result["raw"]["diagnostic"]
+    assert result["raw"]["pytest_exit_code"] is None
     assert result["raw"]["nodeids"] == []
     assert "not installed" in result["raw"]["diagnostic"]

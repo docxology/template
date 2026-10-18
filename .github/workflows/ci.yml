@@ -223,22 +223,27 @@ jobs:
           test -f /opt/google/chrome/resources.pak
           "$chrome" --version
           echo "CHROME_EXECUTABLE_PATH=$chrome" >> "$GITHUB_ENV"
-      - name: Warm locked offline wheels for independently installed native contracts
+      - name: Prepare hash-required offline cache for independently installed native contracts
         if: >-
           matrix.module == 'tests/infra_tests/reporting/test_native_whole_portability.py' ||
           matrix.module == 'tests/infra_tests/reporting/test_native_hosted_credentials.py'
         timeout-minutes: 10
+        uses: ./.github/actions/setup-native-offline-cache
+      - name: Prepare the Active exemplar own locked environment for coverage probes
+        if: >-
+          matrix.module == 'tests/infra_tests/documentation/test_counts_coverage_support.py' ||
+          matrix.module == 'tests/infra_tests/documentation/test_counts_coverage_measurement.py'
+        timeout-minutes: 10
         run: |
           set -euo pipefail
-          # A restored .venv does not supply the fresh offline fixture's wheel cache.
-          # Match the actual Root runtime defaults and the separately installed build tools.
           unset UV_FROZEN
-          native_contract_scratch=$(mktemp -d "$RUNNER_TEMP/native-contract-warm.XXXXXX")
-          df -h "$RUNNER_TEMP"
-          UV_PROJECT_ENVIRONMENT="$native_contract_scratch/venv" \
-            uv sync --locked --group dev --group installed-build --no-python-downloads --python .venv/bin/python
-          rm -r -- "$native_contract_scratch"
-          df -h "$RUNNER_TEMP"
+          # The probes consume this real project environment offline without syncing.
+          # Copied interpreter entries keep nested runtime paths within the checkout.
+          project=projects/templates/template_active_inference
+          .venv/bin/python -m venv --copies "$project/.venv"
+          uv sync --project "$project" --locked --extra dev \
+            --no-python-downloads --python "$PWD/.venv/bin/python"
+
       - name: Warm locked offline wheels for the relocated-runner contract
         if: matrix.module == 'tests/infra_tests/documentation/test_counts_refresh.py'
         timeout-minutes: 10
