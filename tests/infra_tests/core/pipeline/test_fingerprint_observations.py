@@ -472,13 +472,14 @@ def test_next_boundary_refuses_actual_changed_loaded_source_after_prior_matching
     assert outside.read_text() == "private invented sentinel\n"
 
 
-def test_declared_lean_build_is_runtime_without_hiding_nested_authored_inputs(tmp_path: Path) -> None:
+@pytest.mark.parametrize("relative", ["lean", "formal/lean"])
+def test_declared_lean_build_is_runtime_without_hiding_nested_authored_inputs(tmp_path: Path, relative: str) -> None:
     from infrastructure.core.pipeline.fingerprint_files import declared_lean_runtime_roots
     from infrastructure.core.pipeline.fingerprints import source_content_fingerprint
 
     repository = Path(__file__).resolve().parents[4]
     project = tmp_path / "project"
-    lean = project / "lean"
+    lean = project / relative
     lean.mkdir(parents=True)
     (lean / "lakefile.lean").write_text("import Lake\nopen Lake DSL\npackage Owned where\n")
     (lean / "lean-toolchain").write_text("leanprover/lean4:v4.35.0\n")
@@ -501,8 +502,9 @@ def test_declared_lean_build_is_runtime_without_hiding_nested_authored_inputs(tm
     assert source_content_fingerprint(repository, project) != before
 
 
+@pytest.mark.parametrize("relative", ["lean", "formal/lean"])
 @pytest.mark.parametrize("link", ["declaration", "ancestor"])
-def test_declared_lean_runtime_refuses_symbolic_source_components(tmp_path: Path, link: str) -> None:
+def test_declared_lean_runtime_refuses_symbolic_source_components(tmp_path: Path, link: str, relative: str) -> None:
     from infrastructure.core.pipeline.fingerprint_files import declared_lean_runtime_roots
 
     project = tmp_path / "project"
@@ -510,11 +512,29 @@ def test_declared_lean_runtime_refuses_symbolic_source_components(tmp_path: Path
     outside = tmp_path / "outside"
     outside.mkdir()
     (outside / "lakefile.lean").write_text("outside Source must not be selected\n")
+    lean = project / relative
+    lean.parent.mkdir(parents=True, exist_ok=True)
     if link == "ancestor":
-        (project / "lean").symlink_to(outside, target_is_directory=True)
+        lean.symlink_to(outside, target_is_directory=True)
     else:
-        (project / "lean").mkdir()
-        (project / "lean/lakefile.lean").symlink_to(outside / "lakefile.lean")
+        lean.mkdir()
+        (lean / "lakefile.lean").symlink_to(outside / "lakefile.lean")
     with pytest.raises(ValueError, match="symlink|no-follow"):
         declared_lean_runtime_roots(project)
     assert (outside / "lakefile.lean").read_text() == "outside Source must not be selected\n"
+
+
+def test_both_declared_lean_roots_require_their_own_physical_declaration(tmp_path: Path) -> None:
+    from infrastructure.core.pipeline.fingerprint_files import declared_lean_runtime_roots
+
+    expected = set()
+    for relative in ("lean", "formal/lean"):
+        lean = tmp_path / relative
+        lean.mkdir(parents=True)
+        (lean / "lakefile.lean").write_text("import Lake\n")
+        expected.add(lean / ".lake")
+        assert declared_lean_runtime_roots(tmp_path) == frozenset(expected)
+    (tmp_path / "lean/lakefile.lean").unlink()
+    assert declared_lean_runtime_roots(tmp_path) == frozenset({tmp_path / "formal/lean/.lake"})
+    (tmp_path / "formal/lean/lakefile.lean").unlink()
+    assert not declared_lean_runtime_roots(tmp_path)

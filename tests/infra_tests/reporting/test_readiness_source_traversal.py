@@ -391,23 +391,33 @@ print(json.dumps({{'forbidden_operations':len(events)}}))
     assert sentinel.read_bytes() == b"changed owned runtime sentinel"
 
 
-def _declared_lean(root: Path) -> Path:
-    """Use the actual public project's three pins as owned fixture DATA."""
+def _declared_lean(root: Path, relative: str) -> Path:
+    """Use actual public producer declarations and pins as owned fixture DATA."""
     import shutil
 
     _public(root)
-    lean = root / "projects" / _SCOPE / "lean"
-    lean.mkdir()
-    actual = Path(__file__).resolve().parents[3] / "projects/templates/template_active_inference/lean"
-    shutil.copyfile(actual.parent / ".gitignore", lean.parent / ".gitignore")
-    for name in ("lakefile.lean", "lean-toolchain", "lake-manifest.json", "TemplateActiveInference.lean"):
+    project = root / "projects" / _SCOPE
+    lean = project / relative
+    lean.mkdir(parents=True)
+    repository = Path(__file__).resolve().parents[3]
+    actual_project = (
+        repository / "projects/templates" / ("template_active_inference" if relative == "lean" else "template_formal")
+    )
+    actual = actual_project / relative
+    shutil.copyfile(actual_project / ".gitignore", project / ".gitignore")
+    implementation = "TemplateActiveInference.lean" if relative == "lean" else "AntProtocol.lean"
+    for name in ("lakefile.lean", "lean-toolchain", "lake-manifest.json", implementation):
         shutil.copyfile(actual / name, lean / name)
+    assert (lean / "lean-toolchain").read_text().strip() == "leanprover/lean4:v4.35.0"
     return lean
 
 
-def test_declared_lean_source_identity_is_portable_even_when_git_tracks_build_data(tmp_path: Path) -> None:
+@pytest.mark.parametrize("relative", ["lean", "formal/lean"])
+def test_declared_lean_source_identity_is_portable_even_when_git_tracks_build_data(
+    tmp_path: Path, relative: str
+) -> None:
     root = tmp_path / "original"
-    lean = _declared_lean(root)
+    lean = _declared_lean(root, relative)
     expected = source_fingerprint(root), project_source_identity(root, _SCOPE)
     build = lean / ".lake/build/lib/Owned.olean"
     build.parent.mkdir(parents=True)
@@ -449,11 +459,12 @@ def test_declared_lean_source_identity_is_portable_even_when_git_tracks_build_da
     assert not any(path.is_relative_to(clone / lean.relative_to(root) / ".lake") for path in public_source_paths(clone))
 
 
-@pytest.mark.parametrize(
-    "source", ["lakefile.lean", "lean-toolchain", "lake-manifest.json", "TemplateActiveInference.lean"]
-)
-def test_declared_lean_pins_and_implementation_remain_source(tmp_path: Path, source: str) -> None:
-    lean = _declared_lean(tmp_path)
+@pytest.mark.parametrize("relative", ["lean", "formal/lean"])
+@pytest.mark.parametrize("source", ["lakefile.lean", "lean-toolchain", "lake-manifest.json", "implementation"])
+def test_declared_lean_pins_and_implementation_remain_source(tmp_path: Path, source: str, relative: str) -> None:
+    lean = _declared_lean(tmp_path, relative)
+    if source == "implementation":
+        source = "TemplateActiveInference.lean" if relative == "lean" else "AntProtocol.lean"
     path = lean / source
     before = source_fingerprint(tmp_path), project_source_identity(tmp_path, _SCOPE)
     assert path in public_source_paths(tmp_path)
@@ -463,7 +474,16 @@ def test_declared_lean_pins_and_implementation_remain_source(tmp_path: Path, sou
     assert all(left != right for left, right in zip(before, after))
 
 
-@pytest.mark.parametrize("relative", ["data/.lake/input.py", "other/lean/.lake/input.py", "lean/.lake/input.py"])
+@pytest.mark.parametrize(
+    "relative",
+    [
+        "data/.lake/input.py",
+        "other/lean/.lake/input.py",
+        "lean/.lake/input.py",
+        "formal/lean/.lake/input.py",
+        "other/formal/lean/.lake/input.py",
+    ],
+)
 def test_undeclared_or_arbitrary_nested_lake_remains_authored_source(tmp_path: Path, relative: str) -> None:
     _public(tmp_path)
     root = tmp_path / "projects" / _SCOPE
@@ -478,14 +498,15 @@ def test_undeclared_or_arbitrary_nested_lake_remains_authored_source(tmp_path: P
 
 
 @pytest.mark.timeout(90)
-def test_declared_lean_build_root_is_not_traversed(tmp_path: Path) -> None:
-    lean = _declared_lean(tmp_path)
+@pytest.mark.parametrize("relative", ["lean", "formal/lean"])
+def test_declared_lean_build_root_is_not_traversed(tmp_path: Path, relative: str) -> None:
+    lean = _declared_lean(tmp_path, relative)
     boundary = lean / ".lake"
     boundary.mkdir()
     (boundary / "Generated.olean").write_bytes(b"owned build output")
     body = f"""
 from infrastructure.reporting.readiness_receipts import public_source_paths
-boundary=root/'projects/{_SCOPE}/lean/.lake'
+boundary=root/'projects/{_SCOPE}/{relative}/.lake'
 metadata=boundary.stat();blocked=(metadata.st_dev,metadata.st_ino)
 def audit(event,args):
  if event not in ('os.scandir','os.listdir') or not args:return
@@ -498,7 +519,7 @@ def audit(event,args):
  if forbidden:raise AssertionError('declared Lean build root was traversed')
 sys.addaudithook(audit)
 paths=public_source_paths(root)
-assert root/'projects/{_SCOPE}/lean/lean-toolchain' in paths
+assert root/'projects/{_SCOPE}/{relative}/lean-toolchain' in paths
 assert not any(path.is_relative_to(boundary) for path in paths)
 print('declared-build-not-traversed')
 """

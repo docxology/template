@@ -71,8 +71,9 @@ Shared verification retains its exact `infra_tests` selection, stage rows, and
 typed outcomes in the public result and summary. An infrastructure child exit
 2 remains visible beside aggregate exit 1; contradictory shared claims fail.
 
-Project and public Source identities exclude `lean/.lake` only when a physical
-`lean/lakefile.lean` declares that Lake root. The same classification is shared
+Project and public Source identities exclude the declared producers’ exact
+`lean/.lake` and `formal/lean/.lake` build roots only beside their respective
+physical `lakefile.lean` declaration. The same classification is shared
 by pipeline, project, and Root fingerprints. Lean implementation files,
 `lake-manifest.json`, and `lean-toolchain` remain Source; unrelated nested
 `.lake` directories remain authored inputs. Git ignore or forced tracking does

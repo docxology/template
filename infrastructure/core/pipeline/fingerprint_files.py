@@ -79,25 +79,28 @@ def anchored_parent(path: Path) -> Iterator[int | None]:
 
 
 def declared_lean_runtime_roots(project_root: Path) -> frozenset[Path]:
-    """Exclude Lake's exact build root only beside a physical declared Lake file.
+    """Exclude exact build roots beside the two Source-declared Lake files.
 
-    The project Lean producer recognizes ``lean/lakefile.lean`` and snapshots
-    that directory apart from its ``.lake`` runtime. Other nested names remain
-    authored inputs; this never infers exclusions from Git ignore/tracking state.
+    The project Lean producers recognize ``lean/lakefile.lean`` and
+    ``formal/lean/lakefile.lean``, snapshotting those directories apart from
+    their ``.lake`` runtime. Other nested names remain authored inputs; this
+    never infers exclusions from Git ignore/tracking state.
     """
-    declaration = (project_root / "lean" / "lakefile.lean").absolute()
-    with anchored_parent(declaration) as parent:
-        if parent is None:
-            return frozenset()
-        try:
-            metadata = os.stat(declaration.name, dir_fd=parent, follow_symlinks=False)
-        except FileNotFoundError:
-            return frozenset()
-        if stat.S_ISLNK(metadata.st_mode):
-            raise ValueError("Lean declaration requires physical no-follow Source")
-        if not stat.S_ISREG(metadata.st_mode):
-            return frozenset()
-        return frozenset({declaration.parent / ".lake"})
+    roots: set[Path] = set()
+    for relative in ("lean/lakefile.lean", "formal/lean/lakefile.lean"):
+        declaration = (project_root / relative).absolute()
+        with anchored_parent(declaration) as parent:
+            if parent is None:
+                continue
+            try:
+                metadata = os.stat(declaration.name, dir_fd=parent, follow_symlinks=False)
+            except FileNotFoundError:
+                continue
+            if stat.S_ISLNK(metadata.st_mode):
+                raise ValueError("Lean declaration requires physical no-follow Source")
+            if stat.S_ISREG(metadata.st_mode):
+                roots.add(declaration.parent / ".lake")
+    return frozenset(roots)
 
 
 def digest_file(path: Path, parent: int, name: str, original: os.stat_result, *, max_bytes: int | None = None) -> str:
