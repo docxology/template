@@ -15,6 +15,7 @@ from pathlib import Path
 from typing import Any
 
 from infrastructure.core.files.secure_write import atomic_write_bytes_confined, read_bytes_confined
+from infrastructure.project.public_acceptance_evidence import evidence_directory
 from infrastructure.project.public_hosted_origin import (
     HostedReadbackContext,
     MAX_ARCHIVE,
@@ -59,8 +60,7 @@ def collect_auxiliary_print_original(
 
     _context(repository, run_id, head_sha)
     remaining(deadline)
-    if directory.exists() or not directory.is_relative_to(root / "output/readiness"):
-        raise ValueError("auxiliary print collector requires fresh confined evidence")
+    directory = evidence_directory(root, directory, fresh=True)
     directory.mkdir(mode=0o700, parents=True)
     api = fixed_hosted_api(
         root,

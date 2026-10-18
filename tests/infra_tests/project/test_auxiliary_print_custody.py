@@ -76,6 +76,35 @@ def test_print_payload_reconstruction_is_canonical_after_json_roundtrip() -> Non
     )
 
 
+@pytest.mark.parametrize("escape", ["traversal", "symlink"])
+def test_print_collector_refuses_escape_before_creating_evidence(tmp_path: Path, escape: str) -> None:
+    from infrastructure.project.auxiliary_print_hosted import collect_auxiliary_print_original
+
+    root = tmp_path / "source"
+    readiness = root / "output/readiness"
+    readiness.mkdir(parents=True)
+    outside = tmp_path / "outside"
+    if escape == "traversal":
+        directory = readiness / "../../../outside/collected"
+    else:
+        outside.mkdir()
+        (readiness / "alias").symlink_to(outside, target_is_directory=True)
+        directory = readiness / "alias/collected"
+    with pytest.raises(ValueError, match="canonical|symlink"):
+        collect_auxiliary_print_original(
+            root,
+            directory,
+            repository="docxology/template",
+            run_id=39077939242,
+            head_sha="a" * 40,
+            deadline=time.monotonic() + 10,
+            environment={},
+        )
+    assert not (outside / "collected").exists()
+    if escape == "traversal":
+        assert not outside.exists()
+
+
 @pytest.fixture(scope="module")
 def actual_print(tmp_path_factory: pytest.TempPathFactory) -> dict[str, Any]:
     if platform.system() != "Darwin":
@@ -246,7 +275,7 @@ def test_bounded_archive_walk_keeps_complete_large_source_inventory_as_data() ->
         "artifact": "output/readiness/auxiliary-darwin/001/gate.json",
         "artifact_sha256": hashlib.sha256(body).hexdigest(),
     }
-    assert _authenticate_closure({"001/gate.json": body}, {}, reference, deadline=time.monotonic() + 10) is None
+    _authenticate_closure({"001/gate.json": body}, {}, reference, deadline=time.monotonic() + 10)
     # Successful DATA closure creates neither an original nor a live owner.
     with pytest.raises(ValueError, match="actual audited fixed worker entry"):
         require_entry(Path.cwd())

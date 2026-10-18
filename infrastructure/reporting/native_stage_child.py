@@ -227,7 +227,40 @@ def prepare_native_stage_child(
         raise ValueError("native stage factory requires the actual live Source owner and original finite deadline")
     root = source.bindings.current_root
     reader = SnapshotReader(root, native_producer_operation=owner)
-    owner.verify(reader, run_id=owner.run_id, deadline=deadline)
+    # All preparation is fixed synchronous DATA work. The actual Source
+    # correspondence closes before the factory enters the live registry.
+    with owner._verification_guard(reader, run_id=owner.run_id, deadline=deadline):
+        prepared = _prepare_native_stage_child_data(
+            source,
+            scope,
+            request_binding,
+            directory,
+            deadline=deadline,
+            environment=environment,
+            owner=owner,
+            reader=reader,
+        )
+        prepared._verify_owner_data(reader)
+        if not reader.unchanged():
+            raise ValueError("native stage fixed prelaunch Source/request changed during preparation")
+    remaining(deadline)
+    _PREPARED[id(prepared)] = prepared
+    return prepared
+
+
+def _prepare_native_stage_child_data(
+    source: NativeSourceContext,
+    scope: str,
+    request_binding: ArtifactSnapshot,
+    directory: Path,
+    *,
+    deadline: float,
+    environment: Mapping[str, str] | None,
+    owner: NativeProducerOperation,
+    reader: SnapshotReader,
+) -> NativeStageChildPreparation:
+    """Build unpublished fixed DATA inside the caller's fresh Source guard."""
+    root = source.bindings.current_root
     held = reader.read(request_binding.relative)
     if (
         held.path != request_binding.path
@@ -237,7 +270,7 @@ def prepare_native_stage_child(
         raise ValueError("native stage factory request is not the actual parent's held SnapshotReader artifact")
     payload, protocol, script_sha = validate_request(source, scope, held, deadline=deadline)
     directory = directory.absolute()
-    parent_directory = owner.stage_scope_directory(scope)
+    parent_directory = owner._stage_scope_directory_data(scope)
     if (
         not directory.is_relative_to(parent_directory / "native-stage")
         or len(directory.relative_to(parent_directory / "native-stage").parts) != 3
@@ -265,7 +298,7 @@ def prepare_native_stage_child(
         "stage_key": payload["stage_key"],
         "nonce": nonce,
         "directory": leaf.relative_to(root).as_posix(),
-        "source": json.loads(source.descriptor(scope, deadline=deadline)),
+        "source": json.loads(source._descriptor_data(scope, deadline=deadline)),
         "implementation": binding(implementation),
         "request": binding(request),
         "request_digest": canonical_digest(payload),
@@ -355,8 +388,4 @@ def prepare_native_stage_child(
         float(deadline),
         held,
     )
-    _PREPARED[id(prepared)] = prepared
-    prepared.verify_owner(reader)
-    if not reader.unchanged():
-        raise ValueError("native stage fixed prelaunch Source/request changed during preparation")
     return prepared

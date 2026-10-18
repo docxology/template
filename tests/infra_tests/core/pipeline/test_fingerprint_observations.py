@@ -470,3 +470,51 @@ def test_next_boundary_refuses_actual_changed_loaded_source_after_prior_matching
     assert not result.timed_out and not result.custody_refused
     assert "actual-current-source-refused" in result.stdout
     assert outside.read_text() == "private invented sentinel\n"
+
+
+def test_declared_lean_build_is_runtime_without_hiding_nested_authored_inputs(tmp_path: Path) -> None:
+    from infrastructure.core.pipeline.fingerprint_files import declared_lean_runtime_roots
+    from infrastructure.core.pipeline.fingerprints import source_content_fingerprint
+
+    repository = Path(__file__).resolve().parents[4]
+    project = tmp_path / "project"
+    lean = project / "lean"
+    lean.mkdir(parents=True)
+    (lean / "lakefile.lean").write_text("import Lake\nopen Lake DSL\npackage Owned where\n")
+    (lean / "lean-toolchain").write_text("leanprover/lean4:v4.35.0\n")
+    (lean / "lake-manifest.json").write_text('{"packages": []}\n')
+    (lean / "Model.lean").write_text("theorem owned : True := True.intro\n")
+    before = source_content_fingerprint(repository, project)
+    generated = lean / ".lake/build/lib/Model.olean"
+    generated.parent.mkdir(parents=True)
+    generated.write_bytes(b"owned compiled output")
+    assert declared_lean_runtime_roots(project) == frozenset({lean / ".lake"})
+    assert source_content_fingerprint(repository, project) == before
+    generated.write_bytes(b"rebuilt compiled output")
+    assert source_content_fingerprint(repository, project) == before
+    # Generic trees still observe the name; only the declared project boundary
+    # classifies this exact build root as runtime.
+    assert any(".lake" in row[0] for row in tree_records(project, source=True))
+    authored = project / "data/.lake/model.py"
+    authored.parent.mkdir(parents=True)
+    authored.write_text("measurement = 1\n")
+    assert source_content_fingerprint(repository, project) != before
+
+
+@pytest.mark.parametrize("link", ["declaration", "ancestor"])
+def test_declared_lean_runtime_refuses_symbolic_source_components(tmp_path: Path, link: str) -> None:
+    from infrastructure.core.pipeline.fingerprint_files import declared_lean_runtime_roots
+
+    project = tmp_path / "project"
+    project.mkdir()
+    outside = tmp_path / "outside"
+    outside.mkdir()
+    (outside / "lakefile.lean").write_text("outside Source must not be selected\n")
+    if link == "ancestor":
+        (project / "lean").symlink_to(outside, target_is_directory=True)
+    else:
+        (project / "lean").mkdir()
+        (project / "lean/lakefile.lean").symlink_to(outside / "lakefile.lean")
+    with pytest.raises(ValueError, match="symlink|no-follow"):
+        declared_lean_runtime_roots(project)
+    assert (outside / "lakefile.lean").read_text() == "outside Source must not be selected\n"

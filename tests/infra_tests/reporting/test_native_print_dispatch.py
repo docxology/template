@@ -7,6 +7,8 @@ import marshal
 import os
 import shutil
 import struct
+import subprocess
+import sys
 import time
 from io import BytesIO
 from pathlib import Path
@@ -185,3 +187,66 @@ def test_print_source_loader_refuses_aliased_body(tmp_path: Path) -> None:
     alias.symlink_to(source)
     with pytest.raises(ValueError, match="escaped"):
         PrintSourceLoader("provider", alias, tmp_path).get_code("provider")
+
+
+def test_actual_audited_cacheless_print_import_binds_source_and_code(tmp_path: Path) -> None:
+    from infrastructure.core.implementation_custody import bytecode_audit_bootstrap
+
+    source_root = tmp_path.resolve() / "source"
+    source_root.mkdir()
+    source = source_root / "provider.py"
+    source.write_text("VALUE = 42\n")
+    prefix = tmp_path.resolve() / "fresh-cache"
+    prefix.mkdir()
+    bootstrap = bytecode_audit_bootstrap((ROOT / "infrastructure", source_root), prefix)
+    launch = (
+        bootstrap
+        + f"""
+import importlib.util
+import sys
+from pathlib import Path
+sys.path.insert(0, {str(ROOT)!r})
+from infrastructure.reporting.native_print_source_loader import PrintSourceLoader
+source = Path({str(source)!r})
+source_root = source.parent
+prefix = Path(sys.pycache_prefix)
+loader = PrintSourceLoader('owned_provider', source, source_root)
+spec = importlib.util.spec_from_file_location('owned_provider', source, loader=loader)
+module = importlib.util.module_from_spec(spec)
+assert isinstance(module.__cached__, str)  # Importlib's unconsumed cache label.
+sys.modules[spec.name] = module
+loader.exec_module(module)
+assert module.VALUE == 42 and module.__cached__ is None
+registry = sys._template_executed_bytecode_audit
+runs = registry['snapshot']()[str(source)]
+assert runs and all(cache is None and digest is None for _, cache, digest in runs)
+assert not Path(importlib.util.cache_from_source(str(source))).exists()
+verify = _audit_scope['verify_executed_source_code']
+verify(source_root, prefix)
+verify(Path({str(ROOT / "infrastructure")!r}), prefix)
+try:
+    exec(compile('VALUE = 99\\n', str(source), 'exec', dont_inherit=True), module.__dict__)
+except ValueError as error:
+    assert 'differs from current source bytes' in str(error)
+else:
+    raise AssertionError('substituted actual Code was accepted')
+assert module.VALUE == 42
+source.write_text('VALUE = 99\\n')
+try:
+    verify(source_root, prefix)
+except ValueError as error:
+    assert 'differs from current source bytes' in str(error)
+else:
+    raise AssertionError('changed Source was accepted')
+print('cacheless-print-source-code-bound')
+"""
+    )
+    result = subprocess.run(
+        [sys.executable, "-I", "-X", f"pycache_prefix={prefix}", "-c", launch],
+        cwd=tmp_path.resolve(),
+        capture_output=True,
+        text=True,
+        timeout=30,
+    )
+    assert result.returncode == 0, result.stderr
+    assert result.stdout.strip() == "cacheless-print-source-code-bound"

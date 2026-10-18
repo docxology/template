@@ -16,7 +16,12 @@ from importlib.metadata import distributions
 from pathlib import Path
 from collections.abc import Callable, Mapping
 
-from infrastructure.core.pipeline.fingerprint_files import anchored_parent, digest_file, open_directory
+from infrastructure.core.pipeline.fingerprint_files import (
+    anchored_parent,
+    declared_lean_runtime_roots,
+    digest_file,
+    open_directory,
+)
 
 SOURCE_EXCLUSIONS = frozenset(
     {
@@ -197,6 +202,7 @@ def source_content_fingerprint(repo_root: Path, project_dir: Path, *, definition
     if definition_path is not None:
         roots.append(definition_path)
     excluded = (project_dir / "output").absolute()
+    runtime_roots = frozenset({excluded}) | declared_lean_runtime_roots(project_dir)
     reusable = {path: rows for path, rows in observed.items() if not excluded.is_relative_to(path)}
     paths = tuple(roots)
     base = Path(os.path.commonpath([str(path.absolute().parent) for path in paths]))
@@ -206,7 +212,7 @@ def source_content_fingerprint(repo_root: Path, project_dir: Path, *, definition
                 str(path.absolute().relative_to(base)),
                 reusable[path.absolute()]
                 if path.absolute() in reusable
-                else tree_records(path, source=True, excluded_roots=frozenset({excluded})),
+                else tree_records(path, source=True, excluded_roots=runtime_roots),
             )
             for path in sorted(set(paths), key=lambda item: item.as_posix())
         ]

@@ -389,3 +389,119 @@ print(json.dumps({{'forbidden_operations':len(events)}}))
     assert child.returncode == 0, child.stdout + child.stderr
     assert json.loads(child.stdout) == {"forbidden_operations": 0}
     assert sentinel.read_bytes() == b"changed owned runtime sentinel"
+
+
+def _declared_lean(root: Path) -> Path:
+    """Use the actual public project's three pins as owned fixture DATA."""
+    import shutil
+
+    _public(root)
+    lean = root / "projects" / _SCOPE / "lean"
+    lean.mkdir()
+    actual = Path(__file__).resolve().parents[3] / "projects/templates/template_active_inference/lean"
+    shutil.copyfile(actual.parent / ".gitignore", lean.parent / ".gitignore")
+    for name in ("lakefile.lean", "lean-toolchain", "lake-manifest.json", "TemplateActiveInference.lean"):
+        shutil.copyfile(actual / name, lean / name)
+    return lean
+
+
+def test_declared_lean_source_identity_is_portable_even_when_git_tracks_build_data(tmp_path: Path) -> None:
+    root = tmp_path / "original"
+    lean = _declared_lean(root)
+    expected = source_fingerprint(root), project_source_identity(root, _SCOPE)
+    build = lean / ".lake/build/lib/Owned.olean"
+    build.parent.mkdir(parents=True)
+    build.write_bytes(b"genuine owned generated-file control")
+    assert (source_fingerprint(root), project_source_identity(root, _SCOPE)) == expected
+    assert not any(path.is_relative_to(lean / ".lake") for path in public_source_paths(root))
+    # A fixture's Git add --force cannot launder runtime bytes into Source.
+    for arguments in (("init", "--quiet"), ("add", "--all", "--force"), ("commit", "--quiet", "-m", "Owned Source")):
+        result = subprocess.run(
+            ["git", "-c", "user.name=Owned Control", "-c", "user.email=owned@example.invalid", *arguments],
+            cwd=root,
+            capture_output=True,
+            text=True,
+            timeout=20,
+            check=False,
+        )
+        assert result.returncode == 0, result.stderr
+        if arguments[0] == "init":
+            ignored = subprocess.run(
+                ["git", "check-ignore", "--", build.relative_to(root).as_posix()],
+                cwd=root,
+                capture_output=True,
+                text=True,
+                timeout=20,
+                check=False,
+            )
+            assert ignored.returncode == 0 and ignored.stdout.strip() == build.relative_to(root).as_posix()
+    clone = tmp_path / "clone"
+    result = subprocess.run(
+        ["git", "clone", "--quiet", "--no-hardlinks", str(root), str(clone)],
+        capture_output=True,
+        text=True,
+        timeout=20,
+        check=False,
+    )
+    assert result.returncode == 0, result.stderr
+    assert (clone / build.relative_to(root)).read_bytes() == build.read_bytes()
+    assert (source_fingerprint(clone), project_source_identity(clone, _SCOPE)) == expected
+    assert not any(path.is_relative_to(clone / lean.relative_to(root) / ".lake") for path in public_source_paths(clone))
+
+
+@pytest.mark.parametrize(
+    "source", ["lakefile.lean", "lean-toolchain", "lake-manifest.json", "TemplateActiveInference.lean"]
+)
+def test_declared_lean_pins_and_implementation_remain_source(tmp_path: Path, source: str) -> None:
+    lean = _declared_lean(tmp_path)
+    path = lean / source
+    before = source_fingerprint(tmp_path), project_source_identity(tmp_path, _SCOPE)
+    assert path in public_source_paths(tmp_path)
+    assert path in public_source_paths(tmp_path, _SCOPE)
+    path.write_bytes(path.read_bytes() + b"\nowned changed Source sentinel\n")
+    after = source_fingerprint(tmp_path), project_source_identity(tmp_path, _SCOPE)
+    assert all(left != right for left, right in zip(before, after))
+
+
+@pytest.mark.parametrize("relative", ["data/.lake/input.py", "other/lean/.lake/input.py", "lean/.lake/input.py"])
+def test_undeclared_or_arbitrary_nested_lake_remains_authored_source(tmp_path: Path, relative: str) -> None:
+    _public(tmp_path)
+    root = tmp_path / "projects" / _SCOPE
+    path = root / relative
+    path.parent.mkdir(parents=True)
+    path.write_text("owned_measurement = 1\n")
+    before = source_fingerprint(tmp_path), project_source_identity(tmp_path, _SCOPE)
+    assert path in public_source_paths(tmp_path)
+    path.write_text("owned_measurement = 2\n")
+    after = source_fingerprint(tmp_path), project_source_identity(tmp_path, _SCOPE)
+    assert all(left != right for left, right in zip(before, after))
+
+
+@pytest.mark.timeout(90)
+def test_declared_lean_build_root_is_not_traversed(tmp_path: Path) -> None:
+    lean = _declared_lean(tmp_path)
+    boundary = lean / ".lake"
+    boundary.mkdir()
+    (boundary / "Generated.olean").write_bytes(b"owned build output")
+    body = f"""
+from infrastructure.reporting.readiness_receipts import public_source_paths
+boundary=root/'projects/{_SCOPE}/lean/.lake'
+metadata=boundary.stat();blocked=(metadata.st_dev,metadata.st_ino)
+def audit(event,args):
+ if event not in ('os.scandir','os.listdir') or not args:return
+ value=args[0]
+ if type(value) is int:
+  observed=os.fstat(value);forbidden=(observed.st_dev,observed.st_ino)==blocked
+ elif isinstance(value,(str,bytes,os.PathLike)):
+  forbidden=Path(os.fsdecode(value)).absolute().is_relative_to(boundary)
+ else:forbidden=False
+ if forbidden:raise AssertionError('declared Lean build root was traversed')
+sys.addaudithook(audit)
+paths=public_source_paths(root)
+assert root/'projects/{_SCOPE}/lean/lean-toolchain' in paths
+assert not any(path.is_relative_to(boundary) for path in paths)
+print('declared-build-not-traversed')
+"""
+    result = _child(tmp_path, body)
+    assert result.returncode == 0, result.stdout + result.stderr
+    assert result.stdout.strip() == "declared-build-not-traversed"

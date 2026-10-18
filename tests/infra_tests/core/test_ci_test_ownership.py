@@ -17,6 +17,10 @@ ROOT = Path(__file__).resolve().parents[3]
 # Root/native collectors run through actual installed subprocesses; print
 # integration owners also exercise producers through their Source-owned wrappers.
 FOCUSED_PROTOCOL_SOURCES = {
+    "infrastructure/core/pipeline/fingerprint_files.py",
+    "infrastructure/core/pipeline/fingerprints.py",
+    "infrastructure/reporting/readiness_receipts.py",
+    "infrastructure/reporting/native_print_source_loader.py",
     "infrastructure/reporting/native_source_external_admission.py",
     "infrastructure/reporting/native_tool_producer.py",
     "infrastructure/reporting/native_stage_child.py",
