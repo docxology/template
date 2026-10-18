@@ -40,10 +40,15 @@ def test_required_contract_job_keeps_whole_root_budget_and_explicit_empty_outcom
     assert contract["timeout-minutes"] * 60 == 7200
     assert CONTRACT_SECONDS <= 7200
     assert jobs["test-infra"]["timeout-minutes"] == 10
+    from infrastructure.core.testing.ci_infra import _functional_selection
+
+    assert _functional_selection(ROOT, is_contract=True) == {"marker_expression": "", "keyword_expression": ""}
+    assert "not slow" in _functional_selection(ROOT)["marker_expression"]
     assert contract["strategy"]["max-parallel"] == 3
     assert contract["steps"][0]["if"] == "matrix.shard == -1"
     assert any(step.get("if") == "always() && matrix.shard != -1" for step in contract["steps"])
     pdf_modules = (
+        "tests/infra_tests/project/test_scientific_reference_replay.py",
         "tests/infra_tests/reporting/test_native_pdf_citations.py",
         "tests/infra_tests/reporting/test_native_pdf_math.py",
         "tests/infra_tests/reporting/test_native_pdf_source_witness.py",
@@ -129,6 +134,7 @@ def test_actual_deep_owner_cannot_be_moved_back_into_smoke_or_omitted() -> None:
         "tests/infra_tests/documentation/test_counts_provenance.py",
         "tests/infra_tests/documentation/test_counts_refresh.py",
         "tests/infra_tests/project/test_public_reference.py",
+        "tests/infra_tests/project/test_scientific_reference_replay.py",
         "tests/infra_tests/publishing/test_standalone_install_projection.py",
         "tests/infra_tests/reporting/test_native_browser_oracles.py",
         "tests/infra_tests/reporting/test_native_browser_scientific_structure.py",

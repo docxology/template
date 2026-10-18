@@ -306,7 +306,11 @@ def test_declared_dependency_uses_its_own_installed_record(tmp_path, fault):
     if fault == "origin":
         other = tmp_path / "other-provider"
         shutil.copytree(source, other / "canonical_engine")
-        prefix = f"sys.path.insert(0,{str(other)!r});"
+        prefix = (
+            "from importlib.metadata import distribution;"
+            "assert distribution('canonical-engine').version == '0.2.0';"
+            f"sys.path.insert(0,{str(other)!r});"
+        )
     result = probe(
         site,
         tmp_path,
@@ -318,7 +322,12 @@ def test_declared_dependency_uses_its_own_installed_record(tmp_path, fault):
     if fault is not None:
         assert result.returncode != 0
         if fault == "origin":
-            assert "installed implementation lacks selected distribution metadata" in result.stderr
+            assert (
+                "MissingSelectedDistributionMetadata: installed implementation lacks selected distribution metadata"
+                in result.stderr
+            )
+        else:
+            assert "MissingSelectedDistributionMetadata" not in result.stderr
         return
     assert result.returncode == 0, result.stderr
     receipt = json.loads(result.stdout)

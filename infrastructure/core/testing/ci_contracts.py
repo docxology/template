@@ -9,6 +9,7 @@ CONTRACT_SECONDS = 6600
 # broad facade changes. Matrix projection and hosted setup use this one roster.
 _NATIVE_PREPARATION = {
     "tests/infra_tests/project/test_public_acceptance_auxiliary.py": ("native", False, False),
+    "tests/infra_tests/project/test_scientific_reference_replay.py": ("converter", True, False),
     "tests/infra_tests/reporting/test_native_browser_oracles.py": ("converter", False, True),
     "tests/infra_tests/reporting/test_native_browser_scientific_structure.py": ("converter", False, True),
     "tests/infra_tests/reporting/test_native_pdf_citations.py": ("converter", True, False),

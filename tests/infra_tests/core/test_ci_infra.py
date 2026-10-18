@@ -45,10 +45,17 @@ def test_deleted_test_routes_existing_owner_without_executing_nonexistent_path()
 def test_broad_package_ownership_scales_shards_without_losing_selected_work() -> None:
     from infrastructure.core.testing.ci_contracts import combined_groups, contract_files
 
-    changed = ("infrastructure/reporting/__init__.py", "infrastructure/validation/__init__.py")
+    heavy = (
+        "tests/infra_tests/core/test_execution_contract.py",
+        "tests/infra_tests/core/test_project_test_measurement.py",
+    )
+    changed = ("infrastructure/reporting/__init__.py", "infrastructure/validation/__init__.py", *heavy)
     files = infrastructure_files(ROOT, changed)
     shards = infrastructure_shards(ROOT, changed)
     assert 3 < len(shards) <= 8
+    assert all([module] in shards for module in heavy)
+    small = infrastructure_shards(ROOT, heavy)
+    assert len(small) >= 5 and all([module] in small for module in heavy)
     plan = {"infra_shards": shards, "contract_modules": list(contract_files(files, infrastructure_files(ROOT)))}
     validate_shards(combined_groups(plan), files)
     assert shards == infrastructure_shards(ROOT, changed)
@@ -76,12 +83,14 @@ def test_shard_manifest_refuses_missing_duplicate_empty_and_extra_work(fault: st
         validate_shards(shards, ("one.py", "two.py"))
 
 
-@pytest.mark.parametrize("fault", ["none", "missing", "duplicate", "members", "outcomes", "contract"])
+@pytest.mark.parametrize(
+    "fault", ["none", "missing", "duplicate", "members", "outcomes", "contract", "contract-deselected"]
+)
 def test_aggregate_receipt_checks_exact_selected_file_and_member_union(tmp_path: Path, fault: str) -> None:
     from infrastructure.core.testing.ci_infra import _functional_selection
 
     plan = {"infra_shards": [["tests/one.py"], ["tests/two.py"]]}
-    if fault == "contract":
+    if fault.startswith("contract"):
         plan = {"infra_shards": [["tests/one.py"]], "contract_modules": ["tests/two.py"]}
     from infrastructure.core.testing.ci_contracts import combined_groups
 
@@ -89,6 +98,8 @@ def test_aggregate_receipt_checks_exact_selected_file_and_member_union(tmp_path:
         if fault == "missing" and index == 1:
             continue
         selected = [paths[0] + "::test_owned"]
+        deselected = [paths[0] + "::test_omitted"] if fault == "contract-deselected" and index == 1 else []
+        collected = selected + deselected
         phases = {"setup": "passed", "call": "passed", "teardown": "passed"}
         outcomes = [selected[0] + "|" + json.dumps(phases, sort_keys=True, separators=(",", ":"))]
         row = {
@@ -99,8 +110,8 @@ def test_aggregate_receipt_checks_exact_selected_file_and_member_union(tmp_path:
             "outcomes": outcomes,
             "member_sha256": member_digest(tuple(selected)),
             "outcome_sha256": member_digest(tuple(outcomes)),
-            "collected": selected,
-            "deselected": [],
+            "collected": collected,
+            "deselected": deselected,
             "selection_profile": {
                 "arguments": [
                     *paths,
@@ -109,15 +120,16 @@ def test_aggregate_receipt_checks_exact_selected_file_and_member_union(tmp_path:
                     "--benchmark-disable",
                     "-p",
                     "infrastructure.core.testing.pytest_receipt",
+                    *(["-m", "", "-k", ""] if fault.startswith("contract") and index == 1 else []),
                     "--junitxml=diagnostic.xml",
-                    "--timeout=120" if fault == "contract" and index == 1 else "--timeout=60",
+                    "--timeout=120" if fault.startswith("contract") and index == 1 else "--timeout=60",
                 ],
-                **_functional_selection(ROOT),
+                **_functional_selection(ROOT, is_contract=fault.startswith("contract") and index == 1),
                 "workers": None,
                 "ambient_addopts": False,
             },
-            "collection_sha256": member_digest(tuple(selected)),
-            "deselected_sha256": member_digest(()),
+            "collection_sha256": member_digest(tuple(collected)),
+            "deselected_sha256": member_digest(tuple(deselected)),
         }
         if fault == "members":
             row["selected"] = []
@@ -134,8 +146,8 @@ def test_aggregate_receipt_checks_exact_selected_file_and_member_union(tmp_path:
                     "nonce": row["nonce"],
                     "worker": "controller",
                     "selected": selected,
-                    "collected": selected,
-                    "deselected": [],
+                    "collected": collected,
+                    "deselected": deselected,
                     "selection_profile": row["selection_profile"],
                     "reports": {selected[0]: phases},
                     "collection_errors": 0,

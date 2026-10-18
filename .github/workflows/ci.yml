@@ -223,18 +223,20 @@ jobs:
           test -f /opt/google/chrome/resources.pak
           "$chrome" --version
           echo "CHROME_EXECUTABLE_PATH=$chrome" >> "$GITHUB_ENV"
-      - name: Warm locked offline wheels for native portability
-        if: matrix.module == 'tests/infra_tests/reporting/test_native_whole_portability.py'
+      - name: Warm locked offline wheels for independently installed native contracts
+        if: >-
+          matrix.module == 'tests/infra_tests/reporting/test_native_whole_portability.py' ||
+          matrix.module == 'tests/infra_tests/reporting/test_native_hosted_credentials.py'
         timeout-minutes: 10
         run: |
           set -euo pipefail
           # A restored .venv does not supply the fresh offline fixture's wheel cache.
-          # Match that fixture's Root lock, default groups and dev group exactly.
+          # Match the actual Root runtime defaults and the separately installed build tools.
           unset UV_FROZEN
           native_contract_scratch=$(mktemp -d "$RUNNER_TEMP/native-contract-warm.XXXXXX")
           df -h "$RUNNER_TEMP"
           UV_PROJECT_ENVIRONMENT="$native_contract_scratch/venv" \
-            uv sync --locked --group dev --no-python-downloads --python .venv/bin/python
+            uv sync --locked --group dev --group installed-build --no-python-downloads --python .venv/bin/python
           rm -r -- "$native_contract_scratch"
           df -h "$RUNNER_TEMP"
       - name: Warm locked offline wheels for the relocated-runner contract

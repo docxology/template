@@ -98,7 +98,10 @@ def test_genuine_installed_reader_popen_has_only_fixed_credential_route(
     """Real Source/wheel/locked install and audited reader --help; no native acceptance claim."""
     import shutil
 
-    from infrastructure.reporting.native_installed_preparation import prepare_native_installed_runtime
+    from infrastructure.reporting.native_installed_preparation import (
+        NativePreparationFailure,
+        prepare_native_installed_runtime,
+    )
     from infrastructure.reporting.native_installed_invocation import capture_prepared_sdk, launch_prepared_native
     from infrastructure.reporting.native_source_provider_bootstrap import NATIVE_READER_MODULE
 
@@ -114,20 +117,26 @@ def test_genuine_installed_reader_popen_has_only_fixed_credential_route(
     environment = {**build_bounded_env(), "UV_LINK_MODE": "copy", "UV_PYTHON_DOWNLOADS": "never"}
     uv = shutil.which("uv")
     assert uv is not None
-    prepared = prepare_native_installed_runtime(
-        original,
-        current,
-        install,
-        evidence,
-        python=Path(sys.executable).absolute(),
-        uv=Path(uv).absolute(),
-        source_commit=commit,
-        source_identity=source_identity,
-        operation_started=started,
-        deadline=deadline,
-        env=environment,
-        scopes=("templates/template_code_project",),
-    )
+    try:
+        prepared = prepare_native_installed_runtime(
+            original,
+            current,
+            install,
+            evidence,
+            python=Path(sys.executable).absolute(),
+            uv=Path(uv).absolute(),
+            source_commit=commit,
+            source_identity=source_identity,
+            operation_started=started,
+            deadline=deadline,
+            env=environment,
+            scopes=("templates/template_code_project",),
+        )
+    except NativePreparationFailure as error:
+        # Retain the original bounded child body in hosted failure logs.
+        # Preparation precedes creation of this control's credential sentinel.
+        error.add_note(json.dumps(error.result, sort_keys=True))
+        raise
     implementation, raw = capture_prepared_sdk(prepared, environment=environment)
     sentinel = "harmless-" + uuid4().hex
     nominated = {**environment, "GH_TOKEN": sentinel, "UNRELATED_TOKEN": sentinel}

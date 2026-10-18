@@ -25,6 +25,15 @@ from infrastructure.core.testing.pytest_observations import (
     read_execution_receipts,
 )
 
+# Observed combined shards exceeded540s; these real process-heavy modules keep
+# that same routine budget in separate jobs when selected by Source ownership.
+_ISOLATED_ROUTINE_MODULES = frozenset(
+    {
+        "tests/infra_tests/core/test_execution_contract.py",
+        "tests/infra_tests/core/test_project_test_measurement.py",
+    }
+)
+
 CI_EXTRA_PATHS = (
     "tests/infra_tests/core/test_ci_smoke.py",
     "tests/infra_tests/core/test_secure_write.py",
@@ -90,18 +99,20 @@ def infrastructure_shards(root: Path, changed: tuple[str, ...] = (), count: int 
     files = infrastructure_files(root, changed)
     contracts = contract_files(files, infrastructure_files(root))
     files = tuple(name for name in files if name not in contracts)
+    isolated = tuple(name for name in files if count is None and name in _ISOLATED_ROUTINE_MODULES)
+    files = tuple(name for name in files if name not in isolated)
     if count is None:
         # Package-level ownership can expand the routine roster by an order of
         # magnitude. Keep its complete selection and original 540-second clock,
-        # with at most eight jobs and a nominal 32-module target per job.
-        count = min(8, max(3, (len(files) + 31) // 32))
+        # with at most eight jobs and a nominal 20-module target per job.
+        count = min(8 - len(isolated), max(3, (len(files) + 19) // 20))
     shards: list[list[str]] = [[] for _ in range(min(count, len(files)))]
     loads = [0] * len(shards)
     for name in sorted(files, key=lambda p: (-(root / p).stat().st_size, p)):
         selected = min(range(len(loads)), key=lambda i: (loads[i], i))
         shards[selected].append(name)
         loads[selected] += (root / name).stat().st_size
-    return [sorted(shard) for shard in shards]
+    return [*[sorted(shard) for shard in shards], *[[name] for name in isolated]]
 
 
 def validate_shards(shards: list[list[str]], expected: tuple[str, ...]) -> None:
@@ -122,7 +133,7 @@ def validate_plan(root: Path, plan: dict) -> None:
     validate_shards(combined_groups(plan), expected)
 
 
-def _functional_selection(root: Path) -> dict[str, str]:
+def _functional_selection(root: Path, *, is_contract: bool = False) -> dict[str, str]:
     """Resolve the Source-owned ordinary marker/keyword defaults without pytest."""
     metadata = tomllib.loads((root / "pyproject.toml").read_text(encoding="utf-8"))
     options = metadata.get("tool", {}).get("pytest", {}).get("ini_options", {}).get("addopts", "")
@@ -132,6 +143,8 @@ def _functional_selection(root: Path) -> dict[str, str]:
         arguments = options
     else:
         raise ValueError("functional CI requires Source-owned pytest argument defaults")
+    if is_contract:
+        return {"marker_expression": "", "keyword_expression": ""}
     parser = argparse.ArgumentParser(add_help=False, allow_abbrev=False, exit_on_error=False)
     parser.add_argument("-m", dest="marker_expression", default="")
     parser.add_argument("-k", dest="keyword_expression", default="")
@@ -144,6 +157,8 @@ def _shard_collection(directory: Path, nonce: str, files: list[str], root: Path,
     if {node.split("::", 1)[0] for node in collected} != set(files):
         raise ValueError("functional shard omitted a requested test file from original collection")
     fixed = [*files, "--no-cov", "-q", "--benchmark-disable", "-p", "infrastructure.core.testing.pytest_receipt"]
+    if is_contract:
+        fixed.extend(["-m", "", "-k", ""])
     actual = profile["arguments"]
     if (
         len(actual) != len(fixed) + 2
@@ -152,7 +167,10 @@ def _shard_collection(directory: Path, nonce: str, files: list[str], root: Path,
         or not actual[-2].removeprefix("--junitxml=")
         or actual[-1] != ("--timeout=120" if is_contract else "--timeout=60")
         or profile["ambient_addopts"]
-        or any(profile[key] != expected for key, expected in _functional_selection(root).items())
+        or (is_contract and deselected)
+        or any(
+            profile[key] != expected for key, expected in _functional_selection(root, is_contract=is_contract).items()
+        )
     ):
         raise ValueError("functional collection invocation/profile differs from Source-owned defaults")
     return {
@@ -174,6 +192,7 @@ def run_shard(root: Path, plan: dict, shard: int, directory: Path) -> int:
     directory.mkdir(parents=True, exist_ok=False)
     nonce = uuid4().hex
     environment = {**os.environ, DIRECTORY_ENV: str(directory / "execution"), NONCE_ENV: nonce, ROOT_ENV: str(root)}
+    is_contract = shard >= len(plan["infra_shards"])
     command = [
         sys.executable,
         "-m",
@@ -184,9 +203,9 @@ def run_shard(root: Path, plan: dict, shard: int, directory: Path) -> int:
         "--benchmark-disable",
         "-p",
         "infrastructure.core.testing.pytest_receipt",
+        *(["-m", "", "-k", ""] if is_contract else []),
         "--junitxml=" + str(directory / "junit.xml"),
     ]
-    is_contract = shard >= len(plan["infra_shards"])
     # Full contracts use the established infrastructure harness default.
     # A CLI option preserves test markers without changing nested child environments.
     command.append("--timeout=120" if is_contract else "--timeout=60")

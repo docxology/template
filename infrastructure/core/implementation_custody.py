@@ -31,6 +31,10 @@ PACKAGE = "research-project-template"
 SCHEMA = "template/implementation-custody/1"
 
 
+class MissingSelectedDistributionMetadata(ValueError):
+    """The imported installed provider has no metadata in its own selected site."""
+
+
 def _package_identity(value: str) -> str:
     return re.sub(r"[-_.]+", "-", value).lower()
 
@@ -214,7 +218,9 @@ def _distribution_custody(
     candidates = tuple(distributions(name=package, path=roots))
     if not candidates:
         if installed:
-            raise ValueError("installed implementation lacks selected distribution metadata") from None
+            raise MissingSelectedDistributionMetadata(
+                "installed implementation lacks selected distribution metadata"
+            ) from None
         return None
     if len(candidates) != 1:
         raise ValueError("selected platform distribution metadata is ambiguous")
@@ -477,6 +483,7 @@ def _format_bytecode_audit_bootstrap(
 
 
 __all__ = [
+    "MissingSelectedDistributionMetadata",
     "capture_implementation_custody",
     "capture_dependency_custody",
     "runtime_identity",
