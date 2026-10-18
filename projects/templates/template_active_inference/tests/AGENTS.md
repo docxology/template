@@ -58,9 +58,13 @@ other than fixed-point remains at 1,800 seconds, and the fixed-point exception
 must not spread to unrelated coverage or producer commands.
 
 Run the suite serially within each project process. Collection prewarm and
-fixtures share one disposable whole-project session copy. Gate controls and
-composition restore that copy's mutable inputs after each test; they never
-rewrite canonical source or publication bytes. This provides process isolation
+fixtures share one disposable whole-project session copy. Its baseline is
+captured before the first `project_root` consumer receives it. Gate controls
+and composition restore that copy's mutable inputs after each consumer,
+including transitive fixture dependencies and dynamic `getfixturevalue`
+requests; pure tests do not create the copy or scan its restoration surfaces.
+Unknown fixture ownership retains conservative restoration. These fixtures
+never rewrite canonical source or publication bytes. This provides process isolation
 for the existing coverage groups; it does not establish xdist compatibility.
 
 Run full verification from this project root:

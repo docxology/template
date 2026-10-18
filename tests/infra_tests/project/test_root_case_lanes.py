@@ -23,6 +23,7 @@ from infrastructure.project.public_root_case_census import produce_root_census
 from infrastructure.project.public_root_lane_contract import lane_command, write
 from infrastructure.project.public_root_lane_producer import coordinator_command, produce_root_lane
 from infrastructure.project.public_root_lane_readback import read_lane
+from infrastructure.project.public_root_lane_diagnostics import read_output, read_reports
 from infrastructure.reporting.release_readiness_snapshot import SnapshotReader
 
 pytestmark = pytest.mark.timeout(1200)
@@ -72,7 +73,11 @@ def genuine_lane(tmp_path_factory: pytest.TempPathFactory) -> tuple[Path, dict[s
         "    root=Path(__file__).parents[1]; action=root/'output/readiness/action.json'\n"
         "    value=json.loads(action.read_text()) if action.exists() else None\n"
         "    with (root/'output/readiness/events.txt').open('a') as stream: stream.write('call\\n')\n"
-        "    if isinstance(value,int): os._exit(value)\n"
+        "    if isinstance(value,int):\n"
+        "        with request.getfixturevalue('capfd').disabled():\n"
+        "            print('ORIGINAL HARD EXIT STDOUT',flush=True)\n"
+        "            print('ORIGINAL HARD EXIT STDERR',file=sys.stderr,flush=True)\n"
+        "            os._exit(value)\n"
         "    if value=='call-skip': pytest.skip('actual own unexpected skip')\n"
         "    if isinstance(value,dict) and value.get('case') in {'detached-timeout','detached-interrupt'}:\n"
         "        startup=root/'output/readiness/descendant-startup.json'\n"
@@ -196,6 +201,9 @@ def test_actual_source_owned_core_selection_and_all_original_phases(
         assert native["timed_out"] is native["custody_refused"] is False
         assert actual["bytecode_verified"] is True and actual["interrupted"] is False
         assert actual["original_pytest_exit_code"] == actual["exit_code"] == 0
+        directory = (root / record["process_artifact"]["path"]).parent
+        assert read_output(SnapshotReader(root), directory, native["output_artifact"])["stdout"]["captured_bytes"] > 0
+        assert read_reports(SnapshotReader(root), directory, actual["diagnostics_artifact"])["reports"] == []
 
 
 @pytest.mark.parametrize("mode", ["core", "live"])
@@ -239,7 +247,13 @@ def test_real_case_exit_without_receipt_cannot_pass(
         )
         assert bundle["exit_code"] == 1, bundle
         result = json.loads((root / bundle["result_artifact"]["path"]).read_bytes())
+        record = result["records"][0]
         actual = json.loads((root / result["records"][0]["process_artifact"]["path"]).read_bytes())
+        output = read_output(
+            SnapshotReader(root), (root / record["process_artifact"]["path"]).parent, actual["output_artifact"]
+        )
+        assert "ORIGINAL HARD EXIT STDOUT" in output["stdout"]["text"]
+        assert "ORIGINAL HARD EXIT STDERR" in output["stderr"]["text"]
         assert actual["original_returncode"] == original_exit
         assert actual["receipt_artifact"] is None
         with pytest.raises(ValueError):
@@ -267,6 +281,12 @@ def test_actual_skip_teardown_or_concurrent_source_edit_refuses_success(
             timeout_seconds=180,
         )
         assert bundle["exit_code"] == 1, bundle
+        result = json.loads((root / bundle["result_artifact"]["path"]).read_bytes())
+        record = result["records"][0]
+        actual = json.loads((root / record["receipt_artifact"]["path"]).read_bytes())
+        directory = (root / record["receipt_artifact"]["path"]).parent
+        diagnostics = read_reports(SnapshotReader(root), directory, actual["diagnostics_artifact"])
+        assert diagnostics["reports"] or diagnostics["exception"] is not None
         with pytest.raises(ValueError):
             read_lane(SnapshotReader(root), bundle)
     finally:
@@ -407,6 +427,9 @@ def test_actual_case_timer_is_typed_and_early_callback_or_failure_text_is_not_ti
         assert actual["original_pytest_exit_code"] == 1
         assert actual["timed_out"] is (expected_code == 124)
         assert actual["exit_code"] == expected_code
+        directory = (root / result["records"][0]["receipt_artifact"]["path"]).parent
+        diagnostics = read_reports(SnapshotReader(root), directory, actual["diagnostics_artifact"])
+        assert diagnostics["reports"] and any(row["outcome"] == "failed" for row in diagnostics["reports"])
         if expected_code == 124:
             assert reached.read_text() == "actual case timer"
         with pytest.raises(ValueError):
@@ -531,6 +554,10 @@ def test_real_case_physical_root_replacement_refuses_writes_with_identical_sourc
         "impossible-outer-timeline",
         "impossible-worker-timeline",
         "impossible-chunk-timeline",
+        "missing-output-binding",
+        "wrong-output-binding",
+        "missing-diagnostics-binding",
+        "wrong-diagnostics-binding",
     ],
 )
 def test_consistently_rehashed_original_lane_evidence_cannot_waive_contract(
@@ -583,6 +610,14 @@ def test_consistently_rehashed_original_lane_evidence_cannot_waive_contract(
         native["timed_out"] = True
     elif fault == "wrong-child-command":
         native["command"].append("--not-original")
+    elif fault == "missing-output-binding":
+        native.pop("output_artifact")
+    elif fault == "wrong-output-binding":
+        native["output_artifact"] = child["diagnostics_artifact"]
+    elif fault == "missing-diagnostics-binding":
+        child.pop("diagnostics_artifact")
+    elif fault == "wrong-diagnostics-binding":
+        child["diagnostics_artifact"] = native["output_artifact"]
     elif fault == "wrong-plan":
         result["plan_sha256"] = "b" * 64
     elif fault == "wrong-source":

@@ -52,6 +52,12 @@ def measure_test_summary(
     subprocess then fails silently into the ``"pending"`` path.
     """
     project_root = Path(project_root)
+    if "PIPELINE_TEST_MEASUREMENT_SHA256" in os.environ:
+        from infrastructure.core.testing.project_test_measurement import consume_measurement
+
+        measured = consume_measurement(project_root, Path(full_report_out) if full_report_out is not None else None)
+        if measured is not None:
+            return measured
     tests_dir = project_root / "tests"
     src_dir = project_root / "src"
     repo_root_python = Path(__file__).resolve().parents[6] / ".venv" / "bin" / "python3"
@@ -108,7 +114,7 @@ def measure_test_summary(
                 env=isolated_env,
             )
             match = _PASSED_RE.search(result.stdout)
-            if not match or not cov_json.is_file():
+            if result.returncode != 0 or not match or not cov_json.is_file():
                 print(
                     "measure_test_summary: inner pytest run did not produce "
                     f"a parseable summary or coverage JSON (rc={result.returncode})\n"

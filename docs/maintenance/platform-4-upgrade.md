@@ -1212,3 +1212,48 @@ from measured hosted runtime fit.
 
 Final-main complete hosted acceptance and authenticated release publication remain
 open. This follow-through does not qualify a release from the failed candidate.
+
+## Complete acceptance follow-through — 2026-10-18 UTC
+
+The merged candidate's original
+[required run 39077939242](https://github.com/docxology/template/actions/runs/39077939242)
+retained matching platform inventories but unsuccessful Root runtime cohorts and
+Linux auxiliary observations. Passing ordinary CI did not qualify that candidate
+for release. Original failed receipts, logs, process exits and authenticated
+artifacts remain evidence of those attempts.
+
+Root chunks now retain bounded, hash-bound original process text and actual
+pytest failure reports, including teardown failures. Diagnostics cannot authorize
+completion. The macOS artifact transport uses the existing exact scratch
+exclusion contract while retaining original receipts and diagnostics unchanged.
+
+Project Stage 01 can compose its complete original serial branch-coverage
+measurement into later stages of the same run. The actual stage worker carries
+the producer's original publication hash into the executor. Consumers require
+that external commitment, current Source/runtime/run/plan/floor bindings, complete
+original collection and passed phases, and unchanged confined artifacts. An
+invalid present measurement fails closed. An absent current measurement permits
+genuine fresh execution. Autopoiesis uses this contract to avoid repeating its
+full test suite during analysis and refuses to announce a missing coverage file.
+
+Active Inference's standalone Source reader uses search handles for strict Linux
+ancestors while preserving readable selected roots, no-follow checks, inode-chain
+verification and finite operation clocks. Its shared test fixture captures a
+restoration baseline before exposing the project copy, restores actual direct,
+transitive and dynamic consumers, and includes inode/ctime in its stat witness.
+Pure tests no longer create or scan that shared copy merely through autouse.
+
+The analysis benchmark's documented 180-second command was overridden by a
+60-second function marker. Original failures demonstrated that its genuine
+guarded workload exceeded that fixture budget. The reviewed repair explicitly
+declares per-member budgets of 60, 60 and 180 seconds for its existing inputs.
+The smallest input retains repeated samples; the larger inputs record one cold
+sample each, with every selected script executed in order. Single observations
+do not establish stable performance. This explicit test-contract change requires
+fresh canonical timeout bindings and actual timed execution; it cannot convert
+the original failures into passes. Production, Root whole-run, workflow and
+negative-control deadlines are unchanged.
+
+Fresh final-main complete acceptance and authenticated release publication remain
+required. Current measured inventory and coverage belong in the generated
+[`COUNTS.md`](../_generated/COUNTS.md), not in these historical observations.

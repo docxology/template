@@ -48,6 +48,11 @@ from infrastructure.core.testing.project_test_runtime import (
     project_test_deadline,
     remaining_test_budget,
 )
+from infrastructure.core.testing.project_test_measurement import (
+    MeasurementIneligible,
+    prepare_measurement,
+    publish_measurement,
+)
 from infrastructure.core.runtime.python_binding import analysis_runtime_binding
 from infrastructure.core.pipeline.outcomes import RunResult, StageOutcome, StageStatus
 from infrastructure.project.discovery import resolve_project_root
@@ -425,6 +430,7 @@ def _run_project_tests_impl(
             [
                 str(project_root / "tests"),
                 f"--cov={project_root / 'src'}",
+                "--cov-branch",
             ],
             interpreter=_selected,
             deadline=deadline,
@@ -497,6 +503,16 @@ def _run_project_tests_impl(
 
     test_results: dict[str, Any] = {}
     try:
+        observation = prepare_measurement(
+            repo_root,
+            project_root,
+            _selected,
+            cast(dict[str, Any], runtime["binding"]),
+            cmd,
+            env,
+            floor=project_threshold,
+            deadline=deadline,
+        )
         config = _build_generic_project_suite_config(
             project_name=project_name,
             project_root=project_root,
@@ -530,6 +546,17 @@ def _run_project_tests_impl(
         if not unchanged_runtime and exit_code == 0:
             exit_code = 75
         if exit_code == 0:
+            remaining_test_budget(deadline)
+            if observation is not None:
+                try:
+                    publish_measurement(observation, original_exit_code=test_results["original_exit_code"])
+                except MeasurementIneligible as exc:
+                    # Ineligible serial selection (e.g. genuine skips/xdist)
+                    # retains the actual suite result and grants no reuse.
+                    logger.warning("Project tests completed without composable measurement: %s", exc)
+                except (OSError, ValueError, KeyError, TypeError) as exc:
+                    logger.error("Original project measurement custody refused: %s", exc)
+                    exit_code = 75
             remaining_test_budget(deadline)
         test_results["selected_runtime"] = runtime
         test_results["exit_code"] = exit_code

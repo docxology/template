@@ -5,6 +5,8 @@ their runtime fits the smoke deadline. Unlisted helpers retain broad fallback.
 """
 
 SOURCE_TEST_OWNERS: dict[str, tuple[str, ...]] = {
+    "infrastructure/project/public_root_lane_worker.py": ("tests/infra_tests/project/test_root_case_lanes.py",),
+    "infrastructure/project/public_root_lane_readback.py": ("tests/infra_tests/project/test_root_case_lanes.py",),
     "infrastructure/core/testing/pytest_receipt.py": (
         "tests/infra_tests/core/test_pytest_receipt.py",
         "tests/infra_tests/core/test_ci_infra.py",
@@ -49,6 +51,29 @@ SOURCE_TEST_OWNERS: dict[str, tuple[str, ...]] = {
     ),
     "infrastructure/core/pipeline/fingerprints.py": (
         "tests/infra_tests/core/pipeline/test_fingerprint_observations.py",
+        "tests/infra_tests/core/pipeline/test_distribution_identity.py",
+    ),
+    "infrastructure/core/pipeline/_stage_protocol.py": (
+        "tests/infra_tests/core/pipeline/test_stage_source_launch.py",
+        "tests/infra_tests/core/pipeline/test_stage_attempt_admission.py",
+        "tests/infra_tests/core/test_analysis_launch.py",
+        "tests/infra_tests/core/test_project_test_measurement.py",
+    ),
+    "infrastructure/core/pipeline/stage_launch.py": (
+        "tests/infra_tests/core/pipeline/test_stage_source_launch.py",
+        "tests/infra_tests/core/pipeline/test_stage_attempt_admission.py",
+        "tests/infra_tests/core/test_analysis_launch.py",
+        "tests/infra_tests/core/test_project_test_measurement.py",
+    ),
+    "infrastructure/core/pipeline/stage_worker.py": (
+        "tests/infra_tests/core/pipeline/test_stage_source_launch.py",
+        "tests/infra_tests/core/pipeline/test_stage_attempt_admission.py",
+        "tests/infra_tests/core/test_analysis_launch.py",
+        "tests/infra_tests/core/test_project_test_measurement.py",
+    ),
+    "infrastructure/core/pipeline/execution_environment.py": (
+        "tests/infra_tests/core/test_execution_policy.py",
+        "tests/infra_tests/core/pipeline/test_cache_identity.py",
     ),
     "infrastructure/core/testing/_ci_execution_files.py": ("tests/infra_tests/core/test_ci_execution_user.py",),
     "infrastructure/publishing/_standalone_git.py": ("tests/infra_tests/publishing/test_standalone_git_reads.py",),

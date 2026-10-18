@@ -298,6 +298,66 @@ def _source_oracle(repo_root: Path, project: Path) -> str:
     return paths_digest(tuple(roots), source=True, excluded_roots=frozenset({(project / "output").absolute()}))
 
 
+@pytest.mark.parametrize("source", [False, True])
+def test_literal_unusual_names_follow_actual_runtime_suffix_rules(tmp_path: Path, source: bool) -> None:
+    """Retain authored dot/case/Unicode names under the selected Python minor."""
+    root = tmp_path / "source é\nroot"
+    root.mkdir()
+    names = (
+        ".pyc",
+        "..pyc",
+        "...pyc",
+        ".pyo",
+        "..pyo",
+        "...pyo",
+        ".hidden.pyc",
+        "..hidden.pyo",
+        "ordinary.pyc",
+        "ordinary.pyo",
+        "uppercase.PYC",
+        "uppercase.PYO",
+        "trailing.pyc.",
+        "trailing.pyo.",
+        "é.pyc",
+        "é.pyo",
+        "line\n.pyc",
+        "line\n.PYO",
+        "model.py",
+        "drop\n.name",
+    )
+    for name in names:
+        (root / name).write_bytes(name.encode())
+    visited: list[Path] = []
+    rows = tree_records(root, source=source, excluded_names=frozenset({"drop\n.name"}), path_admission=visited.append)
+    admitted = sorted(
+        name for name in names if name != "drop\n.name" and not (source and Path(name).suffix in {".pyc", ".pyo"})
+    )
+    assert rows == (
+        (".", "directory", ""),
+        *(("./" + name, "file", hashlib.sha256(name.encode()).hexdigest()) for name in admitted),
+    )
+    assert visited == [root, *(root / name for name in admitted)]
+
+
+def test_path_admission_still_observes_selected_paths_and_detects_new_directory_entries(tmp_path: Path) -> None:
+    root = tmp_path / "source"
+    root.mkdir()
+    (root / "observed.py").write_text("original")
+    excluded = root / "excluded"
+    excluded.symlink_to(tmp_path / "never-consumed")
+    visited: list[Path] = []
+
+    def consume(path: Path) -> None:
+        visited.append(path)
+        if path.name == "observed.py":
+            (root / "added.py").write_text("new entry during admission")
+
+    with pytest.raises(ValueError, match="contents changed"):
+        tree_records(root, excluded_roots=frozenset({excluded}), path_admission=consume)
+    assert visited == [root, root / "observed.py"]
+    assert excluded.is_symlink()
+
+
 @pytest.mark.parametrize("nominated_root", ["actual-implementation", "separate-owned-root"])
 def test_single_boundary_tree_rows_preserve_source_payload_and_every_fresh_observation(
     tmp_path: Path, nominated_root: str

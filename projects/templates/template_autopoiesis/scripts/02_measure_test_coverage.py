@@ -36,6 +36,8 @@ def main():
     dirs = project_output_dirs(PROJECT_ROOT)
     full_report = dirs["data"] / "coverage_full.json"
     test_count, coverage_pct = measure_test_summary(PROJECT_ROOT, full_report_out=full_report)
+    if test_count == "pending" or coverage_pct == "pending" or not full_report.is_file():
+        raise RuntimeError("Current project test/branch coverage measurement did not complete")
     out = dirs["data"] / "test_coverage_summary.json"
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(json.dumps({"test_count": test_count, "coverage_pct": coverage_pct}, indent=2))

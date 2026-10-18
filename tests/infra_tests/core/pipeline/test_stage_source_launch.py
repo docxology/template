@@ -19,6 +19,31 @@ from tests.infra_tests.core.test_bounded_run_guardian import _run_copy
 pytestmark = pytest.mark.timeout(90)
 
 
+def test_fresh_worker_uses_shared_protocol_without_importing_launch_controller() -> None:
+    root = Path(launch_python_stage.__code__.co_filename).absolute().parents[3]
+    result = subprocess.run(
+        [
+            sys.executable,
+            "-I",
+            "-c",
+            "import sys;sys.path.insert(0,sys.argv[1]);"
+            "from infrastructure.core.pipeline import stage_worker;"
+            "assert 'infrastructure.core.pipeline.stage_launch' not in sys.modules;"
+            "from infrastructure.core.pipeline import stage_launch;"
+            "assert stage_worker.SCHEMA == stage_launch.SCHEMA == 'template-python-stage/3';"
+            "assert stage_worker.ANALYSIS_SCHEMA == stage_launch.ANALYSIS_SCHEMA == 'template-python-analysis/4';"
+            "print('actual-worker-controller-protocol-agrees')",
+            str(root),
+        ],
+        capture_output=True,
+        text=True,
+        timeout=30,
+        check=False,
+    )
+    assert result.returncode == 0, result.stdout + result.stderr
+    assert result.stdout.strip() == "actual-worker-controller-protocol-agrees"
+
+
 def test_actual_stage_ignores_timestamp_valid_poisoned_domain_cache(tmp_path: Path) -> None:
     executor = _executor(tmp_path, "from calculation import VALUE\nprint(VALUE)\n")
     source = executor.config.project_dir / "src/calculation.py"

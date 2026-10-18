@@ -15,14 +15,21 @@ NONCE_ENV = "TEMPLATE_PYTEST_RECEIPT_NONCE"
 ROOT_ENV = "TEMPLATE_PYTEST_RECEIPT_ROOT"
 
 
-def read_execution_receipts(directory: Path, nonce: str) -> tuple[tuple[str, ...], tuple[str, ...]]:
+def read_execution_receipts(
+    directory: Path, nonce: str, *, snapshots: tuple[bytes, ...] | None = None
+) -> tuple[tuple[str, ...], tuple[str, ...]]:
     """Require non-vacuous exact selected/report membership from real controllers."""
     selected: list[str] = []
     outcomes: list[str] = []
     controllers = 0
     calls_passed = 0
-    for path in sorted(directory.glob("execution-*.json")):
-        value = json.loads(path.read_bytes())
+    originals = (
+        snapshots
+        if snapshots is not None
+        else tuple(path.read_bytes() for path in sorted(directory.glob("execution-*.json")))
+    )
+    for raw in originals:
+        value = json.loads(raw)
         if value.get("schema_version") != "template-pytest-execution/v1" or value.get("nonce") != nonce:
             raise ValueError("pytest observation schema/nonce differs")
         if value["worker"] != "controller":
@@ -62,16 +69,23 @@ def member_digest(members: tuple[str, ...]) -> str:
     return hashlib.sha256(json.dumps(members, separators=(",", ":")).encode()).hexdigest()
 
 
-def read_execution_collection(directory: Path, nonce: str) -> tuple[tuple[str, ...], tuple[str, ...], dict[str, Any]]:
+def read_execution_collection(
+    directory: Path, nonce: str, *, snapshots: tuple[bytes, ...] | None = None
+) -> tuple[tuple[str, ...], tuple[str, ...], dict[str, Any]]:
     """Read one serial controller's original prefilter collection and actual exclusions.
 
     Selected members still need genuine complete outcomes; deselection is an
     explicit collection observation, never successful execution or acceptance.
     """
-    selected, _ = read_execution_receipts(directory, nonce)
+    originals = (
+        snapshots
+        if snapshots is not None
+        else tuple(path.read_bytes() for path in sorted(directory.glob("execution-*.json")))
+    )
+    selected, _ = read_execution_receipts(directory, nonce, snapshots=originals)
     controllers = []
-    for path in sorted(directory.glob("execution-*.json")):
-        value = json.loads(path.read_bytes())
+    for raw in originals:
+        value = json.loads(raw)
         if value.get("schema_version") != "template-pytest-execution/v1" or value.get("nonce") != nonce:
             raise ValueError("pytest observation schema/nonce differs")
         if value.get("worker") == "controller":

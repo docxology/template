@@ -17,13 +17,17 @@ from pathlib import Path
 import pytest
 
 from infrastructure.core.analysis_launch import analysis_receipt_path, analysis_stage_key, launch_analysis_script
-from infrastructure.core.pipeline.fingerprints import canonical_digest, source_fingerprint
+from infrastructure.core.pipeline.fingerprints import canonical_digest, source_fingerprint, tool_reuse_refusal
 from infrastructure.core.pipeline.outcomes import StageStatus
 from infrastructure.core.pipeline.executor import PipelineExecutor
 from infrastructure.core.pipeline.incremental import IncrementalConfig, HashManifest, should_skip_stage
 from infrastructure.core.pipeline.types import PipelineConfig, StageContract
 from infrastructure.core.runtime._python_env import build_analysis_script_cmd_and_env
-from infrastructure.core.runtime.python_binding import analysis_runtime_binding, select_analysis_python
+from infrastructure.core.runtime.python_binding import (
+    ANALYSIS_REUSE_REFUSAL,
+    analysis_runtime_binding,
+    select_analysis_python,
+)
 
 pytestmark = pytest.mark.timeout(180)
 
@@ -185,7 +189,12 @@ def test_unbound_os_exit_zero_cannot_complete(tmp_path: Path) -> None:
     repo, project, script = _project(tmp_path, "import os\nos._exit(0)\n")
     result, receipt = _launch(repo, project, script)
     assert result.status is StageStatus.FAILED and result.child_exit_code == 0
-    assert not result.attempt_exit_codes and not receipt["complete"] and receipt["worker"] is None
+    assert not result.attempt_exit_codes and not receipt["complete"]
+    packet = receipt["worker"]
+    assert "completion" not in packet and "original_checkpoint" not in packet
+    process = packet["original_process"]
+    assert process["pid"] > 0 and process["original_exit_code"] == 0 and process["timed_out"] is False
+    assert process["request_digest"] == canonical_digest(packet["request"])
 
 
 def test_restored_script_helper_bytes_cannot_launder_actual_executed_code(tmp_path: Path) -> None:
@@ -213,7 +222,12 @@ def test_supervisor_timeout_is_distinct_from_leaf_exit124(tmp_path: Path) -> Non
     repo, project, script = _project(tmp_path, "import time\ntime.sleep(30)\n")
     result, receipt = _launch(repo, project, script, seconds=2)
     assert result.status is StageStatus.TIMED_OUT and not result.complete
-    assert not result.attempt_exit_codes and receipt["worker"] is None
+    assert not result.attempt_exit_codes and not receipt["complete"]
+    packet = receipt["worker"]
+    if packet is not None:
+        assert "completion" not in packet and "original_checkpoint" not in packet
+        assert packet["original_process"]["timed_out"] is True
+        assert packet["original_process"]["original_exit_code"] != 124
     assert "script exited 124" not in result.diagnostic
 
 
@@ -374,7 +388,10 @@ def test_installed_member_mutation_never_reuses_analysis_or_resumes_checkpoint(t
     resumed_executor = PipelineExecutor(config)
     refused = resumed_executor.execute_pipeline()
     assert resumed_executor.run_result(refused).exit_code == 75
-    assert refused[0].outcome is not None and "declaration identity only" in refused[0].outcome.diagnostic
+    # A genuine unresolved tool can refuse resume before dependency-declaration
+    # custody does. Require the actual earliest refusal, never an accepted cache.
+    expected_refusal = tool_reuse_refusal(repo, project) or ANALYSIS_REUSE_REFUSAL
+    assert refused[0].outcome is not None and expected_refusal in refused[0].outcome.diagnostic
     assert checkpoint.read_bytes() == checkpoint_before
     assert (project / "output/data/value.txt").read_text() == "17"
     config.resume = False

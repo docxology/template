@@ -184,14 +184,15 @@ def ensure_ollama_for_tests():
 
     logger = get_logger(__name__)
     skip_pull = _env_truthy("OLLAMA_SKIP_TEST_MODEL_PULL")
+    base_url = os.environ.get("OLLAMA_HOST", "http://localhost:11434")
     pull_model = (os.environ.get("OLLAMA_TEST_PULL_MODEL") or "smollm2").strip()
     pull_timeout = _ollama_test_pull_timeout()
 
-    if is_ollama_running():
+    if is_ollama_running(base_url):
         logger.info("✓ Ollama server is already running")
     else:
         logger.warning("⚠️  Ollama server is not running - attempting to start...")
-        if not ensure_ollama_ready(auto_start=True):
+        if not ensure_ollama_ready(base_url=base_url, auto_start=True):
             pytest.fail(
                 "\n" + "=" * 80 + "\n"
                 "❌ CRITICAL: Ollama server cannot be started for tests!\n"
@@ -221,7 +222,7 @@ def ensure_ollama_for_tests():
             "=" * 80
         )
 
-    models = get_model_names()
+    models = get_model_names(base_url)
 
     def _maybe_pull(reason: str) -> None:
         nonlocal models
@@ -249,7 +250,7 @@ def ensure_ollama_for_tests():
                 "use whatever is already installed (see `ollama list`).\n"
                 "=" * 80
             )
-        models = get_model_names()
+        models = get_model_names(base_url)
         if not models:
             _fail_no_models()
         if not small_fast_preference_matches(models):
@@ -277,8 +278,8 @@ def ensure_ollama_for_tests():
     # actionable diagnosis instead of identical confusing per-test errors.
     from infrastructure.llm.utils.models import preload_model, select_small_fast_model
 
-    probe_model = select_small_fast_model() or models[0]
-    probe_ok, probe_err = preload_model(probe_model, timeout=120.0, retries=1)
+    probe_model = select_small_fast_model(base_url) or models[0]
+    probe_ok, probe_err = preload_model(probe_model, base_url=base_url, timeout=120.0, retries=1)
     if not probe_ok:
         pytest.fail(
             "\n" + "=" * 80 + "\n"

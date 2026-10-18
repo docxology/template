@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import subprocess
 from pathlib import Path
 
 import pytest
@@ -46,6 +47,9 @@ def _write_project_outputs(project: Path) -> None:
         "@article{smith2026,title={A}}\n",
         encoding="utf-8",
     )
+    # This standalone fixture must not inherit an enclosing checkout's ignored
+    # acceptance scratch directory when validating its shippable artifacts.
+    subprocess.run(["git", "init", "-q"], cwd=project, check=True, capture_output=True)
     aggregate_artifact_manifests(project / "output")
 
 

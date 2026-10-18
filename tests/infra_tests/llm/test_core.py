@@ -741,6 +741,8 @@ class TestLLMQueryModesIntegration:
     def test_query_long(self):
         """Test long query mode."""
         client = _ready_small_model_client()
+        # Keep the actual long-mode path while bounding this smoke workload.
+        client = LLMClient(client.config.with_overrides(long_max_tokens=128))
         try:
             result = client.query_long("Explain what Python is in detail.")
 

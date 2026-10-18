@@ -17,9 +17,7 @@ from infrastructure.core.pipeline.fingerprints import canonical_digest, source_c
 from infrastructure.core.pipeline.outcomes import StageOutcome, StageStatus
 from infrastructure.core.pipeline.skip_receipts import validate_skip_receipt
 from infrastructure.core.runtime.python_binding import admitted_runtime_report
-
-SCHEMA = "template-python-stage/3"
-ANALYSIS_SCHEMA = "template-python-analysis/4"
+from infrastructure.core.pipeline._stage_protocol import SCHEMA, ANALYSIS_SCHEMA
 
 _BOOTSTRAP = (
     "import runpy,sys;sys.dont_write_bytecode=False;"
@@ -46,6 +44,7 @@ def launch_python_stage(
     analysis_receipt: dict[str, object] | None = None,
     cwd: Path | None = None,
     stage_admission: dict[str, object] | None = None,
+    project_test_measurement: dict[str, str] | None = None,
 ) -> StageOutcome:
     """Only an actual fresh worker receipt may authorize stage success or skip."""
     if cwd is not None and not isinstance(cwd, Path):
@@ -164,6 +163,8 @@ def launch_python_stage(
                 )
             )
             fields = {"schema", "request_digest", "run_id", "stage_key", "custody", "original_exit_code", "diagnostic"}
+            if stage_key == "project_tests" and analysis_runtime is None:
+                fields.add("project_test_measurement_sha256")
             if analysis_runtime is not None:
                 fields.update(
                     {
@@ -221,6 +222,21 @@ def launch_python_stage(
                     )
                 ):
                     raise ValueError("Analysis receipt lacks its admitted actual runtime/source identity")
+            if stage_key == "project_tests" and analysis_runtime is None:
+                commitment = receipt["project_test_measurement_sha256"]
+                if commitment is not None:
+                    if (
+                        not isinstance(commitment, str)
+                        or len(commitment) != 64
+                        or any(c not in "0123456789abcdef" for c in commitment)
+                    ):
+                        raise ValueError("Original project measurement commitment is malformed")
+                    if (
+                        project_test_measurement is not None
+                        and receipt["custody"] == "verified"
+                        and receipt["original_exit_code"] == 0
+                    ):
+                        project_test_measurement["sha256"] = commitment
             admitted, original = receipt, receipt["original_exit_code"]
             if analysis_receipt is not None and analysis_runtime is not None:
                 analysis_receipt.update(completion=receipt)

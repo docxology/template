@@ -295,12 +295,17 @@ class TestCLIWithOllama:
 
     def test_query_command_basic(self, capsys):
         """Test basic query command."""
+        from infrastructure.llm.core.config import OllamaClientConfig
+        from infrastructure.llm.utils.models import select_small_fast_model
+
+        model = select_small_fast_model(OllamaClientConfig.from_env().base_url)
+        assert model, "A prepared small Ollama model is required"
         args = argparse.Namespace(
             prompt="Say 'test' and nothing else",
             short=True,
             long=False,
             stream=False,
-            model="smollm2:135m-instruct-q4_K_S",  # Use fast model for tests
+            model=model,
             temperature=0.0,
             max_tokens=50,
             seed=42,

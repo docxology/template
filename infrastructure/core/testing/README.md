@@ -26,6 +26,7 @@ probes, and test-selection planning. Re-homed from the flat
 | `ci_test_ownership.py` | Explicit focused test owners for shared Source changes, retaining the complete legacy smoke selection. |
 | `ci_execution_user.py` | Explicit hosted Linux account preparation, unprivileged original-command execution and byte-identical readiness transport; strict process observation remains unchanged. |
 | `pytest_receipt.py`, `pytest_observations.py` | Explicitly enabled nonce-bound original pytest collection/outcome records and independent readback. |
+| `project_test_measurement.py` | Compose a complete original serial Stage-01 branch-coverage measurement into the same pipeline, using the original producer hash carried by the stage worker. |
 | `ci_infra_partition.py` | Source-declared complete ordinary-CI module partition and selection admission. |
 | `ci_infra_shard_plugin.py` | Explicit pytest/xdist collection partition, actual completion accounting and bounded diagnostics-only controller records. |
 | `ci_infra_coverage.py` | Confined shard transfer checks and the complete ≥60% branch-coverage union. |

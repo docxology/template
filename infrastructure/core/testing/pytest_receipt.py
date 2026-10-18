@@ -22,11 +22,12 @@ _deselected: set[str] = set()
 _reports: dict[str, dict[str, str]] = {}
 _timings: dict[str, dict[str, float]] = {}
 _collection_errors = 0
+_collection_skips = 0
 _enabled = False
 
 
 def pytest_sessionstart(session: Any) -> None:
-    global _collection_errors, _enabled
+    global _collection_errors, _collection_skips, _enabled
     nonce = os.environ.get(NONCE_ENV)
     _enabled = bool(nonce and os.environ.get(DIRECTORY_ENV) and os.environ.get(_ACTIVE_ENV) != nonce)
     if _enabled:
@@ -39,6 +40,7 @@ def pytest_sessionstart(session: Any) -> None:
     _reports.clear()
     _timings.clear()
     _collection_errors = 0
+    _collection_skips = 0
 
 
 def pytest_collection_finish(session: Any) -> None:
@@ -59,9 +61,11 @@ def pytest_xdist_node_collection_finished(node: Any, ids: list[str]) -> None:
 
 
 def pytest_collectreport(report: Any) -> None:
-    global _collection_errors
+    global _collection_errors, _collection_skips
     if report.failed:
         _collection_errors += 1
+    if report.skipped:
+        _collection_skips += 1
 
 
 def pytest_runtest_logreport(report: Any) -> None:
@@ -101,6 +105,7 @@ def pytest_sessionfinish(session: Any, exitstatus: int) -> None:
         "reports": {qualify(node): phases for node, phases in _reports.items()},
         "timings": {qualify(node): phases for node, phases in _timings.items()},
         "collection_errors": _collection_errors,
+        "collection_skips": _collection_skips,
         "exit_code": int(exitstatus),
     }
     # Exclusive original output prevents stale observations being overwritten.

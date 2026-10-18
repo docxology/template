@@ -13,6 +13,7 @@ import os
 import uuid
 import time
 from abc import ABC, abstractmethod
+from dataclasses import replace
 from pathlib import Path
 from typing import TYPE_CHECKING
 
@@ -29,6 +30,11 @@ if TYPE_CHECKING:
 from infrastructure.core.pipeline.outcomes import StageOutcome, StageStatus
 from infrastructure.core.pipeline.fingerprints import canonical_digest, source_fingerprint
 from infrastructure.core.pipeline.stage_launch import launch_python_stage
+from infrastructure.core.testing.project_test_measurement import (
+    ANCHOR_ENV,
+    validate_measurement,
+    measurement_path,
+)
 
 logger = get_logger(__name__)
 PIPELINE_STAGE_TIMEOUT_SECONDS = 7200.0
@@ -56,6 +62,8 @@ def resolve_pipeline_script_path(repo_root: Path, script_name: str) -> Path:
 def build_stage_subprocess_env(repo_root: Path, project_dir: Path, *, mode: str | None = None) -> dict[str, str]:
     """Build the shared environment for full-pipeline and single-stage scripts."""
     env = get_subprocess_env()
+    # Only this executor may inject its current successful Stage-01 commitment.
+    env.pop(ANCHOR_ENV, None)
     env.setdefault("MPLBACKEND", "Agg")
     env.setdefault("PYTHONIOENCODING", "utf-8")
     env.setdefault("PROJECT_ROOT", str(repo_root))
@@ -83,6 +91,7 @@ class PipelineStageMixin(ABC):
     # Concrete implementations are provided by PipelineExecutor via MRO.
     config: "PipelineConfig"
     log_file: Path
+    _project_measurement: tuple[tuple[str, str, str], str] | None = None
 
     @abstractmethod
     def _setup_log_file_handler(self) -> None: ...
@@ -176,6 +185,17 @@ class PipelineStageMixin(ABC):
                 "PIPELINE_SKIP_RECEIPT_PATH": str(receipt_path),
             }
         )
+        measurement_context = (str(self.config.project_dir), run_id, env["PIPELINE_PLAN_DIGEST"])
+        if stage_key == "project_tests":
+            self._project_measurement = None
+            target = measurement_path(self.config.project_dir, run_id)
+            # Repeated attempts cannot adopt a prior attempt's measurement.
+            atomic_write_text_confined(self.config.project_dir, target, "", mode=0o600)
+            unlink_confined(self.config.project_dir, target)
+        else:
+            held = getattr(self, "_project_measurement", None)
+            if held is not None and held[0] == measurement_context:
+                env[ANCHOR_ENV] = held[1]
         deadline = float(getattr(self, "_stage_deadline", 0.0)) or time.monotonic() + PIPELINE_STAGE_TIMEOUT_SECONDS
         launch_deadline = _stage_launch_deadline(deadline)
         if launch_deadline <= time.monotonic():
@@ -195,7 +215,8 @@ class PipelineStageMixin(ABC):
             )
         except (OSError, ValueError) as exc:
             return StageOutcome(stage_key, StageStatus.BLOCKED, None, f"Stage source custody unavailable: {exc}")
-        return launch_python_stage(
+        publication: dict[str, str] = {}
+        outcome = launch_python_stage(
             repo=self.config.repo_root,
             project=self.config.project_dir,
             argv=cmd,
@@ -208,4 +229,26 @@ class PipelineStageMixin(ABC):
             skip_path=receipt_path,
             allow_skip=allow_skip_code,
             stage_admission=getattr(self, "_active_stage_admission", None),
+            project_test_measurement=publication,
         )
+        if stage_key == "project_tests" and outcome.complete:
+            try:
+                anchor = publication.get("sha256")
+                if anchor is not None:
+                    validate_measurement(self.config.project_dir, env, anchor)
+                    self._project_measurement = (measurement_context, anchor)
+            except (OSError, ValueError, KeyError, TypeError) as exc:
+                expired = time.monotonic() >= launch_deadline
+                return replace(
+                    outcome,
+                    status=StageStatus.TIMED_OUT if expired else StageStatus.BLOCKED,
+                    diagnostic=f"Project test measurement custody refused: {exc}",
+                )
+            if time.monotonic() >= launch_deadline:
+                self._project_measurement = None
+                return replace(
+                    outcome,
+                    status=StageStatus.TIMED_OUT,
+                    diagnostic="Original stage deadline expired during measurement validation",
+                )
+        return outcome

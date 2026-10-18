@@ -13,6 +13,7 @@ from collections.abc import Callable
 from pathlib import Path
 
 _DIRECTORY_FLAGS = os.O_RDONLY | os.O_DIRECTORY | getattr(os, "O_NOFOLLOW", 0)
+_ANCESTOR_FLAGS = getattr(os, "O_PATH", os.O_RDONLY) | os.O_DIRECTORY | getattr(os, "O_NOFOLLOW", 0)
 _FILE_FLAGS = os.O_RDONLY | getattr(os, "O_NOFOLLOW", 0) | getattr(os, "O_NONBLOCK", 0)
 
 
@@ -29,22 +30,24 @@ def _content_identity(observation: os.stat_result) -> tuple[int, ...]:
     return (*_identity(observation), observation.st_size, observation.st_mtime_ns, observation.st_ctime_ns)
 
 
-def _open_ancestors(path: Path, deadline: float) -> list[tuple[int, int | None, str]]:
-    """Hold the lexical absolute chain; public link aliases are never resolved."""
+def _open_ancestors(path: Path, deadline: float, *, readable_root: bool = False) -> list[tuple[int, int | None, str]]:
+    """Hold no-follow search witnesses and optionally a readable selected root."""
     path = path.absolute()
     if ".." in path.parts:
         raise ValueError("Lean source refuses lexical parent traversal")
     if len(path.parts) > 128:
         raise ValueError("Lean source exceeds its ancestor depth bound")
-    held: list[tuple[int, int | None, str]] = [(os.open(path.anchor, _DIRECTORY_FLAGS), None, "")]
+    anchor_flags = _DIRECTORY_FLAGS if readable_root and len(path.parts) == 1 else _ANCESTOR_FLAGS
+    held: list[tuple[int, int | None, str]] = [(os.open(path.anchor, anchor_flags), None, "")]
     try:
-        for component in path.parts[1:]:
+        for index, component in enumerate(path.parts[1:], start=1):
             _budget(deadline)
             parent = held[-1][0]
             before = os.stat(component, dir_fd=parent, follow_symlinks=False)
             if not stat.S_ISDIR(before.st_mode):
                 raise ValueError("Lean source custody refuses directory and ancestor symlinks or non-directories")
-            descriptor = os.open(component, _DIRECTORY_FLAGS, dir_fd=parent)
+            flags = _DIRECTORY_FLAGS if readable_root and index == len(path.parts) - 1 else _ANCESTOR_FLAGS
+            descriptor = os.open(component, flags, dir_fd=parent)
             held.append((descriptor, parent, component))
             if _identity(before) != _identity(os.fstat(descriptor)):
                 raise ValueError("Lean source ancestor changed during admission")
@@ -116,7 +119,7 @@ def snapshot_tree(
     max_depth: int = 64,
 ) -> dict[str, bytes]:
     """Capture a finite tree, refusing every admitted nonregular entry."""
-    held = _open_ancestors(root, deadline)
+    held = _open_ancestors(root, deadline, readable_root=True)
     records: dict[str, bytes] = {}
     entries = total = 0
 

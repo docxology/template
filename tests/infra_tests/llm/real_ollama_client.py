@@ -8,6 +8,8 @@ model — this module centralizes that pattern for ``@pytest.mark.requires_ollam
 
 from __future__ import annotations
 
+import os
+
 import pytest
 
 from infrastructure.llm.core.client import LLMClient
@@ -20,15 +22,17 @@ def build_real_small_llm_client(
     auto_inject_system_prompt: bool = True,
     timeout: float = 30.0,
 ) -> LLMClient:
-    """Return a client for ``localhost:11434`` with a preloaded small/fast model."""
-    model_name = select_small_fast_model()
+    """Return a preloaded client for the configured real daemon endpoint."""
+    base_url = os.environ.get("OLLAMA_HOST", "http://localhost:11434")
+    model_name = select_small_fast_model(base_url)
     if not model_name:
         pytest.fail("Expected an Ollama model after ensure_ollama_for_tests")
-    ok, err = preload_model(model_name, timeout=10.0, retries=0)
+    ok, err = preload_model(model_name, base_url=base_url, timeout=10.0, retries=0)
     if not ok:
         pytest.fail(f"Ollama model {model_name!r} failed to preload: {err}")
     return LLMClient(
         OllamaClientConfig(
+            base_url=base_url,
             default_model=model_name,
             timeout=timeout,
             auto_inject_system_prompt=auto_inject_system_prompt,

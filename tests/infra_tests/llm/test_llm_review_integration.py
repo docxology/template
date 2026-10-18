@@ -33,33 +33,21 @@ class TestLLMReviewIntegration:
     def test_generate_review_with_real_llm(self):
         """Test generating a review with real LLM."""
         from infrastructure.llm.review.generator import generate_llm_executive_summary as generate_executive_summary
-        from infrastructure.llm.utils.ollama import is_ollama_running, preload_model, select_small_fast_model
-
-        if not is_ollama_running():
-            pytest.fail("Ollama server is not running (ensure_ollama_for_tests should have started it).")
-
-        model = select_small_fast_model()
-        if not model:
-            pytest.fail("No Ollama models available.")
-
-        ok, err = preload_model(model, timeout=10.0, retries=0)
-        if not ok:
-            pytest.fail(f"Ollama model {model!r} failed to preload: {err}")
-
         from infrastructure.llm.core.client import LLMClient
-        from infrastructure.llm.core.config import OllamaClientConfig
 
-        client = LLMClient(
-            OllamaClientConfig(
-                base_url="http://localhost:11434",
-                default_model=model,
-                timeout=60.0,
-                auto_inject_system_prompt=True,
-            )
-        )
+        from .real_ollama_client import build_real_small_llm_client
+
+        client = build_real_small_llm_client(timeout=60.0)
+        # This smoke proves real review generation and metrics at a finite size.
+        client = LLMClient(client.config.with_overrides(long_max_tokens=128))
         test_text = "This is a brief manuscript to test actual LLM functionality."
-        response, metrics = generate_executive_summary(client, test_text, model_name=model)
+        response, metrics = generate_executive_summary(
+            client, test_text, model_name=client.config.default_model, temperature=0.0
+        )
 
         assert response is not None
         assert len(response) > 0
         assert isinstance(response, str)
+        assert metrics.input_chars == len(test_text)
+        assert metrics.output_chars == len(response)
+        assert metrics.generation_time_seconds > 0

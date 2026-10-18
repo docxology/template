@@ -15,11 +15,19 @@ ROOT = Path(__file__).resolve().parents[3]
 # These owners exercise the integration protocol or a real module CLI rather
 # than importing each internal leaf directly. Their full modules remain selected.
 PROTOCOL_SOURCES = {
+    # Actual source-owned subprocess/case controls exercise the worker through
+    # produce_root_lane, while the same complete module directly reads results.
+    "infrastructure/project/public_root_lane_worker.py",
     "infrastructure/core/testing/pytest_receipt.py",
     "infrastructure/core/testing/ci_infra.py",
     "infrastructure/core/testing/test_runner_outputs.py",
     # Cleanup owners exercise execution_boundary reexports and copied Source/Code custody.
     "infrastructure/core/_bounded_kill.py",
+    # Complete analysis/measurement owners launch the actual worker through the
+    # controller; the isolated import control also binds both protocol identities.
+    "infrastructure/core/pipeline/_stage_protocol.py",
+    "infrastructure/core/pipeline/stage_launch.py",
+    "infrastructure/core/pipeline/stage_worker.py",
     "infrastructure/project/public_acceptance_auxiliary_pipeline_failure.py",
     "infrastructure/project/public_acceptance_auxiliary_pipeline_environment.py",
     "infrastructure/project/public_acceptance_auxiliary_supervision.py",
