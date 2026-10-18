@@ -37,6 +37,17 @@ def evaluate_original_outcome(
     if not kinds:
         raise ValueError("original outcome requires the installed or Linux auxiliary owner")
     expected = {item.id for item in requirements if item.kind in kinds}
+    scoped = report.get("auxiliary_selection")
+    if kind == "auxiliary" and scoped is not None:
+        from infrastructure.project.auxiliary_matrix_plan import validate_cell, matrix_plan
+
+        if not isinstance(scoped, dict):
+            raise ValueError("auxiliary matrix selection must be a Source-owned object")
+        cell = scoped.get("cell")
+        if not isinstance(cell, str):
+            raise ValueError("auxiliary matrix selection requires its exact Source cell name")
+        validate_cell(report, requirements, cell)
+        expected = set(matrix_plan(requirements)[cell])
     gates = report.get("gates")
     if (
         not expected

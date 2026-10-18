@@ -88,7 +88,8 @@ def test_deadline_must_be_finite_before_evidence_or_launch(tmp_path: Path, deadl
     assert not (tmp_path / "output").exists()
 
 
-def test_original_failure_streams_binary_and_bootstrap_are_preserved(tmp_path: Path) -> None:
+@pytest.mark.parametrize("forward", [False, True])
+def test_original_failure_streams_binary_and_bootstrap_are_preserved(tmp_path: Path, capsys, forward: bool) -> None:
     from infrastructure.project.public_acceptance_auxiliary_validation import _supervision_diagnostic
 
     bootstrap = {"declared": "actual control"}
@@ -104,6 +105,7 @@ def test_original_failure_streams_binary_and_bootstrap_are_preserved(tmp_path: P
         tmp_path / "output/readiness/original-failure",
         time.monotonic() + 20,
         bootstrap_payload=bootstrap,
+        stream_diagnostics=forward,
     )
     assert type(observation["pid"]) is int
     assert observation["exit_code"] == 17
@@ -133,6 +135,10 @@ def test_original_failure_streams_binary_and_bootstrap_are_preserved(tmp_path: P
     assert observation["executable_sha256_before"] == observation["executable_sha256_after"] == digest
     assert _stream(tmp_path, observation, "stdout") == b"actual\x00stdout"
     assert _stream(tmp_path, observation, "stderr") == b"actual\x00stderr"
+    captured = capsys.readouterr()
+    if forward:
+        assert "actual\x00stdout" in captured.out
+        assert "actual\x00stderr" in captured.err
 
 
 @pytest.mark.parametrize("root_waits", [False, True], ids=["root-exit", "original-deadline"])

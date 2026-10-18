@@ -27,7 +27,7 @@ def build_real_small_llm_client(
     model_name = select_small_fast_model(base_url)
     if not model_name:
         pytest.fail("Expected an Ollama model after ensure_ollama_for_tests")
-    ok, err = preload_model(model_name, base_url=base_url, timeout=10.0, retries=0)
+    ok, err = preload_model(model_name, base_url=base_url, timeout=10.0, retries=0, context_window=4096)
     if not ok:
         pytest.fail(f"Ollama model {model_name!r} failed to preload: {err}")
     return LLMClient(
@@ -35,6 +35,12 @@ def build_real_small_llm_client(
             base_url=base_url,
             default_model=model_name,
             timeout=timeout,
+            max_tokens=128,
+            context_window=4096,
+            fallback_models=[],
+            request_retries=0,
+            temperature=0.0,
+            seed=42,
             auto_inject_system_prompt=auto_inject_system_prompt,
         )
     )

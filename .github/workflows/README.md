@@ -181,10 +181,13 @@ the release job. Both paths build and admit a fresh source distribution and
 recheck the selected assets before and after publication.
 
 The candidate implementation includes
-[`platform-required-acceptance.yml`](platform-required-acceptance.yml). Its four
-jobs cover six original Root units (Python 3.12/3.13/3.14 on macOS/Linux), common
-installed/export/runtime and auxiliary observations, the native-format
-inventory, and an independent collector. The collector uploads
+[`platform-required-acceptance.yml`](platform-required-acceptance.yml).
+It covers six original Root units (Python 3.12/3.13/3.14 on macOS/Linux), common
+installed/export/runtime observations, Source-derived complete auxiliary
+project cells and separate Root checks, the native-format inventory, and an
+independent collector. Auxiliary cells run serially within individual
+1,800-second operations, with four concurrent cells. This changes aggregate
+scheduling allowance; it never qualifies an earlier failed global operation. The collector uploads
 `platform-required-acceptance` only after every required exact-source gate passes.
 The workflow's presence does not establish a successful hosted run, integration
 into `main`, or publication. Ordinary CI uploads cannot substitute for this

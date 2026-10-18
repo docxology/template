@@ -101,3 +101,9 @@ uv run python scripts/maintenance/refresh_artifact_manifests.py \
 
 - [`AGENTS.md`](AGENTS.md)
 - [`../README.md`](../README.md)
+
+`PipelineExecutor.execute_pipeline(deadline_monotonic=...)` composes an
+existing absolute supervising deadline with the frozen plan budget, including
+the previewed-plan path. Waiting, execution and cleanup never restart that
+outer work clock. Auxiliary copied-source children carry the parent's original
+deadline into this public entry point.

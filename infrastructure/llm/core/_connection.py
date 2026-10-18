@@ -24,7 +24,7 @@ except ImportError as _err:
 from infrastructure.core.exceptions import LLMConnectionError
 from infrastructure.core.logging.utils import get_logger
 from infrastructure.llm.core._text_utils import strip_thinking_tags
-from infrastructure.llm.core.config import GenerationOptions
+from infrastructure.llm.core.config import GenerationOptions, _retry_count
 
 if TYPE_CHECKING:
     from infrastructure.llm.core.config import OllamaClientConfig
@@ -46,7 +46,7 @@ class _ConnectionMixin:
         model: str,
         messages: list[MessageDict],
         options: GenerationOptions | None = None,
-        retries: int = 1,
+        retries: int | None = None,
     ) -> str:
         """Generate response from Ollama API with direct messages and retry logic.
 
@@ -62,6 +62,7 @@ class _ConnectionMixin:
         Raises:
             LLMConnectionError: If connection fails after retries
         """
+        retries = _retry_count(self.config.request_retries if retries is None else retries)
         url = f"{self.config.base_url}/api/chat"
 
         # Build options dict

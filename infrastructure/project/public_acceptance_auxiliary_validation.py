@@ -195,7 +195,9 @@ def validate_auxiliary_process(gate: str, fingerprint: str, details: dict[str, A
         from infrastructure.reporting.native_auxiliary_print_custody import AuxiliaryPrintReaderOperation
 
         print_reader = reader
-        if type(reader.hosted_origin) is AuxiliaryPrintHostedContext:
+        from infrastructure.project.auxiliary_matrix_hosted import AuxiliaryMatrixHostedContext
+
+        if type(reader.hosted_origin) in (AuxiliaryPrintHostedContext, AuxiliaryMatrixHostedContext):
             print_deadline = reader.operation_deadline
             if print_deadline is None and reader.native_operation is not None:
                 print_deadline = reader.native_operation.deadline

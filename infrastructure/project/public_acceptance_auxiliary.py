@@ -87,6 +87,7 @@ def _auxiliary_gate_operation(
             {
                 "gate": gate,
                 "budget": max(1, int(deadline - time.monotonic())),
+                "operation_deadline": deadline,
                 "raw_path": raw_path.relative_to(root).as_posix(),
                 "producer_inputs": (producer_inputs or {}).get(requirement.scope, {}),
                 **(
@@ -253,6 +254,7 @@ def run_auxiliary_acceptance(
     interpreter: Path | None = None,
     producer_inputs: dict[str, dict[str, Any]] | None = None,
     workers: int = 1,
+    matrix_cell: str | None = None,
 ) -> dict[str, Any]:
     """Run a complete bounded selection with serial Source admission per scope."""
     if type(workers) is not int or workers not in (1, 2, 3):
@@ -273,6 +275,13 @@ def run_auxiliary_acceptance(
     selection = tuple(ROOT_GATES if gates is None else gates)
     if not selection or len(set(selection)) != len(selection) or set(selection) - set(available):
         raise ValueError("auxiliary selection must contain unique declared gate IDs")
+    matrix_selection = None
+    if matrix_cell is not None:
+        from infrastructure.project.auxiliary_matrix_plan import selection as cell_selection, TIMEOUT_SECONDS
+
+        matrix_selection = cell_selection(requirements, matrix_cell)
+        if list(selection) != matrix_selection["gates"] or workers != 1 or timeout_seconds != TIMEOUT_SECONDS:
+            raise ValueError("matrix operation requires its full serial selection and original 1800-second clock")
     directory = evidence_directory(
         root, evidence_dir or root / "output/readiness" / f"auxiliary-{uuid.uuid4().hex}", fresh=True
     )
@@ -348,6 +357,7 @@ def run_auxiliary_acceptance(
         "gates": output,
         "source_current": current,
         "auxiliary_workers": workers,
+        **({"auxiliary_selection": matrix_selection} if matrix_selection is not None else {}),
         "deadline_exhausted": expired,
         "exit_code": 1
         if expired or not current or any(item["status"] == "fail" for item in output.values())

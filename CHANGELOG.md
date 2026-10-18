@@ -101,6 +101,19 @@ and historical notes remain preserved.
   coverage and pinned live workloads. Clone Git fixtures through independent
   native transport and route helpers to complete focused CI owners.
 
+- Schedule Linux auxiliary acceptance as complete Source-derived project cells,
+  each serial under its original 1800-second clock. Authenticate every same-run
+  original archive and complete gate union again during candidate and release
+  readback; retain old shared-deadline failures as failures.
+- Compose nested pipeline execution with the existing absolute operation deadline
+  and forward bounded original diagnostics while preserving retained process exits.
+- Authenticate genuine pytest thread timers for native print controls, isolate
+  inventory fixtures in real Git repositories, and make LLM request retries
+  explicit while warming the actual nominated context size.
+- Close native child packets under one fresh synchronous post-return Source
+  boundary, then recheck physical ownership, original events and registry state
+  before adoption. Independent later-use verification remains fresh.
+
 ## [4.0.1] - 2026-10-10
 
 See the [illustrated release-intent notes](docs/releases/v4.0.1.md). The date

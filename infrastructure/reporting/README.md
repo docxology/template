@@ -476,3 +476,11 @@ CMaps are charged for each declared font construction; uncached direct font
 resource dictionaries remain unsupported. Incremental,
 encrypted, hybrid, Form, Type3 and pattern programs remain unsupported and blocked.
 These controls retain original PDF bytes and do not grant publication acceptance.
+
+`native_stage_child_completion.py` closes one actual fixed child after ToolAPI
+return under a fresh synchronous Source boundary. Private DATA validators keep
+every original Code/SDK/PID/request/process predicate. Complete Source/Git/SDK
+closure and final physical factory/registry checks precede child publication.
+No guard spans execution, accepts callbacks or yields reusable verification.
+Public independent verification APIs remain fresh; clocks and original signed
+failure outcomes retain authority.

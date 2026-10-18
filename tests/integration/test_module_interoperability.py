@@ -30,7 +30,7 @@ class TestResearchWorkflow:
         if not model_name:
             pytest.fail("No Ollama model after ensure_ollama_for_tests (misconfiguration).")
 
-        ok, err = preload_model(model_name, base_url=base_url, timeout=10.0, retries=0)
+        ok, err = preload_model(model_name, base_url=base_url, timeout=10.0, retries=0, context_window=4096)
         if not ok:
             pytest.fail(f"Ollama model {model_name!r} failed to preload: {err}")
 
@@ -47,6 +47,9 @@ class TestResearchWorkflow:
                     default_model=model_name,
                     timeout=15.0,
                     max_tokens=128,
+                    context_window=4096,
+                    fallback_models=[],
+                    request_retries=0,
                     temperature=0.0,
                     seed=42,
                 )

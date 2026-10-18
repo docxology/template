@@ -5,6 +5,7 @@ from __future__ import annotations
 import json
 import os
 import signal
+import subprocess
 import time
 from collections.abc import Iterator
 from contextlib import contextmanager
@@ -32,6 +33,12 @@ from infrastructure.core.pipeline.incremental import (
 )
 from infrastructure.core.pipeline.outcomes import StageStatus
 from infrastructure.core.pipeline.types import PipelineConfig, StageContract
+
+
+@pytest.fixture
+def isolated_inventory_repository(tmp_path: Path) -> None:
+    """Keep synthetic output independent of the caller's packaging ignores."""
+    subprocess.run(["git", "init", "--quiet", str(tmp_path)], check=True, capture_output=True)
 
 
 @contextmanager
@@ -227,6 +234,7 @@ def test_complete_resume_cannot_reuse_another_environment(tmp_path: Path, frozen
 
 
 @pytest.mark.parametrize("relative", ["logs/observations.csv", "diagnostics.json", "observations.log"])
+@pytest.mark.usefixtures("isolated_inventory_repository")
 def test_nested_scientific_runtime_names_affect_directory_identities(tmp_path: Path, relative: str) -> None:
     data = tmp_path / "output" / "data"
     artifact = data / relative
@@ -241,6 +249,7 @@ def test_nested_scientific_runtime_names_affect_directory_identities(tmp_path: P
     assert artifact.absolute() in inventory.files
 
 
+@pytest.mark.usefixtures("isolated_inventory_repository")
 def test_runtime_exclusions_follow_actual_output_locations(tmp_path: Path) -> None:
     output = tmp_path / "output"
     data = output / "data"
@@ -270,6 +279,7 @@ def test_runtime_exclusions_follow_actual_output_locations(tmp_path: Path) -> No
     assert inventory.files == ((data / "value.txt").absolute(),)
 
 
+@pytest.mark.usefixtures("isolated_inventory_repository")
 def test_fulltext_inventory_exception_is_bound_without_private_fulltext(tmp_path: Path) -> None:
     fulltext = tmp_path / "output" / "fulltext"
     fulltext.mkdir(parents=True)

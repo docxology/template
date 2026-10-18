@@ -232,15 +232,15 @@ class PipelineExecutor(PipelineStageMixin, PipelineResumeMixin):
 
     # -- Pipeline execution --------------------------------------------------
 
-    def execute_pipeline(self) -> list[PipelineStageResult]:
+    def execute_pipeline(self, *, deadline_monotonic: float | None = None) -> list[PipelineStageResult]:
         """Execute the core or live contract selected by config.mode."""
         try:
             selection = self._preview_identity(not self.config.clean)
             if self._preview_plan is not None and self._preview_selection == selection:
-                return self.execute_plan(self._preview_plan)
+                return self.execute_plan(self._preview_plan, deadline_monotonic=deadline_monotonic)
             self._build_stage_list(skip_clean=not self.config.clean)
             assert self.execution_plan is not None
-            return self.execute_plan(self.execution_plan)
+            return self.execute_plan(self.execution_plan, deadline_monotonic=deadline_monotonic)
         finally:
             self.close()
 

@@ -308,6 +308,7 @@ def preload_model(
     timeout: float = 60.0,
     retries: int = 1,
     check_loaded_first: bool = True,
+    context_window: int | None = None,
 ) -> tuple[bool, str | None]:
     """Preload a model into Ollama's memory with retry logic.
 
@@ -321,6 +322,7 @@ def preload_model(
         timeout: Request timeout in seconds (increased for large models)
         retries: Number of retry attempts on failure
         check_loaded_first: Check if model is already loaded before preloading
+        context_window: Warm this exact context size even when the model is loaded
 
     Returns:
         Tuple of (success: bool, error_message: str | None)
@@ -332,8 +334,11 @@ def preload_model(
         >>> if not success:
         ...     print(f"Preload failed: {error}")
     """
-    # Check if already loaded
-    if check_loaded_first:
+    if context_window is not None and (type(context_window) is not int or context_window <= 0):
+        raise ValueError("preload context window must be a positive integer")
+    # An already-loaded model may own a different context. Explicit nominations
+    # require an actual generate request with the selected context profile.
+    if check_loaded_first and context_window is None:
         is_loaded, loaded_name = check_model_loaded(model_name, base_url)
         if is_loaded:
             logger.debug(f"Model {model_name} already loaded ({loaded_name})")
@@ -353,7 +358,10 @@ def preload_model(
                     "model": model_name,
                     "prompt": "test",
                     "stream": False,
-                    "options": {"num_predict": 1},
+                    "options": {
+                        "num_predict": 1,
+                        **({"num_ctx": context_window} if context_window is not None else {}),
+                    },
                 },
                 timeout=timeout,
             )

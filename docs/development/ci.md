@@ -105,12 +105,17 @@ original launches after its process and raw evidence are retained; the missing
 remainder keeps the complete release selection failing. Fixed public phase,
 PID and remaining-time diagnostics locate delays without authorizing acceptance.
 
-The full required-acceptance workflow runs Linux auxiliary originals alongside
-common installed/runtime originals, Root jobs and native originals. Installed
-cells use the existing dependency-aware executor with three bounded workers.
-Each producer exposes its own required failures; the final collector still
-requires the complete Source-owned profile, every host/runtime obligation and
-the independent installed reader. All original operation deadlines remain enforced.
+The full required-acceptance workflow derives one Linux auxiliary cell for
+each complete public project plus separate Root checks, with four concurrent
+jobs and one serial 1,800-second operation per cell. This changes aggregate
+scheduling and compute allowance from the former global operation; earlier
+failures remain failures. Same-run live collection authenticates every unique
+producer attempt and complete original graph. Darwin print, the six Root
+host/runtime artifacts, common installed/runtime and full native-format
+originals retain their separate owners. Installed cells use three bounded
+dependency-aware workers. The independent installed candidate and fresh release
+readers still require the complete Source-owned profile, all host/runtime
+obligations, coverage floors and original case limits.
 
 Use the manual **Optional Hardening** workflow for the former complete
 infrastructure shards, Python 3.12–3.14 project suites, aggregate coverage,

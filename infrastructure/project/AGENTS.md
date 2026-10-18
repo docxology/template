@@ -738,3 +738,14 @@ The `infrastructure/project/` module enables multi-project support by:
 | `public_root_runtime_producer.py` | Supervised prepared-interpreter Root v2 execution and genuine selected-interpreter readback. |
 | `public_root_runtime_readback.py` | Independent Root runtime readback in the genuinely selected interpreter; no cross-minor reconstruction. |
 | `public_root_runtime_worker.py` | One genuine full census and exact applicability units in the selected Root interpreter. |
+
+### Auxiliary project matrix ownership
+
+`auxiliary_matrix_plan.py` owns the complete Source-derived Linux partition;
+`auxiliary_matrix_hosted.py` owns actual same-attempt API collection and the
+immutable original; `auxiliary_matrix_validation.py` closes every original
+project graph against that live authority. Each cell has one 1,800-second
+serial operation. Parallel cells change aggregate scheduling allowance.
+Never report this as success of the old global deadline. Keep Root's six
+artifacts, Darwin print and native-format originals separate, and preserve
+held contexts through candidate and fresh release handoff validation.

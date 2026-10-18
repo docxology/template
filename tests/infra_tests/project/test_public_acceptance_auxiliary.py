@@ -720,7 +720,7 @@ def test_portable_logical_plan_preserves_original_budget_serialization(budget: f
 
 
 @pytest.mark.skipif(sys.platform != "darwin", reason="actual Darwin print worker control")
-@pytest.mark.parametrize("control", ["missing-tools", "caller-timer", "deadline"])
+@pytest.mark.parametrize("control", ["missing-tools", "caller-timer"])
 def test_print_worker_retains_real_preflight_and_guard_failures(tmp_path: Path, control: str) -> None:
     import json
     import subprocess
@@ -735,7 +735,7 @@ def test_print_worker_retains_real_preflight_and_guard_failures(tmp_path: Path, 
         directory / "spec.json",
         {
             "gate": "root:macos:rendering",
-            "budget": 1 if control == "deadline" else 30,
+            "budget": 30,
             "raw_path": (directory / "raw.json").relative_to(root).as_posix(),
         },
     )
@@ -761,12 +761,38 @@ def test_print_worker_retains_real_preflight_and_guard_failures(tmp_path: Path, 
     )
     raw = json.loads((directory / "raw.json").read_text())
     if control == "missing-tools":
-        assert result.returncode == raw["exit_code"] == 75
+        assert result.returncode == raw["exit_code"] == 75, (raw, result.stdout, result.stderr)
         assert raw["status"] == "blocked"
         assert "unavailable" in raw["diagnostic"]
     else:
-        assert result.returncode == raw["exit_code"] == (124 if control == "deadline" else 1), result.stderr
-        assert raw["status"] == ("timeout" if control == "deadline" else "fail")
-        expected = "NativeDeadlineExpired" if control == "deadline" else "NativeDeadlineUnavailable"
-        assert raw["failure_class"] == expected
+        assert result.returncode == raw["exit_code"] == 1, (raw, result.stdout, result.stderr)
+        assert raw["status"] == "fail", raw
+        assert raw["failure_class"] == "NativeDeadlineUnavailable", raw
         assert "deadline" in raw["diagnostic"] or "timer" in raw["diagnostic"]
+
+
+@pytest.mark.skipif(sys.platform != "darwin", reason="actual Darwin native guard control")
+def test_actual_native_guard_expiry_is_preserved_by_subprocess_exit() -> None:
+    """Transport actual one-second guard expiry, independently of witness ownership."""
+    import json
+    import subprocess
+
+    script = """
+import json, signal, time
+from infrastructure.reporting.native_format_acceptance_contracts import native_deadline_guard, NativeDeadlineExpired
+entered = False
+try:
+    with native_deadline_guard(time.monotonic()+1):
+        entered = signal.getitimer(signal.ITIMER_REAL)[0] > 0
+        time.sleep(2)
+except NativeDeadlineExpired as error:
+    print(json.dumps(dict(entered_guard=entered, failure_class=type(error).__name__,
+                          timer_restored=signal.getitimer(signal.ITIMER_REAL)[0]==0)), flush=True)
+    raise SystemExit(124)
+raise SystemExit(7)
+"""
+    result = subprocess.run([sys.executable, "-c", script], capture_output=True, text=True, timeout=15, check=False)
+    assert result.returncode == 124, (result.returncode, result.stdout, result.stderr)
+    assert json.loads(result.stdout) == dict(
+        entered_guard=True, failure_class="NativeDeadlineExpired", timer_restored=True
+    )

@@ -131,7 +131,7 @@ runs:
                 time.sleep(1)
         assert len(tags["models"]) == 1 and tags["models"][0]["name"] == "smollm2:135m"
         assert tags["models"][0]["digest"] == "9077fe9d2ae1a4a41a868836b56b8163731a8fe16621397028c2c76f838c6907"
-        request = urllib.request.Request("http://127.0.0.1:11434/api/generate", data=json.dumps({"model": "smollm2:135m", "prompt": "Say OK.", "stream": False, "options": {"num_predict": 16, "seed": 0, "temperature": 0}}).encode(), headers={"Content-Type": "application/json"})
+        request = urllib.request.Request("http://127.0.0.1:11434/api/generate", data=json.dumps({"model": "smollm2:135m", "prompt": "Say OK.", "stream": False, "options": {"num_predict": 16, "num_ctx": 4096, "seed": 0, "temperature": 0}}).encode(), headers={"Content-Type": "application/json"})
         with urllib.request.urlopen(request, timeout=120) as response:
             result = json.load(response)
         assert result["done"] and result["eval_count"] > 0 and result["response"].strip()

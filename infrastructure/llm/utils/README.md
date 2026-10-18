@@ -238,3 +238,8 @@ graph TD
 - [AGENTS.md](AGENTS.md) - utils documentation
 - [../core/README.md](../core/README.md) - LLM core functionality
 - [../cli/README.md](../cli/README.md) - CLI interface
+
+`preload_model(..., context_window=4096)` sends an actual one-token generate
+request using that context size even when the model is already loaded. The
+optional nomination must be a positive integer; omitting it preserves the
+existing loaded-model shortcut.

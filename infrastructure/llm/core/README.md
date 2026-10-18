@@ -165,3 +165,12 @@ uv run pytest tests/infra_tests/llm/test_core.py -m requires_ollama -v
 - [AGENTS.md](AGENTS.md) - technical documentation
 - [../README.md](../README.md) - LLM infrastructure overview
 - [../../core/](../../core/) - Core infrastructure utilities
+
+`OllamaClientConfig.request_retries` (or `LLM_REQUEST_RETRIES`) declares extra
+HTTP attempts for blocking and streaming queries. The default remains one;
+zero fails on the first transport failure. Explicit streaming retry arguments
+override this configuration, including the short and long wrappers. Values
+must be non-negative integers. Each attempt retains the selected request
+timeout; callers must fit attempts and backoff within their operation budget.
+Real-model smoke clients choose zero retries, 128 output tokens and a
+4096-token context without extending request or case clocks.

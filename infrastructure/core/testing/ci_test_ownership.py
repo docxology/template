@@ -5,6 +5,13 @@ their runtime fits the smoke deadline. Unlisted helpers retain broad fallback.
 """
 
 SOURCE_TEST_OWNERS: dict[str, tuple[str, ...]] = {
+    "infrastructure/reporting/native_stage_child_completion.py": (
+        "tests/infra_tests/reporting/test_native_stage_child_contracts.py",
+        "tests/infra_tests/rendering/test_native_render_custody.py",
+    ),
+    "infrastructure/project/auxiliary_matrix_plan.py": ("tests/infra_tests/project/test_auxiliary_matrix.py",),
+    "infrastructure/project/auxiliary_matrix_hosted.py": ("tests/infra_tests/project/test_auxiliary_matrix.py",),
+    "infrastructure/project/auxiliary_matrix_validation.py": ("tests/infra_tests/project/test_auxiliary_matrix.py",),
     "scripts/shell/setup-system-deps.sh": ("tests/infra_tests/test_system_deps_prepared_python.py",),
     "infrastructure/core/testing/_pytest_runtime_controls.py": (
         "tests/infra_tests/core/test_pytest_runtime_controls.py",

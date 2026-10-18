@@ -118,7 +118,10 @@ def test_required_contract_job_keeps_whole_root_budget_and_explicit_empty_outcom
             assert 'if [ "$RUNNER_OS" = Linux ]' in observation["run"]
             assert 'exec "${root_command[@]}"' in observation["run"]
         else:
-            assert prepare["with"]["docker"] == "true"
+            assert prepare["with"]["docker"] == "${{ matrix.docker }}"
+            assert required[name]["needs"] == "auxiliary-plan"
+            assert required[name]["strategy"]["fail-fast"] is False
+            assert required[name]["strategy"]["max-parallel"] == 4
             observation = next(step for step in steps if step.get("id") == "auxiliary")
         assert "ci_execution_user run" in observation["run"]
         assert observation["continue-on-error"] is True

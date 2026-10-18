@@ -20,6 +20,8 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--repo-root", type=Path, default=Path.cwd())
     parser.add_argument("--gate", action="append")
+    parser.add_argument("--matrix-json", action="store_true")
+    parser.add_argument("--matrix-cell")
     parser.add_argument("--timeout-seconds", type=int, default=600)
     parser.add_argument("--evidence-dir", type=Path)
     parser.add_argument("--interpreter", type=Path)
@@ -57,6 +59,49 @@ def main() -> int:
     parser.add_argument("--docker-image-id", help="Explicit existing immutable Docker image for SIA")
     args = parser.parse_args()
     root = args.repo_root.resolve()
+    if args.matrix_json or args.matrix_cell:
+        if any((args.installed, args.prepare_transfer, args.prepare_runtime_providers, args.emit_transfer)):
+            parser.error("auxiliary matrix mode cannot select another producer mode")
+        from infrastructure.project.auxiliary_matrix_plan import matrix_plan
+        from infrastructure.reporting.release_readiness_profile import required_profile
+        from infrastructure.reporting.release_readiness_snapshot import SnapshotReader
+        from infrastructure.reporting.readiness_receipts import source_fingerprint
+
+        profile, faults = required_profile(root, SnapshotReader(root), source_fingerprint(root))
+        if faults:
+            raise ValueError("auxiliary matrix requires the complete current Source profile")
+        plan = matrix_plan(profile)
+        if args.matrix_json:
+            if args.matrix_cell or args.gate or args.all:
+                parser.error("matrix planning cannot execute or narrow a gate selection")
+            model_scopes = {
+                *LITERATURE_MODULES,
+                "templates/template_sia",
+                "templates/template_autoscientists",
+                "templates/template_code_project",
+                "templates/template_prose_project",
+                "templates/template_gold_refinement",
+            }
+            print(
+                json.dumps(
+                    {
+                        "include": [
+                            dict(
+                                cell=cell,
+                                model="templates/" + cell in model_scopes,
+                                formal=cell in {"template_active_inference", "template_formal"},
+                                docker=cell == "template_sia",
+                            )
+                            for cell in plan
+                        ]
+                    },
+                    separators=(",", ":"),
+                )
+            )
+            return 0
+        if args.gate or args.all or args.matrix_cell not in plan:
+            parser.error("matrix execution requires one complete Source-owned cell")
+        args.gate = list(plan[args.matrix_cell])
     if args.installed:
         from infrastructure.project.installed_acceptance import run_installed_acceptance
 
@@ -128,6 +173,7 @@ def main() -> int:
         evidence_dir=args.evidence_dir,
         interpreter=args.interpreter,
         workers=args.auxiliary_workers,
+        matrix_cell=args.matrix_cell,
         producer_inputs={
             scope: {"model": args.local_model, "image_id": args.docker_image_id}
             for scope in (

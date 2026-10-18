@@ -135,6 +135,7 @@ class NativeProducerOperation:
                 yield None
             finally:
                 check_owner()
+        check_owner()
         remaining(deadline)
 
     def stage_scope_directory(self, scope: str) -> Path:
@@ -196,6 +197,13 @@ class NativeProducerOperation:
 
     def validate_tool(self, binding: object, raw: dict[str, Any], reader: SnapshotReader, *, run_id: str) -> None:
         self.verify(reader, run_id=run_id, deadline=self.deadline)
+        self._validate_tool_data(binding, raw, reader, run_id=run_id)
+        self.verify(reader, run_id=run_id, deadline=self.deadline)
+
+    def _validate_tool_data(self, binding: object, raw: dict[str, Any], reader: SnapshotReader, *, run_id: str) -> None:
+        """Compare actual retained ToolAPI DATA within a caller's fresh Source guard."""
+        if run_id != self.run_id:
+            raise ValueError("native tool DATA belongs to another actual run")
         if not isinstance(binding, dict) or set(binding) != {"path", "sha256"}:
             raise ValueError("live native tool requires an exact retained binding")
         original = self._tools.get(binding["path"])
@@ -216,7 +224,6 @@ class NativeProducerOperation:
         from infrastructure.reporting.native_tool_replay import validate_native_tool_data
 
         validate_native_tool_data(raw, reader, original_deadline=self.deadline, original_completion=original.completion)
-        self.verify(reader, run_id=run_id, deadline=self.deadline)
 
     @property
     def retained_tool_bindings(self) -> tuple[dict[str, str], ...]:

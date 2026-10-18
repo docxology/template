@@ -13,7 +13,8 @@ from pathlib import Path
 
 from infrastructure.core.files.secure_write import read_bytes_confined
 from infrastructure.project.public_hosted_origin import collect_hosted_origin
-from infrastructure.project.auxiliary_print_hosted import AuxiliaryPrintHostedContext, collect_auxiliary_print_original
+from infrastructure.project.auxiliary_print_hosted import collect_auxiliary_print_original
+from infrastructure.project.auxiliary_matrix_hosted import AuxiliaryMatrixHostedContext, collect_auxiliary_matrix
 from infrastructure.project.public_reference_git import remaining
 from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
 from infrastructure.reporting.native_authenticated_original_launch import admit_authenticated_native_originals
@@ -282,7 +283,26 @@ def _main(argv: list[str] | None = None) -> int:
             deadline=deadline,
             environment=dict(os.environ),
         )
-        context = AuxiliaryPrintHostedContext(root_origin, args.repository, args.run_id, args.revision, original_print)
+        from infrastructure.reporting.release_readiness_profile import required_profile
+        from infrastructure.reporting.readiness_receipts import source_fingerprint
+        from infrastructure.project.auxiliary_matrix_plan import matrix_plan, receipt_path
+
+        profile, faults = required_profile(root, SnapshotReader(root), source_fingerprint(root))
+        if faults:
+            raise ValueError("hosted auxiliary reader requires the complete current Source profile")
+        original_matrix = collect_auxiliary_matrix(
+            root,
+            root / ("output/readiness/auxiliary-matrix-live-" + uuid.uuid4().hex),
+            repository=args.repository,
+            run_id=args.run_id,
+            head_sha=args.revision,
+            requirements=profile,
+            deadline=deadline,
+            environment=dict(os.environ),
+        )
+        context = AuxiliaryMatrixHostedContext(
+            root_origin, args.repository, args.run_id, args.revision, original_print, original_matrix
+        )
         receipts = [*args.receipt, custodian.native_receipt_binding()["path"]]
         if len(set(receipts)) != len(receipts):
             raise ValueError("reader refuses duplicate native/common original receipt ownership")
@@ -310,6 +330,11 @@ def _main(argv: list[str] | None = None) -> int:
             )
         roots = _assignments(args.root_receipt, pair=True)
         auxiliary = _assignments(args.auxiliary_receipt, pair=False)
+        if set(auxiliary) != {"darwin"}:
+            raise ValueError(
+                "hosted reader accepts only the separate Darwin nomination; Linux cells come from live originals"
+            )
+        auxiliary.update({cell: receipt_path(cell) for cell in matrix_plan(profile)})
         packing = (
             RequiredCandidatePackingInputs(
                 custodian, root / "output/readiness/candidate-transport", args.repository, args.run_id, deadline

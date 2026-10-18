@@ -217,8 +217,13 @@ def validate_candidate_handoff(
             run_id=positive_id(run_id),
             head_sha=revision,
         )
-        if hosted_origin is not None and hosted_origin != context:
-            raise ValueError("candidate hosted context differs from the exact authenticated handoff")
+        if hosted_origin is not None:
+            if any(
+                getattr(hosted_origin, name) != getattr(context, name)
+                for name in ("manifest_binding", "repository", "run_id", "head_sha")
+            ):
+                raise ValueError("candidate hosted context differs from the exact authenticated handoff")
+            context = hosted_origin
         reader = SnapshotReader(root, hosted_origin=context, native_operation=native_operation)
         # Hold the same aggregate bytes in the context-aware reader as well.
         if reader.read(RECEIPT_PATH).sha256 != receipt_sha256:

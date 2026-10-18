@@ -366,6 +366,10 @@ def collect_profile(root: Path, receipt_path: Path | None, reader: SnapshotReade
             required_ids = {r.id for r in requirements}
             if set(entries) - required_ids:
                 raise ValueError("receipt contains unsupported acceptance gates")
+            if reader.hosted_origin is not None or "auxiliary_matrix_artifact" in receipt:
+                from infrastructure.project.auxiliary_matrix_validation import authenticate_matrix
+
+                authenticate_matrix(reader, receipt, requirements)
         except (OSError, ValueError, TypeError):
             faults += (
                 GateEvidence(
