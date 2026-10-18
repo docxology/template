@@ -6,11 +6,14 @@ import hashlib
 import json
 import math
 import os
-from dataclasses import dataclass
+import stat
+from collections.abc import Iterator
+from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
 
 from infrastructure.core.files.secure_write import read_bytes_confined
+from infrastructure.core.pipeline.fingerprint_files import anchored_parent, verify_directory
 from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
 
 PUBLIC_ROOT_FILES = frozenset(
@@ -95,6 +98,61 @@ class ArtifactSnapshot:
         return json_object_from_bytes(self.content)
 
 
+@dataclass
+class _SnapshotDirectory:
+    files: list[ArtifactSnapshot] = field(default_factory=list)
+    children: dict[str, _SnapshotDirectory] = field(default_factory=dict)
+
+
+@dataclass
+class _SnapshotFrame:
+    descriptor: int
+    name: str | None
+    files: Iterator[ArtifactSnapshot]
+    children: Iterator[tuple[str, _SnapshotDirectory]]
+
+
+def _snapshot_directory_unchanged(descriptor: int, node: _SnapshotDirectory) -> bool:
+    """Walk held lexical names with fresh handles bounded by path depth."""
+    flags = getattr(os, "O_PATH", os.O_RDONLY) | getattr(os, "O_DIRECTORY", 0) | os.O_NOFOLLOW
+    frames = [_SnapshotFrame(descriptor, None, iter(node.files), iter(node.children.items()))]
+    try:
+        while frames:
+            frame = frames[-1]
+            try:
+                item = next(frame.files)
+            except StopIteration:
+                try:
+                    name, child = next(frame.children)
+                except StopIteration:
+                    if len(frames) == 1:
+                        frames.pop()
+                        continue
+                    try:
+                        assert frame.name is not None
+                        verify_directory(frames[-2].descriptor, frame.name, frame.descriptor)
+                    finally:
+                        frames.pop()
+                        os.close(frame.descriptor)
+                    continue
+                opened = os.open(name, flags, dir_fd=frame.descriptor)
+                try:
+                    nested = _SnapshotFrame(opened, name, iter(child.files), iter(child.children.items()))
+                    frames.append(nested)
+                except BaseException:
+                    os.close(opened)
+                    raise
+            else:
+                observed = os.stat(item.path.name, dir_fd=frame.descriptor, follow_symlinks=False)
+                identity = observed.st_ino, observed.st_size, observed.st_mtime_ns, observed.st_ctime_ns
+                if not stat.S_ISREG(observed.st_mode) or identity != item.identity:
+                    return False
+        return True
+    finally:
+        for frame in reversed(frames[1:]):
+            os.close(frame.descriptor)
+
+
 class SnapshotReader:
     """Read each public path once; detect mutation before the report completes."""
 
@@ -127,8 +185,8 @@ class SnapshotReader:
         self.validated_exports: dict[str, str] = {}
         self.validated_export_commits: dict[str, str] = {}
 
-    def public_path(self, relative: str) -> Path:
-        """Reject private, absolute, traversal, and symlink artifact references."""
+    def _public_lexical_path(self, relative: str) -> Path:
+        """Apply public scope policy without granting filesystem authority."""
         if not isinstance(relative, str) or not relative or "\\" in relative or "\0" in relative:
             raise ValueError("artifact path must be a public repository-relative string")
         path = Path(relative)
@@ -167,7 +225,12 @@ class SnapshotReader:
             ".agents",
         }:
             raise ValueError("artifact path is outside public evidence roots")
-        absolute = self.root / path
+        return self.root / path
+
+    def public_path(self, relative: str) -> Path:
+        """Reject private, absolute, traversal, and symlink artifact references."""
+        absolute = self._public_lexical_path(relative)
+        parts = Path(relative).parts
         component = absolute
         # Admission fixes exactly len(parts) lexical components below root.
         for _ in parts:
@@ -210,11 +273,47 @@ class SnapshotReader:
         return self.snapshots[path]
 
     def unchanged(self) -> bool:
-        """Check identities after aggregation without re-reading or re-selecting facts."""
+        """Check every held identity through fresh, closing-checked directories.
+
+        A directory handle is shared only within this invocation. No path or
+        inode observation authorizes a later call; Source's enclosing directory,
+        Git and implementation checks remain independent.
+        """
         try:
-            return all(
-                self.public_path(item.relative) == item.path and self._identity(item.path) == item.identity
-                for item in self.snapshots.values()
+            root, snapshots = self.root, self.snapshots
+            if type(snapshots) is not dict:
+                return False
+            held = tuple(snapshots.items())
+            for path, item in held:
+                if path != item.path or self._public_lexical_path(item.relative) != path:
+                    return False
+            if os.open not in os.supports_dir_fd or os.stat not in os.supports_dir_fd or not hasattr(os, "O_NOFOLLOW"):
+                valid = all(
+                    self.public_path(item.relative) == item.path and self._identity(item.path) == item.identity
+                    for _, item in held
+                )
+            else:
+                valid = True
+                if held:
+                    tree = _SnapshotDirectory()
+                    for path, item in held:
+                        node = tree
+                        for name in path.relative_to(root).parts[:-1]:
+                            child = node.children.get(name)
+                            if child is None:
+                                child = node.children[name] = _SnapshotDirectory()
+                            node = child
+                        node.files.append(item)
+                    with anchored_parent(root / ".snapshot-root-witness") as descriptor:
+                        if descriptor is None:
+                            return False
+                        valid = _snapshot_directory_unchanged(descriptor, tree)
+            return (
+                valid
+                and self.root == root
+                and self.snapshots is snapshots
+                and len(snapshots) == len(held)
+                and all(snapshots.get(path) is item for path, item in held)
             )
         except (OSError, ValueError):
             return False

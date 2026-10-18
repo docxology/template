@@ -11,7 +11,11 @@ from dataclasses import replace
 from pathlib import Path
 
 from infrastructure.core.files.secure_write import atomic_write_text_confined, unlink_confined
-from infrastructure.core.pipeline.fingerprints import source_fingerprint, source_content_fingerprint, canonical_digest
+from infrastructure.core.pipeline.fingerprints import (
+    source_fingerprint,
+    source_fingerprint_components,
+    canonical_digest,
+)
 from infrastructure.core.pipeline.outcomes import StageOutcome, StageStatus
 from infrastructure.core.pipeline.stage_launch import launch_python_stage
 from infrastructure.core.runtime._python_env import validate_analysis_script_path
@@ -71,10 +75,11 @@ def launch_analysis_script(
         if cmd != [str(selected), str(script)]:
             raise ValueError("Analysis command differs from its nominated interpreter and script")
         runtime = analysis_runtime_binding(project_root, interpreter=selected)
-        source = source_fingerprint(repo_root, project_root)
+        components = source_fingerprint_components(repo_root, project_root)
+        source = canonical_digest(components)
         before = {
             "source_digest": source,
-            "source_content_digest": source_content_fingerprint(repo_root, project_root),
+            "source_content_digest": components["source"],
             "runtime_digest": canonical_digest(runtime),
             "runtime_binding": runtime,
         }
@@ -96,9 +101,10 @@ def launch_analysis_script(
             cwd=cwd,
         )
         actual_runtime = analysis_runtime_binding(project_root, interpreter=selected)
+        components = source_fingerprint_components(repo_root, project_root)
         after = {
-            "source_digest": source_fingerprint(repo_root, project_root),
-            "source_content_digest": source_content_fingerprint(repo_root, project_root),
+            "source_digest": canonical_digest(components),
+            "source_content_digest": components["source"],
             "runtime_digest": canonical_digest(actual_runtime),
             "runtime_binding": actual_runtime,
         }

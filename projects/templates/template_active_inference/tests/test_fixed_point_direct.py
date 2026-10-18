@@ -12,6 +12,7 @@ import io
 import json
 import stat
 import subprocess
+import sys
 from pathlib import Path
 
 import pytest
@@ -179,6 +180,102 @@ def test_generation_source_hash_refuses_linked_direct_src_metadata(tmp_path: Pat
     with pytest.raises(RuntimeError, match="must not contain symlinks"):
         _source_input_sha256(tmp_path)
     assert sentinel.read_text() == "outside source remains unchanged\n"
+
+
+def test_generation_source_hash_excludes_only_declared_lean_runtime(tmp_path: Path) -> None:
+    lean = tmp_path / "lean"
+    lean.mkdir()
+    declaration = lean / "lakefile.lean"
+    declaration.write_text("import Lake\nopen Lake DSL\npackage witness\n")
+    pin = lean / "lean-toolchain"
+    pin.write_text("leanprover/lean4:v4.35.0\n")
+    authored = lean / "Witness.lean"
+    authored.write_text("theorem witness : True := True.intro\n")
+    initial = _source_input_sha256(tmp_path)
+    runtime = lean / ".lake"
+    runtime.mkdir()
+    setup = runtime / "Witness.setup.json"
+    setup.write_text(json.dumps({"importArts": {"Witness": [["/old/checkout/Witness.olean"]]}}))
+    assert _source_input_sha256(tmp_path) == initial
+    setup.write_text(json.dumps({"importArts": {"Witness": [["/new/checkout/Witness.olean"]]}}))
+    assert _source_input_sha256(tmp_path) == initial
+    for source in (declaration, pin, authored):
+        original = source.read_bytes()
+        source.write_bytes(original + b"\n")
+        assert _source_input_sha256(tmp_path) != initial
+        source.write_bytes(original)
+        assert _source_input_sha256(tmp_path) == initial
+    declaration.unlink()
+    undeclared = _source_input_sha256(tmp_path)
+    setup.write_text("changed undeclared input\n")
+    assert _source_input_sha256(tmp_path) != undeclared
+
+
+@pytest.mark.parametrize("relative", ("data/.lake", "lean/nested/.lake"))
+def test_generation_source_hash_retains_other_lake_trees(tmp_path: Path, relative: str) -> None:
+    (tmp_path / "lean").mkdir()
+    (tmp_path / "lean/lakefile.lean").write_text("import Lake\n")
+    nested = tmp_path / relative
+    nested.mkdir(parents=True)
+    witness = nested / "witness.json"
+    witness.write_text("first\n")
+    initial = _source_input_sha256(tmp_path)
+    witness.write_text("second\n")
+    assert _source_input_sha256(tmp_path) != initial
+
+
+@pytest.mark.parametrize("linked", ("declaration", "runtime", "parent"))
+def test_generation_source_hash_refuses_linked_lean_runtime_paths(tmp_path: Path, linked: str) -> None:
+    root = tmp_path / "project"
+    lean = root / "lean"
+    lean.mkdir(parents=True)
+    declaration = lean / "lakefile.lean"
+    declaration.write_text("import Lake\n")
+    runtime = lean / ".lake"
+    runtime.mkdir()
+    (runtime / "witness.json").write_text("local\n")
+    outside = tmp_path / "outside"
+    outside.mkdir()
+    sentinel = outside / "witness.json"
+    sentinel.write_text("outside remains unchanged\n")
+    if linked == "declaration":
+        declaration.unlink()
+        declaration.symlink_to(sentinel)
+    elif linked == "runtime":
+        (runtime / "witness.json").unlink()
+        runtime.rmdir()
+        runtime.symlink_to(outside, target_is_directory=True)
+    else:
+        physical = root / "physical-lean"
+        lean.rename(physical)
+        lean.symlink_to(physical, target_is_directory=True)
+    with pytest.raises(RuntimeError, match="must not contain symlinks"):
+        _source_input_sha256(root)
+    assert sentinel.read_text() == "outside remains unchanged\n"
+
+
+def test_generation_source_hash_never_traverses_declared_lean_runtime(tmp_path: Path) -> None:
+    lean = tmp_path / "lean"
+    runtime = lean / ".lake"
+    runtime.mkdir(parents=True)
+    (lean / "lakefile.lean").write_text("import Lake\n")
+    (runtime / "witness.json").write_text("must not read\n")
+    probe = """
+import sys
+from pathlib import Path
+from roadmap_tracks.fixed_point import _source_input_sha256
+root = Path(sys.argv[1])
+runtime = root / 'lean' / '.lake'
+def audit(event, args):
+    if event in {'open', 'os.scandir'} and args and isinstance(args[0], (str, bytes)):
+        path = Path(args[0])
+        if path == runtime or runtime in path.parents:
+            raise AssertionError('declared runtime was traversed')
+sys.addaudithook(audit)
+print(_source_input_sha256(root))
+"""
+    result = subprocess.run([sys.executable, "-c", probe, str(tmp_path)], capture_output=True, text=True, check=True)
+    assert result.stdout.strip() == _source_input_sha256(tmp_path)
 
 
 def test_fingerprint_tracks_complete_registry_derived_output_inventory(copied_root: Path) -> None:

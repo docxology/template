@@ -14,7 +14,7 @@ import importlib.machinery
 import importlib.util
 import sys
 from pathlib import Path
-from types import CodeType
+from types import CodeType, ModuleType
 from typing import Any
 
 from infrastructure.core.files.secure_write import read_bytes_confined
@@ -28,6 +28,16 @@ class PrintSourceLoader(importlib.machinery.SourceFileLoader):
     def __init__(self, name: str, path: Path, root: Path) -> None:
         super().__init__(name, str(path))
         self.root = root
+
+    def exec_module(self, module: ModuleType) -> None:
+        """Describe actual cacheless execution before compiling held Source.
+
+        Importlib's location-based spec supplies a cache pathname even though
+        this loader neither consumes nor writes it. The executed-code audit
+        must see the actual cacheless module rather than that phantom cache.
+        """
+        setattr(module, "__cached__", None)
+        super().exec_module(module)
 
     def get_code(self, fullname: str) -> CodeType:
         path = Path(self.get_filename(fullname))

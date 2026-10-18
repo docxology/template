@@ -12,7 +12,8 @@ from typing import Any, cast
 from pathlib import Path
 
 from infrastructure.core.files.secure_write import read_bytes_confined
-from infrastructure.project.public_hosted_origin import HostedReadbackContext, collect_hosted_origin
+from infrastructure.project.public_hosted_origin import collect_hosted_origin
+from infrastructure.project.auxiliary_print_hosted import AuxiliaryPrintHostedContext, collect_auxiliary_print_original
 from infrastructure.project.public_reference_git import remaining
 from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
 from infrastructure.reporting.native_authenticated_original_launch import admit_authenticated_native_originals
@@ -60,7 +61,7 @@ def _assignments(values: list[str], *, pair: bool) -> dict[object, str]:
     return rows
 
 
-def main(argv: list[str] | None = None) -> int:
+def _main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--repo-root", type=Path, required=True)
     parser.add_argument("--revision", required=True)
@@ -112,6 +113,9 @@ def main(argv: list[str] | None = None) -> int:
             raise ValueError("reader selected SDK input differs from its actual parent-held digest")
         sdk = NativeSDKSelection(args.sdk_package_root, raw)
         source = admit_native_source_operation(root, sdk, run_id=run, deadline=deadline, environment=os.environ)
+        from infrastructure.project._hosted_api import bind_reader_credentials
+
+        bind_reader_credentials(source, deadline=deadline)
         validate_current_destination(source, args.current_analysis_root)
         if source.reference.commit != args.revision:
             raise ValueError("reader Source differs from the externally selected hosted revision")
@@ -269,7 +273,16 @@ def main(argv: list[str] | None = None) -> int:
                 timeout=600,
                 operation_deadline=deadline,
             )
-        context = HostedReadbackContext(root_origin, args.repository, args.run_id, args.revision)
+        original_print = collect_auxiliary_print_original(
+            root,
+            root / "output/readiness/auxiliary-print-hosted-origin",
+            repository=args.repository,
+            run_id=args.run_id,
+            head_sha=args.revision,
+            deadline=deadline,
+            environment=dict(os.environ),
+        )
+        context = AuxiliaryPrintHostedContext(root_origin, args.repository, args.run_id, args.revision, original_print)
         receipts = [*args.receipt, custodian.native_receipt_binding()["path"]]
         if len(set(receipts)) != len(receipts):
             raise ValueError("reader refuses duplicate native/common original receipt ownership")
@@ -337,6 +350,14 @@ def main(argv: list[str] | None = None) -> int:
             )
         sys.stdout.write("authenticated installed reader refused: " + str(error) + "\n")
         return int(preserve_current_attempts({"exit_code": 2}, attempts)["exit_code"])
+
+
+def main(argv: list[str] | None = None) -> int:
+    """Keep credential nomination private until genuine Source admission."""
+    from infrastructure.project._hosted_api import reader_credential_nomination
+
+    with reader_credential_nomination():
+        return _main(argv)
 
 
 if __name__ == "__main__":

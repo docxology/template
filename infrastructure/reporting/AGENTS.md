@@ -1,5 +1,11 @@
 # Reporting Package
 
+`native_auxiliary_print_custody.py` separates the fixed audited live print
+producer from completed originals. Tool events come directly from the actual
+ToolAPI; only the genuine supervisor return or live same-run collector mints
+an original. Keep `require_native_operation`, full-native classes, provider
+guards, and all existing operation clocks unchanged.
+
 ## Purpose
 
 Reporting converts pipeline, test, validation, evidence, and release-readiness

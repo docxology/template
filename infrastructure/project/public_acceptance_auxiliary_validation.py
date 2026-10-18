@@ -191,10 +191,40 @@ def validate_auxiliary_process(gate: str, fingerprint: str, details: dict[str, A
         raise ValueError("macOS auxiliary checks did not execute on Darwin")
     if gate == "root:macos:rendering":
         from infrastructure.reporting.native_print_witness_validation import validate_print_witness
+        from infrastructure.project.auxiliary_print_hosted import AuxiliaryPrintHostedContext
+        from infrastructure.reporting.native_auxiliary_print_custody import AuxiliaryPrintReaderOperation
+
+        print_reader = reader
+        if type(reader.hosted_origin) is AuxiliaryPrintHostedContext:
+            print_deadline = reader.operation_deadline
+            if print_deadline is None and reader.native_operation is not None:
+                print_deadline = reader.native_operation.deadline
+            if print_deadline is None:
+                raise ValueError("hosted auxiliary print requires its already-live finite reader deadline")
+            print_reader = SnapshotReader(
+                reader.root,
+                hosted_origin=reader.hosted_origin,
+                native_operation=reader.native_operation,
+                native_control_operation=AuxiliaryPrintReaderOperation(
+                    reader.hosted_origin.print_original, reader.root, print_deadline
+                ),
+                operation_deadline=print_deadline,
+            )
 
         validate_print_witness(
-            observed.get("print_witness_artifact"), reader, expected_pid=raw["pid"], expected_runtime=raw["runtime"]
+            observed.get("print_witness_artifact"),
+            print_reader,
+            expected_pid=raw["pid"],
+            expected_runtime=raw["runtime"],
+            deadline=print_reader.operation_deadline,
         )
+        if not print_reader.unchanged():
+            raise ValueError("auxiliary print replay bytes changed before closing")
+        for path, snapshot in print_reader.snapshots.items():
+            previous = reader.snapshots.get(path)
+            if previous is not None and previous != snapshot:
+                raise ValueError("auxiliary print replay disagrees with the aggregate snapshot")
+            reader.snapshots[path] = snapshot
     if gate == "root:macos:process":
         descendant = observed.get("descendant_process", {})
         if (

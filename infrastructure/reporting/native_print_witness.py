@@ -68,10 +68,22 @@ def source_inventory(root: Path, *, original: bool = False) -> dict[str, Any]:
 
 def run_print_witness(root: Path, directory: Path, budget: float) -> dict[str, str]:
     """Render both actual source exemplars privately and retain every PDF page."""
+    from infrastructure.reporting.native_auxiliary_print_custody import original_print_producer
+    from infrastructure.project.auxiliary_print_code import _ENTRY
+
+    if _ENTRY.get() is None:
+        # Existing standalone controls may retain unadmitted observations. They
+        # still fail strict self-validation and never acquire a typed owner.
+        return _run_print_witness(root, directory, None, budget)
+    with original_print_producer(root, directory) as owner:
+        return _run_print_witness(root, directory, owner, budget)
+
+
+def _run_print_witness(root: Path, directory: Path, owner: Any, budget: float) -> dict[str, str]:
     if platform.system() != "Darwin":
         raise ValueError("original print/font witness requires Darwin")
-    deadline = time.monotonic() + budget
-    run_id = uuid.uuid4().hex
+    deadline = time.monotonic() + budget if owner is None else owner.deadline
+    run_id = uuid.uuid4().hex if owner is None else owner.run_id
     directory.mkdir(parents=True, exist_ok=False)
     env = native_environment(root, Path(sys.executable), directory)
     with native_deadline_guard(deadline):
@@ -204,13 +216,19 @@ def run_print_witness(root: Path, directory: Path, budget: float) -> dict[str, s
             "raster_artifacts": raster_artifacts,
         }
         binding = write_json(root, directory / "print-witness.json", raw)
+        if owner is not None:
+            owner.witness = dict(binding)
     from infrastructure.reporting.native_print_witness_validation import validate_print_witness
 
     validate_print_witness(
         binding,
-        SnapshotReader(root),
+        SnapshotReader(root, native_control_operation=owner, operation_deadline=deadline),
         expected_pid=os.getpid(),
         expected_runtime={"executable": sys.executable, "python_version": platform.python_version()},
         deadline=deadline,
     )
+    from infrastructure.reporting.native_auxiliary_print_custody import _tools
+
+    if owner is not None and {item["path"] for item in _tools(raw)} != set(owner._events):
+        raise ValueError("print witness omitted or invented an actual original ToolAPI event")
     return binding

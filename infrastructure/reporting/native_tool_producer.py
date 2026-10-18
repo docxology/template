@@ -16,18 +16,19 @@ from contextlib import contextmanager
 from contextvars import ContextVar
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 from infrastructure.project.public_reference_git import remaining
 from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
-from infrastructure.rendering.native_render_custody import (
-    NativeTexSectionPass,
-    SourceNativeMermaid,
-    SourceNativePandoc,
-    installed_native_render_custody,
-)
-from infrastructure.reporting.native_source_external_admission import NativeSourceContext, _physical_directory
 from infrastructure.reporting.release_readiness_snapshot import SnapshotReader
+
+if TYPE_CHECKING:
+    from infrastructure.rendering.native_render_custody import (
+        NativeTexSectionPass,
+        SourceNativeMermaid,
+        SourceNativePandoc,
+    )
+    from infrastructure.reporting.native_source_external_admission import NativeSourceContext
 
 
 @dataclass(frozen=True)
@@ -56,6 +57,8 @@ def _stage_scope_nomination(
         return None
     if not isinstance(scope, str) or scope not in PUBLIC_PROJECT_NAMES or not isinstance(directory, Path):
         raise ValueError("native stage scope requires a paired exact public scope and directory nomination")
+    from infrastructure.reporting.native_source_external_admission import _physical_directory
+
     selected = evidence_directory(root, directory)
     return scope, selected, _physical_directory(selected)
 
@@ -72,6 +75,8 @@ class NativeProducerOperation:
         scope: str | None = None,
         directory: Path | None = None,
     ) -> None:
+        from infrastructure.reporting.native_source_external_admission import NativeSourceContext
+
         if not isinstance(source, NativeSourceContext) or not isinstance(run_id, str) or not run_id:
             raise ValueError("native producer requires genuine admitted Source and run identity")
         if type(deadline) not in (float, int) or not math.isfinite(deadline):
@@ -86,19 +91,59 @@ class NativeProducerOperation:
         self._closed = False
 
     def verify(self, reader: SnapshotReader, *, run_id: str, deadline: float) -> None:
-        if self._closed or _CURRENT.get() is not self or os.getpid() != self.owner_pid:
-            raise ValueError("native producer custody is not this actual live process owner")
-        if run_id != self.run_id or run_id != self.source.bindings.run_id or not deadline <= self.deadline:
-            raise ValueError("native producer run or original clock differs")
-        remaining(self.deadline)
-        self.source.verify_correspondence(self.source.reference, reader.root, reader, self.deadline)
-        if self._stage_scope is not None and _physical_directory(self._stage_scope[1]) != self._stage_scope[2]:
-            raise ValueError("native producer nominated stage scope directory changed physical identity")
-        remaining(self.deadline)
+        with self._verification_guard(reader, run_id=run_id, deadline=deadline):
+            pass
+
+    @contextmanager
+    def _verification_guard(self, reader: SnapshotReader, *, run_id: str, deadline: float) -> Iterator[None]:
+        """Enclose fixed synchronous DATA comparisons in one fresh Source boundary."""
+        from infrastructure.reporting.native_source_external_admission import _physical_directory
+
+        source, owner_run, original_deadline = self.source, self.run_id, self.deadline
+        owner_pid, scope, root = self.owner_pid, self._stage_scope, reader.root
+
+        def check_owner() -> None:
+            if (
+                self._closed
+                or _CURRENT.get() is not self
+                or self.source is not source
+                or self.owner_pid != owner_pid
+                or os.getpid() != owner_pid
+                or self.run_id != owner_run
+                or self.deadline != original_deadline
+                or self._stage_scope is not scope
+                or reader.root != root
+            ):
+                raise ValueError("native producer custody is not this actual unchanged live process owner")
+            if (
+                run_id != owner_run
+                or run_id != source.bindings.run_id
+                or type(deadline) not in (int, float)
+                or not math.isfinite(deadline)
+                or not deadline <= original_deadline
+            ):
+                raise ValueError("native producer run or original clock differs")
+            remaining(original_deadline)
+            remaining(deadline)
+            if scope is not None and _physical_directory(scope[1]) != scope[2]:
+                raise ValueError("native producer nominated stage scope directory changed physical identity")
+
+        check_owner()
+        with source._correspondence_guard(source.reference, root, reader, original_deadline):
+            check_owner()
+            try:
+                yield None
+            finally:
+                check_owner()
+        remaining(deadline)
 
     def stage_scope_directory(self, scope: str) -> Path:
         """Return the held directory only in the exact actual live public owner."""
         self.verify(SnapshotReader(self.source.bindings.current_root), run_id=self.run_id, deadline=self.deadline)
+        return self._stage_scope_directory_data(scope)
+
+    def _stage_scope_directory_data(self, scope: str) -> Path:
+        """Read held scope DATA only; this does not verify or construct an owner."""
         if self._stage_scope is None or scope != self._stage_scope[0]:
             raise ValueError("native stage requires this actual owner's exact nominated public scope directory")
         return self._stage_scope[1]
@@ -273,6 +318,7 @@ def native_producer_operation(
 ) -> Iterator[NativeProducerOperation]:
     """Begin only from genuine admitted Source, and never start another clock."""
     from infrastructure.reporting.native_format_joint_source import _require_installed_sdk
+    from infrastructure.rendering.native_render_custody import installed_native_render_custody
 
     _require_installed_sdk(source.bindings.expected_implementation_bytes)
     if _CURRENT.get() is not None:

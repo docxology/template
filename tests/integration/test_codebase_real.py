@@ -66,9 +66,9 @@ def compute_architecture_score(codebase: Path) -> int:
         score += 6
 
     # Source files count (only under packages, not tests)
-    src_py = [p for p in codebase.rglob("*.py") if "test" not in p.parts and not p.name.startswith("test_")]
+    src_py = sorted(p for p in codebase.rglob("*.py") if "test" not in p.parts and not p.name.startswith("test_"))
     n_src = len(src_py)
-    test_py = [p for p in codebase.rglob("*.py") if "test" in p.parts or p.name.startswith("test_")]
+    test_py = sorted(p for p in codebase.rglob("*.py") if "test" in p.parts or p.name.startswith("test_"))
     n_tests = len(test_py)
 
     # 2. Documentation (20)
@@ -134,8 +134,9 @@ def compute_architecture_score(codebase: Path) -> int:
         score += n_tests * 3
 
     # 4. Modularity (20)
-    # Reasonable source file count: 5-50 gives full, else scale
-    if 5 <= n_src <= 50:
+    # Decomposing a package into more modules is not an architectural defect.
+    # File size, documentation, imports and typing remain independent checks.
+    if n_src >= 5:
         score += 8
     elif 1 <= n_src < 5:
         score += 4
@@ -275,3 +276,25 @@ class TestRealCodebases:
         score = compute_architecture_score(package)
         print(f"\nFastAPI ArchitectureScore: {score}/100")
         assert score >= MIN_ARCHITECTURE_SCORE, f"FastAPI score {score} below threshold {MIN_ARCHITECTURE_SCORE}"
+
+    def test_well_structured_package_can_exceed_fifty_modules(self, tmp_path: Path) -> None:
+        package = tmp_path / "modular"
+        package.mkdir()
+        (package / "__init__.py").write_text("")
+        for index in range(52):
+            (package / f"step_{index:02d}.py").write_text(
+                'def transform(value: int) -> int:\n    """Advance the workflow value."""\n    return value + 1\n'
+            )
+
+        assert compute_architecture_score(package) >= MIN_ARCHITECTURE_SCORE
+
+    @pytest.mark.parametrize("extra_lines", [0, 1100], ids=["undocumented-untyped", "oversized-undocumented-untyped"])
+    def test_high_module_count_cannot_rescue_poor_architecture(self, tmp_path: Path, extra_lines: int) -> None:
+        package = tmp_path / "unstructured"
+        package.mkdir()
+        (package / "__init__.py").write_text("")
+        body = "def transform(value):\n" + "    value += 1\n" * (extra_lines + 1) + "    return value\n"
+        for index in range(52):
+            (package / f"step_{index:02d}.py").write_text(body)
+
+        assert compute_architecture_score(package) < MIN_ARCHITECTURE_SCORE

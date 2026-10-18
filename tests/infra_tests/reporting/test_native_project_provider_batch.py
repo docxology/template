@@ -33,7 +33,10 @@ from infrastructure.reporting.native_source_external_admission import (
     _anchored_directory_identity,
     _verify_source_directory_identities,
 )
-from tests.infra_tests.project.test_public_reference import complete_reference as complete_reference
+from tests.infra_tests.project.test_public_reference import (
+    _clone_complete_reference,
+    complete_reference as complete_reference,
+)
 
 pytestmark = pytest.mark.timeout(1800)
 
@@ -113,11 +116,10 @@ def test_genuine_batch_matches_single_factories_and_refuses_changed_source(
     The two complete owned trees require roughly twice the public source size.
     """
     original, commit, fingerprint = complete_reference
-    mirror = tmp_path / "current-full-git-mirror"
-    shutil.copytree(original, mirror)
+    deadline = time.monotonic() + 1200
+    mirror = _clone_complete_reference(complete_reference, tmp_path / "current-full-git-mirror", deadline=deadline)
     selected_sdk = Path(infrastructure.__file__).absolute().parent
     metadata = mirror.stat()
-    deadline = time.monotonic() + 1200
 
     def admit_context() -> NativeSourceContext:
         return admit_external_native_source(

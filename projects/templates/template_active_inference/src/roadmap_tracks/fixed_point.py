@@ -154,6 +154,15 @@ def _walk_generation_inputs(root: Path, dirname: str) -> set[str]:
                     # it is runtime state, not authored generation input.
                     if directory == root / "src" and entry.name.endswith(".egg-info"):
                         continue
+                    # Lake's setup JSON contains checkout-local absolute paths.
+                    # Only the physical, declared top-level build root is runtime;
+                    # the declaration, toolchain pin and all Lean sources stay inputs.
+                    if (
+                        directory == root / "lean"
+                        and entry.name == ".lake"
+                        and _confined_path_state(root, "lean/lakefile.lean", content_sensitive=False) == "file"
+                    ):
+                        continue
                     rels.add(rel)
                     pending.append(path)
                 elif entry.is_file(follow_symlinks=False):

@@ -83,6 +83,24 @@ and historical notes remain preserved.
 - Retain bounded, confined combined-render compiler logs on pipeline failures
   before disposable source cleanup, without granting those diagnostics acceptance.
 
+- Compose a complete same-run Project Tests measurement into analysis, retaining
+  original collection, coverage, Source/runtime and producer commitments; reject
+  altered present evidence rather than silently rerunning it.
+- Traverse snapshots through fresh held ancestry and compose native stage
+  preparation inside one complete opening/closing verification. Later public
+  verification remains fresh, and mutation cannot publish prepared authority.
+- Keep GitHub credentials confined to the fixed independently installed reader
+  and same-repository API transport; ordinary tools and guardians remain clean.
+- Retain original Darwin print producer and tool-event custody through relocated
+  replay, confine evidence paths before creation, and audit cacheless Source code.
+- Account for Source-declared top-level wheel companions, defer optional PDF
+  imports, and distinguish installed distribution metadata from checkout residue.
+- Classify only the two physical declared Lean build roots as runtime, preserving
+  manifests, toolchains, implementations and unrelated nested `.lake` inputs.
+- Repair portable Active fixtures, confined benchmark storage, branch-aware Auto
+  coverage and pinned live workloads. Clone Git fixtures through independent
+  native transport and route helpers to complete focused CI owners.
+
 ## [4.0.1] - 2026-10-10
 
 See the [illustrated release-intent notes](docs/releases/v4.0.1.md). The date

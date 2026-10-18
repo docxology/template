@@ -55,7 +55,7 @@ deadline and source-owned per-case limits. The whole-selection domain command
 is an explicit acceptance opt-in: prepare its declared unpaid tool/model
 prerequisites, disable test model pulls, and override default marker exclusions
 with `-m ""`. Own-source acceptance requires nonempty complete collection, real
-behavior and at least 90% branch coverage; a focused test or previous revision's
+behavior and at least 90% branch-aware combined statement and branch coverage; a focused test or previous revision's
 result does not close the row. Missing preparation remains blocked.
 
 Native and live lanes additionally require actual producers, independent

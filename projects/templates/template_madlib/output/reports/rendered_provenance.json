@@ -91,7 +91,7 @@
     },
     "validation_report": {
       "path": "output/reports/validation_report.json",
-      "sha256": "a892ef1d433c09af4762415085d91b1d32954aa17a151566e0ebddbc865533fb",
+      "sha256": "a64c79c96d3dc79102e9c7e0a9cb1468786eeac85dcf4e0aa37b6529ae6b5160",
       "size_bytes": 12738
     }
   },
@@ -110,8 +110,8 @@
       "sha256": "e58dbf06241c473809a7120e8c817f14a87c7499a30e439e34cb43378dd38cfe"
     },
     "stage": {
-      "file_count": 1894,
-      "sha256": "2339b4e8c3cdd7a9a89fb91bda4460f25a84fc0d87d68a50e97a470520d218ea"
+      "file_count": 1903,
+      "sha256": "82c47577f1c1b0e22d7feb145892287b0412a5a91606909e9eeb57ca96d1423e"
     }
   },
   "project": "templates/template_madlib",

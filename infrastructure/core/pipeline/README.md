@@ -71,6 +71,14 @@ Shared verification retains its exact `infra_tests` selection, stage rows, and
 typed outcomes in the public result and summary. An infrastructure child exit
 2 remains visible beside aggregate exit 1; contradictory shared claims fail.
 
+Project and public Source identities exclude the declared producers’ exact
+`lean/.lake` and `formal/lean/.lake` build roots only beside their respective
+physical `lakefile.lean` declaration. The same classification is shared
+by pipeline, project, and Root fingerprints. Lean implementation files,
+`lake-manifest.json`, and `lean-toolchain` remain Source; unrelated nested
+`.lake` directories remain authored inputs. Git ignore or forced tracking does
+not change this boundary, and symbolic declaration/ancestor paths are refused.
+
 Cache and resume identities include the stage's effective `FORMAL_JAVA_BIN`,
 `PANDOC_PATH`, and `LATEX_COMPILER` selections, declared Lean/Lake pins, and
 installed elan backend bytes. Fingerprinting reads bounded regular files and

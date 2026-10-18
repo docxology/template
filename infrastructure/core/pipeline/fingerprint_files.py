@@ -78,6 +78,31 @@ def anchored_parent(path: Path) -> Iterator[int | None]:
             os.close(descriptor)
 
 
+def declared_lean_runtime_roots(project_root: Path) -> frozenset[Path]:
+    """Exclude exact build roots beside the two Source-declared Lake files.
+
+    The project Lean producers recognize ``lean/lakefile.lean`` and
+    ``formal/lean/lakefile.lean``, snapshotting those directories apart from
+    their ``.lake`` runtime. Other nested names remain authored inputs; this
+    never infers exclusions from Git ignore/tracking state.
+    """
+    roots: set[Path] = set()
+    for relative in ("lean/lakefile.lean", "formal/lean/lakefile.lean"):
+        declaration = (project_root / relative).absolute()
+        with anchored_parent(declaration) as parent:
+            if parent is None:
+                continue
+            try:
+                metadata = os.stat(declaration.name, dir_fd=parent, follow_symlinks=False)
+            except FileNotFoundError:
+                continue
+            if stat.S_ISLNK(metadata.st_mode):
+                raise ValueError("Lean declaration requires physical no-follow Source")
+            if stat.S_ISREG(metadata.st_mode):
+                roots.add(declaration.parent / ".lake")
+    return frozenset(roots)
+
+
 def digest_file(path: Path, parent: int, name: str, original: os.stat_result, *, max_bytes: int | None = None) -> str:
     """Hash exact file bytes, reusing only an unchanged OS file observation."""
     if not stat.S_ISREG(original.st_mode):

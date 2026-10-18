@@ -16,7 +16,7 @@ from infrastructure.core.pipeline.artifacts._inventory import collect_stable_out
 from infrastructure.core.project_paths import find_repo_root
 from infrastructure.project.public_acceptance_scope import RuntimeScope
 from infrastructure.project.public_reference import _canonical_inventory, admit_public_reference, reference_binding
-from infrastructure.project.public_reference_git import native_git
+from infrastructure.project.public_reference_git import inventory, native_git, remaining
 from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
 from infrastructure.reporting.readiness_receipts import public_source_paths
 
@@ -88,6 +88,49 @@ def complete_reference(tmp_path_factory: pytest.TempPathFactory) -> tuple[Path, 
     commit = _git(root, "rev-parse", "HEAD").decode().strip()
     assert RuntimeScope(root, "root").source_identity() == source
     return root, commit, source
+
+
+def _clone_complete_reference(fixture: tuple[Path, str, str], destination: Path, *, deadline: float) -> Path:
+    """Clone actual owned Git objects through Git, never copy its live object DB."""
+    original, commit, source = fixture
+    expected = inventory(original, commit, deadline)
+    assert not destination.exists()
+    remaining(deadline)
+    _git(destination.parent, "clone", "--quiet", "--no-local", "--no-hardlinks", str(original), str(destination))
+    assert len(expected.gitlinks) == 1
+    link = expected.gitlinks[0]
+    assert link.path == "infrastructure/steganography/kmyth"
+    remaining(deadline)
+    _git(
+        destination,
+        "clone",
+        "--quiet",
+        "--no-local",
+        "--no-hardlinks",
+        "--no-checkout",
+        str(original / link.path),
+        link.path,
+    )
+    _git(destination / link.path, "checkout", "--quiet", "--detach", link.oid)
+    # Git has no empty-directory objects. Preserve the actual public topology,
+    # rather than inventing placeholders or weakening its separate Source check.
+    for relative, kind, _ in _canonical_inventory(original):
+        if kind == "directory":
+            (destination / relative).mkdir(parents=True, exist_ok=True)
+    assert inventory(destination, commit, deadline) == expected == inventory(original, commit, deadline)
+    assert _canonical_inventory(destination) == _canonical_inventory(original)
+    assert RuntimeScope(destination, "root").source_identity() == source
+    for root in (destination, destination / link.path):
+        assert not (root / ".git/objects/info/alternates").exists()
+    remaining(deadline)
+    return destination
+
+
+def test_normal_clone_retains_complete_native_git_inventory_and_source(
+    complete_reference: tuple[Path, str, str], tmp_path: Path
+) -> None:
+    destination = _clone_complete_reference(complete_reference, tmp_path / "current", deadline=time.monotonic() + 300)
+    assert destination.is_dir() and destination != complete_reference[0]
 
 
 def _admit(fixture: tuple[Path, str, str]):

@@ -183,6 +183,12 @@ _Status legend: ✅ published (durable identifier recorded in `config.yaml`) · 
 
 ## Build
 
+Own-source coverage uses branch-aware combined statement and branch coverage
+with the existing 90% floor. The
+project's explicit `tool.coverage.run.branch = true` matches the public release
+gate and the other template exemplars, so local coverage and Stage 01 use the
+same metric.
+
 ```bash
 uv run pytest projects/templates/template_autopoiesis/tests/ \
     --cov=projects/templates/template_autopoiesis/src \

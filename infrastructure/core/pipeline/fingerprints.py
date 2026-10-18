@@ -16,7 +16,12 @@ from importlib.metadata import distributions
 from pathlib import Path
 from collections.abc import Callable, Mapping
 
-from infrastructure.core.pipeline.fingerprint_files import anchored_parent, digest_file, open_directory
+from infrastructure.core.pipeline.fingerprint_files import (
+    anchored_parent,
+    declared_lean_runtime_roots,
+    digest_file,
+    open_directory,
+)
 
 SOURCE_EXCLUSIONS = frozenset(
     {
@@ -78,33 +83,35 @@ def tree_records(
     if output_tree and output_root is None:
         output_root = lexical_path if path.is_dir() else lexical_path.parent
 
-    def included(child: Path, root_child: bool, source_child: bool) -> bool:
-        if child.name in excluded_names or child.absolute() in excluded_roots:
-            return False
-        if source:
-            if (
-                child.name in {".git", ".DS_Store", "__pycache__"}
-                or child.suffix in {".pyc", ".pyo"}
-                or (root_child and child.name in _ROOT_SOURCE_CONTROLS)
-                or (source_child and child.name.endswith(".egg-info"))
-            ):
-                return False
-        if output_tree:
-            from infrastructure.core.pipeline.artifacts._inventory import _is_ignored_output_relative
-
-            assert output_root is not None
-            if _is_ignored_output_relative(child.absolute().relative_to(output_root)):
-                return False
-        return True
+    excluded_paths = frozenset(str(path.absolute()) for path in excluded_roots)
 
     def names(descriptor: int, current: Path) -> tuple[str, ...]:
-        # Every child is constructed beneath this lexical directory. Derive
-        # control depth once per census, retaining both fresh filesystem reads.
+        # Both censuses still inspect the actual held directory. Name-only
+        # filters avoid constructing Path objects for every candidate twice.
         root_child = current == lexical_path
         source_child = current.name == "src" and current.parent == lexical_path
-        return tuple(
-            name for name in sorted(os.listdir(descriptor)) if included(current / name, root_child, source_child)
-        )
+        parent_prefix = str(current) + ("" if str(current).endswith(os.sep) else os.sep)
+
+        def included(name: str) -> bool:
+            if name in excluded_names or parent_prefix + name in excluded_paths:
+                return False
+            if source:
+                if (
+                    name in {".git", ".DS_Store", "__pycache__"}
+                    or (name.endswith((".pyc", ".pyo")) and Path(name).suffix in {".pyc", ".pyo"})
+                    or (root_child and name in _ROOT_SOURCE_CONTROLS)
+                    or (source_child and name.endswith(".egg-info"))
+                ):
+                    return False
+            if output_tree:
+                from infrastructure.core.pipeline.artifacts._inventory import _is_ignored_output_relative
+
+                assert output_root is not None
+                if _is_ignored_output_relative((current / name).relative_to(output_root)):
+                    return False
+            return True
+
+        return tuple(name for name in sorted(os.listdir(descriptor)) if included(name))
 
     def visit(current: Path, relative: str, parent: int, name: str) -> None:
         if path_admission is not None:
@@ -195,6 +202,7 @@ def source_content_fingerprint(repo_root: Path, project_dir: Path, *, definition
     if definition_path is not None:
         roots.append(definition_path)
     excluded = (project_dir / "output").absolute()
+    runtime_roots = frozenset({excluded}) | declared_lean_runtime_roots(project_dir)
     reusable = {path: rows for path, rows in observed.items() if not excluded.is_relative_to(path)}
     paths = tuple(roots)
     base = Path(os.path.commonpath([str(path.absolute().parent) for path in paths]))
@@ -204,11 +212,21 @@ def source_content_fingerprint(repo_root: Path, project_dir: Path, *, definition
                 str(path.absolute().relative_to(base)),
                 reusable[path.absolute()]
                 if path.absolute() in reusable
-                else tree_records(path, source=True, excluded_roots=frozenset({excluded})),
+                else tree_records(path, source=True, excluded_roots=runtime_roots),
             )
             for path in sorted(set(paths), key=lambda item: item.as_posix())
         ]
     )
+
+
+def _distribution_identity(paths: list[str]) -> list[tuple[str, str | None]]:
+    # Distribution.version itself reads metadata again. Keep one fresh metadata
+    # observation per actual distribution, including PKG-INFO fallback semantics.
+    packages = []
+    for distribution in distributions(path=paths):
+        metadata = distribution.metadata
+        packages.append((str(metadata.get("Name", "")), metadata["Version"]))
+    return sorted(packages)
 
 
 def source_fingerprint_components(
@@ -219,10 +237,7 @@ def source_fingerprint_components(
     python_identity = {
         "version": sys.version,
         "implementation": sys.implementation.name,
-        "packages": sorted(
-            (str(dist.metadata.get("Name", "")), dist.version)
-            for dist in distributions(path=sorted({sysconfig.get_path("purelib"), sysconfig.get_path("platlib")}))
-        ),
+        "packages": _distribution_identity(sorted({sysconfig.get_path("purelib"), sysconfig.get_path("platlib")})),
     }
     return {
         "source": content,

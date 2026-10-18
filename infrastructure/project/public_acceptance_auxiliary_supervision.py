@@ -280,6 +280,7 @@ def supervise(
     *,
     environment: dict[str, str] | None = None,
     bootstrap_payload: dict[str, Any] | None = None,
+    print_originals: list[Any] | None = None,
 ) -> dict[str, Any]:
     """Observe the original child and token-bound cleanup under one finite clock."""
     if type(deadline) not in (int, float) or not math.isfinite(deadline):
@@ -291,6 +292,32 @@ def supervise(
             raise ValueError("explicit auxiliary child environment contains protected credential names")
     directory = evidence_directory(root, directory)
     directory.mkdir(parents=True, exist_ok=True)
+    from infrastructure.project.auxiliary_print_code import nomination
+    from infrastructure.project.public_acceptance_auxiliary_bootstrap import WORKER, PAYLOAD, _body
+    from infrastructure.project.acceptance_payload import validate_acceptance_payload, format_acceptance_payload_loader
+
+    print_held = nomination(root, tuple(command[-2:])) if len(command) == 8 and command[-3] == WORKER else None
+    if print_held is not None:
+        if print_held["deadline"] != deadline or print_originals is None or print_originals:
+            raise ValueError("auxiliary print supervisor needs the actual original clock and fresh owned result holder")
+        body, tail = _body(
+            Path(command[0]),
+            root,
+            WORKER,
+            tuple(command[-2:]),
+            directory,
+            original_root=root,
+            print_nomination=print_held,
+        )
+        payload = validate_acceptance_payload(body, bootstrap_payload, expected_path=directory / PAYLOAD)
+        if (directory / PAYLOAD).read_bytes() != body or command != [
+            command[0],
+            "-I",
+            "-c",
+            format_acceptance_payload_loader(payload),
+            *tail,
+        ]:
+            raise ValueError("auxiliary print prelaunch fixed payload differs from parent-held spec/run")
     started = time.monotonic()
     executable = Path(command[0]).resolve(strict=True)
     binary_hash = hashlib.sha256(executable.read_bytes()).hexdigest()
@@ -388,12 +415,27 @@ def supervise(
         "duration_seconds": time.monotonic() - started,
         "streams": artifacts,
         **({"bootstrap_payload": bootstrap_payload} if bootstrap_payload is not None else {}),
+        **(
+            {"auxiliary_print_launch": print_held, "auxiliary_print_owner_pid": os.getpid()}
+            if print_held is not None
+            else {}
+        ),
     }
     finished = time.monotonic()
     observation["duration_seconds"] = finished - started
+    if print_held is not None:
+        observation["auxiliary_print_completion_monotonic"] = finished
     if finished >= deadline:
         observation["timed_out"] = True
         observation["accepted"] = False
     if original_error is not None and not isinstance(original_error, Exception):
         raise original_error
+    if print_held is not None and observation["accepted"] is True and observation["exit_code"] == 0:
+        from infrastructure.reporting.native_auxiliary_print_custody import capture_supervised_print
+
+        if child is None or guardian is None or print_originals is None:
+            raise ValueError("auxiliary print lost actual original child/guardian ownership")
+        print_originals.append(
+            capture_supervised_print(root, print_held, child, guardian, directory, deadline, finished)
+        )
     return observation

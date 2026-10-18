@@ -26,6 +26,7 @@ from infrastructure.project.public_acceptance_scope import MissingRootCasePolicy
 from infrastructure.project.public_root_case_admission import lane_blockers
 from infrastructure.project.public_root_case_contract import _artifact, _fresh_prefix, _json
 from infrastructure.project.public_root_lane_coverage import capture, measurement, merge, report
+from infrastructure.project.public_root_lane_diagnostics import CaseDiagnostics, retain_output
 from infrastructure.project.public_root_lane_contract import (
     CHUNK_SCHEMA,
     LANE_SCHEMA,
@@ -121,6 +122,7 @@ def chunk(root: Path, snapshot_path: Path, expected: str, index: int) -> int:
     code = 1
     coverage_binding = None
     measured = measurement(root)
+    diagnostics = CaseDiagnostics()
     try:
         blockers = lane_blockers(admitted, spec["lane"], spec["mode"])
         if blockers:
@@ -129,7 +131,7 @@ def chunk(root: Path, snapshot_path: Path, expected: str, index: int) -> int:
         argv = arguments(root, directory, pieces[index], spec["test_timeout_seconds"])
         measured.start()
         try:
-            original = int(pytest.main(argv, plugins=[observer]))
+            original = int(pytest.main(argv, plugins=[observer, diagnostics]))
         finally:
             measured.stop()
         if observer.interrupted:
@@ -177,7 +179,8 @@ def chunk(root: Path, snapshot_path: Path, expected: str, index: int) -> int:
         code, diagnostic = 75, "required Root lane prerequisite is unavailable"
     except KeyboardInterrupt:
         code, diagnostic = 130, "actual Root case execution interrupted"
-    except (OSError, ValueError, RuntimeError):
+    except (OSError, ValueError, RuntimeError) as error:
+        diagnostics.caught(error)
         code, diagnostic = 1, "actual Root lane source/outcome contract refused"
     if observer.interrupted:
         code = 130
@@ -210,6 +213,7 @@ def chunk(root: Path, snapshot_path: Path, expected: str, index: int) -> int:
             "collection_skips": observer.collection_skips,
             "deselected": observer.deselected,
             "diagnostic": diagnostic,
+            "diagnostics_artifact": diagnostics.retain(root, directory, spec["root_identity"]),
         },
         spec["root_identity"],
     )
@@ -263,6 +267,20 @@ def coordinate(root: Path, snapshot_path: Path, expected: str) -> int:
                         receipt_binding = {"path": held.relative, "sha256": held.sha256}
                     except (OSError, ValueError):
                         pass
+                    code = (
+                        130
+                        if observed.returncode in (-2, 130)
+                        else 124
+                        if observed.timed_out or observed.returncode == 124
+                        else 75
+                        if observed.returncode == 75
+                        else 0
+                        if observed.returncode == 0
+                        and receipt_binding is not None
+                        and not observed.custody_refused
+                        and not observed.command_error
+                        else 1
+                    )
                     process_binding = write(
                         root,
                         chunk_dir / "process.json",
@@ -281,6 +299,7 @@ def coordinate(root: Path, snapshot_path: Path, expected: str) -> int:
                             "command_error": observed.command_error,
                             "remaining_budget_seconds": remaining,
                             "duration_seconds": time.monotonic() - chunk_started,
+                            "output_artifact": retain_output(root, chunk_dir, observed, spec["root_identity"]),
                         },
                         spec["root_identity"],
                     )
@@ -291,20 +310,6 @@ def coordinate(root: Path, snapshot_path: Path, expected: str) -> int:
                             "receipt_artifact": receipt_binding,
                             "process_artifact": process_binding,
                         }
-                    )
-                    code = (
-                        130
-                        if observed.returncode in (-2, 130)
-                        else 124
-                        if observed.timed_out or observed.returncode == 124
-                        else 75
-                        if observed.returncode == 75
-                        else 0
-                        if observed.returncode == 0
-                        and receipt_binding is not None
-                        and not observed.custody_refused
-                        and not observed.command_error
-                        else 1
                     )
                     if code:
                         break

@@ -7,6 +7,7 @@ from dataclasses import asdict, dataclass
 from pathlib import Path
 from typing import Literal
 
+from infrastructure.core.pipeline.fingerprint_files import declared_lean_runtime_roots
 from infrastructure.core.pipeline.fingerprints import canonical_digest, paths_digest, tree_records
 from infrastructure.core.pipeline.fingerprint_files import digest_path
 from infrastructure.core.pipeline.artifacts._inventory import collect_stable_output_inventory
@@ -69,6 +70,7 @@ def _project_runtime_roots(root: Path) -> frozenset[Path]:
         root / name
         for name in ("output", ".hypothesis", ".coverage", ".coverage.project", "coverage_project.json", "htmlcov")
     }
+    roots.update(declared_lean_runtime_roots(root))
     roots.update(path for path in (root / "src").glob("*.egg-info"))
     return frozenset(path.absolute() for path in roots)
 

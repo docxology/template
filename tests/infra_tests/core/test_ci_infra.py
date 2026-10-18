@@ -45,10 +45,18 @@ def test_deleted_test_routes_existing_owner_without_executing_nonexistent_path()
 def test_broad_package_ownership_scales_shards_without_losing_selected_work() -> None:
     from infrastructure.core.testing.ci_contracts import combined_groups, contract_files
 
-    changed = ("infrastructure/reporting/__init__.py", "infrastructure/validation/__init__.py")
+    heavy = (
+        "tests/infra_tests/core/test_execution_contract.py",
+        "tests/infra_tests/core/test_project_test_measurement.py",
+        "tests/infra_tests/project/test_root_acceptance.py",
+    )
+    changed = ("infrastructure/reporting/__init__.py", "infrastructure/validation/__init__.py", *heavy)
     files = infrastructure_files(ROOT, changed)
     shards = infrastructure_shards(ROOT, changed)
-    assert 3 < len(shards) <= 8
+    assert 3 < len(shards) <= 10
+    assert all([module] in shards for module in heavy)
+    small = infrastructure_shards(ROOT, heavy)
+    assert len(small) >= 5 and all([module] in small for module in heavy)
     plan = {"infra_shards": shards, "contract_modules": list(contract_files(files, infrastructure_files(ROOT)))}
     validate_shards(combined_groups(plan), files)
     assert shards == infrastructure_shards(ROOT, changed)
@@ -76,12 +84,14 @@ def test_shard_manifest_refuses_missing_duplicate_empty_and_extra_work(fault: st
         validate_shards(shards, ("one.py", "two.py"))
 
 
-@pytest.mark.parametrize("fault", ["none", "missing", "duplicate", "members", "outcomes", "contract"])
+@pytest.mark.parametrize(
+    "fault", ["none", "missing", "duplicate", "members", "outcomes", "contract", "contract-deselected"]
+)
 def test_aggregate_receipt_checks_exact_selected_file_and_member_union(tmp_path: Path, fault: str) -> None:
     from infrastructure.core.testing.ci_infra import _functional_selection
 
     plan = {"infra_shards": [["tests/one.py"], ["tests/two.py"]]}
-    if fault == "contract":
+    if fault.startswith("contract"):
         plan = {"infra_shards": [["tests/one.py"]], "contract_modules": ["tests/two.py"]}
     from infrastructure.core.testing.ci_contracts import combined_groups
 
@@ -89,6 +99,8 @@ def test_aggregate_receipt_checks_exact_selected_file_and_member_union(tmp_path:
         if fault == "missing" and index == 1:
             continue
         selected = [paths[0] + "::test_owned"]
+        deselected = [paths[0] + "::test_omitted"] if fault == "contract-deselected" and index == 1 else []
+        collected = selected + deselected
         phases = {"setup": "passed", "call": "passed", "teardown": "passed"}
         outcomes = [selected[0] + "|" + json.dumps(phases, sort_keys=True, separators=(",", ":"))]
         row = {
@@ -99,8 +111,8 @@ def test_aggregate_receipt_checks_exact_selected_file_and_member_union(tmp_path:
             "outcomes": outcomes,
             "member_sha256": member_digest(tuple(selected)),
             "outcome_sha256": member_digest(tuple(outcomes)),
-            "collected": selected,
-            "deselected": [],
+            "collected": collected,
+            "deselected": deselected,
             "selection_profile": {
                 "arguments": [
                     *paths,
@@ -109,15 +121,16 @@ def test_aggregate_receipt_checks_exact_selected_file_and_member_union(tmp_path:
                     "--benchmark-disable",
                     "-p",
                     "infrastructure.core.testing.pytest_receipt",
+                    *(["-m", "", "-k", ""] if fault.startswith("contract") and index == 1 else []),
                     "--junitxml=diagnostic.xml",
-                    "--timeout=120" if fault == "contract" and index == 1 else "--timeout=60",
+                    "--timeout=120" if fault.startswith("contract") and index == 1 else "--timeout=60",
                 ],
-                **_functional_selection(ROOT),
+                **_functional_selection(ROOT, is_contract=fault.startswith("contract") and index == 1),
                 "workers": None,
                 "ambient_addopts": False,
             },
-            "collection_sha256": member_digest(tuple(selected)),
-            "deselected_sha256": member_digest(()),
+            "collection_sha256": member_digest(tuple(collected)),
+            "deselected_sha256": member_digest(tuple(deselected)),
         }
         if fault == "members":
             row["selected"] = []
@@ -134,8 +147,8 @@ def test_aggregate_receipt_checks_exact_selected_file_and_member_union(tmp_path:
                     "nonce": row["nonce"],
                     "worker": "controller",
                     "selected": selected,
-                    "collected": selected,
-                    "deselected": [],
+                    "collected": collected,
+                    "deselected": deselected,
                     "selection_profile": row["selection_profile"],
                     "reports": {selected[0]: phases},
                     "collection_errors": 0,
@@ -153,3 +166,97 @@ def test_aggregate_receipt_checks_exact_selected_file_and_member_union(tmp_path:
     else:
         with pytest.raises(ValueError):
             verify_shard_receipts(plan, tmp_path)
+
+
+@pytest.mark.timeout(45)
+@pytest.mark.parametrize("test_root", ["tests/infra_tests", "tests/integration"])
+def test_changed_python_helper_routes_complete_actual_consumer_package(tmp_path: Path, test_root: str) -> None:
+    """Changed helpers select real consumers; an actual original receipt stays strict."""
+    import os
+    import subprocess
+    import sys
+    from uuid import uuid4
+
+    from infrastructure.core.testing.ci_infra import CI_EXTRA_PATHS, _shard_collection
+    from infrastructure.core.testing.pytest_observations import DIRECTORY_ENV, NONCE_ENV, ROOT_ENV
+
+    actual_helper = "tests/infra_tests/llm/real_ollama_client.py"
+    actual_files = infrastructure_files(ROOT, (actual_helper,))
+    actual_consumers = {
+        path.relative_to(ROOT).as_posix() for path in (ROOT / "tests/infra_tests/llm").rglob("test_*.py")
+    }
+    assert actual_helper not in actual_files
+    assert {path for path in actual_files if path.startswith("tests/infra_tests/llm/")} == actual_consumers
+    assert {
+        "tests/infra_tests/llm/test_llm_core.py",
+        "tests/infra_tests/llm/test_core.py",
+        "tests/infra_tests/llm/test_review_generators.py",
+        "tests/infra_tests/llm/test_llm_review_integration.py",
+    } <= actual_consumers
+
+    root = tmp_path / "owned-helper-project"
+    root.mkdir()
+    # The real selector retains the legacy roster. These placeholder paths are
+    # selector inputs only; this control executes the two actual consumers below.
+    for name in infrastructure_files(ROOT):
+        path = root / name
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text("# owned legacy selector input\n")
+    (root / "pyproject.toml").write_bytes((ROOT / "pyproject.toml").read_bytes())
+    package = root / test_root / "owned_consumers"
+    package.mkdir(parents=True)
+    marker = root / "actual-helper-calls.txt"
+    helper = package / "shared_driver.py"
+    helper.write_text(
+        "from pathlib import Path\n"
+        "def score(value):\n"
+        f"    with Path({str(marker)!r}).open('a') as stream: stream.write(str(value)+'\\n')\n"
+        "    return value + 17\n"
+    )
+    consumers = (package / "test_left.py", package / "nested/test_right.py")
+    for index, path in enumerate(consumers):
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(
+            "import importlib.util\nfrom pathlib import Path\n"
+            f"spec=importlib.util.spec_from_file_location('actual_owned_helper',Path({str(helper)!r}))\n"
+            "helper=importlib.util.module_from_spec(spec)\nspec.loader.exec_module(helper)\n"
+            f"def test_actual_consumer():\n    assert helper.score({index}) == {index + 17}\n"
+        )
+    selected = infrastructure_files(root, (helper.relative_to(root).as_posix(),))
+    files = [name for name in selected if name.startswith(package.relative_to(root).as_posix() + "/")]
+    assert files == sorted(path.relative_to(root).as_posix() for path in consumers)
+    assert helper.relative_to(root).as_posix() not in selected
+
+    directory = root / "observations"
+    nonce = uuid4().hex
+    environment = {
+        **os.environ,
+        "PYTEST_ADDOPTS": "",
+        DIRECTORY_ENV: str(directory),
+        NONCE_ENV: nonce,
+        ROOT_ENV: str(root),
+    }
+    omitted = root / CI_EXTRA_PATHS[0]
+    omitted.write_text("def test_actual_requested_but_omitted():\n    assert 17 + 2 == 19\n")
+    command = [
+        sys.executable,
+        "-m",
+        "pytest",
+        *files,
+        "--no-cov",
+        "-q",
+        "--benchmark-disable",
+        "-p",
+        "infrastructure.core.testing.pytest_receipt",
+        "--junitxml=" + str(root / "actual-consumers.xml"),
+        "--timeout=60",
+    ]
+    result = subprocess.run(command, cwd=root, env=environment, capture_output=True, text=True, timeout=30, check=False)
+    assert result.returncode == 0, result.stdout + result.stderr
+    assert sorted(marker.read_text().splitlines()) == ["0", "1"]
+    collection = _shard_collection(directory, nonce, files, root)
+    assert len(collection["collected"]) == 2 and collection["deselected"] == []
+    # A real collectable additional module still cannot disappear merely
+    # because another package's genuine cases completed successfully.
+    with pytest.raises(ValueError, match="omitted a requested test file"):
+        _shard_collection(directory, nonce, [*files, omitted.relative_to(root).as_posix()], root)

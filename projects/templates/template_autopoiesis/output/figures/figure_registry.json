@@ -1,12 +1,12 @@
 {
   "figures": [
     {
-      "caption": "Measured branch coverage by source module with the 90 percent floor marked.",
+      "caption": "Measured combined statement and branch coverage by source module with the aggregate gate marked.",
       "filename": "fig_coverage_by_module.png",
       "generated_by": "src.manuscript_figures.fig_coverage_by_module",
       "label": "fig:coverage_by_module",
       "metadata": {
-        "alt_text": "Horizontal bars rank source modules by measured branch coverage against a dashed 90 percent floor; modules below the threshold, if any, are distinguished in red."
+        "alt_text": "Horizontal bars rank source modules by combined statement and branch coverage against a dashed 90 percent aggregate gate; modules below that reference line are distinguished in red."
       }
     },
     {

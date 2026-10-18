@@ -298,6 +298,66 @@ def _source_oracle(repo_root: Path, project: Path) -> str:
     return paths_digest(tuple(roots), source=True, excluded_roots=frozenset({(project / "output").absolute()}))
 
 
+@pytest.mark.parametrize("source", [False, True])
+def test_literal_unusual_names_follow_actual_runtime_suffix_rules(tmp_path: Path, source: bool) -> None:
+    """Retain authored dot/case/Unicode names under the selected Python minor."""
+    root = tmp_path / "source é\nroot"
+    root.mkdir()
+    names = (
+        ".pyc",
+        "..pyc",
+        "...pyc",
+        ".pyo",
+        "..pyo",
+        "...pyo",
+        ".hidden.pyc",
+        "..hidden.pyo",
+        "ordinary.pyc",
+        "ordinary.pyo",
+        "uppercase.PYC",
+        "uppercase.PYO",
+        "trailing.pyc.",
+        "trailing.pyo.",
+        "é.pyc",
+        "é.pyo",
+        "line\n.pyc",
+        "line\n.PYO",
+        "model.py",
+        "drop\n.name",
+    )
+    for name in names:
+        (root / name).write_bytes(name.encode())
+    visited: list[Path] = []
+    rows = tree_records(root, source=source, excluded_names=frozenset({"drop\n.name"}), path_admission=visited.append)
+    admitted = sorted(
+        name for name in names if name != "drop\n.name" and not (source and Path(name).suffix in {".pyc", ".pyo"})
+    )
+    assert rows == (
+        (".", "directory", ""),
+        *(("./" + name, "file", hashlib.sha256(name.encode()).hexdigest()) for name in admitted),
+    )
+    assert visited == [root, *(root / name for name in admitted)]
+
+
+def test_path_admission_still_observes_selected_paths_and_detects_new_directory_entries(tmp_path: Path) -> None:
+    root = tmp_path / "source"
+    root.mkdir()
+    (root / "observed.py").write_text("original")
+    excluded = root / "excluded"
+    excluded.symlink_to(tmp_path / "never-consumed")
+    visited: list[Path] = []
+
+    def consume(path: Path) -> None:
+        visited.append(path)
+        if path.name == "observed.py":
+            (root / "added.py").write_text("new entry during admission")
+
+    with pytest.raises(ValueError, match="contents changed"):
+        tree_records(root, excluded_roots=frozenset({excluded}), path_admission=consume)
+    assert visited == [root, root / "observed.py"]
+    assert excluded.is_symlink()
+
+
 @pytest.mark.parametrize("nominated_root", ["actual-implementation", "separate-owned-root"])
 def test_single_boundary_tree_rows_preserve_source_payload_and_every_fresh_observation(
     tmp_path: Path, nominated_root: str
@@ -410,3 +470,71 @@ def test_next_boundary_refuses_actual_changed_loaded_source_after_prior_matching
     assert not result.timed_out and not result.custody_refused
     assert "actual-current-source-refused" in result.stdout
     assert outside.read_text() == "private invented sentinel\n"
+
+
+@pytest.mark.parametrize("relative", ["lean", "formal/lean"])
+def test_declared_lean_build_is_runtime_without_hiding_nested_authored_inputs(tmp_path: Path, relative: str) -> None:
+    from infrastructure.core.pipeline.fingerprint_files import declared_lean_runtime_roots
+    from infrastructure.core.pipeline.fingerprints import source_content_fingerprint
+
+    repository = Path(__file__).resolve().parents[4]
+    project = tmp_path / "project"
+    lean = project / relative
+    lean.mkdir(parents=True)
+    (lean / "lakefile.lean").write_text("import Lake\nopen Lake DSL\npackage Owned where\n")
+    (lean / "lean-toolchain").write_text("leanprover/lean4:v4.35.0\n")
+    (lean / "lake-manifest.json").write_text('{"packages": []}\n')
+    (lean / "Model.lean").write_text("theorem owned : True := True.intro\n")
+    before = source_content_fingerprint(repository, project)
+    generated = lean / ".lake/build/lib/Model.olean"
+    generated.parent.mkdir(parents=True)
+    generated.write_bytes(b"owned compiled output")
+    assert declared_lean_runtime_roots(project) == frozenset({lean / ".lake"})
+    assert source_content_fingerprint(repository, project) == before
+    generated.write_bytes(b"rebuilt compiled output")
+    assert source_content_fingerprint(repository, project) == before
+    # Generic trees still observe the name; only the declared project boundary
+    # classifies this exact build root as runtime.
+    assert any(".lake" in row[0] for row in tree_records(project, source=True))
+    authored = project / "data/.lake/model.py"
+    authored.parent.mkdir(parents=True)
+    authored.write_text("measurement = 1\n")
+    assert source_content_fingerprint(repository, project) != before
+
+
+@pytest.mark.parametrize("relative", ["lean", "formal/lean"])
+@pytest.mark.parametrize("link", ["declaration", "ancestor"])
+def test_declared_lean_runtime_refuses_symbolic_source_components(tmp_path: Path, link: str, relative: str) -> None:
+    from infrastructure.core.pipeline.fingerprint_files import declared_lean_runtime_roots
+
+    project = tmp_path / "project"
+    project.mkdir()
+    outside = tmp_path / "outside"
+    outside.mkdir()
+    (outside / "lakefile.lean").write_text("outside Source must not be selected\n")
+    lean = project / relative
+    lean.parent.mkdir(parents=True, exist_ok=True)
+    if link == "ancestor":
+        lean.symlink_to(outside, target_is_directory=True)
+    else:
+        lean.mkdir()
+        (lean / "lakefile.lean").symlink_to(outside / "lakefile.lean")
+    with pytest.raises(ValueError, match="symlink|no-follow"):
+        declared_lean_runtime_roots(project)
+    assert (outside / "lakefile.lean").read_text() == "outside Source must not be selected\n"
+
+
+def test_both_declared_lean_roots_require_their_own_physical_declaration(tmp_path: Path) -> None:
+    from infrastructure.core.pipeline.fingerprint_files import declared_lean_runtime_roots
+
+    expected = set()
+    for relative in ("lean", "formal/lean"):
+        lean = tmp_path / relative
+        lean.mkdir(parents=True)
+        (lean / "lakefile.lean").write_text("import Lake\n")
+        expected.add(lean / ".lake")
+        assert declared_lean_runtime_roots(tmp_path) == frozenset(expected)
+    (tmp_path / "lean/lakefile.lean").unlink()
+    assert declared_lean_runtime_roots(tmp_path) == frozenset({tmp_path / "formal/lean/.lake"})
+    (tmp_path / "formal/lean/lakefile.lean").unlink()
+    assert not declared_lean_runtime_roots(tmp_path)

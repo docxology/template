@@ -382,7 +382,7 @@ def _guardian_main(control_fd: int, status_fd: int, source_digest: str) -> int:
     try:
         # Import cleanup before the handshake, under the owned empty cache,
         # so root exit never waits on public imports or uses inherited pyc.
-        from infrastructure.core.execution_boundary import terminate_bounded_run_processes
+        from infrastructure.core._bounded_kill import terminate_bounded_run_processes
 
         _verify_guardian_implementation(source_digest)
         _write_all(status_fd, _READY)

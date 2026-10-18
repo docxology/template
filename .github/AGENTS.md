@@ -12,7 +12,10 @@ transitive consumers; shared, unknown or ambiguous changes select the full roste
 Infrastructure includes changed tests and declared Source owners without dropping
 the legacy union. `CI Gate` requires both test lanes and checks their original
 pytest selection/outcome receipts for an exact disjoint union. JUnit is diagnostic.
-Full contract jobs use the established 120-second infrastructure pytest default;
+Routine work uses at most ten jobs, with dedicated jobs for the selected process
+measurement and Root acceptance modules, retaining the 540-second job-body clock.
+Full contract jobs explicitly clear marker and keyword filters, refuse any
+deselection, and use the established 120-second infrastructure pytest default;
 explicit family/module markers and original operation deadlines retain authority.
 The CLI setting does not alter timeout defaults in nested producer environments.
 `platform-native-preflight.yml` adds an incomplete cold installed diagnostic;

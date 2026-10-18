@@ -23,6 +23,7 @@ class AuxiliaryProcess:
     directory: Path
     deadline: float
     bootstrap_payload: dict[str, Any] | None = None
+    print_originals: list[Any] | None = None
 
 
 AuxiliaryResult = tuple[str, dict[str, Any]]
@@ -100,6 +101,7 @@ def execute_auxiliary_operations(
                 request.directory,
                 request.deadline,
                 bootstrap_payload=request.bootstrap_payload,
+                print_originals=request.print_originals,
             )
             pending[future] = (scope, index, operation)
 

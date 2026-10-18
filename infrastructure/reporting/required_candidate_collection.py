@@ -5,21 +5,17 @@ from __future__ import annotations
 import base64
 import hashlib
 import os
-import sys
 from pathlib import Path
 from typing import Any
 
-from infrastructure.core.execution_boundary import run_bounded_subprocess
+from infrastructure.project._hosted_api import fixed_hosted_api
 from infrastructure.core.files.secure_write import atomic_write_bytes_confined, read_bytes_confined
 from infrastructure.project.public_acceptance_evidence import evidence_directory, write_json
 from infrastructure.project.public_hosted_origin import (
-    DOWNLOAD_SCRIPT,
     MAX_ARCHIVE,
     MAX_LISTING_PAGES,
     WORKFLOW,
-    _api_command,
     _merge_listing_pages,
-    _process,
 )
 from infrastructure.project.public_reference_git import remaining
 from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
@@ -72,37 +68,44 @@ def collect_required_candidate(
     directory = evidence_directory(root, directory, fresh=True)
     directory.mkdir(parents=True, mode=0o700)
 
-    def execute(command: list[str], label: str) -> dict[str, Any]:
-        result = run_bounded_subprocess(
-            command, cwd=root, env=dict(os.environ), timeout=remaining(deadline), capture_output=True
-        )
-        record = {
-            "command": command,
-            "exit_code": result.returncode,
-            "original_exit_code": result.original_returncode,
-            "timed_out": result.timed_out,
-            "custody_refused": result.custody_refused,
-            "diagnostic": result.command_error,
-            "stdout": result.stdout,
-            "stderr": result.stderr,
-        }
-        write_json(root, directory / (label + "-process.json"), record)
-        _process(record, command)
-        return record
+    api_transport = fixed_hosted_api(
+        root,
+        directory,
+        repository=repository,
+        run_id=run_id,
+        head_sha=head,
+        deadline=deadline,
+        environment=os.environ.copy(),
+    )
 
-    def api(endpoint: str, label: str) -> dict[str, Any]:
-        record = execute(_api_command(endpoint), label)
-        payload = json_object_from_bytes(record["stdout"].encode())
-        write_json(root, directory / (label + "-response.json"), payload)
-        return payload
+    def api_response(method: str, number: int | None = None) -> dict[str, Any]:
+        if method == "run":
+            response, observed = api_transport.run_metadata()
+            label = "run"
+        elif method == "workflow":
+            response, observed = api_transport.workflow_metadata()
+            label = "workflow"
+        elif method == "primary-metadata":
+            assert number is not None
+            response, observed = api_transport.artifact_metadata(number)
+            label = "primary-metadata"
+        elif method == "jobs":
+            assert number is not None
+            response, observed = api_transport.job_page(number)
+            label = f"jobs-{number}"
+        else:
+            assert method == "listing" and number is not None
+            response, observed = api_transport.artifact_page(number)
+            label = f"listing-{number}"
+        write_json(root, directory / (label + "-response.json"), response)
+        return response
 
-    base = f"repos/{repository}"
-    run = api(f"{base}/actions/runs/{run_id}", "run")
-    primary = api(f"{base}/actions/artifacts/{artifact_id}", "primary-metadata")
+    run = api_response("run")
+    primary = api_response("primary-metadata", artifact_id)
     validate_hosted_handoff(
         run, primary, repository=repository, revision=head, run_id=str(run_id), artifact_id=str(artifact_id)
     )
-    workflow = api(f"{base}/contents/{WORKFLOW}?ref={head}", "workflow")
+    workflow = api_response("workflow")
     if (
         workflow.get("path") != WORKFLOW
         or base64.b64decode(workflow["content"]) != source.current_source_reader.read(WORKFLOW).content
@@ -110,7 +113,7 @@ def collect_required_candidate(
         raise ValueError("candidate hosted workflow differs from the independently admitted Source")
     pages = []
     for ordinal in range(1, MAX_LISTING_PAGES + 1):
-        pages.append(api(f"{base}/actions/runs/{run_id}/artifacts?per_page=100&page={ordinal}", f"listing-{ordinal}"))
+        pages.append(api_response("listing", ordinal))
         listing = _merge_listing_pages(pages, complete=False)
         if len(listing["artifacts"]) == listing["total_count"]:
             break
@@ -133,18 +136,8 @@ def collect_required_candidate(
             run, normalized, repository=repository, revision=head, run_id=str(run_id), artifact_id=str(metadata["id"])
         )
         target = directory / (name + ".zip")
-        result = execute(
-            [
-                sys.executable,
-                "-I",
-                "-c",
-                DOWNLOAD_SCRIPT,
-                str(target),
-                *_api_command(f"{base}/actions/artifacts/{metadata['id']}/zip"),
-            ],
-            name,
-        )
-        content = read_bytes_confined(root, target, max_bytes=MAX_ARCHIVE)
+        content, process_binding = api_transport.download_artifact(metadata["id"], target)
+        result = SnapshotReader(root).read(process_binding["path"]).json_object()
         digest = hashlib.sha256(content).hexdigest()
         if (
             metadata["digest"] != "sha256:" + digest

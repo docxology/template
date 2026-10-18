@@ -12,6 +12,7 @@ from infrastructure.project.public_acceptance_scope import RuntimeScope
 from infrastructure.project.public_root_case_contract import _artifact, _json
 from infrastructure.project.public_root_case_readback import _within_deadline
 from infrastructure.project.public_root_lane_coverage import measurement, merge, report
+from infrastructure.project.public_root_lane_diagnostics import read_output, read_reports
 from infrastructure.project.public_root_lane_contract import (
     CHUNK_SCHEMA,
     COORDINATOR_SCHEMA,
@@ -180,6 +181,7 @@ def _read_lane_result(reader: SnapshotReader, bundle: object, *, origin: Any = N
                 "command_error",
                 "remaining_budget_seconds",
                 "duration_seconds",
+                "output_artifact",
             }
             or native["schema_version"] != PROCESS_SCHEMA
             or native["run_id"] != spec["run_id"]
@@ -218,6 +220,7 @@ def _read_lane_result(reader: SnapshotReader, bundle: object, *, origin: Any = N
                 "collection_skips",
                 "deselected",
                 "diagnostic",
+                "diagnostics_artifact",
             }
             or child["schema_version"] != CHUNK_SCHEMA
             or child["role"] != "actual-root-lane-chunk"
@@ -252,6 +255,10 @@ def _read_lane_result(reader: SnapshotReader, bundle: object, *, origin: Any = N
             or child["diagnostic"] != ""
         ):
             raise ValueError("Root lane child source, metadata or original setup/call/teardown outcomes are incomplete")
+        read_output(reader, chunk_directory, native["output_artifact"])
+        diagnostics = read_reports(reader, chunk_directory, child["diagnostics_artifact"])
+        if diagnostics["reports"] or diagnostics["exception"] is not None or diagnostics["dropped_reports"]:
+            raise ValueError("Root successful chunk retained unsuccessful original pytest diagnostics")
         coverage_data = _artifact(reader, child["coverage_data_artifact"])
         if coverage_data.path != chunk_directory / "coverage-data.json":
             raise ValueError("Root lane coverage input is outside its original chunk")

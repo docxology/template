@@ -2,7 +2,7 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="utf-8" />
-  <meta name="generator" content="pandoc 3.11" />
+  <meta name="generator" content="pandoc 3.12.1" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
   <title>03_results.md.web</title>
   <style>
@@ -11,7 +11,10 @@
     */
     html {
       color: #1a1a1a;
+      color: light-dark(#1a1a1a, #fdfdfd);
       background-color: #fdfdfd;
+      background-color: light-dark(#fdfdfd, #1a1a1a);
+      color-scheme: light dark;
     }
     body {
       margin: 0 auto;
@@ -36,11 +39,16 @@
     }
     @media print {
       html {
-        background-color: white;
+        color-scheme: light only;
       }
-      body {
+      html, body, pre, code {
         background-color: transparent;
+      }
+      body, a, a:visited, blockquote {
         color: black;
+      }
+      pre, code {
+        padding: 0;
       }
       p, h2, h3 {
         orphans: 3;
@@ -53,11 +61,8 @@
     p {
       margin: 1em 0;
     }
-    a {
-      color: #1a1a1a;
-    }
-    a:visited {
-      color: #1a1a1a;
+    a, a:visited {
+      color: inherit;
     }
     img {
       max-width: 100%;
@@ -86,8 +91,11 @@
     blockquote {
       margin: 1em 0 1em 1.7em;
       padding-left: 1em;
-      border-left: 2px solid #e6e6e6;
+      border-left: 2px solid;
+      border-color: #e6e6e6;
+      border-color: light-dark(#e6e6e6, #4c4c4c);
       color: #606060;
+      color: light-dark(#606060, #b6b6b6);
     }
     code {
       white-space: pre-wrap;
@@ -111,7 +119,7 @@
     }
     hr {
       border: none;
-      border-top: 1px solid #1a1a1a;
+      border-top: 1px solid currentColor;
       height: 1px;
       margin: 1em 0;
     }
@@ -128,11 +136,11 @@
     }
     tbody {
       margin-top: 0.5em;
-      border-top: 1px solid #1a1a1a;
-      border-bottom: 1px solid #1a1a1a;
+      border-top: 1px solid currentColor;
+      border-bottom: 1px solid currentColor;
     }
     th {
-      border-top: 1px solid #1a1a1a;
+      border-top: 1px solid currentColor;
       padding: 0.25em 0.5em 0.25em 0.5em;
     }
     td {
@@ -349,6 +357,9 @@ pre {
 }
 
 pre code {
+  background-color: transparent;
+  padding: 0;
+  border-radius: 0;
   overflow-wrap: inherit;
   white-space: inherit;
   word-break: inherit;
@@ -561,6 +572,7 @@ mjx-container[display="true"] {
 }
 
 </style>
+<script data-template-source-font-loader src="assets/source-web-fonts.js"></script>
 </head>
 <body>
 <a class="skip-link" href="#main-content">Skip to main content</a>
@@ -890,38 +902,38 @@ kernel.</li>
 </ol>
 <h3 id="test-results">Test results</h3>
 <ul>
-<li><strong>Test count</strong>: 528</li>
-<li><strong>Coverage</strong>: 95.33%</li>
+<li><strong>Test count</strong>: 578</li>
+<li><strong>Coverage</strong>: 92.18%</li>
 <li><strong>Grammar hash</strong>: <code>a1f3e428cf1fb3e3</code></li>
 </ul>
 <p>Both the test count and coverage percentage above are produced by
 <code>measure_test_summary()</code>
-(<code>src/template_autopoiesis/manuscript/manuscript_variables.py</code>),
-which shells out to this project’s own <code>pytest</code> +
-<code>coverage</code> run (<code>--cov-branch</code>, matching the
-repository-root branch-coverage methodology) against <code>tests/</code>
-and <code>src/</code> and parses the real <code>passed</code> count and
-<code>coverage.json</code> totals from that subprocess. There is no
-fallback literal: if the subprocess fails, times out, or its output
-fails to parse, both fields resolve to the string <code>"pending"</code>
-rather than a plausible-looking number — the same discipline that
-governs every other numeric token in this manuscript.</p>
+(<code>src/template_autopoiesis/manuscript/manuscript_variables.py</code>).
+When the current pipeline provides a complete original Project Tests
+measurement, it validates and consumes that same-run evidence, including
+its Source, runtime, coverage and executor-held commitment. Altered
+present evidence fails closed. Without that handoff, the standalone path
+executes a fresh pytest measurement against <code>tests/</code> and
+<code>src/</code> with <code>--cov-branch</code>. Its reported
+percentage combines covered statements and branch exits. There is no
+fallback literal: an incomplete measurement cannot produce a successful
+current summary.</p>
 <figure id="fig:coverage_by_module">
-<a class="figure-full-size-link" href="../figures/fig_coverage_by_module.png" target="_blank" rel="noopener" aria-label="Open full-size figure, Real, per-module branch coverage from the same measurement run that produces 528/95.33 above"><img src="../figures/fig_coverage_by_module.png" style="width:90.0%"
-data-fig-alt="Horizontal bar chart of per-module test coverage percentages, all at or above 90%."
-alt="Horizontal bars rank source modules by measured branch coverage against a dashed 90 percent floor; modules below the threshold, if any, are distinguished in red." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
-<figcaption>Real, per-module branch coverage from the
-same measurement run that produces 528/95.33 above — not an aggregate
-alone. Any module below the repository’s 90% floor would be drawn in red
-rather than smoothed into the headline percentage; none is, in this
-measurement.</figcaption>
+<a class="figure-full-size-link" href="../figures/fig_coverage_by_module.png" target="_blank" rel="noopener" aria-label="Open full-size figure, Per-module combined statement and branch coverage from the same measurement that produces…"><img src="../figures/fig_coverage_by_module.png" style="width:90.0%"
+data-fig-alt="Horizontal bars show measured combined statement and branch coverage per module; red bars identify values below the 90% aggregate-gate reference line."
+alt="Horizontal bars rank source modules by combined statement and branch coverage against a dashed 90 percent aggregate gate; modules below that reference line are distinguished in red." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
+<figcaption>Per-module combined statement and branch
+coverage from the same measurement that produces 578/92.18 above. Red
+bars identify modules below the 90% aggregate-gate reference line; the
+aggregate pass does not imply every module meets that
+level.</figcaption>
 </figure>
-<p>The aggregate 95.33% is a mean weighted by statement and branch
+<p>The aggregate 92.18% is a mean weighted by statement and branch
 count, not a uniform floor — <span class="citation"
 data-cites="fig:coverage_by_module">[@fig:coverage_by_module]</span>
-shows the real spread. As of this measurement every module clears the
-configured 90% line. The exact module values are deliberately read from
-<span class="citation"
+shows the real spread. The 90% gate applies to the aggregate, not
+separately to each module. Exact module values are deliberately read
+from <span class="citation"
 data-cites="fig:coverage_by_module">[@fig:coverage_by_module]</span>,
 rather than copied into prose where they would become stale;
 <code>CHANGELOG.md</code>’s Wave 10 entry records the specific branches

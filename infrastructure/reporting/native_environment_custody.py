@@ -196,3 +196,44 @@ def validate_native_environment(native: dict[str, Any], tool: dict[str, Any], re
         expected.update(injections)
         if expected != raw["actual_commitments"]:
             raise ValueError("actual audited Popen environment is not the exact committed bounded transformation")
+
+
+HOSTED_READER_SCHEMA = "template-fixed-hosted-reader-environment-v1"
+
+
+def _capture_hosted_reader_environment(
+    source: dict[str, str],
+    selected: dict[str, str],
+    bounded: dict[str, str],
+    actual: dict[str, str],
+    token: str,
+) -> dict[str, Any]:
+    """Private fixed-reader overlay; ordinary native custody remains credential-free."""
+    from infrastructure.reporting.native_source_provider_bootstrap import NATIVE_READER_MODULE
+
+    ordinary = capture_native_environment(source, selected, bounded, bounded, token, None)
+    credentials = {"GH_TOKEN": source["GH_TOKEN"]} if source.get("GH_TOKEN") else {}
+    if actual != {**bounded, **credentials}:
+        raise ValueError("fixed hosted reader differs from its exact nominated credential transformation")
+    return {
+        "schema_version": HOSTED_READER_SCHEMA,
+        "reader_role": NATIVE_READER_MODULE,
+        "ordinary": ordinary,
+        "credential_commitments": _commitments(credentials),
+        "actual_commitments": _commitments(actual),
+        "actual_digest": canonical_digest(actual),
+    }
+
+
+def _validate_hosted_reader_environment(raw: dict[str, Any], source: dict[str, str]) -> None:
+    """Check this actual parent's launch, never compare a later job's credentials."""
+    selected = strip_secret_env(source)
+    ordinary = raw.get("ordinary")
+    if not isinstance(ordinary, dict) or not isinstance(ordinary.get("guardian_run_token"), str):
+        raise ValueError("fixed hosted reader lacks its actual guardian environment")
+    token = ordinary["guardian_run_token"]
+    inherited = selected.get(_RUN_IDS_ENV, "").strip()
+    bounded = {**selected, _RUN_IDS_ENV: inherited + ":" + token if inherited else token}
+    actual = {**bounded, **({"GH_TOKEN": source["GH_TOKEN"]} if source.get("GH_TOKEN") else {})}
+    if raw != _capture_hosted_reader_environment(source, selected, bounded, actual, token):
+        raise ValueError("fixed hosted reader environment commitment changed")

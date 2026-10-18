@@ -530,12 +530,18 @@ class TestReviewGeneratorsIntegration:
         from .real_ollama_client import build_real_small_llm_client
 
         client = build_real_small_llm_client(timeout=60.0)
+        client = LLMClient(client.config.with_overrides(long_max_tokens=128))
 
         manuscript_text = "This is a test manuscript about machine learning and AI."
-        result, metrics = generate_executive_summary(client, manuscript_text)
+        result, metrics = generate_executive_summary(
+            client, manuscript_text, model_name=client.config.default_model, temperature=0.0
+        )
 
         assert len(result) > 0
         assert isinstance(result, str)
+        assert metrics.input_chars == len(manuscript_text)
+        assert metrics.output_chars == len(result)
+        assert metrics.generation_time_seconds > 0
 
     def test_generate_review_with_metrics_real_ollama(self):
         """Test generate_review_with_metrics with real Ollama."""
@@ -546,12 +552,23 @@ class TestReviewGeneratorsIntegration:
         manuscript_text = "Test manuscript about optimization algorithms."
         from infrastructure.llm.templates import ManuscriptExecutiveSummary
 
+        # Exercise real streaming and metrics without requesting a full review.
         review_text, metrics = generate_review_with_metrics(
-            client, manuscript_text, "executive_summary", "Executive Summary", ManuscriptExecutiveSummary
+            client,
+            manuscript_text,
+            "executive_summary",
+            "Executive Summary",
+            ManuscriptExecutiveSummary,
+            model_name=client.config.default_model,
+            temperature=0.0,
+            max_tokens=128,
+            max_retries=0,
         )
 
         assert len(review_text) > 0
-        assert hasattr(metrics, "output_chars")
+        assert metrics.input_chars == len(manuscript_text)
+        assert metrics.output_chars == len(review_text)
+        assert metrics.output_words == len(review_text.split())
         assert hasattr(metrics, "generation_time_seconds")
         assert metrics.generation_time_seconds > 0
 

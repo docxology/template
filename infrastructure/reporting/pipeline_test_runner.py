@@ -16,6 +16,7 @@ from typing import Any, cast
 from infrastructure.core.config.queries import get_testing_config
 from infrastructure.core.files.coverage_cleanup import clean_coverage_files
 from infrastructure.core.files.project_lock import project_output_lock
+from infrastructure.core.files.secure_write import atomic_write_bytes_confined
 from infrastructure.core.logging.utils import get_logger, log_header, log_substep, log_success
 from infrastructure.core.testing.test_runner_outputs import project_test_report_directory
 from infrastructure.core.testing.pytest_orchestration import (
@@ -47,6 +48,11 @@ from infrastructure.core.testing.project_test_runtime import (
     build_audited_project_test_command,
     project_test_deadline,
     remaining_test_budget,
+)
+from infrastructure.core.testing.project_test_measurement import (
+    MeasurementIneligible,
+    prepare_measurement,
+    publish_measurement,
 )
 from infrastructure.core.runtime.python_binding import analysis_runtime_binding
 from infrastructure.core.pipeline.outcomes import RunResult, StageOutcome, StageStatus
@@ -425,6 +431,7 @@ def _run_project_tests_impl(
             [
                 str(project_root / "tests"),
                 f"--cov={project_root / 'src'}",
+                "--cov-branch",
             ],
             interpreter=_selected,
             deadline=deadline,
@@ -456,6 +463,17 @@ def _run_project_tests_impl(
             f"--cov-report=json:{project_root / 'coverage_project.json'}",
             f"--cov-fail-under={project_threshold}",
             "--tb=short",
+        ]
+    )
+    # Nominate confined runtime storage without requiring the optional plugin
+    # to load or replacing an explicitly selected nondefault user destination.
+    benchmark_store = project_root / "output/.pipeline/benchmarks"
+    atomic_write_bytes_confined(project_root, benchmark_store / ".owner", b"template-project-benchmark-storage\n")
+    cmd.extend(
+        [
+            "-p",
+            "infrastructure.core.testing._pytest_runtime_controls",
+            f"--template-benchmark-storage={benchmark_store}",
         ]
     )
     # Opt-in live LLM tests (``@pytest.mark.requires_ollama``) are excluded from
@@ -497,6 +515,16 @@ def _run_project_tests_impl(
 
     test_results: dict[str, Any] = {}
     try:
+        observation = prepare_measurement(
+            repo_root,
+            project_root,
+            _selected,
+            cast(dict[str, Any], runtime["binding"]),
+            cmd,
+            env,
+            floor=project_threshold,
+            deadline=deadline,
+        )
         config = _build_generic_project_suite_config(
             project_name=project_name,
             project_root=project_root,
@@ -530,6 +558,17 @@ def _run_project_tests_impl(
         if not unchanged_runtime and exit_code == 0:
             exit_code = 75
         if exit_code == 0:
+            remaining_test_budget(deadline)
+            if observation is not None:
+                try:
+                    publish_measurement(observation, original_exit_code=test_results["original_exit_code"])
+                except MeasurementIneligible as exc:
+                    # Ineligible serial selection (e.g. genuine skips/xdist)
+                    # retains the actual suite result and grants no reuse.
+                    logger.warning("Project tests completed without composable measurement: %s", exc)
+                except (OSError, ValueError, KeyError, TypeError) as exc:
+                    logger.error("Original project measurement custody refused: %s", exc)
+                    exit_code = 75
             remaining_test_budget(deadline)
         test_results["selected_runtime"] = runtime
         test_results["exit_code"] = exit_code

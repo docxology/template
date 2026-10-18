@@ -1,14 +1,14 @@
 {
   "claim_boundary": "Compact evidence summary for manuscript validation; full fact dumps are opt-in debug output.",
-  "fact_count": 564,
+  "fact_count": 569,
   "freshness_warnings": [],
   "kind_counts": {
-    "artifact": 118,
+    "artifact": 121,
     "citation": 6,
-    "figure": 14,
+    "figure": 16,
     "number": 426
   },
-  "omitted_fact_count": 364,
+  "omitted_fact_count": 369,
   "sample_facts": [
     {
       "active": true,
@@ -1848,7 +1848,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-08-14T14:20:53Z",
+      "checked_at": "2026-10-18T02:09:27Z",
       "kind": "number",
       "source": "output/data/manuscript_variables.json:$.TEST_COUNT",
       "source_field": "$.TEST_COUNT",
@@ -1856,11 +1856,11 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "528"
+      "value": "578"
     },
     {
       "active": true,
-      "checked_at": "2026-08-14T14:20:53Z",
+      "checked_at": "2026-10-18T02:09:27Z",
       "kind": "number",
       "source": "output/data/test_coverage_summary.json:$.test_count",
       "source_field": "$.test_count",
@@ -1868,71 +1868,11 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "528"
+      "value": "578"
     },
     {
       "active": true,
-      "checked_at": "2026-08-14T14:20:53Z",
-      "kind": "number",
-      "source": "output/reports/test_results.json:$.project.passed",
-      "source_field": "$.project.passed",
-      "source_path": "output/reports/test_results.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "528"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-08-14T14:20:53Z",
-      "kind": "number",
-      "source": "output/reports/test_results.json:$.project.total",
-      "source_field": "$.project.total",
-      "source_path": "output/reports/test_results.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "528"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-08-14T14:20:53Z",
-      "kind": "number",
-      "source": "output/reports/test_results.json:$.project.discovery_count",
-      "source_field": "$.project.discovery_count",
-      "source_path": "output/reports/test_results.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "528"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-08-14T14:20:53Z",
-      "kind": "number",
-      "source": "output/reports/test_results.json:$.summary.total_passed",
-      "source_field": "$.summary.total_passed",
-      "source_path": "output/reports/test_results.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "528"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-08-14T14:20:53Z",
-      "kind": "number",
-      "source": "output/reports/test_results.json:$.summary.total_tests",
-      "source_field": "$.summary.total_tests",
-      "source_path": "output/reports/test_results.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "528"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-08-14T14:20:53Z",
+      "checked_at": "2026-10-18T02:09:27Z",
       "kind": "number",
       "source": "output/data/manuscript_variables.json:$.TEST_COUNT (numeric variant)",
       "source_field": "$.TEST_COUNT",
@@ -1940,11 +1880,11 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "5.28"
+      "value": "5.78"
     },
     {
       "active": true,
-      "checked_at": "2026-08-14T14:20:53Z",
+      "checked_at": "2026-10-18T02:09:27Z",
       "kind": "number",
       "source": "output/data/test_coverage_summary.json:$.test_count (numeric variant)",
       "source_field": "$.test_count",
@@ -1952,71 +1892,11 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "5.28"
+      "value": "5.78"
     },
     {
       "active": true,
-      "checked_at": "2026-08-14T14:20:53Z",
-      "kind": "number",
-      "source": "output/reports/test_results.json:$.project.passed (numeric variant)",
-      "source_field": "$.project.passed",
-      "source_path": "output/reports/test_results.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "5.28"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-08-14T14:20:53Z",
-      "kind": "number",
-      "source": "output/reports/test_results.json:$.project.total (numeric variant)",
-      "source_field": "$.project.total",
-      "source_path": "output/reports/test_results.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "5.28"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-08-14T14:20:53Z",
-      "kind": "number",
-      "source": "output/reports/test_results.json:$.project.discovery_count (numeric variant)",
-      "source_field": "$.project.discovery_count",
-      "source_path": "output/reports/test_results.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "5.28"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-08-14T14:20:53Z",
-      "kind": "number",
-      "source": "output/reports/test_results.json:$.summary.total_passed (numeric variant)",
-      "source_field": "$.summary.total_passed",
-      "source_path": "output/reports/test_results.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "5.28"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-08-14T14:20:53Z",
-      "kind": "number",
-      "source": "output/reports/test_results.json:$.summary.total_tests (numeric variant)",
-      "source_field": "$.summary.total_tests",
-      "source_path": "output/reports/test_results.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "5.28"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-09-13T22:49:22Z",
+      "checked_at": "2026-10-18T04:40:27Z",
       "kind": "number",
       "source": "output/reports/manuscript_composition.json:$.combined_size_bytes",
       "source_field": "$.combined_size_bytes",
@@ -2024,11 +1904,11 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "84534"
+      "value": "83589"
     },
     {
       "active": true,
-      "checked_at": "2026-09-13T22:49:22Z",
+      "checked_at": "2026-10-18T04:40:27Z",
       "kind": "number",
       "source": "output/reports/manuscript_composition.json:$.combined_size_bytes (numeric variant)",
       "source_field": "$.combined_size_bytes",
@@ -2036,7 +1916,7 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "845.34"
+      "value": "835.89"
     },
     {
       "active": true,
@@ -2409,11 +2289,131 @@
       "stale": false,
       "tolerance": 0.0,
       "value": "100"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-10-18T02:09:27Z",
+      "kind": "number",
+      "source": "output/reports/test_results.json:$.coverage_details.project.file_coverage.src/template_autopoiesis/figures/figures.py.coverage_percent",
+      "source_field": "$.coverage_details.project.file_coverage.src/template_autopoiesis/figures/figures.py.coverage_percent",
+      "source_path": "output/reports/test_results.json",
+      "source_tier": "generated_metric",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "100"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-10-18T02:09:27Z",
+      "kind": "number",
+      "source": "output/reports/test_results.json:$.coverage_details.project.file_coverage.src/template_autopoiesis/gates/__init__.py.coverage_percent",
+      "source_field": "$.coverage_details.project.file_coverage.src/template_autopoiesis/gates/__init__.py.coverage_percent",
+      "source_path": "output/reports/test_results.json",
+      "source_tier": "generated_metric",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "100"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-10-18T02:09:27Z",
+      "kind": "number",
+      "source": "output/reports/test_results.json:$.coverage_details.project.file_coverage.src/template_autopoiesis/gates/integrity.py.coverage_percent",
+      "source_field": "$.coverage_details.project.file_coverage.src/template_autopoiesis/gates/integrity.py.coverage_percent",
+      "source_path": "output/reports/test_results.json",
+      "source_tier": "generated_metric",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "100"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-10-18T02:09:27Z",
+      "kind": "number",
+      "source": "output/reports/test_results.json:$.coverage_details.project.file_coverage.src/template_autopoiesis/gates/sealing.py.missing_lines (numeric variant)",
+      "source_field": "$.coverage_details.project.file_coverage.src/template_autopoiesis/gates/sealing.py.missing_lines",
+      "source_path": "output/reports/test_results.json",
+      "source_tier": "generated_metric",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "100"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-10-18T02:09:27Z",
+      "kind": "number",
+      "source": "output/reports/test_results.json:$.coverage_details.project.file_coverage.src/template_autopoiesis/gates/verify.py.missing_lines (numeric variant)",
+      "source_field": "$.coverage_details.project.file_coverage.src/template_autopoiesis/gates/verify.py.missing_lines",
+      "source_path": "output/reports/test_results.json",
+      "source_tier": "generated_metric",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "100"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-10-18T02:09:27Z",
+      "kind": "number",
+      "source": "output/reports/test_results.json:$.coverage_details.project.file_coverage.src/template_autopoiesis/manuscript/__init__.py.coverage_percent",
+      "source_field": "$.coverage_details.project.file_coverage.src/template_autopoiesis/manuscript/__init__.py.coverage_percent",
+      "source_path": "output/reports/test_results.json",
+      "source_tier": "generated_metric",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "100"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-10-18T02:09:27Z",
+      "kind": "number",
+      "source": "output/reports/test_results.json:$.coverage_details.project.file_coverage.src/template_autopoiesis/manuscript/emit_templates.py.coverage_percent",
+      "source_field": "$.coverage_details.project.file_coverage.src/template_autopoiesis/manuscript/emit_templates.py.coverage_percent",
+      "source_path": "output/reports/test_results.json",
+      "source_tier": "generated_metric",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "100"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-10-18T02:09:27Z",
+      "kind": "number",
+      "source": "output/reports/test_results.json:$.coverage_details.project.file_coverage.src/template_autopoiesis/manuscript/manuscript_figures.py.missing_lines (numeric variant)",
+      "source_field": "$.coverage_details.project.file_coverage.src/template_autopoiesis/manuscript/manuscript_figures.py.missing_lines",
+      "source_path": "output/reports/test_results.json",
+      "source_tier": "generated_metric",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "100"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-10-18T02:09:27Z",
+      "kind": "number",
+      "source": "output/reports/test_results.json:$.coverage_details.project.file_coverage.src/template_autopoiesis/primitives/__init__.py.coverage_percent",
+      "source_field": "$.coverage_details.project.file_coverage.src/template_autopoiesis/primitives/__init__.py.coverage_percent",
+      "source_path": "output/reports/test_results.json",
+      "source_tier": "generated_metric",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "100"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-10-18T02:09:27Z",
+      "kind": "number",
+      "source": "output/reports/test_results.json:$.coverage_details.project.file_coverage.src/template_autopoiesis/primitives/base.py.coverage_percent",
+      "source_field": "$.coverage_details.project.file_coverage.src/template_autopoiesis/primitives/base.py.coverage_percent",
+      "source_path": "output/reports/test_results.json",
+      "source_tier": "generated_metric",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "100"
     }
   ],
   "schema": "template-evidence-registry-report-v1",
   "source_tiers": {
-    "artifact": 132,
+    "artifact": 137,
     "bibliography": 6,
     "configuration": 9,
     "generated_metric": 415,

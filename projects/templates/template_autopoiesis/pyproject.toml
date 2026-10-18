@@ -36,6 +36,7 @@ testpaths = ["tests"]
 addopts = "-v --tb=short --strict-markers"
 
 [tool.coverage.run]
+branch = true
 source = ["src"]
 omit = ["tests/*", "scripts/*"]
 

@@ -11,7 +11,11 @@ from typing import Any, Mapping
 from packaging.utils import canonicalize_name
 from packaging.requirements import Requirement as PackageRequirement
 
-from infrastructure.core.implementation_custody import capture_dependency_custody, source_file_bytes
+from infrastructure.core.implementation_custody import (
+    MissingSelectedDistributionMetadata,
+    capture_dependency_custody,
+    source_file_bytes,
+)
 from infrastructure.project.installed_acceptance_artifacts import inspect_wheel_bytes, write_binary
 from infrastructure.project.public_package_dependencies import declared_local_dependencies, local_dependency_closure
 from infrastructure.reporting.release_readiness_profile import Requirement
@@ -86,9 +90,12 @@ def capture_runtime_providers(
         source_root = Path(filename).absolute().parent
         if source_root.is_relative_to(root):
             raise ValueError("source-suite provider must be the admitted installed distribution")
-        observed = capture_dependency_custody(
-            provider["package"], source_root, fresh_pycache_prefix=Path(sys.pycache_prefix)
-        )
+        try:
+            observed = capture_dependency_custody(
+                provider["package"], source_root, fresh_pycache_prefix=Path(sys.pycache_prefix)
+            )
+        except MissingSelectedDistributionMetadata as exc:
+            raise MissingRuntimeProvider(f"{scope} is not installed in the selected runtime") from exc
         selected = observed.get("distribution")
         if (
             observed.get("binding_kind") != "installed-distribution"

@@ -17,7 +17,7 @@ from infrastructure.core.analysis_read_custody import observe_stage_analysis_rea
 from infrastructure.core.analysis_write_custody import observe_stage_analysis_writes
 from infrastructure.core.implementation_custody import source_file_digest, verify_fresh_module_bytecode
 from infrastructure.core.pipeline.fingerprints import canonical_digest, source_fingerprint, source_content_fingerprint
-from infrastructure.core.pipeline.stage_launch import SCHEMA, ANALYSIS_SCHEMA
+from infrastructure.core.pipeline._stage_protocol import SCHEMA, ANALYSIS_SCHEMA
 from infrastructure.core.runtime.python_binding import admit_current_analysis_runtime
 from infrastructure.core.pipeline.stage_admission import validate_stage_admission
 
@@ -113,6 +113,7 @@ def main() -> int:
             verify_fresh_module_bytecode(root, prefix)
 
     original: int | None = None
+    measurement_publication: dict[str, str] = {}
     diagnostic, custody = "", "verified"
     try:
         verify()
@@ -138,6 +139,10 @@ def main() -> int:
         sys.path.insert(0, str(script.parent))
         try:
             with ExitStack() as reads_stack:
+                if payload["stage_key"] == "project_tests" and not analysis:
+                    from infrastructure.core.testing.project_test_measurement import observe_measurement_publication
+
+                    measurement_publication = reads_stack.enter_context(observe_measurement_publication())
                 reads = (
                     reads_stack.enter_context(
                         observe_stage_analysis_reads(
@@ -221,6 +226,8 @@ def main() -> int:
         "original_exit_code": original,
         "diagnostic": diagnostic,
     }
+    if payload["stage_key"] == "project_tests" and not analysis:
+        receipt["project_test_measurement_sha256"] = measurement_publication.get("sha256")
     if analysis:
         receipt.update(
             source_content_digest=payload["source_content_digest"],

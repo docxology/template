@@ -84,49 +84,29 @@ proofs. `integrity.py` separately defines `merkle_root`, an actual
 pairwise-reduction tree, but `materialize()`/`verify()` call the flat
 function, not that one.
 
-### Coverage is uneven across modules, not uniform (though every module now clears the floor)
+### Coverage is uneven across modules
 
-Two earlier drafts of this section each named a different below-floor
-trio — first `sealing.py`/`verify.py`/`cli.py`, then, after those were
-hardened, `common.py`/`figures.py`/`cover_art.py`. As of this measurement no
-module sits below the 90% branch-coverage line
-([@fig:coverage_by_module]): dedicated tests were added for `common.py`'s
-`trunc()` clipping branch and `CheckReport.failed` (`tests/core/test_common.py`,
-new this session), `figures.py`'s `list`/`tuple` input branch of
-`_first_plottable_array`, the generic `repr()` fallback in
-`_scalar_summary_lines`, and the array-plotting branch of
-`render_primitive_figure` (`tests/figures/test_figures.py`), and `cover_art.py`'s
-QR-seal drawing branch (`tests/figures/test_cover_art.py`,
-`test_render_cover_with_grammar_hash_*`) — the same branch identified above
-as running in production but previously untested.
+The aggregate {{COVERAGE_PCT}}% combines covered statements and branch exits
+across the measured source inventory. Passing the configured 90% aggregate gate
+(`--cov-fail-under=90`) does not establish a 90% floor for every module.
+[@fig:coverage_by_module] preserves the per-module spread and marks values below
+that reference line in red. The chart and headline percentage come from the same
+persisted `output/data/coverage_full.json`, rather than independently assembled
+measurements.
 
-Smaller residual gaps remain in modules that are otherwise well above the
-floor: `sealing.py`'s `read_qr_matrix` `pyzbar`-decode path is untested since
-`pyzbar` is not installed here; `verify.py`'s schema-version and
-malformed-JSON `except` branches are not independently exercised; `cli.py`'s
-`cmd_materialize`/`cmd_verify` have no end-to-end CLI-level test, though the
-library functions they wrap are covered elsewhere in `test_materialize.py`
-and `test_integrity_and_verify.py`; `honesty.py` itself sits closest to the
-floor at just above 90%. None of these pull the aggregate below the 90%
-floor (`--cov-fail-under=90`), and the aggregate {{COVERAGE_PCT}} alone would
-obscure exactly where the remaining, smaller gaps live — which is the reason
-this section, and [@fig:coverage_by_module], exist as a per-module view
-rather than trusting one headline number. Property-based tests
-(`tests/gates/test_property_invariants.py`, Hypothesis) and a stress/edge suite
-(`tests/core/test_stress_edge_cases.py`) cover invariants like boundary seeds and
-all-reserved-slot configurations [@claessen2000quickcheck;
-@maciver2019hypothesis], but generated inputs are not a substitute for
-direct tests of the specific branches named above.
+Coverage identifies executed paths, not correctness or completeness. Property-based
+tests (`tests/gates/test_property_invariants.py`, Hypothesis) and the stress/edge
+suite (`tests/core/test_stress_edge_cases.py`) exercise boundary seeds and
+all-reserved-slot configurations [@claessen2000quickcheck; @maciver2019hypothesis],
+but generated inputs do not replace direct negative controls or inspection of
+unexecuted statements and branch exits.
 
-This whole section is itself evidence for a point made elsewhere in this
-manuscript: a coverage ranking is a measurement, not a fact about the code —
-each of its two prior versions was accurate when written and became false as
-soon as new tests shipped. Readers should treat any specific module name and
-percentage in this document as dated to its stated measurement, and re-run
-`stage_02_analysis.py` for the current ranking rather than trust a prior
-render.
+Module rankings and gaps can change whenever source or tests change. Inspect the
+current coverage report and regenerate the analysis and figure after a changed
+input, rather than treating an earlier module list or a passing aggregate as
+proof that all modules clear the reference line.
 
-### Cover art now includes the QR seal, but that code path is untested
+### Cover art includes the QR seal with direct rendering controls
 
 An earlier draft of this section reported that the title-page cover image
 omitted the originally envisioned QR seal, gradient glow, and seed-derived
@@ -142,8 +122,10 @@ hash printed as a text label beneath it. An earlier draft of this section
 also noted that no test called `render_cover` with an explicit
 `grammar_hash=`, leaving the QR-drawing branch (`src/template_autopoiesis/figures/cover_art.py`, the `if
 grammar_hash is not None:` block) exercised in production but untested; that
-gap is now closed by `tests/figures/test_cover_art.py::test_render_cover_with_grammar_hash_*`,
-added this session (see "Coverage is uneven across modules" below).
+gap now has direct controls in `tests/figures/test_cover_art.py::test_render_cover_with_grammar_hash_*`.
+Those controls render an explicit hash, compare sealed and unsealed images, and
+check byte stability for identical inputs; they do not establish exhaustive
+visual correctness or QR decoding on every output.
 
 Separately, for most of this project's life `manuscript/references.bib` held
 a single self-referential `friedman2026autopoiesis` entry noting the DOI was

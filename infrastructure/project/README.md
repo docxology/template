@@ -2,12 +2,26 @@
 
 Project discovery, validation, and metadata extraction for multi-project support.
 
+Darwin auxiliary print acceptance uses `auxiliary_print_code.py` for the fixed
+audited worker entry and its retained actual Code/cache closure, and
+`auxiliary_print_hosted.py` for independently authenticated same-run Darwin
+artifact collection. Receipt JSON cannot create either live producer custody
+or a completed original. The existing supervisor and whole-operation deadline
+remain authoritative; original nonzero/timeout results never become passes.
+
 `codeowners.py` generates and validates the public-exemplar and sensitive-area
 ownership block in `.github/CODEOWNERS` from the canonical public scope.
 
 `public_acceptance_auxiliary_parallel.py` overlaps owned subprocess supervision
 while resuming Source controllers serially. Its deadline exception retains
 completed results and original child observations without granting acceptance.
+
+Every Root lane chunk retains `process-output.json` and `case-diagnostics.json`
+under its original ignored evidence directory. They preserve captured process
+stdout/stderr and actual pytest failure/skip details with explicit hashes and
+truncation: 256 KiB per process stream, 16 KiB per report field and 1 MiB of report
+text per chunk. Original outcome and timeout receipts remain authoritative;
+these hash-bound diagnostics cannot turn a failed case into acceptance.
 
 `acceptance_fixture_preparation.py` is the stdlib fixture producer and strict
 shared manifest parser. Run its thin entry point with

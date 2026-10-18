@@ -25,11 +25,12 @@ class TestResearchWorkflow:
 
         Tests integration between system monitoring and LLM analysis.
         """
-        model_name = select_small_fast_model()
+        base_url = OllamaClientConfig.from_env().base_url
+        model_name = select_small_fast_model(base_url)
         if not model_name:
             pytest.fail("No Ollama model after ensure_ollama_for_tests (misconfiguration).")
 
-        ok, err = preload_model(model_name, timeout=10.0, retries=0)
+        ok, err = preload_model(model_name, base_url=base_url, timeout=10.0, retries=0)
         if not ok:
             pytest.fail(f"Ollama model {model_name!r} failed to preload: {err}")
 
@@ -42,9 +43,12 @@ class TestResearchWorkflow:
             # Use LLM to analyze health status
             llm = LLMClient(
                 OllamaClientConfig(
-                    base_url="http://localhost:11434",
+                    base_url=base_url,
                     default_model=model_name,
                     timeout=15.0,
+                    max_tokens=128,
+                    temperature=0.0,
+                    seed=42,
                 )
             )
             analysis_prompt = f"Analyze this system health status and provide recommendations: {health_status}"

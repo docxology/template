@@ -4,7 +4,7 @@
 paper:
   title: "Autopoietic Project Generation"
   subtitle: "A Combinatoric Grammar for Deterministic Runnable Project Synthesis"
-  version: "1.0.1"
+  version: "2.0.0"
   date: "2026-07-06"
   cover:
     image: "figures/cover_art.png"
@@ -97,6 +97,10 @@ project_config:
     # enumerate every cell; values must match declared slot options exactly.
     archetype_filters: {}
 publication:
+  release_status: "unreleased"
+  intended_version: "2.0.0"
+  platform_version: "4.0.2"
+  last_published_version: "1.0.1"
   doi: "10.5281/zenodo.21227869"
   version_doi: "10.5281/zenodo.21229620"
   version_record: "https://zenodo.org/records/21229620"

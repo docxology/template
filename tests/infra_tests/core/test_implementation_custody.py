@@ -13,6 +13,7 @@ import shutil
 import subprocess
 import sys
 import time
+import venv
 from pathlib import Path
 
 import pytest
@@ -26,6 +27,8 @@ ROOT = Path(__file__).resolve().parents[3]
 def test_source_only_platform_identity_is_checked_without_distribution_metadata(
     tmp_path: Path, wrong_identity: bool
 ) -> None:
+    runtime = tmp_path / "empty-runtime"
+    venv.EnvBuilder(with_pip=False).create(runtime)
     platform = tmp_path.resolve() / "source-platform"
     shutil.copytree(ROOT / "infrastructure", platform / "infrastructure", ignore=shutil.ignore_patterns("__pycache__"))
     for name in ("pyproject.toml", "uv.lock", ".python-version"):
@@ -52,7 +55,7 @@ assert observation['distribution'] is None
 print('actual metadata-absent platform admitted')
 """
     result = subprocess.run(
-        [sys.executable, "-I", "-S", "-c", code, str(platform)],
+        [str(runtime / "bin/python"), "-I", "-c", code, str(platform)],
         cwd=tmp_path,
         capture_output=True,
         text=True,
@@ -68,6 +71,100 @@ print('actual metadata-absent platform admitted')
     else:
         assert result.returncode == 0, result.stderr
         assert result.stdout.strip() == "actual metadata-absent platform admitted"
+
+
+@pytest.mark.parametrize("fault", [None, "duplicate", "metadata", "version", "record", "symlink"])
+def test_checkout_uses_unique_actual_installed_metadata_despite_generated_source_egg_info(
+    tmp_path: Path, fault: str | None
+) -> None:
+    """Exercise real editable metadata in an empty same-ABI owned environment."""
+    runtime = tmp_path / "runtime"
+    venv.EnvBuilder(with_pip=False).create(runtime)
+    python = runtime / "bin/python"
+    site = Path(
+        subprocess.check_output(
+            [str(python), "-I", "-c", "import sysconfig;print(sysconfig.get_path('purelib'))"], text=True
+        ).strip()
+    )
+    checkout = tmp_path / "checkout"
+    source = checkout / "src/canonical_engine"
+    source.mkdir(parents=True)
+    (source / "__init__.py").write_text("VALUE = 7\n")
+    (checkout / "pyproject.toml").write_text('[project]\nname="canonical-engine"\nversion="0.2.0"\n')
+    (checkout / "uv.lock").write_text("version = 1\n")
+    egg = checkout / "src/canonical_engine.egg-info"
+    egg.mkdir()
+    pkg_info = "Metadata-Version: 2.3\nName: canonical-engine\nVersion: 0.2.0\n"
+    (egg / "PKG-INFO").write_text(pkg_info)
+    (egg / "SOURCES.txt").write_text("README.md\n")
+    editable = site / "canonical_engine.pth"
+    editable.write_text(str(source.parent) + "\n")
+    metadata = site / "canonical_engine-0.2.0.dist-info"
+    metadata.mkdir()
+    (metadata / "METADATA").write_text(pkg_info)
+    if fault == "metadata":
+        (metadata / "METADATA").write_text(pkg_info + "Name: wrong\n")
+    elif fault == "version":
+        (metadata / "METADATA").write_text(pkg_info.replace("0.2.0", "0.3.0"))
+
+    def seal(directory: Path) -> None:
+        output = io.StringIO()
+        writer = csv.writer(output)
+        for path in (editable, directory / "METADATA"):
+            raw = path.read_bytes()
+            digest = base64.urlsafe_b64encode(hashlib.sha256(raw).digest()).decode().rstrip("=")
+            writer.writerow([path.relative_to(site).as_posix(), "sha256=" + digest, len(raw)])
+        writer.writerow([directory.relative_to(site).as_posix() + "/RECORD", "", ""])
+        (directory / "RECORD").write_text(output.getvalue())
+
+    seal(metadata)
+    if fault == "duplicate":
+        duplicate = site / "canonical_engine-0.2.1.dist-info"
+        duplicate.mkdir()
+        (duplicate / "METADATA").write_text(pkg_info.replace("0.2.0", "0.2.1"))
+        seal(duplicate)
+    elif fault == "record":
+        editable.write_text(editable.read_text() + "# original bytes changed\n")
+    elif fault == "symlink":
+        external = tmp_path / "external-METADATA"
+        (metadata / "METADATA").rename(external)
+        (metadata / "METADATA").symlink_to(external)
+    code = f"""
+import sys,json
+from pathlib import Path
+from importlib.metadata import distribution
+sys.path.insert(0,{str(ROOT)!r})
+sys.path.insert(0,{str(source.parent)!r})
+assert distribution('canonical-engine').read_text('PKG-INFO') == {pkg_info!r}
+import canonical_engine
+assert Path(canonical_engine.__file__).parent == Path({str(source)!r})
+assert canonical_engine.VALUE == 7
+from infrastructure.core.implementation_custody import capture_dependency_custody
+value=capture_dependency_custody('canonical-engine',Path(canonical_engine.__file__).parent,
+    checkout_root=Path({str(checkout)!r}))
+assert value['binding_kind']=='source-checkout'
+assert value['distribution']['version']=='0.2.0'
+assert value['distribution']['record_sha256']
+assert value['files']['__init__.py']
+print('actual editable custody passed')
+"""
+    result = subprocess.run(
+        [str(python), "-I", "-c", code], cwd=tmp_path, capture_output=True, text=True, timeout=30, check=False
+    )
+    if fault is None:
+        assert result.returncode == 0, result.stderr
+        assert result.stdout.strip() == "actual editable custody passed"
+    else:
+        assert result.returncode != 0
+        reason = {
+            "duplicate": "metadata is ambiguous",
+            "metadata": "METADATA identity is ambiguous or inconsistent",
+            "version": "checkout version differs from selected installed metadata",
+            "record": "differs from its declared RECORD",
+            "symlink": "Too many levels of symbolic links",
+        }[fault]
+        assert reason in result.stderr, result.stderr
+        assert "actual editable custody passed" not in result.stdout
 
 
 def installed_fixture(tmp_path: Path) -> Path:
@@ -179,7 +276,7 @@ print(json.dumps({'source_inventory_calls': calls, 'distribution_unchanged': Tru
     assert json.loads(result.stdout) == {"source_inventory_calls": int(installed), "distribution_unchanged": True}
 
 
-@pytest.mark.parametrize("fault", [None, "modified", "extra", "metadata", "escape"])
+@pytest.mark.parametrize("fault", [None, "modified", "extra", "metadata", "escape", "origin"])
 def test_declared_dependency_uses_its_own_installed_record(tmp_path, fault):
     site = installed_fixture(tmp_path)
     source = site / "canonical_engine"
@@ -205,16 +302,32 @@ def test_declared_dependency_uses_its_own_installed_record(tmp_path, fault):
         (metadata / "METADATA").write_text((metadata / "METADATA").read_text() + "Name: wrong\n")
     elif fault == "escape":
         record.write_text(record.read_text() + "../escape.py,,\n")
+    prefix = ""
+    if fault == "origin":
+        other = tmp_path / "other-provider"
+        shutil.copytree(source, other / "canonical_engine")
+        prefix = (
+            "from importlib.metadata import distribution;"
+            "assert distribution('canonical-engine').version == '0.2.0';"
+            f"sys.path.insert(0,{str(other)!r});"
+        )
     result = probe(
         site,
         tmp_path,
-        "import canonical_engine,json;from pathlib import Path;"
+        prefix + "import canonical_engine,json;from pathlib import Path;"
         "from infrastructure.core.implementation_custody import capture_dependency_custody;"
         "print(json.dumps(capture_dependency_custody('canonical-engine',"
         "Path(canonical_engine.__file__).parent,fresh_pycache_prefix=Path(sys.pycache_prefix))))",
     )
     if fault is not None:
         assert result.returncode != 0
+        if fault == "origin":
+            assert (
+                "MissingSelectedDistributionMetadata: installed implementation lacks selected distribution metadata"
+                in result.stderr
+            )
+        else:
+            assert "MissingSelectedDistributionMetadata" not in result.stderr
         return
     assert result.returncode == 0, result.stderr
     receipt = json.loads(result.stdout)

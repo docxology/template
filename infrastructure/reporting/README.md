@@ -2,6 +2,21 @@
 
 Pipeline reporting and error aggregation utilities.
 
+`native_auxiliary_print_custody.py` owns only the fixed Darwin auxiliary print
+role. Its live worker registers actual ToolAPI events; completed replay needs
+the genuine original supervisor or authenticated hosted collector. It grants
+no full-native, browser, Office, stage, or PDFium authority. Print witness
+self-validation and later replay retain all existing Source/font/library/page
+and native process predicates.
+
+Hosted transport forwards `GH_TOKEN` only through the fixed installed Source
+reader launch. The reader consumes it into a private nomination before work,
+then binds that nomination after genuine Source admission. Fixed github.com
+API/download operations serve Root, native, candidate and print collectors;
+their guardians and ordinary project/native children stay credential-free.
+Raw credentials never enter argv or retained evidence, and later-job tokens
+are not compared to earlier credential commitments.
+
 The package facade resolves stable exports on first use and returns the original
 provider objects. Importing a reporting leaf does not initialize executive,
 document-validation, rendering, or plotting providers. Optional dashboard

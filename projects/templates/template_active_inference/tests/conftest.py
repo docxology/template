@@ -255,28 +255,19 @@ def _remove_new_regular_files(
             continue
 
 
-def _stat_signature(path: Path) -> tuple[int, int] | None:
-    """Return a cheap (size, mtime_ns) identity for *path*, or None if unreadable.
-
-    WHY: the autouse restore fixture runs after EVERY test; on cold or
-    high-latency filesystems the always-read-compare teardown measured ~6s
-    per test (297 snapshot files re-read each time). Mutations through
-    Path.write_text/write_bytes always change size or mtime with nanosecond
-    resolution on CI (APFS/ext4) and local APFS volumes, so a matching
-    (size, mtime_ns) pair is trusted as "unchanged"; anything else falls
-    through to the original byte-exact read-compare-restore below.
-    """
+def _stat_signature(path: Path) -> tuple[int, int, int, int, int] | None:
+    """Witness unchanged bytes cheaply, including replacement and backdated writes."""
     try:
         metadata = path.stat()
     except OSError:
         return None
-    return (metadata.st_size, metadata.st_mtime_ns)
+    return (metadata.st_dev, metadata.st_ino, metadata.st_size, metadata.st_mtime_ns, metadata.st_ctime_ns)
 
 
 def _restore_snapshots(
     root: Path,
     snapshots: dict[Path, bytes],
-    stats: dict[Path, tuple[int, int]] | None = None,
+    stats: dict[Path, tuple[int, int, int, int, int]] | None = None,
 ) -> None:
     for path, original in snapshots.items():
         if not _is_confined_regular_file(root, path, allow_missing_leaf=True):
@@ -287,20 +278,21 @@ def _restore_snapshots(
         try:
             if path.read_bytes() == original:
                 if stats is not None:
-                    stats[path] = _stat_signature(path) or (0, 0)
+                    stats[path] = _stat_signature(path) or (0, 0, 0, 0, 0)
                 continue
         except OSError:
             pass
         try:
             path.write_bytes(original)
             if stats is not None:
-                stats[path] = _stat_signature(path) or (0, 0)
+                stats[path] = _stat_signature(path) or (0, 0, 0, 0, 0)
         except OSError:
             continue
 
 
 _MutableFileSnapshot = tuple[frozenset[Path], dict[Path, bytes]]
-_MutableFileStats = dict[Path, tuple[int, int]]
+_MutableFileStats = dict[Path, tuple[int, int, int, int, int]]
+_MutableProjectState = tuple[Path, _MutableFileSnapshot, _MutableFileSnapshot, _MutableFileStats, _MutableFileStats]
 
 
 def _capture_stat_signatures(snapshots: dict[Path, bytes]) -> _MutableFileStats:
@@ -308,47 +300,68 @@ def _capture_stat_signatures(snapshots: dict[Path, bytes]) -> _MutableFileStats:
 
 
 @pytest.fixture(scope="session")
-def _mutable_project_source_snapshots(project_root: Path) -> _MutableFileSnapshot:
-    return _capture_snapshots(_iter_mutable_project_sources(project_root))
+def _mutable_project_source_snapshots(project_root: Path, pytestconfig: pytest.Config) -> _MutableFileSnapshot:
+    return _session_mutable_project_state(pytestconfig)[1]
 
 
 @pytest.fixture(scope="session")
-def _mutable_project_output_snapshots(project_root: Path) -> _MutableFileSnapshot:
-    return _capture_snapshots(_iter_mutable_project_outputs(project_root))
+def _mutable_project_output_snapshots(project_root: Path, pytestconfig: pytest.Config) -> _MutableFileSnapshot:
+    return _session_mutable_project_state(pytestconfig)[2]
 
 
 @pytest.fixture(scope="session")
 def _mutable_project_source_stats(
     _mutable_project_source_snapshots: _MutableFileSnapshot,
+    pytestconfig: pytest.Config,
 ) -> _MutableFileStats:
-    return _capture_stat_signatures(_mutable_project_source_snapshots[1])
+    return _session_mutable_project_state(pytestconfig)[3]
 
 
 @pytest.fixture(scope="session")
 def _mutable_project_output_stats(
     _mutable_project_output_snapshots: _MutableFileSnapshot,
+    pytestconfig: pytest.Config,
 ) -> _MutableFileStats:
-    return _capture_stat_signatures(_mutable_project_output_snapshots[1])
+    return _session_mutable_project_state(pytestconfig)[4]
+
+
+def _standard_fixture_ownership(request: pytest.FixtureRequest) -> bool:
+    """Use actual pytest fixture ownership; unknown collectors stay conservative."""
+    try:
+        return (
+            isinstance(request.node, pytest.Function)
+            and isinstance(request.fixturenames, list)
+            and all(type(name) is str for name in request.fixturenames)
+        )
+    except Exception:  # noqa: BLE001 - unavailable ownership requires conservative restoration
+        return False
 
 
 @pytest.fixture(autouse=True)
 def _restore_mutable_project_state(
-    project_root: Path,
-    _mutable_project_source_snapshots: _MutableFileSnapshot,
-    _mutable_project_output_snapshots: _MutableFileSnapshot,
-    _mutable_project_source_stats: _MutableFileStats,
-    _mutable_project_output_stats: _MutableFileStats,
+    request: pytest.FixtureRequest,
 ) -> Iterator[None]:
+    state = None if _standard_fixture_ownership(request) else _session_mutable_project_state(request.config)
     yield
-    source_paths, source_snapshots = _mutable_project_source_snapshots
-    output_paths, output_snapshots = _mutable_project_output_snapshots
+    if state is None:
+        # fixturenames includes transitive dependencies and actual dynamic
+        # getfixturevalue requests made after this autouse fixture yielded.
+        if _standard_fixture_ownership(request) and "project_root" not in request.fixturenames:
+            return
+        if _PROJECT_STATE not in request.config.stash:
+            raise RuntimeError("shared project mutation has no pre-execution restoration baseline")
+        state = request.config.stash[_PROJECT_STATE]
+    project_root, source_state, output_state, source_stats, output_stats = state
+    source_paths, source_snapshots = source_state
+    output_paths, output_snapshots = output_state
     _remove_new_regular_files(project_root, source_paths, _iter_mutable_project_sources(project_root))
     _remove_new_regular_files(project_root, output_paths, _iter_mutable_project_outputs(project_root))
-    _restore_snapshots(project_root, source_snapshots, _mutable_project_source_stats)
-    _restore_snapshots(project_root, output_snapshots, _mutable_project_output_stats)
+    _restore_snapshots(project_root, source_snapshots, source_stats)
+    _restore_snapshots(project_root, output_snapshots, output_stats)
 
 
 _PROJECT_COPY = pytest.StashKey[Path]()
+_PROJECT_STATE = pytest.StashKey[_MutableProjectState]()
 
 
 def _session_project_root(config: pytest.Config) -> Path:
@@ -362,10 +375,26 @@ def _session_project_root(config: pytest.Config) -> Path:
     return config.stash[_PROJECT_COPY]
 
 
+def _session_mutable_project_state(config: pytest.Config) -> _MutableProjectState:
+    """Capture the baseline before any caller receives the shared project copy."""
+    if _PROJECT_STATE not in config.stash:
+        root = _session_project_root(config)
+        sources = _capture_snapshots(_iter_mutable_project_sources(root))
+        outputs = _capture_snapshots(_iter_mutable_project_outputs(root))
+        config.stash[_PROJECT_STATE] = (
+            root,
+            sources,
+            outputs,
+            _capture_stat_signatures(sources[1]),
+            _capture_stat_signatures(outputs[1]),
+        )
+    return config.stash[_PROJECT_STATE]
+
+
 @pytest.fixture(scope="session")
 def project_root(pytestconfig: pytest.Config) -> Path:
     """Keep destructive gate controls outside admitted source and publication bytes."""
-    return _session_project_root(pytestconfig)
+    return _session_mutable_project_state(pytestconfig)[0]
 
 
 @pytest.fixture

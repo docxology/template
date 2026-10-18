@@ -114,6 +114,30 @@ jobs:
         run: >-
           .venv/bin/python -m infrastructure.core.testing.ci_execution_user export
           --state "$RUNNER_TEMP/template-ci-execution/state.json"
+      - name: Export original macOS readiness bytes for the artifact reader
+        if: always() && runner.os == 'macOS'
+        run: |
+          .venv/bin/python -B - <<'PYTHON'
+          import hashlib, json, os, tempfile, time
+          from pathlib import Path
+          from infrastructure.core.testing._ci_execution_files import _export
+
+          deadline = time.monotonic() + 120
+          destination = Path(tempfile.mkdtemp(
+              prefix="template-ci-macos-artifacts-",
+              dir=Path(os.environ["RUNNER_TEMP"]).resolve(strict=True),
+          ))
+          excluded = []
+          total = _export(Path.cwd() / "output/readiness", destination, deadline, exclusions=excluded)
+          with open(os.environ["GITHUB_ENV"], "a", encoding="utf-8") as output:
+              output.write(f"TEMPLATE_CI_ARTIFACT_DIRECTORY={destination}\n")
+          print(json.dumps({
+              "transport_bytes": total,
+              "excluded_pytest_scratch": len(excluded),
+              "exclusions_sha256": hashlib.sha256(json.dumps(excluded).encode()).hexdigest(),
+              "runtime_acceptance": False,
+          }))
+          PYTHON
       - name: Retain original source audit
         if: always()
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9

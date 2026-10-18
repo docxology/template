@@ -7,6 +7,8 @@ filesystem — no mocks.
 
 Three sizes — N = 1, 5, 25 — characterise the per-script overhead the
 analysis pipeline imposes on top of interpreter startup.
+N = 1 retains repeated samples; N = 5 and 25 record one complete cold run
+each. A single cold observation does not establish timing stability.
 
 Run with::
 
@@ -53,14 +55,22 @@ def _make_synthetic_project(repo_root: Path, project_name: str, n_scripts: int) 
 
 
 @pytest.mark.bench
-@pytest.mark.timeout(60)
-@pytest.mark.parametrize("n_scripts", [1, 5, 25])
+@pytest.mark.parametrize(
+    "n_scripts",
+    [
+        pytest.param(1, marks=pytest.mark.timeout(60)),
+        pytest.param(5, marks=pytest.mark.timeout(60)),
+        pytest.param(25, marks=pytest.mark.timeout(180)),
+    ],
+)
 def test_bench_run_analysis_pipeline(benchmark: object, tmp_path: Path, n_scripts: int) -> None:
     """Bench ``run_analysis_pipeline`` for N = 1, 5, 25 trivial scripts.
 
-    Each round forks ``n_scripts`` real Python interpreters, so we use
-    ``benchmark.pedantic`` with a small fixed round count to keep wall
-    time bounded while still producing a stable median.
+    Each round launches ``n_scripts`` real guarded Python interpreters.
+    The single-script input retains three measured rounds and one warmup.
+    Larger workloads record one complete cold sample, without a stability
+    claim. The 25-script member uses the documented benchmark safety budget;
+    smaller members retain their 60-second limits.
     """
     repo_root = tmp_path
     project_name = f"bench_proj_n{n_scripts}"
@@ -69,5 +79,6 @@ def test_bench_run_analysis_pipeline(benchmark: object, tmp_path: Path, n_script
     def call() -> int:
         return run_analysis_pipeline(scripts, repo_root, project_name)
 
-    rc = benchmark.pedantic(call, rounds=3, iterations=1, warmup_rounds=1)  # type: ignore[attr-defined]
+    rounds, warmups = (3, 1) if n_scripts == 1 else (1, 0)
+    rc = benchmark.pedantic(call, rounds=rounds, iterations=1, warmup_rounds=warmups)  # type: ignore[attr-defined]
     assert rc == 0

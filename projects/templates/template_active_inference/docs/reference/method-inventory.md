@@ -635,16 +635,16 @@ Total documented definitions: 890
 
 | line | kind | name | documentation source | summary |
 | ---: | --- | --- | --- | --- |
-| 19 | `function` | `_budget` | inventory fallback | Inventory fallback for function `_budget` defined at `src/orchestration/portable_sources.py:19`. |
-| 24 | `function` | `_identity` | inventory fallback | Inventory fallback for function `_identity` defined at `src/orchestration/portable_sources.py:24`. |
-| 28 | `function` | `_content_identity` | inventory fallback | Inventory fallback for function `_content_identity` defined at `src/orchestration/portable_sources.py:28`. |
-| 32 | `function` | `_open_ancestors` | docstring | Hold the lexical absolute chain; public link aliases are never resolved. |
-| 58 | `function` | `_verify_chain` | inventory fallback | Inventory fallback for function `_verify_chain` defined at `src/orchestration/portable_sources.py:58`. |
-| 66 | `function` | `_read` | inventory fallback | Inventory fallback for function `_read` defined at `src/orchestration/portable_sources.py:66`. |
-| 95 | `function` | `snapshot_file` | docstring | Admit one bounded regular file with its complete held ancestor chain. |
-| 108 | `function` | `snapshot_tree` | docstring | Capture a finite tree, refusing every admitted nonregular entry. |
-| 123 | `function` | `snapshot_tree.walk` | inventory fallback | Inventory fallback for function `snapshot_tree.walk` defined at `src/orchestration/portable_sources.py:123`. |
-| 173 | `function` | `materialize` | docstring | Write admitted relative paths into a private owned tool workspace. |
+| 20 | `function` | `_budget` | inventory fallback | Inventory fallback for function `_budget` defined at `src/orchestration/portable_sources.py:20`. |
+| 25 | `function` | `_identity` | inventory fallback | Inventory fallback for function `_identity` defined at `src/orchestration/portable_sources.py:25`. |
+| 29 | `function` | `_content_identity` | inventory fallback | Inventory fallback for function `_content_identity` defined at `src/orchestration/portable_sources.py:29`. |
+| 33 | `function` | `_open_ancestors` | docstring | Hold no-follow search witnesses and optionally a readable selected root. |
+| 61 | `function` | `_verify_chain` | inventory fallback | Inventory fallback for function `_verify_chain` defined at `src/orchestration/portable_sources.py:61`. |
+| 69 | `function` | `_read` | inventory fallback | Inventory fallback for function `_read` defined at `src/orchestration/portable_sources.py:69`. |
+| 98 | `function` | `snapshot_file` | docstring | Admit one bounded regular file with its complete held ancestor chain. |
+| 111 | `function` | `snapshot_tree` | docstring | Capture a finite tree, refusing every admitted nonregular entry. |
+| 126 | `function` | `snapshot_tree.walk` | inventory fallback | Inventory fallback for function `snapshot_tree.walk` defined at `src/orchestration/portable_sources.py:126`. |
+| 176 | `function` | `materialize` | docstring | Write admitted relative paths into a private owned tool workspace. |
 
 ## `src/orchestration/semantic_coverage.py`
 
@@ -695,22 +695,22 @@ Total documented definitions: 890
 | 74 | `function` | `_normalized_rel` | inventory fallback | Inventory fallback for function `_normalized_rel` defined at `src/roadmap_tracks/fixed_point.py:74`. |
 | 81 | `function` | `_confined_path_state` | docstring | Return a race-checked state token without following any symlink. |
 | 134 | `function` | `_walk_generation_inputs` | docstring | Walk one declared input tree without following directory symlinks. |
-| 169 | `function` | `_generation_input_rels` | docstring | Return deterministic source/config inputs that can change generated evidence. |
-| 177 | `function` | `_source_input_sha256` | docstring | Bind the exact confined generation-input file inventory and bytes. |
-| 197 | `function` | `_observed_output_rels` | docstring | Derive the complete positive, negative, and hydrated output inventory from SSOTs. |
-| 241 | `function` | `_cached_fingerprint_matches` | docstring | Return whether the disposable cache exactly binds the current state. |
-| 250 | `function` | `_refresh_animation_outputs` | inventory fallback | Inventory fallback for function `_refresh_animation_outputs` defined at `src/roadmap_tracks/fixed_point.py:250`. |
-| 262 | `function` | `_refresh_hydrated_manuscript` | inventory fallback | Inventory fallback for function `_refresh_hydrated_manuscript` defined at `src/roadmap_tracks/fixed_point.py:262`. |
-| 269 | `function` | `_write_sheaf_owned_artifacts` | inventory fallback | Inventory fallback for function `_write_sheaf_owned_artifacts` defined at `src/roadmap_tracks/fixed_point.py:269`. |
-| 276 | `function` | `_write_semantic_core` | inventory fallback | Inventory fallback for function `_write_semantic_core` defined at `src/roadmap_tracks/fixed_point.py:276`. |
-| 283 | `function` | `_write_contract_artifacts` | inventory fallback | Inventory fallback for function `_write_contract_artifacts` defined at `src/roadmap_tracks/fixed_point.py:283`. |
-| 300 | `function` | `_fingerprint` | inventory fallback | Inventory fallback for function `_fingerprint` defined at `src/roadmap_tracks/fixed_point.py:300`. |
-| 319 | `function` | `_validate_fixed_point` | inventory fallback | Inventory fallback for function `_validate_fixed_point` defined at `src/roadmap_tracks/fixed_point.py:319`. |
-| 347 | `function` | `_source_contract_issues` | docstring | Return source defects that generated-artifact settlement cannot repair. |
-| 362 | `function` | `_existing_fixed_point_paths` | inventory fallback | Inventory fallback for function `_existing_fixed_point_paths` defined at `src/roadmap_tracks/fixed_point.py:362`. |
-| 384 | `function` | `_write_fixed_point_pass` | inventory fallback | Inventory fallback for function `_write_fixed_point_pass` defined at `src/roadmap_tracks/fixed_point.py:384`. |
-| 404 | `function` | `_write_final_validation_pass` | docstring | Refresh self-referential reports and write the certificate from the final live state. |
-| 436 | `function` | `run_semantic_fixed_point` | docstring | Settle manuscript, semantic, and contract artifacts to a validated fixed point. |
+| 178 | `function` | `_generation_input_rels` | docstring | Return deterministic source/config inputs that can change generated evidence. |
+| 186 | `function` | `_source_input_sha256` | docstring | Bind the exact confined generation-input file inventory and bytes. |
+| 206 | `function` | `_observed_output_rels` | docstring | Derive the complete positive, negative, and hydrated output inventory from SSOTs. |
+| 250 | `function` | `_cached_fingerprint_matches` | docstring | Return whether the disposable cache exactly binds the current state. |
+| 259 | `function` | `_refresh_animation_outputs` | inventory fallback | Inventory fallback for function `_refresh_animation_outputs` defined at `src/roadmap_tracks/fixed_point.py:259`. |
+| 271 | `function` | `_refresh_hydrated_manuscript` | inventory fallback | Inventory fallback for function `_refresh_hydrated_manuscript` defined at `src/roadmap_tracks/fixed_point.py:271`. |
+| 278 | `function` | `_write_sheaf_owned_artifacts` | inventory fallback | Inventory fallback for function `_write_sheaf_owned_artifacts` defined at `src/roadmap_tracks/fixed_point.py:278`. |
+| 285 | `function` | `_write_semantic_core` | inventory fallback | Inventory fallback for function `_write_semantic_core` defined at `src/roadmap_tracks/fixed_point.py:285`. |
+| 292 | `function` | `_write_contract_artifacts` | inventory fallback | Inventory fallback for function `_write_contract_artifacts` defined at `src/roadmap_tracks/fixed_point.py:292`. |
+| 309 | `function` | `_fingerprint` | inventory fallback | Inventory fallback for function `_fingerprint` defined at `src/roadmap_tracks/fixed_point.py:309`. |
+| 328 | `function` | `_validate_fixed_point` | inventory fallback | Inventory fallback for function `_validate_fixed_point` defined at `src/roadmap_tracks/fixed_point.py:328`. |
+| 356 | `function` | `_source_contract_issues` | docstring | Return source defects that generated-artifact settlement cannot repair. |
+| 371 | `function` | `_existing_fixed_point_paths` | inventory fallback | Inventory fallback for function `_existing_fixed_point_paths` defined at `src/roadmap_tracks/fixed_point.py:371`. |
+| 393 | `function` | `_write_fixed_point_pass` | inventory fallback | Inventory fallback for function `_write_fixed_point_pass` defined at `src/roadmap_tracks/fixed_point.py:393`. |
+| 413 | `function` | `_write_final_validation_pass` | docstring | Refresh self-referential reports and write the certificate from the final live state. |
+| 445 | `function` | `run_semantic_fixed_point` | docstring | Settle manuscript, semantic, and contract artifacts to a validated fixed point. |
 
 ## `src/roadmap_tracks/formal_interop.py`
 

@@ -2,6 +2,12 @@
 
 ## Purpose
 
+Auxiliary print controls use actual Source copies, audited workers, real
+Pandoc/Poppler and original supervisor handles. Keep the one shared native
+fixture scoped to Darwin; do not replace ToolAPI, Code, or hosted collectors
+with mocked results. Hosted end-to-end qualification still requires a real
+same-run artifact; local byte predicates do not claim API authentication.
+
 Tests for `infrastructure.project.discovery` (`discover_projects`, project metadata loading) and `infrastructure.project.validation` (`validate_project_structure`). All tests follow the No-Mocks Policy: real `tmp_path` directories with real files instead of mocks.
 
 ## Files
