@@ -49,9 +49,10 @@ and historical notes remain preserved.
   while preserving independent exemplar versions and Lean 4.35.0.
 - Add reviewed metadata planning, exact-input checking, retained compensating
   rollback and strict refusal of ambiguous publication configuration.
-- Refresh coverage from authenticated original measurements for all public
-  exemplars; preserve the failed full workflow and successful Redacted follow-up
-  as distinct evidence. Correct the retained-database claim in generated counts.
+- Retain the measured baseline, original failed full workflow and successful
+  Redacted follow-up as distinct evidence. Renew six standalone metrics from
+  compatible own-lock measurements, preserving nineteen historical values, and
+  verify combined statement/branch totals against the retained databases.
 - Install the genuine Root SDK in Redacted's coverage environment and add bounded
   export timing diagnostics under the unchanged native acceptance deadline.
 - Isolate Linux functional tests under their prepared execution account, retain
