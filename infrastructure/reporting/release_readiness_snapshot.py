@@ -6,11 +6,13 @@ import hashlib
 import json
 import math
 import os
+import stat
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
 from infrastructure.core.files.secure_write import read_bytes_confined
+from infrastructure.core.pipeline.fingerprint_files import anchored_parent
 from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
 
 PUBLIC_ROOT_FILES = frozenset(
@@ -127,8 +129,8 @@ class SnapshotReader:
         self.validated_exports: dict[str, str] = {}
         self.validated_export_commits: dict[str, str] = {}
 
-    def public_path(self, relative: str) -> Path:
-        """Reject private, absolute, traversal, and symlink artifact references."""
+    def _public_lexical_path(self, relative: str) -> Path:
+        """Apply public scope policy without granting filesystem authority."""
         if not isinstance(relative, str) or not relative or "\\" in relative or "\0" in relative:
             raise ValueError("artifact path must be a public repository-relative string")
         path = Path(relative)
@@ -167,7 +169,12 @@ class SnapshotReader:
             ".agents",
         }:
             raise ValueError("artifact path is outside public evidence roots")
-        absolute = self.root / path
+        return self.root / path
+
+    def public_path(self, relative: str) -> Path:
+        """Reject private, absolute, traversal, and symlink artifact references."""
+        absolute = self._public_lexical_path(relative)
+        parts = Path(relative).parts
         component = absolute
         # Admission fixes exactly len(parts) lexical components below root.
         for _ in parts:
@@ -210,11 +217,44 @@ class SnapshotReader:
         return self.snapshots[path]
 
     def unchanged(self) -> bool:
-        """Check identities after aggregation without re-reading or re-selecting facts."""
+        """Check every held identity through fresh, closing-checked directories.
+
+        A directory handle is shared only within this invocation. No path or
+        inode observation authorizes a later call; Source's enclosing directory,
+        Git and implementation checks remain independent.
+        """
         try:
-            return all(
-                self.public_path(item.relative) == item.path and self._identity(item.path) == item.identity
-                for item in self.snapshots.values()
+            root, snapshots = self.root, self.snapshots
+            if type(snapshots) is not dict:
+                return False
+            held = tuple(snapshots.items())
+            groups: dict[Path, list[ArtifactSnapshot]] = {}
+            for path, item in held:
+                if path != item.path or self._public_lexical_path(item.relative) != path:
+                    return False
+                groups.setdefault(path.parent, []).append(item)
+            if os.open not in os.supports_dir_fd or os.stat not in os.supports_dir_fd or not hasattr(os, "O_NOFOLLOW"):
+                valid = all(
+                    self.public_path(item.relative) == item.path and self._identity(item.path) == item.identity
+                    for _, item in held
+                )
+            else:
+                valid = True
+                for parent, items in groups.items():
+                    with anchored_parent(parent / ".snapshot-directory-witness") as descriptor:
+                        if descriptor is None:
+                            return False
+                        for item in items:
+                            observed = os.stat(item.path.name, dir_fd=descriptor, follow_symlinks=False)
+                            identity = observed.st_ino, observed.st_size, observed.st_mtime_ns, observed.st_ctime_ns
+                            if not stat.S_ISREG(observed.st_mode) or identity != item.identity:
+                                return False
+            return (
+                valid
+                and self.root == root
+                and self.snapshots is snapshots
+                and len(snapshots) == len(held)
+                and all(snapshots.get(path) is item for path, item in held)
             )
         except (OSError, ValueError):
             return False

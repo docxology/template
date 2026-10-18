@@ -3,8 +3,13 @@
 from __future__ import annotations
 
 import hashlib
+import os
+import sys
 import time
+from dataclasses import replace
 from pathlib import Path
+from types import FrameType
+from typing import Any
 
 import pytest
 
@@ -341,3 +346,72 @@ def test_source_mirror_expired_original_deadline_precedes_copy(tmp_path: Path) -
         copy_source_mirror_data(source, destination, expected_identity=identity, deadline=time.monotonic() - 1)
     assert not list(destination.iterdir())
     assert source_fingerprint(source) == identity
+
+
+@pytest.mark.parametrize("change", ["parent", "ancestor", "add", "remove", "replace", "dictionary", "root"])
+def test_snapshot_batch_closes_real_directories_and_held_inventory(tmp_path: Path, change: str) -> None:
+    """Observe an actual leaf stat, then mutate owned state before closing checks."""
+    root = tmp_path / "repository"
+    target = root / "docs/nested/evidence.json"
+    target.parent.mkdir(parents=True)
+    target.write_bytes(b"retained original bytes")
+    reader = SnapshotReader(root)
+    held = reader.read("docs/nested/evidence.json")
+    extra = root / "docs/extra.json"
+    extra.write_bytes(b"other actual evidence")
+    additional = SnapshotReader(root).read("docs/extra.json")
+    observed: list[str] = []
+
+    def after_actual_stat(frame: FrameType, event: str, function: Any) -> None:
+        if (
+            observed
+            or event != "c_return"
+            or function is not os.stat
+            or frame.f_code is not SnapshotReader.unchanged.__code__
+            or frame.f_locals.get("item") is not held
+        ):
+            return
+        observed.append(change)
+        if change in {"parent", "ancestor"}:
+            directory = target.parent if change == "parent" else root / "docs"
+            relocated = directory.with_name(directory.name + "-original")
+            directory.rename(relocated)
+            replacement = directory / target.relative_to(directory)
+            replacement.parent.mkdir(parents=True)
+            os.link(relocated / target.relative_to(directory), replacement)
+        elif change == "add":
+            reader.snapshots[extra] = additional
+        elif change == "remove":
+            del reader.snapshots[target]
+        elif change == "replace":
+            reader.snapshots[target] = replace(held)
+        elif change == "dictionary":
+            reader.snapshots = dict(reader.snapshots)
+        else:
+            reader.root = tmp_path
+
+    previous = sys.getprofile()
+    try:
+        sys.setprofile(after_actual_stat)
+        assert reader.unchanged() is False
+    finally:
+        sys.setprofile(previous)
+    assert observed == [change]
+    assert target.read_bytes() == held.content
+
+
+def test_snapshot_batches_reobserve_file_clocks_and_empty_inventory(tmp_path: Path) -> None:
+    reader = SnapshotReader(tmp_path)
+    assert reader.unchanged()
+    for directory in ("docs/first", "docs/second", "output/readiness"):
+        for index in range(8):
+            relative = f"{directory}/{index}.json"
+            path = tmp_path / relative
+            path.parent.mkdir(parents=True, exist_ok=True)
+            path.write_bytes(b"original")
+            reader.read(relative)
+    assert reader.unchanged()
+    path.write_bytes(b"changed!")
+    os.utime(path, ns=(path.stat().st_atime_ns, reader.snapshots[path].identity[2]))
+    assert path.stat().st_size == reader.snapshots[path].identity[1]
+    assert reader.unchanged() is False
