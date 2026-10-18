@@ -203,6 +203,12 @@ def test_unpaid_core_controller_preserves_authentic_launcher_custody(tmp_path: P
         prefix = tmp_path / "launcher-cache"
         prefix.mkdir()
         roots = (PROJECT_ROOT / "scripts", platform / "infrastructure", platform / "scripts")
+        import importlib.util
+
+        provider = importlib.util.find_spec("template_literature_meta_analysis")
+        if provider is not None:
+            assert isinstance(provider.origin, str)
+            roots += (Path(provider.origin).resolve().parent,)
         if fault != "missing-project-root":
             roots += (PROJECT_ROOT / "src",)
         bootstrap = bytecode_audit_bootstrap(roots, prefix)

@@ -85,7 +85,6 @@ def pytest_command(
         base.extend(["--collect-only", "--no-cov"])
     else:
         stem = receipt.stem
-        index = stem.removeprefix("chunk-")
         base.extend(
             [
                 "--cov=" + resolved.coverage_source,
@@ -96,7 +95,6 @@ def pytest_command(
                 "--cov-config=" + str(project / "pyproject.toml"),
                 f"--timeout={test_timeout}",
                 "--junitxml=" + str(directory / (stem + ".xml")),
-                "--basetemp=" + str(directory / ("tmp-" + index)),
             ]
         )
     return bootstrap_command(

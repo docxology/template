@@ -113,3 +113,7 @@ Coverage-only documentation measurement is therefore run from a symlink-free
 disposable copy owned by the outer counts process. Per-test teardown is not a
 crash-safety boundary: collection prewarm occurs before the session output
 snapshot, and an outer timeout can kill pytest before fixture restoration.
+
+The typography contract runs the real Pandoc and preamble writers with current
+configuration and a small private manuscript body. It requires no previous
+render; complete native acceptance still renders the full manuscript.

@@ -116,3 +116,7 @@ Fixture-level performance candidates are the repeated marker variants in
 source mutations that currently force the same manuscript rebuild path. Keep at
 least one end-to-end refresh characterization for each gate family; split only
 the duplicate marker or row-only cases into cheaper source-contract checks.
+
+The typography contract runs the real Pandoc and preamble writers with current
+configuration and a small private manuscript body. It requires no previous
+render; complete native acceptance still renders the full manuscript.

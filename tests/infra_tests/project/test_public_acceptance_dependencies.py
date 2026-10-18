@@ -52,6 +52,7 @@ def _producer(
     installed: bool = True,
     conftest: str | None = None,
     selected_runtime: tuple[Path, dict] | None = None,
+    installed_site: Path | None = None,
 ) -> dict:
     python, actual_runtime = selected_runtime or (Path(sys.executable), runtime_identity())
     project = root / "projects" / PROJECT
@@ -70,7 +71,7 @@ def _producer(
     receipt = directory / "pytest.json"
     prefix = root.parent / (name + "-bytecode")
     prefix.mkdir(mode=0o700)
-    site = root.parent / "installed-site"
+    site = installed_site if installed_site is not None else root.parent / "installed-site"
     audit = bytecode_audit_bootstrap(
         (
             ROOT / "infrastructure",
@@ -358,3 +359,70 @@ def test_actual_missing_installed_provider_does_not_execute_pytest(
     assert result["raw"]["pytest_exit_code"] is None
     assert result["raw"]["nodeids"] == []
     assert "not installed" in result["raw"]["diagnostic"]
+
+
+@pytest.mark.parametrize("location", ["evidence", "authored-source"])
+def test_actual_nested_installation_preserves_provider_source_boundary(provider_evidence, location: str) -> None:
+    """A genuine wheel may live in evidence, while authored Source cannot provide it."""
+    root, existing = provider_evidence
+    providers = existing["dependency_providers"]
+    wheel = root / providers[PROVIDER]["wheel_artifact"]["path"]
+    site = (
+        root / "output/runtime-envs/provider-control-site"
+        if location == "evidence"
+        else root / "projects" / PROJECT / "src/provider-shadow-site"
+    )
+    assert not site.exists()
+    try:
+        installed = subprocess.run(
+            [
+                "uv",
+                "pip",
+                "install",
+                "--offline",
+                "--no-config",
+                "--no-deps",
+                "--no-build",
+                "--python",
+                sys.executable,
+                "--target",
+                str(site),
+                str(wheel),
+            ],
+            capture_output=True,
+            text=True,
+            timeout=20,
+        )
+        assert installed.returncode == 0, installed.stdout + installed.stderr
+        collection = _producer(
+            root,
+            providers,
+            "nested-" + location + "-collection",
+            collect=True,
+            body=GOOD,
+            installed_site=site,
+        )
+        if location == "authored-source":
+            assert collection["raw"]["exit_code"] == 1
+            assert not collection["raw"]["nodeids"] and not collection["raw"]["outcomes"]
+            assert "must be the admitted installed distribution" in collection["raw"]["diagnostic"]
+        else:
+            assert collection["raw"]["exit_code"] == 0, collection["raw"]
+            cases = _producer(
+                root,
+                providers,
+                "nested-evidence-cases",
+                collect=False,
+                body=GOOD,
+                installed_site=site,
+            )
+            assert cases["raw"]["exit_code"] == 0, cases["raw"]
+            counts = aggregate_pytest(collection["raw"], [cases["raw"]], "actual-provider-producer")
+            assert counts["collected"] == counts["passed"] == 2
+            assert (
+                cases["raw"]["dependency_custody"][PROVIDER]["before"]
+                == cases["raw"]["dependency_custody"][PROVIDER]["after"]
+            )
+    finally:
+        if site.exists():
+            shutil.rmtree(site)

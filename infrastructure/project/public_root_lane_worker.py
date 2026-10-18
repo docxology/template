@@ -17,6 +17,8 @@ from typing import Any
 
 import pytest
 
+from infrastructure.core.testing.pytest_scratch import external_pytest_scratch
+
 from infrastructure.core.files.project_lock import project_output_lock
 from infrastructure.core.implementation_custody import verify_implementation_custody
 from infrastructure.core.subprocess_policy import SubprocessPolicy, run_with_policy
@@ -214,7 +216,10 @@ def chunk(root: Path, snapshot_path: Path, expected: str, index: int) -> int:
         argv = arguments(root, directory, pieces[index], spec["test_timeout_seconds"])
         measured.start()
         try:
-            original = int(pytest.main(argv, plugins=[observer, diagnostics]))
+            with external_pytest_scratch(root, token=spec["nonce"]) as scratch:
+                original = int(
+                    pytest.main([*argv, "--basetemp=" + str(scratch / "fixtures")], plugins=[observer, diagnostics])
+                )
         finally:
             measured.stop()
         if observer.interrupted:

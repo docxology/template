@@ -94,6 +94,8 @@ runs:
           echo "OLLAMA_CONTEXT_LENGTH=2048"
           echo "OLLAMA_KEEP_ALIVE=1m"
           echo "OLLAMA_MODEL=smollm2:135m"
+          echo "TEMPLATE_AUTOSCIENTISTS_MODEL=smollm2:135m"
+          echo "TEMPLATE_AUTOSCIENTISTS_ENDPOINT=http://127.0.0.1:11434"
           echo "OLLAMA_TEST_PULL_MODEL=smollm2:135m"
           echo "OLLAMA_SKIP_TEST_MODEL_PULL=1"
         } >> "$GITHUB_ENV"

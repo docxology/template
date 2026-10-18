@@ -423,6 +423,12 @@ def test_core_controller_preserves_and_authenticates_launcher_audit(tmp_path, fa
     prefix = tmp_path.resolve() / "launcher-cache"
     prefix.mkdir()
     roots = (platform_root / "infrastructure", platform_root / "scripts", PROJECT / "scripts")
+    import importlib.util
+
+    provider = importlib.util.find_spec("template_literature_meta_analysis")
+    if provider is not None:
+        assert isinstance(provider.origin, str)
+        roots += (Path(provider.origin).resolve().parent,)
     if fault != "missing-project-root":
         roots += (PROJECT / "src",)
     bootstrap = bytecode_audit_bootstrap(roots, prefix)

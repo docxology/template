@@ -17,6 +17,8 @@ ROOT = Path(__file__).resolve().parents[3]
 # Root/native collectors run through actual installed subprocesses; print
 # integration owners also exercise producers through their Source-owned wrappers.
 FOCUSED_PROTOCOL_SOURCES = {
+    # The actual audited project/Root worker owners compose fresh fixture roots.
+    "infrastructure/core/testing/pytest_scratch.py",
     "infrastructure/core/pipeline/fingerprint_files.py",
     "infrastructure/core/pipeline/fingerprints.py",
     "infrastructure/reporting/readiness_receipts.py",

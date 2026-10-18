@@ -263,6 +263,7 @@ def test_generation_source_hash_never_traverses_declared_lean_runtime(tmp_path: 
     probe = """
 import sys
 from pathlib import Path
+sys.path.insert(0, sys.argv[2])
 from roadmap_tracks.fixed_point import _source_input_sha256
 root = Path(sys.argv[1])
 runtime = root / 'lean' / '.lake'
@@ -274,7 +275,14 @@ def audit(event, args):
 sys.addaudithook(audit)
 print(_source_input_sha256(root))
 """
-    result = subprocess.run([sys.executable, "-c", probe, str(tmp_path)], capture_output=True, text=True, check=True)
+    source = Path(__file__).resolve().parents[1] / "src"
+    result = subprocess.run(
+        [sys.executable, "-I", "-c", probe, str(tmp_path), str(source)],
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    assert result.returncode == 0, result.stdout + result.stderr
     assert result.stdout.strip() == _source_input_sha256(tmp_path)
 
 

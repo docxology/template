@@ -116,6 +116,9 @@ def test_honesty_manifest_tokens():
 
 
 def test_measure_test_summary_on_synthetic_passing_project(tmp_path):
+    # A complete independent project must select its own pytest configuration,
+    # even when a caller stores it beneath another checkout's ignored output.
+    (tmp_path / "pytest.ini").write_text("[pytest]\npythonpath = src\n", encoding="utf-8")
     (tmp_path / "src" / "template_autopoiesis").mkdir(parents=True)
     (tmp_path / "src" / "__init__.py").write_text("")
     (tmp_path / "src" / "template_autopoiesis" / "__init__.py").write_text("")

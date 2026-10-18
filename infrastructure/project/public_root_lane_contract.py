@@ -83,7 +83,6 @@ def arguments(root: Path, directory: Path, nodes: tuple[str, ...], timeout: int)
         "--timeout=" + str(timeout),
         "--timeout-method=signal",
         "--timeout-disable-debugger-detection",
-        "--basetemp=" + str(directory / "pytest-tmp"),
         "--benchmark-storage=" + str(directory / "benchmarks"),
         "-q",
         "--tb=short",

@@ -9,3 +9,6 @@ ledger`) stay at the tests root. See [AGENTS.md](AGENTS.md) for the file map.
 ```bash
 uv run pytest projects/templates/template_sia/tests/ -m "not requires_ollama" -v
 ```
+
+Recorded SIA agents are also executed directly against threshold boundary inputs;
+fixture replay itself continues to read recorded data without running agents.

@@ -5,9 +5,20 @@ their runtime fits the smoke deadline. Unlisted helpers retain broad fallback.
 """
 
 SOURCE_TEST_OWNERS: dict[str, tuple[str, ...]] = {
+    "infrastructure/project/public_acceptance_dependencies.py": (
+        "tests/infra_tests/project/test_public_acceptance_dependencies.py",
+        "tests/infra_tests/reporting/test_native_project_provider_batch.py",
+    ),
+    "infrastructure/core/testing/pytest_scratch.py": (
+        "tests/infra_tests/core/test_pytest_scratch.py",
+        "tests/infra_tests/project/test_public_acceptance_dependencies.py",
+        "tests/infra_tests/project/test_root_case_lanes.py",
+    ),
+    "infrastructure/reporting/native_stage_child_scope.py": (
+        "tests/infra_tests/reporting/test_native_stage_child_contracts.py",
+    ),
     "infrastructure/reporting/native_stage_child_completion.py": (
         "tests/infra_tests/reporting/test_native_stage_child_contracts.py",
-        "tests/infra_tests/rendering/test_native_render_custody.py",
     ),
     "infrastructure/project/auxiliary_matrix_plan.py": ("tests/infra_tests/project/test_auxiliary_matrix.py",),
     "infrastructure/project/auxiliary_matrix_hosted.py": ("tests/infra_tests/project/test_auxiliary_matrix.py",),
@@ -294,6 +305,7 @@ SOURCE_TEST_OWNERS: dict[str, tuple[str, ...]] = {
         "tests/infra_tests/project/test_public_acceptance_auxiliary_parallel.py",
     ),
     "infrastructure/project/public_hosted_origin.py": (
+        "tests/infra_tests/project/test_auxiliary_matrix.py",
         "tests/infra_tests/project/test_auxiliary_print_custody.py",
         "tests/infra_tests/project/test_hosted_api.py",
         "tests/infra_tests/project/test_public_hosted_origin.py",
@@ -376,6 +388,7 @@ SOURCE_TEST_OWNERS: dict[str, tuple[str, ...]] = {
         "tests/infra_tests/reporting/test_native_stage_child_contracts.py",
     ),
     "infrastructure/reporting/readiness_receipts.py": (
+        "tests/infra_tests/project/test_auxiliary_matrix.py",
         "tests/infra_tests/project/test_copy_exemplar.py",
         "tests/infra_tests/project/test_public_acceptance.py",
         "tests/infra_tests/project/test_public_acceptance_auxiliary.py",
