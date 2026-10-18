@@ -71,7 +71,7 @@ def test_required_project_layout() -> None:
     assert (root / "data" / "claim_ledger.yaml").is_file()
     pyproject = (root / "pyproject.toml").read_text(encoding="utf-8")
     assert "skip_combined_pytest" not in pyproject
-    assert project_declared_test_command(root) == ("python", "scripts/run_full_verification.py")
+    assert project_declared_test_command(root) == ("python", "scripts/run_full_verification.py", "--coverage-only")
 
 
 def test_compose_manuscript_validate_only_strict() -> None:

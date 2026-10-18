@@ -24,6 +24,13 @@ and historical notes remain preserved.
 - Partition functional infrastructure feedback into complete complementary smoke
   shards and required full-module contract jobs, with original pytest member,
   outcome and JUnit receipts. Add conservative project impact selection.
+- Enforce twenty-module automatic smoke cells with eight concurrent jobs,
+  retaining every selected module and the original 540-second operation limit.
+  Clean up owned detached descendants through the shared bounded runner and
+  preserve raw OS/effective exits separately from pytest outcome receipts.
+- Run the full wheel typing contract with the existing pinned-submodule checkout;
+  bind positive version fixtures to current Source while preserving mismatch,
+  real Git interleaving, strict receipt decoding and installed type controls.
 - Retain diagnostic requests before pytest launch so abrupt exits leave their
   selected files, nonce and declared timeouts without substituting for outcome receipts.
 - Reuse each admitted Meta tree inventory and group adjacent standalone-provider

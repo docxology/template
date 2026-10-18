@@ -6,6 +6,7 @@ import os
 import subprocess
 import sys
 import tarfile
+import tomllib
 import zipfile
 from pathlib import Path
 
@@ -82,6 +83,7 @@ def test_actual_wheel_and_sdist_ship_types_for_independent_strict_consumers(tmp_
         check=False,
     )
     assert installed.returncode == 0, installed.stdout + installed.stderr
+    expected_version = tomllib.loads((ROOT / "pyproject.toml").read_text(encoding="utf-8"))["project"]["version"]
     imported = subprocess.run(
         [
             str(selected_python),
@@ -91,7 +93,8 @@ def test_actual_wheel_and_sdist_ship_types_for_independent_strict_consumers(tmp_
             "source=Path(infrastructure.__file__).resolve();"
             "assert source.is_relative_to(Path(sys.prefix).resolve());"
             "assert (source.parent/'py.typed').is_file();"
-            "assert infrastructure.__version__=='4.0.1'",
+            "assert infrastructure.__version__==sys.argv[1]",
+            expected_version,
         ],
         cwd=tmp_path,
         env=environment,

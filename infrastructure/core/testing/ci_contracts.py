@@ -35,6 +35,7 @@ CONTRACT_MODULES = frozenset(
         "tests/infra_tests/reporting/test_project_verifier.py",
         "tests/infra_tests/project/test_root_case_lanes.py",
         "tests/infra_tests/project/test_root_no_model_acquisition.py",
+        "tests/infra_tests/project/test_root_wheel_typing.py",
         "tests/infra_tests/project/test_root_optional_external.py",
         "tests/infra_tests/project/test_root_policy_authoring.py",
         "tests/infra_tests/project/test_root_portable.py",

@@ -89,6 +89,19 @@ def test_actual_shards_are_nonempty_disjoint_complete_and_include_changed_source
             "tests/infra_tests/methods/test_methods_cli.py",
             "tests/infra_tests/methods/test_methods_orchestration.py",
         ),
+        "infrastructure/core/testing/ci_infra.py": (
+            "tests/infra_tests/core/test_ci_infra.py",
+            "tests/infra_tests/core/test_ci_infra_partition.py",
+            "tests/infra_tests/core/test_pytest_receipt.py",
+            "tests/infra_tests/core/test_ci_contracts.py",
+            "tests/infra_tests/core/test_ci_test_ownership.py",
+            "tests/infra_tests/core/test_ci_infra_process.py",
+        ),
+        "infrastructure/core/testing/ci_contracts.py": (
+            "tests/infra_tests/core/test_ci_contracts.py",
+            "tests/infra_tests/core/test_ci_infra.py",
+            "tests/infra_tests/core/test_ci_infra_process.py",
+        ),
         "infrastructure/core/testing/ci_test_ownership.py": (
             "tests/infra_tests/core/test_ci_infra.py",
             "tests/infra_tests/core/test_ci_infra_partition.py",
@@ -159,7 +172,8 @@ def test_broad_package_ownership_scales_shards_without_losing_selected_work() ->
     changed = ("infrastructure/reporting/__init__.py", "infrastructure/validation/__init__.py", *heavy)
     files = infrastructure_files(ROOT, changed)
     shards = infrastructure_shards(ROOT, changed)
-    assert 3 < len(shards) <= 10
+    assert len(shards) > 3
+    assert all(len(shard) <= 20 for shard in shards)
     assert all([module] in shards for module in heavy)
     small = infrastructure_shards(ROOT, heavy)
     assert len(small) >= 5 and all([module] in small for module in heavy)

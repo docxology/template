@@ -22,6 +22,10 @@ FOCUSED_PROTOCOL_SOURCES = {
     "infrastructure/core/pipeline/artifacts/_manifest.py",
     "infrastructure/core/pipeline/executor.py",
     "infrastructure/core/testing/ci_test_ownership.py",
+    # Complete functional selection and process controls retain direct and
+    # transitive contract packing consumers on later Source-only changes.
+    "infrastructure/core/testing/ci_infra.py",
+    "infrastructure/core/testing/ci_contracts.py",
     # The actual audited project/Root worker owners compose fresh fixture roots.
     "infrastructure/core/testing/pytest_scratch.py",
     "infrastructure/core/pipeline/fingerprint_files.py",

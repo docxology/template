@@ -15,6 +15,7 @@ from infrastructure.core.subprocess_policy import SubprocessPolicy, run_with_pol
 from infrastructure.project.public_acceptance_case_policy import POLICY_SCHEMA
 from infrastructure.project.public_root_case_admission import PREREQUISITE_SCHEMA, admit_plan
 from infrastructure.project.public_root_case_census import produce_root_census
+from infrastructure.project.public_root_case_contract import _json
 from infrastructure.project.public_root_lane_producer import produce_root_lane
 from infrastructure.project.public_root_lane_readback import read_lane
 from infrastructure.reporting.release_readiness_snapshot import SnapshotReader
@@ -86,7 +87,11 @@ def test_required_prepared_model():
     )
     first = _epoch_call(produce_root_census, root, root / "output/readiness/initial", timeout_seconds=180)
     assert first["exit_code"] == 0, first
-    rows = json.loads((root / first["receipt_artifact"]["path"]).read_bytes())["census"]["families"]
+    reader = SnapshotReader(root)
+    held = reader.read(first["receipt_artifact"]["path"])
+    assert held.sha256 == first["receipt_artifact"]["sha256"]
+    rows = _json(held)["census"]["families"]
+    assert reader.unchanged()
     expected = {
         "tests/test_owned.py::test_environment": "core",
         "tests/test_owned.py::test_required_prepared_model": "live-unpaid",

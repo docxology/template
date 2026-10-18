@@ -14,15 +14,26 @@ consumers. Shared or unknown paths, renames, deletions and ambiguous changes
 select every public project. An unreadable Git change roster fails selection.
 
 Infrastructure preserves the complete legacy smoke union, adds changed tests and
-declared Source owners, and splits the selection into three complementary file
-shards. Expensive selected full modules run in a separate required contract
-matrix. Smoke keeps its 540-second child budget and ten-minute job limit;
+declared Source owners, and splits the selection into complementary file
+shards with at most twenty modules in automatic mode. Selected process-heavy
+modules retain dedicated jobs. At most eight routine cells run concurrently;
+the separate contract matrix retains its three-cell concurrency limit. More
+cells increase the aggregate compute allowance; neither file count nor byte
+balancing proves that a cell will fit its deadline. Explicit one-to-eight shard
+requests retain their existing manual packing behavior.
+Smoke keeps its 540-second child budget and ten-minute job limit;
 contract jobs use the existing full-infrastructure 120-second per-test default,
 retain explicit test-owned timeout markers, and have a separate 6600-second
 whole-module ceiling below the existing Root acceptance budget. The explicit
 pytest option applies to this test process; nested producer environments retain
 their original timeout settings. Both lanes emit
 nonce-bound original pytest selection/outcome receipts and JUnit diagnostics.
+The shared bounded subprocess boundary includes startup in the original
+deadline and cleans up owned process groups and detached descendants. A separate
+request-bound process diagnostic preserves raw OS/effective exits, timeout and
+custody status even when pytest cannot finish its receipts; it never grants
+acceptance. The wheel typing contract uses the existing full-submodule checkout
+to exercise actual authored native content in wheel and source distributions.
 The final gate checks the exact combined union and rejects missing, duplicated
 or overlapping members. Neither lane replaces complete release acceptance.
 
