@@ -75,15 +75,33 @@ class NativeStageChildPreparation:
     original_request: ArtifactSnapshot
 
     def verify_owner(self, reader: SnapshotReader) -> None:
-        if (
-            self._key is not _FACTORY_KEY
-            or _PREPARED.get(id(self)) is not self
-            or current_native_producer_operation() is not self.owner
-            or self.owner.source is not self.source
-            or reader.root != self.source.bindings.current_root
-        ):
-            raise ValueError("native stage requires its actual fixed factory and live enclosing Source owner")
-        self.owner.verify(reader, run_id=self.owner.run_id, deadline=self.deadline)
+        owner, source, scope, deadline = self.owner, self.source, self.scope, self.deadline
+
+        def check_factory() -> None:
+            if (
+                self._key is not _FACTORY_KEY
+                or _PREPARED.get(id(self)) is not self
+                or self.owner is not owner
+                or self.source is not source
+                or self.scope != scope
+                or self.deadline != deadline
+                or current_native_producer_operation() is not owner
+                or owner.source is not source
+                or reader.root != source.bindings.current_root
+            ):
+                raise ValueError("native stage requires its actual fixed factory and live enclosing Source owner")
+
+        check_factory()
+        with owner._verification_guard(reader, run_id=owner.run_id, deadline=deadline):
+            check_factory()
+            try:
+                self._verify_owner_data(reader)
+            finally:
+                check_factory()
+        remaining(deadline)
+
+    def _verify_owner_data(self, reader: SnapshotReader) -> None:
+        """Compare held factory DATA only inside the caller's fresh Source guard."""
         spec = self.specification.json_object()
         validate_specification(spec)
         for held in (self.request, self.specification, self.implementation, self.original_request):
@@ -94,17 +112,16 @@ class NativeStageChildPreparation:
             directory_identity(self.directory) != tuple(spec["directory_identity"])
             or directory_identity(self.closure) != tuple(spec["closure_identity"])
             or directory_identity(self.directory / "bytecode") != tuple(spec["prefix_identity"])
-            or spec["source"] != json.loads(self.source.descriptor(self.scope, deadline=self.deadline))
+            or spec["source"] != json.loads(self.source._descriptor_data(self.scope, deadline=self.deadline))
             or spec["parent_pid"] != self.owner.owner_pid
             or spec["parent_directory"]
-            != self.owner.stage_scope_directory(self.scope).relative_to(reader.root).as_posix()
+            != self.owner._stage_scope_directory_data(self.scope).relative_to(reader.root).as_posix()
             or spec["parent_deadline_monotonic"] != self.owner.deadline
             or spec["run_id"] != self.owner.run_id
             or spec["request"] != binding(self.request)
             or self.request.content != self.original_request.content
         ):
             raise ValueError("native stage parent Source/physical-directory/run custody differs")
-        remaining(self.deadline)
 
     def verify_tool_launch(
         self,

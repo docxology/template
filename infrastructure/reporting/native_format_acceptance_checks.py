@@ -182,6 +182,13 @@ def native_tool_record(
     from infrastructure.reporting.native_tool_producer import current_native_producer_operation
 
     producer = current_native_producer_operation()
+    from infrastructure.reporting.native_auxiliary_print_custody import current_auxiliary_print_producer
+
+    auxiliary_print = current_auxiliary_print_producer()
+    if auxiliary_print is not None:
+        if producer is not None:
+            raise ValueError("fixed auxiliary print and full native owners cannot be combined")
+        auxiliary_print.verify()
     if producer is not None:
         producer.verify(SnapshotReader(root), run_id=run_id, deadline=deadline)
     # Existing callers keep their finite 120-second phase. A Source-owned
@@ -343,6 +350,10 @@ def native_tool_record(
             result,
             run_id=run_id,
             deadline=deadline,
+        )
+    if auxiliary_print is not None:
+        auxiliary_print.retain_actual_tool(
+            root, binding, payload["native_process_artifact"], result, run_id=run_id, deadline=deadline
         )
     if packet is not None:
         packet["completion_authorized"] = True

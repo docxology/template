@@ -157,16 +157,42 @@ def launch_prepared_native(
         prepared.deadline,
         required_worker_module=role,
     )
-    result = run_native_tool_process(
-        prepared.evidence,
-        str(prepared.python),
-        ["-I", "-c", body, *arguments],
-        cwd=prepared.current_root,
-        env=environment,
-        deadline=prepared.deadline,
-        purpose=f"actual-native-{role_name}",
-        preserve_nominated_launcher=True,
-    )
+    if role == NATIVE_READER_MODULE:
+        from infrastructure.reporting._native_hosted_launch import fixed_prepared_reader_launch
+
+        with fixed_prepared_reader_launch(
+            prepared,
+            implementation,
+            raw,
+            roots=roots,
+            closure=closure,
+            body=body,
+            arguments=arguments,
+            environment=environment,
+        ) as hosted_route:
+            result = run_native_tool_process(
+                prepared.evidence,
+                str(prepared.python),
+                ["-I", "-c", body, *arguments],
+                cwd=prepared.current_root,
+                env=environment,
+                deadline=prepared.deadline,
+                purpose="actual-native-reader",
+                preserve_nominated_launcher=True,
+            )
+            if result["accepted"] is True and result["original_exit_code"] == 0:
+                hosted_route.validate_result(result)
+    else:
+        result = run_native_tool_process(
+            prepared.evidence,
+            str(prepared.python),
+            ["-I", "-c", body, *arguments],
+            cwd=prepared.current_root,
+            env=environment,
+            deadline=prepared.deadline,
+            purpose=f"actual-native-{role_name}",
+            preserve_nominated_launcher=True,
+        )
     # A native refusal/nonzero remains the real observed result. A retention
     # failure can block OS0, but can never convert an original failure to OS0.
     if result["accepted"] is not True or result["original_exit_code"] != 0:

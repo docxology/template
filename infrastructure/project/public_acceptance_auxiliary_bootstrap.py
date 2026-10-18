@@ -22,7 +22,14 @@ PAYLOAD = "audited-bootstrap.payload"
 
 
 def _body(
-    interpreter: Path, root: Path, module: str, arguments: tuple[str, ...], directory: Path, *, original_root: Path
+    interpreter: Path,
+    root: Path,
+    module: str,
+    arguments: tuple[str, ...],
+    directory: Path,
+    *,
+    original_root: Path,
+    print_nomination: dict[str, Any] | None = None,
 ) -> tuple[bytes, tuple[str, ...]]:
     if module not in {WORKER, PIPELINE}:
         raise ValueError("auxiliary bootstrap requires its exact source-owned entry module")
@@ -35,7 +42,45 @@ def _body(
         implementation_root=original_root / "infrastructure",
         fresh_pycache_prefix=directory / "bytecode",
     )
-    return command[3].encode(), command[4:]
+    body = command[3]
+    if print_nomination is not None:
+        if (
+            module != WORKER
+            or set(print_nomination)
+            != {"spec_path", "spec_sha256", "run_id", "deadline", "parent_pid", "producer_root"}
+            or print_nomination["producer_root"] != str(original_root)
+            or Path(print_nomination["spec_path"]).parent / "execution" != directory
+        ):
+            raise ValueError("auxiliary print custody only belongs to the fixed worker")
+        # Portable process JSON sorts keys. Payload Source must not depend on
+        # a caller dictionary's insertion order before that round trip.
+        print_nomination = {key: print_nomination[key] for key in sorted(print_nomination)}
+        original = " runpy.run_module(sys.argv.pop(1),run_name='__main__')\n"
+        replacement = (
+            " from infrastructure.project.auxiliary_print_code import audited_entry,retain_code\n"
+            f" with audited_entry(Path({str(original_root)!r}),{print_nomination!r},"
+            f"Path({str(directory / PAYLOAD)!r})):\n"
+            "  _print_outcome={'kind':'not_started'}\n"
+            "  try:\n"
+            "   runpy.run_module(sys.argv.pop(1),run_name='__main__')\n"
+            "   _print_outcome={'kind':'returned'}\n"
+            "  except BaseException as _print_error:\n"
+            "   _print_outcome=({'kind':'raised','system_exit_code':_print_error.code} "
+            "if isinstance(_print_error,SystemExit) else {'kind':'failed','class':type(_print_error).__name__})\n"
+            "   raise\n"
+            "  finally:\n"
+            "   try:\n"
+            f"    retain_code(Path({str(original_root)!r}),Path({str(directory / 'print-code')!r}),"
+            f"{print_nomination!r},_print_outcome)\n"
+            "   except BaseException as _print_retention_error:\n"
+            "    sys.stderr.write('actual auxiliary print Code retention refused: '"
+            "+type(_print_retention_error).__name__+'\\n')\n"
+            "    if _print_outcome in ({'kind':'returned'},{'kind':'raised','system_exit_code':0}): raise\n"
+        )
+        if body.count(original) != 1:
+            raise ValueError("auxiliary print fixed bootstrap entry changed")
+        body = body.replace(original, replacement)
+    return body.encode(), command[4:]
 
 
 def prepare_audited_auxiliary_command(
@@ -55,7 +100,10 @@ def prepare_audited_auxiliary_command(
         selected_hook.parent, selected_hook
     ):
         raise ValueError("auxiliary preimport audit hook differs from the nominated Source body")
-    body, tail = _body(interpreter, root, module, arguments, directory, original_root=root)
+    from infrastructure.project.auxiliary_print_code import nomination
+
+    held = nomination(root, arguments) if module == WORKER else None
+    body, tail = _body(interpreter, root, module, arguments, directory, original_root=root, print_nomination=held)
     forbidden = tuple(
         root / name for name in ("infrastructure", "scripts", "tests", "projects") if (root / name).exists()
     )
@@ -76,7 +124,15 @@ def validate_audited_auxiliary_command(
     original = Path(process["producer_root"])
     directory = original / execution_relative
     interpreter = Path(process["selected_interpreter"])
-    body, tail = _body(interpreter, reader.root, module, arguments, directory, original_root=original)
+    body, tail = _body(
+        interpreter,
+        reader.root,
+        module,
+        arguments,
+        directory,
+        original_root=original,
+        print_nomination=process.get("auxiliary_print_launch"),
+    )
     payload = validate_acceptance_payload(body, process.get("bootstrap_payload"), expected_path=directory / PAYLOAD)
     if retained_payload is None:
         observed = reader.read(execution_relative + "/" + PAYLOAD)

@@ -12,7 +12,8 @@ import json
 import os
 import re
 import stat
-from collections.abc import Mapping
+from collections.abc import Iterator, Mapping
+from contextlib import contextmanager
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
@@ -259,6 +260,22 @@ class NativeSourceContext:
         deadline: float,
     ) -> None:
         """Fit SourceCorrespondence without a no-op or output-derived authority."""
+        with self._correspondence_guard(reference, current_root, current_reader, deadline):
+            pass
+
+    @contextmanager
+    def _correspondence_guard(
+        self,
+        reference: PublicReference,
+        current_root: Path,
+        current_reader: SnapshotReader,
+        deadline: float,
+    ) -> Iterator[None]:
+        """Bracket fixed synchronous held-DATA checks, never a child or capability.
+
+        Each invocation opens and closes the complete original correspondence.
+        No verified token, caller-selected callback or reusable result is yielded.
+        """
         remaining(deadline)
         bindings = self.bindings
         if (
@@ -275,15 +292,20 @@ class NativeSourceContext:
         if before_git != reference.git:
             raise ValueError("native current mirror Root/index/pin membership differs from admitted original source")
         self._verify_current_source(current_reader, deadline)
-        if inventory(current_root, bindings.expected_commit, deadline) != before_git:
-            raise ValueError("native current mirror Git custody changed during correspondence")
-        reference.verify_unchanged(deadline=deadline)
-        _verify_selected_sdk(bindings, self.fresh_pycache_prefix)
-        if inventory(current_root, bindings.expected_commit, deadline) != before_git:
-            raise ValueError("native current mirror Git custody changed during closing source/SDK checks")
-        # No reference/SDK custody or native Git verification call follows.
-        # In particular, mutation during the last native Git query is observed.
-        self._verify_current_source(current_reader, deadline)
+        try:
+            yield None
+        finally:
+            if self.bindings is not bindings or self.reference is not reference or current_reader.root != current_root:
+                raise ValueError("native source correspondence binding changed inside its lexical checks")
+            if inventory(current_root, bindings.expected_commit, deadline) != before_git:
+                raise ValueError("native current mirror Git custody changed during correspondence")
+            reference.verify_unchanged(deadline=deadline)
+            _verify_selected_sdk(bindings, self.fresh_pycache_prefix)
+            if inventory(current_root, bindings.expected_commit, deadline) != before_git:
+                raise ValueError("native current mirror Git custody changed during closing source/SDK checks")
+            # No reference/SDK custody or native Git verification call follows.
+            # In particular, mutation during the last native Git query is observed.
+            self._verify_current_source(current_reader, deadline)
 
     def descriptor(self, scope: str, *, deadline: float) -> bytes:
         """Emit a supervisor-retained observation after actual original admission.
@@ -300,6 +322,12 @@ class NativeSourceContext:
             self.current_source_reader,
             deadline,
         )
+        return self._descriptor_data(scope, deadline=deadline)
+
+    def _descriptor_data(self, scope: str, *, deadline: float) -> bytes:
+        """Format held observation DATA; callers supply their fresh enclosing guard."""
+        if scope not in PUBLIC_PROJECT_NAMES:
+            raise ValueError("native source descriptor requires an exact public scope")
         value = {
             "schema_version": DESCRIPTOR_SCHEMA,
             "run_id": self.bindings.run_id,

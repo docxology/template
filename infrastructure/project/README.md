@@ -2,6 +2,13 @@
 
 Project discovery, validation, and metadata extraction for multi-project support.
 
+Darwin auxiliary print acceptance uses `auxiliary_print_code.py` for the fixed
+audited worker entry and its retained actual Code/cache closure, and
+`auxiliary_print_hosted.py` for independently authenticated same-run Darwin
+artifact collection. Receipt JSON cannot create either live producer custody
+or a completed original. The existing supervisor and whole-operation deadline
+remain authoritative; original nonzero/timeout results never become passes.
+
 `codeowners.py` generates and validates the public-exemplar and sensitive-area
 ownership block in `.github/CODEOWNERS` from the canonical public scope.
 

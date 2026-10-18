@@ -91,21 +91,59 @@ class NativeProducerOperation:
         self._closed = False
 
     def verify(self, reader: SnapshotReader, *, run_id: str, deadline: float) -> None:
+        with self._verification_guard(reader, run_id=run_id, deadline=deadline):
+            pass
+
+    @contextmanager
+    def _verification_guard(self, reader: SnapshotReader, *, run_id: str, deadline: float) -> Iterator[None]:
+        """Enclose fixed synchronous DATA comparisons in one fresh Source boundary."""
         from infrastructure.reporting.native_source_external_admission import _physical_directory
 
-        if self._closed or _CURRENT.get() is not self or os.getpid() != self.owner_pid:
-            raise ValueError("native producer custody is not this actual live process owner")
-        if run_id != self.run_id or run_id != self.source.bindings.run_id or not deadline <= self.deadline:
-            raise ValueError("native producer run or original clock differs")
-        remaining(self.deadline)
-        self.source.verify_correspondence(self.source.reference, reader.root, reader, self.deadline)
-        if self._stage_scope is not None and _physical_directory(self._stage_scope[1]) != self._stage_scope[2]:
-            raise ValueError("native producer nominated stage scope directory changed physical identity")
-        remaining(self.deadline)
+        source, owner_run, original_deadline = self.source, self.run_id, self.deadline
+        owner_pid, scope, root = self.owner_pid, self._stage_scope, reader.root
+
+        def check_owner() -> None:
+            if (
+                self._closed
+                or _CURRENT.get() is not self
+                or self.source is not source
+                or self.owner_pid != owner_pid
+                or os.getpid() != owner_pid
+                or self.run_id != owner_run
+                or self.deadline != original_deadline
+                or self._stage_scope is not scope
+                or reader.root != root
+            ):
+                raise ValueError("native producer custody is not this actual unchanged live process owner")
+            if (
+                run_id != owner_run
+                or run_id != source.bindings.run_id
+                or type(deadline) not in (int, float)
+                or not math.isfinite(deadline)
+                or not deadline <= original_deadline
+            ):
+                raise ValueError("native producer run or original clock differs")
+            remaining(original_deadline)
+            remaining(deadline)
+            if scope is not None and _physical_directory(scope[1]) != scope[2]:
+                raise ValueError("native producer nominated stage scope directory changed physical identity")
+
+        check_owner()
+        with source._correspondence_guard(source.reference, root, reader, original_deadline):
+            check_owner()
+            try:
+                yield None
+            finally:
+                check_owner()
+        remaining(deadline)
 
     def stage_scope_directory(self, scope: str) -> Path:
         """Return the held directory only in the exact actual live public owner."""
         self.verify(SnapshotReader(self.source.bindings.current_root), run_id=self.run_id, deadline=self.deadline)
+        return self._stage_scope_directory_data(scope)
+
+    def _stage_scope_directory_data(self, scope: str) -> Path:
+        """Read held scope DATA only; this does not verify or construct an owner."""
         if self._stage_scope is None or scope != self._stage_scope[0]:
             raise ValueError("native stage requires this actual owner's exact nominated public scope directory")
         return self._stage_scope[1]

@@ -139,8 +139,10 @@ SOURCE_TEST_OWNERS: dict[str, tuple[str, ...]] = {
         "tests/infra_tests/project/test_public_acceptance_auxiliary_cli.py",
     ),
     "infrastructure/project/public_acceptance_auxiliary_supervision.py": (
-        "tests/infra_tests/project/test_public_acceptance_auxiliary.py",
         "tests/infra_tests/project/test_auxiliary_audited_bootstrap.py",
+        "tests/infra_tests/project/test_auxiliary_print_custody.py",
+        "tests/infra_tests/project/test_public_acceptance_auxiliary.py",
+        "tests/infra_tests/project/test_public_acceptance_auxiliary_supervision.py",
     ),
     "infrastructure/project/public_acceptance_auxiliary_transfer_validation.py": (
         "tests/infra_tests/project/test_public_acceptance_auxiliary.py",
@@ -166,6 +168,7 @@ SOURCE_TEST_OWNERS: dict[str, tuple[str, ...]] = {
         "tests/infra_tests/reporting/test_native_whole_portability.py",
     ),
     "infrastructure/reporting/native_installed_invocation.py": (
+        "tests/infra_tests/reporting/test_native_hosted_credentials.py",
         "tests/infra_tests/reporting/test_native_installed_launch_contract.py",
         "tests/infra_tests/reporting/test_native_whole_portability.py",
     ),
@@ -186,6 +189,7 @@ SOURCE_TEST_OWNERS: dict[str, tuple[str, ...]] = {
     ),
     "infrastructure/project/public_acceptance_auxiliary_bootstrap.py": (
         "tests/infra_tests/project/test_auxiliary_audited_bootstrap.py",
+        "tests/infra_tests/project/test_auxiliary_print_custody.py",
         "tests/infra_tests/project/test_public_acceptance_auxiliary.py",
     ),
     "infrastructure/project/public_acceptance_auxiliary_pipeline.py": (
@@ -193,7 +197,10 @@ SOURCE_TEST_OWNERS: dict[str, tuple[str, ...]] = {
         "tests/infra_tests/project/test_public_acceptance_auxiliary.py",
     ),
     "infrastructure/project/public_acceptance_auxiliary_validation.py": (
+        "tests/infra_tests/project/test_auxiliary_audited_bootstrap.py",
+        "tests/infra_tests/project/test_auxiliary_print_custody.py",
         "tests/infra_tests/project/test_public_acceptance_auxiliary.py",
+        "tests/infra_tests/project/test_public_acceptance_auxiliary_supervision.py",
     ),
     "infrastructure/project/public_acceptance_auxiliary_worker.py": (
         "tests/infra_tests/project/test_public_acceptance_auxiliary.py",
@@ -210,8 +217,8 @@ SOURCE_TEST_OWNERS: dict[str, tuple[str, ...]] = {
         "tests/infra_tests/reporting/test_native_stage_child_contracts.py",
     ),
     "infrastructure/reporting/native_tool_producer.py": (
-        "tests/infra_tests/reporting/test_native_stage_child_contracts.py",
         "tests/infra_tests/rendering/test_native_render_custody.py",
+        "tests/infra_tests/reporting/test_native_stage_child_contracts.py",
     ),
     "infrastructure/reporting/release_readiness_snapshot.py": (
         "tests/infra_tests/reporting/test_readiness_snapshot.py",
@@ -231,6 +238,112 @@ SOURCE_TEST_OWNERS: dict[str, tuple[str, ...]] = {
     ),
     "infrastructure/reporting/native_office_diagram_runtime.py": (
         "tests/infra_tests/reporting/test_native_pdfium_batch_data.py",
+    ),
+    "infrastructure/project/_hosted_api.py": (
+        "tests/infra_tests/project/test_auxiliary_print_custody.py",
+        "tests/infra_tests/project/test_hosted_api.py",
+        "tests/infra_tests/project/test_public_hosted_origin.py",
+        "tests/infra_tests/project/test_root_portable.py",
+        "tests/infra_tests/reporting/test_native_hosted_credentials.py",
+        "tests/infra_tests/reporting/test_native_original_mutable_reception.py",
+    ),
+    "infrastructure/project/auxiliary_print_code.py": ("tests/infra_tests/project/test_auxiliary_print_custody.py",),
+    "infrastructure/project/auxiliary_print_hosted.py": ("tests/infra_tests/project/test_auxiliary_print_custody.py",),
+    "infrastructure/project/public_acceptance_auxiliary.py": (
+        "tests/infra_tests/project/test_auxiliary_audited_bootstrap.py",
+        "tests/infra_tests/project/test_auxiliary_print_custody.py",
+        "tests/infra_tests/project/test_public_acceptance_auxiliary.py",
+        "tests/infra_tests/project/test_public_acceptance_auxiliary_cli.py",
+        "tests/infra_tests/project/test_public_acceptance_auxiliary_parallel.py",
+        "tests/infra_tests/project/test_public_acceptance_auxiliary_supervision.py",
+    ),
+    "infrastructure/project/public_acceptance_auxiliary_parallel.py": (
+        "tests/infra_tests/project/test_auxiliary_audited_bootstrap.py",
+        "tests/infra_tests/project/test_auxiliary_print_custody.py",
+        "tests/infra_tests/project/test_public_acceptance_auxiliary.py",
+        "tests/infra_tests/project/test_public_acceptance_auxiliary_parallel.py",
+    ),
+    "infrastructure/project/public_hosted_origin.py": (
+        "tests/infra_tests/project/test_auxiliary_print_custody.py",
+        "tests/infra_tests/project/test_hosted_api.py",
+        "tests/infra_tests/project/test_public_hosted_origin.py",
+        "tests/infra_tests/project/test_root_portable.py",
+    ),
+    "infrastructure/reporting/_native_hosted_launch.py": (
+        "tests/infra_tests/reporting/test_native_hosted_credentials.py",
+        "tests/infra_tests/reporting/test_native_installed_launch_contract.py",
+    ),
+    "infrastructure/reporting/native_auxiliary_print_custody.py": (
+        "tests/infra_tests/project/test_auxiliary_print_custody.py",
+    ),
+    "infrastructure/reporting/native_environment_custody.py": (
+        "tests/infra_tests/reporting/test_native_hosted_credentials.py",
+        "tests/infra_tests/reporting/test_native_original_launch_correctness.py",
+        "tests/infra_tests/reporting/test_native_tool_promotion_failure.py",
+        "tests/infra_tests/reporting/test_native_tool_stdin.py",
+    ),
+    "infrastructure/reporting/native_format_acceptance_checks.py": (
+        "tests/infra_tests/project/test_auxiliary_print_custody.py",
+        "tests/infra_tests/project/test_public_acceptance_auxiliary.py",
+        "tests/infra_tests/project/test_scientific_reference_replay.py",
+        "tests/infra_tests/reporting/test_native_browser_oracles.py",
+        "tests/infra_tests/reporting/test_native_format_acceptance.py",
+        "tests/infra_tests/reporting/test_native_format_control_replay.py",
+        "tests/infra_tests/reporting/test_native_office_projection.py",
+        "tests/infra_tests/reporting/test_native_office_reference.py",
+        "tests/infra_tests/reporting/test_native_pdf_all_glyphs.py",
+        "tests/infra_tests/reporting/test_native_pdf_oracles.py",
+        "tests/infra_tests/reporting/test_native_portable_custody.py",
+        "tests/infra_tests/reporting/test_native_projection_source_integration.py",
+        "tests/infra_tests/reporting/test_native_qr_runtime_strict.py",
+        "tests/infra_tests/reporting/test_native_raster_bounds.py",
+        "tests/infra_tests/reporting/test_native_scientific_pdf_dispatch.py",
+        "tests/infra_tests/reporting/test_native_tool_promotion_failure.py",
+        "tests/infra_tests/reporting/test_readiness_artifact_oracles.py",
+    ),
+    "infrastructure/reporting/native_hosted_original_custody.py": (
+        "tests/infra_tests/reporting/test_native_hosted_credentials.py",
+        "tests/infra_tests/reporting/test_native_original_mutable_reception.py",
+    ),
+    "infrastructure/reporting/native_hosted_reader.py": (
+        "tests/infra_tests/project/test_auxiliary_print_custody.py",
+        "tests/infra_tests/reporting/test_native_hosted_credentials.py",
+        "tests/infra_tests/reporting/test_native_installed_launch_contract.py",
+    ),
+    "infrastructure/reporting/native_print_witness.py": (
+        "tests/infra_tests/project/test_auxiliary_print_custody.py",
+        "tests/infra_tests/project/test_public_acceptance_auxiliary.py",
+        "tests/infra_tests/reporting/test_native_print_dispatch.py",
+    ),
+    "infrastructure/reporting/native_print_witness_validation.py": (
+        "tests/infra_tests/project/test_auxiliary_print_custody.py",
+        "tests/infra_tests/project/test_public_acceptance_auxiliary.py",
+        "tests/infra_tests/reporting/test_native_print_dispatch.py",
+    ),
+    "infrastructure/reporting/native_tool_process.py": (
+        "tests/infra_tests/reporting/test_native_hosted_credentials.py",
+        "tests/infra_tests/reporting/test_native_installed_launch_contract.py",
+        "tests/infra_tests/reporting/test_native_original_launch_correctness.py",
+        "tests/infra_tests/reporting/test_native_tool_promotion_failure.py",
+        "tests/infra_tests/reporting/test_native_tool_stdin.py",
+    ),
+    "infrastructure/reporting/native_tool_replay.py": (
+        "tests/infra_tests/project/test_auxiliary_print_custody.py",
+        "tests/infra_tests/reporting/test_native_format_acceptance.py",
+        "tests/infra_tests/reporting/test_native_portable_custody.py",
+        "tests/infra_tests/reporting/test_native_tool_promotion_failure.py",
+    ),
+    "infrastructure/reporting/required_candidate_collection.py": (
+        "tests/infra_tests/reporting/test_native_hosted_credentials.py",
+        "tests/infra_tests/reporting/test_native_installed_launch_contract.py",
+    ),
+    "infrastructure/reporting/native_source_external_admission.py": (
+        "tests/infra_tests/project/test_public_source_body_admission.py",
+        "tests/infra_tests/reporting/test_native_project_provider_batch.py",
+        "tests/infra_tests/reporting/test_native_stage_child_contracts.py",
+    ),
+    "infrastructure/reporting/native_stage_child.py": (
+        "tests/infra_tests/reporting/test_native_stage_child_contracts.py",
     ),
 }
 

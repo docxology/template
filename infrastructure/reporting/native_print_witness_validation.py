@@ -68,6 +68,14 @@ def validate_print_witness(
     """
     deadline = time.monotonic() + 180 if deadline is None else deadline
     with native_deadline_guard(deadline):
+        from infrastructure.reporting.native_auxiliary_print_custody import (
+            AuxiliaryPrintProducerOperation,
+            AuxiliaryPrintReaderOperation,
+        )
+
+        control = reader.native_control_operation
+        if type(control) in (AuxiliaryPrintProducerOperation, AuxiliaryPrintReaderOperation):
+            control.validate_witness(binding, reader)
         record = _file(binding, reader)
         raw = record.json_object()
         names = {
@@ -194,6 +202,8 @@ def validate_print_witness(
                 )
         if not reader.unchanged():
             raise ValueError("native print source/evidence changed during independent readback")
+        if type(control) in (AuxiliaryPrintProducerOperation, AuxiliaryPrintReaderOperation):
+            control.verify()
 
 
 def _admit_raster(

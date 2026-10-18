@@ -268,6 +268,18 @@ def run_native_tool_process(
                 )
                 payload["schema_version"] = STDIN_SCHEMA
                 payload["stdin_input_before"] = _stdin_observation(stdin_stream, stdin_path, deadline)
+            from infrastructure.reporting._native_hosted_launch import current_fixed_reader_launch
+
+            hosted_route = current_fixed_reader_launch(
+                directory, name, arguments, cwd=cwd, environment=env, deadline=deadline, purpose=purpose
+            )
+            if hosted_route is not None and (
+                loader is not None
+                or stdin_path is not None
+                or while_live is not None
+                or not preserve_nominated_launcher
+            ):
+                raise ValueError("fixed hosted reader cannot select another native instrumentation/interaction role")
             selected_env = build_bounded_env(env)
             selected = shutil.which(name, path=selected_env.get("PATH"))
             if not selected:
@@ -309,14 +321,12 @@ def run_native_tool_process(
                 payload["loader_stdin"] = stdin_stream is not None
             from infrastructure.reporting.native_environment_custody import capture_native_environment
 
-            payload["environment_custody"] = capture_native_environment(
-                env,
-                selected_env,
-                bounded_env,
-                process_env,
-                run_token,
-                loader,
-            )
+            if hosted_route is not None:
+                process_env, payload["environment_custody"] = hosted_route.capture(selected_env, bounded_env, run_token)
+            else:
+                payload["environment_custody"] = capture_native_environment(
+                    env, selected_env, bounded_env, process_env, run_token, loader
+                )
             process = subprocess.Popen(
                 payload["command"],
                 cwd=cwd,

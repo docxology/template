@@ -89,6 +89,15 @@ def _auxiliary_gate_operation(
                 "budget": max(1, int(deadline - time.monotonic())),
                 "raw_path": raw_path.relative_to(root).as_posix(),
                 "producer_inputs": (producer_inputs or {}).get(requirement.scope, {}),
+                **(
+                    {
+                        "run_id": uuid.uuid4().hex,
+                        "operation_deadline": deadline,
+                        "parent_pid": __import__("os").getpid(),
+                    }
+                    if gate == "root:macos:rendering"
+                    else {}
+                ),
             },
         )
         from infrastructure.project.public_acceptance_auxiliary_bootstrap import (
@@ -99,7 +108,8 @@ def _auxiliary_gate_operation(
         command, payload = prepare_audited_auxiliary_command(
             python, root, WORKER, ("--spec", str(root / spec["path"])), cell / "execution"
         )
-        process = yield AuxiliaryProcess(command, root, cell / "execution", deadline, payload)
+        print_originals: list[Any] = []
+        process = yield AuxiliaryProcess(command, root, cell / "execution", deadline, payload, print_originals)
         after = source_fingerprint(root)
         raw = read_json(root, raw_path) if raw_path.is_file() else {}
         raw_binding = (
@@ -209,10 +219,17 @@ def _auxiliary_gate_operation(
             ]
         if status == "pass":
             try:
+                from infrastructure.reporting.native_auxiliary_print_custody import AuxiliaryPrintReaderOperation
+
+                print_operation = (
+                    AuxiliaryPrintReaderOperation(print_originals[0], root, deadline)
+                    if gate == "root:macos:rendering" and len(print_originals) == 1
+                    else None
+                )
                 validate_acceptance(
                     requirement,
                     gate_payload(requirement, fingerprint, status, details, []),
-                    SnapshotReader(root, operation_deadline=deadline),
+                    SnapshotReader(root, operation_deadline=deadline, native_control_operation=print_operation),
                 )
             except (OSError, ValueError, TypeError, KeyError, TimeoutError) as error:
                 status = "fail"

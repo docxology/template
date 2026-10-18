@@ -125,6 +125,10 @@ def authenticate_original_native_artifact(
     """
     control = reader.native_control_operation
     if control is not None:
+        from infrastructure.reporting.native_auxiliary_print_custody import (
+            AuxiliaryPrintProducerOperation,
+            AuxiliaryPrintReaderOperation,
+        )
         from infrastructure.reporting.native_office_control_custody import (
             OfficeControlReaderOperation,
         )
@@ -161,6 +165,8 @@ def authenticate_original_native_artifact(
                 SemanticBrowserControlReaderOperation,
                 SlideControlReaderOperation,
                 WholePDFControlReaderOperation,
+                AuxiliaryPrintProducerOperation,
+                AuxiliaryPrintReaderOperation,
             ),
         ) or (
             not isinstance(control, OfficeControlReaderOperation)
@@ -176,6 +182,8 @@ def authenticate_original_native_artifact(
                 SemanticBrowserControlReaderOperation,
                 SlideControlReaderOperation,
                 WholePDFControlReaderOperation,
+                AuxiliaryPrintProducerOperation,
+                AuxiliaryPrintReaderOperation,
             )
         ):
             raise ValueError("native control artifact requires its genuine typed original Source custodian")

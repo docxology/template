@@ -2,6 +2,13 @@
 
 ## Purpose
 
+Darwin print custody: `auxiliary_print_code.py` binds the actual Source-generated
+worker payload to the parent-held spec/run/PID/deadline and retains executed
+Code before private cache cleanup. `auxiliary_print_hosted.py` authenticates the
+fixed same-run Darwin producer job/artifact using actual API/download results.
+Do not construct print originals from parsed receipts or broaden Root's six
+artifact roster; the live supervisor/collector owns the capability.
+
 The `infrastructure/project/` module provides project discovery, validation, and metadata extraction for multi-project support. This enables the template to manage multiple independent research projects within a single repository.
 
 ## Key Components

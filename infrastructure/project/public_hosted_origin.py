@@ -21,8 +21,8 @@ from dataclasses import dataclass
 from pathlib import Path, PurePosixPath
 from typing import Any
 
-from infrastructure.core.execution_boundary import run_bounded_subprocess
-from infrastructure.core.files.secure_write import atomic_write_bytes_confined, read_bytes_confined
+from infrastructure.core.execution_boundary import build_bounded_env, run_bounded_subprocess
+from infrastructure.core.files.secure_write import atomic_write_bytes_confined
 from infrastructure.project.public_acceptance_evidence import evidence_directory, write_json
 from infrastructure.reporting.release_readiness_snapshot import SnapshotReader, json_object_from_bytes
 
@@ -78,7 +78,9 @@ class HostedOriginIdentity:
 
 
 def _context(repository: str, run_id: int, head_sha: str) -> None:
-    if not re.fullmatch(r"[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+", repository):
+    if not re.fullmatch(r"[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+", repository) or any(
+        part in {".", ".."} for part in repository.split("/")
+    ):
         raise ValueError("invalid designated repository")
     if type(run_id) is not int or run_id <= 0 or not re.fullmatch(r"[0-9a-f]{40}", head_sha):
         raise ValueError("invalid original run or exact commit")
@@ -247,13 +249,29 @@ def collect_hosted_origin(
     if deadline <= started:
         raise ValueError("hosted collection cannot restart an exhausted outer operation clock")
     observations: dict[str, Any] = {}
+    from infrastructure.project._hosted_api import fixed_hosted_api
+
+    api = fixed_hosted_api(
+        root,
+        directory,
+        repository=repository,
+        run_id=run_id,
+        head_sha=head_sha,
+        deadline=deadline,
+        environment=os.environ.copy(),
+    )
 
     def execute(command: list[str], label: str) -> dict[str, Any]:
         remaining = deadline - time.monotonic()
         if remaining <= 0:
             raise ValueError("hosted origin collection deadline exhausted")
         result = run_bounded_subprocess(
-            command, cwd=root, env=os.environ.copy(), timeout=remaining, capture_output=True
+            command,
+            cwd=root,
+            env=build_bounded_env(),
+            guardian_env=build_bounded_env(),
+            timeout=remaining,
+            capture_output=True,
         )
         record = {
             "command": command,
@@ -279,14 +297,12 @@ def collect_hosted_origin(
     }
     responses: dict[str, Any] = {}
     for label, endpoint in endpoints.items():
-        record = execute(_api_command(endpoint), label)
-        responses[label] = json_object_from_bytes(record["stdout"].encode())
+        responses[label], observations[label] = api.run_metadata() if label == "run" else api.workflow_metadata()
         observations[label + "_response"] = write_json(root, directory / f"{label}-response.json", responses[label])
     pages = []
     for page in range(1, MAX_LISTING_PAGES + 1):
         label = f"listing-{page}"
-        record = execute(_api_command(f"{base}/actions/runs/{run_id}/artifacts?per_page=100&page={page}"), label)
-        response = json_object_from_bytes(record["stdout"].encode())
+        response, observations[label] = api.artifact_page(page)
         observations[label + "_response"] = write_json(root, directory / f"{label}-response.json", response)
         pages.append(response)
         listing = _merge_listing_pages(pages, complete=False)
@@ -301,10 +317,9 @@ def collect_hosted_origin(
     artifacts = []
     for row in selected:
         archive_path = directory / f"{row['id']}.zip"
-        endpoint = f"{base}/actions/artifacts/{row['id']}/zip"
-        command = [sys.executable, "-I", "-c", DOWNLOAD_SCRIPT, str(archive_path), *_api_command(endpoint)]
-        record = execute(command, f"artifact-{row['id']}")
-        content = read_bytes_confined(root, archive_path, max_bytes=MAX_ARCHIVE)
+        content, process_binding = api.download_artifact(row["id"], archive_path)
+        observations[f"artifact-{row['id']}"] = process_binding
+        record = SnapshotReader(root).read(process_binding["path"]).json_object()
         digest = hashlib.sha256(content).hexdigest()
         child = json_object_from_bytes(record["stdout"].encode())
         if child != {"original_exit_code": 0, "archive_sha256": digest} or row["digest"] != f"sha256:{digest}":
