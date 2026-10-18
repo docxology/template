@@ -22,7 +22,10 @@ from infrastructure.reporting.native_environment_custody import (
 )
 from infrastructure.reporting.native_tool_process import run_native_tool_process
 from infrastructure.reporting.release_readiness_snapshot import SnapshotReader
-from tests.infra_tests.project.test_public_reference import complete_reference as complete_reference
+from tests.infra_tests.project.test_public_reference import (
+    _clone_complete_reference,
+    complete_reference as complete_reference,
+)
 
 
 def test_actual_ordinary_native_child_and_records_remain_credential_free(tmp_path: Path) -> None:
@@ -100,15 +103,14 @@ def test_genuine_installed_reader_popen_has_only_fixed_credential_route(
     from infrastructure.reporting.native_source_provider_bootstrap import NATIVE_READER_MODULE
 
     original, commit, source_identity = complete_reference
-    current = tmp_path / "current"
-    shutil.copytree(original, current)
+    started = time.monotonic()
+    budget = 1100
+    deadline = started + budget
+    current = _clone_complete_reference(complete_reference, tmp_path / "current", deadline=deadline)
     install = tmp_path / "installed"
     install.mkdir()
     evidence = current / "output/readiness/fixed-hosted-reader-control"
     evidence.mkdir(parents=True)
-    started = time.monotonic()
-    budget = 1100
-    deadline = started + budget
     environment = {**build_bounded_env(), "UV_LINK_MODE": "copy", "UV_PYTHON_DOWNLOADS": "never"}
     uv = shutil.which("uv")
     assert uv is not None
