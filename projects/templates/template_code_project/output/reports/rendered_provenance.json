@@ -85,7 +85,7 @@
     },
     "validation_report": {
       "path": "output/reports/validation_report.json",
-      "sha256": "35a973e34ae694498fa84fb2cdca5e4fcca514fb19d54d1e1f3be63af8995db4",
+      "sha256": "3164793b903b46ea5529b1ac9a358649077e1da29ccc92b8fc2cdb637564b19f",
       "size_bytes": 13850
     }
   },
@@ -105,7 +105,7 @@
     },
     "stage": {
       "file_count": 1903,
-      "sha256": "82a811c24339b01d72487b332d3e58c16b1119a9ed3532491679098aff97b335"
+      "sha256": "82c47577f1c1b0e22d7feb145892287b0412a5a91606909e9eeb57ca96d1423e"
     }
   },
   "project": "templates/template_code_project",
