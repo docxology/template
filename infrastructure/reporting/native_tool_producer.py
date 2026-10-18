@@ -16,18 +16,19 @@ from contextlib import contextmanager
 from contextvars import ContextVar
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 from infrastructure.project.public_reference_git import remaining
 from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
-from infrastructure.rendering.native_render_custody import (
-    NativeTexSectionPass,
-    SourceNativeMermaid,
-    SourceNativePandoc,
-    installed_native_render_custody,
-)
-from infrastructure.reporting.native_source_external_admission import NativeSourceContext, _physical_directory
 from infrastructure.reporting.release_readiness_snapshot import SnapshotReader
+
+if TYPE_CHECKING:
+    from infrastructure.rendering.native_render_custody import (
+        NativeTexSectionPass,
+        SourceNativeMermaid,
+        SourceNativePandoc,
+    )
+    from infrastructure.reporting.native_source_external_admission import NativeSourceContext
 
 
 @dataclass(frozen=True)
@@ -56,6 +57,8 @@ def _stage_scope_nomination(
         return None
     if not isinstance(scope, str) or scope not in PUBLIC_PROJECT_NAMES or not isinstance(directory, Path):
         raise ValueError("native stage scope requires a paired exact public scope and directory nomination")
+    from infrastructure.reporting.native_source_external_admission import _physical_directory
+
     selected = evidence_directory(root, directory)
     return scope, selected, _physical_directory(selected)
 
@@ -72,6 +75,8 @@ class NativeProducerOperation:
         scope: str | None = None,
         directory: Path | None = None,
     ) -> None:
+        from infrastructure.reporting.native_source_external_admission import NativeSourceContext
+
         if not isinstance(source, NativeSourceContext) or not isinstance(run_id, str) or not run_id:
             raise ValueError("native producer requires genuine admitted Source and run identity")
         if type(deadline) not in (float, int) or not math.isfinite(deadline):
@@ -86,6 +91,8 @@ class NativeProducerOperation:
         self._closed = False
 
     def verify(self, reader: SnapshotReader, *, run_id: str, deadline: float) -> None:
+        from infrastructure.reporting.native_source_external_admission import _physical_directory
+
         if self._closed or _CURRENT.get() is not self or os.getpid() != self.owner_pid:
             raise ValueError("native producer custody is not this actual live process owner")
         if run_id != self.run_id or run_id != self.source.bindings.run_id or not deadline <= self.deadline:
@@ -273,6 +280,7 @@ def native_producer_operation(
 ) -> Iterator[NativeProducerOperation]:
     """Begin only from genuine admitted Source, and never start another clock."""
     from infrastructure.reporting.native_format_joint_source import _require_installed_sdk
+    from infrastructure.rendering.native_render_custody import installed_native_render_custody
 
     _require_installed_sdk(source.bindings.expected_implementation_bytes)
     if _CURRENT.get() is not None:

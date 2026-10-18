@@ -3,9 +3,14 @@
 from __future__ import annotations
 
 import copy
+import importlib.metadata
 import hashlib
 import json
+import shutil
 import time
+import subprocess
+import sys
+import venv
 from pathlib import Path
 from typing import Any
 
@@ -29,6 +34,66 @@ from infrastructure.reporting.native_tool_producer import _stage_scope_nominatio
 from infrastructure.reporting.release_readiness_snapshot import ArtifactSnapshot, SnapshotReader
 
 SCOPE = "templates/template_code_project"
+
+
+def test_ordinary_owner_query_imports_without_optional_rendering_dependencies(tmp_path: Path) -> None:
+    """A real runtime with required PyYAML can query custody without a PDF provider."""
+    environment = tmp_path / "empty-runtime"
+    venv.EnvBuilder(with_pip=False).create(environment)
+    python = environment / ("Scripts/python.exe" if sys.platform == "win32" else "bin/python")
+    site = environment / (
+        "Lib/site-packages"
+        if sys.platform == "win32"
+        else f"lib/python{sys.version_info.major}.{sys.version_info.minor}/site-packages"
+    )
+    # The SDK declares PyYAML as a required base dependency. Copy the actual
+    # installed distribution into this same-ABI venv; no resolver or optional
+    # PDF packages participate in the regression environment.
+    distribution = importlib.metadata.distribution("PyYAML")
+    assert distribution.files
+    for member in distribution.files:
+        relative = Path(str(member))
+        assert not relative.is_absolute() and ".." not in relative.parts
+        original = Path(distribution.locate_file(member))
+        assert original.is_file() and not original.is_symlink()
+        destination = site / relative
+        destination.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copyfile(original, destination)
+    root = Path(__file__).resolve().parents[3]
+    result = subprocess.run(
+        [
+            str(python),
+            "-I",
+            "-c",
+            "import importlib.metadata,importlib.util,sys;from pathlib import Path;"
+            "assert importlib.util.find_spec('reportlab') is None;"
+            "import yaml;"
+            "assert Path(yaml.__file__).resolve().is_relative_to(Path(sys.prefix).resolve());"
+            "assert importlib.metadata.version('PyYAML') == sys.argv[2];"
+            "assert yaml.safe_load('provider: genuine') == {'provider':'genuine'};"
+            "sys.path.insert(0,sys.argv[1]);"
+            "from infrastructure.reporting.native_tool_producer import current_native_producer_operation;"
+            "assert current_native_producer_operation() is None;"
+            "assert 'infrastructure.reporting.native_source_external_admission' not in sys.modules;"
+            "assert 'infrastructure.rendering' not in sys.modules;"
+            "print('ordinary-query-without-native-provider')",
+            str(root),
+            distribution.version,
+        ],
+        capture_output=True,
+        text=True,
+        timeout=30,
+        check=False,
+    )
+    assert result.returncode == 0, result.stdout + result.stderr
+    assert result.stdout.strip() == "ordinary-query-without-native-provider"
+
+
+def test_native_owner_construction_still_requires_actual_admitted_source() -> None:
+    from infrastructure.reporting.native_tool_producer import NativeProducerOperation
+
+    with pytest.raises(ValueError, match="genuine admitted Source"):
+        NativeProducerOperation(object(), "actual-run", time.monotonic() + 30)
 
 
 def _snapshot(root: Path, relative: str, value: dict[str, Any]) -> ArtifactSnapshot:

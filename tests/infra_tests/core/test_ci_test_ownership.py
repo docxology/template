@@ -42,6 +42,21 @@ PROTOCOL_SOURCES = {
 }
 
 
+def test_native_owner_alias_keeps_every_actual_direct_test_consumer() -> None:
+    source = "infrastructure/reporting/native_tool_producer.py"
+    module = source.removesuffix(".py").replace("/", ".")
+    consumers: set[str] = set()
+    for path in sorted((ROOT / "tests/infra_tests").rglob("test_*.py")):
+        syntax = ast.parse(path.read_bytes())
+        if any(
+            (isinstance(node, ast.ImportFrom) and node.module == module)
+            or (isinstance(node, ast.Import) and any(alias.name == module for alias in node.names))
+            for node in ast.walk(syntax)
+        ):
+            consumers.add(path.relative_to(ROOT).as_posix())
+    assert consumers == set(SOURCE_TEST_OWNERS[source])
+
+
 @pytest.mark.parametrize("source", sorted(SOURCE_TEST_OWNERS))
 def test_shared_helper_routes_every_focused_or_protocol_owner_without_broad_package(source: str) -> None:
     module = source.removesuffix(".py").replace("/", ".")

@@ -635,16 +635,16 @@ Total documented definitions: 890
 
 | line | kind | name | documentation source | summary |
 | ---: | --- | --- | --- | --- |
-| 19 | `function` | `_budget` | inventory fallback | Inventory fallback for function `_budget` defined at `src/orchestration/portable_sources.py:19`. |
-| 24 | `function` | `_identity` | inventory fallback | Inventory fallback for function `_identity` defined at `src/orchestration/portable_sources.py:24`. |
-| 28 | `function` | `_content_identity` | inventory fallback | Inventory fallback for function `_content_identity` defined at `src/orchestration/portable_sources.py:28`. |
-| 32 | `function` | `_open_ancestors` | docstring | Hold the lexical absolute chain; public link aliases are never resolved. |
-| 58 | `function` | `_verify_chain` | inventory fallback | Inventory fallback for function `_verify_chain` defined at `src/orchestration/portable_sources.py:58`. |
-| 66 | `function` | `_read` | inventory fallback | Inventory fallback for function `_read` defined at `src/orchestration/portable_sources.py:66`. |
-| 95 | `function` | `snapshot_file` | docstring | Admit one bounded regular file with its complete held ancestor chain. |
-| 108 | `function` | `snapshot_tree` | docstring | Capture a finite tree, refusing every admitted nonregular entry. |
-| 123 | `function` | `snapshot_tree.walk` | inventory fallback | Inventory fallback for function `snapshot_tree.walk` defined at `src/orchestration/portable_sources.py:123`. |
-| 173 | `function` | `materialize` | docstring | Write admitted relative paths into a private owned tool workspace. |
+| 20 | `function` | `_budget` | inventory fallback | Inventory fallback for function `_budget` defined at `src/orchestration/portable_sources.py:20`. |
+| 25 | `function` | `_identity` | inventory fallback | Inventory fallback for function `_identity` defined at `src/orchestration/portable_sources.py:25`. |
+| 29 | `function` | `_content_identity` | inventory fallback | Inventory fallback for function `_content_identity` defined at `src/orchestration/portable_sources.py:29`. |
+| 33 | `function` | `_open_ancestors` | docstring | Hold no-follow search witnesses and optionally a readable selected root. |
+| 61 | `function` | `_verify_chain` | inventory fallback | Inventory fallback for function `_verify_chain` defined at `src/orchestration/portable_sources.py:61`. |
+| 69 | `function` | `_read` | inventory fallback | Inventory fallback for function `_read` defined at `src/orchestration/portable_sources.py:69`. |
+| 98 | `function` | `snapshot_file` | docstring | Admit one bounded regular file with its complete held ancestor chain. |
+| 111 | `function` | `snapshot_tree` | docstring | Capture a finite tree, refusing every admitted nonregular entry. |
+| 126 | `function` | `snapshot_tree.walk` | inventory fallback | Inventory fallback for function `snapshot_tree.walk` defined at `src/orchestration/portable_sources.py:126`. |
+| 176 | `function` | `materialize` | docstring | Write admitted relative paths into a private owned tool workspace. |
 
 ## `src/orchestration/semantic_coverage.py`
 
