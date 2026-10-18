@@ -20,7 +20,7 @@ from infrastructure.reporting.readiness_receipts import (
     public_source_paths,
     source_fingerprint,
 )
-from infrastructure.reporting.release_readiness_snapshot import SnapshotReader
+from infrastructure.reporting.release_readiness_snapshot import SnapshotReader, _snapshot_directory_unchanged
 from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
 
 
@@ -367,7 +367,7 @@ def test_snapshot_batch_closes_real_directories_and_held_inventory(tmp_path: Pat
             observed
             or event != "c_return"
             or function is not os.stat
-            or frame.f_code is not SnapshotReader.unchanged.__code__
+            or frame.f_code is not _snapshot_directory_unchanged.__code__
             or frame.f_locals.get("item") is not held
         ):
             return
@@ -414,4 +414,68 @@ def test_snapshot_batches_reobserve_file_clocks_and_empty_inventory(tmp_path: Pa
     path.write_bytes(b"changed!")
     os.utime(path, ns=(path.stat().st_atime_ns, reader.snapshots[path].identity[2]))
     assert path.stat().st_size == reader.snapshots[path].identity[1]
+    assert reader.unchanged() is False
+
+
+def test_snapshot_traversal_does_not_depend_on_python_recursion_depth(tmp_path: Path) -> None:
+    reader = SnapshotReader(tmp_path)
+    target = tmp_path / "docs"
+    for _ in range(180):
+        target /= "d"
+        target.mkdir(parents=True, exist_ok=True)
+    target /= "evidence.json"
+    target.write_bytes(b"actual deeply nested file")
+    reader.read(target.relative_to(tmp_path).as_posix())
+    previous = sys.getrecursionlimit()
+    try:
+        sys.setrecursionlimit(120)
+        assert reader.unchanged()
+    finally:
+        sys.setrecursionlimit(previous)
+
+
+def test_snapshot_traversal_bounds_live_handles_and_closes_failed_paths(tmp_path: Path) -> None:
+    descriptors = Path("/dev/fd")
+    if not descriptors.is_dir():
+        pytest.skip("the actual process descriptor table is unavailable")
+    reader = SnapshotReader(tmp_path)
+    for index in range(100):
+        path = tmp_path / f"docs/{index}/evidence.json"
+        path.parent.mkdir(parents=True)
+        path.write_bytes(b"actual breadth control")
+        reader.read(path.relative_to(tmp_path).as_posix())
+    baseline = len(list(descriptors.iterdir()))
+    peak = baseline
+
+    def observe_open(frame: FrameType, event: str, function: Any) -> None:
+        nonlocal peak
+        if event == "c_return" and function is os.open:
+            peak = max(peak, len(list(descriptors.iterdir())))
+
+    previous = sys.getprofile()
+    try:
+        sys.setprofile(observe_open)
+        assert reader.unchanged()
+    finally:
+        sys.setprofile(previous)
+    assert peak > baseline
+    assert peak < baseline + len(tmp_path.resolve().parts) + 8
+    assert len(list(descriptors.iterdir())) == baseline
+    parent = path.parent
+    original = parent.with_name("retained-original")
+    parent.rename(original)
+    parent.symlink_to(original, target_is_directory=True)
+    for _ in range(20):
+        assert reader.unchanged() is False
+    assert len(list(descriptors.iterdir())) == baseline
+
+
+def test_snapshot_traversal_refuses_fifo_without_opening_it(tmp_path: Path) -> None:
+    path = tmp_path / "docs/evidence.json"
+    path.parent.mkdir()
+    path.write_bytes(b"regular file")
+    reader = SnapshotReader(tmp_path)
+    reader.read("docs/evidence.json")
+    path.unlink()
+    os.mkfifo(path)
     assert reader.unchanged() is False
