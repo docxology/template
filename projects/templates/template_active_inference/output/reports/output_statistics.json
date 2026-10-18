@@ -4,12 +4,12 @@
       "exists": true,
       "file_count": 1,
       "size_mb": "4.03",
-      "total_size_bytes": 4225833,
+      "total_size_bytes": 4226061,
       "largest_files": [
         {
           "name": "template_active_inference_combined.pdf",
           "size_mb": "4.03",
-          "size_bytes": 4225833,
+          "size_bytes": 4226061,
           "path": "pdf/template_active_inference_combined.pdf"
         }
       ],
@@ -71,7 +71,7 @@
       "exists": true,
       "file_count": 27,
       "size_mb": "3.79",
-      "total_size_bytes": 3971327,
+      "total_size_bytes": 3971376,
       "largest_files": [
         {
           "name": "sheaf_layers_overview.png",
@@ -132,7 +132,7 @@
       "exists": true,
       "file_count": 32,
       "size_mb": "0.41",
-      "total_size_bytes": 431702,
+      "total_size_bytes": 431692,
       "largest_files": [
         {
           "name": "manuscript_staleness_report.json",
@@ -243,12 +243,12 @@
       "exists": true,
       "file_count": 2,
       "size_mb": "7.47",
-      "total_size_bytes": 7831921,
+      "total_size_bytes": 7832149,
       "largest_files": [
         {
           "name": "template_active_inference_combined.pdf",
           "size_mb": "4.03",
-          "size_bytes": 4225833,
+          "size_bytes": 4226061,
           "path": "template_active_inference_combined.pdf"
         },
         {
@@ -265,19 +265,19 @@
     }
   },
   "total_files": 179,
-  "total_size_mb": 26.351387977600098,
+  "total_size_mb": 26.35186004638672,
   "largest_files": [
     {
       "name": "template_active_inference_combined.pdf",
       "size_mb": "4.03",
-      "size_bytes": 4225833,
+      "size_bytes": 4226061,
       "category": "pdf",
       "path": "pdf/template_active_inference_combined.pdf"
     },
     {
       "name": "template_active_inference_combined.pdf",
       "size_mb": "4.03",
-      "size_bytes": 4225833,
+      "size_bytes": 4226061,
       "category": "root",
       "path": "template_active_inference_combined.pdf"
     },
@@ -340,14 +340,14 @@
   ],
   "missing_expected_files": [],
   "sizes_by_category": {
-    "pdf": 4.030068397521973,
+    "pdf": 4.030285835266113,
     "web": 3.7701969146728516,
-    "figures": 3.7873525619506836,
+    "figures": 3.7873992919921875,
     "data": 2.817331314086914,
-    "reports": 0.41170310974121094,
+    "reports": 0.4116935729980469,
     "arxiv_submission": 3.9248781204223633,
     "manuscript": 0.14075565338134766,
-    "root": 7.469101905822754
+    "root": 7.4693193435668945
   },
   "inventory_mode": "stable-shippable-output-v1",
   "inventory_scope": "stage5-delivery-mirror",

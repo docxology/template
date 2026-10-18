@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="generator" content="pandoc 3.11" />
+  <meta name="generator" content="pandoc 3.12.1" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
   <meta name="author" content="Daniel Ari Friedman" />
   <meta name="description" content="A Combinatoric Grammar for Deterministic Runnable Project Synthesis" />
@@ -13,7 +13,10 @@
     */
     html {
       color: #1a1a1a;
+      color: light-dark(#1a1a1a, #fdfdfd);
       background-color: #fdfdfd;
+      background-color: light-dark(#fdfdfd, #1a1a1a);
+      color-scheme: light dark;
     }
     body {
       margin: 0 auto;
@@ -38,11 +41,16 @@
     }
     @media print {
       html {
-        background-color: white;
+        color-scheme: light only;
       }
-      body {
+      html, body, pre, code {
         background-color: transparent;
+      }
+      body, a, a:visited, blockquote {
         color: black;
+      }
+      pre, code {
+        padding: 0;
       }
       p, h2, h3 {
         orphans: 3;
@@ -55,11 +63,8 @@
     p {
       margin: 1em 0;
     }
-    a {
-      color: #1a1a1a;
-    }
-    a:visited {
-      color: #1a1a1a;
+    a, a:visited {
+      color: inherit;
     }
     img {
       max-width: 100%;
@@ -88,8 +93,11 @@
     blockquote {
       margin: 1em 0 1em 1.7em;
       padding-left: 1em;
-      border-left: 2px solid #e6e6e6;
+      border-left: 2px solid;
+      border-color: #e6e6e6;
+      border-color: light-dark(#e6e6e6, #4c4c4c);
       color: #606060;
+      color: light-dark(#606060, #b6b6b6);
     }
     code {
       white-space: pre-wrap;
@@ -113,7 +121,7 @@
     }
     hr {
       border: none;
-      border-top: 1px solid #1a1a1a;
+      border-top: 1px solid currentColor;
       height: 1px;
       margin: 1em 0;
     }
@@ -130,11 +138,11 @@
     }
     tbody {
       margin-top: 0.5em;
-      border-top: 1px solid #1a1a1a;
-      border-bottom: 1px solid #1a1a1a;
+      border-top: 1px solid currentColor;
+      border-bottom: 1px solid currentColor;
     }
     th {
-      border-top: 1px solid #1a1a1a;
+      border-top: 1px solid currentColor;
       padding: 0.25em 0.5em 0.25em 0.5em;
     }
     td {
@@ -500,6 +508,9 @@ pre {
 }
 
 pre code {
+  background-color: transparent;
+  padding: 0;
+  border-radius: 0;
   overflow-wrap: inherit;
   white-space: inherit;
   word-break: inherit;
@@ -712,6 +723,7 @@ mjx-container[display="true"] {
 }
 
 </style>
+<script data-template-source-font-loader src="assets/source-web-fonts.js"></script>
 </head>
 <body>
 <a class="skip-link" href="#main-content">Skip to main content</a>
@@ -893,16 +905,15 @@ href="#integrity-verification-checks-self-consistency-not-tamper-proofing"
 id="toc-integrity-verification-checks-self-consistency-not-tamper-proofing"><span
 class="toc-section-number">7.5</span> Integrity verification checks
 self-consistency, not tamper-proofing</a></li>
+<li><a href="#coverage-is-uneven-across-modules"
+id="toc-coverage-is-uneven-across-modules"><span
+class="toc-section-number">7.6</span> Coverage is uneven across
+modules</a></li>
 <li><a
-href="#coverage-is-uneven-across-modules-not-uniform-though-every-module-now-clears-the-floor"
-id="toc-coverage-is-uneven-across-modules-not-uniform-though-every-module-now-clears-the-floor"><span
-class="toc-section-number">7.6</span> Coverage is uneven across modules,
-not uniform (though every module now clears the floor)</a></li>
-<li><a
-href="#cover-art-now-includes-the-qr-seal-but-that-code-path-is-untested"
-id="toc-cover-art-now-includes-the-qr-seal-but-that-code-path-is-untested"><span
-class="toc-section-number">7.7</span> Cover art now includes the QR
-seal, but that code path is untested</a></li>
+href="#cover-art-includes-the-qr-seal-with-direct-rendering-controls"
+id="toc-cover-art-includes-the-qr-seal-with-direct-rendering-controls"><span
+class="toc-section-number">7.7</span> Cover art includes the QR seal
+with direct rendering controls</a></li>
 </ul></li>
 <li><a href="#references" id="toc-references"><span
 class="toc-section-number">8</span> References</a></li>
@@ -935,27 +946,29 @@ the real kernel. The same discipline governs this document itself —
 every number below is substituted at render time from a live measurement
 rather than hand-typed as a literal.</p>
 <p>Across 5 heterogeneous primitive domains (- optimization - dynamics -
-statistics - signal - graph), 528 tests exercise both fixed ground-truth
-checks and Hypothesis-driven property invariants at 95.33% branch
-coverage, with an explicit negative control per domain distinguishing
-the real kernel from a deliberately-wrong one.</p>
+statistics - signal - graph), 578 tests exercise both fixed ground-truth
+checks and Hypothesis-driven property invariants at 92.18% combined
+statement and branch coverage, with an explicit negative control per
+domain distinguishing the real kernel from a deliberately-wrong one.</p>
 <h3 data-number="1.1" id="generation-pipeline"><span
 class="header-section-number">1.1</span> Generation pipeline</h3>
-<pre class="mermaid"><code>flowchart LR
-    G[Grammar\nconfig.yaml] --&gt; E[Expand\nseed → Spec]
-    E --&gt; M[Materialize\nSpec → Child]
-    M --&gt; V[Verify\ntree-hash check]
-    V --&gt; S[Seal\nQR provenance]</code></pre>
+<div class="sourceCode" id="cb1"><pre
+class="sourceCode mermaid"><code class="sourceCode mermaid"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">flowchart</span> <span class="cn">LR</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>    <span class="dt">G</span>[<span class="vs">Grammar\nconfig.yaml</span>] <span class="pp">--&gt;</span> <span class="dt">E</span>[<span class="vs">Expand\nseed → Spec</span>]</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">E</span> <span class="pp">--&gt;</span> <span class="dt">M</span>[<span class="vs">Materialize\nSpec → Child</span>]</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">M</span> <span class="pp">--&gt;</span> <span class="dt">V</span>[<span class="vs">Verify\ntree-hash check</span>]</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">V</span> <span class="pp">--&gt;</span> <span class="dt">S</span>[<span class="vs">Seal\nQR provenance</span>]</span></code></pre></div>
 <h3 data-number="1.2" id="grammar-product-space"><span
 class="header-section-number">1.2</span> Grammar product space</h3>
-<pre class="mermaid"><code>%% noqa: docs-lint — {{...}} tokens are manuscript-variable placeholders
-%% (src/template_autopoiesis/manuscript/manuscript_variables.py) injected at render time, not literal mermaid
-flowchart TB
-    A[primitive_domain: 5] --&gt; EP[Effective product: 45 cells]
-    T[track: 3] --&gt; EP
-    S[section_set: 3] --&gt; EP
-    EP --&gt; TP[Total product: 360 cells]
-    R[3 reserved slots, 2 options each] --&gt; TP</code></pre>
+<div class="sourceCode" id="cb2"><pre
+class="sourceCode mermaid"><code class="sourceCode mermaid"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">%% </span><span class="al">noqa:</span><span class="co"> docs-lint — {{...}} tokens are manuscript-variable placeholders</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="co">%% (src/template_autopoiesis/manuscript/manuscript_variables.py) injected at render time, not literal mermaid</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="kw">flowchart</span> <span class="cn">TB</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">A</span>[<span class="vs">primitive_domain: 5</span>] <span class="pp">--&gt;</span> <span class="dt">EP</span>[<span class="vs">Effective product: 45 cells</span>]</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">T</span>[<span class="vs">track: 3</span>] <span class="pp">--&gt;</span> <span class="dt">EP</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    <span class="dt">S</span>[<span class="vs">section_set: 3</span>] <span class="pp">--&gt;</span> <span class="dt">EP</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    <span class="dt">EP</span> <span class="pp">--&gt;</span> <span class="dt">TP</span>[<span class="vs">Total product: 360 cells</span>]</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>    <span class="dt">R</span>[<span class="vs">3 reserved slots, 2 options each</span>] <span class="pp">--&gt;</span> <span class="dt">TP</span></span></code></pre></div>
 <ul>
 <li><strong>Domain count</strong>: 5</li>
 <li><strong>Effective product size</strong>: 45</li>
@@ -963,7 +976,7 @@ flowchart TB
 <li><strong>Reserved slots</strong>: 3
 (<code>figure_profile, qr_profile, integrity_profile</code>)</li>
 <li><strong>Grammar hash</strong>: <code>a1f3e428cf1fb3e3</code></li>
-<li><strong>Tests</strong>: 528 · <strong>Coverage</strong>: 95.33%</li>
+<li><strong>Tests</strong>: 578 · <strong>Coverage</strong>: 92.18%</li>
 </ul>
 <hr />
 <h2 data-number="2" id="introduction"><span
@@ -1208,11 +1221,12 @@ function in its own module
 depends on interactive state or network access; every stage takes an
 immutable input and returns an immutable (or file-system-materialized)
 output.</p>
-<pre class="mermaid"><code>flowchart LR
-    A[Load Grammar] --&gt; B[Expand Spec]
-    B --&gt; C[Materialize Child]
-    C --&gt; D[Verify Integrity]
-    D --&gt; E[Seal + QR]</code></pre>
+<div class="sourceCode" id="cb3"><pre
+class="sourceCode mermaid"><code class="sourceCode mermaid"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">flowchart</span> <span class="cn">LR</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    <span class="dt">A</span>[<span class="vs">Load Grammar</span>] <span class="pp">--&gt;</span> <span class="dt">B</span>[<span class="vs">Expand Spec</span>]</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">B</span> <span class="pp">--&gt;</span> <span class="dt">C</span>[<span class="vs">Materialize Child</span>]</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">C</span> <span class="pp">--&gt;</span> <span class="dt">D</span>[<span class="vs">Verify Integrity</span>]</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">D</span> <span class="pp">--&gt;</span> <span class="dt">E</span>[<span class="vs">Seal + QR</span>]</span></code></pre></div>
 <h3 data-number="3.2" id="stage-a-grammar-loading-and-validation"><span
 class="header-section-number">3.2</span> Stage A — Grammar loading and
 validation</h3>
@@ -1888,37 +1902,37 @@ kernel.</li>
 <h3 data-number="4.5" id="test-results"><span
 class="header-section-number">4.5</span> Test results</h3>
 <ul>
-<li><strong>Test count</strong>: 528</li>
-<li><strong>Coverage</strong>: 95.33%</li>
+<li><strong>Test count</strong>: 578</li>
+<li><strong>Coverage</strong>: 92.18%</li>
 <li><strong>Grammar hash</strong>: <code>a1f3e428cf1fb3e3</code></li>
 </ul>
 <p>Both the test count and coverage percentage above are produced by
 <code>measure_test_summary()</code>
-(<code>src/template_autopoiesis/manuscript/manuscript_variables.py</code>),
-which shells out to this project’s own <code>pytest</code> +
-<code>coverage</code> run (<code>--cov-branch</code>, matching the
-repository-root branch-coverage methodology) against <code>tests/</code>
-and <code>src/</code> and parses the real <code>passed</code> count and
-<code>coverage.json</code> totals from that subprocess. There is no
-fallback literal: if the subprocess fails, times out, or its output
-fails to parse, both fields resolve to the string <code>"pending"</code>
-rather than a plausible-looking number — the same discipline that
-governs every other numeric token in this manuscript.</p>
+(<code>src/template_autopoiesis/manuscript/manuscript_variables.py</code>).
+When the current pipeline provides a complete original Project Tests
+measurement, it validates and consumes that same-run evidence, including
+its Source, runtime, coverage and executor-held commitment. Altered
+present evidence fails closed. Without that handoff, the standalone path
+executes a fresh pytest measurement against <code>tests/</code> and
+<code>src/</code> with <code>--cov-branch</code>. Its reported
+percentage combines covered statements and branch exits. There is no
+fallback literal: an incomplete measurement cannot produce a successful
+current summary.</p>
 <figure id="fig:coverage_by_module">
-<a class="figure-full-size-link" href="../figures/fig_coverage_by_module.png" target="_blank" rel="noopener" aria-label="Open full-size Figure 4, Real, per-module branch coverage from the same measurement run that produces 528/95.33 above"><img src="../figures/fig_coverage_by_module.png" style="width:90.0%"
-data-fig-alt="Horizontal bar chart of per-module test coverage percentages, all at or above 90%."
-alt="Horizontal bars rank source modules by measured branch coverage against a dashed 90 percent floor; modules below the threshold, if any, are distinguished in red." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
-<figcaption>Figure 4: Real, per-module branch
-coverage from the same measurement run that produces 528/95.33 above —
-not an aggregate alone. Any module below the repository’s 90% floor
-would be drawn in red rather than smoothed into the headline percentage;
-none is, in this measurement.</figcaption>
+<a class="figure-full-size-link" href="../figures/fig_coverage_by_module.png" target="_blank" rel="noopener" aria-label="Open full-size Figure 4, Per-module combined statement and branch coverage from the same measurement that produces…"><img src="../figures/fig_coverage_by_module.png" style="width:90.0%"
+data-fig-alt="Horizontal bars show measured combined statement and branch coverage per module; red bars identify values below the 90% aggregate-gate reference line."
+alt="Horizontal bars rank source modules by combined statement and branch coverage against a dashed 90 percent aggregate gate; modules below that reference line are distinguished in red." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
+<figcaption>Figure 4: Per-module combined statement
+and branch coverage from the same measurement that produces 578/92.18
+above. Red bars identify modules below the 90% aggregate-gate reference
+line; the aggregate pass does not imply every module meets that
+level.</figcaption>
 </figure>
-<p>The aggregate 95.33% is a mean weighted by statement and branch
+<p>The aggregate 92.18% is a mean weighted by statement and branch
 count, not a uniform floor — fig. <a
-href="#fig:coverage_by_module">4</a> shows the real spread. As of this
-measurement every module clears the configured 90% line. The exact
-module values are deliberately read from fig. <a
+href="#fig:coverage_by_module">4</a> shows the real spread. The 90% gate
+applies to the aggregate, not separately to each module. Exact module
+values are deliberately read from fig. <a
 href="#fig:coverage_by_module">4</a>, rather than copied into prose
 where they would become stale; <code>CHANGELOG.md</code>’s Wave 10 entry
 records the specific branches and tests behind an earlier coverage
@@ -1941,7 +1955,7 @@ an obvious temptation: assert a capability in prose without checking
 whether the capability exists. The abstract of this manuscript survived
 exactly this failure once — a hand-written test-count and coverage line
 that no generator step had computed — and was corrected by replacing the
-literal numbers with <code>528</code> / <code>95.33</code> tokens filled
+literal numbers with <code>578</code> / <code>92.18</code> tokens filled
 in at render time by <code>scripts/02_measure_test_coverage.py</code>.
 <code>src/template_autopoiesis/core/honesty.py</code> exists to make
 that class of failure structurally harder: every load-bearing claim in
@@ -2122,7 +2136,7 @@ left implicit. First, it is a fixed lexical denylist, not a semantic
 checker — it will not catch a false quantitative claim phrased without
 one of those seven tokens (the stale test-count incident described above
 would not have tripped it; that failure mode is closed instead by the
-<code>528</code> token substitution, a separate mechanism). Second,
+<code>578</code> token substitution, a separate mechanism). Second,
 <code>unsupported_claims</code> <em>is</em> enforced, but only on one of
 the two paths through this module:
 <code>HonestyManifest.all_passed</code> is a conjunction over
@@ -2232,13 +2246,16 @@ diverging from the source code that is supposed to back them.</p>
 class="header-section-number">6</span> Reproducibility</h2>
 <p>Reproducibility is not a claim this manuscript makes about itself; it
 is a property the code enforces on every run. Every number that appears
-below the Determinism heading — a1f3e428cf1fb3e3, 42, 528, 95.33 — is a
+below the Determinism heading — a1f3e428cf1fb3e3, 42, 578, 92.18 — is a
 token substituted at render time by
 <code>src/template_autopoiesis/manuscript/manuscript_variables.py::generate_variables()</code>
-from a live grammar load and a live pytest run
-(<code>src/template_autopoiesis/manuscript/manuscript_variables.py::measure_test_summary()</code>).
-Neither function accepts a hardcoded literal as a fallback: if the
-subprocess pytest run cannot be parsed,
+from a live grammar load and a genuine current pytest measurement
+consumed or produced by
+<code>src/template_autopoiesis/manuscript/manuscript_variables.py::measure_test_summary()</code>.
+A validated same-run Project Tests handoff reuses its original
+measurement; altered present evidence fails closed. Without that
+handoff, the standalone path executes pytest. No hardcoded numeric
+fallback is accepted: if that subprocess cannot be parsed,
 <code>measure_test_summary</code> returns the string
 <code>"pending"</code> for both the test count and the coverage
 percentage rather than a plausible-looking number <span class="citation"
@@ -2472,21 +2489,21 @@ class="header-section-number">6.6</span> Build command</h3>
 class="sourceCode bash"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run pytest projects/templates/template_autopoiesis/tests/ <span class="dt">\</span></span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">--cov</span><span class="op">=</span>projects/templates/template_autopoiesis/src <span class="dt">\</span></span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">--cov-fail-under</span><span class="op">=</span>90</span></code></pre></div>
-<p>This is the same command family <code>measure_test_summary()</code>
-runs internally (with <code>--cov-branch</code> added explicitly,
-matching the repo-root <code>pyproject.toml</code>’s
-<code>branch = true</code> setting rather than this project’s own, so
-the reported 95.33 agrees with the authoritative CI gate methodology
-rather than silently using a different one) to produce the 528 and 95.33
-tokens substituted above — the same build, not a paraphrase of it, is
-the source of both this document’s prose and its own regeneration.</p>
+<p>This command family uses branch instrumentation, explicitly selected
+by <code>measure_test_summary()</code> and enabled in this project’s own
+coverage configuration. The reported percentage combines statements and
+branch exits under the aggregate 90% floor. A pipeline that already
+completed a qualified Project Tests stage reuses that stage’s original
+same-run measurement instead of running the suite again; standalone
+analysis produces a fresh measurement. The full per-module report and
+aggregate tokens remain tied to that one original run.</p>
 <hr />
 <h2 data-number="7" id="limitations"><span
 class="header-section-number">7</span> Limitations</h2>
 <p>This section states what the exemplar does <em>not</em> do, alongside
 what it does. Coverage and test-count figures are not restated as
-literal numbers here — those live only in the <code>528</code> /
-<code>95.33</code> tokens, resolved at render time from a live
+literal numbers here — those live only in the <code>578</code> /
+<code>92.18</code> tokens, resolved at render time from a live
 measurement
 (<code>src/template_autopoiesis/manuscript/manuscript_variables.py::measure_test_summary</code>),
 not hand-typed.</p>
@@ -2591,66 +2608,38 @@ inclusion proofs. <code>integrity.py</code> separately defines
 <code>merkle_root</code>, an actual pairwise-reduction tree, but
 <code>materialize()</code>/<code>verify()</code> call the flat function,
 not that one.</p>
-<h3 data-number="7.6"
-id="coverage-is-uneven-across-modules-not-uniform-though-every-module-now-clears-the-floor"><span
+<h3 data-number="7.6" id="coverage-is-uneven-across-modules"><span
 class="header-section-number">7.6</span> Coverage is uneven across
-modules, not uniform (though every module now clears the floor)</h3>
-<p>Two earlier drafts of this section each named a different below-floor
-trio — first
-<code>sealing.py</code>/<code>verify.py</code>/<code>cli.py</code>,
-then, after those were hardened,
-<code>common.py</code>/<code>figures.py</code>/<code>cover_art.py</code>.
-As of this measurement no module sits below the 90% branch-coverage line
-(fig. <a href="#fig:coverage_by_module">4</a>): dedicated tests were
-added for <code>common.py</code>’s <code>trunc()</code> clipping branch
-and <code>CheckReport.failed</code>
-(<code>tests/core/test_common.py</code>, new this session),
-<code>figures.py</code>’s <code>list</code>/<code>tuple</code> input
-branch of <code>_first_plottable_array</code>, the generic
-<code>repr()</code> fallback in <code>_scalar_summary_lines</code>, and
-the array-plotting branch of <code>render_primitive_figure</code>
-(<code>tests/figures/test_figures.py</code>), and
-<code>cover_art.py</code>’s QR-seal drawing branch
-(<code>tests/figures/test_cover_art.py</code>,
-<code>test_render_cover_with_grammar_hash_*</code>) — the same branch
-identified above as running in production but previously untested.</p>
-<p>Smaller residual gaps remain in modules that are otherwise well above
-the floor: <code>sealing.py</code>’s <code>read_qr_matrix</code>
-<code>pyzbar</code>-decode path is untested since <code>pyzbar</code> is
-not installed here; <code>verify.py</code>’s schema-version and
-malformed-JSON <code>except</code> branches are not independently
-exercised; <code>cli.py</code>’s
-<code>cmd_materialize</code>/<code>cmd_verify</code> have no end-to-end
-CLI-level test, though the library functions they wrap are covered
-elsewhere in <code>test_materialize.py</code> and
-<code>test_integrity_and_verify.py</code>; <code>honesty.py</code>
-itself sits closest to the floor at just above 90%. None of these pull
-the aggregate below the 90% floor (<code>--cov-fail-under=90</code>),
-and the aggregate 95.33 alone would obscure exactly where the remaining,
-smaller gaps live — which is the reason this section, and fig. <a
-href="#fig:coverage_by_module">4</a>, exist as a per-module view rather
-than trusting one headline number. Property-based tests
-(<code>tests/gates/test_property_invariants.py</code>, Hypothesis) and a
-stress/edge suite (<code>tests/core/test_stress_edge_cases.py</code>)
-cover invariants like boundary seeds and all-reserved-slot
-configurations <span class="citation"
+modules</h3>
+<p>The aggregate 92.18% combines covered statements and branch exits
+across the measured source inventory. Passing the configured 90%
+aggregate gate (<code>--cov-fail-under=90</code>) does not establish a
+90% floor for every module. fig. <a href="#fig:coverage_by_module">4</a>
+preserves the per-module spread and marks values below that reference
+line in red. The chart and headline percentage come from the same
+persisted <code>output/data/coverage_full.json</code>, rather than
+independently assembled measurements.</p>
+<p>Coverage identifies executed paths, not correctness or completeness.
+Property-based tests
+(<code>tests/gates/test_property_invariants.py</code>, Hypothesis) and
+the stress/edge suite
+(<code>tests/core/test_stress_edge_cases.py</code>) exercise boundary
+seeds and all-reserved-slot configurations <span class="citation"
 data-cites="claessen2000quickcheck maciver2019hypothesis">(<a
 href="#ref-claessen2000quickcheck" role="doc-biblioref">Claessen and
 Hughes 2000</a>; <a href="#ref-maciver2019hypothesis"
 role="doc-biblioref">MacIver et al. 2019</a>)</span>, but generated
-inputs are not a substitute for direct tests of the specific branches
-named above.</p>
-<p>This whole section is itself evidence for a point made elsewhere in
-this manuscript: a coverage ranking is a measurement, not a fact about
-the code — each of its two prior versions was accurate when written and
-became false as soon as new tests shipped. Readers should treat any
-specific module name and percentage in this document as dated to its
-stated measurement, and re-run <code>stage_02_analysis.py</code> for the
-current ranking rather than trust a prior render.</p>
+inputs do not replace direct negative controls or inspection of
+unexecuted statements and branch exits.</p>
+<p>Module rankings and gaps can change whenever source or tests change.
+Inspect the current coverage report and regenerate the analysis and
+figure after a changed input, rather than treating an earlier module
+list or a passing aggregate as proof that all modules clear the
+reference line.</p>
 <h3 data-number="7.7"
-id="cover-art-now-includes-the-qr-seal-but-that-code-path-is-untested"><span
-class="header-section-number">7.7</span> Cover art now includes the QR
-seal, but that code path is untested</h3>
+id="cover-art-includes-the-qr-seal-with-direct-rendering-controls"><span
+class="header-section-number">7.7</span> Cover art includes the QR seal
+with direct rendering controls</h3>
 <p>An earlier draft of this section reported that the title-page cover
 image omitted the originally envisioned QR seal, gradient glow, and
 seed-derived dot placement. That is no longer accurate and is corrected
@@ -2670,9 +2659,12 @@ called <code>render_cover</code> with an explicit
 <code>grammar_hash=</code>, leaving the QR-drawing branch
 (<code>src/template_autopoiesis/figures/cover_art.py</code>, the
 <code>if grammar_hash is not None:</code> block) exercised in production
-but untested; that gap is now closed by
-<code>tests/figures/test_cover_art.py::test_render_cover_with_grammar_hash_*</code>,
-added this session (see “Coverage is uneven across modules” below).</p>
+but untested; that gap now has direct controls in
+<code>tests/figures/test_cover_art.py::test_render_cover_with_grammar_hash_*</code>.
+Those controls render an explicit hash, compare sealed and unsealed
+images, and check byte stability for identical inputs; they do not
+establish exhaustive visual correctness or QR decoding on every
+output.</p>
 <p>Separately, for most of this project’s life
 <code>manuscript/references.bib</code> held a single self-referential
 <code>friedman2026autopoiesis</code> entry noting the DOI was

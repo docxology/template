@@ -202,25 +202,25 @@ Each child project:
 
 ### Test results
 
-- **Test count**: 528
-- **Coverage**: 95.33%
+- **Test count**: 578
+- **Coverage**: 92.18%
 - **Grammar hash**: `a1f3e428cf1fb3e3`
 
 Both the test count and coverage percentage above are produced by
-`measure_test_summary()` (`src/template_autopoiesis/manuscript/manuscript_variables.py`), which shells out to
-this project's own `pytest` + `coverage` run (`--cov-branch`, matching the
-repository-root branch-coverage methodology) against `tests/` and `src/` and
-parses the real `passed` count and `coverage.json` totals from that
-subprocess. There is no fallback literal: if the subprocess fails, times out,
-or its output fails to parse, both fields resolve to the string `"pending"`
-rather than a plausible-looking number — the same discipline that governs
-every other numeric token in this manuscript.
+`measure_test_summary()` (`src/template_autopoiesis/manuscript/manuscript_variables.py`).
+When the current pipeline provides a complete original Project Tests measurement,
+it validates and consumes that same-run evidence, including its Source, runtime,
+coverage and executor-held commitment. Altered present evidence fails closed.
+Without that handoff, the standalone path executes a fresh pytest measurement
+against `tests/` and `src/` with `--cov-branch`. Its reported percentage combines
+covered statements and branch exits. There is no fallback literal: an incomplete
+measurement cannot produce a successful current summary.
 
-![Real, per-module branch coverage from the same measurement run that produces 528/95.33 above — not an aggregate alone. Any module below the repository's 90% floor would be drawn in red rather than smoothed into the headline percentage; none is, in this measurement.](../output/figures/fig_coverage_by_module.png){#fig:coverage_by_module width=90% fig-alt="Horizontal bar chart of per-module test coverage percentages, all at or above 90%."}
+![Per-module combined statement and branch coverage from the same measurement that produces 578/92.18 above. Red bars identify modules below the 90% aggregate-gate reference line; the aggregate pass does not imply every module meets that level.](../output/figures/fig_coverage_by_module.png){#fig:coverage_by_module width=90% fig-alt="Horizontal bars show measured combined statement and branch coverage per module; red bars identify values below the 90% aggregate-gate reference line."}
 
-The aggregate 95.33% is a mean weighted by statement and branch
+The aggregate 92.18% is a mean weighted by statement and branch
 count, not a uniform floor — [@fig:coverage_by_module] shows the real spread.
-As of this measurement every module clears the configured 90% line. The exact
+The 90% gate applies to the aggregate, not separately to each module. Exact
 module values are deliberately read from [@fig:coverage_by_module], rather
 than copied into prose where they would become stale; `CHANGELOG.md`'s Wave 10
 entry records the specific branches and tests behind an earlier coverage

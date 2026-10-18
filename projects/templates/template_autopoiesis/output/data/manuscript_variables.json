@@ -1,5 +1,5 @@
 {
-  "COVERAGE_PCT": "95.33",
+  "COVERAGE_PCT": "92.18",
   "DEP_COUNT": 0,
   "DEP_LIST": "none",
   "DERIVED_SEED_BITS": 63,
@@ -21,5 +21,5 @@
   "SIGNAL_SAMPLE_POINTS": 64,
   "SLOT_COUNT": 6,
   "SLOT_TABLE": "| Slot | Options | Values |\n| ---|---|--- |\n| primitive_domain | 5 | optimization, dynamics, statistics, signal, graph |\n| track | 3 | analytical, empirical, hybrid |\n| section_set | 3 | minimal, standard, extended |\n| figure_profile | 2 | minimal, full |\n| qr_profile | 2 | off, on |\n| integrity_profile | 2 | sha256, merkle |\n",
-  "TEST_COUNT": 528
+  "TEST_COUNT": 578
 }

@@ -116,6 +116,6 @@
     }
   ],
   "ordered_inputs_sha256": "f5b48ac5a3ae854eb05506528f1157ae1f833a03eb59e4424337d2ac7c360e8e",
-  "project": "templates/template_active_inference",
+  "project": "template_active_inference",
   "schema_version": "template-manuscript-composition-v1"
 }

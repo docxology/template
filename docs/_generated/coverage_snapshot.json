@@ -2,16 +2,16 @@
   "measured_at": "2026-10-16",
   "projects": {
     "template_active_inference": {
-      "coverage_pct": "91.00 %",
-      "source_hash": "25dcd44b1524c17bd544000455ea352e81f383afb492ddc65d75dae55f50b47d"
+      "coverage_pct": "91.03 %",
+      "source_hash": "e8f5be1551c1a5236ca9cb4332cf13f540d2af92f7283d99125278f967778e08"
     },
     "template_advanced_literature_review": {
       "coverage_pct": "94.30 %",
       "source_hash": "c59f372a1e79f39918157c75fe5f0117dee9754f4204f7a8d8196aee965b96a2"
     },
     "template_autopoiesis": {
-      "coverage_pct": "94.75 %",
-      "source_hash": "2e86ada02e9ea8cea98ab8619df61ad5b39914ce19a2ba9142504d7998dd100c"
+      "coverage_pct": "92.03 %",
+      "source_hash": "8e8f36e3667a85519d316b6d0dc59f6c7bf6bb33384c16fd45e90be33b45a533"
     },
     "template_autoresearch_project": {
       "coverage_pct": "96.36 %",
@@ -103,7 +103,7 @@
     }
   },
   "schema_version": 5,
-  "source_commit": "4ec4f26eed3bca7722860dfdda665f2d9d793902",
+  "source_commit": "6f6c6cae2d3ec9c9776bf69e74ceed3ccbcb85d7",
   "source_inventory_mode": "tracked-and-nonignored-coverage-inputs-v3",
   "source_tree_identity": {
     "algorithm": "sha256",
@@ -205,9 +205,9 @@
       }
     },
     "projects": {
-      "template_active_inference": "25dcd44b1524c17bd544000455ea352e81f383afb492ddc65d75dae55f50b47d",
+      "template_active_inference": "e8f5be1551c1a5236ca9cb4332cf13f540d2af92f7283d99125278f967778e08",
       "template_advanced_literature_review": "c59f372a1e79f39918157c75fe5f0117dee9754f4204f7a8d8196aee965b96a2",
-      "template_autopoiesis": "2e86ada02e9ea8cea98ab8619df61ad5b39914ce19a2ba9142504d7998dd100c",
+      "template_autopoiesis": "8e8f36e3667a85519d316b6d0dc59f6c7bf6bb33384c16fd45e90be33b45a533",
       "template_autoresearch_project": "cb0757779ac8dda9bd88a11b16c735e790ca76c25dc525e6b2cf7412c7c59fb3",
       "template_autoscientists": "da381586b3c2e85814c93e70a7f8a99c7c9c059d9bf75a4345663dcc4443079f",
       "template_code_project": "c0c1488547ebe876740da0ec61eeecd2cc3732f15589248d0e777f5e29bff0ac",

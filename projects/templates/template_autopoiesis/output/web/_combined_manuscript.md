@@ -28,9 +28,9 @@ Across 5 heterogeneous primitive domains
 - dynamics
 - statistics
 - signal
-- graph), 528 tests exercise both fixed ground-truth
-checks and Hypothesis-driven property invariants at 95.33% branch
-coverage, with an explicit negative control per domain distinguishing the
+- graph), 578 tests exercise both fixed ground-truth
+checks and Hypothesis-driven property invariants at 92.18% combined
+statement and branch coverage, with an explicit negative control per domain distinguishing the
 real kernel from a deliberately-wrong one.
 
 ### Generation pipeline
@@ -61,7 +61,7 @@ flowchart TB
 - **Total product size**: 360
 - **Reserved slots**: 3 (`figure_profile, qr_profile, integrity_profile`)
 - **Grammar hash**: `a1f3e428cf1fb3e3`
-- **Tests**: 528 · **Coverage**: 95.33%
+- **Tests**: 578 · **Coverage**: 92.18%
 
 
 
@@ -772,25 +772,25 @@ Each child project:
 
 ### Test results
 
-- **Test count**: 528
-- **Coverage**: 95.33%
+- **Test count**: 578
+- **Coverage**: 92.18%
 - **Grammar hash**: `a1f3e428cf1fb3e3`
 
 Both the test count and coverage percentage above are produced by
-`measure_test_summary()` (`src/template_autopoiesis/manuscript/manuscript_variables.py`), which shells out to
-this project's own `pytest` + `coverage` run (`--cov-branch`, matching the
-repository-root branch-coverage methodology) against `tests/` and `src/` and
-parses the real `passed` count and `coverage.json` totals from that
-subprocess. There is no fallback literal: if the subprocess fails, times out,
-or its output fails to parse, both fields resolve to the string `"pending"`
-rather than a plausible-looking number — the same discipline that governs
-every other numeric token in this manuscript.
+`measure_test_summary()` (`src/template_autopoiesis/manuscript/manuscript_variables.py`).
+When the current pipeline provides a complete original Project Tests measurement,
+it validates and consumes that same-run evidence, including its Source, runtime,
+coverage and executor-held commitment. Altered present evidence fails closed.
+Without that handoff, the standalone path executes a fresh pytest measurement
+against `tests/` and `src/` with `--cov-branch`. Its reported percentage combines
+covered statements and branch exits. There is no fallback literal: an incomplete
+measurement cannot produce a successful current summary.
 
-![Real, per-module branch coverage from the same measurement run that produces 528/95.33 above — not an aggregate alone. Any module below the repository's 90% floor would be drawn in red rather than smoothed into the headline percentage; none is, in this measurement.](../figures/fig_coverage_by_module.png){#fig:coverage_by_module width=90% fig-alt="Horizontal bar chart of per-module test coverage percentages, all at or above 90%."}
+![Per-module combined statement and branch coverage from the same measurement that produces 578/92.18 above. Red bars identify modules below the 90% aggregate-gate reference line; the aggregate pass does not imply every module meets that level.](../figures/fig_coverage_by_module.png){#fig:coverage_by_module width=90% fig-alt="Horizontal bars show measured combined statement and branch coverage per module; red bars identify values below the 90% aggregate-gate reference line."}
 
-The aggregate 95.33% is a mean weighted by statement and branch
+The aggregate 92.18% is a mean weighted by statement and branch
 count, not a uniform floor — [@fig:coverage_by_module] shows the real spread.
-As of this measurement every module clears the configured 90% line. The exact
+The 90% gate applies to the aggregate, not separately to each module. Exact
 module values are deliberately read from [@fig:coverage_by_module], rather
 than copied into prose where they would become stale; `CHANGELOG.md`'s Wave 10
 entry records the specific branches and tests behind an earlier coverage
@@ -817,7 +817,7 @@ obvious temptation: assert a capability in prose without checking whether the
 capability exists.  The abstract of this manuscript survived exactly this
 failure once — a hand-written test-count and coverage line that no
 generator step had computed — and was corrected by replacing the literal
-numbers with `528` / `95.33` tokens filled in at render
+numbers with `578` / `92.18` tokens filled in at render
 time by `scripts/02_measure_test_coverage.py`.  `src/template_autopoiesis/core/honesty.py` exists to
 make that class of failure structurally harder: every load-bearing claim in
 this manuscript must resolve to a named function in a named file, and a
@@ -940,7 +940,7 @@ Two honesty points about this scanner, stated plainly rather than left
 implicit. First, it is a fixed lexical denylist, not a semantic checker — it
 will not catch a false quantitative claim phrased without one of those seven
 tokens (the stale test-count incident described above would not have tripped it;
-that failure mode is closed instead by the `528` token
+that failure mode is closed instead by the `578` token
 substitution, a separate mechanism). Second, `unsupported_claims` *is*
 enforced, but only on one of the two paths through this module:
 `HonestyManifest.all_passed` is a conjunction over `evidence`,
@@ -1037,12 +1037,15 @@ silently diverging from the source code that is supposed to back them.
 
 Reproducibility is not a claim this manuscript makes about itself; it is a
 property the code enforces on every run. Every number that appears below the
-Determinism heading — a1f3e428cf1fb3e3, 42, 528,
-95.33 — is a token substituted at render time by
+Determinism heading — a1f3e428cf1fb3e3, 42, 578,
+92.18 — is a token substituted at render time by
 `src/template_autopoiesis/manuscript/manuscript_variables.py::generate_variables()` from a live grammar load
-and a live pytest run (`src/template_autopoiesis/manuscript/manuscript_variables.py::measure_test_summary()`).
-Neither function accepts a hardcoded literal as a fallback: if the subprocess
-pytest run cannot be parsed, `measure_test_summary` returns the string
+and a genuine current pytest measurement consumed or produced by
+`src/template_autopoiesis/manuscript/manuscript_variables.py::measure_test_summary()`.
+A validated same-run Project Tests handoff reuses its original measurement;
+altered present evidence fails closed. Without that handoff, the standalone path
+executes pytest. No hardcoded numeric fallback is accepted: if that subprocess
+cannot be parsed, `measure_test_summary` returns the string
 `"pending"` for both the test count and the coverage percentage rather than a
 plausible-looking number [@reproducible_builds]. This design choice is a direct
 consequence of an earlier failure mode in this project — a manuscript draft
@@ -1235,14 +1238,13 @@ uv run pytest projects/templates/template_autopoiesis/tests/ \
   --cov-fail-under=90
 ```
 
-This is the same command family `measure_test_summary()` runs internally
-(with `--cov-branch` added explicitly, matching the repo-root
-`pyproject.toml`'s `branch = true` setting rather than this project's own,
-so the reported 95.33 agrees with the authoritative CI gate
-methodology rather than silently using a different one) to produce the
-528 and 95.33 tokens substituted above — the same
-build, not a paraphrase of it, is the source of both this document's prose
-and its own regeneration.
+This command family uses branch instrumentation, explicitly selected by
+`measure_test_summary()` and enabled in this project's own coverage configuration.
+The reported percentage combines statements and branch exits under the aggregate
+90% floor. A pipeline that already completed a qualified Project Tests stage
+reuses that stage's original same-run measurement instead of running the suite
+again; standalone analysis produces a fresh measurement. The full per-module
+report and aggregate tokens remain tied to that one original run.
 
 
 
@@ -1254,7 +1256,7 @@ and its own regeneration.
 
 This section states what the exemplar does *not* do, alongside what it does.
 Coverage and test-count figures are not restated as literal numbers here —
-those live only in the `528` / `95.33` tokens, resolved
+those live only in the `578` / `92.18` tokens, resolved
 at render time from a live measurement
 (`src/template_autopoiesis/manuscript/manuscript_variables.py::measure_test_summary`), not hand-typed.
 
@@ -1336,49 +1338,29 @@ proofs. `integrity.py` separately defines `merkle_root`, an actual
 pairwise-reduction tree, but `materialize()`/`verify()` call the flat
 function, not that one.
 
-### Coverage is uneven across modules, not uniform (though every module now clears the floor)
+### Coverage is uneven across modules
 
-Two earlier drafts of this section each named a different below-floor
-trio — first `sealing.py`/`verify.py`/`cli.py`, then, after those were
-hardened, `common.py`/`figures.py`/`cover_art.py`. As of this measurement no
-module sits below the 90% branch-coverage line
-([@fig:coverage_by_module]): dedicated tests were added for `common.py`'s
-`trunc()` clipping branch and `CheckReport.failed` (`tests/core/test_common.py`,
-new this session), `figures.py`'s `list`/`tuple` input branch of
-`_first_plottable_array`, the generic `repr()` fallback in
-`_scalar_summary_lines`, and the array-plotting branch of
-`render_primitive_figure` (`tests/figures/test_figures.py`), and `cover_art.py`'s
-QR-seal drawing branch (`tests/figures/test_cover_art.py`,
-`test_render_cover_with_grammar_hash_*`) — the same branch identified above
-as running in production but previously untested.
+The aggregate 92.18% combines covered statements and branch exits
+across the measured source inventory. Passing the configured 90% aggregate gate
+(`--cov-fail-under=90`) does not establish a 90% floor for every module.
+[@fig:coverage_by_module] preserves the per-module spread and marks values below
+that reference line in red. The chart and headline percentage come from the same
+persisted `output/data/coverage_full.json`, rather than independently assembled
+measurements.
 
-Smaller residual gaps remain in modules that are otherwise well above the
-floor: `sealing.py`'s `read_qr_matrix` `pyzbar`-decode path is untested since
-`pyzbar` is not installed here; `verify.py`'s schema-version and
-malformed-JSON `except` branches are not independently exercised; `cli.py`'s
-`cmd_materialize`/`cmd_verify` have no end-to-end CLI-level test, though the
-library functions they wrap are covered elsewhere in `test_materialize.py`
-and `test_integrity_and_verify.py`; `honesty.py` itself sits closest to the
-floor at just above 90%. None of these pull the aggregate below the 90%
-floor (`--cov-fail-under=90`), and the aggregate 95.33 alone would
-obscure exactly where the remaining, smaller gaps live — which is the reason
-this section, and [@fig:coverage_by_module], exist as a per-module view
-rather than trusting one headline number. Property-based tests
-(`tests/gates/test_property_invariants.py`, Hypothesis) and a stress/edge suite
-(`tests/core/test_stress_edge_cases.py`) cover invariants like boundary seeds and
-all-reserved-slot configurations [@claessen2000quickcheck;
-@maciver2019hypothesis], but generated inputs are not a substitute for
-direct tests of the specific branches named above.
+Coverage identifies executed paths, not correctness or completeness. Property-based
+tests (`tests/gates/test_property_invariants.py`, Hypothesis) and the stress/edge
+suite (`tests/core/test_stress_edge_cases.py`) exercise boundary seeds and
+all-reserved-slot configurations [@claessen2000quickcheck; @maciver2019hypothesis],
+but generated inputs do not replace direct negative controls or inspection of
+unexecuted statements and branch exits.
 
-This whole section is itself evidence for a point made elsewhere in this
-manuscript: a coverage ranking is a measurement, not a fact about the code —
-each of its two prior versions was accurate when written and became false as
-soon as new tests shipped. Readers should treat any specific module name and
-percentage in this document as dated to its stated measurement, and re-run
-`stage_02_analysis.py` for the current ranking rather than trust a prior
-render.
+Module rankings and gaps can change whenever source or tests change. Inspect the
+current coverage report and regenerate the analysis and figure after a changed
+input, rather than treating an earlier module list or a passing aggregate as
+proof that all modules clear the reference line.
 
-### Cover art now includes the QR seal, but that code path is untested
+### Cover art includes the QR seal with direct rendering controls
 
 An earlier draft of this section reported that the title-page cover image
 omitted the originally envisioned QR seal, gradient glow, and seed-derived
@@ -1394,8 +1376,10 @@ hash printed as a text label beneath it. An earlier draft of this section
 also noted that no test called `render_cover` with an explicit
 `grammar_hash=`, leaving the QR-drawing branch (`src/template_autopoiesis/figures/cover_art.py`, the `if
 grammar_hash is not None:` block) exercised in production but untested; that
-gap is now closed by `tests/figures/test_cover_art.py::test_render_cover_with_grammar_hash_*`,
-added this session (see "Coverage is uneven across modules" below).
+gap now has direct controls in `tests/figures/test_cover_art.py::test_render_cover_with_grammar_hash_*`.
+Those controls render an explicit hash, compare sealed and unsealed images, and
+check byte stability for identical inputs; they do not establish exhaustive
+visual correctness or QR decoding on every output.
 
 Separately, for most of this project's life `manuscript/references.bib` held
 a single self-referential `friedman2026autopoiesis` entry noting the DOI was
