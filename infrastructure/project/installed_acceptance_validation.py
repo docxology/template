@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import base64
 import hashlib
 import re
 import zipfile
@@ -51,11 +52,33 @@ def _custody_matches_wheel(custody: object, binding: object, scope: str, reader:
         if len(metadata) != 1:
             raise ValueError("installed custody wheel has ambiguous metadata")
         metadata_sha = hashlib.sha256(archive.read(metadata[0])).hexdigest()
+        companion_names = {"__init__.py"} if scope == "templates/template_autopoiesis" else set()
+        companion_bytes = {name: archive.read(name) for name in companion_names if name in python}
     distribution = custody.get("distribution")
     if not isinstance(distribution, dict) or distribution.get("metadata_sha256") != metadata_sha:
         raise ValueError("installed distribution differs from admitted wheel metadata")
     actual = distribution.get("public_python")
-    if not isinstance(actual, dict) or not actual or len(actual) != len(python):
+    companions = distribution.get("companion_python")
+    if (
+        not isinstance(companions, dict)
+        or set(companions) != companion_names
+        or set(companion_bytes) != companion_names
+    ):
+        raise ValueError("installed distribution differs from Source-declared companion modules")
+    file_hashes = distribution.get("file_sha256")
+    declared_files = distribution.get("declared_files")
+    if not isinstance(file_hashes, dict) or not isinstance(declared_files, dict):
+        raise ValueError("installed distribution lacks its exact RECORD file inventory")
+    for name, content in companion_bytes.items():
+        digest = hashlib.sha256(content).hexdigest()
+        encoded = "sha256=" + base64.urlsafe_b64encode(bytes.fromhex(digest)).decode().rstrip("=")
+        if (
+            companions[name] != digest
+            or file_hashes.get(name) != digest
+            or declared_files.get(name) != [encoded, str(len(content))]
+        ):
+            raise ValueError("installed companion differs from its exact wheel and RECORD bytes")
+    if not isinstance(actual, dict) or not actual or len(actual) + len(companions) != len(python):
         raise ValueError("installed distribution omits its actual wheel source")
     matched: set[str] = set()
     for relative, digest in actual.items():
@@ -64,11 +87,16 @@ def _custody_matches_wheel(custody: object, binding: object, scope: str, reader:
         candidates = {
             name
             for name, expected in python.items()
-            if digest == expected and (name == relative or name.endswith("/" + relative))
+            if name not in companion_names
+            and digest == expected
+            and (name == relative or name.endswith("/" + relative))
         }
         if len(candidates) != 1 or matched & candidates:
             raise ValueError("installed distribution source differs from admitted wheel")
         matched.update(candidates)
+    if matched & companion_names:
+        raise ValueError("installed companion overlaps package source custody")
+    matched.update(companion_names)
     if matched != set(python):
         raise ValueError("installed custody omits admitted wheel Python")
 

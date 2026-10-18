@@ -5,6 +5,7 @@ their runtime fits the smoke deadline. Unlisted helpers retain broad fallback.
 """
 
 SOURCE_TEST_OWNERS: dict[str, tuple[str, ...]] = {
+    "scripts/shell/setup-system-deps.sh": ("tests/infra_tests/test_system_deps_prepared_python.py",),
     "infrastructure/core/testing/_pytest_runtime_controls.py": (
         "tests/infra_tests/core/test_pytest_runtime_controls.py",
         "tests/infra_tests/reporting/test_pipeline_test_runner_integration.py",
@@ -177,6 +178,7 @@ SOURCE_TEST_OWNERS: dict[str, tuple[str, ...]] = {
     ),
     "infrastructure/project/installed_acceptance_validation.py": (
         "tests/infra_tests/project/test_installed_acceptance.py",
+        "tests/infra_tests/project/test_installed_companion_custody.py",
     ),
     "infrastructure/project/installed_acceptance_worker.py": (
         "tests/infra_tests/project/test_installed_acceptance.py",

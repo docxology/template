@@ -86,7 +86,7 @@ may_elevate() {
 # TeX distribution; if one is missing the distribution itself is broken and
 # the fix is a fuller distribution, not tlmgr.
 CORE_STYS="amsmath amssymb amsfonts amsthm graphicx geometry float booktabs longtable array hyperref natbib"
-EXTRA_STYS="multirow caption subcaption bm cleveref doi newunicodechar fancyvrb xcolor listings lmodern"
+EXTRA_STYS="multirow caption subcaption bm cleveref doi newunicodechar fancyvrb xcolor listings lmodern fontsize"
 
 # tlmgr package name for a sty (three stys live inside differently named
 # TeX Live packages; the rest match 1:1).

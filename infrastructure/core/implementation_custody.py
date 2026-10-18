@@ -243,6 +243,7 @@ def _distribution_custody(
     entries: dict[str, list[str]] = {}
     actual_files: dict[str, str] = {}
     source_files: dict[str, str] = {}
+    companion_files: dict[str, str] = {}
     metadata_directory = PurePosixPath(record_name).parent
     site_root = Path(str(selected.locate_file(""))).absolute()
     scripts_root = Path(sysconfig.get_path("scripts")).absolute()
@@ -294,6 +295,8 @@ def _distribution_custody(
             if not declared_hash or not declared_size:
                 raise ValueError("installed public Python source lacks exact RECORD custody")
             source_files[location.relative_to(package_root).as_posix()] = _sha(raw)
+        if public_module:
+            companion_files[location.name] = _sha(raw)
     if set(entries) != {str(path) for path in files}:
         raise ValueError("selected distribution file set differs from its RECORD")
     if installed:
@@ -310,6 +313,9 @@ def _distribution_custody(
         "declared_files": entries,
         "file_sha256": actual_files,
         "public_python": source_files,
+        # Keep package-relative names stable: a top-level companion may have
+        # the same basename as the package's own __init__.py.
+        "companion_python": companion_files,
     }
 
 

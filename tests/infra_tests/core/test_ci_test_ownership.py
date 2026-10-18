@@ -15,6 +15,8 @@ ROOT = Path(__file__).resolve().parents[3]
 # These owners exercise the integration protocol or a real module CLI rather
 # than importing each internal leaf directly. Their full modules remain selected.
 PROTOCOL_SOURCES = {
+    # The genuine shell owner copies and executes this exact repository helper.
+    "scripts/shell/setup-system-deps.sh",
     # Real project runner and measurement subprocesses load this private plugin.
     "infrastructure/core/testing/_pytest_runtime_controls.py",
     # The measurement owner imports the runner in its actual stage child Source.
