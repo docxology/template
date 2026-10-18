@@ -7,6 +7,7 @@ Tests cover:
 - Full combined PDF generation
 """
 
+import re
 import tempfile
 from pathlib import Path
 
@@ -18,7 +19,8 @@ from infrastructure.rendering._pdf_title_page import (
     generate_title_page_body,
     generate_title_page_preamble,
 )
-from infrastructure.rendering._pdf_combined_pandoc import build_pandoc_tex_command
+from infrastructure.rendering._pdf_combined_pandoc import build_pandoc_tex_command, run_pandoc_conversion
+from infrastructure.rendering._pdf_combined_preamble import inject_latex_preamble
 from infrastructure.rendering._pdf_figure_paths import fix_figure_paths
 from infrastructure.rendering._pdf_markdown_combine import combine_manuscript_markdown_sections
 from infrastructure.rendering.config import RenderingConfig
@@ -432,3 +434,31 @@ class TestFigureVerification:
             # Check both existing and missing
             assert (figures_dir / "exists.png").exists()
             assert not (figures_dir / "missing.png").exists()
+
+
+def test_active_declared_typography_reaches_emitted_tex(tmp_path: Path, repo_root: Path) -> None:
+    """Exercise the SDK's actual writers without coupling standalone project tests.
+
+    Current Active config and fenced preamble must reach real emitted LaTeX.
+    A private small body preserves the existing Pandoc bound; full native
+    acceptance renders the complete manuscript separately.
+    """
+    project = repo_root / "projects/templates/template_active_inference"
+    manuscript = project / "manuscript"
+    markdown = tmp_path / "typography.md"
+    markdown.write_text("# Typography contract\n\nCurrent declared typography.\n", encoding="utf-8")
+    emitted = tmp_path / "typography.tex"
+    render = RenderingConfig(figures_dir=str(project / "output/figures"))
+    command = build_pandoc_tex_command(render, markdown, emitted, manuscript)
+    run_pandoc_conversion(command, markdown, [markdown], markdown.read_text(encoding="utf-8"))
+    tex = inject_latex_preamble(emitted.read_text(encoding="utf-8"), manuscript)
+    emitted.write_text(tex, encoding="utf-8")
+    config = yaml.safe_load((manuscript / "config.yaml").read_text(encoding="utf-8"))
+    geometry = (config.get("metadata") or {}).get("geometry", "")
+    assert geometry and geometry in tex, f"declared geometry {geometry!r} did not reach the emitted tex"
+    blocks = re.findall(
+        r"```\s*latex\s*\n(.*?)\n\s*```", (manuscript / "preamble.md").read_text(encoding="utf-8"), re.DOTALL
+    )
+    fontsize = re.search(r"\\changefontsize\[[^\]]+\]\{[^}]+\}", "\n".join(blocks))
+    assert fontsize, "no bracketed changefontsize in preamble"
+    assert fontsize.group(0) in tex, "declared font scaling did not reach the emitted tex"

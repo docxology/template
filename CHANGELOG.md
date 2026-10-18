@@ -114,6 +114,20 @@ and historical notes remain preserved.
   boundary, then recheck physical ownership, original events and registry state
   before adoption. Independent later-use verification remains fresh.
 
+
+- Allocate pytest fixture trees outside Source, Git roots and selected runtimes.
+  Hold physical directory ownership through cleanup, restore only owned fixture
+  directory access, and refuse renamed roots or base directories. Disposable
+  fixture trees no longer enter project publication artifacts.
+- Permit genuine installed providers under Root runtime output while rejecting
+  authored Source shadows. Verify actual installed metadata and wheel bytes.
+- Repair isolated project startup, optional provider audit nominations, synthetic
+  test configuration and real Pandoc typography controls. Exercise all three
+  unchanged SIA archived agents against their declared boundary behavior.
+- Keep native prelaunch preparations unpublished until complete closing checks
+  confirm the original command, environment, working directory and physical owner.
+  Cover both dispatch and independent factory mutation paths with genuine controls.
+
 ## [4.0.1] - 2026-10-10
 
 See the [illustrated release-intent notes](docs/releases/v4.0.1.md). The date

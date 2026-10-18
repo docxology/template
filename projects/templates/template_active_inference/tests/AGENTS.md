@@ -114,6 +114,7 @@ disposable copy owned by the outer counts process. Per-test teardown is not a
 crash-safety boundary: collection prewarm occurs before the session output
 snapshot, and an outer timeout can kill pytest before fixture restoration.
 
-The typography contract runs the real Pandoc and preamble writers with current
-configuration and a small private manuscript body. It requires no previous
-render; complete native acceptance still renders the full manuscript.
+Project typography checks stay local and source-only. Root's rendering suite
+owns the real SDK Pandoc/preamble integration against this configuration with a
+small private body and no previous render. Complete native acceptance separately
+renders the full manuscript. The standalone-import contract remains unchanged.

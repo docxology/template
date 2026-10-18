@@ -23,10 +23,6 @@ from pathlib import Path
 
 import yaml
 
-from infrastructure.rendering._pdf_combined_pandoc import build_pandoc_tex_command, run_pandoc_conversion
-from infrastructure.rendering._pdf_combined_preamble import inject_latex_preamble
-from infrastructure.rendering.config import RenderingConfig
-
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 PREAMBLE = PROJECT_ROOT / "manuscript" / "preamble.md"
 CONFIG = PROJECT_ROOT / "manuscript" / "config.yaml"
@@ -35,31 +31,6 @@ CONFIG = PROJECT_ROOT / "manuscript" / "config.yaml"
 def _fenced_latex(preamble_text: str) -> str:
     blocks = re.findall(r"```\s*latex\s*\n(.*?)\n\s*```", preamble_text, re.DOTALL)
     return "\n".join(blocks)
-
-
-def test_declared_typography_reaches_emitted_tex(tmp_path: Path) -> None:
-    """Run the real Pandoc/preamble writers against current declared typography.
-
-    A small body keeps this contract independent of a previous full render.
-    The production command reads the actual config, and the production preamble
-    writer consumes the actual fenced source. Full native acceptance renders
-    the complete manuscript separately.
-    """
-    markdown = tmp_path / "typography.md"
-    markdown.write_text("# Typography contract\n\nCurrent declared typography.\n", encoding="utf-8")
-    emitted = tmp_path / "typography.tex"
-    render = RenderingConfig(figures_dir=str(PROJECT_ROOT / "output/figures"))
-    command = build_pandoc_tex_command(render, markdown, emitted, PROJECT_ROOT / "manuscript")
-    run_pandoc_conversion(command, markdown, [markdown], markdown.read_text(encoding="utf-8"))
-    tex = inject_latex_preamble(emitted.read_text(encoding="utf-8"), PROJECT_ROOT / "manuscript")
-    emitted.write_text(tex, encoding="utf-8")
-    config = yaml.safe_load(CONFIG.read_text())
-    geometry = (config.get("metadata") or {}).get("geometry", "")
-    assert geometry and geometry in tex, f"declared geometry {geometry!r} did not reach the emitted tex"
-    latex = _fenced_latex(PREAMBLE.read_text())
-    fontsize_decl = re.search(r"\\changefontsize\[[^\]]+\]\{[^}]+\}", latex)
-    assert fontsize_decl, "no bracketed changefontsize in preamble"
-    assert fontsize_decl.group(0) in tex, "declared font scaling did not reach the emitted tex"
 
 
 def test_preamble_is_fenced() -> None:
