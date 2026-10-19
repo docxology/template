@@ -3,7 +3,7 @@
   "projects": {
     "template_active_inference": {
       "coverage_pct": "91.04 %",
-      "source_hash": "67de620ff0ab9807e311033dbcc0b2337097228344cb4d04b19a83e2929ab087"
+      "source_hash": "f2d47b4cc83985cdeb1d7c7f38ab14670f3fdb47edb8c0c1de7226d6ef849dd8"
     },
     "template_advanced_literature_review": {
       "coverage_pct": "94.30 %",
@@ -95,7 +95,7 @@
     },
     "template_template": {
       "coverage_pct": "97.07 %",
-      "source_hash": "2808cab0c8a842998824ddb290d35aacb141259af65d3e5af81ddc5a719e04c2"
+      "source_hash": "e56ca61f3f45ccb5bdc26a732b80b428d60a84fbb5f35389932309958dd30b95"
     },
     "template_textbook": {
       "coverage_pct": "96.17 %",
@@ -103,7 +103,7 @@
     }
   },
   "schema_version": 5,
-  "source_commit": "4f752a307fd5050678e3a785509edc3e0bef12d3",
+  "source_commit": "6b254e16ee9078a2230b86a68ec9e9d8cd78c9b2",
   "source_inventory_mode": "tracked-and-nonignored-coverage-inputs-v3",
   "source_tree_identity": {
     "algorithm": "sha256",
@@ -111,12 +111,12 @@
     "measurement_support": {
       "template_active_inference": {
         "algorithm": "sha256",
-        "digest": "6f3acf13fdb683c443c20fe6cd2931b75fd22db64cc56b6bd234e4fc43e893c0",
+        "digest": "522a327d13f6102aec06e56986f6ffcf1cfc4705753451ac28e5cc3b4c3a8c74",
         "entries": [
           {
             "identity": "sha256",
             "path": "AGENTS.md",
-            "sha256": "40d1715d9c4b8825fc0dfbe9b21f5d93635586f4652869f4ec583032b8c9fa76",
+            "sha256": "c9d87ac9583e1c6d3a5d29c467396b1cd12d0eef70eabaf180bed11c2e9a8b4c",
             "type": "file"
           },
           {
@@ -139,7 +139,7 @@
           {
             "identity": "sha256",
             "path": "docs/rules/memory_and_decision_records.md",
-            "sha256": "f9a721ec083181128703dbd8fc4755a443d05181d85a96c09944eea4b413dc2d",
+            "sha256": "252b4ace5c990e352dccb53f329b0fcb9af68b9b4058105ddb7be579f5d5a741",
             "type": "file"
           },
           {
@@ -175,7 +175,7 @@
           {
             "identity": "sha256",
             "path": "docs/development/ci.md",
-            "sha256": "45f49c6508c68f0d2de7bf45952e46e78b26aa4f74f59a64f968dcc53fef43df",
+            "sha256": "4747ba70052a5a5a7ee71adba8ec874f351232b733802077cd0ba2332c27db25",
             "type": "file"
           },
           {
@@ -205,7 +205,7 @@
       }
     },
     "projects": {
-      "template_active_inference": "67de620ff0ab9807e311033dbcc0b2337097228344cb4d04b19a83e2929ab087",
+      "template_active_inference": "f2d47b4cc83985cdeb1d7c7f38ab14670f3fdb47edb8c0c1de7226d6ef849dd8",
       "template_advanced_literature_review": "c59f372a1e79f39918157c75fe5f0117dee9754f4204f7a8d8196aee965b96a2",
       "template_autopoiesis": "d022efaf60a6ddc1205368800ccd4b11e7cfbd490b3d82e1012009c947578f2c",
       "template_autoresearch_project": "cb0757779ac8dda9bd88a11b16c735e790ca76c25dc525e6b2cf7412c7c59fb3",
@@ -228,7 +228,7 @@
       "template_search_project": "7f49300590374dedc83183bdd5ac19613e6fe3a8222844359b41c5ea61752576",
       "template_sia": "e0bae7246b2cf08bfd0c8ce692da7eb27bea460aa19b958fb23a5c63f7c33b42",
       "template_storybook": "c66f9d88e52376a42a610d25ac649f9282ff77b48b9e77abc727ab8c8ddef2ef",
-      "template_template": "2808cab0c8a842998824ddb290d35aacb141259af65d3e5af81ddc5a719e04c2",
+      "template_template": "e56ca61f3f45ccb5bdc26a732b80b428d60a84fbb5f35389932309958dd30b95",
       "template_textbook": "8137365f1795fb0f5b1b065f3892b44c4179f94c37b12d2a456cb9179736669e"
     }
   }

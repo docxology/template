@@ -17,6 +17,8 @@ and historical notes remain preserved.
 - Make `.agents/` the shared agent interface: generated manifests, local workflows,
   roles and confined local memory. Keep `.cursor/` and `.cursorrules` as deprecated
   adapters, preserve legacy memory originals, and retain the pinned upstream skills.
+- Support trusted module-spec cache metadata in Python 3.15 bytecode auditing,
+  retaining exact Source, cache and contradiction checks.
 - Flush bounded diagnostic-only pytest progress with original failure attribution,
   explicit truncation and held session identity; complete execution receipts remain
   required. Isolate the real process-heavy matrix module and its Python-only
@@ -73,8 +75,8 @@ and historical notes remain preserved.
 - Add reviewed metadata planning, exact-input checking, retained compensating
   rollback and strict refusal of ambiguous publication configuration.
 - Retain the measured baseline, original failed full workflow and successful
-  Redacted follow-up as distinct evidence. Renew six standalone metrics from
-  compatible own-lock measurements, preserving nineteen historical values, and
+  Redacted follow-up as distinct evidence. Renew seven standalone metrics from
+  compatible own-lock measurements, preserving eighteen historical values, and
   verify combined statement/branch totals against the retained databases.
 - Install the genuine Root SDK in Redacted's coverage environment and add bounded
   export timing diagnostics under the unchanged native acceptance deadline.

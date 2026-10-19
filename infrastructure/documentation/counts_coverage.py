@@ -583,36 +583,18 @@ def _hash_exemplar_inventory(repo_root: Path, name: str, inventory: tuple[str, .
 
 
 def _coverage_source_inventory(repo_root: Path, relative_root: str | tuple[str, ...]) -> tuple[str, ...]:
-    """Admit both complete Git inventories once for one source-selection scope."""
+    """Admit the complete tracked/nonignored union in one fresh bounded query."""
     selected = (relative_root,) if isinstance(relative_root, str) else relative_root
-    tracked = run_with_policy(
-        ["git", "ls-files", "-z", "--", *selected],
+    inventory = run_with_policy(
+        ["git", "ls-files", "-z", "--cached", "--others", "--exclude-standard", "--", *selected],
         cwd=repo_root,
         env=_coverage_git_environment(),
         policy=_coverage_process_policy("coverage-source-inventory", 30),
     )
-    untracked = run_with_policy(
-        ["git", "ls-files", "-z", "--others", "--exclude-standard", "--", *selected],
-        cwd=repo_root,
-        env=_coverage_git_environment(),
-        policy=_coverage_process_policy("coverage-source-inventory", 30),
-    )
-    if (
-        tracked.timed_out
-        or untracked.timed_out
-        or tracked.returncode != 0
-        or untracked.returncode != 0
-        or tracked.command_error
-        or untracked.command_error
-    ):
+    if inventory.timed_out or inventory.returncode != 0 or inventory.command_error:
         raise RuntimeError("coverage input inventory requires successful Git tracked/nonignored queries")
     return tuple(
-        sorted(
-            {
-                *_nul_delimited_git_paths(tracked.stdout, inventory="tracked coverage inputs"),
-                *_nul_delimited_git_paths(untracked.stdout, inventory="nonignored coverage inputs"),
-            }
-        )
+        sorted(set(_nul_delimited_git_paths(inventory.stdout, inventory="tracked/nonignored coverage inputs")))
     )
 
 
