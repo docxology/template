@@ -373,7 +373,7 @@ def render_track_status_table(project_root: Path) -> str:
         "## Track status",
         "",
         "| Track | Renderer | Bound sections | Present | Missing | Claims | Status |",
-        "| --- | --- | ---: | ---: | ---: | ---: | --- |",
+        "| -------------------- | --------------- | -----: | -----: | -----: | -----: | -------- |",
     ]
     for row in payload.get("tracks") or []:
         lines.append(

@@ -5,6 +5,7 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
+import pytest
 import yaml
 
 from manuscript.sheaf.coverage import build_coverage_matrix
@@ -14,10 +15,12 @@ from manuscript.sheaf.layers_report import (
     render_track_improvement_scope_table,
     render_track_lane_matrix_table,
     render_track_registry_table,
+    render_track_status_table,
 )
 from manuscript.sheaf.manifest import load_manifest
 from manuscript.sheaf.models import coverage_cell_symbol
 from manuscript.sheaf.registry import load_track_registry
+from manuscript.sheaf.status import build_sheaf_section_status_matrix
 
 
 def _humanized(value: object) -> str:
@@ -164,6 +167,50 @@ def test_track_improvement_summary_preserves_every_scope_row(project_root: Path)
             assert "Producer: none while blocked." in line
         else:
             assert _basename(promotion["producer"]) in line
+
+
+def test_track_status_table_preserves_rows_and_allocates_identifier_columns(project_root: Path) -> None:
+    """Keep real status facts while giving their code identifiers enough table space."""
+    payload = build_sheaf_section_status_matrix(project_root)
+    markdown = render_track_status_table(project_root)
+    table_lines = [line for line in markdown.splitlines() if line.startswith("|")]
+    cells = [[cell.strip() for cell in line.strip("|").split("|")] for line in table_lines]
+    assert cells[0] == ["Track", "Renderer", "Bound sections", "Present", "Missing", "Claims", "Status"]
+    assert all(len(row) == len(cells[0]) for row in cells)
+    assert [cell.endswith(":") for cell in cells[1]] == [False, False, True, True, True, True, False]
+    expected_rows = [
+        [
+            f"`{row['track_id']}`",
+            f"`{row['renderer']}`",
+            str(row["bound_section_count"]),
+            str(row["present_section_count"]),
+            str(row["missing_section_count"]),
+            str(row["claim_count"]),
+            f"`{row['status']}`",
+        ]
+        for row in payload["tracks"]
+    ]
+    assert cells[2:] == expected_rows
+    assert expected_rows
+    assert f"**Status cells:** {payload['cell_count']} section-track cells." in markdown
+
+    # Pandoc's default source-table width is 72 characters. Separator dash
+    # weights express the relative space; this is a source-allocation control,
+    # not a substitute for the real SDK PDF/HTML rendering and visual checks.
+    def assert_code_columns_have_room(separator: str) -> None:
+        fields = [cell.strip() for cell in separator.strip("|").split("|")]
+        assert len(fields) == len(cells[0])
+        assert all(set(cell) <= {"-", ":"} and cell.count("-") >= 3 for cell in fields)
+        weights = [cell.count("-") for cell in fields]
+        for column in (0, 1, 6):
+            longest_identifier = max(len(row[column].strip("`")) for row in expected_rows)
+            assert 72 * weights[column] >= longest_identifier * sum(weights), "code column is too narrow"
+
+    assert max(map(len, table_lines)) > 72  # Ensure Pandoc uses the wrapped table route.
+    assert_code_columns_have_room(table_lines[1])
+    # Genuine prior layout: replay the separator that collided in the held PDF.
+    with pytest.raises(AssertionError, match="code column is too narrow"):
+        assert_code_columns_have_room("| --- | --- | ---: | ---: | ---: | ---: | --- |")
 
 
 def test_render_sheaf_layers_markdown(project_root: Path) -> None:
