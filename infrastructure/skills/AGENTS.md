@@ -27,14 +27,14 @@ flowchart TB
 
 ## Public API (`discovery.py`)
 
-- `DEFAULT_SKILL_SEARCH_ROOTS` — `("infrastructure", "scripts", "projects/templates", "fonds/templates", "rules/templates", "tools/templates", "docs/prompts", ".agents/skills", ".cursor/skills")` relative to repo root; repository-scoped and public-exemplar `.agents/skills/*/SKILL.md` descriptors are intentionally included
-- `SkillDescriptor` — `absolute_path`, `relative_path`, `name`, `description`, `frontmatter`; properties `path_posix`, `cursor_at`
+- `DEFAULT_SKILL_SEARCH_ROOTS` — `("infrastructure", "scripts", "projects/templates", "fonds/templates", "rules/templates", "tools/templates", "docs/prompts", ".agents/skills", ".agents/workflows")` relative to repo root; repository-scoped and public-exemplar `.agents/skills/*/SKILL.md` descriptors are intentionally included
+- `SkillDescriptor` — `absolute_path`, `relative_path`, `name`, `description`, `frontmatter`; properties `path_posix`, `agent_ref` (generic), `cursor_at` (deprecated alias)
 - `split_yaml_frontmatter(source: str) -> tuple[dict | None, str]`
 - `load_skill_descriptor(skill_path: Path, repo_root: Path) -> SkillDescriptor`
 - `iter_skill_paths(repo_root: Path, roots: Sequence[str]) -> Iterator[Path]` — paths under `projects/templates/` are limited to `PUBLIC_PROJECT_NAMES`, so ignored local templates cannot affect public manifests or duplicate-name checks
 - `discover_skills(repo_root, *, search_roots=None) -> list[SkillDescriptor]` — sorted by path; raises `ValueError` on duplicate `name`
 - `build_manifest_payload(skills) -> dict`
-- `write_skill_manifest(repo_root, output_path=None, *, search_roots=None) -> Path` — default `.cursor/skill_manifest.json`
+- `write_skill_manifest(repo_root, output_path=None, *, search_roots=None) -> Path` — default `.agents/skill_manifest.json`
 - `load_manifest(manifest_path) -> dict`
 - `manifest_matches_discovery(repo_root, manifest_path, *, search_roots=None) -> tuple[bool, str]`
 - `manifest_skill_dicts_for_prompt(skills) -> list[dict]`
@@ -57,7 +57,7 @@ Static (AST-only; never imports the target modules) catalog of agent-invocable `
 - The tier covers the whole module, including help/schema/dry-run forms. MCP invocation requires a boolean `allow_mutating`; malformed values are refused before dispatch. Literal `true` or the existing configured environment opt-in admits the guarded tier. Direct CLIs and their own admission/custody checks retain their behavior.
 - `discover_operations(repo_root, *, search_roots=None) -> list[OperationDescriptor]`
 - `build_operations_payload(ops) -> dict` / `operation_descriptors_as_json_serializable(ops) -> list[dict]`
-- `write_operations_manifest(repo_root, output_path=None, *, search_roots=None) -> Path` — default `.cursor/operations_manifest.json`
+- `write_operations_manifest(repo_root, output_path=None, *, search_roots=None) -> Path` — default `.agents/operations_manifest.json`
 - `load_operations_manifest(manifest_path) -> dict`
 - `operations_manifest_matches_discovery(repo_root, manifest_path, *, search_roots=None) -> tuple[bool, str]`
 
@@ -83,7 +83,7 @@ Static (AST-only; never imports the target modules) catalog of agent-invocable `
 - `main(argv=None) -> int`
 - Subcommands: `list-json`, `write` (`--output`), `write-index` (`--output`), `check` (`--manifest`), `check-contracts`, `check-all-exports`
 - Shared flags on each subcommand (after the verb): `--repo-root`, `--roots DIR [DIR ...]`
-- Example: `uv run python -m infrastructure.skills write --roots infrastructure docs/prompts .cursor/skills`
+- Example: `uv run python -m infrastructure.skills write --roots infrastructure docs/prompts .agents/workflows`
 
 ## Tests
 

@@ -78,7 +78,7 @@ Say what you need in natural language — no slash commands or copy-paste blocks
 
 ## Discovery
 
-Skills are indexed in `.cursor/skill_manifest.json`:
+Skills are indexed in `.agents/skill_manifest.json`:
 
 ```bash
 uv run python -m infrastructure.skills write

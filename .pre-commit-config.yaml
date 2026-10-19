@@ -223,7 +223,7 @@ repos:
         always_run: true
         verbose: true
 
-      # Catches drift in `.cursor/skill_manifest.json` vs the on-disk skill
+      # Catches drift in `.agents/skill_manifest.json` vs the on-disk skill
       # tree. Cheap (~0.2 s); runs before every push so a stale manifest never
       # rides into main.
       - id: skills-check
@@ -242,7 +242,7 @@ repos:
         always_run: true
         verbose: true
 
-      # Verifies .cursor/operations_manifest.json (the machine-readable catalog
+      # Verifies .agents/operations_manifest.json (the machine-readable catalog
       # of every `python -m infrastructure.X` CLI) matches live AST discovery —
       # the operations counterpart to skills-check. Regenerate with
       # `uv run python -m infrastructure.skills operations-write`.

@@ -87,7 +87,7 @@ To assemble a custom subset of pipeline stages (discover → fetch → synthesiz
 
 ## Discovery
 
-These skills are indexed in `.cursor/skill_manifest.json` (`uv run python -m infrastructure.skills write`). Human index: [README.md](README.md).
+These skills are indexed in `.agents/skill_manifest.json` (`uv run python -m infrastructure.skills write`). Human index: [README.md](README.md).
 
 ## External design note
 

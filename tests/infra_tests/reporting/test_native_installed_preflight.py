@@ -137,3 +137,58 @@ def test_preflight_refuses_mismatched_externally_held_implementation(tmp_path: P
     assert result.returncode != 0
     assert "differs from the actual externally held input" in result.stderr
     assert not (tmp_path / "evidence-dir").exists()
+
+
+@pytest.mark.parametrize("mode", ("original", "reader", "handoff"))
+def test_complete_native_modes_keep_the_public_roster_without_diagnostic_selection(tmp_path: Path, mode: str) -> None:
+    from infrastructure.reporting.native_installed_launcher import native_preparation_scopes
+
+    assert native_preparation_scopes(mode, tmp_path) == PUBLIC_PROJECT_NAMES
+    with pytest.raises(ValueError, match="unknown"):
+        native_preparation_scopes("unknown", tmp_path)
+
+
+def test_preflight_build_selection_follows_genuine_transitive_local_metadata(tmp_path: Path) -> None:
+    from infrastructure.reporting.native_installed_launcher import native_preparation_scopes
+    from infrastructure.reporting.native_installed_preflight import preflight_provider_scopes
+
+    peer = "templates/template_template"
+    assert peer != PREFLIGHT_SCOPE and peer in PUBLIC_PROJECT_NAMES
+    code = tmp_path / "projects" / PREFLIGHT_SCOPE
+    dependency = tmp_path / "projects" / peer
+    code.mkdir(parents=True)
+    dependency.mkdir(parents=True)
+    (code / "pyproject.toml").write_text(
+        '[project]\nname="owned-code"\nversion="1"\ndependencies=["owned-peer>=1"]\n'
+        '[tool.uv.sources]\nowned-peer={path="../template_template"}\n'
+    )
+    (dependency / "pyproject.toml").write_text('[project]\nname="owned-peer"\nversion="1"\n')
+    assert preflight_provider_scopes(tmp_path) == (PREFLIGHT_SCOPE, peer)
+    assert native_preparation_scopes("preflight", tmp_path) == (PREFLIGHT_SCOPE, peer)
+    leaf = next(scope for scope in PUBLIC_PROJECT_NAMES if scope not in {PREFLIGHT_SCOPE, peer})
+    leaf_root = tmp_path / "projects" / leaf
+    leaf_root.mkdir(parents=True)
+    (tmp_path / "pyproject.toml").write_text('[project]\nname="research-project-template"\nversion="1"\n')
+    (leaf_root / "pyproject.toml").write_text(
+        '[project]\nname="owned-leaf"\nversion="1"\ndependencies=["research-project-template>=1"]\n'
+        '[tool.uv.sources]\nresearch-project-template={path="../../.."}\n'
+    )
+    (dependency / "pyproject.toml").write_text(
+        '[project]\nname="owned-peer"\nversion="1"\ndependencies=["owned-leaf>=1"]\n'
+        f'[tool.uv.sources]\nowned-leaf={{path="../{Path(leaf).name}"}}\n'
+    )
+    assert preflight_provider_scopes(tmp_path) == (PREFLIGHT_SCOPE, leaf, peer)
+    (dependency / "pyproject.toml").write_text(
+        '[project]\nname="owned-peer"\nversion="1"\ndependencies=["owned-code>=1"]\n'
+        '[tool.uv.sources]\nowned-code={path="../template_code_project"}\n'
+    )
+    with pytest.raises(ValueError, match="cycle"):
+        preflight_provider_scopes(tmp_path)
+    (code / "pyproject.toml").write_text('[project]\nname="owned-code"\nversion="1"\n')
+    assert preflight_provider_scopes(tmp_path) == (PREFLIGHT_SCOPE,)
+    (code / "pyproject.toml").write_text(
+        '[project]\nname="owned-code"\nversion="1"\ndependencies=["owned-peer>=1"]\n'
+        '[tool.uv.sources]\nowned-peer={path="../../working/private"}\n'
+    )
+    with pytest.raises(ValueError, match="outside canonical"):
+        preflight_provider_scopes(tmp_path)

@@ -110,7 +110,7 @@ flowchart LR
 | `tests/` | ✅ Testing philosophy | ✅ Quick reference | Test suites |
 | `projects/` | ✅ Project structure guide | ✅ Quick reference | Research code |
 | `docs/` | ✅ Documentation organization | ✅ Quick reference | Documentation hub |
-| Root `.cursorrules` | — | — | Cursor IDE rule file (repository root) |
+| Root `.agents/AGENTS.md` | — | — | Shared agent interface (repository root) |
 | `docs/rules/` | ✅ Standards overview | ✅ Quick reference | Development guidelines (Markdown corpus) |
 
 ### Infrastructure Subdirectories

@@ -1,31 +1,34 @@
-# `.agents/`
+# Shared agent interface
 
-Public repository-scoped Agent Skills shared across Codex/OpenAI-compatible,
-Claude Code, and Hermes runtimes.
+Read [the repository contract](../AGENTS.md) and the applicable directory guide
+before editing. This directory is the canonical home for generic agent behavior;
+`.cursor/` and `.cursorrules` are deprecated compatibility entry points.
 
-## Contract
+| Surface | Contract |
+| --- | --- |
+| [`skill_manifest.json`](skill_manifest.json) | Generated public skill discovery; `agent_ref` is the generic reference and `cursor_at` remains a deprecated compatibility alias. |
+| [`operations_manifest.json`](operations_manifest.json) | Generated static CLI catalog; operation effects and each CLI's admission rules govern execution. |
+| [`workflows/`](workflows/) | Maintained local workflow descriptors shared by editors and agent runtimes. |
+| [`roles/agents-memory-updater.md`](roles/agents-memory-updater.md) | Local memory role using user-authorized evidence. |
+| [`state/README.md`](state/README.md) | Tracked schema and ignored machine-local memory. |
+| [`skills/`](skills/) | The unchanged pinned upstream collection governed by [`context-engineering.lock.json`](context-engineering.lock.json). |
 
-- [`.agents/skills/`](skills/) is the tracked source used by repository skill
-  discovery and by the cross-runtime installer.
-- [`context-engineering.lock.json`](context-engineering.lock.json) pins the
-  upstream repository, revision, plugin version, inventory counts, and exact
-  content digest.
-- Every immediate skill directory under [`skills/`](skills/) belongs to that
-  one pinned source. A skill from another upstream stays with its owning
-  infrastructure package unless a reviewed multi-source lock schema is added.
-- Upstream skill directories retain their relative references and scripts.
-  Scripts are illustrative and must not be auto-executed.
-- Runtime-specific policy belongs in an explicit overlay recorded by the lock,
-  not in an unrecorded per-runtime copy.
+Generic workflow discovery does not install files into a user's runtime.
+`runtime-install` installs only the pinned upstream collection and requires an
+intentional user-level installation request. Preserve that collection's provenance;
+put local additions under `workflows/`.
 
-## Verification
+Regenerate through the owning CLI, then verify discovery and routing:
 
 ```bash
-uv run python -m infrastructure.skills runtime-status
+uv run python -m infrastructure.skills write
+uv run python -m infrastructure.skills operations-write
+uv run python -m infrastructure.skills write-index
 uv run python -m infrastructure.skills check
 uv run python -m infrastructure.skills operations-check
+uv run python scripts/gates/skill_reachability_check.py
 ```
 
-Use `... infrastructure.skills runtime-install` only for an intentional user-level install. It
-moves same-name existing paths to timestamped backups before linking the pinned
-shared store.
+Only declared public agent directories and exact manifest/schema files enter
+Source evidence. Runtime memory and transcript indexes stay ignored. The public
+contract never grants access to unrelated transcripts, messages, or credentials.

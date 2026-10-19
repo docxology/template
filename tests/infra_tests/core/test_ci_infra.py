@@ -165,6 +165,7 @@ def test_broad_package_ownership_scales_shards_without_losing_selected_work() ->
     from infrastructure.core.testing.ci_contracts import combined_groups, contract_files
 
     heavy = (
+        "tests/infra_tests/core/pipeline/test_run_matrix.py",
         "tests/infra_tests/core/test_execution_contract.py",
         "tests/infra_tests/core/test_project_test_measurement.py",
         "tests/infra_tests/project/test_root_acceptance.py",

@@ -252,3 +252,138 @@ def test_pytest_spawned_by_test_cannot_add_another_controller_observation(tmp_pa
     selected, _ = read_execution_receipts(directory, "owned")
     assert selected == ("test_owned.py::test_owned",)
     assert len(tuple(directory.glob("execution-*.json"))) == 1
+
+
+def test_partial_progress_survives_actual_hard_kill_without_terminal_authority(tmp_path: Path) -> None:
+    """A flushed failure and next case remain attributable after a real SIGKILL."""
+    if os.name != "posix":
+        pytest.skip("The hosted Linux/Darwin process contract uses POSIX SIGKILL")
+    (tmp_path / "test_original.py").write_text(
+        "def test_a_actual_failure():\n    assert False, 'λ' * 20000\n"
+        "def test_b_actual_kill():\n    import os,signal\n    os.kill(os.getpid(),signal.SIGKILL)\n"
+    )
+    directory = tmp_path / "observations"
+    result = subprocess.run(
+        [
+            sys.executable,
+            "-m",
+            "pytest",
+            "test_original.py",
+            "--no-cov",
+            "-q",
+            "-p",
+            "infrastructure.core.testing.pytest_receipt",
+        ],
+        cwd=tmp_path,
+        env={
+            **os.environ,
+            "PYTHONPATH": str(ROOT),
+            "PYTEST_ADDOPTS": "",
+            DIRECTORY_ENV: str(directory),
+            NONCE_ENV: "hard-kill-original",
+            ROOT_ENV: str(tmp_path),
+        },
+        capture_output=True,
+        text=True,
+        timeout=30,
+    )
+    assert result.returncode == -9
+    originals = list(directory.glob("progress-*.jsonl"))
+    assert len(originals) == 1 and not list(directory.glob("execution-*.json"))
+    events = [json.loads(line) for line in originals[0].read_bytes().splitlines()]
+    assert all(row["schema_version"] == "template-pytest-progress/v1" for row in events)
+    assert all(row["nonce"] == "hard-kill-original" for row in events)
+    assert [row["sequence"] for row in events] == list(range(len(events)))
+    failures = [row for row in events if row.get("outcome") == "failed"]
+    assert len(failures) == 1 and failures[0]["nodeid"].endswith("::test_a_actual_failure")
+    assert "λ" in failures[0]["failure"] and len(failures[0]["failure"]) <= 8192
+    assert failures[0]["duration"] >= 0
+    starts = [row for row in events if row["event"] == "case_start"]
+    assert starts[-1]["nodeid"].endswith("::test_b_actual_kill")
+    assert failures[0]["failure_truncated"] and failures[0]["failure_characters"] > 8192
+    assert len(failures[0]["failure_sha256"]) == 64
+    assert events[-1]["nodeid"].endswith("::test_b_actual_kill")
+    assert events[-1]["phase"] == "setup" and events[-1]["outcome"] == "passed"
+    assert originals[0].stat().st_size < 64 * 1024 * 1024
+    with pytest.raises(ValueError, match="missing"):
+        read_execution_receipts(directory, "hard-kill-original")
+
+
+def test_progress_retains_complete_original_and_suppresses_nested_pytest(tmp_path: Path) -> None:
+    nested = tmp_path / "nested"
+    nested.mkdir()
+    (nested / "test_child.py").write_text("def test_child():\n    assert 3 * 3 == 9\n")
+    (tmp_path / "test_parent.py").write_text(
+        "import subprocess,sys\n"
+        "def test_real_nested_child(monkeypatch):\n"
+        "    result=subprocess.run([sys.executable,'-m','pytest','test_child.py','--no-cov','-q',"
+        "'-p','infrastructure.core.testing.pytest_receipt'],cwd='nested',capture_output=True,timeout=15)\n"
+        "    assert result.returncode == 0, result.stdout + result.stderr\n"
+        "    monkeypatch.delenv('TEMPLATE_PYTEST_RECEIPT_NONCE')\n"
+    )
+    directory = tmp_path / "observations"
+    result = subprocess.run(
+        [
+            sys.executable,
+            "-m",
+            "pytest",
+            "test_parent.py",
+            "--no-cov",
+            "-q",
+            "-p",
+            "infrastructure.core.testing.pytest_receipt",
+        ],
+        cwd=tmp_path,
+        env={
+            **os.environ,
+            "PYTHONPATH": str(ROOT),
+            "PYTEST_ADDOPTS": "",
+            DIRECTORY_ENV: str(directory),
+            NONCE_ENV: "nested-original",
+            ROOT_ENV: str(tmp_path),
+        },
+        capture_output=True,
+        text=True,
+        timeout=30,
+    )
+    assert result.returncode == 0, result.stdout + result.stderr
+    originals = list(directory.glob("progress-*.jsonl"))
+    assert len(originals) == 1 and len(list(directory.glob("execution-*.json"))) == 1
+    events = [json.loads(line) for line in originals[0].read_bytes().splitlines()]
+    assert events[0]["event"] == "session_start" and events[-1]["event"] == "session_finish"
+    assert events[-1]["exit_code"] == 0
+    assert all("test_child" not in row.get("nodeid", "") for row in events)
+    selected, outcomes = read_execution_receipts(directory, "nested-original")
+    assert selected == ("test_parent.py::test_real_nested_child",) and len(outcomes) == 1
+
+
+def test_progress_io_refusal_preserves_actual_success_and_existing_original(tmp_path: Path) -> None:
+    (tmp_path / "test_owned.py").write_text("def test_owned():\n    assert 6 * 7 == 42\n")
+    directory = tmp_path / "observations"
+    directory.mkdir()
+    program = (
+        "import os,pytest\nfrom pathlib import Path\n"
+        f"Path({str(directory)!r},f'progress-{{os.getpid()}}.jsonl').write_bytes(b'prior-original')\n"
+        "raise SystemExit(pytest.main(['test_owned.py','--no-cov','-q','-s','-p',"
+        "'infrastructure.core.testing.pytest_receipt']))\n"
+    )
+    result = subprocess.run(
+        [sys.executable, "-c", program],
+        cwd=tmp_path,
+        env={
+            **os.environ,
+            "PYTHONPATH": str(ROOT),
+            "PYTEST_ADDOPTS": "",
+            DIRECTORY_ENV: str(directory),
+            NONCE_ENV: "io-refusal-original",
+            ROOT_ENV: str(tmp_path),
+        },
+        capture_output=True,
+        text=True,
+        timeout=30,
+    )
+    assert result.returncode == 0, result.stdout + result.stderr
+    assert "pytest progress diagnostic disabled: FileExistsError" in result.stderr
+    assert next(directory.glob("progress-*.jsonl")).read_bytes() == b"prior-original"
+    selected, _ = read_execution_receipts(directory, "io-refusal-original")
+    assert selected == ("test_owned.py::test_owned",)

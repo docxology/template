@@ -3,7 +3,7 @@ name: template-agentic-use
 description: |
   Agentic-use and skill-routing workflow for the Research Project Template. USE WHEN
   discovering relevant skills, making template easier for agents to navigate, auditing
-  docs/prompts skill coverage, checking .cursor/skill_manifest.json, evaluating external
+  docs/prompts skill coverage, checking .agents/skill_manifest.json, evaluating external
   skills, reviewing external agentic operating models such as Steward OS, AutoResearch CLI,
   LEANN, or Agent Skills for Context Engineering, or improving agent onboarding/routing
   without changing project behavior.
@@ -46,7 +46,7 @@ metadata:
 
 ## Workflow
 
-1. **Inventory** - run `uv run python -m infrastructure.skills list-json`, `check`, `check-contracts`, `operations-check`, and `runtime-status` when user-level parity is in scope. Use [`docs/_generated/skills_index.md`](../../_generated/skills_index.md) as the human index, `.cursor/skill_manifest.json` as the editor manifest, and `.cursor/operations_manifest.json` as the Codex/MCP operation catalog.
+1. **Inventory** - run `uv run python -m infrastructure.skills list-json`, `check`, `check-contracts`, `operations-check`, and `runtime-status` when user-level parity is in scope. Use [`docs/_generated/skills_index.md`](../../_generated/skills_index.md) as the human index, `.agents/skill_manifest.json` as the editor manifest, and `.agents/operations_manifest.json` as the Codex/MCP operation catalog.
 
 2. **Route locally first** - choose `docs/prompts/SKILL.md` ([template-workflows](../SKILL.md)) for broad template work, then exactly one child skill for implementation. Use this skill only for agent onboarding, routing, skill-surface maintenance, and external-skill review.
 
@@ -91,7 +91,7 @@ Steward OS is an external operating-model reference for AI-assisted project main
 | Watchdog pattern | If a future change adds autonomous public actions, add an independent deterministic verifier in the same change. For current skill routing, existing checks and eval reports are the verification surface. |
 | Setup interview | Convert external-reference intake into explicit answers: scope, audience, install/vendoring posture, generated artifacts, and verification commands. Unanswered choices become documented assumptions. |
 | Quality gates | Prefer existing template gates: `infrastructure.skills check`, `check-contracts`, skill tests, eval harness, and docs lint. A generated manifest or passing eval is evidence, not permission for unrelated behavior changes. |
-| Triage scoreboard | Use `docs/_generated/skills_index.md`, `.cursor/skill_manifest.json`, and `_skill-eval/latest/` as the local skill-health view. Do not add scheduled scoreboards unless requested. |
+| Triage scoreboard | Use `docs/_generated/skills_index.md`, `.agents/skill_manifest.json`, and `_skill-eval/latest/` as the local skill-health view. Do not add scheduled scoreboards unless requested. |
 
 ## AutoResearch CLI reference map
 

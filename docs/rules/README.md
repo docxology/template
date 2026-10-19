@@ -1,4 +1,4 @@
-# .cursorrules - Quick Reference
+# Repository Rules - Quick Reference
 
 Development standards and coding guidelines for the Research Project Template.
 

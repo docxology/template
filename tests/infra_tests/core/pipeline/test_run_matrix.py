@@ -423,10 +423,26 @@ def test_matrix_refuses_project_shared_override_before_any_execution(
     assert not (tmp_path / "process_order.log").exists()
 
 
+@pytest.fixture(autouse=True)
+def python_only_pipeline_environment(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    """Nominate the actual Python-only tool environment for every matrix fixture.
+
+    These projects execute Python scripts by absolute interpreter path. Ambient
+    Java/Elan launchers are unrelated to this checkpoint contract; backend reuse
+    refusal retains its separate real-tool controls in test_tool_bindings.py.
+    """
+    tools = tmp_path / "python-only-tools"
+    tools.mkdir()
+    monkeypatch.setenv("PATH", str(tools))
+    for variable in ("FORMAL_JAVA_BIN", "PANDOC_PATH", "LATEX_COMPILER"):
+        monkeypatch.delenv(variable, raising=False)
+
+
 # Two independently bounded180s plans retain finite setup and closing allowance.
 @pytest.mark.timeout(420)
 def test_matrix_resume_keeps_fresh_shared_gate_and_reuses_exact_project_checkpoints(
     tmp_path: Path,
+    python_only_pipeline_environment: None,
 ) -> None:
     from infrastructure.core.pipeline.run_matrix import run_plan_exit_code
     from infrastructure.core.pipeline.outcomes import StageStatus
@@ -451,6 +467,7 @@ def test_matrix_resume_keeps_fresh_shared_gate_and_reuses_exact_project_checkpoi
 @pytest.mark.timeout(180)
 def test_matrix_resume_without_exact_checkpoints_is_pending_and_never_starts_projects(
     tmp_path: Path,
+    python_only_pipeline_environment: None,
 ) -> None:
     from infrastructure.core.pipeline.run_matrix import run_plan_exit_code
     from infrastructure.core.pipeline.outcomes import StageStatus
@@ -507,6 +524,7 @@ def test_matrix_original_deadline_stops_current_and_later_projects(
 @pytest.mark.skipif(os.name != "posix", reason="POSIX detached descendant cleanup")
 def test_matrix_original_deadline_kills_started_child_and_detached_descendant(
     tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     """The original deadline includes shared work and kills actual project processes."""
     import contextlib
@@ -593,8 +611,12 @@ def test_matrix_original_deadline_kills_started_child_and_detached_descendant(
         assert entry["stage_pid"] != entry["descendant_pid"]
         # Absent or an unreapable zombie: hosts whose PID 1 never reaps orphans
         # keep a killed detached descendant's process-table entry.
-        assert_process_exited(entry["stage_pid"])
-        assert_process_exited(entry["descendant_pid"])
+        # The pipeline above ran without optional native tools. Its closing
+        # cleanup proof uses the genuine system ps after execution has ended.
+        with monkeypatch.context() as native_probe:
+            native_probe.setenv("PATH", os.defpath)
+            assert_process_exited(entry["stage_pid"])
+            assert_process_exited(entry["descendant_pid"])
     finally:
         # A failing negative control must not leave its owned sleeping processes.
         # This cleanup runs only after the assertions and cannot grant a pass.

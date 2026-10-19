@@ -6,24 +6,30 @@ import argparse
 import hashlib
 import json
 import os
-import sys
 import time
-import uuid
 from pathlib import Path
 
 from infrastructure.core.implementation_custody import source_file_bytes
 from infrastructure.project.public_acceptance_evidence import write_json
 from infrastructure.project.public_reference_git import remaining
 from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
+from infrastructure.project.public_package_dependencies import local_dependency_closure
 from infrastructure.reporting.native_format_acceptance import run_native_format_acceptance
-from infrastructure.reporting.native_format_joint_source import NativeSDKSelection, admit_native_source_operation
-from infrastructure.reporting.native_full_worker_pdfium import NativePDFiumSelection, admit_full_worker_pdfium_providers
+from infrastructure.reporting.native_format_joint_source import NativeSDKSelection
+from infrastructure.reporting.native_full_worker_pdfium import NativePDFiumSelection
 from infrastructure.reporting.native_mermaid_runtime_selection import NativeMermaidSelection
-from infrastructure.reporting.native_office_diagram_runtime import admit_pdfium_runtimes
-from infrastructure.reporting.native_project_provider_batch import admitted_native_provider_batch
 
 PREFLIGHT_SCOPE = "templates/template_code_project"
-PREFLIGHT_SCHEMA = "template-native-diagnostic-preflight-v1"
+PREFLIGHT_SCHEMA = "template-native-diagnostic-preflight-v2"
+
+
+def preflight_provider_scopes(root: Path) -> tuple[str, ...]:
+    """Nominate only the diagnostic project and its actual local providers."""
+    return tuple(
+        dict.fromkeys(
+            (PREFLIGHT_SCOPE, *(scope for scope in local_dependency_closure(root, PREFLIGHT_SCOPE) if scope != "root"))
+        )
+    )
 
 
 def diagnostic_exit_code(result: dict[str, object], *, deadline: float) -> int:
@@ -44,7 +50,7 @@ def diagnostic_exit_code(result: dict[str, object], *, deadline: float) -> int:
 
 
 def main(argv: list[str] | None = None) -> int:
-    """Close all provider preparations and a real Original/Current exemplar."""
+    """Run one genuine installed Original/Current exemplar under its original clock."""
     parser = argparse.ArgumentParser(description=__doc__)
     for name in (
         "repo-root",
@@ -82,24 +88,15 @@ def main(argv: list[str] | None = None) -> int:
         if not separator or scope not in PUBLIC_PROJECT_NAMES or scope in wheels or not path:
             raise ValueError("preflight needs unique actual canonical provider nominations")
         wheels[scope] = Path(path)
-    if set(wheels) != set(PUBLIC_PROJECT_NAMES) or PREFLIGHT_SCOPE not in PUBLIC_PROJECT_NAMES:
-        raise ValueError("preflight requires the complete canonical provider selection")
+    if PREFLIGHT_SCOPE not in wheels:
+        raise ValueError("preflight requires the selected canonical provider nomination")
     root = args.repo_root.resolve(strict=True)
+    if set(wheels) != set(preflight_provider_scopes(root)):
+        raise ValueError("preflight provider nominations differ from its selected Source dependency closure")
     sdk = NativeSDKSelection(args.sdk_package_root, raw)
-    source = admit_native_source_operation(
-        root, sdk, run_id=uuid.uuid4().hex, deadline=deadline, environment=os.environ
-    )
-    prepared = admitted_native_provider_batch(
-        source, tuple(PUBLIC_PROJECT_NAMES), wheels, Path(sys.executable), deadline=deadline
-    )
     selection = NativePDFiumSelection(args.pdfium_site, args.pdfium_wheel)
-    selections = tuple((scope, selection) for scope in PUBLIC_PROJECT_NAMES)
-    providers = admit_full_worker_pdfium_providers(source, selections, deadline=deadline)
-    runtimes = admit_pdfium_runtimes(source, selections, deadline=deadline)
-    for scope in (PUBLIC_PROJECT_NAMES[0], PUBLIC_PROJECT_NAMES[-1]):
-        providers[scope].verify_current(deadline=deadline)
-        runtimes[scope].verify()
-    remaining(deadline)
+    # The production route owns fresh Source, provider and reader admission.
+    # A duplicate preparatory capability cannot authorize or accelerate it.
     # This uses the production supervisor, real project/native execution and
     # independent Current analysis. Its one-scope selection remains incomplete.
     result = run_native_format_acceptance(
@@ -129,9 +126,9 @@ def main(argv: list[str] | None = None) -> int:
         args.evidence_dir / "diagnostic.json",
         {
             "schema_version": PREFLIGHT_SCHEMA,
-            "source_commit": source.reference.commit,
-            "provider_scopes": list(prepared),
-            "boundary_scopes": [PUBLIC_PROJECT_NAMES[0], PUBLIC_PROJECT_NAMES[-1]],
+            "reference_commit_nomination": os.environ.get("TEMPLATE_PUBLIC_REFERENCE_COMMIT"),
+            "provider_scopes": list(wheels),
+            "preparation_profile": "selected-project-and-local-providers",
             "representative_scope": PREFLIGHT_SCOPE,
             "exit_code": code,
             "complete_release_acceptance": False,

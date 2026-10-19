@@ -33,7 +33,7 @@ DEFAULT_SKILL_SEARCH_ROOTS: tuple[str, ...] = (
     # runtime adapters. This root is public and tracked; private lifecycle
     # workspaces remain excluded by the narrower roots above.
     ".agents/skills",
-    ".cursor/skills",
+    ".agents/workflows",
 )
 
 _MANIFEST_VERSION = 1
@@ -59,7 +59,12 @@ class SkillDescriptor:
 
     @property
     def cursor_at(self) -> str:
-        """Suggested Cursor context reference (same as path_posix)."""
+        """Deprecated compatibility alias for agent_ref."""
+        return self.agent_ref
+
+    @property
+    def agent_ref(self) -> str:
+        """Editor-independent context reference for this descriptor."""
         return self.path_posix
 
 
@@ -132,7 +137,7 @@ def _is_public_template_agent_skill_path(path: Path) -> bool:
 def _is_public_root_agent_skill_path(path: Path) -> bool:
     """Return True for tracked repository-scoped Agent Skills descriptors."""
     parts = path.parts
-    return len(parts) >= 4 and parts[0] == ".agents" and parts[1] == "skills" and parts[-1] == "SKILL.md"
+    return len(parts) >= 4 and parts[0] == ".agents" and parts[1] in {"skills", "workflows"} and parts[-1] == "SKILL.md"
 
 
 def _is_public_cursor_skill_path(path: Path) -> bool:
@@ -168,7 +173,7 @@ def _search_bases(repo_root: Path, relative_root: str) -> tuple[Path, ...]:
 def _is_allowed_agent_tree_path(path: Path) -> bool:
     """Return whether an excluded agent/editor subtree is a public skill lane."""
     parts = path.parts
-    if len(parts) >= 2 and parts[:2] == (".agents", "skills"):
+    if len(parts) >= 2 and parts[0] == ".agents" and parts[1] in {"skills", "workflows"}:
         return True
     if len(parts) >= 2 and parts[:2] == (".cursor", "skills"):
         return True
@@ -277,7 +282,8 @@ def build_manifest_payload(skills: Sequence[SkillDescriptor]) -> dict[str, Any]:
             "name": s.name,
             "description": s.description,
             "path": s.path_posix,
-            "cursor_at": s.cursor_at,
+            "agent_ref": s.agent_ref,
+            "cursor_at": s.cursor_at,  # Deprecated schema-v1 compatibility alias.
         }
         metadata = s.frontmatter.get("metadata")
         if isinstance(metadata, dict):
@@ -329,14 +335,14 @@ def write_skill_manifest(
 ) -> Path:
     """Write skill manifest JSON for editors and agents.
 
-    Default output: ``<repo_root>/.cursor/skill_manifest.json``.
+    Default output: ``<repo_root>/.agents/skill_manifest.json``.
 
     Returns:
         Path to the written file.
     """
     root = Path(repo_root).resolve()
     if output_path is None:
-        out = root / ".cursor" / "skill_manifest.json"
+        out = root / ".agents" / "skill_manifest.json"
     else:
         out = Path(output_path)
         if not out.is_absolute():

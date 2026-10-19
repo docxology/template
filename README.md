@@ -16,7 +16,7 @@
 Just cloned the repo? Do this:
 
 1. `git clone <this-repo> && cd template`
-2. `uv sync` (installs the root environment, including deterministic dependencies for all public template exemplars)
+2. `uv sync --locked` (installs the declared root environment; independent project runtimes retain their own locks)
 3. `./run.sh` (interactive menu) **or** `./run.sh --pipeline --project templates/template_code_project --mode core` (non-interactive, no LLM)
 4. PDFs land in `output/templates/<project>/pdf/`. Logs in `output/templates/<project>/logs/`.
 5. Run `./run.sh --help` for all flags. The always-present roster is generated from `PUBLIC_PROJECT_NAMES` in [`infrastructure/project/public_scope.py`](infrastructure/project/public_scope.py) and published in [`docs/_generated/active_projects.md`](docs/_generated/active_projects.md).
@@ -29,7 +29,7 @@ For deeper guidance see [`docs/guides/getting-started.md`](docs/guides/getting-s
 
 **Fast local test loop:** for agent edit/test iterations, run the documented high-signal subset (`uv run --frozen pytest tests/infra_tests/git_hook_smoke tests/infra_tests/core/test_pytest_orchestration.py tests/infra_tests/core/test_pipeline.py -q`) — see [`docs/operational/config/performance-optimization.md`](docs/operational/config/performance-optimization.md). The full infrastructure gate remains the merge authority.
 
-**Assistants and editors:** [`.cursorrules`](.cursorrules) summarizes architecture and tooling for Cursor; [`CLAUDE.md`](CLAUDE.md) is the command cheat sheet; [`AGENTS.md`](AGENTS.md) is the full system manual (pipeline, validation, configuration). For routable agent workflows, start at [`docs/prompts/SKILL.md`](docs/prompts/SKILL.md) and the generated skill index [`docs/_generated/skills_index.md`](docs/_generated/skills_index.md).
+**Assistants and editors:** start with [`AGENTS.md`](AGENTS.md) for the repository contract and [`.agents/AGENTS.md`](.agents/AGENTS.md) for shared catalogs, workflows and local memory. [`CLAUDE.md`](CLAUDE.md) remains a command cheat sheet; [`.cursorrules`](.cursorrules) is a deprecated compatibility pointer. For routable agent workflows, start at [`docs/prompts/SKILL.md`](docs/prompts/SKILL.md) and the generated skill index [`docs/_generated/skills_index.md`](docs/_generated/skills_index.md).
 
 **Contributors and CI:** GitHub Actions, Dependabot, and PR/issue templates live under [`.github/README.md`](.github/README.md) ([agent entry point](.github/README.md#agent--automation-entry-point), doc map, CI inventory) and [`.github/AGENTS.md`](.github/AGENTS.md) (job names, thresholds, troubleshooting).
 
@@ -186,7 +186,7 @@ SKILL.md files from live discovery:
   checks to exactly one child workflow.
 - **Agentic-use hardening:**
   [`docs/prompts/agentic-use/SKILL.md`](docs/prompts/agentic-use/SKILL.md)
-  covers skill inventory, routing checks, `.cursor/skill_manifest.json`, and
+  covers skill inventory, routing checks, `.agents/skill_manifest.json`, and
   generated skill-index maintenance.
 - **Infrastructure module skills:** [`infrastructure/SKILL.md`](infrastructure/SKILL.md)
   is the Layer-1 hub; pair the relevant `infrastructure/<module>/SKILL.md`
@@ -730,7 +730,7 @@ and CI-gated quality. Full benefits + rationale:
 
 | Task | Start here |
 | --- | --- |
-| **Assistants / Cursor** | [`.cursorrules`](.cursorrules), [`CLAUDE.md`](CLAUDE.md), [`AGENTS.md`](AGENTS.md#for-assistants-and-automation) |
+| **Assistants / editors** | [`.agents/AGENTS.md`](.agents/AGENTS.md), [`AGENTS.md`](AGENTS.md#for-assistants-and-automation), [`CLAUDE.md`](CLAUDE.md) |
 | Write documents | [`docs/guides/getting-started.md`](docs/guides/getting-started.md), [`docs/usage/markdown-template-guide.md`](docs/usage/markdown-template-guide.md) |
 | Add figures | [`docs/guides/figures-and-analysis.md`](docs/guides/figures-and-analysis.md), [`docs/usage/visualization-guide.md`](docs/usage/visualization-guide.md) |
 | Fix issues | [`docs/operational/troubleshooting/README.md`](docs/operational/troubleshooting/README.md), [`docs/reference/faq.md`](docs/reference/faq.md) |

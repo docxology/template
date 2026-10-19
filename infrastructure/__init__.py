@@ -22,7 +22,7 @@ Modules:
     prose: Prose analysis (readability, structure, quality, manuscript reports); see prose/SKILL.md
     reporting: Pipeline reporting & error aggregation
     project: Multi-project management and discovery
-    skills: SKILL.md discovery and Cursor manifest (.cursor/skill_manifest.json); see skills/SKILL.md
+    skills: SKILL.md discovery and Cursor manifest (.agents/skill_manifest.json); see skills/SKILL.md
     steganography: Optional secure PDF post-processing (overlays, barcodes, hashing)
     core.telemetry: Unified pipeline telemetry (stage resource metrics + diagnostic aggregation, JSON/text reports)
 

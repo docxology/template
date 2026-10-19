@@ -105,6 +105,7 @@ def test_top_level_docs_do_not_claim_stale_public_exemplar_counts() -> None:
         root / "AGENTS.md",
         root / "README.md",
         root / "CLAUDE.md",
+        root / ".agents" / "AGENTS.md",
         root / ".cursorrules",
         root / ".github" / "README.md",
         root / ".github" / "AGENTS.md",
@@ -134,6 +135,7 @@ def test_human_docs_do_not_carry_partial_public_exemplar_rosters() -> None:
         root / "AGENTS.md",
         root / "README.md",
         root / "CLAUDE.md",
+        root / ".agents" / "AGENTS.md",
         root / ".cursorrules",
         root / ".github" / "README.md",
         root / ".github" / "AGENTS.md",
@@ -376,8 +378,8 @@ def test_continual_learning_local_state_gitignored() -> None:
     root = _repo_root()
     gitignore = (root / ".gitignore").read_text(encoding="utf-8")
     for pattern in (
-        ".cursor/hooks/state/continual-learning-memory.json",
-        ".cursor/hooks/state/continual-learning-index.json",
+        ".agents/state/continual-learning-memory.json",
+        ".agents/state/continual-learning-index.json",
     ):
         assert pattern in gitignore, f".gitignore must ignore {pattern}"
 
@@ -386,7 +388,7 @@ def test_continual_learning_index_not_tracked() -> None:
     """Transcript index is machine-local and must not be git-tracked."""
     root = _repo_root()
     result = subprocess.run(
-        ["git", "ls-files", ".cursor/hooks/state/continual-learning-index.json"],
+        ["git", "ls-files", ".agents/state/continual-learning-index.json"],
         cwd=root,
         capture_output=True,
         text=True,

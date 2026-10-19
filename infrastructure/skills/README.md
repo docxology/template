@@ -1,6 +1,6 @@
 # infrastructure/skills
 
-Discovers `SKILL.md` files, parses YAML frontmatter, and maintains `.cursor/skill_manifest.json` for editor and agent routing.
+Discovers `SKILL.md` files, parses YAML frontmatter, and maintains `.agents/skill_manifest.json` for editor and agent routing.
 
 ## Commands
 
@@ -14,7 +14,7 @@ uv run python -m infrastructure.skills list-json
 
 Default discovery roots are `infrastructure/`, `scripts/`,
 `projects/templates/`, `fonds/templates/`, `rules/templates/`,
-`tools/templates/`, `docs/prompts/`, `.agents/skills/`, and `.cursor/skills/`.
+`tools/templates/`, `docs/prompts/`, `.agents/skills/`, and `.agents/workflows/`.
 Repository-scoped plus public-exemplar `.agents/skills/<name>/SKILL.md`
 descriptors are included for Hermes/agentskills.io, Codex, and MCP
 `list_skills` visibility.

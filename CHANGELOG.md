@@ -14,6 +14,15 @@ requires complete exact-revision acceptance and the authenticated release handof
 The prepared 4.0.0 and 4.0.1 candidates were not published; their implementation
 and historical notes remain preserved.
 
+- Make `.agents/` the shared agent interface: generated manifests, local workflows,
+  roles and confined local memory. Keep `.cursor/` and `.cursorrules` as deprecated
+  adapters, preserve legacy memory originals, and retain the pinned upstream skills.
+- Flush bounded diagnostic-only pytest progress with original failure attribution,
+  explicit truncation and held session identity; complete execution receipts remain
+  required. Isolate the real process-heavy matrix module and its Python-only
+  fixture environment without changing its selection or deadlines.
+- Remove duplicate native diagnostic preparation and build only Code plus its
+  declared local providers; complete native roles retain the full public roster.
 - Aggregate the latest completed stage's full artifact inventory after targeted
   execution, preserving historical manifests while refusing stale or retired
   output bindings. Keep missing or mismatched stage records fail-closed.

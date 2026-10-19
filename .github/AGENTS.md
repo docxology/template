@@ -13,7 +13,7 @@ Infrastructure includes changed tests and declared Source owners without droppin
 the legacy union. `CI Gate` requires both test lanes and checks their original
 pytest selection/outcome receipts for an exact disjoint union. JUnit is diagnostic.
 Routine automatic jobs contain at most twenty complete modules, with dedicated
-jobs for selected process measurement and Root acceptance modules. At most eight
+jobs for selected process measurement, run-matrix and Root acceptance modules. At most eight
 routine jobs run concurrently; the 540-second job-body clock is unchanged.
 The existing bounded execution boundary cleans up owned descendants and retains
 the original OS/effective exits in a diagnostic that grants no acceptance.
@@ -22,7 +22,9 @@ deselection, and use the established 120-second infrastructure pytest default;
 explicit family/module markers and original operation deadlines retain authority.
 The CLI setting does not alter timeout defaults in nested producer environments.
 `platform-native-preflight.yml` adds an incomplete cold installed diagnostic;
-its bounded one-exemplar result never qualifies full release acceptance.
+it prepares only the selected exemplar and its declared local providers, then
+uses the production Original/Current admissions without a duplicate all-project
+prelude. Its bounded result never qualifies full release acceptance.
 
 The former cross-version/full-suite matrix remains in `hardening.yml`, invoked
 manually. `platform-required-acceptance.yml` is also manual-only; its original

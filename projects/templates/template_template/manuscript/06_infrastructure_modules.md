@@ -114,7 +114,7 @@ Generic Self-Improving-AI loop utilities: task-layout validation, execution harn
 
 ### `infrastructure.skills` (${module_skills_python_file_count} files)
 
-Discovers `SKILL.md` frontmatter → `.cursor/skill_manifest.json`.
+Discovers `SKILL.md` frontmatter → `.agents/skill_manifest.json`.
 
 ### `infrastructure.steganography` (${module_steganography_python_file_count} files)
 

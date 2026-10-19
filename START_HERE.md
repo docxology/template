@@ -14,6 +14,14 @@ A test-driven research operating system for computational research: write code, 
 
 Honest framing: this is Daniel Ari Friedman's research OS, Apache 2.0-licensed. It is opinionated (Python + pytest + LaTeX + uv). If your workflow matches (TDD on research code, Markdown→PDF, optional local-LLM drafts, Zenodo publishing), it will save you time.
 
+## Shared agent setup
+
+Read [AGENTS.md](AGENTS.md) and [`.agents/AGENTS.md`](.agents/AGENTS.md) first.
+Shared manifests, local workflows and memory schemas live under `.agents/`;
+`.cursor/` and `.cursorrules` are compatibility entry points. Local memory and
+transcript indexes stay ignored. Workflow discovery does not authorize an
+installation into user-level runtimes.
+
 ## Automated startup skill (for agents)
 
 Load [`docs/prompts/startup/SKILL.md`](docs/prompts/startup/SKILL.md) — the machine-readable agent skill — and follow its workflow. For the complete agent-executable setup and validation procedure with step-by-step commands, expected outputs, pass/fail checks, and recovery paths for every common failure mode, see [`docs/guides/startup-and-setup.md`](docs/guides/startup-and-setup.md).
@@ -30,7 +38,10 @@ distribution, the LaTeX packages minimal distributions lack, and `uv` — then
 verifies with the repository's LaTeX package validator. It is idempotent;
 add `--check` to verify without installing anything. The manual steps follow.
 
-You need four tools before running anything. Check what you have and install what is missing.
+Git and `uv` are the base tools for Python development and metadata commands.
+PDF rendering additionally needs Pandoc and a TeX compiler; prepare those when
+running the rendering workflow. Complete native-format acceptance has its own
+explicit tool setup. Check and install the tools needed for the selected work.
 
 ### Check
 
@@ -65,7 +76,9 @@ sudo apt-get install -y pandoc texlive-xetex texlive-fonts-recommended \
 
 **`git`:** macOS — `xcode-select --install` (Xcode Command Line Tools); Ubuntu — `sudo apt-get install -y git`.
 
-You do **not** need Python pre-installed. `uv sync` will download and pin the right Python version automatically — this repo pins 3.14 via `.python-version`, and the supported range is Python 3.12+ (`requires-python = ">=3.12"` in `pyproject.toml`; infrastructure and public-project CI matrices cover 3.12–3.14).
+You do **not** need Python pre-installed. `uv sync` will download and pin the right Python version automatically — this repo pins 3.14 via `.python-version`, and the supported range is Python 3.12+ (`requires-python = ">=3.12"` in `pyproject.toml`; infrastructure and public-project CI matrices cover 3.12–3.14). Python 3.15
+component profiling is separate from package/runtime qualification; the locked
+project environments remain the authority for supported execution.
 
 ---
 
@@ -89,10 +102,13 @@ All should exist. If not, `cd` to the repo root first.
 ## Step 2: Install Python dependencies
 
 ```bash
-uv sync
+uv sync --locked
 ```
 
-This creates `.venv/`, pins the Python version, and installs all packages. Takes 30–90 seconds on the first run; subsequent runs are instant. The first run needs network — it downloads the pinned Python and all dependencies.
+This prepares `.venv/` from the declared Root lock and Python selection. Initial
+downloads require network access; elapsed time depends on the machine and cache.
+Independent project runtimes retain their own lockfiles, and system rendering
+tools are prepared separately when the selected workflow needs them.
 
 **Expected:** exit 0, no errors, `.venv/` directory created.
 

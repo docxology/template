@@ -1,7 +1,7 @@
 """Agent skill discovery: enumerate and parse ``SKILL.md`` descriptors.
 
 Use :func:`discover_skills` from repository root to list all skills, or
-``python -m infrastructure.skills write`` to refresh ``.cursor/skill_manifest.json``.
+``python -m infrastructure.skills write`` to refresh ``.agents/skill_manifest.json``.
 """
 
 from infrastructure.skills.contracts import (

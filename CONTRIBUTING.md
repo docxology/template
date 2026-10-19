@@ -11,6 +11,16 @@ pointer; the authoritative guides live under `docs/`.
 - **[`AGENTS.md`](AGENTS.md)** / **[`CLAUDE.md`](CLAUDE.md)** — system manual and operational rules (apply to humans and AI agents alike).
 - **[`.github/AGENTS.md`](.github/AGENTS.md)** — CI jobs, quality gates, branch-protection requirements.
 
+## Scope the local test loop
+
+Use [`.agents/AGENTS.md`](.agents/AGENTS.md) for shared agent interfaces. Start
+with the complete owner modules for the edited behavior, then run the public
+quality and documentation checks required by the changed scope. Keep project
+pytest invocations separate so each project retains its own collection and
+coverage floor. Hosted smoke shards provide functional feedback; release uses
+its separately declared complete acceptance profile. See
+[the CI guide](docs/development/ci.md) for the current lanes and clocks.
+
 ## Non-negotiable rules (enforced in CI)
 
 These are gates, not suggestions — see the docs above for the rationale:

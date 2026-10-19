@@ -31,6 +31,7 @@ from infrastructure.core.testing.pytest_observations import (
 # that same routine budget in separate jobs when selected by Source ownership.
 _ISOLATED_ROUTINE_MODULES = frozenset(
     {
+        "tests/infra_tests/core/pipeline/test_run_matrix.py",
         "tests/infra_tests/core/test_execution_contract.py",
         "tests/infra_tests/core/test_project_test_measurement.py",
         "tests/infra_tests/project/test_root_acceptance.py",

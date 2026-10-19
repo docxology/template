@@ -14,7 +14,7 @@ This is a research project template with a test-driven development workflow, aut
 | [`README.md`](README.md) | First-time setup, documentation map, contributor links |
 | **This file (`CLAUDE.md`)** | Copy-paste commands, CI parity, common code patterns |
 | [`AGENTS.md`](AGENTS.md) | Full pipeline semantics, validation, configuration reference, troubleshooting index |
-| [`.cursorrules`](.cursorrules) | Cursor-focused agent rules (overlap with this file by design) |
+| [`.agents/AGENTS.md`](.agents/AGENTS.md) | Shared agent behavior and generated catalogs |
 | [`.github/AGENTS.md`](.github/AGENTS.md) | Exact CI job names, coverage thresholds, branch protection hints |
 
 ## Quick Reference
@@ -206,7 +206,7 @@ uv run python -m infrastructure.skills runtime-install
 
 # Discoverable per-template skills (Hermes / agentskills.io)
 # Every exemplar under projects/templates/ ships .agents/skills/<name>/SKILL.md
-# These descriptors are included in .cursor/skill_manifest.json and MCP list_skills.
+# These descriptors are included in .agents/skill_manifest.json and MCP list_skills.
 # Load via Hermes: skill_view(name='template-code-project')
 # List skills in a template: ls projects/templates/<name>/.agents/skills/
 
@@ -594,7 +594,7 @@ uv run python scripts/pipeline/stage_03_render.py --project {name}
 ## Documentation Resources
 
 - **README.md** - Project overview and quick start
-- **.cursorrules** - Cursor agent rules (overlap with this file on commands and architecture)
+- **.agents/AGENTS.md** - Shared agent instructions; `.cursorrules` is a deprecated Cursor pointer.
 - **AGENTS.md** - System reference (configuration, modules, troubleshooting details)
 - **.github/README.md** / **.github/AGENTS.md** - CI workflows, Dependabot, PR templates; local parity via **`.pre-commit-config.yaml`**
 - **[docs/RUN_GUIDE.md](docs/RUN_GUIDE.md)** - Pipeline execution documentation

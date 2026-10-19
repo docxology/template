@@ -29,7 +29,7 @@ Adopt a tiered decision-memory discipline:
   rules that should govern future work.
 - Use project `TODO.md`, `ISA.md`, or project docs for active plans, invariants,
   scoped assumptions, and postmortems.
-- Use `.cursor/hooks/state/continual-learning-memory.json` only for local
+- Use `.agents/state/continual-learning-memory.json` only for local
   agent preferences and workspace facts. Do not store public project rosters,
   test counts, coverage values, or infrastructure file counts there unless the
   entry points to generated documentation.

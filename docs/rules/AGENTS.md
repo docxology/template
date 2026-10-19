@@ -4,7 +4,7 @@
 
 This directory contains development standards, coding guidelines, and best practices for the Research Project Template system. All code must follow these standards.
 
-> **Note**: Cursor reads the repository root **[`.cursorrules`](../../.cursorrules)** file for IDE/agent routing. Extended editorial standards live in **`docs/rules/`** (this directory).
+> **Note**: Shared agents start at the repository root **[`.agents/AGENTS.md`](../../.agents/AGENTS.md)** file for runtime-independent routing and catalogs; root `AGENTS.md` defines the repository contract. Extended editorial standards live in **`docs/rules/`** (this directory).
 
 > **Project paths in examples**: default to [`projects/templates/template_code_project/`](../../projects/templates/template_code_project/). Authoritative active `projects/` names → [_generated/active_projects.md](../_generated/active_projects.md) (see [_generated/README.md](../_generated/README.md)).
 

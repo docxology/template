@@ -15,7 +15,7 @@ documentation hub can always find every skill:
 
 2. **Index completeness.** Every ``SKILL.md`` discoverable under the default
    discovery roots (``infrastructure/``, ``projects/``, ``docs/prompts/``,
-   ``.cursor/skills/``) must appear as a row in
+   ``.agents/workflows/``) must appear as a row in
    ``docs/_generated/skills_index.md`` — keyed on its POSIX path so the
    generated catalog can never silently fall behind a newly added skill.
 

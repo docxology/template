@@ -4,13 +4,19 @@ from __future__ import annotations
 
 import json
 import re
+import warnings
 from dataclasses import dataclass
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
-MEMORY_REL_PATH = Path(".cursor/hooks/state/continual-learning-memory.json")
-EXAMPLE_REL_PATH = Path(".cursor/hooks/state/continual-learning-memory.example.json")
+from infrastructure.core.files.secure_write import atomic_write_text_confined, read_bytes_confined
+
+LEGACY_MEMORY_REL_PATH = Path(".cursor/hooks/state/continual-learning-memory.json")
+_MAX_MEMORY_BYTES = 256 * 1024
+
+MEMORY_REL_PATH = Path(".agents/state/continual-learning-memory.json")
+EXAMPLE_REL_PATH = Path(".agents/state/continual-learning-memory.example.json")
 MAX_BULLETS = 12
 
 _REQUIRED_KEYS = ("version", "updated_at", "learned_user_preferences", "learned_workspace_facts")
@@ -138,15 +144,24 @@ def empty_memory_payload() -> dict[str, Any]:
 
 def load_memory(repo_root: Path) -> dict[str, Any]:
     """Load memory JSON, or the example schema when the live file is absent."""
-    path = memory_path(repo_root)
-    if path.is_file():
-        raw_payload = json.loads(path.read_text(encoding="utf-8"))
-    else:
-        example = example_path(repo_root)
-        if example.is_file():
-            raw_payload = json.loads(example.read_text(encoding="utf-8"))
+    root = repo_root.absolute()
+    try:
+        raw = read_bytes_confined(root, memory_path(root), max_bytes=_MAX_MEMORY_BYTES)
+    except FileNotFoundError:
+        try:
+            raw = read_bytes_confined(root, root / LEGACY_MEMORY_REL_PATH, max_bytes=_MAX_MEMORY_BYTES)
+        except FileNotFoundError:
+            try:
+                raw = read_bytes_confined(root, example_path(root), max_bytes=_MAX_MEMORY_BYTES)
+            except FileNotFoundError:
+                raw = json.dumps(empty_memory_payload()).encode()
         else:
-            raw_payload = empty_memory_payload()
+            warnings.warn(
+                "Legacy .cursor memory is deprecated; save_memory writes .agents/state and preserves the original",
+                FutureWarning,
+                stacklevel=2,
+            )
+    raw_payload = json.loads(raw)
     if not isinstance(raw_payload, dict):
         raise ValueError("memory payload must be a JSON object")
     payload: dict[str, Any] = dict(raw_payload)
@@ -163,7 +178,10 @@ def save_memory(repo_root: Path, payload: dict[str, Any]) -> Path:
     payload["learned_user_preferences"] = normalize_bullets(payload["learned_user_preferences"])
     payload["learned_workspace_facts"] = normalize_bullets(payload["learned_workspace_facts"])
     payload["updated_at"] = datetime.now(tz=timezone.utc).isoformat()
-    path = memory_path(repo_root)
-    path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(json.dumps(payload, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+    root = repo_root.absolute()
+    path = memory_path(root)
+    text = json.dumps(payload, indent=2, ensure_ascii=False) + "\n"
+    if len(text.encode("utf-8")) > _MAX_MEMORY_BYTES:
+        raise ValueError("local agent memory exceeds its bounded schema size")
+    atomic_write_text_confined(root, path, text, mode=0o600)
     return path

@@ -84,7 +84,7 @@ same change:
    uv run python scripts/audit/lint_docs.py --json --repo-root .
    ```
 
-Avoid editing `docs/_generated/skills_index.md` or `.cursor/skill_manifest.json`
+Avoid editing `docs/_generated/skills_index.md` or `.agents/skill_manifest.json`
 by hand; both are generated from live `SKILL.md` discovery.
 
 ## Eval workspace

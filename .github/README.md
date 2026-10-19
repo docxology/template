@@ -67,11 +67,11 @@ This file lives under [`.github/`](.) but serves as the **primary GitHub-rendere
 | [`../README.md`](../README.md) | Clone-first quickstart and honest positioning |
 | [`../AGENTS.md`](../AGENTS.md) | Full system manual (pipeline semantics, modules, troubleshooting index) |
 | [`../CLAUDE.md`](../CLAUDE.md) | Copy-paste command cheat sheet |
-| [`.cursorrules`](../.cursorrules) | Cursor agent constraints (architecture, CI scope) |
+| [`.agents/AGENTS.md`](../.agents/AGENTS.md) | Shared agent catalogs, workflow routing and local state |
 
 **Ground truth (do not hard-code rotating names or counts):** [`docs/_generated/active_projects.md`](../docs/_generated/active_projects.md) · [`docs/_generated/COUNTS.md`](../docs/_generated/COUNTS.md) · [`STATUS.md`](../STATUS.md) · [`docs/documentation-index.md`](../docs/documentation-index.md)
 
-**Skills manifest:** [`.cursor/skill_manifest.json`](../.cursor/skill_manifest.json) — regenerate after editing any `**/SKILL.md` with `uv run python -m infrastructure.skills write` (human index: [`docs/_generated/skills_index.md`](../docs/_generated/skills_index.md)).
+**Skills manifest:** [`.agents/skill_manifest.json`](../.agents/skill_manifest.json) — regenerate after editing any `**/SKILL.md` with `uv run python -m infrastructure.skills write` (human index: [`docs/_generated/skills_index.md`](../docs/_generated/skills_index.md)).
 
 ---
 
@@ -105,9 +105,9 @@ Structured routing for coding agents, review bots, and CI automation. **Read in 
 
 | Priority | File | When |
 | ---: | --- | --- |
-| 1 | [`.cursorrules`](../.cursorrules) | Cursor — architecture, thin orchestrator, no-mocks, CI scope |
-| 2 | [`CLAUDE.md`](../CLAUDE.md) | Exact shell commands, CI mirror, common patterns |
-| 3 | [`AGENTS.md`](../AGENTS.md) | Pipeline stages, validation, configuration, troubleshooting index |
+| 1 | [`AGENTS.md`](../AGENTS.md) | Repository contract, pipeline stages, validation and configuration |
+| 2 | [`.agents/AGENTS.md`](../.agents/AGENTS.md) | Shared agent catalogs, workflows and local state |
+| 3 | [`CLAUDE.md`](../CLAUDE.md) | Shell command cheat sheet and common patterns |
 | 4 | **Directory `AGENTS.md`** | API surfaces for the tree you are editing (`infrastructure/`, `projects/<name>/`, `docs/`, …) |
 | 5 | [`.github/AGENTS.md`](AGENTS.md) | GitHub Actions job names, branch protection, local CI parity |
 
@@ -169,7 +169,7 @@ The **Research Project Template** addresses the structural root of research irre
 | **Real test enforcement** | Zero-Mock policy · ≥90% project coverage · ≥60% infra coverage |
 | **Cryptographic provenance** | SHA-256/512 hashing + steganographic watermarking on every PDF |
 | **Horizontal scaling** | N independent projects share one infrastructure layer — no coupling |
-| **AI-agent-ready codebase** | `AGENTS.md` + `README.md` per directory; `SKILL.md` + [`.cursor/skill_manifest.json`](../.cursor/skill_manifest.json) for routing |
+| **AI-agent-ready codebase** | `AGENTS.md` + `README.md` per directory; `SKILL.md` + [`.agents/skill_manifest.json`](../.agents/skill_manifest.json) for routing |
 | **Interactive orchestration** | `run.sh` TUI menu for humans · `--pipeline` flag for CI |
 
 ---
@@ -232,7 +232,7 @@ graph TD
     end
 ```
 
-Authoritative slugs: [`docs/_generated/active_projects.md`](../docs/_generated/active_projects.md). Archived or local-only exemplars live under [`projects/archive/`](../projects/archive/) when present.
+Authoritative slugs: [`docs/_generated/active_projects.md`](../docs/_generated/active_projects.md). Archived or local-only exemplars live under `projects/archive/` when present.
 
 ### Directory Reference
 
@@ -355,7 +355,7 @@ This keeps the docs-lint "zero ghost references" gate green without per-line
 
 ### Archived exemplars
 
-Retired or sample projects are kept under [`projects/archive/`](../projects/archive/) when present, but that roster is checkout-specific and not executed by `./run.sh` until moved back into `projects/`.
+Retired or sample projects are kept under `projects/archive/` when present, but that roster is checkout-specific and not executed by `./run.sh` until moved back into `projects/`.
 
 ### Project Directory Layout
 
@@ -578,8 +578,8 @@ flowchart TB
 | --- | --- |
 | Workflow skills (14 tasks) | [`docs/prompts/SKILL.md`](../docs/prompts/SKILL.md) · [Agent router](#agent-automation-entry-point) |
 | Infrastructure skills | [`infrastructure/SKILL.md`](../infrastructure/SKILL.md) · [`docs/_generated/skills_index.md`](../docs/_generated/skills_index.md) |
-| Editor manifest | [`.cursor/skill_manifest.json`](../.cursor/skill_manifest.json) — `uv run python -m infrastructure.skills write` |
-| Contributor norms | [`docs/rules/`](../docs/rules/) · [`.cursorrules`](../.cursorrules) |
+| Editor manifest | [`.agents/skill_manifest.json`](../.agents/skill_manifest.json) — `uv run python -m infrastructure.skills write` |
+| Contributor norms | [`docs/rules/`](../docs/rules/) · [`.agents/AGENTS.md`](../.agents/AGENTS.md) |
 | PAI integration | [`docs/PAI.md`](../docs/PAI.md) |
 | Skill eval harness (synthetic) | [`docs/prompts/_skill-eval/AGENTS.md`](../docs/prompts/_skill-eval/AGENTS.md) |
 
@@ -805,7 +805,7 @@ Contributing, testing internals, roadmap.
 
 ### Prompts / workflow skills (`docs/prompts/`)
 
-Discoverable agent skills — **hub + 14 workflow directories** — for template-compliant tasks. Invoke in natural language; indexed in [`.cursor/skill_manifest.json`](../.cursor/skill_manifest.json). **Agent router:** [Agent & automation entry point](#agent-automation-entry-point).
+Discoverable agent skills — **hub + 14 workflow directories** — for template-compliant tasks. Invoke in natural language; indexed in [`.agents/skill_manifest.json`](../.agents/skill_manifest.json). **Agent router:** [Agent & automation entry point](#agent-automation-entry-point).
 
 Hub and index: [`docs/prompts/SKILL.md`](../docs/prompts/SKILL.md), [`docs/prompts/README.md`](../docs/prompts/README.md), [`docs/prompts/AGENTS.md`](../docs/prompts/AGENTS.md).
 

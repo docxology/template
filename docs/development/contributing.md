@@ -80,7 +80,7 @@ needed.
 - **Update relevant guides** in the docs/ directory
 - **Capture rationale in the right place**: use [`docs/rules/memory_and_decision_records.md`](../rules/memory_and_decision_records.md) for `WHY:` comments, ADRs, project plans, failure notes, local memory, and negative-control expectations
 - **Include examples** for new functionality
-- **Agent `SKILL.md`:** If you add or change `infrastructure/**/SKILL.md`, run `uv run python -m infrastructure.skills write` (creates or updates `.cursor/skill_manifest.json` at the repo root) and commit that file if it changed; validate with `uv run python -m infrastructure.skills check`
+- **Agent `SKILL.md`:** If you add or change `infrastructure/**/SKILL.md`, run `uv run python -m infrastructure.skills write` (creates or updates `.agents/skill_manifest.json` at the repo root) and commit that file if it changed; validate with `uv run python -m infrastructure.skills check`
 
 ### 🔄 **Commit Messages**
 Use clear, descriptive commit messages:

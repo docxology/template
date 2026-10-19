@@ -270,7 +270,8 @@ mkdir -p src tests scripts manuscript docs output
 # Copy template files
 cp template/scripts/* scripts/
 cp template/pyproject.toml .
-cp template/.cursorrules .
+# Copy only committed public agent configuration; ignored runtime memory is excluded.
+git -C template archive HEAD AGENTS.md .agents | tar -x
 ```
 
 **Set up dependencies:**

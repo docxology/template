@@ -379,7 +379,7 @@
       "expectations": [
         "Mentions docs/prompts/SKILL.md router",
         "Mentions trigger eval set or skill eval",
-        "Mentions .cursor/skill_manifest.json",
+        "Mentions .agents/skill_manifest.json",
         "Mentions no broad documentation normalization"
       ]
     },

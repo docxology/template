@@ -202,5 +202,5 @@ review and disposition; its raw count is not itself a release verdict.
 - [`../AGENTS.md`](../AGENTS.md) — Repository system reference (root)
 - [`documentation-index.md`](documentation-index.md) - Full file index
 - [`prompts/README.md`](prompts/README.md) - AI prompt templates
-- Agent skills manifest: `uv run python -m infrastructure.skills write` (writes `.cursor/skill_manifest.json` at repo root when run) · `uv run python -m infrastructure.skills check` — see [modules/guides/skills-module.md](modules/guides/skills-module.md)
-- Active projects under [`../projects/`](../projects/) may ship a local docs tree (e.g. [`../projects/templates/template_code_project/docs/`](../projects/templates/template_code_project/docs/)); work-in-progress trees under [`../projects/working/`](../projects/working/) are not discovered until promoted. Authoritative slugs: [`_generated/active_projects.md`](_generated/active_projects.md)
+- Agent skills manifest: `uv run python -m infrastructure.skills write` (writes `.agents/skill_manifest.json` at repo root when run) · `uv run python -m infrastructure.skills check` — see [modules/guides/skills-module.md](modules/guides/skills-module.md)
+- Active projects under [`../projects/`](../projects/) may ship a local docs tree (e.g. [`../projects/templates/template_code_project/docs/`](../projects/templates/template_code_project/docs/)); work-in-progress trees under `../projects/working/` are not discovered until promoted. Authoritative slugs: [`_generated/active_projects.md`](_generated/active_projects.md)

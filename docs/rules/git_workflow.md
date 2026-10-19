@@ -209,7 +209,7 @@ Fixes #456
 1. **Automated Checks** - CI must pass
 2. **Code Review** - At least one reviewer required
 3. **Testing** - Reviewer tests functionality
-4. **Style** - Code follows .cursorrules standards
+4. **Style** - Code follows root AGENTS.md and the scoped docs/rules standards
 5. **Documentation** - AGENTS.md/README.md updated
 
 ## Development Workflow

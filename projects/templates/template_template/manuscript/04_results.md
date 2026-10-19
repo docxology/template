@@ -39,7 +39,7 @@ All ${module_count} enumerated subdirectories carry Tier‑1/`README.md` and Tie
 |-------|------|
 | System prompts | Root `CLAUDE.md`, README policy |
 | Structural | `AGENTS.md` directories |
-| Skills | Optional `SKILL.md` manifests + generated `.cursor/skill_manifest.json` |
+| Skills | Optional `SKILL.md` manifests + generated `.agents/skill_manifest.json` |
 | PAI capsule | Repository level `PAI.md` narratives |
 
 `${docs_file_count}+` Markdown shards under `docs/` capture operational knowledge without duplicating auto-generated inventories.

@@ -104,10 +104,15 @@ acceptance and coverage custody still apply independently.
 
 `platform-native-preflight.yml` runs for relevant native/dependency pull-request
 changes and manual dispatch. After tool preparation, its cold installed operation
-has at most 900 seconds on one original clock. It prepares the complete provider
-selection, rechecks first/last providers and runs the Code exemplar through real
-Original and independent Current analysis. The receipt explicitly records
-incomplete release selection and cannot authorize a tag or publication.
+has at most 900 seconds on one original clock. It prepares Code and its actual
+Source-declared local providers, then runs that exemplar through the production
+Original and independent Current route, including all enabled formats. The route
+owns its fresh provider and reader admissions; the diagnostic does not repeat an
+all-project preparation prelude. Its tool setup omits the unrelated Lean compiler.
+The record explicitly declares incomplete release selection and cannot authorize
+a tag or publication. Complete original, reader and handoff roles keep the full
+public provider roster and the required acceptance clocks. This narrower scope
+does not itself establish that the native diagnostic will fit its deadline.
 
 Native core stages explicitly use the nominated cold interpreter, and terminal
 readback requires the exact selected environment commitment. Stage launch

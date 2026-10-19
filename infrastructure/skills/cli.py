@@ -116,7 +116,7 @@ def cmd_operations_list_json(args: argparse.Namespace) -> int:
 
 
 def cmd_operations_write(args: argparse.Namespace) -> int:
-    """Write the operations manifest JSON (default: .cursor/operations_manifest.json)."""
+    """Write the operations manifest JSON (default: .agents/operations_manifest.json)."""
     root = _repo_root_from_args(args)
     out = Path(args.output) if args.output else None
     path = write_operations_manifest(root, output_path=out)
@@ -177,7 +177,7 @@ def _add_shared_cli_args(p: argparse.ArgumentParser) -> None:
 def build_parser() -> argparse.ArgumentParser:
     """Create the argparse parser for the skill CLI."""
     parser = argparse.ArgumentParser(
-        description="Discover SKILL.md files and maintain .cursor/skill_manifest.json",
+        description="Discover SKILL.md files and maintain .agents/skill_manifest.json",
     )
     sub = parser.add_subparsers(dest="command", required=True)
 
@@ -190,7 +190,7 @@ def build_parser() -> argparse.ArgumentParser:
     p_write.add_argument(
         "--output",
         default=None,
-        help="Output file (default: .cursor/skill_manifest.json under repo root)",
+        help="Output file (default: .agents/skill_manifest.json under repo root)",
     )
     p_write.set_defaults(func=cmd_write)
 
@@ -207,7 +207,7 @@ def build_parser() -> argparse.ArgumentParser:
     _add_shared_cli_args(p_check)
     p_check.add_argument(
         "--manifest",
-        default=".cursor/skill_manifest.json",
+        default=".agents/skill_manifest.json",
         help="Manifest path relative to repo root unless absolute",
     )
     p_check.add_argument(
@@ -251,7 +251,7 @@ def build_parser() -> argparse.ArgumentParser:
     p_ops_write.add_argument(
         "--output",
         default=None,
-        help="Output file (default: .cursor/operations_manifest.json under repo root)",
+        help="Output file (default: .agents/operations_manifest.json under repo root)",
     )
     p_ops_write.set_defaults(func=cmd_operations_write)
 
@@ -262,7 +262,7 @@ def build_parser() -> argparse.ArgumentParser:
     p_ops_check.add_argument("--repo-root", default=".", help="Repository root (default: current directory)")
     p_ops_check.add_argument(
         "--manifest",
-        default=".cursor/operations_manifest.json",
+        default=".agents/operations_manifest.json",
         help="Manifest path relative to repo root unless absolute",
     )
     p_ops_check.set_defaults(func=cmd_operations_check)
