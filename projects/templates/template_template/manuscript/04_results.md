@@ -37,7 +37,7 @@ All ${module_count} enumerated subdirectories carry Tier‑1/`README.md` and Tie
 
 | Layer | Role |
 |-------|------|
-| System prompts | Root `CLAUDE.md`, README policy |
+| Shared agent guidance | Root `AGENTS.md`, `.agents/` skills, roles, and workflows |
 | Structural | `AGENTS.md` directories |
 | Skills | Optional `SKILL.md` manifests + generated `.agents/skill_manifest.json` |
 | PAI capsule | Repository level `PAI.md` narratives |
@@ -52,14 +52,14 @@ Stages below mirror `pipeline.yaml` (executor-topological order—not strict num
 |------|------------------------|----------------|------------------|
 | Clean Output Directories | `_run_clean_outputs` | Deletes stale `output/` trees | Blocking |
 | Environment Setup | `scripts/pipeline/stage_00_setup.py` | Validates tooling, PYTHONPATH scaffolding | Blocking |
-| Infrastructure Tests | `scripts/pipeline/stage_01_test.py --infra-only` | Infra pytest + coverage gates | Tunable thresholds |
-| Project Tests | `scripts/pipeline/stage_01_test.py --project-only` | Project pytest + coverage gates | Zero failures default |
+| Infrastructure Tests | `scripts/pipeline/stage_01_test.py` `--infra-only` | Infra pytest + coverage gates | Tunable thresholds |
+| Project Tests | `scripts/pipeline/stage_01_test.py` `--project-only` | Project pytest + coverage gates | Zero failures default |
 | Project Analysis | `scripts/pipeline/stage_02_analysis.py` | Executes `projects/<name>/scripts/*.py` | Blocking |
 | PDF Rendering | `scripts/pipeline/stage_03_render.py` | Pandoc → XeLaTeX manuscripts | Blocking |
 | Output Validation | `scripts/pipeline/stage_04_validate.py` | Structural PDF/markdown probes | Blocking / warnings |
-| LLM Scientific Review | `scripts/pipeline/stage_06_llm_review.py --reviews-only` | Local Ollama reviews | Skippable / exit 2 tolerated |
-| LLM Translations | `scripts/pipeline/stage_06_llm_review.py --translations-only` | Optional translations | Skippable |
-| Copy Outputs | `scripts/pipeline/stage_05_copy.py` | Mirrors deliverables → `output/<project>/` | Soft-fail surfaced in logs |
+| LLM Manuscript Review | `scripts/pipeline/stage_06_llm_review.py` `--reviews-only` | Local Ollama reviews | Fresh policy-bound skip; required live acceptance remains blocking |
+| LLM Translations | `scripts/pipeline/stage_06_llm_review.py` `--translations-only` | Optional translations | Fresh policy-bound skip |
+| Copy Outputs | `scripts/pipeline/stage_05_copy.py` | Mirrors deliverables → `output/<project>/` | Blocking |
 
 `scripts/pipeline/stage_07_executive_report.py` is **multi-project orchestration glue** invoked after iterating active projects—not a tenth DAG node for single-repo runs (`execute_pipeline.py`).
 
@@ -72,7 +72,7 @@ The steganography path exposes metadata injection, SHA-256 hashing, overlay gene
 Rendered via `projects/templates/template_template` (`generate_manuscript_metrics.py` → injected tokens such as `${module_count}`). Architecture figures stem from [`template_template.figures.architecture_viz`](../src/template_template/figures/architecture_viz.py)—font sizes constrained by §QA.
 
 ![Two-Layer Architecture Overview](../output/figures/architecture_overview.png)
-**Figure 1.** Live rendering of the Two-Layer Architecture from repository introspection: the infrastructure layer (top) holds the `${module_count}` reusable subpackages, each annotated with its Python file count and a four-slot documentation badge—`A` AGENTS.md, `R` README.md, `S` SKILL.md, `P` PAI.md, with `·` marking an absent file—so a fully documented module reads `[ARSP]`. A YAML DAG arrow connects it to the project layer (bottom) of public exemplars labelled with chapter and test counts. The takeaway: documentation-duality coverage is near-uniform across the infrastructure, and every box was placed from the same live data the prose cites.
+**Figure 1.** Live rendering of the Two-Layer Architecture from repository introspection: the infrastructure layer (top) holds the `${module_count}` enumerated infrastructure directories, each annotated with its Python file count and a four-slot documentation badge—`A` AGENTS.md, `R` README.md, `S` SKILL.md, `P` PAI.md, with `·` marking an absent file—so a fully documented module reads `[ARSP]`. A YAML DAG arrow connects it to the project layer (bottom) of public exemplars labelled with chapter and test-file counts. The takeaway: documentation-duality coverage is near-uniform across the infrastructure, and every box was placed from the same live data the prose cites.
 
 ![Pipeline Stage Flow](../output/figures/pipeline_stages.png)
 **Figure 2.** Pipeline DAG with ${pipeline_stages_declared} YAML-declared stages (core, LLM, ebook, docxplus, metadata, bundle, archival tags).

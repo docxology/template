@@ -78,6 +78,16 @@ def _split_frame_body(body: str, *, paragraph_threshold: int = 900) -> str:
             key=lambda event: event[1].start(),
         )
 
+        # A source-owned AST pagination break already separates complete
+        # alignments. Normalize it before isolate_ended can add a second break;
+        # literal code, grouped content, and nested environments stay untouched.
+        if stripped == r"\framebreak" and not environment_stack and brace_depth == tex_group_depth == 0:
+            _append_framebreak(output)
+            segment_length = 0
+            segment_has_content = False
+            isolate_ended = False
+            continue
+
         if not environment_stack and stripped.startswith(r"{\def\LTcaptype"):
             if segment_has_content:
                 _append_framebreak(output)
@@ -147,6 +157,10 @@ def _split_frame_body(body: str, *, paragraph_threshold: int = 900) -> str:
             segment_has_content = False
             continue
         if stripped:
+            if re.fullmatch(r"(?:\\(?:protect|phantomsection)\b|\\label\{[A-Za-z0-9:_.-]+\}\s*)+", stripped):
+                # A leading anchor belongs with the following visible block;
+                # it must not manufacture a title-only frame before a table.
+                continue
             segment_length += len(line)
             segment_has_content = True
             brace_depth += _brace_delta(line)

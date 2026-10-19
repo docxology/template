@@ -1,15 +1,171 @@
-"""Two-layer architecture overview figure."""
+"""Two-layer architecture overview with a complete, readable project roster."""
 
 from __future__ import annotations
 
+from math import ceil
 from pathlib import Path
+from textwrap import fill
 from typing import Sequence
 
 import matplotlib.patches as patches
 import matplotlib.pyplot as plt
+from matplotlib.axes import Axes
+from matplotlib.figure import Figure
 
 from ..core.introspection import ModuleInfo, ProjectAnalysis
 from .viz_palette import ARCH_VIZ_COLORS, FIGURE_DPI, FONT_FLOOR, doc_badge
+
+
+def _architecture_figure(
+    modules: Sequence[ModuleInfo], projects: Sequence[ProjectAnalysis], version: str
+) -> tuple[Figure, Axes]:
+    """Lay out every discovered item in bounded cards at fixed readable sizes.
+
+    Rows grow with the roster rather than narrowing all projects into one row.
+    Coordinates are physical inches, so more rows never shrink existing text.
+    """
+    columns = 5
+    row_height = 0.82
+    module_rows = ceil(len(modules) / columns)
+    project_rows = ceil(len(projects) / columns)
+    width = 12.0
+    height = 2.8 + row_height * (module_rows + project_rows)
+    fig = plt.figure(figsize=(width, height), facecolor="white")
+    ax = fig.add_axes((0, 0, 1, 1))
+    ax.set(xlim=(0, width), ylim=(0, height))
+    ax.axis("off")
+    ax.text(
+        width / 2,
+        height - 0.16,
+        "Two-Layer Architecture",
+        ha="center",
+        va="top",
+        fontsize=24,
+        fontweight="bold",
+        color=ARCH_VIZ_COLORS["text_dark"],
+    )
+
+    def panel(top: float, rows: int, title: str, subtitle: str, color: str, background: str) -> float:
+        bottom = top - 0.82 - rows * row_height
+        ax.add_patch(
+            patches.FancyBboxPatch(
+                (0.2, bottom),
+                width - 0.4,
+                top - bottom,
+                boxstyle="round,pad=0.03",
+                linewidth=1.5,
+                edgecolor=color,
+                facecolor=background,
+                zorder=0,
+            )
+        )
+        ax.text(
+            width / 2,
+            top - 0.14,
+            title,
+            ha="center",
+            va="top",
+            fontsize=FONT_FLOOR,
+            fontweight="bold",
+            color=color,
+        )
+        ax.text(
+            width / 2,
+            top - 0.49,
+            subtitle,
+            ha="center",
+            va="top",
+            fontsize=12,
+            color=ARCH_VIZ_COLORS["neutral"],
+        )
+        return bottom
+
+    infra_top = height - 0.7
+    infra_bottom = panel(
+        infra_top,
+        module_rows,
+        "Layer 1 · Infrastructure · generic and reusable",
+        f"{len(modules)} directories · {version} · badges: A AGENTS · R README · S SKILL · P PAI · absent = ·",
+        ARCH_VIZ_COLORS["infra"],
+        ARCH_VIZ_COLORS["bg_infra"],
+    )
+    project_top = infra_bottom - 0.42
+    panel(
+        project_top,
+        project_rows,
+        "Layer 2 · Projects · isolated domain logic",
+        f"{len(projects)} projects · template_ prefix omitted from card labels · ch = manuscript chapters",
+        ARCH_VIZ_COLORS["project"],
+        ARCH_VIZ_COLORS["bg_project"],
+    )
+    ax.annotate(
+        "",
+        xy=(width / 2, project_top + 0.03),
+        xytext=(width / 2, infra_bottom - 0.03),
+        arrowprops={"arrowstyle": "-|>", "color": ARCH_VIZ_COLORS["pipeline"], "lw": 2},
+    )
+
+    card_width = (width - 0.8) / columns
+
+    def card(index: int, top: float, label: str, detail: str, color: str, badge: str = "") -> None:
+        row, column = divmod(index, columns)
+        left = 0.4 + column * card_width
+        bottom = top - 0.78 - (row + 1) * row_height
+        box = patches.FancyBboxPatch(
+            (left + 0.04, bottom + 0.08),
+            card_width - 0.08,
+            row_height - 0.12,
+            boxstyle="round,pad=0.02",
+            facecolor="white",
+            edgecolor=color,
+            linewidth=1,
+        )
+        box.set_gid("architecture-card")
+        ax.add_patch(box)
+        center = left + card_width / 2
+        name = ax.text(
+            center,
+            bottom + 0.53,
+            fill(label.replace("_", " "), width=17),
+            ha="center",
+            va="center",
+            fontsize=FONT_FLOOR,
+            fontweight="semibold",
+            color=ARCH_VIZ_COLORS["text_dark"],
+            linespacing=1.05,
+        )
+        name.set_gid("architecture-card-label")
+        metric = ax.text(
+            center,
+            bottom + 0.20,
+            detail,
+            ha="center",
+            va="center",
+            fontsize=12,
+            color=color,
+        )
+        metric.set_gid("architecture-card-detail")
+        if badge:
+            metric.set_text(detail + " · " + badge)
+
+    for index, module in enumerate(modules):
+        card(
+            index,
+            infra_top,
+            module.name,
+            f"{module.python_file_count} py",
+            ARCH_VIZ_COLORS["infra_dark"],
+            f"[{doc_badge(module)}]",
+        )
+    for index, project in enumerate(projects):
+        card(
+            index,
+            project_top,
+            project.name.removeprefix("template_"),
+            f"{project.chapter_count} ch · {project.test_file_count} test files",
+            ARCH_VIZ_COLORS["project"],
+        )
+    return fig, ax
 
 
 def generate_architecture_overview(
@@ -18,308 +174,11 @@ def generate_architecture_overview(
     output_dir: Path,
     version: str = "v2.0.0",
 ) -> Path:
-    """Generate the Two-Layer Architecture overview figure."""
-    fig, ax = plt.subplots(figsize=(18, 12))
-    ax.set_xlim(0, 100)
-    ax.set_ylim(0, 100)
-    ax.axis("off")
-    fig.patch.set_facecolor("white")
-
-    ax.text(
-        50,
-        99,
-        "Two-Layer Architecture",
-        ha="center",
-        va="top",
-        fontsize=28,
-        fontweight="bold",
-        color=ARCH_VIZ_COLORS["text_dark"],
-    )
-    ax.text(
-        50,
-        95.5,
-        "Layer 1: Infrastructure  (generic · reusable · cross-project)",
-        ha="center",
-        va="top",
-        fontsize=FONT_FLOOR,
-        color=ARCH_VIZ_COLORS["infra"],
-        fontweight="semibold",
-    )
-    ax.text(
-        50,
-        92,
-        "Layer 2: Projects  (domain-specific · customizable · isolated)",
-        ha="center",
-        va="top",
-        fontsize=FONT_FLOOR,
-        color=ARCH_VIZ_COLORS["project"],
-        fontweight="semibold",
-    )
-
-    infra_y = 44
-    infra_h = 45
-    ax.add_patch(
-        patches.FancyBboxPatch(
-            (2, infra_y),
-            96,
-            infra_h,
-            boxstyle="round,pad=1.5",
-            facecolor=ARCH_VIZ_COLORS["bg_infra"],
-            edgecolor=ARCH_VIZ_COLORS["infra"],
-            linewidth=3,
-            alpha=0.90,
-        )
-    )
-    ax.text(
-        50,
-        infra_y + infra_h - 2,
-        "INFRASTRUCTURE LAYER",
-        ha="center",
-        va="center",
-        fontsize=FONT_FLOOR + 4,
-        fontweight="bold",
-        color=ARCH_VIZ_COLORS["infra"],
-    )
-    ax.text(
-        50,
-        infra_y + infra_h - 6,
-        f"{len(modules)} reusable subpackages  ·  {version}",
-        ha="center",
-        va="center",
-        fontsize=FONT_FLOOR,
-        color=ARCH_VIZ_COLORS["neutral"],
-        style="italic",
-    )
-
-    n_cols = 6
-    col_width = 15.5
-    n_mods = len(modules)
-    xs_start = 50 - (min(n_mods, n_cols) * col_width / 2)
-    box_h = 9.5
-    row_gap = 11.5
-
-    for idx, module in enumerate(modules):
-        row, col = divmod(idx, n_cols)
-        cx = xs_start + col * col_width + col_width / 2
-        cy = (infra_y + infra_h - 12) - row * row_gap
-
-        ax.add_patch(
-            patches.FancyBboxPatch(
-                (cx - 7.2 + 0.4, cy - box_h / 2 - 0.3),
-                14.4,
-                box_h,
-                boxstyle="round,pad=0.6",
-                facecolor=ARCH_VIZ_COLORS["shadow"],
-                edgecolor="none",
-                alpha=0.35,
-                zorder=1,
-            )
-        )
-        ax.add_patch(
-            patches.FancyBboxPatch(
-                (cx - 7.2, cy - box_h / 2),
-                14.4,
-                box_h,
-                boxstyle="round,pad=0.6",
-                facecolor=ARCH_VIZ_COLORS["white"],
-                edgecolor=ARCH_VIZ_COLORS["infra"],
-                linewidth=2.2,
-                zorder=2,
-            )
-        )
-        label = module.name.replace("_", "\n") if len(module.name) > 10 else module.name
-        ax.text(
-            cx,
-            cy + 1.2,
-            label,
-            ha="center",
-            va="center",
-            fontsize=FONT_FLOOR - 2,
-            fontweight="bold",
-            color=ARCH_VIZ_COLORS["text_dark"],
-            zorder=3,
-            linespacing=1.1,
-        )
-        ax.text(
-            cx,
-            cy - 2.5,
-            f"{module.python_file_count} py",
-            ha="center",
-            va="center",
-            fontsize=FONT_FLOOR - 4,
-            fontweight="semibold",
-            color=ARCH_VIZ_COLORS["infra_dark"],
-            zorder=3,
-        )
-        badge = doc_badge(module)
-        ax.text(
-            cx + 6,
-            cy + box_h / 2 - 1.8,
-            badge,
-            ha="right",
-            va="center",
-            fontsize=8,
-            fontfamily="monospace",
-            color=ARCH_VIZ_COLORS["neutral"],
-            zorder=3,
-            alpha=0.7,
-        )
-
-    arrow_x = 50
-    arrow_top = infra_y - 0.5
-    arrow_bot = 25
-    ax.annotate(
-        "",
-        xy=(arrow_x, arrow_bot),
-        xytext=(arrow_x, arrow_top),
-        arrowprops=dict(
-            arrowstyle="-|>",
-            lw=5,
-            color=ARCH_VIZ_COLORS["pipeline"],
-            connectionstyle="arc3,rad=0",
-        ),
-    )
-    ax.text(
-        arrow_x + 5,
-        (arrow_top + arrow_bot) / 2,
-        f"YAML DAG\n{len(modules)} modules",
-        ha="left",
-        va="center",
-        fontsize=FONT_FLOOR + 2,
-        fontweight="bold",
-        color=ARCH_VIZ_COLORS["pipeline"],
-        linespacing=1.4,
-    )
-
-    # Documentation-badge legend (left of the DAG arrow): decode the [ARSP]
-    # four-slot badge printed on every infrastructure module box.
-    legend_x = 8
-    legend_y = arrow_bot + 1
-    ax.add_patch(
-        patches.FancyBboxPatch(
-            (legend_x - 1.5, legend_y - 1),
-            34,
-            13,
-            boxstyle="round,pad=0.5",
-            facecolor=ARCH_VIZ_COLORS["white"],
-            edgecolor=ARCH_VIZ_COLORS["divider"],
-            linewidth=1.5,
-            alpha=0.95,
-            zorder=4,
-        )
-    )
-    ax.text(
-        legend_x,
-        legend_y + 10,
-        "Doc badge",
-        ha="left",
-        va="center",
-        fontsize=FONT_FLOOR - 4,
-        fontweight="bold",
-        color=ARCH_VIZ_COLORS["text_dark"],
-        zorder=5,
-    )
-    for row, (glyph, meaning) in enumerate(
-        [
-            ("A", "AGENTS.md"),
-            ("R", "README.md"),
-            ("S", "SKILL.md"),
-            ("P", "PAI.md  ( ·  = absent )"),
-        ]
-    ):
-        ax.text(
-            legend_x,
-            legend_y + 7.5 - row * 2.4,
-            f"{glyph}  ·  {meaning}",
-            ha="left",
-            va="center",
-            fontsize=FONT_FLOOR - 6,
-            fontfamily="monospace",
-            color=ARCH_VIZ_COLORS["neutral"],
-            zorder=5,
-        )
-
-    proj_y = 2
-    proj_h = 22
-    ax.add_patch(
-        patches.FancyBboxPatch(
-            (2, proj_y),
-            96,
-            proj_h,
-            boxstyle="round,pad=1.5",
-            facecolor=ARCH_VIZ_COLORS["bg_project"],
-            edgecolor=ARCH_VIZ_COLORS["project"],
-            linewidth=3,
-            alpha=0.90,
-        )
-    )
-    ax.text(
-        50,
-        proj_y + proj_h - 1.5,
-        "PROJECT LAYER",
-        ha="center",
-        va="center",
-        fontsize=FONT_FLOOR + 4,
-        fontweight="bold",
-        color=ARCH_VIZ_COLORS["project"],
-    )
-
-    n_proj = len(projects)
-    proj_width = min(28, 86 / max(n_proj, 1))
-    start_px = 50 - (n_proj * proj_width) / 2
-    for i, project in enumerate(projects):
-        px = start_px + i * proj_width + proj_width / 2
-        ax.add_patch(
-            patches.FancyBboxPatch(
-                (px - proj_width / 2 + 1.2, proj_y + 2.5),
-                proj_width - 2,
-                12.5,
-                boxstyle="round,pad=0.5",
-                facecolor=ARCH_VIZ_COLORS["shadow"],
-                edgecolor="none",
-                alpha=0.3,
-                zorder=1,
-            )
-        )
-        ax.add_patch(
-            patches.FancyBboxPatch(
-                (px - proj_width / 2 + 0.8, proj_y + 3),
-                proj_width - 1.6,
-                12.5,
-                boxstyle="round,pad=0.5",
-                facecolor=ARCH_VIZ_COLORS["white"],
-                edgecolor=ARCH_VIZ_COLORS["project"],
-                linewidth=2,
-                zorder=2,
-            )
-        )
-        proj_label = project.name.replace("_", "\n")
-        ax.text(
-            px,
-            proj_y + 9.5,
-            proj_label,
-            ha="center",
-            va="center",
-            fontsize=FONT_FLOOR - 2,
-            fontweight="semibold",
-            color=ARCH_VIZ_COLORS["text_dark"],
-            zorder=3,
-            linespacing=1.15,
-        )
-        ax.text(
-            px,
-            proj_y + 4.8,
-            f"{project.chapter_count} ch · {project.test_file_count} tests",
-            ha="center",
-            va="center",
-            fontsize=FONT_FLOOR - 5,
-            fontweight="normal",
-            color=ARCH_VIZ_COLORS["text_light"],
-            zorder=3,
-        )
-
-    plt.tight_layout(pad=0.3)
+    """Generate a two-layer overview without dropping or overlapping projects."""
+    fig, _ = _architecture_figure(modules, projects, version)
     path = output_dir / "architecture_overview.png"
-    plt.savefig(path, dpi=FIGURE_DPI, bbox_inches="tight", facecolor="white")
-    plt.close()
+    try:
+        fig.savefig(path, dpi=FIGURE_DPI, facecolor="white")
+    finally:
+        plt.close(fig)
     return path

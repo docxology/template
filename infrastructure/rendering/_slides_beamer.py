@@ -20,7 +20,9 @@ from infrastructure.rendering._bibliography import (
 from infrastructure.rendering._pdf_unicode_remap import _T, _map_prose_glyphs
 from infrastructure.rendering._slides_codelisting import make_codelisting_slide_safe
 from infrastructure.rendering._slides_framebreaks import split_long_slide_frames
-from infrastructure.rendering._slides_math_header import write_slides_math_header as write_slides_math_header
+from infrastructure.rendering._slides_math_header import (
+    write_slides_math_header as write_slides_math_header,
+)
 from infrastructure.rendering._slides_tex_figures import (
     normalize_accessible_projection_latex as normalize_accessible_projection_latex,
 )
@@ -30,7 +32,9 @@ from infrastructure.rendering._slides_tex_tables import (
     inset_accessible_longtables as inset_accessible_longtables,
 )
 from infrastructure.rendering.config import RenderingConfig
-from infrastructure.rendering.latex_log_quality import parse_latex_log_findings as parse_latex_log_findings
+from infrastructure.rendering.latex_log_quality import (
+    parse_latex_log_findings as parse_latex_log_findings,
+)
 from infrastructure.rendering._slides_beamer_geometry import (
     reject_accessible_beamer_overflow,
 )
@@ -55,6 +59,7 @@ _SLIDES_GLYPH_REMAP: Final[dict[str, str]] = {
     # and section moving arguments cannot trip hyperref's ``Extra \fi``
     # aux-write errors. Protected code regions (Highlighting/verbatim/
     # ``\passthrough``) and graphics filename arguments stay untouched.
+    "✓": _T(r"\checkmark", "[ok]"),
     "≥": _T(r"\ge", ">="),
     "≤": _T(r"\leq", "<="),
     "≠": _T(r"\neq", "!="),
@@ -286,7 +291,10 @@ def transform_beamer_latex(
     """
     tex_content, href_escapes = _escape_ampersands_in_href_urls(tex_content)
     if href_escapes:
-        logger.info("Escaped & in %d \\href URL argument(s) for beamer token safety", href_escapes)
+        logger.info(
+            "Escaped & in %d \\href URL argument(s) for beamer token safety",
+            href_escapes,
+        )
 
     tex_content, codelisting_replacements = make_codelisting_slide_safe(
         tex_content,
@@ -305,7 +313,10 @@ def transform_beamer_latex(
     if config.slides_profile == "archive":
         tex_content, texttt_replacements = make_long_texttt_breakable(tex_content)
     if texttt_replacements:
-        logger.info("Made %d long monospace path span(s) breakable in slides", texttt_replacements)
+        logger.info(
+            "Made %d long monospace path span(s) breakable in slides",
+            texttt_replacements,
+        )
 
     tex_content, literal_replacements = make_known_literals_breakable(tex_content)
     if literal_replacements:
@@ -327,7 +338,10 @@ def transform_beamer_latex(
         tex_content, _ = inset_accessible_longtables(tex_content)
         tex_content, normalized_graphics, removed_empty_captions = normalize_accessible_projection_latex(tex_content)
         if normalized_graphics:
-            logger.info("Preserved aspect ratio for %d accessible slide figure(s)", normalized_graphics)
+            logger.info(
+                "Preserved aspect ratio for %d accessible slide figure(s)",
+                normalized_graphics,
+            )
         if removed_empty_captions:
             logger.info("Removed %d empty projected caption(s)", removed_empty_captions)
 

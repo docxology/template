@@ -1,4 +1,4 @@
-"""Helpers for breakable monospace spans in generated LaTeX."""
+"""Helpers for breakable monospace spans and code blocks in generated LaTeX."""
 
 from __future__ import annotations
 
@@ -13,6 +13,16 @@ _BREAKTT_PREAMBLE = r"""
 \protected\def\breakseq#1{\seqsplit{#1}}
 \protected\def\breaktt#1{\begingroup\ttfamily\seqsplit{#1}\endgroup}
 """.strip()
+# fvextra adds break opportunities during typesetting, without changing code
+# bytes or reducing the font. Pandoc groups highlighted tokens inside macros;
+# wrapping inside those groups is necessary for a long YAML string to fit.
+# Lowercase verbatim is otherwise independent of FancyVerb's global settings.
+VERBATIM_WRAP_PREAMBLE = r"""
+\usepackage{fvextra}
+\fvset{breaklines=true,breakanywhere=true,breaknonspaceingroup=true,breaksymbolleft={},breaksymbolright={},breakanywheresymbolpre={},breakanywheresymbolpost={}}
+\RecustomVerbatimEnvironment{verbatim}{Verbatim}{}
+""".strip()
+
 _BREAKABLE_LITERALS = (
     r"MILD\_SURPRISE",
     "CATASTROPHIC",
@@ -260,10 +270,17 @@ def _plain_paragraph_tables(text: str) -> list[tuple[int, int, int]]:
                         if columns_end is not None and _PANDOC_PARAGRAPH_COLUMNS.fullmatch(
                             text[start + 1 : columns_end - 1]
                         ):
-                            end = text.find(r"\end{longtable}", columns_end, columns_end + 1024 * 1024)
+                            end = text.find(
+                                r"\end{longtable}",
+                                columns_end,
+                                columns_end + 1024 * 1024,
+                            )
                             if end >= 0 and _simple_table_body(text[columns_end:end]):
                                 column_count = len(
-                                    re.findall(_PANDOC_PARAGRAPH_COLUMN, text[start + 1 : columns_end - 1])
+                                    re.findall(
+                                        _PANDOC_PARAGRAPH_COLUMN,
+                                        text[start + 1 : columns_end - 1],
+                                    )
                                 )
                                 ranges.append((columns_end, end, column_count))
                                 if len(ranges) >= 256:

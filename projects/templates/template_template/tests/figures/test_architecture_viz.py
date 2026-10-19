@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
+import matplotlib.pyplot as plt
 import numpy as np
 
 from helpers import PROJECT_DIR, REPO_ROOT
@@ -16,7 +17,15 @@ from template_template.figures.architecture_viz import (
     generate_module_inventory,
     generate_pipeline_stages,
 )
-from template_template.core.introspection import ModuleInfo, PipelineStage, ProjectAnalysis
+from template_template.core.introspection import (
+    ModuleInfo,
+    PipelineStage,
+    ProjectAnalysis,
+    discover_infrastructure_modules,
+    discover_projects,
+)
+from template_template.figures.figure_architecture_overview import _architecture_figure
+from template_template.figures.viz_palette import FONT_FLOOR
 
 
 def _sample_modules() -> list[ModuleInfo]:
@@ -101,7 +110,42 @@ def test_comparative_feature_matrix_data_shape_and_values() -> None:
 
 
 def test_generate_architecture_overview_writes_png(tmp_path: Path) -> None:
-    path = generate_architecture_overview(_sample_modules(), _sample_projects(), tmp_path, "v1.0.0")
+    modules = discover_infrastructure_modules(REPO_ROOT)
+    projects = discover_projects(REPO_ROOT)
+    fig, ax = _architecture_figure(modules, projects, "v1.0.0")
+    try:
+        fig.canvas.draw()
+        renderer = fig.canvas.get_renderer()
+        cards = [patch for patch in ax.patches if patch.get_gid() == "architecture-card"]
+        labels = [text for text in ax.texts if text.get_gid() == "architecture-card-label"]
+        details = [text for text in ax.texts if text.get_gid() == "architecture-card-detail"]
+        assert len(cards) == len(labels) == len(details) == len(modules) + len(projects)
+        expected_names = [module.name for module in modules] + [
+            project.name.removeprefix("template_") for project in projects
+        ]
+        assert [" ".join(text.get_text().split()) for text in labels] == [
+            name.replace("_", " ") for name in expected_names
+        ]
+        boxes = [card.get_window_extent(renderer) for card in cards]
+        for index, (box, label, detail) in enumerate(zip(boxes, labels, details, strict=True)):
+            assert label.get_fontsize() >= FONT_FLOOR
+            for text in (label, detail):
+                extent = text.get_window_extent(renderer)
+                assert box.contains(extent.x0, extent.y0), (
+                    index,
+                    text.get_text(),
+                    "bottom/left",
+                )
+                assert box.contains(extent.x1, extent.y1), (
+                    index,
+                    text.get_text(),
+                    "top/right",
+                )
+            assert not label.get_window_extent(renderer).overlaps(detail.get_window_extent(renderer))
+            assert all(not box.overlaps(other) for other in boxes[index + 1 :])
+    finally:
+        plt.close(fig)
+    path = generate_architecture_overview(modules, projects, tmp_path, "v1.0.0")
     assert path.exists()
     assert path.stat().st_size > 1000
 

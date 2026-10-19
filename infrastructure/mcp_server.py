@@ -1,8 +1,8 @@
 """Self-contained stdio MCP server exposing the template's agent surface.
 
 This is the capstone of the package's agentic-operability surface: it makes
-every discovered capability reachable to *any* MCP-speaking agent, not just an
-editor that reads ``.cursor/*.json``. It is the server counterpart to the
+every discovered capability reachable to *any* MCP-speaking agent, not just a
+client that reads the shared ``.agents/`` catalog. It is the server counterpart to the
 discovery registries — :mod:`infrastructure.skills.operation_registry`,
 :mod:`infrastructure.core.pipeline.cli`, and
 :mod:`infrastructure.skills.discovery` — surfacing them as MCP *tools*.
@@ -17,7 +17,7 @@ via the pure :func:`handle_request` function without any transport or SDK.
 Tools exposed:
 
 * ``list_operations`` — the machine-readable CLI operation catalog.
-* ``describe_pipeline`` — the 16-stage pipeline contract derived from pipeline.yaml.
+* ``describe_pipeline`` — the declared pipeline contract derived from pipeline.yaml.
 * ``list_skills`` — discovered ``SKILL.md`` descriptors.
 * ``invoke_cli`` — run ``python -m infrastructure.<module> <args...>`` and return
   ``{exit_code, stdout, stderr}``. Restricted to ``infrastructure.*`` modules that
@@ -123,7 +123,12 @@ def _operations_by_module() -> dict[str, OperationDescriptor]:
 
 
 def _mutating_opt_in_env() -> bool:
-    return os.environ.get(ALLOW_MUTATING_ENV, "").strip().lower() in {"1", "true", "yes", "on"}
+    return os.environ.get(ALLOW_MUTATING_ENV, "").strip().lower() in {
+        "1",
+        "true",
+        "yes",
+        "on",
+    }
 
 
 def invoke_cli(
@@ -146,10 +151,18 @@ def invoke_cli(
     ``False`` does not disable that configured opt-in; malformed values are refused.
     """
     if type(allow_mutating) is not bool:
-        return {"exit_code": 2, "stdout": "", "stderr": "allow_mutating must be a boolean"}
+        return {
+            "exit_code": 2,
+            "stdout": "",
+            "stderr": "allow_mutating must be a boolean",
+        }
     args = list(args or [])
     if not module.startswith("infrastructure."):
-        return {"exit_code": 2, "stdout": "", "stderr": f"refused: {module!r} is not an infrastructure.* module"}
+        return {
+            "exit_code": 2,
+            "stdout": "",
+            "stderr": f"refused: {module!r} is not an infrastructure.* module",
+        }
     operations = _operations_by_module()
     descriptor = operations.get(module)
     if descriptor is None:
@@ -180,11 +193,19 @@ def invoke_cli(
 def _tool_invoke_cli(args: dict[str, Any]) -> dict[str, Any]:
     allow_mutating = args.get("allow_mutating", False)
     if type(allow_mutating) is not bool:
-        return {"exit_code": 2, "stdout": "", "stderr": "allow_mutating must be a boolean"}
+        return {
+            "exit_code": 2,
+            "stdout": "",
+            "stderr": "allow_mutating must be a boolean",
+        }
     module = str(args.get("module", ""))
     cli_args = args.get("args") or []
     if not isinstance(cli_args, list):
-        return {"exit_code": 2, "stdout": "", "stderr": "args must be a list of strings"}
+        return {
+            "exit_code": 2,
+            "stdout": "",
+            "stderr": "args must be a list of strings",
+        }
     return invoke_cli(module, [str(a) for a in cli_args], allow_mutating=allow_mutating)
 
 
@@ -202,7 +223,11 @@ _TOOLS: dict[str, tuple[Callable[[dict[str, Any]], dict[str, Any]], str, dict[st
             "type": "object",
             "properties": {
                 "mode": {"type": "string", "enum": ["core", "live"], "default": "core"},
-                "view": {"type": "string", "enum": ["execution", "declared"], "default": "execution"},
+                "view": {
+                    "type": "string",
+                    "enum": ["execution", "declared"],
+                    "default": "execution",
+                },
                 "project": {"type": "string"},
             },
             "additionalProperties": False,
@@ -221,8 +246,15 @@ _TOOLS: dict[str, tuple[Callable[[dict[str, Any]], dict[str, Any]], str, dict[st
         {
             "type": "object",
             "properties": {
-                "module": {"type": "string", "description": "Dotted module, e.g. infrastructure.core.pipeline"},
-                "args": {"type": "array", "items": {"type": "string"}, "description": "CLI arguments"},
+                "module": {
+                    "type": "string",
+                    "description": "Dotted module, e.g. infrastructure.core.pipeline",
+                },
+                "args": {
+                    "type": "array",
+                    "items": {"type": "string"},
+                    "description": "CLI arguments",
+                },
                 "allow_mutating": {
                     "type": "boolean",
                     "description": "Explicit boolean opt-in for file-writing, external/paid, or unaudited operations",
@@ -270,7 +302,14 @@ def _request_era(request: dict[str, Any]) -> ProtocolEra:
     meta = _request_meta(request)
     if method == "server/discover" or (
         meta is not None
-        and any(key in meta for key in (_PROTOCOL_VERSION_META, _CLIENT_INFO_META, _CLIENT_CAPABILITIES_META))
+        and any(
+            key in meta
+            for key in (
+                _PROTOCOL_VERSION_META,
+                _CLIENT_INFO_META,
+                _CLIENT_CAPABILITIES_META,
+            )
+        )
     ):
         return "modern"
     return "legacy"
@@ -291,7 +330,10 @@ def _modern_request_error(request: dict[str, Any]) -> dict[str, Any] | None:
             req_id,
             -32022,
             "Unsupported protocol version",
-            data={"supported": list(SUPPORTED_PROTOCOL_VERSIONS), "requested": requested},
+            data={
+                "supported": list(SUPPORTED_PROTOCOL_VERSIONS),
+                "requested": requested,
+            },
         )
 
     client_info = meta.get(_CLIENT_INFO_META)
@@ -300,7 +342,11 @@ def _modern_request_error(request: dict[str, Any]) -> dict[str, Any] | None:
     ):
         return _err(req_id, -32602, f"missing or invalid params._meta.{_CLIENT_INFO_META}")
     if not isinstance(meta.get(_CLIENT_CAPABILITIES_META), dict):
-        return _err(req_id, -32602, f"missing or invalid params._meta.{_CLIENT_CAPABILITIES_META}")
+        return _err(
+            req_id,
+            -32602,
+            f"missing or invalid params._meta.{_CLIENT_CAPABILITIES_META}",
+        )
     return None
 
 
@@ -361,7 +407,11 @@ def handle_request(
 
     if method == "initialize":
         if modern:
-            return _err(req_id, -32601, "method not found in the modern protocol era: initialize")
+            return _err(
+                req_id,
+                -32601,
+                "method not found in the modern protocol era: initialize",
+            )
         return _ok(
             req_id,
             {
