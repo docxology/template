@@ -1,6 +1,6 @@
 {
-  "decoded_bytes": 6537686,
-  "decoded_sha256": "b9d3c563cdfc17adcb652a01fadbc36b5d994a87275d64b7c8d0d03e0765ab38",
+  "decoded_bytes": 6540810,
+  "decoded_sha256": "8c4271044bb84f0f070b26479c48457cfc8f8f3e24644abb37b3854b4dcd9852",
   "encoding": "canonical-json-zlib-9-base64-parts",
   "parts": [
     {
@@ -16,19 +16,19 @@
     {
       "bytes": 262216,
       "ordinal": 2,
-      "sha256": "6af9d757724e7b3ae1e65eceae5c4cacaab7f8fc41ec05fa4753c41066dff910"
+      "sha256": "6a89eff703571e15688e3b850d60a803c1bfc98659db1b815a9f577442056708"
     },
     {
       "bytes": 262216,
       "ordinal": 3,
-      "sha256": "2492d85f8102278904d89c1b55e9a13b9c782e38a3302a30e43d69cc8fcad8d9"
+      "sha256": "094a2c0082ab0067ba05ae842dd2167f6e17ed15ded8a7fe5edd99bc5ea38da5"
     },
     {
-      "bytes": 165952,
+      "bytes": 166548,
       "ordinal": 4,
-      "sha256": "e7cbcb076095c761cc15e6397c850cda61a9b2a0f2177cb4a0c0ca0dac97e338"
+      "sha256": "8bb7049beda890c48136b61952345e8eb641ec7dc464f1c6c7b0a831d2b5965e"
     }
   ],
-  "policy_sha256": "b9d3c563cdfc17adcb652a01fadbc36b5d994a87275d64b7c8d0d03e0765ab38",
+  "policy_sha256": "8c4271044bb84f0f070b26479c48457cfc8f8f3e24644abb37b3854b4dcd9852",
   "schema_version": "template-root-policy-encoding-v1"
 }
