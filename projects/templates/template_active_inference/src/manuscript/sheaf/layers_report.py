@@ -59,8 +59,9 @@ def render_track_registry_table(registry: TrackRegistry) -> str:
     ]
     for track_id, spec in sorted(registry.tracks.items(), key=lambda item: item[1].order):
         optional = "Yes" if spec.optional else "No"
+        label = spec.label.replace("/", " / ")
         lines.append(
-            f"| {spec.order} | `{track_id}` | {spec.label} | `{spec.renderer}` | "
+            f"| {spec.order} | `{track_id}` | {label} | `{spec.renderer}` | "
             f"{spec.paper_role} | {spec.paper_use} | {optional} |"
         )
     lines.append("")

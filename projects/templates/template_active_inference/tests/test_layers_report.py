@@ -52,10 +52,33 @@ def test_coverage_cell_symbol_maps_colors() -> None:
 def test_track_registry_table_row_count(project_root: Path) -> None:
     manifest = load_manifest(project_root / "manuscript" / "sheaf" / "manifest.yaml", project_root=project_root)
     registry = load_track_registry(project_root / manifest.registry_path)
+    original_labels = {track_id: spec.label for track_id, spec in registry.tracks.items()}
     table = render_track_registry_table(registry)
     assert "<!-- sheaf-layers:registry -->" in table
     assert "## Sheaf fragment track registry" in table
-    assert table.count("| `") >= len(registry.tracks)
+    cells = [
+        [cell.strip() for cell in line.strip("|").split("|")] for line in table.splitlines() if line.startswith("|")
+    ]
+    assert cells[0] == ["Order", "Track id", "Label", "Renderer", "Paper role", "Paper use", "Optional"]
+    assert all(len(row) == len(cells[0]) for row in cells)
+    ordered_tracks = sorted(registry.tracks.items(), key=lambda item: item[1].order)
+    assert len(cells[2:]) == len(ordered_tracks)
+    for row, (track_id, spec) in zip(cells[2:], ordered_tracks, strict=True):
+        assert row[:2] == [str(spec.order), f"`{track_id}`"]
+        assert row[2].replace(" / ", "/") == spec.label
+        assert row[3:] == [
+            f"`{spec.renderer}`",
+            spec.paper_role,
+            spec.paper_use,
+            "Yes" if spec.optional else "No",
+        ]
+        # Ordinary Markdown spaces provide line-break opportunities in PDF and HTML.
+        # Exact rendered geometry is checked by native publication QA separately.
+        for index, character in enumerate(row[2]):
+            if character == "/":
+                assert row[2][index - 1 : index] == " "
+                assert row[2][index + 1 : index + 2] == " "
+    assert {track_id: spec.label for track_id, spec in registry.tracks.items()} == original_labels
     assert "**Track count:** {{sheaf_track_count}} registered fragment types." in table
 
 
