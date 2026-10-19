@@ -3,7 +3,7 @@
   "projects": {
     "template_active_inference": {
       "coverage_pct": "91.04 %",
-      "source_hash": "f2d47b4cc83985cdeb1d7c7f38ab14670f3fdb47edb8c0c1de7226d6ef849dd8"
+      "source_hash": "753dbee64d8a4f2d0ad688ffef8ec62efe1f45bf7cc2ba4d92267e420b45d8e0"
     },
     "template_advanced_literature_review": {
       "coverage_pct": "94.30 %",
@@ -23,7 +23,7 @@
     },
     "template_code_project": {
       "coverage_pct": "93.86 %",
-      "source_hash": "1f2b173fddc71f8b88ef0c1be25fa13211e5a32b84a59b7eea328943033f8b1f"
+      "source_hash": "430355cb8a30e08262fde24a321de3229d2daf1006ae2e20aaf8071f99f95124"
     },
     "template_data_descriptor": {
       "coverage_pct": "96.26 %",
@@ -103,7 +103,7 @@
     }
   },
   "schema_version": 5,
-  "source_commit": "6b254e16ee9078a2230b86a68ec9e9d8cd78c9b2",
+  "source_commit": "5abc6fc9fdc71f24e1c079ea5e485097f6a35a86",
   "source_inventory_mode": "tracked-and-nonignored-coverage-inputs-v3",
   "source_tree_identity": {
     "algorithm": "sha256",
@@ -205,12 +205,12 @@
       }
     },
     "projects": {
-      "template_active_inference": "f2d47b4cc83985cdeb1d7c7f38ab14670f3fdb47edb8c0c1de7226d6ef849dd8",
+      "template_active_inference": "753dbee64d8a4f2d0ad688ffef8ec62efe1f45bf7cc2ba4d92267e420b45d8e0",
       "template_advanced_literature_review": "c59f372a1e79f39918157c75fe5f0117dee9754f4204f7a8d8196aee965b96a2",
       "template_autopoiesis": "d022efaf60a6ddc1205368800ccd4b11e7cfbd490b3d82e1012009c947578f2c",
       "template_autoresearch_project": "cb0757779ac8dda9bd88a11b16c735e790ca76c25dc525e6b2cf7412c7c59fb3",
       "template_autoscientists": "439587fefc9aa71aacc8deb1d935f04de12e077c2846f8e60da0b32860a3f2e3",
-      "template_code_project": "1f2b173fddc71f8b88ef0c1be25fa13211e5a32b84a59b7eea328943033f8b1f",
+      "template_code_project": "430355cb8a30e08262fde24a321de3229d2daf1006ae2e20aaf8071f99f95124",
       "template_data_descriptor": "a3b23d23384a27853cbc73ebe4b45706bd3a0d3e398a8088afd2b4e0a58fd036",
       "template_eda_notebook": "8c3f3be67c572e1ce39fe850f57cdc24cb0ac71d2a48b03842658ddbcdba573d",
       "template_experiment_tree": "db280d497285aab683e24d0da3a4d00c580e207bc885f8d3020c7422f16e52b5",
