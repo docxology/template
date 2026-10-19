@@ -316,7 +316,7 @@ Generated status for the current manuscript sheaf, summarized per composable sec
 ## Track status
 
 | Track | Renderer | Bound sections | Present | Missing | Claims | Status |
-| --- | --- | ---: | ---: | ---: | ---: | --- |
+| -------------------- | --------------- | -----: | -----: | -----: | -----: | -------- |
 | `prose` | `markdown` | 12 | 12 | 0 | 0 | `complete` |
 | `formalism` | `markdown` | 5 | 5 | 0 | 0 | `complete` |
 | `simulation` | `markdown` | 5 | 5 | 0 | 11 | `complete` |
