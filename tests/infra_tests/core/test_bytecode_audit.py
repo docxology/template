@@ -361,3 +361,82 @@ def test_cache_read_traverses_search_only_ancestors_without_listing(tmp_path: Pa
     assert target.read_bytes() == content
     assert set(ancestor.iterdir()) == {root}
     assert set(root.iterdir()) == {target}
+
+
+@pytest.mark.parametrize(
+    "declaration",
+    ["spec-only", "wrong-spec", "missing-spec", "untrusted-spec", "wrong-legacy", "null-legacy"],
+)
+def test_import_cache_uses_trusted_module_spec_and_rejects_contradictions(tmp_path: Path, declaration: str) -> None:
+    root = tmp_path.resolve() / "source"
+    root.mkdir()
+    (root / "domain.py").write_text("VALUE = 42\n")
+    prefix = tmp_path.resolve() / "cache"
+    prefix.mkdir()
+    launch = (
+        bytecode_audit_bootstrap((root,), prefix)
+        + """
+import sys,types
+from pathlib import Path
+source=Path(sys.argv[1]);declaration=sys.argv[2]
+sys.path.insert(0,str(source))
+import domain
+assert domain.VALUE==42
+selected=domain.__spec__.cached
+assert isinstance(selected,str) and Path(selected).is_relative_to(Path(sys.pycache_prefix))
+if declaration=='spec-only':
+    domain.__dict__.pop('__cached__',None)
+elif declaration=='wrong-spec':
+    domain.__spec__.cached=str(source/'unreviewed.pyc')
+elif declaration=='missing-spec':
+    domain.__cached__=selected
+    domain.__spec__=None
+elif declaration=='untrusted-spec':
+    domain.__cached__=selected
+    domain.__spec__=types.SimpleNamespace(cached=selected)
+elif declaration=='wrong-legacy':
+    domain.__cached__=str(source/'unreviewed.pyc')
+elif declaration=='null-legacy':
+    domain.__cached__=None
+_audit_scope['verify_executed_source_code'](source,Path(sys.pycache_prefix))
+print('source-and-spec-bound')
+"""
+    )
+    result = subprocess.run(
+        [sys.executable, "-I", "-X", f"pycache_prefix={prefix}", "-c", launch, str(root), declaration],
+        cwd=tmp_path.resolve(),
+        stdin=subprocess.DEVNULL,
+        capture_output=True,
+        text=True,
+        timeout=30,
+    )
+    if declaration == "spec-only":
+        assert result.returncode == 0, result.stderr
+        assert result.stdout.strip() == "source-and-spec-bound"
+    else:
+        assert result.returncode != 0
+        assert "cache" in result.stderr and "source-and-spec-bound" not in result.stdout
+
+
+def test_startup_seed_rejects_cached_main_declared_only_by_module_spec(tmp_path: Path) -> None:
+    root = tmp_path.resolve() / "source"
+    root.mkdir()
+    main = root / "main.py"
+    prefix = tmp_path.resolve() / "cache"
+    prefix.mkdir()
+    main.write_text(
+        "from importlib.machinery import ModuleSpec\n"
+        "__spec__=ModuleSpec('__main__',loader=None)\n"
+        "__spec__.cached=__file__+'c'\n"
+        "__cached__=None\n" + bytecode_audit_bootstrap((root,), prefix, seed_main=True)
+    )
+    result = subprocess.run(
+        [sys.executable, "-I", "-X", f"pycache_prefix={prefix}", str(main)],
+        cwd=tmp_path.resolve(),
+        stdin=subprocess.DEVNULL,
+        capture_output=True,
+        text=True,
+        timeout=30,
+    )
+    assert result.returncode != 0
+    assert "already-running cached main needs a pre-import execution audit" in result.stderr
