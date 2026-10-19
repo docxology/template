@@ -38,7 +38,7 @@ The `infrastructure/` package provides generic, reusable functionality for resea
 | `scientific/` | Benchmarking, numerical stability, scientific templates | `benchmark_function`, `check_numerical_stability` |
 | `sia/` | SIA harness: task layout, fixture replay loop, evaluation runner | `validate_task_dir`, `run_sia_loop`, `run_evaluation` |
 | `project/` | Multi-project discovery and validation | `discover_projects`, `validate_project_structure` |
-| `skills/` | Enumerate and parse `SKILL.md`; maintain Cursor manifest | `discover_skills`, `write_skill_manifest` |
+| `skills/` | Enumerate and parse `SKILL.md`; maintain shared agent manifest | `discover_skills`, `write_skill_manifest` |
 | `steganography/` | Cryptographic PDF watermarking and verification | `SteganographyProcessor`, `SteganographyConfig`, `embed_steganography` |
 | `core/telemetry/` | Unified pipeline telemetry (stage resources + diagnostics, JSON/text reports) | `TelemetryCollector`, `TelemetryConfig` |
 

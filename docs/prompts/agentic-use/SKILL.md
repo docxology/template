@@ -68,7 +68,7 @@ pins source revision, plugin version, license, counts, and exact content hashes.
 
 | Surface | Contract |
 | --- | --- |
-| Repository discovery | `.agents/skills` is a narrow public discovery root included in the Cursor manifest, generated index, and MCP `list_skills`. |
+| Repository discovery | `.agents/skills` is a narrow public discovery root included in the shared agent manifest, generated index, and MCP `list_skills`. |
 | Codex | Managed links live in `~/.agents/skills`; this is the shared Agent Skills root Codex already discovers. |
 | Claude Code | Managed links live in `~/.claude/skills`, preserving complete skill directories and relative references. |
 | Hermes | Managed links live in `~/.hermes/skills` for lazy-loader compatibility; the revisioned shared root is also trusted through `skills.external_dirs`. |
