@@ -361,17 +361,17 @@ Total documented definitions: 890
 | 33 | `function` | `_path_basename` | docstring | Render a source or artifact pointer as a short, breakable basename. |
 | 41 | `function` | `_path_basename_list` | docstring | Render ordered source pointers without long unbreakable repository paths. |
 | 49 | `function` | `render_track_registry_table` | docstring | Render track registry table. |
-| 72 | `function` | `render_binding_matrix_table` | docstring | Render a compact, publication-readable binding matrix summary. |
-| 117 | `function` | `render_coverage_legend` | docstring | Render coverage legend. |
-| 132 | `function` | `render_evidence_crosswalk_table` | docstring | Render evidence crosswalk table. |
-| 151 | `function` | `render_artifact_producer_table` | docstring | Render artifact producer table. |
-| 176 | `function` | `render_semantic_restrictions_table` | docstring | Render semantic restrictions table. |
-| 220 | `function` | `render_track_improvement_scope_table` | docstring | Render every improvement row as a compact publication summary. |
-| 281 | `function` | `render_track_lane_matrix_table` | docstring | Render every pipeline lane as a compact publication summary. |
-| 332 | `function` | `render_section_status_table` | docstring | Render section status table. |
-| 366 | `function` | `render_track_status_table` | docstring | Render track status table. |
-| 389 | `function` | `render_sheaf_render_log_table` | docstring | Render sheaf render log table. |
-| 411 | `function` | `render_sheaf_layers_markdown` | docstring | Render sheaf layers markdown. |
+| 73 | `function` | `render_binding_matrix_table` | docstring | Render a compact, publication-readable binding matrix summary. |
+| 118 | `function` | `render_coverage_legend` | docstring | Render coverage legend. |
+| 133 | `function` | `render_evidence_crosswalk_table` | docstring | Render evidence crosswalk table. |
+| 152 | `function` | `render_artifact_producer_table` | docstring | Render artifact producer table. |
+| 177 | `function` | `render_semantic_restrictions_table` | docstring | Render semantic restrictions table. |
+| 221 | `function` | `render_track_improvement_scope_table` | docstring | Render every improvement row as a compact publication summary. |
+| 282 | `function` | `render_track_lane_matrix_table` | docstring | Render every pipeline lane as a compact publication summary. |
+| 333 | `function` | `render_section_status_table` | docstring | Render section status table. |
+| 367 | `function` | `render_track_status_table` | docstring | Render track status table. |
+| 390 | `function` | `render_sheaf_render_log_table` | docstring | Render sheaf render log table. |
+| 412 | `function` | `render_sheaf_layers_markdown` | docstring | Render sheaf layers markdown. |
 
 ## `src/manuscript/sheaf/manifest.py`
 
