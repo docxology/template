@@ -370,16 +370,18 @@ uv run python -m infrastructure.rendering.cli slides presentation.md --format re
 
 ### Opt in to accessible presentation composition
 
-The default `archive` profile preserves the historical Beamer and Reveal.js
-output. Projects that need a projection-scale, accessibility-enhanced slide
+The default `archive` profile retains complete manuscript content and its
+Beamer-required, Reveal-optional publication behavior. Projects that need an
+accessibility-enhanced slide
 surface must install the rendering capability before opting in. From a source
 checkout, use `uv sync --group rendering`; for an installed distribution, use
 `python -m pip install 'research-project-template[rendering]'` (or install a
 local wheel with its `[rendering]` extra). Accessible Beamer validation fails
 loudly with `slides.capability.pdf-geometry-required` when `pdfplumber` is not
 available, because an uninspected PDF cannot satisfy the safe-area contract.
-The default `archive` profile does not require `pdfplumber` and retains its
-historical post-compile behavior. The full capability table is in
+Unannotated `archive` figures do not require `pdfplumber`. Archive Beamer
+figures selecting measured panels require that capability for the same actual
+embedded-label check, with a 16 pt minimum. The full capability table is in
 [`../../docs/development/optional-dependencies.md`](../../docs/development/optional-dependencies.md).
 
 After installing that capability, opt in through the source-owned
@@ -504,12 +506,37 @@ below them will compose or render successfully.
 
 ### Source-bound presentation panels
 
-An accessible deck can use complete presentation panels while the canonical
-manuscript retains its original figure. Annotate a single-image, top-level
+Accessible decks and archive Beamer can use complete presentation panels
+while the canonical manuscript and archive Reveal retain the original figure. Annotate a single-image, top-level
 Markdown figure with `data-slide-manifest="../figures/example.slides.json"`.
-Archive mode ignores this selector. Accessible mode expands the manifest's
-panels in reading order, assigns unique derivative figure labels, and keeps
-full captions in the canonical reader. Each panel has its own concise `alt`.
+Accessible mode expands the manifest's panels in reading order, assigns unique
+figure labels, and keeps full captions in the canonical reader. Archive Beamer
+keeps one conceptual Figure label and number for all ordered panels, then
+presents the full authored caption once on separate continuation frames. Plain
+caption paragraphs paginate only between whole inline nodes at whitespace;
+no caption text is excerpted. Each panel has its own concise `alt`.
+
+Image-free Markdown chapters keep their single Pandoc conversion. The archive
+Figure preparation pass uses a conservative `![` candidate check; inline-code
+and raw examples may cause an extra parse but never become projected images.
+
+Proper archive Figures use isolated image frames measured against the actual
+wrapped title's space, with shrink-only aspect-preserving bounds. Explicit
+small authored image sizes and naturally tiny images remain small. Unknown
+mixed image/prose blocks keep the conservative historical bounds. During a
+strict refresh, stable figure IDs bind visible captions and local references
+to the actual combined manuscript AUX, including any leading bookend figures;
+standalone rendering keeps local numbering even when an old AUX remains. A
+PDF-disabled project never gains current numbering authority from that file.
+
+Article and archive table headers add optional character breaks to simple ASCII
+header tokens while retaining text/code fonts, all body cells, and column
+widths. The combined PDF factory carries explicit projection metadata so its
+JSON pre-Crossref parser applies that same header pass. Complex nested/spanned
+header content remains unchanged. Archive table
+pagination precedes the header pass so complete repeated headers and all body
+rows remain present. HTML inline-code headers retain complete tokens in the
+existing scrollable table region and inherit the header contrast.
 
 ```json
 {
@@ -548,7 +575,8 @@ serving or distributing the presentation.
 
 After Beamer compilation, the renderer measures every matching raster's actual
 embedded dimensions in PDF points and requires the declared smallest label to
-meet `figure_label_font_pt` (at least 16 pt). Equal-sized panel rasters are
+meet `figure_label_font_pt` (at least 16 pt) for accessible decks, or 16 pt for
+archive Beamer. Equal-sized panel rasters are
 checked using the smallest declared label, conservatively, and missing panel
 occurrences fail. `slides.density.figure-label-scale` removes the invalid PDF;
 the paired rendering boundary removes both public derivatives. The Reveal

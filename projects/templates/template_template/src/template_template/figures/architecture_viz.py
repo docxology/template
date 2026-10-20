@@ -9,13 +9,14 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from .figure_architecture_overview import generate_architecture_overview
+from .figure_architecture_overview import generate_architecture_overview, generate_architecture_presentation_panels
 from .figure_comparative_matrix import (
     comparative_feature_matrix_data,
     generate_comparative_feature_matrix,
 )
-from .figure_module_inventory import generate_module_inventory
-from .figure_pipeline_stages import generate_pipeline_stages
+from .figure_module_inventory import generate_module_inventory, generate_module_inventory_presentation_panels
+from .figure_pipeline_stages import generate_pipeline_stages, generate_pipeline_presentation_panels
+from .figure_comparative_panels import generate_comparative_presentation_panels
 from ..core.introspection import build_infrastructure_report
 
 __all__ = [
@@ -34,7 +35,7 @@ def generate_all_architecture_figures(repo_root: Path, project_dir: Path) -> lis
     output_dir.mkdir(parents=True, exist_ok=True)
 
     report = build_infrastructure_report(repo_root)
-    return [
+    paths = [
         generate_architecture_overview(
             report.modules,
             report.projects,
@@ -45,3 +46,10 @@ def generate_all_architecture_figures(repo_root: Path, project_dir: Path) -> lis
         generate_module_inventory(report.modules, output_dir),
         generate_comparative_feature_matrix(output_dir),
     ]
+    generate_architecture_presentation_panels(
+        report.modules, report.projects, output_dir, report.infrastructure_version
+    )
+    generate_module_inventory_presentation_panels(report.modules, output_dir)
+    generate_pipeline_presentation_panels(report.pipeline_stages, output_dir)
+    generate_comparative_presentation_panels(output_dir)
+    return paths

@@ -1,4 +1,4 @@
-"""Source-bound local figure variants for the accessible presentation writer.
+"""Source-bound local figure variants for accessible and archive presentation writers.
 
 Canonical manuscript figures remain untouched. Explicit manifests enumerate
 complete presentation panels in reading order and bind their native label
@@ -162,12 +162,15 @@ def expand_presentation_variants(
     source: str,
     roots: tuple[Path, ...],
     figure_root: Path | None,
+    preserve_figure_group: bool = False,
 ) -> dict[str, Any]:
     """Replace an explicitly annotated top-level figure with complete panels.
 
     Paths use the same resource-root aliases as canonical images; they are not
     relative to the manifest file. Each emitted figure retains its canonical
-    caption and a unique derivative label. All other input remains unchanged.
+    caption and a unique derivative label. Archive callers may preserve one
+    outer Figure/caption/label while replacing only its ordered image body.
+    All other input remains unchanged.
     """
     for image in _image_nodes(document.get("meta", {})):
         if MANIFEST_ATTRIBUTE in _attributes(image, source):
@@ -194,6 +197,7 @@ def expand_presentation_variants(
         attributes = _attributes(image, source)
         consumed.add(id(image))
         panels = _panels(attributes[MANIFEST_ATTRIBUTE], source=source, roots=roots, figure_root=figure_root)
+        grouped_images: list[dict[str, Any]] = []
         for index, panel in enumerate(panels, start=1):
             variant = copy.deepcopy(block)
             base = variant["c"][0][0] or f"presentation-figure-{block_index}"
@@ -223,7 +227,31 @@ def expand_presentation_variants(
                     stack.extend(value.values())
                 elif isinstance(value, list):
                     stack.extend(value)
-            blocks.append(variant)
+            if preserve_figure_group:
+                geometry = inspect_intrinsic_image_geometry(
+                    panel["src"],
+                    source=source,
+                    heading="Archive presentation variant",
+                    authorized_roots=roots,
+                    figure_root=figure_root,
+                )
+                if geometry is None:
+                    raise _error("presentation panel lost its measured geometry", source)
+                selected["c"][0][2].extend(
+                    [
+                        ["data-slide-figure-intrinsic-width", str(geometry.width)],
+                        ["data-slide-figure-intrinsic-height", str(geometry.height)],
+                    ]
+                )
+                grouped_images.append({"t": "Plain", "c": [selected]})
+            else:
+                blocks.append(variant)
+        if preserve_figure_group:
+            # One conceptual Figure reaches Crossref: one number and one full
+            # authored caption, irrespective of its ordered projection panels.
+            grouped = copy.deepcopy(block)
+            grouped["c"][2] = grouped_images
+            blocks.append(grouped)
     for image in _image_nodes(updated):
         attributes = _attributes(image, source)
         if MANIFEST_ATTRIBUTE in attributes and id(image) not in consumed:
@@ -291,7 +319,22 @@ def reject_small_embedded_labels(pdf: Path, composed_source: Path, *, minimum_pt
             raise _error("composed panel is missing measured raster geometry", str(composed_source)) from exc
     if not expected:
         return
-    import pdfplumber
+    try:
+        import pdfplumber
+    except ImportError as exc:
+        pdf.unlink(missing_ok=True)
+        raise RenderingError(
+            "[slides.capability.pdf-geometry-required] Measured presentation panels require pdfplumber",
+            context={
+                "diagnostic_code": "slides.capability.pdf-geometry-required",
+                "required_extra": "rendering",
+            },
+            suggestions=[
+                "Install the rendering extra before producing measured presentation panels.",
+                "Source checkout: uv sync --group rendering. "
+                "Installed SDK: pip install 'research-project-template[rendering]'.",
+            ],
+        ) from exc
 
     observed = dict.fromkeys(expected, 0)
     findings: list[dict[str, object]] = []

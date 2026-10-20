@@ -13,7 +13,16 @@ from matplotlib.axes import Axes
 from matplotlib.figure import Figure
 
 from ..core.introspection import ModuleInfo, ProjectAnalysis
-from .viz_palette import ARCH_VIZ_COLORS, FIGURE_DPI, FONT_FLOOR, doc_badge
+from .viz_palette import (
+    ARCH_VIZ_COLORS,
+    FIGURE_DPI,
+    FONT_FLOOR,
+    doc_badge,
+    save_presentation_manifest,
+    save_presentation_panel,
+    wrap_presentation_label,
+    presentation_renderer,
+)
 
 
 def _architecture_figure(
@@ -182,3 +191,93 @@ def generate_architecture_overview(
     finally:
         plt.close(fig)
     return path
+
+
+def _architecture_panel_figure(
+    items: Sequence[ModuleInfo | ProjectAnalysis],
+    *,
+    layer: str,
+    panel_number: int,
+    panel_count: int,
+) -> tuple[Figure, Axes]:
+    """Draw up to four complete cards, with a physical layout for projection."""
+    if not 1 <= len(items) <= 4:
+        raise ValueError("Architecture presentation panels require one to four cards")
+    infrastructure = layer == "Infrastructure"
+    if not infrastructure and layer != "Projects":
+        raise ValueError("Unknown architecture layer")
+    color = ARCH_VIZ_COLORS["infra_dark" if infrastructure else "project"]
+    fig = plt.figure(figsize=(8.5, 6.3), facecolor="white", dpi=FIGURE_DPI)
+    ax = fig.add_axes((0, 0, 1, 1))
+    ax.set(xlim=(0, 8.5), ylim=(0, 6.3))
+    ax.axis("off")
+    ax.text(
+        4.25,
+        6.2,
+        f"{layer} · {panel_number} / {panel_count}",
+        ha="center",
+        va="top",
+        fontsize=40,
+        fontweight="bold",
+        color=color,
+    )
+    for index, item in enumerate(items):
+        row, column = divmod(index, 2)
+        left, bottom = 0.2 + 4.15 * column, 2.83 - 2.75 * row
+        box = patches.FancyBboxPatch(
+            (left, bottom), 3.95, 2.7, boxstyle="round,pad=0.02", edgecolor=color, facecolor="white", linewidth=1.5
+        )
+        box.set_gid("architecture-card")
+        ax.add_patch(box)
+        label = item.name if infrastructure else item.name.removeprefix("template_")
+        name = ax.text(
+            left + 1.975,
+            bottom + 1.9,
+            "",
+            ha="center",
+            va="center",
+            fontsize=40,
+            fontweight="semibold",
+            color=ARCH_VIZ_COLORS["text_dark"],
+            linespacing=1.0,
+        )
+        name.set_text(
+            wrap_presentation_label(
+                label.replace("_", " "), presentation_renderer(fig), name.get_fontproperties(), 3.65 * fig.dpi
+            )
+        )
+        name.set_gid("architecture-card-label")
+        if isinstance(item, ModuleInfo):
+            detail = f"{item.python_file_count} py\n[{doc_badge(item)}]"
+        else:
+            detail = f"{item.chapter_count} chapters\n{item.test_file_count} test files"
+        metric = ax.text(
+            left + 1.975, bottom + 0.535, detail, ha="center", va="center", fontsize=40, color=color, linespacing=1.0
+        )
+        metric.set_gid("architecture-card-detail")
+    return fig, ax
+
+
+def generate_architecture_presentation_panels(
+    modules: Sequence[ModuleInfo],
+    projects: Sequence[ProjectAnalysis],
+    output_dir: Path,
+    version: str = "v2.0.0",
+) -> Path:
+    """Preserve every infrastructure/project card in ordered slide-only panels."""
+    panels = []
+    for layer, items in (("Infrastructure", modules), ("Projects", projects)):
+        panel_count = ceil(len(items) / 4)
+        for offset in range(0, len(items), 4):
+            selected = items[offset : offset + 4]
+            number = offset // 4 + 1
+            fig, _ = _architecture_panel_figure(selected, layer=layer, panel_number=number, panel_count=panel_count)
+            path = output_dir / f"architecture_{layer.lower()}_panel_{number:02d}.png"
+            names = ", ".join(item.name for item in selected)
+            alt = f"{layer} panel {number} of {panel_count}, {version}: {names}. "
+            alt += "Complete counts; badges A=AGENTS, R=README, S=SKILL, P=PAI, dot=absent."
+            try:
+                panels.append(save_presentation_panel(fig, path, alt))
+            finally:
+                plt.close(fig)
+    return save_presentation_manifest(output_dir / "architecture_overview.panels.json", panels)

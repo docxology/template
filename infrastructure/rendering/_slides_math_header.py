@@ -35,6 +35,30 @@ if TYPE_CHECKING:
 # box helper; authored includegraphics dimensions and tiny images are untouched.
 _ARCHIVE_BOUNDED_FIGURE_PREAMBLE = r"""
 \makeatletter
+\newbox\archive@titlebox
+\newdimen\archive@available
+\newcommand*\archivefigurebounded[1]{%
+  \sbox\pandoc@box{#1}%
+  \archive@available=\textheight%
+  \ifx\beamer@frametitle\@empty\else%
+    \setbox\archive@titlebox=\vbox{\vbox{}{\parskip0pt\usebeamertemplate***{frametitle}\vskip0.25em}}%
+    \advance\archive@available by-\ht\archive@titlebox%
+    \advance\archive@available by-\dp\archive@titlebox%
+  \fi%
+  \advance\archive@available by-\beamer@frametopskip%
+  \advance\archive@available by-2\baselineskip%
+  \ifdim\archive@available<1pt%
+    \PackageError{template}{Archive image frame has no title-safe image area}{}%
+  \fi%
+  \Gscale@div\@tempa{\archive@available}{\dimexpr\ht\pandoc@box+\dp\pandoc@box\relax}%
+  \Gscale@div\@tempb{0.98\linewidth}{\wd\pandoc@box}%
+  \ifdim\@tempb\p@<\@tempa\p@\let\@tempa\@tempb\fi%
+  \ifdim\@tempa\p@<\p@\scalebox{\@tempa}{\usebox\pandoc@box}%
+  \else\usebox{\pandoc@box}\fi%
+}
+\newcommand*\archivefigurecaptionnumber[2]{#2}
+\newenvironment{archivecaptionframe}{\par\begingroup}{\par\endgroup}
+\newenvironment{archiveimageframe}{\par\begingroup\centering\let\pandocbounded\archivefigurebounded}{\par\endgroup}
 \ifdefined\pandocbounded
 \renewcommand*\pandocbounded[1]{%
   \sbox\pandoc@box{#1}%

@@ -205,6 +205,48 @@ archive = SlidesRenderer(
 ).render(source, output_format="beamer", manuscript_dir=source.parent)
 assert archive.is_file()
 
+# Actual declared base dependencies create genuine panel DATA; pdfplumber is
+# absent from this normal minimal install, not hidden or replaced by the test.
+import hashlib
+import json
+from PIL import Image, ImageDraw, ImageFont
+panel = source.parent / "measured-panel.png"
+raster = Image.new("RGB", (1000, 600), "white")
+draw = ImageDraw.Draw(raster)
+font = ImageFont.load_default(size=90)
+label = "Measured panel"
+draw.text((30, 230), label, font=font, fill="black")
+bounds = draw.textbbox((30, 230), label, font=font)
+minimum_label_px = bounds[3] - bounds[1]
+assert minimum_label_px > 0
+raster.save(panel)
+manifest = source.parent / "panels.json"
+manifest.write_text(json.dumps({"schema_version": "1.0", "panels": [{
+    "src": panel.name, "alt": "Measured panel",
+    "sha256": hashlib.sha256(panel.read_bytes()).hexdigest(), "minimum_label_px": minimum_label_px,
+}]}))
+measured_source = source.parent / "measured.md"
+measured_source.write_text(
+    '## Measured archive\\n\\n![Measured panel](measured-panel.png)'
+    '{data-slide-manifest="panels.json"}\\n'
+)
+measured_output = root / "measured"
+try:
+    SlidesRenderer(RenderingConfig(
+        output_dir=str(measured_output), slides_dir=str(measured_output / "slides"),
+        slides_profile="archive", latex_compiler=compiler,
+    )).render(measured_source, output_format="beamer", manuscript_dir=source.parent)
+except RenderingError as exc:
+    assert exc.context["diagnostic_code"] == "slides.capability.pdf-geometry-required"
+    assert exc.context["required_extra"] == "rendering"
+else:
+    raise AssertionError("measured archive unexpectedly escaped PDF inspection")
+measured_pdf = measured_output / "slides" / "measured_slides.pdf"
+assert not measured_pdf.exists()
+assert measured_pdf.with_suffix(".tex").is_file()
+assert measured_pdf.with_suffix(".log").is_file()
+print("measured-archive-failed-loud; uninspected-pdf-removed")
+
 accessible_output = root / "accessible"
 try:
     SlidesRenderer(
@@ -257,6 +299,7 @@ print("archive-ok; accessible-failed-loud")
     # uv prints build progress (Building research-project-template ...) to
     # stdout before the probe output; the probe's final line is the contract.
     assert "archive-ok; accessible-failed-loud" in completed.stdout
+    assert "measured-archive-failed-loud; uninspected-pdf-removed" in completed.stdout
 
 
 @pytest.mark.slow

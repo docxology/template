@@ -20,7 +20,19 @@ _ENV_BEGIN_RE = re.compile(r"\\begin\{(?P<name>[A-Za-z*]+)\}")
 _ENV_END_RE = re.compile(r"\\end\{(?P<name>[A-Za-z*]+)\}")
 _TEX_GROUP_RE = re.compile(r"\\(?P<kind>begin|end)group\b")
 _ISOLATE_SLIDE_ENVS = frozenset(
-    {"codelisting", "lstlisting", "verbatim", "description", "enumerate", "figure", "itemize", "longtable", "table"}
+    {
+        "archivecaptionframe",
+        "archiveimageframe",
+        "codelisting",
+        "lstlisting",
+        "verbatim",
+        "description",
+        "enumerate",
+        "figure",
+        "itemize",
+        "longtable",
+        "table",
+    }
 )
 _FRAMEBREAK_MARKER = "\n\\par\n\\framebreak\n"
 
@@ -82,7 +94,8 @@ def _split_frame_body(body: str, *, paragraph_threshold: int = 900) -> str:
         # alignments. Normalize it before isolate_ended can add a second break;
         # literal code, grouped content, and nested environments stay untouched.
         if stripped == r"\framebreak" and not environment_stack and brace_depth == tex_group_depth == 0:
-            _append_framebreak(output)
+            if segment_has_content or isolate_ended:
+                _append_framebreak(output)
             segment_length = 0
             segment_has_content = False
             isolate_ended = False
@@ -157,7 +170,10 @@ def _split_frame_body(body: str, *, paragraph_threshold: int = 900) -> str:
             segment_has_content = False
             continue
         if stripped:
-            if re.fullmatch(r"(?:\\(?:protect|phantomsection)\b|\\label\{[A-Za-z0-9:_.-]+\}\s*)+", stripped):
+            if re.fullmatch(
+                r"(?:\\(?:protect|phantomsection)\b|\\refstepcounter\{figure\}|\\label\{[A-Za-z0-9:_.-]+\}\s*)+",
+                stripped,
+            ):
                 # A leading anchor belongs with the following visible block;
                 # it must not manufacture a title-only frame before a table.
                 continue
@@ -199,7 +215,7 @@ def _split_frame_body(body: str, *, paragraph_threshold: int = 900) -> str:
             segment_length = 0
             segment_has_content = False
 
-    return "".join(output)
+    return re.sub(r"\n\\par\n\\framebreak\n[ \t\r\n]*$", "\n", "".join(output))
 
 
 def split_long_slide_frames(tex_content: str) -> tuple[str, int]:

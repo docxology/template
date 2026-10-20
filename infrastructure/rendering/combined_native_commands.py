@@ -85,6 +85,13 @@ def pdf_combined_command(
             if value:
                 command.extend(["-V", f"{key}:{value}"])
     command.extend(formalism)
+    command.extend(
+        [
+            "--metadata=template-latex-table-headers:true",
+            "--lua-filter",
+            str(Path(__file__).with_name("_table_header_breaks.lua")),
+        ]
+    )
     if crossref:
         command.extend(["--filter", crossref])
     return command

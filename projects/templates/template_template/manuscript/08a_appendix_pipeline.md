@@ -5,15 +5,15 @@
 ## Appendix: Pipeline Stage Reference {#appendix-pipeline}
 
 \begin{table}[h]
-\caption{Single-project DAG exported from default \texttt{pipeline.yaml} (names shown in topological order). Scripts live under \texttt{scripts/}.}
+\caption{Single-project DAG reference from default \texttt{pipeline.yaml} (names shown in dependency order). Scripts live under \texttt{scripts/}.}
 \label{tab:pipeline-stages}
 \end{table}
 
 | Stage name | Script / method | Primary inputs | Outputs / artefacts | Failure mode |
-|-----------|-----------------|---------------|----------------------|--------------|
+|----------------|-----------------|------------------------------|----------------------|--------------|
 | Clean Output Directories | `_run_clean_outputs` | prior `projects/<name>/output/`, mirrored `output/<name>/` targets | emptied trees | Blocking |
 | Environment Setup | `scripts/pipeline/stage_00_setup.py` | toolchain probes | scaffold dirs, env exports | Blocking |
-| Infrastructure Tests | `scripts/pipeline/stage_01_test.py` `--infra-only` `--infra-scope` `pipeline-smoke` | `tests/infra_tests/` | coverage + junit-style logs | Required tests and coverage |
+| Infrastructure Tests | `scripts/pipeline/stage_01_test.py` `--infra-only` `--infra-scope` `pipeline-smoke` | `tests/infra_tests/` | smoke-test results | Required smoke tests must pass |
 | Project Tests | `scripts/pipeline/stage_01_test.py` `--project-only` | `projects/<name>/tests/` | coverage artefacts | Nonempty tests, own coverage, verifier, and runner |
 | Project Analysis | `scripts/pipeline/stage_02_analysis.py` | thin scripts | `figures/`, `data/`, reports | Blocking |
 | Connector Search | `scripts/pipeline/stage_08_connector_search.py` | `manuscript/config.yaml` | `output/data/connector_search/` | opt-in (`science` tag); fresh policy-bound skip if unconfigured |
@@ -29,6 +29,6 @@
 | Executable Bundle | `scripts/runner/bundle_executable.py` | project tree + outputs | container bundle manifest | opt-in (`bundle` tag) |
 | Archival Publication | `scripts/runner/archive_publication.py` | bundle + deliverables | archival deposit manifest | opt-in (`archival` tag) |
 
-`scripts/pipeline/stage_07_executive_report.py` is invoked **outside** this DAG whenever `execute_multi_project.py` aggregates pipelines—supplying cross-project KPI dashboards absent from lone-project checkpoints.
+`scripts/pipeline/stage_07_executive_report.py` provides separate **multi-project executive reporting**, not an additional single-project DAG node. `execute_multi_project.py` writes aggregate summaries after project execution; this does not imply automatic invocation of that separate Stage 07 script.
 
 Opt-in stages also prevent completion when invoked and unsuccessful. An allowed skip requires a fresh policy-bound reason receipt; it is not a successful execution. The executable DAG and its contracts remain authoritative.

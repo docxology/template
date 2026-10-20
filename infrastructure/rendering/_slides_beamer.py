@@ -164,6 +164,7 @@ def beamer_command(
     *,
     slide_level: int,
     accessible_resource_roots: tuple[Path, ...] = (),
+    archive_json: bool = False,
 ) -> list[str]:
     """Prepare Pandoc arguments and the profile-specific math header."""
     output_dir = temp_tex.parent
@@ -185,6 +186,8 @@ def beamer_command(
         "--standalone",
         f"--slide-level={slide_level}",
     ]
+    if archive_json:
+        cmd.extend(["-f", "json"])
     if config.slides_profile == "accessible":
         cmd.extend(
             [
@@ -201,6 +204,9 @@ def beamer_command(
     if config.slides_profile == "archive" and allowframebreaks_filter.exists():
         cmd.extend(["--lua-filter", str(allowframebreaks_filter)])
 
+    if config.slides_profile == "archive":
+        cmd.extend(["--lua-filter", str(Path(__file__).with_name("_table_header_breaks.lua"))])
+
     # Keep formalism/equation labels source-owned and automatically
     # numbered in the slide deck just as they are in HTML/PDF/DOCX/EPUB.
     crossref = shutil.which("pandoc-crossref")
@@ -215,6 +221,13 @@ def beamer_command(
     # available; small renderer unit tests and standalone decks without one
     # retain Pandoc's normal no-bibliography behavior.
     cmd.extend(_slide_bibliography_args(manuscript_dir))
+    if config.slides_profile == "archive":
+        cmd.extend(
+            [
+                "--lua-filter",
+                str(Path(__file__).with_name("_archive_figure_frames.lua")),
+            ]
+        )
 
     # Inject the math-font subset of the manuscript preamble so
     # \mid, \ll, \gg etc. render cleanly in slide decks without

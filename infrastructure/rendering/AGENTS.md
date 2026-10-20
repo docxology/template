@@ -58,6 +58,14 @@ HTML and Beamer TeX rewrites use exclusive temporary files in the destination
 folder, so a planted predictable temporary symlink cannot redirect the write.
 Unsupported URI schemes fail validation even when their URL path is empty.
 
+Archive figure frames measure the active theme's actual wrapped title box,
+reserve title/baseline space, and only shrink images. Mixed raw content retains
+the conservative fallback. `_archive_figure_frames.lua` runs after Crossref;
+`_table_header_breaks.lua` runs after archive table pagination and before
+Crossref, including the combined PDF factory. Header breaks use primitive TeX
+penalties, require no macros/packages, preserve fonts and body cells, and abstain
+on nested/spanned header content. Literal examples are not a rewrite surface.
+
 ## Release acceptance modules
 
 | Module | Role |
@@ -232,14 +240,18 @@ Unsupported URI schemes fail validation even when their URL path is empty.
   tables link to the canonical manuscript HTML. Beamer remains an explicitly
   labelled untagged presentation derivative. Neither a successful render nor
   these design constraints establish WCAG or PDF/UA conformance.
-- Accessible single-image figures may select a bounded, source-bound panel
+- Accessible and archive Beamer single-image figures may select a bounded, source-bound panel
   manifest through `data-slide-manifest`. `_slides_presentation_variants.py`
   owns unique-key schema validation, ordered panel expansion, and the final
   embedded PDF label-size gate; `_slides_accessibility_image_io.py` owns all
-  confined resource reads. Canonical manuscript figures and archive mode retain
-  their original sources. Keep producer label measurements bound to exact
+  confined resource reads. Canonical manuscript figures and archive Reveal retain
+  their original sources. Archive Beamer keeps one conceptual figure through
+  Crossref, isolates its ordered images, and emits its complete caption once
+  on following word-boundary continuation frames. The actual combined AUX
+  supplies caption and local-reference numbers in strict refreshes. Keep producer label measurements bound to exact
   raster hashes, require the 16-point minimum after embedding, and preserve
-  paired-output cleanup on a failed scale check. This proves declared integrity
+  accessible paired-output cleanup on a failed scale check. Archive removes
+  its invalid PDF without claiming a paired reader contract. This proves declared integrity
   and scale, not semantic completeness or accessibility conformance.
 - Canonical Stage 03 rendering emits one exact `*_slides.pdf` and
   `*_slides.html` pair per eligible source only in `accessible` mode. The pair

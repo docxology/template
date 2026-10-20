@@ -1489,7 +1489,7 @@ those lanes retain their recorded states. Generated measurements live in
 
 - ✅ Matplotlib auto-configuration (headless operation via MPLBACKEND=Agg)
 - ✅ Optional dependency handling (python-dotenv graceful fallback)
-- ✅ Test failure tolerance (MAX_TEST_FAILURES environment variable)
+- ✅ Blocking test contracts: required tests and coverage must pass; configured tolerances cannot authorize a nonzero test child result
 - ✅ LaTeX path management (BasicTeX/MacTeX support)
 - ✅ Docker containerization (`infrastructure/docker/Dockerfile` + `docker-compose.yml`)
 

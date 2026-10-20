@@ -1,28 +1,4 @@
-"""Slides rendering module.
-
-Per-format preamble coverage
-----------------------------
-This renderer drives Pandoc directly with ``-t beamer`` (or ``revealjs``)
-and intentionally **does not** route through
-:func:`infrastructure.rendering._pdf_combined_preamble.inject_latex_preamble`
-— Beamer ships its own document class, so the manuscript's
-``geometry`` / ``hyperref`` / ``titlepage`` machinery would clash.
-
-The math-font subset *is* propagated. Whenever ``preamble.md`` loads
-``unicode-math``, :func:`infrastructure.rendering._slides_math_header.write_slides_math_header`
-writes a minimal ``_slides_math_header.tex`` containing only
-``\\usepackage{unicode-math}`` plus the active ``\\setmathfont`` (with
-the same ``latinmodern-math.otf`` auto-fallback as the combined-PDF
-path), and passes it to Pandoc via ``-H header.tex``. This gives Beamer
-slides clean rendering of ``\\mid``, ``\\ll``, ``\\gg``, etc. without
-inheriting the rest of the combined-PDF preamble.
-
-The combined-PDF gate
-(:func:`infrastructure.rendering._pdf_combined_prevalidate.prevalidate_for_render`)
-is intentionally *not* invoked here because slides typically render a
-single section in isolation and have a different acceptable-citation
-set than the full manuscript.
-"""
+"""Native slide execution and archive/accessibility output lifecycles."""
 
 import json
 import re
@@ -37,6 +13,7 @@ from infrastructure.core.logging.utils import get_logger
 from infrastructure.rendering._slides_crossref import (
     COMBINED_AUX_BASENAME,
     bind_displayed_equation_numbers,
+    bind_displayed_archive_figure_numbers,
     parse_aux_label_numbers,
     resolve_cross_deck_references,
     transform_tex_prose,
@@ -69,6 +46,7 @@ from infrastructure.rendering._slides_presentation_variants import (
     reject_small_embedded_labels,
     relocate_presentation_panels,
 )
+from infrastructure.rendering._slides_archive_source import prepare_archive_source
 from infrastructure.rendering.config import RenderingConfig
 from infrastructure.rendering.latex_utils import compile_latex, ensure_pdf_at
 from infrastructure.rendering._slides_reveal_content import ACCESSIBLE_REVEAL_URL, ACCESSIBLE_REVEAL_VERSION
@@ -145,7 +123,7 @@ class SlidesRenderer:
             },
             suggestions=[
                 "Install the TeX seqsplit package before rendering generated long labels in the accessible profile.",
-                "Shorten or remove the long projected monospace token; archive rendering retains its historical fallback.",
+                "Shorten the projected monospace token or use the archive wrapping fallback.",
             ],
         )
 
@@ -193,6 +171,21 @@ class SlidesRenderer:
         render_source = source_file
         temporary_sources: tuple[Path, ...] = ()
         accessible_resource_roots: tuple[Path, ...] = ()
+        archive_slide_level = None
+        if self.config.slides_profile == "archive" and output_format == "beamer" and b"![" in source_file.read_bytes():
+            archive_slide_level = self._slide_level_for_source(source_file)
+            output_file.unlink(missing_ok=True)
+            render_source, temporary_sources = prepare_archive_source(
+                self.config,
+                source_file,
+                output_dir,
+                manuscript_dir=manuscript_dir,
+                figures_dir=figures_dir,
+                process_runner=self._process_runner,
+            )
+            accessible_resource_roots = tuple(
+                dict.fromkeys(path for path in (source_file.parent, manuscript_dir, figures_dir) if path is not None)
+            )
         if self.config.slides_profile == "accessible":
             # A failed strict composition must not leave a prior derivative
             # that can be mistaken for the current source.
@@ -217,6 +210,7 @@ class SlidesRenderer:
                     figures_dir,
                     strict_cross_deck_refs=strict_cross_deck_refs,
                     accessible_resource_roots=accessible_resource_roots,
+                    archive_slide_level=archive_slide_level,
                 )
             # For reveal.js, use direct pandoc rendering.
             return self._render_revealjs(
@@ -505,6 +499,7 @@ class SlidesRenderer:
         *,
         strict_cross_deck_refs: bool = False,
         accessible_resource_roots: tuple[Path, ...] = (),
+        archive_slide_level: int | None = None,
     ) -> Path:
         """Render beamer slides with proper figure path handling.
 
@@ -529,8 +524,13 @@ class SlidesRenderer:
             temp_tex,
             manuscript_dir,
             figures_dir,
-            slide_level=2 if self.config.slides_profile == "accessible" else self._slide_level_for_source(source_file),
+            slide_level=(
+                2
+                if self.config.slides_profile == "accessible"
+                else archive_slide_level or self._slide_level_for_source(source_file)
+            ),
             accessible_resource_roots=accessible_resource_roots,
+            archive_json=archive_slide_level is not None,
         )
 
         logger.info(f"Generating beamer slides from {source_file}")
@@ -564,7 +564,8 @@ class SlidesRenderer:
             if (self.config.slides_profile == "accessible" or profile.untrusted) and "^^" in tex_content:
                 temp_tex.unlink(missing_ok=True)
                 raise RenderingError(
-                    "[slides.security.tex-lexical-translation] Generated slide TeX contains forbidden lexical translation",
+                    "[slides.security.tex-lexical-translation] Generated slide TeX contains "
+                    "forbidden lexical translation",
                     context={"diagnostic_code": "slides.security.tex-lexical-translation", "source": str(source_file)},
                 )
 
@@ -581,6 +582,8 @@ class SlidesRenderer:
                     source_file,
                     minimum_pt=self.config.slides_figure_label_font_pt,
                 )
+            elif archive_slide_level is not None:
+                reject_small_embedded_labels(compiled_pdf, source_file, minimum_pt=16)
             ensure_pdf_at(compiled_pdf, output_file)
 
             if output_file.exists():
@@ -686,6 +689,10 @@ class SlidesRenderer:
         label_numbers = parse_aux_label_numbers(aux_path)
         if self.config.slides_profile == "accessible" and strict_cross_deck_refs:
             tex_content = bind_displayed_equation_numbers(tex_content, label_numbers)
+        if self.config.slides_profile == "archive":
+            tex_content = bind_displayed_archive_figure_numbers(
+                tex_content, label_numbers, strict=strict_cross_deck_refs
+            )
         missing_accessible_sections: set[str] = set()
         accessible_section_replacements = 0
         if self.config.slides_profile == "accessible":
@@ -719,6 +726,9 @@ class SlidesRenderer:
             tex_content,
             label_numbers,
             resolve_local=self.config.slides_profile == "accessible" and strict_cross_deck_refs,
+            resolve_local_prefixes=(
+                ("fig:",) if self.config.slides_profile == "archive" and strict_cross_deck_refs else ()
+            ),
         )
         if replaced:
             logger.info(
