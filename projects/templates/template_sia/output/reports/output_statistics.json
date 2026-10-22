@@ -2,93 +2,93 @@
   "directories": {
     "pdf": {
       "exists": true,
-      "file_count": 10,
-      "size_mb": "0.29",
-      "total_size_bytes": 303889,
+      "file_count": 1,
+      "size_mb": "0.19",
+      "total_size_bytes": 196171,
       "largest_files": [
         {
           "name": "template_sia_combined.pdf",
-          "size_mb": "0.21",
+          "size_mb": "0.19",
+          "size_bytes": 196171,
           "path": "pdf/template_sia_combined.pdf"
-        },
-        {
-          "name": "_combined_manuscript.log",
-          "size_mb": "0.05",
-          "path": "pdf/_combined_manuscript.log"
-        },
-        {
-          "name": "_combined_manuscript.tex",
-          "size_mb": "0.01",
-          "path": "pdf/_combined_manuscript.tex"
         }
       ],
       "extensions": {
-        ".md": 1,
-        ".log": 2,
-        ".aux": 1,
-        ".blg": 1,
-        ".bib": 1,
-        ".pdf": 1,
-        ".tex": 1,
-        ".toc": 1,
-        ".bbl": 1
+        ".pdf": 1
       }
     },
     "web": {
       "exists": true,
-      "file_count": 8,
-      "size_mb": "0.05",
-      "total_size_bytes": 52293,
+      "file_count": 9,
+      "size_mb": "0.11",
+      "total_size_bytes": 111519,
       "largest_files": [
         {
           "name": "index.html",
-          "size_mb": "0.02",
+          "size_mb": "0.03",
+          "size_bytes": 26900,
           "path": "web/index.html"
         },
         {
           "name": "manuscript__02_methodology.html",
-          "size_mb": "0.01",
+          "size_mb": "0.02",
+          "size_bytes": 17457,
           "path": "web/manuscript__02_methodology.html"
         },
         {
           "name": "manuscript__03_results.html",
           "size_mb": "0.01",
+          "size_bytes": 14007,
           "path": "web/manuscript__03_results.html"
         }
       ],
       "extensions": {
         ".md": 1,
+        ".ico": 1,
         ".html": 7
       }
     },
     "slides": {
-      "exists": true,
+      "exists": false,
       "file_count": 0,
       "size_mb": "0.00",
-      "total_size_bytes": 0,
-      "largest_files": [],
-      "extensions": {}
+      "total_size_bytes": 0
+    },
+    "docx": {
+      "exists": false,
+      "file_count": 0,
+      "size_mb": "0.00",
+      "total_size_bytes": 0
+    },
+    "epub": {
+      "exists": false,
+      "file_count": 0,
+      "size_mb": "0.00",
+      "total_size_bytes": 0
     },
     "figures": {
       "exists": true,
       "file_count": 5,
-      "size_mb": "0.17",
-      "total_size_bytes": 180750,
+      "size_mb": "0.15",
+      "total_size_bytes": 152177,
       "largest_files": [
         {
-          "name": "sia_improvement_delta.png",
-          "size_mb": "0.05",
-          "path": "figures/sia_improvement_delta.png"
-        },
-        {
           "name": "sia_metric_progression.png",
-          "size_mb": "0.05",
+          "size_mb": "0.04",
+          "size_bytes": 44130,
           "path": "figures/sia_metric_progression.png"
         },
         {
           "name": "sia_loop_topology.png",
           "size_mb": "0.04",
+          "size_bytes": 42241,
           "path": "figures/sia_loop_topology.png"
+        },
+        {
+          "name": "sia_improvement_delta.png",
+          "size_mb": "0.04",
+          "size_bytes": 38025,
+          "path": "figures/sia_improvement_delta.png"
         }
       ],
       "extensions": {
@@ -105,11 +105,13 @@
         {
           "name": "publication_ledger.json",
           "size_mb": "0.00",
+          "size_bytes": 937,
           "path": "data/publication_ledger.json"
         },
         {
           "name": "manuscript_variables.json",
           "size_mb": "0.00",
+          "size_bytes": 859,
           "path": "data/manuscript_variables.json"
         }
       ],
@@ -119,157 +121,255 @@
     },
     "reports": {
       "exists": true,
-      "file_count": 27,
-      "size_mb": "0.10",
-      "total_size_bytes": 107835,
+      "file_count": 4,
+      "size_mb": "0.01",
+      "total_size_bytes": 7555,
       "largest_files": [
         {
-          "name": "evidence_registry.json",
-          "size_mb": "0.03",
-          "path": "reports/evidence_registry.json"
+          "name": "test_results.json",
+          "size_mb": "0.01",
+          "size_bytes": 5268,
+          "path": "reports/test_results.json"
         },
         {
-          "name": "pipeline_report.json",
-          "size_mb": "0.01",
-          "path": "reports/pipeline_report.json"
+          "name": "manuscript_composition.json",
+          "size_mb": "0.00",
+          "size_bytes": 1719,
+          "path": "reports/manuscript_composition.json"
         },
         {
-          "name": "output_statistics.json",
-          "size_mb": "0.01",
-          "path": "reports/output_statistics.json"
+          "name": "test_results.md",
+          "size_mb": "0.00",
+          "size_bytes": 318,
+          "path": "reports/test_results.md"
         }
       ],
       "extensions": {
-        ".md": 6,
-        ".json": 16,
-        ".jsonl": 1,
-        ".txt": 3,
-        ".html": 1
+        ".json": 2,
+        ".md": 2
       }
     },
     "simulations": {
-      "exists": true,
+      "exists": false,
       "file_count": 0,
       "size_mb": "0.00",
-      "total_size_bytes": 0,
-      "largest_files": [],
-      "extensions": {}
+      "total_size_bytes": 0
     },
     "llm": {
-      "exists": true,
+      "exists": false,
       "file_count": 0,
       "size_mb": "0.00",
-      "total_size_bytes": 0,
-      "largest_files": [],
-      "extensions": {}
+      "total_size_bytes": 0
     },
     "logs": {
-      "exists": true,
-      "file_count": 1,
+      "exists": false,
+      "file_count": 0,
       "size_mb": "0.00",
-      "total_size_bytes": 152,
+      "total_size_bytes": 0
+    },
+    "manuscript": {
+      "exists": true,
+      "file_count": 9,
+      "size_mb": "0.01",
+      "total_size_bytes": 7716,
       "largest_files": [
         {
-          "name": "pipeline.log",
+          "name": "config.yaml",
           "size_mb": "0.00",
-          "path": "logs/pipeline.log"
+          "size_bytes": 1758,
+          "path": "manuscript/config.yaml"
+        },
+        {
+          "name": "02_methodology.md",
+          "size_mb": "0.00",
+          "size_bytes": 1749,
+          "path": "manuscript/02_methodology.md"
+        },
+        {
+          "name": "03_results.md",
+          "size_mb": "0.00",
+          "size_bytes": 1214,
+          "path": "manuscript/03_results.md"
         }
       ],
       "extensions": {
-        ".log": 1
+        ".md": 7,
+        ".yaml": 1,
+        ".bib": 1
+      }
+    },
+    "release": {
+      "exists": true,
+      "file_count": 2,
+      "size_mb": "0.00",
+      "total_size_bytes": 1944,
+      "largest_files": [
+        {
+          "name": "upload_receipts.json",
+          "size_mb": "0.00",
+          "size_bytes": 1902,
+          "path": "release/upload_receipts.json"
+        },
+        {
+          "name": "swh_repo_url.txt",
+          "size_mb": "0.00",
+          "size_bytes": 42,
+          "path": "release/swh_repo_url.txt"
+        }
+      ],
+      "extensions": {
+        ".txt": 1,
+        ".json": 1
+      }
+    },
+    "root": {
+      "exists": true,
+      "file_count": 1,
+      "size_mb": "0.19",
+      "total_size_bytes": 196171,
+      "largest_files": [
+        {
+          "name": "template_sia_combined.pdf",
+          "size_mb": "0.19",
+          "size_bytes": 196171,
+          "path": "template_sia_combined.pdf"
+        }
+      ],
+      "extensions": {
+        ".pdf": 1
+      }
+    },
+    "runs": {
+      "exists": true,
+      "file_count": 13,
+      "size_mb": "0.01",
+      "total_size_bytes": 8383,
+      "largest_files": [
+        {
+          "name": "run_summary.json",
+          "size_mb": "0.00",
+          "size_bytes": 1835,
+          "path": "runs/run_1/run_summary.json"
+        },
+        {
+          "name": "target_agent.py",
+          "size_mb": "0.00",
+          "size_bytes": 1692,
+          "path": "runs/run_1/gen_3/target_agent.py"
+        },
+        {
+          "name": "target_agent.py",
+          "size_mb": "0.00",
+          "size_bytes": 1691,
+          "path": "runs/run_1/gen_1/target_agent.py"
+        }
+      ],
+      "extensions": {
+        ".md": 3,
+        ".json": 7,
+        ".py": 3
       }
     }
   },
-  "total_files": 53,
-  "total_size_mb": 0.616755485534668,
+  "total_files": 46,
+  "total_size_mb": 0.6517715454101562,
   "largest_files": [
     {
       "name": "template_sia_combined.pdf",
-      "size_mb": "0.21",
+      "size_mb": "0.19",
+      "size_bytes": 196171,
       "category": "pdf",
       "path": "pdf/template_sia_combined.pdf"
     },
     {
-      "name": "_combined_manuscript.log",
-      "size_mb": "0.05",
-      "category": "pdf",
-      "path": "pdf/_combined_manuscript.log"
-    },
-    {
-      "name": "sia_improvement_delta.png",
-      "size_mb": "0.05",
-      "category": "figures",
-      "path": "figures/sia_improvement_delta.png"
+      "name": "template_sia_combined.pdf",
+      "size_mb": "0.19",
+      "size_bytes": 196171,
+      "category": "root",
+      "path": "template_sia_combined.pdf"
     },
     {
       "name": "sia_metric_progression.png",
-      "size_mb": "0.05",
+      "size_mb": "0.04",
+      "size_bytes": 44130,
       "category": "figures",
       "path": "figures/sia_metric_progression.png"
     },
     {
       "name": "sia_loop_topology.png",
       "size_mb": "0.04",
+      "size_bytes": 42241,
       "category": "figures",
       "path": "figures/sia_loop_topology.png"
     },
     {
-      "name": "evidence_registry.json",
-      "size_mb": "0.03",
-      "category": "reports",
-      "path": "reports/evidence_registry.json"
+      "name": "sia_improvement_delta.png",
+      "size_mb": "0.04",
+      "size_bytes": 38025,
+      "category": "figures",
+      "path": "figures/sia_improvement_delta.png"
     },
     {
       "name": "index.html",
-      "size_mb": "0.02",
+      "size_mb": "0.03",
+      "size_bytes": 26900,
       "category": "web",
       "path": "web/index.html"
     },
     {
-      "name": "_combined_manuscript.tex",
-      "size_mb": "0.01",
-      "category": "pdf",
-      "path": "pdf/_combined_manuscript.tex"
+      "name": "sia_generation_heatmap.png",
+      "size_mb": "0.02",
+      "size_bytes": 25891,
+      "category": "figures",
+      "path": "figures/sia_generation_heatmap.png"
     },
     {
       "name": "manuscript__02_methodology.html",
-      "size_mb": "0.01",
+      "size_mb": "0.02",
+      "size_bytes": 17457,
       "category": "web",
       "path": "web/manuscript__02_methodology.html"
     },
     {
       "name": "manuscript__03_results.html",
       "size_mb": "0.01",
+      "size_bytes": 14007,
       "category": "web",
       "path": "web/manuscript__03_results.html"
+    },
+    {
+      "name": "manuscript__01_introduction.html",
+      "size_mb": "0.01",
+      "size_bytes": 12267,
+      "category": "web",
+      "path": "web/manuscript__01_introduction.html"
     }
   ],
   "missing_expected_files": [],
   "sizes_by_category": {
-    "pdf": 0.2898111343383789,
-    "web": 0.04987049102783203,
-    "slides": 0.0,
-    "figures": 0.1723766326904297,
+    "pdf": 0.18708324432373047,
+    "web": 0.1063528060913086,
+    "figures": 0.1451272964477539,
     "data": 0.001712799072265625,
-    "reports": 0.10283946990966797,
-    "simulations": 0.0,
-    "llm": 0.0,
-    "logs": 0.00014495849609375
+    "reports": 0.007205009460449219,
+    "manuscript": 0.007358551025390625,
+    "release": 0.00185394287109375,
+    "root": 0.18708324432373047,
+    "runs": 0.007994651794433594
   },
+  "inventory_mode": "stable-shippable-output-v1",
+  "inventory_scope": "stage5-delivery-mirror",
+  "inventory_root": "output/templates/template_sia",
   "file_counts_by_type": {
-    ".md": 8,
-    ".log": 3,
-    ".aux": 1,
-    ".blg": 1,
-    ".bib": 1,
-    ".pdf": 1,
-    ".tex": 1,
-    ".toc": 1,
-    ".bbl": 1,
-    ".html": 8,
-    ".json": 19,
+    ".pdf": 2,
+    ".md": 13,
+    ".ico": 1,
+    ".html": 7,
+    ".json": 13,
     ".png": 4,
-    ".jsonl": 1,
-    ".txt": 3
+    ".yaml": 1,
+    ".bib": 1,
+    ".txt": 1,
+    ".py": 3
   }
 }

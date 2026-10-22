@@ -262,7 +262,7 @@
     "passed": 9,
     "total_checks": 9
   },
-  "timestamp": "2026-10-18T22:51:52Z",
+  "timestamp": "2026-10-22T03:14:55Z",
   "validated_inputs": {
     "artifact_manifest": {
       "path": "output/reports/artifact_manifest.json",
@@ -338,7 +338,7 @@
     "fingerprints": {
       "config": {
         "file_count": 15,
-        "sha256": "ee535cfea3b9cd3e375dc61634f933b68195059cb82dc95700931db3f8ff53fb"
+        "sha256": "b89f72bcba83d4477935cf77760100b53dfe9a07bdc90b90e811cd31d5414cfc"
       },
       "output": {
         "file_count": 26,
@@ -349,8 +349,8 @@
         "sha256": "3633609cd631fe0c7682f3d0800c88d3060480c0ec975e55d2e5e5e241c6f241"
       },
       "stage": {
-        "file_count": 1908,
-        "sha256": "7f9f596c7632a3a7f056c023ac96663744c80a75116f6ab19971e9602e170566"
+        "file_count": 1911,
+        "sha256": "28f49d1e39eb7bee0768ca8f0306d136ad029cba071e1db637f46a3f02ff2518"
       }
     },
     "project": "templates/template_autoscientists",

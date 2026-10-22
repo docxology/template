@@ -2,141 +2,140 @@
   "directories": {
     "pdf": {
       "exists": true,
-      "file_count": 11,
-      "size_mb": "1.03",
-      "total_size_bytes": 1077673,
+      "file_count": 1,
+      "size_mb": "0.45",
+      "total_size_bytes": 469702,
       "largest_files": [
         {
           "name": "template_search_project_combined.pdf",
           "size_mb": "0.45",
+          "size_bytes": 469702,
           "path": "pdf/template_search_project_combined.pdf"
-        },
-        {
-          "name": "references_deep.bib",
-          "size_mb": "0.13",
-          "path": "pdf/references_deep.bib"
-        },
-        {
-          "name": "_combined_manuscript.tex",
-          "size_mb": "0.12",
-          "path": "pdf/_combined_manuscript.tex"
         }
       ],
       "extensions": {
-        ".bib": 2,
-        ".md": 1,
-        ".log": 2,
-        ".aux": 1,
-        ".blg": 1,
-        ".pdf": 1,
-        ".tex": 1,
-        ".toc": 1,
-        ".bbl": 1
+        ".pdf": 1
       }
     },
     "web": {
       "exists": true,
       "file_count": 14,
-      "size_mb": "0.50",
-      "total_size_bytes": 525228,
+      "size_mb": "0.66",
+      "total_size_bytes": 695964,
       "largest_files": [
         {
           "name": "index.html",
-          "size_mb": "0.20",
+          "size_mb": "0.29",
+          "size_bytes": 299680,
           "path": "web/index.html"
         },
         {
           "name": "_combined_manuscript.md",
           "size_mb": "0.10",
+          "size_bytes": 102785,
           "path": "web/_combined_manuscript.md"
         },
         {
           "name": "manuscript__S01_literature_review.html",
-          "size_mb": "0.08",
+          "size_mb": "0.09",
+          "size_bytes": 89479,
           "path": "web/manuscript__S01_literature_review.html"
         }
       ],
       "extensions": {
         ".md": 1,
-        ".ico": 1,
-        ".html": 12
+        ".html": 12,
+        ".ico": 1
       }
     },
     "slides": {
       "exists": true,
-      "file_count": 81,
-      "size_mb": "1.46",
-      "total_size_bytes": 1530717,
+      "file_count": 10,
+      "size_mb": "0.63",
+      "total_size_bytes": 658676,
       "largest_files": [
         {
           "name": "02_methodology_slides.pdf",
-          "size_mb": "0.22",
+          "size_mb": "0.24",
+          "size_bytes": 248828,
           "path": "slides/02_methodology_slides.pdf"
         },
         {
           "name": "S01_literature_review_slides.pdf",
-          "size_mb": "0.09",
+          "size_mb": "0.10",
+          "size_bytes": 104815,
           "path": "slides/S01_literature_review_slides.pdf"
         },
         {
-          "name": "S01_literature_review_slides.log",
-          "size_mb": "0.08",
-          "path": "slides/S01_literature_review_slides.log"
+          "name": "07_deep_search_slides.pdf",
+          "size_mb": "0.05",
+          "size_bytes": 53285,
+          "path": "slides/07_deep_search_slides.pdf"
         }
       ],
       "extensions": {
-        ".nav": 10,
-        ".vrb": 10,
-        ".pdf": 10,
-        ".log": 10,
-        ".toc": 10,
-        ".tex": 11,
-        ".snm": 10,
-        ".aux": 10
+        ".pdf": 10
       }
+    },
+    "docx": {
+      "exists": false,
+      "file_count": 0,
+      "size_mb": "0.00",
+      "total_size_bytes": 0
+    },
+    "epub": {
+      "exists": false,
+      "file_count": 0,
+      "size_mb": "0.00",
+      "total_size_bytes": 0
     },
     "figures": {
       "exists": true,
       "file_count": 13,
       "size_mb": "0.53",
-      "total_size_bytes": 552022,
+      "total_size_bytes": 552648,
       "largest_files": [
         {
           "name": "inline_mermaid_0001_d3ead0e9d850.png",
           "size_mb": "0.19",
+          "size_bytes": 195402,
           "path": "figures/mermaid_inline/inline_mermaid_0001_d3ead0e9d850.png"
         },
         {
           "name": "score_distribution.png",
           "size_mb": "0.08",
+          "size_bytes": 87534,
           "path": "figures/score_distribution.png"
         },
         {
           "name": "inline_mermaid_0003_80a863d1871e.png",
           "size_mb": "0.08",
+          "size_bytes": 85655,
           "path": "figures/mermaid_inline/inline_mermaid_0003_80a863d1871e.png"
         }
       ],
       "extensions": {
-        ".png": 7,
         ".json": 2,
-        ".mmd": 4
+        ".mmd": 4,
+        ".png": 7
       }
     },
     "data": {
       "exists": true,
       "file_count": 2,
       "size_mb": "0.01",
-      "total_size_bytes": 10077,
+      "total_size_bytes": 10773,
       "largest_files": [
         {
           "name": "dashboard_payload.json",
           "size_mb": "0.01",
+          "size_bytes": 10214,
           "path": "data/dashboard_payload.json"
         },
         {
           "name": "manuscript_variables.json",
           "size_mb": "0.00",
+          "size_bytes": 559,
           "path": "data/manuscript_variables.json"
         }
       ],
@@ -146,30 +145,33 @@
     },
     "reports": {
       "exists": true,
-      "file_count": 12,
-      "size_mb": "0.24",
-      "total_size_bytes": 251833,
+      "file_count": 5,
+      "size_mb": "0.01",
+      "total_size_bytes": 10516,
       "largest_files": [
         {
-          "name": "artifact_manifest.json",
-          "size_mb": "0.12",
-          "path": "reports/artifact_manifest.json"
+          "name": "test_results.json",
+          "size_mb": "0.00",
+          "size_bytes": 4779,
+          "path": "reports/test_results.json"
         },
         {
-          "name": "evidence_registry.json",
-          "size_mb": "0.09",
-          "path": "reports/evidence_registry.json"
+          "name": "manuscript_composition.json",
+          "size_mb": "0.00",
+          "size_bytes": 2536,
+          "path": "reports/manuscript_composition.json"
         },
         {
-          "name": "validation_report.json",
-          "size_mb": "0.01",
-          "path": "reports/validation_report.json"
+          "name": "dashboard_invariants.txt",
+          "size_mb": "0.00",
+          "size_bytes": 2036,
+          "path": "reports/dashboard_invariants.txt"
         }
       ],
       "extensions": {
-        ".json": 7,
-        ".txt": 3,
-        ".md": 2
+        ".txt": 2,
+        ".json": 2,
+        ".md": 1
       }
     },
     "simulations": {
@@ -189,103 +191,254 @@
       "file_count": 0,
       "size_mb": "0.00",
       "total_size_bytes": 0
+    },
+    "deep_search": {
+      "exists": true,
+      "file_count": 310,
+      "size_mb": "4.50",
+      "total_size_bytes": 4723242,
+      "largest_files": [
+        {
+          "name": "aggregate.json",
+          "size_mb": "2.15",
+          "size_bytes": 2259238,
+          "path": "deep_search/aggregate.json"
+        },
+        {
+          "name": "papers.json",
+          "size_mb": "0.91",
+          "size_bytes": 954034,
+          "path": "deep_search/convex_optimization/papers.json"
+        },
+        {
+          "name": "papers.json",
+          "size_mb": "0.79",
+          "size_bytes": 827501,
+          "path": "deep_search/stochastic_gradient_descent/papers.json"
+        }
+      ],
+      "extensions": {
+        ".json": 6,
+        ".md": 304
+      }
+    },
+    "manuscript": {
+      "exists": true,
+      "file_count": 17,
+      "size_mb": "0.24",
+      "total_size_bytes": 250270,
+      "largest_files": [
+        {
+          "name": "references_deep.bib",
+          "size_mb": "0.13",
+          "size_bytes": 131500,
+          "path": "manuscript/references_deep.bib"
+        },
+        {
+          "name": "S01_literature_review.md",
+          "size_mb": "0.05",
+          "size_bytes": 54714,
+          "path": "manuscript/S01_literature_review.md"
+        },
+        {
+          "name": "07_deep_search.md",
+          "size_mb": "0.01",
+          "size_bytes": 9335,
+          "path": "manuscript/07_deep_search.md"
+        }
+      ],
+      "extensions": {
+        ".md": 14,
+        ".yaml": 1,
+        ".bib": 2
+      }
+    },
+    "review": {
+      "exists": true,
+      "file_count": 7,
+      "size_mb": "0.03",
+      "total_size_bytes": 31671,
+      "largest_files": [
+        {
+          "name": "REVIEW_REPORT.md",
+          "size_mb": "0.02",
+          "size_bytes": 16606,
+          "path": "review/REVIEW_REPORT.md"
+        },
+        {
+          "name": "stage_bibliography_completeness.json",
+          "size_mb": "0.01",
+          "size_bytes": 10391,
+          "path": "review/stage_bibliography_completeness.json"
+        },
+        {
+          "name": "stage_infrastructure_usage.json",
+          "size_mb": "0.00",
+          "size_bytes": 1768,
+          "path": "review/stage_infrastructure_usage.json"
+        }
+      ],
+      "extensions": {
+        ".md": 2,
+        ".json": 5
+      }
+    },
+    "root": {
+      "exists": true,
+      "file_count": 5,
+      "size_mb": "0.46",
+      "total_size_bytes": 479065,
+      "largest_files": [
+        {
+          "name": "template_search_project_combined.pdf",
+          "size_mb": "0.45",
+          "size_bytes": 469702,
+          "path": "template_search_project_combined.pdf"
+        },
+        {
+          "name": "corpus.json",
+          "size_mb": "0.01",
+          "size_bytes": 5652,
+          "path": "corpus.json"
+        },
+        {
+          "name": "reading_report.md",
+          "size_mb": "0.00",
+          "size_bytes": 2583,
+          "path": "reading_report.md"
+        }
+      ],
+      "extensions": {
+        ".json": 3,
+        ".md": 1,
+        ".pdf": 1
+      }
+    },
+    "search": {
+      "exists": true,
+      "file_count": 2,
+      "size_mb": "0.01",
+      "total_size_bytes": 11805,
+      "largest_files": [
+        {
+          "name": "search_c47c433ba93603c6.json",
+          "size_mb": "0.01",
+          "size_bytes": 5920,
+          "path": "search/cache/search_c47c433ba93603c6.json"
+        },
+        {
+          "name": "results.json",
+          "size_mb": "0.01",
+          "size_bytes": 5885,
+          "path": "search/results.json"
+        }
+      ],
+      "extensions": {
+        ".json": 2
+      }
     }
   },
-  "total_files": 133,
-  "total_size_mb": 3.764677047729492,
+  "total_files": 386,
+  "total_size_mb": 7.528621673583984,
   "largest_files": [
+    {
+      "name": "aggregate.json",
+      "size_mb": "2.15",
+      "size_bytes": 2259238,
+      "category": "deep_search",
+      "path": "deep_search/aggregate.json"
+    },
+    {
+      "name": "papers.json",
+      "size_mb": "0.91",
+      "size_bytes": 954034,
+      "category": "deep_search",
+      "path": "deep_search/convex_optimization/papers.json"
+    },
+    {
+      "name": "papers.json",
+      "size_mb": "0.79",
+      "size_bytes": 827501,
+      "category": "deep_search",
+      "path": "deep_search/stochastic_gradient_descent/papers.json"
+    },
     {
       "name": "template_search_project_combined.pdf",
       "size_mb": "0.45",
+      "size_bytes": 469702,
       "category": "pdf",
       "path": "pdf/template_search_project_combined.pdf"
     },
     {
-      "name": "02_methodology_slides.pdf",
-      "size_mb": "0.22",
-      "category": "slides",
-      "path": "slides/02_methodology_slides.pdf"
+      "name": "template_search_project_combined.pdf",
+      "size_mb": "0.45",
+      "size_bytes": 469702,
+      "category": "root",
+      "path": "template_search_project_combined.pdf"
+    },
+    {
+      "name": "papers.json",
+      "size_mb": "0.44",
+      "size_bytes": 460165,
+      "category": "deep_search",
+      "path": "deep_search/reproducible_research/papers.json"
     },
     {
       "name": "index.html",
-      "size_mb": "0.20",
+      "size_mb": "0.29",
+      "size_bytes": 299680,
       "category": "web",
       "path": "web/index.html"
     },
     {
+      "name": "02_methodology_slides.pdf",
+      "size_mb": "0.24",
+      "size_bytes": 248828,
+      "category": "slides",
+      "path": "slides/02_methodology_slides.pdf"
+    },
+    {
       "name": "inline_mermaid_0001_d3ead0e9d850.png",
       "size_mb": "0.19",
+      "size_bytes": 195402,
       "category": "figures",
       "path": "figures/mermaid_inline/inline_mermaid_0001_d3ead0e9d850.png"
     },
     {
       "name": "references_deep.bib",
       "size_mb": "0.13",
-      "category": "pdf",
-      "path": "pdf/references_deep.bib"
-    },
-    {
-      "name": "_combined_manuscript.tex",
-      "size_mb": "0.12",
-      "category": "pdf",
-      "path": "pdf/_combined_manuscript.tex"
-    },
-    {
-      "name": "artifact_manifest.json",
-      "size_mb": "0.12",
-      "category": "reports",
-      "path": "reports/artifact_manifest.json"
-    },
-    {
-      "name": "_combined_manuscript.md",
-      "size_mb": "0.10",
-      "category": "web",
-      "path": "web/_combined_manuscript.md"
-    },
-    {
-      "name": "S01_literature_review_slides.pdf",
-      "size_mb": "0.09",
-      "category": "slides",
-      "path": "slides/S01_literature_review_slides.pdf"
-    },
-    {
-      "name": "evidence_registry.json",
-      "size_mb": "0.09",
-      "category": "reports",
-      "path": "reports/evidence_registry.json"
+      "size_bytes": 131500,
+      "category": "manuscript",
+      "path": "manuscript/references_deep.bib"
     }
   ],
-  "missing_expected_files": [
-    "simulations/ directory",
-    "llm/ directory",
-    "logs/ directory"
-  ],
+  "missing_expected_files": [],
   "sizes_by_category": {
-    "pdf": 1.0277490615844727,
-    "web": 0.5008964538574219,
-    "slides": 1.4598054885864258,
-    "figures": 0.5264492034912109,
-    "data": 0.009610176086425781,
-    "reports": 0.24016666412353516
+    "pdf": 0.44794273376464844,
+    "web": 0.6637229919433594,
+    "slides": 0.6281623840332031,
+    "figures": 0.5270462036132812,
+    "data": 0.010273933410644531,
+    "reports": 0.010028839111328125,
+    "deep_search": 4.504434585571289,
+    "manuscript": 0.2386760711669922,
+    "review": 0.030203819274902344,
+    "root": 0.45687198638916016,
+    "search": 0.011258125305175781
   },
+  "inventory_mode": "stable-shippable-output-v1",
+  "inventory_scope": "stage5-delivery-mirror",
+  "inventory_root": "output/templates/template_search_project",
   "file_counts_by_type": {
-    ".bib": 2,
-    ".md": 4,
-    ".log": 12,
-    ".aux": 11,
-    ".blg": 1,
-    ".pdf": 11,
-    ".tex": 12,
-    ".toc": 11,
-    ".bbl": 1,
-    ".ico": 1,
+    ".pdf": 12,
+    ".md": 323,
     ".html": 12,
-    ".nav": 10,
-    ".vrb": 10,
-    ".snm": 10,
-    ".png": 7,
-    ".json": 11,
+    ".ico": 1,
+    ".json": 22,
     ".mmd": 4,
-    ".txt": 3
+    ".png": 7,
+    ".txt": 2,
+    ".yaml": 1,
+    ".bib": 2
   }
 }

@@ -302,7 +302,7 @@
     "passed": 9,
     "total_checks": 9
   },
-  "timestamp": "2026-10-18T22:51:52Z",
+  "timestamp": "2026-10-22T03:14:55Z",
   "validated_inputs": {
     "artifact_manifest": {
       "path": "output/reports/artifact_manifest.json",
@@ -360,7 +360,7 @@
     "fingerprints": {
       "config": {
         "file_count": 17,
-        "sha256": "767844f9d1509ab6b65bfdc44fce335097bb79114358ea9388bb8eabfb8117fc"
+        "sha256": "a1ee8357de4e297a8634b92e430d6aade1dba475f983a49b5d32a269e9ef2e72"
       },
       "output": {
         "file_count": 45,
@@ -371,8 +371,8 @@
         "sha256": "038afcf4b62c828b76a16b59463942983c94159061ee91bd04a5dab085459775"
       },
       "stage": {
-        "file_count": 1908,
-        "sha256": "7f9f596c7632a3a7f056c023ac96663744c80a75116f6ab19971e9602e170566"
+        "file_count": 1911,
+        "sha256": "28f49d1e39eb7bee0768ca8f0306d136ad029cba071e1db637f46a3f02ff2518"
       }
     },
     "project": "templates/template_sia",

@@ -2,39 +2,34 @@
 OUTPUT STATISTICS REPORT
 ============================================================
 
-Output Directory: output
+Output Directory: output/templates/template_storybook
+Inventory Mode: stable-shippable-output-v1
+Inventory Scope: stage5-delivery-mirror
+Inventory Root: output/templates/template_storybook
 
-Total Files: 93
-Total Size: 4.47 MB
+Total Files: 38
+Total Size: 3.98 MB
 
 Files by Category:
-  • pdf: 11 files (1.54 MB)
-  • web: 9 files (0.05 MB)
-  • slides: 46 files (0.46 MB)
+  • pdf: 2 files (1.47 MB)
+  • web: 9 files (0.09 MB)
+  • slides: 6 files (0.06 MB)
   • figures: 15 files (2.30 MB)
   • data: 1 files (0.01 MB)
-  • reports: 11 files (0.11 MB)
+  • reports: 4 files (0.00 MB)
+  • root: 1 files (0.04 MB)
 
 Largest Files:
   • the-shape-between.pdf: 1.42 MB (pdf)
   • storybook_contact_sheet.png: 0.94 MB (figures)
   • 13_shared_home.png: 0.13 MB (figures)
   • 06_tetra_inside_cube.png: 0.12 MB (figures)
-  • evidence_registry.json: 0.08 MB (reports)
-
-Missing Expected Files:
-  ⚠  simulations/ directory
-  ⚠  llm/ directory
-  ⚠  logs/ directory
+  • 10_tensegrity_lantern.png: 0.12 MB (figures)
 
 File Types:
   • .png: 15 file(s)
-  • .log: 8 file(s)
-  • .pdf: 8 file(s)
-  • .tex: 8 file(s)
-  • .json: 8 file(s)
-  • .aux: 7 file(s)
-  • .toc: 7 file(s)
+  • .pdf: 9 file(s)
   • .html: 7 file(s)
-  • .nav: 6 file(s)
-  • .snm: 6 file(s)
+  • .md: 3 file(s)
+  • .json: 3 file(s)
+  • .ico: 1 file(s)

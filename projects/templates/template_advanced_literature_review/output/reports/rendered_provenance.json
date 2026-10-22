@@ -157,7 +157,7 @@
     },
     "validation_report": {
       "path": "output/reports/validation_report.json",
-      "sha256": "79d83730e489df5d014b9d5ef6c5bf0b0b6a47034730c43ddc64f5c3add984f8",
+      "sha256": "4c8d2da4a0140913a034e9ff7d1b33ed3947df8fde2344c58cf4f01b172ef430",
       "size_bytes": 16071
     }
   },
@@ -165,7 +165,7 @@
   "fingerprints": {
     "config": {
       "file_count": 21,
-      "sha256": "da9087f851459bee28cdf83a5d7bcec38afc7aea467cf3a3b636e84c29b8da66"
+      "sha256": "591bd06496fd669b1a5a374b5a83d8d525fe6ccc62d667593a1fc339cffe76b3"
     },
     "output": {
       "file_count": 101,
@@ -176,8 +176,8 @@
       "sha256": "7061ab744c6441d2d09983b184d20ddae543a799b5fbbf1f4c39ad8f10425134"
     },
     "stage": {
-      "file_count": 1908,
-      "sha256": "7f9f596c7632a3a7f056c023ac96663744c80a75116f6ab19971e9602e170566"
+      "file_count": 1911,
+      "sha256": "28f49d1e39eb7bee0768ca8f0306d136ad029cba071e1db637f46a3f02ff2518"
     }
   },
   "project": "templates/template_advanced_literature_review",

@@ -2,39 +2,36 @@
 OUTPUT STATISTICS REPORT
 ============================================================
 
-Output Directory: output
+Output Directory: output/templates/template_redacted_report
+Inventory Mode: stable-shippable-output-v1
+Inventory Scope: stage5-delivery-mirror
+Inventory Root: output/templates/template_redacted_report
 
-Total Files: 58
-Total Size: 1.32 MB
+Total Files: 70
+Total Size: 4.18 MB
 
 Files by Category:
-  • pdf: 10 files (0.32 MB)
-  • web: 6 files (0.08 MB)
-  • slides: 25 files (0.49 MB)
+  • pdf: 1 files (0.21 MB)
+  • web: 6 files (0.10 MB)
+  • slides: 3 files (0.26 MB)
   • figures: 5 files (0.31 MB)
   • data: 1 files (0.01 MB)
-  • reports: 11 files (0.12 MB)
+  • reports: 4 files (0.01 MB)
+  • dev: 49 files (3.07 MB)
+  • root: 1 files (0.21 MB)
 
 Largest Files:
+  • blur_on_blur_steganography.pdf: 0.24 MB (dev)
+  • grayout_on_blur_steganography.pdf: 0.24 MB (dev)
+  • whiteout_on_blur_steganography.pdf: 0.24 MB (dev)
+  • blackout_on_blur_steganography.pdf: 0.24 MB (dev)
   • template_redacted_report_combined.pdf: 0.21 MB (pdf)
-  • 02_results_slides.pdf: 0.12 MB (slides)
-  • 01_methods_slides.pdf: 0.11 MB (slides)
-  • disclosure_control_matrix.svg: 0.09 MB (figures)
-  • evidence_registry.json: 0.08 MB (reports)
-
-Missing Expected Files:
-  ⚠  simulations/ directory
-  ⚠  llm/ directory
-  ⚠  logs/ directory
 
 File Types:
-  • .json: 10 file(s)
-  • .log: 5 file(s)
-  • .tex: 5 file(s)
-  • .md: 4 file(s)
-  • .aux: 4 file(s)
-  • .pdf: 4 file(s)
-  • .toc: 4 file(s)
+  • .pdf: 37 file(s)
+  • .json: 22 file(s)
   • .html: 4 file(s)
-  • .vrb: 3 file(s)
-  • .snm: 3 file(s)
+  • .md: 2 file(s)
+  • .png: 2 file(s)
+  • .svg: 2 file(s)
+  • .ico: 1 file(s)
