@@ -665,25 +665,27 @@ unavailable, then merges and de-duplicates records by a canonical
 identifier hierarchy (DOI <span class="math inline">\(&gt;\)</span>
 arXiv ID <span class="math inline">\(&gt;\)</span> Semantic Scholar ID
 <span class="math inline">\(&gt;\)</span> OpenAlex ID <span
-class="math inline">\(&gt;\)</span> title digest) into a corpus of <span
-class="math inline">\(N = 2334\)</span> records spanning 2000–2026 (26
-years). Records are classified into a configurable 6-bucket subfield
-taxonomy (Clinical Sleep, Cognition, Pharmacology, Psychiatry, Safety,
-and Neuroscience); the largest subfield is <strong>Clinical
-Sleep</strong> (63.0% of the classified corpus). The corpus grows at a
-compound annual rate of 5.48% (mean year-over-year growth 7.8%, doubling
-time 9.2 years), peaking in 2025 with 147 records.</p>
+class="math inline">\(&gt;\)</span> title digest) into a retrieved
+corpus of <span class="math inline">\(N = 2334\)</span> records.
+Bibliometric analysis retains 2234 records; its dated subset contains
+2234 records spanning 2000–2026 (26 years). The analyzed records are
+classified into a configurable 6-bucket subfield taxonomy (Clinical
+Sleep, Cognition, Pharmacology, Psychiatry, Safety, and Neuroscience);
+the largest subfield is <strong>Clinical Sleep</strong> (63.0% of the
+classified corpus). The dated subset grows at a compound annual rate of
+5.48% (mean year-over-year growth 7.8%, doubling time 9.2 years),
+peaking in 2025 with 147 records.</p>
 <p>Non-negative matrix factorization extracts 5 latent topics over a
 500-feature vocabulary, offline deterministic embeddings place every
 title, abstract, and (when available) full text in a shared vector
 space, and citation-network analysis exposes the corpus’s internal
 structure (8,623 intra-corpus edges across 2234 nodes, 1416 communities,
 graph density 0.17%). Of 38,489 total outgoing references, 22.4% resolve
-to another record inside the corpus. Abstract coverage stands at 61.6%,
-24.6% of records are open access, and 54.6% have a direct PDF link. An
-optional, LLM-gated knowledge-graph stage scores the 6 hypotheses
-explored against the evidence. This run produced 21 publication-quality
-figures.</p>
+to another record inside the corpus. Across the retrieved corpus,
+abstract coverage stands at 61.6%, 24.6% of records are open access, and
+54.6% have a direct PDF link. An optional, LLM-gated knowledge-graph
+stage scores the 6 hypotheses explored against the evidence. This run
+produced 21 publication-quality figures.</p>
 <p>Every domain-specific value in this manuscript — the search term,
 keyword set, engine roster, subfield taxonomy, and hypotheses — is
 injected from a single configuration file and the pipeline’s own

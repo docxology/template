@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="generator" content="pandoc 3.12" />
+  <meta name="generator" content="pandoc 3.12.1" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
   <meta name="author" content="Daniel Ari Friedman" />
   <title>_combined_manuscript</title>
@@ -507,6 +507,9 @@ pre {
 }
 
 pre code {
+  background-color: transparent;
+  padding: 0;
+  border-radius: 0;
   overflow-wrap: inherit;
   white-space: inherit;
   word-break: inherit;
@@ -577,6 +580,15 @@ th, td {
 th {
   background-color: #1f6f8b;
   color: white;
+}
+
+/* Preserve a complete inline-code header within the table's scroll region. */
+th code {
+  color: inherit;
+  background-color: transparent;
+  white-space: nowrap;
+  overflow-wrap: normal;
+  word-break: normal;
 }
 
 img {
@@ -719,6 +731,7 @@ mjx-container[display="true"] {
 }
 
 </style>
+<script data-template-source-font-loader src="assets/source-web-fonts.js"></script>
 </head>
 <body>
 <a class="skip-link" href="#main-content">Skip to main content</a>
@@ -2096,8 +2109,8 @@ The lab translates that idea into a small record that another learner
 can inspect without knowing what its author intended.</p>
 <h2 data-number="4.7" id="a-worked-formalism"><span
 class="header-section-number">4.7</span> A Worked Formalism</h2>
-<p><span id="eq:part_0_orientation_model"><span class="math display">\[
-N(t)=\frac{K}{1+((K-N_0)/N_0)e^{-rt}} \qquad{(1)}\]</span></span></p>
+<p><span id="eq:part_0_orientation_model"><span
+class="math display">\[N(t)=\frac{K}{1+((K-N_0)/N_0)e^{-rt}}\qquad{(1)}\]</span></span></p>
 <div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable table: Table 1: Quantities and conventions for this chapter’s worked example."><table id="tbl:part_0_orientation_parameters" data-responsive-table="true">
 <caption>Table 1: Quantities and conventions for this chapter’s worked
 example.</caption>
@@ -2330,9 +2343,9 @@ execution record supports, rather than obscures, scientific
 judgment.</p>
 <h2 data-number="5.7" id="a-worked-formalism-1"><span
 class="header-section-number">5.7</span> A Worked Formalism</h2>
-<p><span id="eq:part_0_core_methods_model"><span class="math display">\[
-\widehat y(x)=mx+b,\qquad (m,b)=\arg\min_{a,c}\sum_i(y_i-ax_i-c)^2
-\qquad{(2)}\]</span></span></p>
+<p><span id="eq:part_0_core_methods_model"><span
+class="math display">\[\widehat y(x)=mx+b,\qquad
+(m,b)=\arg\min_{a,c}\sum_i(y_i-ax_i-c)^2\qquad{(2)}\]</span></span></p>
 <div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable table: Table 2: Quantities and conventions for this chapter’s worked example."><table id="tbl:part_0_core_methods_parameters" data-responsive-table="true">
 <caption>Table 2: Quantities and conventions for this chapter’s worked
 example.</caption>
@@ -2566,9 +2579,8 @@ comparison makes the limits of a statistic observable.</p>
 <h2 data-number="6.7" id="a-worked-formalism-2"><span
 class="header-section-number">6.7</span> A Worked Formalism</h2>
 <p><span id="eq:part_0_quantitative_foundations_model"><span
-class="math display">\[ \mu=\frac{1}{n}\sum_{i=1}^{n}x_i,\qquad
-\sigma=\sqrt{\frac{1}{n}\sum_{i=1}^{n}(x_i-\mu)^2}
-\qquad{(3)}\]</span></span></p>
+class="math display">\[\mu=\frac{1}{n}\sum_{i=1}^{n}x_i,\qquad
+\sigma=\sqrt{\frac{1}{n}\sum_{i=1}^{n}(x_i-\mu)^2}\qquad{(3)}\]</span></span></p>
 <div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable table: Table 3: Quantities and conventions for this chapter’s worked example."><table id="tbl:part_0_quantitative_foundations_parameters" data-responsive-table="true">
 <caption>Table 3: Quantities and conventions for this chapter’s worked
 example.</caption>
@@ -2819,11 +2831,11 @@ law that grows fast when small and levels off when large is the
 eq. <a href="#eq:part_I_first_principles_rate">4</a> and in closed form
 in eq. <a href="#eq:part_I_first_principles_model">5</a>:</p>
 <p><span id="eq:part_I_first_principles_rate"><span
-class="math display">\[ \frac{dN}{dt} = rN\left(1 - \frac{N}{K}\right)
-\qquad{(4)}\]</span></span></p>
+class="math display">\[\frac{dN}{dt} = rN\left(1 -
+\frac{N}{K}\right)\qquad{(4)}\]</span></span></p>
 <p><span id="eq:part_I_first_principles_model"><span
-class="math display">\[ N(t) = \frac{K}{1 + \left(\dfrac{K -
-N_0}{N_0}\right) e^{-rt}} \qquad{(5)}\]</span></span></p>
+class="math display">\[N(t) = \frac{K}{1 + \left(\dfrac{K -
+N_0}{N_0}\right) e^{-rt}}\qquad{(5)}\]</span></span></p>
 <p>Read eq. <a href="#eq:part_I_first_principles_rate">4</a> aloud: the
 rate of change is proportional to how much there is (<span
 class="math inline">\(rN\)</span>) <em>times</em> how much room remains
@@ -3079,8 +3091,7 @@ additional equation a time-dependent claim would require.</p>
 <h2 data-number="9.7" id="a-worked-formalism-3"><span
 class="header-section-number">9.7</span> A Worked Formalism</h2>
 <p><span id="eq:part_I_building_blocks_model"><span
-class="math display">\[ y(x)=M\frac{x^h}{k^h+x^h}
-\qquad{(6)}\]</span></span></p>
+class="math display">\[y(x)=M\frac{x^h}{k^h+x^h}\qquad{(6)}\]</span></span></p>
 <div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable table: Table 5: Quantities and conventions for this chapter’s worked example."><table id="tbl:part_I_building_blocks_parameters" data-responsive-table="true">
 <caption>Table 5: Quantities and conventions for this chapter’s worked
 example.</caption>
@@ -3303,8 +3314,8 @@ the shared output establishes and which difference it conceals.</p>
 <h2 data-number="10.7" id="a-worked-formalism-4"><span
 class="header-section-number">10.7</span> A Worked Formalism</h2>
 <p><span id="eq:part_I_structure_and_form_model"><span
-class="math display">\[ z_i=\frac{x_i-\min_j x_j}{\max_j x_j-\min_j x_j}
-\qquad{(7)}\]</span></span></p>
+class="math display">\[z_i=\frac{x_i-\min_j x_j}{\max_j x_j-\min_j
+x_j}\qquad{(7)}\]</span></span></p>
 <div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable table: Table 6: Quantities and conventions for this chapter’s worked example."><table id="tbl:part_I_structure_and_form_parameters" data-responsive-table="true">
 <caption>Table 6: Quantities and conventions for this chapter’s worked
 example.</caption>
@@ -3555,8 +3566,7 @@ before any larger feedback or interaction model is proposed.</p>
 <h2 data-number="12.7" id="a-worked-formalism-5"><span
 class="header-section-number">12.7</span> A Worked Formalism</h2>
 <p><span id="eq:part_II_systems_overview_model"><span
-class="math display">\[ N(t)=\frac{K}{1+((K-N_0)/N_0)e^{-rt}}
-\qquad{(8)}\]</span></span></p>
+class="math display">\[N(t)=\frac{K}{1+((K-N_0)/N_0)e^{-rt}}\qquad{(8)}\]</span></span></p>
 <div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable table: Table 7: Quantities and conventions for this chapter’s worked example."><table id="tbl:part_II_systems_overview_parameters" data-responsive-table="true">
 <caption>Table 7: Quantities and conventions for this chapter’s worked
 example.</caption>
@@ -3788,8 +3798,8 @@ can be distinguished from a genuinely changed process.</p>
 <h2 data-number="13.7" id="a-worked-formalism-6"><span
 class="header-section-number">13.7</span> A Worked Formalism</h2>
 <p><span id="eq:part_II_dynamics_and_change_model"><span
-class="math display">\[ e(t)=e_0e^{-\lambda t},\qquad t_{1/2}=\frac{\ln
-2}{\lambda} \qquad{(9)}\]</span></span></p>
+class="math display">\[e(t)=e_0e^{-\lambda t},\qquad t_{1/2}=\frac{\ln
+2}{\lambda}\qquad{(9)}\]</span></span></p>
 <div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable table: Table 8: Quantities and conventions for this chapter’s worked example."><table id="tbl:part_II_dynamics_and_change_parameters" data-responsive-table="true">
 <caption>Table 8: Quantities and conventions for this chapter’s worked
 example.</caption>
@@ -4023,8 +4033,8 @@ establish that the original controller model was adequate.</p>
 <h2 data-number="14.7" id="a-worked-formalism-7"><span
 class="header-section-number">14.7</span> A Worked Formalism</h2>
 <p><span id="eq:part_II_regulation_and_control_model"><span
-class="math display">\[ e(t)=e_0e^{-\lambda t},\qquad t_{1/2}=\frac{\ln
-2}{\lambda} \qquad{(10)}\]</span></span></p>
+class="math display">\[e(t)=e_0e^{-\lambda t},\qquad t_{1/2}=\frac{\ln
+2}{\lambda}\qquad{(10)}\]</span></span></p>
 <div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable table: Table 9: Quantities and conventions for this chapter’s worked example."><table id="tbl:part_II_regulation_and_control_parameters" data-responsive-table="true">
 <caption>Table 9: Quantities and conventions for this chapter’s worked
 example.</caption>
@@ -4284,8 +4294,7 @@ a real system remains an empirical task.</p>
 <h2 data-number="16.7" id="a-worked-formalism-8"><span
 class="header-section-number">16.7</span> A Worked Formalism</h2>
 <p><span id="eq:part_III_applied_models_model"><span
-class="math display">\[ y(x)=M\frac{x^h}{k^h+x^h}
-\qquad{(11)}\]</span></span></p>
+class="math display">\[y(x)=M\frac{x^h}{k^h+x^h}\qquad{(11)}\]</span></span></p>
 <div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable table: Table 10: Quantities and conventions for this chapter’s worked example."><table id="tbl:part_III_applied_models_parameters" data-responsive-table="true">
 <caption>Table 10: Quantities and conventions for this chapter’s worked
 example.</caption>
@@ -4554,8 +4563,9 @@ class="sourceCode python"><code class="sourceCode python"><span id="cb21-1"><a h
 <span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a><span class="co"># fit.slope ≈ 1.375, fit.intercept ≈ 2.175, fit.r_squared ≈ 0.999</span></span></code></pre></div>
 <p>The fitted relationship in eq. <a
 href="#eq:part_III_case_studies_fit">12</a> is</p>
-<p><span id="eq:part_III_case_studies_fit"><span class="math display">\[
-\widehat{y}(d) = 1.375\,d + 2.175 \qquad{(12)}\]</span></span></p>
+<p><span id="eq:part_III_case_studies_fit"><span
+class="math display">\[\widehat{y}(d) = 1.375\,d +
+2.175\qquad{(12)}\]</span></span></p>
 <p>with <span class="math inline">\(R^2 = 0.999\)</span>. The slope says
 each dose step adds about <span class="math inline">\(1.4\)</span> units
 of response; the intercept, <span class="math inline">\(2.175\)</span>,
@@ -4759,9 +4769,9 @@ scientific question. That decision remains part of the authored research
 plan.</p>
 <h2 data-number="18.7" id="a-worked-formalism-9"><span
 class="header-section-number">18.7</span> A Worked Formalism</h2>
-<p><span id="eq:part_III_frontiers_model"><span class="math display">\[
-z_i=\frac{x_i-\min_j x_j}{\max_j x_j-\min_j x_j}
-\qquad{(13)}\]</span></span></p>
+<p><span id="eq:part_III_frontiers_model"><span
+class="math display">\[z_i=\frac{x_i-\min_j x_j}{\max_j x_j-\min_j
+x_j}\qquad{(13)}\]</span></span></p>
 <div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable table: Table 12: Quantities and conventions for this chapter’s worked example."><table id="tbl:part_III_frontiers_parameters" data-responsive-table="true">
 <caption>Table 12: Quantities and conventions for this chapter’s worked
 example.</caption>
@@ -7089,9 +7099,9 @@ class="math inline">\(0 &lt; N_0 \le K\)</span>, the trajectory
 satisfies <span class="math inline">\(\lim_{t \to \infty} N(t) =
 K\)</span>.</p>
 </blockquote>
-<p><span id="eq:formalisms_logistic"><span class="math display">\[ N(t)
-= \frac{K}{1 + A e^{-rt}}, \qquad A = \frac{K - N_0}{N_0} .
-\qquad{(14)}\]</span></span></p>
+<p><span id="eq:formalisms_logistic"><span class="math display">\[N(t) =
+\frac{K}{1 + A e^{-rt}}, \qquad A = \frac{K - N_0}{N_0}
+.\qquad{(14)}\]</span></span></p>
 <p><em>Proof.</em> Because <span class="math inline">\(r &gt;
 0\)</span>, the term <span class="math inline">\(e^{-rt} \to 0\)</span>
 as <span class="math inline">\(t \to \infty\)</span>. Hence the
@@ -7152,14 +7162,12 @@ class="header-section-number">46.5</span> 5. A step-by-step
 derivation</h2>
 <p>For <span class="math inline">\(0&lt;N_0&lt;K\)</span>, separating
 variables in the logistic differential equation gives:</p>
-<p><span class="math display">\[
-\begin{aligned}
+<p><span class="math display">\[\begin{aligned}
 \frac{dN}{dt} &amp;= rN\left(1 - \frac{N}{K}\right) \\
 \int \frac{dN}{N(1 - N/K)} &amp;= \int r \, dt \\
 \ln\!\left(\frac{N}{K - N}\right) &amp;= rt + C \\
 N(t) &amp;= \frac{K}{1 + A e^{-rt}}, \qquad A = e^{-C},
-\end{aligned}
-\]</span></p>
+\end{aligned}\]</span></p>
 <p>which recovers eq. <a href="#eq:formalisms_logistic">14</a>. The
 boundary case <span class="math inline">\(N_0=K\)</span> has the
 constant solution and is handled separately because the logarithm above
@@ -7172,10 +7180,12 @@ equations</h2>
 <p>A simple predator–prey system, with each equation individually
 referenceable (eq. <a href="#eq:formalisms_prey">15</a>, eq. <a
 href="#eq:formalisms_pred">16</a>):</p>
-<p><span id="eq:formalisms_prey"><span class="math display">\[
-\frac{dx}{dt} = \alpha x - \beta x y \qquad{(15)}\]</span></span></p>
-<p><span id="eq:formalisms_pred"><span class="math display">\[
-\frac{dy}{dt} = \delta x y - \gamma y \qquad{(16)}\]</span></span></p>
+<p><span id="eq:formalisms_prey"><span
+class="math display">\[\frac{dx}{dt} = \alpha x - \beta x
+y\qquad{(15)}\]</span></span></p>
+<p><span id="eq:formalisms_pred"><span
+class="math display">\[\frac{dy}{dt} = \delta x y - \gamma
+y\qquad{(16)}\]</span></span></p>
 <p>The vector-field figure style for such systems is demonstrated by the
 quiver plot in the format gallery (sec. <a
 href="#sec:appendix_format_gallery">47</a>).</p>
@@ -7416,23 +7426,20 @@ class="header-section-number">47.5</span> 5. Mathematics and units</h2>
 \ln 2 / \lambda\)</span>.</p>
 <p>A numbered display equation, cross-referenced as eq. <a
 href="#eq:gallery_logistic">17</a>:</p>
-<p><span id="eq:gallery_logistic"><span class="math display">\[ N(t) =
-\frac{K}{1 + \left(\dfrac{K - N_0}{N_0}\right) e^{-rt}}
-\qquad{(17)}\]</span></span></p>
+<p><span id="eq:gallery_logistic"><span class="math display">\[N(t) =
+\frac{K}{1 + \left(\dfrac{K - N_0}{N_0}\right)
+e^{-rt}}\qquad{(17)}\]</span></span></p>
 <p>Multi-line aligned derivation:</p>
-<p><span class="math display">\[
-\begin{aligned}
+<p><span class="math display">\[\begin{aligned}
 \frac{dN}{dt} &amp;= rN\left(1 - \frac{N}{K}\right) \\
               &amp;= rN - \frac{r}{K}N^2 .
-\end{aligned}
-\]</span></p>
+\end{aligned}\]</span></p>
 <p>A matrix and a piecewise definition:</p>
-<p><span class="math display">\[
-\mathbf{A} = \begin{bmatrix} a_{11} &amp; a_{12} \\ a_{21} &amp; a_{22}
-\end{bmatrix},
+<p><span class="math display">\[\mathbf{A} = \begin{bmatrix} a_{11}
+&amp; a_{12} \\ a_{21} &amp; a_{22} \end{bmatrix},
 \qquad
-f(x) = \begin{cases} 0 &amp; x &lt; 0 \\ 1 &amp; x \ge 0 . \end{cases}
-\]</span></p>
+f(x) = \begin{cases} 0 &amp; x &lt; 0 \\ 1 &amp; x \ge 0 .
+\end{cases}\]</span></p>
 <p>Physical quantities with units, written in math mode so they render
 in <strong>every</strong> target (PDF, HTML, slides): a rate of <span
 class="math inline">\(0.5\ \mathrm{s^{-1}}\)</span>, a length of <span

@@ -3,13 +3,13 @@
     "pdf": {
       "exists": true,
       "file_count": 1,
-      "size_mb": "0.15",
-      "total_size_bytes": 159102,
+      "size_mb": "0.19",
+      "total_size_bytes": 203178,
       "largest_files": [
         {
           "name": "template_eda_notebook_combined.pdf",
-          "size_mb": "0.15",
-          "size_bytes": 159102,
+          "size_mb": "0.19",
+          "size_bytes": 203178,
           "path": "pdf/template_eda_notebook_combined.pdf"
         }
       ],
@@ -20,13 +20,13 @@
     "web": {
       "exists": true,
       "file_count": 13,
-      "size_mb": "3.27",
-      "total_size_bytes": 3424890,
+      "size_mb": "2.13",
+      "total_size_bytes": 2229134,
       "largest_files": [
         {
           "name": "source-web-fonts.js",
-          "size_mb": "3.02",
-          "size_bytes": 3170848,
+          "size_mb": "1.88",
+          "size_bytes": 1975092,
           "path": "web/assets/source-web-fonts.js"
         },
         {
@@ -52,26 +52,26 @@
     "slides": {
       "exists": true,
       "file_count": 9,
-      "size_mb": "0.30",
-      "total_size_bytes": 316002,
+      "size_mb": "0.41",
+      "total_size_bytes": 428627,
       "largest_files": [
         {
           "name": "03_results_slides.pdf",
-          "size_mb": "0.08",
-          "size_bytes": 85495,
+          "size_mb": "0.10",
+          "size_bytes": 102538,
           "path": "slides/03_results_slides.pdf"
         },
         {
           "name": "05_experimental_setup_slides.pdf",
-          "size_mb": "0.04",
-          "size_bytes": 37537,
+          "size_mb": "0.05",
+          "size_bytes": 54025,
           "path": "slides/05_experimental_setup_slides.pdf"
         },
         {
-          "name": "02_methodology_slides.pdf",
-          "size_mb": "0.04",
-          "size_bytes": 37249,
-          "path": "slides/02_methodology_slides.pdf"
+          "name": "04_conclusion_slides.pdf",
+          "size_mb": "0.05",
+          "size_bytes": 53153,
+          "path": "slides/04_conclusion_slides.pdf"
         }
       ],
       "extensions": {
@@ -201,13 +201,13 @@
     "root": {
       "exists": true,
       "file_count": 1,
-      "size_mb": "0.15",
-      "total_size_bytes": 159102,
+      "size_mb": "0.19",
+      "total_size_bytes": 203178,
       "largest_files": [
         {
           "name": "template_eda_notebook_combined.pdf",
-          "size_mb": "0.15",
-          "size_bytes": 159102,
+          "size_mb": "0.19",
+          "size_bytes": 203178,
           "path": "template_eda_notebook_combined.pdf"
         }
       ],
@@ -217,33 +217,33 @@
     }
   },
   "total_files": 35,
-  "total_size_mb": 3.951742172241211,
+  "total_size_mb": 3.0028562545776367,
   "largest_files": [
     {
       "name": "source-web-fonts.js",
-      "size_mb": "3.02",
-      "size_bytes": 3170848,
+      "size_mb": "1.88",
+      "size_bytes": 1975092,
       "category": "web",
       "path": "web/assets/source-web-fonts.js"
     },
     {
       "name": "template_eda_notebook_combined.pdf",
-      "size_mb": "0.15",
-      "size_bytes": 159102,
+      "size_mb": "0.19",
+      "size_bytes": 203178,
       "category": "pdf",
       "path": "pdf/template_eda_notebook_combined.pdf"
     },
     {
       "name": "template_eda_notebook_combined.pdf",
-      "size_mb": "0.15",
-      "size_bytes": 159102,
+      "size_mb": "0.19",
+      "size_bytes": 203178,
       "category": "root",
       "path": "template_eda_notebook_combined.pdf"
     },
     {
       "name": "03_results_slides.pdf",
-      "size_mb": "0.08",
-      "size_bytes": 85495,
+      "size_mb": "0.10",
+      "size_bytes": 102538,
       "category": "slides",
       "path": "slides/03_results_slides.pdf"
     },
@@ -256,49 +256,49 @@
     },
     {
       "name": "05_experimental_setup_slides.pdf",
-      "size_mb": "0.04",
-      "size_bytes": 37537,
+      "size_mb": "0.05",
+      "size_bytes": 54025,
       "category": "slides",
       "path": "slides/05_experimental_setup_slides.pdf"
     },
     {
-      "name": "02_methodology_slides.pdf",
-      "size_mb": "0.04",
-      "size_bytes": 37249,
+      "name": "04_conclusion_slides.pdf",
+      "size_mb": "0.05",
+      "size_bytes": 53153,
       "category": "slides",
-      "path": "slides/02_methodology_slides.pdf"
+      "path": "slides/04_conclusion_slides.pdf"
     },
     {
       "name": "06_reproducibility_slides.pdf",
-      "size_mb": "0.04",
-      "size_bytes": 36746,
+      "size_mb": "0.05",
+      "size_bytes": 50895,
       "category": "slides",
       "path": "slides/06_reproducibility_slides.pdf"
     },
     {
-      "name": "notebook_execution.json",
-      "size_mb": "0.03",
-      "size_bytes": 35247,
-      "category": "reports",
-      "path": "reports/notebook_execution.json"
+      "name": "02_methodology_slides.pdf",
+      "size_mb": "0.05",
+      "size_bytes": 50531,
+      "category": "slides",
+      "path": "slides/02_methodology_slides.pdf"
     },
     {
-      "name": "04_conclusion_slides.pdf",
-      "size_mb": "0.03",
-      "size_bytes": 34373,
+      "name": "01_introduction_slides.pdf",
+      "size_mb": "0.04",
+      "size_bytes": 44457,
       "category": "slides",
-      "path": "slides/04_conclusion_slides.pdf"
+      "path": "slides/01_introduction_slides.pdf"
     }
   ],
   "missing_expected_files": [],
   "sizes_by_category": {
-    "pdf": 0.1517314910888672,
-    "web": 3.2662296295166016,
-    "slides": 0.3013629913330078,
+    "pdf": 0.19376564025878906,
+    "web": 2.1258678436279297,
+    "slides": 0.4087705612182617,
     "figures": 0.03585624694824219,
     "data": 0.008191108703613281,
     "reports": 0.03663921356201172,
-    "root": 0.1517314910888672
+    "root": 0.19376564025878906
   },
   "inventory_mode": "stable-shippable-output-v1",
   "inventory_scope": "stage5-delivery-mirror",

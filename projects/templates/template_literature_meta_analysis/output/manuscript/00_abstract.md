@@ -8,10 +8,12 @@ complete quantitative portrait of its literature. For this instance the term is
 engines (arXiv, OpenAlex, Semantic Scholar, Crossref, PubMed, SovietRxiv, ChinaRxiv, Europe PMC, bioRxiv, and medRxiv), each degrading gracefully to a skipped source when an API
 key or the network is unavailable, then merges and de-duplicates records by a canonical
 identifier hierarchy (DOI $>$ arXiv ID $>$ Semantic Scholar ID $>$ OpenAlex ID $>$ title
-digest) into a corpus of $N = 2334$ records spanning 2000--2026
-(26 years). Records are classified into a configurable 6-bucket
+digest) into a retrieved corpus of $N = 2334$ records. Bibliometric analysis
+retains 2234 records; its dated subset contains
+2234 records spanning 2000--2026
+(26 years). The analyzed records are classified into a configurable 6-bucket
 subfield taxonomy (Clinical Sleep, Cognition, Pharmacology, Psychiatry, Safety, and Neuroscience); the largest subfield is **Clinical Sleep**
-(63.0\% of the classified corpus). The corpus grows at a compound annual
+(63.0\% of the classified corpus). The dated subset grows at a compound annual
 rate of 5.48\% (mean year-over-year growth 7.8\%, doubling time
 9.2 years), peaking in 2025 with 147 records.
 
@@ -22,7 +24,8 @@ citation-network analysis exposes the corpus's internal structure (8,623
 intra-corpus edges across 2234 nodes, 1416 communities,
 graph density 0.17\%). Of 38,489 total outgoing
 references, 22.4\% resolve to another record inside the corpus.
-Abstract coverage stands at 61.6\%, 24.6\% of records are open access, and
+Across the retrieved corpus, abstract coverage stands at 61.6\%,
+24.6\% of records are open access, and
 54.6\% have a direct PDF link. An optional,
 LLM-gated knowledge-graph stage scores the 6 hypotheses explored against
 the evidence. This run produced 21 publication-quality figures.

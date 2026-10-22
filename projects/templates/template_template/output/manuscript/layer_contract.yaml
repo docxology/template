@@ -9,3 +9,6 @@ allow_infrastructure_imports:
   # Whole-Root facts are read only through the platform public-reference session,
   # which admits a clean public Root rather than an arbitrary parent checkout.
   - src/template_template/core/paths.py
+  # WHY: This exported figure orchestrator registers its real PNG set through
+  # the selected SDK; individual builders and figure specs remain project-owned.
+  - src/template_template/figures/architecture_viz.py

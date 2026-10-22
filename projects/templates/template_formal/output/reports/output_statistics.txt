@@ -8,11 +8,11 @@ Inventory Scope: stage5-delivery-mirror
 Inventory Root: output/templates/template_formal
 
 Total Files: 33
-Total Size: 5.44 MB
+Total Size: 4.30 MB
 
 Files by Category:
   • pdf: 1 files (0.58 MB)
-  • web: 11 files (3.49 MB)
+  • web: 11 files (2.35 MB)
   • slides: 7 files (0.63 MB)
   • figures: 8 files (0.15 MB)
   • data: 2 files (0.00 MB)
@@ -20,7 +20,7 @@ Files by Category:
   • root: 1 files (0.58 MB)
 
 Largest Files:
-  • source-web-fonts.js: 3.02 MB (web)
+  • source-web-fonts.js: 1.88 MB (web)
   • template_formal_combined.pdf: 0.58 MB (pdf)
   • template_formal_combined.pdf: 0.58 MB (root)
   • 05_results_discussion_slides.pdf: 0.35 MB (slides)

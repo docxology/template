@@ -500,6 +500,15 @@ th {
   color: white;
 }
 
+/* Preserve a complete inline-code header within the table's scroll region. */
+th code {
+  color: inherit;
+  background-color: transparent;
+  white-space: nowrap;
+  overflow-wrap: normal;
+  word-break: normal;
+}
+
 img {
   max-width: 100%;
   height: auto;
@@ -3472,11 +3481,11 @@ config. Generated files remain disposable; the durable contract is the
 ability to regenerate them from the tracked project tree and to observe
 the same validation gates passing.</p>
 <ul>
-<li>Config hash: <code>6ea3b6e37a6003a1</code></li>
-<li>Generated: <code>2026-10-15T18:40:52Z</code> (derived from
+<li>Config hash: <code>0a42c7db26e007f0</code></li>
+<li>Generated: <code>2026-10-22T17:22:44Z</code> (derived from
 <code>SOURCE_DATE_EPOCH</code>; an explicit <code>not-recorded</code>
 marker is emitted when the reproducible timestamp is not supplied)</li>
-<li>Python: <code>3.14.4</code></li>
+<li>Python: <code>3.14.8</code></li>
 <li>Platform: <code>Darwin arm64</code></li>
 </ul>
 <hr />

@@ -71,6 +71,8 @@ count, enabling at-a-glance comparison across runs.
 
 
 
+\clearpage
+
 # Results {#sec:results}
 
 @tbl:sia-metrics summarizes fixture-replay metrics for the bundled run.

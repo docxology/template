@@ -21,7 +21,7 @@ template/
 |   |-- published/               # Non-rendered published (symlinked, private)
 |   |-- archive/                 # Non-rendered retired (symlinked, private)
 |   `-- other/                   # Non-rendered misc (symlinked, private)
-|-- docs/ (20 top-level areas, 375+ markdown files per live counter)
+|-- docs/ (20 top-level areas, 376+ markdown files per live counter)
 |-- tests/                       # Infra suites (938+ files)
 |-- AGENTS.md / README.md / CLAUDE.md / pyproject.toml
 |-- run.sh / secure_run.sh

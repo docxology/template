@@ -2,7 +2,7 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="utf-8" />
-  <meta name="generator" content="pandoc 3.12" />
+  <meta name="generator" content="pandoc 3.12.1" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
   <title>case_studies.md.web</title>
   <style>
@@ -487,6 +487,9 @@ pre {
 }
 
 pre code {
+  background-color: transparent;
+  padding: 0;
+  border-radius: 0;
   overflow-wrap: inherit;
   white-space: inherit;
   word-break: inherit;
@@ -557,6 +560,15 @@ th, td {
 th {
   background-color: #1f6f8b;
   color: white;
+}
+
+/* Preserve a complete inline-code header within the table's scroll region. */
+th code {
+  color: inherit;
+  background-color: transparent;
+  white-space: nowrap;
+  overflow-wrap: normal;
+  word-break: normal;
 }
 
 img {
@@ -699,6 +711,7 @@ mjx-container[display="true"] {
 }
 
 </style>
+<script data-template-source-font-loader src="assets/source-web-fonts.js"></script>
 </head>
 <body>
 <a class="skip-link" href="#main-content">Skip to main content</a>
@@ -865,8 +878,8 @@ class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a hr
 <p>The fitted relationship in <span class="citation"
 data-cites="eq:part_III_case_studies_fit">[@eq:part_III_case_studies_fit]</span>
 is</p>
-<p><span class="math display">\[ \widehat{y}(d) = 1.375\,d + 2.175
-\]</span> {#eq:part_III_case_studies_fit}</p>
+<p><span class="math display">\[\widehat{y}(d) = 1.375\,d +
+2.175\]</span> {#eq:part_III_case_studies_fit}</p>
 <p>with <span class="math inline">\(R^2 = 0.999\)</span>. The slope says
 each dose step adds about <span class="math inline">\(1.4\)</span> units
 of response; the intercept, <span class="math inline">\(2.175\)</span>,

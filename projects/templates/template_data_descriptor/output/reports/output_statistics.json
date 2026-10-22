@@ -3,13 +3,13 @@
     "pdf": {
       "exists": true,
       "file_count": 1,
-      "size_mb": "0.17",
-      "total_size_bytes": 174883,
+      "size_mb": "0.21",
+      "total_size_bytes": 223295,
       "largest_files": [
         {
           "name": "template_data_descriptor_combined.pdf",
-          "size_mb": "0.17",
-          "size_bytes": 174883,
+          "size_mb": "0.21",
+          "size_bytes": 223295,
           "path": "pdf/template_data_descriptor_combined.pdf"
         }
       ],
@@ -20,25 +20,25 @@
     "web": {
       "exists": true,
       "file_count": 12,
-      "size_mb": "3.21",
-      "total_size_bytes": 3360953,
+      "size_mb": "2.07",
+      "total_size_bytes": 2167114,
       "largest_files": [
         {
           "name": "source-web-fonts.js",
-          "size_mb": "3.02",
-          "size_bytes": 3170848,
+          "size_mb": "1.88",
+          "size_bytes": 1975092,
           "path": "web/assets/source-web-fonts.js"
         },
         {
           "name": "index.html",
           "size_mb": "0.05",
-          "size_bytes": 49418,
+          "size_bytes": 49631,
           "path": "web/index.html"
         },
         {
           "name": "manuscript__06_usage_notes.html",
           "size_mb": "0.02",
-          "size_bytes": 17748,
+          "size_bytes": 17961,
           "path": "web/manuscript__06_usage_notes.html"
         }
       ],
@@ -52,25 +52,25 @@
     "slides": {
       "exists": true,
       "file_count": 8,
-      "size_mb": "0.28",
-      "total_size_bytes": 293024,
+      "size_mb": "0.34",
+      "total_size_bytes": 355605,
       "largest_files": [
         {
           "name": "05_quality_validation_slides.pdf",
-          "size_mb": "0.07",
-          "size_bytes": 69160,
+          "size_mb": "0.08",
+          "size_bytes": 81399,
           "path": "slides/05_quality_validation_slides.pdf"
         },
         {
           "name": "03_schema_slides.pdf",
-          "size_mb": "0.06",
-          "size_bytes": 63591,
+          "size_mb": "0.07",
+          "size_bytes": 73809,
           "path": "slides/03_schema_slides.pdf"
         },
         {
           "name": "02_data_description_slides.pdf",
-          "size_mb": "0.04",
-          "size_bytes": 46729,
+          "size_mb": "0.05",
+          "size_bytes": 53384,
           "path": "slides/02_data_description_slides.pdf"
         }
       ],
@@ -188,13 +188,13 @@
     "root": {
       "exists": true,
       "file_count": 1,
-      "size_mb": "0.17",
-      "total_size_bytes": 174883,
+      "size_mb": "0.21",
+      "total_size_bytes": 223295,
       "largest_files": [
         {
           "name": "template_data_descriptor_combined.pdf",
-          "size_mb": "0.17",
-          "size_bytes": 174883,
+          "size_mb": "0.21",
+          "size_bytes": 223295,
           "path": "template_data_descriptor_combined.pdf"
         }
       ],
@@ -204,63 +204,70 @@
     }
   },
   "total_files": 35,
-  "total_size_mb": 3.923323631286621,
+  "total_size_mb": 2.9368104934692383,
   "largest_files": [
     {
       "name": "source-web-fonts.js",
-      "size_mb": "3.02",
-      "size_bytes": 3170848,
+      "size_mb": "1.88",
+      "size_bytes": 1975092,
       "category": "web",
       "path": "web/assets/source-web-fonts.js"
     },
     {
       "name": "template_data_descriptor_combined.pdf",
-      "size_mb": "0.17",
-      "size_bytes": 174883,
+      "size_mb": "0.21",
+      "size_bytes": 223295,
       "category": "pdf",
       "path": "pdf/template_data_descriptor_combined.pdf"
     },
     {
       "name": "template_data_descriptor_combined.pdf",
-      "size_mb": "0.17",
-      "size_bytes": 174883,
+      "size_mb": "0.21",
+      "size_bytes": 223295,
       "category": "root",
       "path": "template_data_descriptor_combined.pdf"
     },
     {
       "name": "05_quality_validation_slides.pdf",
-      "size_mb": "0.07",
-      "size_bytes": 69160,
+      "size_mb": "0.08",
+      "size_bytes": 81399,
       "category": "slides",
       "path": "slides/05_quality_validation_slides.pdf"
     },
     {
       "name": "03_schema_slides.pdf",
-      "size_mb": "0.06",
-      "size_bytes": 63591,
+      "size_mb": "0.07",
+      "size_bytes": 73809,
       "category": "slides",
       "path": "slides/03_schema_slides.pdf"
     },
     {
-      "name": "index.html",
-      "size_mb": "0.05",
-      "size_bytes": 49418,
-      "category": "web",
-      "path": "web/index.html"
-    },
-    {
       "name": "02_data_description_slides.pdf",
-      "size_mb": "0.04",
-      "size_bytes": 46729,
+      "size_mb": "0.05",
+      "size_bytes": 53384,
       "category": "slides",
       "path": "slides/02_data_description_slides.pdf"
     },
     {
       "name": "04_provenance_slides.pdf",
-      "size_mb": "0.04",
-      "size_bytes": 43705,
+      "size_mb": "0.05",
+      "size_bytes": 51041,
       "category": "slides",
       "path": "slides/04_provenance_slides.pdf"
+    },
+    {
+      "name": "index.html",
+      "size_mb": "0.05",
+      "size_bytes": 49631,
+      "category": "web",
+      "path": "web/index.html"
+    },
+    {
+      "name": "01_introduction_slides.pdf",
+      "size_mb": "0.03",
+      "size_bytes": 31176,
+      "category": "slides",
+      "path": "slides/01_introduction_slides.pdf"
     },
     {
       "name": "schema_overview.png",
@@ -268,24 +275,17 @@
       "size_bytes": 28026,
       "category": "figures",
       "path": "figures/schema_overview.png"
-    },
-    {
-      "name": "01_introduction_slides.pdf",
-      "size_mb": "0.02",
-      "size_bytes": 22561,
-      "category": "slides",
-      "path": "slides/01_introduction_slides.pdf"
     }
   ],
   "missing_expected_files": [],
   "sizes_by_category": {
-    "pdf": 0.16678142547607422,
-    "web": 3.205254554748535,
-    "slides": 0.279449462890625,
+    "pdf": 0.2129507064819336,
+    "web": 2.066720962524414,
+    "slides": 0.33913135528564453,
     "figures": 0.09559822082519531,
     "data": 0.0033779144287109375,
     "reports": 0.00608062744140625,
-    "root": 0.16678142547607422
+    "root": 0.2129507064819336
   },
   "inventory_mode": "stable-shippable-output-v1",
   "inventory_scope": "stage5-delivery-mirror",

@@ -83,8 +83,10 @@ def standalone_slide_markdown(
     length: str,
     pitch_subject: str,
     source_base_url: str,
+    content_prefix: str = "deck_content",
 ) -> str:
     """Render one slide's standalone Markdown page."""
+    _validate_path_segment(content_prefix, what="content_prefix")
     lines: list[str] = []
     title = slide.title or f"({slide.kind} slide)"
     lines.append(f"# {title}")
@@ -110,7 +112,7 @@ def standalone_slide_markdown(
         f"[PPTX](../../pptx/{pitch_subject}_pitch_{length}.pptx)"
     )
     lines.append(
-        f"**Deck content source:** [manuscript/deck_content_{length}.yaml](../../../manuscript/deck_content_{length}.yaml)"
+        f"**Deck content source:** [manuscript/{content_prefix}_{length}.yaml](../../../manuscript/{content_prefix}_{length}.yaml)"
     )
     lines.append("")
     lines.append(
@@ -128,6 +130,7 @@ def write_standalone_slides(
     pitch_subject: str,
     project_root: Path,
     source_base_url: str,
+    content_prefix: str = "deck_content",
 ) -> list[Path]:
     """Write one standalone Markdown file per slide; return the written paths.
 
@@ -139,6 +142,7 @@ def write_standalone_slides(
     """
     _validate_path_segment(pitch_subject, what="pitch_subject")
     _validate_path_segment(length, what="length")
+    _validate_path_segment(content_prefix, what="content_prefix")
     total = len(deck.slides)
 
     standalone_dir = project_root / "output" / STANDALONE_SUBDIR / f"{pitch_subject}_{length}"
@@ -156,6 +160,7 @@ def write_standalone_slides(
             length=length,
             pitch_subject=pitch_subject,
             source_base_url=source_base_url,
+            content_prefix=content_prefix,
         )
         out_path.write_text(content, encoding="utf-8")
         written.append(out_path)

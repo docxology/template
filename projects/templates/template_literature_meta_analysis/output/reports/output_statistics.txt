@@ -8,26 +8,26 @@ Inventory Scope: stage5-delivery-mirror
 Inventory Root: output/templates/template_literature_meta_analysis
 
 Total Files: 128
-Total Size: 50.46 MB
+Total Size: 49.60 MB
 
 Files by Category:
-  • pdf: 1 files (7.04 MB)
-  • web: 25 files (3.60 MB)
-  • slides: 21 files (7.61 MB)
-  • figures: 22 files (7.67 MB)
+  • pdf: 1 files (7.10 MB)
+  • web: 25 files (2.46 MB)
+  • slides: 21 files (7.68 MB)
+  • figures: 22 files (7.77 MB)
   • data: 25 files (16.52 MB)
   • reports: 3 files (0.02 MB)
   • fulltext: 1 files (0.84 MB)
   • manuscript: 27 files (0.11 MB)
   • release: 2 files (0.00 MB)
-  • root: 1 files (7.04 MB)
+  • root: 1 files (7.10 MB)
 
 Largest Files:
-  • template_literature_meta_analysis_combined.pdf: 7.04 MB (pdf)
-  • template_literature_meta_analysis_combined.pdf: 7.04 MB (root)
+  • template_literature_meta_analysis_combined.pdf: 7.10 MB (pdf)
+  • template_literature_meta_analysis_combined.pdf: 7.10 MB (root)
   • tfidf_data.json: 6.74 MB (data)
   • corpus.jsonl: 5.10 MB (data)
-  • 03c_results_text_analytics_slides.pdf: 3.96 MB (slides)
+  • 03c_results_text_analytics_slides.pdf: 3.97 MB (slides)
 
 File Types:
   • .json: 25 file(s)

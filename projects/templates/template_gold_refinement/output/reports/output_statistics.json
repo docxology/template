@@ -3,13 +3,13 @@
     "pdf": {
       "exists": true,
       "file_count": 1,
-      "size_mb": "4.76",
-      "total_size_bytes": 4989831,
+      "size_mb": "4.94",
+      "total_size_bytes": 5182304,
       "largest_files": [
         {
           "name": "template_gold_refinement_combined.pdf",
-          "size_mb": "4.76",
-          "size_bytes": 4989831,
+          "size_mb": "4.94",
+          "size_bytes": 5182304,
           "path": "pdf/template_gold_refinement_combined.pdf"
         }
       ],
@@ -20,19 +20,19 @@
     "web": {
       "exists": true,
       "file_count": 16,
-      "size_mb": "3.58",
-      "total_size_bytes": 3755424,
+      "size_mb": "2.44",
+      "total_size_bytes": 2562437,
       "largest_files": [
         {
           "name": "source-web-fonts.js",
-          "size_mb": "3.02",
-          "size_bytes": 3170848,
+          "size_mb": "1.88",
+          "size_bytes": 1975092,
           "path": "web/assets/source-web-fonts.js"
         },
         {
           "name": "index.html",
           "size_mb": "0.19",
-          "size_bytes": 196703,
+          "size_bytes": 196916,
           "path": "web/index.html"
         },
         {
@@ -226,13 +226,13 @@
     "root": {
       "exists": true,
       "file_count": 2,
-      "size_mb": "4.76",
-      "total_size_bytes": 4993949,
+      "size_mb": "4.95",
+      "total_size_bytes": 5186422,
       "largest_files": [
         {
           "name": "template_gold_refinement_combined.pdf",
-          "size_mb": "4.76",
-          "size_bytes": 4989831,
+          "size_mb": "4.94",
+          "size_bytes": 5182304,
           "path": "template_gold_refinement_combined.pdf"
         },
         {
@@ -249,26 +249,26 @@
     }
   },
   "total_files": 75,
-  "total_size_mb": 18.931477546691895,
+  "total_size_mb": 18.160869598388672,
   "largest_files": [
     {
       "name": "template_gold_refinement_combined.pdf",
-      "size_mb": "4.76",
-      "size_bytes": 4989831,
+      "size_mb": "4.94",
+      "size_bytes": 5182304,
       "category": "pdf",
       "path": "pdf/template_gold_refinement_combined.pdf"
     },
     {
       "name": "template_gold_refinement_combined.pdf",
-      "size_mb": "4.76",
-      "size_bytes": 4989831,
+      "size_mb": "4.94",
+      "size_bytes": 5182304,
       "category": "root",
       "path": "template_gold_refinement_combined.pdf"
     },
     {
       "name": "source-web-fonts.js",
-      "size_mb": "3.02",
-      "size_bytes": 3170848,
+      "size_mb": "1.88",
+      "size_bytes": 1975092,
       "category": "web",
       "path": "web/assets/source-web-fonts.js"
     },
@@ -324,14 +324,14 @@
   ],
   "missing_expected_files": [],
   "sizes_by_category": {
-    "pdf": 4.758673667907715,
-    "web": 3.581451416015625,
+    "pdf": 4.942230224609375,
+    "web": 2.443730354309082,
     "figures": 5.6314697265625,
     "data": 0.036963462829589844,
     "reports": 0.020897865295410156,
     "manuscript": 0.13913631439208984,
     "release": 0.0002841949462890625,
-    "root": 4.762600898742676
+    "root": 4.946157455444336
   },
   "inventory_mode": "stable-shippable-output-v1",
   "inventory_scope": "stage5-delivery-mirror",

@@ -44,7 +44,7 @@ whether models and observations agree in the broader literature.
 
 ## Citation Network Analysis
 
-The combined corpus contains **132** citation relationships
+The separate bibliometric corpus contains **132** citation relationships
 across **70** papers, with a network density of
 2.73%. This is a descriptive statistic for the retained
 corpus; it does not establish a field-wide citation structure or community claim.

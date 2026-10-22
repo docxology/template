@@ -15,7 +15,7 @@ The `deep_search:` block in `manuscript/config.yaml` controls the run. The most-
 
 ## Pipeline shape
 
-The deep-search pipeline reads `project_config.deep_search` from `manuscript/config.yaml`, runs one `SearchQuery` per keyword (capped at `max_results_per_keyword`), aggregates the per-backend results through `LiteratureClient`, enriches every paper via `AbstractFetcher` and `FulltextFetcher`, generates collision-free citation keys with `paper_to_bibentry`, and (when `llm_per_paper: true` and Ollama is reachable) calls the local LLM with `DEEP_PROMPT` to produce a seven-section reading note per paper. The per-keyword outputs are then merged by `merge_papers` to form a deduplicated aggregate roster which is written to `manuscript/references_deep.bib`, `output/deep_search/aggregate.json`, and `output/deep_search/aggregate_report.md`. A Mermaid flowchart in this subsection renders the same flow visually in the HTML build.
+The deep-search pipeline reads `project_config.deep_search` from `manuscript/config.yaml`, runs one `SearchQuery` per keyword (capped at `max_results_per_keyword`), aggregates the per-backend results through `LiteratureClient`, enriches every paper via `AbstractFetcher` and `FulltextFetcher`, generates collision-free citation keys with `paper_to_bibentry`, and (when `llm_per_paper: true` and Ollama is reachable) calls the local LLM with `DEEP_PROMPT` to produce a seven-section reading note per paper. The per-keyword outputs are then merged by `merge_papers` to form a deduplicated aggregate roster which is written to `manuscript/references_deep.bib`, `output/deep_search/aggregate.json`, and `output/deep_search/aggregate_report.md`. A Mermaid flowchart in this subsection illustrates the same flow.
 
 ```mermaid
 flowchart TB
@@ -79,7 +79,7 @@ The LLM is duck-typed as `Callable[[str], str]` so tests pass a deterministic lo
 
 ## On-disk layout
 
-A successful deep-search run writes the following artefacts (paths shown relative to the project root); a Mermaid tree in this subsection renders the same hierarchy in the HTML build:
+A successful deep-search run writes the following artefacts (paths shown relative to the project root); a Mermaid tree in this subsection depicts the same hierarchy:
 
 * `output/deep_search/aggregate.json` — every unique paper across keywords.
 * `output/deep_search/aggregate_report.md` — cross-keyword markdown summary.

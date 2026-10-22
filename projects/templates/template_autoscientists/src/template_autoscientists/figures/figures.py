@@ -244,7 +244,8 @@ def build_efficiency_figure(rows: list[AblationRow]) -> tuple["plt.Figure", "plt
     ax.set_xlabel("Experiments (of a 60-experiment budget)")
     ax.set_title(
         "Ablation: search efficiency and hygiene\n"
-        "(the dead-end registry cuts redundant re-exploration to zero — same clean answer)"
+        "(the dead-end registry cuts redundant re-exploration to zero\n"
+        "— same clean answer)"
     )
     ax.legend(loc="lower right")
     ax.grid(True, axis="x", alpha=0.3)

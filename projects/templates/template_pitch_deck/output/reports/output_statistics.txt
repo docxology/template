@@ -8,24 +8,24 @@ Inventory Scope: stage5-delivery-mirror
 Inventory Root: output/templates/template_pitch_deck
 
 Total Files: 140
-Total Size: 5.69 MB
+Total Size: 4.97 MB
 
 Files by Category:
-  • pdf: 4 files (0.88 MB)
-  • web: 11 files (3.17 MB)
-  • figures: 9 files (0.31 MB)
+  • pdf: 4 files (1.35 MB)
+  • web: 11 files (2.03 MB)
+  • figures: 9 files (0.34 MB)
   • reports: 3 files (0.01 MB)
-  • pptx: 3 files (1.10 MB)
+  • pptx: 3 files (1.00 MB)
   • release_bundle: 3 files (0.07 MB)
-  • root: 1 files (0.07 MB)
+  • root: 1 files (0.08 MB)
   • slides_standalone: 106 files (0.09 MB)
 
 Largest Files:
-  • source-web-fonts.js: 3.02 MB (web)
-  • template_template_pitch_long.pptx: 0.52 MB (pptx)
-  • template_template_pitch_medium.pptx: 0.47 MB (pptx)
-  • template_template_pitch_long.pdf: 0.40 MB (pdf)
-  • template_template_pitch_medium.pdf: 0.36 MB (pdf)
+  • source-web-fonts.js: 1.88 MB (web)
+  • template_template_pitch_long.pdf: 0.63 MB (pdf)
+  • template_template_pitch_medium.pdf: 0.54 MB (pdf)
+  • template_template_pitch_long.pptx: 0.48 MB (pptx)
+  • template_template_pitch_medium.pptx: 0.43 MB (pptx)
 
 Missing Expected Files:
   ⚠  data/ directory

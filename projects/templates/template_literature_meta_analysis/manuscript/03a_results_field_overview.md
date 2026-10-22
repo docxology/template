@@ -7,20 +7,21 @@ spanning {{YEAR_START}}--{{YEAR_END}} ({{YEAR_SPAN}} years). Publication volume
 within this dated subset
 grows at a compound annual rate of {{CAGR_PCT}}\% (mean year-over-year growth
 {{MEAN_YOY_GROWTH_PCT}}\%, doubling time {{DOUBLING_TIME}} years), peaking in {{PEAK_YEAR}}
-with {{PEAK_YEAR_PUBS}} records that year. The growth curve is the first-order signal
-that the literature is active rather than dormant.
+with {{PEAK_YEAR_PUBS}} records that year. The growth curve is a first-order
+descriptive summary of this retained analyzed subset. A field-wide estimate of
+research activity would require a separate live coverage audit.
 
 <!-- FIGURE: growth_curve.png -->
-![Publication growth curve for {{SEARCH_TERM_TITLE}}. Annual publication counts (bars) and cumulative total (line) show sustained growth from {{YEAR_START}} through {{YEAR_END}}, peaking in {{PEAK_YEAR}}.](../output/figures/growth_curve.png "Publication Growth Curve"){#fig:growth_curve}
+![Publication growth curve for {{SEARCH_TERM_TITLE}}. Annual publication counts (bars) and cumulative total (line) summarize the retained dated subset from {{YEAR_START}} through {{YEAR_END}}, with its largest annual count in {{PEAK_YEAR}}.](../output/figures/growth_curve.png "Publication Growth Curve"){#fig:growth_curve}
 
 ## RQ1: Field Size and Growth
 
-The temporal analysis reveals a literature that has grown steadily over {{YEAR_SPAN}}
-years. The compound annual growth rate of {{CAGR_PCT}}\% means the corpus roughly doubles
-every {{DOUBLING_TIME}} years — a pace that exceeds the general biomedical literature
-growth rate of approximately 4\% per year. The peak year {{PEAK_YEAR}} with
-{{PEAK_YEAR_PUBS}} publications likely reflects both genuine research activity and the
-lag between publication and indexing in the source databases.
+The temporal analysis describes a retained analyzed literature slice spanning
+{{YEAR_SPAN}} years. The compound annual growth rate of {{CAGR_PCT}}\% implies a corpus
+doubling time of approximately {{DOUBLING_TIME}} years under the configured retrieval,
+filtering, and indexing conditions. The peak year {{PEAK_YEAR}} contains
+{{PEAK_YEAR_PUBS}} retained records. That count may reflect both publication activity
+and source-indexing delays; a causal trend would require a separate live coverage audit.
 
 **Table 1. Top publication years.**
 

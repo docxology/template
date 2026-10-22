@@ -1,18 +1,18 @@
 # TEMPLATE SEARCH PROJECT — DEEP REVIEW REPORT
-**Generated:** 2026-10-22T11:47:00+00:00
+**Generated:** 2026-10-22T17:22:44+00:00
 **Project root:** `projects/templates/template_search_project`
 **Repository root:** `.` (portable report label)
 **Review orchestrator:** `scripts/review`
 **Purpose:** informational current-source findings; this report is not run or release acceptance.
 **Operational completion:** run `scripts/review`; local receipts are separate from this report.
 **Configured local summary:** `output/.pipeline/review/summary.json` (not public acceptance)
-**Consumed own-source and presence snapshot SHA-256:** `24dd4d2206ec9fc0df74c13458e21fede24c0ab2e373a58355456879c36a1a64`
+**Consumed own-source and presence snapshot SHA-256:** `1f04a6f99c591434bb1b9bd1b004a4614eb1334f7db8a69fee93fc88098493ab`
 ---------------------------------------------------------------------------
 ## 1.  PROJECT INVENTORY
-  ▸ AGENTS.md  (12331 bytes)
+  ▸ AGENTS.md  (12537 bytes)
   ▸ CITATION.cff  (620 bytes)
   ▸ LICENSE  (1076 bytes)
-  ▸ README.md  (21972 bytes)
+  ▸ README.md  (22353 bytes)
   ▸ STANDALONE.md  (4729 bytes)
   ▸ TODO.md  (9210 bytes)
   ▸ build/  (2 entries)
@@ -57,8 +57,8 @@
   • Optional hardening
 
 **Internal-anchor validation**
-  AGENTS.md anchors broken: 5  ['1e3a8a', '7c2d12', '0f172a', '0f766e', 'fff']
-  README.md  anchors broken: 7  ['1e3a8a', '0f766e', '7c2d12', 'permanent-canonical-exemplars', 'review-phase', '0f172a', 'fff']
+  AGENTS.md anchors broken: 5  ['fff', '7c2d12', '0f172a', '1e3a8a', '0f766e']
+  README.md  anchors broken: 7  ['fff', '7c2d12', '0f172a', 'permanent-canonical-exemplars', 'review-phase', '1e3a8a', '0f766e']
 
 ## 3.  BIBLIOGRAPHY AUDIT
 **references.bib** entries: 6

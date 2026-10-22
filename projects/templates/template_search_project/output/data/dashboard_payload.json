@@ -2,8 +2,8 @@
   "title": "Literature Search Coverage Dashboard",
   "subtitle": "6 papers · 6 years · 1 sources · every floor and filter is CLI-configurable.",
   "project": "template_search_project",
-  "generated_utc": "2026-10-22T11:57:32Z",
-  "git_rev": "d7e6da6cf",
+  "generated_utc": "2026-10-22T18:10:03Z",
+  "git_rev": "b3ace87e1",
   "git_dirty": true,
   "hyperparameters": {
     "corpus_path": "<repo-root>/projects/templates/template_search_project/output/corpus.json",

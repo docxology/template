@@ -7,35 +7,35 @@ Inventory Mode: stable-shippable-output-v1
 Inventory Scope: stage5-delivery-mirror
 Inventory Root: output/templates/template_textbook
 
-Total Files: 140
-Total Size: 7.38 MB
+Total Files: 161
+Total Size: 11.24 MB
 
 Files by Category:
-  • pdf: 1 files (0.96 MB)
-  • web: 52 files (1.65 MB)
-  • docx: 2 files (1.08 MB)
-  • epub: 1 files (1.17 MB)
-  • figures: 76 files (1.54 MB)
+  • pdf: 1 files (2.07 MB)
+  • web: 53 files (3.55 MB)
+  • docx: 2 files (0.84 MB)
+  • epub: 1 files (0.93 MB)
+  • figures: 96 files (1.76 MB)
   • data: 2 files (0.00 MB)
   • reports: 3 files (0.01 MB)
   • release: 2 files (0.00 MB)
-  • root: 1 files (0.96 MB)
+  • root: 1 files (2.07 MB)
 
 Largest Files:
-  • template_textbook_combined.epub: 1.17 MB (epub)
-  • template_textbook_combined.docx: 1.08 MB (docx)
-  • template_textbook_combined.pdf: 0.96 MB (pdf)
-  • template_textbook_combined.pdf: 0.96 MB (root)
-  • index.html: 0.42 MB (web)
+  • template_textbook_combined.pdf: 2.07 MB (pdf)
+  • template_textbook_combined.pdf: 2.07 MB (root)
+  • source-web-fonts.js: 1.88 MB (web)
+  • template_textbook_combined.epub: 0.93 MB (epub)
+  • template_textbook_combined.docx: 0.84 MB (docx)
 
 File Types:
-  • .png: 54 file(s)
+  • .png: 64 file(s)
   • .html: 50 file(s)
-  • .mmd: 20 file(s)
+  • .mmd: 30 file(s)
   • .json: 7 file(s)
   • .pdf: 2 file(s)
   • .md: 2 file(s)
+  • .js: 1 file(s)
   • .ico: 1 file(s)
   • .yaml: 1 file(s)
   • .docx: 1 file(s)
-  • .epub: 1 file(s)

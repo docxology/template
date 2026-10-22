@@ -264,14 +264,7 @@ The closed form assumes a constant positive rate and a fixed capacity with an in
 
 \begin{figure}[htbp]
 \centering
-\begin{verbatim}
-flowchart LR
-  Q[Question and observation rule] --> I[Declared inputs and units]
-  I --> M[Tested model]
-  M --> P[Predicted quantities]
-  P --> C[Independent comparison]
-  C -->|record a revision| Q
-\end{verbatim}
+\includegraphics[width=0.82\linewidth,height=4.2in,keepaspectratio,alt={Mermaid diagram}]{../figures/mermaid_inline/inline_mermaid_0001_cfd4b27bda2f.png}
 \caption{Mermaid diagram}
 \end{figure}
 
@@ -431,14 +424,7 @@ Least squares here treats the input values as known and fits one straight line w
 
 \begin{figure}[htbp]
 \centering
-\begin{verbatim}
-flowchart LR
-  Q[Question and observation rule] --> I[Declared inputs and units]
-  I --> M[Tested model]
-  M --> P[Predicted quantities]
-  P --> C[Independent comparison]
-  C -->|record a revision| Q
-\end{verbatim}
+\includegraphics[width=0.82\linewidth,height=4.2in,keepaspectratio,alt={Mermaid diagram}]{../figures/mermaid_inline/inline_mermaid_0002_cfd4b27bda2f.png}
 \caption{Mermaid diagram}
 \end{figure}
 
@@ -597,14 +583,7 @@ This summary describes the supplied finite collection using the population divis
 
 \begin{figure}[htbp]
 \centering
-\begin{verbatim}
-flowchart LR
-  Q[Question and observation rule] --> I[Declared inputs and units]
-  I --> M[Tested model]
-  M --> P[Predicted quantities]
-  P --> C[Independent comparison]
-  C -->|record a revision| Q
-\end{verbatim}
+\includegraphics[width=0.82\linewidth,height=4.2in,keepaspectratio,alt={Mermaid diagram}]{../figures/mermaid_inline/inline_mermaid_0003_cfd4b27bda2f.png}
 \caption{Mermaid diagram}
 \end{figure}
 
@@ -798,13 +777,7 @@ the test suite, so the prose and the code cannot silently disagree.
 
 \begin{figure}[htbp]
 \centering
-\begin{verbatim}
-graph TD
-  A[Choose state variables] --> B[Write a rate rule]
-  B --> C[Solve or simulate]
-  C --> D[Predict long-run behaviour]
-  D -->|compare to data| A
-\end{verbatim}
+\includegraphics[width=0.82\linewidth,height=4.2in,keepaspectratio,alt={Mermaid diagram}]{../figures/mermaid_inline/inline_mermaid_0004_29eae841232d.png}
 \caption{Mermaid diagram}
 \end{figure}
 
@@ -969,14 +942,7 @@ This function is a static response curve: it relates an input to an output witho
 
 \begin{figure}[htbp]
 \centering
-\begin{verbatim}
-flowchart LR
-  Q[Question and observation rule] --> I[Declared inputs and units]
-  I --> M[Tested model]
-  M --> P[Predicted quantities]
-  P --> C[Independent comparison]
-  C -->|record a revision| Q
-\end{verbatim}
+\includegraphics[width=0.82\linewidth,height=4.2in,keepaspectratio,alt={Mermaid diagram}]{../figures/mermaid_inline/inline_mermaid_0005_cfd4b27bda2f.png}
 \caption{Mermaid diagram}
 \end{figure}
 
@@ -1130,14 +1096,7 @@ Scaling changes representation, not the evidence that generated it. Bounds estim
 
 \begin{figure}[htbp]
 \centering
-\begin{verbatim}
-flowchart LR
-  Q[Question and observation rule] --> I[Declared inputs and units]
-  I --> M[Tested model]
-  M --> P[Predicted quantities]
-  P --> C[Independent comparison]
-  C -->|record a revision| Q
-\end{verbatim}
+\includegraphics[width=0.82\linewidth,height=4.2in,keepaspectratio,alt={Mermaid diagram}]{../figures/mermaid_inline/inline_mermaid_0006_cfd4b27bda2f.png}
 \caption{Mermaid diagram}
 \end{figure}
 
@@ -1320,14 +1279,7 @@ The closed form assumes a constant positive rate and a fixed capacity with an in
 
 \begin{figure}[htbp]
 \centering
-\begin{verbatim}
-flowchart LR
-  Q[Question and observation rule] --> I[Declared inputs and units]
-  I --> M[Tested model]
-  M --> P[Predicted quantities]
-  P --> C[Independent comparison]
-  C -->|record a revision| Q
-\end{verbatim}
+\includegraphics[width=0.82\linewidth,height=4.2in,keepaspectratio,alt={Mermaid diagram}]{../figures/mermaid_inline/inline_mermaid_0007_cfd4b27bda2f.png}
 \caption{Mermaid diagram}
 \end{figure}
 
@@ -1482,14 +1434,7 @@ The model assumes a constant fractional loss rate with no replenishment. For a f
 
 \begin{figure}[htbp]
 \centering
-\begin{verbatim}
-flowchart LR
-  Q[Question and observation rule] --> I[Declared inputs and units]
-  I --> M[Tested model]
-  M --> P[Predicted quantities]
-  P --> C[Independent comparison]
-  C -->|record a revision| Q
-\end{verbatim}
+\includegraphics[width=0.82\linewidth,height=4.2in,keepaspectratio,alt={Mermaid diagram}]{../figures/mermaid_inline/inline_mermaid_0008_cfd4b27bda2f.png}
 \caption{Mermaid diagram}
 \end{figure}
 
@@ -1646,14 +1591,7 @@ The model assumes a constant fractional loss rate with no replenishment. For a f
 
 \begin{figure}[htbp]
 \centering
-\begin{verbatim}
-flowchart LR
-  Q[Question and observation rule] --> I[Declared inputs and units]
-  I --> M[Tested model]
-  M --> P[Predicted quantities]
-  P --> C[Independent comparison]
-  C -->|record a revision| Q
-\end{verbatim}
+\includegraphics[width=0.82\linewidth,height=4.2in,keepaspectratio,alt={Mermaid diagram}]{../figures/mermaid_inline/inline_mermaid_0009_cfd4b27bda2f.png}
 \caption{Mermaid diagram}
 \end{figure}
 
@@ -1836,14 +1774,7 @@ This function is a static response curve: it relates an input to an output witho
 
 \begin{figure}[htbp]
 \centering
-\begin{verbatim}
-flowchart LR
-  Q[Question and observation rule] --> I[Declared inputs and units]
-  I --> M[Tested model]
-  M --> P[Predicted quantities]
-  P --> C[Independent comparison]
-  C -->|record a revision| Q
-\end{verbatim}
+\includegraphics[width=0.82\linewidth,height=4.2in,keepaspectratio,alt={Mermaid diagram}]{../figures/mermaid_inline/inline_mermaid_0010_cfd4b27bda2f.png}
 \caption{Mermaid diagram}
 \end{figure}
 
@@ -1999,14 +1930,7 @@ approached a ceiling. The fixture does not establish which mechanism applies.
 
 \begin{figure}[htbp]
 \centering
-\begin{verbatim}
-graph LR
-  A[Raw measurements] --> B[Group + average]
-  B --> C[Fit a trend]
-  C --> D{Within data range?}
-  D -->|yes| E[Interpolate: defensible]
-  D -->|no| F[Extrapolate: flag the risk]
-\end{verbatim}
+\includegraphics[width=0.82\linewidth,height=4.2in,keepaspectratio,alt={Mermaid diagram}]{../figures/mermaid_inline/inline_mermaid_0011_258c2154784d.png}
 \caption{Mermaid diagram}
 \end{figure}
 
@@ -2174,14 +2098,7 @@ Scaling changes representation, not the evidence that generated it. Bounds estim
 
 \begin{figure}[htbp]
 \centering
-\begin{verbatim}
-flowchart LR
-  Q[Question and observation rule] --> I[Declared inputs and units]
-  I --> M[Tested model]
-  M --> P[Predicted quantities]
-  P --> C[Independent comparison]
-  C -->|record a revision| Q
-\end{verbatim}
+\includegraphics[width=0.82\linewidth,height=4.2in,keepaspectratio,alt={Mermaid diagram}]{../figures/mermaid_inline/inline_mermaid_0012_cfd4b27bda2f.png}
 \caption{Mermaid diagram}
 \end{figure}
 
@@ -4283,12 +4200,7 @@ Flowchart:
 
 \begin{figure}[htbp]
 \centering
-\begin{verbatim}
-graph TD
-  A[Inputs] --> B[Model]
-  B --> C[Predictions]
-  C -->|revise| A
-\end{verbatim}
+\includegraphics[width=0.82\linewidth,height=4.2in,keepaspectratio,alt={Mermaid diagram}]{../figures/mermaid_inline/inline_mermaid_0013_0c47d0ecfd54.png}
 \caption{Mermaid diagram}
 \end{figure}
 
@@ -4298,13 +4210,7 @@ Sequence:
 
 \begin{figure}[htbp]
 \centering
-\begin{verbatim}
-sequenceDiagram
-  participant Author
-  participant Engine
-  Author ->> Engine: edit config.yaml
-  Engine -->> Author: rendered PDF
-\end{verbatim}
+\includegraphics[width=0.82\linewidth,height=4.2in,keepaspectratio,alt={Mermaid diagram}]{../figures/mermaid_inline/inline_mermaid_0014_292217dd39b3.png}
 \caption{Mermaid diagram}
 \end{figure}
 
@@ -4314,13 +4220,7 @@ State:
 
 \begin{figure}[htbp]
 \centering
-\begin{verbatim}
-stateDiagram-v2
-  [*] --> Stub
-  Stub --> Drafted: fill
-  Drafted --> Reviewed: review
-  Reviewed --> [*]: publish
-\end{verbatim}
+\includegraphics[width=0.82\linewidth,height=4.2in,keepaspectratio,alt={Mermaid diagram}]{../figures/mermaid_inline/inline_mermaid_0015_988c820acb70.png}
 \caption{Mermaid diagram}
 \end{figure}
 
@@ -4330,15 +4230,7 @@ Class:
 
 \begin{figure}[htbp]
 \centering
-\begin{verbatim}
-classDiagram
-  class ChapterRef {
-    +str part_id
-    +str file
-    +stem() str
-  }
-  ChapterRef --> TocEntry : numbered as
-\end{verbatim}
+\includegraphics[width=0.82\linewidth,height=4.2in,keepaspectratio,alt={Mermaid diagram}]{../figures/mermaid_inline/inline_mermaid_0016_cfcd765b5afa.png}
 \caption{Mermaid diagram}
 \end{figure}
 
@@ -4348,11 +4240,7 @@ Entity-relationship:
 
 \begin{figure}[htbp]
 \centering
-\begin{verbatim}
-erDiagram
-  PART ||--o{ CHAPTER : contains
-  CHAPTER ||--|| LAB : has
-\end{verbatim}
+\includegraphics[width=0.82\linewidth,height=4.2in,keepaspectratio,alt={Mermaid diagram}]{../figures/mermaid_inline/inline_mermaid_0017_7df2b5706613.png}
 \caption{Mermaid diagram}
 \end{figure}
 

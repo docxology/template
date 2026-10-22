@@ -26,11 +26,11 @@ main:
     title: "Fish Market — Dock Prices"
     columns: ["Species", "Per lb", "Trend"]
     rows:
-      - ["Dungeness crab", "$6.25", "▲"]
-      - ["Chinook salmon", "$9.80", "▲"]
+      - ["Dungeness crab", "$6.25", "UP"]
+      - ["Chinook salmon", "$9.80", "UP"]
       - ["Rockfish", "$3.40", "—"]
-      - ["Lingcod", "$4.10", "▼"]
-      - ["Pacific halibut", "$11.50", "▲"]
+      - ["Lingcod", "$4.10", "DOWN"]
+      - ["Pacific halibut", "$11.50", "UP"]
       - ["Albacore (frozen)", "$3.95", "—"]
     footnote: "Ex-vessel prices, week ending May 23. Source: Harbor District."
   - figure:

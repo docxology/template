@@ -497,6 +497,15 @@ th {
   color: white;
 }
 
+/* Preserve a complete inline-code header within the table's scroll region. */
+th code {
+  color: inherit;
+  background-color: transparent;
+  white-space: nowrap;
+  overflow-wrap: normal;
+  word-break: normal;
+}
+
 img {
   max-width: 100%;
   height: auto;
@@ -701,10 +710,10 @@ is retained only as a runtime diagnostic because host load and hardware
 make microsecond values unsuitable as pinned reproducibility claims.</p>
 <h2 id="computational-environment">Computational Environment</h2>
 <ul>
-<li><strong>Python</strong>: 3.14.4</li>
-<li><strong>NumPy</strong>: 2.4.1</li>
+<li><strong>Python</strong>: 3.14.8</li>
+<li><strong>NumPy</strong>: 2.4.2</li>
 <li><strong>Platform</strong>: Darwin arm64</li>
-<li><strong>Generated</strong>: 2026-10-15T18:40:52Z</li>
+<li><strong>Generated</strong>: 2026-10-22T17:22:44Z</li>
 </ul>
 <h2 id="pipeline-ordering">Pipeline ordering</h2>
 <p>Typical <code>template_code_project</code> analysis order (see

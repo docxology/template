@@ -1382,9 +1382,12 @@ keeping the version with the most complete metadata (a count of non-None
 optional fields). The DOI is normalized: case-folded, resolver-prefix
 stripped, so the same paper returned by two engines under
 case/format-variant DOIs merges. For this run, 80 records carry DOIs, 12
-carry OpenAlex IDs, and 0 carry arXiv IDs. The de-duplicated corpus for
-this run holds <span class="math inline">\(N = 46\)</span> records
-published across 2000–2023.</p>
+carry OpenAlex IDs, and 0 carry arXiv IDs. The retrieved fixture
+contains 80 records. The configured phase union retains 46 unique
+records; the separate bibliometric analysis uses 70 records. Its dated
+temporal subset contains 70 records published across 2000–2023. These
+are distinct artifact scopes, rather than interchangeable
+denominators.</p>
 <h2 data-number="4.3" id="relevance-filtering"><span
 class="header-section-number">4.3</span> Relevance Filtering</h2>
 <p>After de-duplication, a relevance filter drops papers whose title and
@@ -1410,8 +1413,8 @@ deterministic path. Full-text availability is summarized without
 requiring any download, so the offline default still reports coverage.
 For this run:</p>
 <ul>
-<li><strong>Abstract coverage</strong>: 100.0% of records (80 of
-46) carry an abstract; 0 records lack one.</li>
+<li><strong>Abstract coverage</strong>: 100.0% of records (80 of 80
+retrieved records) carry an abstract; 0 records lack one.</li>
 <li><strong>Open-access status</strong>: 42.5% of records are open
 access (34 records); the remainder are closed or unknown.</li>
 <li><strong>PDF availability</strong>: 42.5% of records (34) have a
@@ -1738,9 +1741,9 @@ connection statistic for the retained corpus; it does not establish
 methodological coherence across the field.</p>
 <h3 data-number="9.2.3" id="combined-corpus"><span
 class="header-section-number">9.2.3</span> Combined Corpus</h3>
-<p>The deduplicated combined corpus contains 46 unique papers spanning
-2000–2023 (23 years). It provides a multi-phase description of the
-retained retrieval slice, not a field-wide account.</p>
+<p>The deduplicated combined phase corpus contains 46 unique papers
+spanning 2000–2023 (23 years). It provides a multi-phase description of
+the retained retrieval slice, not a field-wide account.</p>
 <h2 data-number="9.3" id="llm-based-content-filtering"><span
 class="header-section-number">9.3</span> LLM-Based Content
 Filtering</h2>
@@ -1833,13 +1836,19 @@ serializer behavior, but cannot establish any of these hypotheses.</p>
 <hr />
 <h1 data-number="11" id="results-field-overview"><span
 class="header-section-number">11</span> Results: Field Overview</h1>
-<p>The de-duplicated corpus for <strong>Exoplanet Atmospheres</strong>
-contains <span class="math inline">\(N = 46\)</span> records spanning
-2000–2023 (23 years). Publication volume grows at a compound annual rate
-of 6.76% (mean year-over-year growth 38.9%, doubling time 2.1 years),
-peaking in 2023 with 9 records that year. The growth curve is a
-first-order descriptive summary of the retained corpus; it is not a
-field-wide estimate of research activity.</p>
+<p>The bibliometric analysis corpus for <strong>Exoplanet
+Atmospheres</strong> contains <span class="math inline">\(N =
+70\)</span> records. Its dated temporal subset contains 70 records
+spanning 2000–2023 (23 years). Publication volume grows at a compound
+annual rate of 6.76% (mean year-over-year growth 38.9%, doubling time
+2.1 years), peaking in 2023 with 9 records that year. The growth curve
+is a first-order descriptive summary of this analyzed corpus; it is not
+a field-wide estimate of research activity. The retrieved fixture
+contains 80 records, while the configured phase union contains 46 unique
+records. The figures and descriptive bibliometrics in this section use
+the separate 70-record analyzed corpus, with growth computed on its
+dated temporal subset; identifier and full-text coverage below use the
+retrieved fixture.</p>
 <!-- FIGURE: growth_curve.png -->
 <figure id="fig:growth_curve">
 <a class="figure-full-size-link" href="../figures/growth_curve.png" target="_blank" rel="noopener" aria-label="Open full-size Figure 1, Publication growth curve for Exoplanet Atmospheres."><img src="../figures/growth_curve.png" title="Publication Growth Curve"
@@ -1981,20 +1990,20 @@ research threads.</figcaption>
 <h2 data-number="11.3" id="identifier-and-full-text-coverage"><span
 class="header-section-number">11.3</span> Identifier and Full-Text
 Coverage</h2>
-<p>The corpus has measurable identifier coverage: 80 of 46 records
-(100.0%) carry DOIs, supporting cross-engine de-duplication. OpenAlex
-IDs are present for 12 records. Abstract coverage stands at 100.0% (80
+<p>The retrieved fixture has measurable identifier coverage: 80 of 80
+records carry DOIs, supporting cross-engine de-duplication. OpenAlex IDs
+are present for 12 records. Abstract coverage stands at 100.0% (80
 records), which limits the text analytics to that subset. Open-access
 status is confirmed for 42.5% of records, and 42.5% have a direct PDF
 link.</p>
 <h2 data-number="11.4" id="descriptive-bibliometrics"><span
 class="header-section-number">11.4</span> Descriptive Bibliometrics</h2>
-<p>The corpus spans 144 unique authors across 46 papers, yielding a mean
-of 1.51 papers per author. Citation counts range from zero to 110 (mean
-37.0, median 31.0), with a total of 2,593 citations across the corpus.
-The Gini coefficient of citation concentration is 0.421. This statistic
-describes concentration within the retained corpus and should not be
-generalized to citation behavior in the field.</p>
+<p>The analyzed corpus spans 144 unique authors across 70 papers,
+yielding a mean of 1.51 papers per author. Citation counts range from
+zero to 110 (mean 37.0, median 31.0), with a total of 2,593 citations
+across the corpus. The Gini coefficient of citation concentration is
+0.421. This statistic describes concentration within the retained corpus
+and should not be generalized to citation behavior in the field.</p>
 <p><strong>Table 3. Citation count distribution.</strong></p>
 <div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable data table"><table data-responsive-table="true">
 <thead>
@@ -2455,53 +2464,53 @@ reveal the most closely related works in the corpus.</p>
 </thead>
 <tbody>
 <tr>
-<td>doi:10.5555/exoplanet atmosphe</td>
-<td>doi:10.5555/exoplanet atmosphe</td>
+<td><code>doi:10.5555/exoplanet atmospheres.0031</code></td>
+<td><code>doi:10.5555/exoplanet atmospheres.0055</code></td>
 <td>1.0000</td>
 </tr>
 <tr>
-<td>doi:10.5555/exoplanet atmosphe</td>
-<td>doi:10.5555/exoplanet atmosphe</td>
+<td><code>doi:10.5555/exoplanet atmospheres.0046</code></td>
+<td><code>doi:10.5555/exoplanet atmospheres.0070</code></td>
 <td>1.0000</td>
 </tr>
 <tr>
-<td>doi:10.5555/exoplanet atmosphe</td>
-<td>doi:10.5555/exoplanet atmosphe</td>
+<td><code>doi:10.5555/exoplanet atmospheres.0055</code></td>
+<td><code>doi:10.5555/exoplanet atmospheres.0031</code></td>
 <td>1.0000</td>
 </tr>
 <tr>
-<td>doi:10.5555/exoplanet atmosphe</td>
-<td>doi:10.5555/exoplanet atmosphe</td>
+<td><code>doi:10.5555/exoplanet atmospheres.0070</code></td>
+<td><code>doi:10.5555/exoplanet atmospheres.0046</code></td>
 <td>1.0000</td>
 </tr>
 <tr>
-<td>doi:10.5555/exoplanet atmosphe</td>
-<td>doi:10.5555/exoplanet atmosphe</td>
+<td><code>doi:10.5555/exoplanet atmospheres.0000</code></td>
+<td><code>doi:10.5555/exoplanet atmospheres.0024</code></td>
 <td>1.0000</td>
 </tr>
 <tr>
-<td>doi:10.5555/exoplanet atmosphe</td>
-<td>doi:10.5555/exoplanet atmosphe</td>
+<td><code>doi:10.5555/exoplanet atmospheres.0000</code></td>
+<td><code>doi:10.5555/exoplanet atmospheres.0048</code></td>
 <td>1.0000</td>
 </tr>
 <tr>
-<td>doi:10.5555/exoplanet atmosphe</td>
-<td>doi:10.5555/exoplanet atmosphe</td>
+<td><code>doi:10.5555/exoplanet atmospheres.0000</code></td>
+<td><code>doi:10.5555/exoplanet atmospheres.0072</code></td>
 <td>1.0000</td>
 </tr>
 <tr>
-<td>doi:10.5555/exoplanet atmosphe</td>
-<td>doi:10.5555/exoplanet atmosphe</td>
+<td><code>doi:10.5555/exoplanet atmospheres.0002</code></td>
+<td><code>doi:10.5555/exoplanet atmospheres.0044</code></td>
 <td>1.0000</td>
 </tr>
 <tr>
-<td>doi:10.5555/exoplanet atmosphe</td>
-<td>doi:10.5555/exoplanet atmosphe</td>
+<td><code>doi:10.5555/exoplanet atmospheres.0002</code></td>
+<td><code>doi:10.5555/exoplanet atmospheres.0020</code></td>
 <td>1.0000</td>
 </tr>
 <tr>
-<td>doi:10.5555/exoplanet atmosphe</td>
-<td>doi:10.5555/exoplanet atmosphe</td>
+<td><code>doi:10.5555/exoplanet atmospheres.0002</code></td>
+<td><code>doi:10.5555/exoplanet atmospheres.0068</code></td>
 <td>1.0000</td>
 </tr>
 </tbody>
@@ -2701,8 +2710,8 @@ title="Degree Distribution"
 alt="Histogram of paper in-degree in the directed citation graph, with the horizontal axis giving citations received and the vertical axis giving the number of papers; logarithmic axes are used when the degree range is large." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Figure 17: Degree distribution for the
 Exoplanet Atmospheres citation network. The histogram shows the
-frequency of each in-degree value on a log-linear scale, revealing the
-heavy-tailed structure characteristic of citation networks.</figcaption>
+frequency of each in-degree value on linear axes, describing the
+observed citation-count distribution in this corpus.</figcaption>
 </figure>
 <p>The heavy-tailed degree distribution is characteristic of citation
 networks: a small number of highly-cited papers anchor the structure,
@@ -2895,11 +2904,11 @@ ledger and source-tier metadata. A fixture run cannot establish whether
 models and observations agree in the broader literature.</p>
 <h2 data-number="16.3" id="citation-network-analysis"><span
 class="header-section-number">16.3</span> Citation Network Analysis</h2>
-<p>The combined corpus contains <strong>132</strong> citation
-relationships across <strong>70</strong> papers, with a network density
-of 2.73%. This is a descriptive statistic for the retained corpus; it
-does not establish a field-wide citation structure or community
-claim.</p>
+<p>The separate bibliometric corpus contains <strong>132</strong>
+citation relationships across <strong>70</strong> papers, with a network
+density of 2.73%. This is a descriptive statistic for the retained
+corpus; it does not establish a field-wide citation structure or
+community claim.</p>
 <h2 data-number="16.4" id="reproducibility-assessment"><span
 class="header-section-number">16.4</span> Reproducibility
 Assessment</h2>
@@ -3190,12 +3199,18 @@ are disposable and regenerable:</p>
 <tr>
 <td><code>corpus.jsonl</code></td>
 <td>01</td>
-<td>De-duplicated corpus (46 records)</td>
+<td>Retrieved fixture (80 records)</td>
+</tr>
+<tr>
+<td><code>combined_corpus.jsonl</code></td>
+<td>01</td>
+<td>Configured phase union (46 unique records)</td>
 </tr>
 <tr>
 <td><code>temporal_analysis.json</code></td>
 <td>02</td>
-<td>Year counts, CAGR, doubling time, peak year</td>
+<td>Year-filtered analysis (70 records), CAGR, doubling time, peak
+year</td>
 </tr>
 <tr>
 <td><code>subfield_classification.json</code></td>

@@ -8,23 +8,23 @@ Inventory Scope: stage5-delivery-mirror
 Inventory Root: output/templates/template_autopoiesis
 
 Total Files: 123
-Total Size: 5.01 MB
+Total Size: 4.21 MB
 
 Files by Category:
-  • pdf: 1 files (0.54 MB)
-  • web: 12 files (3.44 MB)
-  • figures: 13 files (0.35 MB)
+  • pdf: 1 files (0.68 MB)
+  • web: 12 files (2.31 MB)
+  • figures: 13 files (0.41 MB)
   • data: 3 files (0.00 MB)
   • reports: 3 files (0.01 MB)
   • children: 79 files (0.05 MB)
   • manuscript: 11 files (0.09 MB)
-  • root: 1 files (0.54 MB)
+  • root: 1 files (0.68 MB)
 
 Largest Files:
-  • source-web-fonts.js: 3.02 MB (web)
-  • template_autopoiesis_combined.pdf: 0.54 MB (pdf)
-  • template_autopoiesis_combined.pdf: 0.54 MB (root)
-  • fig_coverage_by_module.png: 0.16 MB (figures)
+  • source-web-fonts.js: 1.88 MB (web)
+  • template_autopoiesis_combined.pdf: 0.68 MB (pdf)
+  • template_autopoiesis_combined.pdf: 0.68 MB (root)
+  • fig_coverage_by_module.png: 0.18 MB (figures)
   • index.html: 0.14 MB (web)
 
 File Types:

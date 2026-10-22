@@ -244,6 +244,7 @@ def generate_descriptor_figure_assets(project_root: Path) -> tuple[Path, ...]:
 def _style_table(table: Table, column_count: int, *, scale: float) -> None:
     table.auto_set_font_size(False)
     table.set_fontsize(9)
+    table.auto_set_column_width(list(range(column_count)))
     table.scale(1.0, scale)
     for column in range(column_count):
         table[0, column].set_facecolor(BLUE)

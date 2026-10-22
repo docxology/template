@@ -584,6 +584,15 @@ th {
   color: white;
 }
 
+/* Preserve a complete inline-code header within the table's scroll region. */
+th code {
+  color: inherit;
+  background-color: transparent;
+  white-space: nowrap;
+  overflow-wrap: normal;
+  word-break: normal;
+}
+
 img {
   max-width: 100%;
   height: auto;
@@ -3387,7 +3396,7 @@ class="header-section-number">7.1</span> Summary</h2>
 <li>Final purity: 99.9999999% (nine-nines) (24K (nine-nines
 certified))</li>
 <li>24 tokens generated deterministically from seed 431</li>
-<li>Config hash: f07f54804db53e6d</li>
+<li>Config hash: e82859fdfbe05fa8</li>
 <li>7 source-owned formalisms with equation labels:
 eq:purity_functional, eq:monotone_refinery, eq:token_digest,
 eq:claim_support, eq:integrity_vector, eq:certification_predicate,
@@ -3467,9 +3476,9 @@ format, but it does make the manuscript variables, figures, reports, and
 rendered PDF/HTML products rebuildable from source-owned inputs.</p>
 <ul>
 <li><strong>Seed:</strong> 431</li>
-<li><strong>Config hash:</strong> f07f54804db53e6d</li>
-<li><strong>Generation timestamp:</strong> 2026-10-15T18:40:52Z</li>
-<li><strong>Python version:</strong> 3.14.4</li>
+<li><strong>Config hash:</strong> e82859fdfbe05fa8</li>
+<li><strong>Generation timestamp:</strong> 2026-10-22T17:22:44Z</li>
+<li><strong>Python version:</strong> 3.14.8</li>
 </ul>
 <h2 data-number="8.2" id="artifact-inventory"><span
 class="header-section-number">8.2</span> Artifact inventory</h2>
@@ -3511,7 +3520,7 @@ class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="
 <span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Full pipeline (from repo root)</span></span>
 <span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="ex">./run.sh</span> <span class="at">--project</span> templates/template_gold_refinement <span class="at">--pipeline</span> <span class="at">--mode</span> core</span></code></pre></div>
 <p>A reproduction report should record command exit status, the source
-revision, <code>f07f54804db53e6d</code>, Python 3.14.4, and whether the
+revision, <code>e82859fdfbe05fa8</code>, Python 3.14.8, and whether the
 generated registries pass. Matching prose alone is insufficient if the
 token plan, claim registry, or figure registry differs. Conversely,
 timestamp or renderer metadata differences should be interpreted
@@ -3529,7 +3538,7 @@ the optional hardening path visible before execution instead of burying
 it in shell glue or prose.</p>
 <p>The reproducibility spine uses fact registry and figure registry as
 generated artifacts rather than reader trust signals. Variable
-generation records <code>f07f54804db53e6d</code>; analysis writes
+generation records <code>e82859fdfbe05fa8</code>; analysis writes
 refinery, token, claim-support, dashboard, and figure artifacts;
 validation may add the shared evidence registry used by template
 scientific-integrity checks.</p>

@@ -77,6 +77,8 @@ def test_markdown_tables_include_live_plan(tmp_path: Path) -> None:
     assert "| discussion | Discussion: Accountability Boundaries for Generated Prose | False | 0 |" in section_table
     assert "`FIRST_ADJECTIVE`" in inventory_table
     assert "madlib.lexicon.adjectives" in inventory_table
+    assert all(choice.source_key in inventory_table.replace("`", "") for choice in plan.choices)
+    assert "`manuscript/config.yaml#madlib.lexicon.adjectives`[" in inventory_table
 
     field_inventory = configured_field_inventory(config, plan)
     field_counts = configured_field_counts(config, field_inventory)

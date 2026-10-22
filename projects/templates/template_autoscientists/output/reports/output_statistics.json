@@ -4,12 +4,12 @@
       "exists": true,
       "file_count": 1,
       "size_mb": "0.29",
-      "total_size_bytes": 309011,
+      "total_size_bytes": 309129,
       "largest_files": [
         {
           "name": "template_autoscientists_combined.pdf",
           "size_mb": "0.29",
-          "size_bytes": 309011,
+          "size_bytes": 309129,
           "path": "pdf/template_autoscientists_combined.pdf"
         }
       ],
@@ -20,25 +20,25 @@
     "web": {
       "exists": true,
       "file_count": 13,
-      "size_mb": "3.29",
-      "total_size_bytes": 3452474,
+      "size_mb": "2.15",
+      "total_size_bytes": 2256751,
       "largest_files": [
         {
           "name": "source-web-fonts.js",
-          "size_mb": "3.02",
-          "size_bytes": 3170848,
+          "size_mb": "1.88",
+          "size_bytes": 1975092,
           "path": "web/assets/source-web-fonts.js"
         },
         {
           "name": "index.html",
           "size_mb": "0.07",
-          "size_bytes": 72023,
+          "size_bytes": 72034,
           "path": "web/index.html"
         },
         {
           "name": "_combined_manuscript.md",
           "size_mb": "0.03",
-          "size_bytes": 30868,
+          "size_bytes": 30879,
           "path": "web/_combined_manuscript.md"
         }
       ],
@@ -202,12 +202,12 @@
       "exists": true,
       "file_count": 1,
       "size_mb": "0.29",
-      "total_size_bytes": 309011,
+      "total_size_bytes": 309129,
       "largest_files": [
         {
           "name": "template_autoscientists_combined.pdf",
           "size_mb": "0.29",
-          "size_bytes": 309011,
+          "size_bytes": 309129,
           "path": "template_autoscientists_combined.pdf"
         }
       ],
@@ -217,33 +217,33 @@
     }
   },
   "total_files": 27,
-  "total_size_mb": 4.033930778503418,
+  "total_size_mb": 2.8938255310058594,
   "largest_files": [
     {
       "name": "source-web-fonts.js",
-      "size_mb": "3.02",
-      "size_bytes": 3170848,
+      "size_mb": "1.88",
+      "size_bytes": 1975092,
       "category": "web",
       "path": "web/assets/source-web-fonts.js"
     },
     {
       "name": "template_autoscientists_combined.pdf",
       "size_mb": "0.29",
-      "size_bytes": 309011,
+      "size_bytes": 309129,
       "category": "pdf",
       "path": "pdf/template_autoscientists_combined.pdf"
     },
     {
       "name": "template_autoscientists_combined.pdf",
       "size_mb": "0.29",
-      "size_bytes": 309011,
+      "size_bytes": 309129,
       "category": "root",
       "path": "template_autoscientists_combined.pdf"
     },
     {
       "name": "index.html",
       "size_mb": "0.07",
-      "size_bytes": 72023,
+      "size_bytes": 72034,
       "category": "web",
       "path": "web/index.html"
     },
@@ -271,7 +271,7 @@
     {
       "name": "_combined_manuscript.md",
       "size_mb": "0.03",
-      "size_bytes": 30868,
+      "size_bytes": 30879,
       "category": "web",
       "path": "web/_combined_manuscript.md"
     },
@@ -292,13 +292,13 @@
   ],
   "missing_expected_files": [],
   "sizes_by_category": {
-    "pdf": 0.2946958541870117,
-    "web": 3.2925357818603516,
+    "pdf": 0.29480838775634766,
+    "web": 2.152205467224121,
     "figures": 0.14377307891845703,
     "data": 0.0032682418823242188,
     "reports": 0.0030345916748046875,
     "release": 0.0019273757934570312,
-    "root": 0.2946958541870117
+    "root": 0.29480838775634766
   },
   "inventory_mode": "stable-shippable-output-v1",
   "inventory_scope": "stage5-delivery-mirror",

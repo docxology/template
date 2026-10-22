@@ -97,16 +97,16 @@ reveal the most closely related works in the corpus.
 
 | Paper A | Paper B | Similarity |
 | --- | --- | --- |
-| doi:10.5555/exoplanet atmosphe | doi:10.5555/exoplanet atmosphe | 1.0000 |
-| doi:10.5555/exoplanet atmosphe | doi:10.5555/exoplanet atmosphe | 1.0000 |
-| doi:10.5555/exoplanet atmosphe | doi:10.5555/exoplanet atmosphe | 1.0000 |
-| doi:10.5555/exoplanet atmosphe | doi:10.5555/exoplanet atmosphe | 1.0000 |
-| doi:10.5555/exoplanet atmosphe | doi:10.5555/exoplanet atmosphe | 1.0000 |
-| doi:10.5555/exoplanet atmosphe | doi:10.5555/exoplanet atmosphe | 1.0000 |
-| doi:10.5555/exoplanet atmosphe | doi:10.5555/exoplanet atmosphe | 1.0000 |
-| doi:10.5555/exoplanet atmosphe | doi:10.5555/exoplanet atmosphe | 1.0000 |
-| doi:10.5555/exoplanet atmosphe | doi:10.5555/exoplanet atmosphe | 1.0000 |
-| doi:10.5555/exoplanet atmosphe | doi:10.5555/exoplanet atmosphe | 1.0000 |
+| `doi:10.5555/exoplanet atmospheres.0031` | `doi:10.5555/exoplanet atmospheres.0055` | 1.0000 |
+| `doi:10.5555/exoplanet atmospheres.0046` | `doi:10.5555/exoplanet atmospheres.0070` | 1.0000 |
+| `doi:10.5555/exoplanet atmospheres.0055` | `doi:10.5555/exoplanet atmospheres.0031` | 1.0000 |
+| `doi:10.5555/exoplanet atmospheres.0070` | `doi:10.5555/exoplanet atmospheres.0046` | 1.0000 |
+| `doi:10.5555/exoplanet atmospheres.0000` | `doi:10.5555/exoplanet atmospheres.0024` | 1.0000 |
+| `doi:10.5555/exoplanet atmospheres.0000` | `doi:10.5555/exoplanet atmospheres.0048` | 1.0000 |
+| `doi:10.5555/exoplanet atmospheres.0000` | `doi:10.5555/exoplanet atmospheres.0072` | 1.0000 |
+| `doi:10.5555/exoplanet atmospheres.0002` | `doi:10.5555/exoplanet atmospheres.0044` | 1.0000 |
+| `doi:10.5555/exoplanet atmospheres.0002` | `doi:10.5555/exoplanet atmospheres.0020` | 1.0000 |
+| `doi:10.5555/exoplanet atmospheres.0002` | `doi:10.5555/exoplanet atmospheres.0068` | 1.0000 |
 
 <!-- FIGURE: similarity_heatmap.png -->
 ![Document similarity for Exoplanet Atmospheres. The horizontal bar chart shows the 15 most similar document pairs ranked by cosine similarity of their TF-IDF/SVD embeddings. High-similarity pairs share topical and lexical content.](../output/figures/similarity_heatmap.png "Similar Document Pairs"){#fig:similarity_heatmap}

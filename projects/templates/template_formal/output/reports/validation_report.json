@@ -83,7 +83,7 @@
           "file_count": 11,
           "largest_file": "source-web-fonts.js",
           "largest_file_path": "web/assets/source-web-fonts.js",
-          "size_mb": "3.49"
+          "size_mb": "2.35"
         }
       },
       "file_counts": {
@@ -189,7 +189,7 @@
             "optional": false,
             "readable": true,
             "required": true,
-            "size_mb": 3.49
+            "size_mb": 2.35
           }
         },
         "inventory_mode": "stable-shippable-output-v1",
@@ -199,7 +199,7 @@
         "valid": true,
         "warnings": []
       },
-      "total_size_mb": 4.86013126373291
+      "total_size_mb": 3.7197694778442383
     },
     "figures": {
       "files": 8,
@@ -234,12 +234,12 @@
         },
         "web": {
           "files": 11,
-          "size_bytes": 3662208
+          "size_bytes": 2466452
         }
       },
       "mode": "stable-shippable-output-v1",
       "total_files": 32,
-      "total_size_bytes": 5096217
+      "total_size_bytes": 3900461
     }
   },
   "recommendations": [],
@@ -250,11 +250,11 @@
     "passed": 9,
     "total_checks": 9
   },
-  "timestamp": "2026-10-22T11:47:00Z",
+  "timestamp": "2026-10-22T17:22:44Z",
   "validated_inputs": {
     "artifact_manifest": {
       "path": "output/reports/artifact_manifest.json",
-      "sha256": "cc830fdb25f8745b50f57ee21b9b33ca5d8236c66d9facbc0b42b5d6a508aba5",
+      "sha256": "0203d2f31ece2763fbdd5175a6f2e023f5c7b919fe463dbc34f3539b523bfbad",
       "size_bytes": 10699
     },
     "combined_manuscript": {
@@ -314,19 +314,19 @@
     "fingerprints": {
       "config": {
         "file_count": 15,
-        "sha256": "11df1b32f9daaacf8db4e7da689485676138093552468feb8af835532402b64c"
+        "sha256": "bac8abaf1282b403be7dc737f76804aa3a14bc3ff3da137c6ce64a671fd74969"
       },
       "output": {
         "file_count": 32,
-        "sha256": "0a25acf0a602cd08da28f96f2bce5502da506834a2b7de7a359614e3f9ba1132"
+        "sha256": "decf1a81a2e28d64c843f8ad0f5da0c0fcbc10a87ea5abe4b9a8c066138adc4a"
       },
       "source": {
         "file_count": 61,
-        "sha256": "cae569eefddade46e0573813054f9203feff84386063e6bda671676c629600eb"
+        "sha256": "52744d9dd0ea3f415138ee20e253915b731c4fc11df14416c2d851b9e7a72520"
       },
       "stage": {
-        "file_count": 1911,
-        "sha256": "03bb34a0a304f5c2d531712d3dee70803c85812832de6b90ba808743f3ef839c"
+        "file_count": 1913,
+        "sha256": "0c8a6b03136fe7b244a5ecb102c628c1eea87c8b6bf3c4d6141caa1b27903597"
       }
     },
     "project": "templates/template_formal",

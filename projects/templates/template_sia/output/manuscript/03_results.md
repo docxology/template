@@ -1,3 +1,5 @@
+\clearpage
+
 # Results {#sec:results}
 
 @tbl:sia-metrics summarizes fixture-replay metrics for the bundled run.

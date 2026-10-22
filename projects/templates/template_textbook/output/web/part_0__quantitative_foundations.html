@@ -2,7 +2,7 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="utf-8" />
-  <meta name="generator" content="pandoc 3.12" />
+  <meta name="generator" content="pandoc 3.12.1" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
   <title>quantitative_foundations.md.web</title>
   <style>
@@ -487,6 +487,9 @@ pre {
 }
 
 pre code {
+  background-color: transparent;
+  padding: 0;
+  border-radius: 0;
   overflow-wrap: inherit;
   white-space: inherit;
   word-break: inherit;
@@ -557,6 +560,15 @@ th, td {
 th {
   background-color: #1f6f8b;
   color: white;
+}
+
+/* Preserve a complete inline-code header within the table's scroll region. */
+th code {
+  color: inherit;
+  background-color: transparent;
+  white-space: nowrap;
+  overflow-wrap: normal;
+  word-break: normal;
 }
 
 img {
@@ -699,6 +711,7 @@ mjx-container[display="true"] {
 }
 
 </style>
+<script data-template-source-font-loader src="assets/source-web-fonts.js"></script>
 </head>
 <body>
 <a class="skip-link" href="#main-content">Skip to main content</a>
@@ -812,8 +825,8 @@ value and then reorder all values: the first changes the mean, while the
 second preserves the arithmetic summary but changes the sequence. That
 comparison makes the limits of a statistic observable.</p>
 <h2 id="a-worked-formalism">A Worked Formalism</h2>
-<p><span class="math display">\[ \mu=\frac{1}{n}\sum_{i=1}^{n}x_i,\qquad
-\sigma=\sqrt{\frac{1}{n}\sum_{i=1}^{n}(x_i-\mu)^2} \]</span>
+<p><span class="math display">\[\mu=\frac{1}{n}\sum_{i=1}^{n}x_i,\qquad
+\sigma=\sqrt{\frac{1}{n}\sum_{i=1}^{n}(x_i-\mu)^2}\]</span>
 {#eq:part_0_quantitative_foundations_model}</p>
 <div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable table: Quantities and conventions for this chapter’s worked example."><table id="tbl:part_0_quantitative_foundations_parameters" data-responsive-table="true">
 <caption>Quantities and conventions for this chapter’s worked

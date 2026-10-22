@@ -72,8 +72,9 @@ Intermediate and final outputs live under `output/` and are disposable and regen
 
 | File | Stage | Description |
 | --- | --- | --- |
-| `corpus.jsonl` | 01 | De-duplicated corpus (46 records) |
-| `temporal_analysis.json` | 02 | Year counts, CAGR, doubling time, peak year |
+| `corpus.jsonl` | 01 | Retrieved fixture (80 records) |
+| `combined_corpus.jsonl` | 01 | Configured phase union (46 unique records) |
+| `temporal_analysis.json` | 02 | Year-filtered analysis (70 records), CAGR, doubling time, peak year |
 | `subfield_classification.json` | 02 | Per-bucket paper counts |
 | `subfield_timeline.json` | 02 | Per-subfield annual breakdown |
 | `tfidf_data.json` | 02 | TF-IDF matrix, feature names, doc tokens |

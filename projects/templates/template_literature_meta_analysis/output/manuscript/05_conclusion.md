@@ -3,7 +3,8 @@
 We have presented a configurable, reproducible meta-analysis template that turns a single
 search term into a complete, evidence-bound portrait of its literature. Applied to
 **Modafinil**, it retrieved and de-duplicated 2334 records across
-10 engines (arXiv, OpenAlex, Semantic Scholar, Crossref, PubMed, SovietRxiv, ChinaRxiv, Europe PMC, bioRxiv, and medRxiv), classified them into 6 configurable
+10 engines (arXiv, OpenAlex, Semantic Scholar, Crossref, PubMed, SovietRxiv, ChinaRxiv, Europe PMC, bioRxiv, and medRxiv). Its analysis subset of
+2234 records was classified into 6 configurable
 subfields (with **Clinical Sleep** dominant at 63.0\%), extracted
 5 topics over a 500-feature vocabulary, computed
 reproducible document embeddings, mapped the citation network (2234 nodes,
@@ -14,7 +15,7 @@ reproducible document embeddings, mapped the citation network (2234 nodes,
 
 The analysis answers the four research questions posed in the introduction:
 
-1. **RQ1 (Growth)**: The modafinil literature spans 26 years
+1. **RQ1 (Growth)**: The 2234 dated modafinil records span 26 years
    (2000--2026) and grows at a CAGR of 5.48\%, doubling every
    9.2 years. The peak year 2025 produced 147
    publications, indicating sustained and active research interest.

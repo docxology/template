@@ -300,7 +300,16 @@ def _render_digraph_figure(
     if subtitle:
         ax.text(0.5, -0.14, subtitle, transform=ax.transAxes, ha="center", va="center", fontsize=8.5, color="#334155")
     if footer_text:
-        ax.text(0.50, 0.04, footer_text, ha="center", va="center", fontsize=8.5, color="#334155")
+        ax.text(
+            0.50,
+            -0.14,
+            fill(footer_text, width=85),
+            transform=ax.transAxes,
+            ha="center",
+            va="top",
+            fontsize=8.5,
+            color="#334155",
+        )
     return _save_figure(fig, output_dir / filename)
 
 
@@ -443,7 +452,17 @@ def _draw_labeled_digraph(
         edge_color="#475569",
         connectionstyle="arc3,rad=0.05",
     )
-    nx.draw_networkx_labels(graph, positions, labels=labels, ax=ax, font_size=font_size, font_color="#111827")
+    for node, label in labels.items():
+        nx.draw_networkx_labels(
+            graph,
+            positions,
+            labels={node: label},
+            ax=ax,
+            font_size=font_size,
+            font_color=(
+                "white" if graph.nodes[node].get("kind") in {"source", "formalism", "publication"} else "#111827"
+            ),
+        )
     edge_labels = {
         (source, target): str(data.get("label", ""))
         for source, target, data in graph.edges(data=True)

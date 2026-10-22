@@ -778,9 +778,11 @@ keeping the version with the most complete metadata (a count of non-None
 optional fields). The DOI is normalized: case-folded, resolver-prefix
 stripped, so the same paper returned by two engines under
 case/format-variant DOIs merges. For this run, 2260 records carry DOIs,
-923 carry OpenAlex IDs, and 1 carry arXiv IDs. The de-duplicated corpus
-for this run holds <span class="math inline">\(N = 2334\)</span> records
-published across 2000–2026.</p>
+923 carry OpenAlex IDs, and 1 carry arXiv IDs. The retained
+de-duplicated retrieval corpus holds <span class="math inline">\(N =
+2334\)</span> records. The separate analysis subset contains 2234
+records, of which 2234 have publication years in the observed 2000–2026
+analysis window.</p>
 <h2 id="relevance-filtering">Relevance Filtering</h2>
 <p>After de-duplication, a relevance filter drops papers whose title and
 abstract contain none of the configured relevance keywords (modafinil,

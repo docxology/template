@@ -3,13 +3,13 @@
     "pdf": {
       "exists": true,
       "file_count": 1,
-      "size_mb": "0.54",
-      "total_size_bytes": 561424,
+      "size_mb": "0.68",
+      "total_size_bytes": 709336,
       "largest_files": [
         {
           "name": "template_autopoiesis_combined.pdf",
-          "size_mb": "0.54",
-          "size_bytes": 561424,
+          "size_mb": "0.68",
+          "size_bytes": 709336,
           "path": "pdf/template_autopoiesis_combined.pdf"
         }
       ],
@@ -20,19 +20,19 @@
     "web": {
       "exists": true,
       "file_count": 12,
-      "size_mb": "3.44",
-      "total_size_bytes": 3611323,
+      "size_mb": "2.31",
+      "total_size_bytes": 2417484,
       "largest_files": [
         {
           "name": "source-web-fonts.js",
-          "size_mb": "3.02",
-          "size_bytes": 3170848,
+          "size_mb": "1.88",
+          "size_bytes": 1975092,
           "path": "web/assets/source-web-fonts.js"
         },
         {
           "name": "index.html",
           "size_mb": "0.14",
-          "size_bytes": 142896,
+          "size_bytes": 143109,
           "path": "web/index.html"
         },
         {
@@ -70,13 +70,13 @@
     "figures": {
       "exists": true,
       "file_count": 13,
-      "size_mb": "0.35",
-      "total_size_bytes": 367066,
+      "size_mb": "0.41",
+      "total_size_bytes": 427279,
       "largest_files": [
         {
           "name": "fig_coverage_by_module.png",
-          "size_mb": "0.16",
-          "size_bytes": 162548,
+          "size_mb": "0.18",
+          "size_bytes": 187579,
           "path": "figures/fig_coverage_by_module.png"
         },
         {
@@ -87,8 +87,8 @@
         },
         {
           "name": "fig_stacked_product.png",
-          "size_mb": "0.02",
-          "size_bytes": 25510,
+          "size_mb": "0.03",
+          "size_bytes": 30825,
           "path": "figures/fig_stacked_product.png"
         }
       ],
@@ -241,13 +241,13 @@
     "root": {
       "exists": true,
       "file_count": 1,
-      "size_mb": "0.54",
-      "total_size_bytes": 561424,
+      "size_mb": "0.68",
+      "total_size_bytes": 709336,
       "largest_files": [
         {
           "name": "template_autopoiesis_combined.pdf",
-          "size_mb": "0.54",
-          "size_bytes": 561424,
+          "size_mb": "0.68",
+          "size_bytes": 709336,
           "path": "template_autopoiesis_combined.pdf"
         }
       ],
@@ -257,40 +257,40 @@
     }
   },
   "total_files": 123,
-  "total_size_mb": 5.012767791748047,
+  "total_size_mb": 4.213777542114258,
   "largest_files": [
     {
       "name": "source-web-fonts.js",
-      "size_mb": "3.02",
-      "size_bytes": 3170848,
+      "size_mb": "1.88",
+      "size_bytes": 1975092,
       "category": "web",
       "path": "web/assets/source-web-fonts.js"
     },
     {
       "name": "template_autopoiesis_combined.pdf",
-      "size_mb": "0.54",
-      "size_bytes": 561424,
+      "size_mb": "0.68",
+      "size_bytes": 709336,
       "category": "pdf",
       "path": "pdf/template_autopoiesis_combined.pdf"
     },
     {
       "name": "template_autopoiesis_combined.pdf",
-      "size_mb": "0.54",
-      "size_bytes": 561424,
+      "size_mb": "0.68",
+      "size_bytes": 709336,
       "category": "root",
       "path": "template_autopoiesis_combined.pdf"
     },
     {
       "name": "fig_coverage_by_module.png",
-      "size_mb": "0.16",
-      "size_bytes": 162548,
+      "size_mb": "0.18",
+      "size_bytes": 187579,
       "category": "figures",
       "path": "figures/fig_coverage_by_module.png"
     },
     {
       "name": "index.html",
       "size_mb": "0.14",
-      "size_bytes": 142896,
+      "size_bytes": 143109,
       "category": "web",
       "path": "web/index.html"
     },
@@ -311,35 +311,35 @@
     {
       "name": "manuscript__02_methods.html",
       "size_mb": "0.04",
-      "size_bytes": 37433,
+      "size_bytes": 37646,
       "category": "web",
       "path": "web/manuscript__02_methods.html"
     },
     {
       "name": "manuscript__04_honesty.html",
       "size_mb": "0.03",
-      "size_bytes": 32294,
+      "size_bytes": 32507,
       "category": "web",
       "path": "web/manuscript__04_honesty.html"
     },
     {
       "name": "manuscript__03_results.html",
       "size_mb": "0.03",
-      "size_bytes": 31995,
+      "size_bytes": 32208,
       "category": "web",
       "path": "web/manuscript__03_results.html"
     }
   ],
   "missing_expected_files": [],
   "sizes_by_category": {
-    "pdf": 0.5354156494140625,
-    "web": 3.444025993347168,
-    "figures": 0.35006141662597656,
+    "pdf": 0.6764755249023438,
+    "web": 2.305492401123047,
+    "figures": 0.4074850082397461,
     "data": 0.0022029876708984375,
     "reports": 0.009800910949707031,
     "children": 0.04832744598388672,
     "manuscript": 0.08751773834228516,
-    "root": 0.5354156494140625
+    "root": 0.6764755249023438
   },
   "inventory_mode": "stable-shippable-output-v1",
   "inventory_scope": "stage5-delivery-mirror",

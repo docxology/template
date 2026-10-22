@@ -3,13 +3,13 @@
     "pdf": {
       "exists": true,
       "file_count": 1,
-      "size_mb": "1.84",
-      "total_size_bytes": 1933556,
+      "size_mb": "2.24",
+      "total_size_bytes": 2350210,
       "largest_files": [
         {
           "name": "template_template_combined.pdf",
-          "size_mb": "1.84",
-          "size_bytes": 1933556,
+          "size_mb": "2.24",
+          "size_bytes": 2350210,
           "path": "pdf/template_template_combined.pdf"
         }
       ],
@@ -20,13 +20,13 @@
     "web": {
       "exists": true,
       "file_count": 25,
-      "size_mb": "3.80",
-      "total_size_bytes": 3983006,
+      "size_mb": "2.66",
+      "total_size_bytes": 2787250,
       "largest_files": [
         {
           "name": "source-web-fonts.js",
-          "size_mb": "3.02",
-          "size_bytes": 3170848,
+          "size_mb": "1.88",
+          "size_bytes": 1975092,
           "path": "web/assets/source-web-fonts.js"
         },
         {
@@ -52,26 +52,26 @@
     "slides": {
       "exists": true,
       "file_count": 21,
-      "size_mb": "4.06",
-      "total_size_bytes": 4257799,
+      "size_mb": "4.99",
+      "total_size_bytes": 5230757,
       "largest_files": [
         {
           "name": "04_results_slides.pdf",
-          "size_mb": "3.37",
-          "size_bytes": 3537255,
+          "size_mb": "4.03",
+          "size_bytes": 4224265,
           "path": "slides/04_results_slides.pdf"
         },
         {
           "name": "02_introduction_slides.pdf",
-          "size_mb": "0.07",
-          "size_bytes": 69518,
+          "size_mb": "0.10",
+          "size_bytes": 103067,
           "path": "slides/02_introduction_slides.pdf"
         },
         {
-          "name": "07_security_provenance_slides.pdf",
-          "size_mb": "0.06",
-          "size_bytes": 64934,
-          "path": "slides/07_security_provenance_slides.pdf"
+          "name": "06_infrastructure_modules_slides.pdf",
+          "size_mb": "0.09",
+          "size_bytes": 98494,
+          "path": "slides/06_infrastructure_modules_slides.pdf"
         }
       ],
       "extensions": {
@@ -94,7 +94,7 @@
       "exists": true,
       "file_count": 75,
       "size_mb": "5.79",
-      "total_size_bytes": 6069030,
+      "total_size_bytes": 6068640,
       "largest_files": [
         {
           "name": "pipeline_stages.png",
@@ -105,7 +105,7 @@
         {
           "name": "architecture_overview.png",
           "size_mb": "0.45",
-          "size_bytes": 472340,
+          "size_bytes": 471950,
           "path": "figures/architecture_overview.png"
         },
         {
@@ -201,7 +201,7 @@
       "exists": true,
       "file_count": 30,
       "size_mb": "0.15",
-      "total_size_bytes": 154043,
+      "total_size_bytes": 154256,
       "largest_files": [
         {
           "name": "references.bib",
@@ -286,13 +286,13 @@
     "root": {
       "exists": true,
       "file_count": 1,
-      "size_mb": "1.84",
-      "total_size_bytes": 1933556,
+      "size_mb": "2.24",
+      "total_size_bytes": 2350210,
       "largest_files": [
         {
           "name": "template_template_combined.pdf",
-          "size_mb": "1.84",
-          "size_bytes": 1933556,
+          "size_mb": "2.24",
+          "size_bytes": 2350210,
           "path": "template_template_combined.pdf"
         }
       ],
@@ -302,35 +302,35 @@
     }
   },
   "total_files": 165,
-  "total_size_mb": 18.85517120361328,
+  "total_size_mb": 19.437230110168457,
   "largest_files": [
     {
       "name": "04_results_slides.pdf",
-      "size_mb": "3.37",
-      "size_bytes": 3537255,
+      "size_mb": "4.03",
+      "size_bytes": 4224265,
       "category": "slides",
       "path": "slides/04_results_slides.pdf"
     },
     {
-      "name": "source-web-fonts.js",
-      "size_mb": "3.02",
-      "size_bytes": 3170848,
-      "category": "web",
-      "path": "web/assets/source-web-fonts.js"
-    },
-    {
       "name": "template_template_combined.pdf",
-      "size_mb": "1.84",
-      "size_bytes": 1933556,
+      "size_mb": "2.24",
+      "size_bytes": 2350210,
       "category": "pdf",
       "path": "pdf/template_template_combined.pdf"
     },
     {
       "name": "template_template_combined.pdf",
-      "size_mb": "1.84",
-      "size_bytes": 1933556,
+      "size_mb": "2.24",
+      "size_bytes": 2350210,
       "category": "root",
       "path": "template_template_combined.pdf"
+    },
+    {
+      "name": "source-web-fonts.js",
+      "size_mb": "1.88",
+      "size_bytes": 1975092,
+      "category": "web",
+      "path": "web/assets/source-web-fonts.js"
     },
     {
       "name": "Friedman_2026_Template_535bd809.pdf",
@@ -349,7 +349,7 @@
     {
       "name": "architecture_overview.png",
       "size_mb": "0.45",
-      "size_bytes": 472340,
+      "size_bytes": 471950,
       "category": "figures",
       "path": "figures/architecture_overview.png"
     },
@@ -377,16 +377,16 @@
   ],
   "missing_expected_files": [],
   "sizes_by_category": {
-    "pdf": 1.8439826965332031,
-    "web": 3.798490524291992,
-    "slides": 4.060553550720215,
-    "figures": 5.787878036499023,
+    "pdf": 2.241334915161133,
+    "web": 2.6581287384033203,
+    "slides": 4.988438606262207,
+    "figures": 5.787506103515625,
     "data": 0.017404556274414062,
     "reports": 0.008854866027832031,
-    "manuscript": 0.14690685272216797,
+    "manuscript": 0.1471099853515625,
     "release": 0.0019121170043945312,
     "release_bundle": 1.345205307006836,
-    "root": 1.8439826965332031
+    "root": 2.241334915161133
   },
   "inventory_mode": "stable-shippable-output-v1",
   "inventory_scope": "stage5-delivery-mirror",

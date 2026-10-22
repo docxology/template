@@ -1,8 +1,8 @@
 Invariants for Literature Search Coverage Dashboard
 ===================================================
-generated:    2026-10-22T11:57:33Z
+generated:    2026-10-22T18:10:03Z
 project:      template_search_project
-git rev:      d7e6da6cf
+git rev:      b3ace87e1
 git status:   dirty (uncommitted changes)
 
 summary:      8/8 passed, 0 failed

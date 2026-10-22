@@ -235,7 +235,15 @@ def generate_integrity_gate_matrix(
         for col in range(matrix.shape[1]):
             value = matrix[row, col]
             label = "full" if value == 1 else "partial" if value > 0 else "missing"
-            ax.text(col, row, label, ha="center", va="center", fontsize=7)
+            ax.text(
+                col,
+                row,
+                label,
+                ha="center",
+                va="center",
+                fontsize=7,
+                color="white" if value > 0.75 else "#111827",
+            )
     cbar = fig.colorbar(im, ax=ax, fraction=0.046, pad=0.04)
     cbar.set_label("Coverage")
     cbar.set_ticks([0, 0.5, 1])

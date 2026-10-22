@@ -2,7 +2,7 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="utf-8" />
-  <meta name="generator" content="pandoc 3.12" />
+  <meta name="generator" content="pandoc 3.12.1" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
   <title>systems_overview.md.web</title>
   <style>
@@ -487,6 +487,9 @@ pre {
 }
 
 pre code {
+  background-color: transparent;
+  padding: 0;
+  border-radius: 0;
   overflow-wrap: inherit;
   white-space: inherit;
   word-break: inherit;
@@ -557,6 +560,15 @@ th, td {
 th {
   background-color: #1f6f8b;
   color: white;
+}
+
+/* Preserve a complete inline-code header within the table's scroll region. */
+th code {
+  color: inherit;
+  background-color: transparent;
+  white-space: nowrap;
+  overflow-wrap: normal;
+  word-break: normal;
 }
 
 img {
@@ -699,6 +711,7 @@ mjx-container[display="true"] {
 }
 
 </style>
+<script data-template-source-font-loader src="assets/source-web-fonts.js"></script>
 </head>
 <body>
 <a class="skip-link" href="#main-content">Skip to main content</a>
@@ -808,8 +821,9 @@ mathematical conditions, not simply a loop drawn with arrows. The lab
 uses the small logistic case to practice a complete systems record
 before any larger feedback or interaction model is proposed.</p>
 <h2 id="a-worked-formalism">A Worked Formalism</h2>
-<p><span class="math display">\[ N(t)=\frac{K}{1+((K-N_0)/N_0)e^{-rt}}
-\]</span> {#eq:part_II_systems_overview_model}</p>
+<p><span
+class="math display">\[N(t)=\frac{K}{1+((K-N_0)/N_0)e^{-rt}}\]</span>
+{#eq:part_II_systems_overview_model}</p>
 <div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable table: Quantities and conventions for this chapter’s worked example."><table id="tbl:part_II_systems_overview_parameters" data-responsive-table="true">
 <caption>Quantities and conventions for this chapter’s worked
 example.</caption>

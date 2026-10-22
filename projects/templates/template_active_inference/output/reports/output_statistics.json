@@ -20,13 +20,13 @@
     "web": {
       "exists": true,
       "file_count": 20,
-      "size_mb": "3.77",
-      "total_size_bytes": 3957695,
+      "size_mb": "2.63",
+      "total_size_bytes": 2761939,
       "largest_files": [
         {
           "name": "source-web-fonts.js",
-          "size_mb": "3.02",
-          "size_bytes": 3170848,
+          "size_mb": "1.88",
+          "size_bytes": 1975092,
           "path": "web/assets/source-web-fonts.js"
         },
         {
@@ -258,7 +258,7 @@
     }
   },
   "total_files": 178,
-  "total_size_mb": 22.92328929901123,
+  "total_size_mb": 21.78292751312256,
   "largest_files": [
     {
       "name": "template_active_inference_combined.pdf",
@@ -276,8 +276,8 @@
     },
     {
       "name": "source-web-fonts.js",
-      "size_mb": "3.02",
-      "size_bytes": 3170848,
+      "size_mb": "1.88",
+      "size_bytes": 1975092,
       "category": "web",
       "path": "web/assets/source-web-fonts.js"
     },
@@ -334,7 +334,7 @@
   "missing_expected_files": [],
   "sizes_by_category": {
     "pdf": 4.032997131347656,
-    "web": 3.7743520736694336,
+    "web": 2.6339902877807617,
     "figures": 3.788227081298828,
     "data": 2.817331314086914,
     "reports": 0.41170310974121094,

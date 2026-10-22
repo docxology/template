@@ -288,6 +288,8 @@ def test_build_table_specs_generates_compact_registry_and_diagnostic_tables() ->
     assert "@fig:ml_candidate_scores" in tables["FIGURE_METHOD_TABLE"][0]
     assert "[candidate intervals](../data/ml_candidate_intervals.json)" in tables["FIGURE_METHOD_TABLE"][0]
     assert "mlp tanh 64" in tables["ML_CANDIDATE_LEDGER_TABLE"][0]
+    assert "`output/reports/score.json`" in tables["BENCHMARK_SCORE_TABLE"][0]
+    assert "`fig:ml_candidate_scores`" in tables["FIGURE_QUALITY_TABLE"][0]
     assert "macro F1" in tables["BOOTSTRAP_INTERVAL_TABLE"][0]
     assert "objective selection" in tables["DIAGNOSTIC_BOUNDARY_TABLE"][0]
     assert "T1195.002" in tables["SECURITY_THREAT_MODEL_TABLE"][0]

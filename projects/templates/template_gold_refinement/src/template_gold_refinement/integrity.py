@@ -4,6 +4,8 @@ from collections import Counter
 from dataclasses import asdict, dataclass
 from typing import Any
 
+from .formalisms import format_table_code
+
 
 @dataclass(frozen=True)
 class IntegrityDimension:
@@ -220,7 +222,7 @@ def build_integrity_dimensions(config: Any) -> tuple[IntegrityDimension, ...]:
 def integrity_dimension_table_rows(dimensions: tuple[IntegrityDimension, ...]) -> str:
     """Process integrity dimension table rows."""
     return "\n".join(
-        f"| {item.dimension_id} | {item.name} | {item.residual_risk} | {item.owner} | {item.validator} |"
+        f"| {item.dimension_id} | {item.name} | {item.residual_risk} | {item.owner} | {format_table_code(item.validator)} |"
         for item in dimensions
     )
 

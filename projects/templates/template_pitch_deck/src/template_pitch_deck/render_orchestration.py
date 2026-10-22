@@ -155,6 +155,7 @@ def render_one_length(
         pitch_subject=pitch_subject,
         project_root=project_root,
         source_base_url=source_base_url,
+        content_prefix=content_prefix,
     )
     logger.info("[%s] wrote %d standalone slide page(s)", length, len(standalone_paths))
     deck_with_qr = attach_qr_urls(

@@ -56,8 +56,10 @@ the version with the most complete metadata (a count of non-None optional fields
 DOI is normalized: case-folded, resolver-prefix stripped, so the same paper returned by
 two engines under case/format-variant DOIs merges. For this run, 2260 records
 carry DOIs, 923 carry OpenAlex IDs, and 1 carry arXiv
-IDs. The de-duplicated corpus for this run holds $N = 2334$ records published
-across 2000--2026.
+IDs. The retained de-duplicated retrieval corpus holds $N = 2334$ records.
+The separate analysis subset contains 2234 records, of which
+2234 have publication years in the observed
+2000--2026 analysis window.
 
 ## Relevance Filtering
 

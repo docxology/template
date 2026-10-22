@@ -66,8 +66,8 @@
     {
       "contract_match": true,
       "path": "output/pdf/template_autoscientists_combined.pdf",
-      "sha256": "48d2f3b3a9ddac70519aeafe0744ca457d9c9d144cba3d995b074ed009ef406a",
-      "size_bytes": 309011,
+      "sha256": "65f08db02bc9e5454213551555a4f084f309406cb82339d7659d87e1e8d66653",
+      "size_bytes": 255796,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
@@ -93,7 +93,7 @@
     {
       "contract_match": true,
       "path": "output/reports/manuscript_composition.json",
-      "sha256": "65b1956b0e6912a11afc7abddd642968a0dcb886a4538c402b9a23935db7cb16",
+      "sha256": "a1f482111c88e3bc38745f2f9209817d628a0cbeacd28b6ceef368a165c847fd",
       "size_bytes": 2276,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
@@ -120,8 +120,8 @@
     {
       "contract_match": true,
       "path": "output/web/_combined_manuscript.md",
-      "sha256": "41ad49d27fcafb17c4da30655fdc1ab916004ce62434dc6e3f04a04d682a4c82",
-      "size_bytes": 30868,
+      "sha256": "2dae090b4428dd2a1d1b50226ee21b105dec69af55f739471834d442d9c729e9",
+      "size_bytes": 30879,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
@@ -129,8 +129,8 @@
     {
       "contract_match": true,
       "path": "output/web/assets/source-web-fonts.js",
-      "sha256": "4744b7529bd9a8b4742abea22b4c1b01fb66cd5f3ec30aa482625236854eae45",
-      "size_bytes": 1975092,
+      "sha256": "2ce378a84a8ec8f9a884f61c0ffeddfc78f53811b49c7cb47a946a1f3ae4ffcb",
+      "size_bytes": 1853404,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
@@ -147,8 +147,8 @@
     {
       "contract_match": true,
       "path": "output/web/index.html",
-      "sha256": "91cd27e269e34f9795127e62298a565d62347ddda590fad7f671dfaa2f7da388",
-      "size_bytes": 72023,
+      "sha256": "89dd1fd94325e6a4c57982895d56aa0ab110a0139f0003ba28e1e2029514c6dc",
+      "size_bytes": 72034,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
@@ -201,8 +201,8 @@
     {
       "contract_match": true,
       "path": "output/web/manuscript__05_reproducibility.html",
-      "sha256": "33fb9e44dfecf0c8568eab1d938224bcd9fe2f4083e26dca3feda1b55c203a34",
-      "size_bytes": 19935,
+      "sha256": "8c3b5b91707b5b1a02e7ad773c0b32cc49609a634ffb8cd9c0c90c42427c1616",
+      "size_bytes": 19946,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""

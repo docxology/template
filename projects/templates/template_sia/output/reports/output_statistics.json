@@ -4,12 +4,12 @@
       "exists": true,
       "file_count": 1,
       "size_mb": "0.20",
-      "total_size_bytes": 209377,
+      "total_size_bytes": 211759,
       "largest_files": [
         {
           "name": "template_sia_combined.pdf",
           "size_mb": "0.20",
-          "size_bytes": 209377,
+          "size_bytes": 211759,
           "path": "pdf/template_sia_combined.pdf"
         }
       ],
@@ -20,13 +20,13 @@
     "web": {
       "exists": true,
       "file_count": 10,
-      "size_mb": "3.14",
-      "total_size_bytes": 3287316,
+      "size_mb": "1.99",
+      "total_size_bytes": 2091572,
       "largest_files": [
         {
           "name": "source-web-fonts.js",
-          "size_mb": "3.02",
-          "size_bytes": 3170848,
+          "size_mb": "1.88",
+          "size_bytes": 1975092,
           "path": "web/assets/source-web-fonts.js"
         },
         {
@@ -70,13 +70,13 @@
     "figures": {
       "exists": true,
       "file_count": 5,
-      "size_mb": "0.11",
-      "total_size_bytes": 118697,
+      "size_mb": "0.12",
+      "total_size_bytes": 128986,
       "largest_files": [
         {
           "name": "sia_metric_progression.png",
-          "size_mb": "0.03",
-          "size_bytes": 33355,
+          "size_mb": "0.04",
+          "size_bytes": 43644,
           "path": "figures/sia_metric_progression.png"
         },
         {
@@ -172,7 +172,7 @@
       "exists": true,
       "file_count": 9,
       "size_mb": "0.01",
-      "total_size_bytes": 7837,
+      "total_size_bytes": 7849,
       "largest_files": [
         {
           "name": "config.yaml",
@@ -189,7 +189,7 @@
         {
           "name": "03_results.md",
           "size_mb": "0.00",
-          "size_bytes": 1214,
+          "size_bytes": 1226,
           "path": "manuscript/03_results.md"
         }
       ],
@@ -227,12 +227,12 @@
       "exists": true,
       "file_count": 1,
       "size_mb": "0.20",
-      "total_size_bytes": 209377,
+      "total_size_bytes": 211759,
       "largest_files": [
         {
           "name": "template_sia_combined.pdf",
           "size_mb": "0.20",
-          "size_bytes": 209377,
+          "size_bytes": 211759,
           "path": "template_sia_combined.pdf"
         }
       ],
@@ -273,33 +273,33 @@
     }
   },
   "total_files": 47,
-  "total_size_mb": 3.6738224029541016,
+  "total_size_mb": 2.5478391647338867,
   "largest_files": [
     {
       "name": "source-web-fonts.js",
-      "size_mb": "3.02",
-      "size_bytes": 3170848,
+      "size_mb": "1.88",
+      "size_bytes": 1975092,
       "category": "web",
       "path": "web/assets/source-web-fonts.js"
     },
     {
       "name": "template_sia_combined.pdf",
       "size_mb": "0.20",
-      "size_bytes": 209377,
+      "size_bytes": 211759,
       "category": "pdf",
       "path": "pdf/template_sia_combined.pdf"
     },
     {
       "name": "template_sia_combined.pdf",
       "size_mb": "0.20",
-      "size_bytes": 209377,
+      "size_bytes": 211759,
       "category": "root",
       "path": "template_sia_combined.pdf"
     },
     {
       "name": "sia_metric_progression.png",
-      "size_mb": "0.03",
-      "size_bytes": 33355,
+      "size_mb": "0.04",
+      "size_bytes": 43644,
       "category": "figures",
       "path": "figures/sia_metric_progression.png"
     },
@@ -348,14 +348,14 @@
   ],
   "missing_expected_files": [],
   "sizes_by_category": {
-    "pdf": 0.1996774673461914,
-    "web": 3.135028839111328,
-    "figures": 0.11319828033447266,
+    "pdf": 0.2019491195678711,
+    "web": 1.9946784973144531,
+    "figures": 0.12301063537597656,
     "data": 0.001712799072265625,
     "reports": 0.007205009460449219,
-    "manuscript": 0.007473945617675781,
+    "manuscript": 0.007485389709472656,
     "release": 0.00185394287109375,
-    "root": 0.1996774673461914,
+    "root": 0.2019491195678711,
     "runs": 0.007994651794433594
   },
   "inventory_mode": "stable-shippable-output-v1",

@@ -3,13 +3,13 @@
     "pdf": {
       "exists": true,
       "file_count": 1,
-      "size_mb": "7.04",
-      "total_size_bytes": 7384031,
+      "size_mb": "7.10",
+      "total_size_bytes": 7443002,
       "largest_files": [
         {
           "name": "template_literature_meta_analysis_combined.pdf",
-          "size_mb": "7.04",
-          "size_bytes": 7384031,
+          "size_mb": "7.10",
+          "size_bytes": 7443002,
           "path": "pdf/template_literature_meta_analysis_combined.pdf"
         }
       ],
@@ -20,25 +20,25 @@
     "web": {
       "exists": true,
       "file_count": 25,
-      "size_mb": "3.60",
-      "total_size_bytes": 3776852,
+      "size_mb": "2.46",
+      "total_size_bytes": 2583377,
       "largest_files": [
         {
           "name": "source-web-fonts.js",
-          "size_mb": "3.02",
-          "size_bytes": 3170848,
+          "size_mb": "1.88",
+          "size_bytes": 1975092,
           "path": "web/assets/source-web-fonts.js"
         },
         {
           "name": "index.html",
           "size_mb": "0.14",
-          "size_bytes": 142985,
+          "size_bytes": 143806,
           "path": "web/index.html"
         },
         {
           "name": "_combined_manuscript.md",
           "size_mb": "0.07",
-          "size_bytes": 71065,
+          "size_bytes": 71704,
           "path": "web/_combined_manuscript.md"
         }
       ],
@@ -52,25 +52,25 @@
     "slides": {
       "exists": true,
       "file_count": 21,
-      "size_mb": "7.61",
-      "total_size_bytes": 7984193,
+      "size_mb": "7.68",
+      "total_size_bytes": 8052666,
       "largest_files": [
         {
           "name": "03c_results_text_analytics_slides.pdf",
-          "size_mb": "3.96",
-          "size_bytes": 4153751,
+          "size_mb": "3.97",
+          "size_bytes": 4159089,
           "path": "slides/03c_results_text_analytics_slides.pdf"
         },
         {
           "name": "03a_results_field_overview_slides.pdf",
           "size_mb": "1.69",
-          "size_bytes": 1771766,
+          "size_bytes": 1777147,
           "path": "slides/03a_results_field_overview_slides.pdf"
         },
         {
           "name": "03d_results_citation_network_slides.pdf",
-          "size_mb": "1.14",
-          "size_bytes": 1190529,
+          "size_mb": "1.17",
+          "size_bytes": 1227053,
           "path": "slides/03d_results_citation_network_slides.pdf"
         }
       ],
@@ -93,8 +93,8 @@
     "figures": {
       "exists": true,
       "file_count": 22,
-      "size_mb": "7.67",
-      "total_size_bytes": 8045162,
+      "size_mb": "7.77",
+      "total_size_bytes": 8145967,
       "largest_files": [
         {
           "name": "word_cloud.png",
@@ -104,8 +104,8 @@
         },
         {
           "name": "citation_network.png",
-          "size_mb": "1.01",
-          "size_bytes": 1063748,
+          "size_mb": "1.05",
+          "size_bytes": 1104260,
           "path": "figures/citation_network.png"
         },
         {
@@ -222,7 +222,7 @@
       "exists": true,
       "file_count": 27,
       "size_mb": "0.11",
-      "total_size_bytes": 111429,
+      "total_size_bytes": 112068,
       "largest_files": [
         {
           "name": "config.yaml",
@@ -239,7 +239,7 @@
         {
           "name": "03c_results_text_analytics.md",
           "size_mb": "0.01",
-          "size_bytes": 7084,
+          "size_bytes": 7170,
           "path": "manuscript/03c_results_text_analytics.md"
         }
       ],
@@ -278,13 +278,13 @@
     "root": {
       "exists": true,
       "file_count": 1,
-      "size_mb": "7.04",
-      "total_size_bytes": 7384031,
+      "size_mb": "7.10",
+      "total_size_bytes": 7443002,
       "largest_files": [
         {
           "name": "template_literature_meta_analysis_combined.pdf",
-          "size_mb": "7.04",
-          "size_bytes": 7384031,
+          "size_mb": "7.10",
+          "size_bytes": 7443002,
           "path": "template_literature_meta_analysis_combined.pdf"
         }
       ],
@@ -294,19 +294,19 @@
     }
   },
   "total_files": 128,
-  "total_size_mb": 50.4626522064209,
+  "total_size_mb": 49.598989486694336,
   "largest_files": [
     {
       "name": "template_literature_meta_analysis_combined.pdf",
-      "size_mb": "7.04",
-      "size_bytes": 7384031,
+      "size_mb": "7.10",
+      "size_bytes": 7443002,
       "category": "pdf",
       "path": "pdf/template_literature_meta_analysis_combined.pdf"
     },
     {
       "name": "template_literature_meta_analysis_combined.pdf",
-      "size_mb": "7.04",
-      "size_bytes": 7384031,
+      "size_mb": "7.10",
+      "size_bytes": 7443002,
       "category": "root",
       "path": "template_literature_meta_analysis_combined.pdf"
     },
@@ -326,17 +326,10 @@
     },
     {
       "name": "03c_results_text_analytics_slides.pdf",
-      "size_mb": "3.96",
-      "size_bytes": 4153751,
+      "size_mb": "3.97",
+      "size_bytes": 4159089,
       "category": "slides",
       "path": "slides/03c_results_text_analytics_slides.pdf"
-    },
-    {
-      "name": "source-web-fonts.js",
-      "size_mb": "3.02",
-      "size_bytes": 3170848,
-      "category": "web",
-      "path": "web/assets/source-web-fonts.js"
     },
     {
       "name": "bibliography.bib",
@@ -346,9 +339,16 @@
       "path": "data/bibliography.bib"
     },
     {
+      "name": "source-web-fonts.js",
+      "size_mb": "1.88",
+      "size_bytes": 1975092,
+      "category": "web",
+      "path": "web/assets/source-web-fonts.js"
+    },
+    {
       "name": "03a_results_field_overview_slides.pdf",
       "size_mb": "1.69",
-      "size_bytes": 1771766,
+      "size_bytes": 1777147,
       "category": "slides",
       "path": "slides/03a_results_field_overview_slides.pdf"
     },
@@ -361,24 +361,24 @@
     },
     {
       "name": "03d_results_citation_network_slides.pdf",
-      "size_mb": "1.14",
-      "size_bytes": 1190529,
+      "size_mb": "1.17",
+      "size_bytes": 1227053,
       "category": "slides",
       "path": "slides/03d_results_citation_network_slides.pdf"
     }
   ],
   "missing_expected_files": [],
   "sizes_by_category": {
-    "pdf": 7.041960716247559,
-    "web": 3.601886749267578,
-    "slides": 7.614319801330566,
-    "figures": 7.672464370727539,
+    "pdf": 7.098199844360352,
+    "web": 2.463700294494629,
+    "slides": 7.679620742797852,
+    "figures": 7.768599510192871,
     "data": 16.52337646484375,
     "reports": 0.023011207580566406,
     "fulltext": 0.8354110717773438,
-    "manuscript": 0.10626697540283203,
+    "manuscript": 0.10687637329101562,
     "release": 0.0019941329956054688,
-    "root": 7.041960716247559
+    "root": 7.098199844360352
   },
   "inventory_mode": "stable-shippable-output-v1",
   "inventory_scope": "stage5-delivery-mirror",

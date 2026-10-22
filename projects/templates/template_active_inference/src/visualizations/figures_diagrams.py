@@ -118,8 +118,8 @@ def figure_tmaze_schematic(project_root: Path) -> Path:
             ax.add_patch(box)
             ax.text(center[0], center[1], label, ha="center", va="center", fontsize=style.text_size("annotation"))
         arrow = FancyArrowPatch(
-            start,
-            goal,
+            (start[0] + 0.5, start[1]),
+            (goal[0] - 0.5, goal[1]),
             arrowstyle="-|>",
             mutation_scale=12,
             linewidth=2,

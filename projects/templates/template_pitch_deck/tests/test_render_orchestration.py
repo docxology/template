@@ -146,6 +146,8 @@ def test_render_one_length_writes_real_pdf(tmp_path: Path, repo_root):
     standalone_dir = tmp_path / "output" / "slides_standalone" / "template_template_short"
     assert standalone_dir.is_dir()
     assert len(list(standalone_dir.glob("slide_*.md"))) > 0
+    for page in standalone_dir.glob("slide_*.md"):
+        assert "[manuscript/deck_content_short.yaml](../../../manuscript/deck_content_short.yaml)" in page.read_text()
 
 
 def test_render_one_length_raises_on_audit_failure(tmp_path: Path, repo_root):
@@ -239,6 +241,16 @@ def test_render_one_length_supports_second_configured_subject(tmp_path: Path, re
         content_prefix="deck_content_methods",
     )
     assert written and written[0].is_file()
+    standalone_dir = tmp_path / "output" / "slides_standalone" / "template_methods_paper_short"
+    pages = list(standalone_dir.glob("slide_*.md"))
+    assert pages
+    for page in pages:
+        content = page.read_text()
+        assert (
+            "[manuscript/deck_content_methods_short.yaml](../../../manuscript/deck_content_methods_short.yaml)"
+            in content
+        )
+        assert "manuscript/deck_content_short.yaml" not in content
 
 
 def test_preflight_rejects_later_length_before_any_render(tmp_path: Path, repo_root):

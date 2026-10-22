@@ -3,13 +3,13 @@
     "pdf": {
       "exists": true,
       "file_count": 1,
-      "size_mb": "0.19",
-      "total_size_bytes": 201416,
+      "size_mb": "0.24",
+      "total_size_bytes": 250941,
       "largest_files": [
         {
           "name": "template_redacted_report_combined.pdf",
-          "size_mb": "0.19",
-          "size_bytes": 201416,
+          "size_mb": "0.24",
+          "size_bytes": 250941,
           "path": "pdf/template_redacted_report_combined.pdf"
         }
       ],
@@ -20,13 +20,13 @@
     "web": {
       "exists": true,
       "file_count": 7,
-      "size_mb": "3.13",
-      "total_size_bytes": 3282779,
+      "size_mb": "1.99",
+      "total_size_bytes": 2087023,
       "largest_files": [
         {
           "name": "source-web-fonts.js",
-          "size_mb": "3.02",
-          "size_bytes": 3170848,
+          "size_mb": "1.88",
+          "size_bytes": 1975092,
           "path": "web/assets/source-web-fonts.js"
         },
         {
@@ -52,20 +52,20 @@
     "slides": {
       "exists": true,
       "file_count": 3,
-      "size_mb": "0.27",
-      "total_size_bytes": 278180,
+      "size_mb": "0.31",
+      "total_size_bytes": 327708,
       "largest_files": [
         {
-          "name": "01_methods_slides.pdf",
-          "size_mb": "0.13",
-          "size_bytes": 138971,
-          "path": "slides/01_methods_slides.pdf"
+          "name": "02_results_slides.pdf",
+          "size_mb": "0.16",
+          "size_bytes": 168246,
+          "path": "slides/02_results_slides.pdf"
         },
         {
-          "name": "02_results_slides.pdf",
-          "size_mb": "0.12",
-          "size_bytes": 122953,
-          "path": "slides/02_results_slides.pdf"
+          "name": "01_methods_slides.pdf",
+          "size_mb": "0.14",
+          "size_bytes": 143206,
+          "path": "slides/01_methods_slides.pdf"
         },
         {
           "name": "00_abstract_slides.pdf",
@@ -93,26 +93,26 @@
     "figures": {
       "exists": true,
       "file_count": 5,
-      "size_mb": "0.26",
-      "total_size_bytes": 271008,
+      "size_mb": "0.31",
+      "total_size_bytes": 323558,
       "largest_files": [
         {
           "name": "disclosure_control_matrix.svg",
           "size_mb": "0.09",
-          "size_bytes": 94783,
+          "size_bytes": 93373,
           "path": "figures/disclosure_control_matrix.svg"
         },
         {
-          "name": "redaction_flow.svg",
-          "size_mb": "0.07",
-          "size_bytes": 71756,
-          "path": "figures/redaction_flow.svg"
+          "name": "redaction_flow.png",
+          "size_mb": "0.08",
+          "size_bytes": 79621,
+          "path": "figures/redaction_flow.png"
         },
         {
-          "name": "redaction_flow.png",
-          "size_mb": "0.06",
-          "size_bytes": 65216,
-          "path": "figures/redaction_flow.png"
+          "name": "disclosure_control_matrix.png",
+          "size_mb": "0.07",
+          "size_bytes": 78076,
+          "path": "figures/disclosure_control_matrix.png"
         }
       ],
       "extensions": {
@@ -219,13 +219,13 @@
     "root": {
       "exists": true,
       "file_count": 1,
-      "size_mb": "0.19",
-      "total_size_bytes": 201416,
+      "size_mb": "0.24",
+      "total_size_bytes": 250941,
       "largest_files": [
         {
           "name": "template_redacted_report_combined.pdf",
-          "size_mb": "0.19",
-          "size_bytes": 201416,
+          "size_mb": "0.24",
+          "size_bytes": 250941,
           "path": "template_redacted_report_combined.pdf"
         }
       ],
@@ -235,12 +235,12 @@
     }
   },
   "total_files": 71,
-  "total_size_mb": 7.131495475769043,
+  "total_size_mb": 6.182944297790527,
   "largest_files": [
     {
       "name": "source-web-fonts.js",
-      "size_mb": "3.02",
-      "size_bytes": 3170848,
+      "size_mb": "1.88",
+      "size_bytes": 1975092,
       "category": "web",
       "path": "web/assets/source-web-fonts.js"
     },
@@ -274,17 +274,24 @@
     },
     {
       "name": "template_redacted_report_combined.pdf",
-      "size_mb": "0.19",
-      "size_bytes": 201416,
+      "size_mb": "0.24",
+      "size_bytes": 250941,
       "category": "pdf",
       "path": "pdf/template_redacted_report_combined.pdf"
     },
     {
       "name": "template_redacted_report_combined.pdf",
-      "size_mb": "0.19",
-      "size_bytes": 201416,
+      "size_mb": "0.24",
+      "size_bytes": 250941,
       "category": "root",
       "path": "template_redacted_report_combined.pdf"
+    },
+    {
+      "name": "02_results_slides.pdf",
+      "size_mb": "0.16",
+      "size_bytes": 168246,
+      "category": "slides",
+      "path": "slides/02_results_slides.pdf"
     },
     {
       "name": "blur_on_black_steganography.pdf",
@@ -299,25 +306,18 @@
       "size_bytes": 148991,
       "category": "dev",
       "path": "dev/redaction_variants/blur_on_gray_steganography.pdf"
-    },
-    {
-      "name": "blur_on_white_steganography.pdf",
-      "size_mb": "0.14",
-      "size_bytes": 148493,
-      "category": "dev",
-      "path": "dev/redaction_variants/blur_on_white_steganography.pdf"
     }
   ],
   "missing_expected_files": [],
   "sizes_by_category": {
-    "pdf": 0.19208526611328125,
-    "web": 3.130702018737793,
-    "slides": 0.2652931213378906,
-    "figures": 0.258453369140625,
+    "pdf": 0.23931598663330078,
+    "web": 1.990340232849121,
+    "slides": 0.3125267028808594,
+    "figures": 0.30856895446777344,
     "data": 0.010425567626953125,
     "reports": 0.008480072021484375,
     "dev": 3.0739707946777344,
-    "root": 0.19208526611328125
+    "root": 0.23931598663330078
   },
   "inventory_mode": "stable-shippable-output-v1",
   "inventory_scope": "stage5-delivery-mirror",
