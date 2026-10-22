@@ -143,7 +143,9 @@ def test_run_manuscript_variable_script_uses_project_venv_python(tmp_path: Path)
     result = run_manuscript_variable_script(project, template_repo_root=template_root)
 
     assert result == 0
-    executable, injected_template_root = (project / "output" / "hydration_result.txt").read_text(encoding="utf-8").splitlines()
+    executable, injected_template_root = (
+        (project / "output" / "hydration_result.txt").read_text(encoding="utf-8").splitlines()
+    )
     assert executable == str(venv_python)
     assert injected_template_root == str(template_root)
     receipt = json.loads(next((project / "output" / ".pipeline" / "analysis").glob("*/*.json")).read_text())
