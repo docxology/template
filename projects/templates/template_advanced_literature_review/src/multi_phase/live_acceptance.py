@@ -27,14 +27,19 @@ from infrastructure.search.literature.live_contract import (
 from infrastructure.search.literature.live_providers import (
     CROSSREF_URL,
     EUROPEPMC_URL,
+    OPENALEX_URL,
     licensed_fulltext,
     retrieve_crossref,
+    retrieve_openalex_crossref,
 )
 from infrastructure.search.literature.live_transport import LocalGenerator
 
 from literature.corpus import Corpus
 from literature.models import Author, Paper
-from multi_phase.contracts import score_llm_calibration, validate_phase_artifact_manifest
+from multi_phase.contracts import (
+    score_llm_calibration,
+    validate_phase_artifact_manifest,
+)
 from multi_phase.models import PhaseMetadata
 from multi_phase.search import MultiPhaseSearchRunner
 
@@ -72,10 +77,13 @@ def _write_phase_outputs(session: LiveSession, runner: MultiPhaseSearchRunner, p
         {
             "phases": {key: asdict(value) for key, value in runner.phase_metadata.items()},
             "total_unique_papers": len(papers),
-            "execution_scope": "first configured query per phase; bounded Crossref sample",
+            "execution_scope": "first configured query per phase; bounded configured-engine sample",
         },
     )
-    write_json(session.directory / "phase_validation_report.json", runner.validate_phase_configuration())
+    write_json(
+        session.directory / "phase_validation_report.json",
+        runner.validate_phase_configuration(),
+    )
     runner._write_phase_artifact_manifest(session.directory, phase_ids=phases, execution_mode="live-unpaid-bounded")
     manifest_path = session.directory / "phase_artifact_manifest.json"
     manifest = exact_json(session.consume(manifest_path))
@@ -91,6 +99,18 @@ def _write_phase_outputs(session: LiveSession, runner: MultiPhaseSearchRunner, p
             raise LiteratureFailed("independent phase membership reconciliation failed")
 
 
+def _fulltext_candidates(phase_candidates: dict[str, list[Any]]) -> list[Any]:
+    """Cover configured phases before second records; never rank by access outcome."""
+    candidates: list[Any] = []
+    selected_ids: set[str] = set()
+    for rank in range(max(map(len, phase_candidates.values()), default=0)):
+        for records in phase_candidates.values():
+            if rank < len(records) and records[rank].id not in selected_ids and len(candidates) < 3:
+                candidates.append(records[rank])
+                selected_ids.add(records[rank].id)
+    return candidates
+
+
 def run_live(
     project_root: Path,
     directory: Path,
@@ -98,9 +118,14 @@ def run_live(
     *,
     crossref_endpoint: str = CROSSREF_URL,
     europepmc_endpoint: str = EUROPEPMC_URL,
+    openalex_endpoint: str = OPENALEX_URL,
 ) -> Path:
     session = LiveSession(
-        project_root, directory, settings, CAPABILITIES, active_source_root=Path(__file__).absolute().parents[1]
+        project_root,
+        directory,
+        settings,
+        CAPABILITIES,
+        active_source_root=Path(__file__).absolute().parents[1],
     )
     generator = LocalGenerator(session, max_calls=7)
     try:
@@ -120,14 +145,36 @@ def run_live(
         all_records: dict[str, Any] = {}
         phase_sources: dict[str, str] = {}
         selected_queries: dict[str, str] = {}
+        selected_providers: dict[str, str] = {}
+        phase_candidates: dict[str, list[Any]] = {}
         for index, phase in enumerate(phases):
             config = runner.search_phases[phase]
             query = config["queries"][0]
-            if config.get("engines", {}).get("crossref") is not True:
-                raise LiteratureBlocked("bounded unpaid acceptance requires configured Crossref per selected phase")
+            engines = config.get("engines", {})
             selected_queries[phase] = query
             start = time.time()
-            records = retrieve_crossref(session, query, label=f"phase_{index}_retrieval", endpoint=crossref_endpoint)
+            if engines.get("openalex") is True:
+                limits = config.get("deterministic_filters", {})
+                records = retrieve_openalex_crossref(
+                    session,
+                    query,
+                    label=f"phase_{index}_retrieval",
+                    endpoint=openalex_endpoint,
+                    crossref_endpoint=crossref_endpoint,
+                    year_min=limits.get("min_year"),
+                    year_max=limits.get("max_year"),
+                )
+                selected_providers[phase] = "openalex-crossref"
+            elif engines.get("crossref") is True:
+                records = retrieve_crossref(
+                    session,
+                    query,
+                    label=f"phase_{index}_retrieval",
+                    endpoint=crossref_endpoint,
+                )
+                selected_providers[phase] = "crossref"
+            else:
+                raise LiteratureBlocked("bounded unpaid acceptance requires a configured OpenAlex or Crossref engine")
             papers = runner._deduplicate_papers([_domain_paper(record) for record in records])
             filtered = runner.apply_deterministic_filters(papers, config.get("deterministic_filters", {}))
             if not filtered:
@@ -151,18 +198,28 @@ def run_live(
                 llm_filter_status="acceptance-classification-pending",
             )
             phase_sources[phase] = filtered[0].abstract
-            for record in records:
+            retained_ids = {paper.canonical_id for paper in filtered}
+            phase_candidates[phase] = [
+                record for record in records if _domain_paper(record).canonical_id in retained_ids
+            ]
+            for record in phase_candidates[phase]:
                 all_records.setdefault(record.id, record)
         _write_phase_outputs(session, runner, phases)
         keys = export_citations(session, list(all_records.values()))
         session.receipt["producer_results"]["retrieval"] = {
             "status": "passed",
             "selected_queries": selected_queries,
-            "selected_provider": "crossref",
+            "selected_provider": next(iter(set(selected_providers.values())))
+            if len(set(selected_providers.values())) == 1
+            else "configured-per-phase",
+            "selected_providers": selected_providers,
             "paper_count": len(all_records),
             "bibtex_count": len(keys),
             "phase_count": len(phases),
-            "scope": "first configured query per phase; review-size/citation quality gates are not satisfied by this acceptance sample",
+            "scope": (
+                "first configured query per phase; review-size/citation quality gates "
+                "are not satisfied by this acceptance sample"
+            ),
         }
         calibration = exact_json(session.freeze_project_input_bytes("data/llm_filter_calibration.json"))
         cases = calibration["cases"]
@@ -203,8 +260,9 @@ def run_live(
                 generator.generate(
                     annotation_prompt(
                         source[:6000],
-                        "Classify study type: observational uses real telescope/instrument measurements; theoretical uses "
-                        "models/simulations; review summarizes papers; other otherwise. Return label and exact source_quote.",
+                        "Classify study type: observational uses real telescope/instrument measurements; "
+                        "theoretical uses models/simulations; review summarizes papers; other otherwise. "
+                        "Return label and exact source_quote.",
                     ),
                     annotation_schema(source[:6000], labels=categories),
                 ),
@@ -219,14 +277,33 @@ def run_live(
             "classified_phase_count": len(classifications),
             "scope": "one retrieved abstract per selected phase",
         }
-        _, _, fulltext_receipt = licensed_fulltext(
-            session, list(all_records.values()), europepmc_endpoint=europepmc_endpoint
+        candidates = _fulltext_candidates(phase_candidates)
+        selection_path = session.directory / "fulltext_selection.json"
+        write_json(
+            selection_path,
+            {
+                "policy": "phase-filtered round-robin in configured phase/provider order, before access attempts",
+                "max_candidates": 3,
+                "candidate_ids": [record.id for record in candidates],
+                "phase_eligible_ids": {
+                    phase: [record.id for record in rows] for phase, rows in phase_candidates.items()
+                },
+            },
         )
+        session.consume(selection_path)
+        _, _, fulltext_receipt = licensed_fulltext(session, candidates, europepmc_endpoint=europepmc_endpoint)
         session.receipt["producer_results"]["licensed-fulltext"] = fulltext_receipt
         return session.finalize("passed")
     except LiteratureBlocked as exc:
         return session.finalize("blocked", issue=str(exc))
-    except (LiteratureFailed, OSError, ValueError, KeyError, TypeError, RuntimeError) as exc:
+    except (
+        LiteratureFailed,
+        OSError,
+        ValueError,
+        KeyError,
+        TypeError,
+        RuntimeError,
+    ) as exc:
         return session.finalize("failed", issue=f"{type(exc).__name__}: {exc}")
 
 
@@ -244,7 +321,9 @@ def main(project_root: Path, argv: list[str] | None = None) -> int:
     if args.model is None or args.output_dir is None:
         parser.error("live mode requires --model and a fresh --output-dir")
     path = run_live(
-        project_root, args.output_dir, LiveSettings(args.model, args.endpoint, max_results=args.max_results)
+        project_root,
+        args.output_dir,
+        LiveSettings(args.model, args.endpoint, max_results=args.max_results),
     )
     print(path)
     return {"passed": 0, "blocked": 75, "failed": 1}[json.loads(path.read_text())["status"]]

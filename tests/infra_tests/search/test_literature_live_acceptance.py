@@ -11,7 +11,11 @@ import pytest
 from reportlab.pdfgen import canvas
 
 from infrastructure.search.literature.crossref_backend import crossref_item_to_paper
-from infrastructure.search.literature.live_artifacts import annotation_schema, export_citations, validate_annotation
+from infrastructure.search.literature.live_artifacts import (
+    annotation_schema,
+    export_citations,
+    validate_annotation,
+)
 from infrastructure.search.literature.live_contract import (
     LiteratureBlocked,
     LiteratureFailed,
@@ -29,6 +33,7 @@ from infrastructure.search.literature.live_providers import (
     licensed_pdf_candidates,
     parse_licensed_jats,
     retrieve_crossref,
+    retrieve_openalex_crossref,
 )
 from infrastructure.search.literature.live_transport import (
     LocalGenerator,
@@ -59,7 +64,10 @@ def project(tmp_path: Path) -> Path:
 def session(tmp_path: Path, **kwargs) -> LiveSession:
     root = project(tmp_path)
     return LiveSession(
-        root, Path("output/.pipeline/literature_acceptance/test"), LiveSettings("unit-model", **kwargs), ["retrieval"]
+        root,
+        Path("output/.pipeline/literature_acceptance/test"),
+        LiveSettings("unit-model", **kwargs),
+        ["retrieval"],
     )
 
 
@@ -70,7 +78,13 @@ def item() -> dict:
         "author": [{"given": "Ada", "family": "Researcher"}],
         "issued": {"date-parts": [[2024, 1, 1]]},
         "abstract": SOURCE,
-        "license": [{"URL": LICENSE_URL, "content-version": "unspecified", "start": {"date-parts": [[2024, 1, 1]]}}],
+        "license": [
+            {
+                "URL": LICENSE_URL,
+                "content-version": "unspecified",
+                "start": {"date-parts": [[2024, 1, 1]]},
+            }
+        ],
         "link": [],
     }
 
@@ -122,7 +136,12 @@ def test_source_change_and_missing_producer_cannot_pass(tmp_path):
     (run.root / "src/domain.py").write_text("VALUE = 2\n")
     receipt = json.loads(run.finalize("passed").read_text())
     assert receipt["status"] == "failed" and receipt["source_unchanged"] is False
-    other = LiveSession(run.root, Path("output/.pipeline/literature_acceptance/other"), run.settings, ["required"])
+    other = LiveSession(
+        run.root,
+        Path("output/.pipeline/literature_acceptance/other"),
+        run.settings,
+        ["required"],
+    )
     assert json.loads(other.finalize("passed").read_text())["status"] == "failed"
 
 
@@ -198,7 +217,12 @@ def test_unconsumed_artifact_symlink_cannot_be_promoted(tmp_path):
 
 @pytest.mark.parametrize(
     "url",
-    ["http://192.168.1.1/data", "https://127.0.0.1/data", "https://user:secret@example.org/data", "file:///tmp/data"],
+    [
+        "http://192.168.1.1/data",
+        "https://127.0.0.1/data",
+        "https://user:secret@example.org/data",
+        "file:///tmp/data",
+    ],
 )
 def test_private_or_credential_urls_rejected(url):
     with pytest.raises((LiteratureFailed, LiteratureBlocked)):
@@ -253,6 +277,82 @@ def test_real_http_retrieval_dedup_and_complete_bibtex(tmp_path, httpserver):
         # Eligibility cannot weaken the strict downstream citation writer.
         with pytest.raises(LiteratureFailed, match="lacks title, DOI, authors, or year"):
             export_citations(eligible_run, [crossref_item_to_paper(incomplete)])
+
+    for fault in ("canonical", "doi_mismatch", "missing_authors", "too_many"):
+        label = "openalex_" + fault
+        row = {
+            "id": "https://openalex.org/W1",
+            "doi": "https://doi.org/" + DOI,
+            "title": "Real retrieved article",
+            "primary_location": {
+                "is_oa": True,
+                "version": "publishedVersion",
+                "license": "cc-by",
+            },
+        }
+        records = [row] * (4 if fault == "too_many" else 1)
+        httpserver.expect_request(
+            "/" + label,
+            query_string={
+                "search.title_and_abstract": '"configured topic" AND "article"',
+                "per_page": "3",
+                "filter": (
+                    "open_access.is_oa:true,primary_location.license:cc-by,primary_location.version:publishedVersion,"
+                    "from_publication_date:2020-01-01,to_publication_date:2026-12-31"
+                ),
+            },
+        ).respond_with_json({"results": records})
+        deposited = item()
+        deposited["license"][0]["content-version"] = "vor"
+        deposited["license"][0]["URL"] = LICENSE_URL.rstrip("/")
+        deposited["link"] = [
+            {
+                "URL": "https://example.org/article.pdf",
+                "content-type": "application/pdf",
+                "content-version": "vor",
+            }
+        ]
+        if fault == "doi_mismatch":
+            deposited["DOI"] = "10.1000/other"
+        if fault == "missing_authors":
+            deposited.pop("author")
+        httpserver.expect_request("/" + label + "_doi/" + DOI).respond_with_json({"message": deposited})
+        fresh = session(tmp_path / label)
+        kwargs = dict(
+            endpoint=httpserver.url_for("/" + label),
+            crossref_endpoint=httpserver.url_for("/" + label + "_doi"),
+            year_min=2020,
+            year_max=2026,
+        )
+        if fault not in {"doi_mismatch", "too_many", "missing_authors"}:
+            actual = retrieve_openalex_crossref(fresh, '"configured topic" AND "article"', **kwargs)
+            assert len(actual) == 1 and actual[0].doi == DOI
+            assert list(export_citations(fresh, actual)) == ["doi:" + DOI]
+            assert json.loads((fresh.directory / "retrieval/body.bin").read_text())["results"] == records
+            assert json.loads((fresh.directory / "retrieval_doi_0/body.bin").read_text())["message"] == deposited
+            # Metadata can support classification, but never invents download rights.
+            assert licensed_pdf_candidates(actual[0].raw)
+            for license_url, permitted in (
+                ("https://creativecommons.org/licenses/by/4.0/", True),
+                ("https://creativecommons.org/licenses/by/4.0", True),
+                ("http://creativecommons.org/licenses/by/4.0/", True),
+                ("http://creativecommons.org/licenses/by/4.0", True),
+                ("https://creativecommons.org/licenses/by/3.0/", False),
+                ("https://creativecommons.org/licenses/by/4.0?license=cc-by", False),
+                ("https://creativecommons.org/licenses/by/4.0.evil.example", False),
+            ):
+                actual[0].raw["license"][0]["URL"] = license_url
+                assert bool(licensed_pdf_candidates(actual[0].raw)) is permitted
+            actual[0].raw["license"][0]["URL"] = LICENSE_URL
+            actual[0].raw["license"][0]["content-version"] = "am"
+            assert licensed_pdf_candidates(actual[0].raw) == []
+            actual[0].raw["license"][0]["content-version"] = "vor"
+            actual[0].raw["license"][0]["start"]["date-parts"] = [[9999, 1, 1]]
+            assert licensed_pdf_candidates(actual[0].raw) == []
+        else:
+            error = LiteratureFailed if fault in {"doi_mismatch", "too_many"} else LiteratureBlocked
+            with pytest.raises(error):
+                retrieve_openalex_crossref(fresh, '"configured topic" AND "article"', **kwargs)
 
 
 @pytest.mark.parametrize("body", [{"message": {"items": []}}, {"message": {"items": [{}]}}])
@@ -343,7 +443,11 @@ def test_explicit_active_version_license_is_required():
     record = item()
     record["license"][0]["content-version"] = "vor"
     record["link"] = [
-        {"URL": "https://publisher.example/paper.pdf", "content-version": "vor", "content-type": "application/pdf"}
+        {
+            "URL": "https://publisher.example/paper.pdf",
+            "content-version": "vor",
+            "content-type": "application/pdf",
+        }
     ]
     assert len(licensed_pdf_candidates(record, today=date(2024, 1, 1))) == 1
     assert licensed_pdf_candidates(record, today=date(2023, 1, 1)) == []
@@ -356,7 +460,10 @@ def test_explicit_active_version_license_is_required():
     [
         (jats(doi="10.1000/wrong"), LiteratureFailed),
         (jats(license_url="https://example.org/unknown"), LiteratureBlocked),
-        (b'<!DOCTYPE article [<!ENTITY x SYSTEM "file:///etc/passwd">]><article>&x;</article>', LiteratureFailed),
+        (
+            b'<!DOCTYPE article [<!ENTITY x SYSTEM "file:///etc/passwd">]><article>&x;</article>',
+            LiteratureFailed,
+        ),
     ],
 )
 def test_licensed_xml_identity_rights_and_entities_are_checked(raw, error):
@@ -384,7 +491,9 @@ def test_real_pdf_extraction_and_wrong_identity_control():
     pdf.drawString(30, 800, DOI)
     for index in range(4):
         pdf.drawString(
-            30, 760 - index * 25, "A measured source result with calibrated observations and clear uncertainty."
+            30,
+            760 - index * 25,
+            "A measured source result with calibrated observations and clear uncertainty.",
         )
     pdf.save()
     assert "measured source" in _pdf_text(buffer.getvalue(), DOI)
@@ -396,14 +505,21 @@ def test_quote_annotation_rejects_fabrication_coercion_and_extra_fields():
     assert validate_annotation({"summary": "A short annotation", "source_quote": SOURCE[:40]}, SOURCE)["summary"]
     for value in (
         {"summary": None, "source_quote": SOURCE[:40]},
-        {"summary": "annotation", "source_quote": "This fabricated sentence is absent."},
+        {
+            "summary": "annotation",
+            "source_quote": "This fabricated sentence is absent.",
+        },
         {"summary": "annotation", "source_quote": SOURCE[:40], "path": "/tmp/code"},
     ):
         with pytest.raises(LiteratureFailed):
             validate_annotation(value, SOURCE)
 
     assert annotation_schema()["properties"]["summary"] == {"type": "string"}
-    assert annotation_schema(SOURCE)["properties"]["summary"] == {"type": "string", "minLength": 1, "maxLength": 512}
+    assert annotation_schema(SOURCE)["properties"]["summary"] == {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 512,
+    }
     assert annotation_schema(SOURCE, labels=["yes", "no"])["properties"]["label"] == {
         "type": "string",
         "enum": ["yes", "no"],
@@ -443,7 +559,12 @@ def test_real_local_model_worker_binds_provider_request_response_and_digest(tmp_
 def test_real_local_model_identity_and_token_controls(tmp_path, httpserver, model, tokens):
     httpserver.expect_request("/api/tags").respond_with_json({"models": [{"name": "unit-model", "digest": "a" * 64}]})
     httpserver.expect_request("/api/generate", method="POST").respond_with_json(
-        {"model": model, "done": True, "eval_count": tokens, "response": '{"result":"responding"}'}
+        {
+            "model": model,
+            "done": True,
+            "eval_count": tokens,
+            "response": '{"result":"responding"}',
+        }
     )
     run = session(tmp_path, endpoint=httpserver.url_for("").replace("localhost", "127.0.0.1"))
     with pytest.raises(LiteratureFailed):

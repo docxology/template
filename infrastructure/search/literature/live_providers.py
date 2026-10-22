@@ -6,10 +6,11 @@ import io
 import re
 from datetime import date
 from typing import Any
-from urllib.parse import urlencode
+from urllib.parse import quote, urlencode
 
 from defusedxml import ElementTree
 
+from infrastructure.search.connectors.impl.openalex import OpenAlexConnector
 from infrastructure.search.literature.crossref_backend import crossref_item_to_paper
 from infrastructure.search.literature.live_contract import (
     LiteratureBlocked,
@@ -19,10 +20,14 @@ from infrastructure.search.literature.live_contract import (
     sha256,
     write_json,
 )
-from infrastructure.search.literature.live_transport import extract_pdf_text, fetch_bytes
+from infrastructure.search.literature.live_transport import (
+    extract_pdf_text,
+    fetch_bytes,
+)
 from infrastructure.search.literature.models import Paper, merge_papers
 
 CROSSREF_URL = "https://api.crossref.org/works"
+OPENALEX_URL = "https://api.openalex.org/works"
 EUROPEPMC_URL = "https://www.ebi.ac.uk/europepmc/webservices/rest"
 LICENSE_URL = "https://creativecommons.org/licenses/by/4.0/"
 
@@ -125,16 +130,138 @@ def retrieve_crossref(
     return unique
 
 
-def licensed_pdf_candidates(item: dict[str, Any], *, today: date | None = None) -> list[dict[str, str]]:
-    """Require deposited, active CC-BY-4.0 rights for the same declared version.
+def retrieve_openalex_crossref(
+    session: LiveSession,
+    query: str,
+    *,
+    label: str = "retrieval",
+    endpoint: str = OPENALEX_URL,
+    crossref_endpoint: str = CROSSREF_URL,
+    year_min: int | None = None,
+    year_max: int | None = None,
+) -> list[Paper]:
+    """Discover configured title/abstract matches; bind exact Crossref citation bytes."""
+    if not isinstance(query, str) or not query.strip() or len(query) > 2000:
+        raise LiteratureFailed("retrieval query must be a bounded nonempty string")
+    filters = [
+        "open_access.is_oa:true",
+        "primary_location.license:cc-by",
+        "primary_location.version:publishedVersion",
+    ]
+    for bound, name in (
+        (year_min, "from_publication_date"),
+        (year_max, "to_publication_date"),
+    ):
+        if bound is not None:
+            if type(bound) is not int or not 1 <= bound <= 9999:
+                raise LiteratureFailed("retrieval year bounds must be exact calendar years")
+            filters.append(f"{name}:{bound:04d}-" + ("01-01" if name.startswith("from") else "12-31"))
+    raw, metadata = fetch_bytes(
+        session,
+        endpoint
+        + "?"
+        + urlencode(
+            {
+                "search.title_and_abstract": query,
+                "per_page": session.settings.max_results,
+                "filter": ",".join(filters),
+            }
+        ),
+        label,
+        max_bytes=2 * 1024 * 1024,
+        allow_loopback=endpoint != OPENALEX_URL,
+    )
+    payload = exact_json(raw)
+    rows = payload.get("results") if isinstance(payload, dict) else None
+    if not isinstance(rows, list) or len(rows) > session.settings.max_results:
+        raise LiteratureFailed("OpenAlex results violate the requested result ceiling")
+    papers: list[Paper] = []
+    excluded: list[dict[str, Any]] = []
+    seen: set[str] = set()
+    for index, row in enumerate(rows):
+        if not isinstance(row, dict) or not isinstance(row.get("doi"), str):
+            raise LiteratureFailed("OpenAlex result lacks an exact DOI URL")
+        match = re.fullmatch(r"https://doi\.org/(10\.[0-9]{4,9}/[^\s?#]+)", row["doi"])
+        if match is None:
+            raise LiteratureFailed("OpenAlex result DOI URL is malformed")
+        doi = match[1].lower()
+        location = row.get("primary_location")
+        if not isinstance(location, dict) or not (
+            location.get("is_oa") is True
+            and location.get("version") == "publishedVersion"
+            and location.get("license") == "cc-by"
+        ):
+            excluded.append({"raw_index": index, "doi": doi, "reason": "not_declared_oa_cc_by_vor"})
+            continue
+        if doi in seen:
+            excluded.append({"raw_index": index, "doi": doi, "reason": "duplicate_doi"})
+            continue
+        seen.add(doi)
+        mapped = OpenAlexConnector._parse_work(row)
+        if mapped.doi is None or mapped.doi.lower() != doi or not mapped.title.strip():
+            raise LiteratureFailed("OpenAlex field mapping lost article identity")
+        bound_raw, bound_http = fetch_bytes(
+            session,
+            crossref_endpoint.rstrip("/") + "/" + quote(doi, safe=""),
+            f"{label}_doi_{index}",
+            max_bytes=2 * 1024 * 1024,
+            allow_loopback=crossref_endpoint != CROSSREF_URL,
+        )
+        bound = exact_json(bound_raw)
+        item = bound.get("message") if isinstance(bound, dict) else None
+        if not isinstance(item, dict) or not isinstance(item.get("DOI"), str) or item["DOI"].lower() != doi:
+            raise LiteratureFailed("Crossref exact DOI lookup does not identify the discovered article")
+        titles = item.get("title")
+        if not isinstance(titles, list) or not titles or not isinstance(titles[0], str) or not titles[0].strip():
+            raise LiteratureFailed("Crossref result lacks an actual title")
+        paper = crossref_item_to_paper(item)
+        if not paper.authors or paper.year is None:
+            excluded.append(
+                {
+                    "raw_index": index,
+                    "doi": doi,
+                    "reason": "crossref_complete_citation_missing",
+                }
+            )
+            continue
+        if mapped.abstract:
+            paper.abstract = mapped.abstract
+        papers.append(paper)
+        session.receipt.setdefault("crossref_doi_bindings", {})[f"{label}:{doi}"] = bound_http
+    unique = merge_papers(papers)
+    write_json(
+        session.directory / f"{label}_report.json",
+        {
+            "status": "passed" if unique else "blocked",
+            "provider": "openalex-crossref",
+            "query": query,
+            "query_field": "search.title_and_abstract",
+            "raw_count": len(rows),
+            "eligible_count": len(papers),
+            "unique_count": len(unique),
+            "excluded_records": excluded,
+            "http": metadata,
+            "sample_scope": (
+                "configured Boolean title/abstract query and complete exact-DOI Crossref citations; "
+                "full-text rights are independently checked only for actual selected downloads"
+            ),
+        },
+    )
+    if not unique:
+        raise LiteratureBlocked("bounded configured OpenAlex discovery retained no citation-complete records")
+    return unique
 
-    An unspecified license version cannot authorize a version-of-record download.
-    Crossref's deposited license is provider evidence, not a legal certification.
-    """
+
+def _active_license_versions(item: dict[str, Any], today: date | None = None) -> set[str]:
     current = today or date.today()
     versions: set[str] = set()
     for row in item.get("license", []):
-        if not isinstance(row, dict) or row.get("URL") != LICENSE_URL:
+        if not isinstance(row, dict) or row.get("URL") not in {
+            LICENSE_URL,
+            LICENSE_URL.rstrip("/"),
+            LICENSE_URL.replace("https:", "http:"),
+            LICENSE_URL.rstrip("/").replace("https:", "http:"),
+        }:
             continue
         version = row.get("content-version")
         parts = row.get("start", {}).get("date-parts", [])
@@ -149,6 +276,16 @@ def licensed_pdf_candidates(item: dict[str, Any], *, today: date | None = None) 
             continue
         if effective <= current:
             versions.add(version)
+    return versions
+
+
+def licensed_pdf_candidates(item: dict[str, Any], *, today: date | None = None) -> list[dict[str, str]]:
+    """Require deposited, active CC-BY-4.0 rights for the same declared version.
+
+    An unspecified license version cannot authorize a version-of-record download.
+    Crossref's deposited license is provider evidence, not a legal certification.
+    """
+    versions = _active_license_versions(item, today)
     result: list[dict[str, str]] = []
     seen: set[str] = set()
     for row in item.get("link", []):
@@ -200,7 +337,10 @@ def parse_licensed_jats(raw: bytes, doi: str) -> tuple[str, str]:
     license_nodes = root.findall(".//license")
     licenses = {value for node in license_nodes for value in node.attrib.values()}
     licenses.update(value for node in license_nodes for child in node.iter() for value in child.attrib.values())
-    valid = {"https://creativecommons.org/licenses/by/4.0/", "http://creativecommons.org/licenses/by/4.0/"}
+    valid = {
+        "https://creativecommons.org/licenses/by/4.0/",
+        "http://creativecommons.org/licenses/by/4.0/",
+    }
     if not licenses & valid:
         raise LiteratureBlocked("full-text XML does not supply explicit CC-BY-4.0 license evidence")
     body = root.find(".//body")
@@ -220,10 +360,20 @@ def _europepmc_fulltext(
     url = (
         endpoint
         + "/search?"
-        + urlencode({"query": f'DOI:"{paper.doi}" AND OPEN_ACCESS:Y', "format": "json", "pageSize": 2})
+        + urlencode(
+            {
+                "query": f'DOI:"{paper.doi}" AND OPEN_ACCESS:Y',
+                "format": "json",
+                "pageSize": 2,
+            }
+        )
     )
     raw, metadata = fetch_bytes(
-        session, url, label + "_lookup", max_bytes=1024 * 1024, allow_loopback=endpoint != EUROPEPMC_URL
+        session,
+        url,
+        label + "_lookup",
+        max_bytes=1024 * 1024,
+        allow_loopback=endpoint != EUROPEPMC_URL,
     )
     payload = exact_json(raw)
     if not isinstance(payload, dict) or not isinstance(payload.get("resultList"), dict):
@@ -246,7 +396,11 @@ def _europepmc_fulltext(
         raise LiteratureBlocked("selected DOI lacks a unique Europe PMC open-access full text")
     fulltext_url = endpoint + "/" + matches[0]["pmcid"] + "/fullTextXML"
     body, fulltext_metadata = fetch_bytes(
-        session, fulltext_url, label + "_xml", max_bytes=8 * 1024 * 1024, allow_loopback=endpoint != EUROPEPMC_URL
+        session,
+        fulltext_url,
+        label + "_xml",
+        max_bytes=8 * 1024 * 1024,
+        allow_loopback=endpoint != EUROPEPMC_URL,
     )
     text, license_url = parse_licensed_jats(body, paper.doi)
     return text, {
@@ -262,7 +416,10 @@ def _europepmc_fulltext(
 
 
 def licensed_fulltext(
-    session: LiveSession, papers: list[Paper], *, europepmc_endpoint: str = EUROPEPMC_URL
+    session: LiveSession,
+    papers: list[Paper],
+    *,
+    europepmc_endpoint: str = EUROPEPMC_URL,
 ) -> tuple[Paper, str, dict[str, Any]]:
     """Select one real reusable text from at most three retrieved candidates.
 
@@ -276,7 +433,10 @@ def licensed_fulltext(
         for number, candidate in enumerate(licensed_pdf_candidates(paper.raw)):
             try:
                 raw, metadata = fetch_bytes(
-                    session, candidate["url"], f"fulltext_{index}_{number}", max_bytes=16 * 1024 * 1024
+                    session,
+                    candidate["url"],
+                    f"fulltext_{index}_{number}",
+                    max_bytes=16 * 1024 * 1024,
                 )
                 text = extract_pdf_text(
                     session,
@@ -300,14 +460,26 @@ def licensed_fulltext(
                 )
             except LiteratureBlocked as exc:
                 attempts.append(
-                    {"paper_id": paper.id, "url": candidate["url"], "status": "blocked", "reason": str(exc)}
+                    {
+                        "paper_id": paper.id,
+                        "url": candidate["url"],
+                        "status": "blocked",
+                        "reason": str(exc),
+                    }
                 )
         try:
             text, metadata = _europepmc_fulltext(session, paper, f"fulltext_{index}", europepmc_endpoint)
             metadata["attempts"] = attempts
             return _persist_fulltext(session, paper, text, metadata)
         except LiteratureBlocked as exc:
-            attempts.append({"paper_id": paper.id, "provider": "europepmc", "status": "blocked", "reason": str(exc)})
+            attempts.append(
+                {
+                    "paper_id": paper.id,
+                    "provider": "europepmc",
+                    "status": "blocked",
+                    "reason": str(exc),
+                }
+            )
     write_json(session.directory / "fulltext_attempts.json", attempts)
     raise LiteratureBlocked("none of the bounded retrieved candidates supplied identity-bound CC-BY-4.0 full text")
 
@@ -319,6 +491,10 @@ def _persist_fulltext(
     path.write_text(text, encoding="utf-8")
     session.consume(path, text.encode("utf-8"))
     paper.fulltext = text
-    metadata.update(status="passed", text_sha256=sha256(text.encode("utf-8")), text_characters=len(text))
+    metadata.update(
+        status="passed",
+        text_sha256=sha256(text.encode("utf-8")),
+        text_characters=len(text),
+    )
     write_json(session.directory / "fulltext_receipt.json", metadata)
     return paper, text, metadata
