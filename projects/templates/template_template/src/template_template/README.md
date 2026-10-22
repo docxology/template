@@ -42,5 +42,5 @@ print(f"{report.module_count} modules, {report.project_count} projects")
 
 | Function | Returns | Description |
 |----------|---------|-------------|
-| `generate_all_architecture_figures(root, dir)` | `list[Path]` | Generate all 4 figures |
+| `generate_all_architecture_figures(root, dir)` | `list[Path]` | Generate all 4 figures and their `output/figures/figure_registry.json`; return the 4 PNG paths |
 | `comparative_feature_matrix_data()` | `tuple` | 14×10 data matrix + labels |

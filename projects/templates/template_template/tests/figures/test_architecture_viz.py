@@ -2,10 +2,13 @@
 
 from __future__ import annotations
 
+import json
 from pathlib import Path
 
 import matplotlib.pyplot as plt
 import numpy as np
+
+from infrastructure.validation.content.figure_validator import validate_figure_registry
 
 from helpers import PROJECT_DIR, REPO_ROOT
 
@@ -177,3 +180,22 @@ def test_generate_all_architecture_figures_returns_four_paths(tmp_path: Path) ->
         assert path.exists()
         assert path.suffix == ".png"
         assert path.stat().st_size > 1000
+
+    registry_path = output_project_dir / "output" / "figures" / "figure_registry.json"
+    registry = json.loads(registry_path.read_text(encoding="utf-8"))
+    assert registry["schema_version"] == "template-template-figure-registry-v1"
+    figures = registry["figures"]
+    assert {figure["filename"] for figure in figures} == {path.name for path in paths}
+    assert {figure["label"] for figure in figures} == {
+        "fig:template-architecture",
+        "fig:template-pipeline-flow",
+        "fig:template-module-inventory",
+        "fig:template-comparative-matrix",
+    }
+    manuscript_dir = PROJECT_DIR / "manuscript"
+    assert validate_figure_registry(registry_path, manuscript_dir, require_accessibility=True) == (True, [])
+
+    paths[0].unlink()
+    valid, issues = validate_figure_registry(registry_path, manuscript_dir, require_accessibility=True)
+    assert not valid
+    assert any("Registered generated figure file is missing" in issue and paths[0].name in issue for issue in issues)
