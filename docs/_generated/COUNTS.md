@@ -135,12 +135,12 @@ Result: **1440** project-scope infrastructure tests collected and **1258** publi
 | `template_eda_notebook` | 132 | 91.01 % |
 | `template_experiment_tree` | 29 | 91.85 % |
 | `template_formal` | 373 | 90.38 % |
-| `template_gold_refinement` | 337 | 91.71 % |
-| `template_literature_meta_analysis` | 1248 | 95.55 % |
+| `template_gold_refinement` | 337 | 91.72 % |
+| `template_literature_meta_analysis` | 1248 | 95.57 % |
 | `template_madlib` | 198 | 98.95 % |
 | `template_methods_paper` | 94 | 99.00 % |
 | `template_newspaper` | 153 | 99.25 % |
-| `template_pitch_deck` | 159 | 96.42 % |
+| `template_pitch_deck` | 159 | 96.43 % |
 | `template_pools_rules_tools` | 306 | 94.68 % |
 | `template_prose_project` | 189 | 91.67 % |
 | `template_redacted_report` | 156 | 97.03 % |
