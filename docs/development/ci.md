@@ -14,15 +14,26 @@ consumers. Shared or unknown paths, renames, deletions and ambiguous changes
 select every public project. An unreadable Git change roster fails selection.
 
 Infrastructure preserves the complete legacy smoke union, adds changed tests and
-declared Source owners, and splits the selection into three complementary file
-shards. Expensive selected full modules run in a separate required contract
-matrix. Smoke keeps its 540-second child budget and ten-minute job limit;
+declared Source owners, and splits the selection into complementary file
+shards with at most twenty modules in automatic mode. Selected process-heavy
+modules retain dedicated jobs. At most eight routine cells run concurrently;
+the separate contract matrix retains its three-cell concurrency limit. More
+cells increase the aggregate compute allowance; neither file count nor byte
+balancing proves that a cell will fit its deadline. Explicit one-to-eight shard
+requests retain their existing manual packing behavior.
+Smoke keeps its 540-second child budget and ten-minute job limit;
 contract jobs use the existing full-infrastructure 120-second per-test default,
 retain explicit test-owned timeout markers, and have a separate 6600-second
 whole-module ceiling below the existing Root acceptance budget. The explicit
 pytest option applies to this test process; nested producer environments retain
 their original timeout settings. Both lanes emit
 nonce-bound original pytest selection/outcome receipts and JUnit diagnostics.
+The shared bounded subprocess boundary includes startup in the original
+deadline and cleans up owned process groups and detached descendants. A separate
+request-bound process diagnostic preserves raw OS/effective exits, timeout and
+custody status even when pytest cannot finish its receipts; it never grants
+acceptance. The wheel typing contract uses the existing full-submodule checkout
+to exercise actual authored native content in wheel and source distributions.
 The final gate checks the exact combined union and rejects missing, duplicated
 or overlapping members. Neither lane replaces complete release acceptance.
 
@@ -93,10 +104,15 @@ acceptance and coverage custody still apply independently.
 
 `platform-native-preflight.yml` runs for relevant native/dependency pull-request
 changes and manual dispatch. After tool preparation, its cold installed operation
-has at most 900 seconds on one original clock. It prepares the complete provider
-selection, rechecks first/last providers and runs the Code exemplar through real
-Original and independent Current analysis. The receipt explicitly records
-incomplete release selection and cannot authorize a tag or publication.
+has at most 900 seconds on one original clock. It prepares Code and its actual
+Source-declared local providers, then runs that exemplar through the production
+Original and independent Current route, including all enabled formats. The route
+owns its fresh provider and reader admissions; the diagnostic does not repeat an
+all-project preparation prelude. Its tool setup omits the unrelated Lean compiler.
+The record explicitly declares incomplete release selection and cannot authorize
+a tag or publication. Complete original, reader and handoff roles keep the full
+public provider roster and the required acceptance clocks. This narrower scope
+does not itself establish that the native diagnostic will fit its deadline.
 
 Native core stages explicitly use the nominated cold interpreter, and terminal
 readback requires the exact selected environment commitment. Stage launch
@@ -105,12 +121,17 @@ original launches after its process and raw evidence are retained; the missing
 remainder keeps the complete release selection failing. Fixed public phase,
 PID and remaining-time diagnostics locate delays without authorizing acceptance.
 
-The full required-acceptance workflow runs Linux auxiliary originals alongside
-common installed/runtime originals, Root jobs and native originals. Installed
-cells use the existing dependency-aware executor with three bounded workers.
-Each producer exposes its own required failures; the final collector still
-requires the complete Source-owned profile, every host/runtime obligation and
-the independent installed reader. All original operation deadlines remain enforced.
+The full required-acceptance workflow derives one Linux auxiliary cell for
+each complete public project plus separate Root checks, with four concurrent
+jobs and one serial 1,800-second operation per cell. This changes aggregate
+scheduling and compute allowance from the former global operation; earlier
+failures remain failures. Same-run live collection authenticates every unique
+producer attempt and complete original graph. Darwin print, the six Root
+host/runtime artifacts, common installed/runtime and full native-format
+originals retain their separate owners. Installed cells use three bounded
+dependency-aware workers. The independent installed candidate and fresh release
+readers still require the complete Source-owned profile, all host/runtime
+obligations, coverage floors and original case limits.
 
 Use the manual **Optional Hardening** workflow for the former complete
 infrastructure shards, Python 3.12–3.14 project suites, aggregate coverage,

@@ -16,7 +16,7 @@ _NATIVE_PREPARATION = {
     "tests/infra_tests/reporting/test_native_pdf_math.py": ("converter", True, False),
     "tests/infra_tests/reporting/test_native_pdf_source_witness.py": ("converter", True, False),
     "tests/infra_tests/reporting/test_pdf_raw_natbib_source.py": ("converter", True, False),
-    "tests/infra_tests/rendering/test_latex_texttt_native.py": ("none", True, False),
+    "tests/infra_tests/rendering/test_latex_texttt_native.py": ("converter", True, False),
     "tests/infra_tests/rendering/test_latex_utils.py": ("none", True, False),
 }
 CONTRACT_MODULES = frozenset(
@@ -35,6 +35,7 @@ CONTRACT_MODULES = frozenset(
         "tests/infra_tests/reporting/test_project_verifier.py",
         "tests/infra_tests/project/test_root_case_lanes.py",
         "tests/infra_tests/project/test_root_no_model_acquisition.py",
+        "tests/infra_tests/project/test_root_wheel_typing.py",
         "tests/infra_tests/project/test_root_optional_external.py",
         "tests/infra_tests/project/test_root_policy_authoring.py",
         "tests/infra_tests/project/test_root_portable.py",

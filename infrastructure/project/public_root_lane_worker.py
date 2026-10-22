@@ -6,6 +6,7 @@ import argparse
 from dataclasses import asdict
 import math
 import signal
+import threading
 import types
 from importlib import import_module
 from collections.abc import Iterator
@@ -15,6 +16,8 @@ from pathlib import Path
 from typing import Any
 
 import pytest
+
+from infrastructure.core.testing.pytest_scratch import external_pytest_scratch
 
 from infrastructure.core.files.project_lock import project_output_lock
 from infrastructure.core.implementation_custody import verify_implementation_custody
@@ -61,6 +64,79 @@ class LaneObserver(RootCaseObserver):
             raise ValueError("Root case deadline callback is unsupported by the selected test stack")
         self.callback_code, self.handler_code = callback.__code__, handlers[0]
         self.armed_deadlines: dict[str, float] = {}
+        self.timeout_module = module
+        self.thread_callback = getattr(module, "timeout_timer")
+        cancellations = [
+            constant
+            for constant in timer.__code__.co_consts
+            if isinstance(constant, types.CodeType)
+            and constant.co_name == "cancel"
+            and constant.co_freevars == ("timer",)
+        ]
+        if len(cancellations) != 1 or not isinstance(self.thread_callback, types.FunctionType):
+            raise ValueError("Root case thread deadline is unsupported by the selected test stack")
+        self.thread_cancel_code = cancellations[0]
+        self.timer_cancel = threading.Timer.cancel
+        self.timer_join = threading.Thread.join
+        self.armed_thread_timers: dict[str, tuple[threading.Timer, types.FunctionType, object]] = {}
+
+    def _thread_timer(self, item: pytest.Item, settings: object, cancel: object) -> threading.Timer:
+        if (
+            not isinstance(cancel, types.FunctionType)
+            or cancel.__code__ is not self.thread_cancel_code
+            or cancel.__globals__ is not vars(self.timeout_module)
+            or cancel.__closure__ is None
+            or len(cancel.__closure__) != 1
+        ):
+            raise ValueError("Root case thread deadline lacks its actual selected cancellation owner")
+        timer = cancel.__closure__[0].cell_contents
+        if (
+            type(timer) is not threading.Timer
+            or timer.function is not self.thread_callback
+            or not isinstance(timer.args, tuple)
+            or timer.args != (item, settings)
+            or timer.args[0] is not item
+            or timer.args[1] is not settings
+            or timer.kwargs != {}
+            or type(timer.interval) not in (int, float)
+            or timer.interval != getattr(settings, "timeout", None)
+            or not math.isfinite(timer.interval)
+            or timer.interval <= 0
+        ):
+            raise ValueError("Root case thread deadline differs from its actual timer/callback/selection")
+        return timer
+
+    @pytest.hookimpl(hookwrapper=True)
+    def pytest_timeout_cancel_timer(self, item: pytest.Item) -> Iterator[None]:
+        held = self.armed_thread_timers.get(item.nodeid)
+        if held is not None:
+            timer, cancel, settings = held
+            try:
+                if (
+                    getattr(item, "cancel_timeout", None) is not cancel
+                    or self._thread_timer(item, settings, cancel) is not timer
+                    or timer.finished.is_set()
+                    or not timer.is_alive()
+                ):
+                    raise ValueError("Root case thread deadline changed or stopped before actual cancellation")
+            except BaseException:
+                # Refuse the changed item callback without leaving our genuine
+                # held non-daemon timer armed in a failed chunk.
+                self.timer_cancel(timer)
+                remaining = self.armed_deadlines[item.nodeid] - time.monotonic()
+                self.timer_join(timer, timeout=max(0.0, min(1.0, remaining)))
+                raise
+        yield
+        if held is not None:
+            timer, cancel, settings = held
+            if (
+                getattr(item, "cancel_timeout", None) is not cancel
+                or self._thread_timer(item, settings, cancel) is not timer
+                or not timer.finished.is_set()
+                or timer.is_alive()
+            ):
+                raise ValueError("Root case thread deadline did not finish its actual cancellation and join")
+            del self.armed_thread_timers[item.nodeid]
 
     @pytest.hookimpl(hookwrapper=True)
     def pytest_timeout_set_timer(self, item: pytest.Item, settings: object) -> Iterator[None]:
@@ -70,11 +146,20 @@ class LaneObserver(RootCaseObserver):
             or type(duration) not in (int, float)
             or not math.isfinite(duration)
             or duration <= 0
-            or method != "signal"
+            or method not in {"signal", "thread"}
         ):
-            raise ValueError("Root case deadline requires a finite positive actual signal timer")
+            raise ValueError("Root case deadline requires a finite positive actual selected timer")
         deadline = time.monotonic() + duration
         yield
+        if method == "thread":
+            cancel = getattr(item, "cancel_timeout", None)
+            timer = self._thread_timer(item, settings, cancel)
+            assert isinstance(cancel, types.FunctionType)
+            if timer.finished.is_set() or not timer.is_alive():
+                raise ValueError("Root case deadline did not arm its actual selected thread timer")
+            self.armed_thread_timers[item.nodeid] = (timer, cancel, settings)
+            self.armed_deadlines[item.nodeid] = deadline
+            return
         handler = signal.getsignal(signal.SIGALRM)
         if (
             not isinstance(handler, types.FunctionType)
@@ -131,7 +216,10 @@ def chunk(root: Path, snapshot_path: Path, expected: str, index: int) -> int:
         argv = arguments(root, directory, pieces[index], spec["test_timeout_seconds"])
         measured.start()
         try:
-            original = int(pytest.main(argv, plugins=[observer, diagnostics]))
+            with external_pytest_scratch(root, token=spec["nonce"]) as scratch:
+                original = int(
+                    pytest.main([*argv, "--basetemp=" + str(scratch / "fixtures")], plugins=[observer, diagnostics])
+                )
         finally:
             measured.stop()
         if observer.interrupted:

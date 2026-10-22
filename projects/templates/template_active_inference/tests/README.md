@@ -116,3 +116,8 @@ Fixture-level performance candidates are the repeated marker variants in
 source mutations that currently force the same manuscript rebuild path. Keep at
 least one end-to-end refresh characterization for each gate family; split only
 the duplicate marker or row-only cases into cheaper source-contract checks.
+
+Project typography checks stay local and source-only. Root's rendering suite
+owns the real SDK Pandoc/preamble integration against this configuration with a
+small private body and no previous render. Complete native acceptance separately
+renders the full manuscript. The standalone-import contract remains unchanged.

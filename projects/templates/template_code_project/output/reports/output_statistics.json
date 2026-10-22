@@ -3,13 +3,13 @@
     "pdf": {
       "exists": true,
       "file_count": 1,
-      "size_mb": "2.15",
-      "total_size_bytes": 2256546,
+      "size_mb": "2.00",
+      "total_size_bytes": 2094104,
       "largest_files": [
         {
           "name": "template_code_project_combined.pdf",
-          "size_mb": "2.15",
-          "size_bytes": 2256546,
+          "size_mb": "2.00",
+          "size_bytes": 2094104,
           "path": "pdf/template_code_project_combined.pdf"
         }
       ],
@@ -52,25 +52,25 @@
     "slides": {
       "exists": true,
       "file_count": 9,
-      "size_mb": "2.45",
-      "total_size_bytes": 2571894,
+      "size_mb": "2.20",
+      "total_size_bytes": 2304681,
       "largest_files": [
         {
           "name": "03_results_slides.pdf",
-          "size_mb": "2.02",
-          "size_bytes": 2119542,
+          "size_mb": "1.90",
+          "size_bytes": 1991007,
           "path": "slides/03_results_slides.pdf"
         },
         {
           "name": "02_methodology_slides.pdf",
-          "size_mb": "0.09",
-          "size_bytes": 96788,
+          "size_mb": "0.06",
+          "size_bytes": 64500,
           "path": "slides/02_methodology_slides.pdf"
         },
         {
           "name": "01_introduction_slides.pdf",
-          "size_mb": "0.07",
-          "size_bytes": 69354,
+          "size_mb": "0.05",
+          "size_bytes": 49481,
           "path": "slides/01_introduction_slides.pdf"
         }
       ],
@@ -333,13 +333,13 @@
     "root": {
       "exists": true,
       "file_count": 1,
-      "size_mb": "2.15",
-      "total_size_bytes": 2256546,
+      "size_mb": "2.00",
+      "total_size_bytes": 2094104,
       "largest_files": [
         {
           "name": "template_code_project_combined.pdf",
-          "size_mb": "2.15",
-          "size_bytes": 2256546,
+          "size_mb": "2.00",
+          "size_bytes": 2094104,
           "path": "template_code_project_combined.pdf"
         }
       ],
@@ -349,7 +349,7 @@
     }
   },
   "total_files": 81,
-  "total_size_mb": 16.114038467407227,
+  "total_size_mb": 15.549370765686035,
   "largest_files": [
     {
       "name": "source-web-fonts.js",
@@ -360,22 +360,22 @@
     },
     {
       "name": "template_code_project_combined.pdf",
-      "size_mb": "2.15",
-      "size_bytes": 2256546,
+      "size_mb": "2.00",
+      "size_bytes": 2094104,
       "category": "pdf",
       "path": "pdf/template_code_project_combined.pdf"
     },
     {
       "name": "template_code_project_combined.pdf",
-      "size_mb": "2.15",
-      "size_bytes": 2256546,
+      "size_mb": "2.00",
+      "size_bytes": 2094104,
       "category": "root",
       "path": "template_code_project_combined.pdf"
     },
     {
       "name": "03_results_slides.pdf",
-      "size_mb": "2.02",
-      "size_bytes": 2119542,
+      "size_mb": "1.90",
+      "size_bytes": 1991007,
       "category": "slides",
       "path": "slides/03_results_slides.pdf"
     },
@@ -424,9 +424,9 @@
   ],
   "missing_expected_files": [],
   "sizes_by_category": {
-    "pdf": 2.152009963989258,
+    "pdf": 1.9970932006835938,
     "web": 3.4860525131225586,
-    "slides": 2.452749252319336,
+    "slides": 2.1979150772094727,
     "docx": 1.7231550216674805,
     "epub": 1.7238874435424805,
     "figures": 1.9703149795532227,
@@ -436,7 +436,7 @@
     "docs": 0.011358261108398438,
     "manuscript": 0.058783531188964844,
     "provenance": 0.00030422210693359375,
-    "root": 2.152009963989258
+    "root": 1.9970932006835938
   },
   "inventory_mode": "stable-shippable-output-v1",
   "inventory_scope": "stage5-delivery-mirror",

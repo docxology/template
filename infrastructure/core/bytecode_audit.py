@@ -9,6 +9,7 @@ and later cache changes, not containment of arbitrary malicious Python code.
 from __future__ import annotations
 
 import hashlib
+import importlib.machinery
 import importlib.util
 import marshal
 import os
@@ -123,7 +124,9 @@ def install_bytecode_audit(
         )
         if canonical_code(startup_code) != canonical_code(expected):
             raise ValueError("executed main startup code differs from current source bytes")
-        if isinstance(getattr(main_module, "__cached__", None), str):
+        if isinstance(getattr(main_module, "__cached__", None), str) or isinstance(
+            getattr(getattr(main_module, "__spec__", None), "cached", None), str
+        ):
             raise ValueError("an already-running cached main needs a pre-import execution audit")
     for module in tuple(sys.modules.values()):
         filename = getattr(module, "__file__", None)
@@ -243,14 +246,25 @@ def verify_executed_source_code(source_root: Path, prefix: Path) -> None:
         actual_executions = admitted.get(str(path), ())
         if not actual_executions:
             raise ValueError(f"public module has no pre-import execution audit: {relative}")
-        cached = getattr(module, "__cached__", None)
+        # Python 3.15 no longer sets module.__cached__. The importer's
+        # ModuleSpec remains the canonical selected-cache declaration. Keep
+        # checking any explicit legacy declaration instead of allowing it to
+        # contradict the actual audited cache.
+        spec = getattr(module, "__spec__", None)
+        cached = spec.cached if isinstance(spec, importlib.machinery.ModuleSpec) else None
+        legacy_present = "__cached__" in module.__dict__
+        legacy_cached = getattr(module, "__cached__", None)
         for _, cache_path, _ in actual_executions:
             if cache_path is None:
-                if isinstance(cached, str):
+                if isinstance(cached, str) or isinstance(legacy_cached, str):
                     raise ValueError(f"imported public module lacks an audited cache: {relative}")
                 continue
             if not isinstance(cached, str) or Path(cached).absolute() != Path(cache_path).absolute():
-                raise ValueError("loaded public module did not use the audited fresh bytecode cache")
+                raise ValueError(f"loaded public module did not use the audited fresh bytecode cache: {relative}")
+            if legacy_present and (
+                not isinstance(legacy_cached, str) or Path(legacy_cached).absolute() != Path(cache_path).absolute()
+            ):
+                raise ValueError(f"loaded public module legacy cache differs from the audited fresh cache: {relative}")
 
 
 def canonical_code(code: types.CodeType) -> bytes:

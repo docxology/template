@@ -40,6 +40,7 @@ def test_required_contract_job_keeps_whole_root_budget_and_explicit_empty_outcom
     assert contract["timeout-minutes"] * 60 == 7200
     assert CONTRACT_SECONDS <= 7200
     assert jobs["test-infra"]["timeout-minutes"] == 10
+    assert jobs["test-infra"]["strategy"]["max-parallel"] == 8
     from infrastructure.core.testing.ci_infra import _functional_selection
 
     assert _functional_selection(ROOT, is_contract=True) == {"marker_expression": "", "keyword_expression": ""}
@@ -48,6 +49,7 @@ def test_required_contract_job_keeps_whole_root_budget_and_explicit_empty_outcom
     assert contract["steps"][0]["if"] == "matrix.shard == -1"
     assert any(step.get("if") == "always() && matrix.shard != -1" for step in contract["steps"])
     pdf_modules = (
+        "tests/infra_tests/rendering/test_latex_texttt_native.py",
         "tests/infra_tests/project/test_scientific_reference_replay.py",
         "tests/infra_tests/reporting/test_native_pdf_citations.py",
         "tests/infra_tests/reporting/test_native_pdf_math.py",
@@ -70,6 +72,11 @@ def test_required_contract_job_keeps_whole_root_budget_and_explicit_empty_outcom
         "tests/infra_tests/reporting/test_native_browser_scientific_structure.py",
     ):
         assert contract_preparation(module) == {"documents": "converter", "tex": False, "browser": True}
+    assert contract_preparation("tests/infra_tests/project/test_root_wheel_typing.py") == {
+        "documents": "none",
+        "tex": False,
+        "browser": False,
+    }
     assert contract_preparation("none") == {"documents": "none", "tex": False, "browser": False}
     assert (
         contract_preparation("tests/infra_tests/project/test_public_acceptance_auxiliary.py")["documents"] == "native"
@@ -79,7 +86,25 @@ def test_required_contract_job_keeps_whole_root_budget_and_explicit_empty_outcom
     assert 'echo "CHROME_EXECUTABLE_PATH=$chrome" >> "$GITHUB_ENV"' in browser["run"]
     assert 'test ! -L "$chrome"' in browser["run"] and "resources.pak" in browser["run"]
     assert "poppler-utils" in tex["run"] and "kpsewhich plainnat.bst" in tex["run"]
-    assert not any("texlive-" in step.get("run", "") for step in jobs["test-infra"]["steps"])
+    from infrastructure.core.testing.ci_selection import _infra_matrix
+
+    native_latex = "tests/infra_tests/rendering/test_pdf_latex_pipeline.py"
+    selected_shards = infrastructure_shards(ROOT, (native_latex,))
+    matrix = _infra_matrix(selected_shards)["include"]
+    assert [row["shard"] for row in matrix] == list(range(len(selected_shards)))
+    prepared = [row["shard"] for row in matrix if row["tex"]]
+    assert len(prepared) == 1 and native_latex in selected_shards[prepared[0]]
+    assert not _infra_matrix([["tests/infra_tests/core/test_ci_selection.py"]])["include"][0]["tex"]
+    routine_steps = jobs["test-infra"]["steps"]
+    routine_tex = [step for step in routine_steps if "texlive-" in step.get("run", "")]
+    assert len(routine_tex) == 1 and routine_tex[0]["if"] == "matrix.tex"
+    assert "texlive-xetex lmodern" in routine_tex[0]["run"] and "xelatex --version" in routine_tex[0]["run"]
+    routine_account = next(
+        index
+        for index, step in enumerate(routine_steps)
+        if step.get("uses") == "./.github/actions/setup-ci-execution-user"
+    )
+    assert routine_steps.index(routine_tex[0]) < routine_account
     prepare_account = next(
         index
         for index, step in enumerate(contract["steps"])
@@ -118,7 +143,10 @@ def test_required_contract_job_keeps_whole_root_budget_and_explicit_empty_outcom
             assert 'if [ "$RUNNER_OS" = Linux ]' in observation["run"]
             assert 'exec "${root_command[@]}"' in observation["run"]
         else:
-            assert prepare["with"]["docker"] == "true"
+            assert prepare["with"]["docker"] == "${{ matrix.docker }}"
+            assert required[name]["needs"] == "auxiliary-plan"
+            assert required[name]["strategy"]["fail-fast"] is False
+            assert required[name]["strategy"]["max-parallel"] == 4
             observation = next(step for step in steps if step.get("id") == "auxiliary")
         assert "ci_execution_user run" in observation["run"]
         assert observation["continue-on-error"] is True
@@ -134,6 +162,7 @@ def test_actual_deep_owner_cannot_be_moved_back_into_smoke_or_omitted() -> None:
         "tests/infra_tests/documentation/test_counts_provenance.py",
         "tests/infra_tests/documentation/test_counts_refresh.py",
         "tests/infra_tests/project/test_public_reference.py",
+        "tests/infra_tests/project/test_root_wheel_typing.py",
         "tests/infra_tests/project/test_scientific_reference_replay.py",
         "tests/infra_tests/publishing/test_standalone_install_projection.py",
         "tests/infra_tests/reporting/test_native_browser_oracles.py",

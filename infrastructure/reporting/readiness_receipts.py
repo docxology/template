@@ -12,7 +12,12 @@ from infrastructure.core.pipeline.fingerprints import canonical_digest, paths_di
 from infrastructure.core.pipeline.fingerprint_files import digest_path
 from infrastructure.core.pipeline.artifacts._inventory import collect_stable_output_inventory
 from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
-from infrastructure.reporting.release_readiness_snapshot import PUBLIC_ROOT_FILES, SnapshotReader
+from infrastructure.reporting.release_readiness_snapshot import (
+    PUBLIC_ROOT_FILES,
+    PUBLIC_AGENT_FILES,
+    PUBLIC_AGENT_DIRECTORIES,
+    SnapshotReader,
+)
 
 SCHEMA_VERSION = "template-release-readiness-receipt-v2"
 _READINESS_SOURCE_METADATA_NAMES = frozenset({".DS_Store", ".git"})
@@ -102,9 +107,12 @@ def _public_roots(repo_root: Path) -> tuple[tuple[Path, ...], frozenset[Path]]:
     projects = [repo_root / "projects" / name for name in PUBLIC_PROJECT_NAMES]
     roots.extend(projects)
     roots.extend(
-        repo_root / name for name in ("fonds/templates", "rules/templates", "tools/templates", ".agents/skills")
+        repo_root / name
+        for name in ("fonds/templates", "rules/templates", "tools/templates", *sorted(PUBLIC_AGENT_DIRECTORIES))
     )
-    roots.extend(repo_root / name for name in sorted(PUBLIC_ROOT_FILES) if (repo_root / name).is_file())
+    roots.extend(
+        repo_root / name for name in sorted(PUBLIC_ROOT_FILES | PUBLIC_AGENT_FILES) if (repo_root / name).is_file()
+    )
     excluded = {path for project in projects for path in _project_runtime_roots(project)}
     excluded.update(
         repo_root / "infrastructure/steganography/kmyth" / relative

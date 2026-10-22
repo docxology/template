@@ -432,6 +432,15 @@ th {
   color: white;
 }
 
+/* Preserve a complete inline-code header within the table's scroll region. */
+th code {
+  color: inherit;
+  background-color: transparent;
+  white-space: nowrap;
+  overflow-wrap: normal;
+  word-break: normal;
+}
+
 img {
   max-width: 100%;
   height: auto;
@@ -581,8 +590,8 @@ mjx-container[display="true"] {
 Reference</h1>
 <p>This section inventories every Layer‑1 subdirectory returned by
 <code>31</code> <code>discover_infrastructure_modules(repo_root)</code>.
-File totals use <code>1307</code> Python sources across infra +
-<code>12,341</code> infra tests guarding them. Documentation Duality =
+File totals use <code>1322</code> Python sources across infra +
+<code>12,482</code> infra tests guarding them. Documentation Duality =
 paired <code>README.md</code> + <code>AGENTS.md</code>; optional
 <code>SKILL.md</code> manifests feed
 <code>python -m infrastructure.skills</code>.</p>
@@ -627,7 +636,7 @@ paired <code>README.md</code> + <code>AGENTS.md</code>; optional
 </tr>
 <tr>
 <td><code>core</code></td>
-<td style="text-align: center;">195</td>
+<td style="text-align: center;">199</td>
 <td style="text-align: center;">✓</td>
 <td style="text-align: center;">✓</td>
 <td><code>get_logger</code>, <code>load_config</code>,
@@ -709,7 +718,7 @@ contracts + validation</td>
 </tr>
 <tr>
 <td><code>project</code></td>
-<td style="text-align: center;">104</td>
+<td style="text-align: center;">111</td>
 <td style="text-align: center;">✓</td>
 <td style="text-align: center;">✓</td>
 <td><code>discover_projects</code>, workspace management</td>
@@ -744,14 +753,14 @@ contracts + validation</td>
 </tr>
 <tr>
 <td><code>rendering</code></td>
-<td style="text-align: center;">120</td>
+<td style="text-align: center;">121</td>
 <td style="text-align: center;">✓</td>
 <td style="text-align: center;">✓</td>
 <td>PDF/HTML/slide rendering, Pandoc filters</td>
 </tr>
 <tr>
 <td><code>reporting</code></td>
-<td style="text-align: center;">406</td>
+<td style="text-align: center;">409</td>
 <td style="text-align: center;">✓</td>
 <td style="text-align: center;">✓</td>
 <td>Coverage parsers, dashboards, executive artefacts</td>
@@ -851,8 +860,8 @@ id="infrastructureconfig-non-package-subdirectory"><code>infrastructure/config</
 (<code>.env.template</code>, hardened defaults referenced by Docker +
 CLI). <code>config/</code> carries no <code>__init__.py</code>, so it is
 a configuration subdirectory rather than an importable package.</p>
-<h3 id="infrastructure.core-195-files"><code>infrastructure.core</code>
-(195 files)</h3>
+<h3 id="infrastructure.core-199-files"><code>infrastructure.core</code>
+(199 files)</h3>
 <p>Checkpointing, logging, pipeline YAML parsing, telemetry bridges,
 filesystem helpers, hardened exceptions. Everything else imports logging
 + error taxonomy from here first.</p>
@@ -915,8 +924,8 @@ interactive menus, subprocess wiring for thin shell wrappers
 (<code>run.sh</code>, <code>secure_run.sh</code>), and stubs used in CI
 for menu parsing tests.</p>
 <h3
-id="infrastructure.project-104-files"><code>infrastructure.project</code>
-(104 files)</h3>
+id="infrastructure.project-111-files"><code>infrastructure.project</code>
+(111 files)</h3>
 <p>Canonical discovery (<code>discover_projects</code>) enforcing
 <code>src/</code> + <code>tests/</code>, slug validation, nested WIP
 namespaces.</p>
@@ -945,24 +954,23 @@ id="infrastructure.reference-16-files"><code>infrastructure.reference</code>
 <p>Citation/BibTeX parsing + conversion utilities leveraged by
 manuscripts and retrieval scripts.</p>
 <h3
-id="infrastructure.rendering-120-files"><code>infrastructure.rendering</code>
-(120 files)</h3>
+id="infrastructure.rendering-121-files"><code>infrastructure.rendering</code>
+(121 files)</h3>
 <p>Pandoc shim, Unicode/XeLaTeX postprocessors, combined PDF/HTML/slide
 exporters.</p>
 <h3
-id="infrastructure.reporting-406-files"><code>infrastructure.reporting</code>
-(406 files)</h3>
+id="infrastructure.reporting-409-files"><code>infrastructure.reporting</code>
+(409 files)</h3>
 <p>Parses pytest + coverage artefacts for dashboards; pairs with
 Stage 01 summaries and downstream executive exports.</p>
 <h3
 id="infrastructure.research-3-files"><code>infrastructure.research</code>
 (3 files)</h3>
-<p>Seven-stage research workflow
-(SCOPE→LITERATURE→REASON→DESIGN→COMPUTE→SYNTHESIZE→WRITE) defined as
-typed ResearchStage data classes with explicit outputs, skills, and
-template commands per stage. Includes a full PRISMA-adapted literature
-review prompt and a research workflow prompt referencing template/
-infrastructure commands.</p>
+<p>Seven-stage research workflow (SCOPE → LITERATURE → REASON → DESIGN →
+COMPUTE → SYNTHESIZE → WRITE) defined as typed ResearchStage data
+classes with explicit outputs, skills, and template commands per stage.
+Includes a full PRISMA-adapted literature review prompt and a research
+workflow prompt referencing template/ infrastructure commands.</p>
 <h3 id="infrastructure.rules-6-files"><code>infrastructure.rules</code>
 (6 files)</h3>
 <p>Governance rules layer for validating project lifecycle transitions,
@@ -999,7 +1007,7 @@ execution harness, and metric capture reused by
 id="infrastructure.skills-8-files"><code>infrastructure.skills</code> (8
 files)</h3>
 <p>Discovers <code>SKILL.md</code> frontmatter →
-<code>.cursor/skill_manifest.json</code>.</p>
+<code>.agents/skill_manifest.json</code>.</p>
 <h3
 id="infrastructure.steganography-13-files"><code>infrastructure.steganography</code>
 (13 files)</h3>

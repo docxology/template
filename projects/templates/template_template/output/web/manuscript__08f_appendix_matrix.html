@@ -432,6 +432,15 @@ th {
   color: white;
 }
 
+/* Preserve a complete inline-code header within the table's scroll region. */
+th code {
+  color: inherit;
+  background-color: transparent;
+  white-space: nowrap;
+  overflow-wrap: normal;
+  word-break: normal;
+}
+
 img {
   max-width: 100%;
   height: auto;
@@ -580,9 +589,10 @@ mjx-container[display="true"] {
 <h2 id="appendix-matrix">Appendix: Comparative Tool Matrix</h2>
 <p><strong>Symbol key</strong> (applies to all cells):
 <strong>Y</strong> = full native support · <strong>~</strong> = partial
-or plugin-based · <strong>N</strong> = absent. See also <a
-href="https://github.com/docxology/template/blob/main/projects/templates/template_template/manuscript/04_results.md#comparative-feature-analysis">Figure 4</a> for a
-colour-coded heatmap rendering of this table.</p>
+or plugin-based · <strong>N</strong> = absent. See the <a
+href="https://github.com/docxology/template/blob/main/projects/templates/template_template/manuscript/04_results.md#comparative-feature-analysis">comparative feature
+matrix in the Results section</a> for a colour-coded heatmap rendering
+of this table.</p>
 <div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable data table"><table style="width:99%;" data-responsive-table="true">
 <colgroup>
 <col style="width: 13%" />

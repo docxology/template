@@ -46,4 +46,4 @@ Stage handoffs between workflow skills are declared in [`MODE_REGISTRY.md`](MODE
 - To **EDIT/extend an infrastructure module** (change the machinery) → use that module's `infrastructure/<module>/SKILL.md`.
 - To **RUN a research workflow** (operate the machinery) → use `docs/prompts/<skill>/SKILL.md`.
 
-Discover the full set of both trees in [`../_generated/skills_index.md`](../_generated/skills_index.md); the agent-invocable CLI operations are cataloged in [`../../.cursor/operations_manifest.json`](../../.cursor/operations_manifest.json).
+Discover the full set of both trees in [`../_generated/skills_index.md`](../_generated/skills_index.md); the agent-invocable CLI operations are cataloged in [`../../.agents/operations_manifest.json`](../../.agents/operations_manifest.json).

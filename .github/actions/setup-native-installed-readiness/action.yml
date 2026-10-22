@@ -1,8 +1,21 @@
 name: Prepare Source-locked installed native readiness inputs
 description: Provision the existing official tools and warm exact locked dependencies before the unchanged cold operation budget starts.
+inputs:
+  prepare-lean:
+    description: Prepare the Source-pinned Lean compiler for the complete native replay.
+    default: 'true'
 runs:
   using: composite
   steps:
+    - name: Validate native preparation selection
+      shell: bash
+      env:
+        PREPARE_LEAN: ${{ inputs.prepare-lean }}
+      run: |
+        case "$PREPARE_LEAN" in
+          true|false) ;;
+          *) echo 'prepare-lean must be true or false' >&2; exit 2 ;;
+        esac
     - shell: bash
       run: uv sync --locked --inexact --group dev --group public-exemplars --group installed-build --group rendering --group rendering-pptx
     - uses: ./.github/actions/setup-docs-lint
@@ -21,6 +34,7 @@ runs:
         PYTHON
     - uses: ./.github/actions/setup-acceptance-documents
     - name: Prepare the source-pinned Lean compiler for full-suite replay
+      if: inputs.prepare-lean == 'true'
       shell: bash
       run: |
         set -euo pipefail

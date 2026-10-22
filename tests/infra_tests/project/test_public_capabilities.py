@@ -16,6 +16,7 @@ from infrastructure.project.public_capabilities import (
     CAPABILITY_MANIFEST_SCHEMA_VERSION,
     CIMatrixEntry,
     PACKAGE_NAME_OVERRIDES,
+    PLATFORM_VERSION,
     PublicCapabilityReport,
     audit_public_capability,
     audit_public_capabilities,
@@ -65,7 +66,7 @@ def _complete_project(
         (
             f'[project]\nname = "{package_name or name.replace("_", "-")}"\n'
             f'version = "0.1.0"\nrequires-python = "{requires_python}"\n'
-            '[tool.template]\nplatform_version = "4.0.1"\n'
+            f'[tool.template]\nplatform_version = "{PLATFORM_VERSION}"\n'
             'tested_python_versions = ["3.12", "3.13", "3.14"]\n'
         ),
     )
@@ -582,9 +583,19 @@ def test_project_and_infra_matrices_provision_the_pinned_document_toolchain() ->
     for step in action_steps[3:]:
         assert step["if"] == "steps.preparation-mode.outputs.mode == 'native'"
 
-    # Only the ordinary project matrix narrows preparation. Every actual
-    # infrastructure/acceptance/release caller keeps the native default.
+    # Each narrowed preparation route is explicit; new callers retain native.
     project_mode = "${{ matrix.project == 'templates/template_eda_notebook' && 'native' || 'converter' }}"
+    narrowed = {
+        ("ci.yml", "test-infra"): ("converter", None),
+        ("ci.yml", "test-contract"): ("${{ matrix.documents }}", "matrix.documents != 'none'"),
+        ("ci.yml", "test-project"): ("converter", "matrix.project == 'templates/template_search_project'"),
+        ("hardening.yml", "test-project"): (project_mode, None),
+        ("exemplar-coverage.yml", "own-exemplar-coverage"): (
+            "${{ inputs.coverage-project == 'templates/template_eda_notebook' && 'native' || 'converter' }}",
+            None,
+        ),
+    }
+    observed_narrowed = set()
     for workflow_path in sorted((repo / ".github/workflows").glob("*.yml")):
         jobs = yaml.safe_load(workflow_path.read_text(encoding="utf-8")).get("jobs", {})
         for job_name, job in jobs.items():
@@ -592,11 +603,12 @@ def test_project_and_infra_matrices_provision_the_pinned_document_toolchain() ->
                 if step.get("uses") != "./.github/actions/setup-acceptance-documents":
                     continue
                 declared = step.get("with", {}).get("mode", "native")
-                if workflow_path.name == "ci.yml" and job_name == "test-project":
-                    expected = "converter"
-                    assert step["if"] == "matrix.project == 'templates/template_search_project'"
-                elif workflow_path.name == "hardening.yml" and job_name == "test-project":
-                    expected = project_mode
+                caller = (workflow_path.name, job_name)
+                if caller in narrowed:
+                    expected, condition = narrowed[caller]
+                    assert caller not in observed_narrowed
+                    observed_narrowed.add(caller)
+                    assert step.get("if") == condition
                 else:
                     expected = "native"
                 assert declared == expected
@@ -607,6 +619,8 @@ def test_project_and_infra_matrices_provision_the_pinned_document_toolchain() ->
                     else ".venv/bin/python"
                 )
                 assert prepared_python == expected_python
+
+    assert observed_narrowed == set(narrowed)
 
     # The installed/native and release jobs share this nested caller. Its
     # locked root environment must reach the same action input defaults.
@@ -751,10 +765,11 @@ def test_document_archive_cache_refuses_corruption_before_use(tmp_path: Path, to
 def test_platform_binding_and_runtime_range_must_match(tmp_path: Path) -> None:
     project = _complete_project(tmp_path)
     path = project / "pyproject.toml"
+    original = path.read_text()
+    binding = f'platform_version = "{PLATFORM_VERSION}"'
+    assert original.count(binding) == 1
     path.write_text(
-        path.read_text()
-        .replace('platform_version = "4.0.1"', 'platform_version = "3.8.0"')
-        .replace('["3.12", "3.13", "3.14"]', '["3.14"]'),
+        original.replace(binding, 'platform_version = "3.8.0"').replace('["3.12", "3.13", "3.14"]', '["3.14"]'),
         encoding="utf-8",
     )
     capability = audit_public_capability(tmp_path, "template_test")

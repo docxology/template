@@ -112,7 +112,8 @@ def test_custom_renderer_rejects_invalid_timeout_before_execution(
 @pytest.mark.skipif(os.name == "nt", reason="POSIX symlink semantics")
 @pytest.mark.timeout(120)
 def test_run_manuscript_variable_script_uses_project_venv_python(tmp_path: Path) -> None:
-    project = tmp_path / "project"
+    template_root = tmp_path / "template"
+    project = template_root / "projects" / "project"
     script = project / "scripts" / "z_generate_manuscript_variables.py"
     script.parent.mkdir(parents=True)
     script.write_text(
@@ -121,7 +122,8 @@ def test_run_manuscript_variable_script_uses_project_venv_python(tmp_path: Path)
                 "import os",
                 "import sys",
                 "from pathlib import Path",
-                'Path("hydration_result.txt").write_text(',
+                'Path("output").mkdir(exist_ok=True)',
+                'Path("output/hydration_result.txt").write_text(',
                 '    sys.executable + "\\n" + os.environ.get("TEMPLATE_REPO_ROOT", ""),',
                 '    encoding="utf-8",',
                 ")",
@@ -138,13 +140,12 @@ def test_run_manuscript_variable_script_uses_project_venv_python(tmp_path: Path)
     # Keep relocatable macOS interpreters beside their shared libpython rather
     # than copying only the executable away from its @rpath library.
     venv.EnvBuilder(with_pip=False, symlinks=True).create(project / ".venv")
-    template_root = tmp_path / "template"
-    template_root.mkdir()
-
     result = run_manuscript_variable_script(project, template_repo_root=template_root)
 
     assert result == 0
-    executable, injected_template_root = (project / "hydration_result.txt").read_text(encoding="utf-8").splitlines()
+    executable, injected_template_root = (
+        (project / "output" / "hydration_result.txt").read_text(encoding="utf-8").splitlines()
+    )
     assert executable == str(venv_python)
     assert injected_template_root == str(template_root)
     receipt = json.loads(next((project / "output" / ".pipeline" / "analysis").glob("*/*.json")).read_text())
@@ -156,13 +157,12 @@ def test_run_manuscript_variable_script_uses_project_venv_python(tmp_path: Path)
 @pytest.mark.parametrize("actual_exit", [7, 75, 124, 130])
 @pytest.mark.timeout(120)
 def test_hydration_retains_typed_actual_child_outcomes(tmp_path: Path, actual_exit: int) -> None:
-    project = tmp_path / "project"
+    root = tmp_path / "template"
+    project = root / "projects" / "project"
     script = project / "scripts" / "z_generate_manuscript_variables.py"
     script.parent.mkdir(parents=True)
     script.write_text(f"raise SystemExit({actual_exit})\n")
     venv.EnvBuilder(with_pip=False, symlinks=True).create(project / ".venv")
-    root = tmp_path / "template"
-    root.mkdir()
     code = run_manuscript_variable_script(project, template_repo_root=root)
     assert code == (actual_exit if actual_exit in (75, 124, 130) else 1)
     receipt = json.loads(next((project / "output" / ".pipeline" / "analysis").glob("*/*.json")).read_text())

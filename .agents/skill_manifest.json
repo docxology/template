@@ -5,120 +5,143 @@
       "name": "advanced-evaluation",
       "description": "This skill should be used for advanced LLM evaluation: LLM-as-judge systems, direct scoring, pairwise comparison, rubric calibration, evaluator bias mitigation, confidence scoring, and automated quality assessment.",
       "path": ".agents/skills/advanced-evaluation/SKILL.md",
+      "agent_ref": ".agents/skills/advanced-evaluation/SKILL.md",
       "cursor_at": ".agents/skills/advanced-evaluation/SKILL.md"
     },
     {
       "name": "bdi-mental-states",
       "description": "This skill should be used when modeling agent mental states with BDI concepts: beliefs, desires, intentions, RDF-to-belief transformations, rational agency traces, cognitive agents, BDI ontologies, and neuro-symbolic AI integration.",
       "path": ".agents/skills/bdi-mental-states/SKILL.md",
+      "agent_ref": ".agents/skills/bdi-mental-states/SKILL.md",
       "cursor_at": ".agents/skills/bdi-mental-states/SKILL.md"
     },
     {
       "name": "context-compression",
       "description": "This skill should be used when long-running agent sessions need context compression, structured summarization, compaction, token-per-task optimization, or durable handoff summaries that preserve decisions, files, risks, and next actions.",
       "path": ".agents/skills/context-compression/SKILL.md",
+      "agent_ref": ".agents/skills/context-compression/SKILL.md",
       "cursor_at": ".agents/skills/context-compression/SKILL.md"
     },
     {
       "name": "context-degradation",
       "description": "This skill should be used for diagnosing and mitigating context degradation: lost-in-middle failures, context poisoning, context clash, context confusion, attention-pattern issues, and agent performance degradation caused by accumulated or conflicting context.",
       "path": ".agents/skills/context-degradation/SKILL.md",
+      "agent_ref": ".agents/skills/context-degradation/SKILL.md",
       "cursor_at": ".agents/skills/context-degradation/SKILL.md"
     },
     {
       "name": "context-fundamentals",
       "description": "This skill should be used to explain or reason about the foundational concepts of context engineering: what context is, the anatomy of a context window, how attention mechanics work, the U-shaped attention curve, why context quality matters more than quantity, and the mental models needed to interpret every other context-engineering decision. Use this for conceptual explanation, onboarding, and background reading. Route operational work to the specialized skills: debugging attention failures goes to context-degradation, token-efficiency work goes to context-optimization, conversation summarization goes to context-compression, and project-shape decisions go to project-development.",
       "path": ".agents/skills/context-fundamentals/SKILL.md",
+      "agent_ref": ".agents/skills/context-fundamentals/SKILL.md",
       "cursor_at": ".agents/skills/context-fundamentals/SKILL.md"
     },
     {
       "name": "context-optimization",
       "description": "This skill should be used for improving context efficiency: context budgeting, observation masking, prefix or KV-cache strategy, partitioning, token-cost reduction, retrieval scoping, and extending effective context capacity without lowering answer quality.",
       "path": ".agents/skills/context-optimization/SKILL.md",
+      "agent_ref": ".agents/skills/context-optimization/SKILL.md",
       "cursor_at": ".agents/skills/context-optimization/SKILL.md"
     },
     {
       "name": "evaluation",
       "description": "This skill should be used when building agent evaluation systems: deterministic checks, regression suites, multi-dimensional rubrics, quality gates, production monitoring, baseline comparison, and outcome measurement for agent pipelines.",
       "path": ".agents/skills/evaluation/SKILL.md",
+      "agent_ref": ".agents/skills/evaluation/SKILL.md",
       "cursor_at": ".agents/skills/evaluation/SKILL.md"
     },
     {
       "name": "filesystem-context",
       "description": "This skill should be used when agent work needs file-backed context: durable scratchpads, tool-output offloading, just-in-time discovery, cross-agent handoff files, filesystem memory, or cleanup policies for context stored outside the prompt.",
       "path": ".agents/skills/filesystem-context/SKILL.md",
+      "agent_ref": ".agents/skills/filesystem-context/SKILL.md",
       "cursor_at": ".agents/skills/filesystem-context/SKILL.md"
     },
     {
       "name": "harness-engineering",
       "description": "This skill should be used when designing autonomous agent harnesses: research loops, evaluation scaffolds, locked and editable surfaces, durable logs, novelty gates, pruning, rollback, PR preparation, and human approval boundaries.",
       "path": ".agents/skills/harness-engineering/SKILL.md",
+      "agent_ref": ".agents/skills/harness-engineering/SKILL.md",
       "cursor_at": ".agents/skills/harness-engineering/SKILL.md"
     },
     {
       "name": "hosted-agents",
       "description": "This skill should be used when designing hosted or background agent infrastructure: sandboxed execution, remote coding environments, warm pools, session persistence, multiplayer collaboration, self-spawning agents, or Modal-style sandboxes.",
       "path": ".agents/skills/hosted-agents/SKILL.md",
+      "agent_ref": ".agents/skills/hosted-agents/SKILL.md",
       "cursor_at": ".agents/skills/hosted-agents/SKILL.md"
     },
     {
       "name": "latent-briefing",
       "description": "This skill should be used when the user asks to \"share memory between agents\", \"KV cache compaction for multi-agent\", \"orchestrator worker context\", \"latent briefing\", \"reduce worker tokens\", \"cross-agent memory without summarization\", or discusses Attention Matching compaction, recursive language models with workers, or token explosion in hierarchical agents.",
       "path": ".agents/skills/latent-briefing/SKILL.md",
+      "agent_ref": ".agents/skills/latent-briefing/SKILL.md",
       "cursor_at": ".agents/skills/latent-briefing/SKILL.md"
     },
     {
       "name": "long-horizon-prompting",
       "description": "This skill should be used when writing, enhancing, or evaluating the launch prompt for a long-running autonomous agent or a parallel multi-agent orchestration attacking a hard problem: pseudo-formal task briefs that define terms and an exact success predicate linguistically, enumerate non-counting outcomes, set persistence rules with explicit stop and return conditions and effort floors, manage a diverse portfolio of parallel approaches with an approach registry and blocked-route bookkeeping, and gate the return on adversarial audit. Route agent topology and coordination protocols to multi-agent-patterns, runtime control surfaces and loop governance to harness-engineering, evaluator and quality-gate construction to evaluation, judge design to advanced-evaluation, and compaction or memory mechanics to context-compression and memory-systems.",
       "path": ".agents/skills/long-horizon-prompting/SKILL.md",
+      "agent_ref": ".agents/skills/long-horizon-prompting/SKILL.md",
       "cursor_at": ".agents/skills/long-horizon-prompting/SKILL.md"
     },
     {
       "name": "memory-systems",
       "description": "This skill should be used for persistent semantic memory in agent systems: cross-session knowledge retention, entity tracking, temporal validity, graph or vector retrieval, memory consolidation, and memory benchmark selection. Route file-backed scratchpads to filesystem-context, handoff summaries to context-compression, and token-efficiency tactics to context-optimization.",
       "path": ".agents/skills/memory-systems/SKILL.md",
+      "agent_ref": ".agents/skills/memory-systems/SKILL.md",
       "cursor_at": ".agents/skills/memory-systems/SKILL.md"
     },
     {
       "name": "multi-agent-patterns",
       "description": "This skill should be used when designing multi-agent systems that need context isolation, supervisor or swarm coordination, explicit handoffs, parallel execution, or a decision on whether multiple agents are justified.",
       "path": ".agents/skills/multi-agent-patterns/SKILL.md",
+      "agent_ref": ".agents/skills/multi-agent-patterns/SKILL.md",
       "cursor_at": ".agents/skills/multi-agent-patterns/SKILL.md"
     },
     {
       "name": "project-development",
       "description": "This skill should be used for project-level decisions about LLM-powered systems: whether an LLM is the right primitive for the task at hand, the shape of a multi-stage batch or agent pipeline, token and cost estimation, choosing between single-agent and multi-agent at the project level, structured output design for downstream parsing, and structuring agent-assisted iteration. Use this when the unit of work is a whole project or a multi-stage pipeline. Route individual tool design to tool-design and individual skill-loading or context-budget tactics to context-optimization.",
       "path": ".agents/skills/project-development/SKILL.md",
+      "agent_ref": ".agents/skills/project-development/SKILL.md",
       "cursor_at": ".agents/skills/project-development/SKILL.md"
     },
     {
       "name": "self-improvement-loops",
       "description": "This skill should be used when the harness, scaffold, workflow, or optimizer itself is the optimization target: recursive self-improvement (RSI) loops, meta-harnesses, self-improving harnesses that mine their own failures and propose bounded edits, evolutionary or population-based search over agent scaffolds, acceptance gates for self-modifying systems, and agentic context evolution where the mechanism that produces context is versioned and evolved. Route governance of a single autonomous loop (locked surfaces, durable logs, rollback, novelty gates, approval boundaries) to harness-engineering, measurement and quality-gate design to evaluation, judge design to advanced-evaluation, and remote sandbox infrastructure to hosted-agents.",
       "path": ".agents/skills/self-improvement-loops/SKILL.md",
+      "agent_ref": ".agents/skills/self-improvement-loops/SKILL.md",
       "cursor_at": ".agents/skills/self-improvement-loops/SKILL.md"
     },
     {
       "name": "tool-design",
       "description": "This skill should be used for the tool-interface layer of an agent system specifically: writing tool descriptions agents can route on, designing tool schemas and response formats, naming conventions, actionable error recovery messages, MCP server design, tool-set consolidation, and deciding when to add or remove an individual tool. Use this when the unit of work is a single tool or a set of tools. Route project-shape, pipeline architecture, and task-model-fit decisions to project-development; route deciding whether to introduce sub-agents to multi-agent-patterns.",
       "path": ".agents/skills/tool-design/SKILL.md",
+      "agent_ref": ".agents/skills/tool-design/SKILL.md",
       "cursor_at": ".agents/skills/tool-design/SKILL.md"
     },
     {
       "name": "continual-learning",
-      "description": "Orchestrate continual learning by delegating transcript mining to agents-memory-updater and writing durable memory to local JSON (never root AGENTS.md Learned sections). USE WHEN continual learning, mine prior chats, maintain agent memory, or the stop hook triggers this skill.",
-      "path": ".cursor/skills/continual-learning/SKILL.md",
-      "cursor_at": ".cursor/skills/continual-learning/SKILL.md"
+      "description": "Update repository-local durable preferences and workspace facts from user-authorized evidence, with an incremental local index. Use when asked to maintain agent memory or review prior authorized work.",
+      "path": ".agents/workflows/continual-learning/SKILL.md",
+      "agent_ref": ".agents/workflows/continual-learning/SKILL.md",
+      "cursor_at": ".agents/workflows/continual-learning/SKILL.md",
+      "metadata": {
+        "invocation": "explicit"
+      }
     },
     {
       "name": "gauss-open-gauss-cli",
       "description": "Open Gauss in this workspace is the math-inc/OpenGauss gauss CLI for Lean session tooling—not Huawei OpenGauss DBMS. See docs/reference/opengauss-naming.md; for the public Lean exemplar see projects/templates/template_active_inference/lean/.",
-      "path": ".cursor/skills/gauss/SKILL.md",
-      "cursor_at": ".cursor/skills/gauss/SKILL.md"
+      "path": ".agents/workflows/gauss/SKILL.md",
+      "agent_ref": ".agents/workflows/gauss/SKILL.md",
+      "cursor_at": ".agents/workflows/gauss/SKILL.md"
     },
     {
       "name": "template-workflows",
       "description": "Router and workflow hub for the Research Project Template — code, tests, manuscripts,\npipeline, validation, docs, and reproducibility. USE WHEN the user wants to audit the\nrepo, debug ./run.sh or execute_pipeline.py, add a feature, write tests, scaffold a\nmanuscript, verify claims, fix cross-references, run validation gates, refactor, or\nprepare a Zenodo release, discover relevant template skills, improve agent routing,\nreview external agentic operating models or retrieval references such as Steward OS,\nAutoResearch CLI, or LEANN,\nresearch a topic, write/review/revise a paper, or run a research-to-publication workflow\n— even if they never say \"prompt\", \"skill\", or docs/prompts.\nAlso USE WHEN intent is ambiguous (\"something wrong with my manuscript\", \"full health\ncheck\", \"fix the pipeline\") — pick ONE child skill from the routing table and follow it.\nDo NOT use for generic homework, unrelated app security scans, or casual PDF summarization.\n",
       "path": "docs/prompts/SKILL.md",
+      "agent_ref": "docs/prompts/SKILL.md",
       "cursor_at": "docs/prompts/SKILL.md",
       "metadata": {
         "version": "1.2.0",
@@ -145,6 +168,7 @@
       "name": "template-academic-paper-reviewer",
       "description": "Read-only manuscript review, methodology review, re-review, and calibration workflow\nfor template projects. USE WHEN the user asks for peer review, referee-style critique,\nmethods/statistics review, or verification that revisions addressed prior comments.\n",
       "path": "docs/prompts/academic-paper-reviewer/SKILL.md",
+      "agent_ref": "docs/prompts/academic-paper-reviewer/SKILL.md",
       "cursor_at": "docs/prompts/academic-paper-reviewer/SKILL.md",
       "metadata": {
         "version": "1.0.0",
@@ -170,6 +194,7 @@
       "name": "template-academic-paper",
       "description": "Template-native manuscript planning, outline, drafting, revision, formatting, citation\ncheck, and AI-use disclosure routing. USE WHEN the user asks to write, outline, revise,\nformat, or prepare a paper inside the Research Project Template.\n",
       "path": "docs/prompts/academic-paper/SKILL.md",
+      "agent_ref": "docs/prompts/academic-paper/SKILL.md",
       "cursor_at": "docs/prompts/academic-paper/SKILL.md",
       "metadata": {
         "version": "1.1.0",
@@ -199,6 +224,7 @@
       "name": "template-academic-pipeline",
       "description": "Research-to-publication orchestrator for template projects: research, write, verify,\nreview, revise, reproduce, validate, and finalize. USE WHEN the user wants the whole\npaper workflow or enters midstream with an existing paper or reviewer comments.\n",
       "path": "docs/prompts/academic-pipeline/SKILL.md",
+      "agent_ref": "docs/prompts/academic-pipeline/SKILL.md",
       "cursor_at": "docs/prompts/academic-pipeline/SKILL.md",
       "metadata": {
         "version": "1.1.0",
@@ -223,8 +249,9 @@
     },
     {
       "name": "template-agentic-use",
-      "description": "Agentic-use and skill-routing workflow for the Research Project Template. USE WHEN\ndiscovering relevant skills, making template easier for agents to navigate, auditing\ndocs/prompts skill coverage, checking .cursor/skill_manifest.json, evaluating external\nskills, reviewing external agentic operating models such as Steward OS, AutoResearch CLI,\nLEANN, or Agent Skills for Context Engineering, or improving agent onboarding/routing\nwithout changing project behavior.\n",
+      "description": "Agentic-use and skill-routing workflow for the Research Project Template. USE WHEN\ndiscovering relevant skills, making template easier for agents to navigate, auditing\ndocs/prompts skill coverage, checking .agents/skill_manifest.json, evaluating external\nskills, reviewing external agentic operating models such as Steward OS, AutoResearch CLI,\nLEANN, or Agent Skills for Context Engineering, or improving agent onboarding/routing\nwithout changing project behavior.\n",
       "path": "docs/prompts/agentic-use/SKILL.md",
+      "agent_ref": "docs/prompts/agentic-use/SKILL.md",
       "cursor_at": "docs/prompts/agentic-use/SKILL.md",
       "metadata": {
         "version": "1.2.0",
@@ -250,6 +277,7 @@
       "name": "template-code-development",
       "description": "Standards-compliant code for the Research Project Template — infrastructure or project\nsrc/, thin orchestrators, type hints, no mocks. USE WHEN implementing an algorithm, utility,\nanalysis method, optimizer, new module in projects/*/src or infrastructure/, or user says\nadd code following template architecture — even without docs/prompts. Not for end-to-end\nfeature spanning manuscript + pipeline (use template-feature-addition).\n",
       "path": "docs/prompts/code-development/SKILL.md",
+      "agent_ref": "docs/prompts/code-development/SKILL.md",
       "cursor_at": "docs/prompts/code-development/SKILL.md",
       "metadata": {
         "version": "1.0.0",
@@ -270,6 +298,7 @@
       "name": "template-comprehensive-assessment",
       "description": "Full checkout audit for the Research Project Template — tests, architecture, docs,\nmanuscript, pipeline. USE WHEN user asks for comprehensive assessment, full repo review,\nhealth check across projects, audit everything, or pre-merge sanity sweep for template\nexemplars — even without naming docs/prompts or a skill. Not for single failing stage only.\n",
       "path": "docs/prompts/comprehensive-assessment/SKILL.md",
+      "agent_ref": "docs/prompts/comprehensive-assessment/SKILL.md",
       "cursor_at": "docs/prompts/comprehensive-assessment/SKILL.md",
       "metadata": {
         "version": "1.0.1",
@@ -291,6 +320,7 @@
       "name": "template-deep-research",
       "description": "Template-native research intake, literature search, source verification, synthesis,\nfact-checking, and systematic-review planning. USE WHEN the user asks to research a\ntopic, build a literature corpus, fact-check claims, prepare a PRISMA-style review,\nor clarify a research question before manuscript work.\n",
       "path": "docs/prompts/deep-research/SKILL.md",
+      "agent_ref": "docs/prompts/deep-research/SKILL.md",
       "cursor_at": "docs/prompts/deep-research/SKILL.md",
       "metadata": {
         "version": "1.1.0",
@@ -317,6 +347,7 @@
       "name": "template-documentation-creation",
       "description": "Author or refresh AGENTS.md and README.md for template directories — accurate commands,\nMermaid where helpful, link _generated/active_projects.md. USE WHEN folder needs AGENTS,\nREADME audit, doc contract fix, or signposting after code change — even without\ndocumentation_creation prompt.\n",
       "path": "docs/prompts/documentation-creation/SKILL.md",
+      "agent_ref": "docs/prompts/documentation-creation/SKILL.md",
       "cursor_at": "docs/prompts/documentation-creation/SKILL.md",
       "metadata": {
         "version": "1.0.0",
@@ -336,6 +367,7 @@
       "name": "template-feature-addition",
       "description": "End-to-end feature work across src/, scripts/, tests/, manuscript, and docs for the\nResearch Project Template. USE WHEN adding a pipeline-visible feature, new analysis stage,\nmanuscript-facing output, or cross-layer integration — even without feature_addition prompt.\n",
       "path": "docs/prompts/feature-addition/SKILL.md",
+      "agent_ref": "docs/prompts/feature-addition/SKILL.md",
       "cursor_at": "docs/prompts/feature-addition/SKILL.md",
       "metadata": {
         "version": "1.0.0",
@@ -357,6 +389,7 @@
       "name": "template-infrastructure-module",
       "description": "Add or extend generic infrastructure/ packages — Layer 1 modules with SKILL.md, AGENTS.md,\ntests in tests/infra_tests/, 60% coverage. USE WHEN new reusable package under\ninfrastructure/, extending validation/rendering/llm, or skill manifest entry — even without\ninfrastructure_module prompt.\n",
       "path": "docs/prompts/infrastructure-module/SKILL.md",
+      "agent_ref": "docs/prompts/infrastructure-module/SKILL.md",
       "cursor_at": "docs/prompts/infrastructure-module/SKILL.md",
       "metadata": {
         "version": "1.0.0",
@@ -377,6 +410,7 @@
       "name": "template-literature-synthesis",
       "description": "LLM prompt blocks for per-paper and corpus literature synthesis after a search pipeline.\nUSE WHEN synthesizing arXiv/Crossref results, writing per-paper notes, thematic clusters,\ngap analysis from a literature corpus, or wiring template_search_project synthesis — even\nwithout naming infrastructure.llm templates.\n",
       "path": "docs/prompts/literature-synthesis/SKILL.md",
+      "agent_ref": "docs/prompts/literature-synthesis/SKILL.md",
       "cursor_at": "docs/prompts/literature-synthesis/SKILL.md",
       "metadata": {
         "version": "1.0.0",
@@ -399,6 +433,7 @@
       "name": "template-manuscript-claim-verification",
       "description": "Triple-pass verification of every manuscript claim against code, data, refs, and renderer;\nrepair prose while staying renderable. USE WHEN pre-submission, pre-Zenodo, pre-arXiv,\nabstract numbers disagree with CSV, citations do not support sentences, or user asks to\ntriple-check / verify every claim — even without docs/prompts. Not for casual PDF summary.\n",
       "path": "docs/prompts/manuscript-claim-verification/SKILL.md",
+      "agent_ref": "docs/prompts/manuscript-claim-verification/SKILL.md",
       "cursor_at": "docs/prompts/manuscript-claim-verification/SKILL.md",
       "metadata": {
         "version": "1.1.0",
@@ -421,6 +456,7 @@
       "name": "template-manuscript-creation",
       "description": "Scaffold a research manuscript and project layout from a research brief — sections,\nconfig.yaml, src/, scripts/, tests. USE WHEN starting a new paper, new projects/ tree,\nmanuscript from topic description, or aligning with template_code_project exemplar — even\nwithout copy-paste prompts.\n",
       "path": "docs/prompts/manuscript-creation/SKILL.md",
+      "agent_ref": "docs/prompts/manuscript-creation/SKILL.md",
       "cursor_at": "docs/prompts/manuscript-creation/SKILL.md",
       "metadata": {
         "version": "1.0.0",
@@ -442,6 +478,7 @@
       "name": "template-manuscript-cross-references",
       "description": "Audit or author registry-driven manuscript cross-refs — labels.yaml, [[FIG:]], [[THMREF:]],\n[[VAR:]] tokens. USE WHEN fixing figure/equation/theorem numbering, orphan registry keys,\nhard-coded \"Theorem 7.3\" in prose, or [[MISSING:]] injection failures — even for Pandoc\nprojects that also use a YAML registry.\n",
       "path": "docs/prompts/manuscript-cross-references/SKILL.md",
+      "agent_ref": "docs/prompts/manuscript-cross-references/SKILL.md",
       "cursor_at": "docs/prompts/manuscript-cross-references/SKILL.md",
       "metadata": {
         "version": "1.0.0",
@@ -462,6 +499,7 @@
       "name": "template-methods-orchestration",
       "description": "Repo-wide methods orchestration workflow for the Research Project Template. USE WHEN\nthe user asks to add, audit, improve, or validate methods, methodology, method\ncontracts, stage-to-method wiring, artifact/evidence provenance, or orchestration\nacross template projects.\n",
       "path": "docs/prompts/methods-orchestration/SKILL.md",
+      "agent_ref": "docs/prompts/methods-orchestration/SKILL.md",
       "cursor_at": "docs/prompts/methods-orchestration/SKILL.md",
       "metadata": {
         "version": "1.0.0",
@@ -486,6 +524,7 @@
       "name": "template-pipeline-debugging",
       "description": "Systematic pipeline DAG failure triage for the Research Project Template. USE WHEN\n./run.sh or execute_pipeline.py fails, a stage stalls (setup, tests, analysis, render,\nvalidate, LLM, copy), pytest/coverage gate fails mid-pipeline, PDF render or validate\nbreaks, Project Analysis finishes too fast with no figures, or user says pipeline debug,\nstage failed, resume checkpoint, core-only triage — even without naming this skill or docs/prompts.\n",
       "path": "docs/prompts/pipeline-debugging/SKILL.md",
+      "agent_ref": "docs/prompts/pipeline-debugging/SKILL.md",
       "cursor_at": "docs/prompts/pipeline-debugging/SKILL.md",
       "metadata": {
         "version": "1.0.0",
@@ -507,6 +546,7 @@
       "name": "template-publication-audit",
       "description": "End-to-end publication-readiness audit for public template exemplars — tests,\nno-mocks, methods contracts, claims, evidence, figures, references, rendered\noutputs, and deterministic regeneration. USE WHEN preparing a template or\nproject for release, DOI deposit, peer review, or a publication sign-off.\n",
       "path": "docs/prompts/publication-audit/SKILL.md",
+      "agent_ref": "docs/prompts/publication-audit/SKILL.md",
       "cursor_at": "docs/prompts/publication-audit/SKILL.md",
       "metadata": {
         "version": "1.0.0",
@@ -530,6 +570,7 @@
       "name": "template-refactoring",
       "description": "Clean-break refactors with migration for the Research Project Template — move logic to src/,\nsplit modules, rename APIs with test updates. USE WHEN restructuring code, extracting\nmodules, removing duplication, or migration without behavior change.\n",
       "path": "docs/prompts/refactoring/SKILL.md",
+      "agent_ref": "docs/prompts/refactoring/SKILL.md",
       "cursor_at": "docs/prompts/refactoring/SKILL.md",
       "metadata": {
         "version": "1.0.0",
@@ -550,6 +591,7 @@
       "name": "template-reproducibility-audit",
       "description": "Deterministic reproducibility audit — fixed seeds, regenerate-from-clean, double-run\ndiff before Zenodo/arXiv/release. USE WHEN outputs drift between runs, \"worked on my\nmachine\", need regenerate-from-clean proof, or pre-release reproducibility check — even\nwithout naming docs/prompts.\n",
       "path": "docs/prompts/reproducibility-audit/SKILL.md",
+      "agent_ref": "docs/prompts/reproducibility-audit/SKILL.md",
       "cursor_at": "docs/prompts/reproducibility-audit/SKILL.md",
       "metadata": {
         "version": "1.0.0",
@@ -571,6 +613,7 @@
       "name": "template-startup",
       "description": "Full installation and validation workflow for a fresh clone of the Research Project\nTemplate. Installs dependencies, runs pre-commit hooks, executes the core pipeline\nagainst template_code_project, validates outputs, and reports a structured\nPASS / FAIL for each checkpoint. USE WHEN the user says \"start\", \"set up the repo\",\n\"install and validate\", \"does everything work\", \"first time setup\", or any variant\nof bootstrapping a fresh or unknown checkout.\n",
       "path": "docs/prompts/startup/SKILL.md",
+      "agent_ref": "docs/prompts/startup/SKILL.md",
       "cursor_at": "docs/prompts/startup/SKILL.md",
       "metadata": {
         "version": "1.0.0",
@@ -593,6 +636,7 @@
       "name": "template-test-creation",
       "description": "Create pytest suites under the no-mocks policy — real data, temp files, subprocess,\npytest-httpserver. USE WHEN adding tests, raising coverage, testing new src/ module,\nor user forbids mocks.\n",
       "path": "docs/prompts/test-creation/SKILL.md",
+      "agent_ref": "docs/prompts/test-creation/SKILL.md",
       "cursor_at": "docs/prompts/test-creation/SKILL.md",
       "metadata": {
         "version": "1.0.0",
@@ -613,6 +657,7 @@
       "name": "template-validation-quality",
       "description": "Run validation CLI, prerender, markdown/PDF/integrity gates, and QA workflows for the\nResearch Project Template. USE WHEN validate manuscript, check PDF for ?? refs, prerender\ngate, link checker, output integrity, or pre-commit validation — even without\nvalidation_quality prompt.\n",
       "path": "docs/prompts/validation-quality/SKILL.md",
+      "agent_ref": "docs/prompts/validation-quality/SKILL.md",
       "cursor_at": "docs/prompts/validation-quality/SKILL.md",
       "metadata": {
         "version": "1.0.0",
@@ -634,488 +679,569 @@
     },
     {
       "name": "infrastructure-overview",
-      "description": "Top-level skill for the research template infrastructure layer. Use in Cursor, Claude Code, or similar agents when editing or importing anything under infrastructure/, understanding the two-layer architecture, or wiring build/validation/rendering/publishing. Covers module discovery, import patterns, thin orchestrators, per-subpackage SKILL.md paths, and .cursor/skill_manifest.json (see infrastructure.skills).",
+      "description": "Top-level skill for the research template infrastructure layer. Use in Cursor, Claude Code, or similar agents when editing or importing anything under infrastructure/, understanding the two-layer architecture, or wiring build/validation/rendering/publishing. Covers module discovery, import patterns, thin orchestrators, per-subpackage SKILL.md paths, and .agents/skill_manifest.json (see infrastructure.skills).",
       "path": "infrastructure/SKILL.md",
+      "agent_ref": "infrastructure/SKILL.md",
       "cursor_at": "infrastructure/SKILL.md"
     },
     {
       "name": "infrastructure-autoresearch",
       "description": "Skill for deterministic AutoResearch readiness planning. Use when adding, validating, or documenting opt-in autoresearch.yaml controls, stage-gate readiness, evidence-grounded claims, artifact readiness reports, or AutoResearchClaw-inspired workflow checks in template projects.",
       "path": "infrastructure/autoresearch/SKILL.md",
+      "agent_ref": "infrastructure/autoresearch/SKILL.md",
       "cursor_at": "infrastructure/autoresearch/SKILL.md"
     },
     {
       "name": "infrastructure-benchmark",
       "description": "Deterministic benchmark harnesses for public template exemplars. Use when scoring generated project outputs against benchmark manifests, refreshing the default template smoke manifest, checking publication-readiness rubrics, or adding bounded no-network readiness checks for public template outputs.",
       "path": "infrastructure/benchmark/SKILL.md",
+      "agent_ref": "infrastructure/benchmark/SKILL.md",
       "cursor_at": "infrastructure/benchmark/SKILL.md"
     },
     {
       "name": "infrastructure-config",
       "description": "Repository-scoped configuration for the template—environment variable templates and default secure/steganography YAML. Use when editing .env patterns, secure_config defaults, or cross-referencing project manuscript config overrides.",
       "path": "infrastructure/config/SKILL.md",
+      "agent_ref": "infrastructure/config/SKILL.md",
       "cursor_at": "infrastructure/config/SKILL.md"
     },
     {
       "name": "infrastructure-core",
       "description": "Skill for the core infrastructure module providing logging, configuration, exception handling, progress tracking, checkpoints, retry logic, pipeline execution, performance monitoring, security, file operations, and multi-project orchestration. Use when setting up logging, loading config, handling errors, running pipelines, or monitoring performance.",
       "path": "infrastructure/core/SKILL.md",
+      "agent_ref": "infrastructure/core/SKILL.md",
       "cursor_at": "infrastructure/core/SKILL.md"
     },
     {
       "name": "telemetry",
       "description": "Unified pipeline telemetry — collects per-stage performance metrics (CPU, memory, I/O) and diagnostic events into structured reports (JSON, text).",
       "path": "infrastructure/core/telemetry/SKILL.md",
+      "agent_ref": "infrastructure/core/telemetry/SKILL.md",
       "cursor_at": "infrastructure/core/telemetry/SKILL.md"
     },
     {
       "name": "infrastructure-docker",
       "description": "Container build and compose assets for the research template. Use when reproducing CI or cloud environments with Docker, following docs/CLOUD_DEPLOY.md, or wiring Ollama sidecars via docker-compose.",
       "path": "infrastructure/docker/SKILL.md",
+      "agent_ref": "infrastructure/docker/SKILL.md",
       "cursor_at": "infrastructure/docker/SKILL.md"
     },
     {
       "name": "infrastructure-doctor",
       "description": "Skill for the doctor infrastructure module providing repository-level diagnostics and safe, reversible automated repair. Use when the local checkout is acting up, before opening a bug, when onboarding a fresh clone, or as a periodic health probe. Every mutation is backed up under .doctor/backups/ and journalled in .doctor/actions.jsonl so any change can be undone byte-for-byte.",
       "path": "infrastructure/doctor/SKILL.md",
+      "agent_ref": "infrastructure/doctor/SKILL.md",
       "cursor_at": "infrastructure/doctor/SKILL.md"
     },
     {
       "name": "infrastructure-documentation",
       "description": "Figure metadata, deterministic generated-figure registries, and source-derived API documentation. Use when publishing figure inventories, validating generated image files, or maintaining API glossaries.",
       "path": "infrastructure/documentation/SKILL.md",
+      "agent_ref": "infrastructure/documentation/SKILL.md",
       "cursor_at": "infrastructure/documentation/SKILL.md"
     },
     {
       "name": "infrastructure-fonds",
       "description": "Skill for the fonds module — discovery, validation, scope, and private-sidecar symlink sync for the top-level fonds/ directory (archival collection units such as bibliographies, contact registries, and dataset catalogs). Use when discovering fonds (discover_fonds), resolving a fond path (resolve_fond_root), validating fond structure (validate_fond_structure), building FondInfo dataclasses (build_fond_info), checking PUBLIC_FOND_NAMES for CI-safe scope (public_scope.py), syncing private lifecycle fonds into the template checkout (sync_private_fond_links / linking.py), checking whether a path is a managed fond symlink (is_managed_symlink), or adding new public fonds exemplars. Distinct from projects/ (executable research code); fonds are passive data stores requiring fonds.yaml + data/ (not src/ + tests/).",
       "path": "infrastructure/fonds/SKILL.md",
+      "agent_ref": "infrastructure/fonds/SKILL.md",
       "cursor_at": "infrastructure/fonds/SKILL.md"
     },
     {
       "name": "infrastructure-formal-contracts",
       "description": "Skill for the typed formal-contracts package — composing and machine-checking well-typed manuscripts (typed claims, evidence tiers, resolvable formal statements, acyclic dependency DAGs).",
       "path": "infrastructure/formal_contracts/SKILL.md",
+      "agent_ref": "infrastructure/formal_contracts/SKILL.md",
       "cursor_at": "infrastructure/formal_contracts/SKILL.md"
     },
     {
       "name": "infrastructure-llm",
       "description": "Skill for the LLM infrastructure module providing local Large Language Model integration via Ollama. Covers client initialization, prompt templates, output validation, manuscript review generation, conversation context, and CLI usage. Use when querying LLMs, generating manuscript reviews, validating LLM outputs, or managing Ollama models.",
       "path": "infrastructure/llm/SKILL.md",
+      "agent_ref": "infrastructure/llm/SKILL.md",
       "cursor_at": "infrastructure/llm/SKILL.md"
     },
     {
       "name": "infrastructure-metadata",
       "description": "Skill for the shared metadata infrastructure module providing repository-URL normalization and ebook publication-metadata generation. Use when normalizing publication repository URLs, generating ONIX XML, metadata.json, or EPUB OPF metadata packages, or building ebook metadata from project config.",
       "path": "infrastructure/metadata/SKILL.md",
+      "agent_ref": "infrastructure/metadata/SKILL.md",
       "cursor_at": "infrastructure/metadata/SKILL.md"
     },
     {
       "name": "infrastructure-methods",
       "description": "Methods orchestration contract builder for template projects. Use when mapping pipeline stages, manuscript methods, artifact manifests, evidence registries, figures, claim ledgers, experiment plans, and validation commands into one reproducible methods plan.",
       "path": "infrastructure/methods/SKILL.md",
+      "agent_ref": "infrastructure/methods/SKILL.md",
       "cursor_at": "infrastructure/methods/SKILL.md"
     },
     {
       "name": "infrastructure-orchestration",
       "description": "Python CLI and menu orchestration for pipeline runs — project slug validation, interactive picker, PipelineRunner wrapping PipelineExecutor, per-stage logs, secure pipeline wrapper. Use when extending run.sh behavior, fixing menu/CLI routing, or testing discovery helpers.",
       "path": "infrastructure/orchestration/SKILL.md",
+      "agent_ref": "infrastructure/orchestration/SKILL.md",
       "cursor_at": "infrastructure/orchestration/SKILL.md"
     },
     {
       "name": "infrastructure-project",
       "description": "Skill for the project management infrastructure module providing multi-project discovery, structure validation, and metadata extraction. Use when discovering active projects, validating project directory structure, or extracting project configuration metadata.",
       "path": "infrastructure/project/SKILL.md",
+      "agent_ref": "infrastructure/project/SKILL.md",
       "cursor_at": "infrastructure/project/SKILL.md"
     },
     {
       "name": "infrastructure-prose",
       "description": "Prose analysis utilities for research manuscripts and prose-focused projects. Provides readability metrics (Flesch, Flesch-Kincaid, Gunning Fog), heading-outline structural analysis, editorial quality flags (passive voice, hedge words, citation density, long sentences), aggregate ManuscriptReport across a manuscript directory, and a CLI (metrics/outline/quality/report). Use when analyzing manuscripts for readability, building editorial dashboards, validating heading structure, extracting citation keys from prose, or wiring prose-quality gates into the pipeline.",
       "path": "infrastructure/prose/SKILL.md",
+      "agent_ref": "infrastructure/prose/SKILL.md",
       "cursor_at": "infrastructure/prose/SKILL.md"
     },
     {
       "name": "provenance-dag",
       "description": "Content-addressed provenance DAG for research lineage tracking. Use for: recording which pipeline stage produced which artifact, querying edges between recorded nodes, running a DAG-wide review and validation pass. CLI: python -m infrastructure.provenance {list,record-artifact,review,validate}. Library: infrastructure.provenance.Provenance (record/link/get/list/query). Orchestrator: scripts/pipeline/stage_09_provenance_record.py --project {name} --stage NAME",
       "path": "infrastructure/provenance/SKILL.md",
+      "agent_ref": "infrastructure/provenance/SKILL.md",
       "cursor_at": "infrastructure/provenance/SKILL.md"
     },
     {
       "name": "infrastructure-publishing",
       "description": "Skill for the publishing infrastructure module providing academic publishing workflows including BibTeX CLI citation generation, APA/MLA citation helper functions, DOI management, Zenodo publication, arXiv submission preparation, GitHub releases, PyPI and TestPyPI package distribution, static-site deployment to GitHub Pages / Cloudflare Pages / Netlify, multi-target long-horizon archival (IPFS Pinata, Web3.Storage, Software Heritage), a central platform registry, and publication readiness validation. Use when publishing research, generating citations, minting DOIs, distributing Python packages, deploying documentation sites, or preparing archival submissions.",
       "path": "infrastructure/publishing/SKILL.md",
+      "agent_ref": "infrastructure/publishing/SKILL.md",
       "cursor_at": "infrastructure/publishing/SKILL.md"
     },
     {
       "name": "infrastructure-reference",
       "description": "Bibliographic-reference utilities for research projects. Read, write, and convert BibTeX entries that match the syntax/semantics of projects/templates/template_code_project/manuscript/references.bib (consumed by Pandoc with --natbib during PDF render -- see infrastructure/rendering/_pdf_combined_pandoc.py). Exposes the `citation` submodule (BibTeX I/O + Paper→BibEntry conversion) and the `verification` submodule (deterministic reference-existence gate against Crossref/OpenAlex/arXiv with a persistent SQLite cache); designed to host additional reference workflows without breaking the public API.",
       "path": "infrastructure/reference/SKILL.md",
+      "agent_ref": "infrastructure/reference/SKILL.md",
       "cursor_at": "infrastructure/reference/SKILL.md"
     },
     {
       "name": "infrastructure-reference-citation",
       "description": "BibTeX read/write/convert that matches the syntax/semantics of projects/templates/template_code_project/manuscript/references.bib (consumed by Pandoc with --natbib -- see infrastructure/rendering/_pdf_combined_bibliography.py). Provides BibEntry/BibDatabase models, parse_bibfile/render_database functions, paper_to_bibentry conversion from literature search results, generate_citation_key in the project's house style (firstauthorlastname+year+firsttitleword), LaTeX-special-character escape helpers, and a CLI (validate/format/convert). Use when reading or writing .bib files, exporting search results to BibTeX, or generating citation keys.",
       "path": "infrastructure/reference/citation/SKILL.md",
+      "agent_ref": "infrastructure/reference/citation/SKILL.md",
       "cursor_at": "infrastructure/reference/citation/SKILL.md"
     },
     {
       "name": "reference-verification",
       "description": "Deterministic anti-hallucination gate for cited references. Resolves each entry in a manuscript .bib file against Crossref, OpenAlex, and arXiv; flags fabricated (identifier resolves to nothing), mismatched (title/author/year disagree), unverifiable (no identifier), unchecked (offline cache miss — never silently OK), and anachronistic (future-dated) citations. Offline-first with a persistent SQLite cache; live network resolution is opt-in. Use when verifying citation existence, auditing a references.bib before submission, or wiring a claim-verification / pipeline integrity gate.",
       "path": "infrastructure/reference/verification/SKILL.md",
+      "agent_ref": "infrastructure/reference/verification/SKILL.md",
       "cursor_at": "infrastructure/reference/verification/SKILL.md"
     },
     {
       "name": "infrastructure-rendering",
       "description": "Skill for the rendering infrastructure module providing multi-format output generation including PDF manuscripts, HTML web pages, and Beamer/Reveal.js slides. Use when rendering research outputs, converting markdown to PDF, generating slides, or configuring LaTeX rendering.",
       "path": "infrastructure/rendering/SKILL.md",
+      "agent_ref": "infrastructure/rendering/SKILL.md",
       "cursor_at": "infrastructure/rendering/SKILL.md"
     },
     {
       "name": "infrastructure-reporting",
       "description": "Skill for the reporting infrastructure module providing pipeline reporting, error aggregation, executive summaries, dashboard generation, test reporting, and multi-project reports. Use when generating build reports, aggregating errors, creating visual dashboards, or producing executive summaries across projects.",
       "path": "infrastructure/reporting/SKILL.md",
+      "agent_ref": "infrastructure/reporting/SKILL.md",
       "cursor_at": "infrastructure/reporting/SKILL.md"
     },
     {
       "name": "research-workflow",
       "description": "Descriptive research planning API: scope, survey, hypothesise, experiment, validate, review and write. Use for inspecting ordered stage descriptors, expected artifacts, gates and tracking configuration. Instantiate ResearchWorkflow; query stage(name), all_stages(), describe() or to_dict(). The library reads optional project-root research_workflow.yaml.",
       "path": "infrastructure/research/SKILL.md",
+      "agent_ref": "infrastructure/research/SKILL.md",
       "cursor_at": "infrastructure/research/SKILL.md"
     },
     {
       "name": "infrastructure-rules",
       "description": "Skill for the rules module — discovery, validation, scope, and private-sidecar symlink sync for the top-level rules/ directory (specifications include soft markdown guidelines and strong yaml/json formal constraints). Use when discovering rules (discover_rules), resolving a rule path (resolve_rule_root), validating rule structure (validate_rule_structure), building RuleInfo dataclasses (build_rule_info), checking PUBLIC_RULE_NAMES for CI-safe scope (public_scope.py), syncing private lifecycle rules into the template checkout (sync_private_rule_links / linking.py), checking whether a path is a managed rule symlink (is_managed_symlink), or adding new public rule exemplars. Distinct from projects/ (executable research code) and fonds/ (data resource pools); rules are passive specifications requiring rules.yaml + at least one of soft/ or strong/.",
       "path": "infrastructure/rules/SKILL.md",
+      "agent_ref": "infrastructure/rules/SKILL.md",
       "cursor_at": "infrastructure/rules/SKILL.md"
     },
     {
       "name": "infrastructure-scientific",
       "description": "Skill for the scientific infrastructure module providing numerical stability checks, performance benchmarking, and independent improvement confirmation. Use when benchmarking functions, checking numerical stability, or confirming a candidate beats a baseline beyond the noise band.",
       "path": "infrastructure/scientific/SKILL.md",
+      "agent_ref": "infrastructure/scientific/SKILL.md",
       "cursor_at": "infrastructure/scientific/SKILL.md"
     },
     {
       "name": "infrastructure-search",
       "description": "Discovery utilities. Hosts subpackages — `literature` for Paperclip-style multi-source academic search; `exa` for Exa-backed web search, contents, answers, and find-similar; `monid` for the Monid gateway (discover/inspect/run) plus offline USD-per-1k search API pricing; and `deep_research` for provider-neutral long-running research over OpenAI and Gemini (PAID). Use when finding papers, running web search, comparing search API costs, routing agent tasks through Monid, or dispatching manuscript deep-research reviews.",
       "path": "infrastructure/search/SKILL.md",
+      "agent_ref": "infrastructure/search/SKILL.md",
       "cursor_at": "infrastructure/search/SKILL.md"
     },
     {
       "name": "scientific-connectors",
       "description": "Search 8+ scientific databases through a uniform Connector interface. Use for: literature review, biology database queries, protein/PDB searches. CLI: python -m infrastructure.search.connectors {list-dbs,search}. Config: set queries in projects/{name}/manuscript/config.yaml `connector_search:` block. Orchestrator: scripts/pipeline/stage_08_connector_search.py --project {name}",
       "path": "infrastructure/search/connectors/SKILL.md",
+      "agent_ref": "infrastructure/search/connectors/SKILL.md",
       "cursor_at": "infrastructure/search/connectors/SKILL.md"
     },
     {
       "name": "infrastructure-search-literature",
       "description": "Paperclip-style multi-source literature search across arXiv, Crossref, local JSON corpora, and (opt-in) the Paperclip API. Provides Paper/SearchQuery/SearchResult data models, a LiteratureClient aggregator with per-backend failure isolation, DOI/arXiv-aware deduplication via merge_papers, deterministic JSON caching via SearchCache, an HttpClient protocol for test injection, and a CLI (search/to-bibtex). Use when finding papers by topic, building reading lists, populating references.bib from a query, or replaying a prior search reproducibly.",
       "path": "infrastructure/search/literature/SKILL.md",
+      "agent_ref": "infrastructure/search/literature/SKILL.md",
       "cursor_at": "infrastructure/search/literature/SKILL.md"
     },
     {
       "name": "infrastructure-search-monid",
       "description": "Monid HTTP API client for discovering, inspecting, and running hundreds of data endpoints through one wallet (discover/inspect/run/poll/balance). Includes an offline USD-per-1k comparison table for direct search APIs (Exa, Brave, Tavily, Serper, SerpAPI) versus Monid's per-endpoint gateway pricing. Use when the user needs Monid programmatically, wants to compare search API costs, or must route agent tasks through Monid only after checking the user's existing MCP/API keys. PAID — Monid runs debit prepaid balance; inspect pricing first.",
       "path": "infrastructure/search/monid/SKILL.md",
+      "agent_ref": "infrastructure/search/monid/SKILL.md",
       "cursor_at": "infrastructure/search/monid/SKILL.md"
     },
     {
       "name": "infrastructure-sia",
       "description": "Skill for the Self-Improvement Agent (SIA) harness contract. Use when validating task public/private layouts, generation artifact trees, evaluation runners, fixture replay loops, or opt-in live Meta→Target→Feedback cycles in template projects.",
       "path": "infrastructure/sia/SKILL.md",
+      "agent_ref": "infrastructure/sia/SKILL.md",
       "cursor_at": "infrastructure/sia/SKILL.md"
     },
     {
       "name": "infrastructure-skills",
-      "description": "Programmatic discovery of agent SKILL.md files under configured public repo roots (infrastructure, scripts, projects/templates, resource-pool templates, docs/prompts, .agents/skills, and .cursor/skills). Use when enumerating skills, validating .cursor/skill_manifest.json, writing docs/_generated/skills_index.md, checking docs/prompts workflow contracts, or wiring editor/Codex/Hermes/MCP automation. Exposes discover_skills, write_skill_manifest, manifest_matches_discovery, and check_skill_contracts.",
+      "description": "Programmatic discovery of agent SKILL.md files under configured public repo roots (infrastructure, scripts, projects/templates, resource-pool templates, docs/prompts, .agents/skills, and .agents/workflows). Use when enumerating skills, validating .agents/skill_manifest.json, writing docs/_generated/skills_index.md, checking docs/prompts workflow contracts, or wiring editor/Codex/Hermes/MCP automation. Exposes discover_skills, write_skill_manifest, manifest_matches_discovery, and check_skill_contracts.",
       "path": "infrastructure/skills/SKILL.md",
+      "agent_ref": "infrastructure/skills/SKILL.md",
       "cursor_at": "infrastructure/skills/SKILL.md"
     },
     {
       "name": "infrastructure-steganography",
       "description": "Skill for the steganography infrastructure module providing QR code generation with dynamic mailto links, hash manifests, metadata payloads, and document-wide overlay processing. Use this module to insert opt-in cryptographic and steganographic provenance data onto PDFs.",
       "path": "infrastructure/steganography/SKILL.md",
+      "agent_ref": "infrastructure/steganography/SKILL.md",
       "cursor_at": "infrastructure/steganography/SKILL.md"
     },
     {
       "name": "infrastructure-tools",
       "description": "Skill for the tools module — discovery, validation, scope, and private-sidecar symlink sync for the top-level tools/ directory (executable entry points such as scripts, skills, and agents stored as passive manifests with scripts/ directories). Use when discovering tools (discover_tools), resolving a tool path (resolve_tool_root), validating tool structure (validate_tool_structure), building ToolInfo dataclasses (build_tool_info), checking PUBLIC_TOOL_NAMES for CI-safe scope (public_scope.py), syncing private lifecycle tools into the template checkout (sync_private_tool_links / linking.py), checking whether a path is a managed tool symlink (is_managed_symlink), or adding new public tool exemplars. Distinct from projects/ (full research environments) and fonds/ (passive data stores requiring data/ instead of scripts/).",
       "path": "infrastructure/tools/SKILL.md",
+      "agent_ref": "infrastructure/tools/SKILL.md",
       "cursor_at": "infrastructure/tools/SKILL.md"
     },
     {
       "name": "infrastructure-transmission",
       "description": "Skill for the transmission infrastructure module providing rendered-release transmission leaves. Use when generating LaTeX single-page bookends for release bundles, running Stage 04 page-check validation, embedding barcode strips or figures into rendered PDFs, or working with transmission models shared by the publishing release workflow.",
       "path": "infrastructure/transmission/SKILL.md",
+      "agent_ref": "infrastructure/transmission/SKILL.md",
       "cursor_at": "infrastructure/transmission/SKILL.md"
     },
     {
       "name": "infrastructure-validation",
       "description": "Skill for the validation infrastructure module providing PDF validation, markdown validation, output integrity checks, link verification, documentation audits, issue categorization, and repository scanning. Use when validating research outputs, checking document quality, running audits, or verifying cross-references.",
       "path": "infrastructure/validation/SKILL.md",
+      "agent_ref": "infrastructure/validation/SKILL.md",
       "cursor_at": "infrastructure/validation/SKILL.md"
     },
     {
       "name": "publication-readiness-audit",
       "description": "Use when auditing public research exemplars for deterministic publication readiness across tests, methods, evidence, artifacts, figures, manuscript sources, and generated outputs.",
       "path": "infrastructure/validation/publication/SKILL.md",
+      "agent_ref": "infrastructure/validation/publication/SKILL.md",
       "cursor_at": "infrastructure/validation/publication/SKILL.md"
     },
     {
       "name": "template-active-inference",
       "description": "Active Inference multi-track exemplar — analytical formulas, pymdp simulation, sheaf manuscript composition, GNN, ontology, Lean gates, roadmap tracks.",
       "path": "projects/templates/template_active_inference/.agents/skills/template-active-inference/SKILL.md",
+      "agent_ref": "projects/templates/template_active_inference/.agents/skills/template-active-inference/SKILL.md",
       "cursor_at": "projects/templates/template_active_inference/.agents/skills/template-active-inference/SKILL.md"
     },
     {
       "name": "template-advanced-literature-review",
       "description": "Multi-phase literature-review exemplar with phase-aware retrieval, filtering, provenance, and cross-phase validation.",
       "path": "projects/templates/template_advanced_literature_review/.agents/skills/template-advanced-literature-review/SKILL.md",
+      "agent_ref": "projects/templates/template_advanced_literature_review/.agents/skills/template-advanced-literature-review/SKILL.md",
       "cursor_at": "projects/templates/template_advanced_literature_review/.agents/skills/template-advanced-literature-review/SKILL.md"
     },
     {
       "name": "Advanced Multi-Phase Literature Retrieval",
       "description": "Operations for phase-aware federated retrieval across nine literature engines, preserving provenance from broad discovery through focused synthesis.",
       "path": "projects/templates/template_advanced_literature_review/src/literature/SKILL.md",
+      "agent_ref": "projects/templates/template_advanced_literature_review/src/literature/SKILL.md",
       "cursor_at": "projects/templates/template_advanced_literature_review/src/literature/SKILL.md"
     },
     {
       "name": "Advanced Literature Manuscript Injection",
       "description": "Phase-aware tooling for injecting advanced-review evidence and statistics into Markdown manuscript templates.",
       "path": "projects/templates/template_advanced_literature_review/src/manuscript/SKILL.md",
+      "agent_ref": "projects/templates/template_advanced_literature_review/src/manuscript/SKILL.md",
       "cursor_at": "projects/templates/template_advanced_literature_review/src/manuscript/SKILL.md"
     },
     {
       "name": "template-autopoiesis",
       "description": "Combinatoric grammar that deterministically generates whole runnable child projects (src/, tests/, scripts/, manuscript/) from a seed — recompute-based provenance verification and a falsifiable honesty manifest against green-by-construction test theater.",
       "path": "projects/templates/template_autopoiesis/.agents/skills/template-autopoiesis/SKILL.md",
+      "agent_ref": "projects/templates/template_autopoiesis/.agents/skills/template-autopoiesis/SKILL.md",
       "cursor_at": "projects/templates/template_autopoiesis/.agents/skills/template-autopoiesis/SKILL.md"
     },
     {
       "name": "template-autoresearch-project",
       "description": "AutoResearch loop exemplar — deterministic ML candidate evaluation, evidence registries, claim ledgers, artifact manifests, readiness gates.",
       "path": "projects/templates/template_autoresearch_project/.agents/skills/template-autoresearch-project/SKILL.md",
+      "agent_ref": "projects/templates/template_autoresearch_project/.agents/skills/template-autoresearch-project/SKILL.md",
       "cursor_at": "projects/templates/template_autoresearch_project/.agents/skills/template-autoresearch-project/SKILL.md"
     },
     {
       "name": "template-autoscientists",
       "description": "AutoScientists coordination-mechanism testbed — dead-end registry, noise-band confirmation, effect-size ranking, stagnation-driven reorganization, honest null reporting.",
       "path": "projects/templates/template_autoscientists/.agents/skills/template-autoscientists/SKILL.md",
+      "agent_ref": "projects/templates/template_autoscientists/.agents/skills/template-autoscientists/SKILL.md",
       "cursor_at": "projects/templates/template_autoscientists/.agents/skills/template-autoscientists/SKILL.md"
     },
     {
       "name": "template-code-project",
       "description": "Code-centric optimization research exemplar — gradient descent, convergence analysis, automated figures, dashboard, and publication-quality PDF.",
       "path": "projects/templates/template_code_project/.agents/skills/template-code-project/SKILL.md",
+      "agent_ref": "projects/templates/template_code_project/.agents/skills/template-code-project/SKILL.md",
       "cursor_at": "projects/templates/template_code_project/.agents/skills/template-code-project/SKILL.md"
     },
     {
       "name": "template-data-descriptor",
       "description": "FAIR data descriptor exemplar for schema, provenance, license, and dataset release-readiness validation.",
       "path": "projects/templates/template_data_descriptor/.agents/skills/template-data-descriptor/SKILL.md",
+      "agent_ref": "projects/templates/template_data_descriptor/.agents/skills/template-data-descriptor/SKILL.md",
       "cursor_at": "projects/templates/template_data_descriptor/.agents/skills/template-data-descriptor/SKILL.md"
     },
     {
       "name": "template-eda-notebook",
       "description": "Exploratory data analysis notebook exemplar — notebook-to-src extraction workflow, tested EDA library, deterministic dataset, diagnostic figures.",
       "path": "projects/templates/template_eda_notebook/.agents/skills/template-eda-notebook/SKILL.md",
+      "agent_ref": "projects/templates/template_eda_notebook/.agents/skills/template-eda-notebook/SKILL.md",
       "cursor_at": "projects/templates/template_eda_notebook/.agents/skills/template-eda-notebook/SKILL.md"
     },
     {
       "name": "template-experiment-tree",
       "description": "Use when working inside template_experiment_tree — a living research record with a version-controlled experiment tree with frozen nodes. Answers, freezes, reports, and manuscript hydration all flow through the tree store.",
       "path": "projects/templates/template_experiment_tree/.agents/skills/template-experiment-tree/SKILL.md",
+      "agent_ref": "projects/templates/template_experiment_tree/.agents/skills/template-experiment-tree/SKILL.md",
       "cursor_at": "projects/templates/template_experiment_tree/.agents/skills/template-experiment-tree/SKILL.md"
     },
     {
       "name": "template-formal",
       "description": "Strongly-typed multiagent ant-robot colony exemplar — ADTs, session-typed protocols, affine-discipline resource handles, storage-as-functor framing, Active-Inference-flavored decision loop, mypy-as-oracle negative controls.",
       "path": "projects/templates/template_formal/.agents/skills/template-formal/SKILL.md",
+      "agent_ref": "projects/templates/template_formal/.agents/skills/template-formal/SKILL.md",
       "cursor_at": "projects/templates/template_formal/.agents/skills/template-formal/SKILL.md"
     },
     {
       "name": "template-gold-refinement",
       "description": "Metallurgical gold-refining analogy for manuscript composition — ore/smelting/assaying/cupellation/certification with mega-madlib token injection.",
       "path": "projects/templates/template_gold_refinement/.agents/skills/template-gold-refinement/SKILL.md",
+      "agent_ref": "projects/templates/template_gold_refinement/.agents/skills/template-gold-refinement/SKILL.md",
       "cursor_at": "projects/templates/template_gold_refinement/.agents/skills/template-gold-refinement/SKILL.md"
     },
     {
       "name": "template-literature-meta-analysis",
       "description": "Literature meta-analysis exemplar — multi-engine retrieval, dedup, full-text, bibliometrics, embeddings, optional knowledge graph. Default term: modafinil.",
       "path": "projects/templates/template_literature_meta_analysis/.agents/skills/template-literature-meta-analysis/SKILL.md",
+      "agent_ref": "projects/templates/template_literature_meta_analysis/.agents/skills/template-literature-meta-analysis/SKILL.md",
       "cursor_at": "projects/templates/template_literature_meta_analysis/.agents/skills/template-literature-meta-analysis/SKILL.md"
     },
     {
       "name": "Meta-Analysis Source API",
       "description": "Core orchestration guidelines and MCP interactions for the src/ library.",
       "path": "projects/templates/template_literature_meta_analysis/src/SKILL.md",
+      "agent_ref": "projects/templates/template_literature_meta_analysis/src/SKILL.md",
       "cursor_at": "projects/templates/template_literature_meta_analysis/src/SKILL.md"
     },
     {
       "name": "Statistical & Metric Analysis",
       "description": "Orchestration for bibliometrics, topological network analysis, and hypothesis scoring.",
       "path": "projects/templates/template_literature_meta_analysis/src/analysis/SKILL.md",
+      "agent_ref": "projects/templates/template_literature_meta_analysis/src/analysis/SKILL.md",
       "cursor_at": "projects/templates/template_literature_meta_analysis/src/analysis/SKILL.md"
     },
     {
       "name": "LLM Extraction & KG Construction",
       "description": "Core inference logic, prompt construction, and RDF/Nanopublication serialization.",
       "path": "projects/templates/template_literature_meta_analysis/src/knowledge_graph/SKILL.md",
+      "agent_ref": "projects/templates/template_literature_meta_analysis/src/knowledge_graph/SKILL.md",
       "cursor_at": "projects/templates/template_literature_meta_analysis/src/knowledge_graph/SKILL.md"
     },
     {
       "name": "Systematic Literature Retrieval",
       "description": "Operations for federated API querying across ten literature engines (arXiv, Semantic Scholar, OpenAlex, Crossref, PubMed, SovietRxiv, ChinaRxiv, Europe PMC, bioRxiv, medRxiv).",
       "path": "projects/templates/template_literature_meta_analysis/src/literature/SKILL.md",
+      "agent_ref": "projects/templates/template_literature_meta_analysis/src/literature/SKILL.md",
       "cursor_at": "projects/templates/template_literature_meta_analysis/src/literature/SKILL.md"
     },
     {
       "name": "Manuscript Templating & Injection",
       "description": "Tooling for injecting JSON/CSV statistics into Markdown evaluation templates.",
       "path": "projects/templates/template_literature_meta_analysis/src/manuscript/SKILL.md",
+      "agent_ref": "projects/templates/template_literature_meta_analysis/src/manuscript/SKILL.md",
       "cursor_at": "projects/templates/template_literature_meta_analysis/src/manuscript/SKILL.md"
     },
     {
       "name": "Reproducibility Workflow-Graph Assessment",
       "description": "LLM-based extraction of per-paper workflow graphs and content/structural reproducibility scoring.",
       "path": "projects/templates/template_literature_meta_analysis/src/reproducibility/SKILL.md",
+      "agent_ref": "projects/templates/template_literature_meta_analysis/src/reproducibility/SKILL.md",
       "cursor_at": "projects/templates/template_literature_meta_analysis/src/reproducibility/SKILL.md"
     },
     {
       "name": "Data Visualization Library",
       "description": "Orchestrates matplotlib and seaborn pipelines for rendering figures.",
       "path": "projects/templates/template_literature_meta_analysis/src/visualization/SKILL.md",
+      "agent_ref": "projects/templates/template_literature_meta_analysis/src/visualization/SKILL.md",
       "cursor_at": "projects/templates/template_literature_meta_analysis/src/visualization/SKILL.md"
     },
     {
       "name": "template-madlib",
       "description": "Deterministic token-injection manuscript generator — config-owned lexicon, conditional IMRAD, QA probes, authoring contract, and token provenance.",
       "path": "projects/templates/template_madlib/.agents/skills/template-madlib/SKILL.md",
+      "agent_ref": "projects/templates/template_madlib/.agents/skills/template-madlib/SKILL.md",
       "cursor_at": "projects/templates/template_madlib/.agents/skills/template-madlib/SKILL.md"
     },
     {
       "name": "template-methods-paper",
       "description": "Methods-paper exemplar — controlled-method specification DSL with staged validation, deterministic compilation, informed by BPL.",
       "path": "projects/templates/template_methods_paper/.agents/skills/template-methods-paper/SKILL.md",
+      "agent_ref": "projects/templates/template_methods_paper/.agents/skills/template-methods-paper/SKILL.md",
       "cursor_at": "projects/templates/template_methods_paper/.agents/skills/template-methods-paper/SKILL.md"
     },
     {
       "name": "template-newspaper",
       "description": "Newspaper layout engine exemplar — 12-page tabloid/broadsheet PDF from structured YAML via pure-Python ReportLab.",
       "path": "projects/templates/template_newspaper/.agents/skills/template-newspaper/SKILL.md",
+      "agent_ref": "projects/templates/template_newspaper/.agents/skills/template-newspaper/SKILL.md",
       "cursor_at": "projects/templates/template_newspaper/.agents/skills/template-newspaper/SKILL.md"
     },
     {
       "name": "template-pitch-deck",
       "description": "Pitch-deck generation exemplar — short/medium/long PDF+PPTX decks from one token-resolved, diligence-cited content source.",
       "path": "projects/templates/template_pitch_deck/.agents/skills/template-pitch-deck/SKILL.md",
+      "agent_ref": "projects/templates/template_pitch_deck/.agents/skills/template-pitch-deck/SKILL.md",
       "cursor_at": "projects/templates/template_pitch_deck/.agents/skills/template-pitch-deck/SKILL.md"
     },
     {
       "name": "template-pools-rules-tools",
       "description": "Fonds, rules, and tools integration exemplar — read resource pools, apply governance rules, validate tool manifests, and run combined integration.",
       "path": "projects/templates/template_pools_rules_tools/.agents/skills/template-pools-rules-tools/SKILL.md",
+      "agent_ref": "projects/templates/template_pools_rules_tools/.agents/skills/template-pools-rules-tools/SKILL.md",
       "cursor_at": "projects/templates/template_pools_rules_tools/.agents/skills/template-pools-rules-tools/SKILL.md"
     },
     {
       "name": "template-prose-project",
       "description": "Prose-review pipeline exemplar — readability gates, structural checking, BibTeX validation, and quality review workflows.",
       "path": "projects/templates/template_prose_project/.agents/skills/template-prose-project/SKILL.md",
+      "agent_ref": "projects/templates/template_prose_project/.agents/skills/template-prose-project/SKILL.md",
       "cursor_at": "projects/templates/template_prose_project/.agents/skills/template-prose-project/SKILL.md"
     },
     {
       "name": "template-redacted-report",
       "description": "Redacted release-report exemplar for classification ceilings, source protection, source-safe ledgers, reviewer gates, and mosaic-risk checks.",
       "path": "projects/templates/template_redacted_report/.agents/skills/template-redacted-report/SKILL.md",
+      "agent_ref": "projects/templates/template_redacted_report/.agents/skills/template-redacted-report/SKILL.md",
       "cursor_at": "projects/templates/template_redacted_report/.agents/skills/template-redacted-report/SKILL.md"
     },
     {
       "name": "template-registered-report",
       "description": "Registered-report exemplar for preregistration locking, deviation ledgers, replication, and confirmatory claim boundaries.",
       "path": "projects/templates/template_registered_report/.agents/skills/template-registered-report/SKILL.md",
+      "agent_ref": "projects/templates/template_registered_report/.agents/skills/template-registered-report/SKILL.md",
       "cursor_at": "projects/templates/template_registered_report/.agents/skills/template-registered-report/SKILL.md"
     },
     {
       "name": "template-search-project",
       "description": "Literature-search pipeline exemplar — multi-backend search (arXiv/Crossref), BibTeX generation, deep search, optional LLM synthesis.",
       "path": "projects/templates/template_search_project/.agents/skills/template-search-project/SKILL.md",
+      "agent_ref": "projects/templates/template_search_project/.agents/skills/template-search-project/SKILL.md",
       "cursor_at": "projects/templates/template_search_project/.agents/skills/template-search-project/SKILL.md"
     },
     {
       "name": "template-sia",
       "description": "SIA (Self-Improvement Agent) harness exemplar — Meta/Target/Feedback loops, public/private splits, fixture replay, fail-closed validation.",
       "path": "projects/templates/template_sia/.agents/skills/template-sia/SKILL.md",
+      "agent_ref": "projects/templates/template_sia/.agents/skills/template-sia/SKILL.md",
       "cursor_at": "projects/templates/template_sia/.agents/skills/template-sia/SKILL.md"
     },
     {
       "name": "template-storybook",
       "description": "Full-page illustrated storybook exemplar — symbolic shape-family characters, page-level raster scenes, text overlays, deterministic PDF assembly.",
       "path": "projects/templates/template_storybook/.agents/skills/template-storybook/SKILL.md",
+      "agent_ref": "projects/templates/template_storybook/.agents/skills/template-storybook/SKILL.md",
       "cursor_at": "projects/templates/template_storybook/.agents/skills/template-storybook/SKILL.md"
     },
     {
       "name": "template-template",
       "description": "Meta-template exemplar — self-referential introspection of the template repo: infrastructure modules, pipeline DAG, security layers, and public exemplar roster.",
       "path": "projects/templates/template_template/.agents/skills/template-template/SKILL.md",
+      "agent_ref": "projects/templates/template_template/.agents/skills/template-template/SKILL.md",
       "cursor_at": "projects/templates/template_template/.agents/skills/template-template/SKILL.md"
     },
     {
       "name": "template-textbook",
       "description": "Authored textbook and separate draft scaffolding — units, chapters, labs, question banks, deterministic figures, and completion checks.",
       "path": "projects/templates/template_textbook/.agents/skills/template-textbook/SKILL.md",
+      "agent_ref": "projects/templates/template_textbook/.agents/skills/template-textbook/SKILL.md",
       "cursor_at": "projects/templates/template_textbook/.agents/skills/template-textbook/SKILL.md"
     },
     {
       "name": "template-audit",
       "description": "Audit and quality-gate scripts for the template research framework. Covers documentation linting, filepath audits, mock-usage checking, template drift, and confidentiality / git-guard checks.\n",
       "path": "scripts/audit/SKILL.md",
+      "agent_ref": "scripts/audit/SKILL.md",
       "cursor_at": "scripts/audit/SKILL.md"
     },
     {
       "name": "template-docgen",
       "description": "Derived documentation generators for the template research framework. Scripts that write to docs/_generated/ and update in-place doc blocks.\n",
       "path": "scripts/docgen/SKILL.md",
+      "agent_ref": "scripts/docgen/SKILL.md",
       "cursor_at": "scripts/docgen/SKILL.md"
     },
     {
       "name": "template-fixtures",
       "description": "Fixture download scripts for test data. Downloads real GitHub repos\n(requests, fastapi) via sparse checkout and M4 monthly timeseries data\nfrom Hugging Face with synthetic fallback. Resumable — skips if target\ndirectory already exists and is non-empty.",
       "path": "scripts/fixtures/SKILL.md",
+      "agent_ref": "scripts/fixtures/SKILL.md",
       "cursor_at": "scripts/fixtures/SKILL.md"
     },
     {
       "name": "template-gates",
       "description": "Optional validation gates for Hermes-plugin and advisory workflows.\nIncludes cache validation, methods plan checks, line-count gates,\nsecurity scanning, plugin export checks, and skill reachability checks.\nNone run in the default pipeline; invoked explicitly when needed.",
       "path": "scripts/gates/SKILL.md",
+      "agent_ref": "scripts/gates/SKILL.md",
       "cursor_at": "scripts/gates/SKILL.md"
     },
     {
       "name": "template-maintenance",
       "description": "On-demand maintenance helpers for the template repository. Includes\nworkspace management, project info display, working-project rendering,\nPDF re-rendering, executive output organization, test supplement merging,\nbatch source improvement, pre-commit setup, and CodeGraph index helpers.\nNone run in the default pipeline or CI.",
       "path": "scripts/maintenance/SKILL.md",
+      "agent_ref": "scripts/maintenance/SKILL.md",
       "cursor_at": "scripts/maintenance/SKILL.md"
     },
     {
       "name": "template-pipeline",
       "description": "Numbered pipeline stage orchestrators (stages 00–13) for the template research framework.  Each stage_NN_*.py is a thin orchestrator that wires the repo root onto sys.path and delegates to infrastructure/ modules.\n",
       "path": "scripts/pipeline/SKILL.md",
+      "agent_ref": "scripts/pipeline/SKILL.md",
       "cursor_at": "scripts/pipeline/SKILL.md"
     },
     {
       "name": "template-publish",
       "description": "Publishing scripts for DOI-bearing project releases, optional mirror uploads,\nPyPI release validation, post-publish verification, and publication export.\nUse with docs/guides/publication-runbook.md for standalone GitHub + Zenodo\nrelease workflows.",
       "path": "scripts/publish/SKILL.md",
+      "agent_ref": "scripts/publish/SKILL.md",
       "cursor_at": "scripts/publish/SKILL.md"
     },
     {
       "name": "template-runner",
       "description": "Pipeline execution runners for the template research framework. Contains execute_pipeline.py (single-project), execute_multi_project.py (multi-project serial/parallel), and run_matrix.py (deterministic matrix).\n",
       "path": "scripts/runner/SKILL.md",
+      "agent_ref": "scripts/runner/SKILL.md",
       "cursor_at": "scripts/runner/SKILL.md"
     },
     {
       "name": "template-shell",
       "description": "Shell helper scripts for the template research framework. Covers system health checks, local CI reproduction, uv bootstrap, and rsync backup/restore contracts under scripts/shell/.\n",
       "path": "scripts/shell/SKILL.md",
+      "agent_ref": "scripts/shell/SKILL.md",
       "cursor_at": "scripts/shell/SKILL.md"
     }
   ]

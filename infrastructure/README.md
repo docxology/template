@@ -8,7 +8,7 @@ The infrastructure layer provides generic, reusable functionality that can be ap
 
 ## Agent skills (`SKILL.md`)
 
-Each subpackage (and the package root) includes a **`SKILL.md`** with YAML frontmatter (`name`, `description`) so assistants can route work to the right module. **Discovery:** open [`.cursor/skill_manifest.json`](../.cursor/skill_manifest.json) (or `@.cursor/skill_manifest.json` in Cursor), search `infrastructure/**/SKILL.md`, open the hub [SKILL.md](SKILL.md), or use `@infrastructure/SKILL.md` / `@infrastructure/<module>/SKILL.md`. Regenerate the manifest after skill changes: `uv run python -m infrastructure.skills write`.
+Each subpackage (and the package root) includes a **`SKILL.md`** with YAML frontmatter (`name`, `description`) so assistants can route work to the right module. **Discovery:** open [`.agents/skill_manifest.json`](../.agents/skill_manifest.json) (or `@.agents/skill_manifest.json` in Cursor), search `infrastructure/**/SKILL.md`, open the hub [SKILL.md](SKILL.md), or use `@infrastructure/SKILL.md` / `@infrastructure/<module>/SKILL.md`. Regenerate the manifest after skill changes: `uv run python -m infrastructure.skills write`.
 
 | Path | Frontmatter `name` | Description |
 | --- | --- | --- |
@@ -43,7 +43,7 @@ Each subpackage (and the package root) includes a **`SKILL.md`** with YAML front
 | [search/literature/SKILL.md](search/literature/SKILL.md) | `infrastructure-search-literature` | Paperclip-style multi-source literature search across arXiv, Crossref, and local corpora with dedup and caching. |
 | [search/monid/SKILL.md](search/monid/SKILL.md) | `infrastructure-search-monid` | Monid HTTP API client (discover/inspect/run/poll/balance) with an offline search-API pricing comparison table. |
 | [sia/SKILL.md](sia/SKILL.md) | `infrastructure-sia` | Self-Improvement Agent (SIA) harness contract — layouts, artifact trees, evaluation runners, and replay loops. |
-| [skills/SKILL.md](skills/SKILL.md) | `infrastructure-skills` | Programmatic discovery of agent SKILL.md files and `.cursor/skill_manifest.json` validation/writing. |
+| [skills/SKILL.md](skills/SKILL.md) | `infrastructure-skills` | Programmatic discovery of agent SKILL.md files and `.agents/skill_manifest.json` validation/writing. |
 | [steganography/SKILL.md](steganography/SKILL.md) | `infrastructure-steganography` | QR codes, hash manifests, metadata payloads, and document-wide overlay processing for PDFs. |
 | [tools/SKILL.md](tools/SKILL.md) | `infrastructure-tools` | Discovery, validation, scope, and private-sidecar symlink sync for the top-level `tools/` directory. |
 | [transmission/SKILL.md](transmission/SKILL.md) | `infrastructure-transmission` | Rendered-release transmission leaves — LaTeX single-page bookends, Stage 04 page checks, barcode strips, and figure embedding. |

@@ -133,8 +133,8 @@ Deep dive: [`architecture/thin-orchestrator-summary.md`](architecture/thin-orche
 
 The template exposes machine-readable catalogs for agent discovery:
 
-- **Skills**: `infrastructure.skills.discovery` -> `.cursor/skill_manifest.json`
-- **Operations**: `infrastructure.skills.operation_registry` -> `.cursor/operations_manifest.json`
+- **Skills**: `infrastructure.skills.discovery` -> `.agents/skill_manifest.json`
+- **Operations**: `infrastructure.skills.operation_registry` -> `.agents/operations_manifest.json`
 - **Pipeline**: `infrastructure.core.pipeline.cli` -> live from `pipeline.yaml`
 - **Templates**: `infrastructure.project.exemplar_roster` -> generated roster
 

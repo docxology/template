@@ -36,7 +36,7 @@ Reference for Layer-1 infrastructure modules.
 | **Steganography** | Provenance & watermarking | Alpha-channel overlays, QR barcodes, PDF metadata | [Details](guides/steganography-module.md) |
 | **Config** | Configuration schemas | Secure config, environment templates | [Details](guides/config-module.md) |
 | **Docker** | Containerization | Dockerfile, docker-compose | [Details](guides/docker-module.md) |
-| **Skills** | SKILL.md discovery | Cursor manifest, agent routing (`discover_skills`) | [Details](guides/skills-module.md) |
+| **Skills** | SKILL.md discovery | shared agent manifest, agent routing (`discover_skills`) | [Details](guides/skills-module.md) |
 | **Telemetry** | Unified pipeline telemetry | Stage resource metrics, diagnostic aggregation, JSON/text reports | — |
 | **Prose** | Manuscript prose analytics | Readability metrics, outline, editorial flags, JSON reports | [`infrastructure/prose/AGENTS.md`](../../infrastructure/prose/AGENTS.md) |
 | **Orchestration** | Pipeline CLI / menus | Thin shell over `PipelineExecutor`, slug validation, stage logs | [`infrastructure/orchestration/AGENTS.md`](../../infrastructure/orchestration/AGENTS.md) |

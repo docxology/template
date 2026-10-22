@@ -40,7 +40,7 @@
           "file_count": 13,
           "largest_file": "weather_7day.png",
           "largest_file_path": "figures/weather_7day.png",
-          "size_mb": "0.17"
+          "size_mb": "0.07"
         },
         "llm": {
           "exists": false,
@@ -57,7 +57,7 @@
           "file_count": 2,
           "largest_file": "the-triplicate.pdf",
           "largest_file_path": "pdf/the-triplicate.pdf",
-          "size_mb": "0.51"
+          "size_mb": "0.42"
         },
         "release": {
           "exists": true,
@@ -146,7 +146,7 @@
             "optional": false,
             "readable": true,
             "required": true,
-            "size_mb": 0.17
+            "size_mb": 0.07
           },
           "llm": {
             "exists": false,
@@ -168,7 +168,7 @@
             "optional": false,
             "readable": true,
             "required": true,
-            "size_mb": 0.51
+            "size_mb": 0.42
           },
           "release": {
             "exists": true,
@@ -219,16 +219,16 @@
         "valid": true,
         "warnings": []
       },
-      "total_size_mb": 0.9144535064697266
+      "total_size_mb": 0.7207670211791992
     },
     "figures": {
       "files": 13,
-      "size_mb": 0.16872692108154297
+      "size_mb": 0.07233428955078125
     },
     "inventory_mode": "stable-shippable-output-v1",
     "pdf": {
       "files": 2,
-      "size_mb": 0.5124731063842773
+      "size_mb": 0.4151792526245117
     },
     "stable_inventory": {
       "categories": {
@@ -238,11 +238,11 @@
         },
         "figures": {
           "files": 13,
-          "size_bytes": 176923
+          "size_bytes": 75848
         },
         "pdf": {
           "files": 2,
-          "size_bytes": 537367
+          "size_bytes": 435347
         },
         "release": {
           "files": 2,
@@ -263,7 +263,7 @@
       },
       "mode": "stable-shippable-output-v1",
       "total_files": 37,
-      "total_size_bytes": 958874
+      "total_size_bytes": 755779
     }
   },
   "recommendations": [],
@@ -274,12 +274,12 @@
     "passed": 9,
     "total_checks": 9
   },
-  "timestamp": "2026-10-18T10:52:16Z",
+  "timestamp": "2026-10-22T05:16:49Z",
   "validated_inputs": {
     "artifact_manifest": {
       "path": "output/reports/artifact_manifest.json",
-      "sha256": "abb6d659cf8a378a3252e24644f8c2ab1daaa5e94e0c94655495bbaf1a502c87",
-      "size_bytes": 11075
+      "sha256": "cfe3ee2855b125455e616fdf1d95d4e270d5fd3e4321c788acca246c13ac2294",
+      "size_bytes": 11074
     },
     "combined_manuscript": {
       "path": "output/web/_combined_manuscript.md",
@@ -332,19 +332,19 @@
     "fingerprints": {
       "config": {
         "file_count": 28,
-        "sha256": "07f838a4c3fcdce9b8c6ee21a4592eaed33441f708eade6dfd8049fa475c94e1"
+        "sha256": "bd6e0bf518cb15945156bcdfb314296dc22651db0104a4e04ef97fdceb1f923c"
       },
       "output": {
         "file_count": 37,
-        "sha256": "afc62b184c55bd43d50e5994e65110b6a3808278802029173976bc0ffdd2bd5b"
+        "sha256": "8721ac0ece929bfb27e5a52cd59d30df52dac00a6cb470d9503bf9c6f99460fc"
       },
       "source": {
         "file_count": 28,
         "sha256": "392cbe13b8f99f410ded1bbcc21807e7922f631ead980abda46492e67c6582a8"
       },
       "stage": {
-        "file_count": 1903,
-        "sha256": "82c47577f1c1b0e22d7feb145892287b0412a5a91606909e9eeb57ca96d1423e"
+        "file_count": 1911,
+        "sha256": "263a30090aab6f8b458069fc2099a22175075b14298625198741d9457d9e9597"
       }
     },
     "project": "templates/template_newspaper",

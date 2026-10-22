@@ -118,6 +118,7 @@ jobs:
     timeout-minutes: 10
     strategy:
       fail-fast: false
+      max-parallel: 8
       matrix: ${{ fromJSON(needs.detect-projects.outputs.infra) }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -138,6 +139,14 @@ jobs:
       - uses: ./.github/actions/setup-acceptance-documents
         with:
           mode: converter
+      - name: Prepare actual TeX for the selected routine compiler controls
+        if: matrix.tex
+        run: |
+          set -euo pipefail
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends texlive-xetex lmodern
+          xelatex --version
+          kpsewhich article.cls
       - name: Select the installed browser for actual native controls
         run: |
           set -euo pipefail

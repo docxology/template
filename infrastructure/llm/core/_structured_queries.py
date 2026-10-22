@@ -59,7 +59,7 @@ class _StructuredQueryMixin:
         model: str,
         messages: list[MessageDict],
         options: GenerationOptions | None = None,
-        retries: int = 1,
+        retries: int | None = None,
     ) -> str:
         """Implemented by LLMClient via MRO."""
         raise NotImplementedError  # pragma: no cover
@@ -267,7 +267,7 @@ class _StructuredQueryMixin:
         save_response: bool = False,
         save_path: Path | None = None,
         log_progress: bool = True,
-        retries: int = 1,
+        retries: int | None = None,
     ) -> Iterator[str]:
         """Stream a concise response (<=150 words) with a brevity instruction prepended."""
         yield from self._stream_with_instruction(
@@ -290,7 +290,7 @@ class _StructuredQueryMixin:
         save_response: bool = False,
         save_path: Path | None = None,
         log_progress: bool = True,
-        retries: int = 1,
+        retries: int | None = None,
     ) -> Iterator[str]:
         """Stream a comprehensive long response with a thoroughness instruction prepended."""
         yield from self._stream_with_instruction(
@@ -316,7 +316,7 @@ class _StructuredQueryMixin:
         save_response: bool,
         save_path: Path | None,
         log_progress: bool,
-        retries: int,
+        retries: int | None,
     ) -> Iterator[str]:
         """Prepend instruction to prompt and stream with custom token limit."""
         from infrastructure.llm.core._stream_impl import stream_query_impl

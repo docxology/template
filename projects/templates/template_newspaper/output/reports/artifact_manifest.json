@@ -21,8 +21,8 @@
     {
       "contract_match": true,
       "path": "output/figures/ad_bakery.png",
-      "sha256": "103f53809650ea5530a64f6f1abc7a204347701273f832ab662d5951f9150208",
-      "size_bytes": 3644,
+      "sha256": "9124d5bd591c64c47ab3370636e6ae5311bcf2f05891599783d8288d454c3f9f",
+      "size_bytes": 1969,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
@@ -30,8 +30,8 @@
     {
       "contract_match": true,
       "path": "output/figures/ad_festival.png",
-      "sha256": "6188b6b81033426ecf225abf2c34b73641a73877276592ee6b64816ba7486d47",
-      "size_bytes": 3857,
+      "sha256": "d7031590b52d68e03b9af914f91006de63782d998751ca335eb2a85715f1ebde",
+      "size_bytes": 2071,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
@@ -39,8 +39,8 @@
     {
       "contract_match": true,
       "path": "output/figures/ad_grocery.png",
-      "sha256": "199008cc0e705eae0dad6f80aa0b631727f7efc8a2e5d40073843729d25d2723",
-      "size_bytes": 2465,
+      "sha256": "de59ad57a4d5b4fc45922894606be8dea95bc277e6eb6010169383a91b0976e0",
+      "size_bytes": 1143,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
@@ -48,8 +48,8 @@
     {
       "contract_match": true,
       "path": "output/figures/ad_realty.png",
-      "sha256": "6dcc962e5fa190330c6d5b7cd62dbe6c2af80ad82d63da27cd7b73027d4bc0ea",
-      "size_bytes": 2832,
+      "sha256": "590517919625b12607a6c2252955151f068d6ad951044e19b3cf3c73ebf13ad5",
+      "size_bytes": 1192,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
@@ -57,8 +57,8 @@
     {
       "contract_match": true,
       "path": "output/figures/baseball.png",
-      "sha256": "f43a62644a1cf993ebaaa59c670e7131ef7f57fff57774290a74a5e3d1d7c4f6",
-      "size_bytes": 6053,
+      "sha256": "6e3753099c78b1a81ac72d2a81c96e167b4571374121d01898c5edf6ffab9a74",
+      "size_bytes": 1760,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
@@ -66,8 +66,8 @@
     {
       "contract_match": true,
       "path": "output/figures/crab_boat.png",
-      "sha256": "859c4f037e55bedb7c964bef4052306f6edf061af73b6d839c48a76ff627a566",
-      "size_bytes": 4880,
+      "sha256": "bf2ead7e9ede6ec490e8d721b729fd12ac44945918a5a85192fe79626e7524c9",
+      "size_bytes": 1686,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
@@ -75,8 +75,8 @@
     {
       "contract_match": true,
       "path": "output/figures/crab_landings.png",
-      "sha256": "557546816226c16f5c021821f6ce586b4db9569c0c20d21fa235f9441992283c",
-      "size_bytes": 41751,
+      "sha256": "d5575e5f0350f5f329d1fc463f0995f57122526d693705fdab5ac44a1a9ee297",
+      "size_bytes": 16912,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
@@ -84,8 +84,8 @@
     {
       "contract_match": true,
       "path": "output/figures/harbor.png",
-      "sha256": "6f5ffd4c1f16f2255a55089fa4f1b5ad7b97b49b25b623a92b0056b1d35a9357",
-      "size_bytes": 6357,
+      "sha256": "f548728e9827d9d620f8606dc5585ff277f206a356dfbf0a951a2b57d8da804a",
+      "size_bytes": 2363,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
@@ -93,8 +93,8 @@
     {
       "contract_match": true,
       "path": "output/figures/lighthouse.png",
-      "sha256": "a3762074afa5ec060a98a5a5b9561f2852ed58554bd7ffd29626f7c428a1c3fd",
-      "size_bytes": 5327,
+      "sha256": "a1a5d806e88545f0f3a8a4738be724ae4504caefa4068e07adeaa1c5431cb97e",
+      "size_bytes": 2351,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
@@ -102,8 +102,8 @@
     {
       "contract_match": true,
       "path": "output/figures/lily_fields.png",
-      "sha256": "9a760e939a28fe01583506dbd0366b51c98fdb01f05e7d3d478a170bce266f20",
-      "size_bytes": 10423,
+      "sha256": "fcd9b693a502722bb21e3a30a0a6e92e1d43582692a92b6534914473732b7142",
+      "size_bytes": 7755,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
@@ -111,8 +111,8 @@
     {
       "contract_match": true,
       "path": "output/figures/redwoods.png",
-      "sha256": "690e45200bd3851262550b6770903808b6a0a842478308a62512d39184898198",
-      "size_bytes": 6762,
+      "sha256": "dcde8ecdf5abd1ce9a484d7350128e6681f6def1796eb8ddcbdb918c382181e0",
+      "size_bytes": 1421,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
@@ -120,8 +120,8 @@
     {
       "contract_match": true,
       "path": "output/figures/tides.png",
-      "sha256": "d7c019f42a2f148e0ce0b6b095b6e813f6e1a98b4a9d1c8d40b96d67a552481d",
-      "size_bytes": 35572,
+      "sha256": "e06704d9e3d9ae3a3285c28142260ac6e2cc8976db2f5b2579993e9e577af185",
+      "size_bytes": 15640,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
@@ -129,8 +129,8 @@
     {
       "contract_match": true,
       "path": "output/figures/weather_7day.png",
-      "sha256": "8d57499dd2d8c04829879b81f93b8db271e6eaaf02cc7a19135b9a2d7cfdcb58",
-      "size_bytes": 47000,
+      "sha256": "9330d800e860cff5bba137883dc0f99745c83d6efe9297d8d2995246cfaddec2",
+      "size_bytes": 19585,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
@@ -147,8 +147,8 @@
     {
       "contract_match": true,
       "path": "output/pdf/the-triplicate.pdf",
-      "sha256": "43521002b3439c2ca02966f831ac373377a401d97ca1cac1b6f77e7ba6518371",
-      "size_bytes": 479392,
+      "sha256": "5730ff31c31dd0a27cb7a371695b35999347b02ed1c57c3c3a0b4825534e4351",
+      "size_bytes": 377372,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""

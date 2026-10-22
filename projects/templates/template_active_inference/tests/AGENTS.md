@@ -113,3 +113,8 @@ Coverage-only documentation measurement is therefore run from a symlink-free
 disposable copy owned by the outer counts process. Per-test teardown is not a
 crash-safety boundary: collection prewarm occurs before the session output
 snapshot, and an outer timeout can kill pytest before fixture restoration.
+
+Project typography checks stay local and source-only. Root's rendering suite
+owns the real SDK Pandoc/preamble integration against this configuration with a
+small private body and no previous render. Complete native acceptance separately
+renders the full manuscript. The standalone-import contract remains unchanged.

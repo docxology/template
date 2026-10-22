@@ -82,7 +82,7 @@
           "file_count": 1,
           "largest_file": "template_code_project_combined.pdf",
           "largest_file_path": "pdf/template_code_project_combined.pdf",
-          "size_mb": "2.15"
+          "size_mb": "2.00"
         },
         "provenance": {
           "exists": true,
@@ -108,7 +108,7 @@
           "file_count": 9,
           "largest_file": "03_results_slides.pdf",
           "largest_file_path": "slides/03_results_slides.pdf",
-          "size_mb": "2.45"
+          "size_mb": "2.20"
         },
         "web": {
           "exists": true,
@@ -152,7 +152,7 @@
           "combined_pdf": {
             "exists": true,
             "readable": true,
-            "size_mb": 2.15
+            "size_mb": 2.0
           },
           "data": {
             "exists": true,
@@ -222,7 +222,7 @@
             "optional": false,
             "readable": true,
             "required": true,
-            "size_mb": 2.15
+            "size_mb": 2.0
           },
           "provenance": {
             "exists": true,
@@ -253,7 +253,7 @@
             "optional": false,
             "readable": true,
             "required": true,
-            "size_mb": 2.45
+            "size_mb": 2.2
           },
           "web": {
             "exists": true,
@@ -271,7 +271,7 @@
         "valid": true,
         "warnings": []
       },
-      "total_size_mb": 13.962028503417969
+      "total_size_mb": 13.552277565002441
     },
     "figures": {
       "files": 10,
@@ -280,7 +280,7 @@
     "inventory_mode": "stable-shippable-output-v1",
     "pdf": {
       "files": 1,
-      "size_mb": 2.152009963989258
+      "size_mb": 1.9970932006835938
     },
     "stable_inventory": {
       "categories": {
@@ -314,7 +314,7 @@
         },
         "pdf": {
           "files": 1,
-          "size_bytes": 2256546
+          "size_bytes": 2094104
         },
         "provenance": {
           "files": 1,
@@ -326,7 +326,7 @@
         },
         "slides": {
           "files": 9,
-          "size_bytes": 2571894
+          "size_bytes": 2304681
         },
         "web": {
           "files": 14,
@@ -335,7 +335,7 @@
       },
       "mode": "stable-shippable-output-v1",
       "total_files": 80,
-      "total_size_bytes": 14640248
+      "total_size_bytes": 14210593
     }
   },
   "recommendations": [],
@@ -346,11 +346,11 @@
     "passed": 9,
     "total_checks": 9
   },
-  "timestamp": "2026-10-18T10:52:16Z",
+  "timestamp": "2026-10-22T05:16:49Z",
   "validated_inputs": {
     "artifact_manifest": {
       "path": "output/reports/artifact_manifest.json",
-      "sha256": "bae4f9d5789f051cddb944ab5ec5e8f219fc6d1fae2b7321f3b898ffb3f61eaa",
+      "sha256": "0e7cc040b605def369e027452b96a696be9b304efa1e4db28b145eafcbfa1a37",
       "size_bytes": 24175
     },
     "combined_manuscript": {
@@ -434,19 +434,19 @@
     "fingerprints": {
       "config": {
         "file_count": 18,
-        "sha256": "8968dcb49b1b3ee64051eeb00f69e09b7dcd9c0645f8c0fa48e2b7c4fc934831"
+        "sha256": "850a0ebd1d84d61190670180d203fb020363ff81f1fbe04099c2992933422819"
       },
       "output": {
         "file_count": 80,
-        "sha256": "f74c4e5eb0498eccfa6d85cb6660a866bd260686c7f5c300fff03b4e4e8a454c"
+        "sha256": "386a6c736e2a868fe6de3196bbf76bdab48051d3c4379f5def5861dbc22989fd"
       },
       "source": {
         "file_count": 55,
         "sha256": "d9af8b0f2e59be4d187071ff2448e3a82785378c014193df5491da7be1733e36"
       },
       "stage": {
-        "file_count": 1903,
-        "sha256": "82c47577f1c1b0e22d7feb145892287b0412a5a91606909e9eeb57ca96d1423e"
+        "file_count": 1911,
+        "sha256": "263a30090aab6f8b458069fc2099a22175075b14298625198741d9457d9e9597"
       }
     },
     "project": "templates/template_code_project",

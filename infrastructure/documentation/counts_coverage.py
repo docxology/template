@@ -157,12 +157,12 @@ class ExemplarSnapshot:
 
 
 EXEMPLAR_SNAPSHOT: tuple[ExemplarSnapshot, ...] = (
-    ExemplarSnapshot("template_active_inference", "91.03 %"),
+    ExemplarSnapshot("template_active_inference", "91.04 %"),
     ExemplarSnapshot("template_advanced_literature_review", "94.30 %"),
     ExemplarSnapshot("template_autopoiesis", "92.03 %"),
     ExemplarSnapshot("template_autoresearch_project", "96.36 %"),
     ExemplarSnapshot("template_autoscientists", "92.93 %"),
-    ExemplarSnapshot("template_code_project", "93.78 %"),
+    ExemplarSnapshot("template_code_project", "93.86 %"),
     ExemplarSnapshot("template_data_descriptor", "96.26 %"),
     ExemplarSnapshot("template_eda_notebook", "91.01 %"),
     ExemplarSnapshot("template_experiment_tree", "91.85 %"),
@@ -177,10 +177,10 @@ EXEMPLAR_SNAPSHOT: tuple[ExemplarSnapshot, ...] = (
     ExemplarSnapshot("template_prose_project", "91.67 %"),
     ExemplarSnapshot("template_redacted_report", "97.03 %"),
     ExemplarSnapshot("template_registered_report", "95.17 %"),
-    ExemplarSnapshot("template_search_project", "91.94 %"),
-    ExemplarSnapshot("template_sia", "92.48 %"),
+    ExemplarSnapshot("template_search_project", "91.82 %"),
+    ExemplarSnapshot("template_sia", "92.69 %"),
     ExemplarSnapshot("template_storybook", "95.57 %"),
-    ExemplarSnapshot("template_template", "97.07 %"),
+    ExemplarSnapshot("template_template", "95.56 %"),
     ExemplarSnapshot("template_textbook", "96.17 %"),
 )
 
@@ -583,36 +583,18 @@ def _hash_exemplar_inventory(repo_root: Path, name: str, inventory: tuple[str, .
 
 
 def _coverage_source_inventory(repo_root: Path, relative_root: str | tuple[str, ...]) -> tuple[str, ...]:
-    """Admit both complete Git inventories once for one source-selection scope."""
+    """Admit the complete tracked/nonignored union in one fresh bounded query."""
     selected = (relative_root,) if isinstance(relative_root, str) else relative_root
-    tracked = run_with_policy(
-        ["git", "ls-files", "-z", "--", *selected],
+    inventory = run_with_policy(
+        ["git", "ls-files", "-z", "--cached", "--others", "--exclude-standard", "--", *selected],
         cwd=repo_root,
         env=_coverage_git_environment(),
         policy=_coverage_process_policy("coverage-source-inventory", 30),
     )
-    untracked = run_with_policy(
-        ["git", "ls-files", "-z", "--others", "--exclude-standard", "--", *selected],
-        cwd=repo_root,
-        env=_coverage_git_environment(),
-        policy=_coverage_process_policy("coverage-source-inventory", 30),
-    )
-    if (
-        tracked.timed_out
-        or untracked.timed_out
-        or tracked.returncode != 0
-        or untracked.returncode != 0
-        or tracked.command_error
-        or untracked.command_error
-    ):
+    if inventory.timed_out or inventory.returncode != 0 or inventory.command_error:
         raise RuntimeError("coverage input inventory requires successful Git tracked/nonignored queries")
     return tuple(
-        sorted(
-            {
-                *_nul_delimited_git_paths(tracked.stdout, inventory="tracked coverage inputs"),
-                *_nul_delimited_git_paths(untracked.stdout, inventory="nonignored coverage inputs"),
-            }
-        )
+        sorted(set(_nul_delimited_git_paths(inventory.stdout, inventory="tracked/nonignored coverage inputs")))
     )
 
 

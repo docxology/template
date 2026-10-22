@@ -1,5 +1,3 @@
-\newpage
-
 ## Appendix: Exemplar Project Summary {#appendix-exemplars}
 
 \begin{table}[h]

@@ -307,7 +307,11 @@ def test_late_retained_roster_row_refuses_repeats_paths_and_status_minting(
 
 
 def test_data_packet_cannot_open_a_source_owner_stage_directory_or_reader(tmp_path: Path) -> None:
+    from infrastructure.reporting.native_stage_child_completion import observe_native_stage_child
+
     spec, request = _specification(tmp_path)
+    with pytest.raises(ValueError, match="actual fixed parent preparation call"):
+        observe_native_stage_child(spec, {})
     assert current_native_stage_directory() is None
     with pytest.raises(ValueError, match="actual live Source owner"):
         prepare_native_stage_child(spec, SCOPE, request, tmp_path, deadline=time.monotonic() + 10)

@@ -3,15 +3,17 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import os
 import shlex
-import subprocess
+import time
 import sys
 import tomllib
 from pathlib import Path
 from uuid import uuid4
 
+from infrastructure.core.subprocess_policy import SubprocessPolicy, run_with_policy
 from infrastructure.core.testing.ci_contracts import CONTRACT_SECONDS, combined_groups, contract_files
 
 from infrastructure.core.testing.pytest_orchestration import resolve_infrastructure_test_paths
@@ -29,9 +31,11 @@ from infrastructure.core.testing.pytest_observations import (
 # that same routine budget in separate jobs when selected by Source ownership.
 _ISOLATED_ROUTINE_MODULES = frozenset(
     {
+        "tests/infra_tests/core/pipeline/test_run_matrix.py",
         "tests/infra_tests/core/test_execution_contract.py",
         "tests/infra_tests/core/test_project_test_measurement.py",
         "tests/infra_tests/project/test_root_acceptance.py",
+        "tests/infra_tests/publishing/test_standalone_mirror.py",
     }
 )
 
@@ -105,15 +109,18 @@ def infrastructure_shards(root: Path, changed: tuple[str, ...] = (), count: int 
     files = tuple(name for name in files if name not in contracts)
     isolated = tuple(name for name in files if count is None and name in _ISOLATED_ROUTINE_MODULES)
     files = tuple(name for name in files if name not in isolated)
+    automatic = count is None
     if count is None:
         # Package-level ownership can expand the routine roster by an order of
         # magnitude. Keep its complete selection and original 540-second clock,
-        # with at most ten jobs and a nominal 20-module target per job.
-        count = min(10 - len(isolated), max(3, (len(files) + 19) // 20))
+        # with at most 20 modules per automatic job. Hosted concurrency is
+        # bounded separately; file size balancing does not estimate duration.
+        count = max(3, (len(files) + 19) // 20)
     shards: list[list[str]] = [[] for _ in range(min(count, len(files)))]
     loads = [0] * len(shards)
     for name in sorted(files, key=lambda p: (-(root / p).stat().st_size, p)):
-        selected = min(range(len(loads)), key=lambda i: (loads[i], i))
+        available = [i for i in range(len(loads)) if not automatic or len(shards[i]) < 20]
+        selected = min(available, key=lambda i: (loads[i], i))
         shards[selected].append(name)
         loads[selected] += (root / name).stat().st_size
     return [*[sorted(shard) for shard in shards], *[[name] for name in isolated]]
@@ -186,6 +193,61 @@ def _shard_collection(directory: Path, nonce: str, files: list[str], root: Path,
     }
 
 
+def _run_functional_process(
+    root: Path,
+    command: list[str],
+    environment: dict[str, str],
+    directory: Path,
+    *,
+    timeout_seconds: float,
+    is_contract: bool,
+) -> int:
+    """Retain the original bounded outcome; diagnostics grant no pytest success."""
+    request_bytes = (directory / "request.json").read_bytes()
+    request = json.loads(request_bytes)
+    if request["command"] != command or request["timeout_seconds"] != timeout_seconds:
+        raise ValueError("functional process differs from its original request")
+    started = time.monotonic()
+    result = run_with_policy(
+        command,
+        cwd=root,
+        env=environment,
+        policy=SubprocessPolicy(
+            policy_id="functional-ci-contract" if is_contract else "functional-ci-routine",
+            source_path="infrastructure/core/testing/ci_infra.py",
+            timeout_seconds=timeout_seconds,
+            capture_output=False,
+        ),
+    )
+    # Preserve raw OS/effective exits below. CLI timeout takes precedence over
+    # custody refusal; both original predicates remain explicit diagnostics.
+    code = 124 if result.timed_out else 75 if result.custody_refused else result.returncode
+    if code < 0:
+        code = 128 - code
+    if code == 0 and (result.original_returncode != 0 or result.command_error):
+        code = 1
+    diagnostic = {
+        "schema_version": "template-functional-process-diagnostic/v1",
+        "role": "diagnostic-process-only",
+        "request_sha256": hashlib.sha256(request_bytes).hexdigest(),
+        "nonce": request["nonce"],
+        "shard": request["shard"],
+        "timeout_seconds": timeout_seconds,
+        "elapsed_seconds": time.monotonic() - started,
+        "returncode": result.returncode,
+        "original_returncode": result.original_returncode,
+        "pid": result.pid,
+        "timed_out": result.timed_out,
+        "custody_refused": result.custody_refused,
+        "command_error": result.command_error,
+        "stream_mode": "inherited-not-captured",
+        "cli_exit_code": code,
+    }
+    with (directory / "run-process.json").open("x") as stream:
+        json.dump(diagnostic, stream, sort_keys=True, indent=2)
+    return code
+
+
 def run_shard(root: Path, plan: dict, shard: int, directory: Path) -> int:
     if os.environ.get("PYTEST_ADDOPTS", "").strip():
         raise ValueError("functional CI refuses ambient pytest arguments")
@@ -231,9 +293,11 @@ def run_shard(root: Path, plan: dict, shard: int, directory: Path) -> int:
             sort_keys=True,
             indent=2,
         )
-    result = subprocess.run(command, cwd=root, env=environment, check=False, timeout=timeout)
-    if result.returncode:
-        return result.returncode
+    code = _run_functional_process(
+        root, command, environment, directory, timeout_seconds=timeout, is_contract=is_contract
+    )
+    if code:
+        return code
     selected, outcomes = read_execution_receipts(directory / "execution", nonce)
     collection = _shard_collection(directory / "execution", nonce, shards[shard], root, is_contract=is_contract)
     payload = {

@@ -96,7 +96,10 @@ def test_write_coverage_page(project_root: Path) -> None:
     assert path is not None
     text = path.read_text(encoding="utf-8")
     assert "Sheaf Track Coverage" in text
-    assert "Introduction" in text
+    # A heading immediately following a list item becomes lazy list content
+    # in the configured Markdown renderer instead of starting an IMRAD block.
+    for heading in ("Introduction", "Methods", "Results", "Discussion", "Appendix"):
+        assert f"\n\n## {heading}\n\n" in text
     assert "sheaf_coverage_heatmap.png" in text
     # pandoc-crossref owns numbering: one {#fig:} label with the caption text, no hand label.
     assert "{#fig:sheaf_coverage_heatmap" in text

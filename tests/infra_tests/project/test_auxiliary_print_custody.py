@@ -161,7 +161,7 @@ def actual_print(tmp_path_factory: pytest.TempPathFactory) -> dict[str, Any]:
     return {"root": moved, "original": originals[0], "facts": facts, "process": process}
 
 
-@pytest.mark.timeout(300)
+@pytest.mark.timeout(300, method="thread")
 def test_actual_fixed_print_worker_and_relocated_original_replay(actual_print: dict[str, Any]) -> None:
     root, original = actual_print["root"], actual_print["original"]
     deadline = time.monotonic() + 90
@@ -180,7 +180,7 @@ def test_actual_fixed_print_worker_and_relocated_original_replay(actual_print: d
     assert reader.unchanged()
 
 
-@pytest.mark.timeout(300)
+@pytest.mark.timeout(300, method="thread")
 @pytest.mark.parametrize(
     "fault",
     ["witness-rehash", "tool-rehash", "process-rehash", "code", "source", "plain-reader", "expired", "infinite"],

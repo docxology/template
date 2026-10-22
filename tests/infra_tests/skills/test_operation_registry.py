@@ -171,7 +171,7 @@ class TestManifest:
     def test_write_and_match(self, tmp_path: Path) -> None:
         _make_fake_cli_package(tmp_path)
         path = write_operations_manifest(tmp_path)
-        assert path == (tmp_path / ".cursor" / "operations_manifest.json").resolve()
+        assert path == (tmp_path / ".agents" / "operations_manifest.json").resolve()
         on_disk = load_operations_manifest(path)
         assert on_disk["version"] == 1
         ok, msg = operations_manifest_matches_discovery(tmp_path, path)

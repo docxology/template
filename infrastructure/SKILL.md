@@ -1,6 +1,6 @@
 ---
 name: infrastructure-overview
-description: Top-level skill for the research template infrastructure layer. Use in Cursor, Claude Code, or similar agents when editing or importing anything under infrastructure/, understanding the two-layer architecture, or wiring build/validation/rendering/publishing. Covers module discovery, import patterns, thin orchestrators, per-subpackage SKILL.md paths, and .cursor/skill_manifest.json (see infrastructure.skills).
+description: Top-level skill for the research template infrastructure layer. Use in Cursor, Claude Code, or similar agents when editing or importing anything under infrastructure/, understanding the two-layer architecture, or wiring build/validation/rendering/publishing. Covers module discovery, import patterns, thin orchestrators, per-subpackage SKILL.md paths, and .agents/skill_manifest.json (see infrastructure.skills).
 ---
 
 # Infrastructure Layer
@@ -10,8 +10,8 @@ The `infrastructure/` package provides generic, reusable functionality for resea
 ## Finding skills (Cursor and other agents)
 
 - **Hub:** This file lists every subpackage skill and a module map.
-- **Manifest:** `.cursor/skill_manifest.json` lists every discovered first-party skill (`name`, `description`, `path`); regenerate with `uv run python -m infrastructure.skills write`.
-- **Search:** default discovery covers `infrastructure/**/SKILL.md`, `scripts/**/SKILL.md`, public `projects/templates/**/SKILL.md` including `.agents/skills`, public resource-pool template skills under `fonds/templates/`, `rules/templates/`, and `tools/templates/`, plus `.cursor/skills/`.
+- **Manifest:** `.agents/skill_manifest.json` lists every discovered first-party skill (`name`, `description`, `path`); regenerate with `uv run python -m infrastructure.skills write`.
+- **Search:** default discovery covers `infrastructure/**/SKILL.md`, `scripts/**/SKILL.md`, public `projects/templates/**/SKILL.md` including `.agents/skills`, public resource-pool template skills under `fonds/templates/`, `rules/templates/`, and `tools/templates/`, plus `docs/prompts/`, root `.agents/skills/`, and `.agents/workflows/`.
 - **In Cursor:** `@infrastructure/SKILL.md` or `@infrastructure/<module>/SKILL.md` to load context; pair with the matching `AGENTS.md` for API tables.
 - **Frontmatter:** Each `SKILL.md` has YAML `name` and `description` for routing (see also the table in `infrastructure/README.md`).
 
@@ -38,7 +38,7 @@ The `infrastructure/` package provides generic, reusable functionality for resea
 | `scientific/` | Benchmarking, numerical stability, scientific templates | `benchmark_function`, `check_numerical_stability` |
 | `sia/` | SIA harness: task layout, fixture replay loop, evaluation runner | `validate_task_dir`, `run_sia_loop`, `run_evaluation` |
 | `project/` | Multi-project discovery and validation | `discover_projects`, `validate_project_structure` |
-| `skills/` | Enumerate and parse `SKILL.md`; maintain Cursor manifest | `discover_skills`, `write_skill_manifest` |
+| `skills/` | Enumerate and parse `SKILL.md`; maintain shared agent manifest | `discover_skills`, `write_skill_manifest` |
 | `steganography/` | Cryptographic PDF watermarking and verification | `SteganographyProcessor`, `SteganographyConfig`, `embed_steganography` |
 | `core/telemetry/` | Unified pipeline telemetry (stage resources + diagnostics, JSON/text reports) | `TelemetryCollector`, `TelemetryConfig` |
 

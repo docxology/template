@@ -118,6 +118,38 @@ def test_doc_relative_path_points_at_counts_md() -> None:
     assert COVERAGE_PROVENANCE_RELATIVE_PATH == Path("docs/_generated/coverage_snapshot.json")
 
 
+def test_coverage_inventory_union_preserves_tracked_ignored_and_newline_paths(tmp_path: Path) -> None:
+    """One real Git union retains the complete prior two-query contract."""
+    from infrastructure.documentation.counts_coverage import _coverage_source_inventory
+
+    (tmp_path / ".gitignore").write_text("*.ignored\n", encoding="utf-8")
+    selected = tmp_path / "selected"
+    selected.mkdir()
+    names = ("tracked.py", "tracked.ignored", "hidden.ignored")
+    for name in names:
+        (selected / name).write_text(name, encoding="utf-8")
+    (tmp_path / "outside.py").write_text("outside", encoding="utf-8")
+    _initialize_test_git_repository(tmp_path)
+    (selected / "untracked\ninput.py").write_text("untracked", encoding="utf-8")
+    subprocess.run(
+        ["git", "add", "-f", "--", "selected/tracked.py", "selected/tracked.ignored"],
+        cwd=tmp_path,
+        check=True,
+        capture_output=True,
+    )
+
+    def paths(*args: str) -> set[str]:
+        output = subprocess.check_output(["git", "ls-files", "-z", *args, "--", "selected"], cwd=tmp_path)
+        return {os.fsdecode(path) for path in output.split(b"\0") if path}
+
+    expected = paths() | paths("--others", "--exclude-standard")
+    assert expected == {"selected/tracked.py", "selected/tracked.ignored", "selected/untracked\ninput.py"}
+    assert _coverage_source_inventory(tmp_path, "selected") == tuple(sorted(expected))
+    assert _coverage_source_inventory(tmp_path, ("selected", "outside.py", "selected")) == tuple(
+        sorted(expected | {"outside.py"})
+    )
+
+
 def test_exemplar_source_hash_changes_with_source(tmp_path: Path) -> None:
     project = tmp_path / "projects" / "templates" / "demo"
     (project / "src").mkdir(parents=True)

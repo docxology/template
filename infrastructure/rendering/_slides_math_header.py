@@ -20,11 +20,58 @@ from infrastructure.rendering._pdf_latex_helpers import (
 )
 from infrastructure.core.exceptions import RenderingError
 from infrastructure.rendering.latex_texttt import _BREAKTT_PREAMBLE
+from infrastructure.rendering.latex_texttt import VERBATIM_WRAP_PREAMBLE
 
 logger = get_logger(__name__)
 
 if TYPE_CHECKING:
-    from infrastructure.rendering._slides_accessibility_contracts import AccessibleSlidePolicy
+    from infrastructure.rendering._slides_accessibility_contracts import (
+        AccessibleSlidePolicy,
+    )
+
+
+# Modern Pandoc bounds an image to the whole text height, which leaves no
+# room for a Beamer title or caption. Override only its generated shrink-only
+# box helper; authored includegraphics dimensions and tiny images are untouched.
+_ARCHIVE_BOUNDED_FIGURE_PREAMBLE = r"""
+\makeatletter
+\newbox\archive@titlebox
+\newdimen\archive@available
+\newcommand*\archivefigurebounded[1]{%
+  \sbox\pandoc@box{#1}%
+  \archive@available=\textheight%
+  \ifx\beamer@frametitle\@empty\else%
+    \setbox\archive@titlebox=\vbox{\vbox{}{\parskip0pt\usebeamertemplate***{frametitle}\vskip0.25em}}%
+    \advance\archive@available by-\ht\archive@titlebox%
+    \advance\archive@available by-\dp\archive@titlebox%
+  \fi%
+  \advance\archive@available by-\beamer@frametopskip%
+  \advance\archive@available by-2\baselineskip%
+  \ifdim\archive@available<1pt%
+    \PackageError{template}{Archive image frame has no title-safe image area}{}%
+  \fi%
+  \Gscale@div\@tempa{\archive@available}{\dimexpr\ht\pandoc@box+\dp\pandoc@box\relax}%
+  \Gscale@div\@tempb{0.98\linewidth}{\wd\pandoc@box}%
+  \ifdim\@tempb\p@<\@tempa\p@\let\@tempa\@tempb\fi%
+  \ifdim\@tempa\p@<\p@\scalebox{\@tempa}{\usebox\pandoc@box}%
+  \else\usebox{\pandoc@box}\fi%
+}
+\newcommand*\archivefigurecaptionnumber[2]{#2}
+\newenvironment{archivecaptionframe}{\par\begingroup}{\par\endgroup}
+\newenvironment{archiveimageframe}{\par\begingroup\centering\let\pandocbounded\archivefigurebounded}{\par\endgroup}
+\ifdefined\pandocbounded
+\renewcommand*\pandocbounded[1]{%
+  \sbox\pandoc@box{#1}%
+  \Gscale@div\@tempa{0.40\textheight}{\dimexpr\ht\pandoc@box+\dp\pandoc@box\relax}%
+  \Gscale@div\@tempb{0.98\linewidth}{\wd\pandoc@box}%
+  \ifdim\@tempb\p@<\@tempa\p@\let\@tempa\@tempb\fi%
+  \ifdim\@tempa\p@<\p@\scalebox{\@tempa}{\usebox\pandoc@box}%
+  \else\usebox{\pandoc@box}%
+  \fi%
+}
+\fi
+\makeatother
+""".strip()
 
 
 def _latex_href(value: str) -> str:
@@ -129,6 +176,10 @@ def write_slides_math_header(
             snippet_parts.append(
                 "% Manuscript macro/package fallbacks (newcommand -> providecommand).\n" + macro_fallbacks + "\n"
             )
+
+    snippet_parts.append(VERBATIM_WRAP_PREAMBLE + "\n")
+    if accessible_policy is None:
+        snippet_parts.append(_ARCHIVE_BOUNDED_FIGURE_PREAMBLE + "\n")
 
     # Natbib fallback definitions for slide rendering. \providecommand
     # is a no-op when natbib is loaded (real definition wins). The layout
@@ -273,7 +324,13 @@ def write_slides_math_header(
             extract_preamble(preamble_file),
         ):
             env, chained, title = _m.group(1), _m.group(2), _m.group(3)
-            if env in known | {"proposition", "hypothesis", "remark", "axiom", "property"}:
+            if env in known | {
+                "proposition",
+                "hypothesis",
+                "remark",
+                "axiom",
+                "property",
+            }:
                 continue  # already declared or declared below/above
             counter = f"[{chained}]" if chained else ""
             preamble_theorems += f"\\newtheorem{{{env}}}{counter}{{{title}}}\n"

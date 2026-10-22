@@ -432,6 +432,15 @@ th {
   color: white;
 }
 
+/* Preserve a complete inline-code header within the table's scroll region. */
+th code {
+  color: inherit;
+  background-color: transparent;
+  white-space: nowrap;
+  overflow-wrap: normal;
+  word-break: normal;
+}
+
 img {
   max-width: 100%;
   height: auto;
@@ -596,8 +605,8 @@ mjx-container[display="true"] {
 <tr>
 <td>Repository root</td>
 <td style="text-align: center;"><code>AGENTS.md</code>,
-<code>CLAUDE.md</code>, <code>README.md</code>,
-<code>RUN_GUIDE.md</code></td>
+<code>.agents/</code>, <code>CLAUDE.md</code>, <code>README.md</code>,
+<code>docs/RUN_GUIDE.md</code></td>
 <td>Global navigation and AI agent context</td>
 </tr>
 <tr>
@@ -608,13 +617,13 @@ mjx-container[display="true"] {
 <tr>
 <td>Per-directory</td>
 <td style="text-align: center;"><code>AGENTS.md</code> +
-<code>README.md</code> at every directory</td>
+<code>README.md</code> in documented directories</td>
 <td>Documentation Duality standard</td>
 </tr>
 <tr>
 <td>Per-module (Tier 3)</td>
-<td style="text-align: center;"><code>SKILL.md</code> at every
-infrastructure module</td>
+<td style="text-align: center;"><code>SKILL.md</code> on skill-enabled
+modules and public exemplars</td>
 <td>Machine-parseable MCP-aligned skill descriptor</td>
 </tr>
 <tr>
@@ -651,9 +660,11 @@ grows, whereas a token re-resolves on every render. A reader onboarding
 to the repository should start at <code>docs/core/</code>, follow the
 graduated <code>docs/guides/</code> skill ladder, and consult the
 per-directory <code>AGENTS.md</code>/<code>README.md</code> pair nearest
-to whatever code they are editing; AI agents additionally read each
-module’s <code>SKILL.md</code> to locate capabilities without guessing
-API signatures.</p>
+to whatever code they are editing; AI agents begin with root
+<code>AGENTS.md</code> and <code>.agents/AGENTS.md</code>, then read
+local contracts and available <code>SKILL.md</code> descriptors. The
+shared skill manifest supplies discovery; client-specific files remain
+compatibility references.</p>
 </main>
 </body>
 </html>

@@ -30,8 +30,8 @@
     {
       "contract_match": true,
       "path": "output/figures/ablation.png",
-      "sha256": "1b40f009d05d492646e277d7b24f87f99275736c694c62afbb5ab48fe2700fa1",
-      "size_bytes": 51600,
+      "sha256": "919ed722591b2f353932801d97e350788209b9c4ccb7bbe907b9d9ffb9db550c",
+      "size_bytes": 48312,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
@@ -39,8 +39,8 @@
     {
       "contract_match": true,
       "path": "output/figures/ablation_efficiency.png",
-      "sha256": "dd666fffa09536bea41e1e1f85a12a6e47959c2a98a362935cba6bfe4ac4fc3e",
-      "size_bytes": 56834,
+      "sha256": "173d61f984b3295aa0002c53374b892c8ce86d07c8c6e086759e91e2e2a9b789",
+      "size_bytes": 52433,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
@@ -57,8 +57,8 @@
     {
       "contract_match": true,
       "path": "output/figures/search_comparison.png",
-      "sha256": "845fa5295bfe4c8f14d3d5e1579502369e91895fb3becea515881d19cf4b538e",
-      "size_bytes": 54602,
+      "sha256": "03860bb0a3d83ed0de69e4718c4a21cd2a0aa9219c98b7d3098cc7cdafde1f2c",
+      "size_bytes": 47740,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
@@ -66,8 +66,8 @@
     {
       "contract_match": true,
       "path": "output/pdf/template_autoscientists_combined.pdf",
-      "sha256": "85d2b37efdf8cb9b45d3e3c2eec06eb612a48fbef9d2aa0413fed7fdd26e2a34",
-      "size_bytes": 315039,
+      "sha256": "04e183b9ee24716bffd6846971d6bf62f578718937c1784256f220f7ad945123",
+      "size_bytes": 257648,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""

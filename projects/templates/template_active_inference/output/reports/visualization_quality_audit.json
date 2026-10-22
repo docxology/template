@@ -724,7 +724,7 @@
     {
       "accessibility_text_ok": true,
       "alt_word_count": 43,
-      "aspect_ratio": 2.0049652432969216,
+      "aspect_ratio": 1.9320574162679425,
       "aspect_ratio_ok": true,
       "caption_word_count": 36,
       "claim_lane_count": 3,
@@ -740,7 +740,7 @@
       "exists": true,
       "figure_id": "security_posture_map",
       "hash_present": true,
-      "height_px": 1007,
+      "height_px": 1045,
       "mode": "RGB",
       "nonblank": true,
       "paper_claim": "The security posture map separates enforced local controls from deferred production-security obligations and links each row to generated evidence.",
@@ -755,7 +755,7 @@
         "methods_sheaf"
       ],
       "section_bound": true,
-      "size_bytes": 218708,
+      "size_bytes": 219576,
       "source_backed": true,
       "source_mapped": true,
       "sources": [

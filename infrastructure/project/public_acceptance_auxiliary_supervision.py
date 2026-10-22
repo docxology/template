@@ -281,6 +281,7 @@ def supervise(
     environment: dict[str, str] | None = None,
     bootstrap_payload: dict[str, Any] | None = None,
     print_originals: list[Any] | None = None,
+    stream_diagnostics: bool = False,
 ) -> dict[str, Any]:
     """Observe the original child and token-bound cleanup under one finite clock."""
     if type(deadline) not in (int, float) or not math.isfinite(deadline):
@@ -330,6 +331,24 @@ def supervise(
     run_token = ""
     diagnostics: list[str] = []
     original_error: BaseException | None = None
+    diagnostic_positions = {"stdout": 0, "stderr": 0}
+
+    def forward_diagnostics() -> None:
+        # Bounded original text only: no receipt, exit, completion or custody authority.
+        if not stream_diagnostics:
+            return
+        for name, path, target in (("stdout", stdout, sys.stdout), ("stderr", stderr, sys.stderr)):
+            remaining_bytes = 256 * 1024 - diagnostic_positions[name]
+            if remaining_bytes <= 0:
+                continue
+            with path.open("rb") as stream:
+                stream.seek(diagnostic_positions[name])
+                content = stream.read(min(65536, remaining_bytes))
+            if content:
+                diagnostic_positions[name] += len(content)
+                target.write(content.decode("utf-8", errors="replace"))
+                target.flush()
+
     with stdout.open("xb") as out, stderr.open("xb") as err:
         environment = (
             cell_environment(Path(command[0]).absolute(), directory, repo_root=root)
@@ -359,6 +378,7 @@ def supervise(
             )
             guardian.arm(root_pid=child.pid, run_token=run_token, deadline_monotonic=deadline)
             while True:
+                forward_diagnostics()
                 remaining = _remaining(deadline)
                 if stdout.stat().st_size > MAX_STREAM_BYTES or stderr.stat().st_size > MAX_STREAM_BYTES:
                     output_limit = True
@@ -374,6 +394,7 @@ def supervise(
             timeout = isinstance(error, (TimeoutError, subprocess.TimeoutExpired))
         finally:
             cleanup = _cleanup(child, guardian, run_token, deadline)
+            forward_diagnostics()
 
     # The original fresh cache path is an observed runtime fact, not retained evidence.
     # Remove only this owned cache after child cleanup, before source inventory scans.

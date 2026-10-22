@@ -16,8 +16,9 @@ ownership block in `.github/CODEOWNERS` from the canonical public scope.
 while resuming Source controllers serially. Its deadline exception retains
 completed results and original child observations without granting acceptance.
 
-Every Root lane chunk retains `process-output.json` and `case-diagnostics.json`
-under its original ignored evidence directory. They preserve captured process
+`public_root_lane_diagnostics.py` retains each Root lane chunk's
+`process-output.json` and `case-diagnostics.json` under its original ignored
+evidence directory. They preserve captured process
 stdout/stderr and actual pytest failure/skip details with explicit hashes and
 truncation: 256 KiB per process stream, 16 KiB per report field and 1 MiB of report
 text per chunk. Original outcome and timeout receipts remain authoritative;
@@ -433,3 +434,26 @@ POSIX-only and is skipped with a warning on Windows hosts.
 - [manuscript/README.md](manuscript/README.md) - Manuscript utilities
 - [../../scripts/AGENTS.md](../../scripts/AGENTS.md) - Pipeline integration
 - [../../projects/AGENTS.md](../../projects/AGENTS.md) - Multi-project overview
+
+### Project-scoped required auxiliary acceptance
+
+`auxiliary_matrix_plan.py` partitions every Linux-owned auxiliary requirement
+into one complete serial operation per public project and a separate Root
+checks cell. `public_acceptance_auxiliary_cli --matrix-json` emits this Source
+matrix; `--matrix-cell <cell> --timeout-seconds 1800` executes one whole cell.
+The hosted workflow admits four concurrent cells. This deliberately changes
+aggregate scheduling and compute allowance from the former global operation.
+It does not qualify earlier failed invocations or remove any gate.
+
+`auxiliary_matrix_hosted.py` live-authenticates each unique same-run producer,
+attempt, artifact and archive digest through the fixed GitHub read API. Its
+immutable original retains the existing reader deadline. Candidate and fresh
+release readers use `auxiliary_matrix_validation.py` to require the full
+disjoint gate union and every original project graph. Parsed metadata cannot
+construct this authority. Root's six artifacts, Darwin print custody and full
+native-format custody retain their separate owners.
+
+Nested pipeline supervisors forward up to 256 KiB of each original console
+stream into the retained outer worker streams while execution is active.
+Progress lines identify preparation and launch; all forwarded text is
+diagnostic only. It cannot replace original process or completion receipts.

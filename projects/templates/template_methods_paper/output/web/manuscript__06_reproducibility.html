@@ -497,6 +497,15 @@ th {
   color: white;
 }
 
+/* Preserve a complete inline-code header within the table's scroll region. */
+th code {
+  color: inherit;
+  background-color: transparent;
+  white-space: nowrap;
+  overflow-wrap: normal;
+  word-break: normal;
+}
+
 img {
   max-width: 100%;
   height: auto;
@@ -750,7 +759,7 @@ The manuscript intentionally does not hand-transcribe volatile values,
 so prose and artifacts cannot disagree. Configuration provenance is
 itself injected: <code>832fd58172d5b589</code> is the SHA-256 of
 <code>manuscript/config.yaml</code> at build time, and
-<code>2026-10-15T18:40:52Z</code> records when the variables were
+<code>2026-10-22T01:20:41Z</code> records when the variables were
 generated (honoring <code>SOURCE_DATE_EPOCH</code> for byte-reproducible
 builds).</p>
 </main>

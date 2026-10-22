@@ -1,0 +1,87 @@
+{
+  "schema_version": "1.0",
+  "png_sha256": "584af8d12bd40d3e9abc2160e2f72663a0f064dddb4eed74d8fe10ea3198afd1",
+  "width_px": 1700,
+  "height_px": 1100,
+  "dpi": 200,
+  "minimum_label_px": 92.0,
+  "text_measurements": [
+    {
+      "text": "Modules 31\u201331 of 31",
+      "bbox_px": [
+        303.5625,
+        988.0,
+        1396.4375,
+        1080.0
+      ],
+      "font_pixels": 94.44444444444444,
+      "minimum_label_px": 92.0
+    },
+    {
+      "text": "logrotate.d",
+      "bbox_px": [
+        24.0,
+        864.0,
+        543.0,
+        956.0
+      ],
+      "font_pixels": 94.44444444444444,
+      "minimum_label_px": 92.0
+    },
+    {
+      "text": "0",
+      "bbox_px": [
+        1130.0,
+        864.0,
+        1195.75,
+        956.0
+      ],
+      "font_pixels": 94.44444444444444,
+      "minimum_label_px": 92.0
+    },
+    {
+      "text": "[AR\u00b7\u00b7]",
+      "bbox_px": [
+        1350.0,
+        864.0,
+        1614.125,
+        956.0
+      ],
+      "font_pixels": 94.44444444444444,
+      "minimum_label_px": 92.0
+    },
+    {
+      "text": "Python files \u00b7 A AGENTS",
+      "bbox_px": [
+        290.3125,
+        208.0,
+        1409.6875,
+        300.0
+      ],
+      "font_pixels": 94.44444444444444,
+      "minimum_label_px": 92.0
+    },
+    {
+      "text": "R README \u00b7 S SKILL \u00b7 P PAI",
+      "bbox_px": [
+        222.375,
+        108.0,
+        1477.625,
+        200.0
+      ],
+      "font_pixels": 94.44444444444444,
+      "minimum_label_px": 92.0
+    },
+    {
+      "text": "\u00b7 = absent",
+      "bbox_px": [
+        604.3125,
+        8.0,
+        1095.6875,
+        100.0
+      ],
+      "font_pixels": 94.44444444444444,
+      "minimum_label_px": 92.0
+    }
+  ]
+}

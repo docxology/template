@@ -22,3 +22,7 @@ An owned supervisor remains the process-group anchor throughout observation,
 including when the server or its first runner exits. It ignores SIGTERM so
 cleanup retains a verified owner until the final whole-group SIGKILL and live
 member readback. Cleanup authenticates PID/birth identities and refuses reuse.
+
+The warm-up request explicitly uses `num_ctx=4096`, matching the real-model
+smoke clients. This avoids switching context profiles immediately before
+timed requests; successful preparation alone grants no runtime acceptance.

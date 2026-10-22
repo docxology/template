@@ -96,7 +96,10 @@ def _root_descriptor(root: Path, existing_fd: int | None = None) -> Iterator[int
     absolute = root.absolute()
     if ".." in absolute.parts:
         raise ValueError(f"export root must not contain traversal: {root}")
-    flags = os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW
+    # Ancestors need search permission, not directory-listing permission.
+    # Retain no-follow directory handles; actual artifact opens still require read access.
+    access = getattr(os, "O_SEARCH", getattr(os, "O_PATH", os.O_RDONLY))
+    flags = access | os.O_DIRECTORY | os.O_NOFOLLOW
     current = os.open(absolute.anchor, flags)
     try:
         for part in absolute.parts[1:]:

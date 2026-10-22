@@ -1,5 +1,3 @@
-\newpage
-
 ## Appendix: Configuration Reference {#appendix-config}
 
 \begin{table}[h]

@@ -3,11 +3,10 @@
 from __future__ import annotations
 
 import json
-import os
-import shutil
 import subprocess
 import sys
 from pathlib import Path
+from textwrap import dedent
 
 import pytest
 
@@ -305,9 +304,8 @@ def test_git_ignore_inventory_handles_unquoted_path_bytes(tmp_path: Path, name: 
 
 def test_stable_inventory_does_not_admit_file_created_during_git_ignore_evaluation(
     tmp_path: Path,
-    monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    """Git-ignore evaluation and admission must consume one traversal snapshot."""
+    """Real Git runs after the traversal snapshot while fixture files change."""
     project = tmp_path / "project"
     data_dir = project / "output" / "data"
     data_dir.mkdir(parents=True)
@@ -320,40 +318,73 @@ def test_stable_inventory_does_not_admit_file_created_during_git_ignore_evaluati
     late_ignored = data_dir / "late.scratch"
     subprocess.run(["git", "init", "-q"], cwd=project, check=True, capture_output=True)
     (project / ".gitignore").write_text("output/data/*.scratch\n", encoding="utf-8")
-    real_git = shutil.which("git")
-    assert real_git is not None
-    wrapper_dir = tmp_path / "git-wrapper"
-    wrapper_dir.mkdir()
-    wrapper = wrapper_dir / "git"
-    wrapper.write_text(
-        "#!/usr/bin/env python3\n"
-        "import os\n"
-        "from pathlib import Path\n"
-        "import sys\n"
-        "late = Path(os.environ['TEMPLATE_TEST_LATE_IGNORED'])\n"
-        "deleted = Path(os.environ['TEMPLATE_TEST_DELETED'])\n"
-        "replaced = Path(os.environ['TEMPLATE_TEST_REPLACED'])\n"
-        "if 'check-ignore' in sys.argv and not late.exists():\n"
-        "    late.write_text('ignored but too late for this snapshot\\n', encoding='utf-8')\n"
-        "    deleted.unlink()\n"
-        "    replaced.unlink()\n"
-        "    replaced.write_text('replacement with a different identity and size\\n', encoding='utf-8')\n"
-        "real_git = os.environ['TEMPLATE_TEST_REAL_GIT']\n"
-        "os.execv(real_git, [real_git, *sys.argv[1:]])\n",
+    script = tmp_path / "observe_real_git.py"
+    script.write_text(
+        dedent(
+            """\
+            import json
+            import os
+            from pathlib import Path
+            import shutil
+            import sys
+
+            source_root, project = map(Path, sys.argv[1:])
+            sys.path.insert(0, str(source_root))
+            from infrastructure.core.pipeline.artifacts import collect_stable_output_inventory
+
+            data = project / "output" / "data"
+            late = data / "late.scratch"
+            deleted = data / "deleted.json"
+            replaced = data / "replaced.json"
+            native_git = shutil.which("git", path=os.defpath)
+            assert native_git is not None
+            observations = []
+
+            def observe(event, args):
+                if event != "subprocess.Popen":
+                    return
+                executable, command, cwd, environment = args
+                if "check-ignore" not in command:
+                    return
+                assert Path(executable).resolve() == Path(native_git).resolve()
+                assert command[command.index("-C") + 1] == str(project)
+                observations.append(command)
+                if len(observations) == 1:
+                    late.write_text("ignored but too late for this snapshot\\n", encoding="utf-8")
+                    deleted.unlink()
+                    replaced.unlink()
+                    replaced.write_text("replacement with a different identity and size\\n", encoding="utf-8")
+
+            # Audit hooks cannot be removed, so their lifetime belongs to this
+            # isolated child. The observer changes only real fixture files;
+            # subprocess execution and Git's actual result remain untouched.
+            sys.addaudithook(observe)
+            inventory = collect_stable_output_inventory(project / "output")
+            assert len(observations) == 1, observations
+            assert late.is_file(), "interleaving precondition: the late ignored file was created"
+            assert not deleted.exists()
+            assert replaced.read_text(encoding="utf-8").startswith("replacement ")
+            assert inventory.issues == (), inventory.issues
+            assert inventory.files == (data / "stable.json",), inventory.files
+            print(json.dumps({"files": [str(path) for path in inventory.files], "git_calls": len(observations)}))
+            """
+        ),
         encoding="utf-8",
     )
-    wrapper.chmod(0o755)
-    monkeypatch.setenv("TEMPLATE_TEST_LATE_IGNORED", str(late_ignored))
-    monkeypatch.setenv("TEMPLATE_TEST_DELETED", str(deleted))
-    monkeypatch.setenv("TEMPLATE_TEST_REPLACED", str(replaced))
-    monkeypatch.setenv("TEMPLATE_TEST_REAL_GIT", real_git)
-    monkeypatch.setenv("PATH", f"{wrapper_dir}{os.pathsep}{os.environ['PATH']}")
 
-    inventory = collect_stable_output_inventory(project / "output")
+    completed = subprocess.run(
+        [sys.executable, "-I", "-B", str(script), str(Path(__file__).parents[3]), str(project)],
+        check=False,
+        capture_output=True,
+        text=True,
+        timeout=30,
+    )
 
+    assert completed.returncode == 0, completed.stdout + completed.stderr
+    assert json.loads(completed.stdout) == {"files": [str(stable)], "git_calls": 1}
     assert late_ignored.is_file(), "interleaving precondition: the late ignored file was created"
-    assert inventory.issues == ()
-    assert inventory.files == (stable,)
+    assert not deleted.exists()
+    assert replaced.read_text(encoding="utf-8").startswith("replacement ")
 
 
 def test_current_output_snapshot_omits_hidden_atomic_write_leftovers(tmp_path: Path) -> None:

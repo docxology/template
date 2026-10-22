@@ -14,6 +14,7 @@ import time
 
 import pytest
 
+from infrastructure.core.files.portability import sanitize_machine_local_paths
 from infrastructure.core.pipeline.run_matrix import (
     RunConfig,
     RunConfigError,
@@ -393,6 +394,15 @@ def test_matrix_preserves_each_effective_project_dag_after_shared_verification(
         "second:beta",
         "second:alpha",
     ]
+    # Artifact snapshots sanitize machine-home prefixes while retaining diagnostics.
+    portable_paths = tmp_path / "portable-log-paths"
+    portable_paths.mkdir()
+    for project in ("first", "second"):
+        (portable_paths / f"{project}.txt").write_text(
+            str(tmp_path / "projects" / project / "output/logs/pipeline.log"), encoding="utf-8"
+        )
+    sanitize_machine_local_paths(portable_paths)
+
     # The same-process serial matrix must close each project's owned log sinks.
     for project, other, own_order, other_order in (
         ("first", "second", ("Alpha", "Beta"), ("Beta", "Alpha")),
@@ -401,8 +411,11 @@ def test_matrix_preserves_each_effective_project_dag_after_shared_verification(
         log = tmp_path / "projects" / project / "output/logs/pipeline.log"
         other_log = tmp_path / "projects" / other / "output/logs/pipeline.log"
         content = log.read_text(encoding="utf-8")
-        assert content.count(f"Set up log file handler: {log}") == 1
+        display_log = (portable_paths / f"{project}.txt").read_text(encoding="utf-8")
+        display_other_log = (portable_paths / f"{other}.txt").read_text(encoding="utf-8")
+        assert content.count(f"Set up log file handler: {display_log}") == 1
         assert str(other_log) not in content
+        assert display_other_log not in content
         for number, stage in enumerate(own_order, start=1):
             assert content.count(f"[{number}/2] {stage} (") == 1
         for number, stage in enumerate(other_order, start=1):
@@ -423,10 +436,26 @@ def test_matrix_refuses_project_shared_override_before_any_execution(
     assert not (tmp_path / "process_order.log").exists()
 
 
+@pytest.fixture(autouse=True)
+def python_only_pipeline_environment(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    """Nominate the actual Python-only tool environment for every matrix fixture.
+
+    These projects execute Python scripts by absolute interpreter path. Ambient
+    Java/Elan launchers are unrelated to this checkpoint contract; backend reuse
+    refusal retains its separate real-tool controls in test_tool_bindings.py.
+    """
+    tools = tmp_path / "python-only-tools"
+    tools.mkdir()
+    monkeypatch.setenv("PATH", str(tools))
+    for variable in ("FORMAL_JAVA_BIN", "PANDOC_PATH", "LATEX_COMPILER"):
+        monkeypatch.delenv(variable, raising=False)
+
+
 # Two independently bounded180s plans retain finite setup and closing allowance.
 @pytest.mark.timeout(420)
 def test_matrix_resume_keeps_fresh_shared_gate_and_reuses_exact_project_checkpoints(
     tmp_path: Path,
+    python_only_pipeline_environment: None,
 ) -> None:
     from infrastructure.core.pipeline.run_matrix import run_plan_exit_code
     from infrastructure.core.pipeline.outcomes import StageStatus
@@ -451,6 +480,7 @@ def test_matrix_resume_keeps_fresh_shared_gate_and_reuses_exact_project_checkpoi
 @pytest.mark.timeout(180)
 def test_matrix_resume_without_exact_checkpoints_is_pending_and_never_starts_projects(
     tmp_path: Path,
+    python_only_pipeline_environment: None,
 ) -> None:
     from infrastructure.core.pipeline.run_matrix import run_plan_exit_code
     from infrastructure.core.pipeline.outcomes import StageStatus
@@ -507,6 +537,7 @@ def test_matrix_original_deadline_stops_current_and_later_projects(
 @pytest.mark.skipif(os.name != "posix", reason="POSIX detached descendant cleanup")
 def test_matrix_original_deadline_kills_started_child_and_detached_descendant(
     tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     """The original deadline includes shared work and kills actual project processes."""
     import contextlib
@@ -593,8 +624,12 @@ def test_matrix_original_deadline_kills_started_child_and_detached_descendant(
         assert entry["stage_pid"] != entry["descendant_pid"]
         # Absent or an unreapable zombie: hosts whose PID 1 never reaps orphans
         # keep a killed detached descendant's process-table entry.
-        assert_process_exited(entry["stage_pid"])
-        assert_process_exited(entry["descendant_pid"])
+        # The pipeline above ran without optional native tools. Its closing
+        # cleanup proof uses the genuine system ps after execution has ended.
+        with monkeypatch.context() as native_probe:
+            native_probe.setenv("PATH", os.defpath)
+            assert_process_exited(entry["stage_pid"])
+            assert_process_exited(entry["descendant_pid"])
     finally:
         # A failing negative control must not leave its owned sleeping processes.
         # This cleanup runs only after the assertions and cannot grant a pass.

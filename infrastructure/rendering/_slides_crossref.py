@@ -230,6 +230,7 @@ def resolve_cross_deck_references(
     label_numbers: dict[str, str],
     *,
     resolve_local: bool = False,
+    resolve_local_prefixes: tuple[str, ...] = (),
 ) -> tuple[str, int, list[str]]:
     """Substitute cross-deck ``\\ref``/``\\eqref`` with combined-PDF numbers.
 
@@ -254,7 +255,7 @@ def resolve_cross_deck_references(
         def _substitute(match: re.Match[str]) -> str:
             nonlocal replaced
             command, label = match.group("command"), match.group("label")
-            if label in local_labels and not resolve_local:
+            if label in local_labels and not resolve_local and not label.startswith(resolve_local_prefixes):
                 return match.group(0)  # within-deck: Beamer numbers it natively
             number = label_numbers.get(label)
             if number is None:
@@ -316,3 +317,37 @@ def bind_displayed_equation_numbers(tex_content: str, label_numbers: dict[str, s
     for position, text in reversed(insertions):
         tex_content = tex_content[:position] + text + tex_content[position:]
     return tex_content
+
+
+def bind_displayed_archive_figure_numbers(
+    tex_content: str,
+    label_numbers: dict[str, str],
+    *,
+    strict: bool,
+) -> str:
+    """Bind only renderer-owned caption markers to the actual combined AUX.
+
+    The archive counter remains a standalone fallback. A canonical refresh
+    prints the same global number after bookends as the combined manuscript;
+    comments, literal examples and accessible output remain untouched.
+    """
+    marker = re.compile(r"\\archivefigurecaptionnumber\{(?P<label>[A-Za-z0-9:_.-]+)\}\{\\thefigure\}")
+
+    def rewrite(segment: str) -> str:
+        def number(match: re.Match[str]) -> str:
+            label = match.group("label")
+            selected = label_numbers.get(label) if strict else None
+            if selected is None:
+                if strict:
+                    raise RenderingError(
+                        "Current combined-manuscript AUX cannot bind archive figure caption",
+                        context={"figure_label": label},
+                    )
+                return r"\thefigure"
+            if not _SAFE_NUMBER_RE.fullmatch(selected):
+                raise RenderingError("Unsafe canonical archive figure number", context={"figure_label": label})
+            return selected
+
+        return marker.sub(number, segment)
+
+    return transform_tex_prose(tex_content, rewrite)

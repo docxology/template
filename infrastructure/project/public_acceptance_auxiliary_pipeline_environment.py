@@ -177,9 +177,11 @@ def _components(root: Path, scope: str) -> dict[str, object]:
 def _source_records(root: Path, scope: str) -> list[Any]:
     from infrastructure.core.pipeline.definition import PipelinePurpose, resolve_pipeline_source
     from infrastructure.core.pipeline.fingerprints import tree_records
+    from infrastructure.core.pipeline.fingerprint_files import declared_lean_runtime_roots
 
     project = root / "projects" / scope
     declaration = resolve_pipeline_source(root, project, purpose=PipelinePurpose.EXECUTION).path
+    excluded = frozenset({(project / "output").absolute()}) | declared_lean_runtime_roots(project)
     paths = {
         root / "infrastructure",
         root / "scripts",
@@ -190,7 +192,7 @@ def _source_records(root: Path, scope: str) -> list[Any]:
     return [
         (
             path.relative_to(root).as_posix(),
-            tree_records(path, source=True, excluded_roots=frozenset({(project / "output").absolute()})),
+            tree_records(path, source=True, excluded_roots=excluded),
         )
         for path in sorted(paths)
     ]

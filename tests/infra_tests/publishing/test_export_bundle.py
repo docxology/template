@@ -55,7 +55,8 @@ def test_sha256_empty_file(tmp_path: Path) -> None:
 
 def test_collect_artifacts_structure_and_hashes(tmp_path: Path) -> None:
     """_collect_artifacts returns dict with pdf/epub/metadata, each carrying sha256 + size_bytes."""
-    output_root = tmp_path / "output"
+    search_only = tmp_path / "search-only"
+    output_root = search_only / "output"
     (output_root / "pdf").mkdir(parents=True)
     (output_root / "ebook").mkdir(parents=True)
     (output_root / "metadata").mkdir(parents=True)
@@ -72,7 +73,12 @@ def test_collect_artifacts_structure_and_hashes(tmp_path: Path) -> None:
     epub_path.write_bytes(epub_bytes)
     json_path.write_bytes(json_bytes)
 
-    result = _collect_artifacts(output_root)
+    original_mode = search_only.stat().st_mode & 0o7777
+    try:
+        search_only.chmod(0o111)
+        result = _collect_artifacts(output_root)
+    finally:
+        search_only.chmod(original_mode)
 
     assert set(result.keys()) == {"pdf", "epub", "metadata", "docx"}
     assert len(result["pdf"]) == 1

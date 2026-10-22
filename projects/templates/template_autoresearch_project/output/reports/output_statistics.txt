@@ -2,39 +2,40 @@
 OUTPUT STATISTICS REPORT
 ============================================================
 
-Output Directory: output
+Output Directory: output/templates/template_autoresearch_project
+Inventory Mode: stable-shippable-output-v1
+Inventory Scope: stage5-delivery-mirror
+Inventory Root: output/templates/template_autoresearch_project
 
-Total Files: 165
-Total Size: 7.69 MB
+Total Files: 119
+Total Size: 10.59 MB
 
 Files by Category:
-  • pdf: 10 files (1.67 MB)
-  • web: 9 files (0.36 MB)
-  • slides: 49 files (1.88 MB)
+  • pdf: 1 files (1.13 MB)
+  • web: 10 files (3.45 MB)
+  • slides: 6 files (1.14 MB)
   • figures: 28 files (1.12 MB)
   • data: 48 files (2.48 MB)
-  • reports: 21 files (0.19 MB)
+  • reports: 12 files (0.04 MB)
+  • manuscript: 11 files (0.10 MB)
+  • release: 2 files (0.00 MB)
+  • root: 1 files (1.13 MB)
 
 Largest Files:
-  • template_autoresearch_project_combined.pdf: 1.28 MB (pdf)
-  • 03_results_slides.pdf: 1.01 MB (slides)
+  • source-web-fonts.js: 3.02 MB (web)
+  • template_autoresearch_project_combined.pdf: 1.13 MB (pdf)
+  • template_autoresearch_project_combined.pdf: 1.13 MB (root)
   • ml_prediction_records.json: 0.94 MB (data)
-  • ml_task_results.json: 0.67 MB (data)
-  • ml_candidate_ledger.json: 0.54 MB (data)
-
-Missing Expected Files:
-  ⚠  simulations/ directory
-  ⚠  llm/ directory
-  ⚠  logs/ directory
+  • 03_results_slides.pdf: 0.89 MB (slides)
 
 File Types:
-  • .json: 57 file(s)
+  • .json: 52 file(s)
   • .png: 27 file(s)
-  • .md: 11 file(s)
-  • .log: 8 file(s)
-  • .tex: 8 file(s)
-  • .aux: 7 file(s)
-  • .toc: 7 file(s)
-  • .pdf: 7 file(s)
+  • .md: 17 file(s)
+  • .pdf: 8 file(s)
   • .html: 7 file(s)
-  • .nav: 6 file(s)
+  • .csv: 3 file(s)
+  • .js: 1 file(s)
+  • .ico: 1 file(s)
+  • .yaml: 1 file(s)
+  • .bib: 1 file(s)

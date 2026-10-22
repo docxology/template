@@ -425,9 +425,7 @@ Live aggregate → [`docs/development/coverage-gaps.md`](../../../docs/developme
 ### Performance Benchmarks
 
 **Test Execution Time:**
-- Full suite: < 30 seconds
-- Individual tests: < 1 second
-- Setup overhead: < 2 seconds
+Measure complete owner modules with pytest phase timings and profile costly operations separately. Real subprocess, custody and native-tool contracts have explicit clocks; do not infer a universal runtime target from file sizes or reduce executed scope to meet an estimate.
 
 ## Future Enhancements
 

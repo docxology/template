@@ -584,6 +584,15 @@ th {
   color: white;
 }
 
+/* Preserve a complete inline-code header within the table's scroll region. */
+th code {
+  color: inherit;
+  background-color: transparent;
+  white-space: nowrap;
+  overflow-wrap: normal;
+  word-break: normal;
+}
+
 img {
   max-width: 100%;
   height: auto;
@@ -962,10 +971,10 @@ class="toc-section-number">6.1.2</span>
 id="toc-infrastructureconfig-non-package-subdirectory"><span
 class="toc-section-number">6.1.3</span>
 <code>infrastructure/config</code> (non-package subdirectory)</a></li>
-<li><a href="#infrastructure.core-195-files"
-id="toc-infrastructure.core-195-files"><span
+<li><a href="#infrastructure.core-199-files"
+id="toc-infrastructure.core-199-files"><span
 class="toc-section-number">6.1.4</span> <code>infrastructure.core</code>
-(195 files)</a></li>
+(199 files)</a></li>
 <li><a href="#infrastructure.doctor-14-files"
 id="toc-infrastructure.doctor-14-files"><span
 class="toc-section-number">6.1.5</span>
@@ -1002,10 +1011,10 @@ class="toc-section-number">6.1.12</span>
 id="toc-infrastructure.orchestration-14-files"><span
 class="toc-section-number">6.1.13</span>
 <code>infrastructure.orchestration</code> (14 files)</a></li>
-<li><a href="#infrastructure.project-104-files"
-id="toc-infrastructure.project-104-files"><span
+<li><a href="#infrastructure.project-111-files"
+id="toc-infrastructure.project-111-files"><span
 class="toc-section-number">6.1.14</span>
-<code>infrastructure.project</code> (104 files)</a></li>
+<code>infrastructure.project</code> (111 files)</a></li>
 <li><a href="#infrastructure.prose-9-files"
 id="toc-infrastructure.prose-9-files"><span
 class="toc-section-number">6.1.15</span>
@@ -1022,14 +1031,14 @@ class="toc-section-number">6.1.17</span>
 id="toc-infrastructure.reference-16-files"><span
 class="toc-section-number">6.1.18</span>
 <code>infrastructure.reference</code> (16 files)</a></li>
-<li><a href="#infrastructure.rendering-120-files"
-id="toc-infrastructure.rendering-120-files"><span
+<li><a href="#infrastructure.rendering-121-files"
+id="toc-infrastructure.rendering-121-files"><span
 class="toc-section-number">6.1.19</span>
-<code>infrastructure.rendering</code> (120 files)</a></li>
-<li><a href="#infrastructure.reporting-406-files"
-id="toc-infrastructure.reporting-406-files"><span
+<code>infrastructure.rendering</code> (121 files)</a></li>
+<li><a href="#infrastructure.reporting-409-files"
+id="toc-infrastructure.reporting-409-files"><span
 class="toc-section-number">6.1.20</span>
-<code>infrastructure.reporting</code> (406 files)</a></li>
+<code>infrastructure.reporting</code> (409 files)</a></li>
 <li><a href="#infrastructure.research-3-files"
 id="toc-infrastructure.research-3-files"><span
 class="toc-section-number">6.1.21</span>
@@ -1125,7 +1134,23 @@ class="toc-section-number">8</span> Appendices</a>
 <ul>
 <li><a href="#appendix-pipeline" id="toc-appendix-pipeline"><span
 class="toc-section-number">8.1</span> Appendix: Pipeline Stage
-Reference</a></li>
+Reference</a>
+<ul>
+<li><a href="#preparation-and-analysis"
+id="toc-preparation-and-analysis"><span
+class="toc-section-number">8.1.1</span> Preparation and
+analysis</a></li>
+<li><a href="#search-provenance-and-rendering"
+id="toc-search-provenance-and-rendering"><span
+class="toc-section-number">8.1.2</span> Search, provenance and
+rendering</a></li>
+<li><a href="#review-and-delivery" id="toc-review-and-delivery"><span
+class="toc-section-number">8.1.3</span> Review and delivery</a></li>
+<li><a href="#optional-packaging-and-publication"
+id="toc-optional-packaging-and-publication"><span
+class="toc-section-number">8.1.4</span> Optional packaging and
+publication</a></li>
+</ul></li>
 <li><a href="#appendix-config" id="toc-appendix-config"><span
 class="toc-section-number">8.2</span> Appendix: Configuration
 Reference</a></li>
@@ -1227,7 +1252,7 @@ and data-versioning tools track artifacts. <code>template/</code>
 combines those concerns with test and provenance gates by applying
 Infrastructure as Code to the research lifecycle. Its Two-Layer
 Architecture separates 31 infrastructure subdirectories (28 importable
-Python packages, ~1307 modules, validated by ~12,341 tests) from
+Python packages, ~1322 modules, validated by ~12,482 tests) from
 self-contained project workspaces. A YAML-declared pipeline (17 stages;
 10 in a default full run) coordinates environment checks, test
 execution, analysis, Pandoc/XeLaTeX rendering, SHA-256 hashing with
@@ -1273,16 +1298,16 @@ AutoResearch readiness (<code>template_autoresearch_project</code>, 318
 discovered tests). Each declares the same 90% project-source floor and
 consumes the shared pipeline without project-to-project imports. This
 manuscript adds a reflexive artifact: <code>template_template</code>
-(152 discovered tests) follows the same analysis and render path while
+(156 discovered tests) follows the same analysis and render path while
 injecting repository counters and figures from live introspection. The
 result is a self-documenting build whose quantitative repository claims
 are generated artifacts, whose manuscript claims are checked against an
 evidence registry, and whose output can be validated and optionally
 watermarked. A versioned comparative matrix situates
 <code>template/</code> against peer tools across the capabilities
-represented in Figure 4. Code is released under the Apache License 2.0
-at <code>github.com/docxology/template</code>; the work remains
-open-ended.</p>
+reported in the Results section. Code is released under the Apache
+License 2.0 at <code>github.com/docxology/template</code>; the work
+remains open-ended.</p>
 <hr />
 <h1 data-number="2" id="introduction"><span
 class="header-section-number">2</span> Introduction</h1>
@@ -1622,15 +1647,15 @@ pillars:</p>
 cleanly separates globally shared infrastructure (logging, rendering,
 validation, steganography) from project-specific logic (manuscripts,
 scripts, data). 31 infrastructure subdirectories (28 importable
-packages) comprising ~1307 Python modules provide reusable services;
+packages) comprising ~1322 Python modules provide reusable services;
 projects consume them without modification.</p></li>
 <li><p><strong>Execution Integrity</strong>: Pipeline advancement is
 contingent on test passage. The configured source-coverage floors are
 60% for infrastructure and 90% for each project. The static gate rejects
 prohibited mock-framework imports, while the suites exercise real
 filesystem and subprocess behavior and use local protocol servers or
-explicitly enabled live services for network boundaries. ~12,341
-infrastructure tests and 6293+ project tests are discovered by the
+explicitly enabled live services for network boundaries. ~12,482
+infrastructure tests and 6321+ project tests are discovered by the
 introspection build.</p></li>
 <li><p><strong>Automated Provenance</strong>: Steganographic
 watermarking and cryptographic hashing are integrated directly into the
@@ -1643,26 +1668,28 @@ it is enforced by architecture.</p></li>
 <li><p><strong>AI-Agent Collaboration and Skill-Based Agentic
 Operations</strong>: A three-tier documentation architecture enables AI
 agents to operate at every level of the system. At the system level,
-<code>CLAUDE.md</code> asserts global architectural constraints. At the
-structural level, <code>AGENTS.md</code> files at every directory expose
-local API surfaces, file inventories, and integration contracts. At the
-module level, <code>SKILL.md</code> files—written to a discoverable
-YAML+Markdown schema aligned with the Model Context Protocol <span
-class="citation" data-cites="anthropic2024mcp">(<a
-href="#ref-anthropic2024mcp" role="doc-biblioref">Anthropic
-2024</a>)</span>—define each infrastructure module as a reusable,
-self-describing tool. An agent invoking
-<code>infrastructure.rendering</code> does not need to read source code:
-it reads the <code>rendering/SKILL.md</code>, which declares the
-module’s name, description, key imports, and example invocations in a
-machine-parseable YAML frontmatter block. This architecture is the
-practical realization of the skill-library paradigm established in the
-agent literature: Yao et al.’s ReAct framework <span class="citation"
-data-cites="yao2023react">(<a href="#ref-yao2023react"
-role="doc-biblioref">Yao et al. 2023</a>)</span> demonstrated that
-interleaving reasoning traces with tool invocations dramatically
-improves LLM reliability; Schick et al.’s Toolformer <span
-class="citation" data-cites="schick2023toolformer">(<a
+root <code>AGENTS.md</code> and <code>.agents/</code> define shared
+constraints and generic workflows; client files are compatibility
+references. At the structural level, <code>AGENTS.md</code> files in
+documented directories expose local API surfaces, file inventories, and
+integration contracts. At the module level, <code>SKILL.md</code>
+files—written to a discoverable YAML+Markdown schema aligned with the
+Model Context Protocol <span class="citation"
+data-cites="anthropic2024mcp">(<a href="#ref-anthropic2024mcp"
+role="doc-biblioref">Anthropic 2024</a>)</span>—describe skill-enabled
+modules and exemplars as reusable capabilities.</p></li>
+</ol>
+<p>An agent invoking <code>infrastructure.rendering</code> does not need
+to read source code: it reads the <code>rendering/SKILL.md</code>, which
+declares the module’s name, description, activation metadata in YAML
+frontmatter and imports and example invocations in its Markdown body.
+This architecture is the practical realization of the skill-library
+paradigm established in the agent literature: Yao et al.’s ReAct
+framework <span class="citation" data-cites="yao2023react">(<a
+href="#ref-yao2023react" role="doc-biblioref">Yao et al.
+2023</a>)</span> demonstrated that interleaving reasoning traces with
+tool invocations dramatically improves LLM reliability; Schick et al.’s
+Toolformer <span class="citation" data-cites="schick2023toolformer">(<a
 href="#ref-schick2023toolformer" role="doc-biblioref">Schick et al.
 2023</a>)</span> showed that self-supervised tool use can be
 bootstrapped from natural language; Wang et al.’s Voyager <span
@@ -1674,8 +1701,7 @@ instantiates this vision in the domain of scientific research
 infrastructure: each <code>SKILL.md</code> is a Voyager-style skill,
 each pipeline stage is a ReAct action, and the full infrastructure layer
 constitutes a composable, protocol-aligned skill library for scientific
-computation.</p></li>
-</ol>
+computation.</p>
 <h2 data-number="2.4" id="scope-and-contributions"><span
 class="header-section-number">2.4</span> Scope and Contributions</h2>
 <p>This paper is itself a product of the template it describes. The
@@ -1781,7 +1807,7 @@ class="header-section-number">3.1</span> The Two-Layer Architecture</h2>
 <p>The repository is organized into two strictly separated layers:</p>
 <p><strong>Infrastructure Layer</strong> (<code>infrastructure/</code>):
 31 infrastructure subdirectories—28 of them independently-importable
-Python packages—comprising ~1307 modules and providing reusable
+Python packages—comprising ~1322 modules and providing reusable
 services. Each importable package has its own <code>__init__.py</code>,
 <code>AGENTS.md</code>, and <code>README.md</code>, and exports a
 well-defined public API (the remaining subdirectories,
@@ -1937,8 +1963,11 @@ DAG, applies tag filters (<code>--mode core</code> skips
 <code>llm</code> stages), checkpoints between nodes, then dispatches the
 declared <code>scripts/pipeline/stage_NN_*.py</code> scripts or builtin
 methods (<code>_run_clean_outputs</code>).</p>
-<p>The <strong>default YAML graph contains ten named core
-stages</strong> (plus telemetry configuration metadata):</p>
+<p>The YAML declares <strong>17 stages</strong>. Tag filtering selects
+<strong>10 stages for a default full run</strong> and <strong>8 for core
+mode</strong>. The overview below covers the default full selection:
+core stages plus live LLM stages. Telemetry settings are configuration
+metadata, not additional DAG nodes.</p>
 <ol type="1">
 <li><strong>Clean Output Directories</strong> — wipes prior
 <code>projects/&lt;name&gt;/output/</code> + delivered
@@ -1949,9 +1978,11 @@ validation.</li>
 toolchain discovery, scaffolding directories, <code>PYTHONPATH</code>
 wiring.</li>
 <li><strong>Infrastructure Tests</strong>
-(<code>scripts/pipeline/stage_01_test.py --infra-only</code>) —
-<code>tests/</code> suite with the configured ≥60% source-coverage
-floor.</li>
+(<code>scripts/pipeline/stage_01_test.py</code>,
+<code>--infra-only</code>, <code>--infra-scope</code>
+<code>pipeline-smoke</code>) — focused real infrastructure contracts for
+the project pipeline. The full infrastructure suite and its configured
+≥60% coverage floor remain separate verification.</li>
 <li><strong>Project Tests</strong>
 (<code>scripts/pipeline/stage_01_test.py --project-only</code>) —
 isolated per-project suites with each project’s declared floor (≥90% for
@@ -1967,7 +1998,7 @@ artefacts.</li>
 <li><strong>Output Validation</strong>
 (<code>scripts/pipeline/stage_04_validate.py</code>) — PDF structure,
 manifests, Markdown hygiene.</li>
-<li><strong>LLM Scientific Review</strong>
+<li><strong>LLM Manuscript Review</strong>
 (<code>scripts/pipeline/stage_06_llm_review.py --reviews-only</code>;
 <code>tags: llm</code>) — executive + quality critiques via local
 Ollama; <code>allow_skip: true</code>.</li>
@@ -1979,26 +2010,33 @@ expansion.</li>
 (<code>scripts/pipeline/stage_05_copy.py</code>) — reproducible
 snapshots into canonical <code>output/&lt;project&gt;/</code>.</li>
 </ol>
-<p>Two LLM nodes intentionally share one script module with orthogonal
-CLI switches; both depend only on validation so they can parallelize
-logically while remaining optional.</p>
+<p>The two LLM nodes share one script module with orthogonal CLI
+switches and depend on output validation. Full mode includes them; core
+mode excludes them. When a stage permits a skip, it must retain a fresh
+policy-bound reason receipt; unavailable required live acceptance
+remains blocked.</p>
 <p><strong>Executive reporting</strong>
-(<code>scripts/pipeline/stage_07_executive_report.py</code>) is
-<strong>not</strong> a YAML node inside the single-project executor.
-<code>--all-projects</code> / <code>execute_multi_project.py</code>
-invokes it once after iterating projects, consolidating cross-project
-KPIs dashboards.</p>
+(<code>scripts/pipeline/stage_07_executive_report.py</code>) is a
+separate multi-project reporting operation, not an additional YAML node
+inside the single-project executor.
+<code>execute_multi_project.py</code> writes aggregate summary reports
+after project execution.</p>
 <p>Topological order therefore differs slightly from declaration order
 (e.g., copy executes after validation even though stage
 <code>stage_05_copy.py</code> precedes
 <code>stage_06_llm_review.py</code> lexically).</p>
 <h3 data-number="3.4.1" id="stage-highlights"><span
 class="header-section-number">3.4.1</span> Stage Highlights</h3>
-<p><strong>Infrastructure vs project tests.</strong> Splitting pytest
-invocations isolates flaky infra regressions
-(<code>MAX_TEST_FAILURES</code> knobs) from zero-tolerance gates on
-domain code (<code>max_project_test_failures</code> default 0 declared
-in YAML front-matter/testing blocks).</p>
+<p><strong>Infrastructure and project tests.</strong> Separate
+invocations isolate the focused infrastructure smoke contract from each
+project’s nonempty test suite and project-local coverage gate. Required
+test or coverage failures and unsuccessful runners block pipeline
+completion; configured failure tolerances cannot turn a nonzero child
+test result into success. The full infrastructure coverage floor (≥60%)
+is verified separately. An explicitly skippable stage may accept exit 2
+only with a fresh reason receipt bound to the current run, stage,
+command, and plan. That recorded skip does not satisfy required live
+acceptance.</p>
 <p><strong>Stage 02 illustration.</strong> The analysis stage is
 deliberately concrete rather than a hypothetical diagram factory: each
 canonical project ships real behaviour at this node.
@@ -2043,8 +2081,8 @@ sidecars.</p>
 id="documentation-duality-and-ai-collaboration"><span
 class="header-section-number">3.5</span> Documentation Duality and AI
 Collaboration</h2>
-<p>Every directory at every level of the repository hierarchy contains
-two documentation files:</p>
+<p>The Documentation Duality standard pairs two files in documented
+source directories; the live inventory reports actual coverage:</p>
 <ul>
 <li><strong><code>README.md</code></strong>: Human-readable overview,
 quick-start instructions, and directory structure.</li>
@@ -2067,22 +2105,24 @@ href="#ref-lau2025aicoding" role="doc-biblioref">Lau and Guo
 2025</a>)</span> identifies contextual code understanding as a primary
 bottleneck; the Documentation Duality standard addresses this by
 providing pre-structured context at every directory level.</p>
-<p>The template additionally includes <code>CLAUDE.md</code> at the
-repository root, providing system-level instructions for AI coding
-assistants—architectural principles, testing requirements, and naming
-conventions that apply globally. This creates a three-tier documentation
-architecture: per-directory <code>AGENTS.md</code> for local context,
-root <code>README.md</code> and <code>CLAUDE.md</code> for global
-constraints, and <code>README.md</code> for human navigation.</p>
+<p>Root <code>AGENTS.md</code> defines shared architectural and testing
+constraints. <code>.agents/</code> supplies generic skills, roles,
+workflows, and confined local state; <code>.agents/AGENTS.md</code>
+documents that catalog. Per-directory <code>AGENTS.md</code> adds local
+contracts, and <code>README.md</code> supplies human navigation.
+<code>CLAUDE.md</code> is a client command reference;
+<code>.cursor/</code> and <code>.cursorrules</code> are deprecated
+compatibility bridges to the shared guidance.</p>
 <h2 data-number="3.6" id="agentic-skill-architecture"><span
 class="header-section-number">3.6</span> Agentic Skill Architecture</h2>
 <p>The <a
 href="#documentation-duality-and-ai-collaboration">Documentation
 Duality</a> standard addresses human and AI navigation at the directory
 level. A complementary layer operates at the <em>module</em> level:
-every infrastructure subpackage carries two additional machine-readable
-files that transform it from a passive code library into an active,
-protocol-aligned skill endpoint.</p>
+capability-specific <code>SKILL.md</code> descriptors add discoverable
+instructions and invocation examples to documented modules. A descriptor
+supplies context; executable tools remain separately registered
+interfaces.</p>
 <h3 data-number="3.6.1" id="the-three-tier-skill-protocol"><span
 class="header-section-number">3.6.1</span> The Three-Tier Skill
 Protocol</h3>
@@ -2107,22 +2147,21 @@ module-level API contracts:</p>
 <tbody>
 <tr>
 <td>1 — System</td>
-<td><code>README.md</code></td>
-<td>Repository root</td>
-<td>Global architectural principles, Zero-Mock policy, naming
-conventions</td>
+<td>Root <code>AGENTS.md</code>, <code>.agents/</code></td>
+<td>Repository-wide</td>
+<td>Shared constraints, skills, roles, workflows, and local state</td>
 </tr>
 <tr>
 <td>2 — Structure</td>
 <td><code>AGENTS.md</code></td>
-<td>Every directory</td>
+<td>Documented directories</td>
 <td>Local file inventories, API surfaces, integration patterns,
 architectural constraints</td>
 </tr>
 <tr>
 <td>3 — Skill</td>
 <td><code>SKILL.md</code></td>
-<td>Every infrastructure module</td>
+<td>Skill-enabled modules and exemplars</td>
 <td>Machine-parseable skill descriptor: module name, description, key
 imports, usage pattern</td>
 </tr>
@@ -2133,80 +2172,62 @@ literature: system prompts and retrieval-augmented context <span
 class="citation" data-cites="lau2025aicoding">(<a
 href="#ref-lau2025aicoding" role="doc-biblioref">Lau and Guo
 2025</a>)</span>. Tier 3 is novel. The <code>SKILL.md</code> files
-follow a YAML frontmatter + Markdown instruction format precisely
-aligned with the tool-descriptor schemas of the Model Context Protocol
-<span class="citation" data-cites="anthropic2024mcp">(<a
-href="#ref-anthropic2024mcp" role="doc-biblioref">Anthropic
-2024</a>)</span>. The following is the actual frontmatter from
-<code>infrastructure/rendering/SKILL.md</code>:</p>
+combine YAML discovery metadata with Markdown instructions. These
+descriptors complement the separately registered tools exposed through
+the Model Context Protocol <span class="citation"
+data-cites="anthropic2024mcp">(<a href="#ref-anthropic2024mcp"
+role="doc-biblioref">Anthropic 2024</a>)</span>. The following presents
+the metadata from <code>infrastructure/rendering/SKILL.md</code>, with
+its description folded into equivalent YAML for readability:</p>
 <div class="sourceCode" id="cb2"><pre
 class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="pp">---</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">name</span><span class="kw">:</span><span class="at"> infrastructure-rendering</span></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">description</span><span class="kw">:</span><span class="at"> Skill for the rendering infrastructure module providing multi-format output generation including PDF manuscripts, HTML web pages, and Beamer/Reveal.js slides. Use when rendering research outputs, converting markdown to PDF, generating slides, or configuring LaTeX rendering.</span></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="pp">---</span></span></code></pre></div>
-<p>An MCP client reading this block immediately knows the module name,
-its natural-language activation condition (“use for”), and which Python
-symbols to import. No source-code inspection is required. This is the
-practical implementation of Toolformer-style self-documented tools <span
-class="citation" data-cites="schick2023toolformer">(<a
-href="#ref-schick2023toolformer" role="doc-biblioref">Schick et al.
-2023</a>)</span>—rather than a language model learning tool APIs from
-training data, the APIs are encoded directly in version-controlled,
-co-located skill files that evolve with the codebase.</p>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">description</span><span class="kw">:</span><span class="at"> </span><span class="ch">&gt;-</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="at">  Skill for the rendering infrastructure module providing multi-format</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="at">  output generation including PDF manuscripts, HTML web pages, and</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="at">  Beamer/Reveal.js slides. Use when rendering research outputs,</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="at">  converting markdown to PDF, generating slides, or configuring LaTeX</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="at">  rendering.</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="pp">---</span></span></code></pre></div>
+<p>A skill loader reading this block discovers the module name and its
+natural-language activation condition. The Markdown body supplies Python
+imports and usage examples; the frontmatter does not itself register an
+executable MCP tool. This is the practical implementation of
+Toolformer-style self-documented tools <span class="citation"
+data-cites="schick2023toolformer">(<a href="#ref-schick2023toolformer"
+role="doc-biblioref">Schick et al. 2023</a>)</span>—rather than a
+language model learning tool APIs from training data, the APIs are
+encoded directly in version-controlled, co-located skill files that
+evolve with the codebase.</p>
 <h3 data-number="3.6.2" id="module-skill-coverage"><span
 class="header-section-number">3.6.2</span> Module Skill Coverage</h3>
-<p>Each infrastructure subdirectory surfaced by
-<code>discover_infrastructure_modules()</code> carries paired
-<code>README.md</code> + <code>AGENTS.md</code>; agent-facing
-<code>SKILL.md</code> manifests exist wherever teams enable Cursor / PAI
-manifests (regenerated via
-<code>python -m infrastructure.skills</code>). Root-level
-<code>PAI.md</code> summarizes cross-package obligations.</p>
+<p><code>discover_infrastructure_modules()</code> reports the actual
+<code>README.md</code>, <code>AGENTS.md</code>, <code>SKILL.md</code>,
+and <code>PAI.md</code> presence for each enumerated subdirectory.
+<code>python -m infrastructure.skills</code> maintains the shared
+<code>.agents/skill_manifest.json</code>; module and public-exemplar
+skills participate independently of any editor. <code>PAI.md</code>
+provides an optional integration narrative.</p>
 <p>Promotion policy: new Layer‑1 directories must ship human +
 machine-readable docs (<code>README.md</code>, <code>AGENTS.md</code>)
 immediately; Tier‑3 SKILL assets follow once APIs stabilize.</p>
 <h3 data-number="3.6.3" id="mcp-server-mapping"><span
 class="header-section-number">3.6.3</span> MCP Server Mapping</h3>
-<p>The mapping from <code>SKILL.md</code> descriptors to MCP server
-endpoints is intentional but not yet automated; it represents the
-principal next integration step. In the MCP architecture <span
-class="citation" data-cites="anthropic2024mcp">(<a
-href="#ref-anthropic2024mcp" role="doc-biblioref">Anthropic
-2024</a>)</span>, a server exposes three primitive types:
-<strong>Tools</strong> (executable functions),
-<strong>Resources</strong> (data the model can read), and
-<strong>Prompts</strong> (structured query templates). Each
-<code>infrastructure</code> module maps naturally onto this
-taxonomy:</p>
-<ul>
-<li><code>infrastructure.llm</code> → MCP <strong>Tool</strong>
-(<code>query</code>, <code>apply_template</code>) + MCP
-<strong>Prompt</strong> (research prompt templates)</li>
-<li><code>infrastructure.rendering</code> → MCP <strong>Tool</strong>
-(<code>render_pdf</code>, <code>render_html</code>) + MCP
-<strong>Resource</strong> (rendered PDFs as URI-addressable
-resources)</li>
-<li><code>infrastructure.validation</code> → MCP <strong>Tool</strong>
-(<code>validate_pdf_rendering</code>,
-<code>validate_markdown</code>)</li>
-<li><code>infrastructure.publishing</code> → MCP <strong>Tool</strong>
-(<code>publish_to_zenodo</code>, <code>generate_citation_bibtex</code>)
-+ MCP <strong>Resource</strong> (DOI registry)</li>
-<li><code>infrastructure.steganography</code> → MCP
-<strong>Tool</strong> (<code>SteganographyProcessor.process</code>) +
-MCP <strong>Resource</strong> (hash manifests)</li>
-<li><code>infrastructure.search</code> ·
-<code>infrastructure.reference</code> → MCP <strong>Tool</strong>
-wrappers over literature retrieval + BibTeX handling + MCP
-<strong>Resource</strong> exports for corpus JSON /
-<code>.bib</code></li>
-</ul>
-<p>An agent orchestrating a full research pipeline could, in principle,
-compose these MCP tools to reproduce the declarative DAG
-programmatically—discovering capabilities via <code>SKILL.md</code>
-frontmatter, executing them via MCP protocol calls, and consuming their
-outputs as Resources. The <code>SKILL.md</code> files parallel Voyager’s
-skill library <span class="citation" data-cites="wang2023voyager">(<a
+<p>The opt-in <code>infrastructure.mcp_server</code> exposes the
+existing operation catalog, pipeline description, discovered skills, and
+curated CLI invocation through <code>list_operations</code>,
+<code>describe_pipeline</code>, <code>list_skills</code>, and
+<code>invoke_cli</code>. CLI invocation is confined to registered
+infrastructure modules; mutating or external operations require the
+server’s explicit opt-in. Skill discovery and tool execution therefore
+remain separate contracts. The server does not automatically expose
+every Python function, rendered file, or suggested module-to-resource
+mapping.</p>
+<p>An agent can inspect these catalogs and choose supported operations
+while retaining the pipeline’s declared dependencies and acceptance
+gates. Discovery alone does not establish successful execution or
+publication. The <code>SKILL.md</code> files parallel Voyager’s skill
+library <span class="citation" data-cites="wang2023voyager">(<a
 href="#ref-wang2023voyager" role="doc-biblioref">Wang et al.
 2023</a>)</span>—Voyager’s agent accumulates a growing library of
 executable Minecraft skills represented as JavaScript functions;
@@ -2401,7 +2422,7 @@ it.</p>
 class="header-section-number">3.8.3</span> Test Suite Composition</h3>
 <p>The repository maintains three test suites:</p>
 <ul>
-<li><strong>Infrastructure tests</strong> (<code>tests/</code>): ~12,341
+<li><strong>Infrastructure tests</strong> (<code>tests/</code>): ~12,482
 tests validating the 31 infrastructure subdirectories, covering logging,
 rendering, validation, steganography, reporting, and LLM
 integration.</li>
@@ -2511,11 +2532,11 @@ class="header-section-number">4.2</span> Infrastructure Test Suite</h2>
 <tbody>
 <tr>
 <td>Test files</td>
-<td>925+</td>
+<td>938+</td>
 </tr>
 <tr>
 <td>Total tests</td>
-<td>~12,341</td>
+<td>~12,482</td>
 </tr>
 <tr>
 <td>Infrastructure coverage gate</td>
@@ -2578,7 +2599,7 @@ authoritative table below—every row reflects
 </tr>
 <tr>
 <td><code>core</code></td>
-<td style="text-align: center;">195</td>
+<td style="text-align: center;">199</td>
 <td style="text-align: center;">✓</td>
 <td style="text-align: center;">✓</td>
 <td><code>get_logger</code>, <code>load_config</code>,
@@ -2660,7 +2681,7 @@ contracts + validation</td>
 </tr>
 <tr>
 <td><code>project</code></td>
-<td style="text-align: center;">104</td>
+<td style="text-align: center;">111</td>
 <td style="text-align: center;">✓</td>
 <td style="text-align: center;">✓</td>
 <td><code>discover_projects</code>, workspace management</td>
@@ -2695,14 +2716,14 @@ contracts + validation</td>
 </tr>
 <tr>
 <td><code>rendering</code></td>
-<td style="text-align: center;">120</td>
+<td style="text-align: center;">121</td>
 <td style="text-align: center;">✓</td>
 <td style="text-align: center;">✓</td>
 <td>PDF/HTML/slide rendering, Pandoc filters</td>
 </tr>
 <tr>
 <td><code>reporting</code></td>
-<td style="text-align: center;">406</td>
+<td style="text-align: center;">409</td>
 <td style="text-align: center;">✓</td>
 <td style="text-align: center;">✓</td>
 <td>Coverage parsers, dashboards, executive artefacts</td>
@@ -2802,8 +2823,9 @@ Coverage</h2>
 </thead>
 <tbody>
 <tr>
-<td>System prompts</td>
-<td>Root <code>CLAUDE.md</code>, README policy</td>
+<td>Shared agent guidance</td>
+<td>Root <code>AGENTS.md</code>, <code>.agents/</code> skills, roles,
+and workflows</td>
 </tr>
 <tr>
 <td>Structural</td>
@@ -2812,7 +2834,7 @@ Coverage</h2>
 <tr>
 <td>Skills</td>
 <td>Optional <code>SKILL.md</code> manifests + generated
-<code>.cursor/skill_manifest.json</code></td>
+<code>.agents/skill_manifest.json</code></td>
 </tr>
 <tr>
 <td>PAI capsule</td>
@@ -2826,15 +2848,16 @@ inventories.</p>
 <h2 data-number="4.5" id="dag-reference-declarative-executor"><span
 class="header-section-number">4.5</span> DAG Reference (Declarative
 Executor)</h2>
-<p>Stages below mirror <code>pipeline.yaml</code> (executor-topological
-order—not strict numeric script filenames). Scripts live under
-<code>scripts/</code>.</p>
+<p>The table summarizes the 10 default full-run stages (core plus live
+LLM nodes) from 17 YAML declarations; core mode selects 8. Separately
+tagged opt-in extensions are omitted here. Entries follow dependency
+order rather than numeric script filenames.</p>
 <div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable data table"><table data-responsive-table="true">
 <colgroup>
-<col style="width: 9%" />
-<col style="width: 37%" />
+<col style="width: 19%" />
+<col style="width: 33%" />
+<col style="width: 22%" />
 <col style="width: 25%" />
-<col style="width: 28%" />
 </colgroup>
 <thead>
 <tr>
@@ -2859,15 +2882,18 @@ order—not strict numeric script filenames). Scripts live under
 </tr>
 <tr>
 <td>Infrastructure Tests</td>
-<td><code>scripts/pipeline/stage_01_test.py --infra-only</code></td>
-<td>Infra pytest + coverage gates</td>
-<td>Tunable thresholds</td>
+<td><code>scripts/pipeline/stage_01_test.py</code>
+<code>--infra-only</code> <code>--infra-scope</code>
+<code>pipeline-smoke</code></td>
+<td>Focused infrastructure smoke contracts</td>
+<td>Required tests must pass</td>
 </tr>
 <tr>
 <td>Project Tests</td>
-<td><code>scripts/pipeline/stage_01_test.py --project-only</code></td>
-<td>Project pytest + coverage gates</td>
-<td>Zero failures default</td>
+<td><code>scripts/pipeline/stage_01_test.py</code>
+<code>--project-only</code></td>
+<td>Project-local tests + coverage gates</td>
+<td>Required tests and coverage must pass</td>
 </tr>
 <tr>
 <td>Project Analysis</td>
@@ -2888,29 +2914,33 @@ order—not strict numeric script filenames). Scripts live under
 <td>Blocking / warnings</td>
 </tr>
 <tr>
-<td>LLM Scientific Review</td>
-<td><code>scripts/pipeline/stage_06_llm_review.py --reviews-only</code></td>
+<td>LLM Manuscript Review</td>
+<td><code>scripts/pipeline/stage_06_llm_review.py</code>
+<code>--reviews-only</code></td>
 <td>Local Ollama reviews</td>
-<td>Skippable / exit 2 tolerated</td>
+<td>Fresh policy-bound skip; required live acceptance remains
+blocking</td>
 </tr>
 <tr>
 <td>LLM Translations</td>
-<td><code>scripts/pipeline/stage_06_llm_review.py --translations-only</code></td>
+<td><code>scripts/pipeline/stage_06_llm_review.py</code>
+<code>--translations-only</code></td>
 <td>Optional translations</td>
-<td>Skippable</td>
+<td>Fresh policy-bound skip</td>
 </tr>
 <tr>
 <td>Copy Outputs</td>
 <td><code>scripts/pipeline/stage_05_copy.py</code></td>
 <td>Mirrors deliverables → <code>output/&lt;project&gt;/</code></td>
-<td>Soft-fail surfaced in logs</td>
+<td>Blocking</td>
 </tr>
 </tbody>
 </table></div>
-<p><code>scripts/pipeline/stage_07_executive_report.py</code> is
-<strong>multi-project orchestration glue</strong> invoked after
-iterating active projects—not a tenth DAG node for single-repo runs
-(<code>execute_pipeline.py</code>).</p>
+<p><code>scripts/pipeline/stage_07_executive_report.py</code> provides
+separate <strong>multi-project executive reporting</strong>, not an
+additional single-project DAG node (<code>execute_pipeline.py</code>).
+The multi-project executor writes its aggregate summary after project
+execution.</p>
 <h2 data-number="4.6" id="steganographic-performance-boundary"><span
 class="header-section-number">4.6</span> Steganographic Performance
 Boundary</h2>
@@ -2928,42 +2958,61 @@ class="header-section-number">4.7</span> Self-Referential Analysis</h2>
 <code>31</code>). Architecture figures stem from <a
 href="https://github.com/docxology/template/blob/main/projects/templates/template_template/src/template_template/figures/architecture_viz.py"><code>template_template.figures.architecture_viz</code></a>—font
 sizes constrained by §QA.</p>
-<p><img src="../figures/architecture_overview.png"
-alt="Two-Layer Architecture Overview" /> <strong>Figure 1.</strong> Live
-rendering of the Two-Layer Architecture from repository introspection:
-the infrastructure layer (top) holds the <code>31</code> reusable
-subpackages, each annotated with its Python file count and a four-slot
-documentation badge—<code>A</code> AGENTS.md, <code>R</code> README.md,
-<code>S</code> SKILL.md, <code>P</code> PAI.md, with <code>·</code>
-marking an absent file—so a fully documented module reads
-<code>[ARSP]</code>. A YAML DAG arrow connects it to the project layer
-(bottom) of public exemplars labelled with chapter and test counts. The
-takeaway: documentation-duality coverage is near-uniform across the
+<figure id="fig:template-architecture">
+<a class="figure-full-size-link" href="../figures/architecture_overview.png" target="_blank" rel="noopener" aria-label="Open full-size Figure 1, Live rendering of the Two-Layer Architecture from repository introspection: the…"><img src="../figures/architecture_overview.png"
+data-slide-manifest="../figures/architecture_overview.panels.json"
+alt="Infrastructure module cards appear above public-project cards, joined by a pipeline arrow. Each card records the corresponding file counts and documentation badges." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
+<figcaption>Figure 1: Live rendering of the Two-Layer
+Architecture from repository introspection: the infrastructure layer
+(top) holds the <code>31</code> enumerated infrastructure directories,
+each annotated with its Python file count and a four-slot documentation
+badge—<code>A</code> AGENTS.md, <code>R</code> README.md, <code>S</code>
+SKILL.md, <code>P</code> PAI.md, with <code>·</code> marking an absent
+file—so a fully documented module reads <code>[ARSP]</code>. A YAML DAG
+arrow connects it to the project layer (bottom) of public exemplars
+labelled with chapter and test-file counts. The takeaway:
+documentation-duality coverage is near-uniform across the
 infrastructure, and every box was placed from the same live data the
-prose cites.</p>
-<p><img src="../figures/pipeline_stages.png"
-alt="Pipeline Stage Flow" /> <strong>Figure 2.</strong> Pipeline DAG
-with 17 YAML-declared stages (core, LLM, ebook, docxplus, metadata,
-bundle, archival tags).</p>
-<p><img src="../figures/module_inventory.png"
-alt="Infrastructure Module Inventory" /> <strong>Figure 3.</strong>
-Horizontal file-count histogram of every infrastructure subdirectory,
-sorted largest-first. The long tail of small, single-purpose packages
-beside a handful of larger ones (<code>core</code>,
-<code>validation</code>, <code>publishing</code>) is the visual
-signature of the Unix-philosophy modularity the architecture section
-argues for—capability concentrated where it compounds, not spread evenly
-by fiat.</p>
+prose cites.</figcaption>
+</figure>
+<figure id="fig:template-pipeline-flow">
+<a class="figure-full-size-link" href="../figures/pipeline_stages.png" target="_blank" rel="noopener" aria-label="Open full-size Figure 2, Declared-stage reference with all 17 YAML stages in reading order, showing complete names"><img src="../figures/pipeline_stages.png"
+data-slide-manifest="../figures/pipeline_stages.panels.json"
+alt="Pipeline stage cards list every YAML declaration in reading order, with stage numbers, complete names and tags. Their order describes declarations rather than a dependency chain." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
+<figcaption>Figure 2: Declared-stage reference with
+all 17 YAML stages in reading order, showing complete names and tags
+(core, LLM, ebook, docxplus, metadata, bundle, archival). Panel order
+documents declarations; it does not imply a linear dependency
+chain.</figcaption>
+</figure>
+<figure id="fig:template-module-inventory">
+<a class="figure-full-size-link" href="../figures/module_inventory.png" target="_blank" rel="noopener" aria-label="Open full-size Figure 3, Horizontal file-count histogram of every infrastructure subdirectory, sorted largest-first."><img src="../figures/module_inventory.png"
+style="height: auto !important;;height:210mm"
+data-slide-manifest="../figures/module_inventory.panels.json"
+alt="A horizontal bar chart compares Python file counts across infrastructure modules, with the largest modules first and smaller modules forming a long tail." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
+<figcaption>Figure 3: Horizontal file-count histogram
+of every infrastructure subdirectory, sorted largest-first.</figcaption>
+</figure>
+<p>The long tail of small, single-purpose packages beside a handful of
+larger ones (<code>core</code>, <code>validation</code>,
+<code>publishing</code>) is the visual signature of the Unix-philosophy
+modularity the architecture section argues for—capability concentrated
+where it compounds, not spread evenly by fiat.</p>
 <h2 data-number="4.8" id="comparative-feature-analysis"><span
 class="header-section-number">4.8</span> Comparative Feature
 Analysis</h2>
-<p>Figure 4 summarizes the Appendix F capability matrix.</p>
-<p><img src="../figures/comparative_feature_matrix.png"
-alt="Comparative Feature Analysis Heatmap" /> <strong>Figure 4.</strong>
-14 × 10 heatmap annotated in appendix text—green <strong>✓</strong> full
-native capability, yellow <strong>◐</strong> partial / plugin-hosted,
-red <strong>—</strong> unavailable. Rows group <em>Core Pipeline</em>,
-<em>Quality &amp; Security</em>, then <em>Ecosystem</em>.</p>
+<p>The comparative feature matrix below summarizes the Appendix F
+capability matrix.</p>
+<figure id="fig:template-comparative-matrix">
+<a class="figure-full-size-link" href="../figures/comparative_feature_matrix.png" target="_blank" rel="noopener" aria-label="Open full-size Figure 4, 14 × 10 heatmap annotated in appendix text—green ✓ full native capability, yellow ◐ partial…"><img src="../figures/comparative_feature_matrix.png"
+data-slide-manifest="../figures/comparative_feature_matrix.panels.json"
+alt="A heatmap compares tools across core pipeline, quality and security, and ecosystem capabilities. Each cell distinguishes full, partial or plugin-hosted, and unavailable support." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
+<figcaption>Figure 4: 14 × 10 heatmap annotated in
+appendix text—green <strong>✓</strong> full native capability, yellow
+<strong>◐</strong> partial / plugin-hosted, red <strong>—</strong>
+unavailable. Rows group <em>Core Pipeline</em>, <em>Quality &amp;
+Security</em>, then <em>Ecosystem</em>.</figcaption>
+</figure>
 <p>¹ Nextflow lineage records exist at workflow scope, not per rendered
 PDF citation graph.</p>
 <p>² DVC: content-addressed artifacts without native prose
@@ -2998,7 +3047,7 @@ testing policy</a> is <code>template/</code>’s most distinctive design
 decision. By prohibiting all mock objects, we gain confidence that tests
 exercise real code paths—a pytest run against the template genuinely
 invokes <code>pandoc</code>, writes to disk, and parses real YAML. The
-cost is test duration: the full infrastructure test suite (~12,341
+cost is test duration: the full infrastructure test suite (~12,482
 tests) runs for minutes rather than the sub-second execution typical of
 heavily-mocked suites. This manuscript deliberately reports no
 wall-clock figure, consistent with the Results section’s discipline of
@@ -3081,17 +3130,17 @@ preserving transparency).</p>
 <h2 data-number="5.2" id="scalability-from-1-to-n-projects"><span
 class="header-section-number">5.2</span> Scalability: From 1 to N
 Projects</h2>
-<p>The Standalone Project Paradigm enables horizontal scaling: adding a
-new project requires creating a directory with
-<code>manuscript/config.yaml</code> and nothing else. No infrastructure
-code changes, no <code>pyproject.toml</code> modifications, no CI
-configuration updates. The <code>run.sh</code> orchestrator
+<p>The Standalone Project Paradigm enables horizontal scaling: a project
+supplies its manuscript/config, isolated source and tests, thin analysis
+scripts, and declared dependencies. New projects use existing
+infrastructure interfaces; admission to the tracked public roster and
+release matrix remains explicit. The <code>run.sh</code> orchestrator
 automatically discovers new projects and presents them in its
 interactive menu.</p>
 <p>We have validated scaling with 25 canonical exemplars under
 <code>projects/templates/</code>—always present for onboarding and
 tooling—and with this manuscript from
-<code>projects/templates/template_template</code> (152 tests) as a
+<code>projects/templates/template_template</code> (156 tests) as a
 git-tracked public exemplar in the same automated discovery menus.</p>
 <p>Canonical trio:</p>
 <ul>
@@ -3122,7 +3171,7 @@ analyzes the repository via <code>src/template_template/</code>
 introspection metrics; it now lives alongside the other public exemplars
 under <code>projects/templates/</code>.</p>
 <p>These workspaces share no project-level code—only Layer 1 (31
-infrastructure subdirectories, ~1307 Python files)—validating insulation
+infrastructure subdirectories, ~1322 Python files)—validating insulation
 between domain repos and reusable services.</p>
 <h3 data-number="5.2.1" id="multi-project-orchestration"><span
 class="header-section-number">5.2.1</span> Multi-Project
@@ -3194,9 +3243,10 @@ style="text-align: center;"><code>template_autoresearch_project</code></th>
 </tbody>
 </table></div>
 <p>The infrastructure overhead per project is constant regardless of
-project size: the same 31 modules, the same 14 pipeline stages, the same
-rendering and validation logic. This O(1) infrastructure cost is the
-architectural payoff of the Two-Layer separation.</p>
+project size: the same 31 modules, the same 17 declared pipeline stages,
+the same rendering and validation logic. The shared implementation does
+not grow with the project roster; execution time and output volume still
+grow with the work performed.</p>
 <hr />
 <h2 data-number="5.3" id="comparison-to-existing-tools"><span
 class="header-section-number">5.3</span> Comparison to Existing
@@ -3332,9 +3382,10 @@ developers maintain that documentation, which in turn improves future
 interactions <span class="citation" data-cites="lau2025aicoding">(<a
 href="#ref-lau2025aicoding" role="doc-biblioref">Lau and Guo
 2025</a>)</span>. We observed this concretely during
-<code>template/</code> development—each module’s <code>SKILL.md</code>
-was refined through iterative AI-assisted generation, serving as both
-input prompt and output validator.</p>
+<code>template/</code> development—capability-specific
+<code>SKILL.md</code> descriptors were refined through iterative
+AI-assisted generation, serving as both input prompt and output
+validator.</p>
 <p>The <code>SKILL.md</code> layer, with its MCP-aligned YAML
 frontmatter <span class="citation" data-cites="anthropic2024mcp">(<a
 href="#ref-anthropic2024mcp" role="doc-biblioref">Anthropic
@@ -3349,21 +3400,22 @@ href="#ref-wang2024opendevin" role="doc-biblioref">X. Wang et al.
 2024</a>; <a href="#ref-jimenez2024swebench"
 role="doc-biblioref">Jimenez et al. 2024</a>)</span>. These systems
 motivate structured, protocol-aligned tool inventories for unfamiliar
-codebases. An agent navigating <code>template/</code> reads
-<code>CLAUDE.md</code> for global constraints, scans
-<code>AGENTS.md</code> for local contracts, and can invoke skill-enabled
-capabilities through <code>SKILL.md</code> descriptors. The live module
-inventory verifies <code>AGENTS.md</code> and <code>README.md</code>
-coverage; <code>SKILL.md</code> remains a capability-specific layer
-rather than a universal claim about every infrastructure directory.</p>
+codebases. An agent navigating <code>template/</code> reads root
+<code>AGENTS.md</code> and <code>.agents/AGENTS.md</code> for shared
+constraints and generic workflows, scans <code>AGENTS.md</code> for
+local contracts, and can invoke skill-enabled capabilities through
+<code>SKILL.md</code> descriptors. The live module inventory verifies
+<code>AGENTS.md</code> and <code>README.md</code> coverage;
+<code>SKILL.md</code> remains a capability-specific layer rather than a
+universal claim about every infrastructure directory.</p>
 <p>This three-tier model is, to our knowledge, novel in the research
 software engineering literature. The scale of the investment is
 substantial: <code>375</code> Markdown files under <code>docs/</code>
 alone, plus an <code>AGENTS.md</code>/<code>README.md</code> pair in
-every directory and a <code>SKILL.md</code> descriptor on skill-enabled
-infrastructure modules. That count is itself injected from live
-introspection—the manuscript refuses to quote a documentation total it
-cannot recompute—and it represents a deliberate commitment to
+documented directories and a <code>SKILL.md</code> descriptor on
+skill-enabled infrastructure modules. That count is itself injected from
+live introspection—the manuscript refuses to quote a documentation total
+it cannot recompute—and it represents a deliberate commitment to
 machine-readable context that shrinks the surface on which an agent can
 hallucinate.</p>
 <h2 data-number="5.5" id="the-learning-curve"><span
@@ -3571,8 +3623,8 @@ class="header-section-number">6</span> Infrastructure Module
 Reference</h1>
 <p>This section inventories every Layer‑1 subdirectory returned by
 <code>31</code> <code>discover_infrastructure_modules(repo_root)</code>.
-File totals use <code>1307</code> Python sources across infra +
-<code>12,341</code> infra tests guarding them. Documentation Duality =
+File totals use <code>1322</code> Python sources across infra +
+<code>12,482</code> infra tests guarding them. Documentation Duality =
 paired <code>README.md</code> + <code>AGENTS.md</code>; optional
 <code>SKILL.md</code> manifests feed
 <code>python -m infrastructure.skills</code>.</p>
@@ -3617,7 +3669,7 @@ paired <code>README.md</code> + <code>AGENTS.md</code>; optional
 </tr>
 <tr>
 <td><code>core</code></td>
-<td style="text-align: center;">195</td>
+<td style="text-align: center;">199</td>
 <td style="text-align: center;">✓</td>
 <td style="text-align: center;">✓</td>
 <td><code>get_logger</code>, <code>load_config</code>,
@@ -3699,7 +3751,7 @@ contracts + validation</td>
 </tr>
 <tr>
 <td><code>project</code></td>
-<td style="text-align: center;">104</td>
+<td style="text-align: center;">111</td>
 <td style="text-align: center;">✓</td>
 <td style="text-align: center;">✓</td>
 <td><code>discover_projects</code>, workspace management</td>
@@ -3734,14 +3786,14 @@ contracts + validation</td>
 </tr>
 <tr>
 <td><code>rendering</code></td>
-<td style="text-align: center;">120</td>
+<td style="text-align: center;">121</td>
 <td style="text-align: center;">✓</td>
 <td style="text-align: center;">✓</td>
 <td>PDF/HTML/slide rendering, Pandoc filters</td>
 </tr>
 <tr>
 <td><code>reporting</code></td>
-<td style="text-align: center;">406</td>
+<td style="text-align: center;">409</td>
 <td style="text-align: center;">✓</td>
 <td style="text-align: center;">✓</td>
 <td>Coverage parsers, dashboards, executive artefacts</td>
@@ -3843,9 +3895,9 @@ class="header-section-number">6.1.3</span>
 (<code>.env.template</code>, hardened defaults referenced by Docker +
 CLI). <code>config/</code> carries no <code>__init__.py</code>, so it is
 a configuration subdirectory rather than an importable package.</p>
-<h3 data-number="6.1.4" id="infrastructure.core-195-files"><span
+<h3 data-number="6.1.4" id="infrastructure.core-199-files"><span
 class="header-section-number">6.1.4</span>
-<code>infrastructure.core</code> (195 files)</h3>
+<code>infrastructure.core</code> (199 files)</h3>
 <p>Checkpointing, logging, pipeline YAML parsing, telemetry bridges,
 filesystem helpers, hardened exceptions. Everything else imports logging
 + error taxonomy from here first.</p>
@@ -3911,9 +3963,9 @@ class="header-section-number">6.1.13</span>
 interactive menus, subprocess wiring for thin shell wrappers
 (<code>run.sh</code>, <code>secure_run.sh</code>), and stubs used in CI
 for menu parsing tests.</p>
-<h3 data-number="6.1.14" id="infrastructure.project-104-files"><span
+<h3 data-number="6.1.14" id="infrastructure.project-111-files"><span
 class="header-section-number">6.1.14</span>
-<code>infrastructure.project</code> (104 files)</h3>
+<code>infrastructure.project</code> (111 files)</h3>
 <p>Canonical discovery (<code>discover_projects</code>) enforcing
 <code>src/</code> + <code>tests/</code>, slug validation, nested WIP
 namespaces.</p>
@@ -3942,25 +3994,24 @@ class="header-section-number">6.1.18</span>
 <code>infrastructure.reference</code> (16 files)</h3>
 <p>Citation/BibTeX parsing + conversion utilities leveraged by
 manuscripts and retrieval scripts.</p>
-<h3 data-number="6.1.19" id="infrastructure.rendering-120-files"><span
+<h3 data-number="6.1.19" id="infrastructure.rendering-121-files"><span
 class="header-section-number">6.1.19</span>
-<code>infrastructure.rendering</code> (120 files)</h3>
+<code>infrastructure.rendering</code> (121 files)</h3>
 <p>Pandoc shim, Unicode/XeLaTeX postprocessors, combined PDF/HTML/slide
 exporters.</p>
-<h3 data-number="6.1.20" id="infrastructure.reporting-406-files"><span
+<h3 data-number="6.1.20" id="infrastructure.reporting-409-files"><span
 class="header-section-number">6.1.20</span>
-<code>infrastructure.reporting</code> (406 files)</h3>
+<code>infrastructure.reporting</code> (409 files)</h3>
 <p>Parses pytest + coverage artefacts for dashboards; pairs with
 Stage 01 summaries and downstream executive exports.</p>
 <h3 data-number="6.1.21" id="infrastructure.research-3-files"><span
 class="header-section-number">6.1.21</span>
 <code>infrastructure.research</code> (3 files)</h3>
-<p>Seven-stage research workflow
-(SCOPE→LITERATURE→REASON→DESIGN→COMPUTE→SYNTHESIZE→WRITE) defined as
-typed ResearchStage data classes with explicit outputs, skills, and
-template commands per stage. Includes a full PRISMA-adapted literature
-review prompt and a research workflow prompt referencing template/
-infrastructure commands.</p>
+<p>Seven-stage research workflow (SCOPE → LITERATURE → REASON → DESIGN →
+COMPUTE → SYNTHESIZE → WRITE) defined as typed ResearchStage data
+classes with explicit outputs, skills, and template commands per stage.
+Includes a full PRISMA-adapted literature review prompt and a research
+workflow prompt referencing template/ infrastructure commands.</p>
 <h3 data-number="6.1.22" id="infrastructure.rules-6-files"><span
 class="header-section-number">6.1.22</span>
 <code>infrastructure.rules</code> (6 files)</h3>
@@ -3999,7 +4050,7 @@ execution harness, and metric capture reused by
 class="header-section-number">6.1.26</span>
 <code>infrastructure.skills</code> (8 files)</h3>
 <p>Discovers <code>SKILL.md</code> frontmatter →
-<code>.cursor/skill_manifest.json</code>.</p>
+<code>.agents/skill_manifest.json</code>.</p>
 <h3 data-number="6.1.27"
 id="infrastructure.steganography-13-files"><span
 class="header-section-number">6.1.27</span>
@@ -4314,13 +4365,15 @@ class="header-section-number">8</span> Appendices</h1>
 <h2 data-number="8.1" id="appendix-pipeline"><span
 class="header-section-number">8.1</span> Appendix: Pipeline Stage
 Reference</h2>
+<h3 data-number="8.1.1" id="preparation-and-analysis"><span
+class="header-section-number">8.1.1</span> Preparation and analysis</h3>
 <div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable data table"><table data-responsive-table="true">
 <colgroup>
-<col style="width: 13%" />
-<col style="width: 21%" />
-<col style="width: 18%" />
-<col style="width: 27%" />
+<col style="width: 16%" />
 <col style="width: 17%" />
+<col style="width: 30%" />
+<col style="width: 22%" />
+<col style="width: 14%" />
 </colgroup>
 <thead>
 <tr>
@@ -4349,17 +4402,20 @@ Reference</h2>
 </tr>
 <tr>
 <td>Infrastructure Tests</td>
-<td><code>scripts/pipeline/stage_01_test.py --infra-only --infra-scope pipeline-smoke</code></td>
+<td><code>scripts/pipeline/stage_01_test.py</code>
+<code>--infra-only</code> <code>--infra-scope</code>
+<code>pipeline-smoke</code></td>
 <td><code>tests/infra_tests/</code></td>
-<td>coverage + junit-style logs</td>
-<td>tolerant ceilings</td>
+<td>smoke-test results</td>
+<td>Required smoke tests must pass</td>
 </tr>
 <tr>
 <td>Project Tests</td>
-<td><code>scripts/pipeline/stage_01_test.py --project-only</code></td>
+<td><code>scripts/pipeline/stage_01_test.py</code>
+<code>--project-only</code></td>
 <td><code>projects/&lt;name&gt;/tests/</code></td>
 <td>coverage artefacts</td>
-<td>blocking by default</td>
+<td>Nonempty tests, own coverage, verifier, and runner</td>
 </tr>
 <tr>
 <td>Project Analysis</td>
@@ -4368,19 +4424,45 @@ Reference</h2>
 <td><code>figures/</code>, <code>data/</code>, reports</td>
 <td>Blocking</td>
 </tr>
+</tbody>
+</table></div>
+<h3 data-number="8.1.2" id="search-provenance-and-rendering"><span
+class="header-section-number">8.1.2</span> Search, provenance and
+rendering</h3>
+<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable data table"><table data-responsive-table="true">
+<colgroup>
+<col style="width: 16%" />
+<col style="width: 17%" />
+<col style="width: 30%" />
+<col style="width: 22%" />
+<col style="width: 14%" />
+</colgroup>
+<thead>
+<tr>
+<th>Stage name</th>
+<th>Script / method</th>
+<th>Primary inputs</th>
+<th>Outputs / artefacts</th>
+<th>Failure mode</th>
+</tr>
+</thead>
+<tbody>
 <tr>
 <td>Connector Search</td>
 <td><code>scripts/pipeline/stage_08_connector_search.py</code></td>
 <td><code>manuscript/config.yaml</code></td>
 <td><code>output/data/connector_search/</code></td>
-<td>opt-in (<code>science</code> tag); skipped if not configured</td>
+<td>opt-in (<code>science</code> tag); fresh policy-bound skip if
+unconfigured</td>
 </tr>
 <tr>
 <td>Provenance Record</td>
-<td><code>scripts/pipeline/stage_09_provenance_record.py --stage "Connector Search"</code></td>
+<td><code>scripts/pipeline/stage_09_provenance_record.py</code>
+<code>--stage</code> <code>"Connector Search"</code></td>
 <td>prior stage outputs</td>
 <td><code>.provenance/graph.json</code></td>
-<td>opt-in (<code>provenance</code> tag); skipped if not configured</td>
+<td>opt-in (<code>provenance</code> tag); fresh policy-bound skip if
+unconfigured</td>
 </tr>
 <tr>
 <td>PDF Rendering</td>
@@ -4394,49 +4476,99 @@ Reference</h2>
 <td><code>scripts/pipeline/stage_04_validate.py</code></td>
 <td>render tree</td>
 <td>Markdown + PDF diagnostics JSON</td>
-<td>Blocking / downgrade</td>
+<td>Enabled formats, bookends, and provenance block; prose diagnostics
+advisory</td>
 </tr>
+</tbody>
+</table></div>
+<h3 data-number="8.1.3" id="review-and-delivery"><span
+class="header-section-number">8.1.3</span> Review and delivery</h3>
+<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable data table"><table data-responsive-table="true">
+<colgroup>
+<col style="width: 16%" />
+<col style="width: 17%" />
+<col style="width: 30%" />
+<col style="width: 22%" />
+<col style="width: 14%" />
+</colgroup>
+<thead>
 <tr>
-<td>LLM Scientific Review</td>
-<td><code>scripts/pipeline/stage_06_llm_review.py --reviews-only</code></td>
+<th>Stage name</th>
+<th>Script / method</th>
+<th>Primary inputs</th>
+<th>Outputs / artefacts</th>
+<th>Failure mode</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>LLM Manuscript Review</td>
+<td><code>scripts/pipeline/stage_06_llm_review.py</code>
+<code>--reviews-only</code></td>
 <td>resolved manuscript artefacts</td>
 <td>textual reviews</td>
-<td>Optional skip (<code>allow_skip</code>)</td>
+<td>Fresh policy-bound skip; required live acceptance remains
+blocking</td>
 </tr>
 <tr>
 <td>LLM Translations</td>
-<td><code>scripts/pipeline/stage_06_llm_review.py --translations-only</code></td>
+<td><code>scripts/pipeline/stage_06_llm_review.py</code>
+<code>--translations-only</code></td>
 <td>abstract metadata</td>
 <td>multilingual snippets</td>
-<td>Optional skip (<code>allow_skip</code>)</td>
+<td>Fresh policy-bound skip; required live acceptance remains
+blocking</td>
 </tr>
 <tr>
 <td>Copy Outputs</td>
 <td><code>scripts/pipeline/stage_05_copy.py</code></td>
 <td>validated tree</td>
 <td>mirrored <code>output/&lt;name&gt;/…</code></td>
-<td>soft fail logged</td>
+<td>Blocking</td>
 </tr>
+</tbody>
+</table></div>
+<h3 data-number="8.1.4" id="optional-packaging-and-publication"><span
+class="header-section-number">8.1.4</span> Optional packaging and
+publication</h3>
+<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable data table"><table data-responsive-table="true">
+<colgroup>
+<col style="width: 16%" />
+<col style="width: 17%" />
+<col style="width: 30%" />
+<col style="width: 22%" />
+<col style="width: 14%" />
+</colgroup>
+<thead>
+<tr>
+<th>Stage name</th>
+<th>Script / method</th>
+<th>Primary inputs</th>
+<th>Outputs / artefacts</th>
+<th>Failure mode</th>
+</tr>
+</thead>
+<tbody>
 <tr>
 <td>Ebook Generation</td>
 <td><code>scripts/pipeline/stage_11_ebook.py</code></td>
 <td>rendered combined markdown</td>
 <td><code>output/ebook/</code> (EPUB/MOBI/DOCX)</td>
-<td>opt-in (<code>ebook</code> tag); soft fail</td>
+<td>opt-in (<code>ebook</code> tag); blocking when invoked</td>
 </tr>
 <tr>
 <td>docxplus Export</td>
 <td><code>scripts/pipeline/stage_13_docxplus.py</code></td>
 <td>project source tree + metadata</td>
 <td><code>output/docxplus/</code> (.docx, .docxplus)</td>
-<td>opt-in (<code>docxplus</code> tag); soft fail</td>
+<td>opt-in (<code>docxplus</code> tag); blocking when invoked</td>
 </tr>
 <tr>
 <td>Metadata Package</td>
 <td><code>scripts/pipeline/stage_12_metadata.py</code></td>
 <td><code>manuscript/config.yaml</code></td>
 <td><code>output/metadata/</code> (ONIX/JSON/OPF)</td>
-<td>opt-in (<code>metadata</code> tag); soft fail</td>
+<td>opt-in (<code>metadata</code> tag); blocking when invoked</td>
 </tr>
 <tr>
 <td>Executable Bundle</td>
@@ -4454,10 +4586,16 @@ Reference</h2>
 </tr>
 </tbody>
 </table></div>
-<p><code>scripts/pipeline/stage_07_executive_report.py</code> is invoked
-<strong>outside</strong> this DAG whenever
-<code>execute_multi_project.py</code> aggregates pipelines—supplying
-cross-project KPI dashboards absent from lone-project checkpoints.</p>
+<p><code>scripts/pipeline/stage_07_executive_report.py</code> provides
+separate <strong>multi-project executive reporting</strong>, not an
+additional single-project DAG node.
+<code>execute_multi_project.py</code> writes aggregate summaries after
+project execution; this does not imply automatic invocation of that
+separate Stage 07 script.</p>
+<p>Opt-in stages also prevent completion when invoked and unsuccessful.
+An allowed skip requires a fresh policy-bound reason receipt; it is not
+a successful execution. The executable DAG and its contracts remain
+authoritative.</p>
 <hr />
 <h2 data-number="8.2" id="appendix-config"><span
 class="header-section-number">8.2</span> Appendix: Configuration
@@ -4523,30 +4661,30 @@ class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb5-1"><a href="
 class="header-section-number">8.3</span> Appendix: Repository Directory
 Structure</h2>
 <pre class="text"><code>template/
-├── infrastructure/
-│   ├── config/ docker/ documentation/ llm/
-│   ├── orchestration/   # Thin Python entry equal to `./run.sh` backend
-│   ├── prose/ reference/ rendering/ reporting/
-│   ├── scientific/ search/ skills/ steganography/ validation/
-│   ├── project/ core/
-│   └── logrotate.d/      # Operational rotation templates (no Python pkg)
-├── scripts/
-│   ├── pipeline/          # stage_00_setup.py … stage_12_metadata.py (canonical, cited by pipeline.yaml)
-│   └── runner/            # execute_pipeline.py execute_multi_project.py bundle_executable.py archive_publication.py
-├── projects/                    # Typed program subfolders (`discover_projects`)
-│   ├── templates/               # Public exemplars (git-tracked) — full roster:
-│   │   │                        #   docs/_generated/active_projects.md (regenerated by scripts/docgen/active_projects.py)
-│   │   └── template_template/   # Present manuscript (`manuscript/` here)
-│   ├── active/                  # Hot-seat rendered set (symlinked, private)
-│   ├── working/                 # Non-rendered backburner (symlinked, private)
-│   ├── published/               # Non-rendered published (symlinked, private)
-│   ├── archive/                 # Non-rendered retired (symlinked, private)
-│   └── other/                   # Non-rendered misc (symlinked, private)
-├── docs/ (20 top-level areas, 375+ markdown files per live counter)
-├── tests/                       # Infra suites (925+ files)
-├── AGENTS.md / README.md / CLAUDE.md / pyproject.toml
-├── run.sh / secure_run.sh
-└── output/ …                    # Mirrors after copy stage</code></pre>
+|-- infrastructure/
+|   |-- config/ docker/ documentation/ llm/
+|   |-- orchestration/   # Thin Python entry equal to `./run.sh` backend
+|   |-- prose/ reference/ rendering/ reporting/
+|   |-- scientific/ search/ skills/ steganography/ validation/
+|   |-- project/ core/
+|   `-- logrotate.d/      # Operational rotation templates (no Python pkg)
+|-- scripts/
+|   |-- pipeline/          # stage_00_setup.py … stage_12_metadata.py (canonical, cited by pipeline.yaml)
+|   `-- runner/            # execute_pipeline.py execute_multi_project.py bundle_executable.py archive_publication.py
+|-- projects/                    # Typed program subfolders (`discover_projects`)
+|   |-- templates/               # Public exemplars (git-tracked) — full roster:
+|   |   |                        #   docs/_generated/active_projects.md (regenerated by scripts/docgen/active_projects.py)
+|   |   `-- template_template/   # Present manuscript (`manuscript/` here)
+|   |-- active/                  # Hot-seat rendered set (symlinked, private)
+|   |-- working/                 # Non-rendered backburner (symlinked, private)
+|   |-- published/               # Non-rendered published (symlinked, private)
+|   |-- archive/                 # Non-rendered retired (symlinked, private)
+|   `-- other/                   # Non-rendered misc (symlinked, private)
+|-- docs/ (20 top-level areas, 375+ markdown files per live counter)
+|-- tests/                       # Infra suites (938+ files)
+|-- AGENTS.md / README.md / CLAUDE.md / pyproject.toml
+|-- run.sh / secure_run.sh
+`-- output/ …                    # Mirrors after copy stage</code></pre>
 <p>See <code>docs/_generated/active_projects.md</code> for regenerated
 slugs
 (<code>uv run python scripts/docgen/active_projects.py</code>).</p>
@@ -4656,8 +4794,8 @@ Inventory</h2>
 <tr>
 <td>Repository root</td>
 <td style="text-align: center;"><code>AGENTS.md</code>,
-<code>CLAUDE.md</code>, <code>README.md</code>,
-<code>RUN_GUIDE.md</code></td>
+<code>.agents/</code>, <code>CLAUDE.md</code>, <code>README.md</code>,
+<code>docs/RUN_GUIDE.md</code></td>
 <td>Global navigation and AI agent context</td>
 </tr>
 <tr>
@@ -4668,13 +4806,13 @@ Inventory</h2>
 <tr>
 <td>Per-directory</td>
 <td style="text-align: center;"><code>AGENTS.md</code> +
-<code>README.md</code> at every directory</td>
+<code>README.md</code> in documented directories</td>
 <td>Documentation Duality standard</td>
 </tr>
 <tr>
 <td>Per-module (Tier 3)</td>
-<td style="text-align: center;"><code>SKILL.md</code> at every
-infrastructure module</td>
+<td style="text-align: center;"><code>SKILL.md</code> on skill-enabled
+modules and public exemplars</td>
 <td>Machine-parseable MCP-aligned skill descriptor</td>
 </tr>
 <tr>
@@ -4711,18 +4849,21 @@ grows, whereas a token re-resolves on every render. A reader onboarding
 to the repository should start at <code>docs/core/</code>, follow the
 graduated <code>docs/guides/</code> skill ladder, and consult the
 per-directory <code>AGENTS.md</code>/<code>README.md</code> pair nearest
-to whatever code they are editing; AI agents additionally read each
-module’s <code>SKILL.md</code> to locate capabilities without guessing
-API signatures.</p>
+to whatever code they are editing; AI agents begin with root
+<code>AGENTS.md</code> and <code>.agents/AGENTS.md</code>, then read
+local contracts and available <code>SKILL.md</code> descriptors. The
+shared skill manifest supplies discovery; client-specific files remain
+compatibility references.</p>
 <hr />
 <h2 data-number="8.6" id="appendix-matrix"><span
 class="header-section-number">8.6</span> Appendix: Comparative Tool
 Matrix</h2>
 <p><strong>Symbol key</strong> (applies to all cells):
 <strong>Y</strong> = full native support · <strong>~</strong> = partial
-or plugin-based · <strong>N</strong> = absent. See also <a
-href="manuscript__04_results.html#comparative-feature-analysis">Figure 4</a> for a
-colour-coded heatmap rendering of this table.</p>
+or plugin-based · <strong>N</strong> = absent. See the <a
+href="manuscript__04_results.html#comparative-feature-analysis">comparative feature
+matrix in the Results section</a> for a colour-coded heatmap rendering
+of this table.</p>
 <div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable data table"><table style="width:99%;" data-responsive-table="true">
 <colgroup>
 <col style="width: 13%" />

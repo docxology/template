@@ -30,8 +30,8 @@
     {
       "contract_match": true,
       "path": "output/deep_search/aggregate.json",
-      "sha256": "4e81bf85294fdca5dd29d0d826e3340f86797fd7e4b81aef0b901754aebb80b0",
-      "size_bytes": 2259238,
+      "sha256": "9ebe52c1cd040d9aadb98e53c5f9e91c15166bc734f4208a3529b8d13f559a03",
+      "size_bytes": 1402544,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
@@ -2856,8 +2856,8 @@
     {
       "contract_match": true,
       "path": "output/figures/mermaid_inline/inline_mermaid_0001_d3ead0e9d850.png",
-      "sha256": "100b4a960dad1de2be0d91220151f18b86830f363c5b0f6033eab539829e0c37",
-      "size_bytes": 195402,
+      "sha256": "c483376c2bbf4006ddfd684c416b74782d91db163656e657cf69fc7144afbe80",
+      "size_bytes": 148536,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
@@ -2874,8 +2874,8 @@
     {
       "contract_match": true,
       "path": "output/figures/mermaid_inline/inline_mermaid_0002_99a3f6d43208.png",
-      "sha256": "a3fec64237e4aa3cccbc1b443965d08a6f4accae11cde202cab8b9228e5a8b6a",
-      "size_bytes": 31536,
+      "sha256": "188938fc03dc88eb25f7a3087193a5a2f6615d0ea71789edb983af3f64aad7ae",
+      "size_bytes": 28419,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
@@ -2892,8 +2892,8 @@
     {
       "contract_match": true,
       "path": "output/figures/mermaid_inline/inline_mermaid_0003_80a863d1871e.png",
-      "sha256": "9192536df9d1aeaa4193c4553439b2d4653ee82e9e11c62ade38f863427ec6a2",
-      "size_bytes": 85655,
+      "sha256": "866230b6af8590ce8c6c0227a79675bf40193cc14a34bd8538a03f4e25035910",
+      "size_bytes": 66400,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
@@ -2910,8 +2910,8 @@
     {
       "contract_match": true,
       "path": "output/figures/mermaid_inline/inline_mermaid_0004_7fdb10e9eb30.png",
-      "sha256": "6f8c03cddee2fff97b200e896bd1d58bba71b7b015606d864523c3fbccc90624",
-      "size_bytes": 57265,
+      "sha256": "0810927f99b2212481bad1bd0b659d03a363a57bb934d0222e4047f8060be588",
+      "size_bytes": 47574,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
@@ -2919,8 +2919,8 @@
     {
       "contract_match": true,
       "path": "output/figures/papers_per_source.png",
-      "sha256": "137cabee96de9bc74f58664ddd3f02b3cbc6c8b264fba63b86b7ce06372db5ca",
-      "size_bytes": 42595,
+      "sha256": "607782109a6e94afb1a0c1121812e9edeeb97407099540987fb3b142c84f44d1",
+      "size_bytes": 36789,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
@@ -2928,8 +2928,8 @@
     {
       "contract_match": true,
       "path": "output/figures/score_distribution.png",
-      "sha256": "d5cf2564c53c7ebd75443a5d6b41dc04dcdbdd30ff9f44252086db83ffc4b262",
-      "size_bytes": 87534,
+      "sha256": "28f3024f1ac0e666cef40ee34d31cb9f87ed9d80f8cd09c2eec978090e2ef68e",
+      "size_bytes": 78878,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
@@ -2937,8 +2937,8 @@
     {
       "contract_match": true,
       "path": "output/figures/year_histogram.png",
-      "sha256": "b600172f27b0d2cc7530321e7c4cfded3f12f232c10ad34b7cc96dc6ac2bd48b",
-      "size_bytes": 45210,
+      "sha256": "44fba50c7ea61333e91a0c87196e6fef87480f875db6a1260a56421a87947585",
+      "size_bytes": 41543,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
@@ -3099,8 +3099,8 @@
     {
       "contract_match": true,
       "path": "output/pdf/template_search_project_combined.pdf",
-      "sha256": "2047e7cfdbf059a37139c7b874f6b26c3987ae99cad275faaaefcac31049fdd9",
-      "size_bytes": 469702,
+      "sha256": "e2beb031d6440e31d4db97a42becf372a1b3f87c9764049d839872db8f3c2777",
+      "size_bytes": 447860,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
@@ -3270,8 +3270,8 @@
     {
       "contract_match": true,
       "path": "output/slides/02_methodology_slides.pdf",
-      "sha256": "ed698c5fb311685b483cf2acfcee74f3b52c854357c59b4511ab80d95a8583db",
-      "size_bytes": 248828,
+      "sha256": "07752eb5f7b6d655fc6129dfa96461f15414a18aaf93d1eddcb0120a99a17e0e",
+      "size_bytes": 223962,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""

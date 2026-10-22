@@ -304,10 +304,10 @@
       "compared_field": "content_sha256",
       "equal": true,
       "jsonpath": "$",
-      "live_content_sha256": "37913b901d18e4d68c7127aee914bea4924a7b130da0aa8980c138c5544cf7de",
-      "live_sha256": "63c84940dad22e83be825073cfd68ae24daaabda1a5637b3c7c60f2b0e039fa7",
-      "saved_content_sha256": "37913b901d18e4d68c7127aee914bea4924a7b130da0aa8980c138c5544cf7de",
-      "saved_sha256": "63c84940dad22e83be825073cfd68ae24daaabda1a5637b3c7c60f2b0e039fa7",
+      "live_content_sha256": "bf9297c027778fd690776f872306b836ff8f4fcee40af013e0273430df9160a5",
+      "live_sha256": "c305ccfab83496efa1c90e1bf617fcf113efebaa823c9cec54deddc16c742f83",
+      "saved_content_sha256": "bf9297c027778fd690776f872306b836ff8f4fcee40af013e0273430df9160a5",
+      "saved_sha256": "c305ccfab83496efa1c90e1bf617fcf113efebaa823c9cec54deddc16c742f83",
       "source": "output/data/artifact_provenance.json"
     },
     {

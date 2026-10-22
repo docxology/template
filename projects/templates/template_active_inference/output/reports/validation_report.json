@@ -71,7 +71,7 @@
           "file_count": 1,
           "largest_file": "template_active_inference_combined.pdf",
           "largest_file_path": "pdf/template_active_inference_combined.pdf",
-          "size_mb": "4.03"
+          "size_mb": "3.35"
         },
         "reports": {
           "exists": true,
@@ -127,7 +127,7 @@
           "combined_pdf": {
             "exists": true,
             "readable": true,
-            "size_mb": 4.03
+            "size_mb": 3.35
           },
           "data": {
             "exists": true,
@@ -187,7 +187,7 @@
             "optional": false,
             "readable": true,
             "required": true,
-            "size_mb": 4.03
+            "size_mb": 3.35
           },
           "reports": {
             "exists": true,
@@ -227,16 +227,16 @@
         "valid": true,
         "warnings": []
       },
-      "total_size_mb": 18.88255023956299
+      "total_size_mb": 18.20991325378418
     },
     "figures": {
       "files": 27,
-      "size_mb": 3.7873992919921875
+      "size_mb": 3.788227081298828
     },
     "inventory_mode": "stable-shippable-output-v1",
     "pdf": {
       "files": 1,
-      "size_mb": 4.030285835266113
+      "size_mb": 3.3526182174682617
     },
     "stable_inventory": {
       "categories": {
@@ -250,15 +250,15 @@
         },
         "figures": {
           "files": 27,
-          "size_bytes": 3971376
+          "size_bytes": 3972244
         },
         "manuscript": {
           "files": 21,
-          "size_bytes": 147593
+          "size_bytes": 147643
         },
         "pdf": {
           "files": 1,
-          "size_bytes": 4226061
+          "size_bytes": 3515475
         },
         "reports": {
           "files": 32,
@@ -266,12 +266,12 @@
         },
         "web": {
           "files": 20,
-          "size_bytes": 3953338
+          "size_bytes": 3957695
         }
       },
       "mode": "stable-shippable-output-v1",
       "total_files": 177,
-      "total_size_bytes": 19799789
+      "total_size_bytes": 19094478
     }
   },
   "recommendations": [],
@@ -282,21 +282,21 @@
     "passed": 9,
     "total_checks": 9
   },
-  "timestamp": "2026-10-18T10:52:16Z",
+  "timestamp": "2026-10-22T05:16:49Z",
   "validated_inputs": {
     "artifact_manifest": {
       "path": "output/reports/artifact_manifest.json",
-      "sha256": "d19505aea2742bca7e710de615473af9141b56acd443bf425899ac1ce845ce68",
-      "size_bytes": 56700
+      "sha256": "1e4ce3706710270080dee13f041259ec02fa92a5542c433e6c294010b896f1ba",
+      "size_bytes": 54045
     },
     "combined_manuscript": {
       "path": "output/web/_combined_manuscript.md",
-      "sha256": "14cd75650582f9f1a01440abc13e32c09207e433cd703b661f88b6f690874902",
-      "size_bytes": 138097
+      "sha256": "6cc9d50acf05486f92fb1dd952f73bab01e5da2f5375ad1fafd1dc6f64c1f081",
+      "size_bytes": 138147
     },
     "composition_manifest": {
       "path": "output/reports/manuscript_composition.json",
-      "sha256": "7d95fad54c6982e404111638496d83d79a6d08e59325502df8a6e235a56fe195",
+      "sha256": "89ac7b4c59cea00164897fff45c5016078c8545587da6a906745a545d0e7ae3a",
       "size_bytes": 4180
     },
     "consumed_manuscript": [
@@ -308,9 +308,9 @@
       },
       {
         "rendered_path": "output/manuscript/00_00_sheaf_coverage.md",
-        "rendered_sha256": "802b264d10ff7b601b4b1db5e3e40a7b09196aaaf0305cf6963ee691ff6613d3",
+        "rendered_sha256": "e083333c947e8297e83b944378e8edcab82a30ca534348cd09892e41ddcb69ca",
         "source_path": "manuscript/00_00_sheaf_coverage.md",
-        "source_sha256": "0acb0659dde64e3b222d37623fc00c8621bb07776061c4944060873084afe8ad"
+        "source_sha256": "59b2f4845cdfb601f1920fdaa9022b1fe8dc61238845cba7718b157ea8745dcb"
       },
       {
         "rendered_path": "output/manuscript/00_abstract.md",
@@ -350,9 +350,9 @@
       },
       {
         "rendered_path": "output/manuscript/08_methods_sheaf.md",
-        "rendered_sha256": "1751a13c22ffeedeb076e4b53a2882d506b2d26847a4b43385e0e35b77cef78e",
+        "rendered_sha256": "94efecb7cd1ed2ce2e9fc7a5836808736584f92da58f0af1714920a1ebe66ed4",
         "source_path": "manuscript/08_methods_sheaf.md",
-        "source_sha256": "86d291c774e026877483434765134ccc1b12621db3d4cbf5f1c0ee2f3db1a402"
+        "source_sha256": "13cda51ba2af2c5437854fad66dab0e969ff9e90a7d08f45ab06adef69b0a4d5"
       },
       {
         "rendered_path": "output/manuscript/10_results_mi_sweep.md",
@@ -412,19 +412,19 @@
     "fingerprints": {
       "config": {
         "file_count": 27,
-        "sha256": "c43c4f903fce86de5d7f8629c3863d7876c61b6b8e24aafb8f020b4b54befbf3"
+        "sha256": "fe2d4626b30b8103f334fa9909d3154fa0eca23b152e663b6f5efe14943fc158"
       },
       "output": {
         "file_count": 177,
-        "sha256": "89cf109893b6c5b75aa78934c53b8e4dde3c9ecef77814d85c02457a9b8c06c8"
+        "sha256": "b98b427ad8613ee08a377143cf2ae2d9c0480d34886d7bf6b1e1c3589bdfc15b"
       },
       "source": {
         "file_count": 283,
-        "sha256": "72870a0ae7ccd5efe8093edef76296d96719e789bf3dcdd0e12dbb0a495790bc"
+        "sha256": "b42043e5e097687fe5d6aaf3042015318e99191ebee529aacd80dd8bc9f5e01b"
       },
       "stage": {
-        "file_count": 1903,
-        "sha256": "82c47577f1c1b0e22d7feb145892287b0412a5a91606909e9eeb57ca96d1423e"
+        "file_count": 1911,
+        "sha256": "263a30090aab6f8b458069fc2099a22175075b14298625198741d9457d9e9597"
       }
     },
     "project": "templates/template_active_inference",

@@ -1,6 +1,6 @@
 ## Scalability: From 1 to N Projects
 
-The Standalone Project Paradigm enables horizontal scaling: adding a new project requires creating a directory with `manuscript/config.yaml` and nothing else. No infrastructure code changes, no `pyproject.toml` modifications, no CI configuration updates. The `run.sh` orchestrator automatically discovers new projects and presents them in its interactive menu.
+The Standalone Project Paradigm enables horizontal scaling: a project supplies its manuscript/config, isolated source and tests, thin analysis scripts, and declared dependencies. New projects use existing infrastructure interfaces; admission to the tracked public roster and release matrix remains explicit. The `run.sh` orchestrator automatically discovers new projects and presents them in its interactive menu.
 
 We have validated scaling with ${project_count} canonical exemplars under `projects/templates/`—always present for onboarding and tooling—and with this manuscript from `projects/templates/template_template` (${project_template_template_test_count} tests) as a git-tracked public exemplar in the same automated discovery menus.
 
@@ -29,4 +29,4 @@ When the `--all-projects` flag is passed to `run.sh`, the pipeline executes each
 | Analysis scripts | ${project_template_code_project_script_count} | ${project_template_prose_project_script_count} | ${project_template_autoresearch_project_script_count} |
 | Figures (auto-generated) | ${project_template_code_project_figure_count} | ${project_template_prose_project_figure_count} | ${project_template_autoresearch_project_figure_count} |
 
-The infrastructure overhead per project is constant regardless of project size: the same ${module_count} modules, the same ${stage_count} pipeline stages, the same rendering and validation logic. This O(1) infrastructure cost is the architectural payoff of the Two-Layer separation.
+The infrastructure overhead per project is constant regardless of project size: the same ${module_count} modules, the same ${pipeline_stages_declared} declared pipeline stages, the same rendering and validation logic. The shared implementation does not grow with the project roster; execution time and output volume still grow with the work performed.

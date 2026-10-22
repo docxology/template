@@ -1,0 +1,41 @@
+{
+  "figures": [
+    {
+      "caption": "Two-layer architecture derived from the public repository inventory.",
+      "filename": "architecture_overview.png",
+      "generated_by": "template_template.figures.figure_architecture_overview.generate_architecture_overview",
+      "label": "fig:template-architecture",
+      "metadata": {
+        "alt_text": "Infrastructure module cards appear above public-project cards, joined by a pipeline arrow. Each card records the corresponding file counts and documentation badges."
+      }
+    },
+    {
+      "caption": "Comparative capabilities of research tools across the declared feature matrix.",
+      "filename": "comparative_feature_matrix.png",
+      "generated_by": "template_template.figures.figure_comparative_matrix.generate_comparative_feature_matrix",
+      "label": "fig:template-comparative-matrix",
+      "metadata": {
+        "alt_text": "A heatmap compares tools across core pipeline, quality and security, and ecosystem capabilities. Each cell distinguishes full, partial or plugin-hosted, and unavailable support."
+      }
+    },
+    {
+      "caption": "Infrastructure Python file counts by module, sorted largest first.",
+      "filename": "module_inventory.png",
+      "generated_by": "template_template.figures.figure_module_inventory.generate_module_inventory",
+      "label": "fig:template-module-inventory",
+      "metadata": {
+        "alt_text": "A horizontal bar chart compares Python file counts across infrastructure modules, with the largest modules first and smaller modules forming a long tail."
+      }
+    },
+    {
+      "caption": "Declared pipeline stages with their complete names and tags.",
+      "filename": "pipeline_stages.png",
+      "generated_by": "template_template.figures.figure_pipeline_stages.generate_pipeline_stages",
+      "label": "fig:template-pipeline-flow",
+      "metadata": {
+        "alt_text": "Pipeline stage cards list every YAML declaration in reading order, with stage numbers, complete names and tags. Their order describes declarations rather than a dependency chain."
+      }
+    }
+  ],
+  "schema_version": "template-template-figure-registry-v1"
+}

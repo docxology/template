@@ -315,7 +315,7 @@ class TestSkillsCliWiring:
         from infrastructure.skills.cli import main as skills_main
 
         _write(tmp_path / "infrastructure" / "leaf.py", "x = 1\n")
-        # Repo root must have a .cursor for the manifest. Use --audit-root
+        # Repo root uses .agents for the generated manifest. Use --audit-root
         # to point at the synthetic infra/ tree directly.
         rc = skills_main(
             [

@@ -955,8 +955,8 @@ completed. No error has been found."** Second, a genuinely new model
 shipped alongside the original: `AntProtocolFaulty.tla` (+ `.cfg`) is a
 two-peer (initiator/responder) model with an explicit message channel as
 first-class state — not a copy of the single-peer `AntProtocol.tla` — with
-`Send`/`ReceiveHello`/`ReceiveAck`/`Corrupt`/`DeliverCorrupt`/`Duplicate`
-actions mirroring `network/bus.py`'s real drop/corrupt/duplicate fault
+the `Send`, `ReceiveHello`, `ReceiveAck`, `Corrupt`, `DeliverCorrupt`, and
+`Duplicate` actions mirroring `network/bus.py`'s real drop/corrupt/duplicate fault
 modes, checked against `NoFalseEstablishment` (a peer is never
 `established` without the other peer's real message having actually been
 sent, even under arbitrary fault interleaving — the direct TLA+ analogue

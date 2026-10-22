@@ -7,6 +7,9 @@ from pathlib import Path
 import matplotlib.colors as mcolors
 import matplotlib.patches as patches
 import matplotlib.pyplot as plt
+from matplotlib.axes import Axes
+from matplotlib.figure import Figure
+from matplotlib.colorbar import Colorbar
 import numpy as np
 
 from .viz_palette import ARCH_VIZ_COLORS, FIGURE_DPI, FONT_FLOOR
@@ -71,7 +74,7 @@ def comparative_feature_matrix_data() -> tuple[np.ndarray, list[str], list[str]]
     return data, tools, capabilities
 
 
-def generate_comparative_feature_matrix(output_dir: Path) -> Path:
+def _comparative_feature_matrix_figure() -> tuple[Figure, Axes, Colorbar]:
     """Generate the comparative feature matrix heatmap."""
     data, tools, capabilities = comparative_feature_matrix_data()
     labels = np.where(data == 1.0, "✓", np.where(data == 0.5, "◐", "—"))
@@ -160,7 +163,7 @@ def generate_comparative_feature_matrix(output_dir: Path) -> Path:
             fontsize=FONT_FLOOR,
             fontweight="bold",
             color=ARCH_VIZ_COLORS["text_light"],
-            rotation=0,
+            rotation=90,
         )
 
     ax.set_title(
@@ -182,7 +185,7 @@ def generate_comparative_feature_matrix(output_dir: Path) -> Path:
 
     fig.text(
         0.5,
-        -0.01,
+        0.01,
         "✓ = full native support   |   ◐ = partial / plugin-based   |   — = absent"
         "   |   Blue border = template/ column   |   See Appendix for full text table.",
         ha="center",
@@ -193,7 +196,15 @@ def generate_comparative_feature_matrix(output_dir: Path) -> Path:
     )
 
     plt.tight_layout(rect=(0, 0.03, 0.92, 1), pad=1.0)
+    return fig, ax, cbar
+
+
+def generate_comparative_feature_matrix(output_dir: Path) -> Path:
+    """Generate the complete matrix with a separate, legible group-label gutter."""
+    fig, _, _ = _comparative_feature_matrix_figure()
     path = output_dir / "comparative_feature_matrix.png"
-    plt.savefig(path, dpi=FIGURE_DPI, bbox_inches="tight", facecolor="white")
-    plt.close()
+    try:
+        fig.savefig(path, dpi=FIGURE_DPI, bbox_inches="tight", facecolor="white")
+    finally:
+        plt.close(fig)
     return path

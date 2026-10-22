@@ -7,34 +7,34 @@ Inventory Mode: stable-shippable-output-v1
 Inventory Scope: stage5-delivery-mirror
 Inventory Root: output/templates/template_template
 
-Total Files: 96
-Total Size: 12.66 MB
+Total Files: 165
+Total Size: 18.86 MB
 
 Files by Category:
-  • pdf: 1 files (1.80 MB)
-  • web: 25 files (3.78 MB)
-  • slides: 21 files (2.40 MB)
-  • figures: 6 files (1.38 MB)
+  • pdf: 1 files (1.84 MB)
+  • web: 25 files (3.80 MB)
+  • slides: 21 files (4.06 MB)
+  • figures: 75 files (5.79 MB)
   • data: 3 files (0.02 MB)
   • reports: 3 files (0.01 MB)
-  • manuscript: 30 files (0.14 MB)
+  • manuscript: 30 files (0.15 MB)
   • release: 2 files (0.00 MB)
   • release_bundle: 4 files (1.35 MB)
-  • root: 1 files (1.80 MB)
+  • root: 1 files (1.84 MB)
 
 Largest Files:
+  • 04_results_slides.pdf: 3.37 MB (slides)
   • source-web-fonts.js: 3.02 MB (web)
-  • template_template_combined.pdf: 1.80 MB (pdf)
-  • template_template_combined.pdf: 1.80 MB (root)
-  • 04_results_slides.pdf: 1.44 MB (slides)
+  • template_template_combined.pdf: 1.84 MB (pdf)
+  • template_template_combined.pdf: 1.84 MB (root)
   • Friedman_2026_Template_535bd809.pdf: 1.33 MB (release_bundle)
 
 File Types:
+  • .json: 47 file(s)
+  • .png: 37 file(s)
   • .md: 28 file(s)
   • .pdf: 24 file(s)
   • .html: 22 file(s)
-  • .json: 9 file(s)
-  • .png: 6 file(s)
   • .yaml: 2 file(s)
   • .js: 1 file(s)
   • .ico: 1 file(s)

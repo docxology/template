@@ -166,7 +166,7 @@ the primary router:
 
 - Start with [`docs/prompts/SKILL.md`](../prompts/SKILL.md) for workflow routing.
 - Browse [`docs/_generated/skills_index.md`](../_generated/skills_index.md) for the live skill inventory.
-- Regenerate `.cursor/skill_manifest.json` after skill changes with `uv run python -m infrastructure.skills write`.
+- Regenerate `.agents/skill_manifest.json` after skill changes with `uv run python -m infrastructure.skills write`.
 - Validate prompt-skill metadata with `uv run python -m infrastructure.skills check-contracts`.
 
 Use [`docs/prompts/agentic-use/SKILL.md`](../prompts/agentic-use/SKILL.md)

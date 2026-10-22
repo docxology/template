@@ -64,6 +64,19 @@ def root_owned_projection(
 
 def auxiliary_owned_projection(values: dict[str, dict[str, Any]], requirements: Sequence[Any]) -> list[dict[str, Any]]:
     """Fixed original Linux common/Darwin platform ownership, independent of status."""
+    if "linux" not in values:
+        from infrastructure.project.auxiliary_matrix_plan import matrix_plan, DARWIN_GATES, validate_cell
+
+        plan = matrix_plan(requirements)
+        if set(values) != set(plan) | {"darwin"}:
+            raise ValueError("auxiliary aggregate requires every complete project cell and the Darwin owner")
+        for cell in plan:
+            validate_cell(values[cell], requirements, cell)
+        if set(values["darwin"].get("gates", {})) != DARWIN_GATES:
+            raise ValueError("auxiliary Darwin original changed its mandatory host selection")
+        for value in values.values():
+            validate_auxiliary_receipt_closure(value)
+        return [values[cell] for cell in plan] + [values["darwin"]]
     if set(values) != {"linux", "darwin"}:
         raise ValueError("auxiliary aggregate requires both fixed host owners")
     full = {
@@ -328,6 +341,11 @@ def produce_aggregate(
         if hosted_origin.head_sha != revision:
             raise ValueError("hosted aggregate context differs from exact source SHA")
         payload["hosted_origin_artifact"] = hosted_origin.manifest_binding
+        from infrastructure.project.auxiliary_matrix_hosted import AuxiliaryMatrixHostedContext
+
+        if type(hosted_origin) is not AuxiliaryMatrixHostedContext:
+            raise ValueError("hosted aggregate requires freshly authenticated auxiliary project originals")
+        payload["auxiliary_matrix_artifact"] = dict(hosted_origin.matrix_original.binding)
     payload["original_receipts"] = [
         {"path": relative, "sha256": reader.read(relative).sha256} for relative in sorted(paths)
     ]

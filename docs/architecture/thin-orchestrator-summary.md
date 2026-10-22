@@ -85,7 +85,7 @@ Project-specific scripts in `projects/{name}/scripts/` are thin orchestrators th
 #### Updated Main Documentation
 
 - **`README.md`**: Emphasizes thin orchestrator architecture
-- **`.cursorrules`**: Enforces thin orchestrator principles
+- **`.agents/AGENTS.md`**: Routes to the public repository contract and scoped workflow instructions
 - **`markdown-template-guide.md`**: Documents cross-referencing system
 
 ### 3. **Architectural Principles Established**

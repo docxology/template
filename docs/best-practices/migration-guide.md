@@ -261,27 +261,25 @@ git checkout -b migration/template-upgrade
 
 ### Step 2: Set Up Template Structure
 
-**Clone template structure:**
+Use a complete template checkout as the destination; follow [startup and setup](../guides/startup-and-setup.md). The scripts depend on the accompanying infrastructure, configuration and lockfiles. Copying only the top-level scripts and `pyproject.toml` does not install that system.
 
-```bash
-# Create directories
-mkdir -p src tests scripts manuscript docs output
+For an existing template fork, merge the reviewed upstream update on the migration branch while preserving project customizations. Include `.agents/`, the current SDK and gate changes, and the relevant `.gitignore` rules. Before writing local memory, ensure the destination contains:
 
-# Copy template files
-cp template/scripts/* scripts/
-cp template/pyproject.toml .
-cp template/.cursorrules .
+```gitignore
+/.agents/state/*
+!/.agents/state/README.md
+!/.agents/state/continual-learning-memory.example.json
 ```
 
-**Set up dependencies:**
+Retain the legacy Cursor runtime-state ignores during migration. A public `.agents/` archive excludes old runtime bytes, but does not carry ignore rules or install the SDK publication guard by itself.
+
+The destination already has `pyproject.toml`; prepare its declared Root environment without reinitializing it:
 
 ```bash
-# Initialize uv
-uv init
-
-# Add existing dependencies
-uv add package1 package2 package3
+uv sync --locked
 ```
+
+Merge research dependencies into the intended project's metadata and resolve its own lock separately. Package names in migration examples are placeholders.
 
 ### Step 3: Migrate Source Code
 

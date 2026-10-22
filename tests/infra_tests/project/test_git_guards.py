@@ -660,3 +660,43 @@ def test_tracked_secret_scan_ignores_documented_fixtures(tmp_path: Path, content
     subprocess.run(["git", "add", "-A"], cwd=repo_root, check=True, timeout=30)
 
     assert tracked_secret_findings(repo_root) == []
+
+
+def test_git_guard_rejects_force_added_local_agent_state(tmp_path: Path) -> None:
+    """Ignored personal state stays rejected even after real Git force-add."""
+    _init_git_repo(tmp_path)
+    (tmp_path / ".gitignore").write_text("/.agents/state/*\n/.cursor/hooks/state/*\n", encoding="utf-8")
+    private_paths = [
+        ".agents/state/continual-learning-memory.json",
+        ".agents/state/nested/README.md",
+        ".agents/state/transcript-index.json",
+        ".cursor/hooks/state/continual-learning-memory.json",
+        ".cursor/hooks/state/session.json",
+    ]
+    public_paths = [
+        ".agents/state/README.md",
+        ".agents/state/continual-learning-memory.example.json",
+        ".cursor/hooks/state/README.md",
+        ".cursor/hooks/state/continual-learning-memory.example.json",
+        ".agents/workflows/local/SKILL.md",
+        "projects/example/.agents/state/README.md",
+    ]
+    for name in private_paths + public_paths:
+        path = tmp_path / name
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text("local fixture\n", encoding="utf-8")
+    ignored = subprocess.run(
+        ["git", "check-ignore", *private_paths],
+        cwd=tmp_path,
+        check=True,
+        capture_output=True,
+        text=True,
+    ).stdout.splitlines()
+    assert sorted(ignored) == sorted(private_paths)
+    assert tracked_generated_artifacts(tmp_path) == []
+    subprocess.run(["git", "add", "-f", *private_paths, *public_paths], cwd=tmp_path, check=True)
+    assert tracked_generated_artifacts(tmp_path) == sorted(private_paths)
+    for name in private_paths:
+        assert is_generated_artifact_path(name.replace("/", "\\"))
+    for name in public_paths:
+        assert not is_generated_artifact_path(name)

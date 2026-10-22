@@ -18,6 +18,7 @@ from infrastructure.core.implementation_custody import (
 )
 from infrastructure.project.installed_acceptance_artifacts import inspect_wheel_bytes, write_binary
 from infrastructure.project.public_package_dependencies import declared_local_dependencies, local_dependency_closure
+from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
 from infrastructure.reporting.release_readiness_profile import Requirement
 from infrastructure.reporting.release_readiness_snapshot import SnapshotReader
 
@@ -88,7 +89,11 @@ def capture_runtime_providers(
         if not isinstance(filename, str) or Path(filename).name != "__init__.py":
             raise ValueError("runtime provider did not import its actual package")
         source_root = Path(filename).absolute().parent
-        if source_root.is_relative_to(root):
+        authored_directories = (
+            *(root / name for name in ("infrastructure", "scripts", "tests")),
+            *(root / "projects" / name / leaf for name in PUBLIC_PROJECT_NAMES for leaf in ("src", "scripts", "tests")),
+        )
+        if any(source_root.is_relative_to(lane) for lane in authored_directories):
             raise ValueError("source-suite provider must be the admitted installed distribution")
         try:
             observed = capture_dependency_custody(

@@ -47,8 +47,11 @@ def _committed_fixture(tmp_path: Path) -> tuple[Path, str]:
     (root / "infrastructure/witness.py").write_bytes(b"VALUE = 1\n")
     (root / ".agents/skills/owned/SKILL.md").parent.mkdir(parents=True)
     (root / ".agents/skills/owned/SKILL.md").write_bytes(b"# owned public skill\n")
-    # Tracked, but outside the public artifact policy: never public source DATA.
-    (root / ".agents/AGENTS.md").write_bytes(b"owned agent note\n")
+    (root / ".agents/AGENTS.md").write_bytes(b"owned public agent contract\n")
+    (root / ".agents/state").mkdir()
+    (root / ".agents/state/continual-learning-memory.example.json").write_bytes(b"{}\n")
+    # Even tracked runtime state remains private; generic configuration is exact.
+    (root / ".agents/state/continual-learning-memory.json").write_bytes(b"owned private memory\n")
     (root / ".cursor").mkdir()
     (root / ".cursor/rules.md").write_bytes(b"owned editor note\n")
     (root / "fonds/README.md").write_bytes(b"owned resource note\n")
@@ -71,7 +74,12 @@ def test_admitted_source_files_bind_only_canonical_public_bodies(tmp_path: Path)
     root, commit = _committed_fixture(tmp_path)
     reader = SnapshotReader(root)
     reference = inventory(root, commit, time.monotonic() + 60)
-    for relative in (".agents/AGENTS.md", ".cursor/rules.md", "fonds/README.md", "projects/README.md"):
+    for relative in (
+        ".agents/state/continual-learning-memory.json",
+        ".cursor/rules.md",
+        "fonds/README.md",
+        "projects/README.md",
+    ):
         with pytest.raises(ValueError):
             reader.public_path(relative)
     files = admitted_source_files(root, reader, reference, time.monotonic() + 60)
@@ -79,13 +87,17 @@ def test_admitted_source_files_bind_only_canonical_public_bodies(tmp_path: Path)
         "README.md",
         "infrastructure/witness.py",
         ".agents/skills/owned/SKILL.md",
+        ".agents/AGENTS.md",
+        ".agents/state/continual-learning-memory.example.json",
         "projects/" + PUBLIC_PROJECT_NAMES[0] + "/output/html/witness.html",
     }
     assert files["infrastructure/witness.py"] == hashlib.sha256(b"VALUE = 1\n").hexdigest()
     assert reader.unchanged()
 
 
-@pytest.mark.parametrize("fault", ["untracked", "edited", "deleted", "deleted-root", "deleted-output"])
+@pytest.mark.parametrize(
+    "fault", ["untracked", "edited", "deleted", "deleted-root", "deleted-output", "deleted-agent-config"]
+)
 def test_admitted_source_files_refuse_untracked_or_edited_public_body(tmp_path: Path, fault: str) -> None:
     root, commit = _committed_fixture(tmp_path)
     if fault == "untracked":
@@ -98,6 +110,7 @@ def test_admitted_source_files_refuse_untracked_or_edited_public_body(tmp_path: 
         target = {
             "deleted": root / "infrastructure/witness.py",
             "deleted-root": root / "README.md",
+            "deleted-agent-config": root / ".agents/state/continual-learning-memory.example.json",
             "deleted-output": root / "projects" / PUBLIC_PROJECT_NAMES[0] / "output/html/witness.html",
         }[fault]
         target.unlink()

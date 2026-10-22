@@ -50,6 +50,19 @@ PUBLIC_ROOT_FILES = frozenset(
         "uv.lock",
     }
 )
+# Public generic agent configuration is exact; machine-local state stays excluded.
+PUBLIC_AGENT_DIRECTORIES = frozenset({".agents/skills", ".agents/workflows", ".agents/roles"})
+PUBLIC_AGENT_FILES = frozenset(
+    {
+        ".agents/AGENTS.md",
+        ".agents/README.md",
+        ".agents/context-engineering.lock.json",
+        ".agents/skill_manifest.json",
+        ".agents/operations_manifest.json",
+        ".agents/state/README.md",
+        ".agents/state/continual-learning-memory.example.json",
+    }
+)
 _ROOT_OBSERVATIONS = frozenset({"docs_lint.json", "lint.json", "readiness_receipt.json"})
 _PROJECT_PREFIXES = frozenset(Path(name).parts for name in PUBLIC_PROJECT_NAMES)
 _OUTPUT_PREFIXES = _PROJECT_PREFIXES | frozenset((Path(name).name,) for name in PUBLIC_PROJECT_NAMES) | {("readiness",)}
@@ -209,7 +222,11 @@ class SnapshotReader:
             raise ValueError("artifact path references private or unknown output")
         if parts[0] in {"fonds", "rules", "tools"} and not path.is_relative_to(Path(parts[0]) / "templates"):
             raise ValueError("artifact references private resource state")
-        if parts[0] == ".agents" and not path.is_relative_to(Path(".agents/skills")):
+        if (
+            parts[0] == ".agents"
+            and relative not in PUBLIC_AGENT_FILES
+            and not any(path.is_relative_to(Path(directory)) for directory in PUBLIC_AGENT_DIRECTORIES)
+        ):
             raise ValueError("artifact references private agent state")
         if len(parts) > 1 and parts[0] not in {
             "projects",

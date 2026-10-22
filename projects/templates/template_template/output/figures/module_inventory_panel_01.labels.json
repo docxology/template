@@ -1,0 +1,252 @@
+{
+  "schema_version": "1.0",
+  "png_sha256": "eaee2d47a224c9f6f9a18dba2e8f07a1c43cabb03b9e421d54eabd7f1011e8c8",
+  "width_px": 1700,
+  "height_px": 1100,
+  "dpi": 200,
+  "minimum_label_px": 92.0,
+  "text_measurements": [
+    {
+      "text": "Modules 1\u20136 of 31",
+      "bbox_px": [
+        369.25,
+        988.0,
+        1330.75,
+        1080.0
+      ],
+      "font_pixels": 94.44444444444444,
+      "minimum_label_px": 92.0
+    },
+    {
+      "text": "reporting",
+      "bbox_px": [
+        24.0,
+        864.0,
+        459.0,
+        956.0
+      ],
+      "font_pixels": 94.44444444444444,
+      "minimum_label_px": 92.0
+    },
+    {
+      "text": "409",
+      "bbox_px": [
+        1130.0,
+        864.0,
+        1327.25,
+        956.0
+      ],
+      "font_pixels": 94.44444444444444,
+      "minimum_label_px": 92.0
+    },
+    {
+      "text": "[ARS\u00b7]",
+      "bbox_px": [
+        1350.0,
+        864.0,
+        1644.0,
+        956.0
+      ],
+      "font_pixels": 94.44444444444444,
+      "minimum_label_px": 92.0
+    },
+    {
+      "text": "core",
+      "bbox_px": [
+        24.0,
+        760.0,
+        228.75,
+        852.0
+      ],
+      "font_pixels": 94.44444444444444,
+      "minimum_label_px": 92.0
+    },
+    {
+      "text": "199",
+      "bbox_px": [
+        1130.0,
+        760.0,
+        1327.25,
+        852.0
+      ],
+      "font_pixels": 94.44444444444444,
+      "minimum_label_px": 92.0
+    },
+    {
+      "text": "[ARS\u00b7]",
+      "bbox_px": [
+        1350.0,
+        760.0,
+        1644.0,
+        852.0
+      ],
+      "font_pixels": 94.44444444444444,
+      "minimum_label_px": 92.0
+    },
+    {
+      "text": "rendering",
+      "bbox_px": [
+        24.0,
+        656.0,
+        482.375,
+        748.0
+      ],
+      "font_pixels": 94.44444444444444,
+      "minimum_label_px": 92.0
+    },
+    {
+      "text": "121",
+      "bbox_px": [
+        1130.0,
+        656.0,
+        1327.375,
+        748.0
+      ],
+      "font_pixels": 94.44444444444444,
+      "minimum_label_px": 92.0
+    },
+    {
+      "text": "[ARS\u00b7]",
+      "bbox_px": [
+        1350.0,
+        656.0,
+        1644.0,
+        748.0
+      ],
+      "font_pixels": 94.44444444444444,
+      "minimum_label_px": 92.0
+    },
+    {
+      "text": "project",
+      "bbox_px": [
+        24.0,
+        552.0,
+        352.0,
+        644.0
+      ],
+      "font_pixels": 94.44444444444444,
+      "minimum_label_px": 92.0
+    },
+    {
+      "text": "111",
+      "bbox_px": [
+        1130.0,
+        552.0,
+        1327.25,
+        644.0
+      ],
+      "font_pixels": 94.44444444444444,
+      "minimum_label_px": 92.0
+    },
+    {
+      "text": "[ARS\u00b7]",
+      "bbox_px": [
+        1350.0,
+        552.0,
+        1644.0,
+        644.0
+      ],
+      "font_pixels": 94.44444444444444,
+      "minimum_label_px": 92.0
+    },
+    {
+      "text": "validation",
+      "bbox_px": [
+        24.0,
+        448.0,
+        489.125,
+        540.0
+      ],
+      "font_pixels": 94.44444444444444,
+      "minimum_label_px": 92.00000000000006
+    },
+    {
+      "text": "85",
+      "bbox_px": [
+        1130.0,
+        448.0,
+        1261.5,
+        540.0
+      ],
+      "font_pixels": 94.44444444444444,
+      "minimum_label_px": 92.00000000000006
+    },
+    {
+      "text": "[ARS\u00b7]",
+      "bbox_px": [
+        1350.0,
+        448.0,
+        1644.0,
+        540.0
+      ],
+      "font_pixels": 94.44444444444444,
+      "minimum_label_px": 92.00000000000006
+    },
+    {
+      "text": "publishing",
+      "bbox_px": [
+        24.0,
+        344.0,
+        511.75,
+        436.0
+      ],
+      "font_pixels": 94.44444444444444,
+      "minimum_label_px": 92.0
+    },
+    {
+      "text": "83",
+      "bbox_px": [
+        1130.0,
+        344.0,
+        1261.5,
+        436.0
+      ],
+      "font_pixels": 94.44444444444444,
+      "minimum_label_px": 92.0
+    },
+    {
+      "text": "[ARS\u00b7]",
+      "bbox_px": [
+        1350.0,
+        344.0,
+        1644.0,
+        436.0
+      ],
+      "font_pixels": 94.44444444444444,
+      "minimum_label_px": 92.0
+    },
+    {
+      "text": "Python files \u00b7 A AGENTS",
+      "bbox_px": [
+        290.3125,
+        208.0,
+        1409.6875,
+        300.0
+      ],
+      "font_pixels": 94.44444444444444,
+      "minimum_label_px": 92.0
+    },
+    {
+      "text": "R README \u00b7 S SKILL \u00b7 P PAI",
+      "bbox_px": [
+        222.375,
+        108.0,
+        1477.625,
+        200.0
+      ],
+      "font_pixels": 94.44444444444444,
+      "minimum_label_px": 92.0
+    },
+    {
+      "text": "\u00b7 = absent",
+      "bbox_px": [
+        604.3125,
+        8.0,
+        1095.6875,
+        100.0
+      ],
+      "font_pixels": 94.44444444444444,
+      "minimum_label_px": 92.0
+    }
+  ]
+}

@@ -479,3 +479,27 @@ def test_snapshot_traversal_refuses_fifo_without_opening_it(tmp_path: Path) -> N
     path.unlink()
     os.mkfifo(path)
     assert reader.unchanged() is False
+
+
+def test_generic_agent_config_is_bound_while_runtime_memory_stays_private(tmp_path: Path) -> None:
+    from infrastructure.reporting.release_readiness_snapshot import PUBLIC_AGENT_FILES
+
+    for name in PUBLIC_AGENT_FILES | {".agents/workflows/owned/SKILL.md", ".agents/roles/owned.md"}:
+        target = tmp_path / name
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_text("owned public agent configuration\n")
+    private = tmp_path / ".agents/state/continual-learning-memory.json"
+    private.write_text("owned private state\n")
+    reader = SnapshotReader(tmp_path)
+    public = public_source_paths(tmp_path)
+    assert {tmp_path / name for name in PUBLIC_AGENT_FILES} <= set(public)
+    assert private not in public
+    for target in public:
+        reader.read(target.relative_to(tmp_path).as_posix())
+    before = source_fingerprint(tmp_path)
+    private.write_text("changed private state\n")
+    assert reader.unchanged() and source_fingerprint(tmp_path) == before
+    with pytest.raises(ValueError, match="private agent state"):
+        reader.read(private.relative_to(tmp_path).as_posix())
+    (tmp_path / ".agents/skill_manifest.json").write_text("changed public manifest\n")
+    assert not reader.unchanged() and source_fingerprint(tmp_path) != before

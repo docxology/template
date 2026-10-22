@@ -173,6 +173,7 @@ def validate_preamble_packages(
         "array",
         "hyperref",
         "natbib",
+        "fvextra",
     ]
 
     # Optional packages that enhance functionality

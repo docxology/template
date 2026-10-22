@@ -432,6 +432,15 @@ th {
   color: white;
 }
 
+/* Preserve a complete inline-code header within the table's scroll region. */
+th code {
+  color: inherit;
+  background-color: transparent;
+  white-space: nowrap;
+  overflow-wrap: normal;
+  word-break: normal;
+}
+
 img {
   max-width: 100%;
   height: auto;
@@ -677,7 +686,7 @@ may be either).</li>
 evaluations a method’s steps satisfy.</p>
 <h2 id="computational-environment">Computational environment</h2>
 <ul>
-<li><strong>Language</strong>: Python 3.14.4 on Darwin arm64 (see root
+<li><strong>Language</strong>: Python 3.14.8 on Darwin arm64 (see root
 <code>pyproject.toml</code> for the supported version range).</li>
 <li><strong>Core dependencies</strong>: <code>pyyaml</code>,
 <code>matplotlib</code> (declared in

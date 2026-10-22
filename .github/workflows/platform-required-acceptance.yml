@@ -353,7 +353,32 @@ jobs:
           if-no-files-found: error
           retention-days: 1
 
+  auxiliary-plan:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    outputs:
+      matrix: ${{ steps.plan.outputs.matrix }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+          submodules: true
+      - uses: ./.github/actions/setup-acceptance-fixtures
+      - uses: ./.github/actions/setup-python-env
+      - name: Derive complete auxiliary project matrix from Source
+        id: plan
+        run: |
+          set -euo pipefail
+          matrix=$(.venv/bin/python -m infrastructure.project.public_acceptance_auxiliary_cli --matrix-json)
+          echo "matrix=$matrix" >> "$GITHUB_OUTPUT"
+
   auxiliary-original:
+    needs: auxiliary-plan
+    name: auxiliary-original (${{ matrix.cell }})
+    strategy:
+      fail-fast: false
+      max-parallel: 4
+      matrix: ${{ fromJSON(needs.auxiliary-plan.outputs.matrix) }}
     runs-on: ubuntu-latest
     timeout-minutes: 90
     steps:
@@ -389,6 +414,7 @@ jobs:
       - name: Prepare source-locked browser math dependencies
         run: .venv/bin/python -m infrastructure.reporting.native_dependency_preparation --repo-root .
       - name: Prepare pinned formal tools
+        if: matrix.formal
         timeout-minutes: 20
         shell: bash
         run: |
@@ -400,8 +426,10 @@ jobs:
           for pin in projects/templates/template_active_inference/lean/lean-toolchain projects/templates/template_formal/formal/lean/lean-toolchain; do
             "$HOME/.elan/bin/elan" toolchain install "$(tr -d '[:space:]' < "$pin")"
           done
-          sudo apt-get install -y --no-install-recommends default-jre-headless
+      - name: Prepare the declared Java launcher
+        run: sudo apt-get install -y --no-install-recommends default-jre-headless
       - name: Prepare the exact immutable SIA sandbox image
+        if: matrix.docker
         timeout-minutes: 10
         shell: bash
         env:
@@ -413,26 +441,27 @@ jobs:
           echo "TEMPLATE_ACCEPTANCE_SIA_IMAGE_ID=$image" >> "$GITHUB_ENV"
           echo "TEMPLATE_SIA_TEST_IMAGE=$image" >> "$GITHUB_ENV"
       - uses: ./.github/actions/setup-acceptance-model
+        if: matrix.model
       - uses: ./.github/actions/setup-ci-execution-user
         with:
-          docker: "true"
-      - name: Every remaining source-owned obligation
+          docker: ${{ matrix.docker }}
+      - name: Complete source-owned auxiliary project selection
         id: auxiliary
         continue-on-error: true
         run: >-
           .venv/bin/python -m infrastructure.core.testing.ci_execution_user run
           --state "$RUNNER_TEMP/template-ci-execution/state.json" --
           .venv/bin/python -m infrastructure.project.public_acceptance_auxiliary_cli
-          --all --local-model smollm2:135m --docker-image-id "$TEMPLATE_ACCEPTANCE_SIA_IMAGE_ID"
-          --auxiliary-workers 3
-          --timeout-seconds 1800 --evidence-dir output/readiness/auxiliary
-      - name: Fail promptly for any unpassed Linux-owned auxiliary obligation
+          --matrix-cell "${{ matrix.cell }}" --local-model smollm2:135m --docker-image-id "$TEMPLATE_ACCEPTANCE_SIA_IMAGE_ID"
+          --auxiliary-workers 1
+          --timeout-seconds 1800 --evidence-dir "output/readiness/auxiliary-linux/${{ matrix.cell }}"
+      - name: Fail promptly for any unpassed project auxiliary obligation
         if: always()
         run: >-
           .venv/bin/python -m infrastructure.core.testing.ci_execution_user run
           --state "$RUNNER_TEMP/template-ci-execution/state.json" --
           .venv/bin/python -m infrastructure.reporting.original_job_outcome
-          --kind auxiliary --receipt output/readiness/auxiliary/receipt.json
+          --kind auxiliary --receipt "output/readiness/auxiliary-linux/${{ matrix.cell }}/receipt.json"
       - name: Stop only the owned model daemon and descendants
         if: always()
         shell: bash
@@ -481,8 +510,8 @@ jobs:
         if: always()
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
         with:
-          name: required-source-auxiliary-linux
-          path: ${{ env.TEMPLATE_CI_ARTIFACT_DIRECTORY }}/auxiliary/
+          name: required-source-auxiliary-linux-${{ matrix.cell }}
+          path: ${{ env.TEMPLATE_CI_ARTIFACT_DIRECTORY }}/auxiliary-linux/${{ matrix.cell }}/
           if-no-files-found: error
           retention-days: 1
 
@@ -559,11 +588,6 @@ jobs:
         with:
           name: required-source-common
           path: output/readiness
-      - name: Read same-run original Linux auxiliary DATA
-        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333
-        with:
-          name: required-source-auxiliary-linux
-          path: output/readiness/auxiliary
       - name: Read same-run original macOS auxiliary DATA
         uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333
         with:
@@ -593,7 +617,6 @@ jobs:
           --receipt output/readiness/projects/receipt.json
           --receipt output/readiness/installed/receipt.json
           --receipt output/readiness/sandbox-transfer/receipt.json
-          --auxiliary-receipt linux=output/readiness/auxiliary/receipt.json
           --auxiliary-receipt darwin=output/readiness/auxiliary-darwin/receipt.json
           --root-receipt linux/3.12=output/readiness/root-linux-3.12/receipt.json
           --root-receipt linux/3.13=output/readiness/root-linux-3.13/receipt.json

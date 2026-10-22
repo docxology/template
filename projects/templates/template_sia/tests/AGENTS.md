@@ -29,3 +29,6 @@ Behavior tests are co-located with their subject module's subpackage:
 | `test_claim_ledger.py` | Committed `data/claim_ledger.yaml` integrity |
 
 Run one pytest process per project directory (repo-wide convention).
+
+Recorded SIA agents are also executed directly against threshold boundary inputs;
+fixture replay itself continues to read recorded data without running agents.

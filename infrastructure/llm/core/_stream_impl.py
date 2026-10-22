@@ -25,7 +25,7 @@ from infrastructure.llm.core._stream_helpers import (
     save_partial_if_needed,
 )
 from infrastructure.llm.core._text_utils import strip_thinking_tags
-from infrastructure.llm.core.config import GenerationOptions, OllamaClientConfig
+from infrastructure.llm.core.config import GenerationOptions, OllamaClientConfig, _retry_count
 from infrastructure.llm.core.context import ConversationContext
 
 logger = get_logger(__name__)
@@ -41,7 +41,7 @@ def stream_query_impl(
     save_response: bool = False,
     save_path: Path | None = None,
     log_progress: bool = True,
-    retries: int = 1,
+    retries: int | None = None,
 ) -> Iterator[str]:
     """Stream response from LLM with comprehensive logging and error recovery.
 
@@ -63,6 +63,7 @@ def stream_query_impl(
         Response text chunks
     """
     start_time = time_module.time()
+    retries = _retry_count(config.request_retries if retries is None else retries)
     model_name = model or config.default_model
 
     # Pre-bind stable per-request params so save_partial_if_needed and the final save call

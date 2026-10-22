@@ -41,3 +41,9 @@ unprivileged account, explicit runtime inputs and the unchanged global census.
 Preserve shared cache inodes, source bytes/modes, original exits and failed
 evidence. Transport cannot grant runtime or release acceptance. Changes require
 independent review and genuine affected hosted execution.
+
+Public Root and project runtime workers create private fixture scratch outside
+Source, ancestor Git checkouts and the selected runtime. Only the actual worker
+adds that fresh path to its pytest call. Receipt, XML and coverage paths retain
+their declared evidence locations and all original deadlines. Scratch cleanup
+requires the same held physical directory; transported paths grant no cleanup.

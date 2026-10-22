@@ -2,57 +2,49 @@
   "directories": {
     "pdf": {
       "exists": true,
-      "file_count": 11,
-      "size_mb": "1.54",
-      "total_size_bytes": 1615352,
+      "file_count": 2,
+      "size_mb": "1.08",
+      "total_size_bytes": 1128518,
       "largest_files": [
         {
           "name": "the-shape-between.pdf",
-          "size_mb": "1.42",
+          "size_mb": "1.03",
+          "size_bytes": 1083353,
           "path": "pdf/the-shape-between.pdf"
-        },
-        {
-          "name": "_combined_manuscript.log",
-          "size_mb": "0.05",
-          "path": "pdf/_combined_manuscript.log"
         },
         {
           "name": "template_storybook_combined.pdf",
           "size_mb": "0.04",
+          "size_bytes": 45165,
           "path": "pdf/template_storybook_combined.pdf"
         }
       ],
       "extensions": {
-        ".md": 1,
-        ".log": 2,
-        ".aux": 1,
-        ".blg": 1,
-        ".pdf": 2,
-        ".bib": 1,
-        ".tex": 1,
-        ".toc": 1,
-        ".bbl": 1
+        ".pdf": 2
       }
     },
     "web": {
       "exists": true,
       "file_count": 9,
-      "size_mb": "0.05",
-      "total_size_bytes": 50005,
+      "size_mb": "0.09",
+      "total_size_bytes": 98473,
       "largest_files": [
         {
           "name": "index.html",
           "size_mb": "0.02",
+          "size_bytes": 21718,
           "path": "web/index.html"
         },
         {
           "name": "manuscript__00_abstract.html",
           "size_mb": "0.01",
+          "size_bytes": 12431,
           "path": "web/manuscript__00_abstract.html"
         },
         {
           "name": "manuscript__03_story_and_graphics.html",
-          "size_mb": "0.00",
+          "size_mb": "0.01",
+          "size_bytes": 12225,
           "path": "web/manuscript__03_story_and_graphics.html"
         }
       ],
@@ -64,56 +56,67 @@
     },
     "slides": {
       "exists": true,
-      "file_count": 46,
-      "size_mb": "0.46",
-      "total_size_bytes": 486137,
+      "file_count": 6,
+      "size_mb": "0.06",
+      "total_size_bytes": 63915,
       "largest_files": [
         {
-          "name": "02_architecture_slides.log",
-          "size_mb": "0.06",
-          "path": "slides/02_architecture_slides.log"
+          "name": "02_architecture_slides.pdf",
+          "size_mb": "0.01",
+          "size_bytes": 15057,
+          "path": "slides/02_architecture_slides.pdf"
         },
         {
-          "name": "00_abstract_slides.log",
-          "size_mb": "0.06",
-          "path": "slides/00_abstract_slides.log"
+          "name": "00_abstract_slides.pdf",
+          "size_mb": "0.01",
+          "size_bytes": 14068,
+          "path": "slides/00_abstract_slides.pdf"
         },
         {
-          "name": "03_story_and_graphics_slides.log",
-          "size_mb": "0.06",
-          "path": "slides/03_story_and_graphics_slides.log"
+          "name": "03_story_and_graphics_slides.pdf",
+          "size_mb": "0.01",
+          "size_bytes": 12238,
+          "path": "slides/03_story_and_graphics_slides.pdf"
         }
       ],
       "extensions": {
-        ".nav": 6,
-        ".pdf": 6,
-        ".toc": 6,
-        ".tex": 7,
-        ".aux": 6,
-        ".vrb": 3,
-        ".snm": 6,
-        ".log": 6
+        ".pdf": 6
       }
+    },
+    "docx": {
+      "exists": false,
+      "file_count": 0,
+      "size_mb": "0.00",
+      "total_size_bytes": 0
+    },
+    "epub": {
+      "exists": false,
+      "file_count": 0,
+      "size_mb": "0.00",
+      "total_size_bytes": 0
     },
     "figures": {
       "exists": true,
       "file_count": 15,
-      "size_mb": "2.30",
-      "total_size_bytes": 2406612,
+      "size_mb": "1.99",
+      "total_size_bytes": 2083808,
       "largest_files": [
         {
           "name": "storybook_contact_sheet.png",
-          "size_mb": "0.94",
+          "size_mb": "0.93",
+          "size_bytes": 971088,
           "path": "figures/storybook_contact_sheet.png"
         },
         {
           "name": "13_shared_home.png",
-          "size_mb": "0.13",
+          "size_mb": "0.10",
+          "size_bytes": 108730,
           "path": "figures/storybook_pages/13_shared_home.png"
         },
         {
           "name": "06_tetra_inside_cube.png",
-          "size_mb": "0.12",
+          "size_mb": "0.09",
+          "size_bytes": 98559,
           "path": "figures/storybook_pages/06_tetra_inside_cube.png"
         }
       ],
@@ -125,11 +128,12 @@
       "exists": true,
       "file_count": 1,
       "size_mb": "0.01",
-      "total_size_bytes": 11120,
+      "total_size_bytes": 12446,
       "largest_files": [
         {
           "name": "storybook_manifest.json",
           "size_mb": "0.01",
+          "size_bytes": 12446,
           "path": "data/storybook_manifest.json"
         }
       ],
@@ -139,30 +143,32 @@
     },
     "reports": {
       "exists": true,
-      "file_count": 11,
-      "size_mb": "0.11",
-      "total_size_bytes": 117026,
+      "file_count": 4,
+      "size_mb": "0.00",
+      "total_size_bytes": 4369,
       "largest_files": [
         {
-          "name": "evidence_registry.json",
-          "size_mb": "0.08",
-          "path": "reports/evidence_registry.json"
+          "name": "test_results.json",
+          "size_mb": "0.00",
+          "size_bytes": 2164,
+          "path": "reports/test_results.json"
         },
         {
-          "name": "artifact_manifest.json",
-          "size_mb": "0.01",
-          "path": "reports/artifact_manifest.json"
+          "name": "manuscript_composition.json",
+          "size_mb": "0.00",
+          "size_bytes": 1697,
+          "path": "reports/manuscript_composition.json"
         },
         {
-          "name": "validation_report.json",
-          "size_mb": "0.01",
-          "path": "reports/validation_report.json"
+          "name": "test_results.md",
+          "size_mb": "0.00",
+          "size_bytes": 289,
+          "path": "reports/test_results.md"
         }
       ],
       "extensions": {
-        ".json": 7,
-        ".txt": 1,
-        ".md": 3
+        ".json": 2,
+        ".md": 2
       }
     },
     "simulations": {
@@ -182,102 +188,118 @@
       "file_count": 0,
       "size_mb": "0.00",
       "total_size_bytes": 0
+    },
+    "root": {
+      "exists": true,
+      "file_count": 1,
+      "size_mb": "0.04",
+      "total_size_bytes": 45165,
+      "largest_files": [
+        {
+          "name": "template_storybook_combined.pdf",
+          "size_mb": "0.04",
+          "size_bytes": 45165,
+          "path": "template_storybook_combined.pdf"
+        }
+      ],
+      "extensions": {
+        ".pdf": 1
+      }
     }
   },
-  "total_files": 93,
-  "total_size_mb": 4.469158172607422,
+  "total_files": 38,
+  "total_size_mb": 3.277486801147461,
   "largest_files": [
     {
       "name": "the-shape-between.pdf",
-      "size_mb": "1.42",
+      "size_mb": "1.03",
+      "size_bytes": 1083353,
       "category": "pdf",
       "path": "pdf/the-shape-between.pdf"
     },
     {
       "name": "storybook_contact_sheet.png",
-      "size_mb": "0.94",
+      "size_mb": "0.93",
+      "size_bytes": 971088,
       "category": "figures",
       "path": "figures/storybook_contact_sheet.png"
     },
     {
       "name": "13_shared_home.png",
-      "size_mb": "0.13",
+      "size_mb": "0.10",
+      "size_bytes": 108730,
       "category": "figures",
       "path": "figures/storybook_pages/13_shared_home.png"
     },
     {
       "name": "06_tetra_inside_cube.png",
-      "size_mb": "0.12",
+      "size_mb": "0.09",
+      "size_bytes": 98559,
       "category": "figures",
       "path": "figures/storybook_pages/06_tetra_inside_cube.png"
     },
     {
-      "name": "evidence_registry.json",
+      "name": "10_tensegrity_lantern.png",
+      "size_mb": "0.09",
+      "size_bytes": 97269,
+      "category": "figures",
+      "path": "figures/storybook_pages/10_tensegrity_lantern.png"
+    },
+    {
+      "name": "03_pointed_house.png",
+      "size_mb": "0.09",
+      "size_bytes": 95553,
+      "category": "figures",
+      "path": "figures/storybook_pages/03_pointed_house.png"
+    },
+    {
+      "name": "01_publication_information.png",
+      "size_mb": "0.09",
+      "size_bytes": 91074,
+      "category": "figures",
+      "path": "figures/storybook_pages/01_publication_information.png"
+    },
+    {
+      "name": "11_vector_garden.png",
       "size_mb": "0.08",
-      "category": "reports",
-      "path": "reports/evidence_registry.json"
+      "size_bytes": 81161,
+      "category": "figures",
+      "path": "figures/storybook_pages/11_vector_garden.png"
     },
     {
-      "name": "02_architecture_slides.log",
-      "size_mb": "0.06",
-      "category": "slides",
-      "path": "slides/02_architecture_slides.log"
+      "name": "04_valley_symbol.png",
+      "size_mb": "0.07",
+      "size_bytes": 76117,
+      "category": "figures",
+      "path": "figures/storybook_pages/04_valley_symbol.png"
     },
     {
-      "name": "00_abstract_slides.log",
-      "size_mb": "0.06",
-      "category": "slides",
-      "path": "slides/00_abstract_slides.log"
-    },
-    {
-      "name": "03_story_and_graphics_slides.log",
-      "size_mb": "0.06",
-      "category": "slides",
-      "path": "slides/03_story_and_graphics_slides.log"
-    },
-    {
-      "name": "_combined_manuscript.log",
-      "size_mb": "0.05",
-      "category": "pdf",
-      "path": "pdf/_combined_manuscript.log"
-    },
-    {
-      "name": "template_storybook_combined.pdf",
-      "size_mb": "0.04",
-      "category": "pdf",
-      "path": "pdf/template_storybook_combined.pdf"
+      "name": "12_mega_symbol.png",
+      "size_mb": "0.07",
+      "size_bytes": 75255,
+      "category": "figures",
+      "path": "figures/storybook_pages/12_mega_symbol.png"
     }
   ],
-  "missing_expected_files": [
-    "simulations/ directory",
-    "llm/ directory",
-    "logs/ directory"
-  ],
+  "missing_expected_files": [],
   "sizes_by_category": {
-    "pdf": 1.5405197143554688,
-    "web": 0.04768848419189453,
-    "slides": 0.46361637115478516,
-    "figures": 2.295124053955078,
-    "data": 0.0106048583984375,
-    "reports": 0.11160469055175781
+    "pdf": 1.0762386322021484,
+    "web": 0.09391117095947266,
+    "slides": 0.06095409393310547,
+    "figures": 1.987274169921875,
+    "data": 0.011869430541992188,
+    "reports": 0.004166603088378906,
+    "root": 0.04307270050048828
   },
+  "inventory_mode": "stable-shippable-output-v1",
+  "inventory_scope": "stage5-delivery-mirror",
+  "inventory_root": "output/templates/template_storybook",
   "file_counts_by_type": {
-    ".md": 5,
-    ".log": 8,
-    ".aux": 7,
-    ".blg": 1,
-    ".pdf": 8,
-    ".bib": 1,
-    ".tex": 8,
-    ".toc": 7,
-    ".bbl": 1,
+    ".pdf": 9,
+    ".md": 3,
     ".ico": 1,
     ".html": 7,
-    ".nav": 6,
-    ".vrb": 3,
-    ".snm": 6,
     ".png": 15,
-    ".json": 8,
-    ".txt": 1
+    ".json": 3
   }
 }

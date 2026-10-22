@@ -828,11 +828,11 @@
         "semantic"
       ],
       "dimensions": {
-        "height": 1007,
+        "height": 1045,
         "width": 2019
       },
       "figure_id": "security_posture_map",
-      "image_sha256": "63c84940dad22e83be825073cfd68ae24daaabda1a5637b3c7c60f2b0e039fa7",
+      "image_sha256": "c305ccfab83496efa1c90e1bf617fcf113efebaa823c9cec54deddc16c742f83",
       "mapped": true,
       "pixel_provenance_ok": true,
       "renderer": "visualizations.figures.generate_all_figures",

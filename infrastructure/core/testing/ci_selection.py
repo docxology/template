@@ -116,6 +116,12 @@ def functional_selection(root: Path, event: str, base: str = "") -> dict[str, An
     }
 
 
+def _infra_matrix(shards: list[list[str]]) -> dict[str, Any]:
+    """Prepare the real LaTeX provider only for its selected routine consumer."""
+    native_latex = "tests/infra_tests/rendering/test_pdf_latex_pipeline.py"
+    return {"include": [{"shard": i, "tex": native_latex in files} for i, files in enumerate(shards)]}
+
+
 def main() -> int:
     from infrastructure.core.testing.ci_infra import infrastructure_shards
     from infrastructure.core.testing.ci_infra import infrastructure_files
@@ -137,7 +143,7 @@ def main() -> int:
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(plan, sort_keys=True, indent=2) + "\n")
     print("matrix=" + json.dumps(project_smoke_matrix(root, tuple(plan["projects"]))))
-    print("infra=" + json.dumps({"include": [{"shard": i} for i in range(len(plan["infra_shards"]))]}))
+    print("infra=" + json.dumps(_infra_matrix(plan["infra_shards"])))
     print(
         "contracts="
         + json.dumps(

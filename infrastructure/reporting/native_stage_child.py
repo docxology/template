@@ -27,7 +27,6 @@ from infrastructure.reporting.native_format_joint_source import source_environme
 from infrastructure.reporting.native_source_external_admission import NativeSourceContext
 from infrastructure.reporting.native_source_provider_bootstrap import format_selected_sdk_native_bootstrap
 from infrastructure.reporting.native_stage_child_contracts import (
-    PACKET_SCHEMA,
     PURPOSE,
     SCHEMA,
     WORKER,
@@ -78,18 +77,7 @@ class NativeStageChildPreparation:
         owner, source, scope, deadline = self.owner, self.source, self.scope, self.deadline
 
         def check_factory() -> None:
-            if (
-                self._key is not _FACTORY_KEY
-                or _PREPARED.get(id(self)) is not self
-                or self.owner is not owner
-                or self.source is not source
-                or self.scope != scope
-                or self.deadline != deadline
-                or current_native_producer_operation() is not owner
-                or owner.source is not source
-                or reader.root != source.bindings.current_root
-            ):
-                raise ValueError("native stage requires its actual fixed factory and live enclosing Source owner")
+            self._verify_factory_data(reader, owner, source, scope, deadline)
 
         check_factory()
         with owner._verification_guard(reader, run_id=owner.run_id, deadline=deadline):
@@ -99,6 +87,28 @@ class NativeStageChildPreparation:
             finally:
                 check_factory()
         remaining(deadline)
+
+    def _verify_factory_data(
+        self,
+        reader: SnapshotReader,
+        owner: NativeProducerOperation,
+        source: NativeSourceContext,
+        scope: str,
+        deadline: float,
+    ) -> None:
+        """Fixed factory/registry identity DATA; never a Source admission result."""
+        if (
+            self._key is not _FACTORY_KEY
+            or _PREPARED.get(id(self)) is not self
+            or self.owner is not owner
+            or self.source is not source
+            or self.scope != scope
+            or self.deadline != deadline
+            or current_native_producer_operation() is not owner
+            or owner.source is not source
+            or reader.root != source.bindings.current_root
+        ):
+            raise ValueError("native stage requires its actual fixed factory and live enclosing Source owner")
 
     def _verify_owner_data(self, reader: SnapshotReader) -> None:
         """Compare held factory DATA only inside the caller's fresh Source guard."""
@@ -134,8 +144,21 @@ class NativeStageChildPreparation:
         purpose: str,
     ) -> Path:
         """Called before actual ToolAPI Popen; no generic cwd or role override."""
-        reader = SnapshotReader(root, native_producer_operation=self.owner)
+        owner, source, scope = self.owner, self.source, self.scope
+        original_deadline = self.deadline
+        command, environment, cwd = self.command, self.environment, self.cwd
+        registry = _PREPARED
+        reader = SnapshotReader(root, native_producer_operation=owner)
         self.verify_owner(reader)
+        self._verify_factory_data(reader, owner, source, scope, original_deadline)
+        self._verify_owner_data(reader)
+        if (
+            _PREPARED is not registry
+            or self.command is not command
+            or self.environment is not environment
+            or self.cwd is not cwd
+        ):
+            raise ValueError("native stage launch factory changed during complete Source closure")
         if (
             root != self.source.bindings.current_root
             or directory != self.directory
@@ -160,12 +183,20 @@ class NativeStageChildPreparation:
         process_binding: dict[str, str],
         reader: SnapshotReader,
     ) -> None:
-        """Recheck all packet bytes after genuine parent ToolAPI authentication."""
-        from infrastructure.reporting.native_stage_child_custody import validate_stage_child_packet
-
+        """Recheck independently through the unchanged fresh public custody APIs."""
         self.verify_owner(reader)
         process = reader.read(process_binding["path"])
         self.owner.validate_tool(process_binding, process.json_object(), reader, run_id=self.owner.run_id)
+        self._verify_closed_packet_data(packet, process_binding, reader)
+
+    def _verify_closed_packet_data(
+        self, packet: dict[str, Any], process_binding: dict[str, str], reader: SnapshotReader
+    ) -> None:
+        """Complete packet/Code/OS DATA checks inside an already-open fixed guard."""
+        from infrastructure.reporting.native_stage_child_custody import validate_stage_child_packet
+
+        process = reader.read(process_binding["path"])
+        self.owner._validate_tool_data(process_binding, process.json_object(), reader, run_id=self.owner.run_id)
         validate_stage_child_packet(
             self.source,
             packet,
@@ -174,7 +205,7 @@ class NativeStageChildPreparation:
             source_record=self.specification.json_object()["source"],
             parent_pid=self.owner.owner_pid,
             original_deadline=self.owner.deadline,
-            parent_directory=self.owner.stage_scope_directory(self.scope).relative_to(reader.root).as_posix(),
+            parent_directory=self.owner._stage_scope_directory_data(self.scope).relative_to(reader.root).as_posix(),
             deadline=self.deadline,
         )
         if (
@@ -185,31 +216,10 @@ class NativeStageChildPreparation:
             raise ValueError("native stage closed packet belongs to another actual factory attempt")
 
     def observe(self, result: dict[str, Any]) -> dict[str, str]:
-        """Close only an actually retained ToolAPI event, never caller status DATA."""
-        reader = SnapshotReader(self.source.bindings.current_root, native_producer_operation=self.owner)
-        self.verify_owner(reader)
-        process_binding = result.get("artifact", result)
-        if not isinstance(process_binding, dict) or set(process_binding) != {"path", "sha256"}:
-            raise ValueError("native stage observation needs its actual ToolAPI artifact binding")
-        process = reader.read(process_binding["path"])
-        self.owner.validate_tool(process_binding, process.json_object(), reader, run_id=self.owner.run_id)
-        packet = {
-            "schema_version": PACKET_SCHEMA,
-            "process_artifact": process_binding,
-            "specification_artifact": binding(self.specification),
-            "artifact": binding(reader.read((self.directory / "observation.json").relative_to(reader.root).as_posix())),
-            "closure_artifact": binding(
-                reader.read((self.closure / "receipt.json").relative_to(reader.root).as_posix())
-            ),
-            "original_exit_code": process.json_object()["original_exit_code"],
-        }
-        self.verify_closed_packet(packet, process_binding, reader)
-        if not reader.unchanged():
-            raise ValueError("native stage child bytes changed before closing actual parent observation")
-        retained = write_json(reader.root, self.directory / "stage-child.json", packet)
-        self.owner._retain_actual_stage_child(self, process_binding, retained)
-        _PREPARED.pop(id(self))
-        return retained
+        """Close an actual ToolAPI event under one fresh post-return Source boundary."""
+        from infrastructure.reporting.native_stage_child_completion import observe_native_stage_child
+
+        return observe_native_stage_child(self, result)
 
 
 def prepare_native_stage_child(
@@ -226,6 +236,7 @@ def prepare_native_stage_child(
     if owner is None or owner.source is not source or type(deadline) not in (float, int) or not math.isfinite(deadline):
         raise ValueError("native stage factory requires the actual live Source owner and original finite deadline")
     root = source.bindings.current_root
+    registry, original_registry = _PREPARED, dict(_PREPARED)
     reader = SnapshotReader(root, native_producer_operation=owner)
     # All preparation is fixed synchronous DATA work. The actual Source
     # correspondence closes before the factory enters the live registry.
@@ -240,11 +251,42 @@ def prepare_native_stage_child(
             owner=owner,
             reader=reader,
         )
+        execution = (
+            prepared.command,
+            tuple(prepared.command),
+            prepared.environment,
+            dict(prepared.environment),
+            prepared.cwd,
+            str(prepared.cwd),
+        )
         prepared._verify_owner_data(reader)
         if not reader.unchanged():
             raise ValueError("native stage fixed prelaunch Source/request changed during preparation")
+    if (
+        _PREPARED is not registry
+        or len(registry) != len(original_registry)
+        or any(registry.get(key) is not value for key, value in original_registry.items())
+        or current_native_producer_operation() is not owner
+        or owner.source is not source
+        or prepared._key is not _FACTORY_KEY
+        or prepared.owner is not owner
+        or prepared.source is not source
+        or prepared.scope != scope
+        or prepared.deadline != deadline
+        or id(prepared) in registry
+        or prepared.command is not execution[0]
+        or tuple(prepared.command) != execution[1]
+        or prepared.environment is not execution[2]
+        or dict(prepared.environment) != execution[3]
+        or prepared.cwd is not execution[4]
+        or str(prepared.cwd) != execution[5]
+    ):
+        raise ValueError("native stage unpublished factory changed during complete Source closure")
+    prepared._verify_owner_data(reader)
+    if not reader.unchanged():
+        raise ValueError("native stage physical inputs changed during final Source closure")
     remaining(deadline)
-    _PREPARED[id(prepared)] = prepared
+    registry[id(prepared)] = prepared
     return prepared
 
 

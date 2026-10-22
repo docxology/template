@@ -11,6 +11,12 @@ from infrastructure.core.logging.utils import get_logger
 logger = get_logger(__name__)
 
 
+def _retry_count(value: object) -> int:
+    if type(value) is not int or value < 0:
+        raise ValueError("request retries must be a non-negative integer")
+    return value
+
+
 class ResponseMode(str, Enum):
     """Response generation modes for different use cases."""
 
@@ -103,6 +109,7 @@ class OllamaClientConfig:
     # Connection settings
     base_url: str = "http://localhost:11434"
     timeout: float = 60.0
+    request_retries: int = 1  # Extra HTTP attempts; zero fails promptly.
 
     # Model settings - default to fast model for testing
     # Override with OLLAMA_MODEL env var for quality reviews
@@ -171,6 +178,7 @@ class OllamaClientConfig:
         # Override with provided kwargs
         for key, value in kwargs.items():
             setattr(self, key, value)
+        _retry_count(self.request_retries)
 
     # Environment variable → (config_key, cast_fn) mappings for from_env().
     # LLM_NUM_CTX is handled specially (only used if context_window not already set).
@@ -181,6 +189,7 @@ class OllamaClientConfig:
         "LLM_MAX_TOKENS": ("max_tokens", int),
         "LLM_TEMPERATURE": ("temperature", float),
         "LLM_TIMEOUT": ("timeout", float),
+        "LLM_REQUEST_RETRIES": ("request_retries", int),
         "LLM_SEED": ("seed", int),
         "LLM_HEARTBEAT_INTERVAL": ("heartbeat_interval", float),
         "LLM_STALL_THRESHOLD": ("stall_threshold", float),

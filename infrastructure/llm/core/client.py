@@ -314,7 +314,7 @@ class LLMClient(_ConnectionMixin, _StructuredQueryMixin):
         save_response: bool = False,
         save_path: Path | None = None,
         log_progress: bool = True,
-        retries: int = 1,
+        retries: int | None = None,
         sanitize: bool = True,
         *,
         bypass_caller: str | None = None,

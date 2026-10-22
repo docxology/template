@@ -2,39 +2,40 @@
 OUTPUT STATISTICS REPORT
 ============================================================
 
-Output Directory: output
+Output Directory: output/templates/template_prose_project
+Inventory Mode: stable-shippable-output-v1
+Inventory Scope: stage5-delivery-mirror
+Inventory Root: output/templates/template_prose_project
 
-Total Files: 109
-Total Size: 1.79 MB
+Total Files: 59
+Total Size: 4.40 MB
 
 Files by Category:
-  • pdf: 10 files (0.26 MB)
-  • web: 11 files (0.13 MB)
-  • slides: 65 files (0.78 MB)
-  • figures: 10 files (0.50 MB)
+  • pdf: 1 files (0.22 MB)
+  • web: 12 files (3.24 MB)
+  • slides: 8 files (0.21 MB)
+  • figures: 10 files (0.43 MB)
   • data: 3 files (0.00 MB)
-  • reports: 10 files (0.12 MB)
+  • reports: 3 files (0.01 MB)
+  • manuscript: 13 files (0.03 MB)
+  • release: 2 files (0.00 MB)
+  • root: 7 files (0.25 MB)
 
 Largest Files:
-  • readability_metrics.png: 0.15 MB (figures)
-  • template_prose_project_combined.pdf: 0.13 MB (pdf)
-  • inline_mermaid_0002_e1277c0f292c.png: 0.10 MB (figures)
-  • section_word_counts.png: 0.10 MB (figures)
-  • evidence_registry.json: 0.08 MB (reports)
-
-Missing Expected Files:
-  ⚠  simulations/ directory
-  ⚠  llm/ directory
-  ⚠  logs/ directory
+  • source-web-fonts.js: 3.02 MB (web)
+  • template_prose_project_combined.pdf: 0.22 MB (pdf)
+  • template_prose_project_combined.pdf: 0.22 MB (root)
+  • readability_metrics.png: 0.14 MB (figures)
+  • section_word_counts.png: 0.09 MB (figures)
 
 File Types:
-  • .json: 11 file(s)
-  • .log: 10 file(s)
-  • .tex: 10 file(s)
-  • .aux: 9 file(s)
-  • .toc: 9 file(s)
-  • .pdf: 9 file(s)
+  • .md: 14 file(s)
+  • .json: 12 file(s)
+  • .pdf: 10 file(s)
   • .html: 9 file(s)
-  • .nav: 8 file(s)
-  • .vrb: 8 file(s)
-  • .snm: 8 file(s)
+  • .png: 7 file(s)
+  • .mmd: 2 file(s)
+  • .js: 1 file(s)
+  • .ico: 1 file(s)
+  • .yaml: 1 file(s)
+  • .bib: 1 file(s)

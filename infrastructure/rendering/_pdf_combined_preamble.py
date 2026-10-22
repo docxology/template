@@ -7,8 +7,11 @@ import re
 from pathlib import Path
 
 from infrastructure.core.logging.utils import get_logger
-from infrastructure.rendering._pdf_combined_transmission import _inject_toc_after_begin_transmission
+from infrastructure.rendering._pdf_combined_transmission import (
+    _inject_toc_after_begin_transmission,
+)
 from infrastructure.rendering._pdf_latex_helpers import extract_preamble
+from infrastructure.rendering.latex_texttt import VERBATIM_WRAP_PREAMBLE
 from infrastructure.rendering._pdf_title_page import (
     generate_title_page_body,
     generate_title_page_preamble,
@@ -105,6 +108,7 @@ def inject_latex_preamble(
             combined_preamble += "\n".join(title_page_preamble.split("\n")) + "\n\n"
         if preamble_content:
             combined_preamble += preamble_content + "\n\n"
+        combined_preamble += VERBATIM_WRAP_PREAMBLE + "\n\n"
         tex_content = tex_content[:begin_doc_idx] + combined_preamble + tex_content[begin_doc_idx:]
         begin_doc_idx += len(combined_preamble)
         logger.debug(f"✓ Inserted preamble ({len(combined_preamble)} chars) before \\begin{{document}}")

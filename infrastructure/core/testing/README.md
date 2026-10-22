@@ -18,11 +18,12 @@ probes, and test-selection planning. Re-homed from the flat
 | `pytest_orchestration.py` | Union pytest command construction, suite parsing, worker config. |
 | `pytest_profiles.py` | Test profile resolution (quick/release) and concurrency validation. |
 | `pytest_marker_exprs.py` | Marker-expression assembly per profile. |
+| `pytest_scratch.py` | Fresh private pytest fixture directories outside Source, Git and the selected runtime, with held-directory identity checks and descriptor-based cleanup. |
 | `public_matrix_receipt.py` | Deterministic public-matrix receipt build/validate/write. |
 | `coverage_policy.py` | pytest-cov capability probes. |
 | `ci_smoke.py` | Complete public roster with focused functional tests; no whole-suite coverage claim. |
 | `ci_selection.py` | Conservative changed-project selection with declared transitive consumers; shared or ambiguous changes select the complete public roster. |
-| `ci_infra.py`, `ci_contracts.py` | Exact complementary smoke shards and full-module contract jobs; the aggregate refuses missing, repeated or overlapping executed members. Broad routine selections scale from three to at most eight jobs with a nominal 32-module target; byte sizes balance placement, not runtime estimates. The 540-second operation and per-test clocks stay unchanged. |
+| `ci_infra.py`, `ci_contracts.py` | Exact complementary smoke shards and full-module contract jobs; the aggregate refuses missing, repeated or overlapping executed members. Broad routine selections keep at most 20 modules per automatic job and isolate declared process-heavy modules, including the multi-project run matrix; byte sizes balance placement, without predicting runtime. The 540-second operation and per-test clocks stay unchanged. Opt-in pytest observations flush bounded case starts, phase durations and explicitly truncated failure text to diagnostic-only JSONL, so a hard kill can retain partial attribution; complete execution receipts remain required. |
 | `ci_test_ownership.py` | Explicit focused test owners for shared Source changes, retaining the complete legacy smoke selection. |
 | `ci_execution_user.py` | Explicit hosted Linux account preparation, unprivileged original-command execution and byte-identical readiness transport; strict process observation remains unchanged. |
 | `pytest_receipt.py`, `pytest_observations.py` | Explicitly enabled nonce-bound original pytest collection/outcome records and independent readback. |
@@ -68,3 +69,9 @@ incomplete selected outcomes still fail. The full Root release profile and
 coverage floors are unchanged.
 
 Manual hardening partitions its existing marker-filtered infrastructure collection into four disjoint module shards for each existing OS/runtime pair. The plugin is explicitly enabled only by that invocation and by the manual slow lane's `--infra-ci-observer-only slow` mode, which records the same bounded controller diagnostics without partition, selection or completion admission; nested pytest commands retain their declared semantics. Both modes write `output/readiness/ordinary-infra-ci/diagnostics/shard-<lane>.json` as diagnostics-only DATA (declared public test families, member hashes, phases, failures and worker loss; no parameter values, private paths or failure bodies) that the hosted jobs retain as `infra-diagnostics-*` artifacts; it cannot grant selection, coverage or acceptance. Selection receipts bind infrastructure, scripts, tests and CI configuration bytes, and preserve actual pytest failure codes. These are ordinary CI records, not the complete Root release acceptance profile. The required `coverage-infra` job validates all four Python 3.14/Linux receipts and coverage hashes, merges actual arcs into an isolated temporary data file and enforces the existing 60% floor before Codecov upload. An invalid shard invocation or partition refusal exits 2 (pytest's usage error is 4); because pytest's interrupted session also exits 2, every refusal prints its diagnostic (collection refusals from xdist workers reach the controller summary) and leaves no complete shard receipt, so neither a refusal nor an interruption can export coverage.
+
+Public Root and project runtime workers create private fixture scratch outside
+Source, ancestor Git checkouts and the selected runtime. Only the actual worker
+adds that fresh path to its pytest call. Receipt, XML and coverage paths retain
+their declared evidence locations and all original deadlines. Scratch cleanup
+requires the same held physical directory; transported paths grant no cleanup.

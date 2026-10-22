@@ -3,13 +3,13 @@
     "pdf": {
       "exists": true,
       "file_count": 1,
-      "size_mb": "5.05",
-      "total_size_bytes": 5291119,
+      "size_mb": "4.76",
+      "total_size_bytes": 4989831,
       "largest_files": [
         {
           "name": "template_gold_refinement_combined.pdf",
-          "size_mb": "5.05",
-          "size_bytes": 5291119,
+          "size_mb": "4.76",
+          "size_bytes": 4989831,
           "path": "pdf/template_gold_refinement_combined.pdf"
         }
       ],
@@ -70,19 +70,19 @@
     "figures": {
       "exists": true,
       "file_count": 27,
-      "size_mb": "6.31",
-      "total_size_bytes": 6616068,
+      "size_mb": "5.63",
+      "total_size_bytes": 5905024,
       "largest_files": [
         {
           "name": "cover_visualization.png",
-          "size_mb": "1.71",
-          "size_bytes": 1793549,
+          "size_mb": "1.44",
+          "size_bytes": 1511397,
           "path": "figures/cover_visualization.png"
         },
         {
           "name": "claim_evidence_assay.png",
-          "size_mb": "0.67",
-          "size_bytes": 707362,
+          "size_mb": "0.56",
+          "size_bytes": 584517,
           "path": "figures/claim_evidence_assay.png"
         },
         {
@@ -226,13 +226,13 @@
     "root": {
       "exists": true,
       "file_count": 2,
-      "size_mb": "5.05",
-      "total_size_bytes": 5295237,
+      "size_mb": "4.76",
+      "total_size_bytes": 4993949,
       "largest_files": [
         {
           "name": "template_gold_refinement_combined.pdf",
-          "size_mb": "5.05",
-          "size_bytes": 5291119,
+          "size_mb": "4.76",
+          "size_bytes": 4989831,
           "path": "template_gold_refinement_combined.pdf"
         },
         {
@@ -249,19 +249,19 @@
     }
   },
   "total_files": 75,
-  "total_size_mb": 20.184243202209473,
+  "total_size_mb": 18.931477546691895,
   "largest_files": [
     {
       "name": "template_gold_refinement_combined.pdf",
-      "size_mb": "5.05",
-      "size_bytes": 5291119,
+      "size_mb": "4.76",
+      "size_bytes": 4989831,
       "category": "pdf",
       "path": "pdf/template_gold_refinement_combined.pdf"
     },
     {
       "name": "template_gold_refinement_combined.pdf",
-      "size_mb": "5.05",
-      "size_bytes": 5291119,
+      "size_mb": "4.76",
+      "size_bytes": 4989831,
       "category": "root",
       "path": "template_gold_refinement_combined.pdf"
     },
@@ -274,15 +274,15 @@
     },
     {
       "name": "cover_visualization.png",
-      "size_mb": "1.71",
-      "size_bytes": 1793549,
+      "size_mb": "1.44",
+      "size_bytes": 1511397,
       "category": "figures",
       "path": "figures/cover_visualization.png"
     },
     {
       "name": "claim_evidence_assay.png",
-      "size_mb": "0.67",
-      "size_bytes": 707362,
+      "size_mb": "0.56",
+      "size_bytes": 584517,
       "category": "figures",
       "path": "figures/claim_evidence_assay.png"
     },
@@ -295,43 +295,43 @@
     },
     {
       "name": "formalism_traceability.png",
-      "size_mb": "0.42",
-      "size_bytes": 441228,
+      "size_mb": "0.38",
+      "size_bytes": 401702,
       "category": "figures",
       "path": "figures/formalism_traceability.png"
     },
     {
       "name": "purity_progression.png",
-      "size_mb": "0.32",
-      "size_bytes": 340434,
+      "size_mb": "0.29",
+      "size_bytes": 305847,
       "category": "figures",
       "path": "figures/purity_progression.png"
     },
     {
-      "name": "implementation_circuit.png",
-      "size_mb": "0.30",
-      "size_bytes": 310260,
-      "category": "figures",
-      "path": "figures/implementation_circuit.png"
-    },
-    {
       "name": "token_heatmap.png",
-      "size_mb": "0.26",
-      "size_bytes": 271065,
+      "size_mb": "0.24",
+      "size_bytes": 250201,
       "category": "figures",
       "path": "figures/token_heatmap.png"
+    },
+    {
+      "name": "token_density.png",
+      "size_mb": "0.24",
+      "size_bytes": 248913,
+      "category": "figures",
+      "path": "figures/token_density.png"
     }
   ],
   "missing_expected_files": [],
   "sizes_by_category": {
-    "pdf": 5.046004295349121,
+    "pdf": 4.758673667907715,
     "web": 3.581451416015625,
-    "figures": 6.309574127197266,
+    "figures": 5.6314697265625,
     "data": 0.036963462829589844,
     "reports": 0.020897865295410156,
     "manuscript": 0.13913631439208984,
     "release": 0.0002841949462890625,
-    "root": 5.049931526184082
+    "root": 4.762600898742676
   },
   "inventory_mode": "stable-shippable-output-v1",
   "inventory_scope": "stage5-delivery-mirror",

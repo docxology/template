@@ -14,9 +14,34 @@ requires complete exact-revision acceptance and the authenticated release handof
 The prepared 4.0.0 and 4.0.1 candidates were not published; their implementation
 and historical notes remain preserved.
 
+- Make `.agents/` the shared agent interface: generated manifests, local workflows,
+  roles and confined local memory. Keep `.cursor/` and `.cursorrules` as deprecated
+  adapters, preserve legacy memory originals, and retain the pinned upstream skills.
+- Support trusted module-spec cache metadata in Python 3.15 bytecode auditing,
+  retaining exact Source, cache and contradiction checks.
+- Flush bounded diagnostic-only pytest progress with original failure attribution,
+  explicit truncation and held session identity; complete execution receipts remain
+  required. Isolate the real process-heavy matrix module and its Python-only
+  fixture environment without changing its selection or deadlines.
+- Remove duplicate native diagnostic preparation and build only Code plus its
+  declared local providers; complete native roles retain the full public roster.
+- Aggregate the latest completed stage's full artifact inventory after targeted
+  execution, preserving historical manifests while refusing stale or retired
+  output bindings. Keep missing or mismatched stage records fail-closed.
+- Separate generated IMRAD headings from preceding lists so the rendered report
+  retains real section headings; regenerate its manuscript through the producer.
+- Declare actual artifact, executor and test-ownership consumers explicitly,
+  preserving complete contract tests while keeping ownership-map changes focused.
 - Partition functional infrastructure feedback into complete complementary smoke
   shards and required full-module contract jobs, with original pytest member,
   outcome and JUnit receipts. Add conservative project impact selection.
+- Enforce twenty-module automatic smoke cells with eight concurrent jobs,
+  retaining every selected module and the original 540-second operation limit.
+  Clean up owned detached descendants through the shared bounded runner and
+  preserve raw OS/effective exits separately from pytest outcome receipts.
+- Run the full wheel typing contract with the existing pinned-submodule checkout;
+  bind positive version fixtures to current Source while preserving mismatch,
+  real Git interleaving, strict receipt decoding and installed type controls.
 - Retain diagnostic requests before pytest launch so abrupt exits leave their
   selected files, nonce and declared timeouts without substituting for outcome receipts.
 - Reuse each admitted Meta tree inventory and group adjacent standalone-provider
@@ -49,9 +74,10 @@ and historical notes remain preserved.
   while preserving independent exemplar versions and Lean 4.35.0.
 - Add reviewed metadata planning, exact-input checking, retained compensating
   rollback and strict refusal of ambiguous publication configuration.
-- Refresh coverage from authenticated original measurements for all public
-  exemplars; preserve the failed full workflow and successful Redacted follow-up
-  as distinct evidence. Correct the retained-database claim in generated counts.
+- Retain the measured baseline, original failed full workflow and successful
+  Redacted follow-up as distinct evidence. Renew seven standalone metrics from
+  compatible own-lock measurements, preserving eighteen historical values, and
+  verify combined statement/branch totals against the retained databases.
 - Install the genuine Root SDK in Redacted's coverage environment and add bounded
   export timing diagnostics under the unchanged native acceptance deadline.
 - Isolate Linux functional tests under their prepared execution account, retain
@@ -100,6 +126,33 @@ and historical notes remain preserved.
 - Repair portable Active fixtures, confined benchmark storage, branch-aware Auto
   coverage and pinned live workloads. Clone Git fixtures through independent
   native transport and route helpers to complete focused CI owners.
+
+- Schedule Linux auxiliary acceptance as complete Source-derived project cells,
+  each serial under its original 1800-second clock. Authenticate every same-run
+  original archive and complete gate union again during candidate and release
+  readback; retain old shared-deadline failures as failures.
+- Compose nested pipeline execution with the existing absolute operation deadline
+  and forward bounded original diagnostics while preserving retained process exits.
+- Authenticate genuine pytest thread timers for native print controls, isolate
+  inventory fixtures in real Git repositories, and make LLM request retries
+  explicit while warming the actual nominated context size.
+- Close native child packets under one fresh synchronous post-return Source
+  boundary, then recheck physical ownership, original events and registry state
+  before adoption. Independent later-use verification remains fresh.
+
+
+- Allocate pytest fixture trees outside Source, Git roots and selected runtimes.
+  Hold physical directory ownership through cleanup, restore only owned fixture
+  directory access, and refuse renamed roots or base directories. Disposable
+  fixture trees no longer enter project publication artifacts.
+- Permit genuine installed providers under Root runtime output while rejecting
+  authored Source shadows. Verify actual installed metadata and wheel bytes.
+- Repair isolated project startup, optional provider audit nominations, synthetic
+  test configuration and real Pandoc typography controls. Exercise all three
+  unchanged SIA archived agents against their declared boundary behavior.
+- Keep native prelaunch preparations unpublished until complete closing checks
+  confirm the original command, environment, working directory and physical owner.
+  Cover both dispatch and independent factory mutation paths with genuine controls.
 
 ## [4.0.1] - 2026-10-10
 

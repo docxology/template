@@ -488,3 +488,12 @@ client.query("How do these assumptions affect the validity of results?")
 | --- | --- |
 | `local_ollama.py` | Explicit, bounded local Ollama generation with byte-level custody. |
 | `local_review_operation.py` | Supervise explicit local review producers over frozen public input bytes. |
+
+`OllamaClientConfig.request_retries` (or `LLM_REQUEST_RETRIES`) declares extra
+HTTP attempts for blocking and streaming queries. The default remains one;
+zero fails on the first transport failure. Explicit streaming retry arguments
+override this configuration, including the short and long wrappers. Values
+must be non-negative integers. Each attempt retains the selected request
+timeout; callers must fit attempts and backoff within their operation budget.
+Real-model smoke clients choose zero retries, 128 output tokens and a
+4096-token context without extending request or case clocks.

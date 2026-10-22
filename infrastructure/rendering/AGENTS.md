@@ -28,7 +28,7 @@ not a claim of complete native-format acceptance.
 | Pandoc filters | `_pandoc_filters.py`, `_pandoc_args.py`, `formalism.lua`, `convert_latex_images.lua`, `_beamer_allowframebreaks.lua` | `_pandoc_filters.py` resolves the repo-shipped Lua filters for every writer; `formalism.lua` numbers Definition/Proposition/Theorem blocks and resolves `[@def:...]`. `_pandoc_args.combined_pandoc_args` assembles the shared combined-edition extra args (resource-path triple, formalism filter, crossref probe, citeproc+bibliography) for the DOCX/EPUB/ebook lanes. |
 | Bibliographies | `_bibliography.py`, `_pdf_combined_bibliography.py` | Shared sorted `manuscript/*.bib` discovery, repeated/symlink-path deduplication, duplicate-key rejection, Pandoc arguments, and PDF bibliography injection. |
 | Manuscript source | `manuscript_discovery.py`, `manuscript_injection.py`, `_manuscript_source.py`, `manuscript_composition.py`, `render_cache.py` | Section ordering, substitutions, resolved manuscript trees, render-boundary composition evidence (`manuscript_composition.py`), and modular section caching (`render_cache.py`). |
-| LaTeX support | `latex_utils.py`, `latex_package_validator.py`, `preflight.py` | Compilation and package checks. |
+| LaTeX support | `latex_utils.py`, `latex_package_validator.py`, `preflight.py` | Compilation and package checks; required `fvextra` wraps literal and highlighted code without rewriting its bytes or reducing font sizes. |
 | LaTeX checks | `latex_discovery.py`, `latex_validation.py`, `latex_log_quality.py`, `latex_texttt.py` | `kpsewhich`/per-package discovery, required/optional package `ValidationReport`, render-log findings for overfull/underfull boxes and undefined references, and rewriting long `\texttt{}` spans into a breakable monospace macro. |
 | docxplus export (opt-in) | `docxplus_export.py`, `docxplus_stage.py` | Exports a project as a conforming `.docx` that also carries its own source tree in a signed manifest. The container format is imported from upstream ([docxology/docxplus](https://github.com/docxology/docxplus)), never vendored; both modules skip cleanly when the optional `docxplus` extra is absent. |
 | Ebook formats | `ebook_bundle.py`, `ebook_stage.py`, `mobi_renderer.py` | `EbookBundleManager.generate_all` ties EPUB/MOBI/DOCX plus metadata together; `ebook_stage.py` is the opt-in ebook stage orchestrator; `mobi_renderer.py` renders MOBI via a pandoc EPUB intermediate and calibre `ebook-convert`. |
@@ -57,6 +57,14 @@ HTML rewrites preserve existing permissions and leave unchanged files alone.
 HTML and Beamer TeX rewrites use exclusive temporary files in the destination
 folder, so a planted predictable temporary symlink cannot redirect the write.
 Unsupported URI schemes fail validation even when their URL path is empty.
+
+Archive figure frames measure the active theme's actual wrapped title box,
+reserve title/baseline space, and only shrink images. Mixed raw content retains
+the conservative fallback. `_archive_figure_frames.lua` runs after Crossref;
+`_table_header_breaks.lua` runs after archive table pagination and before
+Crossref, including the combined PDF factory. Header breaks use primitive TeX
+penalties, require no macros/packages, preserve fonts and body cells, and abstain
+on nested/spanned header content. Literal examples are not a rewrite surface.
 
 ## Release acceptance modules
 
@@ -232,14 +240,18 @@ Unsupported URI schemes fail validation even when their URL path is empty.
   tables link to the canonical manuscript HTML. Beamer remains an explicitly
   labelled untagged presentation derivative. Neither a successful render nor
   these design constraints establish WCAG or PDF/UA conformance.
-- Accessible single-image figures may select a bounded, source-bound panel
+- Accessible and archive Beamer single-image figures may select a bounded, source-bound panel
   manifest through `data-slide-manifest`. `_slides_presentation_variants.py`
   owns unique-key schema validation, ordered panel expansion, and the final
   embedded PDF label-size gate; `_slides_accessibility_image_io.py` owns all
-  confined resource reads. Canonical manuscript figures and archive mode retain
-  their original sources. Keep producer label measurements bound to exact
+  confined resource reads. Canonical manuscript figures and archive Reveal retain
+  their original sources. Archive Beamer keeps one conceptual figure through
+  Crossref, isolates its ordered images, and emits its complete caption once
+  on following word-boundary continuation frames. The actual combined AUX
+  supplies caption and local-reference numbers in strict refreshes. Keep producer label measurements bound to exact
   raster hashes, require the 16-point minimum after embedding, and preserve
-  paired-output cleanup on a failed scale check. This proves declared integrity
+  accessible paired-output cleanup on a failed scale check. Archive removes
+  its invalid PDF without claiming a paired reader contract. This proves declared integrity
   and scale, not semantic completeness or accessibility conformance.
 - Canonical Stage 03 rendering emits one exact `*_slides.pdf` and
   `*_slides.html` pair per eligible source only in `accessible` mode. The pair

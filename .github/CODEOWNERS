@@ -19,7 +19,8 @@
 /pyproject.toml         @docxology
 /bandit.yaml            @docxology
 
-# Top-level instruction-hierarchy docs.
+# Shared agent configuration and top-level instruction-hierarchy docs.
+/.agents/               @docxology
 /CLAUDE.md              @docxology
 /AGENTS.md              @docxology
 /README.md              @docxology

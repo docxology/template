@@ -2,63 +2,49 @@
   "directories": {
     "pdf": {
       "exists": true,
-      "file_count": 10,
-      "size_mb": "1.36",
-      "total_size_bytes": 1430700,
+      "file_count": 1,
+      "size_mb": "0.96",
+      "total_size_bytes": 1004076,
       "largest_files": [
         {
           "name": "template_textbook_combined.pdf",
-          "size_mb": "0.90",
+          "size_mb": "0.96",
+          "size_bytes": 1004076,
           "path": "pdf/template_textbook_combined.pdf"
-        },
-        {
-          "name": "_combined_manuscript.tex",
-          "size_mb": "0.15",
-          "path": "pdf/_combined_manuscript.tex"
-        },
-        {
-          "name": "_combined_manuscript.aux",
-          "size_mb": "0.11",
-          "path": "pdf/_combined_manuscript.aux"
         }
       ],
       "extensions": {
-        ".md": 1,
-        ".log": 2,
-        ".aux": 1,
-        ".pdf": 1,
-        ".blg": 1,
-        ".bib": 1,
-        ".tex": 1,
-        ".toc": 1,
-        ".bbl": 1
+        ".pdf": 1
       }
     },
     "web": {
       "exists": true,
       "file_count": 52,
-      "size_mb": "0.78",
-      "total_size_bytes": 813146,
+      "size_mb": "1.65",
+      "total_size_bytes": 1728052,
       "largest_files": [
         {
           "name": "index.html",
-          "size_mb": "0.24",
+          "size_mb": "0.42",
+          "size_bytes": 441353,
           "path": "web/index.html"
         },
         {
           "name": "_combined_manuscript.md",
-          "size_mb": "0.11",
+          "size_mb": "0.21",
+          "size_bytes": 215035,
           "path": "web/_combined_manuscript.md"
         },
         {
           "name": "appendices__appendix_format_gallery.html",
-          "size_mb": "0.03",
+          "size_mb": "0.04",
+          "size_bytes": 42473,
           "path": "web/appendices__appendix_format_gallery.html"
         }
       ],
       "extensions": {
-        ".html": 50,
         ".md": 1,
+        ".html": 50,
         ".ico": 1
       }
     },
@@ -68,48 +54,94 @@
       "size_mb": "0.00",
       "total_size_bytes": 0
     },
+    "docx": {
+      "exists": true,
+      "file_count": 2,
+      "size_mb": "1.08",
+      "total_size_bytes": 1134586,
+      "largest_files": [
+        {
+          "name": "template_textbook_combined.docx",
+          "size_mb": "1.08",
+          "size_bytes": 1134556,
+          "path": "docx/template_textbook_combined.docx"
+        },
+        {
+          "name": "_docx_metadata.yaml",
+          "size_mb": "0.00",
+          "size_bytes": 30,
+          "path": "docx/_docx_metadata.yaml"
+        }
+      ],
+      "extensions": {
+        ".yaml": 1,
+        ".docx": 1
+      }
+    },
+    "epub": {
+      "exists": true,
+      "file_count": 1,
+      "size_mb": "1.17",
+      "total_size_bytes": 1227839,
+      "largest_files": [
+        {
+          "name": "template_textbook_combined.epub",
+          "size_mb": "1.17",
+          "size_bytes": 1227839,
+          "path": "epub/template_textbook_combined.epub"
+        }
+      ],
+      "extensions": {
+        ".epub": 1
+      }
+    },
     "figures": {
       "exists": true,
-      "file_count": 96,
-      "size_mb": "1.70",
-      "total_size_bytes": 1781551,
+      "file_count": 76,
+      "size_mb": "1.54",
+      "total_size_bytes": 1618775,
       "largest_files": [
         {
           "name": "gallery_contour.png",
-          "size_mb": "0.12",
+          "size_mb": "0.09",
+          "size_bytes": 93778,
           "path": "figures/gallery/gallery_contour.png"
         },
         {
           "name": "gallery_line.png",
-          "size_mb": "0.10",
+          "size_mb": "0.08",
+          "size_bytes": 82897,
           "path": "figures/gallery/gallery_line.png"
         },
         {
           "name": "gallery_multipanel.png",
-          "size_mb": "0.10",
+          "size_mb": "0.07",
+          "size_bytes": 74973,
           "path": "figures/gallery/gallery_multipanel.png"
         }
       ],
       "extensions": {
-        ".png": 64,
+        ".png": 54,
         ".json": 2,
-        ".mmd": 30
+        ".mmd": 20
       }
     },
     "data": {
       "exists": true,
       "file_count": 2,
       "size_mb": "0.00",
-      "total_size_bytes": 2934,
+      "total_size_bytes": 3441,
       "largest_files": [
         {
           "name": "worked_model_summary.json",
           "size_mb": "0.00",
+          "size_bytes": 2484,
           "path": "data/worked_model_summary.json"
         },
         {
           "name": "publication_ledger.json",
           "size_mb": "0.00",
+          "size_bytes": 957,
           "path": "data/publication_ledger.json"
         }
       ],
@@ -119,30 +151,32 @@
     },
     "reports": {
       "exists": true,
-      "file_count": 10,
-      "size_mb": "0.18",
-      "total_size_bytes": 191581,
+      "file_count": 3,
+      "size_mb": "0.01",
+      "total_size_bytes": 15560,
       "largest_files": [
         {
-          "name": "evidence_registry.json",
-          "size_mb": "0.08",
-          "path": "reports/evidence_registry.json"
+          "name": "manuscript_composition.json",
+          "size_mb": "0.01",
+          "size_bytes": 10513,
+          "path": "reports/manuscript_composition.json"
         },
         {
-          "name": "artifact_manifest.json",
-          "size_mb": "0.05",
-          "path": "reports/artifact_manifest.json"
+          "name": "test_results.json",
+          "size_mb": "0.00",
+          "size_bytes": 4755,
+          "path": "reports/test_results.json"
         },
         {
-          "name": "validation_report.json",
-          "size_mb": "0.02",
-          "path": "reports/validation_report.json"
+          "name": "test_results.md",
+          "size_mb": "0.00",
+          "size_bytes": 292,
+          "path": "reports/test_results.md"
         }
       ],
       "extensions": {
-        ".json": 7,
-        ".txt": 1,
-        ".md": 2
+        ".json": 2,
+        ".md": 1
       }
     },
     "simulations": {
@@ -162,100 +196,149 @@
       "file_count": 0,
       "size_mb": "0.00",
       "total_size_bytes": 0
+    },
+    "release": {
+      "exists": true,
+      "file_count": 2,
+      "size_mb": "0.00",
+      "total_size_bytes": 1980,
+      "largest_files": [
+        {
+          "name": "upload_receipts.json",
+          "size_mb": "0.00",
+          "size_bytes": 1933,
+          "path": "release/upload_receipts.json"
+        },
+        {
+          "name": "swh_repo_url.txt",
+          "size_mb": "0.00",
+          "size_bytes": 47,
+          "path": "release/swh_repo_url.txt"
+        }
+      ],
+      "extensions": {
+        ".txt": 1,
+        ".json": 1
+      }
+    },
+    "root": {
+      "exists": true,
+      "file_count": 1,
+      "size_mb": "0.96",
+      "total_size_bytes": 1004076,
+      "largest_files": [
+        {
+          "name": "template_textbook_combined.pdf",
+          "size_mb": "0.96",
+          "size_bytes": 1004076,
+          "path": "template_textbook_combined.pdf"
+        }
+      ],
+      "extensions": {
+        ".pdf": 1
+      }
     }
   },
-  "total_files": 170,
-  "total_size_mb": 4.024421691894531,
+  "total_files": 140,
+  "total_size_mb": 7.379899024963379,
   "largest_files": [
     {
+      "name": "template_textbook_combined.epub",
+      "size_mb": "1.17",
+      "size_bytes": 1227839,
+      "category": "epub",
+      "path": "epub/template_textbook_combined.epub"
+    },
+    {
+      "name": "template_textbook_combined.docx",
+      "size_mb": "1.08",
+      "size_bytes": 1134556,
+      "category": "docx",
+      "path": "docx/template_textbook_combined.docx"
+    },
+    {
       "name": "template_textbook_combined.pdf",
-      "size_mb": "0.90",
+      "size_mb": "0.96",
+      "size_bytes": 1004076,
       "category": "pdf",
       "path": "pdf/template_textbook_combined.pdf"
     },
     {
+      "name": "template_textbook_combined.pdf",
+      "size_mb": "0.96",
+      "size_bytes": 1004076,
+      "category": "root",
+      "path": "template_textbook_combined.pdf"
+    },
+    {
       "name": "index.html",
-      "size_mb": "0.24",
+      "size_mb": "0.42",
+      "size_bytes": 441353,
       "category": "web",
       "path": "web/index.html"
     },
     {
-      "name": "_combined_manuscript.tex",
-      "size_mb": "0.15",
-      "category": "pdf",
-      "path": "pdf/_combined_manuscript.tex"
-    },
-    {
-      "name": "gallery_contour.png",
-      "size_mb": "0.12",
-      "category": "figures",
-      "path": "figures/gallery/gallery_contour.png"
-    },
-    {
-      "name": "_combined_manuscript.aux",
-      "size_mb": "0.11",
-      "category": "pdf",
-      "path": "pdf/_combined_manuscript.aux"
-    },
-    {
       "name": "_combined_manuscript.md",
-      "size_mb": "0.11",
+      "size_mb": "0.21",
+      "size_bytes": 215035,
       "category": "web",
       "path": "web/_combined_manuscript.md"
     },
     {
+      "name": "gallery_contour.png",
+      "size_mb": "0.09",
+      "size_bytes": 93778,
+      "category": "figures",
+      "path": "figures/gallery/gallery_contour.png"
+    },
+    {
       "name": "gallery_line.png",
-      "size_mb": "0.10",
+      "size_mb": "0.08",
+      "size_bytes": 82897,
       "category": "figures",
       "path": "figures/gallery/gallery_line.png"
     },
     {
       "name": "gallery_multipanel.png",
-      "size_mb": "0.10",
+      "size_mb": "0.07",
+      "size_bytes": 74973,
       "category": "figures",
       "path": "figures/gallery/gallery_multipanel.png"
     },
     {
-      "name": "evidence_registry.json",
-      "size_mb": "0.08",
-      "category": "reports",
-      "path": "reports/evidence_registry.json"
-    },
-    {
-      "name": "artifact_manifest.json",
-      "size_mb": "0.05",
-      "category": "reports",
-      "path": "reports/artifact_manifest.json"
+      "name": "gallery_quiver.png",
+      "size_mb": "0.06",
+      "size_bytes": 59854,
+      "category": "figures",
+      "path": "figures/gallery/gallery_quiver.png"
     }
   ],
-  "missing_expected_files": [
-    "slides/ directory",
-    "simulations/ directory",
-    "llm/ directory",
-    "logs/ directory"
-  ],
+  "missing_expected_files": [],
   "sizes_by_category": {
-    "pdf": 1.3644218444824219,
-    "web": 0.7754764556884766,
-    "figures": 1.699019432067871,
-    "data": 0.0027980804443359375,
-    "reports": 0.18270587921142578
+    "pdf": 0.9575614929199219,
+    "web": 1.6479988098144531,
+    "docx": 1.0820255279541016,
+    "epub": 1.1709585189819336,
+    "figures": 1.5437841415405273,
+    "data": 0.0032815933227539062,
+    "reports": 0.01483917236328125,
+    "release": 0.001888275146484375,
+    "root": 0.9575614929199219
   },
+  "inventory_mode": "stable-shippable-output-v1",
+  "inventory_scope": "stage5-delivery-mirror",
+  "inventory_root": "output/templates/template_textbook",
   "file_counts_by_type": {
-    ".md": 4,
-    ".log": 2,
-    ".aux": 1,
-    ".pdf": 1,
-    ".blg": 1,
-    ".bib": 1,
-    ".tex": 1,
-    ".toc": 1,
-    ".bbl": 1,
+    ".pdf": 2,
+    ".md": 2,
     ".html": 50,
     ".ico": 1,
-    ".png": 64,
-    ".json": 11,
-    ".mmd": 30,
+    ".yaml": 1,
+    ".docx": 1,
+    ".epub": 1,
+    ".png": 54,
+    ".json": 7,
+    ".mmd": 20,
     ".txt": 1
   }
 }

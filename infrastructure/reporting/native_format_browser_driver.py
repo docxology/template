@@ -95,7 +95,7 @@ if __name__ == "__main__":
     _hook_before = _html_source_physical(_hook)
     if (
         _hook != Path(_HTML_CHILD_PLAN["selected_sdk_root"]) / "infrastructure/core/bytecode_audit.py"
-        or _hook_before["sha256"] != "a1ab67ba562148ed834000ecc2cef2322307a3dd1705b77e720e8aa7b587835f"
+        or _hook_before["sha256"] != "aa13244989c39811cf6174e8e51a7a85f8f7432bbe038d7e1dc79ced68085e88"
         or _hook_before["sha256"] != _HTML_CHILD_PLAN["hook_sha256"]
     ):
         raise ValueError("HTML child raw audit Source differs from its selected SDK")
@@ -608,7 +608,7 @@ if __name__ == "__main__":
                 if _original_exception is not None
                 else None
             ),
-            "audit_hook_sha256": "a1ab67ba562148ed834000ecc2cef2322307a3dd1705b77e720e8aa7b587835f",
+            "audit_hook_sha256": "aa13244989c39811cf6174e8e51a7a85f8f7432bbe038d7e1dc79ced68085e88",
         }
         try:
             if _HTML_CHILD_AUDIT is None or _HTML_CHILD_PLAN is None or _HTML_CHILD_START is None:

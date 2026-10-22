@@ -16,7 +16,6 @@ import stat
 import subprocess
 import sys
 import tempfile
-import time
 from dataclasses import replace
 from pathlib import Path
 from typing import Any
@@ -65,7 +64,7 @@ def child(spec_path: str) -> int:
     config = PipelineConfig(scope, root, mode="core", clean=False, skip_infra=True)
     config.run_timeout_seconds = spec["budget"]
     executor = PipelineExecutor(config)
-    results = executor.execute_pipeline()
+    results = executor.execute_pipeline(deadline_monotonic=spec.get("operation_deadline"))
     execution = execution_record_payload(executor, results)
     after = _components(root, scope)
     env_after = environment_observation(root, scope)
@@ -134,18 +133,44 @@ def main() -> int:
     return 0
 
 
-def run_pipeline(root: Path, scope: str, directory: Path, budget: int) -> dict[str, Any]:
+def run_pipeline(
+    root: Path, scope: str, directory: Path, budget: int, *, operation_deadline: float | None = None
+) -> dict[str, Any]:
     from infrastructure.core.execution_policy import apply_execution_policy
     from infrastructure.core.pipeline.fingerprints import tree_records
     from infrastructure.project.public_acceptance_auxiliary import supervise
 
-    deadline = time.monotonic() + budget
+    from infrastructure.core.pipeline.execution_session import compose_run_deadline
+
+    deadline = compose_run_deadline(budget, operation_deadline)
     directory = evidence_directory(root, directory)
     reader = SnapshotReader(root, operation_deadline=deadline)
     with tempfile.TemporaryDirectory(prefix="pipeline-source-") as temporary:
         copied = Path(temporary).resolve() / "source"
         copied.mkdir()
+        print(
+            json.dumps(
+                {
+                    "role": "diagnostic-only-pipeline-progress",
+                    "scope": scope,
+                    "phase": "copy-public-source",
+                    "original_deadline_monotonic": deadline,
+                }
+            ),
+            flush=True,
+        )
         files = copy_public_pipeline_source(root, copied, reader)
+        print(
+            json.dumps(
+                {
+                    "role": "diagnostic-only-pipeline-progress",
+                    "scope": scope,
+                    "phase": "prepare-original-child",
+                    "public_source_files": len(files),
+                }
+            ),
+            flush=True,
+        )
         # File-only exports omit authored empty directories that enter the unchanged compiler's identity.
         for source_root, rows in _source_records(root, scope):
             for relative, kind, _ in rows:
@@ -177,7 +202,13 @@ def run_pipeline(root: Path, scope: str, directory: Path, budget: int) -> dict[s
             )
         inner = copied / "output/readiness/pipeline-child"
         inner.mkdir(parents=True)
-        spec = {"root": str(copied), "scope": scope, "budget": budget, "result_path": str(inner / "facts.json")}
+        spec = {
+            "root": str(copied),
+            "scope": scope,
+            "budget": budget,
+            "operation_deadline": deadline,
+            "result_path": str(inner / "facts.json"),
+        }
         spec_path = inner / "spec.json"
         spec_path.write_text(json.dumps(spec, sort_keys=True))
         # Read only source-owned public controls; protected values are never inspected.
@@ -223,6 +254,17 @@ def run_pipeline(root: Path, scope: str, directory: Path, budget: int) -> dict[s
         command, payload = prepare_audited_auxiliary_command(
             Path(sys.executable), copied, PIPELINE, ("--child-spec", str(spec_path)), inner / "execution"
         )
+        print(
+            json.dumps(
+                {
+                    "role": "diagnostic-only-pipeline-progress",
+                    "scope": scope,
+                    "phase": "launch-original-child",
+                    "original_deadline_monotonic": deadline,
+                }
+            ),
+            flush=True,
+        )
         process = supervise(
             command,
             copied,
@@ -230,6 +272,7 @@ def run_pipeline(root: Path, scope: str, directory: Path, budget: int) -> dict[s
             deadline,
             environment=environment,
             bootstrap_payload=payload,
+            stream_diagnostics=True,
         )
         retained_streams = {
             name: write_binary(

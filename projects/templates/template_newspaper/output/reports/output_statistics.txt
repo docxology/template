@@ -2,35 +2,36 @@
 OUTPUT STATISTICS REPORT
 ============================================================
 
-Output Directory: output
+Output Directory: output/templates/template_newspaper
+Inventory Mode: stable-shippable-output-v1
+Inventory Scope: stage5-delivery-mirror
+Inventory Root: output/templates/template_newspaper
 
-Total Files: 108
-Total Size: 1.49 MB
+Total Files: 38
+Total Size: 0.78 MB
 
 Files by Category:
-  • pdf: 11 files (0.60 MB)
-  • web: 9 files (0.07 MB)
-  • slides: 49 files (0.52 MB)
-  • figures: 13 files (0.17 MB)
-  • data: 1 files (0.00 MB)
-  • reports: 24 files (0.13 MB)
-  • logs: 1 files (0.00 MB)
+  • pdf: 2 files (0.42 MB)
+  • web: 9 files (0.11 MB)
+  • slides: 6 files (0.11 MB)
+  • figures: 13 files (0.07 MB)
+  • data: 2 files (0.01 MB)
+  • reports: 3 files (0.00 MB)
+  • release: 2 files (0.00 MB)
+  • root: 1 files (0.06 MB)
 
 Largest Files:
-  • the-triplicate.pdf: 0.46 MB (pdf)
-  • evidence_registry.json: 0.08 MB (reports)
+  • the-triplicate.pdf: 0.36 MB (pdf)
   • template_newspaper_combined.pdf: 0.06 MB (pdf)
-  • 99_references_slides.log: 0.06 MB (slides)
-  • 02_engine_architecture_slides.log: 0.06 MB (slides)
+  • template_newspaper_combined.pdf: 0.06 MB (root)
+  • 02_engine_architecture_slides.pdf: 0.03 MB (slides)
+  • index.html: 0.03 MB (web)
 
 File Types:
-  • .json: 15 file(s)
   • .png: 13 file(s)
-  • .log: 9 file(s)
-  • .tex: 8 file(s)
-  • .pdf: 8 file(s)
-  • .html: 8 file(s)
-  • .md: 7 file(s)
-  • .aux: 7 file(s)
-  • .toc: 7 file(s)
-  • .nav: 6 file(s)
+  • .pdf: 9 file(s)
+  • .html: 7 file(s)
+  • .json: 5 file(s)
+  • .md: 2 file(s)
+  • .ico: 1 file(s)
+  • .txt: 1 file(s)

@@ -2,57 +2,43 @@
   "directories": {
     "pdf": {
       "exists": true,
-      "file_count": 11,
-      "size_mb": "1.50",
-      "total_size_bytes": 1577805,
+      "file_count": 1,
+      "size_mb": "1.04",
+      "total_size_bytes": 1089190,
       "largest_files": [
         {
           "name": "template_pools_rules_tools_combined.pdf",
-          "size_mb": "1.21",
+          "size_mb": "1.04",
+          "size_bytes": 1089190,
           "path": "pdf/template_pools_rules_tools_combined.pdf"
-        },
-        {
-          "name": "_combined_manuscript.tex",
-          "size_mb": "0.09",
-          "path": "pdf/_combined_manuscript.tex"
-        },
-        {
-          "name": "_combined_manuscript.log",
-          "size_mb": "0.07",
-          "path": "pdf/_combined_manuscript.log"
         }
       ],
       "extensions": {
-        ".md": 1,
-        ".log": 3,
-        ".aux": 1,
-        ".pdf": 1,
-        ".blg": 1,
-        ".bib": 1,
-        ".tex": 1,
-        ".toc": 1,
-        ".bbl": 1
+        ".pdf": 1
       }
     },
     "web": {
       "exists": true,
       "file_count": 11,
-      "size_mb": "0.29",
-      "total_size_bytes": 300240,
+      "size_mb": "0.36",
+      "total_size_bytes": 372373,
       "largest_files": [
         {
           "name": "index.html",
-          "size_mb": "0.11",
+          "size_mb": "0.12",
+          "size_bytes": 123832,
           "path": "web/index.html"
         },
         {
           "name": "_combined_manuscript.md",
           "size_mb": "0.06",
+          "size_bytes": 60646,
           "path": "web/_combined_manuscript.md"
         },
         {
           "name": "manuscript__05_tools.html",
-          "size_mb": "0.02",
+          "size_mb": "0.03",
+          "size_bytes": 32496,
           "path": "web/manuscript__05_tools.html"
         }
       ],
@@ -64,57 +50,68 @@
     },
     "slides": {
       "exists": true,
-      "file_count": 65,
-      "size_mb": "1.97",
-      "total_size_bytes": 2070921,
+      "file_count": 8,
+      "size_mb": "1.18",
+      "total_size_bytes": 1238068,
       "largest_files": [
         {
           "name": "06_integration_slides.pdf",
-          "size_mb": "0.49",
+          "size_mb": "0.41",
+          "size_bytes": 427431,
           "path": "slides/06_integration_slides.pdf"
         },
         {
           "name": "02_introduction_slides.pdf",
-          "size_mb": "0.18",
+          "size_mb": "0.19",
+          "size_bytes": 200304,
           "path": "slides/02_introduction_slides.pdf"
         },
         {
           "name": "05_tools_slides.pdf",
-          "size_mb": "0.17",
+          "size_mb": "0.18",
+          "size_bytes": 190551,
           "path": "slides/05_tools_slides.pdf"
         }
       ],
       "extensions": {
-        ".snm": 8,
-        ".aux": 8,
-        ".log": 8,
-        ".vrb": 8,
-        ".toc": 8,
-        ".tex": 9,
-        ".pdf": 8,
-        ".nav": 8
+        ".pdf": 8
       }
+    },
+    "docx": {
+      "exists": false,
+      "file_count": 0,
+      "size_mb": "0.00",
+      "total_size_bytes": 0
+    },
+    "epub": {
+      "exists": false,
+      "file_count": 0,
+      "size_mb": "0.00",
+      "total_size_bytes": 0
     },
     "figures": {
       "exists": true,
       "file_count": 10,
-      "size_mb": "1.06",
-      "total_size_bytes": 1116300,
+      "size_mb": "0.85",
+      "total_size_bytes": 893143,
       "largest_files": [
         {
-          "name": "resilience_layers.png",
-          "size_mb": "0.16",
-          "path": "figures/resilience_layers.png"
-        },
-        {
           "name": "architecture_overview.png",
-          "size_mb": "0.15",
+          "size_mb": "0.14",
+          "size_bytes": 145805,
           "path": "figures/architecture_overview.png"
         },
         {
-          "name": "pipeline_flow.png",
-          "size_mb": "0.13",
-          "path": "figures/pipeline_flow.png"
+          "name": "resilience_layers.png",
+          "size_mb": "0.12",
+          "size_bytes": 128801,
+          "path": "figures/resilience_layers.png"
+        },
+        {
+          "name": "tool_contract.png",
+          "size_mb": "0.11",
+          "size_bytes": 115046,
+          "path": "figures/tool_contract.png"
         }
       ],
       "extensions": {
@@ -126,11 +123,12 @@
       "exists": true,
       "file_count": 1,
       "size_mb": "0.00",
-      "total_size_bytes": 356,
+      "total_size_bytes": 532,
       "largest_files": [
         {
           "name": "manuscript_variables.json",
           "size_mb": "0.00",
+          "size_bytes": 532,
           "path": "data/manuscript_variables.json"
         }
       ],
@@ -140,161 +138,197 @@
     },
     "reports": {
       "exists": true,
-      "file_count": 26,
-      "size_mb": "0.17",
-      "total_size_bytes": 182863,
+      "file_count": 3,
+      "size_mb": "0.00",
+      "total_size_bytes": 3025,
       "largest_files": [
         {
-          "name": "evidence_registry.json",
-          "size_mb": "0.08",
-          "path": "reports/evidence_registry.json"
+          "name": "manuscript_composition.json",
+          "size_mb": "0.00",
+          "size_bytes": 2116,
+          "path": "reports/manuscript_composition.json"
         },
         {
-          "name": "artifact_manifest.json",
-          "size_mb": "0.02",
-          "path": "reports/artifact_manifest.json"
+          "name": "test_results.json",
+          "size_mb": "0.00",
+          "size_bytes": 616,
+          "path": "reports/test_results.json"
         },
         {
-          "name": "pipeline_report.json",
-          "size_mb": "0.01",
-          "path": "reports/pipeline_report.json"
+          "name": "test_results.md",
+          "size_mb": "0.00",
+          "size_bytes": 293,
+          "path": "reports/test_results.md"
         }
       ],
       "extensions": {
-        ".json": 16,
-        ".jsonl": 1,
-        ".txt": 3,
-        ".md": 5,
-        ".html": 1
+        ".json": 2,
+        ".md": 1
       }
     },
     "simulations": {
-      "exists": true,
+      "exists": false,
       "file_count": 0,
       "size_mb": "0.00",
-      "total_size_bytes": 0,
-      "largest_files": [],
-      "extensions": {}
+      "total_size_bytes": 0
     },
     "llm": {
-      "exists": true,
+      "exists": false,
       "file_count": 0,
       "size_mb": "0.00",
-      "total_size_bytes": 0,
-      "largest_files": [],
-      "extensions": {}
+      "total_size_bytes": 0
     },
     "logs": {
-      "exists": true,
-      "file_count": 1,
+      "exists": false,
+      "file_count": 0,
       "size_mb": "0.00",
-      "total_size_bytes": 166,
+      "total_size_bytes": 0
+    },
+    "manuscript": {
+      "exists": true,
+      "file_count": 11,
+      "size_mb": "0.07",
+      "total_size_bytes": 73088,
       "largest_files": [
         {
-          "name": "pipeline.log",
-          "size_mb": "0.00",
-          "path": "logs/pipeline.log"
+          "name": "05_tools.md",
+          "size_mb": "0.01",
+          "size_bytes": 11572,
+          "path": "manuscript/05_tools.md"
+        },
+        {
+          "name": "06_integration.md",
+          "size_mb": "0.01",
+          "size_bytes": 9531,
+          "path": "manuscript/06_integration.md"
+        },
+        {
+          "name": "07_conclusion.md",
+          "size_mb": "0.01",
+          "size_bytes": 9186,
+          "path": "manuscript/07_conclusion.md"
         }
       ],
       "extensions": {
-        ".log": 1
+        ".md": 9,
+        ".yaml": 1,
+        ".bib": 1
+      }
+    },
+    "root": {
+      "exists": true,
+      "file_count": 1,
+      "size_mb": "1.04",
+      "total_size_bytes": 1089190,
+      "largest_files": [
+        {
+          "name": "template_pools_rules_tools_combined.pdf",
+          "size_mb": "1.04",
+          "size_bytes": 1089190,
+          "path": "template_pools_rules_tools_combined.pdf"
+        }
+      ],
+      "extensions": {
+        ".pdf": 1
       }
     }
   },
-  "total_files": 125,
-  "total_size_mb": 5.0055036544799805,
+  "total_files": 46,
+  "total_size_mb": 4.538163185119629,
   "largest_files": [
     {
       "name": "template_pools_rules_tools_combined.pdf",
-      "size_mb": "1.21",
+      "size_mb": "1.04",
+      "size_bytes": 1089190,
       "category": "pdf",
       "path": "pdf/template_pools_rules_tools_combined.pdf"
     },
     {
+      "name": "template_pools_rules_tools_combined.pdf",
+      "size_mb": "1.04",
+      "size_bytes": 1089190,
+      "category": "root",
+      "path": "template_pools_rules_tools_combined.pdf"
+    },
+    {
       "name": "06_integration_slides.pdf",
-      "size_mb": "0.49",
+      "size_mb": "0.41",
+      "size_bytes": 427431,
       "category": "slides",
       "path": "slides/06_integration_slides.pdf"
     },
     {
       "name": "02_introduction_slides.pdf",
-      "size_mb": "0.18",
+      "size_mb": "0.19",
+      "size_bytes": 200304,
       "category": "slides",
       "path": "slides/02_introduction_slides.pdf"
     },
     {
       "name": "05_tools_slides.pdf",
-      "size_mb": "0.17",
+      "size_mb": "0.18",
+      "size_bytes": 190551,
       "category": "slides",
       "path": "slides/05_tools_slides.pdf"
     },
     {
-      "name": "resilience_layers.png",
-      "size_mb": "0.16",
-      "category": "figures",
-      "path": "figures/resilience_layers.png"
+      "name": "04_rules_slides.pdf",
+      "size_mb": "0.15",
+      "size_bytes": 157740,
+      "category": "slides",
+      "path": "slides/04_rules_slides.pdf"
+    },
+    {
+      "name": "03_pools_slides.pdf",
+      "size_mb": "0.15",
+      "size_bytes": 155848,
+      "category": "slides",
+      "path": "slides/03_pools_slides.pdf"
     },
     {
       "name": "architecture_overview.png",
-      "size_mb": "0.15",
+      "size_mb": "0.14",
+      "size_bytes": 145805,
       "category": "figures",
       "path": "figures/architecture_overview.png"
     },
     {
-      "name": "pipeline_flow.png",
-      "size_mb": "0.13",
+      "name": "resilience_layers.png",
+      "size_mb": "0.12",
+      "size_bytes": 128801,
       "category": "figures",
-      "path": "figures/pipeline_flow.png"
+      "path": "figures/resilience_layers.png"
     },
     {
       "name": "index.html",
-      "size_mb": "0.11",
+      "size_mb": "0.12",
+      "size_bytes": 123832,
       "category": "web",
       "path": "web/index.html"
-    },
-    {
-      "name": "_combined_manuscript.tex",
-      "size_mb": "0.09",
-      "category": "pdf",
-      "path": "pdf/_combined_manuscript.tex"
-    },
-    {
-      "name": "evidence_registry.json",
-      "size_mb": "0.08",
-      "category": "reports",
-      "path": "reports/evidence_registry.json"
     }
   ],
   "missing_expected_files": [],
   "sizes_by_category": {
-    "pdf": 1.5047121047973633,
-    "web": 0.2863311767578125,
-    "slides": 1.9749841690063477,
-    "figures": 1.0645866394042969,
-    "data": 0.000339508056640625,
-    "reports": 0.1743917465209961,
-    "simulations": 0.0,
-    "llm": 0.0,
-    "logs": 0.0001583099365234375
+    "pdf": 1.0387325286865234,
+    "web": 0.35512256622314453,
+    "slides": 1.1807136535644531,
+    "figures": 0.8517675399780273,
+    "data": 0.000507354736328125,
+    "reports": 0.0028848648071289062,
+    "manuscript": 0.0697021484375,
+    "root": 1.0387325286865234
   },
+  "inventory_mode": "stable-shippable-output-v1",
+  "inventory_scope": "stage5-delivery-mirror",
+  "inventory_root": "output/templates/template_pools_rules_tools",
   "file_counts_by_type": {
-    ".md": 7,
-    ".log": 12,
-    ".aux": 9,
-    ".pdf": 9,
-    ".blg": 1,
-    ".bib": 1,
-    ".tex": 10,
-    ".toc": 9,
-    ".bbl": 1,
+    ".pdf": 10,
+    ".md": 11,
     ".ico": 1,
-    ".html": 10,
-    ".snm": 8,
-    ".vrb": 8,
-    ".nav": 8,
+    ".html": 9,
     ".png": 9,
-    ".json": 18,
-    ".jsonl": 1,
-    ".txt": 3
+    ".json": 4,
+    ".yaml": 1,
+    ".bib": 1
   }
 }

@@ -33,8 +33,20 @@ from infrastructure.reporting.native_source_provider_bootstrap import (
     NATIVE_PREFLIGHT_MODULE,
 )
 from infrastructure.reporting.native_tool_process import run_native_tool_process
+from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
 from infrastructure.reporting.native_preparation_resources import PREPARATION_PEAK_BYTES, require_native_capacity
 from infrastructure.reporting.native_readiness_input_copy import copy_original_common_readiness, copy_source_mirror_data
+
+
+def native_preparation_scopes(mode: str, source: Path) -> tuple[str, ...]:
+    """Keep complete native roles distinct from the explicitly narrow diagnostic."""
+    if mode == "preflight":
+        from infrastructure.reporting.native_installed_preflight import preflight_provider_scopes
+
+        return preflight_provider_scopes(source)
+    if mode not in {"original", "reader", "handoff"}:
+        raise ValueError("unknown native installed preparation mode")
+    return PUBLIC_PROJECT_NAMES
 
 
 def _signed_failure(result: dict[str, object]) -> int:
@@ -126,6 +138,7 @@ def main(argv: list[str] | None = None) -> int:
             operation_started=started,
             deadline=deadline,
             env=env,
+            scopes=native_preparation_scopes(args.mode, source),
         )
         env.update(
             TEMPLATE_PUBLIC_REFERENCE_ROOT=str(source),

@@ -16,7 +16,8 @@ This document provides documentation for the Research Project Template system, e
 | Entry | Role |
 | --- | --- |
 | [`README.md`](README.md) | Onboarding, documentation hub links, exemplar table |
-| [`.cursorrules`](.cursorrules) | Cursor agents: layer rules, CI scope, editing discipline |
+| [`.agents/AGENTS.md`](.agents/AGENTS.md) | Shared agent catalogs, workflows, roles and local state |
+| [`.cursorrules`](.cursorrules) | Deprecated Cursor compatibility pointer |
 | [`CLAUDE.md`](CLAUDE.md) | Command cheat sheet, patterns; keep in sync with this file for pipeline wording |
 | [`START_HERE.md`](START_HERE.md) | Agent entry point: install, first pipeline run, orientation ladder |
 | [`STATUS.md`](STATUS.md) | Per-subsystem verification ledger (last-verified dates, health) |
@@ -59,10 +60,10 @@ tracked public files or from the canonical private checkout, not through public
 `template/projects/<name>` symlinks.
 
 **Local agent memory (gitignored):** When present, read
-`.cursor/hooks/state/continual-learning-memory.json`
+`.agents/state/continual-learning-memory.json`
 for durable user preferences and workspace facts. Never commit this file or write
 Learned sections into root `AGENTS.md`. Schema:
-[`.cursor/hooks/state/continual-learning-memory.example.json`](.cursor/hooks/state/continual-learning-memory.example.json).
+[`.agents/state/continual-learning-memory.example.json`](.agents/state/continual-learning-memory.example.json).
 Load/save helpers: `infrastructure.core.agent_memory`.
 
 **Public output hygiene:** Canonical public exemplars may track deterministic
@@ -92,7 +93,7 @@ The same invariant covers three sibling top-level resource-pool directories — 
 
 Operational gotchas: running **all** `projects/*/tests/` in **one** pytest process fails when projects each ship `tests/conftest` under the `tests.conftest` package name — run **one project test directory per pytest invocation** (with `--cov-append` to merge coverage), or follow `.github/workflows/ci.yml`. `resolve_project_root` accepts a qualified `<subfolder>/<name>` path (e.g. `templates/template_code_project`, `active/demo`) and resolves it directly under `projects/`. For a bare name it prefers `projects/active/<name>/` (the hot seat) when that tree has project markers, then `projects/working/<name>/`, then a flat standalone `projects/<name>/`, falling back to `projects/active/<name>/` for error messages.
 
-**Agent skills hub:** [`docs/prompts/SKILL.md`](docs/prompts/SKILL.md) (`template-workflows`); regenerate via `uv run python -m infrastructure.skills write` and `uv run python -m infrastructure.skills write-index`. Repository-scoped context-engineering skills live under [`.agents/skills/`](.agents/skills/) with a pinned source lock and cross-runtime sync/check command. Each canonical exemplar under `projects/templates/` also ships its own `.agents/skills/<name>/SKILL.md`; both public lanes are included in `.cursor/skill_manifest.json`, the generated skills index, MCP `list_skills`, and Hermes/agentskills.io runtimes.
+**Agent skills hub:** [`docs/prompts/SKILL.md`](docs/prompts/SKILL.md) (`template-workflows`); regenerate via `uv run python -m infrastructure.skills write` and `uv run python -m infrastructure.skills write-index`. Repository-scoped context-engineering skills live under [`.agents/skills/`](.agents/skills/) with a pinned source lock and cross-runtime sync/check command. Each canonical exemplar under `projects/templates/` also ships its own `.agents/skills/<name>/SKILL.md`; both public lanes are included in `.agents/skill_manifest.json`, the generated skills index, MCP `list_skills`, and Hermes/agentskills.io runtimes.
 
 ## 📋 Table of Contents
 
@@ -296,11 +297,11 @@ walkthrough remains [`projects/templates/template_code_project/`](projects/templ
 Rotating private workspaces use typed lifecycle folders; see
 [`docs/maintenance/private-projects-repo.md`](docs/maintenance/private-projects-repo.md).
 
-**In-progress projects** live under [`projects/working/`](projects/working/) and are not executed by default pipeline discovery. Render one explicitly with a qualified project name such as `working/<name>`, or deliberately restore it through optional sidecar `active/` only when it should enter default discovery. The roster rotates every checkout, so it is deliberately **not** hard-coded here (cf. the rotation rule above — hard-coding rotating project paths is the recurring staleness defect this guidance prevents): run `ls projects/working/` for the live set, and see [`docs/_generated/active_projects.md`](docs/_generated/active_projects.md) for the rendered roster.
+**In-progress projects** live under `projects/working/` and are not executed by default pipeline discovery. Render one explicitly with a qualified project name such as `working/<name>`, or deliberately restore it through optional sidecar `active/` only when it should enter default discovery. The roster rotates every checkout, so it is deliberately **not** hard-coded here (cf. the rotation rule above — hard-coding rotating project paths is the recurring staleness defect this guidance prevents): run `ls projects/working/` for the live set, and see [`docs/_generated/active_projects.md`](docs/_generated/active_projects.md) for the rendered roster.
 
-**Ongoing projects** live under [`projects/ongoing/`](projects/ongoing/) when present — long-lived work with no publication target, not discovered or executed by default. Render one explicitly with a qualified project name such as `ongoing/<name>`. The roster rotates every checkout and is deliberately **not** hard-coded here: run `ls projects/ongoing/` for the live set.
+**Ongoing projects** live under `projects/ongoing/` when present — long-lived work with no publication target, not discovered or executed by default. Render one explicitly with a qualified project name such as `ongoing/<name>`. The roster rotates every checkout and is deliberately **not** hard-coded here: run `ls projects/ongoing/` for the live set.
 
-**Archived projects** live under [`projects/archive/`](projects/archive/) when present, but the roster is checkout-specific and is not discovered or executed by default. Resume by moving them back to sidecar `working/`, render explicitly with `archive/<name>` when appropriate, or deliberately restore through optional sidecar `active/` for default discovery. Use `ls projects/archive/` for local inspection. The authoritative list of rendered projects is in [`docs/_generated/active_projects.md`](docs/_generated/active_projects.md). Regenerate it after layout changes: `uv run python scripts/docgen/active_projects.py`.
+**Archived projects** live under `projects/archive/` when present, but the roster is checkout-specific and is not discovered or executed by default. Resume by moving them back to sidecar `working/`, render explicitly with `archive/<name>` when appropriate, or deliberately restore through optional sidecar `active/` for default discovery. Use `ls projects/archive/` for local inspection. The authoritative list of rendered projects is in [`docs/_generated/active_projects.md`](docs/_generated/active_projects.md). Regenerate it after layout changes: `uv run python scripts/docgen/active_projects.py`.
 
 ### Documentation Directories
 
@@ -333,7 +334,7 @@ flowchart TB
 
     ROOT --> INFRA[infrastructure<br/>Layer 1 · generic build/validation tools]
     ROOT --> DOCS[docs<br/>Documentation hub]
-    ROOT --> CUR[.cursor<br/>Editor configuration]
+    ROOT --> CUR[.agents<br/>Shared agent interfaces]
     ROOT --> SCR[scripts<br/>Pipeline stage entry points]
     ROOT --> TS[tests<br/>Infrastructure tests]
     ROOT --> PR[projects<br/>Typed subfolders · templates+active rendered]
@@ -347,7 +348,7 @@ flowchart TB
 
     DOCS --> D_FILES[AGENTS.md · README.md ·<br/>CLOUD_DEPLOY.md · PAI.md · RUN_GUIDE.md]
 
-    CUR --> C_FILES[.cursorrules · .cursorignore · README.md]
+    CUR --> C_FILES[AGENTS.md · manifests · workflows · state]
 
     SCR --> S_DOCS[AGENTS.md · README.md]
     SCR --> S_STAGES[scripts/pipeline/stage_00_setup.py<br/>stage_01_test.py<br/>stage_02_analysis.py<br/>stage_03_render.py<br/>stage_04_validate.py<br/>stage_05_copy.py]
@@ -1488,7 +1489,7 @@ those lanes retain their recorded states. Generated measurements live in
 
 - ✅ Matplotlib auto-configuration (headless operation via MPLBACKEND=Agg)
 - ✅ Optional dependency handling (python-dotenv graceful fallback)
-- ✅ Test failure tolerance (MAX_TEST_FAILURES environment variable)
+- ✅ Blocking test contracts: required tests and coverage must pass; configured tolerances cannot authorize a nonzero test child result
 - ✅ LaTeX path management (BasicTeX/MacTeX support)
 - ✅ Docker containerization (`infrastructure/docker/Dockerfile` + `docker-compose.yml`)
 
@@ -1506,7 +1507,7 @@ those lanes retain their recorded states. Generated measurements live in
 
 - ✅ **High code coverage** across infrastructure and project gates (live % → [`docs/_generated/COUNTS.md`](docs/_generated/COUNTS.md), [`docs/development/coverage-gaps.md`](docs/development/coverage-gaps.md))
 - ✅ Zero mock methods - all tests use data and HTTP calls
-- ✅ All .cursorrules standards implemented
+- Shared agent behavior is defined by root `AGENTS.md` and `.agents/AGENTS.md`; `.cursorrules` is a deprecated pointer.
 - ✅ compliance with thin orchestrator pattern
 - Pipeline selection is resolved through core/live; acceptance follows the evidence links above.
 - ✅ Reproducible outputs (deterministic with fixed seeds)

@@ -38,7 +38,7 @@ def test_empty_memory_payload_has_required_keys() -> None:
 
 
 def test_load_memory_uses_example_when_live_file_missing(tmp_path: Path) -> None:
-    example = tmp_path / ".cursor/hooks/state/continual-learning-memory.example.json"
+    example = tmp_path / ".agents/state/continual-learning-memory.example.json"
     example.parent.mkdir(parents=True)
     example.write_text(
         json.dumps(
@@ -68,7 +68,7 @@ def test_save_memory_round_trip(tmp_path: Path) -> None:
 
 
 def test_load_memory_rejects_invalid_version(tmp_path: Path) -> None:
-    memory = tmp_path / ".cursor/hooks/state/continual-learning-memory.json"
+    memory = tmp_path / ".agents/state/continual-learning-memory.json"
     memory.parent.mkdir(parents=True)
     memory.write_text(
         json.dumps(
@@ -128,3 +128,48 @@ def test_audit_memory_payload_allows_generated_source_pointers() -> None:
     ]
 
     assert audit_memory_payload(payload) == []
+
+
+def test_legacy_memory_is_read_then_saved_canonically_without_overwriting_original(tmp_path: Path) -> None:
+    legacy = tmp_path / ".cursor/hooks/state/continual-learning-memory.json"
+    legacy.parent.mkdir(parents=True)
+    payload = empty_memory_payload()
+    payload["learned_user_preferences"] = ["Keep commands composable"]
+    raw = json.dumps(payload).encode()
+    legacy.write_bytes(raw)
+    with pytest.warns(FutureWarning, match="Legacy .cursor"):
+        loaded = load_memory(tmp_path)
+    target = save_memory(tmp_path, loaded)
+    assert target == tmp_path / ".agents/state/continual-learning-memory.json"
+    assert legacy.read_bytes() == raw
+    assert load_memory(tmp_path)["learned_user_preferences"] == payload["learned_user_preferences"]
+    assert target.stat().st_mode & 0o777 == 0o600
+    target.write_text("{broken")
+    with pytest.raises(json.JSONDecodeError):
+        load_memory(tmp_path)
+
+
+def test_agent_memory_rejects_symlink_state_and_preserves_external_original(tmp_path: Path) -> None:
+    outside = tmp_path / "outside"
+    outside.mkdir()
+    original = outside / "continual-learning-memory.json"
+    raw = json.dumps(empty_memory_payload()).encode()
+    original.write_bytes(raw)
+    agents = tmp_path / "repo/.agents"
+    agents.mkdir(parents=True)
+    (agents / "state").symlink_to(outside, target_is_directory=True)
+    for operation in (
+        lambda: load_memory(tmp_path / "repo"),
+        lambda: save_memory(tmp_path / "repo", empty_memory_payload()),
+    ):
+        with pytest.raises((OSError, ValueError)):
+            operation()
+    assert original.read_bytes() == raw
+
+
+def test_agent_memory_oversize_refuses_before_any_write(tmp_path: Path) -> None:
+    payload = empty_memory_payload()
+    payload["learned_user_preferences"] = ["x" * (256 * 1024)]
+    with pytest.raises(ValueError, match="bounded schema"):
+        save_memory(tmp_path, payload)
+    assert not (tmp_path / ".agents").exists()

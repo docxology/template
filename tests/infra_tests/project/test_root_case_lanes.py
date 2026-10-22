@@ -189,6 +189,86 @@ def genuine_lane(tmp_path_factory: pytest.TempPathFactory) -> tuple[Path, dict[s
     return root, census, bundle
 
 
+@pytest.mark.parametrize("action_name", ["complete", "case-deadline", "cancel-removed"])
+def test_actual_thread_deadline_composes_with_native_guard_and_refuses_expiry_or_tamper(
+    genuine_lane: tuple[Path, dict[str, Any], dict[str, Any]], tmp_path: Path, action_name: str
+) -> None:
+    original_root, _, _ = genuine_lane
+    root = tmp_path / "thread-root"
+    root.mkdir()
+    for name in ("tests", "infrastructure/config"):
+        shutil.copytree(original_root / name, root / name)
+    shutil.copyfile(original_root / "pyproject.toml", root / "pyproject.toml")
+    source = root / "tests/test_owned.py"
+    code = source.read_text()
+    code = code.replace(
+        "@pytest.mark.parametrize('number'",
+        "@pytest.mark.timeout(2,method='thread')\n@pytest.mark.parametrize('number'",
+        1,
+    )
+    code = code.replace(
+        "    assert number>0\n",
+        "    from infrastructure.reporting.native_format_acceptance_contracts import native_deadline_guard\n"
+        "    with native_deadline_guard(time.monotonic()+.25):\n"
+        "        assert signal.getitimer(signal.ITIMER_REAL)[0]>0\n"
+        "    assert signal.getitimer(signal.ITIMER_REAL)[0]==0\n"
+        "    if value=='cancel-removed': request.node.cancel_timeout=None\n"
+        "    assert number>0\n",
+        1,
+    )
+    source.write_text(code)
+    first = _epoch_call(produce_root_census, root, root / "output/readiness/first", timeout_seconds=180)
+    assert first["exit_code"] == 0, first
+    from infrastructure.project.public_root_case_contract import _json
+
+    observed = _json(SnapshotReader(root).read(first["receipt_artifact"]["path"]))["census"]["families"]
+    policy_path = root / "infrastructure/config/root-case-policy.json"
+    policy = json.loads(policy_path.read_bytes())
+    prior = {family["id"]: family for family in policy["families"]}
+    assert {family["id"] for family in observed} == set(prior)
+    policy["families"] = [
+        prior[row["id"]] | {key: row[key] for key in ("members", "source_sha256", "metadata_sha256")}
+        for row in observed
+    ]
+    policy_path.write_text(json.dumps(policy))
+    census = _epoch_call(produce_root_census, root, root / "output/readiness/current", timeout_seconds=180)
+    assert census["exit_code"] == 0, census
+    (root / "output/readiness/action.json").write_text(json.dumps(action_name))
+    bundle = _epoch_call(
+        produce_root_lane,
+        root,
+        root / "output/readiness/thread",
+        census_bundle=census,
+        lane="core",
+        timeout_seconds=180,
+        test_timeout_seconds=60,
+    )
+    if action_name == "complete":
+        assert bundle["exit_code"] == 0, bundle
+        result = read_lane(SnapshotReader(root), bundle)
+        assert len(result["selected_nodes"]) == 2
+    else:
+        assert bundle["exit_code"] == 1, bundle
+        result = json.loads((root / bundle["result_artifact"]["path"]).read_bytes())
+        record = result["records"][0]
+        actual = json.loads((root / record["process_artifact"]["path"]).read_bytes())
+        assert actual["original_returncode"] == actual["returncode"] == 1
+        if action_name == "cancel-removed":
+            original = json.loads((root / record["receipt_artifact"]["path"]).read_bytes())
+            assert original["original_pytest_exit_code"] == 3
+            assert original["exit_code"] == 1
+            assert original["bytecode_verified"] is False
+            directory = (root / record["process_artifact"]["path"]).parent
+            output = read_output(SnapshotReader(root), directory, actual["output_artifact"])
+            assert "Root case thread deadline changed or stopped before actual cancellation" in output["stdout"]["text"]
+        else:
+            assert record.get("receipt_artifact") is None
+        assert actual["timed_out"] is False
+        assert actual["duration_seconds"] < 30
+        with pytest.raises(ValueError):
+            read_lane(SnapshotReader(root), bundle)
+
+
 def test_actual_source_owned_core_selection_and_all_original_phases(
     genuine_lane: tuple[Path, dict[str, Any], dict[str, Any]],
 ) -> None:

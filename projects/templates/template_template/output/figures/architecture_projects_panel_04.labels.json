@@ -1,0 +1,109 @@
+{
+  "schema_version": "1.0",
+  "png_sha256": "6cf4510b1525982abf35ff27123b8c480223d4faab888500a0d64a5c82b6e6b7",
+  "width_px": 1700,
+  "height_px": 1260,
+  "dpi": 200,
+  "minimum_label_px": 107.0,
+  "text_measurements": [
+    {
+      "text": "Projects \u00b7 4 / 7",
+      "bbox_px": [
+        398.25,
+        1132.0,
+        1301.75,
+        1240.0
+      ],
+      "font_pixels": 111.11111111111111,
+      "minimum_label_px": 108.0
+    },
+    {
+      "text": "madlib",
+      "bbox_px": [
+        221.875,
+        892.5,
+        648.125,
+        999.5
+      ],
+      "font_pixels": 111.11111111111111,
+      "minimum_label_px": 107.0
+    },
+    {
+      "text": "12 chapters\n8 test files",
+      "bbox_px": [
+        103.75,
+        566.0,
+        766.25,
+        780.0
+      ],
+      "font_pixels": 111.11111111111111,
+      "minimum_label_px": 111.11111111111111
+    },
+    {
+      "text": "methods\npaper",
+      "bbox_px": [
+        992.3125,
+        839.0,
+        1537.6875,
+        1053.0
+      ],
+      "font_pixels": 111.11111111111111,
+      "minimum_label_px": 111.11111111111111
+    },
+    {
+      "text": "9 chapters\n12 test files",
+      "bbox_px": [
+        938.875,
+        566.0,
+        1591.125,
+        780.0
+      ],
+      "font_pixels": 111.11111111111111,
+      "minimum_label_px": 111.11111111111111
+    },
+    {
+      "text": "newspaper",
+      "bbox_px": [
+        91.125,
+        342.5,
+        778.875,
+        449.5
+      ],
+      "font_pixels": 111.11111111111111,
+      "minimum_label_px": 107.0
+    },
+    {
+      "text": "6 chapters\n10 test files",
+      "bbox_px": [
+        108.875,
+        16.0,
+        761.125,
+        230.0
+      ],
+      "font_pixels": 111.11111111111111,
+      "minimum_label_px": 111.11111111111111
+    },
+    {
+      "text": "pitch deck",
+      "bbox_px": [
+        940.3125,
+        342.5,
+        1589.6875,
+        449.5
+      ],
+      "font_pixels": 111.11111111111111,
+      "minimum_label_px": 107.0
+    },
+    {
+      "text": "7 chapters\n14 test files",
+      "bbox_px": [
+        938.9375,
+        16.0,
+        1591.0625,
+        230.0
+      ],
+      "font_pixels": 111.11111111111111,
+      "minimum_label_px": 111.11111111111111
+    }
+  ]
+}

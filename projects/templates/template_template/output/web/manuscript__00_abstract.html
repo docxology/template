@@ -432,6 +432,15 @@ th {
   color: white;
 }
 
+/* Preserve a complete inline-code header within the table's scroll region. */
+th code {
+  color: inherit;
+  background-color: transparent;
+  white-space: nowrap;
+  overflow-wrap: normal;
+  word-break: normal;
+}
+
 img {
   max-width: 100%;
   height: auto;
@@ -588,7 +597,7 @@ and data-versioning tools track artifacts. <code>template/</code>
 combines those concerns with test and provenance gates by applying
 Infrastructure as Code to the research lifecycle. Its Two-Layer
 Architecture separates 31 infrastructure subdirectories (28 importable
-Python packages, ~1307 modules, validated by ~12,341 tests) from
+Python packages, ~1322 modules, validated by ~12,482 tests) from
 self-contained project workspaces. A YAML-declared pipeline (17 stages;
 10 in a default full run) coordinates environment checks, test
 execution, analysis, Pandoc/XeLaTeX rendering, SHA-256 hashing with
@@ -634,16 +643,16 @@ AutoResearch readiness (<code>template_autoresearch_project</code>, 318
 discovered tests). Each declares the same 90% project-source floor and
 consumes the shared pipeline without project-to-project imports. This
 manuscript adds a reflexive artifact: <code>template_template</code>
-(152 discovered tests) follows the same analysis and render path while
+(156 discovered tests) follows the same analysis and render path while
 injecting repository counters and figures from live introspection. The
 result is a self-documenting build whose quantitative repository claims
 are generated artifacts, whose manuscript claims are checked against an
 evidence registry, and whose output can be validated and optionally
 watermarked. A versioned comparative matrix situates
 <code>template/</code> against peer tools across the capabilities
-represented in Figure 4. Code is released under the Apache License 2.0
-at <code>github.com/docxology/template</code>; the work remains
-open-ended.</p>
+reported in the Results section. Code is released under the Apache
+License 2.0 at <code>github.com/docxology/template</code>; the work
+remains open-ended.</p>
 </main>
 </body>
 </html>

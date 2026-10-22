@@ -74,7 +74,7 @@ class TestDiscoverInFixtureRepo:
             "infrastructure/zeta/SKILL.md",
         ]
         assert skills[0].name == "a"
-        assert skills[1].cursor_at == "infrastructure/zeta/SKILL.md"
+        assert skills[1].agent_ref == skills[1].cursor_at == "infrastructure/zeta/SKILL.md"
 
     def test_duplicate_name_raises(self, tmp_path: Path) -> None:
         (tmp_path / "infrastructure" / "p1").mkdir(parents=True)
@@ -157,7 +157,7 @@ class TestTemplateRepository:
             "tools/templates",
             "docs/prompts",
             ".agents/skills",
-            ".cursor/skills",
+            ".agents/workflows",
         )
         assert "projects" not in DEFAULT_SKILL_SEARCH_ROOTS
         assert "fonds" not in DEFAULT_SKILL_SEARCH_ROOTS
@@ -261,7 +261,7 @@ class TestTemplateRepository:
 
     def test_manifest_matches_live_discovery(self) -> None:
         root = _template_repo_root()
-        manifest = root / ".cursor" / "skill_manifest.json"
+        manifest = root / ".agents" / "skill_manifest.json"
         ok, msg = manifest_matches_discovery(root, manifest)
         assert ok, msg
 
@@ -276,7 +276,7 @@ class TestTemplateRepository:
         root = _template_repo_root()
         skills = discover_skills(root)
         paths = {s.path_posix for s in skills}
-        assert ".cursor/skills/gauss/SKILL.md" in paths
+        assert ".agents/workflows/gauss/SKILL.md" in paths
 
 
 class TestCliModule:
@@ -392,7 +392,7 @@ class TestCliModule:
                 "--repo-root",
                 str(root),
                 "--manifest",
-                ".cursor/skill_manifest.json",
+                ".agents/skill_manifest.json",
             ]
         )
         assert code == 0
@@ -498,3 +498,15 @@ class TestSkillDescriptorsAsJsonSerializable:
         ]
         result = skill_descriptors_as_json_serializable(skills)
         assert result[0]["frontmatter"] == {"name": "S1"}
+
+
+def test_shared_workflows_are_default_and_cursor_skills_require_explicit_opt_in(tmp_path: Path) -> None:
+    for base, name in ((".agents/workflows/owned", "generic-owned"), (".cursor/skills/legacy", "legacy-owned")):
+        directory = tmp_path / base
+        directory.mkdir(parents=True)
+        (directory / "SKILL.md").write_text(f"---\nname: {name}\ndescription: Owned workflow\n---\n")
+    actual = discover_skills(tmp_path)
+    assert [row.name for row in actual] == ["generic-owned"]
+    assert actual[0].agent_ref == actual[0].cursor_at == ".agents/workflows/owned/SKILL.md"
+    explicit = discover_skills(tmp_path, search_roots=(".cursor/skills",))
+    assert [row.name for row in explicit] == ["legacy-owned"]

@@ -94,7 +94,7 @@ Parses pytest + coverage artefacts for dashboards; pairs with Stage 01 summarie
 
 ### `infrastructure.research` (${module_research_python_file_count} files)
 
-Seven-stage research workflow (SCOPE→LITERATURE→REASON→DESIGN→COMPUTE→SYNTHESIZE→WRITE) defined as typed ResearchStage data classes with explicit outputs, skills, and template commands per stage. Includes a full PRISMA-adapted literature review prompt and a research workflow prompt referencing template/ infrastructure commands.
+Seven-stage research workflow (SCOPE → LITERATURE → REASON → DESIGN → COMPUTE → SYNTHESIZE → WRITE) defined as typed ResearchStage data classes with explicit outputs, skills, and template commands per stage. Includes a full PRISMA-adapted literature review prompt and a research workflow prompt referencing template/ infrastructure commands.
 
 ### `infrastructure.rules` (${module_rules_python_file_count} files)
 
@@ -114,7 +114,7 @@ Generic Self-Improving-AI loop utilities: task-layout validation, execution harn
 
 ### `infrastructure.skills` (${module_skills_python_file_count} files)
 
-Discovers `SKILL.md` frontmatter → `.cursor/skill_manifest.json`.
+Discovers `SKILL.md` frontmatter → `.agents/skill_manifest.json`.
 
 ### `infrastructure.steganography` (${module_steganography_python_file_count} files)
 

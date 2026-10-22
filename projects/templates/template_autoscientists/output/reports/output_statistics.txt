@@ -8,21 +8,21 @@ Inventory Scope: stage5-delivery-mirror
 Inventory Root: output/templates/template_autoscientists
 
 Total Files: 27
-Total Size: 4.06 MB
+Total Size: 3.93 MB
 
 Files by Category:
-  • pdf: 1 files (0.30 MB)
+  • pdf: 1 files (0.25 MB)
   • web: 13 files (3.29 MB)
-  • figures: 4 files (0.16 MB)
+  • figures: 4 files (0.14 MB)
   • data: 3 files (0.00 MB)
   • reports: 3 files (0.00 MB)
   • release: 2 files (0.00 MB)
-  • root: 1 files (0.30 MB)
+  • root: 1 files (0.25 MB)
 
 Largest Files:
   • source-web-fonts.js: 3.02 MB (web)
-  • template_autoscientists_combined.pdf: 0.30 MB (pdf)
-  • template_autoscientists_combined.pdf: 0.30 MB (root)
+  • template_autoscientists_combined.pdf: 0.25 MB (pdf)
+  • template_autoscientists_combined.pdf: 0.25 MB (root)
   • index.html: 0.07 MB (web)
   • ablation_efficiency.png: 0.05 MB (figures)
 

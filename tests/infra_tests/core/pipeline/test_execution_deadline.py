@@ -28,13 +28,20 @@ def _executor(root: Path) -> PipelineExecutor:
     return PipelineExecutor(PipelineConfig("demo", root, clean=False, skip_infra=True, run_timeout_seconds=90))
 
 
-def test_expired_outer_deadline_does_not_execute_or_overwrite_active_record(tmp_path: Path) -> None:
+@pytest.mark.parametrize("entry", ["plan", "pipeline", "previewed-pipeline"])
+def test_expired_outer_deadline_does_not_execute_or_overwrite_active_record(tmp_path: Path, entry: str) -> None:
     executor = _executor(tmp_path)
     plan = compile_execution_plan(executor.config)
     record = executor.config.project_dir / "output/.pipeline/execution.json"
     record.parent.mkdir(parents=True, exist_ok=True)
     record.write_text("active holder's evidence")
-    results = executor.execute_plan(plan, deadline_monotonic=time.monotonic() - 1)
+    if entry == "previewed-pipeline":
+        executor.preview_stage_names()
+    results = (
+        executor.execute_plan(plan, deadline_monotonic=time.monotonic() - 1)
+        if entry == "plan"
+        else executor.execute_pipeline(deadline_monotonic=time.monotonic() - 1)
+    )
     assert executor.run_result(results).exit_code == 124
     assert results[0].outcome is not None and results[0].outcome.child_exit_code is None
     assert record.read_text() == "active holder's evidence"

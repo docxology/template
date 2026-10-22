@@ -16,8 +16,8 @@ discover_*  ->  build_*_payload  ->  write_*_manifest  ->  *_matches_discovery (
 
 | Catalog | Module | Emit / generated artifact | Drift gate |
 | --- | --- | --- | --- |
-| **Skills** (`SKILL.md` descriptors) | `infrastructure.skills.discovery` | `.cursor/skill_manifest.json` | `manifest_matches_discovery` |
-| **Operations** (every `python -m` CLI) | `infrastructure.skills.operation_registry` | `.cursor/operations_manifest.json` | `operations_manifest_matches_discovery` |
+| **Skills** (`SKILL.md` descriptors) | `infrastructure.skills.discovery` | `.agents/skill_manifest.json` | `manifest_matches_discovery` |
+| **Operations** (every `python -m` CLI) | `infrastructure.skills.operation_registry` | `.agents/operations_manifest.json` | `operations_manifest_matches_discovery` |
 | **Pipeline stages** (stage count derived live from `pipeline.yaml`) | `infrastructure.core.pipeline.cli` | derived live from `pipeline.yaml` | n/a (derive-only) |
 | **Templates** (public exemplars) | `infrastructure.project.exemplar_roster` | `infrastructure/project/template_manifest.json` | `--check` in `scripts/docgen/exemplar_roster.py` |
 

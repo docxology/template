@@ -25,7 +25,7 @@ from infrastructure.project.public_reference_git import (
 )
 from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
 from infrastructure.reporting.readiness_receipts import _READINESS_SOURCE_METADATA_NAMES, _public_roots
-from infrastructure.reporting.release_readiness_snapshot import PUBLIC_ROOT_FILES, SnapshotReader
+from infrastructure.reporting.release_readiness_snapshot import PUBLIC_ROOT_FILES, PUBLIC_AGENT_FILES, SnapshotReader
 
 MAX_SOURCE_BYTES = 512 * 1024 * 1024
 _FIXTURE_ROOTS = (
@@ -79,7 +79,7 @@ def _committed_public_bodies(source_root: Path, reference: GitReference, deadlin
     selected = set()
     for relative in committed_blobs(reference):
         remaining(deadline)
-        if relative in PUBLIC_ROOT_FILES:
+        if relative in PUBLIC_ROOT_FILES | PUBLIC_AGENT_FILES:
             selected.add(relative)
             continue
         output = next((prefix for prefix in outputs if relative.startswith(prefix)), None)

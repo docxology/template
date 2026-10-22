@@ -12,7 +12,7 @@ This directory contains the **Layer 1** generic tools that power the research te
 
 ## 🤖 Agent skills (`SKILL.md`)
 
-Every infrastructure subpackage ships a **`SKILL.md`** at its root with YAML frontmatter (`name`, `description`) plus usage notes—search **`infrastructure/**/SKILL.md`**, start from [`infrastructure/SKILL.md`](SKILL.md), read [`.cursor/skill_manifest.json`](../.cursor/skill_manifest.json), or in Cursor reference `@infrastructure/SKILL.md` / `@infrastructure/<module>/SKILL.md` / `@.cursor/skill_manifest.json`. Programmatic enumeration: `from infrastructure.skills import discover_skills`. Pair with the matching **`AGENTS.md`** for API tables.
+Every infrastructure subpackage ships a **`SKILL.md`** at its root with YAML frontmatter (`name`, `description`) plus usage notes—search **`infrastructure/**/SKILL.md`**, start from [`infrastructure/SKILL.md`](SKILL.md), read [`.agents/skill_manifest.json`](../.agents/skill_manifest.json), or in Cursor reference `@infrastructure/SKILL.md` / `@infrastructure/<module>/SKILL.md` / `@.agents/skill_manifest.json`. Programmatic enumeration: `from infrastructure.skills import discover_skills`. Pair with the matching **`AGENTS.md`** for API tables.
 
 ## 🛠️ Components (summary)
 
@@ -27,7 +27,7 @@ Every infrastructure subpackage ships a **`SKILL.md`** at its root with YAML fro
 - **project**: `discover_projects`, structure validation.
 - **reporting**: Pipeline and executive reports.
 - **scientific**: Benchmarking, stability, templates.
-- **skills**: `discover_skills`, `.cursor/skill_manifest.json`, `python -m infrastructure.skills` (write/check/list-json).
+- **skills**: `discover_skills`, `.agents/skill_manifest.json`, `python -m infrastructure.skills` (write/check/list-json).
 - **steganography**: Post-render PDF hardening (overlays, hashes, optional encryption).
 - **core/telemetry**: Unified per-stage resource + diagnostic tracking (`TelemetryCollector`; JSON/text reports in `output/reports/`).
 

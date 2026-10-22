@@ -448,3 +448,10 @@ print(s.getvalue())
 - [Codecov Documentation](https://docs.codecov.com/)
 
 The infrastructure partition changes execution placement only. The required `coverage-infra` job consumes every 3.14/Linux shard, validates their complete disjoint case union and source/data identities, and enforces the unchanged 60% floor. The existing `ci-gate` complete-job policy includes this job; an unsuccessful or skipped merge prevents optional exhaustive hardening acceptance. Root 4 release evidence remains separately required.
+
+Required auxiliary execution uses a Source-derived complete project matrix and
+one separate Root checks cell. Each serial cell retains its 1,800-second
+operation deadline; four hosted cells may run concurrently. This changes
+aggregate scheduling allowance from the former global operation. The installed
+collector and fresh release handoff authenticate every original producer job,
+attempt, artifact digest and confined graph; no successful subset qualifies.

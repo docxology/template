@@ -196,7 +196,7 @@ applied). It runs on the **pre-push** stage
 only (so `git commit` stays fast) and fails the push on any new MEDIUM/HIGH
 finding — same scope, same severity, same message text as CI. A
 `skills-check` pre-push hook also runs `python -m infrastructure.skills
-check` to catch stale `.cursor/skill_manifest.json`. A stricter manual-stage
+check` to catch stale `.agents/skill_manifest.json`. A stricter manual-stage
 `bandit-low` hook is available for ad-hoc audits.
 
 ```bash

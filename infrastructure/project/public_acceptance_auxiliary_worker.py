@@ -26,7 +26,13 @@ class MissingAuxiliaryProvider(RuntimeError):
 
 
 def execute(
-    root: Path, gate: str, budget: int, *, directory: Path | None = None, inputs: dict[str, Any] | None = None
+    root: Path,
+    gate: str,
+    budget: int,
+    *,
+    directory: Path | None = None,
+    inputs: dict[str, Any] | None = None,
+    operation_deadline: float | None = None,
 ) -> dict[str, Any]:
     """Invoke actual owned implementations; never substitute fixture success."""
     if gate == "root:roster":
@@ -169,7 +175,9 @@ def execute(
 
         if directory is None:
             raise ValueError("actual portable pipeline requires a confined evidence directory")
-        return run_pipeline(root, gate.removesuffix(":pipeline"), directory, budget)
+        return run_pipeline(
+            root, gate.removesuffix(":pipeline"), directory, budget, operation_deadline=operation_deadline
+        )
     if directory is not None:
         from infrastructure.project.public_acceptance_auxiliary_native import native_execution
 
@@ -398,6 +406,7 @@ def run_specification(root: Path, spec: dict[str, Any]) -> int:
                     spec["budget"],
                     directory=(root / spec["raw_path"]).parent,
                     inputs=spec.get("producer_inputs", {}),
+                    operation_deadline=spec.get("operation_deadline"),
                 ),
                 status="pass",
             )

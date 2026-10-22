@@ -12,7 +12,7 @@ This module closes that gap by cloning the exact same contract for *operations*:
 
 * :func:`discover_operations` — enumerate invocable CLIs from the filesystem.
 * :func:`build_operations_payload` — canonical JSON-serializable structure.
-* :func:`write_operations_manifest` — write ``.cursor/operations_manifest.json``.
+* :func:`write_operations_manifest` — write ``.agents/operations_manifest.json``.
 * :func:`operations_manifest_matches_discovery` — drift gate, identical in shape
   to :func:`infrastructure.skills.discovery.manifest_matches_discovery`.
 
@@ -450,14 +450,14 @@ def write_operations_manifest(
 ) -> Path:
     """Write the operations manifest JSON for editors and agents.
 
-    Default output: ``<repo_root>/.cursor/operations_manifest.json``.
+    Default output: ``<repo_root>/.agents/operations_manifest.json``.
 
     Returns:
         Path to the written file.
     """
     root = Path(repo_root).resolve()
     if output_path is None:
-        out = root / ".cursor" / "operations_manifest.json"
+        out = root / ".agents" / "operations_manifest.json"
     else:
         out = Path(output_path)
         out = out.resolve() if out.is_absolute() else (root / out).resolve()

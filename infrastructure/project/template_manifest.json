@@ -182,7 +182,7 @@
       "qualified_name": "templates/template_template",
       "title": "Template: Meta-Research Project",
       "use_when": "Use this template when your research subject is **the repository itself** — programmatic introspection of architecture, pipeline DAGs, module inventories, and security layers, rendered as a manuscript whose every metric is computed live (autopoietic: the paper regenerates itself from the code it describes).",
-      "test_file_count": 10,
+      "test_file_count": 11,
       "coverage_floor": 90
     },
     {

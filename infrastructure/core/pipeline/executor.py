@@ -48,6 +48,7 @@ from infrastructure.core.pipeline.artifact_contracts import (
     contract_failure,
     validate_completion,
     InputContractError,
+    OutputContractError,
 )
 
 logger = get_logger(__name__)
@@ -232,15 +233,15 @@ class PipelineExecutor(PipelineStageMixin, PipelineResumeMixin):
 
     # -- Pipeline execution --------------------------------------------------
 
-    def execute_pipeline(self) -> list[PipelineStageResult]:
+    def execute_pipeline(self, *, deadline_monotonic: float | None = None) -> list[PipelineStageResult]:
         """Execute the core or live contract selected by config.mode."""
         try:
             selection = self._preview_identity(not self.config.clean)
             if self._preview_plan is not None and self._preview_selection == selection:
-                return self.execute_plan(self._preview_plan)
+                return self.execute_plan(self._preview_plan, deadline_monotonic=deadline_monotonic)
             self._build_stage_list(skip_clean=not self.config.clean)
             assert self.execution_plan is not None
-            return self.execute_plan(self.execution_plan)
+            return self.execute_plan(self.execution_plan, deadline_monotonic=deadline_monotonic)
         finally:
             self.close()
 
@@ -285,7 +286,14 @@ class PipelineExecutor(PipelineStageMixin, PipelineResumeMixin):
             result = contract_failure(stage_num, stage_spec, InputContractError(str(exc)))
             results.append(result)
             return result
-        self._prepare_artifact_manifest_for_stage(stage_spec, results)
+        try:
+            self._prepare_artifact_manifest_for_stage(stage_spec, results)
+        except (OSError, ValueError) as exc:
+            result = contract_failure(
+                stage_num, stage_spec, InputContractError(f"Artifact manifest finalization refused: {exc}")
+            )
+            results.append(result)
+            return result
         skipped = self._maybe_skip_stage_incremental(stage_num, stage_spec)
         if skipped is not None:
             guard = validate_completion(self.config, stage_spec, skipped, snapshot)
@@ -332,9 +340,26 @@ class PipelineExecutor(PipelineStageMixin, PipelineResumeMixin):
         if not result.success:
             logger.error(PIPELINE_STAGE_FAILED.format(stage_num=stage_num, stage_name=stage_spec.name))
         if result.stage_completed and (result.success or result.hitl_pause):
+            try:
+                if not self._artifact_manifest_sealed:
+                    self._write_artifact_manifest(stage_num, stage_spec)
+            except (OSError, ValueError) as exc:
+                failure = contract_failure(
+                    stage_num, stage_spec, OutputContractError(f"Artifact manifest commit failed: {exc}")
+                )
+                result.success = False
+                result.exit_code = failure.exit_code
+                result.error_message = failure.error_message
+                result.hitl_pause = False
+                result.stage_completed = False
+                result.outcome = (
+                    replace(result.outcome, status=failure.outcome.status, diagnostic=failure.error_message)
+                    if result.outcome is not None and failure.outcome is not None
+                    else failure.outcome
+                )
+                logger.error(result.error_message)
+                return result
             self._record_incremental_hash(stage_spec)
-            if not self._artifact_manifest_sealed:
-                self._write_artifact_manifest(stage_num, stage_spec)
             self._write_snapshot(stage_num, stage_spec)
             self._save_checkpoint(pipeline_start, stage_num, results)
         return result
@@ -477,31 +502,29 @@ class PipelineExecutor(PipelineStageMixin, PipelineResumeMixin):
 
     def _write_artifact_manifest(self, stage_num: int, stage_spec: StageSpec) -> None:
         """Persist stage and aggregate artifact manifests."""
-        try:
-            from infrastructure.core.pipeline.artifacts import (
-                aggregate_artifact_manifests,
-                output_inventory_mode_for_project,
-                write_stage_artifact_manifest,
-            )
+        from infrastructure.core.pipeline.artifacts import (
+            aggregate_artifact_manifests,
+            output_inventory_mode_for_project,
+            write_stage_artifact_manifest,
+        )
 
-            write_stage_artifact_manifest(
-                repo_root=self.config.repo_root,
-                project_dir=self.config.project_dir,
-                stage_num=stage_num,
-                stage_name=stage_spec.name,
-                contract=stage_spec.contract,
-                record_output_dir=self.config.runtime_output_dir if self.config.shared_infrastructure else None,
-            )
-            aggregate_artifact_manifests(
-                self.config.runtime_output_dir,
-                inventory_output_dir=self.config.project_dir / "output" if self.config.shared_infrastructure else None,
-                inventory_mode=output_inventory_mode_for_project(
-                    self.config.repo_root,
-                    self.config.project_dir,
-                ),
-            )
-        except (OSError, ValueError) as exc:
-            logger.warning(f"Failed to write artifact manifest: {exc}")
+        write_stage_artifact_manifest(
+            repo_root=self.config.repo_root,
+            project_dir=self.config.project_dir,
+            stage_num=stage_num,
+            stage_name=stage_spec.name,
+            contract=stage_spec.contract,
+            record_output_dir=self.config.runtime_output_dir if self.config.shared_infrastructure else None,
+        )
+        aggregate_artifact_manifests(
+            self.config.runtime_output_dir,
+            inventory_output_dir=self.config.project_dir / "output" if self.config.shared_infrastructure else None,
+            inventory_mode=output_inventory_mode_for_project(
+                self.config.repo_root,
+                self.config.project_dir,
+            ),
+            latest_stage=(stage_num, stage_spec.name),
+        )
 
     def _prepare_artifact_manifest_for_stage(
         self,
@@ -542,25 +565,31 @@ class PipelineExecutor(PipelineStageMixin, PipelineResumeMixin):
         if not at_boundary:
             return
 
-        # Seal first: a failed aggregate refresh must not fall through to a
-        # post-validation rewrite of an older manifest.
-        self._artifact_manifest_sealed = True
-        try:
-            from infrastructure.core.pipeline.artifacts import (
-                aggregate_artifact_manifests,
-                output_inventory_mode_for_project,
-            )
+        # A failed refresh returns a typed refusal before the validator child.
+        # Seal only after aggregation actually committed the selected record.
+        from infrastructure.core.pipeline.artifacts import (
+            aggregate_artifact_manifests,
+            output_inventory_mode_for_project,
+        )
 
-            aggregate_artifact_manifests(
-                self.config.runtime_output_dir,
-                inventory_output_dir=self.config.project_dir / "output" if self.config.shared_infrastructure else None,
-                inventory_mode=output_inventory_mode_for_project(
-                    self.config.repo_root,
-                    self.config.project_dir,
-                ),
-            )
-        except (OSError, ValueError) as exc:
-            logger.warning(f"Failed to finalize artifact manifest before validation: {exc}")
+        completed = next(
+            (
+                result
+                for result in reversed(results)
+                if result.stage_completed and (result.success or result.hitl_pause)
+            ),
+            None,
+        )
+        aggregate_artifact_manifests(
+            self.config.runtime_output_dir,
+            inventory_output_dir=self.config.project_dir / "output" if self.config.shared_infrastructure else None,
+            inventory_mode=output_inventory_mode_for_project(
+                self.config.repo_root,
+                self.config.project_dir,
+            ),
+            latest_stage=(completed.stage_num, completed.stage_name) if completed is not None else None,
+        )
+        self._artifact_manifest_sealed = True
 
     def _write_snapshot(self, stage_num: int, stage_spec: StageSpec) -> None:
         """Persist a stage output snapshot."""

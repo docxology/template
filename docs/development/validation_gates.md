@@ -69,8 +69,8 @@ See [`.pre-commit-config.yaml`](../../.pre-commit-config.yaml) for the authorita
 | `pre-push-quick` | pre-push, manual | Generated-artifact, tracked-secret, four-pool confidentiality, mirror-shape, lexical/semantic no-stand-ins guards, and `tests/infra_tests/git_hook_smoke/` |
 | `docs-contract-guard` | pre-push, manual | Strict template drift, backlog/claim bindings, generated API/roster/count/publication-record checks, and the public-`AGENTS.md` memory boundary |
 | `bandit-quick` | pre-push, manual | Bandit MEDIUM+ per `bandit.yaml` (mirrors the CI `security` job) |
-| `skills-check` | pre-push, manual | Skill manifest (`.cursor/skill_manifest.json`) freshness |
-| `operations-check` | pre-push, manual | Operations manifest (`.cursor/operations_manifest.json`) freshness |
+| `skills-check` | pre-push, manual | Skill manifest (`.agents/skill_manifest.json`) freshness |
+| `operations-check` | pre-push, manual | Operations manifest (`.agents/operations_manifest.json`) freshness |
 | `all-exports-check` | pre-push, manual | `__all__` re-export audit |
 | `bandit-low` | manual only | Strict LOW+MEDIUM+HIGH Bandit pass against the `bandit.yaml` allow-list |
 

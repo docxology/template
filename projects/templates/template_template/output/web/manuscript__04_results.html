@@ -432,6 +432,15 @@ th {
   color: white;
 }
 
+/* Preserve a complete inline-code header within the table's scroll region. */
+th code {
+  color: inherit;
+  background-color: transparent;
+  white-space: nowrap;
+  overflow-wrap: normal;
+  word-break: normal;
+}
+
 img {
   max-width: 100%;
   height: auto;
@@ -645,11 +654,11 @@ set.</p>
 <tbody>
 <tr>
 <td>Test files</td>
-<td>925+</td>
+<td>938+</td>
 </tr>
 <tr>
 <td>Total tests</td>
-<td>~12,341</td>
+<td>~12,482</td>
 </tr>
 <tr>
 <td>Infrastructure coverage gate</td>
@@ -711,7 +720,7 @@ authoritative table below—every row reflects
 </tr>
 <tr>
 <td><code>core</code></td>
-<td style="text-align: center;">195</td>
+<td style="text-align: center;">199</td>
 <td style="text-align: center;">✓</td>
 <td style="text-align: center;">✓</td>
 <td><code>get_logger</code>, <code>load_config</code>,
@@ -793,7 +802,7 @@ contracts + validation</td>
 </tr>
 <tr>
 <td><code>project</code></td>
-<td style="text-align: center;">104</td>
+<td style="text-align: center;">111</td>
 <td style="text-align: center;">✓</td>
 <td style="text-align: center;">✓</td>
 <td><code>discover_projects</code>, workspace management</td>
@@ -828,14 +837,14 @@ contracts + validation</td>
 </tr>
 <tr>
 <td><code>rendering</code></td>
-<td style="text-align: center;">120</td>
+<td style="text-align: center;">121</td>
 <td style="text-align: center;">✓</td>
 <td style="text-align: center;">✓</td>
 <td>PDF/HTML/slide rendering, Pandoc filters</td>
 </tr>
 <tr>
 <td><code>reporting</code></td>
-<td style="text-align: center;">406</td>
+<td style="text-align: center;">409</td>
 <td style="text-align: center;">✓</td>
 <td style="text-align: center;">✓</td>
 <td>Coverage parsers, dashboards, executive artefacts</td>
@@ -934,8 +943,9 @@ Documentation Coverage</h2>
 </thead>
 <tbody>
 <tr>
-<td>System prompts</td>
-<td>Root <code>CLAUDE.md</code>, README policy</td>
+<td>Shared agent guidance</td>
+<td>Root <code>AGENTS.md</code>, <code>.agents/</code> skills, roles,
+and workflows</td>
 </tr>
 <tr>
 <td>Structural</td>
@@ -944,7 +954,7 @@ Documentation Coverage</h2>
 <tr>
 <td>Skills</td>
 <td>Optional <code>SKILL.md</code> manifests + generated
-<code>.cursor/skill_manifest.json</code></td>
+<code>.agents/skill_manifest.json</code></td>
 </tr>
 <tr>
 <td>PAI capsule</td>
@@ -957,15 +967,16 @@ operational knowledge without duplicating auto-generated
 inventories.</p>
 <h2 id="dag-reference-declarative-executor">DAG Reference (Declarative
 Executor)</h2>
-<p>Stages below mirror <code>pipeline.yaml</code> (executor-topological
-order—not strict numeric script filenames). Scripts live under
-<code>scripts/</code>.</p>
+<p>The table summarizes the 10 default full-run stages (core plus live
+LLM nodes) from 17 YAML declarations; core mode selects 8. Separately
+tagged opt-in extensions are omitted here. Entries follow dependency
+order rather than numeric script filenames.</p>
 <div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable data table"><table data-responsive-table="true">
 <colgroup>
-<col style="width: 9%" />
-<col style="width: 37%" />
+<col style="width: 19%" />
+<col style="width: 33%" />
+<col style="width: 22%" />
 <col style="width: 25%" />
-<col style="width: 28%" />
 </colgroup>
 <thead>
 <tr>
@@ -990,15 +1001,18 @@ order—not strict numeric script filenames). Scripts live under
 </tr>
 <tr>
 <td>Infrastructure Tests</td>
-<td><code>scripts/pipeline/stage_01_test.py --infra-only</code></td>
-<td>Infra pytest + coverage gates</td>
-<td>Tunable thresholds</td>
+<td><code>scripts/pipeline/stage_01_test.py</code>
+<code>--infra-only</code> <code>--infra-scope</code>
+<code>pipeline-smoke</code></td>
+<td>Focused infrastructure smoke contracts</td>
+<td>Required tests must pass</td>
 </tr>
 <tr>
 <td>Project Tests</td>
-<td><code>scripts/pipeline/stage_01_test.py --project-only</code></td>
-<td>Project pytest + coverage gates</td>
-<td>Zero failures default</td>
+<td><code>scripts/pipeline/stage_01_test.py</code>
+<code>--project-only</code></td>
+<td>Project-local tests + coverage gates</td>
+<td>Required tests and coverage must pass</td>
 </tr>
 <tr>
 <td>Project Analysis</td>
@@ -1019,29 +1033,33 @@ order—not strict numeric script filenames). Scripts live under
 <td>Blocking / warnings</td>
 </tr>
 <tr>
-<td>LLM Scientific Review</td>
-<td><code>scripts/pipeline/stage_06_llm_review.py --reviews-only</code></td>
+<td>LLM Manuscript Review</td>
+<td><code>scripts/pipeline/stage_06_llm_review.py</code>
+<code>--reviews-only</code></td>
 <td>Local Ollama reviews</td>
-<td>Skippable / exit 2 tolerated</td>
+<td>Fresh policy-bound skip; required live acceptance remains
+blocking</td>
 </tr>
 <tr>
 <td>LLM Translations</td>
-<td><code>scripts/pipeline/stage_06_llm_review.py --translations-only</code></td>
+<td><code>scripts/pipeline/stage_06_llm_review.py</code>
+<code>--translations-only</code></td>
 <td>Optional translations</td>
-<td>Skippable</td>
+<td>Fresh policy-bound skip</td>
 </tr>
 <tr>
 <td>Copy Outputs</td>
 <td><code>scripts/pipeline/stage_05_copy.py</code></td>
 <td>Mirrors deliverables → <code>output/&lt;project&gt;/</code></td>
-<td>Soft-fail surfaced in logs</td>
+<td>Blocking</td>
 </tr>
 </tbody>
 </table></div>
-<p><code>scripts/pipeline/stage_07_executive_report.py</code> is
-<strong>multi-project orchestration glue</strong> invoked after
-iterating active projects—not a tenth DAG node for single-repo runs
-(<code>execute_pipeline.py</code>).</p>
+<p><code>scripts/pipeline/stage_07_executive_report.py</code> provides
+separate <strong>multi-project executive reporting</strong>, not an
+additional single-project DAG node (<code>execute_pipeline.py</code>).
+The multi-project executor writes its aggregate summary after project
+execution.</p>
 <h2 id="steganographic-performance-boundary">Steganographic Performance
 Boundary</h2>
 <p>The steganography path exposes metadata injection, SHA-256 hashing,
@@ -1057,40 +1075,58 @@ artifact rather than copied from an ad-hoc workstation run.</p>
 <code>31</code>). Architecture figures stem from <a
 href="https://github.com/docxology/template/blob/main/projects/templates/template_template/src/template_template/figures/architecture_viz.py"><code>template_template.figures.architecture_viz</code></a>—font
 sizes constrained by §QA.</p>
-<p><img src="../figures/architecture_overview.png"
-alt="Two-Layer Architecture Overview" /> <strong>Figure 1.</strong> Live
-rendering of the Two-Layer Architecture from repository introspection:
-the infrastructure layer (top) holds the <code>31</code> reusable
-subpackages, each annotated with its Python file count and a four-slot
-documentation badge—<code>A</code> AGENTS.md, <code>R</code> README.md,
-<code>S</code> SKILL.md, <code>P</code> PAI.md, with <code>·</code>
-marking an absent file—so a fully documented module reads
-<code>[ARSP]</code>. A YAML DAG arrow connects it to the project layer
-(bottom) of public exemplars labelled with chapter and test counts. The
-takeaway: documentation-duality coverage is near-uniform across the
+<figure id="fig:template-architecture">
+<a class="figure-full-size-link" href="../figures/architecture_overview.png" target="_blank" rel="noopener" aria-label="Open full-size figure, Live rendering of the Two-Layer Architecture from repository introspection: the…"><img src="../figures/architecture_overview.png"
+data-slide-manifest="../figures/architecture_overview.panels.json"
+alt="Infrastructure module cards appear above public-project cards, joined by a pipeline arrow. Each card records the corresponding file counts and documentation badges." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
+<figcaption>Live rendering of the Two-Layer
+Architecture from repository introspection: the infrastructure layer
+(top) holds the <code>31</code> enumerated infrastructure directories,
+each annotated with its Python file count and a four-slot documentation
+badge—<code>A</code> AGENTS.md, <code>R</code> README.md, <code>S</code>
+SKILL.md, <code>P</code> PAI.md, with <code>·</code> marking an absent
+file—so a fully documented module reads <code>[ARSP]</code>. A YAML DAG
+arrow connects it to the project layer (bottom) of public exemplars
+labelled with chapter and test-file counts. The takeaway:
+documentation-duality coverage is near-uniform across the
 infrastructure, and every box was placed from the same live data the
-prose cites.</p>
-<p><img src="../figures/pipeline_stages.png"
-alt="Pipeline Stage Flow" /> <strong>Figure 2.</strong> Pipeline DAG
-with 17 YAML-declared stages (core, LLM, ebook, docxplus, metadata,
-bundle, archival tags).</p>
-<p><img src="../figures/module_inventory.png"
-alt="Infrastructure Module Inventory" /> <strong>Figure 3.</strong>
-Horizontal file-count histogram of every infrastructure subdirectory,
-sorted largest-first. The long tail of small, single-purpose packages
-beside a handful of larger ones (<code>core</code>,
-<code>validation</code>, <code>publishing</code>) is the visual
-signature of the Unix-philosophy modularity the architecture section
-argues for—capability concentrated where it compounds, not spread evenly
-by fiat.</p>
+prose cites.</figcaption>
+</figure>
+<figure id="fig:template-pipeline-flow">
+<a class="figure-full-size-link" href="../figures/pipeline_stages.png" target="_blank" rel="noopener" aria-label="Open full-size figure, Declared-stage reference with all 17 YAML stages in reading order, showing complete names"><img src="../figures/pipeline_stages.png"
+data-slide-manifest="../figures/pipeline_stages.panels.json"
+alt="Pipeline stage cards list every YAML declaration in reading order, with stage numbers, complete names and tags. Their order describes declarations rather than a dependency chain." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
+<figcaption>Declared-stage reference with all 17 YAML
+stages in reading order, showing complete names and tags (core, LLM,
+ebook, docxplus, metadata, bundle, archival). Panel order documents
+declarations; it does not imply a linear dependency chain.</figcaption>
+</figure>
+<figure id="fig:template-module-inventory">
+<a class="figure-full-size-link" href="../figures/module_inventory.png" target="_blank" rel="noopener" aria-label="Open full-size figure, Horizontal file-count histogram of every infrastructure subdirectory, sorted largest-first."><img src="../figures/module_inventory.png"
+style="height: auto !important;;height:210mm"
+data-slide-manifest="../figures/module_inventory.panels.json"
+alt="A horizontal bar chart compares Python file counts across infrastructure modules, with the largest modules first and smaller modules forming a long tail." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
+<figcaption>Horizontal file-count histogram of every
+infrastructure subdirectory, sorted largest-first.</figcaption>
+</figure>
+<p>The long tail of small, single-purpose packages beside a handful of
+larger ones (<code>core</code>, <code>validation</code>,
+<code>publishing</code>) is the visual signature of the Unix-philosophy
+modularity the architecture section argues for—capability concentrated
+where it compounds, not spread evenly by fiat.</p>
 <h2 id="comparative-feature-analysis">Comparative Feature Analysis</h2>
-<p>Figure 4 summarizes the Appendix F capability matrix.</p>
-<p><img src="../figures/comparative_feature_matrix.png"
-alt="Comparative Feature Analysis Heatmap" /> <strong>Figure 4.</strong>
-14 × 10 heatmap annotated in appendix text—green <strong>✓</strong> full
-native capability, yellow <strong>◐</strong> partial / plugin-hosted,
-red <strong>—</strong> unavailable. Rows group <em>Core Pipeline</em>,
-<em>Quality &amp; Security</em>, then <em>Ecosystem</em>.</p>
+<p>The comparative feature matrix below summarizes the Appendix F
+capability matrix.</p>
+<figure id="fig:template-comparative-matrix">
+<a class="figure-full-size-link" href="../figures/comparative_feature_matrix.png" target="_blank" rel="noopener" aria-label="Open full-size figure, 14 × 10 heatmap annotated in appendix text—green ✓ full native capability, yellow ◐ partial…"><img src="../figures/comparative_feature_matrix.png"
+data-slide-manifest="../figures/comparative_feature_matrix.panels.json"
+alt="A heatmap compares tools across core pipeline, quality and security, and ecosystem capabilities. Each cell distinguishes full, partial or plugin-hosted, and unavailable support." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
+<figcaption>14 × 10 heatmap annotated in appendix
+text—green <strong>✓</strong> full native capability, yellow
+<strong>◐</strong> partial / plugin-hosted, red <strong>—</strong>
+unavailable. Rows group <em>Core Pipeline</em>, <em>Quality &amp;
+Security</em>, then <em>Ecosystem</em>.</figcaption>
+</figure>
 <p>¹ Nextflow lineage records exist at workflow scope, not per rendered
 PDF citation graph.</p>
 <p>² DVC: content-addressed artifacts without native prose

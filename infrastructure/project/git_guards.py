@@ -294,6 +294,10 @@ def is_generated_artifact_path(path: str) -> bool:
     """Check whether generated artifact path."""
     normalized = path.replace("\\", "/")
     parts = Path(normalized).parts
+    for state_prefix in (".agents/state/", ".cursor/hooks/state/"):
+        if normalized.startswith(state_prefix):
+            public_files = {"README.md", "continual-learning-memory.example.json"}
+            return normalized[len(state_prefix) :] not in public_files
     if len(parts) >= 4 and parts[:2] == ("projects", "templates") and parts[3] in {"build", "dist"}:
         return True
     if any(fnmatch.fnmatch(normalized, pattern) for pattern in ALWAYS_GENERATED_ARTIFACT_PATTERNS):

@@ -95,11 +95,11 @@
       "size_bytes": 470707
     },
     {
-      "content_sha256": "37913b901d18e4d68c7127aee914bea4924a7b130da0aa8980c138c5544cf7de",
+      "content_sha256": "bf9297c027778fd690776f872306b836ff8f4fcee40af013e0273430df9160a5",
       "fresh": true,
       "path": "output/figures/security_posture_map.png",
-      "sha256": "63c84940dad22e83be825073cfd68ae24daaabda1a5637b3c7c60f2b0e039fa7",
-      "size_bytes": 218708
+      "sha256": "c305ccfab83496efa1c90e1bf617fcf113efebaa823c9cec54deddc16c742f83",
+      "size_bytes": 219576
     },
     {
       "content_sha256": "0d1531e48635b5f7d1d3367bacff5d42367d9c55c523a7490fdb4c5bf70c6a26",

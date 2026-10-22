@@ -462,3 +462,13 @@ _agent_erg_archive_*/
 
 # graft's local graph cache — regenerable, not committed (run `graft build`).
 /graft/
+
+# Shared agent-local runtime state (legacy Cursor entries above remain ignored).
+.agents/state/continual-learning.json
+.agents/state/continual-learning-memory.json
+.agents/state/continual-learning-index.json
+
+# Other generic agent runtime state is private too; only schema/docs are public.
+/.agents/state/*
+!/.agents/state/README.md
+!/.agents/state/continual-learning-memory.example.json

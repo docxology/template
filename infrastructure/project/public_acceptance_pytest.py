@@ -11,6 +11,8 @@ from typing import Any
 
 import pytest
 
+from infrastructure.core.testing.pytest_scratch import external_pytest_scratch
+
 from infrastructure.project.public_acceptance_dependencies import MissingRuntimeProvider, capture_runtime_providers
 from infrastructure.project.public_acceptance_cases import PYTEST_SPEC_SCHEMA, project_python_hashes, pytest_command
 from infrastructure.reporting.release_readiness_snapshot import SnapshotReader
@@ -171,7 +173,10 @@ def main(argv: list[str] | None = None) -> int:
             args.receipt.parent / (args.receipt.stem + "-dependencies"),
             retain_metadata=True,
         )
-        original_exit = int(pytest.main(pytest_args, plugins=[observer]))
+        with external_pytest_scratch(root, token=spec["nonce"]) as scratch:
+            original_exit = int(
+                pytest.main([*pytest_args, "--basetemp=" + str(scratch / "fixtures")], plugins=[observer])
+            )
         exit_code = original_exit
         after, _ = capture_runtime_providers(root, providers, args.receipt.parent, retain_metadata=False)
         if before != after:

@@ -40,7 +40,7 @@
           "file_count": 27,
           "largest_file": "cover_visualization.png",
           "largest_file_path": "figures/cover_visualization.png",
-          "size_mb": "6.31"
+          "size_mb": "5.63"
         },
         "llm": {
           "exists": false,
@@ -64,7 +64,7 @@
           "file_count": 1,
           "largest_file": "template_gold_refinement_combined.pdf",
           "largest_file_path": "pdf/template_gold_refinement_combined.pdf",
-          "size_mb": "5.05"
+          "size_mb": "4.76"
         },
         "release": {
           "exists": true,
@@ -127,7 +127,7 @@
           "combined_pdf": {
             "exists": true,
             "readable": true,
-            "size_mb": 5.05
+            "size_mb": 4.76
           },
           "data": {
             "exists": true,
@@ -157,7 +157,7 @@
             "optional": false,
             "readable": true,
             "required": true,
-            "size_mb": 6.31
+            "size_mb": 5.63
           },
           "llm": {
             "exists": false,
@@ -187,7 +187,7 @@
             "optional": false,
             "readable": true,
             "required": true,
-            "size_mb": 5.05
+            "size_mb": 4.76
           },
           "release": {
             "exists": true,
@@ -243,16 +243,16 @@
         "valid": true,
         "warnings": []
       },
-      "total_size_mb": 15.138238906860352
+      "total_size_mb": 14.17280387878418
     },
     "figures": {
       "files": 27,
-      "size_mb": 6.309574127197266
+      "size_mb": 5.6314697265625
     },
     "inventory_mode": "stable-shippable-output-v1",
     "pdf": {
       "files": 1,
-      "size_mb": 5.046004295349121
+      "size_mb": 4.758673667907715
     },
     "stable_inventory": {
       "categories": {
@@ -262,7 +262,7 @@
         },
         "figures": {
           "files": 27,
-          "size_bytes": 6616068
+          "size_bytes": 5905024
         },
         "manuscript": {
           "files": 15,
@@ -270,7 +270,7 @@
         },
         "pdf": {
           "files": 1,
-          "size_bytes": 5291119
+          "size_bytes": 4989831
         },
         "release": {
           "files": 1,
@@ -291,7 +291,7 @@
       },
       "mode": "stable-shippable-output-v1",
       "total_files": 74,
-      "total_size_bytes": 15873594
+      "total_size_bytes": 14861262
     }
   },
   "recommendations": [],
@@ -302,11 +302,11 @@
     "passed": 9,
     "total_checks": 9
   },
-  "timestamp": "2026-10-18T10:52:16Z",
+  "timestamp": "2026-10-22T05:16:49Z",
   "validated_inputs": {
     "artifact_manifest": {
       "path": "output/reports/artifact_manifest.json",
-      "sha256": "06d26543751a77565dab2b8ee3d08c80257db279b661ad08239dd639fb350033",
+      "sha256": "0dd37a21c05265933f95b55341723263ca89e661c49d41cd712d152e7e7464a7",
       "size_bytes": 22284
     },
     "combined_manuscript": {
@@ -396,19 +396,19 @@
     "fingerprints": {
       "config": {
         "file_count": 16,
-        "sha256": "8e675e65eb25f5c907605751b3a2be4872bbcd6c0462264f7b4fa403949b6f39"
+        "sha256": "50c6637f371b611df3d135c4473dd182ce72825a73260418e7ab3e0284370c5d"
       },
       "output": {
         "file_count": 74,
-        "sha256": "a329e5878d0ca187474818431b3a8de04cf1421498e5d54c928d24d81a638736"
+        "sha256": "d2043ba824f0007484f04472878f431fa3325de10c1df04d62016e8cbf3146be"
       },
       "source": {
         "file_count": 46,
         "sha256": "6065a558fe8ec3667bad5793b034c84bb99857ac614d96064dd2def5a6615ad3"
       },
       "stage": {
-        "file_count": 1903,
-        "sha256": "82c47577f1c1b0e22d7feb145892287b0412a5a91606909e9eeb57ca96d1423e"
+        "file_count": 1911,
+        "sha256": "263a30090aab6f8b458069fc2099a22175075b14298625198741d9457d9e9597"
       }
     },
     "project": "templates/template_gold_refinement",

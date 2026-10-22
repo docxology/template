@@ -329,7 +329,9 @@ These issues were discovered during development and are documented here for futu
 
 > **See also**: [New Project Setup Guide](../../../docs/guides/new-project-setup.md) for the full checklist.
 
-This project complies with the template development standards in **[`docs/rules/`](../../../docs/rules/)** and the root **[`.cursorrules`](../../../.cursorrules)** file.
+Development follows the shared instructions in [root `AGENTS.md`](../../../AGENTS.md),
+[`.agents/AGENTS.md`](../../../.agents/AGENTS.md), and
+[`docs/rules/`](../../../docs/rules/).
 
 ### ✅ **Testing Standards Compliance**
 

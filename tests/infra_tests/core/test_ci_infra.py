@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import ast
 import json
 from pathlib import Path
 
@@ -33,6 +34,124 @@ def test_actual_shards_are_nonempty_disjoint_complete_and_include_changed_source
         assert "tests/infra_tests/reporting/test_native_mermaid_runtime_profile.py" in asset_files
         assert set(infrastructure_files(ROOT)) <= set(asset_files)
 
+    from infrastructure.core.testing.ci_contracts import combined_groups, contract_files
+
+    # Every alias retains its actual reexport/protocol consumers plus all
+    # preexisting conventional owners, without selecting the whole core tree.
+    expected_owners = {
+        "infrastructure/core/pipeline/artifacts/_manifest.py": (
+            "tests/infra_tests/benchmark/test_template_benchmark_harness.py",
+            "tests/infra_tests/core/pipeline/test_artifact_finalization.py",
+            "tests/infra_tests/core/test_analysis_pipeline.py",
+            "tests/infra_tests/core/test_manifest_parsing.py",
+            "tests/infra_tests/core/test_manifest_snapshot.py",
+            "tests/infra_tests/core/test_manifest_validation.py",
+            "tests/infra_tests/core/test_pipeline_control_artifacts.py",
+            "tests/infra_tests/core/test_stable_local_mode.py",
+            "tests/infra_tests/methods/test_methods_cli.py",
+            "tests/infra_tests/methods/test_methods_orchestration.py",
+            "tests/infra_tests/publishing/test_repro_bundle.py",
+            "tests/infra_tests/publishing/test_repro_bundle_absent_output.py",
+            "tests/infra_tests/regression/test_manifest_contract.py",
+            "tests/infra_tests/rendering/test_manifest.py",
+            "tests/infra_tests/reporting/test_native_office_semantic_source.py",
+            "tests/infra_tests/validation/test_publication_audit.py",
+            "tests/infra_tests/validation/test_rendered_provenance_composition_parser.py",
+            "tests/infra_tests/validation/test_rendered_provenance_confinement.py",
+            "tests/infra_tests/validation/test_rendered_provenance_external_lifecycle.py",
+            "tests/infra_tests/validation/test_rendered_provenance_placeholder_scan.py",
+            "tests/infra_tests/validation/test_rendered_provenance_receipt_lifecycle.py",
+            "tests/infra_tests/validation/test_rendered_provenance_roles.py",
+            "tests/infra_tests/validation/test_rendered_provenance_stage_closures.py",
+        ),
+        "infrastructure/core/pipeline/executor.py": (
+            "tests/infra_tests/core/pipeline/test_artifact_finalization.py",
+            "tests/infra_tests/core/pipeline/test_cache_identity.py",
+            "tests/infra_tests/core/pipeline/test_execution_deadline.py",
+            "tests/infra_tests/core/pipeline/test_execution_records.py",
+            "tests/infra_tests/core/pipeline/test_executor_log_ownership.py",
+            "tests/infra_tests/core/pipeline/test_incremental_executor.py",
+            "tests/infra_tests/core/pipeline/test_modularity_boundaries.py",
+            "tests/infra_tests/core/pipeline/test_opt_in_tags.py",
+            "tests/infra_tests/core/pipeline/test_plan_admission_custody.py",
+            "tests/infra_tests/core/pipeline/test_plan_compilation.py",
+            "tests/infra_tests/core/pipeline/test_plugins.py",
+            "tests/infra_tests/core/pipeline/test_plugins_executor.py",
+            "tests/infra_tests/core/pipeline/test_report_custody_review.py",
+            "tests/infra_tests/core/pipeline/test_report_finalization.py",
+            "tests/infra_tests/core/pipeline/test_run_matrix.py",
+            "tests/infra_tests/core/pipeline/test_tool_bindings.py",
+            "tests/infra_tests/core/test_analysis_launch.py",
+            "tests/infra_tests/core/test_execution_contract.py",
+            "tests/infra_tests/core/test_execution_policy.py",
+            "tests/infra_tests/core/test_pipeline.py",
+            "tests/infra_tests/core/test_pipeline_control_hitl.py",
+            "tests/infra_tests/methods/test_methods_cli.py",
+            "tests/infra_tests/methods/test_methods_orchestration.py",
+        ),
+        "infrastructure/core/testing/ci_infra.py": (
+            "tests/infra_tests/core/test_ci_infra.py",
+            "tests/infra_tests/core/test_ci_infra_partition.py",
+            "tests/infra_tests/core/test_pytest_receipt.py",
+            "tests/infra_tests/core/test_ci_contracts.py",
+            "tests/infra_tests/core/test_ci_test_ownership.py",
+            "tests/infra_tests/core/test_ci_infra_process.py",
+        ),
+        "infrastructure/core/testing/ci_contracts.py": (
+            "tests/infra_tests/core/test_ci_contracts.py",
+            "tests/infra_tests/core/test_ci_infra.py",
+            "tests/infra_tests/core/test_ci_infra_process.py",
+        ),
+        "infrastructure/core/testing/ci_test_ownership.py": (
+            "tests/infra_tests/core/test_ci_infra.py",
+            "tests/infra_tests/core/test_ci_infra_partition.py",
+            "tests/infra_tests/core/test_ci_test_ownership.py",
+        ),
+    }
+    legacy = infrastructure_files(ROOT)
+    for source, owners in expected_owners.items():
+        selected = infrastructure_files(ROOT, (source,))
+        assert set(selected) == set(legacy) | set(owners)
+        conventional = {
+            path.relative_to(ROOT).as_posix()
+            for path in (ROOT / "tests/infra_tests").rglob("test_" + Path(source).stem.lstrip("_") + "*.py")
+        }
+        assert conventional <= set(owners)
+        shards = infrastructure_shards(ROOT, (source,))
+        contracts = contract_files(selected, legacy)
+        validate_shards(combined_groups({"infra_shards": shards, "contract_modules": list(contracts)}), selected)
+        assert shards == infrastructure_shards(ROOT, (source,))
+    executor = "infrastructure/core/pipeline/executor.py"
+    actual_executor_consumers = {
+        path.relative_to(ROOT).as_posix()
+        for path in (ROOT / "tests/infra_tests/core").rglob("test_*.py")
+        if any(
+            isinstance(node, ast.Call)
+            and (
+                isinstance(node.func, ast.Name)
+                and node.func.id == "PipelineExecutor"
+                or isinstance(node.func, ast.Attribute)
+                and node.func.attr == "PipelineExecutor"
+            )
+            for node in ast.walk(ast.parse(path.read_bytes()))
+        )
+    }
+    methods_owners = {
+        "tests/infra_tests/methods/test_methods_cli.py",
+        "tests/infra_tests/methods/test_methods_orchestration.py",
+    }
+    assert set(expected_owners[executor]) == actual_executor_consumers | methods_owners
+    assert methods_owners <= set(expected_owners["infrastructure/core/pipeline/artifacts/_manifest.py"])
+    # Methods validates actual executor methods and delegates its manifest parser
+    # to this same public defining implementation, through real wrappers.
+    from infrastructure.methods import _plan_validation
+    from infrastructure.core.pipeline import PipelineExecutor
+    from infrastructure.core.pipeline.artifacts import artifact_manifest_from_payload
+
+    assert _plan_validation.PipelineExecutor is PipelineExecutor
+    assert _plan_validation.artifact_manifest_from_payload is artifact_manifest_from_payload
+    assert _plan_validation._artifact_manifest_from_payload({"entries": [], "issues": []}).entries == ()
+
 
 def test_deleted_test_routes_existing_owner_without_executing_nonexistent_path() -> None:
     deleted = "tests/infra_tests/core/test_removed_contract.py"
@@ -46,14 +165,17 @@ def test_broad_package_ownership_scales_shards_without_losing_selected_work() ->
     from infrastructure.core.testing.ci_contracts import combined_groups, contract_files
 
     heavy = (
+        "tests/infra_tests/core/pipeline/test_run_matrix.py",
         "tests/infra_tests/core/test_execution_contract.py",
         "tests/infra_tests/core/test_project_test_measurement.py",
         "tests/infra_tests/project/test_root_acceptance.py",
+        "tests/infra_tests/publishing/test_standalone_mirror.py",
     )
     changed = ("infrastructure/reporting/__init__.py", "infrastructure/validation/__init__.py", *heavy)
     files = infrastructure_files(ROOT, changed)
     shards = infrastructure_shards(ROOT, changed)
-    assert 3 < len(shards) <= 10
+    assert len(shards) > 3
+    assert all(len(shard) <= 20 for shard in shards)
     assert all([module] in shards for module in heavy)
     small = infrastructure_shards(ROOT, heavy)
     assert len(small) >= 5 and all([module] in small for module in heavy)

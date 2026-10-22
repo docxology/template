@@ -35,7 +35,7 @@ lacking its dependency fails loudly.
 | **Ollama** (local LLM server) | `requires_ollama` | **fail-loud when selected** (the harness tries to start Ollama, then fails with setup guidance) | `tests/infra_tests/llm/` real-daemon smoke tests, `tests/integration/test_module_interoperability.py` | Pipeline stage keys `llm_reviews` and `llm_translations`; `scripts/pipeline/stage_06_llm_review.py` | `pytest -m "not requires_ollama"` | Install from <https://ollama.ai>, then `ollama serve` and `ollama pull smollm2` (or the configured model). See env vars below. |
 | **LaTeX / xelatex** (TeX engine) | `requires_latex` | **skip-if-absent** (via `skip_if_no_latex` fixture) | `tests/infra_tests/rendering/` LaTeX/PDF tests (`test_latex_utils.py`, `test_renderers.py`, `test_core.py`, `test_slides_renderer_core.py`, …) | Pipeline stage key `render_pdf` (`scripts/pipeline/stage_03_render.py`); Beamer slide generation | `pytest -m "not requires_latex"` | Install TeX Live / MacTeX. Package requirements are defined by the current CI/container setup; do not assume a copied `tlmgr` list is complete. |
 | **pandoc** (document converter) | _(no dedicated marker; covered by `requires_latex` PDF tests + format-toggle tests)_ | **skip-if-absent** (rendering config sets `pandoc_path=None` when `pandoc` is not on `PATH`; format toggles guard on availability) | `tests/infra_tests/rendering/` markdown→PDF/DOCX/EPUB conversion paths | DOCX/EPUB export and the pandoc-backed markdown→LaTeX combine step | run a non-rendering subset, e.g. `pytest -m "not requires_latex"`, or target non-rendering dirs | Install pandoc: `brew install pandoc` (macOS) or your distro package; CI installs it in the rendering job. |
-| **pdfplumber** (rendered-PDF geometry inspection) | _(runtime capability; no skip marker)_ | **fail-loud when accessible Beamer is requested** with `slides.capability.pdf-geometry-required` | Accessible-slide safe-area and installed-capability probes in `tests/infra_tests/rendering/` | Post-compile glyph/rule clearance verification for `slides_profile="accessible"`; archive slides remain available | Use `slides_profile="archive"` only when the accessible presentation contract is not required | Source checkout: `uv sync --group rendering`. Installed package: `python -m pip install 'research-project-template[rendering]'`. |
+| **pdfplumber** (rendered-PDF geometry inspection) | _(runtime capability; no skip marker)_ | **fail-loud for accessible Beamer or measured presentation panels** with `slides.capability.pdf-geometry-required` | Accessible-slide safe-area, measured-panel and installed-capability probes in `tests/infra_tests/rendering/` | Post-compile accessible glyph/rule clearance and declared raster-label scale verification; unannotated archive slides remain available | Use unannotated archive slides only when accessible safe-area and measured-panel contracts are not required | Source checkout: `uv sync --group rendering`. Installed package: `python -m pip install 'research-project-template[rendering]'`. |
 
 Markers compose: to skip every optional-dependency surface in one run use
 
@@ -97,7 +97,7 @@ To check what is available on the current machine:
 python -c "import shutil; print('xelatex:', bool(shutil.which('xelatex'))); print('pandoc:', bool(shutil.which('pandoc')))"
 ```
 
-## Accessible Beamer geometry: fail-loud installed capability
+## Presentation PDF geometry: fail-loud installed capability
 
 The accessible slide profile inspects the compiled Beamer PDF after LaTeX has
 finished. That inspection is not a best-effort enhancement: it is what detects
@@ -114,8 +114,11 @@ uv sync --group rendering
 python -m pip install 'research-project-template[rendering]'
 ```
 
-The historical `archive` profile neither imports nor requires `pdfplumber`.
-Choosing archive mode is a scope decision, not evidence that the accessible
+Archive slides with measured presentation panels also require `pdfplumber`: the
+post-compile inspection checks the declared raster labels at their actual PDF
+scale. If that capability is absent, the same stable diagnostic removes the
+unverified PDF. Archive slides without measured panels neither import nor
+require `pdfplumber`. Choosing archive mode does not establish that the accessible
 safe-area contract passed.
 
 ## See also

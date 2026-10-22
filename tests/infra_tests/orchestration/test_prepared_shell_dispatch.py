@@ -86,7 +86,9 @@ def test_missing_or_invalid_runtime_blocks_without_acquisition(
 
 @pytest.mark.parametrize("wrapper", ["run.sh", "secure_run.sh"])
 def test_actual_prepared_help_ignores_valid_poisoned_cache(tmp_path: Path, wrapper: str) -> None:
-    root = tmp_path / "repo"
+    search_only = tmp_path / "search-only"
+    search_only.mkdir()
+    root = search_only / "repo"
     _copy_dispatch(root, public_package=True)
     source = root / "infrastructure/core/runtime/prepared_dispatch.py"
     marker = root / "poison-executed"
@@ -120,17 +122,26 @@ def test_actual_prepared_help_ignores_valid_poisoned_cache(tmp_path: Path, wrapp
     assert normal.returncode == 77 and marker.read_text() == "poison"
     marker.unlink()
     env = _environment(root)
+    env["TMPDIR"] = str(tmp_path)
     env["TEMPLATE_ROOT_PYTHON"] = sys.executable
     env["TEMPLATE_DISPATCH_TIMEOUT_SECONDS"] = "60"
-    result = subprocess.run(
-        ["/bin/bash", str(root / wrapper), "--help"],
-        env=env,
-        cwd=tmp_path,
-        capture_output=True,
-        text=True,
-        timeout=75,
-        check=False,
-    )
+    original_mode = search_only.stat().st_mode & 0o7777
+    try:
+        # Existing audited search-only traversal is supported through O_PATH.
+        # Other platforms still exercise both original poisoned-cache help cases.
+        if hasattr(os, "O_PATH"):
+            search_only.chmod(0o111)
+        result = subprocess.run(
+            ["/bin/bash", str(root / wrapper), "--help"],
+            env=env,
+            cwd=tmp_path,
+            capture_output=True,
+            text=True,
+            timeout=75,
+            check=False,
+        )
+    finally:
+        search_only.chmod(original_mode)
     assert result.returncode == 0, (result.stdout, result.stderr)
     assert "usage:" in result.stdout and not marker.exists()
     assert not (root / ".venv").exists() and not (root / "uv.lock").exists()

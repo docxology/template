@@ -501,3 +501,11 @@ execution overlaps are refused. Browser children freeze bytecode writes only
 after their executed Source audit closes; parents still verify the exact final
 cache inventory and bytes. Unit replay DATA cannot grant original native launch
 custody; post-admission tamper coverage remains a hosted native acceptance gate.
+
+`native_stage_child_completion.py` closes one actual fixed child after ToolAPI
+return under a fresh synchronous Source boundary. Private DATA validators keep
+every original Code/SDK/PID/request/process predicate. Complete Source/Git/SDK
+closure and final physical factory/registry checks precede child publication.
+No guard spans execution, accepts callbacks or yields reusable verification.
+Public independent verification APIs remain fresh; clocks and original signed
+failure outcomes retain authority.
