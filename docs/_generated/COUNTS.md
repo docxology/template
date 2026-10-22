@@ -121,12 +121,12 @@ uv run pytest tests/infra_tests/publishing/ --collect-only -q --no-cov
 
 Result: **1440** project-scope infrastructure tests collected and **1258** publishing tests collected. Full behavioral gates still live in CI and in the verification commands listed by the relevant `AGENTS.md` files.
 
-**Exemplar `pytest --collect-only` totals** (derived live in each project's declared environment; coverage baseline dated 2026-10-16, rebound after changed-input measurements; coverage values use the shared `release` test profile):
+**Exemplar `pytest --collect-only` totals** (derived live in each project's declared environment; coverage baseline dated 2026-10-22, rebound after changed-input measurements; coverage values use the shared `release` test profile):
 
 | Project | Tests collected | `src/` line+branch coverage |
 |---------|-----------------|----------------------------|
 | `template_active_inference` | 988 | 91.05 % |
-| `template_advanced_literature_review` | 160 | 94.14 % |
+| `template_advanced_literature_review` | 160 | 94.20 % |
 | `template_autopoiesis` | 578 | 92.03 % |
 | `template_autoresearch_project` | 398 | 96.36 % |
 | `template_autoscientists` | 191 | 92.93 % |
@@ -139,7 +139,7 @@ Result: **1440** project-scope infrastructure tests collected and **1258** publi
 | `template_literature_meta_analysis` | 1248 | 95.55 % |
 | `template_madlib` | 198 | 98.95 % |
 | `template_methods_paper` | 94 | 99.00 % |
-| `template_newspaper` | 153 | 99.07 % |
+| `template_newspaper` | 153 | 99.25 % |
 | `template_pitch_deck` | 159 | 96.42 % |
 | `template_pools_rules_tools` | 306 | 94.68 % |
 | `template_prose_project` | 189 | 91.67 % |
@@ -147,7 +147,7 @@ Result: **1440** project-scope infrastructure tests collected and **1258** publi
 | `template_registered_report` | 85 | 95.17 % |
 | `template_search_project` | 454 | 91.82 % |
 | `template_sia` | 130 | 92.72 % |
-| `template_storybook` | 45 | 95.57 % |
+| `template_storybook` | 45 | 95.38 % |
 | `template_template` | 158 | 95.56 % |
 | `template_textbook` | 299 | 96.17 % |
 
