@@ -18,6 +18,7 @@ probes, and test-selection planning. Re-homed from the flat
 | `pytest_orchestration.py` | Union pytest command construction, suite parsing, worker config. |
 | `pytest_profiles.py` | Test profile resolution (quick/release) and concurrency validation. |
 | `pytest_marker_exprs.py` | Marker-expression assembly per profile. |
+| `pytest_scratch.py` | Fresh private pytest fixture directories outside Source, Git and the selected runtime, with held-directory identity checks and descriptor-based cleanup. |
 | `public_matrix_receipt.py` | Deterministic public-matrix receipt build/validate/write. |
 | `coverage_policy.py` | pytest-cov capability probes. |
 | `ci_smoke.py` | Complete public roster with focused functional tests; no whole-suite coverage claim. |

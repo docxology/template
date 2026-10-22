@@ -16,8 +16,9 @@ ownership block in `.github/CODEOWNERS` from the canonical public scope.
 while resuming Source controllers serially. Its deadline exception retains
 completed results and original child observations without granting acceptance.
 
-Every Root lane chunk retains `process-output.json` and `case-diagnostics.json`
-under its original ignored evidence directory. They preserve captured process
+`public_root_lane_diagnostics.py` retains each Root lane chunk's
+`process-output.json` and `case-diagnostics.json` under its original ignored
+evidence directory. They preserve captured process
 stdout/stderr and actual pytest failure/skip details with explicit hashes and
 truncation: 256 KiB per process stream, 16 KiB per report field and 1 MiB of report
 text per chunk. Original outcome and timeout receipts remain authoritative;

@@ -18,6 +18,7 @@ import os
 import stat
 import subprocess
 import sys
+import zipfile
 from pathlib import Path
 from types import SimpleNamespace
 
@@ -47,8 +48,8 @@ def _fake_pandoc(tmp_path: Path) -> tuple[Path, Path]:
     """Install a real executable named ``pandoc`` that records its argv.
 
     Returns ``(bin_dir, argv_log)``. The script appends its arguments to the log
-    one per line, then creates whatever path followed ``-o`` so the calling
-    renderer's success checks are satisfied by a real file.
+    one per line, then creates the path following ``-o``. DOCX and EPUB use
+    genuine minimal packages so native package projections can also run.
     """
     bin_dir = tmp_path / "fakebin"
     bin_dir.mkdir(parents=True, exist_ok=True)
@@ -89,6 +90,46 @@ with zipfile.ZipFile(output, "w", compression=zipfile.ZIP_DEFLATED) as archive:
 """,
         encoding="utf-8",
     )
+    docx_writer = bin_dir / "write-valid-docx.py"
+    docx_writer.write_text(
+        """import sys
+import zipfile
+
+content_types = ('<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types">'
+                 '<Default Extension="rels" '
+                 'ContentType="application/vnd.openxmlformats-package.relationships+xml"/>'
+                 '<Default Extension="xml" ContentType="application/xml"/>'
+                 '<Override PartName="/word/document.xml" '
+                 'ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"/>'
+                 '<Override PartName="/word/styles.xml" '
+                 'ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.styles+xml"/>'
+                 '</Types>')
+relationships = ('<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">'
+                 '<Relationship Id="rId1" '
+                 'Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" '
+                 'Target="word/document.xml"/></Relationships>')
+document_relationships = ('<Relationships '
+                          'xmlns="http://schemas.openxmlformats.org/package/2006/relationships">'
+                          '<Relationship Id="rId1" '
+                          'Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" '
+                          'Target="styles.xml"/></Relationships>')
+document = ('<w:document xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main">'
+            '<w:body><w:p><w:r><w:t>Fixture</w:t></w:r></w:p><w:sectPr/></w:body></w:document>')
+styles = ('<w:styles xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main">'
+          '<w:style w:type="paragraph" w:default="1" w:styleId="Normal">'
+          '<w:name w:val="Normal"/></w:style></w:styles>')
+with zipfile.ZipFile(sys.argv[1], "w") as archive:
+    for name, payload in (
+        ("[Content_Types].xml", content_types),
+        ("_rels/.rels", relationships),
+        ("word/document.xml", document),
+        ("word/_rels/document.xml.rels", document_relationships),
+        ("word/styles.xml", styles),
+    ):
+        archive.writestr(zipfile.ZipInfo(name), payload, compress_type=zipfile.ZIP_DEFLATED)
+""",
+        encoding="utf-8",
+    )
     script = bin_dir / "pandoc"
     script.write_text(
         f"""#!/bin/sh
@@ -106,6 +147,7 @@ if [ -n "$out" ]; then
   mkdir -p "$(dirname "$out")"
   case "$writer" in
     epub) '{sys.executable}' '{epub_writer}' "$out" ;;
+    docx) '{sys.executable}' '{docx_writer}' "$out" ;;
     *) printf 'stub' > "$out" ;;
   esac
 fi
@@ -225,6 +267,11 @@ def test_combined_docx_command_carries_the_filter(tmp_path: Path) -> None:
     argv = _recorded_argv(argv_log)
     _assert_filter_ordering(argv, "combined DOCX")
     _assert_bibliography_union(argv, manuscript_dir, "combined DOCX")
+
+    # The real renderer must also finish its native DOCX package projection.
+    output = Path(manager.config.docx_dir) / "proj_combined.docx"
+    with zipfile.ZipFile(output) as package:
+        assert {"[Content_Types].xml", "word/document.xml", "word/styles.xml"} <= set(package.namelist())
 
 
 # ---------------------------------------------------------------------------
