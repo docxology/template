@@ -453,8 +453,8 @@
     {
       "contract_match": true,
       "path": "output/figures/disclosure_control_matrix.png",
-      "sha256": "329b8993f2f7b3eecfbc35af0d5b677191986fdae74c6a5078c698e22fb8d90c",
-      "size_bytes": 74442,
+      "sha256": "8d9d43dbb1a5fd67ddb7c85f5df1fde7a423b5244fe0cac546e4d6f25f526c23",
+      "size_bytes": 37228,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
@@ -480,8 +480,8 @@
     {
       "contract_match": true,
       "path": "output/figures/redaction_flow.png",
-      "sha256": "e603e2898eb04719ccef9077c2bc988dcd04d838c9182f76f4adf988c73adeca",
-      "size_bytes": 78001,
+      "sha256": "961dc361cb3e387705fd83ce95aaf51b6d0ccf5670e0112c1329827ded146a1f",
+      "size_bytes": 65216,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
