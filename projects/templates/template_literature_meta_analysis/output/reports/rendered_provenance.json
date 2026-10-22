@@ -145,7 +145,7 @@
     },
     "validation_report": {
       "path": "output/reports/validation_report.json",
-      "sha256": "fd890687172b7223057284081e2af0baec2b678416f60f0d84e7ead09ecfe71b",
+      "sha256": "5126030a06de396229e99edfa790701e66696472dcdac80739691496d23ea77e",
       "size_bytes": 16463
     }
   },
@@ -165,7 +165,7 @@
     },
     "stage": {
       "file_count": 1911,
-      "sha256": "e791d7fa69fbfcc438ddaf807d46a08f4c8c78c5e3f2a53c0475a318f5b46cc8"
+      "sha256": "263a30090aab6f8b458069fc2099a22175075b14298625198741d9457d9e9597"
     }
   },
   "project": "templates/template_literature_meta_analysis",
