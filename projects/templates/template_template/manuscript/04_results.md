@@ -75,7 +75,7 @@ Rendered via `projects/templates/template_template` (`generate_manuscript_metric
 
 ![Declared-stage reference with all ${pipeline_stages_declared} YAML stages in reading order, showing complete names and tags (core, LLM, ebook, docxplus, metadata, bundle, archival). Panel order documents declarations; it does not imply a linear dependency chain.](../output/figures/pipeline_stages.png){#fig:template-pipeline-flow data-slide-manifest="../output/figures/pipeline_stages.panels.json"}
 
-![Horizontal file-count histogram of every infrastructure subdirectory, sorted largest-first.](../output/figures/module_inventory.png){#fig:template-module-inventory data-slide-manifest="../output/figures/module_inventory.panels.json" height="210mm"}
+![Horizontal file-count histogram of every infrastructure subdirectory, sorted largest-first.](../output/figures/module_inventory.png){#fig:template-module-inventory data-slide-manifest="../output/figures/module_inventory.panels.json" height="210mm" style="height: auto !important;"}
 
 The long tail of small, single-purpose packages beside a handful of larger ones (`core`, `validation`, `publishing`) is the visual signature of the Unix-philosophy modularity the architecture section argues for—capability concentrated where it compounds, not spread evenly by fiat.
 
