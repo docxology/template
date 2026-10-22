@@ -25,7 +25,7 @@ _ROSTER_CLAIMS = (
 )
 _SHORTENED_INFRA_SCOPE_CLAIM = (
     "The next chart narrows the total to importable subpackages, excluding {{INFRA_UNATTRIBUTED_FILE_COUNT}} "
-    "top-level file(s): infrastructure/__init__.py and mcp_server.py."
+    "top-level Python file(s)."
 )
 
 
