@@ -14,6 +14,7 @@ import time
 
 import pytest
 
+from infrastructure.core.files.portability import sanitize_machine_local_paths
 from infrastructure.core.pipeline.run_matrix import (
     RunConfig,
     RunConfigError,
@@ -393,6 +394,15 @@ def test_matrix_preserves_each_effective_project_dag_after_shared_verification(
         "second:beta",
         "second:alpha",
     ]
+    # Artifact snapshots sanitize machine-home prefixes while retaining diagnostics.
+    portable_paths = tmp_path / "portable-log-paths"
+    portable_paths.mkdir()
+    for project in ("first", "second"):
+        (portable_paths / f"{project}.txt").write_text(
+            str(tmp_path / "projects" / project / "output/logs/pipeline.log"), encoding="utf-8"
+        )
+    sanitize_machine_local_paths(portable_paths)
+
     # The same-process serial matrix must close each project's owned log sinks.
     for project, other, own_order, other_order in (
         ("first", "second", ("Alpha", "Beta"), ("Beta", "Alpha")),
@@ -401,8 +411,11 @@ def test_matrix_preserves_each_effective_project_dag_after_shared_verification(
         log = tmp_path / "projects" / project / "output/logs/pipeline.log"
         other_log = tmp_path / "projects" / other / "output/logs/pipeline.log"
         content = log.read_text(encoding="utf-8")
-        assert content.count(f"Set up log file handler: {log}") == 1
+        display_log = (portable_paths / f"{project}.txt").read_text(encoding="utf-8")
+        display_other_log = (portable_paths / f"{other}.txt").read_text(encoding="utf-8")
+        assert content.count(f"Set up log file handler: {display_log}") == 1
         assert str(other_log) not in content
+        assert display_other_log not in content
         for number, stage in enumerate(own_order, start=1):
             assert content.count(f"[{number}/2] {stage} (") == 1
         for number, stage in enumerate(other_order, start=1):

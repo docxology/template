@@ -49,6 +49,7 @@ def test_required_contract_job_keeps_whole_root_budget_and_explicit_empty_outcom
     assert contract["steps"][0]["if"] == "matrix.shard == -1"
     assert any(step.get("if") == "always() && matrix.shard != -1" for step in contract["steps"])
     pdf_modules = (
+        "tests/infra_tests/rendering/test_latex_texttt_native.py",
         "tests/infra_tests/project/test_scientific_reference_replay.py",
         "tests/infra_tests/reporting/test_native_pdf_citations.py",
         "tests/infra_tests/reporting/test_native_pdf_math.py",
