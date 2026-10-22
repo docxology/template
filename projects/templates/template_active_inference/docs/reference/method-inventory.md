@@ -962,15 +962,15 @@ Total documented definitions: 890
 
 | line | kind | name | documentation source | summary |
 | ---: | --- | --- | --- | --- |
-| 36 | `function` | `_run_prerequisite_promoters` | inventory fallback | Inventory fallback for function `_run_prerequisite_promoters` defined at `src/roadmap_tracks/sheaf_tracks_write.py:36`. |
-| 51 | `function` | `_record_external_artifact_paths` | inventory fallback | Inventory fallback for function `_record_external_artifact_paths` defined at `src/roadmap_tracks/sheaf_tracks_write.py:51`. |
-| 60 | `function` | `_write_primary_canonical_artifacts` | inventory fallback | Inventory fallback for function `_write_primary_canonical_artifacts` defined at `src/roadmap_tracks/sheaf_tracks_write.py:60`. |
-| 113 | `function` | `_write_integration_audit_phase` | inventory fallback | Inventory fallback for function `_write_integration_audit_phase` defined at `src/roadmap_tracks/sheaf_tracks_write.py:113`. |
-| 123 | `function` | `_write_post_audit_canonical_artifacts` | inventory fallback | Inventory fallback for function `_write_post_audit_canonical_artifacts` defined at `src/roadmap_tracks/sheaf_tracks_write.py:123`. |
-| 166 | `function` | `_write_semantic_artifacts` | inventory fallback | Inventory fallback for function `_write_semantic_artifacts` defined at `src/roadmap_tracks/sheaf_tracks_write.py:166`. |
-| 179 | `function` | `_write_supplemental_phase` | inventory fallback | Inventory fallback for function `_write_supplemental_phase` defined at `src/roadmap_tracks/sheaf_tracks_write.py:179`. |
-| 185 | `function` | `_write_final_canonical_pass` | inventory fallback | Inventory fallback for function `_write_final_canonical_pass` defined at `src/roadmap_tracks/sheaf_tracks_write.py:185`. |
-| 223 | `function` | `write_sheaf_track_artifacts` | docstring | Write the canonical promoted sheaf artifacts in deterministic phases. |
+| 34 | `function` | `_run_prerequisite_promoters` | inventory fallback | Inventory fallback for function `_run_prerequisite_promoters` defined at `src/roadmap_tracks/sheaf_tracks_write.py:34`. |
+| 49 | `function` | `_record_external_artifact_paths` | inventory fallback | Inventory fallback for function `_record_external_artifact_paths` defined at `src/roadmap_tracks/sheaf_tracks_write.py:49`. |
+| 58 | `function` | `_write_primary_canonical_artifacts` | inventory fallback | Inventory fallback for function `_write_primary_canonical_artifacts` defined at `src/roadmap_tracks/sheaf_tracks_write.py:58`. |
+| 111 | `function` | `_write_integration_audit_phase` | inventory fallback | Inventory fallback for function `_write_integration_audit_phase` defined at `src/roadmap_tracks/sheaf_tracks_write.py:111`. |
+| 121 | `function` | `_write_post_audit_canonical_artifacts` | inventory fallback | Inventory fallback for function `_write_post_audit_canonical_artifacts` defined at `src/roadmap_tracks/sheaf_tracks_write.py:121`. |
+| 164 | `function` | `_write_semantic_artifacts` | inventory fallback | Inventory fallback for function `_write_semantic_artifacts` defined at `src/roadmap_tracks/sheaf_tracks_write.py:164`. |
+| 177 | `function` | `_write_supplemental_phase` | inventory fallback | Inventory fallback for function `_write_supplemental_phase` defined at `src/roadmap_tracks/sheaf_tracks_write.py:177`. |
+| 183 | `function` | `_write_final_canonical_pass` | inventory fallback | Inventory fallback for function `_write_final_canonical_pass` defined at `src/roadmap_tracks/sheaf_tracks_write.py:183`. |
+| 221 | `function` | `write_sheaf_track_artifacts` | docstring | Write the canonical promoted sheaf artifacts in deterministic phases. |
 
 ## `src/roadmap_tracks/supplemental.py`
 

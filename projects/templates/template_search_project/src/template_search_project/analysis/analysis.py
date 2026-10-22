@@ -373,6 +373,7 @@ def run_project_tests(
     cmd = [
         sys.executable,
         "-I",
+        "-B",
         "-m",
         "pytest",
         str(tests_dir),
