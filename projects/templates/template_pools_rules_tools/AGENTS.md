@@ -39,7 +39,7 @@ reject private folders, credential files, and symlink ancestors when packaging.
 | Surface | Rule |
 |---|---|
 | `src/` | Pure readers and validators — no `infrastructure` imports |
-| `scripts/` | Thin orchestrators; import from `src/` only |
+| `scripts/` | Thin orchestrators; call pure domain APIs and the declared installed SDK publication/hydration adapters |
 | `tests/` | Real file paths; skip with `pytest.mark.skipif` when files absent |
 | `manuscript/` | Self-contained prose sections referencing the integration |
 

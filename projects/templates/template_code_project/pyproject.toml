@@ -15,6 +15,7 @@ authors = [
 ]
 requires-python = ">=3.12"
 dependencies = [
+    "research-project-template==4.1.0",
     "numpy>=1.24.0",
     "matplotlib>=3.7.0",
     "pillow>=12.3.0",
@@ -72,3 +73,6 @@ exclude_lines = [
 platform_version = "4.1.0"
 tested_python_versions = ["3.12", "3.13", "3.14"]
 required_unpaid_capabilities = ["local-review", "translation"]
+
+[tool.uv.sources]
+research-project-template = { path = "../../..", editable = true }
