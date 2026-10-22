@@ -75,11 +75,17 @@ and historical notes remain preserved.
 - Add reviewed metadata planning, exact-input checking, retained compensating
   rollback and strict refusal of ambiguous publication configuration.
 - Retain the measured baseline, original failed full workflow and successful
-  Redacted follow-up as distinct evidence. Renew seven standalone metrics from
-  compatible own-lock measurements, preserving eighteen historical values, and
-  verify combined statement/branch totals against the retained databases.
-- Install the genuine Root SDK in Redacted's coverage environment and add bounded
-  export timing diagnostics under the unchanged native acceptance deadline.
+  Redacted follow-up as distinct evidence. An earlier qualification renewed seven
+  standalone metrics and preserved eighteen historical values. The current
+  follow-up uses eight successful own-lock measurements, retaining four with
+  unchanged source inputs and renewing four, while preserving seventeen other
+  recorded values. Verify combined statement/branch totals against the retained
+  databases.
+- Preserve earlier SDK-installed Redacted qualification separately. Its current
+  isolated figure control binds the selected runtime, dependencies and optional
+  installed SDK, also supports the standalone own-lock environment, and suppresses
+  bytecode writes. Retain bounded export timing diagnostics under the unchanged
+  native acceptance deadline.
 - Isolate Linux functional tests under their prepared execution account, retain
   setup failures, and preserve strict process-census and cleanup requirements.
 - Read pinned Source and native inputs through search-only ancestors while
