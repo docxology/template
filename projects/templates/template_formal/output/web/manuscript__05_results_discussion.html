@@ -2,7 +2,7 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="utf-8" />
-  <meta name="generator" content="pandoc 3.12" />
+  <meta name="generator" content="pandoc 3.12.1" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
   <title>05_results_discussion.md.web</title>
   <style>
@@ -422,6 +422,9 @@ pre {
 }
 
 pre code {
+  background-color: transparent;
+  padding: 0;
+  border-radius: 0;
   overflow-wrap: inherit;
   white-space: inherit;
   word-break: inherit;
@@ -492,6 +495,15 @@ th, td {
 th {
   background-color: #1f6f8b;
   color: white;
+}
+
+/* Preserve a complete inline-code header within the table's scroll region. */
+th code {
+  color: inherit;
+  background-color: transparent;
+  white-space: nowrap;
+  overflow-wrap: normal;
+  word-break: normal;
 }
 
 img {
@@ -634,6 +646,7 @@ mjx-container[display="true"] {
 }
 
 </style>
+<script data-template-source-font-loader src="assets/source-web-fonts.js"></script>
 </head>
 <body>
 <a class="skip-link" href="#main-content">Skip to main content</a>
@@ -2028,10 +2041,11 @@ Second, a genuinely new model shipped alongside the original:
 <code>AntProtocolFaulty.tla</code> (+ <code>.cfg</code>) is a two-peer
 (initiator/responder) model with an explicit message channel as
 first-class state — not a copy of the single-peer
-<code>AntProtocol.tla</code> — with
-<code>Send</code>/<code>ReceiveHello</code>/<code>ReceiveAck</code>/<code>Corrupt</code>/<code>DeliverCorrupt</code>/<code>Duplicate</code>
-actions mirroring <code>network/bus.py</code>’s real
-drop/corrupt/duplicate fault modes, checked against
+<code>AntProtocol.tla</code> — with the <code>Send</code>,
+<code>ReceiveHello</code>, <code>ReceiveAck</code>,
+<code>Corrupt</code>, <code>DeliverCorrupt</code>, and
+<code>Duplicate</code> actions mirroring <code>network/bus.py</code>’s
+real drop/corrupt/duplicate fault modes, checked against
 <code>NoFalseEstablishment</code> (a peer is never
 <code>established</code> without the other peer’s real message having
 actually been sent, even under arbitrary fault interleaving — the direct

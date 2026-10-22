@@ -1,9 +1,9 @@
 {
   "algorithm": "web-renderer-combine-v1",
-  "binding_sha256": "c56b02b09998ec88d9fe5d7ea914a01ca2182fb8e8b5009645a3949f979429d4",
+  "binding_sha256": "2302b9696dcc1ec2684cd6fe8576e5787dfe121325a3dec47370402e39858765",
   "combined_path": "output/web/_combined_manuscript.md",
-  "combined_sha256": "376885d866fc8d442621ee8f1b4c623fbb517667772461e5a642871c3072f8b5",
-  "combined_size_bytes": 98803,
+  "combined_sha256": "07598a2d41f35a022f1c1b1e1bb3f19e5d9856f9bbb63de1813dc3d52d68cf43",
+  "combined_size_bytes": 98816,
   "input_root_kind": "source",
   "ordered_inputs": [
     {
@@ -39,8 +39,8 @@
     {
       "ordinal": 6,
       "path": "manuscript/05_results_discussion.md",
-      "sha256": "290dac85d934599aaa62ecebaed40e36602ea0b5a12f4386645fedadfb371d9b",
-      "size_bytes": 66570
+      "sha256": "e58e1d7cd03f2327fe433ffd5ed003acc1f6c0d13d0172057d8dc430994d5ff6",
+      "size_bytes": 66583
     },
     {
       "ordinal": 7,
@@ -49,7 +49,7 @@
       "size_bytes": 610
     }
   ],
-  "ordered_inputs_sha256": "74818f0e0f504c7a90482a0ec0ef165dd36c8255e2d84d33a56b96fbafaebdde",
+  "ordered_inputs_sha256": "6e6dedb561a61f95aaa11f13a85b64257c9b4be5e666c4301766b9713dc75cbc",
   "project": "templates/template_formal",
   "schema_version": "template-manuscript-composition-v1"
 }

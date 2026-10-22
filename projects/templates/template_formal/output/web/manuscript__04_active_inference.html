@@ -2,7 +2,7 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="utf-8" />
-  <meta name="generator" content="pandoc 3.12" />
+  <meta name="generator" content="pandoc 3.12.1" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
   <title>04_active_inference.md.web</title>
   <style>
@@ -422,6 +422,9 @@ pre {
 }
 
 pre code {
+  background-color: transparent;
+  padding: 0;
+  border-radius: 0;
   overflow-wrap: inherit;
   white-space: inherit;
   word-break: inherit;
@@ -492,6 +495,15 @@ th, td {
 th {
   background-color: #1f6f8b;
   color: white;
+}
+
+/* Preserve a complete inline-code header within the table's scroll region. */
+th code {
+  color: inherit;
+  background-color: transparent;
+  white-space: nowrap;
+  overflow-wrap: normal;
+  word-break: normal;
 }
 
 img {
@@ -634,6 +646,7 @@ mjx-container[display="true"] {
 }
 
 </style>
+<script data-template-source-font-loader src="assets/source-web-fonts.js"></script>
 </head>
 <body>
 <a class="skip-link" href="#main-content">Skip to main content</a>
@@ -660,10 +673,10 @@ ambiguity term over <span class="math inline">\(Q\)</span>, given in .
 <code>Agent.decide</code> selects the candidate action minimizing this
 quantity.</p>
 </div>
-<p><span class="math display">\[
-G(\text{action}) = \mathrm{KL}\!\left[Q(o \mid \text{action}) \,\|\,
-P(o)\right] + \mathrm{H}\!\left[Q(o \mid \text{action})\right]
-\]</span> {#eq:expected-free-energy}</p>
+<p><span class="math display">\[G(\text{action}) =
+\mathrm{KL}\!\left[Q(o \mid \text{action}) \,\|\, P(o)\right] +
+\mathrm{H}\!\left[Q(o \mid \text{action})\right]\]</span>
+{#eq:expected-free-energy}</p>
 <p>Both terms of <span class="citation"
 data-cites="eq:expected-free-energy">@eq:expected-free-energy</span> are
 ordinary, exactly-computable closed forms — the univariate Gaussian

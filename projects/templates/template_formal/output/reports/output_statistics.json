@@ -2,181 +2,176 @@
   "directories": {
     "pdf": {
       "exists": true,
-      "file_count": 12,
-      "size_mb": "0.87",
-      "total_size_bytes": 911468,
+      "file_count": 1,
+      "size_mb": "0.59",
+      "total_size_bytes": 615603,
       "largest_files": [
         {
           "name": "template_formal_combined.pdf",
-          "size_mb": "0.44",
+          "size_mb": "0.59",
+          "size_bytes": 615603,
           "path": "pdf/template_formal_combined.pdf"
-        },
-        {
-          "name": "_combined_manuscript.tex",
-          "size_mb": "0.12",
-          "path": "pdf/_combined_manuscript.tex"
-        },
-        {
-          "name": "_pages.txt",
-          "size_mb": "0.10",
-          "path": "pdf/_pages.txt"
         }
       ],
       "extensions": {
-        ".md": 1,
-        ".log": 3,
-        ".aux": 1,
-        ".blg": 1,
-        ".pdf": 1,
-        ".bib": 1,
-        ".txt": 1,
-        ".tex": 1,
-        ".toc": 1,
-        ".bbl": 1
+        ".pdf": 1
       }
     },
     "web": {
       "exists": true,
-      "file_count": 10,
-      "size_mb": "0.38",
-      "total_size_bytes": 402379,
+      "file_count": 11,
+      "size_mb": "3.49",
+      "total_size_bytes": 3662208,
       "largest_files": [
         {
+          "name": "source-web-fonts.js",
+          "size_mb": "3.02",
+          "size_bytes": 3170848,
+          "path": "web/assets/source-web-fonts.js"
+        },
+        {
           "name": "index.html",
-          "size_mb": "0.14",
+          "size_mb": "0.15",
+          "size_bytes": 159184,
           "path": "web/index.html"
         },
         {
           "name": "_combined_manuscript.md",
           "size_mb": "0.09",
+          "size_bytes": 98816,
           "path": "web/_combined_manuscript.md"
-        },
-        {
-          "name": "manuscript__05_results_discussion.html",
-          "size_mb": "0.08",
-          "path": "web/manuscript__05_results_discussion.html"
         }
       ],
       "extensions": {
         ".md": 1,
+        ".js": 1,
         ".ico": 1,
         ".html": 8
       }
     },
     "slides": {
       "exists": true,
-      "file_count": 57,
-      "size_mb": "1.01",
-      "total_size_bytes": 1060827,
+      "file_count": 7,
+      "size_mb": "0.63",
+      "total_size_bytes": 663271,
       "largest_files": [
         {
           "name": "05_results_discussion_slides.pdf",
-          "size_mb": "0.20",
+          "size_mb": "0.35",
+          "size_bytes": 366949,
           "path": "slides/05_results_discussion_slides.pdf"
         },
         {
-          "name": "05_results_discussion_slides.tex",
-          "size_mb": "0.08",
-          "path": "slides/05_results_discussion_slides.tex"
+          "name": "02_type_architecture_slides.pdf",
+          "size_mb": "0.09",
+          "size_bytes": 95611,
+          "path": "slides/02_type_architecture_slides.pdf"
         },
         {
-          "name": "05_results_discussion_slides.log",
-          "size_mb": "0.07",
-          "path": "slides/05_results_discussion_slides.log"
+          "name": "04_active_inference_slides.pdf",
+          "size_mb": "0.05",
+          "size_bytes": 55441,
+          "path": "slides/04_active_inference_slides.pdf"
         }
       ],
       "extensions": {
-        ".nav": 7,
-        ".toc": 7,
-        ".pdf": 7,
-        ".tex": 8,
-        ".vrb": 7,
-        ".snm": 7,
-        ".aux": 7,
-        ".log": 7
+        ".pdf": 7
       }
+    },
+    "docx": {
+      "exists": false,
+      "file_count": 0,
+      "size_mb": "0.00",
+      "total_size_bytes": 0
+    },
+    "epub": {
+      "exists": false,
+      "file_count": 0,
+      "size_mb": "0.00",
+      "total_size_bytes": 0
     },
     "figures": {
       "exists": true,
       "file_count": 8,
       "size_mb": "0.16",
-      "total_size_bytes": 170244,
+      "total_size_bytes": 170677,
       "largest_files": [
         {
           "name": "inline_mermaid_0001_e0b519d89719.png",
           "size_mb": "0.04",
+          "size_bytes": 46551,
           "path": "figures/mermaid_inline/inline_mermaid_0001_e0b519d89719.png"
         },
         {
           "name": "colony_demo_convergence.png",
           "size_mb": "0.04",
+          "size_bytes": 42609,
           "path": "figures/colony_demo_convergence.png"
         },
         {
           "name": "inline_mermaid_0002_ad6d15db8898.png",
           "size_mb": "0.04",
+          "size_bytes": 41748,
           "path": "figures/mermaid_inline/inline_mermaid_0002_ad6d15db8898.png"
         }
       ],
       "extensions": {
-        ".json": 2,
         ".png": 4,
+        ".json": 2,
         ".mmd": 2
       }
     },
     "data": {
       "exists": true,
-      "file_count": 325,
-      "size_mb": "5.03",
-      "total_size_bytes": 5269493,
+      "file_count": 2,
+      "size_mb": "0.00",
+      "total_size_bytes": 1981,
       "largest_files": [
         {
-          "name": "agent_0.sqlite3",
-          "size_mb": "0.02",
-          "path": "data/stats_sweep/trial_9008/agent_0.sqlite3"
+          "name": "colony_demo_summary.json",
+          "size_mb": "0.00",
+          "size_bytes": 1203,
+          "path": "data/colony_demo_summary.json"
         },
         {
-          "name": "agent_1.sqlite3",
-          "size_mb": "0.02",
-          "path": "data/stats_sweep/trial_9008/agent_1.sqlite3"
-        },
-        {
-          "name": "agent_3.sqlite3",
-          "size_mb": "0.02",
-          "path": "data/stats_sweep/trial_9008/agent_3.sqlite3"
+          "name": "colony_statistics_sweep_summary.json",
+          "size_mb": "0.00",
+          "size_bytes": 778,
+          "path": "data/colony_statistics_sweep_summary.json"
         }
       ],
       "extensions": {
-        ".sqlite3": 323,
         ".json": 2
       }
     },
     "reports": {
       "exists": true,
-      "file_count": 10,
-      "size_mb": "0.11",
-      "total_size_bytes": 116122,
+      "file_count": 3,
+      "size_mb": "0.00",
+      "total_size_bytes": 2814,
       "largest_files": [
         {
-          "name": "evidence_registry.json",
-          "size_mb": "0.08",
-          "path": "reports/evidence_registry.json"
+          "name": "manuscript_composition.json",
+          "size_mb": "0.00",
+          "size_bytes": 1902,
+          "path": "reports/manuscript_composition.json"
         },
         {
-          "name": "artifact_manifest.json",
-          "size_mb": "0.01",
-          "path": "reports/artifact_manifest.json"
+          "name": "test_results.json",
+          "size_mb": "0.00",
+          "size_bytes": 619,
+          "path": "reports/test_results.json"
         },
         {
-          "name": "validation_report.json",
-          "size_mb": "0.01",
-          "path": "reports/validation_report.json"
+          "name": "test_results.md",
+          "size_mb": "0.00",
+          "size_bytes": 293,
+          "path": "reports/test_results.md"
         }
       ],
       "extensions": {
-        ".json": 7,
-        ".txt": 1,
-        ".md": 2
+        ".json": 2,
+        ".md": 1
       }
     },
     "simulations": {
@@ -196,104 +191,120 @@
       "file_count": 0,
       "size_mb": "0.00",
       "total_size_bytes": 0
+    },
+    "root": {
+      "exists": true,
+      "file_count": 1,
+      "size_mb": "0.59",
+      "total_size_bytes": 615603,
+      "largest_files": [
+        {
+          "name": "template_formal_combined.pdf",
+          "size_mb": "0.59",
+          "size_bytes": 615603,
+          "path": "template_formal_combined.pdf"
+        }
+      ],
+      "extensions": {
+        ".pdf": 1
+      }
     }
   },
-  "total_files": 422,
-  "total_size_mb": 7.563145637512207,
+  "total_files": 33,
+  "total_size_mb": 5.466610908508301,
   "largest_files": [
     {
+      "name": "source-web-fonts.js",
+      "size_mb": "3.02",
+      "size_bytes": 3170848,
+      "category": "web",
+      "path": "web/assets/source-web-fonts.js"
+    },
+    {
       "name": "template_formal_combined.pdf",
-      "size_mb": "0.44",
+      "size_mb": "0.59",
+      "size_bytes": 615603,
       "category": "pdf",
       "path": "pdf/template_formal_combined.pdf"
     },
     {
+      "name": "template_formal_combined.pdf",
+      "size_mb": "0.59",
+      "size_bytes": 615603,
+      "category": "root",
+      "path": "template_formal_combined.pdf"
+    },
+    {
       "name": "05_results_discussion_slides.pdf",
-      "size_mb": "0.20",
+      "size_mb": "0.35",
+      "size_bytes": 366949,
       "category": "slides",
       "path": "slides/05_results_discussion_slides.pdf"
     },
     {
       "name": "index.html",
-      "size_mb": "0.14",
+      "size_mb": "0.15",
+      "size_bytes": 159184,
       "category": "web",
       "path": "web/index.html"
     },
     {
-      "name": "_combined_manuscript.tex",
-      "size_mb": "0.12",
-      "category": "pdf",
-      "path": "pdf/_combined_manuscript.tex"
-    },
-    {
-      "name": "_pages.txt",
-      "size_mb": "0.10",
-      "category": "pdf",
-      "path": "pdf/_pages.txt"
-    },
-    {
       "name": "_combined_manuscript.md",
       "size_mb": "0.09",
+      "size_bytes": 98816,
       "category": "web",
       "path": "web/_combined_manuscript.md"
     },
     {
+      "name": "02_type_architecture_slides.pdf",
+      "size_mb": "0.09",
+      "size_bytes": 95611,
+      "category": "slides",
+      "path": "slides/02_type_architecture_slides.pdf"
+    },
+    {
       "name": "manuscript__05_results_discussion.html",
-      "size_mb": "0.08",
+      "size_mb": "0.09",
+      "size_bytes": 95409,
       "category": "web",
       "path": "web/manuscript__05_results_discussion.html"
     },
     {
-      "name": "05_results_discussion_slides.tex",
-      "size_mb": "0.08",
+      "name": "04_active_inference_slides.pdf",
+      "size_mb": "0.05",
+      "size_bytes": 55441,
       "category": "slides",
-      "path": "slides/05_results_discussion_slides.tex"
+      "path": "slides/04_active_inference_slides.pdf"
     },
     {
-      "name": "evidence_registry.json",
-      "size_mb": "0.08",
-      "category": "reports",
-      "path": "reports/evidence_registry.json"
-    },
-    {
-      "name": "05_results_discussion_slides.log",
-      "size_mb": "0.07",
+      "name": "01_introduction_slides.pdf",
+      "size_mb": "0.05",
+      "size_bytes": 51061,
       "category": "slides",
-      "path": "slides/05_results_discussion_slides.log"
+      "path": "slides/01_introduction_slides.pdf"
     }
   ],
-  "missing_expected_files": [
-    "simulations/ directory",
-    "llm/ directory",
-    "logs/ directory"
-  ],
+  "missing_expected_files": [],
   "sizes_by_category": {
-    "pdf": 0.8692436218261719,
-    "web": 0.38373851776123047,
-    "slides": 1.011683464050293,
-    "figures": 0.16235733032226562,
-    "data": 5.0253801345825195,
-    "reports": 0.11074256896972656
+    "pdf": 0.5870847702026367,
+    "web": 3.4925537109375,
+    "slides": 0.6325445175170898,
+    "figures": 0.16277027130126953,
+    "data": 0.0018892288208007812,
+    "reports": 0.0026836395263671875,
+    "root": 0.5870847702026367
   },
+  "inventory_mode": "stable-shippable-output-v1",
+  "inventory_scope": "stage5-delivery-mirror",
+  "inventory_root": "output/templates/template_formal",
   "file_counts_by_type": {
-    ".md": 4,
-    ".log": 10,
-    ".aux": 8,
-    ".blg": 1,
-    ".pdf": 8,
-    ".bib": 1,
-    ".txt": 2,
-    ".tex": 9,
-    ".toc": 8,
-    ".bbl": 1,
+    ".pdf": 9,
+    ".md": 2,
+    ".js": 1,
     ".ico": 1,
     ".html": 8,
-    ".nav": 7,
-    ".vrb": 7,
-    ".snm": 7,
-    ".json": 11,
     ".png": 4,
-    ".mmd": 2,
-    ".sqlite3": 323
+    ".json": 6,
+    ".mmd": 2
   }
 }

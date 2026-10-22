@@ -172,7 +172,7 @@
       "artifact": "output/figures/security_posture_map.png",
       "exists": true,
       "fresh": true,
-      "sha256": "63c84940dad22e83be825073cfd68ae24daaabda1a5637b3c7c60f2b0e039fa7"
+      "sha256": "c305ccfab83496efa1c90e1bf617fcf113efebaa823c9cec54deddc16c742f83"
     },
     {
       "artifact": "output/figures/semantic_gluing_graph.png",

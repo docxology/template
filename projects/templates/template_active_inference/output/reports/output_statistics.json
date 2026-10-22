@@ -4,12 +4,12 @@
       "exists": true,
       "file_count": 1,
       "size_mb": "4.03",
-      "total_size_bytes": 4228150,
+      "total_size_bytes": 4228904,
       "largest_files": [
         {
           "name": "template_active_inference_combined.pdf",
           "size_mb": "4.03",
-          "size_bytes": 4228150,
+          "size_bytes": 4228904,
           "path": "pdf/template_active_inference_combined.pdf"
         }
       ],
@@ -21,7 +21,7 @@
       "exists": true,
       "file_count": 20,
       "size_mb": "3.77",
-      "total_size_bytes": 3954074,
+      "total_size_bytes": 3957695,
       "largest_files": [
         {
           "name": "source-web-fonts.js",
@@ -32,7 +32,7 @@
         {
           "name": "index.html",
           "size_mb": "0.23",
-          "size_bytes": 237304,
+          "size_bytes": 237517,
           "path": "web/index.html"
         },
         {
@@ -71,7 +71,7 @@
       "exists": true,
       "file_count": 27,
       "size_mb": "3.79",
-      "total_size_bytes": 3971376,
+      "total_size_bytes": 3972244,
       "largest_files": [
         {
           "name": "sheaf_layers_overview.png",
@@ -243,12 +243,12 @@
       "exists": true,
       "file_count": 1,
       "size_mb": "4.03",
-      "total_size_bytes": 4228150,
+      "total_size_bytes": 4228904,
       "largest_files": [
         {
           "name": "template_active_inference_combined.pdf",
           "size_mb": "4.03",
-          "size_bytes": 4228150,
+          "size_bytes": 4228904,
           "path": "template_active_inference_combined.pdf"
         }
       ],
@@ -258,19 +258,19 @@
     }
   },
   "total_files": 178,
-  "total_size_mb": 22.917570114135742,
+  "total_size_mb": 22.92328929901123,
   "largest_files": [
     {
       "name": "template_active_inference_combined.pdf",
       "size_mb": "4.03",
-      "size_bytes": 4228150,
+      "size_bytes": 4228904,
       "category": "pdf",
       "path": "pdf/template_active_inference_combined.pdf"
     },
     {
       "name": "template_active_inference_combined.pdf",
       "size_mb": "4.03",
-      "size_bytes": 4228150,
+      "size_bytes": 4228904,
       "category": "root",
       "path": "template_active_inference_combined.pdf"
     },
@@ -333,14 +333,14 @@
   ],
   "missing_expected_files": [],
   "sizes_by_category": {
-    "pdf": 4.032278060913086,
-    "web": 3.7708988189697266,
-    "figures": 3.7873992919921875,
+    "pdf": 4.032997131347656,
+    "web": 3.7743520736694336,
+    "figures": 3.788227081298828,
     "data": 2.817331314086914,
     "reports": 0.41170310974121094,
     "arxiv_submission": 3.9248781204223633,
     "manuscript": 0.14080333709716797,
-    "root": 4.032278060913086
+    "root": 4.032997131347656
   },
   "inventory_mode": "stable-shippable-output-v1",
   "inventory_scope": "stage5-delivery-mirror",
