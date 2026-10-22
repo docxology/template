@@ -3,13 +3,13 @@
     "pdf": {
       "exists": true,
       "file_count": 2,
-      "size_mb": "0.43",
-      "total_size_bytes": 452023,
+      "size_mb": "0.53",
+      "total_size_bytes": 554184,
       "largest_files": [
         {
           "name": "the-triplicate.pdf",
-          "size_mb": "0.36",
-          "size_bytes": 377372,
+          "size_mb": "0.46",
+          "size_bytes": 479533,
           "path": "pdf/the-triplicate.pdf"
         },
         {
@@ -99,25 +99,25 @@
     "figures": {
       "exists": true,
       "file_count": 13,
-      "size_mb": "0.07",
-      "total_size_bytes": 75848,
+      "size_mb": "0.17",
+      "total_size_bytes": 176923,
       "largest_files": [
         {
           "name": "weather_7day.png",
-          "size_mb": "0.02",
-          "size_bytes": 19585,
+          "size_mb": "0.04",
+          "size_bytes": 47000,
           "path": "figures/weather_7day.png"
         },
         {
           "name": "crab_landings.png",
-          "size_mb": "0.02",
-          "size_bytes": 16912,
+          "size_mb": "0.04",
+          "size_bytes": 41751,
           "path": "figures/crab_landings.png"
         },
         {
           "name": "tides.png",
-          "size_mb": "0.01",
-          "size_bytes": 15640,
+          "size_mb": "0.03",
+          "size_bytes": 35572,
           "path": "figures/tides.png"
         }
       ],
@@ -239,7 +239,7 @@
     }
   },
   "total_files": 39,
-  "total_size_mb": 2.73488712310791,
+  "total_size_mb": 2.928708076477051,
   "largest_files": [
     {
       "name": "source-web-fonts.js",
@@ -250,8 +250,8 @@
     },
     {
       "name": "the-triplicate.pdf",
-      "size_mb": "0.36",
-      "size_bytes": 377372,
+      "size_mb": "0.46",
+      "size_bytes": 479533,
       "category": "pdf",
       "path": "pdf/the-triplicate.pdf"
     },
@@ -270,11 +270,32 @@
       "path": "template_newspaper_combined.pdf"
     },
     {
+      "name": "weather_7day.png",
+      "size_mb": "0.04",
+      "size_bytes": 47000,
+      "category": "figures",
+      "path": "figures/weather_7day.png"
+    },
+    {
+      "name": "crab_landings.png",
+      "size_mb": "0.04",
+      "size_bytes": 41751,
+      "category": "figures",
+      "path": "figures/crab_landings.png"
+    },
+    {
       "name": "02_engine_architecture_slides.pdf",
       "size_mb": "0.04",
       "size_bytes": 41460,
       "category": "slides",
       "path": "slides/02_engine_architecture_slides.pdf"
+    },
+    {
+      "name": "tides.png",
+      "size_mb": "0.03",
+      "size_bytes": 35572,
+      "category": "figures",
+      "path": "figures/tides.png"
     },
     {
       "name": "index.html",
@@ -289,35 +310,14 @@
       "size_bytes": 24158,
       "category": "slides",
       "path": "slides/01_introduction_slides.pdf"
-    },
-    {
-      "name": "99_references_slides.pdf",
-      "size_mb": "0.02",
-      "size_bytes": 23816,
-      "category": "slides",
-      "path": "slides/99_references_slides.pdf"
-    },
-    {
-      "name": "04_reproducibility_slides.pdf",
-      "size_mb": "0.02",
-      "size_bytes": 22560,
-      "category": "slides",
-      "path": "slides/04_reproducibility_slides.pdf"
-    },
-    {
-      "name": "03_typography_and_figures_slides.pdf",
-      "size_mb": "0.02",
-      "size_bytes": 20086,
-      "category": "slides",
-      "path": "slides/03_typography_and_figures_slides.pdf"
     }
   ],
   "missing_expected_files": [],
   "sizes_by_category": {
-    "pdf": 0.43108272552490234,
+    "pdf": 0.5285110473632812,
     "web": 2.0017547607421875,
     "slides": 0.14461994171142578,
-    "figures": 0.07233428955078125,
+    "figures": 0.16872692108154297,
     "data": 0.0074615478515625,
     "reports": 0.004547119140625,
     "release": 0.0018939971923828125,

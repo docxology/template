@@ -1390,7 +1390,7 @@
         "width": 1134
       },
       "figure_id": "tmaze_schematic",
-      "image_sha256": "0989e1aa5855e8d9210c1aa212d6e788740efa44349b4a1e7cfe4caac4b15cc0",
+      "image_sha256": "4d853a7f6b48921da10033042f23f39286e9976bf94376c9149ddd4537a82edc",
       "mapped": true,
       "pixel_provenance_ok": true,
       "renderer": "visualizations.figures.generate_all_figures",

@@ -255,8 +255,8 @@
     {
       "contract_match": true,
       "path": "output/slides/02_introduction_slides.pdf",
-      "sha256": "7e26ec497394d13e3818de223dc536cb99602afab4f32c24f396b1b0640979d7",
-      "size_bytes": 193381,
+      "sha256": "28a2f40af54754a21dabde3b976ea39d2845a8866d37bde34b20940ecbd45a17",
+      "size_bytes": 193378,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""

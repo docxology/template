@@ -158,11 +158,11 @@
       "size_bytes": 122202
     },
     {
-      "content_sha256": "dc8bbc19dffa6ad5c14790a26ac1d3111a1e8918ea14a42086f77909006cc251",
+      "content_sha256": "ba106a510e8bf01996514b78dd0d76ac389b4f809bac45a3e39e23165b622792",
       "fresh": true,
       "path": "output/figures/tmaze_schematic.png",
-      "sha256": "0989e1aa5855e8d9210c1aa212d6e788740efa44349b4a1e7cfe4caac4b15cc0",
-      "size_bytes": 36061
+      "sha256": "4d853a7f6b48921da10033042f23f39286e9976bf94376c9149ddd4537a82edc",
+      "size_bytes": 36052
     },
     {
       "content_sha256": "6d4a96ac32d2a54aa04862bac42d636c5a8164c96e5680c5275c6a6251f46b48",

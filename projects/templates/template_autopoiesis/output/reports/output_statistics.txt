@@ -8,7 +8,7 @@ Inventory Scope: stage5-delivery-mirror
 Inventory Root: output/templates/template_autopoiesis
 
 Total Files: 123
-Total Size: 4.21 MB
+Total Size: 4.22 MB
 
 Files by Category:
   • pdf: 1 files (0.68 MB)

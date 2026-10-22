@@ -199,7 +199,7 @@ _HEADLINE_BY_LEVEL = {
 }
 
 
-def _body_flowables(story: Story, styles: StyleSheet1, fonts: Fonts) -> list[Flowable]:
+def _body_flowables(story: Story, styles: StyleSheet1, fonts: Fonts, *, measure: float) -> list[Flowable]:
     out: list[Flowable] = []
     first_para_done = False
     for block in story.body:
@@ -216,6 +216,23 @@ def _body_flowables(story: Story, styles: StyleSheet1, fonts: Fonts) -> list[Flo
                 first_para_done = True
             else:
                 out.append(Paragraph(_esc(block.text), styles["Body"]))
+    # Each body block above emits one flowable. Group from the end so earlier
+    # block indexes remain valid, including consecutive subheadings. The real
+    # column frames do not apply DocTemplate keepWithNext rules.
+    for index in range(len(out) - 2, -1, -1):
+        if story.body[index].kind == "subhead":
+            opening = Table([[out[index : index + 2]]], colWidths=[measure])
+            opening.setStyle(
+                TableStyle(
+                    [
+                        ("LEFTPADDING", (0, 0), (-1, -1), 0),
+                        ("RIGHTPADDING", (0, 0), (-1, -1), 0),
+                        ("TOPPADDING", (0, 0), (-1, -1), 0),
+                        ("BOTTOMPADDING", (0, 0), (-1, -1), 0),
+                    ]
+                )
+            )
+            out[index : index + 2] = [opening]
     return out
 
 
@@ -247,7 +264,7 @@ def story_flowables(
     if story.byline:
         out.append(Paragraph(html.escape(story.byline), styles["Byline"]))
         out.append(hairline(0.4, MUTED, space_before=1, space_after=3))
-    body = _body_flowables(story, styles, fonts)
+    body = _body_flowables(story, styles, fonts, measure=measure)
     if include_headline and body:
         # Frame.addFromList does not apply DocTemplate keepWithNext rules.
         # One unsplittable row moves the heading and opening paragraph together.

@@ -432,9 +432,13 @@ is derived deterministically by `child_name(spec)` as
 selected domain and a content-derived identity, without any counter or
 timestamp. `_build_tree` then assembles the file map that will be written:
 
-- **Kernel primitives.** `_vendor_kernel_sources` copies `src/template_autopoiesis/primitives/
-  base.py` and `src/template_autopoiesis/primitives/{domain}.py` for the spec's
-  `primitive_domain`, rewriting `from src.primitives` / `from .primitives`
+- **Kernel primitives.** `_vendor_kernel_sources` copies these source files:
+
+  - `src/template_autopoiesis/primitives/base.py`
+  - `src/template_autopoiesis/primitives/{domain}.py`
+
+  The domain file follows the spec's `primitive_domain`. The writer rewrites
+  `from src.primitives` / `from .primitives`
   imports to a bare `from primitives` so the copied module resolves
   correctly once it is no longer nested under the parent template's
   package. It also synthesizes a minimal `primitives/__init__.py` whose
@@ -783,8 +787,14 @@ it validates and consumes that same-run evidence, including its Source, runtime,
 coverage and executor-held commitment. Altered present evidence fails closed.
 Without that handoff, the standalone path executes a fresh pytest measurement
 against `tests/` and `src/` with `--cov-branch`. Its reported percentage combines
-covered statements and branch exits. There is no fallback literal: an incomplete
-measurement cannot produce a successful current summary.
+covered statements and branch exits. In this standalone Stage 02 path,
+`measure_test_summary()` probes and selects the monorepo root
+`.venv/bin/python3` when available, otherwise its current interpreter. These
+manuscript figures describe that functional measurement; the repository-wide
+`docs/_generated/COUNTS.md` snapshot separately records the project's own locked
+runtime qualification and may report a different percentage. The standalone
+measurement does not itself establish that qualification. There is no fallback
+literal: an incomplete measurement cannot produce a successful current summary.
 
 ![Per-module combined statement and branch coverage from the same measurement that produces 578/92.18 above. Red bars identify modules below the 90% aggregate-gate reference line; the aggregate pass does not imply every module meets that level.](../figures/fig_coverage_by_module.png){#fig:coverage_by_module width=90% fig-alt="Horizontal bars show measured combined statement and branch coverage per module; red bars identify values below the 90% aggregate-gate reference line."}
 

@@ -40,7 +40,7 @@
           "file_count": 19,
           "largest_file": "word_cloud.png",
           "largest_file_path": "figures/word_cloud.png",
-          "size_mb": "5.30"
+          "size_mb": "5.42"
         },
         "llm": {
           "exists": false,
@@ -64,7 +64,7 @@
           "file_count": 1,
           "largest_file": "template_advanced_literature_review_combined.pdf",
           "largest_file_path": "pdf/template_advanced_literature_review_combined.pdf",
-          "size_mb": "5.54"
+          "size_mb": "5.66"
         },
         "reports": {
           "exists": true,
@@ -83,7 +83,7 @@
           "file_count": 23,
           "largest_file": "03c_results_text_analytics_slides.pdf",
           "largest_file_path": "slides/03c_results_text_analytics_slides.pdf",
-          "size_mb": "6.11"
+          "size_mb": "6.24"
         },
         "web": {
           "exists": true,
@@ -114,7 +114,7 @@
           "combined_pdf": {
             "exists": true,
             "readable": true,
-            "size_mb": 5.54
+            "size_mb": 5.66
           },
           "data": {
             "exists": true,
@@ -144,7 +144,7 @@
             "optional": false,
             "readable": true,
             "required": true,
-            "size_mb": 5.3
+            "size_mb": 5.42
           },
           "llm": {
             "exists": false,
@@ -174,7 +174,7 @@
             "optional": false,
             "readable": true,
             "required": true,
-            "size_mb": 5.54
+            "size_mb": 5.66
           },
           "reports": {
             "exists": true,
@@ -197,7 +197,7 @@
             "optional": false,
             "readable": true,
             "required": true,
-            "size_mb": 6.11
+            "size_mb": 6.24
           },
           "web": {
             "exists": true,
@@ -215,16 +215,16 @@
         "valid": true,
         "warnings": []
       },
-      "total_size_mb": 19.61902141571045
+      "total_size_mb": 19.987595558166504
     },
     "figures": {
       "files": 19,
-      "size_mb": 5.298604965209961
+      "size_mb": 5.424299240112305
     },
     "inventory_mode": "stable-shippable-output-v1",
     "pdf": {
       "files": 1,
-      "size_mb": 5.540671348571777
+      "size_mb": 5.662123680114746
     },
     "stable_inventory": {
       "categories": {
@@ -234,7 +234,7 @@
         },
         "figures": {
           "files": 19,
-          "size_bytes": 5555990
+          "size_bytes": 5687790
         },
         "manuscript": {
           "files": 29,
@@ -242,7 +242,7 @@
         },
         "pdf": {
           "files": 1,
-          "size_bytes": 5809815
+          "size_bytes": 5937167
         },
         "reports": {
           "files": 1,
@@ -250,7 +250,7 @@
         },
         "slides": {
           "files": 23,
-          "size_bytes": 6411549
+          "size_bytes": 6538875
         },
         "web": {
           "files": 27,
@@ -259,7 +259,7 @@
       },
       "mode": "stable-shippable-output-v1",
       "total_files": 103,
-      "total_size_bytes": 20572035
+      "total_size_bytes": 20958513
     }
   },
   "recommendations": [],
@@ -270,11 +270,11 @@
     "passed": 9,
     "total_checks": 9
   },
-  "timestamp": "2026-10-22T17:22:44Z",
+  "timestamp": "2026-10-22T20:31:52Z",
   "validated_inputs": {
     "artifact_manifest": {
       "path": "output/reports/artifact_manifest.json",
-      "sha256": "448a89cee22ce684104c74169b2773f5b57a7c67447fb7dff0b38c10976ef4c1",
+      "sha256": "8d731ceb7d119851ed958987fac818b8b64bf41630fe1b7895c0b70f3f363ea2",
       "size_bytes": 34071
     },
     "combined_manuscript": {
@@ -434,7 +434,7 @@
       },
       "output": {
         "file_count": 103,
-        "sha256": "77b94cc3382cdb0208f95d7cb3d37ae124faf41176ef4204abdd8ca9ff5244da"
+        "sha256": "cea97e032c786d278179f219319bfb3c443af408bf9e99e487918c35f2343c23"
       },
       "source": {
         "file_count": 101,
@@ -442,7 +442,7 @@
       },
       "stage": {
         "file_count": 1913,
-        "sha256": "0c8a6b03136fe7b244a5ecb102c628c1eea87c8b6bf3c4d6141caa1b27903597"
+        "sha256": "a1e56a7908ff6e39f6c5f546c80b52bf069db1cdb23cf0aeeb7394aa142419c1"
       }
     },
     "project": "templates/template_advanced_literature_review",

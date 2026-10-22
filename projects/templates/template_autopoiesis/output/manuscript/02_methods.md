@@ -162,9 +162,13 @@ is derived deterministically by `child_name(spec)` as
 selected domain and a content-derived identity, without any counter or
 timestamp. `_build_tree` then assembles the file map that will be written:
 
-- **Kernel primitives.** `_vendor_kernel_sources` copies `src/template_autopoiesis/primitives/
-  base.py` and `src/template_autopoiesis/primitives/{domain}.py` for the spec's
-  `primitive_domain`, rewriting `from src.primitives` / `from .primitives`
+- **Kernel primitives.** `_vendor_kernel_sources` copies these source files:
+
+  - `src/template_autopoiesis/primitives/base.py`
+  - `src/template_autopoiesis/primitives/{domain}.py`
+
+  The domain file follows the spec's `primitive_domain`. The writer rewrites
+  `from src.primitives` / `from .primitives`
   imports to a bare `from primitives` so the copied module resolves
   correctly once it is no longer nested under the parent template's
   package. It also synthesizes a minimal `primitives/__init__.py` whose

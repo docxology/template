@@ -5,30 +5,30 @@
     {
       "id": "root_pyproject",
       "kind": "input",
-      "path": "<home>/Documents/GitHub/HumOS/projects/platform/hum-docxology/repos/public/template/pyproject.toml",
+      "path": "<home>/Documents/Git/gitvault/Username/docxology/Public/template/pyproject.toml",
       "required": false,
-      "sha256": "d9018fffdbe1b02feef9853ba5f8cd9163ec520a651b8f6f88e4425ec6948326"
+      "sha256": "d1f4462201f778b90e8894769eb2354452f27f0739a0314e39dc9d172c02a5e9"
     },
     {
       "id": "root_uv_lock",
       "kind": "input",
-      "path": "<home>/Documents/GitHub/HumOS/projects/platform/hum-docxology/repos/public/template/uv.lock",
+      "path": "<home>/Documents/Git/gitvault/Username/docxology/Public/template/uv.lock",
       "required": false,
-      "sha256": "6face6e591f5da00b1ea97c24efdcf8a7118a8e412876f58308e1b5443e25b3e"
+      "sha256": "30b33fd0d882c88c6b4ebc93e2eddde8e02bc22a7d853591f91b66bc964dbdc1"
     },
     {
       "id": "project_pyproject",
       "kind": "input",
       "path": "pyproject.toml",
       "required": false,
-      "sha256": "a97655ef904738f14964b340b37a098c779c054096ac484da69c57240f9fa02f"
+      "sha256": "f3b5aa056d6da024feecc659423e363d51a1bd530de2a82f4e7a649d15066665"
     },
     {
       "id": "project_uv_lock",
       "kind": "input",
       "path": "uv.lock",
       "required": false,
-      "sha256": "e84c22812b9cd5f42021956665d7056368114344f9d1d49f678cbd651c80a0ea"
+      "sha256": "f1502503a8732df861606831916fe4d639cd2b7253d1556aa98dc7fa9a85023b"
     },
     {
       "id": "autoresearch_config",
@@ -98,7 +98,7 @@
       "kind": "input",
       "path": "manuscript/config.yaml",
       "required": true,
-      "sha256": "3bfd9e751871342a1835f4924878742ea653414cd059ec7f9803e5e12f2dfb3e"
+      "sha256": "479dafeb2c5d1afa53b2cc15314dc2332fe2d297622decf571a1aff05c9d9742"
     },
     {
       "id": "generated-001",
@@ -112,28 +112,28 @@
       "kind": "generated_artifact",
       "path": "output/data/autoresearch_evidence_overview.json",
       "required": true,
-      "sha256": "9ba0f93b73d51dfd1c4ec86124b7f84f375d13806b14e89e09985cc6e492fed1"
+      "sha256": "28732301ca0d27b706dc45463e4c73991ffdb61e33294b3ab7c3cee314117394"
     },
     {
       "id": "generated-003",
       "kind": "generated_artifact",
       "path": "output/data/autoresearch_loop.json",
       "required": true,
-      "sha256": "0f768f409c79e61f12829388bf2b08f510c92f8eb9873999c4359ad1701b6092"
+      "sha256": "cf540870d0aeff51c41ffbc9adbcf7c3aae10d06d7be77a0c10b272853cff3ac"
     },
     {
       "id": "generated-004",
       "kind": "generated_artifact",
       "path": "output/data/autoresearch_plan.json",
       "required": true,
-      "sha256": "bb414f0d38e36b4495052580ea03095ae23ff0bd37e29395b8f5ca7ad9b9bc3d"
+      "sha256": "744b51a4ab185dce4816731b58309d208ffa8b7192c3e0d82e67d81b05d3fb25"
     },
     {
       "id": "generated-005",
       "kind": "generated_artifact",
       "path": "output/data/autoresearch_review_packet.json",
       "required": true,
-      "sha256": "334fc2000e213f834260c933e558dcb4031e034fc5695f4ccf751094100f0b38"
+      "sha256": "24767c68ff451fcdb652b3883bfbef9dc17980bf678a136cfd63cb562381a26e"
     },
     {
       "id": "generated-006",
@@ -154,28 +154,28 @@
       "kind": "generated_artifact",
       "path": "output/data/benchmark_scores.json",
       "required": true,
-      "sha256": "18c8ad6b3759b03509c0c61af742335664a582391ef76a437cdac07b4991666b"
+      "sha256": "f0123a925da47641789172c944e7ddf785b9948b5f8f17f6aa02984accfb02ce"
     },
     {
       "id": "generated-009",
       "kind": "generated_artifact",
       "path": "output/data/figure_quality_report.json",
       "required": true,
-      "sha256": "e1336d724abe69130598aad6e9fde04eab3c268bc0a091d306e2c0a1bc067a27"
+      "sha256": "363beec604382775476efbf041b725db9c8a687aabf9e3163bd5acb6aa1c0b02"
     },
     {
       "id": "generated-010",
       "kind": "generated_artifact",
       "path": "output/data/figure_style.json",
       "required": true,
-      "sha256": "5795ff210b083a2315eadb1d0e34df06123fb933eb0262a7a6253523a7e5621a"
+      "sha256": "0041c897268c5e59a9cfda649ac0d131cbf1cc77d16f90983fc85e96641840ac"
     },
     {
       "id": "generated-011",
       "kind": "generated_artifact",
       "path": "output/data/idea_ledger.json",
       "required": true,
-      "sha256": "863f0dc48a9acd85aa1fdce3e70c7768d845a712ceb34e4f6adb47be1170803f"
+      "sha256": "ce717dc1956668b1a1118c47b5f864555311103ad778504eb3138e7ab192f186"
     },
     {
       "id": "generated-012",
@@ -217,7 +217,7 @@
       "kind": "generated_artifact",
       "path": "output/data/ml_candidate_ledger.json",
       "required": true,
-      "sha256": "ff37afa5254318a3a7bc5b63e3c85fe4d8d76ad8c0bde43c5161a56c7976ce83"
+      "sha256": "993c81f80b7dfafc55a5ef3181359bc9827405175fd893169064445e08b3a0c2"
     },
     {
       "id": "generated-018",
@@ -343,7 +343,7 @@
       "kind": "generated_artifact",
       "path": "output/data/review_decisions.json",
       "required": true,
-      "sha256": "934e7b26dba58bd289e48486bb86c0232546c0890268787098b3358e0b8859fc"
+      "sha256": "69876c2ba2d55cffcbd83518dbb84157794a9ae714523c476f6884af9a995758"
     },
     {
       "id": "generated-036",
@@ -413,7 +413,7 @@
       "kind": "generated_artifact",
       "path": "output/figures/ml_classification_metrics_heatmap.png",
       "required": true,
-      "sha256": "33dcdba761cb769d7656006bd7b3182b5e4a9d4a85c6f5dacc67ed3df1dec7d7"
+      "sha256": "1b7d1ff0d930a9ff3820680212e9968964b60295256e01fdecac323f52b8a722"
     },
     {
       "id": "generated-046",
@@ -455,7 +455,7 @@
       "kind": "generated_artifact",
       "path": "output/figures/ml_paired_correctness.png",
       "required": true,
-      "sha256": "0424ccde34df5ee04518d15b43fd8a68866b2fbbae45c8070ddd1972583eef8f"
+      "sha256": "65dca4be8a543b1f817a8414edbf04dc297b5a159afdd439b5c232fbd1b9e58a"
     },
     {
       "id": "generated-052",
@@ -483,7 +483,7 @@
       "kind": "generated_artifact",
       "path": "output/figures/ml_robustness_matrix.png",
       "required": true,
-      "sha256": "09add62511719a66b98aa293a2ea45fd3b410be61cf1e3201836f07628692b61"
+      "sha256": "ca1fbcd1002dcf09f9f3b860d08da351cfbfc6124d5f4cdc696b9cf71a9c448f"
     },
     {
       "id": "generated-056",
@@ -532,7 +532,7 @@
       "kind": "generated_artifact",
       "path": "output/reports/autoresearch_loop.json",
       "required": true,
-      "sha256": "0f768f409c79e61f12829388bf2b08f510c92f8eb9873999c4359ad1701b6092"
+      "sha256": "cf540870d0aeff51c41ffbc9adbcf7c3aae10d06d7be77a0c10b272853cff3ac"
     },
     {
       "id": "generated-063",
@@ -587,7 +587,7 @@
   "cyclonedx_complete": false,
   "formal_sbom": false,
   "format": "template_autoresearch_local_inventory",
-  "generated_at": "2026-10-14T14:49:00+00:00",
+  "generated_at": "2026-10-22T20:31:52+00:00",
   "not_external_signing": true,
   "not_network_security_assessment": true,
   "not_runtime_monitoring": true,

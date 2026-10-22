@@ -2,20 +2,20 @@
   "directories": {
     "pdf": {
       "exists": true,
-      "file_count": 4,
-      "size_mb": "1.35",
-      "total_size_bytes": 1419442,
+      "file_count": 7,
+      "size_mb": "1.43",
+      "total_size_bytes": 1504161,
       "largest_files": [
         {
           "name": "template_template_pitch_long.pdf",
           "size_mb": "0.63",
-          "size_bytes": 658225,
+          "size_bytes": 657792,
           "path": "pdf/template_template_pitch_long.pdf"
         },
         {
           "name": "template_template_pitch_medium.pdf",
           "size_mb": "0.54",
-          "size_bytes": 569650,
+          "size_bytes": 569217,
           "path": "pdf/template_template_pitch_medium.pdf"
         },
         {
@@ -26,7 +26,7 @@
         }
       ],
       "extensions": {
-        ".pdf": 4
+        ".pdf": 7
       }
     },
     "web": {
@@ -82,13 +82,13 @@
     "figures": {
       "exists": true,
       "file_count": 9,
-      "size_mb": "0.34",
-      "total_size_bytes": 351385,
+      "size_mb": "0.33",
+      "total_size_bytes": 351181,
       "largest_files": [
         {
           "name": "coverage_by_exemplar.png",
           "size_mb": "0.10",
-          "size_bytes": 103398,
+          "size_bytes": 103459,
           "path": "figures/coverage_by_exemplar.png"
         },
         {
@@ -100,7 +100,7 @@
         {
           "name": "test_count_vs_coverage.png",
           "size_mb": "0.05",
-          "size_bytes": 52361,
+          "size_bytes": 52096,
           "path": "figures/test_count_vs_coverage.png"
         }
       ],
@@ -165,20 +165,20 @@
     },
     "pptx": {
       "exists": true,
-      "file_count": 3,
-      "size_mb": "1.00",
-      "total_size_bytes": 1045913,
+      "file_count": 6,
+      "size_mb": "1.12",
+      "total_size_bytes": 1176618,
       "largest_files": [
         {
           "name": "template_template_pitch_long.pptx",
           "size_mb": "0.48",
-          "size_bytes": 500272,
+          "size_bytes": 499404,
           "path": "pptx/template_template_pitch_long.pptx"
         },
         {
           "name": "template_template_pitch_medium.pptx",
           "size_mb": "0.43",
-          "size_bytes": 447760,
+          "size_bytes": 446892,
           "path": "pptx/template_template_pitch_medium.pptx"
         },
         {
@@ -189,7 +189,7 @@
         }
       ],
       "extensions": {
-        ".pptx": 3
+        ".pptx": 6
       }
     },
     "release_bundle": {
@@ -241,9 +241,9 @@
     },
     "slides_standalone": {
       "exists": true,
-      "file_count": 106,
-      "size_mb": "0.09",
-      "total_size_bytes": 97074,
+      "file_count": 123,
+      "size_mb": "0.11",
+      "total_size_bytes": 110942,
       "largest_files": [
         {
           "name": "slide_28.md",
@@ -265,12 +265,12 @@
         }
       ],
       "extensions": {
-        ".md": 106
+        ".md": 123
       }
     }
   },
-  "total_files": 140,
-  "total_size_mb": 4.96820068359375,
+  "total_files": 163,
+  "total_size_mb": 5.186676025390625,
   "largest_files": [
     {
       "name": "source-web-fonts.js",
@@ -282,35 +282,35 @@
     {
       "name": "template_template_pitch_long.pdf",
       "size_mb": "0.63",
-      "size_bytes": 658225,
+      "size_bytes": 657792,
       "category": "pdf",
       "path": "pdf/template_template_pitch_long.pdf"
     },
     {
       "name": "template_template_pitch_medium.pdf",
       "size_mb": "0.54",
-      "size_bytes": 569650,
+      "size_bytes": 569217,
       "category": "pdf",
       "path": "pdf/template_template_pitch_medium.pdf"
     },
     {
       "name": "template_template_pitch_long.pptx",
       "size_mb": "0.48",
-      "size_bytes": 500272,
+      "size_bytes": 499404,
       "category": "pptx",
       "path": "pptx/template_template_pitch_long.pptx"
     },
     {
       "name": "template_template_pitch_medium.pptx",
       "size_mb": "0.43",
-      "size_bytes": 447760,
+      "size_bytes": 446892,
       "category": "pptx",
       "path": "pptx/template_template_pitch_medium.pptx"
     },
     {
       "name": "coverage_by_exemplar.png",
       "size_mb": "0.10",
-      "size_bytes": 103398,
+      "size_bytes": 103459,
       "category": "figures",
       "path": "figures/coverage_by_exemplar.png"
     },
@@ -347,27 +347,27 @@
     "data/ directory"
   ],
   "sizes_by_category": {
-    "pdf": 1.3536853790283203,
+    "pdf": 1.4344797134399414,
     "web": 2.03216552734375,
-    "figures": 0.33510684967041016,
+    "figures": 0.3349123001098633,
     "reports": 0.005253791809082031,
-    "pptx": 0.9974603652954102,
+    "pptx": 1.122110366821289,
     "release_bundle": 0.06764888763427734,
     "root": 0.08430290222167969,
-    "slides_standalone": 0.09257698059082031
+    "slides_standalone": 0.10580253601074219
   },
   "inventory_mode": "stable-shippable-output-v1",
   "inventory_scope": "stage5-delivery-mirror",
   "inventory_root": "output/templates/template_pitch_deck",
   "file_counts_by_type": {
-    ".pdf": 6,
-    ".md": 108,
+    ".pdf": 9,
+    ".md": 125,
     ".js": 1,
     ".ico": 1,
     ".html": 8,
     ".png": 6,
     ".mmd": 3,
     ".json": 4,
-    ".pptx": 3
+    ".pptx": 6
   }
 }

@@ -10,7 +10,7 @@ modular boxes, data tables, halftone "engraving" figures and running folios —
 while keeping a strict separation between *content* (data) and *engine* (code):
 a new title is a data edit, never a code change. The layout strategy is a hybrid
 in which fixed *furniture* is drawn directly on the canvas to establish where
-the column grid begins, after which body copy flows through ReportLab frames
-that split paragraphs across columns automatically. The project obeys the
+the column grid begins, after which body copy moves as whole flowables through
+ReportLab column frames, with headings kept beside their opening content. The project obeys the
 research-template monorepo contract and is discovered and executed by the same
 orchestration pipeline as its code- and prose-focused siblings.

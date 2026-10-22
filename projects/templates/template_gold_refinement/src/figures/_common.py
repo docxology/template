@@ -290,9 +290,22 @@ def _render_digraph_figure(
     header_labels: tuple[tuple[float, float, str], ...] | None = None,
     footer_text: str | None = None,
     title_pad: float = 18,
+    edge_curvatures: dict[tuple[str, str], float] | None = None,
+    axis_bounds: tuple[float, float, float, float] | None = None,
 ) -> Path:
     fig, ax = plt.subplots(figsize=figsize)
-    _draw_labeled_digraph(ax, graph, positions, node_size=node_size, edge_widths=edge_widths, font_size=font_size)
+    _draw_labeled_digraph(
+        ax,
+        graph,
+        positions,
+        node_size=node_size,
+        edge_widths=edge_widths,
+        font_size=font_size,
+        edge_curvatures=edge_curvatures,
+    )
+    if axis_bounds is not None:
+        ax.set_xlim(axis_bounds[0], axis_bounds[1])
+        ax.set_ylim(axis_bounds[2], axis_bounds[3])
     ax.set_title(title, fontsize=14, pad=title_pad)
     if header_labels:
         for x_pos, y_pos, label in header_labels:
@@ -405,7 +418,7 @@ def purity_nines_values(purities: list[float] | tuple[float, ...]) -> list[float
 
 
 def _short_label(value: str, *, width: int = 18) -> str:
-    return fill(value, width=width)
+    return "\n".join(fill(line, width=width) for line in value.split("\n"))
 
 
 def _source_display_label(value: str) -> str:
@@ -426,6 +439,7 @@ def _draw_labeled_digraph(
     node_size: int = 1900,
     edge_widths: list[float] | None = None,
     font_size: float = 7.5,
+    edge_curvatures: dict[tuple[str, str], float] | None = None,
 ) -> None:
     node_colors = [
         NODE_TYPE_COLORS.get(str(graph.nodes[node].get("kind", "source")), "#94a3b8") for node in graph.nodes
@@ -441,17 +455,21 @@ def _draw_labeled_digraph(
         linewidths=0.8,
         alpha=0.94,
     )
-    nx.draw_networkx_edges(
-        graph,
-        positions,
-        ax=ax,
-        arrows=True,
-        arrowstyle="-|>",
-        arrowsize=14,
-        width=edge_widths or 1.4,
-        edge_color="#475569",
-        connectionstyle="arc3,rad=0.05",
-    )
+    for index, edge in enumerate(graph.edges):
+        curvature = (edge_curvatures or {}).get(edge, 0.05)
+        nx.draw_networkx_edges(
+            graph,
+            positions,
+            edgelist=[edge],
+            ax=ax,
+            arrows=True,
+            arrowstyle="-|>",
+            arrowsize=14,
+            node_size=node_size,
+            width=edge_widths[index] if edge_widths else 1.4,
+            edge_color="#475569",
+            connectionstyle=f"arc3,rad={curvature}",
+        )
     for node, label in labels.items():
         nx.draw_networkx_labels(
             graph,
@@ -459,6 +477,7 @@ def _draw_labeled_digraph(
             labels={node: label},
             ax=ax,
             font_size=font_size,
+            clip_on=False,
             font_color=(
                 "white" if graph.nodes[node].get("kind") in {"source", "formalism", "publication"} else "#111827"
             ),
@@ -468,12 +487,15 @@ def _draw_labeled_digraph(
         for source, target, data in graph.edges(data=True)
         if data.get("label")
     }
-    if edge_labels:
+    for edge, label in edge_labels.items():
+        curvature = (edge_curvatures or {}).get(edge, 0.05)
         nx.draw_networkx_edge_labels(
             graph,
             positions,
-            edge_labels=edge_labels,
+            edge_labels={edge: label},
             ax=ax,
+            node_size=node_size,
+            connectionstyle=f"arc3,rad={curvature}",
             font_size=max(6.0, font_size - 1.0),
             font_color="#334155",
             rotate=False,

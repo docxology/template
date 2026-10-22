@@ -17,6 +17,7 @@ from __future__ import annotations
 
 import argparse
 import os
+import subprocess
 import sys
 from pathlib import Path
 
@@ -24,8 +25,20 @@ os.environ.setdefault("MPLBACKEND", "Agg")
 
 THIS_DIR = Path(__file__).resolve().parent
 PROJECT_ROOT = THIS_DIR.parent
-# PROJECT_ROOT is projects/templates/<name>/; repo root is three levels above it.
-REPO_ROOT = PROJECT_ROOT.parents[2]
+# Discover Git from this project in either canonical or standalone layouts.
+# The actual containing checkout remains the <repo-root> path placeholder.
+try:
+    REPO_ROOT = Path(
+        subprocess.check_output(
+            ["git", "rev-parse", "--show-toplevel"],
+            cwd=PROJECT_ROOT,
+            stderr=subprocess.DEVNULL,
+            text=True,
+            timeout=5,
+        ).strip()
+    ).resolve()
+except (OSError, subprocess.SubprocessError):
+    REPO_ROOT = PROJECT_ROOT
 # Select the declared SDK before exposing domain source; no ancestor imports.
 _original_import_paths = sys.path[:]
 try:

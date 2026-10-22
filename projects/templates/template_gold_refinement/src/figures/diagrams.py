@@ -69,6 +69,8 @@ def generate_provenance_sankey(
         positions=_graph_positions(graph),
         title="Provenance Flow: Ore to Nine-Nines Certification",
         figsize=(12, 4.8),
+        node_size=6500,
+        axis_bounds=(-0.5, 5.5, -0.09, 0.31),
         edge_widths=edge_widths,
         font_size=7.2,
         subtitle="Edge width encodes stage purity gain; final node encodes nine-nines certification.",
@@ -291,8 +293,10 @@ def generate_implementation_circuit(
         positions=_graph_positions(graph),
         title="Gold Refinement Implementation Circuit",
         figsize=(12.5, 7.2),
-        node_size=2600,
+        node_size=6500,
         font_size=7.4,
+        edge_curvatures={("publication", "config"): 0.85},
+        axis_bounds=(-2.95, 3.3, -0.9, 2.7),
         footer_text=(
             "A fork changes the left side first; generated artifacts and validators then prove whether the manuscript still refines."
         ),

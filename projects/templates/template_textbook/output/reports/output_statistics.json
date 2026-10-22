@@ -4,12 +4,12 @@
       "exists": true,
       "file_count": 1,
       "size_mb": "2.07",
-      "total_size_bytes": 2170580,
+      "total_size_bytes": 2170756,
       "largest_files": [
         {
           "name": "template_textbook_combined.pdf",
           "size_mb": "2.07",
-          "size_bytes": 2170580,
+          "size_bytes": 2170756,
           "path": "pdf/template_textbook_combined.pdf"
         }
       ],
@@ -21,7 +21,7 @@
       "exists": true,
       "file_count": 53,
       "size_mb": "3.55",
-      "total_size_bytes": 3720577,
+      "total_size_bytes": 3720589,
       "largest_files": [
         {
           "name": "source-web-fonts.js",
@@ -32,13 +32,13 @@
         {
           "name": "index.html",
           "size_mb": "0.42",
-          "size_bytes": 441679,
+          "size_bytes": 441682,
           "path": "web/index.html"
         },
         {
           "name": "_combined_manuscript.md",
           "size_mb": "0.20",
-          "size_bytes": 214248,
+          "size_bytes": 214254,
           "path": "web/_combined_manuscript.md"
         }
       ],
@@ -59,12 +59,12 @@
       "exists": true,
       "file_count": 2,
       "size_mb": "0.84",
-      "total_size_bytes": 882974,
+      "total_size_bytes": 882969,
       "largest_files": [
         {
           "name": "template_textbook_combined.docx",
           "size_mb": "0.84",
-          "size_bytes": 882862,
+          "size_bytes": 882857,
           "path": "docx/template_textbook_combined.docx"
         },
         {
@@ -100,7 +100,7 @@
       "exists": true,
       "file_count": 96,
       "size_mb": "1.76",
-      "total_size_bytes": 1840390,
+      "total_size_bytes": 1840598,
       "largest_files": [
         {
           "name": "gallery_contour.png",
@@ -226,12 +226,12 @@
       "exists": true,
       "file_count": 1,
       "size_mb": "2.07",
-      "total_size_bytes": 2170580,
+      "total_size_bytes": 2170756,
       "largest_files": [
         {
           "name": "template_textbook_combined.pdf",
           "size_mb": "2.07",
-          "size_bytes": 2170580,
+          "size_bytes": 2170756,
           "path": "template_textbook_combined.pdf"
         }
       ],
@@ -241,19 +241,19 @@
     }
   },
   "total_files": 161,
-  "total_size_mb": 11.238306045532227,
+  "total_size_mb": 11.238846778869629,
   "largest_files": [
     {
       "name": "template_textbook_combined.pdf",
       "size_mb": "2.07",
-      "size_bytes": 2170580,
+      "size_bytes": 2170756,
       "category": "pdf",
       "path": "pdf/template_textbook_combined.pdf"
     },
     {
       "name": "template_textbook_combined.pdf",
       "size_mb": "2.07",
-      "size_bytes": 2170580,
+      "size_bytes": 2170756,
       "category": "root",
       "path": "template_textbook_combined.pdf"
     },
@@ -274,21 +274,21 @@
     {
       "name": "template_textbook_combined.docx",
       "size_mb": "0.84",
-      "size_bytes": 882862,
+      "size_bytes": 882857,
       "category": "docx",
       "path": "docx/template_textbook_combined.docx"
     },
     {
       "name": "index.html",
       "size_mb": "0.42",
-      "size_bytes": 441679,
+      "size_bytes": 441682,
       "category": "web",
       "path": "web/index.html"
     },
     {
       "name": "_combined_manuscript.md",
       "size_mb": "0.20",
-      "size_bytes": 214248,
+      "size_bytes": 214254,
       "category": "web",
       "path": "web/_combined_manuscript.md"
     },
@@ -316,15 +316,15 @@
   ],
   "missing_expected_files": [],
   "sizes_by_category": {
-    "pdf": 2.070026397705078,
-    "web": 3.5482187271118164,
-    "docx": 0.8420696258544922,
+    "pdf": 2.0701942443847656,
+    "web": 3.5482301712036133,
+    "docx": 0.8420648574829102,
     "epub": 0.9328231811523438,
-    "figures": 1.7551326751708984,
+    "figures": 1.755331039428711,
     "data": 0.0032815933227539062,
     "reports": 0.01483917236328125,
     "release": 0.001888275146484375,
-    "root": 2.070026397705078
+    "root": 2.0701942443847656
   },
   "inventory_mode": "stable-shippable-output-v1",
   "inventory_scope": "stage5-delivery-mirror",

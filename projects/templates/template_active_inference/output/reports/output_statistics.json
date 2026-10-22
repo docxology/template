@@ -4,12 +4,12 @@
       "exists": true,
       "file_count": 1,
       "size_mb": "4.03",
-      "total_size_bytes": 4228904,
+      "total_size_bytes": 4228804,
       "largest_files": [
         {
           "name": "template_active_inference_combined.pdf",
           "size_mb": "4.03",
-          "size_bytes": 4228904,
+          "size_bytes": 4228804,
           "path": "pdf/template_active_inference_combined.pdf"
         }
       ],
@@ -71,7 +71,7 @@
       "exists": true,
       "file_count": 27,
       "size_mb": "3.79",
-      "total_size_bytes": 3972244,
+      "total_size_bytes": 3972235,
       "largest_files": [
         {
           "name": "sheaf_layers_overview.png",
@@ -243,12 +243,12 @@
       "exists": true,
       "file_count": 1,
       "size_mb": "4.03",
-      "total_size_bytes": 4228904,
+      "total_size_bytes": 4228804,
       "largest_files": [
         {
           "name": "template_active_inference_combined.pdf",
           "size_mb": "4.03",
-          "size_bytes": 4228904,
+          "size_bytes": 4228804,
           "path": "template_active_inference_combined.pdf"
         }
       ],
@@ -258,19 +258,19 @@
     }
   },
   "total_files": 178,
-  "total_size_mb": 21.78292751312256,
+  "total_size_mb": 21.78272819519043,
   "largest_files": [
     {
       "name": "template_active_inference_combined.pdf",
       "size_mb": "4.03",
-      "size_bytes": 4228904,
+      "size_bytes": 4228804,
       "category": "pdf",
       "path": "pdf/template_active_inference_combined.pdf"
     },
     {
       "name": "template_active_inference_combined.pdf",
       "size_mb": "4.03",
-      "size_bytes": 4228904,
+      "size_bytes": 4228804,
       "category": "root",
       "path": "template_active_inference_combined.pdf"
     },
@@ -333,14 +333,14 @@
   ],
   "missing_expected_files": [],
   "sizes_by_category": {
-    "pdf": 4.032997131347656,
+    "pdf": 4.032901763916016,
     "web": 2.6339902877807617,
-    "figures": 3.788227081298828,
+    "figures": 3.7882184982299805,
     "data": 2.817331314086914,
     "reports": 0.41170310974121094,
     "arxiv_submission": 3.9248781204223633,
     "manuscript": 0.14080333709716797,
-    "root": 4.032997131347656
+    "root": 4.032901763916016
   },
   "inventory_mode": "stable-shippable-output-v1",
   "inventory_scope": "stage5-delivery-mirror",

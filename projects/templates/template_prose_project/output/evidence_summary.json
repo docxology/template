@@ -4,7 +4,7 @@
   "diagnostic_only": true,
   "metrics": {
     "readability": {
-      "avg_flesch_reading_ease": 21.25,
+      "avg_flesch_reading_ease": 21.28,
       "avg_flesch_kincaid_grade": 15.68,
       "avg_gunning_fog": 16.38
     },
@@ -50,7 +50,7 @@
         "min": 0.0,
         "citation_count": 8,
         "unique_keys": 6,
-        "word_count": 1842
+        "word_count": 1843
       }
     },
     {

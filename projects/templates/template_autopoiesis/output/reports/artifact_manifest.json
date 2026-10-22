@@ -750,8 +750,8 @@
     {
       "contract_match": true,
       "path": "output/figures/fig_coverage_by_module.png",
-      "sha256": "edfe8f734ed0eb598c75b79648fba9f58184b6cea46cd74f1336cd1f21f759f7",
-      "size_bytes": 162548,
+      "sha256": "8626a767e3c3fd0fde7482443cd8113143df85260e526ba8fb8a13baffd7681e",
+      "size_bytes": 161860,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
@@ -876,8 +876,8 @@
     {
       "contract_match": true,
       "path": "output/manuscript/02_methods.md",
-      "sha256": "733aa69cb123f5f2d7aa15c7f0884039f550d2b774a779c91ecfa6f200e3938e",
-      "size_bytes": 17246,
+      "sha256": "6d736f4f8b19c8d69324dd7a5610b61ff9b55aa4f017f8907d92ef65db30b975",
+      "size_bytes": 17301,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
@@ -885,8 +885,8 @@
     {
       "contract_match": true,
       "path": "output/manuscript/03_results.md",
-      "sha256": "50db35d20f11f3a6bd7d5ed7542f88664f6a8cf9d8f6c726bfe29a43b9f01287",
-      "size_bytes": 14912,
+      "sha256": "a03e8c90472463393889a1521bc5ab96f302c037cba3aa9a255e3cb705c94212",
+      "size_bytes": 15377,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
@@ -930,8 +930,8 @@
     {
       "contract_match": true,
       "path": "output/manuscript/config.yaml",
-      "sha256": "11e0a2dc5ff1732b8f48aa46c8d5ed44bbf938f2d2db464f13264b02ccfc360a",
-      "size_bytes": 3940,
+      "sha256": "3f349b64cb1c9074cc25164f752dbb31e677c78e5fe576b310067051072ee21e",
+      "size_bytes": 3980,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
@@ -957,8 +957,8 @@
     {
       "contract_match": true,
       "path": "output/pdf/template_autopoiesis_combined.pdf",
-      "sha256": "b5530b60744c2dff1bb3a975fe944ee85d24adac1631682c896cdb1ce9014eeb",
-      "size_bytes": 563261,
+      "sha256": "790a01404f02b0f65a2918ae3dd2deb33d306529bdeadbeae3a050178de415b2",
+      "size_bytes": 564796,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
@@ -966,7 +966,7 @@
     {
       "contract_match": true,
       "path": "output/reports/manuscript_composition.json",
-      "sha256": "192f55f54b8dd87d0bb0373324ee33b026c999be7c9b2449ef14e10ebfa4bd4e",
+      "sha256": "1f52ce7b0b38e64c1e5b8d8a0cae59b2d740de3bf3726b562581a3196d6c4342",
       "size_bytes": 2124,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
@@ -993,8 +993,8 @@
     {
       "contract_match": true,
       "path": "output/web/_combined_manuscript.md",
-      "sha256": "9e9cda577b9e3a5342f82609fe02c182a259b3c25f8ce47b471897af7fea57fe",
-      "size_bytes": 83589,
+      "sha256": "3df20e58b8eb1d6c6af057ca6594165b2c434c60ce8aa8a432c01cdd585a34ac",
+      "size_bytes": 84109,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
@@ -1020,8 +1020,8 @@
     {
       "contract_match": true,
       "path": "output/web/index.html",
-      "sha256": "262085c77976b9f986777b94b7a25d733c8f8c7633ab73ef25248a323b21862e",
-      "size_bytes": 143109,
+      "sha256": "45ba7b01a548881d014c7cbb39622f638629f5bacd244160b93110d116b1ad7e",
+      "size_bytes": 143739,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
@@ -1047,8 +1047,8 @@
     {
       "contract_match": true,
       "path": "output/web/manuscript__02_methods.html",
-      "sha256": "270834f770ff67dbac868b8ee0c1220c54e97def468211b8215f90431ed80b2a",
-      "size_bytes": 37646,
+      "sha256": "0bdc6776ea8ba7b228309c27ec84e4d154fdcdaf022eb3b9d8a3fa38eba9a279",
+      "size_bytes": 37776,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
@@ -1056,8 +1056,8 @@
     {
       "contract_match": true,
       "path": "output/web/manuscript__03_results.html",
-      "sha256": "d20d1bd17fcc613944f6d6906a88fd81c9170b88c5341e26cab079004ba22d8f",
-      "size_bytes": 32208,
+      "sha256": "468f77203bda551499a0da50ce62cbec57d69128a3acf97debd6c1ae683a4204",
+      "size_bytes": 32708,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""

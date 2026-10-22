@@ -35,7 +35,7 @@ The check compares the cited keys from the `ManuscriptReport` against the BibTeX
 
 The report runs through a set of pure check functions:
 
-* `_check_grade_level` — the manuscript-wide weighted average FKGL falls within `[target_grade_level_min, target_grade_level_max]`.
+* `_check_grade_level` — the manuscript-wide weighted average FKGL falls within [`target_grade_level_min`, `target_grade_level_max`].
 * `_check_citation_density` — citations per 1000 words ≥ `citation_density_min_per_1000`.
 * `_check_no_skipped_levels` — no file uses a skipped heading level (when `prose.forbid_skipped_levels: true`).
 * `_check_h1_per_file` — every file has an H1 (when `prose.require_h1_per_section: true`).
@@ -64,7 +64,9 @@ stages always see a fresh review):
   `output/evidence_summary.json` (versioned diagnostic-only evidence), and
   `output/run_summary.json` (one-line metadata).
 * `scripts/y_generate_prose_figures.py` reads `manuscript_report.json`
-  and writes `output/figures/{section_word_counts,readability_metrics,citation_density}.png`.
+  and writes `output/figures/section_word_counts.png`,
+  `output/figures/readability_metrics.png`, and
+  `output/figures/citation_density.png`.
 * `scripts/z_generate_manuscript_variables.py` reads `manuscript_report.json`
   + `config.yaml` and writes `output/data/manuscript_variables.json`
   along with a resolved manuscript tree under `output/manuscript/`.

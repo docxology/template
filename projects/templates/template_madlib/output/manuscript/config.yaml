@@ -285,7 +285,7 @@ madlib:
     - name: "Unresolved placeholder"
       risk: "A source Markdown token is added without a generated variable."
       detection: "Project test scans output/manuscript and rendered web output for uppercase placeholders."
-      mitigation: "Add variable generation, tests, and rerun z_generate_manuscript_variables.py before render."
+      mitigation: "Add variable generation, tests, and rerun `z_generate_manuscript_variables.py` before render."
     - name: "Overclaimed generated prose"
       risk: "Generated text implies a standalone DOI, empirical validation, or external release that does not exist."
       detection: "Claim ledger review, publication metadata review, and evidence registry validation."

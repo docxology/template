@@ -1381,18 +1381,18 @@ Total documented definitions: 890
 
 | line | kind | name | documentation source | summary |
 | ---: | --- | --- | --- | --- |
-| 34 | `function` | `_load_invariant_blocks` | inventory fallback | Inventory fallback for function `_load_invariant_blocks` defined at `src/visualizations/figures_diagrams.py:34`. |
-| 47 | `function` | `figure_invariant_dashboard` | docstring | Process figure invariant dashboard. |
-| 94 | `function` | `figure_tmaze_schematic` | docstring | Process figure tmaze schematic. |
-| 161 | `function` | `_load_pipeline_track_labels` | inventory fallback | Inventory fallback for function `_load_pipeline_track_labels` defined at `src/visualizations/figures_diagrams.py:161`. |
-| 168 | `function` | `_load_sheaf_track_labels` | inventory fallback | Inventory fallback for function `_load_sheaf_track_labels` defined at `src/visualizations/figures_diagrams.py:168`. |
-| 176 | `function` | `figure_multi_track_architecture` | docstring | Process figure multi track architecture. |
-| 188 | `function` | `figure_multi_track_architecture.chunks` | docstring | Process chunks. |
-| 192 | `function` | `figure_multi_track_architecture.draw_group_column` | docstring | Process draw group column. |
-| 250 | `function` | `figure_track_lane_promotion_map` | docstring | Render the pipeline-track promotion obligations and sheaf-lane bindings. |
-| 358 | `function` | `figure_artifact_contract_map` | docstring | Render artifact-level producer, validator, freshness, and copy-parity obligations. |
-| 457 | `function` | `figure_lean_boundary_status` | docstring | Process figure lean boundary status. |
-| 489 | `function` | `figure_gnn_ontology_concordance` | docstring | Process figure gnn ontology concordance. |
+| 35 | `function` | `_load_invariant_blocks` | inventory fallback | Inventory fallback for function `_load_invariant_blocks` defined at `src/visualizations/figures_diagrams.py:35`. |
+| 48 | `function` | `figure_invariant_dashboard` | docstring | Process figure invariant dashboard. |
+| 95 | `function` | `figure_tmaze_schematic` | docstring | Process figure tmaze schematic. |
+| 162 | `function` | `_load_pipeline_track_labels` | inventory fallback | Inventory fallback for function `_load_pipeline_track_labels` defined at `src/visualizations/figures_diagrams.py:162`. |
+| 169 | `function` | `_load_sheaf_track_labels` | inventory fallback | Inventory fallback for function `_load_sheaf_track_labels` defined at `src/visualizations/figures_diagrams.py:169`. |
+| 177 | `function` | `figure_multi_track_architecture` | docstring | Process figure multi track architecture. |
+| 189 | `function` | `figure_multi_track_architecture.chunks` | docstring | Process chunks. |
+| 193 | `function` | `figure_multi_track_architecture.draw_group_column` | docstring | Process draw group column. |
+| 251 | `function` | `figure_track_lane_promotion_map` | docstring | Render the pipeline-track promotion obligations and sheaf-lane bindings. |
+| 359 | `function` | `figure_artifact_contract_map` | docstring | Render artifact-level producer, validator, freshness, and copy-parity obligations. |
+| 458 | `function` | `figure_lean_boundary_status` | docstring | Process figure lean boundary status. |
+| 495 | `function` | `figure_gnn_ontology_concordance` | docstring | Process figure gnn ontology concordance. |
 
 ## `src/visualizations/figures_semantic.py`
 

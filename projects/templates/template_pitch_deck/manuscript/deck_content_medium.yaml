@@ -89,7 +89,7 @@ slides:
   - kind: content
     title: "No partial credit"
     bullets:
-      - "90% project-coverage floor and a no-mocks testing policy apply to this project exactly as they do to the {{EXEMPLAR_COUNT}} other exemplars."
+      - "90% project-coverage floor and a no-mocks testing policy apply to this project exactly as they do across all {{EXEMPLAR_COUNT}} exemplars."
       - "Every pipeline run either passes its own gate or fails loudly — there is no partial-credit reporting path."
     source: "infrastructure/project/public_scope.py"
 
@@ -196,7 +196,7 @@ slides:
       - "{{INFRA_SUBPACKAGE_COUNT}} importable subpackages, {{INFRA_PYTHON_FILE_COUNT}} tracked Python files total under infrastructure/ — a real inventory anyone can `git ls-files` themselves, not a claimed abstraction."
       - "The largest single subpackage, {{INFRA_LARGEST_SUBPACKAGE}}, holds {{INFRA_LARGEST_SUBPACKAGE_COUNT}} files — still a minority of the whole, not a monolith wearing a modular label."
       - "Every number on this slide is computed live by src/infra_facts.py at render time, reusing the exact same counters docs/_generated/COUNTS.md is built from."
-      - "The next chart narrows the total to importable subpackages, excluding {{INFRA_UNATTRIBUTED_FILE_COUNT}} top-level file(s): infrastructure/__init__.py and mcp_server.py."
+      - "The next chart narrows the total to importable subpackages, excluding {{INFRA_UNATTRIBUTED_FILE_COUNT}} top-level Python file(s)."
     source: "projects/templates/template_pitch_deck/src/template_pitch_deck/infra_facts.py"
 
   - kind: diagram

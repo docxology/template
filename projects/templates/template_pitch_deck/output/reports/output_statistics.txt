@@ -7,18 +7,18 @@ Inventory Mode: stable-shippable-output-v1
 Inventory Scope: stage5-delivery-mirror
 Inventory Root: output/templates/template_pitch_deck
 
-Total Files: 140
-Total Size: 4.97 MB
+Total Files: 163
+Total Size: 5.19 MB
 
 Files by Category:
-  • pdf: 4 files (1.35 MB)
+  • pdf: 7 files (1.43 MB)
   • web: 11 files (2.03 MB)
-  • figures: 9 files (0.34 MB)
+  • figures: 9 files (0.33 MB)
   • reports: 3 files (0.01 MB)
-  • pptx: 3 files (1.00 MB)
+  • pptx: 6 files (1.12 MB)
   • release_bundle: 3 files (0.07 MB)
   • root: 1 files (0.08 MB)
-  • slides_standalone: 106 files (0.09 MB)
+  • slides_standalone: 123 files (0.11 MB)
 
 Largest Files:
   • source-web-fonts.js: 1.88 MB (web)
@@ -31,12 +31,12 @@ Missing Expected Files:
   ⚠  data/ directory
 
 File Types:
-  • .md: 108 file(s)
+  • .md: 125 file(s)
+  • .pdf: 9 file(s)
   • .html: 8 file(s)
-  • .pdf: 6 file(s)
   • .png: 6 file(s)
+  • .pptx: 6 file(s)
   • .json: 4 file(s)
   • .mmd: 3 file(s)
-  • .pptx: 3 file(s)
   • .js: 1 file(s)
   • .ico: 1 file(s)

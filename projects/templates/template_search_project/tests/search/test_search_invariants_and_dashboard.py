@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import shutil
 import subprocess
 import sys
 from pathlib import Path
@@ -264,6 +265,86 @@ class TestBuildDashboardCLI:
         bundle = json.loads(js.read_text())
         n_pass = sum(1 for i in bundle["invariants"] if i["passed"])
         assert n_pass == len(bundle["invariants"]) >= 8
+
+        # Keep canonical containing-checkout path semantics, including when the
+        # caller deliberately supplies an external corpus.
+        containing_root = Path(
+            subprocess.check_output(
+                ["git", "rev-parse", "--show-toplevel"], cwd=PROJECT_ROOT, text=True, timeout=30
+            ).strip()
+        ).resolve()
+        corpus_path = runtime_corpus.resolve()
+        expected_path = (
+            "<repo-root>/" + corpus_path.relative_to(containing_root).as_posix()
+            if corpus_path.is_relative_to(containing_root)
+            else str(corpus_path)
+        )
+        assert bundle["hyperparameters"]["corpus_path"] == expected_path
+
+        # A real flat standalone Git checkout must supply its own revision and
+        # dirty state; no ancestor monorepo or current working directory is used.
+        standalone = tmp_path / "standalone"
+        standalone.mkdir()
+        for directory in ("src", "scripts"):
+            shutil.copytree(
+                PROJECT_ROOT / directory,
+                standalone / directory,
+                ignore=shutil.ignore_patterns("__pycache__", "*.pyc"),
+            )
+        shutil.copy2(PROJECT_ROOT / "pyproject.toml", standalone / "pyproject.toml")
+        (standalone / "data").mkdir()
+        (standalone / "data" / "corpus.json").write_bytes(runtime_corpus.read_bytes())
+        for argv in (
+            ["git", "init", "."],
+            ["git", "add", "src", "scripts", "pyproject.toml", "data"],
+            [
+                "git",
+                "-c",
+                "user.name=Dashboard Control",
+                "-c",
+                "user.email=dashboard-control@example.invalid",
+                "-c",
+                "commit.gpgsign=false",
+                "commit",
+                "-m",
+                "Standalone search dashboard provenance control",
+            ],
+        ):
+            subprocess.run(argv, cwd=standalone, capture_output=True, text=True, check=True, timeout=30)
+        expected_revision = subprocess.check_output(
+            ["git", "rev-parse", "--short", "HEAD"], cwd=standalone, text=True, timeout=30
+        ).strip()
+        for dirty in (False, True):
+            if dirty:
+                (standalone / "dirty-marker.txt").write_text("actual untracked change\n", encoding="utf-8")
+            captured = subprocess.run(
+                [
+                    sys.executable,
+                    "-I",
+                    "-B",
+                    str(standalone / "scripts" / "zzz_build_dashboard.py"),
+                    "--corpus",
+                    str(standalone / "data" / "corpus.json"),
+                    "--html-out",
+                    str(html),
+                    "--json-out",
+                    str(js),
+                    "--invariants-out",
+                    str(tmp_path / "i.txt"),
+                    "--summary-out",
+                    str(tmp_path / "s.txt"),
+                ],
+                cwd=tmp_path,
+                capture_output=True,
+                text=True,
+                timeout=180,
+            )
+            assert captured.returncode == 0, captured.stderr
+            standalone_bundle = json.loads(js.read_text())
+            assert standalone_bundle["git_rev"] == expected_revision
+            assert standalone_bundle["git_dirty"] is dirty
+            assert standalone_bundle["hyperparameters"]["corpus_path"] == "<repo-root>/data/corpus.json"
+            assert f"git rev:           {expected_revision}" in (tmp_path / "s.txt").read_text()
 
     def test_strict_floors_fail_invariants(self, tmp_path, runtime_corpus):
         # Force impossible coverage floors: invariant should fail and CLI exits 1

@@ -62,12 +62,12 @@ def generate_purity_progression(
     stage_names = [STAGE_LABELS[i] for i in range(len(result.stages))]
     gains = [result.stages[i].output_purity - result.stages[i].input_purity for i in range(len(result.stages))]
 
-    fig = plt.figure(figsize=(11, 7.5))
-    grid = fig.add_gridspec(2, 1, height_ratios=(3.2, 1.2), hspace=0.24)
+    fig = plt.figure(figsize=(11, 8.5))
+    grid = fig.add_gridspec(2, 1, height_ratios=(3.2, 1.2), hspace=0.65, top=0.82, bottom=0.12)
     ax1 = fig.add_subplot(grid[0])
     ax3 = fig.add_subplot(grid[1])
 
-    x_positions = np.arange(len(result.stages))
+    x_positions = np.arange(len(result.stages)) + 1
     bar_width = 0.6
     ax1.bar(
         x_positions,
@@ -79,8 +79,8 @@ def generate_purity_progression(
     )
     ax1.set_xlabel("Refinery Stage", fontsize=12)
     ax1.set_ylabel("Purity Gain (fraction)", fontsize=12, color="#333333")
-    ax1.set_xticks(x_positions)
-    ax1.set_xticklabels(stage_names, rotation=15, ha="right")
+    ax1.set_xticks(np.arange(len(purity_seq)))
+    ax1.set_xticklabels(["Input", *stage_names], rotation=15, ha="right")
     ax1.tick_params(axis="y", labelcolor="#333333")
     _style_axes(ax1)
 
@@ -109,7 +109,7 @@ def generate_purity_progression(
     )
 
     ax1.set_title("Gold Refinery: Purity Progression from Ore to Nine-Nines", fontsize=14)
-    fig.legend(loc="upper left", bbox_to_anchor=(0.12, 0.95), fontsize=9)
+    fig.legend(loc="upper center", bbox_to_anchor=(0.5, 0.99), ncol=2, fontsize=9)
 
     nines = purity_nines_values(tuple(purity_seq))
     ax3.plot(line_x, nines, color="#7f1d1d", marker="o", linewidth=2.0)

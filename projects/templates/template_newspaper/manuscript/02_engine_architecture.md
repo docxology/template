@@ -35,9 +35,10 @@ folio, the hairline column rules, and the spanning lead headline.
 `layout` is the bridge. For each page it draws the furniture (which returns the
 y-coordinate where the column grid begins), constructs the column frames —
 including an optional narrow rail and the room reserved for a spanning headline
-— and pours the flowables into the frames with ReportLab's `Frame.addFromList`,
-which splits paragraphs across columns automatically. Content that does not fit
-is returned and reported as an *over-set* page rather than silently dropped.
+— and pours whole flowables into the frames with ReportLab's `Frame.addFromList`
+without paragraph splitting. Heading-and-opening groups move together to the
+next column. Content that does not fit is returned and reported as an *over-set*
+page rather than silently dropped.
 
 `engine` ties it together: register fonts, build the stylesheet, open a canvas
 at the configured trim, render each page, and write the PDF plus a

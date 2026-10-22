@@ -4303,10 +4303,10 @@ Audio and video embed in HTML targets (PDF shows the caption + link). Syntax:
 ```
 
 A downloadable data file lives at
-[`assets/data/sample_dataset.csv`](../assets/data/sample_dataset.csv); its
-contents as a table:
+[`assets/data/sample_dataset.csv`](../assets/data/sample_dataset.csv); a
+four-row excerpt appears below:
 
-: Sample dataset (mirrors `assets/data/sample_dataset.csv`). {#tbl:gallery_data}
+: Four-row excerpt from `assets/data/sample_dataset.csv`. {#tbl:gallery_data}
 
 | condition      | replicate | measurement | standard_error |
 | -------------- | --------: | ----------: | -------------: |

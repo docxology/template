@@ -887,10 +887,10 @@ three figures (per-file word counts, readability metrics, citation
 density) and a JSON <code>manuscript_report.json</code> suitable for CI
 artefacts.</p>
 <p><strong>Run snapshot.</strong> The current configuration analyses 8
-file(s) totalling 1842 words across 90 sentence(s) and 65 paragraph(s).
+file(s) totalling 1843 words across 90 sentence(s) and 65 paragraph(s).
 Average Flesch-Kincaid grade level is 15.68; average Gunning Fog index
 is 16.38; the manuscript references 6 unique citation key(s); the
-longest section is 483 words and the shortest is 17. These numbers are
+longest section is 484 words and the shortest is 17. These numbers are
 auto-substituted by
 <code>scripts/z_generate_manuscript_variables.py</code> after every run,
 so the abstract tracks the JSON outputs in <code>output/</code>.</p>
@@ -1044,8 +1044,8 @@ class="header-section-number">3.4</span> Evaluate</h2>
 <p>The report runs through a set of pure check functions:</p>
 <ul>
 <li><code>_check_grade_level</code> — the manuscript-wide weighted
-average FKGL falls within
-<code>[target_grade_level_min, target_grade_level_max]</code>.</li>
+average FKGL falls within [<code>target_grade_level_min</code>,
+<code>target_grade_level_max</code>].</li>
 <li><code>_check_citation_density</code> — citations per 1000 words ≥
 <code>citation_density_min_per_1000</code>.</li>
 <li><code>_check_no_skipped_levels</code> — no file uses a skipped
@@ -1091,7 +1091,9 @@ human-readable review report), <code>output/evidence_summary.json</code>
 <code>output/run_summary.json</code> (one-line metadata).</li>
 <li><code>scripts/y_generate_prose_figures.py</code> reads
 <code>manuscript_report.json</code> and writes
-<code>../figures/{section_word_counts,readability_metrics,citation_density}.png</code>.</li>
+<code>../figures/section_word_counts.png</code>,
+<code>../figures/readability_metrics.png</code>, and
+<code>../figures/citation_density.png</code>.</li>
 <li><code>scripts/z_generate_manuscript_variables.py</code> reads
 <code>manuscript_report.json</code>
 <ul>

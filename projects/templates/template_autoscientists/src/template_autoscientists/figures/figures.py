@@ -247,7 +247,7 @@ def build_efficiency_figure(rows: list[AblationRow]) -> tuple["plt.Figure", "plt
         "(the dead-end registry cuts redundant re-exploration to zero\n"
         "— same clean answer)"
     )
-    ax.legend(loc="lower right")
+    ax.legend(loc="upper left", bbox_to_anchor=(0.0, -0.22))
     ax.grid(True, axis="x", alpha=0.3)
     return fig, ax
 

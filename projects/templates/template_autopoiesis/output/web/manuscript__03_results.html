@@ -924,9 +924,16 @@ its Source, runtime, coverage and executor-held commitment. Altered
 present evidence fails closed. Without that handoff, the standalone path
 executes a fresh pytest measurement against <code>tests/</code> and
 <code>src/</code> with <code>--cov-branch</code>. Its reported
-percentage combines covered statements and branch exits. There is no
-fallback literal: an incomplete measurement cannot produce a successful
-current summary.</p>
+percentage combines covered statements and branch exits. In this
+standalone Stage 02 path, <code>measure_test_summary()</code> probes and
+selects the monorepo root <code>.venv/bin/python3</code> when available,
+otherwise its current interpreter. These manuscript figures describe
+that functional measurement; the repository-wide
+<code>docs/_generated/COUNTS.md</code> snapshot separately records the
+project’s own locked runtime qualification and may report a different
+percentage. The standalone measurement does not itself establish that
+qualification. There is no fallback literal: an incomplete measurement
+cannot produce a successful current summary.</p>
 <figure id="fig:coverage_by_module">
 <a class="figure-full-size-link" href="../figures/fig_coverage_by_module.png" target="_blank" rel="noopener" aria-label="Open full-size figure, Per-module combined statement and branch coverage from the same measurement that produces…"><img src="../figures/fig_coverage_by_module.png" style="width:90.0%"
 data-fig-alt="Horizontal bars show measured combined statement and branch coverage per module; red bars identify values below the 90% aggregate-gate reference line."

@@ -159,6 +159,8 @@ not treated as automatically best on every diagnostic axis.
 
 {{FIGURE_BLOCK_PROBABILITY_QUALITY}}
 
+\clearpage
+
 {{STATISTICAL_SUMMARY_TABLE}}
 
 {{SELECTIVE_ACCURACY_TABLE}}

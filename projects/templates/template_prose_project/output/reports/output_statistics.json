@@ -4,12 +4,12 @@
       "exists": true,
       "file_count": 1,
       "size_mb": "0.32",
-      "total_size_bytes": 332544,
+      "total_size_bytes": 331612,
       "largest_files": [
         {
           "name": "template_prose_project_combined.pdf",
           "size_mb": "0.32",
-          "size_bytes": 332544,
+          "size_bytes": 331612,
           "path": "pdf/template_prose_project_combined.pdf"
         }
       ],
@@ -21,7 +21,7 @@
       "exists": true,
       "file_count": 12,
       "size_mb": "2.10",
-      "total_size_bytes": 2206761,
+      "total_size_bytes": 2206951,
       "largest_files": [
         {
           "name": "source-web-fonts.js",
@@ -32,7 +32,7 @@
         {
           "name": "index.html",
           "size_mb": "0.06",
-          "size_bytes": 65828,
+          "size_bytes": 65901,
           "path": "web/index.html"
         },
         {
@@ -53,12 +53,12 @@
       "exists": true,
       "file_count": 8,
       "size_mb": "0.29",
-      "total_size_bytes": 302152,
+      "total_size_bytes": 301889,
       "largest_files": [
         {
           "name": "02_methodology_slides.pdf",
           "size_mb": "0.06",
-          "size_bytes": 62486,
+          "size_bytes": 62336,
           "path": "slides/02_methodology_slides.pdf"
         },
         {
@@ -93,25 +93,25 @@
     "figures": {
       "exists": true,
       "file_count": 10,
-      "size_mb": "0.50",
-      "total_size_bytes": 525625,
+      "size_mb": "0.53",
+      "total_size_bytes": 551344,
       "largest_files": [
         {
           "name": "readability_metrics.png",
-          "size_mb": "0.14",
-          "size_bytes": 149500,
+          "size_mb": "0.15",
+          "size_bytes": 156448,
           "path": "figures/readability_metrics.png"
         },
         {
           "name": "inline_mermaid_0002_e1277c0f292c.png",
           "size_mb": "0.12",
-          "size_bytes": 128972,
+          "size_bytes": 127689,
           "path": "figures/mermaid_inline/inline_mermaid_0002_e1277c0f292c.png"
         },
         {
           "name": "section_word_counts.png",
-          "size_mb": "0.09",
-          "size_bytes": 91209,
+          "size_mb": "0.10",
+          "size_bytes": 100565,
           "path": "figures/section_word_counts.png"
         }
       ],
@@ -202,7 +202,7 @@
       "exists": true,
       "file_count": 13,
       "size_mb": "0.03",
-      "total_size_bytes": 31488,
+      "total_size_bytes": 31552,
       "largest_files": [
         {
           "name": "config.yaml",
@@ -213,7 +213,7 @@
         {
           "name": "02_methodology.md",
           "size_mb": "0.00",
-          "size_bytes": 5017,
+          "size_bytes": 5069,
           "path": "manuscript/02_methodology.md"
         },
         {
@@ -257,18 +257,18 @@
       "exists": true,
       "file_count": 7,
       "size_mb": "0.35",
-      "total_size_bytes": 368142,
+      "total_size_bytes": 367257,
       "largest_files": [
         {
           "name": "template_prose_project_combined.pdf",
           "size_mb": "0.32",
-          "size_bytes": 332544,
+          "size_bytes": 331612,
           "path": "template_prose_project_combined.pdf"
         },
         {
           "name": "manuscript_report.json",
           "size_mb": "0.03",
-          "size_bytes": 28535,
+          "size_bytes": 28550,
           "path": "manuscript_report.json"
         },
         {
@@ -286,7 +286,7 @@
     }
   },
   "total_files": 59,
-  "total_size_mb": 3.60115909576416,
+  "total_size_mb": 3.6239452362060547,
   "largest_files": [
     {
       "name": "source-web-fonts.js",
@@ -298,56 +298,56 @@
     {
       "name": "template_prose_project_combined.pdf",
       "size_mb": "0.32",
-      "size_bytes": 332544,
+      "size_bytes": 331612,
       "category": "pdf",
       "path": "pdf/template_prose_project_combined.pdf"
     },
     {
       "name": "template_prose_project_combined.pdf",
       "size_mb": "0.32",
-      "size_bytes": 332544,
+      "size_bytes": 331612,
       "category": "root",
       "path": "template_prose_project_combined.pdf"
     },
     {
       "name": "readability_metrics.png",
-      "size_mb": "0.14",
-      "size_bytes": 149500,
+      "size_mb": "0.15",
+      "size_bytes": 156448,
       "category": "figures",
       "path": "figures/readability_metrics.png"
     },
     {
       "name": "inline_mermaid_0002_e1277c0f292c.png",
       "size_mb": "0.12",
-      "size_bytes": 128972,
+      "size_bytes": 127689,
       "category": "figures",
       "path": "figures/mermaid_inline/inline_mermaid_0002_e1277c0f292c.png"
     },
     {
       "name": "section_word_counts.png",
-      "size_mb": "0.09",
-      "size_bytes": 91209,
+      "size_mb": "0.10",
+      "size_bytes": 100565,
       "category": "figures",
       "path": "figures/section_word_counts.png"
     },
     {
       "name": "citation_density.png",
-      "size_mb": "0.08",
-      "size_bytes": 88390,
+      "size_mb": "0.09",
+      "size_bytes": 99088,
       "category": "figures",
       "path": "figures/citation_density.png"
     },
     {
       "name": "index.html",
       "size_mb": "0.06",
-      "size_bytes": 65828,
+      "size_bytes": 65901,
       "category": "web",
       "path": "web/index.html"
     },
     {
       "name": "02_methodology_slides.pdf",
       "size_mb": "0.06",
-      "size_bytes": 62486,
+      "size_bytes": 62336,
       "category": "slides",
       "path": "slides/02_methodology_slides.pdf"
     },
@@ -361,15 +361,15 @@
   ],
   "missing_expected_files": [],
   "sizes_by_category": {
-    "pdf": 0.317138671875,
-    "web": 2.1045312881469727,
-    "slides": 0.28815460205078125,
-    "figures": 0.5012750625610352,
+    "pdf": 0.3162498474121094,
+    "web": 2.10471248626709,
+    "slides": 0.2879037857055664,
+    "figures": 0.5258026123046875,
     "data": 0.0016126632690429688,
     "reports": 0.00540924072265625,
-    "manuscript": 0.030029296875,
+    "manuscript": 0.03009033203125,
     "release": 0.0019207000732421875,
-    "root": 0.3510875701904297
+    "root": 0.35024356842041016
   },
   "inventory_mode": "stable-shippable-output-v1",
   "inventory_scope": "stage5-delivery-mirror",

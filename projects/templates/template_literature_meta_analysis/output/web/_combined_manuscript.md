@@ -579,20 +579,21 @@ spanning 2000--2026 (26 years). Publication volume
 within this dated subset
 grows at a compound annual rate of 5.48\% (mean year-over-year growth
 7.8\%, doubling time 9.2 years), peaking in 2025
-with 147 records that year. The growth curve is the first-order signal
-that the literature is active rather than dormant.
+with 147 records that year. The growth curve is a first-order
+descriptive summary of this retained analyzed subset. A field-wide estimate of
+research activity would require a separate live coverage audit.
 
 <!-- FIGURE: growth_curve.png -->
-![Publication growth curve for Modafinil. Annual publication counts (bars) and cumulative total (line) show sustained growth from 2000 through 2026, peaking in 2025.](../figures/growth_curve.png "Publication Growth Curve"){#fig:growth_curve}
+![Publication growth curve for Modafinil. Annual publication counts (bars) and cumulative total (line) summarize the retained dated subset from 2000 through 2026, with its largest annual count in 2025.](../figures/growth_curve.png "Publication Growth Curve"){#fig:growth_curve}
 
 ## RQ1: Field Size and Growth
 
-The temporal analysis reveals a literature that has grown steadily over 26
-years. The compound annual growth rate of 5.48\% means the corpus roughly doubles
-every 9.2 years — a pace that exceeds the general biomedical literature
-growth rate of approximately 4\% per year. The peak year 2025 with
-147 publications likely reflects both genuine research activity and the
-lag between publication and indexing in the source databases.
+The temporal analysis describes a retained analyzed literature slice spanning
+26 years. The compound annual growth rate of 5.48\% implies a corpus
+doubling time of approximately 9.2 years under the configured retrieval,
+filtering, and indexing conditions. The peak year 2025 contains
+147 retained records. That count may reflect both publication activity
+and source-indexing delays; a causal trend would require a separate live coverage audit.
 
 **Table 1. Top publication years.**
 

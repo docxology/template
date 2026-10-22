@@ -149,6 +149,61 @@ def test_render_one_length_writes_real_pdf(tmp_path: Path, repo_root):
     for page in standalone_dir.glob("slide_*.md"):
         assert "[manuscript/deck_content_short.yaml](../../../manuscript/deck_content_short.yaml)" in page.read_text()
 
+    # Real shared-renderer regression: keep full statistic text inside the
+    # measured slide width in both formats, without lowering the font floor.
+    from pptx import Presentation
+    from reportlab.pdfbase import pdfmetrics
+    from infrastructure.rendering.pptx_deck import render_pptx
+    from infrastructure.rendering.slide_deck import (
+        DeckContent,
+        MARGIN,
+        MIN_SINGLE_LINE_FONT_SIZE_PT,
+        SLIDE_TEXT_WIDTH_PT,
+        STAT_VALUE_FONT_SIZE,
+        render_pdf,
+        validate_deck_layout,
+    )
+
+    for index, value in enumerate(("89", "9 historical references")):
+        stat_deck = DeckContent(
+            title="Measured statistic",
+            slides=[Slide(kind="stat", title="Retained history", stat_value=value, stat_label="Full wording")],
+        )
+        pdf = render_pdf(stat_deck, tmp_path / f"stat-{index}.pdf")
+        pptx = render_pptx(stat_deck, tmp_path / f"stat-{index}.pptx")
+        page = PdfReader(pdf).pages[-1]
+        observations = []
+        page.extract_text(visitor_text=lambda text, _cm, tm, _font, size: observations.append((text, tuple(tm), size)))
+        observed = [(tm, size) for text, tm, size in observations if text.strip() == value]
+        assert len(observed) == 1
+        matrix, size = observed[0]
+        assert MIN_SINGLE_LINE_FONT_SIZE_PT <= size <= STAT_VALUE_FONT_SIZE
+        assert matrix[4] == pytest.approx(MARGIN)
+        assert pdfmetrics.stringWidth(value, "Helvetica-Bold", size) <= SLIDE_TEXT_WIDTH_PT
+        shape = next(shape for shape in Presentation(pptx).slides[-1].shapes if shape.text == value)
+        run = shape.text_frame.paragraphs[0].runs[0]
+        assert run.font.size.pt == size
+        assert run.font.name == "Helvetica"
+        assert run.font.bold
+        assert not shape.text_frame.word_wrap
+        assert shape.text_frame.margin_left == shape.text_frame.margin_right == 0
+        assert shape.width.pt == pytest.approx(SLIDE_TEXT_WIDTH_PT)
+        assert value in (page.extract_text() or "")
+        if index == 0:
+            assert size == STAT_VALUE_FONT_SIZE
+        else:
+            assert size < STAT_VALUE_FONT_SIZE
+
+    too_wide = DeckContent(title="Overflow", slides=[Slide(kind="stat", title="Kept", stat_value="W" * 500)])
+    with pytest.raises(RenderingError, match="minimum font size"):
+        validate_deck_layout(too_wide)
+    for renderer, extension in ((render_pdf, "pdf"), (render_pptx, "pptx")):
+        target = tmp_path / f"retained-stat.{extension}"
+        target.write_bytes(b"existing-stat-target")
+        with pytest.raises(RenderingError, match="minimum font size"):
+            renderer(too_wide, target)
+        assert target.read_bytes() == b"existing-stat-target"
+
 
 def test_render_one_length_raises_on_audit_failure(tmp_path: Path, repo_root):
     logger = logging.getLogger("test")

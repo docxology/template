@@ -8,10 +8,10 @@ Inventory Scope: stage5-delivery-mirror
 Inventory Root: output/templates/template_autoresearch_project
 
 Total Files: 119
-Total Size: 10.32 MB
+Total Size: 10.35 MB
 
 Files by Category:
-  • pdf: 1 files (1.39 MB)
+  • pdf: 1 files (1.40 MB)
   • web: 10 files (2.31 MB)
   • slides: 6 files (1.48 MB)
   • figures: 28 files (1.12 MB)
@@ -19,13 +19,13 @@ Files by Category:
   • reports: 12 files (0.04 MB)
   • manuscript: 11 files (0.10 MB)
   • release: 2 files (0.00 MB)
-  • root: 1 files (1.39 MB)
+  • root: 1 files (1.40 MB)
 
 Largest Files:
   • source-web-fonts.js: 1.88 MB (web)
-  • template_autoresearch_project_combined.pdf: 1.39 MB (pdf)
-  • template_autoresearch_project_combined.pdf: 1.39 MB (root)
-  • 03_results_slides.pdf: 1.13 MB (slides)
+  • template_autoresearch_project_combined.pdf: 1.40 MB (pdf)
+  • template_autoresearch_project_combined.pdf: 1.40 MB (root)
+  • 03_results_slides.pdf: 1.14 MB (slides)
   • ml_prediction_records.json: 0.94 MB (data)
 
 File Types:

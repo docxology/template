@@ -1,17 +1,17 @@
 {
   "claim_boundary": "Compact evidence summary for manuscript validation; full fact dumps are opt-in debug output.",
-  "fact_count": 960,
+  "fact_count": 964,
   "freshness_warnings": [],
   "kind_counts": {
     "artifact": 73,
     "citation": 47,
     "equation": 8,
     "figure": 28,
-    "number": 787,
+    "number": 791,
     "section": 10,
     "table": 7
   },
-  "omitted_fact_count": 760,
+  "omitted_fact_count": 764,
   "sample_facts": [
     {
       "active": true,
@@ -213,6 +213,18 @@
       "source_field": "$.claims[18].value",
       "source_path": "data/claim_ledger.yaml",
       "source_tier": "configuration",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "16"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-10-22T20:31:52Z",
+      "kind": "number",
+      "source": "output/reports/figure_quality_report.json:$.records[6].color_variance (numeric variant)",
+      "source_field": "$.records[6].color_variance",
+      "source_path": "output/reports/figure_quality_report.json",
+      "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
       "value": "16"
@@ -1935,6 +1947,18 @@
     },
     {
       "active": true,
+      "checked_at": "2026-10-22T20:31:52Z",
+      "kind": "number",
+      "source": "output/reports/figure_quality_report.json:$.records[3].color_variance (numeric variant)",
+      "source_field": "$.records[3].color_variance",
+      "source_path": "output/reports/figure_quality_report.json",
+      "source_tier": "generated_metric",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "2"
+    },
+    {
+      "active": true,
       "checked_at": "2026-08-03T00:25:50+00:00",
       "kind": "number",
       "source": "output/reports/manuscript_composition.json:$.ordered_inputs[1].ordinal",
@@ -2388,30 +2412,6 @@
       "stale": false,
       "tolerance": 0.0,
       "value": "0.02"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-07-12T16:01:11+00:00",
-      "kind": "number",
-      "source": "output/reports/token_plan.json:$.section_counts.authoring_contract (numeric variant)",
-      "source_field": "$.section_counts.authoring_contract",
-      "source_path": "output/reports/token_plan.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "0.02"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-07-12T16:01:11+00:00",
-      "kind": "number",
-      "source": "output/reports/token_plan.json:$.choices[1].ordinal (numeric variant)",
-      "source_field": "$.choices[1].ordinal",
-      "source_path": "output/reports/token_plan.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "0.02"
     }
   ],
   "schema": "template-evidence-registry-report-v1",
@@ -2420,6 +2420,6 @@
     "bibliography": 47,
     "claim_ledger": 17,
     "configuration": 55,
-    "generated_metric": 724
+    "generated_metric": 728
   }
 }

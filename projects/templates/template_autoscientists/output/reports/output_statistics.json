@@ -3,13 +3,13 @@
     "pdf": {
       "exists": true,
       "file_count": 1,
-      "size_mb": "0.29",
-      "total_size_bytes": 309129,
+      "size_mb": "0.30",
+      "total_size_bytes": 317011,
       "largest_files": [
         {
           "name": "template_autoscientists_combined.pdf",
-          "size_mb": "0.29",
-          "size_bytes": 309129,
+          "size_mb": "0.30",
+          "size_bytes": 317011,
           "path": "pdf/template_autoscientists_combined.pdf"
         }
       ],
@@ -70,26 +70,26 @@
     "figures": {
       "exists": true,
       "file_count": 4,
-      "size_mb": "0.14",
-      "total_size_bytes": 150757,
+      "size_mb": "0.16",
+      "total_size_bytes": 167359,
       "largest_files": [
         {
           "name": "ablation_efficiency.png",
-          "size_mb": "0.05",
-          "size_bytes": 52433,
+          "size_mb": "0.06",
+          "size_bytes": 58885,
           "path": "figures/ablation_efficiency.png"
-        },
-        {
-          "name": "ablation.png",
-          "size_mb": "0.05",
-          "size_bytes": 48312,
-          "path": "figures/ablation.png"
         },
         {
           "name": "search_comparison.png",
           "size_mb": "0.05",
-          "size_bytes": 47740,
+          "size_bytes": 54602,
           "path": "figures/search_comparison.png"
+        },
+        {
+          "name": "ablation.png",
+          "size_mb": "0.05",
+          "size_bytes": 51600,
+          "path": "figures/ablation.png"
         }
       ],
       "extensions": {
@@ -201,13 +201,13 @@
     "root": {
       "exists": true,
       "file_count": 1,
-      "size_mb": "0.29",
-      "total_size_bytes": 309129,
+      "size_mb": "0.30",
+      "total_size_bytes": 317011,
       "largest_files": [
         {
           "name": "template_autoscientists_combined.pdf",
-          "size_mb": "0.29",
-          "size_bytes": 309129,
+          "size_mb": "0.30",
+          "size_bytes": 317011,
           "path": "template_autoscientists_combined.pdf"
         }
       ],
@@ -217,7 +217,7 @@
     }
   },
   "total_files": 27,
-  "total_size_mb": 2.8938255310058594,
+  "total_size_mb": 2.924692153930664,
   "largest_files": [
     {
       "name": "source-web-fonts.js",
@@ -228,15 +228,15 @@
     },
     {
       "name": "template_autoscientists_combined.pdf",
-      "size_mb": "0.29",
-      "size_bytes": 309129,
+      "size_mb": "0.30",
+      "size_bytes": 317011,
       "category": "pdf",
       "path": "pdf/template_autoscientists_combined.pdf"
     },
     {
       "name": "template_autoscientists_combined.pdf",
-      "size_mb": "0.29",
-      "size_bytes": 309129,
+      "size_mb": "0.30",
+      "size_bytes": 317011,
       "category": "root",
       "path": "template_autoscientists_combined.pdf"
     },
@@ -249,24 +249,24 @@
     },
     {
       "name": "ablation_efficiency.png",
-      "size_mb": "0.05",
-      "size_bytes": 52433,
+      "size_mb": "0.06",
+      "size_bytes": 58885,
       "category": "figures",
       "path": "figures/ablation_efficiency.png"
     },
     {
-      "name": "ablation.png",
-      "size_mb": "0.05",
-      "size_bytes": 48312,
-      "category": "figures",
-      "path": "figures/ablation.png"
-    },
-    {
       "name": "search_comparison.png",
       "size_mb": "0.05",
-      "size_bytes": 47740,
+      "size_bytes": 54602,
       "category": "figures",
       "path": "figures/search_comparison.png"
+    },
+    {
+      "name": "ablation.png",
+      "size_mb": "0.05",
+      "size_bytes": 51600,
+      "category": "figures",
+      "path": "figures/ablation.png"
     },
     {
       "name": "_combined_manuscript.md",
@@ -292,13 +292,13 @@
   ],
   "missing_expected_files": [],
   "sizes_by_category": {
-    "pdf": 0.29480838775634766,
+    "pdf": 0.3023252487182617,
     "web": 2.152205467224121,
-    "figures": 0.14377307891845703,
+    "figures": 0.1596059799194336,
     "data": 0.0032682418823242188,
     "reports": 0.0030345916748046875,
     "release": 0.0019273757934570312,
-    "root": 0.29480838775634766
+    "root": 0.3023252487182617
   },
   "inventory_mode": "stable-shippable-output-v1",
   "inventory_scope": "stage5-delivery-mirror",
