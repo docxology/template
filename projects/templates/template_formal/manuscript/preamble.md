@@ -13,7 +13,8 @@ This file contains LaTeX packages and commands that are automatically injected i
 
 % Document layout
 \usepackage{geometry}
-\geometry{margin=0.25in}
+% Include the page-number footer inside the declared physical page margins.
+\geometry{margin=0.25in,includefoot}
 \usepackage{float}
 \usepackage{graphicx}
 
