@@ -55,7 +55,7 @@ from infrastructure.documentation._coverage_snapshot_output import CoverageSnaps
 COVERAGE_PROVENANCE_RELATIVE_PATH = Path("docs/_generated/coverage_snapshot.json")
 COVERAGE_PROVENANCE_SCHEMA_VERSION = 5
 COVERAGE_SOURCE_INVENTORY_MODE = "tracked-and-nonignored-coverage-inputs-v3"
-EXEMPLAR_SNAPSHOT_DATE = "2026-10-16"
+EXEMPLAR_SNAPSHOT_DATE = "2026-10-22"
 COVERAGE_MEASUREMENT_TIMEOUT_SECONDS = 1800
 _ACTIVE_COVERAGE_PROJECT = "template_active_inference"
 
@@ -158,7 +158,7 @@ class ExemplarSnapshot:
 
 EXEMPLAR_SNAPSHOT: tuple[ExemplarSnapshot, ...] = (
     ExemplarSnapshot("template_active_inference", "91.05 %"),
-    ExemplarSnapshot("template_advanced_literature_review", "94.14 %"),
+    ExemplarSnapshot("template_advanced_literature_review", "94.20 %"),
     ExemplarSnapshot("template_autopoiesis", "92.03 %"),
     ExemplarSnapshot("template_autoresearch_project", "96.36 %"),
     ExemplarSnapshot("template_autoscientists", "92.93 %"),
@@ -171,7 +171,7 @@ EXEMPLAR_SNAPSHOT: tuple[ExemplarSnapshot, ...] = (
     ExemplarSnapshot("template_literature_meta_analysis", "95.55 %"),
     ExemplarSnapshot("template_madlib", "98.95 %"),
     ExemplarSnapshot("template_methods_paper", "99.00 %"),
-    ExemplarSnapshot("template_newspaper", "99.07 %"),
+    ExemplarSnapshot("template_newspaper", "99.25 %"),
     ExemplarSnapshot("template_pitch_deck", "96.42 %"),
     ExemplarSnapshot("template_pools_rules_tools", "94.68 %"),
     ExemplarSnapshot("template_prose_project", "91.67 %"),
@@ -179,7 +179,7 @@ EXEMPLAR_SNAPSHOT: tuple[ExemplarSnapshot, ...] = (
     ExemplarSnapshot("template_registered_report", "95.17 %"),
     ExemplarSnapshot("template_search_project", "91.82 %"),
     ExemplarSnapshot("template_sia", "92.72 %"),
-    ExemplarSnapshot("template_storybook", "95.57 %"),
+    ExemplarSnapshot("template_storybook", "95.38 %"),
     ExemplarSnapshot("template_template", "95.56 %"),
     ExemplarSnapshot("template_textbook", "96.17 %"),
 )
