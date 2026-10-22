@@ -1,5 +1,3 @@
-\newpage
-
 ## Appendix: Comparative Tool Matrix {#appendix-matrix}
 
 **Symbol key** (applies to all cells): **Y** = full native support  ·  **~** = partial or plugin-based  ·  **N** = absent.

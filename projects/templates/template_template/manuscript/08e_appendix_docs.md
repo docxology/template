@@ -1,5 +1,3 @@
-\newpage
-
 ## Appendix: Documentation Inventory {#appendix-docs}
 
 The repository maintains documentation at three levels:

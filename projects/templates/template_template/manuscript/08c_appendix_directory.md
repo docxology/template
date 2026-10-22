@@ -1,5 +1,3 @@
-\newpage
-
 ## Appendix: Repository Directory Structure {#appendix-directory}
 
 ```text

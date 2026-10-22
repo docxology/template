@@ -402,7 +402,7 @@ def figure_security_posture_map(project_root: Path) -> Path:
         )
         fig.text(
             0.5,
-            0.015,
+            -0.04,
             "Generated from output/reports/security_posture_audit.json; deferred controls are scoped, not claimed as production coverage.",
             ha="center",
             fontsize=style.text_size("source_note"),
