@@ -36,6 +36,13 @@ class PrintSourceLoader(importlib.machinery.SourceFileLoader):
         this loader neither consumes nor writes it. The executed-code audit
         must see the actual cacheless module rather than that phantom cache.
         """
+        spec = getattr(module, "__spec__", None)
+        if isinstance(spec, importlib.machinery.ModuleSpec):
+            # A location-based spec lazily recreates cached even after assigning
+            # None. Keep the actual origin/__file__, but declare this loader's
+            # cacheless execution explicitly on both metadata surfaces.
+            spec.has_location = False
+            spec.cached = None
         setattr(module, "__cached__", None)
         super().exec_module(module)
 

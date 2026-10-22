@@ -112,7 +112,8 @@ def test_custom_renderer_rejects_invalid_timeout_before_execution(
 @pytest.mark.skipif(os.name == "nt", reason="POSIX symlink semantics")
 @pytest.mark.timeout(120)
 def test_run_manuscript_variable_script_uses_project_venv_python(tmp_path: Path) -> None:
-    project = tmp_path / "project"
+    template_root = tmp_path / "template"
+    project = template_root / "projects" / "project"
     script = project / "scripts" / "z_generate_manuscript_variables.py"
     script.parent.mkdir(parents=True)
     script.write_text(
@@ -138,9 +139,6 @@ def test_run_manuscript_variable_script_uses_project_venv_python(tmp_path: Path)
     # Keep relocatable macOS interpreters beside their shared libpython rather
     # than copying only the executable away from its @rpath library.
     venv.EnvBuilder(with_pip=False, symlinks=True).create(project / ".venv")
-    template_root = tmp_path / "template"
-    template_root.mkdir()
-
     result = run_manuscript_variable_script(project, template_repo_root=template_root)
 
     assert result == 0
@@ -156,13 +154,12 @@ def test_run_manuscript_variable_script_uses_project_venv_python(tmp_path: Path)
 @pytest.mark.parametrize("actual_exit", [7, 75, 124, 130])
 @pytest.mark.timeout(120)
 def test_hydration_retains_typed_actual_child_outcomes(tmp_path: Path, actual_exit: int) -> None:
-    project = tmp_path / "project"
+    root = tmp_path / "template"
+    project = root / "projects" / "project"
     script = project / "scripts" / "z_generate_manuscript_variables.py"
     script.parent.mkdir(parents=True)
     script.write_text(f"raise SystemExit({actual_exit})\n")
     venv.EnvBuilder(with_pip=False, symlinks=True).create(project / ".venv")
-    root = tmp_path / "template"
-    root.mkdir()
     code = run_manuscript_variable_script(project, template_repo_root=root)
     assert code == (actual_exit if actual_exit in (75, 124, 130) else 1)
     receipt = json.loads(next((project / "output" / ".pipeline" / "analysis").glob("*/*.json")).read_text())

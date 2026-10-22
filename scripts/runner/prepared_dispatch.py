@@ -47,12 +47,15 @@ if __name__ == "__main__":
         with tempfile.TemporaryDirectory(prefix="template-prepared-startup-") as _temporary:
             sys.pycache_prefix = str(Path(_temporary).resolve())
             _path = _repo / "infrastructure/core/bytecode_audit.py"
-            _descriptors = [os.open(_path.anchor, os.O_RDONLY | os.O_DIRECTORY)]
+            # Search-only ancestor handles preserve no-follow custody without directory reads.
+            _directory_access = getattr(os, "O_SEARCH", getattr(os, "O_PATH", os.O_RDONLY))
+            _directory_flags = _directory_access | os.O_DIRECTORY | os.O_NOFOLLOW
+            _descriptors = [os.open(_path.anchor, _directory_flags)]
             _bindings: list[tuple[int, str, int]] = []
             _directory = _descriptors[0]
             try:
                 for _name in _path.parts[1:-1]:
-                    _child = os.open(_name, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW, dir_fd=_directory)
+                    _child = os.open(_name, _directory_flags, dir_fd=_directory)
                     _bindings.append((_directory, _name, _child))
                     _descriptors.append(_child)
                     _directory = _child

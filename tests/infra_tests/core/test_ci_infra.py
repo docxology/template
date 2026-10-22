@@ -169,6 +169,7 @@ def test_broad_package_ownership_scales_shards_without_losing_selected_work() ->
         "tests/infra_tests/core/test_execution_contract.py",
         "tests/infra_tests/core/test_project_test_measurement.py",
         "tests/infra_tests/project/test_root_acceptance.py",
+        "tests/infra_tests/publishing/test_standalone_mirror.py",
     )
     changed = ("infrastructure/reporting/__init__.py", "infrastructure/validation/__init__.py", *heavy)
     files = infrastructure_files(ROOT, changed)

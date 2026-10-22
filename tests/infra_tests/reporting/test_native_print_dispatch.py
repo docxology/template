@@ -213,10 +213,12 @@ prefix = Path(sys.pycache_prefix)
 loader = PrintSourceLoader('owned_provider', source, source_root)
 spec = importlib.util.spec_from_file_location('owned_provider', source, loader=loader)
 module = importlib.util.module_from_spec(spec)
-assert isinstance(module.__cached__, str)  # Importlib's unconsumed cache label.
+assert isinstance(spec.cached, str)  # Importlib's unconsumed cache label.
 sys.modules[spec.name] = module
 loader.exec_module(module)
 assert module.VALUE == 42 and module.__cached__ is None
+assert module.__spec__ is spec and spec.cached is None and not spec.has_location
+assert spec.origin == str(source) and module.__file__ == str(source)
 registry = sys._template_executed_bytecode_audit
 runs = registry['snapshot']()[str(source)]
 assert runs and all(cache is None and digest is None for _, cache, digest in runs)
@@ -224,6 +226,15 @@ assert not Path(importlib.util.cache_from_source(str(source))).exists()
 verify = _audit_scope['verify_executed_source_code']
 verify(source_root, prefix)
 verify(Path({str(ROOT / "infrastructure")!r}), prefix)
+spec.cached = importlib.util.cache_from_source(str(source))
+try:
+    verify(source_root, prefix)
+except ValueError as error:
+    assert 'lacks an audited cache' in str(error)
+else:
+    raise AssertionError('contradictory cache metadata was accepted')
+spec.cached = None
+verify(source_root, prefix)
 try:
     exec(compile('VALUE = 99\\n', str(source), 'exec', dont_inherit=True), module.__dict__)
 except ValueError as error:

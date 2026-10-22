@@ -51,12 +51,14 @@ def expired(_signal, _frame):
     raise TimeoutError("Prepared native startup/admission exceeded its finite deadline")
 
 def regular_bytes(path):
-    descriptors = [os.open(path.anchor, os.O_RDONLY | os.O_DIRECTORY)]
+    # Ancestor handles require search access; bounded source reads still require read access.
+    directory_flags = getattr(os, "O_SEARCH", getattr(os, "O_PATH", os.O_RDONLY)) | os.O_DIRECTORY | os.O_NOFOLLOW
+    descriptors = [os.open(path.anchor, directory_flags)]
     bindings = []
     try:
         parent = descriptors[0]
         for name in path.parts[1:-1]:
-            child = os.open(name, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW, dir_fd=parent)
+            child = os.open(name, directory_flags, dir_fd=parent)
             bindings.append((parent, name, child))
             descriptors.append(child)
             parent = child

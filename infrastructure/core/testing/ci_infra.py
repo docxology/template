@@ -35,6 +35,7 @@ _ISOLATED_ROUTINE_MODULES = frozenset(
         "tests/infra_tests/core/test_execution_contract.py",
         "tests/infra_tests/core/test_project_test_measurement.py",
         "tests/infra_tests/project/test_root_acceptance.py",
+        "tests/infra_tests/publishing/test_standalone_mirror.py",
     }
 )
 
