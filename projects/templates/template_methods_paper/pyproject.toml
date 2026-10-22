@@ -15,6 +15,7 @@ authors = [
 ]
 requires-python = ">=3.12"
 dependencies = [
+    "research-project-template==4.1.0",
     "matplotlib>=3.7.0",
     "pillow>=12.3.0",
     "pyyaml>=6.0",
@@ -62,6 +63,9 @@ exclude_lines = [
 # Inherits workspace settings from root pyproject.toml
 
 # Compatibility contract for this independent exemplar release.
+[tool.uv.sources]
+research-project-template = {path = "../../..", editable = true}
+
 [tool.template]
 platform_version = "4.1.0"
 tested_python_versions = ["3.12", "3.13", "3.14"]
