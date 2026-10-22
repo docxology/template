@@ -24,7 +24,7 @@ sets CPU, 16 MiB file-size, and 128-open-file limits. Linux enforces a 1 GiB
 address-space limit; macOS records that this limit is unavailable. This executes
 trusted generated source. It provides no claim of hostile-code filesystem or
 network containment. Child PDF rendering remains explicitly unsupported.
-This lane requires platform 4.0.2 from the checkout or an installed platform
+This lane requires the declared platform SDK from the checkout or an installed platform
 package. The supervisor and actual imported generator are admitted before
 materialization. Missing or mismatched platform execution is blocked with exit
 75 and an empty executed-child set;

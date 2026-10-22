@@ -300,7 +300,7 @@ Triggers on `v*.*.*` tag push or `workflow_dispatch` (with tag input). Both trig
 4. Runs the tagged-SHA no-mocks and bounded pipeline-smoke gates, root release contract and fail-closed public capability manifest
 5. Earlier major tags retain the clean-export, install and import-smoke matrix on Python 3.12/3.13/3.14. Root 4+ already authenticated its retained complete matrix in step 3. Preparation and acceptance stay distinct
 6. Builds the final source distribution and admits its exact final bytes alongside the wheel already accepted by the installed matrix; the pristine published audit has already passed before derived execution
-7. For root 4+, selects `docs/releases/<tag>.md` for the actual tag, such as the [4.0.2 candidate notes](../../docs/releases/v4.0.2.md), and adds accepted-commit, hosted-run and receipt-hash bindings; earlier major tags use the commit-based git-log excerpt
+7. For root 4+, selects `docs/releases/<tag>.md` for the actual tag, with maintained notes listed in the [release-note index](../../docs/releases/README.md), and adds accepted-commit, hosted-run and receipt-hash bindings; earlier major tags use the commit-based git-log excerpt
 8. Creates a GitHub Release using `softprops/action-gh-release@v3.0.3` with **`generate_release_notes: false`** and attaches the admitted distributions, tag-selected overview PNG and byte manifest
 9. Retrieves the published assets and requires exact admitted hashes; auto-marks as pre-release if the tag contains `-rc`, `-beta`, or `-alpha`
 

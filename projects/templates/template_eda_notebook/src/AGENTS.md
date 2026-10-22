@@ -8,7 +8,7 @@ re-exported from `src/template_eda_notebook/__init__.py`, so callers (notebook c
 analysis script, tests) can write `from template_eda_notebook import load_dataset`. The domain library is **standalone**: its computations use NumPy/Pandas and
 never import `infrastructure.*` or sibling projects. `notebook_execution.py` is
 an explicit runtime adapter using NBClient/nbformat/Jupyter client and the declared
-`research-project-template==4.0.2` custody/process APIs outside the pure transforms.
+`research-project-template` SDK custody/process APIs pinned by project metadata outside the pure transforms.
 Only this file may import Layer1 under `manuscript/layer_contract.yaml`;
 `notebook_publication.py` and every EDA transform remain independent.
 

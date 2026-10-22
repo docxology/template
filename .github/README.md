@@ -22,7 +22,7 @@ Pipelines · Manuscripts · Cryptographic Provenance · AI-Agent Collaboration
 [![uv](https://img.shields.io/badge/package%20manager-uv-purple?logo=astral)](https://docs.astral.sh/uv/)
 [![Ruff](https://img.shields.io/badge/linter-ruff-orange?logo=ruff)](https://docs.astral.sh/ruff/)
 [![License: Apache 2.0](https://img.shields.io/badge/license-Apache%202.0-green)](../LICENSE)
-[![Source version](https://img.shields.io/badge/source%20version-4.0.2-informational)](../pyproject.toml)
+[![Source metadata](https://img.shields.io/badge/source%20version-package%20metadata-informational)](../pyproject.toml)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.19139090.svg)](https://doi.org/10.5281/zenodo.19139090)
 
 > **📄 Published**: [*A template/ approach to Reproducible Generative Research: Architecture and Ergonomics from Configuration through Publication*](https://zenodo.org/records/19139090) — DOI: [10.5281/zenodo.19139090](https://doi.org/10.5281/zenodo.19139090)

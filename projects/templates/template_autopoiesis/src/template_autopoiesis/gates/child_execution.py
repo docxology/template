@@ -72,7 +72,7 @@ def execute_child(
     if __version__ != "4.1.0":
         raise ChildCapabilityBlocked("child execution requires its bound platform version 4.1.0")
     return run_with_policy(
-        [sys.executable, "-I", "-c", _BOOTSTRAP, str(cpu_budget), script, *arguments],
+        [sys.executable, "-I", "-B", "-c", _BOOTSTRAP, str(cpu_budget), script, *arguments],
         cwd=root,
         env={
             "PATH": str(Path(sys.executable).parent),
