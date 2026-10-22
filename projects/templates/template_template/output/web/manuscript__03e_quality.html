@@ -497,6 +497,15 @@ th {
   color: white;
 }
 
+/* Preserve a complete inline-code header within the table's scroll region. */
+th code {
+  color: inherit;
+  background-color: transparent;
+  white-space: nowrap;
+  overflow-wrap: normal;
+  word-break: normal;
+}
+
 img {
   max-width: 100%;
   height: auto;
@@ -719,7 +728,7 @@ it.</p>
 <h3 id="test-suite-composition">Test Suite Composition</h3>
 <p>The repository maintains three test suites:</p>
 <ul>
-<li><strong>Infrastructure tests</strong> (<code>tests/</code>): ~12,341
+<li><strong>Infrastructure tests</strong> (<code>tests/</code>): ~12,482
 tests validating the 31 infrastructure subdirectories, covering logging,
 rendering, validation, steganography, reporting, and LLM
 integration.</li>

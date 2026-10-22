@@ -1,0 +1,252 @@
+{
+  "schema_version": "1.0",
+  "png_sha256": "ffcc6ce38f6fbcf18725438ac83efeaeae2ea0787a1f203b2953540b491d2ac4",
+  "width_px": 1700,
+  "height_px": 1100,
+  "dpi": 200,
+  "minimum_label_px": 92.0,
+  "text_measurements": [
+    {
+      "text": "Modules 19\u201324 of 31",
+      "bbox_px": [
+        303.5,
+        988.0,
+        1396.5,
+        1080.0
+      ],
+      "font_pixels": 94.44444444444444,
+      "minimum_label_px": 92.0
+    },
+    {
+      "text": "skills",
+      "bbox_px": [
+        24.0,
+        864.0,
+        256.0,
+        956.0
+      ],
+      "font_pixels": 94.44444444444444,
+      "minimum_label_px": 92.0
+    },
+    {
+      "text": "8",
+      "bbox_px": [
+        1130.0,
+        864.0,
+        1195.75,
+        956.0
+      ],
+      "font_pixels": 94.44444444444444,
+      "minimum_label_px": 92.0
+    },
+    {
+      "text": "[ARS\u00b7]",
+      "bbox_px": [
+        1350.0,
+        864.0,
+        1644.0,
+        956.0
+      ],
+      "font_pixels": 94.44444444444444,
+      "minimum_label_px": 92.0
+    },
+    {
+      "text": "fonds",
+      "bbox_px": [
+        24.0,
+        760.0,
+        284.25,
+        852.0
+      ],
+      "font_pixels": 94.44444444444444,
+      "minimum_label_px": 92.0
+    },
+    {
+      "text": "6",
+      "bbox_px": [
+        1130.0,
+        760.0,
+        1195.875,
+        852.0
+      ],
+      "font_pixels": 94.44444444444444,
+      "minimum_label_px": 92.0
+    },
+    {
+      "text": "[ARS\u00b7]",
+      "bbox_px": [
+        1350.0,
+        760.0,
+        1644.0,
+        852.0
+      ],
+      "font_pixels": 94.44444444444444,
+      "minimum_label_px": 92.0
+    },
+    {
+      "text": "rules",
+      "bbox_px": [
+        24.0,
+        656.0,
+        256.5,
+        748.0
+      ],
+      "font_pixels": 94.44444444444444,
+      "minimum_label_px": 92.0
+    },
+    {
+      "text": "6",
+      "bbox_px": [
+        1130.0,
+        656.0,
+        1195.875,
+        748.0
+      ],
+      "font_pixels": 94.44444444444444,
+      "minimum_label_px": 92.0
+    },
+    {
+      "text": "[ARS\u00b7]",
+      "bbox_px": [
+        1350.0,
+        656.0,
+        1644.0,
+        748.0
+      ],
+      "font_pixels": 94.44444444444444,
+      "minimum_label_px": 92.0
+    },
+    {
+      "text": "tools",
+      "bbox_px": [
+        24.0,
+        552.0,
+        252.0,
+        644.0
+      ],
+      "font_pixels": 94.44444444444444,
+      "minimum_label_px": 92.0
+    },
+    {
+      "text": "6",
+      "bbox_px": [
+        1130.0,
+        552.0,
+        1195.875,
+        644.0
+      ],
+      "font_pixels": 94.44444444444444,
+      "minimum_label_px": 92.0
+    },
+    {
+      "text": "[ARS\u00b7]",
+      "bbox_px": [
+        1350.0,
+        552.0,
+        1644.0,
+        644.0
+      ],
+      "font_pixels": 94.44444444444444,
+      "minimum_label_px": 92.0
+    },
+    {
+      "text": "transmission",
+      "bbox_px": [
+        24.0,
+        448.0,
+        627.75,
+        540.0
+      ],
+      "font_pixels": 94.44444444444444,
+      "minimum_label_px": 92.00000000000006
+    },
+    {
+      "text": "6",
+      "bbox_px": [
+        1130.0,
+        448.0,
+        1195.875,
+        540.0
+      ],
+      "font_pixels": 94.44444444444444,
+      "minimum_label_px": 92.00000000000006
+    },
+    {
+      "text": "[ARS\u00b7]",
+      "bbox_px": [
+        1350.0,
+        448.0,
+        1644.0,
+        540.0
+      ],
+      "font_pixels": 94.44444444444444,
+      "minimum_label_px": 92.00000000000006
+    },
+    {
+      "text": "formal_contracts",
+      "bbox_px": [
+        24.0,
+        343.0,
+        817.75,
+        437.0
+      ],
+      "font_pixels": 94.44444444444444,
+      "minimum_label_px": 94.0
+    },
+    {
+      "text": "5",
+      "bbox_px": [
+        1130.0,
+        344.0,
+        1195.75,
+        436.0
+      ],
+      "font_pixels": 94.44444444444444,
+      "minimum_label_px": 92.0
+    },
+    {
+      "text": "[ARS\u00b7]",
+      "bbox_px": [
+        1350.0,
+        344.0,
+        1644.0,
+        436.0
+      ],
+      "font_pixels": 94.44444444444444,
+      "minimum_label_px": 92.0
+    },
+    {
+      "text": "Python files \u00b7 A AGENTS",
+      "bbox_px": [
+        290.3125,
+        208.0,
+        1409.6875,
+        300.0
+      ],
+      "font_pixels": 94.44444444444444,
+      "minimum_label_px": 92.0
+    },
+    {
+      "text": "R README \u00b7 S SKILL \u00b7 P PAI",
+      "bbox_px": [
+        222.375,
+        108.0,
+        1477.625,
+        200.0
+      ],
+      "font_pixels": 94.44444444444444,
+      "minimum_label_px": 92.0
+    },
+    {
+      "text": "\u00b7 = absent",
+      "bbox_px": [
+        604.3125,
+        8.0,
+        1095.6875,
+        100.0
+      ],
+      "font_pixels": 94.44444444444444,
+      "minimum_label_px": 92.0
+    }
+  ]
+}

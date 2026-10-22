@@ -432,6 +432,15 @@ th {
   color: white;
 }
 
+/* Preserve a complete inline-code header within the table's scroll region. */
+th code {
+  color: inherit;
+  background-color: transparent;
+  white-space: nowrap;
+  overflow-wrap: normal;
+  word-break: normal;
+}
+
 img {
   max-width: 100%;
   height: auto;
@@ -579,17 +588,17 @@ mjx-container[display="true"] {
 <main id="main-content" tabindex="-1">
 <h2 id="scalability-from-1-to-n-projects">Scalability: From 1 to N
 Projects</h2>
-<p>The Standalone Project Paradigm enables horizontal scaling: adding a
-new project requires creating a directory with
-<code>manuscript/config.yaml</code> and nothing else. No infrastructure
-code changes, no <code>pyproject.toml</code> modifications, no CI
-configuration updates. The <code>run.sh</code> orchestrator
+<p>The Standalone Project Paradigm enables horizontal scaling: a project
+supplies its manuscript/config, isolated source and tests, thin analysis
+scripts, and declared dependencies. New projects use existing
+infrastructure interfaces; admission to the tracked public roster and
+release matrix remains explicit. The <code>run.sh</code> orchestrator
 automatically discovers new projects and presents them in its
 interactive menu.</p>
 <p>We have validated scaling with 25 canonical exemplars under
 <code>projects/templates/</code>—always present for onboarding and
 tooling—and with this manuscript from
-<code>projects/templates/template_template</code> (152 tests) as a
+<code>projects/templates/template_template</code> (156 tests) as a
 git-tracked public exemplar in the same automated discovery menus.</p>
 <p>Canonical trio:</p>
 <ul>
@@ -620,7 +629,7 @@ analyzes the repository via <code>src/template_template/</code>
 introspection metrics; it now lives alongside the other public exemplars
 under <code>projects/templates/</code>.</p>
 <p>These workspaces share no project-level code—only Layer 1 (31
-infrastructure subdirectories, ~1307 Python files)—validating insulation
+infrastructure subdirectories, ~1322 Python files)—validating insulation
 between domain repos and reusable services.</p>
 <h3 id="multi-project-orchestration">Multi-Project Orchestration</h3>
 <p>When the <code>--all-projects</code> flag is passed to
@@ -689,9 +698,10 @@ style="text-align: center;"><code>template_autoresearch_project</code></th>
 </tbody>
 </table></div>
 <p>The infrastructure overhead per project is constant regardless of
-project size: the same 31 modules, the same 14 pipeline stages, the same
-rendering and validation logic. This O(1) infrastructure cost is the
-architectural payoff of the Two-Layer separation.</p>
+project size: the same 31 modules, the same 17 declared pipeline stages,
+the same rendering and validation logic. The shared implementation does
+not grow with the project roster; execution time and output volume still
+grow with the work performed.</p>
 </main>
 </body>
 </html>

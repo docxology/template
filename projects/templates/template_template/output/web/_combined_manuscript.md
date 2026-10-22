@@ -62,9 +62,9 @@ Structured manifest: `../data/transmission_manifest.json`
 
 # Abstract
 
-The reproducibility problem in computational research is partly structural: research artifacts are often distributed across editors, notebooks, scripts, and manual publication steps without a shared mechanism that keeps code, data, and manuscript synchronized. Existing tools address important parts of this lifecycle: workflow managers orchestrate computation, literate-programming systems render documents, and data-versioning tools track artifacts. `template/` combines those concerns with test and provenance gates by applying Infrastructure as Code to the research lifecycle. Its Two-Layer Architecture separates 31 infrastructure subdirectories (28 importable Python packages, ~1307 modules, validated by ~12,341 tests) from self-contained project workspaces. A YAML-declared pipeline (17 stages; 10 in a default full run) coordinates environment checks, test execution, analysis, Pandoc/XeLaTeX rendering, SHA-256 hashing with optional steganographic watermarking, structural validation, and optional LLM review. The declared quality floors—90% for project source and 60% for infrastructure source—are injected from executable configuration rather than copied into the manuscript. Documentation Duality equips repository directories with human-facing `README.md` and agent-facing `AGENTS.md` files; skill-enabled infrastructure packages additionally expose structured `SKILL.md` descriptors so agents can discover supported capabilities from versioned interfaces.
+The reproducibility problem in computational research is partly structural: research artifacts are often distributed across editors, notebooks, scripts, and manual publication steps without a shared mechanism that keeps code, data, and manuscript synchronized. Existing tools address important parts of this lifecycle: workflow managers orchestrate computation, literate-programming systems render documents, and data-versioning tools track artifacts. `template/` combines those concerns with test and provenance gates by applying Infrastructure as Code to the research lifecycle. Its Two-Layer Architecture separates 31 infrastructure subdirectories (28 importable Python packages, ~1322 modules, validated by ~12,482 tests) from self-contained project workspaces. A YAML-declared pipeline (17 stages; 10 in a default full run) coordinates environment checks, test execution, analysis, Pandoc/XeLaTeX rendering, SHA-256 hashing with optional steganographic watermarking, structural validation, and optional LLM review. The declared quality floors—90% for project source and 60% for infrastructure source—are injected from executable configuration rather than copied into the manuscript. Documentation Duality equips repository directories with human-facing `README.md` and agent-facing `AGENTS.md` files; skill-enabled infrastructure packages additionally expose structured `SKILL.md` descriptors so agents can discover supported capabilities from versioned interfaces.
 
-The generated public exemplar roster (`templates/template_active_inference`, `templates/template_advanced_literature_review`, `templates/template_autopoiesis`, `templates/template_autoresearch_project`, `templates/template_autoscientists`, `templates/template_code_project`, `templates/template_data_descriptor`, `templates/template_eda_notebook`, `templates/template_experiment_tree`, `templates/template_formal`, `templates/template_gold_refinement`, `templates/template_literature_meta_analysis`, `templates/template_madlib`, `templates/template_methods_paper`, `templates/template_newspaper`, `templates/template_pitch_deck`, `templates/template_pools_rules_tools`, `templates/template_prose_project`, `templates/template_redacted_report`, `templates/template_registered_report`, `templates/template_search_project`, `templates/template_sia`, `templates/template_storybook`, `templates/template_template`, `templates/template_textbook`) supplies heterogeneous control-positive layouts, including optimization (`template_code_project`, 263 discovered tests), prose (`template_prose_project`, 165 discovered tests), and AutoResearch readiness (`template_autoresearch_project`, 318 discovered tests). Each declares the same 90% project-source floor and consumes the shared pipeline without project-to-project imports. This manuscript adds a reflexive artifact: `template_template` (152 discovered tests) follows the same analysis and render path while injecting repository counters and figures from live introspection. The result is a self-documenting build whose quantitative repository claims are generated artifacts, whose manuscript claims are checked against an evidence registry, and whose output can be validated and optionally watermarked. A versioned comparative matrix situates `template/` against peer tools across the capabilities represented in Figure 4. Code is released under the Apache License 2.0 at `github.com/docxology/template`; the work remains open-ended.
+The generated public exemplar roster (`templates/template_active_inference`, `templates/template_advanced_literature_review`, `templates/template_autopoiesis`, `templates/template_autoresearch_project`, `templates/template_autoscientists`, `templates/template_code_project`, `templates/template_data_descriptor`, `templates/template_eda_notebook`, `templates/template_experiment_tree`, `templates/template_formal`, `templates/template_gold_refinement`, `templates/template_literature_meta_analysis`, `templates/template_madlib`, `templates/template_methods_paper`, `templates/template_newspaper`, `templates/template_pitch_deck`, `templates/template_pools_rules_tools`, `templates/template_prose_project`, `templates/template_redacted_report`, `templates/template_registered_report`, `templates/template_search_project`, `templates/template_sia`, `templates/template_storybook`, `templates/template_template`, `templates/template_textbook`) supplies heterogeneous control-positive layouts, including optimization (`template_code_project`, 263 discovered tests), prose (`template_prose_project`, 165 discovered tests), and AutoResearch readiness (`template_autoresearch_project`, 318 discovered tests). Each declares the same 90% project-source floor and consumes the shared pipeline without project-to-project imports. This manuscript adds a reflexive artifact: `template_template` (156 discovered tests) follows the same analysis and render path while injecting repository counters and figures from live introspection. The result is a self-documenting build whose quantitative repository claims are generated artifacts, whose manuscript claims are checked against an evidence registry, and whose output can be validated and optionally watermarked. A versioned comparative matrix situates `template/` against peer tools across the capabilities reported in the Results section. Code is released under the Apache License 2.0 at `github.com/docxology/template`; the work remains open-ended.
 
 
 
@@ -136,13 +136,15 @@ No existing system addresses all six concerns within a single enforced pipeline.
 
 `template/` was conceived as a structural antidote to this fragmentation. Rather than adding reproducibility as an afterthought—a Docker container wrapping an already-disjointed workflow [@boettiger2015docker]—the template enforces integrity at the architectural level. It realizes Gentleman and Temple Lang's research compendium vision [@gentleman2007research] at repository scale, bundling code, data, tests, manuscripts, and provenance into a single, pipeline-enforced system with version-controlled infrastructure [@ram2013git]. It stands on four primary pillars:
 
-1. **Ergonomic Modularity**: A Two-Layer Architecture cleanly separates globally shared infrastructure (logging, rendering, validation, steganography) from project-specific logic (manuscripts, scripts, data). 31 infrastructure subdirectories (28 importable packages) comprising ~1307 Python modules provide reusable services; projects consume them without modification.
+1. **Ergonomic Modularity**: A Two-Layer Architecture cleanly separates globally shared infrastructure (logging, rendering, validation, steganography) from project-specific logic (manuscripts, scripts, data). 31 infrastructure subdirectories (28 importable packages) comprising ~1322 Python modules provide reusable services; projects consume them without modification.
 
-2. **Execution Integrity**: Pipeline advancement is contingent on test passage. The configured source-coverage floors are 60% for infrastructure and 90% for each project. The static gate rejects prohibited mock-framework imports, while the suites exercise real filesystem and subprocess behavior and use local protocol servers or explicitly enabled live services for network boundaries. ~12,341 infrastructure tests and 6293+ project tests are discovered by the introspection build.
+2. **Execution Integrity**: Pipeline advancement is contingent on test passage. The configured source-coverage floors are 60% for infrastructure and 90% for each project. The static gate rejects prohibited mock-framework imports, while the suites exercise real filesystem and subprocess behavior and use local protocol servers or explicitly enabled live services for network boundaries. ~12,482 infrastructure tests and 6321+ project tests are discovered by the introspection build.
 
 3. **Automated Provenance**: Steganographic watermarking and cryptographic hashing are integrated directly into the rendering pipeline. Every generated PDF carries SHA-256 (and, when enabled, SHA-512) fingerprints, an alpha-channel watermark (configurable text or QR overlay), per-page provenance footers and barcode strips, and embedded PDF metadata recording the build timestamp, document identifier, and Git commit hash. Provenance is not asserted by policy; it is enforced by architecture.
 
-4. **AI-Agent Collaboration and Skill-Based Agentic Operations**: A three-tier documentation architecture enables AI agents to operate at every level of the system. At the system level, `CLAUDE.md` asserts global architectural constraints. At the structural level, `AGENTS.md` files at every directory expose local API surfaces, file inventories, and integration contracts. At the module level, `SKILL.md` files---written to a discoverable YAML+Markdown schema aligned with the Model Context Protocol [@anthropic2024mcp]---define each infrastructure module as a reusable, self-describing tool. An agent invoking `infrastructure.rendering` does not need to read source code: it reads the `rendering/SKILL.md`, which declares the module's name, description, key imports, and example invocations in a machine-parseable YAML frontmatter block. This architecture is the practical realization of the skill-library paradigm established in the agent literature: Yao et al.'s ReAct framework [@yao2023react] demonstrated that interleaving reasoning traces with tool invocations dramatically improves LLM reliability; Schick et al.'s Toolformer [@schick2023toolformer] showed that self-supervised tool use can be bootstrapped from natural language; Wang et al.'s Voyager [@wang2023voyager] proved that growing skill libraries enable open-ended autonomous exploration in complex environments. `template/` instantiates this vision in the domain of scientific research infrastructure: each `SKILL.md` is a Voyager-style skill, each pipeline stage is a ReAct action, and the full infrastructure layer constitutes a composable, protocol-aligned skill library for scientific computation.
+4. **AI-Agent Collaboration and Skill-Based Agentic Operations**: A three-tier documentation architecture enables AI agents to operate at every level of the system. At the system level, root `AGENTS.md` and `.agents/` define shared constraints and generic workflows; client files are compatibility references. At the structural level, `AGENTS.md` files in documented directories expose local API surfaces, file inventories, and integration contracts. At the module level, `SKILL.md` files---written to a discoverable YAML+Markdown schema aligned with the Model Context Protocol [@anthropic2024mcp]---describe skill-enabled modules and exemplars as reusable capabilities.
+
+An agent invoking `infrastructure.rendering` does not need to read source code: it reads the `rendering/SKILL.md`, which declares the module's name, description, activation metadata in YAML frontmatter and imports and example invocations in its Markdown body. This architecture is the practical realization of the skill-library paradigm established in the agent literature: Yao et al.'s ReAct framework [@yao2023react] demonstrated that interleaving reasoning traces with tool invocations dramatically improves LLM reliability; Schick et al.'s Toolformer [@schick2023toolformer] showed that self-supervised tool use can be bootstrapped from natural language; Wang et al.'s Voyager [@wang2023voyager] proved that growing skill libraries enable open-ended autonomous exploration in complex environments. `template/` instantiates this vision in the domain of scientific research infrastructure: each `SKILL.md` is a Voyager-style skill, each pipeline stage is a ReAct action, and the full infrastructure layer constitutes a composable, protocol-aligned skill library for scientific computation.
 
 ## Scope and Contributions
 
@@ -173,7 +175,7 @@ The `template/` architecture is deliberately bifurcated into a globally shared `
 
 The repository is organized into two strictly separated layers:
 
-**Infrastructure Layer** (`infrastructure/`): 31 infrastructure subdirectories—28 of them independently-importable Python packages—comprising ~1307 modules and providing reusable services. Each importable package has its own `__init__.py`, `AGENTS.md`, and `README.md`, and exports a well-defined public API (the remaining subdirectories, e.g. `config/`, hold shared configuration). The infrastructure layer knows nothing about any specific project---it provides generic capabilities (logging, rendering, validation, steganography) that any project may consume.
+**Infrastructure Layer** (`infrastructure/`): 31 infrastructure subdirectories—28 of them independently-importable Python packages—comprising ~1322 modules and providing reusable services. Each importable package has its own `__init__.py`, `AGENTS.md`, and `README.md`, and exports a well-defined public API (the remaining subdirectories, e.g. `config/`, hold shared configuration). The infrastructure layer knows nothing about any specific project---it provides generic capabilities (logging, rendering, validation, steganography) that any project may consume.
 
 **Project Layer** (`projects/`): Self-contained research workspaces. Each project directory contains:
 
@@ -236,28 +238,28 @@ The critical property is that `calculate_average` in the correct pattern lives i
 
 Single-project pipelines read `infrastructure/core/pipeline/pipeline.yaml`. `scripts/runner/execute_pipeline.py` expands the declarative DAG, applies tag filters (`--mode core` skips `llm` stages), checkpoints between nodes, then dispatches the declared `scripts/pipeline/stage_NN_*.py` scripts or builtin methods (`_run_clean_outputs`).
 
-The **default YAML graph contains ten named core stages** (plus telemetry configuration metadata):
+The YAML declares **17 stages**. Tag filtering selects **10 stages for a default full run** and **8 for core mode**. The overview below covers the default full selection: core stages plus live LLM stages. Telemetry settings are configuration metadata, not additional DAG nodes.
 
 1. **Clean Output Directories** — wipes prior `projects/<name>/output/` + delivered `output/<name>/` paths so stale PDFs cannot satisfy validation.
 2. **Environment Setup** (`scripts/pipeline/stage_00_setup.py`) — Python/uv probing, toolchain discovery, scaffolding directories, `PYTHONPATH` wiring.
-3. **Infrastructure Tests** (`scripts/pipeline/stage_01_test.py --infra-only`) — `tests/` suite with the configured ≥60% source-coverage floor.
+3. **Infrastructure Tests** (`scripts/pipeline/stage_01_test.py`, `--infra-only`, `--infra-scope` `pipeline-smoke`) — focused real infrastructure contracts for the project pipeline. The full infrastructure suite and its configured ≥60% coverage floor remain separate verification.
 4. **Project Tests** (`scripts/pipeline/stage_01_test.py --project-only`) — isolated per-project suites with each project's declared floor (≥90% for this exemplar).
 5. **Project Analysis** (`scripts/pipeline/stage_02_analysis.py`) — lexicographically ordered `projects/<name>/scripts/*.py`, each a thin orchestrator (`src/` does real work).
 6. **PDF Rendering** (`scripts/pipeline/stage_03_render.py`) — Pandoc → XeLaTeX loop, bibliography assembly, injected variables from Stage 02 artefacts.
 7. **Output Validation** (`scripts/pipeline/stage_04_validate.py`) — PDF structure, manifests, Markdown hygiene.
-8. **LLM Scientific Review** (`scripts/pipeline/stage_06_llm_review.py --reviews-only`; `tags: llm`) — executive + quality critiques via local Ollama; `allow_skip: true`.
+8. **LLM Manuscript Review** (`scripts/pipeline/stage_06_llm_review.py --reviews-only`; `tags: llm`) — executive + quality critiques via local Ollama; `allow_skip: true`.
 9. **LLM Translations** (`scripts/pipeline/stage_06_llm_review.py --translations-only`; tags `llm`, same dependency edges) — multilingual abstract expansion.
 10. **Copy Outputs** (`scripts/pipeline/stage_05_copy.py`) — reproducible snapshots into canonical `output/<project>/`.
 
-Two LLM nodes intentionally share one script module with orthogonal CLI switches; both depend only on validation so they can parallelize logically while remaining optional.
+The two LLM nodes share one script module with orthogonal CLI switches and depend on output validation. Full mode includes them; core mode excludes them. When a stage permits a skip, it must retain a fresh policy-bound reason receipt; unavailable required live acceptance remains blocked.
 
-**Executive reporting** (`scripts/pipeline/stage_07_executive_report.py`) is **not** a YAML node inside the single-project executor. `--all-projects` / `execute_multi_project.py` invokes it once after iterating projects, consolidating cross-project KPIs dashboards.
+**Executive reporting** (`scripts/pipeline/stage_07_executive_report.py`) is a separate multi-project reporting operation, not an additional YAML node inside the single-project executor. `execute_multi_project.py` writes aggregate summary reports after project execution.
 
 Topological order therefore differs slightly from declaration order (e.g., copy executes after validation even though stage `stage_05_copy.py` precedes `stage_06_llm_review.py` lexically).
 
 ### Stage Highlights
 
-**Infrastructure vs project tests.** Splitting pytest invocations isolates flaky infra regressions (`MAX_TEST_FAILURES` knobs) from zero-tolerance gates on domain code (`max_project_test_failures` default 0 declared in YAML front-matter/testing blocks).
+**Infrastructure and project tests.** Separate invocations isolate the focused infrastructure smoke contract from each project's nonempty test suite and project-local coverage gate. Required test or coverage failures and unsuccessful runners block pipeline completion; configured failure tolerances cannot turn a nonzero child test result into success. The full infrastructure coverage floor (≥60%) is verified separately. An explicitly skippable stage may accept exit 2 only with a fresh reason receipt bound to the current run, stage, command, and plan. That recorded skip does not satisfy required live acceptance.
 
 **Stage 02 illustration.** The analysis stage is deliberately concrete rather than a hypothetical diagram factory: each canonical project ships real behaviour at this node. `template_autoresearch_project` runs readiness validation; `template_search_project` merges remote literature JSON, generates scripted figures (`y_generate_search_figures.py`), and writes manifests; `template_code_project` emits optimization plots; and `template_prose_project` triggers structural validation scaffolding. The pipeline shape is identical across all four—only the Stage 02 payload differs—which is exactly what lets one orchestrator serve heterogeneous research domains. The live public roster is generated in [`active_projects.md`](../../../../docs/_generated/active_projects.md).
 
@@ -286,18 +288,18 @@ Executes Python `secure` path: standard pipeline artefact reproduction **then** 
 
 ## Documentation Duality and AI Collaboration {#documentation-duality-and-ai-collaboration}
 
-Every directory at every level of the repository hierarchy contains two documentation files:
+The Documentation Duality standard pairs two files in documented source directories; the live inventory reports actual coverage:
 
 - **`README.md`**: Human-readable overview, quick-start instructions, and directory structure.
 - **`AGENTS.md`**: Machine-readable technical specification optimized for AI coding assistants. Contains API tables, dependency graphs, implementation patterns, and architectural constraints.
 
 This Documentation Duality standard serves two purposes. First, it ensures that both human researchers and AI agents can navigate the codebase efficiently—`AGENTS.md` files provide the structured context that language models need to make informed code modifications without hallucinating API signatures or violating architectural invariants. Second, it creates a self-documenting feedback loop: as AI agents modify the codebase, they update the corresponding `AGENTS.md` files, keeping documentation synchronized with implementation. Lau and Guo's survey of 90 AI coding assistant systems [@lau2025aicoding] identifies contextual code understanding as a primary bottleneck; the Documentation Duality standard addresses this by providing pre-structured context at every directory level.
 
-The template additionally includes `CLAUDE.md` at the repository root, providing system-level instructions for AI coding assistants—architectural principles, testing requirements, and naming conventions that apply globally. This creates a three-tier documentation architecture: per-directory `AGENTS.md` for local context, root `README.md` and `CLAUDE.md` for global constraints, and `README.md` for human navigation.
+Root `AGENTS.md` defines shared architectural and testing constraints. `.agents/` supplies generic skills, roles, workflows, and confined local state; `.agents/AGENTS.md` documents that catalog. Per-directory `AGENTS.md` adds local contracts, and `README.md` supplies human navigation. `CLAUDE.md` is a client command reference; `.cursor/` and `.cursorrules` are deprecated compatibility bridges to the shared guidance.
 
 ## Agentic Skill Architecture {#agentic-skill-architecture}
 
-The [Documentation Duality](#documentation-duality-and-ai-collaboration) standard addresses human and AI navigation at the directory level. A complementary layer operates at the *module* level: every infrastructure subpackage carries two additional machine-readable files that transform it from a passive code library into an active, protocol-aligned skill endpoint.
+The [Documentation Duality](#documentation-duality-and-ai-collaboration) standard addresses human and AI navigation at the directory level. A complementary layer operates at the *module* level: capability-specific `SKILL.md` descriptors add discoverable instructions and invocation examples to documented modules. A descriptor supplies context; executable tools remain separately registered interfaces.
 
 ### The Three-Tier Skill Protocol
 
@@ -305,39 +307,37 @@ The [Documentation Duality](#documentation-duality-and-ai-collaboration) standar
 
 | Tier | File | Scope | Purpose |
 |------|------|-------|---------|
-| 1 — System | `README.md` | Repository root | Global architectural principles, Zero-Mock policy, naming conventions |
-| 2 — Structure | `AGENTS.md` | Every directory | Local file inventories, API surfaces, integration patterns, architectural constraints |
-| 3 — Skill | `SKILL.md` | Every infrastructure module | Machine-parseable skill descriptor: module name, description, key imports, usage pattern |
+| 1 — System | Root `AGENTS.md`, `.agents/` | Repository-wide | Shared constraints, skills, roles, workflows, and local state |
+| 2 — Structure | `AGENTS.md` | Documented directories | Local file inventories, API surfaces, integration patterns, architectural constraints |
+| 3 — Skill | `SKILL.md` | Skill-enabled modules and exemplars | Machine-parseable skill descriptor: module name, description, key imports, usage pattern |
 
-Tier 1 and Tier 2 have direct analogues in the prompt-engineering literature: system prompts and retrieval-augmented context [@lau2025aicoding]. Tier 3 is novel. The `SKILL.md` files follow a YAML frontmatter + Markdown instruction format precisely aligned with the tool-descriptor schemas of the Model Context Protocol [@anthropic2024mcp]. The following is the actual frontmatter from `infrastructure/rendering/SKILL.md`:
+Tier 1 and Tier 2 have direct analogues in the prompt-engineering literature: system prompts and retrieval-augmented context [@lau2025aicoding]. Tier 3 is novel. The `SKILL.md` files combine YAML discovery metadata with Markdown instructions. These descriptors complement the separately registered tools exposed through the Model Context Protocol [@anthropic2024mcp]. The following presents the metadata from `infrastructure/rendering/SKILL.md`, with its description folded into equivalent YAML for readability:
 
 ```yaml
 ---
 name: infrastructure-rendering
-description: Skill for the rendering infrastructure module providing multi-format output generation including PDF manuscripts, HTML web pages, and Beamer/Reveal.js slides. Use when rendering research outputs, converting markdown to PDF, generating slides, or configuring LaTeX rendering.
+description: >-
+  Skill for the rendering infrastructure module providing multi-format
+  output generation including PDF manuscripts, HTML web pages, and
+  Beamer/Reveal.js slides. Use when rendering research outputs,
+  converting markdown to PDF, generating slides, or configuring LaTeX
+  rendering.
 ---
 ```
 
-An MCP client reading this block immediately knows the module name, its natural-language activation condition ("use for"), and which Python symbols to import. No source-code inspection is required. This is the practical implementation of Toolformer-style self-documented tools [@schick2023toolformer]—rather than a language model learning tool APIs from training data, the APIs are encoded directly in version-controlled, co-located skill files that evolve with the codebase.
+A skill loader reading this block discovers the module name and its natural-language activation condition. The Markdown body supplies Python imports and usage examples; the frontmatter does not itself register an executable MCP tool. This is the practical implementation of Toolformer-style self-documented tools [@schick2023toolformer]—rather than a language model learning tool APIs from training data, the APIs are encoded directly in version-controlled, co-located skill files that evolve with the codebase.
 
 ### Module Skill Coverage
 
-Each infrastructure subdirectory surfaced by `discover_infrastructure_modules()` carries paired `README.md` + `AGENTS.md`; agent-facing `SKILL.md` manifests exist wherever teams enable Cursor / PAI manifests (regenerated via `python -m infrastructure.skills`). Root-level `PAI.md` summarizes cross-package obligations.
+`discover_infrastructure_modules()` reports the actual `README.md`, `AGENTS.md`, `SKILL.md`, and `PAI.md` presence for each enumerated subdirectory. `python -m infrastructure.skills` maintains the shared `.agents/skill_manifest.json`; module and public-exemplar skills participate independently of any editor. `PAI.md` provides an optional integration narrative.
 
 Promotion policy: new Layer‑1 directories must ship human + machine-readable docs (`README.md`, `AGENTS.md`) immediately; Tier‑3 SKILL assets follow once APIs stabilize.
 
 ### MCP Server Mapping
 
-The mapping from `SKILL.md` descriptors to MCP server endpoints is intentional but not yet automated; it represents the principal next integration step. In the MCP architecture [@anthropic2024mcp], a server exposes three primitive types: **Tools** (executable functions), **Resources** (data the model can read), and **Prompts** (structured query templates). Each `infrastructure` module maps naturally onto this taxonomy:
+The opt-in `infrastructure.mcp_server` exposes the existing operation catalog, pipeline description, discovered skills, and curated CLI invocation through `list_operations`, `describe_pipeline`, `list_skills`, and `invoke_cli`. CLI invocation is confined to registered infrastructure modules; mutating or external operations require the server's explicit opt-in. Skill discovery and tool execution therefore remain separate contracts. The server does not automatically expose every Python function, rendered file, or suggested module-to-resource mapping.
 
-- `infrastructure.llm` → MCP **Tool** (`query`, `apply_template`) + MCP **Prompt** (research prompt templates)
-- `infrastructure.rendering` → MCP **Tool** (`render_pdf`, `render_html`) + MCP **Resource** (rendered PDFs as URI-addressable resources)
-- `infrastructure.validation` → MCP **Tool** (`validate_pdf_rendering`, `validate_markdown`)
-- `infrastructure.publishing` → MCP **Tool** (`publish_to_zenodo`, `generate_citation_bibtex`) + MCP **Resource** (DOI registry)
-- `infrastructure.steganography` → MCP **Tool** (`SteganographyProcessor.process`) + MCP **Resource** (hash manifests)
-- `infrastructure.search` · `infrastructure.reference` → MCP **Tool** wrappers over literature retrieval + BibTeX handling + MCP **Resource** exports for corpus JSON / `.bib`
-
-An agent orchestrating a full research pipeline could, in principle, compose these MCP tools to reproduce the declarative DAG programmatically—discovering capabilities via `SKILL.md` frontmatter, executing them via MCP protocol calls, and consuming their outputs as Resources. The `SKILL.md` files parallel Voyager's skill library [@wang2023voyager]—Voyager's agent accumulates a growing library of executable Minecraft skills represented as JavaScript functions; `template/`'s agent accumulates a curated library of research pipeline skills represented as YAML-frontmattered `SKILL.md` files. In both cases, the skill representation is machine-readable, version-controlled, and self-describing. Wang et al.'s LLM agent survey [@wang2024llmagents] identifies tool use, planning, and memory as the three fundamental capabilities of autonomous agents; Yao et al.'s ReAct framework [@yao2023react] demonstrates that interleaving reasoning traces with tool actions dramatically improves agent reliability in interactive settings. The `template/` skill architecture maps cleanly onto these three capabilities: the `SKILL.md` descriptors supply the tool-use layer, the declarative DAG of `17` `pipeline.yaml` stages (a default full run executes `10`) supplies the planning scaffold, and the per-criterion checkpoint system supplies the memory layer.
+An agent can inspect these catalogs and choose supported operations while retaining the pipeline's declared dependencies and acceptance gates. Discovery alone does not establish successful execution or publication. The `SKILL.md` files parallel Voyager's skill library [@wang2023voyager]—Voyager's agent accumulates a growing library of executable Minecraft skills represented as JavaScript functions; `template/`'s agent accumulates a curated library of research pipeline skills represented as YAML-frontmattered `SKILL.md` files. In both cases, the skill representation is machine-readable, version-controlled, and self-describing. Wang et al.'s LLM agent survey [@wang2024llmagents] identifies tool use, planning, and memory as the three fundamental capabilities of autonomous agents; Yao et al.'s ReAct framework [@yao2023react] demonstrates that interleaving reasoning traces with tool actions dramatically improves agent reliability in interactive settings. The `template/` skill architecture maps cleanly onto these three capabilities: the `SKILL.md` descriptors supply the tool-use layer, the declarative DAG of `17` `pipeline.yaml` stages (a default full run executes `10`) supplies the planning scaffold, and the per-criterion checkpoint system supplies the memory layer.
 
 
 
@@ -406,7 +406,7 @@ These thresholds are enforced at Stage 01 of the pipeline. A project test run be
 
 The repository maintains three test suites:
 
-- **Infrastructure tests** (`tests/`): ~12,341 tests validating the 31 infrastructure subdirectories, covering logging, rendering, validation, steganography, reporting, and LLM integration.
+- **Infrastructure tests** (`tests/`): ~12,482 tests validating the 31 infrastructure subdirectories, covering logging, rendering, validation, steganography, reporting, and LLM integration.
 - **Project tests** (`projects/*/tests/`): Per-project suites whose sizes scale with each exemplar's surface area — for example 318 tests in `template_autoresearch_project` and 263 in `template_code_project`, with several exemplars larger still. (A true min/max span would require dedicated `project_test_count_min`/`project_test_count_max` tokens in `build_manuscript_metrics_dict`; see the meta-template's generator backlog.)
 - **Integration tests**: Embedded within infrastructure tests, these exercise full pipeline stages against real manuscript inputs, validating end-to-end behavior from Markdown source to rendered PDF.
 
@@ -448,8 +448,8 @@ The `./run.sh` interactive orchestrator can execute the public roster through th
 
 | Metric | Value |
 |--------|-------|
-| Test files | 925+ |
-| Total tests | ~12,341 |
+| Test files | 938+ |
+| Total tests | ~12,482 |
 | Infrastructure coverage gate | ≥60% configured floor |
 | Prohibited mock-framework imports | Checked by the static no-mocks gate |
 
@@ -464,7 +464,7 @@ The introspection module (`template_template.core.introspection`) emits the auth
 | `autoresearch` | 11 | ✓ | ✓ | `build_autoresearch_plan`, readiness validation CLI |
 | `benchmark` | 4 | ✓ | ✓ | Template harness scoring + comparative gates |
 | `config` | 0 | ✓ | ✓ | Repository defaults + hardened templates |
-| `core` | 195 | ✓ | ✓ | `get_logger`, `load_config`, `TemplateError` |
+| `core` | 199 | ✓ | ✓ | `get_logger`, `load_config`, `TemplateError` |
 | `docker` | 0 | ✓ | ✓ | Containerisation scaffolding |
 | `doctor` | 14 | ✓ | ✓ | Checkout diagnose/fix/undo repairs |
 | `documentation` | 23 | ✓ | ✓ | `FigureManager`, `build_api_index`, `generate_markdown_table` |
@@ -475,13 +475,13 @@ The introspection module (`template_template.core.introspection`) emits the auth
 | `metadata` | 3 | ✓ | ✓ | `normalized_repository_url`, `generate_metadata_package` |
 | `methods` | 10 | ✓ | ✓ | `build_methods_orchestration_plan`, methods-stage contracts + validation |
 | `orchestration` | 14 | ✓ | ✓ | `PipelineRunner`, entry point for `./run.sh` |
-| `project` | 104 | ✓ | ✓ | `discover_projects`, workspace management |
+| `project` | 111 | ✓ | ✓ | `discover_projects`, workspace management |
 | `prose` | 9 | ✓ | ✓ | Markdown readability + prose tooling |
 | `provenance` | 9 | ✓ | ✓ | — |
 | `publishing` | 83 | ✓ | ✓ | Zenodo, executable bundle, archival targets |
 | `reference` | 16 | ✓ | ✓ | BibTeX models, parsers, converters |
-| `rendering` | 120 | ✓ | ✓ | PDF/HTML/slide rendering, Pandoc filters |
-| `reporting` | 406 | ✓ | ✓ | Coverage parsers, dashboards, executive artefacts |
+| `rendering` | 121 | ✓ | ✓ | PDF/HTML/slide rendering, Pandoc filters |
+| `reporting` | 409 | ✓ | ✓ | Coverage parsers, dashboards, executive artefacts |
 | `research` | 3 | ✓ | ✓ | — |
 | `rules` | 6 | ✓ | ✓ | — |
 | `scientific` | 4 | ✓ | ✓ | `check_numerical_stability`, `benchmark_function` |
@@ -499,31 +499,31 @@ All 31 enumerated subdirectories carry Tier‑1/`README.md` and Tier‑2/`AGENTS
 
 | Layer | Role |
 |-------|------|
-| System prompts | Root `CLAUDE.md`, README policy |
+| Shared agent guidance | Root `AGENTS.md`, `.agents/` skills, roles, and workflows |
 | Structural | `AGENTS.md` directories |
-| Skills | Optional `SKILL.md` manifests + generated `.cursor/skill_manifest.json` |
+| Skills | Optional `SKILL.md` manifests + generated `.agents/skill_manifest.json` |
 | PAI capsule | Repository level `PAI.md` narratives |
 
 `375+` Markdown shards under `docs/` capture operational knowledge without duplicating auto-generated inventories.
 
 ## DAG Reference (Declarative Executor)
 
-Stages below mirror `pipeline.yaml` (executor-topological order—not strict numeric script filenames). Scripts live under `scripts/`.
+The table summarizes the 10 default full-run stages (core plus live LLM nodes) from 17 YAML declarations; core mode selects 8. Separately tagged opt-in extensions are omitted here. Entries follow dependency order rather than numeric script filenames.
 
 | Name | Typical script / method | Responsibility | Failure semantics |
-|------|------------------------|----------------|------------------|
+|--------------|------------------------|----------------|------------------|
 | Clean Output Directories | `_run_clean_outputs` | Deletes stale `output/` trees | Blocking |
 | Environment Setup | `scripts/pipeline/stage_00_setup.py` | Validates tooling, PYTHONPATH scaffolding | Blocking |
-| Infrastructure Tests | `scripts/pipeline/stage_01_test.py --infra-only` | Infra pytest + coverage gates | Tunable thresholds |
-| Project Tests | `scripts/pipeline/stage_01_test.py --project-only` | Project pytest + coverage gates | Zero failures default |
+| Infrastructure Tests | `scripts/pipeline/stage_01_test.py` `--infra-only` `--infra-scope` `pipeline-smoke` | Focused infrastructure smoke contracts | Required tests must pass |
+| Project Tests | `scripts/pipeline/stage_01_test.py` `--project-only` | Project-local tests + coverage gates | Required tests and coverage must pass |
 | Project Analysis | `scripts/pipeline/stage_02_analysis.py` | Executes `projects/<name>/scripts/*.py` | Blocking |
 | PDF Rendering | `scripts/pipeline/stage_03_render.py` | Pandoc → XeLaTeX manuscripts | Blocking |
 | Output Validation | `scripts/pipeline/stage_04_validate.py` | Structural PDF/markdown probes | Blocking / warnings |
-| LLM Scientific Review | `scripts/pipeline/stage_06_llm_review.py --reviews-only` | Local Ollama reviews | Skippable / exit 2 tolerated |
-| LLM Translations | `scripts/pipeline/stage_06_llm_review.py --translations-only` | Optional translations | Skippable |
-| Copy Outputs | `scripts/pipeline/stage_05_copy.py` | Mirrors deliverables → `output/<project>/` | Soft-fail surfaced in logs |
+| LLM Manuscript Review | `scripts/pipeline/stage_06_llm_review.py` `--reviews-only` | Local Ollama reviews | Fresh policy-bound skip; required live acceptance remains blocking |
+| LLM Translations | `scripts/pipeline/stage_06_llm_review.py` `--translations-only` | Optional translations | Fresh policy-bound skip |
+| Copy Outputs | `scripts/pipeline/stage_05_copy.py` | Mirrors deliverables → `output/<project>/` | Blocking |
 
-`scripts/pipeline/stage_07_executive_report.py` is **multi-project orchestration glue** invoked after iterating active projects—not a tenth DAG node for single-repo runs (`execute_pipeline.py`).
+`scripts/pipeline/stage_07_executive_report.py` provides separate **multi-project executive reporting**, not an additional single-project DAG node (`execute_pipeline.py`). The multi-project executor writes its aggregate summary after project execution.
 
 ## Steganographic Performance Boundary
 
@@ -533,22 +533,20 @@ The steganography path exposes metadata injection, SHA-256 hashing, overlay gene
 
 Rendered via `projects/templates/template_template` (`generate_manuscript_metrics.py` → injected tokens such as `31`). Architecture figures stem from [`template_template.figures.architecture_viz`](../src/template_template/figures/architecture_viz.py)—font sizes constrained by §QA.
 
-![Two-Layer Architecture Overview](../figures/architecture_overview.png)
-**Figure 1.** Live rendering of the Two-Layer Architecture from repository introspection: the infrastructure layer (top) holds the `31` reusable subpackages, each annotated with its Python file count and a four-slot documentation badge—`A` AGENTS.md, `R` README.md, `S` SKILL.md, `P` PAI.md, with `·` marking an absent file—so a fully documented module reads `[ARSP]`. A YAML DAG arrow connects it to the project layer (bottom) of public exemplars labelled with chapter and test counts. The takeaway: documentation-duality coverage is near-uniform across the infrastructure, and every box was placed from the same live data the prose cites.
+![Live rendering of the Two-Layer Architecture from repository introspection: the infrastructure layer (top) holds the `31` enumerated infrastructure directories, each annotated with its Python file count and a four-slot documentation badge—`A` AGENTS.md, `R` README.md, `S` SKILL.md, `P` PAI.md, with `·` marking an absent file—so a fully documented module reads `[ARSP]`. A YAML DAG arrow connects it to the project layer (bottom) of public exemplars labelled with chapter and test-file counts. The takeaway: documentation-duality coverage is near-uniform across the infrastructure, and every box was placed from the same live data the prose cites.](../figures/architecture_overview.png){#fig:template-architecture data-slide-manifest="../figures/architecture_overview.panels.json"}
 
-![Pipeline Stage Flow](../figures/pipeline_stages.png)
-**Figure 2.** Pipeline DAG with 17 YAML-declared stages (core, LLM, ebook, docxplus, metadata, bundle, archival tags).
+![Declared-stage reference with all 17 YAML stages in reading order, showing complete names and tags (core, LLM, ebook, docxplus, metadata, bundle, archival). Panel order documents declarations; it does not imply a linear dependency chain.](../figures/pipeline_stages.png){#fig:template-pipeline-flow data-slide-manifest="../figures/pipeline_stages.panels.json"}
 
-![Infrastructure Module Inventory](../figures/module_inventory.png)
-**Figure 3.** Horizontal file-count histogram of every infrastructure subdirectory, sorted largest-first. The long tail of small, single-purpose packages beside a handful of larger ones (`core`, `validation`, `publishing`) is the visual signature of the Unix-philosophy modularity the architecture section argues for—capability concentrated where it compounds, not spread evenly by fiat.
+![Horizontal file-count histogram of every infrastructure subdirectory, sorted largest-first.](../figures/module_inventory.png){#fig:template-module-inventory data-slide-manifest="../figures/module_inventory.panels.json" height="210mm" style="height: auto !important;"}
+
+The long tail of small, single-purpose packages beside a handful of larger ones (`core`, `validation`, `publishing`) is the visual signature of the Unix-philosophy modularity the architecture section argues for—capability concentrated where it compounds, not spread evenly by fiat.
 
 ## Comparative Feature Analysis
 
-Figure 4 summarizes the Appendix F capability matrix.
+The comparative feature matrix below summarizes the Appendix F capability matrix.
 
 
-![Comparative Feature Analysis Heatmap](../figures/comparative_feature_matrix.png)
-**Figure 4.** 14 × 10 heatmap annotated in appendix text—green **✓** full native capability, yellow **◐** partial / plugin-hosted, red **—** unavailable. Rows group *Core Pipeline*, *Quality & Security*, then *Ecosystem*.
+![14 × 10 heatmap annotated in appendix text—green **✓** full native capability, yellow **◐** partial / plugin-hosted, red **—** unavailable. Rows group *Core Pipeline*, *Quality & Security*, then *Ecosystem*.](../figures/comparative_feature_matrix.png){#fig:template-comparative-matrix data-slide-manifest="../figures/comparative_feature_matrix.panels.json"}
 
 ¹ Nextflow lineage records exist at workflow scope, not per rendered PDF citation graph.
 
@@ -582,7 +580,7 @@ Figure 4 summarizes the Appendix F capability matrix.
 
 ## The Zero-Mock Tradeoff
 
-The [Zero-Mock testing policy](03e_quality.md#zero-mock-testing-policy) is `template/`'s most distinctive design decision. By prohibiting all mock objects, we gain confidence that tests exercise real code paths---a pytest run against the template genuinely invokes `pandoc`, writes to disk, and parses real YAML. The cost is test duration: the full infrastructure test suite (~12,341 tests) runs for minutes rather than the sub-second execution typical of heavily-mocked suites. This manuscript deliberately reports no wall-clock figure, consistent with the Results section's discipline of declining timing claims without a versioned benchmark artifact.
+The [Zero-Mock testing policy](03e_quality.md#zero-mock-testing-policy) is `template/`'s most distinctive design decision. By prohibiting all mock objects, we gain confidence that tests exercise real code paths---a pytest run against the template genuinely invokes `pandoc`, writes to disk, and parses real YAML. The cost is test duration: the full infrastructure test suite (~12,482 tests) runs for minutes rather than the sub-second execution typical of heavily-mocked suites. This manuscript deliberately reports no wall-clock figure, consistent with the Results section's discipline of declining timing claims without a versioned benchmark artifact.
 
 We argue this tradeoff is strongly favorable for research software. Unlike web applications where millisecond latency and thousands of daily deploys demand fast feedback loops, research pipelines run infrequently (once per manuscript revision) and correctness vastly outweighs speed. A mocked test that passes while the real renderer fails is worse than a slow test that catches the failure. The analogy to statistical methodology is precise: just as Simmons et al.'s *researcher degrees of freedom* [@simmons2011falsepositive] inflate false-positive rates through undisclosed analytical flexibility, mock objects create *testing degrees of freedom* that make integration failures invisible. The Zero-Mock policy closes this loophole by the same mechanism that pre-registration [@nosek2018preregistration] closes the p-hacking loophole: removing flexibility before the fact. As Peng [@peng2011reproducible] argues, computational reproducibility requires independent verification---and mock-only tests verify assumptions rather than results. Garijo et al.'s FAIRsoft evaluator [@garijo2024fairsoft] identifies *executability* as a primary quality indicator; the Zero-Mock policy operationalizes executability at the unit level.
 
@@ -608,9 +606,9 @@ However, the policy requires careful management of external dependencies. Tests 
 
 ## Scalability: From 1 to N Projects
 
-The Standalone Project Paradigm enables horizontal scaling: adding a new project requires creating a directory with `manuscript/config.yaml` and nothing else. No infrastructure code changes, no `pyproject.toml` modifications, no CI configuration updates. The `run.sh` orchestrator automatically discovers new projects and presents them in its interactive menu.
+The Standalone Project Paradigm enables horizontal scaling: a project supplies its manuscript/config, isolated source and tests, thin analysis scripts, and declared dependencies. New projects use existing infrastructure interfaces; admission to the tracked public roster and release matrix remains explicit. The `run.sh` orchestrator automatically discovers new projects and presents them in its interactive menu.
 
-We have validated scaling with 25 canonical exemplars under `projects/templates/`—always present for onboarding and tooling—and with this manuscript from `projects/templates/template_template` (152 tests) as a git-tracked public exemplar in the same automated discovery menus.
+We have validated scaling with 25 canonical exemplars under `projects/templates/`—always present for onboarding and tooling—and with this manuscript from `projects/templates/template_template` (156 tests) as a git-tracked public exemplar in the same automated discovery menus.
 
 Canonical trio:
 
@@ -620,7 +618,7 @@ Canonical trio:
 
 Meta manuscript (**`projects/templates/template_template`**) analyzes the repository via `src/template_template/` introspection metrics; it now lives alongside the other public exemplars under `projects/templates/`.
 
-These workspaces share no project-level code—only Layer 1 (31 infrastructure subdirectories, ~1307 Python files)—validating insulation between domain repos and reusable services.
+These workspaces share no project-level code—only Layer 1 (31 infrastructure subdirectories, ~1322 Python files)—validating insulation between domain repos and reusable services.
 
 ### Multi-Project Orchestration
 
@@ -637,7 +635,7 @@ When the `--all-projects` flag is passed to `run.sh`, the pipeline executes each
 | Analysis scripts | 9 | 5 | 5 |
 | Figures (auto-generated) | 9 | 5 | 27 |
 
-The infrastructure overhead per project is constant regardless of project size: the same 31 modules, the same 14 pipeline stages, the same rendering and validation logic. This O(1) infrastructure cost is the architectural payoff of the Two-Layer separation.
+The infrastructure overhead per project is constant regardless of project size: the same 31 modules, the same 17 declared pipeline stages, the same rendering and validation logic. The shared implementation does not grow with the project roster; execution time and output volume still grow with the work performed.
 
 
 
@@ -669,11 +667,11 @@ In Gentleman and Temple Lang's terminology [@gentleman2007research], `template/`
 
 The [Documentation Duality](03c_documentation.md#documentation-duality-and-ai-collaboration) standard and three-tier skill architecture represent an empirical bet: that structured, machine-readable documentation measurably improves AI agent performance in research codebases. This section reports our key observations.
 
-The documentation investment creates a positive feedback loop: as agents produce higher-quality outputs from structured context, developers maintain that documentation, which in turn improves future interactions [@lau2025aicoding]. We observed this concretely during `template/` development—each module's `SKILL.md` was refined through iterative AI-assisted generation, serving as both input prompt and output validator.
+The documentation investment creates a positive feedback loop: as agents produce higher-quality outputs from structured context, developers maintain that documentation, which in turn improves future interactions [@lau2025aicoding]. We observed this concretely during `template/` development—capability-specific `SKILL.md` descriptors were refined through iterative AI-assisted generation, serving as both input prompt and output validator.
 
-The `SKILL.md` layer, with its MCP-aligned YAML frontmatter [@anthropic2024mcp], provides a bridge to the agentic software paradigm. Lu et al.'s AI Scientist [@lu2024aiscientist] demonstrates end-to-end autonomous research, while OpenHands is evaluated on SWE-Bench Verified [@wang2024opendevin; @jimenez2024swebench]. These systems motivate structured, protocol-aligned tool inventories for unfamiliar codebases. An agent navigating `template/` reads `CLAUDE.md` for global constraints, scans `AGENTS.md` for local contracts, and can invoke skill-enabled capabilities through `SKILL.md` descriptors. The live module inventory verifies `AGENTS.md` and `README.md` coverage; `SKILL.md` remains a capability-specific layer rather than a universal claim about every infrastructure directory.
+The `SKILL.md` layer, with its MCP-aligned YAML frontmatter [@anthropic2024mcp], provides a bridge to the agentic software paradigm. Lu et al.'s AI Scientist [@lu2024aiscientist] demonstrates end-to-end autonomous research, while OpenHands is evaluated on SWE-Bench Verified [@wang2024opendevin; @jimenez2024swebench]. These systems motivate structured, protocol-aligned tool inventories for unfamiliar codebases. An agent navigating `template/` reads root `AGENTS.md` and `.agents/AGENTS.md` for shared constraints and generic workflows, scans `AGENTS.md` for local contracts, and can invoke skill-enabled capabilities through `SKILL.md` descriptors. The live module inventory verifies `AGENTS.md` and `README.md` coverage; `SKILL.md` remains a capability-specific layer rather than a universal claim about every infrastructure directory.
 
-This three-tier model is, to our knowledge, novel in the research software engineering literature. The scale of the investment is substantial: `375` Markdown files under `docs/` alone, plus an `AGENTS.md`/`README.md` pair in every directory and a `SKILL.md` descriptor on skill-enabled infrastructure modules. That count is itself injected from live introspection—the manuscript refuses to quote a documentation total it cannot recompute—and it represents a deliberate commitment to machine-readable context that shrinks the surface on which an agent can hallucinate.
+This three-tier model is, to our knowledge, novel in the research software engineering literature. The scale of the investment is substantial: `375` Markdown files under `docs/` alone, plus an `AGENTS.md`/`README.md` pair in documented directories and a `SKILL.md` descriptor on skill-enabled infrastructure modules. That count is itself injected from live introspection—the manuscript refuses to quote a documentation total it cannot recompute—and it represents a deliberate commitment to machine-readable context that shrinks the surface on which an agent can hallucinate.
 
 ## The Learning Curve
 
@@ -726,14 +724,14 @@ The template is not merely a build tool; it is an epistemological commitment. It
 
 # Infrastructure Module Reference
 
-This section inventories every Layer‑1 subdirectory returned by `31` `discover_infrastructure_modules(repo_root)`. File totals use `1307` Python sources across infra + `12,341` infra tests guarding them. Documentation Duality = paired `README.md` + `AGENTS.md`; optional `SKILL.md` manifests feed `python -m infrastructure.skills`.
+This section inventories every Layer‑1 subdirectory returned by `31` `discover_infrastructure_modules(repo_root)`. File totals use `1322` Python sources across infra + `12,482` infra tests guarding them. Documentation Duality = paired `README.md` + `AGENTS.md`; optional `SKILL.md` manifests feed `python -m infrastructure.skills`.
 
 | Module | Python Files | Has AGENTS.md | Has README.md | Key Exports |
 |--------|:-----------:|:-------------:|:-------------:|-------------|
 | `autoresearch` | 11 | ✓ | ✓ | `build_autoresearch_plan`, readiness validation CLI |
 | `benchmark` | 4 | ✓ | ✓ | Template harness scoring + comparative gates |
 | `config` | 0 | ✓ | ✓ | Repository defaults + hardened templates |
-| `core` | 195 | ✓ | ✓ | `get_logger`, `load_config`, `TemplateError` |
+| `core` | 199 | ✓ | ✓ | `get_logger`, `load_config`, `TemplateError` |
 | `docker` | 0 | ✓ | ✓ | Containerisation scaffolding |
 | `doctor` | 14 | ✓ | ✓ | Checkout diagnose/fix/undo repairs |
 | `documentation` | 23 | ✓ | ✓ | `FigureManager`, `build_api_index`, `generate_markdown_table` |
@@ -744,13 +742,13 @@ This section inventories every Layer‑1 subdirectory returned by `31` `discover
 | `metadata` | 3 | ✓ | ✓ | `normalized_repository_url`, `generate_metadata_package` |
 | `methods` | 10 | ✓ | ✓ | `build_methods_orchestration_plan`, methods-stage contracts + validation |
 | `orchestration` | 14 | ✓ | ✓ | `PipelineRunner`, entry point for `./run.sh` |
-| `project` | 104 | ✓ | ✓ | `discover_projects`, workspace management |
+| `project` | 111 | ✓ | ✓ | `discover_projects`, workspace management |
 | `prose` | 9 | ✓ | ✓ | Markdown readability + prose tooling |
 | `provenance` | 9 | ✓ | ✓ | — |
 | `publishing` | 83 | ✓ | ✓ | Zenodo, executable bundle, archival targets |
 | `reference` | 16 | ✓ | ✓ | BibTeX models, parsers, converters |
-| `rendering` | 120 | ✓ | ✓ | PDF/HTML/slide rendering, Pandoc filters |
-| `reporting` | 406 | ✓ | ✓ | Coverage parsers, dashboards, executive artefacts |
+| `rendering` | 121 | ✓ | ✓ | PDF/HTML/slide rendering, Pandoc filters |
+| `reporting` | 409 | ✓ | ✓ | Coverage parsers, dashboards, executive artefacts |
 | `research` | 3 | ✓ | ✓ | — |
 | `rules` | 6 | ✓ | ✓ | — |
 | `scientific` | 4 | ✓ | ✓ | `check_numerical_stability`, `benchmark_function` |
@@ -778,7 +776,7 @@ Template harness scoring and comparative gate helpers exercised in CI smoke path
 
 Repository-wide YAML templates and secure manifests (`.env.template`, hardened defaults referenced by Docker + CLI). `config/` carries no `__init__.py`, so it is a configuration subdirectory rather than an importable package.
 
-### `infrastructure.core` (195 files)
+### `infrastructure.core` (199 files)
 
 Checkpointing, logging, pipeline YAML parsing, telemetry bridges, filesystem helpers, hardened exceptions. Everything else imports logging + error taxonomy from here first.
 
@@ -822,7 +820,7 @@ Deterministic methods-orchestration contracts (`MethodStage`, `MethodsOrchestrat
 
 `python -m infrastructure.orchestration` exposes interactive menus, subprocess wiring for thin shell wrappers (`run.sh`, `secure_run.sh`), and stubs used in CI for menu parsing tests.
 
-### `infrastructure.project` (104 files)
+### `infrastructure.project` (111 files)
 
 Canonical discovery (`discover_projects`) enforcing `src/` + `tests/`, slug validation, nested WIP namespaces.
 
@@ -842,17 +840,17 @@ Metadata models, APA/BibTeX/MLA formatters, optional Zenodo clients.
 
 Citation/BibTeX parsing + conversion utilities leveraged by manuscripts and retrieval scripts.
 
-### `infrastructure.rendering` (120 files)
+### `infrastructure.rendering` (121 files)
 
 Pandoc shim, Unicode/XeLaTeX postprocessors, combined PDF/HTML/slide exporters.
 
-### `infrastructure.reporting` (406 files)
+### `infrastructure.reporting` (409 files)
 
 Parses pytest + coverage artefacts for dashboards; pairs with Stage 01 summaries and downstream executive exports.
 
 ### `infrastructure.research` (3 files)
 
-Seven-stage research workflow (SCOPE→LITERATURE→REASON→DESIGN→COMPUTE→SYNTHESIZE→WRITE) defined as typed ResearchStage data classes with explicit outputs, skills, and template commands per stage. Includes a full PRISMA-adapted literature review prompt and a research workflow prompt referencing template/ infrastructure commands.
+Seven-stage research workflow (SCOPE → LITERATURE → REASON → DESIGN → COMPUTE → SYNTHESIZE → WRITE) defined as typed ResearchStage data classes with explicit outputs, skills, and template commands per stage. Includes a full PRISMA-adapted literature review prompt and a research workflow prompt referencing template/ infrastructure commands.
 
 ### `infrastructure.rules` (6 files)
 
@@ -872,7 +870,7 @@ Generic Self-Improving-AI loop utilities: task-layout validation, execution harn
 
 ### `infrastructure.skills` (8 files)
 
-Discovers `SKILL.md` frontmatter → `.cursor/skill_manifest.json`.
+Discovers `SKILL.md` frontmatter → `.agents/skill_manifest.json`.
 
 ### `infrastructure.steganography` (13 files)
 
@@ -1016,46 +1014,61 @@ Software Heritage [@cosmo2020softwareheritage] complements this picture at the s
 
 
 
-\newpage
-
 # Appendices
 
 ## Appendix: Pipeline Stage Reference {#appendix-pipeline}
 
+### Preparation and analysis
+
 \begin{table}[h]
-\caption{Single-project DAG exported from default \texttt{pipeline.yaml} (names shown in topological order). Scripts live under \texttt{scripts/}.}
+\caption{Single-project DAG reference from default \texttt{pipeline.yaml} (names shown in dependency order). Scripts live under \texttt{scripts/}.}
 \label{tab:pipeline-stages}
 \end{table}
 
 | Stage name | Script / method | Primary inputs | Outputs / artefacts | Failure mode |
-|-----------|-----------------|---------------|----------------------|--------------|
+|----------------|-----------------|------------------------------|----------------------|--------------|
 | Clean Output Directories | `_run_clean_outputs` | prior `projects/<name>/output/`, mirrored `output/<name>/` targets | emptied trees | Blocking |
 | Environment Setup | `scripts/pipeline/stage_00_setup.py` | toolchain probes | scaffold dirs, env exports | Blocking |
-| Infrastructure Tests | `scripts/pipeline/stage_01_test.py --infra-only --infra-scope pipeline-smoke` | `tests/infra_tests/` | coverage + junit-style logs | tolerant ceilings |
-| Project Tests | `scripts/pipeline/stage_01_test.py --project-only` | `projects/<name>/tests/` | coverage artefacts | blocking by default |
+| Infrastructure Tests | `scripts/pipeline/stage_01_test.py` `--infra-only` `--infra-scope` `pipeline-smoke` | `tests/infra_tests/` | smoke-test results | Required smoke tests must pass |
+| Project Tests | `scripts/pipeline/stage_01_test.py` `--project-only` | `projects/<name>/tests/` | coverage artefacts | Nonempty tests, own coverage, verifier, and runner |
 | Project Analysis | `scripts/pipeline/stage_02_analysis.py` | thin scripts | `figures/`, `data/`, reports | Blocking |
-| Connector Search | `scripts/pipeline/stage_08_connector_search.py` | `manuscript/config.yaml` | `output/data/connector_search/` | opt-in (`science` tag); skipped if not configured |
-| Provenance Record | `scripts/pipeline/stage_09_provenance_record.py --stage "Connector Search"` | prior stage outputs | `.provenance/graph.json` | opt-in (`provenance` tag); skipped if not configured |
+
+### Search, provenance and rendering
+
+| Stage name | Script / method | Primary inputs | Outputs / artefacts | Failure mode |
+|----------------|-----------------|------------------------------|----------------------|--------------|
+| Connector Search | `scripts/pipeline/stage_08_connector_search.py` | `manuscript/config.yaml` | `output/data/connector_search/` | opt-in (`science` tag); fresh policy-bound skip if unconfigured |
+| Provenance Record | `scripts/pipeline/stage_09_provenance_record.py` `--stage` `"Connector Search"` | prior stage outputs | `.provenance/graph.json` | opt-in (`provenance` tag); fresh policy-bound skip if unconfigured |
 | PDF Rendering | `scripts/pipeline/stage_03_render.py` | `manuscript/`, placeholders | `.pdf`/`.tex` bundles | Blocking |
-| Output Validation | `scripts/pipeline/stage_04_validate.py` | render tree | Markdown + PDF diagnostics JSON | Blocking / downgrade |
-| LLM Scientific Review | `scripts/pipeline/stage_06_llm_review.py --reviews-only` | resolved manuscript artefacts | textual reviews | Optional skip (`allow_skip`) |
-| LLM Translations | `scripts/pipeline/stage_06_llm_review.py --translations-only` | abstract metadata | multilingual snippets | Optional skip (`allow_skip`) |
-| Copy Outputs | `scripts/pipeline/stage_05_copy.py` | validated tree | mirrored `output/<name>/…` | soft fail logged |
-| Ebook Generation | `scripts/pipeline/stage_11_ebook.py` | rendered combined markdown | `output/ebook/` (EPUB/MOBI/DOCX) | opt-in (`ebook` tag); soft fail |
-| docxplus Export | `scripts/pipeline/stage_13_docxplus.py` | project source tree + metadata | `output/docxplus/` (.docx, .docxplus) | opt-in (`docxplus` tag); soft fail |
-| Metadata Package | `scripts/pipeline/stage_12_metadata.py` | `manuscript/config.yaml` | `output/metadata/` (ONIX/JSON/OPF) | opt-in (`metadata` tag); soft fail |
+| Output Validation | `scripts/pipeline/stage_04_validate.py` | render tree | Markdown + PDF diagnostics JSON | Enabled formats, bookends, and provenance block; prose diagnostics advisory |
+
+### Review and delivery
+
+| Stage name | Script / method | Primary inputs | Outputs / artefacts | Failure mode |
+|----------------|-----------------|------------------------------|----------------------|--------------|
+| LLM Manuscript Review | `scripts/pipeline/stage_06_llm_review.py` `--reviews-only` | resolved manuscript artefacts | textual reviews | Fresh policy-bound skip; required live acceptance remains blocking |
+| LLM Translations | `scripts/pipeline/stage_06_llm_review.py` `--translations-only` | abstract metadata | multilingual snippets | Fresh policy-bound skip; required live acceptance remains blocking |
+| Copy Outputs | `scripts/pipeline/stage_05_copy.py` | validated tree | mirrored `output/<name>/…` | Blocking |
+
+### Optional packaging and publication
+
+| Stage name | Script / method | Primary inputs | Outputs / artefacts | Failure mode |
+|----------------|-----------------|------------------------------|----------------------|--------------|
+| Ebook Generation | `scripts/pipeline/stage_11_ebook.py` | rendered combined markdown | `output/ebook/` (EPUB/MOBI/DOCX) | opt-in (`ebook` tag); blocking when invoked |
+| docxplus Export | `scripts/pipeline/stage_13_docxplus.py` | project source tree + metadata | `output/docxplus/` (.docx, .docxplus) | opt-in (`docxplus` tag); blocking when invoked |
+| Metadata Package | `scripts/pipeline/stage_12_metadata.py` | `manuscript/config.yaml` | `output/metadata/` (ONIX/JSON/OPF) | opt-in (`metadata` tag); blocking when invoked |
 | Executable Bundle | `scripts/runner/bundle_executable.py` | project tree + outputs | container bundle manifest | opt-in (`bundle` tag) |
 | Archival Publication | `scripts/runner/archive_publication.py` | bundle + deliverables | archival deposit manifest | opt-in (`archival` tag) |
 
-`scripts/pipeline/stage_07_executive_report.py` is invoked **outside** this DAG whenever `execute_multi_project.py` aggregates pipelines—supplying cross-project KPI dashboards absent from lone-project checkpoints.
+`scripts/pipeline/stage_07_executive_report.py` provides separate **multi-project executive reporting**, not an additional single-project DAG node. `execute_multi_project.py` writes aggregate summaries after project execution; this does not imply automatic invocation of that separate Stage 07 script.
+
+Opt-in stages also prevent completion when invoked and unsuccessful. An allowed skip requires a fresh policy-bound reason receipt; it is not a successful execution. The executable DAG and its contracts remain authoritative.
 
 
 
 ---
 
 
-
-\newpage
 
 ## Appendix: Configuration Reference {#appendix-config}
 
@@ -1128,36 +1141,34 @@ testing:
 
 
 
-\newpage
-
 ## Appendix: Repository Directory Structure {#appendix-directory}
 
 ```text
 template/
-├── infrastructure/
-│   ├── config/ docker/ documentation/ llm/
-│   ├── orchestration/   # Thin Python entry equal to `./run.sh` backend
-│   ├── prose/ reference/ rendering/ reporting/
-│   ├── scientific/ search/ skills/ steganography/ validation/
-│   ├── project/ core/
-│   └── logrotate.d/      # Operational rotation templates (no Python pkg)
-├── scripts/
-│   ├── pipeline/          # stage_00_setup.py … stage_12_metadata.py (canonical, cited by pipeline.yaml)
-│   └── runner/            # execute_pipeline.py execute_multi_project.py bundle_executable.py archive_publication.py
-├── projects/                    # Typed program subfolders (`discover_projects`)
-│   ├── templates/               # Public exemplars (git-tracked) — full roster:
-│   │   │                        #   docs/_generated/active_projects.md (regenerated by scripts/docgen/active_projects.py)
-│   │   └── template_template/   # Present manuscript (`manuscript/` here)
-│   ├── active/                  # Hot-seat rendered set (symlinked, private)
-│   ├── working/                 # Non-rendered backburner (symlinked, private)
-│   ├── published/               # Non-rendered published (symlinked, private)
-│   ├── archive/                 # Non-rendered retired (symlinked, private)
-│   └── other/                   # Non-rendered misc (symlinked, private)
-├── docs/ (20 top-level areas, 375+ markdown files per live counter)
-├── tests/                       # Infra suites (925+ files)
-├── AGENTS.md / README.md / CLAUDE.md / pyproject.toml
-├── run.sh / secure_run.sh
-└── output/ …                    # Mirrors after copy stage
+|-- infrastructure/
+|   |-- config/ docker/ documentation/ llm/
+|   |-- orchestration/   # Thin Python entry equal to `./run.sh` backend
+|   |-- prose/ reference/ rendering/ reporting/
+|   |-- scientific/ search/ skills/ steganography/ validation/
+|   |-- project/ core/
+|   `-- logrotate.d/      # Operational rotation templates (no Python pkg)
+|-- scripts/
+|   |-- pipeline/          # stage_00_setup.py … stage_12_metadata.py (canonical, cited by pipeline.yaml)
+|   `-- runner/            # execute_pipeline.py execute_multi_project.py bundle_executable.py archive_publication.py
+|-- projects/                    # Typed program subfolders (`discover_projects`)
+|   |-- templates/               # Public exemplars (git-tracked) — full roster:
+|   |   |                        #   docs/_generated/active_projects.md (regenerated by scripts/docgen/active_projects.py)
+|   |   `-- template_template/   # Present manuscript (`manuscript/` here)
+|   |-- active/                  # Hot-seat rendered set (symlinked, private)
+|   |-- working/                 # Non-rendered backburner (symlinked, private)
+|   |-- published/               # Non-rendered published (symlinked, private)
+|   |-- archive/                 # Non-rendered retired (symlinked, private)
+|   `-- other/                   # Non-rendered misc (symlinked, private)
+|-- docs/ (20 top-level areas, 375+ markdown files per live counter)
+|-- tests/                       # Infra suites (938+ files)
+|-- AGENTS.md / README.md / CLAUDE.md / pyproject.toml
+|-- run.sh / secure_run.sh
+`-- output/ …                    # Mirrors after copy stage
 ```
 See `docs/_generated/active_projects.md` for regenerated slugs (`uv run python scripts/docgen/active_projects.py`).
 
@@ -1166,8 +1177,6 @@ See `docs/_generated/active_projects.md` for regenerated slugs (`uv run python s
 ---
 
 
-
-\newpage
 
 ## Appendix: Exemplar Project Summary {#appendix-exemplars}
 
@@ -1192,8 +1201,6 @@ The full public exemplar roster is: `templates/template_active_inference`, `temp
 
 
 
-\newpage
-
 ## Appendix: Documentation Inventory {#appendix-docs}
 
 The repository maintains documentation at three levels:
@@ -1205,15 +1212,15 @@ The repository maintains documentation at three levels:
 
 | Level | Files | Purpose |
 |-------|:-----:|---------|
-| Repository root | `AGENTS.md`, `CLAUDE.md`, `README.md`, `RUN_GUIDE.md` | Global navigation and AI agent context |
+| Repository root | `AGENTS.md`, `.agents/`, `CLAUDE.md`, `README.md`, `docs/RUN_GUIDE.md` | Global navigation and AI agent context |
 | `docs/` directory | 375 files across 20 subdirectories | User guides, API reference, troubleshooting |
-| Per-directory | `AGENTS.md` + `README.md` at every directory | Documentation Duality standard |
-| Per-module (Tier 3) | `SKILL.md` at every infrastructure module | Machine-parseable MCP-aligned skill descriptor |
+| Per-directory | `AGENTS.md` + `README.md` in documented directories | Documentation Duality standard |
+| Per-module (Tier 3) | `SKILL.md` on skill-enabled modules and public exemplars | Machine-parseable MCP-aligned skill descriptor |
 | Infrastructure-level (PAI) | `PAI.md` at `infrastructure/` directory | Personal AI Infrastructure integration contract |
 
 The `docs/` subdirectories cover: `core/` (essential docs), `guides/` (progressive skill-level guides), `architecture/` (system design), `usage/` (content authoring), `operational/` (build, config, logging, troubleshooting), `reference/` (API, FAQ, glossary), `modules/` (31 infrastructure modules), `development/` (contributing, testing), `maintenance/` (long-horizon maintenance: private projects, CI-local, regression, archival, bundle), `best-practices/` (version control, migration), `plans/` (strategic plans and decision records), `rules/` (contributor norms), `prompts/` (22 AI prompt templates), `security/` (steganography, hashing), `streams/` (livestream notes), and `audit/` (review reports), plus the machine-generated `_generated/` snippets and `images/` assets.
 
-Every count in this appendix is injected from live repository introspection rather than hand-maintained: `375` counts every Markdown file beneath `docs/` recursively, `20` counts its first-level subdirectories, and `22` counts the workflow subdirectories that each carry a `SKILL.md` descriptor. This is the same discipline the manuscript argues for throughout—a hand-typed documentation total silently rots as the tree grows, whereas a token re-resolves on every render. A reader onboarding to the repository should start at `docs/core/`, follow the graduated `docs/guides/` skill ladder, and consult the per-directory `AGENTS.md`/`README.md` pair nearest to whatever code they are editing; AI agents additionally read each module's `SKILL.md` to locate capabilities without guessing API signatures.
+Every count in this appendix is injected from live repository introspection rather than hand-maintained: `375` counts every Markdown file beneath `docs/` recursively, `20` counts its first-level subdirectories, and `22` counts the workflow subdirectories that each carry a `SKILL.md` descriptor. This is the same discipline the manuscript argues for throughout—a hand-typed documentation total silently rots as the tree grows, whereas a token re-resolves on every render. A reader onboarding to the repository should start at `docs/core/`, follow the graduated `docs/guides/` skill ladder, and consult the per-directory `AGENTS.md`/`README.md` pair nearest to whatever code they are editing; AI agents begin with root `AGENTS.md` and `.agents/AGENTS.md`, then read local contracts and available `SKILL.md` descriptors. The shared skill manifest supplies discovery; client-specific files remain compatibility references.
 
 
 
@@ -1221,12 +1228,10 @@ Every count in this appendix is injected from live repository introspection rath
 
 
 
-\newpage
-
 ## Appendix: Comparative Tool Matrix {#appendix-matrix}
 
 **Symbol key** (applies to all cells): **Y** = full native support  ·  **~** = partial or plugin-based  ·  **N** = absent.
-See also [Figure 4](04_results.md#comparative-feature-analysis) for a colour-coded heatmap rendering of this table.
+See the [comparative feature matrix in the Results section](04_results.md#comparative-feature-analysis) for a colour-coded heatmap rendering of this table.
 
 \begin{table}[h]
 \caption{Comparative feature matrix (14 capabilities $\times$ 10 tools). Y~=~full native support, \textasciitilde~=~partial or plugin-based, N~=~absent.}

@@ -432,6 +432,15 @@ th {
   color: white;
 }
 
+/* Preserve a complete inline-code header within the table's scroll region. */
+th code {
+  color: inherit;
+  background-color: transparent;
+  white-space: nowrap;
+  overflow-wrap: normal;
+  word-break: normal;
+}
+
 img {
   max-width: 100%;
   height: auto;
@@ -586,8 +595,11 @@ DAG, applies tag filters (<code>--mode core</code> skips
 <code>llm</code> stages), checkpoints between nodes, then dispatches the
 declared <code>scripts/pipeline/stage_NN_*.py</code> scripts or builtin
 methods (<code>_run_clean_outputs</code>).</p>
-<p>The <strong>default YAML graph contains ten named core
-stages</strong> (plus telemetry configuration metadata):</p>
+<p>The YAML declares <strong>17 stages</strong>. Tag filtering selects
+<strong>10 stages for a default full run</strong> and <strong>8 for core
+mode</strong>. The overview below covers the default full selection:
+core stages plus live LLM stages. Telemetry settings are configuration
+metadata, not additional DAG nodes.</p>
 <ol type="1">
 <li><strong>Clean Output Directories</strong> — wipes prior
 <code>projects/&lt;name&gt;/output/</code> + delivered
@@ -598,9 +610,11 @@ validation.</li>
 toolchain discovery, scaffolding directories, <code>PYTHONPATH</code>
 wiring.</li>
 <li><strong>Infrastructure Tests</strong>
-(<code>scripts/pipeline/stage_01_test.py --infra-only</code>) —
-<code>tests/</code> suite with the configured ≥60% source-coverage
-floor.</li>
+(<code>scripts/pipeline/stage_01_test.py</code>,
+<code>--infra-only</code>, <code>--infra-scope</code>
+<code>pipeline-smoke</code>) — focused real infrastructure contracts for
+the project pipeline. The full infrastructure suite and its configured
+≥60% coverage floor remain separate verification.</li>
 <li><strong>Project Tests</strong>
 (<code>scripts/pipeline/stage_01_test.py --project-only</code>) —
 isolated per-project suites with each project’s declared floor (≥90% for
@@ -616,7 +630,7 @@ artefacts.</li>
 <li><strong>Output Validation</strong>
 (<code>scripts/pipeline/stage_04_validate.py</code>) — PDF structure,
 manifests, Markdown hygiene.</li>
-<li><strong>LLM Scientific Review</strong>
+<li><strong>LLM Manuscript Review</strong>
 (<code>scripts/pipeline/stage_06_llm_review.py --reviews-only</code>;
 <code>tags: llm</code>) — executive + quality critiques via local
 Ollama; <code>allow_skip: true</code>.</li>
@@ -628,25 +642,32 @@ expansion.</li>
 (<code>scripts/pipeline/stage_05_copy.py</code>) — reproducible
 snapshots into canonical <code>output/&lt;project&gt;/</code>.</li>
 </ol>
-<p>Two LLM nodes intentionally share one script module with orthogonal
-CLI switches; both depend only on validation so they can parallelize
-logically while remaining optional.</p>
+<p>The two LLM nodes share one script module with orthogonal CLI
+switches and depend on output validation. Full mode includes them; core
+mode excludes them. When a stage permits a skip, it must retain a fresh
+policy-bound reason receipt; unavailable required live acceptance
+remains blocked.</p>
 <p><strong>Executive reporting</strong>
-(<code>scripts/pipeline/stage_07_executive_report.py</code>) is
-<strong>not</strong> a YAML node inside the single-project executor.
-<code>--all-projects</code> / <code>execute_multi_project.py</code>
-invokes it once after iterating projects, consolidating cross-project
-KPIs dashboards.</p>
+(<code>scripts/pipeline/stage_07_executive_report.py</code>) is a
+separate multi-project reporting operation, not an additional YAML node
+inside the single-project executor.
+<code>execute_multi_project.py</code> writes aggregate summary reports
+after project execution.</p>
 <p>Topological order therefore differs slightly from declaration order
 (e.g., copy executes after validation even though stage
 <code>stage_05_copy.py</code> precedes
 <code>stage_06_llm_review.py</code> lexically).</p>
 <h3 id="stage-highlights">Stage Highlights</h3>
-<p><strong>Infrastructure vs project tests.</strong> Splitting pytest
-invocations isolates flaky infra regressions
-(<code>MAX_TEST_FAILURES</code> knobs) from zero-tolerance gates on
-domain code (<code>max_project_test_failures</code> default 0 declared
-in YAML front-matter/testing blocks).</p>
+<p><strong>Infrastructure and project tests.</strong> Separate
+invocations isolate the focused infrastructure smoke contract from each
+project’s nonempty test suite and project-local coverage gate. Required
+test or coverage failures and unsuccessful runners block pipeline
+completion; configured failure tolerances cannot turn a nonzero child
+test result into success. The full infrastructure coverage floor (≥60%)
+is verified separately. An explicitly skippable stage may accept exit 2
+only with a fresh reason receipt bound to the current run, stage,
+command, and plan. That recorded skip does not satisfy required live
+acceptance.</p>
 <p><strong>Stage 02 illustration.</strong> The analysis stage is
 deliberately concrete rather than a hypothetical diagram factory: each
 canonical project ships real behaviour at this node.

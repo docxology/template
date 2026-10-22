@@ -1,0 +1,109 @@
+{
+  "schema_version": "1.0",
+  "png_sha256": "4d568fcfd60610a027252f2a66ac8619150d25a9d7634870d5c6cceb9c243c23",
+  "width_px": 1700,
+  "height_px": 1260,
+  "dpi": 200,
+  "minimum_label_px": 107.0,
+  "text_measurements": [
+    {
+      "text": "Infrastructure \u00b7 3 / 8",
+      "bbox_px": [
+        213.625,
+        1133.0,
+        1486.375,
+        1240.0
+      ],
+      "font_pixels": 111.11111111111111,
+      "minimum_label_px": 107.0
+    },
+    {
+      "text": "formal\ncontracts",
+      "bbox_px": [
+        140.3125,
+        839.0,
+        729.6875,
+        1053.0
+      ],
+      "font_pixels": 111.11111111111111,
+      "minimum_label_px": 111.11111111111111
+    },
+    {
+      "text": "5 py\n[ARS\u00b7]",
+      "bbox_px": [
+        262.25,
+        566.0,
+        607.75,
+        780.0
+      ],
+      "font_pixels": 111.11111111111111,
+      "minimum_label_px": 111.11111111111111
+    },
+    {
+      "text": "llm",
+      "bbox_px": [
+        1169.0,
+        892.5,
+        1361.0,
+        999.5
+      ],
+      "font_pixels": 111.11111111111111,
+      "minimum_label_px": 107.0
+    },
+    {
+      "text": "57 py\n[ARS\u00b7]",
+      "bbox_px": [
+        1092.25,
+        566.0,
+        1437.75,
+        780.0
+      ],
+      "font_pixels": 111.11111111111111,
+      "minimum_label_px": 111.11111111111111
+    },
+    {
+      "text": "logrotate.d",
+      "bbox_px": [
+        83.1875,
+        342.0,
+        786.8125,
+        450.0
+      ],
+      "font_pixels": 111.11111111111111,
+      "minimum_label_px": 108.0
+    },
+    {
+      "text": "0 py\n[AR\u00b7\u00b7]",
+      "bbox_px": [
+        279.8125,
+        16.0,
+        590.1875,
+        230.0
+      ],
+      "font_pixels": 111.11111111111111,
+      "minimum_label_px": 111.11111111111111
+    },
+    {
+      "text": "metadata",
+      "bbox_px": [
+        964.0,
+        342.5,
+        1566.0,
+        449.5
+      ],
+      "font_pixels": 111.11111111111111,
+      "minimum_label_px": 107.0
+    },
+    {
+      "text": "3 py\n[ARS\u00b7]",
+      "bbox_px": [
+        1092.25,
+        16.0,
+        1437.75,
+        230.0
+      ],
+      "font_pixels": 111.11111111111111,
+      "minimum_label_px": 111.11111111111111
+    }
+  ]
+}

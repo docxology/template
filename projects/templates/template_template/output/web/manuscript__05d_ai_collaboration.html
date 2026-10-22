@@ -432,6 +432,15 @@ th {
   color: white;
 }
 
+/* Preserve a complete inline-code header within the table's scroll region. */
+th code {
+  color: inherit;
+  background-color: transparent;
+  white-space: nowrap;
+  overflow-wrap: normal;
+  word-break: normal;
+}
+
 img {
   max-width: 100%;
   height: auto;
@@ -588,9 +597,10 @@ section reports our key observations.</p>
 agents produce higher-quality outputs from structured context,
 developers maintain that documentation, which in turn improves future
 interactions [lau2025aicoding]. We observed this concretely during
-<code>template/</code> development—each module’s <code>SKILL.md</code>
-was refined through iterative AI-assisted generation, serving as both
-input prompt and output validator.</p>
+<code>template/</code> development—capability-specific
+<code>SKILL.md</code> descriptors were refined through iterative
+AI-assisted generation, serving as both input prompt and output
+validator.</p>
 <p>The <code>SKILL.md</code> layer, with its MCP-aligned YAML
 frontmatter [anthropic2024mcp], provides a bridge to the agentic
 software paradigm. Lu et al.’s AI Scientist [lu2024aiscientist]
@@ -598,9 +608,10 @@ demonstrates end-to-end autonomous research, while OpenHands is
 evaluated on SWE-Bench Verified [wang2024opendevin;
 jimenez2024swebench]. These systems motivate structured,
 protocol-aligned tool inventories for unfamiliar codebases. An agent
-navigating <code>template/</code> reads <code>CLAUDE.md</code> for
-global constraints, scans <code>AGENTS.md</code> for local contracts,
-and can invoke skill-enabled capabilities through <code>SKILL.md</code>
+navigating <code>template/</code> reads root <code>AGENTS.md</code> and
+<code>.agents/AGENTS.md</code> for shared constraints and generic
+workflows, scans <code>AGENTS.md</code> for local contracts, and can
+invoke skill-enabled capabilities through <code>SKILL.md</code>
 descriptors. The live module inventory verifies <code>AGENTS.md</code>
 and <code>README.md</code> coverage; <code>SKILL.md</code> remains a
 capability-specific layer rather than a universal claim about every
@@ -609,10 +620,10 @@ infrastructure directory.</p>
 software engineering literature. The scale of the investment is
 substantial: <code>375</code> Markdown files under <code>docs/</code>
 alone, plus an <code>AGENTS.md</code>/<code>README.md</code> pair in
-every directory and a <code>SKILL.md</code> descriptor on skill-enabled
-infrastructure modules. That count is itself injected from live
-introspection—the manuscript refuses to quote a documentation total it
-cannot recompute—and it represents a deliberate commitment to
+documented directories and a <code>SKILL.md</code> descriptor on
+skill-enabled infrastructure modules. That count is itself injected from
+live introspection—the manuscript refuses to quote a documentation total
+it cannot recompute—and it represents a deliberate commitment to
 machine-readable context that shrinks the surface on which an agent can
 hallucinate.</p>
 <h2 id="the-learning-curve">The Learning Curve</h2>

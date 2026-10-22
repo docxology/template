@@ -432,6 +432,15 @@ th {
   color: white;
 }
 
+/* Preserve a complete inline-code header within the table's scroll region. */
+th code {
+  color: inherit;
+  background-color: transparent;
+  white-space: nowrap;
+  overflow-wrap: normal;
+  word-break: normal;
+}
+
 img {
   max-width: 100%;
   height: auto;
@@ -579,13 +588,14 @@ mjx-container[display="true"] {
 <main id="main-content" tabindex="-1">
 <h1 id="appendices">Appendices</h1>
 <h2 id="appendix-pipeline">Appendix: Pipeline Stage Reference</h2>
+<h3 id="preparation-and-analysis">Preparation and analysis</h3>
 <div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable data table"><table data-responsive-table="true">
 <colgroup>
-<col style="width: 13%" />
-<col style="width: 21%" />
-<col style="width: 18%" />
-<col style="width: 27%" />
+<col style="width: 16%" />
 <col style="width: 17%" />
+<col style="width: 30%" />
+<col style="width: 22%" />
+<col style="width: 14%" />
 </colgroup>
 <thead>
 <tr>
@@ -614,17 +624,20 @@ mjx-container[display="true"] {
 </tr>
 <tr>
 <td>Infrastructure Tests</td>
-<td><code>scripts/pipeline/stage_01_test.py --infra-only --infra-scope pipeline-smoke</code></td>
+<td><code>scripts/pipeline/stage_01_test.py</code>
+<code>--infra-only</code> <code>--infra-scope</code>
+<code>pipeline-smoke</code></td>
 <td><code>tests/infra_tests/</code></td>
-<td>coverage + junit-style logs</td>
-<td>tolerant ceilings</td>
+<td>smoke-test results</td>
+<td>Required smoke tests must pass</td>
 </tr>
 <tr>
 <td>Project Tests</td>
-<td><code>scripts/pipeline/stage_01_test.py --project-only</code></td>
+<td><code>scripts/pipeline/stage_01_test.py</code>
+<code>--project-only</code></td>
 <td><code>projects/&lt;name&gt;/tests/</code></td>
 <td>coverage artefacts</td>
-<td>blocking by default</td>
+<td>Nonempty tests, own coverage, verifier, and runner</td>
 </tr>
 <tr>
 <td>Project Analysis</td>
@@ -633,19 +646,44 @@ mjx-container[display="true"] {
 <td><code>figures/</code>, <code>data/</code>, reports</td>
 <td>Blocking</td>
 </tr>
+</tbody>
+</table></div>
+<h3 id="search-provenance-and-rendering">Search, provenance and
+rendering</h3>
+<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable data table"><table data-responsive-table="true">
+<colgroup>
+<col style="width: 16%" />
+<col style="width: 17%" />
+<col style="width: 30%" />
+<col style="width: 22%" />
+<col style="width: 14%" />
+</colgroup>
+<thead>
+<tr>
+<th>Stage name</th>
+<th>Script / method</th>
+<th>Primary inputs</th>
+<th>Outputs / artefacts</th>
+<th>Failure mode</th>
+</tr>
+</thead>
+<tbody>
 <tr>
 <td>Connector Search</td>
 <td><code>scripts/pipeline/stage_08_connector_search.py</code></td>
 <td><code>manuscript/config.yaml</code></td>
 <td><code>output/data/connector_search/</code></td>
-<td>opt-in (<code>science</code> tag); skipped if not configured</td>
+<td>opt-in (<code>science</code> tag); fresh policy-bound skip if
+unconfigured</td>
 </tr>
 <tr>
 <td>Provenance Record</td>
-<td><code>scripts/pipeline/stage_09_provenance_record.py --stage "Connector Search"</code></td>
+<td><code>scripts/pipeline/stage_09_provenance_record.py</code>
+<code>--stage</code> <code>"Connector Search"</code></td>
 <td>prior stage outputs</td>
 <td><code>.provenance/graph.json</code></td>
-<td>opt-in (<code>provenance</code> tag); skipped if not configured</td>
+<td>opt-in (<code>provenance</code> tag); fresh policy-bound skip if
+unconfigured</td>
 </tr>
 <tr>
 <td>PDF Rendering</td>
@@ -659,49 +697,97 @@ mjx-container[display="true"] {
 <td><code>scripts/pipeline/stage_04_validate.py</code></td>
 <td>render tree</td>
 <td>Markdown + PDF diagnostics JSON</td>
-<td>Blocking / downgrade</td>
+<td>Enabled formats, bookends, and provenance block; prose diagnostics
+advisory</td>
 </tr>
+</tbody>
+</table></div>
+<h3 id="review-and-delivery">Review and delivery</h3>
+<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable data table"><table data-responsive-table="true">
+<colgroup>
+<col style="width: 16%" />
+<col style="width: 17%" />
+<col style="width: 30%" />
+<col style="width: 22%" />
+<col style="width: 14%" />
+</colgroup>
+<thead>
 <tr>
-<td>LLM Scientific Review</td>
-<td><code>scripts/pipeline/stage_06_llm_review.py --reviews-only</code></td>
+<th>Stage name</th>
+<th>Script / method</th>
+<th>Primary inputs</th>
+<th>Outputs / artefacts</th>
+<th>Failure mode</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>LLM Manuscript Review</td>
+<td><code>scripts/pipeline/stage_06_llm_review.py</code>
+<code>--reviews-only</code></td>
 <td>resolved manuscript artefacts</td>
 <td>textual reviews</td>
-<td>Optional skip (<code>allow_skip</code>)</td>
+<td>Fresh policy-bound skip; required live acceptance remains
+blocking</td>
 </tr>
 <tr>
 <td>LLM Translations</td>
-<td><code>scripts/pipeline/stage_06_llm_review.py --translations-only</code></td>
+<td><code>scripts/pipeline/stage_06_llm_review.py</code>
+<code>--translations-only</code></td>
 <td>abstract metadata</td>
 <td>multilingual snippets</td>
-<td>Optional skip (<code>allow_skip</code>)</td>
+<td>Fresh policy-bound skip; required live acceptance remains
+blocking</td>
 </tr>
 <tr>
 <td>Copy Outputs</td>
 <td><code>scripts/pipeline/stage_05_copy.py</code></td>
 <td>validated tree</td>
 <td>mirrored <code>output/&lt;name&gt;/…</code></td>
-<td>soft fail logged</td>
+<td>Blocking</td>
 </tr>
+</tbody>
+</table></div>
+<h3 id="optional-packaging-and-publication">Optional packaging and
+publication</h3>
+<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable data table"><table data-responsive-table="true">
+<colgroup>
+<col style="width: 16%" />
+<col style="width: 17%" />
+<col style="width: 30%" />
+<col style="width: 22%" />
+<col style="width: 14%" />
+</colgroup>
+<thead>
+<tr>
+<th>Stage name</th>
+<th>Script / method</th>
+<th>Primary inputs</th>
+<th>Outputs / artefacts</th>
+<th>Failure mode</th>
+</tr>
+</thead>
+<tbody>
 <tr>
 <td>Ebook Generation</td>
 <td><code>scripts/pipeline/stage_11_ebook.py</code></td>
 <td>rendered combined markdown</td>
 <td><code>output/ebook/</code> (EPUB/MOBI/DOCX)</td>
-<td>opt-in (<code>ebook</code> tag); soft fail</td>
+<td>opt-in (<code>ebook</code> tag); blocking when invoked</td>
 </tr>
 <tr>
 <td>docxplus Export</td>
 <td><code>scripts/pipeline/stage_13_docxplus.py</code></td>
 <td>project source tree + metadata</td>
 <td><code>output/docxplus/</code> (.docx, .docxplus)</td>
-<td>opt-in (<code>docxplus</code> tag); soft fail</td>
+<td>opt-in (<code>docxplus</code> tag); blocking when invoked</td>
 </tr>
 <tr>
 <td>Metadata Package</td>
 <td><code>scripts/pipeline/stage_12_metadata.py</code></td>
 <td><code>manuscript/config.yaml</code></td>
 <td><code>output/metadata/</code> (ONIX/JSON/OPF)</td>
-<td>opt-in (<code>metadata</code> tag); soft fail</td>
+<td>opt-in (<code>metadata</code> tag); blocking when invoked</td>
 </tr>
 <tr>
 <td>Executable Bundle</td>
@@ -719,10 +805,16 @@ mjx-container[display="true"] {
 </tr>
 </tbody>
 </table></div>
-<p><code>scripts/pipeline/stage_07_executive_report.py</code> is invoked
-<strong>outside</strong> this DAG whenever
-<code>execute_multi_project.py</code> aggregates pipelines—supplying
-cross-project KPI dashboards absent from lone-project checkpoints.</p>
+<p><code>scripts/pipeline/stage_07_executive_report.py</code> provides
+separate <strong>multi-project executive reporting</strong>, not an
+additional single-project DAG node.
+<code>execute_multi_project.py</code> writes aggregate summaries after
+project execution; this does not imply automatic invocation of that
+separate Stage 07 script.</p>
+<p>Opt-in stages also prevent completion when invoked and unsuccessful.
+An allowed skip requires a fresh policy-bound reason receipt; it is not
+a successful execution. The executable DAG and its contracts remain
+authoritative.</p>
 </main>
 </body>
 </html>

@@ -1,0 +1,109 @@
+{
+  "schema_version": "1.0",
+  "png_sha256": "c6615a0941ec5801971e9a0b38e1bd3a31333a075a0ac034cd4878399237e3c9",
+  "width_px": 1700,
+  "height_px": 1260,
+  "dpi": 200,
+  "minimum_label_px": 107.0,
+  "text_measurements": [
+    {
+      "text": "Infrastructure \u00b7 2 / 8",
+      "bbox_px": [
+        213.625,
+        1133.0,
+        1486.375,
+        1240.0
+      ],
+      "font_pixels": 111.11111111111111,
+      "minimum_label_px": 107.0
+    },
+    {
+      "text": "docker",
+      "bbox_px": [
+        223.5625,
+        892.5,
+        646.4375,
+        999.5
+      ],
+      "font_pixels": 111.11111111111111,
+      "minimum_label_px": 107.0
+    },
+    {
+      "text": "0 py\n[ARS\u00b7]",
+      "bbox_px": [
+        262.25,
+        566.0,
+        607.75,
+        780.0
+      ],
+      "font_pixels": 111.11111111111111,
+      "minimum_label_px": 111.11111111111111
+    },
+    {
+      "text": "doctor",
+      "bbox_px": [
+        1062.0,
+        892.5,
+        1468.0,
+        999.5
+      ],
+      "font_pixels": 111.11111111111111,
+      "minimum_label_px": 107.0
+    },
+    {
+      "text": "14 py\n[ARS\u00b7]",
+      "bbox_px": [
+        1092.25,
+        566.0,
+        1437.75,
+        780.0
+      ],
+      "font_pixels": 111.11111111111111,
+      "minimum_label_px": 111.11111111111111
+    },
+    {
+      "text": "documen\ntation",
+      "bbox_px": [
+        149.4375,
+        289.0,
+        720.5625,
+        503.0
+      ],
+      "font_pixels": 111.11111111111111,
+      "minimum_label_px": 111.11111111111111
+    },
+    {
+      "text": "23 py\n[ARS\u00b7]",
+      "bbox_px": [
+        262.25,
+        16.0,
+        607.75,
+        230.0
+      ],
+      "font_pixels": 111.11111111111111,
+      "minimum_label_px": 111.11111111111111
+    },
+    {
+      "text": "fonds",
+      "bbox_px": [
+        1090.25,
+        342.5,
+        1439.75,
+        449.5
+      ],
+      "font_pixels": 111.11111111111111,
+      "minimum_label_px": 107.0
+    },
+    {
+      "text": "6 py\n[ARS\u00b7]",
+      "bbox_px": [
+        1092.25,
+        16.0,
+        1437.75,
+        230.0
+      ],
+      "font_pixels": 111.11111111111111,
+      "minimum_label_px": 111.11111111111111
+    }
+  ]
+}

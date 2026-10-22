@@ -1,0 +1,186 @@
+{
+  "schema_version": "1.0",
+  "png_sha256": "b70d08e22f27af82debfd4169b4d308edc1e9c36dca5dd05bca570efd1e70877",
+  "width_px": 1800,
+  "height_px": 1320,
+  "dpi": 200,
+  "minimum_label_px": 97.0,
+  "text_measurements": [
+    {
+      "text": "Stages 1\u20135 of 17",
+      "bbox_px": [
+        382.625,
+        1192.0,
+        1417.375,
+        1300.0
+      ],
+      "font_pixels": 111.11111111111111,
+      "minimum_label_px": 108.0
+    },
+    {
+      "text": "1",
+      "bbox_px": [
+        51.375,
+        986.5,
+        128.625,
+        1093.5
+      ],
+      "font_pixels": 111.11111111111111,
+      "minimum_label_px": 107.0
+    },
+    {
+      "text": "Clean Output\nDirectories",
+      "bbox_px": [
+        331.5625,
+        933.0,
+        1068.4375,
+        1147.0
+      ],
+      "font_pixels": 111.11111111111111,
+      "minimum_label_px": 111.11111111111111
+    },
+    {
+      "text": "core\nclean",
+      "bbox_px": [
+        1345.5,
+        943.0,
+        1614.5,
+        1137.0
+      ],
+      "font_pixels": 100.0,
+      "minimum_label_px": 100.0
+    },
+    {
+      "text": "2",
+      "bbox_px": [
+        51.375,
+        756.5,
+        128.625,
+        863.5
+      ],
+      "font_pixels": 111.11111111111111,
+      "minimum_label_px": 107.0
+    },
+    {
+      "text": "Environment\nSetup",
+      "bbox_px": [
+        345.1875,
+        703.0,
+        1054.8125,
+        917.0
+      ],
+      "font_pixels": 111.11111111111111,
+      "minimum_label_px": 111.11111111111111
+    },
+    {
+      "text": "core",
+      "bbox_px": [
+        1371.6875,
+        761.5,
+        1588.3125,
+        858.5
+      ],
+      "font_pixels": 100.0,
+      "minimum_label_px": 97.0
+    },
+    {
+      "text": "3",
+      "bbox_px": [
+        51.375,
+        526.5,
+        128.625,
+        633.5
+      ],
+      "font_pixels": 111.11111111111111,
+      "minimum_label_px": 107.0
+    },
+    {
+      "text": "Infrastructure\nTests",
+      "bbox_px": [
+        319.75,
+        473.0,
+        1080.25,
+        687.0
+      ],
+      "font_pixels": 111.11111111111111,
+      "minimum_label_px": 111.11111111111111
+    },
+    {
+      "text": "core\ntests",
+      "bbox_px": [
+        1358.125,
+        483.0,
+        1601.875,
+        677.0
+      ],
+      "font_pixels": 100.0,
+      "minimum_label_px": 100.0
+    },
+    {
+      "text": "4",
+      "bbox_px": [
+        51.375,
+        296.5,
+        128.625,
+        403.5
+      ],
+      "font_pixels": 111.11111111111111,
+      "minimum_label_px": 107.0
+    },
+    {
+      "text": "Project Tests",
+      "bbox_px": [
+        354.0625,
+        296.5,
+        1045.9375,
+        403.5
+      ],
+      "font_pixels": 111.11111111111111,
+      "minimum_label_px": 107.0
+    },
+    {
+      "text": "core\ntests",
+      "bbox_px": [
+        1358.125,
+        253.0,
+        1601.875,
+        447.0
+      ],
+      "font_pixels": 100.0,
+      "minimum_label_px": 100.0
+    },
+    {
+      "text": "5",
+      "bbox_px": [
+        51.375,
+        66.5,
+        128.625,
+        173.5
+      ],
+      "font_pixels": 111.11111111111111,
+      "minimum_label_px": 107.0
+    },
+    {
+      "text": "Project Analysis",
+      "bbox_px": [
+        263.4375,
+        66.5,
+        1136.5625,
+        173.5
+      ],
+      "font_pixels": 111.11111111111111,
+      "minimum_label_px": 107.0
+    },
+    {
+      "text": "core",
+      "bbox_px": [
+        1371.6875,
+        71.5,
+        1588.3125,
+        168.5
+      ],
+      "font_pixels": 100.0,
+      "minimum_label_px": 97.0
+    }
+  ]
+}

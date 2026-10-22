@@ -497,6 +497,15 @@ th {
   color: white;
 }
 
+/* Preserve a complete inline-code header within the table's scroll region. */
+th code {
+  color: inherit;
+  background-color: transparent;
+  white-space: nowrap;
+  overflow-wrap: normal;
+  word-break: normal;
+}
+
 img {
   max-width: 100%;
   height: auto;
@@ -654,7 +663,7 @@ research templates.</p>
 <p>The repository is organized into two strictly separated layers:</p>
 <p><strong>Infrastructure Layer</strong> (<code>infrastructure/</code>):
 31 infrastructure subdirectories—28 of them independently-importable
-Python packages—comprising ~1307 modules and providing reusable
+Python packages—comprising ~1322 modules and providing reusable
 services. Each importable package has its own <code>__init__.py</code>,
 <code>AGENTS.md</code>, and <code>README.md</code>, and exports a
 well-defined public API (the remaining subdirectories,

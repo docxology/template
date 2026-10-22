@@ -432,6 +432,15 @@ th {
   color: white;
 }
 
+/* Preserve a complete inline-code header within the table's scroll region. */
+th code {
+  color: inherit;
+  background-color: transparent;
+  white-space: nowrap;
+  overflow-wrap: normal;
+  word-break: normal;
+}
+
 img {
   max-width: 100%;
   height: auto;
@@ -817,15 +826,15 @@ pipeline-enforced system with version-controlled infrastructure
 cleanly separates globally shared infrastructure (logging, rendering,
 validation, steganography) from project-specific logic (manuscripts,
 scripts, data). 31 infrastructure subdirectories (28 importable
-packages) comprising ~1307 Python modules provide reusable services;
+packages) comprising ~1322 Python modules provide reusable services;
 projects consume them without modification.</p></li>
 <li><p><strong>Execution Integrity</strong>: Pipeline advancement is
 contingent on test passage. The configured source-coverage floors are
 60% for infrastructure and 90% for each project. The static gate rejects
 prohibited mock-framework imports, while the suites exercise real
 filesystem and subprocess behavior and use local protocol servers or
-explicitly enabled live services for network boundaries. ~12,341
-infrastructure tests and 6293+ project tests are discovered by the
+explicitly enabled live services for network boundaries. ~12,482
+infrastructure tests and 6321+ project tests are discovered by the
 introspection build.</p></li>
 <li><p><strong>Automated Provenance</strong>: Steganographic
 watermarking and cryptographic hashing are integrated directly into the
@@ -838,31 +847,32 @@ it is enforced by architecture.</p></li>
 <li><p><strong>AI-Agent Collaboration and Skill-Based Agentic
 Operations</strong>: A three-tier documentation architecture enables AI
 agents to operate at every level of the system. At the system level,
-<code>CLAUDE.md</code> asserts global architectural constraints. At the
-structural level, <code>AGENTS.md</code> files at every directory expose
-local API surfaces, file inventories, and integration contracts. At the
-module level, <code>SKILL.md</code> files—written to a discoverable
-YAML+Markdown schema aligned with the Model Context Protocol
-[anthropic2024mcp]—define each infrastructure module as a reusable,
-self-describing tool. An agent invoking
-<code>infrastructure.rendering</code> does not need to read source code:
-it reads the <code>rendering/SKILL.md</code>, which declares the
-module’s name, description, key imports, and example invocations in a
-machine-parseable YAML frontmatter block. This architecture is the
-practical realization of the skill-library paradigm established in the
-agent literature: Yao et al.’s ReAct framework [yao2023react]
-demonstrated that interleaving reasoning traces with tool invocations
-dramatically improves LLM reliability; Schick et al.’s Toolformer
-[schick2023toolformer] showed that self-supervised tool use can be
-bootstrapped from natural language; Wang et al.’s Voyager
+root <code>AGENTS.md</code> and <code>.agents/</code> define shared
+constraints and generic workflows; client files are compatibility
+references. At the structural level, <code>AGENTS.md</code> files in
+documented directories expose local API surfaces, file inventories, and
+integration contracts. At the module level, <code>SKILL.md</code>
+files—written to a discoverable YAML+Markdown schema aligned with the
+Model Context Protocol [anthropic2024mcp]—describe skill-enabled modules
+and exemplars as reusable capabilities.</p></li>
+</ol>
+<p>An agent invoking <code>infrastructure.rendering</code> does not need
+to read source code: it reads the <code>rendering/SKILL.md</code>, which
+declares the module’s name, description, activation metadata in YAML
+frontmatter and imports and example invocations in its Markdown body.
+This architecture is the practical realization of the skill-library
+paradigm established in the agent literature: Yao et al.’s ReAct
+framework [yao2023react] demonstrated that interleaving reasoning traces
+with tool invocations dramatically improves LLM reliability; Schick et
+al.’s Toolformer [schick2023toolformer] showed that self-supervised tool
+use can be bootstrapped from natural language; Wang et al.’s Voyager
 [wang2023voyager] proved that growing skill libraries enable open-ended
 autonomous exploration in complex environments. <code>template/</code>
 instantiates this vision in the domain of scientific research
 infrastructure: each <code>SKILL.md</code> is a Voyager-style skill,
 each pipeline stage is a ReAct action, and the full infrastructure layer
 constitutes a composable, protocol-aligned skill library for scientific
-computation.</p></li>
-</ol>
+computation.</p>
 <h2 id="scope-and-contributions">Scope and Contributions</h2>
 <p>This paper is itself a product of the template it describes. The
 metrics populating its tables were computed by the introspection module
