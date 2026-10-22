@@ -300,7 +300,7 @@
     {
       "contract_match": true,
       "path": "output/data/artifact_provenance.json",
-      "sha256": "f4f945a44f9fe9dbdd17365a0810d45e5c75e4e4bd7e15e67ed63af1994a803e",
+      "sha256": "30c06f1aa88a767e21044d902ed37b9e2d363ace7150886a3edb102845bae0d0",
       "size_bytes": 194783,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
@@ -1119,8 +1119,8 @@
     {
       "contract_match": true,
       "path": "output/pdf/template_active_inference_combined.pdf",
-      "sha256": "e997e9c3f132fddf0e8ae5e6a5e00c3dc41a852e5201c984e1c38840ebedfd8c",
-      "size_bytes": 3515475,
+      "sha256": "f0bcd833ce6fb9b0cad12cb2d8ed3138d1eaee0c89967b329dda0d8cb5ede77d",
+      "size_bytes": 4228904,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
@@ -1425,8 +1425,8 @@
     {
       "contract_match": true,
       "path": "output/web/assets/source-web-fonts.js",
-      "sha256": "b622eb3bc6314efd31d40d5a4e6d4c444132d0408179b91e0f781853397d30e8",
-      "size_bytes": 3170848,
+      "sha256": "4744b7529bd9a8b4742abea22b4c1b01fb66cd5f3ec30aa482625236854eae45",
+      "size_bytes": 1975092,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""

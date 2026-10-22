@@ -16,7 +16,7 @@ authors:
 publication:
   release_status: "unreleased"
   intended_version: "0.2.0"
-  platform_version: "4.0.2"
+  platform_version: "4.1.0"
   last_published_version: "0.1.0"
   doi: "10.5281/zenodo.20931955"
   version_doi: "10.5281/zenodo.20938523"

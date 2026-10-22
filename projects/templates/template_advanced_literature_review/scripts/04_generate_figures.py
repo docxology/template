@@ -31,6 +31,7 @@ def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Generate all figures for the literature meta-analysis.")
     parser.add_argument("--input-dir", type=str, default=str(DEFAULT_DATA_DIR))
     parser.add_argument("--output-dir", type=str, default=str(DEFAULT_FIGURES_DIR))
+    parser.add_argument("--project-root", type=Path, default=Path(__file__).resolve().parents[1])
     parser.add_argument(
         "--log-level",
         default="INFO",

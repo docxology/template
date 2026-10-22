@@ -59,8 +59,8 @@ uv run pytest tests/primitives tests/core/test_grammar_and_expand.py tests/gates
 uv run python scripts/autopoiesis.py materialize --out-root /tmp/children
 ```
 
-The full selected-child execution capability requires the bound platform 4.0.2
-package or checkout for shared process supervision. Without it,
+The full selected-child execution capability requires the platform SDK version
+bound in `pyproject.toml`, as a package or checkout, for shared process supervision. Without it,
 `realize_archetypes.py` and `realize_child_full.py` preserve a blocked receipt and
 exit 75. Pure standalone generation remains available. Generated children declare
 their own numerical dependencies and `dev` extra for pytest/coverage, and do not

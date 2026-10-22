@@ -43,7 +43,7 @@ def apply_release_plan(root: Path, plan: dict[str, Any], *, reviewed_sha256: str
     if sha256(canonical(plan)) != reviewed_sha256:
         raise ValueError("release plan does not match the explicitly reviewed SHA256")
     check_release_plan(root, plan)
-    actual, after = _prepare(root, plan["root_after"], plan["root_before"])
+    actual, after = _prepare(root, plan["root_after"], plan["root_before"], release_kind=plan["release_kind"])
     if actual != plan:
         raise ValueError("release plan changed before application")
     if journal.is_relative_to(root) or journal.exists() or journal.is_symlink():

@@ -124,17 +124,16 @@ If a project in `projects/<name>/` has its own `pyproject.toml` but **no `.venv/
 
 ### Idempotency Contract for Analysis Scripts
 
-Network-dependent analysis scripts (e.g., literature search, LLM extraction) must detect existing output files and skip re-processing:
+Network-dependent analysis scripts may reuse existing outputs only under their
+own explicit freshness and provenance contract. File existence or nonzero size
+alone does not establish that an artifact matches current source, configuration,
+inputs or required provider identity. Validate those bindings before reuse; a
+missing or stale required artifact must trigger the supported rebuild or a clear
+refusal. Preserve original failed receipts when rebuilding.
 
-```python
-if corpus_path.exists() and corpus_path.stat().st_size > 0:
-    logger.info("Corpus already populated — skipping network searches.")
-    # load and return existing data
-else:
-    # perform actual network operation
-```
-
-This ensures the pipeline remains reproducible and does not make expensive network calls when the output clean step preserves data files.
+This avoids unnecessary network work without promoting stale output to current
+evidence. Follow the owning producer and its negative controls rather than a
+generic existence-only cache shortcut.
 
 ## See Also
 

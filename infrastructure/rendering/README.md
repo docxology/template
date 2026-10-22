@@ -249,9 +249,16 @@ fallback environment.
 WebRenderer font-bearing pages share one local `assets/source-web-fonts.js`
 per output directory instead of repeating twelve font bodies in every HTML
 file. The exact Source font bytes, full OFL notice, constructor hashes, and
-loading observations are preserved. The shared asset uses deterministic gzip
-transport; the browser decompresses each body before checking its length and
-SHA-256 and constructing the font. This requires `DecompressionStream` support.
+loading observations are preserved. The shared asset packs the twelve whole
+bodies into one deterministic LZMA-Alone stream. Its small Source-pinned local
+LZMA-JS decoder and full MIT notice are embedded alongside the full font OFL
+notice, so loading needs no font fetch or worker. The loader checks compressed
+and decoded size bounds, fixed properties and dictionary, and the actual known
+output-length header before decoding; it then reconstructs each complete face
+and checks its original length and SHA-256 before construction. The raw inline
+API and legacy base64/gzip loader branches remain supported. Compression caches
+only an immutable byte result after every call freshly reads and hashes the
+physical font bodies; it never substitutes a cache for Source selection.
 Export the complete `output/web/` tree,
 including assets, for plain-file and HTTP reading; copying an HTML file alone
 omits its fonts. Canonical output copying retains this directory tree. The

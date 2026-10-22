@@ -39,7 +39,7 @@ whether models and observations agree in the broader literature.
 
 ## Citation Network Analysis
 
-The combined corpus contains **{{CITATION_EDGES}}** citation relationships
+The separate bibliometric corpus contains **{{CITATION_EDGES}}** citation relationships
 across **{{CITATION_NODES}}** papers, with a network density of
 {{CITATION_DENSITY_PCT}}%. This is a descriptive statistic for the retained
 corpus; it does not establish a field-wide citation structure or community claim.

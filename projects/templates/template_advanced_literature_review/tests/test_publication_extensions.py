@@ -162,6 +162,7 @@ def test_phase_variables_extractor_computes_totals_and_llm_filter_rate(tmp_path:
 
     assert variables["TOTAL_PHASES"] == "2"
     assert variables["CORPUS_SIZE"] == "42"
+    assert variables["PHASE_CORPUS_SIZE"] == "42"
     assert variables["PHASE_1_NAME"] == "Foundation"
     assert variables["PHASE_1_PAPERS"] == "10"
     assert variables["PHASE_1_QUERIES"] == "2"

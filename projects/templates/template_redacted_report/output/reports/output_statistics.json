@@ -3,13 +3,13 @@
     "pdf": {
       "exists": true,
       "file_count": 1,
-      "size_mb": "0.21",
-      "total_size_bytes": 221938,
+      "size_mb": "0.19",
+      "total_size_bytes": 201416,
       "largest_files": [
         {
           "name": "template_redacted_report_combined.pdf",
-          "size_mb": "0.21",
-          "size_bytes": 221938,
+          "size_mb": "0.19",
+          "size_bytes": 201416,
           "path": "pdf/template_redacted_report_combined.pdf"
         }
       ],
@@ -19,31 +19,32 @@
     },
     "web": {
       "exists": true,
-      "file_count": 6,
-      "size_mb": "0.10",
-      "total_size_bytes": 109103,
+      "file_count": 7,
+      "size_mb": "3.13",
+      "total_size_bytes": 3282779,
       "largest_files": [
+        {
+          "name": "source-web-fonts.js",
+          "size_mb": "3.02",
+          "size_bytes": 3170848,
+          "path": "web/assets/source-web-fonts.js"
+        },
         {
           "name": "index.html",
           "size_mb": "0.04",
-          "size_bytes": 38853,
+          "size_bytes": 39560,
           "path": "web/index.html"
         },
         {
           "name": "manuscript__02_results.html",
           "size_mb": "0.02",
-          "size_bytes": 21584,
+          "size_bytes": 22291,
           "path": "web/manuscript__02_results.html"
-        },
-        {
-          "name": "manuscript__01_methods.html",
-          "size_mb": "0.02",
-          "size_bytes": 19682,
-          "path": "web/manuscript__01_methods.html"
         }
       ],
       "extensions": {
         ".md": 1,
+        ".js": 1,
         ".ico": 1,
         ".html": 4
       }
@@ -51,25 +52,25 @@
     "slides": {
       "exists": true,
       "file_count": 3,
-      "size_mb": "0.26",
-      "total_size_bytes": 269645,
+      "size_mb": "0.27",
+      "total_size_bytes": 278180,
       "largest_files": [
         {
-          "name": "02_results_slides.pdf",
-          "size_mb": "0.13",
-          "size_bytes": 135800,
-          "path": "slides/02_results_slides.pdf"
-        },
-        {
           "name": "01_methods_slides.pdf",
-          "size_mb": "0.12",
-          "size_bytes": 121801,
+          "size_mb": "0.13",
+          "size_bytes": 138971,
           "path": "slides/01_methods_slides.pdf"
         },
         {
+          "name": "02_results_slides.pdf",
+          "size_mb": "0.12",
+          "size_bytes": 122953,
+          "path": "slides/02_results_slides.pdf"
+        },
+        {
           "name": "00_abstract_slides.pdf",
-          "size_mb": "0.01",
-          "size_bytes": 12044,
+          "size_mb": "0.02",
+          "size_bytes": 16256,
           "path": "slides/00_abstract_slides.pdf"
         }
       ],
@@ -218,13 +219,13 @@
     "root": {
       "exists": true,
       "file_count": 1,
-      "size_mb": "0.21",
-      "total_size_bytes": 221938,
+      "size_mb": "0.19",
+      "total_size_bytes": 201416,
       "largest_files": [
         {
           "name": "template_redacted_report_combined.pdf",
-          "size_mb": "0.21",
-          "size_bytes": 221938,
+          "size_mb": "0.19",
+          "size_bytes": 201416,
           "path": "template_redacted_report_combined.pdf"
         }
       ],
@@ -233,9 +234,16 @@
       }
     }
   },
-  "total_files": 70,
-  "total_size_mb": 4.135845184326172,
+  "total_files": 71,
+  "total_size_mb": 7.131495475769043,
   "largest_files": [
+    {
+      "name": "source-web-fonts.js",
+      "size_mb": "3.02",
+      "size_bytes": 3170848,
+      "category": "web",
+      "path": "web/assets/source-web-fonts.js"
+    },
     {
       "name": "blur_on_blur_steganography.pdf",
       "size_mb": "0.24",
@@ -266,15 +274,15 @@
     },
     {
       "name": "template_redacted_report_combined.pdf",
-      "size_mb": "0.21",
-      "size_bytes": 221938,
+      "size_mb": "0.19",
+      "size_bytes": 201416,
       "category": "pdf",
       "path": "pdf/template_redacted_report_combined.pdf"
     },
     {
       "name": "template_redacted_report_combined.pdf",
-      "size_mb": "0.21",
-      "size_bytes": 221938,
+      "size_mb": "0.19",
+      "size_bytes": 201416,
       "category": "root",
       "path": "template_redacted_report_combined.pdf"
     },
@@ -298,25 +306,18 @@
       "size_bytes": 148493,
       "category": "dev",
       "path": "dev/redaction_variants/blur_on_white_steganography.pdf"
-    },
-    {
-      "name": "grayout_on_gray_steganography.pdf",
-      "size_mb": "0.14",
-      "size_bytes": 146909,
-      "category": "dev",
-      "path": "dev/redaction_variants/grayout_on_gray_steganography.pdf"
     }
   ],
   "missing_expected_files": [],
   "sizes_by_category": {
-    "pdf": 0.2116565704345703,
-    "web": 0.1040487289428711,
-    "slides": 0.2571535110473633,
+    "pdf": 0.19208526611328125,
+    "web": 3.130702018737793,
+    "slides": 0.2652931213378906,
     "figures": 0.258453369140625,
     "data": 0.010425567626953125,
     "reports": 0.008480072021484375,
     "dev": 3.0739707946777344,
-    "root": 0.2116565704345703
+    "root": 0.19208526611328125
   },
   "inventory_mode": "stable-shippable-output-v1",
   "inventory_scope": "stage5-delivery-mirror",
@@ -324,6 +325,7 @@
   "file_counts_by_type": {
     ".pdf": 37,
     ".md": 2,
+    ".js": 1,
     ".ico": 1,
     ".html": 4,
     ".png": 2,

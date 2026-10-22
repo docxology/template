@@ -128,7 +128,7 @@ chapters in all.
 
 All commands assume `uv` (never `pip`/`npm`). Run them from the monorepo root. The
 project-local scaffold, figures, and diagrams also run independently. The full
-development suite includes declared SDK 4.0.2 integration checks; its own `dev`
+development suite includes declared SDK integration checks; its own `dev`
 extra selects the SDK from this checkout. An exported clone needs an explicitly
 prepared SDK wheel rather than an ancestor checkout or an assumed PyPI release;
 see [the standalone development boundary](STANDALONE.md#intentional-non-standalone-dependencies).

@@ -7,26 +7,26 @@ Inventory Mode: stable-shippable-output-v1
 Inventory Scope: stage5-delivery-mirror
 Inventory Root: output/templates/template_sia
 
-Total Files: 46
-Total Size: 0.56 MB
+Total Files: 47
+Total Size: 3.67 MB
 
 Files by Category:
-  • pdf: 1 files (0.16 MB)
-  • web: 9 files (0.11 MB)
+  • pdf: 1 files (0.20 MB)
+  • web: 10 files (3.14 MB)
   • figures: 5 files (0.11 MB)
   • data: 2 files (0.00 MB)
   • reports: 4 files (0.01 MB)
   • manuscript: 9 files (0.01 MB)
   • release: 2 files (0.00 MB)
-  • root: 1 files (0.16 MB)
+  • root: 1 files (0.20 MB)
   • runs: 13 files (0.01 MB)
 
 Largest Files:
-  • template_sia_combined.pdf: 0.16 MB (pdf)
-  • template_sia_combined.pdf: 0.16 MB (root)
+  • source-web-fonts.js: 3.02 MB (web)
+  • template_sia_combined.pdf: 0.20 MB (pdf)
+  • template_sia_combined.pdf: 0.20 MB (root)
   • sia_metric_progression.png: 0.03 MB (figures)
   • sia_loop_topology.png: 0.03 MB (figures)
-  • sia_improvement_delta.png: 0.03 MB (figures)
 
 File Types:
   • .md: 13 file(s)
@@ -35,7 +35,7 @@ File Types:
   • .png: 4 file(s)
   • .py: 3 file(s)
   • .pdf: 2 file(s)
+  • .js: 1 file(s)
   • .ico: 1 file(s)
   • .yaml: 1 file(s)
   • .bib: 1 file(s)
-  • .txt: 1 file(s)

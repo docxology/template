@@ -26,7 +26,7 @@ the fixture establishes a scientific trend.
 
 ## Knowledge Graph Results
 
-The optional knowledge-graph stage reports **0** assertions from
+The optional knowledge-graph stage reports **pending** assertions from
 the eligible sample. The configuration-derived hypothesis table is the authoritative
 mapping from review question to score:
 

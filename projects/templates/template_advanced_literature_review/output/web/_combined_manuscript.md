@@ -1083,7 +1083,7 @@ the fixture establishes a scientific trend.
 
 ## Knowledge Graph Results
 
-The optional knowledge-graph stage reports **0** assertions from
+The optional knowledge-graph stage reports **pending** assertions from
 the eligible sample. The configuration-derived hypothesis table is the authoritative
 mapping from review question to score:
 
@@ -1289,9 +1289,11 @@ The suite covers:
 - Deep-research offline replay (provider-neutral, fails closed)
 - Publication-extension and fixture-honesty contracts
 
-Symlinked shared modules (`src/analysis/`, `src/knowledge_graph/`,
-`src/reproducibility/`, `src/visualization/`) are covered by
-`template_literature_meta_analysis`'s own suite, not duplicated here.
+Shared analysis, knowledge-graph, reproducibility and visualization methods are
+imported from the declared `template_literature_meta_analysis` distribution.
+The Meta project's suite verifies their complete source, while Advanced's
+consumer contracts verify phase-aware integration. Installed acceptance binds
+the genuine provider wheel separately from Advanced's project wheel.
 
 
 

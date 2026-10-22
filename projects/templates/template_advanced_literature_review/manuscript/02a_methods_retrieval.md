@@ -56,8 +56,11 @@ the version with the most complete metadata (a count of non-None optional fields
 DOI is normalized: case-folded, resolver-prefix stripped, so the same paper returned by
 two engines under case/format-variant DOIs merges. For this run, {{DOI_COUNT}} records
 carry DOIs, {{OPENALEX_ID_COUNT}} carry OpenAlex IDs, and {{ARXIV_ID_COUNT}} carry arXiv
-IDs. The de-duplicated corpus for this run holds $N = {{CORPUS_SIZE}}$ records published
-across {{YEAR_START}}--{{YEAR_END}}.
+IDs. The retrieved fixture contains {{RETRIEVED_CORPUS_SIZE}} records. The configured
+phase union retains {{PHASE_CORPUS_SIZE}} unique records; the separate bibliometric
+analysis uses {{ANALYZED_CORPUS_SIZE}} records. Its dated temporal subset contains
+{{TEMPORAL_TOTAL_PAPERS}} records published across {{YEAR_START}}--{{YEAR_END}}. These are distinct artifact scopes, rather than interchangeable
+denominators.
 
 ## Relevance Filtering
 

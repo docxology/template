@@ -435,8 +435,8 @@
     {
       "contract_match": true,
       "path": "output/web/assets/source-web-fonts.js",
-      "sha256": "b622eb3bc6314efd31d40d5a4e6d4c444132d0408179b91e0f781853397d30e8",
-      "size_bytes": 3170848,
+      "sha256": "4744b7529bd9a8b4742abea22b4c1b01fb66cd5f3ec30aa482625236854eae45",
+      "size_bytes": 1975092,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""

@@ -1,40 +1,39 @@
 # TEMPLATE SEARCH PROJECT — DEEP REVIEW REPORT
-**Generated:** 2026-08-14T14:20:53+00:00
+**Generated:** 2026-10-22T11:47:00+00:00
 **Project root:** `projects/templates/template_search_project`
 **Repository root:** `.` (portable report label)
 **Review orchestrator:** `scripts/review`
-**Review subprocess exit code:** 0
-**Overall status:** PASS — all enabled stages passed
-**Stages:** 9 total | 4 passed | 0 failed | 5 skipped
+**Purpose:** informational current-source findings; this report is not run or release acceptance.
+**Operational completion:** run `scripts/review`; local receipts are separate from this report.
+**Configured local summary:** `output/.pipeline/review/summary.json` (not public acceptance)
+**Consumed own-source and presence snapshot SHA-256:** `24dd4d2206ec9fc0df74c13458e21fede24c0ab2e373a58355456879c36a1a64`
 ---------------------------------------------------------------------------
 ## 1.  PROJECT INVENTORY
-  ▸ AGENTS.md  (11008 bytes)
+  ▸ AGENTS.md  (12331 bytes)
   ▸ CITATION.cff  (620 bytes)
   ▸ LICENSE  (1076 bytes)
-  ▸ README.md  (18402 bytes)
-  ▸ STANDALONE.md  (4685 bytes)
-  ▸ TODO.md  (4382 bytes)
+  ▸ README.md  (21972 bytes)
+  ▸ STANDALONE.md  (4729 bytes)
+  ▸ TODO.md  (9210 bytes)
+  ▸ build/  (2 entries)
   ▸ codemeta.json  (854 bytes)
-  ▸ coverage_project.json  (136367 bytes)
   ▸ data/  (4 entries)
-  ▸ docs/  (12 entries)
+  ▸ docs/  (13 entries)
   ▸ domain_profile.yaml  (1659 bytes)
   ▸ experiment_plan.yaml  (1502 bytes)
   ▸ export.toml  (63 bytes)
-  ▸ htmlcov/  (25 entries)
   ▸ manuscript/  (19 entries)
-  ▸ pyproject.toml  (3352 bytes)
-  ▸ review_config.yaml  (2271 bytes)
-  ▸ scripts/  (10 entries)
-  ▸ src/  (20 entries)
-  ▸ template_search_project.egg-info/  (5 entries)
-  ▸ tests/  (30 entries)
-  ▸ uv.lock  (368978 bytes)
+  ▸ pyproject.toml  (3479 bytes)
+  ▸ review_config.yaml  (2366 bytes)
+  ▸ scripts/  (12 entries)
+  ▸ src/  (5 entries)
+  ▸ tests/  (7 entries)
+  ▸ uv.lock  (236118 bytes)
 
-**src/ modules**  (20):  AGENTS.md, README.md, __init__.py, __pycache__, analysis.py, composition.py, config.py, dashboard.py, deep_search.py, deep_search_cli.py, dotenv.py, figures.py, llm_runtime.py, manuscript_variables.py, pipeline.py, report.py, review_report.py, search_invariants.py, search_pipeline_cli.py, synthesis.py
-**tests/ modules** (30):  AGENTS.md, README.md, __init__.py, __pycache__, conftest.py, test_analysis.py, test_composition.py, test_composition_script.py, test_config.py, test_dashboard.py, test_deep_improvements.py, test_deep_search.py, test_deep_search_cli.py, test_dotenv.py, test_figures.py, test_llm_runtime.py, test_manuscript_integrity.py, test_manuscript_variables.py, test_pipeline.py, test_pipeline_collisions.py, test_pipeline_integration.py, test_readme_config_consistency.py, test_report.py, test_review_report.py, test_review_report_additional.py, test_script_order.py, test_scripts.py, test_search_invariants_and_dashboard.py, test_search_pipeline_cli.py, test_synthesis.py
+**src/ modules**  (5):  AGENTS.md, README.md, __init__.py, template_search_project, template_search_project.egg-info
+**tests/ modules** (7):  AGENTS.md, README.md, analysis, conftest.py, pipeline, publish, search
 **manuscript/ files** (19):  00_abstract.md, 01_introduction.md, 02_methodology.md, 03_results.md, 04_conclusion.md, 05_pipeline_internals.md, 06_reproducibility.md, 07_deep_search.md, 99_references.md, AGENTS.md, README.md, S01_literature_review.md, SYNTAX.md, config.yaml, config.yaml.example, layer_contract.yaml, preamble.md, references.bib, references_deep.bib
-**scripts/ executables** (10):  AGENTS.md, README.md, review, run_deep_search.py, run_search_pipeline.py, s_compose_literature_review.py, y_generate_search_figures.py, z_generate_manuscript_variables.py, zz_generate_review_report.py, zzz_build_dashboard.py
+**scripts/ executables** (12):  AGENTS.md, README.md, _run_unpaid_acceptance.py, _search_sdk_bootstrap.py, review, run_deep_search.py, run_search_pipeline.py, s_compose_literature_review.py, y_generate_search_figures.py, z_generate_manuscript_variables.py, zz_generate_review_report.py, zzz_build_dashboard.py
 
 ## 2.  DOCUMENTATION COMPLETENESS
 **AGENTS.md** sections:
@@ -55,10 +54,11 @@
   • Review phase
   • Review configuration snapshot
   • Related Documentation
+  • Optional hardening
 
 **Internal-anchor validation**
-  AGENTS.md anchors broken: 5  ['fff', '0f766e', '1e3a8a', '0f172a', '7c2d12']
-  README.md  anchors broken: 7  ['fff', '0f766e', '1e3a8a', '0f172a', '7c2d12', 'review-phase', 'permanent-canonical-exemplars']
+  AGENTS.md anchors broken: 5  ['1e3a8a', '7c2d12', '0f172a', '0f766e', 'fff']
+  README.md  anchors broken: 7  ['1e3a8a', '0f766e', '7c2d12', 'permanent-canonical-exemplars', 'review-phase', '0f172a', 'fff']
 
 ## 3.  BIBLIOGRAPHY AUDIT
 **references.bib** entries: 6
@@ -377,24 +377,34 @@
 
 ## 4.  INFRASTRUCTURE UTILISATION AUDIT
 **Infrastructure modules imported (by importer count):**
+  infrastructure.core.files.secure_write         ← bibliography.py, composition.py, deep_custody.py, deep_search.py, deep_search_cli.py, manuscript_variables.py, pipeline.py, report.py, report_inputs.py, review_execution.py, review_report.py, search_pipeline_cli.py
   infrastructure.search.literature               ← deep_search.py, figures.py, pipeline.py, report.py, synthesis.py
   infrastructure.core.logging.utils              ← composition.py, deep_search_cli.py, llm_runtime.py, search_pipeline_cli.py
-  infrastructure.reference.citation              ← composition.py, deep_search.py, pipeline.py
-  infrastructure.reporting.interactive_dashboard  ← dashboard.py
-  infrastructure.documentation.generated_figure_registry  ← figures.py
+  infrastructure.reference.citation              ← bibliography.py, composition.py, deep_search.py, pipeline.py
+  infrastructure                                 ← analysis.py, deep_custody.py, provider_paths.py
+  infrastructure.core.pipeline.fingerprint_files  ← report_inputs.py
+  infrastructure.core.subprocess_policy          ← review_execution.py
+  infrastructure.search.literature.live_artifacts  ← live_acceptance.py
+  infrastructure.search.literature.live_contract  ← live_acceptance.py
+  infrastructure.search.literature.live_providers  ← live_acceptance.py
+  infrastructure.search.literature.live_transport  ← live_acceptance.py
   infrastructure.llm                             ← llm_runtime.py
+  infrastructure.search.literature.configuration_sources  ← config.py
+  infrastructure.reporting.interactive_dashboard  ← dashboard.py
+  infrastructure.core.implementation_custody     ← deep_custody.py
+  infrastructure.documentation.generated_figure_registry  ← figures.py
 
 ## 5.  REVIEW ORCHESTRATION SYSTEM (INSTALLED)
 
 This project has a configurable, multi-stage review system for pre-flight
 and post-run quality gates.  It leverages existing infrastructure.cli tools plus
-bespoke checks implemented in src.analysis.
+bespoke checks implemented in template_search_project.analysis.
 
 **Artifacts:**
   • review_config.yaml        stage enable/disable configuration
   • scripts/review            unified single-entrypoint orchestrator
-  • scripts/zz_generate_review_report.py  reporter (runs after z_generate_manuscript_variables.py, before zzz_build_dashboard.py)
-  • src/analysis.py           custom-stage functions
+  • scripts/zz_generate_review_report.py  informational source/domain reporter
+  • src/template_search_project/analysis/           custom-stage functions
 
 **Default enabled stages (when run via scripts/review):**
   1. bibtex_validation         infrastructure.reference.citation.cli validate
@@ -407,20 +417,25 @@ bespoke checks implemented in src.analysis.
   output_integrity, test_suite_health
 
 **Run:**  uv run python scripts/review   (or add --list, --stage …)
-**Outputs:** output/review/stage_*.json  +  summary.json
+**Operational outputs:** configured output/.pipeline/review/stage_*.json + summary.json (local only)
+**Public report:** output/review/REVIEW_REPORT.md (recomputed source/domain findings)
 
 
-## 6.  CURRENT REVIEW RESULTS (baseline run)
-**Overall exit code:** 0
-  SKIP (disabled or not materialised)  prerender_validation
-  SKIP (disabled or not materialised)  markdown_links
-  PASS  bibtex_validation
-  PASS  bibliography_completeness
-  SKIP (disabled or not materialised)  variables_resolved
-  SKIP (disabled or not materialised)  output_integrity
-  SKIP (disabled or not materialised)  test_suite_health
-  PASS  infrastructure_usage
-  PASS  determinism_check
+## 6.  CURRENT SOURCE AND DOMAIN FINDINGS
+**Bibliography completeness:** passed
+**Missing bibliography keys:** 0
+**Infrastructure import validity:** passed
+**Infrastructure import issues:** 0
+**Configured stages (execution results remain local):**
+  DISABLED  prerender_validation
+  DISABLED  markdown_links
+  ENABLED  bibtex_validation
+  ENABLED  bibliography_completeness
+  DISABLED  variables_resolved
+  DISABLED  output_integrity
+  DISABLED  test_suite_health
+  ENABLED  infrastructure_usage
+  ENABLED  determinism_check
 
 ## 7.  GAPS & IMMEDIATE RECOMMENDATIONS
 
@@ -460,7 +475,7 @@ bespoke checks implemented in src.analysis.
 
   • Template_search_project: literature-search exemplar using infrastructure.search
     + infrastructure.reference, orchestrated by thin scripts pipeline.
-  • Review system: scripts/review + review_config.yaml + src/analysis.
-  • Infra usage (6 module(s)): infrastructure.core.logging.utils, infrastructure.documentation.generated_figure_registry, infrastructure.llm, infrastructure.reference.citation, infrastructure.reporting.interactive_dashboard, infrastructure.search.literature.
+  • Review system: scripts/review + review_config.yaml + src/template_search_project/analysis.
+  • Infra usage (16 module(s)): infrastructure, infrastructure.core.files.secure_write, infrastructure.core.implementation_custody, infrastructure.core.logging.utils, infrastructure.core.pipeline.fingerprint_files, infrastructure.core.subprocess_policy, infrastructure.documentation.generated_figure_registry, infrastructure.llm, infrastructure.reference.citation, infrastructure.reporting.interactive_dashboard, infrastructure.search.literature, infrastructure.search.literature.configuration_sources, infrastructure.search.literature.live_artifacts, infrastructure.search.literature.live_contract, infrastructure.search.literature.live_providers, infrastructure.search.literature.live_transport.
   • Bibliography: 310 inline citation key(s) detected in manuscript (see section 3).
   • Next: run the top-level pipeline's PDF-rendering stage to refresh the combined PDF.

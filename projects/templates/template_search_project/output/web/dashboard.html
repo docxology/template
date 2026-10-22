@@ -103,11 +103,11 @@ pre{background:#0b1220;border:1px solid var(--border);
 
 <div class="meta">
   project: <code>template_search_project</code> &middot;
-  generated: <code>2026-08-15T12:47:20Z</code> &middot;
-  git: <code>634333692 (dirty)</code> &middot;
-  panels: 5 &middot;
+  generated: <code>2026-10-22T11:57:33Z</code> &middot;
+  git: <code>d7e6da6cf (dirty)</code> &middot;
+  panels: 4 &middot;
   controls: 0 &middot;
-  invariants: 14
+  invariants: 8
 </div>
 
 <script>
@@ -115,12 +115,12 @@ const BUNDLE = {
   "title": "Literature Search Coverage Dashboard",
   "subtitle": "6 papers · 6 years · 1 sources · every floor and filter is CLI-configurable.",
   "project": "template_search_project",
-  "generated_utc": "2026-08-15T12:47:20Z",
-  "git_rev": "634333692",
+  "generated_utc": "2026-10-22T11:57:32Z",
+  "git_rev": "d7e6da6cf",
   "git_dirty": true,
   "hyperparameters": {
     "corpus_path": "<repo-root>/projects/templates/template_search_project/output/corpus.json",
-    "aggregate_path": "<repo-root>/projects/templates/template_search_project/output/deep_search/aggregate.json",
+    "aggregate_path": null,
     "year_min_filter": null,
     "year_max_filter": null,
     "doi_floor": 0.5,
@@ -128,7 +128,7 @@ const BUNDLE = {
     "year_floor": 0.7,
     "min_per_keyword": 1,
     "n_papers": 6,
-    "n_keywords": 3
+    "n_keywords": 0
   },
   "meta": {},
   "payload": {
@@ -154,11 +154,7 @@ const BUNDLE = {
       "abstract": 1.0,
       "year": 1.0
     },
-    "keywords": [
-      "convex optimization",
-      "stochastic gradient descent",
-      "reproducible research"
-    ],
+    "keywords": [],
     "keyword_overlap_matrix": [],
     "papers_preview": [
       {
@@ -372,42 +368,6 @@ const BUNDLE = {
       "driven_by": [],
       "update_fn": "",
       "preview_rows": 10
-    },
-    {
-      "panel_id": "keywords",
-      "title": "Search keywords",
-      "description": "Deep-search ran on 3 keywords; unique papers across them: 6.",
-      "traces": [
-        {
-          "type": "bar",
-          "x": [
-            "convex optimization",
-            "stochastic gradient descent",
-            "reproducible research"
-          ],
-          "y": [
-            2.0,
-            2.0,
-            2.0
-          ],
-          "marker": {
-            "color": "#facc15"
-          },
-          "name": "avg unique / keyword"
-        }
-      ],
-      "layout": {
-        "xaxis": {
-          "title": "keyword",
-          "tickangle": -25
-        },
-        "yaxis": {
-          "title": "papers"
-        }
-      },
-      "driven_by": [],
-      "update_fn": "",
-      "preview_rows": 10
     }
   ],
   "controls": [],
@@ -475,54 +435,6 @@ const BUNDLE = {
       "tolerance": 0.0,
       "witness": "2018 <= 2027 + 0.0e+00",
       "description": "latest paper year = 2018"
-    },
-    {
-      "name": "keywords_nonempty",
-      "passed": true,
-      "kind": "ge",
-      "tolerance": 0.0,
-      "witness": "3 >= 1 - 0.0e+00",
-      "description": "deep search ran with 3 keywords"
-    },
-    {
-      "name": "unique_papers_nonempty",
-      "passed": true,
-      "kind": "ge",
-      "tolerance": 0.0,
-      "witness": "300 >= 1 - 0.0e+00",
-      "description": "unique papers list has 300 entries"
-    },
-    {
-      "name": "unique_papers_min_per_keyword",
-      "passed": true,
-      "kind": "ge",
-      "tolerance": 0.0,
-      "witness": "100 >= 1 - 0.0e+00",
-      "description": "avg papers per keyword = 100.0 ≥ 1"
-    },
-    {
-      "name": "deep_search_keywords_present",
-      "passed": true,
-      "kind": "ge",
-      "tolerance": 0.0,
-      "witness": "3 >= 1 - 0.0e+00",
-      "description": "deep-search aggregate contains 3 keyword(s)"
-    },
-    {
-      "name": "deep_search_keywords_unique",
-      "passed": true,
-      "kind": "equal",
-      "tolerance": 0.0,
-      "witness": "|0 - 0| = 0.000e+00 (tol=0.0e+00)",
-      "description": "duplicate deep-search keywords: 0"
-    },
-    {
-      "name": "deep_search_citation_keys_complete",
-      "passed": true,
-      "kind": "equal",
-      "tolerance": 0.0,
-      "witness": "|0 - 0| = 0.000e+00 (tol=0.0e+00)",
-      "description": "papers without citation keys: []"
     }
   ],
   "tables": {},

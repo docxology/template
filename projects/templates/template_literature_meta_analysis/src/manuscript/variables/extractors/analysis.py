@@ -9,7 +9,7 @@ from template_literature_meta_analysis.manuscript.variables.formatters import la
 
 def extract_analysis(ctx: ExtractContext) -> dict[str, str]:
     """Process extract analysis."""
-    variables: dict[str, str] = {}
+    variables: dict[str, str] = {"ANALYZED_CORPUS_SIZE": "pending"}
     figures_dir = ctx.output_dir / "figures"
     variables["NUM_FIGURES"] = str(len(list(figures_dir.glob("*.png")))) if figures_dir.exists() else "pending"
     if not figures_dir.exists():
@@ -62,6 +62,7 @@ def extract_analysis(ctx: ExtractContext) -> dict[str, str]:
     if desc:
         ds = desc.get("descriptive_stats", {})
         if isinstance(ds, dict):
+            variables["ANALYZED_CORPUS_SIZE"] = str(ds.get("total", "pending"))
             variables["UNIQUE_AUTHORS"] = str(ds.get("unique_authors", 0))
             variables["CITATION_MEAN"] = f"{ds.get('citation_count_mean', 0):.1f}"
             variables["CITATION_MEDIAN"] = f"{ds.get('citation_count_median', 0):.1f}"
@@ -132,7 +133,7 @@ def extract_analysis(ctx: ExtractContext) -> dict[str, str]:
             for pair in pairs[:10]:
                 if isinstance(pair, dict):
                     rows.append(
-                        f"| {pair.get('paper_a', '')[:30]} | {pair.get('paper_b', '')[:30]} | {pair.get('similarity', 0):.4f} |"
+                        f"| `{pair.get('paper_a', '')}` | `{pair.get('paper_b', '')}` | {pair.get('similarity', 0):.4f} |"
                     )
             variables["TOP_SIMILAR_PAIRS_TABLE"] = "\n".join(rows)
         else:

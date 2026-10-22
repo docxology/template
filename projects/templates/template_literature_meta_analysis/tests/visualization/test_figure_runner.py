@@ -117,7 +117,23 @@ def test_generate_all_figures_minimal(tmp_path: Path) -> None:
         json.dump({"PRIMARY_EFFICACY": 0.5}, handle)
 
     args = argparse.Namespace(input_dir=str(input_dir), output_dir=str(output_dir), dpi=100)
-    paths = generate_all_figures(args)
+    manuscript = tmp_path / "manuscript"
+    manuscript.mkdir()
+    (manuscript / "config.yaml").write_text(
+        "project_config:\n  hypothesis_definitions:\n    H1:\n      name: Selected Project Claim\n",
+        encoding="utf-8",
+    )
+    args.project_root = tmp_path
+    from template_literature_meta_analysis.visualization import style
+
+    old_hypotheses = dict(style.HYPOTHESIS_NAMES)
+    try:
+        paths = generate_all_figures(args)
+        assert style.HYPOTHESIS_NAMES["PRIMARY_EFFICACY"] == "Selected Project Claim"
+        assert json.loads((input_dir / "hypothesis_scores.json").read_text()) == {"PRIMARY_EFFICACY": 0.5}
+    finally:
+        style.HYPOTHESIS_NAMES.clear()
+        style.HYPOTHESIS_NAMES.update(old_hypotheses)
     assert len(paths) >= 2
     assert output_dir.exists()
 

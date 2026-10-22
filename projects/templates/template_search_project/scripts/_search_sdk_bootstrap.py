@@ -38,7 +38,7 @@ def select_platform_sdk(project_root: Path) -> None:
         verify_origins()
         sdk = importlib.import_module("infrastructure")
         verify_origins()
-        if sdk.__version__ != "4.0.2":
-            raise ImportError("scripts require the declared platform 4.0.2 SDK")
+        if sdk.__version__ != "4.1.0":
+            raise ImportError("scripts require the declared platform 4.1.0 SDK")
     finally:
         sys.path[:] = original

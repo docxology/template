@@ -102,9 +102,10 @@ flowchart TB
 ### Deep search (`run_deep_search.py`)
 
 Reads the `deep_search:` block of `config.yaml`. Each keyword runs its
-own `SearchQuery` (capped at `max_results_per_keyword`, default 100),
-every paper is fully enriched (abstract + fulltext), and each paper
-gets a multi-section markdown reading note (LLM-generated when enabled).
+own `SearchQuery` (capped at `max_results_per_keyword`, default 100).
+Abstract and full-text enrichment run only when their configured flags are enabled
+and provider data is available. Each paper gets a multi-section markdown reading
+note when LLM generation is enabled and succeeds.
 See [`src/template_search_project/search/deep_search.py`](src/template_search_project/search/deep_search.py) and
 [`manuscript/07_deep_search.md`](manuscript/07_deep_search.md).
 
@@ -123,8 +124,10 @@ See [`src/template_search_project/search/deep_search.py`](src/template_search_pr
 uv run pytest projects/templates/template_search_project/tests/ -v
 ```
 
-All tests run offline: `LocalBackend` against real temp files,
-deterministic LLM callable, real subprocess where needed. The committed
+The default suite uses local files, real loopback HTTP providers, deterministic
+LLM callables and real subprocesses. Controlled HTTP responses verify request
+and parser behavior; actual-model qualification belongs to the explicit native
+acceptance lane. The committed
 `data/corpus.json` is a deterministic fixture, not empirical evidence; the
 standard report writes a fixture-scope notice and rejects high-confidence
 empirical assertion language in fixture-backed synthesis.

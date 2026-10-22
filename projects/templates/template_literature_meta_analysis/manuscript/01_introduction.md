@@ -25,8 +25,9 @@ The pipeline is designed around four research questions (RQs) that a researcher 
 the field would ask:
 
 1. **RQ1 — Field size and growth.** How large is the literature on {{SEARCH_TERM_TITLE}},
-   how fast is it growing, and when did it peak? The corpus of $N = {{CORPUS_SIZE}}$
-   records spanning {{YEAR_START}}--{{YEAR_END}} answers this directly, with a compound
+   how fast is it growing, and when did it peak? The dated analysis subset of
+   $N = {{TEMPORAL_TOTAL_PAPERS}}$ records spanning {{YEAR_START}}--{{YEAR_END}}
+   answers this directly, with a compound
    annual growth rate of {{CAGR_PCT}}\% and a peak in {{PEAK_YEAR}}.
 
 2. **RQ2 — Subfield composition.** What sub-areas compose the literature, and what is

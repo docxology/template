@@ -14,7 +14,6 @@ from pathlib import Path
 from infrastructure.sia import GenerationArtifacts, RunConfig, run_sia_loop
 
 from ..ledger.artifact_manifest import collect_run_artifact_paths, write_artifact_manifest
-from ..figures import write_all_figures
 from .loop_config import load_sia_settings
 # (manuscript.reports is imported inside run_sia_loop_project: manuscript/
 #  modules import loop_config, so a module-level import here closes a cycle.)
@@ -65,6 +64,9 @@ def run_sia_loop_project(project_root: Path, *, live: bool | None = None) -> Sia
     from ..manuscript.manuscript_variables import save_variables
 
     save_variables(project_root)
+    # Figure modules read loop_config; defer the reverse edge until the adapter runs.
+    from ..figures import write_all_figures
+
     figure_paths = tuple(write_all_figures(project_root))
     summary_path = project_root / "output" / "runs" / f"run_{config.run_id}" / "run_summary.json"
     manifest_paths = collect_run_artifact_paths(project_root, run_id=settings.run_id)

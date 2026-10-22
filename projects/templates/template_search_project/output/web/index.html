@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="generator" content="pandoc 3.11" />
+  <meta name="generator" content="pandoc 3.12.1" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
   <meta name="author" content="Daniel Ari Friedman" />
   <meta name="description" content="A configurable pipeline from query → references.bib → LLM-driven reading report" />
@@ -14,7 +14,10 @@ and infrastructure/reference</title>
     */
     html {
       color: #1a1a1a;
+      color: light-dark(#1a1a1a, #fdfdfd);
       background-color: #fdfdfd;
+      background-color: light-dark(#fdfdfd, #1a1a1a);
+      color-scheme: light dark;
     }
     body {
       margin: 0 auto;
@@ -39,11 +42,16 @@ and infrastructure/reference</title>
     }
     @media print {
       html {
-        background-color: white;
+        color-scheme: light only;
       }
-      body {
+      html, body, pre, code {
         background-color: transparent;
+      }
+      body, a, a:visited, blockquote {
         color: black;
+      }
+      pre, code {
+        padding: 0;
       }
       p, h2, h3 {
         orphans: 3;
@@ -56,11 +64,8 @@ and infrastructure/reference</title>
     p {
       margin: 1em 0;
     }
-    a {
-      color: #1a1a1a;
-    }
-    a:visited {
-      color: #1a1a1a;
+    a, a:visited {
+      color: inherit;
     }
     img {
       max-width: 100%;
@@ -89,8 +94,11 @@ and infrastructure/reference</title>
     blockquote {
       margin: 1em 0 1em 1.7em;
       padding-left: 1em;
-      border-left: 2px solid #e6e6e6;
+      border-left: 2px solid;
+      border-color: #e6e6e6;
+      border-color: light-dark(#e6e6e6, #4c4c4c);
       color: #606060;
+      color: light-dark(#606060, #b6b6b6);
     }
     code {
       white-space: pre-wrap;
@@ -114,7 +122,7 @@ and infrastructure/reference</title>
     }
     hr {
       border: none;
-      border-top: 1px solid #1a1a1a;
+      border-top: 1px solid currentColor;
       height: 1px;
       margin: 1em 0;
     }
@@ -131,11 +139,11 @@ and infrastructure/reference</title>
     }
     tbody {
       margin-top: 0.5em;
-      border-top: 1px solid #1a1a1a;
-      border-bottom: 1px solid #1a1a1a;
+      border-top: 1px solid currentColor;
+      border-bottom: 1px solid currentColor;
     }
     th {
-      border-top: 1px solid #1a1a1a;
+      border-top: 1px solid currentColor;
       padding: 0.25em 0.5em 0.25em 0.5em;
     }
     td {
@@ -501,6 +509,9 @@ pre {
 }
 
 pre code {
+  background-color: transparent;
+  padding: 0;
+  border-radius: 0;
   overflow-wrap: inherit;
   white-space: inherit;
   word-break: inherit;
@@ -571,6 +582,15 @@ th, td {
 th {
   background-color: #1f6f8b;
   color: white;
+}
+
+/* Preserve a complete inline-code header within the table's scroll region. */
+th code {
+  color: inherit;
+  background-color: transparent;
+  white-space: nowrap;
+  overflow-wrap: normal;
+  word-break: normal;
 }
 
 img {
@@ -713,6 +733,7 @@ mjx-container[display="true"] {
 }
 
 </style>
+<script data-template-source-font-loader src="assets/source-web-fonts.js"></script>
 </head>
 <body>
 <a class="skip-link" href="#main-content">Skip to main content</a>
@@ -846,8 +867,8 @@ capped at 100 papers per keyword from
 its abstract and PDF fulltext, and (optionally) uses the local LLM to
 write a multi-section reading note for every paper. When a deep-search
 aggregate exists, the latest run covered <strong>3</strong> keyword(s)
-with <strong>300</strong> unique paper(s) after cross-keyword
-deduplication. Both turn a free-text topic into:</p>
+with <strong><deep-search not run></strong> unique paper(s) after
+cross-keyword deduplication. Both turn a free-text topic into:</p>
 <ol type="1">
 <li>a deduplicated, year-filtered set of papers drawn from arXiv,
 Crossref, optional local corpora, and (opt-in) <a
@@ -1187,8 +1208,8 @@ abstract); the per-source breakdown is local=6 and recorded backend
 errors are none. The deep-search workflow (sec. <a
 href="#sec:deep_search">8</a>) covered 3 keyword(s) — <em>convex
 optimization; stochastic gradient descent; reproducible research</em> —
-drawn from , producing 300 unique paper(s) after cross-keyword
-deduplication.</p>
+drawn from , producing <deep-search not run> unique paper(s) after
+cross-keyword deduplication.</p>
 <p>When <code>sources: [local]</code> is used, this section reports
 fixture execution only. It must not be read as a claim about empirical
 literature coverage; a live-provider run requires source-level
@@ -1376,107 +1397,108 @@ href="https://github.com/docxology/template/tree/main/infrastructure/search/lite
 on GitHub</a>) and <code>src/pipeline/pipeline.py</code> (<a
 href="https://github.com/docxology/template/tree/main/projects/templates/template_search_project/src">source
 on GitHub</a>) for the full schema.</p>
-<pre class="mermaid"><code>classDiagram
-    class SearchQuery {
-        +str text
-        +int max_results
-        +int|None year_min
-        +int|None year_max
-        +list~str~ sources
-        +list~str~ fields
-        +matches_year(year) bool
-    }
-
-    class Paper {
-        +str id
-        +str title
-        +list~str~ authors
-        +int|None year
-        +str|None doi
-        +str|None url
-        +str|None abstract
-        +str|None pdf_url
-        +str|None fulltext
-        +str|None venue
-        +str|None venue_type
-        +str|None volume
-        +str|None issue
-        +str|None pages
-        +str|None publisher
-        +str|None edition
-        +str|None isbn
-        +list~str~ keywords
-        +str|None source
-        +float score
-        +dict raw
-        +to_dict() dict
-        +from_dict(d) Paper
-    }
-
-    class SearchResult {
-        +SearchQuery query
-        +list~Paper~ papers
-        +dict per_source_counts
-        +dict errors
-        +to_dict() dict
-        +to_json() str
-    }
-
-    class BibEntry {
-        +str entry_type
-        +str citation_key
-        +OrderedDict fields
-    }
-
-    class BibDatabase {
-        +list~BibEntry~ entries
-        +str|None preamble
-        +find(key) BibEntry
-    }
-
-    class LiteratureRunArtifacts {
-        +SearchResult result
-        +Path|None corpus_path
-        +Path|None bibtex_path
-        +list~FetchResult~ enrichment_log
-        +Path|None cache_dir
-        +dict citation_keys
-        +papers() list~Paper~
-    }
-
-    class ManuscriptVariables {
-        +str config_query
-        +int config_max_results
-        +str config_sources
-        +int result_num_papers
-        +int result_num_sources
-        +str result_per_source
-        +str result_errors
-        +str result_year_min
-        +str result_year_max
-        +int result_with_abstract
-        +int result_with_doi
-        +int deep_max_results_per_keyword
-        +int deep_keyword_count
-        +str deep_keywords_joined
-        +str deep_sources
-        +str deep_unique_papers
-        +as_dict() dict
-        +as_uppercase_keys() dict
-    }
-
-    class SynthesisResult {
-        +str kind
-        +str prompt
-        +str text
-        +str|None paper_id
-    }
-
-    SearchResult --&gt; SearchQuery
-    SearchResult --&gt; &quot;*&quot; Paper
-    LiteratureRunArtifacts --&gt; SearchResult
-    LiteratureRunArtifacts --&gt; &quot;*&quot; BibEntry : via paper_to_bibentry
-    BibDatabase --&gt; &quot;*&quot; BibEntry</code></pre>
+<div class="sourceCode" id="cb2"><pre
+class="sourceCode mermaid"><code class="sourceCode mermaid"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">classDiagram</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">class</span><span class="dt"> SearchQuery {</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>        <span class="kw">+</span>str text</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>        <span class="kw">+</span>int max_results</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>        <span class="kw">+</span>int|None year_min</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>        <span class="kw">+</span>int|None year_max</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>        <span class="kw">+</span>list<span class="fu">~</span>str<span class="fu">~</span> sources</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>        <span class="kw">+</span>list<span class="fu">~</span>str<span class="fu">~</span> fields</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>        <span class="kw">+</span>matches_year(year) bool</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>    <span class="dt">}</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>    <span class="kw">class</span><span class="dt"> Paper {</span></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>        <span class="kw">+</span>str id</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>        <span class="kw">+</span>str title</span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>        <span class="kw">+</span>list<span class="fu">~</span>str<span class="fu">~</span> authors</span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>        <span class="kw">+</span>int|None year</span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>        <span class="kw">+</span>str|None doi</span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>        <span class="kw">+</span>str|None url</span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>        <span class="kw">+</span>str|None abstract</span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>        <span class="kw">+</span>str|None pdf_url</span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>        <span class="kw">+</span>str|None fulltext</span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>        <span class="kw">+</span>str|None venue</span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>        <span class="kw">+</span>str|None venue_type</span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>        <span class="kw">+</span>str|None volume</span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>        <span class="kw">+</span>str|None issue</span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>        <span class="kw">+</span>str|None pages</span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a>        <span class="kw">+</span>str|None publisher</span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a>        <span class="kw">+</span>str|None edition</span>
+<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a>        <span class="kw">+</span>str|None isbn</span>
+<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a>        <span class="kw">+</span>list<span class="fu">~</span>str<span class="fu">~</span> keywords</span>
+<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a>        <span class="kw">+</span>str|None source</span>
+<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a>        <span class="kw">+</span>float score</span>
+<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a>        <span class="kw">+</span>dict raw</span>
+<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a>        <span class="kw">+</span>to_dict() dict</span>
+<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a>        <span class="kw">+</span>from_dict(d) Paper</span>
+<span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a>    <span class="dt">}</span></span>
+<span id="cb2-37"><a href="#cb2-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-38"><a href="#cb2-38" aria-hidden="true" tabindex="-1"></a>    <span class="kw">class</span><span class="dt"> SearchResult {</span></span>
+<span id="cb2-39"><a href="#cb2-39" aria-hidden="true" tabindex="-1"></a>        <span class="kw">+</span>SearchQuery query</span>
+<span id="cb2-40"><a href="#cb2-40" aria-hidden="true" tabindex="-1"></a>        <span class="kw">+</span>list<span class="fu">~</span>Paper<span class="fu">~</span> papers</span>
+<span id="cb2-41"><a href="#cb2-41" aria-hidden="true" tabindex="-1"></a>        <span class="kw">+</span>dict per_source_counts</span>
+<span id="cb2-42"><a href="#cb2-42" aria-hidden="true" tabindex="-1"></a>        <span class="kw">+</span>dict errors</span>
+<span id="cb2-43"><a href="#cb2-43" aria-hidden="true" tabindex="-1"></a>        <span class="kw">+</span>to_dict() dict</span>
+<span id="cb2-44"><a href="#cb2-44" aria-hidden="true" tabindex="-1"></a>        <span class="kw">+</span>to_json() str</span>
+<span id="cb2-45"><a href="#cb2-45" aria-hidden="true" tabindex="-1"></a>    <span class="dt">}</span></span>
+<span id="cb2-46"><a href="#cb2-46" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-47"><a href="#cb2-47" aria-hidden="true" tabindex="-1"></a>    <span class="kw">class</span><span class="dt"> BibEntry {</span></span>
+<span id="cb2-48"><a href="#cb2-48" aria-hidden="true" tabindex="-1"></a>        <span class="kw">+</span>str entry_type</span>
+<span id="cb2-49"><a href="#cb2-49" aria-hidden="true" tabindex="-1"></a>        <span class="kw">+</span>str citation_key</span>
+<span id="cb2-50"><a href="#cb2-50" aria-hidden="true" tabindex="-1"></a>        <span class="kw">+</span>OrderedDict fields</span>
+<span id="cb2-51"><a href="#cb2-51" aria-hidden="true" tabindex="-1"></a>    <span class="dt">}</span></span>
+<span id="cb2-52"><a href="#cb2-52" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-53"><a href="#cb2-53" aria-hidden="true" tabindex="-1"></a>    <span class="kw">class</span><span class="dt"> BibDatabase {</span></span>
+<span id="cb2-54"><a href="#cb2-54" aria-hidden="true" tabindex="-1"></a>        <span class="kw">+</span>list<span class="fu">~</span>BibEntry<span class="fu">~</span> entries</span>
+<span id="cb2-55"><a href="#cb2-55" aria-hidden="true" tabindex="-1"></a>        <span class="kw">+</span>str|None preamble</span>
+<span id="cb2-56"><a href="#cb2-56" aria-hidden="true" tabindex="-1"></a>        <span class="kw">+</span>find(key) BibEntry</span>
+<span id="cb2-57"><a href="#cb2-57" aria-hidden="true" tabindex="-1"></a>    <span class="dt">}</span></span>
+<span id="cb2-58"><a href="#cb2-58" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-59"><a href="#cb2-59" aria-hidden="true" tabindex="-1"></a>    <span class="kw">class</span><span class="dt"> LiteratureRunArtifacts {</span></span>
+<span id="cb2-60"><a href="#cb2-60" aria-hidden="true" tabindex="-1"></a>        <span class="kw">+</span>SearchResult result</span>
+<span id="cb2-61"><a href="#cb2-61" aria-hidden="true" tabindex="-1"></a>        <span class="kw">+</span>Path|None corpus_path</span>
+<span id="cb2-62"><a href="#cb2-62" aria-hidden="true" tabindex="-1"></a>        <span class="kw">+</span>Path|None bibtex_path</span>
+<span id="cb2-63"><a href="#cb2-63" aria-hidden="true" tabindex="-1"></a>        <span class="kw">+</span>list<span class="fu">~</span>FetchResult<span class="fu">~</span> enrichment_log</span>
+<span id="cb2-64"><a href="#cb2-64" aria-hidden="true" tabindex="-1"></a>        <span class="kw">+</span>Path|None cache_dir</span>
+<span id="cb2-65"><a href="#cb2-65" aria-hidden="true" tabindex="-1"></a>        <span class="kw">+</span>dict citation_keys</span>
+<span id="cb2-66"><a href="#cb2-66" aria-hidden="true" tabindex="-1"></a>        <span class="kw">+</span>papers() list<span class="fu">~</span>Paper<span class="fu">~</span></span>
+<span id="cb2-67"><a href="#cb2-67" aria-hidden="true" tabindex="-1"></a>    <span class="dt">}</span></span>
+<span id="cb2-68"><a href="#cb2-68" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-69"><a href="#cb2-69" aria-hidden="true" tabindex="-1"></a>    <span class="kw">class</span><span class="dt"> ManuscriptVariables {</span></span>
+<span id="cb2-70"><a href="#cb2-70" aria-hidden="true" tabindex="-1"></a>        <span class="kw">+</span>str config_query</span>
+<span id="cb2-71"><a href="#cb2-71" aria-hidden="true" tabindex="-1"></a>        <span class="kw">+</span>int config_max_results</span>
+<span id="cb2-72"><a href="#cb2-72" aria-hidden="true" tabindex="-1"></a>        <span class="kw">+</span>str config_sources</span>
+<span id="cb2-73"><a href="#cb2-73" aria-hidden="true" tabindex="-1"></a>        <span class="kw">+</span>int result_num_papers</span>
+<span id="cb2-74"><a href="#cb2-74" aria-hidden="true" tabindex="-1"></a>        <span class="kw">+</span>int result_num_sources</span>
+<span id="cb2-75"><a href="#cb2-75" aria-hidden="true" tabindex="-1"></a>        <span class="kw">+</span>str result_per_source</span>
+<span id="cb2-76"><a href="#cb2-76" aria-hidden="true" tabindex="-1"></a>        <span class="kw">+</span>str result_errors</span>
+<span id="cb2-77"><a href="#cb2-77" aria-hidden="true" tabindex="-1"></a>        <span class="kw">+</span>str result_year_min</span>
+<span id="cb2-78"><a href="#cb2-78" aria-hidden="true" tabindex="-1"></a>        <span class="kw">+</span>str result_year_max</span>
+<span id="cb2-79"><a href="#cb2-79" aria-hidden="true" tabindex="-1"></a>        <span class="kw">+</span>int result_with_abstract</span>
+<span id="cb2-80"><a href="#cb2-80" aria-hidden="true" tabindex="-1"></a>        <span class="kw">+</span>int result_with_doi</span>
+<span id="cb2-81"><a href="#cb2-81" aria-hidden="true" tabindex="-1"></a>        <span class="kw">+</span>int deep_max_results_per_keyword</span>
+<span id="cb2-82"><a href="#cb2-82" aria-hidden="true" tabindex="-1"></a>        <span class="kw">+</span>int deep_keyword_count</span>
+<span id="cb2-83"><a href="#cb2-83" aria-hidden="true" tabindex="-1"></a>        <span class="kw">+</span>str deep_keywords_joined</span>
+<span id="cb2-84"><a href="#cb2-84" aria-hidden="true" tabindex="-1"></a>        <span class="kw">+</span>str deep_sources</span>
+<span id="cb2-85"><a href="#cb2-85" aria-hidden="true" tabindex="-1"></a>        <span class="kw">+</span>str deep_unique_papers</span>
+<span id="cb2-86"><a href="#cb2-86" aria-hidden="true" tabindex="-1"></a>        <span class="kw">+</span>as_dict() dict</span>
+<span id="cb2-87"><a href="#cb2-87" aria-hidden="true" tabindex="-1"></a>        <span class="kw">+</span>as_uppercase_keys() dict</span>
+<span id="cb2-88"><a href="#cb2-88" aria-hidden="true" tabindex="-1"></a>    <span class="dt">}</span></span>
+<span id="cb2-89"><a href="#cb2-89" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-90"><a href="#cb2-90" aria-hidden="true" tabindex="-1"></a>    <span class="kw">class</span><span class="dt"> SynthesisResult {</span></span>
+<span id="cb2-91"><a href="#cb2-91" aria-hidden="true" tabindex="-1"></a>        <span class="kw">+</span>str kind</span>
+<span id="cb2-92"><a href="#cb2-92" aria-hidden="true" tabindex="-1"></a>        <span class="kw">+</span>str prompt</span>
+<span id="cb2-93"><a href="#cb2-93" aria-hidden="true" tabindex="-1"></a>        <span class="kw">+</span>str text</span>
+<span id="cb2-94"><a href="#cb2-94" aria-hidden="true" tabindex="-1"></a>        <span class="kw">+</span>str|None paper_id</span>
+<span id="cb2-95"><a href="#cb2-95" aria-hidden="true" tabindex="-1"></a>    <span class="dt">}</span></span>
+<span id="cb2-96"><a href="#cb2-96" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-97"><a href="#cb2-97" aria-hidden="true" tabindex="-1"></a>    <span class="dt">SearchResult</span> <span class="pp">--&gt;</span> <span class="dt">SearchQuery</span></span>
+<span id="cb2-98"><a href="#cb2-98" aria-hidden="true" tabindex="-1"></a>    <span class="dt">SearchResult</span> <span class="pp">--&gt;</span> <span class="st">&quot;</span><span class="sc">*</span><span class="st">&quot;</span> <span class="dt">Paper</span></span>
+<span id="cb2-99"><a href="#cb2-99" aria-hidden="true" tabindex="-1"></a>    <span class="dt">LiteratureRunArtifacts</span> <span class="pp">--&gt;</span> <span class="dt">SearchResult</span></span>
+<span id="cb2-100"><a href="#cb2-100" aria-hidden="true" tabindex="-1"></a>    <span class="dt">LiteratureRunArtifacts</span> <span class="pp">--&gt;</span> <span class="st">&quot;</span><span class="sc">*</span><span class="st">&quot;</span> <span class="dt">BibEntry</span> <span class="at">:</span> via paper_to_bibentry</span>
+<span id="cb2-101"><a href="#cb2-101" aria-hidden="true" tabindex="-1"></a>    <span class="dt">BibDatabase</span> <span class="pp">--&gt;</span> <span class="st">&quot;</span><span class="sc">*</span><span class="st">&quot;</span> <span class="dt">BibEntry</span></span></code></pre></div>
 <h2 data-number="6.2" id="on-disk-layout"><span
 class="header-section-number">6.2</span> On-disk layout</h2>
 <p>The project keeps committed input data in <code>data/</code>,
@@ -1515,47 +1537,48 @@ run.</li>
 <li><code>manuscript/references.bib</code> — auto-populated,
 Pandoc-ready BibTeX.</li>
 </ul>
-<pre class="mermaid"><code>flowchart TB
-    P[&quot;projects/templates/template_search_project/&quot;]
-    P --&gt; DAT[&quot;data/&lt;br/&gt;committed&quot;]
-    P --&gt; OUT[&quot;output/&lt;br/&gt;regeneratable · gitignored&quot;]
-    P --&gt; MAN[&quot;manuscript/&quot;]
-
-    DAT --&gt; CORP_IN[corpus.json&lt;br/&gt;bundled offline corpus&lt;br/&gt;CI-safe default]
-
-    OUT --&gt; SR[&quot;search/&quot;]
-    OUT --&gt; CC[&quot;cache/&quot;]
-    OUT --&gt; LD[&quot;llm/&quot;]
-    OUT --&gt; FIG[&quot;figures/&quot;]
-    OUT --&gt; DD[&quot;data/&quot;]
-    OUT --&gt; CORP_OUT[corpus.json&lt;br/&gt;enriched · LocalBackend-compatible]
-    OUT --&gt; ELOG[enrichment_log.json&lt;br/&gt;per-fetch status]
-    OUT --&gt; RR[reading_report.md]
-    OUT --&gt; RS[run_summary.json]
-
-    SR --&gt; SR_R[results.json&lt;br/&gt;SearchResult]
-    SR --&gt; SR_C[&quot;cache/search_HASH.json&lt;br/&gt;deterministic SearchCache&quot;]
-
-    CC --&gt; CC_A[&quot;abs/SAFE_ID.txt&quot;]
-    CC --&gt; CC_P[&quot;pdf/SAFE_ID.pdf and .txt&quot;]
-
-    LD --&gt; LD_S[synthesis.md]
-    LD --&gt; LD_PP[&quot;per_paper/SAFE_ID.md&quot;]
-
-    FIG --&gt; F1[papers_per_source.png]
-    FIG --&gt; F2[year_histogram.png]
-    FIG --&gt; F3[score_distribution.png]
-
-    DD --&gt; MV[manuscript_variables.json]
-
-    MAN --&gt; BIB[references.bib&lt;br/&gt;auto-populated · Pandoc-ready]
-
-    classDef dir fill:#0f172a,stroke:#0f172a,color:#fff
-    classDef gen fill:#0f766e,stroke:#0f172a,color:#fff
-    classDef src fill:#1e3a8a,stroke:#0f172a,color:#fff
-    class P,DAT,OUT,MAN,SR,CC,LD,FIG,DD dir
-    class CORP_OUT,ELOG,RR,RS,SR_R,SR_C,CC_A,CC_P,LD_S,LD_PP,F1,F2,F3,MV,BIB gen
-    class CORP_IN src</code></pre>
+<div class="sourceCode" id="cb3"><pre
+class="sourceCode mermaid"><code class="sourceCode mermaid"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">flowchart</span> <span class="cn">TB</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    <span class="dt">P</span>[<span class="st">&quot;projects/templates/template_search_project/&quot;</span>]</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">P</span> <span class="pp">--&gt;</span> <span class="dt">DAT</span>[<span class="st">&quot;data/</span><span class="sc">&lt;br/&gt;</span><span class="st">committed&quot;</span>]</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">P</span> <span class="pp">--&gt;</span> <span class="dt">OUT</span>[<span class="st">&quot;output/</span><span class="sc">&lt;br/&gt;</span><span class="st">regeneratable · gitignored&quot;</span>]</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">P</span> <span class="pp">--&gt;</span> <span class="dt">MAN</span>[<span class="st">&quot;manuscript/&quot;</span>]</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    <span class="dt">DAT</span> <span class="pp">--&gt;</span> <span class="dt">CORP_IN</span>[<span class="vs">corpus.json</span><span class="sc">&lt;br/&gt;</span><span class="vs">bundled offline corpus</span><span class="sc">&lt;br/&gt;</span><span class="vs">CI-safe default</span>]</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>    <span class="dt">OUT</span> <span class="pp">--&gt;</span> <span class="dt">SR</span>[<span class="st">&quot;search/&quot;</span>]</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>    <span class="dt">OUT</span> <span class="pp">--&gt;</span> <span class="dt">CC</span>[<span class="st">&quot;cache/&quot;</span>]</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>    <span class="dt">OUT</span> <span class="pp">--&gt;</span> <span class="dt">LD</span>[<span class="st">&quot;llm/&quot;</span>]</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>    <span class="dt">OUT</span> <span class="pp">--&gt;</span> <span class="dt">FIG</span>[<span class="st">&quot;figures/&quot;</span>]</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>    <span class="dt">OUT</span> <span class="pp">--&gt;</span> <span class="dt">DD</span>[<span class="st">&quot;data/&quot;</span>]</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>    <span class="dt">OUT</span> <span class="pp">--&gt;</span> <span class="dt">CORP_OUT</span>[<span class="vs">corpus.json</span><span class="sc">&lt;br/&gt;</span><span class="vs">enriched · LocalBackend-compatible</span>]</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>    <span class="dt">OUT</span> <span class="pp">--&gt;</span> <span class="dt">ELOG</span>[<span class="vs">enrichment_log.json</span><span class="sc">&lt;br/&gt;</span><span class="vs">per-fetch status</span>]</span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>    <span class="dt">OUT</span> <span class="pp">--&gt;</span> <span class="dt">RR</span>[<span class="vs">reading_report.md</span>]</span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>    <span class="dt">OUT</span> <span class="pp">--&gt;</span> <span class="dt">RS</span>[<span class="vs">run_summary.json</span>]</span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>    <span class="dt">SR</span> <span class="pp">--&gt;</span> <span class="dt">SR_R</span>[<span class="vs">results.json</span><span class="sc">&lt;br/&gt;</span><span class="vs">SearchResult</span>]</span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>    <span class="dt">SR</span> <span class="pp">--&gt;</span> <span class="dt">SR_C</span>[<span class="st">&quot;cache/search_HASH.json</span><span class="sc">&lt;br/&gt;</span><span class="st">deterministic SearchCache&quot;</span>]</span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>    <span class="dt">CC</span> <span class="pp">--&gt;</span> <span class="dt">CC_A</span>[<span class="st">&quot;abs/SAFE_ID.txt&quot;</span>]</span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>    <span class="dt">CC</span> <span class="pp">--&gt;</span> <span class="dt">CC_P</span>[<span class="st">&quot;pdf/SAFE_ID.pdf and .txt&quot;</span>]</span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>    <span class="dt">LD</span> <span class="pp">--&gt;</span> <span class="dt">LD_S</span>[<span class="vs">synthesis.md</span>]</span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>    <span class="dt">LD</span> <span class="pp">--&gt;</span> <span class="dt">LD_PP</span>[<span class="st">&quot;per_paper/SAFE_ID.md&quot;</span>]</span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a>    <span class="dt">FIG</span> <span class="pp">--&gt;</span> <span class="dt">F1</span>[<span class="vs">papers_per_source.png</span>]</span>
+<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a>    <span class="dt">FIG</span> <span class="pp">--&gt;</span> <span class="dt">F2</span>[<span class="vs">year_histogram.png</span>]</span>
+<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a>    <span class="dt">FIG</span> <span class="pp">--&gt;</span> <span class="dt">F3</span>[<span class="vs">score_distribution.png</span>]</span>
+<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a>    <span class="dt">DD</span> <span class="pp">--&gt;</span> <span class="dt">MV</span>[<span class="vs">manuscript_variables.json</span>]</span>
+<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-34"><a href="#cb3-34" aria-hidden="true" tabindex="-1"></a>    <span class="dt">MAN</span> <span class="pp">--&gt;</span> <span class="dt">BIB</span>[<span class="vs">references.bib</span><span class="sc">&lt;br/&gt;</span><span class="vs">auto-populated · Pandoc-ready</span>]</span>
+<span id="cb3-35"><a href="#cb3-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-36"><a href="#cb3-36" aria-hidden="true" tabindex="-1"></a>    <span class="kw">classDef</span> <span class="fu">dir</span> <span class="at">fill:</span><span class="im">#0f172a</span>,<span class="at">stroke:</span><span class="im">#0f172a</span>,<span class="at">color:</span><span class="im">#fff</span></span>
+<span id="cb3-37"><a href="#cb3-37" aria-hidden="true" tabindex="-1"></a>    <span class="kw">classDef</span> <span class="fu">gen</span> <span class="at">fill:</span><span class="im">#0f766e</span>,<span class="at">stroke:</span><span class="im">#0f172a</span>,<span class="at">color:</span><span class="im">#fff</span></span>
+<span id="cb3-38"><a href="#cb3-38" aria-hidden="true" tabindex="-1"></a>    <span class="kw">classDef</span> <span class="fu">src</span> <span class="at">fill:</span><span class="im">#1e3a8a</span>,<span class="at">stroke:</span><span class="im">#0f172a</span>,<span class="at">color:</span><span class="im">#fff</span></span>
+<span id="cb3-39"><a href="#cb3-39" aria-hidden="true" tabindex="-1"></a>    <span class="kw">class</span> <span class="dt">P</span>,<span class="dt">DAT</span>,<span class="dt">OUT</span>,<span class="dt">MAN</span>,<span class="dt">SR</span>,<span class="dt">CC</span>,<span class="dt">LD</span>,<span class="dt">FIG</span>,<span class="dt">DD</span> <span class="fu">dir</span></span>
+<span id="cb3-40"><a href="#cb3-40" aria-hidden="true" tabindex="-1"></a>    <span class="kw">class</span> <span class="dt">CORP_OUT</span>,<span class="dt">ELOG</span>,<span class="dt">RR</span>,<span class="dt">RS</span>,<span class="dt">SR_R</span>,<span class="dt">SR_C</span>,<span class="dt">CC_A</span>,<span class="dt">CC_P</span>,<span class="dt">LD_S</span>,<span class="dt">LD_PP</span>,<span class="dt">F1</span>,<span class="dt">F2</span>,<span class="dt">F3</span>,<span class="dt">MV</span>,<span class="dt">BIB</span> <span class="fu">gen</span></span>
+<span id="cb3-41"><a href="#cb3-41" aria-hidden="true" tabindex="-1"></a>    <span class="kw">class</span> <span class="dt">CORP_IN</span> <span class="fu">src</span></span></code></pre></div>
 <h2 data-number="6.3" id="citation-key-collision-handling"><span
 class="header-section-number">6.3</span> Citation-key collision
 handling</h2>
@@ -1836,33 +1859,34 @@ is written to <code>manuscript/references_deep.bib</code>,
 <code>output/deep_search/aggregate.json</code>, and
 <code>output/deep_search/aggregate_report.md</code>. A Mermaid flowchart
 in this subsection renders the same flow visually in the HTML build.</p>
-<pre class="mermaid"><code>flowchart TB
-    CFG[deep_search block of config.yaml]
-    CFG --&gt; KW{{For each keyword}}
-    KW --&gt; SEARCH[SearchQuery · max_results_per_keyword]
-    SEARCH --&gt; CLIENT[LiteratureClient&lt;br/&gt;aggregates arxiv · crossref · local · paperclip]
-    CLIENT --&gt; ENRICH[AbstractFetcher + FulltextFetcher&lt;br/&gt;cached on disk]
-    ENRICH --&gt; KEYS[paper_to_bibentry&lt;br/&gt;collision-free keys]
-    KEYS --&gt; LLMQ{LLM per-paper?}
-    LLMQ -- yes --&gt; LLM[Ollama LLMClient&lt;br/&gt;DEEP_PROMPT · 7 sections]
-    LLMQ -- no --&gt; SKIP[skip synthesis · no placeholder]
-    LLM --&gt; NOTE[output/deep_search/&amp;lt;slug&amp;gt;/per_paper/&amp;lt;safe_id&amp;gt;.md]
-    SKIP --&gt; NOTE
-    NOTE --&gt; KR[KeywordResult]
-
-    KR --&gt; AGG[merge_papers across all keywords]
-    AGG --&gt; BIB[unified BibTeX&lt;br/&gt;references_deep.bib]
-    AGG --&gt; AJSON[aggregate.json]
-    AGG --&gt; AMD[aggregate_report.md]
-
-    classDef cfg fill:#0f172a,stroke:#0f172a,color:#fff
-    classDef proc fill:#1e3a8a,stroke:#0f172a,color:#fff
-    classDef llm fill:#7c2d12,stroke:#0f172a,color:#fff
-    classDef out fill:#0f766e,stroke:#0f172a,color:#fff
-    class CFG,KW,LLMQ cfg
-    class SEARCH,CLIENT,ENRICH,KEYS,KR,AGG proc
-    class LLM,SKIP llm
-    class NOTE,BIB,AJSON,AMD out</code></pre>
+<div class="sourceCode" id="cb6"><pre
+class="sourceCode mermaid"><code class="sourceCode mermaid"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="kw">flowchart</span> <span class="cn">TB</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    <span class="dt">CFG</span>[<span class="vs">deep_search block of config.yaml</span>]</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">CFG</span> <span class="pp">--&gt;</span> <span class="dt">KW</span>{{<span class="vs">For each keyword</span>}}</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">KW</span> <span class="pp">--&gt;</span> <span class="dt">SEARCH</span>[<span class="vs">SearchQuery · max_results_per_keyword</span>]</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">SEARCH</span> <span class="pp">--&gt;</span> <span class="dt">CLIENT</span>[<span class="vs">LiteratureClient</span><span class="sc">&lt;br/&gt;</span><span class="vs">aggregates arxiv · crossref · local · paperclip</span>]</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>    <span class="dt">CLIENT</span> <span class="pp">--&gt;</span> <span class="dt">ENRICH</span>[<span class="vs">AbstractFetcher + FulltextFetcher</span><span class="sc">&lt;br/&gt;</span><span class="vs">cached on disk</span>]</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>    <span class="dt">ENRICH</span> <span class="pp">--&gt;</span> <span class="dt">KEYS</span>[<span class="vs">paper_to_bibentry</span><span class="sc">&lt;br/&gt;</span><span class="vs">collision-free keys</span>]</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>    <span class="dt">KEYS</span> <span class="pp">--&gt;</span> <span class="dt">LLMQ</span>{<span class="vs">LLM per-paper?</span>}</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>    <span class="dt">LLMQ</span> <span class="pp">--</span> <span class="vs">yes </span><span class="pp">--&gt;</span> <span class="dt">LLM</span>[<span class="vs">Ollama LLMClient</span><span class="sc">&lt;br/&gt;</span><span class="vs">DEEP_PROMPT · 7 sections</span>]</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>    <span class="dt">LLMQ</span> <span class="pp">--</span> <span class="vs">no </span><span class="pp">--&gt;</span> <span class="dt">SKIP</span>[<span class="vs">skip synthesis · no placeholder</span>]</span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>    <span class="dt">LLM</span> <span class="pp">--&gt;</span> <span class="dt">NOTE</span>[<span class="vs">output/deep_search/</span><span class="dv">&amp;lt;</span><span class="vs">slug</span><span class="dv">&amp;gt;</span><span class="vs">/per_paper/</span><span class="dv">&amp;lt;</span><span class="vs">safe_id</span><span class="dv">&amp;gt;</span><span class="vs">.md</span>]</span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>    <span class="dt">SKIP</span> <span class="pp">--&gt;</span> <span class="dt">NOTE</span></span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>    <span class="dt">NOTE</span> <span class="pp">--&gt;</span> <span class="dt">KR</span>[<span class="vs">KeywordResult</span>]</span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>    <span class="dt">KR</span> <span class="pp">--&gt;</span> <span class="dt">AGG</span>[<span class="vs">merge_papers across all keywords</span>]</span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>    <span class="dt">AGG</span> <span class="pp">--&gt;</span> <span class="dt">BIB</span>[<span class="vs">unified BibTeX</span><span class="sc">&lt;br/&gt;</span><span class="vs">references_deep.bib</span>]</span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>    <span class="dt">AGG</span> <span class="pp">--&gt;</span> <span class="dt">AJSON</span>[<span class="vs">aggregate.json</span>]</span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>    <span class="dt">AGG</span> <span class="pp">--&gt;</span> <span class="dt">AMD</span>[<span class="vs">aggregate_report.md</span>]</span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a>    <span class="kw">classDef</span> <span class="fu">cfg</span> <span class="at">fill:</span><span class="im">#0f172a</span>,<span class="at">stroke:</span><span class="im">#0f172a</span>,<span class="at">color:</span><span class="im">#fff</span></span>
+<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a>    <span class="kw">classDef</span> <span class="fu">proc</span> <span class="at">fill:</span><span class="im">#1e3a8a</span>,<span class="at">stroke:</span><span class="im">#0f172a</span>,<span class="at">color:</span><span class="im">#fff</span></span>
+<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a>    <span class="kw">classDef</span> <span class="fu">llm</span> <span class="at">fill:</span><span class="im">#7c2d12</span>,<span class="at">stroke:</span><span class="im">#0f172a</span>,<span class="at">color:</span><span class="im">#fff</span></span>
+<span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a>    <span class="kw">classDef</span> <span class="fu">out</span> <span class="at">fill:</span><span class="im">#0f766e</span>,<span class="at">stroke:</span><span class="im">#0f172a</span>,<span class="at">color:</span><span class="im">#fff</span></span>
+<span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a>    <span class="kw">class</span> <span class="dt">CFG</span>,<span class="dt">KW</span>,<span class="dt">LLMQ</span> <span class="fu">cfg</span></span>
+<span id="cb6-25"><a href="#cb6-25" aria-hidden="true" tabindex="-1"></a>    <span class="kw">class</span> <span class="dt">SEARCH</span>,<span class="dt">CLIENT</span>,<span class="dt">ENRICH</span>,<span class="dt">KEYS</span>,<span class="dt">KR</span>,<span class="dt">AGG</span> <span class="fu">proc</span></span>
+<span id="cb6-26"><a href="#cb6-26" aria-hidden="true" tabindex="-1"></a>    <span class="kw">class</span> <span class="dt">LLM</span>,<span class="dt">SKIP</span> <span class="fu">llm</span></span>
+<span id="cb6-27"><a href="#cb6-27" aria-hidden="true" tabindex="-1"></a>    <span class="kw">class</span> <span class="dt">NOTE</span>,<span class="dt">BIB</span>,<span class="dt">AJSON</span>,<span class="dt">AMD</span> <span class="fu">out</span></span></code></pre></div>
 <h2 data-number="8.3" id="llm-prompt"><span
 class="header-section-number">8.3</span> LLM prompt</h2>
 <p>The deep-search prompt is richer than the standard
@@ -1918,28 +1942,29 @@ enriched per-keyword paper list.</li>
 <li><code>manuscript/references_deep.bib</code> — auto-generated,
 deduplicated unified BibTeX file.</li>
 </ul>
-<pre class="mermaid"><code>flowchart TB
-    P[&quot;projects/templates/template_search_project/&quot;]
-    P --&gt; OUT[&quot;output/deep_search/&quot;]
-    P --&gt; BIB[manuscript/references_deep.bib&lt;br/&gt;auto-generated · deduplicated]
-
-    OUT --&gt; AGG[aggregate.json&lt;br/&gt;every unique paper]
-    OUT --&gt; AMD[aggregate_report.md&lt;br/&gt;cross-keyword summary]
-    OUT --&gt; RS[run_summary.json&lt;br/&gt;one-line metadata]
-    OUT --&gt; KW1[&quot;&amp;lt;keyword_slug_1&amp;gt;/&quot;]
-    OUT --&gt; KW2[&quot;&amp;lt;keyword_slug_2&amp;gt;/&quot;]
-    OUT --&gt; KW3[&quot;&amp;lt;keyword_slug_3&amp;gt;/&quot;]
-
-    KW1 --&gt; KW1_P[papers.json]
-    KW1 --&gt; KW1_R[reading_report.md]
-    KW1 --&gt; KW1_PP[&quot;per_paper/&lt;br/&gt;SAFE_ID.md per paper&quot;]
-
-    classDef d fill:#0f172a,stroke:#0f172a,color:#fff
-    classDef f fill:#0f766e,stroke:#0f172a,color:#fff
-    classDef bib fill:#1e3a8a,stroke:#0f172a,color:#fff
-    class P,OUT,KW1,KW2,KW3,KW1_PP d
-    class AGG,AMD,RS,KW1_P,KW1_R f
-    class BIB bib</code></pre>
+<div class="sourceCode" id="cb8"><pre
+class="sourceCode mermaid"><code class="sourceCode mermaid"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="kw">flowchart</span> <span class="cn">TB</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>    <span class="dt">P</span>[<span class="st">&quot;projects/templates/template_search_project/&quot;</span>]</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">P</span> <span class="pp">--&gt;</span> <span class="dt">OUT</span>[<span class="st">&quot;output/deep_search/&quot;</span>]</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">P</span> <span class="pp">--&gt;</span> <span class="dt">BIB</span>[<span class="vs">manuscript/references_deep.bib</span><span class="sc">&lt;br/&gt;</span><span class="vs">auto-generated · deduplicated</span>]</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>    <span class="dt">OUT</span> <span class="pp">--&gt;</span> <span class="dt">AGG</span>[<span class="vs">aggregate.json</span><span class="sc">&lt;br/&gt;</span><span class="vs">every unique paper</span>]</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>    <span class="dt">OUT</span> <span class="pp">--&gt;</span> <span class="dt">AMD</span>[<span class="vs">aggregate_report.md</span><span class="sc">&lt;br/&gt;</span><span class="vs">cross-keyword summary</span>]</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>    <span class="dt">OUT</span> <span class="pp">--&gt;</span> <span class="dt">RS</span>[<span class="vs">run_summary.json</span><span class="sc">&lt;br/&gt;</span><span class="vs">one-line metadata</span>]</span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>    <span class="dt">OUT</span> <span class="pp">--&gt;</span> <span class="dt">KW1</span>[<span class="st">&quot;</span><span class="dv">&amp;lt;</span><span class="st">keyword_slug_1</span><span class="dv">&amp;gt;</span><span class="st">/&quot;</span>]</span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>    <span class="dt">OUT</span> <span class="pp">--&gt;</span> <span class="dt">KW2</span>[<span class="st">&quot;</span><span class="dv">&amp;lt;</span><span class="st">keyword_slug_2</span><span class="dv">&amp;gt;</span><span class="st">/&quot;</span>]</span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>    <span class="dt">OUT</span> <span class="pp">--&gt;</span> <span class="dt">KW3</span>[<span class="st">&quot;</span><span class="dv">&amp;lt;</span><span class="st">keyword_slug_3</span><span class="dv">&amp;gt;</span><span class="st">/&quot;</span>]</span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>    <span class="dt">KW1</span> <span class="pp">--&gt;</span> <span class="dt">KW1_P</span>[<span class="vs">papers.json</span>]</span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>    <span class="dt">KW1</span> <span class="pp">--&gt;</span> <span class="dt">KW1_R</span>[<span class="vs">reading_report.md</span>]</span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>    <span class="dt">KW1</span> <span class="pp">--&gt;</span> <span class="dt">KW1_PP</span>[<span class="st">&quot;per_paper/</span><span class="sc">&lt;br/&gt;</span><span class="st">SAFE_ID.md per paper&quot;</span>]</span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>    <span class="kw">classDef</span> <span class="fu">d</span> <span class="at">fill:</span><span class="im">#0f172a</span>,<span class="at">stroke:</span><span class="im">#0f172a</span>,<span class="at">color:</span><span class="im">#fff</span></span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a>    <span class="kw">classDef</span> <span class="fu">f</span> <span class="at">fill:</span><span class="im">#0f766e</span>,<span class="at">stroke:</span><span class="im">#0f172a</span>,<span class="at">color:</span><span class="im">#fff</span></span>
+<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a>    <span class="kw">classDef</span> <span class="fu">bib</span> <span class="at">fill:</span><span class="im">#1e3a8a</span>,<span class="at">stroke:</span><span class="im">#0f172a</span>,<span class="at">color:</span><span class="im">#fff</span></span>
+<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a>    <span class="kw">class</span> <span class="dt">P</span>,<span class="dt">OUT</span>,<span class="dt">KW1</span>,<span class="dt">KW2</span>,<span class="dt">KW3</span>,<span class="dt">KW1_PP</span> <span class="fu">d</span></span>
+<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a>    <span class="kw">class</span> <span class="dt">AGG</span>,<span class="dt">AMD</span>,<span class="dt">RS</span>,<span class="dt">KW1_P</span>,<span class="dt">KW1_R</span> <span class="fu">f</span></span>
+<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a>    <span class="kw">class</span> <span class="dt">BIB</span> <span class="fu">bib</span></span></code></pre></div>
 <h2 data-number="8.5" id="determinism"><span
 class="header-section-number">8.5</span> Determinism</h2>
 <p>Three caches make this workflow replayable:</p>

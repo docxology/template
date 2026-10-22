@@ -10,7 +10,7 @@ import pytest
 import yaml
 
 from redacted_report import FIGURE_SPECS, build_figures
-from redacted_report.figures import _height_px
+from redacted_report.figures import _draw_flow_figure, _draw_matrix_figure, _height_px, _inject_svg_accessibility
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 FIGURES_DIR = PROJECT_ROOT / "output" / "figures"
@@ -70,6 +70,36 @@ def test_svg_companions_carry_accessibility_markup(tmp_path: Path) -> None:
         assert 'aria-labelledby="fig-title fig-desc"' in svg
         assert "<title" in svg and "<desc" in svg
         assert spec["alt_text"] in svg
+        assert all(line == line.rstrip(" \t") for line in svg.split("\n"))
+
+        # Independently retain the actual unnormalized drawing and compare its parsed SVG geometry/text.
+        import xml.etree.ElementTree as ET
+
+        raw_png = tmp_path / f"{spec['name']}-raw.png"
+        raw_svg = tmp_path / f"{spec['name']}-raw.svg"
+        draw = _draw_flow_figure if spec["name"] == "redaction_flow" else _draw_matrix_figure
+        draw(spec, raw_png, raw_svg)
+        original = _inject_svg_accessibility(
+            raw_svg.read_text(encoding="utf-8"), title=spec["caption"], desc=spec["alt_text"]
+        )
+        # SVG path/point/transform whitespace separates tokens; numeric values and all other attributes stay exact.
+        projections = [
+            [
+                (
+                    element.tag,
+                    sorted(
+                        (key, " ".join(value.split()) if key in {"d", "points", "transform"} else value)
+                        for key, value in element.attrib.items()
+                    ),
+                    element.text if element.text and not element.text.isspace() else None,
+                    element.tail if element.tail and not element.tail.isspace() else None,
+                )
+                for element in ET.fromstring(text).iter()
+            ]
+            for text in (original, svg)
+        ]
+        assert projections[0] == projections[1]
+        assert raw_png.read_bytes() == (tmp_path / f"{spec['name']}.png").read_bytes()
 
 
 def test_registry_json_is_loadable_and_well_formed(tmp_path: Path) -> None:

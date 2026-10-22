@@ -7,37 +7,38 @@ Inventory Mode: stable-shippable-output-v1
 Inventory Scope: stage5-delivery-mirror
 Inventory Root: output/templates/template_search_project
 
-Total Files: 386
-Total Size: 6.55 MB
+Total Files: 391
+Total Size: 11.36 MB
 
 Files by Category:
-  • pdf: 1 files (0.43 MB)
-  • web: 14 files (0.66 MB)
-  • slides: 10 files (0.60 MB)
-  • figures: 13 files (0.43 MB)
+  • pdf: 2 files (1.08 MB)
+  • web: 15 files (3.75 MB)
+  • slides: 10 files (0.91 MB)
+  • figures: 13 files (0.53 MB)
   • data: 2 files (0.01 MB)
   • reports: 5 files (0.01 MB)
+  • bibliography: 1 files (0.00 MB)
   • deep_search: 310 files (3.69 MB)
-  • manuscript: 17 files (0.24 MB)
+  • manuscript: 18 files (0.24 MB)
   • review: 7 files (0.03 MB)
-  • root: 5 files (0.44 MB)
+  • root: 6 files (1.09 MB)
   • search: 2 files (0.01 MB)
 
 Largest Files:
+  • source-web-fonts.js: 3.02 MB (web)
   • aggregate.json: 1.34 MB (deep_search)
+  • template_search_project_combined.pdf: 1.08 MB (pdf)
+  • template_search_project_combined.pdf: 1.08 MB (root)
   • papers.json: 0.91 MB (deep_search)
-  • papers.json: 0.79 MB (deep_search)
-  • papers.json: 0.44 MB (deep_search)
-  • template_search_project_combined.pdf: 0.43 MB (pdf)
 
 File Types:
   • .md: 323 file(s)
-  • .json: 22 file(s)
+  • .json: 23 file(s)
   • .pdf: 12 file(s)
   • .html: 12 file(s)
   • .png: 7 file(s)
+  • .bib: 5 file(s)
   • .mmd: 4 file(s)
   • .txt: 2 file(s)
-  • .bib: 2 file(s)
+  • .js: 1 file(s)
   • .ico: 1 file(s)
-  • .yaml: 1 file(s)

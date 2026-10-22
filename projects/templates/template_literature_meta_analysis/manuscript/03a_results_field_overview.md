@@ -1,7 +1,10 @@
 # Results: Field Overview
 
-The de-duplicated corpus for **{{SEARCH_TERM_TITLE}}** contains $N = {{CORPUS_SIZE}}$
-records spanning {{YEAR_START}}--{{YEAR_END}} ({{YEAR_SPAN}} years). Publication volume
+The de-duplicated retrieval corpus for **{{SEARCH_TERM_TITLE}}** contains
+$N = {{CORPUS_SIZE}}$ records. The analyzed subset contains
+{{ANALYZED_CORPUS_SIZE}} records; {{TEMPORAL_TOTAL_PAPERS}} have publication years
+spanning {{YEAR_START}}--{{YEAR_END}} ({{YEAR_SPAN}} years). Publication volume
+within this dated subset
 grows at a compound annual rate of {{CAGR_PCT}}\% (mean year-over-year growth
 {{MEAN_YOY_GROWTH_PCT}}\%, doubling time {{DOUBLING_TIME}} years), peaking in {{PEAK_YEAR}}
 with {{PEAK_YEAR_PUBS}} records that year. The growth curve is the first-order signal
@@ -46,8 +49,8 @@ its use in narcolepsy, shift-work disorder, and obstructive sleep apnea.
 
 ## Identifier and Full-Text Coverage
 
-The corpus has strong identifier coverage: {{DOI_COUNT}} of {{CORPUS_SIZE}} records
-({{PCT_WITH_DOI}}\%) carry DOIs, enabling robust cross-engine de-duplication.
+The retrieved corpus carries DOIs for {{DOI_COUNT}} of {{CORPUS_SIZE}} records,
+enabling robust cross-engine de-duplication.
 OpenAlex IDs are present for {{OPENALEX_ID_COUNT}} records. Abstract coverage stands at
 {{ABSTRACT_COVERAGE_PCT}}\% ({{ABSTRACT_COUNT}} records), which limits the text analytics
 to that subset. Open access is confirmed for {{OA_PCT}}\% of records, and
@@ -55,12 +58,15 @@ to that subset. Open access is confirmed for {{OA_PCT}}\% of records, and
 
 ## Descriptive Bibliometrics
 
-The corpus spans {{UNIQUE_AUTHORS}} unique authors across {{CORPUS_SIZE}} papers, yielding
+The analyzed subset spans {{UNIQUE_AUTHORS}} unique authors across
+{{ANALYZED_CORPUS_SIZE}} papers, yielding
 a mean of {{PAPERS_PER_AUTHOR_MEAN}} papers per author. Citation counts range from zero to
 {{CITATION_MAX}} (mean {{CITATION_MEAN}}, median {{CITATION_MEDIAN}}), with a total of
-{{CITATION_TOTAL}} citations across the corpus. The Gini coefficient of citation
+{{CITATION_TOTAL}} citations across the analyzed subset. The Gini coefficient of citation
 concentration is {{GINI_COEFFICIENT}}, indicating a highly skewed distribution
 characteristic of scientific literature.
+
+\clearpage
 
 **Table 3. Citation count distribution.**
 
@@ -69,12 +75,16 @@ characteristic of scientific literature.
 <!-- FIGURE: citation_distribution.png -->
 ![Citation distribution for {{SEARCH_TERM_TITLE}}. The histogram shows the number of papers in each citation-count bucket, with the Gini coefficient annotated. The heavy-tailed distribution is characteristic of scientific citation networks.](../output/figures/citation_distribution.png "Citation Distribution"){#fig:citation_distribution}
 
+\clearpage
+
 **Table 4. Top publication venues.**
 
 {{TOP_VENUES_TABLE}}
 
 <!-- FIGURE: top_venues.png -->
-![Top publication venues for {{SEARCH_TERM_TITLE}}. The horizontal bar chart shows the 15 venues with the most papers in the corpus, revealing where the modafinil literature is published.](../output/figures/top_venues.png "Top Venues"){#fig:top_venues}
+![Top publication venues for {{SEARCH_TERM_TITLE}}. The horizontal bar chart shows the leading venues by paper count in the analyzed subset, revealing where the modafinil literature is published.](../output/figures/top_venues.png "Top Venues"){#fig:top_venues}
+
+\clearpage
 
 **Table 5. Top authors by publication count.**
 

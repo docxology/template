@@ -1,7 +1,7 @@
 {
-  "schema_version": "template-release-plan-contract-v1",
+  "schema_version": "template-release-plan-contract-v2",
   "root_package": "research-project-template",
-  "version_rule": "root-4+-next-patch; preserve-exemplar-own-versions",
+  "version_rule": "root-4+-next-patch-or-explicit-next-minor-zero; preserve-exemplar-own-versions",
   "public_roster_authority": "infrastructure.project.public_scope.PUBLIC_PROJECT_NAMES",
   "lock_rule": "root-editable-version-only; no-resolution-or-third-party-delta",
   "publication_rule": "all-canonical-publication-platform-bindings-only; preserve-intended-and-own-versions",
@@ -13,5 +13,10 @@
     "exact-main-all-29-obligations",
     "independent-installed-release-handoff",
     "explicit-GitHub-publication"
+  ],
+  "default_release_kind": "patch",
+  "release_kinds": [
+    "patch",
+    "minor"
   ]
 }

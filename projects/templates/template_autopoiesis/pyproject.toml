@@ -12,7 +12,7 @@ authors = [
 ]
 requires-python = ">=3.12"
 dependencies = [
-    "research-project-template==4.0.2",
+    "research-project-template==4.1.0",
     # Default realization executes and checks each generated child's real tests.
     "pytest>=7.4.0",
     "pytest-cov>=4.1.0",
@@ -50,6 +50,6 @@ research-project-template = { path = "../../..", editable = true }
 
 # Compatibility contract for this independent exemplar release.
 [tool.template]
-platform_version = "4.0.2"
+platform_version = "4.1.0"
 tested_python_versions = ["3.12", "3.13", "3.14"]
 required_unpaid_capabilities = ["child-execution"]

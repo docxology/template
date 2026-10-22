@@ -105,6 +105,7 @@ def test_writes_section_with_all_keys(tmp_path: Path):
     text = out_md.read_text(encoding="utf-8")
     assert "[@alice2020convexity]" in text
     assert "On Convexity" in text
+    assert "DOI `10.1/x` ([open](https://doi.org/10.1/x))" in text
     assert "novel contribution paragraph" in text
     assert "Why this matters paragraph" in text
     assert "Supplemental S2" in text

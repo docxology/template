@@ -56,8 +56,10 @@ the version with the most complete metadata (a count of non-None optional fields
 DOI is normalized: case-folded, resolver-prefix stripped, so the same paper returned by
 two engines under case/format-variant DOIs merges. For this run, {{DOI_COUNT}} records
 carry DOIs, {{OPENALEX_ID_COUNT}} carry OpenAlex IDs, and {{ARXIV_ID_COUNT}} carry arXiv
-IDs. The de-duplicated corpus for this run holds $N = {{CORPUS_SIZE}}$ records published
-across {{YEAR_START}}--{{YEAR_END}}.
+IDs. The retained de-duplicated retrieval corpus holds $N = {{CORPUS_SIZE}}$ records.
+The separate analysis subset contains {{ANALYZED_CORPUS_SIZE}} records, of which
+{{TEMPORAL_TOTAL_PAPERS}} have publication years in the observed
+{{YEAR_START}}--{{YEAR_END}} analysis window.
 
 ## Relevance Filtering
 

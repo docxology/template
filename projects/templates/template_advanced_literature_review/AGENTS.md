@@ -105,7 +105,7 @@ The advanced template extends the single-term approach with:
 
 - **Phase-based search strategy**: broad foundation (2010+) → JWST-focused work (2020+) → molecular-detection work (2015+), with overlaps preserved in provenance
 - **Iterative filtering**: Each phase applies deterministic (year, venue, citation) and LLM-based (abstract content) filters
-- **Cross-phase validation**: Papers from later phases validate/extend findings from earlier phases
+- **Cross-phase comparison**: Report phase membership, overlap and configured citation sufficiency; these checks do not establish scientific support or causal inference.
 - **Enhanced variable extraction**: Phase-aware manuscript variables including per-phase statistics
 - **Consolidated knowledge graph**: All phases contribute to unified RDF nanopublications
 

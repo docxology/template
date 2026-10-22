@@ -3,7 +3,8 @@
 We have presented a configurable, reproducible meta-analysis template that turns a single
 search term into a complete, evidence-bound portrait of its literature. Applied to
 **{{SEARCH_TERM_TITLE}}**, it retrieved and de-duplicated {{CORPUS_SIZE}} records across
-{{N_ENGINES}} engines ({{ENGINE_LIST}}), classified them into {{N_SUBFIELDS}} configurable
+{{N_ENGINES}} engines ({{ENGINE_LIST}}). Its analysis subset of
+{{ANALYZED_CORPUS_SIZE}} records was classified into {{N_SUBFIELDS}} configurable
 subfields (with **{{TOP_SUBFIELD}}** dominant at {{TOP_SUBFIELD_PCT}}\%), extracted
 {{NUM_TOPICS}} topics over a {{NUM_VOCAB_FEATURES}}-feature vocabulary, computed
 reproducible document embeddings, mapped the citation network ({{CITATION_NODES}} nodes,
@@ -14,7 +15,7 @@ reproducible document embeddings, mapped the citation network ({{CITATION_NODES}
 
 The analysis answers the four research questions posed in the introduction:
 
-1. **RQ1 (Growth)**: The {{SEARCH_TERM}} literature spans {{YEAR_SPAN}} years
+1. **RQ1 (Growth)**: The {{TEMPORAL_TOTAL_PAPERS}} dated {{SEARCH_TERM}} records span {{YEAR_SPAN}} years
    ({{YEAR_START}}--{{YEAR_END}}) and grows at a CAGR of {{CAGR_PCT}}\%, doubling every
    {{DOUBLING_TIME}} years. The peak year {{PEAK_YEAR}} produced {{PEAK_YEAR_PUBS}}
    publications, indicating sustained and active research interest.

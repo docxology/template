@@ -320,6 +320,17 @@ class TestComputeVariables:
         # Figures
         assert variables["NUM_FIGURES"] == "3"
 
+        # Retained retrieval records and the analyzed window have separate denominators.
+        temporal_path = tmp_path / "temporal_analysis.json"
+        temporal = json.loads(temporal_path.read_text())
+        temporal["total_papers"] = 2
+        temporal_path.write_text(json.dumps(temporal))
+        (tmp_path / "descriptive_stats.json").write_text(json.dumps({"descriptive_stats": {"total": 3}}))
+        filtered = compute_variables(tmp_path)
+        assert filtered["CORPUS_SIZE"] == "3"
+        assert filtered["ANALYZED_CORPUS_SIZE"] == "3"
+        assert filtered["TEMPORAL_TOTAL_PAPERS"] == "2"
+
     def test_empty_output_dir(self, tmp_path):
         """compute_variables handles a completely empty output directory."""
         variables = compute_variables(tmp_path)

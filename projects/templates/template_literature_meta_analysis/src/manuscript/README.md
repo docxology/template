@@ -16,13 +16,19 @@ Reads from `output_dir/` (or `output_dir/data/`):
 | JSON file | Variables computed |
 |---|---|
 | `corpus.jsonl` | `CORPUS_SIZE`, `YEAR_START_PUBS`, `YEAR_END_PUBS`, `TOTAL_REFERENCES` |
-| `temporal_analysis.json` | `YEAR_START`, `YEAR_END`, `PEAK_YEAR`, `PEAK_YEAR_PUBS`, `CAGR_PCT`, `MEAN_YOY_GROWTH_PCT`, `DOUBLING_TIME` |
+| `temporal_analysis.json` | `TEMPORAL_TOTAL_PAPERS`, `YEAR_START`, `YEAR_END`, `PEAK_YEAR`, `PEAK_YEAR_PUBS`, `CAGR_PCT`, `MEAN_YOY_GROWTH_PCT`, `DOUBLING_TIME` |
+| `descriptive_stats.json` | `ANALYZED_CORPUS_SIZE` from `descriptive_stats.total`; `pending` when absent |
 | `subfield_classification.json` | `A1_COUNT`, `A2_COUNT`, `B_COUNT`, `C1–C5_COUNT`, `*_PCT` per subfield |
 | `citation_network.json` | `CITATION_EDGES`, `CITATION_COMPONENTS`, `CITATION_DENSITY_PCT`, `MEAN_IN_DEGREE`, `CITATION_RESOLUTION_PCT`, `CITATION_TOTAL_REFS` |
 | `hypothesis_scores.json` | `H1–H8_SCORE`, `H1–H8_SUPPORT`, `H1–H8_NEUTRAL`, `H1–H8_CONTRADICT`, `H1–H8_TOTAL` |
 | `assertion_summary.json` | `TOTAL_ASSERTIONS`, `TOTAL_SUPPORT`, `TOTAL_NEUTRAL`, `TOTAL_CONTRADICT` |
 | `tfidf_data.json` | `NUM_VOCAB_FEATURES`, `NUM_TOPICS` |
 | `output/figures/` | `NUM_FIGURES` |
+
+Retrieved records, analyzed records, and dated temporal records have distinct denominators.
+`CORPUS_SIZE` describes retrieval in this provider; `ANALYZED_CORPUS_SIZE` describes
+the recorded descriptive-analysis corpus, which can include undated records;
+`TEMPORAL_TOTAL_PAPERS` describes only the recorded dated time series.
 
 Hypothesis short aliases H1–H8 map to full IDs. This project's `manuscript/config.yaml`
 `hypothesis_definitions` only names H1–H6 (modafinil-specific: Wakefulness Efficacy,

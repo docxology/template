@@ -185,7 +185,11 @@ Navigation links to in-tree documents (keeps them discoverable):
 
 ## Optional hardening
 
-Default CI builds this template's wheel and runs focused behavioral tests. Further
-hardening can add real sandbox cleanup, approval/rollback controls and held-out model evaluation. The complete suites and native/provider acceptance remain opt-in;
-see [functional CI and hardening](../../../docs/development/ci.md) for commands
-and the evidence each lane establishes.
+Default CI builds this template's wheel and runs focused behavioral tests. The
+complete project suite also contains real Docker execution, cleanup, approval
+and rollback controls, which require an explicitly prepared local daemon and image.
+Actual Ollama proposal acceptance is a separate opt-in lane; fixture replay and
+controlled HTTP responses do not establish model performance. See
+[functional CI and hardening](../../../docs/development/ci.md) and
+[live numeric proposals](docs/live-numeric-proposals.md) for the commands and
+evidence each lane establishes.

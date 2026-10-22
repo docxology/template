@@ -1403,7 +1403,7 @@
     {
       "paper_a": "doi:10.1345/aph.1h302",
       "paper_b": "doi:10.1136/bcr.08.2011.4652",
-      "similarity": 0.9660326174401028
+      "similarity": 0.9660326174401027
     },
     {
       "paper_a": "doi:10.4088/jcp.09m05900gry",
@@ -1413,82 +1413,82 @@
     {
       "paper_a": "doi:10.1111/bdi.12859",
       "paper_b": "doi:10.1111/acps.12712",
-      "similarity": 0.9558332312838942
+      "similarity": 0.9558332312838941
     },
     {
       "paper_a": "doi:10.1111/j.1360-0443.2008.02437.x",
       "paper_b": "doi:10.1111/j.1465-3362.2012.00473.x",
-      "similarity": 0.9535889999637248
+      "similarity": 0.9535889999637247
     },
     {
       "paper_a": "doi:10.1513/annalsats.202006-696fr",
       "paper_b": "doi:10.3760/cma.j.cn112147-20241118-00681",
-      "similarity": 0.9532271487521775
+      "similarity": 0.9532271487521781
     },
     {
       "paper_a": "doi:10.1164/ajrccm.164.9.2103032",
       "paper_b": "doi:10.1093/sleep/28.4.464",
-      "similarity": 0.9513441907958479
+      "similarity": 0.9513441907958482
     },
     {
       "paper_a": "doi:10.1093/sleep/28.4.464",
       "paper_b": "doi:10.1164/ajrccm.164.9.2103032",
-      "similarity": 0.9513441907958479
+      "similarity": 0.9513441907958482
     },
     {
       "paper_a": "doi:10.1002/cncr.25083",
       "paper_b": "doi:10.1200/jco.2005.23.16_suppl.8012",
-      "similarity": 0.9507333979879539
+      "similarity": 0.9507333979879543
     },
     {
       "paper_a": "doi:10.4088/jcp.v67n0120",
       "paper_b": "doi:10.1542/peds.2005-0617",
-      "similarity": 0.9507070627595068
+      "similarity": 0.9507070627595071
     },
     {
       "paper_a": "doi:10.1542/peds.2005-0617",
       "paper_b": "doi:10.4088/jcp.v67n0120",
-      "similarity": 0.9507070627595068
+      "similarity": 0.9507070627595071
     },
     {
       "paper_a": "doi:10.1111/j.1399-5618.2009.00672.x",
       "paper_b": "doi:10.4103/tcmj.tcmj_71_18",
-      "similarity": 0.9498348682930418
+      "similarity": 0.9498348682930415
     },
     {
       "paper_a": "doi:10.1002/cncr.25083",
       "paper_b": "doi:10.1177/0269216309102614",
-      "similarity": 0.9494724197253464
+      "similarity": 0.9494724197253465
     },
     {
       "paper_a": "doi:10.1177/0269216309102614",
       "paper_b": "doi:10.1002/cncr.25083",
-      "similarity": 0.9494724197253464
+      "similarity": 0.9494724197253465
     },
     {
       "paper_a": "doi:10.3390/molecules17010303",
       "paper_b": "doi:10.22159/ijcpr.2017v9i5.22162",
-      "similarity": 0.9481604045540969
+      "similarity": 0.948160404554097
     },
     {
       "paper_a": "doi:10.1080/00952990600920425",
       "paper_b": "doi:10.1016/j.drugalcdep.2021.108554",
-      "similarity": 0.9458443244984722
+      "similarity": 0.9458443244984723
     },
     {
       "paper_a": "doi:10.1586/14737175.6.4.455",
       "paper_b": "doi:10.3390/jcm11206218",
-      "similarity": 0.9455469197014207
+      "similarity": 0.9455469197014211
     },
     {
       "paper_a": "doi:10.4088/jcp.v67n0120",
       "paper_b": "doi:10.1177/1087054712441969",
-      "similarity": 0.9453959916896306
+      "similarity": 0.9453959916896305
     },
     {
       "paper_a": "doi:10.1176/appi.ajp.2009.09050613",
       "paper_b": "doi:10.1093/sleep/zsw069",
-      "similarity": 0.9449249654864535
+      "similarity": 0.9449249654864537
     }
   ]
 }

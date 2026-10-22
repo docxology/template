@@ -1,0 +1,34 @@
+{
+  "authored_sources": {
+    "manuscript/references.bib": "756a0e66a685f770aaba55ae4509ea24f327c7d03016de8afec84d81a6551b0c",
+    "manuscript/references_deep.bib": "88d584e4dc285042f3f6fb0ccba4ee10efbddd1307f4145f7a502b6a7a0812ac"
+  },
+  "generated_sources": {
+    "output/bibliography/references.bib": "756a0e66a685f770aaba55ae4509ea24f327c7d03016de8afec84d81a6551b0c"
+  },
+  "key_origins": {
+    "boyd2004convex": [
+      "output/bibliography/references.bib"
+    ],
+    "kingma2014adam": [
+      "output/bibliography/references.bib"
+    ],
+    "nesterov2013gradient": [
+      "output/bibliography/references.bib"
+    ],
+    "nocedal2006numerical": [
+      "output/bibliography/references.bib"
+    ],
+    "peng2011reproducible": [
+      "output/bibliography/references.bib"
+    ],
+    "reddi2018convergence": [
+      "output/bibliography/references.bib"
+    ]
+  },
+  "kind": "generated-bibliography-projection",
+  "projected_keys": [],
+  "projected_path": "output/manuscript/generated_search.bib",
+  "projected_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "schema_version": 1
+}

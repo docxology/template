@@ -112,7 +112,7 @@ classDiagram
 
 ## On-disk layout
 
-The project keeps committed input data in `data/`, regeneratable outputs in `output/` (gitignored), and the manuscript source in `manuscript/`. The Mermaid flowchart in this subsection (rendered in the HTML build; the PDF build strips Mermaid) lists every artefact the standard pipeline writes:
+The project keeps committed input data in `data/`, regeneratable outputs in `output/` (gitignored), and the manuscript source in `manuscript/`. The Mermaid flowchart in this subsection illustrates every artefact the standard pipeline writes:
 
 * `data/corpus.json` — the bundled offline corpus, CI-safe default for `LocalBackend`.
 * `output/search/results.json` — raw `SearchResult` JSON from the latest run.

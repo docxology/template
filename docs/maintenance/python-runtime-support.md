@@ -1,6 +1,6 @@
 # Python runtime support
 
-Platform 4.0.2 requires Python 3.12 or newer. The repository default and release
+Platform 4.1.0 requires Python 3.12 or newer. The repository default and release
 interpreter is Python 3.14. CI validates Python 3.12, 3.13, and 3.14 for the
 infrastructure and every canonical public exemplar; macOS adds a Python 3.14
 smoke lane. All supported Ubuntu lanes run on pull requests as well as main.
@@ -8,15 +8,17 @@ smoke lane. All supported Ubuntu lanes run on pull requests as well as main.
 The previous Python 3.10/3.11 support belongs to platform 3.x. Raising the floor
 is a breaking platform change and does not relabel prior published releases.
 Public exemplar packages retain independent versions. Their `[tool.template]`
-metadata binds `platform_version = "4.0.2"` and lists the three tested Python
+metadata binds the current root SDK version through `platform_version` and lists the three tested Python
 minor versions; package and manuscript metadata describe the intended next
 release, while published citation/deposit sidecars remain historical evidence.
 
 Root `pyproject.toml` and `infrastructure._version.__version__` must agree. The
 root release contract rejects a mismatched runtime version, a wrong tag, or a
-missing released changelog heading. Regenerate the root and project locks with
-`uv lock` when changing dependency or Python metadata; use `uv lock --check`
-against every independent project to verify freshness.
+missing release-intent changelog heading. For a coordinated root SDK version
+transition, use the checked metadata plan in [release boundary](release-boundary.md);
+it preserves third-party lock records. Dependency or Python changes that require
+resolution need their own reviewed lock refresh. Verify each resulting independent
+lock against its actual package metadata.
 
 `infrastructure.core.runtime.python_compatibility` parses the public source
 surface with the Python 3.12 grammar and rejects known unguarded APIs introduced

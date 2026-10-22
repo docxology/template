@@ -139,9 +139,9 @@ def _draw_flow_figure(spec: Mapping[str, str], output_png: Path, output_svg: Pat
     ax.text(5, 5.12, "Layer 1 - disclosure control", ha="center", fontsize=9.5, fontweight="bold")
     box(0.3, 4.35, 2.1, 0.55, "Typed fixture\n(data/example_segments.json)", fill=(0.92, 0.95, 0.98))
     arrow(2.4, 4.62, 2.95, 4.62)
-    box(2.95, 4.35, 2.9, 0.55, "Classification ceiling + span / overlap / orphan checks", fill=(0.88, 0.94, 0.97))
+    box(2.95, 4.35, 2.9, 0.55, "Classification ceiling +\nspan / overlap / orphan checks", fill=(0.88, 0.94, 0.97))
     arrow(5.85, 4.62, 6.4, 4.62)
-    box(6.4, 4.35, 2.2, 0.55, "Source-control coverage + mosaic-risk score", fill=(0.88, 0.94, 0.97))
+    box(6.4, 4.35, 2.2, 0.55, "Source-control coverage +\nmosaic-risk score", fill=(0.88, 0.94, 0.97))
     arrow(8.6, 4.62, 9.15, 4.62)
     box(9.15, 4.35, 0.7, 0.55, "Gate?", fill=(0.95, 0.9, 0.82))
 
@@ -150,7 +150,7 @@ def _draw_flow_figure(spec: Mapping[str, str], output_png: Path, output_svg: Pat
     arrow(3.0, 3.2, 1.6, 2.5)
     arrow(5.0, 3.2, 6.6, 2.5)
 
-    ax.text(5, 2.85, "Layer 2 - evidence and visual proof", ha="center", fontsize=9.5, fontweight="bold")
+    ax.text(7.5, 3.0, "Layer 2 - evidence and visual proof", ha="center", fontsize=9.5, fontweight="bold")
     box(0.2, 1.85, 2.7, 0.6, "output/reports/redaction_audit.json\ntext-free audit", fill=(0.97, 0.95, 0.93))
     box(4.6, 1.85, 2.7, 0.6, "output/data/release_ledger.json\nhashed ledger", fill=(0.97, 0.95, 0.93))
     box(8.0, 1.85, 1.8, 0.6, "review gate\n3 roles", fill=(0.97, 0.95, 0.93))
@@ -186,11 +186,11 @@ def _draw_matrix_figure(spec: Mapping[str, str], output_png: Path, output_svg: P
     backgrounds = PDF_BACKGROUND_MODES
     n_rows = len(styles)
     cell_w = 1.7
-    cell_h = 0.78
+    cell_h = 0.70
     x0 = 1.55
-    y0 = 2.4
+    y0 = 1.9
 
-    ax.text(5, 5.05, "Redaction style x PDF background proof matrix", ha="center", fontsize=10, fontweight="bold")
+    ax.text(5, 5.18, "Redaction style x PDF background proof matrix", ha="center", fontsize=10, fontweight="bold")
 
     for col, background in enumerate(backgrounds):
         ax.text(
@@ -232,7 +232,7 @@ def _draw_matrix_figure(spec: Mapping[str, str], output_png: Path, output_svg: P
             # proof-PDF composition in redacted_report._proof_renderer).
             bar_x = x + cell_w * 0.12
             bar_w = cell_w * 0.76
-            bar_y = y + cell_h * 0.14
+            bar_y = y + cell_h * 0.28
             bar_h = cell_h * 0.52
             ax.add_patch(
                 plt.Rectangle(
@@ -302,11 +302,11 @@ def _build_one(spec: Mapping[str, str], output_dir: Path) -> None:
         _draw_matrix_figure(spec, png_path, svg_path)
     else:  # pragma: no cover - guarded by the spec table itself
         raise KeyError(f"no builder for figure: {name}")
-    svg_text = svg_path.read_text(encoding="utf-8")
-    svg_path.write_text(
-        _inject_svg_accessibility(svg_text, title=str(spec["caption"]), desc=str(spec["alt_text"])),
-        encoding="utf-8",
+    svg_text = _inject_svg_accessibility(
+        svg_path.read_text(encoding="utf-8"), title=str(spec["caption"]), desc=str(spec["alt_text"])
     )
+    # Matplotlib wraps path attributes with line-end spaces; normalize only ASCII space/tab suffixes.
+    svg_path.write_text("\n".join(line.rstrip(" \t") for line in svg_text.split("\n")), encoding="utf-8")
 
 
 def build_figure_registry() -> dict[str, dict[str, object]]:

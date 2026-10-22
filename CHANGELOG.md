@@ -1,11 +1,40 @@
 # Changelog
 
 All notable changes to this **template repository** (Layer 1 infrastructure, root
-orchestration, CI, and repository-level docs) are documented here. This file does
-not describe individual workspaces under `projects/` (many checkouts omit,
-gitignore, or treat those trees as confidential); where entries mention
-`projects/`, they refer to **generic layout and tooling** defined by the template,
-not to the contents of any specific workspace.
+orchestration, CI, repository-level docs and canonical public exemplars) are
+documented here. Public exemplar entries describe this repository's coordinated
+source and contracts; each exemplar retains its own package and publication
+versions. Confidential and local workspaces outside the canonical public roster
+are excluded.
+
+## [4.1.0] - 2026-10-22
+
+See the [4.1.0 release-intent notes](docs/releases/v4.1.0.md). Publication remains
+pending until exact-revision hosted acceptance and the authenticated release
+handoff complete. The 4.0.0, 4.0.1 and 4.0.2 preparations remain historical
+candidates, not published root releases.
+
+- Add explicit coordinated next-minor metadata preparation while keeping exact
+  next-patch preparation as the default. Bind the selected kind into the checked
+  plan and transaction; preserve independent exemplar versions and third-party locks.
+- Correct auxiliary deadline binding, source-versus-installed dependency custody
+  and strict source-consumption evidence without extending acceptance clocks.
+- Bound structured model generation before parsing, keep exact consumed-source
+  quotes, and pin the declared acceptance model to `smollm2:360m` with authenticated
+  model bytes. Synthetic screening controls do not establish scientific validity.
+- Use configured phase-aware discovery and citation-complete bounded samples;
+  retain strict licensed full-text, DOI, original-byte and downstream validation.
+- Remove redundant Active Inference preparation while retaining its fixed-point
+  validators; keep isolated diagnostic children from writing into held runtimes.
+- Improve table wrapping, figure labels, pagination and boundary markers, and
+  transport every bundled web-font face through a deterministic local LZMA stream
+  with original hashes and licenses. Preserve raw and legacy transport APIs.
+- Align public documentation with declared Python/SDK requirements and separate
+  historical coverage measurements, controlled HTTP tests and native acceptance.
+
+The new full-roster own-lock measurements, generated counts/provenance,
+publication outputs and hosted acceptance must be refreshed for the final 4.1.0
+source. Earlier eight-project measurements remain historical observations.
 
 ## [4.0.2] - 2026-10-15
 
@@ -76,8 +105,8 @@ and historical notes remain preserved.
   rollback and strict refusal of ambiguous publication configuration.
 - Retain the measured baseline, original failed full workflow and successful
   Redacted follow-up as distinct evidence. An earlier qualification renewed seven
-  standalone metrics and preserved eighteen historical values. The current
-  follow-up uses eight successful own-lock measurements, retaining four with
+  standalone metrics and preserved eighteen historical values. That candidate's
+  follow-up used eight successful own-lock measurements, retaining four with
   unchanged source inputs and renewing four, while preserving seventeen other
   recorded values. Verify combined statement/branch totals against the retained
   databases.

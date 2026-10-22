@@ -1,10 +1,10 @@
 # Release boundary
 
-The root package metadata declares the **4.0.2** candidate. Its dated changelog
+The root package metadata declares the **4.1.0** candidate. Its dated changelog
 entry records the frozen release intent; publication remains pending until the
 acceptance and publication steps below pass. Final release-intent metadata must
 be included in the exact revision submitted for release acceptance.
-The prepared 4.0.0 and 4.0.1 candidates were not published; their notes are retained. Tagging and publication require the verified
+The prepared 4.0.0, 4.0.1 and 4.0.2 candidates were not published; their notes are retained. Tagging and publication require the verified
 acceptance and publication steps below. The earlier recorded root release is `3.8.0` /
 `v3.8.0`; its original publication evidence is retained in
 [subsystem history](subsystem-status-history.md). Historical standalone release
@@ -14,6 +14,13 @@ Before the next root release, reconcile these surfaces together:
 
 For the metadata preparation in step 1, use
 `scripts/maintenance/coordinated_release.py --repo-root . plan --from-version <current> --to-version <next-patch>`.
+Patch remains the default. For an explicit minor release, use
+`... plan --from-version <current> --to-version <next-minor>.0 --release-kind minor`.
+The major stays fixed, the minor increments exactly once and patch becomes zero;
+major transitions and skipped minor versions are refused. The selected kind is
+bound into the reviewed plan and reconstructed by check/apply. Both paths retain
+all exemplar own versions, third-party locks and the same follow-up requirements;
+metadata preparation does not authorize publication.
 Review the canonical JSON and its SHA256, then run `check` and `apply` with that
 exact plan, `--reviewed-sha256` and a fresh private `--journal` outside the checkout.
 The transaction binds package/lock inputs and every canonical manuscript
@@ -32,9 +39,14 @@ before the final Source freeze. The command creates no tag, release or acceptanc
    that exact revision. A later metadata, documentation or output change requires
    fresh evidence for the changed source; do not relabel an old receipt.
 3. Supply a successful same-repository hosted run at that revision, its exact
-   `platform-required-acceptance` artifact ID, and aggregate receipt SHA256.
-   The bounded bundle contains only `output/readiness` evidence and the canonical
-   `output/readiness/release-candidate/receipt.json` with `source_commit`.
+   `platform-required-acceptance` primary artifact ID, and logical aggregate
+   receipt SHA256. The primary archive contains `candidate-index.json`; that
+   index binds the exact source, canonical
+   `output/readiness/release-candidate/receipt.json` and every ordered bounded
+   `platform-required-acceptance-shard-NNNN` artifact. Retain the original API
+   metadata and primary/shard archives before their declared expiry. The installed
+   reader authenticates the complete indexed collection and its logical readiness
+   bytes; a flat rebuilt archive or an index alone cannot replace that admission.
 4. Create the matching root tag only after acceptance passes, then manually
    dispatch the release workflow with that handoff. A root 4+ tag push alone is
    blocked. The dedicated [required acceptance workflow](../../.github/workflows/platform-required-acceptance.yml)
@@ -43,7 +55,7 @@ before the final Source freeze. The command creates no tag, release or acceptanc
    Set `RELEASE_TAG` to the verified existing tag whose dereferenced commit
    is the accepted source SHA. Read the other values from one successful
    same-repository required-acceptance run, its exact uploaded
-   `platform-required-acceptance` artifact ID, and the aggregate receipt's
+   `platform-required-acceptance` primary artifact ID, and the logical aggregate receipt's
    actual SHA256. Dispatch that complete handoff:
 
    ```bash
@@ -68,7 +80,7 @@ provider-specific publishing steps.
 
 ## Development checkpoint
 
-Work on the 4.0.2 acceptance adapters may be committed on a development branch
+Work on the current acceptance adapters may be committed on a development branch
 while acceptance remains incomplete. Such a checkpoint preserves reviewed source
 and focused regression checks; it is not a candidate acceptance receipt or a
 release authorization. Unsupported source occurrences and missing native,

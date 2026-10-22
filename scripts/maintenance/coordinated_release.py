@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Review, check, apply or roll back a coordinated metadata patch release.
+"""Review, check, apply or roll back coordinated patch/minor metadata.
 
 Plan prints JSON to stdout without writing. Apply/rollback require its reviewed
 canonical SHA256 and a retained private journal outside the checkout. No command
@@ -26,6 +26,12 @@ def main(argv: list[str] | None = None) -> int:
     plan = commands.add_parser("plan", help="Print a deterministic dry-run plan")
     plan.add_argument("--from-version", required=True)
     plan.add_argument("--to-version", required=True)
+    plan.add_argument(
+        "--release-kind",
+        choices=("patch", "minor"),
+        default="patch",
+        help="Patch is the default; minor requires exactly the next minor version with patch zero.",
+    )
     for name in ("check", "apply"):
         child = commands.add_parser(name)
         child.add_argument("--plan", type=Path, required=True)
@@ -37,7 +43,12 @@ def main(argv: list[str] | None = None) -> int:
     rollback.add_argument("--journal", type=Path, required=True)
     args = parser.parse_args(argv)
     if args.command == "plan":
-        result = build_release_plan(args.repo_root, args.to_version, expected_current=args.from_version)
+        result = build_release_plan(
+            args.repo_root,
+            args.to_version,
+            expected_current=args.from_version,
+            release_kind=args.release_kind,
+        )
     elif args.command == "rollback":
         rollback_release_plan(args.repo_root, args.journal, reviewed_sha256=args.reviewed_sha256)
         result = {"status": "rolled-back", "role": "metadata-preparation-only"}

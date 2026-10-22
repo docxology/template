@@ -26,8 +26,8 @@ requires exact projected bytes, names, modes, and provenance. A copied or edited
 manifest alone cannot authorize changed scientific bytes or different providers.
 
 The platform provider must be a clean real checkout of `research-project-template`
-4.0.2 at its full admitted HEAD, with canonical origin and committed metadata
-bytes. Advanced requires a clean `template-literature-meta-analysis` 0.2.0
+at the version required by the exported project, with its full admitted HEAD,
+canonical origin and committed metadata bytes. Advanced requires a clean `template-literature-meta-analysis` 0.2.0
 standalone commit whose managed bytes are the exact Meta installation projection
 from that same platform revision. Meta must therefore be prepared and committed
 before the Advanced projection is created. Git URL rewriting, hidden changed

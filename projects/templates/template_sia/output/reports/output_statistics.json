@@ -3,13 +3,13 @@
     "pdf": {
       "exists": true,
       "file_count": 1,
-      "size_mb": "0.16",
-      "total_size_bytes": 167273,
+      "size_mb": "0.20",
+      "total_size_bytes": 209377,
       "largest_files": [
         {
           "name": "template_sia_combined.pdf",
-          "size_mb": "0.16",
-          "size_bytes": 167273,
+          "size_mb": "0.20",
+          "size_bytes": 209377,
           "path": "pdf/template_sia_combined.pdf"
         }
       ],
@@ -19,31 +19,32 @@
     },
     "web": {
       "exists": true,
-      "file_count": 9,
-      "size_mb": "0.11",
-      "total_size_bytes": 111519,
+      "file_count": 10,
+      "size_mb": "3.14",
+      "total_size_bytes": 3287316,
       "largest_files": [
+        {
+          "name": "source-web-fonts.js",
+          "size_mb": "3.02",
+          "size_bytes": 3170848,
+          "path": "web/assets/source-web-fonts.js"
+        },
         {
           "name": "index.html",
           "size_mb": "0.03",
-          "size_bytes": 26900,
+          "size_bytes": 27607,
           "path": "web/index.html"
         },
         {
           "name": "manuscript__02_methodology.html",
           "size_mb": "0.02",
-          "size_bytes": 17457,
+          "size_bytes": 18164,
           "path": "web/manuscript__02_methodology.html"
-        },
-        {
-          "name": "manuscript__03_results.html",
-          "size_mb": "0.01",
-          "size_bytes": 14007,
-          "path": "web/manuscript__03_results.html"
         }
       ],
       "extensions": {
         ".md": 1,
+        ".js": 1,
         ".ico": 1,
         ".html": 7
       }
@@ -171,12 +172,12 @@
       "exists": true,
       "file_count": 9,
       "size_mb": "0.01",
-      "total_size_bytes": 7716,
+      "total_size_bytes": 7837,
       "largest_files": [
         {
           "name": "config.yaml",
           "size_mb": "0.00",
-          "size_bytes": 1758,
+          "size_bytes": 1879,
           "path": "manuscript/config.yaml"
         },
         {
@@ -225,13 +226,13 @@
     "root": {
       "exists": true,
       "file_count": 1,
-      "size_mb": "0.16",
-      "total_size_bytes": 167273,
+      "size_mb": "0.20",
+      "total_size_bytes": 209377,
       "largest_files": [
         {
           "name": "template_sia_combined.pdf",
-          "size_mb": "0.16",
-          "size_bytes": 167273,
+          "size_mb": "0.20",
+          "size_bytes": 209377,
           "path": "template_sia_combined.pdf"
         }
       ],
@@ -271,20 +272,27 @@
       }
     }
   },
-  "total_files": 46,
-  "total_size_mb": 0.5647239685058594,
+  "total_files": 47,
+  "total_size_mb": 3.6738224029541016,
   "largest_files": [
     {
+      "name": "source-web-fonts.js",
+      "size_mb": "3.02",
+      "size_bytes": 3170848,
+      "category": "web",
+      "path": "web/assets/source-web-fonts.js"
+    },
+    {
       "name": "template_sia_combined.pdf",
-      "size_mb": "0.16",
-      "size_bytes": 167273,
+      "size_mb": "0.20",
+      "size_bytes": 209377,
       "category": "pdf",
       "path": "pdf/template_sia_combined.pdf"
     },
     {
       "name": "template_sia_combined.pdf",
-      "size_mb": "0.16",
-      "size_bytes": 167273,
+      "size_mb": "0.20",
+      "size_bytes": 209377,
       "category": "root",
       "path": "template_sia_combined.pdf"
     },
@@ -312,7 +320,7 @@
     {
       "name": "index.html",
       "size_mb": "0.03",
-      "size_bytes": 26900,
+      "size_bytes": 27607,
       "category": "web",
       "path": "web/index.html"
     },
@@ -326,35 +334,28 @@
     {
       "name": "manuscript__02_methodology.html",
       "size_mb": "0.02",
-      "size_bytes": 17457,
+      "size_bytes": 18164,
       "category": "web",
       "path": "web/manuscript__02_methodology.html"
     },
     {
       "name": "manuscript__03_results.html",
       "size_mb": "0.01",
-      "size_bytes": 14007,
+      "size_bytes": 14714,
       "category": "web",
       "path": "web/manuscript__03_results.html"
-    },
-    {
-      "name": "manuscript__01_introduction.html",
-      "size_mb": "0.01",
-      "size_bytes": 12267,
-      "category": "web",
-      "path": "web/manuscript__01_introduction.html"
     }
   ],
   "missing_expected_files": [],
   "sizes_by_category": {
-    "pdf": 0.15952396392822266,
-    "web": 0.1063528060913086,
+    "pdf": 0.1996774673461914,
+    "web": 3.135028839111328,
     "figures": 0.11319828033447266,
     "data": 0.001712799072265625,
     "reports": 0.007205009460449219,
-    "manuscript": 0.007358551025390625,
+    "manuscript": 0.007473945617675781,
     "release": 0.00185394287109375,
-    "root": 0.15952396392822266,
+    "root": 0.1996774673461914,
     "runs": 0.007994651794433594
   },
   "inventory_mode": "stable-shippable-output-v1",
@@ -363,6 +364,7 @@
   "file_counts_by_type": {
     ".pdf": 2,
     ".md": 13,
+    ".js": 1,
     ".ico": 1,
     ".html": 7,
     ".json": 13,

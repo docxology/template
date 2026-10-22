@@ -1,4 +1,4 @@
-"""Reviewable patch-release metadata plans; never publication authority.
+"""Reviewable patch/minor metadata plans; never publication authority.
 
 No resolver runs here. Parsed before/after objects must differ only in the
 root version, exact SDK requirements and exemplar compatibility bindings.
@@ -27,7 +27,7 @@ from infrastructure.core.files.secure_write import read_bytes_confined
 from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
 from infrastructure.publishing.root_release_contract import validate_runtime_version_provider
 
-SCHEMA = "template-coordinated-release-plan-v1"
+SCHEMA = "template-coordinated-release-plan-v2"
 CONTRACT = "infrastructure/config/release-plan-contract.json"
 ROOT_PACKAGE = "research-project-template"
 MAX_BYTES = 16 * 1024 * 1024
@@ -220,12 +220,20 @@ def _provider_order(root: Path, metadata: dict[str, dict[str, Any]]) -> list[str
     return order
 
 
-def build_release_plan(root: Path, target_version: str, *, expected_current: str) -> dict[str, Any]:
-    """Read-only next-patch plan; unknown scopes and legacy roots fail closed."""
-    return _prepare(root, target_version, expected_current)[0]
+def build_release_plan(
+    root: Path, target_version: str, *, expected_current: str, release_kind: str = "patch"
+) -> dict[str, Any]:
+    """Read-only next-patch or explicitly selected next-minor plan.
+
+    Patch remains the default. Minor keeps the major, increments the minor by
+    exactly one and resets patch to zero. Neither grants publication authority.
+    """
+    return _prepare(root, target_version, expected_current, release_kind=release_kind)[0]
 
 
-def _prepare(root: Path, target: str, old: str) -> tuple[dict[str, Any], dict[str, bytes]]:
+def _prepare(
+    root: Path, target: str, old: str, *, release_kind: str = "patch"
+) -> tuple[dict[str, Any], dict[str, bytes]]:
     root = root.absolute()
     if git(root, "rev-parse", "--show-toplevel").decode().strip() != str(root):
         raise ValueError("release plan needs its actual Git top-level directory")
@@ -237,8 +245,15 @@ def _prepare(root: Path, target: str, old: str) -> tuple[dict[str, Any], dict[st
         for v in (old, target)
         if re.fullmatch(r"(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)", v)
     ]
-    if len(versions) != 2 or versions[0][0] < 4 or versions[1] != (*versions[0][:2], versions[0][2] + 1):
-        raise ValueError("release plan supports root 4+ exact next patch versions only")
+    if release_kind not in ("patch", "minor"):
+        raise ValueError("release kind must be patch or minor")
+    message = f"release plan supports root 4+ exact next {release_kind} versions only"
+    if len(versions) != 2 or versions[0][0] < 4:
+        raise ValueError(message)
+    current = versions[0]
+    expected = (*current[:2], current[2] + 1) if release_kind == "patch" else (current[0], current[1] + 1, 0)
+    if versions[1] != expected:
+        raise ValueError(message)
     fixed = [CONTRACT, "infrastructure/_version.py", "infrastructure/project/public_scope.py"]
     scopes = ("root", *PUBLIC_PROJECT_NAMES)
     inputs: dict[str, bytes] = {}
@@ -304,6 +319,7 @@ def _prepare(root: Path, target: str, old: str) -> tuple[dict[str, Any], dict[st
         "base_commit": commit,
         "root_before": old,
         "root_after": target,
+        "release_kind": release_kind,
         "public_roster": list(PUBLIC_PROJECT_NAMES),
         "packages": packages,
         "provider_order": _provider_order(root, metadata),
@@ -321,9 +337,11 @@ def _prepare(root: Path, target: str, old: str) -> tuple[dict[str, Any], dict[st
 
 
 CONTRACT_VALUE = {
-    "schema_version": "template-release-plan-contract-v1",
+    "schema_version": "template-release-plan-contract-v2",
     "root_package": ROOT_PACKAGE,
-    "version_rule": "root-4+-next-patch; preserve-exemplar-own-versions",
+    "version_rule": "root-4+-next-patch-or-explicit-next-minor-zero; preserve-exemplar-own-versions",
+    "default_release_kind": "patch",
+    "release_kinds": ["patch", "minor"],
     "public_roster_authority": "infrastructure.project.public_scope.PUBLIC_PROJECT_NAMES",
     "lock_rule": "root-editable-version-only; no-resolution-or-third-party-delta",
     "publication_rule": "all-canonical-publication-platform-bindings-only; preserve-intended-and-own-versions",
@@ -341,5 +359,10 @@ CONTRACT_VALUE = {
 
 def check_release_plan(root: Path, plan: dict[str, Any]) -> None:
     """Reject altered, stale, expanded or unknown-scope review plans."""
-    if plan != build_release_plan(root, plan.get("root_after", ""), expected_current=plan.get("root_before", "")):
+    if plan != build_release_plan(
+        root,
+        plan.get("root_after", ""),
+        expected_current=plan.get("root_before", ""),
+        release_kind=plan.get("release_kind", ""),
+    ):
         raise ValueError("reviewed release plan differs from the actual bounded transaction")

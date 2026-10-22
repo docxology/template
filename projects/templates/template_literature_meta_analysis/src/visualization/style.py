@@ -11,6 +11,8 @@ from pathlib import Path
 
 import yaml
 
+from template_literature_meta_analysis.knowledge_graph.hypothesis import config_key_to_hypothesis_id
+
 VIZ_CONFIG: dict = {
     "figure_size": (12, 7),
     "dpi": 300,
@@ -63,7 +65,7 @@ HYPOTHESIS_NAMES: dict[str, str] = {
 
 
 def load_viz_labels_from_config(project_root: Path) -> None:
-    """Overlay subfield and hypothesis labels from template_literature_meta_analysis.manuscript config when present."""
+    """Overlay labels from the selected project manuscript configuration."""
     config_path = project_root / "manuscript" / "config.yaml"
     if not config_path.exists():
         return
@@ -73,7 +75,11 @@ def load_viz_labels_from_config(project_root: Path) -> None:
         SUBFIELD_NAMES[key] = key.replace("_", " ").title()
     for hypothesis_id, hypothesis in (project_config.get("hypothesis_definitions") or {}).items():
         if isinstance(hypothesis, dict) and hypothesis.get("name"):
-            HYPOTHESIS_NAMES[hypothesis_id] = str(hypothesis["name"])
+            name = str(hypothesis["name"])
+            explicit_id = hypothesis.get("id")
+            canonical_id = str(explicit_id).strip() if explicit_id else config_key_to_hypothesis_id(hypothesis_id, name)
+            HYPOTHESIS_NAMES[hypothesis_id] = name
+            HYPOTHESIS_NAMES[canonical_id] = name
 
 
 def apply_visual_style() -> None:

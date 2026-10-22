@@ -1,11 +1,17 @@
 # Results: Field Overview
 
-The de-duplicated corpus for **{{SEARCH_TERM_TITLE}}** contains $N = {{CORPUS_SIZE}}$
-records spanning {{YEAR_START}}--{{YEAR_END}} ({{YEAR_SPAN}} years). Publication volume
+The bibliometric analysis corpus for **{{SEARCH_TERM_TITLE}}** contains
+$N = {{ANALYZED_CORPUS_SIZE}}$ records. Its dated temporal subset contains
+{{TEMPORAL_TOTAL_PAPERS}} records spanning {{YEAR_START}}--{{YEAR_END}} ({{YEAR_SPAN}} years). Publication volume
 grows at a compound annual rate of {{CAGR_PCT}}\% (mean year-over-year growth
 {{MEAN_YOY_GROWTH_PCT}}\%, doubling time {{DOUBLING_TIME}} years), peaking in {{PEAK_YEAR}}
 with {{PEAK_YEAR_PUBS}} records that year. The growth curve is a first-order descriptive
-summary of the retained corpus; it is not a field-wide estimate of research activity.
+summary of this analyzed corpus; it is not a field-wide estimate of research activity.
+The retrieved fixture contains {{RETRIEVED_CORPUS_SIZE}} records, while the configured
+phase union contains {{PHASE_CORPUS_SIZE}} unique records. The figures and descriptive
+bibliometrics in this section use the separate {{ANALYZED_CORPUS_SIZE}}-record analyzed
+corpus, with growth computed on its dated temporal subset; identifier and full-text
+coverage below use the retrieved fixture.
 
 <!-- FIGURE: growth_curve.png -->
 ![Publication growth curve for {{SEARCH_TERM_TITLE}}. Annual publication counts (bars) and cumulative total (line) show sustained growth from {{YEAR_START}} through {{YEAR_END}}, peaking in {{PEAK_YEAR}}.](../output/figures/growth_curve.png "Publication Growth Curve"){#fig:growth_curve}
@@ -48,8 +54,9 @@ review and a documented coverage assessment.
 
 ## Identifier and Full-Text Coverage
 
-The corpus has measurable identifier coverage: {{DOI_COUNT}} of {{CORPUS_SIZE}} records
-({{PCT_WITH_DOI}}\%) carry DOIs, supporting cross-engine de-duplication.
+The retrieved fixture has measurable identifier coverage: {{DOI_COUNT}} of
+{{RETRIEVED_CORPUS_SIZE}} records
+carry DOIs, supporting cross-engine de-duplication.
 OpenAlex IDs are present for {{OPENALEX_ID_COUNT}} records. Abstract coverage stands at
 {{ABSTRACT_COVERAGE_PCT}}\% ({{ABSTRACT_COUNT}} records), which limits the text analytics
 to that subset. Open-access status is confirmed for {{OA_PCT}}\% of records, and
@@ -57,7 +64,8 @@ to that subset. Open-access status is confirmed for {{OA_PCT}}\% of records, and
 
 ## Descriptive Bibliometrics
 
-The corpus spans {{UNIQUE_AUTHORS}} unique authors across {{CORPUS_SIZE}} papers, yielding
+The analyzed corpus spans {{UNIQUE_AUTHORS}} unique authors across
+{{ANALYZED_CORPUS_SIZE}} papers, yielding
 a mean of {{PAPERS_PER_AUTHOR_MEAN}} papers per author. Citation counts range from zero to
 {{CITATION_MAX}} (mean {{CITATION_MEAN}}, median {{CITATION_MEDIAN}}), with a total of
 {{CITATION_TOTAL}} citations across the corpus. The Gini coefficient of citation

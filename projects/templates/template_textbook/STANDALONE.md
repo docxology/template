@@ -84,12 +84,13 @@ uv run --project projects/templates/template_textbook --locked --extra dev \
 
 The project-local scaffold, figures, and diagrams do not require the template
 infrastructure layer. The full development suite includes SDK integration checks
-and declares `research-project-template==4.0.2` in its `dev` extra.
+and pins `research-project-template` in its `dev` extra in `pyproject.toml`.
 
 Inside the template checkout, the explicit `tool.uv.sources` entry prepares that
 SDK from the repository root. An independent exported clone must remove that
 checkout-local resolver and prepare its development environment with an explicitly
-built platform 4.0.2 wheel and the exported project dependencies. This SDK version
+built platform wheel matching `pyproject.toml` and the exported project
+dependencies. This SDK version
 is an unreleased candidate; do not assume it exists on PyPI or substitute an
 arbitrary ancestor checkout. After the declared provider is installed, run
 `.venv/bin/python -m pytest tests/ --cov=src --cov-fail-under=90` from the exported
