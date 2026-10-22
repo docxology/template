@@ -3,13 +3,13 @@
     "pdf": {
       "exists": true,
       "file_count": 1,
-      "size_mb": "1.84",
-      "total_size_bytes": 1924260,
+      "size_mb": "0.96",
+      "total_size_bytes": 1004076,
       "largest_files": [
         {
           "name": "template_textbook_combined.pdf",
-          "size_mb": "1.84",
-          "size_bytes": 1924260,
+          "size_mb": "0.96",
+          "size_bytes": 1004076,
           "path": "pdf/template_textbook_combined.pdf"
         }
       ],
@@ -98,25 +98,25 @@
     "figures": {
       "exists": true,
       "file_count": 76,
-      "size_mb": "2.06",
-      "total_size_bytes": 2164978,
+      "size_mb": "1.54",
+      "total_size_bytes": 1618775,
       "largest_files": [
         {
           "name": "gallery_contour.png",
-          "size_mb": "0.12",
-          "size_bytes": 126518,
+          "size_mb": "0.09",
+          "size_bytes": 93778,
           "path": "figures/gallery/gallery_contour.png"
         },
         {
           "name": "gallery_line.png",
-          "size_mb": "0.10",
-          "size_bytes": 105093,
+          "size_mb": "0.08",
+          "size_bytes": 82897,
           "path": "figures/gallery/gallery_line.png"
         },
         {
           "name": "gallery_multipanel.png",
-          "size_mb": "0.10",
-          "size_bytes": 101228,
+          "size_mb": "0.07",
+          "size_bytes": 74973,
           "path": "figures/gallery/gallery_multipanel.png"
         }
       ],
@@ -224,13 +224,13 @@
     "root": {
       "exists": true,
       "file_count": 1,
-      "size_mb": "1.84",
-      "total_size_bytes": 1924260,
+      "size_mb": "0.96",
+      "total_size_bytes": 1004076,
       "largest_files": [
         {
           "name": "template_textbook_combined.pdf",
-          "size_mb": "1.84",
-          "size_bytes": 1924260,
+          "size_mb": "0.96",
+          "size_bytes": 1004076,
           "path": "template_textbook_combined.pdf"
         }
       ],
@@ -240,22 +240,8 @@
     }
   },
   "total_files": 140,
-  "total_size_mb": 9.65591049194336,
+  "total_size_mb": 7.379899024963379,
   "largest_files": [
-    {
-      "name": "template_textbook_combined.pdf",
-      "size_mb": "1.84",
-      "size_bytes": 1924260,
-      "category": "pdf",
-      "path": "pdf/template_textbook_combined.pdf"
-    },
-    {
-      "name": "template_textbook_combined.pdf",
-      "size_mb": "1.84",
-      "size_bytes": 1924260,
-      "category": "root",
-      "path": "template_textbook_combined.pdf"
-    },
     {
       "name": "template_textbook_combined.epub",
       "size_mb": "1.17",
@@ -269,6 +255,20 @@
       "size_bytes": 1134556,
       "category": "docx",
       "path": "docx/template_textbook_combined.docx"
+    },
+    {
+      "name": "template_textbook_combined.pdf",
+      "size_mb": "0.96",
+      "size_bytes": 1004076,
+      "category": "pdf",
+      "path": "pdf/template_textbook_combined.pdf"
+    },
+    {
+      "name": "template_textbook_combined.pdf",
+      "size_mb": "0.96",
+      "size_bytes": 1004076,
+      "category": "root",
+      "path": "template_textbook_combined.pdf"
     },
     {
       "name": "index.html",
@@ -286,44 +286,44 @@
     },
     {
       "name": "gallery_contour.png",
-      "size_mb": "0.12",
-      "size_bytes": 126518,
+      "size_mb": "0.09",
+      "size_bytes": 93778,
       "category": "figures",
       "path": "figures/gallery/gallery_contour.png"
     },
     {
       "name": "gallery_line.png",
-      "size_mb": "0.10",
-      "size_bytes": 105093,
+      "size_mb": "0.08",
+      "size_bytes": 82897,
       "category": "figures",
       "path": "figures/gallery/gallery_line.png"
     },
     {
       "name": "gallery_multipanel.png",
-      "size_mb": "0.10",
-      "size_bytes": 101228,
+      "size_mb": "0.07",
+      "size_bytes": 74973,
       "category": "figures",
       "path": "figures/gallery/gallery_multipanel.png"
     },
     {
       "name": "gallery_quiver.png",
-      "size_mb": "0.08",
-      "size_bytes": 83868,
+      "size_mb": "0.06",
+      "size_bytes": 59854,
       "category": "figures",
       "path": "figures/gallery/gallery_quiver.png"
     }
   ],
   "missing_expected_files": [],
   "sizes_by_category": {
-    "pdf": 1.8351173400878906,
+    "pdf": 0.9575614929199219,
     "web": 1.6479988098144531,
     "docx": 1.0820255279541016,
     "epub": 1.1709585189819336,
-    "figures": 2.0646839141845703,
+    "figures": 1.5437841415405273,
     "data": 0.0032815933227539062,
     "reports": 0.01483917236328125,
     "release": 0.001888275146484375,
-    "root": 1.8351173400878906
+    "root": 0.9575614929199219
   },
   "inventory_mode": "stable-shippable-output-v1",
   "inventory_scope": "stage5-delivery-mirror",

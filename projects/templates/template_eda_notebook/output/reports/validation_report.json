@@ -40,7 +40,7 @@
           "file_count": 4,
           "largest_file": "correlation_heatmap.png",
           "largest_file_path": "figures/correlation_heatmap.png",
-          "size_mb": "0.05"
+          "size_mb": "0.04"
         },
         "llm": {
           "exists": false,
@@ -57,7 +57,7 @@
           "file_count": 1,
           "largest_file": "template_eda_notebook_combined.pdf",
           "largest_file_path": "pdf/template_eda_notebook_combined.pdf",
-          "size_mb": "0.20"
+          "size_mb": "0.15"
         },
         "reports": {
           "exists": true,
@@ -76,7 +76,7 @@
           "file_count": 9,
           "largest_file": "03_results_slides.pdf",
           "largest_file_path": "slides/03_results_slides.pdf",
-          "size_mb": "0.42"
+          "size_mb": "0.30"
         },
         "web": {
           "exists": true,
@@ -106,7 +106,7 @@
           "combined_pdf": {
             "exists": true,
             "readable": true,
-            "size_mb": 0.2
+            "size_mb": 0.15
           },
           "data": {
             "exists": true,
@@ -136,7 +136,7 @@
             "optional": false,
             "readable": true,
             "required": true,
-            "size_mb": 0.05
+            "size_mb": 0.04
           },
           "llm": {
             "exists": false,
@@ -158,7 +158,7 @@
             "optional": false,
             "readable": true,
             "required": true,
-            "size_mb": 0.2
+            "size_mb": 0.15
           },
           "reports": {
             "exists": true,
@@ -181,7 +181,7 @@
             "optional": false,
             "readable": true,
             "required": true,
-            "size_mb": 0.42
+            "size_mb": 0.3
           },
           "web": {
             "exists": true,
@@ -199,16 +199,16 @@
         "valid": true,
         "warnings": []
       },
-      "total_size_mb": 3.974869728088379
+      "total_size_mb": 3.8000106811523438
     },
     "figures": {
       "files": 4,
-      "size_mb": 0.04544544219970703
+      "size_mb": 0.03585624694824219
     },
     "inventory_mode": "stable-shippable-output-v1",
     "pdf": {
       "files": 1,
-      "size_mb": 0.2016773223876953
+      "size_mb": 0.1517314910888672
     },
     "stable_inventory": {
       "categories": {
@@ -218,11 +218,11 @@
         },
         "figures": {
           "files": 4,
-          "size_bytes": 47653
+          "size_bytes": 37598
         },
         "pdf": {
           "files": 1,
-          "size_bytes": 211474
+          "size_bytes": 159102
         },
         "reports": {
           "files": 4,
@@ -230,7 +230,7 @@
         },
         "slides": {
           "files": 9,
-          "size_bytes": 436928
+          "size_bytes": 316002
         },
         "web": {
           "files": 13,
@@ -239,7 +239,7 @@
       },
       "mode": "stable-shippable-output-v1",
       "total_files": 34,
-      "total_size_bytes": 4167953
+      "total_size_bytes": 3984600
     }
   },
   "recommendations": [],
@@ -250,12 +250,12 @@
     "passed": 9,
     "total_checks": 9
   },
-  "timestamp": "2026-10-22T03:14:55Z",
+  "timestamp": "2026-10-22T04:07:52Z",
   "validated_inputs": {
     "artifact_manifest": {
       "path": "output/reports/artifact_manifest.json",
-      "sha256": "431111df95420caa0fcf574b0eb8151d0516ecf3999c851034d8a3d58dcacb61",
-      "size_bytes": 11175
+      "sha256": "1ad4e0bcef46b17934a3c05f70cbae08ee0924702b00dff6ad0a1f6ce9bf5fc1",
+      "size_bytes": 10323
     },
     "combined_manuscript": {
       "path": "output/web/_combined_manuscript.md",
@@ -330,7 +330,7 @@
       },
       "output": {
         "file_count": 34,
-        "sha256": "453f51d105a8051409784464b5d591f40a66adbb8038ba0544143a4467c0c31a"
+        "sha256": "a9c74e8a982750fa8b004ee3c84fbbaebd5a28f4dea51a8bb9b77ba29e5b7692"
       },
       "source": {
         "file_count": 39,
@@ -338,7 +338,7 @@
       },
       "stage": {
         "file_count": 1911,
-        "sha256": "28f49d1e39eb7bee0768ca8f0306d136ad029cba071e1db637f46a3f02ff2518"
+        "sha256": "c689caaac67ebed50b5ef42bbea200e5bde3672d30391b30ad32f5589bb7a7b7"
       }
     },
     "project": "templates/template_eda_notebook",

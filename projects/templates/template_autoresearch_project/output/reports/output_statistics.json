@@ -3,13 +3,13 @@
     "pdf": {
       "exists": true,
       "file_count": 1,
-      "size_mb": "1.39",
-      "total_size_bytes": 1461436,
+      "size_mb": "1.13",
+      "total_size_bytes": 1182199,
       "largest_files": [
         {
           "name": "template_autoresearch_project_combined.pdf",
-          "size_mb": "1.39",
-          "size_bytes": 1461436,
+          "size_mb": "1.13",
+          "size_bytes": 1182199,
           "path": "pdf/template_autoresearch_project_combined.pdf"
         }
       ],
@@ -52,25 +52,25 @@
     "slides": {
       "exists": true,
       "file_count": 6,
-      "size_mb": "1.42",
-      "total_size_bytes": 1490696,
+      "size_mb": "1.14",
+      "total_size_bytes": 1197982,
       "largest_files": [
         {
           "name": "03_results_slides.pdf",
-          "size_mb": "1.08",
-          "size_bytes": 1137445,
+          "size_mb": "0.89",
+          "size_bytes": 937141,
           "path": "slides/03_results_slides.pdf"
         },
         {
           "name": "02_methodology_slides.pdf",
-          "size_mb": "0.23",
-          "size_bytes": 236482,
+          "size_mb": "0.17",
+          "size_bytes": 180937,
           "path": "slides/02_methodology_slides.pdf"
         },
         {
           "name": "01_introduction_slides.pdf",
-          "size_mb": "0.06",
-          "size_bytes": 64015,
+          "size_mb": "0.04",
+          "size_bytes": 40843,
           "path": "slides/01_introduction_slides.pdf"
         }
       ],
@@ -256,13 +256,13 @@
     "root": {
       "exists": true,
       "file_count": 1,
-      "size_mb": "1.39",
-      "total_size_bytes": 1461436,
+      "size_mb": "1.13",
+      "total_size_bytes": 1182199,
       "largest_files": [
         {
           "name": "template_autoresearch_project_combined.pdf",
-          "size_mb": "1.39",
-          "size_bytes": 1461436,
+          "size_mb": "1.13",
+          "size_bytes": 1182199,
           "path": "template_autoresearch_project_combined.pdf"
         }
       ],
@@ -272,7 +272,7 @@
     }
   },
   "total_files": 119,
-  "total_size_mb": 11.403986930847168,
+  "total_size_mb": 10.592230796813965,
   "largest_files": [
     {
       "name": "source-web-fonts.js",
@@ -283,24 +283,17 @@
     },
     {
       "name": "template_autoresearch_project_combined.pdf",
-      "size_mb": "1.39",
-      "size_bytes": 1461436,
+      "size_mb": "1.13",
+      "size_bytes": 1182199,
       "category": "pdf",
       "path": "pdf/template_autoresearch_project_combined.pdf"
     },
     {
       "name": "template_autoresearch_project_combined.pdf",
-      "size_mb": "1.39",
-      "size_bytes": 1461436,
+      "size_mb": "1.13",
+      "size_bytes": 1182199,
       "category": "root",
       "path": "template_autoresearch_project_combined.pdf"
-    },
-    {
-      "name": "03_results_slides.pdf",
-      "size_mb": "1.08",
-      "size_bytes": 1137445,
-      "category": "slides",
-      "path": "slides/03_results_slides.pdf"
     },
     {
       "name": "ml_prediction_records.json",
@@ -308,6 +301,13 @@
       "size_bytes": 989913,
       "category": "data",
       "path": "data/ml_prediction_records.json"
+    },
+    {
+      "name": "03_results_slides.pdf",
+      "size_mb": "0.89",
+      "size_bytes": 937141,
+      "category": "slides",
+      "path": "slides/03_results_slides.pdf"
     },
     {
       "name": "ml_task_results.json",
@@ -325,8 +325,8 @@
     },
     {
       "name": "02_methodology_slides.pdf",
-      "size_mb": "0.23",
-      "size_bytes": 236482,
+      "size_mb": "0.17",
+      "size_bytes": 180937,
       "category": "slides",
       "path": "slides/02_methodology_slides.pdf"
     },
@@ -347,15 +347,15 @@
   ],
   "missing_expected_files": [],
   "sizes_by_category": {
-    "pdf": 1.3937339782714844,
+    "pdf": 1.1274328231811523,
     "web": 3.451603889465332,
-    "slides": 1.4216384887695312,
+    "slides": 1.1424846649169922,
     "figures": 1.1177301406860352,
     "data": 2.4817638397216797,
     "reports": 0.038697242736816406,
     "manuscript": 0.1031179428100586,
     "release": 0.0019674301147460938,
-    "root": 1.3937339782714844
+    "root": 1.1274328231811523
   },
   "inventory_mode": "stable-shippable-output-v1",
   "inventory_scope": "stage5-delivery-mirror",

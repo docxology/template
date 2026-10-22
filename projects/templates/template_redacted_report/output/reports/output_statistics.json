@@ -92,8 +92,8 @@
     "figures": {
       "exists": true,
       "file_count": 5,
-      "size_mb": "0.31",
-      "total_size_bytes": 321007,
+      "size_mb": "0.26",
+      "total_size_bytes": 271008,
       "largest_files": [
         {
           "name": "disclosure_control_matrix.svg",
@@ -102,16 +102,16 @@
           "path": "figures/disclosure_control_matrix.svg"
         },
         {
-          "name": "redaction_flow.png",
+          "name": "redaction_flow.svg",
           "size_mb": "0.07",
-          "size_bytes": 78001,
-          "path": "figures/redaction_flow.png"
+          "size_bytes": 71756,
+          "path": "figures/redaction_flow.svg"
         },
         {
-          "name": "disclosure_control_matrix.png",
-          "size_mb": "0.07",
-          "size_bytes": 74442,
-          "path": "figures/disclosure_control_matrix.png"
+          "name": "redaction_flow.png",
+          "size_mb": "0.06",
+          "size_bytes": 65216,
+          "path": "figures/redaction_flow.png"
         }
       ],
       "extensions": {
@@ -234,7 +234,7 @@
     }
   },
   "total_files": 70,
-  "total_size_mb": 4.183527946472168,
+  "total_size_mb": 4.135845184326172,
   "largest_files": [
     {
       "name": "blur_on_blur_steganography.pdf",
@@ -312,7 +312,7 @@
     "pdf": 0.2116565704345703,
     "web": 0.1040487289428711,
     "slides": 0.2571535110473633,
-    "figures": 0.3061361312866211,
+    "figures": 0.258453369140625,
     "data": 0.010425567626953125,
     "reports": 0.008480072021484375,
     "dev": 3.0739707946777344,

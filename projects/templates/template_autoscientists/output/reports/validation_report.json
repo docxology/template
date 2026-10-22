@@ -40,7 +40,7 @@
           "file_count": 4,
           "largest_file": "ablation_efficiency.png",
           "largest_file_path": "figures/ablation_efficiency.png",
-          "size_mb": "0.16"
+          "size_mb": "0.14"
         },
         "llm": {
           "exists": false,
@@ -57,7 +57,7 @@
           "file_count": 1,
           "largest_file": "template_autoscientists_combined.pdf",
           "largest_file_path": "pdf/template_autoscientists_combined.pdf",
-          "size_mb": "0.30"
+          "size_mb": "0.25"
         },
         "release": {
           "exists": true,
@@ -111,7 +111,7 @@
           "combined_pdf": {
             "exists": true,
             "readable": true,
-            "size_mb": 0.3
+            "size_mb": 0.25
           },
           "data": {
             "exists": true,
@@ -141,7 +141,7 @@
             "optional": false,
             "readable": true,
             "required": true,
-            "size_mb": 0.16
+            "size_mb": 0.14
           },
           "llm": {
             "exists": false,
@@ -163,7 +163,7 @@
             "optional": false,
             "readable": true,
             "required": true,
-            "size_mb": 0.3
+            "size_mb": 0.25
           },
           "release": {
             "exists": true,
@@ -211,16 +211,16 @@
         "valid": true,
         "warnings": []
       },
-      "total_size_mb": 3.756829261779785
+      "total_size_mb": 3.6882200241088867
     },
     "figures": {
       "files": 4,
-      "size_mb": 0.15764999389648438
+      "size_mb": 0.14377307891845703
     },
     "inventory_mode": "stable-shippable-output-v1",
     "pdf": {
       "files": 1,
-      "size_mb": 0.3004446029663086
+      "size_mb": 0.2457122802734375
     },
     "stable_inventory": {
       "categories": {
@@ -230,11 +230,11 @@
         },
         "figures": {
           "files": 4,
-          "size_bytes": 165308
+          "size_bytes": 150757
         },
         "pdf": {
           "files": 1,
-          "size_bytes": 315039
+          "size_bytes": 257648
         },
         "release": {
           "files": 2,
@@ -251,7 +251,7 @@
       },
       "mode": "stable-shippable-output-v1",
       "total_files": 26,
-      "total_size_bytes": 3939321
+      "total_size_bytes": 3867379
     }
   },
   "recommendations": [],
@@ -262,11 +262,11 @@
     "passed": 9,
     "total_checks": 9
   },
-  "timestamp": "2026-10-22T03:14:55Z",
+  "timestamp": "2026-10-22T04:07:52Z",
   "validated_inputs": {
     "artifact_manifest": {
       "path": "output/reports/artifact_manifest.json",
-      "sha256": "bc14da34938fbfc587ab724f9356366300982e41dea5da16fc4e47a664206007",
+      "sha256": "5baa00e46fca2e2f5d6486afb578d0013d09c1ef6aebfa09f6a6361c022239fa",
       "size_bytes": 7865
     },
     "combined_manuscript": {
@@ -342,7 +342,7 @@
       },
       "output": {
         "file_count": 26,
-        "sha256": "da7e308f6a6b6ca73515dc53f876826da2bf09325de7459e0fa5b55469b6586e"
+        "sha256": "1835531c67496a4d86b506e9c57774d50e32996ecdc12fb2d9aa666e4644751e"
       },
       "source": {
         "file_count": 40,
@@ -350,7 +350,7 @@
       },
       "stage": {
         "file_count": 1911,
-        "sha256": "28f49d1e39eb7bee0768ca8f0306d136ad029cba071e1db637f46a3f02ff2518"
+        "sha256": "c689caaac67ebed50b5ef42bbea200e5bde3672d30391b30ad32f5589bb7a7b7"
       }
     },
     "project": "templates/template_autoscientists",

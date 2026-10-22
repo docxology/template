@@ -3,13 +3,13 @@
     "pdf": {
       "exists": true,
       "file_count": 1,
-      "size_mb": "2.24",
-      "total_size_bytes": 2350735,
+      "size_mb": "1.84",
+      "total_size_bytes": 1933556,
       "largest_files": [
         {
           "name": "template_template_combined.pdf",
-          "size_mb": "2.24",
-          "size_bytes": 2350735,
+          "size_mb": "1.84",
+          "size_bytes": 1933556,
           "path": "pdf/template_template_combined.pdf"
         }
       ],
@@ -52,26 +52,26 @@
     "slides": {
       "exists": true,
       "file_count": 21,
-      "size_mb": "4.99",
-      "total_size_bytes": 5230694,
+      "size_mb": "4.06",
+      "total_size_bytes": 4257799,
       "largest_files": [
         {
           "name": "04_results_slides.pdf",
-          "size_mb": "4.03",
-          "size_bytes": 4224251,
+          "size_mb": "3.37",
+          "size_bytes": 3537255,
           "path": "slides/04_results_slides.pdf"
         },
         {
           "name": "02_introduction_slides.pdf",
-          "size_mb": "0.10",
-          "size_bytes": 103067,
+          "size_mb": "0.07",
+          "size_bytes": 69518,
           "path": "slides/02_introduction_slides.pdf"
         },
         {
-          "name": "06_infrastructure_modules_slides.pdf",
-          "size_mb": "0.09",
-          "size_bytes": 98494,
-          "path": "slides/06_infrastructure_modules_slides.pdf"
+          "name": "07_security_provenance_slides.pdf",
+          "size_mb": "0.06",
+          "size_bytes": 64934,
+          "path": "slides/07_security_provenance_slides.pdf"
         }
       ],
       "extensions": {
@@ -286,13 +286,13 @@
     "root": {
       "exists": true,
       "file_count": 1,
-      "size_mb": "2.24",
-      "total_size_bytes": 2350735,
+      "size_mb": "1.84",
+      "total_size_bytes": 1933556,
       "largest_files": [
         {
           "name": "template_template_combined.pdf",
-          "size_mb": "2.24",
-          "size_bytes": 2350735,
+          "size_mb": "1.84",
+          "size_bytes": 1933556,
           "path": "template_template_combined.pdf"
         }
       ],
@@ -302,12 +302,12 @@
     }
   },
   "total_files": 165,
-  "total_size_mb": 20.578701972961426,
+  "total_size_mb": 18.85517120361328,
   "largest_files": [
     {
       "name": "04_results_slides.pdf",
-      "size_mb": "4.03",
-      "size_bytes": 4224251,
+      "size_mb": "3.37",
+      "size_bytes": 3537255,
       "category": "slides",
       "path": "slides/04_results_slides.pdf"
     },
@@ -320,15 +320,15 @@
     },
     {
       "name": "template_template_combined.pdf",
-      "size_mb": "2.24",
-      "size_bytes": 2350735,
+      "size_mb": "1.84",
+      "size_bytes": 1933556,
       "category": "pdf",
       "path": "pdf/template_template_combined.pdf"
     },
     {
       "name": "template_template_combined.pdf",
-      "size_mb": "2.24",
-      "size_bytes": 2350735,
+      "size_mb": "1.84",
+      "size_bytes": 1933556,
       "category": "root",
       "path": "template_template_combined.pdf"
     },
@@ -377,16 +377,16 @@
   ],
   "missing_expected_files": [],
   "sizes_by_category": {
-    "pdf": 2.241835594177246,
+    "pdf": 1.8439826965332031,
     "web": 3.798490524291992,
-    "slides": 4.988378524780273,
+    "slides": 4.060553550720215,
     "figures": 5.787878036499023,
     "data": 0.017404556274414062,
     "reports": 0.008854866027832031,
     "manuscript": 0.14690685272216797,
     "release": 0.0019121170043945312,
     "release_bundle": 1.345205307006836,
-    "root": 2.241835594177246
+    "root": 1.8439826965332031
   },
   "inventory_mode": "stable-shippable-output-v1",
   "inventory_scope": "stage5-delivery-mirror",

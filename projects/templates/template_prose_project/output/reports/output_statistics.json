@@ -3,13 +3,13 @@
     "pdf": {
       "exists": true,
       "file_count": 1,
-      "size_mb": "0.29",
-      "total_size_bytes": 306411,
+      "size_mb": "0.22",
+      "total_size_bytes": 230756,
       "largest_files": [
         {
           "name": "template_prose_project_combined.pdf",
-          "size_mb": "0.29",
-          "size_bytes": 306411,
+          "size_mb": "0.22",
+          "size_bytes": 230756,
           "path": "pdf/template_prose_project_combined.pdf"
         }
       ],
@@ -52,25 +52,25 @@
     "slides": {
       "exists": true,
       "file_count": 8,
-      "size_mb": "0.29",
-      "total_size_bytes": 303016,
+      "size_mb": "0.21",
+      "total_size_bytes": 221527,
       "largest_files": [
         {
           "name": "02_methodology_slides.pdf",
-          "size_mb": "0.06",
-          "size_bytes": 62555,
+          "size_mb": "0.04",
+          "size_bytes": 44113,
           "path": "slides/02_methodology_slides.pdf"
         },
         {
           "name": "06_reproducibility_slides.pdf",
-          "size_mb": "0.05",
-          "size_bytes": 47642,
+          "size_mb": "0.03",
+          "size_bytes": 35583,
           "path": "slides/06_reproducibility_slides.pdf"
         },
         {
           "name": "03_results_slides.pdf",
-          "size_mb": "0.04",
-          "size_bytes": 42234,
+          "size_mb": "0.03",
+          "size_bytes": 31456,
           "path": "slides/03_results_slides.pdf"
         }
       ],
@@ -93,26 +93,26 @@
     "figures": {
       "exists": true,
       "file_count": 10,
-      "size_mb": "0.50",
-      "total_size_bytes": 527243,
+      "size_mb": "0.43",
+      "total_size_bytes": 454314,
       "largest_files": [
         {
           "name": "readability_metrics.png",
-          "size_mb": "0.15",
-          "size_bytes": 156450,
+          "size_mb": "0.14",
+          "size_bytes": 149500,
           "path": "figures/readability_metrics.png"
         },
         {
-          "name": "inline_mermaid_0002_e1277c0f292c.png",
-          "size_mb": "0.10",
-          "size_bytes": 109638,
-          "path": "figures/mermaid_inline/inline_mermaid_0002_e1277c0f292c.png"
+          "name": "section_word_counts.png",
+          "size_mb": "0.09",
+          "size_bytes": 91209,
+          "path": "figures/section_word_counts.png"
         },
         {
-          "name": "section_word_counts.png",
-          "size_mb": "0.10",
-          "size_bytes": 100837,
-          "path": "figures/section_word_counts.png"
+          "name": "citation_density.png",
+          "size_mb": "0.08",
+          "size_bytes": 88390,
+          "path": "figures/citation_density.png"
         }
       ],
       "extensions": {
@@ -256,13 +256,13 @@
     "root": {
       "exists": true,
       "file_count": 7,
-      "size_mb": "0.33",
-      "total_size_bytes": 342009,
+      "size_mb": "0.25",
+      "total_size_bytes": 266354,
       "largest_files": [
         {
           "name": "template_prose_project_combined.pdf",
-          "size_mb": "0.29",
-          "size_bytes": 306411,
+          "size_mb": "0.22",
+          "size_bytes": 230756,
           "path": "template_prose_project_combined.pdf"
         },
         {
@@ -286,7 +286,7 @@
     }
   },
   "total_files": 59,
-  "total_size_mb": 4.6922149658203125,
+  "total_size_mb": 4.4006500244140625,
   "largest_files": [
     {
       "name": "source-web-fonts.js",
@@ -297,45 +297,45 @@
     },
     {
       "name": "template_prose_project_combined.pdf",
-      "size_mb": "0.29",
-      "size_bytes": 306411,
+      "size_mb": "0.22",
+      "size_bytes": 230756,
       "category": "pdf",
       "path": "pdf/template_prose_project_combined.pdf"
     },
     {
       "name": "template_prose_project_combined.pdf",
-      "size_mb": "0.29",
-      "size_bytes": 306411,
+      "size_mb": "0.22",
+      "size_bytes": 230756,
       "category": "root",
       "path": "template_prose_project_combined.pdf"
     },
     {
       "name": "readability_metrics.png",
-      "size_mb": "0.15",
-      "size_bytes": 156450,
+      "size_mb": "0.14",
+      "size_bytes": 149500,
       "category": "figures",
       "path": "figures/readability_metrics.png"
     },
     {
-      "name": "inline_mermaid_0002_e1277c0f292c.png",
-      "size_mb": "0.10",
-      "size_bytes": 109638,
-      "category": "figures",
-      "path": "figures/mermaid_inline/inline_mermaid_0002_e1277c0f292c.png"
-    },
-    {
       "name": "section_word_counts.png",
-      "size_mb": "0.10",
-      "size_bytes": 100837,
+      "size_mb": "0.09",
+      "size_bytes": 91209,
       "category": "figures",
       "path": "figures/section_word_counts.png"
     },
     {
       "name": "citation_density.png",
-      "size_mb": "0.09",
-      "size_bytes": 99223,
+      "size_mb": "0.08",
+      "size_bytes": 88390,
       "category": "figures",
       "path": "figures/citation_density.png"
+    },
+    {
+      "name": "inline_mermaid_0002_e1277c0f292c.png",
+      "size_mb": "0.08",
+      "size_bytes": 80729,
+      "category": "figures",
+      "path": "figures/mermaid_inline/inline_mermaid_0002_e1277c0f292c.png"
     },
     {
       "name": "index.html",
@@ -346,30 +346,30 @@
     },
     {
       "name": "02_methodology_slides.pdf",
-      "size_mb": "0.06",
-      "size_bytes": 62555,
+      "size_mb": "0.04",
+      "size_bytes": 44113,
       "category": "slides",
       "path": "slides/02_methodology_slides.pdf"
     },
     {
       "name": "06_reproducibility_slides.pdf",
-      "size_mb": "0.05",
-      "size_bytes": 47642,
+      "size_mb": "0.03",
+      "size_bytes": 35583,
       "category": "slides",
       "path": "slides/06_reproducibility_slides.pdf"
     }
   ],
   "missing_expected_files": [],
   "sizes_by_category": {
-    "pdf": 0.29221630096435547,
+    "pdf": 0.22006607055664062,
     "web": 3.2430648803710938,
-    "slides": 0.28897857666015625,
-    "figures": 0.5028181076049805,
+    "slides": 0.21126461029052734,
+    "figures": 0.43326759338378906,
     "data": 0.0016126632690429688,
     "reports": 0.00540924072265625,
     "manuscript": 0.030029296875,
     "release": 0.0019207000732421875,
-    "root": 0.32616519927978516
+    "root": 0.2540149688720703
   },
   "inventory_mode": "stable-shippable-output-v1",
   "inventory_scope": "stage5-delivery-mirror",

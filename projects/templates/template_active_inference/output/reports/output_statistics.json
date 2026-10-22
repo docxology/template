@@ -3,13 +3,13 @@
     "pdf": {
       "exists": true,
       "file_count": 1,
-      "size_mb": "4.03",
-      "total_size_bytes": 4228904,
+      "size_mb": "3.35",
+      "total_size_bytes": 3515475,
       "largest_files": [
         {
           "name": "template_active_inference_combined.pdf",
-          "size_mb": "4.03",
-          "size_bytes": 4228904,
+          "size_mb": "3.35",
+          "size_bytes": 3515475,
           "path": "pdf/template_active_inference_combined.pdf"
         }
       ],
@@ -242,13 +242,13 @@
     "root": {
       "exists": true,
       "file_count": 1,
-      "size_mb": "4.03",
-      "total_size_bytes": 4228904,
+      "size_mb": "3.35",
+      "total_size_bytes": 3515475,
       "largest_files": [
         {
           "name": "template_active_inference_combined.pdf",
-          "size_mb": "4.03",
-          "size_bytes": 4228904,
+          "size_mb": "3.35",
+          "size_bytes": 3515475,
           "path": "template_active_inference_combined.pdf"
         }
       ],
@@ -258,19 +258,19 @@
     }
   },
   "total_files": 178,
-  "total_size_mb": 22.92328929901123,
+  "total_size_mb": 21.56253147125244,
   "largest_files": [
     {
       "name": "template_active_inference_combined.pdf",
-      "size_mb": "4.03",
-      "size_bytes": 4228904,
+      "size_mb": "3.35",
+      "size_bytes": 3515475,
       "category": "pdf",
       "path": "pdf/template_active_inference_combined.pdf"
     },
     {
       "name": "template_active_inference_combined.pdf",
-      "size_mb": "4.03",
-      "size_bytes": 4228904,
+      "size_mb": "3.35",
+      "size_bytes": 3515475,
       "category": "root",
       "path": "template_active_inference_combined.pdf"
     },
@@ -333,14 +333,14 @@
   ],
   "missing_expected_files": [],
   "sizes_by_category": {
-    "pdf": 4.032997131347656,
+    "pdf": 3.3526182174682617,
     "web": 3.7743520736694336,
     "figures": 3.788227081298828,
     "data": 2.817331314086914,
     "reports": 0.41170310974121094,
     "arxiv_submission": 3.9248781204223633,
     "manuscript": 0.14080333709716797,
-    "root": 4.032997131347656
+    "root": 3.3526182174682617
   },
   "inventory_mode": "stable-shippable-output-v1",
   "inventory_scope": "stage5-delivery-mirror",

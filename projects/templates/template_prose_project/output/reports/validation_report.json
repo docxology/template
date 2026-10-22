@@ -40,7 +40,7 @@
           "file_count": 10,
           "largest_file": "readability_metrics.png",
           "largest_file_path": "figures/readability_metrics.png",
-          "size_mb": "0.50"
+          "size_mb": "0.43"
         },
         "llm": {
           "exists": false,
@@ -64,7 +64,7 @@
           "file_count": 1,
           "largest_file": "template_prose_project_combined.pdf",
           "largest_file_path": "pdf/template_prose_project_combined.pdf",
-          "size_mb": "0.29"
+          "size_mb": "0.22"
         },
         "release": {
           "exists": true,
@@ -97,7 +97,7 @@
           "file_count": 8,
           "largest_file": "02_methodology_slides.pdf",
           "largest_file_path": "slides/02_methodology_slides.pdf",
-          "size_mb": "0.29"
+          "size_mb": "0.21"
         },
         "web": {
           "exists": true,
@@ -130,7 +130,7 @@
           "combined_pdf": {
             "exists": true,
             "readable": true,
-            "size_mb": 0.29
+            "size_mb": 0.22
           },
           "data": {
             "exists": true,
@@ -160,7 +160,7 @@
             "optional": false,
             "readable": true,
             "required": true,
-            "size_mb": 0.5
+            "size_mb": 0.43
           },
           "llm": {
             "exists": false,
@@ -190,7 +190,7 @@
             "optional": false,
             "readable": true,
             "required": true,
-            "size_mb": 0.29
+            "size_mb": 0.22
           },
           "release": {
             "exists": true,
@@ -229,7 +229,7 @@
             "optional": false,
             "readable": true,
             "required": true,
-            "size_mb": 0.29
+            "size_mb": 0.21
           },
           "web": {
             "exists": true,
@@ -247,16 +247,16 @@
         "valid": true,
         "warnings": []
       },
-      "total_size_mb": 4.399998664855957
+      "total_size_mb": 4.180583953857422
     },
     "figures": {
       "files": 10,
-      "size_mb": 0.5028181076049805
+      "size_mb": 0.43326759338378906
     },
     "inventory_mode": "stable-shippable-output-v1",
     "pdf": {
       "files": 1,
-      "size_mb": 0.29221630096435547
+      "size_mb": 0.22006607055664062
     },
     "stable_inventory": {
       "categories": {
@@ -266,7 +266,7 @@
         },
         "figures": {
           "files": 10,
-          "size_bytes": 527243
+          "size_bytes": 454314
         },
         "manuscript": {
           "files": 13,
@@ -274,7 +274,7 @@
         },
         "pdf": {
           "files": 1,
-          "size_bytes": 306411
+          "size_bytes": 230756
         },
         "release": {
           "files": 2,
@@ -290,7 +290,7 @@
         },
         "slides": {
           "files": 8,
-          "size_bytes": 303016
+          "size_bytes": 221527
         },
         "web": {
           "files": 12,
@@ -299,7 +299,7 @@
       },
       "mode": "stable-shippable-output-v1",
       "total_files": 58,
-      "total_size_bytes": 4613733
+      "total_size_bytes": 4383660
     }
   },
   "recommendations": [],
@@ -310,12 +310,12 @@
     "passed": 9,
     "total_checks": 9
   },
-  "timestamp": "2026-10-22T03:14:55Z",
+  "timestamp": "2026-10-22T04:07:52Z",
   "validated_inputs": {
     "artifact_manifest": {
       "path": "output/reports/artifact_manifest.json",
-      "sha256": "d85ec657c5bd9055fa40e095cce61e7c65d8459de5de6b6110ea535599049d69",
-      "size_bytes": 17533
+      "sha256": "f7346dd70806bb274425c0bc01535d5db5d0a4619672433bfa1d5047bd5f4865",
+      "size_bytes": 17529
     },
     "combined_manuscript": {
       "path": "output/web/_combined_manuscript.md",
@@ -396,7 +396,7 @@
       },
       "output": {
         "file_count": 58,
-        "sha256": "b76d62d09168cad5f015a240a2c3450c172882ee95c4ae87014cfe2e2f300de9"
+        "sha256": "ca4e26ad1682955fa9a2cdcbe69e10732372ae96df26b8b6a8684bfbb70882ec"
       },
       "source": {
         "file_count": 33,
@@ -404,7 +404,7 @@
       },
       "stage": {
         "file_count": 1911,
-        "sha256": "28f49d1e39eb7bee0768ca8f0306d136ad029cba071e1db637f46a3f02ff2518"
+        "sha256": "c689caaac67ebed50b5ef42bbea200e5bde3672d30391b30ad32f5589bb7a7b7"
       }
     },
     "project": "templates/template_prose_project",

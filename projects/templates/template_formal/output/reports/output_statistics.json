@@ -3,13 +3,13 @@
     "pdf": {
       "exists": true,
       "file_count": 1,
-      "size_mb": "0.59",
-      "total_size_bytes": 615603,
+      "size_mb": "0.47",
+      "total_size_bytes": 492007,
       "largest_files": [
         {
           "name": "template_formal_combined.pdf",
-          "size_mb": "0.59",
-          "size_bytes": 615603,
+          "size_mb": "0.47",
+          "size_bytes": 492007,
           "path": "pdf/template_formal_combined.pdf"
         }
       ],
@@ -52,25 +52,25 @@
     "slides": {
       "exists": true,
       "file_count": 7,
-      "size_mb": "0.63",
-      "total_size_bytes": 663271,
+      "size_mb": "0.46",
+      "total_size_bytes": 480428,
       "largest_files": [
         {
           "name": "05_results_discussion_slides.pdf",
-          "size_mb": "0.35",
-          "size_bytes": 366949,
+          "size_mb": "0.25",
+          "size_bytes": 261052,
           "path": "slides/05_results_discussion_slides.pdf"
         },
         {
           "name": "02_type_architecture_slides.pdf",
-          "size_mb": "0.09",
-          "size_bytes": 95611,
+          "size_mb": "0.07",
+          "size_bytes": 72195,
           "path": "slides/02_type_architecture_slides.pdf"
         },
         {
           "name": "04_active_inference_slides.pdf",
-          "size_mb": "0.05",
-          "size_bytes": 55441,
+          "size_mb": "0.04",
+          "size_bytes": 40193,
           "path": "slides/04_active_inference_slides.pdf"
         }
       ],
@@ -93,26 +93,26 @@
     "figures": {
       "exists": true,
       "file_count": 8,
-      "size_mb": "0.16",
-      "total_size_bytes": 170677,
+      "size_mb": "0.13",
+      "total_size_bytes": 139423,
       "largest_files": [
         {
           "name": "inline_mermaid_0001_e0b519d89719.png",
           "size_mb": "0.04",
-          "size_bytes": 46551,
+          "size_bytes": 36780,
           "path": "figures/mermaid_inline/inline_mermaid_0001_e0b519d89719.png"
         },
         {
-          "name": "colony_demo_convergence.png",
-          "size_mb": "0.04",
-          "size_bytes": 42609,
-          "path": "figures/colony_demo_convergence.png"
+          "name": "inline_mermaid_0002_ad6d15db8898.png",
+          "size_mb": "0.03",
+          "size_bytes": 34475,
+          "path": "figures/mermaid_inline/inline_mermaid_0002_ad6d15db8898.png"
         },
         {
-          "name": "inline_mermaid_0002_ad6d15db8898.png",
-          "size_mb": "0.04",
-          "size_bytes": 41748,
-          "path": "figures/mermaid_inline/inline_mermaid_0002_ad6d15db8898.png"
+          "name": "colony_demo_convergence.png",
+          "size_mb": "0.03",
+          "size_bytes": 33673,
+          "path": "figures/colony_demo_convergence.png"
         }
       ],
       "extensions": {
@@ -195,13 +195,13 @@
     "root": {
       "exists": true,
       "file_count": 1,
-      "size_mb": "0.59",
-      "total_size_bytes": 615603,
+      "size_mb": "0.47",
+      "total_size_bytes": 492007,
       "largest_files": [
         {
           "name": "template_formal_combined.pdf",
-          "size_mb": "0.59",
-          "size_bytes": 615603,
+          "size_mb": "0.47",
+          "size_bytes": 492007,
           "path": "template_formal_combined.pdf"
         }
       ],
@@ -211,7 +211,7 @@
     }
   },
   "total_files": 33,
-  "total_size_mb": 5.466610908508301,
+  "total_size_mb": 5.026691436767578,
   "largest_files": [
     {
       "name": "source-web-fonts.js",
@@ -222,22 +222,22 @@
     },
     {
       "name": "template_formal_combined.pdf",
-      "size_mb": "0.59",
-      "size_bytes": 615603,
+      "size_mb": "0.47",
+      "size_bytes": 492007,
       "category": "pdf",
       "path": "pdf/template_formal_combined.pdf"
     },
     {
       "name": "template_formal_combined.pdf",
-      "size_mb": "0.59",
-      "size_bytes": 615603,
+      "size_mb": "0.47",
+      "size_bytes": 492007,
       "category": "root",
       "path": "template_formal_combined.pdf"
     },
     {
       "name": "05_results_discussion_slides.pdf",
-      "size_mb": "0.35",
-      "size_bytes": 366949,
+      "size_mb": "0.25",
+      "size_bytes": 261052,
       "category": "slides",
       "path": "slides/05_results_discussion_slides.pdf"
     },
@@ -256,13 +256,6 @@
       "path": "web/_combined_manuscript.md"
     },
     {
-      "name": "02_type_architecture_slides.pdf",
-      "size_mb": "0.09",
-      "size_bytes": 95611,
-      "category": "slides",
-      "path": "slides/02_type_architecture_slides.pdf"
-    },
-    {
       "name": "manuscript__05_results_discussion.html",
       "size_mb": "0.09",
       "size_bytes": 95409,
@@ -270,29 +263,36 @@
       "path": "web/manuscript__05_results_discussion.html"
     },
     {
+      "name": "02_type_architecture_slides.pdf",
+      "size_mb": "0.07",
+      "size_bytes": 72195,
+      "category": "slides",
+      "path": "slides/02_type_architecture_slides.pdf"
+    },
+    {
       "name": "04_active_inference_slides.pdf",
-      "size_mb": "0.05",
-      "size_bytes": 55441,
+      "size_mb": "0.04",
+      "size_bytes": 40193,
       "category": "slides",
       "path": "slides/04_active_inference_slides.pdf"
     },
     {
-      "name": "01_introduction_slides.pdf",
-      "size_mb": "0.05",
-      "size_bytes": 51061,
-      "category": "slides",
-      "path": "slides/01_introduction_slides.pdf"
+      "name": "manuscript__02_type_architecture.html",
+      "size_mb": "0.04",
+      "size_bytes": 38857,
+      "category": "web",
+      "path": "web/manuscript__02_type_architecture.html"
     }
   ],
   "missing_expected_files": [],
   "sizes_by_category": {
-    "pdf": 0.5870847702026367,
+    "pdf": 0.46921443939208984,
     "web": 3.4925537109375,
-    "slides": 0.6325445175170898,
-    "figures": 0.16277027130126953,
+    "slides": 0.4581718444824219,
+    "figures": 0.1329641342163086,
     "data": 0.0018892288208007812,
     "reports": 0.0026836395263671875,
-    "root": 0.5870847702026367
+    "root": 0.46921443939208984
   },
   "inventory_mode": "stable-shippable-output-v1",
   "inventory_scope": "stage5-delivery-mirror",

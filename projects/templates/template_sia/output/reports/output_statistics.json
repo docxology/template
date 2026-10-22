@@ -3,13 +3,13 @@
     "pdf": {
       "exists": true,
       "file_count": 1,
-      "size_mb": "0.19",
-      "total_size_bytes": 196171,
+      "size_mb": "0.16",
+      "total_size_bytes": 167273,
       "largest_files": [
         {
           "name": "template_sia_combined.pdf",
-          "size_mb": "0.19",
-          "size_bytes": 196171,
+          "size_mb": "0.16",
+          "size_bytes": 167273,
           "path": "pdf/template_sia_combined.pdf"
         }
       ],
@@ -69,25 +69,25 @@
     "figures": {
       "exists": true,
       "file_count": 5,
-      "size_mb": "0.15",
-      "total_size_bytes": 152177,
+      "size_mb": "0.11",
+      "total_size_bytes": 118697,
       "largest_files": [
         {
           "name": "sia_metric_progression.png",
-          "size_mb": "0.04",
-          "size_bytes": 44130,
+          "size_mb": "0.03",
+          "size_bytes": 33355,
           "path": "figures/sia_metric_progression.png"
         },
         {
           "name": "sia_loop_topology.png",
-          "size_mb": "0.04",
-          "size_bytes": 42241,
+          "size_mb": "0.03",
+          "size_bytes": 32317,
           "path": "figures/sia_loop_topology.png"
         },
         {
           "name": "sia_improvement_delta.png",
-          "size_mb": "0.04",
-          "size_bytes": 38025,
+          "size_mb": "0.03",
+          "size_bytes": 29189,
           "path": "figures/sia_improvement_delta.png"
         }
       ],
@@ -225,13 +225,13 @@
     "root": {
       "exists": true,
       "file_count": 1,
-      "size_mb": "0.19",
-      "total_size_bytes": 196171,
+      "size_mb": "0.16",
+      "total_size_bytes": 167273,
       "largest_files": [
         {
           "name": "template_sia_combined.pdf",
-          "size_mb": "0.19",
-          "size_bytes": 196171,
+          "size_mb": "0.16",
+          "size_bytes": 167273,
           "path": "template_sia_combined.pdf"
         }
       ],
@@ -272,40 +272,40 @@
     }
   },
   "total_files": 46,
-  "total_size_mb": 0.6517715454101562,
+  "total_size_mb": 0.5647239685058594,
   "largest_files": [
     {
       "name": "template_sia_combined.pdf",
-      "size_mb": "0.19",
-      "size_bytes": 196171,
+      "size_mb": "0.16",
+      "size_bytes": 167273,
       "category": "pdf",
       "path": "pdf/template_sia_combined.pdf"
     },
     {
       "name": "template_sia_combined.pdf",
-      "size_mb": "0.19",
-      "size_bytes": 196171,
+      "size_mb": "0.16",
+      "size_bytes": 167273,
       "category": "root",
       "path": "template_sia_combined.pdf"
     },
     {
       "name": "sia_metric_progression.png",
-      "size_mb": "0.04",
-      "size_bytes": 44130,
+      "size_mb": "0.03",
+      "size_bytes": 33355,
       "category": "figures",
       "path": "figures/sia_metric_progression.png"
     },
     {
       "name": "sia_loop_topology.png",
-      "size_mb": "0.04",
-      "size_bytes": 42241,
+      "size_mb": "0.03",
+      "size_bytes": 32317,
       "category": "figures",
       "path": "figures/sia_loop_topology.png"
     },
     {
       "name": "sia_improvement_delta.png",
-      "size_mb": "0.04",
-      "size_bytes": 38025,
+      "size_mb": "0.03",
+      "size_bytes": 29189,
       "category": "figures",
       "path": "figures/sia_improvement_delta.png"
     },
@@ -319,7 +319,7 @@
     {
       "name": "sia_generation_heatmap.png",
       "size_mb": "0.02",
-      "size_bytes": 25891,
+      "size_bytes": 21946,
       "category": "figures",
       "path": "figures/sia_generation_heatmap.png"
     },
@@ -347,14 +347,14 @@
   ],
   "missing_expected_files": [],
   "sizes_by_category": {
-    "pdf": 0.18708324432373047,
+    "pdf": 0.15952396392822266,
     "web": 0.1063528060913086,
-    "figures": 0.1451272964477539,
+    "figures": 0.11319828033447266,
     "data": 0.001712799072265625,
     "reports": 0.007205009460449219,
     "manuscript": 0.007358551025390625,
     "release": 0.00185394287109375,
-    "root": 0.18708324432373047,
+    "root": 0.15952396392822266,
     "runs": 0.007994651794433594
   },
   "inventory_mode": "stable-shippable-output-v1",

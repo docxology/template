@@ -3,13 +3,13 @@
     "pdf": {
       "exists": true,
       "file_count": 1,
-      "size_mb": "0.45",
-      "total_size_bytes": 469702,
+      "size_mb": "0.43",
+      "total_size_bytes": 447860,
       "largest_files": [
         {
           "name": "template_search_project_combined.pdf",
-          "size_mb": "0.45",
-          "size_bytes": 469702,
+          "size_mb": "0.43",
+          "size_bytes": 447860,
           "path": "pdf/template_search_project_combined.pdf"
         }
       ],
@@ -51,13 +51,13 @@
     "slides": {
       "exists": true,
       "file_count": 10,
-      "size_mb": "0.63",
-      "total_size_bytes": 658676,
+      "size_mb": "0.60",
+      "total_size_bytes": 633810,
       "largest_files": [
         {
           "name": "02_methodology_slides.pdf",
-          "size_mb": "0.24",
-          "size_bytes": 248828,
+          "size_mb": "0.21",
+          "size_bytes": 223962,
           "path": "slides/02_methodology_slides.pdf"
         },
         {
@@ -92,25 +92,25 @@
     "figures": {
       "exists": true,
       "file_count": 13,
-      "size_mb": "0.53",
-      "total_size_bytes": 552648,
+      "size_mb": "0.43",
+      "total_size_bytes": 455590,
       "largest_files": [
         {
           "name": "inline_mermaid_0001_d3ead0e9d850.png",
-          "size_mb": "0.19",
-          "size_bytes": 195402,
+          "size_mb": "0.14",
+          "size_bytes": 148536,
           "path": "figures/mermaid_inline/inline_mermaid_0001_d3ead0e9d850.png"
         },
         {
           "name": "score_distribution.png",
           "size_mb": "0.08",
-          "size_bytes": 87534,
+          "size_bytes": 78878,
           "path": "figures/score_distribution.png"
         },
         {
           "name": "inline_mermaid_0003_80a863d1871e.png",
-          "size_mb": "0.08",
-          "size_bytes": 85655,
+          "size_mb": "0.06",
+          "size_bytes": 66400,
           "path": "figures/mermaid_inline/inline_mermaid_0003_80a863d1871e.png"
         }
       ],
@@ -195,13 +195,13 @@
     "deep_search": {
       "exists": true,
       "file_count": 310,
-      "size_mb": "4.50",
-      "total_size_bytes": 4723242,
+      "size_mb": "3.69",
+      "total_size_bytes": 3866548,
       "largest_files": [
         {
           "name": "aggregate.json",
-          "size_mb": "2.15",
-          "size_bytes": 2259238,
+          "size_mb": "1.34",
+          "size_bytes": 1402544,
           "path": "deep_search/aggregate.json"
         },
         {
@@ -286,13 +286,13 @@
     "root": {
       "exists": true,
       "file_count": 5,
-      "size_mb": "0.46",
-      "total_size_bytes": 479065,
+      "size_mb": "0.44",
+      "total_size_bytes": 457223,
       "largest_files": [
         {
           "name": "template_search_project_combined.pdf",
-          "size_mb": "0.45",
-          "size_bytes": 469702,
+          "size_mb": "0.43",
+          "size_bytes": 447860,
           "path": "template_search_project_combined.pdf"
         },
         {
@@ -339,12 +339,12 @@
     }
   },
   "total_files": 386,
-  "total_size_mb": 7.528621673583984,
+  "total_size_mb": 6.553678512573242,
   "largest_files": [
     {
       "name": "aggregate.json",
-      "size_mb": "2.15",
-      "size_bytes": 2259238,
+      "size_mb": "1.34",
+      "size_bytes": 1402544,
       "category": "deep_search",
       "path": "deep_search/aggregate.json"
     },
@@ -363,25 +363,25 @@
       "path": "deep_search/stochastic_gradient_descent/papers.json"
     },
     {
-      "name": "template_search_project_combined.pdf",
-      "size_mb": "0.45",
-      "size_bytes": 469702,
-      "category": "pdf",
-      "path": "pdf/template_search_project_combined.pdf"
-    },
-    {
-      "name": "template_search_project_combined.pdf",
-      "size_mb": "0.45",
-      "size_bytes": 469702,
-      "category": "root",
-      "path": "template_search_project_combined.pdf"
-    },
-    {
       "name": "papers.json",
       "size_mb": "0.44",
       "size_bytes": 460165,
       "category": "deep_search",
       "path": "deep_search/reproducible_research/papers.json"
+    },
+    {
+      "name": "template_search_project_combined.pdf",
+      "size_mb": "0.43",
+      "size_bytes": 447860,
+      "category": "pdf",
+      "path": "pdf/template_search_project_combined.pdf"
+    },
+    {
+      "name": "template_search_project_combined.pdf",
+      "size_mb": "0.43",
+      "size_bytes": 447860,
+      "category": "root",
+      "path": "template_search_project_combined.pdf"
     },
     {
       "name": "index.html",
@@ -392,15 +392,15 @@
     },
     {
       "name": "02_methodology_slides.pdf",
-      "size_mb": "0.24",
-      "size_bytes": 248828,
+      "size_mb": "0.21",
+      "size_bytes": 223962,
       "category": "slides",
       "path": "slides/02_methodology_slides.pdf"
     },
     {
       "name": "inline_mermaid_0001_d3ead0e9d850.png",
-      "size_mb": "0.19",
-      "size_bytes": 195402,
+      "size_mb": "0.14",
+      "size_bytes": 148536,
       "category": "figures",
       "path": "figures/mermaid_inline/inline_mermaid_0001_d3ead0e9d850.png"
     },
@@ -414,16 +414,16 @@
   ],
   "missing_expected_files": [],
   "sizes_by_category": {
-    "pdf": 0.44794273376464844,
+    "pdf": 0.4271125793457031,
     "web": 0.6637229919433594,
-    "slides": 0.6281623840332031,
-    "figures": 0.5270462036132812,
+    "slides": 0.6044483184814453,
+    "figures": 0.43448448181152344,
     "data": 0.010273933410644531,
     "reports": 0.010028839111328125,
-    "deep_search": 4.504434585571289,
+    "deep_search": 3.687427520751953,
     "manuscript": 0.2386760711669922,
     "review": 0.030203819274902344,
-    "root": 0.45687198638916016,
+    "root": 0.43604183197021484,
     "search": 0.011258125305175781
   },
   "inventory_mode": "stable-shippable-output-v1",

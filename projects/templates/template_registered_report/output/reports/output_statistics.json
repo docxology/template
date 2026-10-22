@@ -3,13 +3,13 @@
     "pdf": {
       "exists": true,
       "file_count": 1,
-      "size_mb": "0.30",
-      "total_size_bytes": 309360,
+      "size_mb": "0.23",
+      "total_size_bytes": 242719,
       "largest_files": [
         {
           "name": "template_registered_report_combined.pdf",
-          "size_mb": "0.30",
-          "size_bytes": 309360,
+          "size_mb": "0.23",
+          "size_bytes": 242719,
           "path": "pdf/template_registered_report_combined.pdf"
         }
       ],
@@ -52,25 +52,25 @@
     "slides": {
       "exists": true,
       "file_count": 8,
-      "size_mb": "0.45",
-      "total_size_bytes": 476451,
+      "size_mb": "0.35",
+      "total_size_bytes": 362311,
       "largest_files": [
         {
           "name": "04_results_slides.pdf",
-          "size_mb": "0.10",
-          "size_bytes": 106647,
+          "size_mb": "0.08",
+          "size_bytes": 83526,
           "path": "slides/04_results_slides.pdf"
         },
         {
           "name": "03_methods_slides.pdf",
-          "size_mb": "0.10",
-          "size_bytes": 101325,
+          "size_mb": "0.08",
+          "size_bytes": 79252,
           "path": "slides/03_methods_slides.pdf"
         },
         {
           "name": "02_hypotheses_slides.pdf",
-          "size_mb": "0.09",
-          "size_bytes": 92973,
+          "size_mb": "0.07",
+          "size_bytes": 71447,
           "path": "slides/02_hypotheses_slides.pdf"
         }
       ],
@@ -93,25 +93,25 @@
     "figures": {
       "exists": true,
       "file_count": 5,
-      "size_mb": "0.20",
-      "total_size_bytes": 205876,
+      "size_mb": "0.16",
+      "total_size_bytes": 167970,
       "largest_files": [
         {
           "name": "permutation_result.png",
-          "size_mb": "0.06",
-          "size_bytes": 64290,
+          "size_mb": "0.05",
+          "size_bytes": 52400,
           "path": "figures/permutation_result.png"
         },
         {
           "name": "analysis_dag.png",
-          "size_mb": "0.05",
-          "size_bytes": 52493,
+          "size_mb": "0.04",
+          "size_bytes": 43979,
           "path": "figures/analysis_dag.png"
         },
         {
           "name": "hypothesis_map.png",
           "size_mb": "0.04",
-          "size_bytes": 45722,
+          "size_bytes": 37543,
           "path": "figures/hypothesis_map.png"
         }
       ],
@@ -188,13 +188,13 @@
     "root": {
       "exists": true,
       "file_count": 1,
-      "size_mb": "0.30",
-      "total_size_bytes": 309360,
+      "size_mb": "0.23",
+      "total_size_bytes": 242719,
       "largest_files": [
         {
           "name": "template_registered_report_combined.pdf",
-          "size_mb": "0.30",
-          "size_bytes": 309360,
+          "size_mb": "0.23",
+          "size_bytes": 242719,
           "path": "template_registered_report_combined.pdf"
         }
       ],
@@ -204,7 +204,7 @@
     }
   },
   "total_files": 36,
-  "total_size_mb": 4.453427314758301,
+  "total_size_mb": 4.181317329406738,
   "largest_files": [
     {
       "name": "source-web-fonts.js",
@@ -215,59 +215,52 @@
     },
     {
       "name": "template_registered_report_combined.pdf",
-      "size_mb": "0.30",
-      "size_bytes": 309360,
+      "size_mb": "0.23",
+      "size_bytes": 242719,
       "category": "pdf",
       "path": "pdf/template_registered_report_combined.pdf"
     },
     {
       "name": "template_registered_report_combined.pdf",
-      "size_mb": "0.30",
-      "size_bytes": 309360,
+      "size_mb": "0.23",
+      "size_bytes": 242719,
       "category": "root",
       "path": "template_registered_report_combined.pdf"
     },
     {
       "name": "04_results_slides.pdf",
-      "size_mb": "0.10",
-      "size_bytes": 106647,
+      "size_mb": "0.08",
+      "size_bytes": 83526,
       "category": "slides",
       "path": "slides/04_results_slides.pdf"
     },
     {
       "name": "03_methods_slides.pdf",
-      "size_mb": "0.10",
-      "size_bytes": 101325,
+      "size_mb": "0.08",
+      "size_bytes": 79252,
       "category": "slides",
       "path": "slides/03_methods_slides.pdf"
     },
     {
       "name": "02_hypotheses_slides.pdf",
-      "size_mb": "0.09",
-      "size_bytes": 92973,
+      "size_mb": "0.07",
+      "size_bytes": 71447,
       "category": "slides",
       "path": "slides/02_hypotheses_slides.pdf"
     },
     {
       "name": "05_deviations_slides.pdf",
-      "size_mb": "0.07",
-      "size_bytes": 76271,
+      "size_mb": "0.05",
+      "size_bytes": 56296,
       "category": "slides",
       "path": "slides/05_deviations_slides.pdf"
     },
     {
       "name": "permutation_result.png",
-      "size_mb": "0.06",
-      "size_bytes": 64290,
+      "size_mb": "0.05",
+      "size_bytes": 52400,
       "category": "figures",
       "path": "figures/permutation_result.png"
-    },
-    {
-      "name": "analysis_dag.png",
-      "size_mb": "0.05",
-      "size_bytes": 52493,
-      "category": "figures",
-      "path": "figures/analysis_dag.png"
     },
     {
       "name": "index.html",
@@ -275,17 +268,24 @@
       "size_bytes": 50477,
       "category": "web",
       "path": "web/index.html"
+    },
+    {
+      "name": "analysis_dag.png",
+      "size_mb": "0.04",
+      "size_bytes": 43979,
+      "category": "figures",
+      "path": "figures/analysis_dag.png"
     }
   ],
   "missing_expected_files": [],
   "sizes_by_category": {
-    "pdf": 0.2950286865234375,
+    "pdf": 0.2314748764038086,
     "web": 3.2061166763305664,
-    "slides": 0.4543790817260742,
-    "figures": 0.19633865356445312,
+    "slides": 0.34552669525146484,
+    "figures": 0.1601886749267578,
     "data": 0.00038909912109375,
     "reports": 0.006146430969238281,
-    "root": 0.2950286865234375
+    "root": 0.2314748764038086
   },
   "inventory_mode": "stable-shippable-output-v1",
   "inventory_scope": "stage5-delivery-mirror",

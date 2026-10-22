@@ -38,9 +38,9 @@
         "figures": {
           "exists": true,
           "file_count": 10,
-          "largest_file": "resilience_layers.png",
-          "largest_file_path": "figures/resilience_layers.png",
-          "size_mb": "1.10"
+          "largest_file": "architecture_overview.png",
+          "largest_file_path": "figures/architecture_overview.png",
+          "size_mb": "0.85"
         },
         "llm": {
           "exists": false,
@@ -64,7 +64,7 @@
           "file_count": 1,
           "largest_file": "template_pools_rules_tools_combined.pdf",
           "largest_file_path": "pdf/template_pools_rules_tools_combined.pdf",
-          "size_mb": "1.24"
+          "size_mb": "1.04"
         },
         "reports": {
           "exists": true,
@@ -83,7 +83,7 @@
           "file_count": 8,
           "largest_file": "06_integration_slides.pdf",
           "largest_file_path": "slides/06_integration_slides.pdf",
-          "size_mb": "1.36"
+          "size_mb": "1.18"
         },
         "web": {
           "exists": true,
@@ -114,7 +114,7 @@
           "combined_pdf": {
             "exists": true,
             "readable": true,
-            "size_mb": 1.24
+            "size_mb": 1.04
           },
           "data": {
             "exists": true,
@@ -144,7 +144,7 @@
             "optional": false,
             "readable": true,
             "required": true,
-            "size_mb": 1.1
+            "size_mb": 0.85
           },
           "llm": {
             "exists": false,
@@ -174,7 +174,7 @@
             "optional": false,
             "readable": true,
             "required": true,
-            "size_mb": 1.24
+            "size_mb": 1.04
           },
           "reports": {
             "exists": true,
@@ -197,7 +197,7 @@
             "optional": false,
             "readable": true,
             "required": true,
-            "size_mb": 1.36
+            "size_mb": 1.18
           },
           "web": {
             "exists": true,
@@ -215,16 +215,16 @@
         "valid": true,
         "warnings": []
       },
-      "total_size_mb": 4.125609397888184
+      "total_size_mb": 3.4994306564331055
     },
     "figures": {
       "files": 10,
-      "size_mb": 1.098067283630371
+      "size_mb": 0.8517675399780273
     },
     "inventory_mode": "stable-shippable-output-v1",
     "pdf": {
       "files": 1,
-      "size_mb": 1.2419490814208984
+      "size_mb": 1.0387325286865234
     },
     "stable_inventory": {
       "categories": {
@@ -234,7 +234,7 @@
         },
         "figures": {
           "files": 10,
-          "size_bytes": 1151407
+          "size_bytes": 893143
         },
         "manuscript": {
           "files": 11,
@@ -242,7 +242,7 @@
         },
         "pdf": {
           "files": 1,
-          "size_bytes": 1302278
+          "size_bytes": 1089190
         },
         "reports": {
           "files": 3,
@@ -250,7 +250,7 @@
         },
         "slides": {
           "files": 8,
-          "size_bytes": 1423312
+          "size_bytes": 1238068
         },
         "web": {
           "files": 11,
@@ -259,7 +259,7 @@
       },
       "mode": "stable-shippable-output-v1",
       "total_files": 45,
-      "total_size_bytes": 4326015
+      "total_size_bytes": 3669419
     }
   },
   "recommendations": [],
@@ -270,12 +270,12 @@
     "passed": 9,
     "total_checks": 9
   },
-  "timestamp": "2026-10-22T03:14:55Z",
+  "timestamp": "2026-10-22T04:07:52Z",
   "validated_inputs": {
     "artifact_manifest": {
       "path": "output/reports/artifact_manifest.json",
-      "sha256": "a8bf1e00f2be15ffdad9fd2e3efe17d832cda95d49a47b294fa513e1981df026",
-      "size_bytes": 13479
+      "sha256": "dc73c2e7c4b85d4e6dbb8f622efb082fa5c81236f0446c52d08d2cbda1ba72f6",
+      "size_bytes": 13475
     },
     "combined_manuscript": {
       "path": "output/web/_combined_manuscript.md",
@@ -344,7 +344,7 @@
       },
       "output": {
         "file_count": 45,
-        "sha256": "7f488d7e8b0f604f81dec29645a67ec018a7e4dc7571994d023c3db86e930ad1"
+        "sha256": "c907e363daaba92da68be507edf7bddfbf3ec86f2a7a59706923c723fe4b7520"
       },
       "source": {
         "file_count": 51,
@@ -352,7 +352,7 @@
       },
       "stage": {
         "file_count": 1911,
-        "sha256": "28f49d1e39eb7bee0768ca8f0306d136ad029cba071e1db637f46a3f02ff2518"
+        "sha256": "c689caaac67ebed50b5ef42bbea200e5bde3672d30391b30ad32f5589bb7a7b7"
       }
     },
     "project": "templates/template_pools_rules_tools",

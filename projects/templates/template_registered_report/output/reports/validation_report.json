@@ -40,7 +40,7 @@
           "file_count": 5,
           "largest_file": "permutation_result.png",
           "largest_file_path": "figures/permutation_result.png",
-          "size_mb": "0.20"
+          "size_mb": "0.16"
         },
         "llm": {
           "exists": false,
@@ -57,7 +57,7 @@
           "file_count": 1,
           "largest_file": "template_registered_report_combined.pdf",
           "largest_file_path": "pdf/template_registered_report_combined.pdf",
-          "size_mb": "0.30"
+          "size_mb": "0.23"
         },
         "reports": {
           "exists": true,
@@ -76,7 +76,7 @@
           "file_count": 8,
           "largest_file": "04_results_slides.pdf",
           "largest_file_path": "slides/04_results_slides.pdf",
-          "size_mb": "0.45"
+          "size_mb": "0.35"
         },
         "web": {
           "exists": true,
@@ -106,7 +106,7 @@
           "combined_pdf": {
             "exists": true,
             "readable": true,
-            "size_mb": 0.3
+            "size_mb": 0.23
           },
           "data": {
             "exists": true,
@@ -136,7 +136,7 @@
             "optional": false,
             "readable": true,
             "required": true,
-            "size_mb": 0.2
+            "size_mb": 0.16
           },
           "llm": {
             "exists": false,
@@ -158,7 +158,7 @@
             "optional": false,
             "readable": true,
             "required": true,
-            "size_mb": 0.3
+            "size_mb": 0.23
           },
           "reports": {
             "exists": true,
@@ -181,7 +181,7 @@
             "optional": false,
             "readable": true,
             "required": true,
-            "size_mb": 0.45
+            "size_mb": 0.35
           },
           "web": {
             "exists": true,
@@ -199,16 +199,16 @@
         "valid": true,
         "warnings": []
       },
-      "total_size_mb": 4.158398628234863
+      "total_size_mb": 3.9498424530029297
     },
     "figures": {
       "files": 5,
-      "size_mb": 0.19633865356445312
+      "size_mb": 0.1601886749267578
     },
     "inventory_mode": "stable-shippable-output-v1",
     "pdf": {
       "files": 1,
-      "size_mb": 0.2950286865234375
+      "size_mb": 0.2314748764038086
     },
     "stable_inventory": {
       "categories": {
@@ -218,11 +218,11 @@
         },
         "figures": {
           "files": 5,
-          "size_bytes": 205876
+          "size_bytes": 167970
         },
         "pdf": {
           "files": 1,
-          "size_bytes": 309360
+          "size_bytes": 242719
         },
         "reports": {
           "files": 8,
@@ -230,7 +230,7 @@
         },
         "slides": {
           "files": 8,
-          "size_bytes": 476451
+          "size_bytes": 362311
         },
         "web": {
           "files": 12,
@@ -239,7 +239,7 @@
       },
       "mode": "stable-shippable-output-v1",
       "total_files": 35,
-      "total_size_bytes": 4360397
+      "total_size_bytes": 4141710
     }
   },
   "recommendations": [],
@@ -250,12 +250,12 @@
     "passed": 9,
     "total_checks": 9
   },
-  "timestamp": "2026-10-22T03:14:55Z",
+  "timestamp": "2026-10-22T04:07:52Z",
   "validated_inputs": {
     "artifact_manifest": {
       "path": "output/reports/artifact_manifest.json",
-      "sha256": "178d124783d77ed3041efb28c5216dd2fc5b5aaaaab87e60ebf48e37b711dc64",
-      "size_bytes": 10573
+      "sha256": "41e91c05deb313517b5ad33a54392ffda5ccedd42d918ab7ebc0a0e63c450928",
+      "size_bytes": 10571
     },
     "combined_manuscript": {
       "path": "output/web/_combined_manuscript.md",
@@ -324,7 +324,7 @@
       },
       "output": {
         "file_count": 35,
-        "sha256": "ba2d9cabe4107a0c6a891e5899ca80e9b432e016f2c339230e372ab9a1405dd6"
+        "sha256": "dc5c2ec35996e118c5eddfe2d0a96859a94513610191bf2f2a1761f346cfaade"
       },
       "source": {
         "file_count": 26,
@@ -332,7 +332,7 @@
       },
       "stage": {
         "file_count": 1911,
-        "sha256": "28f49d1e39eb7bee0768ca8f0306d136ad029cba071e1db637f46a3f02ff2518"
+        "sha256": "c689caaac67ebed50b5ef42bbea200e5bde3672d30391b30ad32f5589bb7a7b7"
       }
     },
     "project": "templates/template_registered_report",

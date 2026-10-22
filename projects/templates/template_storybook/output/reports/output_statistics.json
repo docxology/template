@@ -3,13 +3,13 @@
     "pdf": {
       "exists": true,
       "file_count": 2,
-      "size_mb": "1.47",
-      "total_size_bytes": 1537842,
+      "size_mb": "1.08",
+      "total_size_bytes": 1128518,
       "largest_files": [
         {
           "name": "the-shape-between.pdf",
-          "size_mb": "1.42",
-          "size_bytes": 1492677,
+          "size_mb": "1.03",
+          "size_bytes": 1083353,
           "path": "pdf/the-shape-between.pdf"
         },
         {
@@ -98,25 +98,25 @@
     "figures": {
       "exists": true,
       "file_count": 15,
-      "size_mb": "2.30",
-      "total_size_bytes": 2406612,
+      "size_mb": "1.99",
+      "total_size_bytes": 2083808,
       "largest_files": [
         {
           "name": "storybook_contact_sheet.png",
-          "size_mb": "0.94",
-          "size_bytes": 981712,
+          "size_mb": "0.93",
+          "size_bytes": 971088,
           "path": "figures/storybook_contact_sheet.png"
         },
         {
           "name": "13_shared_home.png",
-          "size_mb": "0.13",
-          "size_bytes": 134055,
+          "size_mb": "0.10",
+          "size_bytes": 108730,
           "path": "figures/storybook_pages/13_shared_home.png"
         },
         {
           "name": "06_tetra_inside_cube.png",
-          "size_mb": "0.12",
-          "size_bytes": 130783,
+          "size_mb": "0.09",
+          "size_bytes": 98559,
           "path": "figures/storybook_pages/06_tetra_inside_cube.png"
         }
       ],
@@ -208,85 +208,85 @@
     }
   },
   "total_files": 38,
-  "total_size_mb": 3.975698471069336,
+  "total_size_mb": 3.277486801147461,
   "largest_files": [
     {
       "name": "the-shape-between.pdf",
-      "size_mb": "1.42",
-      "size_bytes": 1492677,
+      "size_mb": "1.03",
+      "size_bytes": 1083353,
       "category": "pdf",
       "path": "pdf/the-shape-between.pdf"
     },
     {
       "name": "storybook_contact_sheet.png",
-      "size_mb": "0.94",
-      "size_bytes": 981712,
+      "size_mb": "0.93",
+      "size_bytes": 971088,
       "category": "figures",
       "path": "figures/storybook_contact_sheet.png"
     },
     {
       "name": "13_shared_home.png",
-      "size_mb": "0.13",
-      "size_bytes": 134055,
+      "size_mb": "0.10",
+      "size_bytes": 108730,
       "category": "figures",
       "path": "figures/storybook_pages/13_shared_home.png"
     },
     {
       "name": "06_tetra_inside_cube.png",
-      "size_mb": "0.12",
-      "size_bytes": 130783,
+      "size_mb": "0.09",
+      "size_bytes": 98559,
       "category": "figures",
       "path": "figures/storybook_pages/06_tetra_inside_cube.png"
     },
     {
       "name": "10_tensegrity_lantern.png",
-      "size_mb": "0.12",
-      "size_bytes": 129110,
+      "size_mb": "0.09",
+      "size_bytes": 97269,
       "category": "figures",
       "path": "figures/storybook_pages/10_tensegrity_lantern.png"
     },
     {
       "name": "03_pointed_house.png",
-      "size_mb": "0.12",
-      "size_bytes": 121334,
+      "size_mb": "0.09",
+      "size_bytes": 95553,
       "category": "figures",
       "path": "figures/storybook_pages/03_pointed_house.png"
     },
     {
       "name": "01_publication_information.png",
-      "size_mb": "0.11",
-      "size_bytes": 116258,
+      "size_mb": "0.09",
+      "size_bytes": 91074,
       "category": "figures",
       "path": "figures/storybook_pages/01_publication_information.png"
     },
     {
       "name": "11_vector_garden.png",
-      "size_mb": "0.10",
-      "size_bytes": 106244,
+      "size_mb": "0.08",
+      "size_bytes": 81161,
       "category": "figures",
       "path": "figures/storybook_pages/11_vector_garden.png"
     },
     {
       "name": "04_valley_symbol.png",
-      "size_mb": "0.09",
-      "size_bytes": 98415,
+      "size_mb": "0.07",
+      "size_bytes": 76117,
       "category": "figures",
       "path": "figures/storybook_pages/04_valley_symbol.png"
     },
     {
       "name": "12_mega_symbol.png",
-      "size_mb": "0.09",
-      "size_bytes": 98335,
+      "size_mb": "0.07",
+      "size_bytes": 75255,
       "category": "figures",
       "path": "figures/storybook_pages/12_mega_symbol.png"
     }
   ],
   "missing_expected_files": [],
   "sizes_by_category": {
-    "pdf": 1.4666004180908203,
+    "pdf": 1.0762386322021484,
     "web": 0.09391117095947266,
     "slides": 0.06095409393310547,
-    "figures": 2.295124053955078,
+    "figures": 1.987274169921875,
     "data": 0.011869430541992188,
     "reports": 0.004166603088378906,
     "root": 0.04307270050048828

@@ -14,7 +14,7 @@
   "output_statistics": {
     "data": {
       "files": 25,
-      "size_mb": 16.523411750793457
+      "size_mb": 15.653558731079102
     },
     "detailed_validation": {
       "directories": {
@@ -23,7 +23,7 @@
           "file_count": 25,
           "largest_file": "tfidf_data.json",
           "largest_file_path": "data/tfidf_data.json",
-          "size_mb": "16.52"
+          "size_mb": "15.65"
         },
         "docx": {
           "exists": false,
@@ -40,7 +40,7 @@
           "file_count": 22,
           "largest_file": "word_cloud.png",
           "largest_file_path": "figures/word_cloud.png",
-          "size_mb": "7.70"
+          "size_mb": "6.92"
         },
         "fulltext": {
           "exists": true,
@@ -71,7 +71,7 @@
           "file_count": 1,
           "largest_file": "template_literature_meta_analysis_combined.pdf",
           "largest_file_path": "pdf/template_literature_meta_analysis_combined.pdf",
-          "size_mb": "6.99"
+          "size_mb": "6.86"
         },
         "release": {
           "exists": true,
@@ -97,7 +97,7 @@
           "file_count": 21,
           "largest_file": "03c_results_text_analytics_slides.pdf",
           "largest_file_path": "slides/03c_results_text_analytics_slides.pdf",
-          "size_mb": "7.40"
+          "size_mb": "7.20"
         },
         "web": {
           "exists": true,
@@ -130,7 +130,7 @@
           "combined_pdf": {
             "exists": true,
             "readable": true,
-            "size_mb": 6.99
+            "size_mb": 6.86
           },
           "data": {
             "exists": true,
@@ -138,7 +138,7 @@
             "optional": false,
             "readable": true,
             "required": true,
-            "size_mb": 16.52
+            "size_mb": 15.65
           },
           "docx": {
             "exists": false,
@@ -160,7 +160,7 @@
             "optional": false,
             "readable": true,
             "required": true,
-            "size_mb": 7.7
+            "size_mb": 6.92
           },
           "fulltext": {
             "exists": true,
@@ -198,7 +198,7 @@
             "optional": false,
             "readable": true,
             "required": true,
-            "size_mb": 6.99
+            "size_mb": 6.86
           },
           "release": {
             "exists": true,
@@ -229,7 +229,7 @@
             "optional": false,
             "readable": true,
             "required": true,
-            "size_mb": 7.4
+            "size_mb": 7.2
           },
           "web": {
             "exists": true,
@@ -247,26 +247,26 @@
         "valid": true,
         "warnings": []
       },
-      "total_size_mb": 40.13836097717285
+      "total_size_mb": 38.15808582305908
     },
     "figures": {
       "files": 22,
-      "size_mb": 7.703764915466309
+      "size_mb": 6.918155670166016
     },
     "inventory_mode": "stable-shippable-output-v1",
     "pdf": {
       "files": 1,
-      "size_mb": 6.985311508178711
+      "size_mb": 6.856874465942383
     },
     "stable_inventory": {
       "categories": {
         "data": {
           "files": 25,
-          "size_bytes": 17326053
+          "size_bytes": 16413946
         },
         "figures": {
           "files": 22,
-          "size_bytes": 8077983
+          "size_bytes": 7254212
         },
         "fulltext": {
           "files": 1,
@@ -278,7 +278,7 @@
         },
         "pdf": {
           "files": 1,
-          "size_bytes": 7324630
+          "size_bytes": 7189954
         },
         "release": {
           "files": 2,
@@ -290,7 +290,7 @@
         },
         "slides": {
           "files": 21,
-          "size_bytes": 7757795
+          "size_bytes": 7551880
         },
         "web": {
           "files": 24,
@@ -299,7 +299,7 @@
       },
       "mode": "stable-shippable-output-v1",
       "total_files": 125,
-      "total_size_bytes": 42088122
+      "total_size_bytes": 40011653
     }
   },
   "recommendations": [],
@@ -310,12 +310,12 @@
     "passed": 9,
     "total_checks": 9
   },
-  "timestamp": "2026-10-22T03:14:55Z",
+  "timestamp": "2026-10-22T04:07:52Z",
   "validated_inputs": {
     "artifact_manifest": {
       "path": "output/reports/artifact_manifest.json",
-      "sha256": "0a10f75ff83d26ec9d5966252cb2e6c55e7d277014ae29fda8d8c524fd078efa",
-      "size_bytes": 37909
+      "sha256": "c8f995fd11d4ab58e803b463edd30ab65e9a46bfe2779bc5c0b8edf1c0324c81",
+      "size_bytes": 37908
     },
     "combined_manuscript": {
       "path": "output/web/_combined_manuscript.md",
@@ -462,7 +462,7 @@
       },
       "output": {
         "file_count": 125,
-        "sha256": "cac7aa9d0c983b8a7d996916033caaa40d45f10ab1b2199f9fe25bcf4a512447"
+        "sha256": "28bb7dacd13976a99293908be64442a0924572a2ff2b128cd9beb0b824bc6aa3"
       },
       "source": {
         "file_count": 142,
@@ -470,7 +470,7 @@
       },
       "stage": {
         "file_count": 1911,
-        "sha256": "28f49d1e39eb7bee0768ca8f0306d136ad029cba071e1db637f46a3f02ff2518"
+        "sha256": "c689caaac67ebed50b5ef42bbea200e5bde3672d30391b30ad32f5589bb7a7b7"
       }
     },
     "project": "templates/template_literature_meta_analysis",

@@ -8,22 +8,22 @@ Inventory Scope: stage5-delivery-mirror
 Inventory Root: output/templates/template_eda_notebook
 
 Total Files: 35
-Total Size: 4.18 MB
+Total Size: 3.95 MB
 
 Files by Category:
-  • pdf: 1 files (0.20 MB)
+  • pdf: 1 files (0.15 MB)
   • web: 13 files (3.27 MB)
-  • slides: 9 files (0.42 MB)
-  • figures: 4 files (0.05 MB)
+  • slides: 9 files (0.30 MB)
+  • figures: 4 files (0.04 MB)
   • data: 3 files (0.01 MB)
   • reports: 4 files (0.04 MB)
-  • root: 1 files (0.20 MB)
+  • root: 1 files (0.15 MB)
 
 Largest Files:
   • source-web-fonts.js: 3.02 MB (web)
-  • template_eda_notebook_combined.pdf: 0.20 MB (pdf)
-  • template_eda_notebook_combined.pdf: 0.20 MB (root)
-  • 03_results_slides.pdf: 0.11 MB (slides)
+  • template_eda_notebook_combined.pdf: 0.15 MB (pdf)
+  • template_eda_notebook_combined.pdf: 0.15 MB (root)
+  • 03_results_slides.pdf: 0.08 MB (slides)
   • index.html: 0.07 MB (web)
 
 File Types:

@@ -8,24 +8,24 @@ Inventory Scope: stage5-delivery-mirror
 Inventory Root: output/templates/template_gold_refinement
 
 Total Files: 75
-Total Size: 20.18 MB
+Total Size: 18.93 MB
 
 Files by Category:
-  • pdf: 1 files (5.05 MB)
+  • pdf: 1 files (4.76 MB)
   • web: 16 files (3.58 MB)
-  • figures: 27 files (6.31 MB)
+  • figures: 27 files (5.63 MB)
   • data: 3 files (0.04 MB)
   • reports: 10 files (0.02 MB)
   • manuscript: 15 files (0.14 MB)
   • release: 1 files (0.00 MB)
-  • root: 2 files (5.05 MB)
+  • root: 2 files (4.76 MB)
 
 Largest Files:
-  • template_gold_refinement_combined.pdf: 5.05 MB (pdf)
-  • template_gold_refinement_combined.pdf: 5.05 MB (root)
+  • template_gold_refinement_combined.pdf: 4.76 MB (pdf)
+  • template_gold_refinement_combined.pdf: 4.76 MB (root)
   • source-web-fonts.js: 3.02 MB (web)
-  • cover_visualization.png: 1.71 MB (figures)
-  • claim_evidence_assay.png: 0.67 MB (figures)
+  • cover_visualization.png: 1.44 MB (figures)
+  • claim_evidence_assay.png: 0.56 MB (figures)
 
 File Types:
   • .md: 15 file(s)

@@ -40,7 +40,7 @@
           "file_count": 6,
           "largest_file": "schema_overview.png",
           "largest_file_path": "figures/schema_overview.png",
-          "size_mb": "0.11"
+          "size_mb": "0.10"
         },
         "llm": {
           "exists": false,
@@ -57,7 +57,7 @@
           "file_count": 1,
           "largest_file": "template_data_descriptor_combined.pdf",
           "largest_file_path": "pdf/template_data_descriptor_combined.pdf",
-          "size_mb": "0.19"
+          "size_mb": "0.17"
         },
         "reports": {
           "exists": true,
@@ -76,7 +76,7 @@
           "file_count": 8,
           "largest_file": "05_quality_validation_slides.pdf",
           "largest_file_path": "slides/05_quality_validation_slides.pdf",
-          "size_mb": "0.30"
+          "size_mb": "0.28"
         },
         "web": {
           "exists": true,
@@ -106,7 +106,7 @@
           "combined_pdf": {
             "exists": true,
             "readable": true,
-            "size_mb": 0.19
+            "size_mb": 0.17
           },
           "data": {
             "exists": true,
@@ -136,7 +136,7 @@
             "optional": false,
             "readable": true,
             "required": true,
-            "size_mb": 0.11
+            "size_mb": 0.1
           },
           "llm": {
             "exists": false,
@@ -158,7 +158,7 @@
             "optional": false,
             "readable": true,
             "required": true,
-            "size_mb": 0.19
+            "size_mb": 0.17
           },
           "reports": {
             "exists": true,
@@ -181,7 +181,7 @@
             "optional": false,
             "readable": true,
             "required": true,
-            "size_mb": 0.3
+            "size_mb": 0.28
           },
           "web": {
             "exists": true,
@@ -199,16 +199,16 @@
         "valid": true,
         "warnings": []
       },
-      "total_size_mb": 3.8140087127685547
+      "total_size_mb": 3.756542205810547
     },
     "figures": {
       "files": 6,
-      "size_mb": 0.1148233413696289
+      "size_mb": 0.09559822082519531
     },
     "inventory_mode": "stable-shippable-output-v1",
     "pdf": {
       "files": 1,
-      "size_mb": 0.18566608428955078
+      "size_mb": 0.16678142547607422
     },
     "stable_inventory": {
       "categories": {
@@ -218,11 +218,11 @@
         },
         "figures": {
           "files": 6,
-          "size_bytes": 120401
+          "size_bytes": 100242
         },
         "pdf": {
           "files": 1,
-          "size_bytes": 194685
+          "size_bytes": 174883
         },
         "reports": {
           "files": 6,
@@ -230,7 +230,7 @@
         },
         "slides": {
           "files": 8,
-          "size_bytes": 313321
+          "size_bytes": 293024
         },
         "web": {
           "files": 12,
@@ -239,7 +239,7 @@
       },
       "mode": "stable-shippable-output-v1",
       "total_files": 34,
-      "total_size_bytes": 3999278
+      "total_size_bytes": 3939020
     }
   },
   "recommendations": [],
@@ -250,12 +250,12 @@
     "passed": 9,
     "total_checks": 9
   },
-  "timestamp": "2026-10-22T03:14:55Z",
+  "timestamp": "2026-10-22T04:07:52Z",
   "validated_inputs": {
     "artifact_manifest": {
       "path": "output/reports/artifact_manifest.json",
-      "sha256": "eaf3a2962c4b1ef72f4f5555f1507e980166ba7ed3a9e81d8683fc3f7b834a75",
-      "size_bytes": 10271
+      "sha256": "2d1012cd958a097f09259ce533e38fa94e25cdeb00f03d93f605f051991941dd",
+      "size_bytes": 10305
     },
     "combined_manuscript": {
       "path": "output/web/_combined_manuscript.md",
@@ -324,7 +324,7 @@
       },
       "output": {
         "file_count": 34,
-        "sha256": "bb8a27d33cb8b22bea08234ebfe18604167854377af4ef0040ed7d14a301908a"
+        "sha256": "0c10bb9f6f5c3e97b7ae2d5174e3c4daad6326839758173dfb4d0e5e24d3f852"
       },
       "source": {
         "file_count": 31,
@@ -332,7 +332,7 @@
       },
       "stage": {
         "file_count": 1911,
-        "sha256": "28f49d1e39eb7bee0768ca8f0306d136ad029cba071e1db637f46a3f02ff2518"
+        "sha256": "c689caaac67ebed50b5ef42bbea200e5bde3672d30391b30ad32f5589bb7a7b7"
       }
     },
     "project": "templates/template_data_descriptor",
