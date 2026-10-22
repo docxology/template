@@ -85,7 +85,25 @@ def test_required_contract_job_keeps_whole_root_budget_and_explicit_empty_outcom
     assert 'echo "CHROME_EXECUTABLE_PATH=$chrome" >> "$GITHUB_ENV"' in browser["run"]
     assert 'test ! -L "$chrome"' in browser["run"] and "resources.pak" in browser["run"]
     assert "poppler-utils" in tex["run"] and "kpsewhich plainnat.bst" in tex["run"]
-    assert not any("texlive-" in step.get("run", "") for step in jobs["test-infra"]["steps"])
+    from infrastructure.core.testing.ci_selection import _infra_matrix
+
+    native_latex = "tests/infra_tests/rendering/test_pdf_latex_pipeline.py"
+    selected_shards = infrastructure_shards(ROOT, (native_latex,))
+    matrix = _infra_matrix(selected_shards)["include"]
+    assert [row["shard"] for row in matrix] == list(range(len(selected_shards)))
+    prepared = [row["shard"] for row in matrix if row["tex"]]
+    assert len(prepared) == 1 and native_latex in selected_shards[prepared[0]]
+    assert not _infra_matrix([["tests/infra_tests/core/test_ci_selection.py"]])["include"][0]["tex"]
+    routine_steps = jobs["test-infra"]["steps"]
+    routine_tex = [step for step in routine_steps if "texlive-" in step.get("run", "")]
+    assert len(routine_tex) == 1 and routine_tex[0]["if"] == "matrix.tex"
+    assert "texlive-xetex lmodern" in routine_tex[0]["run"] and "xelatex --version" in routine_tex[0]["run"]
+    routine_account = next(
+        index
+        for index, step in enumerate(routine_steps)
+        if step.get("uses") == "./.github/actions/setup-ci-execution-user"
+    )
+    assert routine_steps.index(routine_tex[0]) < routine_account
     prepare_account = next(
         index
         for index, step in enumerate(contract["steps"])
