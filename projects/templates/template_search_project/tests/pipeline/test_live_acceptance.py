@@ -7,6 +7,7 @@ import shutil
 from pathlib import Path
 
 import pytest
+from werkzeug.wrappers import Response
 
 from infrastructure.search.literature.live_contract import LiveSettings
 from template_search_project.pipeline.live_acceptance import main, run_live
@@ -25,8 +26,20 @@ def copied_project(tmp_path):
     return root
 
 
-def configure(httpserver, *, response_quote=SOURCE[:80], status=200):
-    httpserver.expect_request("/works").respond_with_json(
+def configure(httpserver, *, response_quote=None, status=200, incomplete=False):
+    # The actual HTTP request keeps the configured query and three-record ceiling,
+    # and asks only for the explicit rights/version/media sample the consumer uses.
+    httpserver.expect_request(
+        "/works",
+        query_string={
+            "query": "reproducible research optimization",
+            "rows": "3",
+            "filter": (
+                "has-license:true,has-full-text:true,license.url:https://creativecommons.org/licenses/by/4.0/"
+                ",license.version:vor,full-text.version:vor,full-text.type:application/pdf"
+            ),
+        },
+    ).respond_with_json(
         {
             "message": {
                 "items": [
@@ -38,7 +51,18 @@ def configure(httpserver, *, response_quote=SOURCE[:80], status=200):
                         "abstract": SOURCE,
                         "license": [],
                         "link": [],
-                    }
+                    },
+                    *(
+                        [
+                            {
+                                "DOI": "10.1000/incomplete",
+                                "title": ["Correction without deposited authors"],
+                                "issued": {"date-parts": [[2024]]},
+                            }
+                        ]
+                        if incomplete
+                        else []
+                    ),
                 ]
             }
         },
@@ -50,18 +74,33 @@ def configure(httpserver, *, response_quote=SOURCE[:80], status=200):
     xml = f'<article><front><article-id pub-id-type="doi">{DOI}</article-id><license href="https://creativecommons.org/licenses/by/4.0/"/></front><body><p>{SOURCE}</p></body></article>'
     httpserver.expect_request("/PMC123/fullTextXML").respond_with_data(xml, content_type="application/xml")
     httpserver.expect_request("/api/tags").respond_with_json({"models": [{"name": "controlled", "digest": "a" * 64}]})
-    httpserver.expect_request("/api/generate", method="POST").respond_with_json(
-        {
-            "model": "controlled",
-            "done": True,
-            "eval_count": 10,
-            "response": json.dumps({"summary": "A bounded source annotation", "source_quote": response_quote}),
-        }
-    )
+
+    def generation(request):
+        choices = request.json["format"]["properties"]["source_quote"]["enum"]
+        quote = choices[0] if response_quote is None else response_quote
+        return Response(
+            json.dumps(
+                {
+                    "model": "controlled",
+                    "done": True,
+                    "eval_count": 10,
+                    "response": json.dumps(
+                        {
+                            "summary": "A bounded source annotation",
+                            "source_quote": quote,
+                        }
+                    ),
+                }
+            ),
+            content_type="application/json",
+        )
+
+    httpserver.expect_request("/api/generate", method="POST").respond_with_handler(generation)
 
 
-def test_live_requires_all_real_producers_and_retains_byte_custody(tmp_path, httpserver):
-    configure(httpserver)
+@pytest.mark.parametrize("incomplete", [False, True])
+def test_live_requires_all_real_producers_and_retains_byte_custody(tmp_path, httpserver, incomplete):
+    configure(httpserver, incomplete=incomplete)
     root = copied_project(tmp_path)
     endpoint = httpserver.url_for("").replace("localhost", "127.0.0.1")
     path = run_live(
@@ -74,10 +113,36 @@ def test_live_requires_all_real_producers_and_retains_byte_custody(tmp_path, htt
     receipt = json.loads(path.read_text())
     assert receipt["status"] == "passed", receipt["issues"]
     assert receipt["source_unchanged"] and receipt["consumed_unchanged"]
-    assert set(receipt["producer_results"]) == {"retrieval", "fulltext", "local-synthesis"}
+    assert set(receipt["producer_results"]) == {
+        "retrieval",
+        "fulltext",
+        "local-synthesis",
+    }
     assert receipt["producer_results"]["local-synthesis"]["model_sha256"] == "a" * 64
     assert json.loads((path.parent / "synthesis.json").read_text())["paper_id"] == "doi:" + DOI
     assert not (root / "output/data").exists()
+    request = json.loads((path.parent / "model_1/request.json").read_text())
+    source = json.loads(request["prompt"].split("SOURCE (bounded excerpt):\n", 1)[1])
+    assert source == (path.parent / "fulltext.txt").read_text()[:6000]
+    choices = request["format"]["properties"]["source_quote"]["enum"]
+    assert choices and len(choices) == len(set(choices))
+    assert all(20 <= len(quote) <= 200 and quote in source for quote in choices)
+    assert json.loads((path.parent / "synthesis.json").read_text())["source_quote"] in choices
+    assert request["options"]["num_predict"] == 1024
+    assert request["format"]["properties"]["summary"] == {"type": "string", "minLength": 1, "maxLength": 512}
+    retrieval = json.loads((path.parent / "retrieval_report.json").read_text())
+    assert retrieval["raw_count"] == 1 + int(incomplete)
+    assert retrieval["eligible_count"] == retrieval["unique_count"] == 1
+    assert retrieval["deduplicated_count"] == 0 and retrieval["excluded_count"] == int(incomplete)
+    if incomplete:
+        assert retrieval["excluded_records"] == [
+            {
+                "raw_index": 1,
+                "paper_id": "doi:10.1000/incomplete",
+                "doi": "10.1000/incomplete",
+                "reasons": ["missing_authors"],
+            }
+        ]
 
 
 @pytest.mark.parametrize(

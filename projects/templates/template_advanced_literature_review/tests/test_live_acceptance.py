@@ -30,7 +30,7 @@ def copied_project(tmp_path):
     return root
 
 
-def configure(httpserver, *, wrong_calibration=False, status=200):
+def configure(httpserver, *, wrong_calibration=False, bad_quote=False, status=200):
     httpserver.expect_request("/works").respond_with_json(
         {
             "message": {
@@ -66,7 +66,9 @@ def configure(httpserver, *, wrong_calibration=False, status=200):
                 label = "no" if label == "yes" else "yes"
         else:
             label = "observational"
-        value = {"label": label, "source_quote": source[:60]}
+        choices = invocation["format"]["properties"]["source_quote"]["enum"]
+        quote = "This invented annotation is absent from the consumed source." if bad_quote else choices[0]
+        value = {"label": label, "source_quote": quote}
         return Response(
             json.dumps({"model": "controlled", "done": True, "eval_count": 10, "response": json.dumps(value)}),
             content_type="application/json",
@@ -96,11 +98,37 @@ def test_all_selected_phases_calibration_classification_and_licensed_text_run(tm
     assert "do not establish scientific support" in analysis["claim_boundary"]
     assert "phase_1_foundation_corpus.jsonl" in receipt["consumed_artifacts"]
     assert not (root / "output/data").exists()
+    calibration = json.loads((path.parent / "inputs/data/llm_filter_calibration.json").read_text())
+    phase_abstracts = {
+        json.loads(line)["abstract"][:6000]
+        for corpus in path.parent.glob("phase_*_corpus.jsonl")
+        for line in corpus.read_text().splitlines()
+    }
+    for index in range(1, 8):
+        request = json.loads((path.parent / f"model_{index}/request.json").read_text())
+        source = json.loads(request["prompt"].split("SOURCE (bounded excerpt):\n", 1)[1])
+        if index <= 4:
+            assert source == calibration["cases"][index - 1]["abstract"]
+        else:
+            assert source in phase_abstracts
+        choices = request["format"]["properties"]["source_quote"]["enum"]
+        assert choices and len(choices) == len(set(choices))
+        assert all(20 <= len(quote) <= 200 and quote in source for quote in choices)
+        actual_annotation = json.loads(
+            json.loads((path.parent / f"model_{index}/response.json").read_text())["response"]
+        )
+        assert actual_annotation["source_quote"] in choices
+        assert request["options"]["num_predict"] == 1024
 
 
-@pytest.mark.parametrize("wrong_calibration,status,expected", [(True, 200, "failed"), (False, 503, "blocked")])
-def test_failed_screening_or_phase_retrieval_cannot_pass(tmp_path, httpserver, wrong_calibration, status, expected):
-    configure(httpserver, wrong_calibration=wrong_calibration, status=status)
+@pytest.mark.parametrize(
+    "wrong_calibration,bad_quote,status,expected",
+    [(True, False, 200, "failed"), (False, False, 503, "blocked"), (False, True, 200, "failed")],
+)
+def test_failed_screening_or_phase_retrieval_cannot_pass(
+    tmp_path, httpserver, wrong_calibration, bad_quote, status, expected
+):
+    configure(httpserver, wrong_calibration=wrong_calibration, bad_quote=bad_quote, status=status)
     root = copied_project(tmp_path)
     settings = LiveSettings("controlled", httpserver.url_for("").replace("localhost", "127.0.0.1"))
     path = run_live(
@@ -113,6 +141,9 @@ def test_failed_screening_or_phase_retrieval_cannot_pass(tmp_path, httpserver, w
     assert json.loads(path.read_text())["status"] == expected
     if wrong_calibration:
         assert len(json.loads(path.read_text())["local_generation_calls"]) == 4
+    if bad_quote:
+        assert len(json.loads(path.read_text())["local_generation_calls"]) == 1
+        assert any("annotation quote is not verbatim" in issue for issue in json.loads(path.read_text())["issues"])
 
 
 def test_core_default_is_offline_and_live_arguments_are_explicit(tmp_path, capsys):

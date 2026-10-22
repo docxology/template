@@ -70,3 +70,18 @@ def test_run_meta_analysis_pipeline_temporal_error_on_missing_years(
     temporal_path = output_dir / "data" / "temporal_analysis.json"
     payload = json.loads(temporal_path.read_text(encoding="utf-8"))
     assert "error" in payload
+
+    # A genuinely dated one-paper corpus has counts but cannot estimate growth.
+    dated = Corpus(
+        papers=[Paper(title="Dated paper", abstract="active inference and free energy principle", year=2025)]
+    )
+    dated_path = tmp_path / "dated-corpus.jsonl"
+    dated.save(dated_path)
+    args.corpus, args.output_dir, args.n_topics = str(dated_path), str(tmp_path / "dated-analysis"), 1
+    run_meta_analysis_pipeline(args, project_root=project_root)
+    payload = json.loads((Path(args.output_dir) / "data/temporal_analysis.json").read_text())
+    assert "error" not in payload
+    assert payload["year_counts"] == payload["cumulative"] == {"2025": 1}
+    assert payload["first_year"] == payload["last_year"] == payload["peak_year"] == 2025
+    assert payload["total_papers"] == 1 and payload["growth_status"] == "insufficient_years"
+    assert all(payload[field] is None for field in ("cagr", "mean_growth_rate", "doubling_time"))

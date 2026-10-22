@@ -151,6 +151,64 @@ def test_unselected_model_and_docker_image_are_blocked_without_acquisition(tmp_p
         with pytest.raises(MissingAuxiliaryProvider, match="explicitly selected"):
             native_execution(Path.cwd(), gate, 30, tmp_path, {})
 
+    # The actual launcher executes the worker as __main__, while native adapters
+    # import canonical modules. Both paths must raise/catch the same class.
+    import json
+    import subprocess
+    import uuid
+
+    root = Path.cwd().resolve()
+    directory = root / "output/readiness" / ("missing-provider-worker-" + uuid.uuid4().hex)
+    directory.mkdir(parents=True)
+    try:
+        for index, (gate, expected_code, expected_status) in enumerate(
+            (
+                ("templates/template_sia:live:docker-sandbox", 75, "blocked"),
+                ("unpartitioned", 1, "fail"),
+            )
+        ):
+            facts = directory / f"facts-{index}.json"
+            spec = directory / f"spec-{index}.json"
+            spec.write_text(
+                json.dumps(
+                    {
+                        "gate": gate,
+                        "budget": 30,
+                        "producer_inputs": {},
+                        "raw_path": facts.relative_to(root).as_posix(),
+                    }
+                )
+            )
+            result = subprocess.run(
+                [
+                    sys.executable,
+                    "-I",
+                    "-B",
+                    "-c",
+                    "import runpy,sys;sys.path.insert(0,sys.argv.pop(1));"
+                    "runpy.run_module('infrastructure.project.public_acceptance_auxiliary_worker',run_name='__main__')",
+                    str(root),
+                    "--spec",
+                    str(spec),
+                ],
+                cwd=root,
+                capture_output=True,
+                text=True,
+                timeout=30,
+                check=False,
+            )
+            assert result.returncode == expected_code, result.stdout + result.stderr
+            raw = json.loads(facts.read_text())
+            assert raw["gate"] == gate and raw["exit_code"] == expected_code
+            assert raw["status"] == expected_status and "details" not in raw
+            if expected_status == "blocked":
+                assert raw["diagnostic"] == "SIA requires an explicitly selected existing immutable local Docker image"
+                assert "failure_class" not in raw
+            else:
+                assert raw["failure_class"] == "ValueError"
+    finally:
+        shutil.rmtree(directory)
+
 
 @pytest.mark.timeout(420)
 def test_real_process_readback_after_producer_root_and_wrapper_deleted(tmp_path: Path) -> None:

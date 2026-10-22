@@ -73,6 +73,34 @@ def domain_paper(record: Any) -> Paper:
     )
 
 
+def _validate_temporal_analysis(session: LiveSession, expected_years: dict[str, int]) -> None:
+    """Read real temporal output; undefined growth requires an actual one-year corpus."""
+    temporal = exact_json(session.consume(session.directory / "analysis/data/temporal_analysis.json"))
+    if not isinstance(temporal, dict):
+        raise LiteratureFailed("temporal analysis output must be an object")
+    if len(expected_years) == 1 and "None" not in expected_years:
+        year, count = next(iter(expected_years.items()))
+        expected = {
+            "growth_status": "insufficient_years",
+            "year_counts": expected_years,
+            "cumulative": expected_years,
+            "total_papers": count,
+            "first_year": int(year),
+            "last_year": int(year),
+            "peak_year": int(year),
+            "cagr": None,
+            "mean_growth_rate": None,
+            "doubling_time": None,
+        }
+        # Serialized comparison preserves exact JSON numeric types and requires
+        # present nulls; booleans or missing fields cannot stand in for counts.
+        actual = {key: temporal[key] for key in expected if key in temporal}
+        if json.dumps(actual, sort_keys=True) != json.dumps(expected, sort_keys=True):
+            raise LiteratureFailed("single-year temporal counts or undefined growth differ from the actual corpus")
+    elif temporal.get("growth_status") == "insufficient_years":
+        raise LiteratureFailed("undefined temporal growth is not supported by the actual corpus years")
+
+
 def independent_analysis(
     session: LiveSession, papers: list[Paper], *, config_source_bytes: bytes | None = None
 ) -> dict[str, Any]:
@@ -93,6 +121,7 @@ def independent_analysis(
         raise LiteratureFailed("independent corpus/year accounting disagrees with analysis producer")
     if report["citation_count_total"] != sum(paper.citation_count for paper in papers):
         raise LiteratureFailed("independent citation accounting disagrees with analysis producer")
+    _validate_temporal_analysis(session, expected_years)
     for path in sorted((directory / "data").glob("*.json")):
         value = exact_json(session.consume(path))
         if isinstance(value, dict) and "error" in value:
@@ -143,7 +172,7 @@ def run_live(
                 "assign IDs n0, n1, n2, source/method/experiment/sink types, 1-4 information sufficiency ratings "
                 "and upstream dependencies. Copy every source_quote exactly. Partial workflows are acceptable.",
             ),
-            workflow_schema(),
+            workflow_schema(source),
         )
         workflow = parse_workflow(raw, source, selected_domain.canonical_id)
         write_json(session.directory / "workflow.json", workflow.to_dict())
@@ -172,7 +201,7 @@ def run_live(
                     + ". Return label supports, contradicts, or neutral plus an exact source_quote. "
                     "Use neutral when the excerpt is insufficient.",
                 ),
-                annotation_schema(labels=labels),
+                annotation_schema(source, labels=labels),
             ),
             source,
             labels=labels,

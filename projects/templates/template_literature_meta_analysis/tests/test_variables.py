@@ -418,6 +418,12 @@ class TestComputeVariables:
         variables = compute_variables(tmp_path)
         assert variables["CAGR_PCT"] == "150.00"
         assert variables["MEAN_YOY_GROWTH_PCT"] == "150.0"
+        temporal.update(cagr=None, mean_growth_rate=None, doubling_time=None, growth_status="insufficient_years")
+        (tmp_path / "temporal_analysis.json").write_text(json.dumps(temporal))
+        undefined = compute_variables(tmp_path)
+        assert all(undefined[field] == "N/A" for field in ("CAGR_PCT", "MEAN_YOY_GROWTH_PCT", "DOUBLING_TIME"))
+        assert undefined["YEAR_START"] == undefined["YEAR_END"] == "2020"
+        assert undefined["TEMPORAL_TOTAL_PAPERS"] == "10"
 
     def test_doubling_time_zero(self, tmp_path):
         """DOUBLING_TIME empty string when zero."""

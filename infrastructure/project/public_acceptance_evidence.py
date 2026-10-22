@@ -25,6 +25,10 @@ RUNTIME_SCHEMA = "template-public-runtime-v1"
 CELL_SCHEMA = "template-public-runtime-cell-v2"
 
 
+class MissingAuxiliaryProvider(RuntimeError):
+    """A real check cannot run without its explicitly declared provider."""
+
+
 def evidence_directory(root: Path, directory: Path, *, fresh: bool = False) -> Path:
     """Refuse traversal and symlinks before touching the ignored evidence lane."""
     lexical_root = root.absolute()

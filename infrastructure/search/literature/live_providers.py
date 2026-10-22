@@ -28,12 +28,18 @@ LICENSE_URL = "https://creativecommons.org/licenses/by/4.0/"
 
 
 def retrieve_crossref(
-    session: LiveSession, query: str, *, label: str = "retrieval", endpoint: str = CROSSREF_URL
+    session: LiveSession,
+    query: str,
+    *,
+    label: str = "retrieval",
+    endpoint: str = CROSSREF_URL,
 ) -> list[Paper]:
     """Use the existing field mapper/deduplicator, retaining exact provider bytes.
 
     This bounded acceptance sample intentionally selects deposited CC-BY-4.0
-    licenses/full-text links. It is not an exhaustive or unbiased review corpus.
+    version-of-record licenses and typed VOR PDF links, then retains only records
+    with mapped authors and a publication year for complete citations. It is not
+    exhaustive or unbiased. Downloaded identity, active rights and text are checked.
     """
     if not isinstance(query, str) or not query.strip() or len(query) > 2000:
         raise LiteratureFailed("retrieval query must be a bounded nonempty string")
@@ -44,11 +50,20 @@ def retrieve_crossref(
             {
                 "query": query,
                 "rows": session.settings.max_results,
-                "filter": f"has-license:true,has-full-text:true,license.url:{LICENSE_URL}",
+                "filter": (
+                    f"has-license:true,has-full-text:true,license.url:{LICENSE_URL}"
+                    ",license.version:vor,full-text.version:vor,full-text.type:application/pdf"
+                ),
             }
         )
     )
-    raw, metadata = fetch_bytes(session, url, label, max_bytes=2 * 1024 * 1024, allow_loopback=endpoint != CROSSREF_URL)
+    raw, metadata = fetch_bytes(
+        session,
+        url,
+        label,
+        max_bytes=2 * 1024 * 1024,
+        allow_loopback=endpoint != CROSSREF_URL,
+    )
     payload = exact_json(raw)
     try:
         items = payload["message"]["items"]
@@ -57,29 +72,56 @@ def retrieve_crossref(
     if not isinstance(items, list) or len(items) > session.settings.max_results:
         raise LiteratureFailed("Crossref items violate the requested result ceiling")
     papers: list[Paper] = []
-    for item in items:
+    excluded: list[dict[str, Any]] = []
+    for index, item in enumerate(items):
         if not isinstance(item, dict) or not isinstance(item.get("DOI"), str) or not item["DOI"].strip():
             raise LiteratureFailed("Crossref result lacks an actual DOI")
+        titles = item.get("title")
+        if not isinstance(titles, list) or not titles or not isinstance(titles[0], str) or not titles[0].strip():
+            raise LiteratureFailed("Crossref result lacks an actual title")
         paper = crossref_item_to_paper(item)
         if not paper.title.strip() or paper.id != "doi:" + item["DOI"]:
             raise LiteratureFailed("Crossref field mapping lost result identity")
-        papers.append(paper)
-    if not papers:
-        raise LiteratureBlocked("keyless retrieval returned no records for the configured query")
+        reasons = []
+        if not paper.authors:
+            reasons.append("missing_authors")
+        if paper.year is None:
+            reasons.append("missing_year")
+        if reasons:
+            excluded.append(
+                {
+                    "raw_index": index,
+                    "paper_id": paper.id,
+                    "doi": paper.doi,
+                    "reasons": reasons,
+                }
+            )
+        else:
+            papers.append(paper)
     unique = merge_papers(papers)
     report = {
-        "status": "passed",
+        "status": "passed" if unique else "blocked",
         "provider": "crossref",
         "query": query,
-        "sample_scope": "CC-BY-4.0 metadata/full-text links; bounded acceptance sample",
+        "sample_scope": (
+            "citation-complete CC-BY-4.0 VOR licenses/typed VOR PDF links; "
+            "bounded eligible acceptance sample, not exhaustive or unbiased"
+        ),
         "execution_mode": "live-network" if endpoint == CROSSREF_URL else "controlled-http",
-        "raw_count": len(papers),
+        "raw_count": len(items),
+        "eligible_count": len(papers),
+        "excluded_count": len(excluded),
+        "excluded_records": excluded,
         "unique_count": len(unique),
         "http": metadata,
         "deduplicated_count": len(papers) - len(unique),
         "paper_ids": [paper.id for paper in unique],
     }
     write_json(session.directory / f"{label}_report.json", report)
+    if not unique:
+        if not items:
+            raise LiteratureBlocked("keyless retrieval returned no records for the configured query")
+        raise LiteratureBlocked("bounded retrieval returned no citation-complete eligible records")
     return unique
 
 

@@ -10,7 +10,8 @@ from pathlib import Path
 import pytest
 from reportlab.pdfgen import canvas
 
-from infrastructure.search.literature.live_artifacts import export_citations, validate_annotation
+from infrastructure.search.literature.crossref_backend import crossref_item_to_paper
+from infrastructure.search.literature.live_artifacts import annotation_schema, export_citations, validate_annotation
 from infrastructure.search.literature.live_contract import (
     LiteratureBlocked,
     LiteratureFailed,
@@ -29,7 +30,12 @@ from infrastructure.search.literature.live_providers import (
     parse_licensed_jats,
     retrieve_crossref,
 )
-from infrastructure.search.literature.live_transport import LocalGenerator, fetch_bytes, validate_public_url
+from infrastructure.search.literature.live_transport import (
+    LocalGenerator,
+    extract_pdf_text,
+    fetch_bytes,
+    validate_public_url,
+)
 from infrastructure.search.literature.models import Paper
 
 SOURCE = "We measured the telescope spectrum and reported uncertainty for every calibrated observation. " * 4
@@ -210,6 +216,43 @@ def test_real_http_retrieval_dedup_and_complete_bibtex(tmp_path, httpserver):
     assert json.loads(raw)["message"]["items"] == [item(), item()]
     report = json.loads((run.directory / "retrieval_report.json").read_text())
     assert report["deduplicated_count"] == 1 and report["execution_mode"] == "controlled-http"
+    assert report["raw_count"] == report["eligible_count"] == 2
+    assert report["unique_count"] == 1 and report["excluded_count"] == 0
+    assert report["excluded_records"] == []
+    for missing in ("authors", "year", "both"):
+        incomplete = item()
+        incomplete["DOI"] = "10.1000/incomplete"
+        reasons = []
+        if missing in {"authors", "both"}:
+            incomplete.pop("author")
+            reasons.append("missing_authors")
+        if missing in {"year", "both"}:
+            incomplete.pop("issued")
+            reasons.append("missing_year")
+        records = [item(), item(), incomplete]
+        endpoint = "/works_" + missing
+        httpserver.expect_request(endpoint).respond_with_json({"message": {"items": records}})
+        eligible_run = session(tmp_path / missing)
+        eligible = retrieve_crossref(eligible_run, "configured topic", endpoint=httpserver.url_for(endpoint))
+        assert len(eligible) == 1 and eligible[0].doi == DOI
+        assert list(export_citations(eligible_run, eligible)) == ["doi:" + DOI]
+        raw = (eligible_run.directory / "retrieval/body.bin").read_bytes()
+        assert json.loads(raw)["message"]["items"] == records
+        filtered = json.loads((eligible_run.directory / "retrieval_report.json").read_text())
+        assert filtered["status"] == "passed" and filtered["raw_count"] == 3
+        assert filtered["eligible_count"] == 2 and filtered["unique_count"] == filtered["deduplicated_count"] == 1
+        assert filtered["excluded_count"] == 1
+        assert filtered["excluded_records"] == [
+            {
+                "raw_index": 2,
+                "paper_id": "doi:10.1000/incomplete",
+                "doi": "10.1000/incomplete",
+                "reasons": reasons,
+            }
+        ]
+        # Eligibility cannot weaken the strict downstream citation writer.
+        with pytest.raises(LiteratureFailed, match="lacks title, DOI, authors, or year"):
+            export_citations(eligible_run, [crossref_item_to_paper(incomplete)])
 
 
 @pytest.mark.parametrize("body", [{"message": {"items": []}}, {"message": {"items": [{}]}}])
@@ -218,6 +261,39 @@ def test_real_http_empty_or_invalid_retrieval_is_not_success(tmp_path, httpserve
     run = session(tmp_path)
     with pytest.raises((LiteratureFailed, LiteratureBlocked)):
         retrieve_crossref(run, "topic", endpoint=httpserver.url_for("/works"))
+    assert json.loads((run.directory / "retrieval/body.bin").read_bytes()) == body
+    if not body["message"]["items"]:
+        for missing in ("authors", "year", "both", "title"):
+            incomplete = item()
+            reasons = []
+            if missing in {"authors", "both", "title"}:
+                incomplete.pop("author")
+                reasons.append("missing_authors")
+            if missing in {"year", "both"}:
+                incomplete.pop("issued")
+                reasons.append("missing_year")
+            if missing == "title":
+                incomplete["title"] = [""]
+            endpoint = "/no_eligible_" + missing
+            httpserver.expect_request(endpoint).respond_with_json({"message": {"items": [incomplete]}})
+            excluded_run = session(tmp_path / missing)
+            error = LiteratureFailed if missing == "title" else LiteratureBlocked
+            with pytest.raises(error):
+                retrieve_crossref(excluded_run, "topic", endpoint=httpserver.url_for(endpoint))
+            raw = (excluded_run.directory / "retrieval/body.bin").read_bytes()
+            assert json.loads(raw)["message"]["items"] == [incomplete]
+            if error is LiteratureBlocked:
+                filtered = json.loads((excluded_run.directory / "retrieval_report.json").read_text())
+                assert filtered["status"] == "blocked" and filtered["raw_count"] == filtered["excluded_count"] == 1
+                assert filtered["eligible_count"] == filtered["unique_count"] == filtered["deduplicated_count"] == 0
+                assert filtered["excluded_records"] == [
+                    {
+                        "raw_index": 0,
+                        "paper_id": "doi:" + DOI,
+                        "doi": DOI,
+                        "reasons": reasons,
+                    }
+                ]
 
 
 def test_real_http_error_retains_diagnostics_and_is_blocked(tmp_path, httpserver):
@@ -227,6 +303,33 @@ def test_real_http_error_retains_diagnostics_and_is_blocked(tmp_path, httpserver
         fetch_bytes(run, httpserver.url_for("/down"), "down", allow_loopback=True)
     assert json.loads((run.directory / "down/http.json").read_text())["status_code"] == 503
     assert json.loads((run.directory / "down/execution.json").read_text())["returncode"] == 75
+
+    challenge = b"<html><title>Radware Bot Manager Captcha</title><div class='h-captcha'></div></html>"
+    httpserver.expect_request("/captcha").respond_with_data(
+        challenge, content_type="text/html", headers={"X-Access-Challenge": "Radware"}
+    )
+    captcha_run = session(tmp_path / "captcha")
+    with pytest.raises(LiteratureBlocked, match="unpaid worker unavailable"):
+        fetch_bytes(captcha_run, httpserver.url_for("/captcha"), "captcha", allow_loopback=True)
+    captcha_metadata = json.loads((captcha_run.directory / "captcha/http.json").read_text())
+    assert captcha_metadata["status"] == "blocked" and captcha_metadata["status_code"] == 200
+    assert captcha_metadata["requested_url"] == captcha_metadata["final_url"] == httpserver.url_for("/captcha")
+    assert captcha_metadata["content_type"].startswith("text/html")
+    assert dict(captcha_metadata["response_headers"])["X-Access-Challenge"] == "Radware"
+    assert (captcha_run.directory / "captcha/body.bin").read_bytes() == challenge
+    assert json.loads((captcha_run.directory / "captcha/execution.json").read_text())["returncode"] == 75
+
+    # An arbitrary HTML body remains a responding malformed PDF producer,
+    # rather than being reclassified as unavailable by its media type alone.
+    generic_html = b"<html><title>Article landing page</title><p>Not a PDF.</p></html>"
+    httpserver.expect_request("/not_pdf").respond_with_data(generic_html, content_type="text/html")
+    invalid_run = session(tmp_path / "not-pdf")
+    raw, metadata = fetch_bytes(invalid_run, httpserver.url_for("/not_pdf"), "not_pdf", allow_loopback=True)
+    assert raw == generic_html and metadata["status"] == "passed" and metadata["status_code"] == 200
+    with pytest.raises(LiteratureFailed, match="unpaid worker failed"):
+        extract_pdf_text(invalid_run, invalid_run.directory / "not_pdf/body.bin", DOI, "invalid_pdf")
+    invalid_execution = json.loads((invalid_run.directory / "invalid_pdf/execution.json").read_text())
+    assert invalid_execution["returncode"] == 1 and "not a PDF" in invalid_execution["stdout"]
 
 
 def test_http_byte_ceiling_is_a_failed_responding_producer(tmp_path, httpserver):
@@ -298,6 +401,19 @@ def test_quote_annotation_rejects_fabrication_coercion_and_extra_fields():
     ):
         with pytest.raises(LiteratureFailed):
             validate_annotation(value, SOURCE)
+
+    assert annotation_schema()["properties"]["summary"] == {"type": "string"}
+    assert annotation_schema(SOURCE)["properties"]["summary"] == {"type": "string", "minLength": 1, "maxLength": 512}
+    assert annotation_schema(SOURCE, labels=["yes", "no"])["properties"]["label"] == {
+        "type": "string",
+        "enum": ["yes", "no"],
+    }
+    # The generation bound does not truncate or relax independent response parsing.
+    assert validate_annotation({"summary": "x" * 2000, "source_quote": SOURCE[:40]}, SOURCE)["summary"] == "x" * 2000
+    with pytest.raises(LiteratureFailed):
+        validate_annotation({"summary": "x" * 2001, "source_quote": SOURCE[:40]}, SOURCE)
+    with pytest.raises(LiteratureFailed):
+        exact_json('{"source_quote":"' + SOURCE[:40] + '","summary":"unterminated')
 
 
 def test_real_local_model_worker_binds_provider_request_response_and_digest(tmp_path, httpserver):

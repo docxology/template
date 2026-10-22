@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import os
 import time
 from pathlib import Path
 
@@ -65,6 +66,21 @@ def test_actual_snapshot_materializes_identical_readonly_tool_inputs(tmp_path: P
     source = tmp_path / "source"
     source.mkdir()
     (source / "model.lean").write_bytes(b"theorem control : True := True.intro\n")
+    if hasattr(os, "O_SEARCH") or hasattr(os, "O_PATH"):
+        # Ancestors need search permission; tree endpoints still need readable descriptors.
+        original_mode = tmp_path.stat().st_mode & 0o7777
+        tmp_path.chmod(0o111)
+        try:
+            if hasattr(os, "geteuid") and os.geteuid() != 0:
+                with pytest.raises(PermissionError):
+                    os.open(tmp_path, os.O_RDONLY | os.O_DIRECTORY)
+            expected = b"theorem control : True := True.intro\n"
+            assert snapshot_file(source / "model.lean", deadline=time.monotonic() + 2) == expected
+            assert snapshot_tree(source, deadline=time.monotonic() + 2, exclude=lambda _parts: False) == {
+                "model.lean": expected
+            }
+        finally:
+            tmp_path.chmod(original_mode)
     snapshot = snapshot_tree(source, deadline=time.monotonic() + 2, exclude=lambda _parts: False)
     target = tmp_path / "frozen"
     materialize(snapshot, target)

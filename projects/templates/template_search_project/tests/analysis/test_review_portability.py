@@ -2,8 +2,6 @@
 
 from __future__ import annotations
 
-import hashlib
-import importlib.metadata
 import json
 import os
 import shutil
@@ -23,12 +21,17 @@ pytestmark = pytest.mark.timeout(420)
 
 
 def _provider_identity() -> dict[str, str]:
-    origin = Path(infrastructure.__file__).resolve(strict=True)
-    return {
-        "origin": str(origin),
-        "version": importlib.metadata.version("research-project-template"),
-        "init_sha256": hashlib.sha256(origin.read_bytes()).hexdigest(),
-    }
+    """Observe the ordinary isolated child provider, independent of the test controller."""
+    program = """
+import hashlib,importlib.metadata,json
+from pathlib import Path
+import infrastructure
+origin=Path(infrastructure.__file__).resolve(strict=True)
+print(json.dumps({'origin':str(origin),
+                  'version':importlib.metadata.version('research-project-template'),
+                  'init_sha256':hashlib.sha256(origin.read_bytes()).hexdigest()}))
+"""
+    return json.loads(subprocess.check_output([sys.executable, "-I", "-B", "-c", program], text=True, timeout=30))
 
 
 def _ambient_startup_control(directory: Path) -> tuple[dict[str, str], Path]:

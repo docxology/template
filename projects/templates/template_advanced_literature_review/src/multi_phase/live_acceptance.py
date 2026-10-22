@@ -179,7 +179,7 @@ def run_live(
                         "Does this abstract report an observational measurement or evaluate an observational method "
                         "on a named target? Return label yes or no plus an exact source_quote.",
                     ),
-                    annotation_schema(labels=labels),
+                    annotation_schema(source, labels=labels),
                 ),
                 source,
                 labels=labels,
@@ -192,7 +192,7 @@ def run_live(
         session.receipt["producer_results"]["screening"] = {
             **result,
             "status": "passed",
-            "scope": "four synthetic held-out filter-behavior cases; not scientific validation",
+            "scope": "four declared synthetic filter-behavior regression controls; not scientific validation",
         }
         classifications: dict[str, Any] = {}
         categories = ["observational", "theoretical", "review", "other"]
@@ -206,7 +206,7 @@ def run_live(
                         "Classify study type: observational uses real telescope/instrument measurements; theoretical uses "
                         "models/simulations; review summarizes papers; other otherwise. Return label and exact source_quote.",
                     ),
-                    annotation_schema(labels=categories),
+                    annotation_schema(source[:6000], labels=categories),
                 ),
                 source[:6000],
                 labels=categories,

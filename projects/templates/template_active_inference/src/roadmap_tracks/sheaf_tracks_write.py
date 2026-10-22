@@ -24,10 +24,8 @@ from roadmap_tracks.sheaf_tracks_builders_release import (
     build_theorem_traceability_matrix,
 )
 from roadmap_tracks.sheaf_tracks_builders_toy import build_sensitivity_sweep, build_uncertainty_summary
-from roadmap_tracks.sheaf_tracks_context import (
-    _ACTIVE_PROVENANCE_CONTEXT,
-    _ProvenanceContext,
-)
+import roadmap_tracks.sheaf_tracks_context as _provenance_state
+from roadmap_tracks.sheaf_tracks_context import _ProvenanceContext
 from roadmap_tracks.sheaf_tracks_helpers import _refresh_hydrated_manuscript, _remove_legacy_artifacts
 from roadmap_tracks.sheaf_tracks_io import _config_digest, _deterministic_seed, _source_input_sha256, _write_json
 from roadmap_tracks.sheaf_tracks_registry import CANONICAL_ARTIFACTS
@@ -232,7 +230,6 @@ def write_sheaf_track_artifacts(
 
         return cast(dict[str, Path], run_semantic_fixed_point(root, require_analysis_outputs=False))
 
-    global _ACTIVE_PROVENANCE_CONTEXT
     context = _ProvenanceContext(
         config_digest=_config_digest(root),
         deterministic_seed=_deterministic_seed(root),
@@ -240,16 +237,18 @@ def write_sheaf_track_artifacts(
     )
     paths: dict[str, Path] = {}
 
-    previous_context = _ACTIVE_PROVENANCE_CONTEXT
-    _ACTIVE_PROVENANCE_CONTEXT = context
+    previous_context = _provenance_state._ACTIVE_PROVENANCE_CONTEXT
+    _provenance_state._ACTIVE_PROVENANCE_CONTEXT = context
     try:
         _run_prerequisite_promoters(root)
         _remove_legacy_artifacts(root)
         _write_primary_canonical_artifacts(root, paths, context)
         _write_integration_audit_phase(root, paths)
         _write_post_audit_canonical_artifacts(root, paths, context)
-        _write_final_canonical_pass(root, paths, context)
-        _remove_legacy_artifacts(root)
     finally:
-        _ACTIVE_PROVENANCE_CONTEXT = previous_context
+        _provenance_state._ACTIVE_PROVENANCE_CONTEXT = previous_context
+    # Final hydration composes manuscript source. Nested live builders must
+    # derive their provenance after those bytes move, outside this phase cache.
+    _write_final_canonical_pass(root, paths, context)
+    _remove_legacy_artifacts(root)
     return paths

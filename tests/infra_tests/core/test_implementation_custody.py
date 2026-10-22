@@ -14,6 +14,7 @@ import subprocess
 import sys
 import time
 import venv
+import zipfile
 from pathlib import Path
 
 import pytest
@@ -154,6 +155,110 @@ print('actual editable custody passed')
     if fault is None:
         assert result.returncode == 0, result.stderr
         assert result.stdout.strip() == "actual editable custody passed"
+        # Standard editable-origin metadata also nominates the exact checkout
+        # without a literal Source directory in the recorded .pth.
+        editable.write_text("# no literal Source directory in this editable control\n")
+        direct_url = metadata / "direct_url.json"
+        direct_url.write_text(json.dumps({"url": checkout.as_uri(), "dir_info": {"editable": True}}))
+        direct_record = io.StringIO()
+        writer = csv.writer(direct_record)
+        for path in (editable, metadata / "METADATA", direct_url):
+            raw = path.read_bytes()
+            digest = base64.urlsafe_b64encode(hashlib.sha256(raw).digest()).decode().rstrip("=")
+            writer.writerow([path.relative_to(site).as_posix(), "sha256=" + digest, len(raw)])
+        writer.writerow([metadata.relative_to(site).as_posix() + "/RECORD", "", ""])
+        (metadata / "RECORD").write_text(direct_record.getvalue())
+        direct = subprocess.run(
+            [str(python), "-I", "-c", code],
+            cwd=tmp_path,
+            capture_output=True,
+            text=True,
+            timeout=30,
+            check=False,
+        )
+        assert direct.returncode == 0, direct.stderr
+        assert direct.stdout.strip() == "actual editable custody passed"
+        # A genuine noneditable wheel and an explicitly selected Source alias
+        # coexist in separate provider planes, even with the same identity/version.
+        wheel_runtime = tmp_path / "wheel-runtime"
+        venv.EnvBuilder(with_pip=True).create(wheel_runtime)
+        wheel_python = wheel_runtime / "bin/python"
+        wheel = tmp_path / "canonical_engine-0.2.0-py3-none-any.whl"
+        payloads = {
+            "canonical_engine/__init__.py": b"VALUE = 11\n",
+            "canonical_engine-0.2.0.dist-info/METADATA": pkg_info.encode(),
+            "canonical_engine-0.2.0.dist-info/WHEEL": (
+                b"Wheel-Version: 1.0\nGenerator: real-custody-control\nRoot-Is-Purelib: true\nTag: py3-none-any\n"
+            ),
+        }
+        wheel_record = io.StringIO()
+        writer = csv.writer(wheel_record)
+        for name, raw in payloads.items():
+            digest = base64.urlsafe_b64encode(hashlib.sha256(raw).digest()).decode().rstrip("=")
+            writer.writerow([name, "sha256=" + digest, len(raw)])
+        writer.writerow(["canonical_engine-0.2.0.dist-info/RECORD", "", ""])
+        payloads["canonical_engine-0.2.0.dist-info/RECORD"] = wheel_record.getvalue().encode()
+        with zipfile.ZipFile(wheel, "w") as archive:
+            for name, raw in payloads.items():
+                archive.writestr(name, raw)
+        installation = subprocess.run(
+            [
+                str(wheel_python),
+                "-I",
+                "-m",
+                "pip",
+                "--isolated",
+                "install",
+                "--no-index",
+                "--no-deps",
+                "--disable-pip-version-check",
+                str(wheel),
+            ],
+            cwd=tmp_path,
+            capture_output=True,
+            text=True,
+            timeout=30,
+            check=False,
+        )
+        assert installation.returncode == 0, installation.stdout + installation.stderr
+        wheel_code = f"""
+import importlib.util,json,sys
+from pathlib import Path
+import canonical_engine
+assert canonical_engine.VALUE == 11
+wheel_source = Path(canonical_engine.__file__).parent
+sys.path.insert(0,{str(ROOT)!r})
+from infrastructure.core.implementation_custody import capture_dependency_custody
+installed = capture_dependency_custody('canonical-engine',wheel_source)
+assert installed['binding_kind']=='installed-distribution'
+assert installed['distribution']['version']=='0.2.0'
+assert installed['distribution']['public_python']==installed['files']
+assert installed['distribution']['record_sha256']
+del sys.modules['canonical_engine']
+spec = importlib.util.spec_from_file_location('canonical_engine',Path({str(source)!r})/'__init__.py')
+module = importlib.util.module_from_spec(spec)
+sys.modules['canonical_engine'] = module
+spec.loader.exec_module(module)
+assert module.VALUE == 7
+assert Path(module.__file__).parent == Path({str(source)!r})
+selected = capture_dependency_custody('canonical-engine',Path(module.__file__).parent,
+    checkout_root=Path({str(checkout)!r}))
+assert selected['binding_kind']=='source-checkout'
+assert selected['distribution'] is None
+assert set(selected['files'])=={{'__init__.py','checkout/pyproject.toml','checkout/uv.lock'}}
+assert selected['files']['__init__.py'] != installed['files']['__init__.py']
+print('actual wheel and Source custody remain separate')
+"""
+        separated = subprocess.run(
+            [str(wheel_python), "-I", "-c", wheel_code],
+            cwd=tmp_path,
+            capture_output=True,
+            text=True,
+            timeout=30,
+            check=False,
+        )
+        assert separated.returncode == 0, separated.stderr
+        assert separated.stdout.strip() == "actual wheel and Source custody remain separate"
     else:
         assert result.returncode != 0
         reason = {

@@ -148,9 +148,11 @@ def validate_semantic_gluing(project_root: Path) -> list[str]:
     saved_issues.extend(_semantic_lane_summary_issues(saved))
     if saved.get("restrictions", {}).get("coverage_missing") != 0:
         saved_issues.append("saved sheaf_gluing_certificate.json records missing coverage")
-    issues: list[str] = semantic_gluing_issues(root)
-    issues.extend(saved_issues)
     live = build_semantic_gluing_certificate(root)
+    # The live certificate already evaluates every semantic predicate. Copy its
+    # issues so saved-artifact diagnostics cannot mutate the expected payload.
+    issues: list[str] = list(live["issues"])
+    issues.extend(saved_issues)
     # The certificate is deliberately hash-cycle-excluded from the pre-render
     # P/C/R/B records because it embeds their live release predicates.  Its
     # standalone validator must therefore authenticate the complete serialized

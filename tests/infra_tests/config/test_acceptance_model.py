@@ -41,15 +41,15 @@ def test_cached_model_bytes_are_reauthenticated_before_daemon_use(tmp_path: Path
         "mediaType": "application/vnd.docker.distribution.manifest.v2+json",
         "config": {
             "mediaType": "application/vnd.docker.container.image.v1+json",
-            "digest": "sha256:b0f58c4c1a3ca56f34a7673b353d7d09b773a1abce00451a58d5ebd2541331cf",
+            "digest": "sha256:7b5a4e25bd7f795bdbbaa936ddf9601ae08e44b251813aedb7392b9a6c8ea8d1",
             "size": 561,
         },
         "layers": [
             {
                 "mediaType": "application/vnd.ollama.image.model",
-                "digest": "sha256:f535f83ec568d040f88ddc04a199fa6da90923bbb41d4dcaed02caa924d6ef57",
-                "size": 270885952,
-                "from": "/Users/administrator/.ollama/models/blobs/sha256-f535f83ec568d040f88ddc04a199fa6da90923bbb41d4dcaed02caa924d6ef57",
+                "digest": "sha256:7d23be4097d67c5c43c3df62ebc19609a25f483c7d0b77d3989e1d94e36ccab6",
+                "size": 725553792,
+                "from": "/Users/administrator/.ollama/models/blobs/sha256-7d23be4097d67c5c43c3df62ebc19609a25f483c7d0b77d3989e1d94e36ccab6",
             },
             {
                 "mediaType": "application/vnd.ollama.image.system",
@@ -75,7 +75,7 @@ def test_cached_model_bytes_are_reauthenticated_before_daemon_use(tmp_path: Path
     }
     manifest_bytes = json.dumps(manifest, separators=(",", ":")).encode()
     cache_root = "${{ runner.temp }}/template-acceptance-model-cache"
-    expected_paths = {f"{cache_root}/manifests/registry.ollama.ai/library/smollm2/135m"}
+    expected_paths = {f"{cache_root}/manifests/registry.ollama.ai/library/smollm2/360m"}
     expected_paths.update(
         f"{cache_root}/blobs/{record['digest'].replace(':', '-')}"
         for record in [manifest["config"], *manifest["layers"]]
@@ -83,7 +83,7 @@ def test_cached_model_bytes_are_reauthenticated_before_daemon_use(tmp_path: Path
     assert set(cache["with"]["path"].splitlines()) == expected_paths
     assert len(manifest_bytes) == 1124
     assert (
-        hashlib.sha256(manifest_bytes).hexdigest() == "9077fe9d2ae1a4a41a868836b56b8163731a8fe16621397028c2c76f838c6907"
+        hashlib.sha256(manifest_bytes).hexdigest() == "297281b699fc51376006233ca400cd664c4f7b80ed88a47ef084f1e4b089803b"
     )
     programs = tmp_path / "programs-without-downloaders"
     programs.mkdir()
@@ -109,11 +109,11 @@ def test_cached_model_bytes_are_reauthenticated_before_daemon_use(tmp_path: Path
         fresh = case / "fresh-daemon-storage"
         fresh.mkdir()
         model_cache = case / "template-acceptance-model-cache"
-        manifest_file = model_cache / "manifests/registry.ollama.ai/library/smollm2/135m"
+        manifest_file = model_cache / "manifests/registry.ollama.ai/library/smollm2/360m"
         manifest_file.parent.mkdir(parents=True)
         manifest_file.write_bytes(manifest_bytes)
         (model_cache / "blobs").mkdir()
-        blob = model_cache / "blobs/sha256-b0f58c4c1a3ca56f34a7673b353d7d09b773a1abce00451a58d5ebd2541331cf"
+        blob = model_cache / "blobs/sha256-7b5a4e25bd7f795bdbbaa936ddf9601ae08e44b251813aedb7392b9a6c8ea8d1"
         affected = manifest_file if target == "manifest" else blob
         if fault == "length":
             affected.write_bytes(b"short corrupt input")

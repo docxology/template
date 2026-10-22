@@ -192,26 +192,45 @@ def test_run_deep_search_enabled_with_corpus(tmp_path: Path):
 @pytest.mark.parametrize("fault", ["fresh-startup", None, "missing-project-root", "changed-hook-digest"])
 def test_unpaid_core_controller_preserves_authentic_launcher_custody(tmp_path: Path, fault: str | None) -> None:
     """The real controller reads its real fixture; audit refusals remain fatal."""
-    import infrastructure
-    from infrastructure.core.implementation_custody import bytecode_audit_bootstrap
-
     script = PROJECT_ROOT / "scripts/_run_unpaid_acceptance.py"
     if fault == "fresh-startup":
         command = [sys.executable, str(script), "--mode", "core"]
     else:
-        platform = Path(infrastructure.__file__).resolve().parent.parent
         prefix = tmp_path / "launcher-cache"
         prefix.mkdir()
-        roots = (PROJECT_ROOT / "scripts", platform / "infrastructure", platform / "scripts")
-        import importlib.util
-
-        provider = importlib.util.find_spec("template_literature_meta_analysis")
-        if provider is not None:
-            assert isinstance(provider.origin, str)
-            roots += (Path(provider.origin).resolve().parent,)
-        if fault != "missing-project-root":
-            roots += (PROJECT_ROOT / "src",)
-        bootstrap = bytecode_audit_bootstrap(roots, prefix)
+        # Use the actual isolated child's SDK and dependency provider to build its audit.
+        # Portable test-controller imports can legitimately belong to another Source plane.
+        provider_bootstrap = r"""
+import importlib.util,sys
+from pathlib import Path
+from infrastructure.core import implementation_custody
+platform=Path(implementation_custody.__file__).resolve().parents[2]
+project=Path(sys.argv[1])
+prefix=Path(sys.argv[2])
+roots=(project/'scripts',platform/'infrastructure',platform/'scripts')
+provider=importlib.util.find_spec('template_literature_meta_analysis')
+if provider is not None:
+    assert isinstance(provider.origin,str)
+    roots+=(Path(provider.origin).resolve().parent,)
+if sys.argv[3]=='include':
+    roots+=(project/'src',)
+print(implementation_custody.bytecode_audit_bootstrap(roots,prefix),end='')
+"""
+        bootstrap = subprocess.check_output(
+            [
+                sys.executable,
+                "-I",
+                "-B",
+                "-c",
+                provider_bootstrap,
+                str(PROJECT_ROOT),
+                str(prefix),
+                "omit" if fault == "missing-project-root" else "include",
+            ],
+            cwd=tmp_path,
+            text=True,
+            timeout=30,
+        )
         if fault == "changed-hook-digest":
             bootstrap += (
                 "from types import MappingProxyType;record=dict(sys._template_executed_bytecode_audit);"

@@ -20,10 +20,13 @@ def extract_temporal(ctx: ExtractContext) -> dict[str, str]:
     peak_year_val = str(temporal.get("year_counts", {}).get(str(temporal.get("peak_year", "")), ""))
     variables["PEAK_YEAR_COUNT"] = peak_year_val
     variables["PEAK_YEAR_PUBS"] = peak_year_val
-    variables["CAGR_PCT"] = f"{temporal.get('cagr', 0) * 100:.2f}"
-    variables["MEAN_YOY_GROWTH_PCT"] = f"{temporal.get('mean_growth_rate', 0) * 100:.1f}"
+    cagr, mean_growth = temporal.get("cagr", 0), temporal.get("mean_growth_rate", 0)
+    variables["CAGR_PCT"] = "N/A" if cagr is None else f"{cagr * 100:.2f}"
+    variables["MEAN_YOY_GROWTH_PCT"] = "N/A" if mean_growth is None else f"{mean_growth * 100:.1f}"
     doubling = temporal.get("doubling_time", 0)
-    variables["DOUBLING_TIME"] = f"{doubling:.1f}" if doubling else ""
+    variables["DOUBLING_TIME"] = (
+        "N/A" if temporal.get("growth_status") == "insufficient_years" else f"{doubling:.1f}" if doubling else ""
+    )
     year_counts = temporal.get("year_counts", {})
     variables["TEMPORAL_TOTAL_PAPERS"] = str(temporal.get("total_papers", ctx.corpus_size))
     variables["YEAR_SPAN"] = str(int(temporal.get("last_year", 0)) - int(temporal.get("first_year", 0)))

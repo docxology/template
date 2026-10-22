@@ -50,15 +50,34 @@ def export_citations(session: LiveSession, papers: list[Paper]) -> dict[str, str
     return keys
 
 
-def annotation_schema(*, labels: list[str] | None = None) -> dict[str, Any]:
+def annotation_schema(source: str | None = None, *, labels: list[str] | None = None) -> dict[str, Any]:
     """Request one bounded summary or classification with a verbatim source quote."""
+    quote_schema: dict[str, Any] = {"type": "string"}
+    if source is not None:
+        if not isinstance(source, str):
+            raise ValueError("annotation quote source must be text")
+        # The supervised invocation retains these generation choices before
+        # launch. Every choice is a literal substring; validation still checks
+        # the actual returned quote against the exact consumed source.
+        quotes = list(
+            dict.fromkeys(
+                quote for start in range(0, len(source), 200) if len(quote := source[start : start + 200].strip()) >= 20
+            )
+        )
+        if not quotes:
+            raise ValueError("annotation quote source has no bounded nonempty excerpt")
+        quote_schema.update(minLength=20, maxLength=1000, enum=quotes)
     field = "label" if labels is not None else "summary"
     value: dict[str, Any] = {"type": "string"}
     if labels is not None:
         value["enum"] = labels
+    elif source is not None:
+        # Bound generation before the fixed token ceiling; independent parsing
+        # still enforces the full annotation contract on the actual response.
+        value.update(minLength=1, maxLength=512)
     return {
         "type": "object",
-        "properties": {field: value, "source_quote": {"type": "string"}},
+        "properties": {field: value, "source_quote": quote_schema},
         "required": [field, "source_quote"],
         "additionalProperties": False,
     }
