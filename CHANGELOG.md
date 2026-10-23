@@ -34,6 +34,9 @@ root releases.
   retain strict licensed full-text, DOI, original-byte and downstream validation.
 - Remove redundant Active Inference preparation while retaining its fixed-point
   validators; keep isolated diagnostic children from writing into held runtimes.
+- Stage intermediate Active Inference manuscript composition and write only final
+  candidate text. Preserve file identities and clocks when final bytes agree, and
+  refresh live evidence against any changed manuscript before validation.
 - Improve table wrapping, figure labels, pagination and boundary markers, and
   transport every bundled web-font face through a deterministic local LZMA stream
   with original hashes and licenses. Preserve raw and legacy transport APIs.
