@@ -19,6 +19,9 @@ candidates, not published root releases.
   plan and transaction; preserve independent exemplar versions and third-party locks.
 - Correct auxiliary deadline binding, source-versus-installed dependency custody
   and strict source-consumption evidence without extending acceptance clocks.
+- Admit complete Source archives against member names and sizes from confined
+  snapshots. Retain the default 64 MiB bound for unknown archives, Office packages
+  and wheels, plus path, duplicate, symlink, CRC and exact-byte checks.
 - Bound structured model generation before parsing, keep exact consumed-source
   quotes, and pin the declared acceptance model to `smollm2:360m` with authenticated
   model bytes. Synthetic screening controls do not establish scientific validity.
