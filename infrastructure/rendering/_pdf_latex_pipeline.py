@@ -1,6 +1,7 @@
 """LaTeX multi-pass compilation pipeline."""
 
 import os
+import re
 import subprocess
 import time
 from pathlib import Path
@@ -149,13 +150,29 @@ def _check_fatal_error(
                     },
                 )
 
-            log_tail = "\n".join(log_content.splitlines()[-20:])
+            log_lines = log_content.splitlines()
+            log_tail = "\n".join(log_lines[-20:])
+            first_error_index = next(
+                (
+                    index
+                    for index, line in enumerate(log_lines)
+                    if line.startswith("!") or (re.match(r"^.+:\d+:\s", line) and "Warning" not in line)
+                ),
+                None,
+            )
+            error_context = {}
+            if first_error_index is not None:
+                error_context = {
+                    "first_error": "\n".join(log_lines[first_error_index : first_error_index + 12])[:2000],
+                    "first_error_log_line": first_error_index + 1,
+                }
             raise RenderingError(
                 f"LaTeX compilation failed after pass {pass_num}",
                 context={
                     "source": str(combined_tex),
                     "log_file": str(log_file),
                     "returncode": result.returncode,
+                    **error_context,
                     "last_error": log_tail or (result.stderr[:500] if result.stderr else "No stderr"),
                 },
             )

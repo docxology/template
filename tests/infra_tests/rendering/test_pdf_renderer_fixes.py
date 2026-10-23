@@ -200,10 +200,10 @@ class TestCitationProcessing:
         reason="pandoc/xelatex not installed",
     )
     def test_render_combined_includes_bibliography(self, tmp_path):
-        """Test that render_combined includes bibliography processing.
+        """Require resolved bibliography content from the real native render.
 
-        Local-only coverage: CI installs pandoc but not TeX Live (xelatex),
-        so this skips on GitHub runners and is enforced on developer machines.
+        Runs wherever the declared Pandoc and TeX providers are present,
+        including TeX-enabled CI shards.
         """
         config = RenderingConfig(
             manuscript_dir=str(tmp_path / "manuscript"),
@@ -224,21 +224,19 @@ class TestCitationProcessing:
         bib_file = tmp_path / "manuscript" / "references.bib"
         bib_file.write_text("@article{test, title={Test}, author={Author, A.}, year={2024}}")
 
-        # Real execution: tools are present (skipif above).  LaTeX may report
-        # recoverable errors via -interaction=nonstopmode but must still produce
-        # an output file.
-        try:
-            result = renderer.render_combined([md_file], tmp_path / "manuscript")
-        except Exception:
-            # Accept a PDF produced despite reported errors (multi-pass nonstopmode)
-            candidate = tmp_path / "output" / "pdf" / "project_combined.pdf"
-            if candidate.exists() and candidate.stat().st_size > 0:
-                result = candidate
-            else:
-                raise
+        # A real final compiler failure must propagate even if a partial PDF exists.
+        result = renderer.render_combined([md_file], tmp_path / "manuscript")
         assert result.exists(), f"render_combined returned {result} but no file exists"
         assert result.suffix == ".pdf"
         assert result.stat().st_size > 0
+        bibliography = (tmp_path / "output" / "pdf" / "_combined_manuscript.bbl").read_text()
+        assert r"\bibitem" in bibliography and "{test}" in bibliography
+        from pypdf import PdfReader
+
+        pdf_text = " ".join(" ".join(page.extract_text() or "" for page in PdfReader(result).pages).split())
+        assert "Some content with Author" in pdf_text
+        assert "References" in pdf_text and "A. Author. Test. 2024." in pdf_text
+        assert "[?]" not in pdf_text
 
 
 class TestIntegration:

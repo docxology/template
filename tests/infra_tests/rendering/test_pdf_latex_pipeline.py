@@ -68,6 +68,26 @@ def test_latex_pass_nonzero_exit_fails_even_with_partial_pdf(tmp_path: Path) -> 
     with pytest.raises(RenderingError, match="LaTeX compilation failed after pass 2"):
         _check_fatal_error(result, log, tex, pdf, 2)
 
+    # A later caption warning must not hide the earlier actual TeX error.
+    caption_tail = "See the caption package documentation for explanation."
+    for first_error in ("! Undefined control sequence.", "./book.tex:42: Undefined control sequence."):
+        log.write_text(
+            "\n".join(
+                ["Compiler header", first_error, r"l.42 \undefinedReleaseCommand"]
+                + ["Later compiler context"] * 30
+                + [caption_tail]
+            ),
+            encoding="utf-8",
+        )
+        with pytest.raises(RenderingError, match="LaTeX compilation failed after pass 4") as error:
+            _check_fatal_error(result, log, tex, pdf, 4, final_pass=True)
+        assert error.value.context["returncode"] == 1
+        assert error.value.context["first_error"].startswith(first_error)
+        assert r"l.42 \undefinedReleaseCommand" in error.value.context["first_error"]
+        assert error.value.context["first_error_log_line"] == 2
+        assert caption_tail in error.value.context["last_error"]
+        assert first_error not in error.value.context["last_error"]
+
 
 def test_latex_pass_zero_exit_allows_output(tmp_path: Path) -> None:
     """A clean XeLaTeX pass should continue through the pipeline."""
@@ -142,8 +162,12 @@ def test_latex_final_pass_nonzero_exit_with_output_fails(tmp_path: Path) -> None
     assert "Undefined control sequence" in diagnostic and "Output written on" in diagnostic
     assert "That makes 100 errors" not in diagnostic
     assert _check_fatal_error(result, log, tex, pdf, 1) is False
-    with pytest.raises(RenderingError, match="LaTeX compilation failed after pass 4"):
+    with pytest.raises(RenderingError, match="LaTeX compilation failed after pass 4") as error:
         _check_fatal_error(result, log, tex, pdf, 4, final_pass=True)
+    assert "Undefined control sequence" in error.value.context["first_error"]
+    assert "undefinedReleaseCommand" in error.value.context["first_error"]
+    assert error.value.context["first_error_log_line"] > 0
+    assert error.value.context["returncode"] == 1
 
 
 @pytest.mark.requires_latex
