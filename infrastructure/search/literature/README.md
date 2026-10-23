@@ -66,3 +66,14 @@ Navigation links to in-tree documents (keeps them discoverable):
 - [infrastructure/search/literature/backends/](backends/README.md)
 
 <!-- foam-orphan-nav:end -->
+
+### Unpaid HTTP access challenges
+
+Recognized browser access challenges retain their original HTTP body, status,
+headers and process receipt and remain unavailable (`LiteratureBlocked`). The
+HTML recognizer requires either the Radware CAPTCHA markers or the complete
+Client Challenge title, fixed challenge script route, `noscript` section and
+JavaScript instructions. It does not execute challenge scripts. Other HTML and
+malformed PDF responses still fail PDF extraction; DOI, license, candidate and
+deadline checks are unchanged. A blocked access attempt can proceed through the
+existing bounded full-text candidate route, and cannot satisfy full-text itself.

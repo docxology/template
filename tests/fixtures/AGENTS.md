@@ -31,3 +31,12 @@ flowchart LR
 - [`real_codebases/AGENTS.md`](real_codebases/AGENTS.md) — Real codebase fixture docs
 - [`../../scripts/fixtures/AGENTS.md`](../../scripts/fixtures/AGENTS.md) — Fixture download scripts
 - [`../AGENTS.md`](../AGENTS.md) — Test suite documentation
+
+## Retained literature access-challenge DATA
+
+`literature-client-challenge.txt` contains the exact 3,038-byte HTML response
+retained from a Nature PDF URL, SHA-256
+`32ed63159c77e21ee19ca1b9aa3213ccf0218eb59539560b132a8e68ef0e18ea`.
+Real loopback HTTP workers replay these bytes to check explicit browser-challenge
+unavailability and incomplete-signature refusal. Tests do not execute its scripts;
+this fixture supplies neither article full text nor external-provider acceptance.

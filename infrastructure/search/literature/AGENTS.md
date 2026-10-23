@@ -94,3 +94,14 @@ uv run pytest tests/infra_tests/search/ -v
 | `live_contract.py` | Fresh, bounded acceptance evidence for unpaid literature capabilities. |
 | `live_providers.py` | Keyless bounded Crossref retrieval and explicitly licensed full-text custody. |
 | `live_transport.py` | Supervised credential-free HTTP and local-model workers with byte receipts. |
+
+### Unpaid HTTP access challenges
+
+Recognized browser access challenges retain their original HTTP body, status,
+headers and process receipt and remain unavailable (`LiteratureBlocked`). The
+HTML recognizer requires either the Radware CAPTCHA markers or the complete
+Client Challenge title, fixed challenge script route, `noscript` section and
+JavaScript instructions. It does not execute challenge scripts. Other HTML and
+malformed PDF responses still fail PDF extraction; DOI, license, candidate and
+deadline checks are unchanged. A blocked access attempt can proceed through the
+existing bounded full-text candidate route, and cannot satisfy full-text itself.

@@ -38,3 +38,12 @@ uv sync --group timeseries-bench
 - [Real Codebases](real_codebases/) — Cloned repo fixtures
 - [Download Scripts](../../scripts/fixtures/) — Fixture generators
 - [Test Suite](../README.md) — Full test documentation
+
+## Retained literature access-challenge DATA
+
+`literature-client-challenge.txt` contains the exact 3,038-byte HTML response
+retained from a Nature PDF URL, SHA-256
+`32ed63159c77e21ee19ca1b9aa3213ccf0218eb59539560b132a8e68ef0e18ea`.
+Real loopback HTTP workers replay these bytes to check explicit browser-challenge
+unavailability and incomplete-signature refusal. Tests do not execute its scripts;
+this fixture supplies neither article full text nor external-provider acceptance.
