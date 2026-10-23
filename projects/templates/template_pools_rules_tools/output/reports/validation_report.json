@@ -270,7 +270,7 @@
     "passed": 9,
     "total_checks": 9
   },
-  "timestamp": "2026-10-23T05:44:01Z",
+  "timestamp": "2026-10-23T09:28:47Z",
   "validated_inputs": {
     "artifact_manifest": {
       "path": "output/reports/artifact_manifest.json",
@@ -352,7 +352,7 @@
       },
       "stage": {
         "file_count": 1913,
-        "sha256": "c036266690580d0fa8647ae91f3d368f9321b1a5957d7d3296af1a7fe95810c7"
+        "sha256": "619996e28ae21c554194642276e6056ffdaa270efa85fc1f7582313fe88f019e"
       }
     },
     "project": "templates/template_pools_rules_tools",
