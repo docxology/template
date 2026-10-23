@@ -69,7 +69,14 @@ def run_meta_analysis_pipeline(
 
     try:
         temporal = compute_temporal_metrics(papers)
-        growth = estimate_growth_rate(temporal["year_counts"])
+        # Counts are defined for one observed year; inter-year growth is not.
+        # Keep the strict estimator's two-year precondition and report absence
+        # explicitly instead of fabricating zero growth or discarding counts.
+        growth = (
+            estimate_growth_rate(temporal["year_counts"])
+            if len(temporal["year_counts"]) >= 2
+            else {"mean_growth_rate": None, "doubling_time": None, "cagr": None}
+        )
         temporal_results = {
             "year_counts": {str(k): v for k, v in temporal["year_counts"].items()},
             "smoothed_annual": {str(k): v for k, v in temporal.get("smoothed_annual", {}).items()},
@@ -82,6 +89,8 @@ def run_meta_analysis_pipeline(
             "doubling_time": growth["doubling_time"],
             "cagr": growth["cagr"],
         }
+        if len(temporal["year_counts"]) == 1:
+            temporal_results["growth_status"] = "insufficient_years"
     except ValueError as exc:
         logger.warning("Temporal analysis skipped: %s", exc)
         temporal_results = {"error": str(exc)}

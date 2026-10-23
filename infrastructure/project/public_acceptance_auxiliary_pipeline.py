@@ -422,6 +422,7 @@ def validate_portable_pipeline(
             "root": producer,
             "scope": scope,
             "budget": details["plan"]["run_timeout_seconds"],
+            "operation_deadline": process["original_deadline_monotonic"],
             "result_path": str(Path(producer) / "output/readiness/pipeline-child/facts.json"),
         }
         or facts.get("schema_version") != SCHEMA

@@ -90,7 +90,7 @@ connection statistic for the retained corpus; it does not establish methodologic
 coherence across the field.
 
 ### Combined Corpus
-The deduplicated combined corpus contains 46 unique papers spanning
+The deduplicated combined phase corpus contains 46 unique papers spanning
 2000--2023 (23 years). It provides a multi-phase
 description of the retained retrieval slice, not a field-wide account.
 

@@ -3,13 +3,13 @@
     "pdf": {
       "exists": true,
       "file_count": 1,
-      "size_mb": "0.80",
-      "total_size_bytes": 835112,
+      "size_mb": "0.78",
+      "total_size_bytes": 822575,
       "largest_files": [
         {
           "name": "template_madlib_combined.pdf",
-          "size_mb": "0.80",
-          "size_bytes": 835112,
+          "size_mb": "0.78",
+          "size_bytes": 822575,
           "path": "pdf/template_madlib_combined.pdf"
         }
       ],
@@ -20,25 +20,25 @@
     "web": {
       "exists": true,
       "file_count": 16,
-      "size_mb": "3.45",
-      "total_size_bytes": 3614070,
+      "size_mb": "2.19",
+      "total_size_bytes": 2299683,
       "largest_files": [
         {
           "name": "source-web-fonts.js",
-          "size_mb": "3.02",
-          "size_bytes": 3170848,
+          "size_mb": "1.77",
+          "size_bytes": 1853404,
           "path": "web/assets/source-web-fonts.js"
         },
         {
           "name": "index.html",
           "size_mb": "0.12",
-          "size_bytes": 126121,
+          "size_bytes": 126367,
           "path": "web/index.html"
         },
         {
           "name": "_combined_manuscript.md",
           "size_mb": "0.07",
-          "size_bytes": 73013,
+          "size_bytes": 73015,
           "path": "web/_combined_manuscript.md"
         }
       ],
@@ -52,25 +52,25 @@
     "slides": {
       "exists": true,
       "file_count": 12,
-      "size_mb": "0.82",
-      "total_size_bytes": 861787,
+      "size_mb": "0.83",
+      "total_size_bytes": 872436,
       "largest_files": [
         {
           "name": "03_results_slides.pdf",
-          "size_mb": "0.25",
-          "size_bytes": 259512,
+          "size_mb": "0.24",
+          "size_bytes": 247077,
           "path": "slides/03_results_slides.pdf"
         },
         {
           "name": "05_experimental_setup_slides.pdf",
-          "size_mb": "0.20",
-          "size_bytes": 204829,
+          "size_mb": "0.22",
+          "size_bytes": 226577,
           "path": "slides/05_experimental_setup_slides.pdf"
         },
         {
           "name": "06_evaluation_slides.pdf",
-          "size_mb": "0.14",
-          "size_bytes": 145668,
+          "size_mb": "0.13",
+          "size_bytes": 141243,
           "path": "slides/06_evaluation_slides.pdf"
         }
       ],
@@ -93,26 +93,26 @@
     "figures": {
       "exists": true,
       "file_count": 10,
-      "size_mb": "0.69",
-      "total_size_bytes": 719643,
+      "size_mb": "0.67",
+      "total_size_bytes": 705584,
       "largest_files": [
         {
           "name": "madlib_cover_overview.png",
-          "size_mb": "0.13",
-          "size_bytes": 132078,
+          "size_mb": "0.12",
+          "size_bytes": 127519,
           "path": "figures/madlib_cover_overview.png"
         },
         {
           "name": "quality_gate_matrix.png",
           "size_mb": "0.11",
-          "size_bytes": 117510,
+          "size_bytes": 113246,
           "path": "figures/quality_gate_matrix.png"
         },
         {
-          "name": "provenance_trace_map.png",
-          "size_mb": "0.10",
-          "size_bytes": 100676,
-          "path": "figures/provenance_trace_map.png"
+          "name": "section_configuration_heatmap.png",
+          "size_mb": "0.09",
+          "size_bytes": 97677,
+          "path": "figures/section_configuration_heatmap.png"
         }
       ],
       "extensions": {
@@ -124,18 +124,18 @@
       "exists": true,
       "file_count": 5,
       "size_mb": "0.14",
-      "total_size_bytes": 148116,
+      "total_size_bytes": 148120,
       "largest_files": [
         {
           "name": "manuscript_variables.json",
           "size_mb": "0.07",
-          "size_bytes": 76467,
+          "size_bytes": 76469,
           "path": "data/manuscript_variables.json"
         },
         {
           "name": "section_plan.json",
           "size_mb": "0.04",
-          "size_bytes": 41126,
+          "size_bytes": 41128,
           "path": "data/section_plan.json"
         },
         {
@@ -201,12 +201,12 @@
       "exists": true,
       "file_count": 15,
       "size_mb": "0.11",
-      "total_size_bytes": 114632,
+      "total_size_bytes": 114636,
       "largest_files": [
         {
           "name": "config.yaml",
           "size_mb": "0.04",
-          "size_bytes": 38818,
+          "size_bytes": 38820,
           "path": "manuscript/config.yaml"
         },
         {
@@ -255,13 +255,13 @@
     "root": {
       "exists": true,
       "file_count": 1,
-      "size_mb": "0.80",
-      "total_size_bytes": 835112,
+      "size_mb": "0.78",
+      "total_size_bytes": 822575,
       "largest_files": [
         {
           "name": "template_madlib_combined.pdf",
-          "size_mb": "0.80",
-          "size_bytes": 835112,
+          "size_mb": "0.78",
+          "size_bytes": 822575,
           "path": "template_madlib_combined.pdf"
         }
       ],
@@ -271,90 +271,90 @@
     }
   },
   "total_files": 69,
-  "total_size_mb": 6.818758964538574,
+  "total_size_mb": 5.538105010986328,
   "largest_files": [
     {
       "name": "source-web-fonts.js",
-      "size_mb": "3.02",
-      "size_bytes": 3170848,
+      "size_mb": "1.77",
+      "size_bytes": 1853404,
       "category": "web",
       "path": "web/assets/source-web-fonts.js"
     },
     {
       "name": "template_madlib_combined.pdf",
-      "size_mb": "0.80",
-      "size_bytes": 835112,
+      "size_mb": "0.78",
+      "size_bytes": 822575,
       "category": "pdf",
       "path": "pdf/template_madlib_combined.pdf"
     },
     {
       "name": "template_madlib_combined.pdf",
-      "size_mb": "0.80",
-      "size_bytes": 835112,
+      "size_mb": "0.78",
+      "size_bytes": 822575,
       "category": "root",
       "path": "template_madlib_combined.pdf"
     },
     {
       "name": "03_results_slides.pdf",
-      "size_mb": "0.25",
-      "size_bytes": 259512,
+      "size_mb": "0.24",
+      "size_bytes": 247077,
       "category": "slides",
       "path": "slides/03_results_slides.pdf"
     },
     {
       "name": "05_experimental_setup_slides.pdf",
-      "size_mb": "0.20",
-      "size_bytes": 204829,
+      "size_mb": "0.22",
+      "size_bytes": 226577,
       "category": "slides",
       "path": "slides/05_experimental_setup_slides.pdf"
     },
     {
       "name": "06_evaluation_slides.pdf",
-      "size_mb": "0.14",
-      "size_bytes": 145668,
+      "size_mb": "0.13",
+      "size_bytes": 141243,
       "category": "slides",
       "path": "slides/06_evaluation_slides.pdf"
     },
     {
-      "name": "madlib_cover_overview.png",
-      "size_mb": "0.13",
-      "size_bytes": 132078,
-      "category": "figures",
-      "path": "figures/madlib_cover_overview.png"
-    },
-    {
       "name": "02_methodology_slides.pdf",
       "size_mb": "0.13",
-      "size_bytes": 131717,
+      "size_bytes": 134775,
       "category": "slides",
       "path": "slides/02_methodology_slides.pdf"
     },
     {
+      "name": "madlib_cover_overview.png",
+      "size_mb": "0.12",
+      "size_bytes": 127519,
+      "category": "figures",
+      "path": "figures/madlib_cover_overview.png"
+    },
+    {
       "name": "index.html",
       "size_mb": "0.12",
-      "size_bytes": 126121,
+      "size_bytes": 126367,
       "category": "web",
       "path": "web/index.html"
     },
     {
       "name": "quality_gate_matrix.png",
       "size_mb": "0.11",
-      "size_bytes": 117510,
+      "size_bytes": 113246,
       "category": "figures",
       "path": "figures/quality_gate_matrix.png"
     }
   ],
   "missing_expected_files": [],
   "sizes_by_category": {
-    "pdf": 0.7964248657226562,
-    "web": 3.446645736694336,
-    "slides": 0.821864128112793,
-    "figures": 0.686305046081543,
-    "data": 0.14125442504882812,
+    "pdf": 0.7844686508178711,
+    "web": 2.193148612976074,
+    "slides": 0.8320198059082031,
+    "figures": 0.6728973388671875,
+    "data": 0.14125823974609375,
     "reports": 0.018644332885742188,
-    "manuscript": 0.10932159423828125,
+    "manuscript": 0.10932540893554688,
     "release": 0.0018739700317382812,
-    "root": 0.7964248657226562
+    "root": 0.7844686508178711
   },
   "inventory_mode": "stable-shippable-output-v1",
   "inventory_scope": "stage5-delivery-mirror",

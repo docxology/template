@@ -8,25 +8,25 @@ Inventory Scope: stage5-delivery-mirror
 Inventory Root: output/templates/template_madlib
 
 Total Files: 69
-Total Size: 6.82 MB
+Total Size: 5.54 MB
 
 Files by Category:
-  • pdf: 1 files (0.80 MB)
-  • web: 16 files (3.45 MB)
-  • slides: 12 files (0.82 MB)
-  • figures: 10 files (0.69 MB)
+  • pdf: 1 files (0.78 MB)
+  • web: 16 files (2.19 MB)
+  • slides: 12 files (0.83 MB)
+  • figures: 10 files (0.67 MB)
   • data: 5 files (0.14 MB)
   • reports: 7 files (0.02 MB)
   • manuscript: 15 files (0.11 MB)
   • release: 2 files (0.00 MB)
-  • root: 1 files (0.80 MB)
+  • root: 1 files (0.78 MB)
 
 Largest Files:
-  • source-web-fonts.js: 3.02 MB (web)
-  • template_madlib_combined.pdf: 0.80 MB (pdf)
-  • template_madlib_combined.pdf: 0.80 MB (root)
-  • 03_results_slides.pdf: 0.25 MB (slides)
-  • 05_experimental_setup_slides.pdf: 0.20 MB (slides)
+  • source-web-fonts.js: 1.77 MB (web)
+  • template_madlib_combined.pdf: 0.78 MB (pdf)
+  • template_madlib_combined.pdf: 0.78 MB (root)
+  • 03_results_slides.pdf: 0.24 MB (slides)
+  • 05_experimental_setup_slides.pdf: 0.22 MB (slides)
 
 File Types:
   • .md: 17 file(s)

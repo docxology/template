@@ -138,7 +138,7 @@ No existing system addresses all six concerns within a single enforced pipeline.
 
 1. **Ergonomic Modularity**: A Two-Layer Architecture cleanly separates globally shared infrastructure (logging, rendering, validation, steganography) from project-specific logic (manuscripts, scripts, data). 31 infrastructure subdirectories (28 importable packages) comprising ~1322 Python modules provide reusable services; projects consume them without modification.
 
-2. **Execution Integrity**: Pipeline advancement is contingent on test passage. The configured source-coverage floors are 60% for infrastructure and 90% for each project. The static gate rejects prohibited mock-framework imports, while the suites exercise real filesystem and subprocess behavior and use local protocol servers or explicitly enabled live services for network boundaries. ~12,482 infrastructure tests and 6321+ project tests are discovered by the introspection build.
+2. **Execution Integrity**: Pipeline advancement is contingent on test passage. The configured source-coverage floors are 60% for infrastructure and 90% for each project. The static gate rejects prohibited mock-framework imports, while the suites exercise real filesystem and subprocess behavior and use local protocol servers or explicitly enabled live services for network boundaries. ~12,482 infrastructure tests and 6324+ project tests are discovered by the introspection build.
 
 3. **Automated Provenance**: Steganographic watermarking and cryptographic hashing are integrated directly into the rendering pipeline. Every generated PDF carries SHA-256 (and, when enabled, SHA-512) fingerprints, an alpha-channel watermark (configurable text or QR overlay), per-page provenance footers and barcode strips, and embedded PDF metadata recording the build timestamp, document identifier, and Git commit hash. Provenance is not asserted by policy; it is enforced by architecture.
 
@@ -504,7 +504,7 @@ All 31 enumerated subdirectories carry Tier‑1/`README.md` and Tier‑2/`AGENTS
 | Skills | Optional `SKILL.md` manifests + generated `.agents/skill_manifest.json` |
 | PAI capsule | Repository level `PAI.md` narratives |
 
-`375+` Markdown shards under `docs/` capture operational knowledge without duplicating auto-generated inventories.
+`376+` Markdown shards under `docs/` capture operational knowledge without duplicating auto-generated inventories.
 
 ## DAG Reference (Declarative Executor)
 
@@ -671,7 +671,7 @@ The documentation investment creates a positive feedback loop: as agents produce
 
 The `SKILL.md` layer, with its MCP-aligned YAML frontmatter [@anthropic2024mcp], provides a bridge to the agentic software paradigm. Lu et al.'s AI Scientist [@lu2024aiscientist] demonstrates end-to-end autonomous research, while OpenHands is evaluated on SWE-Bench Verified [@wang2024opendevin; @jimenez2024swebench]. These systems motivate structured, protocol-aligned tool inventories for unfamiliar codebases. An agent navigating `template/` reads root `AGENTS.md` and `.agents/AGENTS.md` for shared constraints and generic workflows, scans `AGENTS.md` for local contracts, and can invoke skill-enabled capabilities through `SKILL.md` descriptors. The live module inventory verifies `AGENTS.md` and `README.md` coverage; `SKILL.md` remains a capability-specific layer rather than a universal claim about every infrastructure directory.
 
-This three-tier model is, to our knowledge, novel in the research software engineering literature. The scale of the investment is substantial: `375` Markdown files under `docs/` alone, plus an `AGENTS.md`/`README.md` pair in documented directories and a `SKILL.md` descriptor on skill-enabled infrastructure modules. That count is itself injected from live introspection—the manuscript refuses to quote a documentation total it cannot recompute—and it represents a deliberate commitment to machine-readable context that shrinks the surface on which an agent can hallucinate.
+This three-tier model is, to our knowledge, novel in the research software engineering literature. The scale of the investment is substantial: `376` Markdown files under `docs/` alone, plus an `AGENTS.md`/`README.md` pair in documented directories and a `SKILL.md` descriptor on skill-enabled infrastructure modules. That count is itself injected from live introspection—the manuscript refuses to quote a documentation total it cannot recompute—and it represents a deliberate commitment to machine-readable context that shrinks the surface on which an agent can hallucinate.
 
 ## The Learning Curve
 
@@ -1164,7 +1164,7 @@ template/
 |   |-- published/               # Non-rendered published (symlinked, private)
 |   |-- archive/                 # Non-rendered retired (symlinked, private)
 |   `-- other/                   # Non-rendered misc (symlinked, private)
-|-- docs/ (20 top-level areas, 375+ markdown files per live counter)
+|-- docs/ (20 top-level areas, 376+ markdown files per live counter)
 |-- tests/                       # Infra suites (938+ files)
 |-- AGENTS.md / README.md / CLAUDE.md / pyproject.toml
 |-- run.sh / secure_run.sh
@@ -1213,14 +1213,14 @@ The repository maintains documentation at three levels:
 | Level | Files | Purpose |
 |-------|:-----:|---------|
 | Repository root | `AGENTS.md`, `.agents/`, `CLAUDE.md`, `README.md`, `docs/RUN_GUIDE.md` | Global navigation and AI agent context |
-| `docs/` directory | 375 files across 20 subdirectories | User guides, API reference, troubleshooting |
+| `docs/` directory | 376 files across 20 subdirectories | User guides, API reference, troubleshooting |
 | Per-directory | `AGENTS.md` + `README.md` in documented directories | Documentation Duality standard |
 | Per-module (Tier 3) | `SKILL.md` on skill-enabled modules and public exemplars | Machine-parseable MCP-aligned skill descriptor |
 | Infrastructure-level (PAI) | `PAI.md` at `infrastructure/` directory | Personal AI Infrastructure integration contract |
 
 The `docs/` subdirectories cover: `core/` (essential docs), `guides/` (progressive skill-level guides), `architecture/` (system design), `usage/` (content authoring), `operational/` (build, config, logging, troubleshooting), `reference/` (API, FAQ, glossary), `modules/` (31 infrastructure modules), `development/` (contributing, testing), `maintenance/` (long-horizon maintenance: private projects, CI-local, regression, archival, bundle), `best-practices/` (version control, migration), `plans/` (strategic plans and decision records), `rules/` (contributor norms), `prompts/` (22 AI prompt templates), `security/` (steganography, hashing), `streams/` (livestream notes), and `audit/` (review reports), plus the machine-generated `_generated/` snippets and `images/` assets.
 
-Every count in this appendix is injected from live repository introspection rather than hand-maintained: `375` counts every Markdown file beneath `docs/` recursively, `20` counts its first-level subdirectories, and `22` counts the workflow subdirectories that each carry a `SKILL.md` descriptor. This is the same discipline the manuscript argues for throughout—a hand-typed documentation total silently rots as the tree grows, whereas a token re-resolves on every render. A reader onboarding to the repository should start at `docs/core/`, follow the graduated `docs/guides/` skill ladder, and consult the per-directory `AGENTS.md`/`README.md` pair nearest to whatever code they are editing; AI agents begin with root `AGENTS.md` and `.agents/AGENTS.md`, then read local contracts and available `SKILL.md` descriptors. The shared skill manifest supplies discovery; client-specific files remain compatibility references.
+Every count in this appendix is injected from live repository introspection rather than hand-maintained: `376` counts every Markdown file beneath `docs/` recursively, `20` counts its first-level subdirectories, and `22` counts the workflow subdirectories that each carry a `SKILL.md` descriptor. This is the same discipline the manuscript argues for throughout—a hand-typed documentation total silently rots as the tree grows, whereas a token re-resolves on every render. A reader onboarding to the repository should start at `docs/core/`, follow the graduated `docs/guides/` skill ladder, and consult the per-directory `AGENTS.md`/`README.md` pair nearest to whatever code they are editing; AI agents begin with root `AGENTS.md` and `.agents/AGENTS.md`, then read local contracts and available `SKILL.md` descriptors. The shared skill manifest supplies discovery; client-specific files remain compatibility references.
 
 
 

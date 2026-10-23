@@ -5,7 +5,7 @@
     "local": 6
   },
   "errors": {},
-  "bibtex": "<repo-root>/manuscript/references.bib",
+  "bibtex": "<repo-root>/output/bibliography/references.bib",
   "corpus": "<repo-root>/output/corpus.json",
   "report": "<repo-root>/output/reading_report.md",
   "llm_used": false,

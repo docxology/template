@@ -1,23 +1,27 @@
 # Results: Field Overview
 
-The de-duplicated corpus for **Modafinil** contains $N = 2334$
-records spanning 2000--2026 (26 years). Publication volume
+The de-duplicated retrieval corpus for **Modafinil** contains
+$N = 2334$ records. The analyzed subset contains
+2234 records; 2234 have publication years
+spanning 2000--2026 (26 years). Publication volume
+within this dated subset
 grows at a compound annual rate of 5.48\% (mean year-over-year growth
 7.8\%, doubling time 9.2 years), peaking in 2025
-with 147 records that year. The growth curve is the first-order signal
-that the literature is active rather than dormant.
+with 147 records that year. The growth curve is a first-order
+descriptive summary of this retained analyzed subset. A field-wide estimate of
+research activity would require a separate live coverage audit.
 
 <!-- FIGURE: growth_curve.png -->
-![Publication growth curve for Modafinil. Annual publication counts (bars) and cumulative total (line) show sustained growth from 2000 through 2026, peaking in 2025.](../output/figures/growth_curve.png "Publication Growth Curve"){#fig:growth_curve}
+![Publication growth curve for Modafinil. Annual publication counts (bars) and cumulative total (line) summarize the retained dated subset from 2000 through 2026, with its largest annual count in 2025.](../output/figures/growth_curve.png "Publication Growth Curve"){#fig:growth_curve}
 
 ## RQ1: Field Size and Growth
 
-The temporal analysis reveals a literature that has grown steadily over 26
-years. The compound annual growth rate of 5.48\% means the corpus roughly doubles
-every 9.2 years — a pace that exceeds the general biomedical literature
-growth rate of approximately 4\% per year. The peak year 2025 with
-147 publications likely reflects both genuine research activity and the
-lag between publication and indexing in the source databases.
+The temporal analysis describes a retained analyzed literature slice spanning
+26 years. The compound annual growth rate of 5.48\% implies a corpus
+doubling time of approximately 9.2 years under the configured retrieval,
+filtering, and indexing conditions. The peak year 2025 contains
+147 retained records. That count may reflect both publication activity
+and source-indexing delays; a causal trend would require a separate live coverage audit.
 
 **Table 1. Top publication years.**
 
@@ -64,8 +68,8 @@ its use in narcolepsy, shift-work disorder, and obstructive sleep apnea.
 
 ## Identifier and Full-Text Coverage
 
-The corpus has strong identifier coverage: 2260 of 2334 records
-(97.2\%) carry DOIs, enabling robust cross-engine de-duplication.
+The retrieved corpus carries DOIs for 2260 of 2334 records,
+enabling robust cross-engine de-duplication.
 OpenAlex IDs are present for 923 records. Abstract coverage stands at
 61.6\% (1437 records), which limits the text analytics
 to that subset. Open access is confirmed for 24.6\% of records, and
@@ -73,12 +77,15 @@ to that subset. Open access is confirmed for 24.6\% of records, and
 
 ## Descriptive Bibliometrics
 
-The corpus spans 8152 unique authors across 2334 papers, yielding
+The analyzed subset spans 8152 unique authors across
+2234 papers, yielding
 a mean of 1.28 papers per author. Citation counts range from zero to
 1353 (mean 30.3, median 0.0), with a total of
-67,646 citations across the corpus. The Gini coefficient of citation
+67,646 citations across the analyzed subset. The Gini coefficient of citation
 concentration is 0.817, indicating a highly skewed distribution
 characteristic of scientific literature.
+
+\clearpage
 
 **Table 3. Citation count distribution.**
 
@@ -93,6 +100,8 @@ characteristic of scientific literature.
 
 <!-- FIGURE: citation_distribution.png -->
 ![Citation distribution for Modafinil. The histogram shows the number of papers in each citation-count bucket, with the Gini coefficient annotated. The heavy-tailed distribution is characteristic of scientific citation networks.](../output/figures/citation_distribution.png "Citation Distribution"){#fig:citation_distribution}
+
+\clearpage
 
 **Table 4. Top publication venues.**
 
@@ -110,7 +119,9 @@ characteristic of scientific literature.
 | American Journal of Psychiatry | 23 |
 
 <!-- FIGURE: top_venues.png -->
-![Top publication venues for Modafinil. The horizontal bar chart shows the 15 venues with the most papers in the corpus, revealing where the modafinil literature is published.](../output/figures/top_venues.png "Top Venues"){#fig:top_venues}
+![Top publication venues for Modafinil. The horizontal bar chart shows the leading venues by paper count in the analyzed subset, revealing where the modafinil literature is published.](../output/figures/top_venues.png "Top Venues"){#fig:top_venues}
+
+\clearpage
 
 **Table 5. Top authors by publication count.**
 

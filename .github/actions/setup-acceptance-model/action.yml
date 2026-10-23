@@ -1,5 +1,5 @@
 name: Prepare one owned pinned acceptance model
-description: Authenticate Ollama 0.35.1 and smollm2:135m, then start a temporary loopback-only daemon on this hosted runner.
+description: Authenticate Ollama 0.35.1 and smollm2:360m, then start a temporary loopback-only daemon on this hosted runner.
 runs:
   using: composite
   steps:
@@ -35,14 +35,14 @@ runs:
       uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
       with:
         path: |
-          ${{ runner.temp }}/template-acceptance-model-cache/manifests/registry.ollama.ai/library/smollm2/135m
-          ${{ runner.temp }}/template-acceptance-model-cache/blobs/sha256-b0f58c4c1a3ca56f34a7673b353d7d09b773a1abce00451a58d5ebd2541331cf
-          ${{ runner.temp }}/template-acceptance-model-cache/blobs/sha256-f535f83ec568d040f88ddc04a199fa6da90923bbb41d4dcaed02caa924d6ef57
+          ${{ runner.temp }}/template-acceptance-model-cache/manifests/registry.ollama.ai/library/smollm2/360m
+          ${{ runner.temp }}/template-acceptance-model-cache/blobs/sha256-7b5a4e25bd7f795bdbbaa936ddf9601ae08e44b251813aedb7392b9a6c8ea8d1
+          ${{ runner.temp }}/template-acceptance-model-cache/blobs/sha256-7d23be4097d67c5c43c3df62ebc19609a25f483c7d0b77d3989e1d94e36ccab6
           ${{ runner.temp }}/template-acceptance-model-cache/blobs/sha256-fbacade46b4da804e0398c339c64b944d4b954452adf77cf050b49420116129e
           ${{ runner.temp }}/template-acceptance-model-cache/blobs/sha256-d502d55c1d609104ae6127aee92eb940e51e15c56dfb26dbd067e2771ee746f1
           ${{ runner.temp }}/template-acceptance-model-cache/blobs/sha256-58d1e17ffe5109a7ae296caafcadfdbe6a7d176f0bc4ab01e12a689b0499d8bd
           ${{ runner.temp }}/template-acceptance-model-cache/blobs/sha256-f02dd72bb2423204352eabc5637b44d79d17f109fdb510a7c51455892aa2d216
-        key: acceptance-model-bytes-v1-${{ runner.os }}-9077fe9d2ae1a4a41a868836b56b8163731a8fe16621397028c2c76f838c6907-${{ hashFiles('.github/actions/setup-acceptance-model/action.yml') }}
+        key: acceptance-model-bytes-v1-${{ runner.os }}-297281b699fc51376006233ca400cd664c4f7b80ed88a47ef084f1e4b089803b-${{ hashFiles('.github/actions/setup-acceptance-model/action.yml') }}
     - name: Authenticate exact manifest and every fixed model blob
       shell: bash
       run: |
@@ -57,14 +57,14 @@ runs:
             mkdir "$directory"
           fi
         done
-        manifest="$destination/manifests/registry.ollama.ai/library/smollm2/135m"
+        manifest="$destination/manifests/registry.ollama.ai/library/smollm2/360m"
         if [ ! -e "$manifest" ] && [ ! -L "$manifest" ]; then
-          curl --fail --location --retry 2 --max-time 60 --output "$manifest" https://registry.ollama.ai/v2/library/smollm2/manifests/135m
+          curl --fail --location --retry 2 --max-time 60 --output "$manifest" https://registry.ollama.ai/v2/library/smollm2/manifests/360m
         fi
         test -f "$manifest"
         test ! -L "$manifest"
         test "$(wc -c < "$manifest" | tr -d ' ')" = 1124
-        echo "9077fe9d2ae1a4a41a868836b56b8163731a8fe16621397028c2c76f838c6907  $manifest" | shasum -a 256 --check --status
+        echo "297281b699fc51376006233ca400cd664c4f7b80ed88a47ef084f1e4b089803b  $manifest" | shasum -a 256 --check --status
         python - "$manifest" > "$TEMPLATE_ACCEPTANCE_MODEL_DIRECTORY/blob-inputs.txt" <<'PYTHON'
         import json, sys
         from pathlib import Path
@@ -93,10 +93,10 @@ runs:
           echo "OLLAMA_MAX_LOADED_MODELS=1"
           echo "OLLAMA_CONTEXT_LENGTH=2048"
           echo "OLLAMA_KEEP_ALIVE=1m"
-          echo "OLLAMA_MODEL=smollm2:135m"
-          echo "TEMPLATE_AUTOSCIENTISTS_MODEL=smollm2:135m"
+          echo "OLLAMA_MODEL=smollm2:360m"
+          echo "TEMPLATE_AUTOSCIENTISTS_MODEL=smollm2:360m"
           echo "TEMPLATE_AUTOSCIENTISTS_ENDPOINT=http://127.0.0.1:11434"
-          echo "OLLAMA_TEST_PULL_MODEL=smollm2:135m"
+          echo "OLLAMA_TEST_PULL_MODEL=smollm2:360m"
           echo "OLLAMA_SKIP_TEST_MODEL_PULL=1"
         } >> "$GITHUB_ENV"
     - name: Start owned daemon and verify actual inference before observation
@@ -131,9 +131,9 @@ runs:
                 if time.monotonic() > deadline:
                     raise TimeoutError("Owned Ollama readiness deadline")
                 time.sleep(1)
-        assert len(tags["models"]) == 1 and tags["models"][0]["name"] == "smollm2:135m"
-        assert tags["models"][0]["digest"] == "9077fe9d2ae1a4a41a868836b56b8163731a8fe16621397028c2c76f838c6907"
-        request = urllib.request.Request("http://127.0.0.1:11434/api/generate", data=json.dumps({"model": "smollm2:135m", "prompt": "Say OK.", "stream": False, "options": {"num_predict": 16, "num_ctx": 4096, "seed": 0, "temperature": 0}}).encode(), headers={"Content-Type": "application/json"})
+        assert len(tags["models"]) == 1 and tags["models"][0]["name"] == "smollm2:360m"
+        assert tags["models"][0]["digest"] == "297281b699fc51376006233ca400cd664c4f7b80ed88a47ef084f1e4b089803b"
+        request = urllib.request.Request("http://127.0.0.1:11434/api/generate", data=json.dumps({"model": "smollm2:360m", "prompt": "Say OK.", "stream": False, "options": {"num_predict": 16, "num_ctx": 4096, "seed": 0, "temperature": 0}}).encode(), headers={"Content-Type": "application/json"})
         with urllib.request.urlopen(request, timeout=120) as response:
             result = json.load(response)
         assert result["done"] and result["eval_count"] > 0 and result["response"].strip()

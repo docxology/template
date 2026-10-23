@@ -1,5 +1,5 @@
 version = 1
-revision = 3
+revision = 5
 requires-python = ">=3.12"
 
 [[package]]
@@ -156,6 +156,15 @@ wheels = [
 ]
 
 [[package]]
+name = "defusedxml"
+version = "0.7.1"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/0f/d5/c66da9b79e5bdb124974bfe172b4daf3c984ebd9c2a06e2b8a4dc7331c72/defusedxml-0.7.1.tar.gz", hash = "sha256:1bb3032db185915b62d7c6209c5a8792be6a32ab2fedacc84e01b52c51aa3e69", size = 75520, upload-time = "2021-03-08T10:59:26.269Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/07/6c/aa3f2f849e01cb6a001cd8554a88d4c77c5c1a31c95bdf1cf9301e6d9ef4/defusedxml-0.7.1-py2.py3-none-any.whl", hash = "sha256:a352e7e428770286cc899e2542b6cdaedb2b4953ff269a210103ec58f6198a61", size = 25604, upload-time = "2021-03-08T10:59:24.45Z" },
+]
+
+[[package]]
 name = "fonttools"
 version = "4.63.0"
 source = { registry = "https://pypi.org/simple" }
@@ -292,6 +301,18 @@ wheels = [
 ]
 
 [[package]]
+name = "markdown-it-py"
+version = "4.2.0"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "mdurl" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/06/ff/7841249c247aa650a76b9ee4bbaeae59370dc8bfd2f6c01f3630c35eb134/markdown_it_py-4.2.0.tar.gz", hash = "sha256:04a21681d6fbb623de53f6f364d352309d4094dd4194040a10fd51833e418d49", size = 82454, upload-time = "2026-05-07T12:08:28.36Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/b3/81/4da04ced5a082363ecfa159c010d200ecbd959ae410c10c0264a38cac0f5/markdown_it_py-4.2.0-py3-none-any.whl", hash = "sha256:9f7ebbcd14fe59494226453aed97c1070d83f8d24b6fc3a3bcf9a38092641c4a", size = 91687, upload-time = "2026-05-07T12:08:27.182Z" },
+]
+
+[[package]]
 name = "matplotlib"
 version = "3.11.0"
 source = { registry = "https://pypi.org/simple" }
@@ -343,6 +364,15 @@ wheels = [
     { url = "https://files.pythonhosted.org/packages/ef/f9/9b030b6088354acb0296871bb624b25befc1c42509d3c6cd17420c83a5b8/matplotlib-3.11.0-cp314-cp314t-musllinux_1_2_x86_64.whl", hash = "sha256:15b0d160079cb10699a0e98b5989c70677b2df7cacdc62af67c30f2facec46d9", size = 10939427, upload-time = "2026-06-12T02:29:02.527Z" },
     { url = "https://files.pythonhosted.org/packages/59/94/6b273eaee4ee250863567d100865da61a5c1527fa67f527b7ed22e0dd29c/matplotlib-3.11.0-cp314-cp314t-win_amd64.whl", hash = "sha256:446307e6b04b57b1f1239e228a1ec2af0d589a1008cebc3dfa3f5441d095cfb6", size = 9535809, upload-time = "2026-06-12T02:29:04.994Z" },
     { url = "https://files.pythonhosted.org/packages/60/95/1d36bddf2b7e2692c1540e78a6e5bc88bc1496b137e3e35a611f91b65ac3/matplotlib-3.11.0-cp314-cp314t-win_arm64.whl", hash = "sha256:652fb5696271d4c50f196d22a5ff4f8e4444c74f847423570d7dc0aa2bbd0159", size = 9209226, upload-time = "2026-06-12T02:29:07.033Z" },
+]
+
+[[package]]
+name = "mdurl"
+version = "0.1.2"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/d6/54/cfe61301667036ec958cb99bd3efefba235e65cdeb9c84d24a8293ba1d90/mdurl-0.1.2.tar.gz", hash = "sha256:bb413d29f5eea38f31dd4754dd7377d4465116fb207585f97bf925588687c1ba", size = 8729, upload-time = "2022-08-14T12:40:10.846Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/b3/38/89ba8ad64ae25be8de66a6d463314cf1eb366222074cfda9ee839c56a4b4/mdurl-0.1.2-py3-none-any.whl", hash = "sha256:84008a41e51615a49fc9966191ff91509e3c40b939176e643fd50a5c2196b8f8", size = 9979, upload-time = "2022-08-14T12:40:09.779Z" },
 ]
 
 [[package]]
@@ -504,6 +534,15 @@ wheels = [
 ]
 
 [[package]]
+name = "pypdf"
+version = "6.21.2"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/06/28/081f1cbcca7042441dafc8de00f48ba60853f89e5bff92c5f26477346d81/pypdf-6.21.2.tar.gz", hash = "sha256:0a3e1c5c886a1be03646c16a04827cc166c2a0575c971b26a4bf89686551c2d4", size = 7144571, upload-time = "2026-10-21T16:44:55.272Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/1b/4d/c9d2d67f204eff463237a1a8f5e25a6923b7b1043982b91fcaf104c8ef60/pypdf-6.21.2-py3-none-any.whl", hash = "sha256:1d44d1a3a200f25062adff0085b02040e4646431ac2ccac22e42679e91466084", size = 407766, upload-time = "2026-10-21T16:44:53.626Z" },
+]
+
+[[package]]
 name = "pytest"
 version = "9.1.1"
 source = { registry = "https://pypi.org/simple" }
@@ -592,6 +631,139 @@ wheels = [
 ]
 
 [[package]]
+name = "research-project-template"
+version = "4.1.0"
+source = { editable = "../../../" }
+dependencies = [
+    { name = "defusedxml" },
+    { name = "markdown-it-py" },
+    { name = "matplotlib" },
+    { name = "numpy" },
+    { name = "pillow" },
+    { name = "pypdf" },
+    { name = "pyyaml" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "cryptography", marker = "extra == 'steganography'", specifier = ">=50.0.0" },
+    { name = "defusedxml", specifier = ">=0.7.1" },
+    { name = "docxplus", marker = "extra == 'docxplus'", git = "https://github.com/docxology/docxplus?rev=v1.0.1" },
+    { name = "google-genai", marker = "extra == 'deep-research'", specifier = ">=1.0" },
+    { name = "huggingface-hub", marker = "extra == 'publishing'", specifier = ">=0.35.0" },
+    { name = "markdown-it-py", specifier = ">=4.0.0" },
+    { name = "matplotlib", specifier = ">=3.7" },
+    { name = "numpy", specifier = ">=1.22" },
+    { name = "openai", marker = "extra == 'deep-research'", specifier = ">=1.60" },
+    { name = "pandas", marker = "extra == 'scientific'", specifier = ">=2.0.0" },
+    { name = "pdfplumber", marker = "extra == 'rendering'", specifier = ">=0.11.0" },
+    { name = "pillow", specifier = ">=12.3.0" },
+    { name = "plotly", marker = "extra == 'dashboard'", specifier = ">=5.0.0" },
+    { name = "psutil", marker = "extra == 'monitoring'", specifier = ">=5.9.0" },
+    { name = "pypdf", specifier = ">=6.16.1" },
+    { name = "python-barcode", marker = "extra == 'steganography'", specifier = ">=0.15" },
+    { name = "python-dotenv", marker = "extra == 'deep-research'", specifier = ">=1.2.2" },
+    { name = "python-dotenv", marker = "extra == 'dotenv'", specifier = ">=1.2.2" },
+    { name = "python-pptx", marker = "extra == 'rendering-pptx'", specifier = ">=1.0.0" },
+    { name = "pyyaml", specifier = ">=6.0" },
+    { name = "qrcode", extras = ["pil"], marker = "extra == 'steganography'", specifier = ">=8.2" },
+    { name = "rdflib", marker = "extra == 'scientific'", specifier = ">=7.0.0" },
+    { name = "reportlab", marker = "extra == 'rendering'", specifier = ">=4.0.0" },
+    { name = "requests", marker = "extra == 'llm'", specifier = ">=2.31.0" },
+    { name = "scikit-learn", marker = "extra == 'scientific'", specifier = ">=1.3.0" },
+    { name = "twine", marker = "extra == 'publishing'", specifier = ">=5.0.0" },
+    { name = "wordcloud", marker = "extra == 'scientific'", specifier = ">=1.9.0" },
+]
+provides-extras = ["scientific", "llm", "rendering", "rendering-pptx", "dashboard", "dotenv", "steganography", "docxplus", "monitoring", "publishing", "deep-research"]
+
+[package.metadata.requires-dev]
+active-inference = [{ name = "inferactively-pymdp", specifier = "==1.0.1" }]
+dashboard = [{ name = "plotly", specifier = ">=5.0.0" }]
+deep-research = [
+    { name = "google-genai", specifier = ">=1.0" },
+    { name = "openai", specifier = ">=1.60" },
+    { name = "python-dotenv", specifier = ">=1.2.2" },
+]
+dev = [
+    { name = "bandit", specifier = ">=1.7.0" },
+    { name = "desloppify", git = "https://github.com/peteromallet/desloppify.git?rev=19b9ebebcf449dd7074f30a7bdfdcd327d53cff6" },
+    { name = "hypothesis", specifier = ">=6.151.11" },
+    { name = "iniconfig", specifier = ">=2.3.0" },
+    { name = "mypy", specifier = ">=1.17.1" },
+    { name = "pip-audit", specifier = ">=2.0.0" },
+    { name = "pre-commit", specifier = ">=4.0.0" },
+    { name = "pytest", specifier = ">=7.0" },
+    { name = "pytest-asyncio", specifier = ">=1.3.0" },
+    { name = "pytest-benchmark", specifier = ">=5.0.0" },
+    { name = "pytest-cov", specifier = ">=4.0" },
+    { name = "pytest-httpserver", specifier = ">=1.0.8" },
+    { name = "pytest-timeout", specifier = ">=2.0" },
+    { name = "pytest-xdist", specifier = ">=3.5" },
+    { name = "ruff", specifier = ">=0.15.21" },
+    { name = "types-pyyaml", specifier = ">=6.0.12.20250915" },
+    { name = "types-requests", specifier = ">=2.32.4.20260107" },
+]
+discopy = [{ name = "discopy", specifier = ">=1.0.0" }]
+dotenv = [{ name = "python-dotenv", specifier = ">=1.2.2" }]
+installed-build = [
+    { name = "hatchling", specifier = "==1.32.4" },
+    { name = "setuptools", specifier = "==83.0.0" },
+    { name = "wheel", specifier = "==0.48.0" },
+]
+llm = [{ name = "requests", specifier = ">=2.31.0" }]
+monitoring = [{ name = "psutil", specifier = ">=5.9.0" }]
+public-exemplars = [
+    { name = "bibtexparser", specifier = ">=1.4.0" },
+    { name = "fuzzywuzzy", specifier = ">=0.18.0" },
+    { name = "ipykernel", specifier = ">=6.29.0" },
+    { name = "jinja2", specifier = ">=3.1.0" },
+    { name = "jsonschema", specifier = ">=4.0.0" },
+    { name = "nbclient", specifier = ">=0.10.0" },
+    { name = "nbformat", specifier = ">=5.10.0" },
+    { name = "networkx", specifier = ">=3.0" },
+    { name = "pandas", specifier = ">=2.0.0" },
+    { name = "psutil", specifier = ">=5.9.0" },
+    { name = "python-dateutil", specifier = ">=2.8.0" },
+    { name = "python-levenshtein", specifier = ">=0.21.0" },
+    { name = "python-pptx", specifier = ">=1.0.0" },
+    { name = "pyyaml", specifier = ">=6.0" },
+    { name = "rdflib", specifier = ">=7.0.0" },
+    { name = "requests", specifier = ">=2.31.0" },
+    { name = "scikit-learn", specifier = ">=1.3.0" },
+    { name = "scipy", specifier = ">=1.10.0" },
+    { name = "seaborn", specifier = ">=0.12.0" },
+    { name = "tqdm", specifier = ">=4.65.0" },
+    { name = "urllib3", specifier = ">=2.0.0" },
+    { name = "wordcloud", specifier = ">=1.9.0" },
+]
+publishing = [
+    { name = "huggingface-hub", specifier = ">=0.35.0" },
+    { name = "twine", specifier = ">=5.0.0" },
+]
+rendering = [
+    { name = "pdfplumber", specifier = ">=0.11.0" },
+    { name = "reportlab", specifier = ">=4.0.0" },
+]
+rendering-pptx = [{ name = "python-pptx", specifier = ">=1.0.0" }]
+scientific = [
+    { name = "pandas", specifier = ">=2.0.0" },
+    { name = "rdflib", specifier = ">=7.0.0" },
+    { name = "scikit-learn", specifier = ">=1.3.0" },
+    { name = "scipy", specifier = ">=1.10.0" },
+    { name = "wordcloud", specifier = ">=1.9.0" },
+]
+steganography = [
+    { name = "cryptography", specifier = ">=50.0.0" },
+    { name = "python-barcode", specifier = ">=0.15" },
+    { name = "qrcode", extras = ["pil"], specifier = ">=8.2" },
+]
+timeseries-bench = [
+    { name = "lightgbm", specifier = ">=4.0.0" },
+    { name = "scikit-learn", specifier = ">=1.3.0" },
+    { name = "statsmodels", specifier = ">=0.14.0" },
+]
+
+[[package]]
 name = "six"
 version = "1.17.0"
 source = { registry = "https://pypi.org/simple" }
@@ -608,6 +780,7 @@ dependencies = [
     { name = "matplotlib" },
     { name = "pillow" },
     { name = "pyyaml" },
+    { name = "research-project-template" },
 ]
 
 [package.optional-dependencies]
@@ -623,5 +796,6 @@ requires-dist = [
     { name = "pytest", marker = "extra == 'dev'", specifier = ">=7.4.0" },
     { name = "pytest-cov", marker = "extra == 'dev'", specifier = ">=4.1.0" },
     { name = "pyyaml", specifier = ">=6.0" },
+    { name = "research-project-template", editable = "../../../" },
 ]
 provides-extras = ["dev"]

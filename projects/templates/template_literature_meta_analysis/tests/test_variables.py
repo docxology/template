@@ -320,6 +320,17 @@ class TestComputeVariables:
         # Figures
         assert variables["NUM_FIGURES"] == "3"
 
+        # Retained retrieval records and the analyzed window have separate denominators.
+        temporal_path = tmp_path / "temporal_analysis.json"
+        temporal = json.loads(temporal_path.read_text())
+        temporal["total_papers"] = 2
+        temporal_path.write_text(json.dumps(temporal))
+        (tmp_path / "descriptive_stats.json").write_text(json.dumps({"descriptive_stats": {"total": 3}}))
+        filtered = compute_variables(tmp_path)
+        assert filtered["CORPUS_SIZE"] == "3"
+        assert filtered["ANALYZED_CORPUS_SIZE"] == "3"
+        assert filtered["TEMPORAL_TOTAL_PAPERS"] == "2"
+
     def test_empty_output_dir(self, tmp_path):
         """compute_variables handles a completely empty output directory."""
         variables = compute_variables(tmp_path)
@@ -418,6 +429,12 @@ class TestComputeVariables:
         variables = compute_variables(tmp_path)
         assert variables["CAGR_PCT"] == "150.00"
         assert variables["MEAN_YOY_GROWTH_PCT"] == "150.0"
+        temporal.update(cagr=None, mean_growth_rate=None, doubling_time=None, growth_status="insufficient_years")
+        (tmp_path / "temporal_analysis.json").write_text(json.dumps(temporal))
+        undefined = compute_variables(tmp_path)
+        assert all(undefined[field] == "N/A" for field in ("CAGR_PCT", "MEAN_YOY_GROWTH_PCT", "DOUBLING_TIME"))
+        assert undefined["YEAR_START"] == undefined["YEAR_END"] == "2020"
+        assert undefined["TEMPORAL_TOTAL_PAPERS"] == "10"
 
     def test_doubling_time_zero(self, tmp_path):
         """DOUBLING_TIME empty string when zero."""

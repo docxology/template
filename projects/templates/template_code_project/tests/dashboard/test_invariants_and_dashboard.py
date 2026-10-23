@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import shutil
 import subprocess
 import sys
 from pathlib import Path
@@ -46,6 +47,80 @@ class TestBuildDashboardCLI:
         assert n_pass == len(bundle["invariants"]) > 5
         # Plotly CDN embedded
         assert "cdn.plot.ly" in html.read_text()
+
+        # The same actual CLI must identify its own standalone checkout, not
+        # its non-repository parent or the canonical monorepo used by this test.
+        standalone = tmp_path / "standalone"
+        standalone.mkdir()
+        for directory in ("src", "scripts"):
+            shutil.copytree(
+                PROJECT_ROOT / directory,
+                standalone / directory,
+                ignore=shutil.ignore_patterns("__pycache__", "*.pyc"),
+            )
+        (standalone / "manuscript").mkdir()
+        shutil.copy2(PROJECT_ROOT / "manuscript" / "config.yaml", standalone / "manuscript" / "config.yaml")
+        shutil.copy2(PROJECT_ROOT / "pyproject.toml", standalone / "pyproject.toml")
+        for argv in (
+            ["git", "init", "."],
+            ["git", "add", "src", "scripts", "manuscript", "pyproject.toml"],
+            [
+                "git",
+                "-c",
+                "user.name=Dashboard Control",
+                "-c",
+                "user.email=dashboard-control@example.invalid",
+                "-c",
+                "commit.gpgsign=false",
+                "commit",
+                "-m",
+                "Standalone dashboard provenance control",
+            ],
+        ):
+            subprocess.run(argv, cwd=standalone, capture_output=True, text=True, check=True, timeout=30)
+        expected_revision = subprocess.check_output(
+            ["git", "rev-parse", "--short", "HEAD"], cwd=standalone, text=True, timeout=30
+        ).strip()
+        for dirty in (False, True):
+            if dirty:
+                (standalone / "dirty-marker.txt").write_text("actual untracked change\n", encoding="utf-8")
+            captured = subprocess.run(
+                [
+                    sys.executable,
+                    "-I",
+                    "-B",
+                    str(standalone / "scripts" / "build_dashboard.py"),
+                    "--alpha-sweep-num",
+                    "4",
+                    "--html-out",
+                    str(html),
+                    "--json-out",
+                    str(js),
+                    "--invariants-out",
+                    str(inv),
+                    "--summary-out",
+                    str(sm),
+                ],
+                cwd=standalone,
+                capture_output=True,
+                text=True,
+                timeout=180,
+            )
+            assert captured.returncode == 0, captured.stderr
+            standalone_bundle = json.loads(js.read_text())
+            assert standalone_bundle["git_rev"] == expected_revision
+            assert standalone_bundle["git_dirty"] is dirty
+            assert f"git rev:           {expected_revision}" in sm.read_text()
+
+        # The public facade must bind the supplied checkout even when imported
+        # from a different installed project location.
+        from template_code_project.dashboard.dashboard import build_dashboard_html
+
+        standalone_html = build_dashboard_html(project_root=standalone)
+        assert standalone_html == standalone / "output" / "web" / "dashboard.html"
+        facade_bundle = json.loads((standalone / "output" / "data" / "dashboard_payload.json").read_text())
+        assert facade_bundle["git_rev"] == expected_revision
+        assert facade_bundle["git_dirty"] is True
 
     def test_payload_step_sizes_match_config_yaml(self, tmp_path):
         from template_code_project.core.experiment_config import load_experiment_config

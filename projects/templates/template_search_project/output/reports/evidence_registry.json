@@ -1,17 +1,17 @@
 {
   "claim_boundary": "Compact evidence summary for manuscript validation; full fact dumps are opt-in debug output.",
-  "fact_count": 19821,
+  "fact_count": 19812,
   "freshness_warnings": [],
   "kind_counts": {
-    "artifact": 384,
+    "artifact": 389,
     "boolean": 1,
     "citation": 306,
     "figure": 18,
-    "number": 19091,
+    "number": 19077,
     "section": 20,
     "table": 1
   },
-  "omitted_fact_count": 19621,
+  "omitted_fact_count": 19612,
   "sample_facts": [
     {
       "active": true,
@@ -33,18 +33,6 @@
       "source_field": "$.claims[3].value",
       "source_path": "data/claim_ledger.yaml",
       "source_tier": "configuration",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "3"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-08-03T00:38:39+00:00",
-      "kind": "number",
-      "source": "output/data/dashboard_payload.json:$.hyperparameters.n_keywords",
-      "source_field": "$.hyperparameters.n_keywords",
-      "source_path": "output/data/dashboard_payload.json",
-      "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
       "value": "3"
@@ -2412,16 +2400,28 @@
       "stale": false,
       "tolerance": 0.0,
       "value": "3"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-10-22T11:47:00Z",
+      "kind": "number",
+      "source": "output/deep_search/stochastic_gradient_descent/papers.json:$.papers[1].raw.deposited.date-parts[0][1]",
+      "source_field": "$.papers[1].raw.deposited.date-parts[0][1]",
+      "source_path": "output/deep_search/stochastic_gradient_descent/papers.json",
+      "source_tier": "generated_metric",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "3"
     }
   ],
   "schema": "template-evidence-registry-report-v1",
   "source_tiers": {
-    "artifact": 423,
+    "artifact": 428,
     "bibliography": 308,
     "configuration": 39,
     "data_source": 12,
     "fixture": 2,
-    "generated_metric": 19030,
+    "generated_metric": 19016,
     "project_source": 7
   }
 }

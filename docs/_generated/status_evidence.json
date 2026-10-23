@@ -133,14 +133,14 @@
       "verified_by": "Daniel (agent session)"
     },
     {
-      "command": "`uv run --no-sync --offline python -m infrastructure.publishing.root_release_contract --tag v4.0.2`",
-      "health": "\ud83d\udfe1 Unreleased; version gate must refuse until acceptance closes",
+      "command": "`uv run --no-sync --offline python -m infrastructure.publishing.root_release_contract --tag v4.1.0`",
+      "health": "\ud83d\udfe1 Publication pending; hosted acceptance required",
       "id": "STATUS-ROOT-RELEASE-1",
       "last_verified": "2026-09-26",
       "mode": "manual",
       "receipt": "docs/_generated/status_evidence.json",
       "subsystem": "Root release boundary (`pyproject.toml`, tags, GitHub releases, `CHANGELOG.md`)",
-      "verification_scope": "Root 4.0.2 is intended and Unreleased; the prepared 4.0.0 and 4.0.1 candidates were not published. Historical releases remain preserved. A new tag and release require exact-revision acceptance and the explicit hosted evidence handoff.",
+      "verification_scope": "Root 4.1.0 is the current release intent; the prepared 4.0.0, 4.0.1 and 4.0.2 candidates were not published. Historical releases remain preserved. The version command checks metadata, provider, tag and changelog consistency; a new tag and release separately require exact-revision hosted acceptance and the authenticated evidence handoff.",
       "verified_by": "Daniel (agent session)"
     },
     {
@@ -190,5 +190,5 @@
   ],
   "schema_version": "template-status-evidence/v1",
   "source_path": "STATUS.md",
-  "source_sha256": "8cd6fd9f1c43ed5facafa8e3cd51ef07247e0d54751b7c3c0bbbb753f49bd9ee"
+  "source_sha256": "e7fb20d04b7fc9aed5fd263e29a267aeeecfd97ed6cbcebf07fc037f7042ff31"
 }

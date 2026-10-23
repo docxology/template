@@ -1,8 +1,10 @@
 # Bibliometric and Temporal Analysis
 
-Descriptive statistics summarize the corpus along every available axis: counts by year,
-venue, and author; citation-count distributions; and author productivity. Temporal
-analysis fits the publication time series, reporting a compound annual growth rate of
+Descriptive statistics summarize the analyzed subset of {{ANALYZED_CORPUS_SIZE}}
+records, rather than all {{CORPUS_SIZE}} retrieved records, along every available
+axis: counts by year, venue, and author; citation-count distributions; and author
+productivity. Temporal analysis uses the {{TEMPORAL_TOTAL_PAPERS}} dated records to
+fit the publication time series, reporting a compound annual growth rate of
 {{CAGR_PCT}}\% across {{YEAR_START}}--{{YEAR_END}} (a span of {{YEAR_SPAN}} years), with
 a mean year-over-year growth rate of {{MEAN_YOY_GROWTH_PCT}}\% and a doubling time of
 {{DOUBLING_TIME}} years. The peak publication year is {{PEAK_YEAR}} with

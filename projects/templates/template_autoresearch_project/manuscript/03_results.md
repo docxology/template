@@ -159,6 +159,8 @@ not treated as automatically best on every diagnostic axis.
 
 {{FIGURE_BLOCK_PROBABILITY_QUALITY}}
 
+\clearpage
+
 {{STATISTICAL_SUMMARY_TABLE}}
 
 {{SELECTIVE_ACCURACY_TABLE}}
@@ -195,6 +197,8 @@ figure(s) with validity `{{FIGURE_QUALITY_VALID}}`.
 
 {{FIGURE_BLOCK_CLOSURE_FLOW}}
 
+\clearpage
+
 {{AUTORESEARCH_ARTIFACT_TABLE}}
 
 {{REVIEW_GATE_TABLE}}
@@ -230,5 +234,7 @@ manuscript uses injected variables from generated data payloads, so the abstract
 and results track the latest analysis run rather than hard-coded counts. The
 final readiness status is `{{READINESS_STATUS}}`; generated review decisions are
 recorded as deferred for human review rather than as self-approval.
+
+\clearpage
 
 {{VARIABLE_PROVENANCE_TABLE}}

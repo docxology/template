@@ -2,7 +2,7 @@
 
 ```latex
 \usepackage{geometry}
-\geometry{margin=0.25in}
+\geometry{margin=0.25in,includefoot}
 \usepackage{graphicx}
 \usepackage{xcolor}
 ```

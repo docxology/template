@@ -284,19 +284,24 @@ component is in `infrastructure/`; only project-specific glue is in `src/`;
 
 ## Testing
 
-**Last verified: 2026-08-31** — `uv run pytest projects/templates/template_search_project/tests/ --cov=projects/templates/template_search_project/src --cov-fail-under=90 -q` → 321 passed, coverage 96.39% (gate ≥90%). <!-- noqa: drift-counts -->
+**Historical verification (2026-08-31)** — `uv run pytest projects/templates/template_search_project/tests/ --cov=projects/templates/template_search_project/src --cov-fail-under=90 -q` → 321 passed, coverage 96.39% (gate ≥90%). <!-- noqa: drift-counts -->
 
 ```bash
 uv run pytest projects/templates/template_search_project/tests/ -v
 ```
 
+Current measurement and provenance are generated in
+[`COUNTS.md`](../../../docs/_generated/COUNTS.md). The dated result above is retained
+as history rather than substituted for a fresh own-project receipt.
+
 All tests use real implementations:
 
-* `LocalBackend` against real temp files.
-* HTTP backends would use `pytest-httpserver` (the infra-level tests already
-  cover those, so this project's suite focuses on its orchestration logic).
-* LLM behaviour tested with a deterministic local callable (no Ollama
-  dependency at test time).
+* `LocalBackend` against real temporary files.
+* Real loopback HTTP providers exercise retrieval, licensed full-text consumption,
+  citation export and structured-generation requests in `tests/pipeline/test_live_acceptance.py`.
+* Deterministic local callables and controlled HTTP model responses exercise
+  parsing and orchestration without requiring Ollama. They do not qualify an actual model;
+  the explicit native acceptance lane does that separately.
 
 ## Determinism
 

@@ -16,13 +16,9 @@ from pathlib import Path
 from typing import Any
 from collections.abc import Callable
 
-from infrastructure.project.public_acceptance_evidence import read_json, write_json
+from infrastructure.project.public_acceptance_evidence import MissingAuxiliaryProvider, read_json, write_json
 from infrastructure.reporting.native_format_acceptance_checks import NativeToolUnavailable
 from infrastructure.reporting.native_format_acceptance_contracts import NativeDeadlineExpired, NativeDeadlineUnavailable
-
-
-class MissingAuxiliaryProvider(RuntimeError):
-    """A real check cannot run without its explicitly declared provider."""
 
 
 def execute(
@@ -494,7 +490,7 @@ def publication_native(root: Path, scope: str, capability: str, directory: Path)
             decisions = [redaction.RedactionDecision(**item) for item in fixture["redactions"]]
             output = copied / "output/auxiliary-redaction"
             module.write_dev_variant_pdfs(segments, decisions, output, include_steganography=False, include_kmyth=False)
-            check = module.verify_dev_variant_outputs(output, render_smoke=True)
+            check = module.verify_dev_variant_outputs(output, render_smoke=True, require_steganography=False)
             if check.get("valid") is not True:
                 raise ValueError("actual redaction proof matrix failed: " + str(check))
             pdfs = sorted(output.glob("*.pdf"))

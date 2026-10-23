@@ -110,9 +110,9 @@ def run_live_comparison(project_root: Path, output_dir: Path, settings: LiveSett
             import infrastructure
             from infrastructure.llm.core.local_ollama import validate_local_endpoint
         except ImportError as exc:
-            raise CoordinationBlocked("platform 4.0.2 is required for live coordination") from exc
-        if infrastructure.__version__ != "4.0.2":
-            raise CoordinationBlocked("live coordination requires platform 4.0.2")
+            raise CoordinationBlocked("platform 4.1.0 is required for live coordination") from exc
+        if infrastructure.__version__ != "4.1.0":
+            raise CoordinationBlocked("live coordination requires platform 4.1.0")
         validate_local_endpoint(settings.endpoint)
         implementation_before = implementation_custody()
         platform_before = platform_sources()

@@ -251,7 +251,7 @@ mjx-container[display="true"] { max-width: 100%; overflow: visible; }
   outline: 3px solid var(--brand-1);
   outline-offset: 3px;
 }
-.table-scroll > table { margin-block: 0; min-width: 100%; width: max-content; }
+.table-scroll > table { margin-block: 0; display: table; min-width: 100%; width: 100%; }
 *, *::before, *::after {
   box-sizing: border-box;
 }
@@ -412,8 +412,9 @@ table {
 
 .table-scroll > table {
   margin-block: 0;
+  display: table;
   min-width: 100%;
-  width: max-content;
+  width: 100%;
 }
 
 figure {
@@ -608,7 +609,7 @@ Structure</h2>
 |   |-- published/               # Non-rendered published (symlinked, private)
 |   |-- archive/                 # Non-rendered retired (symlinked, private)
 |   `-- other/                   # Non-rendered misc (symlinked, private)
-|-- docs/ (20 top-level areas, 375+ markdown files per live counter)
+|-- docs/ (20 top-level areas, 376+ markdown files per live counter)
 |-- tests/                       # Infra suites (938+ files)
 |-- AGENTS.md / README.md / CLAUDE.md / pyproject.toml
 |-- run.sh / secure_run.sh

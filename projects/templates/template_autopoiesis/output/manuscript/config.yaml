@@ -29,7 +29,7 @@ metadata:
   # Denser page layout (see manuscript/preamble.md for the paired 9pt font
   # rescale). Forwarded to pandoc as `-V geometry:` by
   # infrastructure/rendering/_pdf_combined_pandoc.py::build_pandoc_tex_command.
-  geometry: "a4paper,margin=0.25in"
+  geometry: "a4paper,margin=0.25in,includehead,includefoot,headheight=12pt"
 
 # Explicit allowlist + order for Stage 02 analysis discovery
 # (infrastructure/core/script_discovery.py::discover_analysis_scripts). Without
@@ -99,7 +99,7 @@ project_config:
 publication:
   release_status: "unreleased"
   intended_version: "2.0.0"
-  platform_version: "4.0.2"
+  platform_version: "4.1.0"
   last_published_version: "1.0.1"
   doi: "10.5281/zenodo.21227869"
   version_doi: "10.5281/zenodo.21229620"

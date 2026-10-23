@@ -14,6 +14,7 @@ authors = [
 keywords = ["gold refining", "manuscript composition", "mega-madlib", "token injection", "reproducible research"]
 requires-python = ">=3.12"
 dependencies = [
+    "research-project-template==4.1.0",
     "numpy>=1.24.0",
     "matplotlib>=3.7.0",
     "pillow>=12.3.0",
@@ -57,7 +58,10 @@ exclude_lines = [
 [tool.uv]
 
 # Compatibility contract for this independent exemplar release.
+[tool.uv.sources]
+research-project-template = {path = "../../..", editable = true}
+
 [tool.template]
-platform_version = "4.0.2"
+platform_version = "4.1.0"
 tested_python_versions = ["3.12", "3.13", "3.14"]
 required_unpaid_capabilities = ["local-review"]

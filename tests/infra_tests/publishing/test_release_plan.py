@@ -123,6 +123,43 @@ def test_real_git_plan_apply_and_exact_rollback_preserve_own_versions_and_locks(
     assert all((repository / path).read_bytes() == body for path, body in original.items())
     assert _git(repository, "diff", "--exit-code") == b""
 
+    # Explicit minor selection exercises all public metadata through the same
+    # actual Git transaction; the default next-patch behavior above is intact.
+    minor = build_release_plan(repository, "4.1.0", expected_current="4.0.1", release_kind="minor")
+    assert plan["release_kind"] == "patch" and minor["release_kind"] == "minor"
+    check_release_plan(repository, minor)
+    assert minor["public_roster"] == list(PUBLIC_PROJECT_NAMES)
+    changed_kind = dict(minor, release_kind="patch")
+    with pytest.raises(ValueError):
+        check_release_plan(repository, changed_kind)
+    missing_kind = {key: value for key, value in minor.items() if key != "release_kind"}
+    with pytest.raises(ValueError):
+        check_release_plan(repository, missing_kind)
+    for invalid in ("4.0.2", "4.1.1", "4.2.0", "5.0.0", "4.1.0rc1"):
+        with pytest.raises(ValueError, match="next minor"):
+            build_release_plan(repository, invalid, expected_current="4.0.1", release_kind="minor")
+    with pytest.raises(ValueError, match="release kind"):
+        build_release_plan(repository, "4.1.0", expected_current="4.0.1", release_kind="major")
+    minor_review = sha256(canonical(minor))
+    minor_journal = tmp_path / "minor-review"
+    apply_release_plan(repository, minor, reviewed_sha256=minor_review, journal=minor_journal)
+    for scope in PUBLIC_PROJECT_NAMES:
+        metadata = tomllib.loads((repository / "projects" / scope / "pyproject.toml").read_text())
+        assert metadata["project"]["version"] == "2.1.3"
+        assert metadata["project"]["dependencies"] == ["research-project-template==4.1.0"]
+        assert metadata["tool"]["template"]["platform_version"] == "4.1.0"
+        publication = repository / "projects" / scope / "manuscript/config.yaml"
+        assert yaml.safe_load(publication.read_text()) == {
+            "publication": {"platform_version": "4.1.0", "intended_version": "2.1.3", "doi": "10.example/owned"}
+        }
+        assert "# Keep comment" in publication.read_text()
+    for path in ("uv.lock", *(f"projects/{scope}/uv.lock" for scope in PUBLIC_PROJECT_NAMES)):
+        rows = tomllib.loads((repository / path).read_text())["package"]
+        assert [row["version"] for row in rows] == ["4.1.0", "4.0.1"]
+    rollback_release_plan(repository, minor_journal, reviewed_sha256=minor_review)
+    assert all((repository / path).read_bytes() == body for path, body in original.items())
+    assert _git(repository, "diff", "--exit-code") == b""
+
 
 @pytest.mark.parametrize(
     "change",
@@ -314,6 +351,51 @@ def test_actual_public_metadata_plan_preserves_every_nonroot_lock_record(tmp_pat
     for row in plan["changes"]:
         assert sha256((owned / row["path"]).read_bytes()) == row["after_sha256"]
 
+    rollback_release_plan(owned, tmp_path / "actual-journal", reviewed_sha256=sha256(canonical(plan)))
+    originals = {path: (owned / path).read_bytes() for path in paths}
+    next_minor = build_release_plan(owned, f"{major}.{minor + 1}.0", expected_current=old, release_kind="minor")
+    check_release_plan(owned, next_minor)
+    jsonschema.validate(next_minor, schema)
+    journal = tmp_path / "actual-minor-journal"
+    apply_release_plan(owned, next_minor, reviewed_sha256=sha256(canonical(next_minor)), journal=journal)
+    for scope in ("root", *PUBLIC_PROJECT_NAMES):
+        base = owned if scope == "root" else owned / "projects" / scope
+        updated = tomllib.loads((base / "uv.lock").read_text())
+        original = tomllib.loads(originals[(base / "uv.lock").relative_to(owned).as_posix()].decode())
+        assert {key: value for key, value in updated.items() if key != "package"} == {
+            key: value for key, value in original.items() if key != "package"
+        }
+        assert [row for row in updated["package"] if row["name"] != "research-project-template"] == [
+            row for row in original["package"] if row["name"] != "research-project-template"
+        ]
+        exported = subprocess.run(
+            [
+                uv,
+                "export",
+                "--directory",
+                str(base),
+                "--locked",
+                "--offline",
+                "--no-default-groups",
+                "--no-emit-project",
+                "--no-emit-local",
+                "--no-header",
+                "--no-annotate",
+                "--no-python-downloads",
+                "--python",
+                sys.executable,
+            ],
+            capture_output=True,
+            check=False,
+            timeout=30,
+        )
+        assert exported.returncode == 0, (scope, exported.stderr.decode(errors="replace"))
+    for row in next_minor["changes"]:
+        assert sha256((owned / row["path"]).read_bytes()) == row["after_sha256"]
+    rollback_release_plan(owned, journal, reviewed_sha256=sha256(canonical(next_minor)))
+    assert all((owned / path).read_bytes() == body for path, body in originals.items())
+    assert _git(owned, "diff", "--exit-code") == b""
+
 
 def test_thin_cli_dry_run_and_check_match_library_plan(repository: Path, tmp_path: Path) -> None:
     script = Path(__file__).resolve().parents[3] / "scripts/maintenance/coordinated_release.py"
@@ -326,4 +408,23 @@ def test_thin_cli_dry_run_and_check_match_library_plan(repository: Path, tmp_pat
     plan_file.write_bytes(emitted)
     result = subprocess.check_output([*command, "check", "--plan", str(plan_file)], timeout=30)
     assert json.loads(result)["status"] == "current"
+    assert _git(repository, "diff", "--exit-code") == b""
+    minor_emitted = subprocess.check_output(
+        [*command, "plan", "--from-version", "4.0.1", "--to-version", "4.1.0", "--release-kind", "minor"],
+        timeout=30,
+    )
+    assert json.loads(minor_emitted) == build_release_plan(
+        repository, "4.1.0", expected_current="4.0.1", release_kind="minor"
+    )
+    minor_file = tmp_path / "reviewed-minor.json"
+    minor_file.write_bytes(minor_emitted)
+    checked = subprocess.check_output([*command, "check", "--plan", str(minor_file)], timeout=30)
+    assert json.loads(checked)["status"] == "current"
+    refused = subprocess.run(
+        [*command, "plan", "--from-version", "4.0.1", "--to-version", "4.1.0"],
+        capture_output=True,
+        check=False,
+        timeout=30,
+    )
+    assert refused.returncode != 0 and b"next patch" in refused.stderr
     assert _git(repository, "diff", "--exit-code") == b""

@@ -216,7 +216,8 @@ def _load_json(path: Path, logger: logging.Logger) -> Any:
 def generate_all_figures(args: argparse.Namespace) -> list[str]:
     """Generate figures from JSON inputs; return list of output paths."""
     logger = logging.getLogger("generate_figures")
-    load_viz_labels_from_config(Path(__file__).resolve().parents[2])
+    project_root = Path(getattr(args, "project_root", None) or Path(__file__).resolve().parents[2])
+    load_viz_labels_from_config(project_root)
     matplotlib.rcParams["savefig.dpi"] = args.dpi
     VIZ_CONFIG["dpi"] = args.dpi
     apply_visual_style()

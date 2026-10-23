@@ -8,10 +8,12 @@ complete quantitative portrait of its literature. For this instance the term is
 engines (arXiv, OpenAlex, Semantic Scholar, Crossref, PubMed, SovietRxiv, ChinaRxiv, Europe PMC, bioRxiv, and medRxiv), each degrading gracefully to a skipped source when an API
 key or the network is unavailable, then merges and de-duplicates records by a canonical
 identifier hierarchy (DOI $>$ arXiv ID $>$ Semantic Scholar ID $>$ OpenAlex ID $>$ title
-digest) into a corpus of $N = 2334$ records spanning 2000--2026
-(26 years). Records are classified into a configurable 6-bucket
+digest) into a retrieved corpus of $N = 2334$ records. Bibliometric analysis
+retains 2234 records; its dated subset contains
+2234 records spanning 2000--2026
+(26 years). The analyzed records are classified into a configurable 6-bucket
 subfield taxonomy (Clinical Sleep, Cognition, Pharmacology, Psychiatry, Safety, and Neuroscience); the largest subfield is **Clinical Sleep**
-(63.0\% of the classified corpus). The corpus grows at a compound annual
+(63.0\% of the classified corpus). The dated subset grows at a compound annual
 rate of 5.48\% (mean year-over-year growth 7.8\%, doubling time
 9.2 years), peaking in 2025 with 147 records.
 
@@ -22,7 +24,8 @@ citation-network analysis exposes the corpus's internal structure (8,623
 intra-corpus edges across 2234 nodes, 1416 communities,
 graph density 0.17\%). Of 38,489 total outgoing
 references, 22.4\% resolve to another record inside the corpus.
-Abstract coverage stands at 61.6\%, 24.6\% of records are open access, and
+Across the retrieved corpus, abstract coverage stands at 61.6\%,
+24.6\% of records are open access, and
 54.6\% have a direct PDF link. An optional,
 LLM-gated knowledge-graph stage scores the 6 hypotheses explored against
 the evidence. This run produced 21 publication-quality figures.
@@ -68,8 +71,9 @@ The pipeline is designed around four research questions (RQs) that a researcher 
 the field would ask:
 
 1. **RQ1 — Field size and growth.** How large is the literature on Modafinil,
-   how fast is it growing, and when did it peak? The corpus of $N = 2334$
-   records spanning 2000--2026 answers this directly, with a compound
+   how fast is it growing, and when did it peak? The dated analysis subset of
+   $N = 2234$ records spanning 2000--2026
+   answers this directly, with a compound
    annual growth rate of 5.48\% and a peak in 2025.
 
 2. **RQ2 — Subfield composition.** What sub-areas compose the literature, and what is
@@ -261,8 +265,10 @@ the version with the most complete metadata (a count of non-None optional fields
 DOI is normalized: case-folded, resolver-prefix stripped, so the same paper returned by
 two engines under case/format-variant DOIs merges. For this run, 2260 records
 carry DOIs, 923 carry OpenAlex IDs, and 1 carry arXiv
-IDs. The de-duplicated corpus for this run holds $N = 2334$ records published
-across 2000--2026.
+IDs. The retained de-duplicated retrieval corpus holds $N = 2334$ records.
+The separate analysis subset contains 2234 records, of which
+2234 have publication years in the observed
+2000--2026 analysis window.
 
 ## Relevance Filtering
 
@@ -340,9 +346,11 @@ geography of the literature, and a hierarchical clustering dendrogram
 
 # Bibliometric and Temporal Analysis
 
-Descriptive statistics summarize the corpus along every available axis: counts by year,
-venue, and author; citation-count distributions; and author productivity. Temporal
-analysis fits the publication time series, reporting a compound annual growth rate of
+Descriptive statistics summarize the analyzed subset of 2234
+records, rather than all 2334 retrieved records, along every available
+axis: counts by year, venue, and author; citation-count distributions; and author
+productivity. Temporal analysis uses the 2234 dated records to
+fit the publication time series, reporting a compound annual growth rate of
 5.48\% across 2000--2026 (a span of 26 years), with
 a mean year-over-year growth rate of 7.8\% and a doubling time of
 9.2 years. The peak publication year is 2025 with
@@ -564,24 +572,28 @@ The six hypotheses frame the evidence landscape for Modafinil:
 
 # Results: Field Overview
 
-The de-duplicated corpus for **Modafinil** contains $N = 2334$
-records spanning 2000--2026 (26 years). Publication volume
+The de-duplicated retrieval corpus for **Modafinil** contains
+$N = 2334$ records. The analyzed subset contains
+2234 records; 2234 have publication years
+spanning 2000--2026 (26 years). Publication volume
+within this dated subset
 grows at a compound annual rate of 5.48\% (mean year-over-year growth
 7.8\%, doubling time 9.2 years), peaking in 2025
-with 147 records that year. The growth curve is the first-order signal
-that the literature is active rather than dormant.
+with 147 records that year. The growth curve is a first-order
+descriptive summary of this retained analyzed subset. A field-wide estimate of
+research activity would require a separate live coverage audit.
 
 <!-- FIGURE: growth_curve.png -->
-![Publication growth curve for Modafinil. Annual publication counts (bars) and cumulative total (line) show sustained growth from 2000 through 2026, peaking in 2025.](../figures/growth_curve.png "Publication Growth Curve"){#fig:growth_curve}
+![Publication growth curve for Modafinil. Annual publication counts (bars) and cumulative total (line) summarize the retained dated subset from 2000 through 2026, with its largest annual count in 2025.](../figures/growth_curve.png "Publication Growth Curve"){#fig:growth_curve}
 
 ## RQ1: Field Size and Growth
 
-The temporal analysis reveals a literature that has grown steadily over 26
-years. The compound annual growth rate of 5.48\% means the corpus roughly doubles
-every 9.2 years — a pace that exceeds the general biomedical literature
-growth rate of approximately 4\% per year. The peak year 2025 with
-147 publications likely reflects both genuine research activity and the
-lag between publication and indexing in the source databases.
+The temporal analysis describes a retained analyzed literature slice spanning
+26 years. The compound annual growth rate of 5.48\% implies a corpus
+doubling time of approximately 9.2 years under the configured retrieval,
+filtering, and indexing conditions. The peak year 2025 contains
+147 retained records. That count may reflect both publication activity
+and source-indexing delays; a causal trend would require a separate live coverage audit.
 
 **Table 1. Top publication years.**
 
@@ -628,8 +640,8 @@ its use in narcolepsy, shift-work disorder, and obstructive sleep apnea.
 
 ## Identifier and Full-Text Coverage
 
-The corpus has strong identifier coverage: 2260 of 2334 records
-(97.2\%) carry DOIs, enabling robust cross-engine de-duplication.
+The retrieved corpus carries DOIs for 2260 of 2334 records,
+enabling robust cross-engine de-duplication.
 OpenAlex IDs are present for 923 records. Abstract coverage stands at
 61.6\% (1437 records), which limits the text analytics
 to that subset. Open access is confirmed for 24.6\% of records, and
@@ -637,12 +649,15 @@ to that subset. Open access is confirmed for 24.6\% of records, and
 
 ## Descriptive Bibliometrics
 
-The corpus spans 8152 unique authors across 2334 papers, yielding
+The analyzed subset spans 8152 unique authors across
+2234 papers, yielding
 a mean of 1.28 papers per author. Citation counts range from zero to
 1353 (mean 30.3, median 0.0), with a total of
-67,646 citations across the corpus. The Gini coefficient of citation
+67,646 citations across the analyzed subset. The Gini coefficient of citation
 concentration is 0.817, indicating a highly skewed distribution
 characteristic of scientific literature.
+
+\clearpage
 
 **Table 3. Citation count distribution.**
 
@@ -657,6 +672,8 @@ characteristic of scientific literature.
 
 <!-- FIGURE: citation_distribution.png -->
 ![Citation distribution for Modafinil. The histogram shows the number of papers in each citation-count bucket, with the Gini coefficient annotated. The heavy-tailed distribution is characteristic of scientific citation networks.](../figures/citation_distribution.png "Citation Distribution"){#fig:citation_distribution}
+
+\clearpage
 
 **Table 4. Top publication venues.**
 
@@ -674,7 +691,9 @@ characteristic of scientific literature.
 | American Journal of Psychiatry | 23 |
 
 <!-- FIGURE: top_venues.png -->
-![Top publication venues for Modafinil. The horizontal bar chart shows the 15 venues with the most papers in the corpus, revealing where the modafinil literature is published.](../figures/top_venues.png "Top Venues"){#fig:top_venues}
+![Top publication venues for Modafinil. The horizontal bar chart shows the leading venues by paper count in the analyzed subset, revealing where the modafinil literature is published.](../figures/top_venues.png "Top Venues"){#fig:top_venues}
+
+\clearpage
 
 **Table 5. Top authors by publication count.**
 
@@ -861,16 +880,16 @@ reveal the most closely related works in the corpus.
 
 | Paper A | Paper B | Similarity |
 | --- | --- | --- |
-| doi:10.1176/appi.ajp.163.12.21 | doi:10.1176/ajp.2006.163.12.21 | 1.0000 |
-| doi:10.1176/ajp.2006.163.12.21 | doi:10.1176/appi.ajp.163.12.21 | 1.0000 |
-| doi:10.1345/aph.1h302 | doi:10.1136/bcr.08.2011.4652 | 0.9660 |
-| doi:10.4088/jcp.09m05900gry | doi:10.1186/s40345-015-0034-0 | 0.9566 |
-| doi:10.1111/bdi.12859 | doi:10.1111/acps.12712 | 0.9558 |
-| doi:10.1111/j.1360-0443.2008.0 | doi:10.1111/j.1465-3362.2012.0 | 0.9536 |
-| doi:10.1513/annalsats.202006-6 | doi:10.3760/cma.j.cn112147-202 | 0.9532 |
-| doi:10.1164/ajrccm.164.9.21030 | doi:10.1093/sleep/28.4.464 | 0.9513 |
-| doi:10.1093/sleep/28.4.464 | doi:10.1164/ajrccm.164.9.21030 | 0.9513 |
-| doi:10.1002/cncr.25083 | doi:10.1200/jco.2005.23.16_sup | 0.9507 |
+| `doi:10.1176/appi.ajp.163.12.2184` | `doi:10.1176/ajp.2006.163.12.2184` | 1.0000 |
+| `doi:10.1176/ajp.2006.163.12.2184` | `doi:10.1176/appi.ajp.163.12.2184` | 1.0000 |
+| `doi:10.1345/aph.1h302` | `doi:10.1136/bcr.08.2011.4652` | 0.9660 |
+| `doi:10.4088/jcp.09m05900gry` | `doi:10.1186/s40345-015-0034-0` | 0.9566 |
+| `doi:10.1111/bdi.12859` | `doi:10.1111/acps.12712` | 0.9558 |
+| `doi:10.1111/j.1360-0443.2008.02437.x` | `doi:10.1111/j.1465-3362.2012.00473.x` | 0.9536 |
+| `doi:10.1513/annalsats.202006-696fr` | `doi:10.3760/cma.j.cn112147-20241118-00681` | 0.9532 |
+| `doi:10.1164/ajrccm.164.9.2103032` | `doi:10.1093/sleep/28.4.464` | 0.9513 |
+| `doi:10.1093/sleep/28.4.464` | `doi:10.1164/ajrccm.164.9.2103032` | 0.9513 |
+| `doi:10.1002/cncr.25083` | `doi:10.1200/jco.2005.23.16_suppl.8012` | 0.9507 |
 
 <!-- FIGURE: similarity_heatmap.png -->
 ![Document similarity for Modafinil. The horizontal bar chart shows the 15 most similar document pairs ranked by cosine similarity of their TF-IDF/SVD embeddings. High-similarity pairs share topical and lexical content.](../figures/similarity_heatmap.png "Similar Document Pairs"){#fig:similarity_heatmap}
@@ -1127,7 +1146,8 @@ architecture.
 We have presented a configurable, reproducible meta-analysis template that turns a single
 search term into a complete, evidence-bound portrait of its literature. Applied to
 **Modafinil**, it retrieved and de-duplicated 2334 records across
-10 engines (arXiv, OpenAlex, Semantic Scholar, Crossref, PubMed, SovietRxiv, ChinaRxiv, Europe PMC, bioRxiv, and medRxiv), classified them into 6 configurable
+10 engines (arXiv, OpenAlex, Semantic Scholar, Crossref, PubMed, SovietRxiv, ChinaRxiv, Europe PMC, bioRxiv, and medRxiv). Its analysis subset of
+2234 records was classified into 6 configurable
 subfields (with **Clinical Sleep** dominant at 63.0\%), extracted
 5 topics over a 500-feature vocabulary, computed
 reproducible document embeddings, mapped the citation network (2234 nodes,
@@ -1138,7 +1158,7 @@ reproducible document embeddings, mapped the citation network (2234 nodes,
 
 The analysis answers the four research questions posed in the introduction:
 
-1. **RQ1 (Growth)**: The modafinil literature spans 26 years
+1. **RQ1 (Growth)**: The 2234 dated modafinil records span 26 years
    (2000--2026) and grows at a CAGR of 5.48\%, doubling every
    9.2 years. The peak year 2025 produced 147
    publications, indicating sustained and active research interest.

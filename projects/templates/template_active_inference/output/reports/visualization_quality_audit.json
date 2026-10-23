@@ -532,7 +532,7 @@
     {
       "accessibility_text_ok": true,
       "alt_word_count": 16,
-      "aspect_ratio": 0.7110024449877751,
+      "aspect_ratio": 0.6493970522554712,
       "aspect_ratio_ok": true,
       "caption_word_count": 9,
       "claim_lane_count": 1,
@@ -546,7 +546,7 @@
       "exists": true,
       "figure_id": "lean_boundary_status",
       "hash_present": true,
-      "height_px": 2045,
+      "height_px": 2239,
       "mode": "RGB",
       "nonblank": true,
       "paper_claim": "The Lean boundary table distinguishes proved finite witnesses from intentionally scoped formalization boundaries.",
@@ -560,7 +560,7 @@
         "methods_lean"
       ],
       "section_bound": true,
-      "size_bytes": 356478,
+      "size_bytes": 460703,
       "source_backed": true,
       "source_mapped": true,
       "sources": [
@@ -1147,7 +1147,7 @@
         "methods_pymdp"
       ],
       "section_bound": true,
-      "size_bytes": 36061,
+      "size_bytes": 36599,
       "source_backed": true,
       "source_mapped": true,
       "sources": [

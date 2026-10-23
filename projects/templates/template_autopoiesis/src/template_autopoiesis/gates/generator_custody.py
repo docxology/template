@@ -27,9 +27,9 @@ def capture_execution_custody(*, fresh_pycache_prefix: Path | None = None) -> tu
             capture_implementation_custody,
         )
     except ImportError as exc:
-        raise ChildCapabilityBlocked("child execution requires the installed or checkout platform 4.0.2") from exc
-    if __version__ != "4.0.2":
-        raise ChildCapabilityBlocked("child execution requires its bound platform version 4.0.2")
+        raise ChildCapabilityBlocked("child execution requires the installed or checkout platform 4.1.0") from exc
+    if __version__ != "4.1.0":
+        raise ChildCapabilityBlocked("child execution requires its bound platform version 4.1.0")
 
     import template_autopoiesis
 

@@ -10,7 +10,7 @@ The author remains responsible for theory, citations, reader expectations, and d
 
 | Failure mode | Risk | Detection | Mitigation |
 | --- | --- | --- | --- |
-| Unresolved placeholder | A source Markdown token is added without a generated variable. | Project test scans output/manuscript and rendered web output for uppercase placeholders. | Add variable generation, tests, and rerun z_generate_manuscript_variables.py before render. |
+| Unresolved placeholder | A source Markdown token is added without a generated variable. | Project test scans output/manuscript and rendered web output for uppercase placeholders. | Add variable generation, tests, and rerun `z_generate_manuscript_variables.py` before render. |
 | Overclaimed generated prose | Generated text implies a standalone DOI, empirical validation, or external release that does not exist. | Claim ledger review, publication metadata review, and evidence registry validation. | Keep publication fields blank and use local-only claim boundaries until evidence exists. |
 | Config-source drift | Documentation names a schema feature that source code no longer parses. | Config tests instantiate the schema and docs point to generated tables. | Update config loader, docs, and tests together. |
 | Figure provenance gap | A figure is referenced in manuscript output without a registry entry. | Stage 04 figure registry validation. | Emit figure_registry.json from src.analysis before rendering. |

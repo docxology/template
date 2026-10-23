@@ -13,8 +13,8 @@
   "CONTENT_FIGURES": "8",
   "COVER_FIGURES": "1",
   "TOTAL_FIGURES": "9",
-  "SRC_MODULES": "12",
-  "TEST_FILES": "11",
+  "SRC_MODULES": "13",
+  "TEST_FILES": "13",
   "ORCHESTRATION_SCRIPTS": "6",
   "TOOL_NAMES": "template_code_executor, template_model, template_skill, template_validator"
 }

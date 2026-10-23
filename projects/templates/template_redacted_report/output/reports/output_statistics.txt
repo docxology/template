@@ -7,25 +7,25 @@ Inventory Mode: stable-shippable-output-v1
 Inventory Scope: stage5-delivery-mirror
 Inventory Root: output/templates/template_redacted_report
 
-Total Files: 70
-Total Size: 4.14 MB
+Total Files: 71
+Total Size: 6.02 MB
 
 Files by Category:
-  • pdf: 1 files (0.21 MB)
-  • web: 6 files (0.10 MB)
-  • slides: 3 files (0.26 MB)
+  • pdf: 1 files (0.24 MB)
+  • web: 7 files (1.87 MB)
+  • slides: 3 files (0.31 MB)
   • figures: 5 files (0.26 MB)
   • data: 1 files (0.01 MB)
   • reports: 4 files (0.01 MB)
   • dev: 49 files (3.07 MB)
-  • root: 1 files (0.21 MB)
+  • root: 1 files (0.24 MB)
 
 Largest Files:
+  • source-web-fonts.js: 1.77 MB (web)
   • blur_on_blur_steganography.pdf: 0.24 MB (dev)
   • grayout_on_blur_steganography.pdf: 0.24 MB (dev)
   • whiteout_on_blur_steganography.pdf: 0.24 MB (dev)
   • blackout_on_blur_steganography.pdf: 0.24 MB (dev)
-  • template_redacted_report_combined.pdf: 0.21 MB (pdf)
 
 File Types:
   • .pdf: 37 file(s)
@@ -34,4 +34,5 @@ File Types:
   • .md: 2 file(s)
   • .png: 2 file(s)
   • .svg: 2 file(s)
+  • .js: 1 file(s)
   • .ico: 1 file(s)

@@ -3,13 +3,13 @@
     "pdf": {
       "exists": true,
       "file_count": 1,
-      "size_mb": "0.96",
-      "total_size_bytes": 1004076,
+      "size_mb": "1.02",
+      "total_size_bytes": 1073702,
       "largest_files": [
         {
           "name": "template_textbook_combined.pdf",
-          "size_mb": "0.96",
-          "size_bytes": 1004076,
+          "size_mb": "1.02",
+          "size_bytes": 1073702,
           "path": "pdf/template_textbook_combined.pdf"
         }
       ],
@@ -19,32 +19,33 @@
     },
     "web": {
       "exists": true,
-      "file_count": 52,
-      "size_mb": "1.65",
-      "total_size_bytes": 1728052,
+      "file_count": 53,
+      "size_mb": "3.43",
+      "total_size_bytes": 3598198,
       "largest_files": [
+        {
+          "name": "source-web-fonts.js",
+          "size_mb": "1.77",
+          "size_bytes": 1853404,
+          "path": "web/assets/source-web-fonts.js"
+        },
         {
           "name": "index.html",
           "size_mb": "0.42",
-          "size_bytes": 441353,
+          "size_bytes": 441702,
           "path": "web/index.html"
         },
         {
           "name": "_combined_manuscript.md",
-          "size_mb": "0.21",
-          "size_bytes": 215035,
+          "size_mb": "0.20",
+          "size_bytes": 212551,
           "path": "web/_combined_manuscript.md"
-        },
-        {
-          "name": "appendices__appendix_format_gallery.html",
-          "size_mb": "0.04",
-          "size_bytes": 42473,
-          "path": "web/appendices__appendix_format_gallery.html"
         }
       ],
       "extensions": {
         ".md": 1,
         ".html": 50,
+        ".js": 1,
         ".ico": 1
       }
     },
@@ -57,19 +58,19 @@
     "docx": {
       "exists": true,
       "file_count": 2,
-      "size_mb": "1.08",
-      "total_size_bytes": 1134586,
+      "size_mb": "0.84",
+      "total_size_bytes": 882969,
       "largest_files": [
         {
           "name": "template_textbook_combined.docx",
-          "size_mb": "1.08",
-          "size_bytes": 1134556,
+          "size_mb": "0.84",
+          "size_bytes": 882857,
           "path": "docx/template_textbook_combined.docx"
         },
         {
           "name": "_docx_metadata.yaml",
           "size_mb": "0.00",
-          "size_bytes": 30,
+          "size_bytes": 112,
           "path": "docx/_docx_metadata.yaml"
         }
       ],
@@ -81,13 +82,13 @@
     "epub": {
       "exists": true,
       "file_count": 1,
-      "size_mb": "1.17",
-      "total_size_bytes": 1227839,
+      "size_mb": "0.93",
+      "total_size_bytes": 978136,
       "largest_files": [
         {
           "name": "template_textbook_combined.epub",
-          "size_mb": "1.17",
-          "size_bytes": 1227839,
+          "size_mb": "0.93",
+          "size_bytes": 978136,
           "path": "epub/template_textbook_combined.epub"
         }
       ],
@@ -97,9 +98,9 @@
     },
     "figures": {
       "exists": true,
-      "file_count": 76,
-      "size_mb": "1.54",
-      "total_size_bytes": 1618775,
+      "file_count": 96,
+      "size_mb": "1.70",
+      "total_size_bytes": 1782982,
       "largest_files": [
         {
           "name": "gallery_contour.png",
@@ -121,9 +122,9 @@
         }
       ],
       "extensions": {
-        ".png": 54,
+        ".png": 64,
         ".json": 2,
-        ".mmd": 20
+        ".mmd": 30
       }
     },
     "data": {
@@ -153,12 +154,12 @@
       "exists": true,
       "file_count": 3,
       "size_mb": "0.01",
-      "total_size_bytes": 15560,
+      "total_size_bytes": 15556,
       "largest_files": [
         {
           "name": "manuscript_composition.json",
           "size_mb": "0.01",
-          "size_bytes": 10513,
+          "size_bytes": 10509,
           "path": "reports/manuscript_composition.json"
         },
         {
@@ -224,13 +225,13 @@
     "root": {
       "exists": true,
       "file_count": 1,
-      "size_mb": "0.96",
-      "total_size_bytes": 1004076,
+      "size_mb": "1.02",
+      "total_size_bytes": 1073702,
       "largest_files": [
         {
           "name": "template_textbook_combined.pdf",
-          "size_mb": "0.96",
-          "size_bytes": 1004076,
+          "size_mb": "1.02",
+          "size_bytes": 1073702,
           "path": "template_textbook_combined.pdf"
         }
       ],
@@ -239,48 +240,55 @@
       }
     }
   },
-  "total_files": 140,
-  "total_size_mb": 7.379899024963379,
+  "total_files": 161,
+  "total_size_mb": 8.974710464477539,
   "largest_files": [
     {
-      "name": "template_textbook_combined.epub",
-      "size_mb": "1.17",
-      "size_bytes": 1227839,
-      "category": "epub",
-      "path": "epub/template_textbook_combined.epub"
-    },
-    {
-      "name": "template_textbook_combined.docx",
-      "size_mb": "1.08",
-      "size_bytes": 1134556,
-      "category": "docx",
-      "path": "docx/template_textbook_combined.docx"
+      "name": "source-web-fonts.js",
+      "size_mb": "1.77",
+      "size_bytes": 1853404,
+      "category": "web",
+      "path": "web/assets/source-web-fonts.js"
     },
     {
       "name": "template_textbook_combined.pdf",
-      "size_mb": "0.96",
-      "size_bytes": 1004076,
+      "size_mb": "1.02",
+      "size_bytes": 1073702,
       "category": "pdf",
       "path": "pdf/template_textbook_combined.pdf"
     },
     {
       "name": "template_textbook_combined.pdf",
-      "size_mb": "0.96",
-      "size_bytes": 1004076,
+      "size_mb": "1.02",
+      "size_bytes": 1073702,
       "category": "root",
       "path": "template_textbook_combined.pdf"
     },
     {
+      "name": "template_textbook_combined.epub",
+      "size_mb": "0.93",
+      "size_bytes": 978136,
+      "category": "epub",
+      "path": "epub/template_textbook_combined.epub"
+    },
+    {
+      "name": "template_textbook_combined.docx",
+      "size_mb": "0.84",
+      "size_bytes": 882857,
+      "category": "docx",
+      "path": "docx/template_textbook_combined.docx"
+    },
+    {
       "name": "index.html",
       "size_mb": "0.42",
-      "size_bytes": 441353,
+      "size_bytes": 441702,
       "category": "web",
       "path": "web/index.html"
     },
     {
       "name": "_combined_manuscript.md",
-      "size_mb": "0.21",
-      "size_bytes": 215035,
+      "size_mb": "0.20",
+      "size_bytes": 212551,
       "category": "web",
       "path": "web/_combined_manuscript.md"
     },
@@ -304,26 +312,19 @@
       "size_bytes": 74973,
       "category": "figures",
       "path": "figures/gallery/gallery_multipanel.png"
-    },
-    {
-      "name": "gallery_quiver.png",
-      "size_mb": "0.06",
-      "size_bytes": 59854,
-      "category": "figures",
-      "path": "figures/gallery/gallery_quiver.png"
     }
   ],
   "missing_expected_files": [],
   "sizes_by_category": {
-    "pdf": 0.9575614929199219,
-    "web": 1.6479988098144531,
-    "docx": 1.0820255279541016,
-    "epub": 1.1709585189819336,
-    "figures": 1.5437841415405273,
+    "pdf": 1.0239620208740234,
+    "web": 3.431509017944336,
+    "docx": 0.8420648574829102,
+    "epub": 0.9328231811523438,
+    "figures": 1.7003841400146484,
     "data": 0.0032815933227539062,
-    "reports": 0.01483917236328125,
+    "reports": 0.014835357666015625,
     "release": 0.001888275146484375,
-    "root": 0.9575614929199219
+    "root": 1.0239620208740234
   },
   "inventory_mode": "stable-shippable-output-v1",
   "inventory_scope": "stage5-delivery-mirror",
@@ -332,13 +333,14 @@
     ".pdf": 2,
     ".md": 2,
     ".html": 50,
+    ".js": 1,
     ".ico": 1,
     ".yaml": 1,
     ".docx": 1,
     ".epub": 1,
-    ".png": 54,
+    ".png": 64,
     ".json": 7,
-    ".mmd": 20,
+    ".mmd": 30,
     ".txt": 1
   }
 }

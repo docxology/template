@@ -67,9 +67,13 @@ primitive domains times three narrative tracks times three section-set
 sizes is the actual space of scientifically distinguishable children this
 template can emit.
 
+\clearpage
+
 ### The five primitive domains
 
 ![The five primitive domains, type-colored: `optimization`, `dynamics`, `statistics`, `signal`, `graph`.](../output/figures/fig_domain_coverage.png){#fig:domain_coverage width=85% fig-alt="Five colored bars, one per primitive domain."}
+
+\clearpage
 
 Each domain in `- optimization
 - dynamics
@@ -213,8 +217,14 @@ it validates and consumes that same-run evidence, including its Source, runtime,
 coverage and executor-held commitment. Altered present evidence fails closed.
 Without that handoff, the standalone path executes a fresh pytest measurement
 against `tests/` and `src/` with `--cov-branch`. Its reported percentage combines
-covered statements and branch exits. There is no fallback literal: an incomplete
-measurement cannot produce a successful current summary.
+covered statements and branch exits. In this standalone Stage 02 path,
+`measure_test_summary()` probes and selects the monorepo root
+`.venv/bin/python3` when available, otherwise its current interpreter. These
+manuscript figures describe that functional measurement; the repository-wide
+`docs/_generated/COUNTS.md` snapshot separately records the project's own locked
+runtime qualification and may report a different percentage. The standalone
+measurement does not itself establish that qualification. There is no fallback
+literal: an incomplete measurement cannot produce a successful current summary.
 
 ![Per-module combined statement and branch coverage from the same measurement that produces 578/92.18 above. Red bars identify modules below the 90% aggregate-gate reference line; the aggregate pass does not imply every module meets that level.](../output/figures/fig_coverage_by_module.png){#fig:coverage_by_module width=90% fig-alt="Horizontal bars show measured combined statement and branch coverage per module; red bars identify values below the 90% aggregate-gate reference line."}
 

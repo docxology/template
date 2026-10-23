@@ -11,6 +11,7 @@ import base64
 import csv
 import hashlib
 import io
+import json
 import math
 import os
 import re
@@ -19,9 +20,10 @@ import sysconfig
 import time
 import tomllib
 from email.parser import BytesParser
-from importlib.metadata import distributions
+from importlib.metadata import Distribution, distributions
 from pathlib import Path, PurePosixPath
 from typing import Any
+from urllib.parse import unquote, urlsplit
 
 from infrastructure.core.bytecode_audit import verify_executed_source_code
 from infrastructure.core.pipeline.fingerprints import verify_loaded_implementation
@@ -194,6 +196,51 @@ def runtime_identity() -> dict[str, Any]:
     }
 
 
+def _checkout_distribution_matches(selected: Distribution, package_root: Path, checkout_root: Path) -> bool:
+    """Nominate supplementary metadata only for this actual editable checkout."""
+    files = selected.files
+    if files is None:
+        raise ValueError("selected platform distribution lacks its declared file set")
+    site_root = Path(str(selected.locate_file(""))).absolute()
+    checkout_root = checkout_root.absolute()
+    for name in files:
+        relative = PurePosixPath(str(name))
+        if ".." in relative.parts or relative.is_absolute():
+            continue
+        if len(relative.parts) == 1 and relative.suffix == ".pth":
+            for line in _regular_bytes(site_root / relative).decode("utf-8").splitlines():
+                line = line.strip()
+                if not line or line.startswith(("#", "import ", "import\t")):
+                    continue
+                directory = Path(os.path.abspath(site_root / line))
+                if directory.is_relative_to(checkout_root) and package_root.is_relative_to(directory):
+                    return True
+        elif (
+            len(relative.parts) == 2 and relative.parts[0].endswith(".dist-info") and relative.name == "direct_url.json"
+        ):
+            origin = json.loads(_regular_bytes(site_root / relative))
+            if not isinstance(origin, dict):
+                raise ValueError("selected platform direct URL must be an object")
+            directory_info = origin.get("dir_info")
+            if not isinstance(directory_info, dict) or directory_info.get("editable") is not True:
+                continue
+            url = origin.get("url")
+            if not isinstance(url, str):
+                raise ValueError("selected editable distribution requires a local directory URL")
+            parsed = urlsplit(url)
+            directory = Path(unquote(parsed.path))
+            if (
+                parsed.scheme == "file"
+                and parsed.netloc in {"", "localhost"}
+                and not parsed.query
+                and not parsed.fragment
+                and directory.is_absolute()
+                and directory == checkout_root
+            ):
+                return True
+    return False
+
+
 def _distribution_custody(
     package_root: Path,
     *,
@@ -207,7 +254,9 @@ def _distribution_custody(
 ) -> dict[str, Any] | None:
     # A checkout's generated src/*.egg-info may precede its installed editable
     # metadata on sys.path. Only the actual runtime's installation sites may
-    # nominate that supplementary distribution. Installed/custom-target source
+    # nominate supplementary metadata, and only when it names this editable
+    # checkout. A separate noneditable wheel is a different provider plane.
+    # Installed/custom-target source
     # instead nominates its own real provider parent, never another sys.path
     # provider with the same name.
     roots = (
@@ -216,6 +265,10 @@ def _distribution_custody(
         else [str(package_root.parent)]
     )
     candidates = tuple(distributions(name=package, path=roots))
+    if checkout_root is not None:
+        candidates = tuple(
+            item for item in candidates if _checkout_distribution_matches(item, package_root, checkout_root)
+        )
     if not candidates:
         if installed:
             raise MissingSelectedDistributionMetadata(

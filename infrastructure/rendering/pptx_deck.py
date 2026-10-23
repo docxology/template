@@ -413,9 +413,21 @@ def _add_stat_slide(prs: Any, layout: Any, slide_content: Slide, theme: DeckThem
 
     value = slide_content.stat_value or (slide_content.bullets[0] if slide_content.bullets else "")
     value_box = slide.shapes.add_textbox(Inches(0.55), Inches(1.8), prs.slide_width - Inches(1.1), Inches(1.4))
-    value_run = value_box.text_frame.paragraphs[0].add_run()
+    value_tf = value_box.text_frame
+    value_tf.word_wrap = False
+    value_tf.auto_size = MSO_AUTO_SIZE.NONE
+    value_tf.margin_left = 0
+    value_tf.margin_right = 0
+    value_tf.margin_top = 0
+    value_tf.margin_bottom = 0
+    value_run = value_tf.paragraphs[0].add_run()
     value_run.text = value
-    value_run.font.size = Pt(STAT_VALUE_FONT_SIZE)
+    value_run.font.name = "Helvetica"
+    value_run.font.size = Pt(
+        fit_helvetica_bold_single_line_font_size(
+            value, max_width_pt=SLIDE_TEXT_WIDTH_PT, start_size_pt=STAT_VALUE_FONT_SIZE
+        )
+    )
     value_run.font.bold = True
     value_run.font.color.rgb = _rgb(theme.highlight_2)
 

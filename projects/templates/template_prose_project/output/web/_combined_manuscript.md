@@ -66,7 +66,7 @@ This paper documents `template_prose_project`, the prose-focused exemplar of the
 
 A single `manuscript/config.yaml` defines target grade-level bands, citation-density floors, structural rules (every section has an H1, no heading levels skipped), and bibliography-consistency policy. The pipeline reads the manuscript, runs the prose analysers, cross-checks every `[@key]` citation against `manuscript/references.bib`, evaluates the configured checks, and writes a deterministic markdown review report alongside three figures (per-file word counts, readability metrics, citation density) and a JSON `manuscript_report.json` suitable for CI artefacts.
 
-**Run snapshot.** The current configuration analyses 8 file(s) totalling 1842 words across 90 sentence(s) and 65 paragraph(s). Average Flesch-Kincaid grade level is 15.68; average Gunning Fog index is 16.38; the manuscript references 6 unique citation key(s); the longest section is 483 words and the shortest is 17. These numbers are auto-substituted by `scripts/z_generate_manuscript_variables.py` after every run, so the abstract tracks the JSON outputs in `output/`.
+**Run snapshot.** The current configuration analyses 8 file(s) totalling 1843 words across 90 sentence(s) and 65 paragraph(s). Average Flesch-Kincaid grade level is 15.68; average Gunning Fog index is 16.38; the manuscript references 6 unique citation key(s); the longest section is 484 words and the shortest is 17. These numbers are auto-substituted by `scripts/z_generate_manuscript_variables.py` after every run, so the abstract tracks the JSON outputs in `output/`.
 
 The contribution is methodological and architectural: a *generic, reusable* prose-quality module (`infrastructure/prose/`) that any project in the template can opt into, plus a *minimal, configurable* exemplar (`projects/templates/template_prose_project/`) that wires it to the bibliography and the manuscript pipeline.
 
@@ -131,7 +131,7 @@ The check compares the cited keys from the `ManuscriptReport` against the BibTeX
 
 The report runs through a set of pure check functions:
 
-* `_check_grade_level` — the manuscript-wide weighted average FKGL falls within `[target_grade_level_min, target_grade_level_max]`.
+* `_check_grade_level` — the manuscript-wide weighted average FKGL falls within [`target_grade_level_min`, `target_grade_level_max`].
 * `_check_citation_density` — citations per 1000 words ≥ `citation_density_min_per_1000`.
 * `_check_no_skipped_levels` — no file uses a skipped heading level (when `prose.forbid_skipped_levels: true`).
 * `_check_h1_per_file` — every file has an H1 (when `prose.require_h1_per_section: true`).
@@ -160,7 +160,9 @@ stages always see a fresh review):
   `output/evidence_summary.json` (versioned diagnostic-only evidence), and
   `output/run_summary.json` (one-line metadata).
 * `scripts/y_generate_prose_figures.py` reads `manuscript_report.json`
-  and writes `../figures/{section_word_counts,readability_metrics,citation_density}.png`.
+  and writes `../figures/section_word_counts.png`,
+  `../figures/readability_metrics.png`, and
+  `../figures/citation_density.png`.
 * `scripts/z_generate_manuscript_variables.py` reads `manuscript_report.json`
   + `config.yaml` and writes `output/data/manuscript_variables.json`
   along with a resolved manuscript tree under `output/manuscript/`.

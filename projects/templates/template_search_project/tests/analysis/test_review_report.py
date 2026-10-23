@@ -503,11 +503,24 @@ def test_public_report_refuses_directory_as_reading_report_presence(tmp_path: Pa
 def test_actual_source_aba_cannot_authorize_findings_under_original_snapshot(tmp_path: Path):
     import subprocess
     import sys
-    import infrastructure
     import template_search_project
 
     source = Path(template_search_project.__file__).resolve()
-    provider = Path(infrastructure.__file__).resolve()
+    # Nominate the same ordinary isolated SDK that the genuine ABA child loads.
+    # The project implementation and test fixture remain the explicit Source copy below.
+    provider = Path(
+        subprocess.check_output(
+            [
+                sys.executable,
+                "-I",
+                "-B",
+                "-c",
+                "from pathlib import Path;import infrastructure;print(Path(infrastructure.__file__).resolve(strict=True))",
+            ],
+            text=True,
+            timeout=30,
+        ).strip()
+    )
     test_source = Path(__file__).resolve()
     program = f"""
 import importlib.util,json,sys,hashlib

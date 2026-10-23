@@ -324,6 +324,24 @@ def test_story_flowables_with_all_fields(styles: StyleSheet1, fonts: Fonts, tmp_
     items = story_flowables(story, styles, fonts, measure=200.0, project_root=tmp_path)
     assert len(items) > 0
 
+    from reportlab.pdfgen.canvas import Canvas
+    from reportlab.platypus import Frame
+
+    # A real short column must not draw an orphaned headline before the image/body.
+    canvas = Canvas(str(tmp_path / "story_columns.pdf"), pagesize=(450, 2100), pageCompression=0)
+    initial = canvas.getCurrentPageContent()
+    count = len(items)
+    short = Frame(0, 0, 200, 200, leftPadding=0, rightPadding=0, topPadding=0, bottomPadding=0)
+    short.addFromList(items, canvas)
+    assert len(items) == count
+    assert canvas.getCurrentPageContent() == initial
+    tall = Frame(220, 0, 200, 2000, leftPadding=0, rightPadding=0, topPadding=0, bottomPadding=0)
+    tall.addFromList(items, canvas)
+    assert items == []
+    assert canvas.getCurrentPageContent() != initial
+    canvas.save()
+    assert (tmp_path / "story_columns.pdf").read_bytes().startswith(b"%PDF-")
+
 
 def test_story_flowables_drop_cap_short_text(styles: StyleSheet1, fonts: Fonts, tmp_path: Path) -> None:
     """A drop_cap with a single-char first paragraph falls back to BodyFirst."""
@@ -348,3 +366,38 @@ def test_story_flowables_no_headline(styles: StyleSheet1, fonts: Fonts, tmp_path
     )
     items = story_flowables(story, styles, fonts, measure=200.0, project_root=tmp_path, include_headline=False)
     assert len(items) > 0
+
+    from reportlab.pdfgen.canvas import Canvas
+    from reportlab.platypus import Frame, Paragraph
+
+    # Prove a subheading alone fits, but the actual builder keeps it with the
+    # following paragraph when a short column has no room for both.
+    heading = Paragraph("Later notice", styles["Subhead"])
+    canvas = Canvas(str(tmp_path / "subheading_columns.pdf"), pagesize=(450, 1000), pageCompression=0)
+    short_height = heading.wrapOn(canvas, 200, 1000)[1] + heading.getSpaceBefore() + heading.getSpaceAfter() + 1
+    standalone = [heading]
+    Frame(0, 0, 200, short_height, leftPadding=0, rightPadding=0, topPadding=0, bottomPadding=0).addFromList(
+        standalone, canvas
+    )
+    assert standalone == []
+    notice = Story(
+        headline="Not drawn",
+        drop_cap=False,
+        body=[
+            Block("subhead", "Later notice"),
+            Block("p", "The first paragraph belongs with its subheading. " * 6),
+        ],
+    )
+    notices = story_flowables(notice, styles, fonts, measure=200.0, project_root=tmp_path, include_headline=False)
+    count = len(notices)
+    initial = canvas.getCurrentPageContent()
+    Frame(220, 0, 200, short_height, leftPadding=0, rightPadding=0, topPadding=0, bottomPadding=0).addFromList(
+        notices, canvas
+    )
+    assert len(notices) == count
+    assert canvas.getCurrentPageContent() == initial
+    Frame(220, 50, 200, 900, leftPadding=0, rightPadding=0, topPadding=0, bottomPadding=0).addFromList(notices, canvas)
+    assert notices == []
+    assert canvas.getCurrentPageContent() != initial
+    canvas.save()
+    assert (tmp_path / "subheading_columns.pdf").read_bytes().startswith(b"%PDF-")

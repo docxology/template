@@ -4,7 +4,7 @@
       "exists": true,
       "file_count": 2,
       "size_mb": "1.08",
-      "total_size_bytes": 1128518,
+      "total_size_bytes": 1128448,
       "largest_files": [
         {
           "name": "the-shape-between.pdf",
@@ -15,7 +15,7 @@
         {
           "name": "template_storybook_combined.pdf",
           "size_mb": "0.04",
-          "size_bytes": 45165,
+          "size_bytes": 45095,
           "path": "pdf/template_storybook_combined.pdf"
         }
       ],
@@ -25,31 +25,32 @@
     },
     "web": {
       "exists": true,
-      "file_count": 9,
-      "size_mb": "0.09",
-      "total_size_bytes": 98473,
+      "file_count": 10,
+      "size_mb": "1.87",
+      "total_size_bytes": 1956966,
       "largest_files": [
+        {
+          "name": "source-web-fonts.js",
+          "size_mb": "1.77",
+          "size_bytes": 1853404,
+          "path": "web/assets/source-web-fonts.js"
+        },
         {
           "name": "index.html",
           "size_mb": "0.02",
-          "size_bytes": 21718,
+          "size_bytes": 22445,
           "path": "web/index.html"
         },
         {
           "name": "manuscript__00_abstract.html",
           "size_mb": "0.01",
-          "size_bytes": 12431,
+          "size_bytes": 13158,
           "path": "web/manuscript__00_abstract.html"
-        },
-        {
-          "name": "manuscript__03_story_and_graphics.html",
-          "size_mb": "0.01",
-          "size_bytes": 12225,
-          "path": "web/manuscript__03_story_and_graphics.html"
         }
       ],
       "extensions": {
         ".md": 1,
+        ".js": 1,
         ".ico": 1,
         ".html": 7
       }
@@ -58,24 +59,24 @@
       "exists": true,
       "file_count": 6,
       "size_mb": "0.06",
-      "total_size_bytes": 63915,
+      "total_size_bytes": 64210,
       "largest_files": [
         {
           "name": "02_architecture_slides.pdf",
           "size_mb": "0.01",
-          "size_bytes": 15057,
+          "size_bytes": 15095,
           "path": "slides/02_architecture_slides.pdf"
         },
         {
           "name": "00_abstract_slides.pdf",
           "size_mb": "0.01",
-          "size_bytes": 14068,
+          "size_bytes": 14109,
           "path": "slides/00_abstract_slides.pdf"
         },
         {
           "name": "03_story_and_graphics_slides.pdf",
           "size_mb": "0.01",
-          "size_bytes": 12238,
+          "size_bytes": 12281,
           "path": "slides/03_story_and_graphics_slides.pdf"
         }
       ],
@@ -193,12 +194,12 @@
       "exists": true,
       "file_count": 1,
       "size_mb": "0.04",
-      "total_size_bytes": 45165,
+      "total_size_bytes": 45095,
       "largest_files": [
         {
           "name": "template_storybook_combined.pdf",
           "size_mb": "0.04",
-          "size_bytes": 45165,
+          "size_bytes": 45095,
           "path": "template_storybook_combined.pdf"
         }
       ],
@@ -207,9 +208,16 @@
       }
     }
   },
-  "total_files": 38,
-  "total_size_mb": 3.277486801147461,
+  "total_files": 39,
+  "total_size_mb": 5.050031661987305,
   "largest_files": [
+    {
+      "name": "source-web-fonts.js",
+      "size_mb": "1.77",
+      "size_bytes": 1853404,
+      "category": "web",
+      "path": "web/assets/source-web-fonts.js"
+    },
     {
       "name": "the-shape-between.pdf",
       "size_mb": "1.03",
@@ -272,24 +280,17 @@
       "size_bytes": 76117,
       "category": "figures",
       "path": "figures/storybook_pages/04_valley_symbol.png"
-    },
-    {
-      "name": "12_mega_symbol.png",
-      "size_mb": "0.07",
-      "size_bytes": 75255,
-      "category": "figures",
-      "path": "figures/storybook_pages/12_mega_symbol.png"
     }
   ],
   "missing_expected_files": [],
   "sizes_by_category": {
-    "pdf": 1.0762386322021484,
-    "web": 0.09391117095947266,
-    "slides": 0.06095409393310547,
+    "pdf": 1.076171875,
+    "web": 1.8663082122802734,
+    "slides": 0.06123542785644531,
     "figures": 1.987274169921875,
     "data": 0.011869430541992188,
     "reports": 0.004166603088378906,
-    "root": 0.04307270050048828
+    "root": 0.043005943298339844
   },
   "inventory_mode": "stable-shippable-output-v1",
   "inventory_scope": "stage5-delivery-mirror",
@@ -297,6 +298,7 @@
   "file_counts_by_type": {
     ".pdf": 9,
     ".md": 3,
+    ".js": 1,
     ".ico": 1,
     ".html": 7,
     ".png": 15,

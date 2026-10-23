@@ -244,6 +244,7 @@ def test_configured_pytest_runs_in_standalone_source_copy(tmp_path: Path, case: 
         [
             sys.executable,
             "-I",
+            "-B",
             "-m",
             "pytest",
             "-p",

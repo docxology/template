@@ -204,8 +204,11 @@ the version with the most complete metadata (a count of non-None optional fields
 DOI is normalized: case-folded, resolver-prefix stripped, so the same paper returned by
 two engines under case/format-variant DOIs merges. For this run, 80 records
 carry DOIs, 12 carry OpenAlex IDs, and 0 carry arXiv
-IDs. The de-duplicated corpus for this run holds $N = 46$ records published
-across 2000--2023.
+IDs. The retrieved fixture contains 80 records. The configured
+phase union retains 46 unique records; the separate bibliometric
+analysis uses 70 records. Its dated temporal subset contains
+70 records published across 2000--2023. These are distinct artifact scopes, rather than interchangeable
+denominators.
 
 ## Relevance Filtering
 
@@ -235,7 +238,7 @@ it to a deterministic path. Full-text availability is summarized without requiri
 download, so the offline default still reports coverage. For this run:
 
 - **Abstract coverage**: 100.0\% of records (80 of
-  46) carry an abstract; 0 records lack one.
+  80 retrieved records) carry an abstract; 0 records lack one.
 - **Open-access status**: 42.5\% of records are open access (34 records);
   the remainder are closed or unknown.
 - **PDF availability**: 42.5\% of records (34) have a direct
@@ -533,7 +536,7 @@ connection statistic for the retained corpus; it does not establish methodologic
 coherence across the field.
 
 ### Combined Corpus
-The deduplicated combined corpus contains 46 unique papers spanning
+The deduplicated combined phase corpus contains 46 unique papers spanning
 2000--2023 (23 years). It provides a multi-phase
 description of the retained retrieval slice, not a field-wide account.
 
@@ -604,12 +607,18 @@ phase linkage, and serializer behavior, but cannot establish any of these hypoth
 
 # Results: Field Overview
 
-The de-duplicated corpus for **Exoplanet Atmospheres** contains $N = 46$
-records spanning 2000--2023 (23 years). Publication volume
+The bibliometric analysis corpus for **Exoplanet Atmospheres** contains
+$N = 70$ records. Its dated temporal subset contains
+70 records spanning 2000--2023 (23 years). Publication volume
 grows at a compound annual rate of 6.76\% (mean year-over-year growth
 38.9\%, doubling time 2.1 years), peaking in 2023
 with 9 records that year. The growth curve is a first-order descriptive
-summary of the retained corpus; it is not a field-wide estimate of research activity.
+summary of this analyzed corpus; it is not a field-wide estimate of research activity.
+The retrieved fixture contains 80 records, while the configured
+phase union contains 46 unique records. The figures and descriptive
+bibliometrics in this section use the separate 70-record analyzed
+corpus, with growth computed on its dated temporal subset; identifier and full-text
+coverage below use the retrieved fixture.
 
 <!-- FIGURE: growth_curve.png -->
 ![Publication growth curve for Exoplanet Atmospheres. Annual publication counts (bars) and cumulative total (line) show sustained growth from 2000 through 2023, peaking in 2023.](../figures/growth_curve.png "Publication Growth Curve"){#fig:growth_curve}
@@ -668,8 +677,9 @@ review and a documented coverage assessment.
 
 ## Identifier and Full-Text Coverage
 
-The corpus has measurable identifier coverage: 80 of 46 records
-(100.0\%) carry DOIs, supporting cross-engine de-duplication.
+The retrieved fixture has measurable identifier coverage: 80 of
+80 records
+carry DOIs, supporting cross-engine de-duplication.
 OpenAlex IDs are present for 12 records. Abstract coverage stands at
 100.0\% (80 records), which limits the text analytics
 to that subset. Open-access status is confirmed for 42.5\% of records, and
@@ -677,7 +687,8 @@ to that subset. Open-access status is confirmed for 42.5\% of records, and
 
 ## Descriptive Bibliometrics
 
-The corpus spans 144 unique authors across 46 papers, yielding
+The analyzed corpus spans 144 unique authors across
+70 papers, yielding
 a mean of 1.51 papers per author. Citation counts range from zero to
 110 (mean 37.0, median 31.0), with a total of
 2,593 citations across the corpus. The Gini coefficient of citation
@@ -836,7 +847,7 @@ be interpreted.
 | JWST | 17 |
 
 <!-- FIGURE: entity_bar_chart.png -->
-![Top named entities for Exoplanet Atmospheres. The horizontal bar chart shows the 20 most frequently extracted entities from abstracts, revealing recurring objects, instruments, methods, and concepts in the retained corpus.](../figures/entity_bar_chart.png "Named Entities"){#fig:entity_bar_chart}
+![Top named entities for Exoplanet Atmospheres. The horizontal bar chart shows the most frequently extracted entities from abstracts, revealing recurring objects, instruments, methods, and concepts in the retained corpus.](../figures/entity_bar_chart.png "Named Entities"){#fig:entity_bar_chart}
 
 \clearpage
 
@@ -871,16 +882,16 @@ reveal the most closely related works in the corpus.
 
 | Paper A | Paper B | Similarity |
 | --- | --- | --- |
-| doi:10.5555/exoplanet atmosphe | doi:10.5555/exoplanet atmosphe | 1.0000 |
-| doi:10.5555/exoplanet atmosphe | doi:10.5555/exoplanet atmosphe | 1.0000 |
-| doi:10.5555/exoplanet atmosphe | doi:10.5555/exoplanet atmosphe | 1.0000 |
-| doi:10.5555/exoplanet atmosphe | doi:10.5555/exoplanet atmosphe | 1.0000 |
-| doi:10.5555/exoplanet atmosphe | doi:10.5555/exoplanet atmosphe | 1.0000 |
-| doi:10.5555/exoplanet atmosphe | doi:10.5555/exoplanet atmosphe | 1.0000 |
-| doi:10.5555/exoplanet atmosphe | doi:10.5555/exoplanet atmosphe | 1.0000 |
-| doi:10.5555/exoplanet atmosphe | doi:10.5555/exoplanet atmosphe | 1.0000 |
-| doi:10.5555/exoplanet atmosphe | doi:10.5555/exoplanet atmosphe | 1.0000 |
-| doi:10.5555/exoplanet atmosphe | doi:10.5555/exoplanet atmosphe | 1.0000 |
+| `doi:10.5555/exoplanet atmospheres.0031` | `doi:10.5555/exoplanet atmospheres.0055` | 1.0000 |
+| `doi:10.5555/exoplanet atmospheres.0046` | `doi:10.5555/exoplanet atmospheres.0070` | 1.0000 |
+| `doi:10.5555/exoplanet atmospheres.0055` | `doi:10.5555/exoplanet atmospheres.0031` | 1.0000 |
+| `doi:10.5555/exoplanet atmospheres.0070` | `doi:10.5555/exoplanet atmospheres.0046` | 1.0000 |
+| `doi:10.5555/exoplanet atmospheres.0000` | `doi:10.5555/exoplanet atmospheres.0024` | 1.0000 |
+| `doi:10.5555/exoplanet atmospheres.0000` | `doi:10.5555/exoplanet atmospheres.0048` | 1.0000 |
+| `doi:10.5555/exoplanet atmospheres.0000` | `doi:10.5555/exoplanet atmospheres.0072` | 1.0000 |
+| `doi:10.5555/exoplanet atmospheres.0002` | `doi:10.5555/exoplanet atmospheres.0044` | 1.0000 |
+| `doi:10.5555/exoplanet atmospheres.0002` | `doi:10.5555/exoplanet atmospheres.0020` | 1.0000 |
+| `doi:10.5555/exoplanet atmospheres.0002` | `doi:10.5555/exoplanet atmospheres.0068` | 1.0000 |
 
 <!-- FIGURE: similarity_heatmap.png -->
 ![Document similarity for Exoplanet Atmospheres. The horizontal bar chart shows the 15 most similar document pairs ranked by cosine similarity of their TF-IDF/SVD embeddings. High-similarity pairs share topical and lexical content.](../figures/similarity_heatmap.png "Similar Document Pairs"){#fig:similarity_heatmap}
@@ -965,7 +976,7 @@ their source type and content.
 ![Citation network for Exoplanet Atmospheres. Nodes represent papers; directed edges represent citation links. Node colours indicate community membership (13 communities detected by modularity optimization). Layout uses a spring-based algorithm with a fixed seed for reproducibility.](../figures/citation_network.png "Citation Network"){#fig:citation_network}
 
 <!-- FIGURE: degree_distribution.png -->
-![Degree distribution for the Exoplanet Atmospheres citation network. The histogram shows the frequency of each in-degree value on a log-linear scale, revealing the heavy-tailed structure characteristic of citation networks.](../figures/degree_distribution.png "Degree Distribution"){#fig:degree_distribution}
+![Degree distribution for the Exoplanet Atmospheres citation network. The histogram shows the frequency of each in-degree value on linear axes, describing the observed citation-count distribution in this corpus.](../figures/degree_distribution.png "Degree Distribution"){#fig:degree_distribution}
 
 The heavy-tailed degree distribution is characteristic of citation networks: a small
 number of highly-cited papers anchor the structure, while the long tail of low-degree
@@ -1083,7 +1094,7 @@ the fixture establishes a scientific trend.
 
 ## Knowledge Graph Results
 
-The optional knowledge-graph stage reports **0** assertions from
+The optional knowledge-graph stage reports **pending** assertions from
 the eligible sample. The configuration-derived hypothesis table is the authoritative
 mapping from review question to score:
 
@@ -1101,7 +1112,7 @@ whether models and observations agree in the broader literature.
 
 ## Citation Network Analysis
 
-The combined corpus contains **132** citation relationships
+The separate bibliometric corpus contains **132** citation relationships
 across **70** papers, with a network density of
 2.73%. This is a descriptive statistic for the retained
 corpus; it does not establish a field-wide citation structure or community claim.
@@ -1289,9 +1300,11 @@ The suite covers:
 - Deep-research offline replay (provider-neutral, fails closed)
 - Publication-extension and fixture-honesty contracts
 
-Symlinked shared modules (`src/analysis/`, `src/knowledge_graph/`,
-`src/reproducibility/`, `src/visualization/`) are covered by
-`template_literature_meta_analysis`'s own suite, not duplicated here.
+Shared analysis, knowledge-graph, reproducibility and visualization methods are
+imported from the declared `template_literature_meta_analysis` distribution.
+The Meta project's suite verifies their complete source, while Advanced's
+consumer contracts verify phase-aware integration. Installed acceptance binds
+the genuine provider wheel separately from Advanced's project wheel.
 
 
 
@@ -1373,8 +1386,9 @@ Intermediate and final outputs live under `output/` and are disposable and regen
 
 | File | Stage | Description |
 | --- | --- | --- |
-| `corpus.jsonl` | 01 | De-duplicated corpus (46 records) |
-| `temporal_analysis.json` | 02 | Year counts, CAGR, doubling time, peak year |
+| `corpus.jsonl` | 01 | Retrieved fixture (80 records) |
+| `combined_corpus.jsonl` | 01 | Configured phase union (46 unique records) |
+| `temporal_analysis.json` | 02 | Year-filtered analysis (70 records), CAGR, doubling time, peak year |
 | `subfield_classification.json` | 02 | Per-bucket paper counts |
 | `subfield_timeline.json` | 02 | Per-subfield annual breakdown |
 | `tfidf_data.json` | 02 | TF-IDF matrix, feature names, doc tokens |

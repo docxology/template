@@ -24,7 +24,7 @@ authors:
 publication:
   release_status: "unreleased"
   intended_version: "2.0.0"
-  platform_version: "4.0.2"
+  platform_version: "4.1.0"
   last_published_version: "1.0.0"
   doi: "10.5281/zenodo.21086292" # Concept DOI — stable citation
   version_doi: "10.5281/zenodo.21086293" # Latest Zenodo deposit

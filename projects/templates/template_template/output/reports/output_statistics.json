@@ -4,12 +4,12 @@
       "exists": true,
       "file_count": 1,
       "size_mb": "1.84",
-      "total_size_bytes": 1933556,
+      "total_size_bytes": 1933268,
       "largest_files": [
         {
           "name": "template_template_combined.pdf",
           "size_mb": "1.84",
-          "size_bytes": 1933556,
+          "size_bytes": 1933268,
           "path": "pdf/template_template_combined.pdf"
         }
       ],
@@ -20,19 +20,19 @@
     "web": {
       "exists": true,
       "file_count": 25,
-      "size_mb": "3.80",
-      "total_size_bytes": 3983006,
+      "size_mb": "2.54",
+      "total_size_bytes": 2666002,
       "largest_files": [
         {
           "name": "source-web-fonts.js",
-          "size_mb": "3.02",
-          "size_bytes": 3170848,
+          "size_mb": "1.77",
+          "size_bytes": 1853404,
           "path": "web/assets/source-web-fonts.js"
         },
         {
           "name": "index.html",
           "size_mb": "0.24",
-          "size_bytes": 255628,
+          "size_bytes": 255648,
           "path": "web/index.html"
         },
         {
@@ -53,12 +53,12 @@
       "exists": true,
       "file_count": 21,
       "size_mb": "4.06",
-      "total_size_bytes": 4257799,
+      "total_size_bytes": 4257888,
       "largest_files": [
         {
           "name": "04_results_slides.pdf",
           "size_mb": "3.37",
-          "size_bytes": 3537255,
+          "size_bytes": 3537271,
           "path": "slides/04_results_slides.pdf"
         },
         {
@@ -94,7 +94,7 @@
       "exists": true,
       "file_count": 75,
       "size_mb": "5.79",
-      "total_size_bytes": 6069030,
+      "total_size_bytes": 6068640,
       "largest_files": [
         {
           "name": "pipeline_stages.png",
@@ -105,7 +105,7 @@
         {
           "name": "architecture_overview.png",
           "size_mb": "0.45",
-          "size_bytes": 472340,
+          "size_bytes": 471950,
           "path": "figures/architecture_overview.png"
         },
         {
@@ -201,7 +201,7 @@
       "exists": true,
       "file_count": 30,
       "size_mb": "0.15",
-      "total_size_bytes": 154043,
+      "total_size_bytes": 154256,
       "largest_files": [
         {
           "name": "references.bib",
@@ -287,12 +287,12 @@
       "exists": true,
       "file_count": 1,
       "size_mb": "1.84",
-      "total_size_bytes": 1933556,
+      "total_size_bytes": 1933268,
       "largest_files": [
         {
           "name": "template_template_combined.pdf",
           "size_mb": "1.84",
-          "size_bytes": 1933556,
+          "size_bytes": 1933268,
           "path": "template_template_combined.pdf"
         }
       ],
@@ -302,35 +302,35 @@
     }
   },
   "total_files": 165,
-  "total_size_mb": 18.85517120361328,
+  "total_size_mb": 17.59854507446289,
   "largest_files": [
     {
       "name": "04_results_slides.pdf",
       "size_mb": "3.37",
-      "size_bytes": 3537255,
+      "size_bytes": 3537271,
       "category": "slides",
       "path": "slides/04_results_slides.pdf"
     },
     {
-      "name": "source-web-fonts.js",
-      "size_mb": "3.02",
-      "size_bytes": 3170848,
-      "category": "web",
-      "path": "web/assets/source-web-fonts.js"
-    },
-    {
       "name": "template_template_combined.pdf",
       "size_mb": "1.84",
-      "size_bytes": 1933556,
+      "size_bytes": 1933268,
       "category": "pdf",
       "path": "pdf/template_template_combined.pdf"
     },
     {
       "name": "template_template_combined.pdf",
       "size_mb": "1.84",
-      "size_bytes": 1933556,
+      "size_bytes": 1933268,
       "category": "root",
       "path": "template_template_combined.pdf"
+    },
+    {
+      "name": "source-web-fonts.js",
+      "size_mb": "1.77",
+      "size_bytes": 1853404,
+      "category": "web",
+      "path": "web/assets/source-web-fonts.js"
     },
     {
       "name": "Friedman_2026_Template_535bd809.pdf",
@@ -349,7 +349,7 @@
     {
       "name": "architecture_overview.png",
       "size_mb": "0.45",
-      "size_bytes": 472340,
+      "size_bytes": 471950,
       "category": "figures",
       "path": "figures/architecture_overview.png"
     },
@@ -370,23 +370,23 @@
     {
       "name": "index.html",
       "size_mb": "0.24",
-      "size_bytes": 255628,
+      "size_bytes": 255648,
       "category": "web",
       "path": "web/index.html"
     }
   ],
   "missing_expected_files": [],
   "sizes_by_category": {
-    "pdf": 1.8439826965332031,
-    "web": 3.798490524291992,
-    "slides": 4.060553550720215,
-    "figures": 5.787878036499023,
+    "pdf": 1.8437080383300781,
+    "web": 2.5424976348876953,
+    "slides": 4.060638427734375,
+    "figures": 5.787506103515625,
     "data": 0.017404556274414062,
     "reports": 0.008854866027832031,
-    "manuscript": 0.14690685272216797,
+    "manuscript": 0.1471099853515625,
     "release": 0.0019121170043945312,
     "release_bundle": 1.345205307006836,
-    "root": 1.8439826965332031
+    "root": 1.8437080383300781
   },
   "inventory_mode": "stable-shippable-output-v1",
   "inventory_scope": "stage5-delivery-mirror",

@@ -7,25 +7,25 @@ Inventory Mode: stable-shippable-output-v1
 Inventory Scope: stage5-delivery-mirror
 Inventory Root: output/templates/template_pools_rules_tools
 
-Total Files: 46
-Total Size: 4.54 MB
+Total Files: 47
+Total Size: 6.19 MB
 
 Files by Category:
-  • pdf: 1 files (1.04 MB)
-  • web: 11 files (0.36 MB)
-  • slides: 8 files (1.18 MB)
+  • pdf: 1 files (1.00 MB)
+  • web: 12 files (2.13 MB)
+  • slides: 8 files (1.14 MB)
   • figures: 10 files (0.85 MB)
   • data: 1 files (0.00 MB)
   • reports: 3 files (0.00 MB)
   • manuscript: 11 files (0.07 MB)
-  • root: 1 files (1.04 MB)
+  • root: 1 files (1.00 MB)
 
 Largest Files:
-  • template_pools_rules_tools_combined.pdf: 1.04 MB (pdf)
-  • template_pools_rules_tools_combined.pdf: 1.04 MB (root)
-  • 06_integration_slides.pdf: 0.41 MB (slides)
-  • 02_introduction_slides.pdf: 0.19 MB (slides)
-  • 05_tools_slides.pdf: 0.18 MB (slides)
+  • source-web-fonts.js: 1.77 MB (web)
+  • template_pools_rules_tools_combined.pdf: 1.00 MB (pdf)
+  • template_pools_rules_tools_combined.pdf: 1.00 MB (root)
+  • 06_integration_slides.pdf: 0.39 MB (slides)
+  • 02_introduction_slides.pdf: 0.18 MB (slides)
 
 File Types:
   • .md: 11 file(s)
@@ -33,6 +33,7 @@ File Types:
   • .html: 9 file(s)
   • .png: 9 file(s)
   • .json: 4 file(s)
+  • .js: 1 file(s)
   • .ico: 1 file(s)
   • .yaml: 1 file(s)
   • .bib: 1 file(s)

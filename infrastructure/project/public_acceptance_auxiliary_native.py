@@ -10,7 +10,7 @@ from dataclasses import asdict
 from pathlib import Path
 from typing import Any
 
-from infrastructure.project.public_acceptance_evidence import write_json
+from infrastructure.project.public_acceptance_evidence import MissingAuxiliaryProvider, write_json
 
 LITERATURE_MODULES = {
     "templates/template_search_project": "template_search_project.pipeline.live_acceptance",
@@ -73,8 +73,6 @@ def native_execution(
     inputs: dict[str, Any],
 ) -> dict[str, Any] | None:
     """Execute known native APIs; absent tools/models retain their original blockers."""
-    from infrastructure.project.public_acceptance_auxiliary_worker import MissingAuxiliaryProvider
-
     scope = gate.split(":", 1)[0]
     project = root / "projects" / scope
     capability = gate.split(":live:", 1)[1] if ":live:" in gate else ""
@@ -226,8 +224,6 @@ def extended_native(
     root: Path, gate: str, budget: int, directory: Path, inputs: dict[str, Any]
 ) -> dict[str, Any] | None:
     """Execute the remaining concrete native implementations with explicit providers."""
-    from infrastructure.project.public_acceptance_auxiliary_worker import MissingAuxiliaryProvider
-
     scope = gate.split(":", 1)[0]
     capability = gate.split(":live:", 1)[1] if ":live:" in gate else ""
     project = root / "projects" / scope

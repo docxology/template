@@ -27,7 +27,7 @@ procedure.
 | Surface | Rule |
 | --- | --- |
 | `src/template_methods_paper/methods_dsl/` (domain) | Pure dataclasses and functions — **no** plotting, no file I/O, **no** `infrastructure` imports except the one sanctioned exception (`_logging.py`) |
-| `scripts/` | Thin orchestrators; may import `infrastructure/` and `src/`; the only place matplotlib + file writes live |
+| `scripts/` | Thin orchestrators; call domain APIs and the declared platform SDK for figure provenance, API documentation, and manuscript injection; the only place matplotlib + file writes live |
 | Live counts | Link [`docs/_generated/COUNTS.md`](../../../docs/_generated/COUNTS.md); **do not** hardcode measured test totals or coverage % |
 
 The boundary is enforced by `check_project_src_infrastructure_boundary` via

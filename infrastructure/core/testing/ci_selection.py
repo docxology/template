@@ -117,9 +117,12 @@ def functional_selection(root: Path, event: str, base: str = "") -> dict[str, An
 
 
 def _infra_matrix(shards: list[list[str]]) -> dict[str, Any]:
-    """Prepare the real LaTeX provider only for its selected routine consumer."""
-    native_latex = "tests/infra_tests/rendering/test_pdf_latex_pipeline.py"
-    return {"include": [{"shard": i, "tex": native_latex in files} for i, files in enumerate(shards)]}
+    """Prepare the real LaTeX provider for its selected routine consumers."""
+    native_latex = {
+        "tests/infra_tests/rendering/test_pdf_latex_pipeline.py",
+        "tests/infra_tests/rendering/test_pdf_renderer_fixes.py",
+    }
+    return {"include": [{"shard": i, "tex": bool(native_latex.intersection(files))} for i, files in enumerate(shards)]}
 
 
 def main() -> int:

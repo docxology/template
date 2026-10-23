@@ -49,6 +49,28 @@ class TestCitationPlots:
         img_arr = mpimg.imread(output)
         assert img_arr.mean() > 0.01, "Figure appears blank"
 
+        # Distinct long IDs with a shared prefix must survive the actual SVG text output.
+        from defusedxml import ElementTree as ET
+
+        import matplotlib as mpl
+
+        identifiers = {
+            node: f"doi:10.5555/exoplanet-atmospheres-shared-prefix-record-{index:04d}"
+            for index, node in enumerate(graph)
+        }
+        labeled_graph = nx.relabel_nodes(graph, identifiers, copy=True)
+        before_nodes = list(labeled_graph.nodes(data=True))
+        before_edges = list(labeled_graph.edges(data=True))
+        svg = tmp_path / "full_hub_ids.svg"
+        with mpl.rc_context({"svg.fonttype": "none"}):
+            assert plot_citation_network(labeled_graph, svg) == svg
+        visible_text = "".join(
+            "".join(element.itertext()) for element in ET.parse(svg).iter() if element.tag.endswith("}text")
+        )
+        assert all(identifier in visible_text for identifier in identifiers.values())
+        assert list(labeled_graph.nodes(data=True)) == before_nodes
+        assert list(labeled_graph.edges(data=True)) == before_edges
+
     def test_plot_citation_network_with_communities(self, tmp_path: Path) -> None:
         graph = _make_small_graph()
         for node in graph.nodes():

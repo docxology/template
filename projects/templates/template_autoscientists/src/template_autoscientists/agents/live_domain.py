@@ -44,14 +44,23 @@ class LiveSettings:
 
 
 def proposal_schema(axes: Sequence[int]) -> dict[str, object]:
-    """Constrain generation as well as independently validating its output."""
+    """Offer the same bounded numeric proposal choices to both matched arms.
+
+    These finite generation choices do not claim continuous search. The parser
+    independently enforces the full numeric domain and retired-direction rules.
+    """
     return {
         "type": "object",
         "additionalProperties": False,
         "properties": {
             "axis": {"type": "integer", "enum": list(axes)},
-            "step": {"type": "number", "minimum": -1, "maximum": 1},
-            "rationale": {"type": "string", "minLength": 1, "maxLength": 2048},
+            "step": {
+                "type": "number",
+                "minimum": -1,
+                "maximum": 1,
+                "enum": [-1, -0.5, -0.25, 0.25, 0.5, 1],
+            },
+            "rationale": {"type": "string", "minLength": 1, "maxLength": 96},
         },
         "required": ["axis", "step", "rationale"],
     }

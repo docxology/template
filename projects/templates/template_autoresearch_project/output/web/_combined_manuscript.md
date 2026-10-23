@@ -896,6 +896,8 @@ not treated as automatically best on every diagnostic axis.
 
 ![Brier score and negative log likelihood for evaluated candidates from output/data/ml_statistical_summary.json; lower values indicate better probability quality within the configured local run, and the accepted candidate is highlighted. Generation method: Brier score and negative-log-likelihood bar comparison. Registry metadata records the generation method, source artifact, and claim boundary for validation.](../figures/ml_probability_quality.png){#fig:ml_probability_quality width="0.82\textwidth"}
 
+\clearpage
+
 | Statistic | Value |
 | --- | --- |
 | Accuracy | 89.4% |
@@ -985,6 +987,8 @@ figure(s) with validity `false`.
 ![Validated AutoResearch run with 7 stages, 6 supported claims, and 78 required artifacts from output/data/autoresearch_loop.json; the count summarizes readiness artifacts, not human approval. Generation method: Horizontal count summary from final loop metrics. Registry metadata records the generation method, source artifact, and claim boundary for validation.](../figures/autoresearch_stage_matrix.png){#fig:autoresearch_stage_matrix width="0.8\textwidth"}
 
 ![File-backed AutoResearch closure from program through review, with 6 supported claims and readiness passed; review remains a deferred human decision and the provenance path remains inspectable. Generation method: File-backed process-flow diagram from final loop state. Registry metadata records the generation method, source artifact, and claim boundary for validation.](../figures/autoresearch_closure_flow.png){#fig:autoresearch_closure_flow width="0.95\textwidth"}
+
+\clearpage
 
 | Artifact | Role |
 | --- | --- |
@@ -1080,8 +1084,8 @@ figure(s) with validity `false`.
 
 | Benchmark task | Status | Score | Grading output |
 | --- | --- | --- | --- |
-| readiness-smoke | graded | 1 | output/reports/benchmark_readiness_smoke.json |
-| ml-loop-score | graded | 1 | output/reports/ml_benchmark_score.json |
+| readiness-smoke | graded | 1 | `output/reports/benchmark_readiness_smoke.json` |
+| ml-loop-score | graded | 1 | `output/reports/ml_benchmark_score.json` |
 
 : Benchmark grading table from `output/data/benchmark_scores.json`. {#tbl:benchmark-scores}
 
@@ -1108,31 +1112,31 @@ figure(s) with validity `false`.
 
 | Figure | Pixels | Variance | Source exists | Nonblank |
 | --- | --- | --- | --- | --- |
-| fig:autoresearch_candidate_lifecycle | 1184x480 | 0.082 | True | True |
-| fig:autoresearch_closure_flow | 1664x448 | 0.015 | True | True |
-| fig:autoresearch_integrity_chain | 1440x736 | 0.040 | True | True |
-| fig:autoresearch_security_control_matrix | 1472x736 | 0.014 | True | True |
-| fig:autoresearch_stage_matrix | 1120x416 | 0.079 | True | True |
-| fig:ml_bootstrap_intervals | 1152x448 | 0.009 | True | True |
-| fig:ml_calibration_reliability | 1152x832 | 0.015 | True | True |
-| fig:ml_candidate_rank_stability | 1408x608 | 0.053 | True | True |
-| fig:ml_candidate_scores | 1376x688 | 0.013 | True | True |
-| fig:ml_classification_metrics_heatmap | 928x832 | 0.092 | True | True |
-| fig:ml_complexity_accuracy | 1120x608 | 0.010 | True | True |
-| fig:ml_confusion_matrix | 896x768 | 0.045 | True | True |
-| fig:ml_confusion_pairs | 1152x576 | 0.129 | True | True |
-| fig:ml_generalization_gap | 1184x864 | 0.059 | True | True |
-| fig:ml_learning_curves | 1216x608 | 0.018 | True | True |
-| fig:ml_paired_correctness | 768x672 | 0.075 | True | True |
-| fig:ml_per_class_accuracy | 1152x512 | 0.098 | True | True |
-| fig:ml_probability_margin_distribution | 1184x864 | 0.024 | True | True |
-| fig:ml_probability_quality | 1344x608 | 0.046 | True | True |
-| fig:ml_robustness_matrix | 1280x608 | 0.073 | True | True |
-| fig:ml_selective_accuracy | 1088x608 | 0.016 | True | True |
-| fig:ml_training_dynamics | 1408x608 | 0.072 | True | True |
-| fig:mnist_class_balance | 1216x544 | 0.071 | True | True |
-| fig:mnist_error_examples | 1280x736 | 0.234 | True | True |
-| fig:mnist_subset_contact_sheet | 1216x544 | 0.230 | True | True |
+| `fig:autoresearch_candidate_lifecycle` | 1184x480 | 0.082 | True | True |
+| `fig:autoresearch_closure_flow` | 1664x448 | 0.015 | True | True |
+| `fig:autoresearch_integrity_chain` | 1440x736 | 0.040 | True | True |
+| `fig:autoresearch_security_control_matrix` | 1472x736 | 0.014 | True | True |
+| `fig:autoresearch_stage_matrix` | 1120x416 | 0.079 | True | True |
+| `fig:ml_bootstrap_intervals` | 1152x448 | 0.009 | True | True |
+| `fig:ml_calibration_reliability` | 1152x832 | 0.015 | True | True |
+| `fig:ml_candidate_rank_stability` | 1408x608 | 0.053 | True | True |
+| `fig:ml_candidate_scores` | 1376x688 | 0.013 | True | True |
+| `fig:ml_classification_metrics_heatmap` | 928x832 | 0.085 | True | True |
+| `fig:ml_complexity_accuracy` | 1120x608 | 0.010 | True | True |
+| `fig:ml_confusion_matrix` | 896x768 | 0.045 | True | True |
+| `fig:ml_confusion_pairs` | 1152x576 | 0.129 | True | True |
+| `fig:ml_generalization_gap` | 1184x864 | 0.059 | True | True |
+| `fig:ml_learning_curves` | 1216x608 | 0.018 | True | True |
+| `fig:ml_paired_correctness` | 768x672 | 0.074 | True | True |
+| `fig:ml_per_class_accuracy` | 1152x512 | 0.098 | True | True |
+| `fig:ml_probability_margin_distribution` | 1184x864 | 0.024 | True | True |
+| `fig:ml_probability_quality` | 1344x608 | 0.046 | True | True |
+| `fig:ml_robustness_matrix` | 1280x608 | 0.079 | True | True |
+| `fig:ml_selective_accuracy` | 1088x608 | 0.016 | True | True |
+| `fig:ml_training_dynamics` | 1408x608 | 0.072 | True | True |
+| `fig:mnist_class_balance` | 1216x544 | 0.071 | True | True |
+| `fig:mnist_error_examples` | 1280x736 | 0.234 | True | True |
+| `fig:mnist_subset_contact_sheet` | 1216x544 | 0.230 | True | True |
 
 : Figure-quality checks from `output/data/figure_quality_report.json`; 25 registered figure(s) were checked. {#tbl:figure-quality}
 
@@ -1170,6 +1174,8 @@ manuscript uses injected variables from generated data payloads, so the abstract
 and results track the latest analysis run rather than hard-coded counts. The
 final readiness status is `passed`; generated review decisions are
 recorded as deferred for human review rather than as self-approval.
+
+\clearpage
 
 | Source artifact | Injected variables or fragments |
 | --- | --- |

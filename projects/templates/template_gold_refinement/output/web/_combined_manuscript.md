@@ -18,7 +18,7 @@ This paper presents a deterministic, artifact-based methods demonstration that m
 
 The analogy is load-bearing in a restricted, testable sense: each stage has an executable owner, ordered input and output states, generated evidence, and a failure condition. A reverse assay identifies the shortest ordered stage prefix that reaches a requested target, while a multi-objective purity vector keeps stage completion, claim support, token provenance, and figure quality distinct. The mega-madlib engine selects 24 configured terms by a seeded SHA-256 digest, recording each choice with its slot, category, ordinal, section, and source path.
 
-The contribution is also formalized: 7 equation-backed formalisms define purity, monotone refinement, token selection, claim support, gate vectors, and certification. This positions the manuscript as a research-compendium artifact in the lineage of literate programming, dynamic reports, and reproducible computational research [@knuth1984literate; @leisch2002sweave; @peng2011reproducible; @sandve2013ten]. The project-local claim assay reports 9/9 supported contribution claims (100.00%, passing), while the integrity model exposes 9 source-owned risk dimensions and the shared template evidence registry contributes 960 source-tiered facts when the validation gate has run.
+The contribution is also formalized: 7 equation-backed formalisms define purity, monotone refinement, token selection, claim support, gate vectors, and certification. This positions the manuscript as a research-compendium artifact in the lineage of literate programming, dynamic reports, and reproducible computational research [@knuth1984literate; @leisch2002sweave; @peng2011reproducible; @sandve2013ten]. The project-local claim assay reports 9/9 supported contribution claims (100.00%, passing), while the integrity model exposes 9 source-owned risk dimensions and the shared template evidence registry contributes 959 source-tiered facts when the validation gate has run.
 
 **Results:** The canonical run reaches 99.9999999% (nine-nines) (24K (nine-nines certified)), with a designed total gain of 90.00%; local nine-nines predicate: Yes. The project-local claim assay reports 9/9 registered claims supported. These are internal workflow results, not estimates of reader-perceived quality, scientific truth, security compliance, or external validity.
 
@@ -280,15 +280,15 @@ The integrity model converts manuscript risks into source-owned dimensions. It d
 
 | ID | Dimension | Residual risk | Owner | Validator |
 |----|-----------|---------------|-------|-----------|
-| I1 | Monotone refinery | 4 | source code | tests/test_refinery.py |
-| I2 | Lexicon completeness | 3 | config | tests/test_config.py |
-| I3 | Token hydration | 5 | generated variables | tests/test_manuscript_variables.py |
-| I4 | Analogy boundary | 15 | claim ledger | infrastructure.validation.cli evidence --fail-on-issues |
-| I5 | Claim support | 10 | evidence assay | output/reports/claim_support_registry.json |
-| I6 | Figure registry | 8 | figure producer | tests/test_registry_integrity.py |
-| I7 | Citation hygiene | 4 | bibliography | infrastructure.reference.citation validate |
+| I1 | Monotone refinery | 4 | source code | `tests/test_refinery.py` |
+| I2 | Lexicon completeness | 3 | config | `tests/test_config.py` |
+| I3 | Token hydration | 5 | generated variables | `tests/test_manuscript_variables.py` |
+| I4 | Analogy boundary | 15 | claim ledger | `infrastructure.validation.cli` evidence --fail-on-issues |
+| I5 | Claim support | 10 | evidence assay | `output/reports/claim_support_registry.json` |
+| I6 | Figure registry | 8 | figure producer | `tests/test_registry_integrity.py` |
+| I7 | Citation hygiene | 4 | bibliography | `infrastructure.reference.citation` validate |
 | I8 | Render readiness | 8 | template pipeline | template pipeline render and validate stages |
-| I9 | Adversarial security assay | 15 | security assay | tests/test_security_assay.py and manuscript source review |
+| I9 | Adversarial security assay | 15 | security assay | `tests/test_security_assay.py` and manuscript source review |
 : Source-owned scientific-integrity dimensions. {#tbl:integrity_dimensions}
 
 The residual-risk score is an ordinal prioritization heuristic: higher severity and lower detectability raise review priority. It was not fitted to incident data, validated against external judgments, or designed for comparison across projects. Its sole use is to identify where this exemplar—or a fork—needs stronger ownership, evidence, or validation before expanding a claim.
@@ -586,7 +586,7 @@ The evidence-tier ladder in [@fig:evidence_tier_ladder] summarizes the evidence 
 
 The ladder complements the risk matrix by counting source tiers rather than
 plotting risks. When the shared evidence registry is available, the manuscript
-can report 960 source-tiered facts to the validation
+can report 959 source-tiered facts to the validation
 surface. When that registry is not available, the same figure falls back to the
 integrity model's configured tiers. Either way, the reader sees the evidentiary
 mix instead of receiving an undifferentiated assurance that evidence exists.
@@ -605,7 +605,7 @@ also which source tiers make their claims inspectable.
 
 | Source tier | Count | Role |
 |-------------|-------|------|
-| generated_metric | 724 | Numbers regenerated from project analysis |
+| generated_metric | 723 | Numbers regenerated from project analysis |
 | artifact | 117 | Generated artifacts exposed to readers |
 | configuration | 55 | Evidence source tier |
 | bibliography | 47 | Reference records and citation metadata |
@@ -643,7 +643,7 @@ The project-local claim-support assay reports 9 supported claims out of 9 total 
 
 ## Shared evidence registry summary
 
-When the template evidence gate has run, the shared registry supplies source-tiered facts used by the evidence validator. Current fact count available to this variable pass: 960.
+When the template evidence gate has run, the shared registry supplies source-tiered facts used by the evidence validator. Current fact count available to this variable pass: 959.
 
 | Fact kind | Count |
 |-----------|-------|
@@ -651,7 +651,7 @@ When the template evidence gate has run, the shared registry supplies source-tie
 | citation | 47 |
 | equation | 8 |
 | figure | 28 |
-| number | 787 |
+| number | 786 |
 | section | 10 |
 | table | 7 |
 : Shared evidence-registry fact kinds when available. {#tbl:shared_evidence_kinds}
@@ -662,18 +662,18 @@ The visualization registry is paired with `output/reports/figure_quality_report.
 
 | Figure | PNG | SVG | Dimensions | Nonwhite | Variance | Status |
 |--------|-----|-----|------------|----------|----------|--------|
-| claim_evidence_assay | yes | yes | 3952x2038 | 0.217 | 0.06049260 | pass |
-| evidence_tier_ladder | yes | yes | 3430x1448 | 0.113 | 0.04049412 | pass |
-| formalism_traceability | yes | yes | 3315x1797 | 0.140 | 0.04434550 | pass |
-| implementation_circuit | yes | yes | 2966x1843 | 0.068 | 0.02205485 | pass |
-| integrity_gate_matrix | yes | yes | 1818x2060 | 0.409 | 0.16204936 | pass |
-| integrity_risk_matrix | yes | yes | 2499x1910 | 0.380 | 0.01852528 | pass |
-| karat_grading | yes | yes | 2961x1698 | 0.279 | 0.07300982 | pass |
-| provenance_sankey | yes | yes | 2850x1461 | 0.070 | 0.02178809 | pass |
-| purity_claim_scatter | yes | yes | 2336x1744 | 0.034 | 0.01607749 | pass |
-| purity_progression | yes | yes | 3024x2125 | 0.182 | 0.03967814 | pass |
-| token_density | yes | yes | 3289x1856 | 0.234 | 0.06699486 | pass |
-| token_heatmap | yes | yes | 2397x2399 | 0.627 | 0.12908659 | pass |
+| `claim_evidence_assay` | yes | yes | 3063x3193 | 0.343 | 0.08586759 | pass |
+| `evidence_tier_ladder` | yes | yes | 3419x1447 | 0.114 | 0.04050309 | pass |
+| `formalism_traceability` | yes | yes | 2478x1777 | 0.426 | 0.10007865 | pass |
+| `implementation_circuit` | yes | yes | 2966x2160 | 0.125 | 0.03298687 | pass |
+| `integrity_gate_matrix` | yes | yes | 3282x2137 | 0.603 | 0.17178490 | pass |
+| `integrity_risk_matrix` | yes | yes | 2918x2025 | 0.240 | 0.01807742 | pass |
+| `karat_grading` | yes | yes | 2956x1699 | 0.279 | 0.07296687 | pass |
+| `provenance_sankey` | yes | yes | 2850x1461 | 0.145 | 0.03337035 | pass |
+| `purity_claim_scatter` | yes | yes | 2343x1745 | 0.034 | 0.01594966 | pass |
+| `purity_progression` | yes | yes | 2993x2454 | 0.144 | 0.03424524 | pass |
+| `token_density` | yes | yes | 2305x2671 | 0.170 | 0.05377018 | pass |
+| `token_heatmap` | yes | yes | 2390x2323 | 0.538 | 0.12047020 | pass |
 : Figure-quality report generated from source-owned figure specs. {#tbl:figure_quality}
 
 
@@ -764,7 +764,7 @@ The gold-refinery pipeline demonstrates that a metallurgical analogy can be made
 - 5 refinery stages from ore (9K) to certification (nine-nines)
 - Final purity: 99.9999999% (nine-nines) (24K (nine-nines certified))
 - 24 tokens generated deterministically from seed 431
-- Config hash: f07f54804db53e6d
+- Config hash: e82859fdfbe05fa8
 - 7 source-owned formalisms with equation labels: eq:purity_functional, eq:monotone_refinery, eq:token_digest, eq:claim_support, eq:integrity_vector, eq:certification_predicate, eq:adversarial_assay
 - Claim-support status: 9/9 supported (passing)
 - 9 integrity dimensions with residual-risk scoring and owner/validator links.
@@ -802,9 +802,9 @@ The refinery pipeline is fully deterministic. Given the same `manuscript/config.
 Executable-publication scholarship sharpens that norm. Executable research compendia and executable papers treat an article as a package of narrative, code, data, environment, and rendered outputs rather than as a static document with detachable supplements [@nuest2017erc; @lasser2020executable]. The present exemplar is smaller and more template-specific: it does not provide a universal executable-paper format, but it does make the manuscript variables, figures, reports, and rendered PDF/HTML products rebuildable from source-owned inputs.
 
 - **Seed:** 431
-- **Config hash:** f07f54804db53e6d
-- **Generation timestamp:** 2026-10-15T18:40:52Z
-- **Python version:** 3.14.4
+- **Config hash:** e82859fdfbe05fa8
+- **Generation timestamp:** 2026-10-23T00:44:50Z
+- **Python version:** 3.14.8
 
 ## Artifact inventory
 
@@ -828,7 +828,7 @@ uv run python projects/templates/template_gold_refinement/scripts/z_generate_man
 ./run.sh --project templates/template_gold_refinement --pipeline --mode core
 ```
 
-A reproduction report should record command exit status, the source revision, `f07f54804db53e6d`, Python 3.14.4, and whether the generated registries pass. Matching prose alone is insufficient if the token plan, claim registry, or figure registry differs. Conversely, timestamp or renderer metadata differences should be interpreted separately from substantive differences in source-owned values.
+A reproduction report should record command exit status, the source revision, `e82859fdfbe05fa8`, Python 3.14.8, and whether the generated registries pass. Matching prose alone is insufficient if the token plan, claim registry, or figure registry differs. Conversely, timestamp or renderer metadata differences should be interpreted separately from substantive differences in source-owned values.
 
 ## Config ownership
 
@@ -836,7 +836,7 @@ All vocabulary, slots, section conditions, steganography toggles, and optional L
 
 `src/template_gold_refinement/pipeline_policy.py` turns those policy blocks into an explicit secure-pipeline hook. That keeps the optional hardening path visible before execution instead of burying it in shell glue or prose.
 
-The reproducibility spine uses fact registry and figure registry as generated artifacts rather than reader trust signals. Variable generation records `f07f54804db53e6d`; analysis writes refinery, token, claim-support, dashboard, and figure artifacts; validation may add the shared evidence registry used by template scientific-integrity checks.
+The reproducibility spine uses fact registry and figure registry as generated artifacts rather than reader trust signals. Variable generation records `e82859fdfbe05fa8`; analysis writes refinery, token, claim-support, dashboard, and figure artifacts; validation may add the shared evidence registry used by template scientific-integrity checks.
 
 The implementation circuit gives a reproducibility checklist for future forks. A reader should be able to start at any rendered figure or claim, follow it to a generated variable or report, follow that artifact to `src/` or `manuscript/config.yaml`, and rerun the same stage command. If that path is broken, the fork has produced a static illustration rather than a reproducible refinement pipeline.
 

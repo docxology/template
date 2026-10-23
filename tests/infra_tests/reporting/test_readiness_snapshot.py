@@ -65,6 +65,9 @@ def test_public_scope_admission_rechecks_symlinked_parent_after_snapshot(tmp_pat
     target.write_bytes(b"{}")
     reader = SnapshotReader(tmp_path)
     reader.read(relative)
+    assert reader.public_path(relative) == target
+    assert reader.unchanged()
+    assert reader.unchanged()
     original = target.parent.with_name("original")
     target.parent.rename(original)
     target.parent.symlink_to(original, target_is_directory=True)
@@ -80,6 +83,8 @@ def test_public_scope_admission_rechecks_symlinked_parent_after_snapshot(tmp_pat
     rooted = SnapshotReader(repository)
     held = rooted.read("docs/nested/evidence.json")
     assert rooted.public_path("docs//./nested/evidence.json") == evidence
+    assert rooted.unchanged()
+    assert rooted.unchanged()
     relocated = tmp_path / "relocated-source"
     repository.rename(relocated)
     repository.symlink_to(relocated, target_is_directory=True)
@@ -88,6 +93,28 @@ def test_public_scope_admission_rechecks_symlinked_parent_after_snapshot(tmp_pat
     assert rooted.unchanged() is False
     with pytest.raises(ValueError, match="escapes"):
         rooted.public_path("docs/nested/evidence.json")
+
+    # Move a genuine Source root between calls, then explicitly nominate its new
+    # root and actual snapshots. Neither old paths nor an old trie can survive.
+    moving_root = tmp_path / "moving-source"
+    moving_file = moving_root / "docs/nested/evidence.json"
+    moving_file.parent.mkdir(parents=True)
+    moving_file.write_bytes(b"actual moved source bytes")
+    moving = SnapshotReader(moving_root)
+    moving.read("docs/nested/evidence.json")
+    assert moving.unchanged()
+    new_root = tmp_path / "moved-source"
+    moving_root.rename(new_root)
+    assert moving.unchanged() is False
+    moving.root = new_root
+    assert moving.unchanged() is False
+    fresh = SnapshotReader(new_root)
+    fresh.read("docs/nested/evidence.json")
+    moving.snapshots = dict(fresh.snapshots)
+    assert moving.public_path("docs/nested/evidence.json") == new_root / "docs/nested/evidence.json"
+    assert moving.unchanged()
+    (new_root / "docs/nested/evidence.json").write_bytes(b"changed moved source bytes")
+    assert moving.unchanged() is False
 
 
 def test_facts_and_digest_use_the_same_bytes_after_file_replacement(tmp_path: Path) -> None:
@@ -360,6 +387,8 @@ def test_snapshot_batch_closes_real_directories_and_held_inventory(tmp_path: Pat
     extra = root / "docs/extra.json"
     extra.write_bytes(b"other actual evidence")
     additional = SnapshotReader(root).read("docs/extra.json")
+    # Warm the expected structure before the real mid-traversal mutation.
+    assert reader.unchanged()
     observed: list[str] = []
 
     def after_actual_stat(frame: FrameType, event: str, function: Any) -> None:
@@ -410,6 +439,22 @@ def test_snapshot_batches_reobserve_file_clocks_and_empty_inventory(tmp_path: Pa
             path.parent.mkdir(parents=True, exist_ok=True)
             path.write_bytes(b"original")
             reader.read(relative)
+            assert reader.unchanged()
+    assert reader.unchanged()
+    added = tmp_path / "docs/added-between-calls.json"
+    added.write_bytes(b"new actual file")
+    reader.snapshots[added] = SnapshotReader(tmp_path).read("docs/added-between-calls.json")
+    assert reader.unchanged()
+    added.write_bytes(b"changed actual file")
+    assert reader.unchanged() is False
+    # A different genuine observation of this current file replaces the held
+    # object between calls; its old expected identity must not stay in the trie.
+    reader.snapshots[added] = SnapshotReader(tmp_path).read("docs/added-between-calls.json")
+    assert reader.unchanged()
+    reader.snapshots = dict(reader.snapshots)
+    assert reader.unchanged()
+    del reader.snapshots[added]
+    added.unlink()
     assert reader.unchanged()
     path.write_bytes(b"changed!")
     os.utime(path, ns=(path.stat().st_atime_ns, reader.snapshots[path].identity[2]))
@@ -476,6 +521,8 @@ def test_snapshot_traversal_refuses_fifo_without_opening_it(tmp_path: Path) -> N
     path.write_bytes(b"regular file")
     reader = SnapshotReader(tmp_path)
     reader.read("docs/evidence.json")
+    assert reader.unchanged()
+    assert reader.unchanged()
     path.unlink()
     os.mkfifo(path)
     assert reader.unchanged() is False

@@ -13,7 +13,7 @@ description = "Reproducible short/medium/long PDF+PPTX pitch decks — token-val
 authors = [{name = "Daniel Ari Friedman", email = "daniel@activeinference.institute"}]
 requires-python = ">=3.12"
 dependencies = [
-    "research-project-template==4.0.2",
+    "research-project-template==4.1.0",
     "pyyaml>=6.0",
     # `src/content_loader.py`/`src/render_orchestration.py` import
     # `infrastructure.rendering.slide_deck` — importing any single submodule
@@ -93,6 +93,6 @@ research-project-template = { path = "../../..", editable = true }
 
 # Compatibility contract for this independent exemplar release.
 [tool.template]
-platform_version = "4.0.2"
+platform_version = "4.1.0"
 tested_python_versions = ["3.12", "3.13", "3.14"]
 required_unpaid_capabilities = ["pdf-pptx"]

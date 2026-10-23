@@ -68,9 +68,22 @@ def _json(path: Path, payload: Any) -> None:
     path.write_text(json.dumps(payload, sort_keys=True, indent=2) + "\n", encoding="utf-8")
 
 
-def request_proposal(settings: ProposalSettings, prompt: str, directory: Path, timeout: int = 60) -> tuple[float, str]:
+def request_proposal(
+    settings: ProposalSettings,
+    prompt: str,
+    directory: Path,
+    timeout: int = 60,
+    *,
+    current_threshold: float | None = None,
+) -> tuple[float, str]:
     """Supervise one real local model request with a total wall-clock deadline."""
     request_path, response_path = directory / "model_request.json", directory / "model_response.json"
+    threshold_schema: dict[str, Any] = {"type": "number", "minimum": 0, "maximum": 1}
+    if current_threshold is not None:
+        current = validated_threshold(current_threshold)
+        # These are declared finite public probes, not continuous optimization.
+        # The independent parser and actual Docker scoring keep the full domain.
+        threshold_schema["enum"] = [probe / 10 for probe in range(1, 10) if probe / 10 != current]
     _json(
         request_path,
         {
@@ -79,8 +92,8 @@ def request_proposal(settings: ProposalSettings, prompt: str, directory: Path, t
             "format": {
                 "type": "object",
                 "properties": {
-                    "threshold": {"type": "number", "minimum": 0, "maximum": 1},
-                    "rationale": {"type": "string", "minLength": 1, "maxLength": 2048},
+                    "threshold": threshold_schema,
+                    "rationale": {"type": "string", "minLength": 1, "maxLength": 96},
                 },
                 "required": ["threshold", "rationale"],
                 "additionalProperties": False,
@@ -229,7 +242,11 @@ def run_live_proposals(project_root: Path, output_dir: Path, settings: ProposalS
             directory = output_dir / f"gen_{generation}"
             directory.mkdir()
             proposal, rationale = request_proposal(
-                settings, public_prompt(public_rows, threshold, score), directory, bounded_timeout(60)
+                settings,
+                public_prompt(public_rows, threshold, score),
+                directory,
+                bounded_timeout(60),
+                current_threshold=threshold,
             )
             identity = json.loads((directory / "model_identity.json").read_text(encoding="utf-8"))
             digest = identity["before_sha256"]

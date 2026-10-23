@@ -6,7 +6,7 @@ inputs:
     required: false
     default: native
   python-executable:
-    description: Already locked Python for the native LaTeX package validator; does not sync or acquire Python.
+    description: Already locked Python for the Linux mirror guard and native LaTeX validator; does not sync or acquire Python.
     required: false
     default: .venv/bin/python
 runs:
@@ -37,6 +37,8 @@ runs:
         key: acceptance-document-archives-v2-${{ runner.os }}-${{ runner.arch }}-${{ steps.preparation-mode.outputs.mode }}-${{ hashFiles('.github/actions/setup-acceptance-documents/action.yml') }}
     - name: Prepare exact compatible Pandoc and cross-reference binaries
       shell: bash
+      env:
+        PREPARED_PYTHON: ${{ inputs.python-executable }}
       run: |
         set -euo pipefail
         archives="$RUNNER_TEMP/template-acceptance-document-archives"
@@ -103,6 +105,102 @@ runs:
         echo "$destination" >> "$GITHUB_PATH"
         "$destination/$pandoc_directory/bin/pandoc" --version
         "$destination/pandoc-crossref" --version
+        if [ "$RUNNER_OS" = Linux ]; then
+          if [ ! -f "$PREPARED_PYTHON" ] || [ ! -x "$PREPARED_PYTHON" ]; then
+            echo "Ubuntu mirror preparation requires an already locked Python executable" >&2
+            exit 1
+          fi
+          sudo -n "$PREPARED_PYTHON" -I -B - <<'PYTHON'
+        import hashlib
+        import json
+        import os
+        from pathlib import Path
+        import stat
+        import tempfile
+
+
+        def identity(info):
+            return (info.st_dev, info.st_ino, info.st_mode, info.st_uid, info.st_gid,
+                    info.st_nlink, info.st_size, info.st_mtime_ns, info.st_ctime_ns)
+
+
+        def owned_bytes(path, limit):
+            before = path.lstat()
+            if (not stat.S_ISREG(before.st_mode) or before.st_uid != 0
+                    or before.st_nlink != 1 or before.st_mode & 0o022):
+                raise SystemExit(f"Expected an owned regular APT file: {path}")
+            with os.fdopen(os.open(path, os.O_RDONLY | os.O_NOFOLLOW), "rb") as handle:
+                data = handle.read(limit + 1)
+                if (len(data) > limit or identity(os.fstat(handle.fileno())) != identity(before)
+                        or identity(path.lstat()) != identity(before)):
+                    raise SystemExit(f"APT file changed or exceeded its bound: {path}")
+            return before, data
+
+
+        mirror = Path("/etc/apt/apt-mirrors.txt")
+        source = Path("/etc/apt/sources.list.d/ubuntu.sources")
+        original = (b"http://azure.archive.ubuntu.com/ubuntu/\tpriority:1\n"
+                    b"https://archive.ubuntu.com/ubuntu/\tpriority:2\n"
+                    b"https://security.ubuntu.com/ubuntu/\tpriority:3\n")
+        preferred = (b"http://azure.archive.ubuntu.com/ubuntu/\tpriority:2\n"
+                     b"https://archive.ubuntu.com/ubuntu/\tpriority:1\n"
+                     b"https://security.ubuntu.com/ubuntu/\tpriority:3\n")
+        before, current = owned_bytes(mirror, 144)
+        if current not in (original, preferred):
+            raise SystemExit("Refusing an unknown Ubuntu APT mirror list")
+        source_before, source_data = owned_bytes(source, 65536)
+        active = False
+        fields = {}
+        for line in [*source_data.decode("utf-8").splitlines(), ""]:
+            if line.lstrip().startswith("#"):
+                continue
+            if line.strip():
+                key, separator, value = line.partition(":")
+                key = key.lower()
+                if line[0].isspace() or not separator or key in fields:
+                    raise SystemExit("Refusing an unknown Ubuntu source stanza")
+                fields[key] = value.strip()
+            else:
+                if fields.get("enabled", "yes") == "yes":
+                    if fields.get("uris") == "mirror+file:/etc/apt/apt-mirrors.txt":
+                        suites = set(fields.get("suites", "").split())
+                        if ("deb" not in fields.get("types", "").split() or not suites
+                                or not suites <= {"noble", "noble-updates", "noble-backports", "noble-security"}
+                                or fields.get("signed-by") != "/usr/share/keyrings/ubuntu-archive-keyring.gpg"):
+                            raise SystemExit("Refusing an unknown Ubuntu mirror-list source")
+                        active = True
+                fields = {}
+        if not active:
+            raise SystemExit("No active signed Ubuntu source uses the expected mirror list")
+        print(json.dumps({"apt_mirrors_before": current.decode(),
+                          "sha256": hashlib.sha256(current).hexdigest(),
+                          "ubuntu_sources_sha256": hashlib.sha256(source_data).hexdigest()}), flush=True)
+        if current != preferred:
+            descriptor, temporary = tempfile.mkstemp(prefix=".template-apt-mirrors-", dir=mirror.parent)
+            try:
+                with os.fdopen(descriptor, "wb") as handle:
+                    os.fchown(handle.fileno(), before.st_uid, before.st_gid)
+                    os.fchmod(handle.fileno(), stat.S_IMODE(before.st_mode))
+                    handle.write(preferred)
+                    handle.flush()
+                    os.fsync(handle.fileno())
+                source_now, source_current = owned_bytes(source, 65536)
+                if (identity(mirror.lstat()) != identity(before)
+                        or identity(source_now) != identity(source_before) or source_current != source_data):
+                    raise SystemExit("APT configuration changed before the priority update")
+                os.replace(temporary, mirror)
+            finally:
+                if os.path.exists(temporary):
+                    os.unlink(temporary)
+        after, actual = owned_bytes(mirror, 144)
+        if (actual != preferred or after.st_uid != before.st_uid or after.st_gid != before.st_gid
+                or stat.S_IMODE(after.st_mode) != stat.S_IMODE(before.st_mode)):
+            raise SystemExit("Ubuntu mirror-priority readback failed")
+        print(json.dumps({"apt_mirrors_after": actual.decode(),
+                          "sha256": hashlib.sha256(actual).hexdigest(),
+                          "already_preferred": current == preferred}), flush=True)
+        PYTHON
+        fi
     - name: Prepare native document prerequisites
       if: steps.preparation-mode.outputs.mode == 'native'
       shell: bash

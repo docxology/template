@@ -4,12 +4,12 @@
       "exists": true,
       "file_count": 1,
       "size_mb": "0.47",
-      "total_size_bytes": 492007,
+      "total_size_bytes": 490579,
       "largest_files": [
         {
           "name": "template_formal_combined.pdf",
           "size_mb": "0.47",
-          "size_bytes": 492007,
+          "size_bytes": 490579,
           "path": "pdf/template_formal_combined.pdf"
         }
       ],
@@ -20,19 +20,19 @@
     "web": {
       "exists": true,
       "file_count": 11,
-      "size_mb": "3.49",
-      "total_size_bytes": 3662208,
+      "size_mb": "2.24",
+      "total_size_bytes": 2344924,
       "largest_files": [
         {
           "name": "source-web-fonts.js",
-          "size_mb": "3.02",
-          "size_bytes": 3170848,
+          "size_mb": "1.77",
+          "size_bytes": 1853404,
           "path": "web/assets/source-web-fonts.js"
         },
         {
           "name": "index.html",
           "size_mb": "0.15",
-          "size_bytes": 159184,
+          "size_bytes": 159204,
           "path": "web/index.html"
         },
         {
@@ -53,12 +53,12 @@
       "exists": true,
       "file_count": 7,
       "size_mb": "0.46",
-      "total_size_bytes": 480428,
+      "total_size_bytes": 479004,
       "largest_files": [
         {
           "name": "05_results_discussion_slides.pdf",
           "size_mb": "0.25",
-          "size_bytes": 261052,
+          "size_bytes": 259627,
           "path": "slides/05_results_discussion_slides.pdf"
         },
         {
@@ -196,12 +196,12 @@
       "exists": true,
       "file_count": 1,
       "size_mb": "0.47",
-      "total_size_bytes": 492007,
+      "total_size_bytes": 490579,
       "largest_files": [
         {
           "name": "template_formal_combined.pdf",
           "size_mb": "0.47",
-          "size_bytes": 492007,
+          "size_bytes": 490579,
           "path": "template_formal_combined.pdf"
         }
       ],
@@ -211,40 +211,40 @@
     }
   },
   "total_files": 33,
-  "total_size_mb": 5.026691436767578,
+  "total_size_mb": 3.7663497924804688,
   "largest_files": [
     {
       "name": "source-web-fonts.js",
-      "size_mb": "3.02",
-      "size_bytes": 3170848,
+      "size_mb": "1.77",
+      "size_bytes": 1853404,
       "category": "web",
       "path": "web/assets/source-web-fonts.js"
     },
     {
       "name": "template_formal_combined.pdf",
       "size_mb": "0.47",
-      "size_bytes": 492007,
+      "size_bytes": 490579,
       "category": "pdf",
       "path": "pdf/template_formal_combined.pdf"
     },
     {
       "name": "template_formal_combined.pdf",
       "size_mb": "0.47",
-      "size_bytes": 492007,
+      "size_bytes": 490579,
       "category": "root",
       "path": "template_formal_combined.pdf"
     },
     {
       "name": "05_results_discussion_slides.pdf",
       "size_mb": "0.25",
-      "size_bytes": 261052,
+      "size_bytes": 259627,
       "category": "slides",
       "path": "slides/05_results_discussion_slides.pdf"
     },
     {
       "name": "index.html",
       "size_mb": "0.15",
-      "size_bytes": 159184,
+      "size_bytes": 159204,
       "category": "web",
       "path": "web/index.html"
     },
@@ -258,7 +258,7 @@
     {
       "name": "manuscript__05_results_discussion.html",
       "size_mb": "0.09",
-      "size_bytes": 95409,
+      "size_bytes": 95429,
       "category": "web",
       "path": "web/manuscript__05_results_discussion.html"
     },
@@ -279,20 +279,20 @@
     {
       "name": "manuscript__02_type_architecture.html",
       "size_mb": "0.04",
-      "size_bytes": 38857,
+      "size_bytes": 38877,
       "category": "web",
       "path": "web/manuscript__02_type_architecture.html"
     }
   ],
   "missing_expected_files": [],
   "sizes_by_category": {
-    "pdf": 0.46921443939208984,
-    "web": 3.4925537109375,
-    "slides": 0.4581718444824219,
+    "pdf": 0.4678525924682617,
+    "web": 2.2362937927246094,
+    "slides": 0.4568138122558594,
     "figures": 0.1329641342163086,
     "data": 0.0018892288208007812,
     "reports": 0.0026836395263671875,
-    "root": 0.46921443939208984
+    "root": 0.4678525924682617
   },
   "inventory_mode": "stable-shippable-output-v1",
   "inventory_scope": "stage5-delivery-mirror",

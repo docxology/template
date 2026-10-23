@@ -19,12 +19,14 @@ from pathlib import Path
 from textwrap import fill
 
 import matplotlib.pyplot as plt
+from matplotlib.patches import FancyArrowPatch, FancyBboxPatch
+import networkx as nx
 import numpy as np
 
 from ._common import (
+    NODE_TYPE_COLORS,
     SOURCE_TIER_COLORS,
     STAGE_COLORS,
-    _draw_labeled_digraph,
     _figure_output_dir,
     _graph_positions,
     _load_json_object,
@@ -54,6 +56,79 @@ except ImportError:  # pragma: no cover - flat-layout fallback
     from template_gold_refinement.refinery import run_refinery
 
 
+def _draw_boxed_digraph(
+    ax: plt.Axes,
+    graph: nx.DiGraph,
+    positions: dict[str, tuple[float, float]],
+    *,
+    font_size: float = 10.5,
+) -> None:
+    """Keep complete graph labels inside colored boxes with clear edge endpoints."""
+    boxes = {}
+    for node, data in graph.nodes(data=True):
+        x, y = positions[node]
+        kind = str(data.get("kind", "source"))
+        box = FancyBboxPatch(
+            (x - 0.39, y - 0.36),
+            0.78,
+            0.72,
+            boxstyle="round,pad=0.02,rounding_size=0.05",
+            facecolor=NODE_TYPE_COLORS.get(kind, "#94a3b8"),
+            edgecolor="#111827",
+            linewidth=0.8,
+            zorder=3,
+        )
+        ax.add_patch(box)
+        boxes[node] = box
+        label = "\n".join(
+            fill(line, width=22, break_on_hyphens=False) for line in str(data.get("label", node)).split("\n")
+        )
+        ax.text(
+            x,
+            y,
+            label,
+            ha="center",
+            va="center",
+            fontsize=font_size,
+            color="white" if kind in {"source", "formalism", "publication"} else "#111827",
+            zorder=4,
+        )
+    for source, target, data in graph.edges(data=True):
+        start, end = positions[source], positions[target]
+        ax.add_patch(
+            FancyArrowPatch(
+                start,
+                end,
+                patchA=boxes[source],
+                patchB=boxes[target],
+                shrinkA=4,
+                shrinkB=4,
+                arrowstyle="-|>",
+                mutation_scale=12,
+                connectionstyle="arc3,rad=0.03",
+                color="#475569",
+                linewidth=1.1,
+                zorder=1,
+            )
+        )
+        if data.get("label"):
+            ax.text(
+                (start[0] + end[0]) / 2,
+                (start[1] + end[1]) / 2,
+                str(data["label"]),
+                ha="center",
+                va="center",
+                fontsize=7.5,
+                color="#334155",
+                bbox={"facecolor": "white", "edgecolor": "none", "pad": 1},
+                zorder=2,
+            )
+    xs, ys = zip(*positions.values())
+    ax.set_xlim(min(xs) - 0.55, max(xs) + 0.55)
+    ax.set_ylim(min(ys) - 0.55, max(ys) + 0.55)
+    ax.axis("off")
+
+
 def generate_provenance_sankey(
     output_dir: Path | None = None,
     *,
@@ -69,6 +144,8 @@ def generate_provenance_sankey(
         positions=_graph_positions(graph),
         title="Provenance Flow: Ore to Nine-Nines Certification",
         figsize=(12, 4.8),
+        node_size=6500,
+        axis_bounds=(-0.5, 5.5, -0.09, 0.31),
         edge_widths=edge_widths,
         font_size=7.2,
         subtitle="Edge width encodes stage purity gain; final node encodes nine-nines certification.",
@@ -167,6 +244,7 @@ def generate_token_heatmap(
                 matrix[si, ci] = idx
 
     fig, ax = plt.subplots(figsize=(9.4, 8.2))
+    fig.subplots_adjust(bottom=0.27, top=0.91)
     im = ax.imshow(matrix, aspect="auto", cmap="YlOrBr", interpolation="nearest")
     ax.set_xticks(range(len(categories)))
     ax.set_xticklabels([f"{cat}\nn={len(cfg.lexicon[cat])}" for cat in categories], rotation=30, ha="right")
@@ -188,11 +266,10 @@ def generate_token_heatmap(
                 fontsize=7,
                 color="white" if matrix[si, ci] > len(cfg.lexicon[categories[ci]]) / 2 else "black",
             )
-    ax.text(
-        0.01,
-        -0.14,
+    fig.text(
+        0.12,
+        0.02,
         "Column labels include inventory size; each cell is the selected inventory index.",
-        transform=ax.transAxes,
         fontsize=8,
         color="#334155",
     )
@@ -225,9 +302,9 @@ def generate_integrity_gate_matrix(
         matrix[row, 3] = 1.0 if any(term in names[row].lower() for term in ("figure", "token", "purity")) else 0.5
 
     fig, ax = plt.subplots(figsize=(10, max(4.5, 0.55 * len(names) + 2)))
-    im = ax.imshow(matrix, cmap="YlGn", vmin=0, vmax=1)
+    im = ax.imshow(matrix, aspect="auto", cmap="YlGn", vmin=0, vmax=1)
     ax.set_xticks(range(len(columns)))
-    ax.set_xticklabels(columns)
+    ax.set_xticklabels(columns, rotation=20, ha="right")
     ax.set_yticks(range(len(names)))
     ax.set_yticklabels(names)
     ax.set_title("Integrity Gate Matrix", fontsize=14)
@@ -235,7 +312,15 @@ def generate_integrity_gate_matrix(
         for col in range(matrix.shape[1]):
             value = matrix[row, col]
             label = "full" if value == 1 else "partial" if value > 0 else "missing"
-            ax.text(col, row, label, ha="center", va="center", fontsize=7)
+            ax.text(
+                col,
+                row,
+                label,
+                ha="center",
+                va="center",
+                fontsize=7,
+                color="white" if value > 0.75 else "#111827",
+            )
     cbar = fig.colorbar(im, ax=ax, fraction=0.046, pad=0.04)
     cbar.set_label("Coverage")
     cbar.set_ticks([0, 0.5, 1])
@@ -250,22 +335,18 @@ def generate_formalism_traceability(
     *,
     project_root: Path | None = None,
 ) -> Path:
-    """Generate formalism traceability."""
+    """Generate formalism traceability with full, boxed source-owned labels."""
     output_dir = _figure_output_dir(output_dir, project_root=project_root)
     graph = build_formalism_traceability_graph()
     formalism_count_for_height = sum(1 for _, data in graph.nodes(data=True) if data.get("kind") == "formalism")
-    return _render_digraph_figure(
-        output_dir,
-        filename="formalism_traceability.png",
-        graph=graph,
-        positions=_graph_positions(graph),
-        title="Formalism Traceability Graph",
-        figsize=(14, max(5, 0.72 * formalism_count_for_height + 2)),
-        node_size=2300,
-        font_size=6.8,
-        title_pad=16,
-        header_labels=((0.17, 0.95, "Formalism"), (0.50, 0.95, "Equation label"), (0.83, 0.95, "Source owner")),
-    )
+    fig, ax = plt.subplots(figsize=(10.4, max(5, 0.76 * formalism_count_for_height + 1.6)))
+    positions = {node: (1.2 * x, y) for node, (x, y) in _graph_positions(graph).items()}
+    _draw_boxed_digraph(ax, graph, positions)
+    ax.set_ylim(0.35, formalism_count_for_height + 1.15)
+    for x, title in ((0.0, "Formalism"), (1.0, "Equation label"), (2.1, "Source owner")):
+        ax.text(1.2 * x, formalism_count_for_height + 0.72, title, ha="center", fontsize=11, fontweight="bold")
+    ax.set_title("Formalism Traceability Graph", fontsize=14, pad=18)
+    return _save_figure(fig, output_dir / "formalism_traceability.png")
 
 
 def generate_implementation_circuit(
@@ -283,8 +364,10 @@ def generate_implementation_circuit(
         positions=_graph_positions(graph),
         title="Gold Refinement Implementation Circuit",
         figsize=(12.5, 7.2),
-        node_size=2600,
+        node_size=6500,
         font_size=7.4,
+        edge_curvatures={("publication", "config"): 0.85},
+        axis_bounds=(-2.95, 3.3, -0.9, 2.7),
         footer_text=(
             "A fork changes the left side first; generated artifacts and validators then prove whether the manuscript still refines."
         ),
@@ -296,7 +379,7 @@ def generate_claim_evidence_assay(
     *,
     project_root: Path | None = None,
 ) -> Path:
-    """Generate claim evidence assay."""
+    """Generate claim evidence assay without truncating its evidence pointers."""
     output_dir = _figure_output_dir(output_dir, project_root=project_root)
 
     root = project_root or Path(".")
@@ -306,17 +389,19 @@ def generate_claim_evidence_assay(
     if not entries:
         entries = []
 
-    fig_height = max(5.2, 0.58 * max(1, len(entries)) + 2.4)
-    fig = plt.figure(figsize=(15, fig_height))
-    grid = fig.add_gridspec(1, 2, width_ratios=(1.0, 1.25), wspace=0.08)
+    fig_height = max(7.5, 0.92 * max(1, len(entries)) + 3.0)
+    fig = plt.figure(figsize=(11, fig_height))
+    grid = fig.add_gridspec(2, 1, height_ratios=(1.0, 1.2), hspace=0.35, left=0.07, right=0.98, top=0.94, bottom=0.04)
     ax = fig.add_subplot(grid[0])
+    support_bounds = ax.get_position()
+    ax.set_position((0.32, support_bounds.y0, 0.65, support_bounds.height))
     graph_ax = fig.add_subplot(grid[1])
     ax.set_xlim(0, 1.05)
     ax.set_ylim(-0.8, max(1, len(entries)) - 0.2)
     ax.set_xlabel("Evidence support")
     ax.set_title("Assay support", fontsize=12, pad=12)
     ax.set_yticks(range(len(entries)))
-    ax.set_yticklabels([fill(entry.claim_name, width=21) for entry in entries], fontsize=8)
+    ax.set_yticklabels([fill(entry.claim_name, width=27) for entry in entries], fontsize=10.5)
     ax.set_xticks([0, 1])
     ax.set_xticklabels(["unsupported", "supported"])
 
@@ -326,15 +411,14 @@ def generate_claim_evidence_assay(
     for row, entry in enumerate(entries):
         width = 1.0 if entry.supported else 0.12
         color = supported_color if entry.supported else unsupported_color
-        ax.barh(row, width, color=color, alpha=0.82, height=0.45)
-        source = entry.evidence_source if len(entry.evidence_source) <= 46 else entry.evidence_source[:43] + "..."
+        ax.barh(row, width, color=color, alpha=0.82, height=0.7)
         ax.text(
-            min(0.98, width + 0.02),
+            0.02 if entry.supported else width + 0.02,
             row,
-            source,
+            fill(entry.evidence_source, width=56, break_on_hyphens=False),
             va="center",
-            ha="right" if width > 0.85 else "left",
-            fontsize=7,
+            ha="left",
+            fontsize=11.5,
             color="#111827",
         )
 
@@ -343,7 +427,7 @@ def generate_claim_evidence_assay(
         positions = {
             node: (float(data.get("x", 0.0)), float(data.get("y", 0.0))) for node, data in topology.nodes(data=True)
         }
-        _draw_labeled_digraph(graph_ax, topology, positions, node_size=1850, font_size=6.3)
+        _draw_boxed_digraph(graph_ax, topology, positions)
     else:
         graph_ax.text(0.5, 0.5, "No configured claims", ha="center", va="center", fontsize=11)
         graph_ax.axis("off")
@@ -352,7 +436,7 @@ def generate_claim_evidence_assay(
     summary = f"{registry.supported_claims}/{registry.total_claims} supported; " + ", ".join(
         f"{boundary}: {count}" for boundary, count in sorted(boundary_counts.items())
     )
-    ax.text(0.0, -0.55, summary, fontsize=8.5, color="#334155")
+    ax.text(0.0, -0.17, summary, transform=ax.transAxes, va="top", fontsize=10, color="#334155")
     ax.grid(axis="x", alpha=0.2)
     for spine in ("top", "right", "left"):
         ax.spines[spine].set_visible(False)
@@ -378,7 +462,9 @@ def generate_integrity_risk_matrix(
     sizes = [120 + score * 35 for score in residual]
     colors = [SOURCE_TIER_COLORS.get(item.source_tier, "#94a3b8") for item in dimensions]
 
-    fig, ax = plt.subplots(figsize=(10, 7))
+    fig, (ax, legend_ax) = plt.subplots(1, 2, figsize=(11.8, 7.5), gridspec_kw={"width_ratios": (1.25, 1)})
+    fig.subplots_adjust(wspace=0.3)
+    legend_ax.axis("off")
     ax.scatter(
         detectability,
         severities,
@@ -388,13 +474,16 @@ def generate_integrity_risk_matrix(
         linewidths=0.8,
         alpha=0.86,
     )
+    point_ids: dict[tuple[int, int], list[str]] = {}
     for item in dimensions:
+        point_ids.setdefault((item.detectability, item.severity), []).append(item.dimension_id)
+    for point, identifiers in point_ids.items():
         ax.annotate(
-            item.dimension_id,
-            xy=(item.detectability, item.severity),
-            xytext=(5, 5),
+            ", ".join(identifiers),
+            xy=point,
+            xytext=(5, 7),
             textcoords="offset points",
-            fontsize=8,
+            fontsize=10,
             fontweight="bold",
         )
 
@@ -421,26 +510,26 @@ def generate_integrity_risk_matrix(
         )
         for tier in sorted({item.source_tier for item in dimensions})
     ]
-    tier_legend = ax.legend(handles=tier_handles, title="Source tier", loc="upper right", fontsize=7)
-    ax.add_artist(tier_legend)
+    tier_legend = legend_ax.legend(handles=tier_handles, title="Source tier", loc="upper left", fontsize=9)
+    legend_ax.add_artist(tier_legend)
     size_levels = sorted({min(residual), int(np.median(residual)), max(residual)})
     size_handles = [
         ax.scatter([], [], s=120 + score * 35, color="#d1d5db", edgecolors="#1f2937", label=str(score))
         for score in size_levels
     ]
-    ax.legend(handles=size_handles, title="Residual risk", loc="lower right", fontsize=7)
+    legend_ax.legend(handles=size_handles, title="Residual risk", loc="upper right", fontsize=9)
 
     table_text = "\n".join(
-        f"{item.dimension_id}: {fill(item.name, width=22)} | {item.source_tier}" for item in dimensions
+        fill(f"{item.dimension_id}: {item.name} | {item.source_tier}", width=39) for item in dimensions
     )
-    ax.text(
+    legend_ax.text(
         0.02,
-        0.02,
+        0.57,
         table_text,
-        transform=ax.transAxes,
-        va="bottom",
+        transform=legend_ax.transAxes,
+        va="top",
         ha="left",
-        fontsize=7,
+        fontsize=9,
         color="#111827",
         bbox={"facecolor": "white", "edgecolor": "#d1d5db", "alpha": 0.92, "pad": 5},
     )

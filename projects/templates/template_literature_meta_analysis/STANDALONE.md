@@ -1,9 +1,10 @@
 # Standalone Fork Guide
 
-The intended 0.2.0 package declares `research-project-template==4.0.2` as a real
-runtime dependency for its shared validator and platform adapters. The checkout's
+The intended 0.2.0 package pins `research-project-template` in `pyproject.toml`
+for its shared validator and platform adapters. The checkout's
 `tool.uv.sources` entry resolves that dependency to the public monorepo. An
-independent source checkout installs an explicitly built platform 4.0.2 wheel and
+independent source checkout installs an explicitly built platform wheel matching
+`pyproject.toml` and
 this project's `dev` extra using pip as shown below; pip does not consult that
 checkout-only resolver. Installed-wheel acceptance separately installs both actual
 wheels outside the checkout. These are unreleased candidates, so do not assume
@@ -96,7 +97,7 @@ requirements. Replace the wheel path with the actual reviewed artifact:
 ```bash
 python3.14 -m venv .venv
 . .venv/bin/activate
-python -m pip install /absolute/path/to/research_project_template-4.0.2-py3-none-any.whl
+python -m pip install /absolute/path/to/research_project_template-4.1.0-py3-none-any.whl
 python -m pip install '.[dev]'
 python -I -m pytest tests/ --cov=src --cov-fail-under=90
 ```
@@ -107,7 +108,7 @@ checkout working directory from becoming an ambient SDK import provider; the
 conftest binds the declared SDK before registering own source.
 The configured test suite exercises source registered by its own conftest;
 installed-wheel execution and exact-revision acceptance remain separate gates.
-The candidate platform 4.0.2 dependency must be supplied explicitly until it is
+The candidate platform SDK must be supplied explicitly at the declared version until it is
 actually published. Installing dependencies requires package access; ordinary
 corpus analysis and the default tests use deterministic fixtures or local servers.
 

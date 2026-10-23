@@ -1,9 +1,9 @@
 {
   "claim_boundary": "Compact evidence summary for manuscript validation; full fact dumps are opt-in debug output.",
-  "fact_count": 15808,
+  "fact_count": 15810,
   "freshness_warnings": [],
   "kind_counts": {
-    "artifact": 124,
+    "artifact": 126,
     "citation": 15,
     "equation": 1,
     "figure": 40,
@@ -11,7 +11,7 @@
     "string": 2,
     "table": 1
   },
-  "omitted_fact_count": 15608,
+  "omitted_fact_count": 15610,
   "sample_facts": [
     {
       "active": true,
@@ -2416,7 +2416,7 @@
   ],
   "schema": "template-evidence-registry-report-v1",
   "source_tiers": {
-    "artifact": 166,
+    "artifact": 168,
     "bibliography": 15,
     "configuration": 100,
     "data_source": 20,

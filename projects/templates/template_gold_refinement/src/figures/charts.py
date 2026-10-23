@@ -62,12 +62,12 @@ def generate_purity_progression(
     stage_names = [STAGE_LABELS[i] for i in range(len(result.stages))]
     gains = [result.stages[i].output_purity - result.stages[i].input_purity for i in range(len(result.stages))]
 
-    fig = plt.figure(figsize=(11, 7.5))
-    grid = fig.add_gridspec(2, 1, height_ratios=(3.2, 1.2), hspace=0.24)
+    fig = plt.figure(figsize=(11, 8.5))
+    grid = fig.add_gridspec(2, 1, height_ratios=(3.2, 1.2), hspace=0.65, top=0.82, bottom=0.12)
     ax1 = fig.add_subplot(grid[0])
     ax3 = fig.add_subplot(grid[1])
 
-    x_positions = np.arange(len(result.stages))
+    x_positions = np.arange(len(result.stages)) + 1
     bar_width = 0.6
     ax1.bar(
         x_positions,
@@ -79,8 +79,8 @@ def generate_purity_progression(
     )
     ax1.set_xlabel("Refinery Stage", fontsize=12)
     ax1.set_ylabel("Purity Gain (fraction)", fontsize=12, color="#333333")
-    ax1.set_xticks(x_positions)
-    ax1.set_xticklabels(stage_names, rotation=15, ha="right")
+    ax1.set_xticks(np.arange(len(purity_seq)))
+    ax1.set_xticklabels(["Input", *stage_names], rotation=15, ha="right")
     ax1.tick_params(axis="y", labelcolor="#333333")
     _style_axes(ax1)
 
@@ -109,7 +109,7 @@ def generate_purity_progression(
     )
 
     ax1.set_title("Gold Refinery: Purity Progression from Ore to Nine-Nines", fontsize=14)
-    fig.legend(loc="upper left", bbox_to_anchor=(0.12, 0.95), fontsize=9)
+    fig.legend(loc="upper center", bbox_to_anchor=(0.5, 0.99), ncol=2, fontsize=9)
 
     nines = purity_nines_values(tuple(purity_seq))
     ax3.plot(line_x, nines, color="#7f1d1d", marker="o", linewidth=2.0)
@@ -228,7 +228,8 @@ def generate_token_density_chart(
     section_counts: dict[str, int] = token_plan_data.get("section_counts", {}) if token_plan_data else {}
     category_counts: dict[str, int] = token_plan_data.get("category_counts", {}) if token_plan_data else {}
 
-    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(13, 5.4))
+    fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(9.2, 9.4))
+    fig.subplots_adjust(left=0.27, right=0.9, top=0.92, bottom=0.1, hspace=0.65)
 
     if section_counts:
         section_items = sorted(section_counts.items(), key=lambda item: (-item[1], item[0]))
@@ -236,10 +237,11 @@ def generate_token_density_chart(
         counts = [item[1] for item in section_items]
         total = sum(counts)
         ax1.bar(sections, counts, color="#1e3a8a", alpha=0.82)
+        ax1.set_ylim(0, max(counts) * 1.25 + 0.5)
         ax1.set_title("Tokens per Manuscript Section", fontsize=12)
         ax1.set_xlabel("Section")
         ax1.set_ylabel("Token Count")
-        ax1.tick_params(axis="x", rotation=30)
+        ax1.tick_params(axis="x", rotation=45)
         for i, c in enumerate(counts):
             pct = 100 * c / total if total else 0
             ax1.text(i, c + 0.1, f"{c}\n{pct:.0f}%", ha="center", fontsize=8)
@@ -252,6 +254,7 @@ def generate_token_density_chart(
         counts = [item[1] for item in category_items]
         total = sum(counts)
         ax2.barh(categories, counts, color="#0f766e", alpha=0.8)
+        ax2.set_xlim(0, max(counts) * 1.25 + 0.5)
         ax2.set_title("Tokens per Lexicon Category", fontsize=12)
         ax2.set_xlabel("Token Count")
         ax2.set_ylabel("Category")
@@ -261,6 +264,6 @@ def generate_token_density_chart(
         ax2.text(0.98, 0.04, f"Total: {total}", transform=ax2.transAxes, ha="right", va="bottom", fontsize=9)
         _style_axes(ax2, grid_axis="x")
 
-    fig.suptitle("Mega-Madlib Token Distribution", fontsize=14, y=1.02)
+    fig.suptitle("Mega-Madlib Token Distribution", fontsize=14, y=0.98)
     out_path = output_dir / "token_density.png"
     return _save_figure(fig, out_path)

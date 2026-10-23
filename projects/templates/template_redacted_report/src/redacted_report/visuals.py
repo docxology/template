@@ -241,11 +241,20 @@ def verify_dev_variant_outputs(
     output_dir: Path,
     *,
     render_smoke: bool = False,
+    require_steganography: bool = True,
     require_kmyth_sidecars: bool = False,
     page_counter: Callable[[Path], int] | None = None,
     executable_resolver: Callable[[str], str | None] = shutil.which,
 ) -> dict[str, object]:
-    """Validate generated visual proof PDFs, filenames, hashes, and matrix records."""
+    """Validate the caller-selected proof matrix; secure PDFs/manifests remain the default.
+
+    Base-only verification requires an explicit trusted caller selection. Missing
+    files or untrusted matrix flags can never disable the default secure checks.
+    """
+    if type(require_steganography) is not bool:
+        raise ValueError("require_steganography must be a boolean")
+    if require_kmyth_sidecars and not require_steganography:
+        raise ValueError("Kmyth sidecars require the steganography proof matrix")
     errors: list[str] = []
     warnings: list[str] = []
     count_pages = page_counter or _pdf_page_count
@@ -298,8 +307,19 @@ def verify_dev_variant_outputs(
     _expect(actual_id_set == expected_id_set, errors, "matrix variant ids do not match expected 4x4 set")
 
     discovered_file_names = {path.name for path in output_dir.iterdir() if path.is_file()}
-    has_kmyth_sidecars = require_kmyth_sidecars or any(name.endswith(".ski") for name in discovered_file_names)
-    expected_file_names = set(expected_dev_variant_filenames(include_kmyth_sidecars=has_kmyth_sidecars))
+    has_kmyth_sidecars = require_steganography and (
+        require_kmyth_sidecars or any(name.endswith(".ski") for name in discovered_file_names)
+    )
+    expected_file_names = set(
+        expected_dev_variant_filenames(
+            include_steganography=require_steganography,
+            include_hash_manifests=require_steganography,
+            include_kmyth_sidecars=has_kmyth_sidecars,
+        )
+    )
+    if not require_steganography:
+        _expect(matrix.get("include_steganography") is False, errors, "matrix does not declare base-only proofs")
+        _expect(matrix.get("security_methods") == [], errors, "base-only matrix claims security methods")
     unexpected = sorted(discovered_file_names - expected_file_names)
     missing_expected = sorted(expected_file_names - discovered_file_names)
     if unexpected:
@@ -327,8 +347,8 @@ def verify_dev_variant_outputs(
                 continue
 
             base_name = f"{variant_id}.pdf"
-            secure_name = f"{variant_id}_steganography.pdf"
-            manifest_name = f"{variant_id}.hashes.json"
+            secure_name = f"{variant_id}_steganography.pdf" if require_steganography else ""
+            manifest_name = f"{variant_id}.hashes.json" if require_steganography else ""
             _expect(variant.get("base_pdf") == base_name, errors, f"{variant_id}: bad base_pdf filename")
             _expect(
                 variant.get("steganography_pdf") == secure_name,
@@ -340,6 +360,19 @@ def verify_dev_variant_outputs(
             base_path = output_dir / base_name
             secure_path = output_dir / secure_name
             manifest_path = output_dir / manifest_name
+            if not require_steganography:
+                base_bytes = variant.get("base_pdf_bytes")
+                base_sha256 = variant.get("base_pdf_sha256")
+                _expect(
+                    type(base_bytes) is int and base_bytes > 0,
+                    errors,
+                    f"{variant_id}: missing base_pdf_bytes custody",
+                )
+                _expect(
+                    isinstance(base_sha256, str) and len(base_sha256) == 64,
+                    errors,
+                    f"{variant_id}: missing base_pdf_sha256 custody",
+                )
             _verify_pdf_file(
                 base_path,
                 variant.get("base_pdf_sha256"),
@@ -347,18 +380,35 @@ def verify_dev_variant_outputs(
                 errors,
                 page_counter=count_pages,
             )
-            _verify_pdf_file(
-                secure_path,
-                variant.get("steganography_pdf_sha256"),
-                variant.get("steganography_pdf_bytes"),
-                errors,
-                page_counter=count_pages,
-            )
-            _verify_hash_manifest(manifest_path, base_name, variant.get("hash_manifest_sha256"), base_path, errors)
+            if require_steganography:
+                _verify_pdf_file(
+                    secure_path,
+                    variant.get("steganography_pdf_sha256"),
+                    variant.get("steganography_pdf_bytes"),
+                    errors,
+                    page_counter=count_pages,
+                )
+                _verify_hash_manifest(manifest_path, base_name, variant.get("hash_manifest_sha256"), base_path, errors)
+            else:
+                _expect(variant.get("security_methods") == [], errors, f"{variant_id}: base-only security methods")
+                for field in ("steganography_pdf_sha256", "hash_manifest_sha256"):
+                    _expect(variant.get(field, "") == "", errors, f"{variant_id}: base-only {field} claim")
+                secure_bytes = variant.get("steganography_pdf_bytes", 0)
+                _expect(
+                    type(secure_bytes) is int and secure_bytes == 0,
+                    errors,
+                    f"{variant_id}: base-only steganography_pdf_bytes claim",
+                )
+                _expect(
+                    variant.get("hash_manifest_exists", False) is False,
+                    errors,
+                    f"{variant_id}: base-only hash_manifest_exists claim",
+                )
 
             if render_tool:
                 _render_pdf_smoke(base_path, render_dir, errors)
-                _render_pdf_smoke(secure_path, render_dir, errors)
+                if require_steganography:
+                    _render_pdf_smoke(secure_path, render_dir, errors)
 
             if require_kmyth_sidecars:
                 _verify_kmyth_sidecar(output_dir / f"{variant_id}.hashes.json.ski", errors)
@@ -381,6 +431,7 @@ def verify_dev_variant_outputs(
         "hash_manifest_count": hash_manifest_count,
         "kmyth_sidecar_count": sidecar_count,
         "render_smoke": render_smoke,
+        "require_steganography": require_steganography,
         "errors": tuple(errors),
         "warnings": tuple(warnings),
     }

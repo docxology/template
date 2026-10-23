@@ -12,16 +12,36 @@ from template_literature_meta_analysis.reproducibility.models import (
 )
 
 
-def workflow_schema() -> dict[str, Any]:
-    """Request at most three named nodes; no arbitrary code or paths are accepted."""
+def workflow_schema(source: str | None = None) -> dict[str, Any]:
+    """Request bounded nodes, optionally choosing quotes from the exact consumed excerpt."""
+    quote_schema: dict[str, Any] = {"type": "string", "minLength": 20, "maxLength": 1000}
+    if source is not None:
+        if not isinstance(source, str):
+            raise ValueError("workflow quote source must be text")
+        # These are generation choices, not repaired model output. Every option
+        # is a literal substring and the supervised invocation retains the enum
+        # before generation. The parser still checks exact source membership.
+        quotes = list(
+            dict.fromkeys(
+                quote for start in range(0, len(source), 200) if len(quote := source[start : start + 200].strip()) >= 20
+            )
+        )
+        if not quotes:
+            raise ValueError("workflow quote source has no bounded nonempty excerpt")
+        quote_schema["enum"] = quotes
     properties = {
         "node_id": {"type": "string", "enum": ["n0", "n1", "n2"]},
-        "node_name": {"type": "string"},
+        "node_name": {"type": "string", "minLength": 1, "maxLength": 1000},
         "node_type": {"type": "string", "enum": [kind.value for kind in NodeType]},
-        "source_quote": {"type": "string"},
-        "description": {"type": "string"},
+        "source_quote": quote_schema,
+        "description": {"type": "string", "minLength": 1, "maxLength": 1000},
         "reproducibility_rating": {"type": "integer", "minimum": 1, "maximum": 4},
-        "depends_on": {"type": "array", "items": {"type": "string", "enum": ["n0", "n1", "n2"]}},
+        "depends_on": {
+            "type": "array",
+            "maxItems": 3,
+            "uniqueItems": True,
+            "items": {"type": "string", "enum": ["n0", "n1", "n2"]},
+        },
     }
     return {
         "type": "object",

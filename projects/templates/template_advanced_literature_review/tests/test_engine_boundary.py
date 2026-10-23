@@ -49,6 +49,7 @@ ARTIFACTS = {
     },
     "descriptive_stats.json": {
         "descriptive_stats": {
+            "total": 3,
             "unique_authors": 2,
             "citation_count_mean": 2,
             "citation_count_median": 2,
@@ -361,6 +362,19 @@ def test_complete_manuscript_consumer_preserves_pending_and_measured_domain_scor
     else:
         assert "H1_SCORE" not in variables and "pending" in variables["HYPOTHESIS_TABLE"]
         assert variables["REPRO_MEAN_SCORE"] == "pending"
+
+    (data / "corpus.jsonl").write_text('{"title":"A"}\n{"title":"B"}\n{"title":"C"}\n{"title":"D"}\n')
+    (data / "phase_metadata.json").write_text(
+        json.dumps({"total_papers": 1, "total_unique_papers": 1, "phases": {"one": {"papers_final": 1}}})
+    )
+    temporal = {**ARTIFACTS["temporal_analysis.json"], "year_counts": {"2020": 1, "2021": 1}, "total_papers": 2}
+    (data / "temporal_analysis.json").write_text(json.dumps(temporal))
+    scoped = compute_variables(output)
+    assert scoped["RETRIEVED_CORPUS_SIZE"] == "4"
+    assert scoped["ANALYZED_CORPUS_SIZE"] == "3"
+    assert scoped["TEMPORAL_TOTAL_PAPERS"] == "2"
+    assert scoped["PHASE_CORPUS_SIZE"] == "1"
+    assert scoped["CORPUS_SIZE"] == "1"  # Existing phase alias remains compatible.
 
 
 def test_actual_crossref_and_repository_field_mapping_preserves_license_and_publication_kind():

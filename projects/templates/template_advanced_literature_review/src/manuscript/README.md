@@ -15,14 +15,20 @@ re-exported from `variables/__init__.py`). Submodules: `context.py`, `formatters
 Reads from `output_dir/` (or `output_dir/data/`):
 | JSON file | Variables computed |
 |---|---|
-| `corpus.jsonl` | `CORPUS_SIZE`, `YEAR_START_PUBS`, `YEAR_END_PUBS`, `TOTAL_REFERENCES` |
-| `temporal_analysis.json` | `YEAR_START`, `YEAR_END`, `PEAK_YEAR`, `PEAK_YEAR_PUBS`, `CAGR_PCT`, `MEAN_YOY_GROWTH_PCT`, `DOUBLING_TIME` |
+| `corpus.jsonl` | `RETRIEVED_CORPUS_SIZE`, `CORPUS_SIZE` (legacy alias), `YEAR_START_PUBS`, `YEAR_END_PUBS`, `TOTAL_REFERENCES` |
+| `phase_metadata.json` | `PHASE_CORPUS_SIZE` from the unique phase union; existing `CORPUS_SIZE` phase alias retained |
+| `temporal_analysis.json` | `TEMPORAL_TOTAL_PAPERS`, `YEAR_START`, `YEAR_END`, `PEAK_YEAR`, `PEAK_YEAR_PUBS`, `CAGR_PCT`, `MEAN_YOY_GROWTH_PCT`, `DOUBLING_TIME` |
+| `descriptive_stats.json` | `ANALYZED_CORPUS_SIZE` from `descriptive_stats.total`; `pending` when absent |
 | `subfield_classification.json` | `A1_COUNT`, `A2_COUNT`, `B_COUNT`, `C1–C5_COUNT`, `*_PCT` per subfield |
 | `citation_network.json` | `CITATION_EDGES`, `CITATION_COMPONENTS`, `CITATION_DENSITY_PCT`, `MEAN_IN_DEGREE`, `CITATION_RESOLUTION_PCT`, `CITATION_TOTAL_REFS` |
 | `hypothesis_scores.json` + `config.yaml` | configuration-keyed `*_SCORE` values and `HYPOTHESIS_TABLE` |
 | `assertion_summary.json` | `TOTAL_ASSERTIONS`, `TOTAL_SUPPORT`, `TOTAL_NEUTRAL`, `TOTAL_CONTRADICT` |
 | `tfidf_data.json` | `NUM_VOCAB_FEATURES`, `NUM_TOPICS` |
 | `output/figures/` | `NUM_FIGURES` |
+
+The raw retrieval count, configured phase union, bibliometric analysis corpus, and
+dated temporal subset are separate scopes. Use their explicit tokens above;
+`CORPUS_SIZE` remains a legacy phase alias when phase metadata is present.
 
 Hypothesis identifiers are configuration-owned. The bundled instance defines four
 phase-aware exoplanet-atmosphere questions. Forks must update the configuration, claim

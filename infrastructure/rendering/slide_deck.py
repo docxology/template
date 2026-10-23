@@ -558,7 +558,13 @@ def validate_deck_layout(deck: DeckContent) -> tuple[ContentSlideLayout | None, 
             if slide.figure_path is not None and slide.figure_path.is_file():
                 plan_diagram_figure_layout(slide.figure_path)
             layouts.append(None)
-        elif slide.kind in {"title", "stat", "quote"}:
+        elif slide.kind == "stat":
+            value = slide.stat_value or (slide.bullets[0] if slide.bullets else "")
+            fit_helvetica_bold_single_line_font_size(
+                value, max_width_pt=SLIDE_TEXT_WIDTH_PT, start_size_pt=STAT_VALUE_FONT_SIZE
+            )
+            layouts.append(None)
+        elif slide.kind in {"title", "quote"}:
             layouts.append(None)
         else:
             fit_helvetica_bold_single_line_font_size(

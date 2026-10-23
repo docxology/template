@@ -2,12 +2,14 @@
 
 from __future__ import annotations
 
+from pathlib import Path
+
 from ..analysis._infra import InteractiveDashboard, Invariant, Panel
 from ..core.invariants import OptimizerSweepConfig, all_invariants
 from ..core.project_paths import _DEFAULT_ROOT as PROJECT_ROOT
 from .dashboard_payload import to_diagonal_A
 
-REPO_ROOT = PROJECT_ROOT.parent
+REPO_ROOT = PROJECT_ROOT
 
 
 def to_dashboard_invariant(r) -> Invariant:
@@ -22,7 +24,7 @@ def to_dashboard_invariant(r) -> Invariant:
     )
 
 
-def build_dashboard(args, payload: dict) -> InteractiveDashboard:
+def build_dashboard(args, payload: dict, *, repo_root: Path = REPO_ROOT) -> InteractiveDashboard:
     """Build dashboard."""
     d = InteractiveDashboard(
         title="Optimization Exemplar — Interactive Convergence Suite",
@@ -32,7 +34,7 @@ def build_dashboard(args, payload: dict) -> InteractiveDashboard:
             "Defaults read from manuscript/config.yaml; every knob is CLI-overridable."
         ),
         project_name="template_code_project",
-        repo_root=REPO_ROOT,
+        repo_root=repo_root,
     )
     d.set_hyperparameters(
         {
@@ -94,8 +96,8 @@ def build_dashboard(args, payload: dict) -> InteractiveDashboard:
             traces=traj_traces,
             layout={
                 "xaxis": {"title": "iteration"},
-                "yaxis": {"title": "objective f(x_t)"},
-                "legend": {"orientation": "h", "y": -0.2},
+                "yaxis": {"title": "objective f(x_t)", "automargin": True},
+                "legend": {"orientation": "h", "y": -0.35, "yanchor": "top"},
             },
         )
     )

@@ -1,8 +1,10 @@
 # Bibliometric and Temporal Analysis
 
-Descriptive statistics summarize the corpus along every available axis: counts by year,
-venue, and author; citation-count distributions; and author productivity. Temporal
-analysis fits the publication time series, reporting a compound annual growth rate of
+Descriptive statistics summarize the analyzed subset of 2234
+records, rather than all 2334 retrieved records, along every available
+axis: counts by year, venue, and author; citation-count distributions; and author
+productivity. Temporal analysis uses the 2234 dated records to
+fit the publication time series, reporting a compound annual growth rate of
 5.48\% across 2000--2026 (a span of 26 years), with
 a mean year-over-year growth rate of 7.8\% and a doubling time of
 9.2 years. The peak publication year is 2025 with

@@ -8,22 +8,22 @@ Inventory Scope: stage5-delivery-mirror
 Inventory Root: output/templates/template_data_descriptor
 
 Total Files: 35
-Total Size: 3.92 MB
+Total Size: 2.65 MB
 
 Files by Category:
   • pdf: 1 files (0.17 MB)
-  • web: 12 files (3.21 MB)
-  • slides: 8 files (0.28 MB)
+  • web: 12 files (1.95 MB)
+  • slides: 8 files (0.26 MB)
   • figures: 6 files (0.10 MB)
   • data: 1 files (0.00 MB)
   • reports: 6 files (0.01 MB)
   • root: 1 files (0.17 MB)
 
 Largest Files:
-  • source-web-fonts.js: 3.02 MB (web)
+  • source-web-fonts.js: 1.77 MB (web)
   • template_data_descriptor_combined.pdf: 0.17 MB (pdf)
   • template_data_descriptor_combined.pdf: 0.17 MB (root)
-  • 05_quality_validation_slides.pdf: 0.07 MB (slides)
+  • 05_quality_validation_slides.pdf: 0.06 MB (slides)
   • 03_schema_slides.pdf: 0.06 MB (slides)
 
 File Types:

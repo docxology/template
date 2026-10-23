@@ -3,13 +3,13 @@
     "pdf": {
       "exists": true,
       "file_count": 1,
-      "size_mb": "3.35",
-      "total_size_bytes": 3515475,
+      "size_mb": "3.44",
+      "total_size_bytes": 3604636,
       "largest_files": [
         {
           "name": "template_active_inference_combined.pdf",
-          "size_mb": "3.35",
-          "size_bytes": 3515475,
+          "size_mb": "3.44",
+          "size_bytes": 3604636,
           "path": "pdf/template_active_inference_combined.pdf"
         }
       ],
@@ -20,19 +20,19 @@
     "web": {
       "exists": true,
       "file_count": 20,
-      "size_mb": "3.77",
-      "total_size_bytes": 3957695,
+      "size_mb": "2.52",
+      "total_size_bytes": 2640591,
       "largest_files": [
         {
           "name": "source-web-fonts.js",
-          "size_mb": "3.02",
-          "size_bytes": 3170848,
+          "size_mb": "1.77",
+          "size_bytes": 1853404,
           "path": "web/assets/source-web-fonts.js"
         },
         {
           "name": "index.html",
           "size_mb": "0.23",
-          "size_bytes": 237517,
+          "size_bytes": 237537,
           "path": "web/index.html"
         },
         {
@@ -70,8 +70,8 @@
     "figures": {
       "exists": true,
       "file_count": 27,
-      "size_mb": "3.79",
-      "total_size_bytes": 3972244,
+      "size_mb": "3.89",
+      "total_size_bytes": 4077007,
       "largest_files": [
         {
           "name": "sheaf_layers_overview.png",
@@ -242,13 +242,13 @@
     "root": {
       "exists": true,
       "file_count": 1,
-      "size_mb": "3.35",
-      "total_size_bytes": 3515475,
+      "size_mb": "3.44",
+      "total_size_bytes": 3604636,
       "largest_files": [
         {
           "name": "template_active_inference_combined.pdf",
-          "size_mb": "3.35",
-          "size_bytes": 3515475,
+          "size_mb": "3.44",
+          "size_bytes": 3604636,
           "path": "template_active_inference_combined.pdf"
         }
       ],
@@ -258,26 +258,26 @@
     }
   },
   "total_files": 178,
-  "total_size_mb": 21.56253147125244,
+  "total_size_mb": 20.576414108276367,
   "largest_files": [
     {
       "name": "template_active_inference_combined.pdf",
-      "size_mb": "3.35",
-      "size_bytes": 3515475,
+      "size_mb": "3.44",
+      "size_bytes": 3604636,
       "category": "pdf",
       "path": "pdf/template_active_inference_combined.pdf"
     },
     {
       "name": "template_active_inference_combined.pdf",
-      "size_mb": "3.35",
-      "size_bytes": 3515475,
+      "size_mb": "3.44",
+      "size_bytes": 3604636,
       "category": "root",
       "path": "template_active_inference_combined.pdf"
     },
     {
       "name": "source-web-fonts.js",
-      "size_mb": "3.02",
-      "size_bytes": 3170848,
+      "size_mb": "1.77",
+      "size_bytes": 1853404,
       "category": "web",
       "path": "web/assets/source-web-fonts.js"
     },
@@ -333,14 +333,14 @@
   ],
   "missing_expected_files": [],
   "sizes_by_category": {
-    "pdf": 3.3526182174682617,
-    "web": 3.7743520736694336,
-    "figures": 3.788227081298828,
+    "pdf": 3.4376487731933594,
+    "web": 2.518263816833496,
+    "figures": 3.888136863708496,
     "data": 2.817331314086914,
     "reports": 0.41170310974121094,
     "arxiv_submission": 3.9248781204223633,
     "manuscript": 0.14080333709716797,
-    "root": 3.3526182174682617
+    "root": 3.4376487731933594
   },
   "inventory_mode": "stable-shippable-output-v1",
   "inventory_scope": "stage5-delivery-mirror",

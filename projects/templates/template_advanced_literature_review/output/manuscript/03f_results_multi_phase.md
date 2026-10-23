@@ -26,7 +26,7 @@ the fixture establishes a scientific trend.
 
 ## Knowledge Graph Results
 
-The optional knowledge-graph stage reports **0** assertions from
+The optional knowledge-graph stage reports **pending** assertions from
 the eligible sample. The configuration-derived hypothesis table is the authoritative
 mapping from review question to score:
 
@@ -44,7 +44,7 @@ whether models and observations agree in the broader literature.
 
 ## Citation Network Analysis
 
-The combined corpus contains **132** citation relationships
+The separate bibliometric corpus contains **132** citation relationships
 across **70** papers, with a network density of
 2.73%. This is a descriptive statistic for the retained
 corpus; it does not establish a field-wide citation structure or community claim.

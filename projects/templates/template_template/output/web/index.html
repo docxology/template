@@ -403,7 +403,7 @@ mjx-container[display="true"] { max-width: 100%; overflow: visible; }
   outline: 3px solid var(--brand-1);
   outline-offset: 3px;
 }
-.table-scroll > table { margin-block: 0; min-width: 100%; width: max-content; }
+.table-scroll > table { margin-block: 0; display: table; min-width: 100%; width: 100%; }
 *, *::before, *::after {
   box-sizing: border-box;
 }
@@ -564,8 +564,9 @@ table {
 
 .table-scroll > table {
   margin-block: 0;
+  display: table;
   min-width: 100%;
-  width: max-content;
+  width: 100%;
 }
 
 figure {
@@ -1655,7 +1656,7 @@ contingent on test passage. The configured source-coverage floors are
 prohibited mock-framework imports, while the suites exercise real
 filesystem and subprocess behavior and use local protocol servers or
 explicitly enabled live services for network boundaries. ~12,482
-infrastructure tests and 6321+ project tests are discovered by the
+infrastructure tests and 6324+ project tests are discovered by the
 introspection build.</p></li>
 <li><p><strong>Automated Provenance</strong>: Steganographic
 watermarking and cryptographic hashing are integrated directly into the
@@ -2842,7 +2843,7 @@ and workflows</td>
 </tr>
 </tbody>
 </table></div>
-<p><code>375+</code> Markdown shards under <code>docs/</code> capture
+<p><code>376+</code> Markdown shards under <code>docs/</code> capture
 operational knowledge without duplicating auto-generated
 inventories.</p>
 <h2 data-number="4.5" id="dag-reference-declarative-executor"><span
@@ -3410,7 +3411,7 @@ local contracts, and can invoke skill-enabled capabilities through
 universal claim about every infrastructure directory.</p>
 <p>This three-tier model is, to our knowledge, novel in the research
 software engineering literature. The scale of the investment is
-substantial: <code>375</code> Markdown files under <code>docs/</code>
+substantial: <code>376</code> Markdown files under <code>docs/</code>
 alone, plus an <code>AGENTS.md</code>/<code>README.md</code> pair in
 documented directories and a <code>SKILL.md</code> descriptor on
 skill-enabled infrastructure modules. That count is itself injected from
@@ -4680,7 +4681,7 @@ Structure</h2>
 |   |-- published/               # Non-rendered published (symlinked, private)
 |   |-- archive/                 # Non-rendered retired (symlinked, private)
 |   `-- other/                   # Non-rendered misc (symlinked, private)
-|-- docs/ (20 top-level areas, 375+ markdown files per live counter)
+|-- docs/ (20 top-level areas, 376+ markdown files per live counter)
 |-- tests/                       # Infra suites (938+ files)
 |-- AGENTS.md / README.md / CLAUDE.md / pyproject.toml
 |-- run.sh / secure_run.sh
@@ -4800,7 +4801,7 @@ Inventory</h2>
 </tr>
 <tr>
 <td><code>docs/</code> directory</td>
-<td style="text-align: center;">375 files across 20 subdirectories</td>
+<td style="text-align: center;">376 files across 20 subdirectories</td>
 <td>User guides, API reference, troubleshooting</td>
 </tr>
 <tr>
@@ -4839,7 +4840,7 @@ decision records), <code>rules/</code> (contributor norms),
 <code>audit/</code> (review reports), plus the machine-generated
 <code>_generated/</code> snippets and <code>images/</code> assets.</p>
 <p>Every count in this appendix is injected from live repository
-introspection rather than hand-maintained: <code>375</code> counts every
+introspection rather than hand-maintained: <code>376</code> counts every
 Markdown file beneath <code>docs/</code> recursively, <code>20</code>
 counts its first-level subdirectories, and <code>22</code> counts the
 workflow subdirectories that each carry a <code>SKILL.md</code>

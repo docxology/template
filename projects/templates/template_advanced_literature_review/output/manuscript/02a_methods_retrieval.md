@@ -56,8 +56,11 @@ the version with the most complete metadata (a count of non-None optional fields
 DOI is normalized: case-folded, resolver-prefix stripped, so the same paper returned by
 two engines under case/format-variant DOIs merges. For this run, 80 records
 carry DOIs, 12 carry OpenAlex IDs, and 0 carry arXiv
-IDs. The de-duplicated corpus for this run holds $N = 46$ records published
-across 2000--2023.
+IDs. The retrieved fixture contains 80 records. The configured
+phase union retains 46 unique records; the separate bibliometric
+analysis uses 70 records. Its dated temporal subset contains
+70 records published across 2000--2023. These are distinct artifact scopes, rather than interchangeable
+denominators.
 
 ## Relevance Filtering
 

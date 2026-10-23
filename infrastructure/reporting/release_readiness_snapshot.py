@@ -7,9 +7,10 @@ import json
 import math
 import os
 import stat
-from collections.abc import Iterator
+from collections.abc import Iterator, Mapping
 from dataclasses import dataclass, field
 from pathlib import Path
+from types import MappingProxyType
 from typing import Any
 
 from infrastructure.core.files.secure_write import read_bytes_confined
@@ -117,15 +118,38 @@ class _SnapshotDirectory:
     children: dict[str, _SnapshotDirectory] = field(default_factory=dict)
 
 
+@dataclass(frozen=True)
+class _SnapshotExpectedDirectory:
+    files: tuple[ArtifactSnapshot, ...]
+    children: Mapping[str, _SnapshotExpectedDirectory]
+
+
+def _freeze_snapshot_directory(node: _SnapshotDirectory) -> _SnapshotExpectedDirectory:
+    """Freeze only expected names and held objects; retain no live observations."""
+    pending = [(node, False)]
+    frozen: dict[int, _SnapshotExpectedDirectory] = {}
+    while pending:
+        current, closing = pending.pop()
+        if not closing:
+            pending.append((current, True))
+            pending.extend((child, False) for child in reversed(tuple(current.children.values())))
+        else:
+            frozen[id(current)] = _SnapshotExpectedDirectory(
+                tuple(current.files),
+                MappingProxyType({name: frozen[id(child)] for name, child in current.children.items()}),
+            )
+    return frozen[id(node)]
+
+
 @dataclass
 class _SnapshotFrame:
     descriptor: int
     name: str | None
     files: Iterator[ArtifactSnapshot]
-    children: Iterator[tuple[str, _SnapshotDirectory]]
+    children: Iterator[tuple[str, _SnapshotDirectory | _SnapshotExpectedDirectory]]
 
 
-def _snapshot_directory_unchanged(descriptor: int, node: _SnapshotDirectory) -> bool:
+def _snapshot_directory_unchanged(descriptor: int, node: _SnapshotDirectory | _SnapshotExpectedDirectory) -> bool:
     """Walk held lexical names with fresh handles bounded by path depth."""
     flags = getattr(os, "O_PATH", os.O_RDONLY) | getattr(os, "O_DIRECTORY", 0) | os.O_NOFOLLOW
     frames = [_SnapshotFrame(descriptor, None, iter(node.files), iter(node.children.items()))]
@@ -195,6 +219,18 @@ class SnapshotReader:
         # Cache origin authentication only; no gate or logical execution decisions.
         self.hosted_origin_authorizations: dict[str, Any] = {}
         self.snapshots: dict[Path, ArtifactSnapshot] = {}
+        # These caches contain only immutable lexical/expected structure. Every
+        # read and unchanged call still performs its original physical checks.
+        self._lexical_paths: dict[str, Path] = {}
+        self._snapshot_tree: (
+            tuple[
+                Path,
+                dict[Path, ArtifactSnapshot],
+                tuple[tuple[Path, ArtifactSnapshot], ...],
+                _SnapshotExpectedDirectory,
+            ]
+            | None
+        ) = None
         self.validated_exports: dict[str, str] = {}
         self.validated_export_commits: dict[str, str] = {}
 
@@ -202,7 +238,14 @@ class SnapshotReader:
         """Apply public scope policy without granting filesystem authority."""
         if not isinstance(relative, str) or not relative or "\\" in relative or "\0" in relative:
             raise ValueError("artifact path must be a public repository-relative string")
-        path = Path(relative)
+        path = self._lexical_paths.get(relative) if type(relative) is str else None
+        if path is None:
+            path = Path(relative)
+            if type(relative) is str:
+                # Cache parsed structure only; every policy below runs again.
+                if len(self._lexical_paths) >= 16384:
+                    self._lexical_paths.clear()
+                self._lexical_paths[relative] = path
         if path.is_absolute() or not path.parts or ".." in path.parts:
             raise ValueError("artifact path is absolute or traverses outside public scope")
         parts = path.parts
@@ -312,15 +355,30 @@ class SnapshotReader:
             else:
                 valid = True
                 if held:
-                    tree = _SnapshotDirectory()
-                    for path, item in held:
-                        node = tree
-                        for name in path.relative_to(root).parts[:-1]:
-                            child = node.children.get(name)
-                            if child is None:
-                                child = node.children[name] = _SnapshotDirectory()
-                            node = child
-                        node.files.append(item)
+                    structure = self._snapshot_tree
+                    if (
+                        structure is not None
+                        and structure[0] == root
+                        and structure[1] is snapshots
+                        and len(structure[2]) == len(held)
+                        and all(
+                            old_path == path and old_item is item
+                            for (old_path, old_item), (path, item) in zip(structure[2], held)
+                        )
+                    ):
+                        tree = structure[3]
+                    else:
+                        builder = _SnapshotDirectory()
+                        for path, item in held:
+                            node = builder
+                            for name in path.relative_to(root).parts[:-1]:
+                                child = node.children.get(name)
+                                if child is None:
+                                    child = node.children[name] = _SnapshotDirectory()
+                                node = child
+                            node.files.append(item)
+                        tree = _freeze_snapshot_directory(builder)
+                        self._snapshot_tree = (root, snapshots, held, tree)
                     with anchored_parent(root / ".snapshot-root-witness") as descriptor:
                         if descriptor is None:
                             return False

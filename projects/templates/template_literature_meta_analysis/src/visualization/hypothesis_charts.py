@@ -19,10 +19,12 @@ from template_literature_meta_analysis.visualization.style import VIZ_CONFIG, HY
 
 def _format_hypothesis_label(key: str) -> str:
     """Convert hypothesis key to readable label using HYPOTHESIS_NAMES."""
-    # Try direct upper-case lookup (H1, H2, ...)
-    upper = key.upper().split("_")[0] if "_" in key else key.upper()
-    if upper in HYPOTHESIS_NAMES:
-        return f"{upper}: {HYPOTHESIS_NAMES[upper]}"
+    # Scorer IDs can contain underscores; consult the full configured ID first.
+    upper = key.upper()
+    for candidate in (key, upper, upper.split("_", 1)[0]):
+        if candidate in HYPOTHESIS_NAMES:
+            name = HYPOTHESIS_NAMES[candidate]
+            return f"{candidate}: {name}" if candidate.startswith("H") and candidate[1:].isdigit() else name
     # Fallback to title-casing the raw key
     return key.replace("_", " ").title()
 
@@ -95,6 +97,7 @@ def plot_hypothesis_dashboard(
     ax.set_xlabel("Evidence Score", fontsize=VIZ_CONFIG["font_size"])
     ax.set_title(
         "Hypothesis Evidence Dashboard",
+        pad=32,
         fontsize=VIZ_CONFIG["title_size"],
         fontweight="bold",
     )

@@ -7,6 +7,7 @@ for the literature citation network.
 from __future__ import annotations
 
 from pathlib import Path
+import textwrap
 
 import matplotlib
 
@@ -100,24 +101,34 @@ def plot_citation_network(
         linewidths=0.5,
     )
 
-    # Label top-5 highest in-degree nodes
+    # Keep full hub identities in a separate column, with leaders to the same nodes.
     top5 = sorted(in_degrees, key=lambda node: in_degrees[node], reverse=True)[:5]
-    for node in top5:
-        if node in pos:
-            x, y = pos[node]
-            short_label = str(node)[:25]
-            ax.annotate(
-                short_label,
-                (x, y),
-                fontsize=max(VIZ_CONFIG["font_size"] - 4, 16),
-                fontweight="bold",
-                alpha=0.85,
-                ha="center",
-                va="bottom",
-                xytext=(0, 6),
-                textcoords="offset points",
-                bbox=dict(boxstyle="round,pad=0.2", fc="white", alpha=0.7, lw=0),
-            )
+    wrapped_labels = [
+        textwrap.wrap(str(node), width=32, drop_whitespace=False, break_on_hyphens=False) or [str(node)]
+        for node in top5
+    ]
+    label_size = max(VIZ_CONFIG["font_size"] - 4, 16)
+    line_units = sum(len(lines) + 1 for lines in wrapped_labels)
+    width, height = VIZ_CONFIG["figure_size"]
+    fig.set_size_inches(width, max(height, (line_units + 2) * label_size * 1.3 / (72 * 0.8)))
+    labels_ax = fig.add_axes((0.64, 0.08, 0.34, 0.80))
+    labels_ax.set_axis_off()
+    labels_ax.text(0, 1.07, "Highest in-degree identifiers", fontsize=label_size, fontweight="bold")
+    cursor = 0.98
+    for node, lines in zip(top5, wrapped_labels):
+        ax.annotate(
+            "\n".join(lines),
+            pos[node],
+            xytext=(0, cursor),
+            textcoords=labels_ax.transAxes,
+            fontsize=label_size,
+            ha="left",
+            va="top",
+            annotation_clip=False,
+            arrowprops=dict(arrowstyle="-", color=VIZ_CONFIG["palette"][0], alpha=0.7),
+            bbox=dict(boxstyle="round,pad=0.2", fc="white", alpha=0.9, lw=0),
+        )
+        cursor -= (len(lines) + 1) / line_units
 
     ax.set_title(
         f"Citation Network ({subgraph.number_of_nodes()} nodes, {subgraph.number_of_edges()} edges)",
@@ -126,7 +137,7 @@ def plot_citation_network(
     )
     ax.set_axis_off()
 
-    plt.tight_layout()
+    fig.subplots_adjust(left=0.02, right=0.58, bottom=0.05, top=0.90)
     fig.savefig(output_path, dpi=VIZ_CONFIG["dpi"], bbox_inches="tight")
     plt.close(fig)
 

@@ -37,7 +37,7 @@ and hydrated manuscript output, not in hand-authored prose.
 | Surface | Rule |
 | --- | --- |
 | `src/` | Domain logic only. Refinery, purity, config, composition, and variable generation here. Do not import `infrastructure.*`. |
-| `scripts/` | Thin orchestrators. They may put repo/project paths on `sys.path`, call `src/`, and delegate manuscript injection to shared infrastructure. |
+| `scripts/` | Thin orchestrators. They may put repo/project paths on `sys.path`, call `src/`, and delegate manuscript injection to the declared platform SDK. Domain `src/` remains SDK-free. |
 | `manuscript/` | Token shells plus metadata. Section prose, titles, and tables must resolve from generated variables. |
 | `tests/` | Real config/data/files only; no mocks. |
 | `output/` | Regeneratable artifacts. Never hand-edit generated Markdown, PDFs, reports, or figures; update the source owner and rerun the pipeline. |

@@ -316,7 +316,7 @@ mjx-container[display="true"] { max-width: 100%; overflow: visible; }
   outline: 3px solid var(--brand-1);
   outline-offset: 3px;
 }
-.table-scroll > table { margin-block: 0; min-width: 100%; width: max-content; }
+.table-scroll > table { margin-block: 0; display: table; min-width: 100%; width: 100%; }
 *, *::before, *::after {
   box-sizing: border-box;
 }
@@ -477,8 +477,9 @@ table {
 
 .table-scroll > table {
   margin-block: 0;
+  display: table;
   min-width: 100%;
-  width: max-content;
+  width: 100%;
 }
 
 figure {
@@ -495,6 +496,15 @@ th, td {
 th {
   background-color: #1f6f8b;
   color: white;
+}
+
+/* Preserve a complete inline-code header within the table's scroll region. */
+th code {
+  color: inherit;
+  background-color: transparent;
+  white-space: nowrap;
+  overflow-wrap: normal;
+  word-break: normal;
 }
 
 img {
@@ -1255,49 +1265,50 @@ pass reports 9 integrity dimensions; highest residual risk is I4
 <td>Monotone refinery</td>
 <td>4</td>
 <td>source code</td>
-<td>tests/test_refinery.py</td>
+<td><code>tests/test_refinery.py</code></td>
 </tr>
 <tr>
 <td>I2</td>
 <td>Lexicon completeness</td>
 <td>3</td>
 <td>config</td>
-<td>tests/test_config.py</td>
+<td><code>tests/test_config.py</code></td>
 </tr>
 <tr>
 <td>I3</td>
 <td>Token hydration</td>
 <td>5</td>
 <td>generated variables</td>
-<td>tests/test_manuscript_variables.py</td>
+<td><code>tests/test_manuscript_variables.py</code></td>
 </tr>
 <tr>
 <td>I4</td>
 <td>Analogy boundary</td>
 <td>15</td>
 <td>claim ledger</td>
-<td>infrastructure.validation.cli evidence –fail-on-issues</td>
+<td><code>infrastructure.validation.cli</code> evidence
+–fail-on-issues</td>
 </tr>
 <tr>
 <td>I5</td>
 <td>Claim support</td>
 <td>10</td>
 <td>evidence assay</td>
-<td>output/reports/claim_support_registry.json</td>
+<td><code>output/reports/claim_support_registry.json</code></td>
 </tr>
 <tr>
 <td>I6</td>
 <td>Figure registry</td>
 <td>8</td>
 <td>figure producer</td>
-<td>tests/test_registry_integrity.py</td>
+<td><code>tests/test_registry_integrity.py</code></td>
 </tr>
 <tr>
 <td>I7</td>
 <td>Citation hygiene</td>
 <td>4</td>
 <td>bibliography</td>
-<td>infrastructure.reference.citation validate</td>
+<td><code>infrastructure.reference.citation</code> validate</td>
 </tr>
 <tr>
 <td>I8</td>
@@ -1311,7 +1322,8 @@ pass reports 9 integrity dimensions; highest residual risk is I4
 <td>Adversarial security assay</td>
 <td>15</td>
 <td>security assay</td>
-<td>tests/test_security_assay.py and manuscript source review</td>
+<td><code>tests/test_security_assay.py</code> and manuscript source
+review</td>
 </tr>
 </tbody>
 </table></div>

@@ -112,16 +112,16 @@ reveal the most closely related works in the corpus.
 
 | Paper A | Paper B | Similarity |
 | --- | --- | --- |
-| doi:10.1176/appi.ajp.163.12.21 | doi:10.1176/ajp.2006.163.12.21 | 1.0000 |
-| doi:10.1176/ajp.2006.163.12.21 | doi:10.1176/appi.ajp.163.12.21 | 1.0000 |
-| doi:10.1345/aph.1h302 | doi:10.1136/bcr.08.2011.4652 | 0.9660 |
-| doi:10.4088/jcp.09m05900gry | doi:10.1186/s40345-015-0034-0 | 0.9566 |
-| doi:10.1111/bdi.12859 | doi:10.1111/acps.12712 | 0.9558 |
-| doi:10.1111/j.1360-0443.2008.0 | doi:10.1111/j.1465-3362.2012.0 | 0.9536 |
-| doi:10.1513/annalsats.202006-6 | doi:10.3760/cma.j.cn112147-202 | 0.9532 |
-| doi:10.1164/ajrccm.164.9.21030 | doi:10.1093/sleep/28.4.464 | 0.9513 |
-| doi:10.1093/sleep/28.4.464 | doi:10.1164/ajrccm.164.9.21030 | 0.9513 |
-| doi:10.1002/cncr.25083 | doi:10.1200/jco.2005.23.16_sup | 0.9507 |
+| `doi:10.1176/appi.ajp.163.12.2184` | `doi:10.1176/ajp.2006.163.12.2184` | 1.0000 |
+| `doi:10.1176/ajp.2006.163.12.2184` | `doi:10.1176/appi.ajp.163.12.2184` | 1.0000 |
+| `doi:10.1345/aph.1h302` | `doi:10.1136/bcr.08.2011.4652` | 0.9660 |
+| `doi:10.4088/jcp.09m05900gry` | `doi:10.1186/s40345-015-0034-0` | 0.9566 |
+| `doi:10.1111/bdi.12859` | `doi:10.1111/acps.12712` | 0.9558 |
+| `doi:10.1111/j.1360-0443.2008.02437.x` | `doi:10.1111/j.1465-3362.2012.00473.x` | 0.9536 |
+| `doi:10.1513/annalsats.202006-696fr` | `doi:10.3760/cma.j.cn112147-20241118-00681` | 0.9532 |
+| `doi:10.1164/ajrccm.164.9.2103032` | `doi:10.1093/sleep/28.4.464` | 0.9513 |
+| `doi:10.1093/sleep/28.4.464` | `doi:10.1164/ajrccm.164.9.2103032` | 0.9513 |
+| `doi:10.1002/cncr.25083` | `doi:10.1200/jco.2005.23.16_suppl.8012` | 0.9507 |
 
 <!-- FIGURE: similarity_heatmap.png -->
 ![Document similarity for Modafinil. The horizontal bar chart shows the 15 most similar document pairs ranked by cosine similarity of their TF-IDF/SVD embeddings. High-similarity pairs share topical and lexical content.](../output/figures/similarity_heatmap.png "Similar Document Pairs"){#fig:similarity_heatmap}

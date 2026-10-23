@@ -101,6 +101,19 @@ def _http_worker(invocation: dict[str, Any], directory: Path) -> int:
                 sha256=sha256(raw),
                 content_type=response.headers.get("Content-Type", ""),
             )
+            media_type = metadata["content_type"].partition(";")[0].strip().lower()
+            if (
+                media_type in {"text/html", "application/xhtml+xml"}
+                and b"<title>radware bot manager captcha</title>" in raw.lower()
+                and b"h-captcha" in raw.lower()
+            ):
+                metadata.update(
+                    status="blocked",
+                    diagnostic="publisher requires a Radware browser CAPTCHA",
+                    response_headers=list(response.headers.items()),
+                )
+                write_json(directory / "http.json", metadata)
+                raise LiteratureBlocked("unpaid HTTP provider requires a browser CAPTCHA")
             write_json(directory / "http.json", metadata)
     except urllib.error.HTTPError as exc:
         metadata.update(status="blocked", status_code=exc.code, redirects=handler.redirects)

@@ -46,7 +46,7 @@ def build_dashboard_html(project_root: Path | None = None) -> Path:
         landscape_num=200,
     )
     payload = compute_payload(args)
-    dashboard = build_dashboard(args, payload)
+    dashboard = build_dashboard(args, payload, repo_root=root)
     result = dashboard.write(
         html_path=dirs["web"] / "dashboard.html",
         json_path=dirs["data"] / "dashboard_payload.json",

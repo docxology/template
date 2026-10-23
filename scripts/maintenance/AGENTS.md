@@ -22,7 +22,7 @@ Operator and repository-maintenance orchestrators. **None of these run in the de
 | `normalize_backlogs.py` | `infrastructure.documentation.backlog_normalizer.normalize_public_backlogs` | Normalize canonical public exemplar TODO files into future-only, typed backlog tables and archive removed historical sections |
 | `normalize_status.py` | `scripts.docgen.status_evidence` | Normalize the root status ledger into stable, machine-readable evidence rows |
 | `benchmark_health.py` | `infrastructure.core.health_benchmark` | Own clean-checkout serial/parallel health runs and fail unless gate parity, provenance, green status, and the latency criterion all hold |
-| `coordinated_release.py` | `infrastructure.publishing.release_plan` and `release_plan_transaction` | Review/check/apply/rollback a canonical metadata patch using its reviewed SHA256 and an external private journal; does not commit, tag, publish or authorize acceptance |
+| `coordinated_release.py` | `infrastructure.publishing.release_plan` and `release_plan_transaction` | Review/check/apply/rollback a canonical patch/minor metadata plan using its reviewed SHA256 and an external private journal; does not commit, tag, publish or authorize acceptance |
 | `release_rehearsal.py` | `infrastructure.publishing.rehearsal` | Plan or explicitly execute two local fresh-checkout release rehearsals; dry-run by default |
 | `rename_counts_doc.py` | (self-contained tree scan) | Guard that scans tracked text files for stale `canonical_facts.md` markers after the COUNTS.md rename; `--check` exits non-zero when any remain outside archived audits |
 

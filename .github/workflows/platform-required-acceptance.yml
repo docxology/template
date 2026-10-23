@@ -452,7 +452,7 @@ jobs:
           .venv/bin/python -m infrastructure.core.testing.ci_execution_user run
           --state "$RUNNER_TEMP/template-ci-execution/state.json" --
           .venv/bin/python -m infrastructure.project.public_acceptance_auxiliary_cli
-          --matrix-cell "${{ matrix.cell }}" --local-model smollm2:135m --docker-image-id "$TEMPLATE_ACCEPTANCE_SIA_IMAGE_ID"
+          --matrix-cell "${{ matrix.cell }}" --local-model smollm2:360m --docker-image-id "$TEMPLATE_ACCEPTANCE_SIA_IMAGE_ID"
           --auxiliary-workers 1
           --timeout-seconds 1800 --evidence-dir "output/readiness/auxiliary-linux/${{ matrix.cell }}"
       - name: Fail promptly for any unpassed project auxiliary obligation

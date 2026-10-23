@@ -205,7 +205,19 @@ class TestEmbeddingAnalysisVariables:
         (data_dir / "embedding_analysis.json").write_text(json.dumps(emb))
         v = compute_variables(tmp_path)
         assert v["NUM_EMBEDDING_CLUSTERS"] == "3"
-        assert "| doi:10.1/a" in v["TOP_SIMILAR_PAIRS_TABLE"]
+        assert "| `doi:10.1/a` | `doi:10.1/b` | 0.9100 |" in v["TOP_SIMILAR_PAIRS_TABLE"]
+        assert v["ANALYZED_CORPUS_SIZE"] == "pending"
+
+        # These complete IDs share a long prefix; truncation must not erase their distinct suffixes.
+        first = "doi:10.5555/exoplanet-atmospheres.fixture-distinct-a"
+        second = "doi:10.5555/exoplanet-atmospheres.fixture-distinct-b"
+        emb["top_similar_pairs"] = [{"paper_a": first, "paper_b": second, "similarity": 0.875}]
+        (data_dir / "embedding_analysis.json").write_text(json.dumps(emb))
+        (data_dir / "descriptive_stats.json").write_text(json.dumps({"descriptive_stats": {"total": 3}}))
+        measured = compute_variables(tmp_path)
+        assert measured["ANALYZED_CORPUS_SIZE"] == "3"
+        assert measured["CORPUS_SIZE"] == "0"  # Never substitute the retrieved denominator.
+        assert f"| `{first}` | `{second}` | 0.8750 |" in measured["TOP_SIMILAR_PAIRS_TABLE"]
 
     def test_embedding_empty_pairs(self, tmp_path):
         """Empty pairs list yields the header-only table."""

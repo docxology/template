@@ -4,18 +4,18 @@
       "exists": true,
       "file_count": 2,
       "size_mb": "0.42",
-      "total_size_bytes": 435347,
+      "total_size_bytes": 436155,
       "largest_files": [
         {
           "name": "the-triplicate.pdf",
           "size_mb": "0.36",
-          "size_bytes": 377372,
+          "size_bytes": 377508,
           "path": "pdf/the-triplicate.pdf"
         },
         {
           "name": "template_newspaper_combined.pdf",
           "size_mb": "0.06",
-          "size_bytes": 57975,
+          "size_bytes": 58647,
           "path": "pdf/template_newspaper_combined.pdf"
         }
       ],
@@ -25,31 +25,32 @@
     },
     "web": {
       "exists": true,
-      "file_count": 9,
-      "size_mb": "0.11",
-      "total_size_bytes": 118951,
+      "file_count": 10,
+      "size_mb": "1.89",
+      "total_size_bytes": 1977627,
       "largest_files": [
+        {
+          "name": "source-web-fonts.js",
+          "size_mb": "1.77",
+          "size_bytes": 1853404,
+          "path": "web/assets/source-web-fonts.js"
+        },
         {
           "name": "index.html",
           "size_mb": "0.03",
-          "size_bytes": 29456,
+          "size_bytes": 30244,
           "path": "web/index.html"
         },
         {
           "name": "manuscript__02_engine_architecture.html",
-          "size_mb": "0.01",
-          "size_bytes": 15726,
+          "size_mb": "0.02",
+          "size_bytes": 16490,
           "path": "web/manuscript__02_engine_architecture.html"
-        },
-        {
-          "name": "manuscript__03_typography_and_figures.html",
-          "size_mb": "0.01",
-          "size_bytes": 12988,
-          "path": "web/manuscript__03_typography_and_figures.html"
         }
       ],
       "extensions": {
         ".md": 1,
+        ".js": 1,
         ".ico": 1,
         ".html": 7
       }
@@ -58,24 +59,24 @@
       "exists": true,
       "file_count": 6,
       "size_mb": "0.11",
-      "total_size_bytes": 111055,
+      "total_size_bytes": 111277,
       "largest_files": [
         {
           "name": "02_engine_architecture_slides.pdf",
           "size_mb": "0.03",
-          "size_bytes": 30899,
+          "size_bytes": 30885,
           "path": "slides/02_engine_architecture_slides.pdf"
         },
         {
           "name": "99_references_slides.pdf",
           "size_mb": "0.02",
-          "size_bytes": 17703,
+          "size_bytes": 17748,
           "path": "slides/99_references_slides.pdf"
         },
         {
           "name": "01_introduction_slides.pdf",
           "size_mb": "0.02",
-          "size_bytes": 17340,
+          "size_bytes": 17381,
           "path": "slides/01_introduction_slides.pdf"
         }
       ],
@@ -223,12 +224,12 @@
       "exists": true,
       "file_count": 1,
       "size_mb": "0.06",
-      "total_size_bytes": 57975,
+      "total_size_bytes": 58647,
       "largest_files": [
         {
           "name": "template_newspaper_combined.pdf",
           "size_mb": "0.06",
-          "size_bytes": 57975,
+          "size_bytes": 58647,
           "path": "template_newspaper_combined.pdf"
         }
       ],
@@ -237,41 +238,48 @@
       }
     }
   },
-  "total_files": 38,
-  "total_size_mb": 0.7760562896728516,
+  "total_files": 39,
+  "total_size_mb": 2.550251007080078,
   "largest_files": [
+    {
+      "name": "source-web-fonts.js",
+      "size_mb": "1.77",
+      "size_bytes": 1853404,
+      "category": "web",
+      "path": "web/assets/source-web-fonts.js"
+    },
     {
       "name": "the-triplicate.pdf",
       "size_mb": "0.36",
-      "size_bytes": 377372,
+      "size_bytes": 377508,
       "category": "pdf",
       "path": "pdf/the-triplicate.pdf"
     },
     {
       "name": "template_newspaper_combined.pdf",
       "size_mb": "0.06",
-      "size_bytes": 57975,
+      "size_bytes": 58647,
       "category": "pdf",
       "path": "pdf/template_newspaper_combined.pdf"
     },
     {
       "name": "template_newspaper_combined.pdf",
       "size_mb": "0.06",
-      "size_bytes": 57975,
+      "size_bytes": 58647,
       "category": "root",
       "path": "template_newspaper_combined.pdf"
     },
     {
       "name": "02_engine_architecture_slides.pdf",
       "size_mb": "0.03",
-      "size_bytes": 30899,
+      "size_bytes": 30885,
       "category": "slides",
       "path": "slides/02_engine_architecture_slides.pdf"
     },
     {
       "name": "index.html",
       "size_mb": "0.03",
-      "size_bytes": 29456,
+      "size_bytes": 30244,
       "category": "web",
       "path": "web/index.html"
     },
@@ -285,14 +293,14 @@
     {
       "name": "99_references_slides.pdf",
       "size_mb": "0.02",
-      "size_bytes": 17703,
+      "size_bytes": 17748,
       "category": "slides",
       "path": "slides/99_references_slides.pdf"
     },
     {
       "name": "01_introduction_slides.pdf",
       "size_mb": "0.02",
-      "size_bytes": 17340,
+      "size_bytes": 17381,
       "category": "slides",
       "path": "slides/01_introduction_slides.pdf"
     },
@@ -302,25 +310,18 @@
       "size_bytes": 16912,
       "category": "figures",
       "path": "figures/crab_landings.png"
-    },
-    {
-      "name": "04_reproducibility_slides.pdf",
-      "size_mb": "0.02",
-      "size_bytes": 16461,
-      "category": "slides",
-      "path": "slides/04_reproducibility_slides.pdf"
     }
   ],
   "missing_expected_files": [],
   "sizes_by_category": {
-    "pdf": 0.4151792526245117,
-    "web": 0.11344051361083984,
-    "slides": 0.1059103012084961,
+    "pdf": 0.41594982147216797,
+    "web": 1.886012077331543,
+    "slides": 0.10612201690673828,
     "figures": 0.07233428955078125,
     "data": 0.0074615478515625,
     "reports": 0.004547119140625,
     "release": 0.0018939971923828125,
-    "root": 0.055289268493652344
+    "root": 0.055930137634277344
   },
   "inventory_mode": "stable-shippable-output-v1",
   "inventory_scope": "stage5-delivery-mirror",
@@ -328,6 +329,7 @@
   "file_counts_by_type": {
     ".pdf": 9,
     ".md": 2,
+    ".js": 1,
     ".ico": 1,
     ".html": 7,
     ".png": 13,

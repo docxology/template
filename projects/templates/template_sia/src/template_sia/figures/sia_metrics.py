@@ -93,6 +93,7 @@ def write_sia_metric_progression(project_root: Path) -> Path:
         values,
         marker="o",
         markersize=7,
+        clip_on=False,
         linewidth=2.2,
         color=_LINE_COLOR,
         zorder=3,
@@ -115,7 +116,7 @@ def write_sia_metric_progression(project_root: Path) -> Path:
     # axes cosmetics
     ax.set_xlabel("Generation", fontsize=10, color=_INK)
     ax.set_ylabel(str(metric_name).capitalize(), fontsize=10, color=_INK)
-    ax.set_title("SIA metric progression", fontsize=11, color=_INK, pad=10)
+    ax.set_title("SIA metric progression", fontsize=11, color=_INK, pad=28)
     ax.xaxis.set_major_locator(mticker.MaxNLocator(integer=True))
     _pct = max(values, default=0) <= 1.0
     if _pct:

@@ -1,9 +1,9 @@
 {
   "algorithm": "web-renderer-combine-v1",
-  "binding_sha256": "c8b03d5e89bffa491ad062a53f960c746e6e6ded78c33b8200147b8a81f2d6da",
+  "binding_sha256": "6e3049d502b502ed46ea5b8f564f1aa1b4dee48792b0f81cf1889d69758ee23c",
   "combined_path": "output/web/_combined_manuscript.md",
-  "combined_sha256": "6155b3bc86765e6e29ff143dee851252ec006c2322a2fb878a353860806a91f7",
-  "combined_size_bytes": 70118,
+  "combined_sha256": "23aa0866aba9a37511c811867f1a00222ab569eeb929e16272ebe4f94edc3cf0",
+  "combined_size_bytes": 71226,
   "input_root_kind": "hydrated",
   "ordered_inputs": [
     {
@@ -27,14 +27,14 @@
     {
       "ordinal": 4,
       "path": "output/manuscript/02a_methods_retrieval.md",
-      "sha256": "71de842bc495f5c44249d00aa14a5cd3267ddc40424a977842f9ec96a354a02a",
-      "size_bytes": 4353
+      "sha256": "6f9aab201349f166f385f0b36212aed2d9a5b0c3da0512ceac3fa6c32ddf8bb1",
+      "size_bytes": 4565
     },
     {
       "ordinal": 5,
       "path": "output/manuscript/02b_methods_extraction.md",
-      "sha256": "b1103fe8bd8d1385198632d596ecffb8f85e9bc55216e03b17ddbfc9868d984e",
-      "size_bytes": 3041
+      "sha256": "fbc4f1dfda829f28ea7d0e50bbbe0bef377fb22210da98fcc55d1bfc5276d0ff",
+      "size_bytes": 3059
     },
     {
       "ordinal": 6,
@@ -57,8 +57,8 @@
     {
       "ordinal": 9,
       "path": "output/manuscript/02f_methods_multi_phase.md",
-      "sha256": "a13c54cc386971da31a4d12cac8963b17897519a9db2dd84a2beae4e00460512",
-      "size_bytes": 4448
+      "sha256": "6fb5344b5c5961cf5729d5e7bd47707a2463f6412dd251553a9aa96df0ddabfb",
+      "size_bytes": 4454
     },
     {
       "ordinal": 10,
@@ -69,8 +69,8 @@
     {
       "ordinal": 11,
       "path": "output/manuscript/03a_results_field_overview.md",
-      "sha256": "6285bb861a92e9f584dbc4c1e36ba1b90c077874ff7119ef62f8e8f9502cc4c6",
-      "size_bytes": 5662
+      "sha256": "eb7236a679a79487327a87d51ce7b8da292317adc218c6ad84b579522b63743d",
+      "size_bytes": 6052
     },
     {
       "ordinal": 12,
@@ -81,14 +81,14 @@
     {
       "ordinal": 13,
       "path": "output/manuscript/03c_results_text_analytics.md",
-      "sha256": "fcd09db023faa2a9f5c135904c0522e2fc64383e4d3f876f403f87f6adc0b50e",
-      "size_bytes": 6824
+      "sha256": "ba6c0e2a0e975e9af49665a9e68bf16c306fe3142fac432ec7b6c893248d6123",
+      "size_bytes": 7021
     },
     {
       "ordinal": 14,
       "path": "output/manuscript/03d_results_citation_network.md",
-      "sha256": "7ad139701ad1be278e91f9ea2c83c8e9d96e9a6f0e64c22457d81930da465081",
-      "size_bytes": 5200
+      "sha256": "031cdd167e036f333d2c55c0aeac44cae41cc84d2c41aa7e6b0185a62fc01cbc",
+      "size_bytes": 5187
     },
     {
       "ordinal": 15,
@@ -99,8 +99,8 @@
     {
       "ordinal": 16,
       "path": "output/manuscript/03f_results_multi_phase.md",
-      "sha256": "bb009d119062b614bbaed3e28ee4973fa87aac3a02ccdd68fd6ce6f73455afa7",
-      "size_bytes": 2681
+      "sha256": "cf1ffeebf1b62e979e53223b5ed127f87376055209d3a2878c0e8c9170eb847d",
+      "size_bytes": 2700
     },
     {
       "ordinal": 17,
@@ -117,14 +117,14 @@
     {
       "ordinal": 19,
       "path": "output/manuscript/06_appendix_tooling.md",
-      "sha256": "89d9275db919718e099ee747fcbb10f8aa980ad56d723df02dcb4e7983d3d57f",
-      "size_bytes": 5469
+      "sha256": "9a51f56f85001eb1fde9f36e05a3b8128d9943862e95063c24efe38996996d8c",
+      "size_bytes": 5649
     },
     {
       "ordinal": 20,
       "path": "output/manuscript/07_appendix_technical.md",
-      "sha256": "204f53f131a80157d0ae404d09f4abed7f3b63c569472b020cd8783e9d78f6f9",
-      "size_bytes": 4027
+      "sha256": "5457cdd8859fe054be62e51d683fd778874acd2c6e10ab4e441ddb0ad83b91b5",
+      "size_bytes": 4126
     },
     {
       "ordinal": 21,
@@ -145,7 +145,7 @@
       "size_bytes": 827
     }
   ],
-  "ordered_inputs_sha256": "2690a3e900d653809bc776f5c53f176d38829cd0f712707e2db7f0592fe5e27a",
+  "ordered_inputs_sha256": "c262316877d284f1e5e61dfba247338a61832595e61f5e56a21cf5fd4fa99fd2",
   "project": "templates/template_advanced_literature_review",
   "schema_version": "template-manuscript-composition-v1"
 }

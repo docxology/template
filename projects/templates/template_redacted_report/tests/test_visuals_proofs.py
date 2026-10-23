@@ -428,6 +428,73 @@ def test_verifier_accepts_real_pdfs_and_real_hash_manifests(stego_complete_dir: 
     assert summary["kmyth_sidecar_count"] == 0
 
 
+def test_verifier_requires_explicit_base_only_selection(
+    base_variants_dir: tuple[Path, dict[str, object]], stego_complete_dir: Path
+) -> None:
+    base_dir, _matrix = base_variants_dir
+    base = verify_dev_variant_outputs(base_dir, require_steganography=False)
+    assert base["valid"] is True, base["errors"]
+    assert base["pdf_count"] == 16 and base["hash_manifest_count"] == 0
+    assert base["require_steganography"] is False
+    default = verify_dev_variant_outputs(base_dir)
+    assert default["valid"] is False
+    assert any("missing expected files" in error for error in default["errors"])
+    full = verify_dev_variant_outputs(stego_complete_dir)
+    assert full["valid"] is True and full["require_steganography"] is True
+    wrong_selection = verify_dev_variant_outputs(stego_complete_dir, require_steganography=False)
+    assert wrong_selection["valid"] is False
+    assert any("unexpected files" in error for error in wrong_selection["errors"])
+    for invalid in (None, 0, "false"):
+        with pytest.raises(ValueError, match="require_steganography must be a boolean"):
+            verify_dev_variant_outputs(base_dir, require_steganography=invalid)
+    with pytest.raises(ValueError, match="Kmyth sidecars require"):
+        verify_dev_variant_outputs(base_dir, require_steganography=False, require_kmyth_sidecars=True)
+
+
+def test_base_only_verifier_rejects_real_corruption_and_false_security_claims(
+    base_variants_dir: tuple[Path, dict[str, object]], tmp_path: Path
+) -> None:
+    base_dir, _matrix = base_variants_dir
+    output = tmp_path / "corrupted-base"
+    shutil.copytree(base_dir, output)
+    damaged = output / "blackout_on_white.pdf"
+    damaged.write_bytes(damaged.read_bytes() + b"actual changed bytes")
+    (output / "grayout_on_black.pdf").unlink()
+    (output / "unselected.hashes.json").write_text("{}")
+    matrix_path = output / "variant_matrix.json"
+    matrix = json.loads(matrix_path.read_text())
+    matrix["include_steganography"] = True
+    matrix["security_methods"] = ["unselected-security-claim"]
+    matrix["variants"][0]["security_methods"] = ["unselected-security-claim"]
+    matrix["variants"][0]["steganography_pdf_sha256"] = "a" * 64
+    matrix["variants"][0]["steganography_pdf_bytes"] = 17
+    matrix["variants"][0]["hash_manifest_sha256"] = "b" * 64
+    matrix["variants"][0]["hash_manifest_exists"] = True
+    matrix["variants"][1].pop("base_pdf_sha256")
+    matrix["variants"][1].pop("base_pdf_bytes")
+    matrix["variants"][0]["steganography_pdf"] = "blackout_on_white_steganography.pdf"
+    matrix_path.write_text(json.dumps(matrix))
+    check = verify_dev_variant_outputs(output, require_steganography=False)
+    assert check["valid"] is False
+    errors = check["errors"]
+    assert any("blackout_on_white.pdf: sha256 differs" in error for error in errors)
+    assert any("missing PDF: grayout_on_black.pdf" in error for error in errors)
+    assert any("unexpected files: unselected.hashes.json" in error for error in errors)
+    assert any("matrix does not declare base-only proofs" in error for error in errors)
+    assert any("bad steganography_pdf filename" in error for error in errors)
+    assert any("base-only matrix claims security methods" in error for error in errors)
+    assert any("missing base_pdf_sha256 custody" in error for error in errors)
+    assert any("missing base_pdf_bytes custody" in error for error in errors)
+    assert any("base-only security methods" in error for error in errors)
+    for field in (
+        "steganography_pdf_sha256",
+        "steganography_pdf_bytes",
+        "hash_manifest_sha256",
+        "hash_manifest_exists",
+    ):
+        assert any(f"base-only {field} claim" in error for error in errors)
+
+
 def test_verifier_reports_missing_matrix_and_unparseable_matrix(tmp_path: Path) -> None:
     missing = verify_dev_variant_outputs(tmp_path / "empty")
     assert missing["valid"] is False

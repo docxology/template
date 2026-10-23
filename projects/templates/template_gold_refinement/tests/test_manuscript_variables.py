@@ -300,7 +300,7 @@ def test_figure_quality_variables_read_generated_report(tmp_path):
     assert v["FIGURE_QUALITY_PNG_COUNT"] == "1"
     assert v["FIGURE_QUALITY_SVG_COUNT"] == "1"
     assert v["FIGURE_QUALITY_REGISTRY_PARITY"] == "Yes"
-    assert "| purity_progression | yes | yes | 1800x1200 | 0.123 | 0.01234567 | pass |" in v["FIGURE_QUALITY_TABLE"]
+    assert "| `purity_progression` | yes | yes | 1800x1200 | 0.123 | 0.01234567 | pass |" in v["FIGURE_QUALITY_TABLE"]
 
 
 def test_config_hash_na_when_no_config(tmp_path):

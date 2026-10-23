@@ -35,9 +35,11 @@ def build_token_inventory_table(token_plan: TokenPlan) -> str:
     """Build token inventory table."""
     rows = ["| Variable | Category | Value | Section | Source |", "| --- | --- | --- | --- | --- |"]
     for choice in token_plan.choices:
+        # Array brackets stay visible outside code so the full path can wrap.
+        source_prefix, bracket, source_index = choice.source_key.partition("[")
+        source_reference = f"`{source_prefix}`{bracket}{source_index}"
         rows.append(
-            f"| `{choice.variable_name}` | {choice.category} | {choice.value} | "
-            f"{choice.section} | `{choice.source_key}` |"
+            f"| `{choice.variable_name}` | {choice.category} | {choice.value} | {choice.section} | {source_reference} |"
         )
     return "\n".join(rows)
 

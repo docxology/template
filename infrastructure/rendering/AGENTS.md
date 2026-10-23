@@ -7,9 +7,14 @@ combined PDFs, slides, web HTML, DOCX, and EPUB. It coordinates format-specific
 renderers without owning validation policy or project analysis.
 
 WebRenderer pages share one `assets/source-web-fonts.js` per output directory,
-containing losslessly gzip-compressed transport for the unchanged twelve Source
-font bodies and full OFL notice. The browser must support `DecompressionStream`;
-decoded lengths and hashes are checked before font construction. Copy
+containing one deterministic LZMA-Alone stream for the unchanged twelve Source
+font bodies and full OFL notice. The Source-pinned local LZMA-JS decoder and full
+MIT notice travel in the asset; it needs no font fetch, worker, or new browser
+compression API. Before decoding, the loader bounds the compressed and decoded
+sizes and checks fixed LZMA properties, dictionary and known-length header;
+each reconstructed face still passes its original length and SHA-256 checks
+before font construction. Existing raw/base64 and gzip loader branches remain.
+Copy
 the complete web directory, including assets, for offline/file or HTTP reading;
 an HTML file alone is no longer the complete font-bearing export. The inline
 `source_web_font_script()` API remains available to independent native controls.

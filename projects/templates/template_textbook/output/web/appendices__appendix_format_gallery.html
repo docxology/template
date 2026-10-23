@@ -2,7 +2,7 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="utf-8" />
-  <meta name="generator" content="pandoc 3.12" />
+  <meta name="generator" content="pandoc 3.12.1" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
   <title>appendix_format_gallery.md.web</title>
   <style>
@@ -381,7 +381,7 @@ mjx-container[display="true"] { max-width: 100%; overflow: visible; }
   outline: 3px solid var(--brand-1);
   outline-offset: 3px;
 }
-.table-scroll > table { margin-block: 0; min-width: 100%; width: max-content; }
+.table-scroll > table { margin-block: 0; display: table; min-width: 100%; width: 100%; }
 *, *::before, *::after {
   box-sizing: border-box;
 }
@@ -487,6 +487,9 @@ pre {
 }
 
 pre code {
+  background-color: transparent;
+  padding: 0;
+  border-radius: 0;
   overflow-wrap: inherit;
   white-space: inherit;
   word-break: inherit;
@@ -539,8 +542,9 @@ table {
 
 .table-scroll > table {
   margin-block: 0;
+  display: table;
   min-width: 100%;
-  width: max-content;
+  width: 100%;
 }
 
 figure {
@@ -557,6 +561,15 @@ th, td {
 th {
   background-color: #1f6f8b;
   color: white;
+}
+
+/* Preserve a complete inline-code header within the table's scroll region. */
+th code {
+  color: inherit;
+  background-color: transparent;
+  white-space: nowrap;
+  overflow-wrap: normal;
+  word-break: normal;
 }
 
 img {
@@ -699,6 +712,7 @@ mjx-container[display="true"] {
 }
 
 </style>
+<script data-template-source-font-loader src="assets/source-web-fonts.js"></script>
 </head>
 <body>
 <a class="skip-link" href="#main-content">Skip to main content</a>
@@ -882,22 +896,19 @@ text):</p>
 <p>A numbered display equation, cross-referenced as <span
 class="citation"
 data-cites="eq:gallery_logistic">[@eq:gallery_logistic]</span>:</p>
-<p><span class="math display">\[ N(t) = \frac{K}{1 + \left(\dfrac{K -
-N_0}{N_0}\right) e^{-rt}} \]</span> {#eq:gallery_logistic}</p>
+<p><span class="math display">\[N(t) = \frac{K}{1 + \left(\dfrac{K -
+N_0}{N_0}\right) e^{-rt}}\]</span> {#eq:gallery_logistic}</p>
 <p>Multi-line aligned derivation:</p>
-<p><span class="math display">\[
-\begin{aligned}
+<p><span class="math display">\[\begin{aligned}
 \frac{dN}{dt} &amp;= rN\left(1 - \frac{N}{K}\right) \\
               &amp;= rN - \frac{r}{K}N^2 .
-\end{aligned}
-\]</span></p>
+\end{aligned}\]</span></p>
 <p>A matrix and a piecewise definition:</p>
-<p><span class="math display">\[
-\mathbf{A} = \begin{bmatrix} a_{11} &amp; a_{12} \\ a_{21} &amp; a_{22}
-\end{bmatrix},
+<p><span class="math display">\[\mathbf{A} = \begin{bmatrix} a_{11}
+&amp; a_{12} \\ a_{21} &amp; a_{22} \end{bmatrix},
 \qquad
-f(x) = \begin{cases} 0 &amp; x &lt; 0 \\ 1 &amp; x \ge 0 . \end{cases}
-\]</span></p>
+f(x) = \begin{cases} 0 &amp; x &lt; 0 \\ 1 &amp; x \ge 0 .
+\end{cases}\]</span></p>
 <p>Physical quantities with units, written in math mode so they render
 in <strong>every</strong> target (PDF, HTML, slides): a rate of <span
 class="math inline">\(0.5\ \mathrm{s^{-1}}\)</span>, a length of <span
@@ -1043,10 +1054,10 @@ class="sourceCode markdown"><code class="sourceCode markdown"><span id="cb7-1"><
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="al">![Caption for a video.](../assets/media/demo.mp4)</span>{width=70%}</span></code></pre></div>
 <p>A downloadable data file lives at <a
 href="https://github.com/docxology/template/blob/main/projects/templates/template_textbook/manuscript/assets/data/sample_dataset.csv"><code>assets/data/sample_dataset.csv</code></a>;
-its contents as a table:</p>
-<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable table: Sample dataset (mirrors assets/data/sample_dataset.csv )."><table id="tbl:gallery_data" data-responsive-table="true">
-<caption>Sample dataset (mirrors
-<code>assets/data/sample_dataset.csv</code>).</caption>
+a four-row excerpt appears below:</p>
+<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable table: Four-row excerpt from assets/data/sample_dataset.csv ."><table id="tbl:gallery_data" data-responsive-table="true">
+<caption>Four-row excerpt from
+<code>assets/data/sample_dataset.csv</code>.</caption>
 <thead>
 <tr>
 <th>condition</th>

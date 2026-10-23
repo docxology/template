@@ -56,9 +56,8 @@ Structured manifest: `../data/transmission_manifest.json`
 
 
 
-```{=latex}
-\newpage
-```
+---
+
 
 
 # Abstract {#sec:abstract}
@@ -75,9 +74,8 @@ Contributions are **methodological** and **architectural**. On the methods side,
 
 
 
-```{=latex}
-\newpage
-```
+---
+
 
 
 # Introduction {#sec:introduction}
@@ -143,9 +141,8 @@ Restricting $f$ to a quadratic with known $(A,b)$ keeps the optimum, gradient, a
 
 
 
-```{=latex}
-\newpage
-```
+---
+
 
 
 # Methodology {#sec:methodology}
@@ -240,9 +237,8 @@ The research template supports advanced LaTeX customization through the `preambl
 
 
 
-```{=latex}
-\newpage
-```
+---
+
 
 
 # Results {#sec:results}
@@ -377,7 +373,16 @@ For a positive-definite quadratic, contraction requires $0 < \alpha < 2/\lambda_
 
 [@fig:complexity] provides a visualization of the algorithm's computational characteristics, including time and space complexity analysis across different problem scales.
 
-![Six-panel diagnostic from `generate_complexity_visualization()` (3×2 grid). **Top left**: bars give the empirical iteration count per configured $\alpha$, coloured by agency category; $\alpha=1.0$ achieves the global minimum of 1 step(s), while $\alpha=0.01$ saturates at the iteration cap $N_{\max}=1000$ (slow convergence) and $\alpha=2.5$ terminates early via a `non_finite` update (divergence). **Top right**: $\log_{10}|f(x)-f(x^\ast)|$ at termination; the four converged rows reach $\approx 10^{-16}$ (machine precision) while $\alpha=0.01$ stops near $10^{-9}$ at the cap. Dashed reference at $\log_{10}\varepsilon$ for $\varepsilon=$ `experiment.convergence_tolerance`. **Middle left**: empirical iterations (solid) versus the smooth proxy $1/(2\alpha(1-\alpha))$ (dashed) on log axes — a shape comparison, not a tight count prediction for every $\alpha$. **Middle right**: per-step error contraction factor $\rho=|1-\alpha|$ from the unit-Hessian linear recurrence ([@eq:scalar_linear_update]); the dashed reference at $\rho=1$ separates stable bars (left of it) from divergent ones (right). **Bottom left**: stable step-size region width $2/L$ per backend profile ($H=I,2I,5I,10I$) with the optimal $\alpha^\ast=1/L$ overlaid. **Bottom right**: cross-profile contraction curves $\rho(\alpha)=|1-\alpha L|$ with dotted verticals at each $2/L$ stability boundary.](../figures/algorithm_complexity.png){#fig:complexity}
+![Six-panel diagnostic from `generate_complexity_visualization()` (3×2 grid).](../figures/algorithm_complexity.png){#fig:complexity}
+
+The panels in [@fig:complexity] encode the following diagnostics:
+
+- **Top left**: bars give the empirical iteration count per configured $\alpha$, coloured by agency category; $\alpha=1.0$ achieves the global minimum of 1 step(s), while $\alpha=0.01$ saturates at the iteration cap $N_{\max}=1000$ (slow convergence) and $\alpha=2.5$ terminates early via a `non_finite` update (divergence).
+- **Top right**: $\log_{10}|f(x)-f(x^\ast)|$ at termination; the four converged rows reach $\approx 10^{-16}$ (machine precision) while $\alpha=0.01$ stops near $10^{-9}$ at the cap. Dashed reference at $\log_{10}\varepsilon$ for $\varepsilon=$ `experiment.convergence_tolerance`.
+- **Middle left**: empirical iterations (solid) versus the smooth proxy $1/(2\alpha(1-\alpha))$ (dashed) on log axes — a shape comparison, not a tight count prediction for every $\alpha$.
+- **Middle right**: per-step error contraction factor $\rho=|1-\alpha|$ from the unit-Hessian linear recurrence ([@eq:scalar_linear_update]); the dashed reference at $\rho=1$ separates stable bars (left of it) from divergent ones (right).
+- **Bottom left**: stable step-size region width $2/L$ per backend profile ($H=I,2I,5I,10I$) with the optimal $\alpha^\ast=1/L$ overlaid.
+- **Bottom right**: cross-profile contraction curves $\rho(\alpha)=|1-\alpha L|$ with dotted verticals at each $2/L$ stability boundary.
 
 The algorithm demonstrates efficient performance for small-scale optimization problems:
 
@@ -430,9 +435,8 @@ Successful generation and reference resolution establish this artifact path for 
 
 
 
-```{=latex}
-\newpage
-```
+---
+
 
 
 # Conclusion {#sec:conclusion}
@@ -495,9 +499,8 @@ The pipeline produced the figures referenced in [@sec:results], wrote `optimizat
 
 
 
-```{=latex}
-\newpage
-```
+---
+
 
 
 # Experimental Setup {#sec:experimental_setup}
@@ -538,10 +541,10 @@ Performance benchmarking spans problem dimensions $d \in \{1, 2, 5, 10, 20, 50\}
 
 ## Computational Environment
 
-- **Python**: 3.14.4
-- **NumPy**: 2.4.1
+- **Python**: 3.14.8
+- **NumPy**: 2.4.2
 - **Platform**: Darwin arm64
-- **Generated**: 2026-10-15T18:40:52Z
+- **Generated**: 2026-10-23T00:44:50Z
 
 ## Pipeline ordering
 
@@ -568,9 +571,8 @@ This table is descriptive documentation only; it is not executed as code during 
 
 
 
-```{=latex}
-\newpage
-```
+---
+
 
 
 # Reproducibility Certification {#sec:reproducibility}
@@ -581,7 +583,7 @@ This section provides a machine-verifiable reproducibility certificate for the c
 
 | Property                          | Value                 |
 | --------------------------------- | --------------------- |
-| Config hash (SHA-256, truncated)  | `f8ebf4554f853abe`     |
+| Config hash (SHA-256, truncated)  | `4bc0e13a7db36799`     |
 | Paper version                     | 3.0.0    |
 | First author                      | Daniel Ari Friedman |
 | Keywords                          | optimization algorithms, gradient descent, convergence analysis, numerical methods, mathematical programming, reproducible research, infrastructure automation   |
@@ -634,9 +636,8 @@ To verify: modifying any value in `config.yaml` and re-running the pipeline will
 
 
 
-```{=latex}
-\newpage
-```
+---
+
 
 
 # Scope, Related Work, and Positioning {#sec:scope}
@@ -666,9 +667,8 @@ These limitations are intentional: they narrow the failure surface so that infra
 
 
 
-```{=latex}
-\newpage
-```
+---
+
 
 
 # References {#sec:references}
@@ -684,9 +684,8 @@ uv run python -m infrastructure.reference.citation.cli validate \
 
 
 
-```{=latex}
-\newpage
-```
+---
+
 
 
 ```{=latex}

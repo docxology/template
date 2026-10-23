@@ -1,22 +1,22 @@
 {
   "algorithm": "web-renderer-combine-v1",
-  "binding_sha256": "c0571232bcf1d60ba2e6d21782cbcd34e0a5202503419344c69078ab9ea0a9ff",
+  "binding_sha256": "6bc1716fd073781a1ee9efc5ec3fe2aa6225a2f06d4e1a2c4dec554896e1c413",
   "combined_path": "output/web/_combined_manuscript.md",
-  "combined_sha256": "7e7ebd154ce92b72b1d27f6e062cd5db1ecda095af9edaafca4646977ec0b0f6",
-  "combined_size_bytes": 71065,
+  "combined_sha256": "5074bc17003a4b14c6f59bf547c0930e1d74219f2349dc192533a1fc08f4560b",
+  "combined_size_bytes": 71835,
   "input_root_kind": "hydrated",
   "ordered_inputs": [
     {
       "ordinal": 1,
       "path": "output/manuscript/00_abstract.md",
-      "sha256": "73729452c07bede70c3f4b810f4ae822a1c1766817c895c83b45250b2afcbdf3",
-      "size_bytes": 2581
+      "sha256": "d905265bd2d6ffcf7875a4d9ca35329f9661ef52603c874949ec3caea2df3e54",
+      "size_bytes": 2723
     },
     {
       "ordinal": 2,
       "path": "output/manuscript/01_introduction.md",
-      "sha256": "44a7e74e8e7c7339b346fc0cdb6e6af186043ccf119443acfb8e5d7133e761fb",
-      "size_bytes": 4903
+      "sha256": "a5c6f09eaba9ebe8608352785b0441a1003d59dbbd98c7158bb80bd47fd24444",
+      "size_bytes": 4921
     },
     {
       "ordinal": 3,
@@ -27,8 +27,8 @@
     {
       "ordinal": 4,
       "path": "output/manuscript/02a_methods_retrieval.md",
-      "sha256": "4761b2151bc1827e7226e42c30782579f90a0b76e098d27f2882cc2547dc1532",
-      "size_bytes": 4456
+      "sha256": "8b1bf5144dbe25313053f04e8bd53b001baf2a250f9fdbc874ea978c6ed399a3",
+      "size_bytes": 4567
     },
     {
       "ordinal": 5,
@@ -39,8 +39,8 @@
     {
       "ordinal": 6,
       "path": "output/manuscript/02c_methods_bibliometrics.md",
-      "sha256": "e6702f2c01aff025f16537abadcf7a03c84f1ae7fc5a0251ad9f247633c4e11d",
-      "size_bytes": 2257
+      "sha256": "0066aee619df93c8a2bdeeb725da2e9056bddf08a314388ef3aa519dd59622aa",
+      "size_bytes": 2353
     },
     {
       "ordinal": 7,
@@ -63,8 +63,8 @@
     {
       "ordinal": 10,
       "path": "output/manuscript/03a_results_field_overview.md",
-      "sha256": "21e34117be6b549a537392b1f3aaecdaecc2568ac0abb551c9974de758413b97",
-      "size_bytes": 5570
+      "sha256": "47fa4b63ff184935330fc53bec18de6b2ca2b2d15e43a033a38f90765ddf6279",
+      "size_bytes": 5845
     },
     {
       "ordinal": 11,
@@ -75,8 +75,8 @@
     {
       "ordinal": 12,
       "path": "output/manuscript/03c_results_text_analytics.md",
-      "sha256": "2ee55157e177d5951fbc84d35da4e614dd9426ecd6b4cf174de4464058cf855b",
-      "size_bytes": 7084
+      "sha256": "fecc71862b1bcbfafb285243c1137dca86914d760ee8bee5cb1eec8c6b2c8af4",
+      "size_bytes": 7170
     },
     {
       "ordinal": 13,
@@ -99,8 +99,8 @@
     {
       "ordinal": 16,
       "path": "output/manuscript/05_conclusion.md",
-      "sha256": "e4791e44284c51160eacb10c3d011fc391a9f90a3a3ce87aa11849d0ceab3340",
-      "size_bytes": 2818
+      "sha256": "2dcbe0d44acf64d62a46d0d7ee5dd017de8062e2149dec8d0ec4aa3f9f5332d4",
+      "size_bytes": 2860
     },
     {
       "ordinal": 17,
@@ -133,7 +133,7 @@
       "size_bytes": 793
     }
   ],
-  "ordered_inputs_sha256": "67b4aa562c596350dfe405d227bde2581380794dbd0740d175380f74de75a2da",
+  "ordered_inputs_sha256": "4d7366e5d99472e83048d357da5b36c36dc714578a47d68de3cd1c8f1a076ef7",
   "project": "templates/template_literature_meta_analysis",
   "schema_version": "template-manuscript-composition-v1"
 }

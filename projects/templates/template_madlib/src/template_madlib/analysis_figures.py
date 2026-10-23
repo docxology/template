@@ -139,7 +139,7 @@ def write_token_injection_flow_figure(
     """Write token injection flow figure to the output path."""
     plt = _pyplot()
     output = Path(output_path)
-    fig, ax = plt.subplots(figsize=(8.4, 3.9))
+    fig, ax = plt.subplots(figsize=(10.4, 3.9))
     ax.set_xlim(0, 1)
     ax.set_ylim(0, 1)
     ax.axis("off")
@@ -291,7 +291,7 @@ def write_configured_field_matrix(
 
     fig, ax = plt.subplots(figsize=(7.4, 3.9))
     image = ax.imshow(values, cmap="YlGnBu")
-    ax.set_title("Configured fields are mostly explicit YAML", loc="left", color=_INK, pad=12)
+    ax.set_title("Configured fields are mostly explicit YAML", loc="left", color=_INK, pad=28)
     ax.set_xticks(range(len(origins)), labels=["Explicit", "Default"])
     ax.set_yticks(range(len(scopes)), labels=[scope.title() for scope in scopes])
     max_value = max((value for row_values in values for value in row_values), default=1)
@@ -336,8 +336,8 @@ def write_section_configuration_heatmap(
 
     fig, ax = plt.subplots(figsize=(8.4, 5.2))
     image = ax.imshow(values, cmap="BuGn", vmin=0, vmax=1)
-    ax.set_title("Section configuration coverage is explicit", loc="left", color=_INK, pad=12)
-    ax.set_xticks(range(len(columns)), labels=("Switch", "Title", "Moves", "Slots"))
+    ax.set_title("Section configuration coverage is explicit", loc="left", color=_INK, pad=28)
+    ax.set_xticks(range(len(columns)), labels=("Switch", "Title", "Moves", "Slots"), rotation=45, ha="right")
     ax.set_yticks(
         range(len(config.section_conditions)),
         labels=[section.replace("_", " ") for section in config.section_conditions],

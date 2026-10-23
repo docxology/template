@@ -4,12 +4,12 @@
       "exists": true,
       "file_count": 1,
       "size_mb": "0.54",
-      "total_size_bytes": 561424,
+      "total_size_bytes": 561348,
       "largest_files": [
         {
           "name": "template_autopoiesis_combined.pdf",
           "size_mb": "0.54",
-          "size_bytes": 561424,
+          "size_bytes": 561348,
           "path": "pdf/template_autopoiesis_combined.pdf"
         }
       ],
@@ -20,25 +20,25 @@
     "web": {
       "exists": true,
       "file_count": 12,
-      "size_mb": "3.44",
-      "total_size_bytes": 3611323,
+      "size_mb": "2.19",
+      "total_size_bytes": 2297780,
       "largest_files": [
         {
           "name": "source-web-fonts.js",
-          "size_mb": "3.02",
-          "size_bytes": 3170848,
+          "size_mb": "1.77",
+          "size_bytes": 1853404,
           "path": "web/assets/source-web-fonts.js"
         },
         {
           "name": "index.html",
           "size_mb": "0.14",
-          "size_bytes": 142896,
+          "size_bytes": 143759,
           "path": "web/index.html"
         },
         {
           "name": "_combined_manuscript.md",
           "size_mb": "0.08",
-          "size_bytes": 83589,
+          "size_bytes": 84133,
           "path": "web/_combined_manuscript.md"
         }
       ],
@@ -70,13 +70,13 @@
     "figures": {
       "exists": true,
       "file_count": 13,
-      "size_mb": "0.35",
-      "total_size_bytes": 367066,
+      "size_mb": "0.36",
+      "total_size_bytes": 380635,
       "largest_files": [
         {
           "name": "fig_coverage_by_module.png",
-          "size_mb": "0.16",
-          "size_bytes": 162548,
+          "size_mb": "0.15",
+          "size_bytes": 161860,
           "path": "figures/fig_coverage_by_module.png"
         },
         {
@@ -211,18 +211,18 @@
       "exists": true,
       "file_count": 11,
       "size_mb": "0.09",
-      "total_size_bytes": 91769,
+      "total_size_bytes": 92353,
       "largest_files": [
         {
           "name": "02_methods.md",
           "size_mb": "0.02",
-          "size_bytes": 17246,
+          "size_bytes": 17301,
           "path": "manuscript/02_methods.md"
         },
         {
           "name": "03_results.md",
           "size_mb": "0.01",
-          "size_bytes": 14912,
+          "size_bytes": 15401,
           "path": "manuscript/03_results.md"
         },
         {
@@ -242,12 +242,12 @@
       "exists": true,
       "file_count": 1,
       "size_mb": "0.54",
-      "total_size_bytes": 561424,
+      "total_size_bytes": 561348,
       "largest_files": [
         {
           "name": "template_autopoiesis_combined.pdf",
           "size_mb": "0.54",
-          "size_bytes": 561424,
+          "size_bytes": 561348,
           "path": "template_autopoiesis_combined.pdf"
         }
       ],
@@ -257,40 +257,40 @@
     }
   },
   "total_files": 123,
-  "total_size_mb": 5.012767791748047,
+  "total_size_mb": 3.773427963256836,
   "largest_files": [
     {
       "name": "source-web-fonts.js",
-      "size_mb": "3.02",
-      "size_bytes": 3170848,
+      "size_mb": "1.77",
+      "size_bytes": 1853404,
       "category": "web",
       "path": "web/assets/source-web-fonts.js"
     },
     {
       "name": "template_autopoiesis_combined.pdf",
       "size_mb": "0.54",
-      "size_bytes": 561424,
+      "size_bytes": 561348,
       "category": "pdf",
       "path": "pdf/template_autopoiesis_combined.pdf"
     },
     {
       "name": "template_autopoiesis_combined.pdf",
       "size_mb": "0.54",
-      "size_bytes": 561424,
+      "size_bytes": 561348,
       "category": "root",
       "path": "template_autopoiesis_combined.pdf"
     },
     {
       "name": "fig_coverage_by_module.png",
-      "size_mb": "0.16",
-      "size_bytes": 162548,
+      "size_mb": "0.15",
+      "size_bytes": 161860,
       "category": "figures",
       "path": "figures/fig_coverage_by_module.png"
     },
     {
       "name": "index.html",
       "size_mb": "0.14",
-      "size_bytes": 142896,
+      "size_bytes": 143759,
       "category": "web",
       "path": "web/index.html"
     },
@@ -304,42 +304,42 @@
     {
       "name": "_combined_manuscript.md",
       "size_mb": "0.08",
-      "size_bytes": 83589,
+      "size_bytes": 84133,
       "category": "web",
       "path": "web/_combined_manuscript.md"
     },
     {
       "name": "manuscript__02_methods.html",
       "size_mb": "0.04",
-      "size_bytes": 37433,
+      "size_bytes": 37796,
       "category": "web",
       "path": "web/manuscript__02_methods.html"
     },
     {
-      "name": "manuscript__04_honesty.html",
-      "size_mb": "0.03",
-      "size_bytes": 32294,
-      "category": "web",
-      "path": "web/manuscript__04_honesty.html"
-    },
-    {
       "name": "manuscript__03_results.html",
       "size_mb": "0.03",
-      "size_bytes": 31995,
+      "size_bytes": 32728,
       "category": "web",
       "path": "web/manuscript__03_results.html"
+    },
+    {
+      "name": "manuscript__04_honesty.html",
+      "size_mb": "0.03",
+      "size_bytes": 32527,
+      "category": "web",
+      "path": "web/manuscript__04_honesty.html"
     }
   ],
   "missing_expected_files": [],
   "sizes_by_category": {
-    "pdf": 0.5354156494140625,
-    "web": 3.444025993347168,
-    "figures": 0.35006141662597656,
+    "pdf": 0.5353431701660156,
+    "web": 2.191333770751953,
+    "figures": 0.36300182342529297,
     "data": 0.0022029876708984375,
     "reports": 0.009800910949707031,
     "children": 0.04832744598388672,
-    "manuscript": 0.08751773834228516,
-    "root": 0.5354156494140625
+    "manuscript": 0.0880746841430664,
+    "root": 0.5353431701660156
   },
   "inventory_mode": "stable-shippable-output-v1",
   "inventory_scope": "stage5-delivery-mirror",

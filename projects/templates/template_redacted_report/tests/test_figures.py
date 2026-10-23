@@ -10,7 +10,7 @@ import pytest
 import yaml
 
 from redacted_report import FIGURE_SPECS, build_figures
-from redacted_report.figures import _height_px
+from redacted_report.figures import _draw_flow_figure, _draw_matrix_figure, _height_px, _inject_svg_accessibility
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 FIGURES_DIR = PROJECT_ROOT / "output" / "figures"
@@ -70,6 +70,36 @@ def test_svg_companions_carry_accessibility_markup(tmp_path: Path) -> None:
         assert 'aria-labelledby="fig-title fig-desc"' in svg
         assert "<title" in svg and "<desc" in svg
         assert spec["alt_text"] in svg
+        assert all(line == line.rstrip(" \t") for line in svg.split("\n"))
+
+        # Independently retain the actual unnormalized drawing and compare its parsed SVG geometry/text.
+        from defusedxml import ElementTree as ET
+
+        raw_png = tmp_path / f"{spec['name']}-raw.png"
+        raw_svg = tmp_path / f"{spec['name']}-raw.svg"
+        draw = _draw_flow_figure if spec["name"] == "redaction_flow" else _draw_matrix_figure
+        draw(spec, raw_png, raw_svg)
+        original = _inject_svg_accessibility(
+            raw_svg.read_text(encoding="utf-8"), title=spec["caption"], desc=spec["alt_text"]
+        )
+        # SVG path/point/transform whitespace separates tokens; numeric values and all other attributes stay exact.
+        projections = [
+            [
+                (
+                    element.tag,
+                    sorted(
+                        (key, " ".join(value.split()) if key in {"d", "points", "transform"} else value)
+                        for key, value in element.attrib.items()
+                    ),
+                    element.text if element.text and not element.text.isspace() else None,
+                    element.tail if element.tail and not element.tail.isspace() else None,
+                )
+                for element in ET.fromstring(text).iter()
+            ]
+            for text in (original, svg)
+        ]
+        assert projections[0] == projections[1]
+        assert raw_png.read_bytes() == (tmp_path / f"{spec['name']}.png").read_bytes()
 
 
 def test_registry_json_is_loadable_and_well_formed(tmp_path: Path) -> None:
@@ -97,29 +127,82 @@ def test_committed_figures_match_regenerated_geometry() -> None:
     """Tracked evidence must match the fresh pipeline's registry and geometry.
 
     The figure builder runs with this gate's explicitly selected interpreter.
-    Real isolated readbacks bind its runtime, installed SDK and dependencies
+    Real isolated readbacks bind its runtime, optional installed SDK and dependencies
     before and after execution. PNG raster bytes can legitimately vary with the host's
     FreeType/font backend even when the locked matplotlib version is identical;
     same-environment byte determinism is covered separately above. This gate
-    therefore compares the source-bound registry and rendered canvas geometry.
+    therefore compares the source-bound registry, rendered canvas geometry and alpha.
+    Lossless PNG encodings may have different modes for identical decoded pixels.
     """
     import subprocess
     import tempfile
 
     from PIL import Image
 
-    provider_program = (
-        "import hashlib,importlib.metadata as m,json,sys;from pathlib import Path;import infrastructure;"
-        "print(json.dumps({'python':sys.version,'executable':str(Path(sys.executable).resolve()),"
-        "'prefix':sys.prefix,'sdk_origin':str(Path(infrastructure.__file__).resolve()),"
-        "'sdk_sha256':hashlib.sha256(Path(infrastructure.__file__).read_bytes()).hexdigest(),"
-        "'packages':{name:m.version(name) for name in "
-        "('research-project-template','reportlab','pytest','coverage')}}));"
-    )
+    provider_program = """
+import hashlib
+import importlib.metadata as metadata
+import json
+import sys
+from pathlib import Path
+
+try:
+    import infrastructure
+except ModuleNotFoundError as exc:
+    if exc.name != "infrastructure":
+        raise
+    sdk = None
+else:
+    origin = Path(infrastructure.__file__).resolve()
+    sdk = {
+        "origin": str(origin),
+        "sha256": hashlib.sha256(origin.read_bytes()).hexdigest(),
+        "version": metadata.version("research-project-template"),
+    }
+print(json.dumps({
+    "python": sys.version,
+    "executable": str(Path(sys.executable).resolve()),
+    "prefix": sys.prefix,
+    "sdk": sdk,
+    "packages": {name: metadata.version(name) for name in ("reportlab", "pytest", "coverage")},
+}))
+"""
+
+    def assert_decoded_geometry(generated: Image.Image, tracked: Image.Image, name: str) -> None:
+        assert generated.size == tracked.size, f"tracked {name}.png has different canvas geometry"
+        with generated.convert("RGBA") as generated_rgba, tracked.convert("RGBA") as tracked_rgba:
+            assert generated_rgba.getchannel("A").tobytes() == tracked_rgba.getchannel("A").tobytes(), (
+                f"tracked {name}.png has different decoded alpha pixels"
+            )
+            with generated_rgba.convert("RGB") as generated_rgb, tracked_rgba.convert("RGB") as tracked_rgb:
+                assert generated_rgb.getbbox() == tracked_rgb.getbbox(), (
+                    f"tracked {name}.png has different content bounds"
+                )
+
+    # Exercise actual decoded representations, including alpha and geometry failures.
+    with Image.new("RGBA", (3, 2), (80, 80, 80, 255)) as control:
+        for mode in ("RGB", "L"):
+            with control.convert(mode) as encoded:
+                assert control.tobytes() == encoded.convert("RGBA").tobytes()
+                assert_decoded_geometry(control, encoded, "lossless-control")
+        with control.crop((0, 0, 2, 2)) as cropped:
+            with pytest.raises(AssertionError, match="different canvas geometry"):
+                assert_decoded_geometry(control, cropped, "cropped-control")
+        with control.copy() as changed_alpha:
+            changed_alpha.putpixel((1, 1), (80, 80, 80, 254))
+            with pytest.raises(AssertionError, match="different decoded alpha pixels"):
+                assert_decoded_geometry(control, changed_alpha, "alpha-control")
+    with Image.new("RGBA", (3, 2), (0, 0, 0, 255)) as bounds:
+        bounds.putpixel((0, 0), (80, 80, 80, 255))
+        with bounds.copy() as moved:
+            moved.putpixel((0, 0), (0, 0, 0, 255))
+            moved.putpixel((1, 1), (80, 80, 80, 255))
+            with pytest.raises(AssertionError, match="different content bounds"):
+                assert_decoded_geometry(bounds, moved, "moved-control")
 
     def read_runtime_provider() -> dict[str, object]:
         observed = subprocess.run(
-            [sys.executable, "-I", "-c", provider_program],
+            [sys.executable, "-I", "-B", "-c", provider_program],
             cwd=PROJECT_ROOT,
             capture_output=True,
             text=True,
@@ -133,7 +216,7 @@ def test_committed_figures_match_regenerated_geometry() -> None:
     with tempfile.TemporaryDirectory(prefix="redacted-fig-check-") as tmp:
         out_dir = Path(tmp) / "figures"
         completed = subprocess.run(
-            [sys.executable, "scripts/02_build_figures.py", "--output-dir", str(out_dir)],
+            [sys.executable, "-B", "scripts/02_build_figures.py", "--output-dir", str(out_dir)],
             cwd=PROJECT_ROOT,
             capture_output=True,
             text=True,
@@ -148,6 +231,4 @@ def test_committed_figures_match_regenerated_geometry() -> None:
         for spec in FIGURE_SPECS:
             name = spec["name"]
             with Image.open(out_dir / f"{name}.png") as generated, Image.open(FIGURES_DIR / f"{name}.png") as tracked:
-                assert generated.size == tracked.size, f"tracked {name}.png has different canvas geometry"
-                assert generated.mode == tracked.mode, f"tracked {name}.png has different pixel mode"
-                assert generated.getbbox() == tracked.getbbox(), f"tracked {name}.png has different content bounds"
+                assert_decoded_geometry(generated, tracked, name)

@@ -92,7 +92,7 @@ MYPYPATH=projects/templates/template_formal/src \
 ## Intentional Non-Standalone Dependencies
 
 The complete own development suite requires both `dev` and `formal-tools`.
-`research-project-template==4.0.2` is declared only in `formal-tools`, not the
+`pyproject.toml` pins `research-project-template` only in `formal-tools`, not the
 pure domain runtime. Inside the template checkout, prepare the public exemplar
 from the repository root with:
 
@@ -103,8 +103,8 @@ uv sync --project projects/templates/template_formal --locked --extra dev --extr
 For a copied tree inside the checkout, select its own project path instead.
 After package metadata changes, refresh its lock before using `--locked`.
 An independent exported clone must remove the checkout-local `tool.uv.sources`
-resolver and prepare its environment with an explicitly built SDK 4.0.2 wheel
-and its declared development dependencies. SDK 4.0.2 is an unreleased candidate;
+resolver and prepare its environment with an explicitly built SDK wheel matching `pyproject.toml`
+and its declared development dependencies. The current SDK is a release candidate;
 do not assume it is on PyPI or substitute an arbitrary ancestor checkout.
 
 The manuscript renders through the shared `infrastructure/rendering/` and

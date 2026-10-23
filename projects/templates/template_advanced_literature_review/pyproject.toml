@@ -17,7 +17,7 @@ classifiers = [
 ]
 dependencies = [
     "template-literature-meta-analysis==0.2.0",
-    "research-project-template==4.0.2",
+    "research-project-template==4.1.0",
     "pypdf>=6.16.1",
     "requests>=2.31.0",
     "defusedxml>=0.7.0",
@@ -181,7 +181,7 @@ dev = [
 
 # Compatibility contract for this independent exemplar release.
 [tool.template]
-platform_version = "4.0.2"
+platform_version = "4.1.0"
 tested_python_versions = ["3.12", "3.13", "3.14"]
 required_unpaid_capabilities = ["retrieval", "screening", "local-classification", "licensed-fulltext"]
 

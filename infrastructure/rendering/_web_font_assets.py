@@ -8,12 +8,12 @@ decoder, shaping, dependency or native-runtime admission.
 from __future__ import annotations
 
 import base64
-import gzip
 import hashlib
-import io
 import json
+import lzma
 import math
 import time
+from functools import lru_cache
 from pathlib import Path
 from typing import Any
 
@@ -121,6 +121,8 @@ FONT_BODIES: dict[str, dict[str, Any]] = {
 }
 LICENSE_SHA256 = "a0c060f758d33ee59a674cd7b45914a560d0a5935968af5e87b0c6981fd89ddc"
 FONT_BUFFER_SCHEMA = "template-source-web-font-buffer-v1"
+LZMA_DECODER_SHA256 = "850305b783d09b71731f6f293d1f1ed58180892ff0e68c73475873b510f753a3"
+LZMA_LICENSE_SHA256 = "2a85a87a012b6f2099902bc20e94f4292c222a80f66072ecf5151d1377377385"
 
 
 def _clock(deadline: float | None) -> None:
@@ -195,33 +197,94 @@ def source_web_font_bundle(*, deadline: float | None = None) -> tuple[list[dict[
     return bodies, license_bytes.decode("utf-8")
 
 
+@lru_cache(maxsize=1)
+def _compressed_font_stream(raw: bytes) -> bytes:
+    """Cache only compression; every caller first reads and hashes physical fonts."""
+    if not raw or len(raw) > 6 * 1024 * 1024:
+        raise ValueError("Source font transport exceeds its decoded byte bound")
+    packed = lzma.compress(raw, format=lzma.FORMAT_ALONE, preset=6)
+    if packed[:5] != b"\x5d\x00\x00\x80\x00" or len(packed) > 4 * 1024 * 1024:
+        raise ValueError("Source font transport has unsupported LZMA properties or size")
+    # FORMAT_ALONE streams normally use an unknown length. Pin the actual length
+    # so the browser decoder has a finite, verified output bound before decoding.
+    return packed[:5] + len(raw).to_bytes(8, "little") + packed[13:]
+
+
+def _source_web_font_decoder() -> tuple[str, str]:
+    directory = source_web_font_directory().parent
+    bodies = []
+    for name, expected in (("lzma-d-min.js", LZMA_DECODER_SHA256), ("LZMA-JS-LICENSE.txt", LZMA_LICENSE_SHA256)):
+        path = directory / name
+        if path.is_symlink() or path.resolve(strict=True) != path:
+            raise ValueError("Source font transport decoder/license must be physical package members")
+        before = path.stat()
+        raw = read_bytes_confined(directory, path, max_bytes=8192)
+        after = path.stat()
+        keys = ("st_dev", "st_ino", "st_mode", "st_size", "st_mtime_ns", "st_ctime_ns", "st_nlink")
+        if (
+            any(getattr(before, key) != getattr(after, key) for key in keys)
+            or hashlib.sha256(raw).hexdigest() != expected
+        ):
+            raise ValueError("Source font transport decoder/license differs from its exact nomination")
+        bodies.append(raw.decode("utf-8"))
+    return bodies[0], bodies[1]
+
+
 def _source_web_font_payload(*, compressed: bool = False) -> str:
     bodies, license_text = source_web_font_bundle()
+    payload: dict[str, Any] = {"faces": bodies, "license": license_text}
     if compressed:
-        for face in bodies:
-            buffer = io.BytesIO()
-            with gzip.GzipFile(fileobj=buffer, mode="wb", compresslevel=9, mtime=0, filename="") as archive:
-                archive.write(base64.b64decode(face["data"], validate=True))
-            face["data"] = base64.b64encode(buffer.getvalue()).decode("ascii")
-            face["encoding"] = "gzip-base64"
-    payload = json.dumps({"faces": bodies, "license": license_text}, separators=(",", ":"))
-    return payload.replace("<", "\\u003c")
+        raw = b"".join(base64.b64decode(face.pop("data"), validate=True) for face in bodies)
+        payload["stream"] = {
+            "encoding": "lzma-alone-base64-v1",
+            "bytes": len(raw),
+            "data": base64.b64encode(_compressed_font_stream(raw)).decode("ascii"),
+        }
+    return json.dumps(payload, separators=(",", ":")).replace("<", "\\u003c")
 
 
 def _source_web_font_loader() -> str:
+    decoder, license_text = _source_web_font_decoder()
     return (
+        "/*\n" + license_text + "\n*/\n"
         "window.templateSourceFontsPromise=(async()=>{\n"
+        "const decoder=(function(){\n" + decoder + "\nreturn this.LZMA;}).call({});\n"
         "const payload=JSON.parse(document.getElementById('template-source-font-bodies').textContent);\n"
+        "let packedRaw=null,offset=0;\n"
+        "if(payload.stream!==undefined){\n"
+        "const stream=payload.stream;\n"
+        "if(!stream||stream.encoding!=='lzma-alone-base64-v1'||payload.faces.length!==12)"
+        "throw Error('Unsupported Source font stream');\n"
+        "const expected=payload.faces.reduce((sum,face)=>{"
+        "if(!Number.isInteger(face.bytes)||face.bytes<1||face.bytes>512*1024)"
+        "throw Error('Invalid Source font size');return sum+face.bytes;},0);\n"
+        "if(expected>6*1024*1024||stream.bytes!==expected||typeof stream.data!=='string'||"
+        "stream.data.length>Math.ceil(4*1024*1024/3)*4)throw Error('Invalid Source font stream size');\n"
+        "const encoded=Uint8Array.from(atob(stream.data),c=>c.charCodeAt(0));\n"
+        "if(encoded.length<13||encoded.length>4*1024*1024)throw Error('Invalid Source LZMA stream');\n"
+        "const header=new DataView(encoded.buffer);\n"
+        "if(encoded[0]!==0x5d||header.getUint32(1,true)!==8388608||"
+        "header.getUint32(9,true)!==0||header.getUint32(5,true)!==expected)"
+        "throw Error('Unsupported Source LZMA header');\n"
+        "const decoded=decoder.decompress(encoded);\n"
+        "if(!Array.isArray(decoded)||decoded.length!==expected)throw Error('Source font stream changed');\n"
+        "packedRaw=Uint8Array.from(decoded);\n"
+        "}\n"
         "const observations=[];\n"
         "for(const face of payload.faces){\n"
+        "let raw;\n"
+        "if(packedRaw){\n"
+        "if(face.data!==undefined||face.encoding!==undefined)throw Error('Mixed Source font transports');\n"
+        "raw=packedRaw.slice(offset,offset+face.bytes);offset+=face.bytes;\n"
+        "}else{\n"
         "const encoded=Uint8Array.from(atob(face.data),c=>c.charCodeAt(0));\n"
         "const encoding=face.encoding===undefined?'base64':face.encoding;\n"
-        "let raw;\n"
         "if(encoding==='base64')raw=encoded;\n"
         "else if(encoding==='gzip-base64'){\n"
         "const stream=new Blob([encoded]).stream().pipeThrough(new DecompressionStream('gzip'));\n"
         "raw=new Uint8Array(await new Response(stream).arrayBuffer());\n"
         "}else throw Error('Unsupported Source font transport encoding');\n"
+        "}\n"
         "const hash=Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',raw)))"
         ".map(n=>n.toString(16).padStart(2,'0')).join('');\n"
         "if(raw.length!==face.bytes||hash!==face.sha256)throw Error('Source font buffer changed');\n"
@@ -248,7 +311,7 @@ def source_web_font_script() -> str:
 
 
 def source_web_font_javascript() -> str:
-    """Publish losslessly compressed bodies and the loader as one local asset."""
+    """Publish a lossless shared font stream and its local bounded decoder."""
     return (
         '(()=>{const node=document.createElement("script");'
         'node.type="application/json";node.id="template-source-font-bodies";'

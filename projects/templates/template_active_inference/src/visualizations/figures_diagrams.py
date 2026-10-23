@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from pathlib import Path
+from textwrap import fill
 
 import matplotlib
 
@@ -11,6 +12,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib.colors import ListedColormap
 from matplotlib.patches import FancyBboxPatch, FancyArrowPatch
+from matplotlib.transforms import Bbox
 
 from gnn.concordance import BERNOULLI_SYMBOL_MAP
 from gnn.parser import parse_gnn_file
@@ -118,8 +120,8 @@ def figure_tmaze_schematic(project_root: Path) -> Path:
             ax.add_patch(box)
             ax.text(center[0], center[1], label, ha="center", va="center", fontsize=style.text_size("annotation"))
         arrow = FancyArrowPatch(
-            start,
-            goal,
+            (start[0] + 0.5, start[1]),
+            (goal[0] - 0.5, goal[1]),
             arrowstyle="-|>",
             mutation_scale=12,
             linewidth=2,
@@ -147,7 +149,7 @@ def figure_tmaze_schematic(project_root: Path) -> Path:
         ax.text(
             1.0,
             -0.10,
-            "finite toy: observations equal latent state; no stochastic sampling",
+            "finite toy: observations equal latent state;\nno stochastic sampling",
             ha="center",
             va="center",
             fontsize=style.text_size("source_note"),
@@ -460,21 +462,26 @@ def figure_lean_boundary_status(project_root: Path) -> Path:
     rows = load_lean_boundary_rows(root)
     if not rows:
         raise FileNotFoundError("no Lean boundary modules under lean/TemplateActiveInference/")
-    table_data = [[wrap_text(row.module, 22), row.kind, wrap_text(row.name, 28), row.status] for row in rows]
+    table_data = [
+        [fill(row.module, 30, break_on_hyphens=False), row.kind, fill(row.name, 43, break_on_hyphens=False), row.status]
+        for row in rows
+    ]
+    row_lines = [1] + [max(value.count("\n") + 1 for value in row) for row in table_data]
     with styled_figure(root, "lean_boundary_status") as (style, out):
-        fig_h = max(2.8, 0.35 * len(rows) + 1.0)
+        fig_h = max(2.8, 0.19 * sum(row_lines) + 1.0)
         fig, ax = plt.subplots(figsize=(9.2, fig_h))
         ax.axis("off")
         table = ax.table(
             cellText=table_data,
             colLabels=["Module", "Kind", "Name", "Status"],
-            loc="center",
+            colWidths=[0.32, 0.10, 0.46, 0.12],
+            bbox=Bbox.from_bounds(0, 0, 1, 0.96),
             cellLoc="left",
         )
         table.auto_set_font_size(False)
         table.set_fontsize(style.text_size("table_cell"))
-        table.scale(1, 1.42)
         for (row_idx, col_idx), cell in table.get_celld().items():
+            cell.set_height(0.96 * row_lines[row_idx] / sum(row_lines))
             if row_idx == 0:
                 cell.set_facecolor(style.color("header_bg"))
                 continue

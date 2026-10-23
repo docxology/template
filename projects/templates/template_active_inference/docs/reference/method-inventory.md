@@ -962,15 +962,15 @@ Total documented definitions: 890
 
 | line | kind | name | documentation source | summary |
 | ---: | --- | --- | --- | --- |
-| 36 | `function` | `_run_prerequisite_promoters` | inventory fallback | Inventory fallback for function `_run_prerequisite_promoters` defined at `src/roadmap_tracks/sheaf_tracks_write.py:36`. |
-| 51 | `function` | `_record_external_artifact_paths` | inventory fallback | Inventory fallback for function `_record_external_artifact_paths` defined at `src/roadmap_tracks/sheaf_tracks_write.py:51`. |
-| 60 | `function` | `_write_primary_canonical_artifacts` | inventory fallback | Inventory fallback for function `_write_primary_canonical_artifacts` defined at `src/roadmap_tracks/sheaf_tracks_write.py:60`. |
-| 113 | `function` | `_write_integration_audit_phase` | inventory fallback | Inventory fallback for function `_write_integration_audit_phase` defined at `src/roadmap_tracks/sheaf_tracks_write.py:113`. |
-| 123 | `function` | `_write_post_audit_canonical_artifacts` | inventory fallback | Inventory fallback for function `_write_post_audit_canonical_artifacts` defined at `src/roadmap_tracks/sheaf_tracks_write.py:123`. |
-| 166 | `function` | `_write_semantic_artifacts` | inventory fallback | Inventory fallback for function `_write_semantic_artifacts` defined at `src/roadmap_tracks/sheaf_tracks_write.py:166`. |
-| 179 | `function` | `_write_supplemental_phase` | inventory fallback | Inventory fallback for function `_write_supplemental_phase` defined at `src/roadmap_tracks/sheaf_tracks_write.py:179`. |
-| 185 | `function` | `_write_final_canonical_pass` | inventory fallback | Inventory fallback for function `_write_final_canonical_pass` defined at `src/roadmap_tracks/sheaf_tracks_write.py:185`. |
-| 223 | `function` | `write_sheaf_track_artifacts` | docstring | Write the canonical promoted sheaf artifacts in deterministic phases. |
+| 34 | `function` | `_run_prerequisite_promoters` | inventory fallback | Inventory fallback for function `_run_prerequisite_promoters` defined at `src/roadmap_tracks/sheaf_tracks_write.py:34`. |
+| 49 | `function` | `_record_external_artifact_paths` | inventory fallback | Inventory fallback for function `_record_external_artifact_paths` defined at `src/roadmap_tracks/sheaf_tracks_write.py:49`. |
+| 58 | `function` | `_write_primary_canonical_artifacts` | inventory fallback | Inventory fallback for function `_write_primary_canonical_artifacts` defined at `src/roadmap_tracks/sheaf_tracks_write.py:58`. |
+| 111 | `function` | `_write_integration_audit_phase` | inventory fallback | Inventory fallback for function `_write_integration_audit_phase` defined at `src/roadmap_tracks/sheaf_tracks_write.py:111`. |
+| 121 | `function` | `_write_post_audit_canonical_artifacts` | inventory fallback | Inventory fallback for function `_write_post_audit_canonical_artifacts` defined at `src/roadmap_tracks/sheaf_tracks_write.py:121`. |
+| 164 | `function` | `_write_semantic_artifacts` | inventory fallback | Inventory fallback for function `_write_semantic_artifacts` defined at `src/roadmap_tracks/sheaf_tracks_write.py:164`. |
+| 177 | `function` | `_write_supplemental_phase` | inventory fallback | Inventory fallback for function `_write_supplemental_phase` defined at `src/roadmap_tracks/sheaf_tracks_write.py:177`. |
+| 183 | `function` | `_write_final_canonical_pass` | inventory fallback | Inventory fallback for function `_write_final_canonical_pass` defined at `src/roadmap_tracks/sheaf_tracks_write.py:183`. |
+| 221 | `function` | `write_sheaf_track_artifacts` | docstring | Write the canonical promoted sheaf artifacts in deterministic phases. |
 
 ## `src/roadmap_tracks/supplemental.py`
 
@@ -1381,18 +1381,18 @@ Total documented definitions: 890
 
 | line | kind | name | documentation source | summary |
 | ---: | --- | --- | --- | --- |
-| 34 | `function` | `_load_invariant_blocks` | inventory fallback | Inventory fallback for function `_load_invariant_blocks` defined at `src/visualizations/figures_diagrams.py:34`. |
-| 47 | `function` | `figure_invariant_dashboard` | docstring | Process figure invariant dashboard. |
-| 94 | `function` | `figure_tmaze_schematic` | docstring | Process figure tmaze schematic. |
-| 161 | `function` | `_load_pipeline_track_labels` | inventory fallback | Inventory fallback for function `_load_pipeline_track_labels` defined at `src/visualizations/figures_diagrams.py:161`. |
-| 168 | `function` | `_load_sheaf_track_labels` | inventory fallback | Inventory fallback for function `_load_sheaf_track_labels` defined at `src/visualizations/figures_diagrams.py:168`. |
-| 176 | `function` | `figure_multi_track_architecture` | docstring | Process figure multi track architecture. |
-| 188 | `function` | `figure_multi_track_architecture.chunks` | docstring | Process chunks. |
-| 192 | `function` | `figure_multi_track_architecture.draw_group_column` | docstring | Process draw group column. |
-| 250 | `function` | `figure_track_lane_promotion_map` | docstring | Render the pipeline-track promotion obligations and sheaf-lane bindings. |
-| 358 | `function` | `figure_artifact_contract_map` | docstring | Render artifact-level producer, validator, freshness, and copy-parity obligations. |
-| 457 | `function` | `figure_lean_boundary_status` | docstring | Process figure lean boundary status. |
-| 489 | `function` | `figure_gnn_ontology_concordance` | docstring | Process figure gnn ontology concordance. |
+| 36 | `function` | `_load_invariant_blocks` | inventory fallback | Inventory fallback for function `_load_invariant_blocks` defined at `src/visualizations/figures_diagrams.py:36`. |
+| 49 | `function` | `figure_invariant_dashboard` | docstring | Process figure invariant dashboard. |
+| 96 | `function` | `figure_tmaze_schematic` | docstring | Process figure tmaze schematic. |
+| 163 | `function` | `_load_pipeline_track_labels` | inventory fallback | Inventory fallback for function `_load_pipeline_track_labels` defined at `src/visualizations/figures_diagrams.py:163`. |
+| 170 | `function` | `_load_sheaf_track_labels` | inventory fallback | Inventory fallback for function `_load_sheaf_track_labels` defined at `src/visualizations/figures_diagrams.py:170`. |
+| 178 | `function` | `figure_multi_track_architecture` | docstring | Process figure multi track architecture. |
+| 190 | `function` | `figure_multi_track_architecture.chunks` | docstring | Process chunks. |
+| 194 | `function` | `figure_multi_track_architecture.draw_group_column` | docstring | Process draw group column. |
+| 252 | `function` | `figure_track_lane_promotion_map` | docstring | Render the pipeline-track promotion obligations and sheaf-lane bindings. |
+| 360 | `function` | `figure_artifact_contract_map` | docstring | Render artifact-level producer, validator, freshness, and copy-parity obligations. |
+| 459 | `function` | `figure_lean_boundary_status` | docstring | Process figure lean boundary status. |
+| 496 | `function` | `figure_gnn_ontology_concordance` | docstring | Process figure gnn ontology concordance. |
 
 ## `src/visualizations/figures_semantic.py`
 

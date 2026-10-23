@@ -4,7 +4,10 @@ from __future__ import annotations
 
 import hashlib
 import json
+import os
 import shutil
+import subprocess
+import sys
 from collections.abc import Callable
 from pathlib import Path
 from typing import Any
@@ -150,6 +153,33 @@ def test_write_sia_metric_progression_single_generation(tmp_path: Path, copy_pro
     out = write_sia_metric_progression(project)
     assert out.is_file()
     assert out.stat().st_size > 0
+
+    # Collection can warm loop imports first; a real cold process must support the public figure API too.
+    expected_sha = hashlib.sha256(out.read_bytes()).hexdigest()
+    program = """
+import json
+from pathlib import Path
+import sys
+source = Path(sys.argv[1]).resolve()
+sys.path.insert(0, str(source))
+from template_sia.figures import write_sia_metric_progression
+from template_sia.figures import sia_metrics
+assert Path(sia_metrics.__file__).resolve() == source / 'template_sia/figures/sia_metrics.py'
+output = write_sia_metric_progression(Path(sys.argv[2]))
+print(json.dumps({'output': str(output), 'provider': str(sia_metrics.__file__)}))
+"""
+    cold = subprocess.run(
+        [sys.executable, "-I", "-B", "-c", program, str(PROJECT_ROOT / "src"), str(project)],
+        cwd=tmp_path,
+        env=dict(os.environ, PYTHONDONTWRITEBYTECODE="1", MPLCONFIGDIR=str(tmp_path / "cold-mpl-cache")),
+        capture_output=True,
+        text=True,
+        timeout=30,
+        check=False,
+    )
+    assert cold.returncode == 0, cold.stdout + cold.stderr
+    assert Path(json.loads(cold.stdout)["output"]) == out
+    assert hashlib.sha256(out.read_bytes()).hexdigest() == expected_sha
 
 
 def test_write_sia_metric_progression_above_one_values(tmp_path: Path, copy_project_sandbox: Copy):

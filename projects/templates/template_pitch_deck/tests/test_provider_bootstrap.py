@@ -62,7 +62,7 @@ def _bootstrap_program(project: Path) -> str:
         "bootstrap=importlib.util.module_from_spec(spec);spec.loader.exec_module(bootstrap);"
         "sdk=bootstrap.bootstrap_project(project);"
         f"assert Path(sdk.__file__).resolve()==Path({str(SDK_ORIGIN)!r});"
-        "assert sdk.__version__=='4.0.2';"
+        "assert sdk.__version__=='4.1.0';"
         "assert hashlib.sha256(Path(sdk.__file__).read_bytes()).hexdigest()=="
         f"{SDK_DIGEST!r};"
         "assert sys.path==before;"
@@ -93,7 +93,7 @@ def test_selected_sdk_precedes_actual_own_shadow_and_executes_domain(tmp_path: P
     assert actual.returncode == 0, actual.stderr or actual.stdout
     rows = [json.loads(line) for line in actual.stdout.splitlines() if line.startswith("{")]
     assert len(rows) == 1 and rows[0]["provider_origin"] == str(SDK_ORIGIN)
-    assert rows[0]["provider_version"] == "4.0.2"
+    assert rows[0]["provider_version"] == "4.1.0"
     assert rows[0]["domain"] == DOMAIN_EXPECTATION
     assert not marker.exists()
 

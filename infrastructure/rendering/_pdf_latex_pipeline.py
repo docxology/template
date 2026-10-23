@@ -1,6 +1,7 @@
 """LaTeX multi-pass compilation pipeline."""
 
 import os
+import re
 import subprocess
 import time
 from pathlib import Path
@@ -137,6 +138,16 @@ def _check_fatal_error(
     is_fatal_exit = result.returncode != 0
 
     if has_fatal_marker or (final_pass and is_fatal_exit):
+        stdout_log = log_file.with_name("_latex_stdout.log")
+        stdout_context = {"stdout_log_file": str(stdout_log)}
+        try:
+            with stdout_log.open("rb") as stream:
+                stream.seek(0, os.SEEK_END)
+                stream.seek(max(0, stream.tell() - 8000))
+                stdout_lines = stream.read(8000).decode("utf-8", errors="replace").splitlines()
+            stdout_context["stdout_tail"] = "\n".join(stdout_lines[-20:])[-2000:]
+        except OSError:
+            pass  # Diagnostic retention must not mask the original compiler failure.
         if log_file.exists():
             missing_pkg = parse_missing_latex_package_from_log(log_file)
             if missing_pkg:
@@ -146,22 +157,40 @@ def _check_fatal_error(
                         "package": missing_pkg,
                         "source": str(combined_tex),
                         "log_file": str(log_file),
+                        **stdout_context,
                     },
                 )
 
-            log_tail = "\n".join(log_content.splitlines()[-20:])
+            log_lines = log_content.splitlines()
+            log_tail = "\n".join(log_lines[-20:])
+            first_error_index = next(
+                (
+                    index
+                    for index, line in enumerate(log_lines)
+                    if line.startswith("!") or (re.match(r"^.+:\d+:\s", line) and "Warning" not in line)
+                ),
+                None,
+            )
+            error_context = {}
+            if first_error_index is not None:
+                error_context = {
+                    "first_error": "\n".join(log_lines[first_error_index : first_error_index + 12])[:2000],
+                    "first_error_log_line": first_error_index + 1,
+                }
             raise RenderingError(
                 f"LaTeX compilation failed after pass {pass_num}",
                 context={
                     "source": str(combined_tex),
                     "log_file": str(log_file),
                     "returncode": result.returncode,
+                    **stdout_context,
+                    **error_context,
                     "last_error": log_tail or (result.stderr[:500] if result.stderr else "No stderr"),
                 },
             )
         raise RenderingError(
             f"LaTeX compilation failed (pass {pass_num})",
-            context={"source": str(combined_tex), "output": str(output_file)},
+            context={"source": str(combined_tex), "output": str(output_file), **stdout_context},
         )
     if is_fatal_exit:
         logger.warning(

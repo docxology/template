@@ -100,7 +100,7 @@ def test_standalone_materialization_is_real_and_missing_platform_execution_block
         check=False,
     )
     assert result.returncode == 75, result.stderr
-    assert "platform 4.0.2" in result.stderr
+    assert "platform 4.1.0" in result.stderr
     receipt = json.loads((source_project / "output/.pipeline/child_realization/single.json").read_text())
     assert receipt["schema_version"] == "autopoiesis/selected-child-execution/2"
     assert receipt["status"] == "blocked" and receipt["executed_children"] == []
@@ -242,9 +242,16 @@ def test_actual_child_timeout_and_file_resource_caps_are_enforced(tmp_path: Path
 
 
 def test_actual_child_receives_only_the_explicit_credential_free_environment(tmp_path: Path) -> None:
-    (tmp_path / "environment.py").write_text("import os,json\nprint(json.dumps(sorted(os.environ)))\n")
+    (tmp_path / "cache_probe.py").write_text("VALUE = 'actual cold import'\n")
+    (tmp_path / "environment.py").write_text(
+        "import os,json,sys,cache_probe\n"
+        "assert sys.dont_write_bytecode\n"
+        "assert cache_probe.VALUE == 'actual cold import'\n"
+        "print(json.dumps(sorted(os.environ)))\n"
+    )
     outcome = execute_child(tmp_path, "environment.py")
     assert outcome.returncode == 0
+    assert not (tmp_path / "__pycache__").exists()
     names = json.loads(outcome.stdout.splitlines()[-1])
     assert set(names) <= {
         "PATH",

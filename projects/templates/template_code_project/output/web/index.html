@@ -402,7 +402,7 @@ mjx-container[display="true"] { max-width: 100%; overflow: visible; }
   outline: 3px solid var(--brand-1);
   outline-offset: 3px;
 }
-.table-scroll > table { margin-block: 0; min-width: 100%; width: max-content; }
+.table-scroll > table { margin-block: 0; display: table; min-width: 100%; width: 100%; }
 *, *::before, *::after {
   box-sizing: border-box;
 }
@@ -563,8 +563,9 @@ table {
 
 .table-scroll > table {
   margin-block: 0;
+  display: table;
   min-width: 100%;
-  width: max-content;
+  width: 100%;
 }
 
 figure {
@@ -581,6 +582,15 @@ th, td {
 th {
   background-color: #1f6f8b;
   color: white;
+}
+
+/* Preserve a complete inline-code header within the table's scroll region. */
+th code {
+  color: inherit;
+  background-color: transparent;
+  white-space: nowrap;
+  overflow-wrap: normal;
+  word-break: normal;
 }
 
 img {
@@ -1844,16 +1854,21 @@ complexity analysis across different problem scales.</p>
 <a class="figure-full-size-link" href="../figures/algorithm_complexity.png" target="_blank" rel="noopener" aria-label="Open full-size Figure 4, Six-panel diagnostic from generate_complexity_visualization() (3×2 grid)."><img src="../figures/algorithm_complexity.png"
 alt="Deterministic proxy for optimization work by problem dimension and recorded iteration count." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Figure 4: Six-panel diagnostic from
-<code>generate_complexity_visualization()</code> (3×2 grid). <strong>Top
-left</strong>: bars give the empirical iteration count per configured
-<span class="math inline">\(\alpha\)</span>, coloured by agency
-category; <span class="math inline">\(\alpha=1.0\)</span> achieves the
-global minimum of 1 step(s), while <span
+<code>generate_complexity_visualization()</code> (3×2
+grid).</figcaption>
+</figure>
+<p>The panels in fig. <a href="#fig:complexity">4</a> encode the
+following diagnostics:</p>
+<ul>
+<li><strong>Top left</strong>: bars give the empirical iteration count
+per configured <span class="math inline">\(\alpha\)</span>, coloured by
+agency category; <span class="math inline">\(\alpha=1.0\)</span>
+achieves the global minimum of 1 step(s), while <span
 class="math inline">\(\alpha=0.01\)</span> saturates at the iteration
 cap <span class="math inline">\(N_{\max}=1000\)</span> (slow
 convergence) and <span class="math inline">\(\alpha=2.5\)</span>
-terminates early via a <code>non_finite</code> update (divergence).
-<strong>Top right</strong>: <span
+terminates early via a <code>non_finite</code> update (divergence).</li>
+<li><strong>Top right</strong>: <span
 class="math inline">\(\log_{10}|f(x)-f(x^\ast)|\)</span> at termination;
 the four converged rows reach <span class="math inline">\(\approx
 10^{-16}\)</span> (machine precision) while <span
@@ -1861,25 +1876,27 @@ class="math inline">\(\alpha=0.01\)</span> stops near <span
 class="math inline">\(10^{-9}\)</span> at the cap. Dashed reference at
 <span class="math inline">\(\log_{10}\varepsilon\)</span> for <span
 class="math inline">\(\varepsilon=\)</span>
-<code>experiment.convergence_tolerance</code>. <strong>Middle
-left</strong>: empirical iterations (solid) versus the smooth proxy
-<span class="math inline">\(1/(2\alpha(1-\alpha))\)</span> (dashed) on
-log axes — a shape comparison, not a tight count prediction for every
-<span class="math inline">\(\alpha\)</span>. <strong>Middle
-right</strong>: per-step error contraction factor <span
-class="math inline">\(\rho=|1-\alpha|\)</span> from the unit-Hessian
-linear recurrence (eq. <strong>¿eq:scalar_linear_update?</strong>); the
-dashed reference at <span class="math inline">\(\rho=1\)</span>
-separates stable bars (left of it) from divergent ones (right).
-<strong>Bottom left</strong>: stable step-size region width <span
+<code>experiment.convergence_tolerance</code>.</li>
+<li><strong>Middle left</strong>: empirical iterations (solid) versus
+the smooth proxy <span
+class="math inline">\(1/(2\alpha(1-\alpha))\)</span> (dashed) on log
+axes — a shape comparison, not a tight count prediction for every <span
+class="math inline">\(\alpha\)</span>.</li>
+<li><strong>Middle right</strong>: per-step error contraction factor
+<span class="math inline">\(\rho=|1-\alpha|\)</span> from the
+unit-Hessian linear recurrence
+(eq. <strong>¿eq:scalar_linear_update?</strong>); the dashed reference
+at <span class="math inline">\(\rho=1\)</span> separates stable bars
+(left of it) from divergent ones (right).</li>
+<li><strong>Bottom left</strong>: stable step-size region width <span
 class="math inline">\(2/L\)</span> per backend profile (<span
 class="math inline">\(H=I,2I,5I,10I\)</span>) with the optimal <span
-class="math inline">\(\alpha^\ast=1/L\)</span> overlaid. <strong>Bottom
-right</strong>: cross-profile contraction curves <span
-class="math inline">\(\rho(\alpha)=|1-\alpha L|\)</span> with dotted
-verticals at each <span class="math inline">\(2/L\)</span> stability
-boundary.</figcaption>
-</figure>
+class="math inline">\(\alpha^\ast=1/L\)</span> overlaid.</li>
+<li><strong>Bottom right</strong>: cross-profile contraction curves
+<span class="math inline">\(\rho(\alpha)=|1-\alpha L|\)</span> with
+dotted verticals at each <span class="math inline">\(2/L\)</span>
+stability boundary.</li>
+</ul>
 <p>The algorithm demonstrates efficient performance for small-scale
 optimization problems:</p>
 <ul>
@@ -2194,10 +2211,10 @@ make microsecond values unsuitable as pinned reproducibility claims.</p>
 <h2 data-number="6.5" id="computational-environment"><span
 class="header-section-number">6.5</span> Computational Environment</h2>
 <ul>
-<li><strong>Python</strong>: 3.14.4</li>
-<li><strong>NumPy</strong>: 2.4.1</li>
+<li><strong>Python</strong>: 3.14.8</li>
+<li><strong>NumPy</strong>: 2.4.2</li>
 <li><strong>Platform</strong>: Darwin arm64</li>
-<li><strong>Generated</strong>: 2026-10-15T18:40:52Z</li>
+<li><strong>Generated</strong>: 2026-10-23T00:44:50Z</li>
 </ul>
 <h2 data-number="6.6" id="pipeline-ordering"><span
 class="header-section-number">6.6</span> Pipeline ordering</h2>
@@ -2292,7 +2309,7 @@ class="header-section-number">7.1</span> Configuration Provenance</h2>
 <tbody>
 <tr>
 <td>Config hash (SHA-256, truncated)</td>
-<td><code>f8ebf4554f853abe</code></td>
+<td><code>4bc0e13a7db36799</code></td>
 </tr>
 <tr>
 <td>Paper version</td>

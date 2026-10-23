@@ -251,7 +251,7 @@ mjx-container[display="true"] { max-width: 100%; overflow: visible; }
   outline: 3px solid var(--brand-1);
   outline-offset: 3px;
 }
-.table-scroll > table { margin-block: 0; min-width: 100%; width: max-content; }
+.table-scroll > table { margin-block: 0; display: table; min-width: 100%; width: 100%; }
 *, *::before, *::after {
   box-sizing: border-box;
 }
@@ -412,8 +412,9 @@ table {
 
 .table-scroll > table {
   margin-block: 0;
+  display: table;
   min-width: 100%;
-  width: max-content;
+  width: 100%;
 }
 
 figure {
@@ -637,8 +638,8 @@ scope appropriate for a template exemplar. On the architecture side, the
 DSL is exercised by a zero-mock test suite under the repository’s
 configured project coverage gate, generates 19 artifacts (1 figures, 7
 data files, 11 reports) per pipeline run, and injects reproducibility
-metadata (configuration hash <code>832fd58172d5b589</code>, build
-timestamp <code>2026-10-22T01:20:41Z</code>) into <span class="citation"
+metadata (configuration hash <code>941d5fb4060503b0</code>, build
+timestamp <code>2026-10-22T17:22:44Z</code>) into <span class="citation"
 data-cites="sec:reproducibility">[@sec:reproducibility]</span>.</p>
 <p><strong>Keywords:</strong> methods paper, domain-specific language,
 controlled methods, deterministic compilation, staged validation,

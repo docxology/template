@@ -206,7 +206,12 @@ def _draw_stat_slide(c: canvas.Canvas, width: float, height: float, slide: Slide
 
     value = slide.stat_value or (slide.bullets[0] if slide.bullets else "")
     c.setFillColor(theme.highlight_2_c)
-    c.setFont(DECK_HELVETICA_BOLD, STAT_VALUE_FONT_SIZE)
+    c.setFont(
+        DECK_HELVETICA_BOLD,
+        fit_helvetica_bold_single_line_font_size(
+            value, max_width_pt=SLIDE_TEXT_WIDTH_PT, start_size_pt=STAT_VALUE_FONT_SIZE
+        ),
+    )
     c.drawString(MARGIN, height / 2 - 0.1 * inch, value)
 
     if slide.stat_label:

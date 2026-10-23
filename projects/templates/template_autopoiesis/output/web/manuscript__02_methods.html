@@ -316,7 +316,7 @@ mjx-container[display="true"] { max-width: 100%; overflow: visible; }
   outline: 3px solid var(--brand-1);
   outline-offset: 3px;
 }
-.table-scroll > table { margin-block: 0; min-width: 100%; width: max-content; }
+.table-scroll > table { margin-block: 0; display: table; min-width: 100%; width: 100%; }
 *, *::before, *::after {
   box-sizing: border-box;
 }
@@ -477,8 +477,9 @@ table {
 
 .table-scroll > table {
   margin-block: 0;
+  display: table;
   min-width: 100%;
-  width: max-content;
+  width: 100%;
 }
 
 figure {
@@ -495,6 +496,15 @@ th, td {
 th {
   background-color: #1f6f8b;
   color: white;
+}
+
+/* Preserve a complete inline-code header within the table's scroll region. */
+th code {
+  color: inherit;
+  background-color: transparent;
+  white-space: nowrap;
+  overflow-wrap: normal;
+  word-break: normal;
 }
 
 img {
@@ -826,23 +836,25 @@ encodes both the selected domain and a content-derived identity, without
 any counter or timestamp. <code>_build_tree</code> then assembles the
 file map that will be written:</p>
 <ul>
-<li><strong>Kernel primitives.</strong>
-<code>_vendor_kernel_sources</code> copies
-<code>src/template_autopoiesis/primitives/ base.py</code> and
-<code>src/template_autopoiesis/primitives/{domain}.py</code> for the
-spec’s <code>primitive_domain</code>, rewriting
-<code>from src.primitives</code> / <code>from .primitives</code> imports
-to a bare <code>from primitives</code> so the copied module resolves
-correctly once it is no longer nested under the parent template’s
-package. It also synthesizes a minimal
-<code>primitives/__init__.py</code> whose
+<li><p><strong>Kernel primitives.</strong>
+<code>_vendor_kernel_sources</code> copies these source files:</p>
+<ul>
+<li><code>src/template_autopoiesis/primitives/base.py</code></li>
+<li><code>src/template_autopoiesis/primitives/{domain}.py</code></li>
+</ul>
+<p>The domain file follows the spec’s <code>primitive_domain</code>. The
+writer rewrites <code>from src.primitives</code> /
+<code>from .primitives</code> imports to a bare
+<code>from primitives</code> so the copied module resolves correctly
+once it is no longer nested under the parent template’s package. It also
+synthesizes a minimal <code>primitives/__init__.py</code> whose
 <code>collect_primitives()</code> imports only the one selected domain
 submodule — the child ships exactly one domain’s kernel, not all
-five.</li>
-<li><strong>Figures source</strong>, vendored verbatim from
+five.</p></li>
+<li><p><strong>Figures source</strong>, vendored verbatim from
 <code>src/template_autopoiesis/figures/figures.py</code> when
-present.</li>
-<li><strong>Dependency vendoring.</strong> <code>_resolve_deps</code>
+present.</p></li>
+<li><p><strong>Dependency vendoring.</strong> <code>_resolve_deps</code>
 reads <code>dep_mode</code> out of the spec’s selections (defaulting to
 <code>"vendor"</code>) and, for each name in <code>spec.deps</code>,
 resolves the corresponding path from
@@ -853,25 +865,25 @@ infrastructure source when it exists on disk or writing an explicit
 vendored dependency the pipeline could not actually locate is marked as
 such in the generated file, not silently omitted. A seam
 <code>vendored/__init__.py</code> re-exports every vendored module by
-name.</li>
-<li><strong>A minimal <code>pyproject.toml</code></strong> declaring the
-child as its own installable project
+name.</p></li>
+<li><p><strong>A minimal <code>pyproject.toml</code></strong> declaring
+the child as its own installable project
 (<code>name = "child_{domain}"</code>,
 <code>numpy</code>/<code>matplotlib</code>/<code>pyyaml</code> runtime
-deps, pytest configured with <code>pythonpath = ["."]</code>).</li>
-<li><strong>A generated <code>analysis.py</code></strong> that calls
+deps, pytest configured with <code>pythonpath = ["."]</code>).</p></li>
+<li><p><strong>A generated <code>analysis.py</code></strong> that calls
 <code>collect_primitives()</code>, iterates the selected domain’s
 registered <code>PrimitiveSpec</code> entries, and prints each one’s
 name and result on its <code>example_input</code> — a real, executable
-entry point rather than a stub that only imports.</li>
-<li><strong>A generated smoke test</strong>,
+entry point rather than a stub that only imports.</p></li>
+<li><p><strong>A generated smoke test</strong>,
 <code>tests/test_analysis.py</code>, asserting only that
-<code>run()</code> completes without raising.</li>
-<li><strong>Manuscript stubs</strong> (<code>_emit_manuscript</code>) —
-abstract, introduction, results, and limitations sections written
+<code>run()</code> completes without raising.</p></li>
+<li><p><strong>Manuscript stubs</strong> (<code>_emit_manuscript</code>)
+— abstract, introduction, results, and limitations sections written
 directly from the spec’s own fields (domain, spec hash, all non-domain
 selections), so the child’s own manuscript is itself traceable to the
-same <code>Spec</code> that generated its code.</li>
+same <code>Spec</code> that generated its code.</p></li>
 </ul>
 <p>Every file in the assembled tree is written to
 <code>child_root</code> and also retained in-memory as

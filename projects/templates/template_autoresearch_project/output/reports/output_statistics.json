@@ -4,12 +4,12 @@
       "exists": true,
       "file_count": 1,
       "size_mb": "1.13",
-      "total_size_bytes": 1182199,
+      "total_size_bytes": 1187964,
       "largest_files": [
         {
           "name": "template_autoresearch_project_combined.pdf",
           "size_mb": "1.13",
-          "size_bytes": 1182199,
+          "size_bytes": 1187964,
           "path": "pdf/template_autoresearch_project_combined.pdf"
         }
       ],
@@ -20,26 +20,26 @@
     "web": {
       "exists": true,
       "file_count": 10,
-      "size_mb": "3.45",
-      "total_size_bytes": 3619269,
+      "size_mb": "2.20",
+      "total_size_bytes": 2304248,
       "largest_files": [
         {
           "name": "source-web-fonts.js",
-          "size_mb": "3.02",
-          "size_bytes": 3170848,
+          "size_mb": "1.77",
+          "size_bytes": 1853404,
           "path": "web/assets/source-web-fonts.js"
         },
         {
           "name": "index.html",
           "size_mb": "0.17",
-          "size_bytes": 174276,
+          "size_bytes": 174860,
           "path": "web/index.html"
         },
         {
-          "name": "_combined_manuscript.md",
+          "name": "manuscript__03_results.html",
           "size_mb": "0.08",
-          "size_bytes": 81364,
-          "path": "web/_combined_manuscript.md"
+          "size_bytes": 81892,
+          "path": "web/manuscript__03_results.html"
         }
       ],
       "extensions": {
@@ -52,25 +52,25 @@
     "slides": {
       "exists": true,
       "file_count": 6,
-      "size_mb": "1.14",
-      "total_size_bytes": 1197982,
+      "size_mb": "1.17",
+      "total_size_bytes": 1228712,
       "largest_files": [
         {
           "name": "03_results_slides.pdf",
-          "size_mb": "0.89",
-          "size_bytes": 937141,
+          "size_mb": "0.92",
+          "size_bytes": 965111,
           "path": "slides/03_results_slides.pdf"
         },
         {
           "name": "02_methodology_slides.pdf",
-          "size_mb": "0.17",
-          "size_bytes": 180937,
+          "size_mb": "0.18",
+          "size_bytes": 183698,
           "path": "slides/02_methodology_slides.pdf"
         },
         {
           "name": "01_introduction_slides.pdf",
           "size_mb": "0.04",
-          "size_bytes": 40843,
+          "size_bytes": 40842,
           "path": "slides/01_introduction_slides.pdf"
         }
       ],
@@ -94,7 +94,7 @@
       "exists": true,
       "file_count": 28,
       "size_mb": "1.12",
-      "total_size_bytes": 1172025,
+      "total_size_bytes": 1176017,
       "largest_files": [
         {
           "name": "autoresearch_security_control_matrix.png",
@@ -124,7 +124,7 @@
       "exists": true,
       "file_count": 48,
       "size_mb": "2.48",
-      "total_size_bytes": 2602318,
+      "total_size_bytes": 2602239,
       "largest_files": [
         {
           "name": "ml_prediction_records.json",
@@ -202,12 +202,12 @@
       "exists": true,
       "file_count": 11,
       "size_mb": "0.10",
-      "total_size_bytes": 108127,
+      "total_size_bytes": 108229,
       "largest_files": [
         {
           "name": "03_results.md",
           "size_mb": "0.04",
-          "size_bytes": 38963,
+          "size_bytes": 39053,
           "path": "manuscript/03_results.md"
         },
         {
@@ -257,12 +257,12 @@
       "exists": true,
       "file_count": 1,
       "size_mb": "1.13",
-      "total_size_bytes": 1182199,
+      "total_size_bytes": 1187964,
       "largest_files": [
         {
           "name": "template_autoresearch_project_combined.pdf",
           "size_mb": "1.13",
-          "size_bytes": 1182199,
+          "size_bytes": 1187964,
           "path": "template_autoresearch_project_combined.pdf"
         }
       ],
@@ -272,26 +272,26 @@
     }
   },
   "total_files": 119,
-  "total_size_mb": 10.592230796813965,
+  "total_size_mb": 9.3822603225708,
   "largest_files": [
     {
       "name": "source-web-fonts.js",
-      "size_mb": "3.02",
-      "size_bytes": 3170848,
+      "size_mb": "1.77",
+      "size_bytes": 1853404,
       "category": "web",
       "path": "web/assets/source-web-fonts.js"
     },
     {
       "name": "template_autoresearch_project_combined.pdf",
       "size_mb": "1.13",
-      "size_bytes": 1182199,
+      "size_bytes": 1187964,
       "category": "pdf",
       "path": "pdf/template_autoresearch_project_combined.pdf"
     },
     {
       "name": "template_autoresearch_project_combined.pdf",
       "size_mb": "1.13",
-      "size_bytes": 1182199,
+      "size_bytes": 1187964,
       "category": "root",
       "path": "template_autoresearch_project_combined.pdf"
     },
@@ -304,8 +304,8 @@
     },
     {
       "name": "03_results_slides.pdf",
-      "size_mb": "0.89",
-      "size_bytes": 937141,
+      "size_mb": "0.92",
+      "size_bytes": 965111,
       "category": "slides",
       "path": "slides/03_results_slides.pdf"
     },
@@ -325,15 +325,15 @@
     },
     {
       "name": "02_methodology_slides.pdf",
-      "size_mb": "0.17",
-      "size_bytes": 180937,
+      "size_mb": "0.18",
+      "size_bytes": 183698,
       "category": "slides",
       "path": "slides/02_methodology_slides.pdf"
     },
     {
       "name": "index.html",
       "size_mb": "0.17",
-      "size_bytes": 174276,
+      "size_bytes": 174860,
       "category": "web",
       "path": "web/index.html"
     },
@@ -347,15 +347,15 @@
   ],
   "missing_expected_files": [],
   "sizes_by_category": {
-    "pdf": 1.1274328231811523,
-    "web": 3.451603889465332,
-    "slides": 1.1424846649169922,
-    "figures": 1.1177301406860352,
-    "data": 2.4817638397216797,
+    "pdf": 1.1329307556152344,
+    "web": 2.1975021362304688,
+    "slides": 1.1717910766601562,
+    "figures": 1.121537208557129,
+    "data": 2.4816884994506836,
     "reports": 0.038697242736816406,
-    "manuscript": 0.1031179428100586,
+    "manuscript": 0.10321521759033203,
     "release": 0.0019674301147460938,
-    "root": 1.1274328231811523
+    "root": 1.1329307556152344
   },
   "inventory_mode": "stable-shippable-output-v1",
   "inventory_scope": "stage5-delivery-mirror",

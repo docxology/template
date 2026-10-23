@@ -120,6 +120,7 @@ def write_ml_classification_metrics_heatmap(figures_dir: Path, diagnostics: dict
         cell_text=cell_text,
         color_threshold=0.72,
     )
+    ax.set_xticks((0, 1, 2), labels=("precision", "recall", "F1"), rotation=25, ha="right")
     ax.set_title("Accepted candidate class metrics")
     ax.set_ylabel("true digit")
     fig.colorbar(image, ax=ax, fraction=0.046, pad=0.04)
@@ -200,7 +201,7 @@ def write_ml_robustness_matrix_figure(figures_dir: Path, robustness: dict[str, o
         ax,
         matrix,
         [value.replace("exp-", "") for value in candidates],
-        [value.replace("_", "\n") for value in transforms],
+        [value.replace("_0_", "\n0.").replace("_", "\n") for value in transforms],
         vmin=0.0,
         vmax=1.0,
         cell_text=cell_text,
@@ -268,16 +269,16 @@ def write_ml_paired_correctness_figure(figures_dir: Path, paired: dict[str, obje
     ax.set_title("Matched correctness comparison")
     ax.set_xticks((0, 1), labels=("baseline wrong", "baseline correct"), rotation=20, ha="right")
     ax.set_yticks((0, 1), labels=("accepted wrong", "accepted correct"))
-    ax.text(
+    fig.text(
+        0.5,
         0.02,
-        -0.18,
         f"exact McNemar p={_float_value(paired.get('exact_mcnemar_p')):.3f}",
-        transform=ax.transAxes,
+        ha="center",
         fontsize=8,
         color=palette_color("box_edge", "#334155"),
     )
     fig.colorbar(image, ax=ax, fraction=0.046, pad=0.04)
-    fig.tight_layout()
+    fig.tight_layout(rect=(0.0, 0.08, 1.0, 1.0))
     return save_figure(fig, path)
 
 

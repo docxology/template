@@ -32,8 +32,8 @@ def main(argv: list[str] | None = None) -> int:
         PROJECT_ROOT,
         require_analysis_outputs=not args.allow_draft,
     )
-    out.write_text(json.dumps(variables, indent=2), encoding="utf-8")
     if args.allow_draft:
+        out.write_text(json.dumps(variables, indent=2), encoding="utf-8")
         # Draft hydration should stay below the repo's per-test timeout and
         # tolerate missing analysis artifacts. The strict pipeline path below
         # still refreshes the full sheaf-track and semantic artifact surface.

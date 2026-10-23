@@ -6,10 +6,11 @@ column frames — including an optional narrow left *rail* and a spanning lead
 headline — and flows the story/box/figure flowables (built by
 :mod:`newspaper.components`) across those frames in reading order.
 
-ReportLab's :meth:`Frame.addFromList` does the hard work of splitting paragraphs
-across columns; this module's job is purely to *place the frames correctly* and
-hand each its slice of content. Any flowables that do not fit are returned so
-the caller can report an over-set page rather than silently dropping copy.
+ReportLab's :meth:`Frame.addFromList` moves whole flowables across columns
+without splitting them. This module places the frames and hands each its slice
+of content; component builders keep headings with their opening content. Any
+flowables that do not fit are returned so the caller can report an over-set page
+rather than silently dropping copy.
 """
 
 from __future__ import annotations

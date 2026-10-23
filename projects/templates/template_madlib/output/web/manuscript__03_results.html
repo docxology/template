@@ -251,7 +251,7 @@ mjx-container[display="true"] { max-width: 100%; overflow: visible; }
   outline: 3px solid var(--brand-1);
   outline-offset: 3px;
 }
-.table-scroll > table { margin-block: 0; min-width: 100%; width: max-content; }
+.table-scroll > table { margin-block: 0; display: table; min-width: 100%; width: 100%; }
 *, *::before, *::after {
   box-sizing: border-box;
 }
@@ -412,8 +412,9 @@ table {
 
 .table-scroll > table {
   margin-block: 0;
+  display: table;
   min-width: 100%;
-  width: max-content;
+  width: 100%;
 }
 
 figure {
@@ -430,6 +431,15 @@ th, td {
 th {
   background-color: #1f6f8b;
   color: white;
+}
+
+/* Preserve a complete inline-code header within the table's scroll region. */
+th code {
+  color: inherit;
+  background-color: transparent;
+  white-space: nowrap;
+  overflow-wrap: normal;
+  word-break: normal;
 }
 
 img {
@@ -644,280 +654,280 @@ alt="Heatmap crossing 11 manuscript sections with 10 lexicon categories. 40 toke
 <td>adjectives</td>
 <td>reviewable</td>
 <td>abstract</td>
-<td><code>manuscript/config.yaml#madlib.lexicon.adjectives[5]</code></td>
+<td><code>manuscript/config.yaml#madlib.lexicon.adjectives</code>[5]</td>
 </tr>
 <tr>
 <td><code>STUDY_NOUN</code></td>
 <td>nouns</td>
 <td>pipeline</td>
 <td>abstract</td>
-<td><code>manuscript/config.yaml#madlib.lexicon.nouns[4]</code></td>
+<td><code>manuscript/config.yaml#madlib.lexicon.nouns</code>[4]</td>
 </tr>
 <tr>
 <td><code>STUDY_VERB</code></td>
 <td>verbs</td>
 <td>hydrate</td>
 <td>abstract</td>
-<td><code>manuscript/config.yaml#madlib.lexicon.verbs[1]</code></td>
+<td><code>manuscript/config.yaml#madlib.lexicon.verbs</code>[1]</td>
 </tr>
 <tr>
 <td><code>INTRO_NOUNS_1</code></td>
 <td>nouns</td>
 <td>protocol</td>
 <td>introduction</td>
-<td><code>manuscript/config.yaml#madlib.lexicon.nouns[5]</code></td>
+<td><code>manuscript/config.yaml#madlib.lexicon.nouns</code>[5]</td>
 </tr>
 <tr>
 <td><code>INTRO_NOUNS_2</code></td>
 <td>nouns</td>
 <td>section</td>
 <td>introduction</td>
-<td><code>manuscript/config.yaml#madlib.lexicon.nouns[3]</code></td>
+<td><code>manuscript/config.yaml#madlib.lexicon.nouns</code>[3]</td>
 </tr>
 <tr>
 <td><code>INTRO_NOUNS_3</code></td>
 <td>nouns</td>
 <td>lexicon</td>
 <td>introduction</td>
-<td><code>manuscript/config.yaml#madlib.lexicon.nouns[2]</code></td>
+<td><code>manuscript/config.yaml#madlib.lexicon.nouns</code>[2]</td>
 </tr>
 <tr>
 <td><code>INTRO_NOUNS_4</code></td>
 <td>nouns</td>
 <td>artifact</td>
 <td>introduction</td>
-<td><code>manuscript/config.yaml#madlib.lexicon.nouns[6]</code></td>
+<td><code>manuscript/config.yaml#madlib.lexicon.nouns</code>[6]</td>
 </tr>
 <tr>
 <td><code>INTRO_VERBS_1</code></td>
 <td>verbs</td>
 <td>condition</td>
 <td>introduction</td>
-<td><code>manuscript/config.yaml#madlib.lexicon.verbs[3]</code></td>
+<td><code>manuscript/config.yaml#madlib.lexicon.verbs</code>[3]</td>
 </tr>
 <tr>
 <td><code>INTRO_VERBS_2</code></td>
 <td>verbs</td>
 <td>bind</td>
 <td>introduction</td>
-<td><code>manuscript/config.yaml#madlib.lexicon.verbs[6]</code></td>
+<td><code>manuscript/config.yaml#madlib.lexicon.verbs</code>[6]</td>
 </tr>
 <tr>
 <td><code>INTRO_VERBS_3</code></td>
 <td>verbs</td>
 <td>bind</td>
 <td>introduction</td>
-<td><code>manuscript/config.yaml#madlib.lexicon.verbs[6]</code></td>
+<td><code>manuscript/config.yaml#madlib.lexicon.verbs</code>[6]</td>
 </tr>
 <tr>
 <td><code>INTRO_VERBS_4</code></td>
 <td>verbs</td>
 <td>compose</td>
 <td>introduction</td>
-<td><code>manuscript/config.yaml#madlib.lexicon.verbs[0]</code></td>
+<td><code>manuscript/config.yaml#madlib.lexicon.verbs</code>[0]</td>
 </tr>
 <tr>
 <td><code>METHOD_NAME</code></td>
 <td>methods</td>
 <td>conditional section hydration</td>
 <td>methods</td>
-<td><code>manuscript/config.yaml#madlib.lexicon.methods[3]</code></td>
+<td><code>manuscript/config.yaml#madlib.lexicon.methods</code>[3]</td>
 </tr>
 <tr>
 <td><code>METHOD_CONSTRAINT</code></td>
 <td>constraints</td>
 <td>publication claims stay local until release</td>
 <td>methods</td>
-<td><code>manuscript/config.yaml#madlib.lexicon.constraints[3]</code></td>
+<td><code>manuscript/config.yaml#madlib.lexicon.constraints</code>[3]</td>
 </tr>
 <tr>
 <td><code>METHOD_ARTIFACT_1</code></td>
 <td>artifacts</td>
 <td>token-injection flow</td>
 <td>methods</td>
-<td><code>manuscript/config.yaml#madlib.lexicon.artifacts[6]</code></td>
+<td><code>manuscript/config.yaml#madlib.lexicon.artifacts</code>[6]</td>
 </tr>
 <tr>
 <td><code>METHOD_ARTIFACT_2</code></td>
 <td>artifacts</td>
 <td>quality-gate matrix</td>
 <td>methods</td>
-<td><code>manuscript/config.yaml#madlib.lexicon.artifacts[9]</code></td>
+<td><code>manuscript/config.yaml#madlib.lexicon.artifacts</code>[9]</td>
 </tr>
 <tr>
 <td><code>METHOD_QUALITY_1</code></td>
 <td>qualities</td>
 <td>claim humility</td>
 <td>methods</td>
-<td><code>manuscript/config.yaml#madlib.lexicon.qualities[4]</code></td>
+<td><code>manuscript/config.yaml#madlib.lexicon.qualities</code>[4]</td>
 </tr>
 <tr>
 <td><code>METHOD_QUALITY_2</code></td>
 <td>qualities</td>
 <td>render readiness</td>
 <td>methods</td>
-<td><code>manuscript/config.yaml#madlib.lexicon.qualities[3]</code></td>
+<td><code>manuscript/config.yaml#madlib.lexicon.qualities</code>[3]</td>
 </tr>
 <tr>
 <td><code>RESULT_MEASURE_1</code></td>
 <td>measures</td>
 <td>provenance coverage</td>
 <td>results</td>
-<td><code>manuscript/config.yaml#madlib.lexicon.measures[3]</code></td>
+<td><code>manuscript/config.yaml#madlib.lexicon.measures</code>[3]</td>
 </tr>
 <tr>
 <td><code>RESULT_MEASURE_2</code></td>
 <td>measures</td>
 <td>evidence registry cleanliness</td>
 <td>results</td>
-<td><code>manuscript/config.yaml#madlib.lexicon.measures[6]</code></td>
+<td><code>manuscript/config.yaml#madlib.lexicon.measures</code>[6]</td>
 </tr>
 <tr>
 <td><code>RESULT_MEASURE_3</code></td>
 <td>measures</td>
 <td>category density</td>
 <td>results</td>
-<td><code>manuscript/config.yaml#madlib.lexicon.measures[2]</code></td>
+<td><code>manuscript/config.yaml#madlib.lexicon.measures</code>[2]</td>
 </tr>
 <tr>
 <td><code>RESULT_ARTIFACT_1</code></td>
 <td>artifacts</td>
 <td>configured-field figures</td>
 <td>results</td>
-<td><code>manuscript/config.yaml#madlib.lexicon.artifacts[10]</code></td>
+<td><code>manuscript/config.yaml#madlib.lexicon.artifacts</code>[10]</td>
 </tr>
 <tr>
 <td><code>RESULT_ARTIFACT_2</code></td>
 <td>artifacts</td>
 <td>token inventory</td>
 <td>results</td>
-<td><code>manuscript/config.yaml#madlib.lexicon.artifacts[0]</code></td>
+<td><code>manuscript/config.yaml#madlib.lexicon.artifacts</code>[0]</td>
 </tr>
 <tr>
 <td><code>DISCUSSION_ADJECTIVE</code></td>
 <td>adjectives</td>
 <td>auditable</td>
 <td>discussion</td>
-<td><code>manuscript/config.yaml#madlib.lexicon.adjectives[0]</code></td>
+<td><code>manuscript/config.yaml#madlib.lexicon.adjectives</code>[0]</td>
 </tr>
 <tr>
 <td><code>DISCUSSION_AUDIENCE_1</code></td>
 <td>audiences</td>
 <td>pipeline maintainers</td>
 <td>discussion</td>
-<td><code>manuscript/config.yaml#madlib.lexicon.audiences[2]</code></td>
+<td><code>manuscript/config.yaml#madlib.lexicon.audiences</code>[2]</td>
 </tr>
 <tr>
 <td><code>DISCUSSION_AUDIENCE_2</code></td>
 <td>audiences</td>
 <td>research educators</td>
 <td>discussion</td>
-<td><code>manuscript/config.yaml#madlib.lexicon.audiences[3]</code></td>
+<td><code>manuscript/config.yaml#madlib.lexicon.audiences</code>[3]</td>
 </tr>
 <tr>
 <td><code>CONFIG_CONSTRAINT</code></td>
 <td>constraints</td>
 <td>disabled sections retain explicit traceability</td>
 <td>configuration</td>
-<td><code>manuscript/config.yaml#madlib.lexicon.constraints[2]</code></td>
+<td><code>manuscript/config.yaml#madlib.lexicon.constraints</code>[2]</td>
 </tr>
 <tr>
 <td><code>EVALUATION_MEASURE_1</code></td>
 <td>measures</td>
 <td>copied output readiness</td>
 <td>evaluation</td>
-<td><code>manuscript/config.yaml#madlib.lexicon.measures[7]</code></td>
+<td><code>manuscript/config.yaml#madlib.lexicon.measures</code>[7]</td>
 </tr>
 <tr>
 <td><code>EVALUATION_MEASURE_2</code></td>
 <td>measures</td>
 <td>figure registry completeness</td>
 <td>evaluation</td>
-<td><code>manuscript/config.yaml#madlib.lexicon.measures[5]</code></td>
+<td><code>manuscript/config.yaml#madlib.lexicon.measures</code>[5]</td>
 </tr>
 <tr>
 <td><code>EVALUATION_MEASURE_3</code></td>
 <td>measures</td>
 <td>category density</td>
 <td>evaluation</td>
-<td><code>manuscript/config.yaml#madlib.lexicon.measures[2]</code></td>
+<td><code>manuscript/config.yaml#madlib.lexicon.measures</code>[2]</td>
 </tr>
 <tr>
 <td><code>EVALUATION_ARTIFACT_1</code></td>
 <td>artifacts</td>
 <td>manuscript variable map</td>
 <td>evaluation</td>
-<td><code>manuscript/config.yaml#madlib.lexicon.artifacts[3]</code></td>
+<td><code>manuscript/config.yaml#madlib.lexicon.artifacts</code>[3]</td>
 </tr>
 <tr>
 <td><code>EVALUATION_ARTIFACT_2</code></td>
 <td>artifacts</td>
 <td>provenance trace map</td>
 <td>evaluation</td>
-<td><code>manuscript/config.yaml#madlib.lexicon.artifacts[8]</code></td>
+<td><code>manuscript/config.yaml#madlib.lexicon.artifacts</code>[8]</td>
 </tr>
 <tr>
 <td><code>REPRODUCIBILITY_ARTIFACT_1</code></td>
 <td>artifacts</td>
 <td>section plan</td>
 <td>reproducibility</td>
-<td><code>manuscript/config.yaml#madlib.lexicon.artifacts[1]</code></td>
+<td><code>manuscript/config.yaml#madlib.lexicon.artifacts</code>[1]</td>
 </tr>
 <tr>
 <td><code>REPRODUCIBILITY_ARTIFACT_2</code></td>
 <td>artifacts</td>
 <td>manuscript variable map</td>
 <td>reproducibility</td>
-<td><code>manuscript/config.yaml#madlib.lexicon.artifacts[3]</code></td>
+<td><code>manuscript/config.yaml#madlib.lexicon.artifacts</code>[3]</td>
 </tr>
 <tr>
 <td><code>LIMITATION_FAILURE_1</code></td>
 <td>failures</td>
 <td>domain misuse</td>
 <td>limitations</td>
-<td><code>manuscript/config.yaml#madlib.lexicon.failures[4]</code></td>
+<td><code>manuscript/config.yaml#madlib.lexicon.failures</code>[4]</td>
 </tr>
 <tr>
 <td><code>LIMITATION_FAILURE_2</code></td>
 <td>failures</td>
 <td>overclaimed generated prose</td>
 <td>limitations</td>
-<td><code>manuscript/config.yaml#madlib.lexicon.failures[1]</code></td>
+<td><code>manuscript/config.yaml#madlib.lexicon.failures</code>[1]</td>
 </tr>
 <tr>
 <td><code>LIMITATION_FAILURE_3</code></td>
 <td>failures</td>
 <td>figure provenance gap</td>
 <td>limitations</td>
-<td><code>manuscript/config.yaml#madlib.lexicon.failures[3]</code></td>
+<td><code>manuscript/config.yaml#madlib.lexicon.failures</code>[3]</td>
 </tr>
 <tr>
 <td><code>SCOPE_CONSTRAINT</code></td>
 <td>constraints</td>
 <td>all lexicon entries live in config</td>
 <td>scope</td>
-<td><code>manuscript/config.yaml#madlib.lexicon.constraints[1]</code></td>
+<td><code>manuscript/config.yaml#madlib.lexicon.constraints</code>[1]</td>
 </tr>
 <tr>
 <td><code>SCOPE_AUDIENCE</code></td>
 <td>audiences</td>
 <td>pipeline maintainers</td>
 <td>scope</td>
-<td><code>manuscript/config.yaml#madlib.lexicon.audiences[2]</code></td>
+<td><code>manuscript/config.yaml#madlib.lexicon.audiences</code>[2]</td>
 </tr>
 <tr>
 <td><code>AUTHORING_AUDIENCE</code></td>
 <td>audiences</td>
 <td>manuscript reviewers</td>
 <td>authoring_contract</td>
-<td><code>manuscript/config.yaml#madlib.lexicon.audiences[1]</code></td>
+<td><code>manuscript/config.yaml#madlib.lexicon.audiences</code>[1]</td>
 </tr>
 <tr>
 <td><code>AUTHORING_QUALITY</code></td>
 <td>qualities</td>
 <td>render readiness</td>
 <td>authoring_contract</td>
-<td><code>manuscript/config.yaml#madlib.lexicon.qualities[3]</code></td>
+<td><code>manuscript/config.yaml#madlib.lexicon.qualities</code>[3]</td>
 </tr>
 </tbody>
 </table></div>

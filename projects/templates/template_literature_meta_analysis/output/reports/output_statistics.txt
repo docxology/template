@@ -7,36 +7,36 @@ Inventory Mode: stable-shippable-output-v1
 Inventory Scope: stage5-delivery-mirror
 Inventory Root: output/templates/template_literature_meta_analysis
 
-Total Files: 126
-Total Size: 45.01 MB
+Total Files: 128
+Total Size: 47.64 MB
 
 Files by Category:
-  • pdf: 1 files (6.86 MB)
-  • web: 24 files (0.56 MB)
-  • slides: 21 files (7.20 MB)
-  • figures: 22 files (6.92 MB)
-  • data: 25 files (15.65 MB)
+  • pdf: 1 files (6.83 MB)
+  • web: 25 files (2.35 MB)
+  • slides: 21 files (7.21 MB)
+  • figures: 22 files (6.93 MB)
+  • data: 25 files (16.52 MB)
   • reports: 3 files (0.02 MB)
   • fulltext: 1 files (0.84 MB)
-  • manuscript: 26 files (0.10 MB)
+  • manuscript: 27 files (0.11 MB)
   • release: 2 files (0.00 MB)
-  • root: 1 files (6.86 MB)
+  • root: 1 files (6.83 MB)
 
 Largest Files:
-  • template_literature_meta_analysis_combined.pdf: 6.86 MB (pdf)
-  • template_literature_meta_analysis_combined.pdf: 6.86 MB (root)
-  • tfidf_data.json: 5.87 MB (data)
+  • template_literature_meta_analysis_combined.pdf: 6.83 MB (pdf)
+  • template_literature_meta_analysis_combined.pdf: 6.83 MB (root)
+  • tfidf_data.json: 6.74 MB (data)
   • corpus.jsonl: 5.10 MB (data)
-  • 03c_results_text_analytics_slides.pdf: 3.93 MB (slides)
+  • 03c_results_text_analytics_slides.pdf: 3.97 MB (slides)
 
 File Types:
+  • .json: 25 file(s)
   • .md: 24 file(s)
-  • .json: 24 file(s)
   • .pdf: 23 file(s)
   • .html: 22 file(s)
   • .png: 21 file(s)
   • .jsonl: 3 file(s)
   • .bib: 2 file(s)
   • .yaml: 2 file(s)
+  • .js: 1 file(s)
   • .ico: 1 file(s)
-  • .gml: 1 file(s)

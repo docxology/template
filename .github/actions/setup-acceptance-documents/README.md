@@ -4,9 +4,18 @@ Prepares official document prerequisites on the isolated GitHub-hosted acceptanc
 Call after checkout and the caller's locked Python dependency sync. The `mode` input accepts exactly `native`
 (the default) or `converter` and is validated before cache restoration or setup.
 Both modes prepare exact pinned Pandoc and crossref. Native mode additionally
-prepares TeX, native readers and JuliaMono; full acceptance and infrastructure
-callers retain this default. Ordinary project tests request native mode for EDA
+prepares TeX, native readers and JuliaMono; full acceptance retains this default.
+Routine infrastructure smoke selects converter and prepares its declared readers
+and TeX separately. Ordinary project tests request native mode for EDA
 and converter mode for the other capability-matrix cells.
+
+On Linux, the existing Pandoc step in both modes uses the caller's prepared
+Python, after archive verification, to validate the
+signed Ubuntu mirror source and prefer its existing official HTTPS archive.
+Only the recognized mirror-list priorities change; URLs, fallback mirrors,
+package trust, package selection and execution limits remain unchanged.
+Unexpected files or source declarations stop preparation. This changes the
+preferred transport route; its effect on transfer time requires actual execution.
 
 Fixed release archives are admitted by
 exact byte length and SHA-256 before extraction or execution. Preparation

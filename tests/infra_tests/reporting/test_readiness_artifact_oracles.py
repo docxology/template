@@ -356,6 +356,44 @@ def test_embedded_export_metadata_requires_exact_public_producer_binding(tmp_pat
         with pytest.raises(ValueError, match="embedded export metadata"):
             validate_source_archive(PROJECT, manifest, invalid, SnapshotReader(tmp_path))
 
+    # A legitimate complete public Root export can exceed an unknown archive's
+    # aggregate limit while each independently held source file stays bounded.
+    from infrastructure.core.files.archive_members import bounded_members
+
+    root = tmp_path / "large-root"
+    sources = {"README.md": b"a" * (33 * 1024 * 1024), "CHANGELOG.md": b"b" * (33 * 1024 * 1024)}
+    for name, content in sources.items():
+        _file(root, name, content)
+    root_manifest = {"files": {name: hashlib.sha256(content).hexdigest() for name, content in sources.items()}}
+    buffer = BytesIO()
+    with zipfile.ZipFile(buffer, "w", compression=zipfile.ZIP_DEFLATED) as archive:
+        for name, content in sources.items():
+            archive.writestr(name, content)
+    large_export = buffer.getvalue()
+    with zipfile.ZipFile(BytesIO(large_export)) as archive, pytest.raises(ValueError, match="unbounded"):
+        bounded_members(archive)
+    reader = SnapshotReader(root)
+    validate_source_archive("root", root_manifest, large_export, reader)
+    assert reader.unchanged()
+    for changed in (
+        dict(sources, **{"README.md": sources["README.md"] + b"!", "CHANGELOG.md": sources["CHANGELOG.md"][:-1]}),
+        dict(sources, **{"README.md": b"c" * len(sources["README.md"])}),
+        dict(sources, **{"invented.txt": b"not current public source"}),
+        dict(sources, **{"empty/": b"unbound directory payload"}),
+    ):
+        buffer = BytesIO()
+        with zipfile.ZipFile(buffer, "w", compression=zipfile.ZIP_DEFLATED) as archive:
+            for name, content in changed.items():
+                archive.writestr(name, content)
+        with pytest.raises(ValueError):
+            validate_source_archive("root", root_manifest, buffer.getvalue(), SnapshotReader(root))
+    buffer = BytesIO()
+    with zipfile.ZipFile(buffer, "w", compression=zipfile.ZIP_DEFLATED) as archive:
+        archive.writestr("src/model.py", source)
+        archive.writestr(".template-export.json", b" " * (64 * 1024 * 1024 + 1))
+    with pytest.raises(ValueError, match="embedded export metadata exceeds"):
+        validate_source_archive(PROJECT, manifest, buffer.getvalue(), SnapshotReader(tmp_path))
+
 
 @pytest.mark.parametrize(
     "raw",

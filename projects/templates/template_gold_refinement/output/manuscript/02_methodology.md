@@ -204,15 +204,15 @@ The integrity model converts manuscript risks into source-owned dimensions. It d
 
 | ID | Dimension | Residual risk | Owner | Validator |
 |----|-----------|---------------|-------|-----------|
-| I1 | Monotone refinery | 4 | source code | tests/test_refinery.py |
-| I2 | Lexicon completeness | 3 | config | tests/test_config.py |
-| I3 | Token hydration | 5 | generated variables | tests/test_manuscript_variables.py |
-| I4 | Analogy boundary | 15 | claim ledger | infrastructure.validation.cli evidence --fail-on-issues |
-| I5 | Claim support | 10 | evidence assay | output/reports/claim_support_registry.json |
-| I6 | Figure registry | 8 | figure producer | tests/test_registry_integrity.py |
-| I7 | Citation hygiene | 4 | bibliography | infrastructure.reference.citation validate |
+| I1 | Monotone refinery | 4 | source code | `tests/test_refinery.py` |
+| I2 | Lexicon completeness | 3 | config | `tests/test_config.py` |
+| I3 | Token hydration | 5 | generated variables | `tests/test_manuscript_variables.py` |
+| I4 | Analogy boundary | 15 | claim ledger | `infrastructure.validation.cli` evidence --fail-on-issues |
+| I5 | Claim support | 10 | evidence assay | `output/reports/claim_support_registry.json` |
+| I6 | Figure registry | 8 | figure producer | `tests/test_registry_integrity.py` |
+| I7 | Citation hygiene | 4 | bibliography | `infrastructure.reference.citation` validate |
 | I8 | Render readiness | 8 | template pipeline | template pipeline render and validate stages |
-| I9 | Adversarial security assay | 15 | security assay | tests/test_security_assay.py and manuscript source review |
+| I9 | Adversarial security assay | 15 | security assay | `tests/test_security_assay.py` and manuscript source review |
 : Source-owned scientific-integrity dimensions. {#tbl:integrity_dimensions}
 
 The residual-risk score is an ordinal prioritization heuristic: higher severity and lower detectability raise review priority. It was not fitted to incident data, validated against external judgments, or designed for comparison across projects. Its sole use is to identify where this exemplar—or a fork—needs stronger ownership, evidence, or validation before expanding a claim.

@@ -93,7 +93,16 @@ def test_required_contract_job_keeps_whole_root_budget_and_explicit_empty_outcom
     matrix = _infra_matrix(selected_shards)["include"]
     assert [row["shard"] for row in matrix] == list(range(len(selected_shards)))
     prepared = [row["shard"] for row in matrix if row["tex"]]
-    assert len(prepared) == 1 and native_latex in selected_shards[prepared[0]]
+    native_bibliography = "tests/infra_tests/rendering/test_pdf_renderer_fixes.py"
+    expected_prepared = [
+        index for index, files in enumerate(selected_shards) if native_latex in files or native_bibliography in files
+    ]
+    assert prepared == expected_prepared
+    assert any(native_latex in selected_shards[index] for index in prepared)
+    assert _infra_matrix([[native_latex], [native_bibliography]]) == {
+        "include": [{"shard": 0, "tex": True}, {"shard": 1, "tex": True}]
+    }
+    assert _infra_matrix([[native_latex, native_bibliography]]) == {"include": [{"shard": 0, "tex": True}]}
     assert not _infra_matrix([["tests/infra_tests/core/test_ci_selection.py"]])["include"][0]["tex"]
     routine_steps = jobs["test-infra"]["steps"]
     routine_tex = [step for step in routine_steps if "texlive-" in step.get("run", "")]

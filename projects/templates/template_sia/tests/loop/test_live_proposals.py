@@ -146,11 +146,25 @@ def test_remote_or_credentialed_model_endpoints_are_rejected() -> None:
             ollama_generate(endpoint, {"model": "anything"})
 
 
-def test_real_http_transport_retains_selected_model_evidence() -> None:
+def test_real_http_transport_retains_selected_model_evidence(tmp_path: Path) -> None:
     with controlled_provider() as (endpoint, requests):
         response = ollama_generate(endpoint, {"model": "controlled-http-fixture", "prompt": "public cases only"})
+        threshold, rationale = request_proposal(
+            ProposalSettings("controlled-http-fixture", "", endpoint),
+            "public cases only",
+            tmp_path,
+            current_threshold=0.5,
+        )
     assert response["eval_count"] == 12
     assert requests[0]["prompt"] == "public cases only"
+    actual_request = json.loads((tmp_path / "model_request.json").read_text())
+    assert actual_request == requests[1]
+    assert actual_request["format"]["properties"]["rationale"]["maxLength"] == 96
+    assert actual_request["options"]["num_predict"] == 512
+    choices = actual_request["format"]["properties"]["threshold"]["enum"]
+    assert choices == [0.1, 0.2, 0.3, 0.4, 0.6, 0.7, 0.8, 0.9]
+    assert all(0 <= choice <= 1 and choice != 0.5 for choice in choices)
+    assert threshold in choices and 1 <= len(rationale) <= 96
 
 
 def test_unavailable_or_incomplete_model_never_falls_back() -> None:
@@ -259,14 +273,21 @@ def test_actual_provider_failure_retains_blocked_receipt_and_restores_source(
         json.dumps({"threshold": 0.4, "rationale": "valid", "code": "import os"}),
         json.dumps({"threshold": "0.4", "rationale": "valid"}),
         json.dumps({"threshold": 0.4, "rationale": ""}),
+        '{"rationale": "truncated',
+        json.dumps({"threshold": 0.4, "rationale": "x" * 2049}),
     ],
 )
 def test_actual_http_proposal_rejects_malformed_or_executable_payloads(tmp_path: Path, proposal: str) -> None:
     payload = {"model": "controlled-http-fixture", "done": True, "eval_count": 1, "response": proposal}
     with controlled_provider(response=payload) as (endpoint, _):
-        with pytest.raises(LiveProposalFailed):
+        with pytest.raises(LiveProposalFailed) as error:
             request_proposal(ProposalSettings("controlled-http-fixture", "", endpoint), "public cases", tmp_path)
     assert (tmp_path / "model_response.json").is_file()
+    assert json.loads((tmp_path / "model_response.json").read_text())["response"] == proposal
+    if proposal == '{"rationale": "truncated':
+        assert "malformed proposal JSON" in str(error.value)
+    if len(proposal) > 2048:
+        assert "bounded nonempty rationale" in str(error.value)
     assert json.loads((tmp_path / "model_execution.json").read_text())["returncode"] == 0
 
 

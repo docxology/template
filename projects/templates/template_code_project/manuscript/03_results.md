@@ -120,7 +120,16 @@ For a positive-definite quadratic, contraction requires $0 < \alpha < 2/\lambda_
 
 [@fig:complexity] provides a visualization of the algorithm's computational characteristics, including time and space complexity analysis across different problem scales.
 
-![Six-panel diagnostic from `generate_complexity_visualization()` (3×2 grid). **Top left**: bars give the empirical iteration count per configured $\alpha$, coloured by agency category; $\alpha={{RESULT_BEST_STEP_SIZE}}$ achieves the global minimum of {{RESULT_MIN_ITERATIONS}} step(s), while $\alpha={{CONFIG_MIN_STEP_SIZE}}$ saturates at the iteration cap $N_{\max}={{CONFIG_MAX_ITERATIONS}}$ (slow convergence) and $\alpha={{CONFIG_MAX_STEP_SIZE}}$ terminates early via a `non_finite` update (divergence). **Top right**: $\log_{10}|f(x)-f(x^\ast)|$ at termination; the four converged rows reach $\approx 10^{-16}$ (machine precision) while $\alpha={{CONFIG_MIN_STEP_SIZE}}$ stops near $10^{-9}$ at the cap. Dashed reference at $\log_{10}\varepsilon$ for $\varepsilon=$ `experiment.convergence_tolerance`. **Middle left**: empirical iterations (solid) versus the smooth proxy $1/(2\alpha(1-\alpha))$ (dashed) on log axes — a shape comparison, not a tight count prediction for every $\alpha$. **Middle right**: per-step error contraction factor $\rho=|1-\alpha|$ from the unit-Hessian linear recurrence ([@eq:scalar_linear_update]); the dashed reference at $\rho=1$ separates stable bars (left of it) from divergent ones (right). **Bottom left**: stable step-size region width $2/L$ per backend profile ($H=I,2I,5I,10I$) with the optimal $\alpha^\ast=1/L$ overlaid. **Bottom right**: cross-profile contraction curves $\rho(\alpha)=|1-\alpha L|$ with dotted verticals at each $2/L$ stability boundary.](../output/figures/algorithm_complexity.png){#fig:complexity}
+![Six-panel diagnostic from `generate_complexity_visualization()` (3×2 grid).](../output/figures/algorithm_complexity.png){#fig:complexity}
+
+The panels in [@fig:complexity] encode the following diagnostics:
+
+- **Top left**: bars give the empirical iteration count per configured $\alpha$, coloured by agency category; $\alpha={{RESULT_BEST_STEP_SIZE}}$ achieves the global minimum of {{RESULT_MIN_ITERATIONS}} step(s), while $\alpha={{CONFIG_MIN_STEP_SIZE}}$ saturates at the iteration cap $N_{\max}={{CONFIG_MAX_ITERATIONS}}$ (slow convergence) and $\alpha={{CONFIG_MAX_STEP_SIZE}}$ terminates early via a `non_finite` update (divergence).
+- **Top right**: $\log_{10}|f(x)-f(x^\ast)|$ at termination; the four converged rows reach $\approx 10^{-16}$ (machine precision) while $\alpha={{CONFIG_MIN_STEP_SIZE}}$ stops near $10^{-9}$ at the cap. Dashed reference at $\log_{10}\varepsilon$ for $\varepsilon=$ `experiment.convergence_tolerance`.
+- **Middle left**: empirical iterations (solid) versus the smooth proxy $1/(2\alpha(1-\alpha))$ (dashed) on log axes — a shape comparison, not a tight count prediction for every $\alpha$.
+- **Middle right**: per-step error contraction factor $\rho=|1-\alpha|$ from the unit-Hessian linear recurrence ([@eq:scalar_linear_update]); the dashed reference at $\rho=1$ separates stable bars (left of it) from divergent ones (right).
+- **Bottom left**: stable step-size region width $2/L$ per backend profile ($H=I,2I,5I,10I$) with the optimal $\alpha^\ast=1/L$ overlaid.
+- **Bottom right**: cross-profile contraction curves $\rho(\alpha)=|1-\alpha L|$ with dotted verticals at each $2/L$ stability boundary.
 
 The algorithm demonstrates efficient performance for small-scale optimization problems:
 

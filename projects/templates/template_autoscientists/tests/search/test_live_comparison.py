@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import math
 import hashlib
 import importlib.metadata
 import os
@@ -88,6 +89,13 @@ def provider_oracle(*, effect="positive", fault=None, source_to_change=None, art
             proposal = {"axis": axes[0], "step": step, "rationale": "controlled public experiment"}
             if fault == "invalid-axis":
                 proposal["axis"] = 99
+            if fault == "out-of-range-step":
+                proposal["step"] = 1.5
+            if fault == "overlong-rationale":
+                proposal["rationale"] = "x" * 2049
+            response = json.dumps(proposal)
+            if fault == "truncated-rationale":
+                response = '{"axis":0,"rationale":"truncated'
             if source_to_change is not None:
                 source_to_change.write_text("changed = True\n")
             if artifact_to_change is not None and len(requests) == 6:
@@ -97,7 +105,7 @@ def provider_oracle(*, effect="positive", fault=None, source_to_change=None, art
                     {
                         "model": "other-model" if fault == "wrong-model" else request["model"],
                         "done": True,
-                        "response": json.dumps(proposal),
+                        "response": response,
                         "eval_count": 513 if fault == "token-overflow" else 32,
                     }
                 )
@@ -131,6 +139,17 @@ def test_real_multistep_workers_report_observed_effect_and_matched_ceilings(tmp_
     assert receipt["model_sha256"] == "a" * 64
     assert len(requests) == 6
     assert receipt["general_superiority_claim"] is False
+    # Inspect the actual retained supervised request and unchanged token cap.
+    actual_request = json.loads((receipt_path.parent / "coordinated/experiment_1/request.json").read_text())
+    step_schema = actual_request["format"]["properties"]["step"]
+    assert step_schema["minimum"] == -1 and step_schema["maximum"] == 1
+    assert step_schema["enum"] == [-1, -0.5, -0.25, 0.25, 0.5, 1]
+    assert all(math.isfinite(value) and 0 < abs(value) <= 1 for value in step_schema["enum"])
+    assert actual_request["options"]["num_predict"] == 512
+    rationale_schema = actual_request["format"]["properties"]["rationale"]
+    assert rationale_schema == {"type": "string", "minLength": 1, "maxLength": 96}
+    assert all(request["format"]["properties"]["rationale"] == rationale_schema for request in requests)
+    assert all(request["format"]["properties"]["step"] == step_schema for request in requests)
     assert receipt["offline_reference"]["actual_model_generations"] == 0
     assert receipt["budget_contract"]["arm_wall_clock_ceiling_seconds"] == 180
     for arm in receipt["arms"].values():
@@ -148,6 +167,9 @@ def test_real_multistep_workers_report_observed_effect_and_matched_ceilings(tmp_
         ("missing-model", "blocked"),
         ("wrong-model", "failed"),
         ("invalid-axis", "failed"),
+        ("out-of-range-step", "failed"),
+        ("truncated-rationale", "failed"),
+        ("overlong-rationale", "failed"),
         ("token-overflow", "failed"),
         ("digest-drift", "failed"),
     ],
@@ -166,6 +188,12 @@ def test_provider_and_domain_failures_propagate_with_diagnostics(tmp_path, fault
     assert receipt["artifact_sha256"]
     assert receipt["diagnostic"]
     assert "baseline" not in receipt["arms"]
+    if fault == "out-of-range-step":
+        assert "proposal step must be finite, nonzero, and in [-1,1]" in receipt["diagnostic"]
+    if fault == "truncated-rationale":
+        assert "proposal must be exactly one JSON object" in receipt["diagnostic"]
+    if fault == "overlong-rationale":
+        assert "proposal rationale must be a bounded nonempty string" in receipt["diagnostic"]
 
 
 def test_source_change_cannot_pass(tmp_path) -> None:
@@ -419,19 +447,41 @@ def test_core_controller_preserves_and_authenticates_launcher_audit(tmp_path, fa
     root = project_copy(tmp_path)
     output = root / "output/launcher-reference"
     script = PROJECT / "scripts/run_search_comparison.py"
-    platform_root = Path(platform_custody.__file__).resolve().parents[2]
     prefix = tmp_path.resolve() / "launcher-cache"
     prefix.mkdir()
-    roots = (platform_root / "infrastructure", platform_root / "scripts", PROJECT / "scripts")
-    import importlib.util
-
-    provider = importlib.util.find_spec("template_literature_meta_analysis")
-    if provider is not None:
-        assert isinstance(provider.origin, str)
-        roots += (Path(provider.origin).resolve().parent,)
-    if fault != "missing-project-root":
-        roots += (PROJECT / "src",)
-    bootstrap = bytecode_audit_bootstrap(roots, prefix)
+    # Select the same ordinary isolated SDK provider that the actual script
+    # child will discover, even when these tests run from a portable Source copy.
+    provider_bootstrap = r"""
+import importlib.util,sys
+from pathlib import Path
+from infrastructure.core import implementation_custody
+platform_root=Path(implementation_custody.__file__).resolve().parents[2]
+project=Path(sys.argv[1])
+prefix=Path(sys.argv[2])
+roots=(platform_root/'infrastructure',platform_root/'scripts',project/'scripts')
+provider=importlib.util.find_spec('template_literature_meta_analysis')
+if provider is not None:
+    assert isinstance(provider.origin,str)
+    roots+=(Path(provider.origin).resolve().parent,)
+if sys.argv[3]=='include':
+    roots+=(project/'src',)
+print(implementation_custody.bytecode_audit_bootstrap(roots,prefix),end='')
+"""
+    bootstrap = subprocess.check_output(
+        [
+            sys.executable,
+            "-I",
+            "-B",
+            "-c",
+            provider_bootstrap,
+            str(PROJECT),
+            str(prefix),
+            "omit" if fault == "missing-project-root" else "include",
+        ],
+        cwd=tmp_path,
+        text=True,
+        timeout=30,
+    )
     if fault == "changed-hook-digest":
         bootstrap += (
             "from types import MappingProxyType;"
@@ -625,7 +675,7 @@ def test_transitive_platform_and_worker_environment_are_required() -> None:
     else:
         assert custody["binding_kind"] == "installed-distribution"
         selected = importlib.metadata.distribution("research-project-template")
-        assert selected.version == "4.0.2" and selected.files is not None
+        assert selected.version == "4.1.0" and selected.files is not None
         records = [path for path in selected.files if str(path).endswith(".dist-info/RECORD")]
         assert len(records) == 1
         record_path = Path(selected.locate_file(records[0]))
@@ -635,7 +685,7 @@ def test_transitive_platform_and_worker_environment_are_required() -> None:
         assert sources["distribution/METADATA"] == hashlib.sha256(metadata_bytes).hexdigest()
         metadata = BytesParser().parsebytes(metadata_bytes)
         assert metadata.get_all("Name") == ["research-project-template"]
-        assert metadata.get_all("Version") == ["4.0.2"]
+        assert metadata.get_all("Version") == ["4.1.0"]
         assert metadata.get_all("Requires-Python") == [">=3.12"]
         requirements = metadata.get_all("Requires-Dist")
         assert requirements

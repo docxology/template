@@ -345,7 +345,7 @@
   "failure_modes": [
     {
       "detection": "Project test scans output/manuscript and rendered web output for uppercase placeholders.",
-      "mitigation": "Add variable generation, tests, and rerun z_generate_manuscript_variables.py before render.",
+      "mitigation": "Add variable generation, tests, and rerun `z_generate_manuscript_variables.py` before render.",
       "name": "Unresolved placeholder",
       "risk": "A source Markdown token is added without a generated variable."
     },

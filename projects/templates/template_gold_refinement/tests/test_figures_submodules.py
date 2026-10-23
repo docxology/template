@@ -154,6 +154,10 @@ class TestCommonHelpers:
     def test_short_label_wraps_long_text(self):
         wrapped = _common._short_label("certification nine nines purity output", width=12)
         assert "\n" in wrapped
+        explicit = "Input ore\n10.00%\n24K (nine-nines certified)\n99.9999999% (nine-nines)"
+        wrapped = _common._short_label(explicit, width=18)
+        assert wrapped.splitlines()[:2] == ["Input ore", "10.00%"]
+        assert "".join(wrapped.split()) == "".join(explicit.split())
 
     def test_svg_path_helper_swaps_suffix(self, tmp_path):
         assert _common._svg_path(tmp_path / "fig.png") == tmp_path / "fig.svg"

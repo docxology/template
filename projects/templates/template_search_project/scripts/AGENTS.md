@@ -48,7 +48,7 @@ cd projects/templates/template_search_project && uv run python scripts/review
 
 ## Environment
 
-Direct scripts select the runtime's declared SDK4.0.2 through
+Direct scripts select the runtime's metadata-declared SDK through
 `_search_sdk_bootstrap.py` before exposing own domain source. Authored source
 cannot replace cached SDK origins. Authored project paths are excluded;
 interpreter-declared site-package roots remain available. The unpaid controller admits its authentic pre-import hook

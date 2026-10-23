@@ -2,7 +2,7 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="utf-8" />
-  <meta name="generator" content="pandoc 3.12" />
+  <meta name="generator" content="pandoc 3.12.1" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
   <title>appendix_formalisms.md.web</title>
   <style>
@@ -316,7 +316,7 @@ mjx-container[display="true"] { max-width: 100%; overflow: visible; }
   outline: 3px solid var(--brand-1);
   outline-offset: 3px;
 }
-.table-scroll > table { margin-block: 0; min-width: 100%; width: max-content; }
+.table-scroll > table { margin-block: 0; display: table; min-width: 100%; width: 100%; }
 *, *::before, *::after {
   box-sizing: border-box;
 }
@@ -422,6 +422,9 @@ pre {
 }
 
 pre code {
+  background-color: transparent;
+  padding: 0;
+  border-radius: 0;
   overflow-wrap: inherit;
   white-space: inherit;
   word-break: inherit;
@@ -474,8 +477,9 @@ table {
 
 .table-scroll > table {
   margin-block: 0;
+  display: table;
   min-width: 100%;
-  width: max-content;
+  width: 100%;
 }
 
 figure {
@@ -492,6 +496,15 @@ th, td {
 th {
   background-color: #1f6f8b;
   color: white;
+}
+
+/* Preserve a complete inline-code header within the table's scroll region. */
+th code {
+  color: inherit;
+  background-color: transparent;
+  white-space: nowrap;
+  overflow-wrap: normal;
+  word-break: normal;
 }
 
 img {
@@ -634,6 +647,7 @@ mjx-container[display="true"] {
 }
 
 </style>
+<script data-template-source-font-loader src="assets/source-web-fonts.js"></script>
 </head>
 <body>
 <a class="skip-link" href="#main-content">Skip to main content</a>
@@ -681,8 +695,8 @@ class="math inline">\(0 &lt; N_0 \le K\)</span>, the trajectory
 satisfies <span class="math inline">\(\lim_{t \to \infty} N(t) =
 K\)</span>.</p>
 </blockquote>
-<p><span class="math display">\[ N(t) = \frac{K}{1 + A e^{-rt}}, \qquad
-A = \frac{K - N_0}{N_0} . \]</span> {#eq:formalisms_logistic}</p>
+<p><span class="math display">\[N(t) = \frac{K}{1 + A e^{-rt}}, \qquad A
+= \frac{K - N_0}{N_0} .\]</span> {#eq:formalisms_logistic}</p>
 <p><em>Proof.</em> Because <span class="math inline">\(r &gt;
 0\)</span>, the term <span class="math inline">\(e^{-rt} \to 0\)</span>
 as <span class="math inline">\(t \to \infty\)</span>. Hence the
@@ -738,14 +752,12 @@ case is covered by
 <h2 id="a-step-by-step-derivation">5. A step-by-step derivation</h2>
 <p>For <span class="math inline">\(0&lt;N_0&lt;K\)</span>, separating
 variables in the logistic differential equation gives:</p>
-<p><span class="math display">\[
-\begin{aligned}
+<p><span class="math display">\[\begin{aligned}
 \frac{dN}{dt} &amp;= rN\left(1 - \frac{N}{K}\right) \\
 \int \frac{dN}{N(1 - N/K)} &amp;= \int r \, dt \\
 \ln\!\left(\frac{N}{K - N}\right) &amp;= rt + C \\
 N(t) &amp;= \frac{K}{1 + A e^{-rt}}, \qquad A = e^{-C},
-\end{aligned}
-\]</span></p>
+\end{aligned}\]</span></p>
 <p>which recovers <span class="citation"
 data-cites="eq:formalisms_logistic">[@eq:formalisms_logistic]</span>.
 The boundary case <span class="math inline">\(N_0=K\)</span> has the
@@ -760,10 +772,10 @@ referenceable (<span class="citation"
 data-cites="eq:formalisms_prey">[@eq:formalisms_prey]</span>, <span
 class="citation"
 data-cites="eq:formalisms_pred">[@eq:formalisms_pred]</span>):</p>
-<p><span class="math display">\[ \frac{dx}{dt} = \alpha x - \beta x y
-\]</span> {#eq:formalisms_prey}</p>
-<p><span class="math display">\[ \frac{dy}{dt} = \delta x y - \gamma y
-\]</span> {#eq:formalisms_pred}</p>
+<p><span class="math display">\[\frac{dx}{dt} = \alpha x - \beta x
+y\]</span> {#eq:formalisms_prey}</p>
+<p><span class="math display">\[\frac{dy}{dt} = \delta x y - \gamma
+y\]</span> {#eq:formalisms_pred}</p>
 <p>The vector-field figure style for such systems is demonstrated by the
 quiver plot in the format gallery (<span class="citation"
 data-cites="sec:appendix_format_gallery">[@sec:appendix_format_gallery]</span>).</p>

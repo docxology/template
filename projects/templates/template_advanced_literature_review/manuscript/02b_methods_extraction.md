@@ -12,7 +12,7 @@ it to a deterministic path. Full-text availability is summarized without requiri
 download, so the offline default still reports coverage. For this run:
 
 - **Abstract coverage**: {{ABSTRACT_COVERAGE_PCT}}\% of records ({{ABSTRACT_COUNT}} of
-  {{CORPUS_SIZE}}) carry an abstract; {{NO_ABSTRACT_COUNT}} records lack one.
+  {{RETRIEVED_CORPUS_SIZE}} retrieved records) carry an abstract; {{NO_ABSTRACT_COUNT}} records lack one.
 - **Open-access status**: {{OA_PCT}}\% of records are open access ({{OA_COUNT}} records);
   the remainder are closed or unknown.
 - **PDF availability**: {{PDF_AVAIL_PCT}}\% of records ({{PDF_AVAIL_COUNT}}) have a direct

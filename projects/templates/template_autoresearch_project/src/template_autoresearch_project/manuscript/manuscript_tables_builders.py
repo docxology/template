@@ -238,7 +238,7 @@ def benchmark_score_table(benchmark_scores: dict[str, Any]) -> str:
             string_value(row.get("id", "N/A")),
             string_value(row.get("status", "N/A")),
             string_value(row.get("score", "N/A")),
-            string_value(row.get("grading_output_path", "N/A")),
+            f"`{string_value(row.get('grading_output_path', 'N/A'))}`",
         )
         for row in mapping_list(benchmark_scores.get("tasks"))
     ]
@@ -569,7 +569,7 @@ def figure_quality_table(figure_quality: dict[str, Any]) -> str:
     """Process figure quality table."""
     rows = [
         (
-            string_value(row.get("label", "N/A")),
+            f"`{string_value(row.get('label', 'N/A'))}`",
             string_value(row.get("width_px", "N/A")) + "x" + string_value(row.get("height_px", "N/A")),
             decimal_value(row.get("pixel_variance")),
             string_value(row.get("source_exists", "N/A")),

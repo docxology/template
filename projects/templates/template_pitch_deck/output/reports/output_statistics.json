@@ -2,55 +2,55 @@
   "directories": {
     "pdf": {
       "exists": true,
-      "file_count": 4,
+      "file_count": 7,
       "size_mb": "0.88",
-      "total_size_bytes": 926752,
+      "total_size_bytes": 927495,
       "largest_files": [
         {
           "name": "template_template_pitch_long.pdf",
-          "size_mb": "0.40",
-          "size_bytes": 418385,
+          "size_mb": "0.38",
+          "size_bytes": 401752,
           "path": "pdf/template_template_pitch_long.pdf"
         },
         {
           "name": "template_template_pitch_medium.pdf",
-          "size_mb": "0.36",
-          "size_bytes": 382492,
+          "size_mb": "0.35",
+          "size_bytes": 365876,
           "path": "pdf/template_template_pitch_medium.pdf"
         },
         {
           "name": "template_pitch_deck_combined.pdf",
           "size_mb": "0.07",
-          "size_bytes": 68193,
+          "size_bytes": 68197,
           "path": "pdf/template_pitch_deck_combined.pdf"
         }
       ],
       "extensions": {
-        ".pdf": 4
+        ".pdf": 7
       }
     },
     "web": {
       "exists": true,
       "file_count": 11,
-      "size_mb": "3.17",
-      "total_size_bytes": 3324932,
+      "size_mb": "1.92",
+      "total_size_bytes": 2009352,
       "largest_files": [
         {
           "name": "source-web-fonts.js",
-          "size_mb": "3.02",
-          "size_bytes": 3170848,
+          "size_mb": "1.77",
+          "size_bytes": 1853404,
           "path": "web/assets/source-web-fonts.js"
         },
         {
           "name": "index.html",
           "size_mb": "0.04",
-          "size_bytes": 38445,
+          "size_bytes": 38678,
           "path": "web/index.html"
         },
         {
           "name": "manuscript__04_reproducibility.html",
           "size_mb": "0.02",
-          "size_bytes": 17593,
+          "size_bytes": 17826,
           "path": "web/manuscript__04_reproducibility.html"
         }
       ],
@@ -82,25 +82,25 @@
     "figures": {
       "exists": true,
       "file_count": 9,
-      "size_mb": "0.31",
-      "total_size_bytes": 319958,
+      "size_mb": "0.29",
+      "total_size_bytes": 303397,
       "largest_files": [
         {
           "name": "coverage_by_exemplar.png",
-          "size_mb": "0.10",
-          "size_bytes": 104465,
+          "size_mb": "0.09",
+          "size_bytes": 90414,
           "path": "figures/coverage_by_exemplar.png"
         },
         {
           "name": "infra_subpackage_sizes.png",
           "size_mb": "0.07",
-          "size_bytes": 77930,
+          "size_bytes": 78022,
           "path": "figures/infra_subpackage_sizes.png"
         },
         {
           "name": "test_count_vs_coverage.png",
           "size_mb": "0.04",
-          "size_bytes": 40537,
+          "size_bytes": 37935,
           "path": "figures/test_count_vs_coverage.png"
         }
       ],
@@ -165,31 +165,31 @@
     },
     "pptx": {
       "exists": true,
-      "file_count": 3,
-      "size_mb": "1.10",
-      "total_size_bytes": 1157279,
+      "file_count": 6,
+      "size_mb": "1.12",
+      "total_size_bytes": 1176614,
       "largest_files": [
         {
           "name": "template_template_pitch_long.pptx",
-          "size_mb": "0.52",
-          "size_bytes": 549672,
+          "size_mb": "0.48",
+          "size_bytes": 499401,
           "path": "pptx/template_template_pitch_long.pptx"
         },
         {
           "name": "template_template_pitch_medium.pptx",
-          "size_mb": "0.47",
-          "size_bytes": 497161,
+          "size_mb": "0.43",
+          "size_bytes": 446850,
           "path": "pptx/template_template_pitch_medium.pptx"
         },
         {
           "name": "template_template_pitch_short.pptx",
-          "size_mb": "0.11",
-          "size_bytes": 110446,
+          "size_mb": "0.09",
+          "size_bytes": 97922,
           "path": "pptx/template_template_pitch_short.pptx"
         }
       ],
       "extensions": {
-        ".pptx": 3
+        ".pptx": 6
       }
     },
     "release_bundle": {
@@ -226,12 +226,12 @@
       "exists": true,
       "file_count": 1,
       "size_mb": "0.07",
-      "total_size_bytes": 68193,
+      "total_size_bytes": 68197,
       "largest_files": [
         {
           "name": "template_pitch_deck_combined.pdf",
           "size_mb": "0.07",
-          "size_bytes": 68193,
+          "size_bytes": 68197,
           "path": "template_pitch_deck_combined.pdf"
         }
       ],
@@ -241,9 +241,9 @@
     },
     "slides_standalone": {
       "exists": true,
-      "file_count": 106,
-      "size_mb": "0.09",
-      "total_size_bytes": 97074,
+      "file_count": 123,
+      "size_mb": "0.11",
+      "total_size_bytes": 110862,
       "largest_files": [
         {
           "name": "slide_28.md",
@@ -265,80 +265,80 @@
         }
       ],
       "extensions": {
-        ".md": 106
+        ".md": 123
       }
     }
   },
-  "total_files": 140,
-  "total_size_mb": 5.694038391113281,
+  "total_files": 163,
+  "total_size_mb": 4.455910682678223,
   "largest_files": [
     {
       "name": "source-web-fonts.js",
-      "size_mb": "3.02",
-      "size_bytes": 3170848,
+      "size_mb": "1.77",
+      "size_bytes": 1853404,
       "category": "web",
       "path": "web/assets/source-web-fonts.js"
     },
     {
       "name": "template_template_pitch_long.pptx",
-      "size_mb": "0.52",
-      "size_bytes": 549672,
+      "size_mb": "0.48",
+      "size_bytes": 499401,
       "category": "pptx",
       "path": "pptx/template_template_pitch_long.pptx"
     },
     {
       "name": "template_template_pitch_medium.pptx",
-      "size_mb": "0.47",
-      "size_bytes": 497161,
+      "size_mb": "0.43",
+      "size_bytes": 446850,
       "category": "pptx",
       "path": "pptx/template_template_pitch_medium.pptx"
     },
     {
       "name": "template_template_pitch_long.pdf",
-      "size_mb": "0.40",
-      "size_bytes": 418385,
+      "size_mb": "0.38",
+      "size_bytes": 401752,
       "category": "pdf",
       "path": "pdf/template_template_pitch_long.pdf"
     },
     {
       "name": "template_template_pitch_medium.pdf",
-      "size_mb": "0.36",
-      "size_bytes": 382492,
+      "size_mb": "0.35",
+      "size_bytes": 365876,
       "category": "pdf",
       "path": "pdf/template_template_pitch_medium.pdf"
     },
     {
       "name": "template_template_pitch_short.pptx",
-      "size_mb": "0.11",
-      "size_bytes": 110446,
+      "size_mb": "0.09",
+      "size_bytes": 97922,
       "category": "pptx",
       "path": "pptx/template_template_pitch_short.pptx"
     },
     {
       "name": "coverage_by_exemplar.png",
-      "size_mb": "0.10",
-      "size_bytes": 104465,
+      "size_mb": "0.09",
+      "size_bytes": 90414,
       "category": "figures",
       "path": "figures/coverage_by_exemplar.png"
     },
     {
       "name": "infra_subpackage_sizes.png",
       "size_mb": "0.07",
-      "size_bytes": 77930,
+      "size_bytes": 78022,
       "category": "figures",
       "path": "figures/infra_subpackage_sizes.png"
     },
     {
       "name": "template_pitch_deck_combined.pdf",
       "size_mb": "0.07",
-      "size_bytes": 68193,
+      "size_bytes": 68197,
       "category": "pdf",
       "path": "pdf/template_pitch_deck_combined.pdf"
     },
     {
       "name": "template_pitch_deck_combined.pdf",
       "size_mb": "0.07",
-      "size_bytes": 68193,
+      "size_bytes": 68197,
       "category": "root",
       "path": "template_pitch_deck_combined.pdf"
     }
@@ -347,27 +347,27 @@
     "data/ directory"
   ],
   "sizes_by_category": {
-    "pdf": 0.883819580078125,
-    "web": 3.1709022521972656,
-    "figures": 0.30513572692871094,
+    "pdf": 0.8845281600952148,
+    "web": 1.9162673950195312,
+    "figures": 0.28934192657470703,
     "reports": 0.005253791809082031,
-    "pptx": 1.1036672592163086,
+    "pptx": 1.1221065521240234,
     "release_bundle": 0.06764888763427734,
-    "root": 0.0650339126586914,
-    "slides_standalone": 0.09257698059082031
+    "root": 0.06503772735595703,
+    "slides_standalone": 0.10572624206542969
   },
   "inventory_mode": "stable-shippable-output-v1",
   "inventory_scope": "stage5-delivery-mirror",
   "inventory_root": "output/templates/template_pitch_deck",
   "file_counts_by_type": {
-    ".pdf": 6,
-    ".md": 108,
+    ".pdf": 9,
+    ".md": 125,
     ".js": 1,
     ".ico": 1,
     ".html": 8,
     ".png": 6,
     ".mmd": 3,
     ".json": 4,
-    ".pptx": 3
+    ".pptx": 6
   }
 }

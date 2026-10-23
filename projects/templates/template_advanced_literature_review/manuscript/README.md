@@ -14,7 +14,7 @@ License: CC-BY-4.0
 | `00_abstract.md` | Abstract | `{{CORPUS_SIZE}}`, `{{YEAR_START}}`, `{{YEAR_END}}`, `{{CAGR_PCT}}`, `{{CITATION_EDGES}}`, `{{CITATION_RESOLUTION_PCT}}` | Stage 5 |
 | `01_introduction.md` | Introduction | — | — |
 | `02_methods_overview.md` | Methods overview | `{{CORPUS_SIZE}}` | Stage 5 |
-| `02a_methods_retrieval.md` | Stage 1: retrieval | `{{CORPUS_SIZE}}`, `{{YEAR_START}}`, `{{YEAR_END}}` | Stage 1 + 5 |
+| `02a_methods_retrieval.md` | Stage 1: retrieval | `{{RETRIEVED_CORPUS_SIZE}}`, `{{PHASE_CORPUS_SIZE}}`, `{{ANALYZED_CORPUS_SIZE}}`, `{{TEMPORAL_TOTAL_PAPERS}}` | Stage 1 + 5 |
 | `02b_methods_extraction.md` | Stage 2: LLM extraction | `{{TOTAL_ASSERTIONS}}` | Stage 3 + 5 |
 | `02c_methods_bibliometrics.md` | Stage 2: bibliometrics | `{{NUM_TOPICS}}`, `{{NUM_VOCAB_FEATURES}}` | Stage 2 + 5 |
 | `02d_methods_knowledge_graph.md` | Stage 3: knowledge graph | `{{TOTAL_ASSERTIONS}}`, `{{CITATION_RESOLUTION_PCT}}` | Stage 3 + 5 |
@@ -36,6 +36,16 @@ License: CC-BY-4.0
 | `99_references.md` | Bibliography | — | — |
 
 ---
+
+## Corpus Scopes
+
+`RETRIEVED_CORPUS_SIZE` counts raw retrieved records in `corpus.jsonl`;
+`PHASE_CORPUS_SIZE` counts the unique configured phase union in `phase_metadata.json`;
+`ANALYZED_CORPUS_SIZE` reads the recorded `descriptive_stats.total`; and
+`TEMPORAL_TOTAL_PAPERS` reads the dated time-series total in `temporal_analysis.json`.
+These counts may differ. Missing descriptive-analysis totals remain `pending`; no raw
+retrieval count is substituted for them. `CORPUS_SIZE` retains its legacy phase alias
+when phase metadata is present.
 
 ## Running Stage 5 (Variable Injection)
 

@@ -232,11 +232,20 @@ def fig_coverage_by_module(coverage_full_json: Path, out_dir: Path) -> Path:
     fig, ax = plt.subplots(figsize=(8, max(3, 0.28 * len(names))))
     ax.barh(names, pcts, color=colors)
     ax.axvline(90, color="#334155", linestyle="--", linewidth=1)
-    ax.text(90.5, len(names) - 0.5, "90% aggregate gate", fontsize=8, color="#334155", va="top")
+    ax.text(
+        90,
+        1.01,
+        "90% aggregate gate",
+        transform=ax.get_xaxis_transform(),
+        fontsize=8,
+        color="#334155",
+        ha="right",
+        va="bottom",
+    )
     ax.set_xlim(0, 105)
     ax.set_xlabel("Combined statement + branch coverage (%)")
-    ax.set_title("Per-module test coverage (real, measured this build)")
-    fig.tight_layout()
+    fig.suptitle("Per-module test coverage (real, measured this build)")
+    fig.tight_layout(rect=(0.0, 0.0, 1.0, 0.94))
     out = out_dir / _SPEC_BY_LABEL["fig:coverage_by_module"].filename
     fig.savefig(out, dpi=150)
     plt.close(fig)

@@ -65,7 +65,7 @@ def run_live(
         annotation = validate_annotation(
             generator.generate(
                 annotation_prompt(source, "Write one short summary of this paper excerpt in summary."),
-                annotation_schema(),
+                annotation_schema(source),
             ),
             source,
         )

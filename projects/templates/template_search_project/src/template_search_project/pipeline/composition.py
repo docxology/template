@@ -70,13 +70,14 @@ def _format_locator(paper: dict) -> str:
 
     The validator (`infrastructure.validation.content.markdown_validator`)
     flags any link whose label contains ``/`` or starts with ``http`` as
-    non-informative. DOIs naturally contain ``/`` so we keep the DOI as
-    plain text and render the clickable target with a slash-free label.
+    non-informative. Keep the complete DOI in an inline-code span, which
+    the PDF renderer makes breakable in narrow table cells, and retain a
+    slash-free label for the unchanged clickable target.
     """
     doi = paper.get("doi")
     url = paper.get("url")
     if doi:
-        return f"DOI {doi} ([open](https://doi.org/{doi}))"
+        return f"DOI `{doi}` ([open](https://doi.org/{doi}))"
     if url:
         return f"[external link]({url})"
     return "—"
