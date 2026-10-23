@@ -71,6 +71,13 @@ flowchart TB
 
 These files are validation inputs only and do not run autonomous review agents.
 
+The explicit `scripts/_run_local_review.py` launcher isolates the selected
+interpreter before public imports so a copied checkout on `PYTHONPATH` cannot
+select a different controller SDK from the supervised worker. Keep the fresh
+pre-import audit and exact implementation/project custody checks. The real CLI
+history regression supplies a genuine copied SDK Source tree and still checks
+wrong-model failure, evidence archival, and refusal of failed current evidence.
+
 ## Run modes
 
 | Command | Behaviour |

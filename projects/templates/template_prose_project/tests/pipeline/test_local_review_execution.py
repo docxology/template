@@ -3,6 +3,9 @@
 from __future__ import annotations
 
 import json
+import hashlib
+import os
+import shutil
 import threading
 import subprocess
 import sys
@@ -180,8 +183,42 @@ def test_provider_rejects_wrong_model_and_non_generation(tmp_path: Path, model: 
     assert not (tmp_path / "output/.pipeline/prose_review/latest.json").exists()
 
 
-def _cli(root: Path, endpoint: str, *extra: str) -> subprocess.CompletedProcess[str]:
+def _copy_public_sdk_source(directory: Path) -> Path:
+    import infrastructure
+
+    package = Path(infrastructure.__file__).resolve().parent
+    copied = directory / "public-sdk-source"
+    copied.mkdir()
+    bindings = {}
+    for label in ("infrastructure", "scripts"):
+        source = package if label == "infrastructure" else package.parent / "scripts"
+        if not source.is_dir():
+            continue
+        for path in sorted(source.rglob("*.py")):
+            if "__pycache__" in path.parts:
+                continue
+            assert path.is_file() and not path.is_symlink()
+            relative = Path(label) / path.relative_to(source)
+            target = copied / relative
+            target.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copyfile(path, target)
+            bindings[relative.as_posix()] = hashlib.sha256(path.read_bytes()).hexdigest()
+            assert hashlib.sha256(target.read_bytes()).hexdigest() == bindings[relative.as_posix()]
+    for name in ("pyproject.toml", "uv.lock", ".python-version"):
+        source = package.parent / name
+        if source.is_file():
+            shutil.copyfile(source, copied / name)
+    assert bindings and "infrastructure/__init__.py" in bindings
+    return copied
+
+
+def _cli(
+    root: Path, endpoint: str, *extra: str, sdk_source_copy: Path | None = None
+) -> subprocess.CompletedProcess[str]:
     script = Path(__file__).resolve().parents[2] / "scripts/_run_local_review.py"
+    environment = dict(os.environ)
+    if sdk_source_copy is not None:
+        environment["PYTHONPATH"] = str(sdk_source_copy)
     return subprocess.run(
         [
             sys.executable,
@@ -197,6 +234,7 @@ def _cli(root: Path, endpoint: str, *extra: str) -> subprocess.CompletedProcess[
             *extra,
         ],
         cwd=root,
+        env=environment,
         capture_output=True,
         text=True,
         timeout=45,
@@ -207,8 +245,11 @@ def _cli(root: Path, endpoint: str, *extra: str) -> subprocess.CompletedProcess[
 def test_real_cli_success_failed_attempt_preserves_history_without_reuse(tmp_path: Path) -> None:
     source_tree(tmp_path).rename(tmp_path / "manuscript/00_abstract.md")
     current = tmp_path / "output/.pipeline/prose_review/latest.json"
+    # This is an actual independent SDK Source copy, not a package shim.
+    # The CLI must select its declared installed SDK in both real subprocesses.
+    sdk_source_copy = _copy_public_sdk_source(tmp_path)
     with local_server() as endpoint:
-        good = _cli(tmp_path, endpoint)
+        good = _cli(tmp_path, endpoint, sdk_source_copy=sdk_source_copy)
     execution = tmp_path / "output/.pipeline/prose_review/execution.json"
     assert good.returncode == 0, (
         good.returncode,
@@ -224,7 +265,7 @@ def test_real_cli_success_failed_attempt_preserves_history_without_reuse(tmp_pat
     assert build_llm_review_receipt(config, project_root=tmp_path)["status"] == "verified"
     original = current.read_bytes()
     with local_server(model="wrong-model") as endpoint:
-        failed = _cli(tmp_path, endpoint)
+        failed = _cli(tmp_path, endpoint, sdk_source_copy=sdk_source_copy)
     assert failed.returncode == 1, failed.stderr
     assert not current.exists()
     archived = [path.read_bytes() for path in (tmp_path / "output/.pipeline/review_history").rglob("*.json")]

@@ -91,11 +91,26 @@ def _receipt_root(arguments: argparse.Namespace) -> Path:
     """Keep project receipts confined below their readable project root."""
     receipt = arguments.receipt
     assert receipt is not None
-    # Strict ancestors need search permission; output components remain held,
-    # readable, no-follow directories. External receipt behavior is unchanged.
+    if ".." in receipt.parts:
+        raise ValueError("tool receipt path cannot contain parent traversal")
+    # Strict ancestors need search permission; selected roots and descendants
+    # remain readable, held, no-follow directories.
     if receipt.is_relative_to(arguments.project_root):
         return Path(arguments.project_root)
-    return Path(receipt.anchor)
+    # An explicit external destination has no project root. Start confinement
+    # at its closest existing parent, rather than treating every ancestor below
+    # the filesystem root as a readable output directory. Missing descendants
+    # are still created by the existing confined writer.
+    parent = receipt.parent
+    while True:
+        try:
+            parent.lstat()
+        except FileNotFoundError:
+            if parent == parent.parent:
+                raise
+            parent = parent.parent
+        else:
+            return parent
 
 
 def _discard_promoted_receipt(arguments: argparse.Namespace) -> None:

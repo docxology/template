@@ -66,3 +66,13 @@ Prepared TLC providers may use the absolute `TEMPLATE_FORMAL_TLC_JAR` path when
 the local cache is absent. Keep the pinned hash and final byte custody; acquisition
 is restricted to the legacy local cache. External tool bytes are not authored
 project source. ISC-124 covers positive execution and unsafe/missing inputs.
+
+## External tool receipts
+
+Tool receipts below project output stay confined to the readable project root.
+For an explicit external receipt path, confinement starts at its closest existing
+parent so strict ancestors need search permission only. The selected root and
+new output directories retain the existing readable, no-follow identity checks;
+missing nested destination parents remain supported. Invalidation, promotion and
+rollback use the same root selection. Symlinks and parent traversal remain
+refused, and receipt cleanup never authorizes a native tool result.

@@ -145,6 +145,12 @@ def test_receipt_invalidation_and_rollback_traverse_search_only_project_ancestor
     receipt = root / "output/receipt.json"
     receipt.parent.mkdir()
     receipt.write_text("stale receipt must be invalidated\n")
+    external_directory = ancestor / "external-receipts"
+    external_directory.mkdir()
+    external_kept = external_directory / "kept.json"
+    external_kept.write_text("unrelated external bytes\n")
+    external_alias = ancestor / "external-alias"
+    external_alias.symlink_to(external_directory, target_is_directory=True)
     ancestor.chmod(0o111)
     try:
         with pytest.raises(PermissionError):
@@ -157,6 +163,36 @@ def test_receipt_invalidation_and_rollback_traverse_search_only_project_ancestor
             arguments.receipt_promoted = True
             launcher._discard_promoted_receipt(arguments)
             assert not arguments.receipt_promoted and not receipt.exists()
+            # An external target below the same search-only ancestor must use
+            # a readable destination root, including missing nested parents.
+            from infrastructure.core.files.secure_write import atomic_write_text_confined
+
+            external_nested = external_directory / "nested/receipt.json"
+            external_arguments = launcher._arguments(_arguments(root, external_nested))
+            assert launcher._receipt_root(external_arguments) == external_directory
+            atomic_write_text_confined(
+                launcher._receipt_root(external_arguments), external_nested, "stale external receipt\n"
+            )
+            assert launcher._launch(external_arguments, time.monotonic() - 1) == 124
+            assert not external_nested.exists()
+            external_nested.write_text("expired promoted external receipt\n")
+            external_arguments.receipt_promoted = True
+            launcher._discard_promoted_receipt(external_arguments)
+            assert not external_arguments.receipt_promoted and not external_nested.exists()
+            launcher._discard_promoted_receipt(external_arguments)
+            assert external_kept.read_text() == "unrelated external bytes\n"
+
+            # Root selection must not resolve a symlink or normalize a parent
+            # traversal before the existing confined writer can refuse it.
+            alias_receipt = external_alias / "kept.json"
+            alias_arguments = launcher._arguments(_arguments(root, alias_receipt))
+            assert launcher._launch(alias_arguments, time.monotonic() - 1) == 2
+            assert external_kept.read_text() == "unrelated external bytes\n"
+            traversal = external_directory / "nested/../kept.json"
+            traversal_arguments = launcher._arguments(_arguments(root, traversal))
+            with pytest.raises(ValueError, match="parent traversal"):
+                launcher._receipt_root(traversal_arguments)
+            assert external_kept.read_text() == "unrelated external bytes\n"
     finally:
         ancestor.chmod(0o700)
     # Explicit destinations outside the project remain supported and confined.
