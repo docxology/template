@@ -25,6 +25,19 @@ def test_safe_archive_returns_file_members_without_directories(tmp_path: Path) -
 
     with zipfile.ZipFile(path) as archive:
         assert bounded_members(archive) == {"word/document.xml", "[Content_Types].xml"}
+        sizes = {"word/document.xml": 4, "[Content_Types].xml": 4}
+        assert bounded_members(archive, exact_sizes=sizes) == set(sizes)
+        for invalid in (
+            {"word/document.xml": 5, "[Content_Types].xml": 3},
+            {"word/document.xml": 4},
+            dict(sizes, invented=0),
+            dict(sizes, **{"word/document.xml": True}),
+            dict(sizes, **{"word/document.xml": -1}),
+            dict(sizes, **{"word/document.xml": 4.0}),
+            dict(sizes, **{"word/document.xml": 64 * 1024 * 1024 + 1}),
+        ):
+            with pytest.raises(ValueError, match="unsafe, duplicate or unbounded"):
+                bounded_members(archive, exact_sizes=invalid)
 
 
 @pytest.mark.parametrize("name", ["../escape.xml", "/absolute.xml", "word\\document.xml"])
@@ -35,6 +48,8 @@ def test_unsafe_member_names_are_refused(tmp_path: Path, name: str) -> None:
 
     with zipfile.ZipFile(path) as archive, pytest.raises(ValueError, match="unsafe, duplicate or unbounded"):
         bounded_members(archive)
+    with zipfile.ZipFile(path) as archive, pytest.raises(ValueError, match="unsafe, duplicate or unbounded"):
+        bounded_members(archive, exact_sizes={name: 4})
 
 
 def test_duplicate_member_names_are_refused(tmp_path: Path) -> None:
@@ -44,6 +59,8 @@ def test_duplicate_member_names_are_refused(tmp_path: Path) -> None:
 
     with zipfile.ZipFile(path) as archive, pytest.raises(ValueError, match="unsafe, duplicate or unbounded"):
         bounded_members(archive)
+    with zipfile.ZipFile(path) as archive, pytest.raises(ValueError, match="unsafe, duplicate or unbounded"):
+        bounded_members(archive, exact_sizes={"word/document.xml": 4})
 
 
 def test_symlink_member_is_refused(tmp_path: Path) -> None:
@@ -53,6 +70,8 @@ def test_symlink_member_is_refused(tmp_path: Path) -> None:
 
     with zipfile.ZipFile(path) as archive, pytest.raises(ValueError, match="unsafe, duplicate or unbounded"):
         bounded_members(archive)
+    with zipfile.ZipFile(path) as archive, pytest.raises(ValueError, match="unsafe, duplicate or unbounded"):
+        bounded_members(archive, exact_sizes={"word/link.xml": len(b"/etc/passwd")})
 
 
 def test_corrupted_member_crc_is_refused(tmp_path: Path) -> None:
@@ -64,3 +83,5 @@ def test_corrupted_member_crc_is_refused(tmp_path: Path) -> None:
 
     with zipfile.ZipFile(path) as archive, pytest.raises(ValueError, match="CRC is invalid"):
         bounded_members(archive)
+    with zipfile.ZipFile(path) as archive, pytest.raises(ValueError, match="CRC is invalid"):
+        bounded_members(archive, exact_sizes={"word/document.xml": len(b"original member bytes")})

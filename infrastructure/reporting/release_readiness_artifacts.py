@@ -194,9 +194,13 @@ def validate_source_archive(scope: str, manifest: dict[str, Any], bundle: bytes,
     """Require the complete current source and declared bundled public resources."""
     base = reader.root if scope == "root" else reader.root / "projects" / scope
     expected: dict[str, str] = {}
+    exact_sizes: dict[str, int] = {}
     dependencies: list[str] = []
     for path in public_source_paths(reader.root, None if scope == "root" else scope):
-        expected[path.relative_to(base).as_posix()] = reader.read(path.relative_to(reader.root).as_posix()).sha256
+        source = reader.read(path.relative_to(reader.root).as_posix())
+        relative = path.relative_to(base).as_posix()
+        expected[relative] = source.sha256
+        exact_sizes[relative] = len(source.content)
     if scope != "root" and (base / "export.toml").is_file():
         config = tomllib.loads(reader.read(f"projects/{scope}/export.toml").content.decode())
         dependencies = config.get("template_export", {}).get("cross_root_dependencies", [])
@@ -212,11 +216,25 @@ def validate_source_archive(scope: str, manifest: dict[str, Any], bundle: bytes,
             root = reader.root / dependency
             for path in public_resource_source_paths(reader.root, dependency):
                 source = reader.read(path.relative_to(reader.root).as_posix())
-                expected[f"_template_resources/{dependency}/{path.relative_to(root).as_posix()}"] = source.sha256
+                relative = f"_template_resources/{dependency}/{path.relative_to(root).as_posix()}"
+                expected[relative] = source.sha256
+                exact_sizes[relative] = len(source.content)
     if not expected:
         raise ValueError("export has no source files")
     with zipfile.ZipFile(BytesIO(bundle)) as archive:
-        names = bounded_members(archive)
+        source_names = {
+            item.filename
+            for item in archive.infolist()
+            if not item.is_dir() and item.filename != ".template-export.json"
+        }
+        if source_names != set(expected) or manifest.get("files") != expected:
+            raise ValueError("export archive/manifest omitted or invented source members")
+        if ".template-export.json" in archive.namelist():
+            metadata_size = archive.getinfo(".template-export.json").file_size
+            if not 0 <= metadata_size <= 64 * 1024 * 1024:
+                raise ValueError("embedded export metadata exceeds the bounded byte ceiling")
+            exact_sizes[".template-export.json"] = metadata_size
+        names = bounded_members(archive, exact_sizes=exact_sizes)
         if ".template-export.json" in names:
             _embedded_export(archive.read(".template-export.json"), scope, manifest, expected, dependencies)
             names.remove(".template-export.json")

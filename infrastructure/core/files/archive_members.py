@@ -11,13 +11,30 @@ import zipfile
 from pathlib import Path
 
 
-def bounded_members(archive: zipfile.ZipFile) -> set[str]:
-    """Reject malformed members and unbounded native archive expansion."""
+def bounded_members(archive: zipfile.ZipFile, *, exact_sizes: dict[str, int] | None = None) -> set[str]:
+    """Admit bounded unknown archives or an exact independently held source inventory.
+
+    Source validators derive every size from their confined snapshots. This is
+    an exact member contract, not a caller-selected expansion ceiling; all
+    other readers retain the default aggregate 64 MiB bound.
+    """
     members = archive.infolist()
     all_names = [item.filename for item in members]
+    if exact_sizes is None:
+        invalid_sizes = sum(item.file_size for item in members) > 64 * 1024 * 1024
+    else:
+        invalid_sizes = (
+            type(exact_sizes) is not dict
+            or any(
+                not isinstance(name, str) or type(size) is not int or not 0 <= size <= 64 * 1024 * 1024
+                for name, size in exact_sizes.items()
+            )
+            or {item.filename: item.file_size for item in members if not item.is_dir()} != exact_sizes
+            or any(item.file_size for item in members if item.is_dir())
+        )
     if (
         len(all_names) != len(set(all_names))
-        or sum(item.file_size for item in members) > 64 * 1024 * 1024
+        or invalid_sizes
         or any(
             not Path(name).parts
             or Path(name).is_absolute()
