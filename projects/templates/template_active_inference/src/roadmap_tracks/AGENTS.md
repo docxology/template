@@ -72,3 +72,8 @@ Run focused project tests after touching this package:
 ```bash
 uv run pytest tests/test_track_consolidation_surface.py tests/test_track_consolidation_negative.py tests/test_roadmap_promotion.py -q --no-cov
 ```
+
+Compiled manuscript candidates are derived DATA during fixed-point generation.
+Keep actual filesystem reads and all semantic/provenance validators intact;
+any changed final Source publication requires the ordinary final evidence
+refresh, and unchanged final text must preserve file identity and clocks.

@@ -1,8 +1,10 @@
 """Pytest configuration for template_pitch_deck project tests."""
 
+import hashlib
 import importlib.util
 import os
 import shutil
+import stat
 import sys
 from collections.abc import Iterator
 from pathlib import Path
@@ -26,6 +28,28 @@ if str(TESTS) not in sys.path:
     sys.path.insert(0, str(TESTS))
 
 
+def _output_state(root: Path) -> dict[str, tuple[object, ...]] | None:
+    """Compare fixture outputs without following links or changing held files."""
+    if root.is_symlink() or not root.is_dir():
+        return None
+    rows: dict[str, tuple[object, ...]] = {".": ("directory", stat.S_IMODE(root.lstat().st_mode))}
+    for directory, names, files in os.walk(root, followlinks=False):
+        for name in sorted(names + files):
+            path = Path(directory) / name
+            metadata = path.lstat()
+            mode = stat.S_IMODE(metadata.st_mode)
+            relative = path.relative_to(root).as_posix()
+            if stat.S_ISLNK(metadata.st_mode):
+                rows[relative] = ("link", mode, os.readlink(path))
+            elif stat.S_ISDIR(metadata.st_mode):
+                rows[relative] = ("directory", mode)
+            elif stat.S_ISREG(metadata.st_mode):
+                rows[relative] = ("file", mode, metadata.st_mtime_ns, hashlib.sha256(path.read_bytes()).hexdigest())
+            else:
+                raise ValueError("unsupported project output fixture member")
+    return rows
+
+
 @pytest.fixture(scope="session", autouse=True)
 def _preserve_project_output(
     tmp_path_factory: pytest.TempPathFactory,
@@ -39,6 +63,10 @@ def _preserve_project_output(
 
     yield
 
+    # A focused suite may only read outputs. Replacing those identical files
+    # would change their physical custody despite preserving every byte.
+    if existed and _output_state(output) == _output_state(snapshot):
+        return
     if output.exists():
         shutil.rmtree(output)
     if existed:

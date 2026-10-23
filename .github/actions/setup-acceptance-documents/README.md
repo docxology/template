@@ -24,7 +24,11 @@ failures block the observation; they cannot certify an acceptance gate.
 In native mode, the action prepares pinned Pandoc and crossref before the shared system-dependency
 audit, then installs the complete Linux TeX/reader package union in one step or
 prepares BasicTeX and native readers on macOS. Both platforms probe the selected
-Pandoc/crossref, XeLaTeX, BibTeX, `pdftoppm`, and `pdffonts` executables. Call it
+Pandoc/crossref, XeLaTeX, BibTeX, `pdftoppm`, and `pdffonts` executables. Linux
+explicitly installs `texlive-plain-generic`, which supplies `soul.sty` for the
+selected Pandoc highlighting preamble. Both platforms resolve `soul.sty` with
+`kpsewhich`, require its actual file, and record its provider path and SHA-256
+before document tests. Call it
 once per job before document tests; native mode runs the unchanged LaTeX
 package validator with `python-executable` (default `.venv/bin/python`). The
 common acceptance job selects `output/runtime-envs/3.14/bin/python`. A missing

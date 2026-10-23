@@ -9,6 +9,22 @@ fixed same-run Darwin producer job/artifact using actual API/download results.
 Do not construct print originals from parsed receipts or broaden Root's six
 artifact roster; the live supervisor/collector owns the capability.
 
+Literature auxiliary adapters use `public_acceptance_literature_diagnostics.py`
+to export every producer original before status admission. Keep failed/blocked
+receipts and request/response/execution bytes under the cell's ordinary artifact,
+with the same absolute operation deadline and stable transport bounds. Error
+summaries expose only bounded outcome/issue fields and retained bindings.
+
+Disposable Pitch pipelines obtain repository facts from the complete original
+Root as explicitly bound DATA. `public_acceptance_auxiliary_reference.py`
+admits its actual Git HEAD and Source fingerprint with `PublicReference` under
+the original auxiliary deadline, then nominates the three existing
+`TEMPLATE_PUBLIC_REFERENCE_*` fields. The copied execution source still has no
+Git metadata; the DATA root never becomes an import path. Preserve both the
+held reference's final unchanged check and Pitch's `ReferenceSession` closure.
+Missing or conflicting source custody must fail rather than use invented Git
+facts or a different SDK.
+
 The `infrastructure/project/` module provides project discovery, validation, and metadata extraction for multi-project support. This enables the template to manage multiple independent research projects within a single repository.
 
 ## Key Components
@@ -700,6 +716,7 @@ The `infrastructure/project/` module enables multi-project support by:
 | `public_acceptance_auxiliary_pipeline.py` | Portable custody of a genuine complete core pipeline in disposable public source. |
 | `public_acceptance_auxiliary_pipeline_environment.py` | Source-confined disposable pipeline setup and its declared environment. |
 | `public_acceptance_auxiliary_pipeline_failure.py` | Preserve failed child facts, streams and exit outcomes before positive-report validation. |
+| `public_acceptance_auxiliary_reference.py` | Admit original complete Root DATA for disposable Pitch pipelines under the original operation deadline; never import DATA. |
 | `public_acceptance_auxiliary_supervision.py` | Actual auxiliary child launch and bounded supervision using exact audited payloads. |
 | `public_acceptance_auxiliary_transfer_validation.py` | Independent confinement and envelope validation for portable sandbox evidence. |
 | `public_acceptance_auxiliary_validation.py` | Independent admission of raw auxiliary process and scientific evidence. |

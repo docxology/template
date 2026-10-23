@@ -106,13 +106,17 @@ def persist_frozen_registration(path: Path, registration: dict[str, Any]) -> dic
     if ".." in absolute.parts:
         raise ValueError("Frozen registration path cannot contain parent traversal")
     directory_flags = os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW
-    descriptors = [os.open(absolute.anchor, directory_flags)]
+    # Strict ancestors need search permission only; keep the output parent readable.
+    ancestor_flags = getattr(os, "O_PATH", os.O_RDONLY) | os.O_DIRECTORY | os.O_NOFOLLOW
+    parent_parts = absolute.parent.parts[1:]
+    descriptors = [os.open(absolute.anchor, ancestor_flags if parent_parts else directory_flags)]
     bindings: list[tuple[int, str, int]] = []
     parent_fd = descriptors[0]
     try:
         try:
-            for part in absolute.parent.parts[1:]:
-                next_fd = os.open(part, directory_flags, dir_fd=parent_fd)
+            for index, part in enumerate(parent_parts):
+                flags = directory_flags if index == len(parent_parts) - 1 else ancestor_flags
+                next_fd = os.open(part, flags, dir_fd=parent_fd)
                 bindings.append((parent_fd, part, next_fd))
                 descriptors.append(next_fd)
                 parent_fd = next_fd

@@ -45,3 +45,8 @@ modules instead of duplicating local helpers.
 3. `uv run python scripts/z_generate_manuscript_variables.py` (or pipeline stage)
 
 Manual sections: `00_abstract.md`, `17_conclusion.md`, `99_references.md`.
+
+Fixed-point generation stages intermediate compiled Markdown as candidate DATA.
+Publish only the final candidate for each generation pass. When publication
+changes Source bytes, refresh the existing semantic and provenance builders
+against that actual Source before validation; staging never overlays reads.

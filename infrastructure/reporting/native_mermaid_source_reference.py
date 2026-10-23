@@ -192,7 +192,10 @@ def _source11_live_node_reports(process: dict[str, Any]) -> None:
             not isinstance(libraries, list)
             or len(libraries) > 4096
             or any(
-                not isinstance(name, str) or not Path(name).is_absolute() or len(name) > 4096 or "\0" in name
+                not isinstance(name, str)
+                or (not Path(name).is_absolute() and not (report["platform"] == "linux" and name == "linux-vdso.so.1"))
+                or len(name) > 4096
+                or "\0" in name
                 for name in libraries
             )
         ):
@@ -204,6 +207,15 @@ def _source11_live_node_reports(process: dict[str, Any]) -> None:
         for name, body in zip(libraries, bodies, strict=True):
             if not isinstance(body, dict) or body.get("path") != name:
                 raise ValueError("Source11 original live loaded-library body path differs from actual loaded API")
+            if name == "linux-vdso.so.1":
+                # Retain the actual kernel label without claiming a file/body.
+                if report["platform"] != "linux" or body != {
+                    "path": name,
+                    "status": "unsupported-kernel-virtual-provider",
+                    "reason": "linux-kernel-vdso-has-no-regular-file-body; separate-kernel-closure-required",
+                }:
+                    raise ValueError("Source11 kernel virtual provider cannot claim regular-file custody")
+                continue
             if body.get("status") == "observed-regular-body":
                 if (
                     set(body) != {"path", "status", "bytes", "sha256", "identity_before", "identity_after"}

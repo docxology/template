@@ -453,10 +453,16 @@ def test_forced_settlement_is_byte_idempotent(
     tmp_path: Path,
 ) -> None:
     root, first = settled_convergence_root
+    source_before = {path: (path.read_bytes(), path.stat()) for path in (root / "manuscript").glob("*.md")}
     (root / FINGERPRINT_CACHE).unlink(missing_ok=True)
     run_semantic_fixed_point(root, require_analysis_outputs=False)
     assert _observed_output_snapshot(root) == first
     assert _validate_fixed_point(root) == []
+    for path, (body, before) in source_before.items():
+        assert path.read_bytes() == body
+        after = path.stat()
+        for field in ("st_dev", "st_ino", "st_mode", "st_size", "st_mtime_ns", "st_ctime_ns"):
+            assert getattr(after, field) == getattr(before, field), path
 
     def assert_forgery_rejected(relative: str, mutate, expected_issue: str) -> None:
         path = root / relative
@@ -664,17 +670,27 @@ def test_fast_path_returns_existing_paths_when_valid(
 
 @pytest.mark.slow
 @pytest.mark.timeout(1200)
-def test_missing_figure_registry_triggers_full_settlement(copied_root: Path) -> None:
-    registry_path = copied_root / "output" / "figures" / "figure_registry.json"
+def test_missing_figure_registry_triggers_full_settlement(tmp_path: Path) -> None:
+    root = copy_project_tree(tmp_path / "missing-registry-project")
+    run_semantic_fixed_point(root, require_analysis_outputs=False)
+    outputs_before = _observed_output_snapshot(root)
+    source_before = {path: (path.read_bytes(), path.stat()) for path in (root / "manuscript").glob("*.md")}
+    registry_path = root / "output" / "figures" / "figure_registry.json"
     registry_path.unlink()
-    assert "missing output/figures/figure_registry.json" in _validate_fixed_point(copied_root)
+    assert "missing output/figures/figure_registry.json" in _validate_fixed_point(root)
 
-    paths = run_semantic_fixed_point(copied_root, require_analysis_outputs=False)
+    paths = run_semantic_fixed_point(root, require_analysis_outputs=False)
 
     assert paths["figure_registry"] == registry_path
     assert registry_path.is_file()
     assert "{{" not in registry_path.read_text(encoding="utf-8")
-    assert _validate_fixed_point(copied_root) == []
+    assert _validate_fixed_point(root) == []
+    assert _observed_output_snapshot(root) == outputs_before
+    for path, (body, before) in source_before.items():
+        assert path.read_bytes() == body
+        after = path.stat()
+        for field in ("st_dev", "st_ino", "st_mode", "st_size", "st_mtime_ns", "st_ctime_ns"):
+            assert getattr(after, field) == getattr(before, field), path
 
 
 @pytest.mark.slow
@@ -766,3 +782,105 @@ def test_unfixable_source_defect_raises_instead_of_converging(
             run_semantic_fixed_point(copied_root, require_analysis_outputs=False, max_passes=2)
     finally:
         gnn_model.write_bytes(original)
+
+
+def test_compiled_source_staging_publishes_only_final_bytes(tmp_path: Path) -> None:
+    from manuscript.compilation_io import stage_compiled_text, write_compiled_text
+
+    root = tmp_path / "manuscript"
+    source = root / "08_methods_sheaf.md"
+    write_compiled_text(source, "final A\n")
+    before = source.stat()
+    with stage_compiled_text(root) as unchanged:
+        write_compiled_text(source, "intermediate B\n")
+        with pytest.raises(RuntimeError, match="completed staging scope"):
+            unchanged.publish()
+        assert source.read_text() == "final A\n"
+        write_compiled_text(source, "final A\n")
+    assert unchanged.matches_current() and unchanged.publish() is False
+    after = source.stat()
+    for field in ("st_dev", "st_ino", "st_mode", "st_size", "st_mtime_ns", "st_ctime_ns"):
+        assert getattr(after, field) == getattr(before, field)
+
+    missing = root / "new.md"
+    with stage_compiled_text(root) as changed:
+        write_compiled_text(source, "new Source\n")
+        write_compiled_text(missing, "new section\n")
+        assert source.read_text() == "final A\n" and not missing.exists()
+    assert changed.matches_current() is False
+    assert changed.publish() is True
+    assert source.read_text() == "new Source\n"
+    assert missing.read_text() == "new section\n"
+    assert changed.matches_current() and changed.publish() is False
+
+    # Direct composition keeps its ordinary changed and missing writes.
+    write_compiled_text(source, "direct changed\n")
+    missing.unlink()
+    write_compiled_text(missing, "direct missing\n")
+    assert source.read_text() == "direct changed\n"
+    assert missing.read_text() == "direct missing\n"
+
+    with pytest.raises(RuntimeError, match="abort derived candidates"):
+        with stage_compiled_text(root) as aborted:
+            write_compiled_text(source, "discarded candidate\n")
+            raise RuntimeError("abort derived candidates")
+    assert source.read_text() == "direct changed\n"
+    with pytest.raises(RuntimeError, match="completed staging scope"):
+        aborted.publish()
+    with stage_compiled_text(root):
+        for outside in (tmp_path / "outside.md", root / ".." / "outside.md"):
+            with pytest.raises(ValueError, match="escapes the fixed manuscript root"):
+                write_compiled_text(outside, "not a manuscript candidate\n")
+        with pytest.raises(RuntimeError, match="one fixed-point owner"):
+            with stage_compiled_text(root):
+                pass
+    assert not (tmp_path / "outside.md").exists()
+    with pytest.raises(ValueError, match="fixed non-symlink manuscript root"):
+        with stage_compiled_text(root / ".." / "manuscript"):
+            pass
+    outside = tmp_path / "outside-directory"
+    outside.mkdir()
+    sentinel = outside / "sentinel.md"
+    sentinel.write_text("outside Source stays unchanged\n")
+    alias = root / "alias"
+    alias.symlink_to(outside, target_is_directory=True)
+    with stage_compiled_text(root):
+        with pytest.raises(ValueError, match="contains a symlink"):
+            write_compiled_text(alias / "sentinel.md", "escaped candidate\n")
+    assert sentinel.read_text() == "outside Source stays unchanged\n"
+
+
+@pytest.mark.slow
+@pytest.mark.timeout(1200)
+def test_fixed_point_refreshes_evidence_after_changed_or_missing_compiled_source(tmp_path: Path) -> None:
+    """Real publication must refresh every report against the final Source."""
+    from manuscript.sheaf.compose import compose_all_sections
+
+    root = copy_project_tree(tmp_path / "changed-compiled-source-project")
+    run_semantic_fixed_point(root, require_analysis_outputs=False)
+    expected_outputs = _observed_output_snapshot(root)
+    source = root / "manuscript" / "08_methods_sheaf.md"
+    final_source = source.read_bytes()
+    for state in ("changed", "missing"):
+        if state == "changed":
+            source.write_bytes(final_source + b"\nTemporary owned stale compiled Source.\n")
+        else:
+            source.unlink()
+        assert not source.exists() or source.read_bytes() != final_source
+
+        paths = run_semantic_fixed_point(root, require_analysis_outputs=False)
+
+        assert paths
+        assert source.read_bytes() == final_source
+        assert _validate_fixed_point(root) == []
+        # Complete byte equality includes report counts, semantic decisions,
+        # provenance, variables, and final figure-registry bindings.
+        assert _observed_output_snapshot(root) == expected_outputs
+        physical = {path: path.stat() for path in (root / "manuscript").glob("*.md")}
+        compose_all_sections(root)
+        for path, before in physical.items():
+            after = path.stat()
+            for field in ("st_dev", "st_ino", "st_mode", "st_size", "st_mtime_ns", "st_ctime_ns"):
+                assert getattr(after, field) == getattr(before, field), path
+        assert _validate_fixed_point(root) == []
+        assert _observed_output_snapshot(root) == expected_outputs

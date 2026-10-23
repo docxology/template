@@ -15,3 +15,8 @@ evidence.
 
 Use these modules from thin project scripts only. Keep all outputs
 deterministic, local, and backed by negative-control tests.
+
+The semantic fixed point stages intermediate compiled manuscript text and
+publishes final candidate bytes once per generation pass. If Source changes,
+the normal final evidence refresh must bind that published Source and reproduce
+the same compiled text before the existing validators can accept the pass.

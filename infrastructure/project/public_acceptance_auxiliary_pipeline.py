@@ -213,6 +213,9 @@ def run_pipeline(
         spec_path.write_text(json.dumps(spec, sort_keys=True))
         # Read only source-owned public controls; protected values are never inspected.
         environment = _clean_environment()
+        from infrastructure.project.public_acceptance_auxiliary_reference import nominate_pipeline_reference
+
+        reference = nominate_pipeline_reference(root, scope, environment, deadline)
         for key in (
             "PYTHONPATH",
             "PYTHONHOME",
@@ -351,6 +354,8 @@ def run_pipeline(
                 SnapshotReader(root, operation_deadline=deadline),
                 logical_observations=logical_observations,
             )
+            if reference is not None:
+                reference.verify_unchanged(deadline=deadline)
         except (OSError, ValueError, TypeError, KeyError, TimeoutError) as error:
             diagnostic_bindings: dict[str, Any] = {
                 "process_artifact": process_binding,

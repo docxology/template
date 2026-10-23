@@ -177,7 +177,7 @@ def execute(
     if directory is not None:
         from infrastructure.project.public_acceptance_auxiliary_native import native_execution
 
-        native = native_execution(root, gate, budget, directory, inputs or {})
+        native = native_execution(root, gate, budget, directory, inputs or {}, operation_deadline=operation_deadline)
         if native is not None:
             return native
     scope, kind = gate.rsplit(":", 1)

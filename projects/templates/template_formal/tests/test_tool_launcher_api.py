@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import os
 import shutil
 import sys
 import time
@@ -132,3 +133,37 @@ def test_parent_worker_without_preimport_custody_is_blocked(tmp_path: Path) -> N
         sys.argv[:] = ["formal-worker", *_arguments(root, root / "output/receipt.json")]
         assert launcher.worker_main(tmp_path / "unadmitted-prefix", time.monotonic() + 120, pending) == 75
     assert not pending.exists() and not (root / "output").exists()
+
+
+@pytest.mark.skipif(
+    os.name != "posix" or not hasattr(os, "O_PATH") or os.geteuid() == 0,
+    reason="requires real nonroot search-only ancestor traversal",
+)
+def test_receipt_invalidation_and_rollback_traverse_search_only_project_ancestors(tmp_path: Path) -> None:
+    ancestor = tmp_path.resolve() / "search-only"
+    root = _project(ancestor / "project")
+    receipt = root / "output/receipt.json"
+    receipt.parent.mkdir()
+    receipt.write_text("stale receipt must be invalidated\n")
+    ancestor.chmod(0o111)
+    try:
+        with pytest.raises(PermissionError):
+            list(ancestor.iterdir())
+        with _owned_interpreter_state():
+            arguments = launcher._arguments(_arguments(root, receipt))
+            assert launcher._launch(arguments, time.monotonic() - 1) == 124
+            assert not receipt.exists() and not (root / "formal/lean/.lake").exists()
+            receipt.write_text("expired promoted receipt\n")
+            arguments.receipt_promoted = True
+            launcher._discard_promoted_receipt(arguments)
+            assert not arguments.receipt_promoted and not receipt.exists()
+    finally:
+        ancestor.chmod(0o700)
+    # Explicit destinations outside the project remain supported and confined.
+    external = tmp_path / "external-receipt.json"
+    external.write_text("expired external receipt\n")
+    with _owned_interpreter_state():
+        arguments = launcher._arguments(_arguments(root, external))
+        arguments.receipt_promoted = True
+        launcher._discard_promoted_receipt(arguments)
+        assert not arguments.receipt_promoted and not external.exists()

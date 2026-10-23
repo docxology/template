@@ -31,7 +31,11 @@ selects its prepared `output/runtime-envs/3.14/bin/python`. The helper's
 `--prepared-python PATH` mode preserves that environment, checks actual CPython
 support, and runs the unchanged LaTeX package validator with it. It performs no
 Python bootstrap, dependency sync or implicit reconciliation. Missing runtime,
-native tools, packages or failed validation remain failures.
+native tools, packages or failed validation remain failures. Linux native
+preparation explicitly includes `texlive-plain-generic` for the actual `soul.sty`
+provider. After platform package preparation, require successful `kpsewhich
+soul.sty` resolution and an actual provider file; retain its path and SHA-256.
+A package inventory or cached archive cannot replace that runtime lookup.
 
 The Linux mirror guard accepts only the exact 144-byte runner mirror list or
 its already preferred form, with the archive/Azure priorities exchanged. Require

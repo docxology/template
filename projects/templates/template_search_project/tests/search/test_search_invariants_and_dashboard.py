@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import os
 import shutil
 import subprocess
 import sys
@@ -268,11 +269,22 @@ class TestBuildDashboardCLI:
 
         # Keep canonical containing-checkout path semantics, including when the
         # caller deliberately supplies an external corpus.
-        containing_root = Path(
-            subprocess.check_output(
-                ["git", "rev-parse", "--show-toplevel"], cwd=PROJECT_ROOT, text=True, timeout=30
-            ).strip()
-        ).resolve()
+        containing = subprocess.run(
+            ["git", "rev-parse", "--show-toplevel"],
+            cwd=PROJECT_ROOT,
+            capture_output=True,
+            text=True,
+            timeout=30,
+            check=False,
+        )
+        if containing.returncode == 0:
+            containing_root = Path(containing.stdout.strip()).resolve()
+        else:
+            # A genuine disposable source export has no Git metadata. The CLI
+            # preserves that distinction instead of inventing a revision.
+            assert containing.returncode == 128 and "not a git repository" in containing.stderr
+            containing_root = PROJECT_ROOT.resolve()
+            assert bundle["git_rev"] == "unknown" and bundle["git_dirty"] is False
         corpus_path = runtime_corpus.resolve()
         expected_path = (
             "<repo-root>/" + corpus_path.relative_to(containing_root).as_posix()
@@ -314,8 +326,12 @@ class TestBuildDashboardCLI:
         expected_revision = subprocess.check_output(
             ["git", "rev-parse", "--short", "HEAD"], cwd=standalone, text=True, timeout=30
         ).strip()
-        for dirty in (False, True):
-            if dirty:
+        for dirty in (False, True, None):
+            if dirty is None:
+                # Removing only this owned fixture's Git metadata proves the
+                # source-export fallback without changing either checkout.
+                shutil.rmtree(standalone / ".git")
+            elif dirty:
                 (standalone / "dirty-marker.txt").write_text("actual untracked change\n", encoding="utf-8")
             captured = subprocess.run(
                 [
@@ -335,16 +351,18 @@ class TestBuildDashboardCLI:
                     str(tmp_path / "s.txt"),
                 ],
                 cwd=tmp_path,
+                env=dict(os.environ, GIT_CEILING_DIRECTORIES=str(standalone.parent)),
                 capture_output=True,
                 text=True,
                 timeout=180,
             )
             assert captured.returncode == 0, captured.stderr
             standalone_bundle = json.loads(js.read_text())
-            assert standalone_bundle["git_rev"] == expected_revision
-            assert standalone_bundle["git_dirty"] is dirty
+            revision = "unknown" if dirty is None else expected_revision
+            assert standalone_bundle["git_rev"] == revision
+            assert standalone_bundle["git_dirty"] is (dirty is True)
             assert standalone_bundle["hyperparameters"]["corpus_path"] == "<repo-root>/data/corpus.json"
-            assert f"git rev:           {expected_revision}" in (tmp_path / "s.txt").read_text()
+            assert f"git rev:           {revision}" in (tmp_path / "s.txt").read_text()
 
     def test_strict_floors_fail_invariants(self, tmp_path, runtime_corpus):
         # Force impossible coverage floors: invariant should fail and CLI exits 1

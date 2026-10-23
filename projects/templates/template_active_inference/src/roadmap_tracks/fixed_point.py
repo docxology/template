@@ -472,11 +472,27 @@ def run_semantic_fixed_point(
     paths: dict[str, Path] = {}
     previous: str | None = None
     final_issues: list[str] = []
+    from manuscript.compilation_io import stage_compiled_text
+
     for _ in range(max_passes):
-        paths.update(_write_fixed_point_pass(root, require_analysis_outputs=require_analysis_outputs))
-        paths.update(_write_final_validation_pass(root, require_analysis_outputs=require_analysis_outputs))
+        # Intermediate live reports can change a generated section A -> B -> A.
+        # Keep those candidates as DATA until this generation pass is complete.
+        with stage_compiled_text(root / "manuscript") as compiled:
+            paths.update(_write_fixed_point_pass(root, require_analysis_outputs=require_analysis_outputs))
+            paths.update(_write_final_validation_pass(root, require_analysis_outputs=require_analysis_outputs))
+        source_changed = compiled.publish()
+        compiled_matches = True
+        if source_changed:
+            # Reports produced before publication bind the previous Source.
+            # Refresh through the existing real builders, then require their
+            # final composition to agree with the actual published Source.
+            with stage_compiled_text(root / "manuscript") as refreshed:
+                paths.update(_write_final_validation_pass(root, require_analysis_outputs=require_analysis_outputs))
+            compiled_matches = refreshed.matches_current()
         current = _fingerprint(root)
         final_issues = _validate_fixed_point(root)
+        if not compiled_matches:
+            final_issues.append("compiled manuscript Source differs after final evidence refresh")
         if not final_issues:
             # A clean validation is the contract: every saved-vs-live comparison
             # just passed against the bytes on disk. Requiring an additional
