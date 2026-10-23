@@ -437,6 +437,22 @@ POSIX-only and is skipped with a warning on Windows hosts.
 
 ### Project-scoped required auxiliary acceptance
 
+Literature live adapters retain the complete producer run under each cell's
+`literature-originals/`, with a hash-bound index and canonical native receipt,
+before checking capability status. Failed and blocked originals remain available
+in the ordinary auxiliary artifact. Transport uses the existing file/byte bounds
+and original operation deadline; retained diagnostics grant no acceptance.
+
+Disposable Pitch pipelines obtain repository facts from the complete original
+Root as explicitly bound DATA. `public_acceptance_auxiliary_reference.py`
+admits its actual Git HEAD and Source fingerprint with `PublicReference` under
+the original auxiliary deadline, then nominates the three existing
+`TEMPLATE_PUBLIC_REFERENCE_*` fields. The copied execution source still has no
+Git metadata; the DATA root never becomes an import path. Preserve both the
+held reference's final unchanged check and Pitch's `ReferenceSession` closure.
+Missing or conflicting source custody must fail rather than use invented Git
+facts or a different SDK.
+
 `auxiliary_matrix_plan.py` partitions every Linux-owned auxiliary requirement
 into one complete serial operation per public project and a separate Root
 checks cell. `public_acceptance_auxiliary_cli --matrix-json` emits this Source

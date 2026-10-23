@@ -18,8 +18,9 @@ proves the validator fires on a missing section).
 | `05_generate_figures.py` | Generate the nine PNG assets and the eight-label registry. |
 | `z_generate_manuscript_variables.py` | Hydrate tokens into the render tree. |
 
-`05_generate_figures.py` runs the real integration-derived figure set, mirrors
-it to `output/figures/`, and writes `figure_registry.json` only after the eight
+`05_generate_figures.py` renders the real integration-derived figure set directly
+to `output/figures/`, preserving checked-in manuscript assets, and writes
+`figure_registry.json` only after the eight
 referenced figures declared in `src/figures/figures.py` are present. Cover art remains
 an unreferenced extra and is not misrepresented as manuscript evidence.
 

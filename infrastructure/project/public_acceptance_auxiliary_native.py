@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 import sys
+import time
 import uuid
 import hashlib
 from dataclasses import asdict
@@ -71,6 +72,8 @@ def native_execution(
     budget: int,
     directory: Path,
     inputs: dict[str, Any],
+    *,
+    operation_deadline: float | None = None,
 ) -> dict[str, Any] | None:
     """Execute known native APIs; absent tools/models retain their original blockers."""
     scope = gate.split(":", 1)[0]
@@ -154,20 +157,26 @@ def native_execution(
         module = project_module(root, scope, LITERATURE_MODULES[scope])
         from infrastructure.search.literature.live_contract import LiveSettings
 
+        from infrastructure.project.public_acceptance_literature_diagnostics import (
+            literature_failure_context,
+            retain_literature_originals,
+        )
+
+        deadline = operation_deadline if operation_deadline is not None else time.monotonic() + budget
         settings = LiveSettings(model=model, run_timeout_seconds=min(budget, 600))
         output = project / "output/.pipeline/literature_acceptance" / uuid.uuid4().hex
         receipt = module.run_live(project, output, settings)
-        native = json.loads(receipt.read_text())
+        native, bound, originals = retain_literature_originals(root, project, receipt, directory, deadline)
+        context = literature_failure_context(native, capability, bound, originals)
         if native.get("status") == "blocked":
-            raise MissingAuxiliaryProvider(json.dumps(native.get("issues")))
+            raise MissingAuxiliaryProvider(context)
         if (
             native.get("status") != "passed"
             or native.get("source_unchanged") is not True
             or native.get("consumed_unchanged") is not True
             or native.get("producer_results", {}).get(capability, {}).get("status") != "passed"
         ):
-            raise ValueError("actual literature producer failed capability/source/consumed-byte custody")
-        bound = write_json(root, directory / "literature-native.json", native)
+            raise ValueError("actual literature producer failed capability/source/consumed-byte custody; " + context)
         execution = write_json(
             root,
             directory / "literature-execution.json",

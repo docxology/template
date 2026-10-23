@@ -449,20 +449,17 @@ def test_core_controller_preserves_and_authenticates_launcher_audit(tmp_path, fa
     script = PROJECT / "scripts/run_search_comparison.py"
     prefix = tmp_path.resolve() / "launcher-cache"
     prefix.mkdir()
-    # Select the same ordinary isolated SDK provider that the actual script
-    # child will discover, even when these tests run from a portable Source copy.
+    # Use the real stage launcher roots. Optional installed packages are not
+    # selected inputs of the core controller and must not be added to this
+    # pre-import scope merely because find_spec can discover them.
     provider_bootstrap = r"""
-import importlib.util,sys
+import sys
 from pathlib import Path
 from infrastructure.core import implementation_custody
 platform_root=Path(implementation_custody.__file__).resolve().parents[2]
 project=Path(sys.argv[1])
 prefix=Path(sys.argv[2])
 roots=(platform_root/'infrastructure',platform_root/'scripts',project/'scripts')
-provider=importlib.util.find_spec('template_literature_meta_analysis')
-if provider is not None:
-    assert isinstance(provider.origin,str)
-    roots+=(Path(provider.origin).resolve().parent,)
 if sys.argv[3]=='include':
     roots+=(project/'src',)
 print(implementation_custody.bytecode_audit_bootstrap(roots,prefix),end='')

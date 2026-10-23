@@ -82,7 +82,15 @@ function libraryIdentity(info) {
     name => [name, String(info[name])],
   ));
 }
+function isLinuxKernelVirtualProvider(filename) {
+  return process.platform === "linux" && filename === "linux-vdso.so.1";
+}
 function observeLiveLibraryBody(filename) {
+  // The actual Node API names the kernel mapping; it supplies no file body.
+  if (isLinuxKernelVirtualProvider(filename)) {
+    return { path: filename, status: "unsupported-kernel-virtual-provider",
+      reason: "linux-kernel-vdso-has-no-regular-file-body; separate-kernel-closure-required" };
+  }
   let descriptor;
   try {
     descriptor = fs.openSync(filename, "r");
@@ -124,7 +132,8 @@ function retainLiveLoadedReport(phase) {
       report.header.nodejsVersion !== process.version ||
       !Array.isArray(report.sharedObjects) || report.sharedObjects.length > 4096 ||
       report.sharedObjects.some(name => typeof name !== "string" ||
-        !path.isAbsolute(name) || name.length > 4096 || name.includes("\0"))) {
+        (!path.isAbsolute(name) && !isLinuxKernelVirtualProvider(name)) ||
+        name.length > 4096 || name.includes("\0"))) {
     throw new Error("Actual Node diagnostic API lacks its finite original loaded-library observation");
   }
   const loadedLibraryBodies = report.sharedObjects.map(observeLiveLibraryBody);

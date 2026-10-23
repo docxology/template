@@ -25,7 +25,6 @@ import sys
 from dataclasses import asdict
 from pathlib import Path
 
-import infrastructure
 import pytest
 
 from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
@@ -238,9 +237,30 @@ def test_same_public_leaf_local_alias_is_live_only_in_explicit_local_discovery(t
     marker = tmp_path / "actual-alias-content-opened"
     watched = [str(alias / "manuscript/config.yaml") for alias in aliases]
     project = Path(__file__).resolve().parents[2]
-    selected_sdk = Path(infrastructure.__file__).resolve(strict=True)
+    # Observe the actual isolated interpreter SDK before adding own paths.
+    selected = subprocess.run(
+        [
+            sys.executable,
+            "-I",
+            "-B",
+            "-c",
+            "import hashlib,json,infrastructure;from pathlib import Path;"
+            "origin=Path(infrastructure.__file__).resolve(strict=True);"
+            "print(json.dumps({'origin':str(origin),'version':infrastructure.__version__,"
+            "'sha256':hashlib.sha256(origin.read_bytes()).hexdigest()}))",
+        ],
+        cwd=tmp_path,
+        text=True,
+        capture_output=True,
+        timeout=90,
+        check=False,
+    )
+    assert selected.returncode == 0, selected.stderr or selected.stdout
+    selected_identity = json.loads(selected.stdout)
+    assert selected_identity["version"] == "4.1.0"
+    selected_sdk = Path(selected_identity["origin"])
     prefix = (
-        "import importlib.util,json,os,sys;from dataclasses import asdict;from pathlib import Path;"
+        "import hashlib,importlib.util,json,os,sys;from dataclasses import asdict;from pathlib import Path;"
         f"project=Path({str(project)!r});"
         "spec=importlib.util.spec_from_file_location('own_template_bootstrap',project/'scripts/_bootstrap.py');"
         "assert spec is not None and spec.loader is not None;"
@@ -248,6 +268,8 @@ def test_same_public_leaf_local_alias_is_live_only_in_explicit_local_discovery(t
         "sdk=bootstrap.bootstrap_project(project);"
         f"assert Path(sdk.__file__).resolve()==Path({str(selected_sdk)!r});"
         "assert sdk.__version__=='4.1.0';"
+        "assert hashlib.sha256(Path(sdk.__file__).read_bytes()).hexdigest()=="
+        f"{selected_identity['sha256']!r};"
         "from template_template.core.introspection import discover_projects;\n"
         f"watched={watched!r}\nmarker=Path({str(marker)!r})\n"
         "def audit(event,args):\n"
@@ -261,6 +283,7 @@ def test_same_public_leaf_local_alias_is_live_only_in_explicit_local_discovery(t
             [
                 sys.executable,
                 "-I",
+                "-B",
                 "-c",
                 prefix
                 + f"rows=discover_projects(Path({str(root)!r}),public_only={public_only!r})\n"

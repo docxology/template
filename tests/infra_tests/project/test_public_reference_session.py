@@ -46,6 +46,31 @@ def test_real_bound_session_reuses_original_reference_and_rechecks_before_succes
     with pytest.raises(ValueError, match="conflicts"):
         session.current(explicit_root=tmp_path)
     session.verify()
+    from infrastructure.project.public_acceptance_auxiliary_reference import nominate_pipeline_reference
+
+    assert session.deadline is not None
+    nominated_environment: dict[str, str] = {}
+    nominated = nominate_pipeline_reference(
+        reference.root, "templates/template_pitch_deck", nominated_environment, session.deadline
+    )
+    assert nominated is not None and nominated_environment == environment
+    nominated.verify_unchanged(deadline=session.deadline)
+    assert nominate_pipeline_reference(tmp_path, "templates/template_code_project", {}, session.deadline) is None
+    with pytest.raises(ValueError, match="conflicts"):
+        nominate_pipeline_reference(
+            reference.root,
+            "templates/template_pitch_deck",
+            dict(environment, TEMPLATE_PUBLIC_REFERENCE_FINGERPRINT="0" * 64),
+            session.deadline,
+        )
+    with pytest.raises(ValueError, match="conflicts"):
+        nominate_pipeline_reference(
+            reference.root,
+            "templates/template_pitch_deck",
+            dict(environment, TEMPLATE_PUBLIC_REFERENCE_COMMIT="0" * 40),
+            session.deadline,
+        )
+    assert session.deadline == original_deadline
     assert (tuple(sys.path), infrastructure.__file__) == before
     target = reference.root / "README.md"
     original = target.read_bytes()
@@ -54,6 +79,8 @@ def test_real_bound_session_reuses_original_reference_and_rechecks_before_succes
         assert reference.read("README.md") == original
         with pytest.raises(ValueError, match="changed"):
             session.verify()
+        with pytest.raises(ValueError, match="changed"):
+            nominated.verify_unchanged(deadline=session.deadline)
     finally:
         target.write_bytes(original)
 

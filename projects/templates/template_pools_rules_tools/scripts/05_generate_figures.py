@@ -32,7 +32,7 @@ from template_pools_rules_tools.tools.integration import (  # noqa: E402
 logging.basicConfig(level=logging.INFO, format="%(levelname)s  %(message)s")
 logger = logging.getLogger(__name__)
 
-_FIGURES_DIR = _PROJECT_DIR / "manuscript" / "figures"
+_FIGURES_DIR = _PROJECT_DIR / "output" / "figures"
 _OUTPUT_FIGURES_DIR = _PROJECT_DIR / "output" / "figures"
 
 
@@ -74,11 +74,9 @@ def main() -> int:
     """CLI entry point."""
     written = generate_assets()
 
-    # manuscript/figures/ is the git-tracked canonical location (resolved by
-    # the combined-PDF render via its manuscript-dir resource path). Mirror a
-    # disposable copy to output/figures/ too, since the Beamer slide renderer
-    # (infrastructure/rendering/slides_renderer.py) hard-codes that location
-    # when rewriting \includegraphics paths for per-section slide decks.
+    # Current figures and their registry belong to the disposable output tree.
+    # The renderers resolve these generated assets from output/figures/; keep
+    # the checked-in manuscript figures unchanged throughout analysis.
     for path in written:
         print(path)
 

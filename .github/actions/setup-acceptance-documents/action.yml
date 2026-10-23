@@ -222,7 +222,7 @@ runs:
           sudo apt-get install -y --no-install-recommends \
             poppler-utils zbar-tools texlive-luatex texlive-science \
             texlive-xetex texlive-latex-extra texlive-bibtex-extra \
-            texlive-fonts-recommended texlive-latex-recommended lmodern fonts-dejavu
+            texlive-fonts-recommended texlive-latex-recommended texlive-plain-generic lmodern fonts-dejavu
         else
           brew install poppler zbar
           export PATH="/Library/TeX/texbin:$PATH"
@@ -245,6 +245,10 @@ runs:
         pdftoppm -v
         pdffonts -v
         xelatex --version
+        soul_provider=$(kpsewhich soul.sty)
+        test -f "$soul_provider"
+        printf 'soul.sty provider: %s\n' "$soul_provider"
+        shasum -a 256 "$soul_provider"
         bibtex --version
         pandoc --version
         pandoc-crossref --version

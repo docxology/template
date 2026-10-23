@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import hashlib
 import importlib.util
 import json
 import shutil
@@ -18,6 +19,7 @@ from infrastructure.validation.content.figure_validator import (  # noqa: E402
 )
 
 from template_pools_rules_tools.figures.figures import (  # noqa: E402
+    COVER_FIGURE_FILENAMES,
     INTEGRATION_FIGURE_SPECS,
     all_figures,
 )
@@ -25,8 +27,8 @@ from template_pools_rules_tools.figures.figures import (  # noqa: E402
 SCRIPT = PROJECT_ROOT / "scripts" / "05_generate_figures.py"
 
 
-def _load_script_module():
-    spec = importlib.util.spec_from_file_location("pools_rules_tools_generate_figures", SCRIPT)
+def _load_script_module(script: Path = SCRIPT):
+    spec = importlib.util.spec_from_file_location("pools_rules_tools_generate_figures", script)
     assert spec is not None and spec.loader is not None
     module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)
@@ -90,3 +92,38 @@ def test_validator_rejects_deleted_published_figure(tmp_path: Path) -> None:
     assert issues == [
         "Registered generated figure file is missing for fig:rulehier: rule_hierarchy.png"
     ]
+
+
+def test_default_generation_preserves_manuscript_source_bytes(tmp_path: Path) -> None:
+    project = tmp_path / "project"
+    manuscript = project / "manuscript"
+    shutil.copytree(PROJECT_ROOT / "manuscript", manuscript)
+    script = project / "scripts" / SCRIPT.name
+    script.parent.mkdir()
+    shutil.copy2(SCRIPT, script)
+    before = {
+        path.relative_to(manuscript).as_posix(): hashlib.sha256(path.read_bytes()).hexdigest()
+        for path in manuscript.rglob("*")
+        if path.is_file()
+    }
+
+    # Load the real entry point from an owned project so its actual default
+    # destinations are exercised without writing in the repository checkout.
+    module = _load_script_module(script)
+    written = module.generate_assets()
+
+    assert {
+        path.relative_to(manuscript).as_posix(): hashlib.sha256(path.read_bytes()).hexdigest()
+        for path in manuscript.rglob("*")
+        if path.is_file()
+    } == before
+    output = project / "output" / "figures"
+    assert all(path.is_relative_to(output) for path in written)
+    assert {path.name for path in output.glob("*.png")} == {
+        *(spec.filename for spec in INTEGRATION_FIGURE_SPECS),
+        *COVER_FIGURE_FILENAMES,
+    }
+    registry = output / "figure_registry.json"
+    assert registry in written
+    ok, issues = validate_figure_registry(registry, manuscript, require_accessibility=True)
+    assert ok, issues

@@ -30,22 +30,13 @@ PRINT_WITNESS_FAULTS = {
 
 
 def _copy_prepared_runtime_file(original: str, copied: str) -> str:
-    """Retain prepared bytes without hard-linking another owner's runtime inode."""
+    """Retain independent prepared bytes without changing the source inode."""
     try:
         os.lstat(copied)
     except FileNotFoundError:
         pass
     else:
         raise FileExistsError(errno.EEXIST, os.strerror(errno.EEXIST), copied)
-    metadata = os.lstat(original)
-    if os.name == "posix" and stat.S_ISREG(metadata.st_mode) and metadata.st_uid == os.geteuid():
-        try:
-            os.link(original, copied)
-        except OSError as error:
-            if error.errno not in {errno.EPERM, errno.EXDEV}:
-                raise
-        else:
-            return copied
     return shutil.copy2(original, copied)
 
 
@@ -55,11 +46,18 @@ def test_prepared_runtime_copy_preserves_owned_and_foreign_file_boundaries(tmp_p
     owned.write_bytes(b"actual owned prepared runtime")
     owned.chmod(0o640)
     owned_copy = tmp_path / "owned-copy"
+    fields = ("st_uid", "st_dev", "st_ino", "st_nlink", "st_size", "st_mtime_ns", "st_ctime_ns")
+    owned_before = tuple(getattr(owned.stat(), field) for field in fields)
     assert _copy_prepared_runtime_file(str(owned), str(owned_copy)) == str(owned_copy)
-    assert (owned.stat().st_dev, owned.stat().st_ino) == (owned_copy.stat().st_dev, owned_copy.stat().st_ino)
-    assert owned.stat().st_nlink == owned_copy.stat().st_nlink == 2
+    assert (owned.stat().st_dev, owned.stat().st_ino) != (owned_copy.stat().st_dev, owned_copy.stat().st_ino)
+    assert owned.stat().st_nlink == owned_copy.stat().st_nlink == 1
     assert owned_copy.read_bytes() == owned.read_bytes()
     assert stat.S_IMODE(owned_copy.stat().st_mode) == 0o640
+    assert tuple(getattr(owned.stat(), field) for field in fields) == owned_before
+    owned_copy.write_bytes(b"independent disposable runtime changes")
+    assert owned.read_bytes() == b"actual owned prepared runtime"
+    owned_copy.unlink()
+    assert tuple(getattr(owned.stat(), field) for field in fields) == owned_before
 
     foreign = Path("/usr/share/zoneinfo/UTC").resolve(strict=True)
     metadata = foreign.stat()
@@ -246,8 +244,8 @@ def test_real_process_readback_after_producer_root_and_wrapper_deleted(tmp_path:
     library = environment / f"lib/python{sys.version_info.major}.{sys.version_info.minor}"
     library.mkdir(parents=True)
     # Complete genuine installed RECORD files need regular held directories.
-    # Reuse owned regular inodes when permitted; copy foreign-owned runtime
-    # files with their metadata. The producer never writes prepared files.
+    # Use independent files for every owner. Adding/removing hard links would
+    # change the held prepared runtime's ctime even when its bytes stay equal.
     shutil.copytree(
         prepared / f"lib/python{sys.version_info.major}.{sys.version_info.minor}/site-packages",
         library / "site-packages",

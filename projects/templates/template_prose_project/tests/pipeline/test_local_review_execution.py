@@ -209,7 +209,13 @@ def test_real_cli_success_failed_attempt_preserves_history_without_reuse(tmp_pat
     current = tmp_path / "output/.pipeline/prose_review/latest.json"
     with local_server() as endpoint:
         good = _cli(tmp_path, endpoint)
-    assert good.returncode == 0, good.stderr
+    execution = tmp_path / "output/.pipeline/prose_review/execution.json"
+    assert good.returncode == 0, (
+        good.returncode,
+        good.stdout,
+        good.stderr,
+        json.loads(execution.read_text()).get("diagnostic") if execution.is_file() else "execution receipt absent",
+    )
     operation = json.loads((tmp_path / "output/.pipeline/prose_review/execution.json").read_text())
     assert operation["status"] == "succeeded" and operation["child_exit_code"] == 0
     assert operation["custody"]["implementation"]["bytecode_binding"] == "fresh-owned-prefix"

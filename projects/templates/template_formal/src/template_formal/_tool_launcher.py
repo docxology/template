@@ -87,6 +87,17 @@ def worker_main(prefix: Path, deadline: float, pending: Path) -> int:
     return {"passed": 0, "failed": 1, "blocked": 75, "timed_out": 124}[str(receipt["status"])]
 
 
+def _receipt_root(arguments: argparse.Namespace) -> Path:
+    """Keep project receipts confined below their readable project root."""
+    receipt = arguments.receipt
+    assert receipt is not None
+    # Strict ancestors need search permission; output components remain held,
+    # readable, no-follow directories. External receipt behavior is unchanged.
+    if receipt.is_relative_to(arguments.project_root):
+        return arguments.project_root
+    return Path(receipt.anchor)
+
+
 def _discard_promoted_receipt(arguments: argparse.Namespace) -> None:
     """Invalidate only an artifact actually promoted by this invocation."""
     if not arguments.receipt_promoted:
@@ -94,7 +105,7 @@ def _discard_promoted_receipt(arguments: argparse.Namespace) -> None:
     from infrastructure.core.files.secure_write import unlink_confined
 
     try:
-        unlink_confined(Path(arguments.receipt.anchor), arguments.receipt)
+        unlink_confined(_receipt_root(arguments), arguments.receipt)
     except FileNotFoundError:
         pass
     except (OSError, ValueError) as error:
@@ -138,7 +149,7 @@ def _launch(arguments: argparse.Namespace, deadline: float) -> int:
             return 75
         if arguments.receipt is not None:
             try:
-                unlink_confined(Path(arguments.receipt.anchor), arguments.receipt)
+                unlink_confined(_receipt_root(arguments), arguments.receipt)
             except FileNotFoundError:
                 pass
             except (OSError, ValueError) as error:
@@ -184,7 +195,7 @@ def _launch(arguments: argparse.Namespace, deadline: float) -> int:
                 code = {"passed": 0, "failed": 1, "blocked": 75, "timed_out": 124}.get(recorded.get("status"))
                 if code != result.returncode:
                     raise ValueError("tool receipt differs from supervised worker exit")
-                atomic_write_text_confined(Path(arguments.receipt.anchor), arguments.receipt, text, mode=0o600)
+                atomic_write_text_confined(_receipt_root(arguments), arguments.receipt, text, mode=0o600)
                 arguments.receipt_promoted = True
             except FileNotFoundError:
                 if result.returncode == 0:

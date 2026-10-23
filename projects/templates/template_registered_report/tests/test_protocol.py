@@ -204,6 +204,40 @@ def test_frozen_record_binding_refuses_real_named_replacements_without_touching_
             os.close(descriptor)
 
 
+@pytest.mark.skipif(
+    os.name != "posix" or not hasattr(os, "O_PATH") or os.geteuid() == 0,
+    reason="requires real nonroot search-only ancestor traversal",
+)
+def test_frozen_record_persistence_traverses_search_only_ancestors_without_following_links(tmp_path: Path) -> None:
+    ancestor = tmp_path.resolve() / "search-only"
+    reports = ancestor / "reports"
+    reports.mkdir(parents=True)
+    path = reports / "frozen_registration.json"
+    outside = tmp_path / "outside.json"
+    outside.write_bytes(b"foreign bytes must remain untouched")
+    ancestor.chmod(0o111)
+    try:
+        with pytest.raises(PermissionError):
+            list(ancestor.iterdir())
+        frozen = persist_frozen_registration(path, load_registration())
+        original = (json.dumps(frozen, indent=4) + "\n\n").encode("utf-8")
+        path.write_bytes(original)
+        assert persist_frozen_registration(path, frozen) == frozen
+        assert path.read_bytes() == original
+        changed = load_registration()
+        changed["hypotheses"][0]["claim"] = "Different prospective intent"
+        with pytest.raises(ValueError, match="new versioned output directory"):
+            persist_frozen_registration(path, changed)
+        assert path.read_bytes() == original
+        linked = reports / "linked.json"
+        linked.symlink_to(outside)
+        with pytest.raises(ValueError, match="new versioned output directory"):
+            persist_frozen_registration(linked, load_registration())
+        assert linked.is_symlink() and outside.read_bytes() == b"foreign bytes must remain untouched"
+    finally:
+        ancestor.chmod(0o700)
+
+
 def test_publication_receipt_requires_owner_authority_and_matching_payload() -> None:
     with pytest.raises(ValueError, match="owner authority"):
         build_publication_receipt({}, artifact_digest="a" * 64)

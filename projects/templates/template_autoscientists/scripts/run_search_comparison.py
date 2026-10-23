@@ -106,9 +106,13 @@ finally:
         for _descriptor in reversed(_audit_descriptors):
             os.close(_descriptor)
 _audit_roots = [PROJECT_ROOT / "src", PROJECT_ROOT / "scripts", _platform_source, _platform_source.parent / "scripts"]
-_provider_spec = importlib.util.find_spec("template_literature_meta_analysis")
-if _provider_spec is not None and _provider_spec.origin is not None:
-    _audit_roots.append(Path(_provider_spec.origin).absolute().parent)
+if _active_audit is None:
+    # A fresh standalone controller owns its provider-root selection. An
+    # existing launcher already fixed its pre-import scope; an optional,
+    # unconsumed installed package cannot retroactively extend that scope.
+    _provider_spec = importlib.util.find_spec("template_literature_meta_analysis")
+    if _provider_spec is not None and _provider_spec.origin is not None:
+        _audit_roots.append(Path(_provider_spec.origin).absolute().parent)
 _audit_scope = {"__name__": "_template_bytecode_audit", "__file__": str(_audit_path)}
 # Execute only the trusted, bounded, no-follow startup source admitted above.
 exec(compile(_audit_bytes, str(_audit_path), "exec", dont_inherit=True), _audit_scope)  # nosec B102

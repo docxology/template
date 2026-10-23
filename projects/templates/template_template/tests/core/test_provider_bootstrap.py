@@ -2,21 +2,18 @@
 
 from __future__ import annotations
 
-import hashlib
 import json
 import shutil
 import subprocess
 import sys
+from functools import cache
 from pathlib import Path
 
-import infrastructure
 import pytest
 import yaml
 
 PROJECT = Path(__file__).resolve().parents[2]
 PACKAGE = "template_template"
-SDK_ORIGIN = Path(infrastructure.__file__).resolve(strict=True)
-SDK_DIGEST = hashlib.sha256(SDK_ORIGIN.read_bytes()).hexdigest()
 
 
 _testing = yaml.safe_load((PROJECT / "manuscript/config.yaml").read_text()).get("testing", {})
@@ -44,7 +41,7 @@ def _copy_project(tmp_path: Path) -> Path:
 
 def _native(project: Path, program: str) -> subprocess.CompletedProcess[str]:
     return subprocess.run(
-        [sys.executable, "-I", "-c", program],
+        [sys.executable, "-I", "-B", "-c", program],
         cwd=project.parent,
         text=True,
         capture_output=True,
@@ -53,7 +50,26 @@ def _native(project: Path, program: str) -> subprocess.CompletedProcess[str]:
     )
 
 
+@cache
+def _selected_sdk_identity() -> tuple[Path, str]:
+    """Observe the isolated interpreter SDK during a test, never collection."""
+    # A pipeline parent can import frozen Source; its cached module is not the
+    # provider selected by a new isolated child of the same interpreter.
+    observation = _native(
+        PROJECT,
+        "import hashlib,json,infrastructure;from pathlib import Path;"
+        "origin=Path(infrastructure.__file__).resolve(strict=True);"
+        "print(json.dumps({'origin':str(origin),'version':infrastructure.__version__,"
+        "'sha256':hashlib.sha256(origin.read_bytes()).hexdigest()}))",
+    )
+    assert observation.returncode == 0, observation.stderr or observation.stdout
+    identity = json.loads(observation.stdout)
+    assert identity["version"] == "4.1.0"
+    return Path(identity["origin"]), identity["sha256"]
+
+
 def _bootstrap_program(project: Path) -> str:
+    sdk_origin, sdk_digest = _selected_sdk_identity()
     return (
         "import sys,importlib,importlib.util,hashlib,json;from pathlib import Path;"
         f"project=Path({str(project)!r});"
@@ -63,10 +79,10 @@ def _bootstrap_program(project: Path) -> str:
         "assert spec is not None and spec.loader is not None;"
         "bootstrap=importlib.util.module_from_spec(spec);spec.loader.exec_module(bootstrap);"
         "sdk=bootstrap.bootstrap_project(project);"
-        f"assert Path(sdk.__file__).resolve()==Path({str(SDK_ORIGIN)!r});"
+        f"assert Path(sdk.__file__).resolve()==Path({str(sdk_origin)!r});"
         "assert sdk.__version__=='4.1.0';"
         "assert hashlib.sha256(Path(sdk.__file__).read_bytes()).hexdigest()=="
-        f"{SDK_DIGEST!r};"
+        f"{sdk_digest!r};"
         "assert sys.path==before;"
         f"own=importlib.import_module({PACKAGE!r});"
         f"assert Path(own.__file__).resolve()==project/'src'/{PACKAGE!r}/'__init__.py';"
@@ -78,7 +94,7 @@ def test_canonical_project_bootstrap_keeps_genuine_selected_runtime_sdk() -> Non
     actual = _native(PROJECT, _bootstrap_program(PROJECT) + DOMAIN_PROGRAM)
     assert actual.returncode == 0, actual.stderr or actual.stdout
     rows = [json.loads(line) for line in actual.stdout.splitlines() if line.startswith("{")]
-    assert len(rows) == 1 and rows[0]["provider_origin"] == str(SDK_ORIGIN)
+    assert len(rows) == 1 and rows[0]["provider_origin"] == str(_selected_sdk_identity()[0])
     assert rows[0]["provider_version"] == "4.1.0"
     assert rows[0]["domain"] == DOMAIN_EXPECTATION
 
@@ -123,7 +139,7 @@ def test_selected_sdk_precedes_actual_own_shadow_and_executes_domain(tmp_path: P
     actual = _native(project, _bootstrap_program(project) + DOMAIN_PROGRAM)
     assert actual.returncode == 0, actual.stderr or actual.stdout
     rows = [json.loads(line) for line in actual.stdout.splitlines() if line.startswith("{")]
-    assert len(rows) == 1 and rows[0]["provider_origin"] == str(SDK_ORIGIN)
+    assert len(rows) == 1 and rows[0]["provider_origin"] == str(_selected_sdk_identity()[0])
     assert rows[0]["provider_version"] == "4.1.0"
     assert rows[0]["domain"] == DOMAIN_EXPECTATION
     assert not marker.exists()

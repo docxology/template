@@ -10,7 +10,7 @@ from infrastructure.rendering._mermaid_source_font_default import PROFILE_NAME, 
 
 SCHEMA = "template-mermaid-v11-source-pinned-default-theme-viewport-licensed-font-request-v2"
 POLICY = "template-mermaid-v11-source-pinned-official-render-default-theme-liberation-sans-before-layout-1400x900-v2"
-ADAPTER_SHA256 = "4272d79903626ce200b19a1e942f85444b6d03898d9d170406f0270aec6eb7fb"
+ADAPTER_SHA256 = "9713187654bc1be265ebee73cb60e8068ec5f6cc1aead50ee1a9974d4912e5de"
 
 
 def rendering_profile() -> dict[str, str | int | bool]:

@@ -6,4 +6,9 @@ Thin orchestrators for analysis + agent search.
 
 **Contract.** Scripts coordinate I/O + visualization only; experiment logic lives in `src/template_autoscientists/search/ablation.py` / `src/template_autoscientists/search/comparison.py`.
 
+The search controller preserves an existing launcher audit and its fresh cache.
+It verifies the selected SDK and project roots against that fixed pre-import
+scope; discovering an optional unconsumed package does not extend the scope.
+A fresh standalone controller still owns its complete provider-root selection.
+
 See the project [`../AGENTS.md`](../AGENTS.md).
