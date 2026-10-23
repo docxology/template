@@ -896,6 +896,8 @@ not treated as automatically best on every diagnostic axis.
 
 ![Brier score and negative log likelihood for evaluated candidates from output/data/ml_statistical_summary.json; lower values indicate better probability quality within the configured local run, and the accepted candidate is highlighted. Generation method: Brier score and negative-log-likelihood bar comparison. Registry metadata records the generation method, source artifact, and claim boundary for validation.](../figures/ml_probability_quality.png){#fig:ml_probability_quality width="0.82\textwidth"}
 
+\clearpage
+
 | Statistic | Value |
 | --- | --- |
 | Accuracy | 89.4% |

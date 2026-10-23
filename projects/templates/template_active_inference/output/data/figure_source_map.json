@@ -595,11 +595,11 @@
         "formal"
       ],
       "dimensions": {
-        "height": 2045,
+        "height": 2239,
         "width": 1454
       },
       "figure_id": "lean_boundary_status",
-      "image_sha256": "0e5fb35912475b0cd830e741de656a96a03e74965101b2f19b8ec0b378717dd9",
+      "image_sha256": "f6a9ad02889c8b006b57de6c95ea6d6df803234cd04425b72b33af0c16480431",
       "mapped": true,
       "pixel_provenance_ok": true,
       "renderer": "visualizations.figures.generate_all_figures",
@@ -1390,7 +1390,7 @@
         "width": 1134
       },
       "figure_id": "tmaze_schematic",
-      "image_sha256": "4d853a7f6b48921da10033042f23f39286e9976bf94376c9149ddd4537a82edc",
+      "image_sha256": "517cd677cebcdf745bfd67a8290878ad8c121797fece2c991255c747c21296c5",
       "mapped": true,
       "pixel_provenance_ok": true,
       "renderer": "visualizations.figures.generate_all_figures",

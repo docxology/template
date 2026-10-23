@@ -4,12 +4,12 @@
       "exists": true,
       "file_count": 2,
       "size_mb": "1.08",
-      "total_size_bytes": 1135611,
+      "total_size_bytes": 1135561,
       "largest_files": [
         {
           "name": "template_search_project_combined.pdf",
           "size_mb": "1.08",
-          "size_bytes": 1135611,
+          "size_bytes": 1135561,
           "path": "pdf/template_search_project_combined.pdf"
         },
         {
@@ -28,7 +28,7 @@
       "exists": true,
       "file_count": 15,
       "size_mb": "2.62",
-      "total_size_bytes": 2746081,
+      "total_size_bytes": 2746543,
       "largest_files": [
         {
           "name": "source-web-fonts.js",
@@ -101,12 +101,12 @@
       "exists": true,
       "file_count": 13,
       "size_mb": "0.53",
-      "total_size_bytes": 558800,
+      "total_size_bytes": 558887,
       "largest_files": [
         {
           "name": "inline_mermaid_0001_d3ead0e9d850.png",
           "size_mb": "0.19",
-          "size_bytes": 198261,
+          "size_bytes": 198348,
           "path": "figures/mermaid_inline/inline_mermaid_0001_d3ead0e9d850.png"
         },
         {
@@ -312,12 +312,12 @@
       "exists": true,
       "file_count": 6,
       "size_mb": "1.09",
-      "total_size_bytes": 1146097,
+      "total_size_bytes": 1146047,
       "largest_files": [
         {
           "name": "template_search_project_combined.pdf",
           "size_mb": "1.08",
-          "size_bytes": 1135611,
+          "size_bytes": 1135561,
           "path": "template_search_project_combined.pdf"
         },
         {
@@ -364,7 +364,7 @@
     }
   },
   "total_files": 391,
-  "total_size_mb": 10.239814758300781,
+  "total_size_mb": 10.240242958068848,
   "largest_files": [
     {
       "name": "source-web-fonts.js",
@@ -383,14 +383,14 @@
     {
       "name": "template_search_project_combined.pdf",
       "size_mb": "1.08",
-      "size_bytes": 1135611,
+      "size_bytes": 1135561,
       "category": "pdf",
       "path": "pdf/template_search_project_combined.pdf"
     },
     {
       "name": "template_search_project_combined.pdf",
       "size_mb": "1.08",
-      "size_bytes": 1135611,
+      "size_bytes": 1135561,
       "category": "root",
       "path": "template_search_project_combined.pdf"
     },
@@ -439,17 +439,17 @@
   ],
   "missing_expected_files": [],
   "sizes_by_category": {
-    "pdf": 1.083003044128418,
-    "web": 2.6188669204711914,
+    "pdf": 1.0829553604125977,
+    "web": 2.619307518005371,
     "slides": 0.9221572875976562,
-    "figures": 0.5329132080078125,
+    "figures": 0.5329961776733398,
     "data": 0.008048057556152344,
     "reports": 0.009220123291015625,
     "bibliography": 0.0030164718627929688,
     "deep_search": 3.687427520751953,
     "manuscript": 0.2397022247314453,
     "review": 0.031198501586914062,
-    "root": 1.093003273010254,
+    "root": 1.0929555892944336,
     "search": 0.011258125305175781
   },
   "inventory_mode": "stable-shippable-output-v1",

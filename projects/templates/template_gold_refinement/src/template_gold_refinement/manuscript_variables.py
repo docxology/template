@@ -135,7 +135,7 @@ def _figure_quality_table_rows(figure_quality: dict[str, Any]) -> str:
         height = int(record.get("height_px", 0) or 0)
         status = "pass" if record.get("passes_quality") else "fail"
         rows.append(
-            f"| {record.get('name', '')} "
+            f"| {format_table_code(str(record.get('name', '')))} "
             f"| {'yes' if record.get('png_exists') else 'no'} "
             f"| {'yes' if record.get('svg_exists') else 'no'} "
             f"| {width}x{height} "

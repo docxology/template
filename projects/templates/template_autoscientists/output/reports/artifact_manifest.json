@@ -39,8 +39,8 @@
     {
       "contract_match": true,
       "path": "output/figures/ablation_efficiency.png",
-      "sha256": "06d040f64cf3f5fb077ca40824a04de34861c567811808bf27dfb48f052b8c6e",
-      "size_bytes": 53680,
+      "sha256": "5625ab5fdfcb08e956f12a01f34d157ff04c3a6df6701bb337bbb5d1dc35e85b",
+      "size_bytes": 52781,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
@@ -66,8 +66,8 @@
     {
       "contract_match": true,
       "path": "output/pdf/template_autoscientists_combined.pdf",
-      "sha256": "91bf96cf81e9601f9a5ec6128fca7d5dbd76afd8ecb8537636a2fbcdb585de03",
-      "size_bytes": 259014,
+      "sha256": "e3d790d6432573cc03865755a246556c99b3a3f216b58473cbba6480ef80fbad",
+      "size_bytes": 257954,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""

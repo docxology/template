@@ -4,18 +4,18 @@
       "exists": true,
       "file_count": 2,
       "size_mb": "0.53",
-      "total_size_bytes": 554184,
+      "total_size_bytes": 554295,
       "largest_files": [
         {
           "name": "the-triplicate.pdf",
           "size_mb": "0.46",
-          "size_bytes": 479533,
+          "size_bytes": 479555,
           "path": "pdf/the-triplicate.pdf"
         },
         {
           "name": "template_newspaper_combined.pdf",
           "size_mb": "0.07",
-          "size_bytes": 74651,
+          "size_bytes": 74740,
           "path": "pdf/template_newspaper_combined.pdf"
         }
       ],
@@ -27,7 +27,7 @@
       "exists": true,
       "file_count": 10,
       "size_mb": "2.00",
-      "total_size_bytes": 2098992,
+      "total_size_bytes": 2099175,
       "largest_files": [
         {
           "name": "source-web-fonts.js",
@@ -38,13 +38,13 @@
         {
           "name": "index.html",
           "size_mb": "0.03",
-          "size_bytes": 30163,
+          "size_bytes": 30224,
           "path": "web/index.html"
         },
         {
           "name": "manuscript__02_engine_architecture.html",
           "size_mb": "0.02",
-          "size_bytes": 16433,
+          "size_bytes": 16470,
           "path": "web/manuscript__02_engine_architecture.html"
         }
       ],
@@ -59,12 +59,12 @@
       "exists": true,
       "file_count": 6,
       "size_mb": "0.14",
-      "total_size_bytes": 151645,
+      "total_size_bytes": 151685,
       "largest_files": [
         {
           "name": "02_engine_architecture_slides.pdf",
           "size_mb": "0.04",
-          "size_bytes": 41460,
+          "size_bytes": 41486,
           "path": "slides/02_engine_architecture_slides.pdf"
         },
         {
@@ -224,12 +224,12 @@
       "exists": true,
       "file_count": 1,
       "size_mb": "0.07",
-      "total_size_bytes": 74651,
+      "total_size_bytes": 74740,
       "largest_files": [
         {
           "name": "template_newspaper_combined.pdf",
           "size_mb": "0.07",
-          "size_bytes": 74651,
+          "size_bytes": 74740,
           "path": "template_newspaper_combined.pdf"
         }
       ],
@@ -239,7 +239,7 @@
     }
   },
   "total_files": 39,
-  "total_size_mb": 2.928708076477051,
+  "total_size_mb": 2.9291114807128906,
   "largest_files": [
     {
       "name": "source-web-fonts.js",
@@ -251,21 +251,21 @@
     {
       "name": "the-triplicate.pdf",
       "size_mb": "0.46",
-      "size_bytes": 479533,
+      "size_bytes": 479555,
       "category": "pdf",
       "path": "pdf/the-triplicate.pdf"
     },
     {
       "name": "template_newspaper_combined.pdf",
       "size_mb": "0.07",
-      "size_bytes": 74651,
+      "size_bytes": 74740,
       "category": "pdf",
       "path": "pdf/template_newspaper_combined.pdf"
     },
     {
       "name": "template_newspaper_combined.pdf",
       "size_mb": "0.07",
-      "size_bytes": 74651,
+      "size_bytes": 74740,
       "category": "root",
       "path": "template_newspaper_combined.pdf"
     },
@@ -286,7 +286,7 @@
     {
       "name": "02_engine_architecture_slides.pdf",
       "size_mb": "0.04",
-      "size_bytes": 41460,
+      "size_bytes": 41486,
       "category": "slides",
       "path": "slides/02_engine_architecture_slides.pdf"
     },
@@ -300,7 +300,7 @@
     {
       "name": "index.html",
       "size_mb": "0.03",
-      "size_bytes": 30163,
+      "size_bytes": 30224,
       "category": "web",
       "path": "web/index.html"
     },
@@ -314,14 +314,14 @@
   ],
   "missing_expected_files": [],
   "sizes_by_category": {
-    "pdf": 0.5285110473632812,
-    "web": 2.0017547607421875,
-    "slides": 0.14461994171142578,
+    "pdf": 0.5286169052124023,
+    "web": 2.00192928314209,
+    "slides": 0.14465808868408203,
     "figures": 0.16872692108154297,
     "data": 0.0074615478515625,
     "reports": 0.004547119140625,
     "release": 0.0018939971923828125,
-    "root": 0.07119274139404297
+    "root": 0.07127761840820312
   },
   "inventory_mode": "stable-shippable-output-v1",
   "inventory_scope": "stage5-delivery-mirror",

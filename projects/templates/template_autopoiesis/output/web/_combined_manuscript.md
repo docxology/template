@@ -641,9 +641,13 @@ primitive domains times three narrative tracks times three section-set
 sizes is the actual space of scientifically distinguishable children this
 template can emit.
 
+\clearpage
+
 ### The five primitive domains
 
 ![The five primitive domains, type-colored: `optimization`, `dynamics`, `statistics`, `signal`, `graph`.](../figures/fig_domain_coverage.png){#fig:domain_coverage width=85% fig-alt="Five colored bars, one per primitive domain."}
+
+\clearpage
 
 Each domain in `- optimization
 - dynamics

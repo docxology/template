@@ -715,11 +715,11 @@ while keeping a strict separation between <em>content</em> (data) and
 <em>engine</em> (code): a new title is a data edit, never a code change.
 The layout strategy is a hybrid in which fixed <em>furniture</em> is
 drawn directly on the canvas to establish where the column grid begins,
-after which body copy flows through ReportLab frames that split
-paragraphs across columns automatically. The project obeys the
-research-template monorepo contract and is discovered and executed by
-the same orchestration pipeline as its code- and prose-focused
-siblings.</p>
+after which body copy moves as whole flowables through ReportLab column
+frames, with headings kept beside their opening content. The project
+obeys the research-template monorepo contract and is discovered and
+executed by the same orchestration pipeline as its code- and
+prose-focused siblings.</p>
 <hr />
 <h1 data-number="2" id="introduction"><span
 class="header-section-number">2</span> Introduction</h1>
@@ -786,11 +786,11 @@ lead headline.</p>
 <p><code>layout</code> is the bridge. For each page it draws the
 furniture (which returns the y-coordinate where the column grid begins),
 constructs the column frames — including an optional narrow rail and the
-room reserved for a spanning headline — and pours the flowables into the
-frames with ReportLab’s <code>Frame.addFromList</code>, which splits
-paragraphs across columns automatically. Content that does not fit is
-returned and reported as an <em>over-set</em> page rather than silently
-dropped.</p>
+room reserved for a spanning headline — and pours whole flowables into
+the frames with ReportLab’s <code>Frame.addFromList</code> without
+paragraph splitting. Heading-and-opening groups move together to the
+next column. Content that does not fit is returned and reported as an
+<em>over-set</em> page rather than silently dropped.</p>
 <p><code>engine</code> ties it together: register fonts, build the
 stylesheet, open a canvas at the configured trim, render each page, and
 write the PDF plus a machine-readable render report.</p>

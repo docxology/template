@@ -4,18 +4,18 @@
       "exists": true,
       "file_count": 7,
       "size_mb": "1.43",
-      "total_size_bytes": 1504161,
+      "total_size_bytes": 1503612,
       "largest_files": [
         {
           "name": "template_template_pitch_long.pdf",
           "size_mb": "0.63",
-          "size_bytes": 657792,
+          "size_bytes": 657516,
           "path": "pdf/template_template_pitch_long.pdf"
         },
         {
           "name": "template_template_pitch_medium.pdf",
           "size_mb": "0.54",
-          "size_bytes": 569217,
+          "size_bytes": 568944,
           "path": "pdf/template_template_pitch_medium.pdf"
         },
         {
@@ -83,12 +83,12 @@
       "exists": true,
       "file_count": 9,
       "size_mb": "0.33",
-      "total_size_bytes": 351181,
+      "total_size_bytes": 351122,
       "largest_files": [
         {
           "name": "coverage_by_exemplar.png",
           "size_mb": "0.10",
-          "size_bytes": 103459,
+          "size_bytes": 103429,
           "path": "figures/coverage_by_exemplar.png"
         },
         {
@@ -100,7 +100,7 @@
         {
           "name": "test_count_vs_coverage.png",
           "size_mb": "0.05",
-          "size_bytes": 52096,
+          "size_bytes": 52067,
           "path": "figures/test_count_vs_coverage.png"
         }
       ],
@@ -167,24 +167,24 @@
       "exists": true,
       "file_count": 6,
       "size_mb": "1.12",
-      "total_size_bytes": 1176618,
+      "total_size_bytes": 1176154,
       "largest_files": [
         {
           "name": "template_template_pitch_long.pptx",
           "size_mb": "0.48",
-          "size_bytes": 499404,
+          "size_bytes": 499171,
           "path": "pptx/template_template_pitch_long.pptx"
         },
         {
           "name": "template_template_pitch_medium.pptx",
           "size_mb": "0.43",
-          "size_bytes": 446892,
+          "size_bytes": 446620,
           "path": "pptx/template_template_pitch_medium.pptx"
         },
         {
           "name": "template_template_pitch_short.pptx",
           "size_mb": "0.09",
-          "size_bytes": 97881,
+          "size_bytes": 97922,
           "path": "pptx/template_template_pitch_short.pptx"
         }
       ],
@@ -243,7 +243,7 @@
       "exists": true,
       "file_count": 123,
       "size_mb": "0.11",
-      "total_size_bytes": 110942,
+      "total_size_bytes": 110862,
       "largest_files": [
         {
           "name": "slide_28.md",
@@ -270,7 +270,7 @@
     }
   },
   "total_files": 163,
-  "total_size_mb": 5.186676025390625,
+  "total_size_mb": 5.185577392578125,
   "largest_files": [
     {
       "name": "source-web-fonts.js",
@@ -282,35 +282,35 @@
     {
       "name": "template_template_pitch_long.pdf",
       "size_mb": "0.63",
-      "size_bytes": 657792,
+      "size_bytes": 657516,
       "category": "pdf",
       "path": "pdf/template_template_pitch_long.pdf"
     },
     {
       "name": "template_template_pitch_medium.pdf",
       "size_mb": "0.54",
-      "size_bytes": 569217,
+      "size_bytes": 568944,
       "category": "pdf",
       "path": "pdf/template_template_pitch_medium.pdf"
     },
     {
       "name": "template_template_pitch_long.pptx",
       "size_mb": "0.48",
-      "size_bytes": 499404,
+      "size_bytes": 499171,
       "category": "pptx",
       "path": "pptx/template_template_pitch_long.pptx"
     },
     {
       "name": "template_template_pitch_medium.pptx",
       "size_mb": "0.43",
-      "size_bytes": 446892,
+      "size_bytes": 446620,
       "category": "pptx",
       "path": "pptx/template_template_pitch_medium.pptx"
     },
     {
       "name": "coverage_by_exemplar.png",
       "size_mb": "0.10",
-      "size_bytes": 103459,
+      "size_bytes": 103429,
       "category": "figures",
       "path": "figures/coverage_by_exemplar.png"
     },
@@ -331,7 +331,7 @@
     {
       "name": "template_template_pitch_short.pptx",
       "size_mb": "0.09",
-      "size_bytes": 97881,
+      "size_bytes": 97922,
       "category": "pptx",
       "path": "pptx/template_template_pitch_short.pptx"
     },
@@ -347,14 +347,14 @@
     "data/ directory"
   ],
   "sizes_by_category": {
-    "pdf": 1.4344797134399414,
+    "pdf": 1.4339561462402344,
     "web": 2.03216552734375,
-    "figures": 0.3349123001098633,
+    "figures": 0.3348560333251953,
     "reports": 0.005253791809082031,
-    "pptx": 1.122110366821289,
+    "pptx": 1.1216678619384766,
     "release_bundle": 0.06764888763427734,
     "root": 0.08430290222167969,
-    "slides_standalone": 0.10580253601074219
+    "slides_standalone": 0.10572624206542969
   },
   "inventory_mode": "stable-shippable-output-v1",
   "inventory_scope": "stage5-delivery-mirror",

@@ -62,7 +62,7 @@ be interpreted.
 | JWST | 17 |
 
 <!-- FIGURE: entity_bar_chart.png -->
-![Top named entities for Exoplanet Atmospheres. The horizontal bar chart shows the 20 most frequently extracted entities from abstracts, revealing recurring objects, instruments, methods, and concepts in the retained corpus.](../output/figures/entity_bar_chart.png "Named Entities"){#fig:entity_bar_chart}
+![Top named entities for Exoplanet Atmospheres. The horizontal bar chart shows the most frequently extracted entities from abstracts, revealing recurring objects, instruments, methods, and concepts in the retained corpus.](../output/figures/entity_bar_chart.png "Named Entities"){#fig:entity_bar_chart}
 
 \clearpage
 

@@ -3,13 +3,13 @@
     "pdf": {
       "exists": true,
       "file_count": 1,
-      "size_mb": "4.03",
-      "total_size_bytes": 4228804,
+      "size_mb": "4.14",
+      "total_size_bytes": 4344162,
       "largest_files": [
         {
           "name": "template_active_inference_combined.pdf",
-          "size_mb": "4.03",
-          "size_bytes": 4228804,
+          "size_mb": "4.14",
+          "size_bytes": 4344162,
           "path": "pdf/template_active_inference_combined.pdf"
         }
       ],
@@ -70,8 +70,8 @@
     "figures": {
       "exists": true,
       "file_count": 27,
-      "size_mb": "3.79",
-      "total_size_bytes": 3972235,
+      "size_mb": "3.89",
+      "total_size_bytes": 4077007,
       "largest_files": [
         {
           "name": "sheaf_layers_overview.png",
@@ -242,13 +242,13 @@
     "root": {
       "exists": true,
       "file_count": 1,
-      "size_mb": "4.03",
-      "total_size_bytes": 4228804,
+      "size_mb": "4.14",
+      "total_size_bytes": 4344162,
       "largest_files": [
         {
           "name": "template_active_inference_combined.pdf",
-          "size_mb": "4.03",
-          "size_bytes": 4228804,
+          "size_mb": "4.14",
+          "size_bytes": 4344162,
           "path": "template_active_inference_combined.pdf"
         }
       ],
@@ -258,19 +258,19 @@
     }
   },
   "total_files": 178,
-  "total_size_mb": 21.78272819519043,
+  "total_size_mb": 22.10267448425293,
   "largest_files": [
     {
       "name": "template_active_inference_combined.pdf",
-      "size_mb": "4.03",
-      "size_bytes": 4228804,
+      "size_mb": "4.14",
+      "size_bytes": 4344162,
       "category": "pdf",
       "path": "pdf/template_active_inference_combined.pdf"
     },
     {
       "name": "template_active_inference_combined.pdf",
-      "size_mb": "4.03",
-      "size_bytes": 4228804,
+      "size_mb": "4.14",
+      "size_bytes": 4344162,
       "category": "root",
       "path": "template_active_inference_combined.pdf"
     },
@@ -333,14 +333,14 @@
   ],
   "missing_expected_files": [],
   "sizes_by_category": {
-    "pdf": 4.032901763916016,
+    "pdf": 4.142915725708008,
     "web": 2.6339902877807617,
-    "figures": 3.7882184982299805,
+    "figures": 3.888136863708496,
     "data": 2.817331314086914,
     "reports": 0.41170310974121094,
     "arxiv_submission": 3.9248781204223633,
     "manuscript": 0.14080333709716797,
-    "root": 4.032901763916016
+    "root": 4.142915725708008
   },
   "inventory_mode": "stable-shippable-output-v1",
   "inventory_scope": "stage5-delivery-mirror",

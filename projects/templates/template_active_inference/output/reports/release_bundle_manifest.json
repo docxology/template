@@ -2,7 +2,7 @@
   "all_copied_outputs_match_or_deferred": true,
   "all_required_sources_present": true,
   "artifact_count": 36,
-  "bundle_hash": "d70d913df2d047c5f4ab3bd4387bf381bfcce91b4d53ca3c8457e06c16a2c689",
+  "bundle_hash": "59345b7fb62c67f1ceb2088c22c866b1f9f9355bc5b5c144fd7d87764e9a8cef",
   "copied_output_parity": {
     "all_copied_outputs_match": false,
     "all_copied_outputs_match_or_deferred": true,
@@ -744,7 +744,7 @@
       "hash_cycle_excluded": false,
       "required_deliverable": true,
       "source_exists": true,
-      "source_sha256": "76e90eee3a43f52fe17c07fedb6d0f0a0ca6356ce6ddd7d4e54f7528b269d51a"
+      "source_sha256": "4a8850386cef5cfa3591e42ad2032806980f86f6e7e2d2cfd73a65bcef3b1a76"
     },
     {
       "artifact": "output/data/statistical_visualization_bridge.json",

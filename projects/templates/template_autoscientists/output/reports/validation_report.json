@@ -211,16 +211,16 @@
         "valid": true,
         "warnings": []
       },
-      "total_size_mb": 2.6223669052124023
+      "total_size_mb": 2.6221323013305664
     },
     "figures": {
       "files": 4,
-      "size_mb": 0.1596059799194336
+      "size_mb": 0.15947246551513672
     },
     "inventory_mode": "stable-shippable-output-v1",
     "pdf": {
       "files": 1,
-      "size_mb": 0.3023252487182617
+      "size_mb": 0.30222415924072266
     },
     "stable_inventory": {
       "categories": {
@@ -230,11 +230,11 @@
         },
         "figures": {
           "files": 4,
-          "size_bytes": 167359
+          "size_bytes": 167219
         },
         "pdf": {
           "files": 1,
-          "size_bytes": 317011
+          "size_bytes": 316905
         },
         "release": {
           "files": 2,
@@ -251,7 +251,7 @@
       },
       "mode": "stable-shippable-output-v1",
       "total_files": 26,
-      "total_size_bytes": 2749751
+      "total_size_bytes": 2749505
     }
   },
   "recommendations": [],
@@ -262,11 +262,11 @@
     "passed": 9,
     "total_checks": 9
   },
-  "timestamp": "2026-10-22T20:31:52Z",
+  "timestamp": "2026-10-22T22:54:54Z",
   "validated_inputs": {
     "artifact_manifest": {
       "path": "output/reports/artifact_manifest.json",
-      "sha256": "d4f256b2e3da5cc99e7dfbaef8d2dee2d479833a662b25fac0afa9ed4cad4446",
+      "sha256": "72c3c30fcff863535f8cee7cc01f2dde09695325b8fa1d9c77140599af3c53b9",
       "size_bytes": 8515
     },
     "combined_manuscript": {
@@ -342,15 +342,15 @@
       },
       "output": {
         "file_count": 26,
-        "sha256": "7162c12b4768e7ed37c11a62d698cf7e24164e242f0bc5fd0c7534cc8ed157c3"
+        "sha256": "a4d17597715afcab4b74457eab804dde5ea936f818dca83c5f1ef6c17dcf532e"
       },
       "source": {
         "file_count": 40,
-        "sha256": "e49f30d6482d0276e29d94bf9055e1293562b366b9ff7bad7af2c5033354a0b7"
+        "sha256": "c638f2bac380c013e6e9b71de876a71f23f521fdb31f76b805b015bcd48dc541"
       },
       "stage": {
         "file_count": 1913,
-        "sha256": "a1e56a7908ff6e39f6c5f546c80b52bf069db1cdb23cf0aeeb7394aa142419c1"
+        "sha256": "13ce92cd0a26b7a9ae4f5865e6a9647dcd71470cdce555045fe3263a65a6f48f"
       }
     },
     "project": "templates/template_autoscientists",

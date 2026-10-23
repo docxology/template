@@ -67,11 +67,11 @@
       "size_bytes": 88738
     },
     {
-      "content_sha256": "cad3cd57a512e8f5d7fbd508d450484a0cf702b36b0f823f88ed9c0e9935c8f6",
+      "content_sha256": "eda7f00950f1ea38ed876a4891e2063ce5795fa29b216894809a15c4c5ac4d30",
       "fresh": true,
       "path": "output/figures/lean_boundary_status.png",
-      "sha256": "0e5fb35912475b0cd830e741de656a96a03e74965101b2f19b8ec0b378717dd9",
-      "size_bytes": 356478
+      "sha256": "f6a9ad02889c8b006b57de6c95ea6d6df803234cd04425b72b33af0c16480431",
+      "size_bytes": 460703
     },
     {
       "content_sha256": "a61fbe0316b3b1a4a918f33eab1bee5d8e6df7aa3cac11d55bb46cff80279a85",
@@ -158,11 +158,11 @@
       "size_bytes": 122202
     },
     {
-      "content_sha256": "ba106a510e8bf01996514b78dd0d76ac389b4f809bac45a3e39e23165b622792",
+      "content_sha256": "29abcdc4d051b32c8a85517fee8a3b431b9ab688f9bc3b9c57e8e2edec5fb31c",
       "fresh": true,
       "path": "output/figures/tmaze_schematic.png",
-      "sha256": "4d853a7f6b48921da10033042f23f39286e9976bf94376c9149ddd4537a82edc",
-      "size_bytes": 36052
+      "sha256": "517cd677cebcdf745bfd67a8290878ad8c121797fece2c991255c747c21296c5",
+      "size_bytes": 36599
     },
     {
       "content_sha256": "6d4a96ac32d2a54aa04862bac42d636c5a8164c96e5680c5275c6a6251f46b48",

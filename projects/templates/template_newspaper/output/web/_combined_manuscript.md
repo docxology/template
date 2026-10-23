@@ -10,8 +10,8 @@ modular boxes, data tables, halftone "engraving" figures and running folios —
 while keeping a strict separation between *content* (data) and *engine* (code):
 a new title is a data edit, never a code change. The layout strategy is a hybrid
 in which fixed *furniture* is drawn directly on the canvas to establish where
-the column grid begins, after which body copy flows through ReportLab frames
-that split paragraphs across columns automatically. The project obeys the
+the column grid begins, after which body copy moves as whole flowables through
+ReportLab column frames, with headings kept beside their opening content. The project obeys the
 research-template monorepo contract and is discovered and executed by the same
 orchestration pipeline as its code- and prose-focused siblings.
 
@@ -92,9 +92,10 @@ folio, the hairline column rules, and the spanning lead headline.
 `layout` is the bridge. For each page it draws the furniture (which returns the
 y-coordinate where the column grid begins), constructs the column frames —
 including an optional narrow rail and the room reserved for a spanning headline
-— and pours the flowables into the frames with ReportLab's `Frame.addFromList`,
-which splits paragraphs across columns automatically. Content that does not fit
-is returned and reported as an *over-set* page rather than silently dropped.
+— and pours whole flowables into the frames with ReportLab's `Frame.addFromList`
+without paragraph splitting. Heading-and-opening groups move together to the
+next column. Content that does not fit is returned and reported as an *over-set*
+page rather than silently dropped.
 
 `engine` ties it together: register fonts, build the stylesheet, open a canvas
 at the configured trim, render each page, and write the PDF plus a

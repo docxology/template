@@ -96,8 +96,8 @@ def build_dashboard(args, payload: dict, *, repo_root: Path = REPO_ROOT) -> Inte
             traces=traj_traces,
             layout={
                 "xaxis": {"title": "iteration"},
-                "yaxis": {"title": "objective f(x_t)"},
-                "legend": {"orientation": "h", "y": -0.2},
+                "yaxis": {"title": "objective f(x_t)", "automargin": True},
+                "legend": {"orientation": "h", "y": -0.35, "yanchor": "top"},
             },
         )
     )

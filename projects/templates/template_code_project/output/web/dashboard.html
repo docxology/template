@@ -16,7 +16,7 @@
 @media (prefers-color-scheme: light){
   :root{
     --bg:#eef1f6; --panel:#ffffff; --fg:#1f2733; --muted:#5a6573;
-    --accent:#5b6ee0; --border:#e3e8ef;
+    --accent:#5b6ee0; --pass:#15803d; --fail:#b91c1c; --border:#e3e8ef;
   }
 }
 *{box-sizing:border-box}
@@ -27,27 +27,29 @@ h1{margin:0 0 4px 0;font-size:24px}
 h2{margin:24px 0 8px 0;font-size:16px;color:var(--muted);
   text-transform:uppercase;letter-spacing:.08em}
 .subtitle{color:var(--muted);margin:0 0 16px 0}
-.row{display:grid;grid-template-columns:repeat(auto-fit,minmax(420px,1fr));
+.row{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(420px,100%),1fr));
   gap:16px}
-.panel{background:var(--panel);border:1px solid var(--border);
+.panel{min-width:0;background:var(--panel);border:1px solid var(--border);
   border-radius:8px;padding:12px}
 .panel h3{margin:0 0 8px 0;font-size:14px;color:var(--fg)}
 .panel .desc{color:var(--muted);font-size:12px;margin:0 0 8px 0}
 .controls{background:var(--panel);border:1px solid var(--border);
   border-radius:8px;padding:12px;margin-bottom:16px;
-  display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(min(260px,100%),1fr));
   gap:12px}
 .ctrl label{display:block;font-size:12px;color:var(--muted);
   margin-bottom:4px;text-transform:uppercase;letter-spacing:.05em}
 .ctrl input[type=range]{width:100%}
 .ctrl .value{color:var(--accent);font-variant-numeric:tabular-nums}
-.invariants{margin-top:24px}
+.invariants{margin-top:24px;min-width:0}
+.invariants .table-scroll{max-width:100%;overflow-x:auto}
+.invariants .table-scroll:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 .invariants table{width:100%;border-collapse:collapse;font-size:13px;
   background:var(--panel);border:1px solid var(--border);border-radius:8px;
   overflow:hidden}
 .invariants th,.invariants td{padding:8px 10px;text-align:left;
   border-bottom:1px solid var(--border)}
-.invariants th{background:#0b1220;color:var(--muted);font-weight:600}
+.invariants th{background:#0b1220;color:#e5e7eb;font-weight:600}
 .pass{color:var(--pass);font-weight:700}
 .fail{color:var(--fail);font-weight:700}
 .tabs{display:flex;gap:4px;margin:16px 0 8px 0}
@@ -57,11 +59,11 @@ h2{margin:24px 0 8px 0;font-size:16px;color:var(--muted);
   border-color:var(--accent)}
 .tab-content{display:none}
 .tab-content.active{display:block}
-pre{background:#0b1220;border:1px solid var(--border);
+pre{background:#0b1220;color:#e5e7eb;border:1px solid var(--border);
   border-radius:6px;padding:12px;overflow:auto;max-height:520px;font-size:12px}
 .meta{color:var(--muted);font-size:12px;margin-top:24px;padding-top:12px;
   border-top:1px solid var(--border)}
-.kbd{background:#0b1220;border:1px solid var(--border);border-radius:4px;
+.kbd{background:#0b1220;color:#e5e7eb;border:1px solid var(--border);border-radius:4px;
   padding:1px 4px;font-family:ui-monospace,monospace;font-size:11px}
 .summary-bar{display:flex;gap:12px;align-items:center;margin-top:8px}
 .summary-bar .pill{background:var(--panel);border:1px solid var(--border);
@@ -103,8 +105,8 @@ pre{background:#0b1220;border:1px solid var(--border);
 
 <div class="meta">
   project: <code>template_code_project</code> &middot;
-  generated: <code>2026-10-22T21:05:50Z</code> &middot;
-  git: <code>727a513e1 (dirty)</code> &middot;
+  generated: <code>2026-10-22T23:07:17Z</code> &middot;
+  git: <code>1fc5af75c (dirty)</code> &middot;
   panels: 5 &middot;
   controls: 2 &middot;
   invariants: 22
@@ -115,8 +117,8 @@ const BUNDLE = {
   "title": "Optimization Exemplar — Interactive Convergence Suite",
   "subtitle": "Live gradient-descent diagnostics on the configurable quadratic f(x) = (1/2) x^T A x − b^T x. Defaults read from manuscript/config.yaml; every knob is CLI-overridable.",
   "project": "template_code_project",
-  "generated_utc": "2026-10-22T21:05:50Z",
-  "git_rev": "727a513e1",
+  "generated_utc": "2026-10-22T23:07:17Z",
+  "git_rev": "1fc5af75c",
   "git_dirty": true,
   "hyperparameters": {
     "A_diagonal": [
@@ -4543,6 +4545,9 @@ function renderPanels(){
       (p.description ? '<div class="desc">' + p.description + '</div>' : '') +
       '<div id="plot-' + p.panel_id + '" style="height:340px"></div>';
     root.appendChild(div);
+  });
+  // Establish the complete grid before any native Plotly width measurement.
+  BUNDLE.panels.forEach(p => {
     const layout = Object.assign({
       paper_bgcolor:'#111827', plot_bgcolor:'#0b1220',
       font:{color:'#e5e7eb'},
@@ -4581,7 +4586,8 @@ function renderInvariants(){
     '<span class="pill ' + (failed?'bad':'') + '">FAIL: ' + failed + '</span>' +
     '<span class="pill">total: ' + total + '</span>' +
     '</div>';
-  html += '<table><thead><tr><th>status</th><th>name</th><th>kind</th><th>tolerance</th><th>witness</th></tr></thead><tbody>';
+  html += '<div class="table-scroll" role="region" aria-label="Invariant results" tabindex="0">' +
+    '<table><thead><tr><th>status</th><th>name</th><th>kind</th><th>tolerance</th><th>witness</th></tr></thead><tbody>';
   BUNDLE.invariants.forEach(i => {
     html += '<tr>' +
       '<td class="' + (i.passed?'pass':'fail') + '">' + (i.passed?'PASS':'FAIL') + '</td>' +
@@ -4591,7 +4597,7 @@ function renderInvariants(){
       '<td>' + i.witness + '</td>' +
       '</tr>';
   });
-  html += '</tbody></table>';
+  html += '</tbody></table></div>';
   root.innerHTML = html;
 }
 

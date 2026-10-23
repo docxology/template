@@ -291,7 +291,7 @@
     {
       "contract_match": true,
       "path": "output/data/artifact_contract_index.json",
-      "sha256": "dcd514b8d3f6b98029e6bc5d0eecbab318ea366837173997fc8042e91f71ae27",
+      "sha256": "e34487550f5b66c4e40b55f9bdbf276abd39fe75bc81c93366540824741c28ff",
       "size_bytes": 104401,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
@@ -300,7 +300,7 @@
     {
       "contract_match": true,
       "path": "output/data/artifact_provenance.json",
-      "sha256": "304927d5631531a01e44f048cb80af355987cbc440fce774df89d0e210e7703a",
+      "sha256": "a8b0c489826c9513d02734038846eef95052c6075df71da20230b4d04bece0d2",
       "size_bytes": 194783,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
@@ -336,7 +336,7 @@
     {
       "contract_match": true,
       "path": "output/data/figure_source_map.json",
-      "sha256": "1e0e5ee9333d571b13f75611f5f85e882436fadbe960d6d46508866d9635056b",
+      "sha256": "ad94d5a53fa4633cec76e3de43806a9d1895376179a715e7d3a5c1c07b7ba7a6",
       "size_bytes": 43395,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
@@ -777,8 +777,8 @@
     {
       "contract_match": true,
       "path": "output/figures/lean_boundary_status.png",
-      "sha256": "0e5fb35912475b0cd830e741de656a96a03e74965101b2f19b8ec0b378717dd9",
-      "size_bytes": 356478,
+      "sha256": "f6a9ad02889c8b006b57de6c95ea6d6df803234cd04425b72b33af0c16480431",
+      "size_bytes": 460703,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
@@ -894,8 +894,8 @@
     {
       "contract_match": true,
       "path": "output/figures/tmaze_schematic.png",
-      "sha256": "4d853a7f6b48921da10033042f23f39286e9976bf94376c9149ddd4537a82edc",
-      "size_bytes": 36052,
+      "sha256": "517cd677cebcdf745bfd67a8290878ad8c121797fece2c991255c747c21296c5",
+      "size_bytes": 36599,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
@@ -1119,8 +1119,8 @@
     {
       "contract_match": true,
       "path": "output/pdf/template_active_inference_combined.pdf",
-      "sha256": "dd0e80dc0e131c271c39d8cb28e4005850ae1486a8302426dc7ff71bc276a305",
-      "size_bytes": 3515441,
+      "sha256": "e35e03d803dfc3e3775cd9e6522bef4bacbee5323a1fe0cdcbfcbaf8d77ad155",
+      "size_bytes": 3604636,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
@@ -1191,7 +1191,7 @@
     {
       "contract_match": true,
       "path": "output/reports/figure_hash_manifest.json",
-      "sha256": "a719f6da8c4139f5441297fa7c8647cffef6c0b25ec6c824b363d2a0cdc66a0a",
+      "sha256": "e81b77fcd1fe8f05e5674db3fec8e3f1d9a9ad9e36e2ee34483feed7ad07d8a3",
       "size_bytes": 7813,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
@@ -1290,7 +1290,7 @@
     {
       "contract_match": true,
       "path": "output/reports/release_attestation.json",
-      "sha256": "4ddd6bd3c801b173c4930ec49405316669a34d8b05cccf2b40b0a2cb6900c819",
+      "sha256": "5e4ff7429ec12703e6d720e134bad2ddc5ce82d6ce518b4d30e6878624bd8aa7",
       "size_bytes": 1985,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
@@ -1299,7 +1299,7 @@
     {
       "contract_match": true,
       "path": "output/reports/release_bundle_manifest.json",
-      "sha256": "21ab1b0bab135935d7dbc8ec3e04d9057ac429de774502b1ab348bfc069fd444",
+      "sha256": "ebe5848a48a71a4ec540c7ac9d1260497f5efbbf45cc15c59c7e1b7acf4f11f4",
       "size_bytes": 31383,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
@@ -1317,7 +1317,7 @@
     {
       "contract_match": true,
       "path": "output/reports/replay_matrix.json",
-      "sha256": "ca6f8aef2fe1a9184cf31ecc1cda754bf0006599233b142a767fb705ef2da6be",
+      "sha256": "6f9c61c874bb3bf3c46718eddfbd67cae56681ceffd26d81a62367f3722d694d",
       "size_bytes": 27762,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
@@ -1407,7 +1407,7 @@
     {
       "contract_match": true,
       "path": "output/reports/visualization_quality_audit.json",
-      "sha256": "76e90eee3a43f52fe17c07fedb6d0f0a0ca6356ce6ddd7d4e54f7528b269d51a",
+      "sha256": "4a8850386cef5cfa3591e42ad2032806980f86f6e7e2d2cfd73a65bcef3b1a76",
       "size_bytes": 40025,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,

@@ -2,8 +2,8 @@
   "title": "Optimization Exemplar — Interactive Convergence Suite",
   "subtitle": "Live gradient-descent diagnostics on the configurable quadratic f(x) = (1/2) x^T A x − b^T x. Defaults read from manuscript/config.yaml; every knob is CLI-overridable.",
   "project": "template_code_project",
-  "generated_utc": "2026-10-22T21:05:50Z",
-  "git_rev": "727a513e1",
+  "generated_utc": "2026-10-22T23:07:17Z",
+  "git_rev": "1fc5af75c",
   "git_dirty": true,
   "hyperparameters": {
     "A_diagonal": [
