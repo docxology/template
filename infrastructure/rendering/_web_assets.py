@@ -182,7 +182,7 @@ mjx-container[display="true"] { max-width: 100%; overflow: visible; }
   outline: 3px solid var(--brand-1);
   outline-offset: 3px;
 }
-.table-scroll > table { margin-block: 0; min-width: 100%; width: max-content; }"""
+.table-scroll > table { margin-block: 0; display: table; min-width: 100%; width: 100%; }"""
 
 
 def harden_mathjax_script(html_file: Path) -> None:
