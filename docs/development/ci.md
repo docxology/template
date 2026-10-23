@@ -47,9 +47,10 @@ dependency group and root lock/package/Python-selector inputs. Every caller
 still runs its declared locked reconciliation. Reused downloads or environments
 are preparation inputs, never accepted runtime results.
 
-Infrastructure smoke prepares genuine Poppler tools for raster controls. The
-auxiliary contract additionally prepares the declared Pandoc/XeTeX document
-producers and readers. The native portability contract warms the exact Root
+Infrastructure smoke prepares genuine Poppler tools for raster controls. Its
+selected compiler controls also install the recommended TeX fonts and verify
+`pzdr.tfm`, which XeTeX hyperlink support requires. The auxiliary contract
+additionally prepares the declared Pandoc/XeTeX document producers and readers. The native portability contract warms the exact Root
 lockfile's default and dev groups in a fresh job-owned environment before its
 unchanged offline fixture runs; a restored environment alone does not establish
 that the required wheel archives remain cached.
