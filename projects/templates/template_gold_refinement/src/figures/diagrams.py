@@ -394,7 +394,7 @@ def generate_claim_evidence_assay(
     grid = fig.add_gridspec(2, 1, height_ratios=(1.0, 1.2), hspace=0.35, left=0.07, right=0.98, top=0.94, bottom=0.04)
     ax = fig.add_subplot(grid[0])
     support_bounds = ax.get_position()
-    ax.set_position([0.32, support_bounds.y0, 0.65, support_bounds.height])
+    ax.set_position((0.32, support_bounds.y0, 0.65, support_bounds.height))
     graph_ax = fig.add_subplot(grid[1])
     ax.set_xlim(0, 1.05)
     ax.set_ylim(-0.8, max(1, len(entries)) - 0.2)

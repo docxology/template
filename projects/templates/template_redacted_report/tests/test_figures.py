@@ -73,7 +73,7 @@ def test_svg_companions_carry_accessibility_markup(tmp_path: Path) -> None:
         assert all(line == line.rstrip(" \t") for line in svg.split("\n"))
 
         # Independently retain the actual unnormalized drawing and compare its parsed SVG geometry/text.
-        import xml.etree.ElementTree as ET
+        from defusedxml import ElementTree as ET
 
         raw_png = tmp_path / f"{spec['name']}-raw.png"
         raw_svg = tmp_path / f"{spec['name']}-raw.svg"

@@ -12,6 +12,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib.colors import ListedColormap
 from matplotlib.patches import FancyBboxPatch, FancyArrowPatch
+from matplotlib.transforms import Bbox
 
 from gnn.concordance import BERNOULLI_SYMBOL_MAP
 from gnn.parser import parse_gnn_file
@@ -474,7 +475,7 @@ def figure_lean_boundary_status(project_root: Path) -> Path:
             cellText=table_data,
             colLabels=["Module", "Kind", "Name", "Status"],
             colWidths=[0.32, 0.10, 0.46, 0.12],
-            bbox=[0, 0, 1, 0.96],
+            bbox=Bbox.from_bounds(0, 0, 1, 0.96),
             cellLoc="left",
         )
         table.auto_set_font_size(False)
