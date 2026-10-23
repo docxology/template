@@ -298,7 +298,7 @@
     "passed": 9,
     "total_checks": 9
   },
-  "timestamp": "2026-10-23T11:26:14Z",
+  "timestamp": "2026-10-23T12:44:35Z",
   "validated_inputs": {
     "artifact_manifest": {
       "path": "output/reports/artifact_manifest.json",
@@ -374,7 +374,7 @@
       },
       "stage": {
         "file_count": 1913,
-        "sha256": "9374e94749ff05c91e3015959105056d6fcb279851a53def52585acd00505abf"
+        "sha256": "e2988e519a8e0538602cb07203bac913d60ec7188a513c0acb96888292bc2ab5"
       }
     },
     "project": "templates/template_pitch_deck",
