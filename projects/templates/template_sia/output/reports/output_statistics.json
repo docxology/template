@@ -3,13 +3,13 @@
     "pdf": {
       "exists": true,
       "file_count": 1,
-      "size_mb": "0.20",
-      "total_size_bytes": 211759,
+      "size_mb": "0.16",
+      "total_size_bytes": 164851,
       "largest_files": [
         {
           "name": "template_sia_combined.pdf",
-          "size_mb": "0.20",
-          "size_bytes": 211759,
+          "size_mb": "0.16",
+          "size_bytes": 164851,
           "path": "pdf/template_sia_combined.pdf"
         }
       ],
@@ -21,7 +21,7 @@
       "exists": true,
       "file_count": 10,
       "size_mb": "1.99",
-      "total_size_bytes": 2091572,
+      "total_size_bytes": 2091712,
       "largest_files": [
         {
           "name": "source-web-fonts.js",
@@ -32,13 +32,13 @@
         {
           "name": "index.html",
           "size_mb": "0.03",
-          "size_bytes": 27607,
+          "size_bytes": 27627,
           "path": "web/index.html"
         },
         {
           "name": "manuscript__02_methodology.html",
           "size_mb": "0.02",
-          "size_bytes": 18164,
+          "size_bytes": 18184,
           "path": "web/manuscript__02_methodology.html"
         }
       ],
@@ -70,13 +70,13 @@
     "figures": {
       "exists": true,
       "file_count": 5,
-      "size_mb": "0.12",
-      "total_size_bytes": 128986,
+      "size_mb": "0.11",
+      "total_size_bytes": 118249,
       "largest_files": [
         {
           "name": "sia_metric_progression.png",
-          "size_mb": "0.04",
-          "size_bytes": 43644,
+          "size_mb": "0.03",
+          "size_bytes": 32907,
           "path": "figures/sia_metric_progression.png"
         },
         {
@@ -226,13 +226,13 @@
     "root": {
       "exists": true,
       "file_count": 1,
-      "size_mb": "0.20",
-      "total_size_bytes": 211759,
+      "size_mb": "0.16",
+      "total_size_bytes": 164851,
       "largest_files": [
         {
           "name": "template_sia_combined.pdf",
-          "size_mb": "0.20",
-          "size_bytes": 211759,
+          "size_mb": "0.16",
+          "size_bytes": 164851,
           "path": "template_sia_combined.pdf"
         }
       ],
@@ -273,7 +273,7 @@
     }
   },
   "total_files": 47,
-  "total_size_mb": 2.5478391647338867,
+  "total_size_mb": 2.448263168334961,
   "largest_files": [
     {
       "name": "source-web-fonts.js",
@@ -284,22 +284,22 @@
     },
     {
       "name": "template_sia_combined.pdf",
-      "size_mb": "0.20",
-      "size_bytes": 211759,
+      "size_mb": "0.16",
+      "size_bytes": 164851,
       "category": "pdf",
       "path": "pdf/template_sia_combined.pdf"
     },
     {
       "name": "template_sia_combined.pdf",
-      "size_mb": "0.20",
-      "size_bytes": 211759,
+      "size_mb": "0.16",
+      "size_bytes": 164851,
       "category": "root",
       "path": "template_sia_combined.pdf"
     },
     {
       "name": "sia_metric_progression.png",
-      "size_mb": "0.04",
-      "size_bytes": 43644,
+      "size_mb": "0.03",
+      "size_bytes": 32907,
       "category": "figures",
       "path": "figures/sia_metric_progression.png"
     },
@@ -320,7 +320,7 @@
     {
       "name": "index.html",
       "size_mb": "0.03",
-      "size_bytes": 27607,
+      "size_bytes": 27627,
       "category": "web",
       "path": "web/index.html"
     },
@@ -334,28 +334,28 @@
     {
       "name": "manuscript__02_methodology.html",
       "size_mb": "0.02",
-      "size_bytes": 18164,
+      "size_bytes": 18184,
       "category": "web",
       "path": "web/manuscript__02_methodology.html"
     },
     {
       "name": "manuscript__03_results.html",
       "size_mb": "0.01",
-      "size_bytes": 14714,
+      "size_bytes": 14734,
       "category": "web",
       "path": "web/manuscript__03_results.html"
     }
   ],
   "missing_expected_files": [],
   "sizes_by_category": {
-    "pdf": 0.2019491195678711,
-    "web": 1.9946784973144531,
-    "figures": 0.12301063537597656,
+    "pdf": 0.15721416473388672,
+    "web": 1.99481201171875,
+    "figures": 0.11277103424072266,
     "data": 0.001712799072265625,
     "reports": 0.007205009460449219,
     "manuscript": 0.007485389709472656,
     "release": 0.00185394287109375,
-    "root": 0.2019491195678711,
+    "root": 0.15721416473388672,
     "runs": 0.007994651794433594
   },
   "inventory_mode": "stable-shippable-output-v1",

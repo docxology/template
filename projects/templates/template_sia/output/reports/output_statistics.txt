@@ -8,24 +8,24 @@ Inventory Scope: stage5-delivery-mirror
 Inventory Root: output/templates/template_sia
 
 Total Files: 47
-Total Size: 2.55 MB
+Total Size: 2.45 MB
 
 Files by Category:
-  • pdf: 1 files (0.20 MB)
+  • pdf: 1 files (0.16 MB)
   • web: 10 files (1.99 MB)
-  • figures: 5 files (0.12 MB)
+  • figures: 5 files (0.11 MB)
   • data: 2 files (0.00 MB)
   • reports: 4 files (0.01 MB)
   • manuscript: 9 files (0.01 MB)
   • release: 2 files (0.00 MB)
-  • root: 1 files (0.20 MB)
+  • root: 1 files (0.16 MB)
   • runs: 13 files (0.01 MB)
 
 Largest Files:
   • source-web-fonts.js: 1.88 MB (web)
-  • template_sia_combined.pdf: 0.20 MB (pdf)
-  • template_sia_combined.pdf: 0.20 MB (root)
-  • sia_metric_progression.png: 0.04 MB (figures)
+  • template_sia_combined.pdf: 0.16 MB (pdf)
+  • template_sia_combined.pdf: 0.16 MB (root)
+  • sia_metric_progression.png: 0.03 MB (figures)
   • sia_loop_topology.png: 0.03 MB (figures)
 
 File Types:

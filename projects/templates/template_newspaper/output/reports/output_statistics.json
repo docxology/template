@@ -3,19 +3,19 @@
     "pdf": {
       "exists": true,
       "file_count": 2,
-      "size_mb": "0.53",
-      "total_size_bytes": 554295,
+      "size_mb": "0.42",
+      "total_size_bytes": 436155,
       "largest_files": [
         {
           "name": "the-triplicate.pdf",
-          "size_mb": "0.46",
-          "size_bytes": 479555,
+          "size_mb": "0.36",
+          "size_bytes": 377508,
           "path": "pdf/the-triplicate.pdf"
         },
         {
           "name": "template_newspaper_combined.pdf",
-          "size_mb": "0.07",
-          "size_bytes": 74740,
+          "size_mb": "0.06",
+          "size_bytes": 58647,
           "path": "pdf/template_newspaper_combined.pdf"
         }
       ],
@@ -27,7 +27,7 @@
       "exists": true,
       "file_count": 10,
       "size_mb": "2.00",
-      "total_size_bytes": 2099175,
+      "total_size_bytes": 2099315,
       "largest_files": [
         {
           "name": "source-web-fonts.js",
@@ -38,13 +38,13 @@
         {
           "name": "index.html",
           "size_mb": "0.03",
-          "size_bytes": 30224,
+          "size_bytes": 30244,
           "path": "web/index.html"
         },
         {
           "name": "manuscript__02_engine_architecture.html",
           "size_mb": "0.02",
-          "size_bytes": 16470,
+          "size_bytes": 16490,
           "path": "web/manuscript__02_engine_architecture.html"
         }
       ],
@@ -58,26 +58,26 @@
     "slides": {
       "exists": true,
       "file_count": 6,
-      "size_mb": "0.14",
-      "total_size_bytes": 151685,
+      "size_mb": "0.11",
+      "total_size_bytes": 111277,
       "largest_files": [
         {
           "name": "02_engine_architecture_slides.pdf",
-          "size_mb": "0.04",
-          "size_bytes": 41486,
+          "size_mb": "0.03",
+          "size_bytes": 30885,
           "path": "slides/02_engine_architecture_slides.pdf"
-        },
-        {
-          "name": "01_introduction_slides.pdf",
-          "size_mb": "0.02",
-          "size_bytes": 24158,
-          "path": "slides/01_introduction_slides.pdf"
         },
         {
           "name": "99_references_slides.pdf",
           "size_mb": "0.02",
-          "size_bytes": 23816,
+          "size_bytes": 17748,
           "path": "slides/99_references_slides.pdf"
+        },
+        {
+          "name": "01_introduction_slides.pdf",
+          "size_mb": "0.02",
+          "size_bytes": 17381,
+          "path": "slides/01_introduction_slides.pdf"
         }
       ],
       "extensions": {
@@ -99,25 +99,25 @@
     "figures": {
       "exists": true,
       "file_count": 13,
-      "size_mb": "0.17",
-      "total_size_bytes": 176923,
+      "size_mb": "0.07",
+      "total_size_bytes": 75848,
       "largest_files": [
         {
           "name": "weather_7day.png",
-          "size_mb": "0.04",
-          "size_bytes": 47000,
+          "size_mb": "0.02",
+          "size_bytes": 19585,
           "path": "figures/weather_7day.png"
         },
         {
           "name": "crab_landings.png",
-          "size_mb": "0.04",
-          "size_bytes": 41751,
+          "size_mb": "0.02",
+          "size_bytes": 16912,
           "path": "figures/crab_landings.png"
         },
         {
           "name": "tides.png",
-          "size_mb": "0.03",
-          "size_bytes": 35572,
+          "size_mb": "0.01",
+          "size_bytes": 15640,
           "path": "figures/tides.png"
         }
       ],
@@ -223,13 +223,13 @@
     "root": {
       "exists": true,
       "file_count": 1,
-      "size_mb": "0.07",
-      "total_size_bytes": 74740,
+      "size_mb": "0.06",
+      "total_size_bytes": 58647,
       "largest_files": [
         {
           "name": "template_newspaper_combined.pdf",
-          "size_mb": "0.07",
-          "size_bytes": 74740,
+          "size_mb": "0.06",
+          "size_bytes": 58647,
           "path": "template_newspaper_combined.pdf"
         }
       ],
@@ -239,7 +239,7 @@
     }
   },
   "total_files": 39,
-  "total_size_mb": 2.9291114807128906,
+  "total_size_mb": 2.666301727294922,
   "largest_files": [
     {
       "name": "source-web-fonts.js",
@@ -250,78 +250,78 @@
     },
     {
       "name": "the-triplicate.pdf",
-      "size_mb": "0.46",
-      "size_bytes": 479555,
+      "size_mb": "0.36",
+      "size_bytes": 377508,
       "category": "pdf",
       "path": "pdf/the-triplicate.pdf"
     },
     {
       "name": "template_newspaper_combined.pdf",
-      "size_mb": "0.07",
-      "size_bytes": 74740,
+      "size_mb": "0.06",
+      "size_bytes": 58647,
       "category": "pdf",
       "path": "pdf/template_newspaper_combined.pdf"
     },
     {
       "name": "template_newspaper_combined.pdf",
-      "size_mb": "0.07",
-      "size_bytes": 74740,
+      "size_mb": "0.06",
+      "size_bytes": 58647,
       "category": "root",
       "path": "template_newspaper_combined.pdf"
     },
     {
-      "name": "weather_7day.png",
-      "size_mb": "0.04",
-      "size_bytes": 47000,
-      "category": "figures",
-      "path": "figures/weather_7day.png"
-    },
-    {
-      "name": "crab_landings.png",
-      "size_mb": "0.04",
-      "size_bytes": 41751,
-      "category": "figures",
-      "path": "figures/crab_landings.png"
-    },
-    {
       "name": "02_engine_architecture_slides.pdf",
-      "size_mb": "0.04",
-      "size_bytes": 41486,
+      "size_mb": "0.03",
+      "size_bytes": 30885,
       "category": "slides",
       "path": "slides/02_engine_architecture_slides.pdf"
     },
     {
-      "name": "tides.png",
-      "size_mb": "0.03",
-      "size_bytes": 35572,
-      "category": "figures",
-      "path": "figures/tides.png"
-    },
-    {
       "name": "index.html",
       "size_mb": "0.03",
-      "size_bytes": 30224,
+      "size_bytes": 30244,
       "category": "web",
       "path": "web/index.html"
     },
     {
+      "name": "weather_7day.png",
+      "size_mb": "0.02",
+      "size_bytes": 19585,
+      "category": "figures",
+      "path": "figures/weather_7day.png"
+    },
+    {
+      "name": "99_references_slides.pdf",
+      "size_mb": "0.02",
+      "size_bytes": 17748,
+      "category": "slides",
+      "path": "slides/99_references_slides.pdf"
+    },
+    {
       "name": "01_introduction_slides.pdf",
       "size_mb": "0.02",
-      "size_bytes": 24158,
+      "size_bytes": 17381,
       "category": "slides",
       "path": "slides/01_introduction_slides.pdf"
+    },
+    {
+      "name": "crab_landings.png",
+      "size_mb": "0.02",
+      "size_bytes": 16912,
+      "category": "figures",
+      "path": "figures/crab_landings.png"
     }
   ],
   "missing_expected_files": [],
   "sizes_by_category": {
-    "pdf": 0.5286169052124023,
-    "web": 2.00192928314209,
-    "slides": 0.14465808868408203,
-    "figures": 0.16872692108154297,
+    "pdf": 0.41594982147216797,
+    "web": 2.0020627975463867,
+    "slides": 0.10612201690673828,
+    "figures": 0.07233428955078125,
     "data": 0.0074615478515625,
     "reports": 0.004547119140625,
     "release": 0.0018939971923828125,
-    "root": 0.07127761840820312
+    "root": 0.055930137634277344
   },
   "inventory_mode": "stable-shippable-output-v1",
   "inventory_scope": "stage5-delivery-mirror",

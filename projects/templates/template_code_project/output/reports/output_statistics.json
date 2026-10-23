@@ -3,13 +3,13 @@
     "pdf": {
       "exists": true,
       "file_count": 1,
-      "size_mb": "2.15",
-      "total_size_bytes": 2257768,
+      "size_mb": "2.00",
+      "total_size_bytes": 2095069,
       "largest_files": [
         {
           "name": "template_code_project_combined.pdf",
-          "size_mb": "2.15",
-          "size_bytes": 2257768,
+          "size_mb": "2.00",
+          "size_bytes": 2095069,
           "path": "pdf/template_code_project_combined.pdf"
         }
       ],
@@ -38,7 +38,7 @@
         {
           "name": "index.html",
           "size_mb": "0.11",
-          "size_bytes": 112103,
+          "size_bytes": 112123,
           "path": "web/index.html"
         }
       ],
@@ -52,25 +52,25 @@
     "slides": {
       "exists": true,
       "file_count": 9,
-      "size_mb": "2.46",
-      "total_size_bytes": 2578212,
+      "size_mb": "2.20",
+      "total_size_bytes": 2309368,
       "largest_files": [
         {
           "name": "03_results_slides.pdf",
-          "size_mb": "2.03",
-          "size_bytes": 2129841,
+          "size_mb": "1.90",
+          "size_bytes": 1996993,
           "path": "slides/03_results_slides.pdf"
         },
         {
           "name": "02_methodology_slides.pdf",
-          "size_mb": "0.09",
-          "size_bytes": 96788,
+          "size_mb": "0.06",
+          "size_bytes": 64500,
           "path": "slides/02_methodology_slides.pdf"
         },
         {
           "name": "01_introduction_slides.pdf",
-          "size_mb": "0.07",
-          "size_bytes": 68498,
+          "size_mb": "0.05",
+          "size_bytes": 49151,
           "path": "slides/01_introduction_slides.pdf"
         }
       ],
@@ -183,7 +183,7 @@
       "exists": true,
       "file_count": 9,
       "size_mb": "0.02",
-      "total_size_bytes": 18552,
+      "total_size_bytes": 18548,
       "largest_files": [
         {
           "name": "test_results.json",
@@ -200,7 +200,7 @@
         {
           "name": "manuscript_composition.json",
           "size_mb": "0.00",
-          "size_bytes": 2753,
+          "size_bytes": 2749,
           "path": "reports/manuscript_composition.json"
         }
       ],
@@ -333,13 +333,13 @@
     "root": {
       "exists": true,
       "file_count": 1,
-      "size_mb": "2.15",
-      "total_size_bytes": 2257768,
+      "size_mb": "2.00",
+      "total_size_bytes": 2095069,
       "largest_files": [
         {
           "name": "template_code_project_combined.pdf",
-          "size_mb": "2.15",
-          "size_bytes": 2257768,
+          "size_mb": "2.00",
+          "size_bytes": 2095069,
           "path": "template_code_project_combined.pdf"
         }
       ],
@@ -349,26 +349,26 @@
     }
   },
   "total_files": 81,
-  "total_size_mb": 14.985041618347168,
+  "total_size_mb": 14.41832447052002,
   "largest_files": [
     {
       "name": "template_code_project_combined.pdf",
-      "size_mb": "2.15",
-      "size_bytes": 2257768,
+      "size_mb": "2.00",
+      "size_bytes": 2095069,
       "category": "pdf",
       "path": "pdf/template_code_project_combined.pdf"
     },
     {
       "name": "template_code_project_combined.pdf",
-      "size_mb": "2.15",
-      "size_bytes": 2257768,
+      "size_mb": "2.00",
+      "size_bytes": 2095069,
       "category": "root",
       "path": "template_code_project_combined.pdf"
     },
     {
       "name": "03_results_slides.pdf",
-      "size_mb": "2.03",
-      "size_bytes": 2129841,
+      "size_mb": "1.90",
+      "size_bytes": 1996993,
       "category": "slides",
       "path": "slides/03_results_slides.pdf"
     },
@@ -424,19 +424,19 @@
   ],
   "missing_expected_files": [],
   "sizes_by_category": {
-    "pdf": 2.1531753540039062,
+    "pdf": 1.9980134963989258,
     "web": 2.3486328125,
-    "slides": 2.4587745666503906,
+    "slides": 2.2023849487304688,
     "docx": 1.7230682373046875,
     "epub": 1.723830223083496,
     "figures": 1.970393180847168,
     "data": 0.3637266159057617,
-    "reports": 0.01769256591796875,
+    "reports": 0.017688751220703125,
     "citations": 0.0020503997802734375,
     "docs": 0.011358261108398438,
     "manuscript": 0.058859825134277344,
     "provenance": 0.00030422210693359375,
-    "root": 2.1531753540039062
+    "root": 1.9980134963989258
   },
   "inventory_mode": "stable-shippable-output-v1",
   "inventory_scope": "stage5-delivery-mirror",

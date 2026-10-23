@@ -71,7 +71,7 @@
           "file_count": 1,
           "largest_file": "template_active_inference_combined.pdf",
           "largest_file_path": "pdf/template_active_inference_combined.pdf",
-          "size_mb": "4.14"
+          "size_mb": "3.44"
         },
         "reports": {
           "exists": true,
@@ -127,7 +127,7 @@
           "combined_pdf": {
             "exists": true,
             "readable": true,
-            "size_mb": 4.14
+            "size_mb": 3.44
           },
           "data": {
             "exists": true,
@@ -187,7 +187,7 @@
             "optional": false,
             "readable": true,
             "required": true,
-            "size_mb": 4.14
+            "size_mb": 3.44
           },
           "reports": {
             "exists": true,
@@ -227,7 +227,7 @@
         "valid": true,
         "warnings": []
       },
-      "total_size_mb": 17.959758758544922
+      "total_size_mb": 17.25481605529785
     },
     "figures": {
       "files": 27,
@@ -236,7 +236,7 @@
     "inventory_mode": "stable-shippable-output-v1",
     "pdf": {
       "files": 1,
-      "size_mb": 4.142915725708008
+      "size_mb": 3.4376487731933594
     },
     "stable_inventory": {
       "categories": {
@@ -258,7 +258,7 @@
         },
         "pdf": {
           "files": 1,
-          "size_bytes": 4344162
+          "size_bytes": 3604636
         },
         "reports": {
           "files": 32,
@@ -266,12 +266,12 @@
         },
         "web": {
           "files": 20,
-          "size_bytes": 2761939
+          "size_bytes": 2762279
         }
       },
       "mode": "stable-shippable-output-v1",
       "total_files": 177,
-      "total_size_bytes": 18832172
+      "total_size_bytes": 18092986
     }
   },
   "recommendations": [],
@@ -282,11 +282,11 @@
     "passed": 9,
     "total_checks": 9
   },
-  "timestamp": "2026-10-22T22:54:54Z",
+  "timestamp": "2026-10-23T01:42:44Z",
   "validated_inputs": {
     "artifact_manifest": {
       "path": "output/reports/artifact_manifest.json",
-      "sha256": "0ebb882dc40b3e20bdf73aa9f2720421e1ee39e03c38fba532641c50d417e592",
+      "sha256": "d4c99a63ee3eda2c654be8bb00739ff764b910d49322f8cc6f8f84fc6ca1b43f",
       "size_bytes": 58470
     },
     "combined_manuscript": {
@@ -416,7 +416,7 @@
       },
       "output": {
         "file_count": 177,
-        "sha256": "46ef1cf1888370fc244e1ecf2b8793e92d68bead1ea1f114747435b506613c9b"
+        "sha256": "3d6d7112e3d7ea89f2e2fd25b7ec17c05ed2e9e818c7f103f6425f8acac6f247"
       },
       "source": {
         "file_count": 283,
@@ -424,7 +424,7 @@
       },
       "stage": {
         "file_count": 1913,
-        "sha256": "13ce92cd0a26b7a9ae4f5865e6a9647dcd71470cdce555045fe3263a65a6f48f"
+        "sha256": "7e6ad0f3cb5090eec1253c4eb0717f5884ba0c0473969fbd2d9ec46ea6e80671"
       }
     },
     "project": "templates/template_active_inference",

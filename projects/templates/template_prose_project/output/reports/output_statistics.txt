@@ -8,25 +8,25 @@ Inventory Scope: stage5-delivery-mirror
 Inventory Root: output/templates/template_prose_project
 
 Total Files: 59
-Total Size: 3.62 MB
+Total Size: 3.32 MB
 
 Files by Category:
-  • pdf: 1 files (0.32 MB)
+  • pdf: 1 files (0.24 MB)
   • web: 12 files (2.10 MB)
-  • slides: 8 files (0.29 MB)
-  • figures: 10 files (0.53 MB)
+  • slides: 8 files (0.21 MB)
+  • figures: 10 files (0.45 MB)
   • data: 3 files (0.00 MB)
   • reports: 3 files (0.01 MB)
   • manuscript: 13 files (0.03 MB)
   • release: 2 files (0.00 MB)
-  • root: 7 files (0.35 MB)
+  • root: 7 files (0.27 MB)
 
 Largest Files:
   • source-web-fonts.js: 1.88 MB (web)
-  • template_prose_project_combined.pdf: 0.32 MB (pdf)
-  • template_prose_project_combined.pdf: 0.32 MB (root)
-  • readability_metrics.png: 0.15 MB (figures)
-  • inline_mermaid_0002_e1277c0f292c.png: 0.12 MB (figures)
+  • template_prose_project_combined.pdf: 0.24 MB (pdf)
+  • template_prose_project_combined.pdf: 0.24 MB (root)
+  • readability_metrics.png: 0.14 MB (figures)
+  • inline_mermaid_0002_e1277c0f292c.png: 0.09 MB (figures)
 
 File Types:
   • .md: 14 file(s)

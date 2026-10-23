@@ -47,9 +47,8 @@ No ISBN or new publication identifier is asserted here.
 
 
 
-```{=latex}
-\newpage
-```
+---
+
 
 
 # Preface {#sec:preface}
@@ -112,9 +111,8 @@ record whose computations and interpretation can be inspected and improved.
 
 
 
-```{=latex}
-\newpage
-```
+---
+
 
 
 # Orientation and Methods {#sec:part_0_intro}
@@ -137,9 +135,8 @@ Retain units, assumptions and failed predictions in the study record.
 
 
 
-```{=latex}
-\newpage
-```
+---
+
 
 
 # Orientation to the Field {#sec:part_0_orientation}
@@ -261,13 +258,14 @@ own explicitly stated inputs, not evidence collected from the opening scenario.
 
 The closed form assumes a constant positive rate and a fixed capacity with an initial state strictly above zero and no larger than capacity. It omits migration, changing resources and random shocks. A discrepancy can therefore reflect a failed assumption rather than a programming error. First inspect the units and initial value, then ask which omitted process could generate the observed discrepancy.
 
-
-\begin{figure}[htbp]
-\centering
-\includegraphics[width=0.82\linewidth,height=4.2in,keepaspectratio,alt={Mermaid diagram}]{../figures/mermaid_inline/inline_mermaid_0001_cfd4b27bda2f.png}
-\caption{Mermaid diagram}
-\end{figure}
-
+```mermaid
+flowchart LR
+  Q[Question and observation rule] --> I[Declared inputs and units]
+  I --> M[Tested model]
+  M --> P[Predicted quantities]
+  P --> C[Independent comparison]
+  C -->|record a revision| Q
+```
 
 This diagram records the direction of a modeling workflow. An arrow names a
 relationship to specify; it does not add an unimplemented physical mechanism.
@@ -296,9 +294,8 @@ Box [@box1976science] discusses model-building as an iterative scientific activi
 
 
 
-```{=latex}
-\newpage
-```
+---
+
 
 
 # Core Methods and Tools {#sec:part_0_core_methods}
@@ -421,13 +418,14 @@ own explicitly stated inputs, not evidence collected from the opening scenario.
 
 Least squares here treats the input values as known and fits one straight line with equal observation weights. It does not model error in the inputs, dependence between observations or a changing variance. A large coefficient of determination is a statement about these fitted observations. Generalization requires additional data and an evaluation design appropriate to the question.
 
-
-\begin{figure}[htbp]
-\centering
-\includegraphics[width=0.82\linewidth,height=4.2in,keepaspectratio,alt={Mermaid diagram}]{../figures/mermaid_inline/inline_mermaid_0002_cfd4b27bda2f.png}
-\caption{Mermaid diagram}
-\end{figure}
-
+```mermaid
+flowchart LR
+  Q[Question and observation rule] --> I[Declared inputs and units]
+  I --> M[Tested model]
+  M --> P[Predicted quantities]
+  P --> C[Independent comparison]
+  C -->|record a revision| Q
+```
 
 This diagram records the direction of a modeling workflow. An arrow names a
 relationship to specify; it does not add an unimplemented physical mechanism.
@@ -456,9 +454,8 @@ Wilson and colleagues [@wilson2014best] address scientific software practices; S
 
 
 
-```{=latex}
-\newpage
-```
+---
+
 
 
 # Quantitative Foundations {#sec:part_0_quantitative_foundations}
@@ -580,13 +577,14 @@ own explicitly stated inputs, not evidence collected from the opening scenario.
 
 This summary describes the supplied finite collection using the population divisor. It is not automatically an estimator of uncertainty in a larger population. Missing, censored or dependent observations require an explicit handling rule before summary statistics become interpretable. Keep that rule with the input data rather than silently discarding awkward observations.
 
-
-\begin{figure}[htbp]
-\centering
-\includegraphics[width=0.82\linewidth,height=4.2in,keepaspectratio,alt={Mermaid diagram}]{../figures/mermaid_inline/inline_mermaid_0003_cfd4b27bda2f.png}
-\caption{Mermaid diagram}
-\end{figure}
-
+```mermaid
+flowchart LR
+  Q[Question and observation rule] --> I[Declared inputs and units]
+  I --> M[Tested model]
+  M --> P[Predicted quantities]
+  P --> C[Independent comparison]
+  C -->|record a revision| Q
+```
 
 This diagram records the direction of a modeling workflow. An arrow names a
 relationship to specify; it does not add an unimplemented physical mechanism.
@@ -615,9 +613,8 @@ Shannon [@shannon1948mathematical] develops a precise communication model; contr
 
 
 
-```{=latex}
-\newpage
-```
+---
+
 
 
 # Fundamentals {#sec:part_I_intro}
@@ -640,9 +637,8 @@ Retain units, assumptions and failed predictions in the study record.
 
 
 
-```{=latex}
-\newpage
-```
+---
+
 
 
 # First Principles {#sec:part_I_first_principles}
@@ -774,13 +770,13 @@ the test suite, so the prose and the code cannot silently disagree.
 
 ## How the pieces connect
 
-
-\begin{figure}[htbp]
-\centering
-\includegraphics[width=0.82\linewidth,height=4.2in,keepaspectratio,alt={Mermaid diagram}]{../figures/mermaid_inline/inline_mermaid_0004_29eae841232d.png}
-\caption{Mermaid diagram}
-\end{figure}
-
+```mermaid
+graph TD
+  A[Choose state variables] --> B[Write a rate rule]
+  B --> C[Solve or simulate]
+  C --> D[Predict long-run behaviour]
+  D -->|compare to data| A
+```
 
 This loop — choose, write, solve, predict, compare — is the first principle the
 rest of the book elaborates. Box discusses scientific model adequacy and revision [@box1976science]. May
@@ -817,9 +813,8 @@ and open to independent arithmetic checks.
 
 
 
-```{=latex}
-\newpage
-```
+---
+
 
 
 # Building Blocks {#sec:part_I_building_blocks}
@@ -939,13 +934,14 @@ own explicitly stated inputs, not evidence collected from the opening scenario.
 
 This function is a static response curve: it relates an input to an output without a state or elapsed time. It cannot by itself explain adaptation, delays, oscillation or memory. Different exponents describe different shapes but do not uniquely identify a physical mechanism. Interpret the parameters within the declared model rather than treating a fitted shape as a causal discovery.
 
-
-\begin{figure}[htbp]
-\centering
-\includegraphics[width=0.82\linewidth,height=4.2in,keepaspectratio,alt={Mermaid diagram}]{../figures/mermaid_inline/inline_mermaid_0005_cfd4b27bda2f.png}
-\caption{Mermaid diagram}
-\end{figure}
-
+```mermaid
+flowchart LR
+  Q[Question and observation rule] --> I[Declared inputs and units]
+  I --> M[Tested model]
+  M --> P[Predicted quantities]
+  P --> C[Independent comparison]
+  C -->|record a revision| Q
+```
 
 This diagram records the direction of a modeling workflow. An arrow names a
 relationship to specify; it does not add an unimplemented physical mechanism.
@@ -974,9 +970,8 @@ Box [@box1976science] discusses selective checks of model inadequacy; use those 
 
 
 
-```{=latex}
-\newpage
-```
+---
+
 
 
 # Structure and Form {#sec:part_I_structure_and_form}
@@ -1093,13 +1088,14 @@ own explicitly stated inputs, not evidence collected from the opening scenario.
 
 Scaling changes representation, not the evidence that generated it. Bounds estimated from one dataset must not be silently recalculated when comparing it with another. The function normalizes one supplied collection; fitting bounds on training data and applying them to future data requires a separately declared transformation. A visually neat scale can conceal these differences unless original units and bounds are retained.
 
-
-\begin{figure}[htbp]
-\centering
-\includegraphics[width=0.82\linewidth,height=4.2in,keepaspectratio,alt={Mermaid diagram}]{../figures/mermaid_inline/inline_mermaid_0006_cfd4b27bda2f.png}
-\caption{Mermaid diagram}
-\end{figure}
-
+```mermaid
+flowchart LR
+  Q[Question and observation rule] --> I[Declared inputs and units]
+  I --> M[Tested model]
+  M --> P[Predicted quantities]
+  P --> C[Independent comparison]
+  C -->|record a revision| Q
+```
 
 This diagram records the direction of a modeling workflow. An arrow names a
 relationship to specify; it does not add an unimplemented physical mechanism.
@@ -1128,9 +1124,8 @@ Wilkinson and colleagues [@wilkinson2016fair] describe metadata and reuse princi
 
 
 
-```{=latex}
-\newpage
-```
+---
+
 
 
 # Core Systems {#sec:part_II_intro}
@@ -1153,9 +1148,8 @@ Retain units, assumptions and failed predictions in the study record.
 
 
 
-```{=latex}
-\newpage
-```
+---
+
 
 
 # Systems Overview {#sec:part_II_systems_overview}
@@ -1276,13 +1270,14 @@ own explicitly stated inputs, not evidence collected from the opening scenario.
 
 The closed form assumes a constant positive rate and a fixed capacity with an initial state strictly above zero and no larger than capacity. It omits migration, changing resources and random shocks. A discrepancy can therefore reflect a failed assumption rather than a programming error. First inspect the units and initial value, then ask which omitted process could generate the observed discrepancy.
 
-
-\begin{figure}[htbp]
-\centering
-\includegraphics[width=0.82\linewidth,height=4.2in,keepaspectratio,alt={Mermaid diagram}]{../figures/mermaid_inline/inline_mermaid_0007_cfd4b27bda2f.png}
-\caption{Mermaid diagram}
-\end{figure}
-
+```mermaid
+flowchart LR
+  Q[Question and observation rule] --> I[Declared inputs and units]
+  I --> M[Tested model]
+  M --> P[Predicted quantities]
+  P --> C[Independent comparison]
+  C -->|record a revision| Q
+```
 
 This diagram records the direction of a modeling workflow. An arrow names a
 relationship to specify; it does not add an unimplemented physical mechanism.
@@ -1311,9 +1306,8 @@ Nyquist [@nyquist1932regeneration] analyzes stability for specified feedback sys
 
 
 
-```{=latex}
-\newpage
-```
+---
+
 
 
 # Dynamics and Change {#sec:part_II_dynamics_and_change}
@@ -1431,13 +1425,14 @@ own explicitly stated inputs, not evidence collected from the opening scenario.
 
 The model assumes a constant fractional loss rate with no replenishment. For a feedback interpretation it also assumes a continuous, undelayed ideal controller with an unsaturated actuator. A changing rate, external input or measurement delay breaks the closed-form description. The function permits zero rate as a constant trajectory, but half-life requires a strictly positive rate.
 
-
-\begin{figure}[htbp]
-\centering
-\includegraphics[width=0.82\linewidth,height=4.2in,keepaspectratio,alt={Mermaid diagram}]{../figures/mermaid_inline/inline_mermaid_0008_cfd4b27bda2f.png}
-\caption{Mermaid diagram}
-\end{figure}
-
+```mermaid
+flowchart LR
+  Q[Question and observation rule] --> I[Declared inputs and units]
+  I --> M[Tested model]
+  M --> P[Predicted quantities]
+  P --> C[Independent comparison]
+  C -->|record a revision| Q
+```
 
 This diagram records the direction of a modeling workflow. An arrow names a
 relationship to specify; it does not add an unimplemented physical mechanism.
@@ -1466,9 +1461,8 @@ Lorenz [@lorenz1963deterministic] studies one specific nonlinear flow model; May
 
 
 
-```{=latex}
-\newpage
-```
+---
+
 
 
 # Regulation and Control {#sec:part_II_regulation_and_control}
@@ -1588,13 +1582,14 @@ own explicitly stated inputs, not evidence collected from the opening scenario.
 
 The model assumes a constant fractional loss rate with no replenishment. For a feedback interpretation it also assumes a continuous, undelayed ideal controller with an unsaturated actuator. A changing rate, external input or measurement delay breaks the closed-form description. The function permits zero rate as a constant trajectory, but half-life requires a strictly positive rate.
 
-
-\begin{figure}[htbp]
-\centering
-\includegraphics[width=0.82\linewidth,height=4.2in,keepaspectratio,alt={Mermaid diagram}]{../figures/mermaid_inline/inline_mermaid_0009_cfd4b27bda2f.png}
-\caption{Mermaid diagram}
-\end{figure}
-
+```mermaid
+flowchart LR
+  Q[Question and observation rule] --> I[Declared inputs and units]
+  I --> M[Tested model]
+  M --> P[Predicted quantities]
+  P --> C[Independent comparison]
+  C -->|record a revision| Q
+```
 
 This diagram records the direction of a modeling workflow. An arrow names a
 relationship to specify; it does not add an unimplemented physical mechanism.
@@ -1623,9 +1618,8 @@ Nyquist [@nyquist1932regeneration] treats feedback stability for defined systems
 
 
 
-```{=latex}
-\newpage
-```
+---
+
 
 
 # Applications and Synthesis {#sec:part_III_intro}
@@ -1648,9 +1642,8 @@ Retain units, assumptions and failed predictions in the study record.
 
 
 
-```{=latex}
-\newpage
-```
+---
+
 
 
 # Applied Models {#sec:part_III_applied_models}
@@ -1771,13 +1764,14 @@ own explicitly stated inputs, not evidence collected from the opening scenario.
 
 This function is a static response curve: it relates an input to an output without a state or elapsed time. It cannot by itself explain adaptation, delays, oscillation or memory. Different exponents describe different shapes but do not uniquely identify a physical mechanism. Interpret the parameters within the declared model rather than treating a fitted shape as a causal discovery.
 
-
-\begin{figure}[htbp]
-\centering
-\includegraphics[width=0.82\linewidth,height=4.2in,keepaspectratio,alt={Mermaid diagram}]{../figures/mermaid_inline/inline_mermaid_0010_cfd4b27bda2f.png}
-\caption{Mermaid diagram}
-\end{figure}
-
+```mermaid
+flowchart LR
+  Q[Question and observation rule] --> I[Declared inputs and units]
+  I --> M[Tested model]
+  M --> P[Predicted quantities]
+  P --> C[Independent comparison]
+  C -->|record a revision| Q
+```
 
 This diagram records the direction of a modeling workflow. An arrow names a
 relationship to specify; it does not add an unimplemented physical mechanism.
@@ -1806,9 +1800,8 @@ Box [@box1976science] offers primary guidance on confronting model inadequacy; c
 
 
 
-```{=latex}
-\newpage
-```
+---
+
 
 
 # Case Studies {#sec:part_III_case_studies}
@@ -1927,13 +1920,14 @@ dose–response model could saturate (recall the
 [@sec:appendix_math_review]); a straight line would overpredict if the system
 approached a ceiling. The fixture does not establish which mechanism applies.
 
-
-\begin{figure}[htbp]
-\centering
-\includegraphics[width=0.82\linewidth,height=4.2in,keepaspectratio,alt={Mermaid diagram}]{../figures/mermaid_inline/inline_mermaid_0011_258c2154784d.png}
-\caption{Mermaid diagram}
-\end{figure}
-
+```mermaid
+graph LR
+  A[Raw measurements] --> B[Group + average]
+  B --> C[Fit a trend]
+  C --> D{Within data range?}
+  D -->|yes| E[Interpolate: defensible]
+  D -->|no| F[Extrapolate: flag the risk]
+```
 
 > **Warning.** A linear fit through three averaged points reports $R^2 = 0.999$,
 > but that number describes how well the line passes through three dots — not how
@@ -1971,9 +1965,8 @@ summarise, fit, then state the limits.
 
 
 
-```{=latex}
-\newpage
-```
+---
+
 
 
 # Frontiers and Open Problems {#sec:part_III_frontiers}
@@ -2095,13 +2088,14 @@ own explicitly stated inputs, not evidence collected from the opening scenario.
 
 Scaling changes representation, not the evidence that generated it. Bounds estimated from one dataset must not be silently recalculated when comparing it with another. The function normalizes one supplied collection; fitting bounds on training data and applying them to future data requires a separately declared transformation. A visually neat scale can conceal these differences unless original units and bounds are retained.
 
-
-\begin{figure}[htbp]
-\centering
-\includegraphics[width=0.82\linewidth,height=4.2in,keepaspectratio,alt={Mermaid diagram}]{../figures/mermaid_inline/inline_mermaid_0012_cfd4b27bda2f.png}
-\caption{Mermaid diagram}
-\end{figure}
-
+```mermaid
+flowchart LR
+  Q[Question and observation rule] --> I[Declared inputs and units]
+  I --> M[Tested model]
+  M --> P[Predicted quantities]
+  P --> C[Independent comparison]
+  C -->|record a revision| Q
+```
 
 This diagram records the direction of a modeling workflow. An arrow names a
 relationship to specify; it does not add an unimplemented physical mechanism.
@@ -2130,9 +2124,8 @@ Turing [@turing1937computable] addresses formal computability; Taschuk and Wilso
 
 
 
-```{=latex}
-\newpage
-```
+---
+
 
 
 # Lab — Orientation to the Field {#sec:lab_part_0_orientation}
@@ -2210,9 +2203,8 @@ challenging the model rather than another copy of its constructed example.
 
 
 
-```{=latex}
-\newpage
-```
+---
+
 
 
 # Lab — Core Methods and Tools {#sec:lab_part_0_core_methods}
@@ -2291,9 +2283,8 @@ challenging the model rather than another copy of its constructed example.
 
 
 
-```{=latex}
-\newpage
-```
+---
+
 
 
 # Lab — Quantitative Foundations {#sec:lab_part_0_quantitative_foundations}
@@ -2370,9 +2361,8 @@ challenging the model rather than another copy of its constructed example.
 
 
 
-```{=latex}
-\newpage
-```
+---
+
 
 
 # Lab — First Principles {#sec:lab_part_I_first_principles}
@@ -2471,9 +2461,8 @@ state variable, which would need separate assumptions and tests.
 
 
 
-```{=latex}
-\newpage
-```
+---
+
 
 
 # Lab — Building Blocks {#sec:lab_part_I_building_blocks}
@@ -2549,9 +2538,8 @@ challenging the model rather than another copy of its constructed example.
 
 
 
-```{=latex}
-\newpage
-```
+---
+
 
 
 # Lab — Structure and Form {#sec:lab_part_I_structure_and_form}
@@ -2627,9 +2615,8 @@ challenging the model rather than another copy of its constructed example.
 
 
 
-```{=latex}
-\newpage
-```
+---
+
 
 
 # Lab — Systems Overview {#sec:lab_part_II_systems_overview}
@@ -2707,9 +2694,8 @@ challenging the model rather than another copy of its constructed example.
 
 
 
-```{=latex}
-\newpage
-```
+---
+
 
 
 # Lab — Dynamics and Change {#sec:lab_part_II_dynamics_and_change}
@@ -2786,9 +2772,8 @@ challenging the model rather than another copy of its constructed example.
 
 
 
-```{=latex}
-\newpage
-```
+---
+
 
 
 # Lab — Regulation and Control {#sec:lab_part_II_regulation_and_control}
@@ -2865,9 +2850,8 @@ challenging the model rather than another copy of its constructed example.
 
 
 
-```{=latex}
-\newpage
-```
+---
+
 
 
 # Lab — Applied Models {#sec:lab_part_III_applied_models}
@@ -2943,9 +2927,8 @@ challenging the model rather than another copy of its constructed example.
 
 
 
-```{=latex}
-\newpage
-```
+---
+
 
 
 # Lab — Case Studies {#sec:lab_part_III_case_studies}
@@ -3042,9 +3025,8 @@ from the two replicates in this lab.
 
 
 
-```{=latex}
-\newpage
-```
+---
+
 
 
 # Lab — Frontiers and Open Problems {#sec:lab_part_III_frontiers}
@@ -3120,9 +3102,8 @@ challenging the model rather than another copy of its constructed example.
 
 
 
-```{=latex}
-\newpage
-```
+---
+
 
 
 # Question Bank — Orientation to the Field {#sec:q_part_0_orientation}
@@ -3164,9 +3145,8 @@ claim, names the quantities being compared and preserves the limits of the model
 
 
 
-```{=latex}
-\newpage
-```
+---
+
 
 
 # Question Bank — Core Methods and Tools {#sec:q_part_0_core_methods}
@@ -3208,9 +3188,8 @@ claim, names the quantities being compared and preserves the limits of the model
 
 
 
-```{=latex}
-\newpage
-```
+---
+
 
 
 # Question Bank — Quantitative Foundations {#sec:q_part_0_quantitative_foundations}
@@ -3252,9 +3231,8 @@ claim, names the quantities being compared and preserves the limits of the model
 
 
 
-```{=latex}
-\newpage
-```
+---
+
 
 
 # Question Bank — First Principles {#sec:q_part_I_first_principles}
@@ -3295,9 +3273,8 @@ italics; in a print build, move them to an answer key if you prefer.
 
 
 
-```{=latex}
-\newpage
-```
+---
+
 
 
 # Question Bank — Building Blocks {#sec:q_part_I_building_blocks}
@@ -3339,9 +3316,8 @@ claim, names the quantities being compared and preserves the limits of the model
 
 
 
-```{=latex}
-\newpage
-```
+---
+
 
 
 # Question Bank — Structure and Form {#sec:q_part_I_structure_and_form}
@@ -3383,9 +3359,8 @@ claim, names the quantities being compared and preserves the limits of the model
 
 
 
-```{=latex}
-\newpage
-```
+---
+
 
 
 # Question Bank — Systems Overview {#sec:q_part_II_systems_overview}
@@ -3427,9 +3402,8 @@ claim, names the quantities being compared and preserves the limits of the model
 
 
 
-```{=latex}
-\newpage
-```
+---
+
 
 
 # Question Bank — Dynamics and Change {#sec:q_part_II_dynamics_and_change}
@@ -3471,9 +3445,8 @@ claim, names the quantities being compared and preserves the limits of the model
 
 
 
-```{=latex}
-\newpage
-```
+---
+
 
 
 # Question Bank — Regulation and Control {#sec:q_part_II_regulation_and_control}
@@ -3515,9 +3488,8 @@ claim, names the quantities being compared and preserves the limits of the model
 
 
 
-```{=latex}
-\newpage
-```
+---
+
 
 
 # Question Bank — Applied Models {#sec:q_part_III_applied_models}
@@ -3559,9 +3531,8 @@ claim, names the quantities being compared and preserves the limits of the model
 
 
 
-```{=latex}
-\newpage
-```
+---
+
 
 
 # Question Bank — Case Studies {#sec:q_part_III_case_studies}
@@ -3607,9 +3578,8 @@ italics.
 
 
 
-```{=latex}
-\newpage
-```
+---
+
 
 
 # Question Bank — Frontiers and Open Problems {#sec:q_part_III_frontiers}
@@ -3651,9 +3621,8 @@ claim, names the quantities being compared and preserves the limits of the model
 
 
 
-```{=latex}
-\newpage
-```
+---
+
 
 
 # Appendix A — Authoring and Verification {#sec:appendix_authoring_guide}
@@ -3701,9 +3670,8 @@ Before accepting a chapter, verify its question, assumptions, numerical example,
 
 
 
-```{=latex}
-\newpage
-```
+---
+
 
 
 # Appendix B — Notation and Symbols {#sec:appendix_notation}
@@ -3750,9 +3718,8 @@ See [@sec:appendix_math_review] for numerical examples and [@sec:appendix_formal
 
 
 
-```{=latex}
-\newpage
-```
+---
+
 
 
 # Appendix C — Mathematical Review {#sec:appendix_math_review}
@@ -3845,9 +3812,8 @@ A learner changes the time unit from days to hours but keeps the decay rate's nu
 
 
 
-```{=latex}
-\newpage
-```
+---
+
 
 
 # Appendix — Formalisms {#sec:appendix_formalisms}
@@ -3997,9 +3963,8 @@ glossary.
 
 
 
-```{=latex}
-\newpage
-```
+---
+
 
 
 # Appendix — Format Gallery {#sec:appendix_format_gallery}
@@ -4197,53 +4162,52 @@ builders in `src/mermaid/diagrams.py` support:
 
 Flowchart:
 
-
-\begin{figure}[htbp]
-\centering
-\includegraphics[width=0.82\linewidth,height=4.2in,keepaspectratio,alt={Mermaid diagram}]{../figures/mermaid_inline/inline_mermaid_0013_0c47d0ecfd54.png}
-\caption{Mermaid diagram}
-\end{figure}
-
+```mermaid
+graph TD
+  A[Inputs] --> B[Model]
+  B --> C[Predictions]
+  C -->|revise| A
+```
 
 Sequence:
 
-
-\begin{figure}[htbp]
-\centering
-\includegraphics[width=0.82\linewidth,height=4.2in,keepaspectratio,alt={Mermaid diagram}]{../figures/mermaid_inline/inline_mermaid_0014_292217dd39b3.png}
-\caption{Mermaid diagram}
-\end{figure}
-
+```mermaid
+sequenceDiagram
+  participant Author
+  participant Engine
+  Author ->> Engine: edit config.yaml
+  Engine -->> Author: rendered PDF
+```
 
 State:
 
-
-\begin{figure}[htbp]
-\centering
-\includegraphics[width=0.82\linewidth,height=4.2in,keepaspectratio,alt={Mermaid diagram}]{../figures/mermaid_inline/inline_mermaid_0015_988c820acb70.png}
-\caption{Mermaid diagram}
-\end{figure}
-
+```mermaid
+stateDiagram-v2
+  [*] --> Stub
+  Stub --> Drafted: fill
+  Drafted --> Reviewed: review
+  Reviewed --> [*]: publish
+```
 
 Class:
 
-
-\begin{figure}[htbp]
-\centering
-\includegraphics[width=0.82\linewidth,height=4.2in,keepaspectratio,alt={Mermaid diagram}]{../figures/mermaid_inline/inline_mermaid_0016_cfcd765b5afa.png}
-\caption{Mermaid diagram}
-\end{figure}
-
+```mermaid
+classDiagram
+  class ChapterRef {
+    +str part_id
+    +str file
+    +stem() str
+  }
+  ChapterRef --> TocEntry : numbered as
+```
 
 Entity-relationship:
 
-
-\begin{figure}[htbp]
-\centering
-\includegraphics[width=0.82\linewidth,height=4.2in,keepaspectratio,alt={Mermaid diagram}]{../figures/mermaid_inline/inline_mermaid_0017_7df2b5706613.png}
-\caption{Mermaid diagram}
-\end{figure}
-
+```mermaid
+erDiagram
+  PART ||--o{ CHAPTER : contains
+  CHAPTER ||--|| LAB : has
+```
 
 Pie, Gantt, mindmap, timeline, quadrant, and user-journey diagrams are also
 supported — see `src/mermaid/diagram_specs.yaml` for a worked spec of each.
@@ -4357,9 +4321,8 @@ in equations.
 
 
 
-```{=latex}
-\newpage
-```
+---
+
 
 
 # Master Glossary {#sec:glossary}
@@ -4429,9 +4392,8 @@ A quantity that can take different values across observations, states or inputs.
 
 
 
-```{=latex}
-\newpage
-```
+---
+
 
 
 # Appendix G — Index of Key Terms {#sec:appendix_index}

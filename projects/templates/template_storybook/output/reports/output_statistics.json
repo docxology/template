@@ -3,8 +3,8 @@
     "pdf": {
       "exists": true,
       "file_count": 2,
-      "size_mb": "1.09",
-      "total_size_bytes": 1142805,
+      "size_mb": "1.08",
+      "total_size_bytes": 1128448,
       "largest_files": [
         {
           "name": "the-shape-between.pdf",
@@ -14,8 +14,8 @@
         },
         {
           "name": "template_storybook_combined.pdf",
-          "size_mb": "0.06",
-          "size_bytes": 59452,
+          "size_mb": "0.04",
+          "size_bytes": 45095,
           "path": "pdf/template_storybook_combined.pdf"
         }
       ],
@@ -27,7 +27,7 @@
       "exists": true,
       "file_count": 10,
       "size_mb": "1.98",
-      "total_size_bytes": 2078514,
+      "total_size_bytes": 2078654,
       "largest_files": [
         {
           "name": "source-web-fonts.js",
@@ -38,13 +38,13 @@
         {
           "name": "index.html",
           "size_mb": "0.02",
-          "size_bytes": 22425,
+          "size_bytes": 22445,
           "path": "web/index.html"
         },
         {
           "name": "manuscript__00_abstract.html",
           "size_mb": "0.01",
-          "size_bytes": 13138,
+          "size_bytes": 13158,
           "path": "web/manuscript__00_abstract.html"
         }
       ],
@@ -58,25 +58,25 @@
     "slides": {
       "exists": true,
       "file_count": 6,
-      "size_mb": "0.08",
-      "total_size_bytes": 88728,
+      "size_mb": "0.06",
+      "total_size_bytes": 64210,
       "largest_files": [
         {
           "name": "02_architecture_slides.pdf",
-          "size_mb": "0.02",
-          "size_bytes": 21100,
+          "size_mb": "0.01",
+          "size_bytes": 15095,
           "path": "slides/02_architecture_slides.pdf"
         },
         {
           "name": "00_abstract_slides.pdf",
-          "size_mb": "0.02",
-          "size_bytes": 19262,
+          "size_mb": "0.01",
+          "size_bytes": 14109,
           "path": "slides/00_abstract_slides.pdf"
         },
         {
           "name": "03_story_and_graphics_slides.pdf",
-          "size_mb": "0.02",
-          "size_bytes": 16928,
+          "size_mb": "0.01",
+          "size_bytes": 12281,
           "path": "slides/03_story_and_graphics_slides.pdf"
         }
       ],
@@ -193,13 +193,13 @@
     "root": {
       "exists": true,
       "file_count": 1,
-      "size_mb": "0.06",
-      "total_size_bytes": 59452,
+      "size_mb": "0.04",
+      "total_size_bytes": 45095,
       "largest_files": [
         {
           "name": "template_storybook_combined.pdf",
-          "size_mb": "0.06",
-          "size_bytes": 59452,
+          "size_mb": "0.04",
+          "size_bytes": 45095,
           "path": "template_storybook_combined.pdf"
         }
       ],
@@ -209,7 +209,7 @@
     }
   },
   "total_files": 39,
-  "total_size_mb": 5.216714859008789,
+  "total_size_mb": 5.166082382202148,
   "largest_files": [
     {
       "name": "source-web-fonts.js",
@@ -284,13 +284,13 @@
   ],
   "missing_expected_files": [],
   "sizes_by_category": {
-    "pdf": 1.0898637771606445,
-    "web": 1.9822254180908203,
-    "slides": 0.08461761474609375,
+    "pdf": 1.076171875,
+    "web": 1.9823589324951172,
+    "slides": 0.06123542785644531,
     "figures": 1.987274169921875,
     "data": 0.011869430541992188,
     "reports": 0.004166603088378906,
-    "root": 0.056697845458984375
+    "root": 0.043005943298339844
   },
   "inventory_mode": "stable-shippable-output-v1",
   "inventory_scope": "stage5-delivery-mirror",

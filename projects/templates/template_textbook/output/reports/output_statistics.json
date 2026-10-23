@@ -3,13 +3,13 @@
     "pdf": {
       "exists": true,
       "file_count": 1,
-      "size_mb": "2.07",
-      "total_size_bytes": 2170756,
+      "size_mb": "1.02",
+      "total_size_bytes": 1073702,
       "largest_files": [
         {
           "name": "template_textbook_combined.pdf",
-          "size_mb": "2.07",
-          "size_bytes": 2170756,
+          "size_mb": "1.02",
+          "size_bytes": 1073702,
           "path": "pdf/template_textbook_combined.pdf"
         }
       ],
@@ -21,7 +21,7 @@
       "exists": true,
       "file_count": 53,
       "size_mb": "3.55",
-      "total_size_bytes": 3720589,
+      "total_size_bytes": 3719886,
       "largest_files": [
         {
           "name": "source-web-fonts.js",
@@ -32,13 +32,13 @@
         {
           "name": "index.html",
           "size_mb": "0.42",
-          "size_bytes": 441682,
+          "size_bytes": 441702,
           "path": "web/index.html"
         },
         {
           "name": "_combined_manuscript.md",
           "size_mb": "0.20",
-          "size_bytes": 214254,
+          "size_bytes": 212551,
           "path": "web/_combined_manuscript.md"
         }
       ],
@@ -99,8 +99,8 @@
     "figures": {
       "exists": true,
       "file_count": 96,
-      "size_mb": "1.76",
-      "total_size_bytes": 1840598,
+      "size_mb": "1.70",
+      "total_size_bytes": 1782982,
       "largest_files": [
         {
           "name": "gallery_contour.png",
@@ -154,12 +154,12 @@
       "exists": true,
       "file_count": 3,
       "size_mb": "0.01",
-      "total_size_bytes": 15560,
+      "total_size_bytes": 15556,
       "largest_files": [
         {
           "name": "manuscript_composition.json",
           "size_mb": "0.01",
-          "size_bytes": 10513,
+          "size_bytes": 10509,
           "path": "reports/manuscript_composition.json"
         },
         {
@@ -225,13 +225,13 @@
     "root": {
       "exists": true,
       "file_count": 1,
-      "size_mb": "2.07",
-      "total_size_bytes": 2170756,
+      "size_mb": "1.02",
+      "total_size_bytes": 1073702,
       "largest_files": [
         {
           "name": "template_textbook_combined.pdf",
-          "size_mb": "2.07",
-          "size_bytes": 2170756,
+          "size_mb": "1.02",
+          "size_bytes": 1073702,
           "path": "template_textbook_combined.pdf"
         }
       ],
@@ -241,28 +241,28 @@
     }
   },
   "total_files": 161,
-  "total_size_mb": 11.238846778869629,
+  "total_size_mb": 9.090761184692383,
   "largest_files": [
-    {
-      "name": "template_textbook_combined.pdf",
-      "size_mb": "2.07",
-      "size_bytes": 2170756,
-      "category": "pdf",
-      "path": "pdf/template_textbook_combined.pdf"
-    },
-    {
-      "name": "template_textbook_combined.pdf",
-      "size_mb": "2.07",
-      "size_bytes": 2170756,
-      "category": "root",
-      "path": "template_textbook_combined.pdf"
-    },
     {
       "name": "source-web-fonts.js",
       "size_mb": "1.88",
       "size_bytes": 1975092,
       "category": "web",
       "path": "web/assets/source-web-fonts.js"
+    },
+    {
+      "name": "template_textbook_combined.pdf",
+      "size_mb": "1.02",
+      "size_bytes": 1073702,
+      "category": "pdf",
+      "path": "pdf/template_textbook_combined.pdf"
+    },
+    {
+      "name": "template_textbook_combined.pdf",
+      "size_mb": "1.02",
+      "size_bytes": 1073702,
+      "category": "root",
+      "path": "template_textbook_combined.pdf"
     },
     {
       "name": "template_textbook_combined.epub",
@@ -281,14 +281,14 @@
     {
       "name": "index.html",
       "size_mb": "0.42",
-      "size_bytes": 441682,
+      "size_bytes": 441702,
       "category": "web",
       "path": "web/index.html"
     },
     {
       "name": "_combined_manuscript.md",
       "size_mb": "0.20",
-      "size_bytes": 214254,
+      "size_bytes": 212551,
       "category": "web",
       "path": "web/_combined_manuscript.md"
     },
@@ -316,15 +316,15 @@
   ],
   "missing_expected_files": [],
   "sizes_by_category": {
-    "pdf": 2.0701942443847656,
-    "web": 3.5482301712036133,
+    "pdf": 1.0239620208740234,
+    "web": 3.5475597381591797,
     "docx": 0.8420648574829102,
     "epub": 0.9328231811523438,
-    "figures": 1.755331039428711,
+    "figures": 1.7003841400146484,
     "data": 0.0032815933227539062,
-    "reports": 0.01483917236328125,
+    "reports": 0.014835357666015625,
     "release": 0.001888275146484375,
-    "root": 2.0701942443847656
+    "root": 1.0239620208740234
   },
   "inventory_mode": "stable-shippable-output-v1",
   "inventory_scope": "stage5-delivery-mirror",

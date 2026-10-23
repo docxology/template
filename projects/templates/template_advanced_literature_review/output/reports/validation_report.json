@@ -40,7 +40,7 @@
           "file_count": 19,
           "largest_file": "word_cloud.png",
           "largest_file_path": "figures/word_cloud.png",
-          "size_mb": "5.42"
+          "size_mb": "4.88"
         },
         "llm": {
           "exists": false,
@@ -64,7 +64,7 @@
           "file_count": 1,
           "largest_file": "template_advanced_literature_review_combined.pdf",
           "largest_file_path": "pdf/template_advanced_literature_review_combined.pdf",
-          "size_mb": "5.66"
+          "size_mb": "5.52"
         },
         "reports": {
           "exists": true,
@@ -83,7 +83,7 @@
           "file_count": 23,
           "largest_file": "03c_results_text_analytics_slides.pdf",
           "largest_file_path": "slides/03c_results_text_analytics_slides.pdf",
-          "size_mb": "6.24"
+          "size_mb": "5.81"
         },
         "web": {
           "exists": true,
@@ -114,7 +114,7 @@
           "combined_pdf": {
             "exists": true,
             "readable": true,
-            "size_mb": 5.66
+            "size_mb": 5.52
           },
           "data": {
             "exists": true,
@@ -144,7 +144,7 @@
             "optional": false,
             "readable": true,
             "required": true,
-            "size_mb": 5.42
+            "size_mb": 4.88
           },
           "llm": {
             "exists": false,
@@ -174,7 +174,7 @@
             "optional": false,
             "readable": true,
             "required": true,
-            "size_mb": 5.66
+            "size_mb": 5.52
           },
           "reports": {
             "exists": true,
@@ -197,7 +197,7 @@
             "optional": false,
             "readable": true,
             "required": true,
-            "size_mb": 6.24
+            "size_mb": 5.81
           },
           "web": {
             "exists": true,
@@ -215,16 +215,16 @@
         "valid": true,
         "warnings": []
       },
-      "total_size_mb": 19.98757839202881
+      "total_size_mb": 18.8802490234375
     },
     "figures": {
       "files": 19,
-      "size_mb": 5.424299240112305
+      "size_mb": 4.8836774826049805
     },
     "inventory_mode": "stable-shippable-output-v1",
     "pdf": {
       "files": 1,
-      "size_mb": 5.6621246337890625
+      "size_mb": 5.516887664794922
     },
     "stable_inventory": {
       "categories": {
@@ -234,7 +234,7 @@
         },
         "figures": {
           "files": 19,
-          "size_bytes": 5687790
+          "size_bytes": 5120907
         },
         "manuscript": {
           "files": 29,
@@ -242,7 +242,7 @@
         },
         "pdf": {
           "files": 1,
-          "size_bytes": 5937168
+          "size_bytes": 5784876
         },
         "reports": {
           "files": 1,
@@ -250,16 +250,16 @@
         },
         "slides": {
           "files": 23,
-          "size_bytes": 6538868
+          "size_bytes": 6096444
         },
         "web": {
           "files": 27,
-          "size_bytes": 2598743
+          "size_bytes": 2599223
         }
       },
       "mode": "stable-shippable-output-v1",
       "total_files": 103,
-      "total_size_bytes": 20958495
+      "total_size_bytes": 19797376
     }
   },
   "recommendations": [],
@@ -270,11 +270,11 @@
     "passed": 9,
     "total_checks": 9
   },
-  "timestamp": "2026-10-22T22:54:54Z",
+  "timestamp": "2026-10-23T01:42:44Z",
   "validated_inputs": {
     "artifact_manifest": {
       "path": "output/reports/artifact_manifest.json",
-      "sha256": "5bcadc68e5684a2f65a824ba64bea81844b3b4983692077bc13ad9af47a77492",
+      "sha256": "0b1d9c3622a8daf0c8215ccbef0fa062ce33a47c10259772598d2161fd32dc18",
       "size_bytes": 34071
     },
     "combined_manuscript": {
@@ -434,7 +434,7 @@
       },
       "output": {
         "file_count": 103,
-        "sha256": "7b4c30dd0bbc4d7db0db88300286d6ff87c5b4e7fc92b06af0dd3105f11a7602"
+        "sha256": "9e9d511c01ab21eaa5b1f524ae175379ab0fca8f36b08bc17930039d1e333fa3"
       },
       "source": {
         "file_count": 101,
@@ -442,7 +442,7 @@
       },
       "stage": {
         "file_count": 1913,
-        "sha256": "13ce92cd0a26b7a9ae4f5865e6a9647dcd71470cdce555045fe3263a65a6f48f"
+        "sha256": "7e6ad0f3cb5090eec1253c4eb0717f5884ba0c0473969fbd2d9ec46ea6e80671"
       }
     },
     "project": "templates/template_advanced_literature_review",

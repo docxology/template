@@ -8,12 +8,12 @@ Inventory Scope: stage5-delivery-mirror
 Inventory Root: output/templates/template_code_project
 
 Total Files: 81
-Total Size: 14.99 MB
+Total Size: 14.42 MB
 
 Files by Category:
-  • pdf: 1 files (2.15 MB)
+  • pdf: 1 files (2.00 MB)
   • web: 14 files (2.35 MB)
-  • slides: 9 files (2.46 MB)
+  • slides: 9 files (2.20 MB)
   • docx: 2 files (1.72 MB)
   • epub: 1 files (1.72 MB)
   • figures: 10 files (1.97 MB)
@@ -23,12 +23,12 @@ Files by Category:
   • docs: 2 files (0.01 MB)
   • manuscript: 14 files (0.06 MB)
   • provenance: 1 files (0.00 MB)
-  • root: 1 files (2.15 MB)
+  • root: 1 files (2.00 MB)
 
 Largest Files:
-  • template_code_project_combined.pdf: 2.15 MB (pdf)
-  • template_code_project_combined.pdf: 2.15 MB (root)
-  • 03_results_slides.pdf: 2.03 MB (slides)
+  • template_code_project_combined.pdf: 2.00 MB (pdf)
+  • template_code_project_combined.pdf: 2.00 MB (root)
+  • 03_results_slides.pdf: 1.90 MB (slides)
   • source-web-fonts.js: 1.88 MB (web)
   • template_code_project_combined.epub: 1.72 MB (epub)
 

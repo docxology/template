@@ -34,7 +34,7 @@
           "file_count": 9,
           "largest_file": "coverage_by_exemplar.png",
           "largest_file_path": "figures/coverage_by_exemplar.png",
-          "size_mb": "0.33"
+          "size_mb": "0.29"
         },
         "llm": {
           "exists": false,
@@ -51,7 +51,7 @@
           "file_count": 7,
           "largest_file": "template_template_pitch_long.pdf",
           "largest_file_path": "pdf/template_template_pitch_long.pdf",
-          "size_mb": "1.43"
+          "size_mb": "0.88"
         },
         "pptx": {
           "exists": true,
@@ -116,7 +116,7 @@
         ],
         "warning": [
           "data/ has no stable publication artifacts",
-          "Combined PDF is unusually small: 0.08 MB"
+          "Combined PDF is unusually small: 0.07 MB"
         ]
       },
       "recommendations": [],
@@ -125,7 +125,7 @@
           "combined_pdf": {
             "exists": true,
             "readable": true,
-            "size_mb": 0.08
+            "size_mb": 0.07
           },
           "data": {
             "exists": false,
@@ -154,7 +154,7 @@
             "optional": false,
             "readable": true,
             "required": true,
-            "size_mb": 0.33
+            "size_mb": 0.29
           },
           "llm": {
             "exists": false,
@@ -176,7 +176,7 @@
             "optional": false,
             "readable": true,
             "required": true,
-            "size_mb": 1.43
+            "size_mb": 0.88
           },
           "pptx": {
             "exists": true,
@@ -237,32 +237,32 @@
         "issues": [],
         "missing_files": [],
         "suspicious_sizes": [
-          "Combined PDF is unusually small: 0.08 MB",
+          "Combined PDF is unusually small: 0.07 MB",
           "data/ directory is empty of stable publication artifacts"
         ],
         "valid": true,
         "warnings": []
       },
-      "total_size_mb": 5.102278709411621
+      "total_size_mb": 4.506923675537109
     },
     "figures": {
       "files": 9,
-      "size_mb": 0.33492183685302734
+      "size_mb": 0.28934192657470703
     },
     "inventory_mode": "stable-shippable-output-v1",
     "pdf": {
       "files": 7,
-      "size_mb": 1.4344558715820312
+      "size_mb": 0.8845281600952148
     },
     "stable_inventory": {
       "categories": {
         "figures": {
           "files": 9,
-          "size_bytes": 351191
+          "size_bytes": 303397
         },
         "pdf": {
           "files": 7,
-          "size_bytes": 1504136
+          "size_bytes": 927495
         },
         "pptx": {
           "files": 6,
@@ -282,12 +282,12 @@
         },
         "web": {
           "files": 11,
-          "size_bytes": 2130880
+          "size_bytes": 2131040
         }
       },
       "mode": "stable-shippable-output-v1",
       "total_files": 162,
-      "total_size_bytes": 5350127
+      "total_size_bytes": 4725852
     }
   },
   "recommendations": [],
@@ -298,12 +298,12 @@
     "passed": 9,
     "total_checks": 9
   },
-  "timestamp": "2026-10-23T00:44:50Z",
+  "timestamp": "2026-10-23T01:42:44Z",
   "validated_inputs": {
     "artifact_manifest": {
       "path": "output/reports/artifact_manifest.json",
-      "sha256": "4d327b340f86a6798223b25065bac7a408d2dd64b254933aca00985bb8843376",
-      "size_bytes": 55598
+      "sha256": "0150a3d481f6e1036361b2a8056d54eb9d58923c8969950fc27df861cb043c43",
+      "size_bytes": 55595
     },
     "combined_manuscript": {
       "path": "output/web/_combined_manuscript.md",
@@ -366,7 +366,7 @@
       },
       "output": {
         "file_count": 162,
-        "sha256": "c6d5fffd23a29dc1c78de3144dc0009e6cd57f79dd89e7ee310863def5a0eefe"
+        "sha256": "fecfd19a2b432048cd18e043e284a35439a6a703700db4e1f2d7357a0048ca5d"
       },
       "source": {
         "file_count": 34,
@@ -374,7 +374,7 @@
       },
       "stage": {
         "file_count": 1913,
-        "sha256": "3b08647defbf3d892e17c7ed7bc3ab098efa820aed201982bdda5fdeef9e784d"
+        "sha256": "7e6ad0f3cb5090eec1253c4eb0717f5884ba0c0473969fbd2d9ec46ea6e80671"
       }
     },
     "project": "templates/template_pitch_deck",

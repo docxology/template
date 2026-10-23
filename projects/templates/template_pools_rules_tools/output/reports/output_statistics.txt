@@ -8,24 +8,24 @@ Inventory Scope: stage5-delivery-mirror
 Inventory Root: output/templates/template_pools_rules_tools
 
 Total Files: 47
-Total Size: 7.15 MB
+Total Size: 6.30 MB
 
 Files by Category:
-  • pdf: 1 files (1.25 MB)
+  • pdf: 1 files (1.00 MB)
   • web: 12 files (2.24 MB)
-  • slides: 8 files (1.47 MB)
+  • slides: 8 files (1.14 MB)
   • figures: 10 files (0.85 MB)
   • data: 1 files (0.00 MB)
   • reports: 3 files (0.00 MB)
   • manuscript: 11 files (0.07 MB)
-  • root: 1 files (1.25 MB)
+  • root: 1 files (1.00 MB)
 
 Largest Files:
   • source-web-fonts.js: 1.88 MB (web)
-  • template_pools_rules_tools_combined.pdf: 1.25 MB (pdf)
-  • template_pools_rules_tools_combined.pdf: 1.25 MB (root)
-  • 06_integration_slides.pdf: 0.49 MB (slides)
-  • 05_tools_slides.pdf: 0.24 MB (slides)
+  • template_pools_rules_tools_combined.pdf: 1.00 MB (pdf)
+  • template_pools_rules_tools_combined.pdf: 1.00 MB (root)
+  • 06_integration_slides.pdf: 0.39 MB (slides)
+  • 02_introduction_slides.pdf: 0.18 MB (slides)
 
 File Types:
   • .md: 11 file(s)

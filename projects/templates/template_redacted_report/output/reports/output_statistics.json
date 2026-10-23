@@ -21,7 +21,7 @@
       "exists": true,
       "file_count": 7,
       "size_mb": "1.99",
-      "total_size_bytes": 2087023,
+      "total_size_bytes": 2087103,
       "largest_files": [
         {
           "name": "source-web-fonts.js",
@@ -32,13 +32,13 @@
         {
           "name": "index.html",
           "size_mb": "0.04",
-          "size_bytes": 39560,
+          "size_bytes": 39580,
           "path": "web/index.html"
         },
         {
           "name": "manuscript__02_results.html",
           "size_mb": "0.02",
-          "size_bytes": 22291,
+          "size_bytes": 22311,
           "path": "web/manuscript__02_results.html"
         }
       ],
@@ -93,8 +93,8 @@
     "figures": {
       "exists": true,
       "file_count": 5,
-      "size_mb": "0.31",
-      "total_size_bytes": 323558,
+      "size_mb": "0.26",
+      "total_size_bytes": 270900,
       "largest_files": [
         {
           "name": "disclosure_control_matrix.svg",
@@ -103,16 +103,16 @@
           "path": "figures/disclosure_control_matrix.svg"
         },
         {
-          "name": "redaction_flow.png",
-          "size_mb": "0.08",
-          "size_bytes": 79621,
-          "path": "figures/redaction_flow.png"
+          "name": "redaction_flow.svg",
+          "size_mb": "0.07",
+          "size_bytes": 70463,
+          "path": "figures/redaction_flow.svg"
         },
         {
-          "name": "disclosure_control_matrix.png",
-          "size_mb": "0.07",
-          "size_bytes": 78076,
-          "path": "figures/disclosure_control_matrix.png"
+          "name": "redaction_flow.png",
+          "size_mb": "0.06",
+          "size_bytes": 66271,
+          "path": "figures/redaction_flow.png"
         }
       ],
       "extensions": {
@@ -235,7 +235,7 @@
     }
   },
   "total_files": 71,
-  "total_size_mb": 6.182944297790527,
+  "total_size_mb": 6.1328020095825195,
   "largest_files": [
     {
       "name": "source-web-fonts.js",
@@ -311,9 +311,9 @@
   "missing_expected_files": [],
   "sizes_by_category": {
     "pdf": 0.23931598663330078,
-    "web": 1.990340232849121,
+    "web": 1.9904165267944336,
     "slides": 0.3125267028808594,
-    "figures": 0.30856895446777344,
+    "figures": 0.2583503723144531,
     "data": 0.010425567626953125,
     "reports": 0.008480072021484375,
     "dev": 3.0739707946777344,

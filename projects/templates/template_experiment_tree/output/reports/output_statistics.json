@@ -3,13 +3,13 @@
     "pdf": {
       "exists": true,
       "file_count": 1,
-      "size_mb": "0.05",
-      "total_size_bytes": 49834,
+      "size_mb": "0.03",
+      "total_size_bytes": 36070,
       "largest_files": [
         {
           "name": "template_experiment_tree_combined.pdf",
-          "size_mb": "0.05",
-          "size_bytes": 49834,
+          "size_mb": "0.03",
+          "size_bytes": 36070,
           "path": "pdf/template_experiment_tree_combined.pdf"
         }
       ],
@@ -21,7 +21,7 @@
       "exists": true,
       "file_count": 10,
       "size_mb": "1.97",
-      "total_size_bytes": 2069172,
+      "total_size_bytes": 2069312,
       "largest_files": [
         {
           "name": "source-web-fonts.js",
@@ -32,13 +32,13 @@
         {
           "name": "index.html",
           "size_mb": "0.02",
-          "size_bytes": 19107,
+          "size_bytes": 19127,
           "path": "web/index.html"
         },
         {
           "name": "manuscript__01_introduction.html",
           "size_mb": "0.01",
-          "size_bytes": 12323,
+          "size_bytes": 12343,
           "path": "web/manuscript__01_introduction.html"
         }
       ],
@@ -52,25 +52,25 @@
     "slides": {
       "exists": true,
       "file_count": 6,
-      "size_mb": "0.07",
-      "total_size_bytes": 72183,
+      "size_mb": "0.05",
+      "total_size_bytes": 50557,
       "largest_files": [
         {
           "name": "04_discussion_slides.pdf",
-          "size_mb": "0.02",
-          "size_bytes": 17351,
+          "size_mb": "0.01",
+          "size_bytes": 11858,
           "path": "slides/04_discussion_slides.pdf"
         },
         {
           "name": "99_references_slides.pdf",
           "size_mb": "0.01",
-          "size_bytes": 12095,
+          "size_bytes": 8460,
           "path": "slides/99_references_slides.pdf"
         },
         {
           "name": "02_methodology_slides.pdf",
           "size_mb": "0.01",
-          "size_bytes": 11121,
+          "size_bytes": 8207,
           "path": "slides/02_methodology_slides.pdf"
         }
       ],
@@ -182,13 +182,13 @@
     "root": {
       "exists": true,
       "file_count": 1,
-      "size_mb": "0.05",
-      "total_size_bytes": 49834,
+      "size_mb": "0.03",
+      "total_size_bytes": 36070,
       "largest_files": [
         {
           "name": "template_experiment_tree_combined.pdf",
-          "size_mb": "0.05",
-          "size_bytes": 49834,
+          "size_mb": "0.03",
+          "size_bytes": 36070,
           "path": "template_experiment_tree_combined.pdf"
         }
       ],
@@ -198,7 +198,7 @@
     }
   },
   "total_files": 29,
-  "total_size_mb": 2.143355369567871,
+  "total_size_mb": 2.096611976623535,
   "largest_files": [
     {
       "name": "source-web-fonts.js",
@@ -209,79 +209,79 @@
     },
     {
       "name": "template_experiment_tree_combined.pdf",
-      "size_mb": "0.05",
-      "size_bytes": 49834,
+      "size_mb": "0.03",
+      "size_bytes": 36070,
       "category": "pdf",
       "path": "pdf/template_experiment_tree_combined.pdf"
     },
     {
       "name": "template_experiment_tree_combined.pdf",
-      "size_mb": "0.05",
-      "size_bytes": 49834,
+      "size_mb": "0.03",
+      "size_bytes": 36070,
       "category": "root",
       "path": "template_experiment_tree_combined.pdf"
     },
     {
       "name": "index.html",
       "size_mb": "0.02",
-      "size_bytes": 19107,
+      "size_bytes": 19127,
       "category": "web",
       "path": "web/index.html"
     },
     {
-      "name": "04_discussion_slides.pdf",
-      "size_mb": "0.02",
-      "size_bytes": 17351,
-      "category": "slides",
-      "path": "slides/04_discussion_slides.pdf"
-    },
-    {
       "name": "manuscript__01_introduction.html",
       "size_mb": "0.01",
-      "size_bytes": 12323,
+      "size_bytes": 12343,
       "category": "web",
       "path": "web/manuscript__01_introduction.html"
     },
     {
       "name": "manuscript__02_methodology.html",
       "size_mb": "0.01",
-      "size_bytes": 12321,
+      "size_bytes": 12341,
       "category": "web",
       "path": "web/manuscript__02_methodology.html"
     },
     {
       "name": "manuscript__04_discussion.html",
       "size_mb": "0.01",
-      "size_bytes": 12291,
+      "size_bytes": 12311,
       "category": "web",
       "path": "web/manuscript__04_discussion.html"
     },
     {
       "name": "manuscript__00_abstract.html",
       "size_mb": "0.01",
-      "size_bytes": 12219,
+      "size_bytes": 12239,
       "category": "web",
       "path": "web/manuscript__00_abstract.html"
     },
     {
-      "name": "99_references_slides.pdf",
+      "name": "manuscript__03_results.html",
       "size_mb": "0.01",
-      "size_bytes": 12095,
-      "category": "slides",
-      "path": "slides/99_references_slides.pdf"
+      "size_bytes": 12058,
+      "category": "web",
+      "path": "web/manuscript__03_results.html"
+    },
+    {
+      "name": "manuscript__99_references.html",
+      "size_mb": "0.01",
+      "size_bytes": 12009,
+      "category": "web",
+      "path": "web/manuscript__99_references.html"
     }
   ],
   "missing_expected_files": [
     "figures/ directory"
   ],
   "sizes_by_category": {
-    "pdf": 0.04752540588378906,
-    "web": 1.9733161926269531,
-    "slides": 0.06883907318115234,
+    "pdf": 0.03439903259277344,
+    "web": 1.97344970703125,
+    "slides": 0.04821491241455078,
     "data": 0.0010309219360351562,
     "reports": 0.0016469955444335938,
     "manuscript": 0.00347137451171875,
-    "root": 0.04752540588378906
+    "root": 0.03439903259277344
   },
   "inventory_mode": "stable-shippable-output-v1",
   "inventory_scope": "stage5-delivery-mirror",

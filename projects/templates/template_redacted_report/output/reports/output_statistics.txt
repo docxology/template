@@ -8,13 +8,13 @@ Inventory Scope: stage5-delivery-mirror
 Inventory Root: output/templates/template_redacted_report
 
 Total Files: 71
-Total Size: 6.18 MB
+Total Size: 6.13 MB
 
 Files by Category:
   • pdf: 1 files (0.24 MB)
   • web: 7 files (1.99 MB)
   • slides: 3 files (0.31 MB)
-  • figures: 5 files (0.31 MB)
+  • figures: 5 files (0.26 MB)
   • data: 1 files (0.01 MB)
   • reports: 4 files (0.01 MB)
   • dev: 49 files (3.07 MB)

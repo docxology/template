@@ -40,7 +40,7 @@
           "file_count": 6,
           "largest_file": "schema_overview.png",
           "largest_file_path": "figures/schema_overview.png",
-          "size_mb": "0.11"
+          "size_mb": "0.10"
         },
         "llm": {
           "exists": false,
@@ -57,7 +57,7 @@
           "file_count": 1,
           "largest_file": "template_data_descriptor_combined.pdf",
           "largest_file_path": "pdf/template_data_descriptor_combined.pdf",
-          "size_mb": "0.22"
+          "size_mb": "0.17"
         },
         "reports": {
           "exists": true,
@@ -76,7 +76,7 @@
           "file_count": 8,
           "largest_file": "05_quality_validation_slides.pdf",
           "largest_file_path": "slides/05_quality_validation_slides.pdf",
-          "size_mb": "0.34"
+          "size_mb": "0.26"
         },
         "web": {
           "exists": true,
@@ -106,7 +106,7 @@
           "combined_pdf": {
             "exists": true,
             "readable": true,
-            "size_mb": 0.22
+            "size_mb": 0.17
           },
           "data": {
             "exists": true,
@@ -136,7 +136,7 @@
             "optional": false,
             "readable": true,
             "required": true,
-            "size_mb": 0.11
+            "size_mb": 0.1
           },
           "llm": {
             "exists": false,
@@ -158,7 +158,7 @@
             "optional": false,
             "readable": true,
             "required": true,
-            "size_mb": 0.22
+            "size_mb": 0.17
           },
           "reports": {
             "exists": true,
@@ -181,7 +181,7 @@
             "optional": false,
             "readable": true,
             "required": true,
-            "size_mb": 0.34
+            "size_mb": 0.26
           },
           "web": {
             "exists": true,
@@ -199,16 +199,16 @@
         "valid": true,
         "warnings": []
       },
-      "total_size_mb": 2.7533273696899414
+      "total_size_mb": 2.5966453552246094
     },
     "figures": {
       "files": 6,
-      "size_mb": 0.11476707458496094
+      "size_mb": 0.09600067138671875
     },
     "inventory_mode": "stable-shippable-output-v1",
     "pdf": {
       "files": 1,
-      "size_mb": 0.21809959411621094
+      "size_mb": 0.1668081283569336
     },
     "stable_inventory": {
       "categories": {
@@ -218,11 +218,11 @@
         },
         "figures": {
           "files": 6,
-          "size_bytes": 120342
+          "size_bytes": 100664
         },
         "pdf": {
           "files": 1,
-          "size_bytes": 228694
+          "size_bytes": 174911
         },
         "reports": {
           "files": 6,
@@ -230,16 +230,16 @@
         },
         "slides": {
           "files": 8,
-          "size_bytes": 361005
+          "size_bytes": 269993
         },
         "web": {
           "files": 12,
-          "size_bytes": 2167114
+          "size_bytes": 2167294
         }
       },
       "mode": "stable-shippable-output-v1",
       "total_files": 34,
-      "total_size_bytes": 2887073
+      "total_size_bytes": 2722780
     }
   },
   "recommendations": [],
@@ -250,11 +250,11 @@
     "passed": 9,
     "total_checks": 9
   },
-  "timestamp": "2026-10-22T20:31:52Z",
+  "timestamp": "2026-10-23T01:42:44Z",
   "validated_inputs": {
     "artifact_manifest": {
       "path": "output/reports/artifact_manifest.json",
-      "sha256": "c5c092b1277c47373e799a1f0bf0102e582b512c84dc35f694862b68f2f8cb49",
+      "sha256": "bee2592bf0d06db800b90be88371043c44d9059f99b8b3a89c91b083de5e0bc4",
       "size_bytes": 11155
     },
     "combined_manuscript": {
@@ -324,7 +324,7 @@
       },
       "output": {
         "file_count": 34,
-        "sha256": "982ab19465b287eb21ccf9e6e97978b65f13be2c517972889a99055305e83b02"
+        "sha256": "4fa9fc19d0d4702b4cabccd0b574a44a3adeaf28fe021570bd264e8eadd986d2"
       },
       "source": {
         "file_count": 31,
@@ -332,7 +332,7 @@
       },
       "stage": {
         "file_count": 1913,
-        "sha256": "a1e56a7908ff6e39f6c5f546c80b52bf069db1cdb23cf0aeeb7394aa142419c1"
+        "sha256": "7e6ad0f3cb5090eec1253c4eb0717f5884ba0c0473969fbd2d9ec46ea6e80671"
       }
     },
     "project": "templates/template_data_descriptor",

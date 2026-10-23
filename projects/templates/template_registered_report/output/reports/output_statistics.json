@@ -3,13 +3,13 @@
     "pdf": {
       "exists": true,
       "file_count": 1,
-      "size_mb": "0.29",
-      "total_size_bytes": 301747,
+      "size_mb": "0.23",
+      "total_size_bytes": 238916,
       "largest_files": [
         {
           "name": "template_registered_report_combined.pdf",
-          "size_mb": "0.29",
-          "size_bytes": 301747,
+          "size_mb": "0.23",
+          "size_bytes": 238916,
           "path": "pdf/template_registered_report_combined.pdf"
         }
       ],
@@ -21,7 +21,7 @@
       "exists": true,
       "file_count": 12,
       "size_mb": "2.07",
-      "total_size_bytes": 2168018,
+      "total_size_bytes": 2168198,
       "largest_files": [
         {
           "name": "source-web-fonts.js",
@@ -32,7 +32,7 @@
         {
           "name": "index.html",
           "size_mb": "0.05",
-          "size_bytes": 50690,
+          "size_bytes": 50710,
           "path": "web/index.html"
         },
         {
@@ -52,25 +52,25 @@
     "slides": {
       "exists": true,
       "file_count": 8,
-      "size_mb": "0.43",
-      "total_size_bytes": 453052,
+      "size_mb": "0.33",
+      "total_size_bytes": 345455,
       "largest_files": [
         {
           "name": "04_results_slides.pdf",
-          "size_mb": "0.10",
-          "size_bytes": 105730,
+          "size_mb": "0.08",
+          "size_bytes": 82786,
           "path": "slides/04_results_slides.pdf"
         },
         {
           "name": "03_methods_slides.pdf",
-          "size_mb": "0.09",
-          "size_bytes": 92595,
+          "size_mb": "0.07",
+          "size_bytes": 72300,
           "path": "slides/03_methods_slides.pdf"
         },
         {
           "name": "02_hypotheses_slides.pdf",
-          "size_mb": "0.08",
-          "size_bytes": 82146,
+          "size_mb": "0.06",
+          "size_bytes": 64000,
           "path": "slides/02_hypotheses_slides.pdf"
         }
       ],
@@ -188,13 +188,13 @@
     "root": {
       "exists": true,
       "file_count": 1,
-      "size_mb": "0.29",
-      "total_size_bytes": 301747,
+      "size_mb": "0.23",
+      "total_size_bytes": 238916,
       "largest_files": [
         {
           "name": "template_registered_report_combined.pdf",
-          "size_mb": "0.29",
-          "size_bytes": 301747,
+          "size_mb": "0.23",
+          "size_bytes": 238916,
           "path": "template_registered_report_combined.pdf"
         }
       ],
@@ -204,7 +204,7 @@
     }
   },
   "total_files": 36,
-  "total_size_mb": 3.241908073425293,
+  "total_size_mb": 3.0196266174316406,
   "largest_files": [
     {
       "name": "source-web-fonts.js",
@@ -215,43 +215,43 @@
     },
     {
       "name": "template_registered_report_combined.pdf",
-      "size_mb": "0.29",
-      "size_bytes": 301747,
+      "size_mb": "0.23",
+      "size_bytes": 238916,
       "category": "pdf",
       "path": "pdf/template_registered_report_combined.pdf"
     },
     {
       "name": "template_registered_report_combined.pdf",
-      "size_mb": "0.29",
-      "size_bytes": 301747,
+      "size_mb": "0.23",
+      "size_bytes": 238916,
       "category": "root",
       "path": "template_registered_report_combined.pdf"
     },
     {
       "name": "04_results_slides.pdf",
-      "size_mb": "0.10",
-      "size_bytes": 105730,
+      "size_mb": "0.08",
+      "size_bytes": 82786,
       "category": "slides",
       "path": "slides/04_results_slides.pdf"
     },
     {
       "name": "03_methods_slides.pdf",
-      "size_mb": "0.09",
-      "size_bytes": 92595,
+      "size_mb": "0.07",
+      "size_bytes": 72300,
       "category": "slides",
       "path": "slides/03_methods_slides.pdf"
     },
     {
       "name": "02_hypotheses_slides.pdf",
-      "size_mb": "0.08",
-      "size_bytes": 82146,
+      "size_mb": "0.06",
+      "size_bytes": 64000,
       "category": "slides",
       "path": "slides/02_hypotheses_slides.pdf"
     },
     {
       "name": "05_deviations_slides.pdf",
-      "size_mb": "0.07",
-      "size_bytes": 74242,
+      "size_mb": "0.05",
+      "size_bytes": 54899,
       "category": "slides",
       "path": "slides/05_deviations_slides.pdf"
     },
@@ -265,7 +265,7 @@
     {
       "name": "index.html",
       "size_mb": "0.05",
-      "size_bytes": 50690,
+      "size_bytes": 50710,
       "category": "web",
       "path": "web/index.html"
     },
@@ -279,13 +279,13 @@
   ],
   "missing_expected_files": [],
   "sizes_by_category": {
-    "pdf": 0.2877683639526367,
-    "web": 2.0675830841064453,
-    "slides": 0.4320640563964844,
+    "pdf": 0.22784805297851562,
+    "web": 2.0677547454833984,
+    "slides": 0.3294515609741211,
     "figures": 0.1601886749267578,
     "data": 0.00038909912109375,
     "reports": 0.006146430969238281,
-    "root": 0.2877683639526367
+    "root": 0.22784805297851562
   },
   "inventory_mode": "stable-shippable-output-v1",
   "inventory_scope": "stage5-delivery-mirror",

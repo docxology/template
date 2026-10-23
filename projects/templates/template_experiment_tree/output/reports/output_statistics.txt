@@ -8,23 +8,23 @@ Inventory Scope: stage5-delivery-mirror
 Inventory Root: output/templates/template_experiment_tree
 
 Total Files: 29
-Total Size: 2.14 MB
+Total Size: 2.10 MB
 
 Files by Category:
-  • pdf: 1 files (0.05 MB)
+  • pdf: 1 files (0.03 MB)
   • web: 10 files (1.97 MB)
-  • slides: 6 files (0.07 MB)
+  • slides: 6 files (0.05 MB)
   • data: 1 files (0.00 MB)
   • reports: 1 files (0.00 MB)
   • manuscript: 9 files (0.00 MB)
-  • root: 1 files (0.05 MB)
+  • root: 1 files (0.03 MB)
 
 Largest Files:
   • source-web-fonts.js: 1.88 MB (web)
-  • template_experiment_tree_combined.pdf: 0.05 MB (pdf)
-  • template_experiment_tree_combined.pdf: 0.05 MB (root)
+  • template_experiment_tree_combined.pdf: 0.03 MB (pdf)
+  • template_experiment_tree_combined.pdf: 0.03 MB (root)
   • index.html: 0.02 MB (web)
-  • 04_discussion_slides.pdf: 0.02 MB (slides)
+  • manuscript__01_introduction.html: 0.01 MB (web)
 
 Missing Expected Files:
   ⚠  figures/ directory

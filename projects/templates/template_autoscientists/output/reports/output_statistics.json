@@ -3,13 +3,13 @@
     "pdf": {
       "exists": true,
       "file_count": 1,
-      "size_mb": "0.30",
-      "total_size_bytes": 316905,
+      "size_mb": "0.25",
+      "total_size_bytes": 257954,
       "largest_files": [
         {
           "name": "template_autoscientists_combined.pdf",
-          "size_mb": "0.30",
-          "size_bytes": 316905,
+          "size_mb": "0.25",
+          "size_bytes": 257954,
           "path": "pdf/template_autoscientists_combined.pdf"
         }
       ],
@@ -21,7 +21,7 @@
       "exists": true,
       "file_count": 13,
       "size_mb": "2.15",
-      "total_size_bytes": 2256751,
+      "total_size_bytes": 2256951,
       "largest_files": [
         {
           "name": "source-web-fonts.js",
@@ -32,7 +32,7 @@
         {
           "name": "index.html",
           "size_mb": "0.07",
-          "size_bytes": 72034,
+          "size_bytes": 72054,
           "path": "web/index.html"
         },
         {
@@ -70,26 +70,26 @@
     "figures": {
       "exists": true,
       "file_count": 4,
-      "size_mb": "0.16",
-      "total_size_bytes": 167219,
+      "size_mb": "0.14",
+      "total_size_bytes": 151105,
       "largest_files": [
         {
           "name": "ablation_efficiency.png",
-          "size_mb": "0.06",
-          "size_bytes": 58745,
-          "path": "figures/ablation_efficiency.png"
-        },
-        {
-          "name": "search_comparison.png",
           "size_mb": "0.05",
-          "size_bytes": 54602,
-          "path": "figures/search_comparison.png"
+          "size_bytes": 52781,
+          "path": "figures/ablation_efficiency.png"
         },
         {
           "name": "ablation.png",
           "size_mb": "0.05",
-          "size_bytes": 51600,
+          "size_bytes": 48312,
           "path": "figures/ablation.png"
+        },
+        {
+          "name": "search_comparison.png",
+          "size_mb": "0.05",
+          "size_bytes": 47740,
+          "path": "figures/search_comparison.png"
         }
       ],
       "extensions": {
@@ -201,13 +201,13 @@
     "root": {
       "exists": true,
       "file_count": 1,
-      "size_mb": "0.30",
-      "total_size_bytes": 316905,
+      "size_mb": "0.25",
+      "total_size_bytes": 257954,
       "largest_files": [
         {
           "name": "template_autoscientists_combined.pdf",
-          "size_mb": "0.30",
-          "size_bytes": 316905,
+          "size_mb": "0.25",
+          "size_bytes": 257954,
           "path": "template_autoscientists_combined.pdf"
         }
       ],
@@ -217,7 +217,7 @@
     }
   },
   "total_files": 27,
-  "total_size_mb": 2.924356460571289,
+  "total_size_mb": 2.7967395782470703,
   "largest_files": [
     {
       "name": "source-web-fonts.js",
@@ -228,45 +228,45 @@
     },
     {
       "name": "template_autoscientists_combined.pdf",
-      "size_mb": "0.30",
-      "size_bytes": 316905,
+      "size_mb": "0.25",
+      "size_bytes": 257954,
       "category": "pdf",
       "path": "pdf/template_autoscientists_combined.pdf"
     },
     {
       "name": "template_autoscientists_combined.pdf",
-      "size_mb": "0.30",
-      "size_bytes": 316905,
+      "size_mb": "0.25",
+      "size_bytes": 257954,
       "category": "root",
       "path": "template_autoscientists_combined.pdf"
     },
     {
       "name": "index.html",
       "size_mb": "0.07",
-      "size_bytes": 72034,
+      "size_bytes": 72054,
       "category": "web",
       "path": "web/index.html"
     },
     {
       "name": "ablation_efficiency.png",
-      "size_mb": "0.06",
-      "size_bytes": 58745,
+      "size_mb": "0.05",
+      "size_bytes": 52781,
       "category": "figures",
       "path": "figures/ablation_efficiency.png"
     },
     {
-      "name": "search_comparison.png",
-      "size_mb": "0.05",
-      "size_bytes": 54602,
-      "category": "figures",
-      "path": "figures/search_comparison.png"
-    },
-    {
       "name": "ablation.png",
       "size_mb": "0.05",
-      "size_bytes": 51600,
+      "size_bytes": 48312,
       "category": "figures",
       "path": "figures/ablation.png"
+    },
+    {
+      "name": "search_comparison.png",
+      "size_mb": "0.05",
+      "size_bytes": 47740,
+      "category": "figures",
+      "path": "figures/search_comparison.png"
     },
     {
       "name": "_combined_manuscript.md",
@@ -278,27 +278,27 @@
     {
       "name": "manuscript__03_results.html",
       "size_mb": "0.03",
-      "size_bytes": 28076,
+      "size_bytes": 28096,
       "category": "web",
       "path": "web/manuscript__03_results.html"
     },
     {
       "name": "manuscript__02_methodology.html",
       "size_mb": "0.02",
-      "size_bytes": 22973,
+      "size_bytes": 22993,
       "category": "web",
       "path": "web/manuscript__02_methodology.html"
     }
   ],
   "missing_expected_files": [],
   "sizes_by_category": {
-    "pdf": 0.30222415924072266,
-    "web": 2.152205467224121,
-    "figures": 0.15947246551513672,
+    "pdf": 0.2460041046142578,
+    "web": 2.1523962020874023,
+    "figures": 0.1441049575805664,
     "data": 0.0032682418823242188,
     "reports": 0.0030345916748046875,
     "release": 0.0019273757934570312,
-    "root": 0.30222415924072266
+    "root": 0.2460041046142578
   },
   "inventory_mode": "stable-shippable-output-v1",
   "inventory_scope": "stage5-delivery-mirror",

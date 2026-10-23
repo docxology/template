@@ -8,16 +8,16 @@ Inventory Scope: stage5-delivery-mirror
 Inventory Root: output/templates/template_storybook
 
 Total Files: 39
-Total Size: 5.22 MB
+Total Size: 5.17 MB
 
 Files by Category:
-  • pdf: 2 files (1.09 MB)
+  • pdf: 2 files (1.08 MB)
   • web: 10 files (1.98 MB)
-  • slides: 6 files (0.08 MB)
+  • slides: 6 files (0.06 MB)
   • figures: 15 files (1.99 MB)
   • data: 1 files (0.01 MB)
   • reports: 4 files (0.00 MB)
-  • root: 1 files (0.06 MB)
+  • root: 1 files (0.04 MB)
 
 Largest Files:
   • source-web-fonts.js: 1.88 MB (web)
