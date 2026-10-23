@@ -9,10 +9,10 @@ are excluded.
 
 ## [4.1.0] - 2026-10-22
 
-See the [4.1.0 release-intent notes](docs/releases/v4.1.0.md). Publication remains
-pending until exact-revision hosted acceptance and the authenticated release
-handoff complete. The 4.0.0, 4.0.1 and 4.0.2 preparations remain historical
-candidates, not published root releases.
+See the [4.1.0 release-intent notes](docs/releases/v4.1.0.md). Publication requires
+exact-revision hosted acceptance and the authenticated release handoff. The
+4.0.0, 4.0.1 and 4.0.2 preparations remain historical candidates, not published
+root releases.
 
 - Add explicit coordinated next-minor metadata preparation while keeping exact
   next-patch preparation as the default. Bind the selected kind into the checked
@@ -39,10 +39,19 @@ candidates, not published root releases.
   with original hashes and licenses. Preserve raw and legacy transport APIs.
 - Align public documentation with declared Python/SDK requirements and separate
   historical coverage measurements, controlled HTTP tests and native acceptance.
+- Retain failed and blocked literature originals before checking capabilities;
+  keep held Root DATA separate from SDK imports in disposable Pitch pipelines,
+  and defer isolated SDK provider observations to test execution.
+- Keep generated Pools figures under `output/`; support search-only strict
+  ancestors for Formal receipts and frozen Registered records while retaining
+  readable final parents, no-follow traversal and held physical checks.
+- Prepare and resolve the actual Linux `soul.sty` provider. Retain the exact Linux
+  vDSO label as an unsupported kernel observation while preserving regular-library
+  body checks and separate shared-cache/kernel custody.
 
-The new full-roster own-lock measurements, generated counts/provenance,
-publication outputs and hosted acceptance must be refreshed for the final 4.1.0
-source. Earlier eight-project measurements remain historical observations.
+Full-roster own-lock measurements, generated counts/provenance, publication
+outputs and hosted acceptance must bind the final 4.1.0 source. Earlier
+eight-project measurements remain historical observations.
 
 ## [4.0.2] - 2026-10-15
 
