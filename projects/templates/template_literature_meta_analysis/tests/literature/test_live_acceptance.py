@@ -42,7 +42,16 @@ def node():
     }
 
 
-def configure(httpserver, *, bad_quote=False, bad_annotation_quote=False, single_year=False, status=200):
+def configure(
+    httpserver,
+    *,
+    bad_quote=False,
+    bad_annotation_quote=False,
+    duplicate_ids=False,
+    single_year=False,
+    status=200,
+    node_count=1,
+):
     records = [
         {
             "DOI": DOI + str(index),
@@ -69,12 +78,21 @@ def configure(httpserver, *, bad_quote=False, bad_annotation_quote=False, single
     def generation(request):
         invocation = request.json
         if "nodes" in invocation["format"]["properties"]:
-            extracted = node()
-            choices = invocation["format"]["properties"]["nodes"]["items"]["properties"]["source_quote"]["enum"]
-            extracted["source_quote"] = choices[0]
-            if bad_quote:
-                extracted["source_quote"] = "This invented protocol is absent from the consumed source."
-            value = {"nodes": [extracted]}
+            branches = invocation["format"]["properties"]["nodes"]["anyOf"]
+            selected_count = 3 if duplicate_ids else node_count
+            slots = branches[selected_count - 1]["items"]
+            rows = []
+            for index in range(3 if duplicate_ids else node_count):
+                extracted = node()
+                extracted["node_id"] = "n0" if duplicate_ids else slots[index]["properties"]["node_id"]["enum"][0]
+                extracted["node_name"] += f" {index}"
+                extracted["description"] += f" {index}"
+                choices = slots[index]["properties"]["source_quote"]["enum"]
+                extracted["source_quote"] = choices[0]
+                if bad_quote:
+                    extracted["source_quote"] = "This invented protocol is absent from the consumed source."
+                rows.append(extracted)
+            value = {"nodes": rows}
         else:
             choices = invocation["format"]["properties"]["source_quote"]["enum"]
             quote = (
@@ -89,9 +107,9 @@ def configure(httpserver, *, bad_quote=False, bad_annotation_quote=False, single
     httpserver.expect_request("/api/generate", method="POST").respond_with_handler(generation)
 
 
-@pytest.mark.parametrize("single_year", [False, True])
-def test_real_controlled_live_producers_and_independent_analysis(tmp_path, httpserver, single_year):
-    configure(httpserver, single_year=single_year)
+@pytest.mark.parametrize("single_year,node_count", [(False, 1), (False, 2), (False, 3), (True, 1)])
+def test_real_controlled_live_producers_and_independent_analysis(tmp_path, httpserver, single_year, node_count):
+    configure(httpserver, single_year=single_year, node_count=node_count)
     root = copied_project(tmp_path)
     settings = LiveSettings("controlled", httpserver.url_for("").replace("localhost", "127.0.0.1"))
     path = run_live(
@@ -142,7 +160,7 @@ def test_real_controlled_live_producers_and_independent_analysis(tmp_path, https
     assert receipt["producer_results"]["kg"]["assertion_count"] == 1
     assert len(receipt["producer_results"]["local-model"]["calls"]) == 2
     score = json.loads((path.parent / "workflow_score.json").read_text())
-    assert score["n_nodes"] == 1 and score["n_edges"] == 0
+    assert score["n_nodes"] == node_count and score["n_edges"] == 0
     assert score["structural_components"]["path_coverage"] == 0.0
     # The existing domain score includes source/sink/cohesion components; an
     # isolated partial node does not imply an overall zero score.
@@ -150,7 +168,17 @@ def test_real_controlled_live_producers_and_independent_analysis(tmp_path, https
     assert not (root / "output/data").exists()
     # Inspect the actual request retained by the supervised HTTP producer.
     request = json.loads((path.parent / "model_1/request.json").read_text())
-    properties = request["format"]["properties"]["nodes"]["items"]["properties"]
+    assert request["format"]["$schema"] == "http://json-schema.org/draft-07/schema#"
+    branches = request["format"]["properties"]["nodes"]["anyOf"]
+    assert len(branches) == 3
+    for count, branch in enumerate(branches, start=1):
+        assert branch["type"] == "array" and branch["minItems"] == branch["maxItems"] == count
+        assert branch["additionalItems"] is False and len(branch["items"]) == count
+        assert [slot["properties"]["node_id"]["enum"] for slot in branch["items"]] == [
+            [f"n{index}"] for index in range(count)
+        ]
+        assert all(slot["additionalProperties"] is False for slot in branch["items"])
+    properties = branches[node_count - 1]["items"][0]["properties"]
     assert properties["depends_on"]["maxItems"] == 3
     assert properties["depends_on"]["uniqueItems"] is True
     assert properties["source_quote"]["minLength"] == 20
@@ -159,7 +187,14 @@ def test_real_controlled_live_producers_and_independent_analysis(tmp_path, https
     assert quote_options and len(quote_options) == len(set(quote_options))
     assert all(20 <= len(quote) <= 200 and quote in consumed_excerpt for quote in quote_options)
     actual_workflow = json.loads((path.parent / "workflow.json").read_text())
-    assert actual_workflow["nodes"][0]["source_quote"] in quote_options
+    original_model = json.loads((path.parent / "model_1/response.json").read_text())
+    original_rows = json.loads(original_model["response"])["nodes"]
+    assert len(original_rows) == len(actual_workflow["nodes"]) == node_count
+    assert [row["node_id"] for row in original_rows] == [f"n{index}" for index in range(node_count)]
+    # Every actual generated row and field survives strict parsing unchanged.
+    for original_row, actual_row in zip(original_rows, actual_workflow["nodes"], strict=True):
+        assert all(actual_row[key] == value for key, value in original_row.items())
+        assert original_row["source_quote"] in quote_options
     for field in ("node_name", "description", "source_quote"):
         assert properties[field]["maxLength"] == 1000
     assert request["options"]["num_predict"] == 1024
@@ -175,13 +210,24 @@ def test_real_controlled_live_producers_and_independent_analysis(tmp_path, https
 
 
 @pytest.mark.parametrize(
-    "bad_quote,bad_annotation_quote,status,expected",
-    [(True, False, 200, "failed"), (False, False, 503, "blocked"), (False, True, 200, "failed")],
+    "bad_quote,bad_annotation_quote,duplicate_ids,status,expected",
+    [
+        (True, False, False, 200, "failed"),
+        (False, False, False, 503, "blocked"),
+        (False, True, False, 200, "failed"),
+        (False, False, True, 200, "failed"),
+    ],
 )
 def test_required_producer_failure_or_fabricated_workflow_cannot_pass(
-    tmp_path, httpserver, bad_quote, bad_annotation_quote, status, expected
+    tmp_path, httpserver, bad_quote, bad_annotation_quote, duplicate_ids, status, expected
 ):
-    configure(httpserver, bad_quote=bad_quote, bad_annotation_quote=bad_annotation_quote, status=status)
+    configure(
+        httpserver,
+        bad_quote=bad_quote,
+        bad_annotation_quote=bad_annotation_quote,
+        duplicate_ids=duplicate_ids,
+        status=status,
+    )
     root = copied_project(tmp_path)
     settings = LiveSettings("controlled", httpserver.url_for("").replace("localhost", "127.0.0.1"))
     path = run_live(
@@ -193,6 +239,11 @@ def test_required_producer_failure_or_fabricated_workflow_cannot_pass(
     )
     actual = json.loads(path.read_text())
     assert actual["status"] == expected
+    if duplicate_ids:
+        assert any("workflow node identity is invalid or duplicated" in issue for issue in actual["issues"])
+        original_model = json.loads((path.parent / "model_1/response.json").read_text())
+        assert [row["node_id"] for row in json.loads(original_model["response"])["nodes"]] == ["n0"] * 3
+        assert not (path.parent / "workflow.json").exists()
     if bad_annotation_quote:
         assert "extraction" in actual["producer_results"]
         assert any("annotation quote is not verbatim" in issue for issue in actual["issues"])

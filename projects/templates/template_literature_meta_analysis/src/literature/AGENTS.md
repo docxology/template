@@ -95,3 +95,13 @@ to all downstream pipeline stages.
   abstract contain every query term. It is bounded by `BIORXIV_MAX_PAGES` (20 pages / 2000
   raw items); a query with very common terms may exhaust the page cap before `max_results`
   matches are found. Not ranked by relevance.
+
+## Bounded live workflow identity
+
+The generation schema retains a list of one to three source-quoted nodes and
+assigns distinct identifiers by list position (`n0`, `n1`, `n2`) before generation.
+The producer keeps every returned node and field; it does not relabel, deduplicate,
+retry or discard malformed output. The unchanged strict parser still refuses
+duplicate IDs, fabricated quotes and invalid fields. Dependency/cycle signals
+remain domain observations, and these uncalibrated partial workflow annotations
+do not establish scientific validity or a complete paper workflow.

@@ -5,8 +5,9 @@ these scripts only handle seeded layout and file I/O. Use the monorepo pipeline
 scripts from the repository root for normal test/render stages.
 
 `generate_figures.py` executes the registered analysis on deterministic
-demonstration data and renders the four manuscript figures into
-`manuscript/figures/`, writing the executed analysis to
+demonstration data and renders the four manuscript figures and their validated
+registry into `output/figures/`, preserving admitted manuscript source images and
+writing the executed analysis to
 `output/data/demo_analysis.json`:
 
 ```bash
@@ -24,3 +25,8 @@ uv run python projects/templates/template_registered_report/scripts/generate_rev
 `generate_review_artifacts.py` exits 2 when the required domain report is invalid. It retains every
 diagnostic JSON artifact and the structured summary so failed runs remain inspectable;
 only valid inputs return 0.
+
+An explicit `--figures-dir` retains standalone regeneration of another selected
+directory. Regenerating committed manuscript images is an intentional source
+update to review before starting a pipeline with frozen source inputs. Ordinary
+pipeline generation keeps current rendered figures in `output/figures/`.
