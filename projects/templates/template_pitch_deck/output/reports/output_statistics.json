@@ -4,18 +4,18 @@
       "exists": true,
       "file_count": 7,
       "size_mb": "1.43",
-      "total_size_bytes": 1503612,
+      "total_size_bytes": 1504136,
       "largest_files": [
         {
           "name": "template_template_pitch_long.pdf",
           "size_mb": "0.63",
-          "size_bytes": 657516,
+          "size_bytes": 657778,
           "path": "pdf/template_template_pitch_long.pdf"
         },
         {
           "name": "template_template_pitch_medium.pdf",
           "size_mb": "0.54",
-          "size_bytes": 568944,
+          "size_bytes": 569206,
           "path": "pdf/template_template_pitch_medium.pdf"
         },
         {
@@ -83,12 +83,12 @@
       "exists": true,
       "file_count": 9,
       "size_mb": "0.33",
-      "total_size_bytes": 351122,
+      "total_size_bytes": 351191,
       "largest_files": [
         {
           "name": "coverage_by_exemplar.png",
           "size_mb": "0.10",
-          "size_bytes": 103429,
+          "size_bytes": 103459,
           "path": "figures/coverage_by_exemplar.png"
         },
         {
@@ -100,7 +100,7 @@
         {
           "name": "test_count_vs_coverage.png",
           "size_mb": "0.05",
-          "size_bytes": 52067,
+          "size_bytes": 52106,
           "path": "figures/test_count_vs_coverage.png"
         }
       ],
@@ -167,18 +167,18 @@
       "exists": true,
       "file_count": 6,
       "size_mb": "1.12",
-      "total_size_bytes": 1176154,
+      "total_size_bytes": 1176614,
       "largest_files": [
         {
           "name": "template_template_pitch_long.pptx",
           "size_mb": "0.48",
-          "size_bytes": 499171,
+          "size_bytes": 499401,
           "path": "pptx/template_template_pitch_long.pptx"
         },
         {
           "name": "template_template_pitch_medium.pptx",
           "size_mb": "0.43",
-          "size_bytes": 446620,
+          "size_bytes": 446850,
           "path": "pptx/template_template_pitch_medium.pptx"
         },
         {
@@ -270,7 +270,7 @@
     }
   },
   "total_files": 163,
-  "total_size_mb": 5.185577392578125,
+  "total_size_mb": 5.186581611633301,
   "largest_files": [
     {
       "name": "source-web-fonts.js",
@@ -282,35 +282,35 @@
     {
       "name": "template_template_pitch_long.pdf",
       "size_mb": "0.63",
-      "size_bytes": 657516,
+      "size_bytes": 657778,
       "category": "pdf",
       "path": "pdf/template_template_pitch_long.pdf"
     },
     {
       "name": "template_template_pitch_medium.pdf",
       "size_mb": "0.54",
-      "size_bytes": 568944,
+      "size_bytes": 569206,
       "category": "pdf",
       "path": "pdf/template_template_pitch_medium.pdf"
     },
     {
       "name": "template_template_pitch_long.pptx",
       "size_mb": "0.48",
-      "size_bytes": 499171,
+      "size_bytes": 499401,
       "category": "pptx",
       "path": "pptx/template_template_pitch_long.pptx"
     },
     {
       "name": "template_template_pitch_medium.pptx",
       "size_mb": "0.43",
-      "size_bytes": 446620,
+      "size_bytes": 446850,
       "category": "pptx",
       "path": "pptx/template_template_pitch_medium.pptx"
     },
     {
       "name": "coverage_by_exemplar.png",
       "size_mb": "0.10",
-      "size_bytes": 103429,
+      "size_bytes": 103459,
       "category": "figures",
       "path": "figures/coverage_by_exemplar.png"
     },
@@ -347,11 +347,11 @@
     "data/ directory"
   ],
   "sizes_by_category": {
-    "pdf": 1.4339561462402344,
+    "pdf": 1.4344558715820312,
     "web": 2.03216552734375,
-    "figures": 0.3348560333251953,
+    "figures": 0.33492183685302734,
     "reports": 0.005253791809082031,
-    "pptx": 1.1216678619384766,
+    "pptx": 1.1221065521240234,
     "release_bundle": 0.06764888763427734,
     "root": 0.08430290222167969,
     "slides_standalone": 0.10572624206542969

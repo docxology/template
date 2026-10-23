@@ -4,12 +4,12 @@
       "exists": true,
       "file_count": 1,
       "size_mb": "2.15",
-      "total_size_bytes": 2257766,
+      "total_size_bytes": 2257768,
       "largest_files": [
         {
           "name": "template_code_project_combined.pdf",
           "size_mb": "2.15",
-          "size_bytes": 2257766,
+          "size_bytes": 2257768,
           "path": "pdf/template_code_project_combined.pdf"
         }
       ],
@@ -21,7 +21,7 @@
       "exists": true,
       "file_count": 14,
       "size_mb": "2.35",
-      "total_size_bytes": 2462661,
+      "total_size_bytes": 2462720,
       "largest_files": [
         {
           "name": "source-web-fonts.js",
@@ -32,7 +32,7 @@
         {
           "name": "dashboard.html",
           "size_mb": "0.12",
-          "size_bytes": 121636,
+          "size_bytes": 121695,
           "path": "web/dashboard.html"
         },
         {
@@ -53,7 +53,7 @@
       "exists": true,
       "file_count": 9,
       "size_mb": "2.46",
-      "total_size_bytes": 2578210,
+      "total_size_bytes": 2578212,
       "largest_files": [
         {
           "name": "03_results_slides.pdf",
@@ -82,12 +82,12 @@
       "exists": true,
       "file_count": 2,
       "size_mb": "1.72",
-      "total_size_bytes": 1806767,
+      "total_size_bytes": 1806768,
       "largest_files": [
         {
           "name": "template_code_project_combined.docx",
           "size_mb": "1.72",
-          "size_bytes": 1806576,
+          "size_bytes": 1806577,
           "path": "docx/template_code_project_combined.docx"
         },
         {
@@ -106,12 +106,12 @@
       "exists": true,
       "file_count": 1,
       "size_mb": "1.72",
-      "total_size_bytes": 1807563,
+      "total_size_bytes": 1807567,
       "largest_files": [
         {
           "name": "template_code_project_combined.epub",
           "size_mb": "1.72",
-          "size_bytes": 1807563,
+          "size_bytes": 1807567,
           "path": "epub/template_code_project_combined.epub"
         }
       ],
@@ -153,12 +153,12 @@
       "exists": true,
       "file_count": 12,
       "size_mb": "0.36",
-      "total_size_bytes": 381336,
+      "total_size_bytes": 381395,
       "largest_files": [
         {
           "name": "dashboard_payload.json",
           "size_mb": "0.10",
-          "size_bytes": 110003,
+          "size_bytes": 110062,
           "path": "data/dashboard_payload.json"
         },
         {
@@ -334,12 +334,12 @@
       "exists": true,
       "file_count": 1,
       "size_mb": "2.15",
-      "total_size_bytes": 2257766,
+      "total_size_bytes": 2257768,
       "largest_files": [
         {
           "name": "template_code_project_combined.pdf",
           "size_mb": "2.15",
-          "size_bytes": 2257766,
+          "size_bytes": 2257768,
           "path": "template_code_project_combined.pdf"
         }
       ],
@@ -349,19 +349,19 @@
     }
   },
   "total_files": 81,
-  "total_size_mb": 14.984918594360352,
+  "total_size_mb": 14.985041618347168,
   "largest_files": [
     {
       "name": "template_code_project_combined.pdf",
       "size_mb": "2.15",
-      "size_bytes": 2257766,
+      "size_bytes": 2257768,
       "category": "pdf",
       "path": "pdf/template_code_project_combined.pdf"
     },
     {
       "name": "template_code_project_combined.pdf",
       "size_mb": "2.15",
-      "size_bytes": 2257766,
+      "size_bytes": 2257768,
       "category": "root",
       "path": "template_code_project_combined.pdf"
     },
@@ -382,14 +382,14 @@
     {
       "name": "template_code_project_combined.epub",
       "size_mb": "1.72",
-      "size_bytes": 1807563,
+      "size_bytes": 1807567,
       "category": "epub",
       "path": "epub/template_code_project_combined.epub"
     },
     {
       "name": "template_code_project_combined.docx",
       "size_mb": "1.72",
-      "size_bytes": 1806576,
+      "size_bytes": 1806577,
       "category": "docx",
       "path": "docx/template_code_project_combined.docx"
     },
@@ -424,19 +424,19 @@
   ],
   "missing_expected_files": [],
   "sizes_by_category": {
-    "pdf": 2.1531734466552734,
-    "web": 2.348576545715332,
-    "slides": 2.458772659301758,
-    "docx": 1.723067283630371,
-    "epub": 1.7238264083862305,
+    "pdf": 2.1531753540039062,
+    "web": 2.3486328125,
+    "slides": 2.4587745666503906,
+    "docx": 1.7230682373046875,
+    "epub": 1.723830223083496,
     "figures": 1.970393180847168,
-    "data": 0.36367034912109375,
+    "data": 0.3637266159057617,
     "reports": 0.01769256591796875,
     "citations": 0.0020503997802734375,
     "docs": 0.011358261108398438,
     "manuscript": 0.058859825134277344,
     "provenance": 0.00030422210693359375,
-    "root": 2.1531734466552734
+    "root": 2.1531753540039062
   },
   "inventory_mode": "stable-shippable-output-v1",
   "inventory_scope": "stage5-delivery-mirror",

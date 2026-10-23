@@ -105,8 +105,8 @@ pre{background:#0b1220;color:#e5e7eb;border:1px solid var(--border);
 
 <div class="meta">
   project: <code>template_code_project</code> &middot;
-  generated: <code>2026-10-22T23:07:17Z</code> &middot;
-  git: <code>1fc5af75c (dirty)</code> &middot;
+  generated: <code>2026-10-23T00:45:51Z</code> &middot;
+  git: <code>6b7561266 (dirty)</code> &middot;
   panels: 5 &middot;
   controls: 2 &middot;
   invariants: 22
@@ -117,8 +117,8 @@ const BUNDLE = {
   "title": "Optimization Exemplar — Interactive Convergence Suite",
   "subtitle": "Live gradient-descent diagnostics on the configurable quadratic f(x) = (1/2) x^T A x − b^T x. Defaults read from manuscript/config.yaml; every knob is CLI-overridable.",
   "project": "template_code_project",
-  "generated_utc": "2026-10-22T23:07:17Z",
-  "git_rev": "1fc5af75c",
+  "generated_utc": "2026-10-23T00:45:51Z",
+  "git_rev": "6b7561266",
   "git_dirty": true,
   "hyperparameters": {
     "A_diagonal": [
@@ -3464,11 +3464,13 @@ const BUNDLE = {
           "title": "iteration"
         },
         "yaxis": {
-          "title": "objective f(x_t)"
+          "title": "objective f(x_t)",
+          "automargin": true
         },
         "legend": {
           "orientation": "h",
-          "y": -0.2
+          "y": -0.35,
+          "yanchor": "top"
         }
       },
       "driven_by": [],

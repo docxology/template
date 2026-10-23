@@ -3,13 +3,13 @@
     "pdf": {
       "exists": true,
       "file_count": 2,
-      "size_mb": "1.08",
-      "total_size_bytes": 1135561,
+      "size_mb": "1.07",
+      "total_size_bytes": 1125337,
       "largest_files": [
         {
           "name": "template_search_project_combined.pdf",
-          "size_mb": "1.08",
-          "size_bytes": 1135561,
+          "size_mb": "1.07",
+          "size_bytes": 1125337,
           "path": "pdf/template_search_project_combined.pdf"
         },
         {
@@ -28,7 +28,7 @@
       "exists": true,
       "file_count": 15,
       "size_mb": "2.62",
-      "total_size_bytes": 2746543,
+      "total_size_bytes": 2746903,
       "largest_files": [
         {
           "name": "source-web-fonts.js",
@@ -39,13 +39,13 @@
         {
           "name": "index.html",
           "size_mb": "0.32",
-          "size_bytes": 333237,
+          "size_bytes": 333364,
           "path": "web/index.html"
         },
         {
           "name": "_combined_manuscript.md",
           "size_mb": "0.10",
-          "size_bytes": 103327,
+          "size_bytes": 103433,
           "path": "web/_combined_manuscript.md"
         }
       ],
@@ -59,20 +59,20 @@
     "slides": {
       "exists": true,
       "file_count": 10,
-      "size_mb": "0.92",
-      "total_size_bytes": 966952,
+      "size_mb": "0.91",
+      "total_size_bytes": 957284,
       "largest_files": [
-        {
-          "name": "02_methodology_slides.pdf",
-          "size_mb": "0.25",
-          "size_bytes": 266933,
-          "path": "slides/02_methodology_slides.pdf"
-        },
         {
           "name": "S01_literature_review_slides.pdf",
           "size_mb": "0.25",
           "size_bytes": 264687,
           "path": "slides/S01_literature_review_slides.pdf"
+        },
+        {
+          "name": "02_methodology_slides.pdf",
+          "size_mb": "0.25",
+          "size_bytes": 257265,
+          "path": "slides/02_methodology_slides.pdf"
         },
         {
           "name": "07_deep_search_slides.pdf",
@@ -100,26 +100,26 @@
     "figures": {
       "exists": true,
       "file_count": 13,
-      "size_mb": "0.53",
-      "total_size_bytes": 558887,
+      "size_mb": "0.52",
+      "total_size_bytes": 540297,
       "largest_files": [
         {
           "name": "inline_mermaid_0001_d3ead0e9d850.png",
           "size_mb": "0.19",
-          "size_bytes": 198348,
+          "size_bytes": 197887,
           "path": "figures/mermaid_inline/inline_mermaid_0001_d3ead0e9d850.png"
-        },
-        {
-          "name": "score_distribution.png",
-          "size_mb": "0.08",
-          "size_bytes": 87534,
-          "path": "figures/score_distribution.png"
         },
         {
           "name": "inline_mermaid_0003_80a863d1871e.png",
           "size_mb": "0.08",
           "size_bytes": 87056,
           "path": "figures/mermaid_inline/inline_mermaid_0003_80a863d1871e.png"
+        },
+        {
+          "name": "score_distribution.png",
+          "size_mb": "0.08",
+          "size_bytes": 78878,
+          "path": "figures/score_distribution.png"
         }
       ],
       "extensions": {
@@ -251,7 +251,7 @@
       "exists": true,
       "file_count": 18,
       "size_mb": "0.24",
-      "total_size_bytes": 251346,
+      "total_size_bytes": 251452,
       "largest_files": [
         {
           "name": "references_deep.bib",
@@ -311,13 +311,13 @@
     "root": {
       "exists": true,
       "file_count": 6,
-      "size_mb": "1.09",
-      "total_size_bytes": 1146047,
+      "size_mb": "1.08",
+      "total_size_bytes": 1135823,
       "largest_files": [
         {
           "name": "template_search_project_combined.pdf",
-          "size_mb": "1.08",
-          "size_bytes": 1135561,
+          "size_mb": "1.07",
+          "size_bytes": 1125337,
           "path": "template_search_project_combined.pdf"
         },
         {
@@ -364,7 +364,7 @@
     }
   },
   "total_files": 391,
-  "total_size_mb": 10.240242958068848,
+  "total_size_mb": 10.19423770904541,
   "largest_files": [
     {
       "name": "source-web-fonts.js",
@@ -382,15 +382,15 @@
     },
     {
       "name": "template_search_project_combined.pdf",
-      "size_mb": "1.08",
-      "size_bytes": 1135561,
+      "size_mb": "1.07",
+      "size_bytes": 1125337,
       "category": "pdf",
       "path": "pdf/template_search_project_combined.pdf"
     },
     {
       "name": "template_search_project_combined.pdf",
-      "size_mb": "1.08",
-      "size_bytes": 1135561,
+      "size_mb": "1.07",
+      "size_bytes": 1125337,
       "category": "root",
       "path": "template_search_project_combined.pdf"
     },
@@ -418,16 +418,9 @@
     {
       "name": "index.html",
       "size_mb": "0.32",
-      "size_bytes": 333237,
+      "size_bytes": 333364,
       "category": "web",
       "path": "web/index.html"
-    },
-    {
-      "name": "02_methodology_slides.pdf",
-      "size_mb": "0.25",
-      "size_bytes": 266933,
-      "category": "slides",
-      "path": "slides/02_methodology_slides.pdf"
     },
     {
       "name": "S01_literature_review_slides.pdf",
@@ -435,21 +428,28 @@
       "size_bytes": 264687,
       "category": "slides",
       "path": "slides/S01_literature_review_slides.pdf"
+    },
+    {
+      "name": "02_methodology_slides.pdf",
+      "size_mb": "0.25",
+      "size_bytes": 257265,
+      "category": "slides",
+      "path": "slides/02_methodology_slides.pdf"
     }
   ],
   "missing_expected_files": [],
   "sizes_by_category": {
-    "pdf": 1.0829553604125977,
-    "web": 2.619307518005371,
-    "slides": 0.9221572875976562,
-    "figures": 0.5329961776733398,
+    "pdf": 1.0732049942016602,
+    "web": 2.6196508407592773,
+    "slides": 0.9129371643066406,
+    "figures": 0.5152673721313477,
     "data": 0.008048057556152344,
     "reports": 0.009220123291015625,
     "bibliography": 0.0030164718627929688,
     "deep_search": 3.687427520751953,
-    "manuscript": 0.2397022247314453,
+    "manuscript": 0.23980331420898438,
     "review": 0.031198501586914062,
-    "root": 1.0929555892944336,
+    "root": 1.083205223083496,
     "search": 0.011258125305175781
   },
   "inventory_mode": "stable-shippable-output-v1",

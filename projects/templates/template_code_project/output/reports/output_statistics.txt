@@ -8,7 +8,7 @@ Inventory Scope: stage5-delivery-mirror
 Inventory Root: output/templates/template_code_project
 
 Total Files: 81
-Total Size: 14.98 MB
+Total Size: 14.99 MB
 
 Files by Category:
   • pdf: 1 files (2.15 MB)
