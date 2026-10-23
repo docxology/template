@@ -24,6 +24,9 @@ candidates, not published root releases.
   and wheels, plus path, duplicate, symlink, CRC and exact-byte checks.
 - Reuse immutable parsed paths and expected snapshot inventory structure while
   rechecking current path policy and filesystem custody on every call.
+- Retain bounded first-error TeX context alongside the compiler-log tail. Require
+  the native citation regression to complete successfully with resolved
+  bibliography content, without accepting a partial PDF after an error.
 - Bound structured model generation before parsing, keep exact consumed-source
   quotes, and pin the declared acceptance model to `smollm2:360m` with authenticated
   model bytes. Synthetic screening controls do not establish scientific validity.

@@ -88,6 +88,28 @@ def test_latex_pass_nonzero_exit_fails_even_with_partial_pdf(tmp_path: Path) -> 
         assert caption_tail in error.value.context["last_error"]
         assert first_error not in error.value.context["last_error"]
 
+    # Merged compiler stdout/stderr may hold a backend error absent from TeX's log.
+    stdout_log = tmp_path / "_latex_stdout.log"
+    stdout_text = "\n".join(["earlier stdout"] * 1000 + ["λ" * 2500, "xdvipdfmx:fatal: owned backend diagnostic"])
+    stdout_log.write_text(stdout_text, encoding="utf-8")
+    assert result.stderr is None
+    for tex_log_present in (True, False):
+        if not tex_log_present:
+            log.unlink()
+        with pytest.raises(RenderingError, match="LaTeX compilation failed") as error:
+            _check_fatal_error(result, log, tex, pdf, 4, final_pass=True)
+        assert error.value.context["stdout_log_file"] == str(stdout_log)
+        assert error.value.context["stdout_tail"] == "\n".join(stdout_text.splitlines()[-20:])[-2000:]
+        assert "xdvipdfmx:fatal: owned backend diagnostic" in error.value.context["stdout_tail"]
+        assert len(error.value.context["stdout_tail"]) <= 2000
+        assert len(error.value.context["stdout_tail"].splitlines()) <= 20
+    stdout_log.unlink()
+    stdout_log.mkdir()
+    with pytest.raises(RenderingError, match="LaTeX compilation failed") as error:
+        _check_fatal_error(result, log, tex, pdf, 4, final_pass=True)
+    assert error.value.context["stdout_log_file"] == str(stdout_log)
+    assert "stdout_tail" not in error.value.context
+
 
 def test_latex_pass_zero_exit_allows_output(tmp_path: Path) -> None:
     """A clean XeLaTeX pass should continue through the pipeline."""
