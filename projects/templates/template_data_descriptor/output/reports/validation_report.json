@@ -83,7 +83,7 @@
           "file_count": 12,
           "largest_file": "source-web-fonts.js",
           "largest_file_path": "web/assets/source-web-fonts.js",
-          "size_mb": "2.07"
+          "size_mb": "1.95"
         }
       },
       "file_counts": {
@@ -189,7 +189,7 @@
             "optional": false,
             "readable": true,
             "required": true,
-            "size_mb": 2.07
+            "size_mb": 1.95
           }
         },
         "inventory_mode": "stable-shippable-output-v1",
@@ -199,7 +199,7 @@
         "valid": true,
         "warnings": []
       },
-      "total_size_mb": 2.5966453552246094
+      "total_size_mb": 2.4805946350097656
     },
     "figures": {
       "files": 6,
@@ -234,12 +234,12 @@
         },
         "web": {
           "files": 12,
-          "size_bytes": 2167294
+          "size_bytes": 2045606
         }
       },
       "mode": "stable-shippable-output-v1",
       "total_files": 34,
-      "total_size_bytes": 2722780
+      "total_size_bytes": 2601092
     }
   },
   "recommendations": [],
@@ -250,12 +250,12 @@
     "passed": 9,
     "total_checks": 9
   },
-  "timestamp": "2026-10-23T01:42:44Z",
+  "timestamp": "2026-10-23T02:31:26Z",
   "validated_inputs": {
     "artifact_manifest": {
       "path": "output/reports/artifact_manifest.json",
-      "sha256": "bee2592bf0d06db800b90be88371043c44d9059f99b8b3a89c91b083de5e0bc4",
-      "size_bytes": 11155
+      "sha256": "764d115493cc7390bb3ff91c3a23a9680c6d3afbebe96f803853c015f044419b",
+      "size_bytes": 10305
     },
     "combined_manuscript": {
       "path": "output/web/_combined_manuscript.md",
@@ -324,7 +324,7 @@
       },
       "output": {
         "file_count": 34,
-        "sha256": "4fa9fc19d0d4702b4cabccd0b574a44a3adeaf28fe021570bd264e8eadd986d2"
+        "sha256": "eb674e149ee3a337ebcb8821a2b3e10ec3e13a29f5eebcc62f8b0cd156c322ce"
       },
       "source": {
         "file_count": 31,

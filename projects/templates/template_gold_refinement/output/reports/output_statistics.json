@@ -20,13 +20,13 @@
     "web": {
       "exists": true,
       "file_count": 16,
-      "size_mb": "2.44",
-      "total_size_bytes": 2563257,
+      "size_mb": "2.33",
+      "total_size_bytes": 2441569,
       "largest_files": [
         {
           "name": "source-web-fonts.js",
-          "size_mb": "1.88",
-          "size_bytes": 1975092,
+          "size_mb": "1.77",
+          "size_bytes": 1853404,
           "path": "web/assets/source-web-fonts.js"
         },
         {
@@ -249,7 +249,7 @@
     }
   },
   "total_files": 75,
-  "total_size_mb": 17.166095733642578,
+  "total_size_mb": 17.050045013427734,
   "largest_files": [
     {
       "name": "template_gold_refinement_combined.pdf",
@@ -267,8 +267,8 @@
     },
     {
       "name": "source-web-fonts.js",
-      "size_mb": "1.88",
-      "size_bytes": 1975092,
+      "size_mb": "1.77",
+      "size_bytes": 1853404,
       "category": "web",
       "path": "web/assets/source-web-fonts.js"
     },
@@ -325,7 +325,7 @@
   "missing_expected_files": [],
   "sizes_by_category": {
     "pdf": 4.548553466796875,
-    "web": 2.444512367248535,
+    "web": 2.3284616470336914,
     "figures": 5.423179626464844,
     "data": 0.037001609802246094,
     "reports": 0.020897865295410156,

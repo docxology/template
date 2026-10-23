@@ -8,11 +8,11 @@ Inventory Scope: stage5-delivery-mirror
 Inventory Root: output/templates/template_literature_meta_analysis
 
 Total Files: 128
-Total Size: 47.75 MB
+Total Size: 47.64 MB
 
 Files by Category:
   • pdf: 1 files (6.83 MB)
-  • web: 25 files (2.46 MB)
+  • web: 25 files (2.35 MB)
   • slides: 21 files (7.21 MB)
   • figures: 22 files (6.93 MB)
   • data: 25 files (16.52 MB)

@@ -8,11 +8,11 @@ Inventory Scope: stage5-delivery-mirror
 Inventory Root: output/templates/template_methods_paper
 
 Total Files: 61
-Total Size: 2.97 MB
+Total Size: 2.86 MB
 
 Files by Category:
   • pdf: 1 files (0.14 MB)
-  • web: 13 files (2.15 MB)
+  • web: 13 files (2.04 MB)
   • slides: 9 files (0.32 MB)
   • figures: 2 files (0.01 MB)
   • data: 11 files (0.00 MB)
@@ -24,7 +24,7 @@ Files by Category:
   • root: 1 files (0.14 MB)
 
 Largest Files:
-  • source-web-fonts.js: 1.88 MB (web)
+  • source-web-fonts.js: 1.77 MB (web)
   • Friedman_2026_Domain_ecd8519f.pdf: 0.14 MB (release_bundle)
   • template_methods_paper_combined.pdf: 0.14 MB (pdf)
   • template_methods_paper_combined.pdf: 0.14 MB (root)

@@ -20,13 +20,13 @@
     "web": {
       "exists": true,
       "file_count": 25,
-      "size_mb": "2.66",
-      "total_size_bytes": 2787690,
+      "size_mb": "2.54",
+      "total_size_bytes": 2666002,
       "largest_files": [
         {
           "name": "source-web-fonts.js",
-          "size_mb": "1.88",
-          "size_bytes": 1975092,
+          "size_mb": "1.77",
+          "size_bytes": 1853404,
           "path": "web/assets/source-web-fonts.js"
         },
         {
@@ -302,7 +302,7 @@
     }
   },
   "total_files": 165,
-  "total_size_mb": 17.714595794677734,
+  "total_size_mb": 17.59854507446289,
   "largest_files": [
     {
       "name": "04_results_slides.pdf",
@@ -310,13 +310,6 @@
       "size_bytes": 3537271,
       "category": "slides",
       "path": "slides/04_results_slides.pdf"
-    },
-    {
-      "name": "source-web-fonts.js",
-      "size_mb": "1.88",
-      "size_bytes": 1975092,
-      "category": "web",
-      "path": "web/assets/source-web-fonts.js"
     },
     {
       "name": "template_template_combined.pdf",
@@ -331,6 +324,13 @@
       "size_bytes": 1933268,
       "category": "root",
       "path": "template_template_combined.pdf"
+    },
+    {
+      "name": "source-web-fonts.js",
+      "size_mb": "1.77",
+      "size_bytes": 1853404,
+      "category": "web",
+      "path": "web/assets/source-web-fonts.js"
     },
     {
       "name": "Friedman_2026_Template_535bd809.pdf",
@@ -378,7 +378,7 @@
   "missing_expected_files": [],
   "sizes_by_category": {
     "pdf": 1.8437080383300781,
-    "web": 2.658548355102539,
+    "web": 2.5424976348876953,
     "slides": 4.060638427734375,
     "figures": 5.787506103515625,
     "data": 0.017404556274414062,

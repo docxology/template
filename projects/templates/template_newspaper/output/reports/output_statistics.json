@@ -26,13 +26,13 @@
     "web": {
       "exists": true,
       "file_count": 10,
-      "size_mb": "2.00",
-      "total_size_bytes": 2099315,
+      "size_mb": "1.89",
+      "total_size_bytes": 1977627,
       "largest_files": [
         {
           "name": "source-web-fonts.js",
-          "size_mb": "1.88",
-          "size_bytes": 1975092,
+          "size_mb": "1.77",
+          "size_bytes": 1853404,
           "path": "web/assets/source-web-fonts.js"
         },
         {
@@ -239,12 +239,12 @@
     }
   },
   "total_files": 39,
-  "total_size_mb": 2.666301727294922,
+  "total_size_mb": 2.550251007080078,
   "largest_files": [
     {
       "name": "source-web-fonts.js",
-      "size_mb": "1.88",
-      "size_bytes": 1975092,
+      "size_mb": "1.77",
+      "size_bytes": 1853404,
       "category": "web",
       "path": "web/assets/source-web-fonts.js"
     },
@@ -315,7 +315,7 @@
   "missing_expected_files": [],
   "sizes_by_category": {
     "pdf": 0.41594982147216797,
-    "web": 2.0020627975463867,
+    "web": 1.886012077331543,
     "slides": 0.10612201690673828,
     "figures": 0.07233428955078125,
     "data": 0.0074615478515625,

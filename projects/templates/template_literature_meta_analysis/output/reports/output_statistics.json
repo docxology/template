@@ -20,13 +20,13 @@
     "web": {
       "exists": true,
       "file_count": 25,
-      "size_mb": "2.46",
-      "total_size_bytes": 2584212,
+      "size_mb": "2.35",
+      "total_size_bytes": 2462524,
       "largest_files": [
         {
           "name": "source-web-fonts.js",
-          "size_mb": "1.88",
-          "size_bytes": 1975092,
+          "size_mb": "1.77",
+          "size_bytes": 1853404,
           "path": "web/assets/source-web-fonts.js"
         },
         {
@@ -294,7 +294,7 @@
     }
   },
   "total_files": 128,
-  "total_size_mb": 47.753623962402344,
+  "total_size_mb": 47.6375732421875,
   "largest_files": [
     {
       "name": "template_literature_meta_analysis_combined.pdf",
@@ -340,8 +340,8 @@
     },
     {
       "name": "source-web-fonts.js",
-      "size_mb": "1.88",
-      "size_bytes": 1975092,
+      "size_mb": "1.77",
+      "size_bytes": 1853404,
       "category": "web",
       "path": "web/assets/source-web-fonts.js"
     },
@@ -370,7 +370,7 @@
   "missing_expected_files": [],
   "sizes_by_category": {
     "pdf": 6.826951026916504,
-    "web": 2.464496612548828,
+    "web": 2.3484458923339844,
     "slides": 7.214853286743164,
     "figures": 6.929577827453613,
     "data": 16.52337646484375,

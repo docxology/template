@@ -8,11 +8,11 @@ Inventory Scope: stage5-delivery-mirror
 Inventory Root: output/templates/template_template
 
 Total Files: 165
-Total Size: 17.71 MB
+Total Size: 17.60 MB
 
 Files by Category:
   • pdf: 1 files (1.84 MB)
-  • web: 25 files (2.66 MB)
+  • web: 25 files (2.54 MB)
   • slides: 21 files (4.06 MB)
   • figures: 75 files (5.79 MB)
   • data: 3 files (0.02 MB)
@@ -24,9 +24,9 @@ Files by Category:
 
 Largest Files:
   • 04_results_slides.pdf: 3.37 MB (slides)
-  • source-web-fonts.js: 1.88 MB (web)
   • template_template_combined.pdf: 1.84 MB (pdf)
   • template_template_combined.pdf: 1.84 MB (root)
+  • source-web-fonts.js: 1.77 MB (web)
   • Friedman_2026_Template_535bd809.pdf: 1.33 MB (release_bundle)
 
 File Types:

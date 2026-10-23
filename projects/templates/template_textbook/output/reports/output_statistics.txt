@@ -8,11 +8,11 @@ Inventory Scope: stage5-delivery-mirror
 Inventory Root: output/templates/template_textbook
 
 Total Files: 161
-Total Size: 9.09 MB
+Total Size: 8.97 MB
 
 Files by Category:
   • pdf: 1 files (1.02 MB)
-  • web: 53 files (3.55 MB)
+  • web: 53 files (3.43 MB)
   • docx: 2 files (0.84 MB)
   • epub: 1 files (0.93 MB)
   • figures: 96 files (1.70 MB)
@@ -22,7 +22,7 @@ Files by Category:
   • root: 1 files (1.02 MB)
 
 Largest Files:
-  • source-web-fonts.js: 1.88 MB (web)
+  • source-web-fonts.js: 1.77 MB (web)
   • template_textbook_combined.pdf: 1.02 MB (pdf)
   • template_textbook_combined.pdf: 1.02 MB (root)
   • template_textbook_combined.epub: 0.93 MB (epub)

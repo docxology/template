@@ -8,11 +8,11 @@ Inventory Scope: stage5-delivery-mirror
 Inventory Root: output/templates/template_redacted_report
 
 Total Files: 71
-Total Size: 6.13 MB
+Total Size: 6.02 MB
 
 Files by Category:
   • pdf: 1 files (0.24 MB)
-  • web: 7 files (1.99 MB)
+  • web: 7 files (1.87 MB)
   • slides: 3 files (0.31 MB)
   • figures: 5 files (0.26 MB)
   • data: 1 files (0.01 MB)
@@ -21,7 +21,7 @@ Files by Category:
   • root: 1 files (0.24 MB)
 
 Largest Files:
-  • source-web-fonts.js: 1.88 MB (web)
+  • source-web-fonts.js: 1.77 MB (web)
   • blur_on_blur_steganography.pdf: 0.24 MB (dev)
   • grayout_on_blur_steganography.pdf: 0.24 MB (dev)
   • whiteout_on_blur_steganography.pdf: 0.24 MB (dev)

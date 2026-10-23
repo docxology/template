@@ -20,13 +20,13 @@
     "web": {
       "exists": true,
       "file_count": 14,
-      "size_mb": "2.35",
-      "total_size_bytes": 2462720,
+      "size_mb": "2.23",
+      "total_size_bytes": 2341032,
       "largest_files": [
         {
           "name": "source-web-fonts.js",
-          "size_mb": "1.88",
-          "size_bytes": 1975092,
+          "size_mb": "1.77",
+          "size_bytes": 1853404,
           "path": "web/assets/source-web-fonts.js"
         },
         {
@@ -349,7 +349,7 @@
     }
   },
   "total_files": 81,
-  "total_size_mb": 14.41832447052002,
+  "total_size_mb": 14.302273750305176,
   "largest_files": [
     {
       "name": "template_code_project_combined.pdf",
@@ -374,8 +374,8 @@
     },
     {
       "name": "source-web-fonts.js",
-      "size_mb": "1.88",
-      "size_bytes": 1975092,
+      "size_mb": "1.77",
+      "size_bytes": 1853404,
       "category": "web",
       "path": "web/assets/source-web-fonts.js"
     },
@@ -425,7 +425,7 @@
   "missing_expected_files": [],
   "sizes_by_category": {
     "pdf": 1.9980134963989258,
-    "web": 2.3486328125,
+    "web": 2.2325820922851562,
     "slides": 2.2023849487304688,
     "docx": 1.7230682373046875,
     "epub": 1.723830223083496,
