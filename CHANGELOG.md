@@ -22,6 +22,8 @@ candidates, not published root releases.
 - Admit complete Source archives against member names and sizes from confined
   snapshots. Retain the default 64 MiB bound for unknown archives, Office packages
   and wheels, plus path, duplicate, symlink, CRC and exact-byte checks.
+- Reuse immutable parsed paths and expected snapshot inventory structure while
+  rechecking current path policy and filesystem custody on every call.
 - Bound structured model generation before parsing, keep exact consumed-source
   quotes, and pin the declared acceptance model to `smollm2:360m` with authenticated
   model bytes. Synthetic screening controls do not establish scientific validity.
