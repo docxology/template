@@ -94,7 +94,7 @@ def _receipt_root(arguments: argparse.Namespace) -> Path:
     # Strict ancestors need search permission; output components remain held,
     # readable, no-follow directories. External receipt behavior is unchanged.
     if receipt.is_relative_to(arguments.project_root):
-        return arguments.project_root
+        return Path(arguments.project_root)
     return Path(receipt.anchor)
 
 
