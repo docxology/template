@@ -13,8 +13,9 @@ in an `always()` step. No shared service may be stopped or replaced.
 `mode` defaults to `native`. Validate exactly `native` or `converter` before
 cache restoration, download or setup. Pandoc/crossref verification is
 unconditional; native package and JuliaMono preparation are conditioned only on
-that validated output. All infrastructure and genuine acceptance callers use
-native preparation. Ordinary project cells explicitly select native for EDA and
+that validated output. Genuine acceptance callers use native preparation;
+routine infrastructure smoke selects converter and separately prepares its
+declared readers and TeX. Ordinary project cells explicitly select native for EDA and
 converter elsewhere, according to their actual source-declared tests.
 
 Cache only official archives, with OS, architecture, validated mode and source
@@ -24,10 +25,18 @@ cached data cannot supply test outcomes or acceptance.
 Run `actionlint` after edits and retain genuine failed preparation diagnostics.
 See [README.md](README.md) for usage.
 
-Native callers must first prepare their selected locked Python environment.
+Linux callers in either mode, and all native callers, must first prepare their selected locked Python environment.
 `python-executable` defaults to `.venv/bin/python`; common acceptance explicitly
 selects its prepared `output/runtime-envs/3.14/bin/python`. The helper's
 `--prepared-python PATH` mode preserves that environment, checks actual CPython
 support, and runs the unchanged LaTeX package validator with it. It performs no
 Python bootstrap, dependency sync or implicit reconciliation. Missing runtime,
 native tools, packages or failed validation remain failures.
+
+The Linux mirror guard accepts only the exact 144-byte runner mirror list or
+its already preferred form, with the archive/Azure priorities exchanged. Require
+root-owned, non-symlink regular files and an active signed Ubuntu Noble stanza
+using that mirror list; retain bounded before/after logs. Replace only the known
+mirror file atomically, preserving owner and mode. Keep all three URLs, fallbacks,
+repository signatures, keyrings, packages and execution limits unchanged. Refuse
+unknown or changing files/stanzas; do not rewrite other APT configuration.
