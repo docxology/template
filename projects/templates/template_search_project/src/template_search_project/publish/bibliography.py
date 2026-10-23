@@ -175,7 +175,7 @@ def project_bibliographies(
                 selected[key] = entry
                 projected.add(entry)
     target = root / "output" / "manuscript" / GENERATED_BIB_NAME
-    text = render_database(projected)
+    text = render_database(projected) or "% No additional generated bibliography entries.\n"
     atomic_write_text_confined(root, target, text)
     receipt = {
         "schema_version": 1,

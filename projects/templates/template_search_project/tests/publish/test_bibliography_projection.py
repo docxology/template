@@ -58,10 +58,12 @@ def test_curated_metadata_and_annotations_survive_projection(tmp_path: Path):
     )
     projected = project_bibliographies(tmp_path, (str(full),))
     assert not parse_bibtex(projected.read_text()).entries
+    assert projected.read_bytes() == b"% No additional generated bibliography entries.\n"
     assert authored.read_bytes() == baseline
     receipt = json.loads((tmp_path / "output" / "bibliography_projection.json").read_text())
     assert receipt["authored_sources"]["manuscript/references.bib"] == hashlib.sha256(baseline).hexdigest()
     assert receipt["projected_keys"] == []
+    assert receipt["projected_sha256"] == hashlib.sha256(projected.read_bytes()).hexdigest()
 
 
 @pytest.mark.parametrize(
