@@ -1101,7 +1101,7 @@
     {
       "contract_match": true,
       "path": "output/pdf/template_active_inference_combined.pdf",
-      "sha256": "49683368d3f2563cd9c44ec51884febf2e1c48bfc5b60923d10b93ed929bf841",
+      "sha256": "f88ef5fe4189f740d3804423e85c3d28e0bdc695614ba9989fadbc1dd52d2bfd",
       "size_bytes": 4344162,
       "stage_name": "PDF Rendering",
       "stage_num": 6,
