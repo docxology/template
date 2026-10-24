@@ -130,6 +130,7 @@
     "projects/templates/template_active_inference/output/reports/artifact_manifest.json",
     "projects/templates/template_active_inference/output/reports/blocked_scope_manifest.json",
     "projects/templates/template_active_inference/output/reports/claim_evidence_audit.json",
+    "projects/templates/template_active_inference/output/reports/cleanup_report.json",
     "projects/templates/template_active_inference/output/reports/counterexample_matrix.json",
     "projects/templates/template_active_inference/output/reports/evidence_registry.json",
     "projects/templates/template_active_inference/output/reports/figure_hash_manifest.json",
@@ -141,8 +142,6 @@
     "projects/templates/template_active_inference/output/reports/manuscript_composition.json",
     "projects/templates/template_active_inference/output/reports/manuscript_staleness_report.json",
     "projects/templates/template_active_inference/output/reports/model_checking_witnesses.json",
-    "projects/templates/template_active_inference/output/reports/output_statistics.json",
-    "projects/templates/template_active_inference/output/reports/output_statistics.txt",
     "projects/templates/template_active_inference/output/reports/producer_completeness.json",
     "projects/templates/template_active_inference/output/reports/pymdp_runtime_diagnostics.json",
     "projects/templates/template_active_inference/output/reports/release_attestation.json",
@@ -160,7 +159,6 @@
     "projects/templates/template_active_inference/output/reports/test_results.json",
     "projects/templates/template_active_inference/output/reports/test_results.md",
     "projects/templates/template_active_inference/output/reports/validation_report.json",
-    "projects/templates/template_active_inference/output/reports/validation_report.md",
     "projects/templates/template_active_inference/output/reports/visualization_quality_audit.json",
     "projects/templates/template_active_inference/output/web/_combined_manuscript.md",
     "projects/templates/template_active_inference/output/web/assets/source-web-fonts.js",
@@ -183,5 +181,5 @@
     "projects/templates/template_active_inference/output/web/manuscript__17_conclusion.html",
     "projects/templates/template_active_inference/output/web/manuscript__99_references.html"
   ],
-  "skipped_tracked_count": 182
+  "skipped_tracked_count": 180
 }
