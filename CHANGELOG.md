@@ -87,6 +87,15 @@ after final source changes, and retain original revisions and failed outcomes.
 Exact-source hosted acceptance and the authenticated release handoff remain
 required.
 
+- Avoid discarded positive Root lane executions while retaining genuine fixture,
+  cohort and lifecycle controls. Dispatch historically longer contracts first
+  without changing canonical shard IDs, module membership or deadlines.
+- Retain complete required CLI stdout, stderr and original exit codes as artifacts
+  beside their receipts; original failures still fail their workflow steps.
+- Preserve the byte-pinned vendored font decoder with one exact EOF-hook exception.
+  Keep generated local statistics and Markdown validation summaries ignored rather
+  than tracked with canonical publication artifacts.
+
 ## [4.0.2] - 2026-10-15
 
 See the [versioned release-intent notes](docs/releases/v4.0.2.md). Publication
