@@ -26,7 +26,6 @@ dev = [
     "pytest-cov>=4.1.0",
     "pytest-timeout>=2.4.0",
     "pytest-xdist>=3.6.0",
-    "pytest-benchmark>=5.0.0",
     "coverage>=7.13.2",
 ]
 
@@ -34,7 +33,7 @@ dev = [
 pythonpath = [".", "src"]
 testpaths = ["tests"]
 python_files = ["test_*.py"]
-addopts = "-v --tb=short --strict-markers --benchmark-storage=file://./output/.pipeline/benchmarks"
+addopts = "-v --tb=short --strict-markers"
 markers = [
     "requires_pymdp: tests that import inferactively-pymdp",
     "long_running: end-to-end or heavy test families that take minutes",
