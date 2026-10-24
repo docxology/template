@@ -166,7 +166,11 @@ def test_broad_package_ownership_scales_shards_without_losing_selected_work() ->
 
     heavy = (
         "tests/infra_tests/core/pipeline/test_artifact_finalization.py",
+        "tests/infra_tests/core/pipeline/test_cache_identity.py",
+        "tests/infra_tests/core/pipeline/test_incremental_cli_flag.py",
         "tests/infra_tests/core/pipeline/test_run_matrix.py",
+        "tests/infra_tests/core/pipeline/test_shared_runtime_namespace.py",
+        "tests/infra_tests/core/test_analysis_launch.py",
         "tests/infra_tests/core/test_execution_contract.py",
         "tests/infra_tests/core/test_project_test_measurement.py",
         "tests/infra_tests/project/test_public_acceptance.py",
