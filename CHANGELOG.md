@@ -7,7 +7,7 @@ source and contracts; each exemplar retains its own package and publication
 versions. Confidential and local workspaces outside the canonical public roster
 are excluded.
 
-## [4.1.0] - 2026-10-22
+## [4.1.0]
 
 See the [4.1.0 release-intent notes](docs/releases/v4.1.0.md). Publication requires
 exact-revision hosted acceptance and the authenticated release handoff. The
@@ -74,6 +74,10 @@ root releases.
 - Require the core prepared test-runner stack without requiring unused benchmark
   tooling. Shared parallel commands omit the optional benchmark flag while
   preserving explicitly selected benchmark dependencies and behavior.
+- Honor exact core runner versions from each project's own lock, retaining exact
+  workspace supplements for undeclared core packages. Refuse malformed or ambiguous
+  locks and version conflicts. Suppress isolated startup bytecode in provider
+  probes and test children while retaining the admitted private source cache audit.
 
 All 25 public exemplars require coverage evidence bound to current measurement
 inputs and their own locked environments. Rerun changed gates with the declared
