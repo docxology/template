@@ -121,7 +121,7 @@ def prepare_measurement(
     if type(floor) not in (int, float) or not math.isfinite(floor) or not 0 <= floor <= 100:
         raise ValueError("Project measurement requires a finite coverage floor")
     context = _context(env)
-    if cmd[:3] != [str(interpreter), "-I", "-c"]:
+    if cmd[:4] != [str(interpreter), "-I", "-B", "-c"]:
         return None
     # A unique directory retains all retry/controller outputs. Multiple original
     # controllers make this attempt ineligible rather than selecting a last pass.
@@ -139,7 +139,7 @@ def prepare_measurement(
         context,
         nonce,
         directory,
-        tuple(cmd[4:]),
+        tuple(cmd[5:]),
         tuple(_inventory(project)),
         float(floor),
         deadline,
