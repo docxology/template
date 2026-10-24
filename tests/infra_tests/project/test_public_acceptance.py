@@ -140,6 +140,7 @@ def test_fresh_bootstrap_cannot_consume_valid_timestamp_poisoned_source_cache(tm
     ordinary = (
         sys.executable,
         "-I",
+        "-B",
         "-c",
         "import sys;sys.path.insert(0,sys.argv[1]);import scientific_model",
         str(tmp_path),
@@ -321,7 +322,13 @@ def test_bare_real_environment_records_missing_test_tools_without_installing(tmp
     result = run_project_test_matrix(
         [
             ProjectTestTask(
-                0, "bare-env", (sys.executable, "-m", "venv", "--without-pip", str(env_path)), tmp_path, {}, 30, True
+                0,
+                "bare-env",
+                (sys.executable, "-B", "-m", "venv", "--without-pip", str(env_path)),
+                tmp_path,
+                {},
+                30,
+                True,
             )
         ],
         workers=1,
