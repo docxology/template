@@ -101,7 +101,7 @@ def _receipt_root(arguments: argparse.Namespace) -> Path:
     # at its closest existing parent, rather than treating every ancestor below
     # the filesystem root as a readable output directory. Missing descendants
     # are still created by the existing confined writer.
-    parent = receipt.parent
+    parent = Path(receipt.parent)
     while True:
         try:
             parent.lstat()

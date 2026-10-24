@@ -203,3 +203,91 @@ def test_receipt_invalidation_and_rollback_traverse_search_only_project_ancestor
         arguments.receipt_promoted = True
         launcher._discard_promoted_receipt(arguments)
         assert not arguments.receipt_promoted and not external.exists()
+
+
+def test_external_receipt_walk_creates_only_missing_destination_descendants(tmp_path: Path) -> None:
+    from infrastructure.core.files.secure_write import atomic_write_text_confined
+
+    root = _project(tmp_path / "project")
+    external = tmp_path / "external"
+    external.mkdir()
+    kept = external / "kept.json"
+    kept.write_bytes(b"unrelated external evidence\n")
+    destination = external / "missing/deeper/receipt.json"
+    project_receipt = root / "output/nested/receipt.json"
+    with _owned_interpreter_state():
+        project_arguments = launcher._arguments(_arguments(root, project_receipt))
+        assert launcher._receipt_root(project_arguments) == root
+        arguments = launcher._arguments(_arguments(root, destination))
+        assert launcher._receipt_root(arguments) == external
+        assert not destination.parent.exists() and not (root / "output").exists()
+        atomic_write_text_confined(
+            launcher._receipt_root(arguments), destination, "stale external receipt\n", mode=0o600
+        )
+        assert destination.read_text() == "stale external receipt\n"
+        assert destination.stat().st_mode & 0o777 == 0o600
+        assert launcher._receipt_root(arguments) == destination.parent
+        assert launcher._launch(arguments, time.monotonic() - 1) == 124
+        assert not destination.exists() and not arguments.receipt_promoted
+        destination.write_text("expired promoted external receipt\n")
+        arguments.receipt_promoted = True
+        launcher._discard_promoted_receipt(arguments)
+        assert not arguments.receipt_promoted and not destination.exists()
+        launcher._discard_promoted_receipt(arguments)
+    assert kept.read_bytes() == b"unrelated external evidence\n"
+    assert not (root / "formal/lean/.lake").exists() and not (root / "output").exists()
+
+
+def test_missing_external_receipt_rollback_is_idempotent_without_creating_parents(tmp_path: Path) -> None:
+    root = _project(tmp_path / "project")
+    missing = tmp_path / "never-created/nested/receipt.json"
+    with _owned_interpreter_state():
+        arguments = launcher._arguments(_arguments(root, missing))
+        assert launcher._receipt_root(arguments) == tmp_path
+        arguments.receipt_promoted = True
+        launcher._discard_promoted_receipt(arguments)
+        assert not arguments.receipt_promoted and not missing.parent.exists()
+        launcher._discard_promoted_receipt(arguments)
+    assert not (tmp_path / "never-created").exists()
+    assert not (root / "formal/lean/.lake").exists()
+
+
+@pytest.mark.parametrize("unsafe", ["parent-symlink", "leaf-symlink", "parent-traversal", "parent-file"])
+def test_external_receipt_refusal_preserves_unrelated_evidence(
+    tmp_path: Path, unsafe: str, capsys: pytest.CaptureFixture[str]
+) -> None:
+    root = _project(tmp_path / "project")
+    external = tmp_path / "external"
+    external.mkdir()
+    kept = external / "kept.json"
+    kept.write_bytes(b"unrelated evidence must survive refusal\n")
+    alias = tmp_path / "external-alias"
+    alias.symlink_to(external, target_is_directory=True)
+    linked_receipt = external / "linked-receipt.json"
+    linked_receipt.symlink_to(kept)
+    blocked = external / "not-a-directory"
+    blocked.write_bytes(b"keep this regular parent too\n")
+    destinations = {
+        "parent-symlink": alias / "kept.json",
+        "leaf-symlink": linked_receipt,
+        "parent-traversal": external / "nested/../kept.json",
+        "parent-file": blocked / "receipt.json",
+    }
+    destination = destinations[unsafe]
+    with _owned_interpreter_state():
+        arguments = launcher._arguments(_arguments(root, destination))
+        if unsafe == "parent-traversal":
+            with pytest.raises(ValueError, match="parent traversal"):
+                launcher._receipt_root(arguments)
+        assert launcher._launch(arguments, time.monotonic() - 1) == 2
+        arguments.receipt_promoted = True
+        launcher._discard_promoted_receipt(arguments)
+        assert not arguments.receipt_promoted
+        launcher._discard_promoted_receipt(arguments)
+    diagnostic = capsys.readouterr().err
+    assert "Invalid Formal receipt destination:" in diagnostic
+    assert "Expired Formal receipt cleanup refused:" in diagnostic
+    assert kept.read_bytes() == b"unrelated evidence must survive refusal\n"
+    assert blocked.read_bytes() == b"keep this regular parent too\n"
+    assert alias.is_symlink() and linked_receipt.is_symlink()
+    assert not (root / "formal/lean/.lake").exists() and not (root / "output").exists()
