@@ -59,8 +59,8 @@ for the canonical statement of every current claim's scope.
   layer this package sits inside (src-layout rationale).
 - [`../../tests/AGENTS.md`](../../tests/AGENTS.md) — how each subpackage is
   exercised (no-mocks policy, mypy-oracle harness, coverage gate).
-- [`../../ISA.md`](../../ISA.md) — the full 122-ISC build history this
-  package's docstrings cite by number (ISC-1..123).
+- [`../../ISA.md`](../../ISA.md) — the criterion and verification history this
+  package's docstrings cite.
 
 Prepared TLC providers may use the absolute `TEMPLATE_FORMAL_TLC_JAR` path when
 the local cache is absent. Keep the pinned hash and final byte custody; acquisition
