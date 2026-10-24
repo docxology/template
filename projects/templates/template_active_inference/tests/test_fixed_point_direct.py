@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import io
 import json
+import shutil
 import stat
 import subprocess
 import sys
@@ -852,13 +853,23 @@ def test_compiled_source_staging_publishes_only_final_bytes(tmp_path: Path) -> N
 
 @pytest.mark.slow
 @pytest.mark.timeout(1200)
-def test_fixed_point_refreshes_evidence_after_changed_or_missing_compiled_source(tmp_path: Path) -> None:
+def test_fixed_point_refreshes_evidence_after_changed_or_missing_compiled_source(
+    settled_convergence_root: tuple[Path, dict[str, bytes | None]],
+    tmp_path: Path,
+) -> None:
     """Real publication must refresh every report against the final Source."""
     from manuscript.sheaf.compose import compose_all_sections
 
-    root = copy_project_tree(tmp_path / "changed-compiled-source-project")
-    run_semantic_fixed_point(root, require_analysis_outputs=False)
-    expected_outputs = _observed_output_snapshot(root)
+    settled_root, expected_outputs = settled_convergence_root
+    root = tmp_path / "changed-compiled-source-project"
+    # The module already built this real fixed point; copy its baseline rather
+    # than repeat the full research settlement inside this item's fixed clock.
+    shutil.copytree(
+        settled_root,
+        root,
+        ignore=shutil.ignore_patterns("__pycache__", ".pytest_cache", ".coverage*"),
+    )
+    assert _observed_output_snapshot(root) == expected_outputs
     source = root / "manuscript" / "08_methods_sheaf.md"
     final_source = source.read_bytes()
     for state in ("changed", "missing"):
