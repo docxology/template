@@ -125,10 +125,37 @@ def _infra_matrix(shards: list[list[str]]) -> dict[str, Any]:
     return {"include": [{"shard": i, "tex": bool(native_latex.intersection(files))} for i, files in enumerate(shards)]}
 
 
+def _contract_matrix(shards: list[list[str]], modules: list[str]) -> dict[str, Any]:
+    """Dispatch long observed contracts first without changing canonical shard IDs."""
+    from infrastructure.core.testing.ci_contracts import contract_preparation
+
+    # Advisory job seconds from successful functional run 40019154805. These
+    # affect dispatch order only, never selected work, deadlines or acceptance.
+    observed_seconds = {
+        "tests/infra_tests/project/test_installed_acceptance.py": 93,
+        "tests/infra_tests/project/test_public_acceptance_auxiliary.py": 238,
+        "tests/infra_tests/project/test_public_reference.py": 586,
+        "tests/infra_tests/project/test_public_reference_session.py": 230,
+        "tests/infra_tests/project/test_root_case_lanes.py": 701,
+        "tests/infra_tests/project/test_root_no_model_acquisition.py": 259,
+        "tests/infra_tests/project/test_root_optional_external.py": 250,
+        "tests/infra_tests/project/test_root_policy_authoring.py": 401,
+        "tests/infra_tests/project/test_root_portable.py": 175,
+        "tests/infra_tests/project/test_root_runtime_v2.py": 1244,
+        "tests/infra_tests/project/test_root_wheel_typing.py": 58,
+        "tests/infra_tests/project/test_scientific_reference_replay.py": 145,
+    }
+    rows: list[dict[str, Any]] = [
+        {"shard": len(shards) + i, "module": name, **contract_preparation(name)} for i, name in enumerate(modules)
+    ]
+    rows.sort(key=lambda row: (-observed_seconds.get(row["module"], 0), row["module"]))
+    return {"include": rows or [{"shard": -1, "module": "none", **contract_preparation("none")}]}
+
+
 def main() -> int:
     from infrastructure.core.testing.ci_infra import infrastructure_shards
     from infrastructure.core.testing.ci_infra import infrastructure_files
-    from infrastructure.core.testing.ci_contracts import contract_files, contract_preparation
+    from infrastructure.core.testing.ci_contracts import contract_files
     from infrastructure.core.testing.ci_smoke import project_smoke_matrix
 
     parser = argparse.ArgumentParser(description=__doc__)
@@ -147,18 +174,7 @@ def main() -> int:
     args.output.write_text(json.dumps(plan, sort_keys=True, indent=2) + "\n")
     print("matrix=" + json.dumps(project_smoke_matrix(root, tuple(plan["projects"]))))
     print("infra=" + json.dumps(_infra_matrix(plan["infra_shards"])))
-    print(
-        "contracts="
-        + json.dumps(
-            {
-                "include": [
-                    {"shard": len(plan["infra_shards"]) + i, "module": name, **contract_preparation(name)}
-                    for i, name in enumerate(plan["contract_modules"])
-                ]
-                or [{"shard": -1, "module": "none", **contract_preparation("none")}]
-            }
-        )
-    )
+    print("contracts=" + json.dumps(_contract_matrix(plan["infra_shards"], plan["contract_modules"])))
     return 0
 
 

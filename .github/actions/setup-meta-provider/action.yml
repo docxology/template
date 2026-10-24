@@ -14,7 +14,12 @@ runs:
         PROVIDER_PYTHON: ${{ inputs.python-executable }}
       run: |
         set -euo pipefail
-        wheels=$(mktemp -d "$RUNNER_TEMP/template-meta-provider.XXXXXX")
-        uv build --wheel --no-build-isolation --python .venv/bin/python \
-          --out-dir "$wheels" projects/templates/template_literature_meta_analysis
+        provider_work=$(mktemp -d "$RUNNER_TEMP/template-meta-provider.XXXXXX")
+        provider_source="$provider_work/source"
+        wheels="$provider_work/wheels"
+        .venv/bin/python -B scripts/audit/copy_exemplar.py \
+          --repo-root "$PWD" --source templates/template_literature_meta_analysis \
+          --dest "$provider_source" --project-only
+        uv build --wheel --no-build-isolation --python "$PWD/.venv/bin/python" \
+          --out-dir "$wheels" "$provider_source"
         uv pip install --python "$PROVIDER_PYTHON" --no-deps --reinstall "$wheels"/*.whl

@@ -738,3 +738,18 @@ Coverage (round 20, cumulative): 123/123 ISC groups passed, 123/123 artifact-bac
 
 - **ISC-126**: The maintained formal Lean declaration and standalone native-tool admission select exactly `leanprover/lean4:v4.35.0`; successful verification still includes all declared theorem axiom audits and TLC proof-of-detection controls. Historical receipts retain their original toolchain epoch.
 - **ISC-127**: Compiler diagnostics derive from the source-owned compiler pin; different versions, prereleases, missing tools, changed sources and unproved declarations continue to fail closed. Shared CI preparation rejects disagreement between the formal and active-inference exemplar pins and installs their common compiler once.
+
+
+## External receipt boundary and portable control criterion
+
+- [ ] **ISC-128**: The optional Formal controller must return a concrete `Path`
+  for an external receipt root and satisfy the existing strict source-tree mypy
+  contract. Project receipts remain confined to the readable project root;
+  external receipts select their closest existing parent before the existing
+  held, no-follow directory checks admit it. Real portable filesystem controls
+  must exercise missing destination descendants, confined receipt permissions,
+  expired-receipt invalidation, exclusive and idempotent rollback, and missing
+  receipt cleanup without creating output. Parent and leaf symlinks, lexical
+  parent traversal and non-directory parents must refuse while preserving
+  unrelated evidence. The Linux nonroot search-only-ancestor proof remains a
+  separate control. Expiry or cleanup must never authorize a native tool result.

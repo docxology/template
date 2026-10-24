@@ -852,13 +852,15 @@ def test_compiled_source_staging_publishes_only_final_bytes(tmp_path: Path) -> N
 
 @pytest.mark.slow
 @pytest.mark.timeout(1200)
-def test_fixed_point_refreshes_evidence_after_changed_or_missing_compiled_source(tmp_path: Path) -> None:
+def test_fixed_point_refreshes_evidence_after_changed_or_missing_compiled_source(
+    settled_convergence_root: tuple[Path, dict[str, bytes | None]],
+) -> None:
     """Real publication must refresh every report against the final Source."""
     from manuscript.sheaf.compose import compose_all_sections
 
-    root = copy_project_tree(tmp_path / "changed-compiled-source-project")
-    run_semantic_fixed_point(root, require_analysis_outputs=False)
-    expected_outputs = _observed_output_snapshot(root)
+    # Generated report bytes bind the fixture's original project-root name.
+    root, expected_outputs = settled_convergence_root
+    assert _observed_output_snapshot(root) == expected_outputs
     source = root / "manuscript" / "08_methods_sheaf.md"
     final_source = source.read_bytes()
     for state in ("changed", "missing"):

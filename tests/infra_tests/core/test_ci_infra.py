@@ -165,9 +165,11 @@ def test_broad_package_ownership_scales_shards_without_losing_selected_work() ->
     from infrastructure.core.testing.ci_contracts import combined_groups, contract_files
 
     heavy = (
+        "tests/infra_tests/core/pipeline/test_artifact_finalization.py",
         "tests/infra_tests/core/pipeline/test_run_matrix.py",
         "tests/infra_tests/core/test_execution_contract.py",
         "tests/infra_tests/core/test_project_test_measurement.py",
+        "tests/infra_tests/project/test_public_acceptance.py",
         "tests/infra_tests/project/test_root_acceptance.py",
         "tests/infra_tests/publishing/test_standalone_mirror.py",
     )
@@ -181,6 +183,26 @@ def test_broad_package_ownership_scales_shards_without_losing_selected_work() ->
     assert len(small) >= 5 and all([module] in small for module in heavy)
     plan = {"infra_shards": shards, "contract_modules": list(contract_files(files, infrastructure_files(ROOT)))}
     validate_shards(combined_groups(plan), files)
+    from infrastructure.core.testing.ci_selection import _contract_matrix
+    from infrastructure.core.testing.ci_contracts import contract_preparation
+
+    original_modules = list(plan["contract_modules"])
+    rows = _contract_matrix(shards, plan["contract_modules"])["include"]
+    expected = [
+        {"shard": len(shards) + index, "module": module, **contract_preparation(module)}
+        for index, module in enumerate(original_modules)
+    ]
+    assert sorted(rows, key=lambda row: row["shard"]) == expected
+    assert plan["contract_modules"] == original_modules
+    assert rows == _contract_matrix(shards, original_modules)["include"]
+    if "tests/infra_tests/project/test_root_runtime_v2.py" in original_modules:
+        assert rows[0]["module"] == "tests/infra_tests/project/test_root_runtime_v2.py"
+    fallback = ["tests/unknown_z.py", "tests/unknown_a.py"]
+    assert _contract_matrix(shards, fallback)["include"] == [
+        {"shard": len(shards) + index, "module": module, **contract_preparation(module)}
+        for index, module in reversed(list(enumerate(fallback)))
+    ]
+    assert _contract_matrix(shards, [])["include"] == [{"shard": -1, "module": "none", **contract_preparation("none")}]
     assert shards == infrastructure_shards(ROOT, changed)
     for count in (1, 3, 8):
         explicit = infrastructure_shards(ROOT, changed, count)

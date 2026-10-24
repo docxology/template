@@ -177,7 +177,8 @@ def test_release_profile_includes_slow_but_keeps_opt_in_surfaces_bounded() -> No
     assert profile.include_ollama_tests is False
     assert profile.include_bench is False
     assert build_profile_marker_expression(profile) == (
-        "not requires_ollama and not requires_docker and not network and not bench and not benchmark and not performance "
+        "not requires_ollama and not requires_docker and not network"
+        " and not bench and not benchmark and not performance "
         "and not long_running and not private_project and not external_fixture"
     )
 
@@ -189,7 +190,8 @@ def test_exhaustive_profile_includes_long_running_but_keeps_live_services_opt_in
     assert profile.include_ollama_tests is False
     assert profile.include_bench is False
     assert build_profile_marker_expression(profile) == (
-        "not requires_ollama and not requires_docker and not network and not bench and not benchmark and not performance "
+        "not requires_ollama and not requires_docker and not network"
+        " and not bench and not benchmark and not performance "
         "and not private_project and not external_fixture"
     )
 
@@ -376,10 +378,10 @@ def test_build_project_pytest_command_uses_existing_python_without_acquisition(t
     (project / "pyproject.toml").write_text('[project]\nname="demo"\n')
     args = [str(project / "tests"), "--cov=src", "--timeout=120"]
     cmd = build_project_pytest_command(project, args)
-    assert cmd[:3] == [str(Path(sys.executable).absolute()), "-I", "-c"]
-    assert "runpy.run_module('pytest'" in cmd[3]
+    assert cmd[:4] == [str(Path(sys.executable).absolute()), "-I", "-B", "-c"]
+    assert "runpy.run_module('pytest'" in cmd[4]
     # The audited entry appends --assert=plain so held plugin source runs unrewritten.
-    assert cmd[4:] == ["tests", "--cov=src", "--timeout=120", "--assert=plain"]
+    assert cmd[5:] == ["tests", "--cov=src", "--timeout=120", "--assert=plain"]
 
 
 def test_build_project_pytest_command_does_not_fall_back_from_missing_venv(tmp_path: Path) -> None:
@@ -443,7 +445,6 @@ def test_resolve_xdist_args_auto(monkeypatch: pytest.MonkeyPatch) -> None:
         "auto",
         "--dist",
         XDIST_DISTRIBUTION,
-        "--benchmark-disable",
     ]
 
 
@@ -454,14 +455,12 @@ def test_resolve_xdist_args_positive_int(monkeypatch: pytest.MonkeyPatch) -> Non
         "6",
         "--dist",
         XDIST_DISTRIBUTION,
-        "--benchmark-disable",
     ]
     assert resolve_xdist_args("4") == [
         "-n",
         "4",
         "--dist",
         XDIST_DISTRIBUTION,
-        "--benchmark-disable",
     ]
 
 
@@ -473,7 +472,6 @@ def test_resolve_xdist_args_env_fallback(monkeypatch: pytest.MonkeyPatch) -> Non
         "auto",
         "--dist",
         XDIST_DISTRIBUTION,
-        "--benchmark-disable",
     ]
     monkeypatch.setenv(ENV_XDIST_WORKERS, "3")
     assert resolve_xdist_args() == [
@@ -481,7 +479,6 @@ def test_resolve_xdist_args_env_fallback(monkeypatch: pytest.MonkeyPatch) -> Non
         "3",
         "--dist",
         XDIST_DISTRIBUTION,
-        "--benchmark-disable",
     ]
 
 
@@ -494,7 +491,6 @@ def test_resolve_xdist_args_explicit_overrides_env(monkeypatch: pytest.MonkeyPat
         "8",
         "--dist",
         XDIST_DISTRIBUTION,
-        "--benchmark-disable",
     ]
 
 
@@ -539,9 +535,9 @@ def test_build_union_pytest_command_injects_xdist_when_parallel(tmp_path: Path) 
     joined = " ".join(cmd_auto)
     assert "-n auto" in joined
     assert f"--dist {XDIST_DISTRIBUTION}" in joined
-    assert "--benchmark-disable" in cmd_auto
+    assert "--benchmark-disable" not in cmd_auto
 
     cmd_n = build_union_pytest_command(repo, project, tests, is_first=True, marker_expr=None, timeout=30, parallel=4)
     assert "-n" in cmd_n and "4" in cmd_n
     assert "--dist" in cmd_n and XDIST_DISTRIBUTION in cmd_n
-    assert "--benchmark-disable" in cmd_n
+    assert "--benchmark-disable" not in cmd_n

@@ -2,6 +2,13 @@
 
 ## Purpose
 
+Audited acceptance launchers suppress bytecode writes during isolated Python
+startup (`-IB`), including genuine `.pth` imports before the worker body. The
+existing Source audit enables writes only after validating its fresh private
+cache prefix. Public imports still require executed-source and cache-byte
+verification; selected runtime entries remain read-only. Payload preparation
+and portable readback preserve the same exact startup flags and body positions.
+
 Darwin print custody: `auxiliary_print_code.py` binds the actual Source-generated
 worker payload to the parent-held spec/run/PID/deadline and retains executed
 Code before private cache cleanup. `auxiliary_print_hosted.py` authenticates the

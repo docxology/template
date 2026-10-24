@@ -1,9 +1,10 @@
 """Render the registered-report exemplar figures (thin orchestrator).
 
 All plotting and computation are imported from ``src/registered_report``; this
-script only handles argument parsing and file I/O. Figures are written to
-``manuscript/figures/`` so the committed manuscript can embed them directly, and
-a machine-readable copy of the executed analysis is written to ``output/data/``.
+script only handles argument parsing and file I/O. Ordinary generation writes
+figures and their registry to ``output/figures/`` while preserving manuscript
+source images. A machine-readable executed analysis is written to ``output/data/``.
+An explicit ``--figures-dir`` still supports intentional standalone regeneration.
 Run headless from the repository root:
 
     MPLBACKEND=Agg uv run python \
@@ -77,17 +78,17 @@ def generate_assets(
     return [*figures.values(), *published, analysis_path], summary
 
 
-def main() -> int:
+def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--registration", type=Path, default=PROJECT_ROOT / "data" / "example_registration.json")
-    parser.add_argument("--figures-dir", type=Path, default=PROJECT_ROOT / "manuscript" / "figures")
+    parser.add_argument("--figures-dir", type=Path)
     parser.add_argument("--output-figures-dir", type=Path, default=PROJECT_ROOT / "output" / "figures")
     parser.add_argument("--data-dir", type=Path, default=PROJECT_ROOT / "output" / "data")
-    args = parser.parse_args()
+    args = parser.parse_args(argv)
 
     written, summary = generate_assets(
         args.registration,
-        args.figures_dir,
+        args.figures_dir if args.figures_dir is not None else args.output_figures_dir,
         args.output_figures_dir,
         args.data_dir,
     )

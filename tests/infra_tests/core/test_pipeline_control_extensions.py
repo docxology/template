@@ -297,7 +297,7 @@ def test_hook_deadline_before_launch_retains_timeout_and_refuses_execution(tmp_p
 @pytest.mark.timeout(45)
 def test_actual_hook_exit_retains_original_child_evidence(tmp_path: Path, child_code: int) -> None:
     hooks = StageHooks(
-        pre_stage=((sys.executable, "-I", "-c", f"raise SystemExit({child_code})"),),
+        pre_stage=((sys.executable, "-I", "-B", "-c", f"raise SystemExit({child_code})"),),
         timeout_seconds=30,
         run_in_ci=True,
     )
@@ -322,7 +322,7 @@ from infrastructure.core.pipeline.hooks import HookEvent,StageHookContext,run_st
 from infrastructure.core.pipeline.types import StageHooks
 source=Path(sys.path[0])/'infrastructure/core/_bounded_kill.py'
 program="from pathlib import Path;import sys;p=Path(sys.argv[1]);p.write_bytes(p.read_bytes()+b'\\n# concurrent source edit\\n');raise SystemExit(130)"
-hooks=StageHooks(pre_stage=((sys.executable,'-I','-c',program,str(source)),),timeout_seconds=30,run_in_ci=True)
+hooks=StageHooks(pre_stage=((sys.executable,'-I','-B','-c',program,str(source)),),timeout_seconds=30,run_in_ci=True)
 results=run_stage_hooks(hooks,HookEvent.PRE_STAGE,StageHookContext('demo','Actual interruption',1,Path.cwd(),'running'))
 assert len(results)==1 and not results[0].success
 print(json.dumps({'exit':results[0].exit_code,'original':results[0].original_exit_code}))

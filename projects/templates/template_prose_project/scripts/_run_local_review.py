@@ -3,12 +3,18 @@
 
 from __future__ import annotations
 
+import os
 import sys
+
+# Use the same declared SDK selection as the isolated supervised worker.
+# An inherited copied checkout on PYTHONPATH cannot select the controller SDK.
+if not sys.flags.isolated:
+    os.execv(sys.executable, [sys.executable, "-I", "-B", os.path.abspath(__file__), *sys.argv[1:]])
+
 import tempfile
 from pathlib import Path
 import hashlib
 import importlib.util
-import os
 import stat
 
 # Establish an empty private cache namespace before importing platform or domain code.

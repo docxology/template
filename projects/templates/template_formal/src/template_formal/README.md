@@ -75,3 +75,13 @@ bytes, SQL-identifier validation). No docstring in this package claims
 Python enforces compile-time linear/affine typing — see
 `storage/transaction.py`'s and `protocol/session.py`'s module docstrings for
 where each concrete guarantee actually stops.
+
+## External tool receipts
+
+Tool receipts below project output stay confined to the readable project root.
+For an explicit external receipt path, confinement starts at its closest existing
+parent so strict ancestors need search permission only. The selected root and
+new output directories retain the existing readable, no-follow identity checks;
+missing nested destination parents remain supported. Invalidation, promotion and
+rollback use the same root selection. Symlinks and parent traversal remain
+refused, and receipt cleanup never authorizes a native tool result.

@@ -2,7 +2,7 @@
 
 Generated documentation coverage for every Python `def` and `class` under `src/` and `scripts/`. Entries marked `inventory fallback` have no inline docstring yet, but remain documented here by path, line, kind, and qualified name.
 
-Total documented definitions: 890
+Total documented definitions: 895
 
 ## `src/analytical/bernoulli_toy.py`
 
@@ -244,7 +244,12 @@ Total documented definitions: 890
 
 | line | kind | name | documentation source | summary |
 | ---: | --- | --- | --- | --- |
-| 8 | `function` | `write_compiled_text` | docstring | Preserve physical source custody when compilation yields identical bytes. |
+| 13 | `class` | `CompiledTextStage` | docstring | Derived candidate bytes; filesystem reads still see actual Source. |
+| 20 | `function` | `CompiledTextStage.matches_current` | docstring | Compare final candidates without changing any physical Source file. |
+| 24 | `function` | `CompiledTextStage.publish` | docstring | Use the ordinary writer once for each final candidate that differs. |
+| 38 | `function` | `stage_compiled_text` | docstring | Defer intermediate composition writes during one real generation pass. |
+| 61 | `function` | `_write_compiled_bytes` | inventory fallback | Inventory fallback for function `_write_compiled_bytes` defined at `src/manuscript/compilation_io.py:61`. |
+| 69 | `function` | `write_compiled_text` | docstring | Preserve physical source custody when final compilation bytes agree. |
 
 ## `src/manuscript/hydrate.py`
 

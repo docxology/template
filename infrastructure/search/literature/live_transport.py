@@ -102,18 +102,27 @@ def _http_worker(invocation: dict[str, Any], directory: Path) -> int:
                 content_type=response.headers.get("Content-Type", ""),
             )
             media_type = metadata["content_type"].partition(";")[0].strip().lower()
-            if (
-                media_type in {"text/html", "application/xhtml+xml"}
-                and b"<title>radware bot manager captcha</title>" in raw.lower()
-                and b"h-captcha" in raw.lower()
-            ):
+            lowered = raw.lower()
+            radware_captcha = b"<title>radware bot manager captcha</title>" in lowered and b"h-captcha" in lowered
+            client_challenge = all(
+                marker in lowered
+                for marker in (
+                    b"<title>client challenge</title>",
+                    b"/_fs-ch-1t1wmsgaoggasxcx/script.js?reload=true",
+                    b"<noscript>",
+                    b"javascript is disabled in your browser.",
+                    b"please enable javascript to proceed.",
+                )
+            )
+            if media_type in {"text/html", "application/xhtml+xml"} and (radware_captcha or client_challenge):
+                challenge = "a Radware browser CAPTCHA" if radware_captcha else "a JavaScript client challenge"
                 metadata.update(
                     status="blocked",
-                    diagnostic="publisher requires a Radware browser CAPTCHA",
+                    diagnostic="publisher requires " + challenge,
                     response_headers=list(response.headers.items()),
                 )
                 write_json(directory / "http.json", metadata)
-                raise LiteratureBlocked("unpaid HTTP provider requires a browser CAPTCHA")
+                raise LiteratureBlocked("unpaid HTTP provider requires " + challenge)
             write_json(directory / "http.json", metadata)
     except urllib.error.HTTPError as exc:
         metadata.update(status="blocked", status_code=exc.code, redirects=handler.redirects)

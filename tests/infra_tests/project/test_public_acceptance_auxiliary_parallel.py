@@ -4,7 +4,6 @@ from __future__ import annotations
 
 import os
 from pathlib import Path
-import shutil
 import subprocess
 import sys
 import threading
@@ -37,6 +36,7 @@ def test_real_children_overlap_only_across_scopes(tmp_path: Path, workers: int) 
         command = [
             sys.executable,
             "-I",
+            "-B",
             "-c",
             "import pathlib,sys,time; p=pathlib.Path(sys.argv[1]); "
             "(p/(sys.argv[2]+'-started')).write_text('actual child'); "
@@ -89,6 +89,7 @@ def test_one_worker_preserves_multi_scope_serial_execution_order(tmp_path: Path)
             [
                 sys.executable,
                 "-I",
+                "-B",
                 "-c",
                 "import pathlib,sys; p=pathlib.Path(sys.argv[1]); f=p.open('a'); f.write(sys.argv[2]+'\\n'); f.close()",
                 str(order),
@@ -114,7 +115,7 @@ def test_real_controller_refuses_admission_completed_after_original_deadline(tmp
 
     def operation() -> AuxiliaryOperation:
         observation = yield AuxiliaryProcess(
-            [sys.executable, "-I", "-c", "print('original child completed')"],
+            [sys.executable, "-I", "-B", "-c", "print('original child completed')"],
             tmp_path,
             tmp_path / "output/readiness/late-admission",
             deadline,
@@ -126,7 +127,7 @@ def test_real_controller_refuses_admission_completed_after_original_deadline(tmp
 
     def early() -> AuxiliaryOperation:
         observed = yield AuxiliaryProcess(
-            [sys.executable, "-I", "-c", "print('original early child')"],
+            [sys.executable, "-I", "-B", "-c", "print('original early child')"],
             tmp_path,
             tmp_path / "output/readiness/early-admission",
             deadline,
@@ -151,14 +152,15 @@ def test_real_controller_refuses_admission_completed_after_original_deadline(tmp
 
 
 def test_declared_pytest_benchmark_storage_preserves_cold_source(tmp_path: Path) -> None:
-    source = Path(__file__).resolve().parents[3] / "projects/templates/template_active_inference/pyproject.toml"
     environment = {key: value for key, value in os.environ.items() if key not in {"PYTEST_ADDOPTS", "PYTEST_PLUGINS"}}
     environment["PYTHONDONTWRITEBYTECODE"] = "1"
     for selected in (True, False):
         project = tmp_path / str(selected)
         project.mkdir()
         (project / "tests").mkdir()
-        shutil.copyfile(source, project / "pyproject.toml")
+        (project / "pyproject.toml").write_text(
+            '[tool.pytest.ini_options]\naddopts = "--benchmark-storage=file://./output/.pipeline/benchmarks"\n'
+        )
         excluded = frozenset({(project / "output").absolute()})
         before = tree_records(project, source=True, excluded_roots=excluded)
         command = [sys.executable, "-B", "-m", "pytest", "--collect-only", "-q", "-p", "no:cacheprovider"]
