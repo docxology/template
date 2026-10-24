@@ -40,7 +40,7 @@ General-purpose core utilities that happen to be consumed by tests
 deliberately stay at the `infrastructure/core/` top level: this package is
 for test-execution machinery, not for every module a test touches.
 
-Ordinary project tests use an existing selected interpreter and validate its exact runner stack without installing packages. Explicit environment preparation is separate. A nominated unusable project `.venv` blocks with exit 75; malformed declarations use exit 2 and real deadline/interruption outcomes remain 124/130.
+Ordinary project tests use an existing selected interpreter and validate its exact runner stack without installing packages. A nominated project `.venv` uses unique core runner versions from its confined `uv.lock`; core packages absent from that lock keep the exact workspace supplement requirement. Missing version values, ambiguous pins or malformed lock content refuse admission, and explicit extra requirements cannot override a conflicting runner pin. Without a project lock, or for the caller runtime, the exact workspace stack remains authoritative. Explicit environment preparation is separate. A nominated unusable project `.venv` blocks with exit 75; malformed declarations use exit 2 and real deadline/interruption outcomes remain 124/130.
 
 The generic project runner nominates confined benchmark storage under
 `output/.pipeline/benchmarks` and explicitly loads the private runtime-control

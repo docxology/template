@@ -94,6 +94,66 @@ def test_actual_current_prepared_stack_admission(tmp_path: Path) -> None:
     assert selected == python
     assert "pytest-benchmark" not in core_receipt["probe"]["versions"]
     assert core_receipt["probe"]["missing"] == []
+
+    # The project's real lock declares authority; copied installed metadata stays untouched.
+    versions = core_receipt["probe"]["versions"]
+    lock = tmp_path / "uv.lock"
+
+    def declared_lock(rows: list[tuple[str, str]]) -> str:
+        return "version = 1\n" + "".join(
+            f'\n[[package]]\nname = "{name}"\nversion = "{version}"\n' for name, version in rows
+        )
+
+    pins = list(versions.items())
+    lock.write_text(declared_lock(pins), encoding="utf-8")
+    selected, locked_receipt = admit_project_test_runtime(tmp_path, interpreter=python)
+    assert selected == python and locked_receipt["probe"]["versions"] == versions
+    partial_pins = [(name, version) for name, version in pins if name not in {"pytest-timeout", "pytest-xdist"}]
+    lock.write_text(declared_lock(partial_pins), encoding="utf-8")
+    selected, supplemented = admit_project_test_runtime(tmp_path, interpreter=python)
+    assert selected == python and supplemented["probe"]["versions"] == versions
+    assert {"pytest-timeout", "pytest-xdist"} <= supplemented["probe"]["versions"].keys()
+    lock.write_text(declared_lock(pins), encoding="utf-8")
+    with pytest.raises(ProjectTestRuntimeError, match="conflicts with the exact selected runner") as conflict:
+        admit_project_test_runtime(tmp_path, interpreter=python, required_distributions={"pytest": "0.0.0"})
+    assert conflict.value.exit_code == 2
+
+    mismatched = [(name, "0.0.0" if name == "pytest-cov" else version) for name, version in pins]
+    lock.write_text(declared_lock(mismatched), encoding="utf-8")
+    with pytest.raises(ProjectTestRuntimeError, match="required exact runner stack") as wrong_lock:
+        admit_project_test_runtime(tmp_path, interpreter=python)
+    assert wrong_lock.value.exit_code == 75
+    # An explicitly selected caller runtime retains the original workspace authority.
+    selected, caller_receipt = admit_project_test_runtime(tmp_path, interpreter=Path(sys.executable).absolute())
+    assert selected == Path(sys.executable).absolute() and caller_receipt["probe"]["versions"] == versions
+
+    lock.write_text(declared_lock([*pins, pins[0]]), encoding="utf-8")
+    with pytest.raises(ProjectTestRuntimeError, match="ambiguous runner pins") as ambiguous:
+        admit_project_test_runtime(tmp_path, interpreter=python)
+    assert ambiguous.value.exit_code == 75
+    lock.write_text('version = 1\n[[package]]\nname = "pytest"\n', encoding="utf-8")
+    with pytest.raises(ProjectTestRuntimeError, match="exact runner version") as unpinned:
+        admit_project_test_runtime(tmp_path, interpreter=python)
+    assert unpinned.value.exit_code == 75
+    for malformed_rows in ('package = ["bad"]\n', "[[package]]\nname = 123\n"):
+        lock.write_text(malformed_rows, encoding="utf-8")
+        with pytest.raises(ProjectTestRuntimeError, match="malformed package rows") as invalid_rows:
+            admit_project_test_runtime(tmp_path, interpreter=python)
+        assert invalid_rows.value.exit_code == 75
+    lock.write_text("invalid = [\n", encoding="utf-8")
+    with pytest.raises(ProjectTestRuntimeError, match="lock is invalid") as malformed:
+        admit_project_test_runtime(tmp_path, interpreter=python)
+    assert malformed.value.exit_code == 75
+    if os.name != "nt":
+        held_lock = tmp_path / "held-uv.lock"
+        held_lock.write_text(declared_lock(pins), encoding="utf-8")
+        lock.unlink()
+        lock.symlink_to(held_lock)
+        with pytest.raises(ProjectTestRuntimeError, match="confined regular file") as linked:
+            admit_project_test_runtime(tmp_path, interpreter=python)
+        assert linked.value.exit_code == 75
+        lock.unlink()
+    lock.write_text(declared_lock(pins), encoding="utf-8")
     absent = subprocess.run(
         [
             str(python),
@@ -355,7 +415,7 @@ def test_actual_audited_pytest_keeps_conftest_and_test_assertions(tmp_path: Path
     )
     command = build_audited_project_test_command(tmp_path, Path(sys.executable).absolute(), args, module="pytest")
     option_end = args.index("--") if "--" in args else len(args)
-    assert command[4:] == (*args[:option_end], "--assert=plain", *args[option_end:])
+    assert command[5:] == (*args[:option_end], "--assert=plain", *args[option_end:])
     result = run_bounded_subprocess(command, cwd=tmp_path, env=os.environ.copy(), timeout=60)
     combined = result.stdout + result.stderr
     assert "executed public module differs" not in combined

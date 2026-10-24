@@ -17,13 +17,14 @@ import time
 from pathlib import Path
 
 from infrastructure.core.execution_boundary import run_bounded_subprocess
+from infrastructure.core.files.secure_write import read_bytes_confined
 from infrastructure.core.implementation_custody import bytecode_audit_bootstrap
 from infrastructure.core.runtime.python_binding import (
     AnalysisRuntimeUnavailable,
     analysis_runtime_binding,
     select_analysis_python,
 )
-from infrastructure.core.testing.pytest_profiles import test_runner_dependency_specs
+from infrastructure.core.testing.pytest_profiles import TEST_RUNNER_BASE_DEPS, test_runner_dependency_specs
 
 
 class ProjectTestRuntimeError(RuntimeError):
@@ -107,17 +108,58 @@ def admit_project_test_runtime(
     major, minor = (int(part) for part in str(binding["python_minor"]).split("."))
     if major != 3 or minor < 12:
         raise ProjectTestRuntimeError("Selected prepared project tests require Python 3.12 or newer")
-    expected: dict[str, str] = {}
+    lock_path = project_root.absolute() / "uv.lock"
+    lock_bytes: bytes | None = None
+    locked: dict[str, str] = {}
+    owns_runtime = binding["prefix"] == str(project_root.absolute() / ".venv")
+    if owns_runtime:
+        try:
+            lock_bytes = read_bytes_confined(project_root.absolute(), lock_path, max_bytes=16 * 1024 * 1024)
+        except FileNotFoundError:
+            pass
+        except (OSError, ValueError) as exc:
+            raise ProjectTestRuntimeError("Project test lock is not a confined regular file") from exc
+        if lock_bytes is not None:
+            try:
+                packages = tomllib.loads(lock_bytes.decode("utf-8")).get("package")
+            except (UnicodeDecodeError, tomllib.TOMLDecodeError) as exc:
+                raise ProjectTestRuntimeError("Project test lock is invalid") from exc
+            if not isinstance(packages, list):
+                raise ProjectTestRuntimeError("Project test lock lacks package pins")
+            if any(
+                not isinstance(row, dict)
+                or not isinstance(row.get("name"), str)
+                or re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9._-]*", row["name"]) is None
+                for row in packages
+            ):
+                raise ProjectTestRuntimeError("Project test lock has malformed package rows")
+            for name in (*TEST_RUNNER_BASE_DEPS, "coverage"):
+                matches = [
+                    row
+                    for row in packages
+                    if isinstance(row, dict)
+                    and isinstance(row.get("name"), str)
+                    and re.sub(r"[-_.]+", "-", row["name"]).lower() == name
+                ]
+                if not matches:
+                    continue  # No project pin: retain the exact workspace supplement below.
+                if len(matches) != 1:
+                    raise ProjectTestRuntimeError(f"Project test lock has ambiguous runner pins: {name}")
+                pinned = matches[0].get("version")
+                if not isinstance(pinned, str) or not pinned or any(char.isspace() for char in pinned):
+                    raise ProjectTestRuntimeError(f"Project test lock lacks an exact runner version: {name}")
+                locked[name] = pinned
+    expected: dict[str, str] = dict(locked)
     for spec in test_runner_dependency_specs():
         name, separator, pinned = spec.partition("==")
+        if name in locked:
+            continue
         if not separator or not pinned:
             raise ProjectTestRuntimeError(f"Workspace runner dependency is unavailable: {name}")
         expected[name] = pinned
     for name, required in (required_distributions or {}).items():
         if name in expected and expected[name] != required:
-            raise ProjectTestRuntimeError(
-                "Required distribution conflicts with the exact workspace runner", exit_code=2
-            )
+            raise ProjectTestRuntimeError("Required distribution conflicts with the exact selected runner", exit_code=2)
         expected[name] = required
     probe = (
         "import importlib.metadata as m,json,sys; "
@@ -130,7 +172,7 @@ def admit_project_test_runtime(
     )
     try:
         result = run_bounded_subprocess(
-            [str(selected), "-I", "-c", probe, json.dumps(expected, sort_keys=True)],
+            [str(selected), "-I", "-B", "-c", probe, json.dumps(expected, sort_keys=True)],
             cwd=project_root,
             env=os.environ.copy(),
             timeout=remaining_test_budget(operation_deadline),
@@ -161,6 +203,17 @@ def admit_project_test_runtime(
         raise ProjectTestRuntimeError("Selected prepared runtime differs from the required exact runner stack")
     if analysis_runtime_binding(project_root, interpreter=selected) != binding:
         raise ProjectTestRuntimeError("Selected project test runtime changed during admission")
+    if owns_runtime:
+        try:
+            current_lock = read_bytes_confined(project_root.absolute(), lock_path, max_bytes=16 * 1024 * 1024)
+        except FileNotFoundError as exc:
+            if lock_bytes is not None:
+                raise ProjectTestRuntimeError("Project test lock changed during admission") from exc
+        except (OSError, ValueError) as exc:
+            raise ProjectTestRuntimeError("Project test lock changed during admission") from exc
+        else:
+            if current_lock != lock_bytes:
+                raise ProjectTestRuntimeError("Project test lock changed during admission")
     remaining_test_budget(operation_deadline)
     return selected, {"binding": binding, "probe": actual, "scope": "executable-prefix-metadata-versions"}
 
@@ -234,6 +287,7 @@ def _declared_provider_roots(
             [
                 str(selected),
                 "-I",
+                "-B",
                 "-c",
                 probe,
                 json.dumps([str(path) for path in project_test_import_paths(project_root)]),
@@ -365,7 +419,7 @@ def build_audited_project_test_command(
     if module == "pytest":
         option_end = args.index("--") if "--" in args else len(args)
         entry_args = (*args[:option_end], "--assert=plain", *args[option_end:])
-    return (str(selected), "-I", "-c", source, *entry_args)
+    return (str(selected), "-I", "-B", "-c", source, *entry_args)
 
 
 __all__ = [
