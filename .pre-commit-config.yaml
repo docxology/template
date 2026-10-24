@@ -62,6 +62,7 @@ repos:
         name: end-of-file-fixer (ensure trailing newline)
         exclude: |
           (?x)^(
+            infrastructure/rendering/assets/fonts/lzma-d-min\.js$|
             output/.*|
             projects/templates/[^/]+/output/.*|
             projects/templates/.*\.svg|
