@@ -92,6 +92,9 @@ required.
   without changing canonical shard IDs, module membership or deadlines.
 - Retain complete required CLI stdout, stderr and original exit codes as artifacts
   beside their receipts; original failures still fail their workflow steps.
+- Reuse original provider-wheel artifact bindings while retaining fresh private
+  wheel copies, separate consumer installations and isolated probes. Refuse
+  changed original provider artifacts through the existing evidence readers.
 - Preserve the byte-pinned vendored font decoder with one exact EOF-hook exception.
   Keep generated local statistics and Markdown validation summaries ignored rather
   than tracked with canonical publication artifacts.
