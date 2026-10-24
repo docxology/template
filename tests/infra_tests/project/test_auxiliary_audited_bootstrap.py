@@ -121,7 +121,7 @@ def test_real_fresh_bytecode_verifier_passes_only_after_audited_bootstrap(source
         tmp_path, tmp_path / "probe.payload", audit[3].encode(), forbidden_roots=(source,)
     )
     result = subprocess.run(
-        [audit[0], "-I", "-c", format_acceptance_payload_loader(payload), *audit[4:]],
+        [*audit[:3], format_acceptance_payload_loader(payload), *audit[4:]],
         cwd=source,
         capture_output=True,
         timeout=30,
@@ -166,7 +166,7 @@ def test_actual_bootstrap_refuses_unowned_or_reused_prefix(source: Path, tmp_pat
         tmp_path, tmp_path / "refused.payload", command[3].encode(), forbidden_roots=(source,)
     )
     result = subprocess.run(
-        [command[0], "-I", "-c", format_acceptance_payload_loader(payload), *command[4:]],
+        [*command[:3], format_acceptance_payload_loader(payload), *command[4:]],
         cwd=source,
         capture_output=True,
         timeout=30,
