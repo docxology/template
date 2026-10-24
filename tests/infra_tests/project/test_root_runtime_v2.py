@@ -602,6 +602,7 @@ raise SystemExit(code)
             [
                 sys.executable,
                 "-I",
+                "-B",
                 "-c",
                 program,
                 str(cache),

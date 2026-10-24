@@ -87,7 +87,7 @@ def genuine_lane(tmp_path_factory: pytest.TempPathFactory) -> tuple[Path, dict[s
         "               \"Path(sys.argv[1]).write_text(json.dumps({'pid':os.getpid(),'token':sys.argv[3],\"\n"
         "               \"'started_ns':time.monotonic_ns()}));time.sleep(900);\"\n"
         "               \"Path(sys.argv[2]).write_text('escaped')\")\n"
-        "        subprocess.Popen([sys.executable,'-I','-c',child,str(startup),str(escaped),token],\n"
+        "        subprocess.Popen([sys.executable,'-I','-B','-c',child,str(startup),str(escaped),token],\n"
         "                         start_new_session=True)\n"
         "        (root/'output/readiness/actual-case-reached').write_text(token)\n"
         "        while not (root/'output/readiness/descendant-live-ack').exists(): time.sleep(.01)\n"
