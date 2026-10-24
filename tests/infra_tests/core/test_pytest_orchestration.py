@@ -443,7 +443,6 @@ def test_resolve_xdist_args_auto(monkeypatch: pytest.MonkeyPatch) -> None:
         "auto",
         "--dist",
         XDIST_DISTRIBUTION,
-        "--benchmark-disable",
     ]
 
 
@@ -454,14 +453,12 @@ def test_resolve_xdist_args_positive_int(monkeypatch: pytest.MonkeyPatch) -> Non
         "6",
         "--dist",
         XDIST_DISTRIBUTION,
-        "--benchmark-disable",
     ]
     assert resolve_xdist_args("4") == [
         "-n",
         "4",
         "--dist",
         XDIST_DISTRIBUTION,
-        "--benchmark-disable",
     ]
 
 
@@ -473,7 +470,6 @@ def test_resolve_xdist_args_env_fallback(monkeypatch: pytest.MonkeyPatch) -> Non
         "auto",
         "--dist",
         XDIST_DISTRIBUTION,
-        "--benchmark-disable",
     ]
     monkeypatch.setenv(ENV_XDIST_WORKERS, "3")
     assert resolve_xdist_args() == [
@@ -481,7 +477,6 @@ def test_resolve_xdist_args_env_fallback(monkeypatch: pytest.MonkeyPatch) -> Non
         "3",
         "--dist",
         XDIST_DISTRIBUTION,
-        "--benchmark-disable",
     ]
 
 
@@ -494,7 +489,6 @@ def test_resolve_xdist_args_explicit_overrides_env(monkeypatch: pytest.MonkeyPat
         "8",
         "--dist",
         XDIST_DISTRIBUTION,
-        "--benchmark-disable",
     ]
 
 
@@ -539,9 +533,9 @@ def test_build_union_pytest_command_injects_xdist_when_parallel(tmp_path: Path) 
     joined = " ".join(cmd_auto)
     assert "-n auto" in joined
     assert f"--dist {XDIST_DISTRIBUTION}" in joined
-    assert "--benchmark-disable" in cmd_auto
+    assert "--benchmark-disable" not in cmd_auto
 
     cmd_n = build_union_pytest_command(repo, project, tests, is_first=True, marker_expr=None, timeout=30, parallel=4)
     assert "-n" in cmd_n and "4" in cmd_n
     assert "--dist" in cmd_n and XDIST_DISTRIBUTION in cmd_n
-    assert "--benchmark-disable" in cmd_n
+    assert "--benchmark-disable" not in cmd_n

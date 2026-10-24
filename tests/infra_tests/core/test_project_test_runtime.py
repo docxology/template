@@ -2,17 +2,83 @@
 
 from __future__ import annotations
 
+import hashlib
+import os
+import shutil
+import subprocess
 import sys
 import venv
+from importlib.metadata import distribution
 from pathlib import Path
 
 import pytest
+from packaging.requirements import Requirement
 
 from infrastructure.core.testing.project_test_runtime import (
     ProjectTestRuntimeError,
     admit_project_test_runtime,
     project_test_deadline,
 )
+from infrastructure.core.testing.pytest_profiles import resolve_xdist_args
+
+
+def _copy_actual_core_runner(runtime: Path) -> tuple[Path, list[Path]]:
+    """Copy genuine same-ABI distributions into one benchmark-free interpreter."""
+    venv.EnvBuilder(with_pip=False).create(runtime)
+    python = runtime / ("Scripts/python.exe" if os.name == "nt" else "bin/python")
+    observed = subprocess.run(
+        [str(python), "-I", "-B", "-c", "import sysconfig; print(sysconfig.get_path('purelib'))"],
+        capture_output=True,
+        text=True,
+        check=True,
+        timeout=30,
+    )
+    site = Path(observed.stdout.strip())
+    pending = [Requirement(name) for name in ("pytest", "pytest-cov", "pytest-timeout", "pytest-xdist", "coverage")]
+    visited: set[tuple[str, tuple[str, ...]]] = set()
+    selected = {}
+    while pending:
+        requirement = pending.pop()
+        if requirement.marker is not None and not requirement.marker.evaluate():
+            continue
+        installed = distribution(requirement.name)
+        assert requirement.specifier.contains(installed.version, prereleases=True)
+        extras = tuple(sorted(requirement.extras))
+        name = installed.metadata["Name"].lower().replace("_", "-")
+        key = (name, extras)
+        if key in visited:
+            continue
+        visited.add(key)
+        selected[name] = installed
+        for raw in installed.requires or ():
+            dependency = Requirement(raw)
+            if dependency.marker is None or any(
+                dependency.marker.evaluate({"extra": extra}) for extra in ("", *extras)
+            ):
+                dependency.marker = None
+                pending.append(dependency)
+    assert "pytest-benchmark" not in selected
+    timeout_members = []
+    for name, installed in selected.items():
+        assert installed.files
+        for member in installed.files:
+            # -m pytest needs distribution bodies/metadata, not external scripts or caches.
+            if ".." in member.parts or member.suffix == ".pyc":
+                continue
+            origin = Path(installed.locate_file(member)).absolute()
+            assert origin.is_file() and not origin.is_symlink()
+            assert origin.resolve(strict=True) == origin
+            target = site / member
+            target.parent.mkdir(parents=True, exist_ok=True)
+            digest = hashlib.sha256(origin.read_bytes()).digest()
+            if not target.exists():
+                shutil.copyfile(origin, target, follow_symlinks=False)
+            assert hashlib.sha256(target.read_bytes()).digest() == digest
+            assert hashlib.sha256(origin.read_bytes()).digest() == digest
+            if name == "pytest-timeout":
+                timeout_members.append(target)
+    assert timeout_members
+    return python, timeout_members
 
 
 @pytest.mark.timeout(90)
@@ -21,6 +87,78 @@ def test_actual_current_prepared_stack_admission(tmp_path: Path) -> None:
     assert selected == Path(sys.executable).absolute()
     assert receipt["scope"] == "executable-prefix-metadata-versions"
     assert receipt["probe"]["missing"] == []
+
+    # Ordinary project tests need the real core stack, not an unused benchmark plugin.
+    python, timeout_members = _copy_actual_core_runner(tmp_path / ".venv")
+    selected, core_receipt = admit_project_test_runtime(tmp_path, interpreter=python)
+    assert selected == python
+    assert "pytest-benchmark" not in core_receipt["probe"]["versions"]
+    assert core_receipt["probe"]["missing"] == []
+    absent = subprocess.run(
+        [
+            str(python),
+            "-I",
+            "-B",
+            "-c",
+            "import importlib.util; assert importlib.util.find_spec('pytest_benchmark') is None",
+        ],
+        capture_output=True,
+        text=True,
+        timeout=30,
+    )
+    assert absent.returncode == 0, absent.stderr
+
+    project = tmp_path / "parallel-project"
+    project.mkdir()
+    (project / "pytest.ini").write_text("[pytest]\n", encoding="utf-8")
+    (project / "test_actual_parallel.py").write_text(
+        "def test_real_file(tmp_path):\n"
+        " path=tmp_path/'value.txt'; path.write_text('actual'); assert path.read_text()=='actual'\n"
+        "def test_real_calculation():\n assert sum(range(8)) == 28\n",
+        encoding="utf-8",
+    )
+    environment = {
+        key: value
+        for key, value in os.environ.items()
+        if not key.startswith(("COV_CORE_", "COVERAGE_", "TEMPLATE_PYTEST_"))
+    }
+    for key in ("PYTEST_PLUGINS", "PYTEST_ADDOPTS", "PYTEST_DISABLE_PLUGIN_AUTOLOAD", "PYTHONPATH", "PYTHONHOME"):
+        environment.pop(key, None)
+    environment["PYTHONDONTWRITEBYTECODE"] = "1"
+    command = [
+        str(python),
+        "-I",
+        "-B",
+        "-m",
+        "pytest",
+        "-c",
+        "pytest.ini",
+        "--no-cov",
+        "-q",
+        *resolve_xdist_args(2, env={}),
+    ]
+    actual = subprocess.run(command, cwd=project, env=environment, capture_output=True, text=True, timeout=60)
+    assert actual.returncode == 0, actual.stdout + actual.stderr
+    assert "2 passed" in actual.stdout
+
+    # Removing a genuine required dependency from only this owned copy still blocks.
+    timeout_metadata = {
+        parent for member in timeout_members for parent in member.parents if parent.name.endswith(".dist-info")
+    }
+    assert timeout_metadata
+    assert all(
+        python.parent.parent in directory.parents
+        and directory.name.lower().replace("_", "-").startswith("pytest-timeout-")
+        and not directory.is_symlink()
+        for directory in timeout_metadata
+    )
+    for member in timeout_members:
+        member.unlink()
+    for directory in timeout_metadata:
+        shutil.rmtree(directory)
+    with pytest.raises(ProjectTestRuntimeError, match="required exact runner stack") as refused:
+        admit_project_test_runtime(tmp_path, interpreter=python)
+    assert refused.value.exit_code == 75
 
 
 @pytest.mark.timeout(90)
