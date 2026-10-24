@@ -240,13 +240,24 @@ jobs:
       - uses: ./.github/actions/setup-acceptance-model
       - name: Complete installed and export matrix
         id: installed
-        run: >-
-          output/runtime-envs/3.14/bin/python -m infrastructure.project.public_acceptance_auxiliary_cli
-          --installed --installed-workers 3
-          --installed-interpreter "3.12=$PWD/output/runtime-envs/3.12/bin/python"
-          --installed-interpreter "3.13=$PWD/output/runtime-envs/3.13/bin/python"
-          --installed-interpreter "3.14=$PWD/output/runtime-envs/3.14/bin/python"
-          --evidence-dir output/readiness/installed
+        shell: bash
+        run: |
+          set -euo pipefail
+          set -o noclobber
+          mkdir -p output/readiness/common-cli-originals
+          original_status=0
+          output/runtime-envs/3.14/bin/python -m infrastructure.project.public_acceptance_auxiliary_cli \
+            --installed --installed-workers 3 \
+            --installed-interpreter "3.12=$PWD/output/runtime-envs/3.12/bin/python" \
+            --installed-interpreter "3.13=$PWD/output/runtime-envs/3.13/bin/python" \
+            --installed-interpreter "3.14=$PWD/output/runtime-envs/3.14/bin/python" \
+            --evidence-dir output/readiness/installed \
+            > output/readiness/common-cli-originals/installed.stdout \
+            2> output/readiness/common-cli-originals/installed.stderr || original_status=$?
+          printf '%s\n' "$original_status" > output/readiness/common-cli-originals/installed.exit-code
+          printf 'Installed/export matrix original exit: %s; receipt: output/readiness/installed/receipt.json\n' "$original_status"
+          sha256sum output/readiness/common-cli-originals/installed.{stdout,stderr,exit-code}
+          exit "$original_status"
       - name: Verify every original installed cell before dependent work
         run: >-
           output/runtime-envs/3.14/bin/python -m infrastructure.reporting.original_job_outcome
@@ -258,7 +269,7 @@ jobs:
             --prepare-runtime-providers --installed-receipt output/readiness/installed/receipt.json \
             > output/readiness/runtime-provider-input.json
           output/runtime-envs/3.14/bin/python - <<'PYTHON'
-          import json, subprocess, sys
+          import hashlib, json, subprocess, sys
           from pathlib import Path
           providers = json.loads(Path("output/readiness/runtime-provider-input.json").read_text())
           wheels = [str(Path.cwd() / binding["path"]) for binding in providers["providers"].values()]
@@ -271,7 +282,20 @@ jobs:
               command += ["--python", f"{minor}={Path.cwd()}/output/runtime-envs/{minor}/bin/python"]
           command += providers["provider_wheel_arguments"]
           command += ["--evidence-dir", "output/readiness/projects"]
-          raise SystemExit(subprocess.run(command, check=False).returncode)
+          originals = Path("output/readiness/common-cli-originals")
+          originals.mkdir(exist_ok=True)
+          stdout, stderr = originals / "runtime.stdout", originals / "runtime.stderr"
+          with stdout.open("xb") as output, stderr.open("xb") as errors:
+              original_status = subprocess.run(command, check=False, stdout=output, stderr=errors).returncode
+          status = originals / "runtime.exit-code"
+          with status.open("x") as output:
+              output.write(f"{original_status}\n")
+          print(f"Runtime matrix original exit: {original_status}; receipt: output/readiness/projects/receipt.json")
+          for path in (stdout, stderr, status):
+              with path.open("rb") as stream:
+                  digest = hashlib.file_digest(stream, "sha256").hexdigest()
+              print(f"{digest}  {path}")
+          raise SystemExit(original_status)
           PYTHON
       - name: Independently admit original Root export before transfer
         id: export_prepare
@@ -349,6 +373,8 @@ jobs:
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
         with:
           name: required-source-common
+          # Retain common-cli-originals/*.stdout, *.stderr and *.exit-code with
+          # the unchanged installed/projects receipts and original member roots.
           path: output/readiness/
           if-no-files-found: error
           retention-days: 1

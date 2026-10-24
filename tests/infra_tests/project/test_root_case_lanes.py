@@ -43,8 +43,7 @@ def _epoch_call(function: Any, *args: Any, **kwargs: Any) -> dict[str, Any]:
                 os.environ[name] = value
 
 
-@pytest.fixture(scope="module")
-def genuine_lane(tmp_path_factory: pytest.TempPathFactory) -> tuple[Path, dict[str, Any], dict[str, Any]]:
+def _genuine_lane_root(tmp_path_factory: pytest.TempPathFactory) -> tuple[Path, dict[str, Any]]:
     root = tmp_path_factory.mktemp("actual-root-lanes").resolve()
     (root / "tests").mkdir()
     (root / "infrastructure/config").mkdir(parents=True)
@@ -172,6 +171,12 @@ def genuine_lane(tmp_path_factory: pytest.TempPathFactory) -> tuple[Path, dict[s
         "tests/test_owned.py::TestLive::test_model",
     }
     assert not (root / "output/readiness/events.txt").exists()
+    return root, census
+
+
+@pytest.fixture(scope="module")
+def genuine_lane(tmp_path_factory: pytest.TempPathFactory) -> tuple[Path, dict[str, Any], dict[str, Any]]:
+    root, census = _genuine_lane_root(tmp_path_factory)
     bundle = _epoch_call(
         produce_root_lane,
         root,
