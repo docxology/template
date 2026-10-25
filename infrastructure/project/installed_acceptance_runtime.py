@@ -144,7 +144,7 @@ def install_runtime(
         providers.append(
             {
                 "scope": scope,
-                "wheel_artifact": write_binary(root, directory / admitted.path.name, admitted.content),
+                "wheel_artifact": dict(wheel_artifact),
                 "targets": admitted.targets,
                 "wheel_members": admitted.members,
                 "package": provider_requirement.package,

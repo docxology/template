@@ -39,7 +39,6 @@ TEST_RUNNER_BASE_DEPS: tuple[str, ...] = (
     "pytest-cov",
     "pytest-timeout",
     "pytest-xdist",
-    "pytest-benchmark",
 )
 MACOS_COVERAGE_XDIST_MAX_WORKERS = 2
 XDIST_DISTRIBUTION = "loadscope"
@@ -285,7 +284,7 @@ def resolve_xdist_args(
     config = resolve_xdist_worker_config(parallel, env=env, strict=strict)
     if config is None:
         return []
-    return ["-n", str(config.workers), "--dist", XDIST_DISTRIBUTION, "--benchmark-disable"]
+    return ["-n", str(config.workers), "--dist", XDIST_DISTRIBUTION]
 
 
 __all__ = [

@@ -59,7 +59,7 @@ This is a research project template with a test-driven development workflow, aut
 
 ### CI mirror (GitHub Actions)
 
-Workflow definitions: [`.github/workflows/ci.yml`](.github/workflows/ci.yml). Job names, matrix (Ubuntu × Python 3.12–3.14 plus macOS × 3.14), coverage floors (infra 60%, project 90%), and local reproduction commands: [`.github/AGENTS.md`](.github/AGENTS.md).
+Fast functional CI is defined in [`.github/workflows/ci.yml`](.github/workflows/ci.yml) and uses Linux/Python 3.14. The optional manual cross-version/full-suite matrix and its coverage gates are defined separately in [`.github/workflows/hardening.yml`](.github/workflows/hardening.yml). Job names, scope and local checks: [`.github/AGENTS.md`](.github/AGENTS.md).
 
 ## Common Commands
 

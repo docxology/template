@@ -174,6 +174,12 @@ eligibility for current acceptance. Exit codes distinguish invalid invocation
 (2), unavailable service/model (75), failed generation/custody (1), and timeout
 (124). Editorial observations do not establish scientific correctness.
 
+The launcher starts the selected interpreter in isolated mode before importing
+project or platform code. The controller and supervised worker therefore use
+the same installed SDK even when the calling environment contains a copied
+checkout on `PYTHONPATH`. Fresh pre-import bytecode, implementation, manuscript,
+and output custody checks remain required.
+
 ## Prerequisites & verification
 
 **Combined-PDF rendering needs headless Chrome.** This manuscript embeds

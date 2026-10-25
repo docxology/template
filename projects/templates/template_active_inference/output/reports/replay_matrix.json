@@ -474,9 +474,9 @@
         "output/reports/blocked_scope_manifest.json": "b1198f578ac61f5f75a1da8eae54fc22d6241ad10023c848b0b94ef11433d022",
         "output/reports/counterexample_matrix.json": "75f80abc1e2c8cb1053f637727b2fd3f161831b6f39e48bec76c399b2df7c3a2",
         "output/reports/model_checking_witnesses.json": "b46a37c57334270ce00fae37b89657b1f2a9bde11dadb5e06aa6a294bcc34eef",
-        "output/reports/release_attestation.json": "5e4ff7429ec12703e6d720e134bad2ddc5ce82d6ce518b4d30e6878624bd8aa7",
-        "output/reports/release_bundle_manifest.json": "ebe5848a48a71a4ec540c7ac9d1260497f5efbbf45cc15c59c7e1b7acf4f11f4",
-        "output/reports/security_posture_audit.json": "e1d689d57097172bdf181a7fd22d85ca4d23d9e470ba528c4daafa3b59183b32",
+        "output/reports/release_attestation.json": "450491f4c1a3712bc4101197b6be27e093df47ec891878ef532760c5bd52d0af",
+        "output/reports/release_bundle_manifest.json": "702e76020aa8ad217db18b74d2943a0643e33aa5b48fc0084de520f33672a4b8",
+        "output/reports/security_posture_audit.json": "7082a59ad4a0c14df5cbcda44d83ca5e511ea9c61f8366a4c5ae0f8e0b6bc373",
         "output/reports/sheaf_render_log.json": "32ba5733e8ea1f5100bf8d263c5695ed4382e16d93b855ba8fc3b8d4d3a846b6"
       },
       "producer_script": "generate_sheaf_tracks.py",

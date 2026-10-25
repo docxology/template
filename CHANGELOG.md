@@ -7,7 +7,7 @@ source and contracts; each exemplar retains its own package and publication
 versions. Confidential and local workspaces outside the canonical public roster
 are excluded.
 
-## [4.1.0] - 2026-10-22
+## [4.1.0]
 
 See the [4.1.0 release-intent notes](docs/releases/v4.1.0.md). Publication requires
 exact-revision hosted acceptance and the authenticated release handoff. The
@@ -52,9 +52,52 @@ root releases.
   vDSO label as an unsupported kernel observation while preserving regular-library
   body checks and separate shared-cache/kernel custody.
 
-Full-roster own-lock measurements, generated counts/provenance, publication
-outputs and hosted acceptance must bind the final 4.1.0 source. Earlier
-eight-project measurements remain historical observations.
+- Recognize complete HTML ClientChallenge responses as blocked provider output;
+  retain original response bytes and use the existing licensed full-text fallback.
+- Give Meta workflow nodes unique positional IDs while retaining strict dependency
+  and quote checks. Build the genuine Meta provider wheel from an independent
+  project copy with the locked Root backend, preserving the held source checkout.
+- Select Prose's installed SDK in an isolated interpreter before its pre-import
+  audit. Support explicit external Formal receipt destinations with readable final
+  parents and held no-follow traversal. Keep default Registered figures and their
+  registry under `output/` while preserving manuscript source images.
+
+- Keep acceptance startup bytecode out of the selected runtime until its fresh
+  private cache is admitted, preserving Source-code audits and exact auxiliary
+  payload readback.
+
+- Remove Active Inference's unused `pytest-benchmark` dependency and storage
+  option so discovery does not refresh the held Git index. Reuse the genuinely
+  settled baseline in changed/missing fixed-point controls while retaining both
+  regeneration branches, physical composition checks and strict validators.
+
+- Require the core prepared test-runner stack without requiring unused benchmark
+  tooling. Shared parallel commands omit the optional benchmark flag while
+  preserving explicitly selected benchmark dependencies and behavior.
+- Honor exact core runner versions from each project's own lock, retaining exact
+  workspace supplements for undeclared core packages. Refuse malformed or ambiguous
+  locks and version conflicts. Suppress isolated startup bytecode in provider
+  probes and test children while retaining the admitted private source cache audit.
+
+All 25 public exemplars require coverage evidence bound to current measurement
+inputs and their own locked environments. Rerun changed gates with the declared
+profiles; retain unchanged original measurements and their provenance. Derive
+counts through the declared collection APIs, renew coupled publication evidence
+after final source changes, and retain original revisions and failed outcomes.
+Exact-source hosted acceptance and the authenticated release handoff remain
+required.
+
+- Avoid discarded positive Root lane executions while retaining genuine fixture,
+  cohort and lifecycle controls. Dispatch historically longer contracts first
+  without changing canonical shard IDs, module membership or deadlines.
+- Retain complete required CLI stdout, stderr and original exit codes as artifacts
+  beside their receipts; original failures still fail their workflow steps.
+- Reuse original provider-wheel artifact bindings while retaining fresh private
+  wheel copies, separate consumer installations and isolated probes. Refuse
+  changed original provider artifacts through the existing evidence readers.
+- Preserve the byte-pinned vendored font decoder with one exact EOF-hook exception.
+  Keep generated local statistics and Markdown validation summaries ignored rather
+  than tracked with canonical publication artifacts.
 
 ## [4.0.2] - 2026-10-15
 

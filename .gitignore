@@ -292,6 +292,9 @@ projects/templates/*/output/reports/pipeline_report.html
 projects/templates/*/output/reports/pipeline_report.json
 projects/templates/*/output/reports/pipeline_report.md
 projects/templates/*/output/reports/render_summary.txt
+projects/templates/*/output/reports/output_statistics.json
+projects/templates/*/output/reports/output_statistics.txt
+projects/templates/*/output/reports/validation_report.md
 projects/templates/*/output/reports/telemetry.json
 projects/templates/*/output/reports/telemetry.txt
 # Structured diagnostics are local validator telemetry, not publication

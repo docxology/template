@@ -1,5 +1,12 @@
 # Project Management - Quick Reference
 
+Audited acceptance launchers suppress bytecode writes during isolated Python
+startup (`-IB`), including genuine `.pth` imports before the worker body. The
+existing Source audit enables writes only after validating its fresh private
+cache prefix. Public imports still require executed-source and cache-byte
+verification; selected runtime entries remain read-only. Payload preparation
+and portable readback preserve the same exact startup flags and body positions.
+
 Project discovery, validation, and metadata extraction for multi-project support.
 
 Darwin auxiliary print acceptance uses `auxiliary_print_code.py` for the fixed

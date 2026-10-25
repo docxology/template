@@ -108,7 +108,7 @@ def prepare_audited_auxiliary_command(
         root / name for name in ("infrastructure", "scripts", "tests", "projects") if (root / name).exists()
     )
     payload = write_acceptance_payload(directory, directory / PAYLOAD, body, forbidden_roots=forbidden)
-    return [str(interpreter), "-I", "-c", format_acceptance_payload_loader(payload), *tail], payload
+    return [str(interpreter), "-IB", "-c", format_acceptance_payload_loader(payload), *tail], payload
 
 
 def validate_audited_auxiliary_command(
@@ -142,6 +142,6 @@ def validate_audited_auxiliary_command(
             raise ValueError("retained auxiliary bootstrap artifact changed")
     if observed.content != body:
         raise ValueError("auxiliary bootstrap differs from exact current Source hook/template/roots")
-    expected = [str(interpreter), "-I", "-c", format_acceptance_payload_loader(payload), *tail]
+    expected = [str(interpreter), "-IB", "-c", format_acceptance_payload_loader(payload), *tail]
     if process.get("command") != expected:
         raise ValueError("auxiliary command differs from its exact Source-derived audited bootstrap")

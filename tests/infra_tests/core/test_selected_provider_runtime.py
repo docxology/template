@@ -66,7 +66,7 @@ def test_real_selected_only_provider_is_audited(tmp_path: Path, corrupt: bool, l
     if corrupt:
         assert "custody refused" in result.stderr
     else:
-        assert str(provider) in command[3]
+        assert str(provider) in command[4]
 
 
 @pytest.mark.timeout(120)

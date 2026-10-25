@@ -48,8 +48,8 @@ def _validate_registry(
     return not issues, issues
 
 
-def _load_script_module() -> ModuleType:
-    spec = importlib.util.spec_from_file_location("registered_report_generate_figures", SCRIPT)
+def _load_script_module(script: Path = SCRIPT) -> ModuleType:
+    spec = importlib.util.spec_from_file_location("registered_report_generate_figures", script)
     assert spec is not None and spec.loader is not None
     module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)
@@ -176,3 +176,65 @@ def test_validator_rejects_deleted_registered_figure(tmp_path: Path) -> None:
 
     assert not ok
     assert issues == ["Registered generated figure file is missing for fig:deviation_timeline: deviation_timeline.png"]
+
+
+def test_default_generation_preserves_manuscript_sources_and_publishes_real_figures(tmp_path: Path) -> None:
+    project, registration = _copy_project_inputs(tmp_path)
+    scripts = project / "scripts"
+    scripts.mkdir()
+    copied_script = scripts / SCRIPT.name
+    shutil.copy2(SCRIPT, copied_script)
+    shutil.copytree(PROJECT_ROOT / "src", project / "src", ignore=shutil.ignore_patterns("__pycache__"))
+    module = _load_script_module(copied_script)
+
+    # The copied committed PNGs and registration are admitted input bytes. A
+    # normal producer may publish actual current figures only under output/.
+    sources = [registration, *sorted((project / "manuscript").rglob("*"))]
+    sources = [path for path in sources if path.is_file()]
+    before = {
+        path.relative_to(project): (
+            path.read_bytes(),
+            path.stat().st_dev,
+            path.stat().st_ino,
+            path.stat().st_mode,
+            path.stat().st_size,
+            path.stat().st_mtime_ns,
+            path.stat().st_ctime_ns,
+        )
+        for path in sources
+    }
+    output = project / "output"
+    assert (
+        module.main(
+            [
+                "--registration",
+                str(registration),
+                "--output-figures-dir",
+                str(output / "figures"),
+                "--data-dir",
+                str(output / "data"),
+            ]
+        )
+        == 0
+    )
+    after = {
+        path.relative_to(project): (
+            path.read_bytes(),
+            path.stat().st_dev,
+            path.stat().st_ino,
+            path.stat().st_mode,
+            path.stat().st_size,
+            path.stat().st_mtime_ns,
+            path.stat().st_ctime_ns,
+        )
+        for path in sources
+    }
+    assert after == before
+    for filename in ("hypothesis_map.png", "analysis_dag.png", "deviation_timeline.png", "permutation_result.png"):
+        assert (output / "figures" / filename).read_bytes().startswith(b"\x89PNG\r\n\x1a\n")
+    registry = output / "figures" / "figure_registry.json"
+    ok, issues = _validate_registry(registry, project / "manuscript", require_accessibility=True)
+    assert ok, issues
+    assert len(json.loads(registry.read_text())["figures"]) == 4
+    summary = json.loads((output / "data" / "demo_analysis.json").read_text())
+    assert summary["significant"] is True

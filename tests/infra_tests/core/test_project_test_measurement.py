@@ -62,6 +62,7 @@ def _original(root: Path, fault: str = "none"):
     cmd = [
         sys.executable,
         "-I",
+        "-B",
         "-c",
         bootstrap,
         "tests",

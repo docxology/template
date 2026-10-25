@@ -272,7 +272,10 @@ def bootstrap_command(
         + " sys.path.insert(0,sys.argv.pop(1))\n"
         + " runpy.run_module(sys.argv.pop(1),run_name='__main__')\n"
     )
-    return str(interpreter), "-I", "-c", bootstrap, str(root), module, *args
+    # Suppress writes during .pth/site startup, before the private prefix exists.
+    # The existing audit enables writes only after admitting that fresh prefix.
+    # Combined flags retain the fixed body/tail positions used by payload readers.
+    return str(interpreter), "-IB", "-c", bootstrap, str(root), module, *args
 
 
 def verify_runtime_execution(project: Path, *, root: Path | None = None, scope: str | None = None) -> None:

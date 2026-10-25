@@ -88,7 +88,7 @@ Pick the entry that matches your goal — each link is stable for deep navigatio
 | **Manuscript / PDF / citations** | [`docs/guides/manuscript-semantics.md`](../docs/guides/manuscript-semantics.md) | [`docs/prompts/manuscript-cross-references/SKILL.md`](../docs/prompts/manuscript-cross-references/SKILL.md) |
 | **Published exemplars / tracked outputs** | [`docs/_generated/publication_records.md`](../docs/_generated/publication_records.md) | [`docs/guides/publishing-guide.md#public-exemplar-release`](../docs/guides/publishing-guide.md#public-exemplar-release) |
 | **Contribute / open a PR** | [CI/CD](#cicd) · [Issue & PR templates](#issue--pr-templates) | [`docs/development/contributing.md`](../docs/development/contributing.md) · [`docs/development/contribution-map.md`](../docs/development/contribution-map.md) |
-| **Mirror CI locally** | [Simulate CI locally](#simulate-ci-locally) | [`docs/maintenance/ci-local.md`](../docs/maintenance/ci-local.md) · [`scripts/shell/ci_local.sh`](../scripts/shell/ci_local.sh) |
+| **Local CI and diagnostics** | [Selected local checks](#selected-local-checks) | [`docs/maintenance/ci-local.md`](../docs/maintenance/ci-local.md) · [`scripts/shell/ci_local.sh`](../scripts/shell/ci_local.sh) |
 | **Cloud / headless deploy** | [`docs/CLOUD_DEPLOY.md`](../docs/CLOUD_DEPLOY.md) | [`infrastructure/docker/`](../infrastructure/docker/) |
 | **Repurpose architectures** | [`docs/repurposing-architectures.md`](../docs/repurposing-architectures.md) | [`architecture/two-layer-architecture.md`](../docs/architecture/two-layer-architecture.md) · [`architecture/capability-surfaces.md`](../docs/architecture/capability-surfaces.md) |
 | **Full system reference** | [`../AGENTS.md`](../AGENTS.md) | [`docs/documentation-index.md`](../docs/documentation-index.md) |
@@ -942,7 +942,7 @@ The repo-wide `permissions:` is `contents: read`; every job re-declares its own 
 
 **Required status checks** for branch protection on `main` are documented in [`AGENTS.md`](AGENTS.md) (the conditional jobs `setup-hook-windows-smoke` / `fep-lean` must NOT be required — they are skipped, not failed, when their project is absent). Reproduce every gate locally with the commands in [`AGENTS.md`](AGENTS.md) → "Local CI parity" and the root [`CLAUDE.md`](../CLAUDE.md) Quick Reference.
 
-### CI Job Flow
+### Selected Optional Hardening Dependencies (`hardening.yml`)
 
 ```mermaid
 flowchart TB
@@ -961,11 +961,7 @@ flowchart TB
     VM[validate manuscripts]
     SS[security scan]
     DL[docs lint]
-    PC[performance — informational]
-    L --> H
-    L --> VM
-    L --> SS
-    L --> DL
+    PC[performance — import and resource checks]
     VNM --> TI
     VNM --> TR
     VNM --> TP
@@ -973,14 +969,14 @@ flowchart TB
     VNM --> FL
     D -. setup_hook .-> SH
     D -. fep_lean .-> FL
+    DP --> TI
     DP --> TP
     TI --> IC
-    TP --> PC
 ```
 
 See [`workflows/AGENTS.md`](workflows/AGENTS.md) for step-level detail (`pip-audit` ignore file, `bandit.yaml`, `stage_01_test.py`).
 
-### Quality Gates
+### Optional Hardening Quality Gates
 
 | Gate | Tool | Threshold |
 | --- | --- | :---: |
@@ -996,24 +992,24 @@ See [`workflows/AGENTS.md`](workflows/AGENTS.md) for step-level detail (`pip-aud
 | Docs lint | `scripts/audit/lint_docs.py` | Mermaid, links, consistency, and doc pairs clean |
 | Performance | import timer | **≤ 5 s** |
 
-### Simulate CI Locally
+### Selected Local Checks
 
 **One command (act + fallback):** [`scripts/shell/ci_local.sh`](../scripts/shell/ci_local.sh) — see [`docs/maintenance/ci-local.md`](../docs/maintenance/ci-local.md).
 
 ```bash
-# Lint + format check (mirror CI)
+# Lint + format checks over the generated public scope
 uv run python -m infrastructure.project.public_scope lint-paths | xargs uv run ruff check
 uv run python -m infrastructure.project.public_scope lint-paths | xargs uv run ruff format --check
 uv run python -m infrastructure.project.public_scope source-paths | xargs uv run mypy
 
-# Tests (skip Ollama-requiring tests)
+# Local coverage diagnostics (not the functional smoke or complete hosted matrix)
 uv run pytest tests/infra_tests/ --cov=infrastructure --cov-fail-under=60 -m "not requires_ollama"
 uv sync
 npm ci
 export PATH="$PWD/node_modules/.bin:$PATH"
 COVERAGE_FILE=.coverage.project uv run python scripts/pipeline/stage_01_test.py --project-only --all-projects --public-projects --non-strict --include-slow
 
-# Security (mirror CI)
+# Local installed-environment security diagnostic; not the frozen export audit
 IGNORE_ARGS=()
 while IFS= read -r raw || [ -n "$raw" ]; do
   [[ "$raw" =~ ^[[:space:]]*# ]] && continue
@@ -1021,6 +1017,8 @@ while IFS= read -r raw || [ -n "$raw" ]; do
   [ -z "$line" ] || IGNORE_ARGS+=(--ignore-vuln "$line")
 done < .github/pip-audit-ignore.txt
 uv run pip-audit "${IGNORE_ARGS[@]}"
+# Hardening instead audits frozen root + every canonical public-project export,
+# using --requirement, --no-deps and --disable-pip; see workflows/hardening.yml.
 uv run bandit -c bandit.yaml -r -ll infrastructure/ scripts/ projects/
 
 # Pre-push hook bundle (fast local gate)
@@ -1035,8 +1033,9 @@ enabled, force pushes disabled, and `strict: false`. GitHub currently has no
 required PR-approval or CODEOWNERS-approval rule and reported no additional
 branch rulesets. Recheck these external settings before integration.
 
-`CI Gate` requires every fast functional job in [`workflows/ci.yml`](workflows/ci.yml)
-to succeed. The manual full matrix reports a distinct `Hardening Gate`. Verify its
+`CI Gate` requires all six always-required functional jobs in
+[`workflows/ci.yml`](workflows/ci.yml) to succeed. Requested exemplar coverage must
+succeed when requested by manual input and must be skipped otherwise. The manual full matrix reports a distinct `Hardening Gate`. Verify its
 success for the exact candidate commit before updating `main`. Complete root 4+
 release acceptance remains a separate handoff. [`CODEOWNERS`](CODEOWNERS) routes
 reviews, while the repository's sensitive-area review obligations remain in

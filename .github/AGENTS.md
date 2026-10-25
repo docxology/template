@@ -131,7 +131,7 @@ in a job `if:` and rejects the whole workflow at parse). 2 further jobs
 | 5 | `health` | Static Health Report | — | 3.14 | ubuntu |
 | 6 | `verify-no-mocks` | Verify No Mocks Policy | — (parallel with `lint`) | 3.14 | ubuntu |
 | 7 | `setup-hook-windows-smoke` | Setup hook (Windows smoke) | verify-no-mocks, detect | 3.14 | windows · runs iff `needs.detect.outputs.setup_hook == 'true'` |
-| 8 | `test-infra` | Infra Tests (matrix) | verify-no-mocks, detect-projects | 3.12–3.14 | ubuntu (×3.12/3.13/3.14) + macOS (3.14 only) — four complete shards per pair, 16 cells on every event; dynamic `infra_matrix` output from `detect-projects` |
+| 8 | `test-infra` | Infra Tests (matrix) | verify-no-mocks, detect-projects | 3.12–3.14 | ubuntu (×3.12/3.13/3.14) + macOS (3.14 only) — four complete shards per pair, 16 cells per manual run; dynamic `infra_matrix` output from `detect-projects` |
 | 9 | `test-regression` | Regression Tier (claim-binding pins) | verify-no-mocks | 3.14 | ubuntu |
 | 10 | `test-project` | Project Tests (per-project matrix) | verify-no-mocks, detect-projects | capability-manifest versions | ubuntu only — exact project/Python include matrix from `public_capabilities.py` |
 | 11 | `fep-lean` | fep_lean (gauss + lake) | verify-no-mocks, detect | 3.14 | ubuntu · runs iff `needs.detect.outputs.fep_lean == 'true'` |
@@ -139,8 +139,8 @@ in a job `if:` and rejects the whole workflow at parse). 2 further jobs
 | 13 | `security` | Security Scan | — | 3.14 | ubuntu |
 | 14 | `docs-lint` | Documentation Lint | — | 3.14 | ubuntu |
 | 15 | `performance` | Performance Check | — (no `needs:`; CI-FAST-PERF-1) | 3.14 | ubuntu |
-| 16 | `public-matrix-receipt` | Public Matrix Receipt (receipt-bearing full matrix) | — | 3.14 | ubuntu · schedule/manual only |
-| 17 | `test-infra-slow` | Infra Slow Lane (`pytest.mark.slow`) | verify-no-mocks | 3.14 | ubuntu · schedule/manual only — exercises the slow-marked suite PR lanes deselect |
+| 16 | `public-matrix-receipt` | Public Matrix Receipt (receipt-bearing full matrix) | — | 3.14 | ubuntu · manual only |
+| 17 | `test-infra-slow` | Infra Slow Lane (`pytest.mark.slow`) | verify-no-mocks | 3.14 | ubuntu · manual only — exercises the slow-marked suite PR lanes deselect |
 | 18 | `test-integration` | Integration Tier (run.sh + pipeline CLI) | verify-no-mocks | 3.14 | ubuntu — runs the registered `tests/integration/` suite on manual full-suite runs |
 | 19 | `coverage-infra` | Infrastructure Union Coverage | test-infra | 3.14 | ubuntu · validates all four transferred selections/data hashes and requires ≥60% union coverage |
 | 20 | `ci-gate` | Hardening Gate | all 19 upstream jobs (`if: always()`) | — | ubuntu · aggregation — fails if any upstream job failed or was cancelled; skipped counts as intentional |
@@ -250,7 +250,7 @@ does not promote older coverage measurements to a current claim. Release's
 exact-source acceptance and coverage custody requirements remain separate and
 unchanged.
 
-The lint job also runs the deterministic source-only publication audit across
+The optional hardening lint job also runs the deterministic source-only publication audit across
 the generated public roster:
 
 ```bash
@@ -286,8 +286,9 @@ were reported. These are observed settings; recheck the external control before
 integration rather than treating this snapshot as permanent configuration.
 
 [`workflows/ci.yml`](workflows/ci.yml) defines `CI Gate` as the aggregate of
-all fast functional jobs. Every one must succeed; missing, skipped, failed or
-cancelled results are refused. The manual full matrix has a separate
+the six always-required functional jobs; each must succeed. The optional
+`own-exemplar-coverage` job must succeed when manual coverage is requested and
+must be skipped otherwise. Missing, failed or cancelled required results are refused. The manual full matrix has a separate
 `Hardening Gate` in `hardening.yml`. Before updating
 `main`, verify a successful `CI Gate` for the exact candidate commit. An older
 successful main run does not establish acceptance for a new revision. CI success
@@ -319,7 +320,7 @@ See [`ISSUE_TEMPLATE/AGENTS.md`](ISSUE_TEMPLATE/AGENTS.md) for local editing rul
 uv run python -m infrastructure.project.public_scope lint-paths | xargs uv run ruff check --fix
 uv run python -m infrastructure.project.public_scope lint-paths | xargs uv run ruff format
 
-# Run tests locally (safe macOS coverage lane; CI uses auto on Linux)
+# Local coverage diagnostic (not the functional smoke or full hosted matrix)
 uv sync --locked --group public-exemplars --group installed-build
 # Prepare Poppler explicitly: brew install poppler (macOS), or
 # sudo apt-get install poppler-utils (Linux).
@@ -334,10 +335,12 @@ uv sync --group public-exemplars
 COVERAGE_FILE=.coverage.project uv run python scripts/pipeline/stage_01_test.py --project-only --all-projects --public-projects --non-strict --include-slow
 uv run coverage xml -o coverage-project.xml
 
-# Security scan locally (mirror CI)
+# Local installed-environment security diagnostic; not the frozen export audit
 IGNORE_ARGS=()
 while IFS= read -r raw; do [[ "$raw" =~ ^[[:space:]]*# ]] && continue; line="${raw%%#*}"; line="$(echo "$line" | xargs)"; [ -z "$line" ] || IGNORE_ARGS+=(--ignore-vuln "$line"); done < .github/pip-audit-ignore.txt
 uv run pip-audit "${IGNORE_ARGS[@]}"
+# Hardening instead audits frozen root + every canonical public-project export,
+# using --requirement, --no-deps and --disable-pip; see workflows/hardening.yml.
 uv run bandit -c bandit.yaml -r -ll infrastructure/ scripts/ projects/
 # Module line count (also in `uv run python -m infrastructure.core.health --gates=module-line-count`):
 uv run python scripts/gates/module_line_count_check.py

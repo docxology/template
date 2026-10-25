@@ -2,10 +2,16 @@
 
 from __future__ import annotations
 
+import hashlib
 import json
 import os
 import py_compile
+import shutil
+import stat
+import subprocess
 import sys
+import sysconfig
+import venv
 from pathlib import Path
 from dataclasses import asdict
 
@@ -134,6 +140,7 @@ def test_fresh_bootstrap_cannot_consume_valid_timestamp_poisoned_source_cache(tm
     ordinary = (
         sys.executable,
         "-I",
+        "-B",
         "-c",
         "import sys;sys.path.insert(0,sys.argv[1]);import scientific_model",
         str(tmp_path),
@@ -315,7 +322,13 @@ def test_bare_real_environment_records_missing_test_tools_without_installing(tmp
     result = run_project_test_matrix(
         [
             ProjectTestTask(
-                0, "bare-env", (sys.executable, "-m", "venv", "--without-pip", str(env_path)), tmp_path, {}, 30, True
+                0,
+                "bare-env",
+                (sys.executable, "-B", "-m", "venv", "--without-pip", str(env_path)),
+                tmp_path,
+                {},
+                30,
+                True,
             )
         ],
         workers=1,
@@ -415,3 +428,107 @@ def test_bootstrap_preserves_selected_sdk_before_public_checkout_shadow(tmp_path
     assert result.returncode == 0 and not result.timed_out, result.output_tail
     assert observed.read_text() == str(selected)
     assert not marker.exists(), "an unadmitted SDK must not execute before refusal"
+
+
+def test_cold_startup_keeps_real_runtime_readonly_and_audits_private_source_cache(tmp_path: Path) -> None:
+    """Real site startup imports genuine stdlib Source without mutating a cold venv."""
+    import infrastructure
+
+    environment = tmp_path / "cold-runtime"
+    venv.EnvBuilder(with_pip=False).create(environment)
+    selected = environment / ("Scripts/python.exe" if os.name == "nt" else "bin/python")
+    located = subprocess.run(
+        [str(selected), "-I", "-B", "-c", "import sysconfig;print(sysconfig.get_path('purelib'))"],
+        capture_output=True,
+        text=True,
+        timeout=15,
+        check=False,
+    )
+    assert located.returncode == 0, located.stderr
+    site = Path(located.stdout.strip()).resolve(strict=True)
+    assert site.is_relative_to(environment.resolve(strict=True))
+    # Use a guaranteed real CPython stdlib body under an owned startup-module
+    # name. This genuine .pth import needs no optional installed build provider,
+    # fake SDK, package acquisition, or copy of an already warm bytecode cache.
+    source = Path(sysconfig.get_path("stdlib")).resolve(strict=True) / "colorsys.py"
+    assert source.is_file()
+    startup_module = site / "_template_owned_startup.py"
+    shutil.copyfile(source, startup_module)
+    assert startup_module.read_bytes() == source.read_bytes()
+    (site / "template-owned-stdlib-startup.pth").write_text("import _template_owned_startup\n", encoding="utf-8")
+    assert not any(site.rglob("*.pyc"))
+    (tmp_path / "startup-provider.json").write_text(
+        json.dumps(
+            {
+                "original": str(source),
+                "copied": str(startup_module),
+                "sha256": hashlib.sha256(source.read_bytes()).hexdigest(),
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    def runtime_physical() -> dict[str, dict[str, object]]:
+        rows: dict[str, dict[str, object]] = {}
+        pending = [environment]
+        while pending:
+            path = pending.pop()
+            info = path.lstat()
+            row: dict[str, object] = {
+                name.removeprefix("st_"): getattr(info, name)
+                for name in (
+                    "st_dev",
+                    "st_ino",
+                    "st_mode",
+                    "st_size",
+                    "st_mtime_ns",
+                    "st_ctime_ns",
+                    "st_uid",
+                    "st_gid",
+                    "st_nlink",
+                )
+            }
+            if stat.S_ISREG(info.st_mode):
+                row["sha256"] = hashlib.sha256(path.read_bytes()).hexdigest()
+            elif stat.S_ISLNK(info.st_mode):
+                row["target"] = os.readlink(path)
+            else:
+                assert stat.S_ISDIR(info.st_mode)
+                pending.extend(sorted(path.iterdir()))
+            rows[path.relative_to(environment).as_posix()] = row
+        return rows
+
+    prefix = tmp_path / "private-bytecode"
+    prefix.mkdir(mode=0o700)
+    selected_sdk = Path(infrastructure.__file__).absolute().parent
+    (tmp_path / "probe.py").write_text(
+        "import sys\nfrom pathlib import Path\nimport infrastructure\n"
+        "from infrastructure.core.implementation_custody import verify_fresh_module_bytecode\n"
+        "assert sys.flags.isolated and sys.flags.dont_write_bytecode\n"
+        "assert not sys.dont_write_bytecode\n"
+        "assert '_template_owned_startup' in sys.modules\n"
+        "startup=sys.modules['_template_owned_startup']\n"
+        f"assert Path(startup.__file__).absolute()==Path({str(startup_module)!r})\n"
+        "assert startup.rgb_to_hsv(1,0,0)==(0,1,1)\n"
+        f"assert Path(infrastructure.__file__).absolute().parent==Path({str(selected_sdk)!r})\n"
+        f"assert sys.pycache_prefix=={str(prefix)!r}\n"
+        "verify_fresh_module_bytecode(Path(infrastructure.__file__).parent,Path(sys.pycache_prefix))\n"
+        "print('actual cold startup and fresh Source audit passed')\n",
+        encoding="utf-8",
+    )
+    command = bootstrap_command(selected, tmp_path, "probe", fresh_pycache_prefix=prefix)
+    env = cell_environment(selected, tmp_path / "evidence")
+    before = runtime_physical()
+    (tmp_path / "runtime-before.json").write_text(json.dumps(before, sort_keys=True), encoding="utf-8")
+    try:
+        original = subprocess.run(
+            command, cwd=tmp_path, env=env, capture_output=True, text=True, timeout=30, check=False
+        )
+    finally:
+        after = runtime_physical()
+        (tmp_path / "runtime-after.json").write_text(json.dumps(after, sort_keys=True), encoding="utf-8")
+    assert original.returncode == 0, original.stderr
+    assert original.stdout.strip() == "actual cold startup and fresh Source audit passed"
+    assert after == before, "a cold startup must preserve every owned runtime entry, body and physical identity"
+    assert not any(site.rglob("*.pyc"))
+    assert any(prefix.rglob("*.pyc")), "public imports still require actual audited private cache bytes"

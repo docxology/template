@@ -93,11 +93,11 @@ def execute(
             raise MissingAuxiliaryProvider("macOS process acceptance requires an actual Darwin host")
         # Verify ordinary exit transport and a real OS timeout, rather than
         # deriving platform acceptance from uname or a structural marker.
-        child = subprocess.run([sys.executable, "-I", "-c", "raise SystemExit(19)"], check=False, timeout=5)
+        child = subprocess.run([sys.executable, "-I", "-B", "-c", "raise SystemExit(19)"], check=False, timeout=5)
         if child.returncode != 19:
             raise ValueError("actual process exit transport changed")
         try:
-            subprocess.run([sys.executable, "-I", "-c", "import time; time.sleep(30)"], check=False, timeout=0.2)
+            subprocess.run([sys.executable, "-I", "-B", "-c", "import time; time.sleep(30)"], check=False, timeout=0.2)
         except subprocess.TimeoutExpired:
             result = {"platform": "macos", "assertions": {"exit_transport": True, "real_timeout": True}}
             if directory is not None:
@@ -107,9 +107,10 @@ def execute(
                 command = [
                     sys.executable,
                     "-I",
+                    "-B",
                     "-c",
                     "import subprocess,sys,time; "
-                    "p=subprocess.Popen([sys.executable,'-I','-c','import time; time.sleep(30)']); "
+                    "p=subprocess.Popen([sys.executable,'-I','-B','-c','import time; time.sleep(30)']); "
                     "print(p.pid,flush=True); time.sleep(30)",
                 ]
                 # This intentional timeout must first admit Source and ARM the
@@ -235,7 +236,7 @@ def negative_control(root: Path, gate: str) -> int:
         )
         return 23 if child.returncode != 0 else 0
     if gate == "root:macos:process":
-        child = subprocess.run([sys.executable, "-I", "-c", "raise SystemExit(23)"], timeout=5, check=False)
+        child = subprocess.run([sys.executable, "-I", "-B", "-c", "raise SystemExit(23)"], timeout=5, check=False)
         return child.returncode
     scope = gate.split(":", 1)[0]
     from infrastructure.project.public_acceptance_auxiliary_native import project_module

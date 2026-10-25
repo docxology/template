@@ -62,7 +62,14 @@ def _probe_runtime(
             "command": [],
         }
     executable = interpreter.absolute()  # resolve() would discard a virtual environment's identity.
-    command = (str(executable), "-I", "-c", RUNTIME_PROBE_SCRIPT, json.dumps([*TEST_RUNNER_BASE_DEPS, "coverage"]))
+    command = (
+        str(executable),
+        "-I",
+        "-B",
+        "-c",
+        RUNTIME_PROBE_SCRIPT,
+        json.dumps([*TEST_RUNNER_BASE_DEPS, "coverage"]),
+    )
     task = ProjectTestTask(
         0, f"runtime-{runtime}", command, root, cell_environment(executable, directory, repo_root=root), 60, True
     )

@@ -38,7 +38,7 @@ pytestmark = [pytest.mark.slow, pytest.mark.timeout(2400)]
 
 @pytest.fixture(scope="module")
 def genuine_runtime(tmp_path_factory: pytest.TempPathFactory) -> tuple[Path, dict[str, Any], dict[str, Any]]:
-    root, _, _ = lane_controls.genuine_lane.__wrapped__(tmp_path_factory)
+    root, _ = lane_controls._genuine_lane_root(tmp_path_factory)
     probe = _probe_runtime(
         root,
         root / "output/readiness/runtime-probe",
@@ -46,7 +46,8 @@ def genuine_runtime(tmp_path_factory: pytest.TempPathFactory) -> tuple[Path, dic
         Path(sys.executable),
     )
     assert probe["status"] == "pass", probe
-    before = (root / "output/readiness/events.txt").read_bytes()
+    events = root / "output/readiness/events.txt"
+    assert not events.exists()
     produced = lane_controls._epoch_call(
         produce_runtime_cohort,
         root,
@@ -61,11 +62,15 @@ def genuine_runtime(tmp_path_factory: pytest.TempPathFactory) -> tuple[Path, dic
     observed = read_runtime_cohort(SnapshotReader(root), produced["bundle"])
     assert observed["passed_counts"] == {"core": 2}
     assert observed["selected_units"] == ["core"]
-    assert (root / "output/readiness/events.txt").read_bytes()[len(before) :].decode().splitlines() == [
-        "setup",
-        "call",
-        "teardown",
-    ] * 2
+    assert (
+        events.read_text().splitlines()
+        == [
+            "setup",
+            "call",
+            "teardown",
+        ]
+        * 2
+    )
     assert not (root / "output/readiness/live-body").exists()
     return root, produced, probe
 
@@ -442,7 +447,7 @@ def test_rehashed_actual_raw_probe_must_match_true_original_selected_runtime(
 def test_whole_root_case_api_refuses_replacement_without_new_gate_probe_or_receipt_writes(
     tmp_path_factory: pytest.TempPathFactory,
 ) -> None:
-    root, _, _ = lane_controls.genuine_lane.__wrapped__(tmp_path_factory)
+    root, _ = lane_controls._genuine_lane_root(tmp_path_factory)
     source = Path(__file__).resolve().parents[3]
     # This is an explicitly partial owned Root fixture. Its metadata inputs are
     # exact copies of the selected public platform and exemplar declarations;
@@ -512,7 +517,7 @@ def test_whole_root_case_api_refuses_replacement_without_new_gate_probe_or_recei
 def test_real_blocked_unit_then_original_executed_guard_failure_precedes_unavailable(
     tmp_path_factory: pytest.TempPathFactory,
 ) -> None:
-    root, _, _ = lane_controls.genuine_lane.__wrapped__(tmp_path_factory)
+    root, _ = lane_controls._genuine_lane_root(tmp_path_factory)
     policy_path = root / "infrastructure/config/root-case-policy.json"
     prerequisite_path = root / "infrastructure/config/root-case-prerequisites.json"
     policy = json.loads(policy_path.read_bytes())
@@ -602,6 +607,7 @@ raise SystemExit(code)
             [
                 sys.executable,
                 "-I",
+                "-B",
                 "-c",
                 program,
                 str(cache),

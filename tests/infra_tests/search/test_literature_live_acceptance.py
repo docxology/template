@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import hashlib
 import io
 import json
 from datetime import date
@@ -430,6 +431,52 @@ def test_real_http_error_retains_diagnostics_and_is_blocked(tmp_path, httpserver
         extract_pdf_text(invalid_run, invalid_run.directory / "not_pdf/body.bin", DOI, "invalid_pdf")
     invalid_execution = json.loads((invalid_run.directory / "invalid_pdf/execution.json").read_text())
     assert invalid_execution["returncode"] == 1 and "not a PDF" in invalid_execution["stdout"]
+
+
+@pytest.mark.parametrize("missing", [None, "title", "script", "noscript", "disabled", "proceed", "html_media_type"])
+def test_client_challenge_requires_complete_signature_and_html_media_type(tmp_path, httpserver, missing):
+    # Exact external HTML retained after a Nature PDF request, replayed as DATA;
+    # this controlled request is not external-provider acceptance.
+    challenge = (Path(__file__).resolve().parents[2] / "fixtures/literature-client-challenge.txt").read_bytes()
+    assert len(challenge) == 3038
+    assert hashlib.sha256(challenge).hexdigest() == "32ed63159c77e21ee19ca1b9aa3213ccf0218eb59539560b132a8e68ef0e18ea"
+    markers = {
+        "title": b"<title>Client Challenge</title>",
+        "script": b"/_fs-ch-1T1wmsGaOgGaSxcX/script.js?reload=true",
+        "noscript": b"<noscript>",
+        "disabled": b"JavaScript is disabled in your browser.",
+        "proceed": b"Please enable JavaScript to proceed.",
+    }
+    if missing in markers:
+        assert challenge.count(markers[missing]) == 1
+        challenge = challenge.replace(markers[missing], b"omitted controlled marker")
+    media_type = "application/octet-stream" if missing == "html_media_type" else "text/html; charset=utf-8"
+    httpserver.expect_request("/client-challenge").respond_with_data(
+        challenge, content_type=media_type, headers={"X-Controlled-Challenge": "retained-body-replay"}
+    )
+    run = session(tmp_path)
+    if missing is None:
+        with pytest.raises(LiteratureBlocked, match="unpaid worker unavailable"):
+            fetch_bytes(run, httpserver.url_for("/client-challenge"), "challenge", allow_loopback=True)
+    else:
+        received, metadata = fetch_bytes(run, httpserver.url_for("/client-challenge"), "challenge", allow_loopback=True)
+        assert received == challenge and metadata["status"] == "passed"
+        with pytest.raises(LiteratureFailed, match="unpaid worker failed"):
+            extract_pdf_text(run, run.directory / "challenge/body.bin", DOI, "invalid_pdf")
+        invalid = json.loads((run.directory / "invalid_pdf/execution.json").read_text())
+        assert invalid["returncode"] == 1 and not invalid["timed_out"] and "not a PDF" in invalid["stdout"]
+    metadata = json.loads((run.directory / "challenge/http.json").read_text())
+    execution = json.loads((run.directory / "challenge/execution.json").read_text())
+    assert (run.directory / "challenge/body.bin").read_bytes() == challenge
+    assert metadata["sha256"] == hashlib.sha256(challenge).hexdigest()
+    assert metadata["status_code"] == 200 and metadata["size_bytes"] == len(challenge)
+    assert metadata["requested_url"] == metadata["final_url"] == httpserver.url_for("/client-challenge")
+    assert metadata["content_type"] == media_type and metadata["redirects"] == []
+    assert execution["returncode"] == (75 if missing is None else 0)
+    assert execution["deadline_seconds"] == 60 and not execution["timed_out"]
+    if missing is None:
+        assert metadata["status"] == "blocked" and "JavaScript client challenge" in metadata["diagnostic"]
+        assert dict(metadata["response_headers"])["X-Controlled-Challenge"] == "retained-body-replay"
 
 
 def test_http_byte_ceiling_is_a_failed_responding_producer(tmp_path, httpserver):

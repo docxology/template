@@ -596,7 +596,7 @@ def test_binary_evidence_cannot_escape_readiness_lane(tmp_path: Path) -> None:
 
 
 def test_real_child_deadline_refuses_incomplete_installation_stage(tmp_path: Path) -> None:
-    command = (sys.executable, "-I", "-c", "import time; time.sleep(3)")
+    command = (sys.executable, "-I", "-B", "-c", "import time; time.sleep(3)")
     with pytest.raises(TimeoutError, match="total deadline"):
         _run(
             command,
@@ -919,6 +919,181 @@ def test_actual_namespaced_engine_wheel_is_consumed_and_bound(tmp_path: Path, mu
             check=False,
         )
         assert measured.returncode == 0 and measured.stdout == "17\n"
+        # Exercise the production installer twice with one immutable original
+        # provider artifact. These are two disposable consuming cells, not a
+        # complete installed acceptance matrix or a synthetic passing receipt.
+        from typing import Any
+
+        from infrastructure.project.installed_acceptance_runtime import install_runtime
+        from infrastructure.project.installed_acceptance_validation import _cell
+        from infrastructure.reporting.release_readiness_snapshot import SnapshotReader
+        from infrastructure.reporting.required_candidate_transport import _graph_paths
+
+        (root / "pyproject.toml").write_text(
+            '[project]\nname="research-project-template"\nversion="4.0.1"\nrequires-python=">=3.12"\n'
+        )
+        (root / "projects" / engine.scope / "pyproject.toml").write_text(
+            '[project]\nname="installed-engine"\nversion="1.0.0"\nrequires-python=">=3.12"\ndependencies=[]\n'
+        )
+        consumer = root / "projects" / requirement.scope
+        (consumer / "pyproject.toml").write_text(
+            '[project]\nname="installed-example"\nversion="1.0.0"\nrequires-python=">=3.12"\n'
+            'dependencies=["installed-engine==1.0.0"]\n'
+            '[tool.uv.sources]\ninstalled-engine={path="../template_prose_project"}\n'
+        )
+        deadline = time.monotonic() + 120
+        lock_directory = root / "output/readiness/shared-provider-lock"
+        _run(
+            (
+                uv,
+                "lock",
+                "--directory",
+                str(consumer),
+                "--offline",
+                "--no-python-downloads",
+                "--python",
+                sys.executable,
+            ),
+            tmp_path,
+            _environment(Path(sys.executable), tmp_path),
+            deadline,
+            root,
+            lock_directory,
+            "genuine-fixture-lock",
+        )
+        provider_binding = write_binary(
+            root, root / "output/readiness/shared-provider-origin" / engine_wheel.name, engine_wheel.read_bytes()
+        )
+        original_binding = dict(provider_binding)
+        original_provider = root / provider_binding["path"]
+        provider_content = original_provider.read_bytes()
+        cells = []
+        private_providers = []
+        returned_bindings = []
+        observed_bindings = []
+        cell_directories = []
+        private_consumers = []
+        python_prefixes = []
+        raw_prefixes = []
+        for label in ("consumer-one", "consumer-two"):
+            scratch = tmp_path / label
+            scratch.mkdir(mode=0o700)
+            directory = root / "output/readiness/shared-provider-cells" / label
+            metadata = freeze_locked_metadata(root, scratch)
+            admitted_consumer = freeze_wheel_bytes(root, requirement, wheel.read_bytes(), scratch, wheel.name)
+            assert admitted_consumer.path.is_relative_to(scratch / "admitted-wheels")
+            assert admitted_consumer.path.read_bytes() == wheel.read_bytes()
+            assert stat.S_IMODE(admitted_consumer.path.stat().st_mode) == 0o400
+            assert admitted_consumer.path.stat().st_nlink == 1
+            private_consumers.append(admitted_consumer.path)
+            runtime_environment = _environment(Path(sys.executable), scratch)
+
+            def run(command: tuple[str, ...], operation: str) -> dict[str, Any]:
+                return _run(command, scratch, runtime_environment, deadline, root, directory, operation)
+
+            python, details = install_runtime(
+                root,
+                requirement,
+                scratch,
+                directory,
+                Path(sys.executable),
+                admitted_consumer,
+                uv,
+                run,
+                provider_wheels={engine.scope: (provider_binding, engine)},
+                metadata=metadata,
+            )
+            assert provider_binding == original_binding
+            assert len(details["providers"]) == 1
+            returned_bindings.append(details["providers"][0]["wheel_artifact"])
+            cell_directories.append(directory)
+            private = list((scratch / "admitted-wheels").glob("*/" + engine_wheel.name))
+            assert len(private) == 1
+            private_provider = private[0]
+            assert private_provider.read_bytes() == provider_content
+            assert stat.S_IMODE(private_provider.stat().st_mode) == 0o400
+            assert private_provider.stat().st_nlink == 1
+            private_providers.append(private_provider)
+            outside = tmp_path / (label + "-probe")
+            actual, observation = _probe(
+                python.parent.parent, requirement, root, members, outside, details["providers"]
+            )
+            assert actual.returncode == 0 and not actual.timed_out, actual.output_tail
+            raw = json.loads(observation.read_bytes())
+            python_prefix = python.parent.parent.resolve(strict=True)
+            raw_prefix = Path(raw["prefix"])
+            assert python_prefix.is_relative_to(scratch.resolve(strict=True))
+            assert raw_prefix == python_prefix
+            assert raw["interpreter"] == str(python)
+            python_prefixes.append(python_prefix)
+            raw_prefixes.append(raw_prefix)
+            assert raw["dependency_providers"][0]["imported_modules"] == ["installed_engine"]
+            observed_bindings.append(raw["dependency_providers"][0]["wheel_artifact"])
+            run(
+                (str(python), "-I", "-B", "-c", "import installed_example; assert installed_example.COMPUTED == 17"),
+                "actual-provider-result",
+            )
+
+            def bound(filename: str, content: bytes) -> dict[str, str]:
+                return write_binary(root, directory / filename, content)
+
+            process = json.loads((outside / "process.json").read_bytes())
+            cell = {
+                "scope": requirement.scope,
+                "python_version": raw["python_version"],
+                "status": "pass",
+                "details": {
+                    **raw,
+                    "wheel_artifact": bound(wheel.name, wheel.read_bytes()),
+                    "runtime_artifact": bound("probe.json", observation.read_bytes()),
+                    "process_artifact": bound("process.json", json.dumps(process).encode()),
+                    "probe_spec_artifact": bound("spec.json", (outside / "spec.json").read_bytes()),
+                    "probe_payload_artifact": bound(
+                        "installed-probe-payload.py", (outside / "installed-probe-payload.py").read_bytes()
+                    ),
+                    "selected_interpreter_sha256": raw["interpreter_sha256"],
+                    "command": process["command"],
+                },
+            }
+            _cell(requirement, cell, SnapshotReader(root))
+            cells.append(cell)
+        # Keep both genuine install/probe/cell paths complete before checking
+        # the new reuse contract, so the old implementation is a meaningful red.
+        assert len({str(path) for path in private_consumers}) == 2
+        assert len({(path.stat().st_dev, path.stat().st_ino) for path in private_consumers}) == 2
+        assert len(set(python_prefixes)) == len(set(raw_prefixes)) == 2
+        assert returned_bindings == [original_binding, original_binding]
+        assert observed_bindings == [original_binding, original_binding]
+        assert all(not (directory / engine_wheel.name).exists() for directory in cell_directories)
+        assert len({str(path) for path in private_providers}) == 2
+        assert len({(path.stat().st_dev, path.stat().st_ino) for path in private_providers}) == 2
+        graph = write_binary(
+            root,
+            root / "output/readiness/shared-provider-diagnostic-graph.json",
+            json.dumps(
+                {"role": "diagnostic-fixture-only", "original_provider": original_binding, "cells": cells}
+            ).encode(),
+        )
+        reader = SnapshotReader(root)
+        paths = _graph_paths(root, graph["path"], reader, deadline=deadline)
+        assert paths[original_binding["path"]] == original_binding["sha256"]
+        assert sum(Path(path).name == engine_wheel.name for path in paths) == 1
+        marker = tmp_path / "unexecuted-mutated-provider-startup"
+        original_provider.write_bytes(_startup_marker_wheel(original_provider, marker))
+        assert hashlib.sha256(original_provider.read_bytes()).hexdigest() != original_binding["sha256"]
+        assert not reader.unchanged()
+        refused = tmp_path / "third-admission"
+        refused.mkdir(mode=0o700)
+        with pytest.raises(ValueError, match="changed after its original admission"):
+            admit_provider_wheel(root, engine, original_binding, refused)
+        assert not (refused / "admitted-wheels").exists()
+        with pytest.raises(ValueError, match="bytes differ from the verified binding"):
+            _graph_paths(root, graph["path"], SnapshotReader(root), deadline=deadline)
+        for cell in cells:
+            with pytest.raises(ValueError, match="provider wheel differs from its bound bytes"):
+                _cell(requirement, cell, SnapshotReader(root))
+        assert all(path.read_bytes() == provider_content for path in private_providers)
+        assert not marker.exists()
 
 
 @pytest.mark.parametrize(

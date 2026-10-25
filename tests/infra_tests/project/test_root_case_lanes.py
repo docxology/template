@@ -43,8 +43,7 @@ def _epoch_call(function: Any, *args: Any, **kwargs: Any) -> dict[str, Any]:
                 os.environ[name] = value
 
 
-@pytest.fixture(scope="module")
-def genuine_lane(tmp_path_factory: pytest.TempPathFactory) -> tuple[Path, dict[str, Any], dict[str, Any]]:
+def _genuine_lane_root(tmp_path_factory: pytest.TempPathFactory) -> tuple[Path, dict[str, Any]]:
     root = tmp_path_factory.mktemp("actual-root-lanes").resolve()
     (root / "tests").mkdir()
     (root / "infrastructure/config").mkdir(parents=True)
@@ -87,7 +86,7 @@ def genuine_lane(tmp_path_factory: pytest.TempPathFactory) -> tuple[Path, dict[s
         "               \"Path(sys.argv[1]).write_text(json.dumps({'pid':os.getpid(),'token':sys.argv[3],\"\n"
         "               \"'started_ns':time.monotonic_ns()}));time.sleep(900);\"\n"
         "               \"Path(sys.argv[2]).write_text('escaped')\")\n"
-        "        subprocess.Popen([sys.executable,'-I','-c',child,str(startup),str(escaped),token],\n"
+        "        subprocess.Popen([sys.executable,'-I','-B','-c',child,str(startup),str(escaped),token],\n"
         "                         start_new_session=True)\n"
         "        (root/'output/readiness/actual-case-reached').write_text(token)\n"
         "        while not (root/'output/readiness/descendant-live-ack').exists(): time.sleep(.01)\n"
@@ -172,6 +171,12 @@ def genuine_lane(tmp_path_factory: pytest.TempPathFactory) -> tuple[Path, dict[s
         "tests/test_owned.py::TestLive::test_model",
     }
     assert not (root / "output/readiness/events.txt").exists()
+    return root, census
+
+
+@pytest.fixture(scope="module")
+def genuine_lane(tmp_path_factory: pytest.TempPathFactory) -> tuple[Path, dict[str, Any], dict[str, Any]]:
+    root, census = _genuine_lane_root(tmp_path_factory)
     bundle = _epoch_call(
         produce_root_lane,
         root,

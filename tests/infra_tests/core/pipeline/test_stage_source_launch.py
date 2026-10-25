@@ -25,6 +25,7 @@ def test_fresh_worker_uses_shared_protocol_without_importing_launch_controller()
         [
             sys.executable,
             "-I",
+            "-B",
             "-c",
             "import sys;sys.path.insert(0,sys.argv[1]);"
             "from infrastructure.core.pipeline import stage_worker;"
@@ -62,6 +63,7 @@ def test_actual_stage_ignores_timestamp_valid_poisoned_domain_cache(tmp_path: Pa
         [
             sys.executable,
             "-I",
+            "-B",
             "-c",
             "import sys;sys.path.insert(0,sys.argv[1]);import calculation",
             str(source.parent),
@@ -82,7 +84,8 @@ def test_actual_stage_refuses_restored_repository_script_helper_code(tmp_path: P
         "import os\nfrom pathlib import Path\n"
         "helper=Path(__file__).with_name('script_helper.py')\n"
         "original=helper.read_bytes()\nobserved=helper.stat()\n"
-        "helper.write_text(\"from pathlib import Path\\nPath(__file__).parents[1].joinpath('projects/demo/output/aba-ran').write_text('actual')\\nVALUE=17\\n\")\n"
+        'helper.write_text("from pathlib import Path\\nPath(__file__).parents[1]'
+        ".joinpath('projects/demo/output/aba-ran').write_text('actual')\\nVALUE=17\\n\")\n"
         "import script_helper\nassert script_helper.VALUE == 17\n"
         "helper.write_bytes(original)\nos.utime(helper,ns=(observed.st_atime_ns,observed.st_mtime_ns))\n",
     )

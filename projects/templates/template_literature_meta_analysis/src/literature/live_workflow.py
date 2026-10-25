@@ -43,19 +43,30 @@ def workflow_schema(source: str | None = None) -> dict[str, Any]:
             "items": {"type": "string", "enum": ["n0", "n1", "n2"]},
         },
     }
+    node_schemas = [
+        {
+            "type": "object",
+            "properties": {**properties, "node_id": {"type": "string", "enum": [node_id]}},
+            "required": list(properties),
+            "additionalProperties": False,
+        }
+        for node_id in ("n0", "n1", "n2")
+    ]
     return {
+        "$schema": "http://json-schema.org/draft-07/schema#",
         "type": "object",
         "properties": {
             "nodes": {
-                "type": "array",
-                "minItems": 1,
-                "maxItems": 3,
-                "items": {
-                    "type": "object",
-                    "properties": properties,
-                    "required": list(properties),
-                    "additionalProperties": False,
-                },
+                "anyOf": [
+                    {
+                        "type": "array",
+                        "minItems": count,
+                        "maxItems": count,
+                        "items": node_schemas[:count],
+                        "additionalItems": False,
+                    }
+                    for count in (1, 2, 3)
+                ]
             }
         },
         "required": ["nodes"],
