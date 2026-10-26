@@ -548,6 +548,9 @@ def test_full_verifier_actual_children_ignore_valid_poisoned_scientific_cache(tm
     assert result.read_text() == "17"
     assert not marker.exists()
     assert source.read_bytes() == original
+    # A successful real pytest child must leave consumed Source unchanged,
+    # including negative directory facts when pytest-benchmark is installed.
+    assert not (tmp_path / ".benchmarks").exists()
 
 
 @pytest.mark.timeout(90)

@@ -12,6 +12,7 @@ coordinates fetch → render → save, per the thin-orchestrator rule.
 
 from __future__ import annotations
 
+import json
 import sys
 from pathlib import Path
 
@@ -61,6 +62,19 @@ def main(argv: list[str] | None = None) -> int:
     logger.info("Wrote chart: %s (%d subpackages)", donut_path, n_subpackages)
     print(donut_path)
 
+    # Preserve the actual inputs used by these figures as pipeline data.
+    data_path = root / "output" / "data" / "chart_inputs.json"
+    data_path.parent.mkdir(parents=True, exist_ok=True)
+    data_path.write_text(
+        json.dumps(
+            {"exemplar_coverage": coverage_rows, "infrastructure_python": infra_rows},
+            indent=2,
+            sort_keys=True,
+        )
+        + "\n",
+        encoding="utf-8",
+    )
+    print(data_path)
     verify_reference_inputs()
     return 0
 
