@@ -19,6 +19,42 @@ from manuscript.sheaf.semantic_refresh import (
 from manuscript.sheaf.semantic_restrictions import _load_json, _restriction_lane_summaries
 
 
+def _write_semantic_gluing_snapshot(project_root: Path) -> dict[str, Path]:
+    """Write current semantic data within the fixed-point coordinator's pass.
+
+    The coordinator owns hydration, animation and contract refresh ordering;
+    its terminal live validators still authenticate the complete composition.
+    The standalone writer retains its existing settlement sequence.
+    """
+    root = project_root.resolve()
+    data_dir = root / "output" / "data"
+    data_dir.mkdir(parents=True, exist_ok=True)
+    crosswalk_path = data_dir / "sheaf_evidence_crosswalk.json"
+    dependency_path = data_dir / "validation_dependency_graph.json"
+    certificate_path = data_dir / "sheaf_gluing_certificate.json"
+    from manuscript.sheaf.status import write_sheaf_status_outputs
+
+    status_paths = write_sheaf_status_outputs(root)
+    crosswalk_path.write_text(
+        json.dumps(build_evidence_crosswalk(root), indent=2, sort_keys=True) + "\n",
+        encoding="utf-8",
+    )
+    dependency_path.write_text(
+        json.dumps(build_validation_dependency_graph(root), indent=2, sort_keys=True) + "\n",
+        encoding="utf-8",
+    )
+    certificate_path.write_text(
+        json.dumps(build_semantic_gluing_certificate(root), indent=2, sort_keys=True) + "\n",
+        encoding="utf-8",
+    )
+    return {
+        "certificate": certificate_path,
+        "crosswalk": crosswalk_path,
+        "dependency_graph": dependency_path,
+        **status_paths,
+    }
+
+
 def write_semantic_gluing_outputs(project_root: Path, *, settle: bool = True) -> dict[str, Path]:
     """Write semantic certificate, evidence crosswalk, and dependency graph outputs."""
     root = project_root.resolve()

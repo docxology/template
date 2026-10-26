@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import hashlib
+import json
 import os
 import stat
 import tempfile
@@ -283,10 +284,9 @@ def _write_sheaf_owned_artifacts(root: Path) -> dict[str, Path]:
 
 
 def _write_semantic_core(root: Path) -> dict[str, Path]:
-    from manuscript.sheaf.semantic import write_semantic_gluing_outputs
+    from manuscript.sheaf.semantic_gluing_outputs import _write_semantic_gluing_snapshot
 
-    result: dict[str, Path] = write_semantic_gluing_outputs(root, settle=False)
-    return result
+    return _write_semantic_gluing_snapshot(root)
 
 
 def _write_contract_artifacts(root: Path) -> dict[str, Path]:
@@ -294,8 +294,8 @@ def _write_contract_artifacts(root: Path) -> dict[str, Path]:
     # writer in each fixed-point pass.  Re-running the base formal writer here
     # would overwrite the enriched 12-row model-checking artifact emitted by
     # ``write_sheaf_track_artifacts(finalize=False)`` and leave its saved hash
-    # stale.  Keep this helper limited to the integration/supplemental writers
-    # that do not compete for the formal artifact paths.
+    # stale.  Refresh integration/supplemental and the replay/contract records
+    # without competing for the formal artifact paths.
     result: dict[str, Path] = {}
     from roadmap_tracks.integration_audit import write_integration_audit_artifacts
 
@@ -303,6 +303,25 @@ def _write_contract_artifacts(root: Path) -> dict[str, Path]:
     from roadmap_tracks.supplemental import write_supplemental_artifacts
 
     result.update(write_supplemental_artifacts(root))
+    # Semantic snapshots write status, crosswalk and dependency data. Bind
+    # replay and contract records after those current bytes, as the standalone
+    # semantic refresh does, rather than relying on an earlier sheaf pass.
+    from roadmap_tracks.sheaf_tracks import CANONICAL_ARTIFACTS, build_artifact_contract_index, build_replay_matrix
+
+    replay_path = root / CANONICAL_ARTIFACTS["replay_matrix"]
+    replay_path.parent.mkdir(parents=True, exist_ok=True)
+    replay_path.write_text(
+        json.dumps(build_replay_matrix(root), indent=2, sort_keys=True) + "\n",
+        encoding="utf-8",
+    )
+    result["replay_matrix"] = replay_path
+    contract_path = root / CANONICAL_ARTIFACTS["artifact_contract_index"]
+    contract_path.parent.mkdir(parents=True, exist_ok=True)
+    contract_path.write_text(
+        json.dumps(build_artifact_contract_index(root), indent=2, sort_keys=True) + "\n",
+        encoding="utf-8",
+    )
+    result["artifact_contract_index"] = contract_path
     return result
 
 
@@ -439,6 +458,13 @@ def _write_final_validation_pass(root: Path, *, require_analysis_outputs: bool) 
 
     paths.update(_wsup(root))
     paths.update(_write_contract_artifacts(root))
+    # Only the certificate is hash-cycle-excluded. Rebuild it from the final
+    # live contract state without rewriting status/crosswalk/dependency inputs.
+    from manuscript.sheaf.semantic_certificate import write_semantic_gluing_certificate
+
+    paths["certificate"] = write_semantic_gluing_certificate(
+        root, output_path=root / "output" / "data" / "sheaf_gluing_certificate.json"
+    )
     return paths
 
 
