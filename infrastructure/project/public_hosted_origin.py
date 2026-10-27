@@ -125,7 +125,7 @@ def _metadata(
     ):
         raise ValueError("incomplete bounded artifact listing")
     selected = [row for row in rows if row.get("name") in ARTIFACTS]
-    if len(selected) != 6 or {row.get("name") for row in selected} != set(ARTIFACTS):
+    if len(selected) != len(ARTIFACTS) or {row.get("name") for row in selected} != set(ARTIFACTS):
         raise ValueError("missing or duplicate fixed source artifacts")
     ids: set[int] = set()
     for row in selected:
@@ -422,7 +422,7 @@ def authorize_root_evidence(
         raise ValueError("current workflow is not exact source workflow")
     selected = _metadata(responses["run"], responses["listing"], repository, run_id, head_sha)
     rows = manifest["artifacts"]
-    if len(rows) != 6 or [row["metadata"] for row in rows] != selected:
+    if len(rows) != len(ARTIFACTS) or [row["metadata"] for row in rows] != selected:
         raise ValueError("manifest artifact roster disagrees with original API")
     owner = None
     if not bindings or len({item["path"] for item in bindings}) != len(bindings):
