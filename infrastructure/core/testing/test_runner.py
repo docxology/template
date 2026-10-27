@@ -302,7 +302,7 @@ def _run_combined_coverage_gate(
 ) -> int:
     """Run ``coverage report --fail-under=<N>`` and return its exit code."""
     log_substep(f"Running combined coverage gate (--fail-under={fail_under})", logger)
-    cmd = get_python_command() + ["-m", "coverage", "report", f"--fail-under={fail_under}"]
+    cmd = get_python_command() + ["-m", "coverage", "report", "--keep-combined", f"--fail-under={fail_under}"]
     try:
         completed = run_with_policy(
             cmd,
