@@ -327,7 +327,7 @@ def _git_head(repo_root: Path) -> str:
             capture_output=True,
             text=True,
         )
-    except OSError, subprocess.CalledProcessError:
+    except (OSError, subprocess.CalledProcessError):
         return "unknown"
     return proc.stdout.strip() or "unknown"
 
@@ -338,7 +338,7 @@ def _infrastructure_version(repo_root: Path) -> str:
         return "unknown"
     try:
         payload = tomllib.loads(pyproject.read_text(encoding="utf-8"))
-    except OSError, UnicodeError, tomllib.TOMLDecodeError:
+    except (OSError, UnicodeError, tomllib.TOMLDecodeError):
         return "unknown"
     project = payload.get("project")
     if not isinstance(project, dict):
@@ -430,7 +430,7 @@ def _git_source_files(repo_root: Path, source_root: Path) -> tuple[Path, ...]:
             capture_output=True,
             text=True,
         )
-    except OSError, subprocess.CalledProcessError:
+    except (OSError, subprocess.CalledProcessError):
         return ()
 
     rels: list[Path] = []

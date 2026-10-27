@@ -45,7 +45,7 @@ def changed_git_paths(root: Path, base: str) -> tuple[tuple[str, ...], bool]:
             check=False,
             env={"PATH": os.defpath, "LC_ALL": "C", "GIT_CONFIG_NOSYSTEM": "1", "GIT_CONFIG_GLOBAL": os.devnull},
         )
-    except OSError, subprocess.TimeoutExpired:
+    except (OSError, subprocess.TimeoutExpired):
         return (), True
     if result.returncode:
         return (), True
@@ -93,7 +93,7 @@ def affected_projects(root: Path, paths: tuple[str, ...], *, full: bool = False)
         changed.add(scope)
     try:
         dependencies = {scope: set(declared_local_dependencies(root, scope)) for scope in all_projects}
-    except ValueError, OSError, KeyError:
+    except (ValueError, OSError, KeyError):
         return all_projects, "dependency declarations unavailable"
     while True:
         expanded = changed | {scope for scope, providers in dependencies.items() if providers & changed}

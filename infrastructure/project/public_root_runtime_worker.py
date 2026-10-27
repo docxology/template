@@ -185,7 +185,7 @@ def coordinate(root: Path, spec_path: Path, expected_hash: str) -> int:
     except MissingRootCasePolicy:
         codes.append(75)
         diagnostic = "Required source-owned Root execution prerequisite is unavailable"
-    except OSError, ValueError, TypeError, KeyError, RuntimeError:
+    except (OSError, ValueError, TypeError, KeyError, RuntimeError):
         codes.append(1)
         diagnostic = "Original Root census, unit execution or independent readback refused"
     code = precedence(codes)
@@ -255,7 +255,7 @@ def main(argv: list[str] | None = None) -> int:
         return 130
     except TimeoutError:
         return 124
-    except OSError, ValueError, TypeError, KeyError, RuntimeError:
+    except (OSError, ValueError, TypeError, KeyError, RuntimeError):
         return 1
 
 

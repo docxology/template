@@ -262,7 +262,7 @@ def _code_only_lines(source: str) -> dict[int, str] | None:
             if tok.type in _NON_CODE_TOKENS:
                 continue
             code_by_line.setdefault(tok.start[0], []).append(tok.string)
-    except tokenize.TokenError, IndentationError, SyntaxError:
+    except (tokenize.TokenError, IndentationError, SyntaxError):
         return None
     return {ln: " ".join(parts) for ln, parts in code_by_line.items()}
 
@@ -372,7 +372,7 @@ def _annotation_mentions_monkeypatch(annotation: ast.expr | None) -> bool:
         return False
     try:
         return ast.unparse(annotation).split(".")[-1] == "MonkeyPatch"
-    except AttributeError, ValueError:
+    except (AttributeError, ValueError):
         return False
 
 

@@ -509,7 +509,7 @@ def _run_original_native_cells(
                 "path": closure_snapshot.relative,
                 "sha256": closure_snapshot.sha256,
             }
-        except OSError, ValueError:
+        except (OSError, ValueError):
             pass
         process = write_json(root, cell / "process.json", observation)
         item["process"] = process
@@ -519,7 +519,7 @@ def _run_original_native_cells(
             raw = read_json(root, cell / "native-execution.json")
             snapshot = SnapshotReader(root).read((cell / "native-execution.json").relative_to(root).as_posix())
             raw_binding = {"path": snapshot.relative, "sha256": snapshot.sha256}
-        except OSError, ValueError:
+        except (OSError, ValueError):
             pass
         item.update(raw_binding=raw_binding, raw=raw, original_launch=None)
         closure_binding = observation["sdk_closure_artifact"]

@@ -176,7 +176,7 @@ def resolve_git_origin_url(git_dir: Path) -> str | None:
             text=True,
             timeout=30,
         )
-    except OSError, subprocess.SubprocessError:
+    except (OSError, subprocess.SubprocessError):
         return None
     url = result.stdout.strip()
     return url if url.startswith(("http://", "https://", "git@")) else None

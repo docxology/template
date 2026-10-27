@@ -376,7 +376,7 @@ def _successful_stage_set(plan: ReviewPlan, summary: dict) -> bool:
             return False
         try:
             record = _read_record(plan, path)
-        except OSError, ValueError:
+        except (OSError, ValueError):
             return False
         if not isinstance(record, dict) or (
             type(record.get("schema_version")) is not int
@@ -524,7 +524,7 @@ def _finalize_execution(plan: ReviewPlan, result: BoundedSubprocessResult) -> Bo
     summary_path = _out_dir(plan) / plan.summary_json
     try:
         summary = _read_record(plan, summary_path)
-    except OSError, ValueError:
+    except (OSError, ValueError):
         summary = {}
     valid = (
         isinstance(summary, dict)

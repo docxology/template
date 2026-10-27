@@ -43,7 +43,7 @@ def _process_running(pid: int) -> bool:
     if stat.exists():
         try:
             return stat.read_text().rsplit(")", 1)[1].split()[0] != "Z"
-        except OSError, IndexError:
+        except (OSError, IndexError):
             return True
     return True
 

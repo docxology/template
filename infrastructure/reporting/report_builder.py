@@ -58,7 +58,7 @@ def _is_ollama_available() -> bool:
     """Return True if the ollama package is importable."""
     try:
         return importlib.util.find_spec("ollama") is not None
-    except ImportError, ValueError:  # importlib.util.find_spec may raise for invalid names
+    except (ImportError, ValueError):  # importlib.util.find_spec may raise for invalid names
         return False
 
 

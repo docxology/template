@@ -113,7 +113,7 @@ class PDBConnector:
         if year_raw:
             try:
                 year = int(year_raw)
-            except TypeError, ValueError:
+            except (TypeError, ValueError):
                 pass
         doi = citation.get("pdbx_database_id_doi") or None
         return ConnectorHit(

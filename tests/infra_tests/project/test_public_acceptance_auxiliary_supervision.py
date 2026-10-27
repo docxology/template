@@ -41,7 +41,7 @@ def _remove_owned_control(pid: int, command: str) -> None:
         process = psutil.Process(pid)
         if process.cmdline()[-1:] == [command]:
             process.kill()
-    except psutil.NoSuchProcess, psutil.ZombieProcess:
+    except (psutil.NoSuchProcess, psutil.ZombieProcess):
         pass
 
 

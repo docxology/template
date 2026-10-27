@@ -42,7 +42,7 @@ def test_discover_fonds_finds_public_templates() -> None:
             check=True,
         )
         repo_root = Path(result.stdout.decode().strip())
-    except subprocess.CalledProcessError, FileNotFoundError:
+    except (subprocess.CalledProcessError, FileNotFoundError):
         pytest.skip("git not available or not inside a git repo")
     names = {f.qualified_name for f in discover_fonds(repo_root)}
     for expected in PUBLIC_FOND_NAMES:
@@ -67,7 +67,7 @@ def test_resolve_fond_root_returns_path_for_public_exemplar(tmp_path: Path) -> N
             check=True,
         )
         repo_root = Path(result.stdout.decode().strip())
-    except subprocess.CalledProcessError, FileNotFoundError:
+    except (subprocess.CalledProcessError, FileNotFoundError):
         pytest.skip("git not available or not inside a git repo")
     if not PUBLIC_FOND_NAMES:
         fixture = _make_fond(tmp_path / "fonds/templates/owned_bibliography")
@@ -311,7 +311,7 @@ def test_offending_tracked_fonds_runs_against_real_repo() -> None:
             check=True,
         )
         repo_root = Path(result.stdout.decode().strip())
-    except subprocess.CalledProcessError, FileNotFoundError:
+    except (subprocess.CalledProcessError, FileNotFoundError):
         pytest.skip("git not available or not inside a git repo")
 
     from infrastructure.project.git_guards import offending_tracked_fonds

@@ -27,7 +27,7 @@ def _tracked_paths(repo_root: Path) -> set[Path] | None:
             check=True,
             capture_output=True,
         )
-    except OSError, subprocess.CalledProcessError:
+    except (OSError, subprocess.CalledProcessError):
         return None
     return {(repo_root / rel).resolve() for rel in proc.stdout.decode("utf-8").split("\0") if rel}
 

@@ -41,7 +41,7 @@ def validate_skip_receipt(path: Path, *, env: Mapping[str, str]) -> tuple[str, s
     """Accept only a current command/run/plan/stage receipt created after parent removal."""
     try:
         payload = json.loads(read_bytes_confined(path.parent, path, max_bytes=64 * 1024))
-    except OSError, ValueError:
+    except (OSError, ValueError):
         return None
     if (
         not isinstance(payload, dict)

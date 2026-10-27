@@ -137,7 +137,7 @@ def test_post_script_interrupt_retains_original_without_completion(tmp_path: Pat
                             os.kill(state["pid"], signal.SIGINT)
                             signalled = True
                             break
-                except OSError, ValueError:
+                except (OSError, ValueError):
                     pass  # Atomic private promotion may still be in flight.
             time.sleep(0.001)
         result, receipt = future.result(timeout=90)

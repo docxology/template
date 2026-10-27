@@ -46,7 +46,7 @@ def _has_explicit_panel_tracks(root: Path) -> bool:
         manifest = load_manifest(root / "manuscript" / "sheaf" / "manifest.yaml", project_root=root)
         registry = load_track_registry(root / manifest.registry_path)
         return bool(registry.tracks)
-    except FileNotFoundError, ValueError, KeyError:
+    except (FileNotFoundError, ValueError, KeyError):
         return False
 
 
@@ -66,7 +66,7 @@ def _layers_output_is_fresh(root: Path, out: Path) -> bool:
         metrics = image_render_metrics(out)
         if not metrics["width_px"] or not metrics["height_px"] or not metrics["nonblank"]:
             return False
-    except OSError, ValueError, KeyError:
+    except (OSError, ValueError, KeyError):
         return False
     return True
 

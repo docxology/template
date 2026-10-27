@@ -461,7 +461,7 @@ def collect_symbol_documentation(repo_root: Path) -> list[SymbolDocRecord]:
     for path in _iter_python_files(repo_root):
         try:
             tree = ast.parse(path.read_text(encoding="utf-8"), filename=str(path))
-        except OSError, UnicodeDecodeError, SyntaxError:
+        except (OSError, UnicodeDecodeError, SyntaxError):
             continue
         visitor = _SymbolVisitor(path, repo_root)
         visitor.visit(tree)

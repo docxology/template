@@ -32,7 +32,7 @@ def current_project_manifest_if_valid(
         return None
     try:
         manifest = read_artifact_manifest(manifest_path)
-    except OSError, json.JSONDecodeError, ValueError:
+    except (OSError, json.JSONDecodeError, ValueError):
         return None
     output_categories = ("pdf", "web", "slides", "figures", "data")
     if not manifest.entries and any((output_dir / name).exists() for name in output_categories):

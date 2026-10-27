@@ -47,7 +47,7 @@ def _rendering_options(config: dict[str, Any] | None) -> dict[str, Any]:
         raw = rendering.get(name, default)
         try:
             value = float(raw)
-        except TypeError, ValueError:
+        except (TypeError, ValueError):
             value = default
         if not math.isfinite(value) or not 0.0 < value <= 1.0:
             value = default
@@ -74,7 +74,7 @@ def _resolve_config_yaml(manuscript_dir: Path) -> Path | None:
     for parent in (manuscript_dir.parent, manuscript_dir.parent.parent):
         try:
             candidate = parent / "manuscript" / "config.yaml"
-        except TypeError, ValueError:
+        except (TypeError, ValueError):
             continue
         if candidate.is_file() and candidate != primary:
             return candidate

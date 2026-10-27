@@ -323,7 +323,7 @@ def main(argv: list[str] | None = None) -> int:
                 ).encode(),
                 mode=0o600,
             )
-        except OSError, ValueError, TypeError:
+        except (OSError, ValueError, TypeError):
             sys.stderr.write("failed launch summary could not be retained; original tool files remain" + "\n")
         sys.stderr.write("installed native original refused; genuine process/raw evidence retained" + "\n")
         return _signed_failure(error.result)

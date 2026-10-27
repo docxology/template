@@ -34,7 +34,7 @@ def load_project_pyproject(project_root: Path) -> ProjectPyprojectConfig | None:
         return None
     try:
         data = tomllib.loads(pyproject.read_text(encoding="utf-8"))
-    except OSError, tomllib.TOMLDecodeError:
+    except (OSError, tomllib.TOMLDecodeError):
         return None
 
     coverage = data.get("tool", {}).get("coverage", {})

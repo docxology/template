@@ -261,7 +261,7 @@ def _hermes_trust_status(config_path: Path, target: Path) -> dict[str, Any]:
             raw_dirs = [raw_dirs]
         trusted = str(target) in raw_dirs if isinstance(raw_dirs, list) else False
         return {"ok": trusted, "config": str(config_path), "trusted_root": str(target)}
-    except OSError, yaml.YAMLError:
+    except (OSError, yaml.YAMLError):
         return {"ok": False, "config": str(config_path), "trusted_root": str(target)}
 
 

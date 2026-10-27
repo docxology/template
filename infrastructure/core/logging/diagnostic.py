@@ -212,7 +212,7 @@ class DiagnosticReporter:
                 if key not in seen:
                     seen.add(key)
                     unique_events.append(e)
-            except TypeError, ValueError:
+            except (TypeError, ValueError):
                 unique_events.append(e)
 
         data = {

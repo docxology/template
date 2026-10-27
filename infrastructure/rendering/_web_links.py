@@ -207,7 +207,7 @@ def _renderer_figure_asset_target(html_file: Path, href_path: str) -> Path | Non
         target = (html_file.parent / lexical).resolve(strict=True)
         figures_root = (html_file.parent.parent / "figures").resolve(strict=True)
         target.relative_to(figures_root)
-    except OSError, ValueError:
+    except (OSError, ValueError):
         return None
     if target.is_symlink() or not target.is_file():
         return None
@@ -248,7 +248,7 @@ def _with_authored_counterparts(rendered_sources: Mapping[Path, str], repository
         augmented[source] = output_name
         try:
             relative = source.resolve(strict=True).relative_to(repository_root)
-        except OSError, ValueError:
+        except (OSError, ValueError):
             continue
         parts = relative.parts
         if len(parts) >= 4 and parts[-3] == "output" and parts[-2] == "manuscript":
@@ -366,7 +366,7 @@ def deployed_web_link_issues(web_dir: Path) -> tuple[str, ...]:
             try:
                 resolved = candidate.resolve(strict=True)
                 resolved.relative_to(root)
-            except OSError, ValueError:
+            except (OSError, ValueError):
                 if _renderer_figure_asset_target(page, parsed.path) is None:
                     issues.append(f"{page.name}: local href leaves output/web or is missing: {raw_href}")
         for match in _IMG_SRC_RE.finditer(content):
@@ -388,7 +388,7 @@ def deployed_web_link_issues(web_dir: Path) -> tuple[str, ...]:
             try:
                 resolved = candidate.resolve(strict=True)
                 resolved.relative_to(root)
-            except OSError, ValueError:
+            except (OSError, ValueError):
                 if _renderer_figure_asset_target(page, parsed.path) is None:
                     issues.append(f"{page.name}: local img src is missing or leaves output/web: {raw_src}")
     return tuple(issues)

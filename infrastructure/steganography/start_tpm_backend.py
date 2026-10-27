@@ -70,7 +70,7 @@ def _read_pid(pid_file: Path) -> int | None:
         return None
     try:
         return int(pid_file.read_text().strip())
-    except ValueError, OSError:
+    except (ValueError, OSError):
         return None
 
 

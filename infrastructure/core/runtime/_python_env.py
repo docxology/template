@@ -71,7 +71,7 @@ def check_uv_available() -> bool:
             ["uv", "--version"], capture_output=True, text=True, check=False, timeout=10
         )
         return result.returncode == 0
-    except FileNotFoundError, subprocess.SubprocessError, subprocess.TimeoutExpired:
+    except (FileNotFoundError, subprocess.SubprocessError, subprocess.TimeoutExpired):
         return False
 
 

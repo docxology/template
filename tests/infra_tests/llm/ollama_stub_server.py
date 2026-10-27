@@ -27,7 +27,7 @@ def _parse_chat_request(request: object) -> tuple[bool, str, list[dict[str, obje
         if format_type is not None:
             format_type = str(format_type)
         return is_stream, model, messages, format_type
-    except ValueError, KeyError, TypeError, json.JSONDecodeError:
+    except (ValueError, KeyError, TypeError, json.JSONDecodeError):
         return False, "gemma3:4b", [], None
 
 

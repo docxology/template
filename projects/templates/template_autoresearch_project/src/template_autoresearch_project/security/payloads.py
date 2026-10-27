@@ -241,7 +241,7 @@ def _provenance_integrity_check(project_root: Path) -> dict[str, object] | None:
         return None
     try:
         declared = str(json.loads(provenance_path.read_text(encoding="utf-8")).get("npz_sha256", "") or "")
-    except OSError, json.JSONDecodeError:
+    except (OSError, json.JSONDecodeError):
         return None
     actual = compute_sha256(fixture_path)
     source = "data/mnist_small_provenance.json (committed declared provenance)"

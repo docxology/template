@@ -499,7 +499,7 @@ def _validated_manifest_path(project_dir: Path, raw_path: str) -> tuple[Path | N
 
     try:
         candidate.resolve(strict=False).relative_to(project_dir.resolve())
-    except OSError, ValueError:
+    except (OSError, ValueError):
         return None, f"artifact path escapes project: {raw_path}"
     return candidate, None
 
@@ -604,7 +604,7 @@ def _is_relative_to(path: Path, parent: Path) -> bool:
     try:
         path.resolve().relative_to(parent.resolve())
         return True
-    except OSError, ValueError:
+    except (OSError, ValueError):
         return False
 
 

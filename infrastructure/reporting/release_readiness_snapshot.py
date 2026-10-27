@@ -390,5 +390,5 @@ class SnapshotReader:
                 and len(snapshots) == len(held)
                 and all(snapshots.get(path) is item for path, item in held)
             )
-        except OSError, ValueError:
+        except (OSError, ValueError):
             return False

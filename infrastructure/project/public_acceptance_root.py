@@ -247,7 +247,7 @@ def main(argv: list[str] | None = None) -> int:
     except MissingRootCasePolicy:
         print(json.dumps({"exit_code": 75, "diagnostic": "required source-owned Root case policy is unavailable"}))
         return 75
-    except OSError, ValueError, TypeError, KeyError:
+    except (OSError, ValueError, TypeError, KeyError):
         parser.error("Root acceptance source-owned invocation/configuration is invalid")
     print(json.dumps(result, indent=2, sort_keys=True))
     return int(result["exit_code"])

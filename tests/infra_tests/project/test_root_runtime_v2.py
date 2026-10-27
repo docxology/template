@@ -333,7 +333,7 @@ def test_actual_runtime_whole_deadline_or_interruption_cleans_launched_detached_
                     live.append(pid)
                     acknowledgement.write_text(token, encoding="utf-8")
                     return
-            except FileNotFoundError, json.JSONDecodeError:
+            except (FileNotFoundError, json.JSONDecodeError):
                 pass
             except (OSError, ValueError, subprocess.TimeoutExpired) as error:
                 errors.append(type(error).__name__)

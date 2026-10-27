@@ -245,7 +245,7 @@ def produce_root_census(root: Path, directory: Path, *, timeout_seconds: int = 6
         held = reader.read((directory / "coordinator-bundle.json").relative_to(root).as_posix())
         bundle_binding = {"path": held.relative, "sha256": held.sha256}
         bundle = _json(held)
-    except OSError, ValueError:
+    except (OSError, ValueError):
         pass
     outer_binding = write_json(
         root,

@@ -71,7 +71,7 @@ def _evidence_spec_holds(value: Any, evidence: dict[str, Any]) -> bool:
     if "field" in evidence:
         try:
             value = _lookup_field(value, str(evidence["field"]))
-        except KeyError, TypeError, ValueError, IndexError:
+        except (KeyError, TypeError, ValueError, IndexError):
             return False
     tolerance = float(evidence.get("tolerance", 0.0))
     if "equals" in evidence and not _numbers_equal(value, evidence["equals"], tolerance):
@@ -186,7 +186,7 @@ def claim_evidence_status_rows(
             if evidence_resolved:
                 try:
                     evidence_holds = _evidence_spec_holds(value, spec)
-                except TypeError, ValueError, KeyError, IndexError:
+                except (TypeError, ValueError, KeyError, IndexError):
                     evidence_holds = False
                 if not evidence_holds:
                     failure_reason = f"evidence predicate failed for {rel}"

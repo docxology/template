@@ -578,7 +578,7 @@ authors:
         # Attempt render - may fail due to missing tools
         try:
             renderer.render_combined(source_files, manuscript_dir, "test")
-        except RenderingError, Exception:
+        except (RenderingError, Exception):
             pass  # Expected if pandoc/LaTeX not available
         assert not existing_pdf.exists()
 
@@ -594,7 +594,7 @@ authors:
         # Attempt render - may fail due to missing tools
         try:
             renderer.render_combined(source_files, manuscript_dir, "test")
-        except RenderingError, Exception:
+        except (RenderingError, Exception):
             pass  # Expected if pandoc/LaTeX not available
 
 
