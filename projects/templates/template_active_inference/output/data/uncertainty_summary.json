@@ -203,10 +203,10 @@
         0.0453416398,
         0.0453416398,
         0.0091543203,
-        0.001848225
+        0.0018482251
       ],
-      "distribution_sum": 0.9999999997,
-      "entropy": 1.6767882923730741,
+      "distribution_sum": 0.9999999998,
+      "entropy": 1.6767882929024271,
       "fallback_reason": null,
       "id": "policy_7",
       "normalized": true,
@@ -218,10 +218,10 @@
         0.0453416398,
         0.0453416398,
         0.0091543203,
-        0.001848225
+        0.0018482251
       ],
       "posterior_concentration": 0.2245785437,
-      "posterior_sum": 0.9999999997,
+      "posterior_sum": 0.9999999998,
       "source": "output/data/pymdp_policy_posterior_grid.json"
     },
     {
@@ -234,10 +234,10 @@
         0.0453416398,
         0.0453416398,
         0.0091543203,
-        0.001848225
+        0.0018482251
       ],
-      "distribution_sum": 0.9999999997,
-      "entropy": 1.6767882923730741,
+      "distribution_sum": 0.9999999998,
+      "entropy": 1.6767882929024271,
       "fallback_reason": null,
       "id": "policy_8",
       "normalized": true,
@@ -249,10 +249,10 @@
         0.0453416398,
         0.0453416398,
         0.0091543203,
-        0.001848225
+        0.0018482251
       ],
       "posterior_concentration": 0.2245785437,
-      "posterior_sum": 0.9999999997,
+      "posterior_sum": 0.9999999998,
       "source": "output/data/pymdp_policy_posterior_grid.json"
     },
     {
@@ -265,10 +265,10 @@
         0.0453416398,
         0.0453416398,
         0.0091543203,
-        0.001848225
+        0.0018482251
       ],
-      "distribution_sum": 0.9999999997,
-      "entropy": 1.6767882923730741,
+      "distribution_sum": 0.9999999998,
+      "entropy": 1.6767882929024271,
       "fallback_reason": null,
       "id": "policy_9",
       "normalized": true,
@@ -280,10 +280,10 @@
         0.0453416398,
         0.0453416398,
         0.0091543203,
-        0.001848225
+        0.0018482251
       ],
       "posterior_concentration": 0.2245785437,
-      "posterior_sum": 0.9999999997,
+      "posterior_sum": 0.9999999998,
       "source": "output/data/pymdp_policy_posterior_grid.json"
     }
   ],

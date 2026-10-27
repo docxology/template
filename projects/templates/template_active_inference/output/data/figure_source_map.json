@@ -35,11 +35,11 @@
         "semantic"
       ],
       "dimensions": {
-        "height": 3708,
-        "width": 2285
+        "height": 3702,
+        "width": 2281
       },
       "figure_id": "artifact_contract_map",
-      "image_sha256": "046a95389e857d347a97857d816b47543e90ef10ddd1a9bd600d5b5111fcfc98",
+      "image_sha256": "c898717bd671afc786cb5c74d349aceb3e00b3256b761d0b08b18a95c2c0e50e",
       "mapped": true,
       "pixel_provenance_ok": true,
       "renderer": "visualizations.figures.generate_all_figures",
@@ -129,11 +129,11 @@
         "analytical"
       ],
       "dimensions": {
-        "height": 771,
-        "width": 1329
+        "height": 772,
+        "width": 1327
       },
       "figure_id": "causal_ablation_heatmap",
-      "image_sha256": "a5663681bd02fb704a1155fd2f5abfc6c6f3862fa031d8c17936118808635740",
+      "image_sha256": "8da94fcf550d1c688825c4c2c6f518a2d7eb63da90602cdb384a578189faa92a",
       "mapped": true,
       "pixel_provenance_ok": true,
       "renderer": "visualizations.figures.generate_all_figures",
@@ -213,11 +213,11 @@
         "pymdp"
       ],
       "dimensions": {
-        "height": 620,
+        "height": 619,
         "width": 1502
       },
       "figure_id": "cue_tmaze_advantage",
-      "image_sha256": "2aee915d1e2dcecb63006943091d67b5b271406684af0e3e8186d64fb134d496",
+      "image_sha256": "09ad0ee4a18afbb1e389447c6eee64c6d278cca91d5d476a246acf5d585ba714",
       "mapped": true,
       "pixel_provenance_ok": true,
       "renderer": "visualizations.figures.generate_all_figures",
@@ -264,10 +264,10 @@
       ],
       "dimensions": {
         "height": 557,
-        "width": 1101
+        "width": 1100
       },
       "figure_id": "dirichlet_convergence",
-      "image_sha256": "2c843351030dd467baa9783d65b004a4d60cc8ed44801c129b0b22037ce86eab",
+      "image_sha256": "84a1198b76845767810eba40ab65c1ec1d2aa023c5c85b14095a1a0845d9f80a",
       "mapped": true,
       "pixel_provenance_ok": true,
       "renderer": "visualizations.figures.generate_all_figures",
@@ -313,11 +313,11 @@
         "pymdp"
       ],
       "dimensions": {
-        "height": 620,
-        "width": 1502
+        "height": 622,
+        "width": 1503
       },
       "figure_id": "efe_decomposition",
-      "image_sha256": "1059380851d052fcfeda0d196ed4b8c34608ed871372a5939a6929226fe65218",
+      "image_sha256": "a8811abd5d28de7c0648541669e26d6e6e1c6217ebc805fe4dc037bddc6b1c85",
       "mapped": true,
       "pixel_provenance_ok": true,
       "renderer": "visualizations.figures.generate_all_figures",
@@ -362,11 +362,11 @@
         "formal"
       ],
       "dimensions": {
-        "height": 619,
-        "width": 1022
+        "height": 622,
+        "width": 1023
       },
       "figure_id": "free_energy_curve",
-      "image_sha256": "c1e3a03818fff7193d19e5da4ad48e387e2bc939acf1dc184744ce30fd87938d",
+      "image_sha256": "66e1c40cb4870643736b63bd4ee105a0454789b94c759e37d057572e8e3a48a3",
       "mapped": true,
       "pixel_provenance_ok": true,
       "renderer": "visualizations.figures.generate_all_figures",
@@ -406,10 +406,10 @@
       ],
       "dimensions": {
         "height": 717,
-        "width": 1465
+        "width": 1451
       },
       "figure_id": "gnn_ontology_concordance",
-      "image_sha256": "2743175db326688431bf66bd969fc1cf2ae53462e1330adb334ae6b5f2b102f9",
+      "image_sha256": "ab2817c3476bb176d3495edde0937ac8d8d3a4a077e48cfe79007852c1ae9ba5",
       "mapped": true,
       "pixel_provenance_ok": true,
       "renderer": "visualizations.figures.generate_all_figures",
@@ -459,11 +459,11 @@
         "analytical"
       ],
       "dimensions": {
-        "height": 841,
-        "width": 1434
+        "height": 842,
+        "width": 1433
       },
       "figure_id": "invariant_dashboard",
-      "image_sha256": "502a6b700507e77923b25907173c5b826a26b3b6e691051ed8ae33782eda6691",
+      "image_sha256": "a6ba7264f0381d5d023ec5e8b72dc1536a02a0b77511dece475a18fce8000515",
       "mapped": true,
       "pixel_provenance_ok": true,
       "renderer": "visualizations.figures.generate_all_figures",
@@ -513,11 +513,11 @@
         "analytical"
       ],
       "dimensions": {
-        "height": 587,
-        "width": 1422
+        "height": 590,
+        "width": 1423
       },
       "figure_id": "ising_mi_curve",
-      "image_sha256": "757c8590152bb94a6f748b5c16953229de98eab33444cc610b3f9e227ec0f4bd",
+      "image_sha256": "2d1bcfc867a49eba0595544e020da73b06495473bb298ecc22487f8e816f3f3d",
       "mapped": true,
       "pixel_provenance_ok": true,
       "renderer": "visualizations.figures.generate_all_figures",
@@ -599,7 +599,7 @@
         "width": 1454
       },
       "figure_id": "lean_boundary_status",
-      "image_sha256": "f6a9ad02889c8b006b57de6c95ea6d6df803234cd04425b72b33af0c16480431",
+      "image_sha256": "8827ef122eb00991e57c3d7ae8315e63c7072b5f72bd64dbde69201cf9bfc17f",
       "mapped": true,
       "pixel_provenance_ok": true,
       "renderer": "visualizations.figures.generate_all_figures",
@@ -647,7 +647,7 @@
         "width": 1870
       },
       "figure_id": "multi_track_architecture",
-      "image_sha256": "a96b2bcc8b99b46e7c71a63c7dd8a306d49e4cadc2f311c1f283c4f1f20400a7",
+      "image_sha256": "3efa36473fc9f86a741ddbbcb29db97668a5b19bbb5ddd2231c6f5b29f3ffc85",
       "mapped": true,
       "pixel_provenance_ok": true,
       "renderer": "visualizations.figures.generate_all_figures",
@@ -691,11 +691,11 @@
         "formal"
       ],
       "dimensions": {
-        "height": 617,
-        "width": 1182
+        "height": 623,
+        "width": 1183
       },
       "figure_id": "precision_sweep",
-      "image_sha256": "6a031acadd05922977fd1374e9c39efdc8a834acd95041244e70daba56e040fd",
+      "image_sha256": "27f8ba342ef790b81ec399eaa248293b96cc426d39d6dd34fc21b83cac2d5cef",
       "mapped": true,
       "pixel_provenance_ok": true,
       "renderer": "visualizations.figures.generate_all_figures",
@@ -739,11 +739,11 @@
         "scope"
       ],
       "dimensions": {
-        "height": 1648,
-        "width": 1941
+        "height": 1649,
+        "width": 1929
       },
       "figure_id": "scholarship_source_map",
-      "image_sha256": "4489a53f0d597cbf57826e9be146740ea517188cd04dc66c78f88070b1c31175",
+      "image_sha256": "881ff2ddaa980461262bd9f48bc751b7294e2cf25ce748d4da542ec6dbbb3d75",
       "mapped": true,
       "pixel_provenance_ok": true,
       "renderer": "visualizations.figures.generate_all_figures",
@@ -832,7 +832,7 @@
         "width": 2019
       },
       "figure_id": "security_posture_map",
-      "image_sha256": "c305ccfab83496efa1c90e1bf617fcf113efebaa823c9cec54deddc16c742f83",
+      "image_sha256": "6082337390bae8db626279ae096fc00c214f812b47d1c73d89dc0a61b6ccc053",
       "mapped": true,
       "pixel_provenance_ok": true,
       "renderer": "visualizations.figures.generate_all_figures",
@@ -919,7 +919,7 @@
         "width": 1614
       },
       "figure_id": "semantic_gluing_graph",
-      "image_sha256": "8c2fab11ffc2bcfd2a1de6e66a53d70775a2aed73adfac3d7dd24265d5c8dc14",
+      "image_sha256": "d94fcf4826ed7cc686fb3e05a234bc523f4e9c99e8ef75e4fc4dda64d00a5e4d",
       "mapped": true,
       "pixel_provenance_ok": true,
       "renderer": "visualizations.figures.generate_all_figures",
@@ -983,11 +983,11 @@
         "semantic"
       ],
       "dimensions": {
-        "height": 1427,
-        "width": 5054
+        "height": 1430,
+        "width": 5032
       },
       "figure_id": "sheaf_coverage_heatmap",
-      "image_sha256": "e67fb41083d1232dcb33c6541615ceee32d4a54fcc69a2cb1c7966ee9bed5d57",
+      "image_sha256": "8acbcb202c35258e9a4290e46c74231a46d7e8e71604cc2f76f4a690af7e6259",
       "mapped": true,
       "pixel_provenance_ok": true,
       "renderer": "visualizations.figures.generate_all_figures",
@@ -1127,10 +1127,10 @@
       ],
       "dimensions": {
         "height": 557,
-        "width": 1166
+        "width": 1167
       },
       "figure_id": "si_belief_entropy_curve",
-      "image_sha256": "17cdf62c26e594ac569df28c895a3ac16f0e473e747db7defb7965d8ec35027d",
+      "image_sha256": "5bf67bac289c55f9ba3cbcc4b44f91e75e4d4380e46e04d4077ba044d498bf95",
       "mapped": true,
       "pixel_provenance_ok": true,
       "renderer": "visualizations.figures.generate_all_figures",
@@ -1174,10 +1174,10 @@
       ],
       "dimensions": {
         "height": 717,
-        "width": 1166
+        "width": 1167
       },
       "figure_id": "si_obs_action_trace",
-      "image_sha256": "010f9586befab4d14c39a3cdfff4420a7027691365b91ea6fdb42f4a2c900cff",
+      "image_sha256": "da34a8b4334b08e46e4101da7b2f63b3b356a2021c630ad0aed63225cf9b801a",
       "mapped": true,
       "pixel_provenance_ok": true,
       "renderer": "visualizations.figures.generate_all_figures",
@@ -1224,7 +1224,7 @@
         "width": 1166
       },
       "figure_id": "si_tmaze_actions",
-      "image_sha256": "d8f878240fe1a71c29e036bb2e22ac78e06c6d533c95b34bdd253ed46c7c39ac",
+      "image_sha256": "c78b2a6ebfae70a37311c513cd043e4d45f8ebafc94fdabc8e00504f7396865b",
       "mapped": true,
       "pixel_provenance_ok": true,
       "renderer": "visualizations.figures.generate_all_figures",
@@ -1306,7 +1306,7 @@
         "width": 1550
       },
       "figure_id": "theorem_traceability_graph",
-      "image_sha256": "1f760767bbed036b778c11ed748b68620d4537edcb089df44545b9245975e604",
+      "image_sha256": "5c42b2d3da08ca481ee6c50775690f8dc351b725451df8cdcb7bc6fa157c3400",
       "mapped": true,
       "pixel_provenance_ok": true,
       "renderer": "visualizations.figures.generate_all_figures",
@@ -1390,7 +1390,7 @@
         "width": 1134
       },
       "figure_id": "tmaze_schematic",
-      "image_sha256": "517cd677cebcdf745bfd67a8290878ad8c121797fece2c991255c747c21296c5",
+      "image_sha256": "c6da917284d94da7269b73fcdf88bc43c75762583a0c168c74501de88d65b1b6",
       "mapped": true,
       "pixel_provenance_ok": true,
       "renderer": "visualizations.figures.generate_all_figures",
@@ -1447,11 +1447,11 @@
         "semantic"
       ],
       "dimensions": {
-        "height": 2238,
-        "width": 2429
+        "height": 2239,
+        "width": 2430
       },
       "figure_id": "track_lane_promotion_map",
-      "image_sha256": "caba1fad9edfd6c35a1e4762502b1aab19ad8191cd55347a95ffdf6f3a52effd",
+      "image_sha256": "9d002f5bf93f9782d576999b2a637fa520e19e5969d3dfc662b138ff5499caf3",
       "mapped": true,
       "pixel_provenance_ok": true,
       "renderer": "visualizations.figures.generate_all_figures",
