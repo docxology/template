@@ -207,13 +207,13 @@ def _architecture_panel_figure(
     if not infrastructure and layer != "Projects":
         raise ValueError("Unknown architecture layer")
     color = ARCH_VIZ_COLORS["infra_dark" if infrastructure else "project"]
-    fig = plt.figure(figsize=(8.5, 6.3), facecolor="white", dpi=FIGURE_DPI)
+    fig = plt.figure(figsize=(8.5, 7.5), facecolor="white", dpi=FIGURE_DPI)
     ax = fig.add_axes((0, 0, 1, 1))
-    ax.set(xlim=(0, 8.5), ylim=(0, 6.3))
+    ax.set(xlim=(0, 8.5), ylim=(0, 7.5))
     ax.axis("off")
     ax.text(
         4.25,
-        6.2,
+        7.4,
         f"{layer} · {panel_number} / {panel_count}",
         ha="center",
         va="top",
@@ -223,16 +223,16 @@ def _architecture_panel_figure(
     )
     for index, item in enumerate(items):
         row, column = divmod(index, 2)
-        left, bottom = 0.2 + 4.15 * column, 2.83 - 2.75 * row
+        left, bottom = 0.2 + 4.15 * column, 3.43 - 3.35 * row
         box = patches.FancyBboxPatch(
-            (left, bottom), 3.95, 2.7, boxstyle="round,pad=0.02", edgecolor=color, facecolor="white", linewidth=1.5
+            (left, bottom), 3.95, 3.2, boxstyle="round,pad=0.02", edgecolor=color, facecolor="white", linewidth=1.5
         )
         box.set_gid("architecture-card")
         ax.add_patch(box)
         label = item.name if infrastructure else item.name.removeprefix("template_")
         name = ax.text(
             left + 1.975,
-            bottom + 1.9,
+            bottom + 2.27,
             "",
             ha="center",
             va="center",
@@ -252,7 +252,7 @@ def _architecture_panel_figure(
         else:
             detail = f"{item.chapter_count} chapters\n{item.test_file_count} test files"
         metric = ax.text(
-            left + 1.975, bottom + 0.535, detail, ha="center", va="center", fontsize=40, color=color, linespacing=1.0
+            left + 1.975, bottom + 0.65, detail, ha="center", va="center", fontsize=40, color=color, linespacing=1.0
         )
         metric.set_gid("architecture-card-detail")
     return fig, ax
