@@ -229,7 +229,7 @@ def _kill_process_group(pid: int) -> None:
         return
     try:
         os.killpg(pid, signal.SIGKILL)
-    except (OSError, ProcessLookupError, PermissionError):
+    except OSError, ProcessLookupError, PermissionError:
         return
 
 
@@ -246,14 +246,14 @@ def _kill_processes_matching(tokens: Sequence[str], attempts: int = 3) -> None:
                 cmdline = " ".join(candidate.info.get("cmdline") or [])
                 if cmdline and any(token in cmdline for token in tokens):
                     victims.append(candidate)
-            except (OSError, AttributeError, psutil.AccessDenied, psutil.NoSuchProcess):
+            except OSError, AttributeError, psutil.AccessDenied, psutil.NoSuchProcess:
                 continue
         if not victims:
             return
         for victim in victims:
             try:
                 victim.kill()
-            except (OSError, AttributeError, psutil.AccessDenied, psutil.NoSuchProcess):
+            except OSError, AttributeError, psutil.AccessDenied, psutil.NoSuchProcess:
                 continue
         psutil.wait_procs(victims, timeout=5)
         time.sleep(0.1)
@@ -282,7 +282,7 @@ def _kill_process_tree(proc: subprocess.Popen[str], tokens: Sequence[str]) -> No
             child.kill()
         parent.kill()
         psutil.wait_procs([parent, *children], timeout=5)
-    except (OSError, AttributeError, psutil.AccessDenied, psutil.NoSuchProcess):
+    except OSError, AttributeError, psutil.AccessDenied, psutil.NoSuchProcess:
         try:
             proc.kill()
         except ProcessLookupError:

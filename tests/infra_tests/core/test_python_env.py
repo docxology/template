@@ -27,7 +27,7 @@ def _candidate_epoch(monkeypatch):
 
 class TestCheckPythonVersion:
     def test_returns_true(self):
-        # The supported project runtime is Python 3.12+.
+        # The supported project runtime is Python 3.14+.
         assert check_python_version() is True
 
     @pytest.mark.parametrize(
@@ -36,9 +36,10 @@ class TestCheckPythonVersion:
             ((3, 9), False),
             ((3, 10), False),
             ((3, 11), False),
-            ((3, 12), True),
-            ((3, 13), True),
+            ((3, 12), False),
+            ((3, 13), False),
             ((3, 14), True),
+            ((3, 15), True),
             ((4, 0), True),
         ],
     )

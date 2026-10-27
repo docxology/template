@@ -154,7 +154,7 @@ def _coerce_int_field(field: str, value: Any, default: int) -> int:
         return default
     try:
         return int(value)
-    except (TypeError, ValueError):
+    except TypeError, ValueError:
         _unsupported(field, value)
         return default
 

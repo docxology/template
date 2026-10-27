@@ -156,7 +156,7 @@ the exemplar's isolated dependencies before collecting tests:
 uv run python scripts/pipeline/stage_01_test.py --project templates/template_literature_meta_analysis --project-only
 ```
 
-For an independent source checkout, prepare its own Python 3.12–3.14 environment
+For an independent source checkout, prepare its own Python 3.14/3.15 environment
 with the actual platform wheel matching `pyproject.toml` and this project's `dev` extra, following
 [`STANDALONE.md`](STANDALONE.md). From that checkout's root, run:
 

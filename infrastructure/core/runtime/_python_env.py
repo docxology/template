@@ -48,16 +48,16 @@ def validate_analysis_script_path(script_path: Path, project_root: Path) -> Path
 
 
 def _python_version_supported(version: tuple[int, int]) -> bool:
-    """Apply the platform's Python 3.12 floor to an explicit version pair."""
-    return version >= (3, 12)
+    """Apply the platform's Python 3.14 floor to an explicit version pair."""
+    return version >= (3, 14)
 
 
 def check_python_version() -> bool:
-    """Verify Python 3.12+ is available (matches ``requires-python`` in pyproject.toml)."""
+    """Verify Python 3.14+ is available (matches ``requires-python`` in pyproject.toml)."""
     version_str = platform.python_version()
 
     if not _python_version_supported((sys.version_info.major, sys.version_info.minor)):
-        logger.error(f"Python 3.12+ required, found {version_str}")
+        logger.error(f"Python 3.14+ required, found {version_str}")
         return False
 
     log_success(f"Python {version_str} available", logger)
@@ -71,7 +71,7 @@ def check_uv_available() -> bool:
             ["uv", "--version"], capture_output=True, text=True, check=False, timeout=10
         )
         return result.returncode == 0
-    except (FileNotFoundError, subprocess.SubprocessError, subprocess.TimeoutExpired):
+    except FileNotFoundError, subprocess.SubprocessError, subprocess.TimeoutExpired:
         return False
 
 

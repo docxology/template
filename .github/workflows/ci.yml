@@ -247,7 +247,7 @@ jobs:
           unset UV_FROZEN
           native_contract_scratch=$(mktemp -d "$RUNNER_TEMP/native-contract-warm.XXXXXX")
           UV_PROJECT_ENVIRONMENT="$native_contract_scratch/venv" \
-            uv sync --locked --group dev --group installed-build --no-python-downloads --python "$PWD/.venv/bin/python"
+            uv sync --locked --group dev --group installed-build --group active-inference --no-python-downloads --python "$PWD/.venv/bin/python"
           rm -r -- "$native_contract_scratch"
       - name: Prepare the Active exemplar own locked environment for coverage probes
         if: >-

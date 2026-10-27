@@ -6,7 +6,7 @@ exec "${TEMPLATE_PYTHON:-python3}" -I -c '
 import os, pathlib, select, sys
 root=pathlib.Path(sys.argv[1])
 manifest=(root/"tools.yaml").read_text()
-checks={"Python >=3.12":sys.version_info >= (3,12),
+checks={"Python >=3.14":sys.version_info >= (3,14),
  "POSIX exit watcher":os.name=="posix" and (hasattr(os,"pidfd_open") or hasattr(select,"kqueue")),
  "manifest type/entrypoints":manifest.startswith("type: code_executor\n") and "entrypoints:" in manifest,
  "run.sh executable":os.access(root/"scripts/run.sh",os.X_OK),

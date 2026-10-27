@@ -78,7 +78,7 @@ bash scripts/shell/restore-test.sh backup pre-upgrade-2026-08-14
 - [`scripts/backup/`](../backup/) — backup scripts directory
 
 `setup-system-deps.sh --prepared-python PATH` never bootstraps or syncs Python;
-it requires an executable CPython >=3.12 and uses that interpreter for the actual
+it requires an executable CPython >=3.14 and uses that interpreter for the actual
 LaTeX package validator. The caller owns dependency preparation. `--check` can
 be combined with this selection and retains its no-install behavior. Ordinary
 standalone invocation keeps its existing uv setup, sync and validation.

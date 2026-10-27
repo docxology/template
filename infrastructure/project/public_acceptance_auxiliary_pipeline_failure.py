@@ -69,7 +69,7 @@ def _retain_pipeline_child_facts(
         facts_binding = write_binary(root, directory / "pipeline-child-facts.json", content)
         try:
             decoded = json.loads(content)
-        except (ValueError, UnicodeDecodeError):
+        except ValueError, UnicodeDecodeError:
             facts_error = "actual core pipeline child left malformed original facts"
         else:
             if isinstance(decoded, dict):

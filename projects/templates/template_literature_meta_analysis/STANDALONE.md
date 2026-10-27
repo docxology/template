@@ -90,7 +90,7 @@ uv run python scripts/pipeline/stage_01_test.py --project templates/template_lit
 ```
 
 For an independent source checkout, create its own environment from its root
-(using a supported Python 3.12–3.14 interpreter), install the explicitly built
+(using a supported Python 3.14/3.15 interpreter), install the explicitly built
 platform candidate wheel, and install this project's declared runtime/dev
 requirements. Replace the wheel path with the actual reviewed artifact:
 

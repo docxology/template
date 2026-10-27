@@ -52,6 +52,7 @@ def test_ordinary_ci_gate_is_not_release_gate():
 
 
 def test_root_owned_projection_retains_blocked_owner_and_all_six_targets():
+    """Historical node ID; require every current host/minor target."""
     from types import SimpleNamespace
 
     from infrastructure.reporting.required_acceptance_aggregate import root_owned_projection
@@ -59,12 +60,12 @@ def test_root_owned_projection_retains_blocked_owner_and_all_six_targets():
     requirements = [
         SimpleNamespace(id=f"root:{host}:{minor}", kind="root-case", case_platform=host, python_version=minor)
         for host in ("darwin", "linux")
-        for minor in ("3.12", "3.13", "3.14")
+        for minor in ("3.14", "3.15")
     ]
     ids = {item.id for item in requirements} | {"root:case-policy", "root:coverage"}
     values = {}
     for host in ("darwin", "linux"):
-        for minor in ("3.12", "3.13", "3.14"):
+        for minor in ("3.14", "3.15"):
             gates = {key: {"status": "pass"} for key in ids}
             gates[f"root:{host}:{minor}"] = {"status": "blocked"}
             values[host, minor] = _receipt(gates)
@@ -73,8 +74,8 @@ def test_root_owned_projection_retains_blocked_owner_and_all_six_targets():
     assert set(flat) == ids
     assert all(flat[item.id]["status"] == "blocked" for item in requirements)
     assert sum(len(value["gates"]) for value in result) == len(ids)
-    values.pop(("darwin", "3.12"))
-    with pytest.raises(ValueError, match="all six"):
+    values.pop(("darwin", "3.15"))
+    with pytest.raises(ValueError, match="all exact supported"):
         root_owned_projection(values, requirements)
 
 

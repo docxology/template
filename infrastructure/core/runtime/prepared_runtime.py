@@ -69,15 +69,14 @@ def _prepared_venv(selected: Path) -> tuple[Path, dict[str, str]]:
 def configure_prepared_site(selected: Path, *, observed_prefix: str) -> None:
     """Expose declared venv package directories under -S without executing .pth.
 
-    CPython 3.12–3.13 establishes venv prefixes in site initialization; 3.14
-    establishes them before site. The outer seed records that actual initial
+    Supported CPython 3.14+ establishes venv prefixes before site. The outer seed records that actual initial
     prefix, then sets its lexical candidate before importing this stdlib-only
     admission module. Normal site processing belongs to the supervised CLI child.
     """
-    if not sys.flags.no_site or sys.implementation.name != "cpython" or sys.version_info < (3, 12):
-        raise PreparedRuntimeUnavailable("Prepared site admission requires isolated CPython 3.12+ with -S")
+    if not sys.flags.no_site or sys.implementation.name != "cpython" or sys.version_info < (3, 14):
+        raise PreparedRuntimeUnavailable("Prepared site admission requires isolated CPython 3.14+ with -S")
     prefix, configuration = _prepared_venv(selected)
-    expected = prefix if sys.version_info >= (3, 14) else Path(sys.base_prefix).absolute()
+    expected = prefix
     if Path(observed_prefix).absolute() != expected:
         raise PreparedRuntimeUnavailable("Observed no-site interpreter prefix differs from its selected venv")
     sys.prefix = sys.exec_prefix = str(prefix)
@@ -94,8 +93,8 @@ def configure_prepared_site(selected: Path, *, observed_prefix: str) -> None:
 
 def check_prepared_root_runtime(repo_root: Path, *, secure: bool = False) -> None:
     """Require the actual nominated interpreter and existing root dependencies."""
-    if sys.version_info < (3, 12):
-        raise PreparedRuntimeUnavailable("Python 3.12 or newer must be prepared explicitly")
+    if sys.version_info < (3, 14):
+        raise PreparedRuntimeUnavailable("Python 3.14 or newer must be prepared explicitly")
     nomination = os.environ.get("TEMPLATE_ROOT_PYTHON")
     selected = Path(nomination) if nomination is not None else repo_root / ".venv/bin/python"
     prefix, _configuration = _prepared_venv(selected)

@@ -104,7 +104,7 @@ def _register_numbers_from_yaml(
         return
     try:
         payload = yaml.safe_load(yaml_path.read_text(encoding="utf-8"))
-    except (OSError, yaml.YAMLError):
+    except OSError, yaml.YAMLError:
         return
     relative = _relative_to_project(yaml_path, project_root)
     for value_path, value in _walk_json(payload):
@@ -133,7 +133,7 @@ def _register_numbers_from_toml(
         return
     try:
         payload = tomllib.loads(toml_path.read_text(encoding="utf-8"))
-    except (OSError, tomllib.TOMLDecodeError):
+    except OSError, tomllib.TOMLDecodeError:
         return
     relative = _relative_to_project(toml_path, project_root)
     for value_path, value in _walk_json(payload):
@@ -212,7 +212,7 @@ def _register_claim_ledger(
             payload = json.loads(ledger_path.read_text(encoding="utf-8"))
         else:
             payload = yaml.safe_load(ledger_path.read_text(encoding="utf-8"))
-    except (OSError, json.JSONDecodeError, yaml.YAMLError):
+    except OSError, json.JSONDecodeError, yaml.YAMLError:
         return
     claims = payload.get("claims", payload) if isinstance(payload, dict) else payload
     if not isinstance(claims, list):
@@ -251,7 +251,7 @@ def _register_numbers_from_json(
 ) -> None:
     try:
         payload = json.loads(json_path.read_text(encoding="utf-8"))
-    except (OSError, json.JSONDecodeError):
+    except OSError, json.JSONDecodeError:
         return
     relative = _relative_to_project(json_path, project_root)
     for value_path, value in _walk_json(payload):

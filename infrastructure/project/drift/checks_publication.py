@@ -233,7 +233,7 @@ def check_pyproject_publication_consistency(project_root: Path, report: Report, 
 
     try:
         cff = _load_yaml_mapping(cff_path)
-    except (OSError, yaml.YAMLError):
+    except OSError, yaml.YAMLError:
         return
 
     cff_version = str(cff.get("version", "")).strip().strip("'\"")
@@ -313,7 +313,7 @@ def _check_runtime_version_exports(project_root: Path, report: Report, project: 
             continue
         try:
             tree = ast.parse(_read(path), filename=str(path))
-        except (OSError, SyntaxError):
+        except OSError, SyntaxError:
             continue  # The public syntax gate reports invalid source separately.
         for node in tree.body:
             if not isinstance(node, ast.Assign) or not any(
@@ -351,7 +351,7 @@ def check_license_file_present_and_consistent(project_root: Path, report: Report
         return
     try:
         cff = _load_yaml_mapping(cff_path)
-    except (OSError, yaml.YAMLError):
+    except OSError, yaml.YAMLError:
         return
     declared = str(cff.get("license", "")).strip().strip("'\"")
     if not declared:
@@ -403,7 +403,7 @@ def check_license_file_present_and_consistent(project_root: Path, report: Report
         return
     try:
         table = tomllib.loads(_read(pyproject_path)).get("project")
-    except (OSError, tomllib.TOMLDecodeError):
+    except OSError, tomllib.TOMLDecodeError:
         return
     if not isinstance(table, dict):
         return
@@ -602,7 +602,7 @@ def check_repository_url_consistent(project_root: Path, report: Report, project:
         return
     try:
         config = _load_yaml_mapping(config_path, strict=True)
-    except (OSError, yaml.YAMLError):
+    except OSError, yaml.YAMLError:
         return
 
     from infrastructure.metadata.repository_metadata import normalized_repository_url
@@ -617,7 +617,7 @@ def check_repository_url_consistent(project_root: Path, report: Report, project:
     if cff_path.is_file():
         try:
             cff = _load_yaml_mapping(cff_path)
-        except (OSError, yaml.YAMLError):
+        except OSError, yaml.YAMLError:
             cff = {}
         actual = str(cff.get("repository-code", "")).strip().rstrip("/")
         if actual and actual != expected:
@@ -636,7 +636,7 @@ def check_repository_url_consistent(project_root: Path, report: Report, project:
     if codemeta_path.is_file():
         try:
             codemeta = json.loads(_read(codemeta_path))
-        except (OSError, json.JSONDecodeError):
+        except OSError, json.JSONDecodeError:
             codemeta = {}
         actual = str(codemeta.get("codeRepository", "")).strip().rstrip("/") if isinstance(codemeta, dict) else ""
         if actual and actual != expected:

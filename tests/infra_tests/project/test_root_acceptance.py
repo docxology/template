@@ -291,7 +291,7 @@ def test_root_producer_blocks_missing_policy_without_test_or_probe_execution(tmp
         assert not {"runtime_artifact", "execution_exit_code", "timed_out"}.intersection(payload["details"])
     assert not list((root / "output/readiness").rglob("cell-process.json"))
     assert not list((root / "output/readiness").rglob("collection-process.json"))
-    for runtime in ("3.12", "3.13", "3.14"):
+    for runtime in ("3.14", "3.15"):
         assert not list((root / "output/readiness").rglob(f"runtime-{runtime}.json"))
     # Prove the marker is live under the producer's actual isolated invocation;
     # an absent marker cannot establish nonexecution if its fixture never runs.
@@ -381,7 +381,7 @@ def test_missing_selected_interpreters_remain_blocked_without_invented_child_exi
         assert entry["command"] == ["unavailable-selected-interpreter"]
         details = json.loads((root / entry["artifact"]).read_text())["details"]
         assert not {"runtime_artifact", "execution_exit_code", "timed_out"}.intersection(details)
-    for runtime in ("3.12", "3.13", "3.14"):
+    for runtime in ("3.14", "3.15"):
         assert not list((root / "output/readiness").rglob(f"runtime-{runtime}.json"))
     assert not list((root / "output/readiness").rglob("cell-process.json"))
     assert not list((root / "output/readiness").rglob("collection-process.json"))
@@ -442,7 +442,8 @@ def test_complete_offline_declaration_cannot_admit_known_opt_in_cases(tmp_path: 
     marker = root / "output/readiness/must-not-execute.txt"
     _owned_root(root, conftest=f"from pathlib import Path\nPath({str(marker)!r}).write_text('unsafe')\n")
     (root / "tests/test_live.py").write_text(
-        "import pytest\n@pytest.mark.requires_credentials\ndef test_paid_surface():\n    raise AssertionError('must not execute')\n"
+        "import pytest\n@pytest.mark.requires_credentials\ndef test_paid_surface():\n"
+        "    raise AssertionError('must not execute')\n"
     )
     result = run_root_acceptance(root, {})
     assert result["exit_code"] == 75

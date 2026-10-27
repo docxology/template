@@ -89,7 +89,7 @@ class UrllibHttpClient:
             body = ""
             try:
                 body = exc.read().decode("utf-8", errors="replace")
-            except (OSError, AttributeError):  # pragma: no cover
+            except OSError, AttributeError:  # pragma: no cover
                 pass
             return HttpResponse(status_code=exc.code, text=body, url=url)
         except urllib.error.URLError as exc:
@@ -159,7 +159,7 @@ class UrllibHttpClient:
             err_body = ""
             try:
                 err_body = exc.read().decode("utf-8", errors="replace")
-            except (OSError, AttributeError):  # pragma: no cover
+            except OSError, AttributeError:  # pragma: no cover
                 pass
             return HttpResponse(status_code=exc.code, text=err_body, url=url)
         except urllib.error.URLError as exc:

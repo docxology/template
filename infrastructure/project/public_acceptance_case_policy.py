@@ -22,7 +22,7 @@ LANES = (
     "offline-benchmark",
     "optional-external",
 )
-RUNTIMES = ("3.12", "3.13", "3.14")
+RUNTIMES = ("3.14", "3.15")
 PLATFORMS = ("darwin", "linux")
 KINDS = (
     "local-model",

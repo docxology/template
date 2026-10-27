@@ -253,7 +253,7 @@ def test_decode_hex_match_exception_path():
         try:
             # For values > 0x10FFFF, chr() raises ValueError
             return chr(int(hex_code, 16))
-        except (ValueError, OverflowError):
+        except ValueError, OverflowError:
             return match.group(0)  # Return original if decode fails
 
     # Test with a value that would exceed valid Unicode (if regex allowed it)

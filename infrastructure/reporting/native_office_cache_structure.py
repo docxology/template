@@ -1,7 +1,7 @@
 """Compare retained cache Code as bounded DATA, never construct cached Code.
 
 The caller authenticates origin, cache header/digest and admitted Source. This
-parser compares all CPython 3.12–3.14 serialized Code fields and typed constants
+parser compares all CPython 3.14–3.15 serialized Code fields and typed constants
 against trusted compilation, normalizing only refs/interning and set ordering.
 """
 
@@ -173,10 +173,24 @@ class _Structure:
             if tag == ord(">"):
                 children.sort(key=lambda child: child.ordering_digest)
             return _node(b"frozenset" if tag == ord(">") else b"tuple", tuple(children))
+        if tag == ord("}"):
+            # Marshal v6 immutable mappings retain pair order. NULL is only
+            # the key-position terminator; a missing value still fails object().
+            pairs = []
+            while True:
+                remaining(self.deadline)
+                if self.position >= len(self.raw):
+                    raise ValueError("Office cache frozendict lacks its terminator")
+                if self.raw[self.position] == ord("0"):
+                    self.take(1)
+                    break
+                pairs.append(self.object(depth + 1))
+                pairs.append(self.object(depth + 1))
+            return _node(b"frozendict", tuple(pairs))
         if tag == ord(":"):
             return _node(b"slice", tuple(self.object(depth + 1) for _ in range(3)))
         if tag == ord("c"):
-            # Complete CPython3.12–3.14 Code wire fields, in original wire order.
+            # Complete CPython3.14–3.15 Code wire fields, in original wire order.
             fields = [_node(b"parameter-fields", self.take(20))]
             fields.extend(self.object(depth + 1) for _ in range(8))
             fields.append(_node(b"first-line-field", self.take(4)))
@@ -204,10 +218,10 @@ def verify_office_cache_code_structure(body: bytes, compiled: types.CodeType, *,
     remaining(deadline)
     if (
         sys.implementation.name != "cpython"
-        or sys.version_info[:2] not in ((3, 12), (3, 13), (3, 14))
+        or sys.version_info[:2] not in ((3, 14), (3, 15))
         or type(compiled) is not types.CodeType
     ):
-        raise ValueError("Office cache structure requires the independently admitted CPython3.12–3.14 Code profile")
+        raise ValueError("Office cache structure requires the independently admitted CPython3.14–3.15 Code profile")
     trusted = marshal.dumps(compiled)
     if not _same_data(_Structure(body, deadline).code(), _Structure(trusted, deadline).code(), deadline=deadline):
         raise ValueError("Office original cache Code fields differ from admitted actual Source compilation")

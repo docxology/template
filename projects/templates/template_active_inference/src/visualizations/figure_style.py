@@ -6,7 +6,10 @@ import contextlib
 from collections.abc import Iterator, Mapping
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Any
+from typing import TYPE_CHECKING, Any
+
+if TYPE_CHECKING:
+    from matplotlib.typing import RcKeyType
 
 from template_active_inference.yaml_io import load_yaml
 
@@ -14,14 +17,14 @@ from template_active_inference.yaml_io import load_yaml
 def _safe_float(value: Any) -> float | None:
     try:
         return float(value)
-    except (TypeError, ValueError):
+    except TypeError, ValueError:
         return None
 
 
 def _safe_int(value: Any) -> int | None:
     try:
         return int(value)
-    except (TypeError, ValueError):
+    except TypeError, ValueError:
         return None
 
 
@@ -88,7 +91,7 @@ class FigureStyleConfig:
         """Process layout value."""
         return float(self.layout.get(role, fallback))
 
-    def rc_params(self) -> dict[str, Any]:
+    def rc_params(self) -> dict[RcKeyType, Any]:
         """Process rc params."""
         base = 10.0 * float(self.font_scale)
         return {

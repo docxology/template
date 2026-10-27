@@ -242,7 +242,7 @@ def decode_pdf_hex_strings(text: str) -> str:
         hex_code = match.group(1)
         try:
             return chr(int(hex_code, 16))
-        except (ValueError, OverflowError):
+        except ValueError, OverflowError:
             return str(match.group(0))  # Return original if decode fails
 
     # Replace /xHH patterns with decoded characters

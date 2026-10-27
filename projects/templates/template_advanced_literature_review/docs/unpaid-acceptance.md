@@ -18,7 +18,7 @@ uv run python projects/templates/template_advanced_literature_review/scripts/_ru
 `core` inspects the committed reference corpus and reports no live execution;
 the normal fixture/analysis scripts retain the complete offline route. The
 underscore-prefixed acceptance orchestrator is excluded from automatic analysis
-discovery. Live execution requires the declared platform SDK, Python 3.12–3.14, installed
+discovery. Live execution requires the declared platform SDK, Python 3.14/3.15, installed
 project dependencies including `pypdf`, and an already available loopback Ollama
 service containing the selected model.
 

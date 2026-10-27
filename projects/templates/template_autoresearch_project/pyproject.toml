@@ -8,7 +8,12 @@ version = "0.4.0"
 license = {text = "MIT"}
 authors = [{name = "Daniel Ari Friedman", email = "daniel@activeinference.institute"}]
 description = "Deterministic bounded AutoResearch ML-loop exemplar for the template repository."
-requires-python = ">=3.12"
+requires-python = ">=3.14"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.14",
+    "Programming Language :: Python :: 3.15",
+]
 dependencies = [
     "research-project-template==4.1.0",
     "numpy>=1.26",
@@ -59,5 +64,5 @@ research-project-template = { path = "../../..", editable = true }
 # Compatibility contract for this independent exemplar release.
 [tool.template]
 platform_version = "4.1.0"
-tested_python_versions = ["3.12", "3.13", "3.14"]
+tested_python_versions = ["3.14", "3.15"]
 required_unpaid_capabilities = []

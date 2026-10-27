@@ -68,7 +68,7 @@ def runtime_projection(probe: object) -> dict[str, Any]:
     actual = {key: probe[key] for key in _RUNTIME_KEYS}
     if (
         actual["missing"] != []
-        or actual["python_version"] not in {"3.12", "3.13", "3.14"}
+        or actual["python_version"] not in {"3.14", "3.15"}
         or not isinstance(actual["executable"], str)
         or not Path(actual["executable"]).is_absolute()
         or not isinstance(actual["interpreter_sha256"], str)

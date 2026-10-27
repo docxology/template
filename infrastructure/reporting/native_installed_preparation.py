@@ -52,7 +52,7 @@ _LOCATION_PROBE = (
 
 
 def native_runtime_export_command(uv: Path, metadata_root: Path, requirements: Path) -> tuple[str, ...]:
-    """Export Root execution defaults, excluding the unused Git-only lint scanner."""
+    """Export native execution defaults and explicit Active ML feature dependencies."""
     return (
         str(uv),
         "export",
@@ -62,6 +62,8 @@ def native_runtime_export_command(uv: Path, metadata_root: Path, requirements: P
         "--offline",
         "--group",
         "public-exemplars",
+        "--group",
+        "active-inference",
         "--group",
         "rendering",
         "--group",

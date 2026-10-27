@@ -121,7 +121,7 @@ def _git_commit_hash(repo_dir: Path) -> str:
             text=True,
             timeout=5,
         )
-    except (subprocess.CalledProcessError, subprocess.TimeoutExpired, FileNotFoundError):
+    except subprocess.CalledProcessError, subprocess.TimeoutExpired, FileNotFoundError:
         return "unknown"
     return result.stdout.strip() or "unknown"
 
@@ -217,7 +217,7 @@ def build_manifest(
         epoch = os.environ.get("SOURCE_DATE_EPOCH", "0")
         try:
             timestamp = datetime.fromtimestamp(int(epoch), tz=timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
-        except (ValueError, OverflowError, OSError):
+        except ValueError, OverflowError, OSError:
             timestamp = "1970-01-01T00:00:00Z"
 
     return Manifest(

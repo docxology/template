@@ -399,7 +399,7 @@ def _existing_checked_at_by_fact(path: Path) -> dict[tuple[str, str, str, str, s
         return {}
     try:
         payload = json.loads(path.read_text(encoding="utf-8"))
-    except (OSError, json.JSONDecodeError):
+    except OSError, json.JSONDecodeError:
         return {}
     if not isinstance(payload, dict):
         return {}

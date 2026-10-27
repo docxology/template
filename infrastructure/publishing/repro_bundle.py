@@ -99,7 +99,7 @@ def _hash_relpath(checkout_root: Path, relpath: str) -> tuple[str | None, int, b
     try:
         resolved = target.resolve()
         resolved.relative_to(checkout_root.resolve())
-    except (OSError, ValueError):
+    except OSError, ValueError:
         return None, 0, False
     prefix = checkout_root
     for part in PurePosixPath(relpath).parts:

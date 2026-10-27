@@ -14,7 +14,7 @@ mandatory. A compiled plan grants no acceptance and cannot authorize publication
 
 `infrastructure.project.public_acceptance_case_policy.RootCasePolicy.parse` admits
 only the versioned explicit families, exact parameter IDs, required obligations,
-Python 3.12–3.14 and Linux/macOS targets. No wildcard, implicit unmarked-case lane,
+Python 3.14/3.15 and Linux/macOS targets. No wildcard, implicit unmarked-case lane,
 waived requirement, extra field or optional obligation is supported. Classification
 uses the complete authenticated census: missing, added, duplicated or changed
 cases, markers, public fixture sources, source bytes and parameter IDs refuse it.

@@ -68,7 +68,8 @@ def _builtin_newspaper_font(face: object, name: str) -> bool:
 
     flag = getattr(face, "builtIn", None)
     return (
-        type(face) is pdfmetrics.TypeFace
+        isinstance(face, pdfmetrics.TypeFace)
+        and type(face) is pdfmetrics.TypeFace
         and type(flag) in (bool, int)
         and flag == 1
         and name in pdfmetrics.standardFonts

@@ -289,7 +289,7 @@ def check_bibliography_overlap(
     if bib_path.is_file():
         try:
             entries = parse_bib_entries(bib_path.read_text(encoding="utf-8"))
-        except (OSError, UnicodeDecodeError):
+        except OSError, UnicodeDecodeError:
             entries = []
         project_keys = sorted({str(e["key"]) for e in entries if "key" in e})
 

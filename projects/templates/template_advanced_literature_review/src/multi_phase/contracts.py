@@ -255,7 +255,7 @@ def validate_phase_artifact_manifest(manifest: Any, *, artifact_root: Path | Non
             try:
                 resolved = candidate.resolve()
                 resolved.relative_to(artifact_root.resolve())
-            except (OSError, ValueError):
+            except OSError, ValueError:
                 issues.append(f"artifacts[{index}] resolves outside the artifact root")
                 continue
             if not candidate.is_file():

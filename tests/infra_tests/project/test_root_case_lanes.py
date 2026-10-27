@@ -124,7 +124,7 @@ def _genuine_lane_root(tmp_path_factory: pytest.TempPathFactory) -> tuple[Path, 
     assert {row["id"] for row in rows} == set(assignments)
     policy = {
         "schema_version": POLICY_SCHEMA,
-        "runtimes": ["3.12", "3.13", "3.14"],
+        "runtimes": ["3.14", "3.15"],
         "platforms": ["darwin", "linux"],
         "obligations": [{"id": "owned-local-model", "kind": "local-model", "eligibility": None}],
         "families": [
@@ -430,7 +430,7 @@ def test_actual_lane_deadline_or_interruption_cleans_launched_detached_child(
                     live.append(pid)
                     acknowledgement.write_text(token, encoding="utf-8")
                     return
-            except (FileNotFoundError, json.JSONDecodeError):
+            except FileNotFoundError, json.JSONDecodeError:
                 pass
             except (OSError, ValueError, subprocess.TimeoutExpired) as error:
                 errors.append(type(error).__name__)

@@ -31,7 +31,7 @@ def _produce_runtime_case_evidence(root: Path):
         root,
         GOOD,
         metadata_prefix='[project]\nname="exemplar"\nversion="2.0.0"\n',
-        extra='platform_version="4.0.1"\ntested_python_versions=["3.12","3.13","3.14"]\nrequired_unpaid_capabilities=[]\n',
+        extra='platform_version="4.0.1"\ntested_python_versions=["3.14","3.15"]\nrequired_unpaid_capabilities=[]\n',
     )
     assert observed["process"].returncode == 0, observed["process"].output_tail
     raw, directory = observed["raw"], observed["directory"]

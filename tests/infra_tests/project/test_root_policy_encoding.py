@@ -27,7 +27,7 @@ def _value() -> dict:
     family = "tests/test_owned.py::test_value"
     return {
         "schema_version": POLICY_SCHEMA,
-        "runtimes": ["3.12", "3.13", "3.14"],
+        "runtimes": ["3.14", "3.15"],
         "platforms": ["darwin", "linux"],
         "families": [
             {

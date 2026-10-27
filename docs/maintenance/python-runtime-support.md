@@ -1,16 +1,24 @@
 # Python runtime support
 
-Platform 4.1.0 requires Python 3.12 or newer. The repository default and release
-interpreter is Python 3.14. CI validates Python 3.12, 3.13, and 3.14 for the
-infrastructure and every canonical public exemplar; macOS adds a Python 3.14
-smoke lane. All supported Ubuntu lanes run on pull requests as well as main.
+Platform 4.1.0 requires Python 3.14 or newer. The repository default and release
+interpreter is Python 3.14. Required qualification covers Python 3.14 and 3.15
+for infrastructure and every canonical public exemplar. Root acceptance requires
+both supported minors on Linux and macOS. Declarations and profiling results do
+not establish a successful runtime qualification.
 
 The previous Python 3.10/3.11 support belongs to platform 3.x. Raising the floor
 is a breaking platform change and does not relabel prior published releases.
 Public exemplar packages retain independent versions. Their `[tool.template]`
-metadata binds the current root SDK version through `platform_version` and lists the three tested Python
+metadata binds the current root SDK version through `platform_version` and lists both required Python
 minor versions; package and manuscript metadata describe the intended next
 release, while published citation/deposit sidecars remain historical evidence.
+
+The Root `active-inference` development group is opt-in with
+`uv sync --group active-inference` for its owning feature and native replay.
+Ordinary core bootstrap does not activate that ML stack. The Active exemplar
+retains its direct project dependency and complete required test selection;
+core availability does not establish optional-feature qualification. Each
+selected minor still needs compatible locked dependencies and actual execution.
 
 Root `pyproject.toml` and `infrastructure._version.__version__` must agree. The
 root release contract rejects a mismatched runtime version, a wrong tag, or a
@@ -20,9 +28,11 @@ it preserves third-party lock records. Dependency or Python changes that require
 resolution need their own reviewed lock refresh. Verify each resulting independent
 lock against its actual package metadata.
 
-`infrastructure.core.runtime.python_compatibility` parses the public source
-surface with the Python 3.12 grammar and rejects known unguarded APIs introduced
-in Python 3.13/3.14. The scanner is a bounded static check; interpreter-specific
+`infrastructure.core.runtime.python_compatibility.scan_python_314_compatibility`
+parses the public source surface with the Python 3.14 grammar and rejects known
+unguarded Python 3.15 APIs. The public `scan_python_312_compatibility` helper
+retains its historical grammar and API checks; it does not declare current
+Python 3.12 runtime support. The scanner is a bounded static check; interpreter-specific
 execution and dependency resolution still require the supported runtime matrix.
 
 `scripts/gates/public_readiness.py` without `--acceptance-matrix` is a health

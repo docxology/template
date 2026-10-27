@@ -437,7 +437,7 @@ def validate_scholarship_source_matrix(project_root: Path) -> list[str]:
         return ["scholarship_source_matrix.json missing"]
     try:
         payload = json.loads(payload_path.read_text(encoding="utf-8"))
-    except (OSError, json.JSONDecodeError, UnicodeDecodeError):
+    except OSError, json.JSONDecodeError, UnicodeDecodeError:
         return ["scholarship_source_matrix.json is not valid JSON"]
     rows = payload.get("rows") or []
     observed = {str(row.get("citation_key")) for row in rows}

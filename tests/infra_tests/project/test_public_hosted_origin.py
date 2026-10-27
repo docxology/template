@@ -38,7 +38,7 @@ def metadata() -> tuple[dict, dict]:
         }
         for index, name in enumerate(ARTIFACTS, 1)
     ]
-    return run, {"total_count": 6, "artifacts": rows}
+    return run, {"total_count": 4, "artifacts": rows}
 
 
 def archive(entries: list[tuple[str, bytes | zipfile.ZipInfo]]) -> bytes:
@@ -54,7 +54,7 @@ def archive(entries: list[tuple[str, bytes | zipfile.ZipInfo]]) -> bytes:
 
 def test_exact_six_original_metadata_and_foreign_stale_duplicate_controls() -> None:
     run, listing = metadata()
-    assert len(_metadata(run, listing, REPOSITORY, 91, SHA)) == 6
+    assert len(_metadata(run, listing, REPOSITORY, 91, SHA)) == 4
     for key, value in (("head_sha", "c" * 40), ("id", 92), ("path", ".github/workflows/foreign.yml")):
         with pytest.raises(ValueError):
             _metadata({**run, key: value}, listing, REPOSITORY, 91, SHA)
@@ -75,27 +75,27 @@ def test_exact_six_original_metadata_and_foreign_stale_duplicate_controls() -> N
 
 
 def test_actual_zip_complete_bytes_and_unsafe_member_controls() -> None:
-    name = "required-source-root-Linux-3.12"
-    receipt = ("root-linux-3.12/receipt.json", b'{"original_exit_code":1}')
-    raw = archive([receipt, ("root-linux-3.12/log.txt", b"actual failure remains visible")])
+    name = "required-source-root-Linux-3.14"
+    receipt = ("root-linux-3.14/receipt.json", b'{"original_exit_code":1}')
+    raw = archive([receipt, ("root-linux-3.14/log.txt", b"actual failure remains visible")])
     admitted = _zip_members(raw, name)
     assert admitted == {
         "output/readiness/" + receipt[0]: receipt[1],
-        "output/readiness/root-linux-3.12/log.txt": b"actual failure remains visible",
+        "output/readiness/root-linux-3.14/log.txt": b"actual failure remains visible",
     }
-    mutant = archive([receipt, ("root-linux-3.12/log.txt", b"changed")])
+    mutant = archive([receipt, ("root-linux-3.14/log.txt", b"changed")])
     assert hashlib.sha256(raw).digest() != hashlib.sha256(mutant).digest()
     assert _zip_members(mutant, name) != admitted
     for bad in (
         "../escape",
-        "/root-linux-3.12/absolute",
-        "root-linux-3.12/../escape",
-        "root-macos-3.12/foreign",
-        "root-linux-3.12\\ambiguous",
+        "/root-linux-3.14/absolute",
+        "root-linux-3.14/../escape",
+        "root-macos-3.14/foreign",
+        "root-linux-3.14\\ambiguous",
     ):
         with pytest.raises(ValueError):
             _zip_members(archive([receipt, (bad, b"bad")]), name)
-    link = zipfile.ZipInfo("root-linux-3.12/link")
+    link = zipfile.ZipInfo("root-linux-3.14/link")
     link.create_system = 3
     link.external_attr = (stat.S_IFLNK | 0o777) << 16
     with pytest.raises(ValueError):
@@ -103,7 +103,7 @@ def test_actual_zip_complete_bytes_and_unsafe_member_controls() -> None:
     with pytest.warns(UserWarning), pytest.raises(ValueError):
         _zip_members(archive([receipt, receipt]), name)
     with pytest.raises(ValueError):
-        _zip_members(archive([("root-linux-3.12/log.txt", b"no receipt")]), name)
+        _zip_members(archive([("root-linux-3.14/log.txt", b"no receipt")]), name)
 
 
 def test_genuine_bounded_process_original_outcome_is_required(tmp_path: Path) -> None:
@@ -141,7 +141,7 @@ def test_real_archive_stream_retains_nested_original_exit(tmp_path: Path) -> Non
 
     from infrastructure.project.public_hosted_origin import DOWNLOAD_SCRIPT
 
-    content = archive([("root-linux-3.12/receipt.json", b'{"original_exit_code":1}')])
+    content = archive([("root-linux-3.14/receipt.json", b'{"original_exit_code":1}')])
     for exit_code in (0, 1):
         target = tmp_path / f"observed-{exit_code}.zip"
         source = f"import sys;sys.stdout.buffer.write({content!r});sys.exit({exit_code})"

@@ -34,7 +34,7 @@ def find_stale_paths(repo_root: Path) -> list[tuple[Path, str]]:
                 continue
         try:
             text = path.read_text(encoding="utf-8")
-        except (UnicodeDecodeError, PermissionError):
+        except UnicodeDecodeError, PermissionError:
             continue
         for marker in STALE_MARKERS:
             if marker in text:

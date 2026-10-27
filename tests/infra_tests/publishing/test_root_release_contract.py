@@ -189,7 +189,7 @@ def test_release_installed_matrix_prepares_all_supported_runtimes() -> None:
     selected = {
         step.get("with", {}).get("python-version") for step in steps if "actions/setup-python@" in step.get("uses", "")
     }
-    assert selected == {"3.12", "3.13", "3.14", "3.14.4"}
+    assert selected == {"3.14", "3.15", "3.14.4"}
     matrix = next(step for step in steps if step.get("name") == "Verify complete installed-wheel matrix")
     assert matrix["if"] == "steps.acceptance.outputs.required != 'true'"
     command = matrix["run"]
@@ -197,7 +197,7 @@ def test_release_installed_matrix_prepares_all_supported_runtimes() -> None:
     assert "--project-workers 1" in command
     assert "--timeout 600" in command
     assert "--no-sync --offline" in command
-    for minor in ("3.12", "3.13", "3.14"):
+    for minor in ("3.14", "3.15"):
         assert f'--python "{minor}=' in command
     preparation = next(step for step in steps if step.get("name") == "Prepare locked installed-matrix dependency cache")
     assert preparation["if"] == matrix["if"]

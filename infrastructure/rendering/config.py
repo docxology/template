@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from pathlib import Path
-from typing import TYPE_CHECKING, Any, Literal, cast
+from typing import TYPE_CHECKING, Any, Literal
 from urllib.parse import urlsplit
 
 from infrastructure.core.logging.utils import get_logger
@@ -37,7 +37,7 @@ def _strict_slide_int(value: Any, key: str) -> int:
 
     if isinstance(value, bool) or not isinstance(value, int):
         raise ValueError(f"render.slides.{key} must be an integer, got {value!r}")
-    return cast(int, value)
+    return value
 
 
 def _strict_slide_string(value: Any, key: str) -> str:

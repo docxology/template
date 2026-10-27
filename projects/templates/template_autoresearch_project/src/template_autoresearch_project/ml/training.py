@@ -176,7 +176,7 @@ def tiny_patch_attention_features(x_values: np.ndarray, spec: CandidateSpec) -> 
     scores = q_values @ np.swapaxes(k_values, 1, 2) / math.sqrt(spec.d_model)
     attention = softmax(scores)
     attended = attention @ v_values @ out_proj
-    return cast(np.ndarray, np.maximum(attended.mean(axis=1), 0.0))
+    return np.maximum(attended.mean(axis=1), 0.0)
 
 
 def flatten_images(x_values: np.ndarray) -> np.ndarray:
@@ -291,7 +291,7 @@ def _activation(values: np.ndarray, activation: str) -> np.ndarray:
     if activation == "relu":
         return cast(np.ndarray, np.maximum(values, 0.0))
     if activation == "tanh":
-        return cast(np.ndarray, np.tanh(values))
+        return np.tanh(values)
     raise ValueError(f"unsupported activation: {activation}")
 
 

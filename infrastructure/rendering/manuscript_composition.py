@@ -83,7 +83,7 @@ def _relative_confined(project_root: Path, path: Path) -> str:
 def _is_within(path: Path, root: Path) -> bool:
     try:
         path.resolve(strict=True).relative_to(root.resolve(strict=True))
-    except (OSError, ValueError):
+    except OSError, ValueError:
         return False
     return True
 

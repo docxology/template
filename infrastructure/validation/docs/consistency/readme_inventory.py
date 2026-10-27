@@ -24,7 +24,7 @@ def check_readme_files_list(repo_root: Path) -> list[Inconsistency]:
             present = {p.name for p in pkg_dir.rglob("*.py")}
             try:
                 lines = doc.read_text(encoding="utf-8").splitlines()
-            except (OSError, UnicodeDecodeError):
+            except OSError, UnicodeDecodeError:
                 continue
             in_fence = False
             for n, line in enumerate(lines, 1):

@@ -36,7 +36,7 @@ bash scripts/validate.sh
 echo '{"code": "print(42)", "language": "python"}' | bash scripts/run.sh
 ```
 
-The required runtime is POSIX Python >=3.12; set `TEMPLATE_PYTHON` to select an
+The required runtime is POSIX Python >=3.14; set `TEMPLATE_PYTHON` to select an
 installed interpreter. `jq` and GNU `timeout` are unnecessary. `timeout_s` must be
 a finite positive number at most 300 (default 30). Incomplete stdin fails after
 five seconds. `sh` and `bash` select the installed Bash runtime.

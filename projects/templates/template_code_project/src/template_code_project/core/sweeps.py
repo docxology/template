@@ -98,7 +98,7 @@ def run_alpha_sweep(
             final_dist.append(dist)
             final_obj.append(float(result.objective_value))
             diverged.append(dist > cfg.divergence_threshold)
-        except (OverflowError, FloatingPointError, ValueError, np.linalg.LinAlgError):
+        except OverflowError, FloatingPointError, ValueError, np.linalg.LinAlgError:
             iters.append(int(cfg.max_iterations))
             final_dist.append(float("inf"))
             final_obj.append(float("inf"))

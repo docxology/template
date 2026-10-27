@@ -49,7 +49,7 @@ run separately. A local dashboard or focused pass cannot authorize publication.
 ## Why this guide exists
 
 Default functional CI uses Linux and Python 3.14. Manual Optional Hardening
-retains the complete Ubuntu × Python 3.12–3.14 and macOS × Python 3.14
+retains the complete Ubuntu × Python 3.14/3.15 and macOS × Python 3.15
 infrastructure matrix. Local reproduction helps diagnose these jobs and reduces
 dependence on hosted runner availability and pricing.
 
@@ -141,9 +141,9 @@ Add `.secrets` to `.gitignore` if you need to test secret-dependent jobs locally
 | CI job | Reproducible via act? | Notes |
 | --- | --- | --- |
 | `lint` (ruff + mypy; also runs the four-pool `check_tracked_all.py` confidentiality guard) | ✅ Yes | Fully Linux-portable |
-| `test-infra` (matrix: ubuntu py3.12/3.13/3.14 + macos py3.14) | ✅ Yes (ubuntu legs) | Four complete shards per environment; set `--matrix python-version:3.X`. Linux 3.14 shards retain coverage data; `coverage-infra` owns the complete-union threshold |
+| `test-infra` (matrix: ubuntu py3.14/3.15 + macos py3.15) | ✅ Yes (ubuntu legs) | Four complete shards per environment; set `--matrix python-version:3.X`. Linux 3.14 shards retain coverage data; `coverage-infra` owns the complete-union threshold |
 | `coverage-infra` | Hosted artifact boundary | Merges all four same-revision Linux 3.14 shard selection/data artifacts, validates the complete disjoint case union and enforces ≥60%. Reproduce it using the actual hosted artifacts; the existing unpartitioned local infrastructure command remains available |
-| `test-project` (matrix: per-project × py3.12/3.13/3.14) | ✅ Yes | Per-project 90% coverage runs inside this job; macOS not exercised here |
+| `test-project` (matrix: per-project × py3.14/3.15) | ✅ Yes | Per-project 90% coverage runs inside this job; macOS not exercised here |
 | `security` (bandit + pip-audit) | ✅ Yes | Fully Linux-portable |
 | `docs-lint` | ✅ Yes | Markdown lint, doc-tree integrity |
 | `validate` (manuscript validation) | ✅ Yes | Pure Python |

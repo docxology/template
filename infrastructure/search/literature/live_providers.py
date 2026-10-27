@@ -272,7 +272,7 @@ def _active_license_versions(item: dict[str, Any], today: date | None = None) ->
             if len(values) != 3 or any(type(value) is not int for value in values):
                 continue
             effective = date(*values)
-        except (ValueError, TypeError):
+        except ValueError, TypeError:
             continue
         if effective <= current:
             versions.add(version)

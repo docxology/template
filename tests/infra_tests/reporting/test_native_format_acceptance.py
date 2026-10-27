@@ -390,7 +390,7 @@ def test_actual_observer_expiry_escapes_routine_error_capture_and_restores_timer
                 # one-shot deadline must escape and stop all later gates.
                 try:
                     observer()
-                except (OSError, ValueError, TypeError, KeyError):
+                except OSError, ValueError, TypeError, KeyError:
                     swallowed = True
         assert not swallowed and time.monotonic() - started < 2
         assert signal.getsignal(signal.SIGALRM) == signal.SIG_IGN

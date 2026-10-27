@@ -117,7 +117,7 @@ def expected_likelihood(concentration: ArrayF) -> ArrayF:
     """Expected likelihood ``E[A] = pA / sum_o(pA)`` (column-normalised)."""
     pa = np.asarray(concentration, dtype=np.float64)
     column_totals = pa.sum(axis=0, keepdims=True)
-    return cast(ArrayF, pa / column_totals)
+    return pa / column_totals
 
 
 def _kl_columns(true_a: ArrayF, learned_a: ArrayF) -> float:

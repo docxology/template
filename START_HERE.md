@@ -76,7 +76,7 @@ sudo apt-get install -y pandoc texlive-xetex texlive-fonts-recommended \
 
 **`git`:** macOS — `xcode-select --install` (Xcode Command Line Tools); Ubuntu — `sudo apt-get install -y git`.
 
-You do **not** need Python pre-installed. `uv sync` will download and pin the right Python version automatically — this repo pins 3.14 via `.python-version`, and the supported range is Python 3.12+ (`requires-python = ">=3.12"` in `pyproject.toml`; infrastructure and public-project CI matrices cover 3.12–3.14). Python 3.15
+You do **not** need Python pre-installed. `uv sync` will download and pin the right Python version automatically — this repo pins 3.14 via `.python-version`, and the supported range is Python 3.14+ (`requires-python = ">=3.14"` in `pyproject.toml`; required infrastructure and public-project CI matrices cover 3.14 and 3.15). Python 3.15
 component profiling is separate from package/runtime qualification; the locked
 project environments remain the authority for supported execution.
 
@@ -210,7 +210,7 @@ docs/               Documentation corpus (hierarchy and index in docs/AGENTS.md
 | `pandoc: command not found` | `brew install pandoc` or `sudo apt-get install pandoc` |
 | Missing LaTeX package `*.sty` | `sudo tlmgr install <package>` |
 | `ModuleNotFoundError` | `uv sync` then retry |
-| `uv sync` fails on Python version | uv auto-downloads Python — check internet; or set `UV_PYTHON=3.12 uv sync` |
+| `uv sync` fails on Python version | uv auto-downloads Python — check internet; or set `UV_PYTHON=3.14 uv sync` |
 | PDF shows `??` for references | Normal on first pass; pipeline runs multi-pass automatically |
 | Tests fail coverage gate | `uv run pytest projects/templates/template_code_project/tests/ --cov=projects/templates/template_code_project/src --cov-report=term-missing --cov-fail-under=90` |
 | Pipeline stage fails | See [`docs/guides/startup-and-setup.md` §Troubleshooting](docs/guides/startup-and-setup.md#troubleshooting) |

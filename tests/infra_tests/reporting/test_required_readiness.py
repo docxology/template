@@ -41,7 +41,7 @@ def _declarations(root: Path) -> None:
         (path / "pyproject.toml").write_text(
             '[project]\nname="exemplar"\nversion="2.0.0"\n'
             '[tool.template]\nplatform_version="4.0.1"\n'
-            'tested_python_versions=["3.12","3.13","3.14"]\nrequired_unpaid_capabilities=[]\n'
+            'tested_python_versions=["3.14","3.15"]\nrequired_unpaid_capabilities=[]\n'
         )
         (path / "manuscript/config.yaml").write_text(
             'publication:\n  intended_version: "2.0.0"\n  platform_version: "4.0.1"\n'
@@ -119,9 +119,8 @@ def test_source_owned_profile_requires_every_project_runtime_and_capability(tmp_
     assert {req.scope for req in requirements} == {"root", *PUBLIC_PROJECT_NAMES}
     for project in PUBLIC_PROJECT_NAMES:
         assert {req.python_version for req in requirements if req.scope == project and req.kind == "runtime"} == {
-            "3.12",
-            "3.13",
             "3.14",
+            "3.15",
         }
         assert {req.kind for req in requirements if req.scope == project} >= {
             "coverage",

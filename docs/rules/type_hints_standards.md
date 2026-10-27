@@ -413,7 +413,7 @@ public scope remains free of `ignore_errors` exemptions. See `[tool.mypy]` in
 
 ```toml
 [tool.mypy]
-python_version = "3.12"
+python_version = "3.14"
 warn_return_any = true
 warn_unused_configs = true
 disallow_untyped_defs = false  # tightened per-module via [[tool.mypy.overrides]]

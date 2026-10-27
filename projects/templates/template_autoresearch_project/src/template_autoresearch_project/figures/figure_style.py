@@ -31,7 +31,10 @@ import contextlib
 from collections.abc import Iterator, Mapping
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Any
+from typing import TYPE_CHECKING, Any
+
+if TYPE_CHECKING:
+    from matplotlib.typing import RcKeyType
 
 import yaml
 
@@ -107,7 +110,7 @@ class FigureStyleConfig:
         """Resolve a palette ``role`` to a hex colour, with a fallback."""
         return str(self.palette.get(role, fallback))
 
-    def rc_params(self) -> dict[str, Any]:
+    def rc_params(self) -> dict[RcKeyType, Any]:
         """Return matplotlib rcParams for this style.
 
         Only ``font.size`` is scaled (matplotlib's relative size keywords such as

@@ -128,7 +128,7 @@ def measure_test_summary(
                 full_report_out.parent.mkdir(parents=True, exist_ok=True)
                 full_report_out.write_text(cov_json.read_text())
             return test_count, coverage_pct
-        except (OSError, subprocess.SubprocessError, json.JSONDecodeError, KeyError):
+        except OSError, subprocess.SubprocessError, json.JSONDecodeError, KeyError:
             print(
                 "measure_test_summary: subprocess/parse failure; reporting "
                 f"'pending' ({traceback.format_exc(limit=2)})",

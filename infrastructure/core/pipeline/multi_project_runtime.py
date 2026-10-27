@@ -99,7 +99,7 @@ def selected_project_config(
     if not isinstance(project, str):
         try:
             projects_dir = project.path.absolute().relative_to(repo_root.absolute()).parts[0]
-        except (ValueError, IndexError):
+        except ValueError, IndexError:
             pass
     return PipelineConfig(
         name,

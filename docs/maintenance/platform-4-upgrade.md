@@ -12,7 +12,7 @@ acceptance and independent review, where required, have passed.
 
 ## Operating contract
 
-- Python >=3.12; repository default 3.14; compatibility lanes 3.12–3.14.
+- Python >=3.14; repository default 3.14; required qualification lanes 3.14/3.15.
 - Deterministic offline core execution by default; explicitly selected live
   capabilities; no paid API execution.
 - Existing process supervision, renderers, validators, scientific oracles, and
@@ -851,7 +851,7 @@ check, main push, standalone promotion or release is implied by these receipts.
   isolation, worker reuse, and same-project contention.
 - Full public lint/type/no-mocks/security/documentation/export/confidentiality
   gates; infrastructure >=60% and each exemplar >=90% own-source coverage.
-- All public projects on 3.12–3.14 and supported macOS runtime behavior; fresh
+- All public projects on 3.14/3.15 and supported macOS runtime behavior; fresh
   clones and installed packages outside source checkouts.
 - Fresh independent shared-infrastructure/security review.
 - Required free/local live capabilities and actual sandbox publication with

@@ -33,7 +33,7 @@ unchanged for the flat baseline):
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Any, cast
+from typing import Any
 
 import numpy as np
 from numpy.typing import NDArray
@@ -120,7 +120,7 @@ def _context_marginal(state_belief: ArrayF) -> ArrayF:
         .sum(axis=1)
     )
     total = marg.sum()
-    return cast(ArrayF, marg / total if total > 0 else marg)
+    return marg / total if total > 0 else marg
 
 
 def cue_information_gain(model: dict[str, Any]) -> float:

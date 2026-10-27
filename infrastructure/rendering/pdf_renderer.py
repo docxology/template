@@ -46,7 +46,7 @@ def _pdf_tagging_options(manuscript_dir: Path) -> tuple[bool, str]:
         return False, "en"
     try:
         config = yaml.safe_load(config_path.read_text(encoding="utf-8")) or {}
-    except (OSError, yaml.YAMLError):
+    except OSError, yaml.YAMLError:
         return False, "en"
     metadata = config.get("metadata") if isinstance(config, dict) else None
     if not isinstance(metadata, dict):

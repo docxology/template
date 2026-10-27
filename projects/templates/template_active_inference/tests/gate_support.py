@@ -124,7 +124,7 @@ def _fixed_point_passes() -> int:
     raw = os.environ.get("TEMPLATE_ACTIVE_INFERENCE_FIXED_POINT_PASSES", "1")
     try:
         value = int(raw)
-    except (TypeError, ValueError):
+    except TypeError, ValueError:
         return 1
     return max(1, value)
 

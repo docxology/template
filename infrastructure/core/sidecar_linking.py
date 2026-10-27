@@ -114,7 +114,7 @@ def _safe_resolve(path: Path) -> Path:
     """
     try:
         return path.resolve()
-    except (OSError, RuntimeError):
+    except OSError, RuntimeError:
         return Path(os.path.realpath(path))
 
 

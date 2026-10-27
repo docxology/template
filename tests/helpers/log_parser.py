@@ -56,7 +56,7 @@ def parse_structured_logs(output: str) -> List[LogEntry]:
                     exception=data.get("exception"),
                 )
             )
-        except (json.JSONDecodeError, KeyError):
+        except json.JSONDecodeError, KeyError:
             continue
     return entries
 

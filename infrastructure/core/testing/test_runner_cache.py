@@ -26,7 +26,7 @@ def _run_git_metadata(repo_root: Path, args: list[str]) -> str:
                 capture_output=True,
             ),
         )
-    except (OSError, ValueError):
+    except OSError, ValueError:
         return "unavailable"
     if completed.returncode != 0:
         return "unavailable"
@@ -158,7 +158,7 @@ def _resolve_roster_revision(repo_root: Path) -> str:
                 capture_output=True,
             ),
         )
-    except (OSError, ValueError):
+    except OSError, ValueError:
         return "unknown"
     if completed.returncode != 0:
         return "unknown"

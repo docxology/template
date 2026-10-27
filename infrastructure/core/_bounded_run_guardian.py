@@ -234,7 +234,7 @@ def start_bounded_run_guardian(
         ):
             try:
                 changed = paths_digest((package_root,), source=True) != source_digest
-            except (OSError, ValueError):
+            except OSError, ValueError:
                 changed = True
             if changed:
                 raise GuardianCustodyError("guardian source changed during startup") from exc
@@ -352,7 +352,7 @@ def _process_is_running(pid: int) -> bool:
             check=False,
             timeout=5,
         )
-    except (OSError, subprocess.SubprocessError):
+    except OSError, subprocess.SubprocessError:
         # An unavailable probe is not evidence that the target exited.  Keep
         # waiting so a transient ps failure cannot trigger premature cleanup
         # of a still-running bounded command.

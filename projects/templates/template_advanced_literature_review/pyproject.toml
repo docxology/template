@@ -5,15 +5,16 @@ description = "Multi-phase systematic literature review with LLM filtering"
 authors = [{name = "Daniel Ari Friedman", email = "daniel@activeinference.institute"}]
 license = {text = "CC-BY-4.0"}
 readme = "README.md"
-requires-python = ">=3.12"
+requires-python = ">=3.14"
 keywords = ["literature-review", "systematic-review", "multi-phase", "llm-filtering", "exoplanets"]
 classifiers = [
     "Development Status :: 4 - Beta",
     "Intended Audience :: Science/Research",
     "License :: OSI Approved :: MIT License",
     "Programming Language :: Python :: 3",
-            "Programming Language :: Python :: 3.12",
     "Topic :: Scientific/Engineering :: Information Analysis",
+    "Programming Language :: Python :: 3.14",
+    "Programming Language :: Python :: 3.15",
 ]
 dependencies = [
     "template-literature-meta-analysis==0.2.0",
@@ -120,7 +121,7 @@ exclude_lines = [
 
 [tool.ruff]
 line-length = 120
-target-version = "py312"
+target-version = "py314"
 
 [tool.ruff.lint]
 select = [
@@ -145,7 +146,7 @@ unfixable = ["B"]
 "src/manuscript/variables/extractors/*" = ["E402"]
 
 [tool.mypy]
-python_version = "3.12"
+python_version = "3.14"
 warn_return_any = true
 warn_unused_configs = true
 disallow_untyped_defs = true
@@ -182,7 +183,7 @@ dev = [
 # Compatibility contract for this independent exemplar release.
 [tool.template]
 platform_version = "4.1.0"
-tested_python_versions = ["3.12", "3.13", "3.14"]
+tested_python_versions = ["3.14", "3.15"]
 required_unpaid_capabilities = ["retrieval", "screening", "local-classification", "licensed-fulltext"]
 
 # Checkout resolver only; wheels declare the real platform dependency above.

@@ -88,7 +88,7 @@ class ResolutionCache:
             return None
         try:
             data = json.loads(paper_json)
-        except (TypeError, json.JSONDecodeError):
+        except TypeError, json.JSONDecodeError:
             return CACHE_MISS
         paper = Paper.from_dict(data)
         if resolved_via and not paper.source:

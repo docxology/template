@@ -143,7 +143,9 @@ def _wheel(
     members = {
         f"{module}/__init__.py": content,
         f"{metadata}/METADATA": f"Metadata-Version: 2.1\nName: {distribution}\nVersion: 1.0.0\n".encode(),
-        f"{metadata}/WHEEL": b"Wheel-Version: 1.0\nGenerator: independent-control\nRoot-Is-Purelib: true\nTag: py3-none-any\n",
+        f"{metadata}/WHEEL": (
+            b"Wheel-Version: 1.0\nGenerator: independent-control\nRoot-Is-Purelib: true\nTag: py3-none-any\n"
+        ),
     }
     record = f"{metadata}/RECORD"
     buffer = StringIO()
@@ -539,7 +541,7 @@ def test_actual_installed_cell_reader_requires_bound_process_and_complete_minor_
             {**cell, "details": {**details, "command": early_command, "process_artifact": early_binding}},
             SnapshotReader(root),
         )
-    foreign = next(minor for minor in ("3.12", "3.13", "3.14") if minor != raw["python_version"])
+    foreign = next(minor for minor in ("3.14", "3.15") if minor != raw["python_version"])
     relabeled_spec = {**spec, "python_version": foreign}
     relabeled_binding = bound("relabeled-spec.json", json.dumps(relabeled_spec).encode())
     relabeled = {**raw, "python_version": foreign, "probe_spec_sha256": relabeled_binding["sha256"]}
@@ -564,7 +566,7 @@ def test_actual_installed_cell_reader_requires_bound_process_and_complete_minor_
                 requirement,
                 {
                     "source_current": True,
-                    "tested_python_versions": ["3.12", "3.13", "3.14"],
+                    "tested_python_versions": ["3.14", "3.15"],
                     "runtime_observations": cells,
                 },
                 SnapshotReader(root),
@@ -635,7 +637,7 @@ def test_complete_missing_runtime_matrix_retains_all_blockers_and_exit75(tmp_pat
         (project / "pyproject.toml").write_text(
             "[project]\nname=" + json.dumps(Path(scope).name) + '\nversion="1.0.0"\n'
             '[tool.template]\nplatform_version="4.0.1"\n'
-            'tested_python_versions=["3.12","3.13","3.14"]\nrequired_unpaid_capabilities=[]\n'
+            'tested_python_versions=["3.14","3.15"]\nrequired_unpaid_capabilities=[]\n'
         )
         (project / "manuscript/config.yaml").write_text(
             'publication:\n  intended_version: "1.0.0"\n  platform_version: "4.0.1"\n'
@@ -643,8 +645,8 @@ def test_complete_missing_runtime_matrix_retains_all_blockers_and_exit75(tmp_pat
     report = run_installed_acceptance(tmp_path, {}, project_workers=3)
     assert report["exit_code"] == 75
     assert report["installed_matrix"]["matrix_complete"] is True
-    assert report["installed_matrix"]["observed_cells"] == report["installed_matrix"]["expected_cells"] == 78
-    assert report["installed_matrix"]["counts"] == {"pass": 0, "fail": 0, "blocked": 78}
+    assert report["installed_matrix"]["observed_cells"] == report["installed_matrix"]["expected_cells"] == 52
+    assert report["installed_matrix"]["counts"] == {"pass": 0, "fail": 0, "blocked": 52}
     assert len(report["gates"]) == 52
     assert all(gate["status"] == "blocked" for gate in report["gates"].values())
     assert all(cell["blockers"] for cell in report["installed_matrix"]["results"])

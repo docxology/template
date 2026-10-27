@@ -10,7 +10,7 @@ metrics returns an empty list. Monitoring retains the caller's existing
 
 Python 3.15's standard-library `profiling.tracing` can retain deterministic call
 profiles without the process-memory access required by `profiling.sampling`.
-These diagnostic profiles do not replace the supported Python 3.12–3.14 release
+These diagnostic profiles do not replace the supported Python 3.14/3.15 release
 gates or authorize cache reuse, changed timeouts, or coverage exceptions.
 
 ## Files
@@ -59,14 +59,14 @@ child. Exported non-Git execution requires explicit `SOURCE_DATE_EPOCH`.
 
 Ordinary core/live execution uses an existing root `.venv/bin/python` or an
 explicit absolute `TEMPLATE_ROOT_PYTHON`. Missing or broken preparation blocks
-with 75 and never selects a substitute. The shell launcher first requires a finite nonce-bound actual CPython 3.12+
+with 75 and never selects a substitute. The shell launcher first requires a finite nonce-bound actual CPython 3.14+
 virtual-environment probe, then uses the mature public-source bytecode audit
 and process guardian with private fresh caches. The functional probe does not
 establish universal trust in a hostile nominated executable.
 The probe, outer supervisor, and guardian use `-I -S`; they admit venv metadata
 and package directories without executing `.pth` or `sitecustomize` startup
 code. The actual CLI child retains normal `-I` site initialization inside the
-guardian's deadline and descendant-cleanup boundary on Python 3.12–3.14.
+guardian's deadline and descendant-cleanup boundary on Python 3.14/3.15.
 Declared installed requirement names/versions establish availability, not
 universal installed dependency-member custody.
 

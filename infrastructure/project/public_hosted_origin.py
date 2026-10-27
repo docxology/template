@@ -31,7 +31,7 @@ WORKFLOW = ".github/workflows/platform-required-acceptance.yml"
 ARTIFACTS = {
     f"required-source-root-{host}-{minor}": (platform, minor)
     for host, platform in (("Linux", "linux"), ("macOS", "darwin"))
-    for minor in ("3.12", "3.13", "3.14")
+    for minor in ("3.14", "3.15")
 }
 MAX_ARCHIVE = 64 * 1024 * 1024
 MAX_RUN_ARTIFACTS = 1024

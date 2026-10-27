@@ -4,14 +4,18 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from infrastructure.core.runtime.python_compatibility import scan_python_312_compatibility
+from infrastructure.core.runtime.python_compatibility import (
+    scan_python_312_compatibility,
+    scan_python_314_compatibility,
+)
 from infrastructure.project.public_scope import public_ci_source_paths
 
 
 def test_public_python_surface_is_python_312_compatible(repo_root: Path) -> None:
+    """Retain the historical node ID while checking the current supported floor."""
     paths = [repo_root / relative for relative in public_ci_source_paths(repo_root)]
 
-    issues = scan_python_312_compatibility(paths, repo_root=repo_root)
+    issues = scan_python_314_compatibility(paths, repo_root=repo_root)
 
     assert issues == ()
 
@@ -69,3 +73,24 @@ def test_python_312_stdlib_and_syntax_are_supported(tmp_path: Path) -> None:
         encoding="utf-8",
     )
     assert scan_python_312_compatibility([source], repo_root=tmp_path) == ()
+
+
+def test_current_floor_rejects_315_only_syntax_and_apis(tmp_path: Path) -> None:
+    (tmp_path / "future_syntax.py").write_text("lazy import json\n", encoding="utf-8")
+    (tmp_path / "future_api.py").write_text(
+        "from typing import TypeForm, NoExtraItems, disjoint_base\nvalue = frozendict()\n",
+        encoding="utf-8",
+    )
+    issues = scan_python_314_compatibility([tmp_path], repo_root=tmp_path)
+    assert {issue.rule for issue in issues} == {"PY314.API", "PY314.SYNTAX"}
+    assert sum(issue.rule == "PY314.API" for issue in issues) == 4
+
+
+def test_current_floor_accepts_314_apis_and_guarded_315_backports(tmp_path: Path) -> None:
+    source = tmp_path / "supported.py"
+    source.write_text(
+        "import annotationlib\nfrom typing import TypeIs, ReadOnly\n"
+        "try:\n    from typing import TypeForm\nexcept ImportError:\n    from typing_extensions import TypeForm\n",
+        encoding="utf-8",
+    )
+    assert scan_python_314_compatibility([source], repo_root=tmp_path) == ()

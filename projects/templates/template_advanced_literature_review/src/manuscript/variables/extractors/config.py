@@ -56,7 +56,7 @@ def extract_config_tokens(ctx: ExtractContext) -> dict[str, str]:
         variables["CORPUS_SIZE"] = str(corpus_size)
         variables["RETRIEVED_CORPUS_SIZE"] = str(corpus_size)
         variables["CORPUS_SIZE_LATEX"] = latex_number(corpus_size)
-    except (AttributeError, OSError, TypeError, ValueError):
+    except AttributeError, OSError, TypeError, ValueError:
         # Fallback for missing or corrupt corpus
         variables["CORPUS_SIZE"] = "0"
         variables["RETRIEVED_CORPUS_SIZE"] = "0"

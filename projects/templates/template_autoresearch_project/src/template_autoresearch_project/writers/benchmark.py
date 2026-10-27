@@ -99,7 +99,7 @@ def _has_supported_claim(project_root: Path) -> bool:
         return False
     try:
         payload = json.loads(path.read_text(encoding="utf-8"))
-    except (OSError, json.JSONDecodeError):
+    except OSError, json.JSONDecodeError:
         return False
     claims = payload if isinstance(payload, list) else []
     for claim in claims:
@@ -122,7 +122,7 @@ def _ml_accuracy_improved(project_root: Path, settings: _GradingSettings) -> boo
         return False
     try:
         payload = json.loads(path.read_text(encoding="utf-8"))
-    except (OSError, json.JSONDecodeError):
+    except OSError, json.JSONDecodeError:
         return False
     delta = payload.get("accuracy_delta") if isinstance(payload, dict) else None
     if not isinstance(delta, (int, float)) or isinstance(delta, bool) or not math.isfinite(delta):
@@ -282,7 +282,7 @@ def _is_auto_grade(path: Path) -> bool:
     """
     try:
         payload = json.loads(path.read_text(encoding="utf-8"))
-    except (OSError, json.JSONDecodeError):
+    except OSError, json.JSONDecodeError:
         return False
     return isinstance(payload, dict) and "checks" in payload and "failed_checks" in payload
 
@@ -309,7 +309,7 @@ def _benchmark_score(path: Path) -> float | None:
         return None
     try:
         payload = json.loads(path.read_text(encoding="utf-8"))
-    except (OSError, json.JSONDecodeError):
+    except OSError, json.JSONDecodeError:
         return None
     if not isinstance(payload, dict):
         return None

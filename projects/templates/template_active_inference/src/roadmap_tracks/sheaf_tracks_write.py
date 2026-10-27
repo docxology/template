@@ -42,7 +42,7 @@ def _run_prerequisite_promoters(root: Path) -> None:
         write_toy_sweep_artifacts(root)
         write_formal_interop_artifacts(root)
         write_integration_audit_artifacts(root)
-    except (ImportError, OSError, ValueError, KeyError):
+    except ImportError, OSError, ValueError, KeyError:
         pass
 
 
@@ -114,7 +114,7 @@ def _write_integration_audit_phase(root: Path, paths: dict[str, Path]) -> None:
 
         write_integration_audit_artifacts(root)
         _record_external_artifact_paths(root, paths)
-    except (ImportError, OSError, ValueError, KeyError):
+    except ImportError, OSError, ValueError, KeyError:
         pass
 
 
@@ -170,7 +170,7 @@ def _write_semantic_artifacts(root: Path, paths: dict[str, Path]) -> None:
             build_evidence_crosswalk(root),
         )
         paths["semantic"] = _write_json(root / CANONICAL_ARTIFACTS["semantic"], build_semantic_gluing_certificate(root))
-    except (ImportError, OSError, ValueError, KeyError):
+    except ImportError, OSError, ValueError, KeyError:
         pass
 
 

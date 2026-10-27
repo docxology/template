@@ -223,7 +223,7 @@ def _verify_one(item: dict[str, Any], base_dir: Path) -> FileVerification:
     media_type = str(item.get("media_type", ""))
     try:
         actual_rows = count_rows(resolved, media_type)
-    except (NotImplementedError, ValueError, json.JSONDecodeError):
+    except NotImplementedError, ValueError, json.JSONDecodeError:
         return FileVerification(
             path=path,
             status=STATUS_UNSUPPORTED_MEDIA,

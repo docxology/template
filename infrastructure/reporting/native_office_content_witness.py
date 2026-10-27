@@ -160,7 +160,7 @@ def _image_identity(data: bytes) -> dict[str, Any]:
                 "size": list(rgba.size),
                 "rgba_sha256": hashlib.sha256(rgba.tobytes()).hexdigest(),
             }
-    except (OSError, SyntaxError):
+    except OSError, SyntaxError:
         # Vector transformations require another explicit witness. Exact
         # source bytes are still accounted for and can survive unchanged.
         return {"kind": "exact-nonraster", "sha256": hashlib.sha256(data).hexdigest()}

@@ -81,7 +81,7 @@ def _values_differ(normal_result: dict, control_result: dict) -> bool:
         try:
             a_arr = np.asarray(a, dtype=float)
             b_arr = np.asarray(b, dtype=float)
-        except (TypeError, ValueError):
+        except TypeError, ValueError:
             if a != b:
                 return True
             continue

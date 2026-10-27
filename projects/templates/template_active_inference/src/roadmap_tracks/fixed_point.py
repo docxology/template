@@ -253,7 +253,7 @@ def _cached_fingerprint_matches(root: Path, current: str) -> bool:
     cache_path = _fingerprint_cache_path(root)
     try:
         return cache_path.is_file() and cache_path.read_text(encoding="utf-8").strip() == current
-    except (OSError, UnicodeError):
+    except OSError, UnicodeError:
         return False
 
 
@@ -286,7 +286,8 @@ def _write_sheaf_owned_artifacts(root: Path) -> dict[str, Path]:
 def _write_semantic_core(root: Path) -> dict[str, Path]:
     from manuscript.sheaf.semantic_gluing_outputs import _write_semantic_gluing_snapshot
 
-    return _write_semantic_gluing_snapshot(root)
+    result: dict[str, Path] = _write_semantic_gluing_snapshot(root)
+    return result
 
 
 def _write_contract_artifacts(root: Path) -> dict[str, Path]:

@@ -2,7 +2,7 @@
 
 The source-owned [literal policy](../../infrastructure/config/root-case-policy.json)
 binds every collected function, parameter member, source hash and fixture/marker
-metadata hash. It retains Python 3.12, 3.13 and 3.14 on Linux and macOS. Only the
+metadata hash. It retains Python 3.14 and 3.15 on Linux and macOS. Only the
 two actual Linux `/proc` controls have Linux-only applicability. Missing tools,
 prepared local models, public contract fixtures and external datasets block the
 applicable required cells. They do not remove those cells.
@@ -72,7 +72,7 @@ cyclic, forward, ambiguous or unused observations are refused. The 64 MiB archiv
 and expanded observation ceilings remain unchanged.
 
 The [dedicated workflow](../../.github/workflows/platform-required-acceptance.yml)
-collects six original Root audits, all 25 native formats, and all project, installed/export and remaining
+collects four supported Root host/minor audits, all 25 native formats, and all project, installed/export and remaining
 source-owned obligations. Each literal Root cell has a fixed host/minor owner;
 Linux 3.14 owns policy and combined Root branch coverage. A blocked owner remains
 blocked even if another audit reports pass. No duplicate gate chooses a winner.

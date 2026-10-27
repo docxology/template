@@ -33,7 +33,7 @@ from infrastructure.reporting.native_format_semantic_source import semantic_sour
 from infrastructure.reporting.native_hydration_reconstruction import observe_native_hydration_reconstruction
 from infrastructure.reporting.native_pdf_citation_runtime import CitationRuntime, file_observation
 from infrastructure.reporting.native_source_external_admission import NativeSourceContext
-from infrastructure.reporting.native_tool_producer import current_native_producer_operation
+from infrastructure.reporting.native_tool_producer import NativeProducerOperation, current_native_producer_operation
 from infrastructure.reporting.release_readiness_snapshot import ArtifactSnapshot, SnapshotReader
 
 PARSER_ARGUMENTS = ("--from=markdown+tex_math_dollars+raw_tex+header_attributes", "--to=json")
@@ -646,7 +646,7 @@ def html_native_endpoints(
     from infrastructure.reporting.native_format_pdf_semantic_plan import strict_ast
     from infrastructure.reporting.native_format_joint_source import require_native_operation
 
-    producer = reader.native_producer_operation
+    producer: NativeProducerOperation | None = reader.native_producer_operation
     if producer is not None:
         if current_native_producer_operation() is not producer:
             raise ValueError("HTML endpoints lost their actual live Source owner")

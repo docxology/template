@@ -19,7 +19,7 @@ def _policy(lane="live-unverified"):
     return RootCasePolicy.parse(
         {
             "schema_version": POLICY_SCHEMA,
-            "runtimes": ["3.12", "3.13", "3.14"],
+            "runtimes": ["3.14", "3.15"],
             "platforms": ["darwin", "linux"],
             "families": [
                 {
@@ -74,7 +74,7 @@ def test_unverified_operation_keeps_every_host_and_minor_required():
     prerequisites = (Prerequisite("monid-discover", "network-unverified", ("MONID_API_KEY",), (), ()),)
     cells = required_cells(policy, prerequisites)
     assert {(cell.platform, cell.runtime) for cell in cells} == {
-        (host, minor) for host in ("darwin", "linux") for minor in ("3.12", "3.13", "3.14")
+        (host, minor) for host in ("darwin", "linux") for minor in ("3.14", "3.15")
     }
     plan = compile_case_plan(policy, _census(policy), source_identity="d" * 64)
     admission = RootCaseAdmission(policy, plan, {}, {}, prerequisites, Path.cwd())

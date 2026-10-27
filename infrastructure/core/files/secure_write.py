@@ -125,7 +125,7 @@ def _directory_identity_matches(
 ) -> bool:
     try:
         current, opened = _open_parent(root, parent_parts, create=False, expected_root_identity=expected_root_identity)
-    except (OSError, ValueError):
+    except OSError, ValueError:
         return False
     try:
         expected = os.fstat(expected_fd)

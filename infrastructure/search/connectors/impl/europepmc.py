@@ -90,7 +90,7 @@ class EuropePMCConnector:
         if year_raw:
             try:
                 year = int(year_raw)
-            except (TypeError, ValueError):
+            except TypeError, ValueError:
                 pass
         doi = item.get("doi") or None
         url_list = item.get("fullTextUrlList", {}).get("fullTextUrl", [{}])

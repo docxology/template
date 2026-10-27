@@ -218,7 +218,7 @@ class _StructuredQueryMixin:
                 },
             )
             return parsed
-        except (json.JSONDecodeError, ValueError):
+        except json.JSONDecodeError, ValueError:
             # Try to extract JSON if wrapped in surrounding text
             if "{" in response_text and "}" in response_text:
                 start = response_text.index("{")

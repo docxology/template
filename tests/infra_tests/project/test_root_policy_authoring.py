@@ -103,7 +103,7 @@ def test_literal_draft_preserves_original_all_families_members_and_live_obligati
     }
     live = next(row for row in actual["families"] if row["id"].endswith("::test_model"))
     assert live["lane"] == "live-unpaid" and live["obligations"] == ["owned-local-model"]
-    assert actual["runtimes"] == ["3.12", "3.13", "3.14"]
+    assert actual["runtimes"] == ["3.14", "3.15"]
     assert actual["platforms"] == ["darwin", "linux"]
     assert not (root / "output/readiness/live-body").exists()
 

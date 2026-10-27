@@ -19,7 +19,12 @@ description = "Generic, idempotent literature meta-analysis template: multi-engi
 authors = [
     {name = "Daniel Ari Friedman", email = "daniel@activeinference.institute"},
 ]
-requires-python = ">=3.12"
+requires-python = ">=3.14"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.14",
+    "Programming Language :: Python :: 3.15",
+]
 dependencies = [
     "research-project-template==4.1.0",
     "pypdf>=6.16.1",
@@ -92,7 +97,7 @@ Documentation = "https://github.com/docxology/template_literature_meta_analysis/
 # Compatibility contract for this independent exemplar release.
 [tool.template]
 platform_version = "4.1.0"
-tested_python_versions = ["3.12", "3.13", "3.14"]
+tested_python_versions = ["3.14", "3.15"]
 required_unpaid_capabilities = ["retrieval", "fulltext", "extraction", "local-model", "kg"]
 
 # Checkout resolver only; wheels declare the real platform dependency above.

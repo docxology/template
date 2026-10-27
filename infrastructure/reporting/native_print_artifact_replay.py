@@ -147,7 +147,7 @@ def admit_print_reference(
         or raw["runtime"] != runtime
         or runtime.get("missing") != []
         or runtime.get("implementation") != "CPython"
-        or runtime.get("python_version") not in {"3.12", "3.13", "3.14"}
+        or runtime.get("python_version") not in {"3.14", "3.15"}
     ):
         raise ValueError("configured print source witness differs from original authenticated worker")
     for name in ("interpreter_before", "interpreter_after"):

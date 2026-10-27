@@ -29,7 +29,7 @@ def _value():
 
     return {
         "schema_version": OPTIONAL_POLICY_SCHEMA,
-        "runtimes": ["3.12", "3.13", "3.14"],
+        "runtimes": ["3.14", "3.15"],
         "platforms": ["darwin", "linux"],
         "families": [
             family("tests/test_owned.py::test_request_parsing", "core", []),
@@ -75,9 +75,9 @@ def test_optional_catalog_retains_full_census_and_every_mandatory_target_without
     prerequisite = (Prerequisite("monid-discover", "network-unverified", ("MONID_API_KEY",), (), ()),)
     admission = RootCaseAdmission(policy, plan, {}, {}, prerequisite, Path.cwd())
     assert set(plan.nodeids) == {"tests/test_owned.py::test_request_parsing", OPTIONAL_MONID_FAMILY}
-    assert len(required_cells(policy, prerequisite)) == 6
+    assert len(required_cells(policy, prerequisite)) == 4
     assert {cell.platform for cell in required_cells(policy, prerequisite)} == {"darwin", "linux"}
-    assert {cell.runtime for cell in required_cells(policy, prerequisite)} == {"3.12", "3.13", "3.14"}
+    assert {cell.runtime for cell in required_cells(policy, prerequisite)} == {"3.14", "3.15"}
     assert [unit.nodeids for unit in admitted_units(admission)] == [("tests/test_owned.py::test_request_parsing",)]
     records = optional_external_records(policy)
     assert len(records) == 1 and records[0]["status"] == "unexecuted" and "passed" not in records[0]

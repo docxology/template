@@ -55,7 +55,7 @@ def _source_path(source: str, project_root: Path = PROJECT_ROOT) -> Path | None:
         return None
     try:
         resolved = candidate.resolve(strict=True)
-    except (OSError, RuntimeError):
+    except OSError, RuntimeError:
         return None
     return resolved if resolved.is_relative_to(root) and resolved.is_file() else None
 

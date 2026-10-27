@@ -86,8 +86,8 @@ def _configuration(prefix: Path) -> tuple[str, str]:
         values[key] = value
     version = values.get("version_info", values.get("version", ""))
     match = re.fullmatch(r"(3)\.(\d+)(?:\.[0-9]+)?(?:[A-Za-z0-9_.+-]*)", version)
-    if match is None or int(match[2]) < 12:
-        raise AnalysisRuntimeUnavailable("Nominated runtime must declare Python 3.12 or newer")
+    if match is None or int(match[2]) < 14:
+        raise AnalysisRuntimeUnavailable("Nominated runtime must declare Python 3.14 or newer")
     if values.get("include-system-site-packages", "false").lower() != "false":
         raise AnalysisRuntimeUnavailable("Nominated runtime must isolate its declared site packages")
     return f"{match[1]}.{match[2]}", hashlib.sha256(raw).hexdigest()
@@ -206,7 +206,7 @@ def admit_current_analysis_runtime(project_root: Path, expected: dict[str, objec
         raise ValueError("Selected analysis runtime differs from its admitted binary/prefix/metadata")
     sites = sorted({str(Path(sysconfig.get_path(name)).absolute()) for name in ("purelib", "platlib")})
     if (
-        (sys.version_info.major, sys.version_info.minor) < (3, 12)
+        (sys.version_info.major, sys.version_info.minor) < (3, 14)
         or f"{sys.version_info.major}.{sys.version_info.minor}" != expected["python_minor"]
         or str(Path(sys.prefix).absolute()) != expected["prefix"]
         or sites != expected["site_roots"]

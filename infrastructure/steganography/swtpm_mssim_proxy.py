@@ -304,7 +304,7 @@ def recv_exactly(sock: socket.socket, n: int) -> bytes | None:
             chunk = sock.recv(n - len(data))
         except socket.timeout:
             return None
-        except (ConnectionResetError, BrokenPipeError, OSError):
+        except ConnectionResetError, BrokenPipeError, OSError:
             return None
         if not chunk:
             return None

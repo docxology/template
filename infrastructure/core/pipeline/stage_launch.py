@@ -294,7 +294,7 @@ def launch_python_stage(
                 original = checkpoint_original
                 if analysis_receipt is not None:
                     analysis_receipt.update(original_checkpoint=checkpoint)
-            except (OSError, ValueError):
+            except OSError, ValueError:
                 pass  # Never upgrade absent/corrupt partial observations into completion.
     custody_diagnostic = (
         str(admitted["diagnostic"]) if admitted is not None and admitted["custody"] == "blocked" else ""

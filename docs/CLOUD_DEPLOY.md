@@ -35,7 +35,7 @@ sudo apt-get update && sudo apt-get install -y \
 ### macOS (Homebrew, headless)
 
 ```bash
-brew install git python@3.12 pandoc
+brew install git python@3.14 pandoc
 brew install --cask mactex-no-gui   # smaller LaTeX install without GUI apps
 ```
 

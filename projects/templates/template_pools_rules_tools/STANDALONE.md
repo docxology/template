@@ -35,7 +35,7 @@ locked metadata, and `_template_resources/{fonds,rules,tools}/templates/`.
 Private `working/`, `archive/`, and lifecycle mirrors are excluded. The generated
 `.template-export.json` binds the actual source commit and copied bytes.
 
-Use an installed Python >=3.12, then from the export:
+Use an installed Python >=3.14, then from the export:
 
 ```bash
 uv sync --locked
