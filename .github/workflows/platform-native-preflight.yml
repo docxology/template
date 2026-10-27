@@ -37,10 +37,10 @@ jobs:
           persist-credentials: false
           submodules: true
           fetch-depth: 0
-      - uses: ./.github/actions/setup-acceptance-fixtures
       - uses: ./.github/actions/setup-python-env
         with:
           python-version: "3.14.4"
+      - uses: ./.github/actions/setup-acceptance-fixtures
       - uses: ./.github/actions/setup-native-installed-readiness
         with:
           prepare-lean: 'false'
