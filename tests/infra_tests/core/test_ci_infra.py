@@ -90,6 +90,7 @@ def test_actual_shards_are_nonempty_disjoint_complete_and_include_changed_source
             "tests/infra_tests/methods/test_methods_orchestration.py",
         ),
         "infrastructure/core/testing/ci_infra.py": (
+            "tests/infra_tests/core/test_ci_module_durations.py",
             "tests/infra_tests/core/test_ci_infra.py",
             "tests/infra_tests/core/test_ci_infra_partition.py",
             "tests/infra_tests/core/test_pytest_receipt.py",
@@ -98,6 +99,7 @@ def test_actual_shards_are_nonempty_disjoint_complete_and_include_changed_source
             "tests/infra_tests/core/test_ci_infra_process.py",
         ),
         "infrastructure/core/testing/ci_contracts.py": (
+            "tests/infra_tests/core/test_ci_module_durations.py",
             "tests/infra_tests/core/test_ci_contracts.py",
             "tests/infra_tests/core/test_ci_infra.py",
             "tests/infra_tests/core/test_ci_infra_process.py",
