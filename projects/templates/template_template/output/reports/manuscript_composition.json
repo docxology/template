@@ -1,8 +1,8 @@
 {
   "algorithm": "web-renderer-combine-v1",
-  "binding_sha256": "dca2372421dcaa41bf73662c59b77127ec59a10d7bffea6299df13aa43cdd139",
+  "binding_sha256": "b2a955f900c87dd40d288f3d1eef3cb99746816f079e392b2dd596eba6111502",
   "combined_path": "output/web/_combined_manuscript.md",
-  "combined_sha256": "52408ca927418ba16070fe33d42e0271cfd573c452822891f17134764fac8b52",
+  "combined_sha256": "70569b957edb4f672816e86f4d6bc42c337355ee3444614b128cf5e56767e9ec",
   "combined_size_bytes": 119943,
   "input_root_kind": "hydrated",
   "ordered_inputs": [
@@ -15,19 +15,19 @@
     {
       "ordinal": 2,
       "path": "output/manuscript/00_abstract.md",
-      "sha256": "3719e660642b690294b72c471894aa615ac2a743e9c629de06a2dd1f3f2616cb",
+      "sha256": "6387a37a98378773363b08a31a3521ff3b45b7c33c30325ff6ed354651ee97f9",
       "size_bytes": 3476
     },
     {
       "ordinal": 3,
       "path": "output/manuscript/02_introduction.md",
-      "sha256": "8d9e005c1c9cbc2c0dcaceef812fa708cbb55641ea728a83d0a74cabdf562f51",
+      "sha256": "c559932111c5134be624a37bcd4859c296fd4d16fa2fcaca29b9b91d336e302f",
       "size_bytes": 18665
     },
     {
       "ordinal": 4,
       "path": "output/manuscript/03a_architecture.md",
-      "sha256": "552bfd46cafff070b94ab511d8865962dd28d1f6823611105384e2352e4798d0",
+      "sha256": "b99863d9653628c304a8b91bfc09252e2b30abe6583540471e94fbdb90358bec",
       "size_bytes": 5433
     },
     {
@@ -51,25 +51,25 @@
     {
       "ordinal": 8,
       "path": "output/manuscript/03e_quality.md",
-      "sha256": "67884aa9051bb5701fedef717e5519439637fb3823b4186e4da6548ac17edf6a",
+      "sha256": "5c2bfbfbf53e573919270c94b8621a6db68bc20659b726f86ffe4a4978edb894",
       "size_bytes": 4180
     },
     {
       "ordinal": 9,
       "path": "output/manuscript/04_results.md",
-      "sha256": "1fcf72d48b10d54f04685e6577967f1377f944fe74c0cb6a8fae6873d08abb0c",
+      "sha256": "f5c904ef25492197b9a3b82f9f07c07f9979663247b628dc8709b0efe718d367",
       "size_bytes": 10829
     },
     {
       "ordinal": 10,
       "path": "output/manuscript/05a_zeromock_tradeoff.md",
-      "sha256": "311d2c986e50c1f5f1de9bd281198472c9cd62882c01c577e529d9aa02af05d5",
+      "sha256": "1ffb20abafd8f5f1e353af012dcc645911e9ca8ce295c61c56aa8eb0baf7183d",
       "size_bytes": 4184
     },
     {
       "ordinal": 11,
       "path": "output/manuscript/05b_scalability.md",
-      "sha256": "3ffa11b6e61d88ee80c580ade1ca07df9adf362c51cf139c1858c2f2ef7b9198",
+      "sha256": "900b8f0b0e74db862f23c03f532a023907c7c7d5bd9870d357310bfd8ee0f710",
       "size_bytes": 3482
     },
     {
@@ -81,7 +81,7 @@
     {
       "ordinal": 13,
       "path": "output/manuscript/05d_ai_collaboration.md",
-      "sha256": "927261cc73b42f09d99b54b5834946b52b722aea45846932ee2801bae5e5b43d",
+      "sha256": "2361304509e05ecf1fdf62b8d64d029d6f907205eb79ff4642d009a72e19f950",
       "size_bytes": 4839
     },
     {
@@ -93,7 +93,7 @@
     {
       "ordinal": 15,
       "path": "output/manuscript/06_infrastructure_modules.md",
-      "sha256": "d9c22970e7340363525284105d13389ac45f027becf46ee0b196ff6e2328b08a",
+      "sha256": "0e2767c863450ae722e49b501f2ee06a6f66997f5cd5edb0727fc3cba8383517",
       "size_bytes": 10154
     },
     {
@@ -117,7 +117,7 @@
     {
       "ordinal": 19,
       "path": "output/manuscript/08c_appendix_directory.md",
-      "sha256": "97f07acd506ade4babe58cd15740f7a29503899809ded820023972e6aa41fd34",
+      "sha256": "8aa6f129d977c373edc9d992c96857ca094b31fe548de4b150d2ba2c86545ae3",
       "size_bytes": 1815
     },
     {
@@ -129,7 +129,7 @@
     {
       "ordinal": 21,
       "path": "output/manuscript/08e_appendix_docs.md",
-      "sha256": "80b0e48111a2badf6ea0b36aa322d190b147fa7aabc923ed38b6d309e4e6bbbd",
+      "sha256": "d66c93dfe60ed32c016ad253548d9438e983eeeca087d9a7a1ac9270e7808556",
       "size_bytes": 2685
     },
     {
@@ -145,7 +145,7 @@
       "size_bytes": 537
     }
   ],
-  "ordered_inputs_sha256": "d26d1358789ec2715852ce1d2dc3219c3a758853fa8410d81284d88c2fcea0c2",
+  "ordered_inputs_sha256": "3289358fa7432cd447747dfb19da34a332aedbfb84a486cc96141a03dd3c900f",
   "project": "templates/template_template",
   "schema_version": "template-manuscript-composition-v1"
 }

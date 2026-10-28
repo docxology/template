@@ -32,6 +32,7 @@ See `README.md` for the module table. Key entry points:
 | Module | Role |
 | --- | --- |
 | `project_test_runtime.py` | Admission of an already prepared project test interpreter; never a resolver. |
+| `local_gate.py` | One offline local entry point over the hosted commands, with `--changed`, `--list` and per-stage plans. |
 
 Default functional CI uses `ci_smoke.py` and the explicit `.github/project-smoke.json` selections. Full matrices and coverage union remain available in the manual hardening workflow.
 

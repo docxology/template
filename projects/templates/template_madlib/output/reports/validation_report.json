@@ -40,7 +40,7 @@
           "file_count": 10,
           "largest_file": "madlib_cover_overview.png",
           "largest_file_path": "figures/madlib_cover_overview.png",
-          "size_mb": "0.67"
+          "size_mb": "0.81"
         },
         "llm": {
           "exists": false,
@@ -64,7 +64,7 @@
           "file_count": 1,
           "largest_file": "template_madlib_combined.pdf",
           "largest_file_path": "pdf/template_madlib_combined.pdf",
-          "size_mb": "0.78"
+          "size_mb": "0.97"
         },
         "release": {
           "exists": true,
@@ -90,14 +90,14 @@
           "file_count": 12,
           "largest_file": "03_results_slides.pdf",
           "largest_file_path": "slides/03_results_slides.pdf",
-          "size_mb": "0.83"
+          "size_mb": "1.07"
         },
         "web": {
           "exists": true,
           "file_count": 16,
           "largest_file": "source-web-fonts.js",
           "largest_file_path": "web/assets/source-web-fonts.js",
-          "size_mb": "2.19"
+          "size_mb": "2.31"
         }
       },
       "file_counts": {
@@ -122,7 +122,7 @@
           "combined_pdf": {
             "exists": true,
             "readable": true,
-            "size_mb": 0.78
+            "size_mb": 0.97
           },
           "data": {
             "exists": true,
@@ -152,7 +152,7 @@
             "optional": false,
             "readable": true,
             "required": true,
-            "size_mb": 0.67
+            "size_mb": 0.81
           },
           "llm": {
             "exists": false,
@@ -182,7 +182,7 @@
             "optional": false,
             "readable": true,
             "required": true,
-            "size_mb": 0.78
+            "size_mb": 0.97
           },
           "release": {
             "exists": true,
@@ -213,7 +213,7 @@
             "optional": false,
             "readable": true,
             "required": true,
-            "size_mb": 0.83
+            "size_mb": 1.07
           },
           "web": {
             "exists": true,
@@ -221,7 +221,7 @@
             "optional": false,
             "readable": true,
             "required": true,
-            "size_mb": 2.19
+            "size_mb": 2.31
           }
         },
         "inventory_mode": "stable-shippable-output-v1",
@@ -231,16 +231,16 @@
         "valid": true,
         "warnings": []
       },
-      "total_size_mb": 4.753636360168457
+      "total_size_mb": 5.439258575439453
     },
     "figures": {
       "files": 10,
-      "size_mb": 0.6728973388671875
+      "size_mb": 0.8138113021850586
     },
     "inventory_mode": "stable-shippable-output-v1",
     "pdf": {
       "files": 1,
-      "size_mb": 0.7844686508178711
+      "size_mb": 0.9738016128540039
     },
     "stable_inventory": {
       "categories": {
@@ -250,7 +250,7 @@
         },
         "figures": {
           "files": 10,
-          "size_bytes": 705584
+          "size_bytes": 853343
         },
         "manuscript": {
           "files": 15,
@@ -258,7 +258,7 @@
         },
         "pdf": {
           "files": 1,
-          "size_bytes": 822575
+          "size_bytes": 1021105
         },
         "release": {
           "files": 2,
@@ -270,16 +270,16 @@
         },
         "slides": {
           "files": 12,
-          "size_bytes": 872436
+          "size_bytes": 1123386
         },
         "web": {
           "files": 16,
-          "size_bytes": 2299683
+          "size_bytes": 2421371
         }
       },
       "mode": "stable-shippable-output-v1",
       "total_files": 68,
-      "total_size_bytes": 4984549
+      "total_size_bytes": 5703476
     }
   },
   "recommendations": [],
@@ -290,21 +290,21 @@
     "passed": 9,
     "total_checks": 9
   },
-  "timestamp": "2026-10-23T12:44:35Z",
+  "timestamp": "2026-10-28T21:24:42Z",
   "validated_inputs": {
     "artifact_manifest": {
       "path": "output/reports/artifact_manifest.json",
-      "sha256": "e4e51d308ba6f1b17addf9b4f151815b59191c3c448f6904ba7ebe26502cc30d",
-      "size_bytes": 20530
+      "sha256": "e18f7a19a05ef298d8b0dafeeea1d8690b36102f379f0195c565aff971da16d5",
+      "size_bytes": 22232
     },
     "combined_manuscript": {
       "path": "output/web/_combined_manuscript.md",
-      "sha256": "4d4f68e9cb68576b17dad9a9e0b9c7a0b54ea5c8fa5aee38d91d75555a8c7c4c",
+      "sha256": "6bdc136f4cefe078175aacf0f09c420f331e970d7005b289ecee46426060cda8",
       "size_bytes": 73015
     },
     "composition_manifest": {
       "path": "output/reports/manuscript_composition.json",
-      "sha256": "5e777f68fe9fd58379dcc339a3e749cf853279017b0d81d5f000bd6f5bb0f075",
+      "sha256": "3beec6c5bcdf19b7572aaea2c15c78d711fa40bbe0d20c4a3afcc9634668b72b",
       "size_bytes": 2928
     },
     "consumed_manuscript": [
@@ -352,7 +352,7 @@
       },
       {
         "rendered_path": "output/manuscript/07_reproducibility.md",
-        "rendered_sha256": "11ec9fcaababbd21b948e2d32ee10763e01ca855cee51a76f7ffd5d0fedb74b5",
+        "rendered_sha256": "2b6893fc63d1c9de561af8d04905d4eb9a243224dd808a6ab55713160385363e",
         "source_path": "manuscript/07_reproducibility.md",
         "source_sha256": "c159af59625c5aa2a96f227a6face4df46caca09df75437fd7df4676b871cbfa"
       },
@@ -384,19 +384,19 @@
     "fingerprints": {
       "config": {
         "file_count": 17,
-        "sha256": "009ae2885a92e66bb8fec990a50ef9026b1b6e25221648f140319f6a6e8a8e71"
+        "sha256": "198cc417c2e49ae5318edf98dc570cdcd6c58343b98dd33cfc12ed1b62739284"
       },
       "output": {
         "file_count": 68,
-        "sha256": "dfac0322258be16689273f128302265867c20064c72c1dd058f93a89e7c7d62d"
+        "sha256": "488ae474e8c879490a5b41af2b6db9ff656deb871a5a10292fa7e51af97f9e0c"
       },
       "source": {
         "file_count": 42,
         "sha256": "5d319c90c442488b4834c41a2461b49ad6e664d63c91cea8332b45496968bbb2"
       },
       "stage": {
-        "file_count": 1913,
-        "sha256": "e2988e519a8e0538602cb07203bac913d60ec7188a513c0acb96888292bc2ab5"
+        "file_count": 1930,
+        "sha256": "9d71e4c2a13df7d6640c32ecd7ed02fca5cbe1b5c5b877cdffb994ac17c45ec3"
       }
     },
     "project": "templates/template_madlib",

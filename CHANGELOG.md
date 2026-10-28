@@ -92,6 +92,21 @@ candidates, not published root releases.
   `platform_version` and the `owner/name` repository shape. The new gate runs in
   the `ci.yml` lint job — with `--tag "$GITHUB_REF_NAME"` on a tag push — and in
   `local_gate.py gates`, and its negative controls cover each failure class.
+- Make the publication-output gate modular and fast: `scripts/audit/check_publication_outputs.py`
+  audits a chosen roster (`--project`, `--all-public`, `--changed`), takes a
+  `--shard INDEX/COUNT` slice, runs projects in parallel (`--jobs`), separates
+  blocking `error` findings from `review_required` ones (`--strict` opts into the
+  release policy), and writes one receipt per project. The release workflow now
+  runs it over all 25 exemplars with four workers and retains the receipts instead
+  of calling one monolithic `publication-audit --all-public`; `local_gate.py` gains
+  a `publication` stage that audits only the projects you changed.
+- Regenerate every exemplar's publication evidence for 4.3.0 through the canonical
+  producers (render, artifact manifest, validation, rendered-provenance receipt),
+  which clears the release workflow's 40 blocking findings and its 24
+  review-required stage-provenance findings. The refresh needs the pinned JuliaMono
+  family (`setup-acceptance-documents`) and, for Mermaid figures, `node_modules/.bin`
+  on `PATH`; both are documented prerequisites, and the missing font is what made a
+  local re-render fail with fontspec errors.
 - Ship the 4.3.0 release artwork (`template-v4.3.0-overview.svg` and a 200 KB
   1600×900 PNG): `release.yml` uploads `docs/releases/template-v<tag>-overview.png`
   and `root_release_artifacts` indexes it as the second declared asset, so the

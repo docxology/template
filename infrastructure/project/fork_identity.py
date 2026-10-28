@@ -96,6 +96,13 @@ def _rewrite_sdk_source(text: str, *, destination: Path, repo_root: Path, sdk_so
     """Point the exemplar's SDK requirement at the fork's actual build input."""
     line = _SDK_SOURCE_LINE.search(text)
     if sdk_source is None:
+        # A copy that stays inside the checkout keeps a resolvable relative path for
+        # its own depth. A copy *outside* the checkout must not embed a path back
+        # into this repository: that is an undeclared external provider for the
+        # standalone projection and publication lanes, so the original declaration
+        # is left exactly as the publication tooling expects.
+        if not destination.is_relative_to(repo_root):
+            return text
         relative = Path(os.path.relpath(repo_root, destination)).as_posix()
         if line is None or f'path = "{relative}"' in line.group(0):
             return text

@@ -55,7 +55,7 @@
     <rect x="1280" y="252" width="42" height="30" rx="8" fill="#e2eaf3"/><text x="1301" y="273" font-size="16" font-weight="700" text-anchor="middle" fill="#334e68">05</text>
     <text x="1280" y="326" class="heading">Keep evidence honest</text>
     <text x="1280" y="376" class="body">25 exemplar suites</text>
-    <text x="1280" y="412" class="body">7,241 passing tests</text>
+    <text x="1280" y="412" class="body">Every exemplar suite</text>
     <text x="1280" y="448" class="body">Coverage re-measure pending</text>
     <text x="1280" y="484" class="body">Snapshot refresh declared</text>
   </g>

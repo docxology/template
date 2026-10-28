@@ -45,11 +45,11 @@ not a parsed grammar — is sufficient to reproduce BPL's core safety
 properties (dimensional safety, staged validation, deterministic
 compilation) at a scope appropriate for a template exemplar. On the
 architecture side, the DSL is exercised by a zero-mock test suite under the
-repository's configured project coverage gate, generates 19 artifacts
+repository's configured project coverage gate, generates 18 artifacts
 (1 figures, 7 data files,
-11 reports) per pipeline run, and injects reproducibility
-metadata (configuration hash `941d5fb4060503b0`, build timestamp
-`2026-10-22T17:22:44Z`) into [@sec:reproducibility].
+10 reports) per pipeline run, and injects reproducibility
+metadata (configuration hash `c4e86321fa0e9cb3`, build timestamp
+`2026-10-28T21:24:42Z`) into [@sec:reproducibility].
 
 **Keywords:** methods paper, domain-specific language, controlled methods, deterministic compilation, staged validation, dimensional analysis
 
@@ -538,7 +538,7 @@ evaluations a method's steps satisfy.
 
 ## Computational environment
 
-- **Language**: Python 3.14.8 on Darwin arm64 (see root
+- **Language**: Python 3.14.9 on Darwin arm64 (see root
   `pyproject.toml` for the supported version range).
 - **Core dependencies**: `pyyaml`, `matplotlib` (declared in
   `domain_profile.yaml::required_packages`); the DSL library itself
@@ -652,9 +652,9 @@ Every quantitative claim in [@sec:results] is either a generated variable
 sourced from a live analysis output or registered in `data/claim_ledger.yaml` for
 evidence-registry validation. The manuscript intentionally does not
 hand-transcribe volatile values, so prose and artifacts cannot disagree.
-Configuration provenance is itself injected: `941d5fb4060503b0` is the
+Configuration provenance is itself injected: `c4e86321fa0e9cb3` is the
 SHA-256 of `manuscript/config.yaml` at build time, and
-`2026-10-22T17:22:44Z` records when the variables were generated
+`2026-10-28T21:24:42Z` records when the variables were generated
 (honoring `SOURCE_DATE_EPOCH` for byte-reproducible builds).
 
 

@@ -301,7 +301,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-10-07T08:21:39Z",
+      "checked_at": "2026-10-28T21:49:46Z",
       "kind": "number",
       "source": "pyproject.toml:$.project.requires-python",
       "source_field": "$.project.requires-python",
@@ -309,11 +309,11 @@
       "source_tier": "configuration",
       "stale": false,
       "tolerance": 0.0,
-      "value": "3.12"
+      "value": "3.14"
     },
     {
       "active": true,
-      "checked_at": "2026-10-07T08:21:39Z",
+      "checked_at": "2026-10-28T21:49:46Z",
       "kind": "number",
       "source": "pyproject.toml:$.project.requires-python (numeric variant)",
       "source_field": "$.project.requires-python",
@@ -321,7 +321,7 @@
       "source_tier": "configuration",
       "stale": false,
       "tolerance": 0.0,
-      "value": "0.0312"
+      "value": "0.0314"
     },
     {
       "active": true,
@@ -433,7 +433,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-09-13T22:29:38Z",
+      "checked_at": "2026-10-28T21:24:42Z",
       "kind": "number",
       "source": "output/reports/manuscript_composition.json:$.combined_size_bytes",
       "source_field": "$.combined_size_bytes",
@@ -441,11 +441,11 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "60646"
+      "value": "60698"
     },
     {
       "active": true,
-      "checked_at": "2026-09-13T22:29:38Z",
+      "checked_at": "2026-10-28T21:24:42Z",
       "kind": "number",
       "source": "output/reports/manuscript_composition.json:$.combined_size_bytes (numeric variant)",
       "source_field": "$.combined_size_bytes",
@@ -453,7 +453,7 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "606.46"
+      "value": "606.98"
     },
     {
       "active": true,
@@ -469,7 +469,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-09-13T22:29:38Z",
+      "checked_at": "2026-10-28T21:24:42Z",
       "kind": "number",
       "source": "output/reports/manuscript_composition.json:$.ordered_inputs[0].size_bytes",
       "source_field": "$.ordered_inputs[0].size_bytes",
@@ -477,11 +477,11 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "3944"
+      "value": "4008"
     },
     {
       "active": true,
-      "checked_at": "2026-09-13T22:29:38Z",
+      "checked_at": "2026-10-28T21:24:42Z",
       "kind": "number",
       "source": "output/reports/manuscript_composition.json:$.ordered_inputs[0].size_bytes (numeric variant)",
       "source_field": "$.ordered_inputs[0].size_bytes",
@@ -489,7 +489,7 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "39.44"
+      "value": "40.08"
     },
     {
       "active": true,
@@ -709,7 +709,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-09-13T22:29:38Z",
+      "checked_at": "2026-10-28T21:24:42Z",
       "kind": "number",
       "source": "output/reports/manuscript_composition.json:$.ordered_inputs[6].size_bytes",
       "source_field": "$.ordered_inputs[6].size_bytes",
@@ -717,11 +717,11 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "9531"
+      "value": "9527"
     },
     {
       "active": true,
-      "checked_at": "2026-09-13T22:29:38Z",
+      "checked_at": "2026-10-28T21:24:42Z",
       "kind": "number",
       "source": "output/reports/manuscript_composition.json:$.ordered_inputs[6].size_bytes (numeric variant)",
       "source_field": "$.ordered_inputs[6].size_bytes",
@@ -729,7 +729,7 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "95.31"
+      "value": "95.27"
     },
     {
       "active": true,

@@ -4,38 +4,38 @@
     {
       "src": "../output/figures/comparative_tool_key.png",
       "alt": "Tool key in source order: A template/; B Snakemake 9.x; C Nextflow 25.x; D CWL 1.2; E Quarto 1.x; F Jupyter Book 2.x; G R Markdown; H DVC 3.x; I Overleaf (2025); J OpenAI Prism",
-      "sha256": "4022352c88cc6a97a0b2f99c67ddc6833f001902836a00aa78d275ab665243dc",
-      "minimum_label_px": 92.0
+      "sha256": "30f81d2ada0a2666c736bfc4bd6621ed7c011416fde02f411e703984b0dd673a",
+      "minimum_label_px": 94.44444444444434
     },
     {
       "src": "../output/figures/comparative_cells_01_03.png",
       "alt": "Full matrix rows; A\u2013J follow the preceding complete tool key: Pipeline orchestration: A=1, B=1, C=1, D=1, E=0.5, F=0, G=0, H=1, I=0, J=0; Manuscript rendering: A=1, B=0, C=0, D=0, E=1, F=1, G=1, H=0, I=1, J=1; Testing enforcement: A=1, B=0, C=0, D=0, E=0, F=0, G=0, H=0, I=0, J=0",
-      "sha256": "76e198e1770ab0862de4f2b627d0d611407831c1d927884f988d07b137d4c851",
-      "minimum_label_px": 92.0
+      "sha256": "ce9b4df535531e7199cbe4b89566256d48378b3c74cd4c11c2d94f173ace5f90",
+      "minimum_label_px": 94.44444444444434
     },
     {
       "src": "../output/figures/comparative_cells_04_06.png",
       "alt": "Full matrix rows; A\u2013J follow the preceding complete tool key: Coverage thresholds: A=1, B=0, C=0, D=0, E=0, F=0, G=0, H=0, I=0, J=0; Cryptographic provenance: A=1, B=0, C=0.5, D=0, E=0, F=0, G=0, H=0.5, I=0, J=0; Steganographic watermarking: A=1, B=0, C=0, D=0, E=0, F=0, G=0, H=0, I=0, J=0",
-      "sha256": "08c26f0308a9931e3ad914e464510f3c77585f8a42198af5d4dc8968a66a25ef",
-      "minimum_label_px": 92.0
+      "sha256": "6fab59a196250a8f0ea7c451fafe812980707e3ba401c1313e49c8df2752a0c2",
+      "minimum_label_px": 94.44444444444434
     },
     {
       "src": "../output/figures/comparative_cells_07_08.png",
       "alt": "Full matrix rows; A\u2013J follow the preceding complete tool key: Multi-project management: A=1, B=0, C=0, D=0, E=0, F=0, G=0, H=0, I=0.5, J=0.5; AI-agent documentation: A=1, B=0, C=0, D=0, E=0, F=0, G=0, H=0, I=0.5, J=0.5",
-      "sha256": "9258557d632d4381029da883835b3e1347330c83bb3c6a3684688ab61652ea88",
-      "minimum_label_px": 92.0
+      "sha256": "d4117c60cb49c38250930c19e41bc39ed31254e6779670da8b768d8fc41dc216",
+      "minimum_label_px": 94.44444444444434
     },
     {
       "src": "../output/figures/comparative_cells_09_11.png",
       "alt": "Full matrix rows; A\u2013J follow the preceding complete tool key: Agentic skill protocol (SKILL.md / MCP): A=1, B=0, C=0, D=0, E=0, F=0, G=0, H=0, I=0, J=0; Interactive TUI: A=1, B=0, C=0, D=0, E=0, F=0, G=0, H=0, I=0, J=0; Zero-mock policy: A=1, B=0, C=0, D=0, E=0, F=0, G=0, H=0, I=0, J=0",
-      "sha256": "861f05471ff42a7e1c1ce62f7ce3d66a5303dfcba36e0c098cdbfd22ff3053e2",
-      "minimum_label_px": 92.0
+      "sha256": "5c2f1c7aa5cf5c38649756f99bf2b075ca924a885edc9fc31cab610822d9fbfa",
+      "minimum_label_px": 94.44444444444434
     },
     {
       "src": "../output/figures/comparative_cells_12_14.png",
       "alt": "Full matrix rows; A\u2013J follow the preceding complete tool key: Container support: A=0.5, B=1, C=1, D=1, E=0, F=0, G=0, H=0, I=0, J=0; Distributed execution: A=0, B=1, C=1, D=1, E=0, F=0, G=0, H=0.5, I=0, J=0; Multi-language (R/Julia): A=0, B=1, C=0, D=1, E=1, F=1, G=1, H=1, I=0, J=0",
-      "sha256": "66efe51052314a69a5ec9f1e2e125432309d1a71a2f05a3f2df9852f3156c2e4",
-      "minimum_label_px": 92.0
+      "sha256": "170615e0d007e8999c74523ffc44694d52c3af7ca8a2de58e903b901827b874c",
+      "minimum_label_px": 94.44444444444434
     }
   ]
 }

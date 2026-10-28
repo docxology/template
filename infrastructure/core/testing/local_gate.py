@@ -34,7 +34,7 @@ from infrastructure.project.public_scope import (
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 UV = ("uv", "run", "--no-sync", "--offline")
-STAGE_ORDER = ("format", "lint", "types", "security", "gates", "unit", "infra")
+STAGE_ORDER = ("format", "lint", "types", "security", "gates", "publication", "unit", "infra")
 DEFAULT_PROJECT = os.environ.get("TEMPLATE_CI_PROJECT", "templates/template_code_project")
 
 
@@ -203,6 +203,9 @@ def stage_commands(
         return [[*UV, "python", "-m", "bandit", "-r", "-ll", "-c", "bandit.yaml", *_security_targets()]]
     if stage == "gates":
         return _gate_commands(changed)
+    if stage == "publication":
+        selection = ["--changed"] if changed is not None else ["--all-public"]
+        return [[*UV, "python", "scripts/audit/check_publication_outputs.py", *selection, "--jobs", "4"]]
     if stage == "unit":
         return _unit_commands(changed)
     if stage == "infra":
@@ -216,6 +219,10 @@ def _write_plan(plan: dict, working_directory: Path) -> None:
 
 
 def _run(stage: str, changed: tuple[str, ...] | None) -> int:
+    if stage == "publication":
+        # Publication outputs are audited per project, so the roster narrowing is
+        # the script's own concern; it must not run inside the infra plan branch.
+        return _execute(stage, stage_commands(stage, changed))
     if stage != "infra":
         return _execute(stage, stage_commands(stage, changed))
     with tempfile.TemporaryDirectory(prefix="local-gate-") as directory:

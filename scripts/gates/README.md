@@ -16,7 +16,7 @@ Pipeline gate scripts for template.
 - `public_capabilities.py` — Emits the deterministic public-exemplar capability manifest and fails closed on roster/matrix, package/Python, source/test syntax, render, hydration, analysis, and skip-contract drift.
 - `check_private_project_promotion.py` — Candidate security scan and composite private-promotion gate, with the historical script entrypoint retained.
 - `ci_module_durations_check.py` — Validates the committed measured module-duration manifest: every key is a real roster module and every value is a finite positive number of seconds.
-- `local_gate.py` — One local entry point for the commands CI runs (`format`, `lint`, `types`, `security`, `gates`, `unit`, `infra`, `all`), offline by default, with `--changed` and `--list`.
+- `local_gate.py` — One local entry point for the commands CI runs (`format`, `lint`, `types`, `security`, `gates`, `publication`, `unit`, `infra`, `all`), offline by default, with `--changed` and `--list`.
 
 ## Fast local verification
 

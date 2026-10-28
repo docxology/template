@@ -70,6 +70,28 @@ def test_generated_metrics_json_matches_live_repo_when_present() -> None:
             assert generated[key] == live[key], f"Stale metric {key}: generated={generated[key]}, live={live[key]}"
 
 
+def test_generated_snapshot_states_the_live_platform_version() -> None:
+    """Negative control: a release bump cannot leave the snapshot naming the old platform.
+
+    The committed metrics and panel manifests are generated artifacts, so no test
+    rebuilds them; without this control an old snapshot kept claiming the previous
+    release through the whole of the 4.3.0 bump. The version is the one field that
+    must always track the installed distribution, so it is compared here while
+    freely varying counts are left to the regeneration step.
+    """
+    version = build_manuscript_metrics_dict(REPO_ROOT)["infrastructure_version"]
+    metrics_path = PROJECT_DIR / "output" / "data" / "metrics.json"
+    assert json.loads(metrics_path.read_text(encoding="utf-8"))["infrastructure_version"] == version, (
+        f"stale metrics snapshot: regenerate it for platform {version}"
+    )
+    panels_path = PROJECT_DIR / "output" / "figures" / "architecture_overview.panels.json"
+    if not panels_path.is_file():
+        return
+    panels = json.loads(panels_path.read_text(encoding="utf-8"))
+    stale = [panel["alt"] for panel in panels["panels"] if f", {version}: " not in panel["alt"]]
+    assert not stale, f"stale panel manifest for platform {version}: {stale[:2]}"
+
+
 def test_metrics_dict_does_not_contain_private_project_names() -> None:
     """Negative control: private/local project names must not appear in metrics."""
     metrics = build_manuscript_metrics_dict(REPO_ROOT)

@@ -29,7 +29,7 @@ The author thanks the Active Inference Institute for hosting the public template
 
 ## Data Availability
 
-All source code, configuration files, and exemplar resources described in this paper are available in the [public template repository](https://github.com/docxology/template) under the `projects/templates/template_pools_rules_tools/` path. The integration pipeline is fully reproducible from source using `uv run python projects/templates/template_pools_rules_tools/scripts/02_run_integration.py` from the repository root. Generated manuscript variables are stored in `output/data/manuscript_variables.json` and injected at render time. Every figure in this manuscript, including the cover illustration, is likewise reproducible from source via `uv run python projects/templates/template_pools_rules_tools/scripts/05_generate_figures.py`, which writes directly to `manuscript/figures/`.
+All source code, configuration files, and exemplar resources described in this paper are available in the [public template repository](https://github.com/docxology/template) under the `projects/templates/template_pools_rules_tools/` path. The integration pipeline is fully reproducible from source using `uv run python projects/templates/template_pools_rules_tools/scripts/02_run_integration.py` from the repository root. Generated manuscript variables are stored in `output/data/manuscript_variables.json` and injected at render time. Every figure in this manuscript, including the cover illustration, is likewise reproducible from source via `uv run python projects/templates/template_pools_rules_tools/scripts/05_generate_figures.py`, which writes current assets to `../figures/` while preserving the checked-in `manuscript/figures/` sources.
 
 ## Competing Interests
 
@@ -499,7 +499,7 @@ This table is itself token-injected: the values shown are those produced by the 
 | `scripts/02_run_integration.py` | Run `run_integration_demo()` and print JSON summary | Console JSON |
 | `scripts/03_generate_manuscript.py` | Write `output/data/manuscript_variables.json` | JSON file |
 | `scripts/04_validate_strong_rules.py` | Semantic evaluation of strong-rule constraints (@sec:rules) against this project's own tree | Console report, non-zero exit on violation |
-| `scripts/05_generate_figures.py` | Render all 8 content figures plus 1 cover illustration | 9 PNG files under `manuscript/figures/` |
+| `scripts/05_generate_figures.py` | Render all 8 content figures plus 1 cover illustration | 9 PNG files under `../figures/` |
 | `scripts/z_generate_manuscript_variables.py` | Hydrate declared manuscript-variable placeholders and inject them into `output/manuscript/` immediately before rendering | JSON file + resolved manuscript tree |
 
 ![The 6-script pipeline from source validation through token hydration, ending at the combined-PDF render step.](figures/pipeline_flow.png){#fig:pipelineflow width=95%}

@@ -64,7 +64,7 @@
           "file_count": 1,
           "largest_file": "template_pools_rules_tools_combined.pdf",
           "largest_file_path": "pdf/template_pools_rules_tools_combined.pdf",
-          "size_mb": "1.00"
+          "size_mb": "1.25"
         },
         "reports": {
           "exists": true,
@@ -83,14 +83,14 @@
           "file_count": 8,
           "largest_file": "06_integration_slides.pdf",
           "largest_file_path": "slides/06_integration_slides.pdf",
-          "size_mb": "1.14"
+          "size_mb": "1.47"
         },
         "web": {
           "exists": true,
           "file_count": 12,
           "largest_file": "source-web-fonts.js",
           "largest_file_path": "web/assets/source-web-fonts.js",
-          "size_mb": "2.13"
+          "size_mb": "2.25"
         }
       },
       "file_counts": {
@@ -114,7 +114,7 @@
           "combined_pdf": {
             "exists": true,
             "readable": true,
-            "size_mb": 1.0
+            "size_mb": 1.25
           },
           "data": {
             "exists": true,
@@ -174,7 +174,7 @@
             "optional": false,
             "readable": true,
             "required": true,
-            "size_mb": 1.0
+            "size_mb": 1.25
           },
           "reports": {
             "exists": true,
@@ -197,7 +197,7 @@
             "optional": false,
             "readable": true,
             "required": true,
-            "size_mb": 1.14
+            "size_mb": 1.47
           },
           "web": {
             "exists": true,
@@ -205,7 +205,7 @@
             "optional": false,
             "readable": true,
             "required": true,
-            "size_mb": 2.13
+            "size_mb": 2.25
           }
         },
         "inventory_mode": "stable-shippable-output-v1",
@@ -215,7 +215,7 @@
         "valid": true,
         "warnings": []
       },
-      "total_size_mb": 5.189130783081055
+      "total_size_mb": 5.8923444747924805
     },
     "figures": {
       "files": 10,
@@ -224,7 +224,7 @@
     "inventory_mode": "stable-shippable-output-v1",
     "pdf": {
       "files": 1,
-      "size_mb": 0.9986238479614258
+      "size_mb": 1.253896713256836
     },
     "stable_inventory": {
       "categories": {
@@ -238,11 +238,11 @@
         },
         "manuscript": {
           "files": 11,
-          "size_bytes": 73209
+          "size_bytes": 73269
         },
         "pdf": {
           "files": 1,
-          "size_bytes": 1047133
+          "size_bytes": 1314806
         },
         "reports": {
           "files": 3,
@@ -250,16 +250,16 @@
         },
         "slides": {
           "files": 8,
-          "size_bytes": 1191884
+          "size_bytes": 1539658
         },
         "web": {
           "files": 12,
-          "size_bytes": 2232272
+          "size_bytes": 2354138
         }
       },
       "mode": "stable-shippable-output-v1",
       "total_files": 46,
-      "total_size_bytes": 5441198
+      "total_size_bytes": 6178571
     }
   },
   "recommendations": [],
@@ -270,29 +270,29 @@
     "passed": 9,
     "total_checks": 9
   },
-  "timestamp": "2026-10-23T12:44:35Z",
+  "timestamp": "2026-10-28T21:24:42Z",
   "validated_inputs": {
     "artifact_manifest": {
       "path": "output/reports/artifact_manifest.json",
-      "sha256": "98c88bbb07d21c0802cb0bee6459788bdeb49e0e73caaabfa18de9dac23aa4f8",
-      "size_bytes": 13777
+      "sha256": "6de46e6085bc5f350cb75de69c281edb84920561aa0c1a8b8404535e5dcc7373",
+      "size_bytes": 14927
     },
     "combined_manuscript": {
       "path": "output/web/_combined_manuscript.md",
-      "sha256": "59a21f12db2d6925f0198c5433d571041e50253b3d9ba19c01cb03278063668c",
-      "size_bytes": 60646
+      "sha256": "b02292d7646e34fb0f18e6197503d14d67720c41045d1f8987a77ff7be396c89",
+      "size_bytes": 60698
     },
     "composition_manifest": {
       "path": "output/reports/manuscript_composition.json",
-      "sha256": "f0e70f289bbaf1f569bef8957327bd5a003af0511e8144241f7d9249ba33ebb1",
+      "sha256": "fbe77fea8a1b3c148e3c60e6136ff255419d49b31f00212dfd39976890fdba7b",
       "size_bytes": 2116
     },
     "consumed_manuscript": [
       {
         "rendered_path": "output/manuscript/00_frontmatter.md",
-        "rendered_sha256": "05be6865a1659dbbd22666d36ec1fb563773a97961d79ea7cb67e19b85e7c264",
+        "rendered_sha256": "86cb09ae8565d0952a374e5be4fcb80b7b5eebbebc1a817d1b8cfcabc2d14935",
         "source_path": "manuscript/00_frontmatter.md",
-        "source_sha256": "edecc2510448b0f2e9e20c7572d9c58b8caeaf4f58d4c8db71e665af595ee276"
+        "source_sha256": "8d8416cfc978db656604763f3e17d3132e5ec5b49dec160de78dd3ef472bd970"
       },
       {
         "rendered_path": "output/manuscript/01_abstract.md",
@@ -326,9 +326,9 @@
       },
       {
         "rendered_path": "output/manuscript/06_integration.md",
-        "rendered_sha256": "0b661f44010d3c1126c2fac8483bdf7b625891b5883d5ebf4928e40ad9e76f88",
+        "rendered_sha256": "abe017dcd3bcc0689d1011f73108de26ed512a107a2f4c77d2715e96a245bf42",
         "source_path": "manuscript/06_integration.md",
-        "source_sha256": "cf8fd1aff45101307b28c2eef2dc7bc093f62b212ea3b7a4273b1627640d5ed6"
+        "source_sha256": "e0def3087a6ca4b1ba4f7985455d60e8633177912bd9268c8904206aba4a2a7f"
       },
       {
         "rendered_path": "output/manuscript/07_conclusion.md",
@@ -340,19 +340,19 @@
     "fingerprints": {
       "config": {
         "file_count": 15,
-        "sha256": "260fe388c2b7962d5e13fc09b2c32453827859a87e5c955d72a37312646e1a78"
+        "sha256": "6ec1f811e02743a0ed4359ebab5d1382c6a722329672eeac9c99b400f505213b"
       },
       "output": {
         "file_count": 46,
-        "sha256": "2ca6f3f3c6c9906613888b85897b870dfd252d26155682af49b1401b51a5aca3"
+        "sha256": "f0266d0382038c0fb953b788caeb9c039934b94ff43001033011fa90de8896a2"
       },
       "source": {
         "file_count": 51,
-        "sha256": "f4761e3deef5d339918fb58798883c0ae66d793db3ab5491c0685f4b5c2e5f95"
+        "sha256": "5f4606317d546c5eadb4d85efcb8d33383da33f1b3b2c89ff3e5e5a740bf8fcf"
       },
       "stage": {
-        "file_count": 1913,
-        "sha256": "e2988e519a8e0538602cb07203bac913d60ec7188a513c0acb96888292bc2ab5"
+        "file_count": 1930,
+        "sha256": "9d71e4c2a13df7d6640c32ecd7ed02fca5cbe1b5c5b877cdffb994ac17c45ec3"
       }
     },
     "project": "templates/template_pools_rules_tools",

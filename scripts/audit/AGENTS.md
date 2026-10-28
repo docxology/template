@@ -28,6 +28,7 @@ these run in the default `./run.sh` pipeline — invoke them directly when neede
 | `check_tracked_generated_artifacts.py` | `infrastructure.project.git_guards` | Generated-artifact git-index hygiene |
 | `check_tracked_secrets.py` | `infrastructure.project.git_guards.tracked_secret_findings` | High-confidence credential scan over every tracked blob |
 | `check_staged_secrets.py` | `infrastructure.project.git_guards.staged_diff_secret_findings` | Pre-commit credential scan over staged A/C/M/R index blobs |
+| `check_publication_outputs.py` | `infrastructure.validation.publication.gate` | Sharded, parallel publication-output gate over the per-project audit |
 | `check_release_versions.py` | `infrastructure.project.release_versions` | Root tag/notes/artwork and per-exemplar intended-versus-published version identity |
 | `check_exemplar_configs.py` | `infrastructure.project.exemplar_config_contract` | Per-exemplar config blocks, SDK pin/source, platform version and generated-copy consistency |
 | `copy_exemplar.py` | `infrastructure.project.copy_exemplar` | Copy or update a canonical exemplar |

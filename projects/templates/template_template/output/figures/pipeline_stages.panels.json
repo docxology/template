@@ -4,26 +4,26 @@
     {
       "src": "../output/figures/pipeline_stages_panel_01.png",
       "alt": "Declared stages in YAML order; final column lists all tags: 1: Clean Output Directories [core, clean]; 2: Environment Setup [core]; 3: Infrastructure Tests [core, tests]; 4: Project Tests [core, tests]; 5: Project Analysis [core]",
-      "sha256": "b70d08e22f27af82debfd4169b4d308edc1e9c36dca5dd05bca570efd1e70877",
-      "minimum_label_px": 97.0
+      "sha256": "4675a404913e76db6e332c1c1fdc01aa79a642ae9af620e3decd4f32bada292a",
+      "minimum_label_px": 100.0
     },
     {
       "src": "../output/figures/pipeline_stages_panel_02.png",
       "alt": "Declared stages in YAML order; final column lists all tags: 6: Connector Search [science, live]; 7: Provenance Record [provenance]; 8: PDF Rendering [core]; 9: Output Validation [core]; 10: LLM Manuscript Review [llm, live]",
-      "sha256": "85d2f4f948133e5ab05717e7591c29e04b4c6a71e34991b4e90a6d8649db998b",
-      "minimum_label_px": 97.0
+      "sha256": "b223121468b866403b9c1c51f4ca3d01e9a1e0ba16e8490d48c83eaf16ad066e",
+      "minimum_label_px": 100.0
     },
     {
       "src": "../output/figures/pipeline_stages_panel_03.png",
       "alt": "Declared stages in YAML order; final column lists all tags: 11: LLM Translations [llm, live]; 12: Copy Outputs [core]; 13: Ebook Generation [core, ebook]; 14: docxplus Export [core, docxplus]; 15: Metadata Package [core, metadata]",
-      "sha256": "e33237631250d66449116d029c1f7b94497f57bbc2b5c118ab4893bd58c55c2f",
-      "minimum_label_px": 97.0
+      "sha256": "19ab1c237d219c807b8b540a493ad3695aa8742c3263b850c0dd8f73ea9ac2df",
+      "minimum_label_px": 100.0
     },
     {
       "src": "../output/figures/pipeline_stages_panel_04.png",
       "alt": "Declared stages in YAML order; final column lists all tags: 16: Executable Bundle [bundle]; 17: Archival Publication [archival, live]",
-      "sha256": "997f8360bf0d9cb20a34c109a991bb7f349da64746f6a034c0851e47eec4f500",
-      "minimum_label_px": 97.0
+      "sha256": "8d5f8955c5aecb1814af4aadc75e27181a08141ba24ac0a266fefd4da2615852",
+      "minimum_label_px": 100.0
     }
   ]
 }

@@ -762,6 +762,9 @@ The `infrastructure/project/` module enables multi-project support by:
 | `public_root_runtime_producer.py` | Supervised prepared-interpreter Root v2 execution and genuine selected-interpreter readback. |
 | `public_root_runtime_readback.py` | Independent Root runtime readback in the genuinely selected interpreter; no cross-minor reconstruction. |
 | `public_root_runtime_worker.py` | One genuine full census and exact applicability units in the selected Root interpreter. |
+| `exemplar_config_contract.py` | Per-exemplar config blocks, SDK pin/source, `platform_version` and generated-copy consistency. |
+| `fork_identity.py` | Forked-copy identity: declared SDK source, author replacement and removal of the source DOI/ORCID/repository/date. |
+| `release_versions.py` | Root tag/changelog/notes/artwork identity and each exemplar's intended-versus-published version agreement. |
 
 ### Auxiliary project matrix ownership
 

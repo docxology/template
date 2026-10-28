@@ -64,7 +64,7 @@
           "file_count": 1,
           "largest_file": "template_advanced_literature_review_combined.pdf",
           "largest_file_path": "pdf/template_advanced_literature_review_combined.pdf",
-          "size_mb": "5.52"
+          "size_mb": "5.49"
         },
         "reports": {
           "exists": true,
@@ -83,14 +83,14 @@
           "file_count": 23,
           "largest_file": "03c_results_text_analytics_slides.pdf",
           "largest_file_path": "slides/03c_results_text_analytics_slides.pdf",
-          "size_mb": "5.81"
+          "size_mb": "6.06"
         },
         "web": {
           "exists": true,
           "file_count": 27,
           "largest_file": "source-web-fonts.js",
           "largest_file_path": "web/assets/source-web-fonts.js",
-          "size_mb": "2.36"
+          "size_mb": "2.48"
         }
       },
       "file_counts": {
@@ -114,7 +114,7 @@
           "combined_pdf": {
             "exists": true,
             "readable": true,
-            "size_mb": 5.52
+            "size_mb": 5.49
           },
           "data": {
             "exists": true,
@@ -174,7 +174,7 @@
             "optional": false,
             "readable": true,
             "required": true,
-            "size_mb": 5.52
+            "size_mb": 5.49
           },
           "reports": {
             "exists": true,
@@ -197,7 +197,7 @@
             "optional": false,
             "readable": true,
             "required": true,
-            "size_mb": 5.81
+            "size_mb": 6.06
           },
           "web": {
             "exists": true,
@@ -205,7 +205,7 @@
             "optional": false,
             "readable": true,
             "required": true,
-            "size_mb": 2.36
+            "size_mb": 2.48
           }
         },
         "inventory_mode": "stable-shippable-output-v1",
@@ -215,7 +215,7 @@
         "valid": true,
         "warnings": []
       },
-      "total_size_mb": 18.764198303222656
+      "total_size_mb": 19.095717430114746
     },
     "figures": {
       "files": 19,
@@ -224,7 +224,7 @@
     "inventory_mode": "stable-shippable-output-v1",
     "pdf": {
       "files": 1,
-      "size_mb": 5.516887664794922
+      "size_mb": 5.48628044128418
     },
     "stable_inventory": {
       "categories": {
@@ -242,7 +242,7 @@
         },
         "pdf": {
           "files": 1,
-          "size_bytes": 5784876
+          "size_bytes": 5752782
         },
         "reports": {
           "files": 1,
@@ -250,16 +250,16 @@
         },
         "slides": {
           "files": 23,
-          "size_bytes": 6096444
+          "size_bytes": 6354473
         },
         "web": {
           "files": 27,
-          "size_bytes": 2477535
+          "size_bytes": 2599223
         }
       },
       "mode": "stable-shippable-output-v1",
       "total_files": 103,
-      "total_size_bytes": 19675688
+      "total_size_bytes": 20023311
     }
   },
   "recommendations": [],
@@ -270,12 +270,12 @@
     "passed": 9,
     "total_checks": 9
   },
-  "timestamp": "2026-10-23T12:44:35Z",
+  "timestamp": "2026-10-28T21:24:42Z",
   "validated_inputs": {
     "artifact_manifest": {
       "path": "output/reports/artifact_manifest.json",
-      "sha256": "39f0526616535707f57a423c6f0ff8a4b9054e1e732b129f9e153d85a79e960b",
-      "size_bytes": 31496
+      "sha256": "74d5c0e1d9f6a5963b429e87c30beb7dd14fcf74306bf88cf1cb03a76f6c4614",
+      "size_bytes": 34071
     },
     "combined_manuscript": {
       "path": "output/web/_combined_manuscript.md",
@@ -430,19 +430,19 @@
     "fingerprints": {
       "config": {
         "file_count": 21,
-        "sha256": "8a0d3336ef1a95f0bc02080339e3ee58017d4e96e8953f5e16adfd9a1b93141c"
+        "sha256": "a69af7ed5da59b5ce587b53588e47870fe82e2326388bfb166d95f0b9fedb9ce"
       },
       "output": {
         "file_count": 103,
-        "sha256": "f64b964d94c37aef03c276d3d579a82262afc53d867ddfa5db8418926c08be8d"
+        "sha256": "c30235af1a7c64bbeeb69e23e4647543ba5b1e9c9462e06d0d18dfedd17ccc30"
       },
       "source": {
         "file_count": 101,
-        "sha256": "9a03a4073abbccd4752a9fbf90a6840dbc819f0392cf618ffe4edf7ac769fd09"
+        "sha256": "f7cf9e0e50a453e9af6dcc3e230c3628b338c2b4e0f2eadcd3b8f3d16298705d"
       },
       "stage": {
-        "file_count": 1913,
-        "sha256": "e2988e519a8e0538602cb07203bac913d60ec7188a513c0acb96888292bc2ab5"
+        "file_count": 1930,
+        "sha256": "9d71e4c2a13df7d6640c32ecd7ed02fca5cbe1b5c5b877cdffb994ac17c45ec3"
       }
     },
     "project": "templates/template_advanced_literature_review",
