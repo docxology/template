@@ -86,9 +86,19 @@ def test_manifest_refuses_unusable_evidence(tmp_path: Path, fault: str) -> None:
         load_module_durations(tmp_path)
 
 
-def test_manifest_requires_a_committed_file(tmp_path: Path) -> None:
-    with pytest.raises(OSError):
-        load_module_durations(tmp_path)
+def test_this_checkout_carries_committed_measurements() -> None:
+    durations = load_module_durations(ROOT)
+    assert durations
+    assert all((ROOT / name).is_file() for name in durations)
+    assert all(seconds > 0 for seconds in durations.values())
+
+
+def test_root_without_manifest_falls_back_to_byte_sizes(tmp_path: Path) -> None:
+    (tmp_path / "tests").mkdir()
+    (tmp_path / "tests/measured.py").write_text("def test_owned():\n    assert True\n", encoding="utf-8")
+    assert load_module_durations(tmp_path) == {}
+    weights = module_weights(tmp_path, ("tests/measured.py",))
+    assert weights == {"tests/measured.py": float((tmp_path / "tests/measured.py").stat().st_size)}
 
 
 def test_measurements_must_name_real_roster_modules() -> None:

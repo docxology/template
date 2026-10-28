@@ -102,6 +102,7 @@ SOURCE_TEST_OWNERS: dict[str, tuple[str, ...]] = {
         "tests/infra_tests/core/test_ci_infra.py",
     ),
     "infrastructure/core/testing/ci_infra.py": (
+        "tests/infra_tests/core/test_ci_module_durations.py",
         "tests/infra_tests/core/test_ci_infra.py",
         "tests/infra_tests/core/test_ci_infra_partition.py",
         "tests/infra_tests/core/test_pytest_receipt.py",
@@ -110,6 +111,7 @@ SOURCE_TEST_OWNERS: dict[str, tuple[str, ...]] = {
         "tests/infra_tests/core/test_ci_infra_process.py",
     ),
     "infrastructure/core/testing/ci_contracts.py": (
+        "tests/infra_tests/core/test_ci_module_durations.py",
         "tests/infra_tests/core/test_ci_contracts.py",
         "tests/infra_tests/core/test_ci_infra.py",
         "tests/infra_tests/core/test_ci_infra_process.py",

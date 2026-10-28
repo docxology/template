@@ -250,11 +250,11 @@
     "passed": 9,
     "total_checks": 9
   },
-  "timestamp": "2026-10-28T21:24:42Z",
+  "timestamp": "2026-10-28T22:22:30Z",
   "validated_inputs": {
     "artifact_manifest": {
       "path": "output/reports/artifact_manifest.json",
-      "sha256": "dc61310292fbd966ba576344dbe2c7c3a116d82670640fb3e19ac1f1e053d7bb",
+      "sha256": "258c1ae20abf18c67f17f9072d48e52e8ab68768e2193786c22b5154bd7c07b9",
       "size_bytes": 11174
     },
     "combined_manuscript": {
@@ -330,15 +330,15 @@
       },
       "output": {
         "file_count": 34,
-        "sha256": "d6b73bcc41d21215a68261d21e211b4f716c838d86e29c5c0582b1427c15572f"
+        "sha256": "a8e6e25963550bd2b375261135a61da73f21dec922947b19a4adbd30b223ecb3"
       },
       "source": {
         "file_count": 39,
         "sha256": "b58897d16ea2dd65372f44350e5b9efb5f6a508d533eca73eb58bdbebcdef044"
       },
       "stage": {
-        "file_count": 1930,
-        "sha256": "9d71e4c2a13df7d6640c32ecd7ed02fca5cbe1b5c5b877cdffb994ac17c45ec3"
+        "file_count": 1932,
+        "sha256": "65a9fb16b00fd871f132a269f9a29dbc32a858033f98908957f862950f0f9ad8"
       }
     },
     "project": "templates/template_eda_notebook",

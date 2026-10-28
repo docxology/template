@@ -322,16 +322,15 @@ def test_workflow_cannot_create_root_4_release_before_required_acceptance() -> N
         "--no-sync",
         "--offline",
         "python",
-        "-m",
-        "infrastructure.validation.cli",
-        "publication-audit",
+        "scripts/audit/check_publication_outputs.py",
         "--repo-root",
         "$GITHUB_WORKSPACE",
         "--all-public",
         "--strict",
-        "--rendered",
-        "--format",
-        "json",
+        "--jobs",
+        "4",
+        "--receipts",
+        "$RUNNER_TEMP/publication-receipts",
     ]
     assert "if" not in audit
     positions = [audit_index]

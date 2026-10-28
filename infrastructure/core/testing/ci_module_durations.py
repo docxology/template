@@ -52,7 +52,14 @@ def _seconds(name: str, value: object) -> float:
 
 
 def load_module_durations(root: Path, manifest: Path = MANIFEST_RELATIVE_PATH) -> dict[str, float]:
-    """Read the committed per-module measurements, refusing malformed evidence."""
+    """Read the committed per-module measurements, refusing malformed evidence.
+
+    A root without the manifest is not a checkout that carries measurements (a
+    synthesized selection root, for instance). Balancing then falls back to byte
+    sizes; a manifest that exists must still parse exactly.
+    """
+    if not (root / manifest).is_file():
+        return {}
     payload = json.loads(
         read_bytes_confined(root, root / manifest, max_bytes=MAX_MANIFEST_BYTES).decode("utf-8"),
         object_pairs_hook=_unique_pairs,

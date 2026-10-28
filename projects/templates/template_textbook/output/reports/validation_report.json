@@ -219,7 +219,7 @@
         "valid": true,
         "warnings": []
       },
-      "total_size_mb": 8.854840278625488
+      "total_size_mb": 8.854839324951172
     },
     "evidence_issues": [
       "appendix_format_gallery.md:328: unsupported number -8",
@@ -254,7 +254,7 @@
         },
         "docx": {
           "files": 2,
-          "size_bytes": 882970
+          "size_bytes": 882969
         },
         "epub": {
           "files": 1,
@@ -283,7 +283,7 @@
       },
       "mode": "stable-shippable-output-v1",
       "total_files": 160,
-      "total_size_bytes": 9284973
+      "total_size_bytes": 9284972
     }
   },
   "recommendations": [],
@@ -294,11 +294,11 @@
     "passed": 9,
     "total_checks": 9
   },
-  "timestamp": "2026-10-28T21:24:42Z",
+  "timestamp": "2026-10-28T22:22:30Z",
   "validated_inputs": {
     "artifact_manifest": {
       "path": "output/reports/artifact_manifest.json",
-      "sha256": "b16ae7e3b999ff78c861b4eff876f1f24839989668a75d45fb32b0287035ab46",
+      "sha256": "4b39514e665860d49b89321e074796a680c1d302f86136d9539ec022a9e1cd82",
       "size_bytes": 53387
     },
     "combined_manuscript": {
@@ -614,15 +614,15 @@
       },
       "output": {
         "file_count": 160,
-        "sha256": "3918b0b6dfd440a7de5952d166eb189b9f33211f5bea8d9e4dae9b187cc708f1"
+        "sha256": "e501906efaae00ab926f82829cee7411938106600a2e6bc67cf52e1cb901e663"
       },
       "source": {
         "file_count": 94,
         "sha256": "56dec26c14364dc2bff1684dd54aff290081688e6cce25879936fe6dc84f5169"
       },
       "stage": {
-        "file_count": 1930,
-        "sha256": "9d71e4c2a13df7d6640c32ecd7ed02fca5cbe1b5c5b877cdffb994ac17c45ec3"
+        "file_count": 1932,
+        "sha256": "65a9fb16b00fd871f132a269f9a29dbc32a858033f98908957f862950f0f9ad8"
       }
     },
     "project": "templates/template_textbook",
