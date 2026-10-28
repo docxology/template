@@ -144,7 +144,7 @@ class OfficeNestedReaderOperation:
         operation.verify(self.parent_reader)
 
     def _child(self, binding: dict[str, str]) -> RetainedOfficeControl:
-        from infrastructure.reporting.native_format_acceptance_validation import _file
+        from infrastructure.reporting.native_format_acceptance_evidence import _file
         from infrastructure.reporting.native_tool_replay import (
             authenticate_original_native_artifact,
             validate_native_tool_data,

@@ -27,7 +27,7 @@ The readiness report counts **projects**, not individual tests. Each public
 exemplar must meet its own coverage floor; `--allow-skips` is an explicit
 project-level exception, not evidence that skipped work passed.
 
-See [CI definitions](workflows/ci.yml) and [local pre-push checks](AGENTS.md#local-pre-push-parity-pre-commit-configyaml)
+See [CI definitions](workflows/ci.yml) and [local pre-push checks](AGENTS.md#local-hook-parity-pre-commit-configyaml)
 for the full platform matrix and security checks. Identify affected pipeline
 stages using the [canonical stage map](../docs/RUN_GUIDE.md#core-pipeline-stages--executive-reporting).
 

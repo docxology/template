@@ -2,7 +2,7 @@
 
 The Standalone Project Paradigm enables horizontal scaling: a project supplies its manuscript/config, isolated source and tests, thin analysis scripts, and declared dependencies. New projects use existing infrastructure interfaces; admission to the tracked public roster and release matrix remains explicit. The `run.sh` orchestrator automatically discovers new projects and presents them in its interactive menu.
 
-We have validated scaling with 25 canonical exemplars under `projects/templates/`—always present for onboarding and tooling—and with this manuscript from `projects/templates/template_template` (156 tests) as a git-tracked public exemplar in the same automated discovery menus.
+We have validated scaling with 25 canonical exemplars under `projects/templates/`—always present for onboarding and tooling—and with this manuscript from `projects/templates/template_template` (157 tests) as a git-tracked public exemplar in the same automated discovery menus.
 
 Canonical trio:
 
@@ -12,7 +12,7 @@ Canonical trio:
 
 Meta manuscript (**`projects/templates/template_template`**) analyzes the repository via `src/template_template/` introspection metrics; it now lives alongside the other public exemplars under `projects/templates/`.
 
-These workspaces share no project-level code—only Layer 1 (31 infrastructure subdirectories, ~1322 Python files)—validating insulation between domain repos and reusable services.
+These workspaces share no project-level code—only Layer 1 (31 infrastructure subdirectories, ~1335 Python files)—validating insulation between domain repos and reusable services.
 
 ### Multi-Project Orchestration
 

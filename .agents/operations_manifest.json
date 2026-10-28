@@ -249,9 +249,10 @@
       "purpose": "Conservative PR functional selection; complete release gates are separate.",
       "subcommands": [],
       "exports": [
-        "changed_git_paths",
         "affected_projects",
-        "functional_selection"
+        "changed_git_paths",
+        "functional_selection",
+        "infrastructure_selection"
       ],
       "effect": "mutating"
     },

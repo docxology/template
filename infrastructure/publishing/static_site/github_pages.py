@@ -21,10 +21,10 @@ from infrastructure.publishing.publication_tree import (
     update_publication_tree,
     validate_publication_update,
 )
+from infrastructure.publishing._standalone_mirror_verify import validate_publication_commit
 from infrastructure.publishing.standalone_mirror import (
     push_admitted_commit,
     validate_git_destination,
-    validate_publication_commit,
 )
 
 from .models import SiteDeployConfig, SiteDeployResult

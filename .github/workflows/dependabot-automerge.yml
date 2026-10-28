@@ -1,53 +1,164 @@
-# Dependabot Automerge (GH-AUTOMERGE-1)
+# Dependabot Automerge (GH-AUTOMERGE-2)
 #
-# Enables GitHub native auto-merge for LOW-RISK Dependabot bumps so dependency
-# toil does not distract from template work, while preserving every safety gate:
+# Merges LOW-RISK Dependabot bumps once the required checks pass, while keeping
+# every safety gate:
 #
-#   * The job only runs for the Dependabot actor (`github.actor` guard).
-#   * Only `semver-minor` and `semver-patch` updates auto-merge. Major bumps are
-#     left for a human (they can carry breaking changes).
-#   * `gh pr merge --auto` enables GitHub's native auto-merge, which merges ONLY
-#     after every required status check passes. This is gated by branch
-#     protection on `main` — if required checks are not configured, GitHub will
-#     not merge on red. Auto-merge must also be enabled in repo settings
-#     (Settings → General → "Allow auto-merge").
+#   * `qualify` only ever acts on Dependabot's own pull requests
+#     (`github.actor == 'dependabot[bot]'`).
+#   * Only `semver-minor` and `semver-patch` updates are marked mergeable, and
+#     only for an ecosystem declared in `.github/dependabot.yml`
+#     (`github_actions`, `pip`). Major bumps are left for a human, and a PR whose
+#     metadata turns into a major update loses the mark again.
+#   * `merge` re-reads the PR instead of trusting the earlier decision: the
+#     recording label must be present, the head branch must live in this
+#     repository, the PR must be an open, non-draft PR into `main`, its merge
+#     state must be CLEAN (every required check passed, no blocking review),
+#     and its head commit must still be the commit whose `CI` run succeeded.
+#     `--match-head-commit` makes that last check atomic with the merge.
 #
-# `pull_request_target` is required so the workflow has a writable token on
-# Dependabot PRs (the `pull_request` event gives Dependabot a read-only token
-# with no secrets). This workflow never checks out or executes PR HEAD code — it
-# only reads update metadata and calls the GitHub API — so the elevated trigger
-# does not expose secrets to untrusted code.
+# WHY THIS NO LONGER CALLS `gh pr merge --auto` (failure of GH-AUTOMERGE-1):
+# run 40627322822 on PR #162 ("Auto-merge safe Dependabot bumps", 6s) failed
+# with
+#     GraphQL: Auto merge is not allowed for this repository (enablePullRequestAutoMerge)
+# GitHub's native auto-merge needs the repository setting Settings → General →
+# "Allow auto-merge"; `gh api repos/docxology/template` reports
+# `allow_auto_merge: false`, so the API call could never succeed and every
+# otherwise-green Dependabot bump stayed blocked. The setting is not part of the
+# repository contents, and a required-check gate must not depend on external
+# state that silently disables dependency updates. This workflow therefore owns
+# the merge itself: `qualify` records eligibility from the canonical
+# `dependabot/fetch-metadata` outputs, and `merge` performs a plain squash merge
+# when the `CI` workflow for the same head commit succeeds. Enabling native
+# auto-merge is now optional and changes nothing here.
+#
+# `pull_request_target` is required so the workflow can write to Dependabot PRs
+# (the `pull_request` event hands Dependabot a read-only token), and
+# `workflow_run` gives us the CI completion that the required checks report
+# through (a `pull_request_target` run starts before those checks exist). Neither
+# job checks out or executes PR HEAD code — they read update metadata and call
+# the GitHub API — so the elevated trigger exposes no secrets to untrusted code.
 name: Dependabot Automerge
 
 on:
   pull_request_target:
     types: [opened, reopened, synchronize, ready_for_review]
+  workflow_run:
+    workflows: [CI]
+    types: [completed]
 
 permissions:
-  contents: write
-  pull-requests: write
+  contents: read
 
 concurrency:
-  group: dependabot-automerge-${{ github.event.pull_request.number }}
-  cancel-in-progress: true
+  # One group per Dependabot PR for eligibility, one per CI completion for the
+  # merge decision, so a newer synchronize supersedes the older eligibility pass
+  # without letting two merge decisions race the same PR.
+  group: dependabot-automerge-${{ github.event_name == 'pull_request_target' && format('pr-{0}', github.event.pull_request.number) || format('run-{0}', github.run_id) }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request_target' }}
 
 jobs:
-  automerge:
-    name: Auto-merge safe Dependabot bumps
+  qualify:
+    name: Record safe Dependabot eligibility
+    if: github.event_name == 'pull_request_target' && github.actor == 'dependabot[bot]'
     runs-on: ubuntu-latest
     timeout-minutes: 5
-    # Only ever act on Dependabot's own PRs.
-    if: github.actor == 'dependabot[bot]'
+    permissions:
+      contents: read
+      pull-requests: write
+      issues: write # label creation and assignment
     steps:
       - name: Fetch Dependabot update metadata
         id: meta
         uses: dependabot/fetch-metadata@25dd0e34f4fe68f24cc83900b1fe3fe149efef98 # v3.1.0
 
-      - name: Enable auto-merge for minor and patch updates
-        if: >-
-          steps.meta.outputs.update-type == 'version-update:semver-minor' ||
-          steps.meta.outputs.update-type == 'version-update:semver-patch'
+      - name: Record or clear the mergeable mark
         env:
           PR_URL: ${{ github.event.pull_request.html_url }}
+          UPDATE_TYPE: ${{ steps.meta.outputs.update-type }}
+          ECOSYSTEM: ${{ steps.meta.outputs.package-ecosystem }}
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: gh pr merge --auto --squash "$PR_URL"
+          LABEL: automerge:dependabot-minor-patch
+        run: |
+          set -euo pipefail
+          gh label create "$LABEL" \
+            --color 0e8a16 \
+            --description "Minor/patch Dependabot update eligible for dependabot-automerge.yml" \
+            --force >/dev/null
+
+          case "$UPDATE_TYPE" in
+            version-update:semver-minor | version-update:semver-patch) update_allowed=true ;;
+            *) update_allowed=false ;;
+          esac
+          case "$ECOSYSTEM" in
+            github_actions | pip) ecosystem_allowed=true ;;
+            *) ecosystem_allowed=false ;;
+          esac
+
+          if [[ "$update_allowed" == true && "$ecosystem_allowed" == true ]]; then
+            gh pr edit "$PR_URL" --add-label "$LABEL" >/dev/null
+            printf 'Eligible: %s (%s, %s).\n' "$PR_URL" "$UPDATE_TYPE" "$ECOSYSTEM" >> "$GITHUB_STEP_SUMMARY"
+          else
+            # A major bump, an undeclared ecosystem, or unparsed metadata must
+            # never inherit an older eligibility mark.
+            gh pr edit "$PR_URL" --remove-label "$LABEL" >/dev/null 2>&1 || true
+            printf 'Left for human review: %s (%s, %s).\n' "$PR_URL" "$UPDATE_TYPE" "$ECOSYSTEM" >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+  merge:
+    name: Merge safe Dependabot bump after CI
+    if: >-
+      github.event_name == 'workflow_run'
+      && github.event.workflow_run.conclusion == 'success'
+      && github.event.workflow_run.event == 'pull_request'
+      && github.event.workflow_run.head_repository.full_name == github.repository
+      && github.event.workflow_run.pull_requests[0].number != null
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - name: Squash-merge the marked pull request at the verified head commit
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPOSITORY: ${{ github.repository }}
+          REPO_OWNER: ${{ github.repository_owner }}
+          PR_NUMBER: ${{ github.event.workflow_run.pull_requests[0].number }}
+          CI_HEAD_SHA: ${{ github.event.workflow_run.head_sha }}
+          LABEL: automerge:dependabot-minor-patch
+        run: |
+          set -euo pipefail
+          skip() {
+            printf 'Skipped: %s\n' "$1" | tee -a "$GITHUB_STEP_SUMMARY"
+            exit 0
+          }
+
+          metadata=""
+          merge_state=UNKNOWN
+          attempt=0
+          while [[ "$attempt" -lt 12 ]]; do
+            attempt=$((attempt + 1))
+            metadata=$(gh pr view "$PR_NUMBER" --repo "$REPOSITORY" \
+              --json state,isDraft,baseRefName,headRefOid,headRepositoryOwner,labels,mergeStateStatus)
+            merge_state=$(jq -r '.mergeStateStatus' <<<"$metadata")
+            # GitHub reports UNKNOWN while it recomputes mergeability.
+            if [[ "$merge_state" != "UNKNOWN" ]]; then
+              break
+            fi
+            sleep 10
+          done
+
+          jq -e '.state == "OPEN" and (.isDraft | not) and .baseRefName == "main"' <<<"$metadata" >/dev/null \
+            || skip "the pull request is not an open, non-draft PR into main"
+          jq -e --arg owner "$REPO_OWNER" '.headRepositoryOwner.login == $owner' <<<"$metadata" >/dev/null \
+            || skip "the pull request head is not a branch of this repository"
+          jq -e --arg label "$LABEL" '[.labels[].name] | index($label) != null' <<<"$metadata" >/dev/null \
+            || skip "the ${LABEL} mark is absent; only minor/patch Dependabot updates carry it"
+          jq -e --arg sha "$CI_HEAD_SHA" '.headRefOid == $sha' <<<"$metadata" >/dev/null \
+            || skip "the head commit moved after the completed CI run; the new commit's CI decides"
+          if [[ "$merge_state" != "CLEAN" ]]; then
+            skip "merge state is ${merge_state}; required checks or reviews are still outstanding"
+          fi
+
+          gh pr merge "$PR_NUMBER" --repo "$REPOSITORY" --squash --match-head-commit "$CI_HEAD_SHA"
+          printf 'Merged %s at %s.\n' "$PR_NUMBER" "$CI_HEAD_SHA" >> "$GITHUB_STEP_SUMMARY"

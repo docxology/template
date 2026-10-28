@@ -96,7 +96,7 @@ def crossref_item_to_paper(item: dict[str, Any], *, source: str = "crossref") ->
     if date_parts and date_parts[0]:
         try:
             year = int(date_parts[0][0])
-        except TypeError, ValueError, IndexError:
+        except (TypeError, ValueError, IndexError):
             year = None
 
     venue_list = item.get("container-title") or []

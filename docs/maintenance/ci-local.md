@@ -186,8 +186,10 @@ no-mocks policies, exports, operations, generated-artifact, confidentiality and
 module-size checks. The retained pre-push hook also checks mirror shape. The
 standalone `lint`, `verify-no-mocks`, `security` and `confid` lanes remain
 available through `--job`; the default avoids their repeated scans. Test
-profiles, coverage requirements, hook stages and named-lane commands are
-unchanged. This local subset still does not replace hosted matrices, dependency
+profiles, coverage requirements and named-lane commands are unchanged; hook
+stages follow [`.pre-commit-config.yaml`](../../.pre-commit-config.yaml) and are
+summarised in [`../development/validation_gates.md`](../development/validation_gates.md).
+This local subset still does not replace hosted matrices, dependency
 auditing or required release acceptance.
 
 The `tests` lane runs the full infrastructure scope and the selected project's

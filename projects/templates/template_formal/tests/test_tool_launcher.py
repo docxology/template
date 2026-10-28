@@ -81,7 +81,7 @@ def test_actual_canonical_shell_ignores_timestamp_valid_poisoned_tool_cache(tmp_
     assert payload["tool_launcher"] == {
         "execution_binding": "preimport-audited-fresh-prefix",
         "controller_execution_binding": "fresh-prefix",
-        "platform_version": "4.1.0",
+        "platform_version": "4.3.0",
     }
     assert not marker.exists() and source.read_bytes() == original
     assert not (root / "formal/lean/.lake").exists()

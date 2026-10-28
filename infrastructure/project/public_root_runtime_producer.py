@@ -130,7 +130,7 @@ def produce_runtime_cohort(
         held = SnapshotReader(root).read((directory / "runtime-cell.json").relative_to(root).as_posix())
         result_binding = {"path": held.relative, "sha256": held.sha256}
         result = _json(held)
-    except OSError, ValueError:
+    except (OSError, ValueError):
         pass
     native_binding = write(
         root,

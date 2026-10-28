@@ -44,7 +44,7 @@ def interactive(
         print("Choice: ", end="", flush=True)
         try:
             raw = reader().strip()
-        except EOFError, KeyboardInterrupt:
+        except (EOFError, KeyboardInterrupt):
             print()
             return 0
 

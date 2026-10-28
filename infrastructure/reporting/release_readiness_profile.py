@@ -107,7 +107,7 @@ def required_profile(
             raise ValueError("root intended version has no matching changelog heading")
     except FileNotFoundError:
         return (), (GateEvidence("root:metadata", "unknown", diagnostic="root metadata is missing"),)
-    except OSError, ValueError, KeyError, TypeError, UnicodeError, SyntaxError:
+    except (OSError, ValueError, KeyError, TypeError, UnicodeError, SyntaxError):
         return (), (GateEvidence("root:metadata", "fail", diagnostic="root metadata is invalid"),)
 
     from infrastructure.project.public_acceptance_scope import RuntimeScope
@@ -159,7 +159,7 @@ def required_profile(
                     diagnostic="required complete Root case policy/operation eligibility is unavailable",
                 )
             )
-        except OSError, ValueError, TypeError, KeyError, UnicodeError:
+        except (OSError, ValueError, TypeError, KeyError, UnicodeError):
             add("root:case-policy", "root-policy")
             faults.append(
                 GateEvidence(
@@ -250,11 +250,11 @@ def required_profile(
                     **common,
                 )
             )
-        except FileNotFoundError, KeyError:
+        except (FileNotFoundError, KeyError):
             faults.append(
                 GateEvidence(f"{project}:declaration", "unknown", diagnostic="required source declaration is missing")
             )
-        except OSError, ValueError, TypeError, yaml.YAMLError, UnicodeError:
+        except (OSError, ValueError, TypeError, yaml.YAMLError, UnicodeError):
             faults.append(
                 GateEvidence(f"{project}:declaration", "fail", diagnostic="required source declaration is invalid")
             )
@@ -340,7 +340,7 @@ def collect_profile(root: Path, receipt_path: Path | None, reader: SnapshotReade
     try:
         fingerprint = source_fingerprint(root)
         requirements, faults = required_profile(root, reader, fingerprint)
-    except OSError, ValueError:
+    except (OSError, ValueError):
         return ReadinessEvidence(
             available=receipt_path is not None,
             candidate_state="fail",
@@ -370,7 +370,7 @@ def collect_profile(root: Path, receipt_path: Path | None, reader: SnapshotReade
                 from infrastructure.project.auxiliary_matrix_validation import authenticate_matrix
 
                 authenticate_matrix(reader, receipt, requirements)
-        except OSError, ValueError, TypeError:
+        except (OSError, ValueError, TypeError):
             faults += (
                 GateEvidence(
                     "receipt", "fail", diagnostic="unsupported, malformed, or source-stale required acceptance receipt"
@@ -380,7 +380,7 @@ def collect_profile(root: Path, receipt_path: Path | None, reader: SnapshotReade
     try:
         if source_fingerprint(root) != fingerprint or not reader.unchanged():
             gates += (GateEvidence("snapshot", "fail", diagnostic="source or evidence changed during collection"),)
-    except OSError, ValueError:
+    except (OSError, ValueError):
         gates += (GateEvidence("snapshot", "fail", diagnostic="source or evidence custody changed during collection"),)
     candidate = aggregate_state(tuple(gate.state for gate in gates if gate.profile == "candidate"))
     released = aggregate_state(tuple(gate.state for gate in gates))

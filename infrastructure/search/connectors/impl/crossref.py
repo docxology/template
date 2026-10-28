@@ -104,7 +104,7 @@ class CrossrefConnector:
         if date_parts and date_parts[0]:
             try:
                 year = int(date_parts[0][0])
-            except TypeError, ValueError:
+            except (TypeError, ValueError):
                 pass
         url = item.get("URL") or (f"https://doi.org/{doi}" if doi else None)
         score = float(item.get("score", 0.0) or 0.0)

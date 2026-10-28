@@ -19,6 +19,12 @@ Repository-local composite actions for the CI pipeline. See
 | --- | --- |
 | [`setup-python-env/action.yml`](setup-python-env/action.yml) | uv + Python provisioning (see its [`AGENTS.md`](setup-python-env/AGENTS.md)). |
 | [`setup-docs-lint/action.yml`](setup-docs-lint/action.yml) | Shared Node + Mermaid + Chrome provisioning for both blocking documentation-lint callers. |
+| [`setup-actionlint/action.yml`](setup-actionlint/AGENTS.md) | Single `actionlint` pin, installer SHA-256 verification, and run. |
+| [`run-public-lint/action.yml`](run-public-lint/AGENTS.md) | Public-scope Ruff/type gates, concurrently, with one aggregated status. |
+| [`run-tracked-guards/action.yml`](run-tracked-guards/AGENTS.md) | Sequential tracked-tree guards (resources, secrets, generated artifacts). |
+| [`run-safety-scan/action.yml`](run-safety-scan/AGENTS.md) | Bandit MEDIUM+ and no-mocks, shared by both workflows. |
+| [`check-browser/action.yml`](check-browser/AGENTS.md) | Installed-Chrome selection for native consumer controls. |
+| [`setup-tex-toolchain/action.yml`](setup-tex-toolchain/AGENTS.md) | Cached xelatex/bibtex provisioning for the slow and rehearsal lanes. |
 | [`setup-meta-provider/action.yml`](setup-meta-provider/action.yml) | Genuine noneditable Meta wheel for Advanced and literature lifecycle tests. |
 | [`setup-ci-execution-user/`](setup-ci-execution-user/README.md) | Fresh unprivileged Linux account, scoped pre-custody handoff and byte-identical readiness transport. |
 | [`setup-native-installed-readiness/`](setup-native-installed-readiness/README.md) | Prepare Source-locked native tools and cached inputs before the installed original/reader/handoff operation. |

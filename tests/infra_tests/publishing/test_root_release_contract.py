@@ -90,16 +90,15 @@ def test_root_release_workflow_invokes_version_contract() -> None:
         "--no-sync",
         "--offline",
         "python",
-        "-m",
-        "infrastructure.validation.cli",
-        "publication-audit",
+        "scripts/audit/check_publication_outputs.py",
         "--repo-root",
         "$GITHUB_WORKSPACE",
         "--all-public",
         "--strict",
-        "--rendered",
-        "--format",
-        "json",
+        "--jobs",
+        "4",
+        "--receipts",
+        "$RUNNER_TEMP/publication-receipts",
     ]
     assert "if" not in audit
     assert not audit.get("continue-on-error", False)

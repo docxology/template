@@ -240,7 +240,7 @@ def _declared_provider_roots(
     """
     try:
         project = tomllib.loads((project_root / "pyproject.toml").read_text(encoding="utf-8")).get("project", {})
-    except OSError, UnicodeDecodeError, tomllib.TOMLDecodeError:
+    except (OSError, UnicodeDecodeError, tomllib.TOMLDecodeError):
         return ()
     names: set[str] = set()
     for value in project.get("dependencies", []) if isinstance(project, dict) else ():

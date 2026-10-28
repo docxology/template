@@ -64,7 +64,7 @@ def _animation_frame_count(root: Path) -> int:
 
         with Image.open(gif_path) as image:
             return sum(1 for _ in ImageSequence.Iterator(image))
-    except ImportError, OSError, ValueError, EOFError:
+    except (ImportError, OSError, ValueError, EOFError):
         return 0
 
 
@@ -73,7 +73,7 @@ def _lean_status(root: Path) -> dict[str, Any]:
         from visualizations.lean_boundary import load_lean_boundary_rows
 
         rows = load_lean_boundary_rows(root)
-    except ImportError, OSError, ValueError:
+    except (ImportError, OSError, ValueError):
         return {"module_count": 0, "proved_count": 0, "all_proved": False, "names": []}
     return {
         "module_count": len(rows),

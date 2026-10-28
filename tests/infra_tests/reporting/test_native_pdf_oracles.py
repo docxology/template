@@ -22,7 +22,8 @@ from infrastructure.reporting.native_format_acceptance_contracts import (
     create_private_native_directory,
     native_environment,
 )
-from infrastructure.reporting.native_format_acceptance_validation import _pdf_controls, _tool
+from infrastructure.reporting.native_format_acceptance_validation import _pdf_controls
+from infrastructure.reporting.native_format_acceptance_evidence import _tool
 from infrastructure.reporting.native_format_acceptance_worker import _pdf_oracle_control
 from infrastructure.reporting.native_format_content_contracts import content_contract_from_bytes, text_tokens
 from infrastructure.reporting.native_format_pdf_oracles import (
@@ -266,7 +267,7 @@ def test_pdf_control_tamper_rejection_needs_original_launch_custody(
 ) -> None:
     """Shared pure candidate DATA checks reject changes without granting custody."""
     from infrastructure.reporting.native_format_pdf_control_replay import _validate_pdf_control_candidate_observation
-    from infrastructure.reporting.native_format_acceptance_validation import _process
+    from infrastructure.reporting.native_format_acceptance_evidence import _process
     from infrastructure.reporting.native_format_acceptance_contracts import WORKER_MODULE
     from infrastructure.reporting.native_format_portable_custody import producer_bootstrap, producer_path
 

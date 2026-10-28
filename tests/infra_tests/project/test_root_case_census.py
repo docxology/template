@@ -446,7 +446,7 @@ def test_whole_collection_deadline_kills_actual_detached_import_descendant(
                 if state is not None and not state.startswith("Z"):
                     live.append(pid)
                     return
-            except FileNotFoundError, json.JSONDecodeError:
+            except (FileNotFoundError, json.JSONDecodeError):
                 pass
             except (OSError, ValueError, subprocess.TimeoutExpired) as error:
                 errors.append(type(error).__name__)

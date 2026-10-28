@@ -27,7 +27,7 @@ def _stage_closure(
 ) -> dict[str, Any]:
     """Reconstruct every retained actual Code/cache body under all four roots."""
     from infrastructure.reporting.native_code_runtime import validate_native_code_runtime
-    from infrastructure.reporting.native_format_acceptance_validation import _file
+    from infrastructure.reporting.native_format_acceptance_evidence import _file
 
     selected = _file(selected_binding, reader)
     raw = selected.json_object()

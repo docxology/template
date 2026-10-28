@@ -59,7 +59,6 @@ _PANDOC_FRONTMATTER_KEYS = frozenset(
         "fail_on_missing",
     }
 )
-_PUBLIC_EXEMPLAR_CONFIG_KEYS = frozenset({"gold_refinement", "madlib"})
 
 try:
     import yaml
@@ -67,6 +66,25 @@ try:
     YAML_AVAILABLE = True
 except ImportError:
     YAML_AVAILABLE = False
+
+
+def _declared_project_config_keys(config_path: Path | str) -> frozenset[str]:
+    """Return the extra top-level keys the owning project declares for itself.
+
+    ``[tool.template].config_keys`` in the project's ``pyproject.toml`` names the
+    config blocks that project owns (for example a domain-specific settings
+    block). Reading the declaration keeps this loader data-driven: a fork adds a
+    key by declaring it, never by editing Layer 1.
+    """
+    if not config_path:
+        return frozenset()
+    path = Path(config_path)
+    manuscript = path.parent
+    root = manuscript.parent if manuscript.name == "manuscript" else manuscript
+    from infrastructure.core.project_pyproject import load_project_pyproject
+
+    declared = load_project_pyproject(root)
+    return frozenset(declared.declared_config_keys) if declared is not None else frozenset()
 
 
 def validate_config_keys(
@@ -103,7 +121,11 @@ def validate_config_keys(
     canonical_keys.update(get_project_schema_extensions("").keys())
     # Standard Pandoc-flat frontmatter keys (csl, link-citations, chapters, …).
     canonical_keys.update(_PANDOC_FRONTMATTER_KEYS)
-    canonical_keys.update(_PUBLIC_EXEMPLAR_CONFIG_KEYS)
+    # A project owns its extra top-level keys: read them from its own
+    # `[tool.template].config_keys` declaration instead of naming exemplars here.
+    declared = _declared_project_config_keys(config_path)
+    if declared:
+        canonical_keys.update(declared)
     known_keys = frozenset(canonical_keys)
     warnings: list[str] = []
 

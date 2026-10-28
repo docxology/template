@@ -30,7 +30,7 @@ def sanitize_machine_local_paths(root: Path) -> tuple[Path, ...]:
             continue
         try:
             original = path.read_text(encoding="utf-8")
-        except OSError, UnicodeDecodeError:
+        except (OSError, UnicodeDecodeError):
             continue
         sanitized = _MACHINE_HOME_RE.sub("<home>", original)
         if sanitized == original:

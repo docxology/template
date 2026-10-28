@@ -94,7 +94,7 @@ def _extract_year(item: dict) -> Optional[int]:
         return None
     try:
         return int(year_raw)
-    except TypeError, ValueError:
+    except (TypeError, ValueError):
         return None
 
 

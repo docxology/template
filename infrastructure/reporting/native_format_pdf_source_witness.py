@@ -185,7 +185,7 @@ def inspect_pdf_source_figures(
                     )
                     continue
                 expected[row["identity"]] = (path, content, source.convert("RGB").copy())
-        except OSError, SyntaxError:
+        except (OSError, SyntaxError):
             blockers.append(f"{row['identity']}: source figure requires a real supported independent decoder")
     native: list[_NativeFigure] = []
     with pdfplumber.open(BytesIO(pdf)) as document:

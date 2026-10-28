@@ -31,7 +31,7 @@ def validate_tex_section_inputs(
     original_root_label: Path,
 ) -> tuple[NativeArtifact, ArtifactSnapshot]:
     """Require the exact authored/consumed section, compiler command and cwd."""
-    from infrastructure.reporting.native_format_acceptance_validation import _file
+    from infrastructure.reporting.native_format_acceptance_evidence import _file
 
     if (
         value["writer"] != "latex"

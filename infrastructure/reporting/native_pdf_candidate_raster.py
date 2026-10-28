@@ -15,7 +15,7 @@ import yaml
 
 from infrastructure.rendering.config import RenderingConfig
 from infrastructure.reporting.native_format_acceptance_contracts import NativeArtifact, native_artifact_contract
-from infrastructure.reporting.native_format_acceptance_validation import _file, _raster, _tool
+from infrastructure.reporting.native_format_acceptance_evidence import _file, _raster, _tool
 from infrastructure.reporting.release_readiness_snapshot import SnapshotReader
 
 

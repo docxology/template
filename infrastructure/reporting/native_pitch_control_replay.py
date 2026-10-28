@@ -12,7 +12,7 @@ from zipfile import ZipFile
 
 from infrastructure.project.public_reference_git import remaining
 from infrastructure.reporting.native_format_acceptance_checks import parse_native_bytes
-from infrastructure.reporting.native_format_acceptance_validation import _file, _tool
+from infrastructure.reporting.native_format_acceptance_evidence import _file, _tool
 from infrastructure.reporting.native_format_joint_source import require_native_operation
 from infrastructure.reporting.native_office_reference_visual import inspect_office_reference_projection
 from infrastructure.reporting.native_pitch_control_mutations import mutate_pitch

@@ -164,7 +164,7 @@ def validate_python_entrypoint(project_root: Path, entrypoint: str) -> Entrypoin
     try:
         resolved = candidate.resolve(strict=True)
         resolved.relative_to(scripts_root)
-    except OSError, ValueError:
+    except (OSError, ValueError):
         issues.append(f"hydration entrypoint escapes or is missing from scripts/: {entrypoint!r}")
         return EntrypointContract(None, "failed", tuple(issues), (f"entrypoint={entrypoint}",))
     cursor = candidate
@@ -222,7 +222,7 @@ def discover_skip_contracts(tests_root: Path, repo_root: Path) -> Iterable[SkipC
     for path in sorted(tests_root.rglob("*.py")):
         try:
             tree = ast.parse(path.read_text(encoding="utf-8"), filename=str(path))
-        except OSError, UnicodeError, SyntaxError, ValueError:
+        except (OSError, UnicodeError, SyntaxError, ValueError):
             # ``validate_python_files`` reports this as a blocking manifest
             # issue; skip discovery remains best-effort so the report can
             # include every other deterministic finding in one invocation.
@@ -412,7 +412,7 @@ def _literal_text(node: ast.AST) -> str:
         return "<computed skip reason>"
     try:
         value = ast.literal_eval(node)
-    except ValueError, TypeError:
+    except (ValueError, TypeError):
         return ""
     return value if isinstance(value, str) else str(value) if value is not None else ""
 

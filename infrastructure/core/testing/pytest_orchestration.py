@@ -163,7 +163,7 @@ def parse_discovery_count(combined_output: str) -> int | None:
         if match:
             try:
                 return int(match.group(1))
-            except ValueError, IndexError:
+            except (ValueError, IndexError):
                 continue
     return None
 

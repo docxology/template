@@ -9,9 +9,9 @@ aliases used for opt-in benchmark and performance suites.
 
 def build_pytest_marker_expression(
     *,
-    skip_requires_ollama: bool,
-    skip_slow: bool,
-    skip_bench: bool,
+    skip_requires_ollama: bool = True,
+    skip_slow: bool = True,
+    skip_bench: bool = True,
     skip_requires_docker: bool = True,
     skip_network: bool = True,
     skip_long_running: bool = True,
@@ -19,6 +19,9 @@ def build_pytest_marker_expression(
     skip_external_fixture: bool = True,
 ) -> str | None:
     """Return a single ``and``-combined marker expression, or ``None`` if unrestricted.
+
+    The keyword defaults are the repository's default pytest selection, so they
+    are the single authority for ``pyproject.toml`` ``addopts``.
 
     Args:
         skip_requires_ollama: When True, append ``not requires_ollama``.
@@ -53,4 +56,12 @@ def build_pytest_marker_expression(
     return " and ".join(parts)
 
 
-__all__ = ["build_pytest_marker_expression"]
+def repository_marker_expression() -> str:
+    """Return the marker expression ``pyproject.toml`` ``addopts`` must carry."""
+    expression = build_pytest_marker_expression()
+    if expression is None:  # pragma: no cover - the defaults always exclude opt-in markers
+        raise ValueError("repository marker defaults must exclude opt-in markers")
+    return expression
+
+
+__all__ = ["build_pytest_marker_expression", "repository_marker_expression"]

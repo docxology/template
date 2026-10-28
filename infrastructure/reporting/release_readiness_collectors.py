@@ -26,14 +26,14 @@ def _read_text(path: Path, reader: SnapshotReader | None) -> str | None:
         if reader is None:
             return path.read_text(encoding="utf-8")
         return reader.read(path.absolute().relative_to(reader.root).as_posix()).content.decode("utf-8")
-    except OSError, ValueError, UnicodeError:
+    except (OSError, ValueError, UnicodeError):
         return None
 
 
 def _read_json(path: Path, reader: SnapshotReader | None = None) -> dict[str, Any] | None:
     try:
         data = json.loads(_read_text(path, reader) or "")
-    except OSError, json.JSONDecodeError:
+    except (OSError, json.JSONDecodeError):
         return None
     return data if isinstance(data, dict) else None
 
@@ -53,7 +53,7 @@ def collect_release_metadata(
             if isinstance(raw, str):
                 version = raw
                 source = _rel(pyproject, repo_root)
-        except OSError, tomllib.TOMLDecodeError:
+        except (OSError, tomllib.TOMLDecodeError):
             version = None
 
     changelog_version = _latest_changelog_version(repo_root, reader)

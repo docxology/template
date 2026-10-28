@@ -36,7 +36,7 @@ from infrastructure.reporting.native_format_acceptance_contracts import (
     native_deadline_guard,
     NativeDeadlineExpired,
 )
-from infrastructure.reporting.native_format_acceptance_validation import _tool
+from infrastructure.reporting.native_format_acceptance_evidence import _tool
 from infrastructure.reporting.native_format_joint_source import JOINT_SCHEMA
 from infrastructure.reporting.native_full_worker_pdfium import SCHEMA as PDFIUM_INPUT_SCHEMA
 from infrastructure.reporting.native_mermaid_runtime_selection import SELECTION_SCHEMA as MERMAID_SELECTION_SCHEMA
@@ -390,7 +390,7 @@ def test_actual_observer_expiry_escapes_routine_error_capture_and_restores_timer
                 # one-shot deadline must escape and stop all later gates.
                 try:
                     observer()
-                except OSError, ValueError, TypeError, KeyError:
+                except (OSError, ValueError, TypeError, KeyError):
                     swallowed = True
         assert not swallowed and time.monotonic() - started < 2
         assert signal.getsignal(signal.SIGALRM) == signal.SIG_IGN

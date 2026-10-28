@@ -1,6 +1,6 @@
 # Python runtime support
 
-Platform 4.1.0 requires Python 3.14 or newer. The repository default and release
+Platform 4.3.0 requires Python 3.14 or newer. The repository default and release
 interpreter is Python 3.14. Required qualification covers Python 3.14 and 3.15
 for infrastructure and every canonical public exemplar. Root acceptance requires
 both supported minors on Linux and macOS. Declarations and profiling results do

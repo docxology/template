@@ -122,7 +122,7 @@ def _issue(result: OutputValidationResult, code: str, message: str) -> None:
 def _read_json(path: Path) -> object | None:
     try:
         return cast(object, json.loads(path.read_text(encoding="utf-8")))
-    except OSError, ValueError:
+    except (OSError, ValueError):
         return None
 
 

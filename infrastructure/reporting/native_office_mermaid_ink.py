@@ -81,7 +81,7 @@ def observe_office_mermaid_ink(
     Mermaid foreignObject labels may be unsupported by this independent
     decoder; that is exposed by actual decoded pixels, never excused.
     """
-    from infrastructure.reporting.native_format_acceptance_validation import _file
+    from infrastructure.reporting.native_format_acceptance_evidence import _file
 
     if production.get("run_id") != run_id or not 0 < len(production.get("diagrams", [])) <= 100:
         raise ValueError("Office Mermaid ink requires the original bounded producer record")
@@ -159,7 +159,7 @@ def replay_office_mermaid_ink(
     deadline: float,
 ) -> None:
     """Recompute original source/vector/raster/native results from portable bytes."""
-    from infrastructure.reporting.native_format_acceptance_validation import _file, _tool
+    from infrastructure.reporting.native_format_acceptance_evidence import _file, _tool
     from infrastructure.reporting.native_format_portable_custody import producer_path
 
     if raw.get("schema_version") != SCHEMA or raw.get("run_id") != run_id or production.get("run_id") != run_id:

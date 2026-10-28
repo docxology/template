@@ -215,7 +215,7 @@ def observe_source_styles(
     tool = native_tool_record(
         root, directory, "pandoc", args, env=env, deadline=deadline, run_id=run_id, purpose="html-source-style-template"
     )
-    from infrastructure.reporting.native_format_acceptance_validation import _tool
+    from infrastructure.reporting.native_format_acceptance_evidence import _tool
 
     transcript = _tool(tool["artifact"], reader, run_id, "pandoc", "html-source-style-template", args)
     template = transcript["stdout"].encode()
@@ -261,7 +261,7 @@ def replay_source_styles(
     deadline: float,
 ) -> dict[str, Any]:
     """Authenticate original Source-only native custody, then re-render freshly."""
-    from infrastructure.reporting.native_format_acceptance_validation import _file, _tool
+    from infrastructure.reporting.native_format_acceptance_evidence import _file, _tool
 
     admitted.close(root, reader, deadline=deadline)
     markup = source_style_markup(admitted.fidelity, deadline=deadline)

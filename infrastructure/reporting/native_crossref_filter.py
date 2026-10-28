@@ -215,7 +215,7 @@ class SourceCrossrefFilter:
 
     def finish(self, parent_tool: dict[str, str]) -> dict[str, str]:
         """Close direct original facts after the parent ToolAPI retains its OS exit."""
-        from infrastructure.reporting.native_format_acceptance_validation import _file
+        from infrastructure.reporting.native_format_acceptance_evidence import _file
 
         self.verify()
         if self.actual is None or self.owner is None or "kernel_exit" not in self.actual:

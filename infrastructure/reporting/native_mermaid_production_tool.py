@@ -363,7 +363,7 @@ def validate_source_native_mermaid_stage_artifact(
     original_root_label: Path | None = None,
 ) -> None:
     """Validate finite packet DATA; actual stage/tool custody is checked separately."""
-    from infrastructure.reporting.native_format_acceptance_validation import _file
+    from infrastructure.reporting.native_format_acceptance_evidence import _file
 
     root = reader.root if original_root_label is None else original_root_label
     if (

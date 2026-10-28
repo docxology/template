@@ -53,7 +53,7 @@ def test_lint_toolchain_is_locked_and_shared_by_ci_and_hooks(
     assert not any(dependency.startswith("black") for dependency in dev_dependencies)
 
     scope_commands = {
-        ".github/workflows/ci.yml": "public_scope ci-paths",
+        ".github/actions/run-public-lint/action.yml": "public_scope ci-paths",
         ".pre-commit-config.yaml": "public_scope lint-paths",
     }
     for relative_path, scope_command in scope_commands.items():
@@ -63,14 +63,22 @@ def test_lint_toolchain_is_locked_and_shared_by_ci_and_hooks(
         assert scope_command in config
         assert "uvx ruff" not in config
 
-    ci = (REPO_ROOT / ".github/workflows/ci.yml").read_text(encoding="utf-8")
-    lint_steps = yaml.safe_load(ci)["jobs"]["lint"]["steps"]
-    check_source = next(step["run"] for step in lint_steps if step.get("name") == "Check public source")
-    assert check_source.count("public_scope ci-paths") == 1
+    # CI keeps one implementation of the public gates: the lint job delegates to
+    # the shared composite action, and the action owns the scope producer.
+    ci = yaml.safe_load((REPO_ROOT / ".github/workflows/ci.yml").read_text(encoding="utf-8"))
+    lint_steps = ci["jobs"]["lint"]["steps"]
+    public_lint = next(step for step in lint_steps if step.get("uses") == "./.github/actions/run-public-lint")
+    assert public_lint.get("with", {}).get("safety-scan") == "true"
+    action_text = (REPO_ROOT / ".github/actions/run-public-lint/action.yml").read_text(encoding="utf-8")
+    assert action_text.count("public_scope ci-paths") == 1
+    check_source = yaml.safe_load(action_text)["runs"]["steps"][0]["run"]
     assert 'uv run ruff check "${PUBLIC_CI_LINT_PATHS[@]}"' in check_source
     assert 'uv run ruff format --check "${PUBLIC_CI_LINT_PATHS[@]}"' in check_source
     assert 'uv run mypy "${PUBLIC_CI_SOURCE_PATHS[@]}"' in check_source
-    scope_preparation = check_source.split("uv run ruff check", 1)[0]
+    # The producer and its nonempty admission are one blocking preamble that ends
+    # before any concurrent gate starts.
+    producer_start = check_source.index("PUBLIC_CI_PATHS=$(")
+    scope_preparation = "set -euo pipefail\n" + check_source[producer_start : check_source.index("log_directory=")]
 
     assert public_scope_main(["ci-paths", "--repo-root", str(REPO_ROOT)]) == 0
     ci_outputs = dict(line.split("=", 1) for line in capsys.readouterr().out.splitlines())

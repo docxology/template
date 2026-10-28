@@ -57,10 +57,7 @@ def _current_source(
 ) -> tuple[bytes, bytes, OfficeMermaidAdmission | None]:
     """Bind original parses and independently execute current admitted source."""
     from infrastructure.core.execution_boundary import run_bounded_subprocess
-    from infrastructure.reporting.native_format_acceptance_validation import (
-        _file,
-        _tool,
-    )
+    from infrastructure.reporting.native_format_acceptance_evidence import _file, _tool
     from infrastructure.reporting.native_office_semantic_source import (
         office_semantic_source_plan,
     )
@@ -346,11 +343,7 @@ def replay_office_full_source(
     Existing portable Office/EPUB and raster/runtime/font replay stays active.
     """
     from infrastructure.core.execution_boundary import run_bounded_subprocess
-    from infrastructure.reporting.native_format_acceptance_validation import (
-        _file,
-        _raster,
-        _tool,
-    )
+    from infrastructure.reporting.native_format_acceptance_evidence import _file, _raster, _tool
     from infrastructure.reporting.native_format_observer_source_replay import (
         replay_office_conversion,
     )

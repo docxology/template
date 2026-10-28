@@ -61,7 +61,16 @@ class TestConfigKeyValidation:
             "export": {"formats": ["pdf"]},
             "gold_refinement": {"seed": 431},
         }
-        config_file = tmp_path / "valid_config.yaml"
+        # A project owns its extra top-level blocks: the loader accepts
+        # `gold_refinement` because this project declares it in its own pyproject.
+        project_root = tmp_path / "projects" / "templates" / "template_probe"
+        (project_root / "manuscript").mkdir(parents=True)
+        (project_root / "pyproject.toml").write_text(
+            '[project]\nname = "template-probe"\nversion = "0.1.0"\n\n'
+            '[tool.template]\nconfig_keys = ["gold_refinement"]\n',
+            encoding="utf-8",
+        )
+        config_file = project_root / "manuscript" / "config.yaml"
         with open(config_file, "w") as f:
             yaml.dump(config, f)
 

@@ -145,7 +145,8 @@ Illustrative hook IDs (authoritative YAML lives at repo root):
 ```yaml
 # See /.pre-commit-config.yaml — commit-stage hooks include:
 #   ruff-ci  → uv run ruff check … && uv run ruff format …
-#   mypy-ci  → uv run mypy …
+# The whole-tree type gate is manual-stage (CI owns it):
+#   mypy-ci  → uv run mypy …   (pre-commit run --hook-stage manual mypy-ci)
 ```
 
 ### Installing pre-commit
@@ -312,7 +313,7 @@ def test_error_conditions():
 
 - ✅ **Use Ruff** (`uv run ruff check`, `uv run ruff format`) for lint/format/import sorting — CI parity
 - ✅ **Use mypy** (`uv run mypy`) on the public CI source paths
-- ✅ **Use pre-commit hooks** (`ruff-ci`, `mypy-ci`) to automate checks
+- ✅ **Use pre-commit hooks** (`ruff-ci` on commit, `mypy-ci` on the manual stage) to automate checks
 - ✅ **Follow PEP 8** guidelines
 - ✅ **Use descriptive names** for variables and functions
 - ✅ **Keep functions small** (under 50 lines)

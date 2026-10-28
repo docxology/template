@@ -203,7 +203,7 @@ def _candidate_artifact_paths(project_root: Path, paths: list[Path]) -> tuple[Pa
 def _load_json(path: Path) -> Any:
     try:
         return json.loads(path.read_text(encoding="utf-8"))
-    except OSError, json.JSONDecodeError:
+    except (OSError, json.JSONDecodeError):
         return None
 
 

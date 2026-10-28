@@ -1,0 +1,92 @@
+name: Run public lint
+description: >-
+  Resolve the public CI scopes once and run Ruff lint, Ruff format check, and the
+  type gate concurrently with separate logs and one aggregated result.
+inputs:
+  type-check:
+    description: >-
+      Type gate to run: `mypy` is the required `uv run mypy` command; `ratchet`
+      is the `scripts/gates/mypy_ratchet.py` wrapper the hardening lane uses.
+    required: false
+    default: mypy
+  safety-scan:
+    description: >-
+      Run the single `run-safety-scan` definition in this same parallel wave.
+      Set by callers whose job has no other copy of that scan.
+    required: false
+    default: "false"
+runs:
+  using: composite
+  steps:
+    - name: Run the public lint gates concurrently
+      shell: bash
+      env:
+        PUBLIC_TYPE_CHECK: ${{ inputs.type-check }}
+        PUBLIC_SAFETY_SCAN: ${{ inputs.safety-scan }}
+      run: |
+        set -euo pipefail
+        case "$PUBLIC_TYPE_CHECK" in
+          mypy | ratchet) ;;
+          *)
+            echo "type-check must be the exact string mypy or ratchet" >&2
+            exit 2
+            ;;
+        esac
+        case "$PUBLIC_SAFETY_SCAN" in
+          true | false) ;;
+          *)
+            echo "safety-scan must be the exact string true or false" >&2
+            exit 2
+            ;;
+        esac
+
+        # Public-source gate, evaluated once and synchronously: a rejected or
+        # empty scope producer stops every consumer before a tool starts.
+        PUBLIC_CI_PATHS=$(uv run python -m infrastructure.project.public_scope ci-paths)
+        PUBLIC_CI_LINT_ROW=${PUBLIC_CI_PATHS%%$'\n'*}
+        PUBLIC_CI_SOURCE_ROW=${PUBLIC_CI_PATHS#*$'\n'}
+        [[ "$PUBLIC_CI_LINT_ROW" == lint_paths=* && "$PUBLIC_CI_SOURCE_ROW" == source_paths=* ]]
+        read -r -a PUBLIC_CI_LINT_PATHS <<<"${PUBLIC_CI_LINT_ROW#lint_paths=}"
+        read -r -a PUBLIC_CI_SOURCE_PATHS <<<"${PUBLIC_CI_SOURCE_ROW#source_paths=}"
+        [[ ${#PUBLIC_CI_LINT_PATHS[@]} -gt 0 && ${#PUBLIC_CI_SOURCE_PATHS[@]} -gt 0 ]]
+
+        log_directory="$RUNNER_TEMP/public-lint-logs"
+        rm -rf -- "$log_directory"
+        mkdir -p "$log_directory"
+        names=()
+        pids=()
+
+        start() {
+          local name="$1"
+          shift
+          names+=("$name")
+          ( "$@" ) >"$log_directory/$name.log" 2>&1 &
+          pids+=("$!")
+        }
+
+        start ruff-check uv run ruff check "${PUBLIC_CI_LINT_PATHS[@]}"
+        start ruff-format uv run ruff format --check "${PUBLIC_CI_LINT_PATHS[@]}"
+        if [[ "$PUBLIC_TYPE_CHECK" == ratchet ]]; then
+          start type-check uv run python scripts/gates/mypy_ratchet.py "${PUBLIC_CI_SOURCE_PATHS[@]}"
+        else
+          start type-check uv run mypy "${PUBLIC_CI_SOURCE_PATHS[@]}"
+        fi
+        if [[ "$PUBLIC_SAFETY_SCAN" == true ]]; then
+          safety_scan="$GITHUB_ACTION_PATH/../run-safety-scan/scan.sh"
+          [[ -f "$safety_scan" ]]
+          start safety-scan bash "$safety_scan"
+        fi
+
+        status=0
+        for index in "${!pids[@]}"; do
+          name="${names[$index]}"
+          if wait "${pids[$index]}"; then
+            printf 'PASS %s\n' "$name"
+          else
+            printf 'FAIL %s\n' "$name"
+            status=1
+          fi
+          printf -- '--- %s ---\n' "$name"
+          cat "$log_directory/$name.log"
+        done
+        exit "$status"

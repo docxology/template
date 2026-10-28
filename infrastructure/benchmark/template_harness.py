@@ -343,7 +343,7 @@ def _check_artifact_manifest(project_root: Path) -> list[str]:
         return ["missing artifact manifest: output/reports/artifact_manifest.json"]
     try:
         manifest = read_artifact_manifest(manifest_path)
-    except OSError, json.JSONDecodeError, ValueError:
+    except (OSError, json.JSONDecodeError, ValueError):
         return ["invalid artifact manifest JSON: output/reports/artifact_manifest.json"]
     if not manifest.entries:
         return ["artifact manifest has no entries"]

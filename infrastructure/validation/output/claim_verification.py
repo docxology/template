@@ -346,7 +346,7 @@ def verify_project_claims(
     for md_file in sorted(manuscript_dir.rglob("*.md")):
         try:
             text = md_file.read_text(encoding="utf-8")
-        except OSError, UnicodeDecodeError:
+        except (OSError, UnicodeDecodeError):
             continue
         claims.extend(_collect_claim_candidates(text))
     unique_claims: list[str] = []

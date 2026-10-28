@@ -24,12 +24,14 @@ import sys
 import pytest
 from pathlib import Path
 
+from infrastructure.publishing._standalone_mirror_source import (
+    clean_source_revision,
+    declared_repository,
+    tracked_relative_paths,
+)
 from infrastructure.publishing.standalone_mirror import (
     _git as _mirror_git,
-    declared_repository,
     populate_mirror_tree,
-    tracked_relative_paths,
-    clean_source_revision,
     sync_exemplar,
     validate_git_destination,
 )

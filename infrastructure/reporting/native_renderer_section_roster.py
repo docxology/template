@@ -12,7 +12,7 @@ from typing import Any
 
 from infrastructure.project.public_reference_git import remaining
 from infrastructure.rendering.manuscript_discovery import discover_manuscript_files
-from infrastructure.reporting.native_format_acceptance_validation import _file
+from infrastructure.reporting.native_format_acceptance_evidence import _file
 from infrastructure.reporting.native_format_acceptance_contracts import CITATION_TOOL_FIELDS, TOOL_SCHEMA
 from infrastructure.reporting.native_stage_child_custody import NativeStageChildReaderOperation
 from infrastructure.reporting.native_tex_section_reference import RESIDUALS

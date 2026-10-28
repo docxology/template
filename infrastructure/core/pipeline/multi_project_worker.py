@@ -92,7 +92,7 @@ def main() -> int:
             args.request.parent, args.receipt, json.dumps(payload, sort_keys=True, allow_nan=False) + "\n", mode=0o600
         )
         return run.exit_code
-    except OSError, ValueError, TypeError, KeyError:
+    except (OSError, ValueError, TypeError, KeyError):
         traceback.print_exc()
         return 1
 

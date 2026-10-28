@@ -510,3 +510,89 @@ def test_pinned_resource_export_preserves_original_expired_deadline(tmp_path: Pa
     with pytest.raises(TimeoutError, match="deadline exhausted"):
         export_exemplar(root, "templates/template_code_project", destination, deadline_monotonic=time.monotonic() - 1)
     assert not destination.exists()
+
+
+def test_fork_sdk_source_url_replaces_the_parent_relative_path(tmp_path: Path) -> None:
+    destination = tmp_path / "fork"
+    export_exemplar(
+        REPO_ROOT,
+        "templates/template_code_project",
+        destination,
+        project_only=True,
+        sdk_source="url:https://example.org/template-sdk.git",
+    )
+    text = (destination / "pyproject.toml").read_text(encoding="utf-8")
+    assert 'research-project-template = { url = "https://example.org/template-sdk.git" }' in text
+    assert 'path = "../../.."' not in text
+
+
+def test_fork_sdk_source_version_only_keeps_the_pin_and_drops_the_source(tmp_path: Path) -> None:
+    destination = tmp_path / "fork"
+    export_exemplar(
+        REPO_ROOT,
+        "templates/template_code_project",
+        destination,
+        project_only=True,
+        sdk_source="version-only",
+    )
+    text = (destination / "pyproject.toml").read_text(encoding="utf-8")
+    assert '"research-project-template==4.3.0"' in text
+    assert "research-project-template = {" not in text
+
+
+def test_fork_sdk_source_path_accepts_this_checkout(tmp_path: Path) -> None:
+    destination = tmp_path / "fork"
+    export_exemplar(
+        REPO_ROOT,
+        "templates/template_code_project",
+        destination,
+        project_only=True,
+        sdk_source=f"path:{REPO_ROOT}",
+    )
+    text = (destination / "pyproject.toml").read_text(encoding="utf-8")
+    assert f'research-project-template = {{ path = "{REPO_ROOT.as_posix()}", editable = true }}' in text
+
+
+@pytest.mark.parametrize("spec", ["path:/nonexistent-sdk", "path:", "url:", "registry:pypi", "bogus"])
+def test_fork_sdk_source_rejects_unusable_specs(tmp_path: Path, spec: str) -> None:
+    with pytest.raises(ValueError):
+        plan_copy(REPO_ROOT, "templates/template_code_project", tmp_path / "fork", sdk_source=spec)
+
+
+def test_fork_copy_rewrites_the_relative_sdk_path_for_its_depth() -> None:
+    from infrastructure.project.fork_identity import _rewrite_sdk_source
+
+    destination = REPO_ROOT / "projects" / "working" / "deep" / "project"
+    source_path = 'research-project-template = { path = "../../..", editable = true }\n'
+    rewritten = _rewrite_sdk_source(source_path, destination=destination, repo_root=REPO_ROOT, sdk_source=None)
+    assert 'path = "../../../.."' in rewritten
+
+
+def test_fork_author_rewrite_replaces_identity_and_drops_source_identifiers(tmp_path: Path) -> None:
+    destination = tmp_path / "fork"
+    export_exemplar(
+        REPO_ROOT,
+        "templates/template_code_project",
+        destination,
+        project_only=True,
+        author_name="Ada Lovelace",
+        author_email="ada@example.org",
+    )
+    import yaml
+
+    pyproject = (destination / "pyproject.toml").read_text(encoding="utf-8")
+    assert 'name = "Ada Lovelace"' in pyproject and "ada@example.org" in pyproject
+    assert "Friedman" not in pyproject
+    citation = yaml.safe_load((destination / "CITATION.cff").read_text(encoding="utf-8"))
+    assert citation["authors"] == [{"family-names": "Lovelace", "given-names": "Ada", "email": "ada@example.org"}]
+    assert "doi" not in citation and "repository-code" not in citation
+    assert citation["version"] == "3.0.0"
+    zenodo = json.loads((destination / ".zenodo.json").read_text(encoding="utf-8"))
+    assert zenodo["creators"] == [{"name": "Lovelace, Ada", "email": "ada@example.org"}]
+    assert "related_identifiers" not in zenodo
+    codemeta = json.loads((destination / "codemeta.json").read_text(encoding="utf-8"))
+    assert codemeta["author"][0]["familyName"] == "Lovelace"
+    assert "identifier" not in codemeta and "codeRepository" not in codemeta
+    for name in ("CITATION.cff", ".zenodo.json", "codemeta.json"):
+        text = (destination / name).read_text(encoding="utf-8")
+        assert "Friedman" not in text and "10.5281" not in text, name

@@ -303,10 +303,7 @@ def replay_scientific_pdf_source(
     verify_source_correspondence: SourceCorrespondence | None,
 ) -> dict[str, Any]:
     """Reparse source independently and replay every retained scoped witness."""
-    from infrastructure.reporting.native_format_acceptance_validation import (
-        _file,
-        _tool,
-    )
+    from infrastructure.reporting.native_format_acceptance_evidence import _file, _tool
     from infrastructure.reporting.native_format_portable_custody import producer_path
 
     reference, verify = require_scientific_pdf_source_context(

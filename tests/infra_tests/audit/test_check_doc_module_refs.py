@@ -160,3 +160,27 @@ def test_main_exit_codes(tmp_path, capsys):
     (root / "docs" / "guide.md").write_text("`infrastructure.publishing`\n")
     assert check_doc_module_refs.main(argv) == 0
     capsys.readouterr()
+
+
+def test_script_inventory_rows_are_in_scope(tmp_path: Path) -> None:
+    """A script-to-module inventory row is documentation the gate must resolve."""
+    root = _make_repo(tmp_path)
+    (root / "scripts").mkdir()
+    (root / "scripts" / "AGENTS.md").write_text(
+        "| `tool.py` | `infrastructure.publishing.nonexistent_module` | Runs the tool. |\n"
+    )
+    findings = _scan(root)
+    assert [finding.path for finding in findings] == ["scripts/AGENTS.md"]
+    assert findings[0].ref == "infrastructure.publishing.nonexistent_module"
+
+
+def test_script_inventory_real_module_resolves(tmp_path: Path) -> None:
+    root = _make_repo(tmp_path)
+    (root / "scripts").mkdir()
+    (root / "scripts" / "AGENTS.md").write_text("| `tool.py` | `infrastructure.publishing` | Runs the tool. |\n")
+    assert _scan(root) == []
+
+
+def test_actual_script_documentation_resolves() -> None:
+    """The real scripts/**/*.md surface resolves, including inventory tables."""
+    assert doc_module_refs.scan_repo(REPO_ROOT) == []

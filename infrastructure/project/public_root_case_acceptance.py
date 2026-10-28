@@ -95,7 +95,7 @@ def _verified_gate(
             "execution_exit_code": code,
             "diagnostic": "original Root case readback deadline exhausted",
         }
-    except OSError, ValueError, TypeError, KeyError, RuntimeError:
+    except (OSError, ValueError, TypeError, KeyError, RuntimeError):
         status, code = "fail", 1
         details = {
             **details,
@@ -189,7 +189,7 @@ def run_root_case_acceptance(
             except TimeoutError:
                 status, original_code = "fail", 124
                 child_codes.append(original_code)
-            except OSError, ValueError, TypeError, KeyError, RuntimeError:
+            except (OSError, ValueError, TypeError, KeyError, RuntimeError):
                 status, original_code = "fail", 1
                 child_codes.append(original_code)
         if observation is not None and bundle_artifact is not None:

@@ -59,7 +59,7 @@ def _admit_provider(provider: GitInstallProvider, package: str, version: str) ->
         _git_provider_closing_metadata,
         _git_provider_opening,
     )
-    from infrastructure.publishing.standalone_mirror import _verify_committed
+    from infrastructure.publishing._standalone_mirror_source import _verify_committed
 
     checkout = provider.checkout.absolute()
     if checkout.resolve(strict=True) != checkout or not checkout.is_dir():
@@ -156,7 +156,8 @@ def _admit_meta_provider(
     meta: GitInstallProvider, root: GitInstallProvider, platform: dict[str, str], version: str
 ) -> dict[str, str]:
     """Only already projected Meta at this exact Root revision can provide Advanced."""
-    from infrastructure.publishing.standalone_mirror import _verify_committed, populate_mirror_tree
+    from infrastructure.publishing._standalone_mirror_source import _verify_committed
+    from infrastructure.publishing.standalone_mirror import populate_mirror_tree
 
     admitted = _admit_provider(meta, META_PACKAGE, version)
     with tempfile.TemporaryDirectory(prefix="projection-meta-") as temporary:

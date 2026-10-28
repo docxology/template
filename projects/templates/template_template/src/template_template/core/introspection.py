@@ -413,7 +413,7 @@ def _load_opt_in_tags(repo_root: Path) -> frozenset[str]:
     yaml_path = repo_root / "infrastructure" / "core" / "pipeline" / "pipeline.yaml"
     try:
         data = yaml.safe_load(yaml_path.read_text(encoding="utf-8")) or {}
-    except OSError, yaml.YAMLError:
+    except (OSError, yaml.YAMLError):
         return frozenset()
     return frozenset(data.get("opt_in_tags") or ())
 

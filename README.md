@@ -537,6 +537,48 @@ template. Applied configuration drives PDF metadata, LaTeX document properties
 (see [`docs/reference/copypasta.md`](docs/reference/copypasta.md) for preamble
 examples), generated file headers, and cross-reference systems.
 
+### Forking an exemplar
+
+`scripts/audit/copy_exemplar.py` produces a clean copy with its own identity; it
+never carries `.venv`, `output/` or caches:
+
+```bash
+uv run --no-sync --offline python scripts/audit/copy_exemplar.py \
+  --source templates/template_code_project \
+  --dest projects/working/my_paper \
+  --new-name my_paper \
+  --author-name "Ada Lovelace" --author-email ada@example.org \
+  --sdk-source path:../../..      # omit for a copy inside this checkout
+```
+
+- `--new-name` rewrites the project slug in paths, package names, `pyproject.toml`
+  and configuration keys. Suffixed identifiers such as `<slug>_extra` are
+  deliberately left alone.
+- `--sdk-source` states how the fork resolves the platform SDK:
+  `path:<dir>` (a template checkout), `url:<git-or-file-url>`, or `version-only`
+  (rely on the pinned release). A copy **inside** this checkout gets a relative
+  path for its own depth automatically; a copy outside it keeps the checkout you
+  pass here instead of silently inheriting a path that cannot resolve.
+- `--author-name` / `--author-email` replace the author in `pyproject.toml`,
+  `CITATION.cff`, `codemeta.json` and `.zenodo.json`, drop the source artifact's
+  own DOI, ORCID, repository URL and release date, and set the CFF/JSON version
+  to the fork's version. A fork must never claim the exemplar's publication
+  identity.
+- `--project-only` omits declared cross-root resources (the `infrastructure/`
+  dependency) for a truly standalone tree.
+
+Then make the fork runnable and verify it:
+
+```bash
+uv sync --project projects/working/my_paper --extra dev
+uv run --project projects/working/my_paper python -m pytest projects/working/my_paper/tests -q
+```
+
+`--dry-run` prints the planned file list without writing. `export_exemplar`
+(the default CLI path) additionally writes a content-addressed
+`.template-export.json` manifest binding every exported file and the source
+commit, which is what the standalone mirror and installed-acceptance lanes read.
+
 ### Adding Project-Specific Scripts
 
 Place Python scripts under `projects/{name}/scripts/`. They must follow the
@@ -558,6 +600,11 @@ the numbering system and slug rules are authoritative in
 [`docs/usage/manuscript-numbering-system.md`](docs/usage/manuscript-numbering-system.md).
 
 ## 📊 Testing
+
+Fast local lane first: `uv run --no-sync python scripts/gates/local_gate.py format lint types`
+runs the same commands as the `Lint & Type Check` job, and `--changed` narrows them to your
+working-tree files. `gates`, `security`, `unit` and `infra` cover the remaining hosted lanes;
+`--list` prints the exact argv.
 
 TDD with strict coverage gates: **infrastructure ≥ 60 %**, **projects ≥ 90 %**.
 No unit-level mock frameworks — tests use real data, real files; HTTP boundaries use `pytest-httpserver` (in-process test server). The

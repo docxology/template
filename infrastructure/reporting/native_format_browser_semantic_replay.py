@@ -26,7 +26,7 @@ def replay_semantic_control(
     from infrastructure.reporting.native_format_html_source_metadata import remaining_seconds
 
     remaining_seconds(deadline)
-    from infrastructure.reporting.native_format_acceptance_validation import _file, _tool
+    from infrastructure.reporting.native_format_acceptance_evidence import _file, _tool
     from infrastructure.reporting.native_format_browser_semantic_controls import (
         semantic_control_source,
         alpha_figure_bytes,

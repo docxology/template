@@ -253,7 +253,7 @@ def _cached_fingerprint_matches(root: Path, current: str) -> bool:
     cache_path = _fingerprint_cache_path(root)
     try:
         return cache_path.is_file() and cache_path.read_text(encoding="utf-8").strip() == current
-    except OSError, UnicodeError:
+    except (OSError, UnicodeError):
         return False
 
 

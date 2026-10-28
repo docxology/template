@@ -24,6 +24,8 @@ class ProjectPyprojectConfig:
     project_test_command: tuple[str, ...] | None
     project_test_command_error: str | None
     project_test_profile_argument: str | None = None
+    declared_config_keys: tuple[str, ...] = ()
+    declared_config_keys_error: str | None = None
 
 
 @lru_cache(maxsize=128)
@@ -34,7 +36,7 @@ def load_project_pyproject(project_root: Path) -> ProjectPyprojectConfig | None:
         return None
     try:
         data = tomllib.loads(pyproject.read_text(encoding="utf-8"))
-    except OSError, tomllib.TOMLDecodeError:
+    except (OSError, tomllib.TOMLDecodeError):
         return None
 
     coverage = data.get("tool", {}).get("coverage", {})
@@ -71,6 +73,19 @@ def load_project_pyproject(project_root: Path) -> ProjectPyprojectConfig | None:
         else:
             profile_argument = raw_profile_argument
 
+    raw_config_keys = template.get("config_keys") if isinstance(template, dict) else None
+    # A project may own extra top-level `manuscript/config.yaml` keys. Declaring
+    # them here keeps the shared loader data-driven instead of naming exemplars.
+    config_keys: tuple[str, ...] = ()
+    config_keys_error: str | None = None
+    if raw_config_keys is not None:
+        if isinstance(raw_config_keys, list) and all(
+            isinstance(key, str) and key.isidentifier() for key in raw_config_keys
+        ):
+            config_keys = tuple(raw_config_keys)
+        else:
+            config_keys_error = "[tool.template].config_keys must be a TOML array of identifier strings"
+
     return ProjectPyprojectConfig(
         path=pyproject,
         coverage_fail_under=fail_under,
@@ -79,6 +94,8 @@ def load_project_pyproject(project_root: Path) -> ProjectPyprojectConfig | None:
         project_test_command=test_command,
         project_test_command_error=test_command_error,
         project_test_profile_argument=profile_argument,
+        declared_config_keys=config_keys,
+        declared_config_keys_error=config_keys_error,
     )
 
 

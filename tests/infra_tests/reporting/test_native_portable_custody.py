@@ -14,7 +14,7 @@ from infrastructure.core.execution_boundary import run_bounded_subprocess
 from infrastructure.project.public_acceptance_evidence import bootstrap_command, runtime_identity, write_json
 from infrastructure.reporting.native_format_acceptance_checks import native_tool_record
 from infrastructure.reporting.native_format_acceptance_contracts import create_private_native_directory
-from infrastructure.reporting.native_format_acceptance_validation import _tool
+from infrastructure.reporting.native_format_acceptance_evidence import _tool
 from infrastructure.reporting.native_format_portable_custody import (
     producer_custody,
     producer_bootstrap,
@@ -93,7 +93,7 @@ def test_actual_tool_receipt_relocated_reader_and_tamper(tmp_path: Path) -> None
         script = (
             "import sys;sys.path[:0]=[sys.argv[1],sys.argv[6]];"
             "from pathlib import Path;import json;"
-            "from infrastructure.reporting.native_format_acceptance_validation import _tool;"
+            "from infrastructure.reporting.native_format_acceptance_evidence import _tool;"
             "from infrastructure.reporting.release_readiness_snapshot import SnapshotReader;"
             "_tool(json.loads(sys.argv[3]),SnapshotReader(Path(sys.argv[2])), '"
             + "a" * 32

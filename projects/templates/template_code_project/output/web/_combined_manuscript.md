@@ -56,8 +56,9 @@ Structured manifest: `../data/transmission_manifest.json`
 
 
 
----
-
+```{=latex}
+\newpage
+```
 
 
 # Abstract {#sec:abstract}
@@ -74,8 +75,9 @@ Contributions are **methodological** and **architectural**. On the methods side,
 
 
 
----
-
+```{=latex}
+\newpage
+```
 
 
 # Introduction {#sec:introduction}
@@ -141,8 +143,9 @@ Restricting $f$ to a quadratic with known $(A,b)$ keeps the optimum, gradient, a
 
 
 
----
-
+```{=latex}
+\newpage
+```
 
 
 # Methodology {#sec:methodology}
@@ -237,8 +240,9 @@ The research template supports advanced LaTeX customization through the `preambl
 
 
 
----
-
+```{=latex}
+\newpage
+```
 
 
 # Results {#sec:results}
@@ -435,8 +439,9 @@ Successful generation and reference resolution establish this artifact path for 
 
 
 
----
-
+```{=latex}
+\newpage
+```
 
 
 # Conclusion {#sec:conclusion}
@@ -499,8 +504,9 @@ The pipeline produced the figures referenced in [@sec:results], wrote `optimizat
 
 
 
----
-
+```{=latex}
+\newpage
+```
 
 
 # Experimental Setup {#sec:experimental_setup}
@@ -541,10 +547,10 @@ Performance benchmarking spans problem dimensions $d \in \{1, 2, 5, 10, 20, 50\}
 
 ## Computational Environment
 
-- **Python**: 3.14.8
-- **NumPy**: 2.4.2
+- **Python**: 3.14.9
+- **NumPy**: 2.5.4
 - **Platform**: Darwin arm64
-- **Generated**: 2026-10-23T00:44:50Z
+- **Generated**: 2026-10-28T22:22:30Z
 
 ## Pipeline ordering
 
@@ -571,8 +577,9 @@ This table is descriptive documentation only; it is not executed as code during 
 
 
 
----
-
+```{=latex}
+\newpage
+```
 
 
 # Reproducibility Certification {#sec:reproducibility}
@@ -583,7 +590,7 @@ This section provides a machine-verifiable reproducibility certificate for the c
 
 | Property                          | Value                 |
 | --------------------------------- | --------------------- |
-| Config hash (SHA-256, truncated)  | `4bc0e13a7db36799`     |
+| Config hash (SHA-256, truncated)  | `4bab2327e6fbe051`     |
 | Paper version                     | 3.0.0    |
 | First author                      | Daniel Ari Friedman |
 | Keywords                          | optimization algorithms, gradient descent, convergence analysis, numerical methods, mathematical programming, reproducible research, infrastructure automation   |
@@ -636,8 +643,9 @@ To verify: modifying any value in `config.yaml` and re-running the pipeline will
 
 
 
----
-
+```{=latex}
+\newpage
+```
 
 
 # Scope, Related Work, and Positioning {#sec:scope}
@@ -667,8 +675,9 @@ These limitations are intentional: they narrow the failure surface so that infra
 
 
 
----
-
+```{=latex}
+\newpage
+```
 
 
 # References {#sec:references}
@@ -684,8 +693,9 @@ uv run python -m infrastructure.reference.citation.cli validate \
 
 
 
----
-
+```{=latex}
+\newpage
+```
 
 
 ```{=latex}

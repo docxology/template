@@ -116,7 +116,12 @@ PUBLIC_TEMPLATE_OUTPUT_PREFIXES: tuple[str, ...] = tuple(
 
 PUBLIC_TEMPLATE_OUTPUT_MAX_BYTES = 50 * 1024 * 1024
 PUBLIC_TEMPLATE_OUTPUT_MAX_FILES = 3500
-PUBLIC_TEMPLATE_OUTPUT_MAX_TOTAL_BYTES = 200 * 1024 * 1024
+# The canonical set measured 209,001,750 bytes before the 4.3.0 publication
+# regeneration and 218,059,616 bytes after it (all 25 exemplars re-rendered from
+# current sources, +4.3%). The ceiling keeps its guard role: it still refuses a
+# runaway artifact, a duplicated tree or an accidental binary drop, with 5% headroom
+# over the reviewed measurement instead of the previous 0.3%.
+PUBLIC_TEMPLATE_OUTPUT_MAX_TOTAL_BYTES = 224 * 1024 * 1024
 PUBLIC_TEMPLATE_OUTPUT_MAX_DUPLICATE_BYTES = 100 * 1024 * 1024
 # Advisory per-file ceiling: a single tracked evidence file above this is
 # presumed non-regenerable until proven otherwise. Sits well below the 50MB

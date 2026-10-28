@@ -108,7 +108,7 @@ def _probe_runtime(
             "runtime": identity,
             "interpreter": executable,
         }
-    except OSError, ValueError, TypeError:
+    except (OSError, ValueError, TypeError):
         binding = write_json(
             root,
             probe_path,
@@ -272,7 +272,7 @@ def _record_cell(
                 if not reader.unchanged():
                     raise ValueError("consumed cell evidence changed during validation")
                 status = "pass"
-            except OSError, ValueError, TypeError, KeyError:
+            except (OSError, ValueError, TypeError, KeyError):
                 pass
             entries.append(_entry(root, directory, req, fingerprint, status, command, details))
         summary = {
@@ -287,7 +287,7 @@ def _record_cell(
             "diagnostic": raw.get("diagnostic", ""),
         }
         return entries[0], entries[1], summary
-    except OSError, ValueError, TypeError, KeyError:
+    except (OSError, ValueError, TypeError, KeyError):
         details = {
             "execution_exit_code": process_exit,
             "diagnostic": "fresh complete cell evidence is unavailable or custody mismatched",
@@ -455,7 +455,7 @@ def run_public_acceptance(
             summaries.append(summary)
     try:
         current = source_fingerprint(root) == fingerprint
-    except OSError, ValueError:
+    except (OSError, ValueError):
         current = False
     counts = {
         status: sum(row["status"] == status for row in summaries) for status in ("pass", "fail", "blocked", "unknown")

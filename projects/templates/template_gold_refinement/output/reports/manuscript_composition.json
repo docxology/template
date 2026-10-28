@@ -1,8 +1,8 @@
 {
   "algorithm": "web-renderer-combine-v1",
-  "binding_sha256": "9ff5d5efb2ad25d5eec00e759d735fa9b88f7449fc9f3cefb6ffe34a1bd3731d",
+  "binding_sha256": "42d574bf7562d6548e215163778d06bcfc93a98304a05b080b41953e74c3cf49",
   "combined_path": "output/web/_combined_manuscript.md",
-  "combined_sha256": "36b53b00b1ff8c19fa6f93022417db2cf1de3d56092f7183780f45404995085e",
+  "combined_sha256": "e2c77dbd5cb11b8fe098bd33bd21fb54fbe8417c5be5b62a0946a857c9e8e017",
   "combined_size_bytes": 104080,
   "input_root_kind": "hydrated",
   "ordered_inputs": [
@@ -15,7 +15,7 @@
     {
       "ordinal": 2,
       "path": "output/manuscript/00_abstract.md",
-      "sha256": "2873e0857acb8a37db79a821c9a0d20765f88a444338dd0ef77d36619bb8a626",
+      "sha256": "873e2eec81e54bd777f245eab5f63579b16fcccbcc34d0d916b16b818a2aee7d",
       "size_bytes": 2520
     },
     {
@@ -33,7 +33,7 @@
     {
       "ordinal": 5,
       "path": "output/manuscript/03_results.md",
-      "sha256": "c3188e772b7a6ff7ba03dc6cca6aeb0d986b0c208ed9d81afb40331d07202bb4",
+      "sha256": "7a8850d0499cf59e8d60658c52277063aa4736aef7bf0f2555130a7ff7bc8b36",
       "size_bytes": 26944
     },
     {
@@ -45,13 +45,13 @@
     {
       "ordinal": 7,
       "path": "output/manuscript/05_conclusion.md",
-      "sha256": "bc3f7cd4f747f99e0ef9ec4f096452e13fd7503b5d4d380a27908a0d3835e0f7",
+      "sha256": "3385ccc606f9c348cf64c6bfa2683dddf7b503e119af38d1a3f3648784de960d",
       "size_bytes": 2765
     },
     {
       "ordinal": 8,
       "path": "output/manuscript/06_reproducibility.md",
-      "sha256": "c885608961e4d728dd8a42773dd2dea9364c410673c898541b0e83c987bd9826",
+      "sha256": "75be78060695a54b21a2ba2f28b09d6efe0d351c7505643a85d10fe619e30864",
       "size_bytes": 5906
     },
     {
@@ -79,7 +79,7 @@
       "size_bytes": 231
     }
   ],
-  "ordered_inputs_sha256": "3ea33a53908d22e9229232f102ec68a5409d0ba85feadc669dcc011befe74322",
+  "ordered_inputs_sha256": "d698256f84393cd16c8a09bfab4723eb18cfec950813d411759d6ffd1899fc9a",
   "project": "templates/template_gold_refinement",
   "schema_version": "template-manuscript-composition-v1"
 }

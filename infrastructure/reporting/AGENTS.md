@@ -189,9 +189,12 @@ observations alone do not establish complete execution or a universal speedup.
 | `native_format_acceptance_checks.py` | Strict native byte parsers and actual bounded PDF tool observations. |
 | `native_format_acceptance_contracts.py` | Source-owned native artifact obligations, separate from existing-file discovery. |
 | `native_format_acceptance_control_validation.py` | Existing exact parser, PDF and Source-selected native control replay. |
+| `native_format_acceptance_evidence.py` | Bound artifact evidence replay: file, process, tool, pipeline and raster observations. |
 | `native_format_acceptance_results.py` | Final source identities and preservation of actual native failure outcomes. |
 | `native_format_acceptance_validation.py` | Independent native conformance reconstruction and full-acceptance refusal. |
 | `native_format_acceptance_worker.py` | Fresh core execution and native observers for one admitted public project. |
+| `native_format_acceptance_worker_artifacts.py` | Deliverable observation phase: native artifact rows, whole-PDF, Pitch pairs and primary formats. |
+| `native_format_acceptance_worker_closing.py` | Closing source, decoder, provider, host and interpreter custody after a worker run. |
 | `native_format_browser_assets.py` | Confined source-owned HTML/CSS and declared MathJax dependency closure. |
 | `native_format_browser_cdn.py` | Lock-integrity-authenticated offline responses for exact reviewed CDN URLs. |
 | `native_format_browser_child.py` | Fixed basic/semantic browser children with genuine Source and native custody. |

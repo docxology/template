@@ -24,7 +24,10 @@ Audit and quality-gate scripts for documentation, filepath, drift, and git-guard
 | `check_tracked_secrets.py` | High-confidence tracked-blob credential scan |
 | `check_staged_secrets.py` | High-confidence staged A/C/M/R index-blob scan |
 | `check_mirror_symlinks.py` | Managed-symlink mirror-shape guard (`projects/<lifecycle>/` holds managed symlinks only) |
-| `copy_exemplar.py` | Copy/update a canonical exemplar |
+| `check_publication_outputs.py` | Sharded, parallel publication-output gate over the per-project audit (`--project`, `--all-public`, `--changed`, `--shard`, `--strict`, `--jobs`) |
+| `check_release_versions.py` | Root tag/notes/artwork and per-exemplar intended-versus-published version identity |
+| `check_exemplar_configs.py` | Per-exemplar config blocks, SDK pin/source, platform version and generated-copy consistency |
+| `copy_exemplar.py` | Copy/update a canonical exemplar, including fork SDK source and author identity |
 
 ## Usage
 

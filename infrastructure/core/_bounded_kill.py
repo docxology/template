@@ -219,7 +219,7 @@ def _posix_descendant_pids(root_pid: int) -> set[int]:
             check=False,
             timeout=5,
         )
-    except OSError, subprocess.SubprocessError:
+    except (OSError, subprocess.SubprocessError):
         return set()
     if completed.returncode != 0:
         return set()
@@ -326,7 +326,7 @@ def _tagged_process_pids(run_token: str) -> set[int]:
             check=False,
             timeout=10,
         )
-    except OSError, subprocess.SubprocessError:
+    except (OSError, subprocess.SubprocessError):
         return set()
     if completed.returncode != 0:
         return set()
@@ -363,7 +363,7 @@ def _darwin_tagged_process_pids(run_token: str) -> set[int]:
             check=False,
             timeout=2,
         )
-    except OSError, subprocess.SubprocessError:
+    except (OSError, subprocess.SubprocessError):
         return set()
     if completed.returncode != 0:
         return set()

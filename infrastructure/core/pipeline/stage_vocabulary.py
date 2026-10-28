@@ -15,7 +15,7 @@ def _load_opt_in_tags() -> frozenset[str]:
     path = Path(__file__).resolve().parent / "pipeline.yaml"
     try:
         return load_opt_in_tags(path)
-    except OSError, yaml.YAMLError:  # pragma: no cover - a broken DAG fails elsewhere
+    except (OSError, yaml.YAMLError):  # pragma: no cover - a broken DAG fails elsewhere
         return frozenset()
 
 
@@ -75,7 +75,7 @@ def _opt_in_tags_for(yaml_path: Path) -> frozenset[str]:
 
     try:
         return load_opt_in_tags(yaml_path)
-    except OSError, yaml.YAMLError:
+    except (OSError, yaml.YAMLError):
         return _OPT_IN_TAGS
 
 

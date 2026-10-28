@@ -176,7 +176,7 @@ def _diagnostic_line(message: str) -> None:
     try:
         sys.stderr.write(message + "\n")
         sys.stderr.flush()
-    except OSError, ValueError, AttributeError:
+    except (OSError, ValueError, AttributeError):
         # Lost diagnostic IO cannot change the actual pytest outcome.
         pass
 
@@ -229,7 +229,7 @@ class _ControllerDiagnostics:
             )
         except FileNotFoundError:
             pass
-        except OSError, ValueError:
+        except (OSError, ValueError):
             self.write_refused = True
         else:
             self.write_refused = True
@@ -269,7 +269,7 @@ class _ControllerDiagnostics:
                             declared.add(prefix + "::" + item.name)
 
                 declarations(tree.body, module)
-            except OSError, ValueError, SyntaxError, UnicodeError:
+            except (OSError, ValueError, SyntaxError, UnicodeError):
                 pass
             self.public_families[module] = declared
         return family if family in self.public_families[module] else None

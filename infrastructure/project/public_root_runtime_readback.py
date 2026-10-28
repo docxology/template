@@ -247,7 +247,7 @@ def main(argv: list[str] | None = None) -> int:
         return 0
     except KeyboardInterrupt:
         return 130
-    except OSError, ValueError, TypeError, KeyError, RuntimeError:
+    except (OSError, ValueError, TypeError, KeyError, RuntimeError):
         return 1
 
 

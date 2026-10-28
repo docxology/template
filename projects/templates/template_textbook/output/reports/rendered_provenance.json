@@ -2,295 +2,295 @@
   "consumed_manuscript": [
     {
       "rendered_path": "output/web/_combined_manuscript.md",
-      "rendered_sha256": "fb4a6673cbc3b4f17e5c48085dc290a11ed1037d17143c7a2d7c3eb6a101b2d9",
+      "rendered_sha256": "606351aa95eb3d7a9e30eae5f6f86a1e9b71331ffff6b47bf38e78528ebab5e0",
       "source_path": "manuscript/front_matter.md",
       "source_sha256": "23eddb734aae1ed9eeb5bd4b579c09cb1b94d8be2d79c5d265b6fbe6d327c319"
     },
     {
       "rendered_path": "output/web/_combined_manuscript.md",
-      "rendered_sha256": "fb4a6673cbc3b4f17e5c48085dc290a11ed1037d17143c7a2d7c3eb6a101b2d9",
+      "rendered_sha256": "606351aa95eb3d7a9e30eae5f6f86a1e9b71331ffff6b47bf38e78528ebab5e0",
       "source_path": "manuscript/preface.md",
       "source_sha256": "7c24ba5b8fdc5c897265a33018f8ed9fc091476acfe58854ac51d48fb87dce72"
     },
     {
       "rendered_path": "output/web/_combined_manuscript.md",
-      "rendered_sha256": "fb4a6673cbc3b4f17e5c48085dc290a11ed1037d17143c7a2d7c3eb6a101b2d9",
+      "rendered_sha256": "606351aa95eb3d7a9e30eae5f6f86a1e9b71331ffff6b47bf38e78528ebab5e0",
       "source_path": "manuscript/part_0/unit_intro.md",
       "source_sha256": "4faeff76c6b04d8cc76eefddbc4f4b3b4b2281349352fd431f174f794b55371a"
     },
     {
       "rendered_path": "output/web/_combined_manuscript.md",
-      "rendered_sha256": "fb4a6673cbc3b4f17e5c48085dc290a11ed1037d17143c7a2d7c3eb6a101b2d9",
+      "rendered_sha256": "606351aa95eb3d7a9e30eae5f6f86a1e9b71331ffff6b47bf38e78528ebab5e0",
       "source_path": "manuscript/part_0/orientation.md",
       "source_sha256": "d6b800c6ca7b5b531614c3d6b1f228712e9420898f8c5d978423ea2ae71a32a6"
     },
     {
       "rendered_path": "output/web/_combined_manuscript.md",
-      "rendered_sha256": "fb4a6673cbc3b4f17e5c48085dc290a11ed1037d17143c7a2d7c3eb6a101b2d9",
+      "rendered_sha256": "606351aa95eb3d7a9e30eae5f6f86a1e9b71331ffff6b47bf38e78528ebab5e0",
       "source_path": "manuscript/part_0/core_methods.md",
       "source_sha256": "c081666f88c8d3b539718d36ca2c8ccbad9e26d609b77f4cc75cd54749e6886d"
     },
     {
       "rendered_path": "output/web/_combined_manuscript.md",
-      "rendered_sha256": "fb4a6673cbc3b4f17e5c48085dc290a11ed1037d17143c7a2d7c3eb6a101b2d9",
+      "rendered_sha256": "606351aa95eb3d7a9e30eae5f6f86a1e9b71331ffff6b47bf38e78528ebab5e0",
       "source_path": "manuscript/part_0/quantitative_foundations.md",
       "source_sha256": "a2b3bd25ffb297ffb6d7d621f2747d0035cc2fc89a1dc861a7584c80f9f8633e"
     },
     {
       "rendered_path": "output/web/_combined_manuscript.md",
-      "rendered_sha256": "fb4a6673cbc3b4f17e5c48085dc290a11ed1037d17143c7a2d7c3eb6a101b2d9",
+      "rendered_sha256": "606351aa95eb3d7a9e30eae5f6f86a1e9b71331ffff6b47bf38e78528ebab5e0",
       "source_path": "manuscript/part_I/unit_intro.md",
       "source_sha256": "b496cb376427697a50ca442ea073ed6cca30eac02189fa4641bf1288da0d78c2"
     },
     {
       "rendered_path": "output/web/_combined_manuscript.md",
-      "rendered_sha256": "fb4a6673cbc3b4f17e5c48085dc290a11ed1037d17143c7a2d7c3eb6a101b2d9",
+      "rendered_sha256": "606351aa95eb3d7a9e30eae5f6f86a1e9b71331ffff6b47bf38e78528ebab5e0",
       "source_path": "manuscript/part_I/first_principles.md",
       "source_sha256": "38e7814a011392b3f6ef9c9205cff082b651eeae2ce274fe1ab378283b40b29f"
     },
     {
       "rendered_path": "output/web/_combined_manuscript.md",
-      "rendered_sha256": "fb4a6673cbc3b4f17e5c48085dc290a11ed1037d17143c7a2d7c3eb6a101b2d9",
+      "rendered_sha256": "606351aa95eb3d7a9e30eae5f6f86a1e9b71331ffff6b47bf38e78528ebab5e0",
       "source_path": "manuscript/part_I/building_blocks.md",
       "source_sha256": "63f8cbc630df56046b9b2d578311c33134cc0f152dc8a1ec70470be0128a4d0d"
     },
     {
       "rendered_path": "output/web/_combined_manuscript.md",
-      "rendered_sha256": "fb4a6673cbc3b4f17e5c48085dc290a11ed1037d17143c7a2d7c3eb6a101b2d9",
+      "rendered_sha256": "606351aa95eb3d7a9e30eae5f6f86a1e9b71331ffff6b47bf38e78528ebab5e0",
       "source_path": "manuscript/part_I/structure_and_form.md",
       "source_sha256": "52e7dc2d2725b5f4725b2d419ea80aefdc57b5dc0a00a6c6bda65a8a3882ce98"
     },
     {
       "rendered_path": "output/web/_combined_manuscript.md",
-      "rendered_sha256": "fb4a6673cbc3b4f17e5c48085dc290a11ed1037d17143c7a2d7c3eb6a101b2d9",
+      "rendered_sha256": "606351aa95eb3d7a9e30eae5f6f86a1e9b71331ffff6b47bf38e78528ebab5e0",
       "source_path": "manuscript/part_II/unit_intro.md",
       "source_sha256": "09491113bac20bf76ed5a800c3667c23d8eb266c4bcc11ca0114a611ea55f6d6"
     },
     {
       "rendered_path": "output/web/_combined_manuscript.md",
-      "rendered_sha256": "fb4a6673cbc3b4f17e5c48085dc290a11ed1037d17143c7a2d7c3eb6a101b2d9",
+      "rendered_sha256": "606351aa95eb3d7a9e30eae5f6f86a1e9b71331ffff6b47bf38e78528ebab5e0",
       "source_path": "manuscript/part_II/systems_overview.md",
       "source_sha256": "6d90c5d16c24e2b2e4f24a626efd2f0636a7d8af435c7f9c7dbe590c9cb924c9"
     },
     {
       "rendered_path": "output/web/_combined_manuscript.md",
-      "rendered_sha256": "fb4a6673cbc3b4f17e5c48085dc290a11ed1037d17143c7a2d7c3eb6a101b2d9",
+      "rendered_sha256": "606351aa95eb3d7a9e30eae5f6f86a1e9b71331ffff6b47bf38e78528ebab5e0",
       "source_path": "manuscript/part_II/dynamics_and_change.md",
       "source_sha256": "1f5cc6ad9b990c39803bcd60c6fcf3b0ea62f1fe73e5e053974a8709893dbfe5"
     },
     {
       "rendered_path": "output/web/_combined_manuscript.md",
-      "rendered_sha256": "fb4a6673cbc3b4f17e5c48085dc290a11ed1037d17143c7a2d7c3eb6a101b2d9",
+      "rendered_sha256": "606351aa95eb3d7a9e30eae5f6f86a1e9b71331ffff6b47bf38e78528ebab5e0",
       "source_path": "manuscript/part_II/regulation_and_control.md",
       "source_sha256": "9dc037669a073fea624ded4ae6e4fde0d66c14466474862708e67025b2c002a7"
     },
     {
       "rendered_path": "output/web/_combined_manuscript.md",
-      "rendered_sha256": "fb4a6673cbc3b4f17e5c48085dc290a11ed1037d17143c7a2d7c3eb6a101b2d9",
+      "rendered_sha256": "606351aa95eb3d7a9e30eae5f6f86a1e9b71331ffff6b47bf38e78528ebab5e0",
       "source_path": "manuscript/part_III/unit_intro.md",
       "source_sha256": "1bfbbf9f3519e50cb71d7c4200bfafed364323ca98402d677b93f71382a9115d"
     },
     {
       "rendered_path": "output/web/_combined_manuscript.md",
-      "rendered_sha256": "fb4a6673cbc3b4f17e5c48085dc290a11ed1037d17143c7a2d7c3eb6a101b2d9",
+      "rendered_sha256": "606351aa95eb3d7a9e30eae5f6f86a1e9b71331ffff6b47bf38e78528ebab5e0",
       "source_path": "manuscript/part_III/applied_models.md",
       "source_sha256": "eb15140af6ff5202c1b82dfa232418912f666b40e520a6aad9202a5800afa3b7"
     },
     {
       "rendered_path": "output/web/_combined_manuscript.md",
-      "rendered_sha256": "fb4a6673cbc3b4f17e5c48085dc290a11ed1037d17143c7a2d7c3eb6a101b2d9",
+      "rendered_sha256": "606351aa95eb3d7a9e30eae5f6f86a1e9b71331ffff6b47bf38e78528ebab5e0",
       "source_path": "manuscript/part_III/case_studies.md",
       "source_sha256": "fc74b5f734276f7b30c836b1597ef4fe2133d42a0f863404c67b973cabdb9acc"
     },
     {
       "rendered_path": "output/web/_combined_manuscript.md",
-      "rendered_sha256": "fb4a6673cbc3b4f17e5c48085dc290a11ed1037d17143c7a2d7c3eb6a101b2d9",
+      "rendered_sha256": "606351aa95eb3d7a9e30eae5f6f86a1e9b71331ffff6b47bf38e78528ebab5e0",
       "source_path": "manuscript/part_III/frontiers.md",
       "source_sha256": "6b33d7aa0296fd06649cae623d77346fd1608242a851dfa1d9aced938de8a27f"
     },
     {
       "rendered_path": "output/web/_combined_manuscript.md",
-      "rendered_sha256": "fb4a6673cbc3b4f17e5c48085dc290a11ed1037d17143c7a2d7c3eb6a101b2d9",
+      "rendered_sha256": "606351aa95eb3d7a9e30eae5f6f86a1e9b71331ffff6b47bf38e78528ebab5e0",
       "source_path": "manuscript/labs/part_0/lab_orientation.md",
       "source_sha256": "9e9d44e679eefcb6ad0e691d8060bcb7867b41706b198d4c99aacac8293aeb9d"
     },
     {
       "rendered_path": "output/web/_combined_manuscript.md",
-      "rendered_sha256": "fb4a6673cbc3b4f17e5c48085dc290a11ed1037d17143c7a2d7c3eb6a101b2d9",
+      "rendered_sha256": "606351aa95eb3d7a9e30eae5f6f86a1e9b71331ffff6b47bf38e78528ebab5e0",
       "source_path": "manuscript/labs/part_0/lab_core_methods.md",
       "source_sha256": "80545d53c80ea1a02cd844af38b34241115f2b248899a07708c1f867d8912645"
     },
     {
       "rendered_path": "output/web/_combined_manuscript.md",
-      "rendered_sha256": "fb4a6673cbc3b4f17e5c48085dc290a11ed1037d17143c7a2d7c3eb6a101b2d9",
+      "rendered_sha256": "606351aa95eb3d7a9e30eae5f6f86a1e9b71331ffff6b47bf38e78528ebab5e0",
       "source_path": "manuscript/labs/part_0/lab_quantitative_foundations.md",
       "source_sha256": "a3fc467713dae25b16e8f8f8020c56a3c257959b8906c6f39fb9cc2572167e9e"
     },
     {
       "rendered_path": "output/web/_combined_manuscript.md",
-      "rendered_sha256": "fb4a6673cbc3b4f17e5c48085dc290a11ed1037d17143c7a2d7c3eb6a101b2d9",
+      "rendered_sha256": "606351aa95eb3d7a9e30eae5f6f86a1e9b71331ffff6b47bf38e78528ebab5e0",
       "source_path": "manuscript/labs/part_I/lab_first_principles.md",
       "source_sha256": "784957fda0cbd50b6411e88859bec6a41db6a8c51cfa30e37e91dcb61e6485e8"
     },
     {
       "rendered_path": "output/web/_combined_manuscript.md",
-      "rendered_sha256": "fb4a6673cbc3b4f17e5c48085dc290a11ed1037d17143c7a2d7c3eb6a101b2d9",
+      "rendered_sha256": "606351aa95eb3d7a9e30eae5f6f86a1e9b71331ffff6b47bf38e78528ebab5e0",
       "source_path": "manuscript/labs/part_I/lab_building_blocks.md",
       "source_sha256": "b837f1cce62b83f122e866ce5141f687e7bad75eeccef29811436b6ae98f8b72"
     },
     {
       "rendered_path": "output/web/_combined_manuscript.md",
-      "rendered_sha256": "fb4a6673cbc3b4f17e5c48085dc290a11ed1037d17143c7a2d7c3eb6a101b2d9",
+      "rendered_sha256": "606351aa95eb3d7a9e30eae5f6f86a1e9b71331ffff6b47bf38e78528ebab5e0",
       "source_path": "manuscript/labs/part_I/lab_structure_and_form.md",
       "source_sha256": "dd78d4946b6223d2a49d0001e49ab49ce5eb0021f16d29e3659901a2dbd871da"
     },
     {
       "rendered_path": "output/web/_combined_manuscript.md",
-      "rendered_sha256": "fb4a6673cbc3b4f17e5c48085dc290a11ed1037d17143c7a2d7c3eb6a101b2d9",
+      "rendered_sha256": "606351aa95eb3d7a9e30eae5f6f86a1e9b71331ffff6b47bf38e78528ebab5e0",
       "source_path": "manuscript/labs/part_II/lab_systems_overview.md",
       "source_sha256": "1cda95e9280dc4c503a45b4b095a49f0ba08ba46f28470010c74cf73fad1d98a"
     },
     {
       "rendered_path": "output/web/_combined_manuscript.md",
-      "rendered_sha256": "fb4a6673cbc3b4f17e5c48085dc290a11ed1037d17143c7a2d7c3eb6a101b2d9",
+      "rendered_sha256": "606351aa95eb3d7a9e30eae5f6f86a1e9b71331ffff6b47bf38e78528ebab5e0",
       "source_path": "manuscript/labs/part_II/lab_dynamics_and_change.md",
       "source_sha256": "87007f4d1191631f3ac16eed674563eb07378d65047f2bc737dabe7c12b2fe04"
     },
     {
       "rendered_path": "output/web/_combined_manuscript.md",
-      "rendered_sha256": "fb4a6673cbc3b4f17e5c48085dc290a11ed1037d17143c7a2d7c3eb6a101b2d9",
+      "rendered_sha256": "606351aa95eb3d7a9e30eae5f6f86a1e9b71331ffff6b47bf38e78528ebab5e0",
       "source_path": "manuscript/labs/part_II/lab_regulation_and_control.md",
       "source_sha256": "e4d38df2b679a179b23a1fa8feacc5019f0c93d1a928b7d7479c4c0de1e2d3e1"
     },
     {
       "rendered_path": "output/web/_combined_manuscript.md",
-      "rendered_sha256": "fb4a6673cbc3b4f17e5c48085dc290a11ed1037d17143c7a2d7c3eb6a101b2d9",
+      "rendered_sha256": "606351aa95eb3d7a9e30eae5f6f86a1e9b71331ffff6b47bf38e78528ebab5e0",
       "source_path": "manuscript/labs/part_III/lab_applied_models.md",
       "source_sha256": "7b9fd8aa065fddf2ed9fee084f5be0b750c7538a5b9ced82efb8836e20ada5d9"
     },
     {
       "rendered_path": "output/web/_combined_manuscript.md",
-      "rendered_sha256": "fb4a6673cbc3b4f17e5c48085dc290a11ed1037d17143c7a2d7c3eb6a101b2d9",
+      "rendered_sha256": "606351aa95eb3d7a9e30eae5f6f86a1e9b71331ffff6b47bf38e78528ebab5e0",
       "source_path": "manuscript/labs/part_III/lab_case_studies.md",
       "source_sha256": "f9cc4a68caf3c27dd4ab9e552a8fde9e0ed075a38da7e09baedb667ae189d794"
     },
     {
       "rendered_path": "output/web/_combined_manuscript.md",
-      "rendered_sha256": "fb4a6673cbc3b4f17e5c48085dc290a11ed1037d17143c7a2d7c3eb6a101b2d9",
+      "rendered_sha256": "606351aa95eb3d7a9e30eae5f6f86a1e9b71331ffff6b47bf38e78528ebab5e0",
       "source_path": "manuscript/labs/part_III/lab_frontiers.md",
       "source_sha256": "37661a554f438a7a9c3b7a5dbf245c7428cabf151a993116bc9d3a3cb538d830"
     },
     {
       "rendered_path": "output/web/_combined_manuscript.md",
-      "rendered_sha256": "fb4a6673cbc3b4f17e5c48085dc290a11ed1037d17143c7a2d7c3eb6a101b2d9",
+      "rendered_sha256": "606351aa95eb3d7a9e30eae5f6f86a1e9b71331ffff6b47bf38e78528ebab5e0",
       "source_path": "manuscript/questions/part_0/q_orientation.md",
       "source_sha256": "de8c1ef732f1be01ae6b6b5cc15a723f6baa2a791a7d95a029ca0d0c7522eb2e"
     },
     {
       "rendered_path": "output/web/_combined_manuscript.md",
-      "rendered_sha256": "fb4a6673cbc3b4f17e5c48085dc290a11ed1037d17143c7a2d7c3eb6a101b2d9",
+      "rendered_sha256": "606351aa95eb3d7a9e30eae5f6f86a1e9b71331ffff6b47bf38e78528ebab5e0",
       "source_path": "manuscript/questions/part_0/q_core_methods.md",
       "source_sha256": "e88a77e9fc72fc5841392f1e1081f101a1ee5ab2dd9e5010c6d1682b29d0d6b0"
     },
     {
       "rendered_path": "output/web/_combined_manuscript.md",
-      "rendered_sha256": "fb4a6673cbc3b4f17e5c48085dc290a11ed1037d17143c7a2d7c3eb6a101b2d9",
+      "rendered_sha256": "606351aa95eb3d7a9e30eae5f6f86a1e9b71331ffff6b47bf38e78528ebab5e0",
       "source_path": "manuscript/questions/part_0/q_quantitative_foundations.md",
       "source_sha256": "7478b8939c251d7ea99f0e4736dae09a72b1efae356f4916d6a99d52ec956824"
     },
     {
       "rendered_path": "output/web/_combined_manuscript.md",
-      "rendered_sha256": "fb4a6673cbc3b4f17e5c48085dc290a11ed1037d17143c7a2d7c3eb6a101b2d9",
+      "rendered_sha256": "606351aa95eb3d7a9e30eae5f6f86a1e9b71331ffff6b47bf38e78528ebab5e0",
       "source_path": "manuscript/questions/part_I/q_first_principles.md",
       "source_sha256": "0390fdf3ac30c7e384022769c5a1745d4917348a49514d76f3ef6d96a4ed34f1"
     },
     {
       "rendered_path": "output/web/_combined_manuscript.md",
-      "rendered_sha256": "fb4a6673cbc3b4f17e5c48085dc290a11ed1037d17143c7a2d7c3eb6a101b2d9",
+      "rendered_sha256": "606351aa95eb3d7a9e30eae5f6f86a1e9b71331ffff6b47bf38e78528ebab5e0",
       "source_path": "manuscript/questions/part_I/q_building_blocks.md",
       "source_sha256": "ac75cb964ede4e58afc9cf861c2e29dfb9eb6dbbc4bbfdf643176d9da1457df6"
     },
     {
       "rendered_path": "output/web/_combined_manuscript.md",
-      "rendered_sha256": "fb4a6673cbc3b4f17e5c48085dc290a11ed1037d17143c7a2d7c3eb6a101b2d9",
+      "rendered_sha256": "606351aa95eb3d7a9e30eae5f6f86a1e9b71331ffff6b47bf38e78528ebab5e0",
       "source_path": "manuscript/questions/part_I/q_structure_and_form.md",
       "source_sha256": "32f884b5c14e4a187854bb7a1f1685aaff6c2c33c21202713d42ca236846ba07"
     },
     {
       "rendered_path": "output/web/_combined_manuscript.md",
-      "rendered_sha256": "fb4a6673cbc3b4f17e5c48085dc290a11ed1037d17143c7a2d7c3eb6a101b2d9",
+      "rendered_sha256": "606351aa95eb3d7a9e30eae5f6f86a1e9b71331ffff6b47bf38e78528ebab5e0",
       "source_path": "manuscript/questions/part_II/q_systems_overview.md",
       "source_sha256": "33089f9b1127aa74ea6f13ea2f650ef9f8095ab0174c4e27d183800a4ad6f827"
     },
     {
       "rendered_path": "output/web/_combined_manuscript.md",
-      "rendered_sha256": "fb4a6673cbc3b4f17e5c48085dc290a11ed1037d17143c7a2d7c3eb6a101b2d9",
+      "rendered_sha256": "606351aa95eb3d7a9e30eae5f6f86a1e9b71331ffff6b47bf38e78528ebab5e0",
       "source_path": "manuscript/questions/part_II/q_dynamics_and_change.md",
       "source_sha256": "7a1d90f3334853cf5d713dcf482e2a688ab8cae66f3a10ba452ffd41e7c2355a"
     },
     {
       "rendered_path": "output/web/_combined_manuscript.md",
-      "rendered_sha256": "fb4a6673cbc3b4f17e5c48085dc290a11ed1037d17143c7a2d7c3eb6a101b2d9",
+      "rendered_sha256": "606351aa95eb3d7a9e30eae5f6f86a1e9b71331ffff6b47bf38e78528ebab5e0",
       "source_path": "manuscript/questions/part_II/q_regulation_and_control.md",
       "source_sha256": "07fe71c86b484a355812aa2cc6e94451507a3843fc27f3af39f25361df1047f4"
     },
     {
       "rendered_path": "output/web/_combined_manuscript.md",
-      "rendered_sha256": "fb4a6673cbc3b4f17e5c48085dc290a11ed1037d17143c7a2d7c3eb6a101b2d9",
+      "rendered_sha256": "606351aa95eb3d7a9e30eae5f6f86a1e9b71331ffff6b47bf38e78528ebab5e0",
       "source_path": "manuscript/questions/part_III/q_applied_models.md",
       "source_sha256": "1592b55217a9d605e610f2722d01957d9d719d8b17d74b14cc5f7097e4a8a6ed"
     },
     {
       "rendered_path": "output/web/_combined_manuscript.md",
-      "rendered_sha256": "fb4a6673cbc3b4f17e5c48085dc290a11ed1037d17143c7a2d7c3eb6a101b2d9",
+      "rendered_sha256": "606351aa95eb3d7a9e30eae5f6f86a1e9b71331ffff6b47bf38e78528ebab5e0",
       "source_path": "manuscript/questions/part_III/q_case_studies.md",
       "source_sha256": "d969420cd21c3804bd11565cad511dd12cccfd08a142d03671ba9a0f2797a4d8"
     },
     {
       "rendered_path": "output/web/_combined_manuscript.md",
-      "rendered_sha256": "fb4a6673cbc3b4f17e5c48085dc290a11ed1037d17143c7a2d7c3eb6a101b2d9",
+      "rendered_sha256": "606351aa95eb3d7a9e30eae5f6f86a1e9b71331ffff6b47bf38e78528ebab5e0",
       "source_path": "manuscript/questions/part_III/q_frontiers.md",
       "source_sha256": "0f03a1e9dd1dd10c662254a5c40c5587e36c70fe26529aa98c05c3f66e6ba952"
     },
     {
       "rendered_path": "output/web/_combined_manuscript.md",
-      "rendered_sha256": "fb4a6673cbc3b4f17e5c48085dc290a11ed1037d17143c7a2d7c3eb6a101b2d9",
+      "rendered_sha256": "606351aa95eb3d7a9e30eae5f6f86a1e9b71331ffff6b47bf38e78528ebab5e0",
       "source_path": "manuscript/appendices/appendix_authoring_guide.md",
       "source_sha256": "189dba0cf997eba0728d9ff5bd72e6d49a776c79ed0c4d8e288a9fb4fefc98bb"
     },
     {
       "rendered_path": "output/web/_combined_manuscript.md",
-      "rendered_sha256": "fb4a6673cbc3b4f17e5c48085dc290a11ed1037d17143c7a2d7c3eb6a101b2d9",
+      "rendered_sha256": "606351aa95eb3d7a9e30eae5f6f86a1e9b71331ffff6b47bf38e78528ebab5e0",
       "source_path": "manuscript/appendices/appendix_notation.md",
       "source_sha256": "c3b5ddb949e3ee941d1323a6828ecf77e9080d284c72087a1318dea7020411a9"
     },
     {
       "rendered_path": "output/web/_combined_manuscript.md",
-      "rendered_sha256": "fb4a6673cbc3b4f17e5c48085dc290a11ed1037d17143c7a2d7c3eb6a101b2d9",
+      "rendered_sha256": "606351aa95eb3d7a9e30eae5f6f86a1e9b71331ffff6b47bf38e78528ebab5e0",
       "source_path": "manuscript/appendices/appendix_math_review.md",
       "source_sha256": "b9cd99a0f8637b09ea2619f82ecf74f44347f08ef8d7fcb260e0e44cd3176649"
     },
     {
       "rendered_path": "output/web/_combined_manuscript.md",
-      "rendered_sha256": "fb4a6673cbc3b4f17e5c48085dc290a11ed1037d17143c7a2d7c3eb6a101b2d9",
+      "rendered_sha256": "606351aa95eb3d7a9e30eae5f6f86a1e9b71331ffff6b47bf38e78528ebab5e0",
       "source_path": "manuscript/appendices/appendix_formalisms.md",
       "source_sha256": "d17a6f385685ae21ba704d00f67b7232e76cd2af8f330e525a1c1f59f2da0b7d"
     },
     {
       "rendered_path": "output/web/_combined_manuscript.md",
-      "rendered_sha256": "fb4a6673cbc3b4f17e5c48085dc290a11ed1037d17143c7a2d7c3eb6a101b2d9",
+      "rendered_sha256": "606351aa95eb3d7a9e30eae5f6f86a1e9b71331ffff6b47bf38e78528ebab5e0",
       "source_path": "manuscript/appendices/appendix_format_gallery.md",
       "source_sha256": "bcfe91806bbffdac53a80f113fd366ce92e2ed9f302b2e89f460873408926a53"
     },
     {
       "rendered_path": "output/web/_combined_manuscript.md",
-      "rendered_sha256": "fb4a6673cbc3b4f17e5c48085dc290a11ed1037d17143c7a2d7c3eb6a101b2d9",
+      "rendered_sha256": "606351aa95eb3d7a9e30eae5f6f86a1e9b71331ffff6b47bf38e78528ebab5e0",
       "source_path": "manuscript/glossary.md",
       "source_sha256": "f654f2d3286eec37eb04491ae4c9d233b20870b3abf6f9e1728be0569b276ff6"
     },
     {
       "rendered_path": "output/web/_combined_manuscript.md",
-      "rendered_sha256": "fb4a6673cbc3b4f17e5c48085dc290a11ed1037d17143c7a2d7c3eb6a101b2d9",
+      "rendered_sha256": "606351aa95eb3d7a9e30eae5f6f86a1e9b71331ffff6b47bf38e78528ebab5e0",
       "source_path": "manuscript/appendices/appendix_index.md",
       "source_sha256": "886e630ebfad72460c16da01a8a587e8d01ae657d77fe9d9362467df7825b1e8"
     }
@@ -298,42 +298,42 @@
   "evidence_files": {
     "artifact_manifest": {
       "path": "output/reports/artifact_manifest.json",
-      "sha256": "0d38c83f7b127b6a4310cadcf74f70ff0ad27b22e476f3b87a2a00f037967fd0",
-      "size_bytes": 49387
+      "sha256": "4b39514e665860d49b89321e074796a680c1d302f86136d9539ec022a9e1cd82",
+      "size_bytes": 53387
     },
     "combined_manuscript": {
       "path": "output/web/_combined_manuscript.md",
-      "sha256": "fb4a6673cbc3b4f17e5c48085dc290a11ed1037d17143c7a2d7c3eb6a101b2d9",
-      "size_bytes": 212551
+      "sha256": "606351aa95eb3d7a9e30eae5f6f86a1e9b71331ffff6b47bf38e78528ebab5e0",
+      "size_bytes": 215041
     },
     "composition_manifest": {
       "path": "output/reports/manuscript_composition.json",
-      "sha256": "696cb5a6ec830743d7a7f28194b9814f13ee82dfc403df0a1d183cee6ea8de5c",
-      "size_bytes": 10509
+      "sha256": "8f4b3d5ab9beed07bd3d5e6faacba06a5630b7abf3d5fd844f052eaf72cb7d81",
+      "size_bytes": 10513
     },
     "validation_report": {
       "path": "output/reports/validation_report.json",
-      "sha256": "d70700a3f3dafa8236c9c28b50da19e137a339857318138f2862ce0d3136b4ce",
-      "size_bytes": 25927
+      "sha256": "f448f2e49f4b89258cde978f9a009b1dd70d2670589f6ca2f4bbebc3970e2485",
+      "size_bytes": 25926
     }
   },
   "evidence_mode": "validated-co-snapshot-fingerprint-bridge",
   "fingerprints": {
     "config": {
       "file_count": 18,
-      "sha256": "4220f909b47479fb86c8fa1a837aa783e9789840536848ce253d63a1d6c1065a"
+      "sha256": "ac3c6e8f6db400f08ce804fe557d1ad982c2bbebc0c0b7d474edbf33dd5cccb6"
     },
     "output": {
       "file_count": 160,
-      "sha256": "8beaec0544fe3c1cde08523c73e834d2ca012862d111c0bf07f6c208c2f8bee0"
+      "sha256": "e501906efaae00ab926f82829cee7411938106600a2e6bc67cf52e1cb901e663"
     },
     "source": {
       "file_count": 94,
       "sha256": "56dec26c14364dc2bff1684dd54aff290081688e6cce25879936fe6dc84f5169"
     },
     "stage": {
-      "file_count": 1913,
-      "sha256": "e2988e519a8e0538602cb07203bac913d60ec7188a513c0acb96888292bc2ab5"
+      "file_count": 1932,
+      "sha256": "65a9fb16b00fd871f132a269f9a29dbc32a858033f98908957f862950f0f9ad8"
     }
   },
   "project": "templates/template_textbook",

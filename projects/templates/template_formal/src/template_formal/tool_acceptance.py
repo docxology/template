@@ -301,7 +301,7 @@ def _execute_formal_tools(
         jar_valid = len(jar_bytes) == TLC_BYTES and hashlib.sha256(jar_bytes).hexdigest() == TLC_SHA256
     except TimeoutError:
         jar_bytes, jar_valid, jar_timed_out = b"", False, True
-    except OSError, ValueError:
+    except (OSError, ValueError):
         jar_bytes, jar_valid = b"", False
     if jar_timed_out:
         checks.append(
@@ -376,7 +376,7 @@ def _execute_formal_tools(
         except TimeoutError:
             unchanged = False
             custody_timed_out = True
-        except OSError, ValueError:
+        except (OSError, ValueError):
             unchanged = False
     if custody_timed_out or time.monotonic() >= deadline:
         checks.append(

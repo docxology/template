@@ -151,7 +151,7 @@ def collect_tool_bindings(
                     pins.update(overrides.values())
                 else:
                     unresolved.add("lean.selection")
-            except UnicodeError, tomllib.TOMLDecodeError:
+            except (UnicodeError, tomllib.TOMLDecodeError):
                 unresolved.add("lean.selection")
         if environment.get("ELAN_TOOLCHAIN"):
             pins.add(environment["ELAN_TOOLCHAIN"])

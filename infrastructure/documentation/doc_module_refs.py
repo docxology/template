@@ -103,8 +103,10 @@ def iter_doc_files(repo_root: Path) -> list[Path]:
         candidate = repo_root / name
         if candidate.is_file():
             files.append(candidate)
-    docs_dir = repo_root / "docs"
-    if docs_dir.is_dir():
+    for directory in ("docs", "scripts"):
+        docs_dir = repo_root / directory
+        if not docs_dir.is_dir():
+            continue
         for path in sorted(docs_dir.rglob("*.md")):
             relative_parts = path.relative_to(repo_root).parts
             if _GENERATED_SEGMENT in relative_parts:

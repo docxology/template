@@ -143,7 +143,7 @@ class SearchCache:
                 else path.read_text(encoding="utf-8")
             )
             payload = json.loads(raw)
-        except FileNotFoundError, json.JSONDecodeError:
+        except (FileNotFoundError, json.JSONDecodeError):
             return None
         except OSError:
             if self.confinement_root is not None:
@@ -158,7 +158,7 @@ class SearchCache:
         try:
             stored_query = SearchQuery(**payload["query"])
             papers = [Paper.from_dict(p) for p in payload.get("papers") or []]
-        except KeyError, TypeError, ValueError:
+        except (KeyError, TypeError, ValueError):
             return None
         return SearchResult(
             query=stored_query,

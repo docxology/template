@@ -271,7 +271,7 @@ def negative_control(root: Path, gate: str) -> int:
         domain = project_module(root, scope, "template_autoscientists.agents.live_domain")
         try:
             domain.parse_proposal('{"axis":0,"step":2}', (0,), "control", frozenset())
-        except ValueError, RuntimeError:
+        except (ValueError, RuntimeError):
             return 23
         return 0
     if scope == "templates/template_autopoiesis":

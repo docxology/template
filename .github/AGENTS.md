@@ -15,6 +15,10 @@ pytest selection/outcome receipts for an exact disjoint union. JUnit is diagnost
 Routine automatic jobs contain at most twenty complete modules, with dedicated
 jobs for selected process measurement, run-matrix and Root acceptance modules. At most eight
 routine jobs run concurrently; the 540-second job-body clock is unchanged.
+Changed-contract lanes also run eight at a time (`max-parallel: 8`): over the 27
+measured modules the longest-path schedule is 2626s at 3 lanes, 1337s at 6, and
+1031s at 8, where the slowest module sets the floor and the 120-minute job budget
+is unchanged.
 The existing bounded execution boundary cleans up owned descendants and retains
 the original OS/effective exits in a diagnostic that grants no acceptance.
 Full contract jobs explicitly clear marker and keyword filters, refuse any
@@ -189,7 +193,24 @@ retain the short git-log excerpt.
 
 ### Dependabot Automerge Workflow (`workflows/dependabot-automerge.yml`)
 
-Triggered by `pull_request_target` on Dependabot PRs only (`github.actor == 'dependabot[bot]'`). Enables GitHub native auto-merge (`gh pr merge --auto --squash`) for `semver-minor` and `semver-patch` updates. Major bumps are left for human review. The workflow never checks out or executes PR HEAD code — it only reads update metadata and calls the GitHub API — so the elevated `pull_request_target` trigger does not expose secrets to untrusted code. Auto-merge must also be enabled in repository settings (Settings → General → "Allow auto-merge").
+Two guarded jobs. `qualify` runs on `pull_request_target` for Dependabot PRs only
+(`github.actor == 'dependabot[bot]'`): it reads `dependabot/fetch-metadata` and
+applies the `automerge:dependabot-minor-patch` label only for `semver-minor` and
+`semver-patch` updates from the ecosystems declared in `dependabot.yml`
+(`github_actions`, `pip`), removing it otherwise. `merge` runs on
+`workflow_run` completion of `CI` and squash-merges the PR only when that run
+succeeded for the PR's current head commit, the label is present, the head branch
+is in this repository, the PR is an open non-draft PR into `main`, and the merge
+state is CLEAN; `--match-head-commit` makes the head binding atomic with the
+merge. Otherwise it records a skip instead of failing.
+
+GitHub's native auto-merge is **not** used: `allow_auto_merge` is `false` on this
+repository, so `gh pr merge --auto` failed with
+`Auto merge is not allowed for this repository (enablePullRequestAutoMerge)`
+(run 40627322822, PR #162) and blocked every otherwise-green bump. Major bumps are
+left for human review. Neither job checks out or executes PR HEAD code — they read
+update metadata and call the GitHub API — so the elevated trigger exposes no
+secrets to untrusted code.
 
 ## Dependabot (`dependabot.yml`)
 
@@ -217,36 +238,59 @@ Triggered by `pull_request_target` on Dependabot PRs only (`github.actor == 'dep
 | Import time | ≤ 5 s |
 | Module line count (`scripts/gates/module_line_count_check.py`) | warn ≥ 800 / fail ≥ 950 for `infrastructure/` + `scripts/`; warn ≥ 150 / fail ≥ 250 for `projects/*/scripts/` |
 
-## Local Pre-Push Parity (`.pre-commit-config.yaml`)
+## Local Hook Parity (`.pre-commit-config.yaml`)
 
-The repo ships a [`.pre-commit-config.yaml`](../.pre-commit-config.yaml) with
-**seven pre-push hooks** that mirror (or partially mirror) CI gates so pushes
-that would fail CI fail locally first:
+The repo ships a [`.pre-commit-config.yaml`](../.pre-commit-config.yaml) whose
+cheap hooks mirror CI gates so a commit or push that would fail CI fails locally
+first. Expensive gates stay blocking in CI and are manual-stage locally.
+
+**Pre-commit (fast, mandatory):**
 
 | Hook id | Mirrors CI step | Typical runtime |
 | --- | --- | :-: |
-| `pre-push-quick` | `verify-no-mocks` + `check_tracked_all` + `tests/infra_tests/git_hook_smoke/` | ~3 s |
-| `docs-contract-guard` | `check_template_drift.py --strict` + AGENTS personal-memory test | ~5 s |
-| `bandit-quick` | `security` job Bandit step (`-c bandit.yaml -r -ll`) | ~5–30 s |
-| `skills-check` | `infrastructure.skills check` (manifest freshness) | <1 s |
-| `operations-check` | `infrastructure.skills operations-check` (operation-manifest freshness) | <1 s |
-| `all-exports-check` | `infrastructure.skills check-all-exports` (lint job MED5 gate) | <1 s |
+| hygiene hooks (`check-added-large-files`, `check-merge-conflict`, `trailing-whitespace`, `end-of-file-fixer`, `check-yaml`, `check-toml`, `check-json`) | tracked-tree hygiene (no single CI step) | <1 s each |
+| `staged-secret-scan` | staged-index counterpart of the tracked-secret guard | ~1–2 s |
+| `ruff-ci` | [`run-public-lint`](actions/run-public-lint/README.md) Ruff check + format on the public CI scope | ~2–5 s |
 | `skill-reachability-check` | docs-lint skill front-door and index completeness gate | <1 s |
 
-As of 2026-10-13, `docs-contract-guard` does not run `COUNTS.md`
-synchronization and dated coverage provenance checks on every push. All its
-other documentation commands remain
-blocking, alongside the separate security, public tracking, no-mocks and
-behavioral hooks. A branch may need to be pushed to obtain genuine hosted
-coverage when its required local tools are unavailable.
+**Pre-push (fast, mandatory):**
+
+| Hook id | Mirrors CI step | Typical runtime |
+| --- | --- | :-: |
+| `pre-push-quick` | `verify-no-mocks` + tracked-artifact/secret guards + `tests/infra_tests/git_hook_smoke/` | ~3 s |
+| `skills-check` | `infrastructure.skills check` (manifest freshness; also in the blocking static `health` report) | <1 s |
+| `operations-check` | `infrastructure.skills operations-check` (operation-manifest freshness) | <1 s |
+| `all-exports-check` | `infrastructure.skills check-all-exports` (hardening `lint` MED5 gate) | <1 s |
+| `skill-reachability-check` | docs-lint skill front-door and index completeness gate | <1 s |
+
+**Manual only** — `pre-commit run --hook-stage manual <id>`:
+
+| Hook id | Blocking CI owner |
+| --- | --- |
+| `mypy-ci` | [`run-public-lint`](actions/run-public-lint/README.md) in `ci.yml` `lint` and hardening `lint` |
+| `bandit-quick` (MEDIUM+) | [`run-safety-scan`](actions/run-safety-scan/README.md) in `ci.yml` `lint` and hardening `security` |
+| `bandit-low` (LOW+ against `bandit.yaml`'s allow-list) | hardening `security` shell-injection sweep keeps the LOW floor |
+| `docs-contract-guard` | hardening `lint` (template drift, `check_backlog.py`, `check_claim_bindings.py`), hardening `validate` (api-reference, exemplar roster, COUNTS, publication records), the static `health` report, and the infra test suite (public-AGENTS memory test) |
+
+Mypy and Bandit left the commit stage because they cost tens of seconds; the two
+documentation contracts that previously existed *only* in `docs-contract-guard`
+(`check_backlog.py`, `check_claim_bindings.py`) were added to hardening `lint` so
+no check was dropped, only moved.
+
+To run the local suites deliberately:
+
+```bash
+pre-commit run --hook-stage pre-push --all-files
+pre-commit run --hook-stage manual --all-files
+```
 
 `uv run python scripts/docgen/counts.py --check` still rejects stale coverage
-provenance in the owning `counts` health gate and full-hardening documentation
-job. The counts writer and explicit provenance refresh retain their existing
-validation. A requested hosted measurement must pass its job, CI Gate and the
-whole workflow; verify the retrieved artifact's exact source commit and project
-input hash before refreshing the dated snapshot. Functional CI passing alone
-does not promote older coverage measurements to a current claim. Release's
+provenance in the owning `counts` health gate and the full-hardening
+documentation job. The counts writer and explicit provenance refresh retain their
+existing validation. A requested hosted measurement must pass its job, CI Gate
+and the whole workflow; verify the retrieved artifact's exact source commit and
+project input hash before refreshing the dated snapshot. Functional CI passing
+alone does not promote older coverage measurements to a current claim. Release's
 exact-source acceptance and coverage custody requirements remain separate and
 unchanged.
 
@@ -262,18 +306,8 @@ pipeline; that mode makes artifact manifests, evidence registries, and figure
 registries blocking requirements. Subjective editorial findings remain
 `review_required` and are reported without weakening deterministic failures.
 
-The lint hooks (`ruff-ci`, `mypy-ci`) run on the **pre-commit** stage, not
-pre-push, to keep `git commit` fast. A separate manual-stage `bandit-low`
-hook provides a stricter LOW+MEDIUM+HIGH sweep against `bandit.yaml`'s
-allow-list — invoke with `pre-commit run --hook-stage manual bandit-low`. To
-run the full pre-push gate manually:
-
-```bash
-pre-commit run --hook-stage pre-push --all-files
-```
-
-A new MEDIUM Bandit finding fails `git push` locally with the same scope and
-severity as the CI `security` job, so contributors hear it before CI does.
+The stricter LOW+MEDIUM+HIGH sweep stays available on demand:
+`pre-commit run --hook-stage manual bandit-low` (same allow-list, wider severity).
 
 ## Branch Protection
 

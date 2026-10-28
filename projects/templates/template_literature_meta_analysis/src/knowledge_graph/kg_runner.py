@@ -32,7 +32,7 @@ def _attach_hypothesis_scores_to_cross_phase_analysis(data_dir: Path, scores: di
         return
     try:
         analysis = json.loads(analysis_path.read_text(encoding="utf-8"))
-    except OSError, json.JSONDecodeError:
+    except (OSError, json.JSONDecodeError):
         return
     if not isinstance(analysis, dict):
         return

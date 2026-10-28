@@ -51,7 +51,7 @@
           "file_count": 7,
           "largest_file": "template_template_pitch_long.pdf",
           "largest_file_path": "pdf/template_template_pitch_long.pdf",
-          "size_mb": "0.88"
+          "size_mb": "0.90"
         },
         "pptx": {
           "exists": true,
@@ -96,7 +96,7 @@
           "file_count": 11,
           "largest_file": "source-web-fonts.js",
           "largest_file_path": "web/assets/source-web-fonts.js",
-          "size_mb": "1.92"
+          "size_mb": "2.03"
         }
       },
       "file_counts": {
@@ -116,7 +116,7 @@
         ],
         "warning": [
           "data/ has no stable publication artifacts",
-          "Combined PDF is unusually small: 0.07 MB"
+          "Combined PDF is unusually small: 0.08 MB"
         ]
       },
       "recommendations": [],
@@ -125,7 +125,7 @@
           "combined_pdf": {
             "exists": true,
             "readable": true,
-            "size_mb": 0.07
+            "size_mb": 0.08
           },
           "data": {
             "exists": false,
@@ -176,7 +176,7 @@
             "optional": false,
             "readable": true,
             "required": true,
-            "size_mb": 0.88
+            "size_mb": 0.9
           },
           "pptx": {
             "exists": true,
@@ -230,20 +230,20 @@
             "optional": false,
             "readable": true,
             "required": true,
-            "size_mb": 1.92
+            "size_mb": 2.03
           }
         },
         "inventory_mode": "stable-shippable-output-v1",
         "issues": [],
         "missing_files": [],
         "suspicious_sizes": [
-          "Combined PDF is unusually small: 0.07 MB",
+          "Combined PDF is unusually small: 0.08 MB",
           "data/ directory is empty of stable publication artifacts"
         ],
         "valid": true,
         "warnings": []
       },
-      "total_size_mb": 4.390872955322266
+      "total_size_mb": 4.526188850402832
     },
     "figures": {
       "files": 9,
@@ -252,7 +252,7 @@
     "inventory_mode": "stable-shippable-output-v1",
     "pdf": {
       "files": 7,
-      "size_mb": 0.8845281600952148
+      "size_mb": 0.9037933349609375
     },
     "stable_inventory": {
       "categories": {
@@ -262,7 +262,7 @@
         },
         "pdf": {
           "files": 7,
-          "size_bytes": 927495
+          "size_bytes": 947696
         },
         "pptx": {
           "files": 6,
@@ -282,12 +282,12 @@
         },
         "web": {
           "files": 11,
-          "size_bytes": 2009352
+          "size_bytes": 2131040
         }
       },
       "mode": "stable-shippable-output-v1",
       "total_files": 162,
-      "total_size_bytes": 4604164
+      "total_size_bytes": 4746053
     }
   },
   "recommendations": [],
@@ -298,12 +298,12 @@
     "passed": 9,
     "total_checks": 9
   },
-  "timestamp": "2026-10-23T12:44:35Z",
+  "timestamp": "2026-10-28T22:22:30Z",
   "validated_inputs": {
     "artifact_manifest": {
       "path": "output/reports/artifact_manifest.json",
-      "sha256": "8745c508b18faa86d930716d2638e2fc8b5352cb34465c415edc8fa59de21c64",
-      "size_bytes": 51545
+      "sha256": "589e8269cda43752c25fa8426a01938182b41810e4f798195cdbe705d2bb375d",
+      "size_bytes": 55595
     },
     "combined_manuscript": {
       "path": "output/web/_combined_manuscript.md",
@@ -362,19 +362,19 @@
     "fingerprints": {
       "config": {
         "file_count": 22,
-        "sha256": "ee188dd9a90421531bdce5b0349862303eda7761b6cc9fd60a02071eb39feb42"
+        "sha256": "8f41355ebafa6066aa2ed205c42e793bd384cf7a1e2cef8724874f455c43a807"
       },
       "output": {
         "file_count": 162,
-        "sha256": "b360d0e69164ddbafdbe4f1c986b646c0a5ece38fcee328a64fab7a33efca534"
+        "sha256": "3cbc55e33f6aeb87a1ec0a78aa5cdbb362927d0de5cf87f73a7f784a5c141c47"
       },
       "source": {
         "file_count": 34,
-        "sha256": "54e775c1db72714d5f29a9af4191155dc9200c343b6b87a42944449b23853c3a"
+        "sha256": "e6e6f1c2fdeb8746144da254f85bce753d9401270d4cd07ed013f3701373354b"
       },
       "stage": {
-        "file_count": 1913,
-        "sha256": "e2988e519a8e0538602cb07203bac913d60ec7188a513c0acb96888292bc2ab5"
+        "file_count": 1932,
+        "sha256": "65a9fb16b00fd871f132a269f9a29dbc32a858033f98908957f862950f0f9ad8"
       }
     },
     "project": "templates/template_pitch_deck",

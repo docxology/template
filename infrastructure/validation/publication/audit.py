@@ -353,7 +353,7 @@ def check_cover_accessibility(ctx: AuditContext) -> Iterable[PublicationFinding]
         return
     try:
         config = yaml.safe_load(config_path.read_text(encoding="utf-8")) or {}
-    except OSError, yaml.YAMLError:
+    except (OSError, yaml.YAMLError):
         return
     if not isinstance(config, dict):
         return

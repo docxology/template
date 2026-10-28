@@ -57,7 +57,7 @@ def stage_is_complete(stage: StageResult) -> bool:
         fields["status"] = StageStatus(fields["status"])
         fields["attempt_exit_codes"] = tuple(fields.get("attempt_exit_codes", ()))
         outcome = StageOutcome(**fields)
-    except TypeError, ValueError, KeyError:
+    except (TypeError, ValueError, KeyError):
         return False
     return (
         stage.status == outcome.status.value

@@ -198,7 +198,7 @@ def validate_renderer_stage_artifact(
     original_root_label: Path | None = None,
 ) -> None:
     """Fixed record DATA checks; actual ToolAPI authority is checked separately."""
-    from infrastructure.reporting.native_format_acceptance_validation import _file
+    from infrastructure.reporting.native_format_acceptance_evidence import _file
 
     if value.get("schema_version") == "template-source-native-mermaid-production-command-v1":
         from infrastructure.reporting.native_mermaid_production_tool import (
@@ -268,7 +268,7 @@ def retain_native_stage_artifact(
     tool_artifacts: Sequence[dict[str, str]],
 ) -> dict[str, str]:
     """Retain this Source renderer packet only after actual live ToolAPI checks."""
-    from infrastructure.reporting.native_format_acceptance_validation import _file
+    from infrastructure.reporting.native_format_acceptance_evidence import _file
 
     context = _CURRENT.get()
     if context is None:

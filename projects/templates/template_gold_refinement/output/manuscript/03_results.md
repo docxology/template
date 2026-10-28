@@ -260,7 +260,7 @@ The evidence-tier ladder in [@fig:evidence_tier_ladder] summarizes the evidence 
 
 The ladder complements the risk matrix by counting source tiers rather than
 plotting risks. When the shared evidence registry is available, the manuscript
-can report 959 source-tiered facts to the validation
+can report 956 source-tiered facts to the validation
 surface. When that registry is not available, the same figure falls back to the
 integrity model's configured tiers. Either way, the reader sees the evidentiary
 mix instead of receiving an undifferentiated assurance that evidence exists.
@@ -279,7 +279,7 @@ also which source tiers make their claims inspectable.
 
 | Source tier | Count | Role |
 |-------------|-------|------|
-| generated_metric | 723 | Numbers regenerated from project analysis |
+| generated_metric | 720 | Numbers regenerated from project analysis |
 | artifact | 117 | Generated artifacts exposed to readers |
 | configuration | 55 | Evidence source tier |
 | bibliography | 47 | Reference records and citation metadata |
@@ -317,7 +317,7 @@ The project-local claim-support assay reports 9 supported claims out of 9 total 
 
 ## Shared evidence registry summary
 
-When the template evidence gate has run, the shared registry supplies source-tiered facts used by the evidence validator. Current fact count available to this variable pass: 959.
+When the template evidence gate has run, the shared registry supplies source-tiered facts used by the evidence validator. Current fact count available to this variable pass: 956.
 
 | Fact kind | Count |
 |-----------|-------|
@@ -325,7 +325,7 @@ When the template evidence gate has run, the shared registry supplies source-tie
 | citation | 47 |
 | equation | 8 |
 | figure | 28 |
-| number | 786 |
+| number | 783 |
 | section | 10 |
 | table | 7 |
 : Shared evidence-registry fact kinds when available. {#tbl:shared_evidence_kinds}

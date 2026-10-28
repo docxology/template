@@ -125,7 +125,7 @@ def extract_workflow_nodes(paper: Paper, fulltext: str, config: LLMConfig) -> li
 
                 try:
                     raw_rating = int(item.get("reproducibility_rating", 1))
-                except TypeError, ValueError:
+                except (TypeError, ValueError):
                     raw_rating = 1
                 rating = min(4, max(1, raw_rating))
 

@@ -56,7 +56,7 @@ def _gitignored_top_level_dirs(root: Path) -> set[str]:
             text=True,
             check=False,
         )
-    except OSError, ValueError:
+    except (OSError, ValueError):
         return set()
     # Exit code 0 => some matched; 1 => none matched; 128 => not a git repo.
     if proc.returncode not in (0, 1):

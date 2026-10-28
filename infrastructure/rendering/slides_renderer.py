@@ -107,7 +107,7 @@ class SlidesRenderer:
                 text=True,
                 **subprocess_options(self.config.security(), 30),
             )
-        except OSError, subprocess.SubprocessError:
+        except (OSError, subprocess.SubprocessError):
             completed = None
         if completed is not None and getattr(completed, "returncode", None) == 0:
             stdout = getattr(completed, "stdout", "")
@@ -477,7 +477,7 @@ class SlidesRenderer:
                                 "issues": list(issues),
                             },
                         )
-                except OSError, RenderingError:
+                except (OSError, RenderingError):
                     output_file.unlink(missing_ok=True)
                     raise
             return output_file

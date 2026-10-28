@@ -67,7 +67,7 @@ def main(argv: list[str] | None = None) -> int:
                 for row in old_payload.get("entries", [])
                 if isinstance(row, dict) and isinstance(row.get("path"), str)
             }
-        except FileNotFoundError, OSError, json.JSONDecodeError, TypeError:
+        except (FileNotFoundError, OSError, json.JSONDecodeError, TypeError):
             pass
         if execute_render_pipeline(name, repo_root=root) != 0:
             print(f"FAIL {name} [RENDER_FAILED]: canonical Stage 3 render failed", file=sys.stderr)

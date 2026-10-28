@@ -334,7 +334,7 @@ def cached_paths(repo_root: Path, *, inherit_git_routing: bool = False) -> set[P
             timeout=30,
             env=env,
         )
-    except OSError, subprocess.TimeoutExpired:
+    except (OSError, subprocess.TimeoutExpired):
         return None
     if completed.returncode != 0:
         return None

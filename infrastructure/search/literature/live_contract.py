@@ -338,14 +338,14 @@ class LiveSession:
         try:
             verify_platform(self.platform_sources, self.environment, self.implementation)
             source_unchanged = source_manifest(self.root, active_source_root=self.active_source_root) == self.sources
-        except ValueError, LiteratureBlocked, OSError:
+        except (ValueError, LiteratureBlocked, OSError):
             source_unchanged = False
         try:
             artifact_manifest = source_file_manifest(
                 self.directory, frozenset(path.suffix for path in self.directory.rglob("*") if path.is_file())
             )
             custody_unchanged = all(artifact_manifest.get(key) == digest for key, digest in self.consumed.items())
-        except ValueError, OSError:
+        except (ValueError, OSError):
             artifact_manifest, custody_unchanged = {}, False
         if not source_unchanged or not custody_unchanged:
             status = "failed"

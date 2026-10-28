@@ -118,7 +118,7 @@ class RootCaseObserver(CollectionEvidence):
             if callable(value):
                 return self._origin(inspect.getsourcefile(inspect.unwrap(value)))
             return {"scope": "unresolved"}
-        except OSError, TypeError, ValueError:
+        except (OSError, TypeError, ValueError):
             return {"scope": "unresolved"}
 
     def pytest_runtest_logreport(self, report: pytest.TestReport) -> None:

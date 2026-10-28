@@ -59,7 +59,7 @@ def _corrupt_member_payload(path: Path, member: str) -> None:
     with zipfile.ZipFile(path) as archive:
         try:
             corrupt_member = archive.testzip()
-        except zipfile.BadZipFile, zlib.error:
+        except (zipfile.BadZipFile, zlib.error):
             return
     assert corrupt_member == member
 

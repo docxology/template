@@ -71,7 +71,7 @@
           "file_count": 1,
           "largest_file": "template_autopoiesis_combined.pdf",
           "largest_file_path": "pdf/template_autopoiesis_combined.pdf",
-          "size_mb": "0.54"
+          "size_mb": "0.63"
         },
         "reports": {
           "exists": true,
@@ -95,7 +95,7 @@
           "file_count": 12,
           "largest_file": "source-web-fonts.js",
           "largest_file_path": "web/assets/source-web-fonts.js",
-          "size_mb": "2.19"
+          "size_mb": "2.31"
         }
       },
       "file_counts": {
@@ -127,7 +127,7 @@
           "combined_pdf": {
             "exists": true,
             "readable": true,
-            "size_mb": 0.54
+            "size_mb": 0.63
           },
           "data": {
             "exists": true,
@@ -187,7 +187,7 @@
             "optional": false,
             "readable": true,
             "required": true,
-            "size_mb": 0.54
+            "size_mb": 0.63
           },
           "reports": {
             "exists": true,
@@ -217,7 +217,7 @@
             "optional": false,
             "readable": true,
             "required": true,
-            "size_mb": 2.19
+            "size_mb": 2.31
           }
         },
         "inventory_mode": "stable-shippable-output-v1",
@@ -227,16 +227,16 @@
         "valid": true,
         "warnings": []
       },
-      "total_size_mb": 3.2380847930908203
+      "total_size_mb": 3.4489898681640625
     },
     "figures": {
       "files": 13,
-      "size_mb": 0.36300182342529297
+      "size_mb": 0.36289501190185547
     },
     "inventory_mode": "stable-shippable-output-v1",
     "pdf": {
       "files": 1,
-      "size_mb": 0.5353431701660156
+      "size_mb": 0.6303043365478516
     },
     "stable_inventory": {
       "categories": {
@@ -250,7 +250,7 @@
         },
         "figures": {
           "files": 13,
-          "size_bytes": 380635
+          "size_bytes": 380523
         },
         "manuscript": {
           "files": 11,
@@ -258,7 +258,7 @@
         },
         "pdf": {
           "files": 1,
-          "size_bytes": 561348
+          "size_bytes": 660922
         },
         "reports": {
           "files": 3,
@@ -266,12 +266,12 @@
         },
         "web": {
           "files": 12,
-          "size_bytes": 2297780
+          "size_bytes": 2419468
         }
       },
       "mode": "stable-shippable-output-v1",
       "total_files": 122,
-      "total_size_bytes": 3395378
+      "total_size_bytes": 3616528
     }
   },
   "recommendations": [],
@@ -282,12 +282,12 @@
     "passed": 9,
     "total_checks": 9
   },
-  "timestamp": "2026-10-23T12:44:35Z",
+  "timestamp": "2026-10-28T22:22:30Z",
   "validated_inputs": {
     "artifact_manifest": {
       "path": "output/reports/artifact_manifest.json",
-      "sha256": "bbd70e2ee9287f6d438786f0624fada8ecd0e925ab04def0c09efe8463431aeb",
-      "size_bytes": 39048
+      "sha256": "f44d1b24ce9fca8599c114989599ba9905d89aa218c9188cda5830ad0649f629",
+      "size_bytes": 42098
     },
     "combined_manuscript": {
       "path": "output/web/_combined_manuscript.md",
@@ -352,19 +352,19 @@
     "fingerprints": {
       "config": {
         "file_count": 15,
-        "sha256": "9fd67b53aaf5b0d1ac118482daa96e3619ef710af77ee7f8c2cd56327e4c386c"
+        "sha256": "16d71b05a02d99b1b0d20c5e8001e50c5943330317f8a2576ac0a330a8658331"
       },
       "output": {
         "file_count": 122,
-        "sha256": "c53a3af71dd226fe008c43a5e9dd3a95f855d37bf5177fe4d0411bbe28c850f8"
+        "sha256": "12f874c6cbdf1e676d6c7effacfceb026b7fbe0b805aef91bc4e898c8e70656e"
       },
       "source": {
         "file_count": 63,
-        "sha256": "3171bb9c5dcd9d06c096703c9d772128bddcb1315c6e84dd556b023e7a06cf70"
+        "sha256": "b7f4ae17e8f509068a2d04944435164cd591698593e19f78b9e157aa66439ebe"
       },
       "stage": {
-        "file_count": 1913,
-        "sha256": "e2988e519a8e0538602cb07203bac913d60ec7188a513c0acb96888292bc2ab5"
+        "file_count": 1932,
+        "sha256": "65a9fb16b00fd871f132a269f9a29dbc32a858033f98908957f862950f0f9ad8"
       }
     },
     "project": "templates/template_autopoiesis",

@@ -100,7 +100,7 @@ def test_standalone_materialization_is_real_and_missing_platform_execution_block
         check=False,
     )
     assert result.returncode == 75, result.stderr
-    assert "platform 4.1.0" in result.stderr
+    assert "platform 4.3.0" in result.stderr
     receipt = json.loads((source_project / "output/.pipeline/child_realization/single.json").read_text())
     assert receipt["schema_version"] == "autopoiesis/selected-child-execution/2"
     assert receipt["status"] == "blocked" and receipt["executed_children"] == []

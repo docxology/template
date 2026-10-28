@@ -29,7 +29,7 @@ from infrastructure.rendering.combined_native_commands import (
 from infrastructure.rendering.manuscript_hydration_replay import (
     combine_held_manuscripts,
 )
-from infrastructure.reporting.native_format_acceptance_validation import _file
+from infrastructure.reporting.native_format_acceptance_evidence import _file
 from infrastructure.reporting.native_format_joint_source import require_native_operation
 from infrastructure.reporting.native_hydration_reconstruction import (
     observe_native_pdf_recomposition,

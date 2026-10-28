@@ -31,7 +31,7 @@ def _declared_verifier_sdk_imports(py_file: Path, project_root: Path) -> dict[st
         metadata = tomllib.loads((project_root / "pyproject.toml").read_text(encoding="utf-8"))
         version = metadata["tool"]["template"]["platform_version"]
         dependencies = metadata["project"]["optional-dependencies"]["dev"]
-    except OSError, KeyError, tomllib.TOMLDecodeError:
+    except (OSError, KeyError, tomllib.TOMLDecodeError):
         return {}
     if (
         not isinstance(version, str)

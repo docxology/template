@@ -124,7 +124,7 @@ def run_installed_acceptance(
                     work = [item for item in work if item[0] not in completed]
     try:
         current = source_fingerprint(root) == fingerprint
-    except OSError, ValueError:
+    except (OSError, ValueError):
         current = False
     gates = {}
     for scope in scopes:

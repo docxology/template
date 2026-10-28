@@ -34,7 +34,7 @@ def replay_stage_crossref_official_archive(
         _source_pin,
     )
     from infrastructure.reporting.native_crossref_replay import CrossrefFilterReaderOperation
-    from infrastructure.reporting.native_format_acceptance_validation import _file
+    from infrastructure.reporting.native_format_acceptance_evidence import _file
     from infrastructure.reporting.native_format_joint_source import require_native_operation
     from infrastructure.reporting.native_stage_child_custody import NativeStageChildReaderOperation
     from infrastructure.reporting.native_stage_loader_replay import require_current_stage_reader

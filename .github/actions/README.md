@@ -12,6 +12,12 @@ runner workspace after `actions/checkout` runs.
 | --- | --- |
 | [`setup-python-env/`](setup-python-env/action.yml) | Provision `uv` (with cache) + Python — the setup block shared by every Python CI job. |
 | [`setup-docs-lint/`](setup-docs-lint/action.yml) | Provision Node, Mermaid CLI, and Chrome for every blocking docs-lint caller. |
+| [`setup-actionlint/`](setup-actionlint/README.md) | One pin (release commit + version + installer SHA-256) and one checksum-verified `actionlint` run for both workflows. |
+| [`run-public-lint/`](run-public-lint/README.md) | Public-scope Ruff check/format and the type gate, run concurrently with separate logs and one aggregated result. |
+| [`run-tracked-guards/`](run-tracked-guards/README.md) | The three sequential tracked-tree guards (non-public resources, secrets, generated artifacts). |
+| [`run-safety-scan/`](run-safety-scan/README.md) | Bandit MEDIUM+ and the no-mocks policy gate, defined once for `ci.yml` and hardening. |
+| [`check-browser/`](check-browser/README.md) | Require the installed Google Chrome runtime and export `CHROME_EXECUTABLE_PATH`. |
+| [`setup-tex-toolchain/`](setup-tex-toolchain/README.md) | Cached `xelatex` + `bibtex` provisioning for the slow and rehearsal lanes. |
 | [`setup-ci-execution-user/`](setup-ci-execution-user/README.md) | Prepare the unprivileged Linux execution account before strict process observations and export original readiness bytes. |
 | [`setup-native-installed-readiness/`](setup-native-installed-readiness/README.md) | Prepare Source-locked native tools and cached inputs before the installed original/reader/handoff operation. |
 | [`upload-readiness-shards/`](upload-readiness-shards/README.md) | Check and upload exact bounded native/candidate transport or separately named failed diagnostics. |

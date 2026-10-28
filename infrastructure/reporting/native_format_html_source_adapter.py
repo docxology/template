@@ -9,7 +9,7 @@ from infrastructure.core.files.secure_write import atomic_write_bytes_confined
 from infrastructure.project.public_acceptance_evidence import write_json
 from infrastructure.reporting.native_format_acceptance_checks import native_tool_record
 from infrastructure.reporting.native_format_acceptance_contracts import NativeArtifact
-from infrastructure.reporting.native_format_acceptance_validation import _file, _tool
+from infrastructure.reporting.native_format_acceptance_evidence import _file, _tool
 from infrastructure.reporting.native_format_content_contracts import NativeContentContract, SemanticContentContract
 from infrastructure.reporting.native_format_current_pandoc import current_pandoc_reader
 from infrastructure.reporting.native_format_html_source_metadata import (

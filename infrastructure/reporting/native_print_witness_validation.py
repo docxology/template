@@ -13,7 +13,7 @@ from PIL import Image
 from infrastructure.project.native_format_library_custody import validate_native_library_custody
 from infrastructure.reporting.native_format_acceptance_checks import parse_native_bytes, _read_pdf_rasters
 from infrastructure.reporting.native_format_acceptance_contracts import native_deadline_guard
-from infrastructure.reporting.native_format_acceptance_validation import _file, _raster, _tool
+from infrastructure.reporting.native_format_acceptance_evidence import _file, _raster, _tool
 from infrastructure.reporting.native_format_portable_custody import validate_executable_observation
 from infrastructure.reporting.native_newspaper_source import NewspaperReference, _fonts, _glyphs, _texts
 from infrastructure.reporting.native_pdf_stream_bounds import preflight_pdf_streams

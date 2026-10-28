@@ -185,7 +185,7 @@ def _repair_xhtml_bytes(payload: bytes) -> bytes | None:
     try:
         safe_et.fromstring(payload)
         return None
-    except DefusedXmlException, safe_et.ParseError, UnicodeError:
+    except (DefusedXmlException, safe_et.ParseError, UnicodeError):
         pass
     return _repair_xhtml(payload.decode("utf-8", errors="replace")).encode("utf-8")
 

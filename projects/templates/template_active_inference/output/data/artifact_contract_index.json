@@ -2721,7 +2721,7 @@
       "sheaf_tracks": [],
       "source_exists": true,
       "source_hash_fresh": true,
-      "source_sha256": "ba2af9f61ff338571752d691024dbf34e2ca42bc66a3d14f3a400ecd1510d963",
+      "source_sha256": "c5314474e7a149e8edaeb53800148e04e4ea9793caf56062d943ad6c9a4a1721",
       "validation_gates": [
         "validate_manuscript",
         "validate_outputs"
@@ -2760,7 +2760,7 @@
       ],
       "source_exists": true,
       "source_hash_fresh": true,
-      "source_sha256": "b30da128afabf49fc8b3850e6c887fe2dab100b6314eb81768b034f464c165de",
+      "source_sha256": "e34b96915d6e83d288286e244dba4cd4419be515132e8a99cb62d4176f759ea3",
       "validation_gates": [
         "validate_manuscript",
         "validate_outputs"
@@ -2943,7 +2943,7 @@
       ],
       "source_exists": true,
       "source_hash_fresh": true,
-      "source_sha256": "7082a59ad4a0c14df5cbcda44d83ca5e511ea9c61f8366a4c5ae0f8e0b6bc373",
+      "source_sha256": "e1d689d57097172bdf181a7fd22d85ca4d23d9e470ba528c4daafa3b59183b32",
       "validation_gates": [
         "validate_manuscript",
         "validate_outputs"

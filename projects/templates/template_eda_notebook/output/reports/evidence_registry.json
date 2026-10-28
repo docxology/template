@@ -2174,7 +2174,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-10-07T08:21:38Z",
+      "checked_at": "2026-10-28T21:49:41Z",
       "kind": "number",
       "source": "pyproject.toml:$.project.requires-python",
       "source_field": "$.project.requires-python",
@@ -2182,11 +2182,11 @@
       "source_tier": "configuration",
       "stale": false,
       "tolerance": 0.0,
-      "value": "3.12"
+      "value": "3.14"
     },
     {
       "active": true,
-      "checked_at": "2026-10-07T08:21:38Z",
+      "checked_at": "2026-10-28T21:49:41Z",
       "kind": "number",
       "source": "pyproject.toml:$.project.requires-python (numeric variant)",
       "source_field": "$.project.requires-python",
@@ -2194,7 +2194,7 @@
       "source_tier": "configuration",
       "stale": false,
       "tolerance": 0.0,
-      "value": "0.0312"
+      "value": "0.0314"
     },
     {
       "active": true,

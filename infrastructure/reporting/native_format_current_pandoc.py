@@ -58,7 +58,7 @@ class CurrentPandocReader:
 
     def tool(self, name: str, arguments: list[str], purpose: str) -> dict[str, Any]:
         """Validate the actual fresh ToolAPI registration while its owner lives."""
-        from infrastructure.reporting.native_format_acceptance_validation import _tool
+        from infrastructure.reporting.native_format_acceptance_evidence import _tool
 
         self.verify()
         if name not in self.bodies:

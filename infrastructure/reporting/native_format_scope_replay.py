@@ -110,7 +110,8 @@ def replay_native_scope_evidence(
     from infrastructure.core.pipeline.native_analysis_current import replay_current_native_analysis
     from infrastructure.reporting.native_format_current_orchestration import current_native_analysis_scope
     from infrastructure.reporting.native_format_acceptance_contracts import NATIVE_SCHEMA
-    from infrastructure.reporting.native_format_acceptance_validation import _file, native_environment_for_replay
+    from infrastructure.reporting.native_format_acceptance_validation import native_environment_for_replay
+    from infrastructure.reporting.native_format_acceptance_evidence import _file
     from infrastructure.reporting.native_format_acceptance_contracts import validate_native_specification
     from infrastructure.reporting.native_office_full_worker_context import NativeOfficeReaderSelection
     from infrastructure.reporting.native_mermaid_runtime_selection import NativeMermaidSelection

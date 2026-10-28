@@ -386,7 +386,7 @@ def _restore(
             return False
         os.fsync(parent)
         return True
-    except OSError, ValueError:
+    except (OSError, ValueError):
         return False
     finally:
         if source >= 0:

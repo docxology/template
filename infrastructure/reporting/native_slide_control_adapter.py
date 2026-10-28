@@ -170,7 +170,7 @@ def replay_slide_source_controls(
 ) -> dict[str, Any]:
     """Authenticate each original child before fresh source/native readback."""
     from infrastructure.reporting.native_format_acceptance_checks import parse_native_bytes
-    from infrastructure.reporting.native_format_acceptance_validation import _file, _raster, _tool
+    from infrastructure.reporting.native_format_acceptance_evidence import _file, _raster, _tool
     from infrastructure.reporting.native_format_control_replay import _closure, _keys, _outcome
     from infrastructure.reporting.native_format_joint_source import require_native_operation
     from infrastructure.reporting.native_format_portable_custody import producer_path

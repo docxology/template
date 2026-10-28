@@ -1,0 +1,25 @@
+name: Setup actionlint
+description: >-
+  Download the pinned rhysd/actionlint installer with its verified SHA-256 and run
+  the pinned release, so both workflows share one pin and one verification.
+runs:
+  using: composite
+  steps:
+    - name: Run actionlint
+      shell: bash
+      env:
+        # rhysd/actionlint @ v1.7.12 — bump REF, VERSION, and SHA256 together on
+        # upgrade. The installer script is fetched from its immutable release
+        # commit and must match SHA256 before it executes.
+        ACTIONLINT_REF: 914e7df21a07ef503a81201c76d2b11c789d3fca
+        ACTIONLINT_VERSION: "1.7.12"
+        ACTIONLINT_SCRIPT_SHA256: 72fa3e45ac20f3c3a512d6747b4fcf719e21f890e8c43e78d48a41fdfb900c4e
+      run: |
+        set -euo pipefail
+        installer="$RUNNER_TEMP/download-actionlint.bash"
+        curl -fsSL \
+          "https://raw.githubusercontent.com/rhysd/actionlint/${ACTIONLINT_REF}/scripts/download-actionlint.bash" \
+          -o "$installer"
+        printf '%s  %s\n' "$ACTIONLINT_SCRIPT_SHA256" "$installer" | sha256sum --check --status
+        bash "$installer" "$ACTIONLINT_VERSION" "$RUNNER_TEMP"
+        "$RUNNER_TEMP/actionlint" -color

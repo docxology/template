@@ -18,7 +18,7 @@ from infrastructure.reporting.native_format_acceptance_contracts import (
     create_private_native_directory,
     native_artifact_contract,
 )
-from infrastructure.reporting.native_format_acceptance_validation import _file, _raster, _tool
+from infrastructure.reporting.native_format_acceptance_evidence import _file, _raster, _tool
 from infrastructure.reporting.native_format_content_contracts import semantic_content_contract_from_ast
 from infrastructure.reporting.native_format_current_pandoc import current_pandoc_reader
 from infrastructure.reporting.native_format_joint_source import require_native_operation

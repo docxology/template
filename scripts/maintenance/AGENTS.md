@@ -12,7 +12,7 @@ Operator and repository-maintenance orchestrators. **None of these run in the de
 | `show_project_info.py` | `infrastructure.project.info.collect_project_info`, `display_project_info` | Print metadata for a discovered project (standalone CLI; not invoked by the `run.sh` menu) |
 | `render_working_projects.py` | `infrastructure.project.working_render` | Render private-sidecar `working/` projects on demand |
 | `rerender_working_pdfs.py` | `infrastructure.project.working_render` | Re-render working-project PDFs with a PASS/PARTIAL/FAIL rubric |
-| `organize_executive_outputs.py` | `infrastructure.reporting.run_executive_output_organization` | Tidy multi-project executive report outputs |
+| `organize_executive_outputs.py` | `infrastructure.reporting.executive_outputs` | Tidy multi-project executive report outputs |
 | `merge_test_supplements.py` | `infrastructure.validation.test_supplements.merge_supplements` | Merge pytest supplement files into a canonical module |
 | `batch_cogsec_improve.py` | `infrastructure.core.source_improve` | Batch source-improvement orchestrator |
 | `setup_pre_commit.py` | (subprocess `pre-commit install`) | Install / refresh the pre-commit hook set |

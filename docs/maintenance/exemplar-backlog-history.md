@@ -1617,3 +1617,23 @@ statements, not fresh acceptance of the current source.
 ### template_sia
 
 > The typed approval contract and fork guidance are ready; obtain the required owner receipt and a real disposable fork before enabling `live_apply`, then attach the approval receipt.
+
+## Archived 2026-10-28 domain acceptance rows
+
+Four `P4-*-DOMAIN-1` rows left the exemplar backlogs after their own acceptance
+profile (full own suite, branch coverage at or above the project floor, plus any
+declared unpaid capability) ran green on the 4.3.0 tree. Each row's implementing
+surface and negative controls were already source-owned; this record preserves
+the run that discharged them. Dependent manuscript/portability rows stay open
+and no longer cite the retired identifiers.
+
+| Exemplar | Former row | Implementing surface | Acceptance evidence (2026-10-28) |
+| --- | --- | --- | --- |
+| `template_textbook` | `P4-TEXTBOOK-DOMAIN-1` | `src/textbook/audit.py` (`require_complete=True`, stub markers), `tests/test_audit.py`, `tests/test_manuscript_integrity.py` (completeness, figure alt text, executed labs/questions) | `pytest tests/ --cov=src --cov-branch --cov-fail-under=90`: 299 passed, 96.01% coverage |
+| `template_eda_notebook` | `P4-EDA-DOMAIN-1` | `src/template_eda_notebook/notebook_execution.py` (fresh selected-interpreter kernel, finite startup/cell/total deadlines), `eda/notebook_oracle.py`, `tests/test_notebook_execution.py` | `pytest tests/ --cov=src --cov-branch --cov-fail-under=90`: 132 passed, 91.01% coverage, including the declared `fresh-kernel` capability |
+| `template_autopoiesis` | `P4-AUTO-DOMAIN-1` | `tests/gates/test_realization_contract.py`, `tests/gates/test_generator_custody.py`, `tests/core/test_honesty.py`; `gates/child_execution.py`, `gates/sealing.py` | `pytest tests/ --cov=src --cov-branch --cov-fail-under=90`: 578 passed, 92.18% coverage, including the declared `child-execution` capability |
+| `template_registered_report` | `P4-REGISTERED-DOMAIN-1` | `src/registered_report/protocol.py`, `src/registered_report/demo_study.py`, `src/registered_report/figures.py`; `tests/test_protocol.py`, `tests/test_generate_review_artifacts_script.py` | `pytest tests/ --cov=src --cov-branch --cov-fail-under=90`: 86 passed, 1 skipped, 95.19% coverage |
+
+Projects without a `pytest-timeout` pin ran the same profile without
+`--timeout`; the acceptance filter `-m ""` and the coverage floor are
+unchanged.

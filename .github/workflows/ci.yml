@@ -34,20 +34,9 @@ jobs:
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
-      - name: Run actionlint
-        env:
-          # rhysd/actionlint @ v1.7.12 — bump REF and VERSION together on upgrade
-          ACTIONLINT_REF: 914e7df21a07ef503a81201c76d2b11c789d3fca
-          ACTIONLINT_VERSION: "1.7.12"
-        run: |
-          set -euo pipefail
-          curl -fsSL \
-            "https://raw.githubusercontent.com/rhysd/actionlint/${ACTIONLINT_REF}/scripts/download-actionlint.bash" \
-            -o "${RUNNER_TEMP}/download-actionlint.bash"
-          echo "72fa3e45ac20f3c3a512d6747b4fcf719e21f890e8c43e78d48a41fdfb900c4e  ${RUNNER_TEMP}/download-actionlint.bash" \
-            | sha256sum --check --status
-          bash "${RUNNER_TEMP}/download-actionlint.bash" "${ACTIONLINT_VERSION}" "${RUNNER_TEMP}"
-          "${RUNNER_TEMP}/actionlint" -color
+      # Single source of the ACTIONLINT_REF/VERSION/SHA256 pin and its
+      # checksum-verified installer run (shared with hardening.yml).
+      - uses: ./.github/actions/setup-actionlint
 
   lint:
     name: Lint & Type Check
@@ -57,30 +46,38 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: ./.github/actions/setup-python-env
       - run: uv sync --locked
-      - name: Check public source
-        run: |
-          set -euo pipefail
-          PUBLIC_CI_PATHS=$(uv run python -m infrastructure.project.public_scope ci-paths)
-          PUBLIC_CI_LINT_ROW=${PUBLIC_CI_PATHS%%$'\n'*}
-          PUBLIC_CI_SOURCE_ROW=${PUBLIC_CI_PATHS#*$'\n'}
-          [[ "$PUBLIC_CI_LINT_ROW" == lint_paths=* && "$PUBLIC_CI_SOURCE_ROW" == source_paths=* ]]
-          read -r -a PUBLIC_CI_LINT_PATHS <<<"${PUBLIC_CI_LINT_ROW#lint_paths=}"
-          read -r -a PUBLIC_CI_SOURCE_PATHS <<<"${PUBLIC_CI_SOURCE_ROW#source_paths=}"
-          [[ ${#PUBLIC_CI_LINT_PATHS[@]} -gt 0 && ${#PUBLIC_CI_SOURCE_PATHS[@]} -gt 0 ]]
-          uv run ruff check "${PUBLIC_CI_LINT_PATHS[@]}"
-          uv run ruff format --check "${PUBLIC_CI_LINT_PATHS[@]}"
-          uv run mypy "${PUBLIC_CI_SOURCE_PATHS[@]}"
+
+      # One step, three concurrent gates: the public Ruff/type gates and the
+      # safety scan launch together, each with its own log, and the step fails
+      # when any of them failed. Previously these ran serially (~151s measured).
+      # The public-source scope producer still runs first and sequentially; the
+      # tracked-tree guards below stay serial and blocking.
+      - name: Check public source, types, and unsafe code
+        uses: ./.github/actions/run-public-lint
+        with:
+          safety-scan: "true"
+
       - name: Guard public data and secrets
+        uses: ./.github/actions/run-tracked-guards
+
+      # Per-exemplar configuration and SDK binding: unknown config blocks, a
+      # missing/incorrect platform pin and a stale generated publication copy.
+      - name: Exemplar configuration contract
+        run: uv run python scripts/audit/check_exemplar_configs.py
+
+      # Root tag/notes/artwork identity plus each exemplar's intended-versus-
+      # published version agreement across pyproject, CITATION, codemeta and
+      # .zenodo.json. On a tag push the tag must equal the declared version.
+      - name: Release version identity
+        env:
+          RELEASE_TAG: ${{ github.ref_type == 'tag' && github.ref_name || '' }}
         run: |
           set -euo pipefail
-          uv run python scripts/audit/check_tracked_all.py
-          uv run python scripts/audit/check_tracked_secrets.py
-          uv run python scripts/audit/check_tracked_generated_artifacts.py
-      - name: Check unsafe code and test replacement
-        run: |
-          set -euo pipefail
-          uv run bandit -c bandit.yaml -r infrastructure scripts projects -ll
-          uv run python scripts/audit/verify_no_mocks.py
+          if [[ -n "$RELEASE_TAG" ]]; then
+            uv run python scripts/audit/check_release_versions.py --tag "$RELEASE_TAG"
+          else
+            uv run python scripts/audit/check_release_versions.py
+          fi
 
   detect-projects:
     name: Public functional test selection
@@ -151,13 +148,7 @@ jobs:
           kpsewhich article.cls
           kpsewhich pzdr.tfm
       - name: Select the installed browser for actual native controls
-        run: |
-          set -euo pipefail
-          chrome=/opt/google/chrome/chrome
-          test -f "$chrome" && test -x "$chrome" && test ! -L "$chrome"
-          test -f /opt/google/chrome/resources.pak
-          "$chrome" --version
-          echo "CHROME_EXECUTABLE_PATH=$chrome" >> "$GITHUB_ENV"
+        uses: ./.github/actions/check-browser
       - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
         with:
           name: functional-selection
@@ -190,7 +181,12 @@ jobs:
     timeout-minutes: 120
     strategy:
       fail-fast: false
-      max-parallel: 3
+      # One complete module per lane. Hosted timings for the 27 contract modules
+      # give an LPT makespan of 2626s at 3 lanes, 1337s at 6, and 1031s at 8 —
+      # 8 is the point where the schedule stops improving because the slowest
+      # module (tests/infra_tests/project/test_root_case_lanes.py, 1031s) sets
+      # the floor. The 120-minute job budget is unchanged.
+      max-parallel: 8
       matrix: ${{ fromJSON(needs.detect-projects.outputs.contracts) }}
     steps:
       - name: Explicit no changed deep contract module
@@ -228,13 +224,7 @@ jobs:
           for tool in xdvipdfmx pdffonts pdftotext pdftoppm; do command -v "$tool"; done
       - name: Select the installed browser for the selected native consumer
         if: matrix.browser
-        run: |
-          set -euo pipefail
-          chrome=/opt/google/chrome/chrome
-          test -f "$chrome" && test -x "$chrome" && test ! -L "$chrome"
-          test -f /opt/google/chrome/resources.pak
-          "$chrome" --version
-          echo "CHROME_EXECUTABLE_PATH=$chrome" >> "$GITHUB_ENV"
+        uses: ./.github/actions/check-browser
       - name: Prepare hash-required offline cache for the installed credential contract
         if: matrix.module == 'tests/infra_tests/reporting/test_native_hosted_credentials.py'
         timeout-minutes: 10

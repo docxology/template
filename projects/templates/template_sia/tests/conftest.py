@@ -36,8 +36,8 @@ def _select_platform_sdk() -> None:
         verify_sdk_origins()
         sdk = importlib.import_module("infrastructure")
         verify_sdk_origins()
-        if getattr(sdk, "__version__", None) != "4.1.0":
-            raise ImportError("tests require the declared platform 4.1.0 SDK")
+        if getattr(sdk, "__version__", None) != "4.3.0":
+            raise ImportError("tests require the declared platform 4.3.0 SDK")
     finally:
         sys.path[:] = original
 

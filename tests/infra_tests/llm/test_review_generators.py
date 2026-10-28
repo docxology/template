@@ -357,7 +357,7 @@ class TestGenerateReviewWithMetricsRetry:
         def stateful_handler(request):
             try:
                 data = json.loads(request.get_data())
-            except ValueError, TypeError:
+            except (ValueError, TypeError):
                 data = {}
             call_count[0] += 1
             model = data.get("model", "gemma3:4b")
@@ -408,7 +408,7 @@ class TestGenerateReviewWithMetricsRetry:
         def counter_handler(request):
             try:
                 data = json.loads(request.get_data())
-            except ValueError, TypeError:
+            except (ValueError, TypeError):
                 data = {}
             call_count[0] += 1
             model = data.get("model", "gemma3:4b")
@@ -463,7 +463,7 @@ class TestWarmupModelOffline:
         def chat_handler(request):
             try:
                 data = json.loads(request.get_data())
-            except ValueError, TypeError:
+            except (ValueError, TypeError):
                 data = {}
             model = data.get("model", "gemma3:4b")
             content = "The main topic is machine learning."

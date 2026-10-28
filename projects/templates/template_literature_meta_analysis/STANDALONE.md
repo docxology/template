@@ -97,7 +97,7 @@ requirements. Replace the wheel path with the actual reviewed artifact:
 ```bash
 python3.14 -m venv .venv
 . .venv/bin/activate
-python -m pip install /absolute/path/to/research_project_template-4.1.0-py3-none-any.whl
+python -m pip install /absolute/path/to/research_project_template-4.3.0-py3-none-any.whl
 python -m pip install '.[dev]'
 python -I -m pytest tests/ --cov=src --cov-fail-under=90
 ```

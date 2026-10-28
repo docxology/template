@@ -96,8 +96,16 @@ jobs:
 
       - name: Verify pristine published public exemplars
         run: >-
-          uv run --no-sync --offline python -m infrastructure.validation.cli publication-audit
-          --repo-root "$GITHUB_WORKSPACE" --all-public --strict --rendered --format json
+          uv run --no-sync --offline python scripts/audit/check_publication_outputs.py
+          --repo-root "$GITHUB_WORKSPACE" --all-public --strict --jobs 4
+          --receipts "$RUNNER_TEMP/publication-receipts"
+      - name: Retain publication gate receipts
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: publication-gate-receipts
+          path: ${{ runner.temp }}/publication-receipts/
+          if-no-files-found: error
 
       - name: Require explicit root 4+ acceptance handoff
         id: acceptance

@@ -209,7 +209,7 @@ class TestDiscoverInfrastructureModulesImportError:
                 # If __all__ exists, public_symbols came from it (line 147).
                 if all_sym is not None:
                     assert m.public_symbols == list(all_sym), f"infrastructure.{m.name}: public_symbols mismatch"
-            except ImportError, AttributeError, OSError:
+            except (ImportError, AttributeError, OSError):
                 pass  # Import failures are handled by the except branch
 
 

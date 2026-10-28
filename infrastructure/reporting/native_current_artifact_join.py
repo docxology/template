@@ -24,7 +24,8 @@ from infrastructure.reporting.native_format_acceptance_contracts import (
     native_artifact_contract,
     validate_native_specification,
 )
-from infrastructure.reporting.native_format_acceptance_validation import _file, native_environment_for_replay
+from infrastructure.reporting.native_format_acceptance_validation import native_environment_for_replay
+from infrastructure.reporting.native_format_acceptance_evidence import _file
 from infrastructure.reporting.native_format_joint_source import require_native_operation
 from infrastructure.reporting.native_format_observer_dispatch import observe_native_artifact
 from infrastructure.reporting.native_format_observer_outcome import native_observer_outcome

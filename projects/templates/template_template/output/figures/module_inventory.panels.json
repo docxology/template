@@ -3,39 +3,39 @@
   "panels": [
     {
       "src": "../output/figures/module_inventory_panel_01.png",
-      "alt": "Infrastructure inventory, largest first: reporting: 409 Python files, [ARS\u00b7]; core: 199 Python files, [ARS\u00b7]; rendering: 121 Python files, [ARS\u00b7]; project: 111 Python files, [ARS\u00b7]; validation: 85 Python files, [ARS\u00b7]; publishing: 83 Python files, [ARS\u00b7]",
-      "sha256": "eaee2d47a224c9f6f9a18dba2e8f07a1c43cabb03b9e421d54eabd7f1011e8c8",
-      "minimum_label_px": 92.0
+      "alt": "Infrastructure inventory, largest first: reporting: 412 Python files, [ARS\u00b7]; core: 201 Python files, [ARS\u00b7]; rendering: 121 Python files, [ARS\u00b7]; project: 116 Python files, [ARS\u00b7]; validation: 86 Python files, [ARS\u00b7]; publishing: 85 Python files, [ARS\u00b7]",
+      "sha256": "286c3550f156173368c20cbd6b5b0e1fee3abf84580a32ed97ccfcbbcd275069",
+      "minimum_label_px": 94.44444444444434
     },
     {
       "src": "../output/figures/module_inventory_panel_02.png",
       "alt": "Infrastructure inventory, largest first: search: 77 Python files, [ARS\u00b7]; llm: 57 Python files, [ARS\u00b7]; documentation: 23 Python files, [ARS\u00b7]; reference: 16 Python files, [ARS\u00b7]; doctor: 14 Python files, [ARS\u00b7]; orchestration: 14 Python files, [ARS\u00b7]",
-      "sha256": "108a589ebb55af2365a1ac289852e68aac60d939c1b7c0fc063b1dc74c834833",
-      "minimum_label_px": 92.0
+      "sha256": "a58dce1c77b49cb14a2d177de5984648a9e5071692a810974311314dc41e891d",
+      "minimum_label_px": 94.44444444444434
     },
     {
       "src": "../output/figures/module_inventory_panel_03.png",
       "alt": "Infrastructure inventory, largest first: steganography: 13 Python files, [ARS\u00b7]; autoresearch: 11 Python files, [ARS\u00b7]; methods: 10 Python files, [ARS\u00b7]; sia: 10 Python files, [ARS\u00b7]; prose: 9 Python files, [ARS\u00b7]; provenance: 9 Python files, [ARS\u00b7]",
-      "sha256": "c6ca70cc91e42794ef8f01849ee86cd11c08e38326ea5a085671a2eadb2ce742",
-      "minimum_label_px": 92.0
+      "sha256": "481283c79a6afc9d22ffa5cbf36b6c1461b3f49c393583699b8244f3ab7e6546",
+      "minimum_label_px": 94.44444444444434
     },
     {
       "src": "../output/figures/module_inventory_panel_04.png",
       "alt": "Infrastructure inventory, largest first: skills: 8 Python files, [ARS\u00b7]; fonds: 6 Python files, [ARS\u00b7]; rules: 6 Python files, [ARS\u00b7]; tools: 6 Python files, [ARS\u00b7]; transmission: 6 Python files, [ARS\u00b7]; formal_contracts: 5 Python files, [ARS\u00b7]",
-      "sha256": "ffcc6ce38f6fbcf18725438ac83efeaeae2ea0787a1f203b2953540b491d2ac4",
-      "minimum_label_px": 92.0
+      "sha256": "ebda91cbca48080447bc34442b7d5b866a3a07da6fd217f74edf79f9ff7ac76a",
+      "minimum_label_px": 94.44444444444434
     },
     {
       "src": "../output/figures/module_inventory_panel_05.png",
       "alt": "Infrastructure inventory, largest first: benchmark: 4 Python files, [ARS\u00b7]; scientific: 4 Python files, [ARS\u00b7]; metadata: 3 Python files, [ARS\u00b7]; research: 3 Python files, [ARS\u00b7]; config: 0 Python files, [ARS\u00b7]; docker: 0 Python files, [ARS\u00b7]",
-      "sha256": "fcdf345ecb47a60f51ab547e0043334f4f1c9d5f16553749f7c4d7b96092edea",
-      "minimum_label_px": 92.0
+      "sha256": "5a3ce74364ae44bc30fa02119f1cd5f5055596441a1fb6353338cdfeb47164f5",
+      "minimum_label_px": 94.44444444444434
     },
     {
       "src": "../output/figures/module_inventory_panel_06.png",
       "alt": "Infrastructure inventory, largest first: logrotate.d: 0 Python files, [AR\u00b7\u00b7]",
-      "sha256": "584af8d12bd40d3e9abc2160e2f72663a0f064dddb4eed74d8fe10ea3198afd1",
-      "minimum_label_px": 92.0
+      "sha256": "422700ba66bddf63e128c43740d280a9f7776b97088ba19900237558add6116a",
+      "minimum_label_px": 94.44444444444434
     }
   ]
 }

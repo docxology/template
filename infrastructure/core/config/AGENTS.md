@@ -24,6 +24,19 @@ validation globally:
   registered keys.
 - `clear_project_schema_extensions()` — test-fixture helper.
 
+The preferred route for a fork or exemplar is declarative and needs no Layer 1
+edit: list the blocks a project owns in its own `pyproject.toml` and the loader
+accepts them.
+
+```toml
+[tool.template]
+config_keys = ["madlib"]   # extra top-level `manuscript/config.yaml` blocks
+```
+
+`infrastructure.core.project_pyproject` reads that declaration (and reports a
+malformed one through `declared_config_keys_error`), so the loader no longer
+names exemplars.
+
 `loader.validate_config_keys` and `loader.load_config` accept an
 optional `project_name=` argument; the loader also infers the name
 from a standard `…/projects/<name>/manuscript/config.yaml` path.
