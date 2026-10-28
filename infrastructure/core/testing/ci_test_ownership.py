@@ -158,6 +158,7 @@ SOURCE_TEST_OWNERS: dict[str, tuple[str, ...]] = {
         "tests/infra_tests/core/test_execution_contract.py",
         "tests/infra_tests/core/test_project_test_measurement.py",
         "tests/infra_tests/project/test_public_acceptance_auxiliary_parallel.py",
+        "tests/infra_tests/project/test_public_reference_tree_policy.py",
         "tests/infra_tests/reporting/test_native_analysis_semantic_compare.py",
         "tests/infra_tests/reporting/test_native_hosted_credentials.py",
         "tests/infra_tests/reporting/test_native_oracle_axis_facts.py",

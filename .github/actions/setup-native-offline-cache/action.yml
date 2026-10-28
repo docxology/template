@@ -24,7 +24,7 @@ runs:
           requirements=$(mktemp "$RUNNER_TEMP/native-requirements.XXXXXX")
           environment=$(mktemp -d "$RUNNER_TEMP/native-dependency-cache.XXXXXX")
           if [ "$scope" = root ]; then
-            uv export --directory "$metadata" --locked --group public-exemplars --group rendering --group rendering-pptx --no-emit-package desloppify --group installed-build --no-emit-project --no-emit-local --no-header --no-annotate --output-file "$requirements"
+            uv export --directory "$metadata" --locked --group public-exemplars --group active-inference --group rendering --group rendering-pptx --no-emit-package desloppify --group installed-build --no-emit-project --no-emit-local --no-header --no-annotate --output-file "$requirements"
           else
             uv export --directory "$metadata" --locked --no-default-groups --no-emit-project --no-emit-local --no-header --no-annotate --output-file "$requirements"
           fi

@@ -118,7 +118,9 @@ jobs:
     timeout-minutes: 10
     strategy:
       fail-fast: false
-      max-parallel: 8
+      # Independent hosted shards can fill available runner slots without
+      # changing their selections, per-job budgets, or artifact contracts.
+      max-parallel: 16
       matrix: ${{ fromJSON(needs.detect-projects.outputs.infra) }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1

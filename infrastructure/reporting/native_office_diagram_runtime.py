@@ -317,40 +317,42 @@ def admit_pdfium_runtimes(
     if prefix is None or not isinstance(registry, types.MappingProxyType) or registry.get("prefix") != str(prefix):
         raise ValueError("PDFium batch needs the launcher's real fresh preimport audit")
     preparation_progress("pdfium-runtimes", "source-opening", deadline)
-    source.verify_correspondence(source.reference, source.bindings.current_root, source.current_source_reader, deadline)
-    lock = source.current_source_reader.read("uv.lock").content
-    pending = []
-    for scope, selection in selections:
-        preparation_progress("pdfium-runtimes", "selection", deadline, scope)
-        site, wheel = selection.site.absolute(), selection.wheel.absolute()
-        if any(
-            not any((site / name).is_relative_to(Path(root)) for root in registry["source_roots"]) for name in PROVIDERS
-        ):
-            raise ValueError("PDFium batch providers are outside the original preimport audit roots")
-        raw, identity = _file(wheel, deadline)
-        members, declared = inspect_pdfium_locked_wheel(wheel.name, raw, lock, deadline=deadline)
-        observation = {"path": str(wheel), **declared, "identity": identity}
-        before, interpreter, image = _pdfium_batch_runtime_observation(site, members, prefix, deadline)
-        if before["selection"]["version"] != observation["version"]:
-            raise ValueError("PDFium selected installed version differs from Source-nominated wheel")
-        pending.append((scope, site, wheel, members, observation, before, interpreter, image))
-    preparation_progress("pdfium-runtimes", "source-closing", deadline)
-    source.verify_correspondence(source.reference, source.bindings.current_root, source.current_source_reader, deadline)
-    for scope, site, wheel, members, observation, before, interpreter, image in pending:
-        preparation_progress("pdfium-runtimes", "selection-closing", deadline, scope)
-        raw, identity = _file(wheel, deadline)
-        if (
-            _sha(raw) != observation["sha256"]
-            or identity != observation["identity"]
-            or _pdfium_batch_runtime_observation(site, members, prefix, deadline) != (before, interpreter, image)
-        ):
-            raise ValueError("PDFium batch wheel/provider/interpreter/audit/image custody changed")
-    if os.getpid() != owner_pid or any(
-        name == package or name.startswith(package + ".") for name in sys.modules for package in PROVIDERS
+    # One lexical guard brackets this fixed synchronous DATA batch.
+    # No result/capability escapes before its complete closing checks.
+    with source._correspondence_guard(
+        source.reference, source.bindings.current_root, source.current_source_reader, deadline
     ):
-        raise ValueError("PDFium batch lost its original PID or preimport namespace absence")
-    preparation_progress("pdfium-runtimes", "source-closing", deadline)
-    source.verify_correspondence(source.reference, source.bindings.current_root, source.current_source_reader, deadline)
+        lock = source.current_source_reader.read("uv.lock").content
+        pending = []
+        for scope, selection in selections:
+            preparation_progress("pdfium-runtimes", "selection", deadline, scope)
+            site, wheel = selection.site.absolute(), selection.wheel.absolute()
+            if any(
+                not any((site / name).is_relative_to(Path(root)) for root in registry["source_roots"])
+                for name in PROVIDERS
+            ):
+                raise ValueError("PDFium batch providers are outside the original preimport audit roots")
+            raw, identity = _file(wheel, deadline)
+            members, declared = inspect_pdfium_locked_wheel(wheel.name, raw, lock, deadline=deadline)
+            observation = {"path": str(wheel), **declared, "identity": identity}
+            before, interpreter, image = _pdfium_batch_runtime_observation(site, members, prefix, deadline)
+            if before["selection"]["version"] != observation["version"]:
+                raise ValueError("PDFium selected installed version differs from Source-nominated wheel")
+            pending.append((scope, site, wheel, members, observation, before, interpreter, image))
+        for scope, site, wheel, members, observation, before, interpreter, image in pending:
+            preparation_progress("pdfium-runtimes", "selection-closing", deadline, scope)
+            raw, identity = _file(wheel, deadline)
+            if (
+                _sha(raw) != observation["sha256"]
+                or identity != observation["identity"]
+                or _pdfium_batch_runtime_observation(site, members, prefix, deadline) != (before, interpreter, image)
+            ):
+                raise ValueError("PDFium batch wheel/provider/interpreter/audit/image custody changed")
+        if os.getpid() != owner_pid or any(
+            name == package or name.startswith(package + ".") for name in sys.modules for package in PROVIDERS
+        ):
+            raise ValueError("PDFium batch lost its original PID or preimport namespace absence")
+        preparation_progress("pdfium-runtimes", "source-closing", deadline)
     if os.getpid() != owner_pid or any(
         name == package or name.startswith(package + ".") for name in sys.modules for package in PROVIDERS
     ):

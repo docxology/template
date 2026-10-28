@@ -21,6 +21,7 @@ from infrastructure.project.public_acceptance_cases import project_python_hashes
 from infrastructure.project.public_acceptance_evidence import bootstrap_command, cell_environment, write_json
 from infrastructure.project.public_acceptance_root import run_root_acceptance
 from infrastructure.project.public_acceptance_scope import RuntimeScope
+from infrastructure.project.public_capabilities import CANONICAL_CI_PYTHON_VERSIONS
 from infrastructure.reporting.readiness_receipts import source_fingerprint
 from infrastructure.reporting.release_readiness_profile import required_profile
 from infrastructure.reporting.release_readiness_snapshot import SnapshotReader
@@ -28,6 +29,8 @@ from infrastructure.reporting.release_readiness_validators import validate_accep
 from tests.infra_tests.reporting.test_required_readiness import _declarations
 
 pytestmark = pytest.mark.timeout(240)
+
+_RUNTIME_COUNT = len(CANONICAL_CI_PYTHON_VERSIONS)
 
 _TEST = """import importlib.util
 from pathlib import Path
@@ -274,12 +277,13 @@ def test_root_producer_blocks_missing_policy_without_test_or_probe_execution(tmp
     minor = f"{sys.version_info.major}.{sys.version_info.minor}"
     result = run_root_acceptance(root, {minor: selected})
     assert result["exit_code"] == 75
-    assert result["root_matrix"]["counts"] == {"pass": 0, "fail": 0, "blocked": 3, "unknown": 0}
+    assert result["root_matrix"]["counts"] == {"pass": 0, "fail": 0, "blocked": _RUNTIME_COUNT, "unknown": 0}
     assert result["root_matrix"]["source_current"] is True
     assert not marker.exists() and not probe_marker.exists()
     assert source_fingerprint(root) == fingerprint
     receipt = json.loads((root / result["receipt"]["path"]).read_text())
-    assert set(receipt["gates"]) == {"root:runtime:3.12", "root:runtime:3.13", "root:runtime:3.14", "root:coverage"}
+    expected_gates = {f"root:runtime:{runtime}" for runtime in CANONICAL_CI_PYTHON_VERSIONS}
+    assert set(receipt["gates"]) == expected_gates | {"root:coverage"}
     diagnostic = "ROOT-ACCEPTANCE-CASE-POLICY-1: reviewed root offline case policy is missing"
     for gate, entry in receipt["gates"].items():
         assert entry["status"] == "blocked"
@@ -342,7 +346,7 @@ def test_actual_negative_probe_preserves_original_outcome_in_root_and_public_agg
     with pytest.raises(ProcessLookupError):
         os.kill(pid, 0)
     matrix = result["root_matrix" if producer == "root" else "matrix"]
-    assert matrix["counts"] == {"pass": 0, "fail": 1, "blocked": 2, "unknown": 0}
+    assert matrix["counts"] == {"pass": 0, "fail": 1, "blocked": _RUNTIME_COUNT - 1, "unknown": 0}
     failed = next(row for row in matrix["results"] if row["status"] == "fail")
     assert failed["execution_exit_code"] == code
     assert failed["timed_out"] is (fault == "supervised-timeout")
@@ -373,7 +377,7 @@ def test_missing_selected_interpreters_remain_blocked_without_invented_child_exi
     )
     assert result["exit_code"] == 75
     matrix = result["root_matrix" if producer == "root" else "matrix"]
-    assert matrix["counts"] == {"pass": 0, "fail": 0, "blocked": 3, "unknown": 0}
+    assert matrix["counts"] == {"pass": 0, "fail": 0, "blocked": _RUNTIME_COUNT, "unknown": 0}
     assert all("execution_exit_code" not in row and "timed_out" not in row for row in matrix["results"])
     receipt = json.loads((root / result["receipt"]["path"]).read_text())
     for entry in receipt["gates"].values():
@@ -447,7 +451,7 @@ def test_complete_offline_declaration_cannot_admit_known_opt_in_cases(tmp_path: 
     )
     result = run_root_acceptance(root, {})
     assert result["exit_code"] == 75
-    assert result["root_matrix"]["counts"]["blocked"] == 3
+    assert result["root_matrix"]["counts"]["blocked"] == _RUNTIME_COUNT
     assert not marker.exists()
 
 

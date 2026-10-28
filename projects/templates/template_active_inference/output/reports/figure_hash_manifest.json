@@ -4,116 +4,116 @@
   "figure_count": 26,
   "rows": [
     {
-      "content_sha256": "1929464dea995442eecf64e962eaa25c605c7d74104e0aa95a0bb4f1db3ebe29",
+      "content_sha256": "147a3a374f4fb72fb7a3c39f05454cb7a86b3cdba434861ba8f3547892dd4f3b",
       "fresh": true,
       "path": "output/figures/artifact_contract_map.png",
-      "sha256": "046a95389e857d347a97857d816b47543e90ef10ddd1a9bd600d5b5111fcfc98",
-      "size_bytes": 472268
+      "sha256": "c898717bd671afc786cb5c74d349aceb3e00b3256b761d0b08b18a95c2c0e50e",
+      "size_bytes": 380905
     },
     {
-      "content_sha256": "77eb6e6def936a27a5df4da764eb538fdfdfed8587291f64f8417dfd8cd2a95e",
+      "content_sha256": "ac408ad308ca933cf52a73e6588df1523b70c807043af4b6f106f57e152547f4",
       "fresh": true,
       "path": "output/figures/causal_ablation_heatmap.png",
-      "sha256": "a5663681bd02fb704a1155fd2f5abfc6c6f3862fa031d8c17936118808635740",
-      "size_bytes": 57015
+      "sha256": "8da94fcf550d1c688825c4c2c6f518a2d7eb63da90602cdb384a578189faa92a",
+      "size_bytes": 57471
     },
     {
-      "content_sha256": "c940027ee1b8ed421fec00f795d632bc5ea8f30e6708045a814678331847473f",
+      "content_sha256": "a750d5746d3226cf29886c10036cf1978adebd4781f561b13f64f4e5851d09b1",
       "fresh": true,
       "path": "output/figures/cue_tmaze_advantage.png",
-      "sha256": "2aee915d1e2dcecb63006943091d67b5b271406684af0e3e8186d64fb134d496",
-      "size_bytes": 43094
+      "sha256": "09ad0ee4a18afbb1e389447c6eee64c6d278cca91d5d476a246acf5d585ba714",
+      "size_bytes": 48486
     },
     {
-      "content_sha256": "e898f6050a9d0385ea64c1a87dc926268bd1a6b3446ebd0dd8349ef500815e17",
+      "content_sha256": "16c27faf0fb4ba4d71ceb0bda1fcad03f1ee5eb7fe1e730785bc2c2bc5439ee8",
       "fresh": true,
       "path": "output/figures/dirichlet_convergence.png",
-      "sha256": "2c843351030dd467baa9783d65b004a4d60cc8ed44801c129b0b22037ce86eab",
-      "size_bytes": 65481
+      "sha256": "84a1198b76845767810eba40ab65c1ec1d2aa023c5c85b14095a1a0845d9f80a",
+      "size_bytes": 64821
     },
     {
-      "content_sha256": "acd83b0cdff17a9e8b2e987f40ee68d39aea5aaefd6d894db20471b2983412d3",
+      "content_sha256": "57270748c348d39019371c5237cf29aed0a30485b31f38e2a8f8585e43340f8a",
       "fresh": true,
       "path": "output/figures/efe_decomposition.png",
-      "sha256": "1059380851d052fcfeda0d196ed4b8c34608ed871372a5939a6929226fe65218",
-      "size_bytes": 70138
+      "sha256": "a8811abd5d28de7c0648541669e26d6e6e1c6217ebc805fe4dc037bddc6b1c85",
+      "size_bytes": 83198
     },
     {
-      "content_sha256": "7a8800a9309a3711b15134c1d8c4d0d9546f2f09e1847b265d023d6936b457a4",
+      "content_sha256": "2f09d94ca385b07e426c7a5f5077b30d70d74485a405c1263ce11100c3aa37f7",
       "fresh": true,
       "path": "output/figures/free_energy_curve.png",
-      "sha256": "c1e3a03818fff7193d19e5da4ad48e387e2bc939acf1dc184744ce30fd87938d",
-      "size_bytes": 43115
+      "sha256": "66e1c40cb4870643736b63bd4ee105a0454789b94c759e37d057572e8e3a48a3",
+      "size_bytes": 41219
     },
     {
-      "content_sha256": "1405fb6965b212ea147898705d787704db540d77e6282d437cf5be53d87c37d0",
+      "content_sha256": "a0b24f9900993f1f91bee1868d742fb3583d6dcd5cca39f9dfe46db93127700e",
       "fresh": true,
       "path": "output/figures/gnn_ontology_concordance.png",
-      "sha256": "2743175db326688431bf66bd969fc1cf2ae53462e1330adb334ae6b5f2b102f9",
-      "size_bytes": 77358
+      "sha256": "ab2817c3476bb176d3495edde0937ac8d8d3a4a077e48cfe79007852c1ae9ba5",
+      "size_bytes": 84486
     },
     {
-      "content_sha256": "496004d8408df309150058b31ad6ceedfc4df9ef1a9ac1511c2c777ab5030a4b",
+      "content_sha256": "f76396399f6edea22dc47aa3eeab332fbbb52e5b01f19a9ef83af8ba5a3bd029",
       "fresh": true,
       "path": "output/figures/invariant_dashboard.png",
-      "sha256": "502a6b700507e77923b25907173c5b826a26b3b6e691051ed8ae33782eda6691",
-      "size_bytes": 119451
+      "sha256": "a6ba7264f0381d5d023ec5e8b72dc1536a02a0b77511dece475a18fce8000515",
+      "size_bytes": 97434
     },
     {
-      "content_sha256": "3d17bf2a6757630da27929b3f5cbf95dee29123616cbd3b426d23ba73f9af7ae",
+      "content_sha256": "e5330617f6b15a5dae4405e380dc0895ff1a73afd44145bbd74141324e463e23",
       "fresh": true,
       "path": "output/figures/ising_mi_curve.png",
-      "sha256": "757c8590152bb94a6f748b5c16953229de98eab33444cc610b3f9e227ec0f4bd",
-      "size_bytes": 88738
+      "sha256": "2d1bcfc867a49eba0595544e020da73b06495473bb298ecc22487f8e816f3f3d",
+      "size_bytes": 93828
     },
     {
-      "content_sha256": "eda7f00950f1ea38ed876a4891e2063ce5795fa29b216894809a15c4c5ac4d30",
+      "content_sha256": "9f05c068881cb6e80b060122e1aa46c47393f9dbe472a09db5230a4b4a8a18c6",
       "fresh": true,
       "path": "output/figures/lean_boundary_status.png",
-      "sha256": "f6a9ad02889c8b006b57de6c95ea6d6df803234cd04425b72b33af0c16480431",
-      "size_bytes": 460703
+      "sha256": "8827ef122eb00991e57c3d7ae8315e63c7072b5f72bd64dbde69201cf9bfc17f",
+      "size_bytes": 472841
     },
     {
-      "content_sha256": "a61fbe0316b3b1a4a918f33eab1bee5d8e6df7aa3cac11d55bb46cff80279a85",
+      "content_sha256": "fff7641a451917442960b4cdaf499dc642bdf6c9a9986e304b2411d0d3d8b7f8",
       "fresh": true,
       "path": "output/figures/multi_track_architecture.png",
-      "sha256": "a96b2bcc8b99b46e7c71a63c7dd8a306d49e4cadc2f311c1f283c4f1f20400a7",
-      "size_bytes": 224955
+      "sha256": "3efa36473fc9f86a741ddbbcb29db97668a5b19bbb5ddd2231c6f5b29f3ffc85",
+      "size_bytes": 213748
     },
     {
-      "content_sha256": "e7fc4ed61eb8bde80c66bf3628264576904dd6bb71fc95e50d0d766e70dfc532",
+      "content_sha256": "7ec2b2c4220723c3abced710ba6ab30fdbb97bb9bf9b9e00fe60a06d79e85536",
       "fresh": true,
       "path": "output/figures/precision_sweep.png",
-      "sha256": "6a031acadd05922977fd1374e9c39efdc8a834acd95041244e70daba56e040fd",
-      "size_bytes": 79213
+      "sha256": "27f8ba342ef790b81ec399eaa248293b96cc426d39d6dd34fc21b83cac2d5cef",
+      "size_bytes": 86019
     },
     {
-      "content_sha256": "70325f3a789581200ead8e3216bf1d137935b92f8b3a2549e2d1f2abe819cea0",
+      "content_sha256": "2d2440368de0f5cfd618768a2e5ef56aecd6ea04b3dbb521572a3552e45b449d",
       "fresh": true,
       "path": "output/figures/scholarship_source_map.png",
-      "sha256": "4489a53f0d597cbf57826e9be146740ea517188cd04dc66c78f88070b1c31175",
-      "size_bytes": 470707
+      "sha256": "881ff2ddaa980461262bd9f48bc751b7294e2cf25ce748d4da542ec6dbbb3d75",
+      "size_bytes": 454246
     },
     {
-      "content_sha256": "bf9297c027778fd690776f872306b836ff8f4fcee40af013e0273430df9160a5",
+      "content_sha256": "22bd2b56916d35dca9e67ba2d165ae54855968c5ad8c8551ef04b649ba988e92",
       "fresh": true,
       "path": "output/figures/security_posture_map.png",
-      "sha256": "c305ccfab83496efa1c90e1bf617fcf113efebaa823c9cec54deddc16c742f83",
-      "size_bytes": 219576
+      "sha256": "6082337390bae8db626279ae096fc00c214f812b47d1c73d89dc0a61b6ccc053",
+      "size_bytes": 191137
     },
     {
-      "content_sha256": "0d1531e48635b5f7d1d3367bacff5d42367d9c55c523a7490fdb4c5bf70c6a26",
+      "content_sha256": "3e15d93971aebf727fbb8cac761ab2773ef369e8607325f5197f19422633f777",
       "fresh": true,
       "path": "output/figures/semantic_gluing_graph.png",
-      "sha256": "8c2fab11ffc2bcfd2a1de6e66a53d70775a2aed73adfac3d7dd24265d5c8dc14",
-      "size_bytes": 251230
+      "sha256": "d94fcf4826ed7cc686fb3e05a234bc523f4e9c99e8ef75e4fc4dda64d00a5e4d",
+      "size_bytes": 207624
     },
     {
-      "content_sha256": "98e965bfbafc7d95ca2129b91ff483e6e8de29c845a789d2e0c6cab58fe565ce",
+      "content_sha256": "5afd8764a7374f94179957e4283566f87c256250fdbb8738e098f9b1dafcd37b",
       "fresh": true,
       "path": "output/figures/sheaf_coverage_heatmap.png",
-      "sha256": "e67fb41083d1232dcb33c6541615ceee32d4a54fcc69a2cb1c7966ee9bed5d57",
-      "size_bytes": 236608
+      "sha256": "8acbcb202c35258e9a4290e46c74231a46d7e8e71604cc2f76f4a690af7e6259",
+      "size_bytes": 188725
     },
     {
       "content_sha256": "7c2d481cde8ce874a4cabd063b2e51218ae7acc6c6d0895839ad54dee3f4fc1c",
@@ -123,11 +123,11 @@
       "size_bytes": 566982
     },
     {
-      "content_sha256": "8fc640b2fc6a86a326563118ce23c4828436cfb699ddcf8cec7e1da38afefda0",
+      "content_sha256": "636c08a6eac30302e58470b752987cd62239c1490e5c30c452b9139015694e80",
       "fresh": true,
       "path": "output/figures/si_belief_entropy_curve.png",
-      "sha256": "17cdf62c26e594ac569df28c895a3ac16f0e473e747db7defb7965d8ec35027d",
-      "size_bytes": 43571
+      "sha256": "5bf67bac289c55f9ba3cbcc4b44f91e75e4d4380e46e04d4077ba044d498bf95",
+      "size_bytes": 37270
     },
     {
       "content_sha256": "d80e985892f37dd1ab5708bfb10d6721fbed055ba8f8bd48525d62a9c99b45e2",
@@ -137,39 +137,39 @@
       "size_bytes": 7058
     },
     {
-      "content_sha256": "67efe9461a65626909ad99c3b5d69b6208b6d436a634f07cf99d3a17c4d26309",
+      "content_sha256": "f51bf9d2ff5297015c4d59b59a3d37cf01fe61f553ad01918b14807137e7a8bc",
       "fresh": true,
       "path": "output/figures/si_obs_action_trace.png",
-      "sha256": "010f9586befab4d14c39a3cdfff4420a7027691365b91ea6fdb42f4a2c900cff",
-      "size_bytes": 47210
+      "sha256": "da34a8b4334b08e46e4101da7b2f63b3b356a2021c630ad0aed63225cf9b801a",
+      "size_bytes": 42670
     },
     {
-      "content_sha256": "571424a3e0a19da2b3ee8b9fd8e584959ef2e2a0be5fa2d935581e7540d17ae6",
+      "content_sha256": "5da0e9203c8c563bfa9997af639e6f7abb8ff5ce9792c683982683ad00d6caed",
       "fresh": true,
       "path": "output/figures/si_tmaze_actions.png",
-      "sha256": "d8f878240fe1a71c29e036bb2e22ac78e06c6d533c95b34bdd253ed46c7c39ac",
-      "size_bytes": 29283
+      "sha256": "c78b2a6ebfae70a37311c513cd043e4d45f8ebafc94fdabc8e00504f7396865b",
+      "size_bytes": 26900
     },
     {
-      "content_sha256": "6b17ddd58bb2b63ca991c151d6e28559e07aca31f2c56b2c723795e1a3b34494",
+      "content_sha256": "8fd54eedb102169cf63e9107b07b4ba2646b6a3a772f3107274d4544198c3b2d",
       "fresh": true,
       "path": "output/figures/theorem_traceability_graph.png",
-      "sha256": "1f760767bbed036b778c11ed748b68620d4537edcb089df44545b9245975e604",
-      "size_bytes": 122202
+      "sha256": "5c42b2d3da08ca481ee6c50775690f8dc351b725451df8cdcb7bc6fa157c3400",
+      "size_bytes": 111089
     },
     {
-      "content_sha256": "29abcdc4d051b32c8a85517fee8a3b431b9ab688f9bc3b9c57e8e2edec5fb31c",
+      "content_sha256": "38807049536bbdfe18a0e58d64ef284cfac2f7262c134076910f6d9085e19166",
       "fresh": true,
       "path": "output/figures/tmaze_schematic.png",
-      "sha256": "517cd677cebcdf745bfd67a8290878ad8c121797fece2c991255c747c21296c5",
-      "size_bytes": 36599
+      "sha256": "c6da917284d94da7269b73fcdf88bc43c75762583a0c168c74501de88d65b1b6",
+      "size_bytes": 33864
     },
     {
-      "content_sha256": "6d4a96ac32d2a54aa04862bac42d636c5a8164c96e5680c5275c6a6251f46b48",
+      "content_sha256": "74ebef71e3b1350535df0d4a5de0fe38a54eeaab3ce2dcd9f7d55252d40e6700",
       "fresh": true,
       "path": "output/figures/track_lane_promotion_map.png",
-      "sha256": "caba1fad9edfd6c35a1e4762502b1aab19ad8191cd55347a95ffdf6f3a52effd",
-      "size_bytes": 194060
+      "sha256": "9d002f5bf93f9782d576999b2a637fa520e19e5969d3dfc662b138ff5499caf3",
+      "size_bytes": 181360
     },
     {
       "content_sha256": "3edf1f9c793ff97dffeceae439cd51d4ca3c6844005f93f69851f926d8c4475f",

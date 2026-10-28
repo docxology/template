@@ -76,7 +76,7 @@
       "artifact": "output/data/pymdp_policy_posterior_grid.json",
       "exists": true,
       "fresh": true,
-      "sha256": "aefa7b677e5ebaa9d9a94e4a29d5477ac54182cfc26e9e921eda4bd640d30fd7"
+      "sha256": "5dab7482021089e82b81a0b27f1753bb1c1e16f2f7c352f8199c85cad636f8e1"
     },
     {
       "artifact": "output/data/sheaf_coverage_matrix.json",
@@ -118,13 +118,13 @@
       "artifact": "output/data/si_policy_comparison.json",
       "exists": true,
       "fresh": true,
-      "sha256": "f76e7425e17d7cea607f9001e2c2be1c19ca960e8e98734be22e4337e7aff565"
+      "sha256": "cad28a0c1ce049a74b076ab1c85e8ca3b21a2ea15df9dc73357515193da14ea7"
     },
     {
       "artifact": "output/data/si_policy_grid.json",
       "exists": true,
       "fresh": true,
-      "sha256": "61086fe0ecf5016d2beea2bdc629cfc9b919b32dab65296851f6e25bf20c5589"
+      "sha256": "7fecd4c69996dd8cb9775032556770f8680b5ed1dcf6c190f676a7d155f1273a"
     },
     {
       "artifact": "output/data/si_tmaze_summary.json",
@@ -154,37 +154,37 @@
       "artifact": "output/figures/artifact_contract_map.png",
       "exists": true,
       "fresh": true,
-      "sha256": "046a95389e857d347a97857d816b47543e90ef10ddd1a9bd600d5b5111fcfc98"
+      "sha256": "c898717bd671afc786cb5c74d349aceb3e00b3256b761d0b08b18a95c2c0e50e"
     },
     {
       "artifact": "output/figures/causal_ablation_heatmap.png",
       "exists": true,
       "fresh": true,
-      "sha256": "a5663681bd02fb704a1155fd2f5abfc6c6f3862fa031d8c17936118808635740"
+      "sha256": "8da94fcf550d1c688825c4c2c6f518a2d7eb63da90602cdb384a578189faa92a"
     },
     {
       "artifact": "output/figures/scholarship_source_map.png",
       "exists": true,
       "fresh": true,
-      "sha256": "4489a53f0d597cbf57826e9be146740ea517188cd04dc66c78f88070b1c31175"
+      "sha256": "881ff2ddaa980461262bd9f48bc751b7294e2cf25ce748d4da542ec6dbbb3d75"
     },
     {
       "artifact": "output/figures/security_posture_map.png",
       "exists": true,
       "fresh": true,
-      "sha256": "c305ccfab83496efa1c90e1bf617fcf113efebaa823c9cec54deddc16c742f83"
+      "sha256": "6082337390bae8db626279ae096fc00c214f812b47d1c73d89dc0a61b6ccc053"
     },
     {
       "artifact": "output/figures/semantic_gluing_graph.png",
       "exists": true,
       "fresh": true,
-      "sha256": "8c2fab11ffc2bcfd2a1de6e66a53d70775a2aed73adfac3d7dd24265d5c8dc14"
+      "sha256": "d94fcf4826ed7cc686fb3e05a234bc523f4e9c99e8ef75e4fc4dda64d00a5e4d"
     },
     {
       "artifact": "output/figures/sheaf_coverage_heatmap.png",
       "exists": true,
       "fresh": true,
-      "sha256": "e67fb41083d1232dcb33c6541615ceee32d4a54fcc69a2cb1c7966ee9bed5d57"
+      "sha256": "8acbcb202c35258e9a4290e46c74231a46d7e8e71604cc2f76f4a690af7e6259"
     },
     {
       "artifact": "output/figures/sheaf_layers_overview.png",
@@ -202,13 +202,13 @@
       "artifact": "output/figures/theorem_traceability_graph.png",
       "exists": true,
       "fresh": true,
-      "sha256": "1f760767bbed036b778c11ed748b68620d4537edcb089df44545b9245975e604"
+      "sha256": "5c42b2d3da08ca481ee6c50775690f8dc351b725451df8cdcb7bc6fa157c3400"
     },
     {
       "artifact": "output/figures/track_lane_promotion_map.png",
       "exists": true,
       "fresh": true,
-      "sha256": "caba1fad9edfd6c35a1e4762502b1aab19ad8191cd55347a95ffdf6f3a52effd"
+      "sha256": "9d002f5bf93f9782d576999b2a637fa520e19e5969d3dfc662b138ff5499caf3"
     },
     {
       "artifact": "output/reports/gnn_lint_report.json",
@@ -244,13 +244,13 @@
       "artifact": "output/reports/pymdp_runtime_diagnostics.json",
       "exists": true,
       "fresh": true,
-      "sha256": "4618adb15d6f1023eba90d1aeaf468158a4f983875a1e3826c81fabcb566b6cc"
+      "sha256": "bf52490ad056949e023ece3af251b36adbc948f2f1b21bbb1c9c62f16f863069"
     },
     {
       "artifact": "output/reports/reproducibility_replay.json",
       "exists": true,
       "fresh": true,
-      "sha256": "b632037038102178716a832544114e44ccc536fb81d991b7a5a916eb913d8192"
+      "sha256": "a7bbb01ce595578c1d56a7398a4fe1f881d0b48276ac9286e6d072c9c3959e1d"
     },
     {
       "artifact": "output/reports/si_invariants.json",

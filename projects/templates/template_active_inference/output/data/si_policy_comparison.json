@@ -237,10 +237,10 @@
             0.0453416398,
             0.0453416398,
             0.0091543203,
-            0.001848225
+            0.0018482251
           ],
           "q_pi_sum": 1.0,
-          "q_pi_entropy": 1.6767882929,
+          "q_pi_entropy": 1.6767882934,
           "q_pi_normalized": true,
           "selected_policy": 0,
           "fallback_reason": null
@@ -257,10 +257,10 @@
             0.0453416398,
             0.0453416398,
             0.0091543203,
-            0.001848225
+            0.0018482251
           ],
           "q_pi_sum": 1.0,
-          "q_pi_entropy": 1.6767882929,
+          "q_pi_entropy": 1.6767882934,
           "q_pi_normalized": true,
           "selected_policy": 0,
           "fallback_reason": null
@@ -277,10 +277,10 @@
             0.0453416398,
             0.0453416398,
             0.0091543203,
-            0.001848225
+            0.0018482251
           ],
           "q_pi_sum": 1.0,
-          "q_pi_entropy": 1.6767882929,
+          "q_pi_entropy": 1.6767882934,
           "q_pi_normalized": true,
           "selected_policy": 0,
           "fallback_reason": null
@@ -288,7 +288,7 @@
       ],
       "policy_posterior_available_count": 3,
       "policy_posterior_all_normalized": true,
-      "mean_policy_posterior_entropy": 1.6767882929,
+      "mean_policy_posterior_entropy": 1.6767882934,
       "expected_free_energy_values": [
         5.3999996185,
         5.3999996185,
