@@ -232,9 +232,21 @@ the two repos:
 ### Amazon KDP (Kindle Direct Publishing)
 
 - Accepts: EPUB (for Kindle) + PDF (for print-on-demand)
-- Requires: ISBN-13 in `manuscript/config.yaml` → `publication.isbn13`
+- ISBN: optional for a Kindle eBook; each print format (paperback, hardcover)
+  needs its own ISBN-13 in `manuscript/config.yaml` → `publication.isbn13`.
+  KDP's free ISBN covers KDP print only
+  ([KDP: ISBN and imprint](https://kdp.amazon.com/en_US/help/topic/G201834170)).
 - Metadata mapping: ONIX XML is converted to KDP metadata format
 - Note: KDP review takes 24–72 hours; receipts are pending until approved
+- KDP Select (Kindle+, the subscription formerly called Kindle Unlimited):
+  enrolling a title makes its eBook exclusive to Amazon in every digital
+  format for 90-day terms that renew automatically, so an enrolled title must
+  not also be sold through Gumroad, Leanpub, Stripe or any other digital
+  storefront; print editions are unaffected. Enrollment is a manual KDP
+  Bookshelf setting. The `docxology/publishing` KDP connector never enrolls a
+  title and warns when one run targets KDP beside a digital storefront
+  ([KDP Select](https://kdp.amazon.com/en_US/help/topic/G200798990), checked
+  2026-10-27).
 
 ### IngramSpark (print-on-demand)
 
