@@ -2,7 +2,7 @@
 
 This implementation record preserves dated candidate work and original outcomes,
 including the unpublished 4.0.2 preparation. For current release intent, use the
-[4.1.0 notes](../releases/v4.1.0.md) and [release boundary](release-boundary.md).
+[4.3.0 notes](../releases/v4.3.0.md) and [release boundary](release-boundary.md).
 
 This is the implementation and verification record for the authorized platform
 upgrade. The starting source revision is

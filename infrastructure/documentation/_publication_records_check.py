@@ -165,6 +165,13 @@ def check_publication_records_doc(
     ]
     if stale_standalone:
         differences.append(f"standalone publication identity blocks drifted: {stale_standalone}")
+    # Version and identity coherence between a project's config and its own
+    # CITATION.cff / .zenodo.json / codemeta.json sidecars. These findings were
+    # computed but never enforced, so a drifted sidecar version, concept DOI or a
+    # missing STANDALONE.md passed every gate.
+    sidecar_drift = [f"{record.project_name}: {finding}" for record in records for finding in record.sidecar_findings]
+    if sidecar_drift:
+        differences.append("publication sidecar drift: " + "; ".join(sidecar_drift))
     return differences
 
 

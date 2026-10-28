@@ -22,8 +22,8 @@ from infrastructure.publishing.standalone_install_projection import (
     project_standalone_installation,
     validate_standalone_installation,
 )
+from infrastructure.publishing._standalone_mirror_verify import _assert_source_current
 from infrastructure.publishing.standalone_mirror import (
-    _assert_source_current,
     _git as publication_git,
     populate_mirror_tree,
     sync_exemplar,

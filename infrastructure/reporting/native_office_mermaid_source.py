@@ -186,7 +186,7 @@ def replay_office_mermaid_source(
     custody: dict[str, str],
 ) -> None:
     """Bind original producer outputs/runtime labels without opening producer tools."""
-    from infrastructure.reporting.native_format_acceptance_validation import _file, _tool
+    from infrastructure.reporting.native_format_acceptance_evidence import _file, _tool
     from infrastructure.reporting.native_format_portable_custody import producer_path
     from infrastructure.reporting.native_office_content_witness import _image_identity
 

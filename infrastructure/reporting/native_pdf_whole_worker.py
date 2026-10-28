@@ -36,7 +36,7 @@ def observe_whole_pdf_worker(
         supervise_whole_pdf_source_controls,
     )
     from infrastructure.reporting.native_pdf_whole_diagnostics import whole_pdf_diagnostics
-    from infrastructure.reporting.native_format_acceptance_validation import _file
+    from infrastructure.reporting.native_format_acceptance_evidence import _file
 
     raw["whole_pdf_cohort"] = observe_whole_pdf_cohort(
         root,

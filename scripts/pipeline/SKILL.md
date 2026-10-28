@@ -30,7 +30,7 @@ Load this skill when you need to:
 | Script | Infrastructure module |
 |--------|-----------------------|
 | `stage_00_setup.py` | `infrastructure.core.runtime.setup_checks` |
-| `stage_01_test.py` | `infrastructure.core.pytest_orchestration`, `infrastructure.core.test_runner`, `infrastructure.reporting.pipeline_test_runner` |
+| `stage_01_test.py` | `infrastructure.core.testing.pytest_orchestration`, `infrastructure.core.testing.test_runner`, `infrastructure.reporting.pipeline_test_runner` |
 | `stage_02_analysis.py` | `infrastructure.core.analysis_pipeline`, `infrastructure.core.script_discovery` |
 | `stage_03_render.py` | `infrastructure.rendering.pipeline` (all enabled formats; historical YAML label `PDF Rendering`) |
 | `stage_04_validate.py` | `infrastructure.validation.output.pipeline`, `infrastructure.validation.publication.rendered_provenance` |

@@ -3,18 +3,29 @@
 #   `infrastructure.project.public_scope`
 #   mypy on the same paths (see `[tool.mypy]` in pyproject.toml)
 #
-# Pre-commit: staged-index secret scanning plus the lint/type gates below.
+# Stage policy (a commit must stay in the low single-digit seconds):
 #
-# Pre-push (fast): tracked-secret and no-mocks scripts + pytest on
-# `tests/infra_tests/git_hook_smoke/`, Bandit MEDIUM+ (`bandit.yaml`, including
-# `exclude_dirs` for archive/WIP roots and local `.venv` / `site-packages`
-# trees), and a stale-manifest check via `infrastructure.skills check`. Full
-# infra tests run in CI (`test-infra`); collecting all of `tests/infra_tests/`
+# Pre-commit (fast, mandatory): staged-index secret scan, hygiene hooks
+# (whitespace/EOF/YAML/JSON/TOML validity, large files, conflict markers),
+# Ruff check + format on the public CI scope, and the skill-reachability gate.
+#
+# Pre-push (fast, mandatory): tracked-artifact/secret/no-mocks guards + hook
+# smoke pytest, manifest freshness (`infrastructure.skills check`,
+# `operations-check`, `check-all-exports`), and the skill-reachability gate.
+#
+# Manual only (`pre-commit run --all-files --hook-stage manual`): the whole-tree
+# type gate (`mypy-ci`), Bandit (`bandit-quick`, and the stricter `bandit-low`
+# sweep), and the documentation contract guard. These are slow or already owned
+# by a blocking CI job, so they no longer run on every commit or push:
+#   * mypy -> `.github/actions/run-public-lint` (ci.yml `lint`, hardening `lint`)
+#   * Bandit MEDIUM+ -> `.github/actions/run-safety-scan` (ci.yml `lint`,
+#     hardening `security`)
+#   * template drift, api-reference, exemplar roster, COUNTS, publication
+#     records -> hardening `lint` / `validate` / `health`; `check_backlog.py`
+#     and `check_claim_bindings.py` only lived here, so hardening `lint` now
+#     runs them too.
+# Full infra tests run in CI (`test-infra`); collecting all of `tests/infra_tests/`
 # here is too slow for every push (~thousands of tests).
-#
-# Manual: `pre-commit run --all-files --hook-stage manual` (also runs the
-# strict `bandit-low` pass, which mirrors the LOW-severity sweep allowed by
-# `bandit.yaml`).
 #
 # PATH robustness: GUI git clients (GitHub Desktop, IDEs) launch hooks with a
 # minimal login PATH that does NOT include `~/.local/bin` (uv's default install
@@ -118,6 +129,10 @@ repos:
         always_run: true
         verbose: true
 
+      # Whole-tree type gate: slow (tens of seconds) and already blocking in CI
+      # through `.github/actions/run-public-lint`. Manual stage only, so
+      # `git commit` stays fast:
+      #   pre-commit run --hook-stage manual mypy-ci
       - id: mypy-ci
         name: mypy (CI scope)
         entry: bash
@@ -131,7 +146,7 @@ repos:
             uv run python scripts/gates/mypy_ratchet.py $CI_SOURCE_PATHS
         language: system
         pass_filenames: false
-        stages: [pre-commit, manual]
+        stages: [manual]
         always_run: true
         verbose: true
 
@@ -166,13 +181,15 @@ repos:
         always_run: true
         verbose: true
 
-      # Docs/signpost contracts at push time. The personal-memory leak class
-      # shipped to origin once (commit 5345b025) because these guards only ran
-      # in the test suite, not before push: (1) check_template_drift --strict
-      # fails on any dead exemplar link (same gate as CI docs-lint); (2) the
-      # public AGENTS.md must never carry "## Learned User Preferences" /
-      # "## Learned Workspace Facts" personal-memory blocks.
-      # Check generated COUNTS freshness here as well as health/hardening.
+      # Docs/signpost contracts. They used to gate every push; the documentation
+      # gates are expensive enough that they now run in CI and on demand:
+      #   * check_template_drift --strict -> hardening `lint` and `docs-lint`
+      #   * check_backlog.py / check_claim_bindings.py -> hardening `lint`
+      #   * api_reference / exemplar_roster / counts / publication_records
+      #     --check -> hardening `validate` and the blocking `health` report
+      #   * the public-AGENTS personal-memory test runs in the infra test suite
+      # Manual stage only:
+      #   pre-commit run --hook-stage manual docs-contract-guard
       - id: docs-contract-guard
         name: docs signpost + public-AGENTS contract (dead links + no personal memory)
         entry: bash
@@ -196,16 +213,17 @@ repos:
             -q --import-mode=importlib
         language: system
         pass_filenames: false
-        stages: [pre-push, manual]
+        stages: [manual]
         always_run: true
         verbose: true
 
-      # Mirrors the CI `security` job's Bandit step
-      # (.github/workflows/ci.yml — "Code security scan (Bandit MEDIUM+ severity)").
-      # Same scope and severity gate (`-ll` = MEDIUM+); exclusions are configured
-      # in `bandit.yaml` (`exclude_dirs`). Fails the push when a new MEDIUM/HIGH
-      # finding lands so contributors hear it locally before CI does.
-      # `-c bandit.yaml` applies the documented LOW-severity allow-list policy.
+      # Mirrors the CI Bandit step, which now runs from the shared
+      # `.github/actions/run-safety-scan` definition (ci.yml `lint`, hardening
+      # `security`). Same scope and severity gate (`-ll` = MEDIUM+); exclusions
+      # are configured in `bandit.yaml` (`exclude_dirs`).
+      # Manual stage only: the full scan costs seconds to tens of seconds, so it
+      # is opt-in locally and blocking in CI:
+      #   pre-commit run --hook-stage manual bandit-quick
       - id: bandit-quick
         name: bandit MEDIUM+ (CI scope)
         entry: bash
@@ -220,7 +238,7 @@ repos:
             -q
         language: system
         pass_filenames: false
-        stages: [pre-push, manual]
+        stages: [manual]
         always_run: true
         verbose: true
 

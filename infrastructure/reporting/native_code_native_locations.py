@@ -23,7 +23,7 @@ from infrastructure.rendering.manuscript_ordinal_anchors import (
 )
 from infrastructure.reporting.native_code_native_endpoints import office_native_endpoints, pdf_native_endpoints
 from infrastructure.reporting.native_format_acceptance_contracts import NativeArtifact
-from infrastructure.reporting.native_format_acceptance_validation import _file, _tool
+from infrastructure.reporting.native_format_acceptance_evidence import _file, _tool
 from infrastructure.reporting.native_format_pdf_source import pdf_source_inputs
 from infrastructure.reporting.native_hydration_reconstruction import replay_native_pdf_recomposition
 from infrastructure.reporting.native_office_hydration_ordinals import observe_office_hydration_ordinals

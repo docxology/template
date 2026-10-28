@@ -157,7 +157,7 @@ def observe_font_probe(
         run_id=run_id,
         purpose="html-source-font-probe",
     )
-    from infrastructure.reporting.native_format_acceptance_validation import _tool
+    from infrastructure.reporting.native_format_acceptance_evidence import _tool
 
     transcript = _tool(
         tool["artifact"],
@@ -198,10 +198,7 @@ def replay_font_probe(
     work: Path,
 ) -> dict[str, Any]:
     """Authenticate original probe, then execute the reader's own actual probe."""
-    from infrastructure.reporting.native_format_acceptance_validation import (
-        _file,
-        _tool,
-    )
+    from infrastructure.reporting.native_format_acceptance_evidence import _file, _tool
 
     remaining_seconds(deadline)
     sdk_root, sdk_reader = _sdk()
@@ -329,7 +326,7 @@ def observe_glyph_reference(
             run_id=run_id,
             purpose="html-source-glyph-reference",
         )
-    from infrastructure.reporting.native_format_acceptance_validation import _tool
+    from infrastructure.reporting.native_format_acceptance_evidence import _tool
 
     _tool(
         tool["artifact"],
@@ -378,10 +375,7 @@ def replay_glyph_reference(
     observer_script: str = GLYPH_REFERENCE_SCRIPT,
 ) -> tuple[dict[str, Any], bytes]:
     """Retained producer pixels are authenticated, never used as expected ink."""
-    from infrastructure.reporting.native_format_acceptance_validation import (
-        _file,
-        _tool,
-    )
+    from infrastructure.reporting.native_format_acceptance_evidence import _file, _tool
 
     remaining_seconds(deadline)
     _, sdk_reader = _sdk()

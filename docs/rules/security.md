@@ -185,16 +185,16 @@ uv tool run pip-audit
 uv tool install safety && safety check
 ```
 
-### Local pre-push security gate
+### Local security gate
 
-`.pre-commit-config.yaml` ships a `bandit-quick` hook that mirrors the CI
-`security` job's Bandit step (`-ll` MEDIUM+ severity on `infrastructure/`,
-`scripts/`, and `projects/`, with path exclusions declared in `bandit.yaml`
-`exclude_dirs` — archive/WIP roots plus `.venv` / `site-packages` so local
-dependency trees are not scanned — and with `bandit.yaml`'s LOW-allow-list
-applied). It runs on the **pre-push** stage
-only (so `git commit` stays fast) and fails the push on any new MEDIUM/HIGH
-finding — same scope, same severity, same message text as CI. A
+`.pre-commit-config.yaml` ships a `bandit-quick` hook that runs the same Bandit
+step as CI (`.github/actions/run-safety-scan`, called by `ci.yml` `lint` and
+hardening `security`): `-ll` MEDIUM+ severity on `infrastructure/`, `scripts/`,
+and `projects/`, with path exclusions declared in `bandit.yaml` `exclude_dirs` —
+archive/WIP roots plus `.venv` / `site-packages` so local dependency trees are
+not scanned — and with `bandit.yaml`'s LOW-allow-list applied. It runs on the
+**manual** stage only, because a full scan costs seconds to tens of seconds; CI
+keeps it blocking with the same scope, severity, and message text. A
 `skills-check` pre-push hook also runs `python -m infrastructure.skills
 check` to catch stale `.agents/skill_manifest.json`. A stricter manual-stage
 `bandit-low` hook is available for ad-hoc audits.
@@ -203,14 +203,14 @@ check` to catch stale `.agents/skill_manifest.json`. A stricter manual-stage
 # Run the full pre-push gate locally (no actual push needed):
 pre-commit run --hook-stage pre-push --all-files
 
-# Just the security hook:
-pre-commit run bandit-quick --hook-stage pre-push --all-files
+# Just the security hook (manual stage):
+pre-commit run bandit-quick --hook-stage manual --all-files
 
 # Strict LOW+MEDIUM+HIGH sweep:
 pre-commit run bandit-low --hook-stage manual --all-files
 ```
 
-See [`.github/AGENTS.md`](../../.github/AGENTS.md#local-pre-push-parity-pre-commit-configyaml)
+See [`.github/AGENTS.md`](../../.github/AGENTS.md#local-hook-parity-pre-commit-configyaml)
 for the full hook table and CI mapping.
 
 ### Secure Dependency Management

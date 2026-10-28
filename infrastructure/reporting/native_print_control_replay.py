@@ -7,7 +7,7 @@ from dataclasses import asdict
 from pathlib import Path
 from typing import Any
 
-from infrastructure.reporting.native_format_acceptance_validation import _file
+from infrastructure.reporting.native_format_acceptance_evidence import _file
 from infrastructure.reporting.native_newspaper_source import NewspaperReference
 from infrastructure.reporting.native_print_artifact_controls import (
     SCHEMA,

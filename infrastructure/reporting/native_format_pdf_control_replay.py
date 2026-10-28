@@ -39,7 +39,7 @@ def replay_pdf_controls(
     deadline: float,
 ) -> dict[str, Any]:
     """Reparse valid fixtures and recompute their exact intended semantic faults."""
-    from infrastructure.reporting.native_format_acceptance_validation import _file, _raster, _process
+    from infrastructure.reporting.native_format_acceptance_evidence import _file, _raster, _process
 
     outcomes: list[dict[str, Any]] = []
     controls = raw.get("pdf_negative_controls")

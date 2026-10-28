@@ -18,7 +18,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "research-project-template"
-version = "4.1.0"
+version = "4.3.0"
 description = "A comprehensive template for research projects with test-driven development, automated PDF generation, and professional documentation structure"
 authors = [{ name = "Research Template Team" }]
 readme = "README.md"
@@ -356,7 +356,13 @@ exclude_lines = [
 # ============================================================================
 
 [tool.ruff]
-target-version = "py314"
+# The runtime floor is 3.14 (`requires-python`), but the source stays parseable by
+# pre-3.14 parsers, so the declared target is 3.13. Targeting 3.14 makes `ruff
+# format` rewrite `except (A, B):` to the PEP 758 `except A, B:` form, which
+# contradicts that source-compatibility rule and reflowed 169 files the moment the
+# formatter ran; 3.13 keeps the optional parentheses in place. `requires-python`,
+# the classifiers and the qualification matrix remain the runtime authority.
+target-version = "py313"
 line-length = 120
 
 [tool.ruff.format]

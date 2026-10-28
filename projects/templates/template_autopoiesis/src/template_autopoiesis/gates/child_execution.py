@@ -68,9 +68,9 @@ def execute_child(
         from infrastructure import __version__
         from infrastructure.core.subprocess_policy import SubprocessPolicy, run_with_policy
     except ImportError as exc:
-        raise ChildCapabilityBlocked("child execution requires the installed or checkout platform 4.1.0") from exc
-    if __version__ != "4.1.0":
-        raise ChildCapabilityBlocked("child execution requires its bound platform version 4.1.0")
+        raise ChildCapabilityBlocked("child execution requires the installed or checkout platform 4.3.0") from exc
+    if __version__ != "4.3.0":
+        raise ChildCapabilityBlocked("child execution requires its bound platform version 4.3.0")
     return run_with_policy(
         [sys.executable, "-I", "-B", "-c", _BOOTSTRAP, str(cpu_budget), script, *arguments],
         cwd=root,

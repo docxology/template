@@ -257,7 +257,7 @@ def test_same_public_leaf_local_alias_is_live_only_in_explicit_local_discovery(t
     )
     assert selected.returncode == 0, selected.stderr or selected.stdout
     selected_identity = json.loads(selected.stdout)
-    assert selected_identity["version"] == "4.1.0"
+    assert selected_identity["version"] == "4.3.0"
     selected_sdk = Path(selected_identity["origin"])
     prefix = (
         "import hashlib,importlib.util,json,os,sys;from dataclasses import asdict;from pathlib import Path;"
@@ -267,7 +267,7 @@ def test_same_public_leaf_local_alias_is_live_only_in_explicit_local_discovery(t
         "bootstrap=importlib.util.module_from_spec(spec);spec.loader.exec_module(bootstrap);"
         "sdk=bootstrap.bootstrap_project(project);"
         f"assert Path(sdk.__file__).resolve()==Path({str(selected_sdk)!r});"
-        "assert sdk.__version__=='4.1.0';"
+        "assert sdk.__version__=='4.3.0';"
         "assert hashlib.sha256(Path(sdk.__file__).read_bytes()).hexdigest()=="
         f"{selected_identity['sha256']!r};"
         "from template_template.core.introspection import discover_projects;\n"

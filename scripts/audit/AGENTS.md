@@ -17,7 +17,7 @@ these run in the default `./run.sh` pipeline — invoke them directly when neede
 | `check_claim_bindings.py` | `infrastructure.validation.claims` | Complete public claim-binding inventory and source-pin contract |
 | `check_public_template_contract.py` | `infrastructure.project.public_template_contract` | Roster-wide public exemplar structure and non-vacuous test-scope gate |
 | `verify_no_mocks.py` | `infrastructure.validation.output.no_mock_audit` | Enforced lexical mock-framework gate plus zero-dependency-replacement semantic inventory |
-| `audit_filepaths.py` | `infrastructure.validation.filepaths` | Repository filepath audit |
+| `audit_filepaths.py` | `infrastructure.validation.repo.audit_orchestrator` | Repository filepath audit |
 | `check_template_drift.py` | `infrastructure.project.drift` | Exemplar doc/code drift check |
 | `check_tracked_projects.py` | `infrastructure.project.git_guards` | Confidentiality guard (no private projects committed) |
 | `check_tracked_fonds.py` | `infrastructure.project.git_guards` | Fonds resource-pool git guard |
@@ -28,7 +28,9 @@ these run in the default `./run.sh` pipeline — invoke them directly when neede
 | `check_tracked_generated_artifacts.py` | `infrastructure.project.git_guards` | Generated-artifact git-index hygiene |
 | `check_tracked_secrets.py` | `infrastructure.project.git_guards.tracked_secret_findings` | High-confidence credential scan over every tracked blob |
 | `check_staged_secrets.py` | `infrastructure.project.git_guards.staged_diff_secret_findings` | Pre-commit credential scan over staged A/C/M/R index blobs |
-| `copy_exemplar.py` | `infrastructure.project.exemplar` | Copy or update a canonical exemplar |
+| `check_release_versions.py` | `infrastructure.project.release_versions` | Root tag/notes/artwork and per-exemplar intended-versus-published version identity |
+| `check_exemplar_configs.py` | `infrastructure.project.exemplar_config_contract` | Per-exemplar config blocks, SDK pin/source, platform version and generated-copy consistency |
+| `copy_exemplar.py` | `infrastructure.project.copy_exemplar` | Copy or update a canonical exemplar |
 
 ## Bootstrap pattern
 

@@ -7,6 +7,130 @@ source and contracts; each exemplar retains its own package and publication
 versions. Confidential and local workspaces outside the canonical public roster
 are excluded.
 
+## [4.3.0]
+
+See the [4.3.0 release-intent notes](docs/releases/v4.3.0.md). Publication requires
+exact-revision hosted acceptance and the authenticated release handoff. 4.3.0 was
+prepared as two reviewed coordinated minor metadata transactions
+(4.1.0 → 4.2.0 → 4.3.0); 4.2.0 is an applied intermediate metadata step and was
+not published. The 4.0.0, 4.0.1 and 4.0.2 preparations remain historical
+candidates, not published root releases.
+
+- Apply the 4.3.0 metadata preparation through the coordinated planner's two
+  reviewed minor transactions. The root SDK version, all lock roots and every
+  canonical exemplar `platform_version` compatibility and publication binding move
+  together; exemplar own versions, third-party lock records and provider
+  declarations stay exact, and both transactions retain their reviewed plan,
+  canonical SHA256 and compensating rollback journal.
+- Declare 4.3.0 in `CITATION.cff` and in the release-boundary note, and record the
+  applied two-step preparation in this changelog and the versioned release notes.
+- Share duplicated outer-workflow steps as composite actions under
+  `.github/actions/` (`setup-actionlint`, `check-browser`, `run-public-lint`,
+  `run-safety-scan`, `run-tracked-guards`) so `ci.yml` and `hardening.yml` run one
+  pinned implementation instead of two copies. The public Ruff/format/type gates and
+  the safety scan now launch concurrently behind one step, while the tracked-tree
+  guards stay serial and blocking.
+- Share the cached `xelatex`/`bibtex` provisioning as
+  `.github/actions/setup-tex-toolchain` between hardening `test-infra-slow` and the
+  release rehearsal, where that block was identical; `ci.yml`'s two TeX steps stay
+  inline because their package sets and probes genuinely differ.
+- Repair Dependabot automerge, which had blocked every green bump: the workflow
+  called `gh pr merge --auto`, but auto-merge is disabled on this repository, so
+  GitHub answered `Auto merge is not allowed for this repository
+  (enablePullRequestAutoMerge)` (run 40627322822, PR #162). `qualify` now records
+  minor/patch eligibility from `dependabot/fetch-metadata` for the declared
+  ecosystems only, and `merge` squash-merges that PR once the `CI` run for the same
+  head commit succeeds with a CLEAN merge state, binding the merge to that commit
+  with `--match-head-commit`. Ineligible or still-blocked PRs are recorded as skips
+  instead of failing.
+- Keep `git commit` in the low single-digit seconds: `mypy-ci`, `bandit-quick` and
+  `docs-contract-guard` moved to the manual hook stage. Each gate keeps a blocking
+  CI owner (`run-public-lint`, `run-safety-scan`, hardening `lint`/`validate` and
+  the static `health` report), and the two documentation contracts that existed
+  only in `docs-contract-guard` (`check_backlog.py`, `check_claim_bindings.py`)
+  now run in hardening `lint`.
+- Keep every `hardening.yml` run in its own concurrency group with
+  `cancel-in-progress: false`, so a later dispatch or commit cannot cancel
+  exact-commit verification.
+- Widen the deep contract matrix to `max-parallel: 8` lanes with one complete module
+  per lane, keeping the existing 120-minute job budget. Hosted measurements put the
+  makespan floor at the slowest module, so additional lanes would not shorten the
+  wall.
+- Weight functional shard balancing by the committed measured module durations in
+  `infrastructure/config/ci-module-durations.json`, with unknown modules falling back
+  to a byte-size estimate on the same scale, and validate that manifest with
+  `scripts/gates/ci_module_durations_check.py`. The manifest stays a measurement
+  source: it never adds, removes or restricts a module. The routine family is
+  measured from the functional-infra JUnit artifacts of run 40718577012 (23 modules,
+  456 cases, 264.3 test-seconds): byte-size balancing produced 11.5 / 191.7 / 61.1
+  test-seconds per shard, and weighting gives the single 162.8-second
+  `tests/infra_tests/core/test_pipeline.py` module its own lane for a 162.8-second
+  makespan. That module is now the smoke floor, so it bounds further rebalancing.
+- Make the `build_pytest_marker_expression` keyword defaults the single declared
+  repository selection and expose `repository_marker_expression()` for the `addopts`
+  binding, updating the marker-expression controls to match.
+- Add `scripts/gates/local_gate.py`, one offline local entry point for the commands
+  the hosted jobs run.
+- Split standalone-mirror source/provider admission and committed-publication parity
+  into `_standalone_mirror_source` and `_standalone_mirror_verify`; the export
+  surface keeps its behaviour, custody checks and receipt parity.
+- Extend the documentation module-reference gate to `scripts/**/*.md`, where the
+  script-to-module inventory tables live. Five stale rows had drifted through the
+  `infrastructure.core` → `infrastructure.core.testing` move (`test_runner`,
+  `pytest_orchestration`, `test_performance`) and two more named modules that do
+  not exist (`governance/filepaths`, `run_executive_output_organization`); all 83
+  inventory rows now resolve on disk, and the gate's negative control covers a
+  script-documentation row.
+- Make release version identity checkable end to end. `publication_records.py
+  --check` now fails on the sidecar findings it had always computed and discarded
+  (CITATION/`.zenodo.json`/`codemeta.json` version and concept DOI against the
+  project's declared publication record, plus a missing `STANDALONE.md`), and
+  `scripts/audit/check_release_versions.py` checks the root tag, changelog
+  heading, release notes and release artwork together with every exemplar's
+  `intended_version` versus `pyproject.toml`, its sidecars against
+  `last_published_version`, `version_doi` presence, release-status coherence,
+  `platform_version` and the `owner/name` repository shape. The new gate runs in
+  the `ci.yml` lint job — with `--tag "$GITHUB_REF_NAME"` on a tag push — and in
+  `local_gate.py gates`, and its negative controls cover each failure class.
+- Ship the 4.3.0 release artwork (`template-v4.3.0-overview.svg` and a 200 KB
+  1600×900 PNG): `release.yml` uploads `docs/releases/template-v<tag>-overview.png`
+  and `root_release_artifacts` indexes it as the second declared asset, so the
+  release step could not have produced its documented asset set without it.
+- Expose `load_publication_record` from the publication-record loader so one
+  project's record can be checked without materializing the whole roster.
+- Bind the platform SDK in the five exemplars that declared `platform_version`
+  without requiring it (`data_descriptor`, `experiment_tree`, `newspaper`,
+  `redacted_report`, `storybook`). Each now declares the `4.3.0` pin and a
+  `[tool.uv.sources]` entry and carries the SDK's runtime dependencies in its own
+  lock; no third-party version moved, and the lock diff is additions only.
+- Replace the loader's hardcoded `gold_refinement`/`madlib` allowlist with a
+  declaration in the project's own `pyproject.toml`: `[tool.template].config_keys`
+  names the extra `manuscript/config.yaml` blocks a project owns. `loader.py`
+  reads it through `project_pyproject`, a malformed declaration is reported rather
+  than guessed, and a fork adds a config block without editing Layer 1.
+- Make forked copies self-describing. `copy_exemplar.py` gains `--sdk-source`
+  (`path:<dir>`, `url:<url>`, `version-only`), which validates a local SDK
+  checkout and rewrites the parent-relative source for a copy outside the
+  checkout, and `--author-name`/`--author-email`, which replace the author in
+  `pyproject.toml`, `CITATION.cff`, `codemeta.json` and `.zenodo.json` while
+  dropping the source DOI, ORCID, repository URL and release date. The fork
+  identity logic lives in `infrastructure/project/fork_identity.py`.
+- Add `scripts/audit/check_exemplar_configs.py`: per-exemplar configuration and
+  SDK-binding contract (unknown config blocks, the platform pin and its declared
+  source, `platform_version` agreement, and a stale generated publication copy).
+  It runs in the `ci.yml` lint job and in `local_gate.py gates`, and its negative
+  controls cover each failure class.
+- Document the fork flow in `README.md` and correct the SIA troubleshooting entry,
+  which claimed a `sia` key warning that cannot occur (`project_config.sia` is
+  canonical) and pointed at a registry call the project never needed.
+- Keep multi-exception `except` clauses parenthesized and settle the formatter
+  target that contradicted it: the root and the two exemplar Ruff configurations
+  declared `target-version = "py314"`, so `ruff format` rewrote `except (A, B):` to
+  the PEP 758 form in 169 already-parenthesized files and the format gate disagreed
+  with the source. The declared target is now `py313` — the highest integer target
+  that keeps optional exception-group parentheses — while `requires-python`, the
+  classifiers and the qualification matrix keep 3.14 as the runtime floor.
+
 ## [4.1.0]
 
 See the [4.1.0 release-intent notes](docs/releases/v4.1.0.md). Publication requires

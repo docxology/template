@@ -41,7 +41,7 @@ def _supervision(
     original_deadline: float,
     extra: list[str] | None = None,
 ) -> None:
-    from infrastructure.reporting.native_format_acceptance_validation import _file
+    from infrastructure.reporting.native_format_acceptance_evidence import _file
 
     projection = kind == "projection"
     binding = item["tool_artifact" if projection else "process_artifact"]
@@ -141,7 +141,7 @@ def _projection_pixels(
     deadline: float,
     env: dict[str, str],
 ) -> dict[str, Any]:
-    from infrastructure.reporting.native_format_acceptance_validation import _file
+    from infrastructure.reporting.native_format_acceptance_evidence import _file
     from infrastructure.reporting.native_projection_checks import inspect_projection
     from infrastructure.reporting.native_qr_runtime import replay_projection_qr_runtime
 
@@ -218,7 +218,7 @@ def _closure(
         HTML_TOOL_FIELDS,
     )
     from infrastructure.reporting.native_format_portable_custody import validate_executable_observation
-    from infrastructure.reporting.native_format_acceptance_validation import _file
+    from infrastructure.reporting.native_format_acceptance_evidence import _file
 
     seen = set() if seen is None else seen
     if isinstance(raw, list):
@@ -250,7 +250,7 @@ def _closure(
         if raw.get("schema_version") == TOOL_SCHEMA:
             if frozenset(raw) not in {TOOL_FIELDS, CITATION_TOOL_FIELDS, HTML_TOOL_FIELDS} or tool_binding is None:
                 raise ValueError("native control tool lacks its exact shared original receipt fields/binding")
-            from infrastructure.reporting.native_format_acceptance_validation import _tool
+            from infrastructure.reporting.native_format_acceptance_evidence import _tool
 
             _tool(
                 tool_binding, reader, run_id, raw["tool"], raw["purpose"], raw["command"][1:], raw["original_exit_code"]
@@ -281,7 +281,7 @@ def _closure(
 
 
 def _pixels(raster: dict[str, Any], reader: SnapshotReader) -> tuple[bytes, ...]:
-    from infrastructure.reporting.native_format_acceptance_validation import _file
+    from infrastructure.reporting.native_format_acceptance_evidence import _file
 
     _keys(raster, {"dpi", "input_artifact", "rasters", "tool_artifacts"})
     for row in raster["rasters"]:
@@ -323,7 +323,7 @@ def _office(
     deadline: float,
     env: dict[str, str],
 ) -> dict[str, Any]:
-    from infrastructure.reporting.native_format_acceptance_validation import _file, _raster, _tool
+    from infrastructure.reporting.native_format_acceptance_evidence import _file, _raster, _tool
     from infrastructure.reporting.native_format_observer_source_replay import replay_office_conversion
     from infrastructure.reporting.native_format_pdf_oracles import inspect_pdf_content
     from infrastructure.reporting.native_office_observer import reconstruct_office_control_fixture
@@ -478,7 +478,7 @@ def validate_format_controls(
     original_deadline: float,
 ) -> dict[str, Any]:
     """Replay complete ordered source suites, independently from original process exits."""
-    from infrastructure.reporting.native_format_acceptance_validation import _file, _raster
+    from infrastructure.reporting.native_format_acceptance_evidence import _file, _raster
     from infrastructure.reporting.native_epub_observer import (
         EPUB_CONTROL_CODES,
         epub_control_bytes,

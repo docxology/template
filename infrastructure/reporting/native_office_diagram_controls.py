@@ -279,10 +279,7 @@ def replay_office_diagram_control(
     Current execution of the complete cohort is required by the enclosing
     cohort adapter; this per-case replay never claims to supply that execution.
     """
-    from infrastructure.reporting.native_format_acceptance_validation import (
-        _file,
-        _raster,
-    )
+    from infrastructure.reporting.native_format_acceptance_evidence import _file, _raster
     from infrastructure.reporting.native_office_diagram_visibility import (
         replay_office_diagram_visibility,
     )

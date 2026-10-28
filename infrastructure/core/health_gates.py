@@ -138,6 +138,10 @@ def build_gate_specs(repo_root: Path) -> list[tuple[str, list[str]]]:
         ("public-capabilities", ["uv", "run", "python", "scripts/gates/public_capabilities.py"]),
         ("architecture-overview", arch_overview_argv),
         ("module-line-count", ["uv", "run", "python", "scripts/gates/module_line_count_check.py"]),
+        (
+            "ci-module-durations",
+            ["uv", "run", "python", "scripts/gates/ci_module_durations_check.py"],
+        ),
     ]
 
 

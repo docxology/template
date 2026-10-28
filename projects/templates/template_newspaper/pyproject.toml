@@ -18,6 +18,7 @@ classifiers = [
     "Programming Language :: Python :: 3.15",
 ]
 dependencies = [
+    "research-project-template==4.3.0",
     "pyyaml>=6.0",
     "reportlab>=4.0",
     "Pillow>=12.3.0",
@@ -63,7 +64,12 @@ exclude_lines = [
 # Inherits workspace settings from root pyproject.toml
 
 # Compatibility contract for this independent exemplar release.
+[tool.uv.sources]
+# The exemplar consumes the platform SDK from the repository checkout; a standalone
+# release substitutes its admitted wheel.
+research-project-template = { path = "../../..", editable = true }
+
 [tool.template]
-platform_version = "4.1.0"
+platform_version = "4.3.0"
 tested_python_versions = ["3.14", "3.15"]
 required_unpaid_capabilities = ["print-raster"]

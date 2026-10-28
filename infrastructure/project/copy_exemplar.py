@@ -15,6 +15,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Sequence
 
+
 from infrastructure.core.files.secure_write import read_bytes_confined
 from infrastructure.project.public_reference_git import (
     _PARTIAL_CONFIGURATION,
@@ -25,6 +26,7 @@ from infrastructure.project.public_reference_git import (
     native_git,
     remaining,
 )
+from infrastructure.project.fork_identity import apply_fork_identity
 from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
 
 
@@ -96,8 +98,15 @@ def plan_copy(
     *,
     new_name: str | None = None,
     dry_run: bool = False,
+    sdk_source: str | None = None,
+    author_name: str | None = None,
+    author_email: str | None = None,
 ) -> CopyResult:
-    """Return the clean-copy plan and optionally create the destination tree."""
+    """Return the clean-copy plan and optionally create the destination tree.
+
+    ``sdk_source``, ``author_name`` and ``author_email`` describe the fork
+    identity. They are applied only when the copy is written.
+    """
     root = Path(repo_root).resolve()
     destination = Path(dest).expanduser().resolve()
     source_root = _resolve_source(root, source)
@@ -130,6 +139,13 @@ def plan_copy(
             old_project_path=old_project_path,
             new_project_path=new_project_path,
         )
+    apply_fork_identity(
+        destination,
+        repo_root=root,
+        sdk_source=sdk_source,
+        author_name=author_name,
+        author_email=author_email,
+    )
     return CopyResult(source=source_root, destination=destination, relative_files=files, dry_run=False)
 
 
@@ -139,9 +155,21 @@ def copy_exemplar(
     dest: Path | str,
     *,
     new_name: str | None = None,
+    sdk_source: str | None = None,
+    author_name: str | None = None,
+    author_email: str | None = None,
 ) -> CopyResult:
     """Clean-copy a public exemplar to ``dest``."""
-    return plan_copy(repo_root, source, dest, new_name=new_name, dry_run=False)
+    return plan_copy(
+        repo_root,
+        source,
+        dest,
+        new_name=new_name,
+        dry_run=False,
+        sdk_source=sdk_source,
+        author_name=author_name,
+        author_email=author_email,
+    )
 
 
 def export_exemplar(
@@ -152,12 +180,23 @@ def export_exemplar(
     new_name: str | None = None,
     project_only: bool = False,
     deadline_monotonic: float | None = None,
+    sdk_source: str | None = None,
+    author_name: str | None = None,
+    author_email: str | None = None,
 ) -> CopyResult:
     """Clean-copy an exemplar and write a deterministic provenance manifest."""
     deadline = time.monotonic() + 600 if deadline_monotonic is None else deadline_monotonic
     remaining(deadline)
     root = Path(repo_root).resolve()
-    result = copy_exemplar(root, source, dest, new_name=new_name)
+    result = copy_exemplar(
+        root,
+        source,
+        dest,
+        new_name=new_name,
+        sdk_source=sdk_source,
+        author_name=author_name,
+        author_email=author_email,
+    )
     dependencies = () if project_only else _declared_resource_dependencies(result.source)
     for dependency in dependencies:
         _copy_resource_dependency(root, dependency, result.destination, deadline=deadline)
@@ -188,10 +227,29 @@ def main(argv: Sequence[str] | None = None) -> int:
         help="Exclude declared cross-root resources from a standalone export.",
     )
     parser.add_argument("--repo-root", default=Path.cwd(), type=Path, help="Repository root. Defaults to cwd.")
+    parser.add_argument(
+        "--sdk-source",
+        help=(
+            "How the fork resolves the template SDK: path:<dir> (a template checkout), "
+            "url:<git-or-file-url>, or version-only (rely on the pinned release). "
+            "A copy inside this checkout rewrites the relative path automatically."
+        ),
+    )
+    parser.add_argument("--author-name", help="Replace the author in pyproject.toml, CITATION.cff and JSON metadata")
+    parser.add_argument("--author-email", help="Author email for the same fields")
     args = parser.parse_args(argv)
 
     if args.dry_run:
-        result = plan_copy(args.repo_root, args.source, args.dest, new_name=args.new_name, dry_run=True)
+        result = plan_copy(
+            args.repo_root,
+            args.source,
+            args.dest,
+            new_name=args.new_name,
+            dry_run=True,
+            sdk_source=args.sdk_source,
+            author_name=args.author_name,
+            author_email=args.author_email,
+        )
     else:
         result = export_exemplar(
             args.repo_root,
@@ -199,6 +257,9 @@ def main(argv: Sequence[str] | None = None) -> int:
             args.dest,
             new_name=args.new_name,
             project_only=args.project_only,
+            sdk_source=args.sdk_source,
+            author_name=args.author_name,
+            author_email=args.author_email,
         )
     action = "Would copy" if result.dry_run else "Copied"
     print(f"{action} {len(result.relative_files)} files from {result.source} to {result.destination}")
@@ -547,6 +608,9 @@ def _rename_text(
         text = text.replace(old_token, new_token)
     text = _replace_keyed_slug(text, old_name, new_name)
     text = _replace_keyed_slug(text, old_hyphen, new_hyphen)
+    # ``\b`` keeps ``<slug>_extra`` style identifiers untouched: a suffix token is
+    # an unrelated name, not the project slug. See
+    # ``test_rename_text_preserves_unrelated_tokens``.
     text = re.sub(rf"\b{re.escape(old_name)}\b", new_name, text)
     text = re.sub(rf"\b{re.escape(old_hyphen)}\b", new_hyphen, text)
     return text

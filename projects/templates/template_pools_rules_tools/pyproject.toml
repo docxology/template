@@ -20,7 +20,7 @@ classifiers = [
     "Programming Language :: Python :: 3.15",
 ]
 dependencies = [
-    "research-project-template==4.1.0",
+    "research-project-template==4.3.0",
     "pyyaml>=6.0",
     "matplotlib>=3.7.0",
     "pillow>=12.3.0",
@@ -85,7 +85,9 @@ module = ["yaml", "csv", "matplotlib.*"]
 ignore_missing_imports = true
 
 [tool.ruff]
-target-version = "py314"
+# Source stays parseable by pre-3.14 parsers, so the formatter keeps optional
+# `except (A, B):` parentheses; the runtime floor remains `requires-python`.
+target-version = "py313"
 line-length = 100
 
 [tool.ruff.lint]
@@ -96,7 +98,7 @@ select = ["E", "F", "I", "N", "W", "UP", "B", "SIM", "ARG", "PTH"]
 
 # Compatibility contract for this independent exemplar release.
 [tool.template]
-platform_version = "4.1.0"
+platform_version = "4.3.0"
 tested_python_versions = ["3.14", "3.15"]
 required_unpaid_capabilities = ["bundled-resource-execution"]
 

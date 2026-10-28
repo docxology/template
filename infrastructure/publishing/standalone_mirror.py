@@ -48,26 +48,36 @@ from infrastructure.project.copy_exemplar import (
     _is_clean_resource_path,
     _is_clean_source_path,
 )
-from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
-from infrastructure.project.public_reference_git import GitReference, committed_blobs, inventory
+from infrastructure.project.public_reference_git import GitReference, inventory
 from infrastructure.publishing._standalone_export import canonical_snapshot_export
 from infrastructure.publishing._standalone_git import (
     _GIT_LOCAL_ENVIRONMENT as _GIT_LOCAL_ENVIRONMENT,
     _PUBLIC_ROOTS as _PUBLIC_ROOTS,
-    _clean_source_records as _clean_source_records,
     _git as _git,
     _git_clean_source_inventory as _git_clean_source_inventory,
     _git_destination_inventory as _git_destination_inventory,
     _git_environment as _git_environment,
-    _git_head_status as _git_head_status,
     _git_source_inventory as _git_source_inventory,
+)
+from infrastructure.publishing._standalone_mirror_source import (
+    _bound_source,
+    _committed_files,
+    _project_root,
+    _public_source,
+    _tracked_paths,
+    _verify_committed,
+    clean_source_revision,
+    declared_repository,
+)
+from infrastructure.publishing._standalone_mirror_verify import (
+    _assert_source_current,
+    _classify,
+    validate_publication_commit,
 )
 from infrastructure.rules.public_scope import PUBLIC_RULE_NAMES as PUBLIC_RULE_NAMES
 from infrastructure.tools.public_scope import PUBLIC_TOOL_NAMES as PUBLIC_TOOL_NAMES
 from infrastructure.publishing.publication_tree import (
     PublicationTarget,
-    PublicationUpdate,
-    INVENTORY_NAME,
     _Budget,
     publication_export_sha256,
     review_plan_sha256,
@@ -77,9 +87,6 @@ from infrastructure.publishing.publication_tree import (
 
 if TYPE_CHECKING:
     from infrastructure.publishing.standalone_install_projection import GitInstallProvider
-
-_REPOSITORY_CODE_RE = re.compile(r"^repository-code:\s*(\S+)", re.MULTILINE)
-_REPOSITORY_URL_RE = re.compile(r"https://github\.com/[A-Za-z0-9][A-Za-z0-9-]{0,38}/[A-Za-z0-9][A-Za-z0-9_.-]{0,99}")
 
 
 @dataclass(frozen=True)
@@ -216,170 +223,6 @@ def push_admitted_commit(
             atomic_write_bytes_confined(private, private / "shallow", content)
         process_env["GIT_OBJECT_DIRECTORY"] = str(git_dir / "objects")
         return run([f"--git-dir={private}", "push", "--", admitted, f"{revision}:refs/heads/{branch}"])
-
-
-def declared_repository(project_root: Path) -> str:
-    """Read a confined citation and admit only a credential-free GitHub URL."""
-    citation = project_root / "CITATION.cff"
-    if not project_root.exists() or (not citation.exists() and not citation.is_symlink()):
-        return ""
-    content = read_bytes_confined(project_root, citation, max_bytes=1024 * 1024).decode("utf-8")
-    match = _REPOSITORY_CODE_RE.search(content)
-    if not match:
-        return ""
-    repository = match.group(1).rstrip("/").removesuffix(".git")
-    if not _REPOSITORY_URL_RE.fullmatch(repository):
-        raise ValueError("Standalone repository must be a credential-free canonical GitHub HTTPS URL")
-    return repository
-
-
-def _project_root(repo_root: Path, project_rel: str) -> Path:
-    if project_rel not in {f"projects/{name}" for name in PUBLIC_PROJECT_NAMES}:
-        raise ValueError("Standalone mirrors require a canonical public exemplar")
-    project = repo_root / project_rel
-    if project.resolve(strict=True) != project.absolute():
-        raise ValueError("Public exemplar roots must not contain symlinks")
-    return project
-
-
-def _tracked_paths(repo_root: Path, prefix: str) -> list[str]:
-    # NUL separators preserve legitimate spaces/newlines and avoid Git's quoted
-    # path representation. '--' prevents option/pathspec reinterpretation.
-    return [path for path in _git(["ls-files", "-z", "--", prefix], cwd=repo_root).stdout.split("\0") if path]
-
-
-def _public_source(repo_root: Path, source: Path, provider_roots: tuple[Path, ...] = _PUBLIC_ROOTS) -> Path:
-    resolved = source.resolve(strict=True)
-    try:
-        relative = resolved.relative_to(repo_root)
-    except ValueError as exc:
-        raise ValueError("Mirror source escapes the public repository") from exc
-    if not any(relative.is_relative_to(root) for root in provider_roots):
-        raise ValueError("Mirror source provider is outside the public rosters")
-    return resolved
-
-
-def clean_source_revision(repo_root: Path, supplied: str | None = None) -> str:
-    """Admit an actual clean HEAD; user-supplied labels cannot grant source identity."""
-    if supplied is not None and not re.fullmatch(r"[0-9a-f]{7,64}", supplied):
-        raise ValueError("standalone source revision must be an actual hexadecimal HEAD identity")
-    head, resolved, status = _git_head_status(repo_root, supplied)
-    return _clean_source_records(head, resolved, status, supplied)
-
-
-def _committed_files(
-    repo_root: Path,
-    revision: str,
-    budget: _Budget,
-    *,
-    listed: str | None = None,
-    pinned: list[GitReference] | None = None,
-) -> dict[str, tuple[str, str]]:
-    if listed is None:
-        listed = _git(
-            [
-                "ls-tree",
-                "-r",
-                "-z",
-                revision,
-                "--",
-                *(root.as_posix() for root in _PUBLIC_ROOTS),
-                "infrastructure",
-                "pyproject.toml",
-            ],
-            cwd=repo_root,
-        ).stdout
-    records: dict[str, tuple[str, str]] = {}
-    links: dict[str, tuple[str, str]] = {}
-    for entry in listed.split("\0"):
-        if not entry:
-            continue
-        budget.check()
-        header, path = entry.split("\t", 1)
-        mode, kind, identity = header.split(" ")
-        if path in records or path in links:
-            raise ValueError("committed mirror input repeats a provider path")
-        if (mode, kind) == ("160000", "commit"):
-            links[path] = mode, identity
-        elif kind == "blob" and mode in {"100644", "100755", "120000"}:
-            records[path] = mode, identity
-        else:
-            raise ValueError("standalone source contains an unsupported committed provider")
-        if len(records) + len(links) > budget.limits.max_files:
-            raise ValueError("committed mirror input exceeds its finite entry limit")
-    if links:
-        if pinned is None:
-            raise ValueError("pinned mirror source requires retained native reference custody")
-        reference = inventory(repo_root, revision, budget.deadline)
-        if {row.path: (row.mode, row.oid) for row in reference.gitlinks} != links:
-            raise ValueError("pinned mirror declaration differs from its admitted source tree")
-        selected = {
-            row.path: (row.mode, row.oid)
-            for row in reference.files
-            if row.path == "pyproject.toml"
-            or Path(row.path).is_relative_to("infrastructure")
-            or any(Path(row.path).is_relative_to(root) for root in _PUBLIC_ROOTS)
-        }
-        if selected != records:
-            raise ValueError("pinned mirror raw source inventory differs from its admitted source tree")
-        for path, (row, _) in committed_blobs(reference).items():
-            if any(path.startswith(prefix + "/") for prefix in links):
-                if path in records:
-                    raise ValueError("pinned mirror source repeats a committed provider")
-                records[path] = row.mode, row.oid
-                if len(records) > budget.limits.max_files:
-                    raise ValueError("expanded committed mirror input exceeds its finite entry limit")
-        pinned.append(reference)
-    return records
-
-
-def _verify_committed(relative: str, content: bytes, mode: str, committed: dict[str, tuple[str, str]]) -> None:
-    record = committed.get(relative)
-    if record is None or record[0] != mode:
-        raise ValueError("mirror consumed provider differs from its committed path or mode")
-    blob = b"blob " + str(len(content)).encode("ascii") + b"\0" + content
-    # Git object identity is compared in its native format; the export receipt uses SHA-256.
-    digest = hashlib.sha256(blob) if len(record[1]) == 64 else hashlib.sha1(blob, usedforsecurity=False)
-    if digest.hexdigest() != record[1]:
-        raise ValueError("mirror consumed bytes differ from the admitted source commit")
-
-
-def _bound_source(
-    repo_root: Path,
-    source: Path,
-    committed: dict[str, tuple[str, str]],
-    budget: _Budget,
-    provider_roots: tuple[Path, ...] = _PUBLIC_ROOTS,
-) -> Path:
-    """Check every dereferenced link against the admitted public Git tree."""
-    candidate = source
-    for _ in range(17):
-        budget.check()
-        try:
-            parts = candidate.relative_to(repo_root).parts
-        except ValueError as error:
-            raise ValueError("mirror provider escapes the admitted public repository") from error
-        if not any(Path(*parts).is_relative_to(root) for root in provider_roots):
-            raise ValueError("mirror provider chain is outside the public rosters")
-        for index in range(len(parts)):
-            current = repo_root.joinpath(*parts[: index + 1])
-            if current.is_symlink():
-                link = os.readlink(current)
-                _verify_committed(current.relative_to(repo_root).as_posix(), os.fsencode(link), "120000", committed)
-                candidate = Path(os.path.normpath(current.parent / link / Path(*parts[index + 1 :])))
-                break
-        else:
-            return _public_source(repo_root, candidate, provider_roots)
-    raise ValueError("mirror refuses recursive or excessive provider links")
-
-
-def tracked_relative_paths(repo_root: Path, project_rel: str) -> list[str]:
-    """Return exemplar-relative paths of every git-tracked file in the project."""
-    repo_root = repo_root.resolve()
-    _project_root(repo_root, project_rel)
-    prefix = f"{project_rel}/"
-    listed = _tracked_paths(repo_root, project_rel)
-    return [path[len(prefix) :] for path in listed if path.startswith(prefix)]
 
 
 def populate_mirror_tree(
@@ -654,90 +497,6 @@ def populate_mirror_tree(
         return count
 
 
-def _assert_source_current(
-    repo_root: Path,
-    project_rel: str,
-    revision: str,
-    export_sha256: str,
-    scratch: Path,
-    *,
-    install_projection: bool = False,
-    meta_provider: GitInstallProvider | None = None,
-) -> None:
-    with tempfile.TemporaryDirectory(prefix="source-recheck-", dir=scratch) as temporary:
-        private = Path(temporary).resolve(strict=True)
-        verification = private / "canonical" if install_projection else private
-        populate_mirror_tree(repo_root, project_rel, verification, source_revision=revision)
-        if install_projection:
-            from infrastructure.publishing.standalone_install_projection import (
-                GitInstallProvider,
-                project_standalone_installation,
-            )
-
-            projected = private / "projected"
-            project_standalone_installation(
-                verification,
-                projected,
-                root_provider=GitInstallProvider(repo_root, revision),
-                meta_provider=meta_provider,
-            )
-            verification = projected
-        if publication_export_sha256(verification) != export_sha256:
-            raise ValueError("whole standalone export changed before promotion")
-    clean_source_revision(repo_root, revision)
-
-
-def validate_publication_commit(destination: Path, update: PublicationUpdate, revision: str) -> None:
-    """Verify actual committed managed bytes and names, including ignored-file failures."""
-    budget = _Budget()
-    tree = _git(["ls-tree", "-r", "-z", revision, "--"], cwd=destination).stdout
-    committed: dict[str, tuple[str, str]] = {}
-    for entry in tree.split("\0"):
-        if entry:
-            budget.check()
-            header, path = entry.split("\t", 1)
-            mode, kind, identity = header.split(" ")
-            if kind != "blob" or len(committed) >= budget.limits.max_files:
-                raise ValueError("publication commit contains an unsupported or excessive tree")
-            committed[path] = mode, identity
-    managed = {
-        name
-        for name, record in update.plan["observed_managed_files"].items()
-        if record is not None and name not in update.removed
-    } | update.plan["desired_export_files"].keys()
-    if committed.keys() != managed | set(update.plan["destination_only"]) | {INVENTORY_NAME}:
-        raise ValueError("publication commit names differ from the reviewed destination export")
-    root_metadata = destination.stat()
-    root_identity = root_metadata.st_dev, root_metadata.st_ino
-    for relative in sorted(managed | {INVENTORY_NAME}):
-        content = read_bytes_confined(
-            destination, destination / relative, max_bytes=64 * 1024 * 1024, expected_root_identity=root_identity
-        )
-        budget.check(len(content))
-        mode = "100755" if (destination / relative).stat().st_mode & 0o111 else "100644"
-        _verify_committed(relative, content, mode, committed)
-    head, _, status = _git_head_status(destination)
-    if head != revision:
-        raise ValueError("publication destination HEAD changed before push")
-    if status.strip():
-        raise ValueError("publication destination changed after its commit")
-
-
-def _classify(status_output: str) -> tuple[int, int, int]:
-    added = modified = deleted = 0
-    for line in status_output.splitlines():
-        if not line.strip():
-            continue
-        code = line[:2]
-        if code.startswith("A") or code.startswith("?"):
-            added += 1
-        elif code.startswith("D"):
-            deleted += 1
-        else:
-            modified += 1
-    return added, modified, deleted
-
-
 def sync_exemplar(
     repo_root: Path,
     exemplar: str,
@@ -891,12 +650,8 @@ def sync_exemplar(
 
 __all__ = [
     "MirrorResult",
-    "declared_repository",
-    "clean_source_revision",
     "populate_mirror_tree",
     "sync_exemplar",
-    "validate_publication_commit",
     "validate_git_destination",
     "push_admitted_commit",
-    "tracked_relative_paths",
 ]

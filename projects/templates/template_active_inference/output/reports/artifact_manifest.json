@@ -1074,7 +1074,7 @@
     {
       "contract_match": true,
       "path": "output/manuscript/config.yaml",
-      "sha256": "70cd47cf7a302a8c179abc595cf64287d6d413d0cdcafa55bbbf6e2c903ebc23",
+      "sha256": "98d999c67b4dbe05e2ec36517cc65887d41bd83b1b4dd118ec4e3979052ec8d6",
       "size_bytes": 2888,
       "stage_name": "PDF Rendering",
       "stage_num": 6,

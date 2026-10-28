@@ -64,7 +64,7 @@ def _selected_sdk_identity() -> tuple[Path, str]:
     )
     assert observation.returncode == 0, observation.stderr or observation.stdout
     identity = json.loads(observation.stdout)
-    assert identity["version"] == "4.1.0"
+    assert identity["version"] == "4.3.0"
     return Path(identity["origin"]), identity["sha256"]
 
 
@@ -80,7 +80,7 @@ def _bootstrap_program(project: Path) -> str:
         "bootstrap=importlib.util.module_from_spec(spec);spec.loader.exec_module(bootstrap);"
         "sdk=bootstrap.bootstrap_project(project);"
         f"assert Path(sdk.__file__).resolve()==Path({str(sdk_origin)!r});"
-        "assert sdk.__version__=='4.1.0';"
+        "assert sdk.__version__=='4.3.0';"
         "assert hashlib.sha256(Path(sdk.__file__).read_bytes()).hexdigest()=="
         f"{sdk_digest!r};"
         "assert sys.path==before;"
@@ -95,7 +95,7 @@ def test_canonical_project_bootstrap_keeps_genuine_selected_runtime_sdk() -> Non
     assert actual.returncode == 0, actual.stderr or actual.stdout
     rows = [json.loads(line) for line in actual.stdout.splitlines() if line.startswith("{")]
     assert len(rows) == 1 and rows[0]["provider_origin"] == str(_selected_sdk_identity()[0])
-    assert rows[0]["provider_version"] == "4.1.0"
+    assert rows[0]["provider_version"] == "4.3.0"
     assert rows[0]["domain"] == DOMAIN_EXPECTATION
 
 
@@ -140,7 +140,7 @@ def test_selected_sdk_precedes_actual_own_shadow_and_executes_domain(tmp_path: P
     assert actual.returncode == 0, actual.stderr or actual.stdout
     rows = [json.loads(line) for line in actual.stdout.splitlines() if line.startswith("{")]
     assert len(rows) == 1 and rows[0]["provider_origin"] == str(_selected_sdk_identity()[0])
-    assert rows[0]["provider_version"] == "4.1.0"
+    assert rows[0]["provider_version"] == "4.3.0"
     assert rows[0]["domain"] == DOMAIN_EXPECTATION
     assert not marker.exists()
 

@@ -223,7 +223,7 @@ def replay_original_source(
 ) -> SemanticContentContract:
     """Independently reparse original sources and all unsupported occurrences."""
     from infrastructure.reporting.native_format_current_pandoc import current_pandoc_reader
-    from infrastructure.reporting.native_format_acceptance_validation import _file, _tool
+    from infrastructure.reporting.native_format_acceptance_evidence import _file, _tool
     from infrastructure.reporting.native_format_portable_custody import producer_path
 
     if raw.get("schema_version") != "template-html-original-source-observation-v1":

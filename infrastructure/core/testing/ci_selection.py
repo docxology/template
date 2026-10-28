@@ -8,11 +8,15 @@ import os
 import re
 import subprocess
 import shutil
+from collections.abc import Mapping
 from pathlib import Path
 from typing import Any
 
 from infrastructure.project.public_package_dependencies import declared_local_dependencies
 from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
+
+
+_REPOSITORY_ROOT = Path(__file__).resolve().parents[3]
 
 
 def changed_git_paths(root: Path, base: str) -> tuple[tuple[str, ...], bool]:
@@ -125,26 +129,18 @@ def _infra_matrix(shards: list[list[str]]) -> dict[str, Any]:
     return {"include": [{"shard": i, "tex": bool(native_latex.intersection(files))} for i, files in enumerate(shards)]}
 
 
-def _contract_matrix(shards: list[list[str]], modules: list[str]) -> dict[str, Any]:
+def _contract_matrix(
+    shards: list[list[str]],
+    modules: list[str],
+    durations: Mapping[str, float] | None = None,
+) -> dict[str, Any]:
     """Dispatch long observed contracts first without changing canonical shard IDs."""
     from infrastructure.core.testing.ci_contracts import contract_preparation
+    from infrastructure.core.testing.ci_module_durations import load_module_durations
 
-    # Advisory job seconds from successful functional run 40019154805. These
-    # affect dispatch order only, never selected work, deadlines or acceptance.
-    observed_seconds = {
-        "tests/infra_tests/project/test_installed_acceptance.py": 93,
-        "tests/infra_tests/project/test_public_acceptance_auxiliary.py": 238,
-        "tests/infra_tests/project/test_public_reference.py": 586,
-        "tests/infra_tests/project/test_public_reference_session.py": 230,
-        "tests/infra_tests/project/test_root_case_lanes.py": 701,
-        "tests/infra_tests/project/test_root_no_model_acquisition.py": 259,
-        "tests/infra_tests/project/test_root_optional_external.py": 250,
-        "tests/infra_tests/project/test_root_policy_authoring.py": 401,
-        "tests/infra_tests/project/test_root_portable.py": 175,
-        "tests/infra_tests/project/test_root_runtime_v2.py": 1244,
-        "tests/infra_tests/project/test_root_wheel_typing.py": 58,
-        "tests/infra_tests/project/test_scientific_reference_replay.py": 145,
-    }
+    # Committed measured seconds keyed by module. They affect dispatch order
+    # only, never selected work, deadlines or acceptance.
+    observed_seconds = load_module_durations(_REPOSITORY_ROOT) if durations is None else durations
     rows: list[dict[str, Any]] = [
         {"shard": len(shards) + i, "module": name, **contract_preparation(name)} for i, name in enumerate(modules)
     ]
@@ -152,10 +148,22 @@ def _contract_matrix(shards: list[list[str]], modules: list[str]) -> dict[str, A
     return {"include": rows or [{"shard": -1, "module": "none", **contract_preparation("none")}]}
 
 
-def main() -> int:
-    from infrastructure.core.testing.ci_infra import infrastructure_shards
-    from infrastructure.core.testing.ci_infra import infrastructure_files
+def infrastructure_selection(root: Path, plan: dict[str, Any]) -> dict[str, Any]:
+    """Attach the exact functional shards and contract roster to a selection plan.
+
+    One assembly used by the CI selection CLI and local gates, so both derive
+    their shard roster from the same source-owned functions.
+    """
     from infrastructure.core.testing.ci_contracts import contract_files
+    from infrastructure.core.testing.ci_infra import infrastructure_files, infrastructure_shards
+
+    changed = tuple(plan["changed_paths"])
+    plan["infra_shards"] = infrastructure_shards(root, changed)
+    plan["contract_modules"] = list(contract_files(infrastructure_files(root, changed), infrastructure_files(root)))
+    return plan
+
+
+def main() -> int:
     from infrastructure.core.testing.ci_smoke import project_smoke_matrix
 
     parser = argparse.ArgumentParser(description=__doc__)
@@ -166,10 +174,7 @@ def main() -> int:
     plan = functional_selection(root, os.environ.get("CI_EVENT", ""), os.environ.get("CI_BASE", ""))
     if not plan["change_roster_available"]:
         raise ValueError("change roster unavailable or malformed; cannot safely route changed infrastructure tests")
-    plan["infra_shards"] = infrastructure_shards(root, tuple(plan["changed_paths"]))
-    plan["contract_modules"] = list(
-        contract_files(infrastructure_files(root, tuple(plan["changed_paths"])), infrastructure_files(root))
-    )
+    infrastructure_selection(root, plan)
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(plan, sort_keys=True, indent=2) + "\n")
     print("matrix=" + json.dumps(project_smoke_matrix(root, tuple(plan["projects"]))))
@@ -182,4 +187,4 @@ if __name__ == "__main__":
     raise SystemExit(main())
 
 
-__all__ = ["changed_git_paths", "affected_projects", "functional_selection"]
+__all__ = ["affected_projects", "changed_git_paths", "functional_selection", "infrastructure_selection"]

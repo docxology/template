@@ -45,7 +45,7 @@ def validate_stage_child_packet(
     deadline: float,
 ) -> dict[str, Any]:
     """DATA reconstruction AFTER the caller authenticates genuine parent Popen."""
-    from infrastructure.reporting.native_format_acceptance_validation import _file
+    from infrastructure.reporting.native_format_acceptance_evidence import _file
     from infrastructure.reporting.native_source_provider_bootstrap import format_selected_sdk_native_bootstrap
     from infrastructure.reporting.native_tool_replay import _stamp
 
@@ -312,7 +312,7 @@ class NativeStageChildReaderOperation:
         self.source.verify_correspondence(self.source.reference, reader.root, reader, self.deadline)
 
     def child(self, packet_binding: dict[str, str], reader: SnapshotReader) -> dict[str, Any]:
-        from infrastructure.reporting.native_format_acceptance_validation import _file
+        from infrastructure.reporting.native_format_acceptance_evidence import _file
         from infrastructure.reporting.native_tool_replay import (
             authenticate_original_native_artifact,
             validate_native_tool_data,
@@ -383,7 +383,7 @@ class NativeStageChildReaderOperation:
 
     def _authenticated_descendants(self, reader: SnapshotReader) -> list[tuple[dict[str, str], dict[str, Any]]]:
         """Follow only closed child rosters of genuinely authenticated ancestors."""
-        from infrastructure.reporting.native_format_acceptance_validation import _file
+        from infrastructure.reporting.native_format_acceptance_evidence import _file
 
         pending = [(self, packet) for packet in self.records]
         seen: set[str] = set()
@@ -436,7 +436,7 @@ class NativeStageChildReaderOperation:
         run_id: str,
         required_sdk_modules: tuple[str, ...],
     ) -> dict[str, Any]:
-        from infrastructure.reporting.native_format_acceptance_validation import _file
+        from infrastructure.reporting.native_format_acceptance_evidence import _file
 
         if run_id != self.run_id:
             raise ValueError("native stage nested ToolAPI belongs to another global native run")

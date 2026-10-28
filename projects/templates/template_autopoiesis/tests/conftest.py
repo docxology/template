@@ -20,8 +20,8 @@ if _bootstrap_spec is None or _bootstrap_spec.loader is None:
 _bootstrap = importlib.util.module_from_spec(_bootstrap_spec)
 _bootstrap_spec.loader.exec_module(_bootstrap)
 _sdk = _bootstrap.bootstrap_project(PROJECT_ROOT)
-if _sdk is None or _sdk.__version__ != "4.1.0":
-    raise ImportError("the own test suite requires the declared platform 4.1.0 dependency")
+if _sdk is None or _sdk.__version__ != "4.3.0":
+    raise ImportError("the own test suite requires the declared platform 4.3.0 dependency")
 
 
 @pytest.fixture(scope="session", autouse=True)

@@ -45,7 +45,7 @@ def test_required_contract_job_keeps_whole_root_budget_and_explicit_empty_outcom
 
     assert _functional_selection(ROOT, is_contract=True) == {"marker_expression": "", "keyword_expression": ""}
     assert "not slow" in _functional_selection(ROOT)["marker_expression"]
-    assert contract["strategy"]["max-parallel"] == 3
+    assert contract["strategy"]["max-parallel"] == 8
     assert contract["steps"][0]["if"] == "matrix.shard == -1"
     assert any(step.get("if") == "always() && matrix.shard != -1" for step in contract["steps"])
     pdf_modules = (
@@ -83,8 +83,10 @@ def test_required_contract_job_keeps_whole_root_budget_and_explicit_empty_outcom
     )
     for module in ("test_latex_texttt_native.py", "test_latex_utils.py"):
         assert contract_preparation("tests/infra_tests/rendering/" + module)["tex"] is True
-    assert 'echo "CHROME_EXECUTABLE_PATH=$chrome" >> "$GITHUB_ENV"' in browser["run"]
-    assert 'test ! -L "$chrome"' in browser["run"] and "resources.pak" in browser["run"]
+    assert browser["uses"] == "./.github/actions/check-browser"
+    browser_action = (ROOT / ".github/actions/check-browser/action.yml").read_text(encoding="utf-8")
+    assert 'echo "CHROME_EXECUTABLE_PATH=$chrome" >> "$GITHUB_ENV"' in browser_action
+    assert 'test ! -L "$chrome"' in browser_action and "resources.pak" in browser_action
     assert "poppler-utils" in tex["run"] and "kpsewhich plainnat.bst" in tex["run"]
     from infrastructure.core.testing.ci_selection import _infra_matrix
 

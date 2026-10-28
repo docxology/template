@@ -1,7 +1,7 @@
 """Select the environment SDK and register only this genuine own namespace.
 
 No inferred repository or own src directory is added to global import paths.
-The declared platform 4.1.0 SDK must be available before own package execution.
+The declared platform 4.3.0 SDK must be available before own package execution.
 """
 
 from __future__ import annotations
@@ -86,8 +86,8 @@ def bootstrap_project(project: Path) -> ModuleType:
             sdk_origin.is_relative_to(site) for site in runtime_sites
         ):
             raise ImportError("own project source cannot provide the declared platform SDK")
-        if sdk.__version__ != "4.1.0":
-            raise ImportError("the own project requires its declared platform 4.1.0 SDK")
+        if sdk.__version__ != "4.3.0":
+            raise ImportError("the own project requires its declared platform 4.3.0 SDK")
     finally:
         sys.path[:] = original
     source = project / "src" / _PACKAGE

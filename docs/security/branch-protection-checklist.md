@@ -10,33 +10,39 @@
 Required-check configuration is external state. Before changing it, open a
 fresh pull request and copy the exact display contexts GitHub reports for the
 current workflow; matrix labels and the public project roster can change. The
-always-running blocking jobs declared by the current `ci.yml` are:
+jobs declared by the current [`ci.yml`](../../.github/workflows/ci.yml) — the only
+pull-request gate — are:
 
 | # | Job display name (from `ci.yml` `name:`) | Job id | Conditional? |
 | --- | --- | --- | --- |
-| 1 | Detect optional projects | `detect` | No |
-| 2 | Detect public capability matrix | `detect-projects` | No |
-| 3 | Actionlint | `actionlint` | No |
-| 4 | Lint & Type Check | `lint` | No |
-| 5 | Static Health Report | `health` | No |
-| 6 | Verify No Mocks Policy | `verify-no-mocks` | No |
-| 7 | Infra Tests (`<os>`, Python `<version>`) | `test-infra` | Matrix cells; require the contexts present on the fresh PR |
-| 8 | Regression Tier (claim-binding pins) | `test-regression` | No |
-| 9 | Integration Tier (run.sh + pipeline CLI) | `test-integration` | No |
-| 10 | Project Tests (`<qualified-project>`, `py<version>`) | `test-project` | Matrix derived by `detect-projects`; require the live contexts |
-| 11 | Validate Manuscripts | `validate` | No |
-| 12 | Security Scan | `security` | No |
-| 13 | Documentation Lint | `docs-lint` | No |
-| 14 | Performance Check | `performance` | No |
+| 1 | Actionlint | `actionlint` | No |
+| 2 | Public functional test selection | `detect-projects` | No |
+| 3 | Lint & Type Check | `lint` | No |
+| 4 | Infrastructure Smoke (`<shard>`) | `test-infra` | Matrix cells; require the contexts present on the fresh PR |
+| 5 | Changed contract (`<module>`) | `test-contract` | Matrix cells, including the explicit "no changed deep contract module" cell |
+| 6 | Project Smoke (`<project>`) | `test-project` | Matrix derived by `detect-projects`; require the live contexts |
+| 7 | CI Gate | `ci-gate` | No — the aggregate that requires every job above |
 
-**Conditional jobs — must NOT be required:**
+`CI Gate` is the observed required context on `main`; it is `if: always()` and
+fails unless each always-required functional job succeeded and the optional
+coverage job either succeeded (`workflow_dispatch` with `coverage-project`) or
+was skipped. `infrastructure/core/ci_policy.py` enforces that its `needs` equals
+the complete declared job set, so adding, removing, or renaming a `ci.yml` job
+requires updating `test-contract` / matrix expectations and this table together.
+
+**Conditional job — must NOT be required:**
 
 | Job display name | Job id | Why not required |
 | --- | --- | --- |
-| Setup hook (Windows smoke) | `setup-hook-windows-smoke` | Skipped (not failed) when no project ships `setup_hook.py` |
-| fep_lean (gauss + lake) | `fep-lean` | Skipped when the optional local project is absent |
-| Public Matrix Receipt | `public-matrix-receipt` | Runs only for scheduled or manually dispatched CI, not pull requests |
-| Infra Slow Lane (`pytest.mark.slow`) | `test-infra-slow` | Runs only for scheduled or manually dispatched CI, not pull requests |
+| Requested exemplar coverage | `own-exemplar-coverage` | Reusable-workflow call that only runs for a manual dispatch with `coverage-project`; skipped, not failed, otherwise |
+
+The jobs in [`hardening.yml`](../../.github/workflows/hardening.yml)
+(`detect`, `health`, `verify-no-mocks`, `test-regression`, `test-integration`,
+`validate`, `security`, `docs-lint`, `performance`, `setup-hook-windows-smoke`,
+`fep-lean`, `public-matrix-receipt`, `test-infra-slow`, `coverage-infra`,
+`ci-gate`) are the optional exhaustive lane. It is `workflow_dispatch` only, so
+none of its contexts can appear on an ordinary pull request — do not require
+them.
 
 Do not require a context that is absent from normal pull-request events. Also
 review the list after workflow or matrix changes: a copied static checklist is
@@ -80,9 +86,14 @@ The sensitive areas are:
 
 ## Additional settings
 
-- **Allow auto-merge:** enable in Settings → General → "Allow auto-merge" so
-  the [`dependabot-automerge.yml`](../../.github/workflows/dependabot-automerge.yml)
-  workflow can auto-merge safe (minor/patch) Dependabot PRs.
+- **Allow auto-merge:** not required. `allow_auto_merge` is `false` on this
+  repository (GitHub's native auto-merge is therefore unusable), and
+  [`dependabot-automerge.yml`](../../.github/workflows/dependabot-automerge.yml)
+  squash-merges a marked minor/patch Dependabot PR directly once the `CI`
+  workflow succeeds for the same head commit and the merge state is CLEAN. If
+  "Require pull request reviews" above is enabled, a Dependabot PR stays
+  `BLOCKED` until a human approves it — that is the intended behaviour, and the
+  workflow records a skip rather than failing.
 - **Do not allow force pushes** to `main`.
 - **Do not allow deletions** of `main`.
 

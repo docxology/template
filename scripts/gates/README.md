@@ -15,6 +15,55 @@ Pipeline gate scripts for template.
 - `methods_plan_check` — Validates source or rendered methods contracts for one project or all public exemplars. Source mode runs in unified health; rendered mode is an explicit publication gate.
 - `public_capabilities.py` — Emits the deterministic public-exemplar capability manifest and fails closed on roster/matrix, package/Python, source/test syntax, render, hydration, analysis, and skip-contract drift.
 - `check_private_project_promotion.py` — Candidate security scan and composite private-promotion gate, with the historical script entrypoint retained.
+- `ci_module_durations_check.py` — Validates the committed measured module-duration manifest: every key is a real roster module and every value is a finite positive number of seconds.
+- `local_gate.py` — One local entry point for the commands CI runs (`format`, `lint`, `types`, `security`, `gates`, `unit`, `infra`, `all`), offline by default, with `--changed` and `--list`.
+
+## Fast local verification
+
+`local_gate.py` orders the existing gate scripts and modules; it never
+re-implements them. Stages map onto hosted work:
+
+| Stage | Hosted counterpart | Commands |
+| --- | --- | --- |
+| `format` | `Lint & Type Check` | `ruff format --check` over `public_scope ci-paths` lint paths |
+| `lint` | `Lint & Type Check` | `ruff check` over the same paths, then `module_line_count_check.py` |
+| `types` | `Lint & Type Check` | `mypy_ratchet.py` over the source paths |
+| `security` | health `bandit` gate | `bandit -r -ll -c bandit.yaml` over the public scope |
+| `gates` | `Lint & Type Check` hygiene steps | tracked-artifact, confidentiality, mirror-symlink, export/manifest and duration-manifest checks |
+| `unit` | `test-project` | `scripts/pipeline/stage_01_test.py --project …` |
+| `infra` | `detect-projects` + `Infrastructure Smoke` | one `infrastructure.core.testing.ci_infra` job per declared shard and contract |
+
+```bash
+# Print the exact plan without running anything
+uv run --no-sync python scripts/gates/local_gate.py --list
+uv run --no-sync python scripts/gates/local_gate.py --list infra
+
+# Fast feedback, then the full local reproduction of the CI jobs
+uv run --no-sync python scripts/gates/local_gate.py format lint types
+uv run --no-sync python scripts/gates/local_gate.py all
+
+# Only the working-tree modules that a stage can actually re-check
+uv run --no-sync python scripts/gates/local_gate.py --changed format lint types
+
+# Inspection only: which modules the functional roster would run
+uv run --no-sync python scripts/gates/local_gate.py --changed --list infra
+```
+
+Every stage runs `uv run --no-sync --offline`, so verification never resolves or
+downloads dependencies. `--changed` narrows file-scoped stages to existing
+working-tree paths (staged, unstaged and untracked), builds the functional plan
+from those paths through the same selection functions CI calls, and skips
+whole-tree controls it cannot honestly report on. Local feedback never replaces
+the required CI matrix or release acceptance.
+
+Functional shard balancing reads `infrastructure/config/ci-module-durations.json`:
+observed hosted seconds where a module has a measurement, a byte-size estimate on
+the same scale otherwise. `ci_module_durations_check.py` keeps that manifest
+pointed at real roster modules.
+
+```bash
+uv run --no-sync python scripts/gates/ci_module_durations_check.py
+```
 
 ```bash
 # Methods gates (all public exemplars, or one --project)

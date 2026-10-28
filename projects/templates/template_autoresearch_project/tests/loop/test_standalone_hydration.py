@@ -227,7 +227,7 @@ sys.path.insert(0,str(script.parent)); sys.argv=[str(script)]
 import infrastructure
 origin=Path(infrastructure.__file__).resolve()
 assert origin.is_relative_to(Path(sys.prefix).resolve())
-assert importlib.metadata.version('research-project-template')=='4.1.0'
+assert importlib.metadata.version('research-project-template')=='4.3.0'
 try:
     runpy.run_path(str(script),run_name='__main__')
 except SystemExit as error:

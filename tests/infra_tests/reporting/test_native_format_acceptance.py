@@ -36,7 +36,7 @@ from infrastructure.reporting.native_format_acceptance_contracts import (
     native_deadline_guard,
     NativeDeadlineExpired,
 )
-from infrastructure.reporting.native_format_acceptance_validation import _tool
+from infrastructure.reporting.native_format_acceptance_evidence import _tool
 from infrastructure.reporting.native_format_joint_source import JOINT_SCHEMA
 from infrastructure.reporting.native_full_worker_pdfium import SCHEMA as PDFIUM_INPUT_SCHEMA
 from infrastructure.reporting.native_mermaid_runtime_selection import SELECTION_SCHEMA as MERMAID_SELECTION_SCHEMA

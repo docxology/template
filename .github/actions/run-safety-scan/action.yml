@@ -1,0 +1,24 @@
+name: Run safety scan
+description: >-
+  Run Bandit at MEDIUM+ severity against the configured allow-list plus the
+  no-mocks policy gate, concurrently, with one aggregated result.
+inputs:
+  bandit-targets:
+    description: Space-separated Bandit targets; the default matches the required functional lint scope.
+    required: false
+    default: infrastructure scripts projects
+  no-mocks:
+    description: >-
+      Also run the lexical no-mocks gate. Set `false` where a dedicated job owns
+      that policy (the hardening `verify-no-mocks` job), so it runs exactly once.
+    required: false
+    default: "true"
+runs:
+  using: composite
+  steps:
+    - name: Bandit MEDIUM+ and the no-mocks gate
+      shell: bash
+      env:
+        BANDIT_TARGETS: ${{ inputs.bandit-targets }}
+        NO_MOCKS: ${{ inputs.no-mocks }}
+      run: bash "$GITHUB_ACTION_PATH/scan.sh"

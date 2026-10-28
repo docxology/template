@@ -23,7 +23,7 @@ def replay_office_conversion(
     custody: dict[str, str],
 ) -> ArtifactSnapshot:
     """Replay exact Office input, conversion command and original PDF bytes."""
-    from infrastructure.reporting.native_format_acceptance_validation import _file, _tool
+    from infrastructure.reporting.native_format_acceptance_evidence import _file, _tool
     from infrastructure.reporting.native_format_acceptance_checks import parse_native_bytes
 
     kind = raw.get("kind")
@@ -86,7 +86,7 @@ def replay_html_source(
     """Reparse current admitted sources with reader-local Pandoc, without producer access."""
     from dataclasses import replace
     from infrastructure.reporting.native_format_current_pandoc import current_pandoc_reader
-    from infrastructure.reporting.native_format_acceptance_validation import _file, _tool
+    from infrastructure.reporting.native_format_acceptance_evidence import _file, _tool
     from infrastructure.reporting.native_format_content_contracts import semantic_content_contract_from_ast
     from infrastructure.reporting.native_format_semantic_source import semantic_source_plan
 

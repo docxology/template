@@ -18,7 +18,7 @@ from infrastructure.reporting.native_format_acceptance_contracts import (
     create_private_native_directory,
     native_artifact_contract,
 )
-from infrastructure.reporting.native_format_acceptance_validation import _file
+from infrastructure.reporting.native_format_acceptance_evidence import _file
 from infrastructure.reporting.native_format_pdf_reference_parity import inspect_pdf_reference_parity
 from infrastructure.reporting.native_format_pdf_source import observe_pdf_source, pdf_source_inputs
 from infrastructure.reporting.native_format_pdf_whole_reference import observe_pdf_whole_reference

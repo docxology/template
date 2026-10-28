@@ -89,7 +89,7 @@ def validate_pair_leg(
     reader: SnapshotReader,
 ) -> str:
     """A DATA predicate; its caller must authenticate the actual parent/child."""
-    from infrastructure.reporting.native_format_acceptance_validation import _file
+    from infrastructure.reporting.native_format_acceptance_evidence import _file
 
     if set(value) != {"declaration", "launcher", "slot", "claim"} or type(value["slot"]) is not int:
         raise ValueError("paired filter invocation lacks its exact fixed fieldset/ordinal")
@@ -208,7 +208,7 @@ def validate_pair_parent_environment(
     value: dict[str, Any], parent_tool: dict[str, Any], reader: SnapshotReader
 ) -> None:
     """Link the checked child handoff to its separately authenticated actual parent."""
-    from infrastructure.reporting.native_format_acceptance_validation import _file
+    from infrastructure.reporting.native_format_acceptance_evidence import _file
 
     pair = _file(value["declaration"], reader).json_object()
     selected = pair["parent_loader"]
@@ -236,7 +236,7 @@ def validate_pair_parent_environment(
 
 def parent_observation(binding: dict[str, str], reader: SnapshotReader) -> dict[str, Any]:
     """Read the retained observed leg; this DATA helper grants no authority."""
-    from infrastructure.reporting.native_format_acceptance_validation import _file
+    from infrastructure.reporting.native_format_acceptance_evidence import _file
 
     raw = _file(binding, reader).json_object()
     if raw.get("schema_version") == PARENT_SCHEMA:

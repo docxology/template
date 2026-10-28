@@ -45,7 +45,7 @@ def replay_native_observer(
     """Independent current-source native observations for the actual artifact."""
     from infrastructure.reporting.native_oracle_dispatch import checked_native_observer_result
     from infrastructure.reporting.native_format_observer_dispatch import OBSERVER_SCHEMA
-    from infrastructure.reporting.native_format_acceptance_validation import _file, _raster
+    from infrastructure.reporting.native_format_acceptance_evidence import _file, _raster
     from infrastructure.reporting.native_format_pdf_oracles import inspect_pdf_content
 
     if (

@@ -8,10 +8,10 @@ permissions:
   contents: read
 
 concurrency:
-  # Preserve completed-SHA evidence even while other main commits arrive.
-  # Only superseded runs of the same pull request cancel each other.
-  group: ci-${{ github.workflow }}-${{ github.event_name == 'pull_request' && github.ref || github.run_id }}
-  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+  # `workflow_dispatch` is the only trigger, so every manual run keeps its own
+  # group: a later dispatch or commit can never cancel exact-commit verification.
+  group: ci-${{ github.workflow }}-${{ github.run_id }}
+  cancel-in-progress: false
 
 env:
   UV_FROZEN: "true"
@@ -107,20 +107,9 @@ jobs:
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
-      - name: Run actionlint
-        env:
-          # rhysd/actionlint @ v1.7.12 — bump REF and VERSION together on upgrade
-          ACTIONLINT_REF: 914e7df21a07ef503a81201c76d2b11c789d3fca
-          ACTIONLINT_VERSION: "1.7.12"
-        run: |
-          set -euo pipefail
-          curl -fsSL \
-            "https://raw.githubusercontent.com/rhysd/actionlint/${ACTIONLINT_REF}/scripts/download-actionlint.bash" \
-            -o "${RUNNER_TEMP}/download-actionlint.bash"
-          echo "72fa3e45ac20f3c3a512d6747b4fcf719e21f890e8c43e78d48a41fdfb900c4e  ${RUNNER_TEMP}/download-actionlint.bash" \
-            | sha256sum --check --status
-          bash "${RUNNER_TEMP}/download-actionlint.bash" "${ACTIONLINT_VERSION}" "${RUNNER_TEMP}"
-          "${RUNNER_TEMP}/actionlint" -color
+      # Single source of the ACTIONLINT_REF/VERSION/SHA256 pin and its
+      # checksum-verified installer run (shared with ci.yml).
+      - uses: ./.github/actions/setup-actionlint
 
   lint:
     name: Lint & Type Check
@@ -136,19 +125,14 @@ jobs:
       - name: Sync dependencies
         run: uv sync
 
-      - name: Resolve public CI paths
-        id: public-scope
-        run: |
-          uv run python -m infrastructure.project.public_scope ci-paths >> "$GITHUB_OUTPUT"
-
-      - name: Ruff lint
-        run: uv run ruff check ${{ steps.public-scope.outputs.lint_paths }}
-
-      - name: Ruff format check
-        run: uv run ruff format --check ${{ steps.public-scope.outputs.lint_paths }}
-
-      - name: Type checking
-        run: uv run python scripts/gates/mypy_ratchet.py ${{ steps.public-scope.outputs.source_paths }}
+      # One step, concurrent gates: the shared public-lint action resolves the
+      # public scopes once and runs Ruff check, Ruff format, and the mypy
+      # ratchet wrapper in parallel with separate logs. Bandit stays in the
+      # `security` job; the tracked-tree guards below stay serial.
+      - name: Public lint and type gates
+        uses: ./.github/actions/run-public-lint
+        with:
+          type-check: ratchet
 
       # MED5 gate: every re-exporting module under infrastructure/ must
       # declare __all__ — see docs/rules/api_design.md. Prevents regression
@@ -159,14 +143,8 @@ jobs:
       - name: Verify operations manifest freshness
         run: uv run python -m infrastructure.skills operations-check
 
-      - name: Reject tracked generated artifacts
-        run: uv run python scripts/audit/check_tracked_generated_artifacts.py
-
-      - name: Reject tracked high-confidence secrets
-        run: uv run python scripts/audit/check_tracked_secrets.py
-
-      - name: Confidentiality guard — only public template resources tracked
-        run: uv run python scripts/audit/check_tracked_all.py
+      - name: Guard public data and secrets
+        uses: ./.github/actions/run-tracked-guards
 
       # AUDIT-PRINT-GUARD-1: the T20 (print) ban is scoped to infrastructure/
       # via CLI select (a global select would flag every CLI/report module in
@@ -224,6 +202,16 @@ jobs:
       # drift cannot land through a branch that skips local hooks.
       - name: Template drift — strict
         run: uv run python scripts/audit/check_template_drift.py --strict
+
+      # These two documentation contracts previously ran only from the
+      # `docs-contract-guard` pre-push hook. They keep their blocking role here,
+      # next to the other repo-contract checks, now that the local hook is
+      # manual-stage so a push stays fast.
+      - name: Backlog metadata contract
+        run: uv run python scripts/audit/check_backlog.py
+
+      - name: Claim-binding contract
+        run: uv run python scripts/audit/check_claim_bindings.py
 
 # ─────────────────────────────────────────────────────────────────────────────
 # Job 1b — Blocking static health report
@@ -534,23 +522,7 @@ jobs:
       - name: Install pandoc
         uses: pandoc/actions/setup@86321b6dd4675f5014c611e05088e10d4939e09e # v1.1.1
 
-      - name: Cache TeX Live packages
-        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
-        with:
-          path: |
-            /var/cache/apt
-            /usr/share/texlive
-            /usr/share/texmf
-          key: texlive-${{ runner.os }}-xetex-extra-bibtex-fonts-v1
-        id: texlive-cache
-
-      - name: Install TeX Live (xelatex + bibtex)
-        if: steps.texlive-cache.outputs.cache-hit != 'true'
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y --no-install-recommends \
-            texlive-xetex texlive-latex-extra texlive-bibtex-extra \
-            texlive-fonts-recommended lmodern
+      - uses: ./.github/actions/setup-tex-toolchain
 
       - name: Prepare the genuine locked Active coverage environment
         timeout-minutes: 10
@@ -1236,14 +1208,28 @@ jobs:
             audit_requirements "$requirement_file"
           done
 
-      - name: Code security scan (Bandit MEDIUM+ severity)
+      - name: Resolve the Bandit targets from the public roster
+        id: bandit-scope
+        env:
+          PUBLIC_PROJECT_NAMES: ${{ steps.security-scope.outputs.names }}
         run: |
           set -euo pipefail
+          read -r -a names <<<"$PUBLIC_PROJECT_NAMES"
+          # An empty roster would silently narrow the scan to two trees.
+          [[ ${#names[@]} -gt 0 ]]
           targets=(infrastructure scripts)
-          for project in ${{ steps.security-scope.outputs.names }}; do
+          for project in "${names[@]}"; do
             targets+=("projects/$project")
           done
-          uv run bandit -c bandit.yaml -r -ll "${targets[@]}"
+          printf 'targets=%s\n' "${targets[*]}" >> "$GITHUB_OUTPUT"
+
+      - name: Code security scan (Bandit MEDIUM+ severity)
+        uses: ./.github/actions/run-safety-scan
+        with:
+          bandit-targets: ${{ steps.bandit-scope.outputs.targets }}
+          # The sibling `verify-no-mocks` job owns the no-mocks policy and its
+          # branch-protection context, so this call runs Bandit only.
+          no-mocks: "false"
 
       # Targeted shell-injection sweep at LOW severity: the MEDIUM+ gate above
       # rates a constant-string ``shell=True`` (B602/B604/B605/B609) as LOW and

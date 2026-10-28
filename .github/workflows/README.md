@@ -17,10 +17,13 @@ gate, then verify the retrieved artifacts before updating coverage provenance.
 The ordinary `CI Gate` also requires both complementary infrastructure lanes and
 accepts the optional coverage job's skip only when unrequested.
 
-The lint job resolves its public lint/type scopes once and passes nonempty Bash
-arrays to Ruff and mypy. A failed scope producer stops before either tool runs.
-Infrastructure smoke exercises that failure, corrupt model-cache refusal,
-fixture preparation and source binding, native source copying and the TeX
+The lint job delegates its public gates to
+[`run-public-lint`](../actions/run-public-lint/action.yml), which resolves both
+public scopes once, preserves producer failure, and passes the same nonempty lint
+array to both Ruff commands while the type gate runs concurrently in its own log
+(`ci.yml` also folds the safety scan into that wave). The tracked-tree guards stay
+sequential. Infrastructure smoke exercises that failure, corrupt model-cache
+refusal, fixture preparation and source binding, native source copying and the TeX
 admission boundary without preparing a model or native tools. These focused
 tests keep preparation and gate regressions on the ordinary push path.
 
@@ -44,7 +47,7 @@ For Dependabot, issue/PR templates, and the full GitHub integration picture, see
 | [`stale.yml`](stale.yml) | Daily 01:00 UTC | Auto-label and close stale issues/PRs |
 | [`release.yml`](release.yml) | `v*.*.*` tag push or manual | Generate GitHub Release with changelog |
 | [`platform-required-acceptance.yml`](platform-required-acceptance.yml) | manual only | Original required-profile observations and strict exact-source acceptance bundle |
-| [`dependabot-automerge.yml`](dependabot-automerge.yml) | `pull_request_target` (Dependabot only) | Auto-merge safe (minor/patch) Dependabot PRs after all required checks pass |
+| [`dependabot-automerge.yml`](dependabot-automerge.yml) | `pull_request_target` + `workflow_run` (Dependabot only) | Marks safe (minor/patch) Dependabot PRs, then squash-merges them after the `CI` run for the same head commit succeeds |
 
 ## Optional exhaustive hardening (`hardening.yml`)
 

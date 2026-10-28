@@ -95,7 +95,7 @@ def capture_native_environment(
 
 def validate_native_environment(native: dict[str, Any], tool: dict[str, Any], reader: SnapshotReader) -> None:
     """Reconstruct the transformation after separately authenticating the OS owner."""
-    from infrastructure.reporting.native_format_acceptance_validation import _file
+    from infrastructure.reporting.native_format_acceptance_evidence import _file
 
     environment_digest = tool.get("environment_digest")
     if not isinstance(environment_digest, str) or re.fullmatch(r"[0-9a-f]{64}", environment_digest) is None:

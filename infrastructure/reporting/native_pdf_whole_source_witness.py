@@ -110,7 +110,7 @@ def observe_current_whole_pdf_predicates(
     import json
 
     from infrastructure.reporting.native_format_acceptance_contracts import create_private_native_directory
-    from infrastructure.reporting.native_format_acceptance_validation import _file, _tool
+    from infrastructure.reporting.native_format_acceptance_evidence import _file, _tool
     from infrastructure.reporting.native_format_pdf_source import pdf_source_inputs
     from infrastructure.reporting.native_format_pdf_source_replay import replay_pdf_source_witness
     from infrastructure.reporting.native_format_pdf_whole_reference import observe_pdf_whole_reference

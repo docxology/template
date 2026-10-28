@@ -624,7 +624,7 @@
     {
       "contract_match": true,
       "path": "output/manuscript/config.yaml",
-      "sha256": "ed85e7883bb1cafbef8761333a27fc1dd99c25bbeb499d4b5d91ef94602963cf",
+      "sha256": "362fea02343f0392d90d07cb43d4b585160738eb817f91101ea71d9567ba4016",
       "size_bytes": 15988,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,

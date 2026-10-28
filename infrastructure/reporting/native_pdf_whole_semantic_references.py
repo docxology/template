@@ -14,7 +14,7 @@ from typing import Any
 from infrastructure.project.public_reference_git import remaining
 from infrastructure.reporting.native_format_acceptance_checks import audit_pdf_raster, parse_native_bytes
 from infrastructure.reporting.native_format_acceptance_contracts import create_private_native_directory
-from infrastructure.reporting.native_format_acceptance_validation import _file, _tool
+from infrastructure.reporting.native_format_acceptance_evidence import _file, _tool
 from infrastructure.reporting.native_format_pdf_semantic_plan import PDFSemanticPlan, strict_ast
 from infrastructure.reporting.native_format_pdf_source import PDFSourceInputs
 from infrastructure.reporting.native_format_scientific_math import (

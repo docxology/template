@@ -133,15 +133,15 @@
       "verified_by": "Daniel (agent session)"
     },
     {
-      "command": "`uv run --no-sync --offline python -m infrastructure.publishing.root_release_contract --tag v4.1.0`",
+      "command": "`uv run --no-sync --offline python -m infrastructure.publishing.root_release_contract --tag v4.3.0`",
       "health": "\ud83d\udfe1 Publication pending; hosted acceptance required",
       "id": "STATUS-ROOT-RELEASE-1",
-      "last_verified": "2026-09-26",
+      "last_verified": "2026-10-28",
       "mode": "manual",
       "receipt": "docs/_generated/status_evidence.json",
       "subsystem": "Root release boundary (`pyproject.toml`, tags, GitHub releases, `CHANGELOG.md`)",
-      "verification_scope": "Root 4.1.0 is the current release intent; the prepared 4.0.0, 4.0.1 and 4.0.2 candidates were not published. Historical releases remain preserved. The version command checks metadata, provider, tag and changelog consistency; a new tag and release separately require exact-revision hosted acceptance and the authenticated evidence handoff.",
-      "verified_by": "Daniel (agent session)"
+      "verification_scope": "Root 4.3.0 is the current release intent, applied as two reviewed coordinated minor metadata transactions (4.1.0 \u2192 4.2.0 \u2192 4.3.0); 4.2.0 is an applied intermediate metadata step and was never published, and the prepared 4.0.0, 4.0.1 and 4.0.2 candidates were not published either. Root metadata, locks, exemplar compatibility/publication bindings, changelog, `CITATION.cff` and the release-boundary note now declare 4.3.0; historical releases remain preserved. The version command checks metadata, provider, tag and changelog consistency; a new tag and release separately require exact-revision hosted acceptance and the authenticated evidence handoff.",
+      "verified_by": "Codex (agent session)"
     },
     {
       "command": "`uv run python -m infrastructure.skills check`",
@@ -190,5 +190,5 @@
   ],
   "schema_version": "template-status-evidence/v1",
   "source_path": "STATUS.md",
-  "source_sha256": "e7fb20d04b7fc9aed5fd263e29a267aeeecfd97ed6cbcebf07fc037f7042ff31"
+  "source_sha256": "46a6e0d693cbc82933aafdbc287181a81eb0525c3cedc1b3e420ae1c44286ea7"
 }

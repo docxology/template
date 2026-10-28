@@ -44,7 +44,7 @@ def replay_browser_observation(
     env: dict[str, str] | None = None,
 ) -> dict[str, Any]:
     """Reconstruct all source/DOM/glyph-region/pixel/asset and command bindings."""
-    from infrastructure.reporting.native_format_acceptance_validation import _file, _tool
+    from infrastructure.reporting.native_format_acceptance_evidence import _file, _tool
     from infrastructure.reporting.native_format_browser_assets import compile_browser_assets
     from infrastructure.reporting.native_format_browser_oracles import (
         BROWSER_SCHEMA,
@@ -362,7 +362,7 @@ def replay_browser_controls(
     if deadline is None:
         raise ValueError("browser control replay requires the original caller's finite clock")
     remaining_seconds(deadline)
-    from infrastructure.reporting.native_format_acceptance_validation import _file
+    from infrastructure.reporting.native_format_acceptance_evidence import _file
     from infrastructure.reporting.native_format_browser_oracles import (
         BROWSER_CONTROL_CODES,
         browser_control_bytes,

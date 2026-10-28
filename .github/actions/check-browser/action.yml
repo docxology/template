@@ -1,0 +1,16 @@
+name: Check browser
+description: >-
+  Require the runner's installed Google Chrome runtime (not a Chromium snapshot or
+  alias) and export CHROME_EXECUTABLE_PATH for native consumer controls.
+runs:
+  using: composite
+  steps:
+    - name: Select the installed browser
+      shell: bash
+      run: |
+        set -euo pipefail
+        chrome=/opt/google/chrome/chrome
+        test -f "$chrome" && test -x "$chrome" && test ! -L "$chrome"
+        test -f /opt/google/chrome/resources.pak
+        "$chrome" --version
+        echo "CHROME_EXECUTABLE_PATH=$chrome" >> "$GITHUB_ENV"

@@ -16,6 +16,7 @@ from uuid import uuid4
 from infrastructure.core.subprocess_policy import SubprocessPolicy, run_with_policy
 from infrastructure.core.testing.ci_contracts import CONTRACT_SECONDS, combined_groups, contract_files
 
+from infrastructure.core.testing.ci_module_durations import module_weights
 from infrastructure.core.testing.pytest_orchestration import resolve_infrastructure_test_paths
 from infrastructure.core.testing.ci_test_ownership import SOURCE_TEST_OWNERS
 from infrastructure.core.testing.pytest_observations import (
@@ -107,7 +108,11 @@ def infrastructure_files(root: Path, changed: tuple[str, ...] = ()) -> tuple[str
 
 
 def infrastructure_shards(root: Path, changed: tuple[str, ...] = (), count: int | None = None) -> list[list[str]]:
-    """Bound broad selections before size balancing; neither estimates runtime."""
+    """Bound broad selections before duration-weighted balancing.
+
+    Load comes from the committed measured-duration manifest; modules without a
+    measurement fall back to a byte-size estimate on the same scale.
+    """
     if count is not None and (type(count) is not int or not 1 <= count <= 8):
         raise ValueError("functional shard count must be between one and eight")
     files = infrastructure_files(root, changed)
@@ -120,15 +125,16 @@ def infrastructure_shards(root: Path, changed: tuple[str, ...] = (), count: int 
         # Package-level ownership can expand the routine roster by an order of
         # magnitude. Keep its complete selection and original 540-second clock,
         # with at most 20 modules per automatic job. Hosted concurrency is
-        # bounded separately; file size balancing does not estimate duration.
+        # bounded separately; balancing cannot leave a job over the module cap.
         count = max(3, (len(files) + 19) // 20)
+    weights = module_weights(root, files)
     shards: list[list[str]] = [[] for _ in range(min(count, len(files)))]
-    loads = [0] * len(shards)
-    for name in sorted(files, key=lambda p: (-(root / p).stat().st_size, p)):
+    loads = [0.0] * len(shards)
+    for name in sorted(files, key=lambda p: (-weights[p], p)):
         available = [i for i in range(len(loads)) if not automatic or len(shards[i]) < 20]
         selected = min(available, key=lambda i: (loads[i], i))
         shards[selected].append(name)
-        loads[selected] += (root / name).stat().st_size
+        loads[selected] += weights[name]
     return [*[sorted(shard) for shard in shards], *[[name] for name in isolated]]
 
 

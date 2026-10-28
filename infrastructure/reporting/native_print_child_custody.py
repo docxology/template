@@ -164,7 +164,7 @@ def _closure(
     role: _ControlRole,
 ) -> dict[str, Any]:
     """Recheck exact admitted source/executed-code/cache bytes, never pyc imports."""
-    from infrastructure.reporting.native_format_acceptance_validation import _file
+    from infrastructure.reporting.native_format_acceptance_evidence import _file
     from infrastructure.reporting.native_code_runtime import validate_native_code_runtime
 
     selected = _file(binding, reader)
@@ -308,7 +308,7 @@ class _SourceControlReaderOperation:
 
     def child(self, item: dict[str, Any], reader: SnapshotReader) -> dict[str, Any]:
         """Authenticate actual parent Popen first, then replay its exact child inputs."""
-        from infrastructure.reporting.native_format_acceptance_validation import _file
+        from infrastructure.reporting.native_format_acceptance_evidence import _file
         from infrastructure.reporting.native_tool_replay import (
             _stamp,
             authenticate_original_native_artifact,
@@ -488,7 +488,7 @@ class _SourceControlReaderOperation:
         self, binding: dict[str, Any], reader: SnapshotReader, *, run_id: str, required_sdk_modules: tuple[str, ...]
     ) -> dict[str, Any]:
         """Admit nested tools only inside one actual parent's sealed child graph."""
-        from infrastructure.reporting.native_format_acceptance_validation import _file
+        from infrastructure.reporting.native_format_acceptance_evidence import _file
 
         if run_id != self.run_id:
             raise ValueError("native source control nested tool belongs to a different run")

@@ -92,7 +92,7 @@ def _compile(
     deadline: float,
 ) -> AdmittedHTMLSource:
     """Bind retained actual parser ASTs after their genuine source replay."""
-    from infrastructure.reporting.native_format_acceptance_validation import _file
+    from infrastructure.reporting.native_format_acceptance_evidence import _file
 
     remaining_seconds(deadline)
     body = semantic["body"]

@@ -59,7 +59,7 @@ class CrossrefFilterReaderOperation:
         authentication derives the child from these actual Source pointers and
         does not recursively replay its parent pair.
         """
-        from infrastructure.reporting.native_format_acceptance_validation import _file
+        from infrastructure.reporting.native_format_acceptance_evidence import _file
         from infrastructure.reporting.native_loader_qualification import SCHEMA as PAIR_SCHEMA, _FIELDS
         from infrastructure.reporting.native_stage_child_custody import NativeStageChildReaderOperation
         from infrastructure.reporting.native_stage_loader_replay import renderer_crossref_data
@@ -120,7 +120,7 @@ class CrossrefFilterReaderOperation:
     ) -> CrossrefFilterReaderOperation:
         """Admit one exact baseline/observed slot from the same real renderer."""
         from infrastructure.reporting.native_crossref_pair import LEG_SCHEMA
-        from infrastructure.reporting.native_format_acceptance_validation import _file
+        from infrastructure.reporting.native_format_acceptance_evidence import _file
 
         if (
             cls is not CrossrefFilterReaderOperation
@@ -214,7 +214,7 @@ class CrossrefFilterReaderOperation:
         remaining(self.deadline)
 
     def _child(self) -> dict[str, Any]:
-        from infrastructure.reporting.native_format_acceptance_validation import _file
+        from infrastructure.reporting.native_format_acceptance_evidence import _file
         from infrastructure.reporting.native_tool_replay import (
             authenticate_original_native_artifact,
             validate_native_tool_data,
@@ -536,7 +536,7 @@ class CrossrefFilterReaderOperation:
         run_id: str,
         required_sdk_modules: tuple[str, ...],
     ) -> dict[str, Any]:
-        from infrastructure.reporting.native_format_acceptance_validation import _file
+        from infrastructure.reporting.native_format_acceptance_evidence import _file
 
         if run_id != self.run_id or reader.root != self.parent_reader.root:
             raise ValueError("crossref nested original tool differs from the held external current reader/run")
@@ -569,10 +569,7 @@ class CrossrefFilterReaderOperation:
 
     def replay(self) -> dict[str, Any]:
         """Authenticate actual nested OS outcomes, then independently inspect JSON."""
-        from infrastructure.reporting.native_format_acceptance_validation import (
-            _file,
-            _tool,
-        )
+        from infrastructure.reporting.native_format_acceptance_evidence import _file, _tool
 
         parent_qualification = None
         stage: NativeStageChildReaderOperation | None = getattr(self, "_renderer_stage_owner", None)

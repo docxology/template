@@ -31,7 +31,7 @@ def replay_epub_observer(
     versions: dict[str, dict[str, Any]],
     deadline: float,
 ) -> None:
-    from infrastructure.reporting.native_format_acceptance_validation import _file, _raster
+    from infrastructure.reporting.native_format_acceptance_evidence import _file, _raster
     from infrastructure.reporting.native_tool_replay import validate_original_native_tool
     from infrastructure.reporting.native_format_observer_dispatch import _manuscript_contracts
     from infrastructure.reporting.native_epub_observer import (
@@ -84,7 +84,7 @@ def replay_projection_observer(
     source_reference: PublicReference | None = None,
     verify_source_correspondence: SourceCorrespondence | None = None,
 ) -> dict[str, Any]:
-    from infrastructure.reporting.native_format_acceptance_validation import _file, _raster
+    from infrastructure.reporting.native_format_acceptance_evidence import _file, _raster
     from infrastructure.reporting.native_format_observer_validation import replay_office_conversion
     from infrastructure.reporting.native_projection_contracts import (
         projection_contract_record,
@@ -174,7 +174,7 @@ def replay_projection_observer(
             ):
                 raise ValueError("retained native QR input differs from admitted page raster")
             runtime = _file(qr["runtime_artifact"], reader).json_object()
-            from infrastructure.reporting.native_format_acceptance_validation import _tool
+            from infrastructure.reporting.native_format_acceptance_evidence import _tool
 
             for binding in (runtime["version_artifact"], runtime["loader_artifact"], qr["tool_artifact"]):
                 tool = _file(binding, reader).json_object()

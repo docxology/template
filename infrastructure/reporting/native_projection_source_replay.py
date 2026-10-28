@@ -23,7 +23,7 @@ def _original_tools(
     bindings: list[dict[str, str]], reader: SnapshotReader, run_id: str
 ) -> Callable[[dict[str, Any]], None]:
     """Bind supplied callbacks to exact retained original native process custody."""
-    from infrastructure.reporting.native_format_acceptance_validation import _file, _tool
+    from infrastructure.reporting.native_format_acceptance_evidence import _file, _tool
 
     held = []
     for binding in bindings:
@@ -81,7 +81,7 @@ def replay_admitted_manuscript_projection(
     source_reference: PublicReference | None,
     verify_source_correspondence: SourceCorrespondence | None,
 ) -> dict[str, Any]:
-    from infrastructure.reporting.native_format_acceptance_validation import _file, _raster
+    from infrastructure.reporting.native_format_acceptance_evidence import _file, _raster
     from infrastructure.reporting.native_slide_replay import replay_manuscript_slide_reference
 
     _admit(root, reader, source_reference, verify_source_correspondence, deadline)
@@ -137,7 +137,7 @@ def _package_qr(
     run_id: str,
     custody: dict[str, str],
 ) -> None:
-    from infrastructure.reporting.native_format_acceptance_validation import _file, _tool
+    from infrastructure.reporting.native_format_acceptance_evidence import _file, _tool
     from infrastructure.reporting.native_qr_runtime import replay_projection_qr_runtime
 
     for ordinal, page in enumerate(original["pages"], 1):
@@ -184,7 +184,7 @@ def replay_admitted_pitch_companion(
     source_reference: PublicReference | None,
     verify_source_correspondence: SourceCorrespondence | None,
 ) -> dict[str, Any]:
-    from infrastructure.reporting.native_format_acceptance_validation import _file, _raster
+    from infrastructure.reporting.native_format_acceptance_evidence import _file, _raster
 
     tracked = _admit(root, reader, source_reference, verify_source_correspondence, deadline)
     if artifact.format == "pdf":

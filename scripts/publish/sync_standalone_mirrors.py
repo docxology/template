@@ -26,7 +26,8 @@ REPO_ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(REPO_ROOT))
 
 from infrastructure.project.public_scope import public_project_names  # noqa: E402
-from infrastructure.publishing.standalone_mirror import clean_source_revision, sync_exemplar  # noqa: E402
+from infrastructure.publishing._standalone_mirror_source import clean_source_revision  # noqa: E402
+from infrastructure.publishing.standalone_mirror import sync_exemplar  # noqa: E402
 from infrastructure.publishing.standalone_install_projection import GitInstallProvider  # noqa: E402
 
 

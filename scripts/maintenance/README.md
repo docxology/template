@@ -23,7 +23,7 @@ validation gates (those live in [`scripts/gates/`](../gates/)).
 | `normalize_backlogs.py` | `infrastructure.documentation.backlog_normalizer` | Normalize public exemplar TODO files into future-only typed tables and archive removed historical sections |
 | `normalize_status.py` | `scripts.docgen.status_evidence` | Normalize the root status ledger into stable, machine-readable evidence rows |
 | `benchmark_health.py` | `infrastructure.core.health_benchmark` | Run serial/parallel clean-checkout health and write an acceptance manifest |
-| `benchmark_tests.py` | `infrastructure.core.test_performance` | Run matched serial/parallel evidence for the infrastructure or public quick test lane |
+| `benchmark_tests.py` | `infrastructure.core.testing.test_performance` | Run matched serial/parallel evidence for the infrastructure or public quick test lane |
 | `coordinated_release.py` | `infrastructure.publishing.release_plan` and `release_plan_transaction` | Plan, check, apply or roll back a reviewed patch/minor metadata plan with a private external journal; never commits, tags, publishes or grants acceptance |
 
 ## Running

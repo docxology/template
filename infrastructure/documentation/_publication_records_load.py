@@ -93,66 +93,67 @@ def _sidecar_findings(
 def load_publication_records(repo_root: Path) -> list[PublicationRecord]:
     """Load publication records from public project configs and sidecars."""
     repo_root = Path(repo_root).resolve()
-    records: list[PublicationRecord] = []
-    for project_name in public_project_names(repo_root):
-        project_root = repo_root / "projects" / project_name
-        config_path = project_root / "manuscript" / "config.yaml"
-        config = _load_yaml_mapping(config_path)
-        paper = _section_mapping(config, "paper")
-        book = _section_mapping(config, "book")
-        publication = _section_mapping(config, "publication")
+    return [load_publication_record(repo_root, project_name) for project_name in public_project_names(repo_root)]
 
-        # Prose/code exemplars use `paper:`; book-length exemplars use `book:`.
-        title = str(paper.get("title") or book.get("title") or project_name)
-        paper_version = str(paper.get("version") or book.get("version") or "").strip()
-        concept_doi = str(publication.get("doi") or "").strip()
-        version_doi = str(publication.get("version_doi") or "").strip()
-        version_record = str(publication.get("version_record") or "").strip()
-        github_repository = str(publication.get("github_repository") or "").strip()
-        repository_url = normalized_repository_url(publication) or ""
 
-        standalone_path = project_root / "STANDALONE.md"
-        citation_path = project_root / "CITATION.cff"
-        zenodo_json_path = project_root / ".zenodo.json"
-        codemeta_path = project_root / "codemeta.json"
-        citation = _load_yaml_mapping(citation_path)
-        zenodo_json = _load_json_mapping(zenodo_json_path)
-        codemeta = _load_json_mapping(codemeta_path)
+def load_publication_record(repo_root: Path, project_name: str) -> PublicationRecord:
+    """Load one project's publication record from its config and citation sidecars."""
+    repo_root = Path(repo_root).resolve()
+    project_root = repo_root / "projects" / project_name
+    config_path = project_root / "manuscript" / "config.yaml"
+    config = _load_yaml_mapping(config_path)
+    paper = _section_mapping(config, "paper")
+    book = _section_mapping(config, "book")
+    publication = _section_mapping(config, "publication")
 
-        records.append(
-            PublicationRecord(
-                project_name=project_name,
-                title=title,
-                paper_version=paper_version,
-                authors=_authors_from_config(config),
-                concept_doi=concept_doi,
-                version_doi=version_doi,
-                version_record=version_record,
-                github_repository=github_repository,
-                repository_url=repository_url,
-                published_artifacts=_published_artifacts(publication),
-                standalone_path=standalone_path,
-                config_path=config_path,
-                citation_path=citation_path,
-                zenodo_json_path=zenodo_json_path,
-                codemeta_path=codemeta_path,
-                release_status=str(publication.get("release_status") or "published").strip().lower(),
-                intended_version=str(publication.get("intended_version") or "").strip(),
-                last_published_version=str(publication.get("last_published_version") or "").strip(),
-                publication_status=str(publication.get("status") or "published").strip().lower(),
-                citation_version=str(citation.get("version", "")).strip().strip("'\""),
-                citation_doi=str(citation.get("doi", "")).strip(),
-                zenodo_json_version=str(zenodo_json.get("version", "")).strip(),
-                sidecar_findings=_sidecar_findings(
-                    paper_version=str(publication.get("last_published_version") or paper_version)
-                    if publication.get("release_status") == "unreleased"
-                    else paper_version,
-                    concept_doi=concept_doi,
-                    citation=citation,
-                    zenodo_json=zenodo_json,
-                    codemeta=codemeta,
-                    standalone_exists=standalone_path.is_file(),
-                ),
-            )
-        )
-    return records
+    # Prose/code exemplars use `paper:`; book-length exemplars use `book:`.
+    title = str(paper.get("title") or book.get("title") or project_name)
+    paper_version = str(paper.get("version") or book.get("version") or "").strip()
+    concept_doi = str(publication.get("doi") or "").strip()
+    version_doi = str(publication.get("version_doi") or "").strip()
+    version_record = str(publication.get("version_record") or "").strip()
+    github_repository = str(publication.get("github_repository") or "").strip()
+    repository_url = normalized_repository_url(publication) or ""
+
+    standalone_path = project_root / "STANDALONE.md"
+    citation_path = project_root / "CITATION.cff"
+    zenodo_json_path = project_root / ".zenodo.json"
+    codemeta_path = project_root / "codemeta.json"
+    citation = _load_yaml_mapping(citation_path)
+    zenodo_json = _load_json_mapping(zenodo_json_path)
+    codemeta = _load_json_mapping(codemeta_path)
+    release_status = str(publication.get("release_status") or "published").strip().lower()
+    last_published_version = str(publication.get("last_published_version") or "").strip()
+
+    return PublicationRecord(
+        project_name=project_name,
+        title=title,
+        paper_version=paper_version,
+        authors=_authors_from_config(config),
+        concept_doi=concept_doi,
+        version_doi=version_doi,
+        version_record=version_record,
+        github_repository=github_repository,
+        repository_url=repository_url,
+        published_artifacts=_published_artifacts(publication),
+        standalone_path=standalone_path,
+        config_path=config_path,
+        citation_path=citation_path,
+        zenodo_json_path=zenodo_json_path,
+        codemeta_path=codemeta_path,
+        release_status=release_status,
+        intended_version=str(publication.get("intended_version") or "").strip(),
+        last_published_version=last_published_version,
+        publication_status=str(publication.get("status") or "published").strip().lower(),
+        citation_version=str(citation.get("version", "")).strip().strip("'\""),
+        citation_doi=str(citation.get("doi", "")).strip(),
+        zenodo_json_version=str(zenodo_json.get("version", "")).strip(),
+        sidecar_findings=_sidecar_findings(
+            paper_version=last_published_version or paper_version if release_status == "unreleased" else paper_version,
+            concept_doi=concept_doi,
+            citation=citation,
+            zenodo_json=zenodo_json,
+            codemeta=codemeta,
+            standalone_exists=standalone_path.is_file(),
+        ),
+    )

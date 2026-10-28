@@ -1122,7 +1122,7 @@ A shell command recommendation without executing it.
 *function — defined in `infrastructure.project.copy_exemplar`*
 
 ```python
-copy_exemplar(repo_root: Path | str, source: str, dest: Path | str, *, new_name: str | None=None) -> CopyResult
+copy_exemplar(repo_root: Path | str, source: str, dest: Path | str, *, new_name: str | None=None, sdk_source: str | None=None, author_name: str | None=None, author_email: str | None=None) -> CopyResult
 ```
 
 Clean-copy a public exemplar to ``dest``.
@@ -1162,7 +1162,7 @@ Discover all valid projects in the active projects directory.
 *function — defined in `infrastructure.project.copy_exemplar`*
 
 ```python
-export_exemplar(repo_root: Path | str, source: str, dest: Path | str, *, new_name: str | None=None, project_only: bool=False, deadline_monotonic: float | None=None) -> CopyResult
+export_exemplar(repo_root: Path | str, source: str, dest: Path | str, *, new_name: str | None=None, project_only: bool=False, deadline_monotonic: float | None=None, sdk_source: str | None=None, author_name: str | None=None, author_email: str | None=None) -> CopyResult
 ```
 
 Clean-copy an exemplar and write a deterministic provenance manifest.
@@ -1212,7 +1212,7 @@ Load and validate one YAML attestation from an offline fixture or project.
 *function — defined in `infrastructure.project.copy_exemplar`*
 
 ```python
-plan_copy(repo_root: Path | str, source: str, dest: Path | str, *, new_name: str | None=None, dry_run: bool=False) -> CopyResult
+plan_copy(repo_root: Path | str, source: str, dest: Path | str, *, new_name: str | None=None, dry_run: bool=False, sdk_source: str | None=None, author_name: str | None=None, author_email: str | None=None) -> CopyResult
 ```
 
 Return the clean-copy plan and optionally create the destination tree.

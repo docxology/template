@@ -30,12 +30,8 @@ def validate_native_controls(
     deadline: float,
     operation: NativeReaderOperation,
 ) -> dict[str, Any]:
-    from infrastructure.reporting.native_format_acceptance_validation import (
-        _file,
-        _process,
-        _tool,
-        native_environment_for_replay,
-    )
+    from infrastructure.reporting.native_format_acceptance_validation import native_environment_for_replay
+    from infrastructure.reporting.native_format_acceptance_evidence import _file, _process, _tool
 
     checked_refusals: list[dict[str, Any]] = []
     checked_suites: dict[str, Any] = {}

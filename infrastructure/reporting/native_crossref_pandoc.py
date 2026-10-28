@@ -214,7 +214,7 @@ def reproduce_crossref_filter(
     from infrastructure.reporting.native_format_joint_source import (
         require_native_operation,
     )
-    from infrastructure.reporting.native_format_acceptance_validation import _file
+    from infrastructure.reporting.native_format_acceptance_evidence import _file
 
     operation = require_native_operation(reader)
     if deadline != operation.deadline:

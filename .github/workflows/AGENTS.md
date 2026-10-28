@@ -124,6 +124,24 @@ its own `uv sync …` line so optional groups (`rendering`/`monitoring`/`discopy
 remain visible per job. When bumping a setup action's SHA, edit the composite
 action — not each job.
 
+The gate steps are shared the same way, by both `ci.yml` and this workflow:
+
+| Action | Callers |
+| --- | --- |
+| [`setup-actionlint`](../actions/setup-actionlint/README.md) | the `actionlint` job of each workflow (one pin: release commit, version, installer SHA-256) |
+| [`run-public-lint`](../actions/run-public-lint/README.md) | `lint` in both workflows; `ci.yml` passes `safety-scan: "true"`, hardening passes `type-check: ratchet` |
+| [`run-tracked-guards`](../actions/run-tracked-guards/README.md) | `lint` in both workflows (sequential, blocking) |
+| [`run-safety-scan`](../actions/run-safety-scan/README.md) | hardening `security` (Bandit over the Source-derived roster, `no-mocks: "false"`); `ci.yml` reaches it through `run-public-lint` |
+| [`check-browser`](../actions/check-browser/README.md) | `ci.yml` `test-infra` and `test-contract` |
+| [`setup-tex-toolchain`](../actions/setup-tex-toolchain/README.md) | hardening `test-infra-slow` and `release-rehearsal` (identical cached xelatex/bibtex block) |
+
+`run-public-lint` runs its gates concurrently inside one step — Ruff check, Ruff
+format, and the type gate each write their own log and the step aggregates their
+exit status — so the measured serial lint time no longer adds up. The
+public-source scope producer and the tracked-tree guards stay sequential. A
+GitHub Actions step cannot overlap another step, so the safety scan joins the
+same wave from inside `run-public-lint` rather than as a sibling step.
+
 The `health` and `docs-lint` jobs additionally share
 [`.github/actions/setup-docs-lint`](../actions/setup-docs-lint/action.yml),
 which provisions the pinned Node runtime/cache plus real `mmdc` and
@@ -135,8 +153,9 @@ behaviorally equivalent to the dedicated documentation job.
 #### 1. Lint & Type Check (`lint`)
 
 - **Runner:** `ubuntu-latest` / Python 3.14
-- **Tools:** `uv run ruff check`, `uv run ruff format --check`, `uv run mypy`, `uv run python -m infrastructure.skills check-all-exports`, `uv run python scripts/audit/check_template_drift.py --strict`
-- **Scope:** Ruff uses public lint paths from `infrastructure.project.public_scope lint-paths`; mypy uses its narrower `source-paths` output.
+- **Shared gates:** [`run-public-lint`](../actions/run-public-lint/README.md) with `type-check: ratchet` (Ruff check, Ruff format check, `scripts/gates/mypy_ratchet.py`, concurrently with separate logs) and [`run-tracked-guards`](../actions/run-tracked-guards/README.md) (confidentiality, secrets, generated artifacts — sequential).
+- **Tools:** `uv run python -m infrastructure.skills check-all-exports`, `uv run python -m infrastructure.skills operations-check`, `ruff check --select T20 infrastructure/`, `check_mirror_symlinks.py`, `check_doc_module_refs.py`, `publication-audit --all-public --strict`, the XML parser policy, `module_line_count_check.py`, `check_template_drift.py --strict`, `check_backlog.py`, `check_claim_bindings.py`.
+- **Scope:** Ruff and mypy use the public scopes from `infrastructure.project.public_scope ci-paths` (resolved once inside the shared action); Bandit lives in the `security` job.
 
 #### 2. Static Health Report (`health`)
 
@@ -320,12 +339,12 @@ runners must be Actions runner `v2.327.1` or newer.
 
 ## Dependabot Automerge Workflow (`dependabot-automerge.yml`)
 
-Triggers on `pull_request_target` (opened, reopened, synchronize, ready_for_review) — but only acts when `github.actor == 'dependabot[bot]'`.
+Triggers on `pull_request_target` (opened, reopened, synchronize, ready_for_review) and on `workflow_run` completion of `CI` — but only acts on `github.actor == 'dependabot[bot]'` PRs.
 
-1. Fetches Dependabot update metadata via `dependabot/fetch-metadata@v3.1.0`
-2. Enables GitHub native auto-merge (`gh pr merge --auto --squash`) for `semver-minor` and `semver-patch` updates only; major bumps are left for human review
-3. Never checks out or executes PR HEAD code — only reads metadata and calls the GitHub API — so the elevated `pull_request_target` trigger does not expose secrets to untrusted code
-4. Auto-merge must also be enabled in repository settings (Settings → General → "Allow auto-merge")
+1. `qualify` reads update metadata via `dependabot/fetch-metadata@v3.1.0` and applies the `automerge:dependabot-minor-patch` label only for `semver-minor`/`semver-patch` updates in a declared ecosystem (`github_actions`, `pip`); anything else has the label removed
+2. `merge` squash-merges the PR after a successful `CI` run for its current head commit, requiring an open non-draft PR into `main`, a CLEAN merge state, and the same head SHA (`--match-head-commit` makes that binding atomic)
+3. Never checks out or executes PR HEAD code — only reads metadata and calls the GitHub API — so the elevated triggers do not expose secrets to untrusted code
+4. GitHub's native auto-merge is not used: `allow_auto_merge` is `false` on this repository, so `gh pr merge --auto` failed with `Auto merge is not allowed for this repository (enablePullRequestAutoMerge)` (run 40627322822). Ineligible or still-blocked PRs are recorded as skips, not failures
 
 ---
 

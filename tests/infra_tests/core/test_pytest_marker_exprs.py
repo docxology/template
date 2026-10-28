@@ -2,7 +2,29 @@
 
 from __future__ import annotations
 
-from infrastructure.core.testing.pytest_marker_exprs import build_pytest_marker_expression
+import shlex
+import tomllib
+from pathlib import Path
+
+from infrastructure.core.testing.pytest_marker_exprs import (
+    build_pytest_marker_expression,
+    repository_marker_expression,
+)
+
+ROOT = Path(__file__).resolve().parents[3]
+
+
+def _addopts_marker_expression(root: Path) -> str:
+    """Return the ``-m`` expression pytest receives from ``pyproject.toml``."""
+    metadata = tomllib.loads((root / "pyproject.toml").read_text(encoding="utf-8"))
+    addopts = metadata["tool"]["pytest"]["ini_options"]["addopts"]
+    arguments = shlex.split(addopts)
+    return arguments[arguments.index("-m") + 1]
+
+
+def test_pyproject_addopts_marker_expression_matches_builder() -> None:
+    """The inline ``addopts`` text may not drift from the builder's defaults."""
+    assert _addopts_marker_expression(ROOT) == repository_marker_expression()
 
 
 def test_default_triple_skip_matches_repo_gate() -> None:

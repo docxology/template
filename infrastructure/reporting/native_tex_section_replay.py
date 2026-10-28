@@ -12,7 +12,7 @@ from typing import Any
 from infrastructure.project.public_reference_git import remaining
 from infrastructure.rendering.latex_utils import latex_compile_command
 from infrastructure.reporting.native_format_acceptance_contracts import NativeArtifact
-from infrastructure.reporting.native_format_acceptance_validation import _file, _tool
+from infrastructure.reporting.native_format_acceptance_evidence import _file, _tool
 from infrastructure.reporting.native_format_joint_source import require_native_operation
 from infrastructure.reporting.native_format_pdf_reference_parity import inspect_pdf_reference_parity
 from infrastructure.reporting.native_pdf_citation_runtime import dependency_identity

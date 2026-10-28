@@ -55,7 +55,7 @@ def replay_office_scientific_controls(
     from infrastructure.reporting.native_format_current_pandoc import current_pandoc_reader
     from infrastructure.reporting.native_print_child_custody import OfficeScientificControlReaderOperation
     from infrastructure.reporting.native_tool_replay import validate_original_native_tool
-    from infrastructure.reporting.native_format_acceptance_validation import _file, _raster, _tool
+    from infrastructure.reporting.native_format_acceptance_evidence import _file, _raster, _tool
     from infrastructure.reporting.native_format_observer_source_replay import replay_office_conversion
     from infrastructure.reporting.native_epub_replay import replay_epub_conversion
     from infrastructure.reporting.native_office_content_witness import inspect_office_source_survival

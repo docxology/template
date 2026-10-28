@@ -404,7 +404,7 @@ def replay_html_hydration_ordinals(
     browser Source packet is required, so retained argv cannot select filters,
     bibliographies or a Crossref owner. Fresh Current observations stay separate.
     """
-    from infrastructure.reporting.native_format_acceptance_validation import _tool
+    from infrastructure.reporting.native_format_acceptance_evidence import _tool
     from infrastructure.reporting.native_format_joint_source import require_native_operation
     from infrastructure.reporting.native_format_portable_custody import producer_path
     from infrastructure.reporting.native_crossref_replay import CrossrefFilterReaderOperation

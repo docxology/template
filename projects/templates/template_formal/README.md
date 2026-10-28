@@ -182,6 +182,14 @@ uv run python scripts/pipeline/stage_03_render.py --project templates/template_f
 #   - Lean/Lake via elan: export PATH="$HOME/.elan/bin:$PATH"
 #   - A Java runtime for TLC (e.g. `brew install openjdk@17`); override the
 #     binary with FORMAL_JAVA_BIN if it is not on PATH as `java`
+#   - The hash-pinned TLC jar in its gitignored local cache path. TLC 1.7.4
+#     refuses newer JVMs; Java 17 is what this project documents and what CI
+#     provisions. The jar is never tracked: fetch it into
+#     formal/tla/tla2tools.jar and verify the pin first:
+#       curl -fsSL -o formal/tla/tla2tools.jar \
+#         https://github.com/tlaplus/tlaplus/releases/download/v1.7.4/tla2tools.jar
+#       shasum -a 256 formal/tla/tla2tools.jar   # must equal TLC_SHA256 in src/
+#     Alternatively point TEMPLATE_FORMAL_TLC_JAR at that verified file.
 projects/templates/template_formal/scripts/check_formal_specs.sh
 ```
 

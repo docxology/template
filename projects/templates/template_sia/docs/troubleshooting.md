@@ -20,16 +20,23 @@ Add `pytest-timeout` to project dev dependencies (already in `pyproject.toml`). 
 
 The variables script must not import `infrastructure.rendering` package init. Use `infrastructure.rendering.manuscript_injection.write_resolved_manuscript_tree` (lazy load of `manuscript_injection.py` only, not the package `__init__.py`).
 
-## `Unknown config key 'sia'`
+## `Unknown config key` for a SIA block
 
-Expected and harmless when this warning comes from the generic
-`infrastructure.core.config` loader validating `manuscript/config.yaml`
-directly (e.g. via ad hoc scripts or the shared config CLI). `src/template_sia/loop/loop_config.py`
-reads the `sia:` block itself with a private YAML helper and never registers
-the key with `register_project_schema_extension` — no such call exists in
-this project. To make the shared loader recognize `sia` and silence the
-warning, register the extension (mirroring the pattern in
-`template_gold_refinement/tests/test_config.py`): `register_project_schema_extension("template_sia", {"sia": dict})`.
+SIA keeps its settings under the canonical `project_config` key
+(`project_config.sia`), which the shared loader already accepts, so a correct
+config produces no warning. If you move those settings to a new top-level key,
+declare that key in this project's own `pyproject.toml` instead of editing
+Layer 1:
+
+```toml
+[tool.template]
+config_keys = ["sia"]
+```
+
+`infrastructure.core.project_pyproject` reads the declaration and
+`infrastructure.core.config.loader.validate_config_keys` accepts it for
+`project_config.sia`-style blocks. `src/template_sia/loop/loop_config.py` still
+validates the SIA block's own fields strictly.
 
 ## Analysis: missing `run_summary.json`
 

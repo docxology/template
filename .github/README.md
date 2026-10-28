@@ -911,7 +911,7 @@ Long-horizon viability — toolchain migration, local CI, archival targets, regr
 | [`stale.yml`](workflows/stale.yml) | Daily schedule | Close inactive issues/PRs (`actions/stale`) |
 | [`release.yml`](workflows/release.yml) | `v*.*.*` tag · manual dispatch | Exact-tag gates, root 4+ full required-acceptance handoff, installed-wheel matrix, rendered evidence, and release build |
 | [`platform-required-acceptance.yml`](workflows/platform-required-acceptance.yml) | manual only | Original Root/common/native observations and strict complete candidate handoff; implementation presence is not acceptance or publication proof |
-| [`dependabot-automerge.yml`](workflows/dependabot-automerge.yml) | `pull_request_target` (Dependabot only) | Auto-merge safe (minor/patch) Dependabot PRs after all required checks pass |
+| [`dependabot-automerge.yml`](workflows/dependabot-automerge.yml) | `pull_request_target` + `workflow_run` (Dependabot only) | Marks safe (minor/patch) Dependabot PRs, then squash-merges them after the `CI` run for the same head commit succeeds |
 
 ### CI Jobs (`hardening.yml`) — complete inventory
 
@@ -1081,12 +1081,15 @@ reviews, while the repository's sensitive-area review obligations remain in
 | Python (uv) | `dev-tools` (pytest, mypy, ruff…) | 5 |
 | Python (uv) | `scientific-core` (numpy, scipy…) | 5 |
 
-Auto-merge for safe (minor/patch) Dependabot PRs is enabled by
-[`workflows/dependabot-automerge.yml`](workflows/dependabot-automerge.yml) —
-it triggers on `pull_request_target` for Dependabot PRs only, enables GitHub
-native auto-merge (`gh pr merge --auto --squash`), and never checks out or
-executes PR HEAD code. Major bumps are left for human review. Auto-merge must
-also be enabled in repository settings.
+Auto-merge for safe (minor/patch) Dependabot PRs is implemented by
+[`workflows/dependabot-automerge.yml`](workflows/dependabot-automerge.yml). It
+triggers on `pull_request_target` for Dependabot PRs only, marks minor/patch
+updates from the declared ecosystems with an `automerge:dependabot-minor-patch`
+label, and then squash-merges that PR when the `CI` workflow for the same head
+commit succeeds with a CLEAN merge state. It never checks out or executes PR HEAD
+code, and major bumps are left for human review. GitHub's native auto-merge is not
+required — it is disabled on this repository, which is why the workflow performs
+the merge itself.
 
 Each JavaScript action declares its runtime in the pinned `action.yml`; consult that revision's documentation for self-hosted runner requirements.
 The pinned [checkout](https://raw.githubusercontent.com/actions/checkout/3d3c42e5aac5ba805825da76410c181273ba90b1/action.yml) and [release](https://raw.githubusercontent.com/softprops/action-gh-release/efb35369e0ad2afab669f228072c1b0d510eae64/action.yml) actions declare `runs.using: node24`.

@@ -383,10 +383,7 @@ def replay_office_diagram_visibility(
     producer artifacts. Original absolute executable paths remain custody
     labels; new execution selects current tools through Root's admitted env.
     """
-    from infrastructure.reporting.native_format_acceptance_validation import (
-        _file,
-        _tool,
-    )
+    from infrastructure.reporting.native_format_acceptance_evidence import _file, _tool
     from infrastructure.reporting.native_format_portable_custody import producer_path
 
     if (

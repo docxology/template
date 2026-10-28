@@ -1,0 +1,25 @@
+name: Setup TeX toolchain
+description: >-
+  Restore the documented apt/TeX Live cache and install the xelatex + bibtex
+  package set that the slow and rehearsal lanes compile with.
+runs:
+  using: composite
+  steps:
+    - name: Restore TeX Live cache
+      id: texlive-cache
+      uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+      with:
+        path: |
+          /var/cache/apt
+          /usr/share/texlive
+          /usr/share/texmf
+        key: texlive-${{ runner.os }}-xetex-extra-bibtex-fonts-v1
+
+    - name: Install TeX Live (xelatex + bibtex)
+      if: steps.texlive-cache.outputs.cache-hit != 'true'
+      shell: bash
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y --no-install-recommends \
+          texlive-xetex texlive-latex-extra texlive-bibtex-extra \
+          texlive-fonts-recommended lmodern

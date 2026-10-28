@@ -67,7 +67,7 @@ def _copy_selected_platform(root: Path) -> Path:
         shutil.copytree(checkout / "scripts", root / "scripts", ignore=shutil.ignore_patterns("__pycache__"))
     else:
         selected = importlib.metadata.distribution("research-project-template")
-        assert selected.version == "4.1.0" and selected.files is not None
+        assert selected.version == "4.3.0" and selected.files is not None
         records = [path for path in selected.files if str(path).endswith(".dist-info/RECORD")]
         assert len(records) == 1
         metadata = records[0].parent
