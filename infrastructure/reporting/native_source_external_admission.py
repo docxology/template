@@ -153,7 +153,10 @@ def _pure_source_records(root: Path, reader: SnapshotReader, deadline: float) ->
 
     def admit_path(path: Path) -> None:
         relative = path.relative_to(root).as_posix()
-        reader.public_path(
+        # tree_records independently holds/rechecks the no-follow physical
+        # traversal. This callback only applies public lexical scope policy;
+        # held bytes and reader.unchanged() retain their own physical checks.
+        reader._public_lexical_path(
             relative + "/.reference-directory-policy" if path in declared_roots and path.is_dir() else relative
         )
 

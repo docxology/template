@@ -70,8 +70,8 @@ def main(argv: list[str] | None = None) -> int:
     )
     parser.add_argument(
         "--project-workers",
-        default="serial",
-        help="bounded public-exemplar collection concurrency; use 'serial' or a positive integer",
+        default="auto",
+        help="bounded public-exemplar collection concurrency (default: auto); use 'serial' or a positive integer",
     )
     args = parser.parse_args(argv)
 

@@ -52,14 +52,21 @@ def _directory(reader: SnapshotReader, relative: str) -> Path:
 
 
 def _path_admission(reader: SnapshotReader) -> Callable[[Path], None]:
+    """Apply lexical policy inside the no-follow, closing-checked tree walker.
+
+    ``tree_records`` holds and verifies every directory and file it traverses.
+    Re-resolving each path here duplicates that physical traversal for every
+    ancestor of every member. Direct directory/byte and deliverable consumers
+    still use ``public_path``/``read`` with their independent physical checks.
+    """
     roots = frozenset(_public_roots(reader.root)[0])
 
     def admitted(path: Path) -> None:
         relative = path.relative_to(reader.root).as_posix()
         if path in roots and path.is_dir():
-            _directory(reader, relative)
+            reader._public_lexical_path(relative + "/.reference-directory-policy")
         else:
-            reader.public_path(relative)
+            reader._public_lexical_path(relative)
 
     return admitted
 
@@ -89,7 +96,7 @@ def _canonical_inventory(root: Path) -> tuple[tuple[str, str, str], ...]:
             if stable.issues:
                 raise ValueError("public reference stable deliverable inventory is unavailable")
             for path in stable.files:
-                path_admission(path)
+                reader.public_path(path.relative_to(root).as_posix())
                 observed.append((path.relative_to(root).as_posix(), "deliverable", ""))
                 if len(observed) > MAX_FILES:
                     raise ValueError("canonical public reference exceeds its entry bound")
