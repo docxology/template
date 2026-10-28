@@ -151,7 +151,7 @@ def validate_xml_parser_policy(scan_dir: Path, repo_root: Path) -> list[str]:
     for py_file in sorted(scan_dir.rglob("*.py")):
         try:
             source = py_file.read_text(encoding="utf-8")
-        except (OSError, UnicodeDecodeError):
+        except OSError, UnicodeDecodeError:
             # Unreadable file: out of scope for a static import policy check.
             continue
         try:

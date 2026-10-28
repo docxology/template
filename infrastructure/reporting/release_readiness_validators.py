@@ -98,7 +98,7 @@ def _runtime_probe(requirement: Requirement, details: dict[str, Any], reader: Sn
         or type(raw.get("execution_exit_code")) is not int
         or raw["execution_exit_code"] != 0
         or raw.get("missing") != []
-        or minor not in {"3.12", "3.13", "3.14"}
+        or minor not in {"3.14", "3.15"}
         or (requirement.python_version and minor != requirement.python_version)
         or not isinstance(executable, str)
         or not Path(executable).is_absolute()

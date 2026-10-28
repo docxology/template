@@ -57,7 +57,7 @@ bash scripts/validate.sh
 | Dependency | Purpose | Required |
 |---|---|---|
 | `bash` ≥ 3.2 | Script runtime | Yes |
-| POSIX Python >=3.12 | JSON, deadlines, independent process guardian | Yes |
+| POSIX Python >=3.14 | JSON, deadlines, independent process guardian | Yes |
 
 Set `TEMPLATE_PYTHON` to an explicitly selected installed interpreter. The tool
 does not acquire runtimes. The finite execution budget is at most 300 seconds;

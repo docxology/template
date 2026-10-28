@@ -25,7 +25,7 @@ root, dropped capabilities, `no-new-privileges`, user `65534:65534`, one CPU,
 128 MiB memory, 32 processes, and a 16 MiB no-exec temporary filesystem.
 Only the fixed target and controller heartbeat, unlabelled feature files, and disposable prediction
 directory are mounted. No Docker socket, home directory, host credential,
-or project tree is mounted. The container must run Python 3.12–3.14. The
+or project tree is mounted. The container must run Python 3.14/3.15. The
 shared process-group supervisor bounds each target to 60 seconds. A trusted
 container PID 1 independently enforces that deadline and exits if its read-only
 controller heartbeat stops advancing for two seconds. This also terminates

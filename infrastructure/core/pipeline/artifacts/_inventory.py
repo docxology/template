@@ -368,7 +368,7 @@ def _git_ignore_matches(
             env=environment,
             timeout=30 if available is None else min(30.0, available),
         )
-    except (OSError, subprocess.TimeoutExpired):
+    except OSError, subprocess.TimeoutExpired:
         _inventory_remaining(original_deadline)
         return _GitIgnoreEvaluation(matches={}, error="git check-ignore unavailable")
     except ValueError:

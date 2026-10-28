@@ -13,7 +13,12 @@ description = "Deterministic reference implementation of the AutoScientists self
 authors = [
     {name = "Daniel Ari Friedman", email = "daniel@activeinference.institute"}
 ]
-requires-python = ">=3.12"
+requires-python = ">=3.14"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.14",
+    "Programming Language :: Python :: 3.15",
+]
 dependencies = [
     "requests>=2.32.0",
     "research-project-template==4.1.0",
@@ -71,7 +76,7 @@ exclude_lines = [
 # Compatibility contract for this independent exemplar release.
 [tool.template]
 platform_version = "4.1.0"
-tested_python_versions = ["3.12", "3.13", "3.14"]
+tested_python_versions = ["3.14", "3.15"]
 required_unpaid_capabilities = ["local-coordination"]
 
 [tool.uv.sources]

@@ -131,7 +131,7 @@ def inspect_table_columns(source: dict[str, Any], actual: dict[str, Any]) -> dic
             style = column.get("style_width", "")
             try:
                 fraction = float(style.removesuffix("%")) / 100 if style.endswith("%") else float("nan")
-            except (ValueError, AttributeError):
+            except ValueError, AttributeError:
                 fraction = float("nan")
             # Pandoc rounds column percentages to an integer percentage.
             if not math.isfinite(fraction) or abs(fraction - expected["width"]) > 0.005001:

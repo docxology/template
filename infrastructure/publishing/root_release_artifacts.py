@@ -17,6 +17,7 @@ from typing import Any
 
 from infrastructure.core.execution_boundary import run_bounded_subprocess
 from infrastructure.core.files.secure_write import atomic_write_bytes_confined, read_bytes_confined
+from infrastructure.project.public_capabilities import CANONICAL_CI_PYTHON_VERSIONS
 from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
 from infrastructure.publishing.root_release_contract import validate_root_release_tag
 from infrastructure.reporting.readiness_receipts import public_source_paths, source_fingerprint
@@ -102,7 +103,7 @@ def _tested_wheel(root: Path, installed_receipt: Path, reader: SnapshotReader) -
     report = receipt.json_object()
     fingerprint = source_fingerprint(root)
     matrix = report.get("installed_matrix", {})
-    expected_cells = 3 * (len(PUBLIC_PROJECT_NAMES) + 1)
+    expected_cells = len(CANONICAL_CI_PYTHON_VERSIONS) * (len(PUBLIC_PROJECT_NAMES) + 1)
     if (
         type(report.get("exit_code")) is not int
         or report["exit_code"] != 0
@@ -155,7 +156,7 @@ def _tested_wheel(root: Path, installed_receipt: Path, reader: SnapshotReader) -
     if (
         len(set(identities)) != expected_cells
         or set(identities)
-        != {(scope, minor) for scope in ("root", *PUBLIC_PROJECT_NAMES) for minor in ("3.12", "3.13", "3.14")}
+        != {(scope, minor) for scope in ("root", *PUBLIC_PROJECT_NAMES) for minor in CANONICAL_CI_PYTHON_VERSIONS}
         or sorted(results, key=lambda cell: (cell["scope"], cell["python_version"]))
         != sorted(all_cells, key=lambda cell: (cell["scope"], cell["python_version"]))
     ):

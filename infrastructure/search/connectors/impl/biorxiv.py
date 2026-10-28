@@ -95,7 +95,7 @@ class BiorxivConnector:
         if date and len(date) >= 4:
             try:
                 year = int(date[:4])
-            except (ValueError, TypeError):
+            except ValueError, TypeError:
                 pass
         abstract = item.get("abstract") or None
         return ConnectorHit(

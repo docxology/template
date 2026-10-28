@@ -76,7 +76,7 @@ class UrllibExaHttpClient:
             err_body = ""
             try:
                 err_body = exc.read().decode("utf-8", errors="replace")
-            except (OSError, AttributeError):  # pragma: no cover - defensive
+            except OSError, AttributeError:  # pragma: no cover - defensive
                 pass
             # Non-2xx is returned, not raised, so the client can attach API context.
             return ExaResponse(status_code=exc.code, text=err_body, url=url)

@@ -67,9 +67,9 @@ if [[ -n "$PREPARED_PYTHON" ]]; then
     [[ -f "$PREPARED_PYTHON" && -x "$PREPARED_PYTHON" ]] \
         || die "prepared Python is not an executable file"
     python_kind=$("$PREPARED_PYTHON" -I -B -c \
-        'import sys; print("prepared-cpython" if sys.implementation.name == "cpython" and sys.version_info >= (3, 12) else "unsupported")') \
+        'import sys; print("prepared-cpython" if sys.implementation.name == "cpython" and sys.version_info >= (3, 14) else "unsupported")') \
         || die "prepared Python probe failed"
-    [[ "$python_kind" == prepared-cpython ]] || die "prepared Python must be CPython >=3.12"
+    [[ "$python_kind" == prepared-cpython ]] || die "prepared Python must be CPython >=3.14"
 fi
 
 # True when elevation may be requested without hanging: either we are root,

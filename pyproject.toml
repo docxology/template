@@ -22,7 +22,7 @@ version = "4.1.0"
 description = "A comprehensive template for research projects with test-driven development, automated PDF generation, and professional documentation structure"
 authors = [{ name = "Research Template Team" }]
 readme = "README.md"
-requires-python = ">=3.12"
+requires-python = ">=3.14"
 keywords = ["research", "template", "academic", "scientific", "documentation", "pdf-generation", "test-driven-development"]
 classifiers = [
     "Development Status :: 5 - Production/Stable",
@@ -30,12 +30,11 @@ classifiers = [
     "Intended Audience :: Developers",
     "License :: OSI Approved :: Apache Software License",
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.12",
-    "Programming Language :: Python :: 3.13",
     "Programming Language :: Python :: 3.14",
     "Topic :: Scientific/Engineering",
     "Topic :: Software Development :: Documentation",
     "Topic :: Text Processing :: Markup",
+    "Programming Language :: Python :: 3.15",
 ]
 dependencies = [
   # numpy and matplotlib are core because infrastructure/scientific/ uses them for
@@ -141,9 +140,10 @@ discopy = [
 ]
 # Required by the public template_active_inference exemplar's real simulation,
 # validation-spine, and reproducibility replay tests. Keep this separate from
-# the reusable Layer-1 package extras: it is a repository development group.
+# the reusable Layer-1 package extras: opt in with --group active-inference
+# for its owning tests; ordinary core bootstrap does not activate this group.
 active-inference = [
-    "inferactively-pymdp==1.0.1",
+    "inferactively-pymdp==1.0.3",
 ]
 # Opt-in timeseries forecasting benchmarks (tests/integration/test_timeseries_benchmarks.py)
 timeseries-bench = [
@@ -219,7 +219,6 @@ default-groups = [
     "rendering",
     "discopy",
     "steganography",
-    "active-inference",
     "public-exemplars",
 ]
 # pip-api (via pip-audit) pins an older pip; keep the installer above its
@@ -357,7 +356,7 @@ exclude_lines = [
 # ============================================================================
 
 [tool.ruff]
-target-version = "py312"
+target-version = "py314"
 line-length = 120
 
 [tool.ruff.format]

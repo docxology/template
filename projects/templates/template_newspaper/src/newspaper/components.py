@@ -444,7 +444,7 @@ def ad_flowables(ad: Ad, styles: StyleSheet1, fonts: Fonts, *, width: float, pro
                 img.hAlign = "CENTER"
                 inner.append(img)
                 inner.append(Spacer(1, 4))
-            except (OSError, TypeError, ValueError, ZeroDivisionError):
+            except OSError, TypeError, ValueError, ZeroDivisionError:
                 pass
 
     inner.append(

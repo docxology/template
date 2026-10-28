@@ -30,14 +30,14 @@ zero unexpected skips or deselections, unchanged source and bytecode custody,
 exact selected installed-runtime identity and complete current evidence.
 
 The independently selected reader runs in the original prepared interpreter.
-A Python 3.14 parent cannot reconstruct a Python 3.12 receipt using its own
+A Python 3.14 parent cannot reconstruct a Python 3.15 receipt using its own
 installed dependencies. The reader authenticates original processes, commands,
 source policy, source/deliverable identities, exact case membership, finite
 timelines and coverage arcs. Original roots and evidence are confined with
 held-directory identity and canonical atomic writes; replacement roots and
 symlink targets cannot redirect publication evidence.
 
-Required cells come from all source-owned units, Python 3.12 through 3.14 and
+Required cells come from all source-owned units, Python 3.14 and 3.15 and
 Darwin/Linux applicability. Explicit source-owned platform obligations may narrow
 a unit's applicability; missing tools, providers or hardware cannot. Other hosts,
 missing prepared interpreters and live work excluded by core mode remain visible

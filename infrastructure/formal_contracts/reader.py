@@ -91,13 +91,13 @@ def _make_block(kind: str, block_id: str, body: str, attrs: dict[str, str], line
         refs = tuple(_CITE.findall(body))
         return FormalStatement(id=block_id, title=attrs.get("title", ""), kind=kind, resolves_to=refs)
     if kind in {"figure", "table", "dataset"}:
-        cls = {"figure": Figure, "table": Table, "dataset": Dataset}[kind]
-        kwargs: dict[str, str | int | None] = {"path": attrs.get("path", "")}
-        if kind == "dataset" and "records" in attrs:
-            kwargs["records"] = int(attrs["records"])
-        block = cls(id=block_id, title=attrs.get("title", ""), **kwargs)
-        assert isinstance(block, Block)
-        return block
+        path = attrs.get("path", "")
+        title = attrs.get("title", "")
+        if kind == "dataset":
+            records = int(attrs["records"]) if "records" in attrs else None
+            return Dataset(id=block_id, title=title, path=path, records=records)
+        cls = Figure if kind == "figure" else Table
+        return cls(id=block_id, title=title, path=path)
     raise ReaderError(f"unsupported div class {kind!r}", line_no)
 
 

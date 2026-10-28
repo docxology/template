@@ -13,6 +13,7 @@ from typing import Any, Sequence
 from infrastructure.project.public_acceptance_evidence import write_json
 from infrastructure.project.public_root_census_encoding import ENCODING_SCHEMAS, decode
 from infrastructure.core.files.secure_write import atomic_write_bytes_confined
+from infrastructure.project.public_capabilities import CANONICAL_CI_PYTHON_VERSIONS
 from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
 from infrastructure.project.public_hosted_origin import HostedReadbackContext
 from infrastructure.publishing.release_acceptance import RECEIPT_PATH, _checkout_revision
@@ -39,9 +40,9 @@ def root_owned_projection(
     hosts. Policy and combined branch coverage have one fixed Linux 3.14 owner.
     Independent gate validators still require actual original native evidence.
     """
-    targets = {(host, minor) for host in ("darwin", "linux") for minor in ("3.12", "3.13", "3.14")}
+    targets = {(host, minor) for host in ("darwin", "linux") for minor in CANONICAL_CI_PYTHON_VERSIONS}
     if set(values) != targets:
-        raise ValueError("Root aggregate requires all six exact owned targets")
+        raise ValueError("Root aggregate requires all exact supported host/runtime targets")
     root_requirements = [item for item in requirements if item.kind == "root-case"]
     full = {item.id for item in root_requirements} | {"root:case-policy", "root:coverage"}
     projections = []

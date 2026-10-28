@@ -31,7 +31,7 @@ def _manuscript_identity(project_root: Path) -> tuple[str | None, str | None]:
         return None, None
     try:
         data = yaml.safe_load(config_path.read_text(encoding="utf-8")) or {}
-    except (OSError, yaml.YAMLError):
+    except OSError, yaml.YAMLError:
         logger.debug("Could not read %s; exporting without title metadata", config_path)
         return None, None
     paper = data.get("paper") or {}

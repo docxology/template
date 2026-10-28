@@ -101,7 +101,7 @@ def _coordinate(root: Path, snapshot_path: Path, expected: str) -> int:
     try:
         held = SnapshotReader(root).read((directory / "lane.json").relative_to(root).as_posix())
         result_binding = {"path": held.relative, "sha256": held.sha256}
-    except (OSError, ValueError):
+    except OSError, ValueError:
         pass
     process_binding = write(
         root,
@@ -133,7 +133,7 @@ def _coordinate(root: Path, snapshot_path: Path, expected: str) -> int:
     if code == 0:
         try:
             _read_lane_result(reader, bundle)
-        except (OSError, ValueError, TypeError, KeyError):
+        except OSError, ValueError, TypeError, KeyError:
             code = 1
     if time.monotonic() >= deadline and code != 130:
         code = 124
@@ -241,7 +241,7 @@ def produce_root_lane(
         held = SnapshotReader(root).read((directory / "lane-coordinator-bundle.json").relative_to(root).as_posix())
         result_binding = {"path": held.relative, "sha256": held.sha256}
         result = _json(held)
-    except (OSError, ValueError):
+    except OSError, ValueError:
         pass
     elapsed = time.monotonic() - started
     native_binding = write(
@@ -301,7 +301,7 @@ def main(argv: list[str] | None = None) -> int:
         return 124
     except _AdmissionError:
         return 2
-    except (OSError, ValueError, TypeError, KeyError, RuntimeError):
+    except OSError, ValueError, TypeError, KeyError, RuntimeError:
         return 1
 
 

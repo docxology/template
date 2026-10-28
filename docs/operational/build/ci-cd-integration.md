@@ -61,7 +61,7 @@ jobs:
           cache-dependency-glob: "**/uv.lock"
       - uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v6.2.0
         with:
-          python-version: "3.12"
+          python-version: "3.14"
       - run: uv sync
       # Adjust paths for your checkout layout:
       - run: >-
@@ -121,7 +121,7 @@ For a single-package layout, **`pytest-cov`** can enforce gates directly:
 ```yaml
 strategy:
   matrix:
-    python-version: ['3.10', '3.11', '3.12']
+    python-version: ['3.14', '3.15']
 
 steps:
 - name: Set up Python ${{ matrix.python-version }}
@@ -155,7 +155,7 @@ jobs:
     - name: Set up Python
       uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v6.2.0
       with:
-        python-version: '3.12'
+        python-version: '3.14'
 
     - name: Install LaTeX
       run: |
@@ -229,7 +229,7 @@ jobs:
     - name: Set up Python
       uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v6.2.0
       with:
-        python-version: '3.12'
+        python-version: '3.14'
 
     - name: Install dependencies
       run: |
@@ -388,7 +388,7 @@ Upstream CI relies on **`astral-sh/setup-uv` `enable-cache`** against **`**/uv.l
 
 - XML path names differ (`coverage-infra.xml`, `coverage-project.xml` upstream)
 - **`CODECOV_TOKEN`** optional on public repos
-- Upload gated to Ubuntu + Python **3.12** matrix cells upstream
+- Upload gated to Ubuntu + Python **3.14** matrix cells upstream
 
 ### Debugging
 

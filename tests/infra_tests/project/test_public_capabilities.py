@@ -47,7 +47,7 @@ def _complete_project(
     *,
     name: str = "template_test",
     package_name: str | None = None,
-    requires_python: str = ">=3.12",
+    requires_python: str = ">=3.14",
     config: str = "paper:\n  title: Synthetic Test Project\n",
     manuscript: str = "# Result\nNo generated values are required.\n",
     hydration_script: str | None = None,
@@ -67,7 +67,7 @@ def _complete_project(
             f'[project]\nname = "{package_name or name.replace("_", "-")}"\n'
             f'version = "0.1.0"\nrequires-python = "{requires_python}"\n'
             f'[tool.template]\nplatform_version = "{PLATFORM_VERSION}"\n'
-            'tested_python_versions = ["3.12", "3.13", "3.14"]\n'
+            'tested_python_versions = ["3.14", "3.15"]\n'
         ),
     )
     if hydration_script is not None:
@@ -319,12 +319,12 @@ def test_python_discovery_fails_closed_on_invalid_source_and_test_syntax(
 
 
 def test_ci_python_floor_must_include_every_canonical_version(tmp_path: Path) -> None:
-    _complete_project(tmp_path, requires_python=">=3.13")
+    _complete_project(tmp_path, requires_python=">=3.15")
 
     capability = audit_public_capability(tmp_path, "template_test")
 
     assert capability.passed is False
-    assert any("CI Python 3.12.x series" in issue for issue in capability.issues)
+    assert any("CI Python 3.14.x series" in issue for issue in capability.issues)
     assert any(
         f"CI Python {version}.x series" in issue
         for version in CANONICAL_CI_PYTHON_VERSIONS
@@ -335,10 +335,10 @@ def test_ci_python_floor_must_include_every_canonical_version(tmp_path: Path) ->
 @pytest.mark.parametrize(
     ("requires_python", "expected_fragment"),
     [
-        (f">=3.12,<=3.{_CI_MINOR}.0", f"CI Python {_CI_CEILING}.x series"),
-        (f">=3.12,!={_CI_CEILING}.42", f"CI Python {_CI_CEILING}.x series"),
-        (">=3.12,!=3.12.*", "CI Python 3.12.x series"),
-        (f">=3.12,<{_CI_CEILING}.99", f"CI Python {_CI_CEILING}.x series"),
+        (f">=3.14,<=3.{_CI_MINOR}.0", f"CI Python {_CI_CEILING}.x series"),
+        (f">=3.14,!={_CI_CEILING}.42", f"CI Python {_CI_CEILING}.x series"),
+        (">=3.14,!=3.14.*", "CI Python 3.14.x series"),
+        (f">=3.14,<{_CI_CEILING}.99", f"CI Python {_CI_CEILING}.x series"),
     ],
 )
 def test_ci_python_contract_rejects_partial_minor_series(
@@ -355,7 +355,7 @@ def test_ci_python_contract_rejects_partial_minor_series(
 
 
 def test_ci_python_contract_accepts_complete_minor_series(tmp_path: Path) -> None:
-    _complete_project(tmp_path, requires_python=f">=3.12,<3.{int(_CI_MINOR) + 1}")
+    _complete_project(tmp_path, requires_python=f">=3.14,<3.{int(_CI_MINOR) + 1}")
 
     capability = audit_public_capability(tmp_path, "template_test")
 
@@ -414,7 +414,7 @@ def test_roster_and_ci_matrix_negative_controls() -> None:
     assert "unexpected projects" in validate_manifest_roster((*PUBLIC_PROJECT_NAMES, "active/private_project"))[0]
     assert "missing lanes" in validate_ci_matrix(canonical[:-1])[0]
     assert "duplicate lanes" in validate_ci_matrix((*canonical, canonical[0]))[0]
-    assert "unexpected lanes" in validate_ci_matrix((*canonical, CIMatrixEntry("active/private_project", "3.12")))[0]
+    assert "unexpected lanes" in validate_ci_matrix((*canonical, CIMatrixEntry("active/private_project", "3.14")))[0]
 
 
 @pytest.mark.parametrize(
@@ -769,7 +769,7 @@ def test_platform_binding_and_runtime_range_must_match(tmp_path: Path) -> None:
     binding = f'platform_version = "{PLATFORM_VERSION}"'
     assert original.count(binding) == 1
     path.write_text(
-        original.replace(binding, 'platform_version = "3.8.0"').replace('["3.12", "3.13", "3.14"]', '["3.14"]'),
+        original.replace(binding, 'platform_version = "3.8.0"').replace('["3.14", "3.15"]', '["3.14"]'),
         encoding="utf-8",
     )
     capability = audit_public_capability(tmp_path, "template_test")

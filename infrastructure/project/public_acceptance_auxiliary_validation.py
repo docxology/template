@@ -158,7 +158,7 @@ def validate_auxiliary_process(gate: str, fingerprint: str, details: dict[str, A
         or process.get("executable_sha256_after") != digest
         or raw.get("runtime", {}).get("executable") != command[0]
         or raw.get("runtime", {}).get("implementation") != "CPython"
-        or not str(raw.get("runtime", {}).get("python_version", "")).startswith(("3.12.", "3.13.", "3.14."))
+        or not str(raw.get("runtime", {}).get("python_version", "")).startswith(("3.14.", "3.15."))
     ):
         raise ValueError("auxiliary original runtime/executable observations are incomplete or changed")
     extra = {"command", "process_artifact", "raw_artifact", "negative_controls", "execution_exit_code"}

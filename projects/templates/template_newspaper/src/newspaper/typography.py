@@ -77,7 +77,7 @@ def _try_register(candidates: list[tuple[str, str, int]]) -> str | None:
         try:
             pdfmetrics.registerFont(TTFont(name, path, subfontIndex=subfont))
             return name
-        except (OSError, TTFError, ValueError):
+        except OSError, TTFError, ValueError:
             continue
     return None
 
@@ -110,7 +110,7 @@ def register_fonts() -> Fonts:
                 italic=body_italic,
                 boldItalic=body_bolditalic,
             )
-        except (KeyError, TypeError, ValueError):
+        except KeyError, TypeError, ValueError:
             pass
 
     sans = _try_register(_SANS_CANDIDATES) or "Helvetica"

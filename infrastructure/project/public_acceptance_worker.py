@@ -430,7 +430,7 @@ def run_cell(
                     status="fail",
                     diagnostic="source, deliverables, interpreter or test stack changed during runtime cell",
                 )
-        except (OSError, ValueError):
+        except OSError, ValueError:
             result.update(status="fail", diagnostic="runtime cell custody recheck failed")
         if result["status"] == "pass":
             try:

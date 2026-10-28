@@ -107,7 +107,7 @@ def replay_browser_observation(
         or raw.get("observer_script_sha256") != hashlib.sha256(observer_script.encode()).hexdigest()
     ):
         raise ValueError("browser observation script changed")
-    assets = (
+    assets: dict[str, Any] = (
         compile_browser_assets(root, snapshot, reader)
         if control is None
         else {"schema_version": "template-native-browser-assets-v1", "assets": [], "blockers": []}
@@ -124,7 +124,7 @@ def replay_browser_observation(
         copy = _file(item.get("consumed"), reader)
         if copy.path != mirror / original.relative or copy.content != original.content:
             raise ValueError("browser asset mirror is not byte-identical")
-    cdn = assets.get("cdn_assets", [])
+    cdn: list[dict[str, Any]] = assets.get("cdn_assets", [])
     if cdn:
         import json
         from infrastructure.reporting.native_format_browser_cdn import cdn_member_bytes

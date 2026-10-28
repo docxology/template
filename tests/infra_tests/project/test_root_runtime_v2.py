@@ -85,7 +85,7 @@ def test_original_selected_interpreter_collects_once_and_retains_every_required_
     assert native["timed_out"] is native["custody_refused"] is False
     observed = read_runtime_cohort(SnapshotReader(root), bundle)
     assert {(cell["platform"], cell["runtime"]) for cell in observed["required_cells"]} == {
-        (platform, runtime) for platform in ("darwin", "linux") for runtime in ("3.12", "3.13", "3.14")
+        (platform, runtime) for platform in ("darwin", "linux") for runtime in ("3.14", "3.15")
     }
     actual = json.loads((root / bundle["result_artifact"]["path"]).read_bytes())
     census_bundle = json.loads((root / actual["census_bundle_artifact"]["path"]).read_bytes())
@@ -125,8 +125,8 @@ def test_source_owned_profile_declares_every_exact_case_unit_target_and_never_wa
         source_files=(),
         test_files=scope.test_files(),
     )
-    assert len(rows) == 13 and rows[0].id == "root:case-policy"
-    assert {row.python_version for row in rows[1:]} == {"3.12", "3.13", "3.14"}
+    assert len(rows) == 9 and rows[0].id == "root:case-policy"
+    assert {row.python_version for row in rows[1:]} == {"3.14", "3.15"}
     assert {row.case_platform for row in rows[1:]} == {"darwin", "linux"}
     assert all(row.case_policy_sha256 == policy.sha256 for row in rows)
     assert {row.case_unit for row in rows[1:]} == {"core", "live-unpaid"}
@@ -333,7 +333,7 @@ def test_actual_runtime_whole_deadline_or_interruption_cleans_launched_detached_
                     live.append(pid)
                     acknowledgement.write_text(token, encoding="utf-8")
                     return
-            except (FileNotFoundError, json.JSONDecodeError):
+            except FileNotFoundError, json.JSONDecodeError:
                 pass
             except (OSError, ValueError, subprocess.TimeoutExpired) as error:
                 errors.append(type(error).__name__)

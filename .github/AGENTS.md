@@ -125,13 +125,13 @@ in a job `if:` and rejects the whole workflow at parse). 2 further jobs
 | # | Job id | Display name (representative) | Depends on | Python | Runner |
 | --- | --- | --- | --- | --- | --- |
 | 1 | `detect` | Detect optional projects | — | — | ubuntu (always) |
-| 2 | `detect-projects` | Detect public capability matrix | — | manifest-owned 3.12 + 3.13 + 3.14 | ubuntu (always) |
+| 2 | `detect-projects` | Detect public capability matrix | — | manifest-owned 3.14 + 3.15 | ubuntu (always) |
 | 3 | `actionlint` | Actionlint | — | — | ubuntu (always) |
 | 4 | `lint` | Lint & Type Check | — | 3.14 | ubuntu |
 | 5 | `health` | Static Health Report | — | 3.14 | ubuntu |
 | 6 | `verify-no-mocks` | Verify No Mocks Policy | — (parallel with `lint`) | 3.14 | ubuntu |
 | 7 | `setup-hook-windows-smoke` | Setup hook (Windows smoke) | verify-no-mocks, detect | 3.14 | windows · runs iff `needs.detect.outputs.setup_hook == 'true'` |
-| 8 | `test-infra` | Infra Tests (matrix) | verify-no-mocks, detect-projects | 3.12–3.14 | ubuntu (×3.12/3.13/3.14) + macOS (3.14 only) — four complete shards per pair, 16 cells per manual run; dynamic `infra_matrix` output from `detect-projects` |
+| 8 | `test-infra` | Infra Tests (matrix) | verify-no-mocks, detect-projects | 3.14/3.15 | ubuntu (×3.14/3.15) + macOS (3.15 only) — four complete shards per pair, source-derived cells per manual run; dynamic `infra_matrix` output from `detect-projects` |
 | 9 | `test-regression` | Regression Tier (claim-binding pins) | verify-no-mocks | 3.14 | ubuntu |
 | 10 | `test-project` | Project Tests (per-project matrix) | verify-no-mocks, detect-projects | capability-manifest versions | ubuntu only — exact project/Python include matrix from `public_capabilities.py` |
 | 11 | `fep-lean` | fep_lean (gauss + lake) | verify-no-mocks, detect | 3.14 | ubuntu · runs iff `needs.detect.outputs.fep_lean == 'true'` |
@@ -165,14 +165,14 @@ requested tag before checkout, checks out that exact ref, proves `HEAD` matches
 the dereferenced tag commit, and explicitly prepares the locked public-exemplar
 and installed-build environment before offline admission or checks. It runs the
 root release contract, bounded pipeline-smoke infra test lane plus no-mocks gate on the tagged SHA,
-the fail-closed capability manifest, the complete Python 3.12–3.14 installed
+the fail-closed capability manifest, the complete Python 3.14/3.15 installed
 wheel matrix outside source checkouts, and strict rendered publication audit
 across the canonical public roster. Root 4+ additionally requires an explicit
 same-repository successful hosted run and artifact bound to that exact revision,
 the aggregate receipt hash, and every required candidate acceptance gate.
 The candidate includes
 [`platform-required-acceptance.yml`](workflows/platform-required-acceptance.yml):
-six original Root minor/platform units, common and native observations, and a
+four supported Root host/minor units, common and native observations, and a
 strict collector that uploads only the passed complete exact-source bundle.
 Its presence does not establish successful hosted acceptance, integration into
 `main`, or publication; ordinary CI uploads cannot authorize this handoff.

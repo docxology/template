@@ -31,7 +31,7 @@ def json_payloads_equal(left: object, right: object) -> bool:
             sort_keys=True,
         )
         return left_json == right_json
-    except (TypeError, ValueError):
+    except TypeError, ValueError:
         return False
 
 
@@ -41,7 +41,7 @@ def load_json(path: Path) -> dict[str, Any]:
         return {}
     try:
         data = json.loads(path.read_text(encoding="utf-8"))
-    except (OSError, json.JSONDecodeError, UnicodeDecodeError):
+    except OSError, json.JSONDecodeError, UnicodeDecodeError:
         return {}
     return data if isinstance(data, dict) else {}
 

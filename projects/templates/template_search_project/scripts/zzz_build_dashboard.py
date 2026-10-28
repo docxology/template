@@ -37,7 +37,7 @@ try:
             timeout=5,
         ).strip()
     ).resolve()
-except (OSError, subprocess.SubprocessError):
+except OSError, subprocess.SubprocessError:
     REPO_ROOT = PROJECT_ROOT
 # Select the declared SDK before exposing domain source; no ancestor imports.
 _original_import_paths = sys.path[:]

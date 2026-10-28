@@ -8,6 +8,7 @@ from typing import Any
 
 from infrastructure.project.public_acceptance_case_policy import (
     POLICY_SCHEMA,
+    RUNTIMES,
     OPTIONAL_POLICY_SCHEMA,
     RootCasePolicy,
     compile_case_plan,
@@ -174,7 +175,7 @@ def author_policy(
         raise ValueError("Root policy authoring requires a reviewed decision for every actual public test module")
     policy = {
         "schema_version": policy_schema,
-        "runtimes": ["3.12", "3.13", "3.14"],
+        "runtimes": list(RUNTIMES),
         "platforms": ["darwin", "linux"],
         "families": sorted(families, key=lambda family: family["id"]),
         "obligations": decisions["obligations"],

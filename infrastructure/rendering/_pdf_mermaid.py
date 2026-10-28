@@ -573,7 +573,7 @@ def _render_mermaid(
     if png_path.is_file() and png_path.stat().st_size > 0 and cache.is_file():
         try:
             cached = json.loads(cache.read_bytes())
-        except (ValueError, OSError):
+        except ValueError, OSError:
             cached = None
         if cached == {**cache_binding, "png_sha256": hashlib.sha256(png_path.read_bytes()).hexdigest()}:
             return png_path

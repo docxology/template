@@ -151,7 +151,7 @@ def execute_current_office_scope(
     held = original_reader.read(original.native_execution_relative).json_object()
     if census != held["office_mermaid_census"]:
         raise ValueError("Current complete all25 source Mermaid fence census differs from held Original")
-    children = {
+    children: dict[str, tuple[NativeOfficeControlOriginal, ...]] = {
         kind: execute_current_office_diagram_cohort(
             source.bindings.current_root,
             directory / f"office-{kind}-cohort",

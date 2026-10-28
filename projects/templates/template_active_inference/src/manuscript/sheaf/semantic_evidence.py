@@ -201,5 +201,5 @@ def _canonical_restriction_snapshot(root: Path) -> dict[str, bool]:
         from roadmap_tracks.sheaf_tracks import _canonical_restrictions
 
         return dict(_canonical_restrictions(root))
-    except (ImportError, OSError, ValueError, KeyError, TypeError):
+    except ImportError, OSError, ValueError, KeyError, TypeError:
         return {}

@@ -106,8 +106,8 @@ def admit_project_test_runtime(
     except ValueError as exc:
         raise ProjectTestRuntimeError(str(exc), exit_code=2) from exc
     major, minor = (int(part) for part in str(binding["python_minor"]).split("."))
-    if major != 3 or minor < 12:
-        raise ProjectTestRuntimeError("Selected prepared project tests require Python 3.12 or newer")
+    if major != 3 or minor < 14:
+        raise ProjectTestRuntimeError("Selected prepared project tests require Python 3.14 or newer")
     lock_path = project_root.absolute() / "uv.lock"
     lock_bytes: bytes | None = None
     locked: dict[str, str] = {}
@@ -240,7 +240,7 @@ def _declared_provider_roots(
     """
     try:
         project = tomllib.loads((project_root / "pyproject.toml").read_text(encoding="utf-8")).get("project", {})
-    except (OSError, UnicodeDecodeError, tomllib.TOMLDecodeError):
+    except OSError, UnicodeDecodeError, tomllib.TOMLDecodeError:
         return ()
     names: set[str] = set()
     for value in project.get("dependencies", []) if isinstance(project, dict) else ():

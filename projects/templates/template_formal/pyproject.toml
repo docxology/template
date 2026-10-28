@@ -13,7 +13,12 @@ description = "Strongly-typed multiagent ant-robot colony: ADTs, session-typed p
 authors = [
     {name = "Daniel Ari Friedman", email = "daniel@activeinference.institute"}
 ]
-requires-python = ">=3.12"
+requires-python = ">=3.14"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.14",
+    "Programming Language :: Python :: 3.15",
+]
 dependencies = [
     "pyyaml>=6.0",
     "pillow>=12.3.0",
@@ -63,7 +68,7 @@ exclude_lines = [
 # oracle invocation (see tests/test_mypy_oracle.py). This section documents
 # the same policy for editors/IDEs that discover config by directory.
 [tool.mypy]
-python_version = "3.12"
+python_version = "3.14"
 strict = true
 mypy_path = "src"
 explicit_package_bases = true
@@ -78,5 +83,5 @@ research-project-template = { path = "../../..", editable = true }
 # Compatibility contract for this independent exemplar release.
 [tool.template]
 platform_version = "4.1.0"
-tested_python_versions = ["3.12", "3.13", "3.14"]
+tested_python_versions = ["3.14", "3.15"]
 required_unpaid_capabilities = ["network-faults", "lean", "tlc"]

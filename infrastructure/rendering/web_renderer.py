@@ -344,7 +344,7 @@ class WebRenderer:
             return "en"
         try:
             config = yaml.safe_load(config_path.read_text(encoding="utf-8")) or {}
-        except (OSError, yaml.YAMLError):
+        except OSError, yaml.YAMLError:
             return "en"
         metadata = config.get("metadata") if isinstance(config, dict) else None
         if not isinstance(metadata, dict):

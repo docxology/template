@@ -73,7 +73,7 @@ def verify_child(child_root: str | Path) -> CheckReport:
             if fp.stat().st_size > 1048576:
                 raise ValueError("child source exceeds the 1MiB custody limit")
             live[rel] = fp.read_text()
-        except (OSError, ValueError):
+        except OSError, ValueError:
             missing.append(rel)
 
     if missing:

@@ -49,7 +49,7 @@ def main(argv: list[str] | None = None) -> int:
 
     try:
         revision = clean_source_revision(REPO_ROOT)
-    except (ValueError, RuntimeError):
+    except ValueError, RuntimeError:
         print("REFUSING: source HEAD and a clean monorepo must be verified before synchronization.", file=sys.stderr)
         return 1
 

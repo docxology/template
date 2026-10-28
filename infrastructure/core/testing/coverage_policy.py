@@ -25,7 +25,7 @@ def check_cov_datafile_support() -> bool:
             check=False,
         )
         return "--cov-datafile" in result.stdout
-    except (subprocess.TimeoutExpired, subprocess.CalledProcessError, FileNotFoundError):
+    except subprocess.TimeoutExpired, subprocess.CalledProcessError, FileNotFoundError:
         return False
 
 

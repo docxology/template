@@ -13,7 +13,12 @@ description = "Meta-project demonstrating fonds, tools, and rules integration"
 authors = [
     {name = "Daniel Ari Friedman", email = "daniel@activeinference.institute"}
 ]
-requires-python = ">=3.12"
+requires-python = ">=3.14"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.14",
+    "Programming Language :: Python :: 3.15",
+]
 dependencies = [
     "research-project-template==4.1.0",
     "pyyaml>=6.0",
@@ -61,7 +66,7 @@ exclude_lines = [
 # Inherits workspace settings from root pyproject.toml
 
 [tool.mypy]
-python_version = "3.12"
+python_version = "3.14"
 strict = true
 ignore_missing_imports = true
 allow_untyped_defs = false
@@ -80,7 +85,7 @@ module = ["yaml", "csv", "matplotlib.*"]
 ignore_missing_imports = true
 
 [tool.ruff]
-target-version = "py312"
+target-version = "py314"
 line-length = 100
 
 [tool.ruff.lint]
@@ -92,7 +97,7 @@ select = ["E", "F", "I", "N", "W", "UP", "B", "SIM", "ARG", "PTH"]
 # Compatibility contract for this independent exemplar release.
 [tool.template]
 platform_version = "4.1.0"
-tested_python_versions = ["3.12", "3.13", "3.14"]
+tested_python_versions = ["3.14", "3.15"]
 required_unpaid_capabilities = ["bundled-resource-execution"]
 
 [tool.uv.sources]

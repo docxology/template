@@ -51,7 +51,7 @@ Optional infrastructure modules (logging, glossary_gen, figure_manager, etc.) ar
 ## Running standalone (outside repo)
 
 ```bash
-# Python 3.12–3.14; from the standalone project directory:
+# Python 3.14/3.15; from the standalone project directory:
 uv sync --extra dev
 uv run pytest tests/primitives tests/core/test_grammar_and_expand.py tests/gates/test_materialize.py --no-cov -q
 

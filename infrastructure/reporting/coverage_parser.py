@@ -225,7 +225,7 @@ def check_test_failures(
     if env_value is not None:
         try:
             max_failures = int(env_value)
-        except (ValueError, TypeError):
+        except ValueError, TypeError:
             max_failures = 0
     else:
         testing_config = get_testing_config(repo_root)

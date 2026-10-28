@@ -16,7 +16,7 @@ def _parse_yaml_cached(path_str: str, payload: bytes) -> dict[str, Any]:
     del path_str
     try:
         data = yaml.safe_load(payload.decode("utf-8")) or {}
-    except (OSError, UnicodeDecodeError, yaml.YAMLError):
+    except OSError, UnicodeDecodeError, yaml.YAMLError:
         return {}
     if not isinstance(data, dict):
         return {}
@@ -29,7 +29,7 @@ def load_yaml(path: Path) -> dict[str, Any]:
         return {}
     try:
         loaded = copy.deepcopy(_parse_yaml_cached(str(path.resolve()), path.read_bytes()))
-    except (OSError, ValueError):
+    except OSError, ValueError:
         return {}
     if not isinstance(loaded, dict):
         return {}

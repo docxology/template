@@ -193,7 +193,7 @@ llm_filters:
 
 ## Dependencies
 
-- Python 3.12+ (see `pyproject.toml`)
+- Python 3.14+ (see `pyproject.toml`)
 - Access to the configured retrieval providers; supply credentials when a provider requires them
 - Optional local LLM server for model-backed filtering when explicitly enabled
 - Standard scientific Python stack (pandas, matplotlib, networkx)

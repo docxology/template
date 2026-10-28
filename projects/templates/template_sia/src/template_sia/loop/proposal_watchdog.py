@@ -12,7 +12,7 @@ from pathlib import Path
 
 CONTAINER_BOOTSTRAP = """
 import json, os, subprocess, sys, time
-assert (3,12)<=sys.version_info[:2]<=(3,14)
+assert (3,14)<=sys.version_info[:2]<=(3,15)
 print(json.dumps({'python_version':sys.version.split()[0]}), flush=True)
 timeout=int(sys.argv[1]); started=time.monotonic()
 heartbeat='/program/controller_heartbeat'

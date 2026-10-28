@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from dataclasses import asdict, dataclass
-from typing import Callable, cast
+from typing import Callable
 
 import numpy as np
 
@@ -225,7 +225,7 @@ def evaluate_robustness(
 
 def _nearest_centroid_predict(features: np.ndarray, centroids: np.ndarray) -> np.ndarray:
     distances = ((features[:, None, :] - centroids[None, :, :]) ** 2).sum(axis=2)
-    return cast(np.ndarray, np.argmin(distances, axis=1).astype(np.int64))
+    return np.argmin(distances, axis=1).astype(np.int64)
 
 
 def _apply_robustness_transform(x_values: np.ndarray, transform: RobustnessTransformSpec) -> np.ndarray:

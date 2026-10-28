@@ -103,11 +103,11 @@ def _parse_timestamp(raw: str | None) -> datetime:
         # Cobertura ships milliseconds; ``coverage.py`` uses milliseconds too.
         epoch_ms = int(raw)
         return datetime.fromtimestamp(epoch_ms / 1000.0, tz=timezone.utc)
-    except (ValueError, TypeError, OSError):
+    except ValueError, TypeError, OSError:
         # Some toolchains write seconds instead of milliseconds; try that next.
         try:
             return datetime.fromtimestamp(float(raw), tz=timezone.utc)
-        except (ValueError, TypeError, OSError):
+        except ValueError, TypeError, OSError:
             logger.warning("Coverage XML at unparseable timestamp %r; using now()", raw)
             return datetime.now(timezone.utc)
 

@@ -1,4 +1,4 @@
-"""Static Python 3.12 syntax and standard-library compatibility audit."""
+"""Static current and historical Python syntax and standard-library audits."""
 
 from __future__ import annotations
 
@@ -10,7 +10,7 @@ from typing import Iterable
 
 @dataclass(frozen=True)
 class PythonCompatibilityIssue:
-    """One unguarded source construct unavailable on Python 3.12."""
+    """One unguarded source construct unavailable on the audited Python floor."""
 
     path: str
     line: int
@@ -63,6 +63,56 @@ def scan_python_312_compatibility(
         if any(token in source for token in ("QueueShutDown", "TypeIs", "ReadOnly", "annotationlib")):
             parents = _parent_map(tree)
             issues.extend(_api_issues(tree, parents, display))
+    return tuple(sorted(issues, key=lambda issue: (issue.path, issue.line, issue.rule)))
+
+
+def scan_python_314_compatibility(
+    paths: Iterable[Path],
+    *,
+    repo_root: Path,
+) -> tuple[PythonCompatibilityIssue, ...]:
+    """Audit the current 3.14 floor without changing the historical 3.12 API."""
+    issues: list[PythonCompatibilityIssue] = []
+    unavailable = {
+        "typing": frozenset({"TypeForm", "NoExtraItems", "disjoint_base"}),
+        "builtins": frozenset({"frozendict"}),
+    }
+    for source_path, display in _python_files_and_displays(paths, repo_root.resolve()):
+        try:
+            source = source_path.read_text(encoding="utf-8")
+            tree = ast.parse(source, filename=str(source_path), feature_version=(3, 14))
+        except SyntaxError as exc:
+            issues.append(PythonCompatibilityIssue(display, exc.lineno or 0, "PY314.SYNTAX", exc.msg))
+            continue
+        except (OSError, UnicodeError) as exc:
+            issues.append(PythonCompatibilityIssue(display, 0, "PY314.READ", str(exc)))
+            continue
+        if not any(token in source for names in unavailable.values() for token in names):
+            continue
+        parents = _parent_map(tree)
+        for node in ast.walk(tree):
+            apis: list[str] = []
+            if isinstance(node, ast.ImportFrom):
+                apis = [
+                    f"{node.module}.{alias.name}"
+                    for alias in node.names
+                    if alias.name in unavailable.get(node.module or "", frozenset())
+                ]
+            elif isinstance(node, ast.Attribute) and isinstance(node.value, ast.Name):
+                if node.attr in unavailable.get(node.value.id, frozenset()):
+                    apis = [f"{node.value.id}.{node.attr}"]
+            elif isinstance(node, ast.Name) and isinstance(node.ctx, ast.Load) and node.id == "frozendict":
+                apis = ["builtins.frozendict"]
+            if apis and not _is_compatibility_guarded(node, parents):
+                issues.extend(
+                    PythonCompatibilityIssue(
+                        display,
+                        getattr(node, "lineno", 0),
+                        "PY314.API",
+                        f"{api} requires Python 3.15+; guard it and provide a 3.14 fallback",
+                    )
+                    for api in apis
+                )
     return tuple(sorted(issues, key=lambda issue: (issue.path, issue.line, issue.rule)))
 
 
@@ -153,4 +203,4 @@ def _display_path(path: Path, resolved_root: Path) -> str:
         return path.as_posix()
 
 
-__all__ = ["PythonCompatibilityIssue", "scan_python_312_compatibility"]
+__all__ = ["PythonCompatibilityIssue", "scan_python_312_compatibility", "scan_python_314_compatibility"]

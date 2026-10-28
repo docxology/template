@@ -14,6 +14,7 @@ from matplotlib.backends.backend_agg import FigureCanvasAgg, RendererAgg
 from matplotlib.font_manager import FontProperties
 from matplotlib.figure import Figure
 from matplotlib.text import Text
+from PIL import Image
 
 from ..core.introspection import ModuleInfo, PipelineStage
 
@@ -137,13 +138,15 @@ def save_presentation_panel(fig: Figure, path: Path, alt: str) -> dict[str, obje
             if max(a[0], b[0]) < min(a[2], b[2]) and max(a[1], b[1]) < min(a[3], b[3]):
                 raise ValueError(f"Presentation labels overlap: {first['text']!r}, {second['text']!r}")
     fig.savefig(path, dpi=FIGURE_DPI, facecolor="white")
+    with Image.open(path) as raster:
+        width, height = raster.size
     digest = hashlib.sha256(path.read_bytes()).hexdigest()
     minimum = min(row["minimum_label_px"] for row in measurements)
     evidence = {
         "schema_version": "1.0",
         "png_sha256": digest,
-        "width_px": int(fig.bbox.width),
-        "height_px": int(fig.bbox.height),
+        "width_px": width,
+        "height_px": height,
         "dpi": FIGURE_DPI,
         "minimum_label_px": minimum,
         "text_measurements": measurements,

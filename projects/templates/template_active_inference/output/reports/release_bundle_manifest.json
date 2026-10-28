@@ -2,7 +2,7 @@
   "all_copied_outputs_match_or_deferred": true,
   "all_required_sources_present": true,
   "artifact_count": 36,
-  "bundle_hash": "a84de99314ddaf264fa71209f0b56612d27054dbd105146f87ca4e1d382807bd",
+  "bundle_hash": "8ff7466349f2aebbf311dabd757a46c3d1534019caf749a59182e903f247d47b",
   "copied_output_parity": {
     "all_copied_outputs_match": false,
     "all_copied_outputs_match_or_deferred": true,
@@ -573,7 +573,7 @@
       "hash_cycle_excluded": false,
       "required_deliverable": true,
       "source_exists": true,
-      "source_sha256": "cc96eb16e6cb5b7773792c255a9bdaa41ca82ac01c8cfcee85c92449dc75ba9b"
+      "source_sha256": "53679b1cdb742c585326768f54a2187cfc665cf57d85d8301a04572b3ef0f036"
     },
     {
       "artifact": "output/reports/counterexample_matrix.json",
@@ -690,7 +690,7 @@
       "hash_cycle_excluded": false,
       "required_deliverable": true,
       "source_exists": true,
-      "source_sha256": "8c2fab11ffc2bcfd2a1de6e66a53d70775a2aed73adfac3d7dd24265d5c8dc14"
+      "source_sha256": "d94fcf4826ed7cc686fb3e05a234bc523f4e9c99e8ef75e4fc4dda64d00a5e4d"
     },
     {
       "artifact": "output/figures/track_lane_promotion_map.png",
@@ -699,7 +699,7 @@
       "hash_cycle_excluded": false,
       "required_deliverable": true,
       "source_exists": true,
-      "source_sha256": "caba1fad9edfd6c35a1e4762502b1aab19ad8191cd55347a95ffdf6f3a52effd"
+      "source_sha256": "9d002f5bf93f9782d576999b2a637fa520e19e5969d3dfc662b138ff5499caf3"
     },
     {
       "artifact": "output/figures/artifact_contract_map.png",
@@ -708,7 +708,7 @@
       "hash_cycle_excluded": false,
       "required_deliverable": true,
       "source_exists": true,
-      "source_sha256": "046a95389e857d347a97857d816b47543e90ef10ddd1a9bd600d5b5111fcfc98"
+      "source_sha256": "c898717bd671afc786cb5c74d349aceb3e00b3256b761d0b08b18a95c2c0e50e"
     },
     {
       "artifact": "output/figures/theorem_traceability_graph.png",
@@ -717,7 +717,7 @@
       "hash_cycle_excluded": false,
       "required_deliverable": true,
       "source_exists": true,
-      "source_sha256": "1f760767bbed036b778c11ed748b68620d4537edcb089df44545b9245975e604"
+      "source_sha256": "5c42b2d3da08ca481ee6c50775690f8dc351b725451df8cdcb7bc6fa157c3400"
     },
     {
       "artifact": "output/figures/causal_ablation_heatmap.png",
@@ -726,7 +726,7 @@
       "hash_cycle_excluded": false,
       "required_deliverable": true,
       "source_exists": true,
-      "source_sha256": "a5663681bd02fb704a1155fd2f5abfc6c6f3862fa031d8c17936118808635740"
+      "source_sha256": "8da94fcf550d1c688825c4c2c6f518a2d7eb63da90602cdb384a578189faa92a"
     },
     {
       "artifact": "output/figures/scholarship_source_map.png",
@@ -735,7 +735,7 @@
       "hash_cycle_excluded": false,
       "required_deliverable": true,
       "source_exists": true,
-      "source_sha256": "4489a53f0d597cbf57826e9be146740ea517188cd04dc66c78f88070b1c31175"
+      "source_sha256": "881ff2ddaa980461262bd9f48bc751b7294e2cf25ce748d4da542ec6dbbb3d75"
     },
     {
       "artifact": "output/reports/visualization_quality_audit.json",
@@ -744,7 +744,7 @@
       "hash_cycle_excluded": false,
       "required_deliverable": true,
       "source_exists": true,
-      "source_sha256": "4a8850386cef5cfa3591e42ad2032806980f86f6e7e2d2cfd73a65bcef3b1a76"
+      "source_sha256": "d3df61043cf3809a04cdd87b3c0543bcc1b1180b88462f9aa155b03a0f18afd6"
     },
     {
       "artifact": "output/data/statistical_visualization_bridge.json",
@@ -780,7 +780,7 @@
       "hash_cycle_excluded": false,
       "required_deliverable": true,
       "source_exists": true,
-      "source_sha256": "d813a56ca7e4149ff976d462939825dfdd7f5fb502057593d4e24e5ed65bfd7e"
+      "source_sha256": "65810f3b6f74851ce301c24268af99b8edaf42f6e0458015c8b494f500e8014f"
     },
     {
       "artifact": "output/data/proof_extraction_index.json",

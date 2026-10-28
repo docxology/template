@@ -466,7 +466,7 @@ def _validate_native_conformance(
     runtime = raw.get("runtime")
     if not isinstance(runtime, dict) or runtime.get("missing") != []:
         raise ValueError("native runtime differs from the actual prepared installed interpreter")
-    if runtime.get("python_version") not in {"3.12", "3.13", "3.14"}:
+    if runtime.get("python_version") not in {"3.14", "3.15"}:
         raise ValueError("native runtime is unsupported")
     if not isinstance(raw.get("library_custody_before"), dict) or not isinstance(
         raw.get("library_custody_after"), dict

@@ -221,7 +221,7 @@ class SystemHealthChecker:
         try:
             with open("/proc/uptime", "r", encoding="utf-8") as f:
                 uptime_seconds = float(f.readline().split()[0])
-        except (FileNotFoundError, OSError):
+        except FileNotFoundError, OSError:
             # Fallback for systems without /proc/uptime
             uptime_seconds = (
                 time.time() - psutil.boot_time() if psutil is not None and hasattr(psutil, "boot_time") else None

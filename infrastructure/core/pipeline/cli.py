@@ -62,13 +62,15 @@ def _preview_logging() -> Iterator[None]:
     streams: list[tuple[logging.StreamHandler[Any], TextIO]] = []
     for selected in loggers:
         for handler in selected.handlers:
+            stream = getattr(handler, "stream", None)
             if (
                 isinstance(handler, logging.StreamHandler)
                 and not isinstance(handler, logging.FileHandler)
-                and (handler.stream is sys.stdout or handler.stream is sys.__stdout__)
+                and (stream is sys.stdout or stream is sys.__stdout__)
                 and all(existing is not handler for existing, _stream in streams)
             ):
-                streams.append((handler, handler.stream))
+                if stream is not None:
+                    streams.append((handler, stream))
     try:
         for handler, _stream in streams:
             handler.setStream(sys.stderr)

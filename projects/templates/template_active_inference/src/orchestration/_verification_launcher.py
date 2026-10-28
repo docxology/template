@@ -37,10 +37,19 @@ class VerificationRuntime:
         if not command or Path(command[0]).absolute() != self.interpreter:
             raise ValueError("Verifier command differs from its admitted lexical interpreter")
         if command[1:3] == ["-m", "pytest"]:
+            # The Stage-01 verifier clears ambient pytest options. Nominate the
+            # same default-only storage control as the generic project runner
+            # directly, so optional benchmark setup cannot create Source dirs.
+            arguments = tuple(command[3:])
+            option_end = arguments.index("--") if "--" in arguments else len(arguments)
+            controls = (
+                "-p",
+                "infrastructure.core.testing._pytest_runtime_controls",
+                f"--template-benchmark-storage={self.project_root / 'output/.pipeline/benchmarks'}",
+            )
+            arguments = (*arguments[:option_end], *controls, *arguments[option_end:])
             return list(
-                build_audited_project_test_command(
-                    self.project_root, self.interpreter, tuple(command[3:]), module="pytest"
-                )
+                build_audited_project_test_command(self.project_root, self.interpreter, arguments, module="pytest")
             )
         if len(command) < 2:
             raise ValueError("Verifier requires a project script or pytest module")

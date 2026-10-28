@@ -76,5 +76,5 @@ def export_timing_progress(phase: str, ordinal: int, scope: str, deadline: float
         maximum = 16 * 1024 // (2 * (len(PUBLIC_PROJECT_NAMES) + 1))
         if len(record.encode("utf-8")) + 1 <= maximum:
             print(record, file=sys.stderr, flush=True)
-    except (OSError, ValueError):
+    except OSError, ValueError:
         pass

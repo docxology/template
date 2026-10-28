@@ -144,13 +144,13 @@ def test_declared_matrix_retains_every_environment_and_shard() -> None:
         (runner, version, shard)
         for runner, versions in (
             ("ubuntu-latest", CANONICAL_CI_PYTHON_VERSIONS),
-            ("macos-latest", ("3.14",)),
+            ("macos-latest", ("3.15",)),
         )
         for version in versions
         for shard in range(SHARD_COUNT)
     }
     actual = {(cell["os"], cell["python-version"], cell["shard"]) for cell in cells}
-    assert actual == expected and len(cells) == len(actual) == 16
+    assert actual == expected and len(cells) == len(actual) == 12
 
 
 def test_partition_covers_future_modules_and_every_parameter_without_overlap() -> None:

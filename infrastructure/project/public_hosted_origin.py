@@ -31,7 +31,7 @@ WORKFLOW = ".github/workflows/platform-required-acceptance.yml"
 ARTIFACTS = {
     f"required-source-root-{host}-{minor}": (platform, minor)
     for host, platform in (("Linux", "linux"), ("macOS", "darwin"))
-    for minor in ("3.12", "3.13", "3.14")
+    for minor in ("3.14", "3.15")
 }
 MAX_ARCHIVE = 64 * 1024 * 1024
 MAX_RUN_ARTIFACTS = 1024
@@ -125,7 +125,7 @@ def _metadata(
     ):
         raise ValueError("incomplete bounded artifact listing")
     selected = [row for row in rows if row.get("name") in ARTIFACTS]
-    if len(selected) != 6 or {row.get("name") for row in selected} != set(ARTIFACTS):
+    if len(selected) != len(ARTIFACTS) or {row.get("name") for row in selected} != set(ARTIFACTS):
         raise ValueError("missing or duplicate fixed source artifacts")
     ids: set[int] = set()
     for row in selected:
@@ -422,7 +422,7 @@ def authorize_root_evidence(
         raise ValueError("current workflow is not exact source workflow")
     selected = _metadata(responses["run"], responses["listing"], repository, run_id, head_sha)
     rows = manifest["artifacts"]
-    if len(rows) != 6 or [row["metadata"] for row in rows] != selected:
+    if len(rows) != len(ARTIFACTS) or [row["metadata"] for row in rows] != selected:
         raise ValueError("manifest artifact roster disagrees with original API")
     owner = None
     if not bindings or len({item["path"] for item in bindings}) != len(bindings):

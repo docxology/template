@@ -111,7 +111,7 @@ Implements the private-projects sidecar symlink sync documented in root `CLAUDE.
 - `package_discovery.discover_import_targets(src_root)` describes static source
   import targets without executing or installing project code.
 - `installed_acceptance.run_installed_acceptance(...)` executes genuine admitted
-  root/public wheels across Python3.12–3.14 with locked transitives and declared
+  root/public wheels across Python3.14/3.15 with locked transitives and declared
   provider topology. The complete selection is78 cells; a diagnostic subset
   cannot establish complete-matrix acceptance.
 - Thin gate: `scripts/gates/installed_public.py`; select each installed minor with

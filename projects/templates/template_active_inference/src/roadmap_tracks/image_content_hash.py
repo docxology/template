@@ -88,7 +88,7 @@ def image_content_sha256(path: Path) -> str:
     try:
         stat = path.stat()
         return _image_content_sha256_cached(str(path.resolve()), stat.st_mtime_ns, stat.st_size)
-    except (OSError, ValueError):
+    except OSError, ValueError:
         return ""
 
 

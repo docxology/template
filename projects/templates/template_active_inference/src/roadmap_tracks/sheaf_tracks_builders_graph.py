@@ -462,7 +462,7 @@ def build_validation_dependency_graph(
         from roadmap_tracks.integration_audit_artifacts import build_figure_source_map
 
         figure_source = build_figure_source_map(root)
-    except (ImportError, OSError, ValueError, KeyError, TypeError):
+    except ImportError, OSError, ValueError, KeyError, TypeError:
         figure_source = _load_json(root / "output" / "data" / "figure_source_map.json")
     for row in figure_source.get("rows") or []:
         for source in row.get("source_artifacts") or row.get("sources") or []:

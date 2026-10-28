@@ -120,7 +120,7 @@ def validate_print_witness(
             not isinstance(runtime, dict)
             or runtime.get("missing") != []
             or runtime.get("implementation") != "CPython"
-            or runtime.get("python_version") not in {"3.12", "3.13", "3.14"}
+            or runtime.get("python_version") not in {"3.14", "3.15"}
             or runtime.get("executable") != expected_runtime.get("executable")
             or runtime.get("python_full_version") != expected_runtime.get("python_version")
         ):

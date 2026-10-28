@@ -29,7 +29,7 @@ def read_json_object(path: Path) -> dict[str, Any]:
         return {}
     try:
         payload = json.loads(path.read_text(encoding="utf-8"))
-    except (OSError, json.JSONDecodeError):
+    except OSError, json.JSONDecodeError:
         return {}
     return payload if isinstance(payload, dict) else {}
 
@@ -48,7 +48,7 @@ def load_yaml_mapping(path: Path, *, strict: bool = False) -> dict[str, Any]:
 
     try:
         loaded = yaml.safe_load(path.read_text(encoding="utf-8"))
-    except (OSError, yaml.YAMLError):
+    except OSError, yaml.YAMLError:
         if strict:
             raise
         return {}

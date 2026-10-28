@@ -63,7 +63,7 @@ FORMAL_JAVA_BIN=/opt/homebrew/opt/openjdk/bin/java scripts/check_formal_specs.sh
 scripts/check_formal_specs.sh --receipt output/.pipeline/formal_tools/receipt.json
 ```
 
-The wrapper requires Python3.12+, elan, a selected Java runtime, and this project's optional
+The wrapper requires Python3.14+, elan, a selected Java runtime, and this project's optional
 `formal-tools` extra, which includes the declared platform SDK (already supplied by the canonical checkout).
 Its filesystem main uses a private fresh cache before platform imports. The
 supervised tool worker additionally uses the platform's pre-import executed-code

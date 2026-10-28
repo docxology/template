@@ -78,7 +78,7 @@ uv run python scripts/audit/check_tracked_all.py
 These commands run from the monorepo root. Stage 01 creates/uses the project's
 isolated environment and installs dependencies declared in its `pyproject.toml`.
 
-For an independent source checkout, prepare its own Python 3.12–3.14 environment
+For an independent source checkout, prepare its own Python 3.14/3.15 environment
 with the actual platform wheel matching `pyproject.toml` and this project's `dev` extra, following
 [`STANDALONE.md`](STANDALONE.md). From that checkout's root, run:
 

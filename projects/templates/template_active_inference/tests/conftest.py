@@ -160,7 +160,7 @@ def _is_confined_regular_file(
     try:
         relative = lexical_path.relative_to(lexical_root)
         root_metadata = lexical_root.lstat()
-    except (OSError, ValueError):
+    except OSError, ValueError:
         return False
     if not relative.parts or stat.S_ISLNK(root_metadata.st_mode):
         return False

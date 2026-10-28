@@ -103,7 +103,7 @@ def test_required_prepared_model():
     ]
     policy = {
         "schema_version": POLICY_SCHEMA,
-        "runtimes": ["3.12", "3.13", "3.14"],
+        "runtimes": ["3.14", "3.15"],
         "platforms": ["darwin", "linux"],
         "obligations": obligations,
         "families": [

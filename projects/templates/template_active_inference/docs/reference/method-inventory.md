@@ -2,7 +2,7 @@
 
 Generated documentation coverage for every Python `def` and `class` under `src/` and `scripts/`. Entries marked `inventory fallback` have no inline docstring yet, but remain documented here by path, line, kind, and qualified name.
 
-Total documented definitions: 895
+Total documented definitions: 896
 
 ## `src/analytical/bernoulli_toy.py`
 
@@ -471,11 +471,12 @@ Total documented definitions: 895
 
 | line | kind | name | documentation source | summary |
 | ---: | --- | --- | --- | --- |
-| 22 | `function` | `write_semantic_gluing_outputs` | docstring | Write semantic certificate, evidence crosswalk, and dependency graph outputs. |
-| 81 | `function` | `_stable_artifact_graph` | inventory fallback | Inventory fallback for function `_stable_artifact_graph` defined at `src/manuscript/sheaf/semantic_gluing_outputs.py:81`. |
-| 93 | `function` | `_stable_certificate_fields` | inventory fallback | Inventory fallback for function `_stable_certificate_fields` defined at `src/manuscript/sheaf/semantic_gluing_outputs.py:93`. |
-| 106 | `function` | `_semantic_lane_summary_issues` | inventory fallback | Inventory fallback for function `_semantic_lane_summary_issues` defined at `src/manuscript/sheaf/semantic_gluing_outputs.py:106`. |
-| 126 | `function` | `validate_semantic_gluing` | docstring | Validate the live semantic certificate and its generated artifact. |
+| 22 | `function` | `_write_semantic_gluing_snapshot` | docstring | Write current semantic data within the fixed-point coordinator's pass. |
+| 58 | `function` | `write_semantic_gluing_outputs` | docstring | Write semantic certificate, evidence crosswalk, and dependency graph outputs. |
+| 117 | `function` | `_stable_artifact_graph` | inventory fallback | Inventory fallback for function `_stable_artifact_graph` defined at `src/manuscript/sheaf/semantic_gluing_outputs.py:117`. |
+| 129 | `function` | `_stable_certificate_fields` | inventory fallback | Inventory fallback for function `_stable_certificate_fields` defined at `src/manuscript/sheaf/semantic_gluing_outputs.py:129`. |
+| 142 | `function` | `_semantic_lane_summary_issues` | inventory fallback | Inventory fallback for function `_semantic_lane_summary_issues` defined at `src/manuscript/sheaf/semantic_gluing_outputs.py:142`. |
+| 162 | `function` | `validate_semantic_gluing` | docstring | Validate the live semantic certificate and its generated artifact. |
 
 ## `src/manuscript/sheaf/semantic_issues.py`
 
@@ -565,8 +566,8 @@ Total documented definitions: 895
 | 17 | `function` | `_platform` | inventory fallback | Inventory fallback for function `_platform` defined at `src/orchestration/_verification_launcher.py:17`. |
 | 27 | `class` | `VerificationRuntime` | docstring | One admitted selected runtime used by every verifier child. |
 | 34 | `function` | `VerificationRuntime.command` | inventory fallback | Inventory fallback for function `VerificationRuntime.command` defined at `src/orchestration/_verification_launcher.py:34`. |
-| 57 | `function` | `VerificationRuntime.verify` | inventory fallback | Inventory fallback for function `VerificationRuntime.verify` defined at `src/orchestration/_verification_launcher.py:57`. |
-| 64 | `function` | `prepare_verification_runtime` | docstring | Require actual selected platform/test versions before any domain child. |
+| 66 | `function` | `VerificationRuntime.verify` | inventory fallback | Inventory fallback for function `VerificationRuntime.verify` defined at `src/orchestration/_verification_launcher.py:66`. |
+| 73 | `function` | `prepare_verification_runtime` | docstring | Require actual selected platform/test versions before any domain child. |
 
 ## `src/orchestration/analysis.py`
 
@@ -695,27 +696,27 @@ Total documented definitions: 895
 
 | line | kind | name | documentation source | summary |
 | ---: | --- | --- | --- | --- |
-| 35 | `function` | `_fingerprint_cache_path` | docstring | Return the confined cache path, rejecting symlinked path components. |
-| 50 | `function` | `_write_fingerprint_cache` | docstring | Atomically write the confined cache without following a cache symlink. |
-| 74 | `function` | `_normalized_rel` | inventory fallback | Inventory fallback for function `_normalized_rel` defined at `src/roadmap_tracks/fixed_point.py:74`. |
-| 81 | `function` | `_confined_path_state` | docstring | Return a race-checked state token without following any symlink. |
-| 134 | `function` | `_walk_generation_inputs` | docstring | Walk one declared input tree without following directory symlinks. |
-| 178 | `function` | `_generation_input_rels` | docstring | Return deterministic source/config inputs that can change generated evidence. |
-| 186 | `function` | `_source_input_sha256` | docstring | Bind the exact confined generation-input file inventory and bytes. |
-| 206 | `function` | `_observed_output_rels` | docstring | Derive the complete positive, negative, and hydrated output inventory from SSOTs. |
-| 250 | `function` | `_cached_fingerprint_matches` | docstring | Return whether the disposable cache exactly binds the current state. |
-| 259 | `function` | `_refresh_animation_outputs` | inventory fallback | Inventory fallback for function `_refresh_animation_outputs` defined at `src/roadmap_tracks/fixed_point.py:259`. |
-| 271 | `function` | `_refresh_hydrated_manuscript` | inventory fallback | Inventory fallback for function `_refresh_hydrated_manuscript` defined at `src/roadmap_tracks/fixed_point.py:271`. |
-| 278 | `function` | `_write_sheaf_owned_artifacts` | inventory fallback | Inventory fallback for function `_write_sheaf_owned_artifacts` defined at `src/roadmap_tracks/fixed_point.py:278`. |
-| 285 | `function` | `_write_semantic_core` | inventory fallback | Inventory fallback for function `_write_semantic_core` defined at `src/roadmap_tracks/fixed_point.py:285`. |
-| 292 | `function` | `_write_contract_artifacts` | inventory fallback | Inventory fallback for function `_write_contract_artifacts` defined at `src/roadmap_tracks/fixed_point.py:292`. |
-| 309 | `function` | `_fingerprint` | inventory fallback | Inventory fallback for function `_fingerprint` defined at `src/roadmap_tracks/fixed_point.py:309`. |
-| 328 | `function` | `_validate_fixed_point` | inventory fallback | Inventory fallback for function `_validate_fixed_point` defined at `src/roadmap_tracks/fixed_point.py:328`. |
-| 356 | `function` | `_source_contract_issues` | docstring | Return source defects that generated-artifact settlement cannot repair. |
-| 371 | `function` | `_existing_fixed_point_paths` | inventory fallback | Inventory fallback for function `_existing_fixed_point_paths` defined at `src/roadmap_tracks/fixed_point.py:371`. |
-| 393 | `function` | `_write_fixed_point_pass` | inventory fallback | Inventory fallback for function `_write_fixed_point_pass` defined at `src/roadmap_tracks/fixed_point.py:393`. |
-| 413 | `function` | `_write_final_validation_pass` | docstring | Refresh self-referential reports and write the certificate from the final live state. |
-| 445 | `function` | `run_semantic_fixed_point` | docstring | Settle manuscript, semantic, and contract artifacts to a validated fixed point. |
+| 36 | `function` | `_fingerprint_cache_path` | docstring | Return the confined cache path, rejecting symlinked path components. |
+| 51 | `function` | `_write_fingerprint_cache` | docstring | Atomically write the confined cache without following a cache symlink. |
+| 75 | `function` | `_normalized_rel` | inventory fallback | Inventory fallback for function `_normalized_rel` defined at `src/roadmap_tracks/fixed_point.py:75`. |
+| 82 | `function` | `_confined_path_state` | docstring | Return a race-checked state token without following any symlink. |
+| 135 | `function` | `_walk_generation_inputs` | docstring | Walk one declared input tree without following directory symlinks. |
+| 179 | `function` | `_generation_input_rels` | docstring | Return deterministic source/config inputs that can change generated evidence. |
+| 187 | `function` | `_source_input_sha256` | docstring | Bind the exact confined generation-input file inventory and bytes. |
+| 207 | `function` | `_observed_output_rels` | docstring | Derive the complete positive, negative, and hydrated output inventory from SSOTs. |
+| 251 | `function` | `_cached_fingerprint_matches` | docstring | Return whether the disposable cache exactly binds the current state. |
+| 260 | `function` | `_refresh_animation_outputs` | inventory fallback | Inventory fallback for function `_refresh_animation_outputs` defined at `src/roadmap_tracks/fixed_point.py:260`. |
+| 272 | `function` | `_refresh_hydrated_manuscript` | inventory fallback | Inventory fallback for function `_refresh_hydrated_manuscript` defined at `src/roadmap_tracks/fixed_point.py:272`. |
+| 279 | `function` | `_write_sheaf_owned_artifacts` | inventory fallback | Inventory fallback for function `_write_sheaf_owned_artifacts` defined at `src/roadmap_tracks/fixed_point.py:279`. |
+| 286 | `function` | `_write_semantic_core` | inventory fallback | Inventory fallback for function `_write_semantic_core` defined at `src/roadmap_tracks/fixed_point.py:286`. |
+| 293 | `function` | `_write_contract_artifacts` | inventory fallback | Inventory fallback for function `_write_contract_artifacts` defined at `src/roadmap_tracks/fixed_point.py:293`. |
+| 329 | `function` | `_fingerprint` | inventory fallback | Inventory fallback for function `_fingerprint` defined at `src/roadmap_tracks/fixed_point.py:329`. |
+| 348 | `function` | `_validate_fixed_point` | inventory fallback | Inventory fallback for function `_validate_fixed_point` defined at `src/roadmap_tracks/fixed_point.py:348`. |
+| 376 | `function` | `_source_contract_issues` | docstring | Return source defects that generated-artifact settlement cannot repair. |
+| 391 | `function` | `_existing_fixed_point_paths` | inventory fallback | Inventory fallback for function `_existing_fixed_point_paths` defined at `src/roadmap_tracks/fixed_point.py:391`. |
+| 413 | `function` | `_write_fixed_point_pass` | inventory fallback | Inventory fallback for function `_write_fixed_point_pass` defined at `src/roadmap_tracks/fixed_point.py:413`. |
+| 433 | `function` | `_write_final_validation_pass` | docstring | Refresh self-referential reports and write the certificate from the final live state. |
+| 472 | `function` | `run_semantic_fixed_point` | docstring | Settle manuscript, semantic, and contract artifacts to a validated fixed point. |
 
 ## `src/roadmap_tracks/formal_interop.py`
 
@@ -1356,16 +1357,16 @@ Total documented definitions: 895
 
 | line | kind | name | documentation source | summary |
 | ---: | --- | --- | --- | --- |
-| 14 | `function` | `_safe_float` | inventory fallback | Inventory fallback for function `_safe_float` defined at `src/visualizations/figure_style.py:14`. |
-| 21 | `function` | `_safe_int` | inventory fallback | Inventory fallback for function `_safe_int` defined at `src/visualizations/figure_style.py:21`. |
-| 67 | `class` | `FigureStyleConfig` | docstring | Data container for FigureStyleConfig. |
-| 78 | `function` | `FigureStyleConfig.color` | docstring | Process color. |
-| 82 | `function` | `FigureStyleConfig.text_size` | docstring | Process text size. |
-| 87 | `function` | `FigureStyleConfig.layout_value` | docstring | Process layout value. |
-| 91 | `function` | `FigureStyleConfig.rc_params` | docstring | Process rc params. |
-| 112 | `function` | `active_style` | docstring | Process active style. |
-| 117 | `function` | `load_figure_style` | docstring | Load figure style from a file. |
-| 163 | `function` | `apply_style` | docstring | Process apply style. |
+| 17 | `function` | `_safe_float` | inventory fallback | Inventory fallback for function `_safe_float` defined at `src/visualizations/figure_style.py:17`. |
+| 24 | `function` | `_safe_int` | inventory fallback | Inventory fallback for function `_safe_int` defined at `src/visualizations/figure_style.py:24`. |
+| 70 | `class` | `FigureStyleConfig` | docstring | Data container for FigureStyleConfig. |
+| 81 | `function` | `FigureStyleConfig.color` | docstring | Process color. |
+| 85 | `function` | `FigureStyleConfig.text_size` | docstring | Process text size. |
+| 90 | `function` | `FigureStyleConfig.layout_value` | docstring | Process layout value. |
+| 94 | `function` | `FigureStyleConfig.rc_params` | docstring | Process rc params. |
+| 115 | `function` | `active_style` | docstring | Process active style. |
+| 120 | `function` | `load_figure_style` | docstring | Load figure style from a file. |
+| 166 | `function` | `apply_style` | docstring | Process apply style. |
 
 ## `src/visualizations/figures.py`
 

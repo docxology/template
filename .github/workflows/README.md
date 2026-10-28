@@ -61,7 +61,7 @@ flowchart TB
     SEC[security<br/>pip-audit + bandit -c bandit.yaml]
     DL[docs-lint<br/>mermaid + links + consistency]
     VNM --> SHW[setup-hook-windows-smoke<br/>conditional · Windows]
-    VNM --> TI[test-infra<br/>ubuntu × py312–314 + macOS × py314<br/>four complete shards per environment]
+    VNM --> TI[test-infra<br/>ubuntu × py314/315 + macOS × py315<br/>four complete shards per environment]
     TI --> IC[coverage-infra<br/>complete py314 Linux union ≥ 60%]
     VNM --> TR[test-regression<br/>claim-binding pins]
     VNM --> TP[test-project<br/>validated capability matrix<br/>each ≥ 90% own src/]
@@ -173,7 +173,7 @@ green static checks cannot substitute for missing requirements.
 
 For root 4+, the fresh installed reader authenticates the complete installed
 matrix from that exact hosted candidate. Release asset admission revalidates
-its source, versions, full roster, three runtimes, original process and Code
+its source, versions, full roster, both supported runtimes, original process and Code
 observations, dependency providers, and wheel bytes, then publishes that already
 tested wheel from the reader mirror. It does not rebuild the installed matrix
 after the handoff. Earlier majors still run the complete installed matrix in
@@ -182,7 +182,7 @@ recheck the selected assets before and after publication.
 
 The candidate implementation includes
 [`platform-required-acceptance.yml`](platform-required-acceptance.yml).
-It covers six original Root units (Python 3.12/3.13/3.14 on macOS/Linux), common
+It covers all required Root host/minor units (Python 3.14/3.15 on macOS/Linux), common
 installed/export/runtime observations, Source-derived complete auxiliary
 project cells and separate Root checks, the native-format inventory, and an
 independent collector. Auxiliary cells run serially within individual

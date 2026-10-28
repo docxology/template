@@ -185,19 +185,12 @@ jobs:
       - name: Verify public capability manifest
         run: uv run --no-sync --offline python scripts/gates/public_capabilities.py
 
-      - name: Install supported Python 3.12
+      - name: Install supported Python 3.15
         if: steps.acceptance.outputs.required != 'true'
-        id: python312
+        id: python315
         uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
         with:
-          python-version: "3.12"
-
-      - name: Install supported Python 3.13
-        if: steps.acceptance.outputs.required != 'true'
-        id: python313
-        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
-        with:
-          python-version: "3.13"
+          python-version: "3.15"
 
       - name: Select supported Python 3.14
         if: steps.acceptance.outputs.required != 'true'
@@ -209,13 +202,12 @@ jobs:
       - name: Prepare locked installed-matrix dependency cache
         if: steps.acceptance.outputs.required != 'true'
         env:
-          PYTHON312: ${{ steps.python312.outputs.python-path }}
-          PYTHON313: ${{ steps.python313.outputs.python-path }}
+          PYTHON315: ${{ steps.python315.outputs.python-path }}
           PYTHON314: ${{ steps.python314.outputs.python-path }}
         run: |
           set -euo pipefail
           read -r -a projects <<< "$(uv run --no-sync --offline python -m infrastructure.project.public_scope project-names)"
-          for selection in "3.12=$PYTHON312" "3.13=$PYTHON313" "3.14=$PYTHON314"; do
+          for selection in "3.14=$PYTHON314" "3.15=$PYTHON315"; do
             minor=${selection%%=*}
             interpreter=${selection#*=}
             build_environment="$RUNNER_TEMP/release-build-cache-$minor"
@@ -242,14 +234,13 @@ jobs:
         id: installed_matrix
         if: steps.acceptance.outputs.required != 'true'
         env:
-          PYTHON312: ${{ steps.python312.outputs.python-path }}
-          PYTHON313: ${{ steps.python313.outputs.python-path }}
+          PYTHON315: ${{ steps.python315.outputs.python-path }}
           PYTHON314: ${{ steps.python314.outputs.python-path }}
         run: |
           set -euo pipefail
           uv run --no-sync --offline python scripts/gates/installed_public.py \
             --project-workers 1 --timeout 600 \
-            --python "3.12=$PYTHON312" --python "3.13=$PYTHON313" --python "3.14=$PYTHON314" \
+            --python "3.14=$PYTHON314" --python "3.15=$PYTHON315" \
             --evidence-dir "$GITHUB_WORKSPACE/output/readiness/installed-release-$GITHUB_RUN_ID-$GITHUB_RUN_ATTEMPT"
 
       - name: Select source-bound installed publication inputs

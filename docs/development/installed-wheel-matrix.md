@@ -1,18 +1,17 @@
 # Public installed-wheel acceptance matrix
 
 `scripts/gates/installed_public.py` builds and executes genuine wheels for the
-root platform and every source-owned public exemplar on Python 3.12, 3.13, and
-3.14. The complete product is 78 cells. Set `P4_PYTHON312`, `P4_PYTHON313`, and
-`P4_PYTHON314` to absolute already installed interpreter paths; the prepared
+root platform and every source-owned public exemplar on Python 3.14 and 3.15.
+The complete product is derived from Root plus the canonical public roster and
+both supported minors. Set `P4_PYTHON314` and `P4_PYTHON315` to absolute already installed interpreter paths; the prepared
 environment example in [`public-runtime-matrix.md`](public-runtime-matrix.md)
 can supply them. Run the complete selection:
 
 ```bash
 uv run --no-sync --offline python scripts/gates/installed_public.py \
   --project-workers 1 --timeout 600 \
-  --python "3.12=$P4_PYTHON312" \
-  --python "3.13=$P4_PYTHON313" \
-  --python "3.14=$P4_PYTHON314"
+  --python "3.14=$P4_PYTHON314" \
+  --python "3.15=$P4_PYTHON315"
 ```
 
 Prepare the exact locked nonlocal dependency and build-tool cache explicitly

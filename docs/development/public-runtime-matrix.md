@@ -4,23 +4,21 @@ The strict matrix in `scripts/gates/public_readiness.py --acceptance-matrix`
 executes every canonical public exemplar on every supported Python minor.
 `PUBLIC_PROJECT_NAMES`, `CANONICAL_CI_PYTHON_VERSIONS`, and each project's
 source-owned required acceptance profile determine the product. The current
-product is 25 projects on Python 3.12, 3.13, and 3.14.
+product is the canonical public roster on Python 3.14 and 3.15; its exact
+cell count is derived from those source-owned declarations.
 
 Select already installed interpreters and dedicated dependency environments.
 The runner never acquires Python or installs packages. Explicit setup is separate
 from acceptance execution. An offline setup example for each installed minor is:
 
 ```bash
-UV_PROJECT_ENVIRONMENT=/tmp/platform-test-envs/3.12 \
-  uv sync --locked --offline --python 3.12 --no-python-downloads
-UV_PROJECT_ENVIRONMENT=/tmp/platform-test-envs/3.13 \
-  uv sync --locked --offline --python 3.13 --no-python-downloads
 UV_PROJECT_ENVIRONMENT=/tmp/platform-test-envs/3.14 \
-  uv sync --locked --offline --python 3.14 --no-python-downloads
+  uv sync --locked --offline --group active-inference --python 3.14 --no-python-downloads
+UV_PROJECT_ENVIRONMENT=/tmp/platform-test-envs/3.15 \
+  uv sync --locked --offline --group active-inference --python 3.15 --no-python-downloads
 
-export P4_PYTHON312=/tmp/platform-test-envs/3.12/bin/python
-export P4_PYTHON313=/tmp/platform-test-envs/3.13/bin/python
 export P4_PYTHON314=/tmp/platform-test-envs/3.14/bin/python
+export P4_PYTHON315=/tmp/platform-test-envs/3.15/bin/python
 ```
 
 If an installed interpreter or cached locked dependency is absent, setup refuses;
@@ -84,9 +82,8 @@ provider wheel:
 ```bash
 uv run --no-sync --offline python scripts/gates/public_readiness.py \
   --acceptance-matrix --project-workers 1 --timeout 7200 --test-timeout 120 \
-  --python "3.12=$P4_PYTHON312" \
-  --python "3.13=$P4_PYTHON313" \
   --python "3.14=$P4_PYTHON314" \
+  --python "3.15=$P4_PYTHON315" \
   --provider-wheel "templates/template_literature_meta_analysis=$P4_META_PROVIDER_WHEEL"
 ```
 
@@ -154,7 +151,7 @@ establish candidate readiness or authorize production publication.
 original-spec SHA, nonce, supervised child, whole-case union, and independent
 reader contracts for the platform root. Supply prepared interpreters with
 repeated `--python MINOR=/absolute/env/bin/python`; acquisition is disabled.
-Root cells run serially. The existing 75-cell exemplar matrix is unchanged.
+Root cells run serially. The canonical 25-project roster requires both supported minors (50 exemplar cells); that required product is not an execution result.
 
 Root scope means the actual repository root, not `projects/root`. Its owned
 Python census covers infrastructure, scripts, tests, and exact root Python
@@ -177,7 +174,7 @@ Use `--mode live` for the complete release observation after preparing every
 source-declared prerequisite. Core mode retains the unmet live requirements as
 blocked release cells. The policy and its fixture controls establish the
 execution contract; the actual production Root observations on Python
-3.12–3.14 and Darwin/Linux must pass independently. See
+3.14/3.15 and Darwin/Linux must pass independently. See
 [`root-runtime-v2.md`](root-runtime-v2.md) for case custody, branch coverage,
 provider admission and transported-host evidence. Installed, portable, native,
 hosted and release requirements remain separate gates.

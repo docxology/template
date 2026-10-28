@@ -46,7 +46,7 @@ def declared_output_relpaths(project_root: Path) -> frozenset[str]:
     manifest_path = project_root / "output" / "reports" / "artifact_manifest.json"
     try:
         payload = json.loads(manifest_path.read_text(encoding="utf-8"))
-    except (OSError, ValueError):
+    except OSError, ValueError:
         return frozenset()
     if not isinstance(payload, dict):
         return frozenset()

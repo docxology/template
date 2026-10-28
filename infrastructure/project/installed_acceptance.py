@@ -55,7 +55,7 @@ def run_installed_acceptance(
     timeout_seconds: int = 600,
     evidence_dir: Path | None = None,
 ) -> dict[str, Any]:
-    """Execute three sequential runtime waves, with at most three package cells in flight."""
+    """Execute declared runtime waves, with at most three package cells in flight."""
     if (
         type(project_workers) is not int
         or not 1 <= project_workers <= 3
@@ -124,7 +124,7 @@ def run_installed_acceptance(
                     work = [item for item in work if item[0] not in completed]
     try:
         current = source_fingerprint(root) == fingerprint
-    except (OSError, ValueError):
+    except OSError, ValueError:
         current = False
     gates = {}
     for scope in scopes:
@@ -177,7 +177,7 @@ def run_installed_acceptance(
         "gates": gates,
         "installed_matrix": {
             "run_id": run_id,
-            "expected_cells": 3 * (len(PUBLIC_PROJECT_NAMES) + 1),
+            "expected_cells": len(CANONICAL_CI_PYTHON_VERSIONS) * (len(PUBLIC_PROJECT_NAMES) + 1),
             "observed_cells": len(results),
             "source_current": current,
             "counts": counts,

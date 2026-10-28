@@ -199,7 +199,7 @@ def run_live_comparison(project_root: Path, output_dir: Path, settings: LiveSett
             try:
                 verify_custody(platform_before, runtime_before, implementation_before)
                 receipt["source_unchanged"] = before == _source_manifest(project_root.absolute())
-            except (ValueError, OSError):
+            except ValueError, OSError:
                 receipt["source_unchanged"] = False
             if not receipt["source_unchanged"]:
                 receipt.update(status="failed", diagnostic="source changed during live coordination")

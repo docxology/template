@@ -406,6 +406,6 @@ class TestErrorHandling:
             # Restore permissions for cleanup
             try:
                 config_path.chmod(current_mode)
-            except (OSError, PermissionError):
+            except OSError, PermissionError:
                 # If we can't restore permissions, that's okay for test cleanup
                 pass

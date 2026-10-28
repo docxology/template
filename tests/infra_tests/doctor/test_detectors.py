@@ -36,8 +36,8 @@ def test_python_detector_uses_current_runtime_floor(tmp_path: Path) -> None:
 
     (finding,) = detect_python_version(tmp_path)
     assert finding.code == "DOC102"
-    assert finding.healthy is (sys.version_info[:2] >= (3, 12))
-    assert "Python >= 3.12" in finding.description
+    assert finding.healthy is (sys.version_info[:2] >= (3, 14))
+    assert "Python >= 3.14" in finding.description
 
 
 def test_run_sh_executable_detected(tmp_path: Path):

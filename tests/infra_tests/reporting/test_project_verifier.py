@@ -228,8 +228,8 @@ def test_declared_verifier_binds_existing_interpreter_without_acquisition(tmp_pa
 
     declared = ("python", "scripts/verify.py", "--release")
     effective = build_project_verifier_execution_command(declared, tmp_path)
-    assert effective[0:3] == (str(Path(sys.executable).absolute()), "-I", "-c")
-    assert "runpy.run_path" in effective[3]
+    assert effective[0:4] == (str(Path(sys.executable).absolute()), "-I", "-B", "-c")
+    assert "runpy.run_path" in effective[4]
     assert effective[-1] == "--release"
     assert "uv" not in effective and "--with" not in effective and "--extra" not in effective
 

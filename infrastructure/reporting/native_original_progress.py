@@ -37,6 +37,6 @@ def original_cell_progress(phase: str, scope: str, deadline: float) -> None:
     }
     try:
         print(json.dumps(value, sort_keys=True, allow_nan=False), file=sys.stderr, flush=True)
-    except (OSError, ValueError):
+    except OSError, ValueError:
         # Diagnostics grant no authority and must not launder the primary exit.
         pass

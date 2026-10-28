@@ -311,7 +311,7 @@ def validate_security_posture_audit(project_root: Path) -> list[str]:
         return ["security_posture_audit.json missing"]
     try:
         payload = json.loads(path.read_text(encoding="utf-8"))
-    except (OSError, json.JSONDecodeError, UnicodeDecodeError):
+    except OSError, json.JSONDecodeError, UnicodeDecodeError:
         return ["security_posture_audit.json is not valid JSON"]
     issues: list[str] = []
     if payload.get("schema") != SECURITY_POSTURE_SCHEMA:

@@ -18,7 +18,7 @@ remains a separate manual lane. See [CI scope and local commands](../docs/develo
 Pipelines · Manuscripts · Cryptographic Provenance · AI-Agent Collaboration
 
 [![CI](https://github.com/docxology/template/actions/workflows/ci.yml/badge.svg)](https://github.com/docxology/template/actions/workflows/ci.yml)
-[![Python 3.12+](https://img.shields.io/badge/python-3.12%20%7C%203.13%20%7C%203.14-blue?logo=python&logoColor=white)](https://www.python.org/)
+[![Python 3.14+](https://img.shields.io/badge/python-3.14%20%7C%203.15-blue?logo=python&logoColor=white)](https://www.python.org/)
 [![uv](https://img.shields.io/badge/package%20manager-uv-purple?logo=astral)](https://docs.astral.sh/uv/)
 [![Ruff](https://img.shields.io/badge/linter-ruff-orange?logo=ruff)](https://docs.astral.sh/ruff/)
 [![License: Apache 2.0](https://img.shields.io/badge/license-Apache%202.0-green)](../LICENSE)
@@ -926,7 +926,7 @@ The repo-wide `permissions:` is `contents: read`; every job re-declares its own 
 | 5 | `health` | — | always | Blocking unified static-health report; behavioral/platform matrices remain separate |
 | 6 | `verify-no-mocks` | — | always | Enforces prohibited mock-framework syntax and zero semantic dependency replacements (runs in parallel with `lint`) |
 | 7 | `setup-hook-windows-smoke` | `verify-no-mocks`, `detect` | `needs.detect.outputs.setup_hook == 'true'` | Windows smoke test of `projects/**/scripts/setup_hook.py` |
-| 8 | `test-infra` | `verify-no-mocks`, `detect-projects` | always | Infra suite, matrix Ubuntu × Py 3.12/3.13/3.14 + macOS × Py 3.14 (16 blocking cells), unchanged marker/deadline policy and `UV_PYTHON`-bound runtime; four instrumented 3.14/Linux shards feed `coverage-infra` |
+| 8 | `test-infra` | `verify-no-mocks`, `detect-projects` | always | Infra suite, matrix Ubuntu × Py 3.14/3.15 + macOS × Py 3.15 (source-derived blocking cells), unchanged marker/deadline policy and `UV_PYTHON`-bound runtime; four instrumented 3.14/Linux shards feed `coverage-infra` |
 | 9 | `test-regression` | `verify-no-mocks` | always | Claim-binding numerical regression tier |
 | 10 | `test-project` | `verify-no-mocks`, `detect-projects` | always | Capability-manifest project/Python matrix with `UV_PYTHON`-bound moving patches; each project enforces its own ≥90 floor |
 | 11 | `fep-lean` | `verify-no-mocks`, `detect` | `needs.detect.outputs.fep_lean == 'true'` | Lean-toolchain project build + tests (`--cov-fail-under=89` rotating exception) |

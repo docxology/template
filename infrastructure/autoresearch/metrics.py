@@ -85,7 +85,7 @@ def mad_confidence(values: Sequence[float | str], baseline: float, best: float) 
     for value in values:
         try:
             numeric = float(value)
-        except (TypeError, ValueError):
+        except TypeError, ValueError:
             continue
         if math.isfinite(numeric):
             finite_values.append(numeric)

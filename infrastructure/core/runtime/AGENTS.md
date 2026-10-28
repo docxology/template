@@ -18,7 +18,7 @@ The `infrastructure/core/runtime/` package contains runtime helpers for environm
 - `env_deps.py` - dependency helpers
 - `prepared_runtime.py` / `prepared_dispatch.py` - existing selected root runtime, declared requirement availability, and finite audited CLI dispatch without acquisition
 - `setup_checks.py` - Stage 0 check-only orchestration and aggregate `run_environment_setup_checks` service (used by `scripts/pipeline/stage_00_setup.py`)
-- `python_compatibility.py` - Python 3.12 syntax/API floor scanner and tested-runtime contract
+- `python_compatibility.py` - current Python 3.14 syntax/API floor scanner, preserved historical 3.12 audit, and tested-runtime contract
 - `eta.py` - ETA helpers
 - `function_profiler.py` - function profiling
 - `health_check.py` - health checks

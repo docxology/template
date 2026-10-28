@@ -40,7 +40,7 @@ def test_required_contract_job_keeps_whole_root_budget_and_explicit_empty_outcom
     assert contract["timeout-minutes"] * 60 == 7200
     assert CONTRACT_SECONDS <= 7200
     assert jobs["test-infra"]["timeout-minutes"] == 10
-    assert jobs["test-infra"]["strategy"]["max-parallel"] == 8
+    assert jobs["test-infra"]["strategy"]["max-parallel"] == 16
     from infrastructure.core.testing.ci_infra import _functional_selection
 
     assert _functional_selection(ROOT, is_contract=True) == {"marker_expression": "", "keyword_expression": ""}

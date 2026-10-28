@@ -353,7 +353,7 @@ def coordinate(root: Path, snapshot_path: Path, expected: str) -> int:
                     try:
                         held = SnapshotReader(root).read((chunk_dir / "receipt.json").relative_to(root).as_posix())
                         receipt_binding = {"path": held.relative, "sha256": held.sha256}
-                    except (OSError, ValueError):
+                    except OSError, ValueError:
                         pass
                     code = (
                         130
@@ -420,7 +420,7 @@ def coordinate(root: Path, snapshot_path: Path, expected: str) -> int:
     except TimeoutError:
         if code != 130:
             code = 124
-    except (OSError, ValueError, RuntimeError):
+    except OSError, ValueError, RuntimeError:
         if code not in (130, 124):
             code = 1
     if time.monotonic() >= deadline and code != 130:
@@ -478,7 +478,7 @@ def main(argv: list[str] | None = None) -> int:
         return 130
     except TimeoutError:
         return 124
-    except (OSError, ValueError, RuntimeError):
+    except OSError, ValueError, RuntimeError:
         return 1
 
 

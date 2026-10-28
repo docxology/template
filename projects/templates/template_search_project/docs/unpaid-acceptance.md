@@ -18,7 +18,7 @@ uv run python projects/templates/template_search_project/scripts/_run_unpaid_acc
 live capabilities. Run the normal project scripts for the full offline pipeline.
 The underscore-prefixed acceptance orchestrator is deliberately excluded from
 automatic analysis-script discovery. Live execution requires the declared platform SDK,
-Python 3.12–3.14, `pypdf`, and a running loopback-only Ollama service containing
+Python 3.14/3.15, `pypdf`, and a running loopback-only Ollama service containing
 the explicitly selected model.
 
 The live command queries Crossref with the configured topic and retrieves at

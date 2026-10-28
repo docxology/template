@@ -73,7 +73,7 @@ def validate_runtime_cases(
     runtime.pop("command", None)
     minor, executable = requirement.python_version, runtime.get("executable")
     if (
-        minor not in ("3.12", "3.13", "3.14")
+        minor not in ("3.14", "3.15")
         or runtime.get("python_version") != minor
         or runtime.get("implementation") != "CPython"
         or not isinstance(runtime.get("python_full_version"), str)

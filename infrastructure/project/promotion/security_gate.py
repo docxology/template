@@ -75,7 +75,7 @@ def scan_security_todos(
         relative = path.relative_to(root).as_posix()
         try:
             lines = path.read_text(encoding="utf-8").splitlines()
-        except (OSError, UnicodeDecodeError):
+        except OSError, UnicodeDecodeError:
             errors.append(f"candidate text file cannot be decoded as UTF-8: {relative}")
             continue
         for line_number, line in enumerate(lines, start=1):
@@ -237,7 +237,7 @@ def _load_attestation(path: Path, errors: list[str]) -> Mapping[str, object]:
         return {}
     try:
         payload = yaml.safe_load(path.read_text(encoding="utf-8"))
-    except (OSError, UnicodeDecodeError, yaml.YAMLError):
+    except OSError, UnicodeDecodeError, yaml.YAMLError:
         errors.append(f"promotion attestation is not valid UTF-8 YAML: {path.name}")
         return {}
     if not isinstance(payload, Mapping):

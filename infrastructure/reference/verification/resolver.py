@@ -178,7 +178,7 @@ class ReferenceResolver:
             return None, False  # transient (5xx, rate limit, ...)
         try:
             message = resp.json().get("message")
-        except (json.JSONDecodeError, AttributeError):
+        except json.JSONDecodeError, AttributeError:
             return None, False
         if not isinstance(message, dict):
             return None, False
@@ -319,7 +319,7 @@ def _openalex_work_to_paper(work: dict[str, Any]) -> Paper:
     year = work.get("publication_year")
     try:
         year = int(year) if year is not None else None
-    except (TypeError, ValueError):
+    except TypeError, ValueError:
         year = None
     venue = None
     location = work.get("primary_location") or {}

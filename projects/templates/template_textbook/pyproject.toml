@@ -17,7 +17,12 @@ version = "0.2.0"
 license = {text = "CC-BY-4.0"}
 description = "Modular, fillable textbook scaffold: data-driven manuscript (parts/chapters/labs/questions), tested computational backbone, deterministic figures + Mermaid diagrams, and a content scaffold/validation engine."
 authors = [{name = "Daniel Ari Friedman", email = "daniel@activeinference.institute"}]
-requires-python = ">=3.12"
+requires-python = ">=3.14"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.14",
+    "Programming Language :: Python :: 3.15",
+]
 dependencies = [
     "defusedxml>=0.7.1",
     "pyyaml>=6.0",
@@ -70,5 +75,5 @@ research-project-template = { path = "../../..", editable = true }
 # Compatibility contract for this independent exemplar release.
 [tool.template]
 platform_version = "4.1.0"
-tested_python_versions = ["3.12", "3.13", "3.14"]
+tested_python_versions = ["3.14", "3.15"]
 required_unpaid_capabilities = []

@@ -135,7 +135,7 @@ readers still require the complete Source-owned profile, all host/runtime
 obligations, coverage floors and original case limits.
 
 Use the manual **Optional Hardening** workflow for the former complete
-infrastructure shards, Python 3.12–3.14 project suites, aggregate coverage,
+infrastructure shards, Python 3.14/3.15 project suites, aggregate coverage,
 platform breadth and extended documentation checks. Use the separate manual
 **Platform required acceptance** workflow when original source/runtime custody,
 native document replay or formal release acceptance is needed. Neither runs

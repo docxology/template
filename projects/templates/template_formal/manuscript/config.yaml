@@ -89,7 +89,6 @@ render:
 analysis:
   scripts:
     - 02_run_analysis.py
-    - zz_generate_cover_art.py
 
 # Consumed by: `infrastructure.llm.LLMClient` (in `infrastructure/llm/core/client.py`)
 llm:

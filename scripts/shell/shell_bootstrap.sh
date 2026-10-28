@@ -91,12 +91,12 @@ try:
     signal.signal(signal.SIGINT, signal.default_int_handler)
     signal.signal(signal.SIGALRM, expired)
     signal.setitimer(signal.ITIMER_REAL, min(30, budget))
-    assert sys.implementation.name == "cpython" and sys.version_info.major == 3 and sys.version_info.minor >= 12
+    assert sys.implementation.name == "cpython" and sys.version_info.major == 3 and sys.version_info.minor >= 14
     assert str(Path(sys.executable).absolute()) == selected
     prefix = Path(selected).parent.parent
     assert prefix.is_absolute() and prefix.is_dir() and prefix != Path(sys.base_prefix).absolute()
     observed = Path(sys.prefix).absolute()
-    assert observed == (prefix if sys.version_info >= (3, 14) else Path(sys.base_prefix).absolute())
+    assert observed == prefix
     configuration = regular_bytes(prefix / "pyvenv.cfg").decode("utf-8")
     assert any(line.partition("=")[0].strip() == "home" and line.partition("=")[2].strip() for line in configuration.splitlines())
     assert all("\n" not in item and "\t" not in item for item in (selected, str(prefix)))
@@ -197,7 +197,7 @@ except (AssertionError, OSError, ValueError) as error:
 print_preparation_instructions() {
     local script_name="${1:-run.sh}"
     cat >&2 <<EOF
-${script_name} requires an existing prepared Python 3.12+ environment.
+${script_name} requires an existing prepared Python 3.14+ environment.
 
 Explicit preparation (not performed by ordinary execution):
   bash scripts/shell/setup-system-deps.sh --check

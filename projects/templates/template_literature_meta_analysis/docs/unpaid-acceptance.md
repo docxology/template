@@ -18,7 +18,7 @@ uv run python projects/templates/template_literature_meta_analysis/scripts/_run_
 `core` inspects the committed corpus and declares no live capability execution;
 the numbered scripts remain the complete offline analysis route. The separate
 underscore-prefixed acceptance command is excluded from default script discovery.
-Live execution requires the declared platform SDK, Python 3.12–3.14, the project's installed
+Live execution requires the declared platform SDK, Python 3.14/3.15, the project's installed
 dependencies including `pypdf` and `rdflib`, and a loopback Ollama service with the
 selected model.
 
