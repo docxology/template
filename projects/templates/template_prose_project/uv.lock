@@ -738,7 +738,7 @@ requires-dist = [
     { name = "requests", marker = "extra == 'llm'", specifier = ">=2.31.0" },
     { name = "scikit-learn", marker = "extra == 'scientific'", specifier = ">=1.3.0" },
     { name = "twine", marker = "extra == 'publishing'", specifier = ">=5.0.0" },
-    { name = "wordcloud", marker = "extra == 'scientific'", specifier = ">=1.9.0" },
+    { name = "wordcloud", marker = "python_full_version < '3.15' and extra == 'scientific'", specifier = ">=1.9.0" },
 ]
 provides-extras = ["scientific", "llm", "rendering", "rendering-pptx", "dashboard", "dotenv", "steganography", "docxplus", "monitoring", "publishing", "deep-research"]
 
@@ -800,7 +800,7 @@ public-exemplars = [
     { name = "seaborn", specifier = ">=0.12.0" },
     { name = "tqdm", specifier = ">=4.65.0" },
     { name = "urllib3", specifier = ">=2.0.0" },
-    { name = "wordcloud", specifier = ">=1.9.0" },
+    { name = "wordcloud", marker = "python_full_version < '3.15'", specifier = ">=1.9.0" },
 ]
 publishing = [
     { name = "huggingface-hub", specifier = ">=0.35.0" },
@@ -816,7 +816,7 @@ scientific = [
     { name = "rdflib", specifier = ">=7.0.0" },
     { name = "scikit-learn", specifier = ">=1.3.0" },
     { name = "scipy", specifier = ">=1.10.0" },
-    { name = "wordcloud", specifier = ">=1.9.0" },
+    { name = "wordcloud", marker = "python_full_version < '3.15'", specifier = ">=1.9.0" },
 ]
 steganography = [
     { name = "cryptography", specifier = ">=50.0.0" },
