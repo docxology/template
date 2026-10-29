@@ -1,6 +1,7 @@
 from __future__ import annotations
 from pathlib import Path
 import numpy as np
+import pytest
 from template_literature_meta_analysis.visualization.advanced.embeddings import (
     plot_pca_embeddings,
     plot_term_heatmap,
@@ -10,6 +11,7 @@ from template_literature_meta_analysis.visualization.advanced.topics import (
     plot_topic_term_bars,
     plot_cooccurrence_matrix,
 )
+from template_literature_meta_analysis.visualization.advanced import word_cloud
 from template_literature_meta_analysis.visualization.advanced.word_cloud import plot_word_cloud
 
 
@@ -45,6 +47,21 @@ class TestAdvancedPlots:
 
         img = Image.open(output)
         assert img.width > 0 and img.height > 0
+
+    def test_plot_word_cloud_renders_without_the_packed_layout_extension(
+        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        monkeypatch.setattr(word_cloud, "_wordcloud_available", lambda: False)
+        weights = {"active": 0.9, "inference": 0.85, "free": 0.7, "energy": 0.2}
+        output = tmp_path / "fallback_wc.png"
+        assert plot_word_cloud(weights, output) == output
+        from PIL import Image
+
+        img = Image.open(output)
+        assert img.width > 0 and img.height > 0
+        first = output.read_bytes()
+        plot_word_cloud(weights, output)
+        assert output.read_bytes() == first, "spiral fallback must be deterministic"
 
     def test_plot_word_cloud_empty(self, tmp_path: Path) -> None:
         output = tmp_path / "empty_wc.png"
