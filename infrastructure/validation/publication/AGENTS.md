@@ -19,9 +19,9 @@ rewrite generated outputs.
 - Rendered mode requires `output/reports/rendered_provenance.json`. The receipt
   binds a green output snapshot to stage, source, config, output, and explicit
   manuscript-consumption fingerprints without claiming per-stage lineage. The
-  stage fingerprint covers every tracked file under `infrastructure/` and
-  `scripts/`, so editing any implementation or gate file invalidates existing
-  receipts and requires re-running the exemplar producers.
+  stage fingerprint covers every tracked `.py` file under `infrastructure/` and
+  `scripts/` (documentation is excluded), so editing a stage module invalidates
+  existing receipts and requires re-running the exemplar producers.
 - Placeholder tokens are valid in hydratable source manuscripts. Scan only the
   canonical rendered manuscript input, once, and ignore literal code examples.
 - Missing, malformed, stale, or incomplete rendered provenance is a

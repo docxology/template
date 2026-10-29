@@ -40,6 +40,12 @@ def _fingerprint(records: Iterable[FileRecord]) -> Fingerprint:
 
 
 def _stage_records(repo_root: Path) -> list[FileRecord]:
+    """Hash the executable stage implementation under the two implementation roots.
+
+    Prose and documentation artwork under those roots cannot change rendered
+    output, so they are excluded: editing an AGENTS.md must not invalidate 25
+    proofs, while editing any stage module must.
+    """
     records: list[FileRecord] = []
     for relative in _IMPLEMENTATION_ROOTS:
         stage_root = repo_root / relative
@@ -51,7 +57,7 @@ def _stage_records(repo_root: Path) -> list[FileRecord]:
                 excluded_parts=CACHE_PARTS,
             )
         )
-    cached = cached_records(records, repo_root)
+    cached = [record for record in cached_records(records, repo_root) if record.key.endswith(".py")]
     if not cached:
         raise RenderedSnapshotError("STAGE_SOURCE_MISSING", "no cached stage implementation files found")
     return cached

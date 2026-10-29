@@ -12,7 +12,9 @@ from infrastructure.core.testing.ci_selection import (
     _parse_changed_paths,
     affected_projects,
     changed_git_paths,
+    documentation_only,
     functional_selection,
+    infrastructure_selection,
 )
 from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
 
@@ -62,7 +64,6 @@ def test_meta_change_includes_real_declared_reverse_consumer(tmp_path: Path) -> 
         ".github/workflows/ci.yml",
         "infrastructure/core/actual.py",
         "tests/infra_tests/core/test_actual.py",
-        "docs/version.md",
         "fonds/templates/actual/data.json",
         "projects/templates/unknown/src/model.py",
         "projects/working/private/src/model.py",
@@ -133,3 +134,36 @@ def test_non_pr_and_invalid_base_events_always_run_full(tmp_path: Path) -> None:
 )
 def test_malformed_change_data_refuses_any_partial_change_roster(output: bytes) -> None:
     assert _parse_changed_paths(output) == ((), True)
+
+
+def test_documentation_paths_select_no_roster_entry(tmp_path: Path) -> None:
+    _metadata(tmp_path)
+    selected, reason = affected_projects(tmp_path, ("docs/version.md",))
+    assert selected == ()
+    assert "documentation-only" in reason
+
+
+def test_documentation_only_change_runs_no_exemplar_suite(tmp_path: Path) -> None:
+    _metadata(tmp_path)
+    paths = ("AGENTS.md", "docs/guides/new-project-setup.md", "infrastructure/core/testing/AGENTS.md")
+    assert documentation_only(paths)
+    projects, reason = affected_projects(tmp_path, paths)
+    assert projects == ()
+    assert "documentation-only" in reason
+    plan: dict[str, object] = {"changed_paths": list(paths), "projects": [], "reason": reason}
+    infrastructure_selection(tmp_path, plan)
+    assert plan["documentation_only"] is True
+    assert plan["infra_shards"] == [["tests/infra_tests/documentation"]]
+
+
+@pytest.mark.parametrize(
+    "paths",
+    [
+        ("infrastructure/project/git_guards.py",),
+        ("AGENTS.md", "pyproject.toml"),
+        ("uv.lock",),
+        (),
+    ],
+)
+def test_non_documentation_changes_keep_normal_routing(paths: tuple[str, ...]) -> None:
+    assert not documentation_only(paths)

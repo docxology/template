@@ -12,6 +12,7 @@ from pathlib import Path
 import pytest
 
 from infrastructure.core.testing.ci_infra import (
+    AUTOMATIC_SHARD_MAX_MODULES,
     _run_functional_process,
     infrastructure_files,
     infrastructure_shards,
@@ -72,7 +73,7 @@ def test_automatic_capacity_holds_for_real_skewed_module_sizes(tmp_path: Path) -
     shards = infrastructure_shards(tmp_path, changed)
 
     validate_shards(shards, selected)
-    assert all(1 <= len(shard) <= 20 for shard in shards)
+    assert all(1 <= len(shard) <= AUTOMATIC_SHARD_MAX_MODULES for shard in shards)
     assert max((tmp_path / name).stat().st_size for name in selected) > 1000000
     assert shards == infrastructure_shards(tmp_path, changed)
 

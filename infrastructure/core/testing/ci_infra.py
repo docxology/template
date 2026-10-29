@@ -61,6 +61,9 @@ CI_EXTRA_PATHS = (
 )
 
 
+AUTOMATIC_SHARD_MAX_MODULES = 12
+
+
 def infrastructure_files(root: Path, changed: tuple[str, ...] = ()) -> tuple[str, ...]:
     """Preserve legacy smoke, include changed tests and conventional Source owners."""
     paths = [Path(p) for p in resolve_infrastructure_test_paths(root, "pipeline-smoke")]
@@ -124,14 +127,16 @@ def infrastructure_shards(root: Path, changed: tuple[str, ...] = (), count: int 
     if count is None:
         # Package-level ownership can expand the routine roster by an order of
         # magnitude. Keep its complete selection and original 540-second clock,
-        # with at most 20 modules per automatic job. Hosted concurrency is
+        # with at most AUTOMATIC_SHARD_MAX_MODULES modules per automatic job,
+        # which keeps a shard short instead of letting one long module stretch
+        # the whole matrix. Hosted concurrency is
         # bounded separately; balancing cannot leave a job over the module cap.
-        count = max(3, (len(files) + 19) // 20)
+        count = max(3, (len(files) + AUTOMATIC_SHARD_MAX_MODULES - 1) // AUTOMATIC_SHARD_MAX_MODULES)
     weights = module_weights(root, files)
     shards: list[list[str]] = [[] for _ in range(min(count, len(files)))]
     loads = [0.0] * len(shards)
     for name in sorted(files, key=lambda p: (-weights[p], p)):
-        available = [i for i in range(len(loads)) if not automatic or len(shards[i]) < 20]
+        available = [i for i in range(len(loads)) if not automatic or len(shards[i]) < AUTOMATIC_SHARD_MAX_MODULES]
         selected = min(available, key=lambda i: (loads[i], i))
         shards[selected].append(name)
         loads[selected] += weights[name]
