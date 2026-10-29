@@ -219,7 +219,7 @@
         "valid": true,
         "warnings": []
       },
-      "total_size_mb": 8.854735374450684
+      "total_size_mb": 8.85473346710205
     },
     "evidence_issues": [
       "appendix_format_gallery.md:328: unsupported number -8",
@@ -254,11 +254,11 @@
         },
         "docx": {
           "files": 2,
-          "size_bytes": 882961
+          "size_bytes": 882960
         },
         "epub": {
           "files": 1,
-          "size_bytes": 978137
+          "size_bytes": 978136
         },
         "figures": {
           "files": 96,
@@ -283,7 +283,7 @@
       },
       "mode": "stable-shippable-output-v1",
       "total_files": 160,
-      "total_size_bytes": 9284863
+      "total_size_bytes": 9284861
     }
   },
   "recommendations": [],
@@ -294,11 +294,11 @@
     "passed": 9,
     "total_checks": 9
   },
-  "timestamp": "2026-10-29T18:15:46Z",
+  "timestamp": "2026-10-29T19:19:20Z",
   "validated_inputs": {
     "artifact_manifest": {
       "path": "output/reports/artifact_manifest.json",
-      "sha256": "4b69ac9c6116e0dfcc27ae85842c3dd483ac91d56d086a751ab4e28e231d70f5",
+      "sha256": "239062720baa712be3f7dcdd12b73ababcf07d53d0493a6359d9d150a15394d1",
       "size_bytes": 53387
     },
     "combined_manuscript": {
@@ -610,11 +610,11 @@
     "fingerprints": {
       "config": {
         "file_count": 18,
-        "sha256": "89633ff7821033ec8c14d2540c50716846b3fca460e0c5fb38927b3279d6d148"
+        "sha256": "6b6a82e6a8f4fa331e36b612c6095762c061ccffa8d6c7ecbbc63edb3df3c47c"
       },
       "output": {
         "file_count": 160,
-        "sha256": "9904619a587be1dc9ca94ca9e96794bdcdc27d2ca0a3020216100ad645b84afc"
+        "sha256": "cf17161968361f3ea4d5e461bfdc6636083f23cf73f25a99a1471a795c2c9474"
       },
       "source": {
         "file_count": 94,
@@ -622,7 +622,7 @@
       },
       "stage": {
         "file_count": 1464,
-        "sha256": "95b86a2879361c63c8c7dd6735bdb793983ef9009ea9a525ad288ec944a60573"
+        "sha256": "5c657d3ea5308c456e765176c70edb167fbbf9ec60069dbec566d236c3e51916"
       }
     },
     "project": "templates/template_textbook",
