@@ -5,6 +5,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import math
 import os
 import shlex
 import time
@@ -62,6 +63,10 @@ CI_EXTRA_PATHS = (
 
 
 AUTOMATIC_SHARD_MAX_MODULES = 12
+# Automatic sharding aims at this much measured work per job so a single long
+# module cannot set the wall time for the whole matrix.
+AUTOMATIC_SHARD_TARGET_SECONDS = 240.0
+AUTOMATIC_SHARD_MAX_JOBS = 64
 
 
 def infrastructure_files(root: Path, changed: tuple[str, ...] = ()) -> tuple[str, ...]:
@@ -124,19 +129,27 @@ def infrastructure_shards(root: Path, changed: tuple[str, ...] = (), count: int 
     isolated = tuple(name for name in files if count is None and name in _ISOLATED_ROUTINE_MODULES)
     files = tuple(name for name in files if name not in isolated)
     automatic = count is None
+    weights = module_weights(root, files)
     if count is None:
         # Package-level ownership can expand the routine roster by an order of
-        # magnitude. Keep its complete selection and original 540-second clock,
-        # with at most AUTOMATIC_SHARD_MAX_MODULES modules per automatic job,
-        # which keeps a shard short instead of letting one long module stretch
-        # the whole matrix. Hosted concurrency is
-        # bounded separately; balancing cannot leave a job over the module cap.
-        count = max(3, (len(files) + AUTOMATIC_SHARD_MAX_MODULES - 1) // AUTOMATIC_SHARD_MAX_MODULES)
-    weights = module_weights(root, files)
+        # magnitude. Split that selection by measured load, not just module
+        # count, so the longest job stays near AUTOMATIC_SHARD_TARGET_SECONDS:
+        # wall time is bounded by the heaviest shard, and one long module must
+        # not own it. The module cap still bounds per-job startup cost and the
+        # job ceiling bounds hosted concurrency.
+        target = float(os.environ.get("TEMPLATE_CI_SHARD_TARGET_SECONDS", AUTOMATIC_SHARD_TARGET_SECONDS) or 0) or AUTOMATIC_SHARD_TARGET_SECONDS
+        total = sum(weights.values())
+        by_load = max(1, math.ceil(total / target)) if target > 0 else 1
+        by_cap = (len(files) + AUTOMATIC_SHARD_MAX_MODULES - 1) // AUTOMATIC_SHARD_MAX_MODULES
+        count = max(3, min(by_load, by_cap, AUTOMATIC_SHARD_MAX_JOBS))
+        # Capacity must still hold every module under the per-job cap.
+        count = max(count, (len(files) + AUTOMATIC_SHARD_MAX_MODULES - 1) // AUTOMATIC_SHARD_MAX_MODULES)
     shards: list[list[str]] = [[] for _ in range(min(count, len(files)))]
     loads = [0.0] * len(shards)
     for name in sorted(files, key=lambda p: (-weights[p], p)):
         available = [i for i in range(len(loads)) if not automatic or len(shards[i]) < AUTOMATIC_SHARD_MAX_MODULES]
+        if not available:  # defensive: capacity is guaranteed above
+            available = list(range(len(loads)))
         selected = min(available, key=lambda i: (loads[i], i))
         shards[selected].append(name)
         loads[selected] += weights[name]
