@@ -1,17 +1,17 @@
 {
   "claim_boundary": "Compact evidence summary for manuscript validation; full fact dumps are opt-in debug output.",
-  "fact_count": 413,
+  "fact_count": 416,
   "freshness_warnings": [],
   "kind_counts": {
-    "artifact": 45,
+    "artifact": 46,
     "boolean": 1,
     "citation": 2,
     "figure": 8,
-    "number": 350,
+    "number": 352,
     "section": 6,
     "table": 1
   },
-  "omitted_fact_count": 213,
+  "omitted_fact_count": 216,
   "sample_facts": [
     {
       "active": true,
@@ -651,6 +651,18 @@
     },
     {
       "active": true,
+      "checked_at": "2026-10-29T21:56:17Z",
+      "kind": "number",
+      "source": "output/reports/cleanup_report.json:$.skipped_tracked_count (numeric variant)",
+      "source_field": "$.skipped_tracked_count",
+      "source_path": "output/reports/cleanup_report.json",
+      "source_tier": "generated_metric",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "0.5"
+    },
+    {
+      "active": true,
       "checked_at": "2026-09-10T16:33:18Z",
       "kind": "number",
       "source": "src/template_sia/fixtures/recorded_generations/gen_1/target_agent.py THRESHOLD",
@@ -669,6 +681,18 @@
       "source_field": "$.claims[5].value",
       "source_path": "data/claim_ledger.yaml",
       "source_tier": "configuration",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "50"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-10-29T21:56:17Z",
+      "kind": "number",
+      "source": "output/reports/cleanup_report.json:$.skipped_tracked_count",
+      "source_field": "$.skipped_tracked_count",
+      "source_path": "output/reports/cleanup_report.json",
+      "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
       "value": "50"
@@ -2388,40 +2412,16 @@
       "stale": false,
       "tolerance": 0.0,
       "value": "0"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-09-13T22:34:01Z",
-      "kind": "number",
-      "source": "output/reports/test_results.json:$.coverage_details.project.file_coverage.src/template_sia/manuscript/reports.py.missing_lines",
-      "source_field": "$.coverage_details.project.file_coverage.src/template_sia/manuscript/reports.py.missing_lines",
-      "source_path": "output/reports/test_results.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "0"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-09-13T22:34:01Z",
-      "kind": "number",
-      "source": "output/reports/test_results.json:$.coverage_details.project.file_coverage.src/template_sia/manuscript/reports.py.excluded_lines",
-      "source_field": "$.coverage_details.project.file_coverage.src/template_sia/manuscript/reports.py.excluded_lines",
-      "source_path": "output/reports/test_results.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "0"
     }
   ],
   "schema": "template-evidence-registry-report-v1",
   "source_tiers": {
-    "artifact": 60,
+    "artifact": 61,
     "bibliography": 2,
     "claim_ledger": 10,
     "configuration": 32,
     "fixture": 2,
-    "generated_metric": 300,
+    "generated_metric": 302,
     "project_source": 7
   }
 }
