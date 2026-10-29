@@ -550,7 +550,7 @@ Performance benchmarking spans problem dimensions $d \in \{1, 2, 5, 10, 20, 50\}
 - **Python**: 3.14.9
 - **NumPy**: 2.5.4
 - **Platform**: Darwin arm64
-- **Generated**: 2026-10-28T22:22:30Z
+- **Generated**: 2026-10-29T02:26:54Z
 
 ## Pipeline ordering
 
