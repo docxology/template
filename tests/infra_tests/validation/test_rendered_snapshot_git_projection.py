@@ -58,10 +58,10 @@ def _nested_worktree(root: Path) -> tuple[Path, Path]:
     nested = root / "infrastructure" / "vendor"
     nested.mkdir()
     _git(nested, "init", "-q")
-    tracked = nested / "native.c"
-    tracked.write_text("int native_value = 3;\n", encoding="utf-8")
-    _git(nested, "add", "native.c")
-    (nested / "untracked.c").write_text("int excluded = 4;\n", encoding="utf-8")
+    tracked = nested / "native.py"
+    tracked.write_text("NATIVE_VALUE = 3\n", encoding="utf-8")
+    _git(nested, "add", "native.py")
+    (nested / "untracked.py").write_text("EXCLUDED = 4\n", encoding="utf-8")
     return nested, tracked
 
 
