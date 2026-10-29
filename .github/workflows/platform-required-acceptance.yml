@@ -217,7 +217,7 @@ jobs:
               requirements=$(mktemp "$RUNNER_TEMP/acceptance-requirements.XXXXXX")
               environment=$(mktemp -d "$RUNNER_TEMP/acceptance-dependency-cache.XXXXXX")
               uv export --directory "$metadata" --locked --no-default-groups --no-emit-project --no-emit-local --no-header --no-annotate --output-file "$requirements"
-              "$interpreter" -m infrastructure.project.locked_dependency_export --metadata-root "$metadata" --requirements "$requirements"
+              "$interpreter" -m infrastructure.project.locked_dependency_export --metadata-root "$metadata" --requirements "$requirements" --minor "$minor"
               uv venv --no-project --no-python-downloads --python "$interpreter" "$environment"
               uv pip sync --no-config --no-build --require-hashes --python "$environment/bin/python" "$build_requirements"
               uv pip install --no-config --no-build-isolation --no-deps --require-hashes --python "$environment/bin/python" --target "$environment/prepared-dependencies" --requirements "$requirements"

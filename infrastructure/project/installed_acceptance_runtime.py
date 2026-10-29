@@ -172,7 +172,7 @@ def install_runtime(
         ),
         "runtime-lock",
     )
-    normalize_locked_dependency_export(metadata_root, dependencies)
+    normalize_locked_dependency_export(metadata_root, dependencies, minor=requirement.python_version or None)
     if not metadata.unchanged():
         raise ValueError("private locked metadata changed during dependency export")
     write_binary(root, directory / dependencies.name, dependencies.read_bytes())

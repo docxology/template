@@ -2,7 +2,10 @@
 
 Registry requirement resolution can reject a release without registry wheels
 before uv checks its prepared sdist wheel cache. A direct URL nominated by the
-same frozen lock permits that cache lookup without enabling a cold build.
+same frozen lock permits that cache lookup without enabling a cold build. A
+lock may carry wheels for other interpreters, so nomination is decided per
+target minor: a package whose locked wheels cannot serve that interpreter is
+treated like a wheel-less release.
 The archive hash does not authenticate mutable derived cache bytes. Callers
 must retain a fresh owner-controlled preparation cache through cold execution.
 """
@@ -17,7 +20,7 @@ from typing import Any
 from urllib.parse import unquote, urlsplit
 
 from packaging.requirements import Requirement
-from packaging.utils import canonicalize_name, parse_sdist_filename
+from packaging.utils import canonicalize_name, parse_sdist_filename, parse_wheel_filename
 from packaging.version import Version
 
 from infrastructure.core.files.secure_write import atomic_write_bytes_confined, read_bytes_confined
@@ -55,18 +58,44 @@ def _artifact(package: dict[str, Any]) -> tuple[str, str]:
     return url, digest
 
 
-def normalize_locked_sdist_requirements(lock_content: bytes, requirements_content: bytes) -> bytes:
+def _wheel_serves_minor(filename: str, minor: str) -> bool:
+    """Report whether a locked wheel filename can install on the target minor."""
+    try:
+        _, _, _, tags = parse_wheel_filename(filename)
+    except ValueError:
+        return False
+    target = int(minor.replace(".", ""))
+    exact = f"cp{target}"
+    for tag in tags:
+        if tag.interpreter in {"py3", "py2.py3"}:
+            return True
+        if tag.interpreter == exact:
+            return True
+        if tag.abi == "abi3" and tag.interpreter.startswith("cp") and tag.interpreter[2:].isdigit():
+            if int(tag.interpreter[2:]) <= target:
+                return True
+    return False
+
+
+def normalize_locked_sdist_requirements(
+    lock_content: bytes, requirements_content: bytes, *, minor: str | None = None
+) -> bytes:
     """Name only wheel-less locked registry artifacts; preserve other rows.
 
     Exact pins, markers and original archive hashes stay mandatory. No wheel
     bytes, cache paths, ambient overrides or generated hashes grant authority.
+    With ``minor`` set, a locked release whose wheels cannot serve that
+    interpreter is nominated exactly like a wheel-less release.
     """
+    if minor is not None and not re.fullmatch(r"3\.\d+", minor):
+        raise ValueError("target minor must be a CPython 3.x minor such as 3.15")
     lock = tomllib.loads(lock_content.decode("utf-8"))
     packages = lock.get("package")
     if not isinstance(packages, list):
         raise ValueError("dependency export requires the canonical locked package list")
     selected: dict[tuple[str, str], tuple[str, str]] = {}
     selected_names: set[str] = set()
+    multi_hash: set[str] = set()
     registry_versions: set[tuple[str, str]] = set()
     for package in packages:
         if not isinstance(package, dict) or not isinstance(package.get("source"), dict):
@@ -80,10 +109,18 @@ def normalize_locked_sdist_requirements(lock_content: bytes, requirements_conten
         if key in registry_versions:
             raise ValueError("dependency export refuses ambiguous locked registry packages")
         registry_versions.add(key)
-        if package.get("wheels"):
+        wheels = package.get("wheels") or []
+        if wheels and (
+            minor is None
+            or any(_wheel_serves_minor(str(wheel.get("url", "")).rsplit("/", 1)[-1], minor) for wheel in wheels)
+        ):
             continue
         selected[key] = _artifact(package)
         selected_names.add(key[0])
+        if wheels:
+            # The exporter lists every locked artifact hash for a release that
+            # does carry wheels; the sdist digest must still be among them.
+            multi_hash.add(key[0])
     blocks: list[str] = []
     pending: list[str] = []
     for line in requirements_content.decode("utf-8").splitlines(keepends=True):
@@ -125,7 +162,10 @@ def normalize_locked_sdist_requirements(lock_content: bytes, requirements_conten
                 raise ValueError("exported sdist URL differs from the canonical lock")
             url, digest = matches[0]
         flags = separator + rest
-        if not _HASH_FLAGS.fullmatch(flags) or re.findall(r"--hash=(sha256:[0-9a-f]{64})", flags) != [digest]:
+        hashes = re.findall(r"--hash=(sha256:[0-9a-f]{64})", flags)
+        exact_hashes = hashes == [digest]
+        bound_among_artifact_hashes = name in multi_hash and digest in hashes
+        if not _HASH_FLAGS.fullmatch(flags) or not (exact_hashes or bound_among_artifact_hashes):
             raise ValueError("exported sdist hash differs from the canonical lock")
         extras = "[" + ",".join(sorted(requirement.extras)) + "]" if requirement.extras else ""
         marker = f" ; {requirement.marker}" if requirement.marker else ""
@@ -134,12 +174,12 @@ def normalize_locked_sdist_requirements(lock_content: bytes, requirements_conten
     return "".join(normalized).encode("utf-8")
 
 
-def normalize_locked_dependency_export(metadata_root: Path, requirements: Path) -> None:
+def normalize_locked_dependency_export(metadata_root: Path, requirements: Path, *, minor: str | None = None) -> None:
     """Rewrite a confined generated export using only its admitted lock bytes."""
     metadata_root, requirements = metadata_root.absolute(), requirements.absolute()
     original = read_bytes_confined(requirements.parent, requirements)
     lock_content = read_bytes_confined(metadata_root, metadata_root / "uv.lock")
-    normalized = normalize_locked_sdist_requirements(lock_content, original)
+    normalized = normalize_locked_sdist_requirements(lock_content, original, minor=minor)
     if read_bytes_confined(metadata_root, metadata_root / "uv.lock") != lock_content:
         raise ValueError("canonical lock changed during dependency export normalization")
     if normalized != original:
@@ -150,8 +190,9 @@ def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--metadata-root", type=Path, required=True)
     parser.add_argument("--requirements", type=Path, required=True)
+    parser.add_argument("--minor", help="Target CPython minor (for example 3.15)")
     arguments = parser.parse_args(argv)
-    normalize_locked_dependency_export(arguments.metadata_root, arguments.requirements)
+    normalize_locked_dependency_export(arguments.metadata_root, arguments.requirements, minor=arguments.minor)
     return 0
 
 
