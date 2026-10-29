@@ -1,8 +1,8 @@
 {
   "algorithm": "web-renderer-combine-v1",
-  "binding_sha256": "fcc782fd8a97f3b5e1681feb453f2a9a32e4cf680d2768fa1590d485852be172",
+  "binding_sha256": "8f31dfda0472b2b6f27f5573873aff6681564f51d8656c9579c0a89e2bba0dd4",
   "combined_path": "output/web/_combined_manuscript.md",
-  "combined_sha256": "f27a356d143e903270f2bb39d2b595237aef3851565fc6825630d47571a78a0b",
+  "combined_sha256": "654a6d8972caacc628d19264d89b8b68e8abd9f672ae07152acb90542c6314ec",
   "combined_size_bytes": 73015,
   "input_root_kind": "hydrated",
   "ordered_inputs": [
@@ -51,7 +51,7 @@
     {
       "ordinal": 8,
       "path": "output/manuscript/07_reproducibility.md",
-      "sha256": "cd747f8b0d77b887c1d1720fea979c4d7e6412d61cd5171fea2a58287998ff79",
+      "sha256": "96a82081127a87e5ed0e0dc6ac983e0bf94f9ab59d25ae3b37e8215f1b59fb5b",
       "size_bytes": 1683
     },
     {
@@ -79,7 +79,7 @@
       "size_bytes": 13
     }
   ],
-  "ordered_inputs_sha256": "1a8b18ce61c458edb461a39b005f5391da80c46d4f459e266dcc3532ceeef96a",
+  "ordered_inputs_sha256": "fca6eabba17d66b49683fde259d8f8916112df1edc9279e94df5aa332983665e",
   "project": "templates/template_madlib",
   "schema_version": "template-manuscript-composition-v1"
 }

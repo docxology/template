@@ -298,11 +298,11 @@
     "passed": 9,
     "total_checks": 9
   },
-  "timestamp": "2026-10-29T02:26:54Z",
+  "timestamp": "2026-10-29T15:48:39Z",
   "validated_inputs": {
     "artifact_manifest": {
       "path": "output/reports/artifact_manifest.json",
-      "sha256": "4f726c4784226a76fa731dd5a2e591790661d383e5f0841ffdf44bcb403ff269",
+      "sha256": "fbd22f1c69d2b785593674e0be13e3c0c1ee932408d2307af544805ed4084875",
       "size_bytes": 55595
     },
     "combined_manuscript": {
@@ -366,7 +366,7 @@
       },
       "output": {
         "file_count": 162,
-        "sha256": "31d46a2e0856f092e7f6ccf03269b9fd3b060b5914a0c7856e14fcf7bcd4ddff"
+        "sha256": "d36f366b4866d4e417382e051c22a2b4ebc7fba1f63648c1480052bb39d4d893"
       },
       "source": {
         "file_count": 34,
@@ -374,7 +374,7 @@
       },
       "stage": {
         "file_count": 1932,
-        "sha256": "65a9fb16b00fd871f132a269f9a29dbc32a858033f98908957f862950f0f9ad8"
+        "sha256": "ec94b178a6c52d20918748b0e382fe961ae9237f7e82d55eefc380426595b9a1"
       }
     },
     "project": "templates/template_pitch_deck",
