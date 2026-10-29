@@ -1,0 +1,49 @@
+{
+  "algorithm": "web-renderer-combine-v1",
+  "binding_sha256": "22eef9fc1bdca6bdcfcfc39196d16f4212f5388094c84de0c39fc8c6f254fa1d",
+  "combined_path": "output/web/_combined_manuscript.md",
+  "combined_sha256": "3793dfeabcbeb85e1d43232319fd987201f3145f47cb1db20fd8848205a0423a",
+  "combined_size_bytes": 4633,
+  "input_root_kind": "source",
+  "ordered_inputs": [
+    {
+      "ordinal": 1,
+      "path": "manuscript/00_abstract.md",
+      "sha256": "6dac67c69bb6b7552420ad3c9da7ace1e361c3ccb0e32d8c4bf478fb488a8c64",
+      "size_bytes": 1196
+    },
+    {
+      "ordinal": 2,
+      "path": "manuscript/01_introduction.md",
+      "sha256": "15bfeaa33bafe7ff66490be186341c2e8b6b2fe93cacb0fcfa81eed3148bb092",
+      "size_bytes": 772
+    },
+    {
+      "ordinal": 3,
+      "path": "manuscript/02_architecture.md",
+      "sha256": "b5d67db2dc82868a1be89d6d1deef3d825837dccdbca013f408309b757a888f6",
+      "size_bytes": 839
+    },
+    {
+      "ordinal": 4,
+      "path": "manuscript/03_story_and_graphics.md",
+      "sha256": "6cc28869475ee90b89e3f2dd3463ca645ec9a24a44364a1aa9a53c49263eaf02",
+      "size_bytes": 982
+    },
+    {
+      "ordinal": 5,
+      "path": "manuscript/04_reproducibility.md",
+      "sha256": "13750ef7f2e3fb48e23659f56ee9bcf21ba98ecdfe8d2669083c26feecc1a9c0",
+      "size_bytes": 595
+    },
+    {
+      "ordinal": 6,
+      "path": "manuscript/99_references.md",
+      "sha256": "e47938c4007f3e479c55570940821395c2c2cf228beffbd18bb505c9748c1a6c",
+      "size_bytes": 199
+    }
+  ],
+  "ordered_inputs_sha256": "5b4ddc0279ee03ac692de323d7dd10ea3f11f61b04d961f9525ca76f0c6df11c",
+  "project": "templates/template_storybook",
+  "schema_version": "template-manuscript-composition-v1"
+}
