@@ -38,7 +38,6 @@ dependencies = [
     "bibtexparser>=1.4.0",
     "fuzzywuzzy>=0.18.0",
     "python-levenshtein>=0.21.0",
-    "wordcloud>=1.9.6",
 ]
 
 [project.optional-dependencies]
