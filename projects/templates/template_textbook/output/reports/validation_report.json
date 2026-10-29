@@ -254,11 +254,11 @@
         },
         "docx": {
           "files": 2,
-          "size_bytes": 882970
+          "size_bytes": 882971
         },
         "epub": {
           "files": 1,
-          "size_bytes": 978136
+          "size_bytes": 978135
         },
         "figures": {
           "files": 96,
@@ -294,11 +294,11 @@
     "passed": 9,
     "total_checks": 9
   },
-  "timestamp": "2026-10-29T15:39:02Z",
+  "timestamp": "2026-10-29T15:48:39Z",
   "validated_inputs": {
     "artifact_manifest": {
       "path": "output/reports/artifact_manifest.json",
-      "sha256": "948b1a1b317d23eae8f7fbbd456dc0b542f06f06e897304f22684562d3109a07",
+      "sha256": "96d0f99f322a19cbac2882fe1df3cdc96738b87381e54a38b11b279f14b78e6c",
       "size_bytes": 53387
     },
     "combined_manuscript": {
@@ -614,7 +614,7 @@
       },
       "output": {
         "file_count": 160,
-        "sha256": "98399a939296590ee6a4cdf0977009d74a840ccc981e76739cb74ea4d096cc88"
+        "sha256": "404c5d92de5e338d5f3b3182855a8d20c18fbb9b4547be6f10de062496f99b2a"
       },
       "source": {
         "file_count": 94,
