@@ -116,7 +116,7 @@ _TEMPLATE_PYPROJECT_TOML = textwrap.dedent("""\
     addopts = "-v --tb=short"
 
     [tool.template]
-    platform_version = "4.3.0"
+    platform_version = "4.4.0"
     tested_python_versions = ["3.14", "3.15"]
     required_unpaid_capabilities = []
     """)

@@ -7,16 +7,16 @@
       "size_bytes": 18957,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
-      "timestamp": "2026-10-29T19:19:20+00:00"
+      "timestamp": "2026-10-29T20:01:36+00:00"
     },
     {
       "contract_match": true,
       "path": "output/data/manuscript_variables.json",
-      "sha256": "098fd0a72632cd72390d16aab06c3ee6099af7fd2e17e61895a1f3b5cc88f13c",
+      "sha256": "362d4b67bab127e4f082cb91ec571a5b20584fc5fe8b33c8515e0e00ee0e9e0b",
       "size_bytes": 76469,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
-      "timestamp": "2026-10-29T19:19:20+00:00"
+      "timestamp": "2026-10-29T20:01:36+00:00"
     },
     {
       "contract_match": true,
@@ -25,7 +25,7 @@
       "size_bytes": 890,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
-      "timestamp": "2026-10-29T19:19:20+00:00"
+      "timestamp": "2026-10-29T20:01:36+00:00"
     },
     {
       "contract_match": true,
@@ -34,7 +34,7 @@
       "size_bytes": 41128,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
-      "timestamp": "2026-10-29T19:19:20+00:00"
+      "timestamp": "2026-10-29T20:01:36+00:00"
     },
     {
       "contract_match": true,
@@ -43,7 +43,7 @@
       "size_bytes": 10676,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
-      "timestamp": "2026-10-29T19:19:20+00:00"
+      "timestamp": "2026-10-29T20:01:36+00:00"
     },
     {
       "contract_match": true,
@@ -52,7 +52,7 @@
       "size_bytes": 60151,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
-      "timestamp": "2026-10-29T19:19:20+00:00"
+      "timestamp": "2026-10-29T20:01:36+00:00"
     },
     {
       "contract_match": true,
@@ -61,7 +61,7 @@
       "size_bytes": 30141,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
-      "timestamp": "2026-10-29T19:19:20+00:00"
+      "timestamp": "2026-10-29T20:01:36+00:00"
     },
     {
       "contract_match": true,
@@ -70,7 +70,7 @@
       "size_bytes": 7331,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
-      "timestamp": "2026-10-29T19:19:20+00:00"
+      "timestamp": "2026-10-29T20:01:36+00:00"
     },
     {
       "contract_match": true,
@@ -79,7 +79,7 @@
       "size_bytes": 161964,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
-      "timestamp": "2026-10-29T19:19:20+00:00"
+      "timestamp": "2026-10-29T20:01:36+00:00"
     },
     {
       "contract_match": true,
@@ -88,7 +88,7 @@
       "size_bytes": 98306,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
-      "timestamp": "2026-10-29T19:19:20+00:00"
+      "timestamp": "2026-10-29T20:01:36+00:00"
     },
     {
       "contract_match": true,
@@ -97,7 +97,7 @@
       "size_bytes": 145812,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
-      "timestamp": "2026-10-29T19:19:20+00:00"
+      "timestamp": "2026-10-29T20:01:36+00:00"
     },
     {
       "contract_match": true,
@@ -106,7 +106,7 @@
       "size_bytes": 122488,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
-      "timestamp": "2026-10-29T19:19:20+00:00"
+      "timestamp": "2026-10-29T20:01:36+00:00"
     },
     {
       "contract_match": true,
@@ -115,7 +115,7 @@
       "size_bytes": 72466,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
-      "timestamp": "2026-10-29T19:19:20+00:00"
+      "timestamp": "2026-10-29T20:01:36+00:00"
     },
     {
       "contract_match": true,
@@ -124,7 +124,7 @@
       "size_bytes": 67678,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
-      "timestamp": "2026-10-29T19:19:20+00:00"
+      "timestamp": "2026-10-29T20:01:36+00:00"
     },
     {
       "contract_match": true,
@@ -133,7 +133,7 @@
       "size_bytes": 87006,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
-      "timestamp": "2026-10-29T19:19:20+00:00"
+      "timestamp": "2026-10-29T20:01:36+00:00"
     },
     {
       "contract_match": true,
@@ -142,7 +142,7 @@
       "size_bytes": 1250,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
-      "timestamp": "2026-10-29T19:19:20+00:00"
+      "timestamp": "2026-10-29T20:01:36+00:00"
     },
     {
       "contract_match": true,
@@ -151,7 +151,7 @@
       "size_bytes": 3865,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
-      "timestamp": "2026-10-29T19:19:20+00:00"
+      "timestamp": "2026-10-29T20:01:36+00:00"
     },
     {
       "contract_match": true,
@@ -160,7 +160,7 @@
       "size_bytes": 26526,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
-      "timestamp": "2026-10-29T19:19:20+00:00"
+      "timestamp": "2026-10-29T20:01:36+00:00"
     },
     {
       "contract_match": true,
@@ -169,7 +169,7 @@
       "size_bytes": 8805,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
-      "timestamp": "2026-10-29T19:19:20+00:00"
+      "timestamp": "2026-10-29T20:01:36+00:00"
     },
     {
       "contract_match": true,
@@ -178,7 +178,7 @@
       "size_bytes": 1194,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
-      "timestamp": "2026-10-29T19:19:20+00:00"
+      "timestamp": "2026-10-29T20:01:36+00:00"
     },
     {
       "contract_match": true,
@@ -187,7 +187,7 @@
       "size_bytes": 14009,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
-      "timestamp": "2026-10-29T19:19:20+00:00"
+      "timestamp": "2026-10-29T20:01:36+00:00"
     },
     {
       "contract_match": true,
@@ -196,16 +196,16 @@
       "size_bytes": 6828,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
-      "timestamp": "2026-10-29T19:19:20+00:00"
+      "timestamp": "2026-10-29T20:01:36+00:00"
     },
     {
       "contract_match": true,
       "path": "output/manuscript/07_reproducibility.md",
-      "sha256": "33d2814cb060fa5a3a41339182f48c1bf1856fe3ed47f9852ac47bd635fd2162",
+      "sha256": "757323212bbaa988343daf1626cb5a5042b167cc75d6f4badf007219286862fe",
       "size_bytes": 1683,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
-      "timestamp": "2026-10-29T19:19:20+00:00"
+      "timestamp": "2026-10-29T20:01:36+00:00"
     },
     {
       "contract_match": true,
@@ -214,7 +214,7 @@
       "size_bytes": 4892,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
-      "timestamp": "2026-10-29T19:19:20+00:00"
+      "timestamp": "2026-10-29T20:01:36+00:00"
     },
     {
       "contract_match": true,
@@ -223,7 +223,7 @@
       "size_bytes": 1116,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
-      "timestamp": "2026-10-29T19:19:20+00:00"
+      "timestamp": "2026-10-29T20:01:36+00:00"
     },
     {
       "contract_match": true,
@@ -232,7 +232,7 @@
       "size_bytes": 2792,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
-      "timestamp": "2026-10-29T19:19:20+00:00"
+      "timestamp": "2026-10-29T20:01:36+00:00"
     },
     {
       "contract_match": true,
@@ -241,7 +241,7 @@
       "size_bytes": 13,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
-      "timestamp": "2026-10-29T19:19:20+00:00"
+      "timestamp": "2026-10-29T20:01:36+00:00"
     },
     {
       "contract_match": true,
@@ -250,7 +250,7 @@
       "size_bytes": 38820,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
-      "timestamp": "2026-10-29T19:19:20+00:00"
+      "timestamp": "2026-10-29T20:01:36+00:00"
     },
     {
       "contract_match": true,
@@ -259,7 +259,7 @@
       "size_bytes": 2540,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
-      "timestamp": "2026-10-29T19:19:20+00:00"
+      "timestamp": "2026-10-29T20:01:36+00:00"
     },
     {
       "contract_match": true,
@@ -268,16 +268,16 @@
       "size_bytes": 303,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
-      "timestamp": "2026-10-29T19:19:20+00:00"
+      "timestamp": "2026-10-29T20:01:36+00:00"
     },
     {
       "contract_match": true,
       "path": "output/pdf/template_madlib_combined.pdf",
-      "sha256": "b2d68d4ac95c1e83ccf0b1407e65bbca8653b3b682e76b1f8ad87a9427a131e0",
-      "size_bytes": 1021093,
+      "sha256": "060cbaf4aa0c9edf217cd48624c22e5c3f0b5fa9ec02fcebd4d801dc0c59e5bc",
+      "size_bytes": 1021099,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
-      "timestamp": "2026-10-29T19:19:20+00:00"
+      "timestamp": "2026-10-29T20:01:36+00:00"
     },
     {
       "contract_match": true,
@@ -286,7 +286,7 @@
       "size_bytes": 45,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
-      "timestamp": "2026-10-29T19:19:20+00:00"
+      "timestamp": "2026-10-29T20:01:36+00:00"
     },
     {
       "contract_match": true,
@@ -295,7 +295,7 @@
       "size_bytes": 1920,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
-      "timestamp": "2026-10-29T19:19:20+00:00"
+      "timestamp": "2026-10-29T20:01:36+00:00"
     },
     {
       "contract_match": true,
@@ -304,7 +304,7 @@
       "size_bytes": 1529,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
-      "timestamp": "2026-10-29T19:19:20+00:00"
+      "timestamp": "2026-10-29T20:01:36+00:00"
     },
     {
       "contract_match": true,
@@ -313,7 +313,7 @@
       "size_bytes": 8049,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
-      "timestamp": "2026-10-29T19:19:20+00:00"
+      "timestamp": "2026-10-29T20:01:36+00:00"
     },
     {
       "contract_match": true,
@@ -322,16 +322,16 @@
       "size_bytes": 1565,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
-      "timestamp": "2026-10-29T19:19:20+00:00"
+      "timestamp": "2026-10-29T20:01:36+00:00"
     },
     {
       "contract_match": true,
       "path": "output/reports/manuscript_composition.json",
-      "sha256": "33a8ea8ecb51f820cf8cc69f1d8c33f1fe6b5a05345ca626246449087673d946",
+      "sha256": "e34bd7049710b2524aa47582d674630975c12b9919bcf06c465f54a79eed306c",
       "size_bytes": 2928,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
-      "timestamp": "2026-10-29T19:19:20+00:00"
+      "timestamp": "2026-10-29T20:01:36+00:00"
     },
     {
       "contract_match": true,
@@ -340,7 +340,7 @@
       "size_bytes": 269,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
-      "timestamp": "2026-10-29T19:19:20+00:00"
+      "timestamp": "2026-10-29T20:01:36+00:00"
     },
     {
       "contract_match": true,
@@ -349,7 +349,7 @@
       "size_bytes": 4892,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
-      "timestamp": "2026-10-29T19:19:20+00:00"
+      "timestamp": "2026-10-29T20:01:36+00:00"
     },
     {
       "contract_match": true,
@@ -358,124 +358,124 @@
       "size_bytes": 318,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
-      "timestamp": "2026-10-29T19:19:20+00:00"
+      "timestamp": "2026-10-29T20:01:36+00:00"
     },
     {
       "contract_match": true,
       "path": "output/slides/00_abstract_slides.pdf",
-      "sha256": "77f1e8ba83c35b98a7c258616c98d876afc57e314eeb387aa7547eee60f58edf",
+      "sha256": "7bb5e2a8f283127637ba18e375c7b95a77bd5f60f25dc1e36bac7addead19aff",
       "size_bytes": 15039,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
-      "timestamp": "2026-10-29T19:19:20+00:00"
+      "timestamp": "2026-10-29T20:01:36+00:00"
     },
     {
       "contract_match": true,
       "path": "output/slides/01_introduction_slides.pdf",
-      "sha256": "ce67d1cb9c0a0b355055876e518210bcdb021feebc1b148c03e7659c221845c8",
+      "sha256": "1543cfe393dee208d5e395a0f308f362eea2978b99420fffc52a9073fda33dc2",
       "size_bytes": 26884,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
-      "timestamp": "2026-10-29T19:19:20+00:00"
+      "timestamp": "2026-10-29T20:01:36+00:00"
     },
     {
       "contract_match": true,
       "path": "output/slides/02_methodology_slides.pdf",
-      "sha256": "3f757018e3146a1cae94b42a35055346c18914c770dac3c196f5cbb51f5bc1fe",
+      "sha256": "dc8206335ebd2fdcdb4043641be782af9cadee781cc9dda5a764f8468c3ed6de",
       "size_bytes": 179588,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
-      "timestamp": "2026-10-29T19:19:20+00:00"
+      "timestamp": "2026-10-29T20:01:36+00:00"
     },
     {
       "contract_match": true,
       "path": "output/slides/03_results_slides.pdf",
-      "sha256": "c2bdcca0c8fdb52664b795b0d6350be5b5daf5326d8c1daf8974b197d8a3c5bc",
+      "sha256": "d6a0e1c8c2f29af236f2eab346550d9099d157d48dd099dd01ce076c18a5b646",
       "size_bytes": 302040,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
-      "timestamp": "2026-10-29T19:19:20+00:00"
+      "timestamp": "2026-10-29T20:01:36+00:00"
     },
     {
       "contract_match": true,
       "path": "output/slides/04_discussion_slides.pdf",
-      "sha256": "8db3d3bdfbc363a4462ead3f6de2afe3498a514d9ba0603911b58be31cf3fec0",
+      "sha256": "259005d3b36e340edc868dc590805a6a5ebba4f8f67d083db5ca8dccf0a15583",
       "size_bytes": 13969,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
-      "timestamp": "2026-10-29T19:19:20+00:00"
+      "timestamp": "2026-10-29T20:01:36+00:00"
     },
     {
       "contract_match": true,
       "path": "output/slides/05_experimental_setup_slides.pdf",
-      "sha256": "148725e7a234252a944247f11db5f0bd6468329570ea0aba6c158d38f39d9117",
+      "sha256": "90af055c7e516abb3e79caf987f403d72fbef52a904aff5b7204663f186fb52c",
       "size_bytes": 294544,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
-      "timestamp": "2026-10-29T19:19:20+00:00"
+      "timestamp": "2026-10-29T20:01:36+00:00"
     },
     {
       "contract_match": true,
       "path": "output/slides/06_evaluation_slides.pdf",
-      "sha256": "8f243eeb2d0c94453123912ecc04e7dcb1a145fb8f36beb4f9af6d9aeab38995",
+      "sha256": "32fb118745d938afac1078eb09c6155fa8a23fab7ab6afc743c6d70d13da8a8b",
       "size_bytes": 181457,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
-      "timestamp": "2026-10-29T19:19:20+00:00"
+      "timestamp": "2026-10-29T20:01:36+00:00"
     },
     {
       "contract_match": true,
       "path": "output/slides/07_reproducibility_slides.pdf",
-      "sha256": "0b3e8c93c9a359eb7eb786208ace17cde00bbda815a55a6e13e30533d32cb4a2",
-      "size_bytes": 28782,
+      "sha256": "2ff20081b68cdeac2b0a92e3a0ae4257789555f67837e513b6a0a92c936ef4a1",
+      "size_bytes": 28785,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
-      "timestamp": "2026-10-29T19:19:20+00:00"
+      "timestamp": "2026-10-29T20:01:36+00:00"
     },
     {
       "contract_match": true,
       "path": "output/slides/08_limitations_slides.pdf",
-      "sha256": "7c467d470f851563c40088bad32b05438afc068c276af21d1ace30443d6ee82f",
+      "sha256": "c1438497b10004170354165dc950af0621ddbbbf6f25d33c3db0551740065bd4",
       "size_bytes": 29606,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
-      "timestamp": "2026-10-29T19:19:20+00:00"
+      "timestamp": "2026-10-29T20:01:36+00:00"
     },
     {
       "contract_match": true,
       "path": "output/slides/09_scope_and_related_work_slides.pdf",
-      "sha256": "5b1a6344173743dcabcc051383a3b17e89c305320bb073d8e092440421855390",
+      "sha256": "c21b6104e19b07d7bf49b5ef0a5e2ce48c4733208841bfdd2992f42ec22cea5e",
       "size_bytes": 17760,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
-      "timestamp": "2026-10-29T19:19:20+00:00"
+      "timestamp": "2026-10-29T20:01:36+00:00"
     },
     {
       "contract_match": true,
       "path": "output/slides/10_authoring_contract_slides.pdf",
-      "sha256": "bf5ea9e318eb1982fbe9dd82e309503071c04ea51d9410d5fd092ca41bc6bba6",
+      "sha256": "4143abdf21256b21388b8eaecb7e1ecfaa0540641d1701290fb8f613089bb82c",
       "size_bytes": 28865,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
-      "timestamp": "2026-10-29T19:19:20+00:00"
+      "timestamp": "2026-10-29T20:01:36+00:00"
     },
     {
       "contract_match": true,
       "path": "output/slides/99_references_slides.pdf",
-      "sha256": "2b4482506fb45774a343b2dcda2df62c36473c7b0d7d9a30a2b1cdc82ad8c20d",
+      "sha256": "0dca2085072816cd813653e519983580d7a3ee4d75739639b846e39fca626405",
       "size_bytes": 4648,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
-      "timestamp": "2026-10-29T19:19:20+00:00"
+      "timestamp": "2026-10-29T20:01:36+00:00"
     },
     {
       "contract_match": true,
       "path": "output/web/_combined_manuscript.md",
-      "sha256": "4dac2a4394f780b42fa5c36182afe36b1e5ea1985de9fd46ba2767a4c12f99df",
+      "sha256": "932b33a33babf374d6af185e4c7cdaf9aa913ed04c0ac677a300f65fe2666bc6",
       "size_bytes": 73015,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
-      "timestamp": "2026-10-29T19:19:20+00:00"
+      "timestamp": "2026-10-29T20:01:36+00:00"
     },
     {
       "contract_match": true,
@@ -484,7 +484,7 @@
       "size_bytes": 1975092,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
-      "timestamp": "2026-10-29T19:19:20+00:00"
+      "timestamp": "2026-10-29T20:01:36+00:00"
     },
     {
       "contract_match": true,
@@ -493,16 +493,16 @@
       "size_bytes": 121,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
-      "timestamp": "2026-10-29T19:19:20+00:00"
+      "timestamp": "2026-10-29T20:01:36+00:00"
     },
     {
       "contract_match": true,
       "path": "output/web/index.html",
-      "sha256": "8273caaf5eee8f77e40ef4474cb188601495476e340538b2c072be4803d86d23",
+      "sha256": "54616d8185d5944aba4079c32fda7275419a1c0652b0daf7fbf8b99de460c8c2",
       "size_bytes": 126365,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
-      "timestamp": "2026-10-29T19:19:20+00:00"
+      "timestamp": "2026-10-29T20:01:36+00:00"
     },
     {
       "contract_match": true,
@@ -511,7 +511,7 @@
       "size_bytes": 13187,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
-      "timestamp": "2026-10-29T19:19:20+00:00"
+      "timestamp": "2026-10-29T20:01:36+00:00"
     },
     {
       "contract_match": true,
@@ -520,7 +520,7 @@
       "size_bytes": 16361,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
-      "timestamp": "2026-10-29T19:19:20+00:00"
+      "timestamp": "2026-10-29T20:01:36+00:00"
     },
     {
       "contract_match": true,
@@ -529,7 +529,7 @@
       "size_bytes": 45407,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
-      "timestamp": "2026-10-29T19:19:20+00:00"
+      "timestamp": "2026-10-29T20:01:36+00:00"
     },
     {
       "contract_match": true,
@@ -538,7 +538,7 @@
       "size_bytes": 27118,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
-      "timestamp": "2026-10-29T19:19:20+00:00"
+      "timestamp": "2026-10-29T20:01:36+00:00"
     },
     {
       "contract_match": true,
@@ -547,7 +547,7 @@
       "size_bytes": 13170,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
-      "timestamp": "2026-10-29T19:19:20+00:00"
+      "timestamp": "2026-10-29T20:01:36+00:00"
     },
     {
       "contract_match": true,
@@ -556,7 +556,7 @@
       "size_bytes": 37641,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
-      "timestamp": "2026-10-29T19:19:20+00:00"
+      "timestamp": "2026-10-29T20:01:36+00:00"
     },
     {
       "contract_match": true,
@@ -565,16 +565,16 @@
       "size_bytes": 21855,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
-      "timestamp": "2026-10-29T19:19:20+00:00"
+      "timestamp": "2026-10-29T20:01:36+00:00"
     },
     {
       "contract_match": true,
       "path": "output/web/manuscript__07_reproducibility.html",
-      "sha256": "f6b4d8bb60fe4afafe3f9cf15bb9b9bd9fc3af100328931d81c668418675f5c6",
+      "sha256": "0fa0f4d3f73239b820eaf1ad73503f83b910c8704ebb086889eebf149dfca184",
       "size_bytes": 13828,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
-      "timestamp": "2026-10-29T19:19:20+00:00"
+      "timestamp": "2026-10-29T20:01:36+00:00"
     },
     {
       "contract_match": true,
@@ -583,7 +583,7 @@
       "size_bytes": 17698,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
-      "timestamp": "2026-10-29T19:19:20+00:00"
+      "timestamp": "2026-10-29T20:01:36+00:00"
     },
     {
       "contract_match": true,
@@ -592,7 +592,7 @@
       "size_bytes": 13140,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
-      "timestamp": "2026-10-29T19:19:20+00:00"
+      "timestamp": "2026-10-29T20:01:36+00:00"
     },
     {
       "contract_match": true,
@@ -601,7 +601,7 @@
       "size_bytes": 15422,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
-      "timestamp": "2026-10-29T19:19:20+00:00"
+      "timestamp": "2026-10-29T20:01:36+00:00"
     },
     {
       "contract_match": true,
@@ -610,7 +610,7 @@
       "size_bytes": 11925,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
-      "timestamp": "2026-10-29T19:19:20+00:00"
+      "timestamp": "2026-10-29T20:01:36+00:00"
     }
   ],
   "inventory_mode": "stable-shippable-output-v1",

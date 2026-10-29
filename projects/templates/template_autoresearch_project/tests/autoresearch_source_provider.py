@@ -153,16 +153,16 @@ def _validate_metadata(relative: str, held_content: bytes) -> None:
         metadata = tomllib.loads(held_content.decode())
         if (
             metadata.get("project", {}).get("name") != "research-project-template"
-            or metadata["project"].get("version") != "4.3.0"
+            or metadata["project"].get("version") != "4.4.0"
         ):
-            raise ValueError("platform source provider must declare research-project-template 4.3.0")
+            raise ValueError("platform source provider must declare research-project-template 4.4.0")
     elif relative == (PROJECT_PATH / "pyproject.toml").as_posix():
         project = tomllib.loads(held_content.decode())
         if (
             project.get("project", {}).get("name") != "template_autoresearch_project"
-            or project.get("tool", {}).get("template", {}).get("platform_version") != "4.3.0"
+            or project.get("tool", {}).get("template", {}).get("platform_version") != "4.4.0"
         ):
-            raise ValueError("platform source provider lacks the canonical Autoresearch 4.3.0 contract")
+            raise ValueError("platform source provider lacks the canonical Autoresearch 4.4.0 contract")
 
 
 @dataclass(frozen=True)

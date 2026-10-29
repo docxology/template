@@ -38,7 +38,7 @@
     },
     {
       "rendered_path": "output/manuscript/05_experimental_setup.md",
-      "rendered_sha256": "93101e5ae380f124a19722e3c445a7cd41e131f485e4be515e24927fa43d12c4",
+      "rendered_sha256": "97b1453127c94925394c14d42269105d888ef0de1f953b8bc02f010f1fc777ec",
       "source_path": "manuscript/05_experimental_setup.md",
       "source_sha256": "9092fabe5b0c77a70dd2ffff7fa3437011a360cb8fc73b97364b7fba5163d0e7"
     },
@@ -70,23 +70,23 @@
   "evidence_files": {
     "artifact_manifest": {
       "path": "output/reports/artifact_manifest.json",
-      "sha256": "5c6067236461772b477cba161a421f44d004f14777f3c21daea07cf706448422",
-      "size_bytes": 26175
+      "sha256": "fe1b47425fb73665036d0d9d29301c65eb0a49f57836acb7b17d8bca743f8ef2",
+      "size_bytes": 26095
     },
     "combined_manuscript": {
       "path": "output/web/_combined_manuscript.md",
-      "sha256": "2566a3ddc4023b504355f7a47d48365efc325a022403dc70f8396be026e47830",
+      "sha256": "3ed7f98c5e06d98b21292100fd85c07979df61bb2421454ade6172ba8146a8e1",
       "size_bytes": 51112
     },
     "composition_manifest": {
       "path": "output/reports/manuscript_composition.json",
-      "sha256": "e39fcc782b9c21c7cb70feef06e8d3e909bd9b607d13b9c2612765cf6cd679b8",
+      "sha256": "c6669a5f2af93a4784304056c1760ccca783efc0a68cb9e04a8f5ffddd838b0b",
       "size_bytes": 2753
     },
     "validation_report": {
       "path": "output/reports/validation_report.json",
-      "sha256": "f46ae2166bdd9851d9ddb6d9fc0635b4ddcda2f72439983a10095736b03f4c41",
-      "size_bytes": 13849
+      "sha256": "9d86a5d91286dc11799229c683927b4319cdf17ce02d122def7bfab79937e804",
+      "size_bytes": 13848
     }
   },
   "evidence_mode": "validated-co-snapshot-fingerprint-bridge",
@@ -97,7 +97,7 @@
     },
     "output": {
       "file_count": 80,
-      "sha256": "2853c758f949fe57c31f769c03529624855df17b7de4d54c5ffec6032c47da4a"
+      "sha256": "df0defd4619737efa7b99457a9d5116b7e576c0ca6e15b2e4cd1d49860f9b08c"
     },
     "source": {
       "file_count": 55,

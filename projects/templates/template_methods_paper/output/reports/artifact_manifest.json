@@ -5,540 +5,549 @@
       "path": "output/data/compiled_plans.json",
       "sha256": "14ebbd554217ae72b778f63910793963d55d5bad9a66bc4a1bfc7ee5ccb0dadf",
       "size_bytes": 421,
-      "stage_name": "current-output-snapshot",
-      "stage_num": 0,
-      "timestamp": "2026-10-29T19:19:20+00:00"
+      "stage_name": "Infrastructure Tests",
+      "stage_num": 3,
+      "timestamp": "2026-10-29T20:01:36+00:00"
     },
     {
       "contract_match": true,
       "path": "output/data/manuscript_variables.json",
-      "sha256": "61e4f9d469533b29fae4e8f69c2daf6d5463482255cd943783c2387532778bec",
+      "sha256": "8f9ff19298bab6534b33e74f182d7ed4a10259712f6b55ce4a160b4ebf694a9b",
       "size_bytes": 973,
-      "stage_name": "current-output-snapshot",
-      "stage_num": 0,
-      "timestamp": "2026-10-29T19:19:20+00:00"
+      "stage_name": "Infrastructure Tests",
+      "stage_num": 3,
+      "timestamp": "2026-10-29T20:01:36+00:00"
     },
     {
       "contract_match": true,
       "path": "output/data/pbspreparation_graph.mmd",
       "sha256": "e9d9b2b0f57b8e3925aae91ef61c2f73f6fe066bc287b2a9824b39283a6eac64",
       "size_bytes": 251,
-      "stage_name": "current-output-snapshot",
-      "stage_num": 0,
-      "timestamp": "2026-10-29T19:19:20+00:00"
+      "stage_name": "Infrastructure Tests",
+      "stage_num": 3,
+      "timestamp": "2026-10-29T20:01:36+00:00"
     },
     {
       "contract_match": true,
       "path": "output/data/pbspreparation_plan.csv",
       "sha256": "5d42eb668557db2b2b6dfe49a79eaa99ecf41f18722b4f682981d7ebf0515925",
       "size_bytes": 233,
-      "stage_name": "current-output-snapshot",
-      "stage_num": 0,
-      "timestamp": "2026-10-29T19:19:20+00:00"
+      "stage_name": "Infrastructure Tests",
+      "stage_num": 3,
+      "timestamp": "2026-10-29T20:01:36+00:00"
     },
     {
       "contract_match": true,
       "path": "output/data/pbspreparation_plan.json",
       "sha256": "8b393f1a061587c2291610daea87471087cb758f4603f098f2d4056585317933",
       "size_bytes": 790,
-      "stage_name": "current-output-snapshot",
-      "stage_num": 0,
-      "timestamp": "2026-10-29T19:19:20+00:00"
+      "stage_name": "Infrastructure Tests",
+      "stage_num": 3,
+      "timestamp": "2026-10-29T20:01:36+00:00"
     },
     {
       "contract_match": true,
       "path": "output/data/pbspreparation_worklist.md",
       "sha256": "68731c2c19de24453531de6bfe13a66d395e8792cf4ae0d0d18003182c12694f",
       "size_bytes": 363,
-      "stage_name": "current-output-snapshot",
-      "stage_num": 0,
-      "timestamp": "2026-10-29T19:19:20+00:00"
+      "stage_name": "Infrastructure Tests",
+      "stage_num": 3,
+      "timestamp": "2026-10-29T20:01:36+00:00"
     },
     {
       "contract_match": true,
       "path": "output/data/publication_ledger.json",
       "sha256": "e4872cfb7b16d7c8f0772d6561164096dac41c7ebd055a05d87b45b5f6d0cd5d",
       "size_bytes": 524,
-      "stage_name": "current-output-snapshot",
-      "stage_num": 0,
-      "timestamp": "2026-10-29T19:19:20+00:00"
+      "stage_name": "Infrastructure Tests",
+      "stage_num": 3,
+      "timestamp": "2026-10-29T20:01:36+00:00"
     },
     {
       "contract_match": true,
       "path": "output/data/sensorcalibrationsweep_graph.mmd",
       "sha256": "6fbf712001c01607e3053e982a95ff6d897afcd2513a24f831c1af5e62dbf16f",
       "size_bytes": 243,
-      "stage_name": "current-output-snapshot",
-      "stage_num": 0,
-      "timestamp": "2026-10-29T19:19:20+00:00"
+      "stage_name": "Infrastructure Tests",
+      "stage_num": 3,
+      "timestamp": "2026-10-29T20:01:36+00:00"
     },
     {
       "contract_match": true,
       "path": "output/data/sensorcalibrationsweep_plan.csv",
       "sha256": "f7b042113a0d9195ab1caff71b0b902c494f88b8bcf08487f2a8bb6c1da06507",
       "size_bytes": 261,
-      "stage_name": "current-output-snapshot",
-      "stage_num": 0,
-      "timestamp": "2026-10-29T19:19:20+00:00"
+      "stage_name": "Infrastructure Tests",
+      "stage_num": 3,
+      "timestamp": "2026-10-29T20:01:36+00:00"
     },
     {
       "contract_match": true,
       "path": "output/data/sensorcalibrationsweep_plan.json",
       "sha256": "b6ed35d9e7a0e695b428f10151cde7ec759771c7290050299dfa8b3eece2c202",
       "size_bytes": 733,
-      "stage_name": "current-output-snapshot",
-      "stage_num": 0,
-      "timestamp": "2026-10-29T19:19:20+00:00"
+      "stage_name": "Infrastructure Tests",
+      "stage_num": 3,
+      "timestamp": "2026-10-29T20:01:36+00:00"
     },
     {
       "contract_match": true,
       "path": "output/data/sensorcalibrationsweep_worklist.md",
       "sha256": "53d6f0cd2956e452690eda6c1412acf6076e95695fc69f0c9ef4b7c2d29671e2",
       "size_bytes": 379,
-      "stage_name": "current-output-snapshot",
-      "stage_num": 0,
-      "timestamp": "2026-10-29T19:19:20+00:00"
+      "stage_name": "Infrastructure Tests",
+      "stage_num": 3,
+      "timestamp": "2026-10-29T20:01:36+00:00"
     },
     {
       "contract_match": true,
       "path": "output/docs/api_glossary.md",
       "sha256": "18f17b1b1de23ca9fac591d1e0b6972b2979857cf3b1ca0dfc935bdded6f2cfd",
       "size_bytes": 6945,
-      "stage_name": "current-output-snapshot",
-      "stage_num": 0,
-      "timestamp": "2026-10-29T19:19:20+00:00"
+      "stage_name": "Infrastructure Tests",
+      "stage_num": 3,
+      "timestamp": "2026-10-29T20:01:36+00:00"
     },
     {
       "contract_match": true,
       "path": "output/figures/figure_registry.json",
       "sha256": "cb3388860d7290df68aa4fd758b7fbae1a0f17c1691d191ee9557a47b63d7c83",
       "size_bytes": 524,
-      "stage_name": "current-output-snapshot",
-      "stage_num": 0,
-      "timestamp": "2026-10-29T19:19:20+00:00"
+      "stage_name": "Infrastructure Tests",
+      "stage_num": 3,
+      "timestamp": "2026-10-29T20:01:36+00:00"
     },
     {
       "contract_match": true,
       "path": "output/figures/step_counts.png",
-      "sha256": "ad749630b06d94a1a7eba91458f20c92a93fec67f9c4ed7228f0c605a798b38c",
-      "size_bytes": 13296,
-      "stage_name": "current-output-snapshot",
-      "stage_num": 0,
-      "timestamp": "2026-10-29T19:19:20+00:00"
+      "sha256": "61a1f05c67a16bcb0b3c541d176c51b9a40cdbce46afbbc8df2c6c73501d221e",
+      "size_bytes": 15075,
+      "stage_name": "Infrastructure Tests",
+      "stage_num": 3,
+      "timestamp": "2026-10-29T20:01:36+00:00"
     },
     {
       "contract_match": true,
       "path": "output/manuscript/00_abstract.md",
-      "sha256": "9a988c0a2fab245e4b09217ce28fe0f1a54802e7a59c10d51dc3902dbfcf9d52",
+      "sha256": "98579c8e3a744d7f2297ade2622c884bbbc7d4c5d1c489ff8f9cdec3d7e729eb",
       "size_bytes": 3172,
-      "stage_name": "current-output-snapshot",
-      "stage_num": 0,
-      "timestamp": "2026-10-29T19:19:20+00:00"
+      "stage_name": "Infrastructure Tests",
+      "stage_num": 3,
+      "timestamp": "2026-10-29T20:01:36+00:00"
     },
     {
       "contract_match": true,
       "path": "output/manuscript/01_introduction.md",
       "sha256": "9714d871aef5163ea354e1eb3dc93eafcccbe778f3e328a17814b874a1741557",
       "size_bytes": 5199,
-      "stage_name": "current-output-snapshot",
-      "stage_num": 0,
-      "timestamp": "2026-10-29T19:19:20+00:00"
+      "stage_name": "Infrastructure Tests",
+      "stage_num": 3,
+      "timestamp": "2026-10-29T20:01:36+00:00"
     },
     {
       "contract_match": true,
       "path": "output/manuscript/02_methodology.md",
       "sha256": "e650553d989f95acc55f39195e74e6ae43f9f6e01754bd35a228642c92e564d7",
       "size_bytes": 7804,
-      "stage_name": "current-output-snapshot",
-      "stage_num": 0,
-      "timestamp": "2026-10-29T19:19:20+00:00"
+      "stage_name": "Infrastructure Tests",
+      "stage_num": 3,
+      "timestamp": "2026-10-29T20:01:36+00:00"
     },
     {
       "contract_match": true,
       "path": "output/manuscript/03_results.md",
       "sha256": "2dbb40e2469e13ba327815e1be6f2dad85a1120d6eaa569faf0950a37cf55277",
       "size_bytes": 4115,
-      "stage_name": "current-output-snapshot",
-      "stage_num": 0,
-      "timestamp": "2026-10-29T19:19:20+00:00"
+      "stage_name": "Infrastructure Tests",
+      "stage_num": 3,
+      "timestamp": "2026-10-29T20:01:36+00:00"
     },
     {
       "contract_match": true,
       "path": "output/manuscript/04_conclusion.md",
       "sha256": "d504c19fcd192a915d3d9b7e001118649eee439c7e82588edaade9f249241d0e",
       "size_bytes": 3987,
-      "stage_name": "current-output-snapshot",
-      "stage_num": 0,
-      "timestamp": "2026-10-29T19:19:20+00:00"
+      "stage_name": "Infrastructure Tests",
+      "stage_num": 3,
+      "timestamp": "2026-10-29T20:01:36+00:00"
     },
     {
       "contract_match": true,
       "path": "output/manuscript/05_experimental_setup.md",
-      "sha256": "114a5b6dfda1d943bd4f7ca39bd8261ce09c78c8192a008ee5f4f98c6504a8b7",
+      "sha256": "d45a61e7748c1c451f739f8ef2b2b9ab80ea3463cda924644daa8707696cb144",
       "size_bytes": 4069,
-      "stage_name": "current-output-snapshot",
-      "stage_num": 0,
-      "timestamp": "2026-10-29T19:19:20+00:00"
+      "stage_name": "Infrastructure Tests",
+      "stage_num": 3,
+      "timestamp": "2026-10-29T20:01:36+00:00"
     },
     {
       "contract_match": true,
       "path": "output/manuscript/06_reproducibility.md",
-      "sha256": "9472f3ef91e5ad022c6ed06e61b351c40be828f98892b6ed241e19180cb9eaed",
+      "sha256": "bae0b3a0786178055a4e51800d639319583deb21e53c1f71576133b3b825b780",
       "size_bytes": 3691,
-      "stage_name": "current-output-snapshot",
-      "stage_num": 0,
-      "timestamp": "2026-10-29T19:19:20+00:00"
+      "stage_name": "Infrastructure Tests",
+      "stage_num": 3,
+      "timestamp": "2026-10-29T20:01:36+00:00"
     },
     {
       "contract_match": true,
       "path": "output/manuscript/07_scope_and_related_work.md",
       "sha256": "ff4f8cf84bad2dfeabab3444086c0f7693879b76885e0f797cb9f5b53533ceb3",
       "size_bytes": 4567,
-      "stage_name": "current-output-snapshot",
-      "stage_num": 0,
-      "timestamp": "2026-10-29T19:19:20+00:00"
+      "stage_name": "Infrastructure Tests",
+      "stage_num": 3,
+      "timestamp": "2026-10-29T20:01:36+00:00"
     },
     {
       "contract_match": true,
       "path": "output/manuscript/99_references.md",
       "sha256": "c48142cf739ba1f52609e8be29de6236438798d2a9fab68a6a7ae87c6f35ee89",
       "size_bytes": 617,
-      "stage_name": "current-output-snapshot",
-      "stage_num": 0,
-      "timestamp": "2026-10-29T19:19:20+00:00"
+      "stage_name": "Infrastructure Tests",
+      "stage_num": 3,
+      "timestamp": "2026-10-29T20:01:36+00:00"
     },
     {
       "contract_match": true,
       "path": "output/manuscript/config.yaml",
       "sha256": "249e316e31a23d194e37b738f4d73a43256260d18546f9b1207a39db02ded4d5",
       "size_bytes": 4157,
-      "stage_name": "current-output-snapshot",
-      "stage_num": 0,
-      "timestamp": "2026-10-29T19:19:20+00:00"
+      "stage_name": "Infrastructure Tests",
+      "stage_num": 3,
+      "timestamp": "2026-10-29T20:01:36+00:00"
     },
     {
       "contract_match": true,
       "path": "output/manuscript/preamble.md",
       "sha256": "014dcb9849bb44a01fe82f59aa166a7769046f09fa9134360421e93a04c4c394",
       "size_bytes": 2550,
-      "stage_name": "current-output-snapshot",
-      "stage_num": 0,
-      "timestamp": "2026-10-29T19:19:20+00:00"
+      "stage_name": "Infrastructure Tests",
+      "stage_num": 3,
+      "timestamp": "2026-10-29T20:01:36+00:00"
     },
     {
       "contract_match": true,
       "path": "output/manuscript/references.bib",
       "sha256": "4b230d2c81e241a78962bf44e3a4bb7071908b5ca0b383c7095a8da4ae0a1b7e",
       "size_bytes": 1886,
-      "stage_name": "current-output-snapshot",
-      "stage_num": 0,
-      "timestamp": "2026-10-29T19:19:20+00:00"
+      "stage_name": "Infrastructure Tests",
+      "stage_num": 3,
+      "timestamp": "2026-10-29T20:01:36+00:00"
     },
     {
       "contract_match": true,
       "path": "output/pdf/template_methods_paper_combined.pdf",
       "sha256": "21727246a8f051796704a7d6241f6d4ee2f6db51021896f66caeb46983b7e241",
       "size_bytes": 197220,
-      "stage_name": "current-output-snapshot",
-      "stage_num": 0,
-      "timestamp": "2026-10-29T19:19:20+00:00"
+      "stage_name": "Infrastructure Tests",
+      "stage_num": 3,
+      "timestamp": "2026-10-29T20:01:36+00:00"
     },
     {
       "contract_match": true,
       "path": "output/release/swh_repo_url.txt",
       "sha256": "8fed513956e7f844cd7ceaaced25122b4217f313d7fb363d9858577ab527487c",
       "size_bytes": 52,
-      "stage_name": "current-output-snapshot",
-      "stage_num": 0,
-      "timestamp": "2026-10-29T19:19:20+00:00"
+      "stage_name": "Infrastructure Tests",
+      "stage_num": 3,
+      "timestamp": "2026-10-29T20:01:36+00:00"
     },
     {
       "contract_match": true,
       "path": "output/release/upload_receipts.json",
       "sha256": "a9d8bfc1fb2993a302cecf66a4dd4232484e6191536c028dfd333e83fee79634",
       "size_bytes": 1962,
-      "stage_name": "current-output-snapshot",
-      "stage_num": 0,
-      "timestamp": "2026-10-29T19:19:20+00:00"
+      "stage_name": "Infrastructure Tests",
+      "stage_num": 3,
+      "timestamp": "2026-10-29T20:01:36+00:00"
     },
     {
       "contract_match": true,
       "path": "output/release_bundle/Friedman_2026_Domain_ecd8519f.pdf",
       "sha256": "ecd8519fc2a9a674bd8a4cf89f96122af76529c913e32bf880a7c842da08771a",
       "size_bytes": 144305,
-      "stage_name": "current-output-snapshot",
-      "stage_num": 0,
-      "timestamp": "2026-10-29T19:19:20+00:00"
+      "stage_name": "Infrastructure Tests",
+      "stage_num": 3,
+      "timestamp": "2026-10-29T20:01:36+00:00"
     },
     {
       "contract_match": true,
       "path": "output/release_bundle/RELEASE_RECEIPT.json",
       "sha256": "997905598980ba979685136c4207a00c308987ebb684ae964ce7c1561a22ccc6",
       "size_bytes": 954,
-      "stage_name": "current-output-snapshot",
-      "stage_num": 0,
-      "timestamp": "2026-10-29T19:19:20+00:00"
+      "stage_name": "Infrastructure Tests",
+      "stage_num": 3,
+      "timestamp": "2026-10-29T20:01:36+00:00"
     },
     {
       "contract_match": true,
       "path": "output/release_bundle/manifest.json",
       "sha256": "99c6be757cc69c56a70edaf2e7e97d7c4b7e7be7106d8b90f02c8870d97e90fc",
       "size_bytes": 8066,
-      "stage_name": "current-output-snapshot",
-      "stage_num": 0,
-      "timestamp": "2026-10-29T19:19:20+00:00"
+      "stage_name": "Infrastructure Tests",
+      "stage_num": 3,
+      "timestamp": "2026-10-29T20:01:36+00:00"
     },
     {
       "contract_match": true,
       "path": "output/release_bundle/publication_metadata.json",
       "sha256": "3358ad5d4efd1b2c979bdfeda1e1bb73c57ce384bc09e1e13c7ae3a989838d8c",
       "size_bytes": 7216,
-      "stage_name": "current-output-snapshot",
-      "stage_num": 0,
-      "timestamp": "2026-10-29T19:19:20+00:00"
+      "stage_name": "Infrastructure Tests",
+      "stage_num": 3,
+      "timestamp": "2026-10-29T20:01:36+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/reports/cleanup_report.json",
+      "sha256": "bd9981657e8fc765dbfbb6d83addc8b9bccebb5235942063a37ff5f24f200c47",
+      "size_bytes": 5682,
+      "stage_name": "Infrastructure Tests",
+      "stage_num": 3,
+      "timestamp": "2026-10-29T20:01:36+00:00"
     },
     {
       "contract_match": true,
       "path": "output/reports/gate_report.json",
       "sha256": "10cd956047d23836f72115700041aeac2758eddf6694c493fd0685d8eca63ebb",
       "size_bytes": 54,
-      "stage_name": "current-output-snapshot",
-      "stage_num": 0,
-      "timestamp": "2026-10-29T19:19:20+00:00"
+      "stage_name": "Infrastructure Tests",
+      "stage_num": 3,
+      "timestamp": "2026-10-29T20:01:36+00:00"
     },
     {
       "contract_match": true,
       "path": "output/reports/manuscript_composition.json",
       "sha256": "442a6704efde5f62a83caff6f975e9fe915526a2ac5e636735ac4881539d4468",
       "size_bytes": 2340,
-      "stage_name": "current-output-snapshot",
-      "stage_num": 0,
-      "timestamp": "2026-10-29T19:19:20+00:00"
+      "stage_name": "Infrastructure Tests",
+      "stage_num": 3,
+      "timestamp": "2026-10-29T20:01:36+00:00"
     },
     {
       "contract_match": true,
       "path": "output/reports/test_results.json",
       "sha256": "1199864fd2b8b0b8139af631bda54b05b928ec9f3fc8ffa7ca534fb114fdb14b",
       "size_bytes": 608,
-      "stage_name": "current-output-snapshot",
-      "stage_num": 0,
-      "timestamp": "2026-10-29T19:19:20+00:00"
+      "stage_name": "Infrastructure Tests",
+      "stage_num": 3,
+      "timestamp": "2026-10-29T20:01:36+00:00"
     },
     {
       "contract_match": true,
       "path": "output/reports/test_results.md",
       "sha256": "c372882454ae5109acfe33d6d0d6be24044a511e971023becfeea0b61deed2b9",
       "size_bytes": 290,
-      "stage_name": "current-output-snapshot",
-      "stage_num": 0,
-      "timestamp": "2026-10-29T19:19:20+00:00"
+      "stage_name": "Infrastructure Tests",
+      "stage_num": 3,
+      "timestamp": "2026-10-29T20:01:36+00:00"
     },
     {
       "contract_match": true,
       "path": "output/reports/trust_chain_report.json",
       "sha256": "f51a330910d0efd5421599a386ae13f86749c595d69c31385e403cfb76aceb7c",
       "size_bytes": 44,
-      "stage_name": "current-output-snapshot",
-      "stage_num": 0,
-      "timestamp": "2026-10-29T19:19:20+00:00"
+      "stage_name": "Infrastructure Tests",
+      "stage_num": 3,
+      "timestamp": "2026-10-29T20:01:36+00:00"
     },
     {
       "contract_match": true,
       "path": "output/slides/00_abstract_slides.pdf",
       "sha256": "f1ec86b78ef9c2300b0afa1aa1e388a766c939d4e737d8ecc4e41dbe5965b83b",
       "size_bytes": 30239,
-      "stage_name": "current-output-snapshot",
-      "stage_num": 0,
-      "timestamp": "2026-10-29T19:19:20+00:00"
+      "stage_name": "Infrastructure Tests",
+      "stage_num": 3,
+      "timestamp": "2026-10-29T20:01:36+00:00"
     },
     {
       "contract_match": true,
       "path": "output/slides/01_introduction_slides.pdf",
       "sha256": "92189c70ab361ab26787ff304b1e24a34adab8021b16df823dbdec3d03137568",
       "size_bytes": 52712,
-      "stage_name": "current-output-snapshot",
-      "stage_num": 0,
-      "timestamp": "2026-10-29T19:19:20+00:00"
+      "stage_name": "Infrastructure Tests",
+      "stage_num": 3,
+      "timestamp": "2026-10-29T20:01:36+00:00"
     },
     {
       "contract_match": true,
       "path": "output/slides/02_methodology_slides.pdf",
       "sha256": "3fe2737366da84c80d6dc5635b095ea985bfb100aadd8ed706368578bbbe052c",
       "size_bytes": 65684,
-      "stage_name": "current-output-snapshot",
-      "stage_num": 0,
-      "timestamp": "2026-10-29T19:19:20+00:00"
+      "stage_name": "Infrastructure Tests",
+      "stage_num": 3,
+      "timestamp": "2026-10-29T20:01:36+00:00"
     },
     {
       "contract_match": true,
       "path": "output/slides/03_results_slides.pdf",
       "sha256": "d01f4d7f5c51faba24977ade5b34d15fa5fc9de8b753994ff040a5b2ef303530",
       "size_bytes": 74292,
-      "stage_name": "current-output-snapshot",
-      "stage_num": 0,
-      "timestamp": "2026-10-29T19:19:20+00:00"
+      "stage_name": "Infrastructure Tests",
+      "stage_num": 3,
+      "timestamp": "2026-10-29T20:01:36+00:00"
     },
     {
       "contract_match": true,
       "path": "output/slides/04_conclusion_slides.pdf",
       "sha256": "87f8075723f0b34d9afbeda2ec1455bf65b749400e7cfcff82b329090edfc166",
       "size_bytes": 59371,
-      "stage_name": "current-output-snapshot",
-      "stage_num": 0,
-      "timestamp": "2026-10-29T19:19:20+00:00"
+      "stage_name": "Infrastructure Tests",
+      "stage_num": 3,
+      "timestamp": "2026-10-29T20:01:36+00:00"
     },
     {
       "contract_match": true,
       "path": "output/slides/05_experimental_setup_slides.pdf",
       "sha256": "e37eb917748836223c1eb1c3fa7c0b684250dfe90c76709173e0facf59c68364",
       "size_bytes": 61734,
-      "stage_name": "current-output-snapshot",
-      "stage_num": 0,
-      "timestamp": "2026-10-29T19:19:20+00:00"
+      "stage_name": "Infrastructure Tests",
+      "stage_num": 3,
+      "timestamp": "2026-10-29T20:01:36+00:00"
     },
     {
       "contract_match": true,
       "path": "output/slides/06_reproducibility_slides.pdf",
       "sha256": "562d52d1abbeff72dd65429fd33b53c47aaee1fe8448dff275a63150704b6640",
       "size_bytes": 54128,
-      "stage_name": "current-output-snapshot",
-      "stage_num": 0,
-      "timestamp": "2026-10-29T19:19:20+00:00"
+      "stage_name": "Infrastructure Tests",
+      "stage_num": 3,
+      "timestamp": "2026-10-29T20:01:36+00:00"
     },
     {
       "contract_match": true,
       "path": "output/slides/07_scope_and_related_work_slides.pdf",
       "sha256": "4404798977aa9e9aabb904fd4c0a0f8df48507d59b79866a311aec12c6574a15",
       "size_bytes": 40493,
-      "stage_name": "current-output-snapshot",
-      "stage_num": 0,
-      "timestamp": "2026-10-29T19:19:20+00:00"
+      "stage_name": "Infrastructure Tests",
+      "stage_num": 3,
+      "timestamp": "2026-10-29T20:01:36+00:00"
     },
     {
       "contract_match": true,
       "path": "output/slides/99_references_slides.pdf",
       "sha256": "8cd53b75cddb88ae32cdd2ab5ed07201ee9415df5c86222906ec99950d4e9767",
       "size_bytes": 16550,
-      "stage_name": "current-output-snapshot",
-      "stage_num": 0,
-      "timestamp": "2026-10-29T19:19:20+00:00"
+      "stage_name": "Infrastructure Tests",
+      "stage_num": 3,
+      "timestamp": "2026-10-29T20:01:36+00:00"
     },
     {
       "contract_match": true,
       "path": "output/web/_combined_manuscript.md",
       "sha256": "e47810b099f494110adf4751a21fb96961e5899f6981094da93168c3b95e80d1",
       "size_bytes": 37290,
-      "stage_name": "current-output-snapshot",
-      "stage_num": 0,
-      "timestamp": "2026-10-29T19:19:20+00:00"
+      "stage_name": "Infrastructure Tests",
+      "stage_num": 3,
+      "timestamp": "2026-10-29T20:01:36+00:00"
     },
     {
       "contract_match": true,
       "path": "output/web/assets/source-web-fonts.js",
       "sha256": "4744b7529bd9a8b4742abea22b4c1b01fb66cd5f3ec30aa482625236854eae45",
       "size_bytes": 1975092,
-      "stage_name": "current-output-snapshot",
-      "stage_num": 0,
-      "timestamp": "2026-10-29T19:19:20+00:00"
+      "stage_name": "Infrastructure Tests",
+      "stage_num": 3,
+      "timestamp": "2026-10-29T20:01:36+00:00"
     },
     {
       "contract_match": true,
       "path": "output/web/favicon.ico",
       "sha256": "6ca6e9ffbb22550f6d94bf216e743cc7469a7fc50d8dcf0737b11bf800de7dad",
       "size_bytes": 121,
-      "stage_name": "current-output-snapshot",
-      "stage_num": 0,
-      "timestamp": "2026-10-29T19:19:20+00:00"
+      "stage_name": "Infrastructure Tests",
+      "stage_num": 3,
+      "timestamp": "2026-10-29T20:01:36+00:00"
     },
     {
       "contract_match": true,
       "path": "output/web/index.html",
       "sha256": "1f85b29783759286e96b7d78c8285dd087344e9a7fea0e9b6f08fa45418447b0",
       "size_bytes": 82740,
-      "stage_name": "current-output-snapshot",
-      "stage_num": 0,
-      "timestamp": "2026-10-29T19:19:20+00:00"
+      "stage_name": "Infrastructure Tests",
+      "stage_num": 3,
+      "timestamp": "2026-10-29T20:01:36+00:00"
     },
     {
       "contract_match": true,
       "path": "output/web/manuscript__00_abstract.html",
       "sha256": "80fedc8adaf04ca9d1bd44b3d43aefdf4bf6f7a4666a445394b702a287c48c8c",
       "size_bytes": 15510,
-      "stage_name": "current-output-snapshot",
-      "stage_num": 0,
-      "timestamp": "2026-10-29T19:19:20+00:00"
+      "stage_name": "Infrastructure Tests",
+      "stage_num": 3,
+      "timestamp": "2026-10-29T20:01:36+00:00"
     },
     {
       "contract_match": true,
       "path": "output/web/manuscript__01_introduction.html",
       "sha256": "9ec9e8239b1104209b4265abd318479959241ab1f9d49ef0a2608596c4c6532c",
       "size_bytes": 18391,
-      "stage_name": "current-output-snapshot",
-      "stage_num": 0,
-      "timestamp": "2026-10-29T19:19:20+00:00"
+      "stage_name": "Infrastructure Tests",
+      "stage_num": 3,
+      "timestamp": "2026-10-29T20:01:36+00:00"
     },
     {
       "contract_match": true,
       "path": "output/web/manuscript__02_methodology.html",
       "sha256": "593c89502d9b96aa20ca12bcf5486d025fbc1c9f30906bfe007dbec2a06757c9",
       "size_bytes": 21771,
-      "stage_name": "current-output-snapshot",
-      "stage_num": 0,
-      "timestamp": "2026-10-29T19:19:20+00:00"
+      "stage_name": "Infrastructure Tests",
+      "stage_num": 3,
+      "timestamp": "2026-10-29T20:01:36+00:00"
     },
     {
       "contract_match": true,
       "path": "output/web/manuscript__03_results.html",
       "sha256": "106ffdc793f3d14da26e9994342f0dcc1532708510b602d9659a3f8657dd347a",
       "size_bytes": 17955,
-      "stage_name": "current-output-snapshot",
-      "stage_num": 0,
-      "timestamp": "2026-10-29T19:19:20+00:00"
+      "stage_name": "Infrastructure Tests",
+      "stage_num": 3,
+      "timestamp": "2026-10-29T20:01:36+00:00"
     },
     {
       "contract_match": true,
       "path": "output/web/manuscript__04_conclusion.html",
       "sha256": "af5f5e8abed61e3b47f9b8a6e2151f066342820198b0303bf9143ebb64d28c20",
       "size_bytes": 16788,
-      "stage_name": "current-output-snapshot",
-      "stage_num": 0,
-      "timestamp": "2026-10-29T19:19:20+00:00"
+      "stage_name": "Infrastructure Tests",
+      "stage_num": 3,
+      "timestamp": "2026-10-29T20:01:36+00:00"
     },
     {
       "contract_match": true,
       "path": "output/web/manuscript__05_experimental_setup.html",
       "sha256": "fc212f210a2c263200f9ee41b7cdc9d2ff12c2acac8bb6661da43ece2a7d5739",
       "size_bytes": 18260,
-      "stage_name": "current-output-snapshot",
-      "stage_num": 0,
-      "timestamp": "2026-10-29T19:19:20+00:00"
+      "stage_name": "Infrastructure Tests",
+      "stage_num": 3,
+      "timestamp": "2026-10-29T20:01:36+00:00"
     },
     {
       "contract_match": true,
       "path": "output/web/manuscript__06_reproducibility.html",
       "sha256": "9702518982cbd0d01a63edb1c513d57e56fbaf36c05380425120ddf1e5a4b8eb",
       "size_bytes": 21668,
-      "stage_name": "current-output-snapshot",
-      "stage_num": 0,
-      "timestamp": "2026-10-29T19:19:20+00:00"
+      "stage_name": "Infrastructure Tests",
+      "stage_num": 3,
+      "timestamp": "2026-10-29T20:01:36+00:00"
     },
     {
       "contract_match": true,
       "path": "output/web/manuscript__07_scope_and_related_work.html",
       "sha256": "84b186f5d5374cf1988e08819abf9217137c7bc1d3890a54810022c0031f8390",
       "size_bytes": 17091,
-      "stage_name": "current-output-snapshot",
-      "stage_num": 0,
-      "timestamp": "2026-10-29T19:19:20+00:00"
+      "stage_name": "Infrastructure Tests",
+      "stage_num": 3,
+      "timestamp": "2026-10-29T20:01:36+00:00"
     },
     {
       "contract_match": true,
       "path": "output/web/manuscript__99_references.html",
       "sha256": "e1a4fcc1d8bf4f6f277c50806539f5004926fbd37e0ad61a4727c06cd6e2a9a2",
       "size_bytes": 16424,
-      "stage_name": "current-output-snapshot",
-      "stage_num": 0,
-      "timestamp": "2026-10-29T19:19:20+00:00"
+      "stage_name": "Infrastructure Tests",
+      "stage_num": 3,
+      "timestamp": "2026-10-29T20:01:36+00:00"
     }
   ],
   "inventory_mode": "stable-shippable-output-v1",
