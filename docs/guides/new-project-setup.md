@@ -146,11 +146,22 @@ name = "<project-name>"
 version = "1.0.0"
 description = "Short description"
 readme = "README.md"
-requires-python = ">=3.10"
+requires-python = ">=3.14"
 dependencies = [
     "matplotlib>=3.10.0",
+    "research-project-template==4.3.0",
     # Add your project-specific deps here
 ]
+
+[tool.uv.sources]
+# Inside this repository the SDK resolves to the checkout; an external fork
+# pins the released version instead.
+research-project-template = { path = "../../..", editable = true }
+
+[tool.template]
+platform_version = "4.3.0"
+tested_python_versions = ["3.14", "3.15"]
+required_unpaid_capabilities = []
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
@@ -307,37 +318,26 @@ os.environ.setdefault("MPLBACKEND", "Agg")
 
 **Root cause**: Your project's `pyproject.toml` lists packages (`scipy`, `pandas`, `wordcloud`, `rdflib`, `scikit-learn`, `networkx`, `requests`) but the project has no local `.venv/`. Analysis scripts therefore run under the **root** `.venv`, which lacks those packages.
 
-**Rule**: If `projects/<name>/.venv` does **not** exist, every package in `projects/<name>/pyproject.toml#dependencies` must also be in the root `pyproject.toml`.
+**Rule**: If `projects/<name>/.venv` does **not** exist, the root environment must provide every package the project imports. Prefer an existing group over adding a core dependency: `pyyaml`, `numpy`, `matplotlib`, `pillow` and `defusedxml` are core dependencies, and the root `scientific`/`llm` groups plus the default `public-exemplars` group already cover `scipy`, `pandas`, `scikit-learn`, `networkx`, `requests`, `rdflib` and `wordcloud`. Only add to `[project].dependencies` when no group fits.
 
 **Fix**:
 
-```toml
-# Root pyproject.toml — add all project-specific packages here
-[project]
-dependencies = [
-  "numpy>=1.22",
-  "pyyaml>=6.0",
-  "matplotlib>=3.7",
-  # project-specific requirements (no local .venv)
-  "scipy>=1.10.0",
-  "pandas>=2.0.0",
-  "networkx>=3.0",
-  "requests>=2.31.0",
-  "rdflib>=7.0.0",
-  "wordcloud>=1.9.0",
-  "scikit-learn>=1.3.0",
-]
+```bash
+uv sync                      # core + default groups (public-exemplars includes scientific/llm)
+uv sync --group scientific   # explicit opt-in for scipy/pandas/scikit-learn/rdflib/wordcloud
 ```
 
-```bash
-uv sync   # installs newly declared packages
-```
+`wordcloud` is marker-capped to `python_version < "3.15"` because it publishes no
+cp315 wheel; on 3.15 a figure that needs it must degrade instead of importing
+(the meta-analysis exemplar renders a deterministic golden-angle spiral packer
+when the extension is missing).
 
 **Diagnosis**:
 
 ```bash
 # Check whether root venv has the packages:
-.venv/bin/python -c "import scipy, pandas, wordcloud, rdflib, sklearn, networkx" 2>&1
+.venv/bin/python -c "import scipy, pandas, rdflib, sklearn, networkx" 2>&1
+.venv/bin/python -c "import importlib.util as u; print(u.find_spec('wordcloud'))"  # None on 3.15
 
 # Run the analysis script directly to see the actual error:
 .venv/bin/python projects/<name>/scripts/01_*.py
@@ -435,6 +435,13 @@ uv run python scripts/pipeline/stage_02_analysis.py --project <qualified-name>
 # 3. Source and rendered scholarly gates
 uv run python -m infrastructure.validation.cli evidence \
   projects/<subfolder>/<name> --fail-on-issues
+# modular release gate: one receipt per project, rendered evidence required
+uv run python scripts/audit/check_publication_outputs.py \
+  --project <qualified-name> --strict --receipts output/receipts
+# same gate across every canonical exemplar (release lane)
+uv run python scripts/audit/check_publication_outputs.py \
+  --all-public --strict --jobs 4 --receipts output/readiness/publication-receipts
+# stricter accessibility variant of the underlying per-project audit
 uv run python -m infrastructure.validation.cli publication-audit \
   --project <qualified-name> --rendered --strict \
   --require-figure-accessibility --format markdown
@@ -444,6 +451,10 @@ uv run python scripts/runner/execute_pipeline.py \
   --project <qualified-name> --mode core
 ./secure_run.sh --project <qualified-name> --mode core --deterministic
 ```
+
+`check_publication_outputs.py` fails on `error` findings by default and adds
+`review_required` findings under `--strict`; `hardening.yml` keeps the
+source-only `publication-audit --all-public --strict --format json` lane.
 
 > **Lesson**: Validate producers before consumers. A failed or stale analysis
 > invalidates downstream variables, figures, hydrated manuscripts, renders, and

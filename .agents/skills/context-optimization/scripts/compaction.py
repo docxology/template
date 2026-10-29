@@ -58,6 +58,7 @@ __all__ = [
 # Token estimation
 # ---------------------------------------------------------------------------
 
+
 def estimate_token_count(text: str) -> int:
     """
     Estimate token count for text.
@@ -100,6 +101,7 @@ def estimate_message_tokens(messages: List[Dict[str, str]]) -> int:
 # ---------------------------------------------------------------------------
 # Compaction functions
 # ---------------------------------------------------------------------------
+
 
 def categorize_messages(messages: List[Dict]) -> Dict[str, List[Dict]]:
     """
@@ -164,12 +166,12 @@ def summarize_tool_output(content: str, max_length: int = 500) -> str:
     to be compacted while preserving actionable data points.
     """
     # Look for metrics (numbers with context)
-    metrics = re.findall(r'(\w+):\s*([\d.,]+)', content)
+    metrics = re.findall(r"(\w+):\s*([\d.,]+)", content)
 
     # Look for key findings (lines with important keywords)
     keywords = ["result", "found", "total", "success", "error", "value"]
     findings = []
-    for line in content.split('\n'):
+    for line in content.split("\n"):
         if any(kw in line.lower() for kw in keywords):
             findings.append(line.strip())
 
@@ -190,8 +192,8 @@ def summarize_conversation(content: str, max_length: int = 500) -> str:
     Use when: older conversation turns need compaction and the key
     decisions/commitments must survive while filler is removed.
     """
-    decisions = re.findall(r'(?i)(?:decided|decision|chose|chosen)[:\s]+([^.]+)', content)
-    questions = re.findall(r'(?:\?|question)[:\s]+([^.]+)', content)
+    decisions = re.findall(r"(?i)(?:decided|decision|chose|chosen)[:\s]+([^.]+)", content)
+    questions = re.findall(r"(?:\?|question)[:\s]+([^.]+)", content)
 
     summary_parts = []
     if decisions:
@@ -203,9 +205,9 @@ def summarize_conversation(content: str, max_length: int = 500) -> str:
 
     if not summary_parts:
         # Fallback: extract the first few substantive sentences
-        sentences = [s.strip() for s in content.split('.') if len(s.strip()) > 20]
+        sentences = [s.strip() for s in content.split(".") if len(s.strip()) > 20]
         if sentences:
-            summary_parts.append('. '.join(sentences[:3]) + '.')
+            summary_parts.append(". ".join(sentences[:3]) + ".")
 
     result = " | ".join(summary_parts) if summary_parts else "[Conversation summarized]"
     return result[:max_length]
@@ -218,12 +220,12 @@ def summarize_document(content: str, max_length: int = 500) -> str:
     Use when: a retrieved document has been consumed for reasoning and
     only a brief reference needs to remain in context.
     """
-    paragraphs = content.split('\n\n')
+    paragraphs = content.split("\n\n")
     if paragraphs:
         first_para = paragraphs[0].strip()
-        sentences = first_para.split('. ')
+        sentences = first_para.split(". ")
         if len(sentences) > 2:
-            first_para = '. '.join(sentences[:2]) + '.'
+            first_para = ". ".join(sentences[:2]) + "."
         return first_para[:max_length]
     return "[Document summarized]"
 
@@ -241,6 +243,7 @@ def summarize_general(content: str, max_length: int = 500) -> str:
 # ---------------------------------------------------------------------------
 # Observation masking
 # ---------------------------------------------------------------------------
+
 
 class ObservationStore:
     """
@@ -314,10 +317,10 @@ class ObservationStore:
 
     def _extract_key_point(self, content: str) -> str:
         """Extract key point from observation."""
-        lines = [line for line in content.split('\n') if len(line) > 20]
+        lines = [line for line in content.split("\n") if len(line) > 20]
         if lines:
             return lines[0][:50] + "..."
-        sentences = content.split('. ')
+        sentences = content.split(". ")
         if sentences:
             return sentences[0][:50] + "..."
         return content[:50] + "..."
@@ -326,6 +329,7 @@ class ObservationStore:
 # ---------------------------------------------------------------------------
 # Context budget management
 # ---------------------------------------------------------------------------
+
 
 class ContextBudget:
     """
@@ -431,6 +435,7 @@ class ContextBudget:
 # Cache optimization
 # ---------------------------------------------------------------------------
 
+
 def design_stable_prompt(template: str, dynamic_values: Optional[Dict] = None) -> str:
     """
     Stabilize a prompt template for maximum KV-cache hit rate.
@@ -443,23 +448,21 @@ def design_stable_prompt(template: str, dynamic_values: Optional[Dict] = None) -
     result = template
 
     # Replace timestamps
-    date_pattern = r'\d{4}-\d{2}-\d{2}'
-    result = re.sub(date_pattern, '[DATE_STABLE]', result)
+    date_pattern = r"\d{4}-\d{2}-\d{2}"
+    result = re.sub(date_pattern, "[DATE_STABLE]", result)
 
     # Replace session IDs
-    session_pattern = r'Session \d+'
-    result = re.sub(session_pattern, 'Session [STABLE]', result)
+    session_pattern = r"Session \d+"
+    result = re.sub(session_pattern, "Session [STABLE]", result)
 
     # Replace counters
-    counter_pattern = r'\d+/\d+'
-    result = re.sub(counter_pattern, '[COUNTER_STABLE]', result)
+    counter_pattern = r"\d+/\d+"
+    result = re.sub(counter_pattern, "[COUNTER_STABLE]", result)
 
     return result
 
 
-def calculate_cache_metrics(
-    requests: List[Dict], cache: Dict[str, Dict]
-) -> Dict[str, object]:
+def calculate_cache_metrics(requests: List[Dict], cache: Dict[str, Dict]) -> Dict[str, object]:
     """
     Calculate KV-cache hit metrics for a request sequence.
 
@@ -525,10 +528,8 @@ if __name__ == "__main__":
 
     # 2. Observation masking
     store = ObservationStore(max_size=100)
-    long_output = (
-        "Result: 42 items found\n"
-        "Total processing time: 3.2s\n"
-        "Details:\n" + "\n".join([f"  Item {i}: value={i*10}" for i in range(20)])
+    long_output = "Result: 42 items found\nTotal processing time: 3.2s\nDetails:\n" + "\n".join(
+        [f"  Item {i}: value={i * 10}" for i in range(20)]
     )
     masked, ref_id = store.mask(long_output, max_length=100)
     print(f"2. Masked observation:\n   {masked}")
@@ -543,9 +544,7 @@ if __name__ == "__main__":
     budget.allocate("message_history", 95_000)
     usage = budget.get_usage()
     print(f"3. Budget utilization: {usage['utilization_ratio']:.1%}")
-    should_opt, reasons = budget.should_optimize(
-        current_usage=int(128_000 * 0.85)
-    )
+    should_opt, reasons = budget.should_optimize(current_usage=int(128_000 * 0.85))
     print(f"   Should optimize: {should_opt}, reasons: {reasons}\n")
 
     # 4. Cache-stable prompt

@@ -61,6 +61,16 @@ Every exemplar also carries these agent-facing surfaces:
   `.agents/` (skill catalog), `scripts/`, `src/`, `tests/`, `manuscript/config.yaml`,
   `manuscript/config.yaml.example`, `manuscript/references.bib`, and
   `manuscript/preamble.md`.
+- `pyproject.toml` must also declare the `[tool.template]` contract enforced by
+  `scripts/audit/check_exemplar_configs.py` and
+  `infrastructure.reporting.release_readiness_profile`: `platform_version` equal
+  to the root version, `tested_python_versions = ["3.14", "3.15"]`, and an
+  explicit `required_unpaid_capabilities` list (an empty list means
+  deterministic-only). Each non-empty entry adds a required live release gate, so
+  an opt-in lane the README advertises must appear there (for example
+  `template_active_inference` → `["pymdp", "lean"]`). The SDK pin
+  (`research-project-template==<root version>` plus its `[tool.uv.sources]`
+  entry) must resolve against the same root version.
 - `TODO.md` is future-only: current validation evidence first, then integrity
   gaps, configurable-surface gaps, documentation/signpost gaps,
   test/validator gaps, and an ordered improvement ladder.
@@ -115,6 +125,8 @@ uv run python scripts/pipeline/stage_03_render.py --project templates/<name>
 uv run python scripts/pipeline/stage_04_validate.py --project templates/<name>
 uv run python scripts/pipeline/stage_05_copy.py --project templates/<name>
 uv run python scripts/pipeline/stage_01_test.py --project-only --all-projects --public-projects
+uv run python scripts/audit/check_publication_outputs.py --project templates/<name> --strict --receipts output/receipts
+uv run python scripts/audit/check_publication_outputs.py --changed --jobs 4
 uv run python scripts/audit/check_template_drift.py --strict
 uv run python scripts/audit/check_tracked_all.py
 uv run python scripts/docgen/exemplar_roster.py --check

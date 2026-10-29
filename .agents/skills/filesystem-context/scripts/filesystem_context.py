@@ -379,9 +379,7 @@ def _demo_tool_handler() -> None:
     print("DEMO: Integrated Tool Output Handler")
     print("=" * 60)
 
-    handler = ToolOutputHandler(
-        scratch_pad=ScratchPadManager(base_path="demo_scratch", token_threshold=50)
-    )
+    handler = ToolOutputHandler(scratch_pad=ScratchPadManager(base_path="demo_scratch", token_threshold=50))
 
     outputs: list[tuple[str, str]] = [
         ("calculator", "42"),

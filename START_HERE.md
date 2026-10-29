@@ -180,7 +180,7 @@ open output/templates/template_code_project/pdf/template_code_project_combined.p
 2. **No mocks**: all tests use real data, real files, `pytest-httpserver` for HTTP.
 3. **Coverage gates**: infra ≥ 60%, per-project ≥ 90%.
 4. **Public exemplars only**: only `projects/templates/*` is committed. Every other project path is local-only.
-5. **`output/` is disposable**: never commit it; the pipeline regenerates everything.
+5. **Root `output/` is disposable** and never committed; the pipeline regenerates it. Canonical public exemplar evidence is the exception: deterministic files under `projects/templates/<name>/output/` are tracked publication evidence inside the 224 MiB `PUBLIC_TEMPLATE_OUTPUT_MAX_BYTES` cap in `infrastructure/project/git_guards.py`.
 6. **One pytest invocation per project**: run each project's tests as its own pytest invocation — combining several `projects/*/tests/` trees in one process fails (see AGENTS.md operational gotchas).
 
 ---
@@ -193,7 +193,7 @@ scripts/            Stage orchestrators (pipeline/, runner/, audit/, docgen/, sh
 tests/              Infrastructure test suite
 projects/templates/ Public canonical exemplars (tracked in git)
 projects/working/   Private working projects (local-only, symlinked from sidecar — edit the canonical sidecar copy, never the symlink)
-output/             Generated deliverables (disposable, not committed)
+output/             Root deliverables (disposable, not committed; tracked exemplar evidence lives under projects/templates/*/output/)
 docs/               Documentation corpus (hierarchy and index in docs/AGENTS.md
                     and docs/documentation-index.md)
 ```

@@ -59,7 +59,7 @@ This is a research project template with a test-driven development workflow, aut
 
 ### CI mirror (GitHub Actions)
 
-Fast functional CI is defined in [`.github/workflows/ci.yml`](.github/workflows/ci.yml) and uses Linux/Python 3.14. The optional manual cross-version/full-suite matrix and its coverage gates are defined separately in [`.github/workflows/hardening.yml`](.github/workflows/hardening.yml). Job names, scope and local checks: [`.github/AGENTS.md`](.github/AGENTS.md).
+Fast functional CI is defined in [`.github/workflows/ci.yml`](.github/workflows/ci.yml) and uses Linux/Python 3.14. The optional manual cross-version/full-suite matrix is defined in [`.github/workflows/hardening.yml`](.github/workflows/hardening.yml); it carries that matrix's coverage gates, the blocking docs-contract guards and the source-only `python -m infrastructure.validation.cli publication-audit --all-public --strict --format json` lane (the modular receipt-writing gate, `scripts/audit/check_publication_outputs.py --all-public --strict --jobs 4`, runs in `release.yml`). Job names, scope and local checks: [`.github/AGENTS.md`](.github/AGENTS.md).
 
 ## Common Commands
 
@@ -356,7 +356,7 @@ uv run python scripts/audit/verify_no_mocks.py --inventory --max-dependency-repl
 Coverage beneath the configured floor fails the gate, so thinning the suite cannot buy a green run.
 The floor is self-demonstrating: deleting tests until measured coverage drops below it makes pytest exit non-zero through `--cov-fail-under`, which is the gate's built-in negative control.
   - **Rotating-project exceptions**: a CI matrix job may pin a lower floor for a checked-out rotating project (e.g. an 89% gate for a Lean-toolchain project) when its Lean build + live external CLI + Ollama-gated paths carry CI-only surface below the 90% floor. The exception applies only while that project is checked out under `projects/`; raise back to 90% once that surface is covered.
-- **Combined-union public-project gate**: 75% (`scripts/pipeline/stage_01_test.py --project-only --all-projects --public-projects`; `DEFAULT_FAIL_UNDER` in `infrastructure/core/test_runner.py`). Deliberately lower than the per-project floor: per-project suites only cover their own `src/`, so the union denominator spans the public exemplar source set. Local `--all-projects` without `--public-projects` still runs every discovered project in the checkout and may include rotating private symlinks. Per-project floors are unchanged and remain authoritative.
+- **Combined-union public-project gate**: 75% (`scripts/pipeline/stage_01_test.py --project-only --all-projects --public-projects`; `DEFAULT_FAIL_UNDER` in `infrastructure/core/testing/test_runner.py`). Deliberately lower than the per-project floor: per-project suites only cover their own `src/`, so the union denominator spans the public exemplar source set. Local `--all-projects` without `--public-projects` still runs every discovered project in the checkout and may include rotating private symlinks. Per-project floors are unchanged and remain authoritative.
 - **No mocks**: All tests use real numerical examples
 - **Deterministic**: Fixed RNG seeds for reproducibility
 

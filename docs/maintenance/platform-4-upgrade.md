@@ -22,7 +22,8 @@ acceptance and independent review, where required, have passed.
 - One resolved execution plan; stable stage keys; truthful typed outcomes;
   source-bound reuse; no success for incomplete or missing required evidence.
 - Each public exemplar has an independent intended version and acceptance
-  binding to platform 4.0.2 and actual source content.
+  binding to platform 4.3.0 and actual source content (4.0.0, 4.0.1 and 4.0.2 remain
+  unpublished historical candidates).
 - Real sandbox transfer and retrieval precede reviewed production promotion.
   Missing providers, credentials, tools, or hardware are blockers.
 
@@ -207,7 +208,7 @@ The required whole-public runtime and installed matrices, every declared native
 format, current live unpaid capabilities, sandbox transfers and exact-revision
 hosted/release evidence remain outstanding. The initial diagnostic encountered
 an unavailable Docker engine; the post-reboot assessment below records its
-subsequent recovery. Platform 4.0.0 remains an intended unreleased version until
+subsequent recovery. Platform 4.3.0 remains an intended unreleased version until
 every required exact-revision acceptance lane passes.
 
 A fresh origin/main fetch still identified the starting revision
@@ -566,7 +567,7 @@ Current repairs and observations retained on 2026-10-01:
   <!-- noqa: drift-counts -- dated scoped receipt: 2026-10-01 -->
 - The obsolete source-import export smoke route is removed. Release preparation
   now warms exact locked nonlocal dependencies separately from the required
-  complete three-runtime installed-wheel runner. Focused retirement/version/
+  complete two-minor installed-wheel matrix (root plus 25 exemplars on 3.14 and 3.15). Focused retirement/version/
   discovery/capability controls passed 56 cases, with 23 additional copy/export
   resource controls; independent shared-infrastructure review closed. No new
   hosted run or complete installed matrix is established by these checks.
@@ -867,7 +868,7 @@ Fresh independent source reviews closed the bounded readiness traversal,
 guardian startup budget, actual launched-process fixtures, notebook provider
 selection, standalone Meta command, and canonical Root census/readback changes.
 Their actual local results remain scoped to the identified input trees and
-selected interpreters; no hosted check, main push, three-runtime acceptance,
+selected interpreters; no hosted check, main push, two-minor acceptance,
 installed-wheel matrix or publication is established by these observations.
 
 | Lane | Actual local observation | Boundary |
@@ -926,7 +927,7 @@ candidate result, main update, standalone push or 4.0 release is established yet
 The refreshed canonical census controls passed all 39 cases in 393.43 seconds.
 Meta's actual whole suite passed 1,244 cases with 95.62% own branch coverage; the
 six selected Pitch/Template provider controls passed. These are local selected
-interpreter results, not complete three-runtime or installed publication evidence.
+interpreter results, not complete two-minor installed or publication evidence.
 <!-- noqa: drift-counts -- dated scoped receipts: 2026-10-05 -->
 
 A later execution cohort recorded 68 passes and one worker crash at the original
@@ -1019,7 +1020,7 @@ preserves proposal identities and original failure logs outside public tracking.
 This continuation worked on a Linux x86_64 replica of the handoff tree with
 CPython 3.14.6 (and 3.12.13 where stated). Every count below is a local,
 scoped receipt for the stated source; none is hosted CI, an installed-wheel
-cell, a three-runtime matrix or publication evidence. Original failure logs
+cell, a two-minor installed matrix or publication evidence. Original failure logs
 from earlier sessions remain retained outside public tracking.
 <!-- noqa: drift-counts -- dated scoped receipts: 2026-10-05 -->
 

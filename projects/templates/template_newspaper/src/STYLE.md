@@ -1,6 +1,6 @@
 # src/ Style
 
-- `from __future__ import annotations`; full type hints; Python 3.10+.
+- `from __future__ import annotations`; full type hints; Python 3.14+.
 - Dataclasses for the content model; `frozen=True` for value objects (geometry,
   config).
 - Strict loaders raise `ValueError` quoting the bad value and the allowed set.

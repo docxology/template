@@ -35,6 +35,7 @@ __all__ = [
 
 class SandboxState(Enum):
     """Sandbox lifecycle states."""
+
     CREATING = "creating"
     SYNCING = "syncing"
     READY = "ready"
@@ -50,6 +51,7 @@ class UserIdentity:
     Use when: configuring sandbox git identity so commits are
     attributed to the prompting user, not the app.
     """
+
     id: str
     name: str
     email: str
@@ -63,6 +65,7 @@ class SandboxConfig:
     Use when: defining resource limits and timeouts for a new sandbox
     to prevent cost runaway and resource exhaustion.
     """
+
     repo_url: str
     base_image: str
     memory_mb: int = 4096
@@ -78,6 +81,7 @@ class Sandbox:
     Use when: interacting with a running sandbox to execute commands,
     read/write files, or take snapshots for session continuity.
     """
+
     id: str
     config: SandboxConfig
     state: SandboxState
@@ -148,6 +152,7 @@ class RepositoryImage:
     Use when: checking whether a cached environment image exists
     and whether it is recent enough to use.
     """
+
     repo_url: str
     image_id: str
     commit_sha: str
@@ -184,13 +189,10 @@ class ImageBuilder:
         build_steps: list[str] = [
             # Clone repository
             f"git clone https://x-access-token:{token}@github.com/{repo_url} /workspace",
-
             # Install dependencies
             "cd /workspace && npm install",
-
             # Run build
             "cd /workspace && npm run build",
-
             # Warm caches by running once
             "cd /workspace && npm run dev &",
             "sleep 5",  # Let dev server start
@@ -206,10 +208,7 @@ class ImageBuilder:
 
         # Create and store image
         image = RepositoryImage(
-            repo_url=repo_url,
-            image_id=await self._finalize_image(),
-            commit_sha=commit_sha,
-            built_at=datetime.utcnow()
+            repo_url=repo_url, image_id=await self._finalize_image(), commit_sha=commit_sha, built_at=datetime.utcnow()
         )
 
         self.images[repo_url] = image
@@ -239,6 +238,7 @@ class WarmSandbox:
     Use when: tracking warm pool inventory and claiming a sandbox
     for an incoming user session.
     """
+
     sandbox: Sandbox
     repo_url: str
     created_at: datetime
@@ -255,10 +255,7 @@ class WarmPoolManager:
     """
 
     def __init__(
-        self,
-        image_builder: ImageBuilder,
-        target_pool_size: int = 3,
-        max_age: timedelta = timedelta(minutes=25)
+        self, image_builder: ImageBuilder, target_pool_size: int = 3, max_age: timedelta = timedelta(minutes=25)
     ) -> None:
         self.image_builder = image_builder
         self.target_size = target_pool_size
@@ -330,7 +327,7 @@ class WarmPoolManager:
             repo_url=repo_url,
             created_at=datetime.utcnow(),
             image_version=image.image_id,
-            sync_complete=False
+            sync_complete=False,
         )
 
         # Start syncing to latest in background
@@ -361,7 +358,7 @@ class SandboxManager:
         self,
         repositories: list[str],
         github_app_token_provider: Callable[[], str],
-        build_interval: timedelta = timedelta(minutes=30)
+        build_interval: timedelta = timedelta(minutes=30),
     ) -> None:
         self.repositories = repositories
         self.image_builder = ImageBuilder(github_app_token_provider)
@@ -385,12 +382,7 @@ class SandboxManager:
 
             await asyncio.sleep(self.build_interval.total_seconds())
 
-    async def start_session(
-        self,
-        repo_url: str,
-        user: UserIdentity,
-        snapshot_id: Optional[str] = None
-    ) -> Sandbox:
+    async def start_session(self, repo_url: str, user: UserIdentity, snapshot_id: Optional[str] = None) -> Sandbox:
         """Start a new session for a user.
 
         Use when: a user submits a prompt. Tries warm pool first,
@@ -453,21 +445,13 @@ class SandboxManager:
 
         return snapshot_id
 
-    async def _configure_for_user(
-        self,
-        sandbox: Sandbox,
-        user: UserIdentity
-    ) -> None:
+    async def _configure_for_user(self, sandbox: Sandbox, user: UserIdentity) -> None:
         """Configure sandbox for a specific user."""
         sandbox.current_user = user
 
         # Set git identity
-        await sandbox.execute_command(
-            f'git config user.name "{user.name}"'
-        )
-        await sandbox.execute_command(
-            f'git config user.email "{user.email}"'
-        )
+        await sandbox.execute_command(f'git config user.name "{user.name}"')
+        await sandbox.execute_command(f'git config user.email "{user.email}"')
 
     async def _wait_for_sync(self, warm: WarmSandbox) -> None:
         """Wait for sync to complete."""
@@ -534,6 +518,7 @@ class AgentSession:
 
 
 if __name__ == "__main__":
+
     async def _demo() -> None:
         """Demonstrate sandbox manager usage end-to-end."""
 
@@ -544,12 +529,8 @@ if __name__ == "__main__":
 
         # Initialize manager with target repositories
         manager = SandboxManager(
-            repositories=[
-                "myorg/frontend",
-                "myorg/backend",
-                "myorg/shared-libs"
-            ],
-            github_app_token_provider=get_github_token
+            repositories=["myorg/frontend", "myorg/backend", "myorg/shared-libs"],
+            github_app_token_provider=get_github_token,
         )
 
         # Start background build loop
@@ -557,10 +538,7 @@ if __name__ == "__main__":
 
         # Simulate user session
         user = UserIdentity(
-            id="user123",
-            name="Alice Developer",
-            email="alice@example.com",
-            github_token="gho_user_token"
+            id="user123", name="Alice Developer", email="alice@example.com", github_token="gho_user_token"
         )
 
         # User starts typing -- predictively warm a sandbox

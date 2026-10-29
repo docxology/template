@@ -196,16 +196,11 @@ class SupervisorAgent:
         candidates = [
             wid
             for wid, info in self.workers.items()
-            if info["status"] == "available"
-            and required_capability in info["capabilities"]
+            if info["status"] == "available" and required_capability in info["capabilities"]
         ]
 
         if not candidates:
-            candidates = [
-                wid
-                for wid, info in self.workers.items()
-                if info["status"] == "available"
-            ]
+            candidates = [wid for wid, info in self.workers.items() if info["status"] == "available"]
 
         if not candidates:
             raise ValueError("No available workers")
@@ -215,18 +210,10 @@ class SupervisorAgent:
             key=lambda w: self.workers[w]["metrics"]["tasks_completed"],
         )
 
-    def aggregate_results(
-        self, subtask_results: List[Dict[str, Any]]
-    ) -> Dict[str, Any]:
+    def aggregate_results(self, subtask_results: List[Dict[str, Any]]) -> Dict[str, Any]:
         """Aggregate results from completed subtasks."""
-        summaries = [
-            r.get("summary", "")
-            for r in subtask_results
-            if r.get("success")
-        ]
-        successful = sum(
-            1 for r in subtask_results if r.get("success", False)
-        )
+        summaries = [r.get("summary", "") for r in subtask_results if r.get("success")]
+        successful = sum(1 for r in subtask_results if r.get("success", False))
         quality = successful / len(subtask_results) if subtask_results else 0.0
 
         return {
@@ -280,9 +267,7 @@ class SupervisorAgent:
             "success": final_result["quality_score"] >= 0.8,
         }
 
-    def _simulate_worker_response(
-        self, worker_id: str, subtask: Dict[str, Any]
-    ) -> Dict[str, Any]:
+    def _simulate_worker_response(self, worker_id: str, subtask: Dict[str, Any]) -> Dict[str, Any]:
         """Simulate a worker completing a subtask.
 
         In production, replace with actual agent execution that sends
@@ -377,9 +362,7 @@ class HandoffProtocol:
         ack = self.communication.receive(from_agent)
 
         return any(
-            m.message_type == MessageType.RESPONSE
-            and m.content.get("status") == "handoff_received"
-            for m in ack
+            m.message_type == MessageType.RESPONSE and m.content.get("status") == "handoff_received" for m in ack
         )
 
 
@@ -400,9 +383,7 @@ class ConsensusManager:
         self.votes: Dict[str, List[Dict[str, Any]]] = {}
         self.debates: Dict[str, List[Dict[str, Any]]] = {}
 
-    def initiate_vote(
-        self, topic_id: str, agents: List[str], options: List[str]
-    ) -> None:
+    def initiate_vote(self, topic_id: str, agents: List[str], options: List[str]) -> None:
         """Initiate a voting round on a topic."""
         self.votes[topic_id] = [
             {
@@ -442,9 +423,7 @@ class ConsensusManager:
         if topic_id not in self.votes:
             raise ValueError(f"Unknown topic: {topic_id}")
 
-        votes = [
-            v for v in self.votes[topic_id] if v.get("status") == "cast"
-        ]
+        votes = [v for v in self.votes[topic_id] if v.get("status") == "cast"]
 
         if not votes:
             return {"status": "no_votes", "result": None}
@@ -461,9 +440,7 @@ class ConsensusManager:
         results: Dict[str, Dict[str, Any]] = {}
         for selection, selection_votes in selections.items():
             weighted_sum = sum(v["confidence"] for v in selection_votes)
-            avg_confidence = (
-                weighted_sum / len(selection_votes) if selection_votes else 0.0
-            )
+            avg_confidence = weighted_sum / len(selection_votes) if selection_votes else 0.0
             results[selection] = {
                 "weighted_score": weighted_sum,
                 "avg_confidence": avg_confidence,
@@ -476,9 +453,7 @@ class ConsensusManager:
             "status": "complete",
             "result": winner,
             "details": results,
-            "consensus_strength": (
-                results[winner]["weighted_score"] / len(votes) if votes else 0.0
-            ),
+            "consensus_strength": (results[winner]["weighted_score"] / len(votes) if votes else 0.0),
         }
 
 
@@ -505,17 +480,13 @@ class AgentFailureHandler:
         self.failure_counts: Dict[str, int] = {}
         self.circuit_breakers: Dict[str, float] = {}  # agent -> unlock time
 
-    def handle_failure(
-        self, agent_id: str, task_id: str, error: str
-    ) -> Dict[str, Any]:
+    def handle_failure(self, agent_id: str, task_id: str, error: str) -> Dict[str, Any]:
         """Handle a failure from an agent.
 
         Use when: an agent reports an error and the system must decide
         whether to retry (with backoff) or reroute to a backup agent.
         """
-        self.failure_counts[agent_id] = (
-            self.failure_counts.get(agent_id, 0) + 1
-        )
+        self.failure_counts[agent_id] = self.failure_counts.get(agent_id, 0) + 1
 
         if self.failure_counts[agent_id] >= self.max_retries:
             self._activate_circuit_breaker(agent_id)
@@ -585,10 +556,7 @@ if __name__ == "__main__":
     )
     comm.send(handoff_msg)
     received = protocol.accept_handoff("writer")
-    print(
-        f"3. Handoff from researcher -> writer: "
-        f"{'accepted' if received else 'none pending'}"
-    )
+    print(f"3. Handoff from researcher -> writer: {'accepted' if received else 'none pending'}")
 
     # 4. Consensus mechanism
     consensus = ConsensusManager()
@@ -597,10 +565,7 @@ if __name__ == "__main__":
     consensus.submit_vote("best_approach", "agent_b", "B", confidence=0.6)
     consensus.submit_vote("best_approach", "agent_c", "A", confidence=0.8)
     result = consensus.calculate_weighted_consensus("best_approach")
-    print(
-        f"4. Consensus result: {result['result']} "
-        f"(strength: {result['consensus_strength']:.2f})"
-    )
+    print(f"4. Consensus result: {result['result']} (strength: {result['consensus_strength']:.2f})")
 
     # 5. Failure handling
     handler = AgentFailureHandler(comm, max_retries=3)

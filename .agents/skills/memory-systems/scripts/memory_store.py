@@ -94,8 +94,7 @@ class VectorStore:
         scores: List[tuple[int, float]] = []
         for i, vec in enumerate(self.vectors):
             score: float = float(
-                np.dot(query_embedding, vec)
-                / (np.linalg.norm(query_embedding) * np.linalg.norm(vec) + 1e-8)
+                np.dot(query_embedding, vec) / (np.linalg.norm(query_embedding) * np.linalg.norm(vec) + 1e-8)
             )
 
             # Apply filters
@@ -120,9 +119,7 @@ class VectorStore:
 
         return results
 
-    def search_by_entity(
-        self, entity: str, query: str = "", limit: int = 5
-    ) -> List[Dict[str, Any]]:
+    def search_by_entity(self, entity: str, query: str = "", limit: int = 5) -> List[Dict[str, Any]]:
         """Search within specific entity.
 
         Use when: the agent needs all memories associated with a known
@@ -139,21 +136,14 @@ class VectorStore:
             for i in indices:
                 vec: np.ndarray = self.vectors[i]
                 score: float = float(
-                    np.dot(query_embedding, vec)
-                    / (np.linalg.norm(query_embedding) * np.linalg.norm(vec) + 1e-8)
+                    np.dot(query_embedding, vec) / (np.linalg.norm(query_embedding) * np.linalg.norm(vec) + 1e-8)
                 )
                 scored.append((i, score, self.metadata[i]))
 
             scored.sort(key=lambda x: x[1], reverse=True)
-            return [
-                {"index": i, "score": s, "metadata": m}
-                for i, s, m in scored[:limit]
-            ]
+            return [{"index": i, "score": s, "metadata": m} for i, s, m in scored[:limit]]
         else:
-            return [
-                {"index": i, "score": 1.0, "metadata": self.metadata[i]}
-                for i in indices[:limit]
-            ]
+            return [{"index": i, "score": 1.0, "metadata": self.metadata[i]} for i in indices[:limit]]
 
     def _embed(self, text: str) -> np.ndarray:
         """Generate embedding for text.
@@ -200,9 +190,7 @@ class PropertyGraph:
         self.node_index: Dict[str, List[str]] = {}  # label -> node_ids
         self.edge_index: Dict[str, List[str]] = {}  # type -> edge_ids
 
-    def get_or_create_node(
-        self, name: str, label: str = "Entity", properties: Optional[Dict[str, Any]] = None
-    ) -> str:
+    def get_or_create_node(self, name: str, label: str = "Entity", properties: Optional[Dict[str, Any]] = None) -> str:
         """Get existing node by name, or create a new one.
 
         Use when: storing an entity that may already exist. The entity
@@ -309,9 +297,7 @@ class PropertyGraph:
         """Get node by ID."""
         return self.nodes.get(node_id)
 
-    def get_relationships(
-        self, node_id: str, direction: str = "both"
-    ) -> List[Dict[str, Any]]:
+    def get_relationships(self, node_id: str, direction: str = "both") -> List[Dict[str, Any]]:
         """Get relationships for a node.
 
         Use when: retrieving all connections for a given entity to build
@@ -362,21 +348,15 @@ class TemporalKnowledgeGraph(PropertyGraph):
         Use when: recording a fact that has a known start time and
         may expire (e.g., employment, address, subscription status).
         """
-        edge_id: str = super().create_relationship(
-            source_id, rel_type, target_id, properties
-        )
+        edge_id: str = super().create_relationship(source_id, rel_type, target_id, properties)
 
         # Add temporal properties
         self.edges[edge_id]["valid_from"] = valid_from.isoformat()
-        self.edges[edge_id]["valid_until"] = (
-            valid_until.isoformat() if valid_until else None
-        )
+        self.edges[edge_id]["valid_until"] = valid_until.isoformat() if valid_until else None
 
         return edge_id
 
-    def query_at_time(
-        self, query: Dict[str, Any], query_time: datetime
-    ) -> List[Dict[str, Any]]:
+    def query_at_time(self, query: Dict[str, Any], query_time: datetime) -> List[Dict[str, Any]]:
         """Query graph state at specific time.
 
         Use when: answering point-in-time questions about entities
@@ -389,9 +369,7 @@ class TemporalKnowledgeGraph(PropertyGraph):
 
         for result in base_results:
             edge: Dict[str, Any] = result["edge"]
-            valid_from: datetime = datetime.fromisoformat(
-                edge.get("valid_from", "1970-01-01")
-            )
+            valid_from: datetime = datetime.fromisoformat(edge.get("valid_from", "1970-01-01"))
             valid_until: Optional[str] = edge.get("valid_until")
 
             # Check temporal validity
@@ -424,15 +402,11 @@ class TemporalKnowledgeGraph(PropertyGraph):
 
         for result in base_results:
             edge: Dict[str, Any] = result["edge"]
-            valid_from: datetime = datetime.fromisoformat(
-                edge.get("valid_from", "1970-01-01")
-            )
+            valid_from: datetime = datetime.fromisoformat(edge.get("valid_from", "1970-01-01"))
             valid_until: Optional[str] = edge.get("valid_until")
 
             # Check if overlaps with query range
-            until_dt: datetime = (
-                datetime.fromisoformat(valid_until) if valid_until else datetime.max
-            )
+            until_dt: datetime = datetime.fromisoformat(valid_until) if valid_until else datetime.max
 
             if until_dt >= start_time and valid_from <= end_time:
                 results.append(
@@ -530,9 +504,7 @@ class IntegratedMemorySystem:
         if entity_filter:
             filters["entity"] = entity_filter
 
-        results: List[Dict[str, Any]] = self.vector_store.search(
-            query, limit=limit, filters=filters
-        )
+        results: List[Dict[str, Any]] = self.vector_store.search(query, limit=limit, filters=filters)
 
         # Enrich with graph relationships
         for result in results:
@@ -554,19 +526,13 @@ class IntegratedMemorySystem:
         node_id: Optional[str] = self.graph.entity_registry.get(entity)
 
         # Get entity node
-        entity_node: Optional[Dict[str, Any]] = (
-            self.graph.get_node(node_id) if node_id else None
-        )
+        entity_node: Optional[Dict[str, Any]] = self.graph.get_node(node_id) if node_id else None
 
         # Get relationships
-        relationships: List[Dict[str, Any]] = (
-            self.graph.get_relationships(node_id) if node_id else []
-        )
+        relationships: List[Dict[str, Any]] = self.graph.get_relationships(node_id) if node_id else []
 
         # Get vector memories
-        memories: List[Dict[str, Any]] = self.vector_store.search_by_entity(
-            entity, limit=10
-        )
+        memories: List[Dict[str, Any]] = self.vector_store.search_by_entity(entity, limit=10)
 
         return {
             "entity": entity_node,
@@ -611,5 +577,4 @@ if __name__ == "__main__":
 
     # Entity context
     context = mem.retrieve_entity_context("Alice")
-    print(f"\nAlice context: {len(context['relationships'])} relationships, "
-          f"{len(context['memories'])} memories")
+    print(f"\nAlice context: {len(context['relationships'])} relationships, {len(context['memories'])} memories")

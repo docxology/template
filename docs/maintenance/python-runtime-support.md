@@ -20,6 +20,17 @@ retains its direct project dependency and complete required test selection;
 core availability does not establish optional-feature qualification. Each
 selected minor still needs compatible locked dependencies and actual execution.
 
+A locked release can carry wheels for one supported minor only. PyYAML 6.0.3
+publishes cp314 wheels and no cp315 wheel, so the installed matrix nominates the
+locked sdist for that target minor instead of its registry requirement
+(`infrastructure.project.locked_dependency_export` with `--minor`), builds the
+wheel once into the warm cache, and still installs offline with `--no-build`
+and exact hashes. The current 3.15 source builds are PyYAML, wordcloud and
+regex; a release with neither a compatible wheel nor a locked sdist is refused
+rather than silently built from an unpinned source. Pins that predate the cp315
+wheel set (torch, triton, cuda-bindings, hypothesis in four exemplars) are
+refreshed rather than bypassed.
+
 Root `pyproject.toml` and `infrastructure._version.__version__` must agree. The
 root release contract rejects a mismatched runtime version, a wrong tag, or a
 missing release-intent changelog heading. For a coordinated root SDK version

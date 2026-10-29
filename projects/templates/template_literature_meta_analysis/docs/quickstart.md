@@ -8,7 +8,7 @@ bundled default term is **`modafinil`**; change one config key to re-target any 
 
 ## Prerequisites
 
-- Python 3.10 or higher
+- Python 3.14 (3.14 and 3.15 are the supported minors)
 - [`uv`](https://github.com/astral-sh/uv) package manager (repo invariant — see the root `CLAUDE.md`)
 - Git
 - Network access for the live search stage (arXiv, OpenAlex, Crossref, PubMed are keyless;

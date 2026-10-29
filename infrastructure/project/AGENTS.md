@@ -111,9 +111,10 @@ Implements the private-projects sidecar symlink sync documented in root `CLAUDE.
 - `package_discovery.discover_import_targets(src_root)` describes static source
   import targets without executing or installing project code.
 - `installed_acceptance.run_installed_acceptance(...)` executes genuine admitted
-  root/public wheels across Python3.14/3.15 with locked transitives and declared
-  provider topology. The complete selection is78 cells; a diagnostic subset
-  cannot establish complete-matrix acceptance.
+  root/public wheels across Python 3.14/3.15 with locked transitives and declared
+  provider topology. The complete selection is 52 cells (root plus 25 exemplars
+  on 3.14 and 3.15); a diagnostic subset cannot establish complete-matrix
+  acceptance.
 - Thin gate: `scripts/gates/installed_public.py`; select each installed minor with
   repeated `--python MINOR=/absolute/env/bin/python`, nominate the candidate build
   epoch/provenance, and retain a fresh ignored evidence directory. See
@@ -121,10 +122,13 @@ Implements the private-projects sidecar symlink sync documented in root `CLAUDE.
 - `copy_exemplar`/`export_exemplar` remain the canonical source/resource copying
   APIs. A source export or source-path import is distinct from installed evidence.
 - `locked_dependency_export.normalize_locked_dependency_export(metadata_root,
-  requirements)` binds a wheel-less registry requirement to the same frozen
-  scope's exact public PyPI sdist URL and original SHA256. The required hosted
-  warmers, `installed_acceptance_runtime.install_runtime`, and native installed
-  preparation share this internal transform. It preserves exact versions,
+  requirements, minor=...)` binds a registry requirement to the same frozen
+  scope's exact public PyPI sdist URL and original SHA256. A locked release is
+  nominated when it carries no wheels at all, and — with `minor` set — when none
+  of its locked wheels can install on that target interpreter (PyYAML 6.0.3
+  publishes cp314 wheels and no cp315 wheel). The required hosted warmers,
+  `installed_acceptance_runtime.install_runtime` (which forwards the cell minor),
+  and native installed preparation share this internal transform. It preserves exact versions,
   markers, extras and other requirement rows; ambiguous locks, alternate URLs,
   hash differences and linked files fail closed. Cold installation retains
   `--offline --no-config --no-build --require-hashes`. Prepare in a fresh private

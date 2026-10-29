@@ -1,4 +1,5 @@
 """Auto-generated analysis entry point for optimization."""
+
 # spec_hash: 683943ab1b437ce6  grammar_hash: 484f85e003a8825a
 # seed: 42  track: analytical  section_set: standard
 from primitives import collect_primitives
