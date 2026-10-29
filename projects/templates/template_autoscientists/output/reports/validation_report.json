@@ -85,7 +85,7 @@
         },
         "web": {
           "exists": true,
-          "file_count": 13,
+          "file_count": 12,
           "largest_file": "source-web-fonts.js",
           "largest_file_path": "web/assets/source-web-fonts.js",
           "size_mb": "2.15"
@@ -97,7 +97,7 @@
         "pdf": 1,
         "release": 2,
         "reports": 3,
-        "web": 13
+        "web": 12
       },
       "inventory_mode": "stable-shippable-output-v1",
       "issues_by_severity": {
@@ -197,7 +197,7 @@
           },
           "web": {
             "exists": true,
-            "files": 13,
+            "files": 12,
             "optional": false,
             "readable": true,
             "required": true,
@@ -211,7 +211,7 @@
         "valid": true,
         "warnings": []
       },
-      "total_size_mb": 2.6011428833007812
+      "total_size_mb": 2.601027488708496
     },
     "figures": {
       "files": 4,
@@ -262,12 +262,12 @@
     "passed": 9,
     "total_checks": 9
   },
-  "timestamp": "2026-10-29T20:01:36Z",
+  "timestamp": "2026-10-29T21:28:46Z",
   "validated_inputs": {
     "artifact_manifest": {
       "path": "output/reports/artifact_manifest.json",
-      "sha256": "186864c151e79b4d0a0b081ae4d85b537f01be1ddf0d9e647621fe87e5c2a6c4",
-      "size_bytes": 8489
+      "sha256": "147437a9e3a85842a9b509da9c28a632ee560559295d609f59622b03e557facf",
+      "size_bytes": 8515
     },
     "combined_manuscript": {
       "path": "output/web/_combined_manuscript.md",
@@ -342,7 +342,7 @@
       },
       "output": {
         "file_count": 26,
-        "sha256": "05079cbf81fb85e4eee01562d7e1437a558ea5dd1cfa00d6fbd287706393b822"
+        "sha256": "98a4356a9e07a4969944f1a87bb2114156afb87a138c5d5b343ef1c801a32236"
       },
       "source": {
         "file_count": 40,
@@ -350,7 +350,7 @@
       },
       "stage": {
         "file_count": 1464,
-        "sha256": "5c657d3ea5308c456e765176c70edb167fbbf9ec60069dbec566d236c3e51916"
+        "sha256": "df4065d8fc098db7c78a11b5fb3f8dd5c323199cb23d2c542371a990a96509b5"
       }
     },
     "project": "templates/template_autoscientists",

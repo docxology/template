@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import re
 import subprocess
 import sys
 from pathlib import Path
@@ -536,7 +537,10 @@ def test_fork_sdk_source_version_only_keeps_the_pin_and_drops_the_source(tmp_pat
         sdk_source="version-only",
     )
     text = (destination / "pyproject.toml").read_text(encoding="utf-8")
-    assert '"research-project-template==4.3.0"' in text
+    source = (REPO_ROOT / "projects/templates/template_code_project/pyproject.toml").read_text(encoding="utf-8")
+    pin = re.search(r'"research-project-template==([^"]+)"', source)
+    assert pin is not None
+    assert f'"research-project-template=={pin.group(1)}"' in text
     assert "research-project-template = {" not in text
 
 

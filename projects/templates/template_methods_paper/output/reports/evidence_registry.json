@@ -1,16 +1,16 @@
 {
   "claim_boundary": "Compact evidence summary for manuscript validation; full fact dumps are opt-in debug output.",
-  "fact_count": 295,
+  "fact_count": 298,
   "freshness_warnings": [],
   "kind_counts": {
-    "artifact": 59,
+    "artifact": 60,
     "citation": 6,
     "figure": 5,
-    "number": 204,
+    "number": 206,
     "section": 18,
     "table": 3
   },
-  "omitted_fact_count": 95,
+  "omitted_fact_count": 98,
   "sample_facts": [
     {
       "active": true,
@@ -314,6 +314,18 @@
     },
     {
       "active": true,
+      "checked_at": "2026-10-29T21:28:46Z",
+      "kind": "number",
+      "source": "output/reports/cleanup_report.json:$.skipped_tracked_count",
+      "source_field": "$.skipped_tracked_count",
+      "source_path": "output/reports/cleanup_report.json",
+      "source_tier": "generated_metric",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "64"
+    },
+    {
+      "active": true,
       "checked_at": "2026-09-10T16:33:18Z",
       "kind": "number",
       "source": "projects/templates/template_methods_paper/src/template_methods_paper/methods_dsl/trust.py _GENESIS_HASH (\"0\" * 64)",
@@ -332,6 +344,18 @@
       "source_field": "$.claims[2].value",
       "source_path": "data/claim_ledger.yaml",
       "source_tier": "configuration",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "0.64"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-10-29T21:28:46Z",
+      "kind": "number",
+      "source": "output/reports/cleanup_report.json:$.skipped_tracked_count (numeric variant)",
+      "source_field": "$.skipped_tracked_count",
+      "source_path": "output/reports/cleanup_report.json",
+      "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
       "value": "0.64"
@@ -2387,38 +2411,14 @@
       "stale": false,
       "tolerance": 0.0,
       "value": "1.1"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-08-14T14:20:53Z",
-      "kind": "number",
-      "source": "output/reports/test_results.json:$.project.coverage_percent",
-      "source_field": "$.project.coverage_percent",
-      "source_path": "output/reports/test_results.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "98.98"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-08-14T14:20:53Z",
-      "kind": "number",
-      "source": "output/reports/test_results.json:$.summary.project_coverage",
-      "source_field": "$.summary.project_coverage",
-      "source_path": "output/reports/test_results.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "98.98"
     }
   ],
   "schema": "template-evidence-registry-report-v1",
   "source_tiers": {
-    "artifact": 85,
+    "artifact": 86,
     "bibliography": 6,
     "configuration": 27,
-    "generated_metric": 164,
+    "generated_metric": 166,
     "project_source": 13
   }
 }

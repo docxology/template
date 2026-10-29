@@ -137,7 +137,10 @@ def infrastructure_shards(root: Path, changed: tuple[str, ...] = (), count: int 
         # wall time is bounded by the heaviest shard, and one long module must
         # not own it. The module cap still bounds per-job startup cost and the
         # job ceiling bounds hosted concurrency.
-        target = float(os.environ.get("TEMPLATE_CI_SHARD_TARGET_SECONDS", AUTOMATIC_SHARD_TARGET_SECONDS) or 0) or AUTOMATIC_SHARD_TARGET_SECONDS
+        target = (
+            float(os.environ.get("TEMPLATE_CI_SHARD_TARGET_SECONDS", AUTOMATIC_SHARD_TARGET_SECONDS) or 0)
+            or AUTOMATIC_SHARD_TARGET_SECONDS
+        )
         total = sum(weights.values())
         by_load = max(1, math.ceil(total / target)) if target > 0 else 1
         by_cap = (len(files) + AUTOMATIC_SHARD_MAX_MODULES - 1) // AUTOMATIC_SHARD_MAX_MODULES
