@@ -250,11 +250,11 @@
     "passed": 9,
     "total_checks": 9
   },
-  "timestamp": "2026-10-29T02:26:54Z",
+  "timestamp": "2026-10-29T15:39:02Z",
   "validated_inputs": {
     "artifact_manifest": {
       "path": "output/reports/artifact_manifest.json",
-      "sha256": "88fd7efd914b3468db733c17e87af2b247f73e7468e024a94765841b96d879dd",
+      "sha256": "deda6915bc0a19391b936f9b0ac6a707bdea09c839bdcb19d1b15b9d4f74b349",
       "size_bytes": 11174
     },
     "combined_manuscript": {
@@ -330,7 +330,7 @@
       },
       "output": {
         "file_count": 34,
-        "sha256": "b168fdbb9fe9e5023d335db13ce4005a8c021fbc6278d3a7c6b702849cea17cc"
+        "sha256": "f10beaf104785c7d7b2a24ce32c9a9e43e2a6720e584a7b5ce9617cfb2b2c769"
       },
       "source": {
         "file_count": 39,
@@ -338,7 +338,7 @@
       },
       "stage": {
         "file_count": 1932,
-        "sha256": "65a9fb16b00fd871f132a269f9a29dbc32a858033f98908957f862950f0f9ad8"
+        "sha256": "ec94b178a6c52d20918748b0e382fe961ae9237f7e82d55eefc380426595b9a1"
       }
     },
     "project": "templates/template_eda_notebook",

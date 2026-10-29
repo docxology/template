@@ -310,11 +310,11 @@
     "passed": 9,
     "total_checks": 9
   },
-  "timestamp": "2026-10-29T02:26:54Z",
+  "timestamp": "2026-10-29T15:39:02Z",
   "validated_inputs": {
     "artifact_manifest": {
       "path": "output/reports/artifact_manifest.json",
-      "sha256": "75233c565ff1f77c8443e09bb9a540711d36e60550998e7a377cd4aab28d5690",
+      "sha256": "234ae82ece7d46cd555b7ba692e06ef0ac77f43dcee4af2a151c812c275ee069",
       "size_bytes": 18981
     },
     "combined_manuscript": {
@@ -396,7 +396,7 @@
       },
       "output": {
         "file_count": 58,
-        "sha256": "00f04af10a0df00693a7d8ef5765efefc34c932fbf83b79b2f28c9699e3d4fc4"
+        "sha256": "0c2bf9600e4372739200dadb14a4a85a6aa802fe455ec56da112d77eb0d00cfe"
       },
       "source": {
         "file_count": 33,
@@ -404,7 +404,7 @@
       },
       "stage": {
         "file_count": 1932,
-        "sha256": "65a9fb16b00fd871f132a269f9a29dbc32a858033f98908957f862950f0f9ad8"
+        "sha256": "ec94b178a6c52d20918748b0e382fe961ae9237f7e82d55eefc380426595b9a1"
       }
     },
     "project": "templates/template_prose_project",
