@@ -26,6 +26,14 @@ def _lock(
     ).encode()
 
 
+def _lock_with_wheels(*wheels: str) -> bytes:
+    table = "\nwheels = [" + "".join(f'\n    {{ url = "{wheel}" }},' for wheel in wheels) + "\n]\n" if wheels else ""
+    return (
+        'version = 1\n[[package]]\nname = "control-package"\nversion = "1.2.3"\n'
+        f'source = {{ registry = "https://pypi.org/simple" }}\nsdist = {{ url = "{URL}", hash = "{DIGEST}" }}' + table
+    ).encode()
+
+
 def _requirements(header: str = "control-package==1.2.3", digest: str = DIGEST) -> bytes:
     return f"{header} \\\n    --hash={digest}\n".encode()
 
@@ -128,3 +136,32 @@ def test_symlinked_lock_and_output_refused_without_modifying_target(tmp_path: Pa
     with pytest.raises((ValueError, OSError)):
         exporter.normalize_locked_dependency_export(metadata, linked)
     assert requirements.read_bytes() == _requirements()
+
+
+def test_locked_wheel_for_another_minor_is_nominated_per_target() -> None:
+    lock = _lock_with_wheels(
+        "https://files.pythonhosted.org/packages/control_package-1.2.3-cp314-cp314-macosx_11_0_arm64.whl"
+    )
+    original = _requirements()
+    assert exporter.normalize_locked_sdist_requirements(lock, original, minor="3.15") == (
+        f"control-package @ {URL} --hash={DIGEST}\n".encode()
+    )
+    assert exporter.normalize_locked_sdist_requirements(lock, original, minor="3.14") == original
+
+
+def test_pure_and_abi3_wheels_still_serve_later_minors() -> None:
+    pure = _lock_with_wheels("https://files.pythonhosted.org/packages/control_package-1.2.3-py3-none-any.whl")
+    abi3 = _lock_with_wheels(
+        "https://files.pythonhosted.org/packages/control_package-1.2.3-cp314-abi3-macosx_11_0_arm64.whl"
+    )
+    original = _requirements()
+    assert exporter.normalize_locked_sdist_requirements(pure, original, minor="3.15") == original
+    assert exporter.normalize_locked_sdist_requirements(abi3, original, minor="3.15") == original
+    assert exporter.normalize_locked_sdist_requirements(abi3, original, minor="3.13") == (
+        f"control-package @ {URL} --hash={DIGEST}\n".encode()
+    )
+
+
+def test_target_minor_must_be_a_cpython_minor() -> None:
+    with pytest.raises(ValueError, match="minor"):
+        exporter.normalize_locked_sdist_requirements(_lock(), _requirements(), minor="3.x")
