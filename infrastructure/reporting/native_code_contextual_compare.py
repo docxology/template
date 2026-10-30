@@ -25,9 +25,7 @@ from infrastructure.rendering.manuscript_composition import (
 from infrastructure.rendering.manuscript_hydration_replay import (
     reconstruct_shared_hydration,
     require_shared_hydration,
-    combine_held_manuscripts,
 )
-from infrastructure.rendering._web_markdown_preprocess import html_safe_markdown
 from infrastructure.reporting.native_analysis_semantic_compare import (
     native_analysis_semantics,
     native_hydration_semantics,
@@ -41,7 +39,7 @@ from infrastructure.reporting.native_code_metadata_domains import (
     _registered_metadata_origin,
     validate_metadata_observation,
 )
-from infrastructure.reporting.native_hydration_reconstruction import _pdf_body
+from infrastructure.reporting.native_hydration_reconstruction import _pdf_body, _combined_body
 from infrastructure.reporting.native_selected_manuscript_transforms import reconstruct_transmission_bookend
 from infrastructure.reporting.native_source_external_admission import NativeSourceContext
 from infrastructure.reporting.release_readiness_snapshot import ArtifactSnapshot, SnapshotReader
@@ -231,15 +229,9 @@ def code_contextual_semantics(
         raise ValueError("Code contextual Source recomposition cannot normalize unsupported generated assets")
     combined = _held(hydration["combined"], reader)
     algorithm = hydration["algorithm"]
-    if algorithm not in {"web-renderer-combine-v1", "shared-combined-markdown-v1"}:
-        raise ValueError("Code contextual projection changed its actual Source composition algorithm")
-    canonical_combined = (
-        html_safe_markdown(
-            combine_held_manuscripts(tuple(bodies), separator="\n---\n\n").decode(), render_citations=False
-        ).encode()
-        if algorithm == "web-renderer-combine-v1"
-        else canonical_pdf
-    )
+    canonical_combined = _combined_body(algorithm, tuple(bodies), settings, canonical_pdf)
+    if canonical_combined is None:
+        raise ValueError("Code contextual projection lacks complete actual Source composition bytes")
     combined_binding = retain(combined, canonical_combined)
     composition = _held(hydration["composition"], reader)
     raw_composition = composition.json_object()

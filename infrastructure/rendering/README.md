@@ -1439,3 +1439,35 @@ uv run pytest tests/infra_tests/rendering/test_pdf_renderer_fixes.py -v
 # Run with coverage
 uv run pytest tests/infra_tests/rendering/ --cov=infrastructure.rendering
 ```
+
+## Ordered paper frontmatter
+
+A paper may declare `paper.frontmatter: ["00a_plate.md", "00b_plate.md"]`.
+The renderer resolves one typed layout for combined outputs: cover, one physical
+page for each declared source, one contents page, then the ordinary body. The
+complete input inventory still feeds individual derivatives. Direct
+`RenderManager.render_combined_pdf` and `render_combined_web` calls use the same
+resolver; HTML-only and shared composition do not depend on a prior PDF.
+
+Each declared source contains one level-one heading and one complete captioned,
+labeled Markdown figure. Sources must be unique, regular, confined `.md` files
+in the supplied inventory. Metadata files, traversal, physical aliases, missing
+sources/images, reserved layout identifiers, book titles, and enabled or stale
+transmission bookends refuse admission. Existing configurations without the
+field retain their supported behavior.
+
+The PDF writer keeps one Pandoc/filter pass. Each frontmatter heading, image and
+full caption is boxed at the existing font sizes and measured against the page;
+figures cannot float out, images preserve aspect ratio, and overflow fails the
+compiler gate. `rendering.front_matter_figure_height_fraction` applies to every
+frontmatter image. HTML retains the whole-pass figure numbering, concise registry
+alternatives and long descriptions, copies the configured cover with its alt,
+and moves the actual unique TOC element by its structural identity. Export the
+complete web directory so shared font assets remain available.
+
+Opt-in receipts identify `web-renderer-paper-frontmatter-v1` or
+`shared-paper-frontmatter-markdown-v1`. Existing algorithm names retain their
+previous bytes. Both reporting reconstruction consumers rebuild the selected
+algorithm rather than accepting a new name for legacy composition. These are
+composition and engineering guarantees; they do not establish scientific,
+publication, tagged-PDF or accessibility conformance acceptance.

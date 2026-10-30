@@ -370,3 +370,15 @@ definitions inside `IfFileExists` arguments. Compiler nonzero exits remain
 failures even when TeX writes a structurally valid PDF; no log signature grants
 an error waiver. Real article/Beamer and erroneous-document controls live in
 `tests/infra_tests/rendering/test_latex_texttt_native.py`.
+
+Paper frontmatter is owned by `_paper_frontmatter.py` (strict layout and held-byte
+composition) and `_paper_frontmatter_render.py` (measured PDF regions and HTML
+structural placement). Carry the admitted `PaperLayout` through Stage03 and the
+existing RenderManager combined methods. Keep one whole-document Pandoc pass,
+exact-once source partitioning, full captions and registry alternatives; reject
+missing/reordered boundaries and measured overflow. Preserve no-frontmatter
+behavior and original composition algorithm meanings. See
+[ordered paper frontmatter](README.md#ordered-paper-frontmatter) and the focused
+real-file tests in `test_paper_frontmatter.py` and
+`test_paper_frontmatter_reconstruction.py`. Final native/source-current and
+independent acceptance remain separate from a development fixture.

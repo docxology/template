@@ -25,6 +25,10 @@ from infrastructure.rendering._combined_exports import combined_source_files
 from infrastructure.rendering._pdf_combined_markdown import preprocess_combined_markdown
 from infrastructure.rendering._pdf_mermaid import _MERMAID_BLOCK_RE
 from infrastructure.rendering._pdf_title_page_config import _rendering_options
+from infrastructure.rendering._paper_frontmatter import (
+    declared_frontmatter,
+    compose_frontmatter,
+)
 from infrastructure.rendering.manuscript_composition import COMPOSITION_RELATIVE_PATH, read_manuscript_composition
 from infrastructure.rendering.manuscript_discovery import discover_manuscript_files
 from infrastructure.rendering.manuscript_hydration_replay import combine_held_manuscripts, require_shared_hydration
@@ -77,7 +81,12 @@ def _pdf_body(
     externally authenticated replay, never by deserializing its graph hash.
     """
     separator = "\n```{=latex}\n\\newpage\n```\n" if _rendering_options(settings)["section_breaks"] else ""
-    joined = combine_held_manuscripts(bodies, separator=separator)
+    names = declared_frontmatter(settings)
+    joined = (
+        compose_frontmatter(bodies, len(names), separator).encode()
+        if names
+        else combine_held_manuscripts(bodies, separator=separator)
+    )
     rewritten, mermaid_rows, mermaid_gaps = reconstruct_inline_mermaid_source(joined, scope, reader, deadline=deadline)
     if rewritten is None:
         return None, mermaid_rows, mermaid_gaps
@@ -90,6 +99,38 @@ def _pdf_body(
         body = preprocess_combined_markdown(rewritten.decode(), manuscript_dir=work).content.encode()
     remaining(deadline)
     return body, mermaid_rows, mermaid_gaps
+
+
+def _combined_body(
+    algorithm: str,
+    bodies: tuple[bytes, ...],
+    settings: dict[str, Any] | None,
+    pdf_body: bytes | None,
+) -> bytes | None:
+    """Reconstruct exactly the named composition; old identifiers keep their bytes."""
+    names = declared_frontmatter(settings)
+    match algorithm:
+        case "web-renderer-combine-v1":
+            if names:
+                raise ValueError("legacy web composition cannot label paper.frontmatter bytes")
+            joined = combine_held_manuscripts(bodies, separator="\n---\n\n")
+            return html_safe_markdown(joined.decode(), render_citations=False).encode()
+        case "shared-combined-markdown-v1":
+            if names:
+                raise ValueError("legacy shared composition cannot label paper.frontmatter bytes")
+            return pdf_body
+        case "web-renderer-paper-frontmatter-v1":
+            if not names:
+                raise ValueError("paper.frontmatter web composition requires its declared partition")
+            return html_safe_markdown(
+                compose_frontmatter(bodies, len(names), "\n---\n\n"), render_citations=False
+            ).encode()
+        case "shared-paper-frontmatter-markdown-v1":
+            if not names:
+                raise ValueError("paper.frontmatter shared composition requires its declared partition")
+            return pdf_body
+        case _:
+            raise ValueError("unsupported Source composition algorithm")
 
 
 def _reconstruct(
@@ -250,12 +291,7 @@ def _reconstruct(
     gaps.extend(mermaid_gaps)
     if pdf_body is None:
         gaps.append("authenticated-generated-mermaid-assets-to-combined-source-transformation")
-    reconstructed: bytes | None
-    if parsed.algorithm == "web-renderer-combine-v1":
-        joined = combine_held_manuscripts(tuple(bodies), separator="\n---\n\n")
-        reconstructed = html_safe_markdown(joined.decode(), render_citations=False).encode()
-    else:
-        reconstructed = pdf_body
+    reconstructed = _combined_body(parsed.algorithm, tuple(bodies), settings, pdf_body)
     if reconstructed is not None and reconstructed != combined.content:
         raise ValueError("native combined manuscript differs from actual complete Source composition/preprocessing")
     body = {
@@ -273,7 +309,11 @@ def _reconstruct(
         "dotted_variables": None if dotted_vars is None else _binding(dotted_vars),
         "independent_combined_sha256": None if reconstructed is None else hashlib.sha256(reconstructed).hexdigest(),
         "pdf_recomposition": {
-            "algorithm": "Source-pdf-section-break-combine-and-preprocess-v1",
+            "algorithm": (
+                "Source-pdf-paper-frontmatter-combine-and-preprocess-v1"
+                if declared_frontmatter(settings)
+                else "Source-pdf-section-break-combine-and-preprocess-v1"
+            ),
             "sha256": None if pdf_body is None else hashlib.sha256(pdf_body).hexdigest(),
             "bytes": None if pdf_body is None else len(pdf_body),
             "section_breaks": _rendering_options(settings)["section_breaks"],
