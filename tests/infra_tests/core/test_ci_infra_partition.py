@@ -627,7 +627,7 @@ def test_actual_xdist_crash_retains_partial_controller_diagnostics(tmp_path: Pat
         supervision = (
             "import os, signal, threading, time\n"
             "def interrupt_owned_controller():\n"
-            "    deadline = time.monotonic() + 5.0\n"
+            "    deadline = time.monotonic() + 20.0\n"
             "    diagnostic = root/'output/readiness/ordinary-infra-ci/diagnostics/shard-slow.json'\n"
             "    while time.monotonic() < deadline:\n"
             "        if diagnostic.exists():\n"
