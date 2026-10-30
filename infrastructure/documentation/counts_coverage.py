@@ -57,7 +57,7 @@ from infrastructure.documentation._coverage_snapshot_output import CoverageSnaps
 COVERAGE_PROVENANCE_RELATIVE_PATH = Path("docs/_generated/coverage_snapshot.json")
 COVERAGE_PROVENANCE_SCHEMA_VERSION = 5
 COVERAGE_SOURCE_INVENTORY_MODE = "tracked-and-nonignored-coverage-inputs-v3"
-EXEMPLAR_SNAPSHOT_DATE = "2026-10-27"
+EXEMPLAR_SNAPSHOT_DATE = "2026-10-30"
 COVERAGE_MEASUREMENT_TIMEOUT_SECONDS = 1800
 _ACTIVE_COVERAGE_PROJECT = "template_active_inference"
 
@@ -159,18 +159,18 @@ class ExemplarSnapshot:
 
 
 EXEMPLAR_SNAPSHOT: tuple[ExemplarSnapshot, ...] = (
-    ExemplarSnapshot("template_active_inference", "90.99 %"),
-    ExemplarSnapshot("template_advanced_literature_review", "94.20 %"),
-    ExemplarSnapshot("template_autopoiesis", "92.03 %"),
+    ExemplarSnapshot("template_active_inference", "91.00 %"),
+    ExemplarSnapshot("template_advanced_literature_review", "94.27 %"),
+    ExemplarSnapshot("template_autopoiesis", "91.88 %"),
     ExemplarSnapshot("template_autoresearch_project", "96.33 %"),
-    ExemplarSnapshot("template_autoscientists", "92.93 %"),
+    ExemplarSnapshot("template_autoscientists", "92.95 %"),
     ExemplarSnapshot("template_code_project", "94.22 %"),
     ExemplarSnapshot("template_data_descriptor", "96.26 %"),
     ExemplarSnapshot("template_eda_notebook", "91.01 %"),
     ExemplarSnapshot("template_experiment_tree", "91.85 %"),
-    ExemplarSnapshot("template_formal", "90.55 %"),
-    ExemplarSnapshot("template_gold_refinement", "91.65 %"),
-    ExemplarSnapshot("template_literature_meta_analysis", "95.57 %"),
+    ExemplarSnapshot("template_formal", "90.39 %"),
+    ExemplarSnapshot("template_gold_refinement", "92.80 %"),
+    ExemplarSnapshot("template_literature_meta_analysis", "95.50 %"),
     ExemplarSnapshot("template_madlib", "98.95 %"),
     ExemplarSnapshot("template_methods_paper", "99.00 %"),
     ExemplarSnapshot("template_newspaper", "99.25 %"),
@@ -179,11 +179,11 @@ EXEMPLAR_SNAPSHOT: tuple[ExemplarSnapshot, ...] = (
     ExemplarSnapshot("template_prose_project", "91.67 %"),
     ExemplarSnapshot("template_redacted_report", "97.03 %"),
     ExemplarSnapshot("template_registered_report", "95.19 %"),
-    ExemplarSnapshot("template_search_project", "91.88 %"),
+    ExemplarSnapshot("template_search_project", "91.89 %"),
     ExemplarSnapshot("template_sia", "92.72 %"),
     ExemplarSnapshot("template_storybook", "95.38 %"),
-    ExemplarSnapshot("template_template", "95.57 %"),
-    ExemplarSnapshot("template_textbook", "96.28 %"),
+    ExemplarSnapshot("template_template", "95.55 %"),
+    ExemplarSnapshot("template_textbook", "96.01 %"),
 )
 
 
