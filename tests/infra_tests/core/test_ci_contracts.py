@@ -66,18 +66,27 @@ def test_required_contract_job_keeps_whole_root_budget_and_explicit_empty_outcom
     browser = next(step for step in contract["steps"] if step.get("if") == "matrix.browser")
     assert converter["if"] == "matrix.documents != 'none'" and tex["if"] == "matrix.tex"
     for module in pdf_modules:
-        assert contract_preparation(module) == {"documents": "converter", "tex": True, "browser": False}
+        preparation = contract_preparation(module)
+        assert preparation["documents"] == "converter"
+        assert preparation["tex"] is True and preparation["browser"] is False
+        assert type(preparation["workers"]) is int and 0 <= preparation["workers"] <= 4
     for module in (
         "tests/infra_tests/reporting/test_native_browser_oracles.py",
         "tests/infra_tests/reporting/test_native_browser_scientific_structure.py",
     ):
-        assert contract_preparation(module) == {"documents": "converter", "tex": False, "browser": True}
+        preparation = contract_preparation(module)
+        assert preparation["documents"] == "converter"
+        assert preparation["tex"] is False and preparation["browser"] is True
+        assert type(preparation["workers"]) is int and 0 <= preparation["workers"] <= 4
     assert contract_preparation("tests/infra_tests/project/test_root_wheel_typing.py") == {
         "documents": "none",
         "tex": False,
         "browser": False,
+        "workers": 0,
     }
-    assert contract_preparation("none") == {"documents": "none", "tex": False, "browser": False}
+    preparation = contract_preparation("none")
+    assert (preparation["documents"], preparation["tex"], preparation["browser"]) == ("none", False, False)
+    assert preparation["workers"] == 0
     assert (
         contract_preparation("tests/infra_tests/project/test_public_acceptance_auxiliary.py")["documents"] == "native"
     )

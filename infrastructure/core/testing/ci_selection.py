@@ -157,7 +157,8 @@ def _contract_matrix(
     # only, never selected work, deadlines or acceptance.
     observed_seconds = load_module_durations(_REPOSITORY_ROOT) if durations is None else durations
     rows: list[dict[str, Any]] = [
-        {"shard": len(shards) + i, "module": name, **contract_preparation(name)} for i, name in enumerate(modules)
+        {"shard": len(shards) + i, "module": name, **contract_preparation(name, observed_seconds)}
+        for i, name in enumerate(modules)
     ]
     rows.sort(key=lambda row: (-observed_seconds.get(row["module"], 0), row["module"]))
     return {"include": rows or [{"shard": -1, "module": "none", **contract_preparation("none")}]}

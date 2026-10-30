@@ -308,6 +308,12 @@ def run_shard(root: Path, plan: dict, shard: int, directory: Path) -> int:
     # Full contracts use the established infrastructure harness default.
     # A CLI option preserves test markers without changing nested child environments.
     command.append("--timeout=120" if is_contract else "--timeout=60")
+    workers = os.environ.get("TEMPLATE_CI_XDIST", "").strip()
+    if workers and is_contract:
+        if not workers.isdigit() or not 1 <= int(workers) <= 8:
+            raise ValueError("TEMPLATE_CI_XDIST must be an integer between 1 and 8")
+        if int(workers) > 1:
+            command.extend(["-n", workers, "--dist", "loadgroup"])
     timeout = CONTRACT_SECONDS if is_contract else 540
     # A hard pytest exit cannot write terminal receipts. Retain its request
     # before launch; this diagnostic cannot stand in for execution outcomes.

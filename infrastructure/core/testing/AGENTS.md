@@ -33,7 +33,7 @@ See `README.md` for the module table. Key entry points:
 | --- | --- |
 | `project_test_runtime.py` | Admission of an already prepared project test interpreter; never a resolver. |
 | `local_gate.py` | One offline local entry point over the hosted commands, with `--changed`, `--list` and per-stage plans. |
-| `ci_module_durations.py` | Measured hosted module seconds from `infrastructure/config/ci-module-durations.json`, the shard load weights they drive, and the byte-size fallback for unmeasured modules. |
+| `ci_module_durations.py` | Measured hosted module seconds from `infrastructure/config/ci-module-durations.json`, the shard load weights they drive, the byte-size fallback for unmeasured modules, and the `pytest-xdist` worker budget `ci_contracts.contract_preparation` derives from them. |
 
 Default functional CI uses `ci_smoke.py` and the explicit `.github/project-smoke.json` selections. Full matrices and coverage union remain available in the manual hardening workflow.
 
