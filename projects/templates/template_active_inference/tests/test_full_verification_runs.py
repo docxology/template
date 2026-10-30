@@ -8,6 +8,7 @@ import os
 import signal
 import sys
 import time
+import tomllib
 import subprocess
 import json
 import venv
@@ -30,7 +31,17 @@ from orchestration.verification_execution import (
 from _coverage_partition_helpers import _write_coverage_partition_tree
 
 
+def _write_platform_declaration(root: Path) -> None:
+    """Give an owned real-child fixture the current source-declared SDK identity."""
+    metadata = Path(full_verification.__file__).resolve().parents[2] / "pyproject.toml"
+    required = tomllib.loads(metadata.read_text(encoding="utf-8"))["tool"]["template"]["platform_version"]
+    (root / "pyproject.toml").write_text(
+        "[tool.template]\nplatform_version = " + json.dumps(required) + "\n", encoding="utf-8"
+    )
+
+
 def _script_command(root: Path, source: str, *, arguments: tuple[str, ...] = ()) -> list[str]:
+    _write_platform_declaration(root)
     script = root / "scripts/command.py"
     script.parent.mkdir(parents=True, exist_ok=True)
     script.write_text(source + "\n")
@@ -431,6 +442,7 @@ def test_actual_interruption_exit_outranks_late_supervisory_deadline() -> None:
 @pytest.mark.parametrize("code,expected", [(7, 1), (124, 124), (130, 130)])
 def test_full_verifier_cli_retains_real_producer_exit_and_stops(tmp_path: Path, code: int, expected: int) -> None:
     project_root = _write_coverage_partition_tree(tmp_path)
+    _write_platform_declaration(project_root)
     source_root = Path(full_verification.__file__).parent
     package = project_root / "src/orchestration"
     package.mkdir(parents=True)
@@ -505,6 +517,7 @@ def test_verifier_composes_command_budgets_under_declared_ceiling() -> None:
 @pytest.mark.timeout(120)
 @pytest.mark.parametrize("target", ["producer", "pytest"])
 def test_full_verifier_actual_children_ignore_valid_poisoned_scientific_cache(tmp_path: Path, target: str) -> None:
+    _write_platform_declaration(tmp_path)
     source = tmp_path / "src/science.py"
     source.parent.mkdir()
     source.write_text("VALUE = 17\n")
@@ -567,6 +580,7 @@ def test_full_verifier_missing_selected_dev_stack_blocks_without_acquisition(tmp
 
 @pytest.mark.parametrize("profile", ["quick", "release", "exhaustive", None])
 def test_real_prepass_accounts_filtered_slice_and_runs_next_group(tmp_path: Path, capsys, profile) -> None:
+    _write_platform_declaration(tmp_path)
     (tmp_path / "pytest.ini").write_text(
         "[pytest]\naddopts = -v --assert=plain\nmarkers = long_running: explicit slow selection\n"
     )
@@ -593,6 +607,7 @@ def test_real_prepass_accounts_filtered_slice_and_runs_next_group(tmp_path: Path
 @pytest.mark.parametrize("profile", ["quick", "release", "exhaustive", None])
 @pytest.mark.parametrize("source,exit_code", [("", 5), ("def test_fails(): assert False\n", 1)])
 def test_real_prepass_never_accepts_missing_collection_or_failure(tmp_path: Path, profile, source, exit_code) -> None:
+    _write_platform_declaration(tmp_path)
     (tmp_path / "pytest.ini").write_text("[pytest]\naddopts = -v --assert=plain\n")
     (tmp_path / "test_case.py").write_text(source)
     with pytest.raises(VerificationCommandFailed) as error:
