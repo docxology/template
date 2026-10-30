@@ -63,9 +63,11 @@ for the canonical statement of every current claim's scope.
   package's docstrings cite.
 
 Prepared TLC providers may use the absolute `TEMPLATE_FORMAL_TLC_JAR` path when
-the local cache is absent. Keep the pinned hash and final byte custody; acquisition
-is restricted to the legacy local cache. External tool bytes are not authored
-project source. ISC-124 covers positive execution and unsafe/missing inputs.
+the project-local developer cache is absent. Keep the pinned hash and final byte custody.
+Acquisition writes only to the project's `formal/tla/tla2tools.jar` developer
+cache; prepared external providers are read-only inputs. External tool bytes
+are not authored project source. ISC-124 covers positive execution and
+unsafe/missing inputs.
 
 ## External tool receipts
 
