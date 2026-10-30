@@ -10,6 +10,7 @@ from pathlib import Path
 from typing import Any
 
 from infrastructure.core.exceptions import RenderingError, TemplateError
+from infrastructure.rendering._paper_frontmatter import PaperLayout, admit_paper_layout, SHARED_ALGORITHM
 from infrastructure.core.files.secure_write import atomic_write_text_confined
 from infrastructure.core.logging.constants import BANNER_WIDTH
 from infrastructure.core.logging.diagnostic import DiagnosticReporter, DiagnosticSeverity
@@ -101,6 +102,8 @@ def prepare_shared_combined_markdown(
     md_files: list[Path],
     manuscript_dir: Path,
     project_name: str,
+    *,
+    paper_layout: PaperLayout | None = None,
 ) -> Path:
     """Write a current combined source for exports and provenance.
 
@@ -111,7 +114,8 @@ def prepare_shared_combined_markdown(
     present to emit the cross-format composition evidence in those lanes.
     """
 
-    source_files = combined_source_files(md_files)
+    layout = admit_paper_layout(manuscript_dir, tuple(md_files), paper_layout)
+    source_files = combined_source_files(list(layout.complete))
     if not source_files:
         raise RenderingError("Cannot prepare combined manuscript without current Markdown inputs")
     profile = manager.config.security()
@@ -123,6 +127,7 @@ def prepare_shared_combined_markdown(
     combined_content = combine_manuscript_markdown_sections(
         source_files,
         section_breaks=_rendering_options(project_config)["section_breaks"],
+        paper_layout=layout if layout.frontmatter else None,
     )
     combined_content = preprocess_combined_markdown(
         combined_content,
@@ -139,7 +144,7 @@ def prepare_shared_combined_markdown(
         project_name,
         source_files,
         combined_path,
-        algorithm="shared-combined-markdown-v1",
+        algorithm=SHARED_ALGORITHM if layout.frontmatter else "shared-combined-markdown-v1",
     )
     logger.info("Prepared shared combined manuscript: %s", combined_path)
     return combined_path
@@ -335,8 +340,12 @@ def render_combined_outputs(
     project_name: str,
     reporter: DiagnosticReporter,
     rendered_count: int,
+    *,
+    paper_layout: PaperLayout | None = None,
 ) -> None:
     """Generate the combined PDF / HTML / DOCX / EPUB manuscripts."""
+    layout = admit_paper_layout(manuscript_dir, tuple(md_files), paper_layout)
+    md_files = list(layout.complete)
     config = manager.config
     combined_pdf_succeeded = False
 
@@ -346,15 +355,24 @@ def render_combined_outputs(
         logger.debug("\n" + "=" * BANNER_WIDTH)
         logger.info("Generating combined PDF manuscript...")
         try:
-            combined_pdf = manager.render_combined_pdf(combined_source_files(md_files), manuscript_dir, project_name)
+            if layout.frontmatter:
+                combined_pdf = manager.render_combined_pdf(md_files, manuscript_dir, project_name, paper_layout=layout)
+            else:
+                combined_pdf = manager.render_combined_pdf(
+                    combined_source_files(md_files), manuscript_dir, project_name
+                )
             logger.info(f"✅ Generated combined PDF: {combined_pdf.name}")
             combined_pdf_succeeded = True
         except RenderingError as rendering_exc:
+            if layout.frontmatter:
+                raise
             logger.error(f"❌ Rendering error generating combined PDF: {rendering_exc.message}")
             reporter.record(rendering_exc.to_diagnostic_event(severity=DiagnosticSeverity.ERROR))
             if rendered_count > 0:
                 logger.info(f"ℹ️  Note: {rendered_count} individual PDF(s) were generated despite combined PDF failure.")
         except (OSError, subprocess.SubprocessError, ValueError, TypeError) as e:
+            if layout.frontmatter:
+                raise
             logger.error(f"❌ Unexpected error generating combined PDF: {e}")
             logger.error(f"  Error type: {type(e).__name__}")
             logger.error(f"  Full traceback:\n{traceback.format_exc()}")
@@ -395,11 +413,18 @@ def render_combined_outputs(
         logger.debug("\n" + "=" * BANNER_WIDTH)
         logger.info("Generating combined HTML manuscript...")
         try:
-            manager.render_combined_web(combined_source_files(md_files), manuscript_dir, project_name)
+            if layout.frontmatter:
+                manager.render_combined_web(md_files, manuscript_dir, project_name, paper_layout=layout)
+            else:
+                manager.render_combined_web(combined_source_files(md_files), manuscript_dir, project_name)
         except RenderingError as rendering_exc:
+            if layout.frontmatter:
+                raise
             logger.warning(f"⚠️  Rendering error generating combined HTML: {rendering_exc.message}")
             reporter.record(rendering_exc.to_diagnostic_event(severity=DiagnosticSeverity.WARNING))
         except (OSError, subprocess.SubprocessError, ValueError) as e:
+            if layout.frontmatter:
+                raise
             logger.warning(f"⚠️  Unexpected error generating combined HTML: {e}")
     else:
         logger.info("[skip] HTML rendering disabled in config (render.formats.html=false)")
@@ -416,6 +441,7 @@ def render_combined_outputs(
             md_files,
             manuscript_dir,
             project_name,
+            paper_layout=layout,
         )
 
     if config.enable_docx:

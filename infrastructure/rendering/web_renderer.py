@@ -12,6 +12,8 @@ from tempfile import TemporaryDirectory
 import yaml
 
 from infrastructure.core.exceptions import RenderingError
+from infrastructure.rendering._paper_frontmatter import PaperLayout, admit_paper_layout, combine_layout, WEB_ALGORITHM
+from infrastructure.rendering._paper_frontmatter_render import place_frontmatter_html
 from infrastructure.core.files.secure_write import atomic_write_text_confined
 from infrastructure.core.logging.constants import BANNER_WIDTH
 from infrastructure.core.logging.utils import get_logger
@@ -150,6 +152,8 @@ class WebRenderer:
         source_files: list[Path],
         manuscript_dir: Path,
         project_name: str = "project",
+        *,
+        paper_layout: PaperLayout | None = None,
     ) -> Path:
         """Render multiple markdown files as a combined HTML document.
 
@@ -167,6 +171,9 @@ class WebRenderer:
         Raises:
             RenderingError: If combination or rendering fails
         """
+        layout = admit_paper_layout(manuscript_dir, tuple(source_files), paper_layout)
+        source_files = list(layout.complete)
+
         logger.info("\n" + "=" * BANNER_WIDTH)
         logger.info("COMBINED HTML RENDERING")
         logger.info("=" * BANNER_WIDTH)
@@ -196,7 +203,7 @@ class WebRenderer:
         # Combine markdown files
         combined_md = output_dir / "_combined_manuscript.md"
         combined_content = self._html_safe_markdown(
-            self._combine_markdown_files(source_files),
+            combine_layout(layout, web=True) if layout.frontmatter else self._combine_markdown_files(source_files),
             render_citations=False,
         )
         atomic_write_text_confined(output_dir, combined_md, combined_content)
@@ -206,6 +213,7 @@ class WebRenderer:
             project_name,
             source_files,
             combined_md,
+            algorithm=WEB_ALGORITHM if layout.frontmatter else "web-renderer-combine-v1",
         )
 
         # Build pandoc command for HTML conversion
@@ -322,6 +330,8 @@ class WebRenderer:
                     )
             logger.info(f"✓ Embedded CSS styling in {output_file.name}")
 
+        if layout.frontmatter:
+            place_frontmatter_html(output_file, layout)
         logger.info(f"✅ Generated combined HTML: {output_file.name}")
         return output_file
 
