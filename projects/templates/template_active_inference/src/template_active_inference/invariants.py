@@ -1,7 +1,4 @@
-"""Compatibility facade for analytical invariant builders.
-
-Prefer ``from analytical.invariants import ...`` in new code.
-"""
+"""Public invariant builders backed by ``analytical.invariants``."""
 
 from analytical.invariants import (
     CORE_INVARIANTS,

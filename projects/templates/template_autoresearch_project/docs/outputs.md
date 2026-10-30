@@ -10,6 +10,11 @@ The integrity attestation and research-object manifest now surface present-but-e
 artifacts (`empty` / `empty_artifact_count`); the schema manifest fails the run on a
 nonconforming governance payload.
 
+Review packets are built by `writers.reports.build_review_packet()` and checked
+by `validate_review_packet()` against the current schema. Readiness does not
+grant publication approval: approval is copied only from the existing
+human-authored decision source.
+
 Core data:
 
 | Path | Role |
@@ -18,7 +23,7 @@ Core data:
 | `output/data/autoresearch_loop.json` | Full loop payload with config, stages, claims, metrics, and paths |
 | `output/data/autoresearch_claims.json` | Evidence-grounded generated claims |
 | `output/data/autoresearch_stage_matrix.csv` | Tabular stage status for spreadsheet review (`status` is `declared`, not execution proof) |
-| `output/data/autoresearch_review_packet.json` | Machine-readable human review packet |
+| `output/data/autoresearch_review_packet.json` | Current `template-autoresearch-review-packet-v2` human review packet |
 | `output/data/autoresearch_evidence_overview.json` | Reviewer-facing overview of readiness vs. approval, claim evidence, source-ledger freshness, benchmark boundary, and security/integrity status |
 | `output/data/research_program.json` | Human-authored research program, autonomy level, budget, and edit allowlist |
 | `output/data/idea_ledger.json` | Proposed, accepted, rejected, and deferred research ideas plus candidates |

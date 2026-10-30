@@ -273,7 +273,7 @@ def test_run_autoresearch_loop_writes_review_packet_and_stage_matrix(
         and autoresearch_loop_result.supported_claim_count == len(autoresearch_loop_result.claims)
     )
     assert review_packet["human_review"]["publication_approved"] is False
-    assert review_packet["schema"] == "template-autoresearch-review-packet-v1"
+    assert review_packet["schema"] == "template-autoresearch-review-packet-v2"
 
 
 def test_run_autoresearch_loop_writes_stage_matrix_figure(

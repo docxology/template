@@ -51,9 +51,8 @@ from .figure_support import (
 )
 from .rule_hierarchy_figure import generate_rule_hierarchy
 
-# Registry metadata is re-exported from this compatibility façade because the
-# figure publisher and downstream project scripts historically import the
-# complete figure contract from ``src/figures/figures.py``.
+# Registry metadata is part of this module's public figure contract.
+# The figure publisher and project scripts consume these re-exports.
 FIGURE_REGISTRY_SCHEMA = _FIGURE_REGISTRY_SCHEMA
 INTEGRATION_FIGURE_SPECS = _INTEGRATION_FIGURE_SPECS
 
