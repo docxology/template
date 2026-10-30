@@ -86,7 +86,7 @@ verify_academic_standards(manuscript_dir)
 ```python
 from infrastructure.validation import validate_output_structure, validate_copied_outputs
 
-validate_output_structure(output_dir)
+validate_output_structure(output_dir, enabled_formats=("pdf",))
 validate_copied_outputs(dest_dir, project_name="templates/my_project", enabled_formats=("pdf",))
 ```
 

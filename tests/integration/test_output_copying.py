@@ -368,7 +368,7 @@ class TestValidateOutputStructure:
         copy_final_deliverables(repo_root, output_dir, "template_code_project")
 
         # Validate structure
-        result = validate_output_structure(output_dir)
+        result = validate_output_structure(output_dir, enabled_formats=("pdf", "html", "slides"))
 
         assert result["valid"] is True
         assert len(result["issues"]) == 0
@@ -380,7 +380,7 @@ class TestValidateOutputStructure:
         """Test structure validation with missing output directory."""
         nonexistent = tmp_path / "nonexistent"
 
-        result = validate_output_structure(nonexistent)
+        result = validate_output_structure(nonexistent, enabled_formats=("pdf", "html", "slides"))
 
         assert result["valid"] is False
         assert "Output directory does not exist" in result["issues"]
@@ -398,10 +398,10 @@ class TestValidateOutputStructure:
         (output_dir / "slides").mkdir()
         (output_dir / "web").mkdir()
 
-        result = validate_output_structure(output_dir)
+        result = validate_output_structure(output_dir, enabled_formats=("pdf", "html", "slides"))
 
         assert result["valid"] is False
-        # Should detect missing PDF (either project-specific or legacy name)
+        # Should detect the missing canonical combined PDF
         assert len(result["missing_files"]) > 0
 
     def test_structure_empty_directories(self, tmp_path):
@@ -419,11 +419,11 @@ class TestValidateOutputStructure:
         (pdf_dir / "template_code_project_combined.pdf").write_text("x" * 1024 * 100)  # > 100KB
         # Also copy to root for validation
         (output_dir / "template_code_project_combined.pdf").write_text("x" * 1024 * 100)
-        baseline = validate_output_structure(output_dir)
+        baseline = validate_output_structure(output_dir, enabled_formats=("pdf", "html", "slides"))
 
         (output_dir / "slides").mkdir()
         (output_dir / "web").mkdir()
-        rerun = validate_output_structure(output_dir)
+        rerun = validate_output_structure(output_dir, enabled_formats=("pdf", "html", "slides"))
 
         assert rerun == baseline
         assert rerun["valid"] is True
@@ -449,7 +449,7 @@ class TestValidateOutputStructure:
         # Also copy to root for validation
         (output_dir / "template_code_project_combined.pdf").write_text("tiny")
 
-        result = validate_output_structure(output_dir)
+        result = validate_output_structure(output_dir, enabled_formats=("pdf", "html", "slides"))
 
         # Small PDF is still valid but flagged as suspicious
         assert result["valid"] is True  # Not a hard error, just a warning

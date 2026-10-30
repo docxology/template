@@ -45,7 +45,7 @@ ALLOWED_PROJECT_NAMES = {Path(name).name for name in PUBLIC_PROJECT_NAMES} | {ME
 
 # Representative private/rotating names (and structural path fragments) that must
 # never appear anywhere in the serialized metrics. Drawn from the lifecycle repo's
-# rotating trees plus the non-rendered typed subfolders that hold them. The legacy
+# rotating trees plus the non-rendered typed subfolders that hold them. Retired
 # ``projects_archive`` / ``projects_in_progress`` tokens are retained as forbidden
 # needles (defense-in-depth) even though those top-level dirs no longer exist.
 PRIVATE_NAME_DENYLIST = (

@@ -207,7 +207,7 @@ class TestVerifyOutputsExist:
     """Test verify_outputs_exist()."""
 
     def test_returns_tuple_for_nonexistent_project(self) -> None:
-        result = verify_outputs_exist("_nonexistent_project_xyz_abc")
+        result = verify_outputs_exist("_nonexistent_project_xyz_abc", enabled_formats=("pdf", "html", "slides"))
         assert isinstance(result, tuple)
         assert len(result) == 2
         valid, details = result
@@ -220,14 +220,18 @@ class TestVerifyOutputsExist:
         (output_dir / "pdf").mkdir(parents=True)
         (output_dir / "pdf" / "paper.pdf").write_bytes(b"%PDF content")
 
-        structure_valid, details = mod.verify_outputs_exist("test", repo_root=tmp_path)
+        structure_valid, details = mod.verify_outputs_exist(
+            "test", repo_root=tmp_path, enabled_formats=("pdf", "html", "slides")
+        )
         assert isinstance(structure_valid, bool)
         assert "structure" in details
 
     def test_empty_output(self, tmp_path, monkeypatch):
         output_dir = tmp_path / "projects" / "active" / "test" / "output"
         output_dir.mkdir(parents=True)
-        structure_valid, details = mod.verify_outputs_exist("test", repo_root=tmp_path)
+        structure_valid, details = mod.verify_outputs_exist(
+            "test", repo_root=tmp_path, enabled_formats=("pdf", "html", "slides")
+        )
         assert isinstance(structure_valid, bool)
 
     def test_verify_outputs_resolves_wip_project(self, tmp_path, monkeypatch):
@@ -236,7 +240,9 @@ class TestVerifyOutputsExist:
         pdf_dir.mkdir(parents=True)
         (pdf_dir / "draft_combined.pdf").write_bytes(_minimal_structural_pdf())
 
-        structure_valid, details = mod.verify_outputs_exist("draft", repo_root=tmp_path)
+        structure_valid, details = mod.verify_outputs_exist(
+            "draft", repo_root=tmp_path, enabled_formats=("pdf", "html", "slides")
+        )
         assert isinstance(structure_valid, bool)
         assert details["structure"]["directory_structure"]["combined_pdf"]["exists"] is True
 

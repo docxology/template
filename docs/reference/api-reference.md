@@ -2734,7 +2734,7 @@ Write resolved copies of ``manuscript/*.md`` into ``output/manuscript/``.
 *function — defined in `infrastructure.reporting.output_statistics`*
 
 ```python
-collect_output_statistics(repo_root: Path, project_name: str='project', project_dir: Path | None=None, *, require_pdf: bool=True, output_dir: Path | None=None, inventory: StableOutputInventory | None=None, enabled_formats: Collection[str] | None=None, inventory_scope: str=PROJECT_OUTPUT_INVENTORY_SCOPE, inventory_mode: OutputInventoryMode=STABLE_OUTPUT_INVENTORY_MODE) -> dict[str, Any]
+collect_output_statistics(repo_root: Path, project_name: str='project', project_dir: Path | None=None, *, output_dir: Path | None=None, inventory: StableOutputInventory | None=None, enabled_formats: Collection[str], inventory_scope: str=PROJECT_OUTPUT_INVENTORY_SCOPE, inventory_mode: OutputInventoryMode=STABLE_OUTPUT_INVENTORY_MODE) -> dict[str, Any]
 ```
 
 Collect comprehensive output file statistics.
@@ -4112,7 +4112,7 @@ Validate mathematical equation formatting and labeling.
 *function — defined in `infrastructure.validation.output.validator`*
 
 ```python
-validate_output_structure(output_dir: Path, *, require_pdf: bool=True, inventory: StableOutputInventory | None=None, enabled_formats: Collection[str] | None=None, inventory_mode: OutputInventoryMode=STABLE_OUTPUT_INVENTORY_MODE) -> OutputStructureResult
+validate_output_structure(output_dir: Path, *, inventory: StableOutputInventory | None=None, enabled_formats: Collection[str], inventory_mode: OutputInventoryMode=STABLE_OUTPUT_INVENTORY_MODE) -> OutputStructureResult
 ```
 
 Validate complete output directory structure.

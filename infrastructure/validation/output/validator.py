@@ -73,16 +73,14 @@ _RENDER_FORMAT_BY_SUBDIR = {
 
 def _stable_category_required(
     category: str,
-    enabled_formats: Collection[str] | None,
-    *,
-    require_pdf: bool,
+    enabled_formats: Collection[str],
 ) -> bool:
     """Return whether an empty stable category is actionable for this run."""
 
     if category == "pdf":
-        return require_pdf
+        return "pdf" in enabled_formats
     format_name = _RENDER_FORMAT_BY_SUBDIR.get(category)
-    if format_name is not None and enabled_formats is not None:
+    if format_name is not None:
         return format_name in enabled_formats
     return category not in OPTIONAL_OUTPUT_SUBDIRS
 
@@ -194,11 +192,7 @@ def validate_copied_outputs(
                 logger,
             )
         else:
-            if _stable_category_required(
-                dir_name,
-                enabled_formats,
-                require_pdf="pdf" in enabled_formats,
-            ):
+            if _stable_category_required(dir_name, enabled_formats):
                 logger.warning(f"{dir_name}/ has no stable artifacts ({description})")
             else:
                 logger.debug(f"{dir_name}/ is not enabled and has no stable artifacts")
@@ -302,9 +296,8 @@ def validate_root_output_structure(repo_root: Path) -> dict[str, Any]:
 def collect_detailed_validation_results(
     output_dir: Path,
     *,
-    require_pdf: bool = True,
     inventory: StableOutputInventory | None = None,
-    enabled_formats: Collection[str] | None = None,
+    enabled_formats: Collection[str],
     inventory_mode: OutputInventoryMode = STABLE_OUTPUT_INVENTORY_MODE,
 ) -> ValidationResultDict:
     """Collect detailed validation results for reporting.
@@ -314,12 +307,10 @@ def collect_detailed_validation_results(
 
     Args:
         output_dir: Path to output directory
-        require_pdf: Whether the effective render configuration requires a PDF
-            deliverable.
         inventory: Optional canonical inventory to reuse across one validation
             run. When omitted it is collected from ``output_dir``.
         enabled_formats: Effective publication formats for required-category
-            diagnostics. ``None`` preserves legacy structure semantics.
+            diagnostics; callers must provide the current effective format set.
 
     Returns:
         Dictionary with detailed validation results:
@@ -337,12 +328,7 @@ def collect_detailed_validation_results(
         inventory_mode=inventory_mode,
     )
     validation_results: ValidationResultDict = {
-        "structure": validate_output_structure(
-            output_dir,
-            require_pdf=require_pdf,
-            inventory=current,
-            enabled_formats=enabled_formats,
-        ),
+        "structure": validate_output_structure(output_dir, inventory=current, enabled_formats=enabled_formats),
         "directories": {},
         "file_counts": {},
         "total_size_mb": 0.0,
@@ -376,11 +362,7 @@ def collect_detailed_validation_results(
                 "file_count": 0,
                 "size_mb": "0.00",
             }
-            if _stable_category_required(
-                subdir_name,
-                enabled_formats,
-                require_pdf=require_pdf,
-            ):
+            if _stable_category_required(subdir_name, enabled_formats):
                 validation_results["issues_by_severity"]["warning"].append(
                     f"{subdir_name}/ has no stable publication artifacts"
                 )
@@ -441,27 +423,25 @@ def collect_detailed_validation_results(
 def validate_output_structure(
     output_dir: Path,
     *,
-    require_pdf: bool = True,
     inventory: StableOutputInventory | None = None,
-    enabled_formats: Collection[str] | None = None,
+    enabled_formats: Collection[str],
     inventory_mode: OutputInventoryMode = STABLE_OUTPUT_INVENTORY_MODE,
 ) -> OutputStructureResult:
     """Validate complete output directory structure.
 
     Checks:
     - Output directory exists
-    - When ``require_pdf`` is true, a combined PDF exists and is > 100KB
+    - When PDF is enabled, a combined PDF exists and is > 100KB
     - All expected subdirectories exist (pdf, web, slides, figures, data, reports, simulations, llm, logs)
     - Each subdirectory contains files
     - All files are readable
 
     Args:
         output_dir: Path to top-level output directory
-        require_pdf: Whether the effective format configuration requires PDF.
         inventory: Optional canonical inventory to reuse across one validation
             run. When omitted it is collected from ``output_dir``.
         enabled_formats: Effective publication formats for required-category
-            diagnostics. ``None`` preserves legacy structure semantics.
+            diagnostics; callers must provide the current effective format set.
 
     Returns:
         Dictionary with structure validation results
@@ -516,6 +496,7 @@ def validate_output_structure(
     else:
         project_name = None
 
+    require_pdf = "pdf" in enabled_formats
     combined_pdf_found = False
     pdf_file = None
     pdf_size_mb = 0.0
@@ -528,7 +509,7 @@ def validate_output_structure(
             try:
                 candidate.relative_to(output_dir.absolute())
             except ValueError:
-                # Legacy pre-copy validation may resolve the canonical PDF from
+                # Pre-copy validation may resolve the canonical PDF from
                 # ``projects/<qualified>/output/pdf``. Admit that fallback only
                 # when it belongs to its own stable inventory; a Git-ignored
                 # source PDF must not satisfy the copied-output contract.
@@ -583,18 +564,10 @@ def validate_output_structure(
                 "size_mb": round(total_size_mb, 2),
                 "readable": all(f.is_file() for f in files),
                 "optional": subdir_name in OPTIONAL_OUTPUT_SUBDIRS,
-                "required": _stable_category_required(
-                    subdir_name,
-                    enabled_formats,
-                    require_pdf=require_pdf,
-                ),
+                "required": _stable_category_required(subdir_name, enabled_formats),
             }
         else:
-            required = _stable_category_required(
-                subdir_name,
-                enabled_formats,
-                require_pdf=require_pdf,
-            )
+            required = _stable_category_required(subdir_name, enabled_formats)
             result["directory_structure"][subdir_name] = {
                 "exists": False,
                 "files": 0,

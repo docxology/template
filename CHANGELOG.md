@@ -18,6 +18,9 @@ through a new exact-revision release contract.
   migrate repository and exemplar callers together.
 - Resolve installed rendering/validation against the source checkout, and apply
   the shared locked dependency normalization to fresh-export hydration.
+- Output validation requires `enabled_formats` and derives PDF requirements from
+  the selected formats. Accessible Beamer overflow checks call the canonical
+  geometry validator directly.
 - Remove duplicated test paths, preserve distinct behavioral controls on the
   current producer, and correct documentation selection and measured CI sharding.
 - Replace repeated source-manifest ancestor opens with held-directory traversal

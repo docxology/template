@@ -360,7 +360,7 @@ local TeX engine. If rendering behavior changes, run at least one real
 - [`../validation/AGENTS.md`](../validation/AGENTS.md)
 
 Web preprocessing uses a private temporary directory for each section and the
-confined atomic writer for combined Markdown. Predictable legacy temporary
+confined atomic writer for combined Markdown. Predictable temporary
 paths are never opened or removed; failures propagate without falling back to
 unprocessed source. The real-Pandoc regression probes live in
 `tests/infra_tests/rendering/test_web_renderer.py`.
