@@ -167,7 +167,7 @@ Projects under `projects/templates/` (the tracked exemplars) and `projects/activ
 - **Rendered** independently with project-specific manuscripts
 - **Outputs** organized in `projects/<subfolder>/{name}/output/` and `output/<subfolder>/{name}/`
 
-#### 📦 **Non-Rendered Projects (`working/`, `archive/`, optional legacy mirrors)**
+#### 📦 **Non-Rendered Projects (`working/`, `archive/`)**
 
 Projects under `projects/working/` and `projects/archive/` are **preserved but not executed by default**:
 
@@ -188,8 +188,8 @@ mv ../projects/working/myproject ../projects/active/myproject
 ```
 
 For confidential work, prefer the configured external private lifecycle repo:
-the simplified sidecar uses `working/` and `archive/` by default; optional
-legacy `active/` folder is linked when present.
+the simplified sidecar uses `working/` and `archive/` by default; the optional
+`active/` folder is linked when present.
 Only `templates/` and optional `active/` are discovered/rendered by default; the
 other mirrors are for inspection or explicit targeted work. Move private work
 between lifecycle folders instead of committing it here.
