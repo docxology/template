@@ -196,8 +196,9 @@ The enforced lexical API reports prohibited mock-framework imports/calls. It
 does not prove that monkeypatch dependency replacements are absent:
 
 ```python
-from infrastructure.validation.output.no_mock_enforcer import validate_no_mocks
-violations = validate_no_mocks(tests_dir, repo_root)
+from infrastructure.validation.output.no_mock_enforcer import scan_lexical_mock_policy
+scan = scan_lexical_mock_policy(tests_dir, repo_root)
+violations = (*scan.violations, *scan.errors)
 ```
 
 Repository-level commands:

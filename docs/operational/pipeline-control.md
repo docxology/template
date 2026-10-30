@@ -173,9 +173,8 @@ manifest under `projects/{project}/output/.pipeline/artifacts/` and refreshes
 path, size, SHA256, producing stage, contract match status, and timestamp. The
 top-level `inventory_mode` records whether the manifest came from the
 fail-closed Git-shippable inventory or an explicitly authorized stable-local
-inventory. Legacy manifests that omit this field are read as Git-shippable;
-new manifests always persist it, and validation rejects a mode that does not
-match the resolved project lifecycle.
+inventory. Every manifest must declare this field. Validation rejects omission
+or a mode that does not match the resolved project lifecycle.
 
 Validation reports missing declared outputs, changed hashes, undeclared
 artifacts, duplicate or noncanonical paths, and stable artifacts omitted from

@@ -482,7 +482,6 @@ observations alone do not establish complete execution or a universal speedup.
 | `release_readiness_artifacts.py` | Native archive structure and exact public source/export parity. |
 | `release_readiness_collectors.py` | Informational local snapshots; acceptance authority comes from the required profile. |
 | `release_readiness_dependencies.py` | Bind runtime acceptance to current declared installed public providers. |
-| `release_readiness_pipeline.py` | Validate fresh completion against the actual source-owned execution plan. |
 | `release_readiness_profile.py` | Source-owned platform candidate and release acceptance requirements. |
 | `release_readiness_root_cases.py` | Source-owned Root v2 case cells and original selected-interpreter acceptance. |
 | `release_readiness_runtime.py` | Independently validate complete source/spec/process-bound public pytest cells. |

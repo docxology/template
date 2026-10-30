@@ -7,6 +7,24 @@ source and contracts; each exemplar retains its own package and publication
 versions. Confidential and local workspaces outside the canonical public roster
 are excluded.
 
+## [4.4.1]
+
+See the [4.4.1 release notes](docs/releases/v4.4.1.md). This coordinated patch
+preserves the existing failed 4.4.0 tag and carries the corrected implementation
+through a new exact-revision release contract.
+
+- Consolidate agent, security, lexical-policy, rendering, MCP, Root acceptance,
+  artifact, cache, backlog, and arXiv interfaces around their current contracts;
+  migrate repository and exemplar callers together.
+- Resolve installed rendering/validation against the source checkout, and apply
+  the shared locked dependency normalization to fresh-export hydration.
+- Remove duplicated test paths, preserve distinct behavioral controls on the
+  current producer, and correct documentation selection and measured CI sharding.
+- Replace repeated source-manifest ancestor opens with held-directory traversal
+  while retaining original byte, inode, replacement, and closure checks.
+- Make publication a manual authenticated exact-tag handoff and verify retrieved
+  assets after release creation.
+
 ## [4.4.0]
 See the [4.4.0 release-intent notes](docs/releases/v4.4.0.md). Publication requires
 exact-revision hosted acceptance and the authenticated release handoff; 4.3.0 and
@@ -17,8 +35,8 @@ earlier preparations remain historical candidates, not published root releases.
   `--all-public`, `--changed`), `--shard` slicing, parallel `--jobs`, blocking versus
   `review_required` severities and one JSON receipt per project. `release.yml` retains
   the receipts; `local_gate.py` gains a `publication` stage.
-- Cut verification cost on every path: documentation-only changes no longer select the
-  exemplar matrix or the contract roster (`ci_selection.documentation_only`), automatic
+- Bound verification cost: guide-only changes no longer select the exemplar matrix,
+  while documentation contracts retain complete prepared jobs; automatic
   functional shards cap at twelve modules (`AUTOMATIC_SHARD_MAX_MODULES`), the
   rendered-provenance stage fingerprint hashes tracked `.py` files instead of prose, and
   `refresh_rendered_provenance.py --jobs` refreshes exemplars in worker processes.

@@ -261,7 +261,7 @@ graph TD
     end
 
     subgraph Compliance["Template standards"]
-        STANDARDS[Root .cursorrules + docs/rules/<br/>Development norms<br/>Testing · docs · style]
+        STANDARDS[Root AGENTS.md + docs/rules/<br/>Development norms<br/>Testing · docs · style]
         RULEFILES[testing_standards.md<br/>documentation_standards.md<br/>under docs/rules/]
     end
 
@@ -367,7 +367,7 @@ uv run python scripts/pipeline/stage_05_copy.py --project {name}
 
 - **Import Pattern**: Projects import from `infrastructure/` but not from each other
 - **Common Utilities**: Logging, validation, rendering, reporting shared across projects
-- **Quality Standards**: Projects align with root **[`.cursorrules`](../.cursorrules)** and **[`docs/rules/`](../docs/rules/)**
+- **Quality Standards**: Projects align with root **[`AGENTS.md`](../AGENTS.md)** and **[`docs/rules/`](../docs/rules/)**
 
 ### ❌ **No Cross-Project Dependencies**
 
@@ -377,7 +377,7 @@ uv run python scripts/pipeline/stage_05_copy.py --project {name}
 
 ## Standards compliance checklist
 
-Every project aligns with the root **[`.cursorrules`](../.cursorrules)** file (Cursor routing) and the guides under **[`docs/rules/`](../docs/rules/)**:
+Every project aligns with the root **[`AGENTS.md`](../AGENTS.md)** file (shared agent routing) and the guides under **[`docs/rules/`](../docs/rules/)**:
 
 ### Testing Standards ([`docs/rules/testing_standards.md`](../docs/rules/testing_standards.md))
 
@@ -656,7 +656,7 @@ Required checks:
 - Has `src/` with Python files
 - Has `tests/` directory
 
-## .cursorrules Compliance
+## AGENTS.md Compliance
 
 ### ✅ **Standards Compliance Across Public Exemplars**
 
@@ -692,7 +692,7 @@ uv run python -m infrastructure.project.public_scope source-paths | xargs uv run
 - Add `pyproject.toml` with metadata
 - Write tests
 - Document your code
-- Follow .cursorrules standards for all development
+- Follow AGENTS.md standards for all development
 
 ### Don'ts ❌
 
@@ -700,7 +700,7 @@ uv run python -m infrastructure.project.public_scope source-paths | xargs uv run
 - Don't commit `output/` directories (in `.gitignore`)
 - Don't use spaces or special characters in project names
 - Don't create projects without `src/` and `tests/`
-- Don't violate .cursorrules standards (testing, documentation, type hints, etc.)
+- Don't violate AGENTS.md standards (testing, documentation, type hints, etc.)
 
 ## Migration from Single Project
 
@@ -970,7 +970,7 @@ infrastructure compliance:
 
 ### 📋 **Compliance Framework**
 
-- **.cursorrules Standards**: Testing, documentation, type hints, error handling, logging
+- **AGENTS.md Standards**: Testing, documentation, type hints, error handling, logging
 - **Quality Gates**: 90% coverage, documentation, type safety
 - **Infrastructure Access**: Import from `infrastructure/` modules for shared utilities
 
@@ -1010,7 +1010,7 @@ Additional rotating projects are discovered from `docs/_generated/active_project
 
 1. **Create**: Copy existing project or start from template
 2. **Develop**: Add algorithms to `src/`, tests to `tests/`, content to `manuscript/`
-3. **Validate**: Ensure .cursorrules compliance and infrastructure integration
+3. **Validate**: Ensure AGENTS.md compliance and infrastructure integration
 4. **Execute**: Run via infrastructure scripts for testing, analysis, rendering
 5. **Deliver**: Final outputs organized in `output/{project}/`
 

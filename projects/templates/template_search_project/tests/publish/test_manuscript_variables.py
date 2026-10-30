@@ -182,7 +182,9 @@ def test_write_resolved_manuscript_tree(tmp_path: Path):
     root = tmp_path / "proj"
     mdir = root / "manuscript"
     mdir.mkdir(parents=True)
-    (mdir / "config.yaml").write_text("paper:\n  title: T\nsearch:\n  query: x\n", encoding="utf-8")
+    (mdir / "config.yaml").write_text(
+        "paper:\n  title: T\nproject_config:\n  search:\n    query: x\n", encoding="utf-8"
+    )
     (mdir / "references.bib").write_text("@article{a,\n title={t}\n}\n", encoding="utf-8")
     (mdir / "00_test.md").write_text("# Hi {{CONFIG_QUERY}} {{DEEP_UNIQUE_PAPERS}}\n", encoding="utf-8")
 

@@ -2316,7 +2316,7 @@ Metadata about a publishing platform adapter.
 *function — defined in `infrastructure.publishing.arxiv.submission`*
 
 ```python
-prepare_arxiv_submission(output_dir: Path, metadata: PublicationMetadata) -> Path
+prepare_arxiv_submission(output_dir: Path) -> Path
 ```
 
 Build a deterministic, non-partial LaTeX-source package for manual upload.

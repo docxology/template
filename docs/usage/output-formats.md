@@ -104,7 +104,7 @@ than being treated as absent.
 
 #### Accessible presentation profile
 
-`archive` is the backwards-compatible default. Opt in to semantic accessible
+`archive` is the default composition profile. Opt in to semantic accessible
 composition in `manuscript/config.yaml`:
 
 ```yaml
@@ -271,9 +271,8 @@ copy stage.
 
 When `slides: true`, at least one current Markdown section must produce a deck;
 configuring every section with `<!-- render:skip-beamer -->` is a validation
-error rather than a successful zero-deliverable slides run. A project-local
-`scripts/_render_pdf_override.py` is the legacy exception to the ordinary
-format toggles: all three stages consistently treat that hook as PDF-only.
+error rather than a successful zero-deliverable slides run. Every project uses
+the declared format configuration and the same validation contract.
 
 ## See also
 

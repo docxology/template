@@ -45,8 +45,7 @@ class TestPrepareArxivSubmission:
         (manuscript_dir / "main.tex").write_text("\\documentclass{article}")
         (manuscript_dir / "refs.bib").write_text("@article{test, title={Test}}")
 
-        metadata = _make_metadata()
-        result = prepare_arxiv_submission(output_dir, metadata)
+        result = prepare_arxiv_submission(output_dir)
         assert result.exists()
         assert result.suffix == ".gz"
         assert "arxiv_submission" in result.name
@@ -60,8 +59,7 @@ class TestPrepareArxivSubmission:
         (manuscript_dir / "paper.tex").write_text("\\documentclass{article}")
         (manuscript_dir / "refs.bib").write_text("@article{x, title={X}}")
 
-        metadata = _make_metadata()
-        result = prepare_arxiv_submission(output_dir, metadata)
+        result = prepare_arxiv_submission(output_dir)
 
         with tarfile.open(result, "r:gz") as tar:
             names = tar.getnames()
@@ -79,8 +77,7 @@ class TestPrepareArxivSubmission:
         figures_dir.mkdir()
         (figures_dir / "fig1.png").write_bytes(b"\x89PNG")
 
-        metadata = _make_metadata()
-        result = prepare_arxiv_submission(output_dir, metadata)
+        result = prepare_arxiv_submission(output_dir)
 
         with tarfile.open(result, "r:gz") as tar:
             names = tar.getnames()
@@ -99,8 +96,7 @@ class TestPrepareArxivSubmission:
         old_dir.mkdir()
         (old_dir / "old_file.txt").write_text("stale")
 
-        metadata = _make_metadata()
-        result = prepare_arxiv_submission(output_dir, metadata)
+        result = prepare_arxiv_submission(output_dir)
         assert result.exists()
         # Old file should not be in the tarball
         with tarfile.open(result, "r:gz") as tar:
@@ -114,9 +110,8 @@ class TestPrepareArxivSubmission:
         stale = output_dir / "arxiv_submission_19990101.tar.gz"
         stale.write_bytes(b"stale")
 
-        metadata = _make_metadata()
         with pytest.raises(PublishingError, match="No LaTeX root found"):
-            prepare_arxiv_submission(output_dir, metadata)
+            prepare_arxiv_submission(output_dir)
         assert not stale.exists()
         assert not (output_dir / "arxiv_submission").exists()
 
@@ -130,8 +125,7 @@ class TestPrepareArxivSubmission:
         (manuscript_dir / "notes.txt").write_text("personal notes")
         (manuscript_dir / "data.csv").write_text("1,2,3")
 
-        metadata = _make_metadata()
-        result = prepare_arxiv_submission(output_dir, metadata)
+        result = prepare_arxiv_submission(output_dir)
 
         with tarfile.open(result, "r:gz") as tar:
             names = tar.getnames()
@@ -148,8 +142,7 @@ class TestPrepareArxivSubmission:
         (manuscript_dir / "custom.cls").write_text("\\NeedsTeXFormat{LaTeX2e}")
         (manuscript_dir / "style.bst").write_text("FUNCTION {format.names}")
 
-        metadata = _make_metadata()
-        result = prepare_arxiv_submission(output_dir, metadata)
+        result = prepare_arxiv_submission(output_dir)
 
         with tarfile.open(result, "r:gz") as tar:
             names = tar.getnames()
@@ -165,14 +158,13 @@ class TestPrepareArxivSubmission:
         # Markdown-only manuscript: no .tex in manuscript/, only a rendered one under output/pdf/.
         (manuscript_dir / "01_intro.md").write_text("# Intro")
         (manuscript_dir / "references.bib").write_text("@article{x, title={X}}")
-        (output_dir / "pdf" / "Test_Paper.tex").write_text("\\documentclass{article}")
+        (output_dir / "pdf" / "_combined_manuscript.tex").write_text("\\documentclass{article}")
 
-        metadata = _make_metadata()
-        result = prepare_arxiv_submission(output_dir, metadata)
+        result = prepare_arxiv_submission(output_dir)
 
         with tarfile.open(result, "r:gz") as tar:
             names = tar.getnames()
-        assert any(n.endswith("Test_Paper.tex") for n in names)
+        assert any(n.endswith("_combined_manuscript.tex") for n in names)
         assert any(n.endswith("references.bib") for n in names)
 
     def test_markdown_only_manuscript_fails_closed(self, tmp_path: Path):
@@ -184,9 +176,8 @@ class TestPrepareArxivSubmission:
         (manuscript_dir / "01_intro.md").write_text("# Intro")
         (manuscript_dir / "references.bib").write_text("@article{x, title={X}}")
 
-        metadata = _make_metadata()
         with pytest.raises(PublishingError, match="No LaTeX root found"):
-            prepare_arxiv_submission(output_dir, metadata)
+            prepare_arxiv_submission(output_dir)
         assert not list(output_dir.glob("arxiv_submission_*.tar.gz"))
 
     def test_canonical_rendered_tree_includes_matching_bbl_references_and_figures(self, tmp_path: Path):
@@ -207,7 +198,7 @@ class TestPrepareArxivSubmission:
         (figures_dir / "runtime.json").write_text("{}")
         (figures_dir / "animation.gif").write_bytes(b"GIF")
 
-        result = prepare_arxiv_submission(output_dir, _make_metadata())
+        result = prepare_arxiv_submission(output_dir)
 
         with tarfile.open(result, "r:gz") as tar:
             names = tar.getnames()
@@ -232,22 +223,24 @@ class TestPrepareArxivSubmission:
         (pdf_dir / "_combined_manuscript.tex").write_text(r"\documentclass{article}")
         (pdf_dir / "stale.tex").write_text(r"\documentclass{book}")
 
-        result = prepare_arxiv_submission(output_dir, _make_metadata())
+        result = prepare_arxiv_submission(output_dir)
 
         with tarfile.open(result, "r:gz") as tar:
             names = tar.getnames()
         assert "_combined_manuscript.tex" in names
         assert "stale.tex" not in names
 
-    def test_ambiguous_noncanonical_rendered_roots_fail(self, tmp_path: Path):
+    @pytest.mark.parametrize("count", [1, 2])
+    def test_noncanonical_rendered_roots_fail(self, tmp_path: Path, count: int):
         output_dir = tmp_path / "output"
         pdf_dir = output_dir / "pdf"
         pdf_dir.mkdir(parents=True)
         (pdf_dir / "one.tex").write_text(r"\documentclass{article}")
-        (pdf_dir / "two.tex").write_text(r"\documentclass{article}")
+        if count == 2:
+            (pdf_dir / "two.tex").write_text(r"\documentclass{article}")
 
-        with pytest.raises(PublishingError, match="Multiple rendered TeX roots"):
-            prepare_arxiv_submission(output_dir, _make_metadata())
+        with pytest.raises(PublishingError, match="requires the canonical root"):
+            prepare_arxiv_submission(output_dir)
         assert not list(output_dir.glob("arxiv_submission_*.tar.gz"))
 
     def test_manuscript_relative_paths_do_not_flatten_or_collide(self, tmp_path: Path):
@@ -258,7 +251,7 @@ class TestPrepareArxivSubmission:
         (manuscript_dir / "main.tex").write_text(r"\input{chapters/main}")
         (manuscript_dir / "chapters" / "main.tex").write_text("chapter")
 
-        result = prepare_arxiv_submission(output_dir, _make_metadata())
+        result = prepare_arxiv_submission(output_dir)
 
         with tarfile.open(result, "r:gz") as tar:
             assert tar.getnames() == ["chapters/main.tex", "main.tex"]
@@ -273,10 +266,10 @@ class TestPrepareArxivSubmission:
         epoch = 1_704_067_200  # 2024-01-01T00:00:00Z
         monkeypatch.setenv("SOURCE_DATE_EPOCH", str(epoch))
 
-        first = prepare_arxiv_submission(output_dir, _make_metadata())
+        first = prepare_arxiv_submission(output_dir)
         first_bytes = first.read_bytes()
         source.touch()
-        second = prepare_arxiv_submission(output_dir, _make_metadata())
+        second = prepare_arxiv_submission(output_dir)
 
         assert first.name == "arxiv_submission_20240101.tar.gz"
         assert second == first
@@ -297,7 +290,7 @@ class TestPrepareArxivSubmission:
         (output_dir / "arxiv_submission_20000101.tar.gz").write_bytes(b"old")
         monkeypatch.setenv("SOURCE_DATE_EPOCH", "1704067200")
 
-        result = prepare_arxiv_submission(output_dir, _make_metadata())
+        result = prepare_arxiv_submission(output_dir)
 
         assert list(output_dir.glob("arxiv_submission_*.tar.gz")) == [result]
 
@@ -316,76 +309,10 @@ class TestPrepareArxivSubmission:
         monkeypatch.setenv("SOURCE_DATE_EPOCH", invalid_epoch)
 
         with pytest.raises(PublishingError, match="SOURCE_DATE_EPOCH must be a non-negative integer"):
-            prepare_arxiv_submission(output_dir, _make_metadata())
+            prepare_arxiv_submission(output_dir)
 
         assert not list(output_dir.glob("arxiv_submission_*.tar.gz"))
         assert not (output_dir / "arxiv_submission").exists()
-
-
-class TestPrepareArxivSubmissionFromPlatforms:
-    def test_basic_submission(self, tmp_path):
-        project = tmp_path / "project"
-        output = project / "output"
-        manuscript = project / "manuscript"
-        output.mkdir(parents=True)
-        manuscript.mkdir()
-
-        (manuscript / "main.tex").write_text(r"\documentclass{article}")
-        (manuscript / "references.bib").write_text("@article{test,}")
-        (manuscript / "notes.md").write_text("# Notes")
-
-        figs = manuscript / "figures"
-        figs.mkdir()
-        (figs / "plot.png").write_bytes(b"fake png")
-
-        meta = _make_metadata()
-        result = prepare_arxiv_submission(output, meta)
-        assert result.exists()
-        assert result.name.startswith("arxiv_submission_")
-        assert result.name.endswith(".tar.gz")
-
-        with tarfile.open(result, "r:gz") as tar:
-            names = tar.getnames()
-            assert any("main.tex" in n for n in names)
-            assert any("references.bib" in n for n in names)
-            assert not any("notes.md" in n for n in names)
-
-    def test_cleans_existing_dir(self, tmp_path):
-        project = tmp_path / "project"
-        output = project / "output"
-        output.mkdir(parents=True)
-        sub = output / "arxiv_submission"
-        sub.mkdir()
-        (sub / "old_file.txt").write_text("old")
-        manuscript = project / "manuscript"
-        manuscript.mkdir()
-        (manuscript / "main.tex").write_text(r"\documentclass{article}")
-
-        meta = _make_metadata()
-        result = prepare_arxiv_submission(output, meta)
-        assert result.exists()
-        assert not (sub / "old_file.txt").exists()
-
-    def test_no_manuscript_dir(self, tmp_path):
-        output = tmp_path / "output"
-        output.mkdir()
-        meta = _make_metadata()
-        with pytest.raises(PublishingError, match="No LaTeX root found"):
-            prepare_arxiv_submission(output, meta)
-
-    def test_bbl_file_copied(self, tmp_path):
-        project = tmp_path / "project"
-        output = project / "output"
-        pdf_dir = output / "pdf"
-        pdf_dir.mkdir(parents=True)
-        (pdf_dir / "_combined_manuscript.tex").write_text(r"\documentclass{article}")
-        (pdf_dir / "_combined_manuscript.bbl").write_text("\\begin{thebibliography}{}")
-
-        meta = _make_metadata()
-        result = prepare_arxiv_submission(output, meta)
-        assert result.exists()
-        with tarfile.open(result, "r:gz") as tar:
-            assert "_combined_manuscript.bbl" in tar.getnames()
 
 
 class TestCreateGithubRelease:

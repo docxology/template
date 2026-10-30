@@ -17,7 +17,7 @@ from uuid import uuid4
 from infrastructure.core.subprocess_policy import SubprocessPolicy, run_with_policy
 from infrastructure.core.testing.ci_contracts import CONTRACT_SECONDS, combined_groups, contract_files
 
-from infrastructure.core.testing.ci_module_durations import module_weights
+from infrastructure.core.testing.ci_module_durations import load_module_durations, module_weights
 from infrastructure.core.testing.pytest_orchestration import resolve_infrastructure_test_paths
 from infrastructure.core.testing.ci_test_ownership import SOURCE_TEST_OWNERS
 from infrastructure.core.testing.pytest_observations import (
@@ -66,14 +66,20 @@ AUTOMATIC_SHARD_MAX_MODULES = 12
 # Automatic sharding aims at this much measured work per job so a single long
 # module cannot set the wall time for the whole matrix.
 AUTOMATIC_SHARD_TARGET_SECONDS = 240.0
-AUTOMATIC_SHARD_MAX_JOBS = 64
+AUTOMATIC_SHARD_LOAD_MAX_JOBS = 64
 
 
-def infrastructure_files(root: Path, changed: tuple[str, ...] = ()) -> tuple[str, ...]:
-    """Preserve legacy smoke, include changed tests and conventional Source owners."""
-    paths = [Path(p) for p in resolve_infrastructure_test_paths(root, "pipeline-smoke")]
-    paths.extend(root / p for p in CI_EXTRA_PATHS)
-    for name in changed:
+def infrastructure_files(root: Path, changed: tuple[str, ...] = (), *, documentation: bool = False) -> tuple[str, ...]:
+    """Enumerate real test modules for the selected functional lane."""
+    paths = (
+        [root / "tests/infra_tests/documentation"]
+        if documentation
+        else [
+            *[Path(p) for p in resolve_infrastructure_test_paths(root, "pipeline-smoke")],
+            *[root / p for p in CI_EXTRA_PATHS],
+        ]
+    )
+    for name in () if documentation else changed:
         relative = Path(name)
         if relative.is_absolute() or ".." in relative.parts:
             raise ValueError("changed infrastructure input escapes repository")
@@ -115,7 +121,9 @@ def infrastructure_files(root: Path, changed: tuple[str, ...] = ()) -> tuple[str
     return tuple(sorted(files))
 
 
-def infrastructure_shards(root: Path, changed: tuple[str, ...] = (), count: int | None = None) -> list[list[str]]:
+def infrastructure_shards(
+    root: Path, changed: tuple[str, ...] = (), count: int | None = None, *, documentation: bool = False
+) -> list[list[str]]:
     """Bound broad selections before duration-weighted balancing.
 
     Load comes from the committed measured-duration manifest; modules without a
@@ -123,36 +131,33 @@ def infrastructure_shards(root: Path, changed: tuple[str, ...] = (), count: int 
     """
     if count is not None and (type(count) is not int or not 1 <= count <= 8):
         raise ValueError("functional shard count must be between one and eight")
-    files = infrastructure_files(root, changed)
-    contracts = contract_files(files, infrastructure_files(root))
+    files = infrastructure_files(root, changed, documentation=documentation)
+    contracts = contract_files(files, () if documentation else infrastructure_files(root))
     files = tuple(name for name in files if name not in contracts)
     isolated = tuple(name for name in files if count is None and name in _ISOLATED_ROUTINE_MODULES)
     files = tuple(name for name in files if name not in isolated)
     automatic = count is None
-    weights = module_weights(root, files)
+    measured = load_module_durations(root)
+    weights = module_weights(root, files, measured)
     if count is None:
-        # Package-level ownership can expand the routine roster by an order of
-        # magnitude. Split that selection by measured load, not just module
-        # count, so the longest job stays near AUTOMATIC_SHARD_TARGET_SECONDS:
-        # wall time is bounded by the heaviest shard, and one long module must
-        # not own it. The module cap still bounds per-job startup cost and the
-        # job ceiling bounds hosted concurrency.
-        target = (
-            float(os.environ.get("TEMPLATE_CI_SHARD_TARGET_SECONDS", AUTOMATIC_SHARD_TARGET_SECONDS) or 0)
-            or AUTOMATIC_SHARD_TARGET_SECONDS
-        )
-        total = sum(weights.values())
-        by_load = max(1, math.ceil(total / target)) if target > 0 else 1
-        by_cap = (len(files) + AUTOMATIC_SHARD_MAX_MODULES - 1) // AUTOMATIC_SHARD_MAX_MODULES
-        count = max(3, min(by_load, by_cap, AUTOMATIC_SHARD_MAX_JOBS))
-        # Capacity must still hold every module under the per-job cap.
-        count = max(count, (len(files) + AUTOMATIC_SHARD_MAX_MODULES - 1) // AUTOMATIC_SHARD_MAX_MODULES)
+        target = float(os.environ.get("TEMPLATE_CI_SHARD_TARGET_SECONDS", AUTOMATIC_SHARD_TARGET_SECONDS))
+        if not math.isfinite(target) or target <= 0:
+            raise ValueError("functional shard target must be finite positive seconds")
+        # Without a measured module weights are bytes, so only capacity can
+        # determine the job count. Never interpret bytes as elapsed seconds.
+        by_load = math.ceil(sum(weights.values()) / target) if any(name in measured for name in files) else 1
+        by_cap = math.ceil(len(files) / AUTOMATIC_SHARD_MAX_MODULES)
+        # Capacity may need more jobs than the duration-driven preference.
+        # Preserve the entire roster and module cap; hosted max-parallel still
+        # limits concurrent execution for broad changes such as conftest.py.
+        preferred_jobs = max(1, AUTOMATIC_SHARD_LOAD_MAX_JOBS - len(isolated))
+        count = max(3, by_cap, min(by_load, preferred_jobs))
     shards: list[list[str]] = [[] for _ in range(min(count, len(files)))]
     loads = [0.0] * len(shards)
     for name in sorted(files, key=lambda p: (-weights[p], p)):
         available = [i for i in range(len(loads)) if not automatic or len(shards[i]) < AUTOMATIC_SHARD_MAX_MODULES]
-        if not available:  # defensive: capacity is guaranteed above
-            available = list(range(len(loads)))
+        if not available:
+            raise ValueError("functional shard capacity exhausted")
         selected = min(available, key=lambda i: (loads[i], i))
         shards[selected].append(name)
         loads[selected] += weights[name]
@@ -171,8 +176,15 @@ def validate_shards(shards: list[list[str]], expected: tuple[str, ...]) -> None:
 
 
 def validate_plan(root: Path, plan: dict) -> None:
-    expected = infrastructure_files(root, tuple(plan["changed_paths"]))
-    if plan.get("contract_modules", []) != list(contract_files(expected, infrastructure_files(root))):
+    from infrastructure.core.testing.ci_selection import documentation_only
+
+    changed = tuple(plan["changed_paths"])
+    docs_only = not plan.get("full", False) and documentation_only(changed)
+    if plan.get("documentation_only", False) is not docs_only:
+        raise ValueError("documentation lane differs from its changed-path scope")
+    expected = infrastructure_files(root, changed, documentation=docs_only)
+    baseline = () if docs_only else infrastructure_files(root)
+    if plan.get("contract_modules", []) != list(contract_files(expected, baseline)):
         raise ValueError("deep contract selection differs from its source-owned exact roster")
     validate_shards(combined_groups(plan), expected)
 
@@ -308,12 +320,6 @@ def run_shard(root: Path, plan: dict, shard: int, directory: Path) -> int:
     # Full contracts use the established infrastructure harness default.
     # A CLI option preserves test markers without changing nested child environments.
     command.append("--timeout=120" if is_contract else "--timeout=60")
-    workers = os.environ.get("TEMPLATE_CI_XDIST", "").strip()
-    if workers and is_contract:
-        if not workers.isdigit() or not 1 <= int(workers) <= 8:
-            raise ValueError("TEMPLATE_CI_XDIST must be an integer between 1 and 8")
-        if int(workers) > 1:
-            command.extend(["-n", workers, "--dist", "loadgroup"])
     timeout = CONTRACT_SECONDS if is_contract else 540
     # A hard pytest exit cannot write terminal receipts. Retain its request
     # before launch; this diagnostic cannot stand in for execution outcomes.

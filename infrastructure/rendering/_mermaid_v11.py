@@ -35,7 +35,7 @@ def validate_rendering_profile(value: object) -> None:
     """Reject altered values and Python's bool/int equality ambiguity."""
     expected = rendering_profile()
     if not isinstance(value, dict) or set(value) != set(expected):
-        raise ValueError("Mermaid rendering profile differs from the source-owned legacy default theme")
+        raise ValueError("Mermaid rendering profile differs from the source-owned default theme")
     for key, original in expected.items():
         if type(value[key]) is not type(original) or value[key] != original:
             raise ValueError("Mermaid rendering profile changes theme, embedding or viewport semantics")

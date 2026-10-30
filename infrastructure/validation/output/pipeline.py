@@ -218,7 +218,7 @@ def verify_outputs_exist(
         require_pdf: Whether detailed structure validation requires a combined
             PDF for the effective render configuration.
         enabled_formats: Effective publication formats for required-category
-            diagnostics. ``None`` preserves legacy behavior.
+            diagnostics. ``None`` uses the default output requirements.
 
     Returns:
         Tuple of (validation_passed, detailed_validation_results)
@@ -365,7 +365,7 @@ def validate_prose_quality(project_name: str = "project", *, repo_root: Path = _
     :func:`infrastructure.validation.content.ai_writing.analyze_prose`. This is a
     warning gate: it always returns ``True`` and never fails the pipeline. It is
     only invoked when ``validation.prose_quality.enabled`` is set in the project
-    config, so disabled runs are byte-identical to the legacy behavior.
+    config, so disabled runs are byte-identical to the default behavior.
     """
     return _validate_prose_quality(_project_root(project_name, repo_root=repo_root))
 

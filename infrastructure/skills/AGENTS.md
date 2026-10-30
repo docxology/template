@@ -28,7 +28,7 @@ flowchart TB
 ## Public API (`discovery.py`)
 
 - `DEFAULT_SKILL_SEARCH_ROOTS` — `("infrastructure", "scripts", "projects/templates", "fonds/templates", "rules/templates", "tools/templates", "docs/prompts", ".agents/skills", ".agents/workflows")` relative to repo root; repository-scoped and public-exemplar `.agents/skills/*/SKILL.md` descriptors are intentionally included
-- `SkillDescriptor` — `absolute_path`, `relative_path`, `name`, `description`, `frontmatter`; properties `path_posix`, `agent_ref` (generic), `cursor_at` (deprecated alias)
+- `SkillDescriptor` — `absolute_path`, `relative_path`, `name`, `description`, `frontmatter`; properties `path_posix` and `agent_ref`; manifest schema 2 exposes the editor-independent reference
 - `split_yaml_frontmatter(source: str) -> tuple[dict | None, str]`
 - `load_skill_descriptor(skill_path: Path, repo_root: Path) -> SkillDescriptor`
 - `iter_skill_paths(repo_root: Path, roots: Sequence[str]) -> Iterator[Path]` — paths under `projects/templates/` are limited to `PUBLIC_PROJECT_NAMES`, so ignored local templates cannot affect public manifests or duplicate-name checks

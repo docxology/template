@@ -9,7 +9,7 @@ Tests LLMClient functionality using real data (No Mocks Policy):
 import pytest
 import requests
 
-from infrastructure.core.exceptions import LLMConnectionError, LLMError, SecurityError
+from infrastructure.core.exceptions import LLMConnectionError, LLMError, SecurityViolation
 from infrastructure.llm.core.client import LLMClient, ResponseMode
 from infrastructure.llm.core.config import GenerationOptions, OllamaClientConfig
 from infrastructure.llm.core.context import ConversationContext
@@ -59,9 +59,9 @@ class TestLLMClientInitialization:
     def test_unallowlisted_bypasses_fail_closed(self, default_config):
         """Raw and unsanitized paths require an explicitly registered caller."""
         client = LLMClient(default_config)
-        with pytest.raises(SecurityError, match="Unallowlisted sanitization"):
+        with pytest.raises(SecurityViolation, match="Unallowlisted sanitization"):
             client.query("project content", sanitize=False, bypass_caller="unknown", bypass_reason="not approved")
-        with pytest.raises(SecurityError, match="Unallowlisted raw-query"):
+        with pytest.raises(SecurityViolation, match="Unallowlisted raw-query"):
             client.query_raw("project content", bypass_caller="unknown", bypass_reason="not approved")
 
 

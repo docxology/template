@@ -17,12 +17,11 @@ from pathlib import Path
 
 import pytest
 
-from infrastructure.core.exceptions import SecurityError
+from infrastructure.core.exceptions import SecurityViolation
 from infrastructure.core.security import (
     RateLimiter,
     SecurityMonitor,
     SecurityValidator,
-    SecurityViolation,
     get_cors_headers,
     get_rate_limiter,
     get_security_headers,
@@ -49,8 +48,8 @@ class TestSecurityValidator:
         assert result == ""
 
     def test_sanitize_llm_input_non_string_raises(self):
-        """Test that non-string input raises SecurityError."""
-        with pytest.raises(SecurityError, match="Prompt must be a string"):
+        """Test that non-string input raises SecurityViolation."""
+        with pytest.raises(SecurityViolation, match="Prompt must be a string"):
             sanitize_llm_input(123)  # type: ignore
 
     def test_sanitize_llm_input_too_long_truncates(self):
@@ -85,7 +84,7 @@ class TestSecurityValidator:
     )
     def test_sanitize_llm_input_dangerous_patterns(self, dangerous_input: str):
         """Test that dangerous patterns are detected and rejected."""
-        with pytest.raises(SecurityError, match="Dangerous content detected in input"):
+        with pytest.raises(SecurityViolation, match="Dangerous content detected in input"):
             sanitize_llm_input(dangerous_input)
 
     def test_sanitize_llm_input_sanitizes_html(self):

@@ -14,7 +14,7 @@ if str(_SCRIPTS) not in sys.path:
 
 from _bootstrap import bootstrap_project
 
-PROJECT_ROOT = bootstrap_project(include_infrastructure=True)
+PROJECT_ROOT = bootstrap_project()
 
 from infrastructure.core.pipeline.artifacts import (
     snapshot_current_artifact_manifest,

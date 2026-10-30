@@ -9,7 +9,6 @@ Use uppercase placeholders such as:
 - `{{RESULTS_FIGURES}}`
 - `{{CONFIGURATION_FIGURES}}`
 - `{{EVALUATION_FIGURES}}`
-- `{{CONFIGURED_FIELD_FIGURES}}`
 - `{{CONFIGURED_FIELD_SUMMARY_TABLE}}`
 - `{{CONFIGURED_FIELD_TABLE}}`
 - `{{DESIGN_PRINCIPLE_TABLE}}`
@@ -29,7 +28,6 @@ Do not hard-code manuscript figures in section shells. Use generated figure grou
 - `{{CONFIGURATION_FIGURES}}`: configured-field origin, section coverage, and field-origin summary.
 - `{{EVALUATION_FIGURES}}`: quality-gate matrix.
 
-`{{CONFIGURED_FIELD_FIGURES}}` is retained as a compatibility alias for `{{CONFIGURATION_FIGURES}}`.
 The PDF cover image is declared with `paper.cover.image` and generated as
 `output/figures/madlib_cover_overview.png`.
 

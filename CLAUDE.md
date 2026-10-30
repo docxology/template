@@ -594,7 +594,7 @@ uv run python scripts/pipeline/stage_03_render.py --project {name}
 ## Documentation Resources
 
 - **README.md** - Project overview and quick start
-- **.agents/AGENTS.md** - Shared agent instructions; `.cursorrules` is a deprecated Cursor pointer.
+- **.agents/AGENTS.md** - Shared agent instructions.
 - **AGENTS.md** - System reference (configuration, modules, troubleshooting details)
 - **.github/README.md** / **.github/AGENTS.md** - CI workflows, Dependabot, PR templates; local parity via **`.pre-commit-config.yaml`**
 - **[docs/RUN_GUIDE.md](docs/RUN_GUIDE.md)** - Pipeline execution documentation

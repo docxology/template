@@ -173,14 +173,6 @@ def preprocess_combined_markdown(
                     if isinstance(raw.get("areas"), dict):
                         areas_dict = raw["areas"]
                         flat["total_areas"] = str(len(areas_dict))
-                        # Alias areas.X -> areas.X.count for legacy scalar
-                        # shapes only. Nested {count: N} entries are already
-                        # flattened to areas.X.count by flatten_manuscript_vars;
-                        # overwriting with str(dict) would emit "{'count': N}".
-                        for area_name, area_value in areas_dict.items():
-                            if isinstance(area_value, dict):
-                                continue
-                            flat[f"areas.{area_name}.count"] = str(area_value)
 
                     content, n_vars = substitute_manuscript_var_placeholders(content, flat)
                     if n_vars:

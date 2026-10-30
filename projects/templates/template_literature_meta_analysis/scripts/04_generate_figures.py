@@ -17,7 +17,7 @@ if str(_SCRIPTS) not in sys.path:
 
 from _bootstrap import bootstrap_project
 
-bootstrap_project(include_infrastructure=True)
+bootstrap_project()
 
 from template_literature_meta_analysis.config import (
     DATA_DIR as DEFAULT_DATA_DIR,

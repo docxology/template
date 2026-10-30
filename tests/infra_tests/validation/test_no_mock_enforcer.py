@@ -9,12 +9,11 @@ from infrastructure.validation.output.no_mock_enforcer import (
     scan_lexical_mock_policy,
     scan_semantic_standins,
     scan_test_roots,
-    validate_no_mocks,
 )
 
 
-class TestValidateNoMocks:
-    """Test validate_no_mocks function."""
+class TestLexicalMockPolicy:
+    """Check lexical violations and unreadable test inputs."""
 
     def test_clean_test_file_has_no_violations(self, tmp_path):
         """Test that a clean test file returns no violations."""
@@ -22,8 +21,8 @@ class TestValidateNoMocks:
         tests_dir.mkdir()
         (tests_dir / "test_clean.py").write_text("def test_something():\n    result = 1 + 1\n    assert result == 2\n")
 
-        violations = validate_no_mocks(tests_dir, tmp_path)
-        assert violations == []
+        violations = scan_lexical_mock_policy(tests_dir, tmp_path).violations
+        assert violations == ()
 
     def test_file_with_mock_import_flagged(self, tmp_path):
         """Test that a file importing unittest.mock is flagged."""
@@ -33,7 +32,7 @@ class TestValidateNoMocks:
             "from unittest.mock import MagicMock\n\ndef test_something():\n    m = MagicMock()\n"
         )
 
-        violations = validate_no_mocks(tests_dir, tmp_path)
+        violations = scan_lexical_mock_policy(tests_dir, tmp_path).violations
         assert len(violations) > 0
         assert any("test_bad.py" in v for v in violations)
 
@@ -45,7 +44,7 @@ class TestValidateNoMocks:
             "import something\n\ndef test_something():\n    m = MagicMock()\n    assert True\n"
         )
 
-        violations = validate_no_mocks(tests_dir, tmp_path)
+        violations = scan_lexical_mock_policy(tests_dir, tmp_path).violations
         assert len(violations) > 0
 
     def test_empty_tests_dir_has_no_violations(self, tmp_path):
@@ -53,16 +52,8 @@ class TestValidateNoMocks:
         tests_dir = tmp_path / "tests"
         tests_dir.mkdir()
 
-        violations = validate_no_mocks(tests_dir, tmp_path)
-        assert violations == []
-
-    def test_returns_list(self, tmp_path):
-        """Test that validate_no_mocks always returns a list."""
-        tests_dir = tmp_path / "tests"
-        tests_dir.mkdir()
-
-        result = validate_no_mocks(tests_dir, tmp_path)
-        assert isinstance(result, list)
+        violations = scan_lexical_mock_policy(tests_dir, tmp_path).violations
+        assert violations == ()
 
     def test_trailing_comment_does_not_hide_mock(self, tmp_path):
         """A trailing comment must not let a real MagicMock() slip past.
@@ -76,7 +67,7 @@ class TestValidateNoMocks:
         (tests_dir / "test_bad.py").write_text(
             f"from unittest.mock import {ctor}  # noqa\n\ndef test_x():\n    m = {ctor}()  # setup\n"
         )
-        assert len(validate_no_mocks(tests_dir, tmp_path)) > 0
+        assert len(scan_lexical_mock_policy(tests_dir, tmp_path).violations) > 0
 
     def test_mock_prefixed_variable_does_not_hide_mock(self, tmp_path):
         """A ``mock_``-prefixed variable name must not skip the line."""
@@ -84,7 +75,7 @@ class TestValidateNoMocks:
         tests_dir.mkdir()
         ctor = "Magic" + "Mock"
         (tests_dir / "test_bad.py").write_text(f"def test_x():\n    mock_client = {ctor}()\n")
-        assert len(validate_no_mocks(tests_dir, tmp_path)) > 0
+        assert len(scan_lexical_mock_policy(tests_dir, tmp_path).violations) > 0
 
     def test_from_unittest_import_mock_flagged(self, tmp_path):
         """``from unittest import mock`` (then mock.patch) must be caught."""
@@ -93,7 +84,7 @@ class TestValidateNoMocks:
         (tests_dir / "test_bad.py").write_text(
             "from unittest import mock\n\ndef test_x():\n    p = mock.patch('os.getcwd')\n"
         )
-        assert len(validate_no_mocks(tests_dir, tmp_path)) > 0
+        assert len(scan_lexical_mock_policy(tests_dir, tmp_path).violations) > 0
 
     def test_dynamic_importlib_mock_import_is_flagged(self, tmp_path):
         tests_dir = tmp_path / "tests"
@@ -107,7 +98,7 @@ class TestValidateNoMocks:
             encoding="utf-8",
         )
 
-        violations = validate_no_mocks(tests_dir, tmp_path)
+        violations = scan_lexical_mock_policy(tests_dir, tmp_path).violations
         assert any("import_module" in violation for violation in violations)
         assert any("getattr" in violation for violation in violations)
 
@@ -122,7 +113,7 @@ class TestValidateNoMocks:
             encoding="utf-8",
         )
 
-        assert len(validate_no_mocks(tests_dir, tmp_path)) == 2
+        assert len(scan_lexical_mock_policy(tests_dir, tmp_path).violations) == 2
 
     def test_monkeypatch_is_allowed(self, tmp_path):
         """pytest's monkeypatch fixture is policy-permitted, not a mock."""
@@ -131,7 +122,7 @@ class TestValidateNoMocks:
         (tests_dir / "test_ok.py").write_text(
             "def test_x(monkeypatch):\n    monkeypatch.setenv('A', '1')\n    assert True\n"
         )
-        assert validate_no_mocks(tests_dir, tmp_path) == []
+        assert scan_lexical_mock_policy(tests_dir, tmp_path).violations == ()
 
     def test_multiline_docstring_mentioning_forbidden_names_ok(self, tmp_path):
         """A forbidden name across a multi-line docstring is not a usage."""
@@ -141,7 +132,7 @@ class TestValidateNoMocks:
         (tests_dir / "test_docs.py").write_text(
             f'"""Policy note.\n\nWhy {ctor}( and patch( are banned in tests.\n"""\n\ndef test_real():\n    assert 2 == 2\n'
         )
-        assert validate_no_mocks(tests_dir, tmp_path) == []
+        assert scan_lexical_mock_policy(tests_dir, tmp_path).violations == ()
 
     def test_one_line_docstring_mentioning_forbidden_names_ok(self, tmp_path):
         """Docstrings may document the policy without counting as violations."""
@@ -153,8 +144,8 @@ class TestValidateNoMocks:
             f'"""Describes why {mock_ctor} is forbidden in tests."""\n\ndef test_real():\n    assert 2 == 2\n'
         )
 
-        violations = validate_no_mocks(tests_dir, tmp_path)
-        assert violations == []
+        violations = scan_lexical_mock_policy(tests_dir, tmp_path).violations
+        assert violations == ()
 
 
 class TestScanTestRoots:
@@ -297,3 +288,24 @@ def test_inventory(monkeypatch, tmp_path):
 
         assert lexical.errors
         assert inventory.errors
+
+
+def test_scan_failures_block_publication_and_exemplar_drift(tmp_path):
+    """Unreadable test syntax cannot make either public gate appear clean."""
+    from infrastructure.project.drift.checks_exemplar import check_mocks_absent_from_tests
+    from infrastructure.project.drift.models import Report
+    from infrastructure.validation.publication.audit import AuditContext, check_no_mocks
+
+    tests_dir = tmp_path / "tests"
+    tests_dir.mkdir()
+    (tests_dir / "test_broken.py").write_text("def incomplete(:\n", encoding="utf-8")
+    context = AuditContext(tmp_path, "templates/example", tmp_path, rendered=False, include_drift=False)
+    publication_findings = list(check_no_mocks(context))
+    assert publication_findings
+    assert all(finding.status == "fail" for finding in publication_findings)
+    assert any("syntax error" in finding.message for finding in publication_findings)
+
+    drift = Report()
+    check_mocks_absent_from_tests(tmp_path, drift, "templates/example")
+    assert drift.errors()
+    assert any("syntax error" in finding.message for finding in drift.errors())

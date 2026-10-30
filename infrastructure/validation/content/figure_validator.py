@@ -155,13 +155,13 @@ def validate_figure_registry(
     registered in the figure registry. Skips documentation files (AGENTS.md,
     README.md) when scanning for references. When ``require_accessibility`` is
     true, referenced entries must carry explicit alt text in either the
-    top-level ``alt_text``/``alt`` field or ``metadata.alt_text``.
+    top-level ``alt_text`` field or ``metadata.alt_text``.
 
     Args:
         registry_path: Path to figure registry JSON file
         manuscript_dir: Path to manuscript directory containing markdown files
-        require_accessibility: Opt-in migration gate for explicit figure alt
-            text. The ordinary reference gate remains backwards compatible.
+        require_accessibility: Require explicit figure alt
+            text. The ordinary reference gate validates paths independently of alt text.
         additional_manuscript_dirs: Additional rendered or hydrated manuscript
             trees whose references must be covered by the same registry. This
             prevents producer-injected figures from bypassing a source-only
@@ -237,7 +237,7 @@ def _missing_accessibility_metadata(
     for label in sorted(referenced_figures & set(registered_figures)):
         record = registered_figures[label]
         metadata = record.get("metadata")
-        alt_text = record.get("alt_text") or record.get("alt")
+        alt_text = record.get("alt_text")
         if not alt_text and isinstance(metadata, dict):
             alt_text = metadata.get("alt_text")
         if not isinstance(alt_text, str) or not alt_text.strip():

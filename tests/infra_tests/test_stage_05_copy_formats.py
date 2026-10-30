@@ -132,22 +132,17 @@ def test_html_only_copy_stage_succeeds_without_publishing_pdf(tmp_path, caplog, 
         assert f"• Reports: {repeat_reports}" in caplog.text
 
 
-def test_legacy_pdf_override_copy_stage_uses_pdf_only_contract(tmp_path) -> None:
+def test_pdf_only_copy_stage_preserves_canonical_and_root_alias_bytes(tmp_path) -> None:
     project_root = tmp_path / "projects" / "active" / "demo"
     (project_root / "src").mkdir(parents=True)
     (project_root / "tests").mkdir()
     manuscript_dir = project_root / "manuscript"
     manuscript_dir.mkdir(parents=True)
     (manuscript_dir / "01_intro.md").write_text("# Intro\n", encoding="utf-8")
-    # The legacy override remains PDF-only even when ordinary format toggles
-    # would otherwise request HTML and slides.
     (manuscript_dir / "config.yaml").write_text(
-        "render:\n  formats:\n    pdf: false\n    html: true\n    slides: true\n",
+        "render:\n  formats:\n    pdf: true\n    html: false\n    slides: false\n    docx: false\n    epub: false\n",
         encoding="utf-8",
     )
-    override = project_root / "scripts" / "_render_pdf_override.py"
-    override.parent.mkdir(parents=True)
-    override.write_text("raise SystemExit(0)\n", encoding="utf-8")
     _write_pdf(project_root / "output" / "pdf" / "demo_combined.pdf")
 
     assert execute_copy_stage("active/demo", repo_root=tmp_path) == 0

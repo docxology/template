@@ -29,7 +29,7 @@ for provenance, verification, and the separate public installation acceptance.
 
 ## Bridge: template/ → docxology/publishing
 
-The `export_for_publishing.py` script is the formal handoff point between this repo's rendering pipeline and the downstream publishing checkout (DAF working-stack layout: a `publishing` checkout under `projects/ongoing/DAF/`, sibling to this clone; standalone layout: `~/Documents/GitHub/publishing`).
+The `export_for_publishing.py` script bundles rendered output for a downstream publishing checkout. It writes to `output/publishing_exports/` by default; pass `--output-dir /path/to/publishing/workspace/imports` for a direct handoff.
 
 ### Two-repo architecture
 
@@ -63,7 +63,7 @@ uv run python scripts/publish/export_for_publishing.py \
     --project templates/my_book
 
 # Step 3: in the publishing repo
-cd ../projects/ongoing/DAF/publishing  # DAF working-stack checkout; standalone clones: cd ~/Documents/GitHub/publishing
+cd /path/to/publishing
 uv run docpub import workspace/imports/my_book-latest/manifest.json
 uv run docpub distribute --platform gumroad
 ```
@@ -73,7 +73,7 @@ uv run docpub distribute --platform gumroad
 1. Resolves the project root from the qualified project name
 2. Reads `manuscript/config.yaml` for title, author, and metadata
 3. Scans `output/pdf/`, `output/ebook/`, and `output/metadata/` for generated artifacts
-4. Creates a timestamped subdirectory under `--output-dir` (default: the publishing checkout's `workspace/imports/`, auto-detected — the DAF working-stack checkout sibling to this clone when present, else `~/Documents/GitHub/publishing/workspace/imports/`)
+4. Creates a timestamped subdirectory under `--output-dir` (default: `output/publishing_exports/` under the selected repository)
 5. Copies all discovered artifacts into the bundle subdirectory
 6. Writes `manifest.json` with paths, checksums, timestamps, and config metadata
 7. Creates/updates the `latest` symlink pointing to the new export
@@ -103,7 +103,7 @@ uv run docpub distribute --platform gumroad
 ### Prerequisites
 
 - The template pipeline has been run and `output/` is populated
-- A publishing checkout exists and is auto-detected (DAF working-stack layout: `projects/ongoing/DAF/publishing` sibling to this clone; standalone layout: `~/Documents/GitHub/publishing`) — clone of docxology/publishing
+- For a direct handoff, supply the `workspace/imports/` directory of your chosen `docxology/publishing` checkout with `--output-dir`.
 - The `workspace/imports/` directory exists (created automatically if missing)
 
 ---

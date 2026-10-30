@@ -256,6 +256,10 @@ config) — flagged here for whoever next touches pytest's import-mode config.
 
 ## Increment 3 — Adversarial review, hardening, and first real end-to-end run (2026-07-13)
 
+**Contract update (2026-10-30, 4.4.1):** `call_ollama()` now requires an explicit
+`system_prompt` for each extraction task. The observations and repair below describe
+the July implementation and are retained as dated audit evidence.
+
 **Trigger:** user asked for a fresh adversarial read of the increment-1 and
 increment-2 work, not a re-confirmation that tests pass. "Don't just re-run
 the existing tests and call it done."

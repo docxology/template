@@ -272,7 +272,7 @@ def register_figure(*, figure_manager_factory: Any = None) -> None:
         fm = manager_factory(registry_file=str(registry_file))
         # This producer owns the complete six-figure Source registry. A prior
         # run's labels and numeric IDs must not choose today's declaration or
-        # make output bytes depend on unrelated legacy registry contents.
+        # make output bytes depend on unrelated registry contents.
         fm.figures = {}
         fm.counter = 0
         figures = [

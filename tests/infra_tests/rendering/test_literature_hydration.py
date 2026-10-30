@@ -23,6 +23,7 @@ def project(request: pytest.FixtureRequest, tmp_path: Path) -> Path:
     (copied / "scripts").mkdir(parents=True)
     for filename in ("_bootstrap.py", "05_inject_variables.py"):
         shutil.copy2(original / "scripts" / filename, copied / "scripts" / filename)
+    shutil.copy2(original / "pyproject.toml", copied / "pyproject.toml")
     shutil.copytree(original / "src", copied / "src", ignore=shutil.ignore_patterns("__pycache__", "*.egg-info"))
     (copied / "manuscript").mkdir()
     (copied / "manuscript/01_main.md").write_text("# Actual fixture\n")
@@ -60,9 +61,17 @@ def test_actual_hydration_dry_run_stale_sections_and_strict_failure_preserve_sou
     rendered.mkdir()
     (rendered / "00_deleted_section.md").write_text("# Former generated section\n")
     (rendered / "notes.md").write_text("Unrelated owned notes\n")
+    before = snapshot(project / "output")
+    for arguments in (("--dry-run",), ()):
+        result = invoke(project, "--project", project.name, *arguments)
+        assert result.returncode != 0 and "unowned rendered manuscript section" in result.stderr
+        assert "move it outside output/manuscript" in result.stderr
+        assert snapshot(project / "output") == before
+    # The owner explicitly retains the unowned bytes outside the render inputs.
+    (rendered / "00_deleted_section.md").rename(project / "output/retained_deleted_section.md")
     result = invoke(project, "--project", project.name)
     assert result.returncode == 0, result.stderr
-    assert not (rendered / "00_deleted_section.md").exists()
+    assert (project / "output/retained_deleted_section.md").read_text() == "# Former generated section\n"
     assert not (rendered / "MANUSCRIPT_STATUS.md").exists()
     assert not (rendered / ".env").exists()
     assert not (rendered / "unrelated.json").exists()
@@ -239,3 +248,51 @@ def test_late_actual_stale_edit_survives_after_prepared_write(tmp_path: Path) ->
         sys.setprofile(previous_profile)
     assert observed == [True]
     assert stale.read_text() == "Late human edit\n"
+
+
+@pytest.mark.parametrize("with_manifest", [False, True])
+def test_unowned_numbered_render_input_is_preserved_and_refused(tmp_path: Path, with_manifest: bool) -> None:
+    from infrastructure.rendering.manuscript_discovery import discover_manuscript_files
+    from infrastructure.rendering.manuscript_injection import hydrate_manuscript_tree
+
+    project = tmp_path / "owner"
+    source = project / "manuscript"
+    source.mkdir(parents=True)
+    (source / "01_main.md").write_text("Current source\n")
+    output = project / "output/manuscript"
+    output.mkdir(parents=True)
+    if with_manifest:
+        hydrate_manuscript_tree(project, lambda _name, content: content)
+    unowned = output / "7_old_section.MD"
+    unowned.write_text("Unowned former content\n")
+    assert unowned in discover_manuscript_files(output)
+    before = snapshot(project)
+    for dry_run in (True, False):
+        with pytest.raises(ValueError, match="unowned rendered manuscript section"):
+            hydrate_manuscript_tree(project, lambda _name, content: content, dry_run=dry_run)
+        assert snapshot(project) == before
+
+
+def test_actual_enabled_renderer_bookends_remain_owned_by_the_render_stage(tmp_path: Path) -> None:
+    import json
+
+    from infrastructure.rendering.manuscript_injection import hydrate_manuscript_tree
+    from infrastructure.transmission.transmission_bookends import write_transmission_bookends
+    from tests.infra_tests.publishing.test_transmission_bookends import _write_project
+
+    project = tmp_path / "owner"
+    _write_project(project, enabled=True)
+    generated = write_transmission_bookends(project, project.name, repo_root=tmp_path)
+    assert generated is not None
+    originals = {path: path.read_bytes() for path in generated}
+    hydrate_manuscript_tree(project, lambda _name, content: content)
+    manifest = json.loads((project / "output/manuscript/hydration_manifest.json").read_text())
+    assert all(path.name not in manifest["files"] for path in generated)
+    assert all(path.read_bytes() == content for path, content in originals.items())
+    # Disabled bookends have no current renderer owner; preserve and refuse them.
+    config = project / "manuscript/config.yaml"
+    config.write_text(config.read_text().replace("enabled: true", "enabled: false"))
+    before = snapshot(project / "output")
+    with pytest.raises(ValueError, match="unowned rendered manuscript section"):
+        hydrate_manuscript_tree(project, lambda _name, content: content)
+    assert snapshot(project / "output") == before

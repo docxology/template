@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import os
 import sys
+import tomllib
 import site
 from pathlib import Path
 
@@ -21,6 +22,10 @@ os.environ.setdefault("MPLBACKEND", "Agg")
 def _select_platform_sdk() -> None:
     """Keep pytest's own source paths separate from the selected environment SDK."""
     project = Path(__file__).resolve().parent.parent
+    with (project / "pyproject.toml").open("rb") as stream:
+        platform_version = tomllib.load(stream)["tool"]["template"]["platform_version"]
+    if not isinstance(platform_version, str) or not platform_version.strip():
+        raise ImportError("the own project requires a declared platform version")
     site_roots = tuple(Path(path).resolve() for path in site.getsitepackages())
 
     def own_source(path: Path) -> bool:
@@ -40,8 +45,8 @@ def _select_platform_sdk() -> None:
         verify_sdk_origins()
         sdk = importlib.import_module("infrastructure")
         verify_sdk_origins()
-        if getattr(sdk, "__version__", None) != "4.4.0":
-            raise ImportError("tests require the declared platform 4.4.0 SDK")
+        if getattr(sdk, "__version__", None) != platform_version:
+            raise ImportError(f"tests require the declared platform {platform_version} SDK")
     finally:
         sys.path[:] = original
 

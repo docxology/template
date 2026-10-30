@@ -251,6 +251,7 @@
       "exports": [
         "affected_projects",
         "changed_git_paths",
+        "documentation_only",
         "functional_selection",
         "infrastructure_selection"
       ],
@@ -358,8 +359,6 @@
       "purpose": "Self-contained stdio MCP server exposing the template's agent surface.",
       "subcommands": [],
       "exports": [
-        "LEGACY_PROTOCOL_VERSION",
-        "MODERN_PROTOCOL_VERSION",
         "PROTOCOL_VERSION",
         "SERVER_INFO",
         "SUPPORTED_PROTOCOL_VERSIONS",

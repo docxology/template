@@ -6,6 +6,8 @@ import json
 import time
 from pathlib import Path
 
+import pytest
+
 
 from infrastructure.search.literature.backends import (
     BackendError,
@@ -191,6 +193,27 @@ class TestSearchCache:
         assert len(recovered.papers) == 1
         assert recovered.papers[0].id == "x"
         assert recovered.per_source_counts == {"local": 1}
+
+    @pytest.mark.parametrize("field", ["_schema_version", "_cache_key"])
+    def test_incomplete_cache_identity_is_a_preserved_miss(self, tmp_path: Path, field: str):
+        cache = SearchCache(tmp_path)
+        query = SearchQuery(text="convex")
+        path = cache.put(SearchResult(query=query, papers=[Paper(id="x", title="Observed")]))
+        payload = json.loads(path.read_text())
+        del payload[field]
+        original = json.dumps(payload)
+        path.write_text(original)
+        assert validate_cache_payload(payload, query)
+        assert cache.get(query) is None
+        assert path.read_text() == original
+
+    @pytest.mark.parametrize("key", ["z" * 16, "A" * 16, "0" * 15, 16])
+    def test_malformed_key_is_rejected_without_a_requested_query(self, tmp_path: Path, key):
+        cache = SearchCache(tmp_path)
+        path = cache.put(SearchResult(query=SearchQuery(text="convex")))
+        payload = json.loads(path.read_text())
+        payload["_cache_key"] = key
+        assert any("_cache_key" in error for error in validate_cache_payload(payload))
 
     def test_hash_distinguishes_queries(self, tmp_path: Path):
         cache = SearchCache(tmp_path)

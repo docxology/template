@@ -299,18 +299,6 @@ class NotADirectoryError(FileOperationError, builtins.NotADirectoryError):
     pass
 ```
 
-#### SecurityError (class)
-```python
-class SecurityError(SecurityViolation):
-    """Security violation in LLM input sanitization.
-
-    Subclass of SecurityViolation kept for backwards compatibility with call
-    sites that catch SecurityError. Re-exported from
-    infrastructure.core._exceptions_domains via exceptions.py.
-    """
-    pass
-```
-
 #### raise_with_context (function)
 ```python
 def raise_with_context(

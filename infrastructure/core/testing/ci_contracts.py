@@ -1,13 +1,6 @@
-"""Complementary full-module contract jobs, separate from legacy smoke clocks."""
+"""Complementary full-module contract jobs, separate from baseline smoke clocks."""
 
 from __future__ import annotations
-
-from collections.abc import Mapping
-from pathlib import Path
-
-from infrastructure.core.testing.ci_module_durations import load_module_durations
-
-_REPOSITORY_ROOT = Path(__file__).resolve().parents[3]
 
 # Full modules retain their own pytest timeout markers. This is below the
 # existing public_acceptance_root default whole-operation limit of 7200s.
@@ -47,28 +40,21 @@ CONTRACT_MODULES = frozenset(
         "tests/infra_tests/project/test_root_policy_authoring.py",
         "tests/infra_tests/project/test_root_portable.py",
         "tests/infra_tests/project/test_root_runtime_v2.py",
+        "tests/infra_tests/project/test_root_runtime_controls.py",
+        "tests/infra_tests/project/test_root_source_controls.py",
     }
 ) | frozenset(_NATIVE_PREPARATION)
 
 
-_XDIST_THRESHOLD_SECONDS = 300.0
-_XDIST_MAX_WORKERS = 4
-
-
-def contract_preparation(module: str, durations: Mapping[str, float] | None = None) -> dict[str, str | bool | int]:
-    """Project source-owned native requirements and a measured worker budget."""
+def contract_preparation(module: str) -> dict[str, str | bool]:
+    """Project source-owned native requirements for one serial module job."""
     documents, tex, browser = _NATIVE_PREPARATION.get(module, ("none", False, False))
-    measured = load_module_durations(_REPOSITORY_ROOT) if durations is None else durations
-    seconds = measured.get(module, 0.0)
-    workers = 0
-    if seconds > _XDIST_THRESHOLD_SECONDS:
-        workers = _XDIST_MAX_WORKERS if seconds > 2 * _XDIST_THRESHOLD_SECONDS else 2
-    return {"documents": documents, "tex": tex, "browser": browser, "workers": workers}
+    return {"documents": documents, "tex": tex, "browser": browser}
 
 
-def contract_files(files: tuple[str, ...], legacy: tuple[str, ...]) -> tuple[str, ...]:
-    """Existing legacy smoke remains exact; selected extra deep modules isolate."""
-    return tuple(name for name in files if name in CONTRACT_MODULES and name not in legacy)
+def contract_files(files: tuple[str, ...], baseline: tuple[str, ...]) -> tuple[str, ...]:
+    """Existing baseline smoke remains exact; selected extra deep modules isolate."""
+    return tuple(name for name in files if name in CONTRACT_MODULES and name not in baseline)
 
 
 def combined_groups(plan: dict) -> list[list[str]]:

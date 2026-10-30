@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 import time
+import tomllib
 from dataclasses import asdict
 from pathlib import Path
 from typing import Any, cast
@@ -106,13 +107,16 @@ def run_live_comparison(project_root: Path, output_dir: Path, settings: LiveSett
     before: dict[str, str] | None = None
     proposers: dict[str, LiveProposer] = {}
     try:
+        required = tomllib.loads((project_root / "pyproject.toml").read_text(encoding="utf-8"))["tool"]["template"][
+            "platform_version"
+        ]
         try:
             import infrastructure
             from infrastructure.llm.core.local_ollama import validate_local_endpoint
         except ImportError as exc:
-            raise CoordinationBlocked("platform 4.4.0 is required for live coordination") from exc
-        if infrastructure.__version__ != "4.4.0":
-            raise CoordinationBlocked("live coordination requires platform 4.4.0")
+            raise CoordinationBlocked(f"platform {required} is required for live coordination") from exc
+        if infrastructure.__version__ != required:
+            raise CoordinationBlocked(f"live coordination requires platform {required}")
         validate_local_endpoint(settings.endpoint)
         implementation_before = implementation_custody()
         platform_before = platform_sources()

@@ -155,7 +155,7 @@ def test_duplicate_io_preserves_actual_data_precedence_and_reference_counts(tmp_
     if layout in {"data", "both"}:
         (data / "topics.json").write_text('[{"topic_id":1}]')
     corpus = data / "corpus.jsonl"
-    corpus.write_text('{"references":["a","b"]}\n\nnot-json\n{"referenced_works":["c"]}\n')
+    corpus.write_text('{"references":["a","b"]}\n\nnot-json\n{"references":["c"]}\n')
     assert local.load_pipeline_json_raw(data, tmp_path, "topics.json") == engine.load_pipeline_json_raw(
         data, tmp_path, "topics.json"
     )
@@ -351,7 +351,7 @@ def test_complete_manuscript_consumer_preserves_pending_and_measured_domain_scor
         )
     variables = compute_variables(output)
     assert variables["SEARCH_TERM"] == "exoplanet atmosphere"
-    assert variables["CORPUS_SIZE"] == "2" and variables["ENGINE_LIST"] == "Crossref"
+    assert variables["RETRIEVED_CORPUS_SIZE"] == "2" and variables["ENGINE_LIST"] == "Crossref"
     assert variables["N_HYPOTHESES"] == "1"
     if measured:
         assert variables["H1_SCORE"] == "+0.50" and variables["H1_TOTAL"] == "4"
@@ -374,7 +374,6 @@ def test_complete_manuscript_consumer_preserves_pending_and_measured_domain_scor
     assert scoped["ANALYZED_CORPUS_SIZE"] == "3"
     assert scoped["TEMPORAL_TOTAL_PAPERS"] == "2"
     assert scoped["PHASE_CORPUS_SIZE"] == "1"
-    assert scoped["CORPUS_SIZE"] == "1"  # Existing phase alias remains compatible.
 
 
 def test_actual_crossref_and_repository_field_mapping_preserves_license_and_publication_kind():

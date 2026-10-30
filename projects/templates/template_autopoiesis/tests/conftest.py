@@ -4,12 +4,14 @@ from __future__ import annotations
 
 import importlib.util
 import shutil
+import tomllib
 from collections.abc import Iterator
 from pathlib import Path
 
 import pytest
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
+PLATFORM_VERSION = tomllib.loads((PROJECT_ROOT / "pyproject.toml").read_text())["tool"]["template"]["platform_version"]
 # Select actual SDK before exposing the own namespace; no ancestor imports.
 
 _bootstrap_spec = importlib.util.spec_from_file_location(
@@ -20,8 +22,8 @@ if _bootstrap_spec is None or _bootstrap_spec.loader is None:
 _bootstrap = importlib.util.module_from_spec(_bootstrap_spec)
 _bootstrap_spec.loader.exec_module(_bootstrap)
 _sdk = _bootstrap.bootstrap_project(PROJECT_ROOT)
-if _sdk is None or _sdk.__version__ != "4.4.0":
-    raise ImportError("the own test suite requires the declared platform 4.4.0 dependency")
+if _sdk is None or _sdk.__version__ != PLATFORM_VERSION:
+    raise ImportError(f"the own test suite requires the declared platform {PLATFORM_VERSION} dependency")
 
 
 @pytest.fixture(scope="session", autouse=True)

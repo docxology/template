@@ -130,10 +130,6 @@ uv run python -m infrastructure.project.public_scope source-paths | xargs uv run
 
 Keep wrapping aligned with the **88**-character default unless `pyproject.toml` overrides Ruff.
 
-#### Legacy tooling (optional locally)
-
-Black, isort, and flake8 are **not** the CI source of truth for this repository; use them only if you intentionally duplicate checks outside Ruff.
-
 ## Pre-commit Hooks
 
 ### pre-commit Configuration

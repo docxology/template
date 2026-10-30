@@ -16,10 +16,7 @@ import re
 
 import yaml
 
-try:
-    from .config import GoldRefinementConfig
-except ImportError:
-    from template_gold_refinement.config import GoldRefinementConfig  # type: ignore[no-redef]
+from .config import GoldRefinementConfig
 
 import logging
 

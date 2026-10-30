@@ -450,13 +450,6 @@ class TestDomainExceptions:
         err = SecurityViolation("constraint violated")
         assert isinstance(err, TemplateError)
 
-    def test_security_error_is_security_violation(self):
-        from infrastructure.core.exceptions import SecurityError, SecurityViolation
-
-        err = SecurityError("sanitization failed")
-        assert isinstance(err, SecurityViolation)
-        assert isinstance(err, TemplateError)
-
     def test_rendering_error(self):
         from infrastructure.core.exceptions import RenderingError
 

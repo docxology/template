@@ -8,7 +8,10 @@ Follows No Mocks Policy — real files and monkeypatch for repo-root isolation o
 from __future__ import annotations
 
 import json
+import shutil
 import subprocess
+import sys
+from pathlib import Path
 
 from infrastructure.core.pipeline.artifacts import ArtifactManifest, ArtifactManifestEntry, compute_sha256
 import infrastructure.validation.output.pipeline as mod
@@ -22,6 +25,37 @@ from infrastructure.validation.output.pipeline import (
 
 def _minimal_structural_pdf() -> bytes:
     return b"%PDF-1.4\n1 0 obj\n<<>>\nendobj\nstartxref\n0\n%%EOF\n"
+
+
+def test_validation_stage_resolves_project_beside_entrypoint_with_independent_sdk(tmp_path: Path) -> None:
+    """A separately located SDK must validate the actual script's project tree."""
+    source = Path(__file__).resolve().parents[3]
+    repo = tmp_path / "current-source"
+    stage = repo / "scripts/pipeline/stage_04_validate.py"
+    stage.parent.mkdir(parents=True)
+    shutil.copy2(source / "scripts/pipeline/stage_04_validate.py", stage)
+    shutil.copy2(source / "scripts/__init__.py", repo / "scripts/__init__.py")
+    project = repo / "projects/templates/template_test"
+    manuscript = project / "manuscript"
+    manuscript.mkdir(parents=True)
+    (manuscript / "01_intro.md").write_text("# Introduction\n\nCurrent project.\n", encoding="utf-8")
+    (project / "output").mkdir()
+    code = f"""
+import runpy, sys
+from pathlib import Path
+sys.path.insert(0, {str(source)!r})
+import infrastructure.validation.output.pipeline
+assert not Path(infrastructure.validation.output.pipeline.__file__).is_relative_to({str(repo)!r})
+sys.argv = [{str(stage)!r}, '--project', 'templates/template_test']
+runpy.run_path({str(stage)!r}, run_name='__main__')
+"""
+    result = subprocess.run(
+        [sys.executable, "-I", "-c", code], cwd=tmp_path, capture_output=True, text=True, timeout=60, check=False
+    )
+    assert result.returncode == 1, result.stdout + result.stderr
+    report = project / "output/reports/validation_report.json"
+    assert report.is_file(), result.stdout + result.stderr
+    assert "VALIDATION SUMMARY" in result.stdout + result.stderr
 
 
 class TestValidatePdfs:
@@ -652,8 +686,8 @@ class TestProseQualityGate:
         rc = mod.execute_validation_pipeline(project_name, repo_root=tmp_path, report_writer=_rec)
         return rc, captured["results"]
 
-    def test_disabled_run_check_results_identical_to_legacy(self, tmp_path, monkeypatch):
-        """No-config (legacy) and enabled:false runs must produce identical checks.
+    def test_disabled_run_check_results_identical_to_default(self, tmp_path, monkeypatch):
+        """No-config and enabled:false runs must produce identical checks.
 
         Proves the byte-identity claim at the level that determines report bytes:
         the disabled gate adds nothing to the results list.
@@ -662,7 +696,7 @@ class TestProseQualityGate:
         (project_dir / "output" / "pdf").mkdir(parents=True, exist_ok=True)
         (project_dir / "output" / "pdf" / "p.pdf").write_bytes(_minimal_structural_pdf())
 
-        rc_legacy, legacy = self._run_capturing_check_results(tmp_path)
+        rc_default, default = self._run_capturing_check_results(tmp_path)
 
         # Now add an explicit disabled toggle; results must be unchanged.
         (project_dir / "manuscript" / "config.yaml").write_text(
@@ -670,9 +704,9 @@ class TestProseQualityGate:
         )
         rc_disabled, disabled = self._run_capturing_check_results(tmp_path)
 
-        assert rc_legacy == rc_disabled
-        assert legacy == disabled
-        assert "Prose quality" not in [n for n, _ in legacy]
+        assert rc_default == rc_disabled
+        assert default == disabled
+        assert "Prose quality" not in [n for n, _ in default]
 
     def test_enabled_run_with_flagged_prose_still_exits_zero(self, tmp_path, monkeypatch):
         """Report-only contract: an enabled run over AI-flagged prose returns 0."""
@@ -710,7 +744,7 @@ class TestProseQualityGate:
             calls.append(project_name)
             return mod.validate_prose_quality(project_name, repo_root=tmp_path)
 
-        # Disabled (no config): prose check must NOT run -> byte-identical legacy path.
+        # Disabled (no config): prose check must NOT run; retain the default result.
         self._scaffold(tmp_path, enabled=None, prose="# Intro\n\nShort prose here.")
         mod.execute_validation_pipeline("test", repo_root=tmp_path, prose_validator=_recorder)
         assert calls == []

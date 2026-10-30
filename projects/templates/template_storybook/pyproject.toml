@@ -15,7 +15,7 @@ classifiers = [
     "Programming Language :: Python :: 3.15",
 ]
 dependencies = [
-    "research-project-template==4.4.0",
+    "research-project-template==4.4.1",
     "Pillow>=12.3.0",
     "pyyaml>=6.0",
     "reportlab>=4.0",
@@ -65,6 +65,6 @@ exclude_lines = [
 research-project-template = { path = "../../..", editable = true }
 
 [tool.template]
-platform_version = "4.4.0"
+platform_version = "4.4.1"
 tested_python_versions = ["3.14", "3.15"]
 required_unpaid_capabilities = ["print-raster"]

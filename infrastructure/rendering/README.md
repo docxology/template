@@ -255,8 +255,8 @@ LZMA-JS decoder and full MIT notice are embedded alongside the full font OFL
 notice, so loading needs no font fetch or worker. The loader checks compressed
 and decoded size bounds, fixed properties and dictionary, and the actual known
 output-length header before decoding; it then reconstructs each complete face
-and checks its original length and SHA-256 before construction. The raw inline
-API and legacy base64/gzip loader branches remain supported. Compression caches
+and checks its original length and SHA-256 before construction. Independent
+native controls use the current raw inline font API. Compression caches
 only an immutable byte result after every call freshly reads and hashes the
 physical font bodies; it never substitutes a cache for Source selection.
 Export the complete `output/web/` tree,

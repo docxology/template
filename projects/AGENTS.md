@@ -658,7 +658,7 @@ flowchart LR
 
 ## Repository standards compliance
 
-Project trees follow the template discipline described in the root **[`.cursorrules`](../.cursorrules)** file (Cursor / IDE agents) and the expanded norms under **[`docs/rules/`](../docs/rules/)** (testing, code style, logging, and related guides — not a `.cursorrules/` directory).
+Project trees follow the template discipline described in the root **[`AGENTS.md`](../AGENTS.md)** file (shared agent contract) and the expanded norms under **[`docs/rules/`](../docs/rules/)** (testing, code style, logging, and related guides).
 
 ### ✅ **Testing Standards Compliance**
 
@@ -1083,7 +1083,7 @@ infrastructure compliance:
 
 ### 📋 **Compliance Framework**
 
-- **Repository standards**: [`.cursorrules`](../.cursorrules) and [`docs/rules/`](../docs/rules/) for testing, documentation, type hints, error handling, and logging
+- **Repository standards**: [`AGENTS.md`](../AGENTS.md) and [`docs/rules/`](../docs/rules/) for testing, documentation, type hints, error handling, and logging
 - **Quality Gates**: Automated coverage checks, documentation validation, type safety verification
 - **Operational Patterns**: Thin orchestrator scripts, infrastructure utility imports, project isolation
 

@@ -1,4 +1,4 @@
-"""Tests for the stdio MCP server (no mocks; real handler + real subprocess)."""
+"""Current stdio MCP contract using real handlers and subprocesses."""
 
 from __future__ import annotations
 
@@ -8,6 +8,8 @@ import subprocess
 import sys
 from pathlib import Path
 from typing import Any
+
+import pytest
 
 from infrastructure.mcp_server import (
     ALLOW_MUTATING_ENV,
@@ -19,19 +21,27 @@ from infrastructure.mcp_server import (
 )
 
 
-def _repo_root() -> Path:
-    return Path(__file__).resolve().parents[2]
-
-
-MODERN_PROTOCOL_VERSION = "2026-07-28"
-
-
-def _modern_meta(protocol_version: str = MODERN_PROTOCOL_VERSION) -> dict[str, object]:
+def _request(method: str, *, request_id: int = 1, **params: Any) -> dict[str, Any]:
     return {
-        "io.modelcontextprotocol/protocolVersion": protocol_version,
-        "io.modelcontextprotocol/clientInfo": {"name": "template-tests", "version": "1.0.0"},
-        "io.modelcontextprotocol/clientCapabilities": {},
+        "jsonrpc": "2.0",
+        "id": request_id,
+        "method": method,
+        "params": {
+            "_meta": {
+                "io.modelcontextprotocol/protocolVersion": PROTOCOL_VERSION,
+                "io.modelcontextprotocol/clientInfo": {"name": "template-tests", "version": "1.0.0"},
+                "io.modelcontextprotocol/clientCapabilities": {},
+            },
+            **params,
+        },
     }
+
+
+def _payload(response: dict[str, Any] | None) -> dict[str, Any]:
+    assert response is not None
+    result = response["result"]
+    assert result["resultType"] == "complete" and result["isError"] is False
+    return json.loads(result["content"][0]["text"])
 
 
 def _run_stdio_subprocess(messages: list[dict[str, Any]]) -> dict[Any, dict[str, Any]]:
@@ -40,446 +50,235 @@ def _run_stdio_subprocess(messages: list[dict[str, Any]]) -> dict[Any, dict[str,
         input="\n".join(json.dumps(message) for message in messages) + "\n",
         capture_output=True,
         text=True,
-        cwd=_repo_root(),
+        cwd=Path(__file__).resolve().parents[2],
         timeout=60,
+        check=False,
     )
-    assert proc.returncode == 0
-    # EVERY non-blank stdout line must be valid JSON-RPC — no log leakage.
+    assert proc.returncode == 0, proc.stderr
+    # Every stdout line must remain JSON-RPC, including tools that load the DAG.
     lines = [json.loads(line) for line in proc.stdout.splitlines() if line.strip()]
     return {line.get("id"): line for line in lines}
 
 
-def _declared_stage_count() -> int:
-    """Stages declared in pipeline.yaml, read rather than spelled.
+class TestProtocol:
+    def test_discovery_has_current_version_and_namespaced_server_identity(self) -> None:
+        response = handle_request(_request("server/discover"))
+        assert response is not None
+        result = response["result"]
+        assert result["supportedVersions"] == [PROTOCOL_VERSION]
+        assert PROTOCOL_VERSION == "2026-07-28"
+        assert result["_meta"]["io.modelcontextprotocol/serverInfo"]["name"] == "humos-template"
+        assert "serverInfo" not in result
+        assert result["capabilities"] == {"tools": {}}
+        assert result["resultType"] == "complete"
+        assert result["ttlMs"] > 0 and result["cacheScope"] == "public"
 
-    These tests are about the MCP tool surface, not about how many stages exist.
-    Hardcoding the total made them fail when an unrelated opt-in stage was added,
-    which tells a maintainer nothing about MCP.
-    """
-    import yaml
+    def test_tools_list_is_independent_and_cacheable(self) -> None:
+        first = handle_request(_request("tools/list", request_id=2))
+        second = handle_request(_request("tools/list", request_id=3))
+        assert first is not None and second is not None
+        assert first["result"] == second["result"]
+        result = first["result"]
+        assert result["resultType"] == "complete"
+        assert result["ttlMs"] > 0 and result["cacheScope"] == "public"
+        assert {tool["name"] for tool in result["tools"]} == {
+            "list_operations",
+            "describe_pipeline",
+            "list_skills",
+            "invoke_cli",
+        }
+        assert all("inputSchema" in tool for tool in list_tools())
 
-    from infrastructure.core.pipeline.cli import DEFAULT_PIPELINE_YAML
+    @pytest.mark.parametrize("method", ["server/discover", "tools/list", "tools/call"])
+    def test_metadata_required_on_every_request(self, method: str) -> None:
+        response = handle_request({"jsonrpc": "2.0", "id": 4, "method": method, "params": {}})
+        assert response is not None and response["error"]["code"] == -32602
+        assert "protocolVersion" in response["error"]["message"]
 
-    data = yaml.safe_load(DEFAULT_PIPELINE_YAML.read_text(encoding="utf-8")) or {}
-    stages = data.get("stages") or next(
-        (v for v in data.values() if isinstance(v, list) and v and isinstance(v[0], dict) and "key" in v[0]),
-        [],
+    @pytest.mark.parametrize(
+        "field,value",
+        [
+            ("protocolVersion", ""),
+            ("protocolVersion", 20260728),
+            ("clientInfo", {}),
+            ("clientInfo", {"name": "client", "version": ""}),
+            ("clientCapabilities", None),
+        ],
     )
-    return len(stages)
+    def test_incomplete_metadata_is_invalid(self, field: str, value: Any) -> None:
+        request = _request("tools/list")
+        request["params"]["_meta"][f"io.modelcontextprotocol/{field}"] = value
+        response = handle_request(request)
+        assert response is not None and response["error"]["code"] == -32602
+        assert field in response["error"]["message"]
+
+    def test_unsupported_version_returns_only_current_supported_version(self) -> None:
+        request = _request("tools/list")
+        request["params"]["_meta"]["io.modelcontextprotocol/protocolVersion"] = "1900-01-01"
+        response = handle_request(request)
+        assert response is not None
+        assert response["error"] == {
+            "code": -32022,
+            "message": "Unsupported protocol version",
+            "data": {"supported": [PROTOCOL_VERSION], "requested": "1900-01-01"},
+        }
+
+    @pytest.mark.parametrize("method", ["frobnicate", "initialize"])
+    def test_unknown_method(self, method: str) -> None:
+        response = handle_request(_request(method))
+        assert response is not None and response["error"]["code"] == -32601
+
+    def test_notification_has_no_response(self) -> None:
+        notification = _request("notifications/progress", progressToken="owned", progress=1)
+        del notification["id"]
+        assert handle_request(notification) is None
 
 
-class TestHandleRequest:
-    def test_initialize(self) -> None:
-        resp = handle_request({"jsonrpc": "2.0", "id": 1, "method": "initialize", "params": {}})
-        assert resp is not None
-        assert resp["result"]["protocolVersion"] == PROTOCOL_VERSION
-        assert resp["result"]["serverInfo"]["name"] == "humos-template"
-        assert "tools" in resp["result"]["capabilities"]
-
-    def test_initialized_notification_has_no_response(self) -> None:
-        assert handle_request({"jsonrpc": "2.0", "method": "notifications/initialized"}) is None
-
-    def test_tools_list(self) -> None:
-        resp = handle_request({"jsonrpc": "2.0", "id": 2, "method": "tools/list"})
-        names = {t["name"] for t in resp["result"]["tools"]}
-        assert {"list_operations", "describe_pipeline", "list_skills", "invoke_cli"} <= names
-        # every tool advertises an inputSchema
-        assert all("inputSchema" in t for t in list_tools())
-
-    def test_tools_call_describe_pipeline(self) -> None:
-        resp = handle_request(
-            {
-                "jsonrpc": "2.0",
-                "id": 3,
-                "method": "tools/call",
-                "params": {"name": "describe_pipeline", "arguments": {"mode": "core"}},
-            }
-        )
-        payload = json.loads(resp["result"]["content"][0]["text"])
+class TestTools:
+    def test_describe_pipeline(self) -> None:
+        payload = _payload(handle_request(_request("tools/call", name="describe_pipeline", arguments={"mode": "core"})))
         assert len(payload["stages"]) == 8
 
-    def test_tools_call_list_operations(self) -> None:
-        resp = handle_request(
-            {"jsonrpc": "2.0", "id": 4, "method": "tools/call", "params": {"name": "list_operations"}}
-        )
-        payload = json.loads(resp["result"]["content"][0]["text"])
+    def test_list_operations(self) -> None:
+        payload = _payload(handle_request(_request("tools/call", name="list_operations")))
         assert any(op["module"] == "infrastructure.skills" for op in payload["operations"])
 
-    def test_tools_call_list_skills_includes_agents_skill_lanes(self) -> None:
-        resp = handle_request({"jsonrpc": "2.0", "id": 5, "method": "tools/call", "params": {"name": "list_skills"}})
-        payload = json.loads(resp["result"]["content"][0]["text"])
+    def test_list_skills_includes_agents_skill_lanes(self) -> None:
+        payload = _payload(handle_request(_request("tools/call", name="list_skills")))
         paths = {skill["path"] for skill in payload["skills"]}
         assert ".agents/skills/context-fundamentals/SKILL.md" in paths
         assert "projects/templates/template_code_project/.agents/skills/template-code-project/SKILL.md" in paths
 
     def test_unknown_tool_is_error(self) -> None:
-        resp = handle_request({"jsonrpc": "2.0", "id": 6, "method": "tools/call", "params": {"name": "nope"}})
-        assert "error" in resp
+        response = handle_request(_request("tools/call", name="nope"))
+        assert response is not None and response["error"]["code"] == -32602
 
-    def test_unknown_method(self) -> None:
-        resp = handle_request({"jsonrpc": "2.0", "id": 7, "method": "frobnicate"})
-        assert resp["error"]["code"] == -32601
-
-
-class TestDualEraProtocol:
-    def test_pure_handler_keeps_request_local_era_compatibility(self) -> None:
-        legacy = handle_request({"jsonrpc": "2.0", "id": 18, "method": "tools/list"})
-        modern = handle_request(
-            {
-                "jsonrpc": "2.0",
-                "id": 19,
-                "method": "tools/list",
-                "params": {"_meta": _modern_meta()},
-            }
-        )
-        assert legacy is not None and modern is not None
-        assert set(legacy["result"]) == {"tools"}
-        assert modern["result"]["resultType"] == "complete"
-
-    def test_server_discover_advertises_modern_and_legacy_versions(self) -> None:
-        resp = handle_request(
-            {
-                "jsonrpc": "2.0",
-                "id": "discover-1",
-                "method": "server/discover",
-                "params": {"_meta": _modern_meta()},
-            }
-        )
-        assert resp is not None
-        result = resp["result"]
-        assert result["resultType"] == "complete"
-        assert result["supportedVersions"] == [MODERN_PROTOCOL_VERSION, PROTOCOL_VERSION]
-        assert result["capabilities"] == {"tools": {}}
-        assert result["serverInfo"]["name"] == "humos-template"
-        assert result["ttlMs"] > 0
-        assert result["cacheScope"] == "public"
-
-    def test_modern_tools_list_is_stateless_and_cacheable(self) -> None:
-        request = {
-            "jsonrpc": "2.0",
-            "id": 20,
-            "method": "tools/list",
-            "params": {"_meta": _modern_meta()},
-        }
-        first = handle_request(request)
-        second = handle_request({**request, "id": 21})
-        assert first is not None and second is not None
-        assert first["result"]["resultType"] == "complete"
-        assert first["result"]["tools"] == second["result"]["tools"]
-        assert first["result"]["ttlMs"] > 0
-        assert first["result"]["cacheScope"] == "public"
-
-    def test_modern_tools_call_has_complete_result_without_initialize(self) -> None:
-        resp = handle_request(
-            {
-                "jsonrpc": "2.0",
-                "id": 22,
-                "method": "tools/call",
-                "params": {
-                    "name": "describe_pipeline",
-                    "arguments": {"mode": "core"},
-                    "_meta": _modern_meta(),
-                },
-            }
-        )
-        assert resp is not None
-        assert resp["result"]["resultType"] == "complete"
-        assert resp["result"]["isError"] is False
-        payload = json.loads(resp["result"]["content"][0]["text"])
-        assert len(payload["stages"]) == 8
-
-    def test_unsupported_modern_version_returns_negotiation_error(self) -> None:
-        resp = handle_request(
-            {
-                "jsonrpc": "2.0",
-                "id": 23,
-                "method": "tools/list",
-                "params": {"_meta": _modern_meta("1900-01-01")},
-            }
-        )
-        assert resp is not None
-        assert resp["error"]["code"] == -32022
-        assert resp["error"]["data"] == {
-            "supported": [MODERN_PROTOCOL_VERSION, PROTOCOL_VERSION],
-            "requested": "1900-01-01",
-        }
-
-    def test_incomplete_modern_metadata_is_invalid_params(self) -> None:
-        resp = handle_request(
-            {
-                "jsonrpc": "2.0",
-                "id": 24,
-                "method": "server/discover",
-                "params": {
-                    "_meta": {
-                        "io.modelcontextprotocol/protocolVersion": MODERN_PROTOCOL_VERSION,
-                    }
-                },
-            }
-        )
-        assert resp is not None
-        assert resp["error"]["code"] == -32602
-        assert "clientInfo" in resp["error"]["message"]
-
-    def test_legacy_initialize_and_tools_list_shape_remain_compatible(self) -> None:
-        initialized = handle_request(
-            {
-                "jsonrpc": "2.0",
-                "id": 25,
-                "method": "initialize",
-                "params": {"protocolVersion": PROTOCOL_VERSION, "capabilities": {}},
-            }
-        )
-        listed = handle_request({"jsonrpc": "2.0", "id": 26, "method": "tools/list"})
-        assert initialized is not None and listed is not None
-        assert initialized["result"]["protocolVersion"] == PROTOCOL_VERSION
-        assert set(listed["result"]) == {"tools"}
-
-    def test_legacy_request_metadata_does_not_select_modern_era(self) -> None:
-        listed = handle_request(
-            {
-                "jsonrpc": "2.0",
-                "id": 27,
-                "method": "tools/list",
-                "params": {"_meta": {"progressToken": "legacy-progress"}},
-            }
-        )
-        assert listed is not None
-        assert set(listed["result"]) == {"tools"}
+    def test_tool_failure_retains_complete_error_result(self) -> None:
+        response = handle_request(_request("tools/call", name="describe_pipeline", arguments={"unsupported": True}))
+        assert response is not None
+        result = response["result"]
+        assert result["resultType"] == "complete" and result["isError"] is True
+        assert "Unsupported pipeline-description option" in result["content"][0]["text"]
 
 
 class TestInvokeCli:
-    def test_refuses_non_infrastructure_module(self) -> None:
-        out = invoke_cli("os", ["--help"])
-        assert out["exit_code"] == 2
-        assert "refused" in out["stderr"]
-
-    def test_refuses_unregistered_module(self) -> None:
-        out = invoke_cli("infrastructure.not_a_real_cli", [])
-        assert out["exit_code"] == 2
-        assert "refused" in out["stderr"]
+    @pytest.mark.parametrize("module", ["os", "infrastructure.not_a_real_cli"])
+    def test_refuses_unregistered_module(self, module: str) -> None:
+        out = invoke_cli(module, ["--help"])
+        assert out["exit_code"] == 2 and "refused" in out["stderr"]
 
     def test_invokes_registered_cli(self) -> None:
         out = invoke_cli("infrastructure.core.pipeline", ["describe-pipeline", "--format", "json"])
         assert out["exit_code"] == 0
-        payload = json.loads(out["stdout"])
-        assert len(payload["stages"]) == 8
+        assert len(json.loads(out["stdout"])["stages"]) == 8
 
     def test_read_only_single_file_cli_is_reachable(self) -> None:
-        # R7: a documented single-file CLI (read_only) runs via invoke_cli.
         out = invoke_cli("infrastructure.project.public_scope", ["source-paths"])
-        assert out["exit_code"] == 0
-        assert out["stdout"].strip()
+        assert out["exit_code"] == 0 and out["stdout"].strip()
 
-    def test_refuses_mutating_op_by_default(self) -> None:
-        # Safe help still requires opt-in for the whole guarded CLI module.
-        for module in ("infrastructure.publishing", "infrastructure.project.locked_dependency_export"):
-            out = invoke_cli(module, ["--help"])
-            assert out["exit_code"] == 2
-            assert out["stdout"] == ""
-            assert "mutating" in out["stderr"]
-        for modern in (False, True):
-            for include_authorization in (False, True):
-                params: dict[str, Any] = {
-                    "name": "invoke_cli",
-                    "arguments": {"module": "infrastructure.publishing", "args": ["--help"]},
-                }
-                if include_authorization:
-                    params["arguments"]["allow_mutating"] = False
-                if modern:
-                    params["_meta"] = _modern_meta()
-                response = handle_request(
-                    json.loads(json.dumps({"jsonrpc": "2.0", "id": 1, "method": "tools/call", "params": params}))
+    @pytest.mark.parametrize("module", ["infrastructure.publishing", "infrastructure.project.locked_dependency_export"])
+    def test_refuses_mutating_op_by_default(self, module: str) -> None:
+        out = invoke_cli(module, ["--help"])
+        assert out["exit_code"] == 2 and out["stdout"] == "" and "mutating" in out["stderr"]
+        for authorization in ({}, {"allow_mutating": False}):
+            response = handle_request(
+                _request(
+                    "tools/call",
+                    name="invoke_cli",
+                    arguments={"module": module, "args": ["--help"], **authorization},
                 )
-                assert response is not None
-                payload = json.loads(response["result"]["content"][0]["text"])
-                assert payload["exit_code"] == 2
-                assert payload["stdout"] == ""
-                assert "mutating" in payload["stderr"]
-        # Malformed authorization must never be coerced into consent.
-        malformed_values: list[Any] = ["false", "true", 0, 1, 0.0, None, [], {}]
-        for value in malformed_values:
-            out = invoke_cli("infrastructure.publishing", ["--help"], allow_mutating=value)
-            assert out == {"exit_code": 2, "stdout": "", "stderr": "allow_mutating must be a boolean"}
-            for modern in (False, True):
-                params: dict[str, Any] = {
-                    "name": "invoke_cli",
-                    "arguments": {
-                        "module": "infrastructure.publishing",
-                        "args": ["--help"],
-                        "allow_mutating": value,
-                    },
-                }
-                if modern:
-                    params["_meta"] = _modern_meta()
-                response = handle_request(
-                    json.loads(json.dumps({"jsonrpc": "2.0", "id": 1, "method": "tools/call", "params": params}))
-                )
-                assert response is not None
-                assert json.loads(response["result"]["content"][0]["text"]) == out
+            )
+            assert _payload(response) == out
+
+    @pytest.mark.parametrize("value", ["false", "true", 0, 1, 0.0, None, [], {}])
+    def test_malformed_authorization_cannot_be_coerced(self, value: Any) -> None:
+        out = invoke_cli("infrastructure.publishing", ["--help"], allow_mutating=value)
+        assert out == {"exit_code": 2, "stdout": "", "stderr": "allow_mutating must be a boolean"}
+        response = handle_request(
+            _request(
+                "tools/call",
+                name="invoke_cli",
+                arguments={"module": "infrastructure.publishing", "args": ["--help"], "allow_mutating": value},
+            )
+        )
+        assert _payload(response) == out
 
     def test_mutating_op_allowed_with_flag(self) -> None:
-        # Actual --help is side-effect free; literal True admits the guarded tier.
+        # Actual help is side-effect free; literal True admits the guarded tier.
         out = invoke_cli("infrastructure.publishing", ["--help"], allow_mutating=True)
-        assert out["exit_code"] == 0
-        assert "mutating" not in out["stderr"]
-        for modern in (False, True):
-            params: dict[str, Any] = {
-                "name": "invoke_cli",
-                "arguments": {
-                    "module": "infrastructure.publishing",
-                    "args": ["--help"],
-                    "allow_mutating": True,
-                },
-            }
-            if modern:
-                params["_meta"] = _modern_meta()
-            response = handle_request(
-                json.loads(json.dumps({"jsonrpc": "2.0", "id": 1, "method": "tools/call", "params": params}))
+        assert out["exit_code"] == 0 and "mutating" not in out["stderr"]
+        response = handle_request(
+            _request(
+                "tools/call",
+                name="invoke_cli",
+                arguments={"module": "infrastructure.publishing", "args": ["--help"], "allow_mutating": True},
             )
-            assert response is not None
-            payload = json.loads(response["result"]["content"][0]["text"])
-            assert payload["exit_code"] == 0
-            assert "mutating" not in payload["stderr"]
+        )
+        payload = _payload(response)
+        assert payload["exit_code"] == 0 and "mutating" not in payload["stderr"]
 
-    def test_mutating_op_allowed_with_env(self, monkeypatch) -> None:
+    def test_mutating_op_allowed_with_env(self, monkeypatch: pytest.MonkeyPatch) -> None:
         monkeypatch.setenv(ALLOW_MUTATING_ENV, "1")
-        out = invoke_cli("infrastructure.publishing", ["--help"], allow_mutating=False)
-        assert out["exit_code"] == 0
-        assert "mutating" not in out["stderr"]
-        malformed_value: Any = "false"
-        malformed = invoke_cli("infrastructure.publishing", ["--help"], allow_mutating=malformed_value)
-        assert malformed == {"exit_code": 2, "stdout": "", "stderr": "allow_mutating must be a boolean"}
-        for modern in (False, True):
-            for value in (False, "false"):
-                params: dict[str, Any] = {
-                    "name": "invoke_cli",
-                    "arguments": {
-                        "module": "infrastructure.publishing",
-                        "args": ["--help"],
-                        "allow_mutating": value,
-                    },
-                }
-                if modern:
-                    params["_meta"] = _modern_meta()
-                response = handle_request(
-                    json.loads(json.dumps({"jsonrpc": "2.0", "id": 1, "method": "tools/call", "params": params}))
+        for value in (False, "false"):
+            out = invoke_cli("infrastructure.publishing", ["--help"], allow_mutating=value)
+            response = handle_request(
+                _request(
+                    "tools/call",
+                    name="invoke_cli",
+                    arguments={"module": "infrastructure.publishing", "args": ["--help"], "allow_mutating": value},
                 )
-                assert response is not None
-                payload = json.loads(response["result"]["content"][0]["text"])
-                if value is False:
-                    assert payload["exit_code"] == 0
-                    assert "mutating" not in payload["stderr"]
-                else:
-                    assert payload == malformed
+            )
+            payload = _payload(response)
+            if value is False:
+                assert out["exit_code"] == payload["exit_code"] == 0
+                assert "mutating" not in out["stderr"] + payload["stderr"]
+            else:
+                assert out == payload == {"exit_code": 2, "stdout": "", "stderr": "allow_mutating must be a boolean"}
 
 
 class TestServeLoop:
-    def test_serve_round_trip_in_process(self) -> None:
+    def test_round_trip_recovers_after_malformed_input(self) -> None:
+        notification = _request("notifications/progress", progressToken="owned", progress=1)
+        del notification["id"]
         requests = "\n".join(
             [
-                json.dumps({"jsonrpc": "2.0", "id": 1, "method": "initialize", "params": {}}),
-                json.dumps({"jsonrpc": "2.0", "method": "notifications/initialized"}),
-                json.dumps({"jsonrpc": "2.0", "id": 2, "method": "tools/list"}),
-                "",  # blank line ignored
-                "{ not json",  # parse error -> error response, loop continues
-            ]
-        )
-        out = io.StringIO()
-        rc = serve(stdin=io.StringIO(requests), stdout=out)
-        assert rc == 0
-        lines = [json.loads(line) for line in out.getvalue().splitlines() if line.strip()]
-        # initialize result, tools/list result, and one parse error (notification produced nothing)
-        assert lines[0]["result"]["serverInfo"]["name"] == "humos-template"
-        assert any("tools" in line.get("result", {}) for line in lines)
-        assert any(line.get("error", {}).get("code") == -32700 for line in lines)
-
-    def test_serve_rejects_modern_request_after_legacy_open(self) -> None:
-        requests = "\n".join(
-            [
-                json.dumps({"jsonrpc": "2.0", "id": 30, "method": "initialize", "params": {}}),
-                json.dumps(
-                    {
-                        "jsonrpc": "2.0",
-                        "id": 31,
-                        "method": "tools/list",
-                        "params": {"_meta": _modern_meta()},
-                    }
-                ),
+                json.dumps(_request("server/discover")),
+                json.dumps(notification),
+                "",
+                "{ not json",
+                "[]",
+                json.dumps(_request("tools/list", request_id=2)),
             ]
         )
         out = io.StringIO()
         assert serve(stdin=io.StringIO(requests), stdout=out) == 0
-        by_id = {line["id"]: line for line in map(json.loads, out.getvalue().splitlines())}
-        assert by_id[30]["result"]["protocolVersion"] == PROTOCOL_VERSION
-        assert by_id[31]["error"] == {
-            "code": -32022,
-            "message": "Protocol era mismatch: stdio process is pinned to legacy",
-            "data": {"supported": [PROTOCOL_VERSION], "requested": MODERN_PROTOCOL_VERSION},
-        }
+        lines = [json.loads(line) for line in out.getvalue().splitlines()]
+        assert len(lines) == 4
+        assert lines[0]["result"]["_meta"]["io.modelcontextprotocol/serverInfo"]["name"] == "humos-template"
+        assert [line["error"]["code"] for line in lines if "error" in line] == [-32700, -32600]
+        assert "tools" in lines[-1]["result"]
 
-    def test_serve_rejects_legacy_initialize_after_modern_open(self) -> None:
-        requests = "\n".join(
-            [
-                json.dumps(
-                    {
-                        "jsonrpc": "2.0",
-                        "id": 32,
-                        "method": "server/discover",
-                        "params": {"_meta": _modern_meta()},
-                    }
-                ),
-                json.dumps({"jsonrpc": "2.0", "id": 33, "method": "initialize", "params": {}}),
-            ]
-        )
+    def test_discovery_does_not_waive_later_request_metadata(self) -> None:
+        requests = [
+            _request("server/discover"),
+            {"jsonrpc": "2.0", "id": 2, "method": "tools/list"},
+            _request("tools/list", request_id=3),
+        ]
         out = io.StringIO()
-        assert serve(stdin=io.StringIO(requests), stdout=out) == 0
+        assert serve(stdin=io.StringIO("\n".join(map(json.dumps, requests))), stdout=out) == 0
         by_id = {line["id"]: line for line in map(json.loads, out.getvalue().splitlines())}
-        assert by_id[32]["result"]["resultType"] == "complete"
-        assert by_id[33]["error"]["code"] == -32601
+        assert by_id[2]["error"]["code"] == -32602
+        assert by_id[3]["result"]["resultType"] == "complete"
 
-    def test_real_subprocess_legacy_stdio(self) -> None:
-        # Include describe_pipeline: it loads the DAG (which logs to stdout), so this
-        # guards against the loader log corrupting the JSON-RPC stream over real stdio.
+    def test_real_subprocess_stdio_with_optional_discovery(self) -> None:
         by_id = _run_stdio_subprocess(
             [
-                {"jsonrpc": "2.0", "id": 1, "method": "initialize", "params": {}},
-                {"jsonrpc": "2.0", "id": 2, "method": "tools/list"},
-                {"jsonrpc": "2.0", "id": 3, "method": "tools/call", "params": {"name": "describe_pipeline"}},
+                _request("tools/call", name="describe_pipeline", arguments={"mode": "core"}),
+                _request("server/discover", request_id=2),
+                _request("tools/list", request_id=3),
             ]
         )
-        assert by_id[1]["result"]["protocolVersion"] == PROTOCOL_VERSION
-        assert "tools" in by_id[2]["result"]
-        pipeline_payload = json.loads(by_id[3]["result"]["content"][0]["text"])
-        assert len(pipeline_payload["stages"]) == 8
-
-    def test_real_subprocess_modern_stdio(self) -> None:
-        by_id = _run_stdio_subprocess(
-            [
-                {
-                    "jsonrpc": "2.0",
-                    "id": 4,
-                    "method": "server/discover",
-                    "params": {"_meta": _modern_meta()},
-                },
-                {
-                    "jsonrpc": "2.0",
-                    "id": 5,
-                    "method": "tools/list",
-                    "params": {"_meta": _modern_meta()},
-                },
-                {
-                    "jsonrpc": "2.0",
-                    "id": 6,
-                    "method": "tools/call",
-                    "params": {
-                        "name": "describe_pipeline",
-                        "arguments": {"mode": "core"},
-                        "_meta": _modern_meta(),
-                    },
-                },
-            ]
-        )
-        assert by_id[4]["result"]["supportedVersions"] == [MODERN_PROTOCOL_VERSION, PROTOCOL_VERSION]
-        assert by_id[5]["result"]["resultType"] == "complete"
-        assert by_id[6]["result"]["resultType"] == "complete"
+        assert len(_payload(by_id[1])["stages"]) == 8
+        assert by_id[2]["result"]["supportedVersions"] == [PROTOCOL_VERSION]
+        assert by_id[2]["result"]["_meta"]["io.modelcontextprotocol/serverInfo"]["name"] == "humos-template"
+        assert by_id[3]["result"]["resultType"] == "complete"

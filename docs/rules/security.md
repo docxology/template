@@ -141,16 +141,16 @@ def safe_read_file(filepath: str | Path) -> str:
 
     # Prevent directory traversal attacks
     if ".." in str(path) or not path.is_absolute():
-        raise SecurityError("Invalid file path")
+        raise SecurityViolation("Invalid file path")
 
     # Check file size to prevent resource exhaustion
     max_size = 10 * 1024 * 1024  # 10MB limit
     if path.stat().st_size > max_size:
-        raise SecurityError("File too large")
+        raise SecurityViolation("File too large")
 
     # Use secure permissions
     if oct(path.stat().st_mode)[-3:] != "600":
-        raise SecurityError("File has insecure permissions")
+        raise SecurityViolation("File has insecure permissions")
 
     with open(path, 'r', encoding='utf-8') as f:
         return f.read()
@@ -245,7 +245,7 @@ def safe_run_command(command: List[str], timeout: int = 30) -> str:
     try:
         # Validate command arguments
         if not command or not all(isinstance(arg, str) for arg in command):
-            raise SecurityError("Invalid command arguments")
+            raise SecurityViolation("Invalid command arguments")
 
         # Use shell=False to prevent shell injection
         result = subprocess.run(
@@ -259,11 +259,11 @@ def safe_run_command(command: List[str], timeout: int = 30) -> str:
         return result.stdout
 
     except subprocess.TimeoutExpired:
-        raise SecurityError("Command timed out")
+        raise SecurityViolation("Command timed out")
     except subprocess.CalledProcessError as e:
-        raise SecurityError(f"Command failed: {e.stderr}")
+        raise SecurityViolation(f"Command failed: {e.stderr}")
     except Exception as e:
-        raise SecurityError(f"Command execution failed: {e}")
+        raise SecurityViolation(f"Command execution failed: {e}")
 ```
 
 ### Safe XML Parsing (DEP-DEFUSEDXML-1)
@@ -340,7 +340,7 @@ def test_input_validation():
         process_input("<script>alert('xss')</script>")
 
     # Test path traversal
-    with pytest.raises(SecurityError):
+    with pytest.raises(SecurityViolation):
         safe_read_file("../../../etc/passwd")
 
     # Test buffer overflow attempts
@@ -351,12 +351,12 @@ def test_secure_file_operations():
     """Test secure file handling."""
 
     # Test directory traversal protection
-    with pytest.raises(SecurityError):
+    with pytest.raises(SecurityViolation):
         safe_read_file("../secret.txt")
 
     # Test file size limits
     large_file = create_large_file(100 * 1024 * 1024)  # 100MB
-    with pytest.raises(SecurityError):
+    with pytest.raises(SecurityViolation):
         safe_read_file(large_file)
 
 def test_secret_handling():
@@ -554,12 +554,12 @@ def secure_api_call(url: str, api_key: str) -> dict:
 
         # Validate response content type
         if 'application/json' not in response.headers.get('content-type', ''):
-            raise SecurityError("Unexpected response content type")
+            raise SecurityViolation("Unexpected response content type")
 
         return response.json()
 
     except requests.RequestException as e:
-        raise SecurityError(f"API request failed: {e}")
+        raise SecurityViolation(f"API request failed: {e}")
 ```
 
 ## Security Checklist

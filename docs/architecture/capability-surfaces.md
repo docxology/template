@@ -59,16 +59,15 @@ editor:
 | `list_skills` | discovered `SKILL.md` descriptors |
 | `invoke_cli` | runs a **registered** `infrastructure.*` CLI; returns `{exit_code, stdout, stderr}` |
 
-The server is **dual-era**. Existing clients retain the `2024-11-05`
-`initialize` / `notifications/initialized` lifecycle and legacy response shapes.
-Clients implementing the [MCP `2026-07-28` release candidate](https://blog.modelcontextprotocol.io/posts/2026-07-28-release-candidate/)
-can instead
-probe `server/discover` and then issue stateless requests carrying
+The server implements [MCP `2026-07-28`](https://blog.modelcontextprotocol.io/posts/2026-07-28/).
+Clients may probe `server/discover` or invoke tools directly. Every request carries
 `io.modelcontextprotocol/protocolVersion`, client identity, and client
-capabilities in `params._meta`. Modern list results are explicitly cacheable;
-no initialize state is retained or required. Unsupported modern versions return
-the structured negotiation error with the server's supported-version list, so a
-dual-era client can choose the modern version or fall back to legacy initialize.
+capabilities in `params._meta`. Discovery returns the server identity in
+`result._meta["io.modelcontextprotocol/serverInfo"]`. Discovery and tool lists
+include cache lifetime and scope; all successful results use `resultType: complete`.
+Unsupported versions return a structured negotiation error advertising only
+`2026-07-28`. Each request is admitted independently, including requests sent
+after discovery on the same stdio connection.
 
 `invoke_cli` is curated: it refuses any module that is not `infrastructure.*` and
 not reported invocable by the operation registry — it is a vetted tool surface,

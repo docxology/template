@@ -129,7 +129,9 @@ class TestConfigValidation:
 
         config = {
             "project_config": {
-                "hypothesis_definitions": {"H1": {"name": "Test", "description": "Test desc", "scope": "test"}}
+                "hypothesis_definitions": {
+                    "H1": {"id": "TEST", "name": "Test", "description": "Test desc", "scope": "test"}
+                }
             }
         }
         issues = validate_hypothesis_config(config)
@@ -138,7 +140,7 @@ class TestConfigValidation:
     def test_missing_hypothesis_fields(self):
         from config_validation import validate_hypothesis_config
 
-        config = {"project_config": {"hypothesis_definitions": {"H1": {"name": "Test"}}}}
+        config = {"project_config": {"hypothesis_definitions": {"H1": {"id": "TEST", "name": "Test"}}}}
         issues = validate_hypothesis_config(config)
         assert any("description" in i for i in issues)
         assert any("scope" in i for i in issues)
@@ -189,7 +191,7 @@ class TestConfigValidation:
                             "engines": {"arxiv": True},
                         },
                         "sampling": {"fraction": 0.1, "seed": 42},
-                        "hypothesis_definitions": {"H1": {"name": "T", "description": "D", "scope": "S"}},
+                        "hypothesis_definitions": {"H1": {"id": "TEST", "name": "T", "description": "D", "scope": "S"}},
                     }
                 },
                 f,

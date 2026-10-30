@@ -1,4 +1,6 @@
 # Versioned release notes
+
+- [4.4.1 release intent](v4.4.1.md): current interfaces, installed native source-root repairs, explicit exemplar contracts, consolidated real tests, bounded CI, and one authenticated release path.
 - [4.4.0 release intent](v4.4.0.md): modular sharded publication gate with per-project receipts, documentation-only and shard-cap CI routing, parallel evidence refresh, a `.py`-only stage fingerprint, per-minor sdist nomination for the 52-cell installed matrix, cp315 dependency refresh, a 224 MiB public output ceiling and a tree-wide documentation correction. Acceptance and publication remain pending.
 
 These source-controlled notes summarize each intended platform release. Its

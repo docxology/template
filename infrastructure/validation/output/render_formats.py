@@ -13,7 +13,6 @@ import re
 import shutil
 import zipfile
 from collections.abc import Callable, Collection
-from dataclasses import replace
 from pathlib import Path
 from typing import Any
 
@@ -73,19 +72,6 @@ def load_effective_rendering_config(
             raise ValueError(f"Rendering configuration must be a mapping: {config_path}")
         project_config = loaded
     config = RenderingConfig.from_project_config(project_config, env=env)
-    if (project_root / "scripts" / "_render_pdf_override.py").is_file():
-        # Stage 3 delegates this legacy hook as a PDF-only renderer and its
-        # verifier deliberately ignores the normal multi-format toggles.  Keep
-        # Stages 4 and 5 on that same contract instead of defaulting to missing
-        # HTML/slides deliverables when an override project has no format block.
-        return replace(
-            config,
-            enable_pdf=True,
-            enable_html=False,
-            enable_slides=False,
-            enable_docx=False,
-            enable_epub=False,
-        )
     return config
 
 

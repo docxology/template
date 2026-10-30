@@ -19,7 +19,7 @@ def _inject_toc_after_begin_transmission(tex_content: str, begin_doc_idx: int, t
     bookend. The cover/title page (``\\maketitle`` — ``\\title``/``\\author``/``\\date``
     are already placed in the preamble) is inserted as **page 2**, followed by the
     table of contents, then the manuscript body. When *title_page_body* is empty the
-    cover is skipped and only the TOC is relocated (legacy behaviour).
+    cover is skipped and only the TOC is relocated (the configured composition).
     """
     label_idx = tex_content.find(_BEGIN_TRANSMISSION_LABEL, begin_doc_idx)
     if label_idx < 0:

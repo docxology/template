@@ -71,4 +71,4 @@ uv run python -m infrastructure.validation.cli markdown projects/<name>/manuscri
 
 ## References
 
-Section checklist and legacy examples: [references/structure-checklist.md](references/structure-checklist.md)
+Section checklist and examples: [references/structure-checklist.md](references/structure-checklist.md)

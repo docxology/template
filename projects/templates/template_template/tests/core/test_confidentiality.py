@@ -22,6 +22,7 @@ import re
 import shutil
 import subprocess
 import sys
+import tomllib
 from dataclasses import asdict
 from pathlib import Path
 
@@ -237,6 +238,7 @@ def test_same_public_leaf_local_alias_is_live_only_in_explicit_local_discovery(t
     marker = tmp_path / "actual-alias-content-opened"
     watched = [str(alias / "manuscript/config.yaml") for alias in aliases]
     project = Path(__file__).resolve().parents[2]
+    platform_version = tomllib.loads((project / "pyproject.toml").read_text())["tool"]["template"]["platform_version"]
     # Observe the actual isolated interpreter SDK before adding own paths.
     selected = subprocess.run(
         [
@@ -257,7 +259,7 @@ def test_same_public_leaf_local_alias_is_live_only_in_explicit_local_discovery(t
     )
     assert selected.returncode == 0, selected.stderr or selected.stdout
     selected_identity = json.loads(selected.stdout)
-    assert selected_identity["version"] == "4.4.0"
+    assert selected_identity["version"] == platform_version
     selected_sdk = Path(selected_identity["origin"])
     prefix = (
         "import hashlib,importlib.util,json,os,sys;from dataclasses import asdict;from pathlib import Path;"
@@ -267,7 +269,7 @@ def test_same_public_leaf_local_alias_is_live_only_in_explicit_local_discovery(t
         "bootstrap=importlib.util.module_from_spec(spec);spec.loader.exec_module(bootstrap);"
         "sdk=bootstrap.bootstrap_project(project);"
         f"assert Path(sdk.__file__).resolve()==Path({str(selected_sdk)!r});"
-        "assert sdk.__version__=='4.4.0';"
+        f"assert sdk.__version__=={platform_version!r};"
         "assert hashlib.sha256(Path(sdk.__file__).read_bytes()).hexdigest()=="
         f"{selected_identity['sha256']!r};"
         "from template_template.core.introspection import discover_projects;\n"

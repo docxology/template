@@ -254,8 +254,8 @@ This backlog is future-only.
     assert "Ordered improvement ladder" not in first
 
 
-def test_backlog_normalizer_decomposes_legacy_major_rows(tmp_path: Path) -> None:
-    """Legacy release-scale rows become bounded Medium planning slices."""
+def test_backlog_normalizer_rejects_rows_without_status_and_next_action(tmp_path: Path) -> None:
+    """Maintenance cannot invent status or ownership for underspecified rows."""
     path = tmp_path / "TODO.md"
     path.write_text(
         """# Example TODO
@@ -273,10 +273,10 @@ def test_backlog_normalizer_decomposes_legacy_major_rows(tmp_path: Path) -> None
         encoding="utf-8",
     )
 
-    normalized, _ = normalize_backlog(path)
-
-    assert "| `EXAMPLE-MAJOR-1` | open | Medium |" in normalized
-    assert "| `EXAMPLE-MAJOR-1` | open | Major |" not in normalized
+    original = path.read_bytes()
+    with pytest.raises(ValueError, match="eight fields"):
+        normalize_backlog(path)
+    assert path.read_bytes() == original
 
 
 def test_root_backlog_rejects_completed_status_rows(tmp_path: Path) -> None:

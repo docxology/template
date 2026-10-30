@@ -605,3 +605,22 @@ def test_real_prepass_never_accepts_missing_collection_or_failure(tmp_path: Path
         )
     assert error.value.original_exit_code == exit_code
     assert not error.value.timed_out and not error.value.custody_refused
+
+
+def test_verifier_platform_pin_comes_from_project_declaration(tmp_path: Path) -> None:
+    from importlib.metadata import version
+    from orchestration._verification_launcher import _platform
+
+    installed = version("research-project-template")
+    metadata = tmp_path / "pyproject.toml"
+    metadata.write_text(f'[tool.template]\nplatform_version = "{installed}"\n')
+    assert _platform(tmp_path) == installed
+    metadata.write_text('[tool.template]\nplatform_version = "0.0.0"\n')
+    with pytest.raises(VerificationRuntimeUnavailable, match="requires prepared platform 0.0.0"):
+        _platform(tmp_path)
+    metadata.write_text('[tool.template]\nplatform_version = ""\n')
+    with pytest.raises(VerificationRuntimeUnavailable, match="non-empty string"):
+        _platform(tmp_path)
+    metadata.unlink()
+    with pytest.raises(VerificationRuntimeUnavailable, match="declared platform version"):
+        _platform(tmp_path)

@@ -15,7 +15,7 @@ This directory holds **generator output** plus **maintainer-written** index file
 | [`status_evidence.json`](status_evidence.json) | **Generated** — `uv run python scripts/docgen/status_evidence.py --write`; source hash and typed command/scope/owner/date/health/mode receipt for `STATUS.md` |
 | [`COUNTS.md`](COUNTS.md) | **Generated** — `uv run python scripts/docgen/counts.py --write` (`--check` gates CI and pre-commit); ground-truthed test counts, gates, and roster notes (see [`README.md`](README.md)) |
 | [`exemplar_roster.md`](exemplar_roster.md) | **Generated** — `uv run python scripts/docgen/exemplar_roster.py` (`--check` gates CI and pre-commit) |
-| [`hermes_knowledge_audit.json`](hermes_knowledge_audit.json) | **Historical snapshot** — legacy external audit metadata; do not use for current counts |
+| [`hermes_knowledge_audit.json`](hermes_knowledge_audit.json) | **Historical snapshot** — external audit metadata; do not use for current counts |
 | [`publication_records.md`](publication_records.md) | **Generated publication matrix** — public exemplar GitHub/Zenodo/config records; refresh with `uv run python scripts/docgen/publication_records.py --refresh-external` |
 | [`skills_index.md`](skills_index.md) | **Generated** — `uv run python -m infrastructure.skills write-index` |
 | [`README.md`](README.md), `AGENTS.md` | **Maintainer** — policy and linking conventions |

@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from template_literature_meta_analysis.knowledge_graph.hypothesis import config_key_to_hypothesis_id
+from template_literature_meta_analysis.knowledge_graph.hypothesis import configured_hypothesis_id
 
 from manuscript.variables._logging import logger
 from manuscript.variables.context import ExtractContext
@@ -67,12 +67,10 @@ def extract_hypotheses(ctx: ExtractContext) -> dict[str, str]:
             elif isinstance(sv, dict) and isinstance(sv.get("score"), (int, float)):
                 score_lookup[hid] = float(sv["score"])
 
-    def score_for(hid: str, hname: str, explicit_id: str = "") -> str:
-        """Process score for."""
-        mapped = explicit_id or config_key_to_hypothesis_id(hid, hname)
-        for key in (hid, mapped, hname, hname.upper().replace(" ", "_")):
-            if key in score_lookup:
-                return f"{score_lookup[key]:+.2f}"
+    def score_for(evidence_id: str) -> str:
+        """Read a score only under its declared evidence identity."""
+        if evidence_id in score_lookup:
+            return f"{score_lookup[evidence_id]:+.2f}"
         return "pending"
 
     hyp_list_parts: list[str] = []
@@ -81,11 +79,11 @@ def extract_hypotheses(ctx: ExtractContext) -> dict[str, str]:
         "| --- | --- | --- | --- |",
     ]
     for hid, hdef in hyp_defs.items():
-        hname = str((hdef or {}).get("name", hid)) if isinstance(hdef, dict) else str(hdef)
-        hscope = str((hdef or {}).get("scope", "")) if isinstance(hdef, dict) else ""
-        explicit_id = str((hdef or {}).get("id", "")) if isinstance(hdef, dict) else ""
+        evidence_id = configured_hypothesis_id(hid, hdef)
+        hname = str(hdef.get("name", hid))
+        hscope = str(hdef.get("scope", ""))
         hyp_list_parts.append(f"{hid} {hname}")
-        hyp_table.append(f"| {hid} | {hname} | {hscope} | {score_for(hid, hname, explicit_id)} |")
+        hyp_table.append(f"| {hid} | {hname} | {hscope} | {score_for(evidence_id)} |")
     variables["HYPOTHESIS_LIST"] = "; ".join(hyp_list_parts)
     variables["HYPOTHESIS_TABLE"] = "\n".join(hyp_table)
     return variables

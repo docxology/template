@@ -95,6 +95,7 @@ def test_actual_fast_gate_requires_success_from_every_declared_job(
         env={
             **os.environ,
             "COVERAGE_REQUESTED": coverage_requested,
+            "DOCS_ONLY": "false",
             "NEEDS_JSON": "null" if fault == "malformed" else json.dumps(values),
             "GITHUB_STEP_SUMMARY": str(tmp_path / "summary.md"),
         },
@@ -240,3 +241,44 @@ def test_executable_smoke_subset_never_accepts_empty_duplicate_or_private_scopes
     assert project_smoke_matrix(REPO, ("templates/template_code_project",)) == {
         "include": [{"project": "templates/template_code_project"}]
     }
+
+
+@pytest.mark.parametrize(
+    "docs_only,project,contract,passes",
+    [
+        ("true", "skipped", "success", True),
+        ("false", "success", "success", True),
+        ("true", "success", "success", False),
+        ("false", "skipped", "success", False),
+        ("true", "skipped", "skipped", False),
+        ("true", "skipped", "failure", False),
+        ("", "success", "success", False),
+        ("TRUE", "skipped", "success", False),
+    ],
+)
+def test_fast_gate_admits_only_the_declared_documentation_skip(
+    tmp_path: Path, docs_only: str, project: str, contract: str, passes: bool
+) -> None:
+    workflow = yaml.safe_load((REPO / ".github/workflows/ci.yml").read_text())
+    gate = workflow["jobs"]["ci-gate"]
+    values = {name: {"result": "success"} for name in gate["needs"]}
+    values["test-project"]["result"] = project
+    values["test-contract"]["result"] = contract
+    values["own-exemplar-coverage"]["result"] = "skipped"
+    step = gate["steps"][0]
+    assert step["env"]["DOCS_ONLY"] == "${{ needs.detect-projects.outputs.docs_only }}"
+    result = subprocess.run(
+        ["bash", "-e", "-o", "pipefail", "-c", step["run"]],
+        env={
+            **os.environ,
+            "COVERAGE_REQUESTED": "false",
+            "DOCS_ONLY": docs_only,
+            "NEEDS_JSON": json.dumps(values),
+            "GITHUB_STEP_SUMMARY": str(tmp_path / "summary.md"),
+        },
+        capture_output=True,
+        text=True,
+        timeout=10,
+        check=False,
+    )
+    assert (result.returncode == 0) is passes, result.stderr

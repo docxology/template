@@ -19,7 +19,7 @@ authors:
 publication:
   release_status: "unreleased"
   intended_version: "0.2.0"
-  platform_version: "4.4.0"
+  platform_version: "4.4.1"
   last_published_version: "0.1"
   doi: "10.5281/zenodo.21298894"
   doi_status: "DOI published"
@@ -71,7 +71,7 @@ report:
   include_corpus_synthesis: true
 
 # Search-project settings belong under the shared schema's project-owned
-# passthrough namespace. The loader still accepts legacy root keys for forks.
+# passthrough namespace; the loader requires these settings here.
 project_config:
   search:
     query: "reproducible research optimization"

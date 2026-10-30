@@ -26,6 +26,8 @@ from infrastructure.documentation.counts_coverage import (
     _coverage_report_command,
     _coverage_support_identity,
     _fresh_coverage_measurement_data_file,
+    _retain_coverage_result,
+    _validated_diagnostics_directory,
     measure_exemplar_coverage,
 )
 from infrastructure.reporting.project_verifier import DEFAULT_PROJECT_VERIFIER_TIMEOUT_SECONDS
@@ -301,6 +303,60 @@ def test_coverage_measurement_refuses_missing_prepared_environment_before_uv(tmp
         measure_exemplar_coverage(tmp_path, project.name)
     assert not (project / ".venv").exists()
     assert not (project / "uv.lock").exists()
+
+
+@pytest.mark.parametrize("exit_code,phase", [(0, "report"), (7, "measurement")])
+def test_coverage_diagnostics_preserve_real_complete_streams_and_prior_attempt(
+    tmp_path: Path, exit_code: int, phase: str
+) -> None:
+    from infrastructure.core.subprocess_policy import SubprocessPolicy, run_with_policy
+
+    policy = SubprocessPolicy(
+        policy_id="coverage-diagnostic-control",
+        source_path="infrastructure/documentation/counts_coverage.py",
+        timeout_seconds=10,
+    )
+    result = run_with_policy(
+        [
+            sys.executable,
+            "-c",
+            "import sys; "
+            "print('first stdout evidence'); "
+            "print('\\n'.join('body line ' + str(i) for i in range(40))); "
+            "print('first stderr evidence', file=sys.stderr); "
+            f"sys.exit({exit_code})",
+        ],
+        cwd=tmp_path,
+        env={"PATH": os.environ.get("PATH", "")},
+        policy=policy,
+    )
+    assert result.returncode == exit_code and not result.timed_out
+    attempt = tmp_path / "retained-attempt"
+    attempt.mkdir()
+    _retain_coverage_result(attempt, "owned-diagnostic-control", phase, result, policy, 1.0)
+    before = {path.name: path.read_bytes() for path in attempt.iterdir()}
+    assert (attempt / f"{phase}.stdout.log").read_text() == result.stdout
+    assert (attempt / f"{phase}.stderr.log").read_text() == result.stderr
+    assert "first stdout evidence" in result.stdout and "body line 39" in result.stdout
+    record = json.loads((attempt / f"{phase}.json").read_text())
+    assert record["returncode"] == exit_code
+    assert record["original_returncode"] == result.original_returncode
+    assert record["timed_out"] is False and record["custody_refused"] is False
+    assert record["command_error"] == result.command_error
+    assert record["phase"] == phase and record["timeout_seconds"] == 10
+    with pytest.raises(FileExistsError):
+        _retain_coverage_result(attempt, "owned-diagnostic-control", phase, result, policy, 2.0)
+    assert {path.name: path.read_bytes() for path in attempt.iterdir()} == before
+
+
+def test_coverage_diagnostics_refuse_source_directories_before_measurement(tmp_path: Path) -> None:
+    repo = tmp_path / "repo"
+    repo.mkdir()
+    with pytest.raises(ValueError, match="outside the repository and selected SDK"):
+        measure_exemplar_coverage(repo, "absent", diagnostics_directory=repo)
+    with pytest.raises(ValueError, match="outside the repository and selected SDK"):
+        _validated_diagnostics_directory(repo, Path(__file__).resolve().parents[3])
+    assert list(repo.iterdir()) == []
 
 
 @pytest.mark.parametrize(

@@ -2,7 +2,7 @@
 
 Generated documentation coverage for every Python `def` and `class` under `src/` and `scripts/`. Entries marked `inventory fallback` have no inline docstring yet, but remain documented here by path, line, kind, and qualified name.
 
-Total documented definitions: 896
+Total documented definitions: 895
 
 ## `src/analytical/bernoulli_toy.py`
 
@@ -563,11 +563,11 @@ Total documented definitions: 896
 
 | line | kind | name | documentation source | summary |
 | ---: | --- | --- | --- | --- |
-| 17 | `function` | `_platform` | inventory fallback | Inventory fallback for function `_platform` defined at `src/orchestration/_verification_launcher.py:17`. |
-| 27 | `class` | `VerificationRuntime` | docstring | One admitted selected runtime used by every verifier child. |
-| 34 | `function` | `VerificationRuntime.command` | inventory fallback | Inventory fallback for function `VerificationRuntime.command` defined at `src/orchestration/_verification_launcher.py:34`. |
-| 66 | `function` | `VerificationRuntime.verify` | inventory fallback | Inventory fallback for function `VerificationRuntime.verify` defined at `src/orchestration/_verification_launcher.py:66`. |
-| 73 | `function` | `prepare_verification_runtime` | docstring | Require actual selected platform/test versions before any domain child. |
+| 18 | `function` | `_platform` | inventory fallback | Inventory fallback for function `_platform` defined at `src/orchestration/_verification_launcher.py:18`. |
+| 36 | `class` | `VerificationRuntime` | docstring | One admitted selected runtime used by every verifier child. |
+| 43 | `function` | `VerificationRuntime.command` | inventory fallback | Inventory fallback for function `VerificationRuntime.command` defined at `src/orchestration/_verification_launcher.py:43`. |
+| 75 | `function` | `VerificationRuntime.verify` | inventory fallback | Inventory fallback for function `VerificationRuntime.verify` defined at `src/orchestration/_verification_launcher.py:75`. |
+| 82 | `function` | `prepare_verification_runtime` | docstring | Require actual selected platform/test versions before any domain child. |
 
 ## `src/orchestration/analysis.py`
 
@@ -704,19 +704,19 @@ Total documented definitions: 896
 | 179 | `function` | `_generation_input_rels` | docstring | Return deterministic source/config inputs that can change generated evidence. |
 | 187 | `function` | `_source_input_sha256` | docstring | Bind the exact confined generation-input file inventory and bytes. |
 | 207 | `function` | `_observed_output_rels` | docstring | Derive the complete positive, negative, and hydrated output inventory from SSOTs. |
-| 251 | `function` | `_cached_fingerprint_matches` | docstring | Return whether the disposable cache exactly binds the current state. |
-| 260 | `function` | `_refresh_animation_outputs` | inventory fallback | Inventory fallback for function `_refresh_animation_outputs` defined at `src/roadmap_tracks/fixed_point.py:260`. |
-| 272 | `function` | `_refresh_hydrated_manuscript` | inventory fallback | Inventory fallback for function `_refresh_hydrated_manuscript` defined at `src/roadmap_tracks/fixed_point.py:272`. |
-| 279 | `function` | `_write_sheaf_owned_artifacts` | inventory fallback | Inventory fallback for function `_write_sheaf_owned_artifacts` defined at `src/roadmap_tracks/fixed_point.py:279`. |
-| 286 | `function` | `_write_semantic_core` | inventory fallback | Inventory fallback for function `_write_semantic_core` defined at `src/roadmap_tracks/fixed_point.py:286`. |
-| 293 | `function` | `_write_contract_artifacts` | inventory fallback | Inventory fallback for function `_write_contract_artifacts` defined at `src/roadmap_tracks/fixed_point.py:293`. |
-| 329 | `function` | `_fingerprint` | inventory fallback | Inventory fallback for function `_fingerprint` defined at `src/roadmap_tracks/fixed_point.py:329`. |
-| 348 | `function` | `_validate_fixed_point` | inventory fallback | Inventory fallback for function `_validate_fixed_point` defined at `src/roadmap_tracks/fixed_point.py:348`. |
-| 376 | `function` | `_source_contract_issues` | docstring | Return source defects that generated-artifact settlement cannot repair. |
-| 391 | `function` | `_existing_fixed_point_paths` | inventory fallback | Inventory fallback for function `_existing_fixed_point_paths` defined at `src/roadmap_tracks/fixed_point.py:391`. |
-| 413 | `function` | `_write_fixed_point_pass` | inventory fallback | Inventory fallback for function `_write_fixed_point_pass` defined at `src/roadmap_tracks/fixed_point.py:413`. |
-| 433 | `function` | `_write_final_validation_pass` | docstring | Refresh self-referential reports and write the certificate from the final live state. |
-| 472 | `function` | `run_semantic_fixed_point` | docstring | Settle manuscript, semantic, and contract artifacts to a validated fixed point. |
+| 250 | `function` | `_cached_fingerprint_matches` | docstring | Return whether the disposable cache exactly binds the current state. |
+| 259 | `function` | `_refresh_animation_outputs` | inventory fallback | Inventory fallback for function `_refresh_animation_outputs` defined at `src/roadmap_tracks/fixed_point.py:259`. |
+| 271 | `function` | `_refresh_hydrated_manuscript` | inventory fallback | Inventory fallback for function `_refresh_hydrated_manuscript` defined at `src/roadmap_tracks/fixed_point.py:271`. |
+| 278 | `function` | `_write_sheaf_owned_artifacts` | inventory fallback | Inventory fallback for function `_write_sheaf_owned_artifacts` defined at `src/roadmap_tracks/fixed_point.py:278`. |
+| 285 | `function` | `_write_semantic_core` | inventory fallback | Inventory fallback for function `_write_semantic_core` defined at `src/roadmap_tracks/fixed_point.py:285`. |
+| 292 | `function` | `_write_contract_artifacts` | inventory fallback | Inventory fallback for function `_write_contract_artifacts` defined at `src/roadmap_tracks/fixed_point.py:292`. |
+| 328 | `function` | `_fingerprint` | inventory fallback | Inventory fallback for function `_fingerprint` defined at `src/roadmap_tracks/fixed_point.py:328`. |
+| 347 | `function` | `_validate_fixed_point` | inventory fallback | Inventory fallback for function `_validate_fixed_point` defined at `src/roadmap_tracks/fixed_point.py:347`. |
+| 375 | `function` | `_source_contract_issues` | docstring | Return source defects that generated-artifact settlement cannot repair. |
+| 390 | `function` | `_existing_fixed_point_paths` | inventory fallback | Inventory fallback for function `_existing_fixed_point_paths` defined at `src/roadmap_tracks/fixed_point.py:390`. |
+| 412 | `function` | `_write_fixed_point_pass` | inventory fallback | Inventory fallback for function `_write_fixed_point_pass` defined at `src/roadmap_tracks/fixed_point.py:412`. |
+| 432 | `function` | `_write_final_validation_pass` | docstring | Refresh self-referential reports and write the certificate from the final live state. |
+| 471 | `function` | `run_semantic_fixed_point` | docstring | Settle manuscript, semantic, and contract artifacts to a validated fixed point. |
 
 ## `src/roadmap_tracks/formal_interop.py`
 
@@ -923,15 +923,14 @@ Total documented definitions: 896
 
 | line | kind | name | documentation source | summary |
 | ---: | --- | --- | --- | --- |
-| 24 | `function` | `_entropy` | inventory fallback | Inventory fallback for function `_entropy` defined at `src/roadmap_tracks/sheaf_tracks_helpers.py:24`. |
-| 30 | `function` | `_root_output_dir` | inventory fallback | Inventory fallback for function `_root_output_dir` defined at `src/roadmap_tracks/sheaf_tracks_helpers.py:30`. |
-| 38 | `function` | `_portable_repo_path` | docstring | Represent repository-local paths without embedding a developer home directory. |
-| 49 | `function` | `_confined_regular_path` | inventory fallback | Inventory fallback for function `_confined_regular_path` defined at `src/roadmap_tracks/sheaf_tracks_helpers.py:49`. |
-| 69 | `function` | `_copied_parity` | inventory fallback | Inventory fallback for function `_copied_parity` defined at `src/roadmap_tracks/sheaf_tracks_helpers.py:69`. |
-| 118 | `function` | `_deferred_copy_parity` | docstring | Declare the post-copy boundary without reading a prior Stage-5 mirror. |
-| 161 | `function` | `_remove_legacy_artifacts` | inventory fallback | Inventory fallback for function `_remove_legacy_artifacts` defined at `src/roadmap_tracks/sheaf_tracks_helpers.py:161`. |
-| 168 | `function` | `_refresh_hydrated_manuscript` | inventory fallback | Inventory fallback for function `_refresh_hydrated_manuscript` defined at `src/roadmap_tracks/sheaf_tracks_helpers.py:168`. |
-| 174 | `function` | `_canonical_artifact_rows` | inventory fallback | Inventory fallback for function `_canonical_artifact_rows` defined at `src/roadmap_tracks/sheaf_tracks_helpers.py:174`. |
+| 23 | `function` | `_entropy` | inventory fallback | Inventory fallback for function `_entropy` defined at `src/roadmap_tracks/sheaf_tracks_helpers.py:23`. |
+| 29 | `function` | `_root_output_dir` | inventory fallback | Inventory fallback for function `_root_output_dir` defined at `src/roadmap_tracks/sheaf_tracks_helpers.py:29`. |
+| 37 | `function` | `_portable_repo_path` | docstring | Represent repository-local paths without embedding a developer home directory. |
+| 48 | `function` | `_confined_regular_path` | inventory fallback | Inventory fallback for function `_confined_regular_path` defined at `src/roadmap_tracks/sheaf_tracks_helpers.py:48`. |
+| 68 | `function` | `_copied_parity` | inventory fallback | Inventory fallback for function `_copied_parity` defined at `src/roadmap_tracks/sheaf_tracks_helpers.py:68`. |
+| 117 | `function` | `_deferred_copy_parity` | docstring | Declare the post-copy boundary without reading a prior Stage-5 mirror. |
+| 160 | `function` | `_refresh_hydrated_manuscript` | inventory fallback | Inventory fallback for function `_refresh_hydrated_manuscript` defined at `src/roadmap_tracks/sheaf_tracks_helpers.py:160`. |
+| 166 | `function` | `_canonical_artifact_rows` | inventory fallback | Inventory fallback for function `_canonical_artifact_rows` defined at `src/roadmap_tracks/sheaf_tracks_helpers.py:166`. |
 
 ## `src/roadmap_tracks/sheaf_tracks_io.py`
 
@@ -1338,20 +1337,20 @@ Total documented definitions: 896
 | ---: | --- | --- | --- | --- |
 | 24 | `class` | `FigureSpec` | docstring | Data container for FigureSpec. |
 | 38 | `class` | `SectionFigureRef` | docstring | Data container for SectionFigureRef. |
-| 47 | `function` | `_figures_yaml_path` | inventory fallback | Inventory fallback for function `_figures_yaml_path` defined at `src/visualizations/figure_registry.py:47`. |
-| 52 | `function` | `_parse_figures_yaml_cached` | docstring | Parse exact registry bytes once per path/content pair. |
-| 59 | `function` | `_load_figures_yaml` | inventory fallback | Inventory fallback for function `_load_figures_yaml` defined at `src/visualizations/figure_registry.py:59`. |
-| 68 | `function` | `_validate_figure_filename` | inventory fallback | Inventory fallback for function `_validate_figure_filename` defined at `src/visualizations/figure_registry.py:68`. |
-| 88 | `function` | `_confined_figure_output_path` | inventory fallback | Inventory fallback for function `_confined_figure_output_path` defined at `src/visualizations/figure_registry.py:88`. |
-| 103 | `function` | `load_figure_registry` | docstring | Load figure registry from a file. |
-| 130 | `function` | `load_section_figures` | docstring | Load section figures from a file. |
-| 155 | `function` | `figure_output_path` | docstring | Process figure output path. |
-| 161 | `function` | `_resolve_figure_field` | docstring | Resolve one registry field, rejecting malformed or unknown tokens. |
-| 183 | `function` | `render_figure_markdown` | docstring | Render figure markdown. |
-| 219 | `function` | `render_section_figures` | docstring | Render section figures. |
-| 243 | `function` | `build_figure_registry_payload` | docstring | Build a fully hydrated registry keyed by ``fig:{id}`` labels. |
-| 275 | `function` | `write_figure_registry_json` | docstring | Atomically persist the hydrated registry from ``figures.yaml``. |
-| 312 | `function` | `validate_figure_registry_json` | docstring | Return drift issues for the persisted hydrated registry. |
+| 45 | `function` | `_figures_yaml_path` | inventory fallback | Inventory fallback for function `_figures_yaml_path` defined at `src/visualizations/figure_registry.py:45`. |
+| 50 | `function` | `_parse_figures_yaml_cached` | docstring | Parse exact registry bytes once per path/content pair. |
+| 57 | `function` | `_load_figures_yaml` | inventory fallback | Inventory fallback for function `_load_figures_yaml` defined at `src/visualizations/figure_registry.py:57`. |
+| 66 | `function` | `_validate_figure_filename` | inventory fallback | Inventory fallback for function `_validate_figure_filename` defined at `src/visualizations/figure_registry.py:66`. |
+| 86 | `function` | `_confined_figure_output_path` | inventory fallback | Inventory fallback for function `_confined_figure_output_path` defined at `src/visualizations/figure_registry.py:86`. |
+| 101 | `function` | `load_figure_registry` | docstring | Load figure registry from a file. |
+| 128 | `function` | `load_section_figures` | docstring | Load section figures from a file. |
+| 153 | `function` | `figure_output_path` | docstring | Process figure output path. |
+| 159 | `function` | `_resolve_figure_field` | docstring | Resolve one registry field, rejecting malformed or unknown tokens. |
+| 181 | `function` | `render_figure_markdown` | docstring | Render figure markdown with numbering owned by pandoc-crossref. |
+| 210 | `function` | `render_section_figures` | docstring | Render section figures. |
+| 232 | `function` | `build_figure_registry_payload` | docstring | Build a fully hydrated registry keyed by ``fig:{id}`` labels. |
+| 264 | `function` | `write_figure_registry_json` | docstring | Atomically persist the hydrated registry from ``figures.yaml``. |
+| 301 | `function` | `validate_figure_registry_json` | docstring | Return drift issues for the persisted hydrated registry. |
 
 ## `src/visualizations/figure_style.py`
 

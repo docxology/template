@@ -305,7 +305,7 @@ timeout_sec: 1800                   # overrides PROJECT_SETUP_HOOK_TIMEOUT_SEC f
 skip_if_env: ["CI_NO_HOOKS"]        # truthy env vars that disable the hook entirely
 ```
 
-Backward-compatible: a project without `setup_hook.yaml` behaves exactly as before — the hook simply runs to completion (or times out).
+A project without `setup_hook.yaml` behaves exactly as before — the hook simply runs to completion (or times out).
 
 **Environment knobs:**
 

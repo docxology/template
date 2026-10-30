@@ -1,4 +1,4 @@
-"""Admit hosted, source-bound required acceptance before root 4+ publication.
+"""Admit hosted, source-bound required acceptance before current platform publication.
 
 The caller retrieves only fixed GitHub API endpoints after input admission.
 Downloaded evidence stays under the ignored public readiness directory. A
@@ -44,15 +44,15 @@ def positive_id(value: str) -> int:
 
 
 def validate_handoff_inputs(root: Path, run_id: str, artifact_id: str, receipt_sha256: str) -> bool:
-    """Require an explicit evidence handoff for root platform major versions 4+."""
+    """Require an explicit evidence handoff for the current root platform contract."""
     version = root_package_version(root)
     match = re.fullmatch(r"(0|[1-9][0-9]*)\.[0-9]+\.[0-9]+(?:[-+][A-Za-z0-9.-]+)?", version)
     if match is None:
         raise ValueError("root release version must have an unambiguous semantic major")
-    if int(match.group(1)) < 4:
-        return False
+    if int(match.group(1)) != 4:
+        raise ValueError("release handoff requires the current platform 4 contract")
     if not all((run_id, artifact_id, receipt_sha256)):
-        raise MissingAcceptanceHandoff("root 4+ release requires a run, artifact, and exact receipt SHA256")
+        raise MissingAcceptanceHandoff("current release requires a run, artifact, and exact receipt SHA256")
     positive_id(run_id)
     positive_id(artifact_id)
     if _SHA256.fullmatch(receipt_sha256) is None:

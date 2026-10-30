@@ -1,7 +1,7 @@
 """Rate limiting and security event monitoring.
 
 Extracted from security.py for single-responsibility. Import via security.py
-for backwards compatibility.
+through the declared public API.
 """
 
 import functools

@@ -7,7 +7,7 @@ import json
 import platform
 import subprocess
 import sys
-from dataclasses import replace
+from dataclasses import asdict, replace
 from pathlib import Path
 
 import pytest
@@ -19,10 +19,59 @@ from infrastructure.project.public_acceptance_evidence import runtime_identity
 from infrastructure.publishing.root_release_contract import RUNTIME_VERSION_PROVIDER_SOURCE
 from infrastructure.reporting.readiness_receipts import SCHEMA_VERSION, source_fingerprint
 from infrastructure.reporting.release_readiness import collect_release_readiness, main
-from infrastructure.reporting.release_readiness_pipeline import validate_pipeline
+from infrastructure.project.public_acceptance_auxiliary_pipeline import _require_complete_stage_outcomes
+from infrastructure.core.pipeline.outcomes import StageOutcome, StageStatus
 from infrastructure.reporting.release_readiness_profile import ARTIFACT_SCHEMA, Requirement, required_profile
 from infrastructure.reporting.release_readiness_snapshot import SnapshotReader
 from infrastructure.reporting.release_readiness_validators import validate_acceptance
+
+
+def _root_policy_declaration(root: Path) -> None:
+    """Declare a current source-profile fixture without claiming an observed census."""
+    from infrastructure.project.public_acceptance_case_policy import POLICY_SCHEMA
+    from infrastructure.project.public_root_case_admission import PREREQUISITE_SCHEMA
+
+    tests = root / "tests"
+    tests.mkdir(exist_ok=True)
+    test_source = b"def test_source_declaration():\n    assert True\n"
+    (tests / "test_source_declaration.py").write_bytes(test_source)
+    config = root / "infrastructure/config"
+    config.mkdir()
+    node = "tests/test_source_declaration.py::test_source_declaration"
+    (config / "root-case-policy.json").write_text(
+        json.dumps(
+            {
+                "schema_version": POLICY_SCHEMA,
+                "runtimes": ["3.14", "3.15"],
+                "platforms": ["darwin", "linux"],
+                "families": [
+                    {
+                        "id": node,
+                        "lane": "core",
+                        "obligations": [],
+                        "members": [{"nodeid": node, "parameter_id": None}],
+                        "source_sha256": hashlib.sha256(test_source).hexdigest(),
+                        "metadata_sha256": hashlib.sha256(b"explicit source-profile fixture").hexdigest(),
+                    }
+                ],
+                "obligations": [],
+            }
+        )
+    )
+    (config / "root-case-prerequisites.json").write_text(
+        json.dumps(
+            {
+                "schema_version": PREREQUISITE_SCHEMA,
+                "obligations": [],
+            }
+        )
+    )
+    with (root / "pyproject.toml").open("a") as stream:
+        stream.write(
+            "[tool.template.root_acceptance]\nschema_version=3\n"
+            'policy="infrastructure/config/root-case-policy.json"\n'
+            'prerequisites="infrastructure/config/root-case-prerequisites.json"\n'
+        )
 
 
 def _declarations(root: Path) -> None:
@@ -31,6 +80,7 @@ def _declarations(root: Path) -> None:
     (root / "CHANGELOG.md").write_text("## [4.0.1] — intended candidate\n")
     (root / "infrastructure").mkdir()
     (root / "infrastructure/_version.py").write_text(RUNTIME_VERSION_PROVIDER_SOURCE)
+    _root_policy_declaration(root)
     for project in PUBLIC_PROJECT_NAMES:
         path = root / "projects" / project
         (path / "manuscript").mkdir(parents=True)
@@ -260,17 +310,8 @@ def test_actual_plan_completion_rejects_singletons_duplicates_skips_and_wrong_or
             check=False,
         )
         assert child.returncode == 0
-        outcomes.append({"stage_key": stage.key, "status": "succeeded", "child_exit_code": child.returncode})
-    details = {
-        "mode": "core",
-        "run_id": "real-control",
-        "selection": {"skip_clean": True, "skip_infra": True},
-        "plan": json.loads(json.dumps(plan.to_dict())),
-        "plan_digest": plan.digest,
-        "expected_stage_keys": list(plan.expected_stage_keys),
-        "outcomes": outcomes,
-    }
-    validate_pipeline(project, details, tmp_path)
+        outcomes.append(asdict(StageOutcome(stage.key, StageStatus.SUCCEEDED, child.returncode)))
+    _require_complete_stage_outcomes(plan.expected_stage_keys, outcomes)
     for invalid in [
         outcomes[:1],
         outcomes[::-1],
@@ -279,14 +320,11 @@ def test_actual_plan_completion_rejects_singletons_duplicates_skips_and_wrong_or
         [dict(outcomes[0], child_exit_code=False), outcomes[1]],
     ]:
         with pytest.raises(ValueError):
-            validate_pipeline(project, dict(details, outcomes=invalid), tmp_path)
-    invented = dict(
-        details,
-        expected_stage_keys=["invented"],
-        outcomes=[{"stage_key": "invented", "status": "succeeded", "child_exit_code": 0}],
-    )
+            _require_complete_stage_outcomes(plan.expected_stage_keys, invalid)
     with pytest.raises(ValueError):
-        validate_pipeline(project, invented, tmp_path)
+        _require_complete_stage_outcomes(
+            plan.expected_stage_keys, [asdict(StageOutcome("invented", StageStatus.SUCCEEDED, 0))]
+        )
 
 
 def test_paid_or_transport_only_live_receipt_cannot_pass(tmp_path: Path) -> None:
@@ -350,9 +388,6 @@ def test_platform_four_auxiliary_flags_require_original_process_and_raw_evidence
     payload = {"source_fingerprint": "b" * 64, "details": details}
     with pytest.raises(ValueError, match="exact artifact binding"):
         validate_acceptance(requirement, payload, SnapshotReader(tmp_path))
-    legacy = replace(requirement, platform_version="3.8.0")
-    validate_acceptance(legacy, payload, SnapshotReader(tmp_path))
-    with pytest.raises(ValueError, match="exact artifact binding"):
-        validate_acceptance(
-            legacy, {**payload, "details": {**details, "process_artifact": None}}, SnapshotReader(tmp_path)
-        )
+    for unsupported in ("3.8.0", "5.0.0", "4", "4.4.invalid"):
+        with pytest.raises(ValueError, match="current platform 4"):
+            validate_acceptance(replace(requirement, platform_version=unsupported), payload, SnapshotReader(tmp_path))
