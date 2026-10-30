@@ -14,7 +14,7 @@
   "output_statistics": {
     "data": {
       "files": 1,
-      "size_mb": 0.0027484893798828125
+      "size_mb": 0.0027494430541992188
     },
     "detailed_validation": {
       "directories": {
@@ -247,34 +247,34 @@
         "valid": true,
         "warnings": []
       },
-      "total_size_mb": 5.0644378662109375
+      "total_size_mb": 5.064521789550781
     },
     "figures": {
       "files": 9,
-      "size_mb": 0.3362579345703125
+      "size_mb": 0.3365297317504883
     },
     "inventory_mode": "stable-shippable-output-v1",
     "pdf": {
       "files": 7,
-      "size_mb": 1.389394760131836
+      "size_mb": 1.3888835906982422
     },
     "stable_inventory": {
       "categories": {
         "data": {
           "files": 1,
-          "size_bytes": 2882
+          "size_bytes": 2883
         },
         "figures": {
           "files": 9,
-          "size_bytes": 352592
+          "size_bytes": 352877
         },
         "pdf": {
           "files": 7,
-          "size_bytes": 1456886
+          "size_bytes": 1456350
         },
         "pptx": {
           "files": 6,
-          "size_bytes": 1180031
+          "size_bytes": 1180369
         },
         "release_bundle": {
           "files": 3,
@@ -295,7 +295,7 @@
       },
       "mode": "stable-shippable-output-v1",
       "total_files": 163,
-      "total_size_bytes": 5310448
+      "total_size_bytes": 5310536
     }
   },
   "recommendations": [],
@@ -306,11 +306,11 @@
     "passed": 9,
     "total_checks": 9
   },
-  "timestamp": "2026-10-30T20:28:00Z",
+  "timestamp": "2026-10-30T21:53:23Z",
   "validated_inputs": {
     "artifact_manifest": {
       "path": "output/reports/artifact_manifest.json",
-      "sha256": "5c21f1c153904ff7a6a07619359b35e3e83f24ce5acbba8a02d3e28736f9949d",
+      "sha256": "756d842043b18d59846056197833d758a3436fb96faf0e1791db3736b7ad3925",
       "size_bytes": 55913
     },
     "combined_manuscript": {
@@ -374,7 +374,7 @@
       },
       "output": {
         "file_count": 163,
-        "sha256": "958319242c74b36a1bac4ac44ea110ec64a669556e054ec850c0d3ddaff88075"
+        "sha256": "c90ed7b4bc6645dd5d0c25ec48a283b51e7fd4c080c97a6b031d4c56d6ded95b"
       },
       "source": {
         "file_count": 34,
@@ -382,7 +382,7 @@
       },
       "stage": {
         "file_count": 1717,
-        "sha256": "232d6b053bd66ef4d9a241d00c36ee2e421d4690cced3ccb3dd6d6c92709c818"
+        "sha256": "33825281983ca80d953aa5e602ba70f3718dc9344c1a9358a19d2fcddfd3b469"
       }
     },
     "project": "templates/template_pitch_deck",

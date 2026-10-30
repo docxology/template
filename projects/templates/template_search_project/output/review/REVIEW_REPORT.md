@@ -1,5 +1,5 @@
 # TEMPLATE SEARCH PROJECT — DEEP REVIEW REPORT
-**Generated:** 2026-10-30T20:28:00+00:00
+**Generated:** 2026-10-30T21:53:23+00:00
 **Project root:** `projects/templates/template_search_project`
 **Repository root:** `.` (portable report label)
 **Review orchestrator:** `scripts/review`
@@ -56,8 +56,8 @@
   • Optional hardening
 
 **Internal-anchor validation**
-  AGENTS.md anchors broken: 5  ['0f766e', '0f172a', 'fff', '1e3a8a', '7c2d12']
-  README.md  anchors broken: 7  ['0f766e', '0f172a', 'fff', 'review-phase', '1e3a8a', 'permanent-canonical-exemplars', '7c2d12']
+  AGENTS.md anchors broken: 5  ['fff', '0f172a', '1e3a8a', '7c2d12', '0f766e']
+  README.md  anchors broken: 7  ['fff', '0f172a', '1e3a8a', 'review-phase', 'permanent-canonical-exemplars', '7c2d12', '0f766e']
 
 ## 3.  BIBLIOGRAPHY AUDIT
 **references.bib** entries: 6

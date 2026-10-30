@@ -81,7 +81,7 @@
       "supported": true
     }
   ],
-  "generated_at": "2026-10-30T20:28:00+00:00",
+  "generated_at": "2026-10-30T21:53:23+00:00",
   "project_name": "template_autoresearch_project",
   "review_state": {
     "approval_boundary": "generated outputs can be ready for review but cannot self-approve publication",
