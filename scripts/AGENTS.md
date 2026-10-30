@@ -54,6 +54,11 @@ repository-wide entrypoint; root-level duplicate launchers are intentionally abs
 - `docgen/coverage_history.py`, `docgen/stage_table.py`, `docgen/exemplar_roster.py`
 - `docgen/publication_records.py`, `docgen/counts.py`
 
+**Audit gates** (`audit/`):
+
+- `audit/check_publication_outputs.py` - modular publication gate: roster (`--project`, `--all-public`, `--changed`), `--shard` slicing, parallel `--jobs`, blocking versus `review_required` separation, and one `--receipts` record per project. `release.yml` runs `--all-public --strict --jobs 4` and uploads the receipts.
+- `audit/check_template_drift.py`, `audit/check_tracked_all.py`, `audit/check_tracked_generated_artifacts.py`, `audit/check_claim_bindings.py` and `audit/check_module_doc_coverage.py` remain the focused repository guards.
+
 **Repository-wide entrypoint rule:** use only the canonical paths under
 `pipeline/`, `runner/`, `audit/`, `docgen/`, `publish/`, `shell/`, and `gates/`.
 The old root-level numbered, generated-document, audit, shell, and runner

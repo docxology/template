@@ -10,13 +10,19 @@ rewrite generated outputs.
 - `PublicationFinding` carries a stable diagnostic code, project-relative path,
   severity, status, evidence, and remediation.
 - `status: fail` is deterministic and blocks the CLI.
-- `status: review_required` is advisory and records editorial or domain review
-  work without turning subjective judgment into a fake binary proof.
+- `status: review_required` records editorial or domain review work. It does
+  not fail the default `blocking` audit, but it does fail `--strict` (the release
+  lane) and the gate's `strict` mode, where its findings block. It never turns
+  subjective judgment into a fake binary proof.
 - Serialization is timestamp-free so reports can participate in reproducibility
   comparisons.
 - Rendered mode requires `output/reports/rendered_provenance.json`. The receipt
   binds a green output snapshot to stage, source, config, output, and explicit
-  manuscript-consumption fingerprints without claiming per-stage lineage.
+  manuscript-consumption fingerprints without claiming per-stage lineage. The
+  stage fingerprint covers every tracked implementation file under
+  `infrastructure/` and `scripts/` (package documentation files are skipped), so
+  editing a stage module or runtime asset invalidates existing receipts and
+  requires re-running the exemplar producers.
 - Placeholder tokens are valid in hydratable source manuscripts. Scan only the
   canonical rendered manuscript input, once, and ignore literal code examples.
 - Missing, malformed, stale, or incomplete rendered provenance is a

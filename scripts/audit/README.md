@@ -24,7 +24,7 @@ Audit and quality-gate scripts for documentation, filepath, drift, and git-guard
 | `check_tracked_secrets.py` | High-confidence tracked-blob credential scan |
 | `check_staged_secrets.py` | High-confidence staged A/C/M/R index-blob scan |
 | `check_mirror_symlinks.py` | Managed-symlink mirror-shape guard (`projects/<lifecycle>/` holds managed symlinks only) |
-| `check_publication_outputs.py` | Sharded, parallel publication-output gate over the per-project audit (`--project`, `--all-public`, `--changed`, `--shard`, `--strict`, `--jobs`) |
+| `check_publication_outputs.py` | Sharded, parallel publication-output gate over the per-project audit (`--project`, `--all-public`, `--changed`, `--shard`, `--strict`, `--jobs`, `--receipts`); errors are blocking, `--strict` also fails `review_required`, and `--receipts` writes one JSON receipt per project |
 | `check_release_versions.py` | Root tag/notes/artwork and per-exemplar intended-versus-published version identity |
 | `check_exemplar_configs.py` | Per-exemplar config blocks, SDK pin/source, platform version and generated-copy consistency |
 | `copy_exemplar.py` | Copy/update a canonical exemplar, including fork SDK source and author identity |
@@ -36,6 +36,8 @@ uv run python scripts/audit/lint_docs.py
 uv run python scripts/audit/check_template_drift.py --strict
 uv run python scripts/audit/check_backlog.py
 uv run python scripts/audit/check_claim_bindings.py
+uv run python scripts/audit/check_publication_outputs.py --changed --jobs 4
+uv run python scripts/audit/check_publication_outputs.py --all-public --strict --jobs 4 --receipts output/readiness/publication-receipts
 uv run python scripts/audit/check_public_template_contract.py --strict
 uv run python scripts/audit/check_doc_module_refs.py
 uv run python scripts/audit/check_tracked_all.py

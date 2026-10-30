@@ -29,7 +29,8 @@ re-implements them. Stages map onto hosted work:
 | `lint` | `Lint & Type Check` | `ruff check` over the same paths, then `module_line_count_check.py` |
 | `types` | `Lint & Type Check` | `mypy_ratchet.py` over the source paths |
 | `security` | health `bandit` gate | `bandit -r -ll -c bandit.yaml` over the public scope |
-| `gates` | `Lint & Type Check` hygiene steps | tracked-artifact, confidentiality, mirror-symlink, export/manifest and duration-manifest checks |
+| `gates` | `Lint & Type Check` hygiene steps | tracked-artifact, confidentiality, mirror-symlink, skills export/operations-manifest, exemplar-config, release-version and duration-manifest checks |
+| `publication` | release publication gate (fast lane) | `scripts/audit/check_publication_outputs.py --changed --jobs 4`, or `--all-public --jobs 4` without `--changed` |
 | `unit` | `test-project` | `scripts/pipeline/stage_01_test.py --project …` |
 | `infra` | `detect-projects` + `Infrastructure Smoke` | one `infrastructure.core.testing.ci_infra` job per declared shard and contract |
 

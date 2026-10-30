@@ -2,7 +2,7 @@
 
 ## Code
 
-- Python 3.10+, `from __future__ import annotations`, full type hints.
+- Python 3.14+, `from __future__ import annotations`, full type hints.
 - Pure-logic modules (`geometry`, `content`, `config`) import no rendering
   library, so they stay fast and testable.
 - Strict loaders: reject unknown keys / invalid enums with a message that quotes

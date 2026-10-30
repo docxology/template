@@ -87,6 +87,7 @@ jobs:
       matrix: ${{ steps.matrix.outputs.matrix }}
       infra: ${{ steps.matrix.outputs.infra }}
       contracts: ${{ steps.matrix.outputs.contracts }}
+      docs_only: ${{ steps.matrix.outputs.docs_only }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -177,6 +178,8 @@ jobs:
   test-contract:
     name: "Changed contract (${{ matrix.module }})"
     needs: detect-projects
+    # Documentation-only changes run the documentation shard instead.
+    if: needs.detect-projects.outputs.docs_only != 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 120
     strategy:
@@ -300,6 +303,9 @@ jobs:
   test-project:
     name: "Project Smoke (${{ matrix.project }})"
     needs: detect-projects
+    # Documentation-only changes select no exemplar suites: the documentation
+    # contracts already run in the infra and contract jobs.
+    if: needs.detect-projects.outputs.docs_only != 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 10
     strategy:

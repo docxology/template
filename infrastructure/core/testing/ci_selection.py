@@ -81,11 +81,26 @@ def _parse_changed_paths(output: bytes) -> tuple[tuple[str, ...], bool]:
     return tuple(sorted(set(paths))), ambiguous
 
 
+_DOCUMENTATION_SUFFIXES = frozenset({".md", ".rst", ".txt", ".svg", ".png", ".jpg", ".jpeg", ".gif"})
+
+
+def documentation_only(paths: tuple[str, ...]) -> bool:
+    """Report whether every changed path is prose or documentation artwork.
+
+    Documentation cannot change executable behavior, so it must not select the
+    functional, contract or smoke rosters. Anything else (source, lock, config,
+    metadata, control file) keeps the normal routing.
+    """
+    return bool(paths) and all(Path(name).suffix.lower() in _DOCUMENTATION_SUFFIXES for name in paths)
+
+
 def affected_projects(root: Path, paths: tuple[str, ...], *, full: bool = False) -> tuple[tuple[str, ...], str]:
     """Only exact project-owned A/M changes may reduce the functional roster."""
     all_projects = tuple(sorted(PUBLIC_PROJECT_NAMES))
     if full or not paths:
         return all_projects, "full event or unavailable/ambiguous change base"
+    if documentation_only(paths):
+        return (), "documentation-only change; no functional project selected"
     changed = set()
     for name in paths:
         parts = Path(name).parts
@@ -158,8 +173,18 @@ def infrastructure_selection(root: Path, plan: dict[str, Any]) -> dict[str, Any]
     from infrastructure.core.testing.ci_infra import infrastructure_files, infrastructure_shards
 
     changed = tuple(plan["changed_paths"])
+    if documentation_only(changed):
+        # Documentation changes still exercise the documentation contracts, but
+        # must not spin up the measured-duration smoke or contract rosters.
+        plan["infra_shards"] = [["tests/infra_tests/documentation"]]
+        # No roster enumeration at all: documentation cannot reach these lanes,
+        # and `ci.yml` skips the contract job for a documentation-only change.
+        plan["contract_modules"] = []
+        plan["documentation_only"] = True
+        return plan
     plan["infra_shards"] = infrastructure_shards(root, changed)
     plan["contract_modules"] = list(contract_files(infrastructure_files(root, changed), infrastructure_files(root)))
+    plan["documentation_only"] = False
     return plan
 
 
@@ -177,6 +202,7 @@ def main() -> int:
     infrastructure_selection(root, plan)
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(plan, sort_keys=True, indent=2) + "\n")
+    print("docs_only=" + ("true" if plan.get("documentation_only") else "false"))
     print("matrix=" + json.dumps(project_smoke_matrix(root, tuple(plan["projects"]))))
     print("infra=" + json.dumps(_infra_matrix(plan["infra_shards"])))
     print("contracts=" + json.dumps(_contract_matrix(plan["infra_shards"], plan["contract_modules"])))
@@ -187,4 +213,10 @@ if __name__ == "__main__":
     raise SystemExit(main())
 
 
-__all__ = ["affected_projects", "changed_git_paths", "functional_selection", "infrastructure_selection"]
+__all__ = [
+    "affected_projects",
+    "changed_git_paths",
+    "documentation_only",
+    "functional_selection",
+    "infrastructure_selection",
+]

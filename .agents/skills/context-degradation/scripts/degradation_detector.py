@@ -42,6 +42,7 @@ __all__ = [
 # Attention Distribution Analysis
 # ---------------------------------------------------------------------------
 
+
 def measure_attention_distribution(
     context_tokens: List[str],
     query: str,
@@ -68,12 +69,14 @@ def measure_attention_distribution(
 
         attention = _estimate_attention(position, n, is_beginning, is_end)
 
-        attention_by_position.append({
-            "position": position,
-            "attention": attention,
-            "region": "attention_favored" if (is_beginning or is_end) else "attention_degraded",
-            "tokens": context_tokens[position][:50] if position < 5 or position > n - 5 else None,
-        })
+        attention_by_position.append(
+            {
+                "position": position,
+                "attention": attention,
+                "region": "attention_favored" if (is_beginning or is_end) else "attention_degraded",
+                "tokens": context_tokens[position][:50] if position < 5 or position > n - 5 else None,
+            }
+        )
 
     return attention_by_position
 
@@ -108,6 +111,7 @@ def _estimate_attention(
 # ---------------------------------------------------------------------------
 # Lost-in-Middle Detection
 # ---------------------------------------------------------------------------
+
 
 def detect_lost_in_middle(
     critical_positions: List[int],
@@ -149,12 +153,14 @@ def detect_lost_in_middle(
         results["degradation_score"] = at_risk_count / total_critical
 
     if results["at_risk"]:
-        results["recommendations"].extend([
-            "Move critical information to attention-favored positions",
-            "Use explicit markers to highlight critical information",
-            "Consider splitting context to reduce middle section",
-            f"{at_risk_count}/{total_critical} critical items are in degraded region",
-        ])
+        results["recommendations"].extend(
+            [
+                "Move critical information to attention-favored positions",
+                "Use explicit markers to highlight critical information",
+                "Consider splitting context to reduce middle section",
+                f"{at_risk_count}/{total_critical} critical items are in degraded region",
+            ]
+        )
 
     return results
 
@@ -162,6 +168,7 @@ def detect_lost_in_middle(
 # ---------------------------------------------------------------------------
 # Context Structure Analysis
 # ---------------------------------------------------------------------------
+
 
 def analyze_context_structure(context: str) -> Dict[str, object]:
     """Assess structural degradation risk factors in a context string.
@@ -200,27 +207,21 @@ def analyze_context_structure(context: str) -> Dict[str, object]:
     middle_start = int(n * 0.3)
     middle_end = int(n * 0.7)
 
-    middle_content = sum(
-        s["length"] for s in sections
-        if s["start"] >= middle_start and s["start"] <= middle_end
-    )
+    middle_content = sum(s["length"] for s in sections if s["start"] >= middle_start and s["start"] <= middle_end)
 
     middle_ratio = middle_content / n if n > 0 else 0
     return {
         "total_lines": n,
         "sections": sections,
         "middle_content_ratio": middle_ratio,
-        "degradation_risk": (
-            "high" if middle_ratio > 0.5
-            else "medium" if middle_ratio > 0.3
-            else "low"
-        ),
+        "degradation_risk": ("high" if middle_ratio > 0.5 else "medium" if middle_ratio > 0.3 else "low"),
     }
 
 
 # ---------------------------------------------------------------------------
 # Context Poisoning Detection
 # ---------------------------------------------------------------------------
+
 
 class PoisoningDetector:
     """Detect context poisoning indicators via pattern matching.
@@ -263,15 +264,16 @@ class PoisoningDetector:
             if len(sentence) < 10:
                 continue
 
-            claims.append({
-                "id": i,
-                "text": sentence,
-                "verified": None,
-                "has_error_indicator": any(
-                    re.search(pattern, sentence, re.IGNORECASE)
-                    for pattern in self.error_patterns
-                ),
-            })
+            claims.append(
+                {
+                    "id": i,
+                    "text": sentence,
+                    "verified": None,
+                    "has_error_indicator": any(
+                        re.search(pattern, sentence, re.IGNORECASE) for pattern in self.error_patterns
+                    ),
+                }
+            )
 
         self.claims.extend(claims)
         return claims
@@ -293,48 +295,47 @@ class PoisoningDetector:
         indicators: List[Dict[str, object]] = []
 
         # Check for error accumulation
-        error_count = sum(
-            1 for pattern in self.error_patterns
-            if re.search(pattern, context, re.IGNORECASE)
-        )
+        error_count = sum(1 for pattern in self.error_patterns if re.search(pattern, context, re.IGNORECASE))
 
         if error_count > 3:
-            indicators.append({
-                "type": "error_accumulation",
-                "count": error_count,
-                "severity": "high" if error_count > 5 else "medium",
-                "message": f"Found {error_count} error indicators in context",
-            })
+            indicators.append(
+                {
+                    "type": "error_accumulation",
+                    "count": error_count,
+                    "severity": "high" if error_count > 5 else "medium",
+                    "message": f"Found {error_count} error indicators in context",
+                }
+            )
 
         # Check for contradiction patterns
         contradictions = self._detect_contradictions(context)
         if contradictions:
-            indicators.append({
-                "type": "contradictions",
-                "count": len(contradictions),
-                "examples": contradictions[:3],
-                "severity": "high",
-                "message": f"Found {len(contradictions)} potential contradictions",
-            })
+            indicators.append(
+                {
+                    "type": "contradictions",
+                    "count": len(contradictions),
+                    "examples": contradictions[:3],
+                    "severity": "high",
+                    "message": f"Found {len(contradictions)} potential contradictions",
+                }
+            )
 
         # Check for hallucination markers
         hallucination_markers = self._detect_hallucination_markers(context)
         if hallucination_markers:
-            indicators.append({
-                "type": "hallucination_markers",
-                "count": len(hallucination_markers),
-                "severity": "medium",
-                "message": f"Found {len(hallucination_markers)} phrases associated with uncertain claims",
-            })
+            indicators.append(
+                {
+                    "type": "hallucination_markers",
+                    "count": len(hallucination_markers),
+                    "severity": "medium",
+                    "message": f"Found {len(hallucination_markers)} phrases associated with uncertain claims",
+                }
+            )
 
         return {
             "poisoning_risk": len(indicators) > 0,
             "indicators": indicators,
-            "overall_risk": (
-                "high" if len(indicators) > 2
-                else "medium" if len(indicators) > 0
-                else "low"
-            ),
+            "overall_risk": ("high" if len(indicators) > 2 else "medium" if len(indicators) > 0 else "low"),
         }
 
     def _detect_contradictions(self, text: str) -> List[str]:
@@ -352,8 +353,7 @@ class PoisoningDetector:
             if re.search(pattern1, text, re.IGNORECASE) and re.search(pattern2, text, re.IGNORECASE):
                 sentences = text.split(".")
                 for sentence in sentences:
-                    if (re.search(pattern1, sentence, re.IGNORECASE)
-                            or re.search(pattern2, sentence, re.IGNORECASE)):
+                    if re.search(pattern1, sentence, re.IGNORECASE) or re.search(pattern2, sentence, re.IGNORECASE):
                         stripped = sentence.strip()
                         if stripped and len(stripped) < 200:
                             contradictions.append(stripped[:100])
@@ -381,6 +381,7 @@ class PoisoningDetector:
 # ---------------------------------------------------------------------------
 # Context Health Analyzer
 # ---------------------------------------------------------------------------
+
 
 class ContextHealthAnalyzer:
     """Run composite health analysis on a context string.
@@ -452,9 +453,7 @@ class ContextHealthAnalyzer:
                 "lost_in_middle": degradation,
                 "poisoning": poisoning,
             },
-            "recommendations": self._generate_recommendations(
-                utilization, degradation, poisoning
-            ),
+            "recommendations": self._generate_recommendations(utilization, degradation, poisoning),
         }
 
         self.metrics_history.append(result)
@@ -515,6 +514,7 @@ class ContextHealthAnalyzer:
 # ---------------------------------------------------------------------------
 # Convenience Function
 # ---------------------------------------------------------------------------
+
 
 def analyze_agent_context(
     context: str,

@@ -26,6 +26,12 @@ from infrastructure.validation.rendered_snapshot._scan import (
 )
 
 _IMPLEMENTATION_ROOTS = ("infrastructure", "scripts")
+# Package documentation cannot change rendered output; every other tracked file
+# under the implementation roots (runtime prompt markdown, Mermaid adapters, LaTeX
+# fragments and C sources included) binds the stage closure.
+# Package documentation carries no rendered behavior; every other tracked file
+# participates, including runtime prose assets such as prompt markdown.
+_STAGE_DOCUMENTATION_NAMES = frozenset({"AGENTS.md", "README.md", "DESIGN.md"})
 
 
 def _fingerprint(records: Iterable[FileRecord]) -> Fingerprint:
@@ -40,6 +46,13 @@ def _fingerprint(records: Iterable[FileRecord]) -> Fingerprint:
 
 
 def _stage_records(repo_root: Path) -> list[FileRecord]:
+    """Hash the stage implementation under the two implementation roots.
+
+    Package documentation (`AGENTS.md`, `README.md`, `DESIGN.md`) is excluded
+    because it cannot change rendered output, so editing one must not invalidate
+    25 proofs. Every other tracked file participates, including runtime prose
+    assets and other non-Python resources.
+    """
     records: list[FileRecord] = []
     for relative in _IMPLEMENTATION_ROOTS:
         stage_root = repo_root / relative
@@ -51,7 +64,11 @@ def _stage_records(repo_root: Path) -> list[FileRecord]:
                 excluded_parts=CACHE_PARTS,
             )
         )
-    cached = cached_records(records, repo_root)
+    cached = [
+        record
+        for record in cached_records(records, repo_root)
+        if Path(record.key).name not in _STAGE_DOCUMENTATION_NAMES
+    ]
     if not cached:
         raise RenderedSnapshotError("STAGE_SOURCE_MISSING", "no cached stage implementation files found")
     return cached

@@ -219,7 +219,7 @@
         "valid": true,
         "warnings": []
       },
-      "total_size_mb": 2.664255142211914
+      "total_size_mb": 2.6642417907714844
     },
     "figures": {
       "files": 13,
@@ -258,12 +258,12 @@
         },
         "web": {
           "files": 10,
-          "size_bytes": 2099315
+          "size_bytes": 2099301
         }
       },
       "mode": "stable-shippable-output-v1",
       "total_files": 38,
-      "total_size_bytes": 2793674
+      "total_size_bytes": 2793660
     }
   },
   "recommendations": [],
@@ -274,11 +274,11 @@
     "passed": 9,
     "total_checks": 9
   },
-  "timestamp": "2026-10-29T15:48:39Z",
+  "timestamp": "2026-10-29T21:56:17Z",
   "validated_inputs": {
     "artifact_manifest": {
       "path": "output/reports/artifact_manifest.json",
-      "sha256": "2ddbde69362aa1a55c937503ca26d0df172eb9a511ef5624f4801abc4189cd75",
+      "sha256": "2e9a534e0c081f4cb00c2c66854a1c184ccd6c2c8d0046805f78347f5b94a688",
       "size_bytes": 12326
     },
     "combined_manuscript": {
@@ -332,19 +332,19 @@
     "fingerprints": {
       "config": {
         "file_count": 28,
-        "sha256": "cbcd6eb81f97f5c27c4f2d2ecfd76489bcd3d8b703ed49514119f97d6cdad023"
+        "sha256": "8ca82368754704c252ed1f9220c9d0e77e3ae739e153fb578040ce2f869e77f9"
       },
       "output": {
         "file_count": 38,
-        "sha256": "2380d1f809be52cdcdc63070410603f5642ac2fe4408b8d1ac6f4365094de843"
+        "sha256": "77e56e2e635416774d29af69a2fe8112f7116125ebcd225e5bf152ae832b40f0"
       },
       "source": {
         "file_count": 28,
-        "sha256": "3ab0f78a45b15b79d81c4978361c7bfefd3992b1a9b8c5fa660525327fd5fcde"
+        "sha256": "e8a9cf8c1001383662e399f5b98f2bed43b9f76352aa097101f71d4c5d1bcd1a"
       },
       "stage": {
-        "file_count": 1932,
-        "sha256": "ec94b178a6c52d20918748b0e382fe961ae9237f7e82d55eefc380426595b9a1"
+        "file_count": 1718,
+        "sha256": "3434c8166001dc802b11e474353ebda8504feb0b702aceb7b93d86a47e35cf1a"
       }
     },
     "project": "templates/template_newspaper",

@@ -4,7 +4,7 @@ Get up and running with the `template_advanced_literature_review` exemplar in ~5
 
 ## Prerequisites
 
-- Python 3.10 or higher
+- Python 3.14 (3.14 and 3.15 are the supported minors)
 - [`uv`](https://github.com/astral-sh/uv) package manager (repo invariant — see the root `CLAUDE.md`)
 - Git
 - Network access only if you intend to run `01_multi_phase_search.py` live; the default offline pipeline replays a tracked corpus snapshot

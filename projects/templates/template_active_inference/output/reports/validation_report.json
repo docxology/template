@@ -227,7 +227,7 @@
         "valid": true,
         "warnings": []
       },
-      "total_size_mb": 17.508952140808105
+      "total_size_mb": 17.508919715881348
     },
     "figures": {
       "files": 27,
@@ -266,12 +266,12 @@
         },
         "web": {
           "files": 20,
-          "size_bytes": 2762279
+          "size_bytes": 2762245
         }
       },
       "mode": "stable-shippable-output-v1",
       "total_files": 178,
-      "total_size_bytes": 18359467
+      "total_size_bytes": 18359433
     }
   },
   "recommendations": [],
@@ -282,11 +282,11 @@
     "passed": 9,
     "total_checks": 9
   },
-  "timestamp": "2026-10-29T15:48:39Z",
+  "timestamp": "2026-10-29T21:56:17Z",
   "validated_inputs": {
     "artifact_manifest": {
       "path": "output/reports/artifact_manifest.json",
-      "sha256": "18f1360695c1519b3d9d77783b08d2349d1d4ddf31e8579a467dc4114040ea95",
+      "sha256": "2e9a368b1c8f0f5e658d46228260b1421a9e0252f5a8aa4f52a693416fc17db9",
       "size_bytes": 58791
     },
     "combined_manuscript": {
@@ -412,19 +412,19 @@
     "fingerprints": {
       "config": {
         "file_count": 27,
-        "sha256": "7a1fe8e2203c73e5a3e956ed751958f411475e84c9b6d4cbfd97f19889eb41b6"
+        "sha256": "536250f7e6df9480d11ca5928a20da0311ebc8de908430e03917f859e8a830d6"
       },
       "output": {
         "file_count": 178,
-        "sha256": "46e11e1af5195d169d0fa9cbd28266ca262eb9432ffb94a202504e52d33e2106"
+        "sha256": "571cd93a4f5130c271ede6191033633e902c6e8bd212a5f673bb72dde9384eae"
       },
       "source": {
         "file_count": 283,
-        "sha256": "1eef5c8221ffd171368f10816247e8b4eac5af94b29ead036e8e961823a67576"
+        "sha256": "a29e9c62348670aa5a49d3ded05bc8217eab29590223e3618f124a895fe79b69"
       },
       "stage": {
-        "file_count": 1932,
-        "sha256": "ec94b178a6c52d20918748b0e382fe961ae9237f7e82d55eefc380426595b9a1"
+        "file_count": 1718,
+        "sha256": "3434c8166001dc802b11e474353ebda8504feb0b702aceb7b93d86a47e35cf1a"
       }
     },
     "project": "templates/template_active_inference",

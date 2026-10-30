@@ -1,4 +1,5 @@
 """Auto-generated analysis entry point for signal."""
+
 # spec_hash: b9deb8b6cbc27e0f  grammar_hash: 647b9d2969d0f696
 # seed: 42  track: analytical  section_set: standard
 from primitives import collect_primitives

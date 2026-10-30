@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="generator" content="pandoc 3.12.1" />
+  <meta name="generator" content="pandoc 3.13" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
   <meta name="author" content="Daniel Ari Friedman" />
   <meta name="description" content="Staged Validation and Deterministic Compilation for Method Specification, Informed by BPL" />
@@ -967,10 +967,10 @@ grammar — is sufficient to reproduce BPL’s core safety properties
 (dimensional safety, staged validation, deterministic compilation) at a
 scope appropriate for a template exemplar. On the architecture side, the
 DSL is exercised by a zero-mock test suite under the repository’s
-configured project coverage gate, generates 18 artifacts (1 figures, 7
-data files, 10 reports) per pipeline run, and injects reproducibility
-metadata (configuration hash <code>c4e86321fa0e9cb3</code>, build
-timestamp <code>2026-10-29T15:48:39Z</code>) into sec. <a
+configured project coverage gate, generates 25 artifacts (1 figures, 7
+data files, 17 reports) per pipeline run, and injects reproducibility
+metadata (configuration hash <code>249e316e31a23d19</code>, build
+timestamp <code>2026-10-29T21:56:17Z</code>) into sec. <a
 href="#sec:reproducibility">7</a>.</p>
 <p><strong>Keywords:</strong> methods paper, domain-specific language,
 controlled methods, deterministic compilation, staged validation,
@@ -1604,7 +1604,7 @@ evaluations a method’s steps satisfy.</p>
 <h2 data-number="6.4" id="computational-environment"><span
 class="header-section-number">6.4</span> Computational environment</h2>
 <ul>
-<li><strong>Language</strong>: Python 3.14.9 on Darwin arm64 (see root
+<li><strong>Language</strong>: Python 3.15.1 on Darwin arm64 (see root
 <code>pyproject.toml</code> for the supported version range).</li>
 <li><strong>Core dependencies</strong>: <code>pyyaml</code>,
 <code>matplotlib</code> (declared in
@@ -1791,9 +1791,9 @@ either a generated variable sourced from a live analysis output or
 registered in <code>data/claim_ledger.yaml</code> for evidence-registry
 validation. The manuscript intentionally does not hand-transcribe
 volatile values, so prose and artifacts cannot disagree. Configuration
-provenance is itself injected: <code>c4e86321fa0e9cb3</code> is the
+provenance is itself injected: <code>249e316e31a23d19</code> is the
 SHA-256 of <code>manuscript/config.yaml</code> at build time, and
-<code>2026-10-29T15:48:39Z</code> records when the variables were
+<code>2026-10-29T21:56:17Z</code> records when the variables were
 generated (honoring <code>SOURCE_DATE_EPOCH</code> for byte-reproducible
 builds).</p>
 <hr />

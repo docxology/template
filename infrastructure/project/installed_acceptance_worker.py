@@ -223,6 +223,7 @@ def run_installed_cell(
             lambda command, label: _run(command, scratch, environment, deadline, root, directory, label),
             provider_wheels=provider_wheels or {},
             metadata=metadata,
+            minor=runtime,
         )
         outside = scratch / "outside-source"
         outside.mkdir()

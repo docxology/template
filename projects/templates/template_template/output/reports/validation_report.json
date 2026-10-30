@@ -247,7 +247,7 @@
         "valid": true,
         "warnings": []
       },
-      "total_size_mb": 16.63840961456299
+      "total_size_mb": 16.638367652893066
     },
     "figures": {
       "files": 75,
@@ -294,12 +294,12 @@
         },
         "web": {
           "files": 25,
-          "size_bytes": 2787690
+          "size_bytes": 2787646
         }
       },
       "mode": "stable-shippable-output-v1",
       "total_files": 164,
-      "total_size_bytes": 17446637
+      "total_size_bytes": 17446593
     }
   },
   "recommendations": [],
@@ -310,11 +310,11 @@
     "passed": 9,
     "total_checks": 9
   },
-  "timestamp": "2026-10-29T15:48:39Z",
+  "timestamp": "2026-10-29T21:56:17Z",
   "validated_inputs": {
     "artifact_manifest": {
       "path": "output/reports/artifact_manifest.json",
-      "sha256": "14514d01f755a40801ab102d9324f572ff466f92391bd6b5cbb4fc9deeabbbaf",
+      "sha256": "52aeea62554918c7f7dc73d2037cbc55b11d96697a40877033b08366f47d5a87",
       "size_bytes": 54560
     },
     "combined_manuscript": {
@@ -470,19 +470,19 @@
     "fingerprints": {
       "config": {
         "file_count": 17,
-        "sha256": "f566c3e09c639d82454f443068f79ce454280893ea27ed6b41155aaa6e623156"
+        "sha256": "4419fb494d610f539f32306d1ccd7eac611cb593d48e3272769d1b7d06afb6d2"
       },
       "output": {
         "file_count": 164,
-        "sha256": "2f04a1fa11f76aeb19a837c06edcea084bef12bfbb98a5b707ced73a7df76f3d"
+        "sha256": "193409a11d4a79a2df13206f2f9f016fd5fc1299644f8c7f1998545e5c104736"
       },
       "source": {
         "file_count": 47,
-        "sha256": "ea3f3b9b756c8b46bc9e4bf9820725d77879dfbe1244c6c20f3d2e61022e5086"
+        "sha256": "d2980b931698dbab99b9814a67bb6da4aa9eb381e75fe2c41104aa608fb06ad5"
       },
       "stage": {
-        "file_count": 1932,
-        "sha256": "ec94b178a6c52d20918748b0e382fe961ae9237f7e82d55eefc380426595b9a1"
+        "file_count": 1718,
+        "sha256": "3434c8166001dc802b11e474353ebda8504feb0b702aceb7b93d86a47e35cf1a"
       }
     },
     "project": "templates/template_template",

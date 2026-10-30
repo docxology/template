@@ -176,8 +176,8 @@ def test_actual_provider_rejects_wrong_commit(committed_actual_provider: tuple[P
 @pytest.mark.parametrize(
     "relative,marker,diagnostic",
     [
-        ("pyproject.toml", b'version = "4.3.0"', "research-project-template 4.3.0"),
-        ((PROJECT_PATH / "pyproject.toml").as_posix(), b'platform_version = "4.3.0"', "canonical Autoresearch 4.3.0"),
+        ("pyproject.toml", b'version = "4.4.0"', "research-project-template 4.4.0"),
+        ((PROJECT_PATH / "pyproject.toml").as_posix(), b'platform_version = "4.4.0"', "canonical Autoresearch 4.4.0"),
     ],
 )
 def test_metadata_validation_binds_actual_held_bytes_across_file_replacement(
@@ -193,7 +193,7 @@ def test_metadata_validation_binds_actual_held_bytes_across_file_replacement(
     metadata = root / relative
     held_valid = _read_source(metadata)
     assert marker in held_valid
-    metadata.write_bytes(held_valid.replace(marker, marker.replace(b"4.3.0", b"3.8.0"), 1))
+    metadata.write_bytes(held_valid.replace(marker, marker.replace(b"4.4.0", b"3.8.0"), 1))
     held_invalid = _read_source(metadata)
     assert held_invalid != held_valid
     # Parsing the admitted valid buffer never rereads the now-invalid file.
@@ -260,12 +260,12 @@ def test_real_external_provider_rejects_source_substitution(
     elif mutation == "wrong-version":
         metadata = root / "pyproject.toml"
         source = metadata.read_text()
-        assert 'version = "4.3.0"' in source
-        metadata.write_text(source.replace('version = "4.3.0"', 'version = "3.8.0"', 1))
+        assert 'version = "4.4.0"' in source
+        metadata.write_text(source.replace('version = "4.4.0"', 'version = "3.8.0"', 1))
         _git(root, "add", "--all")
         _git(root, "commit", "--no-gpg-sign", "-m", "Actual invalid version control")
         commit = _git(root, "rev-parse", "HEAD")
     else:
         selected.write_bytes(selected.read_bytes() + b"\n# changed source\n")
-    with pytest.raises(ValueError, match="source|research-project-template 4.3.0"):
+    with pytest.raises(ValueError, match="source|research-project-template 4.4.0"):
         resolve_source_provider(tmp_path, _nomination(root, commit))

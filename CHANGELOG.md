@@ -7,6 +7,35 @@ source and contracts; each exemplar retains its own package and publication
 versions. Confidential and local workspaces outside the canonical public roster
 are excluded.
 
+## [4.4.0]
+See the [4.4.0 release-intent notes](docs/releases/v4.4.0.md). Publication requires
+exact-revision hosted acceptance and the authenticated release handoff; 4.3.0 and
+earlier preparations remain historical candidates, not published root releases.
+
+- Replace the monolithic all-public publication call with the modular
+  `scripts/audit/check_publication_outputs.py`: roster selection (`--project`,
+  `--all-public`, `--changed`), `--shard` slicing, parallel `--jobs`, blocking versus
+  `review_required` severities and one JSON receipt per project. `release.yml` retains
+  the receipts; `local_gate.py` gains a `publication` stage.
+- Cut verification cost on every path: documentation-only changes no longer select the
+  exemplar matrix or the contract roster (`ci_selection.documentation_only`), automatic
+  functional shards cap at twelve modules (`AUTOMATIC_SHARD_MAX_MODULES`), the
+  rendered-provenance stage fingerprint hashes tracked `.py` files instead of prose, and
+  `refresh_rendered_provenance.py --jobs` refreshes exemplars in worker processes.
+- Nominate a locked sdist per target interpreter, so a release whose wheels serve one
+  supported minor only (PyYAML 6.0.3) still installs offline with `--no-build` and exact
+  hashes; forward the installed cell's minor from the cell runner. Refresh `torch 2.15.0`,
+  `triton 3.9.0` and `cuda-bindings 13.4.4` in two exemplars and `hypothesis 6.170.13` in
+  two more for cp315 wheels, and marker-cap `wordcloud` to `python_version < "3.15"` with
+  a deterministic spiral fallback for the meta-analysis term cloud.
+- Raise the canonical public output ceiling to 224 MiB with the reviewed measurement
+  recorded beside the constant.
+- Correct the documentation against the tree: the root AGENTS/CLAUDE/START_HERE gate and
+  output-tracking statements, the validation/publication/publishing inventories, the
+  scripts and workflow entry points, the shared exemplar fork contract and its gate
+  commands, stale Python 3.10 statements in quickstarts, style guides, the formal ISA and
+  the autopoiesis emitter, and the release-boundary procedure.
+
 ## [4.3.0]
 
 See the [4.3.0 release-intent notes](docs/releases/v4.3.0.md). Publication requires

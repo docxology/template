@@ -243,7 +243,7 @@
         "valid": true,
         "warnings": []
       },
-      "total_size_mb": 4.526188850402832
+      "total_size_mb": 4.5261735916137695
     },
     "figures": {
       "files": 9,
@@ -282,12 +282,12 @@
         },
         "web": {
           "files": 11,
-          "size_bytes": 2131040
+          "size_bytes": 2131024
         }
       },
       "mode": "stable-shippable-output-v1",
       "total_files": 162,
-      "total_size_bytes": 4746053
+      "total_size_bytes": 4746037
     }
   },
   "recommendations": [],
@@ -298,12 +298,12 @@
     "passed": 9,
     "total_checks": 9
   },
-  "timestamp": "2026-10-29T15:48:39Z",
+  "timestamp": "2026-10-29T21:56:17Z",
   "validated_inputs": {
     "artifact_manifest": {
       "path": "output/reports/artifact_manifest.json",
-      "sha256": "fbd22f1c69d2b785593674e0be13e3c0c1ee932408d2307af544805ed4084875",
-      "size_bytes": 55595
+      "sha256": "dec4c62637db35cd04685b96b208f1b5860872c142410e3d6a32399744ae6f64",
+      "size_bytes": 55433
     },
     "combined_manuscript": {
       "path": "output/web/_combined_manuscript.md",
@@ -362,19 +362,19 @@
     "fingerprints": {
       "config": {
         "file_count": 22,
-        "sha256": "79acd692382874301b2a59635b7e3a1ebeb9e6a412d05b9b6a675b7df373752d"
+        "sha256": "23f7ed42bbc5ce3ca60c6f9ed4b7ce0960839cc71cacf088d56eac67d13013f2"
       },
       "output": {
         "file_count": 162,
-        "sha256": "d36f366b4866d4e417382e051c22a2b4ebc7fba1f63648c1480052bb39d4d893"
+        "sha256": "a6fd415482eb7dad3e0b00cfd88de59bfe4d5e61b91536b6defda1bd8fdc8067"
       },
       "source": {
         "file_count": 34,
-        "sha256": "e6e6f1c2fdeb8746144da254f85bce753d9401270d4cd07ed013f3701373354b"
+        "sha256": "ded0739db55c6285adc5c3319a2c72fe38cebe0112ba4f0cce08d07f1d779967"
       },
       "stage": {
-        "file_count": 1932,
-        "sha256": "ec94b178a6c52d20918748b0e382fe961ae9237f7e82d55eefc380426595b9a1"
+        "file_count": 1718,
+        "sha256": "3434c8166001dc802b11e474353ebda8504feb0b702aceb7b93d86a47e35cf1a"
       }
     },
     "project": "templates/template_pitch_deck",

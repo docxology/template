@@ -1,12 +1,12 @@
 {
   "claim_boundary": "Compact evidence summary for manuscript validation; full fact dumps are opt-in debug output.",
-  "fact_count": 175,
+  "fact_count": 178,
   "freshness_warnings": [],
   "kind_counts": {
-    "artifact": 45,
+    "artifact": 46,
     "citation": 12,
     "figure": 17,
-    "number": 96,
+    "number": 98,
     "section": 5
   },
   "omitted_fact_count": 0,
@@ -430,6 +430,30 @@
       "stale": false,
       "tolerance": 0.0,
       "value": "1"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-10-29T21:16:00Z",
+      "kind": "number",
+      "source": "output/reports/cleanup_report.json:$.skipped_tracked_count",
+      "source_field": "$.skipped_tracked_count",
+      "source_path": "output/reports/cleanup_report.json",
+      "source_tier": "generated_metric",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "50"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-10-29T21:16:00Z",
+      "kind": "number",
+      "source": "output/reports/cleanup_report.json:$.skipped_tracked_count (numeric variant)",
+      "source_field": "$.skipped_tracked_count",
+      "source_path": "output/reports/cleanup_report.json",
+      "source_tier": "generated_metric",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "0.5"
     },
     {
       "active": true,
@@ -1837,6 +1861,18 @@
     },
     {
       "active": true,
+      "checked_at": "2026-10-29T21:16:00Z",
+      "kind": "artifact",
+      "source": "filesystem",
+      "source_field": "",
+      "source_path": "output/reports/cleanup_report.json",
+      "source_tier": "artifact",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "output/reports/cleanup_report.json"
+    },
+    {
+      "active": true,
       "checked_at": "2026-08-08T23:12:32Z",
       "kind": "artifact",
       "source": "filesystem",
@@ -2114,10 +2150,10 @@
   ],
   "schema": "template-evidence-registry-report-v1",
   "source_tiers": {
-    "artifact": 67,
+    "artifact": 68,
     "bibliography": 12,
     "configuration": 23,
-    "generated_metric": 67,
+    "generated_metric": 69,
     "project_source": 6
   }
 }

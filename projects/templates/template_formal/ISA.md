@@ -38,7 +38,7 @@ A visitor forks `template_formal`, runs `uv run pytest`, and watches mypy --stri
 ## Constraints
 
 - Two-layer architecture: generic code in `infrastructure/` (none needed for this task — only if a genuinely reusable primitive emerges), project-specific code in `projects/templates/template_formal/src/`.
-- Python 3.10–3.12, `uv` for all dependency/execution, `mypy --strict` must pass with zero errors on `src/`.
+- Python 3.14–3.15, `uv` for all dependency/execution, `mypy --strict` must pass with zero errors on `src/`.
 - `pytest --cov=projects/templates/template_formal/src --cov-fail-under=90` must pass with **zero mocks** (`MagicMock`/`mocker.patch`/`unittest.mock` forbidden).
 - Must carry the canonical forkable surface per `projects/templates/AGENTS.md`: `README.md`, `AGENTS.md`, `TODO.md`, `pyproject.toml`, `.gitignore`, `.agents/skills/template-formal/SKILL.md` (+ `AGENTS.md`/`README.md`), `scripts/`, `src/`, `tests/`, `manuscript/config.yaml` + `.example`, `manuscript/references.bib`, `manuscript/preamble.md`.
 - Manuscript renders through the existing pipeline (`stage_02_analysis.py` → `stage_03_render.py` → `stage_04_validate.py`) and must pass `infrastructure.validation.cli markdown` + `pdf` checks; theorem/ADT-block math must be verified via page-scale raster, not `pdftotext` alone (per repo gotcha).

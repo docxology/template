@@ -18,9 +18,9 @@ def _platform() -> None:
     try:
         installed = version("research-project-template")
     except PackageNotFoundError as exc:
-        raise VerificationRuntimeUnavailable("Prepare the verifier dev extra with platform4.3.0 explicitly") from exc
-    if installed != "4.3.0":
-        raise VerificationRuntimeUnavailable("Full verification requires prepared platform4.3.0")
+        raise VerificationRuntimeUnavailable("Prepare the verifier dev extra with platform4.4.0 explicitly") from exc
+    if installed != "4.4.0":
+        raise VerificationRuntimeUnavailable("Full verification requires prepared platform4.4.0")
 
 
 @dataclass(frozen=True)
@@ -85,7 +85,7 @@ def prepare_verification_runtime(project_root: Path, interpreter: str, deadline:
             project_root,
             deadline=deadline,
             interpreter=Path(interpreter),
-            required_distributions={"research-project-template": "4.3.0"},
+            required_distributions={"research-project-template": "4.4.0"},
         )
     except ProjectTestRuntimeError as exc:
         if exc.exit_code in {124, 130}:

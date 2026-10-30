@@ -30,6 +30,9 @@ MAX_SNAPSHOT_BYTES = 256 * 1024 * 1024
 MAX_FILES = 10000
 MAX_DISCOVERY_PATHS = 100000
 
+_CAPTURE_ATTEMPTS = 3
+_CAPTURE_RETRY_SECONDS = 0.25
+
 
 def remaining(deadline: float) -> float:
     """Check the existing supervisor clock; never create a replacement budget."""
@@ -105,7 +108,40 @@ def _selected_files(project: Path, deadline: float) -> tuple[tuple[str, ...], tu
     return tuple(roots), selected
 
 
+_TRANSIENT_CAPTURE_RACES = frozenset(
+    {
+        "analysis data changed before boundary capture closed",
+        "analysis boundary body changed while capturing original bytes",
+        "complete analysis boundary membership changed while capturing original bytes",
+    }
+)
+
+
 def capture_analysis_data(
+    project: Path,
+    *,
+    run_id: str,
+    stage_key: str,
+    deadline: float,
+) -> dict[str, Any]:
+    """Capture the boundary, retrying a body that a producer is still writing.
+
+    A generated-data producer can still be flushing files when the boundary is
+    captured, which surfaced as an intermittent refusal rather than a wrong
+    capture. Retained blobs are content addressed, so a bounded retry is safe;
+    every other refusal still propagates on the first attempt.
+    """
+    for attempt in range(1, _CAPTURE_ATTEMPTS + 1):
+        try:
+            return _capture_analysis_data_once(project, run_id=run_id, stage_key=stage_key, deadline=deadline)
+        except ValueError as error:
+            if str(error) not in _TRANSIENT_CAPTURE_RACES or attempt == _CAPTURE_ATTEMPTS:
+                raise
+            time.sleep(_CAPTURE_RETRY_SECONDS * attempt)
+    raise AssertionError("capture retry loop must return or raise")
+
+
+def _capture_analysis_data_once(
     project: Path,
     *,
     run_id: str,

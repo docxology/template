@@ -126,10 +126,13 @@ Respond with valid JSON:
 
     # Calculate weighted score
     total_weight: float = sum(c["weight"] for c in criteria)
-    weighted_score: float = sum(
-        s["score"] * next(c["weight"] for c in criteria if c["name"] == s["criterion"])
-        for s in expected_output["scores"]
-    ) / total_weight
+    weighted_score: float = (
+        sum(
+            s["score"] * next(c["weight"] for c in criteria if c["name"] == s["criterion"])
+            for s in expected_output["scores"]
+        )
+        / total_weight
+    )
 
     print(f"Weighted Score: {weighted_score:.2f}/5")
     return expected_output
@@ -202,7 +205,7 @@ def pairwise_comparison_example() -> dict[str, Any]:
 {second_response}
 
 ## Comparison Criteria
-{', '.join(criteria)}
+{", ".join(criteria)}
 
 ## Output Format
 {{

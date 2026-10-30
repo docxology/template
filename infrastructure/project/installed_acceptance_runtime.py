@@ -109,6 +109,7 @@ def install_runtime(
     *,
     provider_wheels: dict[str, tuple[dict[str, str], Requirement]],
     metadata: LockedMetadata,
+    minor: str | None = None,
 ) -> tuple[Path, dict[str, Any]]:
     """Use exact locked transitives, then install genuine wheels with no dependencies.
 
@@ -172,7 +173,7 @@ def install_runtime(
         ),
         "runtime-lock",
     )
-    normalize_locked_dependency_export(metadata_root, dependencies, minor=requirement.python_version or None)
+    normalize_locked_dependency_export(metadata_root, dependencies, minor=minor or requirement.python_version or None)
     if not metadata.unchanged():
         raise ValueError("private locked metadata changed during dependency export")
     write_binary(root, directory / dependencies.name, dependencies.read_bytes())

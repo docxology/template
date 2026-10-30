@@ -1,0 +1,67 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" role="img" aria-labelledby="title description">
+  <title id="title">Template 4.4.0: coordinated metadata, measured CI and unambiguous forks</title>
+  <desc id="description">Five connected stages show two reviewed minor metadata transactions that move the root SDK to 4.4.0 with all 25 exemplar bindings while preserving each exemplar's own version, a rebuilt CI surface of six shared composite actions with an eight-lane contract matrix, functional shards balanced by committed measured module durations, forked copies that declare their own SDK source and author identity, and retained evidence with an explicitly pending coverage re-measurement. Acceptance and publication remain required; the illustration is not an acceptance receipt.</desc>
+  <defs>
+    <marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 L8 4 L0 8Z" fill="#829ab1"/></marker>
+    <style>
+      text { font-family: Arial, Helvetica, sans-serif; }
+      .heading { font-size: 23px; font-weight: 700; fill: #102a43; }
+      .body { font-size: 18px; fill: #334e68; }
+    </style>
+  </defs>
+  <rect width="1600" height="900" fill="#eef3f8"/>
+  <text x="72" y="98" font-size="52" font-weight="700" fill="#102a43">template/ 4.4.0</text>
+  <text x="74" y="146" font-size="25" fill="#334e68">Coordinated metadata. Measured gates. Forkable exemplars.</text>
+  <rect x="1250" y="60" width="278" height="82" rx="12" fill="#fff5db" stroke="#dfba64"/>
+  <text x="1389" y="93" font-size="16" font-weight="700" letter-spacing="1.2" text-anchor="middle" fill="#7b590d">RELEASE INTENT</text>
+  <text x="1389" y="121" font-size="18" text-anchor="middle" fill="#7b590d">Verification required</text>
+  <g id="stage-1"><rect x="72" y="228" width="272" height="312" rx="15" fill="#ffffff" stroke="#cfdae5" stroke-width="2"/>
+    <rect x="96" y="252" width="42" height="30" rx="8" fill="#e2eaf3"/><text x="117" y="273" font-size="16" font-weight="700" text-anchor="middle" fill="#334e68">01</text>
+    <text x="96" y="326" class="heading">Coordinate metadata</text>
+    <text x="96" y="376" class="body">Two reviewed minor plans</text>
+    <text x="96" y="412" class="body">25 SDK binding moves</text>
+    <text x="96" y="448" class="body">Own versions preserved</text>
+    <text x="96" y="484" class="body">Rollback journals kept</text>
+  </g>
+  <path d="M 348 388 H 362" fill="none" stroke="#829ab1" stroke-width="2" marker-end="url(#arrow)"/>
+  <g id="stage-2"><rect x="368" y="228" width="272" height="312" rx="15" fill="#ffffff" stroke="#cfdae5" stroke-width="2"/>
+    <rect x="392" y="252" width="42" height="30" rx="8" fill="#e2eaf3"/><text x="413" y="273" font-size="16" font-weight="700" text-anchor="middle" fill="#334e68">02</text>
+    <text x="392" y="326" class="heading">Rebuild CI surface</text>
+    <text x="392" y="376" class="body">Six shared actions</text>
+    <text x="392" y="412" class="body">Eight contract lanes</text>
+    <text x="392" y="448" class="body">Concurrent lint gates</text>
+    <text x="392" y="484" class="body">Dependabot unblocked</text>
+  </g>
+  <path d="M 644 388 H 658" fill="none" stroke="#829ab1" stroke-width="2" marker-end="url(#arrow)"/>
+  <g id="stage-3"><rect x="664" y="228" width="272" height="312" rx="15" fill="#ffffff" stroke="#cfdae5" stroke-width="2"/>
+    <rect x="688" y="252" width="42" height="30" rx="8" fill="#e2eaf3"/><text x="709" y="273" font-size="16" font-weight="700" text-anchor="middle" fill="#334e68">03</text>
+    <text x="688" y="326" class="heading">Balance by measurement</text>
+    <text x="688" y="376" class="body">Committed durations</text>
+    <text x="688" y="412" class="body">191.7 s → 162.8 s</text>
+    <text x="688" y="448" class="body">One local gate entry</text>
+    <text x="688" y="484" class="body">Five-second commits</text>
+  </g>
+  <path d="M 940 388 H 954" fill="none" stroke="#829ab1" stroke-width="2" marker-end="url(#arrow)"/>
+  <g id="stage-4"><rect x="960" y="228" width="272" height="312" rx="15" fill="#ffffff" stroke="#cfdae5" stroke-width="2"/>
+    <rect x="984" y="252" width="42" height="30" rx="8" fill="#e2eaf3"/><text x="1005" y="273" font-size="16" font-weight="700" text-anchor="middle" fill="#334e68">04</text>
+    <text x="984" y="326" class="heading">Fork without ambiguity</text>
+    <text x="984" y="376" class="body">Declared SDK source</text>
+    <text x="984" y="412" class="body">Own author identity</text>
+    <text x="984" y="448" class="body">No inherited DOI/ORCID</text>
+    <text x="984" y="484" class="body">Project-owned config keys</text>
+  </g>
+  <path d="M 1236 388 H 1250" fill="none" stroke="#829ab1" stroke-width="2" marker-end="url(#arrow)"/>
+  <g id="stage-5"><rect x="1256" y="228" width="272" height="312" rx="15" fill="#ffffff" stroke="#cfdae5" stroke-width="2"/>
+    <rect x="1280" y="252" width="42" height="30" rx="8" fill="#e2eaf3"/><text x="1301" y="273" font-size="16" font-weight="700" text-anchor="middle" fill="#334e68">05</text>
+    <text x="1280" y="326" class="heading">Keep evidence honest</text>
+    <text x="1280" y="376" class="body">25 exemplar suites</text>
+    <text x="1280" y="412" class="body">Modular gate</text>
+    <text x="1280" y="448" class="body">Coverage re-measure pending</text>
+    <text x="1280" y="484" class="body">Snapshot refresh declared</text>
+  </g>
+  <rect x="72" y="602" width="1456" height="148" rx="15" fill="#102a43"/>
+  <text x="104" y="652" font-size="29" font-weight="700" fill="#ffffff">One version identity across the root and 25 standalone repositories</text>
+  <text x="104" y="697" font-size="23" fill="#d8e5f1">Package version  ·  changelog heading  ·  release tag  ·  citation record  ·  deposit metadata</text>
+  <text x="74" y="813" font-size="19" fill="#526d82">Architecture overview. Only complete exact-source acceptance and the authenticated handoff authorize publication.</text>
+  <text x="74" y="847" font-size="17" fill="#526d82">This illustration communicates the release path; it is not a test receipt, scientific result or certification.</text>
+</svg>

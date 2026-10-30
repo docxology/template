@@ -59,6 +59,7 @@ __all__ = [
 # Token estimation
 # ---------------------------------------------------------------------------
 
+
 def estimate_token_count(text: str) -> int:
     """Return a rough token estimate for *text*.
 
@@ -129,6 +130,7 @@ def count_tokens_by_type(context: Dict[str, Any]) -> Dict[str, int]:
 # ---------------------------------------------------------------------------
 # Context Builder
 # ---------------------------------------------------------------------------
+
 
 class ContextBuilder:
     """Build context with priority-aware budget management.
@@ -211,9 +213,7 @@ class ContextBuilder:
             "total_tokens": total,
             "limit": self.context_limit,
             "utilization": total / self.context_limit if self.context_limit else 0,
-            "by_section": {
-                name: s["tokens"] for name, s in self.sections.items()
-            },
+            "by_section": {name: s["tokens"] for name, s in self.sections.items()},
             "status": self._get_status(total),
         }
 
@@ -231,6 +231,7 @@ class ContextBuilder:
 # ---------------------------------------------------------------------------
 # Context Truncation
 # ---------------------------------------------------------------------------
+
 
 def truncate_context(
     context: str,
@@ -285,12 +286,8 @@ def truncate_messages(
         else:
             recent_messages.append(msg)
 
-    tokens_for_system = (
-        estimate_token_count(system_prompt["content"]) if system_prompt else 0
-    )
-    tokens_for_summary = (
-        estimate_token_count(summary["content"]) if summary else 0
-    )
+    tokens_for_system = estimate_token_count(system_prompt["content"]) if system_prompt else 0
+    tokens_for_summary = estimate_token_count(summary["content"]) if summary else 0
     available = max_tokens - tokens_for_system - tokens_for_summary
 
     tokens_for_recent = estimate_message_tokens(recent_messages)
@@ -317,6 +314,7 @@ def truncate_messages(
 # Context Validation
 # ---------------------------------------------------------------------------
 
+
 def validate_context_structure(context: Dict[str, Any]) -> Dict[str, Any]:
     """Validate a context dict for common structural issues.
 
@@ -340,9 +338,7 @@ def validate_context_structure(context: Dict[str, Any]) -> Dict[str, Any]:
     # Check for excessive length
     total_tokens = sum(estimate_token_count(str(c)) for c in context.values())
     if total_tokens > 80_000:
-        issues.append(
-            f"Context length ({total_tokens} tokens) exceeds recommended limit"
-        )
+        issues.append(f"Context length ({total_tokens} tokens) exceeds recommended limit")
         recommendations.append("Consider context compaction or partitioning")
 
     # Check for missing sections
@@ -350,9 +346,7 @@ def validate_context_structure(context: Dict[str, Any]) -> Dict[str, Any]:
     for section in recommended_sections:
         if section not in context:
             issues.append(f"Missing recommended section: {section}")
-            recommendations.append(
-                f"Add {section} section with relevant information"
-            )
+            recommendations.append(f"Add {section} section with relevant information")
 
     # Check for duplicate content (first 1000 chars, hashed for consistency)
     seen_content: set[str] = set()
@@ -373,6 +367,7 @@ def validate_context_structure(context: Dict[str, Any]) -> Dict[str, Any]:
 # ---------------------------------------------------------------------------
 # Progressive Disclosure
 # ---------------------------------------------------------------------------
+
 
 class ProgressiveDisclosureManager:
     """Lazy loader for progressive disclosure of file-based context.
@@ -445,6 +440,7 @@ class ProgressiveDisclosureManager:
 # High-level entry point
 # ---------------------------------------------------------------------------
 
+
 def build_agent_context(
     task: str,
     system_prompt: str,
@@ -501,8 +497,7 @@ if __name__ == "__main__":
     print("=== Context Manager Demo ===\n")
 
     sample_prompt = (
-        "You are a senior Python engineer. Follow PEP 8, use type hints, "
-        "and write docstrings for all public functions."
+        "You are a senior Python engineer. Follow PEP 8, use type hints, and write docstrings for all public functions."
     )
     sample_task = "Refactor the authentication module to use OAuth 2.0."
     sample_docs = [

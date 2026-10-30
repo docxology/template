@@ -159,8 +159,8 @@ def _launch(arguments: argparse.Namespace, deadline: float) -> int:
             platform_version = version("research-project-template")
         except PackageNotFoundError:
             platform_version = ""
-        if platform_version != "4.3.0":
-            print("Formal tool launcher blocked: exact platform4.3.0 is required", file=sys.stderr)
+        if platform_version != "4.4.0":
+            print("Formal tool launcher blocked: exact platform4.4.0 is required", file=sys.stderr)
             return 75
         if arguments.receipt is not None:
             try:

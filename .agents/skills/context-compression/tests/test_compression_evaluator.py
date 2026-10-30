@@ -3,12 +3,8 @@ import unittest
 from pathlib import Path
 
 
-MODULE_PATH = (
-    Path(__file__).resolve().parents[1] / "scripts" / "compression_evaluator.py"
-)
-MODULE_SPEC = importlib.util.spec_from_file_location(
-    "compression_evaluator", MODULE_PATH
-)
+MODULE_PATH = Path(__file__).resolve().parents[1] / "scripts" / "compression_evaluator.py"
+MODULE_SPEC = importlib.util.spec_from_file_location("compression_evaluator", MODULE_PATH)
 if MODULE_SPEC is None or MODULE_SPEC.loader is None:
     raise RuntimeError(f"Unable to load compression_evaluator.py from {MODULE_PATH}")
 COMPRESSION_EVALUATOR = importlib.util.module_from_spec(MODULE_SPEC)

@@ -154,7 +154,7 @@ behaviorally equivalent to the dedicated documentation job.
 
 - **Runner:** `ubuntu-latest` / Python 3.14
 - **Shared gates:** [`run-public-lint`](../actions/run-public-lint/README.md) with `type-check: ratchet` (Ruff check, Ruff format check, `scripts/gates/mypy_ratchet.py`, concurrently with separate logs) and [`run-tracked-guards`](../actions/run-tracked-guards/README.md) (confidentiality, secrets, generated artifacts — sequential).
-- **Tools:** `uv run python -m infrastructure.skills check-all-exports`, `uv run python -m infrastructure.skills operations-check`, `ruff check --select T20 infrastructure/`, `check_mirror_symlinks.py`, `check_doc_module_refs.py`, `publication-audit --all-public --strict`, the XML parser policy, `module_line_count_check.py`, `check_template_drift.py --strict`, `check_backlog.py`, `check_claim_bindings.py`.
+- **Tools:** `./.github/actions/run-public-lint` (Ruff check, Ruff format check, `scripts/gates/mypy_ratchet.py`), `./.github/actions/run-tracked-guards` (confidentiality, secrets and generated artifacts), `scripts/audit/check_exemplar_configs.py`, and `scripts/audit/check_release_versions.py` (with `--tag "$RELEASE_TAG"` on tag pushes). The publication audit is **not** part of this job: `hardening.yml` runs the source-only `publication-audit --all-public --strict --format json`, and `release.yml` runs the modular `scripts/audit/check_publication_outputs.py --all-public --strict --jobs 4` over rendered exemplars and uploads one receipt per project.
 - **Scope:** Ruff and mypy use the public scopes from `infrastructure.project.public_scope ci-paths` (resolved once inside the shared action); Bandit lives in the `security` job.
 
 #### 2. Static Health Report (`health`)

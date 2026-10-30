@@ -165,9 +165,7 @@ class AgentEvaluator:
             }
 
         # Calculate weighted overall
-        overall: float = sum(
-            s["score"] * self.rubric[k].weight for k, s in scores.items()
-        )
+        overall: float = sum(s["score"] * self.rubric[k].weight for k, s in scores.items())
 
         result: Dict[str, Any] = {
             "overall_score": overall,
@@ -211,8 +209,9 @@ class AgentEvaluator:
             if task.get("requires_citations"):
                 # Look for citation patterns like [1], [Author 2024], [source]
                 # Avoid false positives from code brackets or JSON
-                citation_pattern = r'\[\d+\]|\[[A-Z][a-z]+(?:\s+(?:et al\.?|&)\s+[A-Z][a-z]+)?\s*[\d,]+\]|\[(?:source|ref|cite)[^\]]*\]'
+                citation_pattern = r"\[\d+\]|\[[A-Z][a-z]+(?:\s+(?:et al\.?|&)\s+[A-Z][a-z]+)?\s*[\d,]+\]|\[(?:source|ref|cite)[^\]]*\]"
                 import re as _re
+
                 citations_found = _re.findall(citation_pattern, output)
                 if len(citations_found) >= 1:
                     return 1.0
@@ -240,9 +239,7 @@ class AgentEvaluator:
 
         return 0.5  # Default
 
-    def _check_factual_accuracy(
-        self, output: str, ground_truth: Dict[str, Any]
-    ) -> float:
+    def _check_factual_accuracy(self, output: str, ground_truth: Dict[str, Any]) -> float:
         """Check output against ground truth.
 
         Use when: ground truth key_claims are available for comparison.
@@ -413,9 +410,7 @@ class EvaluationRunner:
 
         for i, test in enumerate(self.test_set.tests):
             if verbose:
-                print(
-                    f"Running test {i + 1}/{len(self.test_set.tests)}: {test['name']}"
-                )
+                print(f"Running test {i + 1}/{len(self.test_set.tests)}: {test['name']}")
 
             result = self.run_test(test)
             self.results.append(result)
@@ -519,9 +514,7 @@ class ProductionMonitor:
         """
         return self._rng.random() < self.sample_rate
 
-    def record_sample(
-        self, query: str, output: str, evaluation: Dict[str, Any]
-    ) -> None:
+    def record_sample(self, query: str, output: str, evaluation: Dict[str, Any]) -> None:
         """Record a production sample for evaluation.
 
         Use when: storing evaluated production interactions for trend analysis.
@@ -561,9 +554,7 @@ class ProductionMonitor:
             "alerts": self._generate_alerts(pass_rate, avg_score),
         }
 
-    def _generate_alerts(
-        self, pass_rate: float, avg_score: float
-    ) -> List[Dict[str, str]]:
+    def _generate_alerts(self, pass_rate: float, avg_score: float) -> List[Dict[str, str]]:
         """Generate alerts based on metrics."""
         alerts: List[Dict[str, str]] = []
 

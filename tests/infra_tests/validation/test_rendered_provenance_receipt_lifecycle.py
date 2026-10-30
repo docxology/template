@@ -38,6 +38,8 @@ def test_receipt_is_deterministic_and_current_for_green_real_files(tmp_path: Pat
     assert first == second
     assert (project / RECEIPT_RELATIVE_PATH).read_bytes() == first_bytes
     assert first.evidence_mode == "validated-co-snapshot-fingerprint-bridge"
+    # Every tracked implementation file binds, including runtime prose assets;
+    # only package documentation files are excluded by name.
     assert first.stage.file_count == 6
     assert first.source.file_count >= 3
     assert first.config.file_count >= 3

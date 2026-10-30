@@ -45,6 +45,7 @@ __all__ = [
 # Protocols -- lightweight structural typing for tool specs
 # ---------------------------------------------------------------------------
 
+
 class ToolSpec(Protocol):
     """Structural interface expected by generation helpers.
 
@@ -108,6 +109,7 @@ PARAM_TEMPLATE: str = """
 # Generation helpers
 # ---------------------------------------------------------------------------
 
+
 def generate_tool_description(tool_spec: ToolSpec) -> str:
     """Render a complete markdown tool description from *tool_spec*.
 
@@ -156,9 +158,7 @@ def _generate_parameters(parameters: Sequence[Dict[str, Any]]) -> str:
         default = p.get("default")
         default_label = f"Default: {default}" if default is not None else ""
         parts.append(
-            f"- **{p['name']}** ({p['type']}{required_label})\n"
-            f"  {p['description']}\n"
-            f"  {default_label}".rstrip()
+            f"- **{p['name']}** ({p['type']}{required_label})\n  {p['description']}\n  {default_label}".rstrip()
         )
     return "\n".join(parts)
 
@@ -185,6 +185,7 @@ def _generate_errors(errors: Sequence[Dict[str, Any]]) -> str:
 # ---------------------------------------------------------------------------
 # Evaluator
 # ---------------------------------------------------------------------------
+
 
 class ToolDescriptionEvaluator:
     """Score a rendered description against quality criteria.
@@ -245,9 +246,7 @@ class ToolDescriptionEvaluator:
             ("returns", r"### Returns"),
             ("errors", r"### Errors"),
         ]
-        present: int = sum(
-            1 for _, pattern in required_patterns if re.search(pattern, description)
-        )
+        present: int = sum(1 for _, pattern in required_patterns if re.search(pattern, description))
         return present / len(required_patterns)
 
     def _check_accuracy(self, description: str, tool_spec: ToolSpec) -> float:
@@ -296,6 +295,7 @@ class ToolDescriptionEvaluator:
 # Error Message Generator
 # ---------------------------------------------------------------------------
 
+
 class ErrorMessageGenerator:
     """Produce structured, agent-recoverable error messages.
 
@@ -304,26 +304,33 @@ class ErrorMessageGenerator:
     """
 
     TEMPLATES: Dict[str, str] = {
-        "NOT_FOUND": json.dumps({
-            "error": "{error_code}",
-            "message": "{specific_message}",
-            "resolution": "{how_to_resolve}",
-            "example": "{correct_format}",
-        }, indent=2),
-
-        "INVALID_INPUT": json.dumps({
-            "error": "{error_code}",
-            "message": "Invalid {field}: {received_value}",
-            "expected_format": "{expected_format}",
-            "resolution": "Provide value matching {expected_format}",
-        }, indent=2),
-
-        "RATE_LIMITED": json.dumps({
-            "error": "{error_code}",
-            "message": "Rate limit exceeded",
-            "retry_after": "{seconds}",
-            "resolution": "Wait {seconds} seconds before retrying",
-        }, indent=2),
+        "NOT_FOUND": json.dumps(
+            {
+                "error": "{error_code}",
+                "message": "{specific_message}",
+                "resolution": "{how_to_resolve}",
+                "example": "{correct_format}",
+            },
+            indent=2,
+        ),
+        "INVALID_INPUT": json.dumps(
+            {
+                "error": "{error_code}",
+                "message": "Invalid {field}: {received_value}",
+                "expected_format": "{expected_format}",
+                "resolution": "Provide value matching {expected_format}",
+            },
+            indent=2,
+        ),
+        "RATE_LIMITED": json.dumps(
+            {
+                "error": "{error_code}",
+                "message": "Rate limit exceeded",
+                "retry_after": "{seconds}",
+                "resolution": "Wait {seconds} seconds before retrying",
+            },
+            indent=2,
+        ),
     }
 
     def generate(self, error_type: str, context: Dict[str, str]) -> str:
@@ -339,6 +346,7 @@ class ErrorMessageGenerator:
 # ---------------------------------------------------------------------------
 # Schema Builder
 # ---------------------------------------------------------------------------
+
 
 class ToolSchemaBuilder:
     """Fluent builder for complete tool schemas.
@@ -380,14 +388,16 @@ class ToolSchemaBuilder:
 
         Use when: declaring each accepted input for the tool.
         """
-        self.parameters.append({
-            "name": name,
-            "type": param_type,
-            "description": description,
-            "required": required,
-            "default": default,
-            "enum": enum,
-        })
+        self.parameters.append(
+            {
+                "name": name,
+                "type": param_type,
+                "description": description,
+                "required": required,
+                "default": default,
+                "enum": enum,
+            }
+        )
         return self
 
     def set_returns(
@@ -418,11 +428,13 @@ class ToolSchemaBuilder:
         Use when: enumerating known failure modes so agents can
         handle them gracefully.
         """
-        self.errors.append({
-            "code": code,
-            "description": description,
-            "resolution": resolution,
-        })
+        self.errors.append(
+            {
+                "code": code,
+                "description": description,
+                "resolution": resolution,
+            }
+        )
         return self
 
     def build(self) -> "_BuiltToolSpec":
@@ -454,9 +466,7 @@ class ToolSchemaBuilder:
         self._triggers.append(trigger)
         return self
 
-    def add_example(
-        self, input_text: str, tool_call: str
-    ) -> "ToolSchemaBuilder":
+    def add_example(self, input_text: str, tool_call: str) -> "ToolSchemaBuilder":
         """Add a usage example.
 
         Use when: providing concrete input/output pairs that help agents
@@ -475,16 +485,17 @@ if __name__ == "__main__":
     builder = ToolSchemaBuilder("get_customer")
     builder.set_description(
         "Retrieve customer record by ID",
-        "Fetches a customer object from the primary datastore. "
-        "Supports concise and detailed response formats.",
+        "Fetches a customer object from the primary datastore. Supports concise and detailed response formats.",
     )
     builder.add_parameter(
-        "customer_id", "string",
+        "customer_id",
+        "string",
         'Customer identifier in CUST-###### format (e.g., "CUST-000001")',
         required=True,
     )
     builder.add_parameter(
-        "format", "string",
+        "format",
+        "string",
         '"concise" for key fields, "detailed" for complete record',
         required=False,
         default="concise",
@@ -518,11 +529,14 @@ if __name__ == "__main__":
 
     # Generate an error message example
     err_gen = ErrorMessageGenerator()
-    err_msg = err_gen.generate("NOT_FOUND", {
-        "error_code": "NOT_FOUND",
-        "specific_message": "No customer with ID CUST-999999",
-        "how_to_resolve": "Check ID and retry",
-        "correct_format": "CUST-######",
-    })
+    err_msg = err_gen.generate(
+        "NOT_FOUND",
+        {
+            "error_code": "NOT_FOUND",
+            "specific_message": "No customer with ID CUST-999999",
+            "how_to_resolve": "Check ID and retry",
+            "correct_format": "CUST-######",
+        },
+    )
     print("\n=== Sample Error Message ===")
     print(err_msg)

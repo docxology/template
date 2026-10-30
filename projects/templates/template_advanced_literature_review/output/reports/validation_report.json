@@ -215,7 +215,7 @@
         "valid": true,
         "warnings": []
       },
-      "total_size_mb": 19.095715522766113
+      "total_size_mb": 19.095669746398926
     },
     "figures": {
       "files": 19,
@@ -254,12 +254,12 @@
         },
         "web": {
           "files": 27,
-          "size_bytes": 2599223
+          "size_bytes": 2599175
         }
       },
       "mode": "stable-shippable-output-v1",
       "total_files": 103,
-      "total_size_bytes": 20023309
+      "total_size_bytes": 20023261
     }
   },
   "recommendations": [],
@@ -270,11 +270,11 @@
     "passed": 9,
     "total_checks": 9
   },
-  "timestamp": "2026-10-29T15:48:39Z",
+  "timestamp": "2026-10-29T21:56:17Z",
   "validated_inputs": {
     "artifact_manifest": {
       "path": "output/reports/artifact_manifest.json",
-      "sha256": "76e15c22d64de4c3683975eff1a3f4be8b9fc393524045c58d45426454a07150",
+      "sha256": "bbff4b48e9d89b2cc4fbca0a314361a3f7c0f8023bc8a0294d7ae7822a2f742c",
       "size_bytes": 34071
     },
     "combined_manuscript": {
@@ -430,19 +430,19 @@
     "fingerprints": {
       "config": {
         "file_count": 21,
-        "sha256": "cf8076463bbefa74a93192e26ffb079d4a1c1d6aee26645dcab771719623c725"
+        "sha256": "a4d0652764c623dd70d17c9a127a3658368428b76e773670fc421bdc0f114260"
       },
       "output": {
         "file_count": 103,
-        "sha256": "41219567ad2d39bfdcc2a44320b406e387ac0a2c2d0b0cce32fe673d194516ed"
+        "sha256": "edfc67b1e30b86be1df5160bbf516716a8c9ae10401a3bcab561e17ccad44a02"
       },
       "source": {
         "file_count": 101,
-        "sha256": "f7cf9e0e50a453e9af6dcc3e230c3628b338c2b4e0f2eadcd3b8f3d16298705d"
+        "sha256": "86d64471efcd7043e11582e25154d80f434e56aa4f393e759b5de679c02e928f"
       },
       "stage": {
-        "file_count": 1932,
-        "sha256": "ec94b178a6c52d20918748b0e382fe961ae9237f7e82d55eefc380426595b9a1"
+        "file_count": 1718,
+        "sha256": "3434c8166001dc802b11e474353ebda8504feb0b702aceb7b93d86a47e35cf1a"
       }
     },
     "project": "templates/template_advanced_literature_review",

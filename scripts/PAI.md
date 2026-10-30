@@ -1,7 +1,7 @@
 # 🧠 PAI.md - Scripts Context
 
 ## 📍 Purpose
-This directory contains the **Entry Point Orchestrators**. These scripts drive the execution pipeline (setup, test, analysis, render, validate).
+This directory contains the **Entry Point Orchestrators**. This directory holds role-specific entry-point orchestrators: `pipeline/` (stage scripts), `runner/` (pipeline, matrix, bundle and archival runners), `audit/` (documentation, drift, tracked-resource and publication-output gates), `docgen/` (`docs/_generated/` writers), `publish/` (release helpers), `gates/` (opt-in gates plus the offline local gate), `maintenance/`, `shell/` and `fixtures/`. Business logic stays in `infrastructure/`.
 
 ## PAI v5 Operations
 

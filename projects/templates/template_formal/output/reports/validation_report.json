@@ -199,7 +199,7 @@
         "valid": true,
         "warnings": []
       },
-      "total_size_mb": 3.618165969848633
+      "total_size_mb": 3.6181507110595703
     },
     "figures": {
       "files": 8,
@@ -234,12 +234,12 @@
         },
         "web": {
           "files": 11,
-          "size_bytes": 2466612
+          "size_bytes": 2466596
         }
       },
       "mode": "stable-shippable-output-v1",
       "total_files": 32,
-      "total_size_bytes": 3793922
+      "total_size_bytes": 3793906
     }
   },
   "recommendations": [],
@@ -250,11 +250,11 @@
     "passed": 9,
     "total_checks": 9
   },
-  "timestamp": "2026-10-29T15:48:39Z",
+  "timestamp": "2026-10-29T21:56:17Z",
   "validated_inputs": {
     "artifact_manifest": {
       "path": "output/reports/artifact_manifest.json",
-      "sha256": "3fae41477ea73886508c6db4642c5d564ad92e2e3be9729a55c8339828a0a183",
+      "sha256": "3751b357b6d55d9241def6081e5de1717ee523059bad0706bed453d2aa0a4423",
       "size_bytes": 10699
     },
     "combined_manuscript": {
@@ -314,19 +314,19 @@
     "fingerprints": {
       "config": {
         "file_count": 15,
-        "sha256": "fb26f0ce1a765c5743d6c52f825f07180fd3f9677ecc47c2699a3d71761ede76"
+        "sha256": "74c6fcac32e5d3f3b8c8bd72a07bdacc10f32afdfc25380afbfb872f3e65b24f"
       },
       "output": {
         "file_count": 32,
-        "sha256": "3037b3b777bb1adaeac4ac4d1eb46c637bad53be2ffcdcfb475a50e6fff03736"
+        "sha256": "aa0bd29772e892e737ee143a79f70ffec9ef4cf42393f8119eb3882c1af96cc4"
       },
       "source": {
         "file_count": 61,
-        "sha256": "913c09dd1d20cdc1df48a602e7bf76af7cd122bddfb51f53bfacbe7e75ddffb6"
+        "sha256": "6664e7317409f9ca92081274b42772e321fe7444489648130488d1f46772b0bd"
       },
       "stage": {
-        "file_count": 1932,
-        "sha256": "ec94b178a6c52d20918748b0e382fe961ae9237f7e82d55eefc380426595b9a1"
+        "file_count": 1718,
+        "sha256": "3434c8166001dc802b11e474353ebda8504feb0b702aceb7b93d86a47e35cf1a"
       }
     },
     "project": "templates/template_formal",

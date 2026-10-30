@@ -55,6 +55,7 @@ __all__ = [
 
 class ProbeType(Enum):
     """Types of evaluation probes for compression quality assessment."""
+
     RECALL = "recall"
     ARTIFACT = "artifact"
     CONTINUATION = "continuation"
@@ -69,6 +70,7 @@ class Probe:
     Each probe targets a specific information category that compression
     may have lost.
     """
+
     probe_type: ProbeType
     question: str
     ground_truth: Optional[str] = None
@@ -78,6 +80,7 @@ class Probe:
 @dataclass
 class CriterionResult:
     """Result for a single evaluation criterion."""
+
     criterion_id: str
     score: float
     reasoning: str
@@ -90,6 +93,7 @@ class EvaluationResult:
     Contains per-criterion scores, per-dimension aggregates, and an
     overall aggregate score.
     """
+
     probe: Probe
     response: str
     criterion_results: List[CriterionResult]
@@ -101,87 +105,59 @@ class EvaluationResult:
 
 RUBRIC_CRITERIA: Dict[str, List[Dict]] = {
     "accuracy": [
-        {
-            "id": "accuracy_factual",
-            "question": "Are facts, file paths, and technical details correct?",
-            "weight": 0.6
-        },
-        {
-            "id": "accuracy_technical",
-            "question": "Are code references and technical concepts correct?",
-            "weight": 0.4
-        }
+        {"id": "accuracy_factual", "question": "Are facts, file paths, and technical details correct?", "weight": 0.6},
+        {"id": "accuracy_technical", "question": "Are code references and technical concepts correct?", "weight": 0.4},
     ],
     "context_awareness": [
         {
             "id": "context_conversation_state",
             "question": "Does the response reflect current conversation state?",
-            "weight": 0.5
+            "weight": 0.5,
         },
         {
             "id": "context_artifact_state",
             "question": "Does the response reflect which files/artifacts were accessed?",
-            "weight": 0.5
-        }
+            "weight": 0.5,
+        },
     ],
     "artifact_trail": [
-        {
-            "id": "artifact_files_created",
-            "question": "Does the agent know which files were created?",
-            "weight": 0.3
-        },
-        {
-            "id": "artifact_files_modified",
-            "question": "Does the agent know which files were modified?",
-            "weight": 0.4
-        },
+        {"id": "artifact_files_created", "question": "Does the agent know which files were created?", "weight": 0.3},
+        {"id": "artifact_files_modified", "question": "Does the agent know which files were modified?", "weight": 0.4},
         {
             "id": "artifact_key_details",
             "question": "Does the agent remember function names, variable names, error messages?",
-            "weight": 0.3
-        }
+            "weight": 0.3,
+        },
     ],
     "completeness": [
         {
             "id": "completeness_coverage",
             "question": "Does the response address all parts of the question?",
-            "weight": 0.6
+            "weight": 0.6,
         },
-        {
-            "id": "completeness_depth",
-            "question": "Is sufficient detail provided?",
-            "weight": 0.4
-        }
+        {"id": "completeness_depth", "question": "Is sufficient detail provided?", "weight": 0.4},
     ],
     "continuity": [
         {
             "id": "continuity_work_state",
             "question": "Can the agent continue without re-fetching information?",
-            "weight": 0.4
+            "weight": 0.4,
         },
         {
             "id": "continuity_todo_state",
             "question": "Does the agent maintain awareness of pending tasks?",
-            "weight": 0.3
+            "weight": 0.3,
         },
         {
             "id": "continuity_reasoning",
             "question": "Does the agent retain rationale behind previous decisions?",
-            "weight": 0.3
-        }
+            "weight": 0.3,
+        },
     ],
     "instruction_following": [
-        {
-            "id": "instruction_format",
-            "question": "Does the response follow the requested format?",
-            "weight": 0.5
-        },
-        {
-            "id": "instruction_constraints",
-            "question": "Does the response respect stated constraints?",
-            "weight": 0.5
-        }
-    ]
+        {"id": "instruction_format", "question": "Does the response follow the requested format?", "weight": 0.5},
+        {"id": "instruction_constraints", "question": "Does the response respect stated constraints?", "weight": 0.5},
+    ],
 }
 
 
@@ -214,38 +190,46 @@ class ProbeGenerator:
 
         # Recall probes
         if self.extracted_facts:
-            probes.append(Probe(
-                probe_type=ProbeType.RECALL,
-                question="What was the original error or issue that started this session?",
-                ground_truth=self.extracted_facts.get("original_error"),
-                context_reference="session_start"
-            ))
+            probes.append(
+                Probe(
+                    probe_type=ProbeType.RECALL,
+                    question="What was the original error or issue that started this session?",
+                    ground_truth=self.extracted_facts.get("original_error"),
+                    context_reference="session_start",
+                )
+            )
 
         # Artifact probes
         if self.extracted_files:
-            probes.append(Probe(
-                probe_type=ProbeType.ARTIFACT,
-                question="Which files have we modified? Describe what changed in each.",
-                ground_truth=json.dumps(self.extracted_files),
-                context_reference="file_operations"
-            ))
+            probes.append(
+                Probe(
+                    probe_type=ProbeType.ARTIFACT,
+                    question="Which files have we modified? Describe what changed in each.",
+                    ground_truth=json.dumps(self.extracted_files),
+                    context_reference="file_operations",
+                )
+            )
 
         # Continuation probes
-        probes.append(Probe(
-            probe_type=ProbeType.CONTINUATION,
-            question="What should we do next?",
-            ground_truth=self.extracted_facts.get("next_steps"),
-            context_reference="task_state"
-        ))
+        probes.append(
+            Probe(
+                probe_type=ProbeType.CONTINUATION,
+                question="What should we do next?",
+                ground_truth=self.extracted_facts.get("next_steps"),
+                context_reference="task_state",
+            )
+        )
 
         # Decision probes
         if self.extracted_decisions:
-            probes.append(Probe(
-                probe_type=ProbeType.DECISION,
-                question="What key decisions did we make and why?",
-                ground_truth=json.dumps(self.extracted_decisions),
-                context_reference="decision_points"
-            ))
+            probes.append(
+                Probe(
+                    probe_type=ProbeType.DECISION,
+                    question="What key decisions did we make and why?",
+                    ground_truth=json.dumps(self.extracted_decisions),
+                    context_reference="decision_points",
+                )
+            )
 
         return probes
 
@@ -257,7 +241,7 @@ class ProbeGenerator:
         error_patterns = [
             r"error[:\s]+(.+?)(?:\n|$)",
             r"(\d{3})\s+(Unauthorized|Not Found|Internal Server Error)",
-            r"exception[:\s]+(.+?)(?:\n|$)"
+            r"exception[:\s]+(.+?)(?:\n|$)",
         ]
 
         for pattern in error_patterns:
@@ -267,11 +251,7 @@ class ProbeGenerator:
                 break
 
         # Extract next steps
-        next_step_patterns = [
-            r"next[:\s]+(.+?)(?:\n|$)",
-            r"TODO[:\s]+(.+?)(?:\n|$)",
-            r"remaining[:\s]+(.+?)(?:\n|$)"
-        ]
+        next_step_patterns = [r"next[:\s]+(.+?)(?:\n|$)", r"TODO[:\s]+(.+?)(?:\n|$)", r"remaining[:\s]+(.+?)(?:\n|$)"]
 
         for pattern in next_step_patterns:
             match = re.search(pattern, self.history, re.IGNORECASE)
@@ -289,17 +269,23 @@ class ProbeGenerator:
         file_patterns = [
             r"(?:modified|changed|updated|edited)\s+([^\s]+\.[a-z]+)",
             r"(?:created|added)\s+([^\s]+\.[a-z]+)",
-            r"(?:read|examined|opened)\s+([^\s]+\.[a-z]+)"
+            r"(?:read|examined|opened)\s+([^\s]+\.[a-z]+)",
         ]
 
         for pattern in file_patterns:
             matches = re.findall(pattern, self.history, re.IGNORECASE)
             for match in matches:
                 if match not in [f["path"] for f in files]:
-                    files.append({
-                        "path": match,
-                        "operation": "modified" if "modif" in pattern else "created" if "creat" in pattern else "read"
-                    })
+                    files.append(
+                        {
+                            "path": match,
+                            "operation": "modified"
+                            if "modif" in pattern
+                            else "created"
+                            if "creat" in pattern
+                            else "read",
+                        }
+                    )
 
         return files
 
@@ -311,16 +297,13 @@ class ProbeGenerator:
             r"decided to\s+(.+?)(?:\n|$)",
             r"chose\s+(.+?)(?:\n|$)",
             r"going with\s+(.+?)(?:\n|$)",
-            r"will use\s+(.+?)(?:\n|$)"
+            r"will use\s+(.+?)(?:\n|$)",
         ]
 
         for pattern in decision_patterns:
             matches = re.findall(pattern, self.history, re.IGNORECASE)
             for match in matches:
-                decisions.append({
-                    "decision": match.strip(),
-                    "context": pattern.split("\\s+")[0]
-                })
+                decisions.append({"decision": match.strip(), "context": pattern.split("\\s+")[0]})
 
         return decisions[:5]  # Limit to 5 decisions
 
@@ -342,10 +325,7 @@ class CompressionEvaluator:
         self.model = model
         self.results: List[EvaluationResult] = []
 
-    def evaluate(self,
-                 probe: Probe,
-                 response: str,
-                 compressed_context: str) -> EvaluationResult:
+    def evaluate(self, probe: Probe, response: str, compressed_context: str) -> EvaluationResult:
         """Evaluate a single probe response against the rubric.
 
         Use when: scoring how well a model's response (given compressed
@@ -368,12 +348,7 @@ class CompressionEvaluator:
         # Evaluate each criterion
         criterion_results: List[CriterionResult] = []
         for criterion in criteria:
-            result = self._evaluate_criterion(
-                criterion,
-                probe,
-                response,
-                compressed_context
-            )
+            result = self._evaluate_criterion(criterion, probe, response, compressed_context)
             criterion_results.append(result)
 
         # Calculate dimension scores
@@ -387,7 +362,7 @@ class CompressionEvaluator:
             response=response,
             criterion_results=criterion_results,
             aggregate_score=aggregate_score,
-            dimension_scores=dimension_scores
+            dimension_scores=dimension_scores,
         )
 
         self.results.append(result)
@@ -418,10 +393,7 @@ class CompressionEvaluator:
                 dimension_totals[dim] = dimension_totals.get(dim, 0) + score
                 dimension_counts[dim] = dimension_counts.get(dim, 0) + 1
 
-        avg_dimensions = {
-            dim: dimension_totals[dim] / dimension_counts[dim]
-            for dim in dimension_totals
-        }
+        avg_dimensions = {dim: dimension_totals[dim] / dimension_counts[dim] for dim in dimension_totals}
 
         return {
             "total_evaluations": len(self.results),
@@ -454,11 +426,7 @@ class CompressionEvaluator:
 
         return criteria
 
-    def _evaluate_criterion(self,
-                            criterion: Dict,
-                            probe: Probe,
-                            response: str,
-                            context: str) -> CriterionResult:
+    def _evaluate_criterion(self, criterion: Dict, probe: Probe, response: str, context: str) -> CriterionResult:
         """
         Evaluate a single criterion using LLM judge.
 
@@ -480,16 +448,9 @@ class CompressionEvaluator:
         score = self._heuristic_score(criterion, response, probe.ground_truth)
         reasoning = f"Evaluated {criterion['id']} based on response content."
 
-        return CriterionResult(
-            criterion_id=criterion["id"],
-            score=score,
-            reasoning=reasoning
-        )
+        return CriterionResult(criterion_id=criterion["id"], score=score, reasoning=reasoning)
 
-    def _heuristic_score(self,
-                         criterion: Dict,
-                         response: str,
-                         ground_truth: Optional[str]) -> float:
+    def _heuristic_score(self, criterion: Dict, response: str, ground_truth: Optional[str]) -> float:
         """
         Heuristic scoring for demonstration.
 
@@ -517,9 +478,7 @@ class CompressionEvaluator:
 
         return min(5.0, max(0.0, score))
 
-    def _ground_truth_overlap_ratio(self,
-                                    response: str,
-                                    ground_truth: Optional[str]) -> float:
+    def _ground_truth_overlap_ratio(self, response: str, ground_truth: Optional[str]) -> float:
         if not ground_truth:
             return 0.0
 
@@ -554,27 +513,21 @@ class CompressionEvaluator:
         collect(parsed)
         return list(dict.fromkeys(terms))
 
-    def _calculate_dimension_scores(self,
-                                    criterion_results: List[CriterionResult]) -> Dict[str, float]:
+    def _calculate_dimension_scores(self, criterion_results: List[CriterionResult]) -> Dict[str, float]:
         """Calculate dimension scores from criterion results."""
         dimension_scores: Dict[str, float] = {}
 
         for dimension, criteria in RUBRIC_CRITERIA.items():
             criterion_ids = [c["id"] for c in criteria]
-            relevant_results = [
-                r for r in criterion_results
-                if r.criterion_id in criterion_ids
-            ]
+            relevant_results = [r for r in criterion_results if r.criterion_id in criterion_ids]
 
             if relevant_results:
                 # Weighted average
                 total_weight = sum(
-                    c["weight"] for c in criteria
-                    if c["id"] in [r.criterion_id for r in relevant_results]
+                    c["weight"] for c in criteria if c["id"] in [r.criterion_id for r in relevant_results]
                 )
                 weighted_sum = sum(
-                    r.score * next(c["weight"] for c in criteria if c["id"] == r.criterion_id)
-                    for r in relevant_results
+                    r.score * next(c["weight"] for c in criteria if c["id"] == r.criterion_id) for r in relevant_results
                 )
                 dimension_scores[dimension] = weighted_sum / total_weight if total_weight > 0 else 0.0
 
@@ -620,7 +573,7 @@ class StructuredSummarizer:
             "files_read": [],
             "decisions": [],
             "current_state": "",
-            "next_steps": []
+            "next_steps": [],
         }
 
     def update_from_span(self, new_content: str) -> str:
@@ -654,16 +607,13 @@ class StructuredSummarizer:
             "files_read": [],
             "decisions": [],
             "current_state": "",
-            "next_steps": []
+            "next_steps": [],
         }
 
         # Extract file modifications
         mod_pattern = r"(?:modified|changed|updated|fixed)\s+([^\s]+\.[a-z]+)[:\s]*(.+?)(?:\n|$)"
         for match in re.finditer(mod_pattern, content, re.IGNORECASE):
-            extracted["files_modified"].append({
-                "path": match.group(1),
-                "change": match.group(2).strip()[:100]
-            })
+            extracted["files_modified"].append({"path": match.group(1), "change": match.group(2).strip()[:100]})
 
         # Extract file reads
         read_pattern = r"(?:read|examined|opened|checked)\s+([^\s]+\.[a-z]+)"
@@ -708,22 +658,21 @@ class StructuredSummarizer:
 
     def _format_summary(self) -> str:
         """Format sections into summary string."""
-        files_modified_str = "\n".join(
-            f"- {f['path']}: {f['change']}"
-            for f in self.sections["files_modified"]
-        ) or "None"
+        files_modified_str = (
+            "\n".join(f"- {f['path']}: {f['change']}" for f in self.sections["files_modified"]) or "None"
+        )
 
-        files_read_str = "\n".join(
-            f"- {f}" for f in self.sections["files_read"]
-        ) or "None"
+        files_read_str = "\n".join(f"- {f}" for f in self.sections["files_read"]) or "None"
 
-        decisions_str = "\n".join(
-            f"- {d}" for d in self.sections["decisions"][-5:]  # Keep last 5
-        ) or "None"
+        decisions_str = (
+            "\n".join(
+                f"- {d}"
+                for d in self.sections["decisions"][-5:]  # Keep last 5
+            )
+            or "None"
+        )
 
-        next_steps_str = "\n".join(
-            f"{i+1}. {s}" for i, s in enumerate(self.sections["next_steps"][-5:])
-        ) or "None"
+        next_steps_str = "\n".join(f"{i + 1}. {s}" for i, s in enumerate(self.sections["next_steps"][-5:])) or "None"
 
         return self.TEMPLATE.format(
             intent=self.sections["intent"] or "Not specified",
@@ -731,7 +680,7 @@ class StructuredSummarizer:
             files_read=files_read_str,
             decisions=decisions_str,
             current_state=self.sections["current_state"] or "In progress",
-            next_steps=next_steps_str
+            next_steps=next_steps_str,
         )
 
 
@@ -778,9 +727,7 @@ def evaluate_compression_quality(
     summary["recommendations"] = []
 
     if summary.get("weakest_dimension") == "artifact_trail":
-        summary["recommendations"].append(
-            "Consider implementing separate artifact tracking outside compression"
-        )
+        summary["recommendations"].append("Consider implementing separate artifact tracking outside compression")
 
     if summary.get("average_score", 0) < 3.5:
         summary["recommendations"].append(

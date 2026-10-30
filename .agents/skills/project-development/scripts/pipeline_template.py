@@ -95,6 +95,7 @@ Title: {title}
 # Data Structures
 # -----------------------------------------------------------------------------
 
+
 @dataclass
 class Item:
     """Represents a single item to process through the pipeline.
@@ -129,6 +130,7 @@ class ParsedResult:
 # Path Utilities
 # -----------------------------------------------------------------------------
 
+
 def get_batch_dir(batch_id: str) -> Path:
     """Get the data directory for a batch.
 
@@ -156,6 +158,7 @@ def get_output_dir(batch_id: str) -> Path:
 # -----------------------------------------------------------------------------
 # Stage: Acquire
 # -----------------------------------------------------------------------------
+
 
 def stage_acquire(batch_id: str, limit: int | None = None) -> list[Path]:
     """Stage 1: Acquire raw data from sources.
@@ -200,18 +203,21 @@ def fetch_items_from_source(limit: int | None = None) -> list[Item]:
     # Example: Generate sample items
     items: list[Item] = []
     for i in range(limit or 10):
-        items.append(Item(
-            id=f"item-{i:04d}",
-            title=f"Sample Item {i}",
-            content=f"This is sample content for item {i}. " * 10,
-            metadata={"source": "example", "index": i},
-        ))
+        items.append(
+            Item(
+                id=f"item-{i:04d}",
+                title=f"Sample Item {i}",
+                content=f"This is sample content for item {i}. " * 10,
+                metadata={"source": "example", "index": i},
+            )
+        )
     return items
 
 
 # -----------------------------------------------------------------------------
 # Stage: Prepare
 # -----------------------------------------------------------------------------
+
 
 def stage_prepare(batch_id: str) -> int:
     """Stage 2: Generate prompts from raw data.
@@ -267,6 +273,7 @@ def generate_prompt(item_data: dict[str, Any]) -> str:
 # -----------------------------------------------------------------------------
 # Stage: Process
 # -----------------------------------------------------------------------------
+
 
 def stage_process(
     batch_id: str,
@@ -376,6 +383,7 @@ The analysis considered multiple factors including relevance and clarity.
 # Stage: Parse
 # -----------------------------------------------------------------------------
 
+
 def stage_parse(batch_id: str) -> list[dict[str, Any]]:
     """Stage 4: Extract structured data from LLM responses.
 
@@ -404,10 +412,12 @@ def stage_parse(batch_id: str) -> list[dict[str, Any]]:
         with open(parsed_file, "w") as f:
             json.dump(asdict(result), f, indent=2)
 
-        all_results.append({
-            "id": item_dir.name,
-            **asdict(result),
-        })
+        all_results.append(
+            {
+                "id": item_dir.name,
+                **asdict(result),
+            }
+        )
 
         error_count = len(result.parse_errors)
         print(f"Parsed: {item_dir.name} (score={result.score}, errors={error_count})")
@@ -467,7 +477,7 @@ def extract_section(text: str, section_name: str) -> str | None:
 
     Use when: pulling a named markdown section from LLM output.
     """
-    pattern = rf'(?:^|\n)(?:#+ *)?{re.escape(section_name)}[:\s]*\n(.*?)(?=\n#|\Z)'
+    pattern = rf"(?:^|\n)(?:#+ *)?{re.escape(section_name)}[:\s]*\n(.*?)(?=\n#|\Z)"
     match = re.search(pattern, text, re.IGNORECASE | re.DOTALL)
     return match.group(1).strip() if match else None
 
@@ -477,7 +487,7 @@ def extract_field(text: str, field_name: str) -> str | None:
 
     Use when: pulling a single key-value field (e.g., "Confidence: high").
     """
-    pattern = rf'(?:\*\*)?{re.escape(field_name)}(?:\*\*)?[\s:\-]+([^\n]+)'
+    pattern = rf"(?:\*\*)?{re.escape(field_name)}(?:\*\*)?[\s:\-]+([^\n]+)"
     match = re.search(pattern, text, re.IGNORECASE)
     return match.group(1).strip() if match else None
 
@@ -491,13 +501,11 @@ def extract_list_items(text: str, section_name: str) -> list[str]:
     if not section:
         return []
 
-    items = re.findall(r'^[\-\*]\s*(.+)$', section, re.MULTILINE)
+    items = re.findall(r"^[\-\*]\s*(.+)$", section, re.MULTILINE)
     return [item.strip() for item in items]
 
 
-def extract_score(
-    text: str, field_name: str, min_val: int, max_val: int
-) -> int | None:
+def extract_score(text: str, field_name: str, min_val: int, max_val: int) -> int | None:
     """Extract and validate numeric score.
 
     Use when: pulling a bounded integer score from LLM output.
@@ -506,7 +514,7 @@ def extract_score(
     if not raw:
         return None
 
-    match = re.search(r'\d+', raw)
+    match = re.search(r"\d+", raw)
     if not match:
         return None
 
@@ -517,6 +525,7 @@ def extract_score(
 # -----------------------------------------------------------------------------
 # Stage: Render
 # -----------------------------------------------------------------------------
+
 
 def stage_render(batch_id: str) -> Path | None:
     """Stage 5: Generate final outputs from parsed results.
@@ -562,10 +571,10 @@ def render_html(results: list[dict[str, Any]], batch_id: str) -> str:
     for r in results:
         rows += f"""
         <tr>
-            <td>{html_lib.escape(r.get('id', ''))}</td>
-            <td>{html_lib.escape(r.get('summary', '')[:100])}...</td>
-            <td>{r.get('score', 'N/A')}</td>
-            <td>{html_lib.escape(r.get('confidence', ''))}</td>
+            <td>{html_lib.escape(r.get("id", ""))}</td>
+            <td>{html_lib.escape(r.get("summary", "")[:100])}...</td>
+            <td>{r.get("score", "N/A")}</td>
+            <td>{html_lib.escape(r.get("confidence", ""))}</td>
         </tr>"""
 
     return f"""<!DOCTYPE html>
@@ -599,6 +608,7 @@ def render_html(results: list[dict[str, Any]], batch_id: str) -> str:
 # -----------------------------------------------------------------------------
 # Clean Stage
 # -----------------------------------------------------------------------------
+
 
 def stage_clean(batch_id: str, from_stage: str | None = None) -> int:
     """Remove stage outputs to enable re-processing.
@@ -659,6 +669,7 @@ def stage_clean(batch_id: str, from_stage: str | None = None) -> int:
 # Cost Estimation
 # -----------------------------------------------------------------------------
 
+
 def stage_estimate(batch_id: str) -> dict[str, Any] | None:
     """Estimate processing costs before running the process stage.
 
@@ -696,7 +707,7 @@ def stage_estimate(batch_id: str) -> dict[str, Any] | None:
     est_output_tokens = item_count * 500  # Assume 500 tokens per response
 
     # Example pricing (adjust for your model)
-    input_price = 3.0 / 1_000_000   # $3 per MTok
+    input_price = 3.0 / 1_000_000  # $3 per MTok
     output_price = 15.0 / 1_000_000  # $15 per MTok
 
     est_cost = (est_input_tokens * input_price) + (est_output_tokens * output_price)
@@ -722,6 +733,7 @@ def stage_estimate(batch_id: str) -> dict[str, Any] | None:
 # -----------------------------------------------------------------------------
 # CLI
 # -----------------------------------------------------------------------------
+
 
 def main() -> None:
     """Entry point for CLI usage. Parses arguments and dispatches to stages."""

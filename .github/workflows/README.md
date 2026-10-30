@@ -162,7 +162,7 @@ the tag before checkout, checks out that exact ref, proves `HEAD` matches the
 dereferenced tag commit, runs the root release contract, and requires the
 no-mocks gate, bounded pipeline-smoke infra lane, public capability manifest,
 complete installed-wheel matrix on supported runtimes, and
-`publication-audit --all-public --strict --rendered` before building. Root
+the modular `scripts/audit/check_publication_outputs.py --all-public --strict --jobs 4` before building, which audits the rendered exemplars and uploads one receipt per project. Root
 major versions 4 and later additionally require an explicit hosted acceptance
 handoff before those checks: the successful run ID, exact
 `platform-required-acceptance` artifact ID, and aggregate receipt SHA256.

@@ -1,4 +1,5 @@
 """Auto-generated analysis entry point for statistics."""
+
 # spec_hash: 28bdf9d5951b0b1d  grammar_hash: 1142e011a7d4b835
 # seed: 42  track: analytical  section_set: standard
 from primitives import collect_primitives
