@@ -21,19 +21,14 @@
       97.03
     ],
     [
-      "template_pitch_deck",
-      159,
-      96.43
-    ],
-    [
       "template_autoresearch_project",
       398,
-      96.33
+      96.49
     ],
     [
-      "template_textbook",
-      299,
-      96.28
+      "template_pitch_deck",
+      162,
+      96.43
     ],
     [
       "template_data_descriptor",
@@ -41,14 +36,19 @@
       96.26
     ],
     [
-      "template_literature_meta_analysis",
-      1251,
-      95.57
+      "template_textbook",
+      299,
+      96.01
     ],
     [
       "template_template",
-      158,
-      95.57
+      161,
+      95.55
+    ],
+    [
+      "template_literature_meta_analysis",
+      1261,
+      95.5
     ],
     [
       "template_storybook",
@@ -66,19 +66,24 @@
       94.68
     ],
     [
+      "template_advanced_literature_review",
+      160,
+      94.27
+    ],
+    [
       "template_code_project",
       301,
       94.22
     ],
     [
-      "template_advanced_literature_review",
-      160,
-      94.2
-    ],
-    [
       "template_autoscientists",
       191,
-      92.93
+      92.95
+    ],
+    [
+      "template_gold_refinement",
+      337,
+      92.8
     ],
     [
       "template_sia",
@@ -86,13 +91,13 @@
       92.72
     ],
     [
-      "template_autopoiesis",
-      578,
-      92.03
+      "template_search_project",
+      458,
+      91.89
     ],
     [
-      "template_search_project",
-      454,
+      "template_autopoiesis",
+      578,
       91.88
     ],
     [
@@ -106,24 +111,19 @@
       91.67
     ],
     [
-      "template_gold_refinement",
-      337,
-      91.65
-    ],
-    [
       "template_eda_notebook",
       132,
       91.01
     ],
     [
       "template_active_inference",
-      990,
-      90.99
+      992,
+      91.0
     ],
     [
       "template_formal",
       380,
-      90.55
+      90.39
     ]
   ],
   "infrastructure_python": [

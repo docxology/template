@@ -9,11 +9,11 @@
   "project_count": 25,
   "total_infra_python_files": 1334,
   "infra_test_file_count": 948,
-  "infra_test_count": 12551,
-  "infra_test_count_approx": "12,551",
+  "infra_test_count": 12548,
+  "infra_test_count_approx": "12,548",
   "all_projects_test_count": 6339,
-  "total_test_count": 18890,
-  "total_test_count_approx": "18,890",
+  "total_test_count": 18887,
+  "total_test_count_approx": "18,887",
   "docs_file_count": 379,
   "docs_subdir_count": 20,
   "prompt_template_count": 22,
@@ -266,6 +266,6 @@
   "module_transmission_has_readme_md": "true",
   "module_validation_has_readme_md": "true",
   "module_inventory_table": "| Module | Python Files | Has AGENTS.md | Has README.md | Key Exports |\n|--------|:-----------:|:-------------:|:-------------:|-------------|\n| `autoresearch` | 11 | ✓ | ✓ | `build_autoresearch_plan`, readiness validation CLI |\n| `benchmark` | 4 | ✓ | ✓ | Template harness scoring + comparative gates |\n| `config` | 0 | ✓ | ✓ | Repository defaults + hardened templates |\n| `core` | 201 | ✓ | ✓ | `get_logger`, `load_config`, `TemplateError` |\n| `docker` | 0 | ✓ | ✓ | Containerisation scaffolding |\n| `doctor` | 14 | ✓ | ✓ | Checkout diagnose/fix/undo repairs |\n| `documentation` | 23 | ✓ | ✓ | `FigureManager`, `build_api_index`, `generate_markdown_table` |\n| `fonds` | 6 | ✓ | ✓ | — |\n| `formal_contracts` | 5 | ✓ | ✓ | — |\n| `llm` | 57 | ✓ | ✓ | Ollama helpers, sanitization, review + translation pipelines |\n| `logrotate.d` | 0 | ✓ | ✓ | Rotation snippets (documentation-first) |\n| `metadata` | 3 | ✓ | ✓ | `normalized_repository_url`, `generate_metadata_package` |\n| `methods` | 10 | ✓ | ✓ | `build_methods_orchestration_plan`, methods-stage contracts + validation |\n| `orchestration` | 14 | ✓ | ✓ | `PipelineRunner`, entry point for `./run.sh` |\n| `project` | 116 | ✓ | ✓ | `discover_projects`, workspace management |\n| `prose` | 9 | ✓ | ✓ | Markdown readability + prose tooling |\n| `provenance` | 9 | ✓ | ✓ | — |\n| `publishing` | 85 | ✓ | ✓ | Zenodo, executable bundle, archival targets |\n| `reference` | 16 | ✓ | ✓ | BibTeX models, parsers, converters |\n| `rendering` | 120 | ✓ | ✓ | PDF/HTML/slide rendering, Pandoc filters |\n| `reporting` | 411 | ✓ | ✓ | Coverage parsers, dashboards, executive artefacts |\n| `research` | 3 | ✓ | ✓ | — |\n| `rules` | 6 | ✓ | ✓ | — |\n| `scientific` | 4 | ✓ | ✓ | `check_numerical_stability`, `benchmark_function` |\n| `search` | 77 | ✓ | ✓ | `infrastructure.search.literature` clients + cache |\n| `sia` | 10 | ✓ | ✓ | Self-Improving-AI loop: task validation, harness, metric capture |\n| `skills` | 8 | ✓ | ✓ | `discover_skills`, SKILL manifest regeneration |\n| `steganography` | 13 | ✓ | ✓ | Watermark overlays + hash manifests |\n| `tools` | 6 | ✓ | ✓ | — |\n| `transmission` | 6 | ✓ | ✓ | — |\n| `validation` | 87 | ✓ | ✓ | PDF + Markdown + integrity CLIs |",
-  "generated_at": "2026-10-30T16:34:46Z",
+  "generated_at": "2026-10-30T20:28:00Z",
   "metrics_schema_version": "template-template/metrics/1"
 }

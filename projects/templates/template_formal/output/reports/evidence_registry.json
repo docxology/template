@@ -2342,7 +2342,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-08-14T14:20:53Z",
+      "checked_at": "2026-10-30T20:28:00Z",
       "kind": "number",
       "source": "data/claim_ledger.yaml:$.claims[16].value (numeric variant)",
       "source_field": "$.claims[16].value",
@@ -2354,7 +2354,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-08-14T14:20:53Z",
+      "checked_at": "2026-10-30T20:28:00Z",
       "kind": "number",
       "source": "tests/colony/test_colony_experiments_extended.py and tests/colony/test_colony_convergence_statistics.py (numeric variant)",
       "source_field": "manuscript-number-017",
@@ -2366,7 +2366,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-08-14T14:20:53Z",
+      "checked_at": "2026-10-30T20:28:00Z",
       "kind": "number",
       "source": "data/claim_ledger.yaml:$.claims[17].value",
       "source_field": "$.claims[17].value",
@@ -2378,7 +2378,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-08-14T14:20:53Z",
+      "checked_at": "2026-10-30T20:28:00Z",
       "kind": "number",
       "source": "tests/colony/test_colony_experiments_extended.py and tests/colony/test_colony_convergence_statistics.py",
       "source_field": "manuscript-number-018",
@@ -2390,7 +2390,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-08-14T14:20:53Z",
+      "checked_at": "2026-10-30T20:28:00Z",
       "kind": "number",
       "source": "data/claim_ledger.yaml:$.claims[17].value (numeric variant)",
       "source_field": "$.claims[17].value",
@@ -2402,7 +2402,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-08-14T14:20:53Z",
+      "checked_at": "2026-10-30T20:28:00Z",
       "kind": "number",
       "source": "data/claim_ledger.yaml:$.claims[100].value (numeric variant)",
       "source_field": "$.claims[100].value",

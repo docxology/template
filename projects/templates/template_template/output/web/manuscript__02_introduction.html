@@ -827,15 +827,15 @@ pipeline-enforced system with version-controlled infrastructure
 cleanly separates globally shared infrastructure (logging, rendering,
 validation, steganography) from project-specific logic (manuscripts,
 scripts, data). 31 infrastructure subdirectories (28 importable
-packages) comprising ~1335 Python modules provide reusable services;
+packages) comprising ~1334 Python modules provide reusable services;
 projects consume them without modification.</p></li>
 <li><p><strong>Execution Integrity</strong>: Pipeline advancement is
 contingent on test passage. The configured source-coverage floors are
 60% for infrastructure and 90% for each project. The static gate rejects
 prohibited mock-framework imports, while the suites exercise real
 filesystem and subprocess behavior and use local protocol servers or
-explicitly enabled live services for network boundaries. ~12,564
-infrastructure tests and 6335+ project tests are discovered by the
+explicitly enabled live services for network boundaries. ~12,548
+infrastructure tests and 6339+ project tests are discovered by the
 introspection build.</p></li>
 <li><p><strong>Automated Provenance</strong>: Steganographic
 watermarking and cryptographic hashing are integrated directly into the
@@ -849,10 +849,10 @@ it is enforced by architecture.</p></li>
 Operations</strong>: A three-tier documentation architecture enables AI
 agents to operate at every level of the system. At the system level,
 root <code>AGENTS.md</code> and <code>.agents/</code> define shared
-constraints and generic workflows; client files are compatibility
-references. At the structural level, <code>AGENTS.md</code> files in
-documented directories expose local API surfaces, file inventories, and
-integration contracts. At the module level, <code>SKILL.md</code>
+constraints and generic workflows; client entrypoints reference these
+shared contracts. At the structural level, <code>AGENTS.md</code> files
+in documented directories expose local API surfaces, file inventories,
+and integration contracts. At the module level, <code>SKILL.md</code>
 files—written to a discoverable YAML+Markdown schema aligned with the
 Model Context Protocol [anthropic2024mcp]—describe skill-enabled modules
 and exemplars as reusable capabilities.</p></li>

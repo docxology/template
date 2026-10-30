@@ -10,7 +10,7 @@ Executable-publication scholarship sharpens that norm. Executable research compe
 
 - **Seed:** 431
 - **Config hash:** 7739d8b1496922b8
-- **Generation timestamp:** 2026-10-30T16:34:46Z
+- **Generation timestamp:** 2026-10-30T20:28:00Z
 - **Python version:** 3.14.9
 
 ## Artifact inventory
@@ -19,8 +19,8 @@ Executable-publication scholarship sharpens that norm. Executable research compe
 |----------|-------|
 | Figures | 26 |
 | Data files | 3 |
-| Reports | 14 |
-| **Total** | 43 |
+| Reports | 15 |
+| **Total** | 44 |
 
 ## Regeneration commands
 

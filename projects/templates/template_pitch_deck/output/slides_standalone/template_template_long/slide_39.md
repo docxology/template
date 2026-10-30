@@ -3,7 +3,7 @@
 *Slide 39 of 57 — template_template pitch, long deck — kind: `content`*
 
 - Every one of 25 public exemplars is measured independently, not summarized into one repo-wide percentage.
-- The chart on the next slide is generated from the same docs/_generated/COUNTS.md factsheet this deck's own 95.57% figure comes from — one source of truth, two presentations.
+- The chart on the next slide is generated from the same docs/_generated/COUNTS.md factsheet this deck's own 95.55% figure comes from — one source of truth, two presentations.
 
 ---
 

@@ -56,8 +56,8 @@
   "num_agents": 3,
   "num_ticks": 5,
   "observation_counts": {
-    "0314196f-04c6-4130-96ce-d912ec4e89fa": 10,
-    "45c35ad0-67ee-497e-8b96-a804e20a80d5": 10,
-    "502d0139-8092-44f8-a6c2-d3a678e8619e": 10
+    "62ab7402-ed0c-427e-8606-8f940fe0991b": 20,
+    "c75c346a-464c-4b3b-bed6-b14dfcf4e4cd": 20,
+    "da5cc66b-bbf1-40ef-9a70-4c7dcf66ee02": 20
   }
 }

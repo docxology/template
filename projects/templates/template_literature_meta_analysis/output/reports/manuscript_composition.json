@@ -1,9 +1,9 @@
 {
   "algorithm": "web-renderer-combine-v1",
-  "binding_sha256": "6bc1716fd073781a1ee9efc5ec3fe2aa6225a2f06d4e1a2c4dec554896e1c413",
+  "binding_sha256": "c54cefb8434b43acbaad3dce12187ac993a5ffda03d88b152287dd0eb9a31359",
   "combined_path": "output/web/_combined_manuscript.md",
-  "combined_sha256": "5074bc17003a4b14c6f59bf547c0930e1d74219f2349dc192533a1fc08f4560b",
-  "combined_size_bytes": 71835,
+  "combined_sha256": "2a7d3f9be4147608630441344da309e6f76956a22934578231f6c308155e86e5",
+  "combined_size_bytes": 71837,
   "input_root_kind": "hydrated",
   "ordered_inputs": [
     {
@@ -93,8 +93,8 @@
     {
       "ordinal": 15,
       "path": "output/manuscript/04_discussion.md",
-      "sha256": "1921b2ea133b8396b6f7ba5fa793cd5642a503e70bc156d6dc00509f70f026b7",
-      "size_bytes": 3721
+      "sha256": "102ca329c93798016fe9b497e3e1bd2e00ef44b3553ed41254cdb4b1bf9f79a9",
+      "size_bytes": 3723
     },
     {
       "ordinal": 16,
@@ -133,7 +133,7 @@
       "size_bytes": 793
     }
   ],
-  "ordered_inputs_sha256": "4d7366e5d99472e83048d357da5b36c36dc714578a47d68de3cd1c8f1a076ef7",
+  "ordered_inputs_sha256": "a3ffef781c1a97af8ac5746a3a894d4a781f2bee9cc1288f8abb3b839702d0dc",
   "project": "templates/template_literature_meta_analysis",
   "schema_version": "template-manuscript-composition-v1"
 }

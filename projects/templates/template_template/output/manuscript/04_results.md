@@ -19,7 +19,7 @@ The `./run.sh` interactive orchestrator can execute the public roster through th
 | Metric | Value |
 |--------|-------|
 | Test files | 948+ |
-| Total tests | ~12,551 |
+| Total tests | ~12,548 |
 | Infrastructure coverage gate | ≥60% configured floor |
 | Prohibited mock-framework imports | Checked by the static no-mocks gate |
 
@@ -116,7 +116,7 @@ The long tail of small, single-purpose packages beside a handful of larger ones 
 The comparative feature matrix below summarizes the Appendix F capability matrix.
 
 
-![14 × 10 heatmap annotated in appendix text—green **✓** full native capability, yellow **◐** partial / plugin-hosted, red **—** unavailable. Rows group *Core Pipeline*, *Quality & Security*, then *Ecosystem*.](../output/figures/comparative_feature_matrix.png){#fig:template-comparative-matrix data-slide-manifest="../output/figures/comparative_feature_matrix.panels.json"}
+![14 × 10 heatmap annotated in appendix text—green **✓** full native capability, yellow partial / plugin-hosted, red **—** unavailable. Rows group *Core Pipeline*, *Quality & Security*, then *Ecosystem*.](../output/figures/comparative_feature_matrix.png){#fig:template-comparative-matrix data-slide-manifest="../output/figures/comparative_feature_matrix.panels.json"}
 
 ¹ Nextflow lineage records exist at workflow scope, not per rendered PDF citation graph.
 

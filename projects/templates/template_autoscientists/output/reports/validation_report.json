@@ -40,7 +40,7 @@
           "file_count": 4,
           "largest_file": "ablation_efficiency.png",
           "largest_file_path": "figures/ablation_efficiency.png",
-          "size_mb": "0.14"
+          "size_mb": "0.15"
         },
         "llm": {
           "exists": false,
@@ -141,7 +141,7 @@
             "optional": false,
             "readable": true,
             "required": true,
-            "size_mb": 0.14
+            "size_mb": 0.15
           },
           "llm": {
             "exists": false,
@@ -211,16 +211,16 @@
         "valid": true,
         "warnings": []
       },
-      "total_size_mb": 2.6011428833007812
+      "total_size_mb": 2.609004020690918
     },
     "figures": {
       "files": 4,
-      "size_mb": 0.1441049575805664
+      "size_mb": 0.15361499786376953
     },
     "inventory_mode": "stable-shippable-output-v1",
     "pdf": {
       "files": 1,
-      "size_mb": 0.2964305877685547
+      "size_mb": 0.2950420379638672
     },
     "stable_inventory": {
       "categories": {
@@ -230,11 +230,11 @@
         },
         "figures": {
           "files": 4,
-          "size_bytes": 151105
+          "size_bytes": 161077
         },
         "pdf": {
           "files": 1,
-          "size_bytes": 310830
+          "size_bytes": 309374
         },
         "release": {
           "files": 2,
@@ -246,12 +246,12 @@
         },
         "web": {
           "files": 13,
-          "size_bytes": 2256931
+          "size_bytes": 2256658
         }
       },
       "mode": "stable-shippable-output-v1",
       "total_files": 26,
-      "total_size_bytes": 2727496
+      "total_size_bytes": 2735739
     }
   },
   "recommendations": [],
@@ -262,11 +262,11 @@
     "passed": 9,
     "total_checks": 9
   },
-  "timestamp": "2026-10-30T04:07:21Z",
+  "timestamp": "2026-10-30T20:28:00Z",
   "validated_inputs": {
     "artifact_manifest": {
       "path": "output/reports/artifact_manifest.json",
-      "sha256": "ccf59c9ddc91651e0ec0371d5553f4c7ecd43cf2eb55ed65dc4394905d854735",
+      "sha256": "9030b54360f26443419eb733bc0fb459317444119fbf81c5b4009fcb4d7ecc20",
       "size_bytes": 8515
     },
     "combined_manuscript": {
@@ -338,19 +338,19 @@
     "fingerprints": {
       "config": {
         "file_count": 15,
-        "sha256": "fb591cf623f80af688486fd15d4126c03b6e2a1d78d77b4a8b6fbe6af34c45d4"
+        "sha256": "a1dbd23f2cb059d1c79df953ded4dd66fae6dcc2e8c5a0bfce0d935888952da9"
       },
       "output": {
         "file_count": 26,
-        "sha256": "f102ac1282381941e7257df57fe8554ad52a83312213d29cd4a890ef86724051"
+        "sha256": "0dfb9f70dafcbf303e2bacb8bbcd03fc00b73d436f23934aa4aadd84c9ce62e5"
       },
       "source": {
         "file_count": 40,
-        "sha256": "dabd44267414dfea95fc046584e6d092ce9dec797eaa8979cb6866bebf82c1c6"
+        "sha256": "e05f7a73c4dd28b157a0f53a16cbc96b4f5b9236cb1c046ef6cf500b1a8df152"
       },
       "stage": {
-        "file_count": 1719,
-        "sha256": "99d9e847388805b29aa6776039af1895a0af917c759980b61570946b1feab887"
+        "file_count": 1717,
+        "sha256": "232d6b053bd66ef4d9a241d00c36ee2e421d4690cced3ccb3dd6d6c92709c818"
       }
     },
     "project": "templates/template_autoscientists",

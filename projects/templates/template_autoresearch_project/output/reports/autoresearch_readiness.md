@@ -1,6 +1,6 @@
 # AutoResearch Readiness
 
-- Project: `template_autoresearch_project`
+- Project: `templates/template_autoresearch_project`
 - Status: `pass`
 - Issues: 0 (0 error(s), 0 warning(s))
 

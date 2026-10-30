@@ -1,9 +1,9 @@
 {
   "algorithm": "shared-combined-markdown-v1",
-  "binding_sha256": "46a7436b9ef5046a1ffe6b8a721a4ea2378dcce08842d0f1f2d09b12aca7c69b",
+  "binding_sha256": "fa7a071a8f39554375a26ab57602851c80422f4e67a6e839ac60c3c17e22b16f",
   "combined_path": "output/web/_combined_manuscript.md",
-  "combined_sha256": "606351aa95eb3d7a9e30eae5f6f86a1e9b71331ffff6b47bf38e78528ebab5e0",
-  "combined_size_bytes": 215041,
+  "combined_sha256": "4291c7a5d1ac18308f676dd64101c2a318d1077f95e0f021740efe7ebff65268",
+  "combined_size_bytes": 214254,
   "input_root_kind": "source",
   "ordered_inputs": [
     {
