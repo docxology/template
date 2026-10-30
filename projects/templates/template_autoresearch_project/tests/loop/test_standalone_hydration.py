@@ -155,7 +155,6 @@ def genuine_platform_environment(
             "sync",
             "--offline",
             "--no-config",
-            "--no-build",
             "--require-hashes",
             "--python",
             str(python),

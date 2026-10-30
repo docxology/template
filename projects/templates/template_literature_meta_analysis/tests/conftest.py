@@ -77,7 +77,9 @@ _fixtures_spec.loader.exec_module(_llm_extraction_fixtures)
 # for the full test suite to run. Fail fast with a clear message if missing.
 REQUIRED_DEPENDENCIES = [
     ("rdflib", "rdflib>=7.0.0"),
-    ("wordcloud", "wordcloud>=1.9.0"),
+    # Marker-aware: the exemplar declares wordcloud only below 3.15 because no
+    # cp315 distribution exists, so this frame must not require it there.
+    *([("wordcloud", "wordcloud>=1.9.0")] if sys.version_info < (3, 15) else []),
     ("sklearn", "scikit-learn>=1.3.0"),  # imported as sklearn
 ]
 missing_required = []
