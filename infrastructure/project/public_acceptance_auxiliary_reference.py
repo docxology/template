@@ -6,6 +6,7 @@ from pathlib import Path
 
 from infrastructure.project.public_acceptance_scope import RuntimeScope
 from infrastructure.project.public_reference import (
+    PIPELINE_REFERENCE_KEYS,
     PublicReference,
     _path_admission,
     admit_public_reference,
@@ -43,8 +44,12 @@ def nominate_pipeline_reference(
         binding[0], expected_commit=binding[1], expected_source_identity=binding[2], deadline=deadline
     )
     environment.update(
-        TEMPLATE_PUBLIC_REFERENCE_ROOT=str(binding[0]),
-        TEMPLATE_PUBLIC_REFERENCE_COMMIT=binding[1],
-        TEMPLATE_PUBLIC_REFERENCE_FINGERPRINT=binding[2],
+        dict(
+            zip(
+                PIPELINE_REFERENCE_KEYS,
+                (str(binding[0]), binding[1], binding[2]),
+                strict=True,
+            )
+        )
     )
     return reference

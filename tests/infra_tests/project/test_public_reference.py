@@ -579,3 +579,15 @@ else:
         _git(root, "reset", "--hard", commit)
         target.unlink(missing_ok=True)
         marker.unlink(missing_ok=True)
+
+
+def test_pipeline_reference_family_binds_without_claiming_native_origin(tmp_path: Path) -> None:
+    """A disposable pipeline copy may admit DATA without native-origin tool custody."""
+    from infrastructure.project.public_reference import PIPELINE_REFERENCE_KEYS
+    from infrastructure.rendering.native_render_custody import NATIVE_ORIGIN_KEYS
+
+    environment = dict(zip(PIPELINE_REFERENCE_KEYS, (str(tmp_path), "a" * 40, "b" * 64), strict=True))
+    assert reference_binding(environment) == (tmp_path, "a" * 40, "b" * 64)
+    assert not set(PIPELINE_REFERENCE_KEYS) & set(NATIVE_ORIGIN_KEYS), (
+        "pipeline DATA admission must not be read as a native-origin render claim"
+    )
