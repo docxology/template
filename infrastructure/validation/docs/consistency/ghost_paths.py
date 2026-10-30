@@ -8,13 +8,13 @@ from pathlib import Path
 
 from infrastructure.project.discovery import discover_projects
 from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
+from infrastructure.validation.docs._io import read_markdown
 from infrastructure.validation.docs.consistency._shared import (
     Inconsistency,
     blank_fences,
     iter_long_lived_docs,
     line_has_noqa,
     line_is_conditional,
-    read_markdown,
 )
 
 STATIC_PLACEHOLDER_NAMES: frozenset[str] = frozenset(

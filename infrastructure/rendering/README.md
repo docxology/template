@@ -347,7 +347,7 @@ roots. The system handles:
   `output/figures/`, `../figures/`, and `./figures/`) when the alias payload
   remains inside the configured figure root
 - Unicode characters in filenames
-- Missing-figure discovery warnings in the legacy/archive path
+- Discovery warnings for an absent or empty figures directory
 
 Escaping or unrecognized traversal is never normalized. In the accessible
 profile, a resource-preflight or writer failure invalidates the transactional

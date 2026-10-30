@@ -95,7 +95,7 @@ uv run --extra dev python scripts/run_full_verification.py
 Runtime is dominated by generated-artifact gates, but the verification script
 runs coverage in separate pytest processes and appends the coverage data into
 one final 90% gate. Use `--monolithic-coverage` only when diagnosing behavior
-that specifically needs the legacy single pytest process.
+that specifically needs one pytest process.
 
 This command is explicitly declared as the project's single-project Stage-01
 verifier in `pyproject.toml`. Under that adapter it emits a fresh structured

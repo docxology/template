@@ -3,91 +3,91 @@
   "panels": [
     {
       "src": "../output/figures/architecture_infrastructure_panel_01.png",
-      "alt": "Infrastructure panel 1 of 8, 4.4.0: autoresearch, benchmark, config, core. Complete counts; badges A=AGENTS, R=README, S=SKILL, P=PAI, dot=absent.",
+      "alt": "Infrastructure panel 1 of 8, 4.4.1: autoresearch, benchmark, config, core. Complete counts; badges A=AGENTS, R=README, S=SKILL, P=PAI, dot=absent.",
       "sha256": "f8c65d9fff520a07897b41aef613b3c78fa107efaaaebf7d25262725d75c07b1",
       "minimum_label_px": 111.11111111111109
     },
     {
       "src": "../output/figures/architecture_infrastructure_panel_02.png",
-      "alt": "Infrastructure panel 2 of 8, 4.4.0: docker, doctor, documentation, fonds. Complete counts; badges A=AGENTS, R=README, S=SKILL, P=PAI, dot=absent.",
+      "alt": "Infrastructure panel 2 of 8, 4.4.1: docker, doctor, documentation, fonds. Complete counts; badges A=AGENTS, R=README, S=SKILL, P=PAI, dot=absent.",
       "sha256": "faa8bb1025acc794246939bbbdbda9dd84b20ab039b6596bdb079ef38efe0f56",
       "minimum_label_px": 111.11111111111109
     },
     {
       "src": "../output/figures/architecture_infrastructure_panel_03.png",
-      "alt": "Infrastructure panel 3 of 8, 4.4.0: formal_contracts, llm, logrotate.d, metadata. Complete counts; badges A=AGENTS, R=README, S=SKILL, P=PAI, dot=absent.",
+      "alt": "Infrastructure panel 3 of 8, 4.4.1: formal_contracts, llm, logrotate.d, metadata. Complete counts; badges A=AGENTS, R=README, S=SKILL, P=PAI, dot=absent.",
       "sha256": "4d2b4d623031d51c1de93b4d57e9da43f9e1bc418f9622676016c8537c248389",
       "minimum_label_px": 111.11111111111109
     },
     {
       "src": "../output/figures/architecture_infrastructure_panel_04.png",
-      "alt": "Infrastructure panel 4 of 8, 4.4.0: methods, orchestration, project, prose. Complete counts; badges A=AGENTS, R=README, S=SKILL, P=PAI, dot=absent.",
+      "alt": "Infrastructure panel 4 of 8, 4.4.1: methods, orchestration, project, prose. Complete counts; badges A=AGENTS, R=README, S=SKILL, P=PAI, dot=absent.",
       "sha256": "e02902c48d0d574ce2522bc6c18004382d412f7fbf8fc358e21432bf91723097",
       "minimum_label_px": 111.11111111111109
     },
     {
       "src": "../output/figures/architecture_infrastructure_panel_05.png",
-      "alt": "Infrastructure panel 5 of 8, 4.4.0: provenance, publishing, reference, rendering. Complete counts; badges A=AGENTS, R=README, S=SKILL, P=PAI, dot=absent.",
-      "sha256": "f096b7e8ccef0a45cda7fcfcc29c64b912309145e464e81093ce124773ae795e",
+      "alt": "Infrastructure panel 5 of 8, 4.4.1: provenance, publishing, reference, rendering. Complete counts; badges A=AGENTS, R=README, S=SKILL, P=PAI, dot=absent.",
+      "sha256": "388609d60f1c1678d09964087535ae7b09cf86552fa45222780a71d9ecc55280",
       "minimum_label_px": 111.11111111111109
     },
     {
       "src": "../output/figures/architecture_infrastructure_panel_06.png",
-      "alt": "Infrastructure panel 6 of 8, 4.4.0: reporting, research, rules, scientific. Complete counts; badges A=AGENTS, R=README, S=SKILL, P=PAI, dot=absent.",
-      "sha256": "0378a2e45adaeaea0f294b6a5064ba9722048592d4476607878aa0ef93e7f907",
+      "alt": "Infrastructure panel 6 of 8, 4.4.1: reporting, research, rules, scientific. Complete counts; badges A=AGENTS, R=README, S=SKILL, P=PAI, dot=absent.",
+      "sha256": "e359a1c95381c081ecb522ab91f4f8fd678d559ccfe756878e64aab0f360638b",
       "minimum_label_px": 111.11111111111109
     },
     {
       "src": "../output/figures/architecture_infrastructure_panel_07.png",
-      "alt": "Infrastructure panel 7 of 8, 4.4.0: search, sia, skills, steganography. Complete counts; badges A=AGENTS, R=README, S=SKILL, P=PAI, dot=absent.",
+      "alt": "Infrastructure panel 7 of 8, 4.4.1: search, sia, skills, steganography. Complete counts; badges A=AGENTS, R=README, S=SKILL, P=PAI, dot=absent.",
       "sha256": "b27ce675ae9f1e119d7caf96df452f3bd2e2cbfab469062bb2fc32a37f3d7644",
       "minimum_label_px": 111.11111111111109
     },
     {
       "src": "../output/figures/architecture_infrastructure_panel_08.png",
-      "alt": "Infrastructure panel 8 of 8, 4.4.0: tools, transmission, validation. Complete counts; badges A=AGENTS, R=README, S=SKILL, P=PAI, dot=absent.",
-      "sha256": "69eccfe87bcabf89973318e97c3b6772a2d70e0118b2a70c5b46f42807f02504",
+      "alt": "Infrastructure panel 8 of 8, 4.4.1: tools, transmission, validation. Complete counts; badges A=AGENTS, R=README, S=SKILL, P=PAI, dot=absent.",
+      "sha256": "a8fe3daa7474e86bbd706cd755964489f6e23c6b02e531832b8246c69a1c83ee",
       "minimum_label_px": 111.11111111111109
     },
     {
       "src": "../output/figures/architecture_projects_panel_01.png",
-      "alt": "Projects panel 1 of 7, 4.4.0: template_active_inference, template_advanced_literature_review, template_autopoiesis, template_autoresearch_project. Complete counts; badges A=AGENTS, R=README, S=SKILL, P=PAI, dot=absent.",
+      "alt": "Projects panel 1 of 7, 4.4.1: template_active_inference, template_advanced_literature_review, template_autopoiesis, template_autoresearch_project. Complete counts; badges A=AGENTS, R=README, S=SKILL, P=PAI, dot=absent.",
       "sha256": "0b47cd4e0a966b64704795c57d13ed90dbc46620d9a10e05934b0d56a32d7efe",
       "minimum_label_px": 111.11111111111109
     },
     {
       "src": "../output/figures/architecture_projects_panel_02.png",
-      "alt": "Projects panel 2 of 7, 4.4.0: template_autoscientists, template_code_project, template_data_descriptor, template_eda_notebook. Complete counts; badges A=AGENTS, R=README, S=SKILL, P=PAI, dot=absent.",
+      "alt": "Projects panel 2 of 7, 4.4.1: template_autoscientists, template_code_project, template_data_descriptor, template_eda_notebook. Complete counts; badges A=AGENTS, R=README, S=SKILL, P=PAI, dot=absent.",
       "sha256": "9aeeda97820297d55d48f1b94cfae0769c5b59a273e26b18469abb06848cf49f",
       "minimum_label_px": 111.11111111111109
     },
     {
       "src": "../output/figures/architecture_projects_panel_03.png",
-      "alt": "Projects panel 3 of 7, 4.4.0: template_experiment_tree, template_formal, template_gold_refinement, template_literature_meta_analysis. Complete counts; badges A=AGENTS, R=README, S=SKILL, P=PAI, dot=absent.",
+      "alt": "Projects panel 3 of 7, 4.4.1: template_experiment_tree, template_formal, template_gold_refinement, template_literature_meta_analysis. Complete counts; badges A=AGENTS, R=README, S=SKILL, P=PAI, dot=absent.",
       "sha256": "a499ca2f5037239055bb88344dcc156beb61bfa77ae6f23701133718ec883c59",
       "minimum_label_px": 111.11111111111109
     },
     {
       "src": "../output/figures/architecture_projects_panel_04.png",
-      "alt": "Projects panel 4 of 7, 4.4.0: template_madlib, template_methods_paper, template_newspaper, template_pitch_deck. Complete counts; badges A=AGENTS, R=README, S=SKILL, P=PAI, dot=absent.",
+      "alt": "Projects panel 4 of 7, 4.4.1: template_madlib, template_methods_paper, template_newspaper, template_pitch_deck. Complete counts; badges A=AGENTS, R=README, S=SKILL, P=PAI, dot=absent.",
       "sha256": "52c81bbd360c94b4ba1682b7b711b0ede1fdfabd58cfb8e85b52598a055e9cb1",
       "minimum_label_px": 111.11111111111109
     },
     {
       "src": "../output/figures/architecture_projects_panel_05.png",
-      "alt": "Projects panel 5 of 7, 4.4.0: template_pools_rules_tools, template_prose_project, template_redacted_report, template_registered_report. Complete counts; badges A=AGENTS, R=README, S=SKILL, P=PAI, dot=absent.",
+      "alt": "Projects panel 5 of 7, 4.4.1: template_pools_rules_tools, template_prose_project, template_redacted_report, template_registered_report. Complete counts; badges A=AGENTS, R=README, S=SKILL, P=PAI, dot=absent.",
       "sha256": "f76d433d86b0f133355da112264714f94c8a824a61284b83b43066da68670792",
       "minimum_label_px": 111.11111111111109
     },
     {
       "src": "../output/figures/architecture_projects_panel_06.png",
-      "alt": "Projects panel 6 of 7, 4.4.0: template_search_project, template_sia, template_storybook, template_template. Complete counts; badges A=AGENTS, R=README, S=SKILL, P=PAI, dot=absent.",
+      "alt": "Projects panel 6 of 7, 4.4.1: template_search_project, template_sia, template_storybook, template_template. Complete counts; badges A=AGENTS, R=README, S=SKILL, P=PAI, dot=absent.",
       "sha256": "60b67c40c0f06434bcd306c09f5b6ed9b9d1a05201fc81da30c3386f1352b4cc",
       "minimum_label_px": 111.11111111111109
     },
     {
       "src": "../output/figures/architecture_projects_panel_07.png",
-      "alt": "Projects panel 7 of 7, 4.4.0: template_textbook. Complete counts; badges A=AGENTS, R=README, S=SKILL, P=PAI, dot=absent.",
+      "alt": "Projects panel 7 of 7, 4.4.1: template_textbook. Complete counts; badges A=AGENTS, R=README, S=SKILL, P=PAI, dot=absent.",
       "sha256": "8bb54cbeae8c058a95aee7a20f1d1a7760649310f2a9f613949fff37925ddfeb",
       "minimum_label_px": 111.11111111111109
     }

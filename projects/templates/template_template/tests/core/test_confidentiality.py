@@ -31,7 +31,6 @@ import pytest
 from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
 
 from template_template.core.introspection import (
-    META_PROJECT_DIR_NAME,
     META_PROJECT_PUBLIC_NAME,
     discover_projects,
 )
@@ -136,7 +135,7 @@ class TestSelfAndPublicIntrospectionStillWork:
     def test_meta_project_self_metric_present(self) -> None:
         metrics = build_manuscript_metrics_dict(REPO_ROOT)
         assert "project_template_template_test_count" in metrics, (
-            "Meta-project self-introspection key missing — rename mapping regressed"
+            "Meta-project self-introspection key missing from the canonical roster"
         )
 
     def test_public_exemplar_metrics_present(self) -> None:
@@ -149,13 +148,13 @@ class TestSelfAndPublicIntrospectionStillWork:
             assert f"project_{name}_test_count" in metrics, f"Public exemplar '{name}' missing from metrics"
 
     def test_bare_template_name_is_never_emitted(self) -> None:
-        """The on-disk staging name ``template`` must be rewritten, never emitted."""
+        """Only the canonical ``template_template`` identity enters public metrics."""
         metrics = build_manuscript_metrics_dict(REPO_ROOT)
         assert "project_template_test_count" not in metrics, (
             "Bare 'template' project key emitted — should be 'template_template'"
         )
         names = {p.name for p in discover_projects(REPO_ROOT)}
-        assert META_PROJECT_DIR_NAME not in names or META_PROJECT_DIR_NAME == META_PROJECT_PUBLIC_NAME
+        assert "template" not in names
         assert META_PROJECT_PUBLIC_NAME in names
 
 

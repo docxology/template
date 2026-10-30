@@ -4,7 +4,7 @@
 
 ## 158 tests
 
-95.56% coverage on template_template's own source — the same gate every exemplar in the repo must pass.
+95.57% coverage on template_template's own source — the same gate every exemplar in the repo must pass.
 
 ---
 

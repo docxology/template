@@ -1,6 +1,6 @@
 # Infrastructure Module Reference
 
-This section inventories every Layer‑1 subdirectory returned by `31` `discover_infrastructure_modules(repo_root)`. File totals use `1335` Python sources across infra + `12,564` infra tests guarding them. Documentation Duality = paired `README.md` + `AGENTS.md`; optional `SKILL.md` manifests feed `python -m infrastructure.skills`.
+This section inventories every Layer‑1 subdirectory returned by `31` `discover_infrastructure_modules(repo_root)`. File totals use `1334` Python sources across infra + `12,551` infra tests guarding them. Documentation Duality = paired `README.md` + `AGENTS.md`; optional `SKILL.md` manifests feed `python -m infrastructure.skills`.
 
 | Module | Python Files | Has AGENTS.md | Has README.md | Key Exports |
 |--------|:-----------:|:-------------:|:-------------:|-------------|
@@ -23,8 +23,8 @@ This section inventories every Layer‑1 subdirectory returned by `31` `discover
 | `provenance` | 9 | ✓ | ✓ | — |
 | `publishing` | 85 | ✓ | ✓ | Zenodo, executable bundle, archival targets |
 | `reference` | 16 | ✓ | ✓ | BibTeX models, parsers, converters |
-| `rendering` | 121 | ✓ | ✓ | PDF/HTML/slide rendering, Pandoc filters |
-| `reporting` | 412 | ✓ | ✓ | Coverage parsers, dashboards, executive artefacts |
+| `rendering` | 120 | ✓ | ✓ | PDF/HTML/slide rendering, Pandoc filters |
+| `reporting` | 411 | ✓ | ✓ | Coverage parsers, dashboards, executive artefacts |
 | `research` | 3 | ✓ | ✓ | — |
 | `rules` | 6 | ✓ | ✓ | — |
 | `scientific` | 4 | ✓ | ✓ | `check_numerical_stability`, `benchmark_function` |
@@ -34,7 +34,7 @@ This section inventories every Layer‑1 subdirectory returned by `31` `discover
 | `steganography` | 13 | ✓ | ✓ | Watermark overlays + hash manifests |
 | `tools` | 6 | ✓ | ✓ | — |
 | `transmission` | 6 | ✓ | ✓ | — |
-| `validation` | 86 | ✓ | ✓ | PDF + Markdown + integrity CLIs |
+| `validation` | 87 | ✓ | ✓ | PDF + Markdown + integrity CLIs |
 
 ## Alphabetical summaries
 
@@ -116,11 +116,11 @@ Metadata models, APA/BibTeX/MLA formatters, optional Zenodo clients.
 
 Citation/BibTeX parsing + conversion utilities leveraged by manuscripts and retrieval scripts.
 
-### `infrastructure.rendering` (121 files)
+### `infrastructure.rendering` (120 files)
 
 Pandoc shim, Unicode/XeLaTeX postprocessors, combined PDF/HTML/slide exporters.
 
-### `infrastructure.reporting` (412 files)
+### `infrastructure.reporting` (411 files)
 
 Parses pytest + coverage artefacts for dashboards; pairs with Stage 01 summaries and downstream executive exports.
 
@@ -164,7 +164,7 @@ Rendered-release transmission leaves: LaTeX single-page bookends
 models. Consumed by the publishing release workflow; regular package so the
 documentation module-reference guard resolves nested refs on disk.
 
-### `infrastructure.validation` (86 files)
+### `infrastructure.validation` (87 files)
 
 Markdown + PDF + integrity CLIs underpinning Stage 04 diagnostics.
 

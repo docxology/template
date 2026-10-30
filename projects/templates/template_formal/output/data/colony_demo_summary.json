@@ -1,8 +1,8 @@
 {
   "agent_db_paths": [
-    "<home>/Documents/GitHub/template/projects/templates/template_formal/output/data/agent_0.sqlite3",
-    "<home>/Documents/GitHub/template/projects/templates/template_formal/output/data/agent_1.sqlite3",
-    "<home>/Documents/GitHub/template/projects/templates/template_formal/output/data/agent_2.sqlite3"
+    "agent_0.sqlite3",
+    "agent_1.sqlite3",
+    "agent_2.sqlite3"
   ],
   "choice_history": [
     [
@@ -56,8 +56,8 @@
   "num_agents": 3,
   "num_ticks": 5,
   "observation_counts": {
-    "5c3f6c92-b47f-4024-ac7e-a2c672c36586": 5,
-    "ac7ab45c-1ddf-4b91-9f5e-05dac46d0b30": 5,
-    "e81f2286-716e-400f-97c7-561151eb368e": 5
+    "0314196f-04c6-4130-96ce-d912ec4e89fa": 10,
+    "45c35ad0-67ee-497e-8b96-a804e20a80d5": 10,
+    "502d0139-8092-44f8-a6c2-d3a678e8619e": 10
   }
 }

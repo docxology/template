@@ -6,7 +6,8 @@ from collections.abc import Sequence
 from pathlib import Path
 
 from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
-from infrastructure.validation.docs.consistency._shared import Inconsistency, read_markdown
+from infrastructure.validation.docs._io import read_markdown
+from infrastructure.validation.docs.consistency._shared import Inconsistency
 
 MEMORY_DECISION_RULE = "docs/rules/memory_and_decision_records.md"
 MEMORY_DECISION_BASENAME = "memory_and_decision_records.md"

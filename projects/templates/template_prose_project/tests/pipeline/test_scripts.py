@@ -39,6 +39,13 @@ def test_run_prose_pipeline_offline(tmp_path: Path):
     assert (iso / "output" / "review_report.md").exists()
     summary = json.loads((iso / "output" / "run_summary.json").read_text())
     assert summary["total_words"] > 0
+    assert str(iso) not in json.dumps(summary)
+    assert summary["evidence_summary_path"] == "evidence_summary.json"
+    relocated = tmp_path / "relocated-output"
+    (iso / "output").rename(relocated)
+    evidence = json.loads((relocated / summary["evidence_summary_path"]).read_text())
+    assert evidence["checks"] == summary["checks"]
+    assert evidence["diagnostic_only"] is True
 
 
 def test_run_prose_pipeline_strict_mode(tmp_path: Path):

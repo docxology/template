@@ -5,13 +5,13 @@ from __future__ import annotations
 import re
 from pathlib import Path
 
+from infrastructure.validation.docs._io import read_markdown
 from infrastructure.validation.docs.consistency._shared import (
     Inconsistency,
     SHELL_NOQA_RE,
     blank_fences,
     iter_long_lived_docs,
     line_has_noqa,
-    read_markdown,
 )
 
 _SHELL_FENCE_RE = re.compile(
