@@ -47,13 +47,17 @@ def test_real_bound_session_reuses_original_reference_and_rechecks_before_succes
         session.current(explicit_root=tmp_path)
     session.verify()
     from infrastructure.project.public_acceptance_auxiliary_reference import nominate_pipeline_reference
+    from infrastructure.project.public_reference import reference_binding
 
     assert session.deadline is not None
     nominated_environment: dict[str, str] = {}
     nominated = nominate_pipeline_reference(
         reference.root, "templates/template_pitch_deck", nominated_environment, session.deadline
     )
-    assert nominated is not None and nominated_environment == environment
+    # The nomination binds the same original DATA triple through the pipeline key
+    # family; it must not republish the native-origin claim.
+    assert nominated is not None
+    assert reference_binding(nominated_environment) == reference_binding(environment)
     nominated.verify_unchanged(deadline=session.deadline)
     assert nominate_pipeline_reference(tmp_path, "templates/template_code_project", {}, session.deadline) is None
     with pytest.raises(ValueError, match="conflicts"):

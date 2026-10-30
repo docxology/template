@@ -37,6 +37,14 @@ _BINDING_KEYS = (
     "TEMPLATE_PUBLIC_REFERENCE_COMMIT",
     "TEMPLATE_PUBLIC_REFERENCE_FINGERPRINT",
 )
+# A disposable pipeline copy admits the same original DATA for discovery and
+# imports without claiming native-origin tool custody, so it binds through its
+# own key family. Rendering still uses the local toolchain in that copy.
+PIPELINE_REFERENCE_KEYS = (
+    "TEMPLATE_PIPELINE_REFERENCE_ROOT",
+    "TEMPLATE_PIPELINE_REFERENCE_COMMIT",
+    "TEMPLATE_PIPELINE_REFERENCE_FINGERPRINT",
+)
 
 
 def _identity(path: Path) -> tuple[int, int, int, int, int]:
@@ -259,12 +267,14 @@ def admit_public_reference(
 def reference_binding(environment: Mapping[str, str] | None = None) -> tuple[Path, str, str] | None:
     """Read all explicit DATA bindings together; never infer a revision from a path."""
     environment = os.environ if environment is None else environment
-    values = [environment.get(key, "") for key in _BINDING_KEYS]
-    if not any(values):
-        return None
-    if not all(isinstance(value, str) and value for value in values):
-        raise ValueError("public reference requires explicit root, commit and fingerprint together")
-    return Path(values[0]), values[1], values[2]
+    for keys in (_BINDING_KEYS, PIPELINE_REFERENCE_KEYS):
+        values = [environment.get(key, "") for key in keys]
+        if not any(values):
+            continue
+        if not all(isinstance(value, str) and value for value in values):
+            raise ValueError("public reference requires explicit root, commit and fingerprint together")
+        return Path(values[0]), values[1], values[2]
+    return None
 
 
-__all__ = ["PublicReference", "admit_public_reference", "reference_binding"]
+__all__ = ["PIPELINE_REFERENCE_KEYS", "PublicReference", "admit_public_reference", "reference_binding"]
