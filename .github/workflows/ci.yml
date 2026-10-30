@@ -52,6 +52,13 @@ jobs:
       # when any of them failed. Previously these ran serially (~151s measured).
       # The public-source scope producer still runs first and sequentially; the
       # tracked-tree guards below stay serial and blocking.
+      - name: Restore the type-check cache
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: .mypy_cache
+          key: mypy-${{ runner.os }}-${{ hashFiles('pyproject.toml', 'uv.lock') }}
+          restore-keys: |
+            mypy-${{ runner.os }}-
       - name: Check public source, types, and unsafe code
         uses: ./.github/actions/run-public-lint
         with:
@@ -157,6 +164,8 @@ jobs:
       - name: Run exact functional shard with original pytest observations
         env:
           SHARD: ${{ matrix.shard }}
+          # Measured per-module duration decides the pytest-xdist budget.
+          TEMPLATE_CI_XDIST: ${{ matrix.workers }}
         run: |
           .venv/bin/python -m infrastructure.core.testing.ci_execution_user run \
             --state "$RUNNER_TEMP/template-ci-execution/state.json" -- \

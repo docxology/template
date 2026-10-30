@@ -30,6 +30,11 @@ rewrite generated outputs.
 - `models.py` defines the typed finding/report contract used by the audit
   orchestrator; keep its status and diagnostic fields stable for downstream
   JSON consumers.
+- `rendered_refresh.py` owns the canonical refresh and rebind for one exemplar's
+  rendered-provenance receipt: render, validate and write, or revalidate
+  unchanged bytes and rewrite the receipt for current tooling. A refused render
+  re-admits the analysis boundary once, and a rebind is refused whenever the
+  output tree no longer hashes to what the receipt recorded.
 
 ## Commands
 
