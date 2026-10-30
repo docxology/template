@@ -20,6 +20,14 @@ from infrastructure.validation.output.validator import (
 )
 
 
+def _write_pdf(path):
+    from pypdf import PdfWriter
+
+    writer = PdfWriter()
+    writer.add_blank_page(width=612, height=792)
+    writer.write(path)
+
+
 @pytest.fixture
 def temp_project_structure(tmp_path):
     """Create a temporary project structure for testing.
@@ -63,10 +71,10 @@ def temp_project_structure(tmp_path):
     output_dir = output_base / "template_code_project"  # Project-specific output directory
     output_dir.mkdir()
 
-    # Create mock files
-    (pdf_dir / "template_code_project_combined.pdf").write_text("mock pdf content")
-    (slides_dir / "01_abstract_slides.pdf").write_text("mock slide 1")
-    (slides_dir / "02_introduction_slides.pdf").write_text("mock slide 2")
+    # Create real PDF containers and deterministic web fixtures.
+    _write_pdf(pdf_dir / "template_code_project_combined.pdf")
+    _write_pdf(slides_dir / "01_abstract_slides.pdf")
+    _write_pdf(slides_dir / "02_introduction_slides.pdf")
     (web_dir / "01_abstract.html").write_text("<html>mock</html>")
     (web_dir / "02_introduction.html").write_text("<html>mock</html>")
     (web_dir / "style.css").write_text("/* css */")
@@ -148,7 +156,10 @@ class TestCopyFinalDeliverables:
 
         assert stats["combined_pdf"] == 1
         assert (output_dir / "template_code_project_combined.pdf").exists()
-        assert (output_dir / "template_code_project_combined.pdf").read_text() == "mock pdf content"
+        source_pdf = (
+            repo_root / "projects" / "template_code_project" / "output" / "pdf" / "template_code_project_combined.pdf"
+        )
+        assert (output_dir / "template_code_project_combined.pdf").read_bytes() == source_pdf.read_bytes()
 
     def test_copy_slides(self, temp_project_structure):
         """Test copying slide PDFs."""
@@ -239,7 +250,7 @@ class TestValidateCopiedOutputs:
         copy_final_deliverables(repo_root, output_dir, "template_code_project")
 
         # Validate
-        result = validate_copied_outputs(output_dir)
+        result = validate_copied_outputs(output_dir, enabled_formats=("pdf", "slides"))
 
         assert result is True
 
@@ -259,7 +270,7 @@ class TestValidateCopiedOutputs:
         (output_dir / "web").mkdir()
         (output_dir / "pdf").mkdir()
 
-        result = validate_copied_outputs(output_dir)
+        result = validate_copied_outputs(output_dir, enabled_formats=("pdf",))
 
         assert result is False
 
@@ -274,7 +285,7 @@ class TestValidateCopiedOutputs:
         # Create empty PDF
         (output_dir / "template_code_project_combined.pdf").write_text("")
 
-        result = validate_copied_outputs(output_dir)
+        result = validate_copied_outputs(output_dir, enabled_formats=("pdf",))
 
         assert result is False
 
@@ -289,11 +300,11 @@ class TestValidateCopiedOutputs:
         # Copy only combined PDF to pdf/ directory (where it actually gets copied)
         pdf_dir = output_dir / "pdf"
         pdf_dir.mkdir(exist_ok=True)
-        (pdf_dir / "template_code_project_combined.pdf").write_text("mock pdf")
+        _write_pdf(pdf_dir / "template_code_project_combined.pdf")
         # Also copy to root for validation
-        (output_dir / "template_code_project_combined.pdf").write_text("mock pdf")
+        _write_pdf(output_dir / "template_code_project_combined.pdf")
 
-        result = validate_copied_outputs(output_dir)
+        result = validate_copied_outputs(output_dir, enabled_formats=("pdf",))
 
         # Should still pass if combined PDF exists
         assert result is True
@@ -321,7 +332,7 @@ class TestCompleteOutputCopyingWorkflow:
         assert stats["web_files"] == 3
 
         # Validate
-        valid_result = validate_copied_outputs(output_dir)
+        valid_result = validate_copied_outputs(output_dir, enabled_formats=("pdf", "slides"))
         assert valid_result is True
 
     def test_workflow_with_missing_sources(self, temp_project_structure):
@@ -342,7 +353,7 @@ class TestCompleteOutputCopyingWorkflow:
         assert stats["slides_files"] == 1  # Only one slide copied
 
         # Validate
-        valid_result = validate_copied_outputs(output_dir)
+        valid_result = validate_copied_outputs(output_dir, enabled_formats=("pdf", "slides"))
         assert valid_result is True  # Still valid if PDF exists
 
 
@@ -470,6 +481,6 @@ class TestErrorHandling:
         """Test validation with non-existent output directory."""
         nonexistent = tmp_path / "nonexistent"
 
-        result = validate_copied_outputs(nonexistent)
+        result = validate_copied_outputs(nonexistent, enabled_formats=("pdf",))
 
         assert result is False

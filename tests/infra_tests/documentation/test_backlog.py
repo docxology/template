@@ -58,6 +58,7 @@ def test_normalizer_archives_completed_prose_and_rows_without_closing_blockers(t
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | `EXAMPLE-DONE-1` | completed | Minor | fixture | old result | old receipt | `uv run pytest tests -q` | mutation fails |
 | `EXAMPLE-BLOCKED-1` | blocked-external | Minor | owner | Obtain the owner receipt | external receipt | `uv run pytest tests -q` | missing owner fails |
+| `EXAMPLE-MAJOR-1` | blocked-external | Major | owner | Obtain the owner receipt | external receipt | `uv run pytest tests -q --no-cov --timeout=120` | missing owner fails |
 """,
         encoding="utf-8",
     )
@@ -70,6 +71,11 @@ def test_normalizer_archives_completed_prose_and_rows_without_closing_blockers(t
     assert "Completed: import cleanup" in archived
     assert "`EXAMPLE-DONE-1`" in archived and "`EXAMPLE-DONE-1`" not in normalized
     assert "| `EXAMPLE-BLOCKED-1` | blocked-external |" in normalized
+    assert (
+        "| `EXAMPLE-MAJOR-1` | blocked-external | Medium | owner | Obtain the owner receipt | "
+        "external receipt | `uv run pytest tests -q --no-cov --timeout=120` | missing owner fails |"
+    ) in normalized
+    assert "`EXAMPLE-MAJOR-1`" not in archived
     assert "Keep coverage above the 90% floor." in normalized
     path.write_text(normalized, encoding="utf-8")
     assert normalize_backlog(path) == (normalized, "")

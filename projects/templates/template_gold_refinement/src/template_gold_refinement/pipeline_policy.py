@@ -121,30 +121,33 @@ def load_steganography_profile(project_root: Path | None = None) -> Steganograph
     raw = config.get("steganography", {})
     if not isinstance(raw, dict):
         raw = {}
+    unsupported = set(raw) & {"overlays", "barcodes", "metadata", "hashing", "encryption"}
+    if unsupported:
+        raise ValueError(f"Steganography profile requires canonical *_enabled fields: {sorted(unsupported)}")
     return SteganographyProfile(
         enabled=_as_bool(raw.get("enabled"), False, field_name="steganography.enabled"),
         overlays_enabled=_as_bool(
-            raw.get("overlays_enabled", raw.get("overlays")),
+            raw.get("overlays_enabled"),
             False,
             field_name="steganography.overlays_enabled",
         ),
         barcodes_enabled=_as_bool(
-            raw.get("barcodes_enabled", raw.get("barcodes")),
+            raw.get("barcodes_enabled"),
             False,
             field_name="steganography.barcodes_enabled",
         ),
         metadata_enabled=_as_bool(
-            raw.get("metadata_enabled", raw.get("metadata")),
+            raw.get("metadata_enabled"),
             False,
             field_name="steganography.metadata_enabled",
         ),
         hashing_enabled=_as_bool(
-            raw.get("hashing_enabled", raw.get("hashing")),
+            raw.get("hashing_enabled"),
             False,
             field_name="steganography.hashing_enabled",
         ),
         encryption_enabled=_as_bool(
-            raw.get("encryption_enabled", raw.get("encryption")),
+            raw.get("encryption_enabled"),
             False,
             field_name="steganography.encryption_enabled",
         ),

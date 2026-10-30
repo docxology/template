@@ -36,18 +36,18 @@ class TestCleanRootOutputDirectory:
         assert program_dir.exists()
         assert nested_output.exists()
 
-    def test_removes_obsolete_leaf_dir_for_qualified_projects(self, tmp_path):
+    def test_preserves_unmanaged_leaf_dir_for_qualified_projects(self, tmp_path):
         output = tmp_path / "output"
-        obsolete_leaf = output / "nested_project"
-        obsolete_leaf.mkdir(parents=True)
-        (obsolete_leaf / "old.pdf").write_text("old")
+        unmanaged_leaf = output / "nested_project"
+        unmanaged_leaf.mkdir(parents=True)
+        (unmanaged_leaf / "old.pdf").write_text("old")
         current_nested = output / "my_program" / "nested_project"
         current_nested.mkdir(parents=True)
 
         result = clean_root_output_directory(tmp_path, ["my_program/nested_project"])
 
         assert result is True
-        assert not obsolete_leaf.exists()
+        assert (unmanaged_leaf / "old.pdf").read_text() == "old"
         assert current_nested.exists()
 
     def test_removes_root_level_dirs(self, tmp_path):

@@ -536,11 +536,20 @@ def validate_manuscript_output_markdown(project_name: str = "project") -> bool:
 
 #### validate_copied_outputs (function)
 ```python
-def validate_copied_outputs(output_dir: Path) -> bool:
+def validate_copied_outputs(
+    output_dir: Path,
+    *,
+    project_name: str | None = None,
+    enabled_formats: Collection[str],
+    manuscript_dir: Path | None = None,
+    inventory: StableOutputInventory | None = None,
+    slides_profile: str = "archive",
+) -> bool:
     """Validate that outputs were copied correctly.
 
     Args:
         output_dir: Output directory to validate
+        enabled_formats: Required effective render formats from current configuration
 
     Returns:
         True if validation passes, False otherwise

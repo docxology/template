@@ -682,7 +682,7 @@ class TestOptionsConversion:
 
     def test_options_num_ctx(self):
         """Test num_ctx option."""
-        config = OllamaClientConfig(num_ctx=8192)
+        config = OllamaClientConfig(context_window=8192)
         opts = GenerationOptions()
 
         ollama_opts = opts.to_ollama_options(config)
@@ -690,7 +690,7 @@ class TestOptionsConversion:
 
     def test_options_override_num_ctx(self):
         """Test num_ctx override."""
-        config = OllamaClientConfig(num_ctx=4096)
+        config = OllamaClientConfig(context_window=4096)
         opts = GenerationOptions(num_ctx=16384)
 
         ollama_opts = opts.to_ollama_options(config)

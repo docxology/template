@@ -119,7 +119,7 @@ def validate_copied_outputs(
     output_dir: Path,
     *,
     project_name: str | None = None,
-    enabled_formats: Collection[str] | None = None,
+    enabled_formats: Collection[str],
     manuscript_dir: Path | None = None,
     inventory: StableOutputInventory | None = None,
     slides_profile: str = "archive",
@@ -127,9 +127,8 @@ def validate_copied_outputs(
     """Validate all project outputs were copied successfully.
 
     Checks:
-    - When ``enabled_formats`` is supplied, validates exactly those canonical
-      copied artifacts and rejects canonical artifacts for disabled formats.
-    - Otherwise preserves the legacy combined-PDF lookup contract.
+    - Validates the explicitly enabled canonical copied artifacts and rejects
+      canonical artifacts for disabled formats.
     - All expected subdirectories exist (pdf, web, slides, figures, data, reports, simulations, llm, logs)
     - Each directory contains files
     - All files are readable
@@ -138,8 +137,7 @@ def validate_copied_outputs(
         output_dir: Path to top-level output directory.
         project_name: Qualified project name or basename. Defaults to the
             copied output directory name.
-        enabled_formats: Effective render formats. ``None`` preserves the
-            legacy PDF-only behavior for callers that do not have config.
+        enabled_formats: Required effective render formats from current configuration.
         manuscript_dir: Current source manuscript, used to derive exact slide
             deck names when slides are enabled.
         inventory: Optional canonical inventory for the copied tree. Stage 5
@@ -156,52 +154,18 @@ def validate_copied_outputs(
     validation_passed = True
 
     inferred_project_name = project_name or (output_dir.name if "output" in output_dir.parts else None)
-    if enabled_formats is not None:
-        if inferred_project_name is None:
-            logger.error("Cannot validate configured render outputs without a project name")
-            validation_passed = False
-        else:
-            validation_passed = validate_enabled_render_outputs(
-                output_dir,
-                inferred_project_name,
-                enabled_formats,
-                manuscript_dir=manuscript_dir,
-                inventory=inventory,
-                slides_profile=slides_profile,
-            )
+    if inferred_project_name is None:
+        logger.error("Cannot validate configured render outputs without a project name")
+        validation_passed = False
     else:
-        # Preserve the historical PDF contract for callers without an
-        # effective render configuration.
-        combined_pdf_found = False
-        if inferred_project_name:
-            pdf_result = find_combined_pdf(output_dir, inferred_project_name)
-            if pdf_result:
-                _pdf_path, size_mb = pdf_result
-                log_success(f"Combined PDF valid ({size_mb:.2f} MB)", logger)
-                combined_pdf_found = True
-
-        if not combined_pdf_found:
-            logger.error("Combined manuscript PDF missing or empty")
-            if inferred_project_name:
-                logger.error(
-                    f"  Expected: output/{inferred_project_name}/{Path(inferred_project_name).name}_combined.pdf"
-                )
-                logger.error(
-                    f"  Or in: output/{inferred_project_name}/pdf/{Path(inferred_project_name).name}_combined.pdf"
-                )
-                logger.error(
-                    f"  Or in source: projects/{inferred_project_name}/output/pdf/"
-                    f"{Path(inferred_project_name).name}_combined.pdf"
-                )
-                logger.error(
-                    f"  Or in WIP source: projects/working/{inferred_project_name}/output/pdf/"
-                    f"{Path(inferred_project_name).name}_combined.pdf"
-                )
-            else:
-                logger.error("  Expected: output/{project_name}_combined.pdf")
-            logger.error("  → PDF rendering stage may have failed")
-            logger.error("  → Check project output/ directory for the combined PDF")
-            validation_passed = False
+        validation_passed = validate_enabled_render_outputs(
+            output_dir,
+            inferred_project_name,
+            enabled_formats,
+            manuscript_dir=manuscript_dir,
+            inventory=inventory,
+            slides_profile=slides_profile,
+        )
 
     # Check all expected subdirectories
     expected_dirs = {
@@ -218,9 +182,6 @@ def validate_copied_outputs(
         "logs": "Pipeline execution logs",
     }
 
-    # Directories that are optional or populated later in the pipeline
-    optional_dirs = set(OPTIONAL_OUTPUT_SUBDIRS)
-
     _inventory, files_by_subdir = _stable_files_by_subdir(output_dir, inventory)
 
     for dir_name, description in expected_dirs.items():
@@ -233,19 +194,14 @@ def validate_copied_outputs(
                 logger,
             )
         else:
-            if enabled_formats is not None:
-                if _stable_category_required(
-                    dir_name,
-                    enabled_formats,
-                    require_pdf="pdf" in enabled_formats,
-                ):
-                    logger.warning(f"{dir_name}/ has no stable artifacts ({description})")
-                else:
-                    logger.debug(f"{dir_name}/ is not enabled and has no stable artifacts")
-            elif dir_name in optional_dirs:
-                logger.debug(f"{dir_name}/ has no stable artifacts (optional, generated in later stage)")
-            else:
+            if _stable_category_required(
+                dir_name,
+                enabled_formats,
+                require_pdf="pdf" in enabled_formats,
+            ):
                 logger.warning(f"{dir_name}/ has no stable artifacts ({description})")
+            else:
+                logger.debug(f"{dir_name}/ is not enabled and has no stable artifacts")
 
     return validation_passed
 

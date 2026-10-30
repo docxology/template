@@ -87,7 +87,7 @@ verify_academic_standards(manuscript_dir)
 from infrastructure.validation import validate_output_structure, validate_copied_outputs
 
 validate_output_structure(output_dir)
-validate_copied_outputs(source_dir, dest_dir)
+validate_copied_outputs(dest_dir, project_name="templates/my_project", enabled_formats=("pdf",))
 ```
 
 ## Link Verification (`integrity/check_links.py`, `integrity/link_validator.py`)
