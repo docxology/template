@@ -22,6 +22,10 @@ through a new exact-revision release contract.
   current producer, and correct documentation selection and measured CI sharding.
 - Replace repeated source-manifest ancestor opens with held-directory traversal
   while retaining original byte, inode, replacement, and closure checks.
+- Require successful original publication-audit child exits, validate current
+  report structure, and retain the original exit in each project receipt.
+- Consolidate AutoResearch review packets into the current canonical builder and
+  validator while preserving the human publication-approval boundary.
 - Make publication a manual authenticated exact-tag handoff and verify retrieved
   assets after release creation.
 
