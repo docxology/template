@@ -590,7 +590,15 @@ def run_native_scope_worker(
             }
             try:
                 if raw["stage_children"] != list(producer.stage_children):
-                    raise ValueError("native completed stage bindings changed after graph reconstruction")
+                    completed = len(raw["stage_children"])
+                    expected = len(producer.stage_children)
+                    detail = str(raw.get("diagnostic") or "").strip()
+                    raise ValueError(
+                        "native completed stage bindings changed after graph reconstruction "
+                        f"(completed={completed}, expected={expected}"
+                        + (f", worker diagnostic: {detail}" if detail else "")
+                        + ")"
+                    )
                 producer.verify(
                     SnapshotReader(root, native_producer_operation=producer),
                     run_id=specification["run_id"],
