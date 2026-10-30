@@ -358,6 +358,19 @@
       "platforms": [],
       "paths": [],
       "packages": []
+    },
+    {
+      "id": "local-wheel-build-python",
+      "kind": "tool",
+      "environment_keys": [],
+      "executables": [
+        "python"
+      ],
+      "platforms": [],
+      "paths": [],
+      "packages": [
+        "setuptools"
+      ]
     }
   ]
 }
