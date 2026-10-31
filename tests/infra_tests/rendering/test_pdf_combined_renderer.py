@@ -215,15 +215,15 @@ class TestPreprocessCombinedMarkdown:
         result = preprocess_combined_markdown(content, manuscript_dir=tmp_path)
         assert "2" in result.content
 
-    def test_areas_legacy_scalar_shape_substitutes_count(self, tmp_path):
-        """Legacy shape ``areas: {FEP: 14}`` must substitute ``{{areas.FEP.count}}`` → ``14``."""
+    def test_scalar_areas_do_not_create_undeclared_count_fields(self, tmp_path):
+        """Only explicit nested count fields can fill count placeholders."""
         vars_data = {"areas": {"FEP": 14, "Thermo": 7}}
         (tmp_path / "manuscript_vars.yaml").write_text(yaml.dump(vars_data))
 
         content = "FEP={{areas.FEP.count}} Thermo={{areas.Thermo.count}}"
         result = preprocess_combined_markdown(content, manuscript_dir=tmp_path)
-        assert "FEP=14" in result.content
-        assert "Thermo=7" in result.content
+        assert result.content == content
+        assert result.manuscript_vars_substitutions == 0
 
     def test_areas_nested_dict_shape_does_not_emit_dict_repr(self, tmp_path):
         """Nested shape ``areas: {FEP: {count: 14}}`` must substitute to integer text,

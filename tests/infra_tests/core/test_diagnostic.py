@@ -116,8 +116,8 @@ class TestDiagnosticCode:
         assert e.code == "MARKDOWN.PANDOC_BARE_PIPE"
         assert r.events[0].code == "MARKDOWN.PANDOC_BARE_PIPE"
 
-    def test_legacy_report_without_code_loads(self, tmp_path):
-        """A report written before the field existed must round-trip cleanly."""
+    def test_report_without_optional_code_loads(self, tmp_path):
+        """A report may omit the optional code field and still load its event."""
         report_dir = tmp_path / "reports"
         report_dir.mkdir()
         (report_dir / "diagnostics.json").write_text(

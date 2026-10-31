@@ -215,7 +215,6 @@ def test_artifact_markdown_tables_match_generation(tmp_path: Path) -> None:
     assert "CONFIGURED_FIELD_TABLE" in tables
     assert "CONFIGURED_FIELD_SUMMARY_TABLE" in tables
     assert "CONFIGURATION_FIGURES" in tables
-    assert "CONFIGURED_FIELD_FIGURES" in tables
     assert "METHODS_FIGURES" in tables
     assert "RESULTS_FIGURES" in tables
     assert "EVALUATION_FIGURES" in tables
@@ -231,7 +230,7 @@ def test_artifact_markdown_tables_match_generation(tmp_path: Path) -> None:
     assert "madlib.seed" in tables["CONFIGURED_FIELD_TABLE"]
     assert "Deterministic token-injection flow" in tables["METHODS_FIGURES"]
     assert "Section token allocation" in tables["RESULTS_FIGURES"]
-    assert "Configured field origin matrix" in tables["CONFIGURED_FIELD_FIGURES"]
+    assert "Configured field origin matrix" in tables["CONFIGURATION_FIGURES"]
     assert "Quality gate matrix" in tables["EVALUATION_FIGURES"]
 
     registry = json.loads(artifacts["figure_registry"].read_text(encoding="utf-8"))

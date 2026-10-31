@@ -99,6 +99,8 @@ def main(argv: list[str] | None = None) -> int:
     admitted_scope = spec.get("scope")
     if not isinstance(admitted_scope, str):
         raise ValueError("pytest execution spec requires its stable source scope")
+    if admitted_scope == "root":
+        raise ValueError("Root execution requires its complete case-policy worker")
     resolved = RuntimeScope(root, admitted_scope)
     if resolved.base != project:
         raise ValueError("pytest source scope differs from its admitted execution base")
@@ -120,7 +122,6 @@ def main(argv: list[str] | None = None) -> int:
     hashes_after: dict[str, str] = {}
     scope = resolved.name
     try:
-        resolved.require_case_policy(reader)
         selectors, timeout, collect = spec.get("selectors"), spec.get("test_timeout_seconds"), spec.get("collect")
         if (
             spec.get("schema_version") != PYTEST_SPEC_SCHEMA

@@ -120,7 +120,7 @@ def test_generate_all_figures_minimal(tmp_path: Path) -> None:
     manuscript = tmp_path / "manuscript"
     manuscript.mkdir()
     (manuscript / "config.yaml").write_text(
-        "project_config:\n  hypothesis_definitions:\n    H1:\n      name: Selected Project Claim\n",
+        "project_config:\n  hypothesis_definitions:\n    H1:\n      id: PRIMARY_EFFICACY\n      name: Selected Project Claim\n",
         encoding="utf-8",
     )
     args.project_root = tmp_path

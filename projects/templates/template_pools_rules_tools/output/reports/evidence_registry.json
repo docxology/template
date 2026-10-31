@@ -1,11 +1,11 @@
 {
   "claim_boundary": "Compact evidence summary for manuscript validation; full fact dumps are opt-in debug output.",
-  "fact_count": 178,
+  "fact_count": 200,
   "freshness_warnings": [],
   "kind_counts": {
-    "artifact": 46,
+    "artifact": 59,
     "citation": 12,
-    "figure": 17,
+    "figure": 26,
     "number": 98,
     "section": 5
   },
@@ -1429,6 +1429,18 @@
     },
     {
       "active": true,
+      "checked_at": "2026-10-30T19:22:57Z",
+      "kind": "figure",
+      "source": "output/arxiv_submission/figures/architecture_overview.png",
+      "source_field": "",
+      "source_path": "output/arxiv_submission/figures/architecture_overview.png",
+      "source_tier": "artifact",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "fig:architecture_overview"
+    },
+    {
+      "active": true,
       "checked_at": "2026-08-08T23:12:32Z",
       "kind": "figure",
       "source": "output/figures/architecture_overview.png",
@@ -1438,6 +1450,18 @@
       "stale": false,
       "tolerance": 0.0,
       "value": "fig:architecture_overview"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-10-30T19:22:57Z",
+      "kind": "figure",
+      "source": "output/arxiv_submission/figures/cover_art.png",
+      "source_field": "",
+      "source_path": "output/arxiv_submission/figures/cover_art.png",
+      "source_tier": "artifact",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "fig:cover_art"
     },
     {
       "active": true,
@@ -1453,6 +1477,18 @@
     },
     {
       "active": true,
+      "checked_at": "2026-10-30T19:22:57Z",
+      "kind": "figure",
+      "source": "output/arxiv_submission/figures/fond_taxonomy.png",
+      "source_field": "",
+      "source_path": "output/arxiv_submission/figures/fond_taxonomy.png",
+      "source_tier": "artifact",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "fig:fond_taxonomy"
+    },
+    {
+      "active": true,
       "checked_at": "2026-08-08T23:12:32Z",
       "kind": "figure",
       "source": "output/figures/fond_taxonomy.png",
@@ -1462,6 +1498,18 @@
       "stale": false,
       "tolerance": 0.0,
       "value": "fig:fond_taxonomy"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-10-30T19:22:57Z",
+      "kind": "figure",
+      "source": "output/arxiv_submission/figures/pipeline_flow.png",
+      "source_field": "",
+      "source_path": "output/arxiv_submission/figures/pipeline_flow.png",
+      "source_tier": "artifact",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "fig:pipeline_flow"
     },
     {
       "active": true,
@@ -1477,6 +1525,18 @@
     },
     {
       "active": true,
+      "checked_at": "2026-10-30T19:22:57Z",
+      "kind": "figure",
+      "source": "output/arxiv_submission/figures/resilience_layers.png",
+      "source_field": "",
+      "source_path": "output/arxiv_submission/figures/resilience_layers.png",
+      "source_tier": "artifact",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "fig:resilience_layers"
+    },
+    {
+      "active": true,
       "checked_at": "2026-08-08T23:12:32Z",
       "kind": "figure",
       "source": "output/figures/resilience_layers.png",
@@ -1486,6 +1546,18 @@
       "stale": false,
       "tolerance": 0.0,
       "value": "fig:resilience_layers"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-10-30T19:22:57Z",
+      "kind": "figure",
+      "source": "output/arxiv_submission/figures/resource_counts.png",
+      "source_field": "",
+      "source_path": "output/arxiv_submission/figures/resource_counts.png",
+      "source_tier": "artifact",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "fig:resource_counts"
     },
     {
       "active": true,
@@ -1501,6 +1573,18 @@
     },
     {
       "active": true,
+      "checked_at": "2026-10-30T19:22:57Z",
+      "kind": "figure",
+      "source": "output/arxiv_submission/figures/rule_hierarchy.png",
+      "source_field": "",
+      "source_path": "output/arxiv_submission/figures/rule_hierarchy.png",
+      "source_tier": "artifact",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "fig:rule_hierarchy"
+    },
+    {
+      "active": true,
       "checked_at": "2026-08-08T23:12:32Z",
       "kind": "figure",
       "source": "output/figures/rule_hierarchy.png",
@@ -1513,6 +1597,18 @@
     },
     {
       "active": true,
+      "checked_at": "2026-10-30T19:22:57Z",
+      "kind": "figure",
+      "source": "output/arxiv_submission/figures/status_dashboard.png",
+      "source_field": "",
+      "source_path": "output/arxiv_submission/figures/status_dashboard.png",
+      "source_tier": "artifact",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "fig:status_dashboard"
+    },
+    {
+      "active": true,
       "checked_at": "2026-08-08T23:12:32Z",
       "kind": "figure",
       "source": "output/figures/status_dashboard.png",
@@ -1522,6 +1618,18 @@
       "stale": false,
       "tolerance": 0.0,
       "value": "fig:status_dashboard"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-10-30T19:22:57Z",
+      "kind": "figure",
+      "source": "output/arxiv_submission/figures/tool_contract.png",
+      "source_field": "",
+      "source_path": "output/arxiv_submission/figures/tool_contract.png",
+      "source_tier": "artifact",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "fig:tool_contract"
     },
     {
       "active": true,
@@ -1594,6 +1702,162 @@
       "stale": false,
       "tolerance": 0.0,
       "value": "sec:pools"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-10-30T19:22:57Z",
+      "kind": "artifact",
+      "source": "filesystem",
+      "source_field": "",
+      "source_path": "output/arxiv_submission/_combined_manuscript.bbl",
+      "source_tier": "artifact",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "output/arxiv_submission/_combined_manuscript.bbl"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-10-30T19:22:57Z",
+      "kind": "artifact",
+      "source": "filesystem",
+      "source_field": "",
+      "source_path": "output/arxiv_submission/_combined_manuscript.tex",
+      "source_tier": "artifact",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "output/arxiv_submission/_combined_manuscript.tex"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-10-30T19:22:57Z",
+      "kind": "artifact",
+      "source": "filesystem",
+      "source_field": "",
+      "source_path": "output/arxiv_submission/figures/architecture_overview.png",
+      "source_tier": "artifact",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "output/arxiv_submission/figures/architecture_overview.png"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-10-30T19:22:57Z",
+      "kind": "artifact",
+      "source": "filesystem",
+      "source_field": "",
+      "source_path": "output/arxiv_submission/figures/cover_art.png",
+      "source_tier": "artifact",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "output/arxiv_submission/figures/cover_art.png"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-10-30T19:22:57Z",
+      "kind": "artifact",
+      "source": "filesystem",
+      "source_field": "",
+      "source_path": "output/arxiv_submission/figures/fond_taxonomy.png",
+      "source_tier": "artifact",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "output/arxiv_submission/figures/fond_taxonomy.png"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-10-30T19:22:57Z",
+      "kind": "artifact",
+      "source": "filesystem",
+      "source_field": "",
+      "source_path": "output/arxiv_submission/figures/pipeline_flow.png",
+      "source_tier": "artifact",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "output/arxiv_submission/figures/pipeline_flow.png"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-10-30T19:22:57Z",
+      "kind": "artifact",
+      "source": "filesystem",
+      "source_field": "",
+      "source_path": "output/arxiv_submission/figures/resilience_layers.png",
+      "source_tier": "artifact",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "output/arxiv_submission/figures/resilience_layers.png"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-10-30T19:22:57Z",
+      "kind": "artifact",
+      "source": "filesystem",
+      "source_field": "",
+      "source_path": "output/arxiv_submission/figures/resource_counts.png",
+      "source_tier": "artifact",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "output/arxiv_submission/figures/resource_counts.png"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-10-30T19:22:57Z",
+      "kind": "artifact",
+      "source": "filesystem",
+      "source_field": "",
+      "source_path": "output/arxiv_submission/figures/rule_hierarchy.png",
+      "source_tier": "artifact",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "output/arxiv_submission/figures/rule_hierarchy.png"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-10-30T19:22:57Z",
+      "kind": "artifact",
+      "source": "filesystem",
+      "source_field": "",
+      "source_path": "output/arxiv_submission/figures/status_dashboard.png",
+      "source_tier": "artifact",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "output/arxiv_submission/figures/status_dashboard.png"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-10-30T19:22:57Z",
+      "kind": "artifact",
+      "source": "filesystem",
+      "source_field": "",
+      "source_path": "output/arxiv_submission/figures/tool_contract.png",
+      "source_tier": "artifact",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "output/arxiv_submission/figures/tool_contract.png"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-10-30T19:22:57Z",
+      "kind": "artifact",
+      "source": "filesystem",
+      "source_field": "",
+      "source_path": "output/arxiv_submission/references.bib",
+      "source_tier": "artifact",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "output/arxiv_submission/references.bib"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-10-31T02:22:03Z",
+      "kind": "artifact",
+      "source": "filesystem",
+      "source_field": "",
+      "source_path": "output/arxiv_submission_20261031.tar.gz",
+      "source_tier": "artifact",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "output/arxiv_submission_20261031.tar.gz"
     },
     {
       "active": true,
@@ -2150,7 +2414,7 @@
   ],
   "schema": "template-evidence-registry-report-v1",
   "source_tiers": {
-    "artifact": 68,
+    "artifact": 90,
     "bibliography": 12,
     "configuration": 23,
     "generated_metric": 69,

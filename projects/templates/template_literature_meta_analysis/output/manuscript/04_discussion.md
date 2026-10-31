@@ -21,7 +21,7 @@ The committed analysis corpus is a bounded retrieval snapshot. It predates the
 deterministic per-engine retrieval report introduced by this template, so this paper
 does not attribute record counts or success/failure states to individual engines by
 reverse-engineering the merged corpus. New runs write those facts directly to
-`output/data/retrieval_report.json`; a resumed legacy snapshot is explicitly labelled
+`output/data/retrieval_report.json`; a resumed retained snapshot is explicitly labelled
 `resume_without_prior_retrieval_report` rather than being given invented provenance.
 
 The max-results cap of 1,000 per engine means the full literature is larger than the

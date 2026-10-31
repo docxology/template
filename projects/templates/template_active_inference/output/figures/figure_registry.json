@@ -1,6 +1,6 @@
 {
   "fig:artifact_contract_map": {
-    "alt": "Matrix generated from artifact_contract_index.json. Rows are generated artifacts; columns show producer configured, source present, claim bound or exempt, validation gate, negative control, freshness hash, copied-output parity, and complete contract status.",
+    "alt_text": "Matrix generated from artifact_contract_index.json. Rows are generated artifacts; columns show producer configured, source present, claim bound or exempt, validation gate, negative control, freshness hash, copied-output parity, and complete contract status.",
     "caption": "Artifact contract map: 86 generated artifact rows with complete contract status true and copied-output parity complete true. Cycle rows are explicit in `output/data/artifact_contract_index.json`.",
     "evidence_role": "sheaf",
     "figure_id": "artifact_contract_map",
@@ -12,7 +12,7 @@
     "width": 0.98
   },
   "fig:causal_ablation_heatmap": {
-    "alt": "Heatmap generated from the causal ablation and sensitivity reports. Rows are toy graph topologies, columns are perturbation types, and each cell shows the maximum absolute deterministic effect sourced from generated JSON rows.",
+    "alt_text": "Heatmap generated from the causal ablation and sensitivity reports. Rows are toy graph topologies, columns are perturbation types, and each cell shows the maximum absolute deterministic effect sourced from generated JSON rows.",
     "caption": "Causal-ablation heatmap: 36 source-backed rows joined to sensitivity and uncertainty artifacts; all effects source-backed: true.",
     "evidence_role": "statistical",
     "figure_id": "causal_ablation_heatmap",
@@ -24,7 +24,7 @@
     "width": 0.92
   },
   "fig:cue_tmaze_advantage": {
-    "alt": "Two-panel bar chart for the cue-then-reward T-maze. The left panel shows the cue information gain I(context; observation) in nats and the expected reward log-preference for an epistemic agent that samples the cue versus a greedy agent that commits to an arm, demonstrating a positive behavioural advantage for cue-sampling. The right panel shows the flat Expected Free Energy of the cue-first and greedy policies, which are identical, illustrating that flat EFE propagation cannot reward cue-sampling and the sophisticated observation- conditioned evaluator is required.",
+    "alt_text": "Two-panel bar chart for the cue-then-reward T-maze. The left panel shows the cue information gain I(context; observation) in nats and the expected reward log-preference for an epistemic agent that samples the cue versus a greedy agent that commits to an arm, demonstrating a positive behavioural advantage for cue-sampling. The right panel shows the flat Expected Free Energy of the cue-first and greedy policies, which are identical, illustrating that flat EFE propagation cannot reward cue-sampling and the sophisticated observation- conditioned evaluator is required.",
     "caption": "Cue-then-reward T-maze where epistemic value is strictly necessary. Left: the cue carries 0.6931 nats of information and the cue-sampling agent reaches reward with a measured advantage of 4.0000 nats over a greedy agent. Right: flat Expected Free Energy scores the cue-first and greedy policies identically (identical), so the sophisticated observation- conditioned evaluator is what makes information-seeking required. Closed form (no sampling).",
     "evidence_role": "formal",
     "figure_id": "cue_tmaze_advantage",
@@ -36,7 +36,7 @@
     "width": 0.95
   },
   "fig:dirichlet_convergence": {
-    "alt": "Single-panel semilog line chart of the Kullback-Leibler divergence from the true T-maze likelihood matrix A to the Dirichlet-learned expected likelihood, plotted against the update step. The divergence starts large at the uniform prior and falls monotonically toward zero as deterministic observation-state counts accumulate, crossing a dashed convergence-tolerance reference line; the first step below tolerance is marked. The curve is computed in closed form from a fixed expected-count stream (no sampling).",
+    "alt_text": "Single-panel semilog line chart of the Kullback-Leibler divergence from the true T-maze likelihood matrix A to the Dirichlet-learned expected likelihood, plotted against the update step. The divergence starts large at the uniform prior and falls monotonically toward zero as deterministic observation-state counts accumulate, crossing a dashed convergence-tolerance reference line; the first step below tolerance is marked. The curve is computed in closed form from a fixed expected-count stream (no sampling).",
     "caption": "Dirichlet model learning: KL$(A_{\\text{true}} \\,\\|\\, A_{\\text{learned}})$ versus concentration-update step. The expected likelihood $E[A] = pA / \\sum_o pA$ converges monotonically to the true generative likelihood; the run reaches the convergence tolerance at step 3 with final KL 1.29e-03 nats. Deterministic (no sampling), so the curve is byte-reproducible.",
     "evidence_role": "formal",
     "figure_id": "dirichlet_convergence",
@@ -48,7 +48,7 @@
     "width": 0.85
   },
   "fig:efe_decomposition": {
-    "alt": "Two-panel bar chart of the Expected Free Energy term decomposition across the four length-two T-maze policies (action sequences 00, 01, 10, 11). The left panel stacks risk (pragmatic deviation, the KL of policy-predicted outcomes from preferences) below ambiguity (epistemic, the expected likelihood entropy) so each bar's height is the Expected Free Energy G(pi); the goal-seeking policy with minimum G is marked. The right panel shows the equal-and-opposite pragmatic value (expected log-preference) and epistemic value (state-outcome mutual information) per policy, with a zero reference line, illustrating the exact identity G(pi) = -(pragmatic + epistemic).",
+    "alt_text": "Two-panel bar chart of the Expected Free Energy term decomposition across the four length-two T-maze policies (action sequences 00, 01, 10, 11). The left panel stacks risk (pragmatic deviation, the KL of policy-predicted outcomes from preferences) below ambiguity (epistemic, the expected likelihood entropy) so each bar's height is the Expected Free Energy G(pi); the goal-seeking policy with minimum G is marked. The right panel shows the equal-and-opposite pragmatic value (expected log-preference) and epistemic value (state-outcome mutual information) per policy, with a zero reference line, illustrating the exact identity G(pi) = -(pragmatic + epistemic).",
     "caption": "Closed-form Expected Free Energy decomposition over the finite T-maze policies. Left: $G(\\pi)$ = risk + ambiguity (stacked), with the goal-seeking minimiser marked. Right: the pragmatic and epistemic values, which sum to $-G(\\pi)$. Both forms are computed in closed form (no sampling) and satisfy risk + ambiguity + pragmatic + epistemic = 0 to machine precision.",
     "evidence_role": "formal",
     "figure_id": "efe_decomposition",
@@ -60,7 +60,7 @@
     "width": 0.95
   },
   "fig:free_energy_curve": {
-    "alt": "Line plot of free energy in nats versus coupling strength lambda for the entangled posterior relative to a mean-field prior. The entangled-prior free energy is identically zero, so this plotted comparison isolates mean-field prior mismatch. A single dark curve traces free energy across the sweep; the minimum is marked with a teal scatter point and labeled with the argmin lambda value.",
+    "alt_text": "Line plot of free energy in nats versus coupling strength lambda for the entangled posterior relative to a mean-field prior. The entangled-prior free energy is identically zero, so this plotted comparison isolates mean-field prior mismatch. A single dark curve traces free energy across the sweep; the minimum is marked with a teal scatter point and labeled with the argmin lambda value.",
     "caption": "Free energy of the entangled posterior relative to the mean-field prior across the hyperparameter sweep (grid points 21); relative to the entangled prior, the same posterior has identically zero free energy.",
     "evidence_role": "formal",
     "figure_id": "free_energy_curve",
@@ -72,7 +72,7 @@
     "width": 0.9
   },
   "fig:gnn_ontology_concordance": {
-    "alt": "Layered concordance diagram linking analytical symbols, GNN variables from bernoulli_toy.gnn.md (GNN v1.1), and Active Inference Ontology terms.",
+    "alt_text": "Layered concordance diagram linking analytical symbols, GNN variables from bernoulli_toy.gnn.md (GNN v1.1), and Active Inference Ontology terms.",
     "caption": "GNN $\\leftrightarrow$ ontology concordance for the Bernoulli\u2013Ising toy (GNN v1.1).",
     "evidence_role": "formal",
     "figure_id": "gnn_ontology_concordance",
@@ -84,7 +84,7 @@
     "width": 0.9
   },
   "fig:invariant_dashboard": {
-    "alt": "Horizontal bar checklist of analytical and simulation invariant names with pass or fail status. 12 of 12 checks pass on the merged report.",
+    "alt_text": "Horizontal bar checklist of analytical and simulation invariant names with pass or fail status. 12 of 12 checks pass on the merged report.",
     "caption": "Invariant dashboard: 12 / 12 merged analytical and simulation checks from the validation registry.",
     "evidence_role": "statistical",
     "figure_id": "invariant_dashboard",
@@ -96,7 +96,7 @@
     "width": 0.9
   },
   "fig:ising_mi_curve": {
-    "alt": "Two-panel plot of mutual information versus coupling strength lambda for the symmetric Bernoulli-Ising toy. Left panel shows the closed-form curve (solid dark line) and an independent exact recomputation via total correlation (dashed blue line) with lambda on the x-axis and mutual information in nats on the y-axis. Right panel shows the recompute-minus-closed-form residual versus lambda with a zero reference line; the two deterministic estimators agree to machine precision.",
+    "alt_text": "Two-panel plot of mutual information versus coupling strength lambda for the symmetric Bernoulli-Ising toy. Left panel shows the closed-form curve (solid dark line) and an independent exact recomputation via total correlation (dashed blue line) with lambda on the x-axis and mutual information in nats on the y-axis. Right panel shows the recompute-minus-closed-form residual versus lambda with a zero reference line; the two deterministic estimators agree to machine precision.",
     "caption": "Closed-form $I(\\lambda)$ and an independent exact recomputation via total correlation for the symmetric Bernoulli-Ising toy across 21 grid points up to $\\lambda_{\\max}$ = 4; grid maximum 0.6031 nats. Both estimators are deterministic (no sampling), so the right panel is a cross-implementation agreement check (max residual 0 nats), not a sampling residual.",
     "evidence_role": "statistical",
     "figure_id": "ising_mi_curve",
@@ -108,7 +108,7 @@
     "width": 0.9
   },
   "fig:lean_boundary_status": {
-    "alt": "Table figure listing Lean modules, declaration kinds, names, and proved versus sorry status under lean/TemplateActiveInference/.",
+    "alt_text": "Table figure listing Lean modules, declaration kinds, names, and proved versus sorry status under lean/TemplateActiveInference/.",
     "caption": "Lean formalization boundary: module witnesses checked by lake build.",
     "evidence_role": "formal",
     "figure_id": "lean_boundary_status",
@@ -120,7 +120,7 @@
     "width": 0.9
   },
   "fig:multi_track_architecture": {
-    "alt": "Process diagram linking three scientific tracks to 31 pipeline gates and 34 sheaf fragment types across 17 manifest rows.",
+    "alt_text": "Process diagram linking three scientific tracks to 31 pipeline gates and 34 sheaf fragment types across 17 manifest rows.",
     "caption": "Multi-track architecture: analytical, pymdp, and sheaf composition lanes mapped to 31 pipeline gates and 34 composable fragment types.",
     "evidence_role": "sheaf",
     "figure_id": "multi_track_architecture",
@@ -132,7 +132,7 @@
     "width": 0.95
   },
   "fig:precision_sweep": {
-    "alt": "Dual-axis line plot of how the T-maze policy posterior q(pi) = softmax(-gamma G) sharpens as the precision gamma increases from 0 to 16. The left axis plots the Shannon entropy of the posterior in nats, decreasing from ln 4 at gamma=0 and saturating at the ln(|optimal set|) floor (a dashed reference line) because two policies tie at the expected-free-energy minimum. The right axis plots the probability mass placed on the expected-free-energy optimal policy set, rising from 0.5 toward 1 and crossing the selection threshold; the precision at which it crosses is marked.",
+    "alt_text": "Dual-axis line plot of how the T-maze policy posterior q(pi) = softmax(-gamma G) sharpens as the precision gamma increases from 0 to 16. The left axis plots the Shannon entropy of the posterior in nats, decreasing from ln 4 at gamma=0 and saturating at the ln(|optimal set|) floor (a dashed reference line) because two policies tie at the expected-free-energy minimum. The right axis plots the probability mass placed on the expected-free-energy optimal policy set, rising from 0.5 toward 1 and crossing the selection threshold; the precision at which it crosses is marked.",
     "caption": "Precision sweep over the closed-form T-maze policy posterior $q(\\pi)\\propto\\exp(-\\gamma G)$ across 33 grid points up to $\\gamma$=16. Entropy falls from $\\ln 4$ to the $\\ln|\\Pi^\\star|$ floor (2 tied optima, second action irrelevant under the absorbing goal); the optimal-set mass crosses 0.99 at $\\gamma$=3. Entropy at $\\gamma$=1 is 1.1458 nats. Computed in closed form (no sampling).",
     "evidence_role": "formal",
     "figure_id": "precision_sweep",
@@ -144,7 +144,7 @@
     "width": 0.9
   },
   "fig:scholarship_source_map": {
-    "alt": "Five-column source map generated from the scholarship source matrix. Each row links a bibliography key to a DOI or URL locator, manuscript citation status, guarded scope boundary, method role, and generated evidence artifact; green borders mark rows rederived from bibliography entries, manuscript citations, registered tracks, bound manuscript sections, and existing artifacts.",
+    "alt_text": "Five-column source map generated from the scholarship source matrix. Each row links a bibliography key to a DOI or URL locator, manuscript citation status, guarded scope boundary, method role, and generated evidence artifact; green borders mark rows rederived from bibliography entries, manuscript citations, registered tracks, bound manuscript sections, and existing artifacts.",
     "caption": "Scholarship source map: 21 source rows across 21 method roles and 10 source families. Connected status: true; row evidence rederived: true.",
     "evidence_role": "scholarship",
     "figure_id": "scholarship_source_map",
@@ -156,7 +156,7 @@
     "width": 0.95
   },
   "fig:security_posture_map": {
-    "alt": "Matrix generated from security_posture_audit.json. Rows are defensive controls such as public data boundary, offline reproducibility, hash integrity, release parity, claim traceability, formal boundary, secret scan, signed attestation, and zero-trust runtime boundary; columns show evidence, validator, negative-control, scoping, and overall status.",
+    "alt_text": "Matrix generated from security_posture_audit.json. Rows are defensive controls such as public data boundary, offline reproducibility, hash integrity, release parity, claim traceability, formal boundary, secret scan, signed attestation, and zero-trust runtime boundary; columns show evidence, validator, negative-control, scoping, and overall status.",
     "caption": "Security posture map: 9 controls, 7 enforced and 2 scoped as deferred; secret findings: 0; high-risk gaps: 0.",
     "evidence_role": "source_mapped",
     "figure_id": "security_posture_map",
@@ -168,7 +168,7 @@
     "width": 0.96
   },
   "fig:semantic_gluing_graph": {
-    "alt": "Dependency diagram linking configured analysis scripts to generated evidence artifacts, manuscript consumers, and validation gates for the semantic sheaf gluing certificate.",
+    "alt_text": "Dependency diagram linking configured analysis scripts to generated evidence artifacts, manuscript consumers, and validation gates for the semantic sheaf gluing certificate.",
     "caption": "Semantic gluing graph: configured producers, generated evidence artifacts, and validation consumers for the multi-track sheaf certificate.",
     "evidence_role": "sheaf",
     "figure_id": "semantic_gluing_graph",
@@ -180,7 +180,7 @@
     "width": 0.95
   },
   "fig:sheaf_coverage_heatmap": {
-    "alt": "Heatmap matrix of IMRAD manuscript rows versus 34 sheaf fragment track columns. Black cells mean the track is bound and the fragment file exists; white cells mean the track is not bound; gray cells mean bound but missing. Rows are grouped by IMRAD block with indented subsection labels; column headers list track ids.",
+    "alt_text": "Heatmap matrix of IMRAD manuscript rows versus 34 sheaf fragment track columns. Black cells mean the track is bound and the fragment file exists; white cells mean the track is not bound; gray cells mean bound but missing. Rows are grouped by IMRAD block with indented subsection labels; column headers list track ids.",
     "caption": "Sheaf track coverage matrix: 17 IMRAD rows \u00d7 34 fragment columns. Black = present (P), white = absent (\u2014), gray = missing (M). Counts: 95 present / 95 bound / 0 missing. Generated from `output/data/sheaf_coverage_matrix.json`.",
     "evidence_role": "sheaf",
     "figure_id": "sheaf_coverage_heatmap",
@@ -192,7 +192,7 @@
     "width": 0.95
   },
   "fig:sheaf_layers_overview": {
-    "alt": "Two-panel overview of sheaf fragment layers. Left panel shows 34 composable track types in registry compose order with labels and renderer ids. Right panel shows the IMRAD section binding heatmap with black present, white absent, and gray missing cells across 17 manifest rows and 34 tracks.",
+    "alt_text": "Two-panel overview of sheaf fragment layers. Left panel shows 34 composable track types in registry compose order with labels and renderer ids. Right panel shows the IMRAD section binding heatmap with black present, white absent, and gray missing cells across 17 manifest rows and 34 tracks.",
     "caption": "Sheaf layers overview: registry stack (compose order, renderer ids) and IMRAD binding heatmap for 34 fragment types across 17 manifest rows (95 present / 95 bound / 0 missing), generated from `output/data/sheaf_coverage_matrix.json`.",
     "evidence_role": "sheaf",
     "figure_id": "sheaf_layers_overview",
@@ -204,7 +204,7 @@
     "width": 0.98
   },
   "fig:si_belief_entropy_curve": {
-    "alt": "Line plot of belief entropy in nats versus timestep for the pymdp T-maze rollout. Entropy ranges from 0 to 0 nats across 2 steps in state_inference mode.",
+    "alt_text": "Line plot of belief entropy in nats versus timestep for the pymdp T-maze rollout. Entropy ranges from 0 to 0 nats across 2 steps in state_inference mode.",
     "caption": "Belief entropy over time for the T-maze rollout (mean 0.0000 nats).",
     "evidence_role": "statistical",
     "figure_id": "si_belief_entropy_curve",
@@ -216,7 +216,7 @@
     "width": 0.9
   },
   "fig:si_obs_action_trace": {
-    "alt": "Dual-panel plot of observation index and action index versus timestep for the pymdp T-maze rollout. The upper panel shows discrete observations; the lower panel shows actions. Goal reached flag is 1.",
+    "alt_text": "Dual-panel plot of observation index and action index versus timestep for the pymdp T-maze rollout. The upper panel shows discrete observations; the lower panel shows actions. Goal reached flag is 1.",
     "caption": "Observation and action traces for the T-maze rollout (action diversity 2).",
     "evidence_role": "statistical",
     "figure_id": "si_obs_action_trace",
@@ -228,7 +228,7 @@
     "width": 0.9
   },
   "fig:si_tmaze_actions": {
-    "alt": "Step plot of discrete action index versus timestep for the pymdp T-maze rollout in state_inference mode. Actions change at each timestep with light fill under the step trace; policy depth is 2 steps.",
+    "alt_text": "Step plot of discrete action index versus timestep for the pymdp T-maze rollout in state_inference mode. Actions change at each timestep with light fill under the step trace; policy depth is 2 steps.",
     "caption": "Discrete action index over time for the pymdp T-maze rollout (policy length 2).",
     "evidence_role": "statistical",
     "figure_id": "si_tmaze_actions",
@@ -240,7 +240,7 @@
     "width": 0.9
   },
   "fig:theorem_traceability_graph": {
-    "alt": "Three-column graph generated from theorem traceability and proof dependency JSON. Each row links a Lean theorem to its proof-dependency edge count and finite model witness count; all theorem rows have resolved dependency edges: true.",
+    "alt_text": "Three-column graph generated from theorem traceability and proof dependency JSON. Each row links a Lean theorem to its proof-dependency edge count and finite model witness count; all theorem rows have resolved dependency edges: true.",
     "caption": "Theorem traceability graph generated from 17 linked theorem rows and 207 proof-dependency edges.",
     "evidence_role": "formal",
     "figure_id": "theorem_traceability_graph",
@@ -252,7 +252,7 @@
     "width": 0.95
   },
   "fig:tmaze_schematic": {
-    "alt": "Schematic of the minimal T-maze POMDP with start and goal states, discrete actions and observations, and planning horizon policy_len = 2.",
+    "alt_text": "Schematic of the minimal T-maze POMDP with start and goal states, discrete actions and observations, and planning horizon policy_len = 2.",
     "caption": "T-maze generative model schematic (2-step policy horizon, state_inference mode).",
     "evidence_role": "schematic",
     "figure_id": "tmaze_schematic",
@@ -264,7 +264,7 @@
     "width": 0.85
   },
   "fig:track_lane_promotion_map": {
-    "alt": "Two-panel matrix generated from track_lane_matrix.json. The left panel lists pipeline tracks against producer, artifact, manuscript consumer, typed claim, semantic restriction, validation gate, and negative control obligations. The right panel shows the sheaf fragment lanes bound to each pipeline track.",
+    "alt_text": "Two-panel matrix generated from track_lane_matrix.json. The left panel lists pipeline tracks against producer, artifact, manuscript consumer, typed claim, semantic restriction, validation gate, and negative control obligations. The right panel shows the sheaf fragment lanes bound to each pipeline track.",
     "caption": "Track-lane promotion map: 32 pipeline-to-sheaf rows with complete promotion status true. Left: seven promotion-rule obligations; right: sheaf fragment bindings.",
     "evidence_role": "sheaf",
     "figure_id": "track_lane_promotion_map",

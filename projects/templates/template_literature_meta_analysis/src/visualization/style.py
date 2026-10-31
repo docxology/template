@@ -11,7 +11,7 @@ from pathlib import Path
 
 import yaml
 
-from template_literature_meta_analysis.knowledge_graph.hypothesis import config_key_to_hypothesis_id
+from template_literature_meta_analysis.knowledge_graph.hypothesis import configured_hypothesis_id
 
 VIZ_CONFIG: dict = {
     "figure_size": (12, 7),
@@ -76,8 +76,7 @@ def load_viz_labels_from_config(project_root: Path) -> None:
     for hypothesis_id, hypothesis in (project_config.get("hypothesis_definitions") or {}).items():
         if isinstance(hypothesis, dict) and hypothesis.get("name"):
             name = str(hypothesis["name"])
-            explicit_id = hypothesis.get("id")
-            canonical_id = str(explicit_id).strip() if explicit_id else config_key_to_hypothesis_id(hypothesis_id, name)
+            canonical_id = configured_hypothesis_id(hypothesis_id, hypothesis)
             HYPOTHESIS_NAMES[hypothesis_id] = name
             HYPOTHESIS_NAMES[canonical_id] = name
 

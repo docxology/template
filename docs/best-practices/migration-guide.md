@@ -271,7 +271,7 @@ For an existing template fork, merge the reviewed upstream update on the migrati
 !/.agents/state/continual-learning-memory.example.json
 ```
 
-Retain the legacy Cursor runtime-state ignores during migration. A public `.agents/` archive excludes old runtime bytes, but does not carry ignore rules or install the SDK publication guard by itself.
+Preserve existing ignore rules for unrelated Cursor runtime state under `.cursor/hooks/state/`; the canonical memory helper does not load those files. A public `.agents/` archive excludes runtime bytes, but does not carry ignore rules or install the SDK publication guard by itself.
 
 The destination already has `pyproject.toml`; prepare its declared Root environment without reinitializing it:
 

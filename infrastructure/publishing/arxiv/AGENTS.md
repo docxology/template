@@ -11,15 +11,14 @@ from infrastructure.publishing.arxiv import prepare_arxiv_submission
 ### `prepare_arxiv_submission`
 
 ```python
-prepare_arxiv_submission(output_dir: Path, metadata: PublicationMetadata) -> Path
+prepare_arxiv_submission(output_dir: Path) -> Path
 ```
 
 Prefers the renderer-owned `output/pdf/_combined_manuscript.tex`, stages it at
 the archive root with its stem-matched `.bbl`, rendered bibliography files, and
 `output/figures/`, and adapts renderer-relative figure references to that flat
-layout. If the canonical file is absent, exactly one legacy
-`output/pdf/*.tex` is accepted; otherwise a conventional sibling `manuscript/`
-TeX source tree is preserved by relative path.
+layout. Rendered TeX must use that exact canonical root. Projects authored directly
+in TeX can instead provide a sibling `manuscript/` source tree, preserved by relative path.
 
 The helper fails closed on a missing/empty or ambiguous TeX root, symlinks,
 special files, and non-identical path collisions. It removes all older

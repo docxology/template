@@ -121,7 +121,7 @@ def _default_abstract_path(config_path: Path) -> Path:
 
 
 def _read_abstract_plaintext(abstract_path: Path, *, variables_path: Path | None = None) -> str:
-    """Return a short plaintext abstract excerpt for citations and legacy fields."""
+    """Return a short plaintext abstract excerpt for citation metadata fields."""
     return render_abstract_plaintext(abstract_path, variables_path=variables_path)
 
 

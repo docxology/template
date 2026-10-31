@@ -108,17 +108,15 @@ def test_root_release_workflow_invokes_version_contract() -> None:
     assert 'EXPECTED=$(git rev-parse "refs/tags/$TAG^{commit}")' in workflow
     assert 'if [ "$ACTUAL" != "$EXPECTED" ]; then' in workflow
     assert "python scripts/gates/public_capabilities.py" in workflow
-    assert "python scripts/gates/installed_public.py" in workflow
     assert workflow.index("Determine tag name") < workflow.index("uses: actions/checkout@")
     names = {step.get("name"): index for index, step in enumerate(steps)}
     assert (
         names["Verify checkout is the requested tag"]
         < audit_index
-        < names["Require explicit root 4+ acceptance handoff"]
+        < names["Require exact-tag acceptance handoff"]
         < names["Verify complete authenticated candidate with independently installed current providers"]
         < names["Verify root package release contract"]
         < names["Verify public capability manifest"]
-        < names["Verify complete installed-wheel matrix"]
         < names["Admit the exact installed wheel and final source distribution"]
     )
     distribution = steps[names["Admit the exact installed wheel and final source distribution"]]
@@ -179,51 +177,43 @@ def test_wrong_distribution_provider_is_refused(tmp_path: Path) -> None:
         root_runtime_version(tmp_path)
 
 
-def test_release_installed_matrix_prepares_all_supported_runtimes() -> None:
-    """Publication cannot substitute a source-path import or diagnostic subset."""
+def test_release_requires_handoff_and_uses_exact_reader_runtime() -> None:
+    """Publication uses the authenticated full matrix and a fresh installed reader."""
     import yaml
 
-    workflow = yaml.safe_load((REPO_ROOT / ".github/workflows/release.yml").read_text(encoding="utf-8"))
+    workflow = yaml.safe_load((REPO_ROOT / ".github/workflows/release.yml").read_text())
+    triggers = workflow.get("on", workflow.get(True))
+    assert set(triggers) == {"workflow_dispatch"}
+    assert all(item["required"] for item in triggers["workflow_dispatch"]["inputs"].values())
     steps = workflow["jobs"]["release"]["steps"]
     selected = {
         step.get("with", {}).get("python-version") for step in steps if "actions/setup-python@" in step.get("uses", "")
     }
-    assert selected == {"3.14", "3.15", "3.14.4"}
-    matrix = next(step for step in steps if step.get("name") == "Verify complete installed-wheel matrix")
-    assert matrix["if"] == "steps.acceptance.outputs.required != 'true'"
-    command = matrix["run"]
-    assert "--project " not in command
-    assert "--project-workers 1" in command
-    assert "--timeout 600" in command
-    assert "--no-sync --offline" in command
-    for minor in ("3.14", "3.15"):
-        assert f'--python "{minor}=' in command
-    preparation = next(step for step in steps if step.get("name") == "Prepare locked installed-matrix dependency cache")
-    assert preparation["if"] == matrix["if"]
-    assert "infrastructure.project.public_scope project-names" in preparation["run"]
-    for flag in ("--locked", "--no-emit-project", "--no-emit-local", "--require-hashes", "--no-build"):
-        assert flag in preparation["run"]
+    assert selected == {"3.14.4"}
+    reader = next(step for step in steps if step.get("id") == "candidate_reader")
+    assert "if" not in reader
+    assert "native_installed_launcher --mode handoff" in reader["run"]
+    assert not any("scripts/gates/installed_public.py" in step.get("run", "") for step in steps)
     policy = next(step for step in steps if step.get("name") == "Bind tagged candidate build policy")
     assert 'git -C "$GITHUB_WORKSPACE" show -s --format=%ct "$candidate"' in policy["run"]
     assert "TEMPLATE_BUILD_EPOCH_SOURCE=git:$candidate" in policy["run"]
 
 
 def test_release_serializes_selected_tag_across_trigger_refs() -> None:
-    """Tag push and dispatch branches must share one publication lock."""
+    """Dispatch branches must share the selected tag publication lock."""
     import yaml
 
     workflow = yaml.safe_load((REPO_ROOT / ".github/workflows/release.yml").read_text(encoding="utf-8"))
     concurrency = workflow["concurrency"]
-    assert concurrency["group"] == "release-${{ inputs.tag || github.ref_name }}"
+    assert concurrency["group"] == "release-${{ inputs.tag }}"
     assert concurrency["cancel-in-progress"] is False
     steps = workflow["jobs"]["release"]["steps"]
     selection = next(step for step in steps if step.get("id") == "tag")
     assert selection["env"]["INPUT_TAG"] == "${{ inputs.tag }}"
-    assert selection["env"]["REF_NAME"] == "${{ github.ref_name }}"
 
 
-@pytest.mark.parametrize("case", ["accepted", "legacy", "missing-receipt", "different-revision"])
-def test_release_publication_inputs_use_exact_handoff_or_legacy_matrix(tmp_path: Path, case: str) -> None:
+@pytest.mark.parametrize("case", ["accepted", "checkout-receipt-only", "missing-receipt", "different-revision"])
+def test_release_publication_inputs_require_exact_handoff(tmp_path: Path, case: str) -> None:
     """Execute actual workflow routing; absent/stale handoffs never fall back."""
     import os
     import yaml
@@ -252,10 +242,10 @@ def test_release_publication_inputs_use_exact_handoff_or_legacy_matrix(tmp_path:
     temporary.mkdir()
     mirror = temporary / "template-release-reader-root"
     git(source, "clone", "--quiet", "--no-hardlinks", str(source), str(mirror))
-    root = source if case == "legacy" else mirror
+    root = source if case == "checkout-receipt-only" else mirror
     relative = (
         "output/readiness/installed-release-123-1/receipt.json"
-        if case == "legacy"
+        if case == "checkout-receipt-only"
         else "output/readiness/installed/receipt.json"
     )
     receipt = root / relative
@@ -271,7 +261,6 @@ def test_release_publication_inputs_use_exact_handoff_or_legacy_matrix(tmp_path:
     output = tmp_path / "output.txt"
     environment = {name: value for name, value in os.environ.items() if not name.startswith("GIT_")}
     environment.update(
-        REQUIRED_ACCEPTANCE="false" if case == "legacy" else "true",
         GITHUB_WORKSPACE=str(source),
         RUNNER_TEMP=str(temporary),
         GITHUB_RUN_ID="123",
@@ -281,7 +270,7 @@ def test_release_publication_inputs_use_exact_handoff_or_legacy_matrix(tmp_path:
     result = subprocess.run(
         ["bash", "-c", selection["run"]], cwd=source, env=environment, capture_output=True, text=True, timeout=30
     )
-    if case in {"missing-receipt", "different-revision"}:
+    if case in {"checkout-receipt-only", "missing-receipt", "different-revision"}:
         assert result.returncode != 0
         assert not output.exists()
     else:

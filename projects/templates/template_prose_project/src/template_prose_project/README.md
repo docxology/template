@@ -21,15 +21,12 @@ flowchart LR
 ## Quick start
 
 Programmatic use (the scripts in `scripts/` wire these calls to the
-filesystem; `src/` must be importable, e.g. under the project's
-`[tool.pytest.ini_options] pythonpath`):
+filesystem; install the project package with `uv sync --locked` first):
 
 ```python
 from infrastructure.prose import analyze_manuscript
 
-from src.config import load_project_config
-from src.pipeline import run_prose_pipeline
-from src.report import write_review_report
+from template_prose_project import load_project_config, run_prose_pipeline, write_review_report
 
 config = load_project_config("manuscript/config.yaml")
 report = analyze_manuscript(

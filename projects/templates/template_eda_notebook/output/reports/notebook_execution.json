@@ -4,11 +4,10 @@
     "data/measurements.csv": "bb98b610548bc80fd408f93568fa13adabfe4e53fa3772763ffacae4985b11a1",
     "notebooks/eda_walkthrough.ipynb": "72c9cd830a5c63c01317bdf00e4f1b24961386221a8450a4aac6671b6cfd8d45",
     "scripts/__init__.py": "a015774647b977f4eeee8a227c511a3d0a03a26746fb19952b3c756ceb26ad21",
-    "scripts/_execute_notebook_worker.py": "b65f4b31f7d59ea769025b743eeacd4ab938f20e5698f6c20d8de5493b521a5f",
     "scripts/eda_analysis.py": "651bb2610fd76a354e376bdb10b327b22fd7fde131615ac28632cef09c307974",
-    "scripts/execute_notebook.py": "92113c60b9be01d443bd142fae965444671fa09d9e566eda1e30259f03ca427a",
+    "scripts/execute_notebook.py": "4b27851a9e8791e6e88645e024fda1e6e9cc11f61ac63ab2acc38a4f5f86cbfa",
     "scripts/generate_measurements_data.py": "5ec2097528ea3b2675ce466d98d1c9f59daf5b7229931119fbb3d6b754bd7b7e",
-    "scripts/refresh_notebook_binding.py": "00b8c7ef7edebc13e8ca5ac0c2b87960981bc2ba8a6b53b316d90fa1cc05afe4",
+    "scripts/refresh_notebook_binding.py": "6b02b1a498cf464fef765effc224a8861be854eea422eead6280f7fe2b737b2c",
     "src/__init__.py": "223c06f92ae2ce0a088554802b504db8e85eb9904fb3f31ccc17596ccc6a1a09",
     "src/template_eda_notebook/__init__.py": "846c6e98d62ae4846a6bfafa70001add97a9a2257553f192dedbc2b7e91c3591",
     "src/template_eda_notebook/eda/__init__.py": "dae761fd623d01e9e0eb6340431b3dfd41cb22418f68bb726c7422cb8f51e167",
@@ -20,12 +19,12 @@
     "src/template_eda_notebook/eda/notebook_binding.py": "cf0cf15bc26a1eea433b12d20d70e2a18e7523671ad5f5cc2f60a8e9122b0601",
     "src/template_eda_notebook/eda/notebook_oracle.py": "123e1b6ec553cb218b14d18b27c9bad913e2d444f7ed4ebf224c966a48dbc95c",
     "src/template_eda_notebook/eda/statistics.py": "2002d80767f662adf60778dea239bec0f5cdb12559b04606d2e2dfe528229ddb",
-    "src/template_eda_notebook/notebook_execution.py": "8a5bb90c707f1e2020a12495d79886cd97d22e082c4fdf644721995a5cb45289",
-    "src/template_eda_notebook/notebook_publication.py": "14a97b14a1ab159c6b62b2dfe846a93f1441988a50e8ff0ce3c60a4fd53ceab2",
+    "src/template_eda_notebook/notebook_execution.py": "cf484694e40870ab421f168977593438704abd98b489fb66dc6b08fb1f339ef5",
+    "src/template_eda_notebook/notebook_publication.py": "304f69e18786fbb4689dc3994234618f9b8773e21b3ab33eddcbce4dca755689",
     "src/template_eda_notebook/project_paths.py": "b165a1ef51fdbb5e2c71e9c5a3eb9efa6889073829cc9deb8769a14d88495a60"
   },
   "kernel": {
-    "interpreter_path_sha256": "85934f97191bd23f643888ee5d8197ac1d42f2ad3bb0d5d1a28531634a8fc097",
+    "interpreter_path_sha256": "9063b5746da00714c524d548b321e1d5f2d44743f88c8ecb5918c3a9bc832f3e",
     "mode": "fresh-audited-selected-interpreter"
   },
   "limits_seconds": {

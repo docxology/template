@@ -39,15 +39,14 @@ def inspect_pdfium_source_wheel(
         or len(raw) > MAX_BYTES
     ):
         raise ValueError("PDFium Source wheel filename/body exceeds its exact finite declaration")
-    source.verify_correspondence(
+    with source._correspondence_guard(
         source.reference,
         source.bindings.current_root,
         source.current_source_reader,
         deadline,
-    )
-    lock = source.current_source_reader.read("uv.lock")
-    result = inspect_pdfium_locked_wheel(filename, raw, lock.content, deadline=deadline)
-    source.verify_correspondence(source.reference, source.bindings.current_root, source.current_source_reader, deadline)
+    ):
+        lock = source.current_source_reader.read("uv.lock")
+        result = inspect_pdfium_locked_wheel(filename, raw, lock.content, deadline=deadline)
     remaining(deadline)
     return result
 

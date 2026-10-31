@@ -17,7 +17,7 @@ classifiers = [
 # visuals.py renders proof PDFs with reportlab and re-parses them with pypdf;
 # the isolated per-project interpreter needs both (mirrors template_pitch_deck).
 dependencies = [
-    "research-project-template==4.4.0",
+    "research-project-template==4.5.0",
     "pyyaml>=6.0",
     "reportlab>=4.0.0",
     "pypdf>=6.16.1",
@@ -66,6 +66,6 @@ exclude_lines = [
 research-project-template = { path = "../../..", editable = true }
 
 [tool.template]
-platform_version = "4.4.0"
+platform_version = "4.5.0"
 tested_python_versions = ["3.14", "3.15"]
 required_unpaid_capabilities = ["raster-redaction"]

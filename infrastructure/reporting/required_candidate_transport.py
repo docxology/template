@@ -93,10 +93,10 @@ def _graph_paths(root: Path, receipt: str, reader: SnapshotReader, *, deadline: 
         if len(paths) > MAX_MEMBERS:
             raise ValueError("candidate evidence exceeds its Source-declared bounded member census")
         if label.endswith(".json"):
-            from infrastructure.project.public_root_census_encoding import ENCODING_SCHEMAS, decode
+            from infrastructure.project.public_root_census_encoding import SCHEMA as CENSUS_ENCODING_SCHEMA, decode
 
             payload = held.json_object()
-            if payload.get("schema_version") in ENCODING_SCHEMAS:
+            if payload.get("schema_version") == CENSUS_ENCODING_SCHEMA:
                 payload = decode(payload)
             walk(payload, held.path.parent)
         if not reader.unchanged():

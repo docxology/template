@@ -1,8 +1,8 @@
 """Pipeline-stage modules for the literature workflow: pure orchestration,
 LLM synthesis, composition, LLM runtime setup, and dotenv utilities.
 
-These modules are re-exported from ``template_search_project`` for
-backwards compatibility; import them from the package root.
+These modules are re-exported from ``template_search_project`` as
+the declared public API; import them from the package root.
 """
 
 from template_search_project.pipeline.composition import compose_literature_review

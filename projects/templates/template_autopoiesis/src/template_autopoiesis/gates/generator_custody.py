@@ -4,6 +4,8 @@ from __future__ import annotations
 
 import os
 from pathlib import Path
+
+from .._platform import required_platform_version
 from typing import Any
 
 from .child_execution import ChildCapabilityBlocked
@@ -20,6 +22,7 @@ def capture_execution_custody(*, fresh_pycache_prefix: Path | None = None) -> tu
     A fresh prefix is evidence only when the caller's launcher installed the
     shared pre-import bytecode audit; ordinary calls retain the weaker baseline.
     """
+    required = required_platform_version()
     try:
         from infrastructure import __version__
         from infrastructure.core.implementation_custody import (
@@ -27,9 +30,9 @@ def capture_execution_custody(*, fresh_pycache_prefix: Path | None = None) -> tu
             capture_implementation_custody,
         )
     except ImportError as exc:
-        raise ChildCapabilityBlocked("child execution requires the installed or checkout platform 4.4.0") from exc
-    if __version__ != "4.4.0":
-        raise ChildCapabilityBlocked("child execution requires its bound platform version 4.4.0")
+        raise ChildCapabilityBlocked(f"child execution requires the installed or checkout platform {required}") from exc
+    if __version__ != required:
+        raise ChildCapabilityBlocked(f"child execution requires its bound platform version {required}")
 
     import template_autopoiesis
 

@@ -358,6 +358,33 @@
       "platforms": [],
       "paths": [],
       "packages": []
+    },
+    {
+      "id": "local-wheel-build-python",
+      "kind": "tool",
+      "environment_keys": [],
+      "executables": [
+        "python"
+      ],
+      "platforms": [],
+      "paths": [],
+      "packages": [
+        "setuptools"
+      ]
+    },
+    {
+      "id": "pdfium-wheel",
+      "kind": "external-fixture",
+      "environment_keys": [
+        "TEMPLATE_TEST_PDFIUM_WHEEL"
+      ],
+      "executables": [
+        "uv",
+        "git"
+      ],
+      "platforms": [],
+      "paths": [],
+      "packages": []
     }
   ]
 }

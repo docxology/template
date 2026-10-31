@@ -86,9 +86,9 @@
     },
     {
       "rendered_path": "output/manuscript/04_discussion.md",
-      "rendered_sha256": "1921b2ea133b8396b6f7ba5fa793cd5642a503e70bc156d6dc00509f70f026b7",
+      "rendered_sha256": "102ca329c93798016fe9b497e3e1bd2e00ef44b3553ed41254cdb4b1bf9f79a9",
       "source_path": "manuscript/04_discussion.md",
-      "source_sha256": "411e9d1845d2bf1218220c085b411580c255c1ec51c0a327e9e3ea3f24b056b1"
+      "source_sha256": "03da23aa6d88858461b5c55933a09f1cbe0c7b62086adaad418210de886964f8"
     },
     {
       "rendered_path": "output/manuscript/05_conclusion.md",
@@ -130,42 +130,42 @@
   "evidence_files": {
     "artifact_manifest": {
       "path": "output/reports/artifact_manifest.json",
-      "sha256": "25a14e99410d87cd48929f38b9eafc352760f079b6bf8bbf5ba767aa655e6b39",
-      "size_bytes": 41688
+      "sha256": "bbca17073f0adf4be759345fa0efdbb724c63132ef7c29397abeabaa66a703aa",
+      "size_bytes": 41689
     },
     "combined_manuscript": {
       "path": "output/web/_combined_manuscript.md",
-      "sha256": "5074bc17003a4b14c6f59bf547c0930e1d74219f2349dc192533a1fc08f4560b",
-      "size_bytes": 71835
+      "sha256": "2a7d3f9be4147608630441344da309e6f76956a22934578231f6c308155e86e5",
+      "size_bytes": 71837
     },
     "composition_manifest": {
       "path": "output/reports/manuscript_composition.json",
-      "sha256": "b919baf155283e168ea8a3f4d1a698c146786faf1efea9315ad765f50357eca9",
+      "sha256": "4312946b7ae8ee4655076280f2961749d8f8f85ef05782597e8282567a1119b2",
       "size_bytes": 4832
     },
     "validation_report": {
       "path": "output/reports/validation_report.json",
-      "sha256": "b5b8d7108b8dcff8edd5ffc19ada92826474f89f2d3e5c810c3aa69b5afe7519",
-      "size_bytes": 16490
+      "sha256": "500c6a7d05daffbaed240520339d4fa33e40b972029454f690b4d8eabdfea8fd",
+      "size_bytes": 16489
     }
   },
   "evidence_mode": "validated-co-snapshot-fingerprint-bridge",
   "fingerprints": {
     "config": {
       "file_count": 22,
-      "sha256": "7873d3d87b991aa57a1d1bb20cee1a8e26a5296fe9e088fed7310d37e57d9eee"
+      "sha256": "691dce0edeee1fc853a1d3cc66c96d691f0029c29bd94ef47bf431997e7ba543"
     },
     "output": {
       "file_count": 127,
-      "sha256": "be72ac6233f768baebd0c46ff80a72472f5a734fbc698442217dd5fa0105010a"
+      "sha256": "b3663a0c6a50e429604c1ce7f5ff19521f281d28b2ec79025cce22067b27bcb0"
     },
     "source": {
       "file_count": 142,
-      "sha256": "3f424fa20e695686e180a8c55362f75ff456da14b75d8ee95c80d5701cf9ba96"
+      "sha256": "f4b72ef6e33d486ebd0c150da0c75edddf15a27a1592bc100b702622c74d1424"
     },
     "stage": {
-      "file_count": 1719,
-      "sha256": "99d9e847388805b29aa6776039af1895a0af917c759980b61570946b1feab887"
+      "file_count": 1718,
+      "sha256": "79d670d77838b002e00b4e735ee4b3e97ebaaa44b38735527425aa0b0dff5402"
     }
   },
   "project": "templates/template_literature_meta_analysis",

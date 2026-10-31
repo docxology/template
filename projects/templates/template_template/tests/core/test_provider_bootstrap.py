@@ -6,6 +6,7 @@ import json
 import shutil
 import subprocess
 import sys
+import tomllib
 from functools import cache
 from pathlib import Path
 
@@ -13,6 +14,7 @@ import pytest
 import yaml
 
 PROJECT = Path(__file__).resolve().parents[2]
+PLATFORM_VERSION = tomllib.loads((PROJECT / "pyproject.toml").read_text())["tool"]["template"]["platform_version"]
 PACKAGE = "template_template"
 
 
@@ -64,7 +66,7 @@ def _selected_sdk_identity() -> tuple[Path, str]:
     )
     assert observation.returncode == 0, observation.stderr or observation.stdout
     identity = json.loads(observation.stdout)
-    assert identity["version"] == "4.4.0"
+    assert identity["version"] == PLATFORM_VERSION
     return Path(identity["origin"]), identity["sha256"]
 
 
@@ -80,7 +82,7 @@ def _bootstrap_program(project: Path) -> str:
         "bootstrap=importlib.util.module_from_spec(spec);spec.loader.exec_module(bootstrap);"
         "sdk=bootstrap.bootstrap_project(project);"
         f"assert Path(sdk.__file__).resolve()==Path({str(sdk_origin)!r});"
-        "assert sdk.__version__=='4.4.0';"
+        f"assert sdk.__version__=={PLATFORM_VERSION!r};"
         "assert hashlib.sha256(Path(sdk.__file__).read_bytes()).hexdigest()=="
         f"{sdk_digest!r};"
         "assert sys.path==before;"
@@ -95,7 +97,7 @@ def test_canonical_project_bootstrap_keeps_genuine_selected_runtime_sdk() -> Non
     assert actual.returncode == 0, actual.stderr or actual.stdout
     rows = [json.loads(line) for line in actual.stdout.splitlines() if line.startswith("{")]
     assert len(rows) == 1 and rows[0]["provider_origin"] == str(_selected_sdk_identity()[0])
-    assert rows[0]["provider_version"] == "4.4.0"
+    assert rows[0]["provider_version"] == PLATFORM_VERSION
     assert rows[0]["domain"] == DOMAIN_EXPECTATION
 
 
@@ -140,7 +142,7 @@ def test_selected_sdk_precedes_actual_own_shadow_and_executes_domain(tmp_path: P
     assert actual.returncode == 0, actual.stderr or actual.stdout
     rows = [json.loads(line) for line in actual.stdout.splitlines() if line.startswith("{")]
     assert len(rows) == 1 and rows[0]["provider_origin"] == str(_selected_sdk_identity()[0])
-    assert rows[0]["provider_version"] == "4.4.0"
+    assert rows[0]["provider_version"] == PLATFORM_VERSION
     assert rows[0]["domain"] == DOMAIN_EXPECTATION
     assert not marker.exists()
 
@@ -168,3 +170,32 @@ def test_cached_canonical_modules_remain_valid_but_real_wrong_own_alias_is_refus
     actual = _native(project, program)
     assert actual.returncode == 0, actual.stderr or actual.stdout
     assert "actual wrong own alias refused" in actual.stdout
+
+
+@pytest.mark.parametrize("declaration", ['"0.0.0"', "false"])
+def test_bootstrap_refuses_a_different_or_malformed_declared_sdk(tmp_path: Path, declaration: str) -> None:
+    project = _copy_project(tmp_path)
+    metadata = project / "pyproject.toml"
+    original = metadata.read_text()
+    changed = original.replace(f'platform_version = "{PLATFORM_VERSION}"', f"platform_version = {declaration}")
+    assert changed != original
+    metadata.write_text(changed)
+    program = (
+        "import importlib.util,sys;from pathlib import Path;"
+        f"project=Path({str(project)!r});"
+        "spec=importlib.util.spec_from_file_location('owned_bootstrap',project/'scripts/_bootstrap.py');"
+        "assert spec is not None and spec.loader is not None;"
+        "bootstrap=importlib.util.module_from_spec(spec);spec.loader.exec_module(bootstrap);"
+        "before=sys.path[:];\n"
+        "try:\n"
+        "    bootstrap.bootstrap_project(project)\n"
+        "except ImportError as error:\n"
+        "    assert 'declared platform' in str(error)\n"
+        "    assert sys.path == before\n"
+        "    print('declared SDK refused')\n"
+        "else:\n"
+        "    raise AssertionError('different or malformed SDK declaration admitted')\n"
+    )
+    actual = _native(project, program)
+    assert actual.returncode == 0, actual.stderr or actual.stdout
+    assert actual.stdout.strip() == "declared SDK refused"

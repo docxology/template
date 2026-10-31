@@ -7,11 +7,15 @@ import site
 import importlib
 import importlib.util
 import sys
+import tomllib
 from pathlib import Path
 
 
 def _select_platform_sdk(project: Path) -> None:
     """Bind the declared interpreter SDK before exposing any project-owned source."""
+    required = tomllib.loads((project / "pyproject.toml").read_text(encoding="utf-8"))["tool"]["template"][
+        "platform_version"
+    ]
     site_roots = tuple(Path(path).resolve() for path in site.getsitepackages())
 
     def own_source(path: Path) -> bool:
@@ -31,13 +35,13 @@ def _select_platform_sdk(project: Path) -> None:
         verify_origins()
         sdk = importlib.import_module("infrastructure")
         verify_origins()
-        if getattr(sdk, "__version__", None) != "4.4.0":
-            raise ImportError("project scripts require the declared platform 4.4.0 SDK")
+        if getattr(sdk, "__version__", None) != required:
+            raise ImportError(f"project scripts require the declared platform {required} SDK")
     finally:
         sys.path[:] = original
 
 
-def bootstrap_project(*, include_infrastructure: bool = False) -> Path:
+def bootstrap_project() -> Path:
     """Bind the declared SDK, then expose this project source.
 
     Returns:
@@ -45,8 +49,7 @@ def bootstrap_project(*, include_infrastructure: bool = False) -> Path:
     """
     root = Path(__file__).resolve().parent.parent
     _select_platform_sdk(root)
-    # Kept for caller compatibility; SDK authority comes from the interpreter,
-    # never TEMPLATE_REPO_ROOT or a guessed ancestor.
+    # SDK authority comes from the selected interpreter.
     src = root / "src"
     if "template_literature_meta_analysis" not in sys.modules:
         spec = importlib.util.spec_from_file_location(

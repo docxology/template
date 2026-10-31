@@ -15,6 +15,7 @@ tests, ship in CI artifacts).
 
 import hashlib
 import json
+import re
 import time
 from dataclasses import asdict
 from pathlib import Path
@@ -34,8 +35,6 @@ SEARCH_CACHE_SCHEMA_VERSION = 1
 
 def query_identity(query: SearchQuery) -> dict[str, Any]:
     """Return the canonical, receipt-friendly identity of *query*."""
-    import re
-
     # Normalize whitespace: collapse consecutive spaces, tabs, and newlines
     normalized_text = re.sub(r"\s+", " ", query.text.strip().lower())
     return {
@@ -56,22 +55,19 @@ def query_cache_key(query: SearchQuery) -> str:
 def validate_cache_payload(payload: Any, query: SearchQuery | None = None) -> list[str]:
     """Return actionable schema/identity errors for a JSON cache payload.
 
-    Legacy entries without the new metadata remain readable; newly written
-    entries carry both a schema version and an explicit cache key so receipts
+    Every entry carries the current schema and explicit cache key so receipts
     can prove which query identity was replayed.
     """
     errors: list[str] = []
     if not isinstance(payload, dict):
         return ["payload must be a mapping"]
     version = payload.get("_schema_version")
-    if version is not None and version != SEARCH_CACHE_SCHEMA_VERSION:
+    if type(version) is not int or version != SEARCH_CACHE_SCHEMA_VERSION:
         errors.append(f"unsupported _schema_version: {version!r}")
     stored_query = payload.get("query")
     if not isinstance(stored_query, dict):
         errors.append("query must be a mapping")
     elif query is not None:
-        import re
-
         stored_text = re.sub(r"\s+", " ", str(stored_query.get("text", "")).strip().lower())
         stored_identity = {
             "text": stored_text,
@@ -83,7 +79,9 @@ def validate_cache_payload(payload: Any, query: SearchQuery | None = None) -> li
         if stored_identity != query_identity(query):
             errors.append("query identity does not match requested query")
     stored_key = payload.get("_cache_key")
-    if stored_key is not None and query is not None and stored_key != query_cache_key(query):
+    if not isinstance(stored_key, str) or re.fullmatch(r"[0-9a-f]{16}", stored_key) is None:
+        errors.append("_cache_key must be a 16-character lowercase hexadecimal query identity")
+    elif query is not None and stored_key != query_cache_key(query):
         errors.append("_cache_key does not match requested query")
     if not isinstance(payload.get("papers", []), list):
         errors.append("papers must be a list")

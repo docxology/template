@@ -1012,10 +1012,10 @@ class="toc-section-number">6.1.12</span>
 id="toc-infrastructure.orchestration-14-files"><span
 class="toc-section-number">6.1.13</span>
 <code>infrastructure.orchestration</code> (14 files)</a></li>
-<li><a href="#infrastructure.project-116-files"
-id="toc-infrastructure.project-116-files"><span
+<li><a href="#infrastructure.project-117-files"
+id="toc-infrastructure.project-117-files"><span
 class="toc-section-number">6.1.14</span>
-<code>infrastructure.project</code> (116 files)</a></li>
+<code>infrastructure.project</code> (117 files)</a></li>
 <li><a href="#infrastructure.prose-9-files"
 id="toc-infrastructure.prose-9-files"><span
 class="toc-section-number">6.1.15</span>
@@ -1032,14 +1032,14 @@ class="toc-section-number">6.1.17</span>
 id="toc-infrastructure.reference-16-files"><span
 class="toc-section-number">6.1.18</span>
 <code>infrastructure.reference</code> (16 files)</a></li>
-<li><a href="#infrastructure.rendering-121-files"
-id="toc-infrastructure.rendering-121-files"><span
+<li><a href="#infrastructure.rendering-120-files"
+id="toc-infrastructure.rendering-120-files"><span
 class="toc-section-number">6.1.19</span>
-<code>infrastructure.rendering</code> (121 files)</a></li>
-<li><a href="#infrastructure.reporting-412-files"
-id="toc-infrastructure.reporting-412-files"><span
+<code>infrastructure.rendering</code> (120 files)</a></li>
+<li><a href="#infrastructure.reporting-411-files"
+id="toc-infrastructure.reporting-411-files"><span
 class="toc-section-number">6.1.20</span>
-<code>infrastructure.reporting</code> (412 files)</a></li>
+<code>infrastructure.reporting</code> (411 files)</a></li>
 <li><a href="#infrastructure.research-3-files"
 id="toc-infrastructure.research-3-files"><span
 class="toc-section-number">6.1.21</span>
@@ -1076,10 +1076,10 @@ class="toc-section-number">6.1.28</span>
 id="toc-infrastructure.transmission-6-files"><span
 class="toc-section-number">6.1.29</span>
 <code>infrastructure.transmission</code> (6 files)</a></li>
-<li><a href="#infrastructure.validation-86-files"
-id="toc-infrastructure.validation-86-files"><span
+<li><a href="#infrastructure.validation-87-files"
+id="toc-infrastructure.validation-87-files"><span
 class="toc-section-number">6.1.30</span>
-<code>infrastructure.validation</code> (86 files)</a></li>
+<code>infrastructure.validation</code> (87 files)</a></li>
 <li><a href="#infrastructurelogrotate.d-0-files"
 id="toc-infrastructurelogrotate.d-0-files"><span
 class="toc-section-number">6.1.31</span>
@@ -1293,13 +1293,13 @@ capabilities from versioned interfaces.</p>
 <code>templates/template_template</code>,
 <code>templates/template_textbook</code>) supplies heterogeneous
 control-positive layouts, including optimization
-(<code>template_code_project</code>, 263 discovered tests), prose
+(<code>template_code_project</code>, 258 discovered tests), prose
 (<code>template_prose_project</code>, 165 discovered tests), and
 AutoResearch readiness (<code>template_autoresearch_project</code>, 318
 discovered tests). Each declares the same 90% project-source floor and
 consumes the shared pipeline without project-to-project imports. This
 manuscript adds a reflexive artifact: <code>template_template</code>
-(157 discovered tests) follows the same analysis and render path while
+(158 discovered tests) follows the same analysis and render path while
 injecting repository counters and figures from live introspection. The
 result is a self-documenting build whose quantitative repository claims
 are generated artifacts, whose manuscript claims are checked against an
@@ -1656,7 +1656,7 @@ contingent on test passage. The configured source-coverage floors are
 prohibited mock-framework imports, while the suites exercise real
 filesystem and subprocess behavior and use local protocol servers or
 explicitly enabled live services for network boundaries. ~12,564
-infrastructure tests and 6335+ project tests are discovered by the
+infrastructure tests and 6336+ project tests are discovered by the
 introspection build.</p></li>
 <li><p><strong>Automated Provenance</strong>: Steganographic
 watermarking and cryptographic hashing are integrated directly into the
@@ -1670,10 +1670,10 @@ it is enforced by architecture.</p></li>
 Operations</strong>: A three-tier documentation architecture enables AI
 agents to operate at every level of the system. At the system level,
 root <code>AGENTS.md</code> and <code>.agents/</code> define shared
-constraints and generic workflows; client files are compatibility
-references. At the structural level, <code>AGENTS.md</code> files in
-documented directories expose local API surfaces, file inventories, and
-integration contracts. At the module level, <code>SKILL.md</code>
+constraints and generic workflows; client entrypoints reference these
+shared contracts. At the structural level, <code>AGENTS.md</code> files
+in documented directories expose local API surfaces, file inventories,
+and integration contracts. At the module level, <code>SKILL.md</code>
 files—written to a discoverable YAML+Markdown schema aligned with the
 Model Context Protocol <span class="citation"
 data-cites="anthropic2024mcp">(<a href="#ref-anthropic2024mcp"
@@ -2111,9 +2111,7 @@ constraints. <code>.agents/</code> supplies generic skills, roles,
 workflows, and confined local state; <code>.agents/AGENTS.md</code>
 documents that catalog. Per-directory <code>AGENTS.md</code> adds local
 contracts, and <code>README.md</code> supplies human navigation.
-<code>CLAUDE.md</code> is a client command reference;
-<code>.cursor/</code> and <code>.cursorrules</code> are deprecated
-compatibility bridges to the shared guidance.</p>
+<code>CLAUDE.md</code> is a client command reference.</p>
 <h2 data-number="3.6" id="agentic-skill-architecture"><span
 class="header-section-number">3.6</span> Agentic Skill Architecture</h2>
 <p>The <a
@@ -2430,7 +2428,7 @@ integration.</li>
 <li><strong>Project tests</strong> (<code>projects/*/tests/</code>):
 Per-project suites whose sizes scale with each exemplar’s surface area —
 for example 318 tests in <code>template_autoresearch_project</code> and
-263 in <code>template_code_project</code>, with several exemplars larger
+258 in <code>template_code_project</code>, with several exemplars larger
 still. (A true min/max span would require dedicated
 <code>project_test_count_min</code>/<code>project_test_count_max</code>
 tokens in <code>build_manuscript_metrics_dict</code>; see the
@@ -2496,7 +2494,7 @@ policy floor rather than an unversioned observed percentage.</p>
 <tr>
 <td><code>template_code_project</code></td>
 <td>8</td>
-<td style="text-align: right;">263</td>
+<td style="text-align: right;">258</td>
 <td style="text-align: right;">90%</td>
 </tr>
 <tr>
@@ -2533,7 +2531,7 @@ class="header-section-number">4.2</span> Infrastructure Test Suite</h2>
 <tbody>
 <tr>
 <td>Test files</td>
-<td>947+</td>
+<td>951+</td>
 </tr>
 <tr>
 <td>Total tests</td>
@@ -2682,7 +2680,7 @@ contracts + validation</td>
 </tr>
 <tr>
 <td><code>project</code></td>
-<td style="text-align: center;">116</td>
+<td style="text-align: center;">117</td>
 <td style="text-align: center;">✓</td>
 <td style="text-align: center;">✓</td>
 <td><code>discover_projects</code>, workspace management</td>
@@ -2717,14 +2715,14 @@ contracts + validation</td>
 </tr>
 <tr>
 <td><code>rendering</code></td>
-<td style="text-align: center;">121</td>
+<td style="text-align: center;">120</td>
 <td style="text-align: center;">✓</td>
 <td style="text-align: center;">✓</td>
 <td>PDF/HTML/slide rendering, Pandoc filters</td>
 </tr>
 <tr>
 <td><code>reporting</code></td>
-<td style="text-align: center;">412</td>
+<td style="text-align: center;">411</td>
 <td style="text-align: center;">✓</td>
 <td style="text-align: center;">✓</td>
 <td>Coverage parsers, dashboards, executive artefacts</td>
@@ -2796,7 +2794,7 @@ capture</td>
 </tr>
 <tr>
 <td><code>validation</code></td>
-<td style="text-align: center;">86</td>
+<td style="text-align: center;">87</td>
 <td style="text-align: center;">✓</td>
 <td style="text-align: center;">✓</td>
 <td>PDF + Markdown + integrity CLIs</td>
@@ -2843,7 +2841,7 @@ and workflows</td>
 </tr>
 </tbody>
 </table></div>
-<p><code>378+</code> Markdown shards under <code>docs/</code> capture
+<p><code>380+</code> Markdown shards under <code>docs/</code> capture
 operational knowledge without duplicating auto-generated
 inventories.</p>
 <h2 data-number="4.5" id="dag-reference-declarative-executor"><span
@@ -3005,14 +3003,14 @@ Analysis</h2>
 <p>The comparative feature matrix below summarizes the Appendix F
 capability matrix.</p>
 <figure id="fig:template-comparative-matrix">
-<a class="figure-full-size-link" href="../figures/comparative_feature_matrix.png" target="_blank" rel="noopener" aria-label="Open full-size Figure 4, 14 × 10 heatmap annotated in appendix text—green ✓ full native capability, yellow ◐ partial…"><img src="../figures/comparative_feature_matrix.png"
+<a class="figure-full-size-link" href="../figures/comparative_feature_matrix.png" target="_blank" rel="noopener" aria-label="Open full-size Figure 4, 14 × 10 heatmap annotated in appendix text—green ✓ full native capability, yellow partial /…"><img src="../figures/comparative_feature_matrix.png"
 data-slide-manifest="../figures/comparative_feature_matrix.panels.json"
 alt="A heatmap compares tools across core pipeline, quality and security, and ecosystem capabilities. Each cell distinguishes full, partial or plugin-hosted, and unavailable support." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Figure 4: 14 × 10 heatmap annotated in
 appendix text—green <strong>✓</strong> full native capability, yellow
-<strong>◐</strong> partial / plugin-hosted, red <strong>—</strong>
-unavailable. Rows group <em>Core Pipeline</em>, <em>Quality &amp;
-Security</em>, then <em>Ecosystem</em>.</figcaption>
+partial / plugin-hosted, red <strong>—</strong> unavailable. Rows group
+<em>Core Pipeline</em>, <em>Quality &amp; Security</em>, then
+<em>Ecosystem</em>.</figcaption>
 </figure>
 <p>¹ Nextflow lineage records exist at workflow scope, not per rendered
 PDF citation graph.</p>
@@ -3141,12 +3139,12 @@ interactive menu.</p>
 <p>We have validated scaling with 25 canonical exemplars under
 <code>projects/templates/</code>—always present for onboarding and
 tooling—and with this manuscript from
-<code>projects/templates/template_template</code> (157 tests) as a
+<code>projects/templates/template_template</code> (158 tests) as a
 git-tracked public exemplar in the same automated discovery menus.</p>
 <p>Canonical trio:</p>
 <ul>
 <li><strong><code>template_code_project</code></strong>: Numerical
-optimization example with gradient-descent narration and 263 discovered
+optimization example with gradient-descent narration and 258 discovered
 tests. Its <code>pyproject.toml</code> declares the 90% project-source
 floor. Minimal footprint: compact <code>src/</code>, scripted analysis,
 short manuscript sections.</li>
@@ -3219,7 +3217,7 @@ style="text-align: center;"><code>template_autoresearch_project</code></th>
 </tr>
 <tr>
 <td>Test count</td>
-<td style="text-align: center;">263</td>
+<td style="text-align: center;">258</td>
 <td style="text-align: center;">165</td>
 <td style="text-align: center;">318</td>
 </tr>
@@ -3411,7 +3409,7 @@ local contracts, and can invoke skill-enabled capabilities through
 universal claim about every infrastructure directory.</p>
 <p>This three-tier model is, to our knowledge, novel in the research
 software engineering literature. The scale of the investment is
-substantial: <code>378</code> Markdown files under <code>docs/</code>
+substantial: <code>380</code> Markdown files under <code>docs/</code>
 alone, plus an <code>AGENTS.md</code>/<code>README.md</code> pair in
 documented directories and a <code>SKILL.md</code> descriptor on
 skill-enabled infrastructure modules. That count is itself injected from
@@ -3752,7 +3750,7 @@ contracts + validation</td>
 </tr>
 <tr>
 <td><code>project</code></td>
-<td style="text-align: center;">116</td>
+<td style="text-align: center;">117</td>
 <td style="text-align: center;">✓</td>
 <td style="text-align: center;">✓</td>
 <td><code>discover_projects</code>, workspace management</td>
@@ -3787,14 +3785,14 @@ contracts + validation</td>
 </tr>
 <tr>
 <td><code>rendering</code></td>
-<td style="text-align: center;">121</td>
+<td style="text-align: center;">120</td>
 <td style="text-align: center;">✓</td>
 <td style="text-align: center;">✓</td>
 <td>PDF/HTML/slide rendering, Pandoc filters</td>
 </tr>
 <tr>
 <td><code>reporting</code></td>
-<td style="text-align: center;">412</td>
+<td style="text-align: center;">411</td>
 <td style="text-align: center;">✓</td>
 <td style="text-align: center;">✓</td>
 <td>Coverage parsers, dashboards, executive artefacts</td>
@@ -3866,7 +3864,7 @@ capture</td>
 </tr>
 <tr>
 <td><code>validation</code></td>
-<td style="text-align: center;">86</td>
+<td style="text-align: center;">87</td>
 <td style="text-align: center;">✓</td>
 <td style="text-align: center;">✓</td>
 <td>PDF + Markdown + integrity CLIs</td>
@@ -3964,9 +3962,9 @@ class="header-section-number">6.1.13</span>
 interactive menus, subprocess wiring for thin shell wrappers
 (<code>run.sh</code>, <code>secure_run.sh</code>), and stubs used in CI
 for menu parsing tests.</p>
-<h3 data-number="6.1.14" id="infrastructure.project-116-files"><span
+<h3 data-number="6.1.14" id="infrastructure.project-117-files"><span
 class="header-section-number">6.1.14</span>
-<code>infrastructure.project</code> (116 files)</h3>
+<code>infrastructure.project</code> (117 files)</h3>
 <p>Canonical discovery (<code>discover_projects</code>) enforcing
 <code>src/</code> + <code>tests/</code>, slug validation, nested WIP
 namespaces.</p>
@@ -3995,14 +3993,14 @@ class="header-section-number">6.1.18</span>
 <code>infrastructure.reference</code> (16 files)</h3>
 <p>Citation/BibTeX parsing + conversion utilities leveraged by
 manuscripts and retrieval scripts.</p>
-<h3 data-number="6.1.19" id="infrastructure.rendering-121-files"><span
+<h3 data-number="6.1.19" id="infrastructure.rendering-120-files"><span
 class="header-section-number">6.1.19</span>
-<code>infrastructure.rendering</code> (121 files)</h3>
+<code>infrastructure.rendering</code> (120 files)</h3>
 <p>Pandoc shim, Unicode/XeLaTeX postprocessors, combined PDF/HTML/slide
 exporters.</p>
-<h3 data-number="6.1.20" id="infrastructure.reporting-412-files"><span
+<h3 data-number="6.1.20" id="infrastructure.reporting-411-files"><span
 class="header-section-number">6.1.20</span>
-<code>infrastructure.reporting</code> (412 files)</h3>
+<code>infrastructure.reporting</code> (411 files)</h3>
 <p>Parses pytest + coverage artefacts for dashboards; pairs with
 Stage 01 summaries and downstream executive exports.</p>
 <h3 data-number="6.1.21" id="infrastructure.research-3-files"><span
@@ -4073,9 +4071,9 @@ class="header-section-number">6.1.29</span>
 embedding, and shared models. Consumed by the publishing release
 workflow; regular package so the documentation module-reference guard
 resolves nested refs on disk.</p>
-<h3 data-number="6.1.30" id="infrastructure.validation-86-files"><span
+<h3 data-number="6.1.30" id="infrastructure.validation-87-files"><span
 class="header-section-number">6.1.30</span>
-<code>infrastructure.validation</code> (86 files)</h3>
+<code>infrastructure.validation</code> (87 files)</h3>
 <p>Markdown + PDF + integrity CLIs underpinning Stage 04
 diagnostics.</p>
 <h3 data-number="6.1.31" id="infrastructurelogrotate.d-0-files"><span
@@ -4681,8 +4679,8 @@ Structure</h2>
 |   |-- published/               # Non-rendered published (symlinked, private)
 |   |-- archive/                 # Non-rendered retired (symlinked, private)
 |   `-- other/                   # Non-rendered misc (symlinked, private)
-|-- docs/ (20 top-level areas, 378+ markdown files per live counter)
-|-- tests/                       # Infra suites (947+ files)
+|-- docs/ (20 top-level areas, 380+ markdown files per live counter)
+|-- tests/                       # Infra suites (951+ files)
 |-- AGENTS.md / README.md / CLAUDE.md / pyproject.toml
 |-- run.sh / secure_run.sh
 `-- output/ …                    # Mirrors after copy stage</code></pre>
@@ -4744,7 +4742,7 @@ cover every exemplar without hand-editing.</p>
 <td><code>template_code_project</code></td>
 <td>Optimization tutorial</td>
 <td>Convex demo figures, scripted tables</td>
-<td style="text-align: center;">263 discovered tests; 90% declared
+<td style="text-align: center;">258 discovered tests; 90% declared
 gate</td>
 <td style="text-align: left;">Controlled matplotlib exports</td>
 </tr>
@@ -4801,7 +4799,7 @@ Inventory</h2>
 </tr>
 <tr>
 <td><code>docs/</code> directory</td>
-<td style="text-align: center;">378 files across 20 subdirectories</td>
+<td style="text-align: center;">380 files across 20 subdirectories</td>
 <td>User guides, API reference, troubleshooting</td>
 </tr>
 <tr>
@@ -4840,7 +4838,7 @@ decision records), <code>rules/</code> (contributor norms),
 <code>audit/</code> (review reports), plus the machine-generated
 <code>_generated/</code> snippets and <code>images/</code> assets.</p>
 <p>Every count in this appendix is injected from live repository
-introspection rather than hand-maintained: <code>378</code> counts every
+introspection rather than hand-maintained: <code>380</code> counts every
 Markdown file beneath <code>docs/</code> recursively, <code>20</code>
 counts its first-level subdirectories, and <code>22</code> counts the
 workflow subdirectories that each carry a <code>SKILL.md</code>
@@ -4853,8 +4851,8 @@ per-directory <code>AGENTS.md</code>/<code>README.md</code> pair nearest
 to whatever code they are editing; AI agents begin with root
 <code>AGENTS.md</code> and <code>.agents/AGENTS.md</code>, then read
 local contracts and available <code>SKILL.md</code> descriptors. The
-shared skill manifest supplies discovery; client-specific files remain
-compatibility references.</p>
+shared skill manifest supplies discovery; client-specific entrypoints
+reference the shared contracts.</p>
 <hr />
 <h2 data-number="8.6" id="appendix-matrix"><span
 class="header-section-number">8.6</span> Appendix: Comparative Tool

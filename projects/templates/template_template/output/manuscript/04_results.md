@@ -8,7 +8,7 @@ The `./run.sh` interactive orchestrator can execute the public roster through th
 
 | Project | Effective core stages¹ | Discovered tests | Declared project floor |
 |---------|-----------------------|-----------------:|-----------------------:|
-| `template_code_project` | 8 | 263 | 90% |
+| `template_code_project` | 8 | 258 | 90% |
 | `template_prose_project` | 8 | 165 | 90% |
 | `template_autoresearch_project` | 8 | 318 | 90% |
 
@@ -18,7 +18,7 @@ The `./run.sh` interactive orchestrator can execute the public roster through th
 
 | Metric | Value |
 |--------|-------|
-| Test files | 947+ |
+| Test files | 951+ |
 | Total tests | ~12,564 |
 | Infrastructure coverage gate | ≥60% configured floor |
 | Prohibited mock-framework imports | Checked by the static no-mocks gate |
@@ -45,13 +45,13 @@ The introspection module (`template_template.core.introspection`) emits the auth
 | `metadata` | 3 | ✓ | ✓ | `normalized_repository_url`, `generate_metadata_package` |
 | `methods` | 10 | ✓ | ✓ | `build_methods_orchestration_plan`, methods-stage contracts + validation |
 | `orchestration` | 14 | ✓ | ✓ | `PipelineRunner`, entry point for `./run.sh` |
-| `project` | 116 | ✓ | ✓ | `discover_projects`, workspace management |
+| `project` | 117 | ✓ | ✓ | `discover_projects`, workspace management |
 | `prose` | 9 | ✓ | ✓ | Markdown readability + prose tooling |
 | `provenance` | 9 | ✓ | ✓ | — |
 | `publishing` | 85 | ✓ | ✓ | Zenodo, executable bundle, archival targets |
 | `reference` | 16 | ✓ | ✓ | BibTeX models, parsers, converters |
-| `rendering` | 121 | ✓ | ✓ | PDF/HTML/slide rendering, Pandoc filters |
-| `reporting` | 412 | ✓ | ✓ | Coverage parsers, dashboards, executive artefacts |
+| `rendering` | 120 | ✓ | ✓ | PDF/HTML/slide rendering, Pandoc filters |
+| `reporting` | 411 | ✓ | ✓ | Coverage parsers, dashboards, executive artefacts |
 | `research` | 3 | ✓ | ✓ | — |
 | `rules` | 6 | ✓ | ✓ | — |
 | `scientific` | 4 | ✓ | ✓ | `check_numerical_stability`, `benchmark_function` |
@@ -61,7 +61,7 @@ The introspection module (`template_template.core.introspection`) emits the auth
 | `steganography` | 13 | ✓ | ✓ | Watermark overlays + hash manifests |
 | `tools` | 6 | ✓ | ✓ | — |
 | `transmission` | 6 | ✓ | ✓ | — |
-| `validation` | 86 | ✓ | ✓ | PDF + Markdown + integrity CLIs |
+| `validation` | 87 | ✓ | ✓ | PDF + Markdown + integrity CLIs |
 
 All 31 enumerated subdirectories carry Tier‑1/`README.md` and Tier‑2/`AGENTS.md` coverage wherever the Documentation Duality standard applies; subsets ship Tier‑3 `SKILL.md` descriptors for MCP routing (`infrastructure/skills` manifest generation).
 
@@ -74,7 +74,7 @@ All 31 enumerated subdirectories carry Tier‑1/`README.md` and Tier‑2/`AGENTS
 | Skills | Optional `SKILL.md` manifests + generated `.agents/skill_manifest.json` |
 | PAI capsule | Repository level `PAI.md` narratives |
 
-`378+` Markdown shards under `docs/` capture operational knowledge without duplicating auto-generated inventories.
+`380+` Markdown shards under `docs/` capture operational knowledge without duplicating auto-generated inventories.
 
 ## DAG Reference (Declarative Executor)
 
@@ -116,7 +116,7 @@ The long tail of small, single-purpose packages beside a handful of larger ones 
 The comparative feature matrix below summarizes the Appendix F capability matrix.
 
 
-![14 × 10 heatmap annotated in appendix text—green **✓** full native capability, yellow **◐** partial / plugin-hosted, red **—** unavailable. Rows group *Core Pipeline*, *Quality & Security*, then *Ecosystem*.](../output/figures/comparative_feature_matrix.png){#fig:template-comparative-matrix data-slide-manifest="../output/figures/comparative_feature_matrix.panels.json"}
+![14 × 10 heatmap annotated in appendix text—green **✓** full native capability, yellow partial / plugin-hosted, red **—** unavailable. Rows group *Core Pipeline*, *Quality & Security*, then *Ecosystem*.](../output/figures/comparative_feature_matrix.png){#fig:template-comparative-matrix data-slide-manifest="../output/figures/comparative_feature_matrix.panels.json"}
 
 ¹ Nextflow lineage records exist at workflow scope, not per rendered PDF citation graph.
 

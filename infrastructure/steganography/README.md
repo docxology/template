@@ -50,11 +50,11 @@ Add a `steganography:` section to your project's `manuscript/config.yaml`:
 ```yaml
 steganography:
   enabled: true
-  overlays: true
-  barcodes: true
-  metadata: true
-  hashing: true
-  encryption: false
+  overlays_enabled: true
+  barcodes_enabled: true
+  metadata_enabled: true
+  hashing_enabled: true
+  encryption_enabled: false
   pdf_encryption_algorithm: "AES-256"
   overlay_text: "CONFIDENTIAL"
   overlay_opacity: 0.08

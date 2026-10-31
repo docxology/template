@@ -16,7 +16,6 @@ from ._infra import (
     generate_citation_bibtex,
     generate_citation_mla,
     get_logger,
-    infrastructure_available,
 )
 from .experiments import _project_root
 
@@ -49,15 +48,12 @@ def extract_optimization_metadata(results: dict[float, OptimizationResult]) -> d
             "methodology": "Gradient descent with fixed step sizes",
         }
     except (KeyError, ValueError, TypeError, AttributeError) as e:
-        if infrastructure_available() and get_logger is not None:
-            get_logger(__name__).warning("Failed to extract optimization metadata: %s", e)
+        get_logger(__name__).warning("Failed to extract optimization metadata: %s", e)
         return None
 
 
 def generate_citations_from_metadata(metadata: dict[str, Any]) -> dict[str, str] | None:
     """Generate citations from optimization metadata."""
-    if not infrastructure_available():
-        return None
     try:
         pub_metadata = PublicationMetadata(
             title=metadata["title"],
@@ -72,9 +68,8 @@ def generate_citations_from_metadata(metadata: dict[str, Any]) -> dict[str, str]
             "apa": generate_citation_apa(pub_metadata),
             "mla": generate_citation_mla(pub_metadata),
         }
-    except (KeyError, ValueError, TypeError, ImportError, NameError) as e:
-        if get_logger is not None:
-            get_logger(__name__).warning("Failed to generate citations: %s", e)
+    except (KeyError, ValueError, TypeError) as e:
+        get_logger(__name__).warning("Failed to generate citations: %s", e)
         return None
 
 
@@ -107,11 +102,9 @@ def save_publishing_materials(metadata: dict[str, Any], citations: dict[str, str
                 for format_name, citation in citations.items():
                     f.write(f"### {format_name.upper()}\n\n{citation}\n\n")
 
-        if infrastructure_available() and get_logger is not None:
-            get_logger(__name__).info("Publishing materials saved to: %s", output_dir)
+        get_logger(__name__).info("Publishing materials saved to: %s", output_dir)
     except (OSError, json.JSONDecodeError, KeyError, ValueError, TypeError) as e:
-        if infrastructure_available() and get_logger is not None:
-            get_logger(__name__).warning("Failed to save publishing materials: %s", e)
+        get_logger(__name__).warning("Failed to save publishing materials: %s", e)
 
 
 __all__ = [

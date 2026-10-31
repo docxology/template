@@ -54,7 +54,7 @@ uv run python projects/templates/template_literature_meta_analysis/scripts/09_ex
 uv run python projects/templates/template_literature_meta_analysis/scripts/05_inject_variables.py
 ```
 
-Stage 01 (`01_literature_search.py`) is the live/network retrieval path. Use it only when intentionally refreshing the corpus from engines configured in `manuscript/config.yaml`. It writes both the merged corpus and a deterministic `output/data/retrieval_report.json`; a legacy resume without that report is labelled explicitly and never assigned reconstructed engine counts.
+Stage 01 (`01_literature_search.py`) is the live/network retrieval path. Use it only when intentionally refreshing the corpus from engines configured in `manuscript/config.yaml`. It writes both the merged corpus and a deterministic `output/data/retrieval_report.json`. Resuming a populated retained corpus skips network retrieval. If its prior report is absent, the new report records `run_mode="resume_without_prior_retrieval_report"` with empty engine observations; the retained corpus receives no reconstructed engine attribution or counts.
 
 ## Optional gap-filler search (Monid)
 

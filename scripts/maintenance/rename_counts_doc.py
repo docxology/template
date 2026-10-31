@@ -30,8 +30,7 @@ def find_stale_paths(repo_root: Path) -> list[tuple[Path, str]]:
         if path.name == "rename_counts_doc.py":
             continue
         if path.suffix not in {".md", ".py", ".json", ".yaml", ".yml", ".html", ".toml"}:
-            if path.name not in {".cursorrules"}:
-                continue
+            continue
         try:
             text = path.read_text(encoding="utf-8")
         except (UnicodeDecodeError, PermissionError):

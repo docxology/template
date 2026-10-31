@@ -35,8 +35,9 @@ The receipt schema is `template-release-readiness-receipt-v2`. It contains the
 current `platform_version`, `source_fingerprint`, exact canonical `roster`, and
 a `gates` mapping. Each gate entry has a state, an executed `command` argv array,
 a public repository-relative `artifact` path and its exact `artifact_sha256`.
-Place acceptance artifacts under ignored `output/readiness/<run>/`. The old five
-structural receipts are insufficient and unsupported.
+Place acceptance artifacts under ignored `output/readiness/<run>/`. Passing gates
+require actual execution evidence and the complete source and runtime custody
+defined by their current contracts.
 
 Each artifact is an object with schema `template-required-acceptance-v1`, its
 exact `gate`, `scope` (`root` or a qualified public project), `status`, independent
@@ -52,21 +53,35 @@ identity excludes only the actual project output roots and runtime caches; sourc
 modules called `output`, `build`, or `dist` remain included. Stable deliverables
 use the shared shippable-output inventory, including Git-ignore custody.
 
-Legacy pipeline snapshots, generated counts and structural graphs remain useful
+Pipeline snapshots, generated counts and structural graphs are diagnostic
 observations. They cannot establish that the expected plans, required live
 capabilities or the whole public roster completed.
 
 ## Producing complete evidence
 
 Use `required_profile(root, SnapshotReader(root), source_fingerprint(root))` to
-derive the current gate IDs and bindings. Runtime details must include the exact
+derive the current gate IDs and bindings. Acceptance requires a current 4.x
+platform release contract.
+
+Root admission requires declaration schema 3, policy
+`template-root-case-policy-v3`, and the complete fresh census of literal families
+and parameter members. The policy derives required case units for each supported
+host and Python minor. Root runtime and branch coverage gates bind the original
+`root_case_bundle_artifact`; the generic public-exemplar runtime producer and
+reader refuse Root scope. A required blocked case cannot disappear from the
+inventory. The policy's exact `optional-external` Monid family remains visible
+and uncertified without authorizing its production request. See
+[Root required acceptance](../../docs/maintenance/root-required-acceptance.md)
+for current local and authenticated hosted readback requirements.
+
+Public-exemplar runtime details must include the exact
 supported Python minor, nonzero passing counts, zero failures/errors/skips or
 deselections, and the complete ordered `Requirement.test_files` selection.
 Coverage details bind the raw branch-coverage JSON and its exact totals; its
 measured file keys must cover all `Requirement.source_files`, with source-owned
 coverage omissions already applied. Project-relative `src/` keys are normalized
 to the canonical public project path.
-Both runtime and coverage details bind an actual selected-interpreter
+Public-exemplar runtime and coverage details bind an actual selected-interpreter
 `runtime_artifact` probe with executable hash, supported minor/full version,
 implementation, installed test packages, empty missing list and child exit0.
 The details' `interpreter`, `implementation` and `python_full_version` must match
@@ -90,7 +105,9 @@ the explicitly selected checkout plane in source-test cells; isolated root-wheel
 acceptance is a separate required gate.
 
 Pipeline acceptance binds the current compiled complete core plan, its digest,
-ordered expected stage keys, and fresh successful outcomes. Cached, skipped,
+ordered expected stage keys, and fresh successful outcomes. Its portable evidence
+also binds the complete current source and original process, SDK, runtime and
+environment observations. Cached, skipped,
 partial, invented or reordered stage sets cannot establish fresh acceptance.
 Native format checks parse the actual bound PDF, DOCX or EPUB bytes. Installation
 checks require complete wheel `WHEEL`/`RECORD` metadata and the current Python
@@ -105,7 +122,8 @@ file hashes and source commit must agree with the bound outer manifest; that
 manifest must include `source_commit` when embedded metadata is present. Root
 exports have no embedded project metadata. Sandbox transfer and publication
 receipts must reference the export already validated for the same scope, then
-bind independently retrieved identical bytes.
+bind independently retrieved identical bytes. Sandbox transfer acceptance also
+requires the original transfer process and authenticated retrieval evidence.
 
 Live receipts must explicitly report successful actual execution of the declared
 unpaid capability and bind its execution artifact. Positive assertions require

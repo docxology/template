@@ -19,14 +19,12 @@ from infrastructure.core.pipeline.artifacts import (
 from infrastructure.validation.output.artifacts import current_project_manifest_if_valid, read_artifact_manifest
 
 
-def test_legacy_manifest_reader_defaults_to_strict_shippable_mode(tmp_path: Path) -> None:
+def test_manifest_reader_requires_explicit_inventory_mode(tmp_path: Path) -> None:
     manifest_path = tmp_path / "artifact_manifest.json"
     manifest_path.write_text('{"entries": [], "issues": []}\n', encoding="utf-8")
 
-    manifest = read_artifact_manifest(manifest_path)
-
-    assert manifest.inventory_mode == STABLE_OUTPUT_INVENTORY_MODE
-    assert manifest.to_dict()["inventory_mode"] == STABLE_OUTPUT_INVENTORY_MODE
+    with pytest.raises(ValueError, match="unsupported stable output inventory mode"):
+        read_artifact_manifest(manifest_path)
 
 
 @pytest.mark.parametrize(
@@ -82,6 +80,7 @@ def test_manifest_parser_preserves_nul_safe_newline_path() -> None:
             }
         ],
         "issues": [],
+        "inventory_mode": STABLE_OUTPUT_INVENTORY_MODE,
     }
 
     parsed = artifact_manifest_from_payload(payload)
@@ -114,7 +113,7 @@ def test_local_manifest_roundtrip_preserves_inventory_mode(tmp_path: Path) -> No
     assert current_project_manifest_if_valid(output, output.parent) is None
 
 
-def test_local_aggregate_inherits_unspecified_legacy_stage_mode_but_rejects_explicit_conflict(
+def test_local_aggregate_requires_matching_explicit_stage_mode(
     tmp_path: Path,
 ) -> None:
     project = tmp_path / "private-project"
@@ -137,7 +136,13 @@ def test_local_aggregate_inherits_unspecified_legacy_stage_mode_but_rejects_expl
             }
         ],
         "issues": [],
+        "inventory_mode": STABLE_OUTPUT_INVENTORY_MODE,
     }
+    del payload["inventory_mode"]
+    stage_path.write_text(json.dumps(payload), encoding="utf-8")
+    missing = aggregate_artifact_manifests(output, inventory_mode=STABLE_LOCAL_OUTPUT_INVENTORY_MODE)
+    assert any("unsupported stable output inventory mode" in issue for issue in missing.issues)
+    payload["inventory_mode"] = STABLE_LOCAL_OUTPUT_INVENTORY_MODE
     stage_path.write_text(json.dumps(payload), encoding="utf-8")
 
     inherited = aggregate_artifact_manifests(

@@ -13,7 +13,8 @@ MIT notice travel in the asset; it needs no font fetch, worker, or new browser
 compression API. Before decoding, the loader bounds the compressed and decoded
 sizes and checks fixed LZMA properties, dictionary and known-length header;
 each reconstructed face still passes its original length and SHA-256 checks
-before font construction. Existing raw/base64 and gzip loader branches remain.
+before font construction. Independent native controls use the current raw
+inline font API; explicit per-face transport encodings are refused.
 Copy
 the complete web directory, including assets, for offline/file or HTTP reading;
 an HTML file alone is no longer the complete font-bearing export. The inline
@@ -38,7 +39,7 @@ not a claim of complete native-format acceptance.
 | docxplus export (opt-in) | `docxplus_export.py`, `docxplus_stage.py` | Exports a project as a conforming `.docx` that also carries its own source tree in a signed manifest. The container format is imported from upstream ([docxology/docxplus](https://github.com/docxology/docxplus)), never vendored; both modules skip cleanly when the optional `docxplus` extra is absent. |
 | Ebook formats | `ebook_bundle.py`, `ebook_stage.py`, `mobi_renderer.py` | `EbookBundleManager.generate_all` ties EPUB/MOBI/DOCX plus metadata together; `ebook_stage.py` is the opt-in ebook stage orchestrator; `mobi_renderer.py` renders MOBI via a pandoc EPUB intermediate and calibre `ebook-convert`. |
 | Executable bundle | `dockerfile_gen.py`, `manifest.py` | Deterministic reproducible-build Dockerfile generation (pinned base image and `uv` version) and the Stage-10 `manifest.json` of pinned numerical claims, git metadata, and build environment. |
-| CLI | `cli.py`, `render_all_cli.py` | Module commands and legacy all-format entrypoint. |
+| CLI | `cli.py` | PDF, slides, web and all-format commands. |
 
 ## Internal rendering responsibilities
 
@@ -359,7 +360,7 @@ local TeX engine. If rendering behavior changes, run at least one real
 - [`../validation/AGENTS.md`](../validation/AGENTS.md)
 
 Web preprocessing uses a private temporary directory for each section and the
-confined atomic writer for combined Markdown. Predictable legacy temporary
+confined atomic writer for combined Markdown. Predictable temporary
 paths are never opened or removed; failures propagate without falling back to
 unprocessed source. The real-Pandoc regression probes live in
 `tests/infra_tests/rendering/test_web_renderer.py`.

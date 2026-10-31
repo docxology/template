@@ -29,7 +29,7 @@ Across 5 heterogeneous primitive domains
 - statistics
 - signal
 - graph), 578 tests exercise both fixed ground-truth
-checks and Hypothesis-driven property invariants at 92.18% combined
+checks and Hypothesis-driven property invariants at 91.88% combined
 statement and branch coverage, with an explicit negative control per domain distinguishing the
 real kernel from a deliberately-wrong one.
 
@@ -61,7 +61,7 @@ flowchart TB
 - **Total product size**: 360
 - **Reserved slots**: 3 (`figure_profile, qr_profile, integrity_profile`)
 - **Grammar hash**: `a1f3e428cf1fb3e3`
-- **Tests**: 578 · **Coverage**: 92.18%
+- **Tests**: 578 · **Coverage**: 91.88%
 
 
 
@@ -781,7 +781,7 @@ Each child project:
 ### Test results
 
 - **Test count**: 578
-- **Coverage**: 92.18%
+- **Coverage**: 91.88%
 - **Grammar hash**: `a1f3e428cf1fb3e3`
 
 Both the test count and coverage percentage above are produced by
@@ -800,9 +800,9 @@ runtime qualification and may report a different percentage. The standalone
 measurement does not itself establish that qualification. There is no fallback
 literal: an incomplete measurement cannot produce a successful current summary.
 
-![Per-module combined statement and branch coverage from the same measurement that produces 578/92.18 above. Red bars identify modules below the 90% aggregate-gate reference line; the aggregate pass does not imply every module meets that level.](../figures/fig_coverage_by_module.png){#fig:coverage_by_module width=90% fig-alt="Horizontal bars show measured combined statement and branch coverage per module; red bars identify values below the 90% aggregate-gate reference line."}
+![Per-module combined statement and branch coverage from the same measurement that produces 578/91.88 above. Red bars identify modules below the 90% aggregate-gate reference line; the aggregate pass does not imply every module meets that level.](../figures/fig_coverage_by_module.png){#fig:coverage_by_module width=90% fig-alt="Horizontal bars show measured combined statement and branch coverage per module; red bars identify values below the 90% aggregate-gate reference line."}
 
-The aggregate 92.18% is a mean weighted by statement and branch
+The aggregate 91.88% is a mean weighted by statement and branch
 count, not a uniform floor — [@fig:coverage_by_module] shows the real spread.
 The 90% gate applies to the aggregate, not separately to each module. Exact
 module values are deliberately read from [@fig:coverage_by_module], rather
@@ -831,7 +831,7 @@ obvious temptation: assert a capability in prose without checking whether the
 capability exists.  The abstract of this manuscript survived exactly this
 failure once — a hand-written test-count and coverage line that no
 generator step had computed — and was corrected by replacing the literal
-numbers with `578` / `92.18` tokens filled in at render
+numbers with `578` / `91.88` tokens filled in at render
 time by `scripts/02_measure_test_coverage.py`.  `src/template_autopoiesis/core/honesty.py` exists to
 make that class of failure structurally harder: every load-bearing claim in
 this manuscript must resolve to a named function in a named file, and a
@@ -1052,7 +1052,7 @@ silently diverging from the source code that is supposed to back them.
 Reproducibility is not a claim this manuscript makes about itself; it is a
 property the code enforces on every run. Every number that appears below the
 Determinism heading — a1f3e428cf1fb3e3, 42, 578,
-92.18 — is a token substituted at render time by
+91.88 — is a token substituted at render time by
 `src/template_autopoiesis/manuscript/manuscript_variables.py::generate_variables()` from a live grammar load
 and a genuine current pytest measurement consumed or produced by
 `src/template_autopoiesis/manuscript/manuscript_variables.py::measure_test_summary()`.
@@ -1270,7 +1270,7 @@ report and aggregate tokens remain tied to that one original run.
 
 This section states what the exemplar does *not* do, alongside what it does.
 Coverage and test-count figures are not restated as literal numbers here —
-those live only in the `578` / `92.18` tokens, resolved
+those live only in the `578` / `91.88` tokens, resolved
 at render time from a live measurement
 (`src/template_autopoiesis/manuscript/manuscript_variables.py::measure_test_summary`), not hand-typed.
 
@@ -1354,7 +1354,7 @@ function, not that one.
 
 ### Coverage is uneven across modules
 
-The aggregate 92.18% combines covered statements and branch exits
+The aggregate 91.88% combines covered statements and branch exits
 across the measured source inventory. Passing the configured 90% aggregate gate
 (`--cov-fail-under=90`) does not establish a 90% floor for every module.
 [@fig:coverage_by_module] preserves the per-module spread and marks values below

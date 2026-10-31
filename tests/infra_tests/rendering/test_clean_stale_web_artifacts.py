@@ -114,20 +114,20 @@ def test_clean_stale_render_deliverables_removes_only_canonical_targets(tmp_path
         output_dir / "slides" / "deleted_section_slides.log",
         output_dir / "docx" / "sample_combined.docx",
         output_dir / "docx" / "old_project_combined.docx",
-        output_dir / "docx" / "legacy" / "sample_combined.docx",
-        output_dir / "docx" / "legacy" / "old_project_combined.docx",
+        output_dir / "docx" / "nested" / "sample_combined.docx",
+        output_dir / "docx" / "nested" / "old_project_combined.docx",
         output_dir / "epub" / "sample_combined.epub",
         output_dir / "epub" / "old_project_combined.epub",
-        output_dir / "epub" / "legacy" / "sample_combined.epub",
-        output_dir / "epub" / "legacy" / "old_project_combined.epub",
+        output_dir / "epub" / "nested" / "sample_combined.epub",
+        output_dir / "epub" / "nested" / "old_project_combined.epub",
         output_dir / "reports" / "manuscript_composition.json",
     ]
     preserved = [
         output_dir / "pdf" / "independent_report.pdf",
         output_dir / "web" / "dashboard.html",
         output_dir / "slides" / "hand_authored_deck.pdf",
-        output_dir / "docx" / "legacy" / "authored_notes.docx",
-        output_dir / "epub" / "legacy" / "reference_reader.epub",
+        output_dir / "docx" / "nested" / "authored_notes.docx",
+        output_dir / "epub" / "nested" / "reference_reader.epub",
     ]
     for path in [*canonical, *preserved]:
         path.parent.mkdir(parents=True, exist_ok=True)

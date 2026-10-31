@@ -192,6 +192,21 @@ def test_hypothesis_entry_missing_required_fields() -> None:
     assert any("missing required field 'description'" in m for m in issues)
 
 
+@pytest.mark.parametrize("evidence_id", [None, "", "  ", 7])
+def test_hypothesis_id_must_be_nonempty_string(evidence_id) -> None:
+    definition = {"id": evidence_id, "name": "Claim", "description": "Evidence", "scope": "study"}
+    issues = validate_hypothesis_config({"project_config": {"hypothesis_definitions": {"row": definition}}})
+    assert issues == ["Hypothesis row: missing required field 'id'"]
+
+
+def test_hypothesis_ids_must_be_unique() -> None:
+    definition = {"id": "SAME", "name": "Claim", "description": "Evidence", "scope": "study"}
+    config = {
+        "project_config": {"hypothesis_definitions": {"first": definition, "second": {**definition, "id": " SAME "}}}
+    }
+    assert validate_hypothesis_config(config) == ["Hypothesis second: duplicate id 'SAME'"]
+
+
 def test_sampling_must_be_mapping() -> None:
     issues = validate_sampling_config({"project_config": {"sampling": 3}})
     assert "project_config.sampling must be a mapping" in issues[0]
@@ -373,6 +388,7 @@ def test_check_config_health_valid_and_invalid(tmp_path: Path) -> None:
         "    term: modafinil\n"
         "  hypothesis_definitions:\n"
         "    H1:\n"
+        "      id: EFFICACY\n"
         "      name: efficacy\n"
         "      description: tested\n"
         "      scope: clinical\n",

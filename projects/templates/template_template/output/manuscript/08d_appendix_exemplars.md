@@ -9,7 +9,7 @@ The full public exemplar roster is: `templates/template_active_inference`, `temp
 
 | Project slug | Purpose | Highlights | Tests | Figures (Stage 02 hint) |
 |--------------|---------|------------|:-----:|:-----------------------|
-| `template_code_project` | Optimization tutorial | Convex demo figures, scripted tables | 263 discovered tests; 90% declared gate | Controlled matplotlib exports |
+| `template_code_project` | Optimization tutorial | Convex demo figures, scripted tables | 258 discovered tests; 90% declared gate | Controlled matplotlib exports |
 | `template_prose_project` | Prose-heavy workflow | Validates narrative-only repos | 165 | Lightweight / optional plots |
 | `template_autoresearch_project` | AutoResearch readiness | Planner + validation CLI | 318 | Readiness reports from Stage 02 |
 

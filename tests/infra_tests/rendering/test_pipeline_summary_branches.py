@@ -221,15 +221,7 @@ class TestPackageVerification:
         assert _verify_epub_output(project, "test_proj") is True
 
 
-class TestRenderOverrideAndConfigErrors:
-    def test_pdf_override_script_routes_to_pdf_only_contract(self, tmp_path: Path) -> None:
-        project = _scaffold_project(tmp_path)
-        scripts = project / "scripts"
-        scripts.mkdir(parents=True)
-        (scripts / "_render_pdf_override.py").write_text("# override\n", encoding="utf-8")
-        # No PDF outputs exist, so the legacy PDF-only contract must fail closed.
-        assert verify_render_outputs(PROJECT, repo_root=tmp_path) is False
-
+class TestRenderConfigErrors:
     def test_unreadable_config_fails_closed(self, tmp_path: Path) -> None:
         project = _scaffold_project(tmp_path)
         config = project / "manuscript" / "config.yaml"

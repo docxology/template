@@ -4,7 +4,6 @@ from __future__ import annotations
 
 import json
 import re
-import warnings
 from dataclasses import dataclass
 from datetime import datetime, timezone
 from pathlib import Path
@@ -12,7 +11,6 @@ from typing import Any
 
 from infrastructure.core.files.secure_write import atomic_write_text_confined, read_bytes_confined
 
-LEGACY_MEMORY_REL_PATH = Path(".cursor/hooks/state/continual-learning-memory.json")
 _MAX_MEMORY_BYTES = 256 * 1024
 
 MEMORY_REL_PATH = Path(".agents/state/continual-learning-memory.json")
@@ -149,18 +147,9 @@ def load_memory(repo_root: Path) -> dict[str, Any]:
         raw = read_bytes_confined(root, memory_path(root), max_bytes=_MAX_MEMORY_BYTES)
     except FileNotFoundError:
         try:
-            raw = read_bytes_confined(root, root / LEGACY_MEMORY_REL_PATH, max_bytes=_MAX_MEMORY_BYTES)
+            raw = read_bytes_confined(root, example_path(root), max_bytes=_MAX_MEMORY_BYTES)
         except FileNotFoundError:
-            try:
-                raw = read_bytes_confined(root, example_path(root), max_bytes=_MAX_MEMORY_BYTES)
-            except FileNotFoundError:
-                raw = json.dumps(empty_memory_payload()).encode()
-        else:
-            warnings.warn(
-                "Legacy .cursor memory is deprecated; save_memory writes .agents/state and preserves the original",
-                FutureWarning,
-                stacklevel=2,
-            )
+            raw = json.dumps(empty_memory_payload()).encode()
     raw_payload = json.loads(raw)
     if not isinstance(raw_payload, dict):
         raise ValueError("memory payload must be a JSON object")

@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" role="img" aria-labelledby="title description">
+<title id="title">Template 4.4.1: current contracts and an authenticated release path</title><desc id="description">Five stages connect current interfaces, source-root native execution, bounded CI, 25 standalone exemplars, and an exact-source authenticated release. The diagram describes the contract rather than completed acceptance.</desc>
+<defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 L8 4 L0 8Z" fill="#829ab1"/></marker><style>text {font-family:Arial,Helvetica,sans-serif}.heading {font-size:23px;font-weight:700;fill:#102a43}.body {font-size:18px;fill:#334e68}</style></defs>
+<rect width="1600" height="900" fill="#eef3f8"/>
+<text x="72" y="98" font-size="52" font-weight="700" fill="#102a43">template/ 4.4.1</text>
+<text x="74" y="146" font-size="25" fill="#334e68">Current interfaces. Real execution. Exact-source acceptance.</text>
+<rect x="1250" y="60" width="278" height="82" rx="12" fill="#e0f2ee" stroke="#7da99b"/><text x="1389" y="94" font-size="17" font-weight="700" text-anchor="middle" fill="#245c4b">RELEASE CONTRACT</text><text x="1389" y="122" font-size="18" text-anchor="middle" fill="#245c4b">Acceptance precedes publication</text>
+<g id="stage-1"><rect x="72" y="228" width="272" height="312" rx="15" fill="#fff" stroke="#cfdae5" stroke-width="2"/><rect x="96" y="252" width="42" height="30" rx="8" fill="#e2eaf3"/><text x="117" y="273" font-size="16" font-weight="700" text-anchor="middle" fill="#334e68">01</text><text x="96" y="326" class="heading">Current contracts</text>
+<text x="96" y="376" class="body">One supported API</text>
+<text x="96" y="412" class="body">Explicit data schemas</text>
+<text x="96" y="448" class="body">Owned generated files</text>
+<text x="96" y="484" class="body">All callers migrated</text>
+</g>
+<path d="M 348 388 H 362" fill="none" stroke="#829ab1" stroke-width="2" marker-end="url(#arrow)"/>
+<g id="stage-2"><rect x="368" y="228" width="272" height="312" rx="15" fill="#fff" stroke="#cfdae5" stroke-width="2"/><rect x="392" y="252" width="42" height="30" rx="8" fill="#e2eaf3"/><text x="413" y="273" font-size="16" font-weight="700" text-anchor="middle" fill="#334e68">02</text><text x="392" y="326" class="heading">Real native paths</text>
+<text x="392" y="376" class="body">Installed SDK execution</text>
+<text x="392" y="412" class="body">Source checkout roots</text>
+<text x="392" y="448" class="body">Locked dependencies</text>
+<text x="392" y="484" class="body">Held directory traversal</text>
+</g>
+<path d="M 644 388 H 658" fill="none" stroke="#829ab1" stroke-width="2" marker-end="url(#arrow)"/>
+<g id="stage-3"><rect x="664" y="228" width="272" height="312" rx="15" fill="#fff" stroke="#cfdae5" stroke-width="2"/><rect x="688" y="252" width="42" height="30" rx="8" fill="#e2eaf3"/><text x="709" y="273" font-size="16" font-weight="700" text-anchor="middle" fill="#334e68">03</text><text x="688" y="326" class="heading">Bounded CI</text>
+<text x="688" y="376" class="body">Measured shard weights</text>
+<text x="688" y="412" class="body">Complete contract jobs</text>
+<text x="688" y="448" class="body">Focused guide changes</text>
+<text x="688" y="484" class="body">Original result streams</text>
+</g>
+<path d="M 940 388 H 954" fill="none" stroke="#829ab1" stroke-width="2" marker-end="url(#arrow)"/>
+<g id="stage-4"><rect x="960" y="228" width="272" height="312" rx="15" fill="#fff" stroke="#cfdae5" stroke-width="2"/><rect x="984" y="252" width="42" height="30" rx="8" fill="#e2eaf3"/><text x="1005" y="273" font-size="16" font-weight="700" text-anchor="middle" fill="#334e68">04</text><text x="984" y="326" class="heading">25 exemplars</text>
+<text x="984" y="376" class="body">Coordinated SDK bindings</text>
+<text x="984" y="412" class="body">Independent own versions</text>
+<text x="984" y="448" class="body">Explicit scientific IDs</text>
+<text x="984" y="484" class="body">Canonical figure metadata</text>
+</g>
+<path d="M 1236 388 H 1250" fill="none" stroke="#829ab1" stroke-width="2" marker-end="url(#arrow)"/>
+<g id="stage-5"><rect x="1256" y="228" width="272" height="312" rx="15" fill="#fff" stroke="#cfdae5" stroke-width="2"/><rect x="1280" y="252" width="42" height="30" rx="8" fill="#e2eaf3"/><text x="1301" y="273" font-size="16" font-weight="700" text-anchor="middle" fill="#334e68">05</text><text x="1280" y="326" class="heading">Exact-source release</text>
+<text x="1280" y="376" class="body">Four Root host/minors</text>
+<text x="1280" y="412" class="body">Installed + native gates</text>
+<text x="1280" y="448" class="body">Authenticated handoff</text>
+<text x="1280" y="484" class="body">Retrieved asset checks</text>
+</g>
+<rect x="72" y="602" width="1456" height="148" rx="15" fill="#102a43"/>
+<text x="104" y="652" font-size="29" font-weight="700" fill="#fff">One accepted revision across source, runtime, artifacts, and publication</text>
+<text x="104" y="697" font-size="23" fill="#d8e5f1">Version identity  ·  complete census  ·  original observations  ·  installed readback  ·  asset hashes</text>
+<text x="74" y="813" font-size="19" fill="#526d82">Architecture overview. Complete exact-source acceptance and the authenticated handoff authorize publication.</text>
+<text x="74" y="847" font-size="17" fill="#526d82">This diagram is not a test receipt, scientific result, or certification.</text>
+</svg>

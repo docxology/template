@@ -111,7 +111,7 @@ project_config:
     assert args.llm_model == "test-model"
 
 
-def test_kg_runner_removes_legacy_checkpoint(
+def test_kg_runner_preserves_unrelated_checkpoint(
     sample_papers: list,
     tmp_path: Path,
 ) -> None:
@@ -125,8 +125,8 @@ def test_kg_runner_removes_legacy_checkpoint(
     data_dir = output_dir / "data"
     data_dir.mkdir(parents=True)
     _seed_nanopubs(corpus, data_dir / "nanopublications.jsonl")
-    legacy = output_dir / "llm_checkpoint.jsonl"
-    legacy.write_text('{"legacy": true}\n', encoding="utf-8")
+    retained = output_dir / "llm_checkpoint.jsonl"
+    retained.write_text('{"retained": true}\n', encoding="utf-8")
 
     args = argparse.Namespace(
         corpus=str(corpus_path),
@@ -140,7 +140,7 @@ def test_kg_runner_removes_legacy_checkpoint(
     )
     project_root = Path(__file__).resolve().parents[2]
     run_knowledge_graph_pipeline(args, project_root=project_root)
-    assert not legacy.exists()
+    assert retained.read_text(encoding="utf-8") == '{"retained": true}\n'
 
 
 def test_kg_runner_scopes_cached_assertions_to_current_cap(

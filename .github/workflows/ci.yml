@@ -164,8 +164,6 @@ jobs:
       - name: Run exact functional shard with original pytest observations
         env:
           SHARD: ${{ matrix.shard }}
-          # Measured per-module duration decides the pytest-xdist budget.
-          TEMPLATE_CI_XDIST: ${{ matrix.workers }}
         run: |
           .venv/bin/python -m infrastructure.core.testing.ci_execution_user run \
             --state "$RUNNER_TEMP/template-ci-execution/state.json" -- \
@@ -188,7 +186,6 @@ jobs:
     name: "Changed contract (${{ matrix.module }})"
     needs: detect-projects
     # Documentation-only changes run the documentation shard instead.
-    if: needs.detect-projects.outputs.docs_only != 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 120
     strategy:
@@ -368,6 +365,7 @@ jobs:
     steps:
       - name: Require every functional job and the declared coverage outcome
         env:
+          DOCS_ONLY: ${{ needs.detect-projects.outputs.docs_only }}
           COVERAGE_REQUESTED: ${{ github.event_name == 'workflow_dispatch' && inputs.coverage-project != '' }}
           NEEDS_JSON: ${{ toJson(needs) }}
         run: |
@@ -376,10 +374,15 @@ jobs:
             true|false) ;;
             *) echo "coverage request must be the exact declared boolean" >&2; exit 1 ;;
           esac
-          jq -e --arg requested "$COVERAGE_REQUESTED" '
+          case "$DOCS_ONLY" in
+            true|false) ;;
+            *) echo "documentation selection must be the exact declared boolean" >&2; exit 1 ;;
+          esac
+          jq -e --arg requested "$COVERAGE_REQUESTED" --arg docs "$DOCS_ONLY" '
             type == "object"
             and keys == ["actionlint", "detect-projects", "lint", "own-exemplar-coverage", "test-contract", "test-infra", "test-project"]
-            and (del(."own-exemplar-coverage") | all(.[]; .result == "success"))
+            and (del(."own-exemplar-coverage", ."test-project") | all(.[]; .result == "success"))
+            and (."test-project".result == (if $docs == "true" then "skipped" else "success" end))
             and (."own-exemplar-coverage".result == (if $requested == "true" then "success" else "skipped" end))
           ' <<< "$NEEDS_JSON"
           echo "CI Gate passed for the functional jobs and declared coverage request." >> "$GITHUB_STEP_SUMMARY"

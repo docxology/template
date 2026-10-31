@@ -393,8 +393,7 @@ def ensure_setmathfont(preamble: str, math_font: str = "latinmodern-math.otf") -
 
 ### Combined PDF helpers (`_pdf_combined_*.py`)
 
-`PDFRenderer.render_combined()` delegates to focused modules (re-exported from
-`_pdf_combined_renderer.py` for backward compatibility):
+`PDFRenderer.render_combined()` delegates to focused modules:
 
 | Module | Role |
 | --- | --- |
@@ -476,7 +475,7 @@ defends against this on two complementary axes:
 
 1. **Adaptive `--slide-level` (2–4)**: chooses the deepest useful heading
    level present in the source, capped at h4. This gives dense sections real
-   frame boundaries while preserving the legacy level-2 behavior for shallow
+   frame boundaries while preserving level-2 composition for shallow
    sources.
 2. **`--lua-filter _beamer_allowframebreaks.lua`**: the filter tags
    every h1/h2 with the `allowframebreaks` class, so Pandoc emits
@@ -697,12 +696,4 @@ def render_web_command(args):
 ```python
 def main():
     """Main CLI entry point for rendering tools."""
-```
-
-### render_all_cli.py
-
-#### main (function)
-```python
-def main():
-    """Main function for render all CLI."""
 ```

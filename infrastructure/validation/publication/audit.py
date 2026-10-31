@@ -26,7 +26,7 @@ from infrastructure.validation.evidence_registry import (
     validate_text_against_registry,
 )
 from infrastructure.validation.output.artifacts import read_artifact_manifest
-from infrastructure.validation.output.no_mock_enforcer import validate_no_mocks
+from infrastructure.validation.output.no_mock_enforcer import scan_lexical_mock_policy
 from infrastructure.validation.publication.models import PublicationAuditReport, PublicationFinding
 from infrastructure.validation.publication.rendered_provenance import (
     RenderedProvenanceValidation,
@@ -151,7 +151,8 @@ def check_no_mocks(ctx: AuditContext) -> Iterable[PublicationFinding]:
     tests_dir = ctx.project_root / "tests"
     if not tests_dir.is_dir():
         return
-    for violation in validate_no_mocks(tests_dir, ctx.project_root):
+    scan = scan_lexical_mock_policy(tests_dir, ctx.project_root)
+    for violation in (*scan.violations, *scan.errors):
         yield _finding(
             ctx,
             path=f"projects/{ctx.project}/tests",

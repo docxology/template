@@ -48,13 +48,8 @@ if(packedRaw){
 if(face.data!==undefined||face.encoding!==undefined)throw Error('Mixed Source font transports');
 raw=packedRaw.slice(offset,offset+face.bytes);offset+=face.bytes;
 }else{
-const encoded=Uint8Array.from(atob(face.data),c=>c.charCodeAt(0));
-const encoding=face.encoding===undefined?'base64':face.encoding;
-if(encoding==='base64')raw=encoded;
-else if(encoding==='gzip-base64'){
-const stream=new Blob([encoded]).stream().pipeThrough(new DecompressionStream('gzip'));
-raw=new Uint8Array(await new Response(stream).arrayBuffer());
-}else throw Error('Unsupported Source font transport encoding');
+if(face.encoding!==undefined)throw Error('Unsupported Source font transport encoding');
+raw=Uint8Array.from(atob(face.data),c=>c.charCodeAt(0));
 }
 const hash=Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',raw))).map(n=>n.toString(16).padStart(2,'0')).join('');
 if(raw.length!==face.bytes||hash!==face.sha256)throw Error('Source font buffer changed');

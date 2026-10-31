@@ -3,7 +3,7 @@
 Background
 ----------
 Modules that perform top-level re-exports (e.g. ``from foo import Bar`` with
-``# noqa: F401`` or backwards-compat hub modules) must declare ``__all__`` so
+``# noqa: F401`` or declared package exports) must declare ``__all__`` so
 that:
 
 1. ``mypy --strict`` does not flag downstream callers with

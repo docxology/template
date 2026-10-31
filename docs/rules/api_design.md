@@ -319,7 +319,7 @@ Negative control: `test_top_level_f401_without_all_is_violation`
 ([`tests/infra_tests/skills/test_all_exports_audit.py`](../../tests/infra_tests/skills/test_all_exports_audit.py))
 asserts a top-level re-export without `__all__` is flagged by the exports audit.
 
-A module is a "re-exporter" if it has at least one top-level `from X import Y` statement carrying a `# noqa: F401` marker (the canonical marker for an intentional backwards-compat re-export). Examples include `infrastructure/core/exceptions.py`, `infrastructure/core/runtime/environment.py`, and any package `__init__.py` that flattens a sub-tree.
+A module is a "re-exporter" if it has at least one top-level `from X import Y` statement carrying a `# noqa: F401` marker (the canonical marker for an intentional public re-export). Examples include `infrastructure/core/exceptions.py`, `infrastructure/core/runtime/environment.py`, and any package `__init__.py` that flattens a sub-tree.
 
 **Why this matters:**
 - Under `mypy --strict`, downstream callers cannot import re-exported names unless `__all__` is declared. Missing `__all__` produces `[attr-defined]` errors at every call site.
@@ -338,7 +338,7 @@ A module is a "re-exporter" if it has at least one top-level `from X import Y` s
 - Filenames starting with `_` are private and skipped by the audit; `__init__.py` is public.
 
 ```python
-# Re-exports for backwards compatibility
+# Declared public exports
 from infrastructure.publishing.announcement import (  # noqa: F401
     create_publication_announcement,
     generate_doi_badge,
@@ -537,37 +537,12 @@ async def main():
 
 ## API Versioning
 
-### Version Indicators
-
-```python
-# ✅ GOOD: Version-aware APIs
-def process_data_v1(data: list[dict]) -> dict:
-    """Process data (version 1)."""
-    # Legacy implementation
-    pass
-
-def process_data(data: list[dict], *, version: str = "v2") -> dict:
-    """Process data with version support.
-
-    Args:
-        data: Data to process
-        version: API version to use ("v1" or "v2")
-
-    Returns:
-        Processing results
-    """
-    if version == "v1":
-        return process_data_v1(data)
-    elif version == "v2":
-        # Current implementation
-        return process_data_v2(data)
-    else:
-        raise ValueError(f"Unsupported version: {version}")
-
-# Usage
-result = process_data(data, version="v1")  # Backward compatibility
-result = process_data(data)  # Latest version (v2)
-```
+Expose one current implementation for each operation. When an interface changes,
+update every repository and exemplar caller, its behavioral tests, declared
+exports, and usage documentation in the same change. Persisted data formats must
+declare their schema explicitly and reject unsupported versions before use.
+Record the changed contract in the release notes; do not dispatch among obsolete
+implementations through a version argument.
 
 ## API Documentation
 
@@ -709,7 +684,7 @@ def test_api_composition():
 
 This repository follows the clean-break doctrine in [`docs/rules/refactoring.md`](refactoring.md):
 rename or reshape APIs in one atomic pass and update every caller. Do **not** add
-backward-compatible wrapper functions, dual constructors, or deprecated aliases.
+duplicate wrapper functions, parallel constructors, or redundant aliases.
 
 When an external API must change:
 

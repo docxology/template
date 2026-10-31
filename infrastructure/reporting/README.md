@@ -27,6 +27,28 @@ one held Source boundary, then closes the original Source, SDK and fixture check
 before returning. `native_preparation_progress.py` emits bounded phase labels and
 remaining time for diagnostics; progress output never grants native admission.
 
+`native_worker_startup_diagnostics.py` embeds fixed, bounded startup observations
+in the Source-owned native worker command without importing candidate code before
+SDK admission. Samples show an anchored worker/bootstrap frame and its callers,
+not the active callee. Missing records remain unknown; a blocked diagnostic writer
+can outlive cancellation. These observations do not certify execution or cleanup.
+During the existing worker execution only, an owner-PID/thread-checked ContextVar
+routes fixed begin/returned/raised setup boundaries to that same bounded sink.
+Execution phase records do not replace the caller-owned worker/bootstrap sampler
+anchor; suspended diagnostic helper frames never become its anchor.
+Entry labels bracket the actual context manager entry, not its later body/exit.
+Mermaid ToolAPI return is separate from the retained Node process end: producer
+verification and retained DATA checks can still run after the process exits.
+The unchanged V1 eight-field schema reports wall-clock observations, not process
+CPU. Existing queue/event/byte/deadline caps can drop observations; a missing
+returned/raised record does not identify an interrupted callee.
+The 84 allowlisted phase slots reserve capacity inside the original 96-record
+cap: anchored-stack observations may consume at most 12 records across all six
+sample times. Diagnostic delivery is still best-effort, never guaranteed.
+Retention phases are active only inside the fixed Mermaid Node-version ToolAPI
+call; later unrelated tool custody cannot reuse those labels. Post-Node guard
+entry and full-guard completion are separate from its DATA/observation body.
+
 ## Overview
 
 The reporting module provides reporting capabilities for pipeline execution, including:

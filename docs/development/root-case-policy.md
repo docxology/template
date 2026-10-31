@@ -3,7 +3,9 @@
 The platform declares policy version 3 and its prerequisites in
 [`pyproject.toml`](../../pyproject.toml). Its complete literal policy uses
 [`root-case-policy.json`](../../infrastructure/config/root-case-policy.json)
-and the derived source parts. The parser also supports legacy version 2.
+and the derived source parts. Declaration and policy admission require this exact
+current version. Runtime, census and plan record versions remain independent
+contracts.
 
 Root runtime acceptance requires a fresh complete case inventory and independently
 reviewed classification before execution. Source changes to test modules or public

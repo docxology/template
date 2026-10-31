@@ -14,9 +14,10 @@ import json
 from pathlib import Path
 from typing import Any
 
+from template_gold_refinement.parsing import load_json_object
+
 from ._common import (
     FIGURE_SPECS,
-    _load_json_object,
     _quality_record,
     logger,
 )
@@ -61,7 +62,7 @@ def write_figure_quality_report(project_root: Path) -> Path:
     reports_dir = project_root / "output" / "reports"
     reports_dir.mkdir(parents=True, exist_ok=True)
     records = [_quality_record(output_dir, spec) for spec in FIGURE_SPECS]
-    registry = _load_json_object(output_dir / "figure_registry.json")
+    registry = load_json_object(output_dir / "figure_registry.json")
     registry_labels = {str(item.get("label", "")) for item in registry.get("figures", []) if isinstance(item, dict)}
     spec_labels = {spec.label for spec in FIGURE_SPECS}
     payload = {

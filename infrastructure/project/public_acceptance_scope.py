@@ -2,12 +2,10 @@
 
 from __future__ import annotations
 
-import ast
 from collections.abc import Callable
-import tomllib
 from dataclasses import dataclass
 from pathlib import Path
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING
 
 from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
 
@@ -18,23 +16,6 @@ if TYPE_CHECKING:
 
 class MissingRootCasePolicy(ValueError):
     """Root execution cannot begin without its reviewed offline case policy."""
-
-
-_ROOT_POLICY = {"schema_version": 1, "selection": "complete-offline"}
-_OPT_IN_MARKERS = frozenset(
-    {
-        "requires_ollama",
-        "requires_docker",
-        "network",
-        "requires_network",
-        "requires_credentials",
-        "requires_zenodo",
-        "requires_github",
-        "requires_arxiv",
-        "private_project",
-        "external_fixture",
-    }
-)
 
 
 @dataclass(frozen=True)
@@ -99,7 +80,7 @@ class RuntimeScope:
         )
 
     def require_case_units(self, reader: SnapshotReader | None = None) -> tuple[RootCaseUnit, ...]:
-        """Load v2 declarations without authorizing collection, execution or v1 exclusions."""
+        """Load current declarations without authorizing collection or execution."""
         if self.name != "root":
             raise ValueError("Root case units are unavailable for exemplar runtime scopes")
         from infrastructure.project.public_root_case_admission import load_policy
@@ -109,33 +90,3 @@ class RuntimeScope:
         selected = reader or SnapshotReader(self.root)
         policy, _, _, prerequisites = load_policy(selected)
         return declared_units(policy, prerequisites)
-
-    def require_case_policy(self, reader: SnapshotReader | None = None) -> dict[str, Any]:
-        """Require the legacy v1 complete-offline policy for owned controls.
-
-        This control-only method rejects the platform's declared v3 policy.
-        Production v3 policy and prerequisite loading uses require_case_units
-        and public_root_case_admission.load_policy. Runtime admission separately
-        requires a fresh complete census and independently reviewed classification.
-        Missing or incompatible declarations fail closed without case exclusions.
-        """
-        if self.name != "root":
-            return {}
-        from infrastructure.reporting.release_readiness_snapshot import SnapshotReader
-
-        reader = reader or SnapshotReader(self.root)
-        metadata = tomllib.loads(reader.read("pyproject.toml").content.decode())
-        policy = metadata.get("tool", {}).get("template", {}).get("root_acceptance")
-        if not isinstance(policy, dict) or policy != _ROOT_POLICY or type(policy.get("schema_version")) is not int:
-            raise MissingRootCasePolicy("ROOT-ACCEPTANCE-CASE-POLICY-1: reviewed root offline case policy is missing")
-        # This initial policy cannot reclassify known opt-in cases as core.
-        policy_sources = sorted((self.base / "tests").rglob("*.py")) + sorted(self.base.glob("*.py"))
-        for path in policy_sources:
-            tree = ast.parse(reader.read(path.relative_to(self.root).as_posix()).content, filename=str(path))
-            if any(isinstance(node, ast.Attribute) and node.attr in _OPT_IN_MARKERS for node in ast.walk(tree)):
-                raise MissingRootCasePolicy(
-                    "ROOT-ACCEPTANCE-CASE-POLICY-1: root contains opt-in cases needing classification"
-                )
-        if not reader.unchanged():
-            raise ValueError("root case policy/source changed while admitted")
-        return dict(policy)

@@ -1,16 +1,19 @@
 # Release boundary
 
-The root package metadata declares the **4.3.0** candidate. Its changelog
-entry records the frozen release intent; publication remains pending until the
-acceptance and publication steps below pass. The 4.3.0 preparation applied two
-reviewed minor metadata transactions (4.1.0 → 4.2.0 → 4.3.0); 4.2.0 is an applied
-intermediate metadata step and was never published. Final release-intent metadata
-must be included in the exact revision submitted for release acceptance.
-The prepared 4.0.0, 4.0.1 and 4.0.2 candidates were not published; their notes are retained. Tagging and publication require the verified
-acceptance and publication steps below. The earlier recorded root release is `3.8.0` /
-`v3.8.0`; its original publication evidence is retained in
-[subsystem history](subsystem-status-history.md). Historical standalone release
-entries do not version the root package.
+The root package metadata declares the **4.5.0** candidate. Its changelog and
+release notes record the release intent; publication remains pending until the
+acceptance and publication steps below pass. The coordinated minor transaction
+moves the root SDK, all 25 exemplar SDK requirements and their publication
+platform bindings from the unpublished 4.4.1 preparation to 4.5.0 while retaining
+exemplar own versions. Current release guidance is in [the 4.5.0 notes](../releases/v4.5.0.md).
+The existing `v4.4.0` tag remains bound to its failed candidate and is not reused.
+Final release-intent metadata must be included in the exact revision submitted
+for release acceptance.
+
+Earlier unpublished candidate notes remain historical records. The earlier
+recorded root release is `3.8.0` / `v3.8.0`; its original publication evidence is
+retained in [subsystem history](subsystem-status-history.md). Historical
+standalone release entries do not version the root package.
 
 Before the next root release, reconcile these surfaces together:
 

@@ -14,6 +14,8 @@ import json
 import math
 import os
 import re
+import tempfile
+import time
 from collections.abc import Iterator, Mapping
 from contextlib import contextmanager
 from dataclasses import dataclass
@@ -55,7 +57,7 @@ from infrastructure.documentation._coverage_snapshot_output import CoverageSnaps
 COVERAGE_PROVENANCE_RELATIVE_PATH = Path("docs/_generated/coverage_snapshot.json")
 COVERAGE_PROVENANCE_SCHEMA_VERSION = 5
 COVERAGE_SOURCE_INVENTORY_MODE = "tracked-and-nonignored-coverage-inputs-v3"
-EXEMPLAR_SNAPSHOT_DATE = "2026-10-27"
+EXEMPLAR_SNAPSHOT_DATE = "2026-10-30"
 COVERAGE_MEASUREMENT_TIMEOUT_SECONDS = 1800
 _ACTIVE_COVERAGE_PROJECT = "template_active_inference"
 
@@ -157,18 +159,18 @@ class ExemplarSnapshot:
 
 
 EXEMPLAR_SNAPSHOT: tuple[ExemplarSnapshot, ...] = (
-    ExemplarSnapshot("template_active_inference", "90.99 %"),
-    ExemplarSnapshot("template_advanced_literature_review", "94.20 %"),
-    ExemplarSnapshot("template_autopoiesis", "92.03 %"),
-    ExemplarSnapshot("template_autoresearch_project", "96.33 %"),
-    ExemplarSnapshot("template_autoscientists", "92.93 %"),
-    ExemplarSnapshot("template_code_project", "94.22 %"),
+    ExemplarSnapshot("template_active_inference", "91.00 %"),
+    ExemplarSnapshot("template_advanced_literature_review", "94.27 %"),
+    ExemplarSnapshot("template_autopoiesis", "91.88 %"),
+    ExemplarSnapshot("template_autoresearch_project", "96.49 %"),
+    ExemplarSnapshot("template_autoscientists", "92.95 %"),
+    ExemplarSnapshot("template_code_project", "94.28 %"),
     ExemplarSnapshot("template_data_descriptor", "96.26 %"),
     ExemplarSnapshot("template_eda_notebook", "91.01 %"),
     ExemplarSnapshot("template_experiment_tree", "91.85 %"),
-    ExemplarSnapshot("template_formal", "90.55 %"),
-    ExemplarSnapshot("template_gold_refinement", "91.65 %"),
-    ExemplarSnapshot("template_literature_meta_analysis", "95.57 %"),
+    ExemplarSnapshot("template_formal", "90.39 %"),
+    ExemplarSnapshot("template_gold_refinement", "92.80 %"),
+    ExemplarSnapshot("template_literature_meta_analysis", "95.48 %"),
     ExemplarSnapshot("template_madlib", "98.95 %"),
     ExemplarSnapshot("template_methods_paper", "99.00 %"),
     ExemplarSnapshot("template_newspaper", "99.25 %"),
@@ -177,11 +179,11 @@ EXEMPLAR_SNAPSHOT: tuple[ExemplarSnapshot, ...] = (
     ExemplarSnapshot("template_prose_project", "91.67 %"),
     ExemplarSnapshot("template_redacted_report", "97.03 %"),
     ExemplarSnapshot("template_registered_report", "95.19 %"),
-    ExemplarSnapshot("template_search_project", "91.88 %"),
+    ExemplarSnapshot("template_search_project", "92.00 %"),
     ExemplarSnapshot("template_sia", "92.72 %"),
     ExemplarSnapshot("template_storybook", "95.38 %"),
-    ExemplarSnapshot("template_template", "95.57 %"),
-    ExemplarSnapshot("template_textbook", "96.28 %"),
+    ExemplarSnapshot("template_template", "95.55 %"),
+    ExemplarSnapshot("template_textbook", "96.01 %"),
 )
 
 
@@ -369,8 +371,64 @@ class CoverageVerificationResult:
     report: str
 
 
-def measure_exemplar_coverage(repo_root: Path, name: str) -> str:
-    """Run one exemplar's release-profile coverage gate and return its total."""
+def _validated_diagnostics_directory(repo_root: Path, directory: Path | None) -> Path | None:
+    if directory is None:
+        return None
+    resolved = directory.resolve(strict=True)
+    if not resolved.is_dir():
+        raise ValueError("coverage diagnostics directory must be an existing directory")
+    for protected in (repo_root.resolve(), Path(__file__).resolve().parents[2]):
+        if resolved.is_relative_to(protected):
+            raise ValueError("coverage diagnostics directory must be outside the repository and selected SDK")
+    return resolved
+
+
+def _retain_coverage_result(
+    directory: Path | None,
+    name: str,
+    phase: str,
+    result: BoundedSubprocessResult,
+    policy: SubprocessPolicy,
+    elapsed_seconds: float,
+) -> None:
+    """Retain original complete streams before concise failure presentation."""
+    if directory is None:
+        return
+    streams = {"stdout": f"{phase}.stdout.log", "stderr": f"{phase}.stderr.log"}
+    for stream, filename in streams.items():
+        with (directory / filename).open("x", encoding="utf-8") as output:
+            output.write(getattr(result, stream))
+    record = {
+        "schema_version": "template-exemplar-coverage-diagnostics/1",
+        "project": name,
+        "profile": "release",
+        "phase": phase,
+        "policy_id": policy.policy_id,
+        "timeout_seconds": policy.timeout_seconds,
+        "guardian_startup_timeout_seconds": policy.guardian_startup_timeout_seconds,
+        "elapsed_seconds": elapsed_seconds,
+        "returncode": result.returncode,
+        "original_returncode": result.original_returncode,
+        "timed_out": result.timed_out,
+        "custody_refused": result.custody_refused,
+        "command_error": result.command_error,
+        "pid": result.pid,
+        **streams,
+    }
+    # Metadata is last: its presence means both complete streams were retained.
+    with (directory / f"{phase}.json").open("x", encoding="utf-8") as output:
+        json.dump(record, output, indent=2)
+        output.write("\n")
+
+
+def measure_exemplar_coverage(repo_root: Path, name: str, *, diagnostics_directory: Path | None = None) -> str:
+    """Run release-profile coverage, optionally retaining complete subprocess evidence.
+
+    Diagnostics use a new project-named subdirectory per attempt in an existing
+    directory outside the repository and selected SDK. Prior attempts are never
+    overwritten; ordinary callers continue to receive only the percentage.
+    """
+    diagnostics_root = _validated_diagnostics_directory(repo_root, diagnostics_directory)
     canonical_project_dir = repo_root.resolve() / "projects" / "templates" / name
     if not canonical_project_dir.is_dir():
         raise RuntimeError(f"exemplar not checked out: {name}")
@@ -380,6 +438,11 @@ def measure_exemplar_coverage(repo_root: Path, name: str) -> str:
         raise RuntimeError(
             f"prepared own Python environment is required for {name}; run locked setup before measurement"
         )
+    diagnostics = (
+        Path(tempfile.mkdtemp(prefix=f"{canonical_project_dir.name}-", dir=diagnostics_root))
+        if diagnostics_root is not None
+        else None
+    )
     with _coverage_measurement_workspace(repo_root, name) as (environment_project, measurement_project):
         data_file = _fresh_coverage_measurement_data_file(measurement_project, name)
         env = _coverage_measurement_environment(data_file)
@@ -391,11 +454,15 @@ def measure_exemplar_coverage(repo_root: Path, name: str) -> str:
         measurement_policy = _coverage_measurement_process_policy(name)
         strategy = _coverage_measurement_strategy(name)
         try:
+            started = time.monotonic()
             run = run_with_policy(
                 command,
                 cwd=repo_root,
                 env=env,
                 policy=measurement_policy,
+            )
+            _retain_coverage_result(
+                diagnostics, name, "measurement", run, measurement_policy, time.monotonic() - started
             )
             if run.timed_out:
                 raise RuntimeError(
@@ -410,13 +477,20 @@ def measure_exemplar_coverage(repo_root: Path, name: str) -> str:
                 measurement_project,
                 environment_project_dir=environment_project,
             )
+            report_policy = _coverage_process_policy("coverage-report", 300)
+            started = time.monotonic()
             report = run_with_policy(
                 report_command,
                 cwd=repo_root,
                 env=env,
-                policy=_coverage_process_policy("coverage-report", 300),
+                policy=report_policy,
             )
+            _retain_coverage_result(diagnostics, name, "report", report, report_policy, time.monotonic() - started)
             return _validated_coverage_report(report, name)
+        except RuntimeError as exc:
+            if diagnostics is not None:
+                raise RuntimeError(f"{exc}\ncomplete coverage diagnostics: {diagnostics}") from exc
+            raise
         finally:
             data_file.unlink(missing_ok=True)
 
@@ -426,12 +500,14 @@ def verify_exemplar_coverage_result(
     *,
     rewrite: bool = False,
     snapshot_output: Path | None = None,
+    diagnostics_directory: Path | None = None,
 ) -> CoverageVerificationResult:
     """Re-measure every exemplar; write only an explicitly admitted DATA copy."""
     if rewrite and snapshot_output is None:
         raise ValueError("--verify-coverage --write requires --coverage-snapshot-output with a retained DATA copy")
     if not rewrite and snapshot_output is not None:
         raise ValueError("--coverage-snapshot-output requires --verify-coverage --write")
+    diagnostics_root = _validated_diagnostics_directory(repo_root, diagnostics_directory)
     admitted_output = (
         CoverageSnapshotOutput.admit(repo_root, snapshot_output, Path(__file__))
         if snapshot_output is not None
@@ -441,7 +517,7 @@ def verify_exemplar_coverage_result(
     failures: list[str] = []
     for row in EXEMPLAR_SNAPSHOT:
         try:
-            measured[row.name] = measure_exemplar_coverage(repo_root, row.name)
+            measured[row.name] = measure_exemplar_coverage(repo_root, row.name, diagnostics_directory=diagnostics_root)
         except RuntimeError as exc:
             failures.append(f"{row.name}: {exc}")
 
@@ -510,14 +586,6 @@ def _finalize_exemplar_coverage_result(
         measured_count=len(measured),
         report="\n".join(lines),
     )
-
-
-def verify_exemplar_coverage(
-    repo_root: Path, *, rewrite: bool = False, snapshot_output: Path | None = None
-) -> tuple[bool, str]:
-    """Re-measure coverage while preserving the historical tuple interface."""
-    result = verify_exemplar_coverage_result(repo_root, rewrite=rewrite, snapshot_output=snapshot_output)
-    return result.all_match, result.report
 
 
 def _rewrite_exemplar_snapshot(measured: dict[str, str], snapshot_output: CoverageSnapshotOutput | None = None) -> None:
@@ -792,7 +860,6 @@ __all__ = [
     "exemplar_source_hash",
     "measure_exemplar_coverage",
     "validate_coverage_provenance",
-    "verify_exemplar_coverage",
     "verify_exemplar_coverage_result",
     "write_coverage_provenance",
 ]

@@ -161,7 +161,6 @@ def test_phase_variables_extractor_computes_totals_and_llm_filter_rate(tmp_path:
     variables = extract_phase_variables(ctx)
 
     assert variables["TOTAL_PHASES"] == "2"
-    assert variables["CORPUS_SIZE"] == "42"
     assert variables["PHASE_CORPUS_SIZE"] == "42"
     assert variables["PHASE_1_NAME"] == "Foundation"
     assert variables["PHASE_1_PAPERS"] == "10"
@@ -272,7 +271,7 @@ def test_advanced_variables_use_recorded_artifacts(tmp_path: Path) -> None:
             "keywords": ["spectra", "retrieval"],
         },
     )
-    assert variables["CORPUS_SIZE"] == "3"
+    assert variables["PHASE_CORPUS_SIZE"] == "3"
     assert variables["ABSTRACT_COVERAGE_PCT"] == "50.0"
     assert variables["YEAR_SPAN"] == "2"
     assert variables["ENGINE_LIST"] == "arXiv"
@@ -421,6 +420,7 @@ def test_configuration_file_boundary_and_require_helpers(tmp_path: Path) -> None
         "    term: topic\n"
         "  hypothesis_definitions:\n"
         "    H:\n"
+        "      id: HYPOTHESIS\n"
         "      name: Hypothesis\n"
         "      description: Description\n"
         "      scope: Scope\n",

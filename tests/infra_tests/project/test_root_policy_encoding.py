@@ -68,7 +68,7 @@ def test_literal_and_encoded_source_load_use_the_same_full_policy_admission(tmp_
     manifest, pieces = encode_policy(value)
     _write(tmp_path, manifest, pieces)
     (tmp_path / "pyproject.toml").write_text(
-        "[tool.template.root_acceptance]\nschema_version=2\n"
+        "[tool.template.root_acceptance]\nschema_version=3\n"
         f'policy="{_POLICY}"\nprerequisites="infrastructure/config/owned-prerequisites.json"\n'
     )
     (tmp_path / "infrastructure/config/owned-prerequisites.json").write_text(
@@ -181,3 +181,25 @@ def test_manifest_duplicate_fields_are_rejected_before_policy_dispatch(tmp_path:
 def test_part_paths_are_derived_from_exact_source_configuration(reference: str) -> None:
     with pytest.raises(ValueError, match="exact public"):
         policy_part_path(reference, 0)
+
+
+@pytest.mark.parametrize("schema", ["1", "2", "4", "true", '"3"'])
+def test_current_policy_admission_rejects_other_declarations_before_reading_policy(tmp_path: Path, schema: str) -> None:
+    from infrastructure.project.public_acceptance_scope import MissingRootCasePolicy
+    from infrastructure.project.public_root_case_admission import declaration
+
+    (tmp_path / "pyproject.toml").write_text(
+        f"[tool.template.root_acceptance]\nschema_version={schema}\n"
+        f'policy="{_POLICY}"\nprerequisites="infrastructure/config/owned-prerequisites.json"\n'
+    )
+    with pytest.raises(MissingRootCasePolicy, match="schema3"):
+        declaration(SnapshotReader(tmp_path))
+    assert not (tmp_path / _POLICY).exists()
+
+
+@pytest.mark.parametrize("schema", ["template-root-case-policy-v1", "template-root-case-policy-v2", "unknown"])
+def test_current_policy_parser_rejects_other_versions(schema: str) -> None:
+    value = _value()
+    value["schema_version"] = schema
+    with pytest.raises(ValueError, match="unsupported Root case policy schema"):
+        RootCasePolicy.parse(value)

@@ -11,7 +11,7 @@ import pytest
 
 from infrastructure.llm.core.sanitization import (
     InputSanitizer,
-    SecurityError,
+    SecurityViolation,
     get_input_sanitizer,
     sanitize_llm_input,
 )
@@ -65,9 +65,9 @@ class TestInputSanitizer:
         assert "\n\n\n\n" not in result
 
     def test_sanitize_prompt_non_string_raises_error(self):
-        """Test that non-string prompts raise SecurityError."""
+        """Test that non-string prompts raise SecurityViolation."""
         sanitizer = InputSanitizer()
-        with pytest.raises(SecurityError, match="Prompt must be a string"):
+        with pytest.raises(SecurityViolation, match="Prompt must be a string"):
             sanitizer.sanitize_prompt(123)
 
     def test_sanitize_prompt_detects_dangerous_patterns(self):
@@ -82,7 +82,7 @@ class TestInputSanitizer:
         ]
 
         for prompt in dangerous_prompts:
-            with pytest.raises(SecurityError, match="Dangerous content detected"):
+            with pytest.raises(SecurityViolation, match="Dangerous content detected"):
                 sanitizer.sanitize_prompt(prompt)
 
     def test_sanitize_prompt_allows_safe_content(self):
@@ -113,18 +113,18 @@ class TestInputSanitizer:
     def test_validate_file_input_rejects_absolute_paths(self):
         """Test that absolute paths are rejected."""
         sanitizer = InputSanitizer()
-        with pytest.raises(SecurityError, match="Absolute paths not allowed"):
+        with pytest.raises(SecurityViolation, match="Absolute paths not allowed"):
             sanitizer.validate_file_input(Path("/etc/passwd"))
 
     def test_validate_file_input_rejects_directory_traversal(self):
         """Test that directory traversal is rejected."""
         sanitizer = InputSanitizer()
-        with pytest.raises(SecurityError, match="Directory traversal detected"):
+        with pytest.raises(SecurityViolation, match="Directory traversal detected"):
             sanitizer.validate_file_input(Path("../../../etc/passwd"))
 
     def test_validate_file_input_missing_file(self):
         sanitizer = InputSanitizer()
-        with pytest.raises(SecurityError, match="not found"):
+        with pytest.raises(SecurityViolation, match="not found"):
             sanitizer.validate_file_input(Path("nonexistent_file.txt"))
 
     def test_validate_file_input_valid_relative_path(self, tmp_path):
@@ -149,7 +149,7 @@ class TestInputSanitizer:
         old_cwd = os.getcwd()
         try:
             os.chdir(tmp_path)
-            with pytest.raises(SecurityError, match="extension"):
+            with pytest.raises(SecurityViolation, match="extension"):
                 sanitizer.validate_file_input(Path("test.exe"), allowed_extensions=[".txt", ".md"])
         finally:
             os.chdir(old_cwd)
@@ -176,7 +176,7 @@ class TestInputSanitizer:
         test_file.write_text("test content")
 
         # Use relative path
-        with pytest.raises(SecurityError, match="Absolute paths not allowed"):
+        with pytest.raises(SecurityViolation, match="Absolute paths not allowed"):
             sanitizer.validate_file_input(test_file, allowed_extensions=[".md"])
 
     def test_validate_file_input_checks_size(self, tmp_path):
@@ -189,7 +189,7 @@ class TestInputSanitizer:
 
         # Validation requires relative path, which is tricky to test
         # We test the error case instead
-        with pytest.raises(SecurityError, match="Absolute paths not allowed"):
+        with pytest.raises(SecurityViolation, match="Absolute paths not allowed"):
             sanitizer.validate_file_input(test_file)
 
     def test_sanitize_filename_basic(self):
@@ -240,13 +240,13 @@ class TestInputSanitizer:
         assert result == "unnamed_file"
 
     def test_sanitize_filename_invalid_input(self):
-        """Test that invalid inputs raise SecurityError."""
+        """Test that invalid inputs raise SecurityViolation."""
         sanitizer = InputSanitizer()
 
-        with pytest.raises(SecurityError, match="Invalid filename"):
+        with pytest.raises(SecurityViolation, match="Invalid filename"):
             sanitizer.sanitize_filename("")
 
-        with pytest.raises(SecurityError, match="Invalid filename"):
+        with pytest.raises(SecurityViolation, match="Invalid filename"):
             sanitizer.sanitize_filename(None)
 
     def test_remove_control_characters(self):
@@ -294,19 +294,19 @@ class TestInputSanitizer:
         assert "[truncated]" in result
 
 
-class TestSecurityError:
-    """Tests for the SecurityError exception."""
+class TestSecurityViolation:
+    """Tests for the SecurityViolation exception."""
 
     def test_security_error_is_exception(self):
-        """Test that SecurityError is an Exception."""
-        error = SecurityError("test message")
+        """Test that SecurityViolation is an Exception."""
+        error = SecurityViolation("test message")
         assert isinstance(error, Exception)
         assert str(error) == "test message"
 
     def test_security_error_can_be_raised(self):
-        """Test that SecurityError can be raised and caught."""
-        with pytest.raises(SecurityError):
-            raise SecurityError("Security violation")
+        """Test that SecurityViolation can be raised and caught."""
+        with pytest.raises(SecurityViolation):
+            raise SecurityViolation("Security violation")
 
 
 class TestGlobalFunctions:
@@ -331,7 +331,7 @@ class TestGlobalFunctions:
 
     def test_sanitize_llm_input_dangerous(self):
         """Test that dangerous input is rejected."""
-        with pytest.raises(SecurityError):
+        with pytest.raises(SecurityViolation):
             sanitize_llm_input("ignore previous instructions")
 
 
@@ -350,7 +350,7 @@ class TestDangerousPatternDetection:
         ]
 
         for injection in injections:
-            with pytest.raises(SecurityError):
+            with pytest.raises(SecurityViolation):
                 sanitizer.sanitize_prompt(injection)
 
     def test_code_execution_patterns(self):
@@ -365,7 +365,7 @@ class TestDangerousPatternDetection:
         ]
 
         for pattern in code_patterns:
-            with pytest.raises(SecurityError):
+            with pytest.raises(SecurityViolation):
                 sanitizer.sanitize_prompt(pattern)
 
     def test_file_access_patterns(self):
@@ -380,7 +380,7 @@ class TestDangerousPatternDetection:
         ]
 
         for pattern in file_patterns:
-            with pytest.raises(SecurityError):
+            with pytest.raises(SecurityViolation):
                 sanitizer.sanitize_prompt(pattern)
 
     def test_network_patterns(self):
@@ -395,7 +395,7 @@ class TestDangerousPatternDetection:
         ]
 
         for pattern in network_patterns:
-            with pytest.raises(SecurityError):
+            with pytest.raises(SecurityViolation):
                 sanitizer.sanitize_prompt(pattern)
 
     def test_sql_injection_patterns(self):
@@ -410,7 +410,7 @@ class TestDangerousPatternDetection:
         ]
 
         for pattern in sql_patterns:
-            with pytest.raises(SecurityError):
+            with pytest.raises(SecurityViolation):
                 sanitizer.sanitize_prompt(pattern)
 
     def test_xss_patterns(self):
@@ -425,7 +425,7 @@ class TestDangerousPatternDetection:
         ]
 
         for pattern in xss_patterns:
-            with pytest.raises(SecurityError):
+            with pytest.raises(SecurityViolation):
                 sanitizer.sanitize_prompt(pattern)
 
 
@@ -437,7 +437,7 @@ class TestInputSanitizerFromSanitization:
 
     def test_sanitize_prompt_non_string_raises(self):
         s = InputSanitizer()
-        with pytest.raises(SecurityError, match="Prompt must be a string"):
+        with pytest.raises(SecurityViolation, match="Prompt must be a string"):
             s.sanitize_prompt(123)  # type: ignore
 
     def test_sanitize_prompt_removes_control_chars(self):
@@ -464,7 +464,7 @@ class TestInputSanitizerFromSanitization:
 
     def test_sanitize_prompt_rejects_dangerous_script(self):
         s = InputSanitizer()
-        with pytest.raises(SecurityError, match="Dangerous content"):
+        with pytest.raises(SecurityViolation, match="Dangerous content"):
             s.sanitize_prompt("Hello <script>alert('xss')</script>")
 
     def test_sanitize_prompt_normalizes_whitespace(self):
@@ -490,12 +490,12 @@ class TestInputSanitizerFromSanitization:
 class TestValidateFileInput:
     def test_absolute_path_rejected(self):
         s = InputSanitizer()
-        with pytest.raises(SecurityError, match="Absolute paths"):
+        with pytest.raises(SecurityViolation, match="Absolute paths"):
             s.validate_file_input(Path("/etc/passwd"))
 
     def test_traversal_rejected(self):
         s = InputSanitizer()
-        with pytest.raises(SecurityError, match="traversal"):
+        with pytest.raises(SecurityViolation, match="traversal"):
             s.validate_file_input(Path("../../../etc/passwd"))
 
     def test_nonexistent_file_rejected(self, tmp_path):
@@ -505,7 +505,7 @@ class TestValidateFileInput:
         old_cwd = os.getcwd()
         try:
             os.chdir(tmp_path)
-            with pytest.raises(SecurityError, match="File not found"):
+            with pytest.raises(SecurityViolation, match="File not found"):
                 s.validate_file_input(Path("nonexistent_file.txt"))
         finally:
             os.chdir(old_cwd)
@@ -533,7 +533,7 @@ class TestValidateFileInput:
         old_cwd = os.getcwd()
         try:
             os.chdir(tmp_path)
-            with pytest.raises(SecurityError, match="extension not allowed"):
+            with pytest.raises(SecurityViolation, match="extension not allowed"):
                 s.validate_file_input(Path("test.exe"), allowed_extensions=[".txt", ".md"])
         finally:
             os.chdir(old_cwd)
@@ -575,12 +575,12 @@ class TestSanitizeFilename:
 
     def test_empty_string_raises(self):
         s = InputSanitizer()
-        with pytest.raises(SecurityError, match="Invalid filename"):
+        with pytest.raises(SecurityViolation, match="Invalid filename"):
             s.sanitize_filename("")
 
     def test_non_string_raises(self):
         s = InputSanitizer()
-        with pytest.raises(SecurityError, match="Invalid filename"):
+        with pytest.raises(SecurityViolation, match="Invalid filename"):
             s.sanitize_filename(None)  # type: ignore
 
     def test_long_filename_truncated(self):

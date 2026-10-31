@@ -39,7 +39,7 @@ def slide_cites_a_fact(slide: dict) -> bool:
     return any(token.startswith(prefix) for token in tokens for prefix in FACT_TOKEN_PREFIXES)
 
 
-def _citation_exists_on_disk(source: str, repo_root: Path | None) -> bool:
+def _citation_exists_on_disk(source: str, repo_root: Path) -> bool:
     """Whether ``source`` — an absolute URL, or a repo-relative path — resolves to something real.
 
     Absolute URLs (already checked reachable by nothing here — this project
@@ -47,18 +47,15 @@ def _citation_exists_on_disk(source: str, repo_root: Path | None) -> bool:
     is checked against the filesystem so a typo'd/renamed/deleted citation
     fails the gate the same way a missing citation does, rather than reading
     as "verified" while silently pointing at nothing (red-team finding,
-    2026-07-09). When ``repo_root`` isn't provided (e.g. a caller auditing
-    raw content in isolation, with no repo context), existence is not
-    checked — only non-emptiness — matching the prior behavior.
+    2026-07-09). Every audit requires its repository root so relative citations
+    are checked against the declared source tree.
     """
-    if repo_root is None:
-        return True
     if source.startswith("http://") or source.startswith("https://"):
         return True
     return (repo_root / source).exists()
 
 
-def diligence_rows(raw: dict, repo_root: Path | None = None) -> list[dict]:
+def diligence_rows(raw: dict, repo_root: Path) -> list[dict]:
     """One row per slide: 1-based index, title, whether it needs a citation, whether it has one.
 
     1-based to match every other slide-numbering convention in this project
@@ -66,6 +63,8 @@ def diligence_rows(raw: dict, repo_root: Path | None = None) -> list[dict]:
     deck's own page order) — a prior 0-based version here made error messages
     off by one from the file/heading a reviewer would actually go look at.
     """
+    if not isinstance(repo_root, Path) or not repo_root.is_dir():
+        raise ValueError("diligence audit requires an existing repository root directory")
     rows = []
     for i, slide in enumerate(raw.get("slides", []), start=1):
         needs = slide_cites_a_fact(slide)
@@ -82,7 +81,7 @@ def diligence_rows(raw: dict, repo_root: Path | None = None) -> list[dict]:
     return rows
 
 
-def uncited_fact_slides(raw: dict, repo_root: Path | None = None) -> list[dict]:
+def uncited_fact_slides(raw: dict, repo_root: Path) -> list[dict]:
     """Rows for slides that reference a fact token but carry no valid `source` citation."""
     return [row for row in diligence_rows(raw, repo_root) if row["needs_citation"] and not row["has_citation"]]
 

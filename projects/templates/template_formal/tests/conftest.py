@@ -5,6 +5,7 @@ from __future__ import annotations
 import os
 import sys
 import site
+import tomllib
 from pathlib import Path
 
 import importlib
@@ -13,6 +14,9 @@ import importlib
 def _select_platform_sdk() -> None:
     """Keep pytest's own source paths separate from the selected environment SDK."""
     project = Path(__file__).resolve().parent.parent
+    required = tomllib.loads((project / "pyproject.toml").read_text(encoding="utf-8"))["tool"]["template"][
+        "platform_version"
+    ]
     site_roots = tuple(Path(path).resolve() for path in site.getsitepackages())
 
     def own_source(path: Path) -> bool:
@@ -32,8 +36,8 @@ def _select_platform_sdk() -> None:
         verify_sdk_origins()
         sdk = importlib.import_module("infrastructure")
         verify_sdk_origins()
-        if getattr(sdk, "__version__", None) != "4.4.0":
-            raise ImportError("tests require the declared platform 4.4.0 SDK")
+        if getattr(sdk, "__version__", None) != required:
+            raise ImportError(f"tests require the declared platform {required} SDK")
     finally:
         sys.path[:] = original
 

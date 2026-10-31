@@ -9,7 +9,7 @@ from infrastructure.core.exceptions import FileNotFoundError, NotADirectoryError
 
 MarkdownDiscoveryScope = Literal["tree", "repo", "link_audit"]
 
-# Keep the legacy integrity-audit scope aligned with the canonical repository
+# Keep the documentation integrity-audit scope aligned with the canonical repository
 # documentation scope. This is repeated here rather than imported from the
 # ``docs`` package because ``infrastructure.validation.content`` is imported by
 # that package during initialization; a module-level import would create a

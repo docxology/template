@@ -68,8 +68,8 @@ class ArtifactValidationReport:
 
 
 def artifact_manifest_inventory_mode(payload: Mapping[str, object]) -> OutputInventoryMode:
-    """Read a manifest mode, defaulting legacy payloads to strict shippable scope."""
-    return parse_output_inventory_mode(payload.get("inventory_mode", STABLE_OUTPUT_INVENTORY_MODE))
+    """Require the manifest's explicit output inventory contract."""
+    return parse_output_inventory_mode(payload.get("inventory_mode"))
 
 
 def artifact_manifest_from_payload(payload: object) -> ArtifactManifest:
@@ -317,13 +317,12 @@ def aggregate_artifact_manifests(
                 latest_paths = {
                     entry.path for entry in stage_manifest.entries if not _is_ignored_manifest_path(entry.path)
                 }
-            if "inventory_mode" in payload:
-                stage_inventory_mode = stage_manifest.inventory_mode
-                if stage_inventory_mode != inventory_mode:
-                    issues.append(
-                        "stage artifact manifest inventory mode mismatch: "
-                        f"{manifest_path.name}: expected {inventory_mode}, found {stage_inventory_mode}"
-                    )
+            stage_inventory_mode = stage_manifest.inventory_mode
+            if stage_inventory_mode != inventory_mode:
+                issues.append(
+                    "stage artifact manifest inventory mode mismatch: "
+                    f"{manifest_path.name}: expected {inventory_mode}, found {stage_inventory_mode}"
+                )
             entries.extend(entry for entry in stage_manifest.entries if not _is_ignored_manifest_path(entry.path))
             issues.extend(stage_manifest.issues)
 

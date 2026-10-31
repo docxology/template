@@ -132,9 +132,9 @@ def _json(snapshot: ArtifactSnapshot) -> dict[str, Any]:
     value = json.loads(snapshot.content, object_pairs_hook=pairs, parse_constant=nonfinite)
     if not isinstance(value, dict):
         raise ValueError("Root case evidence must be a finite JSON object")
-    from infrastructure.project.public_root_census_encoding import ENCODING_SCHEMAS, decode
+    from infrastructure.project.public_root_census_encoding import SCHEMA as CENSUS_ENCODING_SCHEMA, decode
 
-    if value.get("schema_version") in ENCODING_SCHEMAS:
+    if value.get("schema_version") == CENSUS_ENCODING_SCHEMA:
         decoded: dict[str, Any] = decode(value)
         value = decoded
         if value.get("schema_version") != RECEIPT_SCHEMA or value.get("role") != "canonical-collection-only":

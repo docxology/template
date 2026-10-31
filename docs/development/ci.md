@@ -13,13 +13,16 @@ Project-only pull requests select changed projects and their declared transitive
 consumers. Shared or unknown paths, renames, deletions and ambiguous changes
 select every public project. An unreadable Git change roster fails selection.
 
-Infrastructure preserves the complete legacy smoke union, adds changed tests and
+Infrastructure preserves the complete baseline smoke union, adds changed tests and
 declared Source owners, and splits the selection into complementary file
-shards with at most twenty modules in automatic mode. Selected process-heavy
-modules retain dedicated jobs. At most eight routine cells run concurrently;
-the separate contract matrix retains its three-cell concurrency limit. More
-cells increase the aggregate compute allowance; neither file count nor byte
-balancing proves that a cell will fit its deadline. Explicit one-to-eight shard
+shards with at most twelve modules in automatic mode. Selected process-heavy
+modules retain dedicated jobs. At most sixteen routine cells run concurrently;
+the separate contract matrix retains its eight-cell concurrency limit. More
+cells increase the aggregate compute allowance. Measured seconds determine both
+job count and placement, targeting 240 seconds per routine job within a 64-job
+planning preference. Broad rosters expand beyond that preference when needed
+to retain the twelve-module cap; hosted concurrency remains sixteen jobs. Without any applicable measurement, file capacity determines job count
+and byte sizes only balance placement. Neither estimate proves a cell will fit its deadline. Explicit one-to-eight shard
 requests retain their existing manual packing behavior.
 Smoke keeps its 540-second child budget and ten-minute job limit;
 contract jobs use the existing full-infrastructure 120-second per-test default,
@@ -39,8 +42,15 @@ or overlapping members. Neither lane replaces complete release acceptance.
 
 Lint/type checks,
 Bandit, secret scanning and the public tracking boundary remain blocking. The
-`CI Gate` requires every functional job to succeed; a missing, cancelled,
-skipped or failed required job cannot turn green.
+`CI Gate` requires every selected functional job to succeed. Guide-only pull
+requests enumerate actual documentation test modules, retaining prepared
+full-module jobs for the heavy documentation contracts, and skip only the
+exemplar matrix. Main and manual events retain the full selection. Runtime
+prompts, manuscripts, dependency text files and rendering artwork do not qualify
+for this reduction. The aggregate accepts only that declared exemplar skip and
+the unrequested coverage skip; missing, cancelled or failed required jobs fail.
+Contract modules execute serially inside independent jobs so original collection
+and outcome receipts remain verifiable; the contract matrix supplies concurrency.
 
 The environment cache includes the resolved Python version, OS, architecture,
 dependency group and root lock/package/Python-selector inputs. Every caller

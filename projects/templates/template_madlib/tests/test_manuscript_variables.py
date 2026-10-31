@@ -33,7 +33,6 @@ def test_generate_variables_contains_sections_tables_and_provenance_tokens() -> 
     assert "RESULTS_FIGURES" in variables
     assert "CONFIGURATION_FIGURES" in variables
     assert "EVALUATION_FIGURES" in variables
-    assert "CONFIGURED_FIELD_FIGURES" in variables
     assert "CONFIGURED_FIELD_SUMMARY_TABLE" in variables
     assert "CONFIGURED_FIELD_TABLE" in variables
     assert "DESIGN_PRINCIPLE_TABLE" in variables

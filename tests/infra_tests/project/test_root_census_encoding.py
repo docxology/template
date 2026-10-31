@@ -77,3 +77,12 @@ def test_actual_64MiB_decompression_ceiling_preserves_guard():
     assert len(_inflate(packed, MAX_BYTES)) == MAX_BYTES
     with pytest.raises(ValueError):
         _inflate(zlib.compress(b"x" * (MAX_BYTES + 1)), MAX_BYTES)
+
+
+def test_inner_dag_is_validated_only_inside_the_current_public_envelope():
+    original = {"original_pytest_exit_code": 0, "cases": ["actual"]}
+    dag = _encode_dag(original)
+    assert _decode_dag(dag) == original
+    with pytest.raises(ValueError, match="unsupported compressed census encoding"):
+        decode(dag)
+    assert decode(encode(original)) == original

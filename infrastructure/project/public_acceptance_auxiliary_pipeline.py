@@ -370,6 +370,24 @@ def run_pipeline(
         return details
 
 
+def _require_complete_stage_outcomes(expected: tuple[str, ...], rows: list[dict[str, Any]]) -> None:
+    """Require original success for every source-plan stage exactly once in order."""
+    from infrastructure.core.pipeline.outcomes import RunResult, StageOutcome, StageStatus
+
+    outcomes = []
+    for row in rows:
+        values = dict(row)
+        values["status"] = StageStatus(values["status"])
+        values["attempt_exit_codes"] = tuple(values["attempt_exit_codes"])
+        outcome = StageOutcome(**values)
+        if outcome.status is not StageStatus.SUCCEEDED:
+            raise ValueError("portable pipeline requires every original stage freshly succeeded")
+        outcomes.append(outcome)
+    result = RunResult(expected, tuple(outcomes))
+    if not result.complete or result.exit_code != 0:
+        raise ValueError("portable pipeline omitted/reordered/duplicated fresh stage outcomes")
+
+
 def validate_portable_pipeline(
     scope: str,
     details: dict[str, Any],
@@ -377,7 +395,6 @@ def validate_portable_pipeline(
     *,
     logical_observations: list[dict[str, Any]] | None = None,
 ) -> None:
-    from infrastructure.core.pipeline.outcomes import RunResult, StageOutcome, StageStatus
     from infrastructure.core.pipeline.plan import ExecutionPlan
     from infrastructure.reporting.readiness_receipts import public_source_paths
 
@@ -530,18 +547,7 @@ def validate_portable_pipeline(
     )
     if reconstructed.digest != original.digest or details["expected_stage_keys"] != list(original.expected_stage_keys):
         raise ValueError("portable pipeline differs from independently compiled complete logical source plan")
-    outcomes = []
-    for row in details["outcomes"]:
-        values = dict(row)
-        values["status"] = StageStatus(values["status"])
-        values["attempt_exit_codes"] = tuple(values["attempt_exit_codes"])
-        outcome = StageOutcome(**values)
-        if outcome.status is not StageStatus.SUCCEEDED:
-            raise ValueError("portable pipeline requires every original stage freshly succeeded")
-        outcomes.append(outcome)
-    result = RunResult(original.expected_stage_keys, tuple(outcomes))
-    if not result.complete or result.exit_code != 0:
-        raise ValueError("portable pipeline omitted/reordered/duplicated fresh stage outcomes")
+    _require_complete_stage_outcomes(original.expected_stage_keys, details["outcomes"])
     files = custody["output_after"]
     original_files = {
         relative.removeprefix("./"): digest for relative, kind, digest in facts["output_records"] if kind == "file"

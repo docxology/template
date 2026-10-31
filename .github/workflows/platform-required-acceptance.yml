@@ -40,6 +40,13 @@ jobs:
           python-version: ${{ matrix.python }}
       - name: Prepare selected locked environment
         run: uv sync --locked --inexact --group dev --group installed-build --group active-inference --group timeseries-bench --group rendering-pptx --python '${{ matrix.python }}'
+      - name: Prepare exact Source-locked PDFium wheel fixture
+        shell: bash
+        run: |
+          set -euo pipefail
+          wheel=$(.venv/bin/python -B -m infrastructure.project.pdfium_fixture_preparation \
+            --repo-root "$PWD" --temporary-root "$RUNNER_TEMP")
+          echo "TEMPLATE_TEST_PDFIUM_WHEEL=$wheel" >> "$GITHUB_ENV"
       - uses: ./.github/actions/setup-acceptance-fixtures
       - uses: ./.github/actions/setup-docs-lint
       - uses: ./.github/actions/setup-acceptance-documents

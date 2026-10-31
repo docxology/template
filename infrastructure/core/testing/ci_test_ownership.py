@@ -5,6 +5,10 @@ their runtime fits the smoke deadline. Unlisted helpers retain broad fallback.
 """
 
 SOURCE_TEST_OWNERS: dict[str, tuple[str, ...]] = {
+    "infrastructure/reporting/native_worker_startup_diagnostics.py": (
+        "tests/infra_tests/reporting/test_native_worker_startup_diagnostics.py",
+        "tests/infra_tests/reporting/test_native_worker_execution_diagnostics.py",
+    ),
     "infrastructure/core/pipeline/artifacts/_manifest.py": (
         "tests/infra_tests/benchmark/test_template_benchmark_harness.py",
         "tests/infra_tests/core/pipeline/test_artifact_finalization.py",
@@ -90,7 +94,10 @@ SOURCE_TEST_OWNERS: dict[str, tuple[str, ...]] = {
         "tests/infra_tests/reporting/test_project_verifier.py",
         "tests/infra_tests/core/test_project_test_measurement.py",
     ),
-    "infrastructure/project/public_root_lane_worker.py": ("tests/infra_tests/project/test_root_case_lanes.py",),
+    "infrastructure/project/public_root_lane_worker.py": (
+        "tests/infra_tests/project/test_root_case_lanes.py",
+        "tests/infra_tests/project/test_root_runtime_controls.py",
+    ),
     "infrastructure/project/public_root_lane_readback.py": ("tests/infra_tests/project/test_root_case_lanes.py",),
     "infrastructure/core/testing/pytest_receipt.py": (
         "tests/infra_tests/core/test_pytest_receipt.py",
@@ -105,16 +112,19 @@ SOURCE_TEST_OWNERS: dict[str, tuple[str, ...]] = {
         "tests/infra_tests/core/test_ci_module_durations.py",
         "tests/infra_tests/core/test_ci_infra.py",
         "tests/infra_tests/core/test_ci_infra_partition.py",
+        "tests/infra_tests/core/test_ci_selection.py",
         "tests/infra_tests/core/test_pytest_receipt.py",
         "tests/infra_tests/core/test_ci_contracts.py",
         "tests/infra_tests/core/test_ci_test_ownership.py",
         "tests/infra_tests/core/test_ci_infra_process.py",
+        "tests/infra_tests/core/test_local_gate.py",
     ),
     "infrastructure/core/testing/ci_contracts.py": (
         "tests/infra_tests/core/test_ci_module_durations.py",
         "tests/infra_tests/core/test_ci_contracts.py",
         "tests/infra_tests/core/test_ci_infra.py",
         "tests/infra_tests/core/test_ci_infra_process.py",
+        "tests/infra_tests/core/test_local_gate.py",
     ),
     "infrastructure/core/pipeline/artifact_contracts.py": (
         "tests/infra_tests/core/pipeline/test_artifact_contracts.py",
@@ -323,6 +333,8 @@ SOURCE_TEST_OWNERS: dict[str, tuple[str, ...]] = {
     ),
     "infrastructure/reporting/native_source_provider_bootstrap.py": (
         "tests/infra_tests/reporting/test_native_stage_child_contracts.py",
+        "tests/infra_tests/reporting/test_native_project_provider_batch.py",
+        "tests/infra_tests/reporting/test_native_worker_startup_diagnostics.py",
     ),
     "infrastructure/reporting/native_tool_producer.py": (
         "tests/infra_tests/rendering/test_native_render_custody.py",
@@ -338,6 +350,11 @@ SOURCE_TEST_OWNERS: dict[str, tuple[str, ...]] = {
     "infrastructure/reporting/native_pdfium_provider_data.py": (
         "tests/infra_tests/reporting/test_native_revalidation_data.py",
     ),
+    "infrastructure/reporting/native_pdfium_source_wheel.py": (
+        "tests/infra_tests/reporting/test_native_pdfium_batch_data.py",
+        "tests/infra_tests/reporting/test_native_revalidation_data.py",
+        "tests/infra_tests/reporting/test_native_source_wheel_guard.py",
+    ),
     "infrastructure/reporting/native_pdfium_revalidation.py": (
         "tests/infra_tests/reporting/test_native_revalidation_data.py",
     ),
@@ -346,6 +363,11 @@ SOURCE_TEST_OWNERS: dict[str, tuple[str, ...]] = {
     ),
     "infrastructure/reporting/native_office_diagram_runtime.py": (
         "tests/infra_tests/reporting/test_native_pdfium_batch_data.py",
+    ),
+    "infrastructure/reporting/native_full_worker_pdfium.py": (
+        "tests/infra_tests/reporting/test_native_format_acceptance.py",
+        "tests/infra_tests/reporting/test_native_pdfium_batch_data.py",
+        "tests/infra_tests/reporting/test_native_pdfium_verify_current.py",
     ),
     "infrastructure/project/_hosted_api.py": (
         "tests/infra_tests/project/test_auxiliary_print_custody.py",
@@ -435,6 +457,7 @@ SOURCE_TEST_OWNERS: dict[str, tuple[str, ...]] = {
         "tests/infra_tests/reporting/test_native_original_launch_correctness.py",
         "tests/infra_tests/reporting/test_native_tool_promotion_failure.py",
         "tests/infra_tests/reporting/test_native_tool_stdin.py",
+        "tests/infra_tests/reporting/test_native_worker_startup_diagnostics.py",
     ),
     "infrastructure/reporting/native_tool_replay.py": (
         "tests/infra_tests/project/test_auxiliary_print_custody.py",
@@ -448,7 +471,9 @@ SOURCE_TEST_OWNERS: dict[str, tuple[str, ...]] = {
     ),
     "infrastructure/reporting/native_source_external_admission.py": (
         "tests/infra_tests/project/test_public_source_body_admission.py",
+        "tests/infra_tests/reporting/test_native_pdfium_verify_current.py",
         "tests/infra_tests/reporting/test_native_project_provider_batch.py",
+        "tests/infra_tests/reporting/test_native_source_wheel_guard.py",
         "tests/infra_tests/reporting/test_native_stage_child_contracts.py",
     ),
     "infrastructure/reporting/native_stage_child.py": (
@@ -463,6 +488,8 @@ SOURCE_TEST_OWNERS: dict[str, tuple[str, ...]] = {
         "tests/infra_tests/project/test_public_reference.py",
         "tests/infra_tests/project/test_public_source_body_admission.py",
         "tests/infra_tests/project/test_root_acceptance.py",
+        "tests/infra_tests/project/test_root_runtime_controls.py",
+        "tests/infra_tests/project/test_root_source_controls.py",
         "tests/infra_tests/publishing/test_release_acceptance.py",
         "tests/infra_tests/reporting/test_native_installed_preparation_source.py",
         "tests/infra_tests/reporting/test_original_job_outcome.py",

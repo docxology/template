@@ -138,15 +138,9 @@ class TestArxivApi:
         (manuscript_dir / "main.tex").write_text("\\documentclass{article}", encoding="utf-8")
         (manuscript_dir / "references.bib").write_text("@misc{x, title={X}}", encoding="utf-8")
 
-        metadata = publishing.PublicationMetadata(
-            title="Test Paper",
-            authors=["Author"],
-            abstract="Abstract",
-            keywords=["test"],
-        )
         (manuscript_dir / "main.bbl").write_text("\\begin{thebibliography}{1}", encoding="utf-8")
 
-        result = publishing.prepare_arxiv_submission(output_dir, metadata)
+        result = publishing.prepare_arxiv_submission(output_dir)
         assert result.exists()
         assert result.suffixes[-2:] == [".tar", ".gz"]
         with tarfile.open(result, "r:gz") as archive:

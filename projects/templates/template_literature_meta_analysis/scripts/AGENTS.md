@@ -38,7 +38,7 @@ again afterward when those optional artifacts must be reflected in the manuscrip
 
 | Script | Inputs | Outputs | Dependencies |
 |--------|--------|---------|--------------|
-| `01` | API responses | `output/data/corpus.jsonl`, `output/data/retrieval_report.json` | Network / cached corpus; legacy resumes are labelled instead of assigned inferred engine counts |
+| `01` | API responses | `output/data/corpus.jsonl`, `output/data/retrieval_report.json` | Network for new retrieval; populated retained corpora resume without network, and absent prior reports record empty engine observations instead of inferred counts |
 | `02` | `corpus.jsonl` | `subfield_classification.json`, `temporal_analysis.json`, `tfidf_data.json`, `topics.json`, `citation_network.json`, `citation_graph.gml` | `01` |
 | `03` | `corpus.jsonl` | `nanopublications.jsonl`, `nanopublications.trig`, `hypothesis_scores.json`, `hypothesis_trends.json`, `assertion_summary.json` | `01`, Ollama (optional) |
 | `04` | All `output/data/*.json`, `citation_graph.gml` | `output/figures/*.png`, `figure_registry.json` | `02`, `03` |

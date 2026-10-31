@@ -34,7 +34,6 @@ from infrastructure.rendering._manuscript_source import (  # noqa: F401
     render_individual_files as render_individual_files,
     resolve_manuscript_dir as resolve_manuscript_dir,
     run_manuscript_variable_script as run_manuscript_variable_script,
-    run_override_script as run_override_script,
     unresolved_config_tokens as unresolved_config_tokens,
     validate_latex_packages as validate_latex_packages,
     verify_config_tokens_resolved as verify_config_tokens_resolved,
@@ -53,50 +52,6 @@ from infrastructure.core.logging.diagnostic import DiagnosticReporter
 logger = get_logger(__name__)
 
 
-def _write_override_composition(project_root: Path, project_name: str) -> None:
-    """Bind a render-boundary composition receipt for custom-PDF lanes.
-
-    The shared web/combined lanes emit ``manuscript_composition.json``
-    (consumed by the rendered-provenance validation check); a project
-    ``scripts/_render_pdf_override.py`` builds its combined PDF directly
-    and would otherwise render without that receipt.  The override's
-    token-substituted combined markdown (``output/pdf/temp_combined.md``)
-    is promoted to the stable combined artifact and the receipt binds it
-    to the discovered canonical manuscript inputs, mirroring
-    :func:`~infrastructure.rendering.manuscript_composition.write_manuscript_composition`
-    usage in the standard lanes.
-    """
-    from infrastructure.rendering._manuscript_source import resolve_source_manuscript_dir
-    from infrastructure.rendering.manuscript_composition import write_manuscript_composition
-    from infrastructure.rendering.manuscript_discovery import discover_manuscript_files
-
-    try:
-        source_dir = resolve_source_manuscript_dir(project_root)
-        rendered_inputs = discover_manuscript_files(source_dir)
-        if not rendered_inputs:
-            logger.warning("Override composition skipped: no canonical manuscript inputs")
-            return
-        temp_combined = project_root / "output" / "pdf" / "temp_combined.md"
-        if not temp_combined.is_file():
-            logger.warning("Override composition skipped: no combined markdown from override render")
-            return
-        combined_md = project_root / "output" / "web" / "_combined_manuscript.md"
-        combined_text = temp_combined.read_text(encoding="utf-8")
-        if not combined_md.exists() or combined_md.read_text(encoding="utf-8") != combined_text:
-            combined_md.parent.mkdir(parents=True, exist_ok=True)
-            combined_md.write_text(combined_text, encoding="utf-8")
-        write_manuscript_composition(
-            project_root,
-            project_name,
-            rendered_inputs,
-            combined_md,
-            algorithm="shared-combined-markdown-v1",
-        )
-        logger.info("Override render composition receipt bound to: %s", combined_md)
-    except Exception as exc:  # noqa: BLE001 — provenance must not fail the render
-        logger.warning("Override composition receipt could not be written: %s", exc)
-
-
 def _write_transmission_bookends(project_root: Path, project_name: str, *, repo_root: Path) -> None:
     from infrastructure.transmission.transmission_bookends import write_transmission_bookends
 
@@ -110,7 +65,6 @@ class RenderPipelineDependencies:
     resolve_project: Callable[[Path, str], Path] = resolve_project_root
     hydrate_manuscript: Callable[..., int] = run_manuscript_variable_script
     write_bookends: Callable[..., None] = _write_transmission_bookends
-    run_override: Callable[[Path, Path], int] = run_override_script
     validate_latex: Callable[..., int] = validate_latex_packages
     verify_figures: Callable[[Path, Path], dict[str, Any]] = verify_figures_exist
     discover_manuscript: Callable[[Path], list[Path]] = discover_manuscript_files
@@ -166,19 +120,6 @@ def _render_pipeline_impl(
         deps.write_bookends(project_root, project_name, repo_root=root)
     except Exception as exc:  # noqa: BLE001 — bookends must not block rendering
         logger.warning("Transmission bookend generation skipped: %s", exc)
-
-    override_script = project_root / "scripts" / "_render_pdf_override.py"
-    if override_script.exists():
-        stale_override_pdf = project_root / "output" / "pdf" / f"{Path(project_name).name}_combined.pdf"
-        try:
-            stale_override_pdf.unlink(missing_ok=True)
-        except OSError as exc:
-            logger.error("Could not remove stale override PDF %s: %s", stale_override_pdf, exc)
-            return 1
-        exit_code = deps.run_override(project_root, override_script)
-        if exit_code == 0:
-            _write_override_composition(project_root, project_name)
-        return exit_code
 
     if deps.validate_latex() != 0:
         return 1

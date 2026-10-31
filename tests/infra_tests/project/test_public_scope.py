@@ -184,12 +184,12 @@ def test_public_source_roots_refuse_wrong_canonical_origins(tmp_path: Path, targ
         public_project_source_roots(tmp_path)
 
 
-def test_ci_paths_cli_matches_both_legacy_scopes(tmp_path: Path) -> None:
-    """One actual CLI invocation preserves each established scope and output order."""
+def test_ci_paths_cli_matches_each_individual_scope(tmp_path: Path) -> None:
+    """The combined CLI matches each current single-value scope and its output order."""
     repo = Path(__file__).resolve().parents[3]
     _scaffold_exemplars(tmp_path)
     _scaffold_project(tmp_path, "active/private_research_project")
-    legacy = {}
+    individual_scopes = {}
     for command in ("lint-paths", "source-paths"):
         observed = subprocess.run(
             [sys.executable, "-m", "infrastructure.project.public_scope", command, "--repo-root", str(tmp_path)],
@@ -201,7 +201,7 @@ def test_ci_paths_cli_matches_both_legacy_scopes(tmp_path: Path) -> None:
         )
         assert observed.stderr == ""
         assert "active/private_research_project" not in observed.stdout
-        legacy[command] = observed.stdout.rstrip("\n")
+        individual_scopes[command] = observed.stdout.rstrip("\n")
     combined = subprocess.run(
         [sys.executable, "-m", "infrastructure.project.public_scope", "ci-paths", "--repo-root", str(tmp_path)],
         cwd=repo,
@@ -211,7 +211,10 @@ def test_ci_paths_cli_matches_both_legacy_scopes(tmp_path: Path) -> None:
         check=True,
     )
     assert combined.stderr == ""
-    assert combined.stdout == f"lint_paths={legacy['lint-paths']}\nsource_paths={legacy['source-paths']}\n"
+    assert (
+        combined.stdout
+        == f"lint_paths={individual_scopes['lint-paths']}\nsource_paths={individual_scopes['source-paths']}\n"
+    )
 
 
 def test_ci_paths_cli_rejects_invalid_arguments_without_outputs() -> None:

@@ -86,8 +86,8 @@ verify_academic_standards(manuscript_dir)
 ```python
 from infrastructure.validation import validate_output_structure, validate_copied_outputs
 
-validate_output_structure(output_dir)
-validate_copied_outputs(source_dir, dest_dir)
+validate_output_structure(output_dir, enabled_formats=("pdf",))
+validate_copied_outputs(dest_dir, project_name="templates/my_project", enabled_formats=("pdf",))
 ```
 
 ## Link Verification (`integrity/check_links.py`, `integrity/link_validator.py`)
@@ -196,8 +196,9 @@ The enforced lexical API reports prohibited mock-framework imports/calls. It
 does not prove that monkeypatch dependency replacements are absent:
 
 ```python
-from infrastructure.validation.output.no_mock_enforcer import validate_no_mocks
-violations = validate_no_mocks(tests_dir, repo_root)
+from infrastructure.validation.output.no_mock_enforcer import scan_lexical_mock_policy
+scan = scan_lexical_mock_policy(tests_dir, repo_root)
+violations = (*scan.violations, *scan.errors)
 ```
 
 Repository-level commands:

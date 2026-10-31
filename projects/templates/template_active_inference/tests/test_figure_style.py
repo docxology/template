@@ -12,6 +12,7 @@ from visualizations.figure_registry import (
     _parse_figures_yaml_cached,
     figure_output_path,
     load_figure_registry,
+    load_section_figures,
     render_figure_markdown,
 )
 from visualizations.figure_style import apply_style, load_figure_style
@@ -233,7 +234,7 @@ def test_figure_registry_and_markdown() -> None:
     registry = load_figure_registry(root)
     assert "ising_mi_curve" in registry
     assert len(registry["ising_mi_curve"].alt) >= 80
-    md = render_figure_markdown(root, "ising_mi_curve", figure_number=1)
+    md = render_figure_markdown(root, "ising_mi_curve")
     # pandoc-crossref owns numbering: a single label, the caption in the alt slot, no hand number.
     assert "Figure 1." not in md
     assert "*Figure" not in md
@@ -275,15 +276,13 @@ def test_render_figure_markdown_pandoc_owns_numbering() -> None:
     """A labeled figure emits exactly one pandoc-crossref label and NO hand-written number.
 
     Regression guard for the triple-numbering defect: render_figure_markdown must not emit
-    any ``Figure N`` / ``*Figure ...*`` hand label even when a legacy caption_prefix/number
-    is passed; pandoc-crossref is the single source of figure numbers.
+    any ``Figure N`` / ``*Figure ...*`` hand label; pandoc-crossref is the
+    single source of figure numbers.
     """
     root = Path(__file__).resolve().parents[1]
     md = render_figure_markdown(
         root,
         "sheaf_layers_overview",
-        figure_number=6,
-        caption_prefix="Figure 6 (methods). ",
     )
     assert "{#fig:sheaf_layers_overview" in md
     assert md.count("#fig:sheaf_layers_overview") == 1
@@ -311,3 +310,12 @@ def test_no_orphan_hand_figure_labels_in_composed_manuscript(project_root: Path)
             if _re.match(r"\*Figure\s+[0-9IMA]", line.strip()):
                 offenders.append(f"{md.name}:{i}:{line.strip()[:50]}")
     assert not offenders, f"orphan hand Figure labels: {offenders}"
+
+
+@pytest.mark.parametrize("field", ["number", "caption_prefix"])
+def test_section_figure_refuses_manual_numbering_fields(tmp_path: Path, field: str) -> None:
+    (tmp_path / "figures.yaml").write_text(
+        f"section_figures:\n  methods:\n    - id: chart\n      {field}: 1\n", encoding="utf-8"
+    )
+    with pytest.raises(ValueError, match="pandoc-crossref"):
+        load_section_figures(tmp_path)

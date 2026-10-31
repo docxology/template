@@ -5,13 +5,13 @@ from __future__ import annotations
 import re
 from pathlib import Path
 
+from infrastructure.validation.docs._io import read_markdown
 from infrastructure.validation.docs.consistency._shared import (
     Inconsistency,
     blank_fences,
     discover_infra_packages,
     iter_long_lived_docs,
     line_has_noqa,
-    read_markdown,
 )
 
 _PACKAGE_COUNT_LINE_RE = re.compile(

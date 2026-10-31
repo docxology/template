@@ -110,12 +110,14 @@ runs:
             echo "Ubuntu mirror preparation requires an already locked Python executable" >&2
             exit 1
           fi
-          sudo -n "$PREPARED_PYTHON" -I -B - <<'PYTHON'
+          sudo -n "$PREPARED_PYTHON" -I -B - "$GITHUB_ACTION_PATH/ubuntu_apt_mirrors.py" <<'PYTHON'
         import hashlib
         import json
         import os
         from pathlib import Path
+        import runpy
         import stat
+        import sys
         import tempfile
 
 
@@ -139,15 +141,13 @@ runs:
 
         mirror = Path("/etc/apt/apt-mirrors.txt")
         source = Path("/etc/apt/sources.list.d/ubuntu.sources")
-        original = (b"http://azure.archive.ubuntu.com/ubuntu/\tpriority:1\n"
-                    b"https://archive.ubuntu.com/ubuntu/\tpriority:2\n"
-                    b"https://security.ubuntu.com/ubuntu/\tpriority:3\n")
-        preferred = (b"http://azure.archive.ubuntu.com/ubuntu/\tpriority:2\n"
-                     b"https://archive.ubuntu.com/ubuntu/\tpriority:1\n"
-                     b"https://security.ubuntu.com/ubuntu/\tpriority:3\n")
-        before, current = owned_bytes(mirror, 144)
-        if current not in (original, preferred):
-            raise SystemExit("Refusing an unknown Ubuntu APT mirror list")
+        mirror_policy = runpy.run_path(sys.argv[1])
+        mirror_limit = mirror_policy["MAX_MIRROR_BYTES"]
+        before, current = owned_bytes(mirror, mirror_limit)
+        try:
+            preferred = mirror_policy["prefer_primary_archive"](current)
+        except ValueError as error:
+            raise SystemExit(str(error)) from None
         source_before, source_data = owned_bytes(source, 65536)
         active = False
         fields = {}
@@ -192,7 +192,7 @@ runs:
             finally:
                 if os.path.exists(temporary):
                     os.unlink(temporary)
-        after, actual = owned_bytes(mirror, 144)
+        after, actual = owned_bytes(mirror, mirror_limit)
         if (actual != preferred or after.st_uid != before.st_uid or after.st_gid != before.st_gid
                 or stat.S_IMODE(after.st_mode) != stat.S_IMODE(before.st_mode)):
             raise SystemExit("Ubuntu mirror-priority readback failed")
