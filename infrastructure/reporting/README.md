@@ -27,6 +27,12 @@ one held Source boundary, then closes the original Source, SDK and fixture check
 before returning. `native_preparation_progress.py` emits bounded phase labels and
 remaining time for diagnostics; progress output never grants native admission.
 
+`native_worker_startup_diagnostics.py` embeds fixed, bounded startup observations
+in the Source-owned native worker command without importing candidate code before
+SDK admission. Samples show an anchored worker/bootstrap frame and its callers,
+not the active callee. Missing records remain unknown; a blocked diagnostic writer
+can outlive cancellation. These observations do not certify execution or cleanup.
+
 ## Overview
 
 The reporting module provides reporting capabilities for pipeline execution, including:
