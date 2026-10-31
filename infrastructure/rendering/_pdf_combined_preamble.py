@@ -25,6 +25,7 @@ def inject_latex_preamble(
     manuscript_dir: Path,
     *,
     skip_title_page: bool = False,
+    paper_frontmatter: bool = False,
 ) -> str:
     """Extract preamble from preamble.md and config.yaml, inject before \\begin{document}."""
     preamble_file = manuscript_dir / "preamble.md"
@@ -124,7 +125,9 @@ def inject_latex_preamble(
     if not title_page_body or begin_doc_idx <= 0:
         return tex_content
 
-    if "\\tableofcontents" in title_page_body:
+    if paper_frontmatter:
+        full_title_body = title_page_body + "\n\\clearpage"
+    elif "\\tableofcontents" in title_page_body:
         full_title_body = title_page_body
     else:
         full_title_body = title_page_body + "\n\\tableofcontents\n\\newpage"

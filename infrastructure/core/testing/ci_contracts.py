@@ -15,6 +15,8 @@ CONTRACT_SECONDS = 6600
 # Preparation follows the actual consumer, including modules selected through
 # broad facade changes. Matrix projection and hosted setup use this one roster.
 _NATIVE_PREPARATION = {
+    "tests/infra_tests/rendering/test_paper_frontmatter_native.py": ("converter", True, False),
+    "tests/infra_tests/reporting/test_paper_frontmatter_reconstruction_native.py": ("converter", True, False),
     "tests/infra_tests/project/test_public_acceptance_auxiliary.py": ("native", False, False),
     "tests/infra_tests/project/test_scientific_reference_replay.py": ("converter", True, False),
     "tests/infra_tests/reporting/test_native_browser_oracles.py": ("converter", False, True),

@@ -474,3 +474,13 @@ operation deadline; four hosted cells may run concurrently. This changes
 aggregate scheduling allowance from the former global operation. The installed
 collector and fresh release handoff authenticate every original producer job,
 attempt, artifact digest and confined graph; no successful subset qualifies.
+
+## Paper frontmatter compiler contracts
+
+`test_paper_frontmatter_native.py` and
+`test_paper_frontmatter_reconstruction_native.py` run as complete required
+`test-contract` modules with the converter, XeLaTeX and PDF readers prepared.
+Their three real compiler cases retain their original assertions; pure admission
+and reconstruction cases remain in the original smoke modules. Supplemental
+frontmatter ownership adds both kinds of consumer without removing conventional
+or package-fallback tests. Missing compiler providers fail these contracts.

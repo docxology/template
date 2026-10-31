@@ -6,6 +6,7 @@ from typing import Any
 
 from infrastructure.core.logging.utils import get_logger
 from infrastructure.rendering.config import RenderingConfig
+from infrastructure.rendering._paper_frontmatter import PaperLayout
 from infrastructure.rendering.pdf_renderer import PDFRenderer
 from infrastructure.rendering.slides_renderer import SlidesRenderer
 from infrastructure.rendering.web_renderer import WebRenderer
@@ -264,6 +265,8 @@ class RenderManager:
         source_files: list[Path],
         manuscript_dir: Path,
         project_name: str = "project",
+        *,
+        paper_layout: PaperLayout | None = None,
     ) -> Path:
         """Render combined PDF from multiple markdown files.
 
@@ -276,13 +279,15 @@ class RenderManager:
             Path to generated combined PDF file
         """
         logger.info(f"Rendering combined PDF from {len(source_files)} files...")
-        return self.pdf_renderer.render_combined(source_files, manuscript_dir, project_name)
+        return self.pdf_renderer.render_combined(source_files, manuscript_dir, project_name, paper_layout=paper_layout)
 
     def render_combined_web(
         self,
         source_files: list[Path],
         manuscript_dir: Path,
         project_name: str = "project",
+        *,
+        paper_layout: PaperLayout | None = None,
     ) -> Path:
         """Render combined HTML from multiple markdown files.
 
@@ -295,4 +300,4 @@ class RenderManager:
             Path to generated combined HTML file (index.html)
         """
         logger.info(f"Rendering combined HTML from {len(source_files)} files...")
-        return self.web_renderer.render_combined(source_files, manuscript_dir, project_name)
+        return self.web_renderer.render_combined(source_files, manuscript_dir, project_name, paper_layout=paper_layout)

@@ -19,7 +19,7 @@ from infrastructure.core.testing.ci_contracts import CONTRACT_SECONDS, combined_
 
 from infrastructure.core.testing.ci_module_durations import module_weights
 from infrastructure.core.testing.pytest_orchestration import resolve_infrastructure_test_paths
-from infrastructure.core.testing.ci_test_ownership import SOURCE_TEST_OWNERS
+from infrastructure.core.testing.ci_test_ownership import SOURCE_TEST_OWNERS, SUPPLEMENTAL_TEST_OWNERS
 from infrastructure.core.testing.pytest_observations import (
     DIRECTORY_ENV,
     NONCE_ENV,
@@ -101,6 +101,7 @@ def infrastructure_files(root: Path, changed: tuple[str, ...] = ()) -> tuple[str
                 # Missing conventional ownership cannot silently omit changed behavior.
                 package = relative.parts[1] if len(relative.parts) > 2 else ""
                 paths.append(root / "tests/infra_tests" / package)
+        paths.extend(root / owner for owner in SUPPLEMENTAL_TEST_OWNERS.get(name, ()))
     files: set[str] = set()
     for path in paths:
         if not path.exists() or path.is_symlink() or not path.resolve().is_relative_to(root.resolve()):

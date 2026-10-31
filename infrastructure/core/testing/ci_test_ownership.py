@@ -479,4 +479,29 @@ SOURCE_TEST_OWNERS: dict[str, tuple[str, ...]] = {
     ),
 }
 
-__all__ = ["SOURCE_TEST_OWNERS"]
+# These public writer/reconstruction contracts supplement conventional and
+# broad package discovery; they must never narrow the existing selection.
+_PAPER_FRONTMATTER_TESTS = (
+    "tests/infra_tests/rendering/test_paper_frontmatter.py",
+    "tests/infra_tests/rendering/test_paper_frontmatter_native.py",
+    "tests/infra_tests/reporting/test_paper_frontmatter_reconstruction.py",
+    "tests/infra_tests/reporting/test_paper_frontmatter_reconstruction_native.py",
+)
+SUPPLEMENTAL_TEST_OWNERS: dict[str, tuple[str, ...]] = {
+    "infrastructure/core/config/schema.py": _PAPER_FRONTMATTER_TESTS,
+    "infrastructure/rendering/_paper_frontmatter.py": _PAPER_FRONTMATTER_TESTS,
+    "infrastructure/rendering/_paper_frontmatter_render.py": _PAPER_FRONTMATTER_TESTS,
+    "infrastructure/rendering/manuscript_discovery.py": _PAPER_FRONTMATTER_TESTS,
+    "infrastructure/rendering/pipeline.py": _PAPER_FRONTMATTER_TESTS,
+    "infrastructure/rendering/core.py": _PAPER_FRONTMATTER_TESTS,
+    "infrastructure/rendering/_combined_exports.py": _PAPER_FRONTMATTER_TESTS,
+    "infrastructure/rendering/_pdf_markdown_combine.py": _PAPER_FRONTMATTER_TESTS,
+    "infrastructure/rendering/_pdf_combined_preamble.py": _PAPER_FRONTMATTER_TESTS,
+    "infrastructure/rendering/pdf_renderer.py": _PAPER_FRONTMATTER_TESTS,
+    "infrastructure/rendering/web_renderer.py": _PAPER_FRONTMATTER_TESTS,
+    "infrastructure/rendering/manuscript_composition.py": _PAPER_FRONTMATTER_TESTS,
+    "infrastructure/reporting/native_hydration_reconstruction.py": _PAPER_FRONTMATTER_TESTS,
+    "infrastructure/reporting/native_code_contextual_compare.py": _PAPER_FRONTMATTER_TESTS,
+}
+
+__all__ = ["SOURCE_TEST_OWNERS", "SUPPLEMENTAL_TEST_OWNERS"]
