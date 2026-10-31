@@ -18,20 +18,12 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Sequence
 
-try:
-    from .purity import (
-        NINE_NINES_PURITY,
-        KaratGrade,
-        assert_monotone_increase,
-        karat_for_purity,
-    )
-except ImportError:
-    from template_gold_refinement.purity import (  # type: ignore[no-redef]
-        NINE_NINES_PURITY,
-        KaratGrade,
-        assert_monotone_increase,
-        karat_for_purity,
-    )
+from .purity import (
+    NINE_NINES_PURITY,
+    KaratGrade,
+    assert_monotone_increase,
+    karat_for_purity,
+)
 
 
 @dataclass(frozen=True)

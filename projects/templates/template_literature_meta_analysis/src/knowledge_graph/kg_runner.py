@@ -133,10 +133,6 @@ def run_knowledge_graph_pipeline(args: argparse.Namespace, *, project_root: Path
         papers = sampled
 
     nanopub_path = data_dir / "nanopublications.jsonl"
-    legacy_checkpoint = output_dir / "llm_checkpoint.jsonl"
-    if legacy_checkpoint.exists():
-        legacy_checkpoint.unlink()
-
     if args.clear_assertions and nanopub_path.exists():
         nanopub_path.unlink()
 

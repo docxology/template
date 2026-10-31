@@ -22,6 +22,7 @@ import re
 import shutil
 import subprocess
 import sys
+import tomllib
 from dataclasses import asdict
 from pathlib import Path
 
@@ -30,7 +31,6 @@ import pytest
 from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
 
 from template_template.core.introspection import (
-    META_PROJECT_DIR_NAME,
     META_PROJECT_PUBLIC_NAME,
     discover_projects,
 )
@@ -45,7 +45,7 @@ ALLOWED_PROJECT_NAMES = {Path(name).name for name in PUBLIC_PROJECT_NAMES} | {ME
 
 # Representative private/rotating names (and structural path fragments) that must
 # never appear anywhere in the serialized metrics. Drawn from the lifecycle repo's
-# rotating trees plus the non-rendered typed subfolders that hold them. The legacy
+# rotating trees plus the non-rendered typed subfolders that hold them. Retired
 # ``projects_archive`` / ``projects_in_progress`` tokens are retained as forbidden
 # needles (defense-in-depth) even though those top-level dirs no longer exist.
 PRIVATE_NAME_DENYLIST = (
@@ -135,7 +135,7 @@ class TestSelfAndPublicIntrospectionStillWork:
     def test_meta_project_self_metric_present(self) -> None:
         metrics = build_manuscript_metrics_dict(REPO_ROOT)
         assert "project_template_template_test_count" in metrics, (
-            "Meta-project self-introspection key missing — rename mapping regressed"
+            "Meta-project self-introspection key missing from the canonical roster"
         )
 
     def test_public_exemplar_metrics_present(self) -> None:
@@ -148,13 +148,13 @@ class TestSelfAndPublicIntrospectionStillWork:
             assert f"project_{name}_test_count" in metrics, f"Public exemplar '{name}' missing from metrics"
 
     def test_bare_template_name_is_never_emitted(self) -> None:
-        """The on-disk staging name ``template`` must be rewritten, never emitted."""
+        """Only the canonical ``template_template`` identity enters public metrics."""
         metrics = build_manuscript_metrics_dict(REPO_ROOT)
         assert "project_template_test_count" not in metrics, (
             "Bare 'template' project key emitted — should be 'template_template'"
         )
         names = {p.name for p in discover_projects(REPO_ROOT)}
-        assert META_PROJECT_DIR_NAME not in names or META_PROJECT_DIR_NAME == META_PROJECT_PUBLIC_NAME
+        assert "template" not in names
         assert META_PROJECT_PUBLIC_NAME in names
 
 
@@ -237,6 +237,7 @@ def test_same_public_leaf_local_alias_is_live_only_in_explicit_local_discovery(t
     marker = tmp_path / "actual-alias-content-opened"
     watched = [str(alias / "manuscript/config.yaml") for alias in aliases]
     project = Path(__file__).resolve().parents[2]
+    platform_version = tomllib.loads((project / "pyproject.toml").read_text())["tool"]["template"]["platform_version"]
     # Observe the actual isolated interpreter SDK before adding own paths.
     selected = subprocess.run(
         [
@@ -257,7 +258,7 @@ def test_same_public_leaf_local_alias_is_live_only_in_explicit_local_discovery(t
     )
     assert selected.returncode == 0, selected.stderr or selected.stdout
     selected_identity = json.loads(selected.stdout)
-    assert selected_identity["version"] == "4.4.0"
+    assert selected_identity["version"] == platform_version
     selected_sdk = Path(selected_identity["origin"])
     prefix = (
         "import hashlib,importlib.util,json,os,sys;from dataclasses import asdict;from pathlib import Path;"
@@ -267,7 +268,7 @@ def test_same_public_leaf_local_alias_is_live_only_in_explicit_local_discovery(t
         "bootstrap=importlib.util.module_from_spec(spec);spec.loader.exec_module(bootstrap);"
         "sdk=bootstrap.bootstrap_project(project);"
         f"assert Path(sdk.__file__).resolve()==Path({str(selected_sdk)!r});"
-        "assert sdk.__version__=='4.4.0';"
+        f"assert sdk.__version__=={platform_version!r};"
         "assert hashlib.sha256(Path(sdk.__file__).read_bytes()).hexdigest()=="
         f"{selected_identity['sha256']!r};"
         "from template_template.core.introspection import discover_projects;\n"

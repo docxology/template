@@ -139,8 +139,9 @@ uv run pytest projects/templates/template_search_project/tests/ -q
 
 For YAML snippets:
 ```yaml
-search:
-  sources: [local]
+project_config:
+  search:
+    sources: [local]
 ```
 
 For inline code referencing file paths, use single backticks: `projects/templates/template_search_project/src/template_search_project/pipeline/pipeline.py`.

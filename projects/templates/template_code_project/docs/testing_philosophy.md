@@ -93,16 +93,16 @@ Before submitting any test, verify all boxes are checked:
 
 ## Coverage inventory (`test_analysis_coverage.py`)
 
-Branch and error-path tests for `src/template_code_project/analysis/`: `TestFallbackLogging`, `TestValidateOutputs`, `TestSaveValidationReport`, `TestStabilityScoreBranches`, `TestScientificInfraPaths`, `TestExtractMetadataExtended`, `TestCitationsExtended`, `TestPublishingExtended`, `TestMainBranches`, `TestMainErrors`, `TestRegisterFigure`, `TestImportFallback`.
+Branch and error-path tests for `src/template_code_project/analysis/`: `TestSdkLogging`, `TestValidateOutputs`, `TestSaveValidationReport`, `TestStabilityScoreBranches`, `TestScientificInfraPaths`, `TestExtractMetadataExtended`, `TestCitationsExtended`, `TestPublishingExtended`, `TestMainBranches`, `TestMainErrors`, `TestRegisterFigure`, `TestRequiredSdk`.
 
 ## Orchestration Branch Testing
 
-Orchestration modules (`analysis/`, `dashboard/dashboard.py`, `figures/`, `core/manuscript_variables.py`) may use **`pytest.MonkeyPatch`** on module attributes and **subprocess import isolation** to hit error paths and infrastructure fallbacks. That is not the same as mocking algorithm output: real code runs with redirected boundaries. See [`../tests/PATTERNS.md`](../tests/PATTERNS.md) and [`test_analysis_coverage.py`](../tests/analysis/test_analysis_coverage.py).
+Orchestration controls use project-root contexts, real filesystem failures, and isolated subprocesses without the SDK to exercise genuine error paths. Required analysis capabilities fail closed rather than selecting an SDK-free success path. Do not replace dependency functions or algorithm output. See [`../tests/PATTERNS.md`](../tests/PATTERNS.md) and [`test_analysis_coverage.py`](../tests/analysis/test_analysis_coverage.py).
 
 ## Structural Rule: If You Need a Mock, Move the Code
 
 - **`src/template_code_project/core/optimizer.py`, `src/template_code_project/core/invariants.py`, `src/template_code_project/core/experiment_config.py`** — Pure or config-only; no infrastructure imports
-- **`src/template_code_project/analysis/`, `src/template_code_project/figures/`, `src/template_code_project/dashboard/dashboard.py`, `src/template_code_project/core/manuscript_variables.py`** — Orchestration; may import `infrastructure.*` behind try/except
+- **`src/template_code_project/analysis/`, `src/template_code_project/figures/`, `src/template_code_project/dashboard/dashboard.py`, `src/template_code_project/core/manuscript_variables.py`** — Orchestration; use the declared `infrastructure.*` dependency; missing required analysis capabilities fail closed
 - **`scripts/*.py`** — CLI wrappers only
 
 ## Running the Gate

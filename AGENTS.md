@@ -17,7 +17,6 @@ This document provides documentation for the Research Project Template system, e
 | --- | --- |
 | [`README.md`](README.md) | Onboarding, documentation hub links, exemplar table |
 | [`.agents/AGENTS.md`](.agents/AGENTS.md) | Shared agent catalogs, workflows, roles and local state |
-| [`.cursorrules`](.cursorrules) | Deprecated Cursor compatibility pointer |
 | [`CLAUDE.md`](CLAUDE.md) | Command cheat sheet, patterns; keep in sync with this file for pipeline wording |
 | [`START_HERE.md`](START_HERE.md) | Agent entry point: install, first pipeline run, orientation ladder |
 | [`STATUS.md`](STATUS.md) | Per-subsystem verification ledger (last-verified dates, health) |
@@ -31,6 +30,11 @@ This document provides documentation for the Research Project Template system, e
 | [`CHANGELOG.md`](CHANGELOG.md) | Release history |
 
 ## For assistants and automation
+
+**Current release scope:** [4.5.0](docs/releases/v4.5.0.md) coordinates the root
+SDK and all canonical public exemplars. Follow the
+[release boundary](docs/maintenance/release-boundary.md); preserve original
+acceptance evidence and never infer publication from a version bump or green local checks.
 
 **Read order:** [`README.md`](README.md) → [`CLAUDE.md`](CLAUDE.md) → this file for anything not covered there.
 
@@ -80,10 +84,10 @@ evidence.
 Generic, Layer-1 facts for working in this repository.
 
 - **Manuscript variables are injected, not hand-authored.** Per-project metrics, counts, and variables come from `output/data/manuscript_variables.json` at render time. For `template_code_project`, the default pipeline calls `generate_variables(..., require_analysis_outputs=True)` via `projects/{name}/scripts/z_generate_manuscript_variables.py` and fails when `output/data/optimization_results.csv` is absent; pass `--allow-draft` only for intentional early drafts. PDF Publishing Information reads `publication.doi`, optional `publication.repository_url`, and `publication.repository_label` from `projects/{name}/manuscript/config.yaml` via `infrastructure/rendering/_pdf_latex_helpers.py`.
-- **Validation & rendering pitfalls.** Content-validation diagnostics use stable dotted IDs from `infrastructure/validation/content/diagnostic_codes.py` (`MarkdownCode`, `BibtexCode`); every new `DiagnosticEvent` must pass `code=…`, and renaming an existing code is a breaking change for downstream `jq`/`rg` filters. Fast manuscript pre-flight: `uv run python -m infrastructure.validation.cli prerender projects/<project>/manuscript --repo-root .`. Multi-pass PDF rendering continues when pass 1 wrote output despite recoverable `Missing $` errors so later passes resolve forward references. Mermaid: unquoted `//` line comments; stadium nodes `[/label/]` close with `/]`; combined-PDF Mermaid via Chrome headless or `mmdc`, else verbatim figure fallback. `FIGURE_WIDTH_*` values must be bare fractions (e.g. `0.9`); the alt-text comment belongs before `\begin{figure}`; prefer inline `$...$` over `\(...\)` in Markdown list items.
+- **Validation & rendering pitfalls.** Content-validation diagnostics use stable dotted IDs from `infrastructure/validation/content/diagnostic_codes.py` (`MarkdownCode`, `BibtexCode`); every new `DiagnosticEvent` must pass `code=…`, and renaming an existing code is a breaking change for downstream `jq`/`rg` filters. Fast manuscript pre-flight: `uv run python -m infrastructure.validation.cli prerender projects/<project>/manuscript --repo-root .`. Multi-pass PDF rendering may retry a failed pass for a truncated PDF or SIGPIPE; bounded retries must produce an actual successful compiler exit and a valid PDF. Syntax errors remain failures. Mermaid: unquoted `//` line comments; stadium nodes `[/label/]` close with `/]`; combined-PDF Mermaid via Chrome headless or `mmdc`, else verbatim figure fallback. `FIGURE_WIDTH_*` values must be bare fractions (e.g. `0.9`); the alt-text comment belongs before `\begin{figure}`; prefer inline `$...$` over `\(...\)` in Markdown list items.
 - **Entry points & gates.** `run.sh` and `secure_run.sh` source only [`scripts/shell/shell_bootstrap.sh`](scripts/shell/shell_bootstrap.sh); menu and argparse live in `infrastructure.orchestration`. [`scripts/shell/bash_utils.sh`](scripts/shell/bash_utils.sh) serves backup/health scripts and tests, not pipeline entrypoints. Exemplar doc/code drift: `scripts/audit/check_template_drift.py` → `infrastructure.project.drift.run_drift_checks()` on `PUBLIC_PROJECT_NAMES` (`--project`, `--strict`). Layer 1 module size: `scripts/gates/module_line_count_check.py` and `uv run python -m infrastructure.core.health` (`module-line-count`). The health registry also runs the executable methods contract and `scripts/gates/public_capabilities.py` across the canonical public roster. Opt-in gates under `scripts/gates/` report `status: "skipped"` under `skipped_tools` when tools are missing. `bandit.yaml` `exclude_dirs` skips rotating/private trees so CI stays strict on `infrastructure/`, `scripts/`, and public exemplars.
 
-- **Publication gate, local gate & evidence binding.** The release publication audit is the modular `scripts/audit/check_publication_outputs.py` (`--project`, `--all-public`, `--changed`, `--shard`, `--jobs`, `--receipts`, `--strict`): it audits per project, separates blocking errors from `review_required` findings, runs workers in parallel and writes one receipt per project; `release.yml` runs it as `--all-public --strict --jobs 4` and uploads the receipts. `hardening.yml` still runs the source-only `python -m infrastructure.validation.cli publication-audit --all-public --strict --format json` (no `--rendered`, no receipts). Locally, `scripts/gates/local_gate.py` (thin CLI over `infrastructure/core/testing/local_gate.py`; `--changed`, `--list`) runs the `format`, `lint`, `types`, `security`, `gates`, `publication`, `unit` and `infra` stages; its `publication` stage runs `scripts/audit/check_publication_outputs.py --changed --jobs 4`, or `--all-public --jobs 4` without `--changed`. A rendered-provenance receipt binds its exemplar's sources and config **plus every tracked implementation file under `infrastructure/` and `scripts/`** (`AGENTS.md`, `README.md` and `DESIGN.md` are excluded because they cannot change rendered output; runtime prose assets still bind), so editing a stage module or runtime asset invalidates all 25 receipts: re-run that exemplar's producers (`scripts/pipeline/stage_03_render.py`, then `stage_04_validate.py --project <name>`) and stage the evidence in the same commit. Heavy contract modules declare a measured `pytest-xdist` worker budget (`ci_contracts.contract_preparation` → `workers`, passed as `TEMPLATE_CI_XDIST`), so a long module such as `test_root_runtime_v2.py` runs across four workers instead of owning a job for twenty minutes; the per-module measurement comes from `infrastructure/config/ci-module-durations.json`. `scripts/maintenance/refresh_rendered_provenance.py` re-runs Stage 2 analysis once when a render is blocked by a stale analysis boundary, so a local refresh self-heals instead of requiring a manual ordering fix. Canonical public output bytes are capped at `PUBLIC_TEMPLATE_OUTPUT_MAX_TOTAL_BYTES` (224 MiB in `infrastructure/project/git_guards.py`) and enforced by `scripts/audit/check_tracked_generated_artifacts.py`. Root 4+ publication requires a successful `platform-required-acceptance.yml` run on the exact tag SHA; hand its `platform-required-acceptance` artifact and the SHA-256 of `output/readiness/release-candidate/receipt.json` to `release.yml` via `acceptance_run_id`, `acceptance_artifact_id` and `acceptance_receipt_sha256`.
+- **Publication gate, local gate & evidence binding.** The release publication audit is the modular `scripts/audit/check_publication_outputs.py` (`--project`, `--all-public`, `--changed`, `--shard`, `--jobs`, `--receipts`, `--strict`): it audits per project, separates blocking errors from `review_required` findings, runs workers in parallel and writes one receipt per project; `release.yml` runs it as `--all-public --strict --jobs 4` and uploads the receipts. `hardening.yml` still runs the source-only `python -m infrastructure.validation.cli publication-audit --all-public --strict --format json` (no `--rendered`, no receipts). Locally, `scripts/gates/local_gate.py` (thin CLI over `infrastructure/core/testing/local_gate.py`; `--changed`, `--list`) runs the `format`, `lint`, `types`, `security`, `gates`, `publication`, `unit` and `infra` stages; its `publication` stage runs `scripts/audit/check_publication_outputs.py --changed --jobs 4`, or `--all-public --jobs 4` without `--changed`. A rendered-provenance receipt binds its exemplar's sources and config **plus every tracked implementation file under `infrastructure/` and `scripts/`** (`AGENTS.md`, `README.md` and `DESIGN.md` are excluded because they cannot change rendered output; runtime prose assets still bind), so editing a stage module or runtime asset invalidates all 25 receipts: re-run that exemplar's producers (`scripts/pipeline/stage_03_render.py`, then `stage_04_validate.py --project <name>`) and stage the evidence in the same commit. Contract modules run in independent jobs with serial collection receipts; measurements in `infrastructure/config/ci-module-durations.json` guide functional shard balancing. `scripts/maintenance/refresh_rendered_provenance.py` re-runs Stage 2 analysis once when a render is blocked by a stale analysis boundary, so a local refresh self-heals instead of requiring a manual ordering fix. Canonical public output bytes are capped at `PUBLIC_TEMPLATE_OUTPUT_MAX_TOTAL_BYTES` (224 MiB in `infrastructure/project/git_guards.py`) and enforced by `scripts/audit/check_tracked_generated_artifacts.py`. Root 4+ publication requires a successful `platform-required-acceptance.yml` run on the exact tag SHA; hand its `platform-required-acceptance` artifact and the SHA-256 of `output/readiness/release-candidate/receipt.json` to `release.yml` via `acceptance_run_id`, `acceptance_artifact_id` and `acceptance_receipt_sha256`.
 
 ## Confidentiality invariant (this is a PUBLIC repo)
 
@@ -1076,13 +1080,15 @@ Multi-format output generation from single source.
 **Usage:**
 
 ```python
+from pathlib import Path
+
 from infrastructure.rendering import RenderManager
 
 manager = RenderManager()
-pdf = manager.render_pdf("manuscript.tex")
-slides = manager.render_slides("presentation.md", format="revealjs")
-html = manager.render_web("manuscript.md")
-all_outputs = manager.render_all("manuscript.md")
+pdf = manager.render_pdf(Path("manuscript.tex"))
+slides = manager.render_slides(Path("presentation.md"), output_format="revealjs")
+html = manager.render_web(Path("manuscript.md"))
+all_outputs = manager.render_all(Path("manuscript.md"))
 ```
 
 ### 🚀 Publishing Module (`infrastructure/publishing/`)
@@ -1127,7 +1133,7 @@ print(result.doi)
 release = create_github_release(metadata, files, token)
 
 # Prepare arXiv submission
-package = prepare_arxiv_submission(metadata, files)
+package = prepare_arxiv_submission(Path("output"))
 ```
 
 ### **Module Integration**
@@ -1509,7 +1515,7 @@ those lanes retain their recorded states. Generated measurements live in
 
 - ✅ **High code coverage** across infrastructure and project gates (live % → [`docs/_generated/COUNTS.md`](docs/_generated/COUNTS.md), [`docs/development/coverage-gaps.md`](docs/development/coverage-gaps.md))
 - ✅ Zero mock methods - all tests use data and HTTP calls
-- Shared agent behavior is defined by root `AGENTS.md` and `.agents/AGENTS.md`; `.cursorrules` is a deprecated pointer.
+- Shared agent behavior is defined by root `AGENTS.md` and `.agents/AGENTS.md`.
 - ✅ compliance with thin orchestrator pattern
 - Pipeline selection is resolved through core/live; acceptance follows the evidence links above.
 - ✅ Reproducible outputs (deterministic with fixed seeds)

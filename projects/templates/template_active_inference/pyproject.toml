@@ -25,7 +25,7 @@ dependencies = [
 
 [project.optional-dependencies]
 dev = [
-    "research-project-template==4.4.0",
+    "research-project-template==4.5.0",
     "defusedxml>=0.7.1",
     "pytest>=7.4.0",
     "pytest-cov>=4.1.0",
@@ -59,7 +59,7 @@ precision = 2
 
 [tool.template]
 acceptance_test_groups = "orchestration.full_verification:_validated_coverage_test_groups"
-platform_version = "4.4.0"
+platform_version = "4.5.0"
 tested_python_versions = ["3.14", "3.15"]
 required_unpaid_capabilities = ["pymdp", "lean"]
 # Test prepared artifacts exactly once through isolated --cov-append groups.

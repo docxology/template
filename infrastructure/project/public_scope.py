@@ -148,7 +148,7 @@ def main(argv: Sequence[str] | None = None) -> int:
     repo_root = args.repo_root.resolve()
     if args.command == "ci-paths":
         # Compute both scopes before publishing either output. The helpers
-        # remain the same source of truth used by health and legacy commands.
+        # remain the same source of truth used by health and project commands.
         lint_paths = _format_paths(public_ci_lint_paths(repo_root))
         source_paths = _format_paths(public_ci_source_paths(repo_root))
         print(f"lint_paths={lint_paths}\nsource_paths={source_paths}")

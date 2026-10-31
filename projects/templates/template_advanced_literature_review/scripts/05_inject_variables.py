@@ -13,7 +13,7 @@ if str(_SCRIPTS) not in sys.path:
 
 from _bootstrap import bootstrap_project
 
-PROJECT_ROOT = bootstrap_project(include_infrastructure=True)
+PROJECT_ROOT = bootstrap_project()
 
 from infrastructure.core.logging.utils import get_logger, log_operation
 from infrastructure.rendering.manuscript_injection import (

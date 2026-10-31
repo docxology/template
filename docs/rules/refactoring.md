@@ -1,20 +1,11 @@
 # Refactoring Standards
 
-## Core Principle: No Backward Compatibility
+## Current implementation contract
 
-**CRITICAL RULE**: When refactoring or modularizing code:
-
-1. **NO backward compatibility shims**
-2. **NO deprecation warnings**
-3. **NO legacy method wrappers**
-4. **Clean break approach only**
-
-### Rationale
-
-- Backward compatibility adds technical debt
-- Legacy code paths increase complexity and maintenance burden
-- Clean breaks force updates and prevent fragmented codebases
-- All code should use the current, best structure
+Refactoring replaces the implementation and migrates its callers in one change.
+Keep one supported entrypoint for each operation. Remove superseded wrappers,
+parallel implementations, and unused files after all callers have migrated.
+Document the resulting API and release impact directly.
 
 ### Declared public exports
 
@@ -31,7 +22,7 @@ usage guidance.
 When modularizing or restructuring:
 
 1. **Create new modular structure** with clear separation of concerns
-2. **Delete old files completely** - no leaving "deprecated" files around
+2. **Delete replaced files completely** after migrating every caller
 3. **Update ALL imports** across the entire codebase immediately
 4. **Update ALL tests** to use new imports
 5. **Update ALL documentation** (AGENTS.md, README.md, docstrings)
@@ -107,27 +98,6 @@ Update in this order:
 3. **After**: Run full test suite with coverage report
 4. **Verify**: No broken imports, all tests pass
 
-### Example: Modularizing a Large File
-
-**Bad** (backward compatibility approach):
-
-```python
-# old_api.py
-import warnings
-from new_module import *
-
-warnings.warn("Use new_module instead", DeprecationWarning)
-```
-
-**Good** (clean break approach):
-
-```python
-# Delete old_api.py completely
-# Update all imports:
-# OLD: from old_api import Thing
-# NEW: from new_module.things import Thing
-```
-
 ### Commit Message Template
 
 ```
@@ -165,17 +135,6 @@ Before marking refactoring:
 - [ ] Test coverage maintained or improved
 - [ ] No linter errors introduced
 - [ ] Commit message documents migration
-
-## Benefits of Clean Break Approach
-
-1. **Clarity**: Only one way to import things
-2. **Maintainability**: No legacy code paths to maintain
-3. **Performance**: No deprecation warnings at runtime
-4. **Quality**: Forces updates
-5. **Documentation**: Documentation stays current
-6. **Testing**: Tests reflect actual usage
-7. **Simplicity**: Codebase easier to understand
-
 
 ## See Also
 

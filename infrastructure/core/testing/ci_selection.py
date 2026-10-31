@@ -81,17 +81,39 @@ def _parse_changed_paths(output: bytes) -> tuple[tuple[str, ...], bool]:
     return tuple(sorted(set(paths))), ambiguous
 
 
-_DOCUMENTATION_SUFFIXES = frozenset({".md", ".rst", ".txt", ".svg", ".png", ".jpg", ".jpeg", ".gif"})
+_DOCUMENTATION_SUFFIXES = frozenset({".md", ".rst", ".svg", ".png", ".jpg", ".jpeg", ".gif"})
+_GUIDE_NAMES = frozenset({"AGENTS.md", "README.md", "DESIGN.md"})
+_ROOT_GUIDES = _GUIDE_NAMES | frozenset(
+    {
+        "CHANGELOG.md",
+        "CLAUDE.md",
+        "CONTRIBUTING.md",
+        "MAINTAINERS.md",
+        "SECURITY.md",
+        "START_HERE.md",
+        "STATUS.md",
+        "TO-DO.md",
+    }
+)
 
 
 def documentation_only(paths: tuple[str, ...]) -> bool:
-    """Report whether every changed path is prose or documentation artwork.
+    """Recognize guide-only changes without excluding runtime text or artwork."""
 
-    Documentation cannot change executable behavior, so it must not select the
-    functional, contract or smoke rosters. Anything else (source, lock, config,
-    metadata, control file) keeps the normal routing.
-    """
-    return bool(paths) and all(Path(name).suffix.lower() in _DOCUMENTATION_SUFFIXES for name in paths)
+    def is_guide(name: str) -> bool:
+        path = Path(name)
+        if path.is_absolute() or ".." in path.parts or "\\" in name or path.as_posix() != name:
+            return False
+        if len(path.parts) == 1:
+            return name in _ROOT_GUIDES
+        if path.parts[0] == "docs":
+            # These trees contain manuscript inputs and executable prompt assets.
+            return path.parts[1] not in {"manuscript", "prompts"} and path.suffix.lower() in _DOCUMENTATION_SUFFIXES
+        return (
+            path.parts[0] in {"infrastructure", "scripts", "tests", ".github", "projects"} and path.name in _GUIDE_NAMES
+        )
+
+    return bool(paths) and all(is_guide(name) for name in paths)
 
 
 def affected_projects(root: Path, paths: tuple[str, ...], *, full: bool = False) -> tuple[tuple[str, ...], str]:
@@ -157,8 +179,7 @@ def _contract_matrix(
     # only, never selected work, deadlines or acceptance.
     observed_seconds = load_module_durations(_REPOSITORY_ROOT) if durations is None else durations
     rows: list[dict[str, Any]] = [
-        {"shard": len(shards) + i, "module": name, **contract_preparation(name, observed_seconds)}
-        for i, name in enumerate(modules)
+        {"shard": len(shards) + i, "module": name, **contract_preparation(name)} for i, name in enumerate(modules)
     ]
     rows.sort(key=lambda row: (-observed_seconds.get(row["module"], 0), row["module"]))
     return {"include": rows or [{"shard": -1, "module": "none", **contract_preparation("none")}]}
@@ -174,18 +195,11 @@ def infrastructure_selection(root: Path, plan: dict[str, Any]) -> dict[str, Any]
     from infrastructure.core.testing.ci_infra import infrastructure_files, infrastructure_shards
 
     changed = tuple(plan["changed_paths"])
-    if documentation_only(changed):
-        # Documentation changes still exercise the documentation contracts, but
-        # must not spin up the measured-duration smoke or contract rosters.
-        plan["infra_shards"] = [["tests/infra_tests/documentation"]]
-        # No roster enumeration at all: documentation cannot reach these lanes,
-        # and `ci.yml` skips the contract job for a documentation-only change.
-        plan["contract_modules"] = []
-        plan["documentation_only"] = True
-        return plan
-    plan["infra_shards"] = infrastructure_shards(root, changed)
-    plan["contract_modules"] = list(contract_files(infrastructure_files(root, changed), infrastructure_files(root)))
-    plan["documentation_only"] = False
+    docs_only = not plan.get("full", False) and documentation_only(changed)
+    files = infrastructure_files(root, changed, documentation=docs_only)
+    plan["infra_shards"] = infrastructure_shards(root, changed, documentation=docs_only)
+    plan["contract_modules"] = list(contract_files(files, () if docs_only else infrastructure_files(root)))
+    plan["documentation_only"] = docs_only
     return plan
 
 

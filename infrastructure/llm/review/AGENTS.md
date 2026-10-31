@@ -60,7 +60,7 @@ The `_REVIEW_REGISTRY` dict — add new review types here to generate additional
 # Defined in generator.py; not part of the public API but documents the pattern.
 ```
 
-`generator.py` also re-exports from its submodules for backwards compatibility (all names flow through `__init__.py`):
+`generator.py` also re-exports from its submodules as its declared public API (all names flow through `__init__.py`):
 
 ```python
 from infrastructure.llm.review.generator import (

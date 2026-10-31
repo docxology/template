@@ -42,7 +42,7 @@ def test_tagged_pdf_replaces_pandoc_caption_alt_with_registry_text(tmp_path: Pat
 def test_tagged_pdf_rejects_registry_path_under_mismatched_figure_label(tmp_path: Path) -> None:
     registry_path = tmp_path / "figure_registry.json"
     registry_path.write_text(
-        json.dumps({"fig:dense": {"filename": "dense.png", "alt": "Registry description."}}),
+        json.dumps({"fig:dense": {"filename": "dense.png", "alt_text": "Registry description."}}),
         encoding="utf-8",
     )
     tex = (
@@ -57,7 +57,7 @@ def test_tagged_pdf_rejects_registry_path_under_mismatched_figure_label(tmp_path
 def test_tagged_pdf_rejects_registry_label_rendering_mismatched_path(tmp_path: Path) -> None:
     registry_path = tmp_path / "figure_registry.json"
     registry_path.write_text(
-        json.dumps({"fig:dense": {"filename": "dense.png", "alt": "Registry description."}}),
+        json.dumps({"fig:dense": {"filename": "dense.png", "alt_text": "Registry description."}}),
         encoding="utf-8",
     )
     tex = (
@@ -82,8 +82,8 @@ def test_labelled_tagged_pdf_figure_resolves_by_label_despite_alias_filename(
     registry_path.write_text(
         json.dumps(
             {
-                "fig:dense": {"filename": "shared.png", "alt": "Dense description."},
-                "fig:atlas-shared": {"filename": "shared.png", "alt": "Atlas description."},
+                "fig:dense": {"filename": "shared.png", "alt_text": "Dense description."},
+                "fig:atlas-shared": {"filename": "shared.png", "alt_text": "Atlas description."},
             }
         ),
         encoding="utf-8",
@@ -103,7 +103,7 @@ def test_labelled_tagged_pdf_figure_resolves_by_label_despite_alias_filename(
 def test_tagged_pdf_unlabelled_registry_reuse_preserves_nonblank_authored_alt(tmp_path: Path) -> None:
     registry_path = tmp_path / "figure_registry.json"
     registry_path.write_text(
-        json.dumps({"fig:dense": {"filename": "dense.png", "alt": "Registry description."}}),
+        json.dumps({"fig:dense": {"filename": "dense.png", "alt_text": "Registry description."}}),
         encoding="utf-8",
     )
     tex = r"\includegraphics[keepaspectratio,alt={Repeated caption}]{../figures/dense.png}"
@@ -120,7 +120,7 @@ def test_tagged_pdf_unlabelled_registry_reuse_without_authored_alt_stays_decorat
 ) -> None:
     registry_path = tmp_path / "figure_registry.json"
     registry_path.write_text(
-        json.dumps({"fig:dense": {"filename": "dense.png", "alt": "Registry description."}}),
+        json.dumps({"fig:dense": {"filename": "dense.png", "alt_text": "Registry description."}}),
         encoding="utf-8",
     )
     tex = r"\includegraphics[keepaspectratio]{../figures/dense.png}"
@@ -139,7 +139,7 @@ def test_tagged_pdf_unregistered_graphic_without_authored_alt_fails(
     registry_path = tmp_path / "figure_registry.json"
     if registry_present:
         registry_path.write_text(
-            json.dumps({"fig:dense": {"filename": "dense.png", "alt": "Registry description."}}),
+            json.dumps({"fig:dense": {"filename": "dense.png", "alt_text": "Registry description."}}),
             encoding="utf-8",
         )
     tex = r"\includegraphics[keepaspectratio]{../figures/unknown.png}"
@@ -151,7 +151,7 @@ def test_tagged_pdf_unregistered_graphic_without_authored_alt_fails(
 def test_tagged_pdf_unregistered_figure_preserves_nonblank_authored_alt(tmp_path: Path) -> None:
     registry_path = tmp_path / "figure_registry.json"
     registry_path.write_text(
-        json.dumps({"fig:dense": {"filename": "dense.png", "alt": "Registry description."}}),
+        json.dumps({"fig:dense": {"filename": "dense.png", "alt_text": "Registry description."}}),
         encoding="utf-8",
     )
     tex = (
@@ -167,7 +167,7 @@ def test_tagged_pdf_unregistered_figure_preserves_nonblank_authored_alt(tmp_path
 def test_tagged_pdf_unlabelled_figure_cannot_consume_registry_path(tmp_path: Path) -> None:
     registry_path = tmp_path / "figure_registry.json"
     registry_path.write_text(
-        json.dumps({"fig:dense": {"filename": "dense.png", "alt": "Registry description."}}),
+        json.dumps({"fig:dense": {"filename": "dense.png", "alt_text": "Registry description."}}),
         encoding="utf-8",
     )
     tex = (
@@ -182,7 +182,7 @@ def test_tagged_pdf_unlabelled_figure_cannot_consume_registry_path(tmp_path: Pat
 def test_untagged_pdf_does_not_claim_registry_alt_support(tmp_path: Path) -> None:
     registry_path = tmp_path / "figure_registry.json"
     registry_path.write_text(
-        json.dumps({"fig:dense": {"filename": "dense.png", "alt": "Registry description."}}),
+        json.dumps({"fig:dense": {"filename": "dense.png", "alt_text": "Registry description."}}),
         encoding="utf-8",
     )
     tex = r"\includegraphics[alt={Authored caption}]{../figures/dense.png}"

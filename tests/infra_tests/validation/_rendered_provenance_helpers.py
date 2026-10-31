@@ -15,7 +15,7 @@ PROJECT = "templates/template_test"
 def _write_green_validation_report(root: Path, project: Path) -> dict[str, object]:
     snapshot = build_current_rendered_snapshot(root, PROJECT)
     checks = {"Rendered structure": True, "Artifact manifest": True}
-    detailed_validation = collect_detailed_validation_results(project / "output", require_pdf=False)
+    detailed_validation = collect_detailed_validation_results(project / "output", enabled_formats=("html",))
     payload: dict[str, object] = {
         "timestamp": "2026-01-01T00:00:00Z",
         "checks": checks,

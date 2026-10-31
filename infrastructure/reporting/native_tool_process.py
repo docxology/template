@@ -29,6 +29,7 @@ from infrastructure.core.execution_boundary import (
 from infrastructure.reporting.native_format_portable_custody import (
     executable_observation,
 )
+from infrastructure.reporting.native_original_progress import _preflight_worker_phase
 
 from infrastructure.reporting.native_tool_process_inputs import (
     _nomination_observation as _nomination_observation,
@@ -259,7 +260,9 @@ def run_native_tool_process(
         "guardian_finished": False,
         "final_token_sweep_matched_pids": None,
     }
+    _preflight_worker_phase("streams-open-begin", purpose, deadline)
     with stdout_path.open("xb") as stdout, stderr_path.open("xb") as stderr:
+        _preflight_worker_phase("streams-open-end", purpose, deadline)
         try:
             if stdin_path is not None:
                 stdin_stream = os.fdopen(
@@ -280,6 +283,7 @@ def run_native_tool_process(
                 or not preserve_nominated_launcher
             ):
                 raise ValueError("fixed hosted reader cannot select another native instrumentation/interaction role")
+            _preflight_worker_phase("nomination-begin", purpose, deadline)
             selected_env = build_bounded_env(env)
             selected = shutil.which(name, path=selected_env.get("PATH"))
             if not selected:
@@ -300,7 +304,9 @@ def run_native_tool_process(
             ]
             payload["launcher_preserved"] = preserve_nominated_launcher
             payload["nominated_identity_before"] = _nomination_observation(nominated)
+            _preflight_worker_phase("nomination-end", purpose, deadline)
 
+            _preflight_worker_phase("guardian-start", purpose, deadline)
             process_env, run_token = build_bounded_run_env(selected_env)
             bounded_env = dict(process_env)
             guardian = start_bounded_run_guardian(
@@ -311,6 +317,7 @@ def run_native_tool_process(
             if guardian is None:
                 raise ValueError("actual native tool requires its independent owned guardian")
             cleanup["guardian_pid"] = guardian.process.pid
+            _preflight_worker_phase("guardian-ready", purpose, deadline, pid=guardian.process.pid)
             _remaining(deadline)
             payload["launch_begin"] = _stamp()
             if loader is not None:
@@ -321,12 +328,15 @@ def run_native_tool_process(
                 payload["loader_stdin"] = stdin_stream is not None
             from infrastructure.reporting.native_environment_custody import capture_native_environment
 
+            _preflight_worker_phase("environment-begin", purpose, deadline)
             if hosted_route is not None:
                 process_env, payload["environment_custody"] = hosted_route.capture(selected_env, bounded_env, run_token)
             else:
                 payload["environment_custody"] = capture_native_environment(
                     env, selected_env, bounded_env, process_env, run_token, loader
                 )
+            _preflight_worker_phase("environment-end", purpose, deadline)
+            _preflight_worker_phase("worker-popen-begin", purpose, deadline)
             process = subprocess.Popen(
                 payload["command"],
                 cwd=cwd,
@@ -336,9 +346,12 @@ def run_native_tool_process(
                 stderr=stderr,
                 start_new_session=True,
             )
+            _preflight_worker_phase("worker-popen-returned", purpose, deadline, pid=process.pid)
             payload["pid"] = process.pid
             payload["launch_returned"] = _stamp()
+            _preflight_worker_phase("arm-begin", purpose, deadline)
             guardian.arm(root_pid=process.pid, run_token=run_token, deadline_monotonic=deadline)
+            _preflight_worker_phase("arm-end", purpose, deadline)
             cleanup["guardian_armed"] = guardian.armed
             monitor = threading.Thread(target=monitor_streams, name="native-tool-owned-streams", daemon=True)
             monitor.start()
@@ -381,7 +394,9 @@ def run_native_tool_process(
                 finally:
                     owner._close_owner()
                     interaction["end"] = _stamp()
+            _preflight_worker_phase("wait-begin", purpose, deadline)
             process.wait(timeout=_remaining(deadline))
+            _preflight_worker_phase("wait-end", purpose, deadline)
             payload["root_reaped"] = _stamp()
             if loader_thread is not None:
                 loader_thread.join(timeout=_remaining(deadline))
@@ -397,6 +412,7 @@ def run_native_tool_process(
             payload["diagnostics"].append(f"{type(error).__name__}: {error}")
             payload["timed_out"] = isinstance(error, (TimeoutError, subprocess.TimeoutExpired))
         finally:
+            _preflight_worker_phase("cleanup-begin", purpose, deadline)
             if loader_thread is not None and loader_thread.is_alive():
                 if loader is not None:
                     loader.abort()
@@ -465,7 +481,9 @@ def run_native_tool_process(
                         payload["root_reaped"] = _stamp()
                 cleanup["root_reaped"] = process is not None and process.returncode is not None
                 cleanup["end"] = _stamp()
+                _preflight_worker_phase("cleanup-end", purpose, deadline)
     payload["cleanup"] = cleanup
+    _preflight_worker_phase("retention-begin", purpose, deadline)
     if observed_processes is not None:
         # Direct independently reaped Popen/guardian facts survive later
         # executable/stream/JSON retention failure. They remain DATA and cannot
@@ -523,4 +541,5 @@ def run_native_tool_process(
         record_path.write_text(json.dumps(payload, indent=2) + "\n")
     if original_error is not None and not isinstance(original_error, Exception):
         raise original_error
+    _preflight_worker_phase("retention-end", purpose, deadline)
     return payload

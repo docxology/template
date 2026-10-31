@@ -21,7 +21,7 @@ def test_parse_pytest_output_extracts_counts_and_coverage() -> None:
     assert result["exit_code"] == 1
 
 
-def test_generate_test_report_combines_infra_and_project() -> None:
+def test_generate_test_report_combines_infra_and_project(tmp_path: Path) -> None:
     infra = {
         "passed": 5,
         "failed": 0,
@@ -39,7 +39,9 @@ def test_generate_test_report_combines_infra_and_project() -> None:
         "exit_code": 1,
     }
 
-    report = generate_test_report(infra_results=infra, project_results=project, repo_root=Path("."))
+    report = generate_test_report(
+        infra_results=infra, project_results=project, repo_root=tmp_path, project_root=tmp_path / "project"
+    )
 
     summary = report["summary"]
     assert summary["total_passed"] == 12
@@ -118,23 +120,27 @@ def test_parse_pytest_output_deselected() -> None:
     assert result["total"] == 5  # Deselected not counted in total
 
 
-def test_generate_test_report_no_coverage() -> None:
+def test_generate_test_report_no_coverage(tmp_path: Path) -> None:
     """Test generate_test_report when coverage is not present."""
     infra = {"passed": 5, "failed": 0, "skipped": 1, "total": 6, "exit_code": 0}
     project = {"passed": 7, "failed": 1, "skipped": 0, "total": 8, "exit_code": 1}
 
-    report = generate_test_report(infra_results=infra, project_results=project, repo_root=Path("."))
+    report = generate_test_report(
+        infra_results=infra, project_results=project, repo_root=tmp_path, project_root=tmp_path / "project"
+    )
 
     assert "infrastructure_coverage" not in report["summary"]
     assert "project_coverage" not in report["summary"]
 
 
-def test_generate_test_report_all_passed() -> None:
+def test_generate_test_report_all_passed(tmp_path: Path) -> None:
     """Test generate_test_report when all tests pass."""
     infra = {"passed": 10, "failed": 0, "skipped": 0, "total": 10, "exit_code": 0}
     project = {"passed": 20, "failed": 0, "skipped": 0, "total": 20, "exit_code": 0}
 
-    report = generate_test_report(infra_results=infra, project_results=project, repo_root=Path("."))
+    report = generate_test_report(
+        infra_results=infra, project_results=project, repo_root=tmp_path, project_root=tmp_path / "project"
+    )
 
     assert report["summary"]["all_passed"] is True
     assert report["summary"]["total_passed"] == 30

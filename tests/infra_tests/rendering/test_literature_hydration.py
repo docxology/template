@@ -14,6 +14,85 @@ ROOT = Path(__file__).resolve().parents[3]
 PROJECTS = ("template_literature_meta_analysis", "template_advanced_literature_review")
 
 
+@pytest.fixture(scope="module")
+def installed_meta_provider(tmp_path_factory: pytest.TempPathFactory) -> Path:
+    """Build/install the real dependency once; entrypoint families require uv-cli."""
+    scratch = tmp_path_factory.mktemp("hydration-installed-provider").resolve()
+    original = ROOT / "projects/templates/template_literature_meta_analysis"
+    source = scratch / "source"
+    source.mkdir()
+    for name in ("pyproject.toml", "README.md", "LICENSE"):
+        shutil.copy2(original / name, source / name)
+    shutil.copytree(original / "src", source / "src", ignore=shutil.ignore_patterns("__pycache__", "*.egg-info"))
+    wheels = scratch / "wheels"
+    wheels.mkdir()
+
+    def run(name: str, command: list[str]) -> None:
+        stdout_path, stderr_path = scratch / f"{name}.stdout.log", scratch / f"{name}.stderr.log"
+        with stdout_path.open("w", encoding="utf-8") as stdout, stderr_path.open("w", encoding="utf-8") as stderr:
+            result = subprocess.run(
+                command,
+                cwd=source,
+                stdin=subprocess.DEVNULL,
+                stdout=stdout,
+                stderr=stderr,
+                timeout=90,
+                check=False,
+            )
+        assert result.returncode == 0, (
+            f"{name} failed; retained diagnostics: {scratch}\n"
+            + stdout_path.read_text()[-2000:]
+            + stderr_path.read_text()[-2000:]
+        )
+
+    run(
+        "build",
+        [
+            sys.executable,
+            "-I",
+            "-c",
+            "import sys;from setuptools.build_meta import build_wheel;print(build_wheel(sys.argv[1]))",
+            str(wheels),
+        ],
+    )
+    artifacts = list(wheels.glob("*.whl"))
+    assert len(artifacts) == 1
+    uv = shutil.which("uv")
+    assert uv is not None, "actual offline dependency installation requires uv"
+    site = scratch / "installed-site"
+    run(
+        "install",
+        [
+            uv,
+            "pip",
+            "install",
+            "--offline",
+            "--no-config",
+            "--no-deps",
+            "--no-build",
+            "--python",
+            sys.executable,
+            "--target",
+            str(site),
+            str(artifacts[0]),
+        ],
+    )
+    run(
+        "installed-origin",
+        [
+            sys.executable,
+            "-I",
+            "-c",
+            "import importlib.metadata,sys;from pathlib import Path;"
+            "sys.path.insert(0,sys.argv[1]);import template_literature_meta_analysis as provider;"
+            "assert Path(provider.__file__).resolve().is_relative_to(Path(sys.argv[1]).resolve());"
+            "print(provider.__file__);print(importlib.metadata.version('template-literature-meta-analysis'))",
+            str(site),
+        ],
+    )
+    return site
+
+
 @pytest.fixture(params=PROJECTS)
 def project(request: pytest.FixtureRequest, tmp_path: Path) -> Path:
     """Copy real public source into a fresh typed workspace with minimal authored input."""
@@ -23,6 +102,7 @@ def project(request: pytest.FixtureRequest, tmp_path: Path) -> Path:
     (copied / "scripts").mkdir(parents=True)
     for filename in ("_bootstrap.py", "05_inject_variables.py"):
         shutil.copy2(original / "scripts" / filename, copied / "scripts" / filename)
+    shutil.copy2(original / "pyproject.toml", copied / "pyproject.toml")
     shutil.copytree(original / "src", copied / "src", ignore=shutil.ignore_patterns("__pycache__", "*.egg-info"))
     (copied / "manuscript").mkdir()
     (copied / "manuscript/01_main.md").write_text("# Actual fixture\n")
@@ -33,10 +113,19 @@ def project(request: pytest.FixtureRequest, tmp_path: Path) -> Path:
     return copied
 
 
-def invoke(project: Path, *args: str) -> subprocess.CompletedProcess[str]:
+def invoke(project: Path, *args: str, provider_site: Path) -> subprocess.CompletedProcess[str]:
     environment = dict(os.environ, TEMPLATE_REPO_ROOT=str(ROOT), PYTHONDONTWRITEBYTECODE="1")
     return subprocess.run(
-        [sys.executable, "-I", str(project / "scripts/05_inject_variables.py"), *args],
+        [
+            sys.executable,
+            "-I",
+            "-c",
+            "import runpy,sys;sys.path.insert(0,sys.argv.pop(1));"
+            "sys.argv=sys.argv[1:];runpy.run_path(sys.argv[0],run_name='__main__')",
+            str(provider_site),
+            str(project / "scripts/05_inject_variables.py"),
+            *args,
+        ],
         env=environment,
         cwd=project,
         capture_output=True,
@@ -50,19 +139,32 @@ def snapshot(root: Path) -> dict[str, bytes | None]:
     return {p.relative_to(root).as_posix(): p.read_bytes() if p.is_file() else None for p in root.rglob("*")}
 
 
-def test_actual_hydration_dry_run_stale_sections_and_strict_failure_preserve_source(project: Path) -> None:
+@pytest.mark.timeout(180)
+def test_actual_hydration_dry_run_stale_sections_and_strict_failure_preserve_source(
+    project: Path, installed_meta_provider: Path
+) -> None:
     source = snapshot(project / "manuscript")
     before = snapshot(project / "output")
-    result = invoke(project, "--project", f"templates/{project.name}", "--dry-run")
+    result = invoke(
+        project, "--project", f"templates/{project.name}", "--dry-run", provider_site=installed_meta_provider
+    )
     assert result.returncode == 0, result.stderr
     assert snapshot(project / "output") == before
     rendered = project / "output/manuscript"
     rendered.mkdir()
     (rendered / "00_deleted_section.md").write_text("# Former generated section\n")
     (rendered / "notes.md").write_text("Unrelated owned notes\n")
-    result = invoke(project, "--project", project.name)
+    before = snapshot(project / "output")
+    for arguments in (("--dry-run",), ()):
+        result = invoke(project, "--project", project.name, *arguments, provider_site=installed_meta_provider)
+        assert result.returncode != 0 and "unowned rendered manuscript section" in result.stderr
+        assert "move it outside output/manuscript" in result.stderr
+        assert snapshot(project / "output") == before
+    # The owner explicitly retains the unowned bytes outside the render inputs.
+    (rendered / "00_deleted_section.md").rename(project / "output/retained_deleted_section.md")
+    result = invoke(project, "--project", project.name, provider_site=installed_meta_provider)
     assert result.returncode == 0, result.stderr
-    assert not (rendered / "00_deleted_section.md").exists()
+    assert (project / "output/retained_deleted_section.md").read_text() == "# Former generated section\n"
     assert not (rendered / "MANUSCRIPT_STATUS.md").exists()
     assert not (rendered / ".env").exists()
     assert not (rendered / "unrelated.json").exists()
@@ -71,21 +173,24 @@ def test_actual_hydration_dry_run_stale_sections_and_strict_failure_preserve_sou
     assert snapshot(project / "manuscript") == source
     # Manifest-owned sections disappear only when the exact generated bytes remain.
     (project / "manuscript/02_removed.md").write_text("# Remove on subsequent regeneration\n")
-    assert invoke(project).returncode == 0
+    assert invoke(project, provider_site=installed_meta_provider).returncode == 0
     (project / "manuscript/02_removed.md").unlink()
-    assert invoke(project).returncode == 0
+    assert invoke(project, provider_site=installed_meta_provider).returncode == 0
     assert not (rendered / "02_removed.md").exists()
     before = snapshot(project / "output")
     # A later section fails after the first source has rendered. No prepared file
     # or stale section may mutate the last successful artifact tree.
     (project / "manuscript/99_invalid.md").write_text("{{UNKNOWN_REQUIRED_METRIC}}\n")
-    result = invoke(project)
+    result = invoke(project, provider_site=installed_meta_provider)
     assert result.returncode != 0 and "Unresolved variables" in result.stderr
     assert snapshot(project / "output") == before
 
 
 @pytest.mark.parametrize("selection", ["other", "lifecycle", "traversal", "absolute", "sidecar"])
-def test_actual_project_context_refuses_other_owner_before_writing(project: Path, selection: str) -> None:
+@pytest.mark.timeout(180)
+def test_actual_project_context_refuses_other_owner_before_writing(
+    project: Path, selection: str, installed_meta_provider: Path
+) -> None:
     if selection == "sidecar":
         from infrastructure.rendering.manuscript_injection import validate_project_selection
 
@@ -103,13 +208,16 @@ def test_actual_project_context_refuses_other_owner_before_writing(project: Path
         "absolute": str(project),
     }[selection]
     before = snapshot(project / "output")
-    result = invoke(project, "--project", supplied)
+    result = invoke(project, "--project", supplied, provider_site=installed_meta_provider)
     assert result.returncode != 0 and "only supports" in result.stderr
     assert snapshot(project / "output") == before
 
 
 @pytest.mark.parametrize("link", ["output", "destination", "member", "source", "sdk_source", "sdk_scripts"])
-def test_actual_hydration_refuses_source_and_destination_links(project: Path, tmp_path: Path, link: str) -> None:
+@pytest.mark.timeout(180)
+def test_actual_hydration_refuses_source_and_destination_links(
+    project: Path, tmp_path: Path, link: str, installed_meta_provider: Path
+) -> None:
     outside = tmp_path / "outside"
     outside.mkdir()
     (outside / "01_main.md").write_text("Original external bytes\n")
@@ -134,7 +242,7 @@ def test_actual_hydration_refuses_source_and_destination_links(project: Path, tm
         (project / "manuscript/01_main.md").unlink()
         (project / "manuscript/01_main.md").symlink_to(outside / "01_main.md")
     before = snapshot(outside)
-    result = invoke(project)
+    result = invoke(project, provider_site=installed_meta_provider)
     if link in {"sdk_source", "sdk_scripts"}:
         assert result.returncode == 0, result.stdout + result.stderr
     else:
@@ -239,3 +347,51 @@ def test_late_actual_stale_edit_survives_after_prepared_write(tmp_path: Path) ->
         sys.setprofile(previous_profile)
     assert observed == [True]
     assert stale.read_text() == "Late human edit\n"
+
+
+@pytest.mark.parametrize("with_manifest", [False, True])
+def test_unowned_numbered_render_input_is_preserved_and_refused(tmp_path: Path, with_manifest: bool) -> None:
+    from infrastructure.rendering.manuscript_discovery import discover_manuscript_files
+    from infrastructure.rendering.manuscript_injection import hydrate_manuscript_tree
+
+    project = tmp_path / "owner"
+    source = project / "manuscript"
+    source.mkdir(parents=True)
+    (source / "01_main.md").write_text("Current source\n")
+    output = project / "output/manuscript"
+    output.mkdir(parents=True)
+    if with_manifest:
+        hydrate_manuscript_tree(project, lambda _name, content: content)
+    unowned = output / "7_old_section.MD"
+    unowned.write_text("Unowned former content\n")
+    assert unowned in discover_manuscript_files(output)
+    before = snapshot(project)
+    for dry_run in (True, False):
+        with pytest.raises(ValueError, match="unowned rendered manuscript section"):
+            hydrate_manuscript_tree(project, lambda _name, content: content, dry_run=dry_run)
+        assert snapshot(project) == before
+
+
+def test_actual_enabled_renderer_bookends_remain_owned_by_the_render_stage(tmp_path: Path) -> None:
+    import json
+
+    from infrastructure.rendering.manuscript_injection import hydrate_manuscript_tree
+    from infrastructure.transmission.transmission_bookends import write_transmission_bookends
+    from tests.infra_tests.publishing.test_transmission_bookends import _write_project
+
+    project = tmp_path / "owner"
+    _write_project(project, enabled=True)
+    generated = write_transmission_bookends(project, project.name, repo_root=tmp_path)
+    assert generated is not None
+    originals = {path: path.read_bytes() for path in generated}
+    hydrate_manuscript_tree(project, lambda _name, content: content)
+    manifest = json.loads((project / "output/manuscript/hydration_manifest.json").read_text())
+    assert all(path.name not in manifest["files"] for path in generated)
+    assert all(path.read_bytes() == content for path, content in originals.items())
+    # Disabled bookends have no current renderer owner; preserve and refuse them.
+    config = project / "manuscript/config.yaml"
+    config.write_text(config.read_text().replace("enabled: true", "enabled: false"))
+    before = snapshot(project / "output")
+    with pytest.raises(ValueError, match="unowned rendered manuscript section"):
+        hydrate_manuscript_tree(project, lambda _name, content: content)
+    assert snapshot(project / "output") == before

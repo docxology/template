@@ -461,8 +461,8 @@ class TestPaperSerialization:
         assert restored.license == "cc-by-4.0"
         assert restored.license_url.endswith("by/4.0/")
 
-    def test_from_dict_backward_compatible(self):
-        """from_dict handles legacy data without full-text fields."""
+    def test_from_dict_optional_fulltext_absent(self):
+        """Sparse bibliographic records may omit optional full-text fields."""
         data = {
             "title": "Old Paper",
             "abstract": "Legacy record",
@@ -475,19 +475,19 @@ class TestPaperSerialization:
         assert p.is_open_access is None
         assert p.full_text_source is None
 
-    def test_from_dict_backward_compatible_missing_pmid(self):
-        """from_dict handles legacy JSONL rows written before pmid existed."""
+    def test_from_dict_optional_pmid_absent(self):
+        """A record without a PubMed identifier preserves its DOI identity."""
         data = {
             "title": "Pre-pmid Paper",
             "abstract": "Legacy record",
             "authors": [],
             "year": 2018,
-            "doi": "10.1234/legacy",
+            "doi": "10.1234/sparse",
         }
         p = Paper.from_dict(data)
         assert p.title == "Pre-pmid Paper"
         assert p.pmid is None
-        assert p.canonical_id == "doi:10.1234/legacy"
+        assert p.canonical_id == "doi:10.1234/sparse"
 
     def test_round_trip_pmid(self):
         """pmid survives a to_dict/from_dict round-trip."""

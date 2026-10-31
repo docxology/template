@@ -432,10 +432,11 @@ Reproducibility in computational research has well-documented prerequisites: ope
 Replace the `sources` list with the desired backend set:
 
 ```yaml
-search:
-  query: "your topic"
-  sources: [arxiv, crossref]
-  crossref_mailto: "you@example.org"
+project_config:
+  search:
+    query: "your topic"
+    sources: [arxiv, crossref]
+    crossref_mailto: "you@example.org"
 ```
 
 A first live run populates `output/search/cache/`. Commit that directory to the repo and the pipeline becomes reproducible across machines without further configuration changes.

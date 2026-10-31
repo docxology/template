@@ -8,7 +8,7 @@ import pytest
 from infrastructure.project.public_acceptance_case_policy import (
     CENSUS_SCHEMA,
     OPTIONAL_MONID_FAMILY,
-    OPTIONAL_POLICY_SCHEMA,
+    POLICY_SCHEMA,
     RootCasePolicy,
     compile_case_plan,
 )
@@ -28,7 +28,7 @@ def _value():
         }
 
     return {
-        "schema_version": OPTIONAL_POLICY_SCHEMA,
+        "schema_version": POLICY_SCHEMA,
         "runtimes": ["3.14", "3.15"],
         "platforms": ["darwin", "linux"],
         "families": [
@@ -101,7 +101,9 @@ def test_optional_catalog_cannot_waive_another_case_or_scope(fault):
         optional["members"].append({"nodeid": OPTIONAL_MONID_FAMILY + "[other]", "parameter_id": "other"})
     else:
         value["families"][0]["obligations"] = ["monid-discover"]
-    with pytest.raises(ValueError, match="exact reviewed Monid"):
+    with pytest.raises(
+        ValueError, match="unsupported Root case policy schema" if fault == "v2" else "exact reviewed Monid"
+    ):
         RootCasePolicy.parse(value)
 
 
@@ -167,8 +169,6 @@ def test_actual_v3_runtime_retains_optional_catalog_without_executing_its_body(t
             }
         )
     )
-    project = root / "pyproject.toml"
-    project.write_text(project.read_text().replace("schema_version=2", "schema_version=3"))
     probe = _probe_runtime(
         root,
         root / "output/readiness/optional-probe",

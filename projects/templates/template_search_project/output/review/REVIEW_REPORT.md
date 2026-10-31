@@ -1,12 +1,12 @@
 # TEMPLATE SEARCH PROJECT — DEEP REVIEW REPORT
-**Generated:** 2026-10-23T04:29:14+00:00
+**Generated:** 2026-10-31T05:06:21+00:00
 **Project root:** `projects/templates/template_search_project`
 **Repository root:** `.` (portable report label)
 **Review orchestrator:** `scripts/review`
 **Purpose:** informational current-source findings; this report is not run or release acceptance.
 **Operational completion:** run `scripts/review`; local receipts are separate from this report.
 **Configured local summary:** `output/.pipeline/review/summary.json` (not public acceptance)
-**Consumed own-source and presence snapshot SHA-256:** `f49883e9dc3be55fe869c4d98990598697de038ce02c812463b089a41454d8ad`
+**Consumed own-source and presence snapshot SHA-256:** `cdcf0dcd676ecb30daf63fcef2c82f6fba58c4f5cc96d7862a789acae6b2ca9d`
 ---------------------------------------------------------------------------
 ## 1.  PROJECT INVENTORY
   ▸ AGENTS.md  (12537 bytes)
@@ -14,8 +14,7 @@
   ▸ LICENSE  (1076 bytes)
   ▸ README.md  (22353 bytes)
   ▸ STANDALONE.md  (4729 bytes)
-  ▸ TODO.md  (9210 bytes)
-  ▸ build/  (2 entries)
+  ▸ TODO.md  (9180 bytes)
   ▸ codemeta.json  (854 bytes)
   ▸ data/  (4 entries)
   ▸ docs/  (13 entries)
@@ -23,12 +22,12 @@
   ▸ experiment_plan.yaml  (1502 bytes)
   ▸ export.toml  (63 bytes)
   ▸ manuscript/  (19 entries)
-  ▸ pyproject.toml  (3479 bytes)
+  ▸ pyproject.toml  (3624 bytes)
   ▸ review_config.yaml  (2366 bytes)
   ▸ scripts/  (12 entries)
   ▸ src/  (5 entries)
   ▸ tests/  (7 entries)
-  ▸ uv.lock  (236118 bytes)
+  ▸ uv.lock  (219811 bytes)
 
 **src/ modules**  (5):  AGENTS.md, README.md, __init__.py, template_search_project, template_search_project.egg-info
 **tests/ modules** (7):  AGENTS.md, README.md, analysis, conftest.py, pipeline, publish, search
@@ -57,8 +56,8 @@
   • Optional hardening
 
 **Internal-anchor validation**
-  AGENTS.md anchors broken: 5  ['0f766e', '0f172a', '1e3a8a', 'fff', '7c2d12']
-  README.md  anchors broken: 7  ['0f766e', '0f172a', '1e3a8a', 'fff', 'review-phase', 'permanent-canonical-exemplars', '7c2d12']
+  AGENTS.md anchors broken: 5  ['1e3a8a', '0f172a', 'fff', '7c2d12', '0f766e']
+  README.md  anchors broken: 7  ['1e3a8a', '0f172a', 'fff', 'permanent-canonical-exemplars', '7c2d12', 'review-phase', '0f766e']
 
 ## 3.  BIBLIOGRAPHY AUDIT
 **references.bib** entries: 6

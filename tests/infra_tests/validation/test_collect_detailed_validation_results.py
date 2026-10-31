@@ -34,7 +34,7 @@ class TestCollectDetailedValidationResults:
             subdir_path.mkdir()
             (subdir_path / f"{subdir}_file.txt").write_text("content")
 
-        result = collect_detailed_validation_results(project_output_dir)
+        result = collect_detailed_validation_results(project_output_dir, enabled_formats=("pdf", "html", "slides"))
 
         assert "structure" in result
         assert "directories" in result
@@ -62,7 +62,7 @@ class TestCollectDetailedValidationResults:
         pdf_dir.mkdir()
         (pdf_dir / "test_project_combined.pdf").write_bytes(b"PDF" * 50000)
 
-        result = collect_detailed_validation_results(project_output_dir)
+        result = collect_detailed_validation_results(project_output_dir, enabled_formats=("pdf", "html", "slides"))
 
         # Missing directories should be flagged as warnings
         assert len(result["issues_by_severity"]["warning"]) > 0
@@ -82,7 +82,7 @@ class TestCollectDetailedValidationResults:
         (project_output_dir / "pdf").mkdir()
         (project_output_dir / "figures").mkdir()
 
-        result = collect_detailed_validation_results(project_output_dir)
+        result = collect_detailed_validation_results(project_output_dir, enabled_formats=("pdf", "html", "slides"))
 
         # Missing PDF should be critical issue
         assert len(result["issues_by_severity"]["critical"]) > 0
@@ -99,7 +99,7 @@ class TestCollectDetailedValidationResults:
         # Minimal structure - no PDF, no figures
         (project_output_dir / "pdf").mkdir()
 
-        result = collect_detailed_validation_results(project_output_dir)
+        result = collect_detailed_validation_results(project_output_dir, enabled_formats=("pdf", "html", "slides"))
 
         # Should have recommendations
         assert len(result["recommendations"]) > 0
@@ -126,7 +126,7 @@ class TestCollectDetailedValidationResults:
         figures_dir.mkdir()
         (figures_dir / "figure1.png").write_bytes(b"Y" * 512 * 1024)  # 0.5 MB
 
-        result = collect_detailed_validation_results(project_output_dir)
+        result = collect_detailed_validation_results(project_output_dir, enabled_formats=("pdf", "html", "slides"))
 
         # Total should be around 1.5 MB
         assert result["total_size_mb"] > 1.0
@@ -147,7 +147,7 @@ class TestCollectDetailedValidationResults:
         (pdf_dir / "test_project_combined.pdf").write_bytes(b"Y" * 50000)
         (pdf_dir / "medium.pdf").write_bytes(b"Z" * 1000)
 
-        result = collect_detailed_validation_results(project_output_dir)
+        result = collect_detailed_validation_results(project_output_dir, enabled_formats=("pdf", "html", "slides"))
 
         # Largest file should be identified
         assert result["directories"]["pdf"]["largest_file"] == "test_project_combined.pdf"
@@ -161,7 +161,7 @@ class TestCollectDetailedValidationResults:
         project_output_dir = output_root / "test_project"
         project_output_dir.mkdir()
 
-        result = collect_detailed_validation_results(project_output_dir)
+        result = collect_detailed_validation_results(project_output_dir, enabled_formats=("pdf", "html", "slides"))
 
         # Should have issues
         assert result["structure"]["valid"] is False
@@ -181,7 +181,7 @@ class TestCollectDetailedValidationResults:
         pdf_dir.mkdir()
         (pdf_dir / "test_project_combined.pdf").write_bytes(b"PDF" * 10)  # Very small
 
-        result = collect_detailed_validation_results(project_output_dir)
+        result = collect_detailed_validation_results(project_output_dir, enabled_formats=("pdf", "html", "slides"))
 
         # Suspicious size should be in warnings
         assert len(result["issues_by_severity"]["warning"]) > 0
@@ -209,7 +209,7 @@ class TestCollectDetailedValidationResults:
             "project/output/pdf/*.bbl\nproject/output/data/*.scratch\n",
             encoding="utf-8",
         )
-        baseline = collect_detailed_validation_results(output_dir)
+        baseline = collect_detailed_validation_results(output_dir, enabled_formats=("pdf", "html", "slides"))
 
         ignored_files = {
             "pdf/project_combined.aux": b"aux",
@@ -227,7 +227,7 @@ class TestCollectDetailedValidationResults:
         for relative in ("slides", "simulations", "llm"):
             (output_dir / relative).mkdir(parents=True, exist_ok=True)
 
-        rerun = collect_detailed_validation_results(output_dir)
+        rerun = collect_detailed_validation_results(output_dir, enabled_formats=("pdf", "html", "slides"))
 
         assert rerun == baseline
         assert rerun["inventory_mode"] == "stable-shippable-output-v1"
@@ -236,7 +236,7 @@ class TestCollectDetailedValidationResults:
         assert rerun["directories"]["logs"]["exists"] is False
 
         (output_dir / "data" / "new-public-result.json").write_text("{}\n", encoding="utf-8")
-        changed = collect_detailed_validation_results(output_dir)
+        changed = collect_detailed_validation_results(output_dir, enabled_formats=("pdf", "html", "slides"))
         assert changed != baseline
         assert changed["directories"]["data"]["file_count"] == 2
 
@@ -252,7 +252,7 @@ class TestCollectDetailedValidationResults:
         (data_dir / "linked-result.json").symlink_to(outside)
 
         with pytest.raises(ValueError, match="symlink artifact forbidden"):
-            collect_detailed_validation_results(output_dir, require_pdf=False)
+            collect_detailed_validation_results(output_dir, enabled_formats=())
 
     def test_supplied_copy_inventory_cannot_use_source_pdf_fallback(self, tmp_path):
         """Stage 5 structure evidence must describe the copied tree alone."""
@@ -264,12 +264,7 @@ class TestCollectDetailedValidationResults:
         source_pdf.parent.mkdir(parents=True)
         source_pdf.write_bytes(b"P" * 120_000)
 
-        result = validate_output_structure(
-            copied,
-            require_pdf=True,
-            inventory=StableOutputInventory(files=()),
-            enabled_formats={"pdf"},
-        )
+        result = validate_output_structure(copied, inventory=StableOutputInventory(files=()), enabled_formats={"pdf"})
 
         assert result["valid"] is False
         assert result["directory_structure"]["combined_pdf"]["exists"] is False
@@ -287,7 +282,7 @@ class TestCollectDetailedValidationResults:
             encoding="utf-8",
         )
 
-        result = validate_output_structure(output_dir, require_pdf=True)
+        result = validate_output_structure(output_dir, enabled_formats=("pdf", "html", "slides"))
 
         assert result["valid"] is False
         assert result["directory_structure"]["combined_pdf"]["exists"] is False
@@ -310,7 +305,7 @@ class TestCollectDetailedValidationResults:
             path.parent.mkdir(parents=True, exist_ok=True)
             path.write_bytes(payload)
 
-        result = collect_detailed_validation_results(output_dir, require_pdf=False)
+        result = collect_detailed_validation_results(output_dir, enabled_formats=("docx", "epub"))
 
         assert sum(result["file_counts"].values()) == len(files)
         assert result["file_counts"]["docx"] == 1
@@ -340,7 +335,7 @@ class TestCollectDetailedValidationResults:
         (pdf_dir / "test_project_combined.pdf").write_bytes(b"PDF content" * 20000)
         (project_output_dir / "data").mkdir()  # exists but empty
 
-        result = collect_detailed_validation_results(project_output_dir)
+        result = collect_detailed_validation_results(project_output_dir, enabled_formats=("pdf", "html", "slides"))
 
         info_msgs = result["issues_by_severity"]["info"]
         warning_msgs = result["issues_by_severity"]["warning"]

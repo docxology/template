@@ -59,9 +59,11 @@ project_config:
     second_bucket: [c]
   hypothesis_definitions:
     H1:
+      id: PRIMARY_CLAIM
       name: "Primary Claim"
       scope: "clinical"
     H2:
+      id: SECONDARY_CLAIM
       name: "Secondary Claim"
       scope: "applied"
 """
@@ -102,11 +104,23 @@ project_config:
     def test_hypothesis_table_merges_scores(self, tmp_path):
         out = self._project(tmp_path, self._CONFIG)
         (out / "data" / "corpus.jsonl").write_text("")
-        (out / "data" / "hypothesis_scores.json").write_text(json.dumps({"H1": 0.42}))
+        (out / "data" / "hypothesis_scores.json").write_text(json.dumps({"PRIMARY_CLAIM": 0.42}))
         v = compute_variables(out)
         assert "| H1 | Primary Claim | clinical | +0.42 |" in v["HYPOTHESIS_TABLE"]
         # H2 has no score -> still pending
         assert "| H2 | Secondary Claim | applied | pending |" in v["HYPOTHESIS_TABLE"]
+
+    def test_hypothesis_scores_use_only_declared_evidence_id(self, tmp_path):
+        out = self._project(tmp_path, self._CONFIG)
+        (out / "data" / "corpus.jsonl").write_text("")
+        (out / "data" / "hypothesis_scores.json").write_text(
+            json.dumps({"H1": 0.99, "Primary Claim": 0.88, "PRIMARY_CLAIM": 0.42})
+        )
+        variables = compute_variables(out)
+        assert "| H1 | Primary Claim | clinical | +0.42 |" in variables["HYPOTHESIS_TABLE"]
+        (out / "data" / "hypothesis_scores.json").write_text(json.dumps({"H1": 0.99, "Primary Claim": 0.88}))
+        variables = compute_variables(out)
+        assert "| H1 | Primary Claim | clinical | pending |" in variables["HYPOTHESIS_TABLE"]
 
     def test_fallbacks_when_config_absent(self, tmp_path):
         # output_dir with no sibling manuscript/config.yaml -> safe fallbacks

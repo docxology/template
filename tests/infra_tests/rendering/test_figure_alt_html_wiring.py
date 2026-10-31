@@ -32,17 +32,13 @@ from ._figure_alt_helpers import (
             }
         },
         {
-            "schema_version": "figure-registry-v1",
-            "figures": [
-                {
-                    "label": "fig:dense",
-                    "path": "dense.png",
-                    "alt": (
-                        "Three blue trajectories descend at different rates; amber uncertainty bands narrow "
-                        "after iteration 40, while the dashed baseline remains flat."
-                    ),
-                }
-            ],
+            "fig:dense": {
+                "filename": "dense.png",
+                "alt_text": (
+                    "Three blue trajectories descend at different rates; amber uncertainty bands narrow "
+                    "after iteration 40, while the dashed baseline remains flat."
+                ),
+            }
         },
         {
             "schema_version": "figure-registry-v1",
@@ -58,7 +54,7 @@ from ._figure_alt_helpers import (
             ],
         },
     ],
-    ids=["metadata-alt-text", "top-level-alt", "canonical-top-level-alt-text"],
+    ids=["metadata-alt-text", "flat-alt-text", "enveloped-alt-text"],
 )
 def test_source_owned_registry_alt_reaches_real_combined_html(
     tmp_path: Path,
@@ -78,11 +74,28 @@ def test_source_owned_registry_alt_reaches_real_combined_html(
     assert 'alt="Short visible caption"' not in rendered
 
 
+def test_registry_short_alt_field_cannot_supply_accessibility_text(tmp_path: Path) -> None:
+    registry_path = tmp_path / "figure_registry.json"
+    registry_path.write_text(
+        json.dumps({"fig:dense": {"filename": "dense.png", "alt": "Unsupported registry field."}}),
+        encoding="utf-8",
+    )
+    html_file = tmp_path / "index.html"
+    html_file.write_text(
+        '<html><body><figure id="fig:dense"><img src="../figures/dense.png" '
+        'alt="Caption"><figcaption>Caption</figcaption></figure></body></html>',
+        encoding="utf-8",
+    )
+
+    with pytest.raises(RenderingError, match="accessibility alt text"):
+        WebRenderer._enhance_accessibility(html_file, registry_path=registry_path)
+
+
 def test_registry_replacement_uses_exact_alt_and_src_attributes(tmp_path: Path) -> None:
     registry_path = tmp_path / "figure_registry.json"
     rich_alt = "Three blue trajectories descend while amber intervals narrow."
     registry_path.write_text(
-        json.dumps({"fig:dense": {"filename": "dense.png", "alt": rich_alt}}),
+        json.dumps({"fig:dense": {"filename": "dense.png", "alt_text": rich_alt}}),
         encoding="utf-8",
     )
     html_file = tmp_path / "index.html"
@@ -112,7 +125,7 @@ def test_registry_long_description_is_associated_escaped_and_idempotent(tmp_path
             {
                 "fig:dense": {
                     "filename": "dense.png",
-                    "alt": "A square-marked trajectory rises above a dotted reference.",
+                    "alt_text": "A square-marked trajectory rises above a dotted reference.",
                     "long_description": (
                         "Panel A reads from left to right & distinguishes square and circle markers.\n\n"
                         "The bounded fixture does not establish <universal> performance."
@@ -260,7 +273,7 @@ def test_registry_rejects_conflicting_long_description_fields(tmp_path: Path) ->
             {
                 "fig:dense": {
                     "filename": "dense.png",
-                    "alt": "A meaningful concise alternative.",
+                    "alt_text": "A meaningful concise alternative.",
                     "long_description": "Top-level reading order.",
                     "metadata": {"long_description": "Different nested reading order."},
                 }
@@ -284,7 +297,7 @@ def test_registry_replacement_preserves_latex_backslashes_in_alt(tmp_path: Path)
     registry_path = tmp_path / "figure_registry.json"
     rich_alt = r"Phase portrait with \Omega resistance and \delta perturbation."
     registry_path.write_text(
-        json.dumps({"fig:dense": {"filename": "dense.png", "alt": rich_alt}}),
+        json.dumps({"fig:dense": {"filename": "dense.png", "alt_text": rich_alt}}),
         encoding="utf-8",
     )
     html_file = tmp_path / "index.html"
@@ -313,8 +326,8 @@ def test_labelled_html_figure_resolves_by_label_despite_alias_filename(tmp_path:
     registry_path.write_text(
         json.dumps(
             {
-                "fig:dense": {"filename": "shared.png", "alt": "Dense description."},
-                "fig:atlas-shared": {"filename": "shared.png", "alt": "Atlas description."},
+                "fig:dense": {"filename": "shared.png", "alt_text": "Dense description."},
+                "fig:atlas-shared": {"filename": "shared.png", "alt_text": "Atlas description."},
             }
         ),
         encoding="utf-8",
@@ -341,7 +354,7 @@ def test_unlabelled_figure_without_registry_match_preserves_authored_alt(tmp_pat
             {
                 "fig:canonical": {
                     "filename": "canonical.png",
-                    "alt": "Canonical figure description.",
+                    "alt_text": "Canonical figure description.",
                 }
             }
         ),
@@ -495,9 +508,9 @@ def test_unsafe_registry_figure_path_fails_render(tmp_path: Path, filename: str)
     [
         {"figures": {"label": "fig:dense"}},
         {"figures": [None]},
-        [{"filename": "dense.png", "alt": "A description."}],
-        {"not-a-figure": {"filename": "dense.png", "alt": "A description."}},
-        {"fig:dense": {"label": "fig:dense", "alt": "A description."}},
+        [{"filename": "dense.png", "alt_text": "A description."}],
+        {"not-a-figure": {"filename": "dense.png", "alt_text": "A description."}},
+        {"fig:dense": {"label": "fig:dense", "alt_text": "A description."}},
     ],
 )
 def test_malformed_present_registry_fails_instead_of_degrading_to_authored_alt(

@@ -116,7 +116,7 @@ def run_root_case_acceptance(
 ) -> dict[str, Any]:
     """Execute prepared interpreters serially; all other required cells remain explicit.
 
-    Source-owned v2 classification is mandatory. Publication, paid operations and
+    Source-owned current policy classification is mandatory. Publication, paid operations and
     runtime acquisition are unavailable here. An enclosing program supervises
     synchronous API admission/readback if it requires a hard overall deadline.
     """
@@ -225,7 +225,7 @@ def run_root_case_acceptance(
                     fingerprint,
                     "blocked",
                     command,
-                    {"python_version": minor, "execution_exit_code": 75, "diagnostic": why},
+                    {"python_version": minor, "diagnostic": why},
                     [{"tool": requirement.case_unit, "reason": why}],
                     identity=identity,
                 )
@@ -242,6 +242,8 @@ def run_root_case_acceptance(
                         "python_version": minor,
                         "execution_exit_code": original_code,
                         "diagnostic": "original prepared-runtime cohort or independent reader failed",
+                        **({"runtime_artifact": probe["binding"]} if probe.get("binding") else {}),
+                        **({"timed_out": probe["timed_out"]} if "timed_out" in probe else {}),
                     },
                     identity=identity,
                 )
@@ -277,7 +279,7 @@ def run_root_case_acceptance(
                 fingerprint,
                 "blocked",
                 ["unobserved-required-root-runtime"],
-                {"execution_exit_code": 75, "diagnostic": "Root runtime stopped before required cell"},
+                {"diagnostic": "Root runtime stopped before required cell"},
                 [{"tool": requirement.id, "reason": "required cell remains unobserved"}],
                 identity=identity,
             )
@@ -291,7 +293,7 @@ def run_root_case_acceptance(
                 fingerprint,
                 "blocked",
                 ["unavailable-complete-root-cohort"],
-                {"execution_exit_code": 75},
+                {},
                 [{"tool": requirement.id, "reason": "no successful original required Root cohort"}],
                 identity=identity,
             )

@@ -10,9 +10,8 @@ from typing import Any
 
 from infrastructure.project.public_acceptance_case_policy import digest
 
-LEGACY_SCHEMA = "template-root-census-encoding-v1"
+DAG_SCHEMA = "template-root-census-encoding-v1"
 SCHEMA = "template-root-census-encoding-v2"
-ENCODING_SCHEMAS = frozenset((LEGACY_SCHEMA, SCHEMA))
 MAX_BYTES = 64 * 1024 * 1024
 MAX_NODES = 250000
 
@@ -44,7 +43,7 @@ def _encode_dag(value: dict[str, Any]) -> dict[str, Any]:
         return known[identity]
 
     root = visit(value)
-    result = {"schema_version": LEGACY_SCHEMA, "value_sha256": digest(value), "nodes": nodes, "root": root}
+    result = {"schema_version": DAG_SCHEMA, "value_sha256": digest(value), "nodes": nodes, "root": root}
     if len(json.dumps(result, separators=(",", ":"), allow_nan=False).encode()) > MAX_BYTES:
         raise ValueError("encoded census exceeds the unchanged artifact byte ceiling")
     return result
@@ -52,7 +51,7 @@ def _encode_dag(value: dict[str, Any]) -> dict[str, Any]:
 
 def _decode_dag(value: dict[str, Any]) -> dict[str, Any]:
     """Admit one canonical acyclic encoding before any existing custody readback."""
-    if set(value) != {"schema_version", "value_sha256", "nodes", "root"} or value["schema_version"] != LEGACY_SCHEMA:
+    if set(value) != {"schema_version", "value_sha256", "nodes", "root"} or value["schema_version"] != DAG_SCHEMA:
         raise ValueError("unsupported census encoding")
     nodes = value["nodes"]
     if not isinstance(nodes, list) or not nodes or len(nodes) > MAX_NODES:
@@ -141,9 +140,7 @@ def encode(value: dict[str, Any]) -> dict[str, Any]:
 
 
 def decode(value: dict[str, Any]) -> dict[str, Any]:
-    """Read historical DAGs or bounded canonical compressed original evidence."""
-    if value.get("schema_version") == LEGACY_SCHEMA:
-        return _decode_dag(value)
+    """Read the bounded canonical compressed envelope and its original DAG."""
     if (
         set(value) != {"schema_version", "encoding", "decoded_size", "decoded_sha256", "data"}
         or value.get("schema_version") != SCHEMA

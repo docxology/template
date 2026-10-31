@@ -6,6 +6,8 @@ registry loading, reference detection, and validation reporting.
 
 import json
 
+import pytest
+
 
 from infrastructure.validation.content.figure_validator import (
     validate_configured_cover_accessibility,
@@ -112,8 +114,14 @@ class TestValidateFigureRegistry:
         assert success is False
         assert any("registry not found" in issue.lower() for issue in issues)
 
-    def test_accessibility_mode_requires_alt_text(self, tmp_path):
+    @pytest.mark.parametrize("field", [None, "alt", "alt_text", "metadata"])
+    def test_accessibility_mode_requires_declared_alt_text(self, tmp_path, field):
         registry_path = tmp_path / "registry.json"
+        accessibility = (
+            {}
+            if field is None
+            else {field: {"alt_text": "A real description."} if field == "metadata" else "A real description."}
+        )
         registry_path.write_text(
             json.dumps(
                 {
@@ -121,6 +129,7 @@ class TestValidateFigureRegistry:
                         "filename": "example.png",
                         "caption": "A real figure.",
                         "generated_by": "tests",
+                        **accessibility,
                     }
                 }
             )
@@ -136,8 +145,8 @@ class TestValidateFigureRegistry:
             require_accessibility=True,
         )
 
-        assert success is False
-        assert any("alt text" in issue for issue in issues)
+        assert success is (field in {"alt_text", "metadata"})
+        assert any("alt text" in issue for issue in issues) is (field in {None, "alt"})
 
     def test_validate_invalid_registry_json(self, tmp_path):
         """Test validation with invalid JSON registry."""

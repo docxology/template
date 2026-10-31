@@ -222,7 +222,9 @@ def chunk(root: Path, snapshot_path: Path, expected: str, index: int) -> int:
                 )
         finally:
             measured.stop()
-        if observer.interrupted:
+        if original in (124, 130):
+            code = original
+        elif observer.interrupted:
             code = 130
         elif original != 0:
             code = 124 if observer.timed_out else 1
@@ -270,7 +272,7 @@ def chunk(root: Path, snapshot_path: Path, expected: str, index: int) -> int:
     except (OSError, ValueError, RuntimeError) as error:
         diagnostics.caught(error)
         code, diagnostic = 1, "actual Root lane source/outcome contract refused"
-    if observer.interrupted:
+    if observer.interrupted and original not in (124, 130):
         code = 130
     write(
         root,

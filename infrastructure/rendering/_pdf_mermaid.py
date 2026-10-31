@@ -494,7 +494,6 @@ def _render_mermaid(
     mmd_path.write_text(source + "\n", encoding="utf-8")
     use_api12 = False
     use_api11 = False
-    policy = "template-mermaid-original-legacy-cli-1400x900-unverified-v1"
     inputs: tuple[Path, ...] = (mmd_path, *((puppeteer_config,) if puppeteer_config is not None else ()))
     try:
         entry = Path(mmdc).resolve(strict=True)
@@ -518,7 +517,7 @@ def _render_mermaid(
             package = module.selected_package(mmdc) if module is not None else selected_package(mmdc)
             node = shutil.which("node")
             if node is None:
-                raise ValueError("the selected Mermaid12 API requires its admitted Node executable")
+                raise ValueError("the selected Mermaid API requires its admitted Node executable")
             api_version = "v11" if use_api11 else "v12"
             adapter = output_dir / f"{stem}.mermaid-{api_version}.mjs"
             request = output_dir / f"{stem}.mermaid-{api_version}-request.json"
@@ -542,30 +541,13 @@ def _render_mermaid(
             inputs = (*inputs, adapter, request)
             policy = module.POLICY if module is not None else POLICY
         else:
-            # Keep ordinary supported legacy tools and standalone executables on
-            # the exact existing CLI path; this is not runtime/source admission.
-            cmd = [
-                mmdc,
-                "--input",
-                str(mmd_path),
-                "--output",
-                str(png_path),
-                "--width",
-                "1400",
-                "--height",
-                "900",
-                "--backgroundColor",
-                "white",
-                "--quiet",
-            ]
-            if puppeteer_config is not None:
-                cmd.extend(["--puppeteerConfigFile", str(puppeteer_config)])
+            raise ValueError("selected Mermaid entrypoint has no admitted runtime profile")
     except (OSError, ValueError) as exc:
-        raise RenderingError(f"Mermaid12 rectangular viewport compatibility admission failed: {exc}") from exc
+        raise RenderingError(f"Mermaid rectangular viewport profile admission failed: {exc}") from exc
     env = os.environ.copy()
     env["PATH"] = os.pathsep.join(part for part in (env.get("PATH", ""), os.defpath) if part)
-    if (use_api12 or use_api11) and (env.get("NODE_OPTIONS") or env.get("NODE_PATH")):
-        raise RenderingError("Mermaid12 profile cannot admit environment-supplied JavaScript/module overrides")
+    if env.get("NODE_OPTIONS") or env.get("NODE_PATH"):
+        raise RenderingError("Mermaid profile cannot admit environment-supplied JavaScript/module overrides")
 
     before = {str(path.absolute()): hashlib.sha256(path.read_bytes()).hexdigest() for path in inputs}
     cache = output_dir / f"{stem}.mermaid-cache.json"

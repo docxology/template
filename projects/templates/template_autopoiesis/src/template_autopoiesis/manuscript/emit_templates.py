@@ -22,6 +22,7 @@ from __future__ import annotations
 import re
 import textwrap
 
+from .._platform import required_platform_version
 from ..core.expand import Spec
 
 # ---------------------------------------------------------------------------
@@ -116,7 +117,7 @@ _TEMPLATE_PYPROJECT_TOML = textwrap.dedent("""\
     addopts = "-v --tb=short"
 
     [tool.template]
-    platform_version = "4.4.0"
+    platform_version = "@@PLATFORM_VERSION@@"
     tested_python_versions = ["3.14", "3.15"]
     required_unpaid_capabilities = []
     """)
@@ -229,6 +230,7 @@ def _substitutions_from_spec(spec: Spec) -> dict[str, str]:
     """Extract all @@KEY@@ substitution values from *spec*."""
     selections = dict(spec.selections)
     return {
+        "PLATFORM_VERSION": required_platform_version(),
         "DOMAIN": spec.primitive_domain,
         "SPEC_HASH": spec.spec_hash,
         "GRAMMAR_HASH": spec.grammar_hash,

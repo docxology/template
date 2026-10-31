@@ -20,19 +20,6 @@ import matplotlib
 import networkx as nx
 import numpy as np
 
-try:
-    from ..parsing import load_json_object as _load_json_object  # noqa: F401
-except ImportError:  # pragma: no cover - flat-layout fallback
-    import json
-
-    def _load_json_object(path: Path) -> dict[str, Any]:
-        if not path.exists():
-            return {}
-        with path.open("r", encoding="utf-8") as handle:
-            data = json.load(handle)
-        return data if isinstance(data, dict) else {}
-
-
 matplotlib.use("Agg")  # headless-safe before pyplot import
 import matplotlib.image as mpimg
 import matplotlib.pyplot as plt
@@ -70,7 +57,6 @@ class FigureSpec:
     def registry_record(self) -> dict[str, Any]:
         """Process registry record."""
         record = asdict(self)
-        record["alt"] = record.pop("alt_text")
         record["svg_path"] = self.svg_path
         return record
 

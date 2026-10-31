@@ -71,7 +71,7 @@ def count_total_references(corpus_path: Path) -> int:
                 continue
             try:
                 paper = json.loads(line)
-                refs = paper.get("references", paper.get("referenced_works", []))
+                refs = paper.get("references", [])
                 if isinstance(refs, list):
                     total += len(refs)
             except json.JSONDecodeError:

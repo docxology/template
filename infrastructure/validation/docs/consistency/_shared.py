@@ -9,7 +9,6 @@ from pathlib import Path
 
 from infrastructure.core.logging.utils import get_logger
 from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
-from infrastructure.validation.docs._io import read_markdown as read_markdown  # back-compat re-export  # noqa: PLC0414
 from infrastructure.validation.docs.scan_scope import DEFAULT_EXCLUDE_PARTS
 
 logger = get_logger(__name__)

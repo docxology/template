@@ -42,7 +42,7 @@ def heading_slug(text: str) -> str:
 def extract_headings(content: str) -> set[str]:
     """Extract GitHub-compatible heading and explicit HTML anchors.
 
-    The blocking cross-link linter and the legacy integrity audit must agree on
+    The blocking cross-link linter and the documentation integrity audit must agree on
     anchors.  In addition to ATX headings, GitHub-rendered documents commonly
     use explicit ``<a id=...>`` signposts and ``{#custom-id}`` attributes.
     Fenced examples are blanked before parsing so illustrative headings do not

@@ -113,7 +113,7 @@ def resolve_test_profile(
     include_ollama_tests: bool = False,
     include_bench: bool = False,
 ) -> TestProfileSpec:
-    """Resolve profile semantics plus additive legacy include-flags."""
+    """Resolve a named profile with explicitly requested capability additions."""
     if not isinstance(profile, str) or profile not in TEST_PROFILE_NAMES:
         choices = ", ".join(TEST_PROFILE_NAMES)
         raise ValueError(f"Unknown test profile {profile!r}; choose one of: {choices}")

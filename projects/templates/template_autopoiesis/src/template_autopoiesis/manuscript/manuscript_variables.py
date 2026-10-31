@@ -43,10 +43,10 @@ def measure_test_summary(
     If *full_report_out* is given, the complete per-module coverage JSON from
     that same measurement is copied there for the figure producer.
 
-    The legacy standalone path prefers the monorepo root's existing ``.venv``
-    interpreter after probing pytest/coverage, then falls back to
-    ``sys.executable``. That selection does not itself establish a normal
-    own-lock qualification; runtime identity must be recorded separately.
+    Standalone measurement uses the caller's selected interpreter, preserving
+    the project environment chosen by the launcher. It never discovers another
+    checkout's environment. Runtime identity must be recorded separately for
+    own-lock qualification.
     """
     project_root = Path(project_root)
     if "PIPELINE_TEST_MEASUREMENT_SHA256" in os.environ:
@@ -57,24 +57,6 @@ def measure_test_summary(
             return measured
     tests_dir = project_root / "tests"
     src_dir = project_root / "src"
-    repo_root_python = Path(__file__).resolve().parents[6] / ".venv" / "bin" / "python3"
-    python = str(repo_root_python) if repo_root_python.is_file() else sys.executable
-    if repo_root_python.is_file():
-        probe = subprocess.run(
-            [str(repo_root_python), "-c", "import pytest, pytest_cov"],
-            capture_output=True,
-            text=True,
-            timeout=30,
-            check=False,
-        )
-        if probe.returncode != 0:
-            print(
-                f"measure_test_summary: interpreter {repo_root_python} cannot "
-                f"import pytest/coverage ({probe.stderr.strip()[-300:]}); "
-                "falling back to sys.executable",
-                file=sys.stderr,
-            )
-            python = sys.executable
     with tempfile.TemporaryDirectory() as tmp:
         cov_json = Path(tmp) / "coverage.json"
         # Isolate coverage so this inner pytest never inherits or pollutes the
@@ -95,7 +77,7 @@ def measure_test_summary(
         try:
             result = subprocess.run(
                 [
-                    python,
+                    sys.executable,
                     "-m",
                     "pytest",
                     str(tests_dir),

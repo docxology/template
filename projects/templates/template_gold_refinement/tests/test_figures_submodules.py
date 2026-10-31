@@ -1,29 +1,12 @@
-"""Direct unit tests for the split ``src/figures/`` subpackage.
+"""Direct tests for canonical figure submodules and their real domain inputs.
 
-``src/figures.py`` was split into the ``src/figures/`` package
-(``__init__.py`` facade plus ``_common``/``graphs``/``charts``/``diagrams``/
-``registry`` submodules), preserving the exact public API. ``test_figures.py``
-exercises that surface through the facade; this module instead loads the
-``_common`` and ``graphs`` submodules directly by file path under a synthetic
-package context (so their ``from ._common`` / ``from ..formalisms`` relative
-imports resolve) to guarantee direct per-file coverage independent of the
-facade re-exports. It exercises the pure, directly-testable surface:
-the ``FigureSpec`` dataclass, the deterministic ``purity_nines_values``
-transform, the four ``nx.DiGraph`` builders, the source-label / svg-path
-helpers, and the headless figure IO helpers (``_save_figure``,
-``_normalize_svg_whitespace``, ``_quality_record``).
-
-No mocks: real refinery / formalism data drives the graph builders and a real
-matplotlib PNG/SVG pair is written to ``tmp_path`` for the quality record.
+Graph builders use actual refinery and formalism data. Figure IO controls
+write real matplotlib PNG/SVG pairs and inspect their quality records.
 """
 
 from __future__ import annotations
 
-import importlib.util
 import os
-import sys
-import types
-from pathlib import Path
 
 import matplotlib
 import networkx as nx
@@ -32,41 +15,7 @@ import pytest
 matplotlib.use("Agg")  # headless before any pyplot use
 import matplotlib.pyplot as plt  # noqa: E402
 
-# --------------------------------------------------------------------------- #
-# Load figures/_common.py and figures/graphs.py directly by file path.
-#
-# A synthetic parent package ("_goldfig_subpkg") is registered with __path__
-# pointing at the figures/ directory so the submodules' relative imports
-# (from ._common import ...) resolve. graphs.py's `from ..formalisms import
-# FORMALISMS` falls back to the flat `from formalisms import FORMALISMS` branch,
-# which works because conftest.py puts src/ on sys.path.
-# --------------------------------------------------------------------------- #
-_SRC = Path(__file__).resolve().parent.parent / "src"
-_PKG_DIR = _SRC / "figures"
-_PKG_NAME = "_goldfig_subpkg"
-
-
-def _load_submodules() -> tuple[types.ModuleType, types.ModuleType]:
-    if _PKG_NAME not in sys.modules:
-        pkg = types.ModuleType(_PKG_NAME)
-        pkg.__path__ = [str(_PKG_DIR)]  # type: ignore[attr-defined]
-        sys.modules[_PKG_NAME] = pkg
-    loaded: dict[str, types.ModuleType] = {}
-    for name in ("_common", "graphs"):
-        full = f"{_PKG_NAME}.{name}"
-        if full in sys.modules:
-            loaded[name] = sys.modules[full]
-            continue
-        spec = importlib.util.spec_from_file_location(full, _PKG_DIR / f"{name}.py")
-        assert spec is not None and spec.loader is not None
-        module = importlib.util.module_from_spec(spec)
-        sys.modules[full] = module
-        spec.loader.exec_module(module)
-        loaded[name] = module
-    return loaded["_common"], loaded["graphs"]
-
-
-_common, graphs = _load_submodules()
+from figures import _common, graphs
 
 
 # --------------------------------------------------------------------------- #
@@ -167,19 +116,6 @@ class TestCommonHelpers:
         result = _common._ensure_output_dir(target)
         assert result == target
         assert target.is_dir()
-
-    def test_load_json_object_missing_returns_empty(self, tmp_path):
-        assert _common._load_json_object(tmp_path / "absent.json") == {}
-
-    def test_load_json_object_non_dict_returns_empty(self, tmp_path):
-        path = tmp_path / "list.json"
-        path.write_text("[1, 2, 3]", encoding="utf-8")
-        assert _common._load_json_object(path) == {}
-
-    def test_load_json_object_reads_dict(self, tmp_path):
-        path = tmp_path / "obj.json"
-        path.write_text('{"a": 1}', encoding="utf-8")
-        assert _common._load_json_object(path) == {"a": 1}
 
 
 # --------------------------------------------------------------------------- #
@@ -345,8 +281,7 @@ class TestGraphBuildersSubmodule:
 
 
 def test_submodules_loaded_from_subpackage_files():
-    """Guard: the tests really exercise figures/_common.py and figures/graphs.py,
-    not the monolithic figures.py facade."""
+    """Bind the imports to the actual canonical figure submodules."""
     assert os.path.basename(os.path.dirname(_common.__file__)) == "figures"
     assert _common.__file__.endswith(os.path.join("figures", "_common.py"))
     assert graphs.__file__.endswith(os.path.join("figures", "graphs.py"))

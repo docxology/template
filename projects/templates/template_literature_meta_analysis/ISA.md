@@ -256,6 +256,10 @@ config) — flagged here for whoever next touches pytest's import-mode config.
 
 ## Increment 3 — Adversarial review, hardening, and first real end-to-end run (2026-07-13)
 
+**Contract update (2026-10-30, 4.4.1):** `call_ollama()` now requires an explicit
+`system_prompt` for each extraction task. The observations and repair below describe
+the July implementation and are retained as dated audit evidence.
+
 **Trigger:** user asked for a fresh adversarial read of the increment-1 and
 increment-2 work, not a re-confirmation that tests pass. "Don't just re-run
 the existing tests and call it done."
@@ -273,13 +277,14 @@ the existing tests and call it done."
    emitted nodes with empty `node_type=""` that the validation layer
    silently dropped, producing zero-node graphs. Tests did not catch this
    because pytest-httpserver returns canned responses regardless of what
-   is sent to it. Fixed by adding an optional `system_prompt` parameter to
-   `call_ollama()` (keyword-only, defaults to `None` → falls back to the
-   knowledge-graph prompt for backward compatibility) and passing
-   `reproducibility.prompts._SYSTEM_PROMPT` from `extraction.py`. Added a
-   test (`test_extract_workflow_nodes_sends_reproducibility_system_prompt`)
-   that inspects the actual HTTP request body to verify the correct system
-   prompt is sent.
+   is sent to it. The July repair added a keyword-only `system_prompt`
+   parameter and passed `reproducibility.prompts._SYSTEM_PROMPT` from
+   `extraction.py`; omitted prompts still used the knowledge-graph prompt
+   at that time. The 4.4.1 contract above supersedes that fallback:
+   `call_ollama()` requires every caller to supply a non-empty `system_prompt`.
+   The July regression test
+   (`test_extract_workflow_nodes_sends_reproducibility_system_prompt`)
+   inspects the actual HTTP request body to verify the correct system prompt.
 
 2. **BUG (moderate): `weak_component_coverage` (rc5) could exceed 1.0.**
    A hand-built `WorkflowGraph` whose edges reference `node_id`s not in

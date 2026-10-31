@@ -17,8 +17,8 @@ Honest framing: this is Daniel Ari Friedman's research OS, Apache 2.0-licensed. 
 ## Shared agent setup
 
 Read [AGENTS.md](AGENTS.md) and [`.agents/AGENTS.md`](.agents/AGENTS.md) first.
-Shared manifests, local workflows and memory schemas live under `.agents/`;
-`.cursor/` and `.cursorrules` are compatibility entry points. Local memory and
+Shared manifests, local workflows and memory schemas live under `.agents/`.
+Local memory and
 transcript indexes stay ignored. Workflow discovery does not authorize an
 installation into user-level runtimes.
 

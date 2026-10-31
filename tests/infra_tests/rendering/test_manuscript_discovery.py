@@ -407,7 +407,7 @@ class TestDiscoverManuscriptFiles:
         ]
 
     def test_numbered_injected_manuscript_takes_precedence_over_config(self, tmp_path):
-        """Injected output/manuscript trees keep legacy numbered-file ordering."""
+        """Injected output/manuscript trees keep numeric filename ordering."""
         manuscript_dir = tmp_path / "manuscript"
         manuscript_dir.mkdir()
         (manuscript_dir / "01_front.md").write_text("# Front")

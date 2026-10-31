@@ -12,6 +12,8 @@ Tests for `infrastructure.project.discovery` (`discover_projects`, project metad
 
 ## Files
 
+- `test_pdfium_fixture_preparation.py` — actual-platform locked wheel selection, finite curl capability DATA, physical scratch/file controls and hosted fixture ordering; no network or native-provider grant.
+
 - `test_discovery.py` — exhaustive coverage of `discover_projects()`: nested project layouts, qualified-name handling, the `src/` + `tests/` runnable filter, manuscript-only projects, archived/in-progress filtering, edge cases (~47 KB)
 - `test_validation.py` — `validate_project_structure()` happy paths and failure modes (missing dir, missing `src/`, missing `tests/`, no Python files in `src/`)
 - `test_thin_orchestrator_drift.py` — drift policy: **repo** `scripts/` fat files emit **WARNING**; **project** `scripts/` fat files emit **ERROR**; `scan_project_scripts()` only scans `PUBLIC_PROJECT_NAMES` exemplars

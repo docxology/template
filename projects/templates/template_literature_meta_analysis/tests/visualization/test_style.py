@@ -13,7 +13,7 @@ class TestVizConfig:
         manuscript = tmp_path / "manuscript"
         manuscript.mkdir()
         (manuscript / "config.yaml").write_text(
-            "project_config:\n  subfield_keywords:\n    custom_field: [kw]\n  hypothesis_definitions:\n    H9:\n      name: Custom Hypothesis\n",
+            "project_config:\n  subfield_keywords:\n    custom_field: [kw]\n  hypothesis_definitions:\n    H9:\n      id: CUSTOM_HYPOTHESIS\n      name: Custom Hypothesis\n",
             encoding="utf-8",
         )
         old_subfields = dict(style.SUBFIELD_NAMES)
@@ -25,7 +25,7 @@ class TestVizConfig:
             assert style.HYPOTHESIS_NAMES["CUSTOM_HYPOTHESIS"] == "Custom Hypothesis"
             (manuscript / "config.yaml").write_text(
                 "project_config:\n  hypothesis_definitions:\n"
-                "    H1:\n      name: Current Domain Claim\n"
+                "    H1:\n      id: PRIMARY_EFFICACY\n      name: Current Domain Claim\n"
                 "    H2:\n      id: EXPLICIT_DOMAIN_ID\n      name: Explicit Domain Claim\n",
                 encoding="utf-8",
             )

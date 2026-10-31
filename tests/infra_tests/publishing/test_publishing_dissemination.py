@@ -59,14 +59,7 @@ class TestDissemination:
         # selected TeX root is valid for arXiv processing.
         (pdf_dir / "Test_Paper.bbl").touch()
 
-        metadata = publishing.PublicationMetadata(
-            title="Test Paper",
-            authors=["Author"],
-            abstract="Abstract",
-            keywords=["key"],
-        )
-
-        tar_path = publishing.prepare_arxiv_submission(output_dir, metadata)
+        tar_path = publishing.prepare_arxiv_submission(output_dir)
 
         assert tar_path.exists()
         assert tar_path.name.endswith(".tar.gz")

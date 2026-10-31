@@ -22,7 +22,6 @@ It stages an immutable revision and tree-hash release under
 `~/.local/share/template-agent-skills/`, backs up replaced paths under
 `~/.local/state/`, and never executes upstream scripts.
 
-Migration from Cursor: the manifests now live here, shared memory writes to
-[`state/`](state/README.md), and legacy ignored memory remains readable with a
-deprecation warning. Existing private state is preserved. Cursor-specific
-adapters can follow [the deprecated bridge](../.cursor/README.md).
+Shared manifests live here, and memory is loaded from and saved to
+[`state/`](state/README.md). Existing private state outside this directory
+remains untouched and excluded from publication.

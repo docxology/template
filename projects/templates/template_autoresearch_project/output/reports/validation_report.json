@@ -14,7 +14,7 @@
   "output_statistics": {
     "data": {
       "files": 48,
-      "size_mb": 2.4816884994506836
+      "size_mb": 2.4817943572998047
     },
     "detailed_validation": {
       "directories": {
@@ -38,9 +38,9 @@
         "figures": {
           "exists": true,
           "file_count": 28,
-          "largest_file": "autoresearch_security_control_matrix.png",
-          "largest_file_path": "figures/autoresearch_security_control_matrix.png",
-          "size_mb": "1.12"
+          "largest_file": "ml_confusion_matrix.png",
+          "largest_file_path": "figures/ml_confusion_matrix.png",
+          "size_mb": "1.18"
         },
         "llm": {
           "exists": false,
@@ -64,7 +64,7 @@
           "file_count": 1,
           "largest_file": "template_autoresearch_project_combined.pdf",
           "largest_file_path": "pdf/template_autoresearch_project_combined.pdf",
-          "size_mb": "1.40"
+          "size_mb": "1.46"
         },
         "release": {
           "exists": true,
@@ -90,7 +90,7 @@
           "file_count": 6,
           "largest_file": "03_results_slides.pdf",
           "largest_file_path": "slides/03_results_slides.pdf",
-          "size_mb": "1.49"
+          "size_mb": "1.54"
         },
         "web": {
           "exists": true,
@@ -122,7 +122,7 @@
           "combined_pdf": {
             "exists": true,
             "readable": true,
-            "size_mb": 1.4
+            "size_mb": 1.46
           },
           "data": {
             "exists": true,
@@ -152,7 +152,7 @@
             "optional": false,
             "readable": true,
             "required": true,
-            "size_mb": 1.12
+            "size_mb": 1.18
           },
           "llm": {
             "exists": false,
@@ -182,7 +182,7 @@
             "optional": false,
             "readable": true,
             "required": true,
-            "size_mb": 1.4
+            "size_mb": 1.46
           },
           "release": {
             "exists": true,
@@ -213,7 +213,7 @@
             "optional": false,
             "readable": true,
             "required": true,
-            "size_mb": 1.49
+            "size_mb": 1.54
           },
           "web": {
             "exists": true,
@@ -231,26 +231,26 @@
         "valid": true,
         "warnings": []
       },
-      "total_size_mb": 8.948078155517578
+      "total_size_mb": 9.116497039794922
     },
     "figures": {
       "files": 28,
-      "size_mb": 1.121537208557129
+      "size_mb": 1.1773614883422852
     },
     "inventory_mode": "stable-shippable-output-v1",
     "pdf": {
       "files": 1,
-      "size_mb": 1.4017066955566406
+      "size_mb": 1.4580936431884766
     },
     "stable_inventory": {
       "categories": {
         "data": {
           "files": 48,
-          "size_bytes": 2602239
+          "size_bytes": 2602350
         },
         "figures": {
           "files": 28,
-          "size_bytes": 1176017
+          "size_bytes": 1234553
         },
         "manuscript": {
           "files": 11,
@@ -258,7 +258,7 @@
         },
         "pdf": {
           "files": 1,
-          "size_bytes": 1469796
+          "size_bytes": 1528922
         },
         "release": {
           "files": 2,
@@ -270,16 +270,16 @@
         },
         "slides": {
           "files": 6,
-          "size_bytes": 1557897
+          "size_bytes": 1616997
         },
         "web": {
           "files": 10,
-          "size_bytes": 2425922
+          "size_bytes": 2425649
         }
       },
       "mode": "stable-shippable-output-v1",
       "total_files": 118,
-      "total_size_bytes": 9382740
+      "total_size_bytes": 9559340
     }
   },
   "recommendations": [],
@@ -290,21 +290,21 @@
     "passed": 9,
     "total_checks": 9
   },
-  "timestamp": "2026-10-30T04:07:21Z",
+  "timestamp": "2026-10-31T05:06:21Z",
   "validated_inputs": {
     "artifact_manifest": {
       "path": "output/reports/artifact_manifest.json",
-      "sha256": "53a4c361c285cf11dcf29b8a8ea32d59dc14485a366477e8486e504592266fab",
+      "sha256": "d781552bb0fe650768cf298413ed577bbc3a644bcb2e2c4ebc54b3b831bd172c",
       "size_bytes": 38616
     },
     "combined_manuscript": {
       "path": "output/web/_combined_manuscript.md",
-      "sha256": "cffa25014d4f52e1b311c24d99ccf8f26761f32f71915f37487a9671b8a5631d",
+      "sha256": "489b0e5d2e1b19c81767c406ef1ccd61fd56f09203deb6033cc8d5460523e499",
       "size_bytes": 81454
     },
     "composition_manifest": {
       "path": "output/reports/manuscript_composition.json",
-      "sha256": "ccedccdad9984f3f111d33ac37b8e24eea412f089bb896b1074432a0d73160e5",
+      "sha256": "f7f54d178dbfd37acbde1c471deb6daa10016ec95108023ee68d8787df85d2a7",
       "size_bytes": 2149
     },
     "consumed_manuscript": [
@@ -334,7 +334,7 @@
       },
       {
         "rendered_path": "output/manuscript/03_results.md",
-        "rendered_sha256": "cca943f50118aacf316e9194f67f2530cfc7ef6c834380c7d48fd4ae0d3c6e49",
+        "rendered_sha256": "4a38903541a691561d97b640bc9d7085639b2c98b2b5749e257b40a8be505e96",
         "source_path": "manuscript/03_results.md",
         "source_sha256": "2f4e606537779fdffa5ff543bd27570912ffec1d6aa37eace819eab8a919663f"
       },
@@ -360,19 +360,19 @@
     "fingerprints": {
       "config": {
         "file_count": 23,
-        "sha256": "65e7d3cb04b2ea1f35f870b6d3027b6e7bd3db20e6ca7db194f4200bea08b1ac"
+        "sha256": "16d10150ba1aad8c850d2b1f813faac7c01261476a1360fcb0c3e26fe1226b50"
       },
       "output": {
         "file_count": 118,
-        "sha256": "50de104658db2bfdbbe4aa1d6b375c7020e4f443dae1c5a106df686b6c58831a"
+        "sha256": "f9a32b91282d429149289857b8757b3aac02bc9996c6f25500556a908346608f"
       },
       "source": {
         "file_count": 87,
-        "sha256": "f444fbf6a8601bc671ee080ff998da8b2f72352190a9c9451bb0975799a503af"
+        "sha256": "4b62191ae34c169da5fc5496f678b360f888e92c413b4d469977ebf511f70607"
       },
       "stage": {
-        "file_count": 1719,
-        "sha256": "99d9e847388805b29aa6776039af1895a0af917c759980b61570946b1feab887"
+        "file_count": 1718,
+        "sha256": "79d670d77838b002e00b4e735ee4b3e97ebaaa44b38735527425aa0b0dff5402"
       }
     },
     "project": "templates/template_autoresearch_project",

@@ -49,7 +49,7 @@ Scripts require the project dependencies:
 
 - `numpy` - Numerical computations
 - `matplotlib` - Plotting and visualization
-- `infrastructure` - Template utilities (optional, for figure registration)
+- `infrastructure` - Required SDK utilities, including figure registration
 
 ## Usage Examples
 

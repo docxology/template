@@ -78,7 +78,7 @@ doi = client.publish(dep.deposition_id)
 ```python
 from infrastructure.publishing.arxiv import prepare_arxiv_submission
 
-package = prepare_arxiv_submission(output_dir, metadata)
+package = prepare_arxiv_submission(output_dir)
 ```
 
 ## GitHub releases

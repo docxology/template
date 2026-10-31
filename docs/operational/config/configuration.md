@@ -228,7 +228,7 @@ tag tree, reading order, or PDF/UA conformance.
 | `ENABLE_SLIDES` | `1` | Per-format toggle — archive profile requires per-section Beamer PDFs; accessible profile requires a transactional Beamer-PDF/Reveal-HTML pair from one composed AST. |
 | `ENABLE_DOCX` | `0` | Opt-in — combined Word document at `output/<project>/docx/`. |
 | `ENABLE_EPUB` | `0` | Opt-in — combined EPUB at `output/<project>/epub/`. |
-| `SLIDES_PROFILE` | `archive` | Slide composition profile: backwards-compatible `archive` or opt-in `accessible`. |
+| `SLIDES_PROFILE` | `archive` | Slide composition profile: default `archive` or opt-in `accessible`. |
 | `SLIDES_MAX_PROSE_WORDS` | `80` | Accessible-profile prose ceiling; accepted integer interval `[1, 80]`. |
 | `SLIDES_MAX_TABLE_ROWS` | `8` | Accessible-profile displayed table-row ceiling; accepted integer interval `[1, 8]`. |
 | `SLIDES_MIN_FIGURE_AREA_PERCENT` | `70` | Minimum figure-led frame allocation; accepted integer interval `[70, 100]`. |

@@ -217,7 +217,7 @@ def collect_standin_inventory(
 
 
 def build_parser() -> argparse.ArgumentParser:
-    """Build the shared CLI parser used by both compatibility wrappers."""
+    """Build the CLI parser for prohibited mock syntax and stand-in inventories."""
     parser = argparse.ArgumentParser(
         description=("Check prohibited mock-framework syntax or inventory pytest.monkeypatch semantic stand-ins.")
     )

@@ -16,7 +16,6 @@ from roadmap_tracks.sheaf_tracks_io import (
 )
 from roadmap_tracks.sheaf_tracks_registry import (
     HASH_CYCLE_AUTHORITY,
-    LEGACY_ARTIFACTS,
     hash_cycle_excluded,
 )
 
@@ -156,13 +155,6 @@ def _deferred_copy_parity(project_root: Path, rel_paths: list[str]) -> dict[str,
         "pre_copy_stage": True,
         "parity_authority": "stage_05_copy",
     }
-
-
-def _remove_legacy_artifacts(root: Path) -> None:
-    for rel in LEGACY_ARTIFACTS:
-        path = root / rel
-        if path.is_file():
-            path.unlink()
 
 
 def _refresh_hydrated_manuscript(root: Path) -> None:

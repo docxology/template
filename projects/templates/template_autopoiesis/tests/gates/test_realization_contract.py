@@ -7,6 +7,7 @@ import shutil
 import signal
 import subprocess
 import sys
+import tomllib
 from pathlib import Path
 from typing import Any
 
@@ -22,6 +23,7 @@ from template_autopoiesis.gates.realization_contract import realize_selected_chi
 from template_autopoiesis.gates.sealing import seal_verified_child
 
 PROJECT = Path(__file__).resolve().parents[2]
+PLATFORM_VERSION = tomllib.loads((PROJECT / "pyproject.toml").read_text())["tool"]["template"]["platform_version"]
 
 
 @pytest.fixture
@@ -100,7 +102,7 @@ def test_standalone_materialization_is_real_and_missing_platform_execution_block
         check=False,
     )
     assert result.returncode == 75, result.stderr
-    assert "platform 4.4.0" in result.stderr
+    assert f"platform {PLATFORM_VERSION}" in result.stderr
     receipt = json.loads((source_project / "output/.pipeline/child_realization/single.json").read_text())
     assert receipt["schema_version"] == "autopoiesis/selected-child-execution/2"
     assert receipt["status"] == "blocked" and receipt["executed_children"] == []

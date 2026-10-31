@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import pytest
+
 
 class TestSteganographyConfig:
     def test_default_config_disabled(self):
@@ -26,7 +28,7 @@ class TestSteganographyConfig:
     def test_from_dict_basic(self):
         from infrastructure.steganography.config import SteganographyConfig
 
-        config = SteganographyConfig.from_dict({"enabled": True, "overlays": False, "barcodes": True})
+        config = SteganographyConfig.from_dict({"enabled": True, "overlays_enabled": False, "barcodes_enabled": True})
         assert config.enabled is True
         assert config.overlays_enabled is False
         assert config.barcodes_enabled is True
@@ -41,11 +43,12 @@ class TestSteganographyConfig:
 
         assert SteganographyConfig.from_dict(None).enabled is False
 
-    def test_from_dict_unknown_keys_ignored(self):
+    def test_from_dict_unknown_keys_rejected(self):
         from infrastructure.steganography.config import SteganographyConfig
 
-        config = SteganographyConfig.from_dict({"enabled": True, "unknown_key": "value"})
-        assert config.enabled is True
+        for key in ("unknown_key", "overlays", "barcodes", "metadata", "hashing", "encryption"):
+            with pytest.raises(ValueError, match="Unknown steganography configuration fields"):
+                SteganographyConfig.from_dict({"enabled": True, key: False})
 
     def test_from_dict_canonical_names(self):
         from infrastructure.steganography.config import SteganographyConfig

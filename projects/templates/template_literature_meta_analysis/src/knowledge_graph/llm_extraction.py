@@ -10,7 +10,7 @@ import requests
 
 from template_literature_meta_analysis.knowledge_graph.llm_client import call_ollama, parse_llm_response
 from template_literature_meta_analysis.knowledge_graph.llm_config import LLMConfig
-from template_literature_meta_analysis.knowledge_graph.llm_prompts import build_prompt, hypothesis_dicts
+from template_literature_meta_analysis.knowledge_graph.llm_prompts import _SYSTEM_PROMPT, build_prompt, hypothesis_dicts
 from template_literature_meta_analysis.knowledge_graph.nanopublication import (
     Assertion,
     Nanopublication,
@@ -41,7 +41,7 @@ def assess_paper_hypotheses(
 
     for attempt in range(1, config.max_retries + 1):
         try:
-            raw, meta = call_ollama(prompt, config)
+            raw, meta = call_ollama(prompt, config, system_prompt=_SYSTEM_PROMPT)
             assessments = parse_llm_response(raw)
             assertions: list[Assertion] = []
             direction_counts: dict[str, int] = {}

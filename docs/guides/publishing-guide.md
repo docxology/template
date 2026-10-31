@@ -186,17 +186,10 @@ badge_md = generate_doi_badge("10.5281/zenodo.12345678")
 ```python
 from pathlib import Path
 
-from infrastructure.publishing import PublicationMetadata, prepare_arxiv_submission
-
-metadata = PublicationMetadata(
-    title="My Paper",
-    authors=["Author"],
-    abstract="Abstract.",
-    keywords=["research"],
-)
+from infrastructure.publishing import prepare_arxiv_submission
 
 output_dir = Path("projects/templates/template_code_project/output")
-tarball = prepare_arxiv_submission(output_dir, metadata)
+tarball = prepare_arxiv_submission(output_dir)
 print(f"Submission package: {tarball}")
 ```
 

@@ -38,8 +38,8 @@ to all downstream pipeline stages.
   negative citation counts. API responses can occasionally return `null` — the parser defaults
   to 0 in that case. Never pass negative values to `Assertion.citation_count`.
 - **JSONL format stability**: Each line of `corpus.jsonl` is a `Paper.to_dict()` JSON object.
-  Adding or removing `Paper` fields requires updating `Paper.from_dict()` to handle both old
-  and new format (backward compatibility via `.get()` with defaults).
+  Adding or removing `Paper` fields requires updating `Paper.from_dict()` to handle
+  sparse records, using defaults for optional bibliographic and full-text fields.
 
 ## Adding a New Literature Source
 

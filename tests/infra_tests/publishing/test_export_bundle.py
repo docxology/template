@@ -625,3 +625,12 @@ def test_successful_export_leaves_no_manifest_temporaries(tmp_path: Path) -> Non
     assert not list(bundle.glob(".manifest-*.tmp"))
     manifest = json.loads((bundle / "manifest.json").read_text(encoding="utf-8"))
     assert manifest["artifacts"]["pdf"][0]["sha256"] == hashlib.sha256(b"fixture").hexdigest()
+
+
+def test_export_default_is_inside_selected_repository(tmp_path: Path) -> None:
+    project = make_project(tmp_path, "template_test", program="templates", with_manuscript=True, with_output=True)
+    pdf = project / "output" / "pdf" / "report.pdf"
+    pdf.write_bytes(b"%PDF-1.4 local export\n")
+    bundle = export_for_publishing("templates/template_test", repo_root=tmp_path)
+    assert bundle.parent == tmp_path / "output" / "publishing_exports"
+    assert (bundle / "pdf" / "report.pdf").read_bytes() == pdf.read_bytes()

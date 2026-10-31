@@ -7,6 +7,7 @@ dependency metadata is declaration identity, not universal member-byte custody.
 
 from __future__ import annotations
 
+import tomllib
 from dataclasses import dataclass
 from importlib.metadata import PackageNotFoundError, version
 from pathlib import Path
@@ -14,13 +15,21 @@ from pathlib import Path
 from .verification_execution import VerificationCommandFailed, VerificationRuntimeUnavailable
 
 
-def _platform() -> None:
+def _platform(project_root: Path) -> str:
+    try:
+        metadata = tomllib.loads((project_root / "pyproject.toml").read_text(encoding="utf-8"))
+        required = metadata["tool"]["template"]["platform_version"]
+    except (OSError, tomllib.TOMLDecodeError, KeyError, TypeError) as exc:
+        raise VerificationRuntimeUnavailable("Verifier requires its declared platform version") from exc
+    if not isinstance(required, str) or not required.strip():
+        raise VerificationRuntimeUnavailable("Verifier platform_version must be a non-empty string")
     try:
         installed = version("research-project-template")
     except PackageNotFoundError as exc:
-        raise VerificationRuntimeUnavailable("Prepare the verifier dev extra with platform4.4.0 explicitly") from exc
-    if installed != "4.4.0":
-        raise VerificationRuntimeUnavailable("Full verification requires prepared platform4.4.0")
+        raise VerificationRuntimeUnavailable(f"Prepare the verifier dev extra with platform {required}") from exc
+    if installed != required:
+        raise VerificationRuntimeUnavailable(f"Full verification requires prepared platform {required}")
+    return required
 
 
 @dataclass(frozen=True)
@@ -72,7 +81,7 @@ class VerificationRuntime:
 
 def prepare_verification_runtime(project_root: Path, interpreter: str, deadline: float) -> VerificationRuntime:
     """Require actual selected platform/test versions before any domain child."""
-    _platform()
+    required = _platform(project_root)
     try:
         from infrastructure.core.testing.project_test_runtime import (
             ProjectTestRuntimeError,
@@ -85,7 +94,7 @@ def prepare_verification_runtime(project_root: Path, interpreter: str, deadline:
             project_root,
             deadline=deadline,
             interpreter=Path(interpreter),
-            required_distributions={"research-project-template": "4.4.0"},
+            required_distributions={"research-project-template": required},
         )
     except ProjectTestRuntimeError as exc:
         if exc.exit_code in {124, 130}:

@@ -25,22 +25,6 @@ _GENERATED_HEADINGS = {
     "Major upcoming",
 }
 
-_BLOCKED_EXTERNAL_IDS = frozenset(
-    {
-        "DATA-PUBLICATION-1",
-        "DATA-MEDIA-1",
-        "LIT-ENGINE-POLITENESS-1",
-        "REGISTERED-PUBLICATION-1",
-        "POOLS-FOURTH-FOND-1",
-        "SIA-APPROVAL-FORK-1",
-        "ARL-CROSS-PHASE-1",
-        "ARL-PHASE-PROVENANCE-1",
-    }
-)
-_BLOCKED_TOOL_IDS = frozenset({"AUTOPOIESIS-SPEC-1", "FORMAL-SPEC-1", "PROSE-LLM-REVIEW-1", "REDACTED-VISUAL-1"})
-_PARTIAL_IDS: frozenset[str] = frozenset()
-_OPEN_IDS: frozenset[str] = frozenset()
-
 
 def _sections(lines: list[str]) -> list[tuple[str, list[str]]]:
     sections: list[tuple[str, list[str]]] = []
@@ -93,20 +77,8 @@ def _table(rows: list[tuple[str, ...]]) -> list[str]:
     return output
 
 
-def _status_for(identifier: str) -> str:
-    if identifier in _BLOCKED_EXTERNAL_IDS:
-        return "blocked-external"
-    if identifier in _BLOCKED_TOOL_IDS:
-        return "blocked-tool"
-    if identifier in _PARTIAL_IDS:
-        return "partial"
-    if identifier in _OPEN_IDS:
-        return "open"
-    return "open"
-
-
 def _canonical_acceptance_command(command: str, project_slug: str) -> str:
-    """Keep the planned acceptance field executable even when legacy prose was supplied."""
+    """Keep the planned acceptance field executable for project-local execution."""
     # A TODO lives inside its exemplar.  Keep its acceptance command runnable
     # from that project root so project-local documentation contracts do not
     # mistake a root-checkout path for a reproducible local command.  The
@@ -129,24 +101,7 @@ def _canonical_acceptance_command(command: str, project_slug: str) -> str:
 
 
 def _normalize_row(row: tuple[str, ...], *, project_slug: str) -> tuple[str, ...]:
-    """Migrate a legacy six-field row or validate the shape of a new row."""
-    if len(row) == 6:
-        identifier, size, dependency, artifact, command, negative = row
-        # Active planning is intentionally decomposed into Minor/Medium
-        # slices.  Preserve the stable ID while converting legacy release-
-        # scale rows into a bounded Medium unblock condition.
-        if size.strip().casefold() == "major":
-            size = "Medium"
-        status = _status_for(identifier.strip("`"))
-        action_prefix = {
-            "open": "Implement the scoped change",
-            "partial": "Complete the remaining scoped work",
-            "blocked-external": "Obtain the required owner or external receipt to unblock",
-            "blocked-tool": "Install or pin the required tool, or record its unavailable status to unblock",
-        }[status]
-        acceptance = _canonical_acceptance_command(command, project_slug)
-        next_action = f"{action_prefix}; run {acceptance} and attach {artifact}."
-        return (identifier, status, size, dependency, next_action, artifact, acceptance, negative)
+    """Validate the explicit eight-field planning contract."""
     if len(row) == 8:
         identifier, status, size, dependency, next_action, artifact, command, negative = row
         if size.strip().casefold() == "major":
@@ -155,7 +110,7 @@ def _normalize_row(row: tuple[str, ...], *, project_slug: str) -> tuple[str, ...
         if acceptance == command:
             return (identifier, status, size, dependency, next_action, artifact, command, negative)
         return (identifier, status, size, dependency, next_action, artifact, acceptance, negative)
-    raise ValueError(f"backlog row must have six legacy or eight current fields: {row!r}")
+    raise ValueError(f"backlog row must have eight fields: {row!r}")
 
 
 def _clean_body(lines: list[str]) -> list[str]:

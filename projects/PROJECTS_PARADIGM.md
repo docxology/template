@@ -152,7 +152,7 @@ uv run python scripts/pipeline/stage_03_render.py --project {name}
 
 ## Template standards compliance as paradigm requirement
 
-The standalone project paradigm requires alignment with the repository root **[`.cursorrules`](../.cursorrules)** file (Cursor / IDE routing) and with **[`docs/rules/`](../docs/rules/)** (normative Markdown guides). This alignment is not optional — it is a core requirement of the paradigm.
+The standalone project paradigm requires alignment with the repository root **[`AGENTS.md`](../AGENTS.md)** file (shared agent routing) and with **[`docs/rules/`](../docs/rules/)** (normative Markdown guides). This alignment is not optional — it is a core requirement of the paradigm.
 
 ### ✅ **Testing Standards Compliance (Required)**
 
@@ -194,7 +194,7 @@ find projects/ -name "*.py" -exec grep -L '"""' {} \;  # Check for missing docst
 
 ### Alignment with docs/rules standards
 
-Every standalone project must comply with development standards documented under **[`docs/rules/`](../docs/rules/)**, guided by the root **[`.cursorrules`](../.cursorrules)** entry rule:
+Every standalone project must comply with development standards documented under **[`docs/rules/`](../docs/rules/)**, guided by the root **[`AGENTS.md`](../AGENTS.md)** entry rule:
 
 #### ✅ **Testing Standards Compliance**
 
@@ -541,7 +541,7 @@ Rendered projects are discovered and executed by infrastructure:
 is an optional hot-seat mirror for private sidecar projects that should enter
 normal discovery.
 
-### Non-rendered projects (`projects/working/`, `archive/`, optional legacy mirrors)
+### Non-rendered projects (`projects/working/`, `archive/`)
 
 Non-rendered projects are preserved but not executed by default:
 
@@ -551,9 +551,8 @@ Non-rendered projects are preserved but not executed by default:
 - **Preserved** for historical reference, explicit qualified renders, or later
   deliberate restoration into optional `active/`
 
-The simplified private sidecar requires `working/` and `archive/`; optional
-legacy `active/` folder is still linked when
-present.
+The simplified private sidecar requires `working/` and `archive/`; the optional
+`active/` folder is linked when present.
 
 ### Retiring or resuming a sidecar project
 

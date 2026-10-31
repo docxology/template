@@ -355,32 +355,6 @@ class TestCliModuleStructure:
         assert hasattr(cli, "RenderManager")
 
 
-class TestRenderAllCliCore:
-    """Test core render all CLI functionality."""
-
-    def test_module_imports(self):
-        """Test that module imports correctly."""
-        from infrastructure.rendering import render_all_cli
-
-        assert render_all_cli.__name__ == "infrastructure.rendering.render_all_cli"
-
-    def test_has_main_function(self):
-        """Test that module has main function."""
-        from infrastructure.rendering import render_all_cli
-
-        assert callable(render_all_cli.main)
-
-
-class TestRenderCommands:
-    """Test render command functionality."""
-
-    def test_render_all_entrypoint_is_callable(self):
-        """The wrapper exposes one callable entrypoint for all formats."""
-        from infrastructure.rendering import render_all_cli
-
-        assert callable(render_all_cli.main)
-
-
 @pytest.mark.slow
 class TestRenderCliParsing:
     """Test CLI argument parsing via real subprocess."""
@@ -403,22 +377,6 @@ class TestRenderCliParsing:
             )
 
             _assert_cli_result(result, success_text="Generated:")
-
-
-class TestSlidesRendering:
-    """Test slides rendering commands."""
-
-    def test_slides_beamer_command(self):
-        """Test Beamer slides command."""
-        from infrastructure.rendering import render_all_cli
-
-        assert not hasattr(render_all_cli, "render_slides_command")
-
-    def test_slides_revealjs_command(self):
-        """Test reveal.js slides command."""
-        from infrastructure.rendering import render_all_cli
-
-        assert not hasattr(render_all_cli, "render_revealjs_command")
 
 
 class TestSchemaSubcommand:

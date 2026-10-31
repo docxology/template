@@ -58,13 +58,13 @@ def test_actual_pytest_exit_and_diagnostic_cannot_grant_execution_receipts(tmp_p
 
 def test_automatic_capacity_holds_for_real_skewed_module_sizes(tmp_path: Path) -> None:
     root = Path(__file__).resolve().parents[3]
-    legacy = infrastructure_files(root)
+    baseline = infrastructure_files(root)
     changed = tuple(f"tests/infra_tests/skew/test_owned_{index:03d}.py" for index in range(61))
-    for relative in (*legacy, *changed):
+    for relative in (*baseline, *changed):
         path = tmp_path / relative
         path.parent.mkdir(parents=True, exist_ok=True)
         path.write_text("def test_owned():\n    assert 1 + 1 == 2\n", encoding="utf-8")
-    bins = (len(legacy) + len(changed) + 19) // 20
+    bins = (len(baseline) + len(changed) + AUTOMATIC_SHARD_MAX_MODULES - 1) // AUTOMATIC_SHARD_MAX_MODULES
     for relative in changed[: bins - 1]:
         with (tmp_path / relative).open("a") as stream:
             stream.write("#" + "large physical module " * 50000 + "\n")
@@ -79,6 +79,7 @@ def test_automatic_capacity_holds_for_real_skewed_module_sizes(tmp_path: Path) -
 
 
 @pytest.mark.skipif(os.name != "posix", reason="detached POSIX sessions and native ps ownership")
+@pytest.mark.timeout(120)
 def test_actual_pytest_timeout_cleans_owned_detached_descendant_and_keeps_foreign_sibling(tmp_path: Path) -> None:
     owned_root = tmp_path / "owned"
     owned_root.mkdir()

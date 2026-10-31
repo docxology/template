@@ -46,7 +46,7 @@ config = RenderingConfig()
 ```
 
 For projection-scale slides, explicitly select the accessible profile. The
-archive profile remains the default for backwards compatibility:
+archive profile is the default composition:
 
 ```python
 config = RenderingConfig(
@@ -142,7 +142,7 @@ renderer.render_combined(source_files, manuscript_dir, project_name="my_project"
 uv run python -m infrastructure.rendering.cli pdf manuscript.tex
 # Subcommands: pdf | all | slides | web — each takes a positional source file (TeX or Markdown)
 uv run python -m infrastructure.rendering.cli all manuscript.tex
-uv run python -m infrastructure.rendering.render_all_cli
+uv run python -m infrastructure.rendering.cli all manuscript/main.tex
 ```
 
 ## Slides Rendering (`slides_renderer.py`)

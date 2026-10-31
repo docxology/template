@@ -121,3 +121,18 @@ def test_working_tree_changes_observes_real_files() -> None:
     # This file is part of an edited working tree during development, but the
     # helper must never invent paths that do not exist on disk.
     assert all(not name.startswith("/") for name in changed)
+
+
+def test_changed_guides_use_the_same_complete_documentation_roster_as_prs() -> None:
+    from infrastructure.core.testing.ci_contracts import combined_groups
+    from infrastructure.core.testing.ci_infra import infrastructure_files, validate_plan
+    from infrastructure.core.testing.local_gate import _infra_plan
+
+    plan = _infra_plan(("README.md",))
+    assert plan["documentation_only"] is True and plan["full"] is False
+    validate_plan(ROOT, plan)
+    assert {name for group in combined_groups(plan) for name in group} == set(
+        infrastructure_files(ROOT, documentation=True)
+    )
+    assert plan["contract_modules"]
+    assert _infra_plan(None)["documentation_only"] is False

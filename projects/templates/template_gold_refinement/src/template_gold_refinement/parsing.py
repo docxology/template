@@ -10,10 +10,7 @@ from typing import Any, Sequence
 
 import yaml
 
-try:
-    from .coercion import coerce_bool
-except ImportError:
-    from template_gold_refinement.coercion import coerce_bool  # type: ignore[no-redef]
+from .coercion import coerce_bool
 
 
 def build_timestamp() -> str:

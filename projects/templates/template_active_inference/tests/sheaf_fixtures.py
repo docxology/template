@@ -22,7 +22,6 @@ figures:
 section_figures:
   coverage_page:
     - id: sheaf_coverage_heatmap
-      caption_prefix: "Coverage overview. "
 """,
         encoding="utf-8",
     )

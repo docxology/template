@@ -9,7 +9,7 @@ Boundary rule:
 Implementation split:
   _exceptions_core.py    — TemplateError base + config/validation/build/file/dep/test/integration
   _exceptions_domains.py — literature/LLM/security/rendering/publishing exceptions
-  exceptions.py          — utility functions + backwards-compat re-exports
+  exceptions.py          — utility functions + declared public exports
 
 Part of the infrastructure layer (Layer 1) - reusable across all projects.
 """
@@ -56,7 +56,6 @@ from infrastructure.core._exceptions_domains import (  # noqa: F401
     MetadataError,
     PublishingError,
     RenderingError,
-    SecurityError,
     SecurityViolation,
     TemplateRenderingError,
     UploadError,
@@ -129,7 +128,6 @@ __all__ = [
     "MetadataError",
     "PublishingError",
     "RenderingError",
-    "SecurityError",
     "SecurityViolation",
     "TemplateRenderingError",
     "UploadError",
