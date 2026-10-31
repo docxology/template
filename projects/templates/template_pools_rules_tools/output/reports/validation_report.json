@@ -247,7 +247,7 @@
         "valid": true,
         "warnings": []
       },
-      "total_size_mb": 7.911948204040527
+      "total_size_mb": 7.911953926086426
     },
     "figures": {
       "files": 10,
@@ -286,7 +286,7 @@
         },
         "root": {
           "files": 1,
-          "size_bytes": 897707
+          "size_bytes": 897713
         },
         "slides": {
           "files": 8,
@@ -299,7 +299,7 @@
       },
       "mode": "stable-shippable-output-v1",
       "total_files": 60,
-      "total_size_bytes": 8296279
+      "total_size_bytes": 8296285
     }
   },
   "recommendations": [],
@@ -310,11 +310,11 @@
     "passed": 9,
     "total_checks": 9
   },
-  "timestamp": "2026-10-31T02:22:03Z",
+  "timestamp": "2026-10-31T05:06:21Z",
   "validated_inputs": {
     "artifact_manifest": {
       "path": "output/reports/artifact_manifest.json",
-      "sha256": "b2e34122f800e958321dcb129b0523ae4d0ec966f0064327b7cb956937e89b17",
+      "sha256": "1c4ddc413cff64092c9131c6379463dc2d760371b99a2626cd8fdf35a336609f",
       "size_bytes": 19627
     },
     "combined_manuscript": {
@@ -380,19 +380,19 @@
     "fingerprints": {
       "config": {
         "file_count": 15,
-        "sha256": "2889c7cf4255de27acaf6084ec19ecb0c909f757cfd0876f4fc0597d23f1d937"
+        "sha256": "e9d6bd98f1a8274215d704c60aa0922208042ff251b19a33f7bf90d2045e59c7"
       },
       "output": {
         "file_count": 60,
-        "sha256": "e67afbf864db1f11fdf32578d1ccc683ea37644129ce195c7b3f5b62f6514c05"
+        "sha256": "0d4af2136bfda8f5d434868671e800fc783f58c92eb540c7e98e468eed066eee"
       },
       "source": {
         "file_count": 51,
         "sha256": "ef590270c743c586ba3acab9ea34212360abbacf03ed71d48887f1938968f7b0"
       },
       "stage": {
-        "file_count": 1717,
-        "sha256": "a7dd7f7f37b7084f7c90ceccd6c06ce5e690ba76ee2cb3b236d73178eb9d5bd1"
+        "file_count": 1718,
+        "sha256": "79d670d77838b002e00b4e735ee4b3e97ebaaa44b38735527425aa0b0dff5402"
       }
     },
     "project": "templates/template_pools_rules_tools",

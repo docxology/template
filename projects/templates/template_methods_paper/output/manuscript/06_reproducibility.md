@@ -71,5 +71,5 @@ evidence-registry validation. The manuscript intentionally does not
 hand-transcribe volatile values, so prose and artifacts cannot disagree.
 Configuration provenance is itself injected: `0937b126ad9a5a71` is the
 SHA-256 of `manuscript/config.yaml` at build time, and
-`2026-10-31T02:22:03Z` records when the variables were generated
+`2026-10-31T05:06:21Z` records when the variables were generated
 (honoring `SOURCE_DATE_EPOCH` for byte-reproducible builds).

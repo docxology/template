@@ -7,7 +7,7 @@
       "kind": "input",
       "path": "<home>/Documents/Git/gitvault/Local/worktrees/template-4.4.0-completion-20261030/pyproject.toml",
       "required": false,
-      "sha256": "48cb6b5e06efdfed1cc92f5d38bd452ce8de6617a182018b89d7a22483de06cd"
+      "sha256": "e002cc2a3e0e2affac2b8b57df5beb62652393151b3146095859505e70de4d67"
     },
     {
       "id": "root_uv_lock",
@@ -112,14 +112,14 @@
       "kind": "generated_artifact",
       "path": "output/data/autoresearch_evidence_overview.json",
       "required": true,
-      "sha256": "391c39692aeb1f711ac51218c952a9801bab28691b6ead97a5036eb4410e753d"
+      "sha256": "cc692ed54a0772d04428435df9d5332263d0c7ea7d74aee1896a51732863100d"
     },
     {
       "id": "generated-003",
       "kind": "generated_artifact",
       "path": "output/data/autoresearch_loop.json",
       "required": true,
-      "sha256": "1143756e845a07a414cc6a2ac22581ff83a024bd02bd359ec1721469b3fb696c"
+      "sha256": "7d899860dd21dc91589168630a24000e2ac3b7590f81c91453789a3ac09eb6a4"
     },
     {
       "id": "generated-004",
@@ -133,7 +133,7 @@
       "kind": "generated_artifact",
       "path": "output/data/autoresearch_review_packet.json",
       "required": true,
-      "sha256": "9642c40a0d84e27b9bd7b6ede44cf2d292cd5caac4e0669a5534aae8875d319b"
+      "sha256": "d0acda2465bff3eccf084961da2fe38dfcaf27c05889177a66b75c1ea2626fa4"
     },
     {
       "id": "generated-006",
@@ -154,28 +154,28 @@
       "kind": "generated_artifact",
       "path": "output/data/benchmark_scores.json",
       "required": true,
-      "sha256": "9c04dfae8441fc1fb7119fe5f216ad6739d0bb99513a6f9728364ef43c829dcc"
+      "sha256": "689c7469d343ee77fbc27c29da8380142f7414c61584eb10c803d310355f5aa9"
     },
     {
       "id": "generated-009",
       "kind": "generated_artifact",
       "path": "output/data/figure_quality_report.json",
       "required": true,
-      "sha256": "54589868e2047f79de1279a3b702e4e09e256ddc80ef2bd9b3f9288230fa643c"
+      "sha256": "1bf6b1b28c3c75871c2be767559ad1a964c8c08077a86bf011e62e3d95f8b5fb"
     },
     {
       "id": "generated-010",
       "kind": "generated_artifact",
       "path": "output/data/figure_style.json",
       "required": true,
-      "sha256": "d1357e6b7e3d59c66dd030013da085a396d7550108d274a37060c10a56e4fcfe"
+      "sha256": "f66b19723816147968cbf57c76b4129c0c22a586d65e2973f364743e9acbf880"
     },
     {
       "id": "generated-011",
       "kind": "generated_artifact",
       "path": "output/data/idea_ledger.json",
       "required": true,
-      "sha256": "da0a6294823d97fbec0ac9a22dc723aef8d96102e5dd51c554b386078d21422c"
+      "sha256": "a7ebc02831039e3560a19ba80991df3e46ae3b3600344b6c2f9b5c5f50acc3ee"
     },
     {
       "id": "generated-012",
@@ -217,7 +217,7 @@
       "kind": "generated_artifact",
       "path": "output/data/ml_candidate_ledger.json",
       "required": true,
-      "sha256": "6763270477365735b1fcf57ba4886f7f76dce069d464d79f2e11bd3fc098656a"
+      "sha256": "4e967f9e8f02524f6f5809c390d560dc57a4cf0b587fd8d2fdf8f544d68ae0cd"
     },
     {
       "id": "generated-018",
@@ -343,7 +343,7 @@
       "kind": "generated_artifact",
       "path": "output/data/review_decisions.json",
       "required": true,
-      "sha256": "26059fb0249977705810aa73cd57280c3c0b6bbbc0c0914a2c7044833b3a86d2"
+      "sha256": "5f71bdcec6920cc99adda56659b46c8d2fc3561891e6f185c121aee7f0d1ec7d"
     },
     {
       "id": "generated-036",
@@ -532,7 +532,7 @@
       "kind": "generated_artifact",
       "path": "output/reports/autoresearch_loop.json",
       "required": true,
-      "sha256": "1143756e845a07a414cc6a2ac22581ff83a024bd02bd359ec1721469b3fb696c"
+      "sha256": "7d899860dd21dc91589168630a24000e2ac3b7590f81c91453789a3ac09eb6a4"
     },
     {
       "id": "generated-063",
@@ -587,7 +587,7 @@
   "cyclonedx_complete": false,
   "formal_sbom": false,
   "format": "template_autoresearch_local_inventory",
-  "generated_at": "2026-10-31T02:22:03+00:00",
+  "generated_at": "2026-10-31T05:06:21+00:00",
   "not_external_signing": true,
   "not_network_security_assessment": true,
   "not_runtime_monitoring": true,

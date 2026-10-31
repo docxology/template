@@ -49,6 +49,6 @@ repository's configured project coverage gate, generates 19 artifacts
 (1 figures, 7 data files,
 11 reports) per pipeline run, and injects reproducibility
 metadata (configuration hash `0937b126ad9a5a71`, build timestamp
-`2026-10-31T02:22:03Z`) into [@sec:reproducibility].
+`2026-10-31T05:06:21Z`) into [@sec:reproducibility].
 
 **Keywords:** methods paper, domain-specific language, controlled methods, deterministic compilation, staged validation, dimensional analysis

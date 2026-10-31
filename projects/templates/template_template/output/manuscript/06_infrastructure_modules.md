@@ -1,6 +1,6 @@
 # Infrastructure Module Reference
 
-This section inventories every Layer‑1 subdirectory returned by `31` `discover_infrastructure_modules(repo_root)`. File totals use `1334` Python sources across infra + `12,552` infra tests guarding them. Documentation Duality = paired `README.md` + `AGENTS.md`; optional `SKILL.md` manifests feed `python -m infrastructure.skills`.
+This section inventories every Layer‑1 subdirectory returned by `31` `discover_infrastructure_modules(repo_root)`. File totals use `1335` Python sources across infra + `12,564` infra tests guarding them. Documentation Duality = paired `README.md` + `AGENTS.md`; optional `SKILL.md` manifests feed `python -m infrastructure.skills`.
 
 | Module | Python Files | Has AGENTS.md | Has README.md | Key Exports |
 |--------|:-----------:|:-------------:|:-------------:|-------------|
@@ -18,7 +18,7 @@ This section inventories every Layer‑1 subdirectory returned by `31` `discover
 | `metadata` | 3 | ✓ | ✓ | `normalized_repository_url`, `generate_metadata_package` |
 | `methods` | 10 | ✓ | ✓ | `build_methods_orchestration_plan`, methods-stage contracts + validation |
 | `orchestration` | 14 | ✓ | ✓ | `PipelineRunner`, entry point for `./run.sh` |
-| `project` | 116 | ✓ | ✓ | `discover_projects`, workspace management |
+| `project` | 117 | ✓ | ✓ | `discover_projects`, workspace management |
 | `prose` | 9 | ✓ | ✓ | Markdown readability + prose tooling |
 | `provenance` | 9 | ✓ | ✓ | — |
 | `publishing` | 85 | ✓ | ✓ | Zenodo, executable bundle, archival targets |
@@ -96,7 +96,7 @@ Deterministic methods-orchestration contracts (`MethodStage`, `MethodsOrchestrat
 
 `python -m infrastructure.orchestration` exposes interactive menus, subprocess wiring for thin shell wrappers (`run.sh`, `secure_run.sh`), and stubs used in CI for menu parsing tests.
 
-### `infrastructure.project` (116 files)
+### `infrastructure.project` (117 files)
 
 Canonical discovery (`discover_projects`) enforcing `src/` + `tests/`, slug validation, nested WIP namespaces.
 

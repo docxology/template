@@ -22,7 +22,7 @@ template/
 |   |-- archive/                 # Non-rendered retired (symlinked, private)
 |   `-- other/                   # Non-rendered misc (symlinked, private)
 |-- docs/ (20 top-level areas, 380+ markdown files per live counter)
-|-- tests/                       # Infra suites (949+ files)
+|-- tests/                       # Infra suites (951+ files)
 |-- AGENTS.md / README.md / CLAUDE.md / pyproject.toml
 |-- run.sh / secure_run.sh
 `-- output/ …                    # Mirrors after copy stage

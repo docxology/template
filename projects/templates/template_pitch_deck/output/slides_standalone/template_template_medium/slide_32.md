@@ -2,7 +2,7 @@
 
 *Slide 32 of 38 — template_template pitch, medium deck — kind: `content`*
 
-- 28 importable subpackages, 1351 tracked Python files total under infrastructure/ — a real inventory anyone can `git ls-files` themselves, not a claimed abstraction.
+- 28 importable subpackages, 1352 tracked Python files total under infrastructure/ — a real inventory anyone can `git ls-files` themselves, not a claimed abstraction.
 - The largest single subpackage, reporting, holds 411 files — still a minority of the whole, not a monolith wearing a modular label.
 - Every number on this slide is computed live by src/infra_facts.py at render time, reusing the exact same counters docs/_generated/COUNTS.md is built from.
 - The next chart narrows the total to importable subpackages, excluding 3 top-level Python file(s).

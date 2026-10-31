@@ -3,8 +3,8 @@
   "panels": [
     {
       "src": "../output/figures/module_inventory_panel_01.png",
-      "alt": "Infrastructure inventory, largest first: reporting: 411 Python files, [ARS\u00b7]; core: 201 Python files, [ARS\u00b7]; rendering: 120 Python files, [ARS\u00b7]; project: 116 Python files, [ARS\u00b7]; validation: 87 Python files, [ARS\u00b7]; publishing: 85 Python files, [ARS\u00b7]",
-      "sha256": "85224926abca83720bdd2aff6496e7730902be01dbc38bb5794ee3a0fac53e58",
+      "alt": "Infrastructure inventory, largest first: reporting: 411 Python files, [ARS\u00b7]; core: 201 Python files, [ARS\u00b7]; rendering: 120 Python files, [ARS\u00b7]; project: 117 Python files, [ARS\u00b7]; validation: 87 Python files, [ARS\u00b7]; publishing: 85 Python files, [ARS\u00b7]",
+      "sha256": "5409042d96accdf265fbfbeb9eafd31a9b8512860617a82506973532dfeaa478",
       "minimum_label_px": 94.44444444444434
     },
     {
