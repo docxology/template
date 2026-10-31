@@ -110,16 +110,3 @@ def test_opt_in_algorithm_requires_actual_partition(algorithm: str) -> None:
 def test_unknown_algorithm_refuses() -> None:
     with pytest.raises(ValueError, match="unsupported"):
         _combined_body("unknown", (b"body",), {}, b"pdf")
-
-
-@pytest.mark.timeout(90)
-def test_real_public_pdf_without_frontmatter_retains_legacy_body(tmp_path: Path) -> None:
-    from pypdf import PdfReader
-
-    m, _, manager = _project(tmp_path, frontmatter=False)
-    manager.config.pdf_dir = str(tmp_path / "output/pdf")
-    source = m / "00_abstract.md"
-    output = manager.render_combined_pdf([source], m, "legacy_fixture")
-    assert "Development fixture." in "\n".join(page.extract_text() for page in PdfReader(output).pages)
-    assert (output.parent / "_combined_manuscript.md").read_text() == source.read_text()
-    assert "template-paper-frontmatter" not in (output.parent / "_combined_manuscript.tex").read_text()

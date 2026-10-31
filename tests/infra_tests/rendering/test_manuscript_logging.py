@@ -1,5 +1,10 @@
 """Tests for manuscript logging."""
 
+from pathlib import Path
+
+import pytest
+import yaml
+
 from infrastructure.rendering.manuscript_discovery import discover_manuscript_files
 
 
@@ -127,6 +132,8 @@ def test_mixed_file_types(tmp_path, caplog):
 
     for fname in files:
         content = f"# {fname}" if fname.endswith(".md") else f"% {fname}"
+        if fname == "config.yaml":
+            content = "paper: {title: Mixed file fixture}\n"
         (manuscript_dir / fname).write_text(content)
 
     result = discover_manuscript_files(manuscript_dir)
@@ -200,3 +207,17 @@ def test_file_order_preserved(tmp_path):
     assert str(result[1]).endswith("02_intro.md")
     assert str(result[2]).endswith("03_results.md")
     assert str(result[3]).endswith("S01_supp.md")
+
+
+def test_malformed_config_is_not_ignored_during_discovery(tmp_path: Path) -> None:
+    """A non-manuscript config file still owns admission of manuscript layout."""
+    manuscript = tmp_path / "manuscript"
+    manuscript.mkdir()
+    section = manuscript / "01_intro.md"
+    section.write_text("# Introduction\n", encoding="utf-8")
+    config = manuscript / "config.yaml"
+    config.write_text("% config.yaml", encoding="utf-8")
+    with pytest.raises(yaml.YAMLError, match="while scanning a directive"):
+        discover_manuscript_files(manuscript)
+    config.write_text("paper: {title: Valid configuration}\n", encoding="utf-8")
+    assert discover_manuscript_files(manuscript) == [section]

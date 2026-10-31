@@ -206,3 +206,68 @@ def test_actual_deep_owner_cannot_be_moved_back_into_smoke_or_omitted() -> None:
         plan["infra_shards"][0].append(changed[0])
         with pytest.raises(ValueError, match="deep contract selection"):
             validate_plan(ROOT, plan)
+
+
+_PAPER_NATIVE = (
+    "tests/infra_tests/rendering/test_paper_frontmatter_native.py",
+    "tests/infra_tests/reporting/test_paper_frontmatter_reconstruction_native.py",
+)
+_PAPER_PURE = (
+    "tests/infra_tests/rendering/test_paper_frontmatter.py",
+    "tests/infra_tests/reporting/test_paper_frontmatter_reconstruction.py",
+)
+
+
+def test_paper_compilers_are_required_and_pure_cases_remain_in_smoke() -> None:
+    from infrastructure.core.testing.ci_selection import _contract_matrix, infrastructure_selection
+
+    changed = (*_PAPER_PURE, *_PAPER_NATIVE)
+    plan = infrastructure_selection(ROOT, {"changed_paths": changed})
+    validate_plan(ROOT, plan)
+    smoke = {module for shard in plan["infra_shards"] for module in shard}
+    assert set(_PAPER_PURE) <= smoke
+    assert set(_PAPER_NATIVE).isdisjoint(smoke)
+    assert set(plan["contract_modules"]) == set(_PAPER_NATIVE)
+    matrix = _contract_matrix(plan["infra_shards"], plan["contract_modules"])["include"]
+    assert {row["module"] for row in matrix} == set(_PAPER_NATIVE)
+    for row in matrix:
+        assert row["documents"] == "converter"
+        assert row["tex"] is True and row["browser"] is False
+    # A plan that silently omits either compiler module cannot pass CI admission.
+    for missing in _PAPER_NATIVE:
+        incomplete = {**plan, "contract_modules": [m for m in plan["contract_modules"] if m != missing]}
+        with pytest.raises(ValueError, match="deep contract selection"):
+            validate_plan(ROOT, incomplete)
+
+
+@pytest.mark.parametrize(
+    "source",
+    [
+        "infrastructure/core/config/schema.py",
+        *[
+            f"infrastructure/rendering/{name}.py"
+            for name in (
+                "_paper_frontmatter",
+                "_paper_frontmatter_render",
+                "manuscript_discovery",
+                "pipeline",
+                "core",
+                "_combined_exports",
+                "_pdf_markdown_combine",
+                "_pdf_combined_preamble",
+                "pdf_renderer",
+                "web_renderer",
+                "manuscript_composition",
+            )
+        ],
+        "infrastructure/reporting/native_hydration_reconstruction.py",
+        "infrastructure/reporting/native_code_contextual_compare.py",
+    ],
+)
+def test_paper_source_changes_retain_both_compiler_contracts(source: str) -> None:
+    from infrastructure.core.testing.ci_selection import infrastructure_selection
+
+    plan = infrastructure_selection(ROOT, {"changed_paths": (source,)})
+    validate_plan(ROOT, plan)
+    assert set(_PAPER_NATIVE) <= set(plan["contract_modules"])
+    assert set(_PAPER_PURE) <= {module for shard in plan["infra_shards"] for module in shard}
