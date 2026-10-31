@@ -1849,15 +1849,15 @@
     },
     {
       "active": true,
-      "checked_at": "2026-10-30T19:22:57Z",
+      "checked_at": "2026-10-31T02:22:03Z",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
-      "source_path": "output/arxiv_submission_20261030.tar.gz",
+      "source_path": "output/arxiv_submission_20261031.tar.gz",
       "source_tier": "artifact",
       "stale": false,
       "tolerance": 0.0,
-      "value": "output/arxiv_submission_20261030.tar.gz"
+      "value": "output/arxiv_submission_20261031.tar.gz"
     },
     {
       "active": true,

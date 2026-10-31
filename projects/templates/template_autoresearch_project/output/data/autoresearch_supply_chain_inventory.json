@@ -17,7 +17,7 @@
       "id": "generated-002",
       "path": "output/data/autoresearch_evidence_overview.json",
       "required": true,
-      "sha256": "950a0783e29ab5d93840dd595420a5c5ef93dc2d04239cbc3dbbb33cab441a47",
+      "sha256": "391c39692aeb1f711ac51218c952a9801bab28691b6ead97a5036eb4410e753d",
       "size_bytes": 4437
     },
     {
@@ -25,7 +25,7 @@
       "id": "generated-003",
       "path": "output/data/autoresearch_loop.json",
       "required": true,
-      "sha256": "51afab293d78e23984e85aca628f35cef0926bc10f04eb7aff7a33fe03dab729",
+      "sha256": "1143756e845a07a414cc6a2ac22581ff83a024bd02bd359ec1721469b3fb696c",
       "size_bytes": 15988
     },
     {
@@ -41,7 +41,7 @@
       "id": "generated-005",
       "path": "output/data/autoresearch_review_packet.json",
       "required": true,
-      "sha256": "2111a08219d81caea57fbd63b29cf929399b691298486aed66afbbc248f20260",
+      "sha256": "9642c40a0d84e27b9bd7b6ede44cf2d292cd5caac4e0669a5534aae8875d319b",
       "size_bytes": 16042
     },
     {
@@ -65,7 +65,7 @@
       "id": "generated-008",
       "path": "output/data/benchmark_scores.json",
       "required": true,
-      "sha256": "844cb55bfb6072424bddb5bbc7f9697bbf4a79e16fe3b42853c2f0285b1cd099",
+      "sha256": "9c04dfae8441fc1fb7119fe5f216ad6739d0bb99513a6f9728364ef43c829dcc",
       "size_bytes": 621
     },
     {
@@ -73,7 +73,7 @@
       "id": "generated-009",
       "path": "output/data/figure_quality_report.json",
       "required": true,
-      "sha256": "1019b9a61a06cb0f48bb89a84c200fec078b11242af85ec4de534ae0cc3e1646",
+      "sha256": "54589868e2047f79de1279a3b702e4e09e256ddc80ef2bd9b3f9288230fa643c",
       "size_bytes": 16041
     },
     {
@@ -81,7 +81,7 @@
       "id": "generated-010",
       "path": "output/data/figure_style.json",
       "required": true,
-      "sha256": "9bea6559f17bdfac4427e658613e6caa52a677b191f61e23d8d0f1617315b68e",
+      "sha256": "d1357e6b7e3d59c66dd030013da085a396d7550108d274a37060c10a56e4fcfe",
       "size_bytes": 1117
     },
     {
@@ -89,7 +89,7 @@
       "id": "generated-011",
       "path": "output/data/idea_ledger.json",
       "required": true,
-      "sha256": "3eee79417604f0fba69c2c70cfd3e8dbf6eb235e5f5b00e834d722b2be2e8da3",
+      "sha256": "da0a6294823d97fbec0ac9a22dc723aef8d96102e5dd51c554b386078d21422c",
       "size_bytes": 5306
     },
     {
@@ -137,7 +137,7 @@
       "id": "generated-017",
       "path": "output/data/ml_candidate_ledger.json",
       "required": true,
-      "sha256": "e6df5a2f5ca7a0cdb59859249c0376471ca0c7cc7f6bbfe44a5e766680f2eb51",
+      "sha256": "6763270477365735b1fcf57ba4886f7f76dce069d464d79f2e11bd3fc098656a",
       "size_bytes": 570872
     },
     {
@@ -281,7 +281,7 @@
       "id": "generated-035",
       "path": "output/data/review_decisions.json",
       "required": true,
-      "sha256": "f14a5c874bda6b8fab27cd536f923f85472e10a354ab3ce27ae9f7e4507cbf29",
+      "sha256": "26059fb0249977705810aa73cd57280c3c0b6bbbc0c0914a2c7044833b3a86d2",
       "size_bytes": 669
     },
     {
@@ -497,7 +497,7 @@
       "id": "generated-062",
       "path": "output/reports/autoresearch_loop.json",
       "required": true,
-      "sha256": "51afab293d78e23984e85aca628f35cef0926bc10f04eb7aff7a33fe03dab729",
+      "sha256": "1143756e845a07a414cc6a2ac22581ff83a024bd02bd359ec1721469b3fb696c",
       "size_bytes": 15988
     },
     {
@@ -557,14 +557,14 @@
       "size_bytes": 1687
     }
   ],
-  "generated_at": "2026-10-30T21:53:23+00:00",
+  "generated_at": "2026-10-31T02:22:03+00:00",
   "inputs": [
     {
       "exists": true,
       "id": "root_pyproject",
       "path": "<home>/Documents/Git/gitvault/Local/worktrees/template-4.4.0-completion-20261030/pyproject.toml",
       "required": false,
-      "sha256": "2d4d07ffa187eb29fe575e232a1a2d1b8ebfe1fc8e8f521cc7e7238f71d19064",
+      "sha256": "48cb6b5e06efdfed1cc92f5d38bd452ce8de6617a182018b89d7a22483de06cd",
       "size_bytes": 22985
     },
     {
@@ -572,7 +572,7 @@
       "id": "root_uv_lock",
       "path": "<home>/Documents/Git/gitvault/Local/worktrees/template-4.4.0-completion-20261030/uv.lock",
       "required": false,
-      "sha256": "c9fdd1037a9bb5f0c27b8ddb39f7865e5035fdddbb3ce90cf3f3faec62006a89",
+      "sha256": "9bb9d8910220202448bd37eb9469825f762317d2c4aa53b5a59e9f38e55e0a6f",
       "size_bytes": 674609
     },
     {
@@ -580,7 +580,7 @@
       "id": "project_pyproject",
       "path": "pyproject.toml",
       "required": false,
-      "sha256": "97c412b86b4d53896b183cfc8a16de2579c86d04dd84e2def3cf746444f3b15c",
+      "sha256": "a9beb3240e120f7c20c8feadce25f9ea1125bbb6de96fdddba2ac879b68e0b2f",
       "size_bytes": 1999
     },
     {
@@ -588,7 +588,7 @@
       "id": "project_uv_lock",
       "path": "uv.lock",
       "required": false,
-      "sha256": "1fd71b8162891fe8c62aa222d468437a733de27ae197e4247e07e68afb3278c4",
+      "sha256": "e6b5ad39a783d5fd5f474cde7e48158f6e0a0866389ed06034fc8d5a3abda330",
       "size_bytes": 132757
     },
     {
@@ -668,7 +668,7 @@
       "id": "manuscript_config",
       "path": "manuscript/config.yaml",
       "required": true,
-      "sha256": "f96c8c634e05919845aaaca2910ec937b451c3ce70357c2576059bf18df622a6",
+      "sha256": "22de835f3f911759171db7cf3ed8d3c8b398a752c3df692b22d7b8cd32e9074f",
       "size_bytes": 3354
     }
   ],

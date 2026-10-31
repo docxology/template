@@ -57,8 +57,8 @@
       "status": "passed"
     },
     {
-      "actual_sha256": "f96c8c634e05919845aaaca2910ec937b451c3ce70357c2576059bf18df622a6",
-      "expected_sha256": "f96c8c634e05919845aaaca2910ec937b451c3ce70357c2576059bf18df622a6",
+      "actual_sha256": "22de835f3f911759171db7cf3ed8d3c8b398a752c3df692b22d7b8cd32e9074f",
+      "expected_sha256": "22de835f3f911759171db7cf3ed8d3c8b398a752c3df692b22d7b8cd32e9074f",
       "path": "manuscript/config.yaml",
       "status": "passed"
     },
@@ -69,14 +69,14 @@
       "status": "passed"
     },
     {
-      "actual_sha256": "950a0783e29ab5d93840dd595420a5c5ef93dc2d04239cbc3dbbb33cab441a47",
-      "expected_sha256": "950a0783e29ab5d93840dd595420a5c5ef93dc2d04239cbc3dbbb33cab441a47",
+      "actual_sha256": "391c39692aeb1f711ac51218c952a9801bab28691b6ead97a5036eb4410e753d",
+      "expected_sha256": "391c39692aeb1f711ac51218c952a9801bab28691b6ead97a5036eb4410e753d",
       "path": "output/data/autoresearch_evidence_overview.json",
       "status": "passed"
     },
     {
-      "actual_sha256": "51afab293d78e23984e85aca628f35cef0926bc10f04eb7aff7a33fe03dab729",
-      "expected_sha256": "51afab293d78e23984e85aca628f35cef0926bc10f04eb7aff7a33fe03dab729",
+      "actual_sha256": "1143756e845a07a414cc6a2ac22581ff83a024bd02bd359ec1721469b3fb696c",
+      "expected_sha256": "1143756e845a07a414cc6a2ac22581ff83a024bd02bd359ec1721469b3fb696c",
       "path": "output/data/autoresearch_loop.json",
       "status": "passed"
     },
@@ -87,8 +87,8 @@
       "status": "passed"
     },
     {
-      "actual_sha256": "2111a08219d81caea57fbd63b29cf929399b691298486aed66afbbc248f20260",
-      "expected_sha256": "2111a08219d81caea57fbd63b29cf929399b691298486aed66afbbc248f20260",
+      "actual_sha256": "9642c40a0d84e27b9bd7b6ede44cf2d292cd5caac4e0669a5534aae8875d319b",
+      "expected_sha256": "9642c40a0d84e27b9bd7b6ede44cf2d292cd5caac4e0669a5534aae8875d319b",
       "path": "output/data/autoresearch_review_packet.json",
       "status": "passed"
     },
@@ -105,26 +105,26 @@
       "status": "passed"
     },
     {
-      "actual_sha256": "844cb55bfb6072424bddb5bbc7f9697bbf4a79e16fe3b42853c2f0285b1cd099",
-      "expected_sha256": "844cb55bfb6072424bddb5bbc7f9697bbf4a79e16fe3b42853c2f0285b1cd099",
+      "actual_sha256": "9c04dfae8441fc1fb7119fe5f216ad6739d0bb99513a6f9728364ef43c829dcc",
+      "expected_sha256": "9c04dfae8441fc1fb7119fe5f216ad6739d0bb99513a6f9728364ef43c829dcc",
       "path": "output/data/benchmark_scores.json",
       "status": "passed"
     },
     {
-      "actual_sha256": "1019b9a61a06cb0f48bb89a84c200fec078b11242af85ec4de534ae0cc3e1646",
-      "expected_sha256": "1019b9a61a06cb0f48bb89a84c200fec078b11242af85ec4de534ae0cc3e1646",
+      "actual_sha256": "54589868e2047f79de1279a3b702e4e09e256ddc80ef2bd9b3f9288230fa643c",
+      "expected_sha256": "54589868e2047f79de1279a3b702e4e09e256ddc80ef2bd9b3f9288230fa643c",
       "path": "output/data/figure_quality_report.json",
       "status": "passed"
     },
     {
-      "actual_sha256": "9bea6559f17bdfac4427e658613e6caa52a677b191f61e23d8d0f1617315b68e",
-      "expected_sha256": "9bea6559f17bdfac4427e658613e6caa52a677b191f61e23d8d0f1617315b68e",
+      "actual_sha256": "d1357e6b7e3d59c66dd030013da085a396d7550108d274a37060c10a56e4fcfe",
+      "expected_sha256": "d1357e6b7e3d59c66dd030013da085a396d7550108d274a37060c10a56e4fcfe",
       "path": "output/data/figure_style.json",
       "status": "passed"
     },
     {
-      "actual_sha256": "3eee79417604f0fba69c2c70cfd3e8dbf6eb235e5f5b00e834d722b2be2e8da3",
-      "expected_sha256": "3eee79417604f0fba69c2c70cfd3e8dbf6eb235e5f5b00e834d722b2be2e8da3",
+      "actual_sha256": "da0a6294823d97fbec0ac9a22dc723aef8d96102e5dd51c554b386078d21422c",
+      "expected_sha256": "da0a6294823d97fbec0ac9a22dc723aef8d96102e5dd51c554b386078d21422c",
       "path": "output/data/idea_ledger.json",
       "status": "passed"
     },
@@ -159,8 +159,8 @@
       "status": "passed"
     },
     {
-      "actual_sha256": "e6df5a2f5ca7a0cdb59859249c0376471ca0c7cc7f6bbfe44a5e766680f2eb51",
-      "expected_sha256": "e6df5a2f5ca7a0cdb59859249c0376471ca0c7cc7f6bbfe44a5e766680f2eb51",
+      "actual_sha256": "6763270477365735b1fcf57ba4886f7f76dce069d464d79f2e11bd3fc098656a",
+      "expected_sha256": "6763270477365735b1fcf57ba4886f7f76dce069d464d79f2e11bd3fc098656a",
       "path": "output/data/ml_candidate_ledger.json",
       "status": "passed"
     },
@@ -267,8 +267,8 @@
       "status": "passed"
     },
     {
-      "actual_sha256": "f14a5c874bda6b8fab27cd536f923f85472e10a354ab3ce27ae9f7e4507cbf29",
-      "expected_sha256": "f14a5c874bda6b8fab27cd536f923f85472e10a354ab3ce27ae9f7e4507cbf29",
+      "actual_sha256": "26059fb0249977705810aa73cd57280c3c0b6bbbc0c0914a2c7044833b3a86d2",
+      "expected_sha256": "26059fb0249977705810aa73cd57280c3c0b6bbbc0c0914a2c7044833b3a86d2",
       "path": "output/data/review_decisions.json",
       "status": "passed"
     },
@@ -429,8 +429,8 @@
       "status": "passed"
     },
     {
-      "actual_sha256": "51afab293d78e23984e85aca628f35cef0926bc10f04eb7aff7a33fe03dab729",
-      "expected_sha256": "51afab293d78e23984e85aca628f35cef0926bc10f04eb7aff7a33fe03dab729",
+      "actual_sha256": "1143756e845a07a414cc6a2ac22581ff83a024bd02bd359ec1721469b3fb696c",
+      "expected_sha256": "1143756e845a07a414cc6a2ac22581ff83a024bd02bd359ec1721469b3fb696c",
       "path": "output/reports/autoresearch_loop.json",
       "status": "passed"
     },
@@ -486,7 +486,7 @@
   ],
   "claim_boundary": "Checksums attest local files observed by this run; they are not externally signed provenance.",
   "external_signature": false,
-  "generated_at": "2026-10-30T21:53:23+00:00",
+  "generated_at": "2026-10-31T02:22:03+00:00",
   "local_attestation": true,
   "mismatch_count": 0,
   "missing_count": 0,

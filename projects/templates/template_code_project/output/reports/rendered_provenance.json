@@ -38,13 +38,13 @@
     },
     {
       "rendered_path": "output/manuscript/05_experimental_setup.md",
-      "rendered_sha256": "c29c640e383fd9659a050d27c184aadf1815ad2356e96716fcebe62a66eb3ed5",
+      "rendered_sha256": "fa3c35a41a76232c3dc5bac3229c7e4c97a33e4fdd7974daca73c7ddce1f11df",
       "source_path": "manuscript/05_experimental_setup.md",
       "source_sha256": "9092fabe5b0c77a70dd2ffff7fa3437011a360cb8fc73b97364b7fba5163d0e7"
     },
     {
       "rendered_path": "output/manuscript/06_reproducibility.md",
-      "rendered_sha256": "d4ca52506143195615780f40d2b45431c90294ef8e57f817e002bfcafde2db3a",
+      "rendered_sha256": "8e54097a55e790baa46ba668cfeb9ae63605dc7611cdff9a6061b568a9d089bb",
       "source_path": "manuscript/06_reproducibility.md",
       "source_sha256": "9d614e32bc736288f5f1b25f3f9cd8962e36816b210d8bba438842e4f98c4156"
     },
@@ -70,22 +70,22 @@
   "evidence_files": {
     "artifact_manifest": {
       "path": "output/reports/artifact_manifest.json",
-      "sha256": "66d3013c23be2242ea77c2055910d41bfd6dfef8aacdcc7317334e5251afee85",
+      "sha256": "a870c78c8e78e23f016d7c00e4c0e8cd9f5c2c337c82cce9d64fbddb0f09cedc",
       "size_bytes": 26175
     },
     "combined_manuscript": {
       "path": "output/web/_combined_manuscript.md",
-      "sha256": "d71c35b03f83103f7d0c4fb863cf513e2a1af893f29c7ccf75255987c56871a2",
+      "sha256": "79ecfb4a2411daf2c06ea1dd18738ca22b99c07799a3db71ef8b1e02ba356697",
       "size_bytes": 51112
     },
     "composition_manifest": {
       "path": "output/reports/manuscript_composition.json",
-      "sha256": "e050c85d60682a84c74b452bf26786c65f9652ef1815978e06c90b93d0f8a789",
+      "sha256": "c897fae7b5718695fd2c38c2b262a7fb7757391360e0a261dac8d5a346d2981f",
       "size_bytes": 2753
     },
     "validation_report": {
       "path": "output/reports/validation_report.json",
-      "sha256": "779380609ae5fc4c079a0b02a1d019fa647d3d234787f3c4e7bb58713f31e028",
+      "sha256": "c82c662d9638f9be0f39fc2ef3e36a16e27c1fd8db05484268c969ef80520250",
       "size_bytes": 13846
     }
   },
@@ -93,19 +93,19 @@
   "fingerprints": {
     "config": {
       "file_count": 18,
-      "sha256": "2f2c2adf912c1a5d31c53b76343e9a0f38d5101326a7147340cd34c6161b7d84"
+      "sha256": "de15ddf0a0be359eafd811dca0df71354435d154fd042ddfe25b3ca6dd9ab159"
     },
     "output": {
       "file_count": 80,
-      "sha256": "30da2b30db5610d9986bc8d0c3f12a02776730bb444f63c72f2cfaaf04a09761"
+      "sha256": "984134099364c2f1d5f1e38f16ed0c40d309d5c4945bedad2134055c0d9c738d"
     },
     "source": {
       "file_count": 55,
-      "sha256": "71774d886a2315b388ecb2fc025eb2c368ebd440bb9f3d4c9e65f0a68935b542"
+      "sha256": "84118aba61feaa9199a717aced07425ca97f63b79c6e54efab8403f483212031"
     },
     "stage": {
       "file_count": 1717,
-      "sha256": "33825281983ca80d953aa5e602ba70f3718dc9344c1a9358a19d2fcddfd3b469"
+      "sha256": "a7dd7f7f37b7084f7c90ceccd6c06ce5e690ba76ee2cb3b236d73178eb9d5bd1"
     }
   },
   "project": "templates/template_code_project",
