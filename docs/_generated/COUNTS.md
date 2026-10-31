@@ -130,10 +130,10 @@ Result: **1488** project-scope infrastructure tests collected and **1259** publi
 | `template_autopoiesis` | 578 | 91.88 % |
 | `template_autoresearch_project` | 398 | 96.49 % |
 | `template_autoscientists` | 191 | 92.95 % |
-| `template_code_project` | 301 | 94.22 % |
+| `template_code_project` | 296 | 94.28 % |
 | `template_data_descriptor` | 78 | 96.26 % |
 | `template_eda_notebook` | 132 | 91.01 % |
-| `template_experiment_tree` | 29 | 91.85 % |
+| `template_experiment_tree` | 32 | 91.85 % |
 | `template_formal` | 380 | 90.39 % |
 | `template_gold_refinement` | 337 | 92.80 % |
 | `template_literature_meta_analysis` | 1261 | 95.48 % |
@@ -145,7 +145,7 @@ Result: **1488** project-scope infrastructure tests collected and **1259** publi
 | `template_prose_project` | 189 | 91.67 % |
 | `template_redacted_report` | 156 | 97.03 % |
 | `template_registered_report` | 87 | 95.19 % |
-| `template_search_project` | 458 | 91.89 % |
+| `template_search_project` | 458 | 92.00 % |
 | `template_sia` | 130 | 92.72 % |
 | `template_storybook` | 45 | 95.38 % |
 | `template_template` | 161 | 95.55 % |
