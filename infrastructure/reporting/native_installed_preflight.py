@@ -18,6 +18,7 @@ from infrastructure.reporting.native_format_acceptance import run_native_format_
 from infrastructure.reporting.native_format_joint_source import NativeSDKSelection
 from infrastructure.reporting.native_full_worker_pdfium import NativePDFiumSelection
 from infrastructure.reporting.native_mermaid_runtime_selection import NativeMermaidSelection
+from infrastructure.reporting.native_original_progress import _preflight_phase, _representative_preflight_diagnostics
 
 PREFLIGHT_SCOPE = "templates/template_code_project"
 PREFLIGHT_SCHEMA = "template-native-diagnostic-preflight-v2"
@@ -79,6 +80,13 @@ def main(argv: list[str] | None = None) -> int:
         parser.error("diagnostic preflight requires its original at-most-900-second outer clock")
     deadline = args.operation_started_monotonic + args.timeout
     remaining(deadline)
+    with _representative_preflight_diagnostics(deadline):
+        return _run_preflight(args, deadline)
+
+
+def _run_preflight(args: argparse.Namespace, deadline: float) -> int:
+    """Keep diagnostics inside the original clock without altering preparation or outcomes."""
+    _preflight_phase("preparation-begin", deadline)
     raw = source_file_bytes(args.implementation_input)
     if hashlib.sha256(raw).hexdigest() != args.implementation_sha256:
         raise ValueError("preflight SDK differs from the actual externally held input")
@@ -99,6 +107,7 @@ def main(argv: list[str] | None = None) -> int:
     # A duplicate preparatory capability cannot authorize or accelerate it.
     # This uses the production supervisor, real project/native execution and
     # independent Current analysis. Its one-scope selection remains incomplete.
+    _preflight_phase("preparation-end", deadline)
     result = run_native_format_acceptance(
         root,
         projects=(PREFLIGHT_SCOPE,),
@@ -120,6 +129,7 @@ def main(argv: list[str] | None = None) -> int:
         operation_started=args.operation_started_monotonic,
         current_analysis_root=args.current_analysis_root,
     )
+    _preflight_phase("preflight-returned", deadline)
     code = diagnostic_exit_code(result, deadline=deadline)
     write_json(
         root,

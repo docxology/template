@@ -73,7 +73,7 @@ from infrastructure.reporting.release_readiness_snapshot import SnapshotReader
 
 from infrastructure.reporting.native_full_worker_pdfium import NativePDFiumSelection, admit_full_worker_pdfium_providers
 from infrastructure.reporting.native_project_provider_batch import admitted_native_provider_batch
-from infrastructure.reporting.native_original_progress import original_cell_progress
+from infrastructure.reporting.native_original_progress import _preflight_phase, original_cell_progress
 from infrastructure.reporting.native_hosted_original_producer import NativeHostedTransportRequest
 
 
@@ -147,9 +147,11 @@ def _run_native_format_acceptance(
     deadline = _state["deadline"]
     if sdk_selection is None:
         raise ProjectionSourceUnsupported("native producer requires an externally admitted selected SDK input")
+    _preflight_phase("source-admission-begin", deadline)
     source_context = admit_native_source_operation(
         root, sdk_selection, run_id=run_id, deadline=deadline, environment=os.environ
     )
+    _preflight_phase("source-admission-end", deadline)
     from infrastructure.reporting.native_tool_producer import native_producer_operation
     from infrastructure.reporting.native_format_current_orchestration import (
         finish_native_format_acceptance,
@@ -259,6 +261,7 @@ def _run_admitted_native_format_acceptance(
         source_mermaid_runtime_operation,
     )
 
+    _preflight_phase("mermaid-begin", deadline)
     runtime_directory = directory / "mermaid-controller-runtime"
     create_private_native_directory(root, runtime_directory)
     _state["executed"] = True
@@ -269,6 +272,7 @@ def _run_admitted_native_format_acceptance(
         directory=runtime_directory,
         env=native_environment(root, Path(sys.executable), directory),
     )
+    _preflight_phase("mermaid-end", deadline)
     with source_mermaid_runtime_operation(runtime, source=source_context, deadline=deadline):
         _run_original_native_cells(
             root,
@@ -329,6 +333,7 @@ def _run_original_native_cells(
     # Admit every provider before the first reader imports a PDFium namespace.
     # Scope factories intentionally refuse post-import admission. Reusing a held
     # pre-import capability keeps subsequent cells inside that original boundary.
+    _preflight_phase("providers-begin", deadline)
     prepared_providers = admitted_native_provider_batch(
         source_context, selected, provider_wheels or {}, Path(sys.executable), deadline=deadline
     )
@@ -339,6 +344,7 @@ def _run_original_native_cells(
     # Every scope holds its own genuine preimport admission. The complete fixed
     # selection closes Source custody before any provider capability escapes.
     prepared_reader_runtimes = admit_pdfium_runtimes(source_context, selections, deadline=deadline)
+    _preflight_phase("providers-end", deadline)
     _state.update(
         original_provider_bindings={scope: prepared_providers[scope][0] for scope in selected},
         office_reader_selection=office_reader_selection,
@@ -358,12 +364,14 @@ def _run_original_native_cells(
             sdk_selection.implementation_bytes,
             mode=0o600,
         )
+        _preflight_phase("descriptor-begin", deadline)
         atomic_write_bytes_confined(
             root,
             cell / "source-descriptor.json",
             source_context.descriptor(scope, deadline=deadline),
             mode=0o600,
         )
+        _preflight_phase("descriptor-end", deadline)
         input_reader = source_context.current_source_reader
         implementation_input = input_reader.read((cell / "implementation-input.json").relative_to(root).as_posix())
         source_descriptor = input_reader.read((cell / "source-descriptor.json").relative_to(root).as_posix())
@@ -404,6 +412,7 @@ def _run_original_native_cells(
             "source_inputs": source_inputs,
         }
         specification = write_json(root, cell / "spec.json", spec)
+        _preflight_phase("sdk-command-begin", deadline)
         command = list(
             selected_sdk_native_command(
                 Path(sys.executable),
@@ -427,8 +436,10 @@ def _run_original_native_cells(
                 deadline=deadline,
             )
         )
+        _preflight_phase("sdk-command-end", deadline)
         from infrastructure.reporting.native_original_supervisor import NativeOriginalSupervisor
 
+        _preflight_phase("supervisor-begin", deadline)
         specification_snapshot = SnapshotReader(root).read(specification["path"])
         supervisor = NativeOriginalSupervisor(
             source_context,
@@ -441,6 +452,7 @@ def _run_original_native_cells(
             deadline=deadline,
             pdfium_provider=pdfium_provider,
         )
+        _preflight_phase("supervisor-end", deadline)
         remaining = deadline - time.monotonic()
         observation: dict[str, Any] = {
             "schema_version": PROCESS_SCHEMA,
