@@ -49,6 +49,7 @@ _ISOLATED_ROUTINE_MODULES = frozenset(
 
 CI_EXTRA_PATHS = (
     "tests/infra_tests/core/test_ci_smoke.py",
+    "tests/infra_tests/core/test_ubuntu_apt_mirrors.py",
     "tests/infra_tests/core/test_secure_write.py",
     "tests/infra_tests/config/test_acceptance_model.py",
     "tests/infra_tests/project/test_distribution_contract.py",

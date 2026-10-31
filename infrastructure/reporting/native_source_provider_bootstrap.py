@@ -430,61 +430,55 @@ def selected_sdk_native_command(
     not invent those bindings, launch a process or extend its deadline.
     """
     remaining(deadline)
-    context.verify_correspondence(
+    with context._correspondence_guard(
         context.reference,
         context.bindings.current_root,
         context.current_source_reader,
         deadline,
-    )
-    expected = json_object_from_bytes(context.bindings.expected_implementation_bytes)
-    runtime = expected.get("runtime_environment")
-    if (
-        not interpreter.is_absolute()
-        or not isinstance(runtime, dict)
-        or str(interpreter.resolve(strict=True)) != runtime.get("python_executable")
     ):
-        raise ValueError("native launcher differs from the externally admitted actual SDK runtime")
-    sdk_root = context.bindings.selected_sdk_package_root
-    relative = implementation_binding_path.relative_to(context.bindings.current_root).as_posix()
-    held = context.current_source_reader.read(relative)
-    if held.content != context.bindings.expected_implementation_bytes:
-        raise ValueError("native implementation input differs from externally admitted actual SDK bytes")
-    closure_relative = audit_closure_directory.relative_to(context.bindings.current_root).as_posix()
-    if not audit_closure_directory.is_relative_to(context.bindings.current_root / "output/readiness"):
-        raise ValueError("native SDK closure destination is outside the supervisor runtime evidence plane")
-    context.current_source_reader.public_path(closure_relative + "/.closure-directory-policy")
-    metadata = audit_closure_directory.lstat()
-    if not stat.S_ISDIR(metadata.st_mode) or any(audit_closure_directory.iterdir()):
-        raise ValueError("native SDK closure destination must be the supervisor's fresh real directory")
-    closure_identity = metadata.st_dev, metadata.st_ino
-    hook = source_file_bytes(sdk_root / "core/bytecode_audit.py")
-    files = expected.get("files")
-    if (
-        not isinstance(files, dict)
-        or files.get("infrastructure/core/bytecode_audit.py") != hashlib.sha256(hook).hexdigest()
-    ):
-        raise ValueError("native SDK audit hook differs from its independently admitted implementation")
-    command = (
-        str(interpreter.absolute()),
-        "-I",
-        "-c",
-        format_selected_sdk_native_bootstrap(
-            hook,
-            sdk_root,
-            provider_audit_roots,
-            implementation_binding_path,
-            held.sha256,
-            audit_closure_directory,
-            closure_identity,
-            deadline,
-        ),
-        *worker_arguments,
-    )
-    context.verify_correspondence(
-        context.reference,
-        context.bindings.current_root,
-        context.current_source_reader,
-        deadline,
-    )
+        expected = json_object_from_bytes(context.bindings.expected_implementation_bytes)
+        runtime = expected.get("runtime_environment")
+        if (
+            not interpreter.is_absolute()
+            or not isinstance(runtime, dict)
+            or str(interpreter.resolve(strict=True)) != runtime.get("python_executable")
+        ):
+            raise ValueError("native launcher differs from the externally admitted actual SDK runtime")
+        sdk_root = context.bindings.selected_sdk_package_root
+        relative = implementation_binding_path.relative_to(context.bindings.current_root).as_posix()
+        held = context.current_source_reader.read(relative)
+        if held.content != context.bindings.expected_implementation_bytes:
+            raise ValueError("native implementation input differs from externally admitted actual SDK bytes")
+        closure_relative = audit_closure_directory.relative_to(context.bindings.current_root).as_posix()
+        if not audit_closure_directory.is_relative_to(context.bindings.current_root / "output/readiness"):
+            raise ValueError("native SDK closure destination is outside the supervisor runtime evidence plane")
+        context.current_source_reader.public_path(closure_relative + "/.closure-directory-policy")
+        metadata = audit_closure_directory.lstat()
+        if not stat.S_ISDIR(metadata.st_mode) or any(audit_closure_directory.iterdir()):
+            raise ValueError("native SDK closure destination must be the supervisor's fresh real directory")
+        closure_identity = metadata.st_dev, metadata.st_ino
+        hook = source_file_bytes(sdk_root / "core/bytecode_audit.py")
+        files = expected.get("files")
+        if (
+            not isinstance(files, dict)
+            or files.get("infrastructure/core/bytecode_audit.py") != hashlib.sha256(hook).hexdigest()
+        ):
+            raise ValueError("native SDK audit hook differs from its independently admitted implementation")
+        command = (
+            str(interpreter.absolute()),
+            "-I",
+            "-c",
+            format_selected_sdk_native_bootstrap(
+                hook,
+                sdk_root,
+                provider_audit_roots,
+                implementation_binding_path,
+                held.sha256,
+                audit_closure_directory,
+                closure_identity,
+                deadline,
+            ),
+            *worker_arguments,
+        )
     remaining(deadline)
     return command

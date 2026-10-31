@@ -196,9 +196,8 @@ class NativeProducerOperation:
         remaining(self.deadline)
 
     def validate_tool(self, binding: object, raw: dict[str, Any], reader: SnapshotReader, *, run_id: str) -> None:
-        self.verify(reader, run_id=run_id, deadline=self.deadline)
-        self._validate_tool_data(binding, raw, reader, run_id=run_id)
-        self.verify(reader, run_id=run_id, deadline=self.deadline)
+        with self._verification_guard(reader, run_id=run_id, deadline=self.deadline):
+            self._validate_tool_data(binding, raw, reader, run_id=run_id)
 
     def _validate_tool_data(self, binding: object, raw: dict[str, Any], reader: SnapshotReader, *, run_id: str) -> None:
         """Compare actual retained ToolAPI DATA within a caller's fresh Source guard."""

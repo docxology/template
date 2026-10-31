@@ -571,14 +571,23 @@ def validate_root_output_structure(repo_root: Path) -> Dict[str, Any]:
 
 #### validate_output_structure (function)
 ```python
-def validate_output_structure(output_dir: Path) -> Dict:
-    """Validate output directory structure and contents.
+def validate_output_structure(
+    output_dir: Path,
+    *,
+    inventory: StableOutputInventory | None = None,
+    enabled_formats: Collection[str],
+    inventory_mode: OutputInventoryMode = STABLE_OUTPUT_INVENTORY_MODE,
+) -> OutputStructureResult:
+    """Validate complete output directory structure.
 
     Args:
-        output_dir: Output directory to validate
+        output_dir: Path to top-level output directory.
+        inventory: Optional canonical inventory reused across one validation run.
+        enabled_formats: Required effective publication formats.
+        inventory_mode: Explicit stable-output inventory policy.
 
     Returns:
-        Validation results dictionary
+        Structure validation results, including required-format diagnostics.
     """
 ```
 

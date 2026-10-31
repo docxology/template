@@ -329,6 +329,7 @@ SOURCE_TEST_OWNERS: dict[str, tuple[str, ...]] = {
     ),
     "infrastructure/reporting/native_source_provider_bootstrap.py": (
         "tests/infra_tests/reporting/test_native_stage_child_contracts.py",
+        "tests/infra_tests/reporting/test_native_project_provider_batch.py",
     ),
     "infrastructure/reporting/native_tool_producer.py": (
         "tests/infra_tests/rendering/test_native_render_custody.py",

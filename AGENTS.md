@@ -31,6 +31,11 @@ This document provides documentation for the Research Project Template system, e
 
 ## For assistants and automation
 
+**Current release scope:** [4.5.0](docs/releases/v4.5.0.md) coordinates the root
+SDK and all canonical public exemplars. Follow the
+[release boundary](docs/maintenance/release-boundary.md); preserve original
+acceptance evidence and never infer publication from a version bump or green local checks.
+
 **Read order:** [`README.md`](README.md) → [`CLAUDE.md`](CLAUDE.md) → this file for anything not covered there.
 
 **Ground truth:** Public CI/documentation project names come from [`docs/_generated/active_projects.md`](docs/_generated/active_projects.md) (`infrastructure.project.public_scope`). Runtime `discover_projects()` remains broader for local private symlinked workspaces. Measured numbers for documentation claims belong in [`docs/_generated/COUNTS.md`](docs/_generated/COUNTS.md); avoid inventing statistics.
@@ -1075,13 +1080,15 @@ Multi-format output generation from single source.
 **Usage:**
 
 ```python
+from pathlib import Path
+
 from infrastructure.rendering import RenderManager
 
 manager = RenderManager()
-pdf = manager.render_pdf("manuscript.tex")
-slides = manager.render_slides("presentation.md", format="revealjs")
-html = manager.render_web("manuscript.md")
-all_outputs = manager.render_all("manuscript.md")
+pdf = manager.render_pdf(Path("manuscript.tex"))
+slides = manager.render_slides(Path("presentation.md"), output_format="revealjs")
+html = manager.render_web(Path("manuscript.md"))
+all_outputs = manager.render_all(Path("manuscript.md"))
 ```
 
 ### 🚀 Publishing Module (`infrastructure/publishing/`)

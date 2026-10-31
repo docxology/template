@@ -14,12 +14,12 @@ Cross-algorithm comparison (new):
     compare_algorithms          → AlgorithmComparison
     multi_factor_analysis       → MultiFactorReport
 
-Infrastructure probes (re-exported):
-    INFRASTRUCTURE_AVAILABLE, ProgressBar, ScriptExecutionError,
+Required SDK capabilities (re-exported):
+    ProgressBar, ScriptExecutionError,
     SystemHealthChecker, TemplateError
 
 Logging helpers (re-exported):
-    _get_logger, _setup_fallback_logging
+    _get_logger
 
 Scientific helpers (re-exported):
     _benchmark_timings, _stability_score_from_runs
@@ -31,7 +31,6 @@ Misc (re-exported):
 
 from __future__ import annotations
 
-import logging
 import time as _time
 from dataclasses import dataclass, field
 from typing import Any
@@ -39,7 +38,6 @@ from typing import Any
 import numpy as np
 
 from ._infra import (
-    INFRASTRUCTURE_AVAILABLE,
     ProgressBar,
     ScriptExecutionError,
     SystemHealthChecker,
@@ -48,10 +46,8 @@ from ._infra import (
     check_numerical_stability,
     log_success,
     verify_output_integrity,
-    infrastructure_available,
-    infrastructure_context,
 )
-from ._logging import _setup_fallback_logging, get_logger as _get_logger
+from ._logging import get_logger as _get_logger
 from ..core.project_paths import _DEFAULT_ROOT as project_root
 from .pipeline import (
     extract_optimization_metadata,
@@ -67,15 +63,6 @@ from .pipeline import (
 )
 from .scientific_reports import _benchmark_timings, _stability_score_from_runs
 from .workflow import main, run_analysis_pipeline
-
-if not INFRASTRUCTURE_AVAILABLE:
-
-    def log_success(  # pragma: no cover — only executed when infrastructure import fails
-        message: str, logger: "logging.Logger | None" = None
-    ) -> None:
-        """Process log success."""
-        return None
-
 
 # ---------------------------------------------------------------------------
 # Cross-algorithm comparison data structures
@@ -594,10 +581,6 @@ def multi_factor_analysis(
 # ---------------------------------------------------------------------------
 
 __all__ = [
-    # Infrastructure probes
-    "INFRASTRUCTURE_AVAILABLE",
-    "infrastructure_available",
-    "infrastructure_context",
     "ProgressBar",
     "ScriptExecutionError",
     "SystemHealthChecker",
@@ -609,7 +592,6 @@ __all__ = [
     "check_numerical_stability",
     # Logging
     "_get_logger",
-    "_setup_fallback_logging",
     # Pipeline steps
     "extract_optimization_metadata",
     "generate_citations_from_metadata",

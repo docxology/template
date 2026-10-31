@@ -7,7 +7,27 @@ source and contracts; each exemplar retains its own package and publication
 versions. Confidential and local workspaces outside the canonical public roster
 are excluded.
 
-## [4.4.1]
+## [4.5.0]
+
+See the [4.5.0 release notes](docs/releases/v4.5.0.md). This minor candidate
+supersedes the unpublished 4.4.1 preparation below. Publication requires fresh
+exact-revision acceptance; metadata and local checks do not establish delivery.
+
+- Move the root SDK and all 25 canonical exemplar SDK requirements, lock roots,
+  and publication platform bindings together; retain exemplar own versions.
+- Carry forward the current-interface consolidation, installed-source repairs,
+  real behavioral controls, and authenticated release path prepared for 4.4.1.
+- Require the declared SDK for Code analysis and Experiment Tree hydration;
+  reject missing imports and missing validation reports instead of reporting
+  degraded success. Isolate script smoke tests from canonical project outputs.
+- Consolidate synchronous native command checks inside opening and closing
+  source guards, retaining restored-file mutation detection and process deadlines.
+- Correct Ubuntu mirror preparation, installed-acceptance policy fixtures,
+  native caller test ownership, and vendored skill overlay provenance.
+- Keep standalone publication downstream of exact-source core acceptance and
+  distinguish current user guidance from retained historical release evidence.
+
+## [4.4.1] — superseded unpublished preparation
 
 See the [4.4.1 release notes](docs/releases/v4.4.1.md). This coordinated patch
 preserves the existing failed 4.4.0 tag and carries the corrected implementation

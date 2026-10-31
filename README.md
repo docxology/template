@@ -1,5 +1,9 @@
 # 🚀 Research Project Template
 
+**Current candidate: 4.5.0.** See the [release notes](docs/releases/v4.5.0.md)
+and [acceptance/publication boundary](docs/maintenance/release-boundary.md).
+Candidate metadata does not establish a published release.
+
 <!-- Badges are qualitative; measured coverage and test counts drift — use `uv run pytest` and CI for ground truth. See docs/RUN_GUIDE.md. -->
 [![Build](https://img.shields.io/badge/build-docs%20%26%20CI-blue)](docs/RUN_GUIDE.md)
 [![Coverage](https://img.shields.io/badge/coverage-see%20RUN__GUIDE%20%26%20CI-blue)](docs/RUN_GUIDE.md)

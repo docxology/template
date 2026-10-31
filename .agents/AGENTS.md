@@ -10,10 +10,10 @@ before editing. This directory is the canonical home for generic agent behavior.
 | [`workflows/`](workflows/) | Maintained local workflow descriptors shared by editors and agent runtimes. |
 | [`roles/agents-memory-updater.md`](roles/agents-memory-updater.md) | Local memory role using user-authorized evidence. |
 | [`state/README.md`](state/README.md) | Tracked schema and ignored machine-local memory. |
-| [`skills/`](skills/) | The unchanged pinned upstream collection governed by [`context-engineering.lock.json`](context-engineering.lock.json). |
+| [`skills/`](skills/) | The pinned upstream collection with declared local overlays governed by [`context-engineering.lock.json`](context-engineering.lock.json). |
 
 Generic workflow discovery does not install files into a user's runtime.
-`runtime-install` installs only the pinned upstream collection and requires an
+`runtime-install` installs only the pinned collection with its declared overlays and requires an
 intentional user-level installation request. Preserve that collection's provenance;
 put local additions under `workflows/`.
 

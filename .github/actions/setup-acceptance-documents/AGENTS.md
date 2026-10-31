@@ -37,10 +37,19 @@ provider. After platform package preparation, require successful `kpsewhich
 soul.sty` resolution and an actual provider file; retain its path and SHA-256.
 A package inventory or cached archive cannot replace that runtime lookup.
 
-The Linux mirror guard accepts only the exact 144-byte runner mirror list or
-its already preferred form, with the archive/Azure priorities exchanged. Require
-root-owned, non-symlink regular files and an active signed Ubuntu Noble stanza
-using that mirror list; retain bounded before/after logs. Replace only the known
-mirror file atomically, preserving owner and mode. Keep all three URLs, fallbacks,
-repository signatures, keyrings, packages and execution limits unchanged. Refuse
-unknown or changing files/stanzas; do not rewrite other APT configuration.
+The Linux mirror guard uses the action-owned `ubuntu_apt_mirrors.py` policy.
+Admit only its exact three-row ASCII serialization: Azure or a reviewed standard
+commercial EC2 regional Ubuntu host, followed by the fixed HTTPS archive and
+security fallbacks. The finite region set is source reviewed; unknown regions,
+URLs, paths, whitespace, extra rows and priority arrangements are refused. Allow
+only original or already preferred archive/primary priorities and derive the
+maximum read size from those accepted byte forms. Do not infer a hosted file's
+complete bytes or hash from its size or selected hostname.
+
+Require root-owned, non-symlink regular files and an active signed Ubuntu Noble
+stanza using that mirror list; retain bounded before/after logs. Replace only the
+known mirror file atomically, preserving owner and mode. Keep all three URLs,
+fallbacks, repository signatures, keyrings, packages and execution limits
+unchanged. Refuse unknown or changing files/stanzas; do not rewrite other APT
+configuration. Run permanent byte-policy tests without host APT access and use a
+separate disposable Linux root-file control for filesystem behavior.

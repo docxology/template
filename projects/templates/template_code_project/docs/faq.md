@@ -99,7 +99,7 @@ output/templates/template_code_project/template_code_project_combined.pdf
 
 ### I imported `infrastructure` in `src/` and tests broke
 
-Pure-math modules (`src/template_code_project/core/optimizer.py`, `src/template_code_project/core/invariants.py`) must stay infrastructure-free. Orchestration modules (`src/template_code_project/analysis/`, `src/template_code_project/figures/`, `src/template_code_project/dashboard/dashboard.py`, `src/template_code_project/core/manuscript_variables.py`) may import `infrastructure.*` behind try/except fallbacks. If you added infrastructure to a math primitive, move that code to an orchestration module or `scripts/`.
+Pure-math modules (`src/template_code_project/core/optimizer.py`, `src/template_code_project/core/invariants.py`) must stay infrastructure-free. Orchestration modules (`src/template_code_project/analysis/`, `src/template_code_project/figures/`, `src/template_code_project/dashboard/dashboard.py`, `src/template_code_project/core/manuscript_variables.py`) may import `infrastructure.*` through the declared SDK dependency. If you added infrastructure to a math primitive, move that code to an orchestration module or `scripts/`.
 
 ### My test uses `unittest.mock` and coverage dropped
 

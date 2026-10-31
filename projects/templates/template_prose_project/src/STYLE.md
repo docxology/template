@@ -162,28 +162,28 @@ of the public contract.
 
 ## Module Exports
 
-`src/__init__.py` re-exports the public API. The current set (kept in
+`src/template_prose_project/__init__.py` re-exports the public API. The current set (kept in
 sync with the actual file — drift in this listing is caught by
 `scripts/audit/check_template_drift.py`'s `__init___export_drift` rule):
 
 ```python
-from .config import ProjectConfig, load_project_config
-from .config import LLMReviewConfig
+from .pipeline.config import ProjectConfig, load_project_config
+from .pipeline.config import LLMReviewConfig
 from .figures import (
     generate_all_figures,
     plot_citation_density,
     plot_readability_metrics,
     plot_section_word_counts,
 )
-from .manuscript_variables import (
+from .manuscript.manuscript_variables import (
     ManuscriptVariables,
     compute_variables,
     substitute_in_text,
     write_variables,
 )
 from .pipeline import ProseRunArtifacts, run_prose_pipeline
-from .report import write_review_report
-from .llm_review import build_llm_review_receipt, validate_transcript
+from .manuscript.report import write_review_report
+from .pipeline.llm_review import build_llm_review_receipt, validate_transcript
 
 __all__ = [
     # Config

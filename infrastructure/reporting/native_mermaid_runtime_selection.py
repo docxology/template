@@ -292,15 +292,14 @@ class NativeMermaidRuntimeAdmission:
         if not deadline <= self.deadline or current_native_producer_operation() is not self.producer:
             raise ValueError("Mermaid runtime admission lost its genuine Source owner or original clock")
         reader = SnapshotReader(self.source.bindings.current_root, native_producer_operation=self.producer)
-        self.producer.verify(reader, run_id=self.source.bindings.run_id, deadline=deadline)
-        observed = reader.read(self.node_version_artifact["path"])
-        self.producer.validate_tool(
-            self.node_version_artifact, observed.json_object(), reader, run_id=self.source.bindings.run_id
-        )
-        current = _observe(self.selection, self.source, deadline)
-        if current != self.runtime or not reader.unchanged():
-            raise ValueError("Source-pinned npm/Node/Chrome runtime changed after genuine admission")
-        self.producer.verify(reader, run_id=self.source.bindings.run_id, deadline=deadline)
+        with self.producer._verification_guard(reader, run_id=self.source.bindings.run_id, deadline=deadline):
+            observed = reader.read(self.node_version_artifact["path"])
+            self.producer._validate_tool_data(
+                self.node_version_artifact, observed.json_object(), reader, run_id=self.source.bindings.run_id
+            )
+            current = _observe(self.selection, self.source, deadline)
+            if current != self.runtime or not reader.unchanged():
+                raise ValueError("Source-pinned npm/Node/Chrome runtime changed after genuine admission")
         return current
 
     def admit_node_version_process(self, record: dict[str, Any]) -> None:
@@ -357,23 +356,23 @@ def admit_source_mermaid_selection(
         run_id=source.bindings.run_id,
         purpose="source-mermaid-node-version",
     )
-    snapshot = reader.read(proof["artifact"]["path"])
-    raw = snapshot.json_object()
-    producer.validate_tool(proof["artifact"], raw, reader, run_id=source.bindings.run_id)
-    if (
-        raw["executable"] != before["node_executable_label"]
-        or raw["executable_sha256"] != before["node"]["sha256"]
-        or raw["command"] != [before["node_executable_label"], "--version"]
-        or raw["original_exit_code"] != 0
-        or raw["exit_code"] != 0
-        or not re.fullmatch(r"v24\.[0-9]+\.[0-9]+\n?", raw["stdout"])
-        or raw["stderr"]
-    ):
-        raise ValueError("actual Source-nominated Node process is not the genuine successful Node24 profile")
-    after = _observe(selection, source, deadline)
-    if before != after or not reader.unchanged():
-        raise ValueError("Source Mermaid runtime changed during actual Node24 process admission")
-    producer.verify(reader, run_id=source.bindings.run_id, deadline=deadline)
+    with producer._verification_guard(reader, run_id=source.bindings.run_id, deadline=deadline):
+        snapshot = reader.read(proof["artifact"]["path"])
+        raw = snapshot.json_object()
+        producer._validate_tool_data(proof["artifact"], raw, reader, run_id=source.bindings.run_id)
+        if (
+            raw["executable"] != before["node_executable_label"]
+            or raw["executable_sha256"] != before["node"]["sha256"]
+            or raw["command"] != [before["node_executable_label"], "--version"]
+            or raw["original_exit_code"] != 0
+            or raw["exit_code"] != 0
+            or not re.fullmatch(r"v24\.[0-9]+\.[0-9]+\n?", raw["stdout"])
+            or raw["stderr"]
+        ):
+            raise ValueError("actual Source-nominated Node process is not the genuine successful Node24 profile")
+        after = _observe(selection, source, deadline)
+        if before != after or not reader.unchanged():
+            raise ValueError("Source Mermaid runtime changed during actual Node24 process admission")
     return NativeMermaidRuntimeAdmission(selection, source, producer, before, dict(proof["artifact"]), deadline, _SEAL)
 
 

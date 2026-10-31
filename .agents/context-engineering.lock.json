@@ -8,12 +8,25 @@
   "file_count": 57,
   "hash_algorithm": "sha256(path + NUL + content + NUL), sorted by path",
   "upstream_tree_sha256": "641576794ab0985275f25a1237e41a57eb8d87382fc2c6c9024e189c8a40112c",
-  "vendored_tree_sha256": "ad2d7f3c91c00d507b27e97d88c07b4398cfb025de80aa1c12f2e26e135e8085",
+  "vendored_tree_sha256": "9a5ccb6a13e5e5d11b3ec92ee315f9aaf0eed98f5aa7059d09415925be4b0920",
   "local_overlays": [
     ".agents/skills/latent-briefing/SKILL.md: retain runtime-neutral read-only guidance",
     ".agents/skills/project-development/SKILL.md: use runtime-neutral wording",
     ".agents/skills/filesystem-context/SKILL.md: route learning to gitignored reviewed memory",
-    ".agents/skills/hosted-agents/SKILL.md: prohibit automatic execution of unsafe examples"
+    ".agents/skills/hosted-agents/SKILL.md: prohibit automatic execution of unsafe examples",
+    ".agents/skills/advanced-evaluation/scripts/evaluation_example.py: Python AST-preserving formatting introduced in template commit 860f15e4f4b126eb0eb47481bae243c94f89368a",
+    ".agents/skills/context-compression/scripts/compression_evaluator.py: Python AST-preserving formatting introduced in template commit 860f15e4f4b126eb0eb47481bae243c94f89368a",
+    ".agents/skills/context-compression/tests/test_compression_evaluator.py: Python AST-preserving formatting introduced in template commit 860f15e4f4b126eb0eb47481bae243c94f89368a",
+    ".agents/skills/context-degradation/scripts/degradation_detector.py: Python AST-preserving formatting introduced in template commit 860f15e4f4b126eb0eb47481bae243c94f89368a",
+    ".agents/skills/context-fundamentals/scripts/context_manager.py: Python AST-preserving formatting introduced in template commit 860f15e4f4b126eb0eb47481bae243c94f89368a",
+    ".agents/skills/context-optimization/scripts/compaction.py: Python AST-preserving formatting introduced in template commit 860f15e4f4b126eb0eb47481bae243c94f89368a",
+    ".agents/skills/evaluation/scripts/evaluator.py: Python AST-preserving formatting introduced in template commit 860f15e4f4b126eb0eb47481bae243c94f89368a",
+    ".agents/skills/filesystem-context/scripts/filesystem_context.py: Python AST-preserving formatting introduced in template commit 860f15e4f4b126eb0eb47481bae243c94f89368a",
+    ".agents/skills/hosted-agents/scripts/sandbox_manager.py: Python AST-preserving formatting introduced in template commit 860f15e4f4b126eb0eb47481bae243c94f89368a",
+    ".agents/skills/memory-systems/scripts/memory_store.py: Python AST-preserving formatting introduced in template commit 860f15e4f4b126eb0eb47481bae243c94f89368a",
+    ".agents/skills/multi-agent-patterns/scripts/coordination.py: Python AST-preserving formatting introduced in template commit 860f15e4f4b126eb0eb47481bae243c94f89368a",
+    ".agents/skills/project-development/scripts/pipeline_template.py: Python AST-preserving formatting introduced in template commit 860f15e4f4b126eb0eb47481bae243c94f89368a",
+    ".agents/skills/tool-design/scripts/description_generator.py: Python AST-preserving formatting introduced in template commit 860f15e4f4b126eb0eb47481bae243c94f89368a"
   ],
   "execution_policy": "SKILL.md guidance is routable; bundled scripts and references are examples and are never auto-executed"
 }
