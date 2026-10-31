@@ -106,6 +106,15 @@ from infrastructure.reporting.native_format_worker_controls import (
 )
 
 
+def _native_startup_phase(phase: str) -> None:
+    try:
+        observer = globals().get("_native_startup_observer")
+        if observer is not None:
+            observer(phase, sys._getframe(1))
+    except Exception:
+        pass
+
+
 def require_canonical_native_stages(plan: Any) -> None:
     """A renamed or replaced no-op plan cannot certify existing native artifacts."""
     targets = [stage.script for stage in plan.stages]
@@ -527,6 +536,7 @@ def run_native_worker(
 
 def main(argv: list[str] | None = None) -> int:
     """Internal supervised worker; public CLI owns selection and final bindings."""
+    _native_startup_phase("worker-main-enter")
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--root", required=True, type=Path)
     parser.add_argument("--spec", type=Path)
@@ -677,6 +687,7 @@ def main(argv: list[str] | None = None) -> int:
 
     if infrastructure.__file__ is None:
         raise ValueError("native selected SDK origin is unavailable")
+    _native_startup_phase("source-admission-begin")
     source_context = admit_native_source_operation(
         root,
         NativeSDKSelection(Path(infrastructure.__file__).absolute().parent, implementation.content),
@@ -684,6 +695,7 @@ def main(argv: list[str] | None = None) -> int:
         deadline=specification["deadline_monotonic"],
         environment=os.environ,
     )
+    _native_startup_phase("source-admission-returned")
     from infrastructure.reporting.native_source_external_admission import (
         validate_original_source_descriptor,
     )
@@ -737,6 +749,7 @@ def main(argv: list[str] | None = None) -> int:
         deadline=specification["deadline_monotonic"],
         digest=args.office_fonts_sha256,
     )
+    _native_startup_phase("worker-execution-begin")
     raw = run_native_worker(
         root,
         specification,

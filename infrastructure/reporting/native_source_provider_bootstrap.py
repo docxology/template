@@ -410,6 +410,10 @@ def format_selected_sdk_native_bootstrap(
         "   sys.stderr.write('selected SDK execution closure retention failed: '"
         "+type(retention_error).__name__+'\\n')\n"
     )
+    if required_worker_module == NATIVE_WORKER_MODULE:
+        from infrastructure.reporting.native_worker_startup_diagnostics import wrap_native_worker_startup
+
+        return wrap_native_worker_startup(body, sdk_package_root, deadline)
     return body
 
 
