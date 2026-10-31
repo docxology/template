@@ -8,7 +8,7 @@ The `./run.sh` interactive orchestrator can execute the public roster through th
 
 | Project | Effective core stages¹ | Discovered tests | Declared project floor |
 |---------|-----------------------|-----------------:|-----------------------:|
-| `template_code_project` | 8 | 263 | 90% |
+| `template_code_project` | 8 | 258 | 90% |
 | `template_prose_project` | 8 | 165 | 90% |
 | `template_autoresearch_project` | 8 | 318 | 90% |
 
@@ -18,8 +18,8 @@ The `./run.sh` interactive orchestrator can execute the public roster through th
 
 | Metric | Value |
 |--------|-------|
-| Test files | 948+ |
-| Total tests | ~12,548 |
+| Test files | 949+ |
+| Total tests | ~12,552 |
 | Infrastructure coverage gate | ≥60% configured floor |
 | Prohibited mock-framework imports | Checked by the static no-mocks gate |
 
@@ -74,7 +74,7 @@ All 31 enumerated subdirectories carry Tier‑1/`README.md` and Tier‑2/`AGENTS
 | Skills | Optional `SKILL.md` manifests + generated `.agents/skill_manifest.json` |
 | PAI capsule | Repository level `PAI.md` narratives |
 
-`379+` Markdown shards under `docs/` capture operational knowledge without duplicating auto-generated inventories.
+`380+` Markdown shards under `docs/` capture operational knowledge without duplicating auto-generated inventories.
 
 ## DAG Reference (Declarative Executor)
 

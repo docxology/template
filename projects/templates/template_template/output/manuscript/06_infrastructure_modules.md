@@ -1,6 +1,6 @@
 # Infrastructure Module Reference
 
-This section inventories every Layer‑1 subdirectory returned by `31` `discover_infrastructure_modules(repo_root)`. File totals use `1334` Python sources across infra + `12,548` infra tests guarding them. Documentation Duality = paired `README.md` + `AGENTS.md`; optional `SKILL.md` manifests feed `python -m infrastructure.skills`.
+This section inventories every Layer‑1 subdirectory returned by `31` `discover_infrastructure_modules(repo_root)`. File totals use `1334` Python sources across infra + `12,552` infra tests guarding them. Documentation Duality = paired `README.md` + `AGENTS.md`; optional `SKILL.md` manifests feed `python -m infrastructure.skills`.
 
 | Module | Python Files | Has AGENTS.md | Has README.md | Key Exports |
 |--------|:-----------:|:-------------:|:-------------:|-------------|
