@@ -21,6 +21,15 @@ uv run pytest tests/infra_tests/reporting/test_project_verifier.py -q
 
 ## Test Modules
 
+### Genuine PDFium Use-Time Custody (`test_native_pdfium_verify_current.py`)
+
+Explicit external-fixture controls admit a real complete Git Source and an offline
+installation of an authentic platform wheel named by `TEMPLATE_TEST_PDFIUM_WHEEL`.
+They exercise repeated provider verification, observe one complete opening/closing
+Source guard, and reject actual wheel/site changes and closing Source ABA mutations.
+Run with `-m external_fixture`; missing prerequisites fail rather than skip. These
+controls do not establish native-worker execution or installed release acceptance.
+
 ### Error Aggregator Tests (`test_error_aggregator.py`)
 
 Error collection and aggregation:

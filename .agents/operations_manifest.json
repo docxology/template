@@ -485,6 +485,15 @@
       "effect": "mutating"
     },
     {
+      "module": "infrastructure.project.pdfium_fixture_preparation",
+      "invocation": "python -m infrastructure.project.pdfium_fixture_preparation",
+      "source_path": "infrastructure/project/pdfium_fixture_preparation.py",
+      "purpose": "Prepare Source-locked public wheel DATA, never native execution authority.",
+      "subcommands": [],
+      "exports": [],
+      "effect": "mutating"
+    },
+    {
       "module": "infrastructure.project.promotion",
       "invocation": "python -m infrastructure.project.promotion",
       "source_path": "infrastructure/project/promotion/cli.py",

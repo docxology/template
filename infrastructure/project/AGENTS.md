@@ -2,6 +2,12 @@
 
 ## Purpose
 
+`pdfium_fixture_preparation.py` nominates one actual-platform wheel from `uv.lock`
+for the genuine PDFium external-fixture controls. It requires curl 8.4.0 or newer,
+disables glob expansion and redirects, and writes only a fresh external physical
+scratch directory. Exact bounded hash/size verification precedes its success
+receipt. Preparation is DATA, not native execution or Source acceptance.
+
 Audited acceptance launchers suppress bytecode writes during isolated Python
 startup (`-IB`), including genuine `.pth` imports before the worker body. The
 existing Source audit enables writes only after validating its fresh private

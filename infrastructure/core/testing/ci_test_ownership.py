@@ -354,6 +354,11 @@ SOURCE_TEST_OWNERS: dict[str, tuple[str, ...]] = {
     "infrastructure/reporting/native_office_diagram_runtime.py": (
         "tests/infra_tests/reporting/test_native_pdfium_batch_data.py",
     ),
+    "infrastructure/reporting/native_full_worker_pdfium.py": (
+        "tests/infra_tests/reporting/test_native_format_acceptance.py",
+        "tests/infra_tests/reporting/test_native_pdfium_batch_data.py",
+        "tests/infra_tests/reporting/test_native_pdfium_verify_current.py",
+    ),
     "infrastructure/project/_hosted_api.py": (
         "tests/infra_tests/project/test_auxiliary_print_custody.py",
         "tests/infra_tests/project/test_hosted_api.py",
@@ -455,6 +460,7 @@ SOURCE_TEST_OWNERS: dict[str, tuple[str, ...]] = {
     ),
     "infrastructure/reporting/native_source_external_admission.py": (
         "tests/infra_tests/project/test_public_source_body_admission.py",
+        "tests/infra_tests/reporting/test_native_pdfium_verify_current.py",
         "tests/infra_tests/reporting/test_native_project_provider_batch.py",
         "tests/infra_tests/reporting/test_native_stage_child_contracts.py",
     ),

@@ -397,6 +397,7 @@ ignore = [
 "infrastructure/publishing/release_acceptance.py" = ["T201"]  # acceptance CLI / human report
 "infrastructure/publishing/root_release_artifacts.py" = ["T201"]  # acceptance CLI / human report
 "infrastructure/reporting/native_dependency_preparation.py" = ["T201"]  # acceptance CLI / human report
+"infrastructure/project/pdfium_fixture_preparation.py" = ["T201"]
 "infrastructure/reporting/native_epub_preparation.py" = ["T201"]  # acceptance CLI / human report
 "infrastructure/reporting/native_format_acceptance.py" = ["T201"]  # acceptance CLI / human report
 "infrastructure/reporting/required_acceptance_aggregate.py" = ["T201"]  # acceptance CLI / human report
