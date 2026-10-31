@@ -215,3 +215,29 @@ def test_hosted_fixture_precedes_execution_user_and_root_custody() -> None:
     command = steps[fixture]["run"]
     assert "-m infrastructure.project.pdfium_fixture_preparation" in command
     assert "TEMPLATE_TEST_PDFIUM_WHEEL=$wheel" in command and "$GITHUB_ENV" in command
+
+
+def test_hardening_infrastructure_prepares_source_wheel_fixture() -> None:
+    workflow = yaml.safe_load((ROOT / ".github/workflows/hardening.yml").read_text())
+    steps = workflow["jobs"]["test-infra"]["steps"]
+    sync = next(
+        index
+        for index, step in enumerate(steps)
+        if step.get("name") == "Sync dependencies (dev + optional test groups)"
+    )
+    fixture = next(
+        index
+        for index, step in enumerate(steps)
+        if step.get("name") == "Prepare exact Source-locked PDFium wheel fixture"
+    )
+    execution = next(index for index, step in enumerate(steps) if step.get("name") == "Run infrastructure tests")
+    assert sync < fixture < execution
+    step = steps[fixture]
+    assert step["shell"] == "bash" and "if" not in step and "continue-on-error" not in step
+    command = step["run"]
+    assert "set -euo pipefail" in command
+    assert ".venv/bin/python -B -m infrastructure.project.pdfium_fixture_preparation" in command
+    assert '--repo-root "$PWD" --temporary-root "$RUNNER_TEMP"' in command
+    assert 'echo "TEMPLATE_TEST_PDFIUM_WHEEL=$wheel" >> "$GITHUB_ENV"' in command
+    assert "pytest tests/infra_tests/" in steps[execution]["run"]
+    assert "not external_fixture" not in steps[execution]["run"]

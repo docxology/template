@@ -51,6 +51,10 @@ For Dependabot, issue/PR templates, and the full GitHub integration picture, see
 
 ## Optional exhaustive hardening (`hardening.yml`)
 
+Every infrastructure matrix cell prepares the exact Source-locked PDFium wheel
+and exports `TEMPLATE_TEST_PDFIUM_WHEEL` before its external-fixture tests. This
+authenticates test input bytes; it does not grant native or release acceptance.
+
 ### Job Graph
 
 `health`, `validate`, `security`, and `docs-lint` run independently alongside **`lint`**; `verify-no-mocks` gates the test matrix. Every job remains required by **`ci-gate`**. See [`AGENTS.md`](AGENTS.md).

@@ -29,6 +29,9 @@ execution-user setup. `TEMPLATE_TEST_PDFIUM_WHEEL` is a narrowly approved public
 fixture locator; Linux grants read/search access only to its fresh `template-*`
 asset root. The fixture helper requires curl 8.4.0 or newer and verifies exact
 bounded bytes without installing them or granting native execution authority.
+Each hardening infrastructure matrix cell also prepares and exports this exact
+fixture after environment sync, before selecting its external-fixture controls.
+Missing preparation remains a failure, never a reason to skip those controls.
 
 Changed wrapping-header contracts run `test_latex_texttt_native.py` in the
 existing deep-contract lane with a prepared real XeLaTeX provider. Pure rendering

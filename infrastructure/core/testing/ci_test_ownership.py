@@ -346,6 +346,11 @@ SOURCE_TEST_OWNERS: dict[str, tuple[str, ...]] = {
     "infrastructure/reporting/native_pdfium_provider_data.py": (
         "tests/infra_tests/reporting/test_native_revalidation_data.py",
     ),
+    "infrastructure/reporting/native_pdfium_source_wheel.py": (
+        "tests/infra_tests/reporting/test_native_pdfium_batch_data.py",
+        "tests/infra_tests/reporting/test_native_revalidation_data.py",
+        "tests/infra_tests/reporting/test_native_source_wheel_guard.py",
+    ),
     "infrastructure/reporting/native_pdfium_revalidation.py": (
         "tests/infra_tests/reporting/test_native_revalidation_data.py",
     ),
@@ -464,6 +469,7 @@ SOURCE_TEST_OWNERS: dict[str, tuple[str, ...]] = {
         "tests/infra_tests/project/test_public_source_body_admission.py",
         "tests/infra_tests/reporting/test_native_pdfium_verify_current.py",
         "tests/infra_tests/reporting/test_native_project_provider_batch.py",
+        "tests/infra_tests/reporting/test_native_source_wheel_guard.py",
         "tests/infra_tests/reporting/test_native_stage_child_contracts.py",
     ),
     "infrastructure/reporting/native_stage_child.py": (
