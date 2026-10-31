@@ -7,6 +7,11 @@ Original authority and the paired Current producer supplies live tool custody.
 
 from __future__ import annotations
 
+from infrastructure.reporting.native_worker_startup_diagnostics import (
+    _worker_execution_entry,
+    _worker_execution_phase,
+)
+
 import sys
 from collections.abc import Mapping
 from pathlib import Path
@@ -513,68 +518,80 @@ def run_native_scope_worker(
     )
     from infrastructure.reporting.native_office_full_worker_context import verify_office_font_nominations
 
-    validate_native_specification(specification)
-    deadline = specification["deadline_monotonic"]
-    verify_office_font_nominations(
-        specification["source_inputs"]["office_fonts"],
-        office_font_files,
-        deadline=deadline,
-    )
-    # Allocate once at this genuine outer worker when no already-held caller
-    # budget is supplied. Every artifact/copy uses this exact same object.
-    if decoded_pixel_budget is None:
-        decoded_pixel_budget = SourceImageDecodeBudget(MAX_SOURCE_IMAGE_OCCURRENCES)
-    if not isinstance(decoded_pixel_budget, SourceImageDecodeBudget):
-        raise ValueError("native Office source needs the actual shared decoder budget")
-    from infrastructure.reporting.native_oracle_phase import NativeOraclePhase, finish_original_native_oracle_phase
+    with _worker_execution_phase("scope-setup"):
+        validate_native_specification(specification)
+        deadline = specification["deadline_monotonic"]
+        verify_office_font_nominations(
+            specification["source_inputs"]["office_fonts"],
+            office_font_files,
+            deadline=deadline,
+        )
+        # Allocate once at this genuine outer worker when no already-held caller
+        # budget is supplied. Every artifact/copy uses this exact same object.
+        if decoded_pixel_budget is None:
+            decoded_pixel_budget = SourceImageDecodeBudget(MAX_SOURCE_IMAGE_OCCURRENCES)
+        if not isinstance(decoded_pixel_budget, SourceImageDecodeBudget):
+            raise ValueError("native Office source needs the actual shared decoder budget")
+        from infrastructure.reporting.native_oracle_phase import NativeOraclePhase, finish_original_native_oracle_phase
 
     oracle_phases: list[NativeOraclePhase] = []
     raw: dict[str, Any] | None = None
     try:
-        with native_producer_operation(
-            source_context,
-            run_id=specification["run_id"],
-            deadline=specification["deadline_monotonic"],
-            scope=specification["scope"],
-            directory=root / specification["directory"],
+        with _worker_execution_entry(
+            "producer-entry",
+            native_producer_operation(
+                source_context,
+                run_id=specification["run_id"],
+                deadline=specification["deadline_monotonic"],
+                scope=specification["scope"],
+                directory=root / specification["directory"],
+            ),
         ) as producer:
             from infrastructure.reporting.native_mermaid_runtime_selection import (
                 readmit_source_mermaid_selection,
                 source_mermaid_runtime_operation,
             )
 
-            runtime_directory = root / specification["directory"] / "mermaid-worker-runtime"
-            create_private_native_directory(root, runtime_directory)
-            runtime = readmit_source_mermaid_selection(
-                specification["source_inputs"]["mermaid_runtime"],
-                mermaid_selection,
-                source_context,
-                deadline=specification["deadline_monotonic"],
-                directory=runtime_directory,
-                env=native_environment(root, Path(sys.executable), runtime_directory),
-            )
+            with _worker_execution_phase("mermaid-readmission"):
+                runtime_directory = root / specification["directory"] / "mermaid-worker-runtime"
+                create_private_native_directory(root, runtime_directory)
+                runtime = readmit_source_mermaid_selection(
+                    specification["source_inputs"]["mermaid_runtime"],
+                    mermaid_selection,
+                    source_context,
+                    deadline=specification["deadline_monotonic"],
+                    directory=runtime_directory,
+                    env=native_environment(root, Path(sys.executable), runtime_directory),
+                )
             with (
-                source_mermaid_runtime_operation(
-                    runtime,
-                    source=source_context,
-                    deadline=specification["deadline_monotonic"],
+                _worker_execution_entry(
+                    "mermaid-runtime-entry",
+                    source_mermaid_runtime_operation(
+                        runtime,
+                        source=source_context,
+                        deadline=specification["deadline_monotonic"],
+                    ),
                 ),
-                full_worker_pdfium_execution(
-                    pdfium_provider,
-                    directory=root / specification["directory"] / "pdfium-worker-runtime",
-                    deadline=specification["deadline_monotonic"],
+                _worker_execution_entry(
+                    "pdfium-execution-entry",
+                    full_worker_pdfium_execution(
+                        pdfium_provider,
+                        directory=root / specification["directory"] / "pdfium-worker-runtime",
+                        deadline=specification["deadline_monotonic"],
+                    ),
                 ) as pdfium_execution,
             ):
-                raw = _run_native_worker(
-                    root,
-                    specification,
-                    source_context=source_context,
-                    mermaid_runtime=runtime,
-                    pdfium_runtime=pdfium_execution.runtime,
-                    office_font_files=office_font_files,
-                    decoded_pixel_budget=decoded_pixel_budget,
-                    oracle_phases=oracle_phases,
-                )
+                with _worker_execution_phase("worker-body"):
+                    raw = _run_native_worker(
+                        root,
+                        specification,
+                        source_context=source_context,
+                        mermaid_runtime=runtime,
+                        pdfium_runtime=pdfium_execution.runtime,
+                        office_font_files=office_font_files,
+                        decoded_pixel_budget=decoded_pixel_budget,
+                        oracle_phases=oracle_phases,
+                    )
             if pdfium_execution.completed_binding is None:
                 raise ValueError("full native PDFium actual namespace/Code/image closure did not complete")
             raw["pdfium_runtime"] = pdfium_execution.completed_binding

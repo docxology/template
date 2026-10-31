@@ -7,6 +7,10 @@ A completed external original is required later for portable validation.
 
 from __future__ import annotations
 
+from infrastructure.reporting.native_worker_startup_diagnostics import (
+    _worker_execution_phase,
+)
+
 import math
 import os
 import time
@@ -161,39 +165,42 @@ class NativeProducerOperation:
     ) -> None:
         """Called only by ToolAPI immediately after actual Popen/retention, not a parser."""
         reader = SnapshotReader(root)
-        self.verify(reader, run_id=run_id, deadline=deadline)
-        selected = reader.read(binding["path"])
-        process = reader.read(process_binding["path"])
-        complete = time.monotonic()
-        if (
-            selected.sha256 != binding["sha256"]
-            or process.sha256 != process_binding["sha256"]
-            or result.get("accepted") is not True
-            or result.get("timed_out") is not False
-            or type(result.get("pid")) is not int
-            or result["pid"] <= 0
-            or result.get("owner_pid") != self.owner_pid
-            or type(result.get("original_exit_code")) is not int
-            or type(result.get("cleanup", {}).get("guardian_pid")) is not int
-            or not complete < deadline <= self.deadline
-            or selected.relative in self._tools
-        ):
-            raise ValueError("native ToolAPI cannot retain incomplete or duplicate actual original custody")
-        self._tools[selected.relative] = _OriginalTool(
-            selected.relative,
-            selected.sha256,
-            process.relative,
-            process.sha256,
-            result["pid"],
-            self.owner_pid,
-            result["cleanup"]["guardian_pid"],
-            result["original_exit_code"],
-            tuple(result["command"]),
-            complete,
-        )
-        if not reader.unchanged():
-            raise ValueError("native actual ToolAPI artifact changed during live custody retention")
-        remaining(self.deadline)
+        with _worker_execution_phase("retain-tool-verify"):
+            self.verify(reader, run_id=run_id, deadline=deadline)
+        with _worker_execution_phase("retain-tool-data"):
+            selected = reader.read(binding["path"])
+            process = reader.read(process_binding["path"])
+            complete = time.monotonic()
+            if (
+                selected.sha256 != binding["sha256"]
+                or process.sha256 != process_binding["sha256"]
+                or result.get("accepted") is not True
+                or result.get("timed_out") is not False
+                or type(result.get("pid")) is not int
+                or result["pid"] <= 0
+                or result.get("owner_pid") != self.owner_pid
+                or type(result.get("original_exit_code")) is not int
+                or type(result.get("cleanup", {}).get("guardian_pid")) is not int
+                or not complete < deadline <= self.deadline
+                or selected.relative in self._tools
+            ):
+                raise ValueError("native ToolAPI cannot retain incomplete or duplicate actual original custody")
+            self._tools[selected.relative] = _OriginalTool(
+                selected.relative,
+                selected.sha256,
+                process.relative,
+                process.sha256,
+                result["pid"],
+                self.owner_pid,
+                result["cleanup"]["guardian_pid"],
+                result["original_exit_code"],
+                tuple(result["command"]),
+                complete,
+            )
+        with _worker_execution_phase("retain-tool-unchanged"):
+            if not reader.unchanged():
+                raise ValueError("native actual ToolAPI artifact changed during live custody retention")
+            remaining(self.deadline)
 
     def validate_tool(self, binding: object, raw: dict[str, Any], reader: SnapshotReader, *, run_id: str) -> None:
         with self._verification_guard(reader, run_id=run_id, deadline=self.deadline):

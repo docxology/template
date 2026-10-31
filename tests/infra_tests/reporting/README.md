@@ -21,6 +21,18 @@ uv run pytest tests/infra_tests/reporting/test_project_verifier.py -q
 
 ## Test Modules
 
+### Worker Execution Diagnostics (`test_native_worker_execution_diagnostics.py`)
+
+Real emitted-prelude subprocesses call the actual diagnostic helper, open real
+files/context managers, and exercise original exception identity, context entry
+versus exit, closed/full sinks, expired clocks, fixed-label bounds and PID/thread
+isolation. These are diagnostic transport controls, not fabricated native-worker
+acceptance. Source-flow checks supplement those executions. Existing startup
+controls remain unchanged. The helper has direct CI ownership; changed native
+callers retain their existing test owners or broad fallback. Root policy needs
+fresh collection/review and the exact changed SDK needs source-matched build and
+installed requalification before any native acceptance claim.
+
 ### Genuine PDFium Use-Time Custody (`test_native_pdfium_verify_current.py`)
 
 Explicit external-fixture controls admit a real complete Git Source and an offline

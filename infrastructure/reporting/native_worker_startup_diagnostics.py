@@ -2,7 +2,105 @@
 
 from __future__ import annotations
 
+from collections.abc import Callable, Iterator
+from contextlib import AbstractContextManager, ExitStack, contextmanager
+from contextvars import ContextVar
+import os
 from pathlib import Path
+import sys
+import threading
+from types import FrameType
+from typing import TypeVar
+
+
+_EXECUTION_PHASES = (
+    "run-native-worker",
+    "scope-setup",
+    "producer-entry",
+    "mermaid-readmission",
+    "mermaid-runtime-entry",
+    "pdfium-execution-entry",
+    "worker-body",
+    "worker-initial-setup",
+    "worker-correspondence",
+    "worker-fingerprint",
+    "worker-runtime-observation",
+    "worker-runtime-binding",
+    "mermaid-producer-verify",
+    "mermaid-observe-before",
+    "mermaid-tool-api",
+    "mermaid-post-node",
+    "mermaid-post-node-guard",
+    "mermaid-post-node-data",
+    "mermaid-observe-after",
+    "mermaid-post-node-unchanged",
+    "retain-tool-verify",
+    "retain-tool-data",
+    "retain-tool-unchanged",
+)
+_WorkerObserver = Callable[[str, FrameType], None]
+_WORKER_EXECUTION_OBSERVER: ContextVar[tuple[_WorkerObserver, int, int] | None] = ContextVar(
+    "native_worker_execution_observer", default=None
+)
+_WORKER_MERMAID_TOOL: ContextVar[bool] = ContextVar("native_worker_mermaid_tool", default=False)
+_EntryValue = TypeVar("_EntryValue")
+
+
+def _worker_execution_notify(phase: str) -> None:
+    try:
+        selected = _WORKER_EXECUTION_OBSERVER.get()
+        if selected is not None:
+            observer, owner_pid, owner_thread = selected
+            if os.getpid() == owner_pid and threading.get_ident() == owner_thread:
+                observer(phase, sys._getframe(1))
+    except BaseException:
+        pass
+
+
+@contextmanager
+def _worker_execution_observer(observer: object) -> Iterator[None]:
+    """Bind diagnostic DATA only; this token supplies no Source or runtime authority."""
+    selected = (observer, os.getpid(), threading.get_ident()) if callable(observer) else None
+    token = _WORKER_EXECUTION_OBSERVER.set(selected)
+    try:
+        yield
+    finally:
+        _WORKER_EXECUTION_OBSERVER.reset(token)
+
+
+@contextmanager
+def _worker_execution_phase(phase: str) -> Iterator[None]:
+    """Observe only fixed inline boundaries without replacing a result or exception."""
+    if (
+        type(phase) is not str
+        or phase not in _EXECUTION_PHASES
+        or phase.startswith("retain-tool-")
+        and not _WORKER_MERMAID_TOOL.get()
+    ):
+        yield
+        return
+    token = _WORKER_MERMAID_TOOL.set(True) if phase == "mermaid-tool-api" else None
+    try:
+        _worker_execution_notify(phase + "-begin")
+        try:
+            yield
+        except BaseException:
+            _worker_execution_notify(phase + "-raised")
+            raise
+        else:
+            _worker_execution_notify(phase + "-returned")
+    finally:
+        if token is not None:
+            _WORKER_MERMAID_TOOL.reset(token)
+
+
+@contextmanager
+def _worker_execution_entry(phase: str, manager: AbstractContextManager[_EntryValue]) -> Iterator[_EntryValue]:
+    """Bracket actual __enter__, forwarding body/exit semantics to the original owner."""
+    with ExitStack() as stack:
+        with _worker_execution_phase(phase):
+            value = stack.enter_context(manager)
+        yield value
 
 
 _PRELUDE = r"""
@@ -21,16 +119,19 @@ try:
    self.lock = threading.Lock()
    self.pending = queue.Queue(maxsize=96)
    self.events = 0
+   self.stack_events = 0
    self.byte_count = 0
    self.seen = set()
    self.writer = None
    self.sampler = None
+   self.execution_phases = frozenset((@EXECUTION_PHASES@))
    self.phases = frozenset((
     'bootstrap-enter','bootstrap-imports-returned','cache-ready','audit-begin',
     'audit-returned','package-exec-begin','package-exec-returned',
     'worker-dispatch','worker-main-enter',
     'source-admission-begin','source-admission-returned','worker-execution-begin',
-    'worker-dispatch-returned','protected-body-raised','bootstrap-leaving'))
+    'worker-dispatch-returned','protected-body-raised','bootstrap-leaving',
+    @EXECUTION_PHASES@))
   def start(self):
    if type(self.deadline) not in (int,float) or not math.isfinite(self.deadline):
     return
@@ -53,7 +154,8 @@ try:
       or os.getpid() != self.owner_pid or threading.get_ident() != self.owner_thread
       or self.stop.is_set()):
      return
-    self.anchor = frame
+    if phase not in self.execution_phases:
+     self.anchor = frame
     self.emit(phase)
    except Exception:
     pass
@@ -64,16 +166,21 @@ try:
      or type(depth) is not int or not -1 <= depth < 12
      or type(line) is not int or not 0 <= line <= 1000000):
     return
+   if phase != 'anchored-stack' and depth != -1:
+    return
    if self.stop.is_set() or not self.lock.acquire(blocking=False):
     return
    try:
     observed = time.monotonic()
     if (observed >= self.deadline or self.events >= 96
+      or (phase == 'anchored-stack' and self.stack_events >= 96-len(self.phases))
       or (depth == -1 and phase in self.seen)):
      return
     record = ('NATIVE_WORKER_STARTUP_V1 %s %d %.9f %.9f %d %s %d\n' %
      (phase,self.owner_pid,observed,self.deadline-observed,depth,label,line)).encode('ascii')
     self.events += 1
+    if phase == 'anchored-stack':
+     self.stack_events += 1
     if len(record) > 512 or self.byte_count + len(record) > 32768:
      return
     self.byte_count += len(record)
@@ -160,8 +267,13 @@ def _native_startup_checkpoint(phase):
 
 def _diagnostic_envelope(body: str, sdk_package_root: Path, deadline: float) -> str:
     """Wrap fixed caller-owned code; tests exercise transport, never Source admission."""
-    prelude = _PRELUDE.replace("@DEADLINE@", repr(deadline)).replace(
-        "@WORKER_FILENAME@", repr(str(sdk_package_root / "reporting/native_format_acceptance_worker.py"))
+    execution_phases = ",".join(
+        repr(phase + "-" + outcome) for phase in _EXECUTION_PHASES for outcome in ("begin", "returned", "raised")
+    )
+    prelude = (
+        _PRELUDE.replace("@EXECUTION_PHASES@", execution_phases)
+        .replace("@DEADLINE@", repr(deadline))
+        .replace("@WORKER_FILENAME@", repr(str(sdk_package_root / "reporting/native_format_acceptance_worker.py")))
     )
     return (
         prelude + "\ntry:\n" + "\n".join(" " + line for line in body.splitlines()) + "\nfinally:\n"

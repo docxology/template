@@ -5,6 +5,10 @@ their runtime fits the smoke deadline. Unlisted helpers retain broad fallback.
 """
 
 SOURCE_TEST_OWNERS: dict[str, tuple[str, ...]] = {
+    "infrastructure/reporting/native_worker_startup_diagnostics.py": (
+        "tests/infra_tests/reporting/test_native_worker_startup_diagnostics.py",
+        "tests/infra_tests/reporting/test_native_worker_execution_diagnostics.py",
+    ),
     "infrastructure/core/pipeline/artifacts/_manifest.py": (
         "tests/infra_tests/benchmark/test_template_benchmark_harness.py",
         "tests/infra_tests/core/pipeline/test_artifact_finalization.py",
