@@ -56,7 +56,7 @@ repository-wide entrypoint; root-level duplicate launchers are intentionally abs
 
 **Audit gates** (`audit/`):
 
-- `audit/check_publication_outputs.py` - modular publication gate: roster (`--project`, `--all-public`, `--changed`), `--shard` slicing, parallel `--jobs`, blocking versus `review_required` separation, and one `--receipts` record per project. `release.yml` runs `--all-public --strict --jobs 4` and uploads the receipts.
+- `audit/check_publication_outputs.py` - modular publication gate: roster (`--project`, `--all-public`, `--changed`, `--dry-run`), `--shard` slicing, parallel `--jobs`, blocking versus `review_required` separation, and one `template-publication-gate/v2` record per project including its selection. `--changed` narrows only for exact public-exemplar edits; shared, unknown and control-file paths widen to the full roster, and a zero-project selection reports `skipped — nothing audited`, never a pass. `release.yml` runs `--all-public --strict --jobs 4` and uploads the receipts.
 - `audit/check_template_drift.py`, `audit/check_tracked_all.py`, `audit/check_tracked_generated_artifacts.py`, `audit/check_claim_bindings.py` and `audit/check_module_doc_coverage.py` remain the focused repository guards.
 
 **Repository-wide entrypoint rule:** use only the canonical paths under

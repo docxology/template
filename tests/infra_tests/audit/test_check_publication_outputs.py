@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 import subprocess
+import sys
 from pathlib import Path
 
 import pytest
@@ -12,6 +13,8 @@ from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
 from infrastructure.validation.publication import gate
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
+SCRIPT = REPO_ROOT / "scripts" / "audit" / "check_publication_outputs.py"
+SAMPLE_PROJECT = sorted(PUBLIC_PROJECT_NAMES)[0]
 
 
 def _result(project: str, *, blocking: tuple[str, ...] = (), review: tuple[str, ...] = ()) -> gate.ProjectGateResult:
@@ -37,9 +40,67 @@ def test_whole_roster_is_the_canonical_public_roster() -> None:
     assert gate.select_projects(all_public=True) == tuple(sorted(PUBLIC_PROJECT_NAMES))
 
 
-def test_changed_selection_keeps_only_projects_with_changes() -> None:
-    changed = ("projects/templates/template_madlib/pyproject.toml", "docs/RUN_GUIDE.md")
-    assert gate.select_projects(all_public=True, changed=changed) == ("templates/template_madlib",)
+def test_exact_exemplar_change_narrows_to_that_exemplar() -> None:
+    changed = (f"projects/{SAMPLE_PROJECT}/pyproject.toml",)
+    assert gate.select_projects(all_public=True, changed=changed) == (SAMPLE_PROJECT,)
+
+
+def test_documentation_companion_does_not_widen_a_narrowed_selection() -> None:
+    """Docs cannot change rendered bytes, so they must not force the whole roster."""
+    changed = (f"projects/{SAMPLE_PROJECT}/pyproject.toml", "docs/RUN_GUIDE.md")
+    assert gate.select_projects(all_public=True, changed=changed) == (SAMPLE_PROJECT,)
+
+
+@pytest.mark.parametrize(
+    "changed",
+    [
+        ("infrastructure/rendering/pdf_renderer.py",),
+        ("scripts/pipeline/stage_03_render.py",),
+        ("pyproject.toml",),
+        ("uv.lock",),
+        ("tests/infra_tests/audit/test_check_publication_outputs.py",),
+        (".github/workflows/release.yml",),
+        ("projects/working/scratch/manuscript/01_intro.md",),
+        ("projects/templates/template_not_in_the_roster/README.md",),
+    ],
+)
+def test_shared_unknown_or_control_changes_widen_to_the_whole_roster(changed: tuple[str, ...]) -> None:
+    """A change outside one exact public exemplar invalidates every rendered receipt."""
+    selection = gate.resolve_selection(all_public=True, changed=changed)
+    assert selection.projects == tuple(sorted(PUBLIC_PROJECT_NAMES))
+    assert selection.widened
+    assert changed[0] in selection.reason
+
+
+def test_exemplar_manuscript_edit_selects_its_project_not_a_documentation_lane() -> None:
+    """Project ownership is resolved before the documentation exemption."""
+    selection = gate.resolve_selection(all_public=True, changed=(f"projects/{SAMPLE_PROJECT}/manuscript/01_intro.md",))
+    assert selection.projects == (SAMPLE_PROJECT,)
+    assert not selection.widened
+
+
+def test_documentation_only_change_selects_nothing_and_says_why() -> None:
+    selection = gate.resolve_selection(all_public=True, changed=("docs/RUN_GUIDE.md", "README.md"))
+    assert selection.projects == ()
+    assert "documentation-only" in selection.reason
+    assert not selection.widened
+
+
+def test_observed_empty_change_set_selects_nothing() -> None:
+    selection = gate.resolve_selection(changed=())
+    assert selection.projects == ()
+    assert "no observed working-tree changes" in selection.reason
+
+
+def test_unfiltered_selection_keeps_the_baseline() -> None:
+    assert gate.resolve_selection(all_public=True).projects == tuple(sorted(PUBLIC_PROJECT_NAMES))
+    assert gate.resolve_selection(projects=(SAMPLE_PROJECT,)).projects == (SAMPLE_PROJECT,)
+
+
+def test_widening_never_audits_projects_the_caller_excluded() -> None:
+    selection = gate.resolve_selection(projects=(SAMPLE_PROJECT,), changed=("infrastructure/core/determinism.py",))
+    assert selection.projects == (SAMPLE_PROJECT,)
+    assert selection.widened
 
 
 def test_shards_partition_the_roster_disjointly_and_completely() -> None:
@@ -97,14 +158,57 @@ def test_receipts_bind_each_project_outcome(tmp_path: Path) -> None:
             _result("templates/a", blocking=("PUBLICATION.X",)),
             _result("templates/b", review=("METHODS.STAGE_PROVENANCE_UNAVAILABLE",)),
         ),
+        selection=gate.ProjectSelection(("templates/a", "templates/b"), "exact public-exemplar changes only"),
     )
     written = gate.write_receipts(report, tmp_path)
     assert {path.name for path in written} == {"a.json", "b.json"}
     payload = json.loads((tmp_path / "a.json").read_text(encoding="utf-8"))
     assert payload["status"] == "fail"
     assert payload["blocking_codes"] == ["PUBLICATION.X"]
-    assert payload["schema_version"] == "template-publication-gate/v1"
+    assert payload["schema_version"] == "template-publication-gate/v2"
+    assert payload["selection"] == {
+        "reason": "exact public-exemplar changes only",
+        "roster_size": 2,
+        "widened": False,
+    }
     assert json.loads((tmp_path / "b.json").read_text(encoding="utf-8"))["status"] == "pass"
+
+
+def test_receipt_records_that_a_widened_selection_produced_it(tmp_path: Path) -> None:
+    selection = gate.publication_affected_projects(("infrastructure/rendering/pdf_renderer.py",))
+    (
+        gate.write_receipts(
+            gate.PublicationGateReport(mode="strict", results=(_result(SAMPLE_PROJECT),), selection=selection),
+            tmp_path,
+        )
+    )
+    payload = json.loads((tmp_path / f"{SAMPLE_PROJECT.split('/')[-1]}.json").read_text(encoding="utf-8"))
+    assert payload["selection"]["widened"] is True
+    assert payload["selection"]["roster_size"] == len(PUBLIC_PROJECT_NAMES)
+
+
+def test_empty_audit_is_never_reported_as_a_bare_pass() -> None:
+    """A zero-project run must not read like a passing audit of the roster."""
+    report = gate.PublicationGateReport(
+        mode="strict",
+        results=(),
+        selection=gate.ProjectSelection((), "no observed working-tree changes"),
+    )
+    text = gate.format_gate_report(report)
+    assert "status: pass" not in text
+    assert "nothing audited" in text
+    assert "no observed working-tree changes" in text
+
+
+def test_a_real_audit_pass_names_its_selection_reason() -> None:
+    report = gate.PublicationGateReport(
+        mode="strict",
+        results=(_result(SAMPLE_PROJECT),),
+        selection=gate.ProjectSelection((SAMPLE_PROJECT,), "exact public-exemplar changes only"),
+    )
+    text = gate.format_gate_report(report)
+    assert "status: pass" in text
+    assert "exact public-exemplar changes only" in text
 
 
 def test_changed_project_paths_observes_real_git_state(tmp_path: Path) -> None:
@@ -125,3 +229,69 @@ def test_changed_project_paths_observes_real_git_state(tmp_path: Path) -> None:
     changed = gate.changed_project_paths(repo)
     assert "projects/templates/template_probe/pyproject.toml" in changed
     assert "projects/templates/template_probe/new.txt" in changed
+
+
+def _baseline_repo(tmp_path: Path) -> Path:
+    """A committed disposable checkout with one exemplar, docs, and shared code."""
+    repo = tmp_path / "repo"
+    (repo / "docs").mkdir(parents=True)
+    (repo / "infrastructure" / "rendering").mkdir(parents=True)
+    project = repo / "projects" / SAMPLE_PROJECT
+    project.mkdir(parents=True)
+    (repo / "docs" / "RUN_GUIDE.md").write_text("# guide\n", encoding="utf-8")
+    (repo / "infrastructure" / "rendering" / "pdf_renderer.py").write_text("VALUE = 1\n", encoding="utf-8")
+    (project / "pyproject.toml").write_text("[project]\nname='probe'\n", encoding="utf-8")
+    subprocess.run(["git", "init", "-q"], cwd=repo, check=True)
+    subprocess.run(["git", "add", "-A"], cwd=repo, check=True)
+    subprocess.run(
+        ["git", "-c", "user.email=fixture@example.com", "-c", "user.name=Fixture", "commit", "-qm", "fixture"],
+        cwd=repo,
+        check=True,
+    )
+    return repo
+
+
+def _dry_run_selection(repo: Path) -> str:
+    result = subprocess.run(
+        [sys.executable, str(SCRIPT), "--repo-root", str(repo), "--changed", "--dry-run"],
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    assert result.returncode == 0, result.stderr
+    return result.stdout
+
+
+def test_cli_widens_the_roster_for_a_shared_implementation_change(tmp_path: Path) -> None:
+    """Regression: a stage edit used to select nothing and report a pass."""
+    repo = _baseline_repo(tmp_path)
+    (repo / "infrastructure" / "rendering" / "pdf_renderer.py").write_text("VALUE = 2\n", encoding="utf-8")
+    output = _dry_run_selection(repo)
+    assert f"selection: {len(PUBLIC_PROJECT_NAMES)} project(s)" in output
+    assert "widened to the full roster" in output
+    assert SAMPLE_PROJECT in output
+
+
+def test_cli_selects_one_exemplar_for_an_exact_project_change(tmp_path: Path) -> None:
+    repo = _baseline_repo(tmp_path)
+    (repo / "projects" / SAMPLE_PROJECT / "pyproject.toml").write_text(
+        "[project]\nname='probe'\nversion='2'\n", encoding="utf-8"
+    )
+    output = _dry_run_selection(repo)
+    assert "selection: 1 project(s)" in output
+    assert "exact public-exemplar changes only" in output
+
+
+def test_cli_refuses_to_call_a_documentation_only_change_an_audit(tmp_path: Path) -> None:
+    repo = _baseline_repo(tmp_path)
+    (repo / "docs" / "RUN_GUIDE.md").write_text("# guide v2\n", encoding="utf-8")
+    output = _dry_run_selection(repo)
+    assert "selection: 0 project(s)" in output
+    assert "documentation-only" in output
+
+
+def test_cli_reports_an_empty_change_set_instead_of_auditing_nothing_silently(tmp_path: Path) -> None:
+    repo = _baseline_repo(tmp_path)
+    output = _dry_run_selection(repo)
+    assert "selection: 0 project(s)" in output
+    assert "no observed working-tree changes" in output
