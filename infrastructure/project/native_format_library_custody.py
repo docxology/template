@@ -128,6 +128,41 @@ def _relative(prefix: Path, site: Path, label: str) -> str:
         raise ValueError("decoder RECORD path escapes original provider prefix") from error
 
 
+def _installer_console_script_path(relative: str) -> bool:
+    """Whether a normalized provider path is a ``<prefix>/bin/<name>`` entry."""
+    parts = Path(relative).parts
+    return len(parts) == 2 and parts[0] == "bin"
+
+
+def _installer_console_script(relative: str, content: bytes) -> bool:
+    """Whether a RECORD entry is an installer-written console-script shim.
+
+    The installer writes these shims itself and chooses the interpreter line, so
+    a wheel's recorded size and hash describe the wheel's own script rather than
+    the installed bytes; ``uv`` in particular rewrites the shebang. Only a
+    ``<prefix>/bin/<name>`` entry that really begins with a shebang qualifies,
+    so a genuine library file, a non-script file under ``bin``, or a corrupted
+    shim still falls through to the exact RECORD comparison below.
+    """
+    if not _installer_console_script_path(relative):
+        return False
+    first = content.partition(b"\n")[0]
+    return first.startswith(b"#!") and len(first.strip()) > 2
+
+
+def _assert_recorded_provider_file(relative: str, content: bytes, declared_hash: str, declared_size: str) -> None:
+    """Compare one provider file against its original RECORD row, naming the file."""
+    if declared_size and int(declared_size) != len(content):
+        raise ValueError(f"native decoder file {relative} differs from RECORD size")
+    if declared_hash:
+        algorithm, encoded = declared_hash.split("=", 1)
+        if algorithm != "sha256":
+            raise ValueError("native decoder RECORD requires source-supported SHA256 hashes")
+        actual = base64.urlsafe_b64encode(hashlib.new(algorithm, content).digest()).decode().rstrip("=")
+        if actual != encoded:
+            raise ValueError(f"native decoder file {relative} differs from RECORD hash")
+
+
 def observe_native_library_custody(formats: Any, *, repo_root: Path | None = None) -> dict[str, Any]:
     selected = _selected(formats)
     root = (repo_root or Path(__file__).resolve().parents[2]).resolve()
@@ -166,15 +201,23 @@ def observe_native_library_custody(formats: Any, *, repo_root: Path | None = Non
             if total > MAX_TOTAL:
                 raise ValueError("native decoder inventory exceeds observation ceiling")
             digest = hashlib.sha256(content).hexdigest()
-            if declared_size and int(declared_size) != len(content):
-                raise ValueError("native decoder file differs from RECORD size")
-            if declared_hash:
-                algorithm, encoded = declared_hash.split("=", 1)
-                if algorithm != "sha256":
-                    raise ValueError("native decoder RECORD requires source-supported SHA256 hashes")
-                actual = base64.urlsafe_b64encode(hashlib.new(algorithm, content).digest()).decode().rstrip("=")
-                if actual != encoded:
-                    raise ValueError("native decoder file differs from RECORD hash")
+            if _installer_console_script(relative, content):
+                # Console-script shims are installer products, not provider
+                # content, so their bytes cannot be certified from the wheel
+                # RECORD. Retain the observed file and digest without claiming
+                # the recorded size or hash, and keep the strict comparison for
+                # every provider library file.
+                inventory.append(
+                    {
+                        "record_label": label,
+                        "relative": relative,
+                        "sha256": digest,
+                        "metadata": facts,
+                        "installer_console_script": True,
+                    }
+                )
+                continue
+            _assert_recorded_provider_file(relative, content, declared_hash, declared_size)
             inventory.append({"record_label": label, "relative": relative, "sha256": digest, "metadata": facts})
         if record_relative not in seen:
             raise ValueError("native decoder RECORD omits itself")
@@ -272,14 +315,18 @@ def validate_native_library_custody(
                     or not re.fullmatch(r"[0-9a-f]{64}", file["sha256"])
                 ):
                     raise ValueError("native decoder file observation malformed")
-                if declaration[2] and int(declaration[2]) != size:
-                    raise ValueError("native decoder retained size differs from RECORD")
-                if (
-                    declaration[1].startswith("sha256=")
-                    and base64.urlsafe_b64encode(bytes.fromhex(file["sha256"])).decode().rstrip("=")
-                    != declaration[1][7:]
-                ):
-                    raise ValueError("native decoder retained hash differs from RECORD")
+                exempt = file.get("installer_console_script") is True
+                if exempt and not _installer_console_script_path(file["relative"]):
+                    raise ValueError("native decoder installer shim exemption is not a provider bin entry")
+                if not exempt:
+                    if declaration[2] and int(declaration[2]) != size:
+                        raise ValueError("native decoder retained size differs from RECORD")
+                    if (
+                        declaration[1].startswith("sha256=")
+                        and base64.urlsafe_b64encode(bytes.fromhex(file["sha256"])).decode().rstrip("=")
+                        != declaration[1][7:]
+                    ):
+                        raise ValueError("native decoder retained hash differs from RECORD")
                 if file["relative"] == distribution["record_relative"] and (
                     file["sha256"] != hashlib.sha256(record).hexdigest() or size != len(record)
                 ):
