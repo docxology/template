@@ -257,8 +257,13 @@ exclude = [
 
 [tool.hatch.build.targets.wheel]
 packages = ["infrastructure"]
+# Twine 6.2.0's compatibility shim accepts Core Metadata only through 2.4.
+# This package needs no 2.5-only fields, so build both targets at the newest
+# version the release workflow's checker admits.
+core-metadata-version = "2.4"
 
 [tool.hatch.build.targets.sdist]
+core-metadata-version = "2.4"
 include = [
     "/infrastructure",
     "/README.md",
