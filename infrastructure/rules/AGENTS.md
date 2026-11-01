@@ -114,6 +114,7 @@ is_valid, message = validate_rule_structure(Path("rules/my_rule"))
 - `LIFECYCLE_LINK_DIRS: dict[str, str]` — `{"working": "rules/working", "archive": "rules/archive"}`.
 - `PROTECTED_NAMES: frozenset[str]` — bare exemplar names; syncer never touches.
 - `ENV_VAR = "TEMPLATE_RULES_ROOT"`, `SKIP_ENV_VAR = "TEMPLATE_SKIP_RULE_LINK_SYNC"`.
+- The command itself is not written here: `_build_parser`/`main` delegate to `infrastructure.core.sidecar_linking.build_link_sync_parser`/`run_link_sync_cli`, which own the shared flag contract and delta printing for all four resource trees.
 
 ```python
 @dataclass

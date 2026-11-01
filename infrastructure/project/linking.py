@@ -2,8 +2,9 @@
 
 The private companion repo (default: the sibling ``<repo_root.parent>/projects``)
 mirrors lifecycle folders into typed subfolders under ``<repo_root>/projects/``.
-Generic symlink mechanics live in :mod:`infrastructure.core.sidecar_linking`; this
-module supplies the template project's ``PROJECT_LINK_CONFIG`` and CLI entrypoint.
+Generic symlink mechanics and the shared ``linking`` command live in
+:mod:`infrastructure.core.sidecar_linking`; this module supplies the template
+project's ``PROJECT_LINK_CONFIG`` and its thin public wrappers.
 """
 
 from __future__ import annotations
@@ -11,13 +12,14 @@ from __future__ import annotations
 import argparse
 from pathlib import Path
 
-from infrastructure.core.project_paths import find_repo_root
 from infrastructure.core.sidecar_linking import (
     LinkSyncResult,
     MirrorOffender,
     SidecarLinkConfig,
+    build_link_sync_parser,
     is_managed_symlink as _is_managed_symlink,
     resolve_private_root,
+    run_link_sync_cli,
     sync_private_links,
     unmanaged_mirror_entries as _unmanaged_mirror_entries,
 )
@@ -45,6 +47,8 @@ CONFIG_FILENAME = ".private_projects_root"
 ENV_VAR = "TEMPLATE_PRIVATE_PROJECTS_ROOT"
 SKIP_ENV_VAR = "TEMPLATE_SKIP_LINK_SYNC"
 IGNORED_LIFECYCLE_ENTRY_NAMES: frozenset[str] = frozenset({"output"})
+PROG = "python -m infrastructure.project.linking"
+DESCRIPTION = "Symlink lifecycle projects from the private docxology/projects repo into the template checkout."
 
 PROJECT_LINK_CONFIG = SidecarLinkConfig(
     protected_names=PROTECTED_NAMES,
@@ -102,37 +106,12 @@ def sync_private_project_links(
 
 
 def _build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(
-        prog="python -m infrastructure.project.linking",
-        description=("Symlink lifecycle projects from the private docxology/projects repo into the template checkout."),
-    )
-    parser.add_argument("--repo-root", type=Path, default=None)
-    parser.add_argument("--private-root", type=Path, default=None)
-    parser.add_argument("--dry-run", action="store_true")
-    parser.add_argument("--no-prune", action="store_true")
-    return parser
+    return build_link_sync_parser(prog=PROG, description=DESCRIPTION)
 
 
 def main(argv: list[str] | None = None) -> int:
     """CLI entry point."""
-    ns = _build_parser().parse_args(argv)
-    repo_root = ns.repo_root or find_repo_root()
-    result = sync_private_project_links(
-        repo_root,
-        ns.private_root,
-        prune=not ns.no_prune,
-        dry_run=ns.dry_run,
-    )
-    print(result.summary())
-    for label, names in [
-        ("+", result.created),
-        ("~", result.updated),
-        ("-", result.removed),
-        (".", result.skipped),
-    ]:
-        for name in names:
-            print(f"  {label} {name}")
-    return 0
+    return run_link_sync_cli(PROJECT_LINK_CONFIG, prog=PROG, description=DESCRIPTION, argv=argv)
 
 
 if __name__ == "__main__":  # pragma: no cover - module entry point
