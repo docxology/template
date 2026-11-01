@@ -100,6 +100,7 @@ Implements the private-projects sidecar symlink sync documented in root `CLAUDE.
 - `private_projects_root(repo_root)` - resolve the sidecar root (env `TEMPLATE_PRIVATE_PROJECTS_ROOT` or `.private_projects_root`, default sibling `../projects`)
 - `is_managed_symlink(path, private_root)` - classify a `projects/` entry as a managed sidecar symlink
 - Env vars: `TEMPLATE_PRIVATE_PROJECTS_ROOT` (root override), `TEMPLATE_SKIP_LINK_SYNC` (disable sync)
+- The `python -m infrastructure.project.linking` command, and the identical commands for `fonds/`, `rules/`, `tools/`, come from `infrastructure.core.sidecar_linking` (`build_link_sync_parser`, `run_link_sync_cli`, `print_link_sync_result`); this module supplies only `PROJECT_LINK_CONFIG` and the named wrappers.
 
 ### Exemplar Roster (`exemplar_roster.py`)
 
