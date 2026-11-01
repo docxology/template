@@ -1,9 +1,9 @@
 # Documentation mega-file decomposition policy
 
 Human-authored guides above **800 lines** are tracked as **P1 watch** items in
-[`infrastructure/AGENTS.md`](../../infrastructure/AGENTS.md). They are not CI
-failures; decomposition is done when a guide's edit churn or navigation cost
-justifies the split.
+the table below, which is the live watch surface. They are not CI failures;
+decomposition is done when a guide's edit churn or navigation cost justifies the
+split.
 
 ## When to split
 
@@ -17,22 +17,27 @@ Split a mega guide when **any** of the following hold:
 Do **not** split generated inventories (`docs/_generated/*`, `api-reference.md`);
 those are refreshed by scripts and are exempt.
 
-## Current P1 watch list (snapshot 2026-06-11 — line counts are historical; re-derive before acting)
+## Current P1 watch list (snapshot 2026-11-01)
 
-The numeric column below was measured on 2026-06-11 and is now stale; it is
-kept only to preserve the original scoping context. Re-derive current sizes
-from the file footers or
-[`docs/_generated/COUNTS.md`](../_generated/COUNTS.md) — never copy these
-numbers into prose — and treat [`infrastructure/AGENTS.md`](../../infrastructure/AGENTS.md)
-as the live watch surface.
+The sizes below were measured on 2026-11-01 with `wc -l`. Re-derive them before
+acting, and do not copy them into other prose —
+[`docs/_generated/COUNTS.md`](../_generated/COUNTS.md) remains the owner of
+repository-wide measured facts.
 
-| Path | Lines (2026-06-11) | Suggested leaf topics |
+| Path | Lines (2026-11-01) | Suggested leaf topics |
 | --- | ---: | --- |
-| [`docs/reference/api-reference.md`](../reference/api-reference.md) | 3245 | Generated — no split; refresh via `scripts/docgen/api_reference.py` |
-| [`docs/rules/manuscript_style.md`](../rules/manuscript_style.md) | 1145 | LaTeX math · citations · figures · accessibility |
-| [`docs/guides/figures-and-analysis.md`](../guides/figures-and-analysis.md) | 860 | Registry figures · analysis scripts · manifest hooks |
-| [`docs/rules/llm_standards.md`](../rules/llm_standards.md) | 800 | Prompt hygiene · Ollama workflow · review templates |
-| [`docs/reference/common-workflows.md`](../reference/common-workflows.md) | 813 | Pipeline · validation · publishing |
+| [`docs/reference/api-reference.md`](../reference/api-reference.md) | 4221 | Generated — no split; refresh via `scripts/docgen/api_reference.py` |
+| [`docs/rules/manuscript_style.md`](../rules/manuscript_style.md) | 1132 | LaTeX math · citations · figures · accessibility |
+| [`docs/guides/figures-and-analysis.md`](../guides/figures-and-analysis.md) | 986 | Registry figures · analysis scripts · manifest hooks |
+| [`docs/guides/publishing-guide.md`](../guides/publishing-guide.md) | 953 | Zenodo · Software Heritage · GitHub release · DOI |
+| [`docs/rules/llm_standards.md`](../rules/llm_standards.md) | 824 | Prompt hygiene · Ollama workflow · review templates |
+| [`docs/reference/common-workflows.md`](../reference/common-workflows.md) | 823 | Pipeline · validation · publishing |
+
+Dated maintenance ledgers are not split candidates: the program roadmap and
+evidence record in [`platform-4-upgrade.md`](platform-4-upgrade.md) and the
+completed-backlog record in
+[`exemplar-backlog-history.md`](exemplar-backlog-history.md) are chronological
+records whose value depends on staying in one file.
 
 ## Leaf naming
 
