@@ -90,7 +90,9 @@ class NativeOriginalSupervisor:
             raise ValueError("native original prelaunch Source/spec pins differ")
         if self.pdfium_provider.held_inputs() != spec["source_inputs"]["pdfium"]:
             raise ValueError("native original prelaunch PDFium input differs from actual held provider")
-        self._verify()
+        # The single authoritative Source/PDFium/closure verification runs in
+        # launch() immediately before Popen. Repeating it here measured 44-62s
+        # of the cold preflight budget without closing the later launch window.
 
     def _verify(self) -> None:
         remaining(self.deadline)

@@ -6,8 +6,9 @@ Call after a full checkout and source-fixture preparation. The caller provisions
 `uv` and Python 3.14.4 first through the existing
 [Python setup](../setup-python-env/README.md). Use this action in an owned hosted
 workspace, before the cold operation starts. Complete native roles retain their
-14400-second budget; the incomplete Code diagnostic retains its 900-second
-budget. Preparation does not establish that either operation will finish.
+14400-second budget; the incomplete Code diagnostic retains its bounded
+1800-second budget. Preparation does not establish that either operation will
+finish.
 
 The action warms locked Root development, wheel-build and native rendering
 dependencies, reuses the existing Node/Mermaid/Chrome and document-tool actions,

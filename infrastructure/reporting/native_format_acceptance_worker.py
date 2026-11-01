@@ -734,6 +734,7 @@ def main(argv: list[str] | None = None) -> int:
         scope: input_reader.public_path(provider["wheel_artifact"]["path"])
         for scope, provider in inputs["providers"].items()
     }
+    _native_startup_phase("source-providers-begin")
     providers, roots = admitted_native_providers(
         source_context,
         specification["scope"],
@@ -741,6 +742,8 @@ def main(argv: list[str] | None = None) -> int:
         Path(sys.executable),
         deadline=specification["deadline_monotonic"],
     )
+    _native_startup_phase("source-providers-returned")
+    _native_startup_phase("pdfium-readmission-begin")
     pdfium_provider = readmit_full_worker_pdfium_provider(
         NativePDFiumSelection(args.pdfium_site, args.pdfium_wheel),
         source_context,
@@ -750,6 +753,7 @@ def main(argv: list[str] | None = None) -> int:
         input_sha256=args.pdfium_input_sha256,
         deadline=specification["deadline_monotonic"],
     )
+    _native_startup_phase("pdfium-readmission-returned")
     roots = (*roots, *pdfium_provider.audit_roots)
     if providers != inputs["providers"] or list(map(str, roots)) != inputs["provider_roots"]:
         raise ValueError("native installed provider admission differs from original launch selection")
