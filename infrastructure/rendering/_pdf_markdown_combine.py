@@ -4,12 +4,15 @@ import re
 from pathlib import Path
 
 from infrastructure.core.exceptions import RenderingError
+from infrastructure.rendering._paper_frontmatter import PaperLayout, admit_paper_layout, combine_layout
 from infrastructure.core.logging.utils import get_logger
 
 logger = get_logger(__name__)
 
 
-def combine_manuscript_markdown_sections(source_files: list[Path], *, section_breaks: bool = True) -> str:
+def combine_manuscript_markdown_sections(
+    source_files: list[Path], *, section_breaks: bool = True, paper_layout: PaperLayout | None = None
+) -> str:
     """Combine multiple markdown files into one document body.
 
     Args:
@@ -22,6 +25,10 @@ def combine_manuscript_markdown_sections(source_files: list[Path], *, section_br
     Raises:
         RenderingError: If any file cannot be read or combined content is empty.
     """
+    if paper_layout is not None:
+        layout = admit_paper_layout(paper_layout.manuscript_dir, tuple(source_files), paper_layout)
+        if layout.frontmatter:
+            return combine_layout(layout)
     combined_parts: list[str] = []
 
     for i, md_file in enumerate(source_files):

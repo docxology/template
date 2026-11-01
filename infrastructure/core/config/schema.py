@@ -47,6 +47,7 @@ class PaperConfig(TypedDict, total=False):
     """Configuration for a paper's base metadata."""
 
     title: str
+    frontmatter: list[str]
     cover: _CoverConfig
 
 
@@ -229,6 +230,12 @@ def generate_manuscript_config_schema(
             "type": "object",
             "properties": {
                 "title": {"type": "string"},
+                "frontmatter": {
+                    "type": "array",
+                    "items": {"type": "string", "minLength": 1},
+                    "uniqueItems": True,
+                    "description": "Ordered single-page paper sources between cover and contents",
+                },
                 "cover": {
                     "type": "object",
                     "properties": {

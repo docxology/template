@@ -326,9 +326,9 @@ Triggers on `v*.*.*` tag push or `workflow_dispatch` (with tag input). Both trig
 2. Prepares supported interpreters, the locked release environment and identical acceptance fixture inputs; audits pristine published exemplars before the installed handoff
 3. For root 4+, requires the exact successful hosted run ID, `platform-required-acceptance` artifact ID and aggregate receipt SHA256; authenticates the same-repository exact-revision run and bounded artifact, then uses an independently installed current reader to authenticate every candidate requirement, the complete retained installed matrix and its exact admitted wheel/receipt. Tag pushes without that explicit handoff stop
 4. Runs the tagged-SHA no-mocks and bounded pipeline-smoke gates, root release contract and fail-closed public capability manifest
-5. Earlier major tags retain the clean-export, install and import-smoke matrix on Python 3.12/3.13/3.14. Root 4+ already authenticated its retained complete matrix in step 3. Preparation and acceptance stay distinct
+5. Every release follows this one authenticated path; the former pre-4 clean-export, install and import-smoke lane is retired. Root 4+ authenticates its retained complete matrix in step 3. Preparation and acceptance stay distinct
 6. Builds the final source distribution and admits its exact final bytes alongside the wheel already accepted by the installed matrix; the pristine published audit has already passed before derived execution
-7. For root 4+, selects `docs/releases/<tag>.md` for the actual tag, with maintained notes listed in the [release-note index](../../docs/releases/README.md), and adds accepted-commit, hosted-run and receipt-hash bindings; earlier major tags use the commit-based git-log excerpt
+7. Selects `docs/releases/<tag>.md` for the actual tag, with maintained notes listed in the [release-note index](../../docs/releases/README.md), and adds accepted-commit, hosted-run and receipt-hash bindings
 8. Creates a GitHub Release using `softprops/action-gh-release@v3.0.3` with **`generate_release_notes: false`** and attaches the admitted distributions, tag-selected overview PNG and byte manifest
 9. Retrieves the published assets and requires exact admitted hashes; auto-marks as pre-release if the tag contains `-rc`, `-beta`, or `-alpha`
 
@@ -483,3 +483,13 @@ operation deadline; four hosted cells may run concurrently. This changes
 aggregate scheduling allowance from the former global operation. The installed
 collector and fresh release handoff authenticate every original producer job,
 attempt, artifact digest and confined graph; no successful subset qualifies.
+
+## Paper frontmatter compiler contracts
+
+`test_paper_frontmatter_native.py` and
+`test_paper_frontmatter_reconstruction_native.py` run as complete required
+`test-contract` modules with the converter, XeLaTeX and PDF readers prepared.
+Their three real compiler cases retain their original assertions; pure admission
+and reconstruction cases remain in the original smoke modules. Supplemental
+frontmatter ownership adds both kinds of consumer without removing conventional
+or package-fallback tests. Missing compiler providers fail these contracts.

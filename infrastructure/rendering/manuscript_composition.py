@@ -17,7 +17,12 @@ SCHEMA_VERSION = "template-manuscript-composition-v1"
 COMPOSITION_RELATIVE_PATH = Path("output/reports/manuscript_composition.json")
 COMBINED_RELATIVE_PATH = Path("output/web/_combined_manuscript.md")
 _SHA256_RE = re.compile(r"[0-9a-f]{64}\Z")
-_SUPPORTED_ALGORITHMS = {"web-renderer-combine-v1", "shared-combined-markdown-v1"}
+_SUPPORTED_ALGORITHMS = {
+    "web-renderer-combine-v1",
+    "shared-combined-markdown-v1",
+    "web-renderer-paper-frontmatter-v1",
+    "shared-paper-frontmatter-markdown-v1",
+}
 
 
 @dataclass(frozen=True)
@@ -217,7 +222,7 @@ def read_manuscript_composition(path: Path) -> ManuscriptComposition:
             raise ValueError("composition input row has missing or unknown fields")
         ordinal = raw.get("ordinal")
         size_bytes = raw.get("size_bytes")
-        if ordinal != expected_ordinal:
+        if not isinstance(ordinal, int) or isinstance(ordinal, bool) or ordinal != expected_ordinal:
             raise ValueError("composition input ordinals must be contiguous and ordered")
         if not isinstance(size_bytes, int) or isinstance(size_bytes, bool) or size_bytes < 0:
             raise ValueError("composition input size_bytes must be non-negative")

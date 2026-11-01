@@ -6,6 +6,7 @@ reusable across all projects.
 """
 
 from pathlib import Path
+from infrastructure.rendering._paper_frontmatter import resolve_paper_layout
 from typing import Any
 
 import yaml
@@ -293,7 +294,7 @@ def discover_manuscript_files(manuscript_dir: Path) -> list[Path]:
         if configured_files is not None:
             tex_files = sorted(manuscript_dir.glob("*.tex"))
             _log_configured_discovery(configured_files, tex_files, manuscript_dir)
-            return configured_files + tex_files
+            return list(resolve_paper_layout(manuscript_dir, tuple(configured_files + tex_files)).complete)
 
     # Organize files by category for proper ordering
     main_sections: list[Path] = []  # 01_*.md - 09_*.md
@@ -368,4 +369,4 @@ def discover_manuscript_files(manuscript_dir: Path) -> list[Path]:
         for f in tex_files:
             logger.info(f"    • {f.name}")
 
-    return ordered_files + tex_files
+    return list(resolve_paper_layout(manuscript_dir, tuple(ordered_files + tex_files)).complete)

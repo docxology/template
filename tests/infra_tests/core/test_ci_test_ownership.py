@@ -8,7 +8,7 @@ from pathlib import Path
 import pytest
 
 from infrastructure.core.testing.ci_infra import infrastructure_files
-from infrastructure.core.testing.ci_test_ownership import SOURCE_TEST_OWNERS
+from infrastructure.core.testing.ci_test_ownership import SOURCE_TEST_OWNERS, SUPPLEMENTAL_TEST_OWNERS
 
 ROOT = Path(__file__).resolve().parents[3]
 
@@ -162,3 +162,15 @@ def test_unowned_reporting_helper_still_selects_complete_package_fallback() -> N
         path.relative_to(ROOT).as_posix() for path in (ROOT / "tests/infra_tests/reporting").rglob("test_*.py")
     }
     assert set(infrastructure_files(ROOT, (source,))) == expected
+
+
+@pytest.mark.parametrize("source", sorted(SUPPLEMENTAL_TEST_OWNERS))
+def test_supplemental_paper_protocol_owners_are_real_complete_modules(source: str) -> None:
+    # RenderManager integrates these leaves; no artificial direct imports are required.
+    assert (ROOT / source).is_file()
+    owners = SUPPLEMENTAL_TEST_OWNERS[source]
+    assert len(owners) == len(set(owners))
+    for owner in owners:
+        syntax = ast.parse((ROOT / owner).read_bytes())
+        assert any(isinstance(node, ast.FunctionDef) and node.name.startswith("test_") for node in syntax.body)
+    assert set(owners) <= set(infrastructure_files(ROOT, (source,)))

@@ -10,6 +10,8 @@ from pathlib import Path
 import yaml
 
 from infrastructure.core.exceptions import RenderingError
+from infrastructure.rendering._paper_frontmatter import PaperLayout, admit_paper_layout
+from infrastructure.rendering._paper_frontmatter_render import place_frontmatter_latex
 from infrastructure.core.logging.constants import BANNER_WIDTH
 from infrastructure.core.logging.utils import get_logger
 from infrastructure.rendering._pdf_combined_pandoc import build_pandoc_tex_command, run_pandoc_conversion
@@ -189,6 +191,8 @@ class PDFRenderer:
         source_files: list[Path],
         manuscript_dir: Path,
         project_name: str = "project",
+        *,
+        paper_layout: PaperLayout | None = None,
     ) -> Path:
         """Render multiple markdown files as a combined PDF.
 
@@ -205,6 +209,9 @@ class PDFRenderer:
         Raises:
             RenderingError: If combination or rendering fails
         """
+
+        layout = admit_paper_layout(manuscript_dir, tuple(source_files), paper_layout)
+        source_files = list(layout.complete)
 
         logger.info("\n" + "=" * BANNER_WIDTH)
         logger.info("COMBINED MANUSCRIPT RENDERING")
@@ -260,6 +267,7 @@ class PDFRenderer:
         combined_content = combine_manuscript_markdown_sections(
             source_files,
             section_breaks=rendering_options["section_breaks"],
+            paper_layout=layout,
         )
 
         # Write combined markdown atomically. Any failure (disk full, encoding
@@ -326,7 +334,13 @@ class PDFRenderer:
         # Step 6: Inject preamble and title page
         config_path = manuscript_dir / "config.yaml"
         bookends_enabled = transmission_bookends_enabled(config_path) if config_path.is_file() else False
-        tex_content = inject_latex_preamble(tex_content, manuscript_dir, skip_title_page=bookends_enabled)
+        tex_content = inject_latex_preamble(
+            tex_content, manuscript_dir, skip_title_page=bookends_enabled, paper_frontmatter=bool(layout.frontmatter)
+        )
+        if layout.frontmatter:
+            tex_content = place_frontmatter_latex(
+                tex_content, layout, rendering_options["front_matter_figure_height_fraction"]
+            )
 
         # Step 7: Inject bibliography
         tex_content = inject_bibliography(

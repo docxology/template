@@ -45,6 +45,7 @@ from infrastructure.rendering._pipeline_summary import (
     verify_render_outputs,
 )
 from infrastructure.rendering.config import RenderingConfig
+from infrastructure.rendering._paper_frontmatter import resolve_paper_layout, declared_frontmatter
 from infrastructure.rendering.manuscript_discovery import discover_manuscript_files, verify_figures_exist
 from infrastructure.rendering import RenderManager
 from infrastructure.core.logging.diagnostic import DiagnosticReporter
@@ -116,10 +117,14 @@ def _render_pipeline_impl(
             logger.error("   %s", suggestion)
         return 1
 
-    try:
-        deps.write_bookends(project_root, project_name, repo_root=root)
-    except Exception as exc:  # noqa: BLE001 — bookends must not block rendering
-        logger.warning("Transmission bookend generation skipped: %s", exc)
+    # Paper-frontmatter admission excludes transmission semantics. Do not run
+    # the legacy producer, which also consults source-project configuration,
+    # against this explicit consumed paper layout.
+    if not declared_frontmatter(deps.load_project_config(manuscript_dir)):
+        try:
+            deps.write_bookends(project_root, project_name, repo_root=root)
+        except Exception as exc:  # noqa: BLE001 — bookends must not block rendering
+            logger.warning("Transmission bookend generation skipped: %s", exc)
 
     if deps.validate_latex() != 0:
         return 1
@@ -185,6 +190,7 @@ def _render_pipeline_impl(
         return 1
 
     md_files = [f for f in source_files if f.suffix == ".md"]
+    paper_layout = resolve_paper_layout(manuscript_dir, tuple(md_files))
     try:
         clean_stale_render_deliverables(manager, source_files, project_name)
     except OSError as exc:
@@ -193,7 +199,12 @@ def _render_pipeline_impl(
     rendered_count, failed_files = deps.render_individual(manager, source_files, reporter)
 
     if md_files:
-        deps.render_combined(manager, md_files, manuscript_dir, project_name, reporter, rendered_count)
+        if paper_layout.frontmatter:
+            deps.render_combined(
+                manager, md_files, manuscript_dir, project_name, reporter, rendered_count, paper_layout=paper_layout
+            )
+        else:
+            deps.render_combined(manager, md_files, manuscript_dir, project_name, reporter, rendered_count)
 
     if reporter.events:
         reporter.print_report()
