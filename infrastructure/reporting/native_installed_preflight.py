@@ -19,6 +19,7 @@ from infrastructure.reporting.native_format_joint_source import NativeSDKSelecti
 from infrastructure.reporting.native_full_worker_pdfium import NativePDFiumSelection
 from infrastructure.reporting.native_mermaid_runtime_selection import NativeMermaidSelection
 from infrastructure.reporting.native_original_progress import _preflight_phase, _representative_preflight_diagnostics
+from infrastructure.reporting.native_preflight_budget import PREFLIGHT_MAX_OPERATION_SECONDS
 
 PREFLIGHT_SCOPE = "templates/template_code_project"
 PREFLIGHT_SCHEMA = "template-native-diagnostic-preflight-v2"
@@ -76,8 +77,13 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--operation-started-monotonic", type=float, required=True)
     parser.add_argument("--timeout", type=int, required=True)
     args = parser.parse_args(argv)
-    if not 0 < args.timeout <= 900 or not 0 < args.operation_started_monotonic < time.monotonic():
-        parser.error("diagnostic preflight requires its original at-most-900-second outer clock")
+    if (
+        not 0 < args.timeout <= PREFLIGHT_MAX_OPERATION_SECONDS
+        or not 0 < args.operation_started_monotonic < time.monotonic()
+    ):
+        parser.error(
+            f"diagnostic preflight requires its original bounded at-most-{PREFLIGHT_MAX_OPERATION_SECONDS}-second outer clock"
+        )
     deadline = args.operation_started_monotonic + args.timeout
     remaining(deadline)
     with _representative_preflight_diagnostics(deadline):

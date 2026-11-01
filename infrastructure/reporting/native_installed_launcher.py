@@ -26,6 +26,10 @@ from infrastructure.reporting.native_installed_preparation import (
     NativePreparationFailure,
     prepare_native_installed_runtime,
 )
+from infrastructure.reporting.native_preflight_budget import (
+    PREFLIGHT_MAX_OPERATION_SECONDS,
+    preflight_inner_timeout_seconds,
+)
 from infrastructure.reporting.native_prepared_pdfium import prepare_pdfium_nomination
 from infrastructure.reporting.native_source_provider_bootstrap import (
     NATIVE_CONTROLLER_MODULE,
@@ -93,9 +97,16 @@ def main(argv: list[str] | None = None) -> int:
     started = time.monotonic()
     if not 0 < args.timeout <= 14400:
         parser.error("native installed launch requires the existing whole-operation budget")
-    if args.mode == "preflight" and args.timeout > 900:
-        parser.error("diagnostic preflight requires an explicit timeout at most 900 seconds")
+    if args.mode == "preflight" and args.timeout > PREFLIGHT_MAX_OPERATION_SECONDS:
+        parser.error(
+            f"diagnostic preflight requires an explicit timeout at most {PREFLIGHT_MAX_OPERATION_SECONDS} seconds"
+        )
     deadline = started + args.timeout
+    # The inner owner must return and retain its receipts inside the outer
+    # watcher's clock; an identical nested deadline lets the outer watcher kill
+    # it before worker process/cleanup/guardian evidence is written.
+    inner_timeout = preflight_inner_timeout_seconds(args.timeout) if args.mode == "preflight" else args.timeout
+    launch_retention_reserve = args.timeout - inner_timeout
     source = args.source_root.resolve(strict=True)
     mirror = args.current_root.absolute()
     scratch = args.scratch.absolute()
@@ -193,7 +204,7 @@ def main(argv: list[str] | None = None) -> int:
             "--operation-started-monotonic",
             str(started),
             "--timeout",
-            str(args.timeout),
+            str(inner_timeout),
         )
         if args.mode in {"original", "preflight"}:
             arguments = (
@@ -278,6 +289,9 @@ def main(argv: list[str] | None = None) -> int:
             "mode": args.mode,
             "original_started_monotonic": started,
             "original_deadline_monotonic": deadline,
+            "operation_timeout_seconds": args.timeout,
+            "inner_operation_timeout_seconds": inner_timeout,
+            "launch_retention_reserve_seconds": launch_retention_reserve,
             "current_root": str(mirror),
             "source_commit": args.source_commit,
             "source_identity": args.source_identity,
@@ -316,6 +330,9 @@ def main(argv: list[str] | None = None) -> int:
                             "mode": args.mode,
                             "actual_original_result": error.result,
                             "original_deadline_monotonic": deadline,
+                            "operation_timeout_seconds": args.timeout,
+                            "inner_operation_timeout_seconds": inner_timeout,
+                            "launch_retention_reserve_seconds": launch_retention_reserve,
                         },
                         sort_keys=True,
                     )

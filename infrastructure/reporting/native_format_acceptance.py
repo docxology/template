@@ -75,6 +75,7 @@ from infrastructure.reporting.native_full_worker_pdfium import NativePDFiumSelec
 from infrastructure.reporting.native_project_provider_batch import admitted_native_provider_batch
 from infrastructure.reporting.native_original_progress import _preflight_phase, original_cell_progress
 from infrastructure.reporting.native_hosted_original_producer import NativeHostedTransportRequest
+from infrastructure.reporting.native_preflight_budget import WORKER_RETENTION_RESERVE_SECONDS
 
 
 def _executed_failure_result(state: dict[str, Any], error: BaseException) -> dict[str, Any]:
@@ -328,6 +329,10 @@ def _run_original_native_cells(
         raise ProjectionSourceUnsupported(
             "native original requires independent PDFium site and Source wheel nomination"
         )
+    # The supervised worker owns an earlier clock than the surrounding
+    # evidence operation. The tail lets its watcher reap the worker, finish the
+    # guardian and retain process.json before the preflight deadline.
+    worker_deadline = deadline - WORKER_RETENTION_RESERVE_SECONDS
     office_fonts = observe_office_font_nominations(office_font_files, deadline=deadline)
     office_reader_selection = NativeOfficeReaderSelection(runtime.selection, office_font_files)
     # Admit every provider before the first reader imports a PDFium namespace.
@@ -406,7 +411,7 @@ def _run_original_native_cells(
             "formats": list(lookup[scope].formats),
             "source_digest": before,
             "timeout_seconds": timeout_seconds,
-            "deadline_monotonic": deadline,
+            "deadline_monotonic": worker_deadline,
             "observer_tools": observer_tools,
             "expected_platform": expected_platform,
             "source_inputs": source_inputs,
@@ -433,7 +438,7 @@ def _run_original_native_cells(
                 provider_audit_roots=provider_roots,
                 implementation_binding_path=implementation_input.path,
                 audit_closure_directory=closure_directory,
-                deadline=deadline,
+                deadline=worker_deadline,
             )
         )
         _preflight_phase("sdk-command-end", deadline)
@@ -449,11 +454,11 @@ def _run_original_native_cells(
             tuple(command),
             closure_directory,
             closure_identity,
-            deadline=deadline,
+            deadline=worker_deadline,
             pdfium_provider=pdfium_provider,
         )
         _preflight_phase("supervisor-end", deadline)
-        remaining = deadline - time.monotonic()
+        remaining = worker_deadline - time.monotonic()
         observation: dict[str, Any] = {
             "schema_version": PROCESS_SCHEMA,
             "run_id": run_id,
@@ -493,7 +498,7 @@ def _run_original_native_cells(
             try:
                 worker_env = native_environment(root, Path(sys.executable), cell)
                 worker_env.update(source_environment(source_context))
-                original_cell_progress("worker-start", scope, deadline)
+                original_cell_progress("worker-start", scope, worker_deadline)
                 observation.update(supervisor.launch(cell, worker_env))
             except KeyboardInterrupt:
                 observation.update(
@@ -503,11 +508,11 @@ def _run_original_native_cells(
                     diagnostic="native supervisor interrupted",
                 )
         if observation["pid"] is not None:
-            original_cell_progress("worker-completed", scope, deadline)
+            original_cell_progress("worker-completed", scope, worker_deadline)
         observation["host_after"] = native_host_observation()
         if observation["completed_monotonic"] is None:
             observation["completed_monotonic"] = time.monotonic()
-        if observation["completed_monotonic"] >= deadline:
+        if observation["completed_monotonic"] >= worker_deadline:
             observation.update(
                 exit_code=130 if observation["exit_code"] == 130 else 124,
                 timed_out=observation["exit_code"] != 130,

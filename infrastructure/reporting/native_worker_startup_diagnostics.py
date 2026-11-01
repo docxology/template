@@ -130,6 +130,8 @@ try:
     'audit-returned','package-exec-begin','package-exec-returned',
     'worker-dispatch','worker-main-enter',
     'source-admission-begin','source-admission-returned','worker-execution-begin',
+    'source-providers-begin','source-providers-returned',
+    'pdfium-readmission-begin','pdfium-readmission-returned',
     'worker-dispatch-returned','protected-body-raised','bootstrap-leaving',
     @EXECUTION_PHASES@))
   def start(self):
