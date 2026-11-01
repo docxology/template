@@ -148,7 +148,21 @@ def test_expired_original_clock_stays_expired_and_silent() -> None:
     assert result.stderr == ""
 
 
-def test_real_deep_private_anchor_emits_only_twelve_sanitized_callers(tmp_path: Path) -> None:
+def _listed_phase_names() -> tuple[str, ...]:
+    """Read the actual generated prelude's listed phase set without running it."""
+    tree = ast.parse(_program("pass"))
+    for node in ast.walk(tree):
+        if (
+            isinstance(node, ast.Assign)
+            and any(isinstance(target, ast.Attribute) and target.attr == "phases" for target in node.targets)
+            and isinstance(node.value, ast.Call)
+            and node.value.args
+        ):
+            return ast.literal_eval(node.value.args[0])
+    raise AssertionError("diagnostic prelude lost its listed phase set")
+
+
+def test_real_deep_private_anchor_emits_only_its_bounded_sanitized_callers(tmp_path: Path) -> None:
     private = tmp_path / "private-diagnostic-sentinel.py"
     private.write_text(
         textwrap.dedent("""
@@ -167,8 +181,13 @@ def test_real_deep_private_anchor_emits_only_twelve_sanitized_callers(tmp_path: 
     """)
     assert result.returncode == 0, result.stderr
     samples = [row for row in _rows(result.stderr) if row[1] == "anchored-stack"]
-    assert len(samples) == 12
-    assert [int(row[5]) for row in samples] == list(range(12))
+    # The sampler walks at most twelve frames, and the fixed 96-event budget
+    # keeps one record per listed phase, so the allowance is whichever is
+    # smaller.
+    allowance = min(12, 96 - len(_listed_phase_names()))
+    assert allowance > 0
+    assert len(samples) == allowance
+    assert [int(row[5]) for row in samples] == list(range(allowance))
     assert all(row[6:] == ["unlisted", "0"] for row in samples)
     assert "private_name" not in result.stderr
 

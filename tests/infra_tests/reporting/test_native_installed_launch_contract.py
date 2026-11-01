@@ -13,6 +13,7 @@ import pytest
 from infrastructure.reporting.native_current_reader_inputs import NativeCurrentAnalysisInputs
 from infrastructure.reporting.native_installed_invocation import launch_prepared_native
 from infrastructure.reporting.native_installed_launcher import _signed_failure
+from infrastructure.reporting.native_preflight_budget import PREFLIGHT_MAX_OPERATION_SECONDS
 from infrastructure.reporting.native_revalidation_progress import RevalidationProgress
 
 ROOT = Path(__file__).resolve().parents[3]
@@ -71,15 +72,22 @@ def _run(arguments: list[str]) -> subprocess.CompletedProcess[str]:
     )
 
 
-@pytest.mark.parametrize("mode,budget", [("original", 0), ("original", -1), ("original", 14401), ("preflight", 901)])
+@pytest.mark.parametrize(
+    "mode,budget",
+    [("original", 0), ("original", -1), ("original", 14401), ("preflight", PREFLIGHT_MAX_OPERATION_SECONDS + 1)],
+)
 def test_real_launcher_refuses_invalid_original_budget_before_any_work(tmp_path: Path, mode: str, budget: int) -> None:
     result = _run(_arguments(tmp_path, mode, budget))
-    message = "at most 900 seconds" if mode == "preflight" else "existing whole-operation budget"
+    message = (
+        f"at most {PREFLIGHT_MAX_OPERATION_SECONDS} seconds"
+        if mode == "preflight"
+        else "existing whole-operation budget"
+    )
     assert result.returncode == 2 and message in result.stderr
     assert sorted(path.name for path in tmp_path.iterdir()) == ["source"]
 
 
-@pytest.mark.parametrize("mode,budget", [("preflight", 900), ("original", 14400)])
+@pytest.mark.parametrize("mode,budget", [("preflight", PREFLIGHT_MAX_OPERATION_SECONDS), ("original", 14400)])
 @pytest.mark.parametrize("occupied", ["mirror", "scratch", "dangling-mirror"])
 def test_real_launcher_accepts_each_clock_bound_but_refuses_nonfresh_paths(
     tmp_path: Path, mode: str, budget: int, occupied: str
@@ -97,7 +105,7 @@ def test_real_launcher_accepts_each_clock_bound_but_refuses_nonfresh_paths(
 
 @pytest.mark.parametrize("missing", ["--current-root", "--scratch"])
 def test_real_launcher_requires_both_explicit_fresh_destinations(tmp_path: Path, missing: str) -> None:
-    arguments = _arguments(tmp_path, "preflight", 900)
+    arguments = _arguments(tmp_path, "preflight", PREFLIGHT_MAX_OPERATION_SECONDS)
     index = arguments.index(missing)
     del arguments[index : index + 2]
     result = _run(arguments)

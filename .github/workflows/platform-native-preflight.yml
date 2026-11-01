@@ -30,7 +30,9 @@ env:
 jobs:
   native-preflight:
     runs-on: ubuntu-latest
-    timeout-minutes: 25
+    # 1800s operation + cold setup/upload. The 900s bound was measured below
+    # the cold lifecycle; see docs/guides/native-format-acceptance.md.
+    timeout-minutes: 45
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
@@ -51,7 +53,7 @@ jobs:
           --source-root "$GITHUB_WORKSPACE" --source-commit "$GITHUB_SHA"
           --source-identity "$(.venv/bin/python -c 'from pathlib import Path;from infrastructure.reporting.readiness_receipts import source_fingerprint;print(source_fingerprint(Path.cwd()))')"
           --python "$GITHUB_WORKSPACE/.venv/bin/python" --uv "$(command -v uv)"
-          --expected-platform Linux --timeout 900
+          --expected-platform Linux --timeout 1800
           --mermaid-package-root "$GITHUB_WORKSPACE/node_modules/@mermaid-js/mermaid-cli"
           --mermaid-dependency-root "$GITHUB_WORKSPACE/node_modules"
           --mermaid-node-executable "$(command -v node)"

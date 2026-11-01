@@ -115,7 +115,10 @@ acceptance and coverage custody still apply independently.
 
 `platform-native-preflight.yml` runs for relevant native/dependency pull-request
 changes and manual dispatch. After tool preparation, its cold installed operation
-has at most 900 seconds on one original clock. It prepares Code and its actual
+has at most 1800 seconds on one original clock, reserving a 30-second launch tail
+and a 15-second supervised-worker tail so the inner owner returns and retains its
+worker process, cleanup and guardian receipts before the outer watcher ends. It
+prepares Code and its actual
 Source-declared local providers, then runs that exemplar through the production
 Original and independent Current route, including all enabled formats. The route
 owns its fresh provider and reader admissions; the diagnostic does not repeat an
