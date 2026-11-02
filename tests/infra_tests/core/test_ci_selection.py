@@ -15,6 +15,7 @@ from infrastructure.core.testing.ci_selection import (
     documentation_only,
     functional_selection,
     infrastructure_selection,
+    project_smoke_selection_matrix,
 )
 from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
 
@@ -173,6 +174,29 @@ def test_documentation_only_change_runs_no_exemplar_suite(tmp_path: Path) -> Non
 )
 def test_non_documentation_changes_keep_normal_routing(paths: tuple[str, ...]) -> None:
     assert not documentation_only(paths)
+
+
+def test_documentation_only_selection_emits_empty_project_matrix(tmp_path: Path) -> None:
+    """A documentation-only plan selects no functional project yet still emits a matrix.
+
+    The workflow skips the project-smoke job for a documentation-only plan, but
+    the selection CLI must still print a parseable matrix for it instead of
+    feeding the legitimately empty subset to the nonempty-subset guard.
+    """
+    _metadata(tmp_path)
+    selected, reason = affected_projects(tmp_path, ("docs/guides/new-project-setup.md",))
+    assert selected == ()
+    assert "documentation-only" in reason
+    assert project_smoke_selection_matrix(tmp_path, selected) == {"include": []}
+
+
+def test_nonempty_selection_matrix_keeps_roster_validation() -> None:
+    """The empty-matrix case must not weaken the nonempty-subset guard."""
+    root = Path(__file__).resolve().parents[3]
+    project = sorted(PUBLIC_PROJECT_NAMES)[0]
+    assert project_smoke_selection_matrix(root, (project,)) == {"include": [{"project": project}]}
+    with pytest.raises(ValueError):
+        project_smoke_selection_matrix(root, ("templates/not_a_public_project",))
 
 
 @pytest.mark.parametrize(
