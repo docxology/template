@@ -460,13 +460,9 @@ def test_pages_copy_stages_sibling_figures_and_repairs_references(tmp_path: Path
     assert (destination / "index.html").read_text(encoding="utf-8") == (
         '<html><body><img src="figures/alpha.png" alt="alpha"></body></html>'
     )
-    assert (destination / "notes.md").read_text(encoding="utf-8") == (
-        "![alpha](figures/alpha.png)\n"
-    )
+    assert (destination / "notes.md").read_text(encoding="utf-8") == ("![alpha](figures/alpha.png)\n")
     # Non-text staged copies are published unchanged.
-    assert (destination / "data.json").read_text(encoding="utf-8") == (
-        '{"note": "../figures/alpha.png"}'
-    )
+    assert (destination / "data.json").read_text(encoding="utf-8") == ('{"note": "../figures/alpha.png"}')
     # The source tree keeps its in-repo reading contract.
     assert (web / "index.html").read_text(encoding="utf-8") == source_html
 
