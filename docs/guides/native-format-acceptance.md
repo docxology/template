@@ -38,6 +38,16 @@ diagnostic remains incomplete, is not a release receipt, and never authorizes
 publication. The release path's 14,400-second whole-operation budget is
 unchanged.
 
+Both native lanes run the strict rendered publication-evidence audit first
+(`infrastructure.validation.cli publication-audit --rendered --strict
+--require-figure-accessibility`) in the same submodule-initialized checkout, over
+the scope the lane itself prepares: the preflight's representative exemplar
+(`PREFLIGHT_SCOPE`) and the complete public roster for `--mode original`. The
+supervised worker applies that predicate to its reference root before any stage
+executes, so a stale or incomplete rendered receipt fails in seconds instead of
+after the bounded native lifecycle. The gate adds no admission and skips or
+weakens no native check; the lane still owns every native observation.
+
 POSIX main-thread admission and finalization use the original real-time deadline;
 the deadline exception bypasses ordinary observer error capture. Unsupported
 thread/platform callers or an active caller-owned real-time timer remain blocked.

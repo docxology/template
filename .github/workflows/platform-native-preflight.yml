@@ -48,6 +48,15 @@ jobs:
       - uses: ./.github/actions/setup-native-installed-readiness
         with:
           prepare-lean: 'false'
+      - name: Strict rendered publication evidence gate
+        # The native worker refuses on this same strict rendered predicate before
+        # any stage executes, so run it first: a stale receipt fails in seconds
+        # instead of after the bounded native lifecycle. The project is the
+        # worker's own representative scope, and the job clock stays intact.
+        run: >-
+          .venv/bin/python -m infrastructure.validation.cli publication-audit
+          --project "$(.venv/bin/python -c 'from infrastructure.reporting.native_installed_preflight import PREFLIGHT_SCOPE; print(PREFLIGHT_SCOPE)')"
+          --rendered --strict --require-figure-accessibility --format markdown
       - name: Bounded cold diagnostic native lifecycle
         id: preflight
         run: >-

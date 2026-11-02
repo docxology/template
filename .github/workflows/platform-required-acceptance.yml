@@ -565,6 +565,14 @@ jobs:
         with:
           python-version: "3.14.4"
       - uses: ./.github/actions/setup-native-installed-readiness
+      - name: Strict rendered publication evidence gate
+        # The native worker refuses on this same strict rendered predicate before
+        # any stage executes, so run it first: a stale receipt fails in seconds
+        # instead of after the bounded native lifecycle. It skips and weakens
+        # nothing; the lane still owns every native check.
+        run: >-
+          .venv/bin/python -m infrastructure.validation.cli publication-audit --all-public
+          --rendered --strict --require-figure-accessibility --format markdown
       - name: Original authenticated installed native format inventory
         id: native
         run: >-
