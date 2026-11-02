@@ -205,7 +205,7 @@ public-exemplars = [
     "ipykernel>=6.29.0",
 ]
 installed-build = [
-    "hatchling==1.32.4",
+    "hatchling==1.33.0",
     "setuptools==83.0.0",
     "wheel==0.48.0",
 ]
