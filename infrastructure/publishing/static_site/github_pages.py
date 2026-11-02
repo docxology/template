@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import os
 import re
+import stat
 import subprocess
 import tempfile
 from contextlib import contextmanager
@@ -13,6 +14,10 @@ from typing import Any
 
 from infrastructure.core.determinism import now_utc_iso as _now_utc
 from infrastructure.core.execution_boundary import build_bounded_env, run_bounded_subprocess
+from infrastructure.core.files.secure_write import (
+    atomic_write_bytes_confined,
+    read_bytes_confined,
+)
 from infrastructure.core.logging.utils import get_logger
 from infrastructure.publishing.publication_tree import (
     PublicationTarget,
@@ -142,9 +147,63 @@ def _git(args: list[str], *, cwd: Path, env: dict[str, str], check: bool = True)
     return process
 
 
+_STAGED_TEXT_SUFFIXES = frozenset({".html", ".htm", ".md"})
+_UPSTREAM_FIGURE_PREFIX = b"../figures/"
+_SITE_FIGURE_PREFIX = b"figures/"
+_STAGED_TEXT_MAX_BYTES = 64 * 1024 * 1024
+
+
+def stage_sibling_figures(site_dir: Path, pages_dir: Path) -> None:
+    """Publish the sibling ``figures/`` tree and repair one-level-up references.
+
+    Web payloads are staged from ``<project>/output/web`` while their HTML
+    refers to ``../figures/<name>``: correct when read inside the checkout
+    (where ``web/`` and ``figures/`` are siblings), but one level above the
+    site root once ``web/`` is published to GitHub Pages, where ``..`` escapes
+    the project site. Copy the sibling ``figures/`` tree to the staged site
+    root and rewrite that reference in the staged HTML and Markdown copies
+    only. Source files and the in-repo reading contract are unchanged, and a
+    site directory without a sibling ``figures/`` tree is published as before.
+    """
+    figures = site_dir.parent / "figures"
+    if not figures.is_dir():
+        return
+    destination = pages_dir / "figures"
+    destination.mkdir(parents=True, exist_ok=True)
+    copy_publication_source(figures, destination)
+    staged = pages_dir.absolute()
+    metadata = staged.lstat()
+    if not stat.S_ISDIR(metadata.st_mode):
+        raise ValueError("staged publication tree must be a real directory")
+    identity = (metadata.st_dev, metadata.st_ino)
+    for path in sorted(staged.rglob("*")):
+        if not path.is_file() or path.suffix.lower() not in _STAGED_TEXT_SUFFIXES:
+            continue
+        content = read_bytes_confined(
+            staged,
+            path,
+            max_bytes=_STAGED_TEXT_MAX_BYTES,
+            expected_root_identity=identity,
+        )
+        rewritten = content.replace(_UPSTREAM_FIGURE_PREFIX, _SITE_FIGURE_PREFIX)
+        if rewritten != content:
+            atomic_write_bytes_confined(
+                staged,
+                path,
+                rewritten,
+                mode=stat.S_IMODE(path.stat().st_mode),
+                expected_root_identity=identity,
+            )
+
+
 def _copy_site(site_dir: Path, pages_dir: Path) -> None:
-    """Update confined regular files, preserving published files absent locally."""
+    """Update confined regular files, preserving published files absent locally.
+
+    Also stages the sibling ``figures/`` tree with repaired references; see
+    :func:`stage_sibling_figures`.
+    """
     copy_publication_source(site_dir, pages_dir)
+    stage_sibling_figures(site_dir, pages_dir)
 
 
 def _publish_tree(
