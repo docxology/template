@@ -188,7 +188,7 @@ def test_actual_source_admitted_wrong_host_cannot_be_rehashed_into_a_success(
         source.write_bytes(
             before
             + (
-                "\n[tool.template.root_acceptance]\nschema_version=2\n"
+                "\n[tool.template.root_acceptance]\nschema_version=3\n"
                 'policy="infrastructure/config/unit-policy.json"\n'
                 'prerequisites="infrastructure/config/unit-prerequisites.json"\n'
             ).encode()

@@ -118,7 +118,7 @@
       "mode": "external",
       "receipt": "docs/_generated/status_evidence.json",
       "subsystem": "CI matrix (`.github/workflows/ci.yml`)",
-      "verification_scope": "Python 3.12\u20133.14 source and installed-package matrices are declared for Platform 4. Earlier hosted receipts remain in history; an exact-revision hosted acceptance run is still required.",
+      "verification_scope": "Python 3.14\u20133.15 source and installed-package matrices are declared for Platform 4. Earlier hosted receipts remain in history; an exact-revision hosted acceptance run is still required.",
       "verified_by": "Codex (agent session)"
     },
     {
@@ -133,14 +133,14 @@
       "verified_by": "Daniel (agent session)"
     },
     {
-      "command": "`uv run --no-sync --offline python -m infrastructure.publishing.root_release_contract --tag v4.3.0`",
+      "command": "`uv run --no-sync --offline python -m infrastructure.publishing.root_release_contract --tag v4.5.0`",
       "health": "\ud83d\udfe1 Publication pending; hosted acceptance required",
       "id": "STATUS-ROOT-RELEASE-1",
-      "last_verified": "2026-10-28",
+      "last_verified": "2026-10-30",
       "mode": "manual",
       "receipt": "docs/_generated/status_evidence.json",
       "subsystem": "Root release boundary (`pyproject.toml`, tags, GitHub releases, `CHANGELOG.md`)",
-      "verification_scope": "Root 4.3.0 is the current release intent, applied as two reviewed coordinated minor metadata transactions (4.1.0 \u2192 4.2.0 \u2192 4.3.0); 4.2.0 is an applied intermediate metadata step and was never published, and the prepared 4.0.0, 4.0.1 and 4.0.2 candidates were not published either. Root metadata, locks, exemplar compatibility/publication bindings, changelog, `CITATION.cff` and the release-boundary note now declare 4.3.0; historical releases remain preserved. The version command checks metadata, provider, tag and changelog consistency; a new tag and release separately require exact-revision hosted acceptance and the authenticated evidence handoff.",
+      "verification_scope": "Root 4.5.0 is the current release intent, superseding the unpublished 4.4.1 preparation. Root metadata, locks and all public exemplar compatibility bindings declare 4.5.0. Hosted required acceptance on main `8227dc8e805ea0f950125b974abf226cdeb7419d` failed on 2026-10-30: Root policy admission was stale, project runtime hydration failed on Python 3.15, and native rendering selected the installed SDK directory; installed/export verification completed before the runtime failure. The latest published root release observed on 2026-10-30 is v3.8.0. Earlier 4.x preparations remain unpublished. The version command checks metadata, provider, tag and changelog consistency; a new tag and release separately require exact-revision hosted acceptance and the authenticated evidence handoff.",
       "verified_by": "Codex (agent session)"
     },
     {
@@ -190,5 +190,5 @@
   ],
   "schema_version": "template-status-evidence/v1",
   "source_path": "STATUS.md",
-  "source_sha256": "46a6e0d693cbc82933aafdbc287181a81eb0525c3cedc1b3e420ae1c44286ea7"
+  "source_sha256": "181ddbd9af5c10c84e23ea794730f81fec542e3acab587dd70a9b732f3fc5d3d"
 }

@@ -50,8 +50,9 @@ def validate_runtime_cases(
 ) -> list[dict[str, Any]]:
     """Require genuine complete cases regardless of whether a provider is declared."""
     root, scope = reader.root, requirement.scope
+    if scope == "root":
+        raise ValueError("Root evidence requires its complete case-policy reader")
     resolved = RuntimeScope(root, scope)
-    resolved.require_case_policy(reader)
     if not requirement.test_files:
         raise ValueError("a source-owned public runtime cell and full test selection are required")
     run_id, cases, processes = (
@@ -99,8 +100,6 @@ def validate_runtime_cases(
     directory = directory.parent
     test_files = list(requirement.test_files)
     relative_tests = resolved.relative_tests(test_files)
-    if scope == "root" and tuple(test_files) != resolved.test_files():
-        raise ValueError("root runtime requirement differs from its complete source-owned test census")
     for value in (cell, cell_spec):
         if (
             value.get("run_id") != run_id

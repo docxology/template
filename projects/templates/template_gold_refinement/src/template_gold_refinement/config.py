@@ -13,10 +13,7 @@ from typing import Any
 
 import yaml
 
-try:
-    from .purity import PURITY_VECTOR_DIMENSIONS
-except ImportError:
-    from template_gold_refinement.purity import PURITY_VECTOR_DIMENSIONS  # type: ignore[no-redef]
+from .purity import PURITY_VECTOR_DIMENSIONS
 
 PROJECT_SCHEMA_EXTENSION = {"gold_refinement": dict}
 

@@ -129,7 +129,7 @@ class RenderingConfig:
     enable_epub: bool = False
 
     def __post_init__(self) -> None:
-        """Validate the opt-in slide contract without changing legacy output."""
+        """Validate the opt-in slide contract independently of archive composition."""
 
         if self.web_asset_mode not in {"cdn", "local"}:
             raise ValueError("web_asset_mode must be cdn or local")

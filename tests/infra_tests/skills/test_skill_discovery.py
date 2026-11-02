@@ -74,7 +74,7 @@ class TestDiscoverInFixtureRepo:
             "infrastructure/zeta/SKILL.md",
         ]
         assert skills[0].name == "a"
-        assert skills[1].agent_ref == skills[1].cursor_at == "infrastructure/zeta/SKILL.md"
+        assert skills[1].agent_ref == "infrastructure/zeta/SKILL.md"
 
     def test_duplicate_name_raises(self, tmp_path: Path) -> None:
         (tmp_path / "infrastructure" / "p1").mkdir(parents=True)
@@ -123,7 +123,7 @@ class TestManifestRoundTrip:
         ok, msg = manifest_matches_discovery(tmp_path, out)
         assert ok, msg
         data = json.loads(out.read_text(encoding="utf-8"))
-        assert data["version"] == 1
+        assert data["version"] == 2
         assert len(data["skills"]) == 1
         assert data["skills"][0]["name"] == "m1"
 
@@ -375,7 +375,7 @@ class TestCliModule:
         )
         manifest = tmp_path / "m.json"
         manifest.write_text(
-            json.dumps({"version": 1, "skills": []}),
+            json.dumps({"version": 2, "skills": []}),
             encoding="utf-8",
         )
         ok, msg = manifest_matches_discovery(tmp_path, manifest)
@@ -432,10 +432,10 @@ class TestBuildManifestPayload:
         root = _template_repo_root()
         skills = discover_skills(root)
         payload = build_manifest_payload(skills)
-        assert payload["version"] == 1
+        assert payload["version"] == 2
         for row in payload["skills"]:
-            assert {"name", "description", "path", "cursor_at"}.issubset(row)
-            assert row["path"] == row["cursor_at"]
+            assert {"name", "description", "path", "agent_ref"}.issubset(row)
+            assert row["path"] == row["agent_ref"]
 
     def test_basic_payload_from_fixture(self, tmp_path: Path) -> None:
         (tmp_path / "infrastructure").mkdir()
@@ -500,13 +500,13 @@ class TestSkillDescriptorsAsJsonSerializable:
         assert result[0]["frontmatter"] == {"name": "S1"}
 
 
-def test_shared_workflows_are_default_and_cursor_skills_require_explicit_opt_in(tmp_path: Path) -> None:
-    for base, name in ((".agents/workflows/owned", "generic-owned"), (".cursor/skills/legacy", "legacy-owned")):
+def test_shared_workflows_are_public_and_editor_state_is_excluded(tmp_path: Path) -> None:
+    for base, name in ((".agents/workflows/owned", "generic-owned"), (".cursor/skills/local", "local-owned")):
         directory = tmp_path / base
         directory.mkdir(parents=True)
         (directory / "SKILL.md").write_text(f"---\nname: {name}\ndescription: Owned workflow\n---\n")
     actual = discover_skills(tmp_path)
     assert [row.name for row in actual] == ["generic-owned"]
-    assert actual[0].agent_ref == actual[0].cursor_at == ".agents/workflows/owned/SKILL.md"
+    assert actual[0].agent_ref == ".agents/workflows/owned/SKILL.md"
     explicit = discover_skills(tmp_path, search_roots=(".cursor/skills",))
-    assert [row.name for row in explicit] == ["legacy-owned"]
+    assert explicit == []

@@ -135,7 +135,7 @@ def test_run_deep_search_disabled_exits_zero(tmp_path: Path):
     (iso / "manuscript").mkdir()
     # Minimal config with deep_search disabled (default).
     (iso / "manuscript" / "config.yaml").write_text(
-        "paper:\n  title: 'X'\nsearch:\n  query: 'x'\n  sources: [local]\ndeep_search:\n  enabled: false\n",
+        "paper:\n  title: X\nproject_config:\n  deep_search:\n    enabled: false\n  search:\n    query: x\n    sources:\n    - local\n",
         encoding="utf-8",
     )
     result = _run(
@@ -156,17 +156,7 @@ def test_run_deep_search_enabled_with_corpus(tmp_path: Path):
     bundled_corpus = PROJECT_ROOT / "data" / "corpus.json"
     (iso / "data" / "corpus.json").write_text(bundled_corpus.read_text(encoding="utf-8"), encoding="utf-8")
     (iso / "manuscript" / "config.yaml").write_text(
-        "paper:\n  title: 'X'\n"
-        "search:\n  query: 'x'\n  sources: [local]\n"
-        "  local_corpus: 'data/corpus.json'\n"
-        "deep_search:\n"
-        "  enabled: false\n"  # script will --enable override this
-        "  sources: [local]\n"
-        "  fetch_abstracts: false\n"
-        "  fetch_fulltext: false\n"
-        "  output_dir: 'output/deep_search'\n"
-        "  search_cache_dir: 'output/cache/search'\n"
-        "  unified_bibtex_path: 'output/bibliography/refs.bib'\n",
+        "paper:\n  title: X\nproject_config:\n  deep_search:\n    enabled: false\n    sources:\n    - local\n    fetch_abstracts: false\n    fetch_fulltext: false\n    output_dir: output/deep_search\n    search_cache_dir: output/cache/search\n    unified_bibtex_path: output/bibliography/refs.bib\n  search:\n    query: x\n    sources:\n    - local\n    local_corpus: data/corpus.json\n",
         encoding="utf-8",
     )
     result = _run(

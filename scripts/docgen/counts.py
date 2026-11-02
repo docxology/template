@@ -69,12 +69,19 @@ def main(argv: list[str] | None = None) -> int:
         help="existing independent exact copy of selected counts_coverage.py outside the repo and SDK",
     )
     parser.add_argument(
+        "--coverage-diagnostics-directory",
+        type=Path,
+        help="existing directory outside the repository and selected SDK for complete per-attempt subprocess logs",
+    )
+    parser.add_argument(
         "--project-workers",
         default="auto",
         help="bounded public-exemplar collection concurrency (default: auto); use 'serial' or a positive integer",
     )
     args = parser.parse_args(argv)
 
+    if args.coverage_diagnostics_directory is not None and not args.verify_coverage:
+        parser.error("--coverage-diagnostics-directory requires --verify-coverage")
     if args.coverage_snapshot_output is not None and not (args.verify_coverage and args.write):
         parser.error("--coverage-snapshot-output requires --verify-coverage --write")
     if args.verify_coverage and args.write and args.coverage_snapshot_output is None:
@@ -83,7 +90,10 @@ def main(argv: list[str] | None = None) -> int:
     if args.verify_coverage:
         try:
             result = verify_exemplar_coverage_result(
-                REPO_ROOT, rewrite=args.write, snapshot_output=args.coverage_snapshot_output
+                REPO_ROOT,
+                rewrite=args.write,
+                snapshot_output=args.coverage_snapshot_output,
+                diagnostics_directory=args.coverage_diagnostics_directory,
             )
         except (ValueError, OSError, UnicodeError) as exc:
             parser.error(str(exc))

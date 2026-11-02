@@ -99,14 +99,21 @@ def validate_hypothesis_config(config: Config) -> list[str]:
     if not isinstance(hypotheses, Mapping) or not hypotheses:
         return ["No hypothesis definitions configured"]
 
+    seen_ids: set[str] = set()
     for hypothesis_id, hypothesis in hypotheses.items():
         if not isinstance(hypothesis, Mapping):
             issues.append(f"Hypothesis {hypothesis_id}: must be a mapping")
             continue
-        for field in ("name", "description", "scope"):
+        for field in ("id", "name", "description", "scope"):
             value = hypothesis.get(field)
             if not isinstance(value, str) or not value.strip():
                 issues.append(f"Hypothesis {hypothesis_id}: missing required field '{field}'")
+        evidence_id = hypothesis.get("id")
+        if isinstance(evidence_id, str) and evidence_id.strip():
+            evidence_id = evidence_id.strip()
+            if evidence_id in seen_ids:
+                issues.append(f"Hypothesis {hypothesis_id}: duplicate id '{evidence_id}'")
+            seen_ids.add(evidence_id)
     return issues
 
 

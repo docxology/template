@@ -43,31 +43,44 @@ def _package_identity(value: str) -> str:
 
 def _regular_bytes(path: Path, *, max_bytes: int = 64 * 1024 * 1024) -> bytes:
     """Read a bounded regular file without accepting symlink ancestry/replacement."""
-    import stat
-
     path = path.absolute()
     with anchored_parent(path) as parent:
         if parent is None:
             raise ValueError("implementation custody requires an existing regular file")
-        descriptor = os.open(path.name, os.O_RDONLY | getattr(os, "O_NOFOLLOW", 0) | os.O_NONBLOCK, dir_fd=parent)
-        try:
-            before = os.fstat(descriptor)
-            if not stat.S_ISREG(before.st_mode) or before.st_size > max_bytes:
-                raise ValueError("implementation custody requires a bounded regular file")
-            chunks = []
-            size = 0
-            while chunk := os.read(descriptor, min(1024 * 1024, max_bytes + 1)):
-                chunks.append(chunk)
-                size += len(chunk)
-                if size > max_bytes:
-                    raise ValueError("implementation file grew beyond its byte ceiling")
-            after = os.fstat(descriptor)
-            current = os.stat(path.name, dir_fd=parent, follow_symlinks=False)
-            if observation(before) != observation(after) or observation(after) != observation(current):
-                raise ValueError("implementation file changed while consumed")
-            return b"".join(chunks)
-        finally:
-            os.close(descriptor)
+        return _regular_bytes_at(parent, path.name, max_bytes=max_bytes)
+
+
+def _regular_bytes_at(
+    parent: int,
+    name: str,
+    *,
+    max_bytes: int = 64 * 1024 * 1024,
+    expected: os.stat_result | None = None,
+) -> bytes:
+    """Read a leaf through a caller-held, closing-checked physical directory."""
+    import stat
+
+    descriptor = os.open(name, os.O_RDONLY | getattr(os, "O_NOFOLLOW", 0) | os.O_NONBLOCK, dir_fd=parent)
+    try:
+        before = os.fstat(descriptor)
+        if not stat.S_ISREG(before.st_mode) or before.st_size > max_bytes:
+            raise ValueError("implementation custody requires a bounded regular file")
+        if expected is not None and observation(before) != observation(expected):
+            raise ValueError("implementation file changed before consumption")
+        chunks = []
+        size = 0
+        while chunk := os.read(descriptor, min(1024 * 1024, max_bytes + 1)):
+            chunks.append(chunk)
+            size += len(chunk)
+            if size > max_bytes:
+                raise ValueError("implementation file grew beyond its byte ceiling")
+        after = os.fstat(descriptor)
+        current = os.stat(name, dir_fd=parent, follow_symlinks=False)
+        if observation(before) != observation(after) or observation(after) != observation(current):
+            raise ValueError("implementation file changed while consumed")
+        return b"".join(chunks)
+    finally:
+        os.close(descriptor)
 
 
 def _sha(raw: bytes) -> str:
@@ -144,7 +157,10 @@ def source_file_manifest(
                         raise ValueError("implementation directory changed before traversal")
                     visit(path, child, depth + 1)
             elif path.suffix in suffixes:
-                result[path.relative_to(root).as_posix()] = _sha(_regular_bytes(path))
+                # The traversal already holds every ancestor until its closing
+                # identity check. Read relative to that same directory instead
+                # of reopening the entire ancestry once for every source file.
+                result[path.relative_to(root).as_posix()] = _sha(_regular_bytes_at(descriptor, name, expected=metadata))
             check_deadline()
         if names != names_in(descriptor, expected_count=len(names)):
             raise ValueError("implementation directory changed during traversal")

@@ -17,7 +17,7 @@ from infrastructure.project.drift.checks_publication import (
     check_publication_metadata_consistency,
     check_publishing_status_block_current,
 )
-from infrastructure.validation.output.no_mock_enforcer import validate_no_mocks
+from infrastructure.validation.output.no_mock_enforcer import scan_lexical_mock_policy
 
 
 def _read(path: Path) -> str:
@@ -238,7 +238,7 @@ def check_no_blanket_except_in_src(project_root: Path, report: Report, project: 
 def check_mocks_absent_from_tests(project_root: Path, report: Report, project: str) -> None:
     """No mock frameworks anywhere under an exemplar's `tests/`.
 
-    Delegates to :func:`infrastructure.validation.output.no_mock_enforcer.validate_no_mocks`
+    Delegates to :func:`infrastructure.validation.output.no_mock_enforcer.scan_lexical_mock_policy`
     — the same AST + comment/string-stripped scanner the repo-level
     ``verify_no_mocks`` gate uses — so the exemplar rule and the repo rule can
     never diverge. (Previously this maintained its own weaker regex that both
@@ -248,7 +248,8 @@ def check_mocks_absent_from_tests(project_root: Path, report: Report, project: s
     tests_dir = project_root / "tests"
     if not tests_dir.is_dir():
         return
-    for violation in validate_no_mocks(tests_dir, project_root):
+    scan = scan_lexical_mock_policy(tests_dir, project_root)
+    for violation in (*scan.violations, *scan.errors):
         report.add("ERROR", project, "mock_in_tests", violation)
 
 

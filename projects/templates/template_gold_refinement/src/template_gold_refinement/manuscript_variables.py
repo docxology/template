@@ -21,64 +21,34 @@ import platform
 from pathlib import Path
 from typing import Any
 
-try:
-    from .composition import generate_token_plan
-    from .config import load_gold_refinement_config
-    from .evidence import build_evidence_registry
-    from .figures._common import figure_markdown_variables
-    from .formalisms import (
-        equation_labels,
-        formalism_count,
-        formalism_equation_blocks,
-        formalism_table_rows,
-        formalism_traceability_rows,
-        format_table_code,
-    )
-    from .integrity import (
-        build_evidence_tiers,
-        build_integrity_dimensions,
-        evidence_tier_table_rows,
-        integrity_dimension_table_rows,
-        integrity_owner_table_rows,
-        integrity_summary_line,
-    )
-    from .parsing import build_timestamp, load_json_object, load_manuscript_config
-    from .purity import format_purity, purity_to_nines
-    from .refinery import run_refinery
-    from .security_assay import (
-        build_security_assay,
-        security_assay_summary_line,
-        security_assay_table_rows,
-    )
-except ImportError:  # pragma: no cover
-    from template_gold_refinement.composition import generate_token_plan  # type: ignore[no-redef]
-    from template_gold_refinement.config import load_gold_refinement_config  # type: ignore[no-redef]
-    from template_gold_refinement.evidence import build_evidence_registry  # type: ignore[no-redef]
-    from figures._common import figure_markdown_variables
-    from template_gold_refinement.formalisms import (  # type: ignore[no-redef]
-        equation_labels,
-        formalism_count,
-        formalism_equation_blocks,
-        formalism_table_rows,
-        formalism_traceability_rows,
-        format_table_code,
-    )
-    from template_gold_refinement.integrity import (  # type: ignore[no-redef]
-        build_evidence_tiers,
-        build_integrity_dimensions,
-        evidence_tier_table_rows,
-        integrity_dimension_table_rows,
-        integrity_owner_table_rows,
-        integrity_summary_line,
-    )
-    from template_gold_refinement.parsing import build_timestamp, load_json_object, load_manuscript_config  # type: ignore[no-redef]
-    from template_gold_refinement.purity import format_purity, purity_to_nines  # type: ignore[no-redef]
-    from template_gold_refinement.refinery import run_refinery  # type: ignore[no-redef]
-    from template_gold_refinement.security_assay import (  # type: ignore[no-redef]
-        build_security_assay,
-        security_assay_summary_line,
-        security_assay_table_rows,
-    )
+from .composition import generate_token_plan
+from .config import load_gold_refinement_config
+from .evidence import build_evidence_registry
+from figures._common import figure_markdown_variables
+from .formalisms import (
+    equation_labels,
+    formalism_count,
+    formalism_equation_blocks,
+    formalism_table_rows,
+    formalism_traceability_rows,
+    format_table_code,
+)
+from .integrity import (
+    build_evidence_tiers,
+    build_integrity_dimensions,
+    evidence_tier_table_rows,
+    integrity_dimension_table_rows,
+    integrity_owner_table_rows,
+    integrity_summary_line,
+)
+from .parsing import build_timestamp, load_json_object, load_manuscript_config
+from .purity import format_purity, purity_to_nines
+from .refinery import run_refinery
+from .security_assay import (
+    build_security_assay,
+    security_assay_summary_line,
+    security_assay_table_rows,
+)
 
 import logging
 

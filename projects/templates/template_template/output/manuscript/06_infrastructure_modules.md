@@ -18,13 +18,13 @@ This section inventories every Layer‑1 subdirectory returned by `31` `discover
 | `metadata` | 3 | ✓ | ✓ | `normalized_repository_url`, `generate_metadata_package` |
 | `methods` | 10 | ✓ | ✓ | `build_methods_orchestration_plan`, methods-stage contracts + validation |
 | `orchestration` | 14 | ✓ | ✓ | `PipelineRunner`, entry point for `./run.sh` |
-| `project` | 116 | ✓ | ✓ | `discover_projects`, workspace management |
+| `project` | 117 | ✓ | ✓ | `discover_projects`, workspace management |
 | `prose` | 9 | ✓ | ✓ | Markdown readability + prose tooling |
 | `provenance` | 9 | ✓ | ✓ | — |
 | `publishing` | 85 | ✓ | ✓ | Zenodo, executable bundle, archival targets |
 | `reference` | 16 | ✓ | ✓ | BibTeX models, parsers, converters |
-| `rendering` | 121 | ✓ | ✓ | PDF/HTML/slide rendering, Pandoc filters |
-| `reporting` | 412 | ✓ | ✓ | Coverage parsers, dashboards, executive artefacts |
+| `rendering` | 120 | ✓ | ✓ | PDF/HTML/slide rendering, Pandoc filters |
+| `reporting` | 411 | ✓ | ✓ | Coverage parsers, dashboards, executive artefacts |
 | `research` | 3 | ✓ | ✓ | — |
 | `rules` | 6 | ✓ | ✓ | — |
 | `scientific` | 4 | ✓ | ✓ | `check_numerical_stability`, `benchmark_function` |
@@ -34,7 +34,7 @@ This section inventories every Layer‑1 subdirectory returned by `31` `discover
 | `steganography` | 13 | ✓ | ✓ | Watermark overlays + hash manifests |
 | `tools` | 6 | ✓ | ✓ | — |
 | `transmission` | 6 | ✓ | ✓ | — |
-| `validation` | 86 | ✓ | ✓ | PDF + Markdown + integrity CLIs |
+| `validation` | 87 | ✓ | ✓ | PDF + Markdown + integrity CLIs |
 
 ## Alphabetical summaries
 
@@ -96,7 +96,7 @@ Deterministic methods-orchestration contracts (`MethodStage`, `MethodsOrchestrat
 
 `python -m infrastructure.orchestration` exposes interactive menus, subprocess wiring for thin shell wrappers (`run.sh`, `secure_run.sh`), and stubs used in CI for menu parsing tests.
 
-### `infrastructure.project` (116 files)
+### `infrastructure.project` (117 files)
 
 Canonical discovery (`discover_projects`) enforcing `src/` + `tests/`, slug validation, nested WIP namespaces.
 
@@ -116,11 +116,11 @@ Metadata models, APA/BibTeX/MLA formatters, optional Zenodo clients.
 
 Citation/BibTeX parsing + conversion utilities leveraged by manuscripts and retrieval scripts.
 
-### `infrastructure.rendering` (121 files)
+### `infrastructure.rendering` (120 files)
 
 Pandoc shim, Unicode/XeLaTeX postprocessors, combined PDF/HTML/slide exporters.
 
-### `infrastructure.reporting` (412 files)
+### `infrastructure.reporting` (411 files)
 
 Parses pytest + coverage artefacts for dashboards; pairs with Stage 01 summaries and downstream executive exports.
 
@@ -164,7 +164,7 @@ Rendered-release transmission leaves: LaTeX single-page bookends
 models. Consumed by the publishing release workflow; regular package so the
 documentation module-reference guard resolves nested refs on disk.
 
-### `infrastructure.validation` (86 files)
+### `infrastructure.validation` (87 files)
 
 Markdown + PDF + integrity CLIs underpinning Stage 04 diagnostics.
 

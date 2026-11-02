@@ -39,8 +39,6 @@ class SectionFigureRef:
     """Data container for SectionFigureRef."""
 
     figure_id: str
-    number: int | None = None
-    caption_prefix: str = ""
     labeled: bool = True
 
 
@@ -140,11 +138,11 @@ def load_section_figures(project_root: Path) -> dict[str, tuple[SectionFigureRef
             if isinstance(entry, str):
                 refs.append(SectionFigureRef(figure_id=entry))
             elif isinstance(entry, dict):
+                if {"number", "caption_prefix"}.intersection(entry):
+                    raise ValueError("section figure numbering and captions are owned by pandoc-crossref")
                 refs.append(
                     SectionFigureRef(
                         figure_id=str(entry["id"]),
-                        number=int(entry["number"]) if entry.get("number") is not None else None,
-                        caption_prefix=str(entry.get("caption_prefix", "")),
                         labeled=bool(entry.get("labeled", True)),
                     )
                 )
@@ -184,17 +182,10 @@ def render_figure_markdown(
     project_root: Path,
     figure_id: str,
     *,
-    figure_number: int | None = None,
-    caption_prefix: str = "",
     variables: dict[str, Any] | None = None,
     labeled: bool = True,
 ) -> str:
-    # `figure_number` / `caption_prefix` are retained for signature back-compat but are
-    # intentionally unused: pandoc-crossref owns figure numbering (single source of truth).
-    # Hand-written "Figure N (section)." prefixes previously double-numbered every figure
-    # against pandoc's auto-caption — see manuscript/SYNTAX.md and src/visualizations/AGENTS.md.
-    """Render figure markdown."""
-    del figure_number, caption_prefix
+    """Render figure markdown with numbering owned by pandoc-crossref."""
     spec = load_figure_registry(project_root)[figure_id]
     _confined_figure_output_path(project_root, figure_id, spec.filename)
     rel = f"../output/figures/{spec.filename}"
@@ -230,8 +221,6 @@ def render_section_figures(
         render_figure_markdown(
             project_root,
             ref.figure_id,
-            figure_number=ref.number,
-            caption_prefix=ref.caption_prefix,
             variables=variables,
             labeled=ref.labeled,
         )
@@ -261,7 +250,7 @@ def build_figure_registry_payload(
             "label": label,
             "figure_id": figure_id,
             "filename": spec.filename,
-            "alt": _resolve_figure_field(figure_id, "alt", spec.alt, formatted),
+            "alt_text": _resolve_figure_field(figure_id, "alt", spec.alt, formatted),
             "caption": _resolve_figure_field(figure_id, "caption", spec.caption, formatted),
             "width": spec.width,
             "visual_role": spec.visual_role,

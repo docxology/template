@@ -25,7 +25,7 @@ class TestCollectOutputStatistics:
         output_dir = project_dir / "output"
         output_dir.mkdir(parents=True)
 
-        stats = collect_output_statistics(tmp_path, "test")
+        stats = collect_output_statistics(tmp_path, "test", enabled_formats=("pdf",))
         assert stats["total_files"] == 0
         assert stats["total_size_mb"] == 0.0
         assert stats["directories"]["pdf"]["file_count"] == 0
@@ -43,9 +43,9 @@ class TestCollectOutputStatistics:
         stats = collect_output_statistics(
             tmp_path,
             "templates/test",
-            require_pdf=False,
             output_dir=output_dir,
             inventory_scope=STAGE5_DELIVERY_INVENTORY_SCOPE,
+            enabled_formats=(),
         )
 
         assert stats["inventory_scope"] == "stage5-delivery-mirror"
@@ -60,7 +60,7 @@ class TestCollectOutputStatistics:
         (pdf_dir / "paper.pdf").write_bytes(b"%PDF-1.4" + b"x" * 1000)
         (pdf_dir / "other.pdf").write_bytes(b"%PDF-1.4" + b"x" * 2000)
 
-        stats = collect_output_statistics(tmp_path, "test")
+        stats = collect_output_statistics(tmp_path, "test", enabled_formats=("pdf",))
         assert stats["directories"]["pdf"]["file_count"] == 2
         assert stats["total_files"] >= 2
 
@@ -72,7 +72,7 @@ class TestCollectOutputStatistics:
             d.mkdir(parents=True)
             (d / f"file.{subdir[:3]}").write_bytes(b"content" * 100)
 
-        stats = collect_output_statistics(tmp_path, "test")
+        stats = collect_output_statistics(tmp_path, "test", enabled_formats=("pdf",))
         assert stats["total_files"] == 4
         assert stats["directories"]["pdf"]["file_count"] == 1
         assert stats["directories"]["figures"]["file_count"] == 1
@@ -94,7 +94,7 @@ class TestCollectOutputStatistics:
             path.parent.mkdir(parents=True, exist_ok=True)
             path.write_bytes(payload)
 
-        stats = collect_output_statistics(tmp_path, "test", require_pdf=False)
+        stats = collect_output_statistics(tmp_path, "test", enabled_formats=("docx", "epub"))
 
         assert stats["total_files"] == len(files)
         assert sum(info["file_count"] for info in stats["directories"].values()) == len(files)
@@ -113,7 +113,7 @@ class TestCollectOutputStatistics:
             path.parent.mkdir(parents=True, exist_ok=True)
             path.write_bytes(b"x" * size)
 
-        stats = collect_output_statistics(tmp_path, "test", require_pdf=False)
+        stats = collect_output_statistics(tmp_path, "test", enabled_formats=())
 
         assert [item["path"] for item in stats["largest_files"][:2]] == [
             "reports/larger.json",
@@ -137,7 +137,7 @@ class TestCollectOutputStatistics:
             path.parent.mkdir(parents=True, exist_ok=True)
             path.write_bytes(b"x" * size)
 
-        stats = collect_output_statistics(tmp_path, "test", require_pdf=False)
+        stats = collect_output_statistics(tmp_path, "test", enabled_formats=())
 
         assert [item["size_bytes"] for item in stats["largest_files"]] == list(range(100, 90, -1))
         assert len(stats["directories"]["data"]["largest_files"]) == 3
@@ -150,7 +150,7 @@ class TestCollectOutputStatistics:
         (pdf_dir / "small.pdf").write_bytes(b"x" * 100)
         (pdf_dir / "large.pdf").write_bytes(b"x" * 10000)
 
-        stats = collect_output_statistics(tmp_path, "test")
+        stats = collect_output_statistics(tmp_path, "test", enabled_formats=("pdf",))
         assert len(stats["largest_files"]) > 0
         # First should be the largest
         assert float(stats["largest_files"][0]["size_mb"]) >= float(stats["largest_files"][-1]["size_mb"])
@@ -161,7 +161,7 @@ class TestCollectOutputStatistics:
         pdf_dir = project_dir / "output" / "pdf"
         pdf_dir.mkdir(parents=True)
 
-        stats = collect_output_statistics(tmp_path, "test")
+        stats = collect_output_statistics(tmp_path, "test", enabled_formats=("pdf",))
         assert any("test_combined.pdf" in m for m in stats["missing_expected_files"])
 
     def test_combined_pdf_present(self, tmp_path: Path):
@@ -171,7 +171,7 @@ class TestCollectOutputStatistics:
         pdf_dir.mkdir(parents=True)
         (pdf_dir / "test_combined.pdf").write_bytes(b"pdf content")
 
-        stats = collect_output_statistics(tmp_path, "test")
+        stats = collect_output_statistics(tmp_path, "test", enabled_formats=("pdf",))
         assert not any("test_combined.pdf" in m for m in stats["missing_expected_files"])
 
     def test_root_combined_pdf_satisfies_canonical_layout(self, tmp_path: Path):
@@ -180,7 +180,7 @@ class TestCollectOutputStatistics:
         output_dir.mkdir(parents=True)
         (output_dir / "test_combined.pdf").write_bytes(b"pdf content")
 
-        stats = collect_output_statistics(tmp_path, "test")
+        stats = collect_output_statistics(tmp_path, "test", enabled_formats=("pdf",))
 
         assert stats["directories"]["root"]["file_count"] == 1
         assert "pdf/ directory" not in stats["missing_expected_files"]
@@ -195,7 +195,7 @@ class TestCollectOutputStatistics:
         (pdf_dir / "b.pdf").write_bytes(b"x")
         (pdf_dir / "c.log").write_text("log")
 
-        stats = collect_output_statistics(tmp_path, "test")
+        stats = collect_output_statistics(tmp_path, "test", enabled_formats=("pdf",))
         assert ".pdf" in stats["file_counts_by_type"]
         assert stats["file_counts_by_type"][".pdf"] == 2
 
@@ -206,7 +206,7 @@ class TestCollectOutputStatistics:
         pdf_dir.mkdir(parents=True)
         (pdf_dir / "paper.pdf").write_bytes(b"x" * 500)
 
-        stats = collect_output_statistics(tmp_path, "ignored", project_dir=custom_dir)
+        stats = collect_output_statistics(tmp_path, "ignored", project_dir=custom_dir, enabled_formats=("pdf",))
         assert stats["directories"]["pdf"]["file_count"] == 1
 
     def test_directory_info_structure(self, tmp_path: Path):
@@ -214,7 +214,7 @@ class TestCollectOutputStatistics:
         project_dir = tmp_path / "projects" / "test"
         (project_dir / "output" / "pdf").mkdir(parents=True)
 
-        stats = collect_output_statistics(tmp_path, "test")
+        stats = collect_output_statistics(tmp_path, "test", enabled_formats=("pdf",))
         pdf_info = stats["directories"]["pdf"]
         assert "exists" in pdf_info
         assert "file_count" in pdf_info
@@ -242,7 +242,7 @@ class TestCollectOutputStatistics:
         project_dir = tmp_path / "projects" / "test"
         (project_dir / "output").mkdir(parents=True)
 
-        stats = collect_output_statistics(tmp_path, "test")
+        stats = collect_output_statistics(tmp_path, "test", enabled_formats=("pdf",))
         for dir_name in ["web", "slides", "figures"]:
             assert stats["directories"][dir_name]["exists"] is False
             assert stats["directories"][dir_name]["file_count"] == 0
@@ -267,7 +267,7 @@ class TestCollectOutputStatistics:
             "projects/test/output/pdf/*.bbl\nprojects/test/output/data/*.scratch\n",
             encoding="utf-8",
         )
-        baseline = collect_output_statistics(tmp_path, "test")
+        baseline = collect_output_statistics(tmp_path, "test", enabled_formats=("pdf",))
 
         ignored_files = {
             "pdf/test_combined.aux": b"latex auxiliary",
@@ -285,7 +285,7 @@ class TestCollectOutputStatistics:
         for relative in ("slides", "simulations", "llm"):
             (output_dir / relative).mkdir(parents=True, exist_ok=True)
 
-        rerun = collect_output_statistics(tmp_path, "test")
+        rerun = collect_output_statistics(tmp_path, "test", enabled_formats=("pdf",))
 
         assert rerun == baseline
         assert rerun["inventory_mode"] == "stable-shippable-output-v1"
@@ -293,7 +293,7 @@ class TestCollectOutputStatistics:
         assert rerun["directories"]["logs"]["exists"] is False
 
         (output_dir / "data" / "new-public-result.json").write_text("{}\n", encoding="utf-8")
-        changed = collect_output_statistics(tmp_path, "test")
+        changed = collect_output_statistics(tmp_path, "test", enabled_formats=("pdf",))
         assert changed != baseline
         assert changed["directories"]["data"]["file_count"] == 2
 

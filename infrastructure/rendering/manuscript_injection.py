@@ -213,7 +213,9 @@ def hydrate_manuscript_tree(
     ``render(filename, content)`` owns the project's substitution and strictness.
     Source code admits numbered sections and config.yaml/preamble.md/references.bib;
     a manifest records their prior bytes but cannot grant new deletion authority.
-    Legacy numbered sections are removed without a manifest; unknown files stay.
+    Only unchanged files bound by the prior ownership manifest can be removed.
+    Unowned numbered render inputs refuse admission without modifying their bytes.
+    The two enabled transmission bookends belong to the separate render stage.
     Dry runs perform the same validation and never create output directories.
     """
     validate_hydration_paths(project_root)
@@ -286,9 +288,20 @@ def hydrate_manuscript_tree(
                 if hashlib.sha256(content).hexdigest() != previous[path.name]:
                     raise ValueError("stale generated manuscript was edited; refusing removal")
                 stale.append((path, previous[path.name]))
-            elif not manifest_path.exists() and re.fullmatch(r"[0-9]{2}[a-z]?_.+\.md", path.name):
-                content = read_bytes_confined(root, path, max_bytes=_HYDRATION_FILE_BYTES)
-                stale.append((path, hashlib.sha256(content).hexdigest()))
+            elif path.is_file() and path.suffix.lower() == ".md" and path.stem[:1].isdigit():
+                from infrastructure.transmission.transmission_bookends import (
+                    is_transmission_bookend,
+                    transmission_bookends_enabled,
+                )
+
+                # The render stage regenerates these exact reserved filenames
+                # after hydration; ordinary numbered sections have no such owner.
+                if is_transmission_bookend(path) and transmission_bookends_enabled(source / "config.yaml"):
+                    continue
+                raise ValueError(
+                    f"unowned rendered manuscript section {path.name!r}; move it outside "
+                    "output/manuscript or restore its matching source section before retrying hydration"
+                )
     # Re-read through no-follow descriptors before any mutation, including dry runs.
     for name, content in originals.items():
         if read_bytes_confined(root, source / name, max_bytes=_HYDRATION_FILE_BYTES) != content:

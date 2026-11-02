@@ -132,30 +132,6 @@ class TestReviewMinWords:
         assert REVIEW_MIN_WORDS["translation"] <= 600
 
 
-# Preserve original test functions for backward compatibility
-def test_get_template():
-    tmpl = get_template("summarize_abstract")
-    assert isinstance(tmpl, SummarizeAbstract)
-
-
-def test_get_template_invalid():
-    with pytest.raises(LLMTemplateError):
-        get_template("nonexistent")
-
-
-def test_render_success():
-    tmpl = SummarizeAbstract()
-    result = tmpl.render(text="Sample abstract")
-    assert "Sample abstract" in result
-    assert "summarize" in result
-
-
-def test_render_missing_var():
-    tmpl = SummarizeAbstract()
-    with pytest.raises(LLMTemplateError):
-        tmpl.render()  # Missing 'text'
-
-
 class TestAllRegisteredTemplates:
     """Parametrised tests that every entry in TEMPLATES works end-to-end."""
 

@@ -1658,10 +1658,11 @@ class="header-section-number">7.1</span> Switching to live search</h2>
 <p>Replace the <code>sources</code> list with the desired backend
 set:</p>
 <div class="sourceCode" id="cb4"><pre
-class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">search</span><span class="kw">:</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">query</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;your topic&quot;</span></span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">sources</span><span class="kw">:</span><span class="at"> </span><span class="kw">[</span><span class="at">arxiv</span><span class="kw">,</span><span class="at"> crossref</span><span class="kw">]</span></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">crossref_mailto</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;you@example.org&quot;</span></span></code></pre></div>
+class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">project_config</span><span class="kw">:</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">search</span><span class="kw">:</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">query</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;your topic&quot;</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">sources</span><span class="kw">:</span><span class="at"> </span><span class="kw">[</span><span class="at">arxiv</span><span class="kw">,</span><span class="at"> crossref</span><span class="kw">]</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">crossref_mailto</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;you@example.org&quot;</span></span></code></pre></div>
 <p>A first live run populates <code>output/search/cache/</code>. Commit
 that directory to the repo and the pipeline becomes reproducible across
 machines without further configuration changes.</p>

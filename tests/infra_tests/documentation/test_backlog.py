@@ -58,6 +58,7 @@ def test_normalizer_archives_completed_prose_and_rows_without_closing_blockers(t
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | `EXAMPLE-DONE-1` | completed | Minor | fixture | old result | old receipt | `uv run pytest tests -q` | mutation fails |
 | `EXAMPLE-BLOCKED-1` | blocked-external | Minor | owner | Obtain the owner receipt | external receipt | `uv run pytest tests -q` | missing owner fails |
+| `EXAMPLE-MAJOR-1` | blocked-external | Major | owner | Obtain the owner receipt | external receipt | `uv run pytest tests -q --no-cov --timeout=120` | missing owner fails |
 """,
         encoding="utf-8",
     )
@@ -70,6 +71,11 @@ def test_normalizer_archives_completed_prose_and_rows_without_closing_blockers(t
     assert "Completed: import cleanup" in archived
     assert "`EXAMPLE-DONE-1`" in archived and "`EXAMPLE-DONE-1`" not in normalized
     assert "| `EXAMPLE-BLOCKED-1` | blocked-external |" in normalized
+    assert (
+        "| `EXAMPLE-MAJOR-1` | blocked-external | Medium | owner | Obtain the owner receipt | "
+        "external receipt | `uv run pytest tests -q --no-cov --timeout=120` | missing owner fails |"
+    ) in normalized
+    assert "`EXAMPLE-MAJOR-1`" not in archived
     assert "Keep coverage above the 90% floor." in normalized
     path.write_text(normalized, encoding="utf-8")
     assert normalize_backlog(path) == (normalized, "")
@@ -254,8 +260,8 @@ This backlog is future-only.
     assert "Ordered improvement ladder" not in first
 
 
-def test_backlog_normalizer_decomposes_legacy_major_rows(tmp_path: Path) -> None:
-    """Legacy release-scale rows become bounded Medium planning slices."""
+def test_backlog_normalizer_rejects_rows_without_status_and_next_action(tmp_path: Path) -> None:
+    """Maintenance cannot invent status or ownership for underspecified rows."""
     path = tmp_path / "TODO.md"
     path.write_text(
         """# Example TODO
@@ -273,10 +279,10 @@ def test_backlog_normalizer_decomposes_legacy_major_rows(tmp_path: Path) -> None
         encoding="utf-8",
     )
 
-    normalized, _ = normalize_backlog(path)
-
-    assert "| `EXAMPLE-MAJOR-1` | open | Medium |" in normalized
-    assert "| `EXAMPLE-MAJOR-1` | open | Major |" not in normalized
+    original = path.read_bytes()
+    with pytest.raises(ValueError, match="eight fields"):
+        normalize_backlog(path)
+    assert path.read_bytes() == original
 
 
 def test_root_backlog_rejects_completed_status_rows(tmp_path: Path) -> None:

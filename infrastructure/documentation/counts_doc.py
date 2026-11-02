@@ -60,7 +60,6 @@ from infrastructure.documentation.counts_coverage import (
     exemplar_source_hash,
     measure_exemplar_coverage,
     validate_coverage_provenance,
-    verify_exemplar_coverage,
     verify_exemplar_coverage_result,
     write_coverage_provenance,
 )
@@ -91,7 +90,6 @@ __all__ = [
     "render_counts_doc",
     "tracked_infra_python_count",
     "validate_coverage_provenance",
-    "verify_exemplar_coverage",
     "verify_exemplar_coverage_result",
     "write_counts_doc",
     "write_coverage_provenance",

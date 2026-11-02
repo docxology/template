@@ -141,7 +141,7 @@ Default format:
 There are now **two** default formats — one for the terminal (compact,
 prefix-less, optionally emoji-tagged) and one for the log file (full
 `[ts] [LEVEL] message`). The console handler uses `ConsoleFormatter`; the
-file handler uses the legacy `TemplateFormatter`. See
+file handler uses `TemplateFormatter`. See
 [`output-design.md`](output-design.md) for the full visual contract.
 
 **Terminal default (clean):**

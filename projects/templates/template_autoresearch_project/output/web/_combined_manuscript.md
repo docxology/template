@@ -1112,27 +1112,27 @@ figure(s) with validity `false`.
 
 | Figure | Pixels | Variance | Source exists | Nonblank |
 | --- | --- | --- | --- | --- |
-| `fig:autoresearch_candidate_lifecycle` | 1184x480 | 0.082 | True | True |
-| `fig:autoresearch_closure_flow` | 1664x448 | 0.015 | True | True |
-| `fig:autoresearch_integrity_chain` | 1440x736 | 0.040 | True | True |
+| `fig:autoresearch_candidate_lifecycle` | 1184x480 | 0.083 | True | True |
+| `fig:autoresearch_closure_flow` | 1664x448 | 0.016 | True | True |
+| `fig:autoresearch_integrity_chain` | 1440x736 | 0.041 | True | True |
 | `fig:autoresearch_security_control_matrix` | 1472x736 | 0.014 | True | True |
-| `fig:autoresearch_stage_matrix` | 1120x416 | 0.079 | True | True |
+| `fig:autoresearch_stage_matrix` | 1120x416 | 0.080 | True | True |
 | `fig:ml_bootstrap_intervals` | 1152x448 | 0.009 | True | True |
-| `fig:ml_calibration_reliability` | 1152x832 | 0.015 | True | True |
+| `fig:ml_calibration_reliability` | 1152x832 | 0.016 | True | True |
 | `fig:ml_candidate_rank_stability` | 1408x608 | 0.053 | True | True |
-| `fig:ml_candidate_scores` | 1376x688 | 0.013 | True | True |
+| `fig:ml_candidate_scores` | 1376x688 | 0.014 | True | True |
 | `fig:ml_classification_metrics_heatmap` | 928x832 | 0.085 | True | True |
-| `fig:ml_complexity_accuracy` | 1120x608 | 0.010 | True | True |
+| `fig:ml_complexity_accuracy` | 1120x608 | 0.012 | True | True |
 | `fig:ml_confusion_matrix` | 896x768 | 0.045 | True | True |
 | `fig:ml_confusion_pairs` | 1152x576 | 0.129 | True | True |
 | `fig:ml_generalization_gap` | 1184x864 | 0.059 | True | True |
 | `fig:ml_learning_curves` | 1216x608 | 0.018 | True | True |
 | `fig:ml_paired_correctness` | 768x672 | 0.074 | True | True |
-| `fig:ml_per_class_accuracy` | 1152x512 | 0.098 | True | True |
+| `fig:ml_per_class_accuracy` | 1152x512 | 0.099 | True | True |
 | `fig:ml_probability_margin_distribution` | 1184x864 | 0.024 | True | True |
 | `fig:ml_probability_quality` | 1344x608 | 0.046 | True | True |
-| `fig:ml_robustness_matrix` | 1280x608 | 0.079 | True | True |
-| `fig:ml_selective_accuracy` | 1088x608 | 0.016 | True | True |
+| `fig:ml_robustness_matrix` | 1280x608 | 0.078 | True | True |
+| `fig:ml_selective_accuracy` | 1088x608 | 0.017 | True | True |
 | `fig:ml_training_dynamics` | 1408x608 | 0.072 | True | True |
 | `fig:mnist_class_balance` | 1216x544 | 0.071 | True | True |
 | `fig:mnist_error_examples` | 1280x736 | 0.234 | True | True |

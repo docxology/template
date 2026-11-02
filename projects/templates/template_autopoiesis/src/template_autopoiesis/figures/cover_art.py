@@ -122,7 +122,7 @@ def render_cover(
     If *grammar_hash* is provided, a small QR-code seal encoding the hash is
     drawn in the bottom-right corner of the image along with a text label.
     When *grammar_hash* is ``None`` (default) no QR seal is drawn, preserving
-    backward-compatible output.
+    consistent output.
     """
     out = Path(out_path)
     out.parent.mkdir(parents=True, exist_ok=True)

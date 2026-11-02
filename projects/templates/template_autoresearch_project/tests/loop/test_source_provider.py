@@ -12,6 +12,7 @@ import pytest
 
 from autoresearch_source_provider import (
     PROJECT_PATH,
+    PLATFORM_VERSION,
     SOURCE_COMMIT_ENV,
     SOURCE_ROOT_ENV,
     _SOURCE_ROOTS,
@@ -60,6 +61,7 @@ def committed_actual_provider(repo_root: Path, tmp_path_factory: pytest.TempPath
         "__pycache__",
         ".pytest_cache",
         ".ruff_cache",
+        ".benchmarks",
         "htmlcov",
         "output",
         "dist",
@@ -176,8 +178,12 @@ def test_actual_provider_rejects_wrong_commit(committed_actual_provider: tuple[P
 @pytest.mark.parametrize(
     "relative,marker,diagnostic",
     [
-        ("pyproject.toml", b'version = "4.4.0"', "research-project-template 4.4.0"),
-        ((PROJECT_PATH / "pyproject.toml").as_posix(), b'platform_version = "4.4.0"', "canonical Autoresearch 4.4.0"),
+        ("pyproject.toml", f'version = "{PLATFORM_VERSION}"'.encode(), f"research-project-template {PLATFORM_VERSION}"),
+        (
+            (PROJECT_PATH / "pyproject.toml").as_posix(),
+            f'platform_version = "{PLATFORM_VERSION}"'.encode(),
+            f"canonical Autoresearch {PLATFORM_VERSION}",
+        ),
     ],
 )
 def test_metadata_validation_binds_actual_held_bytes_across_file_replacement(
@@ -193,7 +199,7 @@ def test_metadata_validation_binds_actual_held_bytes_across_file_replacement(
     metadata = root / relative
     held_valid = _read_source(metadata)
     assert marker in held_valid
-    metadata.write_bytes(held_valid.replace(marker, marker.replace(b"4.4.0", b"3.8.0"), 1))
+    metadata.write_bytes(held_valid.replace(marker, marker.replace(PLATFORM_VERSION.encode(), b"3.8.0"), 1))
     held_invalid = _read_source(metadata)
     assert held_invalid != held_valid
     # Parsing the admitted valid buffer never rereads the now-invalid file.
@@ -220,6 +226,11 @@ def test_dirty_canonical_monorepo_remains_explicit_local_source(committed_actual
     provider = resolve_source_provider(with_clone / PROJECT_PATH, {})
     assert provider.root == with_clone.resolve()
     assert provider.commit is None
+    provider.assert_unchanged()
+    # Pytest-benchmark creates this runtime cache even in a source-only run.
+    cache = with_clone / PROJECT_PATH / ".benchmarks"
+    cache.mkdir()
+    (cache / "observations.json").write_text('{"rounds": 1}\n')
     provider.assert_unchanged()
     selected.write_bytes(selected.read_bytes() + b"# later source mutation\n")
     with pytest.raises(ValueError, match="changed after test admission"):
@@ -260,12 +271,12 @@ def test_real_external_provider_rejects_source_substitution(
     elif mutation == "wrong-version":
         metadata = root / "pyproject.toml"
         source = metadata.read_text()
-        assert 'version = "4.4.0"' in source
-        metadata.write_text(source.replace('version = "4.4.0"', 'version = "3.8.0"', 1))
+        assert f'version = "{PLATFORM_VERSION}"' in source
+        metadata.write_text(source.replace(f'version = "{PLATFORM_VERSION}"', 'version = "3.8.0"', 1))
         _git(root, "add", "--all")
         _git(root, "commit", "--no-gpg-sign", "-m", "Actual invalid version control")
         commit = _git(root, "rev-parse", "HEAD")
     else:
         selected.write_bytes(selected.read_bytes() + b"\n# changed source\n")
-    with pytest.raises(ValueError, match="source|research-project-template 4.4.0"):
+    with pytest.raises(ValueError, match=f"source|research-project-template {PLATFORM_VERSION}"):
         resolve_source_provider(tmp_path, _nomination(root, commit))

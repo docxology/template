@@ -634,6 +634,52 @@ def test_manifest_optional_limits_preserve_actual_default_inventory(tmp_path):
     )
 
 
+@pytest.mark.parametrize("replacement", ["leaf", "parent", "same-bytes-edit"])
+def test_manifest_refuses_source_replacement_during_real_leaf_open(tmp_path: Path, replacement: str) -> None:
+    """A real audit event mutates disk between traversal stat and actual open."""
+    root = tmp_path.resolve() / "source"
+    nested = root / "nested"
+    nested.mkdir(parents=True)
+    (nested / "public.py").write_text("VALUE = 1\n")
+    code = f"""
+import os, sys
+from pathlib import Path
+sys.path.insert(0, {str(ROOT)!r})
+from infrastructure.core.implementation_custody import source_file_manifest
+root = Path({str(root)!r})
+leaf = root / 'nested/public.py'
+replacement = {replacement!r}
+armed = True
+def mutate(event, args):
+    global armed
+    if not armed or event != 'open' or args[0] != 'public.py':
+        return
+    armed = False
+    if replacement == 'leaf':
+        leaf.rename(root / 'retained.py')
+        leaf.write_text('VALUE = 1\\n')
+    elif replacement == 'parent':
+        leaf.parent.rename(root / 'retained')
+        leaf.parent.mkdir()
+        leaf.write_text('VALUE = 1\\n')
+    else:
+        before = leaf.stat()
+        leaf.write_text('VALUE = 1\\n')
+        os.utime(leaf, ns=(before.st_atime_ns, before.st_mtime_ns))
+sys.addaudithook(mutate)
+try:
+    source_file_manifest(root, frozenset({{'.py'}}))
+except ValueError:
+    assert not armed, 'control did not mutate the actual source'
+    print('actual source mutation refused')
+else:
+    raise AssertionError('changed source was admitted')
+"""
+    result = subprocess.run([sys.executable, "-I", "-c", code], capture_output=True, text=True, timeout=30, check=False)
+    assert result.returncode == 0, result.stderr
+    assert result.stdout.strip() == "actual source mutation refused"
+
+
 def test_manifest_width_counts_actual_nonselected_entries(tmp_path):
     root = tmp_path.resolve() / "wide"
     root.mkdir()

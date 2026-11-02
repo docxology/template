@@ -18,7 +18,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "research-project-template"
-version = "4.4.0"
+version = "4.5.0"
 description = "A comprehensive template for research projects with test-driven development, automated PDF generation, and professional documentation structure"
 authors = [{ name = "Research Template Team" }]
 readme = "README.md"
@@ -257,8 +257,13 @@ exclude = [
 
 [tool.hatch.build.targets.wheel]
 packages = ["infrastructure"]
+# Twine 6.2.0's compatibility shim accepts Core Metadata only through 2.4.
+# This package needs no 2.5-only fields, so build both targets at the newest
+# version the release workflow's checker admits.
+core-metadata-version = "2.4"
 
 [tool.hatch.build.targets.sdist]
+core-metadata-version = "2.4"
 include = [
     "/infrastructure",
     "/README.md",
@@ -397,6 +402,7 @@ ignore = [
 "infrastructure/publishing/release_acceptance.py" = ["T201"]  # acceptance CLI / human report
 "infrastructure/publishing/root_release_artifacts.py" = ["T201"]  # acceptance CLI / human report
 "infrastructure/reporting/native_dependency_preparation.py" = ["T201"]  # acceptance CLI / human report
+"infrastructure/project/pdfium_fixture_preparation.py" = ["T201"]
 "infrastructure/reporting/native_epub_preparation.py" = ["T201"]  # acceptance CLI / human report
 "infrastructure/reporting/native_format_acceptance.py" = ["T201"]  # acceptance CLI / human report
 "infrastructure/reporting/required_acceptance_aggregate.py" = ["T201"]  # acceptance CLI / human report

@@ -113,10 +113,10 @@ def test_figure_registry_json_matches_yaml(project_root: Path) -> None:
         assert record["visual_role"] == spec.visual_role
         assert record["evidence_role"] == spec.evidence_role
         assert record["paper_claim"] == spec.paper_claim
-        assert "{{" not in record["alt"]
+        assert "{{" not in record["alt_text"]
         assert "{{" not in record["caption"]
     architecture = payload["fig:multi_track_architecture"]
-    assert architecture["alt"] == (
+    assert architecture["alt_text"] == (
         "Process diagram linking three scientific tracks to 31 pipeline gates "
         "and 34 sheaf fragment types across 17 manifest rows."
     )
@@ -154,7 +154,7 @@ def test_figure_registry_writer_binds_exact_supplied_values(tmp_path: Path) -> N
         {"count_value": 7, "ready_value": True, "score_value": 1.234},
     )
     first = json.loads(path.read_text(encoding="utf-8"))["fig:example"]
-    assert first["alt"] == "Count 7; ready true."
+    assert first["alt_text"] == "Count 7; ready true."
     assert first["caption"] == "Score 1.23."
 
     path = write_figure_registry_json(
@@ -162,7 +162,7 @@ def test_figure_registry_writer_binds_exact_supplied_values(tmp_path: Path) -> N
         {"count_value": 9, "ready_value": False, "score_value": 2.5},
     )
     second = json.loads(path.read_text(encoding="utf-8"))["fig:example"]
-    assert second["alt"] == "Count 9; ready false."
+    assert second["alt_text"] == "Count 9; ready false."
     assert second["caption"] == "Score 2.50."
     assert second != first
 
@@ -277,9 +277,7 @@ def test_coverage_page_section_figures_registered(project_root: Path) -> None:
 
     refs = load_section_figures(project_root).get("coverage_page", ())
     assert refs and refs[0].figure_id == "sheaf_coverage_heatmap"
-    assert refs[0].number is None
-    # pandoc-crossref owns numbering: no hand-written caption prefix is emitted.
-    assert refs[0].caption_prefix == ""
+    assert refs[0].labeled is True
 
 
 def test_figure_sheaf_coverage_heatmap_dimensions(project_root: Path) -> None:

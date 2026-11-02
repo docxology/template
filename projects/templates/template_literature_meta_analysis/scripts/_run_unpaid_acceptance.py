@@ -82,7 +82,7 @@ _audit_scope["install_bytecode_audit"](
 
 from _bootstrap import bootstrap_project
 
-PROJECT_ROOT = bootstrap_project(include_infrastructure=True)
+PROJECT_ROOT = bootstrap_project()
 
 from template_literature_meta_analysis.literature.live_acceptance import main
 

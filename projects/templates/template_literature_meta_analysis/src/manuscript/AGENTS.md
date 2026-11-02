@@ -11,7 +11,7 @@ Package (`variables/`: `compute.py`, `context.py`, `formatters.py`, `inject.py`,
 - **Always multiply by 100 for percentages**: `CAGR_PCT` = `cagr * 100`. The raw `cagr` from
   `temporal_analysis.json` is a decimal fraction (e.g., 0.1699 for 16.99%). Never output
   the fraction directly as CAGR_PCT — it would render as "0.17%" in the manuscript.
-- **H1–H8 aliases are order-dependent**: The mapping from config keys such as H1/H2 to scorer IDs must match `knowledge_graph.hypothesis.config_key_to_hypothesis_id`. If hypothesis key mapping changes, update both files together.
+- **Explicit hypothesis identities**: Each configured definition declares a stable `id`. Manuscript scores use that ID only; display row keys, names and order do not determine evidence identity.
 - **Infrastructure fallback**: The try/except import of `get_logger` is intentional. Do not
   remove it — the module must work both inside the template monorepo and standalone.
 - **Silent fallback values**: When a JSON file is missing, `compute_variables` returns an

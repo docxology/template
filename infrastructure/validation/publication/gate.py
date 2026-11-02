@@ -40,11 +40,12 @@ class ProjectGateResult:
     blocking: tuple[str, ...]
     review_required: tuple[str, ...]
     diagnostic: str = ""
+    original_exit: int | None = None
 
     @property
     def failed(self) -> bool:
         """Return whether this project fails under any policy."""
-        return bool(self.blocking)
+        return bool(self.blocking) or self.status not in {"pass", "review"} or self.original_exit not in (None, 0)
 
 
 @dataclass(frozen=True)
@@ -134,28 +135,90 @@ def _audit_project(repo_root: Path, project: str, *, mode: GateMode) -> ProjectG
         "json",
     ]
     result = subprocess.run(command, cwd=repo_root, capture_output=True, text=True, check=False)
+    return _audit_result(project, result)
+
+
+def _audit_result(project: str, result: subprocess.CompletedProcess[str]) -> ProjectGateResult:
+    """Admit current audit JSON without allowing it to erase its original exit."""
+    blocking = {"PUBLICATION.AUDIT_SUBPROCESS_FAILED"} if result.returncode else set()
+    diagnostic = f"audit subprocess exited with status {result.returncode}" if result.returncode else ""
+
+    def unique_object(pairs: list[tuple[str, object]]) -> dict[str, object]:
+        value: dict[str, object] = {}
+        for key, item in pairs:
+            if key in value:
+                raise ValueError("audit JSON repeats a field")
+            value[key] = item
+        return value
+
     try:
-        payload = json.loads(result.stdout)
-    except json.JSONDecodeError:
+        payload = json.loads(result.stdout, object_pairs_hook=unique_object)
+        if (
+            not isinstance(payload, dict)
+            or set(payload) != {"schema_version", "status", "projects", "summary", "findings"}
+            or payload["schema_version"] != "template-publication-audit-v1"
+            or payload["projects"] != [project]
+            or payload["status"] not in {"pass", "review", "fail"}
+            or not isinstance(payload["findings"], list)
+        ):
+            raise ValueError("audit report schema, project or status is invalid")
+        findings = payload["findings"]
+        fields = {
+            "project",
+            "path",
+            "diagnostic_code",
+            "severity",
+            "status",
+            "message",
+            "evidence",
+            "remediation",
+            "line",
+        }
+        for finding in findings:
+            if (
+                not isinstance(finding, dict)
+                or set(finding) != fields
+                or any(not isinstance(finding[key], str) for key in fields - {"line"})
+                or finding["project"] != project
+                or not finding["diagnostic_code"]
+                or (finding["severity"], finding["status"]) not in {("error", "fail"), ("warning", "review_required")}
+                or type(finding["line"]) is not int
+                or finding["line"] < 0
+            ):
+                raise ValueError("audit finding is malformed or belongs to another project")
+        errors = [finding for finding in findings if finding["status"] == "fail"]
+        reviews = [finding for finding in findings if finding["status"] == "review_required"]
+        expected_summary = {
+            "finding_count": len(findings),
+            "blocking_count": len(errors),
+            "review_required_count": len(reviews),
+        }
+        summary = payload["summary"]
+        if (
+            not isinstance(summary, dict)
+            or summary != expected_summary
+            or any(type(value) is not int for value in summary.values())
+            or payload["status"] != ("fail" if errors else "review" if reviews else "pass")
+        ):
+            raise ValueError("audit summary or status disagrees with its findings")
+    except (ValueError, TypeError) as error:
+        blocking.add("PUBLICATION.AUDIT_INVALID_REPORT")
         return ProjectGateResult(
             project=project,
             status="unknown",
-            blocking=("audit did not emit JSON",),
+            blocking=tuple(sorted(blocking)),
             review_required=(),
-            diagnostic=(result.stderr or result.stdout).strip()[-400:],
+            diagnostic="; ".join(part for part in (diagnostic, str(error)) if part),
+            original_exit=result.returncode,
         )
-    findings = payload.get("findings") or []
-    blocking = tuple(
-        sorted({str(finding.get("diagnostic_code")) for finding in findings if finding.get("severity") == "error"})
-    )
-    review = tuple(
-        sorted({str(finding.get("diagnostic_code")) for finding in findings if finding.get("severity") != "error"})
-    )
+    blocking.update(finding["diagnostic_code"] for finding in errors)
     return ProjectGateResult(
         project=project,
-        status=str(payload.get("status", "unknown")),
-        blocking=blocking,
-        review_required=review,
+        status=payload["status"],
+        blocking=tuple(sorted(blocking)),
+        review_required=tuple(sorted({finding["diagnostic_code"] for finding in reviews})),
+        diagnostic=diagnostic,
+        original_exit=result.returncode,
     )
 
 
@@ -184,11 +247,12 @@ def write_receipts(report: PublicationGateReport, directory: Path) -> tuple[Path
     for result in report.results:
         path = directory / f"{Path(result.project).name}.json"
         payload = {
-            "schema_version": "template-publication-gate/v1",
+            "schema_version": "template-publication-gate/v2",
             "project": result.project,
             "mode": report.mode,
             "status": "fail" if (result.failed or (report.mode == "strict" and result.review_required)) else "pass",
             "audit_status": result.status,
+            "original_exit": result.original_exit,
             "blocking_codes": list(result.blocking),
             "review_required_codes": list(result.review_required),
             "diagnostic": result.diagnostic,

@@ -17,63 +17,63 @@
       "empty": false,
       "exists": true,
       "path": "output/data/autoresearch_evidence_overview.json",
-      "sha256": "5f5b30f7f2fcb41e7f88636cd01323cfa6c76bda7cd82efbdea49441e9f94894",
+      "sha256": "bc23f70a948b488c51bd3aaca39201b2ebf7aff1b0e981155372dac7796ddd24",
       "size_bytes": 4436
     },
     {
       "empty": false,
       "exists": true,
       "path": "output/data/autoresearch_integrity_attestation.json",
-      "sha256": "6319cb09df6d02e48f1e38eb543190ada35c628d01c7f97af9a67029090d9912",
+      "sha256": "a6e059dca880c9e54bf268a9dc630441d5eda4457bb23ee58a694680c0a40edd",
       "size_bytes": 22755
     },
     {
       "empty": false,
       "exists": true,
       "path": "output/data/autoresearch_inventory_export.json",
-      "sha256": "f0d469006220cfa31ea225efecb74543ce77d9c17126a950af1bd3b1cdf56962",
-      "size_bytes": 20261
+      "sha256": "8ebdf0446eb9feafef46ebc1c810b52a0356f04964f2dcc84c75608f50a74656",
+      "size_bytes": 20293
     },
     {
       "empty": false,
       "exists": true,
       "path": "output/data/autoresearch_loop.json",
-      "sha256": "e9b83c3a61f48b83f6550937d66b7eaf13dbee8ce90eaf192fc863b00e6449f0",
+      "sha256": "4072d5937aec61c5cc4f05addf45d0a3bf3274969205a8f97cc1edaf5d9f4eb8",
       "size_bytes": 16085
     },
     {
       "empty": false,
       "exists": true,
       "path": "output/data/autoresearch_phase_ledger.json",
-      "sha256": "cb7749caeb926d3c63627ae27f4339f4ccbdecc4ff966a9b0877140c65acd6b7",
+      "sha256": "de23a03b10ed792d6a1b73d1a2b70e77c39f6aaeedc15956f40e9de28e089400",
       "size_bytes": 3779
     },
     {
       "empty": false,
       "exists": true,
       "path": "output/data/autoresearch_plan.json",
-      "sha256": "d2bc0b8b2ab618feeaea70143da412253cc30c4c166da019240c90b5c2230e45",
-      "size_bytes": 20557
+      "sha256": "bba9a3c3c97e74b30fb821476923b9a9f2ccd12fc684c1b9cff8d059559258fc",
+      "size_bytes": 20605
     },
     {
       "empty": false,
       "exists": true,
       "path": "output/data/autoresearch_review_packet.json",
-      "sha256": "42f67ed3992c5874d5a8098abac126ab10cee5e5fc160eef6e9b37d4108c68d2",
+      "sha256": "f89ee1532d4ae64c100d9854cb22db279c424b102465ab6194a7c2f83796fe6b",
       "size_bytes": 16204
     },
     {
       "empty": false,
       "exists": true,
       "path": "output/data/autoresearch_schema_manifest.json",
-      "sha256": "a04bf6bf33db8f720276e4f52a21f29a92cee401dcded152de3ca3778a22e45d",
+      "sha256": "c590578f05961ce781d04ac4c7131fe173c0363c49e095c3ac947e8c3fb42837",
       "size_bytes": 7226
     },
     {
       "empty": false,
       "exists": true,
       "path": "output/data/autoresearch_security_profile.json",
-      "sha256": "4703d1ed54081c1f69c1fa32ae9e216bf5631254d65405afc193bd5c33d08ce6",
+      "sha256": "3575b314d4813d20567e08c852cdd9d64bc15237c8f7043998d6eb823e2f5b0d",
       "size_bytes": 1537
     },
     {
@@ -87,14 +87,14 @@
       "empty": false,
       "exists": true,
       "path": "output/data/autoresearch_supply_chain_inventory.json",
-      "sha256": "9bf85e23a88e49e9e76e48a51bb5f2dbb2d0da4f509df4381bef4ac20da2034f",
-      "size_bytes": 21517
+      "sha256": "0e8d27e495634cc4055ad1eaaaf1b54d6d39b437f5b4a6fa4c8758d1b9b84103",
+      "size_bytes": 21549
     },
     {
       "empty": false,
       "exists": true,
       "path": "output/data/autoresearch_threat_model.json",
-      "sha256": "0ae740e4c2e6cd02257a4fb333214064859c864ceecc0ced5874f2199d7297f1",
+      "sha256": "98677f281da683c0de730a40e6588b7c0106d27180c3e31661d436bbeaf21548",
       "size_bytes": 6370
     },
     {
@@ -108,28 +108,28 @@
       "empty": false,
       "exists": true,
       "path": "output/data/benchmark_scores.json",
-      "sha256": "f0123a925da47641789172c944e7ddf785b9948b5f8f17f6aa02984accfb02ce",
+      "sha256": "689c7469d343ee77fbc27c29da8380142f7414c61584eb10c803d310355f5aa9",
       "size_bytes": 621
     },
     {
       "empty": false,
       "exists": true,
       "path": "output/data/figure_quality_report.json",
-      "sha256": "fd0b3cbf4789317ad1dc06b688b92855a0efb1b1dedbf1e986461036c2f5a1e2",
-      "size_bytes": 16041
+      "sha256": "3b25ae9753d7bc3230008533b3d87564335bab96fbea09a244846b23bbacad8a",
+      "size_bytes": 16040
     },
     {
       "empty": false,
       "exists": true,
       "path": "output/data/figure_style.json",
-      "sha256": "0041c897268c5e59a9cfda649ac0d131cbf1cc77d16f90983fc85e96641840ac",
+      "sha256": "f66b19723816147968cbf57c76b4129c0c22a586d65e2973f364743e9acbf880",
       "size_bytes": 1117
     },
     {
       "empty": false,
       "exists": true,
       "path": "output/data/idea_ledger.json",
-      "sha256": "ce717dc1956668b1a1118c47b5f864555311103ad778504eb3138e7ab192f186",
+      "sha256": "a7ebc02831039e3560a19ba80991df3e46ae3b3600344b6c2f9b5c5f50acc3ee",
       "size_bytes": 5306
     },
     {
@@ -150,7 +150,7 @@
       "empty": false,
       "exists": true,
       "path": "output/data/manuscript_variables.json",
-      "sha256": "6b648f0112c291314c2d0d973316fbcf82d2f4bc666a70ddab1c3024e75aa33d",
+      "sha256": "5a7e4615936a11a2c090a0960bcb2bbce4112dc9671f289664f2ae06d61a18d1",
       "size_bytes": 54630
     },
     {
@@ -185,7 +185,7 @@
       "empty": false,
       "exists": true,
       "path": "output/data/ml_candidate_ledger.json",
-      "sha256": "993c81f80b7dfafc55a5ef3181359bc9827405175fd893169064445e08b3a0c2",
+      "sha256": "4e967f9e8f02524f6f5809c390d560dc57a4cf0b587fd8d2fdf8f544d68ae0cd",
       "size_bytes": 570872
     },
     {
@@ -311,7 +311,7 @@
       "empty": false,
       "exists": true,
       "path": "output/data/review_decisions.json",
-      "sha256": "69876c2ba2d55cffcbd83518dbb84157794a9ae714523c476f6884af9a995758",
+      "sha256": "5f71bdcec6920cc99adda56659b46c8d2fc3561891e6f185c121aee7f0d1ec7d",
       "size_bytes": 669
     },
     {
@@ -325,36 +325,36 @@
       "empty": false,
       "exists": true,
       "path": "output/figures/autoresearch_candidate_lifecycle.png",
-      "sha256": "82d3e92a0122cacd01c329b187ba5b59de965b3a079d007d8f78381339e5e0d2",
-      "size_bytes": 28056
+      "sha256": "76250e27e168d031092f1f80282e1e9217c491e500a97786f3eb0af81684646c",
+      "size_bytes": 28398
     },
     {
       "empty": false,
       "exists": true,
       "path": "output/figures/autoresearch_closure_flow.png",
-      "sha256": "bbbd094efcaffce4b12911c57b7b62bde81c6ded75eaa2dfb87152e0f80291cb",
-      "size_bytes": 40873
+      "sha256": "c5b08a7d84c2300d2df059ad5105d3f800251c681453cc076040825b74da993f",
+      "size_bytes": 46883
     },
     {
       "empty": false,
       "exists": true,
       "path": "output/figures/autoresearch_integrity_chain.png",
-      "sha256": "867e7c2142925840351f9d049c0aef9f4631eeebf9d3128524499142d0d8e616",
-      "size_bytes": 48228
+      "sha256": "35caba2297fba8a9f9079add2199f68ab53d4e614bcb82ee5f672f9bf7cdb360",
+      "size_bytes": 50544
     },
     {
       "empty": false,
       "exists": true,
       "path": "output/figures/autoresearch_security_control_matrix.png",
-      "sha256": "67c5f3de399e225a94778fbfacf7c4a274121a950703c98e61a452fc58f960cc",
-      "size_bytes": 86494
+      "sha256": "40d8b0824f6c5465a2a26cd5e964e37efda9ec80e8e37b5dfa19015a98f45f76",
+      "size_bytes": 81428
     },
     {
       "empty": false,
       "exists": true,
       "path": "output/figures/autoresearch_stage_matrix.png",
-      "sha256": "7d7bec45245b0659dd9f5196e385f896d212d09faa773e9d757fc5abfad7f249",
-      "size_bytes": 23486
+      "sha256": "7cca6f758cd9bce96a00355ecf48acd3d3e810de1905601d3c07196e8ac5162e",
+      "size_bytes": 24532
     },
     {
       "empty": false,
@@ -367,148 +367,148 @@
       "empty": false,
       "exists": true,
       "path": "output/figures/ml_bootstrap_intervals.png",
-      "sha256": "45266a40242b46e1c6d2249078c3e066e4dc13434382a130809c29705054bd51",
-      "size_bytes": 21830
+      "sha256": "8661ea71c7d13e9607c00d756efa40e0aebde25f3f1d0d3ccef33ab1e53784cf",
+      "size_bytes": 22397
     },
     {
       "empty": false,
       "exists": true,
       "path": "output/figures/ml_calibration_reliability.png",
-      "sha256": "1fbe7b016e511b1d56689249d09b0ce49cdf9dba6660e034e9af5da1fab75e8d",
-      "size_bytes": 73855
+      "sha256": "6b95147d4937a95529db8214949d0283790cdf467cd739ba44b75d4d04444461",
+      "size_bytes": 72609
     },
     {
       "empty": false,
       "exists": true,
       "path": "output/figures/ml_candidate_rank_stability.png",
-      "sha256": "066ba392e31df71e8df9257bc2120ca840a52247ffcd0457a30a72330265fad1",
-      "size_bytes": 43670
+      "sha256": "2edfb5756f4c65f60a4ae623b15aeed47fb9130987acee8c665aa8934ac67fe5",
+      "size_bytes": 45486
     },
     {
       "empty": false,
       "exists": true,
       "path": "output/figures/ml_candidate_scores.png",
-      "sha256": "567314d5d44067eb6567e15e83d3ed7608322b9c24ec1590ad4e3dbdfb7be96a",
-      "size_bytes": 59947
+      "sha256": "936f60fbcf9c5a9dd3a8435a4883c7c320a138466e00bc1ca076901fde80bbc6",
+      "size_bytes": 59628
     },
     {
       "empty": false,
       "exists": true,
       "path": "output/figures/ml_classification_metrics_heatmap.png",
-      "sha256": "1b7d1ff0d930a9ff3820680212e9968964b60295256e01fdecac323f52b8a722",
-      "size_bytes": 58458
+      "sha256": "53bdbef26f503a92444dde696238b4552da2c5a08535752f46a5539ee7f9341c",
+      "size_bytes": 60721
     },
     {
       "empty": false,
       "exists": true,
       "path": "output/figures/ml_complexity_accuracy.png",
-      "sha256": "4e81ebd48509c4cd3627648b2e3318c084cfc98d89130f0d57a073d24ce9115f",
-      "size_bytes": 35016
+      "sha256": "e4467d38fd371d408ed14c03c0be18ca67c24ea21a7179b8f8620a0b4c8f0239",
+      "size_bytes": 40074
     },
     {
       "empty": false,
       "exists": true,
       "path": "output/figures/ml_confusion_matrix.png",
-      "sha256": "cfcf09924fa57a8e7e8ea525a801e79b975c5e659ef1cfdb09e797bf11562286",
-      "size_bytes": 65918
+      "sha256": "c379a89553ee3bd383b3f576b7b953bb2c03e9d3f5d51259545cc0fb6a853b23",
+      "size_bytes": 83331
     },
     {
       "empty": false,
       "exists": true,
       "path": "output/figures/ml_confusion_pairs.png",
-      "sha256": "f9f7670210a6bbe580f227871a551db04fb94aae7a63bc045b3cc2fbdd5010b6",
-      "size_bytes": 33982
+      "sha256": "56fdfa36253c63ebdf230a6997ca93bef4064c8503f6338940c5704a8714e830",
+      "size_bytes": 33659
     },
     {
       "empty": false,
       "exists": true,
       "path": "output/figures/ml_generalization_gap.png",
-      "sha256": "1d31dcf85a68cd2923631d93ad741fcb3b52829895dc6c6cbb0e5cd6f7fe9172",
-      "size_bytes": 48554
+      "sha256": "c225d51fca59ab492a207f5b284b290d35f84f8671b04039686efbe0054c266c",
+      "size_bytes": 43630
     },
     {
       "empty": false,
       "exists": true,
       "path": "output/figures/ml_learning_curves.png",
-      "sha256": "9fdf6a040004de9245b7c19ceb362d8b141aa23dc9cb1080521f5f06c052be2b",
-      "size_bytes": 59360
+      "sha256": "9bba83f6a4361f5aa2e51813c88d43f29824d713407ca4e27510737177da9240",
+      "size_bytes": 60641
     },
     {
       "empty": false,
       "exists": true,
       "path": "output/figures/ml_paired_correctness.png",
-      "sha256": "65dca4be8a543b1f817a8414edbf04dc297b5a159afdd439b5c232fbd1b9e58a",
-      "size_bytes": 43849
+      "sha256": "6145fc8f2375ea1a6853c9174f854131563365543eebecb3aab1f492f60c71a1",
+      "size_bytes": 40091
     },
     {
       "empty": false,
       "exists": true,
       "path": "output/figures/ml_per_class_accuracy.png",
-      "sha256": "03bf0e8a4e539bb085832b61ea2ab943f19fad1f11d0aa2f916a3f29bbb67049",
-      "size_bytes": 34938
+      "sha256": "06d4e115bc0129d8cbc13b16d63370aa47a717b6881ced3713f0b7ea7342bf9d",
+      "size_bytes": 37380
     },
     {
       "empty": false,
       "exists": true,
       "path": "output/figures/ml_probability_margin_distribution.png",
-      "sha256": "75e247b52dd5dbfb02d0a913003168deeccfda4fd4da678e258a519fff563fd7",
-      "size_bytes": 41747
+      "sha256": "bdfd786fc481af7b2935a69cd0517b3fe0879be511f391bbc13141d44ea6698c",
+      "size_bytes": 42645
     },
     {
       "empty": false,
       "exists": true,
       "path": "output/figures/ml_probability_quality.png",
-      "sha256": "1fbe741cb6537f130782788083cd2a45aee7ac58ecc9a238c24f6dc98f29e634",
-      "size_bytes": 38072
+      "sha256": "98d65701288da7de52500a29e12c409987eb13a0d0f510e2f099ac2c2b4a6e59",
+      "size_bytes": 43012
     },
     {
       "empty": false,
       "exists": true,
       "path": "output/figures/ml_robustness_matrix.png",
-      "sha256": "ca1fbcd1002dcf09f9f3b860d08da351cfbfc6124d5f4cdc696b9cf71a9c448f",
-      "size_bytes": 51278
+      "sha256": "ae6a2cdd7ec1fc7c936ad2896703b85168b45e91c07aeb502cfc12127d9216b5",
+      "size_bytes": 54421
     },
     {
       "empty": false,
       "exists": true,
       "path": "output/figures/ml_selective_accuracy.png",
-      "sha256": "8787c907449410163d8c75f08c3ba76323bb0ec1005d5a3ee9e7009e8391bd40",
-      "size_bytes": 48332
+      "sha256": "6868465748e8b91e1cea81fdc1f894bc7c8e3076747af5289df74d7b68763cd7",
+      "size_bytes": 50878
     },
     {
       "empty": false,
       "exists": true,
       "path": "output/figures/ml_training_dynamics.png",
-      "sha256": "be3ec2d16528759b8b7c4cefdeb7d44e123dcd42da05fdd08e7030deb30ccda4",
-      "size_bytes": 50908
+      "sha256": "6ca208cb42065c6f439f18ed7f14ef60cad271d33494a9f790420906a6736b63",
+      "size_bytes": 51259
     },
     {
       "empty": false,
       "exists": true,
       "path": "output/figures/mnist_class_balance.png",
-      "sha256": "bf5d7b97d1278814db418b1be027cdfe01905039ce1e7a98f8238fc70633932e",
-      "size_bytes": 27006
+      "sha256": "db5b3abf0a3bc86ebd7e8044c10c46a1915c13a8c090418a0612bb38964babe1",
+      "size_bytes": 33408
     },
     {
       "empty": false,
       "exists": true,
       "path": "output/figures/mnist_error_examples.png",
-      "sha256": "c533c842e4ed59ca6582ef43c4c6fe5f19dfaafd7073ea32364a9fe061b008ef",
-      "size_bytes": 28446
+      "sha256": "d2e70c0859f57a7f4b54538ff9378b929174b6026efa0cd865cdcda40c2866d7",
+      "size_bytes": 38149
     },
     {
       "empty": false,
       "exists": true,
       "path": "output/figures/mnist_subset_contact_sheet.png",
-      "sha256": "322d4bb87b3ef59d2c50d14ce17072b49018b33d897193c4cf769bcd1510ef5b",
-      "size_bytes": 23682
+      "sha256": "7a9fb9b3cea9f2354bdfe77c394180c487aecb3ecf4a83ef2cf94e08e6f2e988",
+      "size_bytes": 29317
     },
     {
       "empty": false,
       "exists": true,
       "path": "output/reports/artifact_manifest.json",
-      "sha256": "948ca9606c4312a5c01554b275b7d28fd748b6c79f14554542d76cce581c6af1",
-      "size_bytes": 38614
+      "sha256": "cb4e76c1c17e88455783496ac7f14587957cf9cc2d4084aebbe127eeb770a310",
+      "size_bytes": 38616
     },
     {
       "empty": false,
@@ -521,7 +521,7 @@
       "empty": false,
       "exists": true,
       "path": "output/reports/autoresearch_loop.json",
-      "sha256": "e9b83c3a61f48b83f6550937d66b7eaf13dbee8ce90eaf192fc863b00e6449f0",
+      "sha256": "4072d5937aec61c5cc4f05addf45d0a3bf3274969205a8f97cc1edaf5d9f4eb8",
       "size_bytes": 16085
     },
     {
@@ -577,7 +577,7 @@
       "empty": false,
       "exists": true,
       "path": "output/reports/evidence_registry.json",
-      "sha256": "b715b5a814e906e802bf8c3e746533f2038269519031a71c85d15f208702979c",
+      "sha256": "1b22b426e8b87a56153dbbea6e34b5c342137fc820eeeda5dc718644cb75ca87",
       "size_bytes": 91570
     },
     {
@@ -601,24 +601,24 @@
     "empty": false,
     "exists": true,
     "path": "output/reports/evidence_registry.json",
-    "sha256": "b715b5a814e906e802bf8c3e746533f2038269519031a71c85d15f208702979c",
+    "sha256": "1b22b426e8b87a56153dbbea6e34b5c342137fc820eeeda5dc718644cb75ca87",
     "size_bytes": 91570
   },
-  "generated_at": "2026-10-22T20:31:52+00:00",
+  "generated_at": "2026-10-31T05:06:21+00:00",
   "manuscript_outputs": [
     {
       "empty": false,
       "exists": true,
       "path": "output/pdf/template_autoresearch_project_combined.pdf",
-      "sha256": "a2e070c2e9957c13a57ea49324316e7783e00bde79223dfb4050995c19df78a3",
-      "size_bytes": 1183488
+      "sha256": "4c26b59c10dd8688ecd9ee85e54a9bd705c0cdb655399430b81dde39e6d9ecce",
+      "size_bytes": 1528922
     },
     {
       "empty": false,
       "exists": true,
       "path": "output/web/index.html",
-      "sha256": "a9662150adc340fa4f0e6d33a41726dcb3edf72d4a9bea30f23b4cebb20e3269",
-      "size_bytes": 174489
+      "sha256": "c677c95646a30010dd4aeaf6d27965052adb0f3866bf1f51921e8ef4d78dc46e",
+      "size_bytes": 174858
     },
     {
       "empty": false,
@@ -634,7 +634,7 @@
     "empty": false,
     "exists": true,
     "path": "output/data/autoresearch_schema_manifest.json",
-    "sha256": "a04bf6bf33db8f720276e4f52a21f29a92cee401dcded152de3ca3778a22e45d",
+    "sha256": "c590578f05961ce781d04ac4c7131fe173c0363c49e095c3ac947e8c3fb42837",
     "size_bytes": 7226
   },
   "source_ledger": {

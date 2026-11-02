@@ -1,4 +1,4 @@
-"""Functional sharding preserves the legacy roster and changed-test ownership."""
+"""Functional sharding preserves the baseline roster and changed-test ownership."""
 
 from __future__ import annotations
 
@@ -24,7 +24,7 @@ def test_actual_shards_are_nonempty_disjoint_complete_and_include_changed_source
     files = infrastructure_files(ROOT, changed)
     shards = infrastructure_shards(ROOT, changed)
     validate_shards(shards, files)
-    assert len(shards) == 3
+    assert len(shards) >= 3
     assert "tests/infra_tests/core/test_ci_selection.py" in files
     assert "tests/infra_tests/core/test_ci_infra.py" in files
     assert set(infrastructure_files(ROOT)) <= set(files)
@@ -93,16 +93,19 @@ def test_actual_shards_are_nonempty_disjoint_complete_and_include_changed_source
             "tests/infra_tests/core/test_ci_module_durations.py",
             "tests/infra_tests/core/test_ci_infra.py",
             "tests/infra_tests/core/test_ci_infra_partition.py",
+            "tests/infra_tests/core/test_ci_selection.py",
             "tests/infra_tests/core/test_pytest_receipt.py",
             "tests/infra_tests/core/test_ci_contracts.py",
             "tests/infra_tests/core/test_ci_test_ownership.py",
             "tests/infra_tests/core/test_ci_infra_process.py",
+            "tests/infra_tests/core/test_local_gate.py",
         ),
         "infrastructure/core/testing/ci_contracts.py": (
             "tests/infra_tests/core/test_ci_module_durations.py",
             "tests/infra_tests/core/test_ci_contracts.py",
             "tests/infra_tests/core/test_ci_infra.py",
             "tests/infra_tests/core/test_ci_infra_process.py",
+            "tests/infra_tests/core/test_local_gate.py",
         ),
         "infrastructure/core/testing/ci_test_ownership.py": (
             "tests/infra_tests/core/test_ci_infra.py",
@@ -110,17 +113,17 @@ def test_actual_shards_are_nonempty_disjoint_complete_and_include_changed_source
             "tests/infra_tests/core/test_ci_test_ownership.py",
         ),
     }
-    legacy = infrastructure_files(ROOT)
+    baseline = infrastructure_files(ROOT)
     for source, owners in expected_owners.items():
         selected = infrastructure_files(ROOT, (source,))
-        assert set(selected) == set(legacy) | set(owners)
+        assert set(selected) == set(baseline) | set(owners)
         conventional = {
             path.relative_to(ROOT).as_posix()
             for path in (ROOT / "tests/infra_tests").rglob("test_" + Path(source).stem.lstrip("_") + "*.py")
         }
         assert conventional <= set(owners)
         shards = infrastructure_shards(ROOT, (source,))
-        contracts = contract_files(selected, legacy)
+        contracts = contract_files(selected, baseline)
         validate_shards(combined_groups({"infra_shards": shards, "contract_modules": list(contracts)}), selected)
         assert shards == infrastructure_shards(ROOT, (source,))
     executor = "infrastructure/core/pipeline/executor.py"
@@ -152,7 +155,12 @@ def test_actual_shards_are_nonempty_disjoint_complete_and_include_changed_source
 
     assert _plan_validation.PipelineExecutor is PipelineExecutor
     assert _plan_validation.artifact_manifest_from_payload is artifact_manifest_from_payload
-    assert _plan_validation._artifact_manifest_from_payload({"entries": [], "issues": []}).entries == ()
+    assert (
+        _plan_validation._artifact_manifest_from_payload(
+            {"inventory_mode": "stable-shippable-output-v1", "entries": [], "issues": []}
+        ).entries
+        == ()
+    )
 
 
 def test_deleted_test_routes_existing_owner_without_executing_nonexistent_path() -> None:
@@ -183,7 +191,7 @@ def test_broad_package_ownership_scales_shards_without_losing_selected_work() ->
     files = infrastructure_files(ROOT, changed)
     shards = infrastructure_shards(ROOT, changed)
     assert len(shards) > 3
-    assert all(len(shard) <= 20 for shard in shards)
+    assert all(len(shard) <= 12 for shard in shards)
     assert all([module] in shards for module in heavy)
     small = infrastructure_shards(ROOT, heavy)
     assert len(small) >= 5 and all([module] in small for module in heavy)
@@ -346,12 +354,12 @@ def test_changed_python_helper_routes_complete_actual_consumer_package(tmp_path:
 
     root = tmp_path / "owned-helper-project"
     root.mkdir()
-    # The real selector retains the legacy roster. These placeholder paths are
+    # The real selector retains the baseline roster. These placeholder paths are
     # selector inputs only; this control executes the two actual consumers below.
     for name in infrastructure_files(ROOT):
         path = root / name
         path.parent.mkdir(parents=True, exist_ok=True)
-        path.write_text("# owned legacy selector input\n")
+        path.write_text("# owned baseline selector input\n")
     (root / "pyproject.toml").write_bytes((ROOT / "pyproject.toml").read_bytes())
     package = root / test_root / "owned_consumers"
     package.mkdir(parents=True)
@@ -410,3 +418,53 @@ def test_changed_python_helper_routes_complete_actual_consumer_package(tmp_path:
     # because another package's genuine cases completed successfully.
     with pytest.raises(ValueError, match="omitted a requested test file"):
         _shard_collection(directory, nonce, [*files, omitted.relative_to(root).as_posix()], root)
+
+
+@pytest.mark.parametrize("measured", [False, True])
+def test_automatic_shard_count_uses_seconds_only_with_measured_weights(tmp_path: Path, measured: bool) -> None:
+    from infrastructure.core.testing.ci_module_durations import MANIFEST_RELATIVE_PATH, SCHEMA_VERSION
+
+    files = infrastructure_files(ROOT)
+    for name in files:
+        path = tmp_path / name
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text("def test_real():\n    assert 2 + 2 == 4\n" + "#" * 1000 + "\n")
+    if measured:
+        manifest = tmp_path / MANIFEST_RELATIVE_PATH
+        manifest.parent.mkdir(parents=True, exist_ok=True)
+        manifest.write_text(
+            json.dumps(
+                {
+                    "schema_version": SCHEMA_VERSION,
+                    "unit": "seconds",
+                    "provenance": "owned scheduling control",
+                    "modules": {name: 200.0 for name in files},
+                }
+            )
+        )
+    shards = infrastructure_shards(tmp_path)
+    validate_shards(shards, files)
+    capacity_jobs = max(3, (len(files) + 11) // 12)
+    assert len(shards) > capacity_jobs if measured else len(shards) == capacity_jobs
+    assert len(shards) <= 64
+    assert all(len(shard) <= 12 for shard in shards)
+
+
+@pytest.mark.parametrize("target", ["0", "-1", "nan", "inf"])
+def test_shard_seconds_target_refuses_invalid_values(target: str, monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setenv("TEMPLATE_CI_SHARD_TARGET_SECONDS", target)
+    with pytest.raises(ValueError, match="finite positive"):
+        infrastructure_shards(ROOT)
+
+
+def test_complete_infrastructure_change_preserves_roster_above_load_job_preference() -> None:
+    from infrastructure.core.testing.ci_contracts import combined_groups, contract_files
+    from infrastructure.core.testing.ci_infra import AUTOMATIC_SHARD_LOAD_MAX_JOBS, AUTOMATIC_SHARD_MAX_MODULES
+
+    changed = ("tests/conftest.py",)
+    selected = infrastructure_files(ROOT, changed)
+    shards = infrastructure_shards(ROOT, changed)
+    contracts = contract_files(selected, infrastructure_files(ROOT))
+    validate_shards(combined_groups({"infra_shards": shards, "contract_modules": list(contracts)}), selected)
+    assert len(selected) > AUTOMATIC_SHARD_LOAD_MAX_JOBS * AUTOMATIC_SHARD_MAX_MODULES
+    assert all(len(shard) <= AUTOMATIC_SHARD_MAX_MODULES for shard in shards)

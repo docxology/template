@@ -56,17 +56,12 @@ def _load_steganography() -> tuple[Any, Any]:  # pragma: no cover - import indir
 
 def _load_project_config(project_path: Path, *, strict: bool = False) -> dict[str, Any]:
     """Load ``manuscript/config.yaml`` for the project, if present."""
-    return _load_yaml_mapping(project_path / "manuscript" / "config.yaml", strict=strict)
-
-
-def _load_yaml_mapping(path: Path, *, strict: bool = False) -> dict[str, Any]:
-    """Compatibility wrapper over the shared tolerant YAML loader."""
-    return load_yaml_mapping(path, strict=strict)
+    return load_yaml_mapping(project_path / "manuscript" / "config.yaml", strict=strict)
 
 
 def _load_repo_secure_config(repo_root: Path) -> dict[str, Any]:
     """Load repository-wide secure defaults from ``infrastructure/config``."""
-    config = _load_yaml_mapping(repo_root / "infrastructure" / "config" / "secure_config.yaml")
+    config = load_yaml_mapping(repo_root / "infrastructure" / "config" / "secure_config.yaml")
     steg = config.get("steganography", {})
     return dict(steg) if isinstance(steg, dict) else {}
 

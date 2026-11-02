@@ -207,7 +207,7 @@ Each child project:
 ### Test results
 
 - **Test count**: 578
-- **Coverage**: 92.18%
+- **Coverage**: 91.88%
 - **Grammar hash**: `a1f3e428cf1fb3e3`
 
 Both the test count and coverage percentage above are produced by
@@ -226,9 +226,9 @@ runtime qualification and may report a different percentage. The standalone
 measurement does not itself establish that qualification. There is no fallback
 literal: an incomplete measurement cannot produce a successful current summary.
 
-![Per-module combined statement and branch coverage from the same measurement that produces 578/92.18 above. Red bars identify modules below the 90% aggregate-gate reference line; the aggregate pass does not imply every module meets that level.](../output/figures/fig_coverage_by_module.png){#fig:coverage_by_module width=90% fig-alt="Horizontal bars show measured combined statement and branch coverage per module; red bars identify values below the 90% aggregate-gate reference line."}
+![Per-module combined statement and branch coverage from the same measurement that produces 578/91.88 above. Red bars identify modules below the 90% aggregate-gate reference line; the aggregate pass does not imply every module meets that level.](../output/figures/fig_coverage_by_module.png){#fig:coverage_by_module width=90% fig-alt="Horizontal bars show measured combined statement and branch coverage per module; red bars identify values below the 90% aggregate-gate reference line."}
 
-The aggregate 92.18% is a mean weighted by statement and branch
+The aggregate 91.88% is a mean weighted by statement and branch
 count, not a uniform floor — [@fig:coverage_by_module] shows the real spread.
 The 90% gate applies to the aggregate, not separately to each module. Exact
 module values are deliberately read from [@fig:coverage_by_module], rather

@@ -12,6 +12,7 @@ import pytest
 
 from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
 from infrastructure.reporting.native_installed_preflight import PREFLIGHT_SCOPE, diagnostic_exit_code
+from infrastructure.reporting.native_preflight_budget import PREFLIGHT_MAX_OPERATION_SECONDS
 
 
 @pytest.mark.parametrize("code", (1, 75, 124, 130))
@@ -82,22 +83,30 @@ def _run(arguments: list[str]) -> subprocess.CompletedProcess[str]:
     return subprocess.run(arguments, capture_output=True, text=True, check=False, timeout=30)
 
 
-@pytest.mark.parametrize("timeout", ("0", "-1", "901", "14400"))
+@pytest.mark.parametrize("timeout", ("0", "-1", str(PREFLIGHT_MAX_OPERATION_SECONDS + 1), "14400"))
 def test_preflight_refuses_extended_or_missing_operation_budget(tmp_path: Path, timeout: str) -> None:
     result = _run(
         [*_arguments(tmp_path), "--timeout", timeout, "--operation-started-monotonic", str(time.monotonic() - 1)]
     )
     assert result.returncode == 2
-    assert "original at-most-900-second outer clock" in result.stderr
+    assert f"at-most-{PREFLIGHT_MAX_OPERATION_SECONDS}-second outer clock" in result.stderr
     assert not (tmp_path / "evidence-dir").exists()
 
 
 @pytest.mark.parametrize("clock", ("0", "-1", "nan", "inf", "future"))
 def test_preflight_refuses_invalid_or_restarted_clock(tmp_path: Path, clock: str) -> None:
     started = str(time.monotonic() + 1000) if clock == "future" else clock
-    result = _run([*_arguments(tmp_path), "--timeout", "900", "--operation-started-monotonic", started])
+    result = _run(
+        [
+            *_arguments(tmp_path),
+            "--timeout",
+            str(PREFLIGHT_MAX_OPERATION_SECONDS),
+            "--operation-started-monotonic",
+            started,
+        ]
+    )
     assert result.returncode == 2
-    assert "original at-most-900-second outer clock" in result.stderr
+    assert f"at-most-{PREFLIGHT_MAX_OPERATION_SECONDS}-second outer clock" in result.stderr
     assert not (tmp_path / "evidence-dir").exists()
 
 

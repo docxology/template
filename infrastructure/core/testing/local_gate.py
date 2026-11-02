@@ -154,6 +154,7 @@ def _infra_plan(changed: tuple[str, ...] | None) -> dict:
     plan = functional_selection(REPO_ROOT, "", "")
     if changed is not None:
         plan["changed_paths"] = list(changed)
+        plan["full"] = False
     return infrastructure_selection(REPO_ROOT, plan)
 
 

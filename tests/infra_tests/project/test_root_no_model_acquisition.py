@@ -142,7 +142,7 @@ def test_required_prepared_model():
     )
     with (root / "pyproject.toml").open("a") as stream:
         stream.write(
-            "[tool.template.root_acceptance]\nschema_version=2\n"
+            "[tool.template.root_acceptance]\nschema_version=3\n"
             'policy="infrastructure/config/root-case-policy.json"\n'
             'prerequisites="infrastructure/config/root-case-prerequisites.json"\n'
         )

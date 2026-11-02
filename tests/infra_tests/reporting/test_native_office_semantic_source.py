@@ -44,7 +44,7 @@ def _admitted_project(root: Path) -> Path:
     payload = json.loads(report.read_text())
     payload["validated_inputs"] = snapshot.validated_inputs_dict()
     payload["output_statistics"]["detailed_validation"] = collect_detailed_validation_results(
-        project / "output", require_pdf=False
+        project / "output", enabled_formats=("html",)
     )
     report.write_text(json.dumps(payload))
     return project

@@ -478,16 +478,13 @@ def verify_pdf_outputs(project_name: str = "project", *, repo_root: Path | None 
 def verify_render_outputs(project_name: str = "project", *, repo_root: Path | None = None) -> bool:
     """Verify exactly the publication formats enabled for the current run.
 
-    The legacy PDF override remains a PDF-only contract. Normal render runs use
+    Render runs use
     the effective YAML/environment toggles and require a current, valid
     deliverable for every enabled format.
     """
 
     root = repo_root or Path(__file__).parent.parent.parent
     project_root = resolve_project_root(root, project_name)
-    if (project_root / "scripts" / "_render_pdf_override.py").is_file():
-        return verify_pdf_outputs(project_name, repo_root=root)
-
     try:
         config = _rendering_config_for_verify(project_root)
     except (OSError, TypeError, ValueError) as exc:

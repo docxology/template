@@ -10,12 +10,12 @@ API style note:
 Implementation split:
 - _validation.py   — SecurityValidator (input/path/filename/content validation)
 - _rate_limiting.py — RateLimiter, SecurityMonitor, rate_limit decorator
-- security.py       — HTTP headers, singletons, backwards-compat re-exports
+- security.py       — HTTP headers, singletons, declared public exports
 """
 
 import functools
 
-# Re-export from submodules for backwards compatibility
+# Declared public exports from focused implementation modules
 from infrastructure.core.exceptions import SecurityViolation  # noqa: F401
 from infrastructure.core._rate_limiting import (  # noqa: F401
     RateLimiter,
@@ -94,7 +94,7 @@ def reset_rate_limiter() -> None:
 
 
 __all__ = [
-    # Re-exports for backwards compatibility
+    # Declared public exports
     "RateLimiter",
     "SecurityMonitor",
     "SecurityValidator",

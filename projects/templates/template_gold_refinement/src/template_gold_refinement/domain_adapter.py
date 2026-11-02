@@ -4,20 +4,12 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Mapping
 
-try:
-    from .parsing import (
-        as_bool as _as_bool,
-        as_float as _as_float,
-        as_str_tuple as _as_str_tuple,
-        load_yaml_dict,
-    )
-except ImportError:
-    from template_gold_refinement.parsing import (  # type: ignore[no-redef]
-        as_bool as _as_bool,
-        as_float as _as_float,
-        as_str_tuple as _as_str_tuple,
-        load_yaml_dict,
-    )
+from .parsing import (
+    as_bool as _as_bool,
+    as_float as _as_float,
+    as_str_tuple as _as_str_tuple,
+    load_yaml_dict,
+)
 
 
 def _load_domain_profile_data(project_root: Path) -> dict[str, Any]:

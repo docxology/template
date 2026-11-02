@@ -49,20 +49,6 @@ def test_enable_pdf_environment_override_remains_strict(tmp_path) -> None:
     assert validate_enabled_render_outputs(project_root / "output", "demo", formats) is False
 
 
-def test_legacy_pdf_override_forces_same_pdf_only_contract_in_later_stages(tmp_path) -> None:
-    project_root = _html_only_project(tmp_path)
-    override = project_root / "scripts" / "_render_pdf_override.py"
-    override.parent.mkdir(parents=True)
-    override.write_text("raise SystemExit(0)\n", encoding="utf-8")
-
-    config = load_effective_rendering_config(
-        project_root,
-        env={"ENABLE_HTML": "1", "ENABLE_SLIDES": "1", "ENABLE_DOCX": "1"},
-    )
-
-    assert enabled_render_formats(config) == {"pdf"}
-
-
 def test_slides_enabled_requires_at_least_one_current_deck(tmp_path) -> None:
     manuscript_dir = tmp_path / "manuscript"
     manuscript_dir.mkdir()

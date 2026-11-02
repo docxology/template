@@ -13,7 +13,7 @@ The most critical style rule is the absolute prohibition of mocking. The followi
 - `@patch(...)` decorators
 - `monkeypatch.setattr(...)` when used to substitute a real function with a fake callable (or fake return values)
 
-**Allowed for orchestration modules only:** `pytest.MonkeyPatch` on module attributes (`project_root`, `INFRASTRUCTURE_AVAILABLE`, I/O boundaries) and subprocess import isolation — real code paths run; see [`../tests/PATTERNS.md`](../tests/PATTERNS.md).
+**Orchestration controls:** use project-root contexts, real temporary files, and isolated subprocesses. Missing required SDK imports must fail; do not replace dependency functions or simulate successful SDK-free execution. See [`../tests/PATTERNS.md`](../tests/PATTERNS.md).
 
 **Why**: `src/template_code_project/core/optimizer.py` contains pure functions. You can always test them with real numpy arrays and real mathematical results. A test that requires a mock is a test for the wrong thing — it tests that one function calls another (call-count assertion), not that the algorithm is correct.
 
@@ -52,7 +52,7 @@ Project code must delegate cross-cutting concerns to `infrastructure/`. The dele
 | `scripts/optimization_analysis.py` | `template_code_project.core.optimizer`, `infrastructure.core.logging.utils`, `infrastructure.scientific.*`, `infrastructure.reporting.*`, `infrastructure.validation.*`, `infrastructure.core.progress` | Business logic (math, gradient update rules) |
 | `scripts/generate_api_docs.py` | `template_code_project.core.optimizer`, `infrastructure.core.logging.utils` | Math |
 | `scripts/z_generate_manuscript_variables.py` | `src/manuscript_variables`, `infrastructure.rendering.manuscript_injection` | Business logic; direct infrastructure I/O (delegated via src) |
-| `tests/core/test_optimizer.py` | `template_code_project.core.optimizer`, `scripts/optimization_analysis` (via `INFRASTRUCTURE_AVAILABLE` guard) | `unittest.mock.*`, `infrastructure.*` directly |
+| `tests/core/test_optimizer.py` | `template_code_project.core.optimizer`, `template_code_project.core.invariants` | `unittest.mock.*`, `infrastructure.*` directly |
 
 **Verify `src/` is clean**:
 ```bash

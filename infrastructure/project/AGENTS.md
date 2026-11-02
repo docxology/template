@@ -2,6 +2,12 @@
 
 ## Purpose
 
+`pdfium_fixture_preparation.py` nominates one actual-platform wheel from `uv.lock`
+for the genuine PDFium external-fixture controls. It requires curl 8.4.0 or newer,
+disables glob expansion and redirects, and writes only a fresh external physical
+scratch directory. Exact bounded hash/size verification precedes its success
+receipt. Preparation is DATA, not native execution or Source acceptance.
+
 Audited acceptance launchers suppress bytecode writes during isolated Python
 startup (`-IB`), including genuine `.pth` imports before the worker body. The
 existing Source audit enables writes only after validating its fresh private
@@ -305,7 +311,7 @@ timeout_sec: 1800                   # overrides PROJECT_SETUP_HOOK_TIMEOUT_SEC f
 skip_if_env: ["CI_NO_HOOKS"]        # truthy env vars that disable the hook entirely
 ```
 
-Backward-compatible: a project without `setup_hook.yaml` behaves exactly as before — the hook simply runs to completion (or times out).
+A project without `setup_hook.yaml` behaves exactly as before — the hook simply runs to completion (or times out).
 
 **Environment knobs:**
 

@@ -2,9 +2,11 @@
 
 from __future__ import annotations
 
-import json
 import builtins
+import json
+import logging
 import shutil
+import subprocess
 import sys
 from pathlib import Path
 
@@ -19,14 +21,12 @@ if str(REPO_ROOT) not in sys.path:
 import template_code_project.analysis as analysis_mod  # noqa: E402
 from template_code_project.analysis import (  # noqa: E402
     _get_logger,
-    _setup_fallback_logging,
     _stability_score_from_runs,
     extract_optimization_metadata,
     generate_citations_from_metadata,
     save_publishing_materials,
     save_validation_report,
     validate_generated_outputs,
-    infrastructure_context,
 )
 from template_code_project.core.experiment_config import ExperimentConfig  # noqa: E402
 from template_code_project.core.optimizer import OptimizationResult  # noqa: E402
@@ -39,37 +39,21 @@ def _isolated_project_root(tmp_path: Path):
         yield
 
 
-class TestFallbackLogging:
-    def test_setup_fallback_logging_idempotent(self):
-        logger = _setup_fallback_logging()
-        again = _setup_fallback_logging()
-        assert logger.name == again.name
-        assert logger.handlers
+class TestSdkLogging:
+    def test_get_logger_uses_sdk(self):
+        logger = _get_logger()
+        assert isinstance(logger, logging.Logger)
+        assert logger is _get_logger()
 
-    def test_get_logger_without_infra(self):
-        with infrastructure_context(False):
-            logger = _get_logger()
-        assert logger.name == "template_code_project.optimization_analysis"
-
-    def test_log_success_fallback_is_noop(self):
-        """log_success no-op fallback (lines 71-74) is callable and returns None."""
-        # The fallback is only redefined at module import time; test via the no-op
-        # directly by calling it when infrastructure is unavailable.
-        # We can call the global log_success — if infrastructure is available,
-        # it is the real one; if not, it is the no-op. Either way it should not raise.
-        with infrastructure_context(False):
-            result = analysis_mod.log_success("test message", None)
-        assert result is None
+    def test_log_success_emits_message(self, caplog: pytest.LogCaptureFixture):
+        logger = logging.getLogger("test.analysis.sdk")
+        with caplog.at_level(logging.INFO, logger=logger.name):
+            analysis_mod.log_success("analysis SDK available", logger=logger)
+        assert "analysis SDK available" in caplog.text
 
 
 class TestValidateOutputs:
-    def test_skips_when_infra_unavailable(self):
-        with infrastructure_context(False):
-            assert validate_generated_outputs() is None
-
     def test_returns_summary_when_infra_available(self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
-        if not analysis_mod.INFRASTRUCTURE_AVAILABLE:
-            pytest.skip("Infrastructure not available")
         figures = tmp_path / "output" / "figures"
         figures.mkdir(parents=True)
         (figures / "convergence_plot.png").write_bytes(b"png-bytes")
@@ -79,8 +63,6 @@ class TestValidateOutputs:
         assert "integrity_check" in report
 
     def test_handles_validation_error(self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
-        if not analysis_mod.INFRASTRUCTURE_AVAILABLE:
-            pytest.skip("Infrastructure not available")
         from infrastructure.core.exceptions import ValidationError
 
         def _raise_validation(_path: Path) -> None:
@@ -89,8 +71,6 @@ class TestValidateOutputs:
         assert validate_generated_outputs(integrity_validator=_raise_validation) is None
 
     def test_handles_unexpected_error(self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
-        if not analysis_mod.INFRASTRUCTURE_AVAILABLE:
-            pytest.skip("Infrastructure not available")
 
         def _raise_oserror(_path: Path) -> None:
             raise OSError("disk full")
@@ -98,8 +78,6 @@ class TestValidateOutputs:
         assert validate_generated_outputs(integrity_validator=_raise_oserror) is None
 
     def test_logs_integrity_issues_when_present(self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
-        if not analysis_mod.INFRASTRUCTURE_AVAILABLE:
-            pytest.skip("Infrastructure not available")
         from infrastructure.validation.integrity.checks import IntegrityReport
 
         def _report_with_issues(_path: Path) -> IntegrityReport:
@@ -159,8 +137,6 @@ class TestStabilityScoreBranches:
 
 class TestScientificInfraPaths:
     def test_stability_uses_infrastructure_report(self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
-        if not analysis_mod.INFRASTRUCTURE_AVAILABLE:
-            pytest.skip("Infrastructure not available")
         from template_code_project.analysis import run_stability_analysis
 
         path = run_stability_analysis(ExperimentConfig(stability_starting_points=(0.0, 1.0)))
@@ -169,8 +145,6 @@ class TestScientificInfraPaths:
         assert "actual_behavior" in data
 
     def test_benchmark_uses_infrastructure_report(self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
-        if not analysis_mod.INFRASTRUCTURE_AVAILABLE:
-            pytest.skip("Infrastructure not available")
         from template_code_project.analysis import run_performance_benchmarking
 
         path = run_performance_benchmarking()
@@ -207,8 +181,6 @@ class TestExtractMetadataExtended:
 
 class TestCitationsExtended:
     def test_generates_all_formats_when_infra(self):
-        if not analysis_mod.INFRASTRUCTURE_AVAILABLE:
-            pytest.skip("Infrastructure not available")
         meta = {
             "title": "Optimization Study",
             "description": "Gradient descent sweep",
@@ -259,16 +231,17 @@ class TestMainBranches:
     def _copy_manuscript(self, tmp_path: Path) -> None:
         shutil.copytree(PROJECT_ROOT / "manuscript", tmp_path / "manuscript")
 
-    def test_main_without_infra(self, tmp_path: Path):
+    def test_main_requires_writable_validation_report(self, tmp_path: Path):
+        from infrastructure.core.exceptions import ValidationError
+
         self._copy_manuscript(tmp_path)
-        with infrastructure_context(False):
+        report_path = tmp_path / "output" / "reports" / "output_validation.json"
+        report_path.mkdir(parents=True)
+        with pytest.raises(ValidationError, match="validation report could not be saved"):
             analysis_mod.main()
-        assert (tmp_path / "output" / "data" / "optimization_results.csv").exists()
-        assert (tmp_path / "output" / "figures" / "convergence_plot.png").exists()
+        assert report_path.is_dir()
 
     def test_main_unhealthy_health_check(self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
-        if not analysis_mod.INFRASTRUCTURE_AVAILABLE:
-            pytest.skip("Infrastructure not available")
         self._copy_manuscript(tmp_path)
 
         class UnhealthyChecker:
@@ -282,8 +255,6 @@ class TestMainBranches:
         assert (tmp_path / "output" / "reports" / "stability_analysis.json").exists()
 
     def test_main_handles_publishing_demo_failure(self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
-        if not analysis_mod.INFRASTRUCTURE_AVAILABLE:
-            pytest.skip("Infrastructure not available")
         self._copy_manuscript(tmp_path)
 
         base_logger = analysis_mod._get_logger()
@@ -309,8 +280,6 @@ class TestMainErrors:
         shutil.copytree(PROJECT_ROOT / "manuscript", tmp_path / "manuscript")
 
     def test_main_reraises_script_execution_error(self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
-        if not analysis_mod.INFRASTRUCTURE_AVAILABLE:
-            pytest.skip("Infrastructure not available")
         from infrastructure.core.exceptions import ScriptExecutionError
 
         self._copy_manuscript(tmp_path)
@@ -324,8 +293,6 @@ class TestMainErrors:
             analysis_mod.main(convergence_runner=_boom)
 
     def test_main_reraises_template_error(self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
-        if not analysis_mod.INFRASTRUCTURE_AVAILABLE:
-            pytest.skip("Infrastructure not available")
         from infrastructure.core.exceptions import TemplateError
 
         self._copy_manuscript(tmp_path)
@@ -339,8 +306,6 @@ class TestMainErrors:
             analysis_mod.main(convergence_runner=_boom)
 
     def test_main_reraises_unexpected_error(self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
-        if not analysis_mod.INFRASTRUCTURE_AVAILABLE:
-            pytest.skip("Infrastructure not available")
         self._copy_manuscript(tmp_path)
 
         def _boom(**_kwargs: object) -> dict:
@@ -381,14 +346,6 @@ class TestRegisterFigure:
         assert isinstance(data, dict)
         assert data["fig:convergence"]["metadata"]["alt_text"]
 
-    def test_register_figure_handles_import_error(self, tmp_path: Path):
-        from template_code_project.analysis import register_figure
-
-        def unavailable_manager(**kwargs: object):
-            raise ImportError("figure manager unavailable")
-
-        register_figure(figure_manager_factory=unavailable_manager)
-
     def test_register_figure_handles_oserror(self, tmp_path: Path):
         (tmp_path / "output" / "figures").mkdir(parents=True)
 
@@ -404,46 +361,18 @@ class TestRegisterFigure:
         register_figure(figure_manager_factory=_BrokenFigureManager)
 
 
-class TestImportFallback:
-    def test_infrastructure_import_fallback(self) -> None:
-        """Import path when infrastructure modules are unavailable at load time."""
-        import subprocess
-        import sys
-
-        project_root = PROJECT_ROOT
-        code = """
-import builtins
-import importlib.util
-import sys
-from pathlib import Path
-
-project_root = Path(sys.argv[1])
-real_import = builtins.__import__
-
-def _block_infra(name, globals=None, locals=None, fromlist=(), level=0):
-    if name == "infrastructure" or name.startswith("infrastructure."):
-        raise ImportError("infrastructure unavailable")
-    return real_import(name, globals, locals, fromlist, level)
-
-builtins.__import__ = _block_infra
-sys.path.insert(0, str(project_root))
-sys.path.insert(0, str(project_root / "src"))
-sys.path.insert(0, str(project_root / "src" / "template_code_project"))
-
-spec = importlib.util.spec_from_file_location(
-    "analysis_infra_isolated",
-    project_root / "src" / "template_code_project" / "analysis" / "_infra.py",
-)
-mod = importlib.util.module_from_spec(spec)
-assert spec.loader is not None
-spec.loader.exec_module(mod)
-assert mod.INFRASTRUCTURE_AVAILABLE is False
-"""
+class TestRequiredSdk:
+    def test_infrastructure_import_fails_without_sdk(self, tmp_path: Path) -> None:
+        """A stdlib-only interpreter cannot silently import analysis SDK bindings."""
+        sdk_bindings = PROJECT_ROOT / "src" / "template_code_project" / "analysis" / "_infra.py"
         result = subprocess.run(
-            [sys.executable, "-c", code, str(project_root)],
+            [sys.executable, "-I", "-S", str(sdk_bindings)],
             capture_output=True,
             text=True,
+            cwd=tmp_path,
             timeout=60,
             check=False,
         )
-        assert result.returncode == 0, result.stderr or result.stdout
+        assert result.returncode != 0
+        assert "ModuleNotFoundError: No module named 'infrastructure'" in result.stderr
+        assert "completed successfully" not in result.stdout + result.stderr
