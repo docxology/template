@@ -12,7 +12,7 @@ types, staged validation, and deterministic compilation. See
 ``docs/architecture.md`` for the correspondence between this DSL's stages and
 BPL's compiler pipeline.
 
-All DSL logic lives in the ``src.methods_dsl`` subpackage and is re-exported
+All DSL logic lives in the ``template_methods_paper.methods_dsl`` subpackage and is re-exported
 here so callers (scripts, tests, manuscript variable generation) can write
 ``from template_methods_paper import compile_method, run_all_gates``.
 """

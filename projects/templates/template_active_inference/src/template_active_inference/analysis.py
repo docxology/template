@@ -1,7 +1,4 @@
-"""Compatibility facade for orchestration analysis entrypoints.
-
-Prefer ``from orchestration.analysis import ...`` in new code.
-"""
+"""Public analysis entrypoints backed by ``orchestration.analysis``."""
 
 from orchestration.analysis import (
     run_analysis,

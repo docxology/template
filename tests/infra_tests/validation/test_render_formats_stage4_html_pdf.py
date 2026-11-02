@@ -38,12 +38,7 @@ def test_stage4_html_only_full_stage_succeeds_without_pdf(tmp_path) -> None:
 def test_stage4_html_only_detailed_structure_does_not_invent_pdf(tmp_path) -> None:
     _html_only_project(tmp_path)
 
-    valid, details = verify_outputs_exist(
-        "demo",
-        repo_root=tmp_path,
-        require_pdf=False,
-        enabled_formats={"html"},
-    )
+    valid, details = verify_outputs_exist("demo", repo_root=tmp_path, enabled_formats={"html"})
 
     assert valid is True
     assert details["structure"]["missing_files"] == []

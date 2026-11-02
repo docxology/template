@@ -16,7 +16,7 @@ flowchart TB
     T --> WEB[Web renderer<br/>test_web_renderer]
     T --> LATEX[LaTeX<br/>test_latex_package_validator · test_latex_utils]
     T --> MAN[Manuscript<br/>test_manuscript_discovery]
-    T --> CLI[CLI<br/>test_cli · test_render_all_cli ·<br/>test_rendering_cli · test_rendering_cli_full]
+    T --> CLI[CLI<br/>test_cli · test_rendering_cli · test_rendering_cli_full]
 
     classDef d fill:#0f172a,stroke:#0f172a,color:#fff
     classDef cat fill:#1e3a8a,stroke:#0f172a,color:#fff

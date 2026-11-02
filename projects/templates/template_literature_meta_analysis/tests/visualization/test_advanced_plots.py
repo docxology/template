@@ -1,7 +1,6 @@
 from __future__ import annotations
 from pathlib import Path
 import numpy as np
-import pytest
 from template_literature_meta_analysis.visualization.advanced.embeddings import (
     plot_pca_embeddings,
     plot_term_heatmap,
@@ -48,20 +47,40 @@ class TestAdvancedPlots:
         img = Image.open(output)
         assert img.width > 0 and img.height > 0
 
-    def test_plot_word_cloud_renders_without_the_packed_layout_extension(
-        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-    ) -> None:
-        monkeypatch.setattr(word_cloud, "_wordcloud_available", lambda: False)
-        weights = {"active": 0.9, "inference": 0.85, "free": 0.7, "energy": 0.2}
-        output = tmp_path / "fallback_wc.png"
-        assert plot_word_cloud(weights, output) == output
-        from PIL import Image
+    def test_spiral_word_cloud_packer_preserves_terms_geometry_and_determinism(self, tmp_path: Path) -> None:
+        from itertools import combinations
 
-        img = Image.open(output)
-        assert img.width > 0 and img.height > 0
-        first = output.read_bytes()
-        plot_word_cloud(weights, output)
-        assert output.read_bytes() == first, "spiral fallback must be deterministic"
+        import matplotlib.pyplot as plt
+        from PIL import Image, ImageChops
+
+        weights = {"energy": 0.2, "inference": 0.85, "active": 0.9, "free": 0.7}
+        layouts = []
+        rendered_bytes = []
+        for index in range(2):
+            fig, ax = plt.subplots(figsize=(12, 8), dpi=100)
+            output = tmp_path / f"spiral_wc_{index}.png"
+            try:
+                word_cloud._pack_terms(ax, fig, weights, max_words=3)
+                ax.set_axis_off()
+                fig.canvas.draw()
+                assert [text.get_text() for text in ax.texts] == ["active", "inference", "free"]
+                sizes = [text.get_fontsize() for text in ax.texts]
+                assert sizes[0] > sizes[1] > sizes[2]
+                renderer = fig.canvas.get_renderer()
+                bounds = [text.get_window_extent(renderer) for text in ax.texts]
+                assert all(ax.bbox.contains(box.x0, box.y0) and ax.bbox.contains(box.x1, box.y1) for box in bounds)
+                assert all(not left.overlaps(right) for left, right in combinations(bounds, 2))
+                layouts.append([(text.get_text(), text.get_position(), text.get_fontsize()) for text in ax.texts])
+                fig.savefig(output, dpi=100)
+            finally:
+                plt.close(fig)
+            with Image.open(output) as image:
+                assert image.size == (1200, 800)
+                background = Image.new("RGB", image.size, "white")
+                assert ImageChops.difference(image.convert("RGB"), background).getbbox() is not None
+            rendered_bytes.append(output.read_bytes())
+        assert layouts[0] == layouts[1]
+        assert rendered_bytes[0] == rendered_bytes[1], "spiral packing must render deterministic PNGs"
 
     def test_plot_word_cloud_empty(self, tmp_path: Path) -> None:
         output = tmp_path / "empty_wc.png"

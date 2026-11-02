@@ -14,5 +14,5 @@ incremental index may record processed paths and modification times in
 
 Do not retain credentials, transient progress, or unrelated private details.
 Point mutable public rosters and measured facts at `docs/_generated/`.
-Keep all runtime JSON ignored and preserve legacy originals during migration.
+Keep runtime JSON ignored and preserve unrelated editor state without loading it.
 If there is no durable change, leave memory untouched and report that briefly.

@@ -9,7 +9,7 @@ itself, no other `infrastructure.*` imports.
 ## Quick Start
 
 ```python
-from src import all_example_methods, run_all_gates, compile_method
+from template_methods_paper import all_example_methods, run_all_gates, compile_method
 
 method = all_example_methods()[0]
 assert all(g.passed for g in run_all_gates(method))

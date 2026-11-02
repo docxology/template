@@ -1,7 +1,7 @@
 """Select the environment SDK and register only this genuine own namespace.
 
 No inferred repository or own src directory is added to global import paths.
-The declared platform 4.4.0 SDK must be available before own package execution.
+The metadata-declared platform SDK must be available before own package execution.
 """
 
 from __future__ import annotations
@@ -10,6 +10,7 @@ import importlib
 import importlib.util
 import os
 import sys
+import tomllib
 import sysconfig
 from pathlib import Path
 from types import ModuleType
@@ -64,6 +65,10 @@ def _verify_cached_namespace(source: Path) -> ModuleType | None:
 
 def bootstrap_project(project: Path) -> ModuleType:
     project = project.resolve(strict=True)
+    with (project / "pyproject.toml").open("rb") as stream:
+        platform_version = tomllib.load(stream)["tool"]["template"]["platform_version"]
+    if not isinstance(platform_version, str) or not platform_version.strip():
+        raise ImportError("the own project requires a declared platform version")
     owner = Path(__file__).resolve(strict=True).parent.parent
     own_roots = (project, owner)
     # The selected own environment can live under project/.venv. Keep only its
@@ -86,8 +91,8 @@ def bootstrap_project(project: Path) -> ModuleType:
             sdk_origin.is_relative_to(site) for site in runtime_sites
         ):
             raise ImportError("own project source cannot provide the declared platform SDK")
-        if sdk.__version__ != "4.4.0":
-            raise ImportError("the own project requires its declared platform 4.4.0 SDK")
+        if sdk.__version__ != platform_version:
+            raise ImportError(f"the own project requires its declared platform {platform_version} SDK")
     finally:
         sys.path[:] = original
     source = project / "src" / _PACKAGE

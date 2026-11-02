@@ -11,8 +11,8 @@ is testable without shell logic.
 | File | Role |
 | --- | --- |
 | `__init__.py` | Public analysis exports. |
-| `_infra.py` | Optional infrastructure availability helpers. |
-| `_logging.py` | Logging fallback helpers. |
+| `_infra.py` | Required SDK capabilities; missing imports fail closed. |
+| `_logging.py` | Canonical SDK logger adapter. |
 | `experiments.py` | Convergence experiments and result persistence. |
 | `pipeline.py` | Composable step exports (`run_convergence_experiment`, metadata, validation). |
 | `workflow.py` | Full `run_analysis_pipeline` / `main` orchestration. |

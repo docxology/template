@@ -397,8 +397,8 @@ class TestCliArgumentParsing:
         # Verbose output should show validation info in subprocess output
         assert "Validating" in result.stdout or "issues" in result.stdout.lower()
 
-    def test_legacy_pdf_module_subprocess(self, tmp_path):
-        """Legacy pdf.py module entry remains backward-compatible."""
+    def test_pdf_cli_valid_document_subprocess(self, tmp_path):
+        """The canonical PDF validation command accepts a valid document."""
         from reportlab.lib.pagesizes import letter
         from reportlab.pdfgen import canvas
 

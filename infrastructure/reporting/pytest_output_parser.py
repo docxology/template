@@ -111,8 +111,8 @@ def parse_pytest_output(stdout: str, stderr: str, exit_code: int) -> dict[str, A
         if discovery_match:
             results["discovery_count"] = int(discovery_match.group(1))
 
-    # Standard pytest output reports one total session duration. Preserve the
-    # legacy "execution" key for that observed summary value; session-start
+    # Standard pytest output reports one total session duration. The
+    # "execution" key records that observed summary value; session-start
     # and collection banners do not provide separate measured phase times.
     duration_match = re.search(r"(\d+)\s+passed.*?in\s+([\d.]+)s", stdout, re.DOTALL)
     if duration_match:

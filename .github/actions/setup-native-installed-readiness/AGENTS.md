@@ -12,7 +12,7 @@ Preserve Root `uv.lock`, Source package/tool pins, upstream licenses and existin
 local setup actions. Do not combine independent project locks or use a cache,
 path or tool label as provider authority. Cache warming precedes the cold
 operation. Complete native roles retain the original 14400-second deadline;
-the incomplete Code diagnostic retains its 900-second deadline. All later
+the incomplete Code diagnostic retains its bounded 1800-second deadline. All later
 provider/Code/native predicates belong to the genuine installed launcher and
 reader. Preparation establishes no claim that either operation fits its clock.
 

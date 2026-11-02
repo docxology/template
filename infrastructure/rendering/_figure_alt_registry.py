@@ -269,14 +269,11 @@ def _parse_record(
         )
     filename = next(iter(filenames), None)
 
-    # ``alt_text`` is the canonical Active Fedference/report-schema field.
-    # ``alt`` remains a compact renderer-facing compatibility alias, and
-    # nested metadata is accepted for older figure registries.
+    # Flat project registries and FigureManager metadata both declare alt_text.
     top_alt = _normalized_alt(record.get("alt_text"))
-    renderer_alt = _normalized_alt(record.get("alt"))
     metadata = record.get("metadata")
     metadata_alt = _normalized_alt(metadata.get("alt_text")) if isinstance(metadata, dict) else None
-    declared_alts = [value for value in (top_alt, renderer_alt, metadata_alt) if value is not None]
+    declared_alts = [value for value in (top_alt, metadata_alt) if value is not None]
     if len(set(declared_alts)) > 1:
         raise RenderingError(
             f"Figure registry has conflicting alternative text fields for {label}",
@@ -312,7 +309,7 @@ def _parse_record(
     return FigureAltRecord(
         label=label,
         filename=filename,
-        alt_text=top_alt or renderer_alt or metadata_alt,
+        alt_text=top_alt or metadata_alt,
         long_description=top_long_description or metadata_long_description,
         exact_value_fallback=exact_value_fallback,
         exact_value_href=exact_value_href,

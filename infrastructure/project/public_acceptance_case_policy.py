@@ -8,8 +8,7 @@ import re
 from dataclasses import dataclass
 from typing import Any
 
-POLICY_SCHEMA = "template-root-case-policy-v2"
-OPTIONAL_POLICY_SCHEMA = "template-root-case-policy-v3"
+POLICY_SCHEMA = "template-root-case-policy-v3"
 OPTIONAL_MONID_FAMILY = "tests/infra_tests/search/test_monid.py::test_live_discover_includes_price_when_key_present"
 CENSUS_SCHEMA = "template-root-case-census-v2"
 PLAN_SCHEMA = "template-root-case-plan-v2"
@@ -215,7 +214,7 @@ class RootCasePolicy:
     @classmethod
     def parse(cls, value: object) -> RootCasePolicy:
         row = _object(value, {"schema_version", "runtimes", "platforms", "families", "obligations"}, "Root case policy")
-        if row["schema_version"] not in {POLICY_SCHEMA, OPTIONAL_POLICY_SCHEMA}:
+        if row["schema_version"] != POLICY_SCHEMA:
             raise ValueError("unsupported Root case policy schema")
         runtimes = _strings(row["runtimes"], "required runtimes")
         platforms = _strings(row["platforms"], "required platforms")
@@ -234,8 +233,7 @@ class RootCasePolicy:
         for family in optional:
             obligation = next((item for item in obligations if item.id == "monid-discover"), None)
             if (
-                row["schema_version"] != OPTIONAL_POLICY_SCHEMA
-                or family.id != OPTIONAL_MONID_FAMILY
+                family.id != OPTIONAL_MONID_FAMILY
                 or family.obligations != ("monid-discover",)
                 or family.members != (CaseMember(OPTIONAL_MONID_FAMILY, None),)
                 or obligation is None

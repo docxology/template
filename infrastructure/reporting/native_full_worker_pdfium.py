@@ -104,23 +104,29 @@ class NativePDFiumProvider:
         return tuple(self.selection.site / name for name in PROVIDERS)
 
     def verify_current(self, *, deadline: float) -> None:
+        from infrastructure.reporting.native_office_pdfium_provider import _file
+        from infrastructure.reporting.native_pdfium_source_wheel import inspect_pdfium_locked_wheel
+
         remaining(deadline)
         self.held_inputs()
         if deadline > self.deadline:
             raise ValueError("PDFium provider cannot renew its original caller clock")
-        self.source.verify_correspondence(
+        with self.source._correspondence_guard(
             self.source.reference,
             self.source.bindings.current_root,
             self.source.current_source_reader,
             deadline,
-        )
-        members, wheel = _wheel(self.source, self.selection.wheel, deadline)
-        if (
-            dict(self.members) != members
-            or self.wheel != wheel
-            or self.installed != _installed(self.selection.site, members, deadline)
         ):
-            raise ValueError("PDFium actual selected namespace/wheel/RECORD/physical closure changed")
+            raw, identity = _file(self.selection.wheel, deadline)
+            lock = self.source.current_source_reader.read("uv.lock").content
+            members, declared = inspect_pdfium_locked_wheel(self.selection.wheel.name, raw, lock, deadline=deadline)
+            wheel = {"path": str(self.selection.wheel), **declared, "identity": identity}
+            if (
+                dict(self.members) != members
+                or self.wheel != wheel
+                or self.installed != _installed(self.selection.site, members, deadline)
+            ):
+                raise ValueError("PDFium actual selected namespace/wheel/RECORD/physical closure changed")
         remaining(deadline)
 
 

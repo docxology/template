@@ -164,12 +164,9 @@ uv run python scripts/10_reproducibility_assessment.py --fulltext-dir output/ful
 Ollama must be running at `http://localhost:11434` with `gemma3:4b` pulled
 (same LLM boundary as `knowledge_graph`, sharing `LLMConfig`,
 `call_ollama()`, and `parse_llm_response()`). The reproducibility module
-passes its own `_SYSTEM_PROMPT` (from `prompts.py`) to `call_ollama()` via
-the `system_prompt=` keyword argument — without this, `call_ollama()` would
-default to the knowledge-graph module's system prompt (which describes
-hypothesis-support assertions, not the workflow-graph schema), and the LLM
-would emit nodes with empty/invalid `node_type` values that the validation
-layer would silently drop.
+passes its own `_SYSTEM_PROMPT` (from `prompts.py`) through the required
+`system_prompt=` keyword. The knowledge-graph caller explicitly supplies its own
+assertion prompt; the shared HTTP client does not choose an extraction schema.
 
 ## Known Limitations
 

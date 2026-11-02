@@ -132,8 +132,6 @@ def test_source_owned_profile_declares_every_exact_case_unit_target_and_never_wa
     assert {row.case_unit for row in rows[1:]} == {"core", "live-unpaid"}
     assert len({row.id for row in rows}) == len(rows)
     assert {unit.id for unit in scope.require_case_units(reader)} == {"core", "live-unpaid"}
-    with pytest.raises(ValueError):
-        scope.require_case_policy(reader)
 
 
 @pytest.mark.parametrize(
@@ -287,7 +285,7 @@ def test_actual_runtime_whole_deadline_or_interruption_cleans_launched_detached_
     genuine_runtime: tuple[Path, dict[str, Any], dict[str, Any]], action_name: str, expected_code: int
 ) -> None:
     root, _, probe = genuine_runtime
-    whole_seconds = 300
+    whole_seconds = 120
     token = uuid.uuid4().hex
     action = root / "output/readiness/action.json"
     startup = root / "output/readiness/descendant-startup.json"
@@ -351,7 +349,7 @@ def test_actual_runtime_whole_deadline_or_interruption_cleans_launched_detached_
             root / ("output/readiness/runtime-" + action_name),
             interpreter=Path(sys.executable),
             runtime_probe=probe["runtime"],
-            census_timeout_seconds=180,
+            census_timeout_seconds=60,
             timeout_seconds=whole_seconds,
             test_timeout_seconds=600,
         )

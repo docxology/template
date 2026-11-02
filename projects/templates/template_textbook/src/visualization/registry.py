@@ -75,7 +75,7 @@ class FigureRegistryEntry:
     label: str
     filename: str
     caption: str
-    alt: str
+    alt_text: str
     source_markdown: str
     generated_by: str
 
@@ -108,7 +108,7 @@ def collect_figure_registry_entries(manuscript_dir: Path, figures_dir: Path) -> 
                     label=label,
                     filename=filename,
                     caption=caption,
-                    alt=alt,
+                    alt_text=alt,
                     source_markdown=markdown_file.relative_to(manuscript_dir).as_posix(),
                     generated_by="scripts/generate_figures.py",
                 ),

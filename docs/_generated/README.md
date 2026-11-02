@@ -11,7 +11,7 @@ This directory mixes **script-generated files** with two **maintainer-written** 
 | [status_evidence.json](status_evidence.json) | **Generated** — `uv run python scripts/docgen/status_evidence.py --write`; source-bound typed evidence for the STATUS.md ledger |
 | [COUNTS.md](COUNTS.md) | **Generated** — `uv run python scripts/docgen/counts.py` (`--check` in CI, `--write` to refresh); measured infra counts, pytest collection totals, package roster |
 | [exemplar_roster.md](exemplar_roster.md) | **Generated** — `uv run python scripts/docgen/exemplar_roster.py` (`--check` in CI and pre-commit) |
-| [hermes_knowledge_audit.json](hermes_knowledge_audit.json) | **Historical snapshot** — legacy external audit metadata; superseded by current generated facts |
+| [hermes_knowledge_audit.json](hermes_knowledge_audit.json) | **Historical snapshot** — external audit metadata; superseded by current generated facts |
 | [publication_records.md](publication_records.md) | **Generated publication matrix** — public exemplar GitHub/Zenodo/config records; refresh with `scripts/docgen/publication_records.py --refresh-external` |
 | [skills_index.md](skills_index.md) | **Generated** — `uv run python -m infrastructure.skills write-index` |
 | `README.md`, `AGENTS.md` | **Maintainer** — policy and conventions for linking to generated content |

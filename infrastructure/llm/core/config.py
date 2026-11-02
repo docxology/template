@@ -146,16 +146,10 @@ class OllamaClientConfig:
     max_input_length: int = 500000  # Max input character length (LLM_MAX_INPUT_LENGTH)
 
     def __init__(self, **kwargs: Any):
-        """Initialize config, supporting num_ctx as alias for context_window.
+        """Initialize declared fields and reject unknown configuration keywords.
 
-        Manual __init__ exists because @dataclass-generated __init__ cannot handle
-        the num_ctx→context_window alias or reject unknown kwargs with a clear error.
-        Uses dataclasses.fields() internally so it stays in sync with field additions.
+        Uses dataclasses.fields() so validation stays in sync with field additions.
         """
-        # Handle num_ctx -> context_window mapping
-        if "num_ctx" in kwargs and "context_window" not in kwargs:
-            kwargs["context_window"] = kwargs.pop("num_ctx")
-
         # Manually initialize all dataclass fields
         from dataclasses import MISSING, fields
 
@@ -181,7 +175,6 @@ class OllamaClientConfig:
         _retry_count(self.request_retries)
 
     # Environment variable → (config_key, cast_fn) mappings for from_env().
-    # LLM_NUM_CTX is handled specially (only used if context_window not already set).
     # OLLAMA_MODEL is a plain string (no cast needed, handled inline).
     _ENV_MAPPINGS: ClassVar[dict[str, tuple[str, type]]] = {
         "LLM_CONTEXT_WINDOW": ("context_window", int),
@@ -212,13 +205,6 @@ class OllamaClientConfig:
                     config_kwargs[config_key] = cast_fn(os.environ[env_var])
                 except ValueError:
                     logger.warning("Invalid %s=%r, using default", env_var, os.environ[env_var])
-
-        # LLM_NUM_CTX: alternative for context_window (only if not already set)
-        if "LLM_NUM_CTX" in os.environ and "context_window" not in config_kwargs:
-            try:
-                config_kwargs["context_window"] = int(os.environ["LLM_NUM_CTX"])
-            except ValueError:
-                logger.warning("Invalid LLM_NUM_CTX=%r, using default", os.environ["LLM_NUM_CTX"])
 
         # OLLAMA_MODEL: plain string, no cast
         if "OLLAMA_MODEL" in os.environ:

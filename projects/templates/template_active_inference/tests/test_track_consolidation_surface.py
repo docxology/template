@@ -75,8 +75,7 @@ def test_text_and_yaml_mutation_helpers_restore_after_exception(tmp_path: Path) 
 
 
 def test_live_track_surface_uses_canonical_ids(project_root: Path) -> None:
-    from gates.artifact_manifest import REQUIRED_OUTPUTS
-    from roadmap_tracks.sheaf_tracks import CANONICAL_TRACKS, LEGACY_ARTIFACTS
+    from roadmap_tracks.sheaf_tracks import CANONICAL_TRACKS
 
     registry = yaml.safe_load((project_root / "manuscript" / "sheaf" / "tracks.yaml").read_text())["tracks"]
     manifest = yaml.safe_load((project_root / "manuscript" / "sheaf" / "manifest.yaml").read_text())
@@ -103,14 +102,16 @@ def test_live_track_surface_uses_canonical_ids(project_root: Path) -> None:
     assert "generate_sheaf_tracks.py" in configured
     assert "generate_v2_sheaf_tracks.py" not in configured
     assert "generate_v3_sheaf_tracks.py" not in configured
-    assert not (set(LEGACY_ARTIFACTS) & set(REQUIRED_OUTPUTS))
 
 
 def test_canonical_sheaf_artifacts_are_written_and_valid(project_root: Path) -> None:
     from roadmap_tracks import validate_sheaf_track_artifacts, write_sheaf_track_artifacts
 
     ensure_gate_artifacts(project_root)
+    retained = project_root / "output/data/artifact_lineage_v2.json"
+    retained.write_text('{"retained": true}\n', encoding="utf-8")
     paths = write_sheaf_track_artifacts(project_root)
+    assert retained.read_text(encoding="utf-8") == '{"retained": true}\n'
 
     assert _relative_posix(paths["semantic"], project_root) == "output/data/sheaf_gluing_certificate.json"
     assert _relative_posix(paths["dependency"], project_root) == "output/data/validation_dependency_graph.json"

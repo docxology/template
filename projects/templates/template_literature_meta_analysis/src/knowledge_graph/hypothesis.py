@@ -19,6 +19,7 @@ from __future__ import annotations
 
 import logging
 import math
+from collections.abc import Mapping
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Optional
@@ -134,13 +135,14 @@ def load_hypotheses_from_config(config_path: Path, *, source_bytes: bytes | None
         return list(STANDARD_HYPOTHESES)
 
     hypotheses: list[Hypothesis] = []
+    seen_ids: set[str] = set()
     for h_key, h_def in hyp_defs.items():
+        hyp_id = configured_hypothesis_id(h_key, h_def)
+        if hyp_id in seen_ids:
+            raise ValueError(f"Hypothesis {h_key}: duplicate id '{hyp_id}'")
+        seen_ids.add(hyp_id)
         name = h_def.get("name", h_key)
         description = h_def.get("description", "")
-        # Prefer an explicit project-owned ID. Legacy H1..H8 ordinal mapping
-        # remains the fallback for older configurations and fixtures.
-        explicit_id = h_def.get("id") if isinstance(h_def, dict) else None
-        hyp_id = str(explicit_id).strip() if explicit_id else _config_key_to_id(h_key, name)
         hypotheses.append(Hypothesis(hyp_id, name, description))
 
     logger.info(
@@ -151,31 +153,18 @@ def load_hypotheses_from_config(config_path: Path, *, source_bytes: bytes | None
     return hypotheses
 
 
-def _config_key_to_id(key: str, name: str) -> str:
-    """Map a config key (e.g. 'H1') to a hypothesis_id.
+def configured_hypothesis_id(key: str, definition: Mapping[str, object]) -> str:
+    """Read the stable evidence ID explicitly declared by a project hypothesis.
 
-    Checks if the key matches a known STANDARD_HYPOTHESES entry by
-    ordinal position (H1→PRIMARY_EFFICACY, H2→OPTIMAL_PERFORMANCE, etc.).
-    Falls back to uppercased name with spaces replaced by underscores.
+    Configuration keys identify display rows. Evidence IDs remain independent
+    of those keys, row order, and human-readable names.
     """
-    ordinal_map = {f"H{i + 1}": h.hypothesis_id for i, h in enumerate(STANDARD_HYPOTHESES)}
-    if key in ordinal_map:
-        return ordinal_map[key]
-    # Fallback: derive from name
-    return name.upper().replace(" ", "_").replace("-", "_")
-
-
-def config_key_to_hypothesis_id(key: str, name: str = "") -> str:
-    """Public alias of :func:`_config_key_to_id`.
-
-    Downstream consumers (e.g. the manuscript-variable layer) need the SAME
-    config-key → internal-hypothesis-id mapping the KG scorer uses, so that an
-    ``hypothesis_scores.json`` keyed by ``PRIMARY_EFFICACY`` can be looked up
-    from a manuscript that references the config key ``H1``. Without this bridge
-    the injected hypothesis-evidence table reads ``pending`` even after the
-    knowledge-graph stage has scored every hypothesis.
-    """
-    return _config_key_to_id(key, name)
+    if not isinstance(definition, Mapping):
+        raise ValueError(f"Hypothesis {key}: must be a mapping")
+    hypothesis_id = definition.get("id")
+    if not isinstance(hypothesis_id, str) or not hypothesis_id.strip():
+        raise ValueError(f"Hypothesis {key}: id must be a non-empty string")
+    return hypothesis_id.strip()
 
 
 def configure_hypotheses(config_path: Optional[Path] = None, *, source_bytes: bytes | None = None) -> list[Hypothesis]:

@@ -6,7 +6,7 @@ arXiv upload from a project's manuscript and rendered outputs.
 ```python
 from infrastructure.publishing.arxiv import prepare_arxiv_submission
 
-tar_path = prepare_arxiv_submission(Path("projects/my_project/output"), metadata)
+tar_path = prepare_arxiv_submission(Path("projects/my_project/output"))
 ```
 
 ## Package contract
@@ -48,11 +48,9 @@ uv run python - <<'PY'
 from pathlib import Path
 
 from infrastructure.publishing import prepare_arxiv_submission
-from infrastructure.publishing.metadata.metadata_from_config import publication_metadata_from_config
 
 project = Path("projects/templates/template_active_inference")
-metadata = publication_metadata_from_config(project / "manuscript/config.yaml")
-print(prepare_arxiv_submission(project / "output", metadata))
+print(prepare_arxiv_submission(project / "output"))
 PY
 uv run python scripts/maintenance/refresh_artifact_manifests.py \
   --project templates/template_active_inference

@@ -355,7 +355,7 @@ def _native_project(tmp_path: Path, *, overflow: bool = False):
         )
         registry[f"fig:plate-{name.lower()}"] = {
             "filename": filename,
-            "alt": f"Concise alternative for {name}.",
+            "alt_text": f"Concise alternative for {name}.",
             "long_description": f"Complete first paragraph for {name}.\n\nComplete second paragraph for {name}.",
         }
     (figures / "figure_registry.json").write_text(json.dumps(registry), encoding="utf-8")

@@ -27,6 +27,7 @@ from infrastructure.reporting.native_format_process_custody import native_host_o
 from infrastructure.reporting.native_source_external_admission import NativeSourceContext, _anchored_directory_identity
 from infrastructure.reporting.native_tool_process import run_native_tool_process
 from infrastructure.reporting.native_tool_producer import current_native_producer_operation
+from infrastructure.reporting.native_original_progress import _preflight_phase
 from infrastructure.reporting.release_readiness_snapshot import ArtifactSnapshot, SnapshotReader
 
 
@@ -89,7 +90,9 @@ class NativeOriginalSupervisor:
             raise ValueError("native original prelaunch Source/spec pins differ")
         if self.pdfium_provider.held_inputs() != spec["source_inputs"]["pdfium"]:
             raise ValueError("native original prelaunch PDFium input differs from actual held provider")
-        self._verify()
+        # The single authoritative Source/PDFium/closure verification runs in
+        # launch() immediately before Popen. Repeating it here measured 44-62s
+        # of the cold preflight budget without closing the later launch window.
 
     def _verify(self) -> None:
         remaining(self.deadline)
@@ -109,7 +112,9 @@ class NativeOriginalSupervisor:
         """Execute exactly once; retain true signed OS result and full raw streams."""
         if self._result is not None or self._finished:
             raise ValueError("native original supervisor cannot launch twice")
+        _preflight_phase("launch-verify-begin", self.deadline)
         self._verify()
+        _preflight_phase("launch-verify-end", self.deadline)
         before = native_host_observation()
         selected_environment, environment_digest = _worker_environment(environment)
         result = run_native_tool_process(

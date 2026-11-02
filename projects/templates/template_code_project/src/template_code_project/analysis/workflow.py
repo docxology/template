@@ -27,8 +27,8 @@ def run_analysis_pipeline(
         save_publishing_materials,
         save_validation_report,
         validate_generated_outputs,
-        infrastructure_available,
     )
+    from ._infra import ValidationError
     from .experiments import _project_root
     from ..core.experiment_config import load_experiment_config
     from ..figures import (
@@ -43,7 +43,6 @@ def run_analysis_pipeline(
 
     apply_visualization_style()
     logger = (logger_factory or _get_logger)()
-    infra_available = infrastructure_available()
     run_convergence = convergence_runner or run_convergence_experiment
     exp_config = load_experiment_config(_project_root())
 
@@ -55,34 +54,29 @@ def run_analysis_pipeline(
         """Process log warning."""
         logger.warning(msg)
 
-    if infra_available:
-        log_success("Starting optimization analysis pipeline", logger=logger)
+    log_success("Starting optimization analysis pipeline", logger=logger)
     log_info(f"Project root: {_project_root()}")
 
     try:
         checker_factory = health_checker_factory or SystemHealthChecker
-        if infra_available and checker_factory is not None:
-            health_checker = checker_factory()
-            log_info("Running system health check...")
-            health_status = health_checker.get_health_status()
-            if health_status.get("overall_status") != "healthy":
-                log_warning("System health check failed:")
-                for check_name, check_result in health_status.get("checks", {}).items():
-                    if check_result.get("status") != "healthy":
-                        log_warning(f"  - {check_name}: {check_result.get('error', 'unknown error')}")
-            else:
-                log_info("System health check passed")
+        health_checker = checker_factory()
+        log_info("Running system health check...")
+        health_status = health_checker.get_health_status()
+        if health_status.get("overall_status") != "healthy":
+            log_warning("System health check failed:")
+            for check_name, check_result in health_status.get("checks", {}).items():
+                if check_result.get("status") != "healthy":
+                    log_warning(f"  - {check_name}: {check_result.get('error', 'unknown error')}")
+        else:
+            log_info("System health check passed")
 
         log_info("Running convergence experiments...")
-        if infra_available and ProgressBar is not None:
-            progress = ProgressBar(total=len(exp_config.step_sizes), task="Step sizes")
-            results = run_convergence(
-                on_step=lambda _alpha, _result: progress.update(1),
-                config=exp_config,
-            )
-            progress.finish()
-        else:
-            results = run_convergence(config=exp_config)
+        progress = ProgressBar(total=len(exp_config.step_sizes), task="Step sizes")
+        results = run_convergence(
+            on_step=lambda _alpha, _result: progress.update(1),
+            config=exp_config,
+        )
+        progress.finish()
 
         log_info("Generating traditional analysis outputs...")
         convergence_plot = generate_convergence_plot(results, config=exp_config)
@@ -101,29 +95,27 @@ def run_analysis_pipeline(
 
         register_figure()
 
-        validation_report_path = None
         log_info("Validating generated outputs...")
-        if infra_available:
-            validation_report = validate_generated_outputs()
-            if validation_report:
-                validation_report_path = save_validation_report(validation_report)
+        validation_report = validate_generated_outputs()
+        if not validation_report:
+            raise ValidationError("Output validation did not produce a report")
+        validation_report_path = save_validation_report(validation_report)
+        if validation_report_path is None:
+            raise ValidationError("Output validation report could not be saved")
 
         log_info("Generating publishing materials...")
         publishing_metadata = extract_optimization_metadata(results)
-        if publishing_metadata and infra_available:
+        if publishing_metadata:
             citations = generate_citations_from_metadata(publishing_metadata)
             save_publishing_materials(publishing_metadata, citations)
-        elif publishing_metadata:
-            log_info("Skipping citation generation (infrastructure not available)")
 
-        if infra_available:
-            log_info("Publishing integration demonstration...")
-            try:
-                if publishing_metadata:
-                    log_info("Publishing interfaces available: Zenodo, arXiv, GitHub releases")
-                    log_info("Publication metadata extracted and formatted")
-            except (OSError, ImportError, ValueError) as e:
-                log_warning(f"Publishing demonstration failed: {e}")
+        log_info("Publishing integration demonstration...")
+        try:
+            if publishing_metadata:
+                log_info("Publishing interfaces available: Zenodo, arXiv, GitHub releases")
+                log_info("Publication metadata extracted and formatted")
+        except (OSError, ValueError) as e:
+            log_warning(f"Publishing demonstration failed: {e}")
 
         log_info(f"Generated convergence plot: {convergence_plot}")
         log_info(f"Generated sensitivity plot: {sensitivity_plot}")
@@ -131,16 +123,13 @@ def run_analysis_pipeline(
         log_info(f"Generated complexity visualization: {complexity_plot}")
         log_info(f"Generated data: {data_path}")
 
-        if infra_available:
-            log_info(f"Generated stability report: {stability_path}")
-            log_info(f"Generated benchmark report: {benchmark_path}")
-            log_info(f"Generated stability visualization: {stability_plot}")
-            log_info(f"Generated benchmark visualization: {benchmark_plot}")
-            log_info(f"Generated validation report: {validation_report_path}")
-            log_info("Generated publishing materials and citations")
-            log_success("Optimization analysis pipeline completed successfully", logger=logger)
-        else:
-            log_info("Optimization analysis pipeline completed successfully")
+        log_info(f"Generated stability report: {stability_path}")
+        log_info(f"Generated benchmark report: {benchmark_path}")
+        log_info(f"Generated stability visualization: {stability_plot}")
+        log_info(f"Generated benchmark visualization: {benchmark_plot}")
+        log_info(f"Generated validation report: {validation_report_path}")
+        log_info("Generated publishing materials and citations")
+        log_success("Optimization analysis pipeline completed successfully", logger=logger)
 
     except ImportError as e:
         logger.error("Import error: %s", e, exc_info=True)

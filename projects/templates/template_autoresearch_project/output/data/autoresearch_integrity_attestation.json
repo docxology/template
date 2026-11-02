@@ -57,8 +57,8 @@
       "status": "passed"
     },
     {
-      "actual_sha256": "479dafeb2c5d1afa53b2cc15314dc2332fe2d297622decf571a1aff05c9d9742",
-      "expected_sha256": "479dafeb2c5d1afa53b2cc15314dc2332fe2d297622decf571a1aff05c9d9742",
+      "actual_sha256": "22de835f3f911759171db7cf3ed8d3c8b398a752c3df692b22d7b8cd32e9074f",
+      "expected_sha256": "22de835f3f911759171db7cf3ed8d3c8b398a752c3df692b22d7b8cd32e9074f",
       "path": "manuscript/config.yaml",
       "status": "passed"
     },
@@ -69,26 +69,26 @@
       "status": "passed"
     },
     {
-      "actual_sha256": "28732301ca0d27b706dc45463e4c73991ffdb61e33294b3ab7c3cee314117394",
-      "expected_sha256": "28732301ca0d27b706dc45463e4c73991ffdb61e33294b3ab7c3cee314117394",
+      "actual_sha256": "cc692ed54a0772d04428435df9d5332263d0c7ea7d74aee1896a51732863100d",
+      "expected_sha256": "cc692ed54a0772d04428435df9d5332263d0c7ea7d74aee1896a51732863100d",
       "path": "output/data/autoresearch_evidence_overview.json",
       "status": "passed"
     },
     {
-      "actual_sha256": "cf540870d0aeff51c41ffbc9adbcf7c3aae10d06d7be77a0c10b272853cff3ac",
-      "expected_sha256": "cf540870d0aeff51c41ffbc9adbcf7c3aae10d06d7be77a0c10b272853cff3ac",
+      "actual_sha256": "7d899860dd21dc91589168630a24000e2ac3b7590f81c91453789a3ac09eb6a4",
+      "expected_sha256": "7d899860dd21dc91589168630a24000e2ac3b7590f81c91453789a3ac09eb6a4",
       "path": "output/data/autoresearch_loop.json",
       "status": "passed"
     },
     {
-      "actual_sha256": "744b51a4ab185dce4816731b58309d208ffa8b7192c3e0d82e67d81b05d3fb25",
-      "expected_sha256": "744b51a4ab185dce4816731b58309d208ffa8b7192c3e0d82e67d81b05d3fb25",
+      "actual_sha256": "9d1736c0d528ef50b8d8b5917f896fc12e07ceb4d9c68fb8332d3dcd73b13530",
+      "expected_sha256": "9d1736c0d528ef50b8d8b5917f896fc12e07ceb4d9c68fb8332d3dcd73b13530",
       "path": "output/data/autoresearch_plan.json",
       "status": "passed"
     },
     {
-      "actual_sha256": "24767c68ff451fcdb652b3883bfbef9dc17980bf678a136cfd63cb562381a26e",
-      "expected_sha256": "24767c68ff451fcdb652b3883bfbef9dc17980bf678a136cfd63cb562381a26e",
+      "actual_sha256": "d0acda2465bff3eccf084961da2fe38dfcaf27c05889177a66b75c1ea2626fa4",
+      "expected_sha256": "d0acda2465bff3eccf084961da2fe38dfcaf27c05889177a66b75c1ea2626fa4",
       "path": "output/data/autoresearch_review_packet.json",
       "status": "passed"
     },
@@ -105,26 +105,26 @@
       "status": "passed"
     },
     {
-      "actual_sha256": "f0123a925da47641789172c944e7ddf785b9948b5f8f17f6aa02984accfb02ce",
-      "expected_sha256": "f0123a925da47641789172c944e7ddf785b9948b5f8f17f6aa02984accfb02ce",
+      "actual_sha256": "689c7469d343ee77fbc27c29da8380142f7414c61584eb10c803d310355f5aa9",
+      "expected_sha256": "689c7469d343ee77fbc27c29da8380142f7414c61584eb10c803d310355f5aa9",
       "path": "output/data/benchmark_scores.json",
       "status": "passed"
     },
     {
-      "actual_sha256": "363beec604382775476efbf041b725db9c8a687aabf9e3163bd5acb6aa1c0b02",
-      "expected_sha256": "363beec604382775476efbf041b725db9c8a687aabf9e3163bd5acb6aa1c0b02",
+      "actual_sha256": "1bf6b1b28c3c75871c2be767559ad1a964c8c08077a86bf011e62e3d95f8b5fb",
+      "expected_sha256": "1bf6b1b28c3c75871c2be767559ad1a964c8c08077a86bf011e62e3d95f8b5fb",
       "path": "output/data/figure_quality_report.json",
       "status": "passed"
     },
     {
-      "actual_sha256": "0041c897268c5e59a9cfda649ac0d131cbf1cc77d16f90983fc85e96641840ac",
-      "expected_sha256": "0041c897268c5e59a9cfda649ac0d131cbf1cc77d16f90983fc85e96641840ac",
+      "actual_sha256": "f66b19723816147968cbf57c76b4129c0c22a586d65e2973f364743e9acbf880",
+      "expected_sha256": "f66b19723816147968cbf57c76b4129c0c22a586d65e2973f364743e9acbf880",
       "path": "output/data/figure_style.json",
       "status": "passed"
     },
     {
-      "actual_sha256": "ce717dc1956668b1a1118c47b5f864555311103ad778504eb3138e7ab192f186",
-      "expected_sha256": "ce717dc1956668b1a1118c47b5f864555311103ad778504eb3138e7ab192f186",
+      "actual_sha256": "a7ebc02831039e3560a19ba80991df3e46ae3b3600344b6c2f9b5c5f50acc3ee",
+      "expected_sha256": "a7ebc02831039e3560a19ba80991df3e46ae3b3600344b6c2f9b5c5f50acc3ee",
       "path": "output/data/idea_ledger.json",
       "status": "passed"
     },
@@ -159,8 +159,8 @@
       "status": "passed"
     },
     {
-      "actual_sha256": "993c81f80b7dfafc55a5ef3181359bc9827405175fd893169064445e08b3a0c2",
-      "expected_sha256": "993c81f80b7dfafc55a5ef3181359bc9827405175fd893169064445e08b3a0c2",
+      "actual_sha256": "4e967f9e8f02524f6f5809c390d560dc57a4cf0b587fd8d2fdf8f544d68ae0cd",
+      "expected_sha256": "4e967f9e8f02524f6f5809c390d560dc57a4cf0b587fd8d2fdf8f544d68ae0cd",
       "path": "output/data/ml_candidate_ledger.json",
       "status": "passed"
     },
@@ -267,8 +267,8 @@
       "status": "passed"
     },
     {
-      "actual_sha256": "69876c2ba2d55cffcbd83518dbb84157794a9ae714523c476f6884af9a995758",
-      "expected_sha256": "69876c2ba2d55cffcbd83518dbb84157794a9ae714523c476f6884af9a995758",
+      "actual_sha256": "5f71bdcec6920cc99adda56659b46c8d2fc3561891e6f185c121aee7f0d1ec7d",
+      "expected_sha256": "5f71bdcec6920cc99adda56659b46c8d2fc3561891e6f185c121aee7f0d1ec7d",
       "path": "output/data/review_decisions.json",
       "status": "passed"
     },
@@ -279,20 +279,20 @@
       "status": "passed"
     },
     {
-      "actual_sha256": "82d3e92a0122cacd01c329b187ba5b59de965b3a079d007d8f78381339e5e0d2",
-      "expected_sha256": "82d3e92a0122cacd01c329b187ba5b59de965b3a079d007d8f78381339e5e0d2",
+      "actual_sha256": "76250e27e168d031092f1f80282e1e9217c491e500a97786f3eb0af81684646c",
+      "expected_sha256": "76250e27e168d031092f1f80282e1e9217c491e500a97786f3eb0af81684646c",
       "path": "output/figures/autoresearch_candidate_lifecycle.png",
       "status": "passed"
     },
     {
-      "actual_sha256": "3cc656fca79460c678b1b399e7cd2f382a6f8ffc094c97f2166248c3294d8ff1",
-      "expected_sha256": "3cc656fca79460c678b1b399e7cd2f382a6f8ffc094c97f2166248c3294d8ff1",
+      "actual_sha256": "f64096a0825147f8be9661c1a5ec2f473701c02e438841dd8064bdb65bee8395",
+      "expected_sha256": "f64096a0825147f8be9661c1a5ec2f473701c02e438841dd8064bdb65bee8395",
       "path": "output/figures/autoresearch_closure_flow.png",
       "status": "passed"
     },
     {
-      "actual_sha256": "9a8e835c0e3a31cfd90aaa819486fbe5dc060898ddc975fed05ff8a4e8099df6",
-      "expected_sha256": "9a8e835c0e3a31cfd90aaa819486fbe5dc060898ddc975fed05ff8a4e8099df6",
+      "actual_sha256": "bd2357cfeeee6b8e57af9a400efdfe33c015f78b2c318648833d705e9b61211e",
+      "expected_sha256": "bd2357cfeeee6b8e57af9a400efdfe33c015f78b2c318648833d705e9b61211e",
       "path": "output/figures/autoresearch_stage_matrix.png",
       "status": "passed"
     },
@@ -303,122 +303,122 @@
       "status": "passed"
     },
     {
-      "actual_sha256": "45266a40242b46e1c6d2249078c3e066e4dc13434382a130809c29705054bd51",
-      "expected_sha256": "45266a40242b46e1c6d2249078c3e066e4dc13434382a130809c29705054bd51",
+      "actual_sha256": "8661ea71c7d13e9607c00d756efa40e0aebde25f3f1d0d3ccef33ab1e53784cf",
+      "expected_sha256": "8661ea71c7d13e9607c00d756efa40e0aebde25f3f1d0d3ccef33ab1e53784cf",
       "path": "output/figures/ml_bootstrap_intervals.png",
       "status": "passed"
     },
     {
-      "actual_sha256": "1fbe7b016e511b1d56689249d09b0ce49cdf9dba6660e034e9af5da1fab75e8d",
-      "expected_sha256": "1fbe7b016e511b1d56689249d09b0ce49cdf9dba6660e034e9af5da1fab75e8d",
+      "actual_sha256": "6b95147d4937a95529db8214949d0283790cdf467cd739ba44b75d4d04444461",
+      "expected_sha256": "6b95147d4937a95529db8214949d0283790cdf467cd739ba44b75d4d04444461",
       "path": "output/figures/ml_calibration_reliability.png",
       "status": "passed"
     },
     {
-      "actual_sha256": "066ba392e31df71e8df9257bc2120ca840a52247ffcd0457a30a72330265fad1",
-      "expected_sha256": "066ba392e31df71e8df9257bc2120ca840a52247ffcd0457a30a72330265fad1",
+      "actual_sha256": "2edfb5756f4c65f60a4ae623b15aeed47fb9130987acee8c665aa8934ac67fe5",
+      "expected_sha256": "2edfb5756f4c65f60a4ae623b15aeed47fb9130987acee8c665aa8934ac67fe5",
       "path": "output/figures/ml_candidate_rank_stability.png",
       "status": "passed"
     },
     {
-      "actual_sha256": "567314d5d44067eb6567e15e83d3ed7608322b9c24ec1590ad4e3dbdfb7be96a",
-      "expected_sha256": "567314d5d44067eb6567e15e83d3ed7608322b9c24ec1590ad4e3dbdfb7be96a",
+      "actual_sha256": "936f60fbcf9c5a9dd3a8435a4883c7c320a138466e00bc1ca076901fde80bbc6",
+      "expected_sha256": "936f60fbcf9c5a9dd3a8435a4883c7c320a138466e00bc1ca076901fde80bbc6",
       "path": "output/figures/ml_candidate_scores.png",
       "status": "passed"
     },
     {
-      "actual_sha256": "1b7d1ff0d930a9ff3820680212e9968964b60295256e01fdecac323f52b8a722",
-      "expected_sha256": "1b7d1ff0d930a9ff3820680212e9968964b60295256e01fdecac323f52b8a722",
+      "actual_sha256": "53bdbef26f503a92444dde696238b4552da2c5a08535752f46a5539ee7f9341c",
+      "expected_sha256": "53bdbef26f503a92444dde696238b4552da2c5a08535752f46a5539ee7f9341c",
       "path": "output/figures/ml_classification_metrics_heatmap.png",
       "status": "passed"
     },
     {
-      "actual_sha256": "4e81ebd48509c4cd3627648b2e3318c084cfc98d89130f0d57a073d24ce9115f",
-      "expected_sha256": "4e81ebd48509c4cd3627648b2e3318c084cfc98d89130f0d57a073d24ce9115f",
+      "actual_sha256": "e4467d38fd371d408ed14c03c0be18ca67c24ea21a7179b8f8620a0b4c8f0239",
+      "expected_sha256": "e4467d38fd371d408ed14c03c0be18ca67c24ea21a7179b8f8620a0b4c8f0239",
       "path": "output/figures/ml_complexity_accuracy.png",
       "status": "passed"
     },
     {
-      "actual_sha256": "cfcf09924fa57a8e7e8ea525a801e79b975c5e659ef1cfdb09e797bf11562286",
-      "expected_sha256": "cfcf09924fa57a8e7e8ea525a801e79b975c5e659ef1cfdb09e797bf11562286",
+      "actual_sha256": "c379a89553ee3bd383b3f576b7b953bb2c03e9d3f5d51259545cc0fb6a853b23",
+      "expected_sha256": "c379a89553ee3bd383b3f576b7b953bb2c03e9d3f5d51259545cc0fb6a853b23",
       "path": "output/figures/ml_confusion_matrix.png",
       "status": "passed"
     },
     {
-      "actual_sha256": "f9f7670210a6bbe580f227871a551db04fb94aae7a63bc045b3cc2fbdd5010b6",
-      "expected_sha256": "f9f7670210a6bbe580f227871a551db04fb94aae7a63bc045b3cc2fbdd5010b6",
+      "actual_sha256": "56fdfa36253c63ebdf230a6997ca93bef4064c8503f6338940c5704a8714e830",
+      "expected_sha256": "56fdfa36253c63ebdf230a6997ca93bef4064c8503f6338940c5704a8714e830",
       "path": "output/figures/ml_confusion_pairs.png",
       "status": "passed"
     },
     {
-      "actual_sha256": "1d31dcf85a68cd2923631d93ad741fcb3b52829895dc6c6cbb0e5cd6f7fe9172",
-      "expected_sha256": "1d31dcf85a68cd2923631d93ad741fcb3b52829895dc6c6cbb0e5cd6f7fe9172",
+      "actual_sha256": "c225d51fca59ab492a207f5b284b290d35f84f8671b04039686efbe0054c266c",
+      "expected_sha256": "c225d51fca59ab492a207f5b284b290d35f84f8671b04039686efbe0054c266c",
       "path": "output/figures/ml_generalization_gap.png",
       "status": "passed"
     },
     {
-      "actual_sha256": "9fdf6a040004de9245b7c19ceb362d8b141aa23dc9cb1080521f5f06c052be2b",
-      "expected_sha256": "9fdf6a040004de9245b7c19ceb362d8b141aa23dc9cb1080521f5f06c052be2b",
+      "actual_sha256": "9bba83f6a4361f5aa2e51813c88d43f29824d713407ca4e27510737177da9240",
+      "expected_sha256": "9bba83f6a4361f5aa2e51813c88d43f29824d713407ca4e27510737177da9240",
       "path": "output/figures/ml_learning_curves.png",
       "status": "passed"
     },
     {
-      "actual_sha256": "65dca4be8a543b1f817a8414edbf04dc297b5a159afdd439b5c232fbd1b9e58a",
-      "expected_sha256": "65dca4be8a543b1f817a8414edbf04dc297b5a159afdd439b5c232fbd1b9e58a",
+      "actual_sha256": "6145fc8f2375ea1a6853c9174f854131563365543eebecb3aab1f492f60c71a1",
+      "expected_sha256": "6145fc8f2375ea1a6853c9174f854131563365543eebecb3aab1f492f60c71a1",
       "path": "output/figures/ml_paired_correctness.png",
       "status": "passed"
     },
     {
-      "actual_sha256": "03bf0e8a4e539bb085832b61ea2ab943f19fad1f11d0aa2f916a3f29bbb67049",
-      "expected_sha256": "03bf0e8a4e539bb085832b61ea2ab943f19fad1f11d0aa2f916a3f29bbb67049",
+      "actual_sha256": "06d4e115bc0129d8cbc13b16d63370aa47a717b6881ced3713f0b7ea7342bf9d",
+      "expected_sha256": "06d4e115bc0129d8cbc13b16d63370aa47a717b6881ced3713f0b7ea7342bf9d",
       "path": "output/figures/ml_per_class_accuracy.png",
       "status": "passed"
     },
     {
-      "actual_sha256": "75e247b52dd5dbfb02d0a913003168deeccfda4fd4da678e258a519fff563fd7",
-      "expected_sha256": "75e247b52dd5dbfb02d0a913003168deeccfda4fd4da678e258a519fff563fd7",
+      "actual_sha256": "bdfd786fc481af7b2935a69cd0517b3fe0879be511f391bbc13141d44ea6698c",
+      "expected_sha256": "bdfd786fc481af7b2935a69cd0517b3fe0879be511f391bbc13141d44ea6698c",
       "path": "output/figures/ml_probability_margin_distribution.png",
       "status": "passed"
     },
     {
-      "actual_sha256": "1fbe741cb6537f130782788083cd2a45aee7ac58ecc9a238c24f6dc98f29e634",
-      "expected_sha256": "1fbe741cb6537f130782788083cd2a45aee7ac58ecc9a238c24f6dc98f29e634",
+      "actual_sha256": "98d65701288da7de52500a29e12c409987eb13a0d0f510e2f099ac2c2b4a6e59",
+      "expected_sha256": "98d65701288da7de52500a29e12c409987eb13a0d0f510e2f099ac2c2b4a6e59",
       "path": "output/figures/ml_probability_quality.png",
       "status": "passed"
     },
     {
-      "actual_sha256": "ca1fbcd1002dcf09f9f3b860d08da351cfbfc6124d5f4cdc696b9cf71a9c448f",
-      "expected_sha256": "ca1fbcd1002dcf09f9f3b860d08da351cfbfc6124d5f4cdc696b9cf71a9c448f",
+      "actual_sha256": "ae6a2cdd7ec1fc7c936ad2896703b85168b45e91c07aeb502cfc12127d9216b5",
+      "expected_sha256": "ae6a2cdd7ec1fc7c936ad2896703b85168b45e91c07aeb502cfc12127d9216b5",
       "path": "output/figures/ml_robustness_matrix.png",
       "status": "passed"
     },
     {
-      "actual_sha256": "8787c907449410163d8c75f08c3ba76323bb0ec1005d5a3ee9e7009e8391bd40",
-      "expected_sha256": "8787c907449410163d8c75f08c3ba76323bb0ec1005d5a3ee9e7009e8391bd40",
+      "actual_sha256": "6868465748e8b91e1cea81fdc1f894bc7c8e3076747af5289df74d7b68763cd7",
+      "expected_sha256": "6868465748e8b91e1cea81fdc1f894bc7c8e3076747af5289df74d7b68763cd7",
       "path": "output/figures/ml_selective_accuracy.png",
       "status": "passed"
     },
     {
-      "actual_sha256": "be3ec2d16528759b8b7c4cefdeb7d44e123dcd42da05fdd08e7030deb30ccda4",
-      "expected_sha256": "be3ec2d16528759b8b7c4cefdeb7d44e123dcd42da05fdd08e7030deb30ccda4",
+      "actual_sha256": "6ca208cb42065c6f439f18ed7f14ef60cad271d33494a9f790420906a6736b63",
+      "expected_sha256": "6ca208cb42065c6f439f18ed7f14ef60cad271d33494a9f790420906a6736b63",
       "path": "output/figures/ml_training_dynamics.png",
       "status": "passed"
     },
     {
-      "actual_sha256": "bf5d7b97d1278814db418b1be027cdfe01905039ce1e7a98f8238fc70633932e",
-      "expected_sha256": "bf5d7b97d1278814db418b1be027cdfe01905039ce1e7a98f8238fc70633932e",
+      "actual_sha256": "db5b3abf0a3bc86ebd7e8044c10c46a1915c13a8c090418a0612bb38964babe1",
+      "expected_sha256": "db5b3abf0a3bc86ebd7e8044c10c46a1915c13a8c090418a0612bb38964babe1",
       "path": "output/figures/mnist_class_balance.png",
       "status": "passed"
     },
     {
-      "actual_sha256": "c533c842e4ed59ca6582ef43c4c6fe5f19dfaafd7073ea32364a9fe061b008ef",
-      "expected_sha256": "c533c842e4ed59ca6582ef43c4c6fe5f19dfaafd7073ea32364a9fe061b008ef",
+      "actual_sha256": "d2e70c0859f57a7f4b54538ff9378b929174b6026efa0cd865cdcda40c2866d7",
+      "expected_sha256": "d2e70c0859f57a7f4b54538ff9378b929174b6026efa0cd865cdcda40c2866d7",
       "path": "output/figures/mnist_error_examples.png",
       "status": "passed"
     },
     {
-      "actual_sha256": "322d4bb87b3ef59d2c50d14ce17072b49018b33d897193c4cf769bcd1510ef5b",
-      "expected_sha256": "322d4bb87b3ef59d2c50d14ce17072b49018b33d897193c4cf769bcd1510ef5b",
+      "actual_sha256": "7a9fb9b3cea9f2354bdfe77c394180c487aecb3ecf4a83ef2cf94e08e6f2e988",
+      "expected_sha256": "7a9fb9b3cea9f2354bdfe77c394180c487aecb3ecf4a83ef2cf94e08e6f2e988",
       "path": "output/figures/mnist_subset_contact_sheet.png",
       "status": "passed"
     },
@@ -429,8 +429,8 @@
       "status": "passed"
     },
     {
-      "actual_sha256": "cf540870d0aeff51c41ffbc9adbcf7c3aae10d06d7be77a0c10b272853cff3ac",
-      "expected_sha256": "cf540870d0aeff51c41ffbc9adbcf7c3aae10d06d7be77a0c10b272853cff3ac",
+      "actual_sha256": "7d899860dd21dc91589168630a24000e2ac3b7590f81c91453789a3ac09eb6a4",
+      "expected_sha256": "7d899860dd21dc91589168630a24000e2ac3b7590f81c91453789a3ac09eb6a4",
       "path": "output/reports/autoresearch_loop.json",
       "status": "passed"
     },
@@ -486,7 +486,7 @@
   ],
   "claim_boundary": "Checksums attest local files observed by this run; they are not externally signed provenance.",
   "external_signature": false,
-  "generated_at": "2026-10-22T20:31:52+00:00",
+  "generated_at": "2026-10-31T05:06:21+00:00",
   "local_attestation": true,
   "mismatch_count": 0,
   "missing_count": 0,

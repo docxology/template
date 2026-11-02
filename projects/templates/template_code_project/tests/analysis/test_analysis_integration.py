@@ -20,28 +20,20 @@ from template_code_project.analysis import (
     run_performance_benchmarking,
     run_stability_analysis,
     save_optimization_results,
-    infrastructure_context,
 )
 from template_code_project.core.experiment_config import ExperimentConfig, load_experiment_config
 from template_code_project.core.optimizer import OptimizationResult
 from template_code_project.core.project_paths import project_root_context
+from template_code_project.figures import (
+    generate_benchmark_visualization,
+    generate_stability_visualization,
+)
 
 
 @pytest.fixture(autouse=True)
 def _isolated_project_root(tmp_path: Path):
     with project_root_context(tmp_path):
         yield
-
-
-try:
-    from template_code_project.figures import (
-        generate_benchmark_visualization,
-        generate_stability_visualization,
-    )
-
-    FIGURES_AVAILABLE = True
-except ImportError:
-    FIGURES_AVAILABLE = False
 
 
 class TestRunConvergenceExperiment:
@@ -129,17 +121,7 @@ class TestExtractOptimizationMetadata:
         assert extract_optimization_metadata({}) is None
 
 
-class TestAnalysisStandalonePaths:
-    def test_stability_analysis_without_infra(self, tmp_path: Path):
-        with infrastructure_context(False):
-            path = run_stability_analysis()
-        assert path.exists()
-
-    def test_benchmark_without_infra(self, tmp_path: Path):
-        with infrastructure_context(False):
-            path = run_performance_benchmarking()
-        assert path.exists()
-
+class TestAnalysisMathHelpers:
     def test_stability_score_standalone(self):
         cfg = ExperimentConfig(stability_starting_points=(0.0, 10.0))
         from template_code_project.analysis import _stability_score_from_runs
@@ -186,19 +168,15 @@ class TestPublishingHelpers:
 
 class TestValidationAndRegistration:
     def test_validate_and_save_report(self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
-        if not __import__(
-            "template_code_project.analysis", fromlist=["INFRASTRUCTURE_AVAILABLE"]
-        ).INFRASTRUCTURE_AVAILABLE:
-            pytest.skip("Infrastructure not available")
         (tmp_path / "output" / "figures").mkdir(parents=True)
         (tmp_path / "output" / "figures" / "convergence_plot.png").write_bytes(b"png")
 
         from template_code_project.analysis import save_validation_report, validate_generated_outputs
 
         report = validate_generated_outputs()
-        if report:
-            path = save_validation_report(report)
-            assert path is not None and path.exists()
+        assert report is not None
+        path = save_validation_report(report)
+        assert path is not None and path.exists()
 
     def test_register_figure(self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
         (tmp_path / "output" / "figures").mkdir(parents=True)
@@ -225,8 +203,12 @@ class TestMainPipelineSmoke:
         assert (tmp_path / "output" / "figures" / "convergence_plot.png").exists()
         assert (tmp_path / "output" / "data" / "optimization_results.csv").exists()
 
+        report_path = tmp_path / "output" / "reports" / "output_validation.json"
+        report = json.loads(report_path.read_text())
+        assert report["integrity_check"]["total_files"] > 0
+        assert (tmp_path / "output" / "citations" / "citation_bibtex.txt").is_file()
 
-@pytest.mark.skipif(not FIGURES_AVAILABLE, reason="Figure modules not available")
+
 class TestStabilityAnalysis:
     """Test numerical stability analysis functions."""
 
@@ -262,7 +244,6 @@ class TestStabilityAnalysis:
             pytest.fail("Stability analysis returned None")
 
 
-@pytest.mark.skipif(not FIGURES_AVAILABLE, reason="Figure modules not available")
 class TestPerformanceBenchmarking:
     """Test performance benchmarking functions."""
 

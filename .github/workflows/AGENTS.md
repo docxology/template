@@ -24,6 +24,15 @@ hardening choices and the local commands are in [`docs/development/ci.md`](../..
 
 # CI/CD Workflows
 
+Root-original acceptance prepares an exact Source-locked PDFium wheel before
+execution-user setup. `TEMPLATE_TEST_PDFIUM_WHEEL` is a narrowly approved public
+fixture locator; Linux grants read/search access only to its fresh `template-*`
+asset root. The fixture helper requires curl 8.4.0 or newer and verifies exact
+bounded bytes without installing them or granting native execution authority.
+Each hardening infrastructure matrix cell also prepares and exports this exact
+fixture after environment sync, before selecting its external-fixture controls.
+Missing preparation remains a failure, never a reason to skip those controls.
+
 Changed wrapping-header contracts run `test_latex_texttt_native.py` in the
 existing deep-contract lane with a prepared real XeLaTeX provider. Pure rendering
 smoke remains separate; the native regression requires zero compiler errors for
@@ -317,9 +326,9 @@ Triggers on `v*.*.*` tag push or `workflow_dispatch` (with tag input). Both trig
 2. Prepares supported interpreters, the locked release environment and identical acceptance fixture inputs; audits pristine published exemplars before the installed handoff
 3. For root 4+, requires the exact successful hosted run ID, `platform-required-acceptance` artifact ID and aggregate receipt SHA256; authenticates the same-repository exact-revision run and bounded artifact, then uses an independently installed current reader to authenticate every candidate requirement, the complete retained installed matrix and its exact admitted wheel/receipt. Tag pushes without that explicit handoff stop
 4. Runs the tagged-SHA no-mocks and bounded pipeline-smoke gates, root release contract and fail-closed public capability manifest
-5. Earlier major tags retain the clean-export, install and import-smoke matrix on Python 3.12/3.13/3.14. Root 4+ already authenticated its retained complete matrix in step 3. Preparation and acceptance stay distinct
+5. Every release follows this one authenticated path; the former pre-4 clean-export, install and import-smoke lane is retired. Root 4+ authenticates its retained complete matrix in step 3. Preparation and acceptance stay distinct
 6. Builds the final source distribution and admits its exact final bytes alongside the wheel already accepted by the installed matrix; the pristine published audit has already passed before derived execution
-7. For root 4+, selects `docs/releases/<tag>.md` for the actual tag, with maintained notes listed in the [release-note index](../../docs/releases/README.md), and adds accepted-commit, hosted-run and receipt-hash bindings; earlier major tags use the commit-based git-log excerpt
+7. Selects `docs/releases/<tag>.md` for the actual tag, with maintained notes listed in the [release-note index](../../docs/releases/README.md), and adds accepted-commit, hosted-run and receipt-hash bindings
 8. Creates a GitHub Release using `softprops/action-gh-release@v3.0.3` with **`generate_release_notes: false`** and attaches the admitted distributions, tag-selected overview PNG and byte manifest
 9. Retrieves the published assets and requires exact admitted hashes; auto-marks as pre-release if the tag contains `-rc`, `-beta`, or `-alpha`
 

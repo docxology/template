@@ -38,8 +38,8 @@ Pipeline execution, summary, tracking, and multi-project orchestration helpers.
   fail-closed Git-shippable filtering; explicitly resolved non-template
   lifecycle projects may use stable-local mode without claiming Git
   shippability. Manifests persist the selected mode, validators compare it with
-  the lifecycle-authorized mode, and legacy manifests without the field retain
-  the strict Git-shippable interpretation. Manifest readers share an exact schema
+  the lifecycle-authorized mode. Every manifest requires the field; omission
+  fails validation. Manifest readers share an exact schema
   parser (canonical POSIX `output/...` paths, complete typed fields, lowercase
   SHA-256 values), and validation rejects duplicates, omitted stable artifacts,
   or entries outside the lifecycle-authorized inventory. Both modes exclude

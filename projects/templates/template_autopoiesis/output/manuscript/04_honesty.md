@@ -7,7 +7,7 @@ obvious temptation: assert a capability in prose without checking whether the
 capability exists.  The abstract of this manuscript survived exactly this
 failure once — a hand-written test-count and coverage line that no
 generator step had computed — and was corrected by replacing the literal
-numbers with `578` / `92.18` tokens filled in at render
+numbers with `578` / `91.88` tokens filled in at render
 time by `scripts/02_measure_test_coverage.py`.  `src/template_autopoiesis/core/honesty.py` exists to
 make that class of failure structurally harder: every load-bearing claim in
 this manuscript must resolve to a named function in a named file, and a

@@ -1,9 +1,0 @@
-# Deprecated Cursor entry point
-
-Generic agent instructions now live in [.agents/AGENTS.md](.agents/AGENTS.md).
-Read [AGENTS.md](AGENTS.md) for the repository contract and
-[START_HERE.md](START_HERE.md) for executable onboarding.
-
-Use `.agents/skill_manifest.json`, `.agents/operations_manifest.json`,
-and `.agents/state/` for shared discovery and local memory. This file remains
-a compatibility pointer for existing Cursor workspaces.

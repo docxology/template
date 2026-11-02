@@ -4,9 +4,19 @@ Comprehensive tests for output validation functionality including
 copied outputs validation and output structure validation.
 """
 
+import pytest
+
 from infrastructure.validation.output.validator import (
     validate_copied_outputs,
 )
+
+
+def _write_pdf(path):
+    from pypdf import PdfWriter
+
+    writer = PdfWriter()
+    writer.add_blank_page(width=612, height=792)
+    writer.write(path)
 
 
 class TestValidateCopiedOutputs:
@@ -26,9 +36,9 @@ class TestValidateCopiedOutputs:
 
         # Create PDF with project-specific name
         pdf_file = project_output_dir / "test_project_combined.pdf"
-        pdf_file.write_bytes(b"PDF content" * 1000)
+        _write_pdf(pdf_file)
 
-        result = validate_copied_outputs(project_output_dir)
+        result = validate_copied_outputs(project_output_dir, enabled_formats=("pdf",))
 
         assert result is True
 
@@ -44,9 +54,9 @@ class TestValidateCopiedOutputs:
 
         # Create PDF in pdf/ directory with project-specific name
         pdf_file = pdf_dir / "test_project_combined.pdf"
-        pdf_file.write_bytes(b"PDF content" * 1000)
+        _write_pdf(pdf_file)
 
-        result = validate_copied_outputs(project_output_dir)
+        result = validate_copied_outputs(project_output_dir, enabled_formats=("pdf",))
 
         assert result is True
 
@@ -57,7 +67,10 @@ class TestValidateCopiedOutputs:
         project_output_dir = output_root / "test_project"
         project_output_dir.mkdir()
 
-        result = validate_copied_outputs(project_output_dir)
+        with pytest.raises(TypeError, match="enabled_formats"):
+            validate_copied_outputs(project_output_dir)
+
+        result = validate_copied_outputs(project_output_dir, enabled_formats=("pdf",))
 
         assert result is False
 
@@ -71,7 +84,7 @@ class TestValidateCopiedOutputs:
         pdf_file = project_output_dir / "test_project_combined.pdf"
         pdf_file.write_bytes(b"")  # Empty file
 
-        result = validate_copied_outputs(project_output_dir)
+        result = validate_copied_outputs(project_output_dir, enabled_formats=("pdf",))
 
         assert result is False
 
@@ -84,7 +97,7 @@ class TestValidateCopiedOutputs:
 
         pdf_dir = project_output_dir / "pdf"
         pdf_dir.mkdir()
-        (pdf_dir / "test_project_combined.pdf").write_bytes(b"PDF" * 1000)
+        _write_pdf(pdf_dir / "test_project_combined.pdf")
 
         # Create all expected subdirectories
         for subdir in ["web", "slides", "figures", "data", "reports", "simulations"]:
@@ -92,7 +105,7 @@ class TestValidateCopiedOutputs:
             subdir_path.mkdir()
             (subdir_path / f"{subdir}_file.txt").write_text("content")
 
-        result = validate_copied_outputs(project_output_dir)
+        result = validate_copied_outputs(project_output_dir, enabled_formats=("pdf",))
 
         assert result is True
 
@@ -105,14 +118,14 @@ class TestValidateCopiedOutputs:
 
         pdf_dir = project_output_dir / "pdf"
         pdf_dir.mkdir()
-        (pdf_dir / "test_project_combined.pdf").write_bytes(b"PDF" * 1000)
+        _write_pdf(pdf_dir / "test_project_combined.pdf")
 
         for subdir in ["figures", "data"]:
             subdir_path = project_output_dir / subdir
             subdir_path.mkdir()
             (subdir_path / "file.txt").write_text("content")
 
-        result = validate_copied_outputs(project_output_dir)
+        result = validate_copied_outputs(project_output_dir, enabled_formats=("pdf",))
 
         assert result is True
 
@@ -125,11 +138,11 @@ class TestValidateCopiedOutputs:
 
         pdf_dir = project_output_dir / "pdf"
         pdf_dir.mkdir()
-        (pdf_dir / "test_project_combined.pdf").write_bytes(b"PDF" * 1000)
+        _write_pdf(pdf_dir / "test_project_combined.pdf")
 
         for subdir in ["figures"]:
             (project_output_dir / subdir).mkdir()
 
-        result = validate_copied_outputs(project_output_dir)
+        result = validate_copied_outputs(project_output_dir, enabled_formats=("pdf",))
 
         assert result is True

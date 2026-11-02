@@ -259,15 +259,7 @@ def test_extract_workflow_graphs_llm_skips_papers_without_fulltext(httpserver: H
 
 
 def test_extract_workflow_nodes_sends_reproducibility_system_prompt(httpserver: HTTPServer):
-    """call_ollama must receive the reproducibility system prompt, not the KG one.
-
-    The shared call_ollama() defaults to knowledge_graph.llm_prompts._SYSTEM_PROMPT
-    when system_prompt is not passed. The reproducibility module must pass its own
-    system prompt (describing the workflow-graph schema) — otherwise the LLM gets
-    a system prompt about hypothesis-support assertions and emits nodes with empty
-    node_type values that the validation layer silently drops. This test verifies
-    the request body's 'system' field matches the reproducibility module's prompt.
-    """
+    """The actual request carries the workflow-graph task's explicit system prompt."""
     httpserver.expect_request("/api/generate", method="POST").respond_with_json(
         {"response": json.dumps(_valid_workflow_response()), "done": True}
     )

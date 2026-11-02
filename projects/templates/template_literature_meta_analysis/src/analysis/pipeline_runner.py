@@ -28,14 +28,6 @@ from template_literature_meta_analysis.analysis.temporal_analysis import (
 from template_literature_meta_analysis.analysis.text_processing import build_tfidf_matrix, tokenize_documents
 from template_literature_meta_analysis.analysis.topic_modeling import fit_nmf_topics
 from template_literature_meta_analysis.literature.corpus import Corpus
-from template_literature_meta_analysis.literature.models import Paper
-
-
-def _count_paper_references(paper: Paper) -> int:
-    refs = getattr(paper, "references", None)
-    if isinstance(refs, list) and refs:
-        return len(refs)
-    return len(getattr(paper, "referenced_works", []) or [])
 
 
 def run_meta_analysis_pipeline(
@@ -149,7 +141,7 @@ def run_meta_analysis_pipeline(
         "max_out_degree": metrics["max_out_degree"],
         "connected_components": metrics["connected_components"],
         "num_communities": len(set(communities.values())) if communities else 0,
-        "total_references": sum(_count_paper_references(p) for p in papers),
+        "total_references": sum(len(p.references) for p in papers),
         "top_pagerank": {k: float(v) for k, v in list(metrics["pagerank"].items())[:5]},
         "top_hubs": {k: float(v) for k, v in list(metrics.get("hubs", {}).items())[:5]},
         "top_authorities": {k: float(v) for k, v in list(metrics.get("authorities", {}).items())[:5]},

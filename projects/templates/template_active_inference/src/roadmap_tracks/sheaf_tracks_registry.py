@@ -103,32 +103,6 @@ CANONICAL_ARTIFACTS: dict[str, str] = {
     "release_attestation": "output/reports/release_attestation.json",
 }
 
-LEGACY_ARTIFACTS: tuple[str, ...] = (
-    "output/data/artifact_lineage_v2.json",
-    "output/data/artifact_bundle_lineage_v3.json",
-    "output/data/sensitivity_sweep_v2.json",
-    "output/data/sensitivity_sweep_v3.json",
-    "output/data/uncertainty_summary_v2.json",
-    "output/data/uncertainty_calibration_v3.json",
-    "output/reports/counterexample_matrix_v2.json",
-    "output/reports/counterexample_fixture_matrix_v3.json",
-    "output/reports/model_checking_witnesses_v2.json",
-    "output/reports/model_checking_witnesses_v3.json",
-    "output/data/interop_roundtrip_v2.json",
-    "output/data/interop_roundtrip_v3.json",
-    "output/reports/adversarial_audit_v2.json",
-    "output/reports/adversarial_probe_matrix_v3.json",
-    "output/reports/replay_matrix_v2.json",
-    "output/data/sheaf_gluing_certificate_v3.json",
-    "output/data/sheaf_gluing_certificate_v4.json",
-    "output/data/sheaf_gluing_certificate_v5.json",
-    "output/data/validation_dependency_graph_v2.json",
-    "output/data/validation_dependency_graph_v3.json",
-    "output/data/validation_dependency_graph_v4.json",
-    "output/data/track_improvement_scope_v2.json",
-    "output/reports/blocked_scope_manifest_v2.json",
-)
-
 REQUIRED_EDGE_TYPES: tuple[str, ...] = (
     "producer_to_track",
     "track_to_artifact",

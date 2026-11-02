@@ -41,14 +41,7 @@ def _setup_iso_with_deep_search(tmp_path: Path) -> Path:
     (iso / "manuscript").mkdir()
     (iso / "output" / "bibliography").mkdir(parents=True)
     (iso / "manuscript" / "config.yaml").write_text(
-        "paper:\n  title: 'X'\n"
-        "search:\n  query: 'x'\n"
-        "deep_search:\n"
-        "  enabled: true\n"
-        "  keywords: ['convex']\n"
-        "  max_results_per_keyword: 2\n"
-        "  output_dir: 'output/deep_search'\n"
-        "  unified_bibtex_path: 'output/bibliography/references_deep.bib'\n",
+        "paper:\n  title: X\nproject_config:\n  deep_search:\n    enabled: true\n    keywords:\n    - convex\n    max_results_per_keyword: 2\n    output_dir: output/deep_search\n    unified_bibtex_path: output/bibliography/references_deep.bib\n  search:\n    query: x\n",
         encoding="utf-8",
     )
 
@@ -108,7 +101,9 @@ def test_composition_skips_when_no_deep_search(tmp_path: Path):
     iso.mkdir()
     (iso / "manuscript").mkdir()
     (iso / "output" / "bibliography").mkdir(parents=True)
-    (iso / "manuscript" / "config.yaml").write_text("paper:\n  title: 'X'\nsearch:\n  query: 'x'\n", encoding="utf-8")
+    (iso / "manuscript" / "config.yaml").write_text(
+        "paper:\n  title: X\nproject_config:\n  search:\n    query: x\n", encoding="utf-8"
+    )
     result = _run(
         [
             "--config",

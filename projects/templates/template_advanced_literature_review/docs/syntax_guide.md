@@ -41,7 +41,7 @@ The authoritative token list is the return value of
 | Token | Source |
 | --- | --- |
 | `TOTAL_PHASES` | Number of phases in `phase_metadata.json` |
-| `CORPUS_SIZE` | Total papers across all phases, from `phase_metadata.json` |
+| `PHASE_CORPUS_SIZE` | Unique papers in the configured phase union, from `phase_metadata.json` |
 | `PHASE_{n}_NAME`, `PHASE_{n}_PAPERS`, `PHASE_{n}_QUERIES` | Per-phase name, final paper count, and query count (`n` = 1, 2, 3, ... in phase order) |
 | `PHASE_{n}_LLM_FILTER_RATE` | Fraction of phase-`n` papers removed by LLM filtering, when the phase's deterministic-filtered count is nonzero |
 | `CROSS_PHASE_OVERLAP_PCT` | Average Jaccard similarity across the phase-overlap matrix |

@@ -663,7 +663,7 @@ The visualization registry is paired with `output/reports/figure_quality_report.
 | Figure | PNG | SVG | Dimensions | Nonwhite | Variance | Status |
 |--------|-----|-----|------------|----------|----------|--------|
 | `claim_evidence_assay` | yes | yes | 3063x3193 | 0.343 | 0.08586759 | pass |
-| `evidence_tier_ladder` | yes | yes | 3419x1447 | 0.114 | 0.04050309 | pass |
+| `evidence_tier_ladder` | yes | yes | 3419x1447 | 0.114 | 0.04050978 | pass |
 | `formalism_traceability` | yes | yes | 2478x1777 | 0.426 | 0.10007865 | pass |
 | `implementation_circuit` | yes | yes | 2966x2160 | 0.125 | 0.03298687 | pass |
 | `integrity_gate_matrix` | yes | yes | 3282x2137 | 0.603 | 0.17178490 | pass |
@@ -764,7 +764,7 @@ The gold-refinery pipeline demonstrates that a metallurgical analogy can be made
 - 5 refinery stages from ore (9K) to certification (nine-nines)
 - Final purity: 99.9999999% (nine-nines) (24K (nine-nines certified))
 - 24 tokens generated deterministically from seed 431
-- Config hash: dac157d212602182
+- Config hash: 4a2f746f4bbe5ec5
 - 7 source-owned formalisms with equation labels: eq:purity_functional, eq:monotone_refinery, eq:token_digest, eq:claim_support, eq:integrity_vector, eq:certification_predicate, eq:adversarial_assay
 - Claim-support status: 9/9 supported (passing)
 - 9 integrity dimensions with residual-risk scoring and owner/validator links.
@@ -802,8 +802,8 @@ The refinery pipeline is fully deterministic. Given the same `manuscript/config.
 Executable-publication scholarship sharpens that norm. Executable research compendia and executable papers treat an article as a package of narrative, code, data, environment, and rendered outputs rather than as a static document with detachable supplements [@nuest2017erc; @lasser2020executable]. The present exemplar is smaller and more template-specific: it does not provide a universal executable-paper format, but it does make the manuscript variables, figures, reports, and rendered PDF/HTML products rebuildable from source-owned inputs.
 
 - **Seed:** 431
-- **Config hash:** dac157d212602182
-- **Generation timestamp:** 2026-10-29T21:56:17Z
+- **Config hash:** 4a2f746f4bbe5ec5
+- **Generation timestamp:** 2026-10-31T05:06:21Z
 - **Python version:** 3.14.9
 
 ## Artifact inventory
@@ -828,7 +828,7 @@ uv run python projects/templates/template_gold_refinement/scripts/z_generate_man
 ./run.sh --project templates/template_gold_refinement --pipeline --mode core
 ```
 
-A reproduction report should record command exit status, the source revision, `dac157d212602182`, Python 3.14.9, and whether the generated registries pass. Matching prose alone is insufficient if the token plan, claim registry, or figure registry differs. Conversely, timestamp or renderer metadata differences should be interpreted separately from substantive differences in source-owned values.
+A reproduction report should record command exit status, the source revision, `4a2f746f4bbe5ec5`, Python 3.14.9, and whether the generated registries pass. Matching prose alone is insufficient if the token plan, claim registry, or figure registry differs. Conversely, timestamp or renderer metadata differences should be interpreted separately from substantive differences in source-owned values.
 
 ## Config ownership
 
@@ -836,7 +836,7 @@ All vocabulary, slots, section conditions, steganography toggles, and optional L
 
 `src/template_gold_refinement/pipeline_policy.py` turns those policy blocks into an explicit secure-pipeline hook. That keeps the optional hardening path visible before execution instead of burying it in shell glue or prose.
 
-The reproducibility spine uses fact registry and figure registry as generated artifacts rather than reader trust signals. Variable generation records `dac157d212602182`; analysis writes refinery, token, claim-support, dashboard, and figure artifacts; validation may add the shared evidence registry used by template scientific-integrity checks.
+The reproducibility spine uses fact registry and figure registry as generated artifacts rather than reader trust signals. Variable generation records `4a2f746f4bbe5ec5`; analysis writes refinery, token, claim-support, dashboard, and figure artifacts; validation may add the shared evidence registry used by template scientific-integrity checks.
 
 The implementation circuit gives a reproducibility checklist for future forks. A reader should be able to start at any rendered figure or claim, follow it to a generated variable or report, follow that artifact to `src/` or `manuscript/config.yaml`, and rerun the same stage command. If that path is broken, the fork has produced a static illustration rather than a reproducible refinement pipeline.
 

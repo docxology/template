@@ -1,4 +1,4 @@
-"""Accessible Beamer overflow gate, reveal crossref resolution, and MathJax hardening (split from test_slides_accessibility.py)."""
+"""Accessible Beamer overflow, Reveal cross-references, and pinned MathJax validation."""
 
 from __future__ import annotations
 
@@ -25,10 +25,8 @@ from infrastructure.rendering._web_postprocess import (
     harden_mathjax_script,
 )
 from infrastructure.rendering.config import RenderingConfig
-from infrastructure.rendering.slides_renderer import (
-    SlidesRenderer,
-    _reject_accessible_beamer_overflow,
-)
+from infrastructure.rendering._slides_beamer_geometry import reject_accessible_beamer_overflow
+from infrastructure.rendering.slides_renderer import SlidesRenderer
 
 
 def test_accessible_beamer_overflow_discards_derivative_with_stable_diagnostic(tmp_path: Path) -> None:
@@ -38,7 +36,7 @@ def test_accessible_beamer_overflow_discards_derivative_with_stable_diagnostic(t
     compiled_pdf.write_bytes(b"%PDF-1.7\nfailed-layout")
 
     with pytest.raises(RenderingError, match=r"\[slides\.density\.beamer-overflow\]") as exc_info:
-        _reject_accessible_beamer_overflow(log_file, compiled_pdf)
+        reject_accessible_beamer_overflow(log_file, compiled_pdf)
 
     assert not compiled_pdf.exists()
     assert exc_info.value.context["diagnostic_code"] == "slides.density.beamer-overflow"
@@ -54,7 +52,7 @@ def test_accessible_beamer_overflow_gate_ignores_non_layout_log_findings(tmp_pat
     )
     compiled_pdf.write_bytes(b"%PDF-1.7\nlayout-valid")
 
-    _reject_accessible_beamer_overflow(log_file, compiled_pdf)
+    reject_accessible_beamer_overflow(log_file, compiled_pdf)
 
     assert compiled_pdf.exists()
 
@@ -326,11 +324,11 @@ def test_reveal_mathjax_validation_requires_one_exact_sri_loader() -> None:
     assert reveal_reference_and_math_issues(marker + exact) == ()
     assert "exact pinned SRI" in " ".join(reveal_reference_and_math_issues(marker + wrong))
     assert "exactly one pinned MathJax loader" in " ".join(reveal_reference_and_math_issues(marker + exact + exact))
-    legacy = (
+    competing_loader = (
         f'<script src="{ACCESSIBLE_REVEAL_URL}/plugin/math/math.js"></script>'
         "<script>Reveal.initialize({plugins: [ RevealMath ]});</script>"
     )
-    assert "competing legacy RevealMath" in " ".join(reveal_reference_and_math_issues(marker + exact + legacy))
+    assert "competing RevealMath" in " ".join(reveal_reference_and_math_issues(marker + exact + competing_loader))
 
     empty_config = "<script data-template-mathjax-config></script>"
     assert "one canonical MathJax configuration" in " ".join(reveal_reference_and_math_issues(empty_config + exact))

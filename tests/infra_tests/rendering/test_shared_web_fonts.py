@@ -120,8 +120,8 @@ def test_multiple_real_html_pages_share_one_idempotent_bounded_asset(tmp_path: P
     authored = '<script>window.authoredValue="Preserved";</script>'
     old_inline = source_web_font_script()
     for index, page in enumerate(pages):
-        legacy_fonts = old_inline if index == 0 else ""
-        page.write_text("<html><head>" + authored + legacy_fonts + "</head><body>Readable publication.</body></html>")
+        inline_fonts = old_inline if index == 0 else ""
+        page.write_text("<html><head>" + authored + inline_fonts + "</head><body>Readable publication.</body></html>")
         embed_css(page, css)
         text = page.read_text()
         assert f'src="{SOURCE_WEB_FONT_ASSET}"' in text

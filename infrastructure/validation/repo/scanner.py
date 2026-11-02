@@ -124,7 +124,7 @@ class RepositoryScanner:
 
     def _discover_scripts(self) -> None:
         """Discover runnable scripts across the repository."""
-        # ``repo_utilities`` is a supported legacy script location used by the
+        # ``repo_utilities`` is a supported project script location used by the
         # documentation scanners and documented-command resolver. Keep this
         # inventory in sync so a full repository scan does not silently omit
         # those files from its completeness and architecture checks.

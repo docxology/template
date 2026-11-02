@@ -132,45 +132,39 @@ def required_profile(
             )
         )
 
-    root_case_contract = metadata.get("tool", {}).get("template", {}).get("root_acceptance")
-    root_v2 = isinstance(root_case_contract, dict) and root_case_contract.get("schema_version") in {2, 3}
-    if root_v2:
-        from infrastructure.project.public_acceptance_scope import MissingRootCasePolicy
-        from infrastructure.reporting.release_readiness_root_cases import case_requirements
+    from infrastructure.project.public_acceptance_scope import MissingRootCasePolicy
+    from infrastructure.reporting.release_readiness_root_cases import case_requirements
 
-        try:
-            requirements.extend(
-                case_requirements(
-                    reader,
-                    version=version,
-                    package=package,
-                    fingerprint=fingerprint,
-                    deliverables=root_deliverables,
-                    source_files=files,
-                    test_files=tests,
-                )
+    try:
+        requirements.extend(
+            case_requirements(
+                reader,
+                version=version,
+                package=package,
+                fingerprint=fingerprint,
+                deliverables=root_deliverables,
+                source_files=files,
+                test_files=tests,
             )
-        except MissingRootCasePolicy:
-            add("root:case-policy", "root-policy")
-            faults.append(
-                GateEvidence(
-                    "root:case-declaration",
-                    "blocked",
-                    diagnostic="required complete Root case policy/operation eligibility is unavailable",
-                )
+        )
+    except MissingRootCasePolicy:
+        add("root:case-policy", "root-policy")
+        faults.append(
+            GateEvidence(
+                "root:case-declaration",
+                "blocked",
+                diagnostic="required complete Root case policy/operation eligibility is unavailable",
             )
-        except (OSError, ValueError, TypeError, KeyError, UnicodeError):
-            add("root:case-policy", "root-policy")
-            faults.append(
-                GateEvidence(
-                    "root:case-declaration",
-                    "fail",
-                    diagnostic="source-owned complete Root case policy/prerequisites are invalid",
-                )
+        )
+    except (OSError, ValueError, TypeError, KeyError, UnicodeError):
+        add("root:case-policy", "root-policy")
+        faults.append(
+            GateEvidence(
+                "root:case-declaration",
+                "fail",
+                diagnostic="source-owned complete Root case policy/prerequisites are invalid",
             )
-    else:
-        for runtime in CANONICAL_CI_PYTHON_VERSIONS:
-            add(f"root:runtime:{runtime}", "runtime", python_version=runtime)
+        )
     for id_, kind in (
         ("roster", "roster"),
         ("docs_lint", "docs"),

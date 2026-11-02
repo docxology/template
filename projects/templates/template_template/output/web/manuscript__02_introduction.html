@@ -835,7 +835,7 @@ contingent on test passage. The configured source-coverage floors are
 prohibited mock-framework imports, while the suites exercise real
 filesystem and subprocess behavior and use local protocol servers or
 explicitly enabled live services for network boundaries. ~12,564
-infrastructure tests and 6335+ project tests are discovered by the
+infrastructure tests and 6336+ project tests are discovered by the
 introspection build.</p></li>
 <li><p><strong>Automated Provenance</strong>: Steganographic
 watermarking and cryptographic hashing are integrated directly into the
@@ -849,10 +849,10 @@ it is enforced by architecture.</p></li>
 Operations</strong>: A three-tier documentation architecture enables AI
 agents to operate at every level of the system. At the system level,
 root <code>AGENTS.md</code> and <code>.agents/</code> define shared
-constraints and generic workflows; client files are compatibility
-references. At the structural level, <code>AGENTS.md</code> files in
-documented directories expose local API surfaces, file inventories, and
-integration contracts. At the module level, <code>SKILL.md</code>
+constraints and generic workflows; client entrypoints reference these
+shared contracts. At the structural level, <code>AGENTS.md</code> files
+in documented directories expose local API surfaces, file inventories,
+and integration contracts. At the module level, <code>SKILL.md</code>
 files—written to a discoverable YAML+Markdown schema aligned with the
 Model Context Protocol [anthropic2024mcp]—describe skill-enabled modules
 and exemplars as reusable capabilities.</p></li>

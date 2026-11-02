@@ -13,7 +13,7 @@ from pathlib import Path
 from typing import Any, Iterable
 
 from infrastructure.project.git_guards import (
-    ALLOWED_PROJECTS_TOPLEVEL,
+    ALLOWED_PROJECTS_TOPLEVEL_FILES,
     ALLOWED_PROJECT_DIRS,
 )
 
@@ -88,7 +88,7 @@ def unexpected_indexed_project_paths(indexed_paths: Iterable[str]) -> list[str]:
         normalized = path.replace("\\", "/").lstrip("./")
         if not normalized.startswith("projects/"):
             continue
-        if ALLOWED_PROJECTS_TOPLEVEL.match(normalized):
+        if normalized in ALLOWED_PROJECTS_TOPLEVEL_FILES:
             continue
         if any(normalized.startswith(prefix) for prefix in ALLOWED_PROJECT_DIRS):
             continue

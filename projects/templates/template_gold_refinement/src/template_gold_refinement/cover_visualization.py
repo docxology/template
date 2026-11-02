@@ -11,18 +11,13 @@ import numpy as np
 from matplotlib.patches import Circle, FancyBboxPatch, Polygon, Wedge
 
 from figures._common import FIGURE_DPI, PNG_METADATA, STAGE_COLORS, SVG_METADATA, _normalize_svg_whitespace
-from template_gold_refinement.formalisms import formalism_count
-from template_gold_refinement.integrity import build_integrity_dimensions
-from template_gold_refinement.security_assay import build_security_assay
+from .formalisms import formalism_count
+from .integrity import build_integrity_dimensions
+from .security_assay import build_security_assay
 
-try:
-    from .config import load_gold_refinement_config
-    from .evidence import build_evidence_registry
-    from .refinery import run_refinery
-except ImportError:
-    from template_gold_refinement.config import load_gold_refinement_config  # type: ignore[no-redef]
-    from template_gold_refinement.evidence import build_evidence_registry  # type: ignore[no-redef]
-    from template_gold_refinement.refinery import run_refinery  # type: ignore[no-redef]
+from .config import load_gold_refinement_config
+from .evidence import build_evidence_registry
+from .refinery import run_refinery
 
 
 COVER_PNG = "cover_visualization.png"

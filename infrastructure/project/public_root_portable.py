@@ -1,8 +1,8 @@
 """Portable Root observations authenticated by the exact hosted artifact origin.
 
-Legacy local readers retain physical filesystem/runtime checks. This versioned
-contract retains actual producer observations and checks them against current
-source and the independently verified same-run artifact byte inventory.
+Current local readers require physical filesystem/runtime checks. Hosted readback
+retains actual producer observations and checks them against current source and
+the independently verified same-run artifact byte inventory.
 """
 
 from __future__ import annotations

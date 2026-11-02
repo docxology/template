@@ -15,7 +15,6 @@ from .contracts import (
     validate_steganography_defaults_receipt,
 )
 from .introspection import (
-    META_PROJECT_DIR_NAME,
     META_PROJECT_PUBLIC_NAME,
     CoverageConfig,
     InfrastructureReport,
@@ -33,7 +32,6 @@ from .introspection import (
 from .paths import locate_repo_root
 
 __all__ = [
-    "META_PROJECT_DIR_NAME",
     "META_PROJECT_PUBLIC_NAME",
     "CoverageConfig",
     "InfrastructureReport",

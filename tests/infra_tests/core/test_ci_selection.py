@@ -145,6 +145,9 @@ def test_documentation_paths_select_no_roster_entry(tmp_path: Path) -> None:
 
 def test_documentation_only_change_runs_no_exemplar_suite(tmp_path: Path) -> None:
     _metadata(tmp_path)
+    test = tmp_path / "tests/infra_tests/documentation/test_guide.py"
+    test.parent.mkdir(parents=True)
+    test.write_text("def test_guide():\n    assert 1 + 1 == 2\n")
     paths = ("AGENTS.md", "docs/guides/new-project-setup.md", "infrastructure/core/testing/AGENTS.md")
     assert documentation_only(paths)
     projects, reason = affected_projects(tmp_path, paths)
@@ -153,7 +156,10 @@ def test_documentation_only_change_runs_no_exemplar_suite(tmp_path: Path) -> Non
     plan: dict[str, object] = {"changed_paths": list(paths), "projects": [], "reason": reason}
     infrastructure_selection(tmp_path, plan)
     assert plan["documentation_only"] is True
-    assert plan["infra_shards"] == [["tests/infra_tests/documentation"]]
+    assert plan["infra_shards"] == [["tests/infra_tests/documentation/test_guide.py"]]
+    from infrastructure.core.testing.ci_infra import validate_plan
+
+    validate_plan(tmp_path, plan)
 
 
 @pytest.mark.parametrize(
@@ -167,3 +173,65 @@ def test_documentation_only_change_runs_no_exemplar_suite(tmp_path: Path) -> Non
 )
 def test_non_documentation_changes_keep_normal_routing(paths: tuple[str, ...]) -> None:
     assert not documentation_only(paths)
+
+
+@pytest.mark.parametrize(
+    "path",
+    [
+        "requirements.txt",
+        "infrastructure/llm/prompts/review.md",
+        "docs/prompts/research.md",
+        "docs/manuscript/01_intro.md",
+        "projects/templates/template_code_project/manuscript/01_intro.md",
+        "projects/templates/template_code_project/manuscript/figures/plot.png",
+        "infrastructure/rendering/assets/background.svg",
+        "unknown/README.md",
+        "../docs/guide.md",
+        "/docs/guide.md",
+    ],
+)
+def test_runtime_text_artwork_and_unknown_paths_keep_functional_tests(path: str) -> None:
+    assert not documentation_only((path,))
+
+
+def test_full_run_does_not_apply_pull_request_documentation_reduction() -> None:
+    from infrastructure.core.testing.ci_infra import infrastructure_files, validate_plan
+
+    root = Path(__file__).resolve().parents[3]
+    plan = {"changed_paths": ["README.md"], "full": True}
+    infrastructure_selection(root, plan)
+    assert plan["documentation_only"] is False
+    validate_plan(root, plan)
+    assert set(infrastructure_files(root)) <= {name for shard in plan["infra_shards"] for name in shard}
+
+
+@pytest.mark.timeout(90)
+def test_documentation_plan_executes_real_modules_and_retains_prepared_contracts(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    from infrastructure.core.testing.ci_infra import run_shard, validate_plan, verify_shard_receipts
+
+    root = tmp_path / "source"
+    directory = root / "tests/infra_tests/documentation"
+    directory.mkdir(parents=True)
+    (root / "pyproject.toml").write_text("[tool.pytest.ini_options]\naddopts=[]\n")
+    for name in ("test_guide", "test_counts_refresh"):
+        (directory / (name + ".py")).write_text(
+            "from pathlib import Path\n"
+            f"def test_real_file():\n    Path({str(tmp_path / name)!r}).write_text('executed')\n"
+        )
+    plan = {"changed_paths": ["docs/guide.md"]}
+    infrastructure_selection(root, plan)
+    validate_plan(root, plan)
+    assert plan["contract_modules"] == ["tests/infra_tests/documentation/test_counts_refresh.py"]
+    assert plan["infra_shards"] == [["tests/infra_tests/documentation/test_guide.py"]]
+    monkeypatch.setenv("PYTEST_ADDOPTS", "")
+    monkeypatch.setenv("PYTHONPATH", str(Path(__file__).resolve().parents[3]))
+    receipts = tmp_path / "receipts"
+    for shard in range(2):
+        assert run_shard(root, plan, shard, receipts / str(shard)) == 0
+    assert verify_shard_receipts(plan, receipts, root=root)["members"] == 2
+    assert all((tmp_path / name).read_text() == "executed" for name in ("test_guide", "test_counts_refresh"))
+    plan["documentation_only"] = False
+    with pytest.raises(ValueError, match="documentation lane"):
+        validate_plan(root, plan)

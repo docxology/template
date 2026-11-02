@@ -99,7 +99,7 @@ def _run_pytest(
     remaining = math.floor(deadline - time.monotonic())
     if remaining < 1:
         raise TimeoutError("runtime cell deadline exhausted before pytest launch")
-    scope = "root" if project == root else project.relative_to(root / "projects").as_posix()
+    scope = project.relative_to(root / "projects").as_posix()
     resolved = RuntimeScope(root, scope)
     if (
         resolved.source_identity() != admitted_source_identity
@@ -273,6 +273,8 @@ def run_cell(
     """Produce raw collection/outcome/branch coverage evidence under the project lock."""
     root = Path(spec["root"]).resolve()
     scope = spec["scope"]
+    if scope == "root":
+        raise ValueError("Root execution requires its complete case-policy producer")
     resolved = RuntimeScope(root, scope)
     project = resolved.base
     directory = evidence_directory(root, root / spec["directory"])
@@ -316,9 +318,6 @@ def run_cell(
     try:
         if initial_runtime != spec["runtime"]:
             raise ValueError("selected interpreter or test stack changed after the bounded runtime probe")
-        resolved.require_case_policy()
-        if scope == "root" and list(resolved.test_files()) != spec["test_files"]:
-            raise ValueError("root cell omitted or invented source-owned test files")
         with project_output_lock(project, timeout=min(timeout, max(0.0, deadline - time.monotonic()))):
             if resolved.source_identity() != spec["source_identity"]:
                 raise ValueError("project source changed before full-selection execution")
