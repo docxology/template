@@ -203,6 +203,22 @@ def infrastructure_selection(root: Path, plan: dict[str, Any]) -> dict[str, Any]
     return plan
 
 
+def project_smoke_selection_matrix(root: Path, projects: tuple[str, ...]) -> dict[str, list[dict[str, str]]]:
+    """Emit the project-smoke matrix for one selection plan.
+
+    A documentation-only change legitimately selects no functional project
+    (``affected_projects`` returns an empty subset for it), and the workflow
+    skips the project-smoke job for that plan, so an empty subset yields an
+    empty matrix. Every nonempty subset still passes through
+    ``project_smoke_matrix``, which validates it against the public roster.
+    """
+    from infrastructure.core.testing.ci_smoke import project_smoke_matrix
+
+    if not projects:
+        return {"include": []}
+    return project_smoke_matrix(root, projects)
+
+
 def main() -> int:
     from infrastructure.core.testing.ci_smoke import project_smoke_matrix
 
@@ -218,7 +234,7 @@ def main() -> int:
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(plan, sort_keys=True, indent=2) + "\n")
     print("docs_only=" + ("true" if plan.get("documentation_only") else "false"))
-    print("matrix=" + json.dumps(project_smoke_matrix(root, tuple(plan["projects"]))))
+    print("matrix=" + json.dumps(project_smoke_selection_matrix(root, tuple(plan["projects"]))))
     print("infra=" + json.dumps(_infra_matrix(plan["infra_shards"])))
     print("contracts=" + json.dumps(_contract_matrix(plan["infra_shards"], plan["contract_modules"])))
     return 0
@@ -234,4 +250,5 @@ __all__ = [
     "documentation_only",
     "functional_selection",
     "infrastructure_selection",
+    "project_smoke_selection_matrix",
 ]
