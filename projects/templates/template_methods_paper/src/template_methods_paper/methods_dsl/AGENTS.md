@@ -27,8 +27,9 @@ its central subject.
 - Keep `compile_method` deterministic: the same `Method` must always produce
   the same `Plan.plan_hash` — sort before hashing, never rely on dict/set
   iteration order for anything that reaches the hash.
-- Re-export the public surface from `src/__init__.py` so callers write
-  `from src import compile_method` regardless of internal layout.
+- Re-export the public surface from `src/template_methods_paper/__init__.py`
+  so callers write `from template_methods_paper import compile_method`
+  regardless of internal layout. Keep `src/__init__.py` a namespace marker.
 
 ## See Also
 

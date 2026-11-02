@@ -171,7 +171,7 @@ def run_publication_analysis(project_root: Path) -> AnalysisArtifacts:
 
     return AnalysisArtifacts(
         demo_summary=summary_path,
-        demo_databases=tuple(Path(path) for path in summary["agent_db_paths"]),
+        demo_databases=tuple(output_dir / path for path in summary["agent_db_paths"]),
         demo_figure=demo_figure,
         sweep_summary=sweep_summary_path,
         sweep_figure=sweep_figure,

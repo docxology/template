@@ -23,13 +23,14 @@ from matplotlib.patches import FancyArrowPatch, FancyBboxPatch
 import networkx as nx
 import numpy as np
 
+from template_gold_refinement.parsing import load_json_object
+
 from ._common import (
     NODE_TYPE_COLORS,
     SOURCE_TIER_COLORS,
     STAGE_COLORS,
     _figure_output_dir,
     _graph_positions,
-    _load_json_object,
     _nines_score,
     _render_digraph_figure,
     _save_figure,
@@ -42,18 +43,11 @@ from .graphs import (
     build_provenance_flow_graph,
 )
 
-try:
-    from ..composition import generate_token_plan
-    from ..config import load_gold_refinement_config
-    from ..evidence import build_evidence_registry
-    from ..integrity import build_evidence_tiers, build_integrity_dimensions
-    from ..refinery import run_refinery
-except ImportError:  # pragma: no cover - flat-layout fallback
-    from template_gold_refinement.composition import generate_token_plan
-    from template_gold_refinement.config import load_gold_refinement_config
-    from template_gold_refinement.evidence import build_evidence_registry
-    from template_gold_refinement.integrity import build_evidence_tiers, build_integrity_dimensions
-    from template_gold_refinement.refinery import run_refinery
+from template_gold_refinement.composition import generate_token_plan
+from template_gold_refinement.config import load_gold_refinement_config
+from template_gold_refinement.evidence import build_evidence_registry
+from template_gold_refinement.integrity import build_evidence_tiers, build_integrity_dimensions
+from template_gold_refinement.refinery import run_refinery
 
 
 def _draw_boxed_digraph(
@@ -549,7 +543,7 @@ def generate_evidence_tier_ladder(
     root = project_root or Path(".")
     cfg = load_gold_refinement_config(root)
     dimensions = build_integrity_dimensions(cfg)
-    shared_evidence = _load_json_object(root / "output" / "reports" / "evidence_registry.json")
+    shared_evidence = load_json_object(root / "output" / "reports" / "evidence_registry.json")
     tiers = build_evidence_tiers(shared_evidence, dimensions)
 
     tier_order = {

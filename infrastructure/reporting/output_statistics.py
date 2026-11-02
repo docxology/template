@@ -87,10 +87,9 @@ def collect_output_statistics(
     project_name: str = "project",
     project_dir: Path | None = None,
     *,
-    require_pdf: bool = True,
     output_dir: Path | None = None,
     inventory: StableOutputInventory | None = None,
-    enabled_formats: Collection[str] | None = None,
+    enabled_formats: Collection[str],
     inventory_scope: str = PROJECT_OUTPUT_INVENTORY_SCOPE,
     inventory_mode: OutputInventoryMode = STABLE_OUTPUT_INVENTORY_MODE,
 ) -> dict[str, Any]:
@@ -101,14 +100,12 @@ def collect_output_statistics(
         project_name: Name of the project (default: "project").
         project_dir: Absolute path to the project directory. When provided,
             overrides ``repo_root / 'projects' / project_name``.
-        require_pdf: Whether a canonical combined PDF is required by the
-            effective render-format configuration.
         output_dir: Exact output tree to describe. When omitted, derives the
             canonical project output from ``project_dir`` or ``repo_root``.
         inventory: Optional stable inventory already collected for
             ``output_dir``; useful for Stage 5's filtered delivery mirror.
-        enabled_formats: Effective publication formats. When supplied,
-            missing-format diagnostics describe only enabled deliverables;
+        enabled_formats: Required effective publication formats.
+            Missing-format diagnostics describe only enabled deliverables;
             disabled PDF/HTML/slides/DOCX/EPUB directories are not warnings.
         inventory_scope: Machine-readable identity for the tree being counted.
             Stage 5 uses ``stage5-delivery-mirror`` because its source-located
@@ -159,7 +156,7 @@ def collect_output_statistics(
 
     # Expected output directories
     expected_dirs = list(OUTPUT_SUBDIR_NAMES)
-    enabled = set(enabled_formats) if enabled_formats is not None else None
+    enabled = set(enabled_formats)
 
     files_by_directory: dict[str, list[Path]] = {name: [] for name in expected_dirs}
     for path in current.files:
@@ -239,11 +236,7 @@ def collect_output_statistics(
                 "total_size_bytes": 0,
             }
             is_render_directory = dir_name in {"pdf", "web", "slides", "docx", "epub"}
-            if (
-                dir_name not in OPTIONAL_OUTPUT_SUBDIRS
-                and dir_name != "pdf"
-                and not (enabled is not None and is_render_directory)
-            ):
+            if dir_name not in OPTIONAL_OUTPUT_SUBDIRS and dir_name != "pdf" and not is_render_directory:
                 stats["missing_expected_files"].append(f"{dir_name}/ directory")
 
     # Sort largest files by size
@@ -253,7 +246,7 @@ def collect_output_statistics(
     )[:10]
 
     # Check for expected combined PDF
-    required_formats = enabled if enabled is not None else ({"pdf"} if require_pdf else set())
+    required_formats = enabled
     format_candidates: dict[str, tuple[Path, ...]] = {
         "pdf": combined_pdf_candidates,
         "html": (output_dir / "web" / "index.html",),

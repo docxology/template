@@ -59,6 +59,15 @@ def test_load_pipeline_policy_reads_steganography_and_llm(tmp_path):
     assert policy.llm_reviews.requires_ollama is True
     assert policy.llm_reviews.requires_explicit_opt_in is True
 
+    config_path = root / "manuscript" / "config.yaml"
+    canonical = yaml.safe_load(config_path.read_text(encoding="utf-8"))
+    for key in ("overlays", "barcodes", "metadata", "hashing", "encryption"):
+        malformed = dict(canonical)
+        malformed["steganography"] = {**canonical["steganography"], key: False}
+        config_path.write_text(yaml.safe_dump(malformed), encoding="utf-8")
+        with pytest.raises(ValueError, match=r"canonical \*_enabled fields"):
+            load_pipeline_policy(root)
+
 
 def test_llm_review_gating_requires_ollama_and_opt_in(tmp_path):
     root = _write_policy_config(tmp_path, llm_enabled=True)

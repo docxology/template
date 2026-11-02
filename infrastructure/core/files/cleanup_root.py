@@ -41,7 +41,6 @@ def clean_root_output_directory(repo_root: Path, project_names: list[str]) -> bo
 
     try:
         known_output_roots = {Path(name).parts[0] for name in project_names if Path(name).parts}
-        known_nested_leaf_names = {Path(name).name for name in project_names if len(Path(name).parts) > 1}
 
         # Track what we remove and keep
         removed_items: list[str] = []
@@ -54,12 +53,6 @@ def clean_root_output_directory(repo_root: Path, project_names: list[str]) -> bo
                 # Keep project-specific folders
                 if item_name in project_names or item_name in known_output_roots:
                     kept_items.append(item_name)
-                    continue
-
-                if item_name in known_nested_leaf_names:
-                    logger.debug(f"  Removing obsolete nested-project leaf directory: {item_name}")
-                    remove_output_entry(item)
-                    removed_items.append(item_name)
                     continue
 
                 # Keep special directories that might be needed

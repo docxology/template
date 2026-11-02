@@ -575,7 +575,7 @@ def test_validate_small_pdf(tmp_path):
     # Create very small PDF (< 100KB) in pdf/ directory
     (pdf_dir / "test_project_combined.pdf").write_bytes(b"PDF" * 100)
 
-    result = validate_output_structure(output_dir)
+    result = validate_output_structure(output_dir, enabled_formats=("pdf",))
     # Small PDF is still valid but flagged as suspicious
     assert result["valid"] is True
     assert any("unusually small" in s for s in result["suspicious_sizes"])

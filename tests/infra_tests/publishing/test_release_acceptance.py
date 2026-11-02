@@ -33,6 +33,9 @@ def _root(root: Path, version: str = "4.0.1") -> str:
     (root / ".python-version").write_text("3.14\n")
     (root / "infrastructure").mkdir()
     (root / "infrastructure/_version.py").write_text(RUNTIME_VERSION_PROVIDER_SOURCE)
+    from tests.infra_tests.reporting.test_required_readiness import _root_policy_declaration
+
+    _root_policy_declaration(root)
     for argv in (
         ["git", "init", "--quiet", str(root)],
         [
@@ -44,6 +47,8 @@ def _root(root: Path, version: str = "4.0.1") -> str:
             "CHANGELOG.md",
             ".python-version",
             "infrastructure/_version.py",
+            "infrastructure/config",
+            "tests",
         ],
         [
             "git",
@@ -92,14 +97,20 @@ def test_noncanonical_ids_refuse_endpoint_construction(value: str) -> None:
         positive_id(value)
 
 
-def test_root_4_requires_explicit_handoff_and_older_major_does_not(tmp_path: Path) -> None:
+def test_current_root_requires_explicit_handoff(tmp_path: Path) -> None:
     _root(tmp_path)
     with pytest.raises(MissingAcceptanceHandoff):
         validate_handoff_inputs(tmp_path, "", "", "")
     assert main(["inputs", "--repo-root", str(tmp_path)]) == 75
     assert validate_handoff_inputs(tmp_path, "123", "789", "a" * 64)
-    (tmp_path / "pyproject.toml").write_text('[project]\nname="research-project-template"\nversion="3.8.0"\n')
-    assert not validate_handoff_inputs(tmp_path, "", "", "")
+
+
+@pytest.mark.parametrize("version", ["0.1.0", "3.8.0", "5.0.0"])
+def test_unsupported_root_contract_cannot_waive_handoff(tmp_path: Path, version: str) -> None:
+    _root(tmp_path, version=version)
+    for values in (("", "", ""), ("123", "789", "a" * 64)):
+        with pytest.raises(ValueError, match="current platform 4"):
+            validate_handoff_inputs(tmp_path, *values)
 
 
 @pytest.mark.parametrize(
@@ -347,9 +358,8 @@ def test_workflow_cannot_create_root_4_release_before_required_acceptance() -> N
         positions.append(next(index for index, step in enumerate(steps) if command in step.get("run", "")))
     assert positions == sorted(positions)
     assert all(index < release for index in positions)
-    required = "steps.acceptance.outputs.required == 'true'"
-    assert steps[positions[2]]["if"] == required
-    assert steps[positions[3]]["if"] == required
+    assert "if" not in steps[positions[2]]
+    assert "if" not in steps[positions[3]]
     assert "if" not in steps[release]
     assert all(not step.get("continue-on-error", False) for step in steps[: release + 1])
     recheck = next(step for step in steps[:release] if step.get("name") == "Recheck admitted publication bytes")

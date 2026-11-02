@@ -92,7 +92,7 @@ def test_figure_registry_entries_match_manuscript_labels(tmp_path):
     assert "fig:gallery_line" in labels
     assert "fig:part_III_case_studies" in labels
     assert labels <= set(FIGURE_ALT_TEXT)
-    assert all(entry.alt.strip() for entry in entries)
+    assert all(entry.alt_text.strip() for entry in entries)
 
 
 def test_figure_registry_rejects_missing_explicit_alt_text(tmp_path):

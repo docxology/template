@@ -14,14 +14,9 @@ import networkx as nx
 
 from ._common import _source_display_label
 
-try:
-    from ..formalisms import FORMALISMS
-    from ..purity import format_purity
-    from ..refinery import run_refinery
-except ImportError:  # pragma: no cover - flat-layout fallback
-    from template_gold_refinement.formalisms import FORMALISMS
-    from template_gold_refinement.purity import format_purity
-    from template_gold_refinement.refinery import run_refinery
+from template_gold_refinement.formalisms import FORMALISMS
+from template_gold_refinement.purity import format_purity
+from template_gold_refinement.refinery import run_refinery
 
 
 def build_provenance_flow_graph() -> tuple[nx.DiGraph, list[float]]:

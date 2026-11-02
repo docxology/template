@@ -141,18 +141,6 @@ class Paper:
     keywords: list[str] = field(default_factory=list)
 
     @property
-    def referenced_works(self) -> list[str]:
-        """Alias for :attr:`references` — matches the OpenAlex/S2 field name.
-
-        Some engines (OpenAlex, Semantic Scholar) expose the reference list
-        under ``referenced_works`` rather than ``references``. The pipeline
-        runner (:func:`analysis.pipeline_runner._count_paper_references`)
-        already checks both names; this alias makes the Paper model
-        self-documenting.
-        """
-        return self.references
-
-    @property
     def canonical_id(self) -> str:
         """Return best available identifier with priority: doi > pmid > arxiv_id > s2_id > openalex_id > title hash.
 

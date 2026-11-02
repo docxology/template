@@ -11,7 +11,7 @@ describes is reproducible and unit-tested.
 
 | File | Role |
 | --- | --- |
-| `__init__.py` | Public DSL exports re-exported from `src/__init__.py`. |
+| `__init__.py` | Public DSL exports re-exported from `src/template_methods_paper/__init__.py`. |
 | `vocabulary.py` | Controlled-vocabulary `StepKind` and `Target` enums; `target_accepts`. |
 | `units.py` | Dimensional-safety unit system: `Dimension`, `DimensionError`, `Quantity`. |
 | `model.py` | `Method`, `Step`, `Resource`, `Parameter` frozen dataclasses with shape validation. |

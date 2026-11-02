@@ -8,7 +8,7 @@ from pathlib import Path
 
 SCHEMA = "template-mermaid-v12-legacy11-default-theme-viewport-request-v2"
 POLICY = "template-mermaid-v12-official-run-legacy11-default-theme-1400x900-v2"
-ADAPTER_SHA256 = "9e1bc4bb15d2ba87b67a5649ba42178bd7ee8856b09912600b52a0c572ceb588"
+ADAPTER_SHA256 = "2e819f40d052ab6c4789dabfcb9df5214ba8fba5063145b0832d1ceaf5ab0b79"
 
 
 def rendering_profile() -> dict[str, str | int | bool]:
@@ -31,7 +31,7 @@ def validate_rendering_profile(value: object) -> None:
     """Reject altered values and Python's bool/int equality ambiguity."""
     expected = rendering_profile()
     if not isinstance(value, dict) or set(value) != set(expected):
-        raise ValueError("Mermaid rendering profile differs from the source-owned legacy default theme")
+        raise ValueError("Mermaid rendering profile differs from the source-owned default theme")
     for key, original in expected.items():
         if type(value[key]) is not type(original) or value[key] != original:
             raise ValueError("Mermaid rendering profile changes theme, embedding or viewport semantics")

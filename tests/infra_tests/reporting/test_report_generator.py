@@ -2,6 +2,8 @@
 
 import json
 
+import pytest
+
 from infrastructure.reporting.report_generator import (
     generate_test_report,
     save_test_report_to_files,
@@ -12,7 +14,9 @@ class TestGenerateTestReport:
     def test_basic_report(self, tmp_path):
         infra = {"passed": 90, "failed": 5, "skipped": 5, "total": 100, "exit_code": 0}
         project = {"passed": 45, "failed": 3, "skipped": 2, "total": 50, "exit_code": 0}
-        report = generate_test_report(infra, project, tmp_path, include_coverage_details=False)
+        report = generate_test_report(
+            infra, project, tmp_path, include_coverage_details=False, project_root=tmp_path / "project"
+        )
         assert report["summary"]["total_passed"] == 135
         assert report["summary"]["total_failed"] == 8
         assert report["summary"]["total_tests"] == 150
@@ -21,29 +25,39 @@ class TestGenerateTestReport:
     def test_all_passed_false_when_failures(self, tmp_path):
         infra = {"passed": 10, "failed": 0, "total": 10, "exit_code": 0}
         project = {"passed": 5, "failed": 2, "total": 7, "exit_code": 1}
-        report = generate_test_report(infra, project, tmp_path, include_coverage_details=False)
+        report = generate_test_report(
+            infra, project, tmp_path, include_coverage_details=False, project_root=tmp_path / "project"
+        )
         assert report["summary"]["all_passed"] is False
 
     def test_includes_coverage_summary(self, tmp_path):
         infra = {"passed": 10, "total": 10, "exit_code": 0, "coverage_percent": 82.5}
         project = {"passed": 5, "total": 5, "exit_code": 0, "coverage_percent": 91.0}
-        report = generate_test_report(infra, project, tmp_path, include_coverage_details=False)
+        report = generate_test_report(
+            infra, project, tmp_path, include_coverage_details=False, project_root=tmp_path / "project"
+        )
         assert report["summary"]["infrastructure_coverage"] == 82.5
         assert report["summary"]["project_coverage"] == 91.0
 
     def test_includes_timestamp(self, tmp_path):
-        report = generate_test_report({}, {}, tmp_path, include_coverage_details=False)
+        report = generate_test_report(
+            {}, {}, tmp_path, include_coverage_details=False, project_root=tmp_path / "project"
+        )
         assert "timestamp" in report
         assert "T" in report["timestamp"]
 
     def test_timestamp_is_byte_stable_without_source_date_epoch(self, tmp_path, monkeypatch):
         monkeypatch.delenv("SOURCE_DATE_EPOCH", raising=False)
-        first = generate_test_report({}, {}, tmp_path, include_coverage_details=False)
-        second = generate_test_report({}, {}, tmp_path, include_coverage_details=False)
+        first = generate_test_report(
+            {}, {}, tmp_path, include_coverage_details=False, project_root=tmp_path / "project"
+        )
+        second = generate_test_report(
+            {}, {}, tmp_path, include_coverage_details=False, project_root=tmp_path / "project"
+        )
         assert first["timestamp"] == second["timestamp"]
 
     def test_coverage_details_from_json_files(self, tmp_path):
-        # Create mock coverage JSON files
+        # Create actual fixture coverage JSON files
         infra_cov = {
             "files": {
                 "mod.py": {
@@ -54,12 +68,16 @@ class TestGenerateTestReport:
             }
         }
         (tmp_path / "coverage_infra.json").write_text(json.dumps(infra_cov))
-        report = generate_test_report({}, {}, tmp_path, include_coverage_details=True)
+        report = generate_test_report(
+            {}, {}, tmp_path, include_coverage_details=True, project_root=tmp_path / "project"
+        )
         assert "coverage_details" in report
         assert "infrastructure" in report["coverage_details"]
 
     def test_no_coverage_details_when_disabled(self, tmp_path):
-        report = generate_test_report({}, {}, tmp_path, include_coverage_details=False)
+        report = generate_test_report(
+            {}, {}, tmp_path, include_coverage_details=False, project_root=tmp_path / "project"
+        )
         assert "coverage_details" not in report
 
     def test_project_only_report_ignores_stale_infrastructure_coverage(self, tmp_path):
@@ -74,7 +92,8 @@ class TestGenerateTestReport:
             },
         }
         (tmp_path / "coverage_infra.json").write_text(json.dumps(coverage))
-        (tmp_path / "coverage_project.json").write_text(json.dumps(coverage))
+        (tmp_path / "project").mkdir()
+        (tmp_path / "project/coverage_project.json").write_text(json.dumps(coverage))
 
         report = generate_test_report(
             {},
@@ -82,6 +101,7 @@ class TestGenerateTestReport:
             tmp_path,
             include_coverage_details=True,
             include_infrastructure_coverage=False,
+            project_root=tmp_path / "project",
         )
 
         assert report["coverage_details"] == {
@@ -104,7 +124,9 @@ class TestGenerateTestReport:
         }
 
     def test_missing_coverage_files_no_error(self, tmp_path):
-        report = generate_test_report({}, {}, tmp_path, include_coverage_details=True)
+        report = generate_test_report(
+            {}, {}, tmp_path, include_coverage_details=True, project_root=tmp_path / "project"
+        )
         # Should not have coverage_details if files don't exist
         assert "coverage_details" not in report
 
@@ -171,7 +193,9 @@ class TestGenerateTestReportFromReportGenerator:
     def test_basic_report(self, tmp_path):
         infra = {"passed": 100, "failed": 2, "skipped": 3, "total": 105, "exit_code": 0}
         project = {"passed": 50, "failed": 0, "skipped": 1, "total": 51, "exit_code": 0}
-        report = generate_test_report(infra, project, tmp_path, include_coverage_details=False)
+        report = generate_test_report(
+            infra, project, tmp_path, include_coverage_details=False, project_root=tmp_path / "project"
+        )
         assert report["summary"]["total_passed"] == 150
         assert report["summary"]["total_failed"] == 2
         assert report["summary"]["total_tests"] == 156
@@ -180,14 +204,18 @@ class TestGenerateTestReportFromReportGenerator:
     def test_with_coverage(self, tmp_path):
         infra = {"passed": 10, "failed": 0, "total": 10, "exit_code": 0, "coverage_percent": 85.0}
         project = {"passed": 5, "failed": 0, "total": 5, "exit_code": 0, "coverage_percent": 92.0}
-        report = generate_test_report(infra, project, tmp_path, include_coverage_details=False)
+        report = generate_test_report(
+            infra, project, tmp_path, include_coverage_details=False, project_root=tmp_path / "project"
+        )
         assert report["summary"]["infrastructure_coverage"] == 85.0
         assert report["summary"]["project_coverage"] == 92.0
 
     def test_failed_exit_code(self, tmp_path):
         infra = {"passed": 10, "failed": 1, "total": 11, "exit_code": 1}
         project = {"passed": 5, "failed": 0, "total": 5, "exit_code": 0}
-        report = generate_test_report(infra, project, tmp_path, include_coverage_details=False)
+        report = generate_test_report(
+            infra, project, tmp_path, include_coverage_details=False, project_root=tmp_path / "project"
+        )
         assert report["summary"]["all_passed"] is False
 
     def test_with_coverage_details(self, tmp_path):
@@ -198,7 +226,8 @@ class TestGenerateTestReportFromReportGenerator:
                 {"totals": {"percent_covered": 80.0}, "files": {"mod.py": {"summary": {"percent_covered": 80.0}}}}
             )
         )
-        project_cov = tmp_path / "coverage_project.json"
+        (tmp_path / "project").mkdir()
+        project_cov = tmp_path / "project/coverage_project.json"
         project_cov.write_text(
             json.dumps(
                 {"totals": {"percent_covered": 90.0}, "files": {"src.py": {"summary": {"percent_covered": 90.0}}}}
@@ -206,7 +235,9 @@ class TestGenerateTestReportFromReportGenerator:
         )
         infra = {"passed": 10, "failed": 0, "total": 10, "exit_code": 0}
         project = {"passed": 5, "failed": 0, "total": 5, "exit_code": 0}
-        report = generate_test_report(infra, project, tmp_path, include_coverage_details=True)
+        report = generate_test_report(
+            infra, project, tmp_path, include_coverage_details=True, project_root=tmp_path / "project"
+        )
         assert "coverage_details" in report
 
     def test_project_identity_never_falls_back_to_stale_repo_coverage(self, tmp_path):
@@ -229,7 +260,9 @@ class TestGenerateTestReportFromReportGenerator:
         assert "coverage_details" not in report
 
     def test_empty_results(self, tmp_path):
-        report = generate_test_report({}, {}, tmp_path, include_coverage_details=False)
+        report = generate_test_report(
+            {}, {}, tmp_path, include_coverage_details=False, project_root=tmp_path / "project"
+        )
         assert report["summary"]["total_passed"] == 0
         assert report["summary"]["total_failed"] == 0
 
@@ -285,3 +318,12 @@ class TestSaveTestReportToFilesFromReportGenerator:
         _, md_path = save_test_report_to_files(report, tmp_path)
         md_text = md_path.read_text()
         assert "PASSED" in md_text
+
+
+def test_project_identity_is_required_before_coverage_can_be_read(tmp_path):
+    stale = tmp_path / "coverage_project.json"
+    stale.write_text('{"files": {"wrong.py": {"executed_lines": [1]}}}')
+    original = stale.read_bytes()
+    with pytest.raises(TypeError, match="project_root"):
+        generate_test_report({}, {}, tmp_path)
+    assert stale.read_bytes() == original

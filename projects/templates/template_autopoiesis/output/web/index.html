@@ -957,7 +957,7 @@ every number below is substituted at render time from a live measurement
 rather than hand-typed as a literal.</p>
 <p>Across 5 heterogeneous primitive domains (- optimization - dynamics -
 statistics - signal - graph), 578 tests exercise both fixed ground-truth
-checks and Hypothesis-driven property invariants at 92.18% combined
+checks and Hypothesis-driven property invariants at 91.88% combined
 statement and branch coverage, with an explicit negative control per
 domain distinguishing the real kernel from a deliberately-wrong one.</p>
 <h3 data-number="1.1" id="generation-pipeline"><span
@@ -986,7 +986,7 @@ class="sourceCode mermaid"><code class="sourceCode mermaid"><span id="cb2-1"><a 
 <li><strong>Reserved slots</strong>: 3
 (<code>figure_profile, qr_profile, integrity_profile</code>)</li>
 <li><strong>Grammar hash</strong>: <code>a1f3e428cf1fb3e3</code></li>
-<li><strong>Tests</strong>: 578 · <strong>Coverage</strong>: 92.18%</li>
+<li><strong>Tests</strong>: 578 · <strong>Coverage</strong>: 91.88%</li>
 </ul>
 <hr />
 <h2 data-number="2" id="introduction"><span
@@ -1915,7 +1915,7 @@ kernel.</li>
 class="header-section-number">4.5</span> Test results</h3>
 <ul>
 <li><strong>Test count</strong>: 578</li>
-<li><strong>Coverage</strong>: 92.18%</li>
+<li><strong>Coverage</strong>: 91.88%</li>
 <li><strong>Grammar hash</strong>: <code>a1f3e428cf1fb3e3</code></li>
 </ul>
 <p>Both the test count and coverage percentage above are produced by
@@ -1942,12 +1942,12 @@ cannot produce a successful current summary.</p>
 data-fig-alt="Horizontal bars show measured combined statement and branch coverage per module; red bars identify values below the 90% aggregate-gate reference line."
 alt="Horizontal bars rank source modules by combined statement and branch coverage against a dashed 90 percent aggregate gate; modules below that reference line are distinguished in red." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Figure 4: Per-module combined statement
-and branch coverage from the same measurement that produces 578/92.18
+and branch coverage from the same measurement that produces 578/91.88
 above. Red bars identify modules below the 90% aggregate-gate reference
 line; the aggregate pass does not imply every module meets that
 level.</figcaption>
 </figure>
-<p>The aggregate 92.18% is a mean weighted by statement and branch
+<p>The aggregate 91.88% is a mean weighted by statement and branch
 count, not a uniform floor — fig. <a
 href="#fig:coverage_by_module">4</a> shows the real spread. The 90% gate
 applies to the aggregate, not separately to each module. Exact module
@@ -1974,7 +1974,7 @@ an obvious temptation: assert a capability in prose without checking
 whether the capability exists. The abstract of this manuscript survived
 exactly this failure once — a hand-written test-count and coverage line
 that no generator step had computed — and was corrected by replacing the
-literal numbers with <code>578</code> / <code>92.18</code> tokens filled
+literal numbers with <code>578</code> / <code>91.88</code> tokens filled
 in at render time by <code>scripts/02_measure_test_coverage.py</code>.
 <code>src/template_autopoiesis/core/honesty.py</code> exists to make
 that class of failure structurally harder: every load-bearing claim in
@@ -2265,7 +2265,7 @@ diverging from the source code that is supposed to back them.</p>
 class="header-section-number">6</span> Reproducibility</h2>
 <p>Reproducibility is not a claim this manuscript makes about itself; it
 is a property the code enforces on every run. Every number that appears
-below the Determinism heading — a1f3e428cf1fb3e3, 42, 578, 92.18 — is a
+below the Determinism heading — a1f3e428cf1fb3e3, 42, 578, 91.88 — is a
 token substituted at render time by
 <code>src/template_autopoiesis/manuscript/manuscript_variables.py::generate_variables()</code>
 from a live grammar load and a genuine current pytest measurement
@@ -2522,7 +2522,7 @@ class="header-section-number">7</span> Limitations</h2>
 <p>This section states what the exemplar does <em>not</em> do, alongside
 what it does. Coverage and test-count figures are not restated as
 literal numbers here — those live only in the <code>578</code> /
-<code>92.18</code> tokens, resolved at render time from a live
+<code>91.88</code> tokens, resolved at render time from a live
 measurement
 (<code>src/template_autopoiesis/manuscript/manuscript_variables.py::measure_test_summary</code>),
 not hand-typed.</p>
@@ -2630,7 +2630,7 @@ not that one.</p>
 <h3 data-number="7.6" id="coverage-is-uneven-across-modules"><span
 class="header-section-number">7.6</span> Coverage is uneven across
 modules</h3>
-<p>The aggregate 92.18% combines covered statements and branch exits
+<p>The aggregate 91.88% combines covered statements and branch exits
 across the measured source inventory. Passing the configured 90%
 aggregate gate (<code>--cov-fail-under=90</code>) does not establish a
 90% floor for every module. fig. <a href="#fig:coverage_by_module">4</a>

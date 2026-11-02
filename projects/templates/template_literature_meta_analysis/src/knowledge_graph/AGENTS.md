@@ -18,10 +18,10 @@ operation in the pipeline — use incremental mode (the default) whenever possib
   all existing nanopublications.
 - **Score range**: `score_hypothesis()` returns a value in [−1, +1]. A return of `0.0` is
   ambiguous (no assertions OR balanced evidence). Always check assertion counts.
-- **Hypothesis ID order**: `STANDARD_HYPOTHESES` list order determines H1–H8 aliases, computed
-  automatically by `_config_key_to_id()` in `hypothesis.py` and consumed (not defined) by
-  `src/manuscript/variables/extractors/hypotheses.py`. Do not reorder `STANDARD_HYPOTHESES`
-  without checking downstream alias expectations.
+- **Stable hypothesis IDs**: Each configured definition requires a unique nonempty `id`.
+  Scoring, manuscript tables and figure labels read that declared identity. Row keys,
+  order and names do not derive IDs. Retain an ID while changing its display label;
+  changing the scientific hypothesis requires a new identity and newly generated evidence.
 - **No mock policy**: Tests must use real `Assertion` objects and real score computations.
 
 ## LLM Extraction Workflow
@@ -50,13 +50,16 @@ Ollama must be running at `http://localhost:11434` with `gemma3:4b` pulled.
 
 ## Adding a New Hypothesis
 
-1. Add a `Hypothesis` object to `STANDARD_HYPOTHESES` in `hypothesis.py`. The H9 alias is
-   derived automatically from its ordinal position by `_config_key_to_id()` — no manual
-   alias mapping to edit.
-2. Add the corresponding URI to `HYPOTHESIS_CATEGORIES` in `schema.py`.
-3. Add keyword/description definitions in `manuscript/config.yaml` under `project_config.hypothesis_definitions`.
-4. Regenerate nanopublications via `--clear-assertions` (new hypothesis won't have assertions otherwise).
-5. Update `manuscript/03_results_hypothesis.md` with a new row in the evidence table.
+1. Add an explicit stable `id`, name, description and scope under
+   `project_config.hypothesis_definitions` in `manuscript/config.yaml`.
+2. Load the configuration with `configure_hypotheses()`; it updates the active
+   scoring hypotheses and RDF categories from the declared IDs.
+3. Generate evidence for the added hypothesis using the selected extraction workflow.
+   Preserve existing assertion files unless deliberately requesting full re-extraction.
+4. Regenerate manuscript variables so the configured evidence table includes the new row.
+
+`STANDARD_HYPOTHESES` remains the domain-neutral set for callers without a configuration.
+It does not assign IDs to configured rows.
 
 ## Known Limitations
 

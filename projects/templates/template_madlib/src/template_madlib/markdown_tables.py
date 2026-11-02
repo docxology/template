@@ -41,7 +41,6 @@ def artifact_markdown_tables_from_run(run: MadlibRun) -> dict[str, str]:
         "AUTHORING_OBLIGATION_TABLE": build_authoring_obligation_table(config),
         "AUDIT_RULE_TABLE": build_audit_rule_table(config),
         "CONFIGURATION_FIGURES": build_configuration_figure_markdown(config),
-        "CONFIGURED_FIELD_FIGURES": build_configuration_figure_markdown(config),
         "CONFIGURED_FIELD_SUMMARY_TABLE": build_configured_field_summary_table(counts),
         "CONFIGURED_FIELD_TABLE": build_configured_field_table(inventory),
         "CONTRIBUTION_TABLE": build_contribution_table(config),

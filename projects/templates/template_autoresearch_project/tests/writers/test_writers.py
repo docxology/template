@@ -119,7 +119,7 @@ def test_write_loop_payloads_writes_core_and_finalize_artifacts(tmp_path: Path) 
     loop_payload = (tmp_path / "output/data/autoresearch_loop.json").read_text(encoding="utf-8")
     assert '"readiness_valid": false' in loop_payload
     review_packet = json.loads((tmp_path / "output/data/autoresearch_review_packet.json").read_text(encoding="utf-8"))
-    assert review_packet["schema"] == "template-autoresearch-review-packet-v1"
+    assert review_packet["schema"] == "template-autoresearch-review-packet-v2"
 
 
 def test_write_method_contract_artifacts_uses_human_review_state(tmp_path: Path) -> None:

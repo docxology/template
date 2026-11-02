@@ -128,8 +128,6 @@ def test_snapshot_data_rechecks_copied_source_binding(tmp_path: Path) -> None:
 def test_public_verifier_refuses_implicit_rewrite_before_measurement(tmp_path: Path) -> None:
     with pytest.raises(ValueError, match="--coverage-snapshot-output"):
         counts_coverage.verify_exemplar_coverage_result(tmp_path, rewrite=True)
-    with pytest.raises(ValueError, match="--coverage-snapshot-output"):
-        counts_coverage.verify_exemplar_coverage(tmp_path, rewrite=True)
     assert list(tmp_path.iterdir()) == []
 
 

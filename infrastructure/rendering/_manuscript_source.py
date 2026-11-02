@@ -186,47 +186,6 @@ def resolve_manuscript_dir(project_root: Path) -> Path:
     return source_dir
 
 
-def run_override_script(project_root: Path, override_script: Path) -> int:
-    """Run an admitted custom renderer within one bounded descendant lifetime."""
-    import math
-
-    from infrastructure.core.execution_boundary import run_bounded_subprocess
-    from infrastructure.core.runtime._python_env import build_analysis_script_cmd_and_env
-    from infrastructure.core.runtime.python_binding import AnalysisRuntimeUnavailable
-
-    logger.info("Found custom render override: %s", override_script.name)
-    root = Path(__file__).absolute().parents[2]
-    try:
-        timeout = float(os.environ.get("MANUSCRIPT_HYDRATION_TIMEOUT", "300"))
-        if not math.isfinite(timeout) or timeout <= 0:
-            raise ValueError("Custom render timeout must be positive finite")
-        cmd, env = build_analysis_script_cmd_and_env(override_script, project_root, root)
-    except AnalysisRuntimeUnavailable as exc:
-        logger.error("Custom render runtime unavailable; prepare it explicitly: %s", exc)
-        return 75
-    except (OSError, ValueError) as exc:
-        logger.error("Invalid custom renderer invocation: %s", exc)
-        return 2
-    result = run_bounded_subprocess(cmd, cwd=project_root, env=env, timeout=timeout, capture_output=False)
-    original = result.original_returncode
-    code = (
-        130
-        if original in {130, -2} or result.returncode == 130
-        else 124
-        if result.timed_out or original == 124
-        else original
-        if original is not None and original != 0
-        else result.returncode
-    )
-    if code == 0:
-        log_success("Custom PDF rendering completed successfully", logger)
-    else:
-        logger.error(
-            "Custom PDF renderer failed (original child exit %s, outcome %s): %s", original, code, result.command_error
-        )
-    return code
-
-
 def run_manuscript_variable_script(
     project_root: Path,
     template_repo_root: Path | None = None,

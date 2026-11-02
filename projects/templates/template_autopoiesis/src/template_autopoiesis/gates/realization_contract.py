@@ -10,6 +10,7 @@ from pathlib import Path
 from tempfile import TemporaryDirectory
 from typing import Any
 
+from .._platform import required_platform_version
 from ..core.expand import SCHEMA_VERSION, Spec, enumerate_all, expand
 from ..core.grammar import KNOWN_DOMAINS, load_grammar
 from ..core.honesty import build_manifest
@@ -121,11 +122,12 @@ def realize_selected_children(
         "selection_scope": "one-per-selected-domain" if not single else "one-selected-child",
         "child_pdf_rendering": "unsupported",
         "executed_children": [],
-        "platform_version": "4.4.0",
+        "platform_version": None,
         "child_process_deadline_sec": 60,
         "max_declared_cells": MAX_DECLARED_CELLS,
     }
     try:
+        receipt["platform_version"] = required_platform_version()
         # Admit the actual supervisor and imported generator before any child
         # materialization. Supplied project sources are reference inputs only.
         active_generator, platform = capture_execution_custody(fresh_pycache_prefix=fresh_pycache_prefix)

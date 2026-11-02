@@ -192,7 +192,7 @@ FIGURE_ALT_TEXT = {
         "encodes publication count after the pipeline's record deduplication."
     ),
     "similarity_heatmap.png": (
-        "Ranked horizontal bars, despite the legacy heatmap filename, compare up to "
+        "Ranked horizontal bars compare up to "
         "fifteen document pairs. Each label identifies a pair of paper IDs and bar length "
         "gives cosine similarity on a fixed zero-to-one axis."
     ),

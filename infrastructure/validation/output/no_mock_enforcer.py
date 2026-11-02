@@ -39,10 +39,8 @@ from enum import Enum
 from pathlib import Path
 from typing import Any
 
-from infrastructure.core.logging.utils import get_logger
 from infrastructure.project.public_scope import public_project_infos
 
-logger = get_logger(__name__)
 
 # Explicit opt-out token (kept narrow — not a bare ``#``).
 _SUPPRESSION_TOKEN = "# no-mocks-ok:"  # nosec B105
@@ -535,22 +533,6 @@ def scan_semantic_standins(
     )
 
 
-def validate_no_mocks(tests_dir: Path, repo_root: Path) -> list[str]:
-    """Return lexical mock-framework violations for backward compatibility.
-
-    Args:
-        tests_dir: The directory containing test files.
-        repo_root: Repository root path to make output relative.
-
-    Returns:
-        List of formatted violation strings. Empty list means no violations.
-    """
-    result = scan_lexical_mock_policy(tests_dir, repo_root)
-    for error in result.errors:
-        logger.warning(error)
-    return list(result.violations)
-
-
 def scan_hand_rolled_fakes(
     tests_dir: Path,
     repo_root: Path,
@@ -609,5 +591,4 @@ __all__ = [
     "scan_lexical_mock_policy",
     "scan_semantic_standins",
     "scan_test_roots",
-    "validate_no_mocks",
 ]

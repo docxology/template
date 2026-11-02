@@ -2,8 +2,9 @@
 
 The source-owned [literal policy](../../infrastructure/config/root-case-policy.json)
 binds every collected function, parameter member, source hash and fixture/marker
-metadata hash. It retains Python 3.14 and 3.15 on Linux and macOS. Only the
-two actual Linux `/proc` controls have Linux-only applicability. Missing tools,
+metadata hash. The Root declaration requires schema 3 and the policy requires
+`template-root-case-policy-v3`. It retains Python 3.14 and 3.15 on Linux and macOS,
+with platform applicability declared explicitly for each family. Missing tools,
 prepared local models, public contract fixtures and external datasets block the
 applicable required cells. They do not remove those cells.
 
@@ -16,8 +17,9 @@ the declared native tools, including a prepared browser for Mermaid. Git clone
 revision controls require actual Git 2.51 or newer. The original tests remain
 responsible for tool version, daemon, prepared model and rendering behavior.
 
-The six hosted Root jobs install the locked `timeseries-bench` dependency group
-alongside `dev` and the explicit `rendering-pptx` group, clone the declared public Requests/FastAPI fixtures through the
+The four hosted Root jobs install the locked `dev`, `installed-build`,
+`active-inference`, `timeseries-bench` and `rendering-pptx` dependency groups,
+clone the declared public Requests/FastAPI fixtures through the
 existing source-owned fixture helper, and call the existing deterministic
 synthetic generator for ten explicitly synthetic time-series fixtures. Synthetic
 fixtures are not described as downloaded M4 data. No literal case is removed.
@@ -59,7 +61,7 @@ describes execution prices without establishing a free discovery contract. The
 retained review records billing `unverified`, exact provider/operation and
 `MONID_API_KEY`. It is historical visibility rather than execution authority;
 separate authorization and verified eligibility are needed for a production call.
-Legacy mandatory `live-unverified` cases remain permanently blocked by
+Required `live-unverified` cases remain blocked by
 `unpaid-operation-eligibility-unverified` even when a key is supplied.
 
 The original census producer emits a lossless canonical JSON DAG in a bounded
@@ -76,7 +78,7 @@ collects four supported Root host/minor audits, all 25 native formats, and all p
 source-owned obligations. Each literal Root cell has a fixed host/minor owner;
 Linux 3.14 owns policy and combined Root branch coverage. A blocked owner remains
 blocked even if another audit reports pass. No duplicate gate chooses a winner.
-Every six-target original audit must retain its complete inventory. Linux owns
+Every original audit must retain its complete declared target inventory. Linux owns
 common auxiliary gates; Darwin 3.14 owns both actual macOS gates. The actual
 transfer receipt has its own fixed producer. Full original blocked audits remain
 bound to the aggregate; ownership never chooses outcomes by status.
@@ -85,7 +87,7 @@ Hosted Root readback uses a separate versioned portable observation contract.
 Original workers observe physical Root identity, exact interpreter and packages,
 loaded SDK custody, and every selected runtime provider file before and after
 actual cases. No executable distribution is copied. The collector independently
-retrieves all six fixed artifact IDs through the official API, verifies exact
+retrieves all four fixed Root artifact IDs through the official API, verifies exact
 repository/run/SHA/workflow/archive digests, and admits each confined member's
 actual bytes. The candidate header binds this original origin manifest.
 
@@ -93,8 +95,8 @@ An external exact-SHA handoff supplies a typed expected context. The portable
 reader refuses without it, authenticates the complete original evidence closure
 against one fixed host/minor artifact, and reconstructs every original command,
 census, policy unit, setup/call/teardown outcome, finite timeline and coverage arc
-against current source. It does not reopen an original host's filesystem. Legacy
-local readback retains its existing physical identity and selected runtime checks.
+against current source. It does not reopen an original host's filesystem. Current
+local readback requires physical identity and selected runtime checks.
 Only repeated immutable archive origin authentication is cached inside one reader;
 all logical source/case/coverage checks remain independent and each fresh reader
 reconstructs origin authentication again.

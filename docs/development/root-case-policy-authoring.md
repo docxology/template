@@ -42,8 +42,9 @@ source-owned policy admission, real execution and independent original-reader
 receipts can close runtime or release requirements. Every supported Python minor
 and applicable Darwin/Linux unit remains required regardless of tool availability.
 
-The draft author supports an explicit `policy_schema` keyword for v2 or v3,
-while keeping v2 as the legacy default. Selecting v3 retains the same complete
-census, exhaustive decisions, source evidence and strict optional-operation
-parser. It grants no additional exception. The current source declaration and
-fresh independent review still determine the installed policy protocol.
+The draft author emits the current `template-root-case-policy-v3` protocol. Its
+complete census, exhaustive decisions, source evidence and optional-operation
+checks remain mandatory. One reviewed policy declares both Python minors and
+both host platforms; every applicable target independently authenticates its
+own actual census and runtime providers against that policy. Installing the
+policy requires a new census because policy bytes contribute to source identity.

@@ -35,9 +35,6 @@ from infrastructure.rendering.config import RenderingConfig
 from infrastructure.rendering.latex_log_quality import (
     parse_latex_log_findings as parse_latex_log_findings,
 )
-from infrastructure.rendering._slides_beamer_geometry import (
-    reject_accessible_beamer_overflow,
-)
 from infrastructure.rendering.latex_texttt import (
     constrain_includegraphics_textheight as constrain_includegraphics_textheight,
     make_known_literals_breakable as make_known_literals_breakable,
@@ -128,11 +125,6 @@ _SLIDES_GLYPH_REMAP: Final[dict[str, str]] = {
     "Ψ": _T(r"\Psi", "Psi"),
     "Ω": _T(r"\Omega", "Omega"),
 }
-
-
-def _reject_accessible_beamer_overflow(log_file: Path, compiled_pdf: Path) -> None:
-    """Compatibility adapter for the shared rendered-geometry validation."""
-    reject_accessible_beamer_overflow(log_file, compiled_pdf)
 
 
 def _slide_bibliography_args(manuscript_dir: Path | None) -> list[str]:

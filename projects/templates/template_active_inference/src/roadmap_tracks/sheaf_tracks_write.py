@@ -26,7 +26,7 @@ from roadmap_tracks.sheaf_tracks_builders_release import (
 from roadmap_tracks.sheaf_tracks_builders_toy import build_sensitivity_sweep, build_uncertainty_summary
 import roadmap_tracks.sheaf_tracks_context as _provenance_state
 from roadmap_tracks.sheaf_tracks_context import _ProvenanceContext
-from roadmap_tracks.sheaf_tracks_helpers import _refresh_hydrated_manuscript, _remove_legacy_artifacts
+from roadmap_tracks.sheaf_tracks_helpers import _refresh_hydrated_manuscript
 from roadmap_tracks.sheaf_tracks_io import _config_digest, _deterministic_seed, _source_input_sha256, _write_json
 from roadmap_tracks.sheaf_tracks_registry import CANONICAL_ARTIFACTS
 
@@ -241,7 +241,6 @@ def write_sheaf_track_artifacts(
     _provenance_state._ACTIVE_PROVENANCE_CONTEXT = context
     try:
         _run_prerequisite_promoters(root)
-        _remove_legacy_artifacts(root)
         _write_primary_canonical_artifacts(root, paths, context)
         _write_integration_audit_phase(root, paths)
         _write_post_audit_canonical_artifacts(root, paths, context)
@@ -250,5 +249,4 @@ def write_sheaf_track_artifacts(
     # Final hydration composes manuscript source. Nested live builders must
     # derive their provenance after those bytes move, outside this phase cache.
     _write_final_canonical_pass(root, paths, context)
-    _remove_legacy_artifacts(root)
     return paths

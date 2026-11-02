@@ -156,7 +156,7 @@ def _genuine_lane_root(tmp_path_factory: pytest.TempPathFactory) -> tuple[Path, 
     )
     with (root / "pyproject.toml").open("a") as stream:
         stream.write(
-            "[tool.template.root_acceptance]\nschema_version=2\n"
+            "[tool.template.root_acceptance]\nschema_version=3\n"
             'policy="infrastructure/config/root-case-policy.json"\n'
             'prerequisites="infrastructure/config/root-case-prerequisites.json"\n'
         )
@@ -384,7 +384,7 @@ def test_actual_lane_deadline_or_interruption_cleans_launched_detached_child(
     genuine_lane: tuple[Path, dict[str, Any], dict[str, Any]], action_name: str, expected_code: int
 ) -> None:
     root, census, _ = genuine_lane
-    whole_seconds = 180
+    whole_seconds = 90
     token = uuid.uuid4().hex
     action = root / "output/readiness/action.json"
     startup = root / "output/readiness/descendant-startup.json"

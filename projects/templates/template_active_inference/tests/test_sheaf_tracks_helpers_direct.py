@@ -14,7 +14,6 @@ from roadmap_tracks.sheaf_tracks_helpers import (
     _canonical_artifact_rows,
     _copied_parity,
     _portable_repo_path,
-    _remove_legacy_artifacts,
 )
 from roadmap_tracks.sheaf_tracks_io import (
     _bound_tracks,
@@ -27,7 +26,6 @@ from roadmap_tracks.sheaf_tracks_registry import (
     HASH_CYCLE_AUTHORITY,
     HASH_CYCLE_EXCLUDED_PRODUCERS,
     HASH_CYCLE_EXCLUDED_PATHS,
-    LEGACY_ARTIFACTS,
     hash_cycle_excluded,
 )
 
@@ -159,18 +157,6 @@ def test_copied_parity_rejects_symlink_without_touching_target(tmp_path: Path) -
     with pytest.raises(RuntimeError, match="must not contain symlinks"):
         _copied_parity(project, ["output/data/linked.json"])
     assert outside.read_bytes() == b"outside"
-
-
-def test_remove_legacy_artifacts_deletes_present_real_file(tmp_path: Path) -> None:
-    present = tmp_path / LEGACY_ARTIFACTS[0]
-    absent = tmp_path / LEGACY_ARTIFACTS[1]
-    _write_bytes(present, b"legacy")
-    assert not absent.exists()
-
-    _remove_legacy_artifacts(tmp_path)
-
-    assert not present.exists()
-    assert not absent.exists()
 
 
 def test_canonical_artifact_rows_bind_known_project_copy_state(copied_root: Path) -> None:

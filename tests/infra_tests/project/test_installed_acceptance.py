@@ -41,9 +41,11 @@ from infrastructure.project.installed_acceptance_runtime import (
 from infrastructure.project.installed_acceptance_worker import _environment, _run
 from infrastructure.project.acceptance_payload import format_acceptance_payload_loader, write_acceptance_payload
 from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
+from infrastructure.publishing.root_release_contract import root_package_version
 from infrastructure.reporting.release_readiness_profile import Requirement
 from infrastructure.reporting.native_installed_preparation import native_runtime_export_command
 from infrastructure.core.testing.pytest_profiles import TEST_RUNNER_BASE_DEPS
+from tests.infra_tests.reporting.test_required_readiness import _root_policy_declaration
 
 
 def _export_repository(tmp_path: Path) -> tuple[Path, Requirement, Path, Path]:
@@ -624,11 +626,15 @@ def test_invalid_matrix_budget_is_refused_before_source_or_environment_writes(
 
 def test_complete_missing_runtime_matrix_retains_all_blockers_and_exit75(tmp_path: Path) -> None:
     root = Path(__file__).resolve().parents[3]
+    platform_version = root_package_version(root)
     (tmp_path / "infrastructure").mkdir()
     (tmp_path / "infrastructure/_version.py").write_bytes((root / "infrastructure/_version.py").read_bytes())
-    (tmp_path / "pyproject.toml").write_text('[project]\nname="research-project-template"\nversion="4.0.1"\n')
-    (tmp_path / "CHANGELOG.md").write_text("## [4.0.1] - Unreleased\n")
+    (tmp_path / "pyproject.toml").write_text(
+        f'[project]\nname="research-project-template"\nversion="{platform_version}"\n'
+    )
+    (tmp_path / "CHANGELOG.md").write_text(f"## [{platform_version}] - Unreleased\n")
     (tmp_path / ".python-version").write_text("3.14\n")
+    _root_policy_declaration(tmp_path)
     for scope in PUBLIC_PROJECT_NAMES:
         project = tmp_path / "projects" / scope
         (project / "src").mkdir(parents=True)
@@ -636,11 +642,11 @@ def test_complete_missing_runtime_matrix_retains_all_blockers_and_exit75(tmp_pat
         (project / "src/model.py").write_text("VALUE=1\n")
         (project / "pyproject.toml").write_text(
             "[project]\nname=" + json.dumps(Path(scope).name) + '\nversion="1.0.0"\n'
-            '[tool.template]\nplatform_version="4.0.1"\n'
+            f'[tool.template]\nplatform_version="{platform_version}"\n'
             'tested_python_versions=["3.14","3.15"]\nrequired_unpaid_capabilities=[]\n'
         )
         (project / "manuscript/config.yaml").write_text(
-            'publication:\n  intended_version: "1.0.0"\n  platform_version: "4.0.1"\n'
+            f'publication:\n  intended_version: "1.0.0"\n  platform_version: "{platform_version}"\n'
         )
     report = run_installed_acceptance(tmp_path, {}, project_workers=3)
     assert report["exit_code"] == 75

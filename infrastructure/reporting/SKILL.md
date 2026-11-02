@@ -10,6 +10,8 @@ Pipeline reporting, error aggregation, and executive dashboard generation.
 ## Pipeline Reports (`pipeline_report_model.py`, `pipeline_io.py`)
 
 ```python
+from pathlib import Path
+
 from infrastructure.reporting import (
     generate_pipeline_report, save_pipeline_report,
     save_validation_report, save_test_results,
@@ -32,7 +34,12 @@ report = generate_pipeline_report(
 save_pipeline_report(report, output_dir)
 
 # Individual report sections
-test_report = generate_test_report(test_data)
+test_report = generate_test_report(
+    infra_results=infra_test_data,
+    project_results=project_test_data,
+    repo_root=Path("."),
+    project_root=Path("projects/templates/template_code_project"),
+)
 saved_files = save_validation_report(validation_data, output_dir)
 ```
 
@@ -107,12 +114,10 @@ save_test_report_to_files(results, output_path)
 ```python
 from infrastructure.reporting import (
     collect_output_statistics,
-    log_output_summary,
     write_output_statistics_reports,
 )
 
-stats = collect_output_statistics(output_dir)
-log_output_summary(stats)
+stats = collect_output_statistics(repo_root, "templates/my_project", enabled_formats=("pdf",))
 write_output_statistics_reports(output_dir, stats)
 ```
 

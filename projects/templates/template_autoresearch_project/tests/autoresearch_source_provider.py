@@ -32,7 +32,18 @@ _SOURCE_ROOTS = (
     "LICENSE",
 )
 _IGNORED_NAMES = frozenset(
-    {".git", ".venv", "__pycache__", ".pytest_cache", ".ruff_cache", "htmlcov", "output", "dist", "build"}
+    {
+        ".git",
+        ".venv",
+        "__pycache__",
+        ".pytest_cache",
+        ".ruff_cache",
+        ".benchmarks",
+        "htmlcov",
+        "output",
+        "dist",
+        "build",
+    }
 )
 _REQUIRED_SOURCE_FILES = frozenset(
     {
@@ -90,6 +101,18 @@ def _read_source(path: Path) -> bytes:
         return content
     finally:
         os.close(descriptor)
+
+
+def _declared_platform_version() -> str:
+    """Bind the test owner's exact SDK requirement before nominated source reads."""
+    metadata = tomllib.loads(_read_source(Path(__file__).resolve().parents[1] / "pyproject.toml").decode())
+    version = metadata.get("tool", {}).get("template", {}).get("platform_version")
+    if not isinstance(version, str) or re.fullmatch(r"(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)", version) is None:
+        raise ValueError("Autoresearch must declare an exact SDK platform_version")
+    return version
+
+
+PLATFORM_VERSION = _declared_platform_version()
 
 
 def _source_records(root: Path) -> tuple[tuple[str, str, str, str], ...]:
@@ -153,16 +176,16 @@ def _validate_metadata(relative: str, held_content: bytes) -> None:
         metadata = tomllib.loads(held_content.decode())
         if (
             metadata.get("project", {}).get("name") != "research-project-template"
-            or metadata["project"].get("version") != "4.4.0"
+            or metadata["project"].get("version") != PLATFORM_VERSION
         ):
-            raise ValueError("platform source provider must declare research-project-template 4.4.0")
+            raise ValueError(f"platform source provider must declare research-project-template {PLATFORM_VERSION}")
     elif relative == (PROJECT_PATH / "pyproject.toml").as_posix():
         project = tomllib.loads(held_content.decode())
         if (
             project.get("project", {}).get("name") != "template_autoresearch_project"
-            or project.get("tool", {}).get("template", {}).get("platform_version") != "4.4.0"
+            or project.get("tool", {}).get("template", {}).get("platform_version") != PLATFORM_VERSION
         ):
-            raise ValueError("platform source provider lacks the canonical Autoresearch 4.4.0 contract")
+            raise ValueError(f"platform source provider lacks the canonical Autoresearch {PLATFORM_VERSION} contract")
 
 
 @dataclass(frozen=True)

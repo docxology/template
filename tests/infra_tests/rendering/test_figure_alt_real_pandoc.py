@@ -39,7 +39,7 @@ def test_registry_alt_reaches_real_tagged_pdf_structure_tree(tmp_path: Path) -> 
     registry_path = figures_dir / "figure_registry.json"
     rich_alt = "Blue & amber curves fall from 9% to 1_000 units # reproducibly."
     registry_path.write_text(
-        json.dumps({"fig:dense": {"filename": "dense.png", "alt": rich_alt}}),
+        json.dumps({"fig:dense": {"filename": "dense.png", "alt_text": rich_alt}}),
         encoding="utf-8",
     )
     tex = postprocess_latex(

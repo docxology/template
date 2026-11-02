@@ -2,7 +2,7 @@
 
 This section states what the exemplar does *not* do, alongside what it does.
 Coverage and test-count figures are not restated as literal numbers here —
-those live only in the `578` / `92.18` tokens, resolved
+those live only in the `578` / `91.88` tokens, resolved
 at render time from a live measurement
 (`src/template_autopoiesis/manuscript/manuscript_variables.py::measure_test_summary`), not hand-typed.
 
@@ -86,7 +86,7 @@ function, not that one.
 
 ### Coverage is uneven across modules
 
-The aggregate 92.18% combines covered statements and branch exits
+The aggregate 91.88% combines covered statements and branch exits
 across the measured source inventory. Passing the configured 90% aggregate gate
 (`--cov-fail-under=90`) does not establish a 90% floor for every module.
 [@fig:coverage_by_module] preserves the per-module spread and marks values below

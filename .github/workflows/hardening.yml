@@ -358,6 +358,14 @@ jobs:
       - name: Sync dependencies (dev + optional test groups)
         run: uv sync --locked --group public-exemplars --group installed-build
 
+      - name: Prepare exact Source-locked PDFium wheel fixture
+        shell: bash
+        run: |
+          set -euo pipefail
+          wheel=$(.venv/bin/python -B -m infrastructure.project.pdfium_fixture_preparation \
+            --repo-root "$PWD" --temporary-root "$RUNNER_TEMP")
+          echo "TEMPLATE_TEST_PDFIUM_WHEEL=$wheel" >> "$GITHUB_ENV"
+
       - name: Warm locked offline wheels for fresh-environment tests
         # A restored `.venv` can satisfy the sync above without downloading,
         # and setup-uv prunes registry wheels from its cache. Infra tests that

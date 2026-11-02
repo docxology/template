@@ -10,6 +10,7 @@ from infrastructure.core.pipeline.types import PipelineStageResult
 from infrastructure.core.pipeline.summary import generate_pipeline_summary
 from infrastructure.core.pipeline.outcomes import outcome_for_result
 from infrastructure.core.project_paths import resolve_project_root
+from infrastructure.validation.output.render_formats import enabled_render_formats, load_effective_rendering_config
 
 logger = get_logger(__name__)
 
@@ -51,6 +52,7 @@ def write_pipeline_post_run_reports(
             project_name,
             project_dir=project_dir,
             output_dir=project_dir / "output",
+            enabled_formats=enabled_render_formats(load_effective_rendering_config(project_dir)),
             inventory_mode=output_inventory_mode_for_project(repo_root, project_dir),
         )
         log_file = output_dir / "logs" / "pipeline.log"

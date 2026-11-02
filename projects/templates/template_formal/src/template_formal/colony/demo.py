@@ -33,7 +33,7 @@ DEMO_DECAY = 0.02
 
 
 class DemoSummary(TypedDict):
-    """JSON-serializable result of the deterministic demonstration run."""
+    """Demo results with database references relative to the output directory."""
 
     num_agents: int
     num_ticks: int
@@ -90,7 +90,7 @@ def run_demo_colony(output_dir: Path) -> DemoSummary:
             "choice_history": choice_history,
             "concentration_history": concentration_history,
             "observation_counts": {str(agent.agent_id): agent.observation_count() for agent in agents},
-            "agent_db_paths": [str(output_dir / f"agent_{index}.sqlite3") for index in range(DEMO_NUM_AGENTS)],
+            "agent_db_paths": [f"agent_{index}.sqlite3" for index in range(DEMO_NUM_AGENTS)],
         }
     finally:
         for agent in agents:

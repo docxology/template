@@ -116,20 +116,7 @@ def test_no_placeholder_strings_in_deep_search_outputs(tmp_path: Path) -> None:
     (iso / "data" / "corpus.json").write_text(bundled_corpus.read_text(encoding="utf-8"), encoding="utf-8")
 
     (iso / "manuscript" / "config.yaml").write_text(
-        "paper:\n  title: 'X'\n"
-        "search:\n  query: 'reproducible'\n  sources: [local]\n"
-        "  local_corpus: 'data/corpus.json'\n"
-        "deep_search:\n"
-        "  enabled: false\n"
-        "  keywords: ['reproducible']\n"
-        "  max_results_per_keyword: 3\n"
-        "  sources: [local]\n"
-        "  fetch_abstracts: false\n"
-        "  fetch_fulltext: false\n"
-        "  llm_per_paper: false\n"
-        "  output_dir: 'output/deep_search'\n"
-        "  search_cache_dir: 'output/cache/search'\n"
-        "  unified_bibtex_path: 'output/bibliography/references_deep.bib'\n",
+        "paper:\n  title: X\nproject_config:\n  deep_search:\n    enabled: false\n    keywords:\n    - reproducible\n    max_results_per_keyword: 3\n    sources:\n    - local\n    fetch_abstracts: false\n    fetch_fulltext: false\n    llm_per_paper: false\n    output_dir: output/deep_search\n    search_cache_dir: output/cache/search\n    unified_bibtex_path: output/bibliography/references_deep.bib\n  search:\n    query: reproducible\n    sources:\n    - local\n    local_corpus: data/corpus.json\n",
         encoding="utf-8",
     )
 

@@ -97,8 +97,8 @@ uv run python scripts/pipeline/stage_01_test.py --project-only --profile release
 uv run python scripts/pipeline/stage_01_test.py --project-only --profile exhaustive
 ```
 
-Legacy `--include-slow`, `--include-long-running`, `--include-ollama-tests`,
-and `--include-bench` flags remain additive for compatibility.
+`--include-slow`, `--include-long-running`, `--include-ollama-tests`, and
+`--include-bench` explicitly add capabilities to the selected profile.
 
 ### Running Slow Tests
 

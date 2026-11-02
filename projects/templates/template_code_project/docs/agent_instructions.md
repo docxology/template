@@ -148,7 +148,7 @@ grep -r "unittest.mock\|MagicMock\|@patch\|create_autospec" \
 #    These two files MUST remain infrastructure-free so they are copy-pasteable into any
 #    Python environment without the pipeline installed. Other `src/` modules (`analysis/`,
 #    `dashboard/dashboard.py`, `core/manuscript_variables.py`) are orchestration layers and may import
-#    `infrastructure.*` behind try/except fallbacks; that is intentional and documented in
+#    `infrastructure.*` through the declared SDK dependency; that is intentional and documented in
 #    `src/AGENTS.md` and `architecture.md`.
 grep -nE "^(from|import) infrastructure" \
     projects/templates/template_code_project/src/template_code_project/core/optimizer.py \

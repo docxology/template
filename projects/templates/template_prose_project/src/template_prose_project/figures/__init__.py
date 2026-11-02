@@ -1,7 +1,7 @@
 """Matplotlib figure modules for the prose-review workflow.
 
-These modules are re-exported from ``template_prose_project`` for
-backwards compatibility; import them from the package root.
+These modules are re-exported from ``template_prose_project`` as
+the declared public API; import them from the package root.
 """
 
 from .figures import (

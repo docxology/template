@@ -251,6 +251,7 @@
       "exports": [
         "affected_projects",
         "changed_git_paths",
+        "documentation_only",
         "functional_selection",
         "infrastructure_selection"
       ],
@@ -358,8 +359,6 @@
       "purpose": "Self-contained stdio MCP server exposing the template's agent surface.",
       "subcommands": [],
       "exports": [
-        "LEGACY_PROTOCOL_VERSION",
-        "MODERN_PROTOCOL_VERSION",
         "PROTOCOL_VERSION",
         "SERVER_INFO",
         "SUPPORTED_PROTOCOL_VERSIONS",
@@ -481,6 +480,15 @@
       "invocation": "python -m infrastructure.project.locked_dependency_export",
       "source_path": "infrastructure/project/locked_dependency_export.py",
       "purpose": "Retain exact locked sdists as explicit artifacts for cold wheel reuse.",
+      "subcommands": [],
+      "exports": [],
+      "effect": "mutating"
+    },
+    {
+      "module": "infrastructure.project.pdfium_fixture_preparation",
+      "invocation": "python -m infrastructure.project.pdfium_fixture_preparation",
+      "source_path": "infrastructure/project/pdfium_fixture_preparation.py",
+      "purpose": "Prepare Source-locked public wheel DATA, never native execution authority.",
       "subcommands": [],
       "exports": [],
       "effect": "mutating"

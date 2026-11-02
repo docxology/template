@@ -56,7 +56,11 @@ def main() -> int:
 
     try:
         # Run rendering pipeline
-        exit_code = execute_render_pipeline(args.project, skip_manuscript_hydration=args.skip_manuscript_hydration)
+        exit_code = execute_render_pipeline(
+            args.project,
+            skip_manuscript_hydration=args.skip_manuscript_hydration,
+            repo_root=Path(__file__).resolve().parents[2],
+        )
         return exit_code
 
     except Exception as e:

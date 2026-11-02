@@ -195,7 +195,7 @@ inherited files, reserves the new version DOI, writes the DOI fields and renders
 before creating the upload bundle. It keeps `publication.doi` stable and updates
 `publication.version_doi` plus `publication.version_record`. A live new-version
 reserve-first release requires this explicit GitHub commit when GitHub is enabled
-and refuses `--skip-rerender`. The legacy `--new-version` route remains available.
+and refuses `--skip-rerender`. Use `--new-version` to select an existing series.
 
 Check `final_rendered_pdf_sha256` and `pdf_sha256` in the release receipt, then
 retrieve the actual Zenodo and GitHub PDF assets and require their bytes/hash to

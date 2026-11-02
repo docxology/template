@@ -127,10 +127,10 @@ _STANDALONE_REVEAL_MATH_PLUGIN_RE = re.compile(
 
 
 def activate_hardened_reveal_mathjax(content: str) -> str:
-    """Replace Pandoc's legacy RevealMath2 loader with the shared SRI path.
+    """Replace Pandoc's RevealMath2 loader with the shared SRI path.
 
-    Pandoc's Reveal template activates the legacy ``RevealMath`` alias, whose
-    plugin appends a MathJax-2 ``?config=...`` query even when given the
+    Pandoc's Reveal template activates ``RevealMath``, whose plugin
+    appends a MathJax-2 ``?config=...`` query even when given the
     project's MathJax-4 URL. Accessible mode keeps Pandoc's MathJax-formatted
     ``\\[...\\]`` output but loads the pinned shared runtime directly with the
     same SRI/configuration boundary used by the canonical HTML manuscript.
@@ -140,7 +140,7 @@ def activate_hardened_reveal_mathjax(content: str) -> str:
         return content
     # Pandoc indents plugin tags on otherwise empty physical lines.  Consume
     # the whole line before the general inline replacement so the removed
-    # legacy loader cannot leave a whitespace-only line in committed decks.
+    # upstream loader cannot leave a whitespace-only line in committed decks.
     content = _STANDALONE_REVEAL_MATH_PLUGIN_RE.sub("", content)
     content = _ANY_REVEAL_MATH_PLUGIN_RE.sub("", content)
     content = _REVEAL_MATH_PLUGIN_ENTRY_RE.sub("", content)
@@ -420,12 +420,12 @@ def reveal_reference_and_math_issues(content: str) -> tuple[str, ...]:
         and canonical_config_count == 1
         and config_precedes_loader
     )
-    legacy_reveal_math = (
+    competing_reveal_math = (
         _ANY_REVEAL_MATH_PLUGIN_RE.search(content) is not None
         or _REVEAL_MATH_INITIALIZER_RE.search(content) is not None
         or _REVEAL_MATH_CONFIG_RE.search(content) is not None
     )
-    executable_math_backend = direct_hardened_mathjax and not legacy_reveal_math
+    executable_math_backend = direct_hardened_mathjax and not competing_reveal_math
     if MATHJAX_URL in content:
         if len(direct_loaders) != 1:
             issues.append("Reveal deck must contain exactly one pinned MathJax loader")
@@ -437,8 +437,8 @@ def reveal_reference_and_math_issues(content: str) -> tuple[str, ...]:
             or not config_precedes_loader
         ):
             issues.append("Reveal deck must contain one canonical MathJax configuration before its loader")
-    if legacy_reveal_math:
-        issues.append("Reveal deck retains a competing legacy RevealMath loader or configuration")
+    if competing_reveal_math:
+        issues.append("Reveal deck retains a competing RevealMath loader or configuration")
 
     display_spans = list(_DISPLAY_MATH_RE.finditer(visible))
     for match in display_spans:

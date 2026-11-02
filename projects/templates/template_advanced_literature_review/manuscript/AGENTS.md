@@ -39,7 +39,7 @@ Source directory for the paper: all `.md` sections, `config.yaml`, `preamble.md`
 Manuscript source files use double-brace placeholders of the form `{{<NAME>}}` where `<NAME>` is the variable identifier (the actual placeholders use plain double braces with no angle brackets — angle brackets are shown here only to keep this documentation example from being substituted). Stage 5 (`scripts/05_inject_variables.py`) computes values from pipeline outputs and writes rendered files to `output/manuscript/`.
 
 **Injection sources:**
-- `corpus.jsonl` → `{{CORPUS_SIZE}}`, `{{YEAR_START}}`, `{{YEAR_END}}`
+- `corpus.jsonl` → `{{RETRIEVED_CORPUS_SIZE}}`, `{{YEAR_START}}`, `{{YEAR_END}}`
 - `temporal_analysis.json` → `{{CAGR_PCT}}`, `{{PEAK_YEAR}}`, `{{PEAK_YEAR_PUBS}}`, `{{DOUBLING_TIME}}`
 - `subfield_classification.json` → configuration-keyed subfield counts and percentages
 - `citation_network.json` → `{{CITATION_NODES}}`, `{{CITATION_EDGES}}`, `{{CITATION_DENSITY_PCT}}`, `{{CITATION_RESOLUTION_PCT}}`
