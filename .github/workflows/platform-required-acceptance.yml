@@ -23,11 +23,11 @@ jobs:
       matrix:
         python: ["3.14", "3.15"]
         include:
-          - runner: ubuntu-latest
+          - runner: ubuntu-24.04
             host: linux
           - runner: macos-latest
             host: darwin
-        runner: [ubuntu-latest, macos-latest]
+        runner: [ubuntu-24.04, macos-latest]
     runs-on: ${{ matrix.runner }}
     timeout-minutes: 180
     steps:
@@ -165,7 +165,7 @@ jobs:
           retention-days: 1
 
   common-original:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 360
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
@@ -386,7 +386,7 @@ jobs:
           retention-days: 1
 
   auxiliary-plan:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 15
     outputs:
       matrix: ${{ steps.plan.outputs.matrix }}
@@ -411,7 +411,7 @@ jobs:
       fail-fast: false
       max-parallel: 4
       matrix: ${{ fromJSON(needs.auxiliary-plan.outputs.matrix) }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 90
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
@@ -548,7 +548,7 @@ jobs:
           retention-days: 1
 
   native-original:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 300
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
@@ -603,7 +603,7 @@ jobs:
   complete:
     needs: [root-original, common-original, auxiliary-original, native-original]
     if: always() && !cancelled()
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 300
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
