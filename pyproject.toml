@@ -206,7 +206,7 @@ public-exemplars = [
 ]
 installed-build = [
     "hatchling==1.32.4",
-    "setuptools==83.0.0",
+    "setuptools==84.2.1",
     "wheel==0.48.0",
 ]
 
