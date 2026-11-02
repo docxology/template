@@ -439,6 +439,47 @@ def test_pages_copy_refuses_unsafe_site_content(site_dir: Path, tmp_path: Path, 
     assert config.read_text() == "preserved repository configuration\n"
 
 
+def test_pages_copy_stages_sibling_figures_and_repairs_references(tmp_path: Path) -> None:
+    """A flat-published web payload carries its figures and repaired references."""
+    web = tmp_path / "output" / "web"
+    figures = tmp_path / "output" / "figures"
+    web.mkdir(parents=True)
+    figures.mkdir()
+    source_html = '<html><body><img src="../figures/alpha.png" alt="alpha"></body></html>'
+    (web / "index.html").write_text(source_html, encoding="utf-8")
+    (web / "notes.md").write_text("![alpha](../figures/alpha.png)\n", encoding="utf-8")
+    (web / "data.json").write_text('{"note": "../figures/alpha.png"}', encoding="utf-8")
+    figure_bytes = b"\x89PNG\r\n\x1a\ninvented figure bytes"
+    (figures / "alpha.png").write_bytes(figure_bytes)
+    destination = tmp_path / "destination"
+    destination.mkdir()
+
+    _copy_site(web, destination)
+
+    assert (destination / "figures" / "alpha.png").read_bytes() == figure_bytes
+    assert (destination / "index.html").read_text(encoding="utf-8") == (
+        '<html><body><img src="figures/alpha.png" alt="alpha"></body></html>'
+    )
+    assert (destination / "notes.md").read_text(encoding="utf-8") == ("![alpha](figures/alpha.png)\n")
+    # Non-text staged copies are published unchanged.
+    assert (destination / "data.json").read_text(encoding="utf-8") == ('{"note": "../figures/alpha.png"}')
+    # The source tree keeps its in-repo reading contract.
+    assert (web / "index.html").read_text(encoding="utf-8") == source_html
+
+
+def test_pages_copy_without_sibling_figures_is_unchanged(site_dir: Path, tmp_path: Path) -> None:
+    """No sibling figures/ tree means the staged copy is not altered."""
+    destination = tmp_path / "destination"
+    destination.mkdir()
+
+    _copy_site(site_dir, destination)
+
+    assert (destination / "index.html").read_text(encoding="utf-8") == (
+        "<!doctype html><html><body>Hello</body></html>"
+    )
+    assert not (destination / "figures").exists()
+
+
 # ---------------------------------------------------------------------------
 # 7. CloudflarePagesAdapter — dry run
 # ---------------------------------------------------------------------------
