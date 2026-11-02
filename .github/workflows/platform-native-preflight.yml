@@ -48,6 +48,7 @@ jobs:
       - uses: ./.github/actions/setup-native-installed-readiness
         with:
           prepare-lean: 'false'
+<<<<<<< HEAD
       - name: Strict rendered publication evidence gate
         # The native worker refuses on this same strict rendered predicate before
         # any stage executes, so run it first: a stale receipt fails in seconds
@@ -57,6 +58,36 @@ jobs:
           .venv/bin/python -m infrastructure.validation.cli publication-audit
           --project "$(.venv/bin/python -c 'from infrastructure.reporting.native_installed_preflight import PREFLIGHT_SCOPE; print(PREFLIGHT_SCOPE)')"
           --rendered --strict --require-figure-accessibility --format markdown
+||||||| parent of 66e5aa708 (Keep the declared native capacity by reclaiming unused hosted toolchains)
+=======
+      - name: Keep the declared capacity before native allocation
+        # require_native_capacity refuses unless the volume retains the 2 GiB
+        # reserve plus its declared peak (8 GiB preparation, 16 GiB transport).
+        # Hosted images ship toolchains this lane never uses: remove exactly
+        # those paths, keep chrome, node, python and uv, and report free space.
+        run: |
+          set -euo pipefail
+          free_before=$(df -Pk --output=avail / | tail -n 1)
+          for path in \
+            /usr/local/lib/android \
+            /usr/share/dotnet \
+            /opt/ghc \
+            /usr/share/swift \
+            /usr/local/share/boost \
+            /opt/hostedtoolcache/CodeQL \
+            /opt/hostedtoolcache/PyPy \
+            /opt/hostedtoolcache/Ruby \
+            /opt/hostedtoolcache/Go; do
+            if [ -e "$path" ]; then
+              sudo rm -rf --one-file-system -- "$path" || echo "reclaim-retained=$path"
+            fi
+          done
+          free_after=$(df -Pk --output=avail / | tail -n 1)
+          echo "reclaimed_kib=$((free_after - free_before)) free_kib=$free_after"
+          if [ "$free_after" -lt 10485760 ]; then
+            echo "::warning::free space is below the declared 10 GiB preparation threshold"
+          fi
+>>>>>>> 66e5aa708 (Keep the declared native capacity by reclaiming unused hosted toolchains)
       - name: Bounded cold diagnostic native lifecycle
         id: preflight
         run: >-
