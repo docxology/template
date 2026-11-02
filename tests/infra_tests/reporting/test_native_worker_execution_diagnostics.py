@@ -338,10 +338,14 @@ def test_real_thread_fork_owner_checks_and_context_restoration() -> None:
 def test_real_queue_reserves_every_phase_after_stack_saturation() -> None:
     result = _run("""
         reserved = _NativeStartupDiagnostics()
-        assert len(reserved.phases) == 84
+        # The sampler walks at most twelve frames and the fixed 96-event budget
+        # keeps one record per listed phase, so the allowance is whichever is
+        # smaller; derive it so a new listed phase cannot stale this control.
+        allowance = min(12, 96 - len(reserved.phases))
+        assert allowance > 0
         for count in range(500):
             reserved.emit('anchored-stack', count % 12, 'unlisted', 0)
-        assert reserved.stack_events == 12
+        assert reserved.stack_events == allowance
         with _worker_execution_observer(reserved.observe), _worker_execution_phase('mermaid-tool-api'):
             for phase in _EXECUTION_PHASES:
                 with _worker_execution_phase(phase):
@@ -359,7 +363,7 @@ def test_real_queue_reserves_every_phase_after_stack_saturation() -> None:
         assert reserved.byte_count <= 32768
         records = [reserved.pending.get_nowait() for count in range(96)]
         labels = [record.decode().split()[1] for record in records]
-        assert labels.count('anchored-stack') == 12
+        assert labels.count('anchored-stack') == allowance
         assert set(labels) - {'anchored-stack'} == reserved.phases
         assert all(labels.count(phase) == 1 for phase in reserved.phases)
         assert all(len(record) <= 512 for record in records)
