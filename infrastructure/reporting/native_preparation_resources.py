@@ -24,6 +24,12 @@ def require_native_capacity(path: Path, *, peak_bytes: int, deadline: float) -> 
     probe = path.absolute()
     while not probe.exists():
         probe = probe.parent
-    if shutil.disk_usage(probe).free < RESERVE_BYTES + peak_bytes:
-        raise ValueError("native preparation cannot retain the2GiB reserve plus its declared bounded peak")
+    free_bytes = shutil.disk_usage(probe).free
+    required_bytes = RESERVE_BYTES + peak_bytes
+    if free_bytes < required_bytes:
+        raise ValueError(
+            f"native allocation needs {required_bytes} free bytes "
+            f"({RESERVE_BYTES} reserve plus the declared {peak_bytes}-byte peak) "
+            f"but the volume has {free_bytes}"
+        )
     remaining(deadline)
