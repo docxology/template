@@ -15,6 +15,19 @@ recorded root release is `3.8.0` / `v3.8.0`; its original publication evidence i
 retained in [subsystem history](subsystem-status-history.md). Historical
 standalone release entries do not version the root package.
 
+## Tag-only milestones
+
+`v4.3.0` and `v4.4.0` are retained as **tag-only milestones**. Each tag marks a
+prepared candidate revision, and each versioned note remains the record of that
+preparation, but neither owns a GitHub Release and neither will be backfilled.
+
+This is a recorded disposition, not an outstanding task. Creating a retroactive
+release for either tag would publish preparation notes as if they were acceptance
+records and would misstate what was verified at the time. `v4.4.0` stays bound to
+the candidate that did not pass required acceptance; `v4.3.0` stays bound to its
+metadata-preparation revision. Neither tag is moved, deleted or reused, and the
+last published root release remains `3.8.0` / `v3.8.0`.
+
 Before the next root release, reconcile these surfaces together:
 
 For the metadata preparation in step 1, use
