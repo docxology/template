@@ -331,7 +331,7 @@ Reference in text: Figure \ref{fig:your_figure}
 
 For accessible publication figures, generate
 `output/figures/figure_registry.json` with an exact `label`, `filename` (or
-`path`), and a non-empty top-level `alt` or `metadata.alt_text`. HTML uses that
+`path`), and a non-empty top-level `alt_text` or `metadata.alt_text`. HTML uses that
 source-owned description only when the rendered label and path agree; it does
 not manufacture image alternatives from visible captions. A present registry
 record with blank alt text or a label/path mismatch blocks rendering. A

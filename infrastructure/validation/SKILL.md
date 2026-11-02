@@ -113,7 +113,7 @@ success, issues = validate_figure_registry(
 ```
 
 Pass ``require_accessibility=True`` during an explicit migration or release
-review to require non-empty ``alt`` or ``metadata.alt_text`` for every
+review to require non-empty ``alt_text`` or ``metadata.alt_text`` for every
 referenced registered figure. The publication CLI exposes the same contract as
 ``--require-figure-accessibility``. A manuscript that references figures but
 has no registry fails closed; a manuscript with no figure references does not

@@ -420,6 +420,7 @@ observations alone do not establish complete execution or a universal speedup.
 | `native_pitch_source_layout.py` | Complete current-source native Pitch package layout, theme and replay. |
 | `native_pitch_source_native.py` | Actual complete source-only Pitch PDF layout/theme/ink and portable replay. |
 | `native_pitch_source_parity.py` | Source-driven Pitch OOXML package and all-three native PDF/PPTX pair closure. |
+| `native_preflight_budget.py` | Single bounded diagnostic budget for the cold preflight clock and its launch/worker retention reserves. |
 | `native_preparation_resources.py` | Bounded owner-controlled installed preparation capacity; no cleanup authority. |
 | `native_prepared_code_readback.py` | Read exact retained original Code from actual prepared installed invocations. |
 | `native_prepared_pdfium.py` | Prepare exact Source-listed wheel DATA for the cold native provider factory. |

@@ -141,7 +141,7 @@ on nested/spanned header content. Literal examples are not a rewrite surface.
   permissions, and EPUB's first uncompressed `mimetype` member while
   normalizing member timestamps.
 - Body-figure alternatives come from `output/figures/figure_registry.json`,
-  using either top-level `alt` or `metadata.alt_text`. Combined and per-section
+  using either top-level `alt_text` or `metadata.alt_text`. Combined and per-section
   HTML replace Pandoc's caption-derived image alternative only when the
   rendered label and figure path exactly match the registry; blank metadata or
   a present label/path disagreement fails the render. Non-empty authored alt
