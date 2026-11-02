@@ -48,6 +48,35 @@ EXCLUDED_DOC_FILENAMES: frozenset[str] = frozenset({"AGENTS.md", "MANUSCRIPT_STA
 # carries a status ledger; it is repository documentation, never a
 # rendered section.
 
+# Destination copies live in ``output/manuscript/``, one level below the project
+# root, so a source-relative ``../output/<path>`` — correct from ``manuscript/`` —
+# names ``output/output/<path>`` there.  The same asset from the destination is
+# ``../<path>``.  Only link/image targets and quoted HTML
+# ``src``/``href``/``data-slide-manifest`` attributes are rebased: source files
+# keep their own relative form, and prose or code spans that document the source
+# path are left verbatim.
+_MARKDOWN_OUTPUT_TARGET_RE = re.compile(r"(?P<open>\]\()\.\./output/(?P<rest>[^)\s]+)")
+_HTML_OUTPUT_ATTR_RE = re.compile(r"(?P<open>\b(?:src|href|data-slide-manifest)=\")\.\./output/(?P<rest>[^\"]+)")
+
+
+def _rebase_output_links_for_destination(text: str) -> str:
+    """Re-express ``../output/<path>`` targets for the ``output/manuscript/`` copy.
+
+    The source manuscript and the destination copy sit at different depths, so a
+    path that is correct in the source is not correct in the copy.  Exactly the
+    project-``output/`` prefix is rebased; every other relative form — including
+    paths that already resolve inside the destination directory — is unchanged.
+
+    Args:
+        text: Resolved markdown text on its way to ``output/manuscript/``.
+
+    Returns:
+        The text with link/image targets and quoted HTML attributes that begin
+        ``../output/`` rewritten to begin ``../``.
+    """
+    text = _MARKDOWN_OUTPUT_TARGET_RE.sub(lambda match: f"{match.group('open')}../{match.group('rest')}", text)
+    return _HTML_OUTPUT_ATTR_RE.sub(lambda match: f"{match.group('open')}../{match.group('rest')}", text)
+
 
 def substitute_manuscript_text(
     text: str,
@@ -91,7 +120,10 @@ def write_resolved_manuscript_tree(
     (``config.yaml``, ``*.bib``) are copied verbatim.
 
     Unresolved tokens are logged as warnings and preserved literally in the
-    output so they remain visible if the rendered PDF is inspected.
+    output so they remain visible if the rendered PDF is inspected.  Relative
+    targets that point into the project's ``output/`` tree (for example
+    ``../output/figures/plot.png``) are re-expressed for the copy's location
+    (``../figures/plot.png``); the source files keep their own form.
 
     The PDF-rendering pipeline prefers ``output/manuscript/`` when it contains
     markdown (see :func:`infrastructure.rendering.pipeline.resolve_manuscript_dir`).
@@ -126,6 +158,7 @@ def write_resolved_manuscript_tree(
             continue
         text = md_file.read_text(encoding="utf-8")
         resolved, unresolved = substitute_manuscript_text(text, variables)
+        resolved = _rebase_output_links_for_destination(resolved)
         if unresolved:
             logger.warning(
                 "Unresolved {{TOKEN}} in %s: %s",
