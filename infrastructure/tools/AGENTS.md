@@ -142,7 +142,7 @@ A valid tool must have:
 Optional: `tests/`, `docs/`
 
 Unlike fonds (passive data stores), tools are executable and require a `scripts/`
-directory instead of a `data/` directory.
+directory instead of a `<fond>/data/` directory.
 
 ## Discovery Scope
 
