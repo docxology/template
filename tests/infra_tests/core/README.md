@@ -29,6 +29,19 @@ uv run pytest tests/infra_tests/core/ --cov=infrastructure.core --cov-report=ter
 | `pipeline/` | Multi-project parallel helpers and worker isolation |
 | `telemetry/` | Telemetry retention and archive rotation |
 
+### Cross-pool contract (`test_pool_contract.py`)
+
+One contract test parametrized over the three passive resource pools
+(`fonds`, `rules`, `tools`), pinning discovery, `resolve_*_root`, validation
+messages, the info dataclass shape, and public-scope filtering to identical
+behaviour. It lives here because the shared engine it guards belongs in
+`infrastructure/core/`; the pool-specific suites stay in
+`tests/infra_tests/{fonds,rules,tools}/`.
+
+```bash
+uv run pytest tests/infra_tests/core/test_pool_contract.py -v
+```
+
 ### Configuration Tests (`test_config_loader_*.py`)
 
 Configuration loading and environment variable integration:
