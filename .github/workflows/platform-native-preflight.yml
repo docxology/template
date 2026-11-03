@@ -29,7 +29,11 @@ env:
 
 jobs:
   native-preflight:
-    runs-on: ubuntu-latest
+    # Pinned like the other Linux lanes (590567abd): ubuntu-latest now routes to
+    # the 26.04 image, where actions/setup-python has no 3.14.4 build — run
+    # 41563643745 died in setup-python-env on Image: ubuntu-26.04 with
+    # "The version '3.14.4' with architecture 'x64' was not found for Ubuntu 26.04".
+    runs-on: ubuntu-24.04
     # 1800s operation + cold setup/upload. The 900s bound was measured below
     # the cold lifecycle; see docs/guides/native-format-acceptance.md.
     timeout-minutes: 45
