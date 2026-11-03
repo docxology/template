@@ -23,6 +23,8 @@ import tomllib
 from dataclasses import dataclass
 from pathlib import Path
 
+import yaml
+
 from infrastructure.core.project_pyproject import load_project_pyproject
 from infrastructure.publishing.root_release_contract import (
     root_changelog_versions,
@@ -78,11 +80,25 @@ def _root_findings(root: Path, version: str, tag: str | None) -> list[ReleaseVer
         findings.append(
             ReleaseVersionFinding("root", "changelog", f"CHANGELOG.md has no released heading for {version!r}")
         )
-    notes = root / "docs" / "releases" / f"v{version}.md"
+    releases = root / "docs" / "releases"
+    notes = releases / f"v{version}.md"
     if not notes.is_file():
         findings.append(ReleaseVersionFinding("root", "release-notes", f"missing {notes.relative_to(root).as_posix()}"))
+    else:
+        heading = next(
+            (line for line in notes.read_text(encoding="utf-8").splitlines() if line.startswith("# ")), ""
+        )
+        expected = f"# {version}"
+        if not heading.startswith(expected):
+            findings.append(
+                ReleaseVersionFinding(
+                    "root",
+                    "release-notes-heading",
+                    f"{notes.relative_to(root).as_posix()} first heading {heading!r} does not start with {expected!r}",
+                )
+            )
     for suffix in ("overview.svg", "overview.png"):
-        asset = root / "docs" / "releases" / f"template-v{version}-{suffix}"
+        asset = releases / f"template-v{version}-{suffix}"
         if not asset.is_file():
             findings.append(
                 ReleaseVersionFinding(
@@ -90,6 +106,40 @@ def _root_findings(root: Path, version: str, tag: str | None) -> list[ReleaseVer
                     "release-artifact",
                     f"missing {asset.relative_to(root).as_posix()} (release.yml uploads and indexes it)",
                 )
+            )
+    for stray in sorted(releases.glob("*.svg.png")):
+        findings.append(
+            ReleaseVersionFinding("root", "stray-release-artifact", f"unexpected {stray.relative_to(root).as_posix()}")
+        )
+    index = releases / "README.md"
+    if index.is_file() and f"(v{version}.md)" not in index.read_text(encoding="utf-8"):
+        findings.append(
+            ReleaseVersionFinding(
+                "root", "releases-index", f"{index.relative_to(root).as_posix()} does not list v{version}.md"
+            )
+        )
+    citation = root / "CITATION.cff"
+    if citation.is_file():
+        try:
+            payload = yaml.safe_load(citation.read_text(encoding="utf-8"))
+        except yaml.YAMLError as error:
+            findings.append(ReleaseVersionFinding("root", "citation-cff", f"CITATION.cff is not valid YAML: {error}"))
+        else:
+            if not isinstance(payload, dict):
+                findings.append(ReleaseVersionFinding("root", "citation-cff", "CITATION.cff is not a mapping"))
+            else:
+                declared = payload.get("version")
+                if normalize_version(declared) != normalize_version(version):
+                    findings.append(
+                        ReleaseVersionFinding(
+                            "root", "citation-cff", f"CITATION.cff version {declared!r} differs from {version!r}"
+                        )
+                    )
+    for relative in ("README.md", "AGENTS.md", "docs/maintenance/release-boundary.md"):
+        surface = root / relative
+        if surface.is_file() and version not in surface.read_text(encoding="utf-8"):
+            findings.append(
+                ReleaseVersionFinding("root", "root-surface-version", f"{relative} does not mention {version}")
             )
     if tag is not None:
         try:
