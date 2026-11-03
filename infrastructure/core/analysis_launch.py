@@ -47,11 +47,7 @@ def deadline_relabels_outcome(result: StageOutcome, deadline: float) -> bool:
     e4f931d56bb8: began 3603.76, reaped 3821.12, its own deadline 3861.51 (40.39 s
     of slack), exit 0, while an enclosing deadline had already passed.
     """
-    return (
-        not result.complete
-        and time.monotonic() >= deadline
-        and result.status is not StageStatus.INTERRUPTED
-    )
+    return not result.complete and time.monotonic() >= deadline and result.status is not StageStatus.INTERRUPTED
 
 
 def launch_analysis_script(
@@ -154,7 +150,12 @@ def launch_analysis_script(
     assert result is not None
     if deadline_relabels_outcome(result, deadline):
         result = replace(
-            result, status=StageStatus.TIMED_OUT, diagnostic=f"{result.diagnostic}; analysis deadline passed during finalisation (not the cause of a completed stage)"
+            result,
+            status=StageStatus.TIMED_OUT,
+            diagnostic=(
+                f"{result.diagnostic}; analysis deadline passed during finalisation "
+                "(not the cause of a completed stage)"
+            ),
         )
     return _persist_analysis_result(
         repo_root,
@@ -234,7 +235,12 @@ def _persist_analysis_result(
                 atomic_write_text_confined(project, target, json.dumps(record, sort_keys=True) + "\n", mode=0o600)
         if deadline_relabels_outcome(result, deadline):
             result = replace(
-                result, status=StageStatus.TIMED_OUT, diagnostic=f"{result.diagnostic}; evidence deadline passed during finalisation (not the cause of a completed stage)"
+                result,
+                status=StageStatus.TIMED_OUT,
+                diagnostic=(
+                    f"{result.diagnostic}; evidence deadline passed during finalisation "
+                    "(not the cause of a completed stage)"
+                ),
             )
             record.update(outcome=result.to_dict(), complete=False)
             atomic_write_text_confined(project, target, json.dumps(record, sort_keys=True) + "\n", mode=0o600)
