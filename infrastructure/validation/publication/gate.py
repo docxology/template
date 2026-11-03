@@ -359,6 +359,7 @@ def run_publication_gate(
     resolved = selection or ProjectSelection(tuple(projects), "unspecified selection")
     return PublicationGateReport(mode=mode, results=results, selection=resolved)
 
+
 def write_receipts(report: PublicationGateReport, directory: Path) -> tuple[Path, ...]:
     """Write one JSON receipt per project and return the paths written.
 
