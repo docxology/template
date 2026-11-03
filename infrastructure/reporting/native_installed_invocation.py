@@ -109,6 +109,30 @@ class NativeInstalledInvocationFailure(RuntimeError):
         super().__init__("actual cold installed invocation refused or failed")
         self.result = result
 
+    def __str__(self) -> str:
+        """Name the actual refusing result instead of an opaque category.
+
+        Only structured result fields are rendered. Raw child streams are never
+        included: they can carry paths and project content.
+        """
+        base = super().__str__()
+        result = self.result
+        if not isinstance(result, dict):
+            return base
+        observed: list[str] = []
+        if "accepted" in result:
+            observed.append(f"accepted={result['accepted']!r}")
+        if "original_exit_code" in result:
+            observed.append(f"original_exit_code={result['original_exit_code']!r}")
+        if result.get("timed_out") is True:
+            observed.append("timed_out=True")
+        diagnostics = result.get("diagnostics")
+        if isinstance(diagnostics, list):
+            detail = "; ".join(item for item in diagnostics if isinstance(item, str))
+            if detail:
+                observed.append(f"diagnostics={detail[:400]}")
+        return base if not observed else base + ": " + ", ".join(observed)
+
 
 def launch_prepared_native(
     prepared: NativePreparedRuntime,

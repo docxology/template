@@ -329,6 +329,7 @@ def main(argv: list[str] | None = None) -> int:
                         {
                             "mode": args.mode,
                             "actual_original_result": error.result,
+                            "refused_because": f"{type(error).__name__}: {error}",
                             "original_deadline_monotonic": deadline,
                             "operation_timeout_seconds": args.timeout,
                             "inner_operation_timeout_seconds": inner_timeout,
@@ -342,7 +343,11 @@ def main(argv: list[str] | None = None) -> int:
             )
         except (OSError, ValueError, TypeError):
             sys.stderr.write("failed launch summary could not be retained; original tool files remain" + "\n")
-        sys.stderr.write("installed native original refused; genuine process/raw evidence retained" + "\n")
+        sys.stderr.write(
+            "installed native original refused; genuine process/raw evidence retained: "
+            + f"{type(error).__name__}: {error}"
+            + "\n"
+        )
         return _signed_failure(error.result)
     except KeyboardInterrupt:
         return 130
