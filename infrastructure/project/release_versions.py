@@ -85,9 +85,7 @@ def _root_findings(root: Path, version: str, tag: str | None) -> list[ReleaseVer
     if not notes.is_file():
         findings.append(ReleaseVersionFinding("root", "release-notes", f"missing {notes.relative_to(root).as_posix()}"))
     else:
-        heading = next(
-            (line for line in notes.read_text(encoding="utf-8").splitlines() if line.startswith("# ")), ""
-        )
+        heading = next((line for line in notes.read_text(encoding="utf-8").splitlines() if line.startswith("# ")), "")
         expected = f"# {version}"
         if not heading.startswith(expected):
             findings.append(

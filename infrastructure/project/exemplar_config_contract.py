@@ -97,11 +97,7 @@ def _sdk_binding(root: Path, project_root: Path, version: str) -> tuple[list[str
         else:
             rows = lock_payload.get("package")
             rows = rows if isinstance(rows, list) else []
-            versions = [
-                row.get("version")
-                for row in rows
-                if isinstance(row, dict) and row.get("name") == SDK_PACKAGE
-            ]
+            versions = [row.get("version") for row in rows if isinstance(row, dict) and row.get("name") == SDK_PACKAGE]
             if not versions or any(item != version for item in versions):
                 findings.append(f"uv.lock {SDK_PACKAGE} version {versions!r} differs from {version!r}")
     return findings, declared if isinstance(declared, str) else None
