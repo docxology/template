@@ -116,6 +116,7 @@ is_valid, message = validate_fond_structure(Path("fonds/my_bibliography"))
 - `LIFECYCLE_LINK_DIRS: dict[str, str]` — `{"working": "fonds/working", "archive": "fonds/archive"}`.
 - `PROTECTED_NAMES: frozenset[str]` — bare exemplar names; syncer never touches.
 - `ENV_VAR = "TEMPLATE_FONDS_ROOT"`, `SKIP_ENV_VAR = "TEMPLATE_SKIP_FOND_LINK_SYNC"`.
+- The command itself is not written here: `_build_parser`/`main` delegate to `infrastructure.core.sidecar_linking.build_link_sync_parser`/`run_link_sync_cli`, which own the shared flag contract and delta printing for all four resource trees.
 
 ```python
 @dataclass
@@ -140,9 +141,9 @@ uv run python -m infrastructure.fonds.linking --private-root /path/to/fonds
 
 A valid fond must have:
 - `fonds.yaml` — manifest (required by `validate_fond_structure`)
-- `data/` — resource data (required)
+- `<fond>/data/` — resource data (required)
 
-Optional: `manuscript/`, `scripts/`, `tests/`
+Optional: `<fond>/manuscript/`, `<fond>/scripts/`, `<fond>/tests/`
 
 Unlike projects, no Python code is required — fonds are passive data stores.
 

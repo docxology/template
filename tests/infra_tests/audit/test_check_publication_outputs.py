@@ -215,7 +215,9 @@ def test_errors_fail_every_mode(tmp_path: Path) -> None:
         assert "PUBLICATION.AUDIT_INVALID_REPORT" in refused.blocking
 
     # The actual CLI also reaches the same parser and retains its real failure.
-    actual = gate._audit_project(tmp_path, "templates/template_code_project", mode="blocking")
+    # No lane is threaded in: one audit result serves the blocking and the
+    # strict lane, and the report applies the severity policy.
+    actual = gate._audit_project(tmp_path, "templates/template_code_project")
     assert actual.failed and actual.original_exit != 0
     assert "PUBLICATION.AUDIT_SUBPROCESS_FAILED" in actual.blocking
 

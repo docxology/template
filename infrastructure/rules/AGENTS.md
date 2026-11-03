@@ -114,6 +114,7 @@ is_valid, message = validate_rule_structure(Path("rules/my_rule"))
 - `LIFECYCLE_LINK_DIRS: dict[str, str]` — `{"working": "rules/working", "archive": "rules/archive"}`.
 - `PROTECTED_NAMES: frozenset[str]` — bare exemplar names; syncer never touches.
 - `ENV_VAR = "TEMPLATE_RULES_ROOT"`, `SKIP_ENV_VAR = "TEMPLATE_SKIP_RULE_LINK_SYNC"`.
+- The command itself is not written here: `_build_parser`/`main` delegate to `infrastructure.core.sidecar_linking.build_link_sync_parser`/`run_link_sync_cli`, which own the shared flag contract and delta printing for all four resource trees.
 
 ```python
 @dataclass
@@ -140,12 +141,12 @@ A valid rule must have both items below; `validate_rule_structure` rejects
 A directory missing any required member is rejected by `validate_rule_structure`.
 `validate_rule_structure` fails closed: a directory without `rules.yaml`, or missing one of the required fields below, does not validate.
 an invalid layout by returning `(False, ...)` — validation fails on any
-directory missing the `rules.yaml` manifest or lacking both `soft/` and
-`strong/`:
+directory missing the `rules.yaml` manifest or lacking both `<rule>/soft/` and
+`<rule>/strong/`:
 - `rules.yaml` — manifest (required by `validate_rule_structure`)
 - At least one of:
-  - `soft/` — markdown guideline files (prompt-style prose)
-  - `strong/` — yaml or json formal constraint files
+  - `<rule>/soft/` — markdown guideline files (prompt-style prose)
+  - `<rule>/strong/` — yaml or json formal constraint files
 
 Optional: `scripts/`, `tests/`, `examples/`
 

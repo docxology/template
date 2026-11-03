@@ -191,8 +191,11 @@ still applies verbatim:
 - `[tool.template].project_test_command` is an explicit, default-off argv contract for the single-project Stage-01 lane; malformed declarations fail closed. Stage 01 admits one existing selected interpreter against the workspace's exact pytest/Coverage runner versions without acquisition, requires project-local coverage evidence plus real warning/discovery/outcome counts, and gives the verifier a 6,900-second deadline inside the tree-killing 7,200-second stage boundary. The `--all-projects --public-projects` union runner honors the same source-declared verifier contract, retains independently admitted isolated coverage bytes, and runs declared lanes serially after the bounded ordinary pytest matrix. GitHub's per-project public matrix also invokes the single-project Stage-01 contract.
 
 **sidecar_linking.py**
-- Generic sidecar lifecycle symlink sync for template checkouts: creates/updates/prunes managed symlinks under `projects/` from a resolved private root, honoring per-pool env/config overrides
-- Public API: `sync_private_links`, `resolve_private_root`, `is_managed_symlink`, dataclasses `SidecarLinkConfig` and `LinkSyncResult`
+- Generic sidecar lifecycle symlink sync for template checkouts: creates/updates/prunes managed symlinks under any top-level resource tree (`projects/`, `fonds/`, `rules/`, `tools/`) from a resolved private root, honoring per-pool env/config overrides
+- Owns the one `linking` CLI those four trees share: `build_link_sync_parser` (the `--repo-root`/`--private-root`/`--dry-run`/`--no-prune` contract) and `run_link_sync_cli` (parse, resolve, sync, report, return 0), so each tree's `linking.py` keeps only its `SidecarLinkConfig` and thin named wrappers
+- Owns the result printer too: `print_link_sync_result` (summary + deltas on stdout) and `write_link_sync_deltas` (deltas only, for callers that prefix their own summary)
+- Public API: `sync_private_links`, `resolve_private_root`, `is_managed_symlink`, `unmanaged_mirror_entries`, `build_link_sync_parser`, `run_link_sync_cli`, `print_link_sync_result`, `write_link_sync_deltas`, dataclasses `SidecarLinkConfig` and `LinkSyncResult`
+- Characterization tests: [`tests/infra_tests/core/test_sidecar_linking.py`](../../tests/infra_tests/core/test_sidecar_linking.py) and [`tests/infra_tests/core/test_sidecar_linking_cli.py`](../../tests/infra_tests/core/test_sidecar_linking_cli.py) (the latter pins all four tree CLIs against one contract)
 
 **cli.py**
 - Command-line interface utilities

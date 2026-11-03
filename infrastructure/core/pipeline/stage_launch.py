@@ -9,10 +9,11 @@ import time
 import uuid
 from pathlib import Path
 
-from infrastructure.core.execution_boundary import run_bounded_subprocess
+from infrastructure.core.execution_boundary import BoundedSubprocessResult, run_bounded_subprocess
 from infrastructure.core.analysis_data_custody import capture_analysis_data, require_analysis_data
 from infrastructure.core.files.secure_write import atomic_write_text_confined, read_bytes_confined
 from infrastructure.core.implementation_custody import bytecode_audit_bootstrap
+from infrastructure.core.pipeline.failure_identity import ClockState, terminal_identity
 from infrastructure.core.pipeline.fingerprints import canonical_digest, source_content_fingerprint
 from infrastructure.core.pipeline.outcomes import StageOutcome, StageStatus
 from infrastructure.core.pipeline.skip_receipts import validate_skip_receipt
@@ -24,6 +25,44 @@ _BOOTSTRAP = (
     "sys.path.insert(0,sys.argv.pop(1));"
     "runpy.run_module('infrastructure.core.pipeline.stage_worker',run_name='__main__')"
 )
+
+
+def _typed_condition(
+    *,
+    child: BoundedSubprocessResult,
+    original: int | None,
+    deadline: float,
+    known_original: bool,
+    child_decided_124: bool,
+    convention_124: bool,
+) -> str:
+    """Name the typed condition behind one supervised stage outcome.
+
+    The condition is carried *alongside* ``custody_refused``, not instead of it,
+    so the record still shows that a refusal occurred; the boolean is refused a
+    second job it cannot do, which is naming the cause.
+
+    Precedence is settled by the caller rather than inside ``failure_identity``
+    because only the caller can see causal order. A child that exited 124 with
+    its clock still running decided for itself, so a refusal recorded in the same
+    observation sits *downstream* of that exit and must not overwrite the cause.
+    That ordering comes from the child's own terminal record, never from
+    inference: a refusal whose order is unknown is passed through unchanged and
+    labels ``CUSTODY_REFUSAL``. ``refuses_certification`` holds for both
+    conditions, so no verdict moves either way -- the evidence only gets more
+    specific about which of the two it is looking at.
+    """
+    downstream_refusal = child.custody_refused and child_decided_124
+    identity = terminal_identity(
+        clock=ClockState(deadline_monotonic=deadline, observed_completion_monotonic=time.monotonic()),
+        supervisor_timed_out=child.timed_out,
+        original_exit=original if known_original else child.original_returncode,
+        observed_exit=child.returncode,
+        custody_refused=child.custody_refused and not downstream_refusal,
+        command_error=child.command_error,
+        script_timeout_convention=convention_124,
+    )
+    return str(identity.condition)
 
 
 def launch_python_stage(
@@ -303,6 +342,8 @@ def launch_python_stage(
         custody_diagnostic = "; ".join(filter(None, (custody_diagnostic, child.command_error)))
     known_original = admitted is not None or checkpoint_original is not None
     attempts = (original,) if analysis_runtime is not None and known_original and original is not None else ()
+    child_decided_124 = known_original and original == 124 and not child.timed_out and time.monotonic() < deadline
+    convention_124 = analysis_runtime is not None and child_decided_124
     if observed in {130, -2} or (known_original and original == 130):
         interruption = (
             "Analysis script exited 130 (interruption convention)"
@@ -317,21 +358,21 @@ def launch_python_stage(
             attempt_exit_codes=attempts,
         )
     if child.timed_out or time.monotonic() >= deadline or (known_original and original == 124):
-        timeout = (
-            "Analysis script exited 124 (timeout convention)"
-            if analysis_runtime is not None
-            and known_original
-            and original == 124
-            and not child.timed_out
-            and time.monotonic() < deadline
-            else "Python stage timeout"
-        )
+        timeout = "Analysis script exited 124 (timeout convention)" if convention_124 else "Python stage timeout"
         return StageOutcome(
             stage_key,
             StageStatus.TIMED_OUT,
             original if known_original else child.original_returncode,
             timeout + (f"; {custody_diagnostic}" if custody_diagnostic else ""),
             attempt_exit_codes=attempts,
+            condition=_typed_condition(
+                child=child,
+                original=original,
+                deadline=deadline,
+                known_original=known_original,
+                child_decided_124=child_decided_124,
+                convention_124=convention_124,
+            ),
         )
     if child.custody_refused:
         state = StageStatus.FAILED if known_original and original not in {None, 0, 75} else StageStatus.BLOCKED
@@ -341,6 +382,14 @@ def launch_python_stage(
             original if known_original else child.original_returncode,
             child.command_error,
             attempt_exit_codes=attempts,
+            condition=_typed_condition(
+                child=child,
+                original=original,
+                deadline=deadline,
+                known_original=known_original,
+                child_decided_124=child_decided_124,
+                convention_124=convention_124,
+            ),
         )
     if child.command_error or admitted is None:
         state = StageStatus.BLOCKED if checkpoint_original in {0, 75} else StageStatus.FAILED

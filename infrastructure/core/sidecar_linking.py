@@ -2,11 +2,15 @@
 
 from __future__ import annotations
 
+import argparse
 import os
+import sys
 from dataclasses import dataclass, field
 from pathlib import Path
+from typing import TextIO
 
 from infrastructure.core.logging.utils import get_logger
+from infrastructure.core.project_paths import find_repo_root
 
 logger = get_logger(__name__)
 
@@ -440,4 +444,77 @@ def sync_private_links(
     return result
 
 
-__all__ = ["LinkSyncResult", "SidecarLinkConfig", "is_managed_symlink", "resolve_private_root", "sync_private_links"]
+def write_link_sync_deltas(result: LinkSyncResult, *, stream: TextIO | None = None) -> None:
+    """Write the created/updated/removed/skipped delta lines for one sync result."""
+    out = stream or sys.stdout
+    for label, names in (
+        ("+", result.created),
+        ("~", result.updated),
+        ("-", result.removed),
+        (".", result.skipped),
+    ):
+        for name in names:
+            print(f"  {label} {name}", file=out)
+
+
+def print_link_sync_result(result: LinkSyncResult, *, stream: TextIO | None = None) -> None:
+    """Print a sync summary followed by its created/updated/removed/skipped deltas.
+
+    The default stream is stdout so a ``linking`` module CLI stays pipeable;
+    callers that report progress (orchestration) prefix the summary instead.
+    """
+    out = stream or sys.stdout
+    print(result.summary(), file=out)
+    write_link_sync_deltas(result, stream=out)
+
+
+def build_link_sync_parser(*, prog: str, description: str) -> argparse.ArgumentParser:
+    """Build the shared ``linking`` command parser for one resource tree."""
+    parser = argparse.ArgumentParser(prog=prog, description=description)
+    parser.add_argument("--repo-root", type=Path, default=None)
+    parser.add_argument("--private-root", type=Path, default=None)
+    parser.add_argument("--dry-run", action="store_true")
+    parser.add_argument("--no-prune", action="store_true")
+    return parser
+
+
+def run_link_sync_cli(
+    config: SidecarLinkConfig,
+    *,
+    prog: str,
+    description: str,
+    argv: list[str] | None = None,
+    stream: TextIO | None = None,
+) -> int:
+    """Run one resource tree's ``linking`` command and report its deltas.
+
+    Every resource tree (``projects/``, ``fonds/``, ``rules/``, ``tools/``) shares
+    this command: parse the same four flags, resolve the checkout root, sync the
+    configured lifecycle links, print the result, and return 0. Differences
+    between trees stay in their :class:`SidecarLinkConfig`.
+    """
+    namespace = build_link_sync_parser(prog=prog, description=description).parse_args(argv)
+    repo_root: Path = namespace.repo_root or find_repo_root()
+    result = sync_private_links(
+        repo_root,
+        config,
+        namespace.private_root,
+        prune=not namespace.no_prune,
+        dry_run=namespace.dry_run,
+    )
+    print_link_sync_result(result, stream=stream)
+    return 0
+
+
+__all__ = [
+    "LinkSyncResult",
+    "SidecarLinkConfig",
+    "build_link_sync_parser",
+    "is_managed_symlink",
+    "print_link_sync_result",
+    "resolve_private_root",
+    "run_link_sync_cli",
+    "sync_private_links",
+    "unmanaged_mirror_entries",
+    "write_link_sync_deltas",
+]

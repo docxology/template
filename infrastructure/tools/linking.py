@@ -1,6 +1,8 @@
 """Symlink private lifecycle tools into the template checkout.
 
-Implementation lives in :mod:`infrastructure.core.sidecar_linking`.
+Generic symlink mechanics and the shared ``linking`` command live in
+:mod:`infrastructure.core.sidecar_linking`; this module supplies the tools
+pool's :data:`TOOLS_LINK_CONFIG` and its thin public wrappers.
 """
 
 from __future__ import annotations
@@ -8,12 +10,13 @@ from __future__ import annotations
 import argparse
 from pathlib import Path
 
-from infrastructure.core.project_paths import find_repo_root
 from infrastructure.core.sidecar_linking import (
     LinkSyncResult,
     SidecarLinkConfig,
+    build_link_sync_parser,
     is_managed_symlink as _is_managed_symlink,
     resolve_private_root,
+    run_link_sync_cli,
     sync_private_links,
 )
 from infrastructure.tools.public_scope import PUBLIC_TOOL_NAMES
@@ -31,6 +34,8 @@ CONFIG_FILENAME = ".tools_root"
 ENV_VAR = "TEMPLATE_TOOLS_ROOT"
 SKIP_ENV_VAR = "TEMPLATE_SKIP_TOOL_LINK_SYNC"
 IGNORED_LIFECYCLE_ENTRY_NAMES: frozenset[str] = frozenset({"output"})
+PROG = "python -m infrastructure.tools.linking"
+DESCRIPTION = "Symlink lifecycle tools from the private sidecar into the template checkout."
 
 TOOLS_LINK_CONFIG = SidecarLinkConfig(
     protected_names=PROTECTED_NAMES,
@@ -72,37 +77,12 @@ def sync_private_tool_links(
 
 
 def _build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(
-        prog="python -m infrastructure.tools.linking",
-        description="Symlink lifecycle tools from the private sidecar into the template checkout.",
-    )
-    parser.add_argument("--repo-root", type=Path, default=None)
-    parser.add_argument("--private-root", type=Path, default=None)
-    parser.add_argument("--dry-run", action="store_true")
-    parser.add_argument("--no-prune", action="store_true")
-    return parser
+    return build_link_sync_parser(prog=PROG, description=DESCRIPTION)
 
 
 def main(argv: list[str] | None = None) -> int:
     """CLI entry point."""
-    ns = _build_parser().parse_args(argv)
-    repo_root = ns.repo_root or find_repo_root()
-    result = sync_private_tool_links(
-        repo_root,
-        ns.private_root,
-        prune=not ns.no_prune,
-        dry_run=ns.dry_run,
-    )
-    print(result.summary())
-    for name in result.created:
-        print(f"  + {name}")
-    for name in result.updated:
-        print(f"  ~ {name}")
-    for name in result.removed:
-        print(f"  - {name}")
-    for name in result.skipped:
-        print(f"  . {name}")
-    return 0
+    return run_link_sync_cli(TOOLS_LINK_CONFIG, prog=PROG, description=DESCRIPTION, argv=argv)
 
 
 if __name__ == "__main__":  # pragma: no cover

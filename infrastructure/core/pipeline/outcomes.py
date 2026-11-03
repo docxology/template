@@ -43,6 +43,7 @@ class StageOutcome:
     retryable: bool = False
     attempt_exit_codes: tuple[int, ...] = ()
     in_process_completed: bool = False
+    condition: str | None = None
 
     def __post_init__(self) -> None:
         if not isinstance(self.stage_key, str) or not self.stage_key or not isinstance(self.status, StageStatus):
@@ -78,8 +79,18 @@ class StageOutcome:
         return self.complete
 
     def to_dict(self) -> dict[str, object]:
-        """Serialize without losing child diagnostics."""
-        return asdict(self)
+        """Serialize without losing child diagnostics.
+
+        The typed condition is emitted only when it is set, so an untyped record
+        keeps exactly the key set it had before the field existed. ``asdict``
+        still does the serialization; the key is dropped here rather than
+        excluded upstream, which is why this cannot be "simplified" back to a
+        bare ``asdict(self)`` without the inertness test going red.
+        """
+        payload = asdict(self)
+        if self.condition is None:
+            payload.pop("condition", None)
+        return payload
 
 
 def outcome_for_result(result: PipelineStageResult) -> StageOutcome:

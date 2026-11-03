@@ -113,6 +113,7 @@ is_valid, message = validate_tool_structure(Path("tools/templates/template_code_
 - `LIFECYCLE_LINK_DIRS: dict[str, str]` — `{"working": "tools/working", "archive": "tools/archive"}`.
 - `PROTECTED_NAMES: frozenset[str]` — bare exemplar names; syncer never touches.
 - `ENV_VAR = "TEMPLATE_TOOLS_ROOT"`, `SKIP_ENV_VAR = "TEMPLATE_SKIP_TOOL_LINK_SYNC"`.
+- The command itself is not written here: `_build_parser`/`main` delegate to `infrastructure.core.sidecar_linking.build_link_sync_parser`/`run_link_sync_cli`, which own the shared flag contract and delta printing for all four resource trees.
 
 ```python
 @dataclass
@@ -142,7 +143,7 @@ A valid tool must have:
 Optional: `tests/`, `docs/`
 
 Unlike fonds (passive data stores), tools are executable and require a `scripts/`
-directory instead of a `data/` directory.
+directory instead of a `<fond>/data/` directory.
 
 ## Discovery Scope
 
