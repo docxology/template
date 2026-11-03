@@ -132,10 +132,22 @@ def attach_stage_outcome(result: PipelineStageResult, child: StageOutcome | None
         )
     elif child is not None and result.exit_code in {124, 130}:
         # ``child`` is a StageOutcome, which carries no timeout boolean: its
-        # status is the typed verdict (a bare exit 124 is FAILED unless a clock
-        # was actually consumed) and completion is the only truth value of an
-        # outcome. A completed child keeps its own verdict; only a child that
-        # itself recorded a timeout earns the TIMED_OUT label.
+        # status is the typed verdict and completion is the only truth value of
+        # an outcome. A completed child keeps its own verdict, so an enclosing
+        # code never discards a stage that satisfied its contract.
+        #
+        # For an incomplete child the two codes are produced by different
+        # decisions. A 124 reaches here from ``hook_failure_exit_code`` when a
+        # stage hook (``on_fail``/``pre_stage``/``post_stage``) actually consumed
+        # its clock, and ``run_stage_hooks`` stops at {130, 124}, so the hook
+        # verdict -- not the child's earlier status -- owns the stage and run exit
+        # code; the child's own code survives in ``child_exit_code`` and its
+        # diagnostic stays in the text. ``result.stage_completed`` names that
+        # boundary: it is False only where the child was reaped without reaching
+        # its own verdict (``_execute_stage`` returns stage_completed=False for a
+        # child-decided 124/75), so a child that timed out earns TIMED_OUT from
+        # ``child.status`` and a hook timeout earns it from the hook's code.
+        # The 130 half has always been unconditional for the same reason.
         result.outcome = replace(
             child,
             stage_key=key,
@@ -143,7 +155,7 @@ def attach_stage_outcome(result: PipelineStageResult, child: StageOutcome | None
                 child.status
                 if child.complete
                 else StageStatus.TIMED_OUT
-                if result.exit_code == 124 and child.status is StageStatus.TIMED_OUT
+                if result.exit_code == 124 and (child.status is StageStatus.TIMED_OUT or result.stage_completed)
                 else StageStatus.INTERRUPTED
                 if result.exit_code == 130
                 else StageStatus.FAILED

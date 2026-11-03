@@ -80,6 +80,29 @@ def test_a_completed_child_is_not_relabelled_by_an_enclosing_124() -> None:
     assert result.outcome.stage_key == "hydration"
 
 
+def test_a_hook_timeout_labels_an_incomplete_child_from_the_hook_verdict() -> None:
+    """A reaped child's own status cannot absorb a hook that consumed its clock.
+
+    ``hook_failure_exit_code`` gives the stage a 124 because ``run_stage_hooks``
+    stopped at a hook that actually timed out, and ``_execute_stage`` reports
+    that boundary as ``stage_completed=True``. The child still failed on its own
+    code, so the label comes from the hook while the child's code and diagnostic
+    survive on the outcome. This is the half the completed-child rule must not
+    swallow: the real-process contract in
+    ``tests/infra_tests/core/test_execution_contract.py`` pins the same shape
+    against a live ``on_fail`` hook.
+    """
+    child = StageOutcome("child", StageStatus.FAILED, 2, "Stage script exited 2", attempt_exit_codes=(2,))
+    result = PipelineStageResult(1, "Child", False, 0.0, 124, "on_fail hook timed out after 1s", stage_completed=True)
+    attached = attach_stage_outcome(result, child, "child")
+    assert attached.outcome is not None
+    assert attached.outcome.status is StageStatus.TIMED_OUT
+    assert attached.outcome.complete is False
+    assert attached.outcome.child_exit_code == 2
+    assert attached.outcome.attempt_exit_codes == (2,)
+    assert attached.outcome.diagnostic == "on_fail hook timed out after 1s"
+
+
 def test_a_bare_124_without_a_consumed_clock_is_not_a_timeout() -> None:
     """A non-completed child that recorded no expiry is not relabelled TIMED_OUT."""
     child = StageOutcome("render_pdf", StageStatus.FAILED, 1, "Stage script exited 1")
