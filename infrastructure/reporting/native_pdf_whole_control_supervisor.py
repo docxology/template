@@ -38,6 +38,22 @@ SUITE_REMAINING = (
     "whole Source renderer-stage and official native runtime/archive/library admission",
     "every explicitly unsupported PDF writer/Source occurrence control",
 )
+# No per-control phase extends the original caller clock or starves its own suite.
+#
+# One whole-PDF control phase was truncated at 600.7 s in the hosted native
+# inventory: its nested child was squeezed to 241.2 s and timed out, while the
+# caller clock still held 4,418 s and every stage policy clock was untouched.
+# A provisioned per-project cell is 12,000-15,000 s, so an hour per phase keeps
+# at least three phases inside the minimum cell, stays far below the 86,400 s
+# stage policy, and is 6x the observed truncation. The caller clock still wins
+# whenever it is closer, and the between-control remaining() checks keep the
+# suite fail-closed.
+CONTROL_PHASE_CEILING_SECONDS = 3600.0
+
+
+def control_phase_deadline(deadline: float, *, now: float) -> float:
+    """Bound one control phase without extending the original caller clock."""
+    return min(deadline, now + CONTROL_PHASE_CEILING_SECONDS)
 
 
 def _child(
@@ -62,8 +78,7 @@ def _child(
         raise ValueError("whole PDF original child requires actual enclosing Source/ToolAPI owner")
     owner.verify(reader, run_id=run_id, deadline=deadline)
     source = owner.source
-    # No per-control phase extends the original caller clock.
-    child_deadline = min(deadline, time.monotonic() + 600.0)
+    child_deadline = control_phase_deadline(deadline, now=time.monotonic())
     create_private_native_directory(root, leaf)
     create_private_native_directory(root, leaf / "closure")
     implementation_path = leaf / "implementation.json"
