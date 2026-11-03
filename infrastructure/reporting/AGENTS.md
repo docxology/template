@@ -294,6 +294,7 @@ observations alone do not establish complete execution or a universal speedup.
 | `native_installed_preflight.py` | Bounded cold installed diagnostic across all providers and one real exemplar; its incomplete scope cannot authorize publication. |
 | `native_installed_preparation.py` | Source-locked fresh wheel/runtime preparation for the genuine native launcher. |
 | `native_original_progress.py` | Fixed public phase, PID and original remaining-time diagnostics; no execution or custody authority. |
+| `native_worker_startup_diagnostics.py` | Source-owned inline startup and owner-scoped fixed execution setup boundaries through the same bounded sink; not active-callee stacks, execution acceptance or cleanup authority. |
 | `native_linux_calibre_runtime.py` | Actual Source-selected Linux Calibre package/embedded-Qt observations. |
 | `native_loader_build.py` | Compile the one Source-owned Linux auditor through the actual native ToolAPI. |
 | `native_loader_compilation_replay.py` | Exact compiler/header/body DATA reconstruction under enclosing Tool custody. |
@@ -419,6 +420,7 @@ observations alone do not establish complete execution or a universal speedup.
 | `native_pitch_source_layout.py` | Complete current-source native Pitch package layout, theme and replay. |
 | `native_pitch_source_native.py` | Actual complete source-only Pitch PDF layout/theme/ink and portable replay. |
 | `native_pitch_source_parity.py` | Source-driven Pitch OOXML package and all-three native PDF/PPTX pair closure. |
+| `native_preflight_budget.py` | Single bounded diagnostic budget for the cold preflight clock and its launch/worker retention reserves. |
 | `native_preparation_resources.py` | Bounded owner-controlled installed preparation capacity; no cleanup authority. |
 | `native_prepared_code_readback.py` | Read exact retained original Code from actual prepared installed invocations. |
 | `native_prepared_pdfium.py` | Prepare exact Source-listed wheel DATA for the cold native provider factory. |
@@ -482,7 +484,6 @@ observations alone do not establish complete execution or a universal speedup.
 | `release_readiness_artifacts.py` | Native archive structure and exact public source/export parity. |
 | `release_readiness_collectors.py` | Informational local snapshots; acceptance authority comes from the required profile. |
 | `release_readiness_dependencies.py` | Bind runtime acceptance to current declared installed public providers. |
-| `release_readiness_pipeline.py` | Validate fresh completion against the actual source-owned execution plan. |
 | `release_readiness_profile.py` | Source-owned platform candidate and release acceptance requirements. |
 | `release_readiness_root_cases.py` | Source-owned Root v2 case cells and original selected-interpreter acceptance. |
 | `release_readiness_runtime.py` | Independently validate complete source/spec/process-bound public pytest cells. |

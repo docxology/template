@@ -4,12 +4,14 @@ from __future__ import annotations
 
 import json
 import subprocess
+import sys
 from pathlib import Path
 
 import pytest
 
 from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
 from infrastructure.validation.publication import gate
+from infrastructure.validation.publication.models import PublicationAuditReport, PublicationFinding
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 
@@ -20,6 +22,24 @@ def _result(project: str, *, blocking: tuple[str, ...] = (), review: tuple[str, 
         status="fail" if blocking else "pass",
         blocking=blocking,
         review_required=review,
+    )
+
+
+def _audit_process(directory: Path, content: str, original_exit: int) -> subprocess.CompletedProcess[str]:
+    return subprocess.run(
+        [
+            sys.executable,
+            "-I",
+            "-c",
+            "import sys;sys.stdout.write(sys.stdin.read());raise SystemExit(int(sys.argv[1]))",
+            str(original_exit),
+        ],
+        input=content,
+        cwd=directory,
+        capture_output=True,
+        text=True,
+        timeout=30,
+        check=False,
     )
 
 
@@ -57,7 +77,7 @@ def test_invalid_shard_specs_are_refused(shard: str) -> None:
         gate.shard_projects(tuple(sorted(PUBLIC_PROJECT_NAMES)), shard)
 
 
-def test_blocking_mode_ignores_review_required_and_strict_mode_fails() -> None:
+def test_blocking_mode_ignores_review_required_and_strict_mode_fails(tmp_path: Path) -> None:
     blocking_report = gate.PublicationGateReport(
         mode="blocking",
         results=(_result("templates/a", review=("METHODS.STAGE_PROVENANCE_UNAVAILABLE",)),),
@@ -68,11 +88,76 @@ def test_blocking_mode_ignores_review_required_and_strict_mode_fails() -> None:
     strict_report = gate.PublicationGateReport(mode="strict", results=blocking_report.results)
     assert strict_report.failed
 
+    payload = PublicationAuditReport(
+        "template-publication-audit-v1",
+        ("templates/a",),
+        (
+            PublicationFinding(
+                "templates/a",
+                "manuscript/example.md",
+                "PUBLICATION.REVIEW",
+                "warning",
+                "review_required",
+                "Editorial review",
+            ),
+        ),
+    ).to_dict()
+    result = gate._audit_result("templates/a", _audit_process(tmp_path, json.dumps(payload), 0))
+    assert result.status == "review" and result.original_exit == 0 and not result.failed
+    assert not gate.PublicationGateReport(mode="blocking", results=(result,)).failed
+    assert gate.PublicationGateReport(mode="strict", results=(result,)).failed
 
-def test_errors_fail_every_mode() -> None:
+
+def test_errors_fail_every_mode(tmp_path: Path) -> None:
     results = (_result("templates/a", blocking=("PUBLICATION.RENDERED_PROVENANCE_VALIDATION_INPUTS_DRIFT",)),)
     assert gate.PublicationGateReport(mode="blocking", results=results).failed
     assert gate.PublicationGateReport(mode="strict", results=results).failed
+
+    # Declared report DATA passes through real children and the production
+    # parser; no audit implementation or subprocess dependency is replaced.
+    payload = PublicationAuditReport("template-publication-audit-v1", ("templates/a",)).to_dict()
+    for original_exit in (0, 42, 130):
+        process = _audit_process(tmp_path, json.dumps(payload), original_exit)
+        assert process.returncode == original_exit and json.loads(process.stdout)["status"] == "pass"
+        observed = gate._audit_result("templates/a", process)
+        assert observed.original_exit == original_exit
+        assert observed.failed is (original_exit != 0), "passing JSON cannot erase the original child failure"
+        for mode in ("blocking", "strict"):
+            report = gate.PublicationGateReport(mode=mode, results=(observed,))
+            assert report.failed is (original_exit != 0)
+            assert ("status: fail" in gate.format_gate_report(report)) is (original_exit != 0)
+        gate.write_receipts(report, tmp_path / str(original_exit))
+        receipt = json.loads((tmp_path / str(original_exit) / "a.json").read_text())
+        assert receipt["original_exit"] == original_exit
+        assert receipt["status"] == ("fail" if original_exit else "pass")
+        if original_exit:
+            assert "PUBLICATION.AUDIT_SUBPROCESS_FAILED" in observed.blocking
+            assert str(original_exit) in receipt["diagnostic"]
+
+    invalid = [
+        "not JSON",
+        "[]",
+        "null",
+        json.dumps({**payload, "schema_version": "unsupported"}),
+        json.dumps({**payload, "projects": ["templates/other"]}),
+        json.dumps({**payload, "status": "unknown"}),
+        json.dumps({**payload, "status": "fail"}),
+        json.dumps({**payload, "status": "review"}),
+        json.dumps({**payload, "findings": None}),
+        json.dumps({**payload, "findings": [{}]}),
+        json.dumps({**payload, "summary": {}}),
+        json.dumps({**payload, "summary": {**payload["summary"], "finding_count": False}}),
+        json.dumps(payload)[:-1] + ', "status": "pass"}',
+    ]
+    for content in invalid:
+        refused = gate._audit_result("templates/a", _audit_process(tmp_path, content, 0))
+        assert refused.failed and refused.original_exit == 0
+        assert "PUBLICATION.AUDIT_INVALID_REPORT" in refused.blocking
+
+    # The actual CLI also reaches the same parser and retains its real failure.
+    actual = gate._audit_project(tmp_path, "templates/template_code_project", mode="blocking")
+    assert actual.failed and actual.original_exit != 0
+    assert "PUBLICATION.AUDIT_SUBPROCESS_FAILED" in actual.blocking
 
 
 def test_report_groups_failures_by_diagnostic_code() -> None:
@@ -103,7 +188,8 @@ def test_receipts_bind_each_project_outcome(tmp_path: Path) -> None:
     payload = json.loads((tmp_path / "a.json").read_text(encoding="utf-8"))
     assert payload["status"] == "fail"
     assert payload["blocking_codes"] == ["PUBLICATION.X"]
-    assert payload["schema_version"] == "template-publication-gate/v1"
+    assert payload["schema_version"] == "template-publication-gate/v2"
+    assert payload["original_exit"] is None
     assert json.loads((tmp_path / "b.json").read_text(encoding="utf-8"))["status"] == "pass"
 
 

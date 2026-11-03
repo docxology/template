@@ -38,7 +38,7 @@ if (profile === null || Array.isArray(profile) || typeof profile !== "object" ||
     JSON.stringify(Object.keys(profile).sort()) !== JSON.stringify(Object.keys(expectedProfile).sort()) ||
     Object.entries(expectedProfile).some(([key, value]) =>
       typeof profile[key] !== typeof value || profile[key] !== value)) {
-  throw new Error("Mermaid adapter rendering profile changes the source-owned legacy default theme");
+  throw new Error("Mermaid adapter rendering profile changes the source-owned default theme");
 }
 for (const name of ["package_root", "input", "output"]) {
   if (typeof request[name] !== "string" || !path.isAbsolute(request[name]) ||

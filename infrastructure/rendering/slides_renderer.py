@@ -36,12 +36,14 @@ from infrastructure.rendering._slides_beamer import (
     resolve_bibliography as resolve_bibliography,
     write_slides_math_header as write_slides_math_header,
     parse_latex_log_findings as parse_latex_log_findings,
-    _reject_accessible_beamer_overflow as _reject_accessible_beamer_overflow,
     _slide_bibliography_args as _slide_bibliography_args,
     beamer_command,
     transform_beamer_latex,
 )
-from infrastructure.rendering._slides_beamer_geometry import reject_unsafe_accessible_beamer_geometry
+from infrastructure.rendering._slides_beamer_geometry import (
+    reject_accessible_beamer_overflow,
+    reject_unsafe_accessible_beamer_geometry,
+)
 from infrastructure.rendering._slides_presentation_variants import (
     reject_small_embedded_labels,
     relocate_presentation_panels,
@@ -575,7 +577,7 @@ class SlidesRenderer:
             # Compile LaTeX to PDF (written as {temp_tex.stem}.pdf, e.g. slides_slides.pdf)
             compiled_pdf = self._latex_compile(temp_tex, output_dir, compiler=self.config.latex_compiler, timeout=900)
             if self.config.slides_profile == "accessible":
-                _reject_accessible_beamer_overflow(temp_tex.with_suffix(".log"), compiled_pdf)
+                reject_accessible_beamer_overflow(temp_tex.with_suffix(".log"), compiled_pdf)
                 reject_unsafe_accessible_beamer_geometry(compiled_pdf)
                 reject_small_embedded_labels(
                     compiled_pdf,
@@ -646,9 +648,8 @@ class SlidesRenderer:
         Pandoc turns headings below ``--slide-level`` into Beamer blocks. A
         deep manuscript section can therefore become one enormous block and
         overflow even when the source contains natural subheadings. Heading
-        levels 2--4 are the useful presentation range: h1-only legacy decks
-        retain the historical level-2 behavior, while h3/h4-heavy results
-        sections get actual frame boundaries. Deeper headings remain block
+        levels 2--4 are the useful presentation range: h1-only sources use
+        level 2, while h3/h4-heavy results sections get actual frame boundaries. Deeper headings remain block
         content rather than creating a pathological one-frame-per-line deck.
         """
         source = source_file.read_text(encoding="utf-8")

@@ -41,6 +41,7 @@ def _project(destination: Path) -> Path:
         destination / "formal",
         ignore=shutil.ignore_patterns(".lake", "states", "*TTrace*"),
     )
+    shutil.copyfile(PROJECT / "pyproject.toml", destination / "pyproject.toml")
     return destination
 
 

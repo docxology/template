@@ -4,12 +4,10 @@ Generates publication-quality figures from refinery data using matplotlib.
 All figures are deterministic (fixed seeds, no RNG) and headless-safe
 (MPLBACKEND=Agg set in tests and pipeline).
 
-This package replaces the former single-file ``figures.py`` module. It is split
-into focused submodules — :mod:`._common` (shared infrastructure, specs, and
+The package contains :mod:`._common` (shared infrastructure, specs, and
 helpers), :mod:`.graphs` (directed-graph builders), :mod:`.charts` (bar/line
 charts), :mod:`.diagrams` (graph and matrix diagrams), and :mod:`.registry`
-(registry, quality report, and the all-figures orchestrator) — while preserving
-the exact public API the monolith exported.
+(registry, quality report, and the all-figures orchestrator).
 """
 
 from __future__ import annotations

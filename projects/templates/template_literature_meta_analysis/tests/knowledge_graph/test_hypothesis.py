@@ -9,6 +9,8 @@ from __future__ import annotations
 
 import math
 
+import pytest
+
 from template_literature_meta_analysis.literature.models import Paper
 from template_literature_meta_analysis.knowledge_graph.nanopublication import Assertion
 from template_literature_meta_analysis.knowledge_graph.hypothesis import (
@@ -355,9 +357,11 @@ class TestLoadHypothesesFromConfig:
         config.write_text(
             "hypothesis_definitions:\n"
             "  H1:\n"
+            "    id: PRIMARY_EFFICACY\n"
             "    name: Primary Efficacy\n"
             "    description: The FEP applies universally\n"
             "  H2:\n"
+            "    id: OPTIMAL_PERFORMANCE\n"
             "    name: AIF Optimality\n"
             "    description: Active Inference is optimal\n"
         )
@@ -388,10 +392,11 @@ class TestLoadHypothesesFromConfig:
         assert len(result) == 8
 
     def test_all_eight_from_config(self, tmp_path) -> None:
-        """Config with all H1-H8 keys should map to standard hypothesis IDs."""
+        """Each configured row preserves its explicitly declared evidence ID."""
         lines = ["hypothesis_definitions:\n"]
         for i, h in enumerate(STANDARD_HYPOTHESES, 1):
             lines.append(f"  H{i}:\n")
+            lines.append(f'    id: "{h.hypothesis_id}"\n')
             lines.append(f'    name: "{h.name}"\n')
             lines.append(f'    description: "{h.description}"\n')
         config = tmp_path / "config.yaml"
@@ -404,25 +409,23 @@ class TestLoadHypothesesFromConfig:
             assert h.hypothesis_id == STANDARD_HYPOTHESES[i].hypothesis_id
 
     def test_project_config_nested_hypotheses_loaded(self, tmp_path) -> None:
-        """hypothesis_definitions nested under project_config is loaded correctly."""
+        """A nested project definition preserves its declared identity."""
         config = tmp_path / "config.yaml"
         config.write_text(
             "project_config:\n"
             "  hypothesis_definitions:\n"
-            "  H1:\n"
-            "    name: Primary Efficacy\n"
-            "    description: FEP applies universally\n"
+            "    display_row:\n"
+            "      id: STABLE_ID\n"
+            "      name: Updated Display Name\n"
+            "      description: Reported evidence\n"
         )
         from template_literature_meta_analysis.knowledge_graph.hypothesis import load_hypotheses_from_config
 
-        # Nested under project_config — should be found and loaded
         result = load_hypotheses_from_config(config)
-        # Either reads from project_config or falls back to STANDARD_HYPOTHESES
-        assert isinstance(result, list)
-        assert len(result) > 0
+        assert [(h.hypothesis_id, h.name) for h in result] == [("STABLE_ID", "Updated Display Name")]
 
-    def test_explicit_project_hypothesis_id_overrides_legacy_ordinal(self, tmp_path) -> None:
-        """Project-owned IDs prevent legacy domain labels from leaking into outputs."""
+    def test_explicit_project_hypothesis_id_is_independent_of_display_key(self, tmp_path) -> None:
+        """Project-owned IDs are independent of display keys and default hypotheses."""
         config = tmp_path / "config.yaml"
         config.write_text(
             "project_config:\n"
@@ -438,30 +441,26 @@ class TestLoadHypothesesFromConfig:
 
         assert result[0].hypothesis_id == "JWST_CHARACTERIZATION"
 
+    @pytest.mark.parametrize("definition", [{}, {"id": ""}, {"id": "  "}, {"id": 1}, "invalid"])
+    def test_invalid_explicit_identity_is_rejected(self, tmp_path, definition) -> None:
+        import yaml
+        from template_literature_meta_analysis.knowledge_graph.hypothesis import load_hypotheses_from_config
 
-class TestConfigKeyToId:
-    """Validate the _config_key_to_id mapping helper."""
+        config = tmp_path / "config.yaml"
+        config.write_text(yaml.safe_dump({"hypothesis_definitions": {"H1": definition}}))
+        with pytest.raises(ValueError, match="Hypothesis H1"):
+            load_hypotheses_from_config(config)
 
-    def test_known_keys(self) -> None:
-        """H1-H8 should map to standard hypothesis IDs."""
-        from template_literature_meta_analysis.knowledge_graph.hypothesis import _config_key_to_id
+    def test_duplicate_explicit_identity_is_rejected(self, tmp_path) -> None:
+        import yaml
+        from template_literature_meta_analysis.knowledge_graph.hypothesis import load_hypotheses_from_config
 
-        assert _config_key_to_id("H1", "Primary Efficacy") == "PRIMARY_EFFICACY"
-        assert _config_key_to_id("H8", "Language AIF") == "DOMAIN_GENERALIZATION"
-
-    def test_unknown_key_falls_back_to_name(self) -> None:
-        """Unknown ordinal keys should derive ID from name."""
-        from template_literature_meta_analysis.knowledge_graph.hypothesis import _config_key_to_id
-
-        result = _config_key_to_id("HX", "My Custom Hypothesis")
-        assert result == "MY_CUSTOM_HYPOTHESIS"
-
-    def test_name_with_hyphens(self) -> None:
-        """Hyphens in names should be replaced with underscores."""
-        from template_literature_meta_analysis.knowledge_graph.hypothesis import _config_key_to_id
-
-        result = _config_key_to_id("H99", "Self-Organization")
-        assert result == "SELF_ORGANIZATION"
+        config = tmp_path / "config.yaml"
+        config.write_text(
+            yaml.safe_dump({"hypothesis_definitions": {"row_a": {"id": "SAME"}, "row_b": {"id": " SAME "}}})
+        )
+        with pytest.raises(ValueError, match="duplicate id 'SAME'"):
+            load_hypotheses_from_config(config)
 
 
 class TestConfigureHypotheses:
@@ -473,9 +472,11 @@ class TestConfigureHypotheses:
         config.write_text(
             "hypothesis_definitions:\n"
             "  H1:\n"
+            "    id: PRIMARY_EFFICACY\n"
             "    name: Primary Efficacy\n"
             "    description: Test\n"
             "  H2:\n"
+            "    id: OPTIMAL_PERFORMANCE\n"
             "    name: AIF Optimality\n"
             "    description: Test\n"
         )

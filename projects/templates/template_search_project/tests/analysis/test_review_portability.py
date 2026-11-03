@@ -7,6 +7,7 @@ import os
 import shutil
 import subprocess
 import sys
+import tomllib
 from pathlib import Path
 
 import infrastructure
@@ -17,6 +18,7 @@ from template_search_project.analysis.provider_paths import platform_package_roo
 from template_search_project.analysis.review_report import collect_infra_imports, ensure_review_summary
 
 PROJECT = Path(__file__).resolve().parents[2]
+PLATFORM_VERSION = tomllib.loads((PROJECT / "pyproject.toml").read_text())["tool"]["template"]["platform_version"]
 pytestmark = pytest.mark.timeout(420)
 
 
@@ -59,6 +61,7 @@ def _standalone_project(tmp_path: Path) -> tuple[Path, Path]:
     project = tmp_path / "standalone"
     scripts = project / "scripts"
     scripts.mkdir(parents=True)
+    shutil.copy2(PROJECT / "pyproject.toml", project / "pyproject.toml")
     for filename in ("review", "zz_generate_review_report.py", "_search_sdk_bootstrap.py"):
         shutil.copy2(PROJECT / "scripts" / filename, scripts / filename)
     shutil.copytree(
@@ -112,7 +115,7 @@ def _assert_provider_observations(project: Path, *, minimum: int) -> None:
     observations = sorted((project / "provider-observations").glob("*.json"))
     assert len(observations) >= minimum
     expected = _provider_identity()
-    assert expected["version"] == "4.4.0"
+    assert expected["version"] == PLATFORM_VERSION
     assert all(json.loads(path.read_text()) == expected for path in observations)
 
 
@@ -188,7 +191,7 @@ def test_review_child_uses_selected_provider_without_ambient_startup_code(tmp_pa
     summary, exit_code, _ = ensure_review_summary(project, project / "output/.pipeline/review")
     assert exit_code == 0 and not marker.exists()
     assert summary["provider"] == _provider_identity()
-    assert summary["provider"]["version"] == "4.4.0"
+    assert summary["provider"]["version"] == PLATFORM_VERSION
 
 
 def test_real_standalone_review_runs_infra_and_custom_stages_and_rejects_domain_fault(tmp_path):

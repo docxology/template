@@ -13,7 +13,6 @@ from template_autoresearch_project.loop.models import AutoResearchLoopResult, Lo
 from template_autoresearch_project.writers.reports import (
     build_evidence_overview,
     build_review_packet,
-    build_review_packet_v2,
     render_evidence_overview_markdown,
     render_loop_markdown,
     render_ml_experiment_report,
@@ -115,7 +114,7 @@ def test_review_packet_distinguishes_ready_from_publication_approval() -> None:
     packet = build_review_packet(result)
     human_review = packet["human_review"]
     assert isinstance(human_review, dict)
-    assert packet["schema"] == "template-autoresearch-review-packet-v1"
+    assert packet["schema"] == "template-autoresearch-review-packet-v2"
     assert human_review["ready_for_review"] is True
     assert human_review["publication_approved"] is False
     assert human_review["decision_source"] == "human_review.yaml"
@@ -124,13 +123,15 @@ def test_review_packet_distinguishes_ready_from_publication_approval() -> None:
     assert "Ready for review: `true`" in markdown
     assert "Publication approved: `false`" in markdown
 
-    packet_v2 = build_review_packet_v2(result)
-    assert packet_v2["schema"] == "template-autoresearch-review-packet-v2"
-    assert validate_review_packet(packet_v2) == []
-    human_review_v2 = packet_v2["human_review"]
-    assert isinstance(human_review_v2, dict)
-    human_review_v2["publication_approved"] = True
-    assert any("human decision source" in issue for issue in validate_review_packet(packet_v2))
+    assert "compatibility" not in packet
+    assert validate_review_packet(packet) == []
+    assert validate_review_packet(None) == ["review packet must be a mapping"]
+    assert validate_review_packet({**packet, "human_review": []}) == ["human_review must be a mapping"]
+    assert validate_review_packet({**packet, "schema": "template-autoresearch-review-packet-v1"}) == [
+        "unsupported review packet schema: 'template-autoresearch-review-packet-v1'"
+    ]
+    human_review["publication_approved"] = True
+    assert any("human decision source" in issue for issue in validate_review_packet(packet))
 
 
 def test_review_packet_copies_only_manual_publication_approval() -> None:
@@ -166,6 +167,7 @@ def test_review_packet_copies_only_manual_publication_approval() -> None:
     assert human_review["ready_for_review"] is True
     assert human_review["publication_approved"] is True
     assert human_review["reviewer"] == "Human Reviewer"
+    assert validate_review_packet(packet) == []
 
 
 def test_write_json_and_text_create_files(tmp_path: Path) -> None:

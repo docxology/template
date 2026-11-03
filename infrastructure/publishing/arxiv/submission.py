@@ -11,7 +11,6 @@ from pathlib import Path
 
 from infrastructure.core.determinism import resolve_source_date_epoch
 from infrastructure.core.exceptions import PublishingError
-from infrastructure.publishing.models import PublicationMetadata
 
 _SUBMISSION_DIRECTORY = "arxiv_submission"
 _ARCHIVE_PATTERN = "arxiv_submission_*.tar.gz"
@@ -101,7 +100,7 @@ def _copy_figure_tree(root: Path, target_root: Path) -> None:
 
 
 def _rendered_tex(output_dir: Path) -> Path | None:
-    """Select one rendered root deterministically, preferring the renderer contract."""
+    """Select the canonical renderer root without inferring an alternate file."""
     pdf_dir = output_dir / "pdf"
     if pdf_dir.is_symlink():
         raise PublishingError(f"Rendered PDF directory may not be a symlink: {pdf_dir}")
@@ -113,16 +112,9 @@ def _rendered_tex(output_dir: Path) -> Path | None:
     if canonical.is_file():
         _require_nonempty_tex(canonical)
         return canonical
-    candidates = []
-    for candidate in sorted(pdf_dir.glob("*.tex")):
-        _require_nonempty_tex(candidate)
-        candidates.append(candidate)
-    if len(candidates) > 1:
-        names = ", ".join(path.name for path in candidates)
-        raise PublishingError(
-            f"Multiple rendered TeX roots found without {_CANONICAL_RENDERED_TEX}; cannot choose safely: {names}"
-        )
-    return candidates[0] if candidates else None
+    if any(pdf_dir.glob("*.tex")):
+        raise PublishingError(f"Rendered TeX source requires the canonical root {_CANONICAL_RENDERED_TEX}")
+    return None
 
 
 def _arxiv_rendered_tex(source: Path) -> str:
@@ -241,7 +233,7 @@ def _write_deterministic_archive(submission_dir: Path, tar_path: Path, epoch: in
         raise
 
 
-def prepare_arxiv_submission(output_dir: Path, metadata: PublicationMetadata) -> Path:
+def prepare_arxiv_submission(output_dir: Path) -> Path:
     """Build a deterministic, non-partial LaTeX-source package for manual upload.
 
     The renderer-owned ``output/pdf/_combined_manuscript.tex`` is preferred. Its
@@ -260,14 +252,9 @@ def prepare_arxiv_submission(output_dir: Path, metadata: PublicationMetadata) ->
     controls both the UTC ``YYYYMMDD`` filename and tar/gzip timestamps; when it
     is unset, the repository ``HEAD`` epoch is used in deterministic mode.
 
-    ``metadata`` remains part of the public API for compatibility and future
-    upload-manifest use; package filenames are deliberately derived from the
-    selected TeX root, not from the publication title.
-
     Raises:
         PublishingError: If a safe LaTeX source package candidate cannot be built.
     """
-    del metadata
     output_dir = Path(output_dir)
     if output_dir.is_symlink() or not output_dir.is_dir():
         raise PublishingError(f"arXiv output directory must be a real directory: {output_dir}")

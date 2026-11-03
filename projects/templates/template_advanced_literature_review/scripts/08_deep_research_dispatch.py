@@ -25,9 +25,8 @@ if str(_SCRIPTS) not in sys.path:
 
 from _bootstrap import bootstrap_project
 
-# include_infrastructure=True so ``infrastructure.search.deep_research`` resolves
-# when the script is run standalone (outside the root pytest pythonpath).
-PROJECT_ROOT = bootstrap_project(include_infrastructure=True)
+# The selected interpreter supplies the declared infrastructure SDK.
+PROJECT_ROOT = bootstrap_project()
 
 from config import DATA_DIR as DEFAULT_DATA_DIR
 from deep_research.dispatch import dispatch_offline_replay

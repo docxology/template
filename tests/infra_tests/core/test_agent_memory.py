@@ -130,18 +130,17 @@ def test_audit_memory_payload_allows_generated_source_pointers() -> None:
     assert audit_memory_payload(payload) == []
 
 
-def test_legacy_memory_is_read_then_saved_canonically_without_overwriting_original(tmp_path: Path) -> None:
-    legacy = tmp_path / ".cursor/hooks/state/continual-learning-memory.json"
-    legacy.parent.mkdir(parents=True)
+def test_unrelated_editor_memory_is_preserved_and_not_loaded(tmp_path: Path) -> None:
+    retained = tmp_path / ".cursor/hooks/state/continual-learning-memory.json"
+    retained.parent.mkdir(parents=True)
     payload = empty_memory_payload()
     payload["learned_user_preferences"] = ["Keep commands composable"]
     raw = json.dumps(payload).encode()
-    legacy.write_bytes(raw)
-    with pytest.warns(FutureWarning, match="Legacy .cursor"):
-        loaded = load_memory(tmp_path)
-    target = save_memory(tmp_path, loaded)
+    retained.write_bytes(raw)
+    assert load_memory(tmp_path) == empty_memory_payload()
+    target = save_memory(tmp_path, payload)
     assert target == tmp_path / ".agents/state/continual-learning-memory.json"
-    assert legacy.read_bytes() == raw
+    assert retained.read_bytes() == raw
     assert load_memory(tmp_path)["learned_user_preferences"] == payload["learned_user_preferences"]
     assert target.stat().st_mode & 0o777 == 0o600
     target.write_text("{broken")

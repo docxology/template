@@ -51,11 +51,12 @@ def main() -> int:
 
     log_header(f"STAGE 04: Validate Output (Project: {args.project})", logger)
 
-    result = execute_validation_pipeline(args.project)
+    repo_root = Path(__file__).resolve().parents[2]
+    result = execute_validation_pipeline(args.project, repo_root=repo_root)
     if result != 0:
         return result
     try:
-        receipt = write_rendered_provenance_receipt(Path(__file__).resolve().parents[2], args.project)
+        receipt = write_rendered_provenance_receipt(repo_root, args.project)
     except RenderedProvenanceError as exc:
         logger.error("Rendered provenance receipt failed [%s]: %s", exc.code, exc)
         return 1

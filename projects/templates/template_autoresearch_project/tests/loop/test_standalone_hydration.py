@@ -14,6 +14,8 @@ from pathlib import Path
 
 import pytest
 
+from autoresearch_source_provider import PLATFORM_VERSION
+
 from infrastructure.core.execution_boundary import run_bounded_subprocess
 from infrastructure.core.files.secure_write import read_bytes_confined
 from infrastructure.core.implementation_custody import bytecode_audit_bootstrap
@@ -21,6 +23,7 @@ from infrastructure.project.copy_exemplar import export_exemplar
 from infrastructure.project.installed_acceptance_artifacts import freeze_wheel_bytes
 from infrastructure.project.installed_acceptance_runtime import freeze_locked_metadata, install_admitted_wheels
 from infrastructure.project.installed_acceptance_worker import _environment
+from infrastructure.project.locked_dependency_export import normalize_locked_dependency_export
 from infrastructure.reporting.readiness_receipts import source_fingerprint
 from infrastructure.reporting.release_readiness_profile import Requirement
 
@@ -141,6 +144,11 @@ def genuine_platform_environment(
         ),
         "locked standalone dependencies",
     )
+    normalize_locked_dependency_export(
+        metadata.root / "projects/templates/template_autoresearch_project",
+        dependencies,
+        minor=f"{sys.version_info.major}.{sys.version_info.minor}",
+    )
     assert metadata.unchanged()
     installed = scratch / "installed-environment"
     run(
@@ -155,6 +163,7 @@ def genuine_platform_environment(
             "sync",
             "--offline",
             "--no-config",
+            "--no-build",
             "--require-hashes",
             "--python",
             str(python),
@@ -218,6 +227,7 @@ def test_fresh_export_hydrates_with_actual_platform_distribution(
     )
     code = (
         audit
+        + f"\nEXPECTED_PLATFORM_VERSION = {PLATFORM_VERSION!r}\n"
         + """
 import importlib.metadata, json, runpy, sys
 from pathlib import Path
@@ -226,7 +236,7 @@ sys.path.insert(0,str(script.parent)); sys.argv=[str(script)]
 import infrastructure
 origin=Path(infrastructure.__file__).resolve()
 assert origin.is_relative_to(Path(sys.prefix).resolve())
-assert importlib.metadata.version('research-project-template')=='4.4.0'
+assert importlib.metadata.version('research-project-template') == EXPECTED_PLATFORM_VERSION
 try:
     runpy.run_path(str(script),run_name='__main__')
 except SystemExit as error:

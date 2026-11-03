@@ -2,6 +2,11 @@
 
 from __future__ import annotations
 
+from infrastructure.reporting.native_worker_startup_diagnostics import (
+    _worker_execution_observer,
+    _worker_execution_phase,
+)
+
 from infrastructure.reporting.native_office_diagram_runtime import PDFiumRuntimeAdmission
 from infrastructure.reporting.native_office_full_worker_context import verify_office_font_nominations
 from infrastructure.reporting.native_format_pdf_source_decode_bounds import (
@@ -106,6 +111,15 @@ from infrastructure.reporting.native_format_worker_controls import (
 )
 
 
+def _native_startup_phase(phase: str) -> None:
+    try:
+        observer = globals().get("_native_startup_observer")
+        if observer is not None:
+            observer(phase, sys._getframe(1))
+    except Exception:
+        pass
+
+
 def require_canonical_native_stages(plan: Any) -> None:
     """A renamed or replaced no-op plan cannot certify existing native artifacts."""
     targets = [stage.script for stage in plan.stages]
@@ -134,32 +148,39 @@ def _run_native_worker(
     removes its current renderer-owned outputs before producing them again.
     Shared infrastructure verification belongs to the separate root gate.
     """
-    root = root.resolve()
-    validate_native_specification(specification)
-    host_before = native_host_observation()
-    if host_before["system"] != specification["expected_platform"]:
-        raise ValueError("native worker host differs from the supervisor platform obligation")
-    if any(key in SOURCE_RENDER_ENV_NAMES or key.startswith("SLIDES_") for key in os.environ):
-        raise ValueError("native worker received an ambient rendering override")
-    scope, run_id = specification["scope"], specification["run_id"]
-    directory = evidence_directory(root, root / specification["directory"])
-    deadline = specification["deadline_monotonic"]
-    from infrastructure.reporting.native_tool_producer import (
-        current_native_producer_operation,
-    )
+    with _worker_execution_phase("worker-initial-setup"):
+        root = root.resolve()
+        validate_native_specification(specification)
+        host_before = native_host_observation()
+        if host_before["system"] != specification["expected_platform"]:
+            raise ValueError("native worker host differs from the supervisor platform obligation")
+        if any(key in SOURCE_RENDER_ENV_NAMES or key.startswith("SLIDES_") for key in os.environ):
+            raise ValueError("native worker received an ambient rendering override")
+        scope, run_id = specification["scope"], specification["run_id"]
+        directory = evidence_directory(root, root / specification["directory"])
+        deadline = specification["deadline_monotonic"]
+        from infrastructure.reporting.native_tool_producer import (
+            current_native_producer_operation,
+        )
 
-    producer = current_native_producer_operation()
-    if producer is None:
-        raise ValueError("native worker requires its genuine live Source owner")
-    native_reader = SnapshotReader(root, native_producer_operation=producer)
-    source_context.verify_correspondence(source_context.reference, root, source_context.current_source_reader, deadline)
+        producer = current_native_producer_operation()
+        if producer is None:
+            raise ValueError("native worker requires its genuine live Source owner")
+        native_reader = SnapshotReader(root, native_producer_operation=producer)
+    with _worker_execution_phase("worker-correspondence"):
+        source_context.verify_correspondence(
+            source_context.reference, root, source_context.current_source_reader, deadline
+        )
     formats = tuple(specification["formats"])
-    before = public_source_digest(root)
-    if before != specification["source_digest"]:
-        raise ValueError("native admission source changed before execution")
-    runtime = runtime_identity()
-    interpreter_before = executable_observation(Path(sys.executable))
-    runtime_binding = write_json(root, directory / "runtime.json", {**runtime, "execution_exit_code": 0})
+    with _worker_execution_phase("worker-fingerprint"):
+        before = public_source_digest(root)
+        if before != specification["source_digest"]:
+            raise ValueError("native admission source changed before execution")
+    with _worker_execution_phase("worker-runtime-observation"):
+        runtime = runtime_identity()
+        interpreter_before = executable_observation(Path(sys.executable))
+    with _worker_execution_phase("worker-runtime-binding"):
+        runtime_binding = write_json(root, directory / "runtime.json", {**runtime, "execution_exit_code": 0})
     raw: dict[str, Any] = {
         "schema_version": NATIVE_SCHEMA,
         "native_oracle_requirements": None,
@@ -527,6 +548,7 @@ def run_native_worker(
 
 def main(argv: list[str] | None = None) -> int:
     """Internal supervised worker; public CLI owns selection and final bindings."""
+    _native_startup_phase("worker-main-enter")
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--root", required=True, type=Path)
     parser.add_argument("--spec", type=Path)
@@ -677,6 +699,7 @@ def main(argv: list[str] | None = None) -> int:
 
     if infrastructure.__file__ is None:
         raise ValueError("native selected SDK origin is unavailable")
+    _native_startup_phase("source-admission-begin")
     source_context = admit_native_source_operation(
         root,
         NativeSDKSelection(Path(infrastructure.__file__).absolute().parent, implementation.content),
@@ -684,6 +707,7 @@ def main(argv: list[str] | None = None) -> int:
         deadline=specification["deadline_monotonic"],
         environment=os.environ,
     )
+    _native_startup_phase("source-admission-returned")
     from infrastructure.reporting.native_source_external_admission import (
         validate_original_source_descriptor,
     )
@@ -710,6 +734,7 @@ def main(argv: list[str] | None = None) -> int:
         scope: input_reader.public_path(provider["wheel_artifact"]["path"])
         for scope, provider in inputs["providers"].items()
     }
+    _native_startup_phase("source-providers-begin")
     providers, roots = admitted_native_providers(
         source_context,
         specification["scope"],
@@ -717,6 +742,8 @@ def main(argv: list[str] | None = None) -> int:
         Path(sys.executable),
         deadline=specification["deadline_monotonic"],
     )
+    _native_startup_phase("source-providers-returned")
+    _native_startup_phase("pdfium-readmission-begin")
     pdfium_provider = readmit_full_worker_pdfium_provider(
         NativePDFiumSelection(args.pdfium_site, args.pdfium_wheel),
         source_context,
@@ -726,6 +753,7 @@ def main(argv: list[str] | None = None) -> int:
         input_sha256=args.pdfium_input_sha256,
         deadline=specification["deadline_monotonic"],
     )
+    _native_startup_phase("pdfium-readmission-returned")
     roots = (*roots, *pdfium_provider.audit_roots)
     if providers != inputs["providers"] or list(map(str, roots)) != inputs["provider_roots"]:
         raise ValueError("native installed provider admission differs from original launch selection")
@@ -737,14 +765,19 @@ def main(argv: list[str] | None = None) -> int:
         deadline=specification["deadline_monotonic"],
         digest=args.office_fonts_sha256,
     )
-    raw = run_native_worker(
-        root,
-        specification,
-        source_context=source_context,
-        mermaid_selection=mermaid_selection,
-        pdfium_provider=pdfium_provider,
-        office_font_files=office_font_files,
-    )
+    _native_startup_phase("worker-execution-begin")
+    with (
+        _worker_execution_observer(globals().get("_native_startup_observer")),
+        _worker_execution_phase("run-native-worker"),
+    ):
+        raw = run_native_worker(
+            root,
+            specification,
+            source_context=source_context,
+            mermaid_selection=mermaid_selection,
+            pdfium_provider=pdfium_provider,
+            office_font_files=office_font_files,
+        )
     write_json(root, root / specification["directory"] / "native-execution.json", raw)
     code = raw["execution_exit_code"]
     if type(code) is not int:

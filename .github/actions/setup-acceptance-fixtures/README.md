@@ -27,7 +27,7 @@ commit `5a47802b5c391f59ecdd44117981f4ff8c0656ba`. The rolling `v1.8.0`
 pre-release is rebuilt in place and is not pinned; any replaced body must fail the
 exact byte guards until its full binding and genuine model controls are reviewed.
 The genuine committed time-series seed is copied without host-dependent numerical
-regeneration. Preparation failure blocks the observation. The legacy shallow-clone
+regeneration. Preparation failure blocks the observation. The shallow-clone
 downloader is a local exploration tool; its mutable HEAD and `.git` metadata do
 not satisfy this fixed fixture contract.
 

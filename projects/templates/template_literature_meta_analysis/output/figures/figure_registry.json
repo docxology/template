@@ -269,7 +269,7 @@
     "placement": "h",
     "generated_by": "04_generate_figures.py",
     "metadata": {
-      "alt_text": "Ranked horizontal bars, despite the legacy heatmap filename, compare up to fifteen document pairs. Each label identifies a pair of paper IDs and bar length gives cosine similarity on a fixed zero-to-one axis."
+      "alt_text": "Ranked horizontal bars compare up to fifteen document pairs. Each label identifies a pair of paper IDs and bar length gives cosine similarity on a fixed zero-to-one axis."
     }
   }
 }

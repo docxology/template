@@ -17,6 +17,6 @@ when the current task allows it; direct execution of the same role is also suppo
 This workflow does not authorize contacting other chats or people, reading
 unrelated private transcripts, or scheduling background work.
 
-Retain the original legacy memory during migration. Save through the helper,
+Preserve unrelated editor state without loading it. Save through the helper,
 which writes the canonical path atomically. Keep runtime memory and transcript
 indexes ignored; root `AGENTS.md` remains the public repository contract.

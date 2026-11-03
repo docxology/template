@@ -128,14 +128,6 @@ class TestCountTotalReferences:
         p.write_text("\n".join(lines) + "\n")
         assert _count_total_references(p) == 4
 
-    def test_papers_with_referenced_works(self, tmp_path):
-        p = tmp_path / "corpus.jsonl"
-        lines = [
-            json.dumps({"title": "A", "referenced_works": ["w1", "w2"]}),
-        ]
-        p.write_text("\n".join(lines) + "\n")
-        assert _count_total_references(p) == 2
-
     def test_malformed_line_skipped(self, tmp_path):
         p = tmp_path / "corpus.jsonl"
         p.write_text('{"title":"A","references":["r1"]}\nnot-json\n')

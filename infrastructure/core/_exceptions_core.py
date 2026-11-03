@@ -1,7 +1,7 @@
 """Core exception hierarchy: base class and infrastructure domain exceptions.
 
 Extracted from exceptions.py for single-responsibility. Import via exceptions.py
-for backwards compatibility.
+through the declared public API.
 
 Boundary rule:
   exceptions.py → raiseable exception classes (raise and catch)

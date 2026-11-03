@@ -14,7 +14,7 @@ Tests for `infrastructure/publishing/`: metadata, citations, platform clients, a
 | `test_archival_cli.py` | `archival_cli.main`, `_build_providers` |
 | `test_citations.py` | BibTeX, APA, MLA, author formatters |
 | `test_deposit_filename.py` | Metadata-driven deposit PDF filenames |
-| `test_cli.py` | Legacy CLI smoke |
+| `test_cli.py` | Publishing CLI smoke and command-schema contracts |
 | `test_executable_bundle.py` | Stage 10 `bundle_project` |
 | `test_publishing_preflight.py` | Payload, path, credential, and PDF preflight contracts |
 | `test_release_receipts.py` | Versioned release metadata, command, authority, and coverage-gap receipts |

@@ -7,6 +7,51 @@ source and contracts; each exemplar retains its own package and publication
 versions. Confidential and local workspaces outside the canonical public roster
 are excluded.
 
+## [4.5.0]
+
+See the [4.5.0 release notes](docs/releases/v4.5.0.md). This minor candidate
+supersedes the unpublished 4.4.1 preparation below. Publication requires fresh
+exact-revision acceptance; metadata and local checks do not establish delivery.
+
+- Move the root SDK and all 25 canonical exemplar SDK requirements, lock roots,
+  and publication platform bindings together; retain exemplar own versions.
+- Carry forward the current-interface consolidation, installed-source repairs,
+  real behavioral controls, and authenticated release path prepared for 4.4.1.
+- Require the declared SDK for Code analysis and Experiment Tree hydration;
+  reject missing imports and missing validation reports instead of reporting
+  degraded success. Isolate script smoke tests from canonical project outputs.
+- Consolidate synchronous native command checks inside opening and closing
+  source guards, retaining restored-file mutation detection and process deadlines.
+- Correct Ubuntu mirror preparation, installed-acceptance policy fixtures,
+  native caller test ownership, and vendored skill overlay provenance.
+- Keep standalone publication downstream of exact-source core acceptance and
+  distinguish current user guidance from retained historical release evidence.
+
+## [4.4.1] — superseded unpublished preparation
+
+See the [4.4.1 release notes](docs/releases/v4.4.1.md). This coordinated patch
+preserves the existing failed 4.4.0 tag and carries the corrected implementation
+through a new exact-revision release contract.
+
+- Consolidate agent, security, lexical-policy, rendering, MCP, Root acceptance,
+  artifact, cache, backlog, and arXiv interfaces around their current contracts;
+  migrate repository and exemplar callers together.
+- Resolve installed rendering/validation against the source checkout, and apply
+  the shared locked dependency normalization to fresh-export hydration.
+- Output validation requires `enabled_formats` and derives PDF requirements from
+  the selected formats. Accessible Beamer overflow checks call the canonical
+  geometry validator directly.
+- Remove duplicated test paths, preserve distinct behavioral controls on the
+  current producer, and correct documentation selection and measured CI sharding.
+- Replace repeated source-manifest ancestor opens with held-directory traversal
+  while retaining original byte, inode, replacement, and closure checks.
+- Require successful original publication-audit child exits, validate current
+  report structure, and retain the original exit in each project receipt.
+- Consolidate AutoResearch review packets into the current canonical builder and
+  validator while preserving the human publication-approval boundary.
+- Make publication a manual authenticated exact-tag handoff and verify retrieved
+  assets after release creation.
+
 ## [4.4.0]
 See the [4.4.0 release-intent notes](docs/releases/v4.4.0.md). Publication requires
 exact-revision hosted acceptance and the authenticated release handoff; 4.3.0 and
@@ -17,8 +62,8 @@ earlier preparations remain historical candidates, not published root releases.
   `--all-public`, `--changed`), `--shard` slicing, parallel `--jobs`, blocking versus
   `review_required` severities and one JSON receipt per project. `release.yml` retains
   the receipts; `local_gate.py` gains a `publication` stage.
-- Cut verification cost on every path: documentation-only changes no longer select the
-  exemplar matrix or the contract roster (`ci_selection.documentation_only`), automatic
+- Bound verification cost: guide-only changes no longer select the exemplar matrix,
+  while documentation contracts retain complete prepared jobs; automatic
   functional shards cap at twelve modules (`AUTOMATIC_SHARD_MAX_MODULES`), the
   rendered-provenance stage fingerprint hashes tracked `.py` files instead of prose, and
   `refresh_rendered_provenance.py --jobs` refreshes exemplars in worker processes.

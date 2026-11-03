@@ -44,7 +44,7 @@ def extract_multi_phase_variables(data_dir: Path, config: dict[str, Any] | None 
         phases = phase_meta.get("phases", {})
         if isinstance(phases, dict):
             variables["TOTAL_PHASES"] = str(len(phases))
-            variables["CORPUS_SIZE"] = str(phase_meta.get("total_unique_papers", 0))
+            variables["PHASE_CORPUS_SIZE"] = str(phase_meta.get("total_unique_papers", 0))
             for index, (phase_id, phase_data) in enumerate(phases.items(), 1):
                 if not isinstance(phase_data, dict):
                     continue

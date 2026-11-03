@@ -19,7 +19,6 @@ from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
 
 PUBLIC_ROOT_FILES = frozenset(
     {
-        ".cursorrules",
         ".dockerignore",
         ".gitattributes",
         ".gitignore",

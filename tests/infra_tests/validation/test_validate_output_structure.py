@@ -28,7 +28,7 @@ class TestValidateOutputStructure:
             subdir_path.mkdir()
             (subdir_path / "file.txt").write_text("content")
 
-        result = validate_output_structure(project_output_dir)
+        result = validate_output_structure(project_output_dir, enabled_formats=("pdf", "html", "slides"))
 
         assert result["valid"] is True
         assert len(result["issues"]) == 0
@@ -38,7 +38,7 @@ class TestValidateOutputStructure:
         """Test validation when output directory doesn't exist."""
         output_dir = tmp_path / "nonexistent"
 
-        result = validate_output_structure(output_dir)
+        result = validate_output_structure(output_dir, enabled_formats=("pdf", "html", "slides"))
 
         assert result["valid"] is False
         assert len(result["issues"]) > 0
@@ -51,7 +51,7 @@ class TestValidateOutputStructure:
         project_output_dir = output_root / "test_project"
         project_output_dir.mkdir()
 
-        result = validate_output_structure(project_output_dir)
+        result = validate_output_structure(project_output_dir, enabled_formats=("pdf", "html", "slides"))
 
         assert result["valid"] is False
         assert len(result["missing_files"]) > 0
@@ -64,7 +64,7 @@ class TestValidateOutputStructure:
         web_dir.mkdir(parents=True)
         (web_dir / "index.html").write_text("<!doctype html><html></html>\n", encoding="utf-8")
 
-        result = validate_output_structure(project_output_dir, require_pdf=False)
+        result = validate_output_structure(project_output_dir, enabled_formats=("html",))
 
         assert result["valid"] is True
         assert result["missing_files"] == []
@@ -82,7 +82,7 @@ class TestValidateOutputStructure:
         # Create very small PDF (< 100KB)
         (pdf_dir / "test_project_combined.pdf").write_bytes(b"PDF" * 100)
 
-        result = validate_output_structure(project_output_dir)
+        result = validate_output_structure(project_output_dir, enabled_formats=("pdf", "html", "slides"))
 
         assert result["valid"] is True
         assert len(result["suspicious_sizes"]) > 0
@@ -102,7 +102,7 @@ class TestValidateOutputStructure:
         for subdir in ["figures"]:
             (project_output_dir / subdir).mkdir()
 
-        result = validate_output_structure(project_output_dir)
+        result = validate_output_structure(project_output_dir, enabled_formats=("pdf", "html", "slides"))
 
         assert result["valid"] is True
         assert len(result["suspicious_sizes"]) > 0
@@ -124,7 +124,7 @@ class TestValidateOutputStructure:
             subdir_path.mkdir()
             (subdir_path / "file.txt").write_text("content")
 
-        result = validate_output_structure(project_output_dir)
+        result = validate_output_structure(project_output_dir, enabled_formats=("pdf", "html", "slides"))
 
         assert result["valid"] is True
         assert result["directory_structure"]["llm"]["optional"] is True
@@ -147,7 +147,7 @@ class TestValidateOutputStructure:
         (figures_dir / "figure1.png").write_bytes(b"PNG" * 1000)
         (figures_dir / "figure2.png").write_bytes(b"PNG" * 1000)
 
-        result = validate_output_structure(project_output_dir)
+        result = validate_output_structure(project_output_dir, enabled_formats=("pdf", "html", "slides"))
 
         # Check PDF metadata
         assert result["directory_structure"]["combined_pdf"]["exists"] is True
@@ -185,7 +185,7 @@ class TestValidateOutputStructure:
         (project_output_dir / "figures").mkdir()
         (project_output_dir / "data").mkdir()
 
-        result = validate_output_structure(project_output_dir)
+        result = validate_output_structure(project_output_dir, enabled_formats=("pdf", "html", "slides"))
 
         assert result["valid"] is True
         assert len(result["missing_files"]) == 0
@@ -203,7 +203,7 @@ class TestValidateOutputStructure:
             encoding="utf-8",
         )
 
-        result = validate_output_structure(copied)
+        result = validate_output_structure(copied, enabled_formats=("pdf", "html", "slides"))
 
         assert result["valid"] is False
         assert result["directory_structure"]["combined_pdf"]["exists"] is False
@@ -222,7 +222,7 @@ class TestValidateOutputStructure:
         linked.parent.mkdir(parents=True)
         linked.symlink_to(outside)
 
-        result = validate_output_structure(copied)
+        result = validate_output_structure(copied, enabled_formats=("pdf", "html", "slides"))
 
         assert result["valid"] is False
         assert result["directory_structure"]["combined_pdf"]["exists"] is False
@@ -240,7 +240,7 @@ class TestValidateOutputStructure:
             subdir_path.mkdir()
             (subdir_path / "file.txt").write_text("content")
 
-        result = validate_output_structure(project_output_dir)
+        result = validate_output_structure(project_output_dir, enabled_formats=("pdf", "html", "slides"))
 
         assert result["valid"] is True
         assert len(result["missing_files"]) == 0
@@ -252,7 +252,7 @@ class TestValidateOutputStructure:
         pdf_dir.mkdir(parents=True)
         (pdf_dir / "draft_project_combined.pdf").write_bytes(b"PDF" * 10000)
 
-        result = validate_output_structure(project_output_dir)
+        result = validate_output_structure(project_output_dir, enabled_formats=("pdf", "html", "slides"))
 
         assert result["directory_structure"]["combined_pdf"]["exists"] is True
 
@@ -268,7 +268,7 @@ class TestValidateOutputStructure:
             subdir_path.mkdir()
             (subdir_path / "file.txt").write_text("content")
 
-        result = validate_output_structure(project_output_dir)
+        result = validate_output_structure(project_output_dir, enabled_formats=("pdf", "html", "slides"))
 
         assert result["valid"] is True
         assert result["directory_structure"]["combined_pdf"]["exists"] is True
@@ -282,7 +282,7 @@ class TestValidateOutputStructure:
 
         (project_output_dir / "pdf").mkdir()
 
-        result = validate_output_structure(project_output_dir)
+        result = validate_output_structure(project_output_dir, enabled_formats=("pdf", "html", "slides"))
 
         assert result["valid"] is False
         assert len(result["issues"]) > 0
@@ -300,6 +300,6 @@ class TestValidateOutputStructure:
         pdf_file = pdf_dir / "test_project_combined.pdf"
         pdf_file.write_bytes(b"PDF" * 10000)
 
-        result = validate_output_structure(project_output_dir)
+        result = validate_output_structure(project_output_dir, enabled_formats=("pdf", "html", "slides"))
 
         assert result["directory_structure"]["combined_pdf"]["readable"] is True

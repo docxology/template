@@ -1,4 +1,4 @@
-"""HTML transformations and compatibility exports for web post-processing.
+"""HTML transformations and shared exports for web post-processing.
 
 Asset injection and repository link resolution live in narrow leaf modules;
 existing web and slide renderers retain their imports through this module.

@@ -11,9 +11,9 @@ License: CC-BY-4.0
 
 | File | Section | Key Variables Injected | Generating Script |
 | --- | --- | --- | --- |
-| `00_abstract.md` | Abstract | `{{CORPUS_SIZE}}`, `{{YEAR_START}}`, `{{YEAR_END}}`, `{{CAGR_PCT}}`, `{{CITATION_EDGES}}`, `{{CITATION_RESOLUTION_PCT}}` | Stage 5 |
+| `00_abstract.md` | Abstract | `{{RETRIEVED_CORPUS_SIZE}}`, `{{YEAR_START}}`, `{{YEAR_END}}`, `{{CAGR_PCT}}`, `{{CITATION_EDGES}}`, `{{CITATION_RESOLUTION_PCT}}` | Stage 5 |
 | `01_introduction.md` | Introduction | — | — |
-| `02_methods_overview.md` | Methods overview | `{{CORPUS_SIZE}}` | Stage 5 |
+| `02_methods_overview.md` | Methods overview | `{{RETRIEVED_CORPUS_SIZE}}` | Stage 5 |
 | `02a_methods_retrieval.md` | Stage 1: retrieval | `{{RETRIEVED_CORPUS_SIZE}}`, `{{PHASE_CORPUS_SIZE}}`, `{{ANALYZED_CORPUS_SIZE}}`, `{{TEMPORAL_TOTAL_PAPERS}}` | Stage 1 + 5 |
 | `02b_methods_extraction.md` | Stage 2: LLM extraction | `{{TOTAL_ASSERTIONS}}` | Stage 3 + 5 |
 | `02c_methods_bibliometrics.md` | Stage 2: bibliometrics | `{{NUM_TOPICS}}`, `{{NUM_VOCAB_FEATURES}}` | Stage 2 + 5 |
@@ -28,7 +28,7 @@ License: CC-BY-4.0
 | `03e_results_reproducibility.md` | Reproducibility assessment | `{{REPRODUCIBILITY_MEAN_SCORE}}`, `{{REPRODUCIBILITY_N_PAPERS_SCORED}}`, `{{REPRODUCIBILITY_LOW_SCORE_COUNT}}` | Stage 5 |
 | `03f_results_multi_phase.md` | Multi-phase results | `{{PHASE_1_PAPERS}}`, `{{PHASE_2_PAPERS}}`, `{{PHASE_3_PAPERS}}`, `{{TOTAL_ASSERTIONS}}`, `{{HYPOTHESIS_TABLE}}` | Stage 1 + 3 + 5 |
 | `04_discussion.md` | Discussion | — | — |
-| `05_conclusion.md` | Conclusion | `{{CORPUS_SIZE}}`, `{{TOTAL_ASSERTIONS}}` | Stage 5 |
+| `05_conclusion.md` | Conclusion | `{{RETRIEVED_CORPUS_SIZE}}`, `{{TOTAL_ASSERTIONS}}` | Stage 5 |
 | `06_appendix_tooling.md` | Tooling appendix | — | — |
 | `07_appendix_technical.md` | Technical appendix | — | — |
 | `08_appendix_accessibility.md` | Accessibility appendix | — | — |
@@ -44,8 +44,7 @@ License: CC-BY-4.0
 `ANALYZED_CORPUS_SIZE` reads the recorded `descriptive_stats.total`; and
 `TEMPORAL_TOTAL_PAPERS` reads the dated time-series total in `temporal_analysis.json`.
 These counts may differ. Missing descriptive-analysis totals remain `pending`; no raw
-retrieval count is substituted for them. `CORPUS_SIZE` retains its legacy phase alias
-when phase metadata is present.
+retrieval count is substituted for them. Use the counter for the population a claim describes.
 
 ## Running Stage 5 (Variable Injection)
 

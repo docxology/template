@@ -28,7 +28,6 @@ def extract_phase_variables(ctx: Any) -> dict[str, Any]:
 
     # Overall phase statistics
     variables["TOTAL_PHASES"] = latex_number(len(phases))
-    variables["CORPUS_SIZE"] = latex_number(total_papers)
     variables["PHASE_CORPUS_SIZE"] = latex_number(phase_metadata.get("total_unique_papers", total_papers))
 
     # Phase-specific counts

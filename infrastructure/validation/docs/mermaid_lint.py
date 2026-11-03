@@ -47,8 +47,8 @@ _MERMAID_FENCE = re.compile(
 _KIND_RE = re.compile(r"^\s*(?P<kind>[A-Za-z][A-Za-z0-9_-]*)")
 _MMDC_TIMEOUT_SECONDS = float(os.environ.get("TEMPLATE_MERMAID_LINT_TIMEOUT", "30"))
 _MMDC_TOTAL_TIMEOUT_SECONDS = float(os.environ.get("TEMPLATE_MERMAID_LINT_TOTAL_TIMEOUT", "300"))
-# Floor for the unscaled (legacy) total budget when scaling applies.
-_LEGACY_TOTAL_FLOOR_SECONDS = 300.0
+# Floor for the unscaled total budget when scaling applies.
+_MINIMUM_TOTAL_SECONDS = 300.0
 # Real renders average well under one second per diagram on idle hardware,
 # but loaded machines (parallel agent sessions, cold Chrome starts) routinely
 # triple that. A fixed wall-clock budget sized from a smaller doc tree turns
@@ -67,7 +67,7 @@ def scaled_total_timeout(block_count: int) -> float:
     The budget scales linearly with the discovered block count, floored at
     ``_MMDC_TOTAL_TIMEOUT_SECONDS`` (the value of
     ``TEMPLATE_MERMAID_LINT_TOTAL_TIMEOUT``, which therefore still raises the
-    floor when raised) and floored at the legacy 300s fixed budget so small
+    floor when raised) and floored at the minimum 300s fixed budget so small
     trees behave exactly as before. Capped so a discovery bug counting
     non-block matches cannot produce an unbounded run. Callers passing an
     explicit ``total_timeout_seconds`` to :func:`validate_blocks` bypass this
@@ -75,7 +75,7 @@ def scaled_total_timeout(block_count: int) -> float:
     """
     scaled = min(
         _MAX_SCALED_BUDGET_SECONDS,
-        max(_LEGACY_TOTAL_FLOOR_SECONDS, block_count * _SECS_PER_BLOCK),
+        max(_MINIMUM_TOTAL_SECONDS, block_count * _SECS_PER_BLOCK),
     )
     return max(scaled, _MMDC_TOTAL_TIMEOUT_SECONDS)
 

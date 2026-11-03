@@ -1,9 +1,9 @@
 {
   "claim_boundary": "Compact evidence summary for manuscript validation; full fact dumps are opt-in debug output.",
-  "fact_count": 72,
+  "fact_count": 74,
   "freshness_warnings": [],
   "kind_counts": {
-    "artifact": 28,
+    "artifact": 30,
     "citation": 2,
     "number": 42
   },
@@ -671,6 +671,18 @@
     },
     {
       "active": true,
+      "checked_at": "2026-10-30T19:22:57Z",
+      "kind": "artifact",
+      "source": "filesystem",
+      "source_field": "",
+      "source_path": "output/reports/experiment_record.md",
+      "source_tier": "artifact",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "output/reports/experiment_record.md"
+    },
+    {
+      "active": true,
       "checked_at": "2026-09-23T18:25:24Z",
       "kind": "artifact",
       "source": "filesystem",
@@ -680,6 +692,18 @@
       "stale": false,
       "tolerance": 0.0,
       "value": "output/reports/manuscript_composition.json"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-10-30T19:22:57Z",
+      "kind": "artifact",
+      "source": "filesystem",
+      "source_field": "",
+      "source_path": "output/reports/tree_state.png",
+      "source_tier": "artifact",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "output/reports/tree_state.png"
     },
     {
       "active": true,
@@ -876,7 +900,7 @@
   ],
   "schema": "template-evidence-registry-report-v1",
   "source_tiers": {
-    "artifact": 28,
+    "artifact": 30,
     "bibliography": 2,
     "configuration": 7,
     "generated_metric": 35

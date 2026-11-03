@@ -4,6 +4,8 @@ from __future__ import annotations
 
 import sys
 from pathlib import Path
+
+from .._platform import required_platform_version
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
@@ -64,13 +66,14 @@ def execute_child(
         raise ValueError("child CPU seconds must be an integer within its whole timeout")
     if script != "__pytest__":
         confined_path(root, script)
+    required = required_platform_version()
     try:
         from infrastructure import __version__
         from infrastructure.core.subprocess_policy import SubprocessPolicy, run_with_policy
     except ImportError as exc:
-        raise ChildCapabilityBlocked("child execution requires the installed or checkout platform 4.4.0") from exc
-    if __version__ != "4.4.0":
-        raise ChildCapabilityBlocked("child execution requires its bound platform version 4.4.0")
+        raise ChildCapabilityBlocked(f"child execution requires the installed or checkout platform {required}") from exc
+    if __version__ != required:
+        raise ChildCapabilityBlocked(f"child execution requires its bound platform version {required}")
     return run_with_policy(
         [sys.executable, "-I", "-B", "-c", _BOOTSTRAP, str(cpu_budget), script, *arguments],
         cwd=root,

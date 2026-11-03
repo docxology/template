@@ -466,17 +466,13 @@ def execute_copy_stage(project_name: str, *, repo_root: Path) -> int:
         # Step 4b: Validate directory structure without inventing a PDF
         # requirement for configurations that explicitly disable it.
         structure_validation = validate_output_structure(
-            output_dir,
-            require_pdf=render_config.enable_pdf,
-            inventory=copied_inventory,
-            enabled_formats=formats,
+            output_dir, inventory=copied_inventory, enabled_formats=formats
         )
 
         # Step 5: Collect comprehensive output statistics
         output_stats = collect_output_statistics(
             repo_root,
             project_name,
-            require_pdf=render_config.enable_pdf,
             output_dir=output_dir,
             inventory=copied_inventory,
             enabled_formats=formats,

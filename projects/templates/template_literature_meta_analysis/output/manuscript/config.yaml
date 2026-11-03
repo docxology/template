@@ -22,7 +22,7 @@ authors:
 publication:
   release_status: "unreleased"
   intended_version: "0.2.0"
-  platform_version: "4.4.0"
+  platform_version: "4.5.0"
   last_published_version: "0.1.0"
   doi: "10.5281/zenodo.20931964"
   version_doi: "10.5281/zenodo.20931965"
@@ -253,29 +253,36 @@ project_config:
     # near-verbatim (non-exact) match against a paper's fulltext.
     fuzzy_quote_threshold: 0.85
 
-  # Domain hypotheses scored against the corpus. Replace these to re-target.
+  # Stable IDs bind retained evidence; display keys and names may change independently.
+  # Replace hypotheses and IDs together when re-targeting the study.
   hypothesis_definitions:
     H1:
+      id: "PRIMARY_EFFICACY"
       name: "Wakefulness Efficacy"
       description: "Modafinil reliably promotes wakefulness in sleep-disorder populations (narcolepsy, shift-work, OSA)"
       scope: "clinical"
     H2:
+      id: "OPTIMAL_PERFORMANCE"
       name: "Cognitive Enhancement"
       description: "Modafinil improves attention, working memory, and executive function, especially under sleep deprivation"
       scope: "cognitive"
     H3:
+      id: "MECHANISTIC_BASIS"
       name: "Low Abuse Liability"
       description: "Modafinil has lower abuse potential and dependence risk than classical psychostimulants"
       scope: "safety"
     H4:
+      id: "PROCESS_MODEL"
       name: "Dopaminergic Mechanism"
       description: "Modafinil acts substantially via dopamine-transporter inhibition rather than a purely novel mechanism"
       scope: "pharmacological"
     H5:
+      id: "SCALABILITY"
       name: "Off-label Psychiatric Utility"
       description: "Modafinil is a useful adjunct for fatigue and cognition in psychiatric and neurological conditions"
       scope: "applied"
     H6:
+      id: "CLINICAL_UTILITY"
       name: "Tolerability"
       description: "Modafinil is generally well tolerated, with predominantly mild, transient adverse effects"
       scope: "safety"

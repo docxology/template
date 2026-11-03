@@ -10,15 +10,21 @@ These are functional checks, with no full-suite coverage or native acceptance cl
 Main/manual runs select every public project. Exact project-only PRs include
 transitive consumers; shared, unknown or ambiguous changes select the full roster.
 Infrastructure includes changed tests and declared Source owners without dropping
-the legacy union. `CI Gate` requires both test lanes and checks their original
+the baseline union. `CI Gate` requires both test lanes and checks their original
 pytest selection/outcome receipts for an exact disjoint union. JUnit is diagnostic.
-Routine automatic jobs contain at most twenty complete modules, with dedicated
-jobs for selected process measurement, run-matrix and Root acceptance modules. At most eight
+Routine automatic jobs contain at most twelve complete modules, with dedicated
+jobs for selected process measurement, run-matrix and Root acceptance modules. At most sixteen
 routine jobs run concurrently; the 540-second job-body clock is unchanged.
 Changed-contract lanes also run eight at a time (`max-parallel: 8`): over the 27
 measured modules the longest-path schedule is 2626s at 3 lanes, 1337s at 6, and
 1031s at 8, where the slowest module sets the floor and the 120-minute job budget
 is unchanged.
+Guide-only pull requests enumerate the complete documentation test-module
+roster, keeping heavy documentation contracts in their prepared jobs. Only the
+exemplar matrix skips, and `CI Gate` requires that exact declared outcome. Main
+and manual runs retain the full selection. Runtime text and artwork do not
+qualify as guide-only changes. Each module runs serially; concurrency comes from
+independent jobs with original collection and outcome receipts.
 The existing bounded execution boundary cleans up owned descendants and retains
 the original OS/effective exits in a diagnostic that grants no acceptance.
 Full contract jobs explicitly clear marker and keyword filters, refuse any
@@ -100,7 +106,7 @@ flowchart TB
     WF --> WF_FAST[ci.yml<br/>Linux/Python 3.14 functional checks · CI Gate]
     WF --> WF_CI[hardening.yml<br/>20 jobs — 2 conditional via detect outputs — fep-lean, setup-hook-windows-smoke — manual-only lanes — public-matrix-receipt, test-infra-slow — 1 aggregation gate — ci-gate]
     WF --> WF_STALE[stale.yml<br/>Auto-label/close stale issues/PRs]
-    WF --> WF_REL[release.yml<br/>GitHub Releases on version tags]
+    WF --> WF_REL[release.yml<br/>Exact-tag release handoff]
     WF --> WF_REQUIRED[platform-required-acceptance.yml<br/>Original observations + strict candidate collector]
     WF --> WF_DA[dependabot-automerge.yml<br/>Auto-merge safe Dependabot PRs]
 
@@ -164,32 +170,29 @@ Runs daily. Issues → stale after 60 days, closed after 14 more. PRs → stale 
 
 ### Release Workflow (`workflows/release.yml`)
 
-Triggered by `v*.*.*` tag pushes or manual dispatch with a tag. It resolves the
-requested tag before checkout, checks out that exact ref, proves `HEAD` matches
-the dereferenced tag commit, and explicitly prepares the locked public-exemplar
-and installed-build environment before offline admission or checks. It runs the
-root release contract, bounded pipeline-smoke infra test lane plus no-mocks gate on the tagged SHA,
-the fail-closed capability manifest, the complete Python 3.14/3.15 installed
-wheel matrix outside source checkouts, and strict rendered publication audit
-across the canonical public roster. Root 4+ additionally requires an explicit
-same-repository successful hosted run and artifact bound to that exact revision,
-the aggregate receipt hash, and every required candidate acceptance gate.
-The candidate includes
-[`platform-required-acceptance.yml`](workflows/platform-required-acceptance.yml):
-four supported Root host/minor units, common and native observations, and a
-strict collector that uploads only the passed complete exact-source bundle.
-Its presence does not establish successful hosted acceptance, integration into
-`main`, or publication; ordinary CI uploads cannot authorize this handoff.
-Tag pushes without the explicit handoff stop. The metadata-declared candidate remains unpublished during development. Final changelog and
-release-intent metadata must be frozen before exact-revision acceptance; those
-bytes do not establish publication. The prepared 4.0.0 candidate was not published.
-The release uses `softprops/action-gh-release@v3.0.3` with
-**`generate_release_notes`** off. Root 4+ reads `docs/releases/<tag>.md` for its
-actual tag (see the [release-note index](../docs/releases/README.md)), and
-adds accepted-commit, hosted-run and receipt-hash bindings. It publishes the
-admitted installed wheel, exact final source distribution, tag-selected overview
-PNG and byte manifest, then verifies retrieved asset hashes. Earlier major tags
-retain the short git-log excerpt.
+Manual dispatch requires an existing version tag, the successful same-repository
+Required acceptance run ID, its exact artifact ID, and the aggregate receipt
+SHA-256. The workflow checks out the requested tag and proves `HEAD` matches its
+dereferenced commit. It prepares the locked public-exemplar and installed-build
+environment, audits all pristine public outputs, and verifies hosted provenance.
+
+An independently installed reader revalidates the complete candidate, including
+the original Python 3.14/3.15 installed matrix, from the authenticated artifact.
+The bounded pipeline-smoke lane, no-mocks gate, root version contract, capability
+manifest, exact wheel/source-distribution admission, and byte recheck remain
+blocking. Every release follows this one path.
+
+[`platform-required-acceptance.yml`](workflows/platform-required-acceptance.yml)
+collects four supported Root host/minor units, common and native observations,
+and uploads only a passed complete exact-source bundle. Ordinary CI artifacts
+cannot authorize publication. Release metadata and notes must be frozen before
+that acceptance run; preparing those files does not establish publication.
+
+The workflow uses `softprops/action-gh-release@v3.0.3`, with generated notes off,
+and reads the exact `docs/releases/<tag>.md` file. It adds accepted-commit,
+hosted-run, artifact, and receipt-hash bindings, publishes the admitted wheel,
+source distribution, overview PNG, and byte manifest, then verifies downloaded
+asset hashes. Publication and downloaded-byte verification have separate outcomes.
 
 ### Dependabot Automerge Workflow (`workflows/dependabot-automerge.yml`)
 

@@ -13,7 +13,7 @@ The `infrastructure/validation/output/` package contains pipeline output validat
 - `pdf_checks.py` - PDF structure and transmission bookend checks
 - `markdown_checks.py` - manuscript markdown wrapper and diagnostic report handling
 - `design.py` - domain profile, experiment plan, and AutoResearch overlay validation
-- `artifacts.py` - strict shared artifact-manifest JSON parsing and lifecycle-mode-aware current-manifest selection; legacy missing mode means strict shippable, but loose/coerced entry fields are invalid
+- `artifacts.py` - strict shared artifact-manifest JSON parsing and lifecycle-mode-aware current-manifest selection; an explicit current inventory mode is required, and loose/coerced entry fields are invalid
 - `prose_quality.py` - opt-in, report-only AI-writing prose quality gate
 - `claim_verification.py` - optional web-grounded claim verification report for manuscript prose
 - `no_mock_enforcer.py` - AST/token lexical mock-framework scan plus classified monkeypatch stand-in inventory

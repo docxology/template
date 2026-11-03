@@ -25,6 +25,7 @@ from infrastructure.project.public_acceptance_dependencies import MissingRuntime
 from infrastructure.project.public_package_dependencies import local_dependency_closure
 from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
 from infrastructure.reporting.native_project_provider_batch import admitted_native_provider_batch
+from infrastructure.reporting.native_source_provider_bootstrap import selected_sdk_native_command
 from infrastructure.reporting.native_format_joint_source import admitted_native_providers
 from infrastructure.reporting.native_source_external_admission import (
     NativeExternalSourceBindings,
@@ -106,6 +107,34 @@ class _ABANominations(Mapping[str, Path]):
         return self.entries[key]
 
 
+class _ABANativeArguments(tuple[str, ...]):
+    """A genuine tuple input restores Source bytes during argument expansion.
+
+    The constructor accepts tuple arguments and expands them inside its Source
+    boundary. This input exercises that actual Python iteration protocol; no
+    application callable, dependency, owner or provider is substituted.
+    """
+
+    target: Path
+    mutated: bool
+
+    def __new__(cls, target: Path, entries: tuple[str, ...]) -> _ABANativeArguments:
+        result = super().__new__(cls, entries)
+        result.target = target
+        result.mutated = False
+        return result
+
+    def __iter__(self) -> Iterator[str]:
+        if not self.mutated:
+            original = self.target.read_bytes()
+            try:
+                self.target.write_bytes(original + b"\nOwned command argument ABA control.\n")
+            finally:
+                self.target.write_bytes(original)
+            self.mutated = True
+        return super().__iter__()
+
+
 def test_genuine_batch_matches_single_factories_and_refuses_changed_source(
     complete_reference: tuple[Path, str, str], tmp_path: Path
 ) -> None:
@@ -151,6 +180,26 @@ def test_genuine_batch_matches_single_factories_and_refuses_changed_source(
     scratch = tmp_path / "meta-build"
     scratch.mkdir()
     evidence = mirror / "output/readiness/provider-batch-control"
+    evidence.mkdir(parents=True)
+    implementation_input = evidence / "selected-sdk-implementation.json"
+    implementation_input.write_bytes(context.bindings.expected_implementation_bytes)
+    positive_closure = evidence / "selected-sdk-positive-closure"
+    positive_closure.mkdir()
+    worker_arguments = ("owned-native-construction-control", "--no-child-is-launched")
+    command = selected_sdk_native_command(
+        interpreter.absolute(),
+        context,
+        worker_arguments,
+        provider_audit_roots=(),
+        implementation_binding_path=implementation_input,
+        audit_closure_directory=positive_closure,
+        deadline=deadline,
+    )
+    assert command[:3] == (str(interpreter.absolute()), "-I", "-c")
+    assert command[-2:] == worker_arguments
+    assert "install_bytecode_audit" in command[3]
+    assert not tuple(positive_closure.iterdir())
+    assert context.current_source_reader.unchanged()
     source = scratch / "template_literature_meta_analysis"
     # The complete fixture can commit existing root egg-info's five runtime
     # records (PKG-INFO, SOURCES.txt, dependency_links.txt, requires.txt and
@@ -243,6 +292,29 @@ def test_genuine_batch_matches_single_factories_and_refuses_changed_source(
     assert hostile.mutated and target.read_bytes() == original_bytes
     assert not context.current_source_reader.unchanged()
     assert original.joinpath("README.md").read_bytes() == original_bytes
+
+    # The actual command constructor must also retain its closing boundary when
+    # an accepted tuple's iteration restores Source bytes before returning.
+    context = admit_context()
+    implementation_input.write_bytes(context.bindings.expected_implementation_bytes)
+    hostile_closure = evidence / "selected-sdk-aba-closure"
+    hostile_closure.mkdir()
+    hostile_arguments = _ABANativeArguments(target, worker_arguments)
+    with pytest.raises(ValueError):
+        selected_sdk_native_command(
+            interpreter.absolute(),
+            context,
+            hostile_arguments,
+            provider_audit_roots=(),
+            implementation_binding_path=implementation_input,
+            audit_closure_directory=hostile_closure,
+            deadline=deadline,
+        )
+    assert hostile_arguments.mutated
+    assert target.read_bytes() == original_bytes
+    assert original.joinpath("README.md").read_bytes() == original_bytes
+    assert not context.current_source_reader.unchanged()
+    assert not tuple(hostile_closure.iterdir())
 
 
 def test_provider_batch_refuses_context_free_inputs_without_source_authority(tmp_path: Path) -> None:

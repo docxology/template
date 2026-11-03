@@ -1,7 +1,7 @@
 {
   "figures": [
     {
-      "alt": "A vertical bar chart compares several labeled categories, with bar height encoding each category's value.",
+      "alt_text": "A vertical bar chart compares several labeled categories, with bar height encoding each category's value.",
       "caption": "Bar chart.",
       "filename": "gallery/gallery_bar.png",
       "generated_by": "scripts/generate_figures.py",
@@ -9,7 +9,7 @@
       "source_markdown": "appendices/appendix_format_gallery.md"
     },
     {
-      "alt": "Six condition means rise from left to right; every point has a vertical standard-error interval.",
+      "alt_text": "Six condition means rise from left to right; every point has a vertical standard-error interval.",
       "caption": "Means with standard-error bars.",
       "filename": "gallery/gallery_errorbar.png",
       "generated_by": "scripts/generate_figures.py",
@@ -17,7 +17,7 @@
       "source_markdown": "appendices/appendix_format_gallery.md"
     },
     {
-      "alt": "Three sinusoidal curves share one time axis, with progressively higher oscillation frequency.",
+      "alt_text": "Three sinusoidal curves share one time axis, with progressively higher oscillation frequency.",
       "caption": "A multi-series line plot of three sine waves, produced by\n`visualization.gallery.line_plot`.",
       "filename": "gallery/gallery_line.png",
       "generated_by": "scripts/generate_figures.py",
@@ -25,7 +25,7 @@
       "source_markdown": "appendices/appendix_format_gallery.md"
     },
     {
-      "alt": "A rectangular heatmap uses a light-to-dark color scale to encode values across rows and columns.",
+      "alt_text": "A rectangular heatmap uses a light-to-dark color scale to encode values across rows and columns.",
       "caption": "A generated heatmap embedded as a raster\nimage.",
       "filename": "gallery/gallery_heatmap.png",
       "generated_by": "scripts/generate_figures.py",
@@ -33,7 +33,7 @@
       "source_markdown": "appendices/appendix_format_gallery.md"
     },
     {
-      "alt": "A two-by-two composite contains a line chart, scatter plot, bar chart, and histogram.",
+      "alt_text": "A two-by-two composite contains a line chart, scatter plot, bar chart, and histogram.",
       "caption": "A 2\u00d72 composite: line, scatter, bar, and histogram\npanels.",
       "filename": "gallery/gallery_multipanel.png",
       "generated_by": "scripts/generate_figures.py",
@@ -41,7 +41,7 @@
       "source_markdown": "appendices/appendix_format_gallery.md"
     },
     {
-      "alt": "A circular chart is divided into labeled slices whose angles encode category proportions.",
+      "alt_text": "A circular chart is divided into labeled slices whose angles encode category proportions.",
       "caption": "Pie chart.",
       "filename": "gallery/gallery_pie.png",
       "generated_by": "scripts/generate_figures.py",
@@ -49,7 +49,7 @@
       "source_markdown": "appendices/appendix_format_gallery.md"
     },
     {
-      "alt": "Twenty-five synthetic points follow an increasing trend with a smooth oscillating deviation; a fitted straight line summarizes the trend while leaving visible positive and negative residuals.",
+      "alt_text": "Twenty-five synthetic points follow an increasing trend with a smooth oscillating deviation; a fitted straight line summarizes the trend while leaving visible positive and negative residuals.",
       "caption": "A deterministic synthetic scatter and its least-squares line; visible residuals contrast with the exact arithmetic example.",
       "filename": "part_0_core_methods.png",
       "generated_by": "scripts/generate_figures.py",
@@ -57,7 +57,7 @@
       "source_markdown": "part_0/core_methods.md"
     },
     {
-      "alt": "Three smooth S-shaped quantity-versus-time curves start at five units and approach a dashed capacity line at one hundred; higher rates reach the middle of the transition sooner.",
+      "alt_text": "Three smooth S-shaped quantity-versus-time curves start at five units and approach a dashed capacity line at one hundred; higher rates reach the middle of the transition sooner.",
       "caption": "Deterministic logistic trajectories at three positive growth rates with common initial state and capacity.",
       "filename": "part_0_orientation.png",
       "generated_by": "scripts/generate_figures.py",
@@ -65,7 +65,7 @@
       "source_markdown": "part_0/orientation.md"
     },
     {
-      "alt": "A rising cloud of synthetic observations is crossed by a fitted line; the point-to-line deviations remain visible instead of being hidden by an average.",
+      "alt_text": "A rising cloud of synthetic observations is crossed by a fitted line; the point-to-line deviations remain visible instead of being hidden by an average.",
       "caption": "Synthetic paired observations and their fitted trend illustrate the difference between individual variation and a summary.",
       "filename": "part_0_quantitative_foundations.png",
       "generated_by": "scripts/generate_figures.py",
@@ -73,7 +73,7 @@
       "source_markdown": "part_0/quantitative_foundations.md"
     },
     {
-      "alt": "Three input-versus-response curves rise from zero toward one and all pass through response one half at input three; larger exponents sharpen the transition around that point.",
+      "alt_text": "Three input-versus-response curves rise from zero toward one and all pass through response one half at input three; larger exponents sharpen the transition around that point.",
       "caption": "Static saturating responses with a shared half-saturation input and different shape exponents.",
       "filename": "part_III_applied_models.png",
       "generated_by": "scripts/generate_figures.py",
@@ -81,7 +81,7 @@
       "source_markdown": "part_III/applied_models.md"
     },
     {
-      "alt": "Six instructional fixture values increase across control, low-treatment, and high-treatment conditions; each point has a supplied error interval.",
+      "alt_text": "Six instructional fixture values increase across control, low-treatment, and high-treatment conditions; each point has a supplied error interval.",
       "caption": "Instructional fixture values with supplied error bars across the control, low-treatment,\nand high-treatment conditions, generated directly from\n`manuscript/assets/data/sample_dataset.csv`.",
       "filename": "part_III_case_studies.png",
       "generated_by": "scripts/generate_figures.py",
@@ -89,7 +89,7 @@
       "source_markdown": "part_III/case_studies.md"
     },
     {
-      "alt": "Three response curves share the same output scale and midpoint but have different slopes near the midpoint; equal normalized range does not make the relationships identical.",
+      "alt_text": "Three response curves share the same output scale and midpoint but have different slopes near the midpoint; equal normalized range does not make the relationships identical.",
       "caption": "Dimensionless static response curves illustrate how shape and scale are distinct choices.",
       "filename": "part_III_frontiers.png",
       "generated_by": "scripts/generate_figures.py",
@@ -97,7 +97,7 @@
       "source_markdown": "part_III/frontiers.md"
     },
     {
-      "alt": "A smooth quantity-versus-time curve starts at one hundred and decreases toward zero; a vertical dashed line at approximately one point three nine time units marks where the remaining amount is fifty.",
+      "alt_text": "A smooth quantity-versus-time curve starts at one hundred and decreases toward zero; a vertical dashed line at approximately one point three nine time units marks where the remaining amount is fifty.",
       "caption": "Deterministic exponential decay with its first half-life marked.",
       "filename": "part_II_dynamics_and_change.png",
       "generated_by": "scripts/generate_figures.py",
@@ -105,7 +105,7 @@
       "source_markdown": "part_II/dynamics_and_change.md"
     },
     {
-      "alt": "A smooth quantity-versus-time curve starts at one hundred and decreases toward zero; a vertical dashed line at approximately one point three nine time units marks where the remaining amount is fifty.",
+      "alt_text": "A smooth quantity-versus-time curve starts at one hundred and decreases toward zero; a vertical dashed line at approximately one point three nine time units marks where the remaining amount is fifty.",
       "caption": "Deterministic exponential decay with its first half-life marked.",
       "filename": "part_II_regulation_and_control.png",
       "generated_by": "scripts/generate_figures.py",
@@ -113,7 +113,7 @@
       "source_markdown": "part_II/regulation_and_control.md"
     },
     {
-      "alt": "Three smooth S-shaped quantity-versus-time curves start at five units and approach a dashed capacity line at one hundred; higher rates reach the middle of the transition sooner.",
+      "alt_text": "Three smooth S-shaped quantity-versus-time curves start at five units and approach a dashed capacity line at one hundred; higher rates reach the middle of the transition sooner.",
       "caption": "Deterministic logistic trajectories at three positive growth rates with common initial state and capacity.",
       "filename": "part_II_systems_overview.png",
       "generated_by": "scripts/generate_figures.py",
@@ -121,7 +121,7 @@
       "source_markdown": "part_II/systems_overview.md"
     },
     {
-      "alt": "Three input-versus-response curves rise from zero toward one and all pass through response one half at input three; larger exponents sharpen the transition around that point.",
+      "alt_text": "Three input-versus-response curves rise from zero toward one and all pass through response one half at input three; larger exponents sharpen the transition around that point.",
       "caption": "Static saturating responses with a shared half-saturation input and different shape exponents.",
       "filename": "part_I_building_blocks.png",
       "generated_by": "scripts/generate_figures.py",
@@ -129,7 +129,7 @@
       "source_markdown": "part_I/building_blocks.md"
     },
     {
-      "alt": "Three S-shaped logistic-growth curves approach the horizontal carrying-capacity line at 100; higher growth rates rise sooner.",
+      "alt_text": "Three S-shaped logistic-growth curves approach the horizontal carrying-capacity line at 100; higher growth rates rise sooner.",
       "caption": "A logistic growth curve for three growth rates, approaching the carrying\ncapacity $K = 100$. Produced deterministically by\n`visualization.plots.plot_logistic_growth`.",
       "filename": "logistic_growth.png",
       "generated_by": "scripts/generate_figures.py",
@@ -137,7 +137,7 @@
       "source_markdown": "part_I/first_principles.md"
     },
     {
-      "alt": "Three response curves share the same output scale and midpoint but have different slopes near the midpoint; equal normalized range does not make the relationships identical.",
+      "alt_text": "Three response curves share the same output scale and midpoint but have different slopes near the midpoint; equal normalized range does not make the relationships identical.",
       "caption": "Dimensionless static response curves illustrate how shape and scale are distinct choices.",
       "filename": "part_I_structure_and_form.png",
       "generated_by": "scripts/generate_figures.py",

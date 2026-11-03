@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from infrastructure.core.exceptions import SecurityError
+from infrastructure.core.exceptions import SecurityViolation
 
 # Keep this registry deliberately small. A caller must be named in source and
 # provide a human-readable reason at every bypass site. Tests use a separate
@@ -24,9 +24,9 @@ def _require(
 ) -> None:
     """Require a registered caller and non-empty per-call rationale."""
     if not caller or caller not in registry:
-        raise SecurityError(f"Unallowlisted {kind} bypass caller: {caller or '<missing>'}")
+        raise SecurityViolation(f"Unallowlisted {kind} bypass caller: {caller or '<missing>'}")
     if not reason or len(reason.strip()) < 12:
-        raise SecurityError(f"{kind} bypass requires a named caller justification")
+        raise SecurityViolation(f"{kind} bypass requires a named caller justification")
 
 
 def require_sanitization_bypass(caller: str | None, reason: str | None) -> None:

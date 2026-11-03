@@ -1,4 +1,4 @@
-"""Source-owned Root v2 policy, operation eligibility and exact plan admission."""
+"""Source-owned current Root policy, operation eligibility and exact plan admission."""
 
 from __future__ import annotations
 
@@ -16,7 +16,6 @@ from urllib.parse import urlsplit
 
 from infrastructure.project.public_acceptance_case_policy import (
     POLICY_SCHEMA,
-    OPTIONAL_POLICY_SCHEMA,
     RootCasePlan,
     RootCasePolicy,
     compile_case_plan,
@@ -68,7 +67,7 @@ def _path(value: object) -> str:
         or "\0" in value
         or any(part in ("", ".", "..") for part in value.split("/"))
     ):
-        raise ValueError("Root v2 policy references must be exact public source configuration files")
+        raise ValueError("Root policy references must be exact public source configuration files")
     return value
 
 
@@ -160,10 +159,10 @@ def declaration(reader: SnapshotReader) -> dict[str, Any]:
         not isinstance(contract, dict)
         or set(contract) != {"schema_version", "policy", "prerequisites"}
         or type(contract["schema_version"]) is not int
-        or contract["schema_version"] not in {2, DECLARATION_SCHEMA}
+        or contract["schema_version"] != DECLARATION_SCHEMA
     ):
         raise MissingRootCasePolicy(
-            "ROOT-ACCEPTANCE-CASE-POLICY-2: reviewed complete Root v2 source declaration is missing"
+            "ROOT-ACCEPTANCE-CASE-POLICY-2: reviewed complete Root schema3 source declaration is missing"
         )
     return {
         "schema_version": contract["schema_version"],
@@ -180,7 +179,7 @@ def load_policy(
     policy_snapshot = reader.read(contract["policy"])
     _json(policy_snapshot)  # Preserve the original duplicate/nonfinite JSON admission.
     value = decode_policy(reader, policy_snapshot)
-    if value.get("schema_version") != (OPTIONAL_POLICY_SCHEMA if contract["schema_version"] == 3 else POLICY_SCHEMA):
+    if value.get("schema_version") != POLICY_SCHEMA:
         raise ValueError("Root policy protocol differs from its source-owned declaration")
     policy = RootCasePolicy.parse(value)
     credential_names = _eligibility(policy, reader)
