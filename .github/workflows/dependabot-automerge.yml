@@ -1,3 +1,5 @@
+# Eligibility guard note: this job deliberately never checks out, so every gh call
+# must name its repository explicitly (--repo / full PR URL).
 # Dependabot Automerge (GH-AUTOMERGE-2)
 #
 # Merges LOW-RISK Dependabot bumps once the required checks pass, while keeping
