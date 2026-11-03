@@ -78,9 +78,10 @@ jobs:
           ECOSYSTEM: ${{ steps.meta.outputs.package-ecosystem }}
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           LABEL: automerge:dependabot-minor-patch
+          REPOSITORY: ${{ github.repository }}
         run: |
           set -euo pipefail
-          gh label create "$LABEL" \
+          gh label create "$LABEL" --repo "$REPOSITORY" \
             --color 0e8a16 \
             --description "Minor/patch Dependabot update eligible for dependabot-automerge.yml" \
             --force >/dev/null
@@ -90,7 +91,7 @@ jobs:
             *) update_allowed=false ;;
           esac
           case "$ECOSYSTEM" in
-            github_actions | pip) ecosystem_allowed=true ;;
+            github_actions | pip | uv) ecosystem_allowed=true ;;
             *) ecosystem_allowed=false ;;
           esac
 
