@@ -31,7 +31,7 @@ This document provides documentation for the Research Project Template system, e
 
 ## For assistants and automation
 
-**Current release scope:** [4.5.0](docs/releases/v4.5.0.md) coordinates the root
+**Current release scope:** [5.0.0](docs/releases/v5.0.0.md) coordinates the root
 SDK and all canonical public exemplars. Follow the
 [release boundary](docs/maintenance/release-boundary.md); preserve original
 acceptance evidence and never infer publication from a version bump or green local checks.
