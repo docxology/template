@@ -23,6 +23,17 @@ Resume and incremental reuse are disabled. Canonical analysis, rendering and
 validation targets must execute in order, with every selected stage freshly
 succeeded. Missing tools are blocked; actual failures and timeouts remain failed.
 
+The manual `platform-native-preflight.yml` diagnostic is bounded at 1800
+seconds. Two hosted 900-second cold runs measured the older bound below the
+lifecycle's cost: 406-564 seconds elapsed before the supervised worker started,
+and neither worker had a complete outcome when the clock expired. The
+preflight reserves 30 seconds at the launch boundary and 15 seconds at the
+supervised-worker boundary so the inner owner can return, reap its worker and
+retain process/cleanup/guardian receipts before the outer watcher ends. The
+diagnostic remains incomplete, is not a release receipt, and never authorizes
+publication. The release path's 14,400-second whole-operation budget is
+unchanged.
+
 POSIX main-thread admission and finalization use the original real-time deadline;
 the deadline exception bypasses ordinary observer error capture. Unsupported
 thread/platform callers or an active caller-owned real-time timer remain blocked.

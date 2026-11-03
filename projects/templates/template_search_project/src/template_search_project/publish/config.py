@@ -137,23 +137,20 @@ class ProjectConfig:
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> "ProjectConfig":
-        """Build config, preferring schema-compliant project-owned settings.
-
-        Older standalone forks stored search settings at the YAML root. Those
-        keys remain readable, but new configs place them under
-        ``project_config`` so the shared Layer-1 loader can validate without
-        unknown-key warnings.
-        """
+        """Build config with project-owned settings under ``project_config``."""
+        misplaced = {"search", "enrichment", "deep_search", "references_path"}.intersection(data)
+        if misplaced:
+            raise ValueError(f"place project-owned settings under project_config: {', '.join(sorted(misplaced))}")
         paper = data.get("paper", {}) or {}
         project_raw = data.get("project_config", {}) or {}
         if not isinstance(project_raw, dict):
             raise ValueError("project_config must be a YAML mapping")
-        search_raw = project_raw.get("search", data.get("search", {})) or {}
-        enrich_raw = project_raw.get("enrichment", data.get("enrichment", {})) or {}
+        search_raw = project_raw.get("search", {}) or {}
+        enrich_raw = project_raw.get("enrichment", {}) or {}
         llm_raw = data.get("llm", {}) or {}
         report_raw = data.get("report", {}) or {}
-        deep_search_raw = project_raw.get("deep_search", data.get("deep_search", {})) or {}
-        references_path = project_raw.get("references_path", data.get("references_path"))
+        deep_search_raw = project_raw.get("deep_search", {}) or {}
+        references_path = project_raw.get("references_path")
 
         return cls(
             title=str(paper.get("title") or "Literature Search Project"),

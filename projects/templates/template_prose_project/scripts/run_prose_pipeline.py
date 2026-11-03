@@ -97,7 +97,11 @@ def main(argv: list[str] | None = None) -> int:
         "files": len(artifacts.manuscript_report.files),
         "total_words": artifacts.total_words,
         "all_passed": artifacts.all_passed,
-        "evidence_summary_path": str(artifacts.evidence_summary_path) if artifacts.evidence_summary_path else None,
+        "evidence_summary_path": (
+            artifacts.evidence_summary_path.relative_to(summary_path.parent).as_posix()
+            if artifacts.evidence_summary_path
+            else None
+        ),
         "checks": [c.to_dict() for c in artifacts.checks],
     }
     summary_path.write_text(json.dumps(summary, indent=2, ensure_ascii=False), encoding="utf-8")

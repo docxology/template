@@ -29,7 +29,7 @@ Across 5 heterogeneous primitive domains
 - statistics
 - signal
 - graph), 578 tests exercise both fixed ground-truth
-checks and Hypothesis-driven property invariants at 92.18% combined
+checks and Hypothesis-driven property invariants at 91.88% combined
 statement and branch coverage, with an explicit negative control per domain distinguishing the
 real kernel from a deliberately-wrong one.
 
@@ -61,4 +61,4 @@ flowchart TB
 - **Total product size**: 360
 - **Reserved slots**: 3 (`figure_profile, qr_profile, integrity_profile`)
 - **Grammar hash**: `a1f3e428cf1fb3e3`
-- **Tests**: 578 · **Coverage**: 92.18%
+- **Tests**: 578 · **Coverage**: 91.88%

@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import pytest
+
 from template_pitch_deck.diligence_audit import diligence_rows, slide_cites_a_fact, slide_text_blob, uncited_fact_slides
 
 
@@ -34,7 +36,9 @@ def test_slide_cites_a_fact_false_for_plain_prose():
     assert slide_cites_a_fact(slide) is False
 
 
-def test_diligence_rows_reports_needs_and_has_citation():
+def test_diligence_rows_reports_needs_and_has_citation(tmp_path):
+    (tmp_path / "some").mkdir()
+    (tmp_path / "some/file.py").write_text("# actual source\n")
     raw = {
         "slides": [
             {"title": "Fact, cited", "bullets": ["{{EXEMPLAR_COUNT}} exemplars"], "source": "some/file.py"},
@@ -42,27 +46,29 @@ def test_diligence_rows_reports_needs_and_has_citation():
             {"title": "No fact", "bullets": ["Just prose."]},
         ]
     }
-    rows = diligence_rows(raw)
+    rows = diligence_rows(raw, tmp_path)
     assert rows[0] == {"index": 1, "title": "Fact, cited", "needs_citation": True, "has_citation": True}
     assert rows[1] == {"index": 2, "title": "Fact, uncited", "needs_citation": True, "has_citation": False}
     assert rows[2] == {"index": 3, "title": "No fact", "needs_citation": False, "has_citation": False}
 
 
-def test_uncited_fact_slides_returns_only_the_gap():
+def test_uncited_fact_slides_returns_only_the_gap(tmp_path):
+    (tmp_path / "x.py").write_text("# actual source\n")
     raw = {
         "slides": [
             {"title": "Cited", "bullets": ["{{EXEMPLAR_COUNT}}"], "source": "x.py"},
             {"title": "Uncited", "bullets": ["{{EXEMPLAR_COUNT}}"]},
         ]
     }
-    gaps = uncited_fact_slides(raw)
+    gaps = uncited_fact_slides(raw, tmp_path)
     assert len(gaps) == 1
     assert gaps[0]["title"] == "Uncited"
 
 
-def test_uncited_fact_slides_empty_when_all_covered():
+def test_uncited_fact_slides_empty_when_all_covered(tmp_path):
+    (tmp_path / "x.py").write_text("# actual source\n")
     raw = {"slides": [{"title": "Cited", "bullets": ["{{EXEMPLAR_COUNT}}"], "source": "x.py"}]}
-    assert uncited_fact_slides(raw) == []
+    assert uncited_fact_slides(raw, tmp_path) == []
 
 
 def test_citation_to_nonexistent_file_is_flagged_as_uncited_when_repo_root_given(tmp_path):
@@ -86,11 +92,12 @@ def test_citation_to_real_file_passes_when_repo_root_given(tmp_path):
     assert uncited_fact_slides(raw, tmp_path) == []
 
 
-def test_citation_existence_not_checked_when_repo_root_omitted():
-    """Backward-compat: without repo_root, only non-emptiness is checked (a
-    caller auditing raw content with no repo context to check against)."""
+@pytest.mark.parametrize("missing", [True, False])
+def test_diligence_audit_requires_existing_repository_context(tmp_path, missing):
+    root = tmp_path / "missing" if missing else None
     raw = {"slides": [{"title": "X", "bullets": ["{{EXEMPLAR_COUNT}}"], "source": "does/not/exist.py"}]}
-    assert uncited_fact_slides(raw) == []
+    with pytest.raises(ValueError, match="existing repository root"):
+        uncited_fact_slides(raw, root)
 
 
 def test_absolute_url_citation_always_passes_existence_check(tmp_path):

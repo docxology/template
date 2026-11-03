@@ -36,7 +36,7 @@ DEFAULT_SKILL_SEARCH_ROOTS: tuple[str, ...] = (
     ".agents/workflows",
 )
 
-_MANIFEST_VERSION = 1
+_MANIFEST_VERSION = 2
 _PUBLIC_TEMPLATE_NAMES = frozenset(
     name.removeprefix("templates/") for name in PUBLIC_PROJECT_NAMES if name.startswith("templates/")
 )
@@ -56,11 +56,6 @@ class SkillDescriptor:
     def path_posix(self) -> str:
         """Path relative to repo root, POSIX-style (for JSON and @-references)."""
         return self.relative_path.as_posix()
-
-    @property
-    def cursor_at(self) -> str:
-        """Deprecated compatibility alias for agent_ref."""
-        return self.agent_ref
 
     @property
     def agent_ref(self) -> str:
@@ -140,12 +135,6 @@ def _is_public_root_agent_skill_path(path: Path) -> bool:
     return len(parts) >= 4 and parts[0] == ".agents" and parts[1] in {"skills", "workflows"} and parts[-1] == "SKILL.md"
 
 
-def _is_public_cursor_skill_path(path: Path) -> bool:
-    """Return True for explicitly configured root Cursor skill descriptors."""
-    parts = path.parts
-    return len(parts) >= 4 and parts[0] == ".cursor" and parts[1] == "skills" and parts[-1] == "SKILL.md"
-
-
 def _is_registered_public_template_path(path: Path) -> bool:
     """Return whether a path under ``projects/templates`` belongs to the public roster.
 
@@ -174,8 +163,6 @@ def _is_allowed_agent_tree_path(path: Path) -> bool:
     """Return whether an excluded agent/editor subtree is a public skill lane."""
     parts = path.parts
     if len(parts) >= 2 and parts[0] == ".agents" and parts[1] in {"skills", "workflows"}:
-        return True
-    if len(parts) >= 2 and parts[:2] == (".cursor", "skills"):
         return True
     if len(parts) < 4 or parts[:2] != ("projects", "templates") or parts[3] != ".agents":
         return False
@@ -229,7 +216,6 @@ def iter_skill_paths(repo_root: Path, roots: Sequence[str]) -> Iterator[Path]:
                     should_exclude_path(rel_path, DEFAULT_EXCLUDE_PARTS)
                     and not _is_public_template_agent_skill_path(rel_path)
                     and not _is_public_root_agent_skill_path(rel_path)
-                    and not _is_public_cursor_skill_path(rel_path)
                 ):
                     continue
                 yield p
@@ -283,7 +269,6 @@ def build_manifest_payload(skills: Sequence[SkillDescriptor]) -> dict[str, Any]:
             "description": s.description,
             "path": s.path_posix,
             "agent_ref": s.agent_ref,
-            "cursor_at": s.cursor_at,  # Deprecated schema-v1 compatibility alias.
         }
         metadata = s.frontmatter.get("metadata")
         if isinstance(metadata, dict):

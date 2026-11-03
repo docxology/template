@@ -1,8 +1,8 @@
 """Publication-facing modules for the literature workflow: figures,
 dashboard, typed configuration, and manuscript variable generation.
 
-These modules are re-exported from ``template_search_project`` for
-backwards compatibility; import them from the package root.
+These modules are re-exported from ``template_search_project`` as
+the declared public API; import them from the package root.
 """
 
 from template_search_project.publish.config import (

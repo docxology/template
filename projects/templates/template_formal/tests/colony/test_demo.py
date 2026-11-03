@@ -4,6 +4,8 @@ src/, so it needs real test coverage like everything else in src/)."""
 
 from __future__ import annotations
 
+import json
+import sqlite3
 from pathlib import Path
 
 from template_formal.colony.demo import (
@@ -18,16 +20,24 @@ from template_formal.colony.demo import (
 
 
 def test_run_demo_colony_produces_real_per_agent_sqlite_files(tmp_path: Path) -> None:
-    summary = run_demo_colony(tmp_path)
+    output_dir = tmp_path / "original"
+    output_dir.mkdir()
+    summary = run_demo_colony(output_dir)
 
     assert summary["num_agents"] == DEMO_NUM_AGENTS
     assert summary["num_ticks"] == DEMO_NUM_TICKS
     agent_db_paths = summary["agent_db_paths"]
     assert isinstance(agent_db_paths, list)
     assert len(agent_db_paths) == DEMO_NUM_AGENTS
+    assert str(tmp_path) not in json.dumps(summary)
+    relocated = tmp_path / "relocated"
+    output_dir.rename(relocated)
     for db_path in agent_db_paths:
-        assert Path(db_path).is_file()
-        assert Path(db_path).stat().st_size > 0
+        assert not Path(db_path).is_absolute()
+        actual = relocated / db_path
+        assert actual.is_file() and actual.stat().st_size > 0
+        with sqlite3.connect(f"{actual.as_uri()}?mode=ro", uri=True) as connection:
+            assert connection.execute("SELECT count(*) FROM observations").fetchone()[0] == DEMO_NUM_TICKS
 
 
 def test_run_demo_colony_choice_and_concentration_history_shapes(tmp_path: Path) -> None:

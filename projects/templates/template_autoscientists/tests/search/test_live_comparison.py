@@ -11,6 +11,7 @@ import shutil
 import socket
 import subprocess
 import sys
+import tomllib
 import threading
 import time
 from contextlib import contextmanager
@@ -34,6 +35,7 @@ from template_autoscientists.agents.live_custody import (
 from template_autoscientists.search.live_comparison import live_exit_code, run_live_comparison
 
 PROJECT = Path(__file__).resolve().parents[2]
+PLATFORM_VERSION = tomllib.loads((PROJECT / "pyproject.toml").read_text())["tool"]["template"]["platform_version"]
 
 # The actual producer has a <=600s whole-run and <=60s generation deadline.
 # Source admission and final custody/cleanup retain a finite outer allowance.
@@ -454,6 +456,7 @@ def test_core_controller_preserves_and_authenticates_launcher_audit(tmp_path, fa
     # pre-import scope merely because find_spec can discover them.
     provider_bootstrap = r"""
 import sys
+import tomllib
 from pathlib import Path
 from infrastructure.core import implementation_custody
 platform_root=Path(implementation_custody.__file__).resolve().parents[2]
@@ -672,7 +675,7 @@ def test_transitive_platform_and_worker_environment_are_required() -> None:
     else:
         assert custody["binding_kind"] == "installed-distribution"
         selected = importlib.metadata.distribution("research-project-template")
-        assert selected.version == "4.4.0" and selected.files is not None
+        assert selected.version == PLATFORM_VERSION and selected.files is not None
         records = [path for path in selected.files if str(path).endswith(".dist-info/RECORD")]
         assert len(records) == 1
         record_path = Path(selected.locate_file(records[0]))
@@ -682,7 +685,7 @@ def test_transitive_platform_and_worker_environment_are_required() -> None:
         assert sources["distribution/METADATA"] == hashlib.sha256(metadata_bytes).hexdigest()
         metadata = BytesParser().parsebytes(metadata_bytes)
         assert metadata.get_all("Name") == ["research-project-template"]
-        assert metadata.get_all("Version") == ["4.4.0"]
+        assert metadata.get_all("Version") == [PLATFORM_VERSION]
         assert metadata.get_all("Requires-Python") == [">=3.12"]
         requirements = metadata.get_all("Requires-Dist")
         assert requirements

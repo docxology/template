@@ -115,19 +115,13 @@ class PDFiumRuntimeAdmission:
 
         remaining(self.deadline)
         validate_runtime_owner(self)
-        self.source.verify_correspondence(
+        with self.source._correspondence_guard(
             self.source.reference,
             self.source.bindings.current_root,
             self.source.current_source_reader,
             self.deadline,
-        )
-        after = observe_runtime_data(self, loaded=loaded)
-        self.source.verify_correspondence(
-            self.source.reference,
-            self.source.bindings.current_root,
-            self.source.current_source_reader,
-            self.deadline,
-        )
+        ):
+            after = observe_runtime_data(self, loaded=loaded)
         remaining(self.deadline)
         return after
 

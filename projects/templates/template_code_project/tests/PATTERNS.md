@@ -16,8 +16,8 @@ Every test must exercise real algorithms with real data.
 
 For **`src/template_code_project/analysis/`**, **`src/template_code_project/dashboard/dashboard.py`**, **`src/template_code_project/figures/`**, and **`src/template_code_project/core/manuscript_variables.py`** only:
 
-- **`pytest.MonkeyPatch`** on module attributes (`project_root`, `verify_output_integrity`, `_get_logger`, etc.) — real functions run; I/O boundaries are redirected, not faked
-- **Subprocess import isolation** — block `infrastructure.*` at import time to exercise fallback paths (see `TestImportFallback` in `test_analysis_coverage.py` and `test_manuscript_variables.py`)
+- **Owned filesystem and environment controls** — use project-root contexts, real temporary files, and real permission/path failures; do not substitute dependency functions.
+- **Real subprocess import isolation** — execute the actual SDK adapter with `-I -S`, without site packages, and require a missing-SDK failure (see `TestRequiredSdk` in `test_analysis_coverage.py`). Do not replace the import hook.
 
 Canonical orchestration-branch examples: [`test_analysis_coverage.py`](analysis/test_analysis_coverage.py), [`test_dashboard_config.py`](dashboard/test_dashboard_config.py).
 

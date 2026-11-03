@@ -50,15 +50,12 @@ import matplotlib.pyplot as plt
 # 3. Project source imports (via pythonpath)
 from template_code_project.core.optimizer import gradient_descent, OptimizationResult
 
-# 4. Infrastructure imports (graceful fallback)
-try:
-    from infrastructure.core.logging.utils import get_logger
-    logger = get_logger(__name__)
-except ImportError:
-    logger = logging.getLogger(__name__)
+from infrastructure.core.logging.utils import get_logger
+
+logger = get_logger(__name__)
 ```
 
-- Always handle missing infrastructure gracefully with `try/except ImportError`
+- Let missing required SDK imports fail; do not report successful partial execution.
 - Use explicit imports (not `from module import *`)
 
 ## Output Directory Structure

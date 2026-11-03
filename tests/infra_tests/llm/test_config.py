@@ -106,9 +106,10 @@ class TestOllamaClientConfig:
         assert config.timeout > 0
         assert OllamaClientConfig(timeout=30.0).timeout == 30.0
 
-    def test_num_ctx_alias(self):
-        config = OllamaClientConfig(num_ctx=8192)
-        assert config.context_window == 8192
+    def test_client_config_rejects_wire_context_key(self):
+        """The upstream wire key is not a client-configuration field."""
+        with pytest.raises(ValueError, match="unknown keyword arguments"):
+            OllamaClientConfig(num_ctx=8192)
 
     def test_num_ctx_with_context_window_raises(self):
         with pytest.raises(ValueError, match="unknown keyword arguments"):
@@ -135,7 +136,7 @@ class TestOllamaClientConfig:
             ({"OLLAMA_MODEL": "llama3"}, "default_model", "llama3"),
             ({"LLM_MAX_TOKENS": "4096"}, "max_tokens", 4096),
             ({"LLM_TEMPERATURE": "0.3"}, "temperature", 0.3),
-            ({"LLM_NUM_CTX": "65536"}, "context_window", 65536),
+            ({"LLM_CONTEXT_WINDOW": "65536"}, "context_window", 65536),
             ({"LLM_REVIEW_TIMEOUT": "600.0"}, "review_timeout", 600.0),
             ({"LLM_SEED": "42"}, "seed", 42),
         ],
@@ -156,6 +157,8 @@ class TestOllamaClientConfig:
         monkeypatch.setenv("LLM_NUM_CTX", "65536")
         config = OllamaClientConfig.from_env()
         assert config.context_window == 32768
+        monkeypatch.delenv("LLM_CONTEXT_WINDOW")
+        assert OllamaClientConfig.from_env().context_window == 131072
 
     def test_from_env_invalid_num_ctx_uses_default(self, monkeypatch):
         monkeypatch.setenv("LLM_NUM_CTX", "bad")

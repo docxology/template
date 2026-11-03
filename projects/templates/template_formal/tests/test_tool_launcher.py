@@ -8,11 +8,13 @@ import py_compile
 import shutil
 import subprocess
 import sys
+import tomllib
 from pathlib import Path
 
 import pytest
 
 PROJECT = Path(__file__).resolve().parents[1]
+PLATFORM_VERSION = tomllib.loads((PROJECT / "pyproject.toml").read_text())["tool"]["template"]["platform_version"]
 
 
 def _project(destination: Path) -> Path:
@@ -22,6 +24,7 @@ def _project(destination: Path) -> Path:
             destination / leaf,
             ignore=shutil.ignore_patterns("__pycache__", ".lake", "states", "*TTrace*"),
         )
+    shutil.copyfile(PROJECT / "pyproject.toml", destination / "pyproject.toml")
     return destination
 
 
@@ -81,7 +84,7 @@ def test_actual_canonical_shell_ignores_timestamp_valid_poisoned_tool_cache(tmp_
     assert payload["tool_launcher"] == {
         "execution_binding": "preimport-audited-fresh-prefix",
         "controller_execution_binding": "fresh-prefix",
-        "platform_version": "4.4.0",
+        "platform_version": PLATFORM_VERSION,
     }
     assert not marker.exists() and source.read_bytes() == original
     assert not (root / "formal/lean/.lake").exists()

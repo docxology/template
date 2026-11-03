@@ -296,16 +296,10 @@ def _project_analysis_from_workspace(child: Path) -> ProjectAnalysis | None:
 
 #: Typed program subfolders under ``projects/``. The public exemplars are
 #: git-tracked under ``projects/templates/``; ``active/`` holds the hot-seat
-#: rendered set; ``working``/``ongoing``/``archive`` hold non-rendered
+#: rendered set; ``working``/``archive`` hold non-rendered
 #: rotating work (symlinked from the private lifecycle repo). Keep in sync with
-#: ``infrastructure.project.discovery.NON_RENDERED_SUBDIRS`` (the latter four).
+#: ``infrastructure.project.discovery.NON_RENDERED_SUBDIRS``.
 _TYPED_PROJECT_SUBDIRS = frozenset({"templates", "active", "working", "archive"})
-
-#: On-disk directory name (leaf) of this meta-project's workspace. It is now
-#: git-tracked at ``projects/templates/template_template/``, so the leaf matches
-#: :data:`META_PROJECT_PUBLIC_NAME` exactly; the rename mapping below is therefore
-#: a no-op kept for back-compat with callers that key on the staging name.
-META_PROJECT_DIR_NAME = "template_template"
 
 #: Public identity of this meta-project. The ``src/`` package is named
 #: ``template_template`` and the project is published as a public exemplar
@@ -364,10 +358,6 @@ def discover_projects(repo_root: Path, *, public_only: bool = True) -> list[Proj
             analysis = _project_analysis_from_workspace(child)
             if analysis is None:
                 continue
-            # No-op under the git-tracked layout (leaf == public name); retained so
-            # any future staging directory name still maps to the public identity.
-            if analysis.name == META_PROJECT_DIR_NAME:
-                analysis.name = META_PROJECT_PUBLIC_NAME
             combined[analysis.name] = analysis
 
     projects = sorted(combined.values(), key=lambda p: p.name)

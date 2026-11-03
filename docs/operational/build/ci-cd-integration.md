@@ -22,24 +22,24 @@ Upstream CI is **`name: CI`** in [`.github/workflows/ci.yml`](../../../.github/w
 
 | Doc | Contents |
 | --- | --- |
-| [`.github/AGENTS.md`](../../../.github/AGENTS.md) | Triggers, concurrency, dependency groups (`test-infra` vs `test-project`), per-project coverage semantics, macOS infra `continue-on-error`, stale / Dependabot / release summaries |
-| [`.github/workflows/AGENTS.md`](../../../.github/workflows/AGENTS.md) | Per-job steps: `lint`, `verify-no-mocks`, matrices, conditional `fep-lean`, `validate`, `security`, `performance` |
+| [`.github/AGENTS.md`](../../../.github/AGENTS.md) | Functional CI, optional hardening, coverage, acceptance, and release workflow boundaries |
+| [`.github/workflows/AGENTS.md`](../../../.github/workflows/AGENTS.md) | Current workflow jobs, dependency preparation, and gate requirements |
 | [`.github/workflows/README.md`](../../../.github/workflows/README.md) | Job graph synopsis and reproduce-CI shell snippets |
 
 High-signal behavioral anchors:
 
-1. **`test-infra`** — `uv sync`; Ubuntu × Python 3.10–3.14 plus a macOS 3.14 smoke; **≥ 60 %** on `infrastructure/`. The default groups include the deterministic public-exemplar dependencies. pytest uses **`continue-on-error: true` on macOS**; treat **Ubuntu matrix legs as the authoritative merge gate**.
-2. **`test-project`** — Adds `--group discopy`. Runs one matrix job per public exemplar from [`.github/workflows/ci.yml`](../../../.github/workflows/ci.yml), across Python 3.10 and 3.14, and invokes `scripts/pipeline/stage_01_test.py --project <name> --project-only` — slow tests deselected on push/PR, `--include-slow` retained on scheduled/dispatched cells (CI-SLOWMARK-SHARD-1; no project test is slow-marked today, the gate keeps any future one off the PR path). Each job enforces that exemplar's own **≥ 90%** `src/` coverage floor; there is no combined-union project coverage run in current CI.
-3. **`fep-lean`** — Runs **only when** the `detect` job reports `needs.detect.outputs.fep_lean == 'true'`. The workflow deliberately avoids job-level `hashFiles()` because that context is invalid in a job `if:`.
-4. **Manual CI runs** — `workflow_dispatch` on **CI has no workflow inputs**. (The **`release`** workflow differs: **`workflow_dispatch`** expects a **`tag`** input.)
+1. **Functional CI** — Main pushes, pull requests, and manual dispatch run on Linux with Python 3.14. `actionlint`, `lint`, and `detect-projects` prepare the checks; `test-infra` runs the selected functional shards and `test-contract` runs the selected complete contract modules. Documentation-only changes select documentation contracts.
+2. **`test-project`** — Each selected public exemplar builds its standalone wheel and runs the focused behavioral tests declared in `.github/project-smoke.json`. Documentation-only changes skip this lane. These checks do not measure full-suite coverage or establish native release acceptance.
+3. **Coverage and hardening** — Manual CI dispatch accepts an optional exact public `coverage-project` and calls `exemplar-coverage.yml` for that project's locked release-profile coverage. The **Public exemplar coverage** workflow can measure the full public roster. The broader cross-version/full-suite matrix and conditional `fep-lean` checks live in the separate, manual-only `hardening.yml`; formal release acceptance remains in `platform-required-acceptance.yml`.
+4. **`CI Gate`** — The aggregate gate requires the selected functional lanes to succeed. It accepts the project-smoke skip only for documentation-only selection and the optional coverage skip only when coverage was not requested. The separate **`release`** workflow is manual-only and requires `tag`, `acceptance_run_id`, `acceptance_artifact_id`, and `acceptance_receipt_sha256` for an exact-tag acceptance handoff.
 
-Other automation: **[`stale.yml`](../../../.github/workflows/stale.yml)**, **`dependabot.yml`**, **`release.yml`** (`v*.*.*` tags + tagged dispatch) — see [`.github/AGENTS.md`](../../../.github/AGENTS.md).
+Other automation includes **[`stale.yml`](../../../.github/workflows/stale.yml)**, the [Dependabot configuration](../../../.github/dependabot.yml), and **[`release.yml`](../../../.github/workflows/release.yml)** (manual dispatch with the four required acceptance inputs above). See [`.github/AGENTS.md`](../../../.github/AGENTS.md).
 
 ## GitHub Actions Setup
 
 ### Minimal single-job illustration (forks only)
 
-Below is intentionally **narrow**—useful as a scaffold for forks. It **does not** replace [`.github/workflows/ci.yml`](../../../.github/workflows/ci.yml) **(lint, no-mocks scan, multi-job DAG, manuscripts, Bandit/pip-audit, performance import gate, matrices).**
+Below is a single-job scaffold for forks. The repository workflow in [`.github/workflows/ci.yml`](../../../.github/workflows/ci.yml) also requires lint/types, source and security guards, selected infrastructure contracts, standalone project builds, focused project tests, and its aggregate gate.
 
 ```yaml
 name: CI (minimal illustration)
@@ -73,7 +73,7 @@ jobs:
 
 ## Automated Testing
 
-This template separates **Layer 1** (`tests/infra_tests/` → `--cov=infrastructure`) from **Layer 2** (per-project `projects/<name>/tests/`). CI runs each public exemplar in its own matrix job; the local `scripts/pipeline/stage_01_test.py --project-only --all-projects` path runs each project with an isolated coverage datafile and combines the results after all project gates pass. Patterns below are generic; parity with Actions is [.github/workflows/README.md](../../../.github/workflows/README.md) “Reproduce CI locally”.
+This template separates **Layer 1** (`tests/infra_tests/` → `--cov=infrastructure`) from **Layer 2** (per-project `projects/<name>/tests/`). Functional CI selects focused checks; the manual coverage and hardening workflows run the broader measurements. The local `scripts/pipeline/stage_01_test.py --project-only --all-projects` path runs each project with an isolated coverage datafile and combines results after all project gates pass. The examples below are generic; see [.github/workflows/README.md](../../../.github/workflows/README.md) for the current workflow commands and boundaries.
 
 ### Test Execution
 
@@ -112,7 +112,7 @@ For a single-package layout, **`pytest-cov`** can enforce gates directly:
     --cov-fail-under=90
 ```
 
-**This repo** uses isolated per-project CI jobs for public exemplars. The local all-project orchestrator runs each project in its own subprocess/datafile, then combines the files and applies the combined-union `coverage report --fail-under=75` gate for release-style sweeps. Per-project standalone gates remain **90%**. See [.github/workflows/AGENTS.md](../../../.github/workflows/AGENTS.md).
+**This repo** measures each selected public exemplar independently in the manual coverage workflow and enforces its own **90%** floor. Functional project smoke has no full-suite coverage claim. The local all-project orchestrator uses separate subprocesses/datafiles, then combines them and applies the combined-union `coverage report --fail-under=75` gate for release-style sweeps. See [.github/workflows/AGENTS.md](../../../.github/workflows/AGENTS.md).
 
 ### Test Matrix
 
@@ -209,7 +209,7 @@ Replace `{name}` with a discovered project slug (consult [`docs/_generated/activ
 
 ### Release workflow (**hypothetical** third-party snippet)
 
-Upstream shipping uses [.github/workflows/release.yml](../../../.github/workflows/release.yml) (**tag **`v*.*.*`**, **`softprops/action-gh-release`**). The excerpt below sketches an **alternate** CI pattern reacting to **`release: published`**—not what this repo’s file does:
+Repository publication uses [.github/workflows/release.yml](../../../.github/workflows/release.yml), invoked only by manual dispatch with `tag`, `acceptance_run_id`, `acceptance_artifact_id`, and `acceptance_receipt_sha256`. It verifies the selected tag and exact acceptance handoff before publication. The excerpt below is a fork-specific illustration reacting to **`release: published`**:
 
 ```yaml
 name: Release (illustrative)
@@ -343,7 +343,7 @@ Upstream CI relies on **`astral-sh/setup-uv` `enable-cache`** against **`**/uv.l
 
 1. **Separate jobs** - Test, build, and deploy separately
 2. **Use dependencies** - `needs:` to order jobs
-3. **Fail fast** - Stop on first failure (except where `continue-on-error` is deliberate—see infra macOS semantics above)
+3. **Preserve failures** - Make every required lane report its original outcome and make the aggregate gate fail when a required lane fails
 4. **Parallel execution** - Run independent jobs in parallel
 
 ### Error Handling
@@ -368,10 +368,10 @@ Upstream CI relies on **`astral-sh/setup-uv` `enable-cache`** against **`**/uv.l
 
 **Solution:**
 
-- Match Python **`matrix`** / **uv sync** groups to [.github/workflows/AGENTS.md](../../../.github/workflows/AGENTS.md)
-- **`PYTHONPATH=.`** is set for project pytest in **`test-project`**; mirror locally if imports fail
-- macOS infra failures may be **`continue-on-error`**—check Ubuntu logs first
-- Rotate **active `projects/`** roster; consult [`docs/_generated/active_projects.md`](../../_generated/active_projects.md)
+- Match the selected workflow’s Python runtime, locked dependency groups, and preparation steps from [.github/workflows/AGENTS.md](../../../.github/workflows/AGENTS.md)
+- Reproduce the failing job’s actual command: functional project smoke and manual full-suite coverage use different runners
+- Inspect the original failed lane and aggregate `CI Gate` result; functional CI runs on Linux
+- Confirm the selected canonical public project name against [`docs/_generated/active_projects.md`](../../_generated/active_projects.md)
 
 #### Issue: PDF generation fails
 
@@ -386,9 +386,9 @@ Upstream CI relies on **`astral-sh/setup-uv` `enable-cache`** against **`**/uv.l
 
 **Solution:**
 
-- XML path names differ (`coverage-infra.xml`, `coverage-project.xml` upstream)
-- **`CODECOV_TOKEN`** optional on public repos
-- Upload gated to Ubuntu + Python **3.14** matrix cells upstream
+- For the manual exemplar-coverage workflow, inspect its selected project, original measurement logs, and uploaded source-bound result artifact
+- For optional hardening Codecov uploads, check the exact XML path and upload condition in `hardening.yml`
+- **`CODECOV_TOKEN`** is optional on public repositories; an upload result does not replace the underlying coverage gate
 
 ### Debugging
 
@@ -417,7 +417,7 @@ Treat [`.github/workflows/ci.yml`](../../../.github/workflows/ci.yml) plus [`.gi
 
 ### Example 2: Scheduled Builds
 
-Upstream CI already fires weekly (`cron`) for CVE-ish drift; forks can add schedules similarly:
+Functional CI and hardening have no scheduled trigger. Forks can add an explicit schedule when they intend to run it:
 
 ```yaml
 on:
@@ -428,7 +428,7 @@ on:
 
 ### Example 3: Multi-Platform Testing
 
-Upstream tests **Ubuntu + macOS** (Linux gate authoritative for infra flakes). Extend with **Windows** only if tooling supports:
+Functional CI uses Linux. The optional manual hardening workflow declares its cross-platform matrix. Forks can define a broader matrix when each platform has the required tooling:
 
 ```yaml
 strategy:

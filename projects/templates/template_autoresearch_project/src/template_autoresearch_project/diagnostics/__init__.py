@@ -1,4 +1,4 @@
-"""Compatibility exports for AutoResearch diagnostic payload builders."""
+"""Public exports for AutoResearch diagnostic payload builders."""
 
 from __future__ import annotations
 

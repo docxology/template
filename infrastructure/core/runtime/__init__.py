@@ -1,4 +1,4 @@
-"""Lazy compatibility exports for runtime infrastructure."""
+"""Lazy public exports for runtime infrastructure."""
 
 from __future__ import annotations
 

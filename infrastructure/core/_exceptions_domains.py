@@ -1,7 +1,7 @@
 """Domain-specific exception classes: literature, LLM, security, rendering, publishing.
 
 Extracted from exceptions.py for single-responsibility. Import via exceptions.py
-for backwards compatibility.
+through the declared public API.
 """
 
 from infrastructure.core._exceptions_core import TemplateError
@@ -61,23 +61,7 @@ class ContextLimitError(LLMError):
 
 
 class SecurityViolation(TemplateError):
-    """Raised when a security constraint is violated.
-
-    **Catch contract:** API boundaries and callers in infrastructure should catch
-    ``SecurityViolation`` — this catches both ``SecurityViolation`` and its subclass
-    ``SecurityError``, so a single ``except SecurityViolation`` handles both.
-    """
-
-    pass
-
-
-class SecurityError(SecurityViolation):
-    """Security violation in LLM input sanitization.
-
-    Subclass of SecurityViolation kept for backwards compatibility with call
-    sites that catch SecurityError specifically. Prefer catching SecurityViolation
-    at higher layers — it is the canonical catch target and catches this class too.
-    """
+    """Raised when a security constraint or input-sanitization rule is violated."""
 
     pass
 

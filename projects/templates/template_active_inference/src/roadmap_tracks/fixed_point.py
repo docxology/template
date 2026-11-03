@@ -211,13 +211,12 @@ def _observed_output_rels(root: Path) -> list[str]:
     from manuscript.sheaf.semantic_maps import ARTIFACT_PRODUCERS
     from roadmap_tracks.sheaf_tracks_builders_formal import BLOCKED_SCOPE_SENTINELS
     from roadmap_tracks.sheaf_tracks_builders_release import RELEASE_BUNDLE_REQUIRED_ARTIFACTS
-    from roadmap_tracks.sheaf_tracks_registry import CANONICAL_ARTIFACTS, LEGACY_ARTIFACTS
+    from roadmap_tracks.sheaf_tracks_registry import CANONICAL_ARTIFACTS
 
     rels = set(REQUIRED_OUTPUTS)
     rels.update(ARTIFACT_PRODUCERS)
     rels.update(VARIABLE_ARTIFACTS.values())
     rels.update(CANONICAL_ARTIFACTS.values())
-    rels.update(LEGACY_ARTIFACTS)
     rels.update(BLOCKED_SCOPE_SENTINELS)
     rels.update(RELEASE_BUNDLE_REQUIRED_ARTIFACTS)
 

@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import sys
 from pathlib import Path
 
 
@@ -125,7 +126,8 @@ def test_measure_test_summary_on_synthetic_passing_project(tmp_path):
     (tmp_path / "src" / "template_autopoiesis" / "adder.py").write_text("def add(a, b):\n    return a + b\n")
     (tmp_path / "tests").mkdir()
     (tmp_path / "tests" / "test_adder.py").write_text(
-        "from template_autopoiesis.adder import add\n\n\ndef test_add():\n    assert add(1, 2) == 3\n"
+        "import sys\nfrom template_autopoiesis.adder import add\n\n\ndef test_add():\n    assert add(1, 2) == 3\n"
+        f"    assert sys.executable == {sys.executable!r}\n"
     )
     test_count, coverage_pct = measure_test_summary(tmp_path)
     assert test_count == 1

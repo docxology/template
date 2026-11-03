@@ -50,7 +50,7 @@ them; they are caught (if at all) by other gates or not at all:
   `pyproject.toml`; it does not assert that an exemplar's floor is `>= 90`.
 - **Extended mock primitives in project tests.** The drift mock check uses a
   narrower pattern set than `infrastructure.validation.output.no_mock_enforcer`
-  (`validate_no_mocks`). The authoritative, broadest no-mocks enforcement is
+  (`scan_lexical_mock_policy`). The authoritative, broadest no-mocks enforcement is
   `scripts/audit/verify_no_mocks.py`, which scans the repo `tests/` tree **plus**
   every public exemplar's `tests/` directory.
 - **External URL liveness / markdown anchors.** `cross_link_lint` strips

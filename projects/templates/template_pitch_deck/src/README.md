@@ -19,3 +19,5 @@ Content-domain logic only — no layout/drawing code (that lives in
 | `render_orchestration.py` | ties audit → diligence-gate → standalone-pages → QR-attach → render into one call per deck length |
 
 See `../AGENTS.md` for the full architecture.
+
+Citation audit functions require an existing repository root and verify repo-relative sources against that tree. Absolute URL citations retain their declared links without a network reachability claim.

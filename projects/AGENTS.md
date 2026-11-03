@@ -121,12 +121,12 @@ Projects under `projects/templates/` (tracked exemplars) and `projects/active/` 
 - **Validated** by `scripts/pipeline/stage_04_validate.py`
 - **Copied** to `output/<subfolder>/{name}/` by `scripts/pipeline/stage_05_copy.py`
 
-Private lifecycle projects normally live in an external private repository. The simplified sidecar uses `working/` and `archive/` by default: `working/*` is symlinked into `projects/working/`, and `archive/*` into `projects/archive/`, for explicit targeted work. Optional legacy `active/*` is still recognized if present; optional `active/*` is symlinked into `projects/active/` before discovery/rendering. Preview with
+Private lifecycle projects normally live in an external private repository. The simplified sidecar uses `working/` and `archive/` by default: `working/*` is symlinked into `projects/working/`, and `archive/*` into `projects/archive/`, for explicit targeted work. Optional `active/*` is symlinked into `projects/active/` before discovery/rendering. Preview with
 `uv run python -m infrastructure.orchestration link-projects --dry-run`;
 override the private root with `TEMPLATE_PRIVATE_PROJECTS_ROOT` or
 `.private_projects_root`; disable one auto-sync with `TEMPLATE_SKIP_LINK_SYNC=1`.
 
-#### ❌ **Non-Rendered Projects (`working/`, `archive/`, optional legacy mirrors)**
+#### ❌ **Non-Rendered Projects (`working/`, `archive/`)**
 
 Projects under `projects/working/` and `projects/archive/` are non-rendered by default:
 
@@ -658,7 +658,7 @@ flowchart LR
 
 ## Repository standards compliance
 
-Project trees follow the template discipline described in the root **[`.cursorrules`](../.cursorrules)** file (Cursor / IDE agents) and the expanded norms under **[`docs/rules/`](../docs/rules/)** (testing, code style, logging, and related guides — not a `.cursorrules/` directory).
+Project trees follow the template discipline described in the root **[`AGENTS.md`](../AGENTS.md)** file (shared agent contract) and the expanded norms under **[`docs/rules/`](../docs/rules/)** (testing, code style, logging, and related guides).
 
 ### ✅ **Testing Standards Compliance**
 
@@ -1083,7 +1083,7 @@ infrastructure compliance:
 
 ### 📋 **Compliance Framework**
 
-- **Repository standards**: [`.cursorrules`](../.cursorrules) and [`docs/rules/`](../docs/rules/) for testing, documentation, type hints, error handling, and logging
+- **Repository standards**: [`AGENTS.md`](../AGENTS.md) and [`docs/rules/`](../docs/rules/) for testing, documentation, type hints, error handling, and logging
 - **Quality Gates**: Automated coverage checks, documentation validation, type safety verification
 - **Operational Patterns**: Thin orchestrator scripts, infrastructure utility imports, project isolation
 

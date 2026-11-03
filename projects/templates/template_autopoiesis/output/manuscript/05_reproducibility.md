@@ -3,7 +3,7 @@
 Reproducibility is not a claim this manuscript makes about itself; it is a
 property the code enforces on every run. Every number that appears below the
 Determinism heading — a1f3e428cf1fb3e3, 42, 578,
-92.18 — is a token substituted at render time by
+91.88 — is a token substituted at render time by
 `src/template_autopoiesis/manuscript/manuscript_variables.py::generate_variables()` from a live grammar load
 and a genuine current pytest measurement consumed or produced by
 `src/template_autopoiesis/manuscript/manuscript_variables.py::measure_test_summary()`.

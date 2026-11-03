@@ -1,4 +1,4 @@
-"""Deep modules remain required, isolated, and complementary to legacy smoke."""
+"""Deep modules remain required, isolated, and complementary to baseline smoke."""
 
 from pathlib import Path
 
@@ -21,13 +21,13 @@ from infrastructure.core.testing.ci_infra import (
 ROOT = Path(__file__).resolve().parents[3]
 
 
-def test_deep_owner_files_are_complementary_without_removing_legacy_smoke() -> None:
+def test_deep_owner_files_are_complementary_without_removing_baseline_smoke() -> None:
     heavy = "tests/infra_tests/project/test_public_reference.py"
-    legacy = "tests/infra_tests/project/test_public_source_body_admission.py"
+    baseline = "tests/infra_tests/project/test_public_source_body_admission.py"
     routine = "tests/infra_tests/core/test_ci_selection.py"
-    files = (heavy, legacy, routine)
-    assert contract_files(files, (legacy,)) == (heavy,)
-    plan = {"infra_shards": [[legacy], [routine]], "contract_modules": [heavy]}
+    files = (heavy, baseline, routine)
+    assert contract_files(files, (baseline,)) == (heavy,)
+    plan = {"infra_shards": [[baseline], [routine]], "contract_modules": [heavy]}
     validate_shards(combined_groups(plan), files)
     assert combined_groups(plan)[-1] == [heavy]
 
@@ -46,6 +46,9 @@ def test_required_contract_job_keeps_whole_root_budget_and_explicit_empty_outcom
     assert _functional_selection(ROOT, is_contract=True) == {"marker_expression": "", "keyword_expression": ""}
     assert "not slow" in _functional_selection(ROOT)["marker_expression"]
     assert contract["strategy"]["max-parallel"] == 8
+    assert "if" not in contract
+    assert "TEMPLATE_CI_XDIST" not in str(workflow)
+    assert set(contract_preparation("none")) == {"documents", "tex", "browser"}
     assert contract["steps"][0]["if"] == "matrix.shard == -1"
     assert any(step.get("if") == "always() && matrix.shard != -1" for step in contract["steps"])
     pdf_modules = (
@@ -69,7 +72,6 @@ def test_required_contract_job_keeps_whole_root_budget_and_explicit_empty_outcom
         preparation = contract_preparation(module)
         assert preparation["documents"] == "converter"
         assert preparation["tex"] is True and preparation["browser"] is False
-        assert type(preparation["workers"]) is int and 0 <= preparation["workers"] <= 4
     for module in (
         "tests/infra_tests/reporting/test_native_browser_oracles.py",
         "tests/infra_tests/reporting/test_native_browser_scientific_structure.py",
@@ -77,16 +79,13 @@ def test_required_contract_job_keeps_whole_root_budget_and_explicit_empty_outcom
         preparation = contract_preparation(module)
         assert preparation["documents"] == "converter"
         assert preparation["tex"] is False and preparation["browser"] is True
-        assert type(preparation["workers"]) is int and 0 <= preparation["workers"] <= 4
     assert contract_preparation("tests/infra_tests/project/test_root_wheel_typing.py") == {
         "documents": "none",
         "tex": False,
         "browser": False,
-        "workers": 0,
     }
     preparation = contract_preparation("none")
     assert (preparation["documents"], preparation["tex"], preparation["browser"]) == ("none", False, False)
-    assert preparation["workers"] == 0
     assert (
         contract_preparation("tests/infra_tests/project/test_public_acceptance_auxiliary.py")["documents"] == "native"
     )

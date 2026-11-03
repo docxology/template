@@ -12,7 +12,7 @@ from collections.abc import Iterator
 import pytest
 
 
-@pytest.fixture(scope="module", autouse=True)
+@pytest.fixture(scope="session", autouse=True)
 def explicit_disposable_build_epoch() -> Iterator[None]:
     """Supply an explicit reference clock for non-Git test projects.
 

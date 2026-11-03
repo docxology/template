@@ -10,7 +10,6 @@ from typing import Any
 import requests
 
 from template_literature_meta_analysis.knowledge_graph.llm_config import LLMConfig
-from template_literature_meta_analysis.knowledge_graph.llm_prompts import _SYSTEM_PROMPT
 
 logger = logging.getLogger(__name__)
 
@@ -19,26 +18,23 @@ def call_ollama(
     prompt: str,
     config: LLMConfig,
     *,
-    system_prompt: str | None = None,
+    system_prompt: str,
 ) -> tuple[str, dict[str, float | int]]:
     """Send *prompt* to Ollama ``/api/generate`` and return text + metadata.
 
     Args:
         prompt: The user-turn prompt text.
         config: LLM extraction configuration (model, temperature, retries, ...).
-        system_prompt: Optional system-turn prompt. When ``None`` (default),
-            falls back to :data:`knowledge_graph.llm_prompts._SYSTEM_PROMPT`
-            for backward compatibility with the knowledge-graph extraction
-            pipeline. Callers with their own system prompt (e.g. the
-            reproducibility module's workflow-graph schema) must pass it
-            explicitly — the default is *not* a generic prompt and will
-            produce wrong results for a different extraction task.
+        system_prompt: Required system-turn prompt for the caller's extraction
+            task and response schema.
     """
+    if not isinstance(system_prompt, str) or not system_prompt.strip():
+        raise ValueError("system_prompt must be a non-empty string")
     url = f"{config.base_url}/api/generate"
     payload = {
         "model": config.model,
         "prompt": prompt,
-        "system": system_prompt if system_prompt is not None else _SYSTEM_PROMPT,
+        "system": system_prompt,
         "stream": False,
         "options": {"temperature": config.temperature, "num_predict": config.max_tokens},
     }

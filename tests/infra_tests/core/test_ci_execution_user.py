@@ -35,6 +35,7 @@ def test_environment_carries_declared_runtime_data_without_credentials() -> None
     values = {
         "GITHUB_SHA": "a" * 40,
         "TEMPLATE_FORMAL_TLC_JAR": "/tmp/template-fixtures/tla2tools.jar",
+        "TEMPLATE_TEST_PDFIUM_WHEEL": "/tmp/template-pdfium-wheel-owned/provider.whl",
         "UV_FROZEN": "true",
         "UV_PYTHON_INSTALL_DIR": "/tmp/runner-temp/uv-python-dir",
         "GITHUB_TOKEN": "private-token",
@@ -45,7 +46,14 @@ def test_environment_carries_declared_runtime_data_without_credentials() -> None
         "HOME": "/private/original-home",
     }
     assert _environment(values) == {
-        key: values[key] for key in ("GITHUB_SHA", "TEMPLATE_FORMAL_TLC_JAR", "UV_FROZEN", "UV_PYTHON_INSTALL_DIR")
+        key: values[key]
+        for key in (
+            "GITHUB_SHA",
+            "TEMPLATE_FORMAL_TLC_JAR",
+            "TEMPLATE_TEST_PDFIUM_WHEEL",
+            "UV_FROZEN",
+            "UV_PYTHON_INSTALL_DIR",
+        )
     }
     with pytest.raises(ValueError, match="invalid runtime DATA"):
         _environment({"SHARD": "1\nGITHUB_TOKEN=secret"})
@@ -67,6 +75,17 @@ def test_physical_paths_and_descriptor_reads_refuse_real_parent_symlinks(tmp_pat
         _physical(Path("relative"))
     temporary = root / "runner-temp"
     temporary.mkdir()
+    wheel_directory = temporary / "template-pdfium-wheel-owned"
+    wheel_directory.mkdir()
+    wheel = wheel_directory / "provider.whl"
+    wheel.write_bytes(b"Owned transport DATA, not an installed provider")
+    projected = _environment({"TEMPLATE_TEST_PDFIUM_WHEEL": str(wheel)})
+    wheel_environment, _, wheel_assets, wheel_python = _tool_assets(
+        projected, ["/usr/bin"], temporary, temporary / "template-ci-execution"
+    )
+    assert wheel_environment["TEMPLATE_TEST_PDFIUM_WHEEL"] == str(wheel)
+    assert wheel_assets == {wheel_directory} and wheel_python is None
+    assert _tool_entries(wheel_assets, wheel_python, time.monotonic() + 10)
     managed = temporary / "uv-python-dir"
     environment, selected, assets, admitted = _tool_assets(
         {"UV_PYTHON_INSTALL_DIR": str(managed)},

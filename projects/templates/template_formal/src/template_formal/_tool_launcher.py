@@ -12,6 +12,7 @@ import math
 import sys
 import tempfile
 import time
+import tomllib
 from pathlib import Path
 
 
@@ -131,6 +132,14 @@ def _discard_promoted_receipt(arguments: argparse.Namespace) -> None:
 def _launch(arguments: argparse.Namespace, deadline: float) -> int:
     """Reuse the platform supervisor and retain its final custody/exit result."""
     project_source = Path(__file__).absolute().parents[1]
+    try:
+        declaration = tomllib.loads((arguments.project_root / "pyproject.toml").read_text(encoding="utf-8"))
+        required = declaration["tool"]["template"]["platform_version"]
+        if not isinstance(required, str) or not required.strip():
+            raise ValueError("platform_version must be a non-empty string")
+    except (OSError, ValueError, KeyError, TypeError) as error:
+        print(f"Invalid Formal platform declaration: {error}", file=sys.stderr)
+        return 2
     with tempfile.TemporaryDirectory(prefix="template-formal-launcher-") as directory:
         scratch = Path(directory).resolve()
         controller_prefix = scratch / "controller-bytecode"
@@ -159,8 +168,8 @@ def _launch(arguments: argparse.Namespace, deadline: float) -> int:
             platform_version = version("research-project-template")
         except PackageNotFoundError:
             platform_version = ""
-        if platform_version != "4.4.0":
-            print("Formal tool launcher blocked: exact platform4.4.0 is required", file=sys.stderr)
+        if platform_version != required:
+            print(f"Formal tool launcher blocked: exact platform {required} is required", file=sys.stderr)
             return 75
         if arguments.receipt is not None:
             try:

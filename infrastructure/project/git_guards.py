@@ -63,22 +63,6 @@ ALLOWED_PROJECTS_TOPLEVEL_FILES: frozenset[str] = frozenset(
 )
 
 
-class _ExplicitToplevelAllowlist:
-    """`.match()`-compatible shim over the explicit nav-doc allowlist.
-
-    Preserves the historical ``ALLOWED_PROJECTS_TOPLEVEL.match(path)`` call site
-    in :mod:`infrastructure.project.codegraph` while swapping the permissive
-    wildcard regex for a closed set. Returns a truthy object on an exact match,
-    ``None`` otherwise — matching ``re.Pattern.match`` truthiness semantics.
-    """
-
-    def match(self, path: str) -> str | None:
-        """Process match."""
-        return path if path in ALLOWED_PROJECTS_TOPLEVEL_FILES else None
-
-
-ALLOWED_PROJECTS_TOPLEVEL = _ExplicitToplevelAllowlist()
-
 ALWAYS_GENERATED_ARTIFACT_PATTERNS: tuple[str, ...] = (
     ".codegraph",
     ".codegraph/*",

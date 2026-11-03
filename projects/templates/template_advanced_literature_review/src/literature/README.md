@@ -163,7 +163,7 @@ deduplication decisions can be audited.
 `output/data/literature_evaluation.json` — corpus summary from the stage-07 evaluation harness.
 `output/data/bibliography.bib` — unified BibTeX export from `scripts/09_export_bibliography.py`.
 Corpus size, engine mix, and year range vary per run/topic — see the generated
-`retrieval_report.json` and the manuscript's injected `{{N_ENGINES}}`/`{{CORPUS_SIZE}}`
+`retrieval_report.json` and the manuscript's injected `{{N_ENGINES}}`/`{{RETRIEVED_CORPUS_SIZE}}`
 variables for the authoritative figures of the most recent run, rather than a hand-maintained
 count here.
 

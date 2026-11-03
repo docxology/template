@@ -387,7 +387,7 @@ from infrastructure.publishing import (
 
 result = publish_to_zenodo(metadata, files, access_token)
 assert isinstance(result.doi, str)
-arxiv_package = prepare_arxiv_submission(Path("output/"), metadata)
+arxiv_package = prepare_arxiv_submission(Path("output/"))
 url = create_github_release("v1.0", "Release 1.0", "Notes", files, token, "owner/repo")
 ```
 

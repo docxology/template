@@ -48,6 +48,35 @@ EXCLUDED_DOC_FILENAMES: frozenset[str] = frozenset({"AGENTS.md", "MANUSCRIPT_STA
 # carries a status ledger; it is repository documentation, never a
 # rendered section.
 
+# Destination copies live in ``output/manuscript/``, one level below the project
+# root, so a source-relative ``../output/<path>`` — correct from ``manuscript/`` —
+# names ``output/output/<path>`` there.  The same asset from the destination is
+# ``../<path>``.  Only link/image targets and quoted HTML
+# ``src``/``href``/``data-slide-manifest`` attributes are rebased: source files
+# keep their own relative form, and prose or code spans that document the source
+# path are left verbatim.
+_MARKDOWN_OUTPUT_TARGET_RE = re.compile(r"(?P<open>\]\()\.\./output/(?P<rest>[^)\s]+)")
+_HTML_OUTPUT_ATTR_RE = re.compile(r"(?P<open>\b(?:src|href|data-slide-manifest)=\")\.\./output/(?P<rest>[^\"]+)")
+
+
+def _rebase_output_links_for_destination(text: str) -> str:
+    """Re-express ``../output/<path>`` targets for the ``output/manuscript/`` copy.
+
+    The source manuscript and the destination copy sit at different depths, so a
+    path that is correct in the source is not correct in the copy.  Exactly the
+    project-``output/`` prefix is rebased; every other relative form — including
+    paths that already resolve inside the destination directory — is unchanged.
+
+    Args:
+        text: Resolved markdown text on its way to ``output/manuscript/``.
+
+    Returns:
+        The text with link/image targets and quoted HTML attributes that begin
+        ``../output/`` rewritten to begin ``../``.
+    """
+    text = _MARKDOWN_OUTPUT_TARGET_RE.sub(lambda match: f"{match.group('open')}../{match.group('rest')}", text)
+    return _HTML_OUTPUT_ATTR_RE.sub(lambda match: f"{match.group('open')}../{match.group('rest')}", text)
+
 
 def substitute_manuscript_text(
     text: str,
@@ -91,7 +120,10 @@ def write_resolved_manuscript_tree(
     (``config.yaml``, ``*.bib``) are copied verbatim.
 
     Unresolved tokens are logged as warnings and preserved literally in the
-    output so they remain visible if the rendered PDF is inspected.
+    output so they remain visible if the rendered PDF is inspected.  Relative
+    targets that point into the project's ``output/`` tree (for example
+    ``../output/figures/plot.png``) are re-expressed for the copy's location
+    (``../figures/plot.png``); the source files keep their own form.
 
     The PDF-rendering pipeline prefers ``output/manuscript/`` when it contains
     markdown (see :func:`infrastructure.rendering.pipeline.resolve_manuscript_dir`).
@@ -126,6 +158,7 @@ def write_resolved_manuscript_tree(
             continue
         text = md_file.read_text(encoding="utf-8")
         resolved, unresolved = substitute_manuscript_text(text, variables)
+        resolved = _rebase_output_links_for_destination(resolved)
         if unresolved:
             logger.warning(
                 "Unresolved {{TOKEN}} in %s: %s",
@@ -213,7 +246,9 @@ def hydrate_manuscript_tree(
     ``render(filename, content)`` owns the project's substitution and strictness.
     Source code admits numbered sections and config.yaml/preamble.md/references.bib;
     a manifest records their prior bytes but cannot grant new deletion authority.
-    Legacy numbered sections are removed without a manifest; unknown files stay.
+    Only unchanged files bound by the prior ownership manifest can be removed.
+    Unowned numbered render inputs refuse admission without modifying their bytes.
+    The two enabled transmission bookends belong to the separate render stage.
     Dry runs perform the same validation and never create output directories.
     """
     validate_hydration_paths(project_root)
@@ -286,9 +321,20 @@ def hydrate_manuscript_tree(
                 if hashlib.sha256(content).hexdigest() != previous[path.name]:
                     raise ValueError("stale generated manuscript was edited; refusing removal")
                 stale.append((path, previous[path.name]))
-            elif not manifest_path.exists() and re.fullmatch(r"[0-9]{2}[a-z]?_.+\.md", path.name):
-                content = read_bytes_confined(root, path, max_bytes=_HYDRATION_FILE_BYTES)
-                stale.append((path, hashlib.sha256(content).hexdigest()))
+            elif path.is_file() and path.suffix.lower() == ".md" and path.stem[:1].isdigit():
+                from infrastructure.transmission.transmission_bookends import (
+                    is_transmission_bookend,
+                    transmission_bookends_enabled,
+                )
+
+                # The render stage regenerates these exact reserved filenames
+                # after hydration; ordinary numbered sections have no such owner.
+                if is_transmission_bookend(path) and transmission_bookends_enabled(source / "config.yaml"):
+                    continue
+                raise ValueError(
+                    f"unowned rendered manuscript section {path.name!r}; move it outside "
+                    "output/manuscript or restore its matching source section before retrying hydration"
+                )
     # Re-read through no-follow descriptors before any mutation, including dry runs.
     for name, content in originals.items():
         if read_bytes_confined(root, source / name, max_bytes=_HYDRATION_FILE_BYTES) != content:

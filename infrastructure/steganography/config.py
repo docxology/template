@@ -266,29 +266,16 @@ class SteganographyConfig:
     # ── Factory ───────────────────────────────────────────────────────
 
     @classmethod
-    def from_dict(cls, data: dict[str, Any]) -> "SteganographyConfig":
-        """Build config from a raw dictionary (e.g. parsed YAML section).
-
-        Unknown keys are silently ignored so forward-compatible config files
-        work without errors.
-        """
+    def from_dict(cls, data: dict[str, Any] | None) -> "SteganographyConfig":
+        """Build config from declared canonical fields, rejecting unknown keys."""
         if not data:
             return cls()
 
         known_fields = {f.name for f in cls.__dataclass_fields__.values()}
-        filtered = {k: v for k, v in data.items() if k in known_fields}
-
-        # Normalise shorthand booleans from YAML
-        bool_aliases = {
-            "overlays": "overlays_enabled",
-            "barcodes": "barcodes_enabled",
-            "metadata": "metadata_enabled",
-            "hashing": "hashing_enabled",
-            "encryption": "encryption_enabled",
-        }
-        for alias, canon in bool_aliases.items():
-            if alias in data and canon not in filtered:
-                filtered[canon] = bool(data[alias])
+        unknown = set(data) - known_fields
+        if unknown:
+            raise ValueError(f"Unknown steganography configuration fields: {sorted(unknown)}")
+        filtered = dict(data)
 
         # Handle overlay_color as list → tuple
         if "overlay_color_rgb" in filtered and isinstance(filtered["overlay_color_rgb"], list):

@@ -2,7 +2,7 @@
 
 ## Overview
 
-The `tests/` directory contains tests for the optimization algorithms in `src/`. These tests validate correctness, numerical accuracy, and edge case handling without using mocks - all tests use computations. Orchestration modules may use `pytest.MonkeyPatch` on module attributes per [`PATTERNS.md`](PATTERNS.md).
+The `tests/` directory contains tests for the optimization algorithms in `src/`. These tests validate correctness, numerical accuracy, and edge case handling without using mocks - all tests use computations. Orchestration tests use the real filesystem, project-root contexts, and genuine subprocess isolation per [`PATTERNS.md`](PATTERNS.md).
 
 ## Key Concepts
 

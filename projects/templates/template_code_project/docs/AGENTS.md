@@ -27,7 +27,7 @@ Technical guide for `projects/templates/template_code_project/docs/` — the ope
 
 **Read-first protocol**: AI agents must read `agent_instructions.md` before modifying any project file. Skipping this document is the most common source of errors in this project — agents who skip it tend to: introduce mocks (violating Rule 1), write math in `scripts/` (violating Rule 3), or hardcode numbers in manuscript prose (violating Rule 4 of `style_guide.md`). The consequence of any one violation is a CI failure or a misleading exemplar for future users.
 
-**Architecture isolation**: the **mathematical primitives** in `src/` (`core/optimizer.py`, `core/invariants.py`) are pure logic with no `infrastructure.*` imports; the **orchestration modules** (`analysis/`, `figures/`, `dashboard/dashboard.py`, `core/manuscript_variables.py`) live in `src/` for testability but may import `infrastructure.*` behind try/except fallbacks; `scripts/` is glue (no math); `infrastructure/` is operations (cross-cutting). The dependency arrow remains one-directional: `scripts/` → `src/`; `scripts/` → `infrastructure/`; `tests/` → `src/`. Nothing imports upward. The math-primitive purity is the load-bearing claim: `core/optimizer.py` and `core/invariants.py` can be lifted into any Python environment without the pipeline installed.
+**Architecture isolation**: the **mathematical primitives** in `src/` (`core/optimizer.py`, `core/invariants.py`) are pure logic with no `infrastructure.*` imports; the **orchestration modules** (`analysis/`, `figures/`, `dashboard/dashboard.py`, `core/manuscript_variables.py`) live in `src/` for testability but may import `infrastructure.*` through the declared SDK dependency; `scripts/` is glue (no math); `infrastructure/` is operations (cross-cutting). The dependency arrow remains one-directional: `scripts/` → `src/`; `scripts/` → `infrastructure/`; `tests/` → `src/`. Nothing imports upward. The math-primitive purity is the load-bearing claim: `core/optimizer.py` and `core/invariants.py` can be lifted into any Python environment without the pipeline installed.
 
 **Zero-mock enforcement**: No `unittest.mock`, `MagicMock`, `@patch`, or `create_autospec` anywhere in `tests/`. CI enforces this via `scripts/audit/verify_no_mocks.py` before the test stage runs. The enforcement exists because mock tests can pass even when the actual mathematical logic is wrong — they test call signatures, not convergence.
 
@@ -60,7 +60,7 @@ grep -r "unittest.mock\|MagicMock\|@patch\|create_autospec" \
 
 # Mathematical primitives (core/optimizer.py, core/invariants.py) have no infrastructure imports
 # (orchestration modules analysis/ / dashboard/ / core/manuscript_variables.py are allowed
-# to import infrastructure behind try/except fallbacks — see src/AGENTS.md).
+# to import infrastructure through the declared SDK dependency — see src/AGENTS.md).
 grep -nE "^(from|import) infrastructure" \
     projects/templates/template_code_project/src/template_code_project/core/optimizer.py \
     projects/templates/template_code_project/src/template_code_project/core/invariants.py \

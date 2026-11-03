@@ -207,18 +207,15 @@ def verify_outputs_exist(
     project_name: str = "project",
     *,
     repo_root: Path = _REPO_ROOT,
-    require_pdf: bool = True,
-    enabled_formats: Collection[str] | None = None,
+    enabled_formats: Collection[str],
 ) -> tuple[bool, ValidationResultDict]:
     """Verify all expected output files exist.
 
     Args:
         project_name: Name of project in projects/ directory (default: "project")
         repo_root: Repository root containing the resolved project.
-        require_pdf: Whether detailed structure validation requires a combined
-            PDF for the effective render configuration.
         enabled_formats: Effective publication formats for required-category
-            diagnostics. ``None`` preserves legacy behavior.
+            diagnostics; callers must provide the current effective format set.
 
     Returns:
         Tuple of (validation_passed, detailed_validation_results)
@@ -232,10 +229,7 @@ def verify_outputs_exist(
     )
 
     detailed_validation = collect_detailed_validation_results(
-        output_dir,
-        require_pdf=require_pdf,
-        enabled_formats=enabled_formats,
-        inventory_mode=inventory_mode,
+        output_dir, enabled_formats=enabled_formats, inventory_mode=inventory_mode
     )
     structure_valid = detailed_validation["structure"]["valid"]
 
@@ -365,7 +359,7 @@ def validate_prose_quality(project_name: str = "project", *, repo_root: Path = _
     :func:`infrastructure.validation.content.ai_writing.analyze_prose`. This is a
     warning gate: it always returns ``True`` and never fails the pipeline. It is
     only invoked when ``validation.prose_quality.enabled`` is set in the project
-    config, so disabled runs are byte-identical to the legacy behavior.
+    config, so disabled runs are byte-identical to the default behavior.
     """
     return _validate_prose_quality(_project_root(project_name, repo_root=repo_root))
 
@@ -412,10 +406,7 @@ def execute_validation_pipeline(
     try:
         render_config = load_effective_rendering_config(project_root)
         structure_result, detailed_validation = verify_outputs_exist(
-            project_name,
-            repo_root=repo_root,
-            require_pdf=render_config.enable_pdf,
-            enabled_formats=enabled_render_formats(render_config),
+            project_name, repo_root=repo_root, enabled_formats=enabled_render_formats(render_config)
         )
         results.append(("Output structure", structure_result))
     except Exception as e:

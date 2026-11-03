@@ -255,8 +255,8 @@ LZMA-JS decoder and full MIT notice are embedded alongside the full font OFL
 notice, so loading needs no font fetch or worker. The loader checks compressed
 and decoded size bounds, fixed properties and dictionary, and the actual known
 output-length header before decoding; it then reconstructs each complete face
-and checks its original length and SHA-256 before construction. The raw inline
-API and legacy base64/gzip loader branches remain supported. Compression caches
+and checks its original length and SHA-256 before construction. Independent
+native controls use the current raw inline font API. Compression caches
 only an immutable byte result after every call freshly reads and hashes the
 physical font bodies; it never substitutes a cache for Source selection.
 Export the complete `output/web/` tree,
@@ -331,7 +331,7 @@ Reference in text: Figure \ref{fig:your_figure}
 
 For accessible publication figures, generate
 `output/figures/figure_registry.json` with an exact `label`, `filename` (or
-`path`), and a non-empty top-level `alt` or `metadata.alt_text`. HTML uses that
+`path`), and a non-empty top-level `alt_text` or `metadata.alt_text`. HTML uses that
 source-owned description only when the rendered label and path agree; it does
 not manufacture image alternatives from visible captions. A present registry
 record with blank alt text or a label/path mismatch blocks rendering. A
@@ -347,7 +347,7 @@ roots. The system handles:
   `output/figures/`, `../figures/`, and `./figures/`) when the alias payload
   remains inside the configured figure root
 - Unicode characters in filenames
-- Missing-figure discovery warnings in the legacy/archive path
+- Discovery warnings for an absent or empty figures directory
 
 Escaping or unrecognized traversal is never normalized. In the accessible
 profile, a resource-preflight or writer failure invalidates the transactional

@@ -41,6 +41,9 @@ class TestAssessPaperHypotheses:
 
         # "irrelevant" entries are excluded → 3 should remain
         assert len(assertions) == 3
+        from template_literature_meta_analysis.knowledge_graph.llm_prompts import _SYSTEM_PROMPT
+
+        assert httpserver.log[0][0].get_json()["system"] == _SYSTEM_PROMPT
 
         # Check the supporting assertion
         fep = [a for a in assertions if a.hypothesis_id == "PRIMARY_EFFICACY"]
@@ -200,3 +203,13 @@ class TestAssessPaperHypotheses:
         assert len(assertions) == 1
         assert assertions[0].hypothesis_id == "OPTIMAL_PERFORMANCE"
         assert assertions[0].confidence == 0.6
+
+
+@pytest.mark.parametrize("system_prompt", [None, "", "   "])
+def test_http_client_refuses_missing_task_prompt(httpserver: HTTPServer, system_prompt) -> None:
+    from template_literature_meta_analysis.knowledge_graph.llm_client import call_ollama
+
+    config = LLMConfig(base_url=httpserver_base_url(httpserver), model="test-model")
+    with pytest.raises(ValueError, match="system_prompt must be a non-empty string"):
+        call_ollama("Assess this paper", config, system_prompt=system_prompt)
+    assert httpserver.log == []

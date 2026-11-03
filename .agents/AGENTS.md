@@ -1,20 +1,19 @@
 # Shared agent interface
 
 Read [the repository contract](../AGENTS.md) and the applicable directory guide
-before editing. This directory is the canonical home for generic agent behavior;
-`.cursor/` and `.cursorrules` are deprecated compatibility entry points.
+before editing. This directory is the canonical home for generic agent behavior.
 
 | Surface | Contract |
 | --- | --- |
-| [`skill_manifest.json`](skill_manifest.json) | Generated public skill discovery; `agent_ref` is the generic reference and `cursor_at` remains a deprecated compatibility alias. |
+| [`skill_manifest.json`](skill_manifest.json) | Generated public skill discovery; `agent_ref` identifies the source skill. |
 | [`operations_manifest.json`](operations_manifest.json) | Generated static CLI catalog; operation effects and each CLI's admission rules govern execution. |
 | [`workflows/`](workflows/) | Maintained local workflow descriptors shared by editors and agent runtimes. |
 | [`roles/agents-memory-updater.md`](roles/agents-memory-updater.md) | Local memory role using user-authorized evidence. |
 | [`state/README.md`](state/README.md) | Tracked schema and ignored machine-local memory. |
-| [`skills/`](skills/) | The unchanged pinned upstream collection governed by [`context-engineering.lock.json`](context-engineering.lock.json). |
+| [`skills/`](skills/) | The pinned upstream collection with declared local overlays governed by [`context-engineering.lock.json`](context-engineering.lock.json). |
 
 Generic workflow discovery does not install files into a user's runtime.
-`runtime-install` installs only the pinned upstream collection and requires an
+`runtime-install` installs only the pinned collection with its declared overlays and requires an
 intentional user-level installation request. Preserve that collection's provenance;
 put local additions under `workflows/`.
 

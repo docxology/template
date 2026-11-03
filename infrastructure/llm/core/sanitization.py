@@ -10,11 +10,9 @@ import html
 import re
 from pathlib import Path
 
-# SecurityError is a subclass of SecurityViolation (see infrastructure/core/exceptions.py).
-# Both names are valid here; SecurityError is used for backwards compatibility with
-# call sites that catch SecurityError specifically.
+# Input rejection shares the canonical security exception contract.
 from infrastructure.core._validation import normalize_whitespace
-from infrastructure.core.exceptions import SecurityError
+from infrastructure.core.exceptions import SecurityViolation
 from infrastructure.core.logging.utils import get_logger
 from infrastructure.core.security import get_security_validator
 
@@ -44,10 +42,10 @@ class InputSanitizer:
             Sanitized prompt text
 
         Raises:
-            SecurityError: If prompt contains dangerous content
+            SecurityViolation: If prompt contains dangerous content
         """
         if not isinstance(prompt, str):
-            raise SecurityError("Prompt must be a string")
+            raise SecurityViolation("Prompt must be a string")
 
         prompt = self._remove_control_characters(prompt)
         self._check_dangerous_patterns(prompt)
@@ -66,7 +64,7 @@ class InputSanitizer:
             allowed_extensions: List of allowed file extensions
 
         Raises:
-            SecurityError: If file input is unsafe
+            SecurityViolation: If file input is unsafe
         """
         # LLM-provided paths must be relative: absolute paths from untrusted input
         # risk referencing arbitrary system locations (e.g. /etc/passwd).
@@ -74,30 +72,30 @@ class InputSanitizer:
         # it validates infrastructure-owned paths (output dirs, config files) which
         # are trusted and always absolute. These are different threat models.
         if file_path.is_absolute():
-            raise SecurityError("Absolute paths not allowed in LLM input")
+            raise SecurityViolation("Absolute paths not allowed in LLM input")
 
         # Resolve path to prevent traversal attacks
         try:
             resolved = file_path.resolve()
         except (OSError, RuntimeError) as e:
-            raise SecurityError("Invalid file path") from e
+            raise SecurityViolation("Invalid file path") from e
 
         # Check for directory traversal attempts
         if ".." in str(file_path):
-            raise SecurityError("Directory traversal detected")
+            raise SecurityViolation("Directory traversal detected")
         if not resolved.exists():
-            raise SecurityError("File not found")
+            raise SecurityViolation("File not found")
 
         # Check file extension
         if allowed_extensions:
             if resolved.suffix.lower() not in [ext.lower() for ext in allowed_extensions]:
-                raise SecurityError(f"File extension not allowed: {resolved.suffix}")
+                raise SecurityViolation(f"File extension not allowed: {resolved.suffix}")
 
         # Check file size (prevent DoS)
         max_size = 50 * 1024 * 1024  # 50MB limit
         file_stat = resolved.stat()
         if file_stat.st_size > max_size:
-            raise SecurityError(f"File too large: {file_stat.st_size} bytes")
+            raise SecurityViolation(f"File too large: {file_stat.st_size} bytes")
 
     def sanitize_filename(self, filename: str) -> str:
         """Strip path separators and control characters from an LLM-supplied filename.
@@ -113,10 +111,10 @@ class InputSanitizer:
             Sanitized filename safe for file operations
 
         Raises:
-            SecurityError: If filename is empty, not a string, or otherwise invalid
+            SecurityViolation: If filename is empty, not a string, or otherwise invalid
         """
         if not isinstance(filename, str) or not filename:
-            raise SecurityError("Invalid filename")
+            raise SecurityViolation("Invalid filename")
 
         sanitized = re.sub(r'[<>:"|?*\x00-\x1f\x7f-\x9f]', "_", filename)
         sanitized = re.sub(r"[\/\\]", "_", sanitized)
@@ -135,7 +133,7 @@ class InputSanitizer:
         for pattern in self.dangerous_patterns:
             if re.search(pattern, text):  # patterns use inline (?i) flags; re.IGNORECASE is redundant
                 logger.warning(f"Dangerous pattern detected: {pattern}")
-                raise SecurityError("Dangerous content detected in input")
+                raise SecurityViolation("Dangerous content detected in input")
 
     def _escape_html_entities(self, text: str) -> str:
         """Escape HTML entities in LLM-bound prompts.

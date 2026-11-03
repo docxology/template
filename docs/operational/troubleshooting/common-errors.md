@@ -108,7 +108,7 @@ by checking `projects/<name>/manuscript/config.yaml` `render.formats` block.
 The default Stage 3 path now builds a fresh shared
 `output/web/_combined_manuscript.md` from the current ordered manuscript inputs
 whenever DOCX or EPUB is enabled; it does not require PDF. This skip message
-therefore indicates a direct or legacy renderer call that did not supply a
+therefore indicates a direct renderer call that did not supply a
 current combined source, or a failed combined-source preparation step. Run the
 normal Stage 3 command, confirm current manuscript files were discovered, and
 inspect `output/reports/manuscript_composition.json`. Do not enable PDF merely

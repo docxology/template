@@ -201,3 +201,36 @@ class TestWriteResolvedManuscriptTree:
         assert not (root / "output" / "manuscript" / "AGENTS.md").exists()
         # Source AGENTS.md is untouched
         assert (ms / "AGENTS.md").read_text(encoding="utf-8") == agents_src
+
+    def test_destination_copies_rebase_output_links(self, tmp_path: Path):
+        """Links authored for ``manuscript/`` must resolve from ``output/manuscript/``.
+
+        ``../output/figures/x.png`` denotes ``<project>/output/figures/x.png``
+        from the manuscript source, so the destination copy needs
+        ``../figures/x.png``; the source file keeps its own relative form.
+        """
+        root = tmp_path / "proj"
+        ms = root / "manuscript"
+        ms.mkdir(parents=True)
+        figures = root / "output" / "figures"
+        figures.mkdir(parents=True)
+        (figures / "ablation.png").write_bytes(b"png")
+        (ms / "00_body.md").write_text(
+            "![Ablation](../output/figures/ablation.png){#fig:ablation width=80%}\n"
+            "![Slides](../output/figures/ablation.png){#fig:ablation-slides"
+            ' data-slide-manifest="../output/figures/ablation.panels.json"}\n'
+            "See [the methods](../docs/methods.md) for details.\n",
+            encoding="utf-8",
+        )
+
+        out_dir = write_resolved_manuscript_tree(root, {})
+
+        assert "../output/figures/ablation.png" in (ms / "00_body.md").read_text(encoding="utf-8")
+        copied = (out_dir / "00_body.md").read_text(encoding="utf-8")
+        assert "../output/" not in copied
+        assert "](../figures/ablation.png)" in copied
+        assert 'data-slide-manifest="../figures/ablation.panels.json"' in copied
+        # Project-relative links outside ``output/`` are not this rebase's surface.
+        assert "(../docs/methods.md)" in copied
+        # The rewritten target actually resolves from the destination directory.
+        assert (out_dir / "../figures/ablation.png").resolve() == (figures / "ablation.png").resolve()

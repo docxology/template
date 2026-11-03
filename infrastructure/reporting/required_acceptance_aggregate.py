@@ -11,7 +11,7 @@ from pathlib import Path
 from typing import Any, Sequence
 
 from infrastructure.project.public_acceptance_evidence import write_json
-from infrastructure.project.public_root_census_encoding import ENCODING_SCHEMAS, decode
+from infrastructure.project.public_root_census_encoding import SCHEMA as CENSUS_ENCODING_SCHEMA, decode
 from infrastructure.core.files.secure_write import atomic_write_bytes_confined
 from infrastructure.project.public_capabilities import CANONICAL_CI_PYTHON_VERSIONS
 from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
@@ -118,7 +118,7 @@ def _evidence_closure(reader: SnapshotReader, relative: str) -> dict[str, bytes]
             raise ValueError("complete acceptance exceeds the hosted archive byte ceiling")
         if path.endswith(".json"):
             payload = json.loads(held.content)
-            if isinstance(payload, dict) and payload.get("schema_version") in ENCODING_SCHEMAS:
+            if isinstance(payload, dict) and payload.get("schema_version") == CENSUS_ENCODING_SCHEMA:
                 payload = decode(payload)
             walk(payload)
 
