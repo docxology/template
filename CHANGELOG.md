@@ -48,6 +48,13 @@ exact-revision acceptance; metadata and local checks do not establish delivery.
   rather than a timeout field `StageOutcome` does not carry; the missing
   attribute raised `AttributeError` on every timed-out child, and a completed
   child now keeps its own status under an enclosing exit 124.
+- Keep a hook's own timeout verdict for an incomplete child. Reading every
+  incomplete child's status as final swallowed the 124 that `on_fail`,
+  `pre_stage` and `post_stage` hooks produce when they actually consume their
+  clock, so a failing child whose `on_fail` hook timed out reported a plain
+  failure and the run exited 1 instead of 124. The child's exit code and
+  diagnostic are still preserved on the outcome; only the stage label and run
+  exit code follow the hook, matching the exit-130 half that already did.
 - Refuse a native render input that has no authored counterpart by name instead
   of letting a custody read raise `FileNotFoundError`: a generated transmission
   bookend stays a render input, and a missing authored member reports the
