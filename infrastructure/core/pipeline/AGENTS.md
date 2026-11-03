@@ -69,6 +69,7 @@ The `infrastructure/core/pipeline/` package contains the executor, DAG, summary,
 | `execution_custody.py` | Revalidate the frozen execution identity at launch, reuse, and completion. |
 | `execution_environment.py` | Digest the effective child environment without recording its values. |
 | `execution_records.py` | Source-bound execution records shared by every executor entry point. |
+| `failure_identity.py` | Typed terminal identity for a supervised stage attempt: `SupervisionCondition` names the observed cause, `ClockState` records deadline/start/completion observations as data (an unknown clock is never exhausted), `terminal_identity()` maps facts to a condition plus stage status so a timeout label requires an actually consumed clock, and `refuses_certification()` is the conservative predicate behind the legacy `custody_refused` boolean — true for every non-completed condition, so migrating a reader onto the typed label cannot accept a refused attempt. |
 | `execution_session.py` | Whole-run deadline and lock composition for every resolved-plan executor. |
 | `fingerprint_files.py` | Held-directory filesystem observations for content fingerprints. |
 | `fingerprints.py` | Content identities for source trees and stable deliverables. |
