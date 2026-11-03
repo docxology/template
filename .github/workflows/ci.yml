@@ -89,7 +89,7 @@ jobs:
   detect-projects:
     name: Public functional test selection
     runs-on: ubuntu-24.04
-    timeout-minutes: 5
+    timeout-minutes: 15
     outputs:
       matrix: ${{ steps.matrix.outputs.matrix }}
       infra: ${{ steps.matrix.outputs.infra }}
