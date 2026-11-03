@@ -547,7 +547,11 @@ jobs:
           if-no-files-found: error
           retention-days: 1
 
+  # Retained until the sharded cells are enabled: the single-job roster form
+  # cannot finish (one project measured 10264.8 s, 25 cannot fit one clock).
   native-original:
+    # TODO(native-sharding): delete once native-original-cell runs.
+    if: vars.NATIVE_SHARDING_CELLS != 'true'
     runs-on: ubuntu-24.04
     timeout-minutes: 300
     steps:
@@ -600,8 +604,250 @@ jobs:
           directory: ${{ github.workspace }}/output/readiness/failed-native-transport
           kind: failed-native
 
+
+  # TODO(native-sharding): `--matrix-cell` is wired for the auxiliary lane
+  # (see the job below) but not for `--mode original`
+  # (`infrastructure.reporting.native_installed_launcher`). It is
+  # `infrastructure/` work and must land together with raising the 600 s
+  # per-control ceiling in
+  # `infrastructure/reporting/native_pdf_whole_control_supervisor.py:66`, so the
+  # exemplar rebind happens once. Until then these jobs are gated on the
+  # repository variable NATIVE_SHARDING_CELLS and `native-original` above
+  # remains the active native lane. To enable: land --matrix-cell, give
+  # upload-readiness-shards a per-cell artifact name, then set
+  # NATIVE_SHARDING_CELLS=true.
+  native-plan:
+    if: vars.NATIVE_SHARDING_CELLS == 'true'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    outputs:
+      matrix: ${{ steps.plan.outputs.matrix }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+          submodules: true
+      - uses: ./.github/actions/setup-acceptance-fixtures
+      - uses: ./.github/actions/setup-python-env
+      - name: Derive the complete public project matrix from Source
+        id: plan
+        run: |
+          set -euo pipefail
+          # TODO(native-sharding): reuse the auxiliary matrix emitter (as here),
+          # or expose an equivalent flag on the native CLI. The `cell` values are
+          # bare project names; `root` is not a project and is excluded.
+          matrix=$(.venv/bin/python -m infrastructure.project.public_acceptance_auxiliary_cli --matrix-json \
+            | jq -c '{include: [.include[] | select(.cell != "root")]}')
+          echo "matrix=$matrix" >> "$GITHUB_OUTPUT"
+
+  native-original-cell:
+    needs: native-plan
+    name: native-original-cell (${{ matrix.cell }})
+    # TODO(native-sharding): enable once --matrix-cell lands. Deliberately
+    # gated so a missing selection can never be mistaken for a pass.
+    if: vars.NATIVE_SHARDING_CELLS == 'true'
+    strategy:
+      fail-fast: false
+      max-parallel: 16
+      matrix: ${{ fromJSON(needs.native-plan.outputs.matrix) }}
+    runs-on: ubuntu-24.04
+    # 14,400 s launcher clock plus preparation and transport margin. One project
+    # measured 10,264.8 s without completing in run 41539538215.
+    timeout-minutes: 300
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+          submodules: true
+          fetch-depth: 0
+      - uses: ./.github/actions/setup-acceptance-fixtures
+      - uses: ./.github/actions/setup-python-env
+        with:
+          python-version: "3.14.4"
+      - uses: ./.github/actions/setup-native-installed-readiness
+      - name: Keep the declared capacity before native allocation
+        run: |
+          set -euo pipefail
+          free_before=$(df -Pk --output=avail / | tail -n 1)
+          for path in \
+            /usr/local/lib/android \
+            /usr/share/dotnet \
+            /opt/ghc \
+            /usr/share/swift \
+            /usr/local/share/boost \
+            /opt/hostedtoolcache/CodeQL \
+            /opt/hostedtoolcache/PyPy \
+            /opt/hostedtoolcache/Ruby \
+            /opt/hostedtoolcache/Go; do
+            if [ -e "$path" ]; then
+              sudo rm -rf --one-file-system -- "$path" || echo "reclaim-retained=$path"
+            fi
+          done
+          free_after=$(df -Pk --output=avail / | tail -n 1)
+          echo "reclaimed_kib=$((free_after - free_before)) free_kib=$free_after"
+          if [ "$free_after" -lt 10485760 ]; then
+            echo "::warning::free space is below the declared 10 GiB preparation threshold"
+          fi
+      - name: Original authenticated installed native format inventory (one project)
+        id: native
+        run: >-
+          .venv/bin/python -m infrastructure.reporting.native_installed_launcher --mode original
+          --matrix-cell "${{ matrix.cell }}"
+          --source-root "$GITHUB_WORKSPACE" --source-commit "$GITHUB_SHA"
+          --source-identity "$(.venv/bin/python -c 'from pathlib import Path;from infrastructure.reporting.readiness_receipts import source_fingerprint;print(source_fingerprint(Path.cwd()))')"
+          --python "$GITHUB_WORKSPACE/.venv/bin/python" --uv "$(command -v uv)"
+          --expected-platform Linux --timeout 14400
+          --mermaid-package-root "$GITHUB_WORKSPACE/node_modules/@mermaid-js/mermaid-cli"
+          --mermaid-dependency-root "$GITHUB_WORKSPACE/node_modules"
+          --mermaid-node-executable "$(command -v node)"
+          --mermaid-chrome-executable "$CHROME_EXECUTABLE_PATH"
+          --office-font-directory /usr/share/fonts/truetype
+          --office-font-directory "/usr/local/share/fonts/template-acceptance-juliamono"
+          --repository "$GITHUB_REPOSITORY" --run-id "$GITHUB_RUN_ID"
+          --current-root "$RUNNER_TEMP/template-native-original-root"
+          --scratch "$RUNNER_TEMP/template-native-original-scratch"
+          --epubcheck-jar "$TEMPLATE_NATIVE_EPUBCHECK" --java-executable "$TEMPLATE_NATIVE_JAVA"
+      - name: Retain exact independently admitted native shards (one project)
+        uses: ./.github/actions/upload-readiness-shards
+        with:
+          repo-root: ${{ runner.temp }}/template-native-original-root
+          directory: ${{ runner.temp }}/template-native-original-root/output/readiness/native-transport
+          kind: native
+          cell: ${{ matrix.cell }}
+      - name: Preserve failed original raw and Code evidence
+        if: always() && steps.native.outcome == 'failure'
+        run: >-
+          .venv/bin/python -m infrastructure.reporting.native_failed_transport
+          --repo-root "$GITHUB_WORKSPACE" --mirror "$RUNNER_TEMP/template-native-original-root"
+          --scratch "$RUNNER_TEMP/template-native-original-scratch"
+          --repository "$GITHUB_REPOSITORY" --run-id "$GITHUB_RUN_ID" --revision "$GITHUB_SHA"
+      - name: Retain bounded failed-native diagnostics without acceptance
+        if: always() && steps.native.outcome == 'failure'
+        uses: ./.github/actions/upload-readiness-shards
+        with:
+          repo-root: ${{ github.workspace }}
+          directory: ${{ github.workspace }}/output/readiness/failed-native-transport
+          kind: failed-native
+
+  # Hosted-only lane: the reader cell path and custody cell selection cannot be
+  # proven locally, so this job proves nothing by itself and needs an
+  # acceptance-shaped run. It renames artifacts only
+  # (`required-source-native-cell-<cell>` and its `-shard-` members, via
+  # `cell_artifact_names`/`transport_artifact_names`); the content rules stay
+  # `native` and no new artifact kind is invented. Completeness is asserted by the
+  # aggregate seam (`union_selection(collected_cells)`), never here.
+  native-reader-cell:
+    needs: native-plan
+    name: native-reader-cell (${{ matrix.cell }})
+    if: vars.NATIVE_SHARDING_CELLS == 'true'
+    strategy:
+      fail-fast: false
+      max-parallel: 16
+      matrix: ${{ fromJSON(needs.native-plan.outputs.matrix) }}
+    runs-on: ubuntu-24.04
+    # Same 300-minute lane as its original-side sibling: a cell must never get a
+    # shorter clock than the unsharded reader job.
+    timeout-minutes: 300
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+          submodules: true
+          fetch-depth: 0
+      - uses: ./.github/actions/setup-acceptance-fixtures
+      - uses: ./.github/actions/setup-python-env
+        with:
+          python-version: "3.14.4"
+      - name: Read same-run original common DATA
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333
+        with:
+          name: required-source-common
+          path: output/readiness
+      - name: Read same-run original macOS auxiliary DATA
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333
+        with:
+          name: required-source-auxiliary-darwin
+          path: output/readiness/auxiliary-darwin
+      - uses: ./.github/actions/setup-native-installed-readiness
+      - name: Keep the declared capacity before native allocation
+        run: |
+          set -euo pipefail
+          free_before=$(df -Pk --output=avail / | tail -n 1)
+          for path in \
+            /usr/local/lib/android \
+            /usr/share/dotnet \
+            /opt/ghc \
+            /usr/share/swift \
+            /usr/local/share/boost \
+            /opt/hostedtoolcache/CodeQL \
+            /opt/hostedtoolcache/PyPy \
+            /opt/hostedtoolcache/Ruby \
+            /opt/hostedtoolcache/Go; do
+            if [ -e "$path" ]; then
+              sudo rm -rf --one-file-system -- "$path" || echo "reclaim-retained=$path"
+            fi
+          done
+          free_after=$(df -Pk --output=avail / | tail -n 1)
+          echo "reclaimed_kib=$((free_after - free_before)) free_kib=$free_after"
+          if [ "$free_after" -lt 10485760 ]; then
+            echo "::warning::free space is below the declared 10 GiB preparation threshold"
+          fi
+      - name: Independently admit this cell through fresh installed Source
+        id: reader
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: >-
+          .venv/bin/python -m infrastructure.reporting.native_installed_launcher --mode reader
+          --matrix-cell "${{ matrix.cell }}"
+          --source-root "$GITHUB_WORKSPACE" --source-commit "$GITHUB_SHA"
+          --source-identity "$(.venv/bin/python -c 'from pathlib import Path;from infrastructure.reporting.readiness_receipts import source_fingerprint;print(source_fingerprint(Path.cwd()))')"
+          --python "$GITHUB_WORKSPACE/.venv/bin/python" --uv "$(command -v uv)"
+          --expected-platform Linux --timeout 14400
+          --mermaid-package-root "$GITHUB_WORKSPACE/node_modules/@mermaid-js/mermaid-cli"
+          --mermaid-dependency-root "$GITHUB_WORKSPACE/node_modules"
+          --mermaid-node-executable "$(command -v node)"
+          --mermaid-chrome-executable "$CHROME_EXECUTABLE_PATH"
+          --office-font-directory /usr/share/fonts/truetype
+          --office-font-directory "/usr/local/share/fonts/template-acceptance-juliamono"
+          --repository "$GITHUB_REPOSITORY" --run-id "$GITHUB_RUN_ID"
+          --current-root "$RUNNER_TEMP/template-native-reader-cell-root"
+          --scratch "$RUNNER_TEMP/template-native-reader-cell-scratch" --stage-bundle
+          --epubcheck-jar "$TEMPLATE_NATIVE_EPUBCHECK" --java-executable "$TEMPLATE_NATIVE_JAVA"
+          --receipt output/readiness/projects/receipt.json
+          --receipt output/readiness/installed/receipt.json
+          --receipt output/readiness/sandbox-transfer/receipt.json
+          --auxiliary-receipt darwin=output/readiness/auxiliary-darwin/receipt.json
+          --root-receipt linux/3.14=output/readiness/root-linux-3.14/receipt.json
+          --root-receipt linux/3.15=output/readiness/root-linux-3.15/receipt.json
+          --root-receipt darwin/3.14=output/readiness/root-darwin-3.14/receipt.json
+          --root-receipt darwin/3.15=output/readiness/root-darwin-3.15/receipt.json
+      - name: Complete this cell's passed candidate transport only
+        id: candidate_transport
+        uses: ./.github/actions/upload-readiness-shards
+        with:
+          repo-root: ${{ runner.temp }}/template-native-reader-cell-root
+          directory: ${{ runner.temp }}/template-native-reader-cell-root/output/readiness/candidate-transport
+          kind: candidate
+          cell: ${{ matrix.cell }}
+      - name: Preserve failed reader raw and Code evidence
+        if: always() && steps.reader.outcome == 'failure'
+        run: >-
+          .venv/bin/python -m infrastructure.reporting.native_failed_transport
+          --repo-root "$GITHUB_WORKSPACE" --mirror "$RUNNER_TEMP/template-native-reader-cell-root"
+          --scratch "$RUNNER_TEMP/template-native-reader-cell-scratch" --kind failed-reader
+          --repository "$GITHUB_REPOSITORY" --run-id "$GITHUB_RUN_ID" --revision "$GITHUB_SHA"
+      - name: Retain bounded failed-reader diagnostics without acceptance
+        id: diagnostic_transport
+        if: always() && steps.reader.outcome == 'failure'
+        uses: ./.github/actions/upload-readiness-shards
+        with:
+          repo-root: ${{ github.workspace }}
+          directory: ${{ github.workspace }}/output/readiness/failed-reader-transport
+          kind: failed-reader
+          cell: ${{ matrix.cell }}
+
   complete:
-    needs: [root-original, common-original, auxiliary-original, native-original]
+    needs: [root-original, common-original, auxiliary-original, native-plan, native-original-cell]
     if: always() && !cancelled()
     runs-on: ubuntu-24.04
     timeout-minutes: 300
@@ -626,6 +872,41 @@ jobs:
           name: required-source-auxiliary-darwin
           path: output/readiness/auxiliary-darwin
       - uses: ./.github/actions/setup-native-installed-readiness
+      - name: Require the complete native cell union before any admission
+        if: vars.NATIVE_SHARDING_CELLS == 'true'
+        # Fail closed with a named project. This is the guard the roster-wide
+        # lane lacked: stopping early must never look like a 24-of-25 candidate.
+        env:
+          GH_TOKEN: ${{ github.token }}
+          NATIVE_MATRIX: ${{ needs.native-plan.outputs.matrix }}
+          NATIVE_JOB_RESULT: ${{ needs.native-original-cell.result }}
+        run: |
+          set -euo pipefail
+          expected=$(jq -r '.include[].cell' <<< "$NATIVE_MATRIX" | sort)
+          expected_count=$(wc -l <<< "$expected" | tr -d ' ')
+          echo "expected native cells: $expected_count"
+          if [ "$NATIVE_JOB_RESULT" != "success" ]; then
+            echo "::error::native cell lane result is '$NATIVE_JOB_RESULT', not success"
+            exit 1
+          fi
+          gh api "repos/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID/artifacts?per_page=100" \
+            --jq '.artifacts[].name' > "$RUNNER_TEMP/native-artifacts.txt"
+          actual=$(grep -o '^required-source-native-cell-.*' "$RUNNER_TEMP/native-artifacts.txt" | sed 's/^required-source-native-cell-//' | sort || true)
+          missing=$(comm -23 <<< "$expected" <(printf '%s\n' "$actual" | sed '/^$/d'))
+          extra=$(comm -13 <<< "$expected" <(printf '%s\n' "$actual" | sed '/^$/d'))
+          if [ -n "$missing" ]; then
+            echo "::error::missing native cell artifacts for: $(tr '\n' ' ' <<< "$missing")"
+            exit 1
+          fi
+          if [ -n "$extra" ]; then
+            echo "::error::unexpected native cell artifacts for: $(tr '\n' ' ' <<< "$extra")"
+            exit 1
+          fi
+          echo "complete native cell union: $expected_count of $expected_count"
+      - name: Note the disabled native cell lane
+        if: vars.NATIVE_SHARDING_CELLS != 'true'
+        run: |
+          echo "::warning::native cell lane disabled; native-original is the active lane"
       - name: Independently admit complete candidate through fresh installed Source
         id: reader
         env:
