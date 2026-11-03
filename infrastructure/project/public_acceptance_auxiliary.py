@@ -397,6 +397,40 @@ def admitted_root_export(root: Path, receipt_path: Path, reader: SnapshotReader 
     return dict(payload["details"]["bundle_artifact"])
 
 
+def _incomplete_observation(process: Any) -> str:
+    """Name the exact condition that makes one supervised observation inadmissible.
+
+    The refusal outcome does not change; only the message becomes specific and the
+    process record is retained. A census or cleanup failure previously reported
+    itself as a checkout, commit or API mismatch, and nothing was written, so the
+    real condition could not be recovered from the transport.
+    """
+    if not isinstance(process, dict):
+        return "the supervised process record is missing"
+    if process.get("schema_version") != PROCESS_SCHEMA:
+        return f"the supervised process schema is {process.get('schema_version')!r}"
+    if process.get("accepted") is not True:
+        return "the supervised process was not accepted"
+    cleanup = process.get("cleanup")
+    if not isinstance(cleanup, dict):
+        return "the cleanup record is missing"
+    if cleanup.get("verified") is not True:
+        return "cleanup was not verified"
+    if cleanup.get("final_census_succeeded") is not True:
+        return "the final token census did not succeed"
+    if cleanup.get("final_census_matched_pids") != []:
+        return f"the final token census still matched pids {cleanup.get('final_census_matched_pids')!r}"
+    if type(process.get("pid")) is not int or process["pid"] <= 0:
+        return "the supervised process pid is missing"
+    if type(process.get("exit_code")) is not int:
+        return "the supervised process exit code is missing"
+    if process.get("timed_out") is not False:
+        return "the supervised process timed out"
+    if process.get("output_limit_exceeded") is not False:
+        return "the supervised process exceeded its output limit"
+    return "the supervised process custody record is incomplete"
+
+
 def run_sandbox_transfer(
     root: Path,
     *,
@@ -443,22 +477,34 @@ def run_sandbox_transfer(
     if git is None:
         raise ValueError("actual source commit observation requires existing git")
     revision_process = supervise([git, "rev-parse", "HEAD"], root, directory / "revision", deadline)
+    revision_process_artifact = write_json(root, directory / "checkout-process.json", revision_process)
     revision_bytes = reader.read(revision_process["streams"]["stdout"]["path"]).content
-    if (
-        not complete_auxiliary_observation(revision_process)
-        or revision_process["exit_code"] != 0
-        or revision_bytes.decode().strip() != source_commit
-    ):
-        raise ValueError("actual checkout commit differs from nominated same-run source SHA")
+    if not complete_auxiliary_observation(revision_process):
+        raise ValueError(
+            f"actual source commit observation was not admissible: {_incomplete_observation(revision_process)}"
+        )
+    if revision_process["exit_code"] != 0:
+        raise ValueError(f"actual source commit observation exited {revision_process['exit_code']}")
+    observed_revision = revision_bytes.decode().strip()
+    if observed_revision != source_commit:
+        raise ValueError(
+            "actual checkout commit differs from nominated same-run source SHA: "
+            f"observed {observed_revision!r}, nominated {source_commit!r}"
+        )
     for label, endpoint in (
         ("artifact", f"repos/{repository}/actions/artifacts/{artifact_id}"),
         ("repository", f"repos/{repository}"),
     ):
         process = supervise([gh, "api", "--hostname", "github.com", endpoint], root, directory / label, deadline)
-        if not complete_auxiliary_observation(process) or process["exit_code"] != 0:
-            raise ValueError("actual scoped GitHub artifact API read failed")
+        process_artifact = write_json(root, directory / f"{label}-process.json", process)
+        if not complete_auxiliary_observation(process):
+            raise ValueError(
+                f"actual scoped GitHub artifact API read was not admissible: {_incomplete_observation(process)}"
+            )
+        if process["exit_code"] != 0:
+            raise ValueError(f"actual scoped GitHub artifact API read exited {process['exit_code']}")
         data = json.loads(reader.read(process["streams"]["stdout"]["path"]).content)
-        observations[label] = {"data": data, "process": write_json(root, directory / f"{label}-process.json", process)}
+        observations[label] = {"data": data, "process": process_artifact}
     metadata = observations["artifact"]["data"]
     repo = observations["repository"]["data"]
     workflow = metadata.get("workflow_run", {})
@@ -493,7 +539,7 @@ def run_sandbox_transfer(
             "source_commit": source_commit,
             "upload_outputs": outputs,
             "upload_outputs_artifact": {"path": upload_snapshot.relative, "sha256": upload_snapshot.sha256},
-            "checkout_process": write_json(root, directory / "checkout-process.json", revision_process),
+            "checkout_process": revision_process_artifact,
             "api_observations": observations,
             "export_artifact": export,
             "retrieved_artifact": {"path": retrieved.relative, "sha256": retrieved.sha256},
