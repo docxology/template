@@ -131,12 +131,19 @@ def attach_stage_outcome(result: PipelineStageResult, child: StageOutcome | None
             diagnostic=result.error_message or "Human decision required",
         )
     elif child is not None and result.exit_code in {124, 130}:
+        # ``child`` is a StageOutcome, which carries no timeout boolean: its
+        # status is the typed verdict (a bare exit 124 is FAILED unless a clock
+        # was actually consumed) and completion is the only truth value of an
+        # outcome. A completed child keeps its own verdict; only a child that
+        # itself recorded a timeout earns the TIMED_OUT label.
         result.outcome = replace(
             child,
             stage_key=key,
             status=(
-                StageStatus.TIMED_OUT
-                if result.exit_code == 124 and child.timed_out
+                child.status
+                if child.complete
+                else StageStatus.TIMED_OUT
+                if result.exit_code == 124 and child.status is StageStatus.TIMED_OUT
                 else StageStatus.INTERRUPTED
                 if result.exit_code == 130
                 else StageStatus.FAILED

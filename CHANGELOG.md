@@ -44,6 +44,10 @@ exact-revision acceptance; metadata and local checks do not establish delivery.
 - Refuse a rendered run whose existing output verdict is false instead of
   reporting completion: the stage consults that verdict before its completion
   line, and the verdict keeps naming its own failing clause.
+- Derive a relabelled stage status from the child outcome's own typed verdict
+  rather than a timeout field `StageOutcome` does not carry; the missing
+  attribute raised `AttributeError` on every timed-out child, and a completed
+  child now keeps its own status under an enclosing exit 124.
 
 ## [4.4.1] — superseded unpublished preparation
 
