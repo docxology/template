@@ -67,3 +67,28 @@ def test_replace_preserves_the_typed_condition() -> None:
     """
     typed = StageOutcome("render_pdf", StageStatus.TIMED_OUT, 124, condition="custody_refusal")
     assert dataclasses.replace(typed, stage_key="output_validation").condition == "custody_refusal"
+
+
+def test_typed_and_untyped_outcomes_satisfy_both_consumer_shapes() -> None:
+    """Both consumers, both cases, in the one payload that must serve them.
+
+    Mirrors the worker's two checks: the stage-row validator requires the full
+    field set and `results_from_payload` reconstructs by `StageOutcome(**row)`,
+    while the outcome list is compared against `to_dict()`. The untyped case is
+    the regression -- under the pre-fix producer the payload list came from
+    `asdict` and carried `condition: null` while `to_dict()` omitted it, so the
+    rows were refused and the aggregate failed.
+    """
+    cases = (
+        StageOutcome("render_pdf", StageStatus.SUCCEEDED, 0),
+        StageOutcome("render_pdf", StageStatus.TIMED_OUT, 124, condition="unattributed_exit_124"),
+    )
+    for outcome in cases:
+        stage_row = dataclasses.asdict(outcome)
+        assert set(stage_row) == {field.name for field in dataclasses.fields(StageOutcome)}
+        reconstructed = StageOutcome(**stage_row)
+        assert reconstructed.condition == outcome.condition
+        worker_shape = [reconstructed.to_dict()]
+        assert worker_shape == [outcome.to_dict()]
+        if outcome.condition is None:
+            assert worker_shape != [dataclasses.asdict(outcome)]
