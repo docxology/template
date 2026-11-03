@@ -34,6 +34,41 @@ def _summary_bootstrap(implementation: Path) -> str:
     )
 
 
+def _stable(result: MultiProjectResult) -> dict:
+    """Serialize the summary request without changing either consumed shape.
+
+    The worker consumes two different shapes and the producer must emit both
+    exactly:
+
+    * **Stage rows** (``project_results[*]`` and
+      ``shared_infrastructure_result.stage_results``) carry a nested ``outcome``
+      mapping that must contain *every* ``StageOutcome`` field, because
+      ``results_from_payload`` reconstructs the type from it by field set. Here
+      ``asdict`` is required, and it is why the rule is not "never asdict".
+    * **A ``RunResult.outcomes`` list** is compared against
+      ``StageOutcome.to_dict()``, which intentionally omits an unset
+      ``condition``. Letting ``asdict`` produce it emitted ``condition: null``
+      for untyped outcomes and the worker refused the whole aggregate.
+
+    So ``asdict`` stays for the stage rows, and only the two ``outcomes`` lists
+    are rewritten through ``to_dict()`` -- the one shape whose contract is
+    ``to_dict`` rather than the dataclass field set.
+    """
+    serialized = asdict(result)
+    for name, run in result.run_results.items():
+        serialized["run_results"][name]["outcomes"] = [outcome.to_dict() for outcome in run.outcomes]
+    shared = serialized.get("shared_infrastructure_result")
+    if (
+        shared is not None
+        and isinstance(shared.get("run_result"), dict)
+        and result.shared_infrastructure_result is not None
+    ):
+        shared["run_result"]["outcomes"] = [
+            outcome.to_dict() for outcome in result.shared_infrastructure_result.run_result.outcomes
+        ]
+    return serialized
+
+
 def write_summary_reports(
     result: MultiProjectResult, projects: list[ProjectInfo], root: Path, *, deadline: float
 ) -> int:
@@ -51,7 +86,7 @@ def write_summary_reports(
             "schema_version": SCHEMA,
             "nonce": uuid.uuid4().hex,
             "custody": custody,
-            "result": asdict(result),
+            "result": _stable(result),
             "projects": [asdict(project) for project in projects],
         }
         content = json.dumps(payload, sort_keys=True, default=str, allow_nan=False).encode()
