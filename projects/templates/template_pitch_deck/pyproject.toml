@@ -31,7 +31,8 @@ dependencies = [
     # same pattern as `template_search_project`/`template_newspaper`.
     "reportlab>=4.0.0",
     "pypdf>=6.16.1",
-    "Pillow>=12.3.0",
+    # 13.0.0 is the first Pillow release with no open advisory: 12.3.0 carries 130 critical and 598 high alerts in this repository. Do not lower this floor.
+    "Pillow>=13.0.0",
     # `infrastructure.rendering.slide_deck._draw_qr_code`/`pptx_deck._add_qr_code`
     # call `infrastructure.steganography.barcode_generators.generate_qr_code`
     # for the per-slide QR deep-links — same transitive-dependency situation

@@ -22,7 +22,8 @@ classifiers = [
 dependencies = [
     "research-project-template==5.0.0",
     "matplotlib>=3.7.0",
-    "pillow>=12.3.0",
+    # 13.0.0 is the first Pillow release with no open advisory: 12.3.0 carries 130 critical and 598 high alerts in this repository. Do not lower this floor.
+    "pillow>=13.0.0",
     "pyyaml>=6.0",
 ]
 

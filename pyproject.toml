@@ -44,7 +44,8 @@ dependencies = [
   # Publication placeholder audits need CommonMark block source maps so only
   # actual code blocks are excluded from fail-closed rendered-text scanning.
   "markdown-it-py>=4.0.0",
-  "pillow>=12.3.0",
+  # 13.0.0 is the first Pillow release with no open advisory: 12.3.0 carries 130 critical and 598 high alerts in this repository. Do not lower this floor.
+  "pillow>=13.0.0",
   "matplotlib>=3.7",
   # Archive rendering canonicalizes PDFs whenever SOURCE_DATE_EPOCH is set.
   "pypdf>=6.16.1",
