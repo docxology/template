@@ -15,6 +15,7 @@ from typing import Any, Sequence
 
 from infrastructure.core.files.secure_write import atomic_write_bytes_confined
 from infrastructure.core.implementation_custody import source_file_bytes
+from infrastructure.reporting.native_cell_selection import cell_selection
 from infrastructure.reporting.native_format_acceptance_results import (
     _executed_failure_exit as _executed_failure_exit,
     _executed_failure_result as _original_executed_failure_result,
@@ -139,6 +140,11 @@ def _run_native_format_acceptance(
         or any(scope not in PUBLIC_PROJECT_NAMES for scope in selected)
     ):
         raise ValueError("native acceptance requires unique canonical public project names")
+    # A run is either the complete roster or exactly one declared cell. Anything
+    # else is a mis-scoped matrix expansion and must refuse before any work, so a
+    # partial selection can never proceed while looking like a cell.
+    if selected != PUBLIC_PROJECT_NAMES and not cell_selection(selected):
+        raise ValueError("native acceptance selection must be the complete roster or exactly one declared cell")
     if (epubcheck_jar is None) != (java_executable is None):
         raise ValueError("native EPUB tools require both the reviewed JAR and actual Java executable")
     for tool in (epubcheck_jar, java_executable):
