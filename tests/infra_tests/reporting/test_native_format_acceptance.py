@@ -499,3 +499,57 @@ def test_actual_child_outcome_survives_confined_persistence_refusal(tmp_path: Pa
     state["deadline"] = time.monotonic() - 1
     expired = _executed_failure_result(state, ValueError("post-launch finalization failed"))
     assert expired["exit_code"] == (130 if exit_code == 130 else 124)
+
+
+def test_actual_cli_refuses_a_selection_that_is_neither_the_roster_nor_one_declared_cell(tmp_path: Path) -> None:
+    # Two declared scopes are a mis-scoped matrix expansion: neither the complete
+    # roster nor one cell, so admission must refuse before any work rather than
+    # let a partial selection proceed while looking like a sharded cell.
+    nominations = tmp_path / "nominations"
+    nominations.mkdir()
+    implementation = nominations / "implementation-input.json"
+    implementation.write_bytes(b'{"binding_kind": "nominated-only"}\n')
+    command = bootstrap_command(
+        Path(sys.executable),
+        REPO,
+        "infrastructure.reporting.native_format_acceptance",
+        "--repo-root",
+        str(tmp_path),
+        "--project",
+        SCOPE,
+        "--project",
+        "templates/template_advanced_literature_review",
+        "--timeout",
+        "600",
+        "--current-analysis-root",
+        str(nominations / "current"),
+        "--expected-platform",
+        platform.system(),
+        "--sdk-package-root",
+        str(nominations / "sdk"),
+        "--implementation-input",
+        str(implementation),
+        "--implementation-sha256",
+        hashlib.sha256(implementation.read_bytes()).hexdigest(),
+        "--mermaid-package-root",
+        str(nominations / "mermaid"),
+        "--mermaid-dependency-root",
+        str(nominations / "mermaid-dependencies"),
+        "--mermaid-node-executable",
+        str(nominations / "node"),
+        "--mermaid-chrome-executable",
+        str(nominations / "chrome"),
+        "--pdfium-site",
+        str(nominations / "pdfium-site"),
+        "--pdfium-wheel",
+        str(nominations / "pdfium.whl"),
+    )
+    result = run_bounded_subprocess(
+        command,
+        cwd=REPO,
+        env=native_environment(REPO, Path(sys.executable), tmp_path / "output/readiness/mis-scoped-cell"),
+        timeout=30,
+    )
+    assert result.returncode == result.original_returncode == 2
+    assert "complete roster or exactly one declared cell" in result.stderr
+    assert not (tmp_path / "output").exists()
