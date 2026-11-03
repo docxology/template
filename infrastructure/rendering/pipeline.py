@@ -223,6 +223,19 @@ def _render_pipeline_impl(
     if failed_files:
         logger.error(f"PDF rendering pipeline failed: {len(failed_files)} manuscript file(s) had render errors")
         return 1
+    # The authoritative verdict for the current outputs already exists; a run
+    # that finished without per-file errors must still be refused when that
+    # verdict is false. The verdict names its own failing clause above
+    # (combined manuscript PDF absent or too small, no PDF files in the output
+    # tree, a failing compilation, or an uncleared LaTeX warning policy), so
+    # this refusal carries the decision instead of a second copy of it.
+    if not deps.verify_outputs(project_name, repo_root=root):
+        logger.error(
+            "PDF rendering pipeline refused: the render verdict above names the failing clause "
+            "(combined manuscript PDF absent or too small, no PDF files in the output tree, a failing "
+            "compilation, or an uncleared LaTeX warning policy)"
+        )
+        return 1
     log_success("PDF rendering pipeline completed", logger)
     return 0
 

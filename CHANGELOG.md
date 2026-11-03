@@ -26,6 +26,9 @@ exact-revision acceptance; metadata and local checks do not establish delivery.
   native caller test ownership, and vendored skill overlay provenance.
 - Keep standalone publication downstream of exact-source core acceptance and
   distinguish current user guidance from retained historical release evidence.
+- Refuse a rendered run whose existing output verdict is false instead of
+  reporting completion: the stage consults that verdict before its completion
+  line, and the verdict keeps naming its own failing clause.
 
 ## [4.4.1] — superseded unpublished preparation
 
