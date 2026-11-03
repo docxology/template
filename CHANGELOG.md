@@ -7,6 +7,21 @@ source and contracts; each exemplar retains its own package and publication
 versions. Confidential and local workspaces outside the canonical public roster
 are excluded.
 
+## [5.0.0]
+
+See the [5.0.0 release notes](docs/releases/v5.0.0.md). This release makes the
+instruments work well enough to see the real problem clearly.
+
+- Native inventory sharding seam: per-cell transport artifact naming for every
+  kind, with `cell=None` keeping the previous names byte-identically, and a
+  union gate that counts cells rather than shards.
+- Sidecar link-sync consolidation: four linking modules unified.
+- Publication gate selection policy: `--changed` narrowing is admitted only for
+  evidence that cannot reach another project's publication output, and an
+  observation failure raises rather than guessing a clean change set.
+- Diagnosability: a native refusal now names why it refused instead of
+  discarding the reason.
+
 ## [4.5.0]
 
 See the [4.5.0 release notes](docs/releases/v4.5.0.md). This minor candidate
