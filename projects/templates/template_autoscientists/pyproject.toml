@@ -21,7 +21,7 @@ classifiers = [
 ]
 dependencies = [
     "requests>=2.32.0",
-    "research-project-template==4.5.0",
+    "research-project-template==5.0.0",
     "numpy>=1.24.0",
     "matplotlib>=3.7.0",
     "pillow>=12.3.0",
