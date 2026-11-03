@@ -50,13 +50,63 @@ def test_installed_invocation_failure_str_carries_structured_diagnostics() -> No
 
 
 def test_installed_invocation_failure_str_never_renders_raw_child_streams() -> None:
-    """Only structured fields are named; raw streams can hold paths and content."""
+    """Only the exception line is named; other stream content is not echoed."""
     error = NativeInstalledInvocationFailure(
         _refusing_result(stdout="private stdout body", stderr="private stderr body")
     )
     rendered = str(error)
     assert "private stdout body" not in rendered
     assert "private stderr body" not in rendered
+
+
+def test_installed_invocation_failure_str_names_the_child_exception_when_no_diagnostics() -> None:
+    """A real refusal states its reason in the child's final exception line."""
+    stderr = (
+        "Traceback (most recent call last):\n"
+        '  File "<string>", line 22, in <module>\n'
+        "    runpy.run_module('infrastructure.reporting.native_hosted_reader',run_name='__main__')\n"
+        "    from infrastructure.reporting.required_acceptance_aggregate import produce_aggregate\n"
+        "ModuleNotFoundError: No module named 'infrastructure.reporting.native_cell_selection'\n"
+    )
+    rendered = str(NativeInstalledInvocationFailure(_refusing_result(stderr=stderr)))
+    assert (
+        "child_error=ModuleNotFoundError: No module named 'infrastructure.reporting.native_cell_selection'" in rendered
+    )
+    # Only the exception line is named, not the surrounding traceback.
+    assert "runpy" not in rendered
+    assert "Traceback" not in rendered
+
+
+def test_child_exception_line_never_echoes_private_content_from_other_lines() -> None:
+    """A secret on a non-final line must not be pulled into the message."""
+    rendered = str(
+        NativeInstalledInvocationFailure(
+            _refusing_result(stderr="/private/secret/path/manuscript.md\nValueError: actual reason\n")
+        )
+    )
+    assert "child_error=ValueError: actual reason" in rendered
+    assert "/private/secret/path" not in rendered
+
+
+def test_child_error_is_omitted_when_the_stream_has_no_exception_line() -> None:
+    """Never guess a reason from ordinary progress output."""
+    rendered = str(
+        NativeInstalledInvocationFailure(
+            _refusing_result(accepted=False, original_exit_code=None, stderr="progress only\n")
+        )
+    )
+    assert "child_error=" not in rendered
+    assert "accepted=False" in rendered
+
+
+def test_structured_diagnostics_take_precedence_over_the_child_stream() -> None:
+    rendered = str(
+        NativeInstalledInvocationFailure(
+            _refusing_result(diagnostics=["retained ceiling refused"], stderr="ValueError: shadowed\n")
+        )
+    )
+    assert "diagnostics=retained ceiling refused" in rendered
+    assert "child_error=" not in rendered
 
 
 def test_installed_invocation_failure_str_tolerates_a_non_mapping_result() -> None:
