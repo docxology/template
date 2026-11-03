@@ -1,6 +1,6 @@
 # 🚀 Research Project Template
 
-**Current candidate: 4.5.0.** See the [release notes](docs/releases/v4.5.0.md)
+**Current candidate: 5.0.0.** See the [release notes](docs/releases/v5.0.0.md)
 and [acceptance/publication boundary](docs/maintenance/release-boundary.md).
 Candidate metadata does not establish a published release.
 

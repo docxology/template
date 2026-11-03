@@ -1,11 +1,14 @@
 # Release boundary
 
-The root package metadata declares the **4.5.0** candidate. Its changelog and
+The root package metadata declares the **5.0.0** candidate. Its changelog and
 release notes record the release intent; publication remains pending until the
-acceptance and publication steps below pass. The coordinated minor transaction
-moves the root SDK, all 25 exemplar SDK requirements and their publication
-platform bindings from the unpublished 4.4.1 preparation to 4.5.0 while retaining
-exemplar own versions. Current release guidance is in [the 4.5.0 notes](../releases/v4.5.0.md).
+acceptance and publication steps below pass. The coordinated release transaction
+moves the root SDK, all 25 exemplar SDK requirements and their
+`[tool.template].platform_version` bindings from the unpublished 4.5.0
+preparation to 5.0.0 while retaining exemplar own versions; the exemplar
+`manuscript/config.yaml` publication `platform_version` fields moved with their
+tracked publication copies in the same change. Current release guidance is
+in [the 5.0.0 notes](../releases/v5.0.0.md).
 The existing `v4.4.0` tag remains bound to its failed candidate and is not reused.
 Final release-intent metadata must be included in the exact revision submitted
 for release acceptance.

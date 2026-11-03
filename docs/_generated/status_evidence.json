@@ -144,6 +144,17 @@
       "verified_by": "Codex (agent session)"
     },
     {
+      "command": "`uv run --no-sync --offline python -m infrastructure.publishing.root_release_contract --tag v5.0.0`",
+      "health": "\ud83d\udfe1 Publication pending; hosted acceptance required",
+      "id": "STATUS-ROOT-RELEASE-2",
+      "last_verified": "2026-11-03",
+      "mode": "manual",
+      "receipt": "docs/_generated/status_evidence.json",
+      "subsystem": "Root release boundary (`pyproject.toml`, tags, GitHub releases, `CHANGELOG.md`)",
+      "verification_scope": "Root 5.0.0 is the current release intent, superseding the unpublished 4.5.0 preparation. Root metadata, `CHANGELOG.md`, `CITATION.cff` and the release note declare 5.0.0, and both release-version checkers pass at the release commit; all 25 exemplar SDK pins, `[tool.template].platform_version` bindings and locks were re-locked to 5.0.0. Exemplar `manuscript/config.yaml` publication `platform_version` fields and the 15 tracked `output/manuscript/config.yaml` copies moved to 5.0.0 in the same clean change (source edit plus the byte-copy the manuscript injection step performs); the other 10 exemplars have no tracked publication copy to refresh. The `v5.0.0` tag and exact-revision hosted acceptance remain pending.",
+      "verified_by": "Release lane (agent session)"
+    },
+    {
       "command": "`uv run python -m infrastructure.skills check`",
       "health": "\ud83d\udfe1 Platform 4 acceptance pending",
       "id": "STATUS-SKILLS-1",
@@ -190,5 +201,5 @@
   ],
   "schema_version": "template-status-evidence/v1",
   "source_path": "STATUS.md",
-  "source_sha256": "181ddbd9af5c10c84e23ea794730f81fec542e3acab587dd70a9b732f3fc5d3d"
+  "source_sha256": "1722187cf30d79ff8d75f753a7565893dffadbe23cf32c5e1bb42d1d062dd89c"
 }
