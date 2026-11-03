@@ -29,7 +29,7 @@ env:
 
 jobs:
   native-preflight:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     # 1800s operation + cold setup/upload. The 900s bound was measured below
     # the cold lifecycle; see docs/guides/native-format-acceptance.md.
     timeout-minutes: 45
