@@ -253,7 +253,8 @@
         "changed_git_paths",
         "documentation_only",
         "functional_selection",
-        "infrastructure_selection"
+        "infrastructure_selection",
+        "project_smoke_selection_matrix"
       ],
       "effect": "mutating"
     },
