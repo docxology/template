@@ -158,7 +158,7 @@ Python census covers infrastructure, scripts, tests, and exact root Python
 files, including root `conftest.py`. Source identity binds the full public
 source fingerprint and all 25 stable public deliverable identities. Root branch
 coverage measures infrastructure with a 60 percent floor. The existing
-`root:coverage` requirement is explicitly bound to `.python-version` (3.14);
+`root:coverage` requirement is explicitly bound to `.python-version`;
 the three supported root runtime requirements remain separate.
 
 The production Root policy and prerequisites are now declared under

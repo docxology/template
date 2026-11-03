@@ -130,7 +130,7 @@ Implemented pieces:
    writes a deterministic `bundle_receipt.json` payload manifest, and verifies
    every listed path and content hash before returning.
 2. `infrastructure/rendering/manifest.py` reads `tests/regression/pinned_values/<project>.json` when present and writes `manifest.json`.
-3. `infrastructure/rendering/dockerfile_gen.py` writes a Dockerfile and `docker-compose.yml` with checksum-verified uv (default 0.13.0). The selected exemplar `.python-version` supplies the Python default, followed by the repository pin and a conservative 3.14 fallback. An explicit `--python-version` takes precedence. `runtime.json` records the selected and effective bundle profile. Non-native Ubuntu Python minors retain the deadsnakes bootstrap; generated source requires an actual container build and runtime check before operational use.
+3. `infrastructure/rendering/dockerfile_gen.py` writes a Dockerfile and `docker-compose.yml` with checksum-verified uv (default 0.13.0). The selected exemplar `.python-version` supplies the Python default, followed by the repository pin and a conservative fallback. An explicit `--python-version` takes precedence. `runtime.json` records the selected and effective bundle profile. Non-native Ubuntu Python minors retain the deadsnakes bootstrap; generated source requires an actual container build and runtime check before operational use.
 4. `pipeline.yaml` declares the `Executable Bundle` stage with tag `bundle`; default runs filter it out.
 5. `scripts/runner/archive_publication.py` and the `Archival Publication` stage provide the downstream opt-in archival path. The archival command remains dry-run by default and must receive the verified Executable Bundle.
 
