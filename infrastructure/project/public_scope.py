@@ -53,6 +53,19 @@ LOCAL_ONLY_TEMPLATE_NAMES: tuple[str, ...] = ()
 # Local-only template exemplars: see docs/maintenance/local-only-template-exemplars.md
 
 
+def public_cell_scope(cell: str) -> str:
+    """Resolve one sharded matrix cell to its canonical public scope, refusing anything else.
+
+    Hosted acceptance lanes carry the bare exemplar name as their cell
+    (``template_active_inference``) so a cell can name an artifact without a path
+    separator. The returned scope is the roster form project selection consumes.
+    """
+    scope = "templates/" + cell
+    if scope not in PUBLIC_PROJECT_NAMES:
+        raise ValueError("matrix cell must name one declared public exemplar")
+    return scope
+
+
 def public_project_source_roots(repo_root: Path | str) -> tuple[Path, ...]:
     """Admit the complete canonical public source roster without discovery.
 

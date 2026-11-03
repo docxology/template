@@ -10,9 +10,14 @@ import time
 
 import pytest
 
+from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
 from infrastructure.reporting.native_current_reader_inputs import NativeCurrentAnalysisInputs
 from infrastructure.reporting.native_installed_invocation import launch_prepared_native
-from infrastructure.reporting.native_installed_launcher import _signed_failure
+from infrastructure.reporting.native_installed_launcher import (
+    _signed_failure,
+    native_cell_scope,
+    native_preparation_scopes,
+)
 from infrastructure.reporting.native_preflight_budget import PREFLIGHT_MAX_OPERATION_SECONDS
 from infrastructure.reporting.native_revalidation_progress import RevalidationProgress
 
@@ -160,3 +165,53 @@ def test_current_reader_constructor_refuses_unadmitted_source_before_filesystem_
     with pytest.raises(ValueError, match="genuinely admitted Source context"):
         NativeCurrentAnalysisInputs(None, time.monotonic() + 10, {}, {})  # type: ignore[arg-type]
     assert not tuple(tmp_path.iterdir())
+
+
+def test_native_cell_scope_resolves_only_declared_public_exemplars() -> None:
+    assert native_cell_scope("template_code_project") == "templates/template_code_project"
+    with pytest.raises(ValueError, match="one declared public exemplar"):
+        native_cell_scope("template_not_declared")
+
+
+@pytest.mark.parametrize("mode", ["reader", "handoff"])
+def test_native_preparation_scopes_keeps_whole_roles_unsharded(mode: str) -> None:
+    assert native_preparation_scopes(mode, Path("unused-source")) == PUBLIC_PROJECT_NAMES
+
+
+def test_native_preparation_scopes_narrows_one_original_cell() -> None:
+    assert native_preparation_scopes("original", Path("unused-source"), cell="template_code_project") == (
+        "templates/template_code_project",
+    )
+
+
+def test_native_preparation_scopes_refuses_a_cell_outside_the_original_role() -> None:
+    with pytest.raises(ValueError, match="only to the original role"):
+        native_preparation_scopes("reader", Path("unused-source"), cell="template_code_project")
+
+
+def test_real_launcher_refuses_an_undeclared_matrix_cell_before_any_work(tmp_path: Path) -> None:
+    arguments = _arguments(tmp_path, "original", 14400)
+    arguments += ["--matrix-cell", "template_not_declared"]
+    result = _run(arguments)
+    assert result.returncode == 2 and "one declared public exemplar" in result.stderr
+    assert sorted(path.name for path in tmp_path.iterdir()) == ["source"]
+
+
+@pytest.mark.parametrize("mode", ["reader", "handoff", "preflight"])
+def test_real_launcher_refuses_matrix_cell_scoping_outside_the_original_role(tmp_path: Path, mode: str) -> None:
+    budget = PREFLIGHT_MAX_OPERATION_SECONDS if mode == "preflight" else 14400
+    arguments = _arguments(tmp_path, mode, budget)
+    arguments += ["--matrix-cell", "template_code_project"]
+    result = _run(arguments)
+    assert result.returncode == 2 and "only to the original role" in result.stderr
+    assert sorted(path.name for path in tmp_path.iterdir()) == ["source"]
+
+
+def test_real_launcher_admits_a_declared_matrix_cell_before_touching_fresh_paths(tmp_path: Path) -> None:
+    # A declared cell passes cell admission and stops at the fresh-destination
+    # guard, so the flag is proven admitted without running any preparation.
+    arguments = _arguments(tmp_path, "original", 14400)
+    arguments += ["--matrix-cell", "template_code_project"]
+    (tmp_path / "mirror").mkdir()
+    result = _run(arguments)
+    assert result.returncode == 2 and "fresh owner-controlled mirror and scratch" in result.stderr

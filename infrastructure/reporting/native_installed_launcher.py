@@ -37,19 +37,33 @@ from infrastructure.reporting.native_source_provider_bootstrap import (
     NATIVE_PREFLIGHT_MODULE,
 )
 from infrastructure.reporting.native_tool_process import run_native_tool_process
-from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
+from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES, public_cell_scope
 from infrastructure.reporting.native_preparation_resources import PREPARATION_PEAK_BYTES, require_native_capacity
 from infrastructure.reporting.native_readiness_input_copy import copy_original_common_readiness, copy_source_mirror_data
 
 
-def native_preparation_scopes(mode: str, source: Path) -> tuple[str, ...]:
-    """Keep complete native roles distinct from the explicitly narrow diagnostic."""
+def native_cell_scope(cell: str) -> str:
+    """Resolve one sharded matrix cell exactly as every hosted lane resolves it."""
+    return public_cell_scope(cell)
+
+
+def native_preparation_scopes(mode: str, source: Path, cell: str | None = None) -> tuple[str, ...]:
+    """Keep complete native roles distinct from the explicitly narrow diagnostic.
+
+    A sharded original cell prepares and executes exactly its own declared scope.
+    The reader and handoff roles stay whole because they bind every cell's
+    original transport, and the diagnostic preflight keeps its own narrow scope.
+    """
     if mode == "preflight":
         from infrastructure.reporting.native_installed_preflight import preflight_provider_scopes
 
         return preflight_provider_scopes(source)
     if mode not in {"original", "reader", "handoff"}:
         raise ValueError("unknown native installed preparation mode")
+    if cell is not None:
+        if mode != "original":
+            raise ValueError("native matrix cell scoping applies only to the original role")
+        return (native_cell_scope(cell),)
     return PUBLIC_PROJECT_NAMES
 
 
@@ -75,6 +89,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--python", required=True, type=Path)
     parser.add_argument("--uv", required=True, type=Path)
     parser.add_argument("--timeout", type=int, default=14400)
+    parser.add_argument("--matrix-cell", help="run one declared public exemplar as a sharded matrix cell")
     parser.add_argument("--expected-platform", required=True, choices=("Linux", "Darwin"))
     parser.add_argument("--mermaid-package-root", required=True, type=Path)
     parser.add_argument("--mermaid-dependency-root", required=True, type=Path)
@@ -101,6 +116,14 @@ def main(argv: list[str] | None = None) -> int:
         parser.error(
             f"diagnostic preflight requires an explicit timeout at most {PREFLIGHT_MAX_OPERATION_SECONDS} seconds"
         )
+    cell_scope: str | None = None
+    if args.matrix_cell is not None:
+        if args.mode != "original":
+            parser.error("native matrix cell scoping applies only to the original role")
+        try:
+            cell_scope = native_cell_scope(args.matrix_cell)
+        except ValueError as error:
+            parser.error(str(error))
     deadline = started + args.timeout
     # The inner owner must return and retain its receipts inside the outer
     # watcher's clock; an identical nested deadline lets the outer watcher kill
@@ -149,7 +172,7 @@ def main(argv: list[str] | None = None) -> int:
             operation_started=started,
             deadline=deadline,
             env=env,
-            scopes=native_preparation_scopes(args.mode, source),
+            scopes=native_preparation_scopes(args.mode, source, cell=args.matrix_cell),
         )
         env.update(
             TEMPLATE_PUBLIC_REFERENCE_ROOT=str(source),
@@ -236,6 +259,8 @@ def main(argv: list[str] | None = None) -> int:
                     "--java-executable",
                     str(args.java_executable),
                 )
+            if cell_scope is not None:
+                arguments += ("--project", cell_scope)
             role = NATIVE_PREFLIGHT_MODULE if args.mode == "preflight" else NATIVE_CONTROLLER_MODULE
         else:
             arguments = (
@@ -295,6 +320,8 @@ def main(argv: list[str] | None = None) -> int:
             "current_root": str(mirror),
             "source_commit": args.source_commit,
             "source_identity": args.source_identity,
+            "matrix_cell": args.matrix_cell,
+            "matrix_cell_scope": cell_scope,
             "actual_original_result": result,
             "native_transport": str(mirror / "output/readiness/native-transport") if args.mode == "original" else None,
         }
@@ -328,6 +355,8 @@ def main(argv: list[str] | None = None) -> int:
                     json.dumps(
                         {
                             "mode": args.mode,
+                            "matrix_cell": args.matrix_cell,
+                            "matrix_cell_scope": cell_scope,
                             "actual_original_result": error.result,
                             "original_deadline_monotonic": deadline,
                             "operation_timeout_seconds": args.timeout,
