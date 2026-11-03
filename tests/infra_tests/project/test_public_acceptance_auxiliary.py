@@ -852,3 +852,63 @@ raise SystemExit(7)
     assert json.loads(result.stdout) == dict(
         entered_guard=True, failure_class="NativeDeadlineExpired", timer_restored=True
     )
+
+
+def test_incomplete_observation_names_the_exact_custody_condition() -> None:
+    """Each inadmissible supervision condition keeps its own refusal message.
+
+    The transport previously reported a census or cleanup failure as a checkout,
+    commit or API mismatch and retained nothing, so the real condition could not
+    be recovered from the artifact. The outcome stays fail-closed; only the
+    message and the retained process record change. Pure DATA predicate: no
+    Source, Original or hosted authority is created here.
+    """
+    from infrastructure.project.public_acceptance_auxiliary import _incomplete_observation
+    from infrastructure.project.public_acceptance_auxiliary_supervision import (
+        PROCESS_SCHEMA,
+        complete_auxiliary_observation,
+    )
+
+    def admissible() -> dict:
+        return {
+            "schema_version": PROCESS_SCHEMA,
+            "pid": 4242,
+            "exit_code": 0,
+            "timed_out": False,
+            "output_limit_exceeded": False,
+            "accepted": True,
+            "cleanup": {"verified": True, "final_census_succeeded": True, "final_census_matched_pids": []},
+        }
+
+    assert complete_auxiliary_observation(admissible()) is True
+    assert _incomplete_observation(admissible()) == "the supervised process custody record is incomplete"
+
+    faults = (
+        ({"schema_version": "template-auxiliary-process-v2"}, "the supervised process schema is"),
+        ({"accepted": False}, "the supervised process was not accepted"),
+        ({"timed_out": True}, "the supervised process timed out"),
+        ({"output_limit_exceeded": True}, "the supervised process exceeded its output limit"),
+        ({"pid": 0}, "the supervised process pid is missing"),
+        ({"exit_code": None}, "the supervised process exit code is missing"),
+        ({"cleanup": None}, "the cleanup record is missing"),
+        (
+            {"cleanup": {"verified": False, "final_census_succeeded": True, "final_census_matched_pids": []}},
+            "cleanup was not verified",
+        ),
+        (
+            {"cleanup": {"verified": True, "final_census_succeeded": False, "final_census_matched_pids": []}},
+            "the final token census did not succeed",
+        ),
+        (
+            {"cleanup": {"verified": True, "final_census_succeeded": True, "final_census_matched_pids": [7]}},
+            "the final token census still matched pids [7]",
+        ),
+    )
+    for changes, expected in faults:
+        changed = admissible()
+        changed.update(changes)
+        assert complete_auxiliary_observation(changed) is False, expected
+        assert expected in _incomplete_observation(changed), (expected, _incomplete_observation(changed))
+
+    assert _incomplete_observation(None) == "the supervised process record is missing"
+    assert _incomplete_observation(["not", "a", "record"]) == "the supervised process record is missing"
