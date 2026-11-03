@@ -33,6 +33,10 @@ exact-revision acceptance; metadata and local checks do not establish delivery.
   rather than a timeout field `StageOutcome` does not carry; the missing
   attribute raised `AttributeError` on every timed-out child, and a completed
   child now keeps its own status under an enclosing exit 124.
+- Refuse a native render input that has no authored counterpart by name instead
+  of letting a custody read raise `FileNotFoundError`: a generated transmission
+  bookend stays a render input, and a missing authored member reports the
+  relative path and both roots.
 
 ## [4.4.1] — superseded unpublished preparation
 
