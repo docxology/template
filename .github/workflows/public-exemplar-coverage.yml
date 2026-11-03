@@ -19,7 +19,7 @@ concurrency:
 jobs:
   select:
     name: Source-derived coverage roster
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 5
     outputs:
       matrix: ${{ steps.roster.outputs.matrix }}
@@ -67,7 +67,7 @@ jobs:
     name: Public exemplar coverage complete
     if: always()
     needs: [select, coverage]
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 5
     steps:
       - name: Require the complete selected matrix

@@ -23,7 +23,7 @@ env:
 jobs:
   own-exemplar-coverage:
     name: Requested exemplar coverage
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 135
     env:
       COVERAGE_PROJECT: ${{ inputs.coverage-project }}
