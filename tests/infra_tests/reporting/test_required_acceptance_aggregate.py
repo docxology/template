@@ -168,3 +168,115 @@ def test_complete_archive_closure_retains_native_raster_rows_and_refuses_changed
     (tmp_path / raster["path"]).write_bytes(b"changed actual native image bytes")
     with pytest.raises(ValueError, match="original reference"):
         _evidence_closure(SnapshotReader(tmp_path), receipt["path"])
+
+
+def _held_census(*scopes):
+    """A held native census exposing the one fact the union assertion reads."""
+    from types import SimpleNamespace
+
+    return SimpleNamespace(originals={scope: object() for scope in scopes})
+
+
+def test_the_join_refuses_a_census_that_is_not_the_roster(tmp_path):
+    """Collected and missing cells are both named, and the filesystem agrees.
+
+    The audit is written before this refusal runs, exactly as the producer
+    writes it, so the assertion pins the documented consequence: the audit
+    exists and no canonical receipt does, and a re-run needs a fresh root.
+    """
+    from infrastructure.project.public_acceptance_evidence import write_json
+    from infrastructure.reporting.required_acceptance_aggregate import (
+        AUDIT_PATH,
+        RECEIPT_PATH,
+        _require_cell_union,
+    )
+
+    collected = tuple(PUBLIC_PROJECT_NAMES[:-1])
+    missing = PUBLIC_PROJECT_NAMES[-1]
+    (tmp_path / AUDIT_PATH).parent.mkdir(parents=True, exist_ok=True)
+    audit = write_json(tmp_path, tmp_path / AUDIT_PATH, {"candidate_state": "fail"})
+    with pytest.raises(ValueError) as refusal:
+        _require_cell_union(_held_census(*collected))
+    message = str(refusal.value)
+    assert "collected:" in message and "missing:" in message
+    assert missing in message
+    assert all(scope in message for scope in collected)
+    assert "no canonical receipt" in message
+    assert "fresh root" in message
+    assert audit["path"] == AUDIT_PATH
+    assert (tmp_path / AUDIT_PATH).exists()
+    assert not (tmp_path / RECEIPT_PATH).exists()
+
+
+def test_the_join_accepts_every_roster_scope_exactly_once():
+    from infrastructure.reporting.required_acceptance_aggregate import _require_cell_union
+
+    assert _require_cell_union(_held_census(*PUBLIC_PROJECT_NAMES)) is None
+
+
+def test_the_join_refuses_an_undeclared_census():
+    from infrastructure.reporting.required_acceptance_aggregate import _require_cell_union
+
+    with pytest.raises(ValueError, match="undeclared"):
+        _require_cell_union(_held_census(*PUBLIC_PROJECT_NAMES, "templates/not_a_declared_cell"))
+
+
+def _produce_aggregate_body():
+    """Return the real produce_aggregate function node, parsed from its source."""
+    import ast
+    from pathlib import Path as _Path
+
+    from infrastructure.reporting import required_acceptance_aggregate
+
+    tree = ast.parse(_Path(required_acceptance_aggregate.__file__).read_text())
+    for node in tree.body:
+        if isinstance(node, ast.FunctionDef) and node.name == "produce_aggregate":
+            return node
+    raise AssertionError("produce_aggregate is missing")
+
+
+def test_the_union_assertion_is_wired_into_the_join_before_the_receipt():
+    """Delete the union call from produce_aggregate and this test goes red.
+
+    The behavioural cases above prove the assertion's contract; this case proves
+    the assertion is actually reached by the join, after the state decision and
+    before the canonical receipt write, and that it stays behind the packing
+    guard so the unpacked path cannot reach it.
+    """
+    import ast
+
+    body = _produce_aggregate_body()
+    calls = [
+        node
+        for node in ast.walk(body)
+        if isinstance(node, ast.Call) and isinstance(node.func, ast.Name) and node.func.id == "_require_cell_union"
+    ]
+    assert len(calls) == 1, "produce_aggregate must assert the cell union exactly once"
+    guards = [
+        node
+        for node in body.body
+        if isinstance(node, ast.If)
+        and any(
+            isinstance(item, ast.Call) and isinstance(item.func, ast.Name) and item.func.id == "_require_cell_union"
+            for item in ast.walk(node)
+        )
+    ]
+    assert len(guards) == 1, "the union assertion must sit behind exactly one guard"
+    guard = guards[0]
+    assert isinstance(guard.test, ast.Compare) and getattr(guard.test.left, "id", "") == "candidate_packing", (
+        "the union assertion must be gated on candidate_packing so the unpacked path is untouched"
+    )
+    state = [
+        node
+        for node in body.body
+        if isinstance(node, ast.Assign) and any(getattr(target, "id", "") == "state" for target in node.targets)
+    ]
+    receipt_gate = [
+        node
+        for node in body.body
+        if isinstance(node, ast.If) and getattr(node.test, "left", None) is not None and node.test.left.id == "state"
+    ]
+    assert state and receipt_gate, "the state assignment and the receipt gate stay top-level"
+    assert state[-1].lineno < guard.lineno < receipt_gate[-1].lineno, (
+        "the union must run after the state decision and before the canonical receipt write"
+    )

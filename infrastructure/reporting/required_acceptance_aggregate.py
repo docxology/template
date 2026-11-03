@@ -21,6 +21,7 @@ from infrastructure.reporting.readiness_receipts import SCHEMA_VERSION, source_f
 from infrastructure.reporting.original_job_outcome import validate_auxiliary_receipt_closure
 from infrastructure.reporting.release_readiness_profile import collect_profile, required_profile
 from infrastructure.reporting.release_readiness_snapshot import ArtifactSnapshot, SnapshotReader
+from infrastructure.reporting.native_cell_selection import union_selection
 from infrastructure.reporting.native_format_joint_source import NativeReaderOperation
 from infrastructure.reporting.required_candidate_transport import (
     RequiredCandidatePackingInputs,
@@ -234,6 +235,37 @@ def _exact_source(root: Path, revision: str) -> bool:
     return observed.returncode == 0 and not observed.stdout.strip() and _checkout_revision(root) == revision
 
 
+def _require_cell_union(operation: NativeReaderOperation) -> None:
+    """Refuse a join whose collected native census is not the complete roster once.
+
+    The union is the only place that may claim roster completeness. A sharded
+    cell is admissible on its own terms and completeness is never asserted per
+    cell, so a cell that produced nothing cannot be distinguished from a cell
+    that was never run until the cells are joined here.
+
+    Collected scopes come from the native byte census this run genuinely
+    gathered (``operation.originals``); they are never derived from the
+    declaration. A list derived from the declaration would always report a
+    complete union, so this refusal could never fire.
+    """
+    collected_cells = tuple((scope,) for scope in sorted(operation.originals))
+    if union_selection(collected_cells):
+        return
+    collected = sorted(scope for cell in collected_cells for scope in cell)
+    missing = sorted(set(PUBLIC_PROJECT_NAMES) - set(collected))
+    undeclared = sorted(set(collected) - set(PUBLIC_PROJECT_NAMES))
+    detail = "; missing: " + (", ".join(missing) if missing else "none")
+    if undeclared:
+        detail += "; undeclared: " + ", ".join(undeclared)
+    raise ValueError(
+        "native cell union is incomplete (collected: "
+        + (", ".join(collected) if collected else "none")
+        + detail
+        + f"); the audit is written at {AUDIT_PATH} and no canonical receipt was written at {RECEIPT_PATH}; "
+        "re-running requires a fresh root"
+    )
+
+
 def merge_receipts(
     values: Sequence[dict[str, Any]], *, revision: str, fingerprint: str, version: str, required: set[str]
 ) -> dict[str, Any]:
@@ -360,6 +392,16 @@ def produce_aggregate(
     state = evidence.candidate_state
     if faults or not reader.unchanged() or not checked_reader.unchanged() or source_fingerprint(root) != fingerprint:
         state = "fail"
+    if candidate_packing is not None:
+        # The join is the one path that may claim the roster, so the union
+        # assertion lives here rather than inside the state decision: a union
+        # failure and a profile failure name different things. The audit is
+        # already written above and no canonical receipt exists yet, and the
+        # refusal says so, because a same-root re-run would otherwise report an
+        # evidence collision instead of the cells that are missing.
+        if not isinstance(native_operation, NativeReaderOperation):
+            raise ValueError("candidate packing requires the held native reader")
+        _require_cell_union(native_operation)
     canonical = None
     result: dict[str, Any] = {}
     if state == "pass":
