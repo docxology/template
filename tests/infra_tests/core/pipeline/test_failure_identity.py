@@ -148,3 +148,42 @@ def test_success_and_ordinary_failures_keep_their_meanings() -> None:
     missing = terminal_identity(clock=live, receipt_error="no completion receipt")
     assert missing.condition is SupervisionCondition.RECEIPT_MISSING
     assert missing.status is StageStatus.BLOCKED
+
+
+def test_a_bare_124_under_the_declared_convention_keeps_the_timeout_label() -> None:
+    """The repository's own 124 convention stays; only the refusal escapes it."""
+    live = ClockState(deadline_monotonic=86_400.0, observed_completion_monotonic=86_399.0)
+    identity = terminal_identity(
+        clock=live,
+        original_exit=124,
+        script_timeout_convention=True,
+    )
+    assert identity.condition is SupervisionCondition.SCRIPT_TIMEOUT_CONVENTION
+    assert identity.status is StageStatus.TIMED_OUT
+    assert identity.refuses is True
+
+
+def test_the_124_convention_cannot_relabel_an_unobserved_attempt() -> None:
+    """The 4.5.0 mislabel: a composed 124 plus a failed observation read as a timeout.
+
+    The acceptance run recorded `stage_key: render_pdf`, `status: timed_out`,
+    `child_exit_code: 124` while the same attempt's supervision record reported
+    `timed_out: false`, `custody_refused: true`, and the terminal-data
+    mismatch. A real child timeout outranks a *later* refusal, but a 124 whose
+    observation itself failed is not a timeout, and the convention must not
+    relabel it.
+    """
+    live = ClockState(deadline_monotonic=14667.95, observed_completion_monotonic=10268.80)
+    identity = terminal_identity(
+        clock=live,
+        original_exit=124,
+        observed_exit=124,
+        custody_refused=True,
+        custody_condition=SupervisionCondition.TERMINAL_DATA_MISMATCH,
+        observation_failed="native original terminal data differs from actual supervised original OS custody",
+        script_timeout_convention=True,
+    )
+    assert identity.condition is SupervisionCondition.TERMINAL_DATA_MISMATCH
+    assert identity.status is not StageStatus.TIMED_OUT
+    assert identity.status is StageStatus.BLOCKED
+    assert identity.refuses is True

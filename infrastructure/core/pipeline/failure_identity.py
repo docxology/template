@@ -150,6 +150,7 @@ def terminal_identity(
     observation_failed: str = "",
     command_error: str = "",
     receipt_error: str = "",
+    script_timeout_convention: bool = False,
 ) -> SupervisionIdentity:
     """Map observed supervision facts onto one typed terminal identity.
 
@@ -157,6 +158,13 @@ def terminal_identity(
     interruption or an actually consumed clock is reported as such, a custody
     condition reports its own typed cause, and an exit-124 convention with no
     consumed clock is reported as unattributed instead of as a timeout.
+
+    ``script_timeout_convention`` records the one legitimate exit-124 label: a
+    caller whose script declares the 124 timeout convention itself. It is
+    checked *after* the refusal conditions, so the convention can label an
+    unattended exit 124 as a timeout but can never relabel a refused or
+    unobserved attempt as one. A bare 124 keeps the timeout label; a 124 that
+    arrived with a refusal keeps the refusal's cause.
     """
     exit_code = original_exit if original_exit is not None else observed_exit
     if exit_code in INTERRUPTION_EXIT_CODES:
@@ -188,6 +196,12 @@ def terminal_identity(
             custody_condition or SupervisionCondition.CUSTODY_REFUSAL,
             StageStatus.BLOCKED,
             command_error or "supervision boundary refused to certify the attempt",
+        )
+    if script_timeout_convention and exit_code == TIMEOUT_CONVENTION_EXIT:
+        return SupervisionIdentity(
+            SupervisionCondition.SCRIPT_TIMEOUT_CONVENTION,
+            StageStatus.TIMED_OUT,
+            "the script declared the exit-124 timeout convention; the supervisor's declared clock was not consumed",
         )
     if exit_code == TIMEOUT_CONVENTION_EXIT:
         return SupervisionIdentity(

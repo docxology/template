@@ -120,7 +120,13 @@ def changed_project_paths(repo_root: Path) -> tuple[str, ...]:
     return tuple(sorted(set(paths)))
 
 
-def _audit_project(repo_root: Path, project: str, *, mode: GateMode) -> ProjectGateResult:
+def _audit_project(repo_root: Path, project: str) -> ProjectGateResult:
+    """Run one project's rendered audit and classify its retained JSON.
+
+    Severity policy is applied by the report, never by the audit call: the same
+    audit JSON serves both the blocking and the strict lane, so no mode is
+    threaded here.
+    """
     command = [
         sys.executable,
         "-m",
@@ -233,10 +239,10 @@ def run_publication_gate(
     root = Path(repo_root).resolve()
     workers = max(1, min(jobs, len(projects) or 1))
     if workers == 1:
-        results = tuple(_audit_project(root, project, mode=mode) for project in projects)
+        results = tuple(_audit_project(root, project) for project in projects)
     else:
         with ThreadPoolExecutor(max_workers=workers) as pool:
-            results = tuple(pool.map(lambda name: _audit_project(root, name, mode=mode), projects))
+            results = tuple(pool.map(lambda name: _audit_project(root, name), projects))
     return PublicationGateReport(mode=mode, results=results)
 
 
