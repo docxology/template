@@ -316,7 +316,9 @@ def collect_native_hosted_originals(
     if len(jobs) != job_count:
         raise ValueError("native hosted producer job listing is incomplete")
     selected_jobs = [
-        job for job in jobs if job.get("name") == ("native-original" if cell is None else f"native-original-cell ({cell})")
+        job
+        for job in jobs
+        if job.get("name") == ("native-original" if cell is None else f"native-original-cell ({cell})")
     ]
     if (
         len(selected_jobs) != 1
