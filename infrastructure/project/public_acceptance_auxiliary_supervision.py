@@ -314,7 +314,7 @@ def supervise(
         payload = validate_acceptance_payload(body, bootstrap_payload, expected_path=directory / PAYLOAD)
         if (directory / PAYLOAD).read_bytes() != body or command != [
             command[0],
-            "-I",
+            "-IB",
             "-c",
             format_acceptance_payload_loader(payload),
             *tail,
