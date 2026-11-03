@@ -61,9 +61,15 @@ def native_preparation_scopes(mode: str, source: Path, cell: str | None = None) 
     if mode not in {"original", "reader", "handoff"}:
         raise ValueError("unknown native installed preparation mode")
     if cell is not None:
-        if mode != "original":
-            raise ValueError("native matrix cell scoping applies only to the original role")
-        return (native_cell_scope(cell),)
+        if mode == "original":
+            return (native_cell_scope(cell),)
+        if mode == "reader":
+            # The reader keeps roster-wide preparation: its provider admission
+            # still demands every public nomination, and only its Current-side
+            # execution is sharded to the cell.
+            native_cell_scope(cell)
+            return PUBLIC_PROJECT_NAMES
+        raise ValueError("native matrix cell scoping applies only to the original and reader roles")
     return PUBLIC_PROJECT_NAMES
 
 
@@ -118,8 +124,8 @@ def main(argv: list[str] | None = None) -> int:
         )
     cell_scope: str | None = None
     if args.matrix_cell is not None:
-        if args.mode != "original":
-            parser.error("native matrix cell scoping applies only to the original role")
+        if args.mode not in {"original", "reader"}:
+            parser.error("native matrix cell scoping applies only to the original and reader roles")
         try:
             cell_scope = native_cell_scope(args.matrix_cell)
         except ValueError as error:
@@ -290,6 +296,8 @@ def main(argv: list[str] | None = None) -> int:
                 )
             if args.stage_bundle:
                 arguments += ("--stage-bundle",)
+            if cell_scope is not None:
+                arguments += ("--matrix-cell", args.matrix_cell)
             role = NATIVE_READER_MODULE
         if args.mode == "handoff":
             if args.acceptance_artifact_id is None or args.acceptance_receipt_sha256 is None:

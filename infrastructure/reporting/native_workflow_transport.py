@@ -13,16 +13,14 @@ from pathlib import Path
 from typing import Any
 
 from infrastructure.project.public_hosted_origin import MAX_ARCHIVE, _context
-from infrastructure.project.public_scope import public_cell_scope
+from infrastructure.reporting.native_cell_selection import cell_artifact_names
 from infrastructure.reporting.native_hosted_transport_archive import (
-    INDEX_ARTIFACT,
     MAX_CHUNK,
     MAX_MEMBERS,
     MAX_SHARD,
     MAX_SHARDS,
     MAX_TOTAL,
     SCHEMA as NATIVE_SCHEMA,
-    SHARD_PREFIX as NATIVE_PREFIX,
     _archive,
     _file_identity,
     _hash,
@@ -45,8 +43,11 @@ def transport_artifact_names(kind: str, cell: str | None = None) -> tuple[str, s
     shard member names stay the same, so the reader's per-artifact discovery and
     the published candidate schema are unchanged.
     """
+    if cell is not None and kind != "native":
+        raise ValueError("transport cell naming applies only to the native transport")
     if kind == "native":
-        filename, primary, prefix = "native-index.json", INDEX_ARTIFACT, NATIVE_PREFIX
+        filename = "native-index.json"
+        primary, prefix = cell_artifact_names(cell)
     elif kind == "candidate":
         filename, primary, prefix = CANDIDATE_INDEX, "platform-required-acceptance", CANDIDATE_PREFIX
     elif kind in {"failed-native", "failed-reader", "failed-handoff"}:
@@ -56,12 +57,6 @@ def transport_artifact_names(kind: str, cell: str | None = None) -> tuple[str, s
         prefix = "required-source-" + label + "-failure-shard-"
     else:
         raise ValueError("transport upload requires one Source-owned confined target")
-    if cell is not None:
-        if kind != "native":
-            raise ValueError("transport cell naming applies only to the native transport")
-        public_cell_scope(cell)
-        primary = "required-source-native-cell-" + cell
-        prefix = primary + "-shard-"
     return filename, primary, prefix
 
 

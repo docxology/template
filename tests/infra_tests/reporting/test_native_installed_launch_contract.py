@@ -184,9 +184,17 @@ def test_native_preparation_scopes_narrows_one_original_cell() -> None:
     )
 
 
-def test_native_preparation_scopes_refuses_a_cell_outside_the_original_role() -> None:
-    with pytest.raises(ValueError, match="only to the original role"):
-        native_preparation_scopes("reader", Path("unused-source"), cell="template_code_project")
+def test_native_preparation_scopes_refuses_a_cell_outside_the_original_and_reader_roles() -> None:
+    with pytest.raises(ValueError, match="only to the original and reader roles"):
+        native_preparation_scopes("handoff", Path("unused-source"), cell="template_code_project")
+
+
+def test_native_preparation_scopes_keeps_the_reader_roster_wide_for_a_cell() -> None:
+    # The reader's provider admission still demands every public nomination, so a
+    # cell shards only its Current-side execution, never its preparation.
+    assert native_preparation_scopes("reader", Path("unused-source"), cell="template_code_project") == (
+        PUBLIC_PROJECT_NAMES
+    )
 
 
 def test_real_launcher_refuses_an_undeclared_matrix_cell_before_any_work(tmp_path: Path) -> None:
@@ -197,14 +205,26 @@ def test_real_launcher_refuses_an_undeclared_matrix_cell_before_any_work(tmp_pat
     assert sorted(path.name for path in tmp_path.iterdir()) == ["source"]
 
 
-@pytest.mark.parametrize("mode", ["reader", "handoff", "preflight"])
-def test_real_launcher_refuses_matrix_cell_scoping_outside_the_original_role(tmp_path: Path, mode: str) -> None:
+@pytest.mark.parametrize("mode", ["handoff", "preflight"])
+def test_real_launcher_refuses_matrix_cell_scoping_outside_the_original_and_reader_roles(
+    tmp_path: Path, mode: str
+) -> None:
     budget = PREFLIGHT_MAX_OPERATION_SECONDS if mode == "preflight" else 14400
     arguments = _arguments(tmp_path, mode, budget)
     arguments += ["--matrix-cell", "template_code_project"]
     result = _run(arguments)
-    assert result.returncode == 2 and "only to the original role" in result.stderr
+    assert result.returncode == 2 and "only to the original and reader roles" in result.stderr
     assert sorted(path.name for path in tmp_path.iterdir()) == ["source"]
+
+
+def test_real_launcher_admits_a_declared_matrix_cell_for_the_reader_before_touching_fresh_paths(
+    tmp_path: Path,
+) -> None:
+    arguments = _arguments(tmp_path, "reader", 14400)
+    arguments += ["--matrix-cell", "template_code_project"]
+    (tmp_path / "mirror").mkdir()
+    result = _run(arguments)
+    assert result.returncode == 2 and "fresh owner-controlled mirror and scratch" in result.stderr
 
 
 def test_real_launcher_admits_a_declared_matrix_cell_before_touching_fresh_paths(tmp_path: Path) -> None:

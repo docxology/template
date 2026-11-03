@@ -11,7 +11,22 @@ from __future__ import annotations
 
 from collections.abc import Iterable, Sequence
 
-from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
+from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES, public_cell_scope
+from infrastructure.reporting.native_hosted_transport_archive import INDEX_ARTIFACT, SHARD_PREFIX
+
+
+def cell_artifact_names(cell: str | None) -> tuple[str, str]:
+    """Return the (primary index artifact, shard artifact prefix) for one native target.
+
+    A cell renames only the artifacts. The producer's index filename and shard
+    member names stay the same, so per-artifact discovery and the published
+    candidate schema are unchanged.
+    """
+    if cell is None:
+        return INDEX_ARTIFACT, SHARD_PREFIX
+    public_cell_scope(cell)
+    primary = "required-source-native-cell-" + cell
+    return primary, primary + "-shard-"
 
 
 def cell_selection(scopes: Sequence[str]) -> bool:
