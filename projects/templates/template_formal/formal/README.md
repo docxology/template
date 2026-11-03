@@ -21,7 +21,7 @@ src/template_formal -mindepth 1 -type d -iname 'formal'` now returns nothing
 (note: `find src -type d -iname '*formal*'` is **not** the right check here —
 it also matches `src/template_formal` itself, since that directory name
 contains the substring "formal"). If you ever see a nested `formal/`
-directory under `src/template_formal/` again, that is a regression — the
+directory under `projects/templates/template_formal/src/template_formal/` again, that is a regression — the
 side-spec belongs only here, at the project root, wired to
 `scripts/check_formal_specs.sh`.
 

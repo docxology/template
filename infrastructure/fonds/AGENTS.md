@@ -140,9 +140,9 @@ uv run python -m infrastructure.fonds.linking --private-root /path/to/fonds
 
 A valid fond must have:
 - `fonds.yaml` — manifest (required by `validate_fond_structure`)
-- `data/` — resource data (required)
+- `<fond>/data/` — resource data (required)
 
-Optional: `manuscript/`, `scripts/`, `tests/`
+Optional: `<fond>/manuscript/`, `<fond>/scripts/`, `<fond>/tests/`
 
 Unlike projects, no Python code is required — fonds are passive data stores.
 
