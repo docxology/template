@@ -772,11 +772,17 @@ jobs:
             echo "::error::native cell lane result is '$NATIVE_JOB_RESULT', not success"
             exit 1
           fi
-          gh api "repos/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID/artifacts?per_page=100" \
+          gh api --paginate "repos/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID/artifacts?per_page=100" \
             --jq '.artifacts[].name' > "$RUNNER_TEMP/native-artifacts.txt"
-          actual=$(grep -o '^required-source-native-cell-.*' "$RUNNER_TEMP/native-artifacts.txt" | sed 's/^required-source-native-cell-//' | sort || true)
-          missing=$(comm -23 <<< "$expected" <(printf '%s\n' "$actual" | sed '/^$/d'))
-          extra=$(comm -13 <<< "$expected" <(printf '%s\n' "$actual" | sed '/^$/d'))
+          # A cell uploads one primary index plus its own `-shard-NNNN` members.
+          # Only the primary names the cell, so the shard members are excluded:
+          # counting them would report every shard as an undeclared cell.
+          actual=$(grep -o '^required-source-native-cell-.*' "$RUNNER_TEMP/native-artifacts.txt" \
+            | grep -v -- '-shard-[0-9]\{4\}$' \
+            | sed 's/^required-source-native-cell-//' | sort || true)
+          # comm needs two file operands; a here-string is stdin, not operand one.
+          missing=$(comm -23 <(printf '%s\n' "$expected") <(printf '%s\n' "$actual" | sed '/^$/d'))
+          extra=$(comm -13 <(printf '%s\n' "$expected") <(printf '%s\n' "$actual" | sed '/^$/d'))
           if [ -n "$missing" ]; then
             echo "::error::missing native cell artifacts for: $(tr '\n' ' ' <<< "$missing")"
             exit 1
