@@ -708,14 +708,12 @@ jobs:
           --scratch "$RUNNER_TEMP/template-native-original-scratch"
           --epubcheck-jar "$TEMPLATE_NATIVE_EPUBCHECK" --java-executable "$TEMPLATE_NATIVE_JAVA"
       - name: Retain exact independently admitted native shards (one project)
-        # TODO(native-sharding): the per-cell artifact name must come from
-        # upload-readiness-shards, so the collector can require one artifact per
-        # project. `kind: native` alone names the roster-wide artifact.
         uses: ./.github/actions/upload-readiness-shards
         with:
           repo-root: ${{ runner.temp }}/template-native-original-root
           directory: ${{ runner.temp }}/template-native-original-root/output/readiness/native-transport
           kind: native
+          cell: ${{ matrix.cell }}
       - name: Preserve failed original raw and Code evidence
         if: always() && steps.native.outcome == 'failure'
         run: >-

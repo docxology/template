@@ -13,6 +13,7 @@ from pathlib import Path
 from typing import Any
 
 from infrastructure.project.public_hosted_origin import MAX_ARCHIVE, _context
+from infrastructure.project.public_scope import public_cell_scope
 from infrastructure.reporting.native_hosted_transport_archive import (
     INDEX_ARTIFACT,
     MAX_CHUNK,
@@ -37,8 +38,42 @@ from infrastructure.reporting.required_candidate_transport import (
 from infrastructure.reporting.native_failed_transport import SCHEMA as FAILED_SCHEMA
 
 
+def transport_artifact_names(kind: str, cell: str | None = None) -> tuple[str, str, str]:
+    """Return the (index filename, primary artifact, shard prefix) names for one target.
+
+    A sharded cell renames only the artifacts: the producer's index filename and
+    shard member names stay the same, so the reader's per-artifact discovery and
+    the published candidate schema are unchanged.
+    """
+    if kind == "native":
+        filename, primary, prefix = "native-index.json", INDEX_ARTIFACT, NATIVE_PREFIX
+    elif kind == "candidate":
+        filename, primary, prefix = CANDIDATE_INDEX, "platform-required-acceptance", CANDIDATE_PREFIX
+    elif kind in {"failed-native", "failed-reader", "failed-handoff"}:
+        label = kind.removeprefix("failed-")
+        filename = kind + "-index.json"
+        primary = "required-source-" + label + "-failure-index"
+        prefix = "required-source-" + label + "-failure-shard-"
+    else:
+        raise ValueError("transport upload requires one Source-owned confined target")
+    if cell is not None:
+        if kind != "native":
+            raise ValueError("transport cell naming applies only to the native transport")
+        public_cell_scope(cell)
+        primary = "required-source-native-cell-" + cell
+        prefix = primary + "-shard-"
+    return filename, primary, prefix
+
+
 def prepare_transport_upload(
-    root: Path, directory: Path, *, kind: str, repository: str, run_id: int, revision: str
+    root: Path,
+    directory: Path,
+    *,
+    kind: str,
+    repository: str,
+    run_id: int,
+    revision: str,
+    cell: str | None = None,
 ) -> dict[str, Any]:
     """Return a checked upload plan; no gate acceptance is inferred from DATA."""
     _context(repository, run_id, revision)
@@ -56,16 +91,8 @@ def prepare_transport_upload(
     reader = SnapshotReader(root)
     relative = directory.relative_to(root).as_posix()
     reader.public_path(relative)
-    filename = "native-index.json" if kind == "native" else CANDIDATE_INDEX
-    primary = INDEX_ARTIFACT if kind == "native" else "platform-required-acceptance"
-    prefix = NATIVE_PREFIX if kind == "native" else CANDIDATE_PREFIX
-    schema = NATIVE_SCHEMA if kind == "native" else CANDIDATE_SCHEMA
-    if failed:
-        filename = kind + "-index.json"
-        label = kind.removeprefix("failed-")
-        primary = "required-source-" + label + "-failure-index"
-        prefix = "required-source-" + label + "-failure-shard-"
-        schema = FAILED_SCHEMA
+    filename, primary, prefix = transport_artifact_names(kind, cell)
+    schema = FAILED_SCHEMA if failed else (NATIVE_SCHEMA if kind == "native" else CANDIDATE_SCHEMA)
     index = reader.read(f"{relative}/index/{filename}", max_bytes=MAX_ARCHIVE)
     data = index.json_object()
     if (
@@ -170,6 +197,7 @@ def prepare_transport_upload(
         "index_filename": filename,
         "shard_prefix": prefix,
         "member_prefix": kind,
+        "cell": cell or "",
         "shard_count": len(shards),
         "index_sha256": index.sha256,
     }
@@ -185,6 +213,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--repository", required=True)
     parser.add_argument("--run-id", required=True, type=int)
     parser.add_argument("--revision", required=True)
+    parser.add_argument("--cell", default="", help="name the native artifact for one sharded matrix cell")
     args = parser.parse_args(argv)
     try:
         plan = prepare_transport_upload(
@@ -194,6 +223,7 @@ def main(argv: list[str] | None = None) -> int:
             repository=args.repository,
             run_id=args.run_id,
             revision=args.revision,
+            cell=args.cell or None,
         )
     except (OSError, ValueError, KeyError, TypeError) as error:
         sys.stdout.write("transport upload refused: " + str(error) + "\n")
