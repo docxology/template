@@ -10,6 +10,10 @@ inputs:
   kind:
     description: Source-declared native or candidate transport target.
     required: true
+  cell:
+    description: Optional bare exemplar name naming one sharded native cell's artifacts.
+    required: false
+    default: ""
 runs:
   using: composite
   steps:
@@ -20,10 +24,12 @@ runs:
         TRANSPORT_ROOT: ${{ inputs.repo-root }}
         TRANSPORT_DIRECTORY: ${{ inputs.directory }}
         TRANSPORT_KIND: ${{ inputs.kind }}
+        TRANSPORT_CELL: ${{ inputs.cell }}
       run: |
         set -euo pipefail
         .venv/bin/python -m infrastructure.reporting.native_workflow_transport \
           --repo-root "$TRANSPORT_ROOT" --directory "$TRANSPORT_DIRECTORY" --kind "$TRANSPORT_KIND" \
+          --cell "$TRANSPORT_CELL" \
           --repository "$GITHUB_REPOSITORY" --run-id "$GITHUB_RUN_ID" --revision "$GITHUB_SHA" >> "$GITHUB_OUTPUT"
     - name: Upload exact primary index
       uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a

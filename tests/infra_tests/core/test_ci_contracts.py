@@ -1,5 +1,8 @@
 """Deep modules remain required, isolated, and complementary to baseline smoke."""
 
+import json
+import os
+import subprocess
 from pathlib import Path
 
 import yaml
@@ -270,3 +273,82 @@ def test_paper_source_changes_retain_both_compiler_contracts(source: str) -> Non
     validate_plan(ROOT, plan)
     assert set(_PAPER_NATIVE) <= set(plan["contract_modules"])
     assert set(_PAPER_PURE) <= {module for shard in plan["infra_shards"] for module in shard}
+
+
+def _native_union_gate_script(tmp_path: Path) -> Path:
+    """Extract the union gate body from the workflow so the test cannot drift from it."""
+    jobs = yaml.safe_load((ROOT / ".github/workflows/platform-required-acceptance.yml").read_bytes())["jobs"]
+    step = next(
+        step
+        for step in jobs["complete"]["steps"]
+        if step.get("name") == "Require the complete native cell union before any admission"
+    )
+    script = tmp_path / "union-gate.sh"
+    script.write_text(step["run"], encoding="utf-8")
+    return script
+
+
+def _run_native_union_gate(tmp_path: Path, artifacts: str, cells: str) -> subprocess.CompletedProcess[str]:
+    """Run the real gate body with the artifact census it reads from `gh api`."""
+    script = _native_union_gate_script(tmp_path)
+    # A real `gh` stand-in: it prints the artifact census to stdout, so the
+    # workflow's own `> "$RUNNER_TEMP/native-artifacts.txt"` redirect still runs.
+    runner = tmp_path / "gh"
+    runner.write_text("#!/usr/bin/env bash\ncat <<'ARTIFACTS'\n" + artifacts + "ARTIFACTS\n", encoding="utf-8")
+    runner.chmod(0o755)
+    matrix = json.dumps({"include": [{"cell": cell} for cell in cells.split()]})
+    environment = {
+        **os.environ,
+        "PATH": f"{tmp_path}{os.pathsep}{os.environ['PATH']}",
+        "RUNNER_TEMP": str(tmp_path),
+        "GITHUB_REPOSITORY": "docxology/template",
+        "GITHUB_RUN_ID": "1",
+        "NATIVE_MATRIX": matrix,
+        "NATIVE_JOB_RESULT": "success",
+    }
+    return subprocess.run(["bash", str(script)], capture_output=True, text=True, env=environment, check=False)
+
+
+def test_native_union_gate_counts_cells_not_their_shard_members(tmp_path: Path) -> None:
+    """Each cell uploads a primary index plus its own shards; shards are not cells."""
+    artifacts = "\n".join(
+        [
+            "required-source-native-cell-template_code_project",
+            "required-source-native-cell-template_code_project-shard-0000",
+            "required-source-native-cell-template_code_project-shard-0001",
+            "required-source-native-cell-template_sia",
+            "required-source-native-cell-template_sia-shard-0000",
+            "required-source-common",
+            "",
+        ]
+    )
+    observed = _run_native_union_gate(tmp_path, artifacts, "template_code_project template_sia")
+    assert observed.returncode == 0, observed.stdout + observed.stderr
+    assert "complete native cell union: 2 of 2" in observed.stdout
+
+
+def test_native_union_gate_names_a_missing_cell(tmp_path: Path) -> None:
+    artifacts = "\n".join(
+        [
+            "required-source-native-cell-template_code_project",
+            "required-source-native-cell-template_code_project-shard-0000",
+            "",
+        ]
+    )
+    observed = _run_native_union_gate(tmp_path, artifacts, "template_code_project template_sia")
+    assert observed.returncode != 0
+    assert "missing native cell artifacts for: template_sia" in observed.stdout
+
+
+def test_native_union_gate_names_an_undeclared_cell(tmp_path: Path) -> None:
+    artifacts = "\n".join(
+        [
+            "required-source-native-cell-template_code_project",
+            "required-source-native-cell-template_sia",
+            "required-source-native-cell-template_formal",
+            "",
+        ]
+    )
+    observed = _run_native_union_gate(tmp_path, artifacts, "template_code_project template_sia")
+    assert observed.returncode != 0
+    assert "unexpected native cell artifacts for: template_formal" in observed.stdout
