@@ -388,6 +388,8 @@ def test_platform_four_auxiliary_flags_require_original_process_and_raw_evidence
     payload = {"source_fingerprint": "b" * 64, "details": details}
     with pytest.raises(ValueError, match="exact artifact binding"):
         validate_acceptance(requirement, payload, SnapshotReader(tmp_path))
-    for unsupported in ("3.8.0", "5.0.0", "4", "4.4.invalid"):
+    with pytest.raises(ValueError, match="exact artifact binding"):
+        validate_acceptance(replace(requirement, platform_version="5.0.0"), payload, SnapshotReader(tmp_path))
+    for unsupported in ("3.8.0", "6.0.0", "4", "4.4.invalid"):
         with pytest.raises(ValueError, match="current platform 4"):
             validate_acceptance(replace(requirement, platform_version=unsupported), payload, SnapshotReader(tmp_path))

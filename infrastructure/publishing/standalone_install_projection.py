@@ -244,7 +244,7 @@ def _expected(
     from infrastructure.publishing.root_release_contract import root_package_version
 
     platform_version = root_package_version(root.checkout)
-    if re.fullmatch(r"4\.\d+\.\d+", platform_version) is None:
+    if re.fullmatch(r"(?:4|5)\.\d+\.\d+", platform_version) is None:
         raise ValueError("installation projection requires genuine platform 4 Source metadata")
     platform = _admit_provider(root, ROOT_PACKAGE, platform_version)
     scope, records = _assert_canonical_original(original, root, platform_version)

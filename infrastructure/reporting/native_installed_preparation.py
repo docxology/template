@@ -269,7 +269,7 @@ def prepare_native_installed_runtime(
         raise ValueError("native preparation requires the complete valid source-owned release profile")
     lookup = {row.scope: row for row in rows if row.kind == "installed"}
     expected_version = lookup["root"].version
-    if re.fullmatch(r"4\.\d+\.\d+", expected_version) is None or lookup["root"].package != "research-project-template":
+    if re.fullmatch(r"(?:4|5)\.\d+\.\d+", expected_version) is None or lookup["root"].package != "research-project-template":
         raise ValueError("native preparation requires genuine intended platform 4 Source metadata")
     source_files, source_fixtures = admit_source_bodies(
         source_root, reader, reference, _canonical_inventory(source_root), deadline

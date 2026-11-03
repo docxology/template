@@ -63,7 +63,7 @@ def test_capture_requires_the_externally_admitted_wheel_hash(tmp_path: Path) -> 
     assert not (tmp_path / "source/output/readiness/custody.json").exists()
 
 
-@pytest.mark.parametrize("version", ("4.0.1", "4.0.2"))
+@pytest.mark.parametrize("version", ("4.0.1", "4.0.2", "5.0.0"))
 def test_capture_never_treats_metadata_as_a_valid_wheel_or_runtime(version: str, tmp_path: Path) -> None:
     result = _capture(tmp_path, '[project]\nname="research-project-template"\nversion="' + version + '"\n')
     assert result.returncode != 0
