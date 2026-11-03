@@ -27,14 +27,13 @@ from infrastructure.project.public_hosted_origin import (
     _merge_listing_pages,
 )
 from infrastructure.project.public_reference_git import remaining
-from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
+from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES, public_cell_scope
+from infrastructure.reporting.native_cell_selection import cell_artifact_names
 from infrastructure.reporting.native_source_external_admission import NativeSourceContext
 from infrastructure.reporting.release_readiness_snapshot import SnapshotReader, json_object_from_bytes
 
 from infrastructure.reporting.native_hosted_transport_archive import (
     SCHEMA,
-    INDEX_ARTIFACT,
-    SHARD_PREFIX,
     MAX_SHARDS,
     MAX_MEMBERS,
     MAX_TOTAL,
@@ -225,6 +224,7 @@ def collect_native_hosted_originals(
     run_id: int,
     head_sha: str,
     deadline: float,
+    cell: str | None = None,
 ) -> NativeHostedArtifactCustodian:
     """Actually authenticate exact Source/job/API digests and retrieve all shards.
 
@@ -315,7 +315,11 @@ def collect_native_hosted_originals(
             raise ValueError("native hosted producer job pagination is incomplete")
     if len(jobs) != job_count:
         raise ValueError("native hosted producer job listing is incomplete")
-    selected_jobs = [job for job in jobs if job.get("name") == "native-original"]
+    selected_jobs = [
+        job
+        for job in jobs
+        if job.get("name") == ("native-original" if cell is None else f"native-original-cell ({cell})")
+    ]
     if (
         len(selected_jobs) != 1
         or selected_jobs[0].get("status") != "completed"
@@ -323,11 +327,10 @@ def collect_native_hosted_originals(
         or selected_jobs[0].get("head_sha") != head_sha
     ):
         raise ValueError("native hosted exact original producer did not genuinely complete successfully")
-    steps = [
-        step
-        for step in selected_jobs[0].get("steps", [])
-        if step.get("name") == "Original authenticated installed native format inventory"
-    ]
+    producer_step = "Original authenticated installed native format inventory"
+    if cell is not None:
+        producer_step += " (one project)"
+    steps = [step for step in selected_jobs[0].get("steps", []) if step.get("name") == producer_step]
     if len(steps) != 1 or steps[0].get("status") != "completed" or steps[0].get("conclusion") != "success":
         raise ValueError("native hosted source-declared installed producer step did not pass")
     pages: list[dict[str, Any]] = []
@@ -338,17 +341,16 @@ def collect_native_hosted_originals(
         if len(listing["artifacts"]) == listing["total_count"]:
             break
     artifacts = _merge_listing_pages(pages, complete=True)["artifacts"]
+    index_name, shard_prefix = cell_artifact_names(cell)
     selected = {
         row["name"]: row
         for row in artifacts
-        if row.get("name") == INDEX_ARTIFACT or str(row.get("name", "")).startswith(SHARD_PREFIX)
+        if row.get("name") == index_name or str(row.get("name", "")).startswith(shard_prefix)
     }
     if (
         len(selected)
-        != sum(
-            row.get("name") == INDEX_ARTIFACT or str(row.get("name", "")).startswith(SHARD_PREFIX) for row in artifacts
-        )
-        or INDEX_ARTIFACT not in selected
+        != sum(row.get("name") == index_name or str(row.get("name", "")).startswith(shard_prefix) for row in artifacts)
+        or index_name not in selected
         or len(selected) > MAX_SHARDS + 1
     ):
         raise ValueError("native hosted artifact owner roster is duplicated or missing")
@@ -386,10 +388,11 @@ def collect_native_hosted_originals(
         observations.append({"path": target.relative_to(root).as_posix(), "sha256": digest})
         return _archive(content, maximum=MAX_ARCHIVE, count=1)
 
-    original_index = download(INDEX_ARTIFACT)
+    original_index = download(index_name)
     if set(original_index) != {"native-index.json"}:
         raise ValueError("native hosted index archive membership differs")
     index = json_object_from_bytes(original_index["native-index.json"])
+    expected_scopes = list(PUBLIC_PROJECT_NAMES) if cell is None else [public_cell_scope(cell)]
     if (
         set(index)
         != {
@@ -410,11 +413,15 @@ def collect_native_hosted_originals(
         or index.get("hosted_run_id") != run_id
         or index.get("source_commit") != head_sha
         or index.get("source_identity") != source.reference.source_identity
-        or index.get("scopes") != list(PUBLIC_PROJECT_NAMES)
-        or set(index.get("originals", {})) != set(PUBLIC_PROJECT_NAMES)
-        or set(index.get("pdfium_wheels", {})) != set(PUBLIC_PROJECT_NAMES)
+        or index.get("scopes") != expected_scopes
+        or set(index.get("originals", {})) != set(expected_scopes)
+        or set(index.get("pdfium_wheels", {})) != set(expected_scopes)
     ):
-        raise ValueError("native hosted index differs from complete externally admitted Source/public roster")
+        raise ValueError(
+            "native hosted index differs from complete externally admitted Source/public roster"
+            if cell is None
+            else "native hosted cell index differs from its declared single Source scope"
+        )
     shards = index.get("shards")
     files = index.get("files")
     if (
@@ -422,14 +429,14 @@ def collect_native_hosted_originals(
         or not 0 < len(shards) <= MAX_SHARDS
         or not isinstance(files, list)
         or len(files) > MAX_MEMBERS
-        or set(selected) != {INDEX_ARTIFACT, *(SHARD_PREFIX + f"{i:04d}" for i in range(len(shards)))}
+        or set(selected) != {index_name, *(shard_prefix + f"{i:04d}" for i in range(len(shards)))}
     ):
         raise ValueError("native hosted bounded shard/file census differs")
     chunk_paths: dict[str, Path] = {}
     total_chunks = 0
     for ordinal, shard in enumerate(shards):
         remaining(deadline)
-        archive_members = download(SHARD_PREFIX + f"{ordinal:04d}")
+        archive_members = download(shard_prefix + f"{ordinal:04d}")
         filename = f"native-shard-{ordinal:04d}.zip"
         if (
             set(archive_members) != {filename}

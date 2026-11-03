@@ -73,6 +73,10 @@ def _main(argv: list[str] | None = None) -> int:
     parser.add_argument("--implementation-input", type=Path, required=True)
     parser.add_argument("--implementation-sha256", required=True)
     parser.add_argument("--provider-wheel", action="append", default=[])
+    parser.add_argument(
+        "--matrix-cell",
+        help="shard the Current side to one declared public exemplar while keeping every provider nomination",
+    )
     parser.add_argument("--pdfium-site", type=Path, required=True)
     parser.add_argument("--pdfium-wheel", type=Path, required=True)
     parser.add_argument("--office-font-file", action="append", default=[], type=Path)
@@ -150,6 +154,7 @@ def _main(argv: list[str] | None = None) -> int:
             run_id=args.run_id,
             head_sha=args.revision,
             deadline=deadline,
+            cell=args.matrix_cell or None,
         )
         originals = admit_authenticated_native_originals(
             custodian, source, current_pdfium_providers=providers, deadline=deadline
