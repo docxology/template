@@ -736,6 +736,12 @@ jobs:
   # `cell_artifact_names`/`transport_artifact_names`); the content rules stay
   # `native` and no new artifact kind is invented. Completeness is asserted by the
   # aggregate seam (`union_selection(collected_cells)`), never here.
+  #
+  # Dispatch rule (measured, not predicted): a tree without the five ubuntu-24.04
+  # pins dies in `setup-python-env` on the 26.04 image ("The version '3.14.4' with
+  # architecture 'x64' was not found for Ubuntu 26.04") before any repository code
+  # runs. That failure is never a reader defect; dispatch from a tree that carries
+  # the pins.
   native-reader-cell:
     needs: native-plan
     name: native-reader-cell (${{ matrix.cell }})
@@ -907,8 +913,17 @@ jobs:
         if: vars.NATIVE_SHARDING_CELLS != 'true'
         run: |
           echo "::warning::native cell lane disabled; native-original is the active lane"
+      # Gated off when the cell lanes are active, and for a structural reason
+      # rather than a cost one: a roster-wide native producer running alongside
+      # per-cell producers of the same artifact kind is the two-authorities
+      # shape. The union gate refuses and names collected / missing / undeclared,
+      # and the roster-wide producer would appear as an undeclared scope — a
+      # refusal that would be misread as a sharding defect. With the variable
+      # unset this step has no gate and no new code, so the unsharded path stays
+      # byte-identical and remains the regression configuration.
       - name: Independently admit complete candidate through fresh installed Source
         id: reader
+        if: vars.NATIVE_SHARDING_CELLS != 'true'
         env:
           GH_TOKEN: ${{ github.token }}
         run: >-
@@ -937,6 +952,7 @@ jobs:
           --root-receipt darwin/3.15=output/readiness/root-darwin-3.15/receipt.json
       - name: Complete passed exact-SHA candidate transport only
         id: candidate_transport
+        if: vars.NATIVE_SHARDING_CELLS != 'true'
         uses: ./.github/actions/upload-readiness-shards
         with:
           repo-root: ${{ runner.temp }}/template-native-reader-root
