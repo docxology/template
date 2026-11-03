@@ -225,12 +225,12 @@
         "valid": true,
         "warnings": []
       },
-      "total_size_mb": 2.122124671936035
+      "total_size_mb": 2.1221303939819336
     },
     "inventory_mode": "stable-shippable-output-v1",
     "pdf": {
       "files": 1,
-      "size_mb": 0.04752540588378906
+      "size_mb": 0.0475311279296875
     },
     "stable_inventory": {
       "categories": {
@@ -244,7 +244,7 @@
         },
         "pdf": {
           "files": 1,
-          "size_bytes": 49834
+          "size_bytes": 49840
         },
         "reports": {
           "files": 3,
@@ -261,7 +261,7 @@
       },
       "mode": "stable-shippable-output-v1",
       "total_files": 30,
-      "total_size_bytes": 2225209
+      "total_size_bytes": 2225215
     }
   },
   "recommendations": [],
@@ -272,11 +272,11 @@
     "passed": 9,
     "total_checks": 9
   },
-  "timestamp": "2026-11-02T17:01:19Z",
+  "timestamp": "2026-11-03T23:48:26Z",
   "validated_inputs": {
     "artifact_manifest": {
       "path": "output/reports/artifact_manifest.json",
-      "sha256": "c5ef8504e645a2d54e2abbd6ea7588ed68524bba4171e5188245c1751dd7cb60",
+      "sha256": "7214cd971ef799a3fcba2b67a9eb62a1be6992839f99cbfa028d612997dfd697",
       "size_bytes": 9766
     },
     "combined_manuscript": {
@@ -330,19 +330,19 @@
     "fingerprints": {
       "config": {
         "file_count": 14,
-        "sha256": "713c133b720d3e27676a133c4abcf62c868fdfb4bc809d5f3af304d4fe24ed89"
+        "sha256": "4c0d7a28f91e302f0d26b22e226dc2254a5c1df2c48209c9fcb35a36c0d3823f"
       },
       "output": {
         "file_count": 30,
-        "sha256": "3815608b877ba28ef2cff51f37a91ff58746318710c84712663e645c0b5406c1"
+        "sha256": "10f3daf0a95e9618c490107a954f60508569f1b398b820dae8afe3f2e168f0ad"
       },
       "source": {
         "file_count": 22,
         "sha256": "0c3279f9270deade852b5828c6fba16adf9364a71dcb209c06abf49a8bed39ce"
       },
       "stage": {
-        "file_count": 1722,
-        "sha256": "ecffaf544d43b08d6412a09a0006648412c43cc0976148cc5ccd9cf27f3e20b0"
+        "file_count": 1724,
+        "sha256": "51a0609cc31eded2cf043358398ea1df967a66d318fcb7209780cbb7f9132130"
       }
     },
     "project": "templates/template_experiment_tree",

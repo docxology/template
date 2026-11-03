@@ -16,7 +16,7 @@ Metric delta (final − first generation): 0.0000.
 
 Final injected token: accuracy=1.0000 (n=6).
 
-![SIA metric progression across generations.](../output/figures/sia_metric_progression.png){#fig:sia-metric-progression width=85%}
+![SIA metric progression across generations.](../figures/sia_metric_progression.png){#fig:sia-metric-progression width=85%}
 
 ## Threshold robustness control
 
@@ -26,4 +26,4 @@ therefore score 1.0. The zero generation-over-generation delta is an important
 negative result: the harness records feedback and code variation without
 fabricating an improvement signal where the evaluation cannot distinguish one.
 
-![Generation-over-generation metric delta (Δaccuracy) for the SIA fixture replay; the flat trace confirms threshold robustness and prevents a fabricated improvement claim.](../output/figures/sia_improvement_delta.png){#fig:sia-improvement-delta width=80%}
+![Generation-over-generation metric delta (Δaccuracy) for the SIA fixture replay; the flat trace confirms threshold robustness and prevents a fabricated improvement claim.](../figures/sia_improvement_delta.png){#fig:sia-improvement-delta width=80%}

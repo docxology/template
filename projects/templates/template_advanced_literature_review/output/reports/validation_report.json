@@ -215,7 +215,7 @@
         "valid": true,
         "warnings": []
       },
-      "total_size_mb": 19.987878799438477
+      "total_size_mb": 19.987886428833008
     },
     "figures": {
       "files": 19,
@@ -224,7 +224,7 @@
     "inventory_mode": "stable-shippable-output-v1",
     "pdf": {
       "files": 1,
-      "size_mb": 5.662236213684082
+      "size_mb": 5.662243843078613
     },
     "stable_inventory": {
       "categories": {
@@ -242,7 +242,7 @@
         },
         "pdf": {
           "files": 1,
-          "size_bytes": 5937285
+          "size_bytes": 5937293
         },
         "reports": {
           "files": 1,
@@ -259,7 +259,7 @@
       },
       "mode": "stable-shippable-output-v1",
       "total_files": 103,
-      "total_size_bytes": 20958810
+      "total_size_bytes": 20958818
     }
   },
   "recommendations": [],
@@ -270,11 +270,11 @@
     "passed": 9,
     "total_checks": 9
   },
-  "timestamp": "2026-11-02T17:01:19Z",
+  "timestamp": "2026-11-03T23:48:26Z",
   "validated_inputs": {
     "artifact_manifest": {
       "path": "output/reports/artifact_manifest.json",
-      "sha256": "e90e59464caeb8fb23d7b7d950e69e75bdf58de5cb3a38511ca80014bcb7f447",
+      "sha256": "eacc460e9d9314b21c96b8c52b1f27d02ab8a0e41e8edf22ddc6bdc57a3f4284",
       "size_bytes": 34071
     },
     "combined_manuscript": {
@@ -430,19 +430,19 @@
     "fingerprints": {
       "config": {
         "file_count": 21,
-        "sha256": "5f3c81946906228fe9a4cede3c1ec6d15a080a46cb9116123267b0379007411d"
+        "sha256": "4613f8814150c09c82b72acb0e8e2801b7bdfa59d25ba306d5b1b73f57a8d36c"
       },
       "output": {
         "file_count": 103,
-        "sha256": "6a7ee5921f2175dd096f58d31ebaaac8e65c57cff8498484e734173ba873af0c"
+        "sha256": "96dbe90dda8670f2bd72bb28530cbf349d491c3445fae1093fd0ca7f7d799589"
       },
       "source": {
         "file_count": 101,
         "sha256": "4e394f27667cb99bccfbbec4106a942d8e99dc2e056ca995f1fa0587e0b8ec2a"
       },
       "stage": {
-        "file_count": 1722,
-        "sha256": "ecffaf544d43b08d6412a09a0006648412c43cc0976148cc5ccd9cf27f3e20b0"
+        "file_count": 1724,
+        "sha256": "51a0609cc31eded2cf043358398ea1df967a66d318fcb7209780cbb7f9132130"
       }
     },
     "project": "templates/template_advanced_literature_review",

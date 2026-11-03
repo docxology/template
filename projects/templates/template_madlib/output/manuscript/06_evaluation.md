@@ -8,7 +8,7 @@ That readiness is deliberately narrower than publication readiness. A local pass
 
 The QA probes are Method row completeness, Field-origin visibility, Placeholder survival, Provenance completeness, Section-switch observability, Figure registry coverage, Method-figure alignment, Evidence cleanliness, Fork readiness, Copied-output parity, Digest invariant review, Claim-ledger alignment, Review packet completeness, Fork migration sufficiency. They are phrased as questions so they can be reused by reviewers and by forks of the exemplar: did the placeholder disappear, did the provenance survive, did the figure registry cover every reference, and did copied outputs preserve the same evidence surface that validation inspected?
 
-![Quality gate matrix](../output/figures/quality_gate_matrix.png){#fig:quality-gate-matrix}
+![Quality gate matrix](../figures/quality_gate_matrix.png){#fig:quality-gate-matrix}
 
 ## Evaluation Criteria
 
