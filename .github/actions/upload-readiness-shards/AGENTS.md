@@ -1,9 +1,15 @@
 # Readiness shard upload contract
 
-[README.md](README.md) defines the three explicit inputs and supported transport
+[README.md](README.md) defines the four explicit inputs and supported transport
 roles. The action runs the Source-owned DATA checker before invoking the existing
 pinned upload-artifact action. It does not construct a Source context, runtime
 provider grant or completed-original capability from an index.
+
+`cell` must reach the artifact name for every kind, never be declared and
+ignored: a matrix lane runs sibling cells concurrently, so an unapplied cell
+collides their uploads under one name. A cell renames artifacts only; index and
+shard member filenames and the published schemas stay unchanged, and an
+undeclared or path-bearing cell is refused.
 
 Keep every ordinal shard path and conditional count aligned with the bounded
 checker. Preserve all per-file/archive, decoded-byte, shard, member and whole

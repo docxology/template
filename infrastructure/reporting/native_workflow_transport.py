@@ -13,6 +13,7 @@ from pathlib import Path
 from typing import Any
 
 from infrastructure.project.public_hosted_origin import MAX_ARCHIVE, _context
+from infrastructure.project.public_scope import public_cell_scope
 from infrastructure.reporting.native_cell_selection import cell_artifact_names
 from infrastructure.reporting.native_hosted_transport_archive import (
     MAX_CHUNK,
@@ -42,9 +43,13 @@ def transport_artifact_names(kind: str, cell: str | None = None) -> tuple[str, s
     A sharded cell renames only the artifacts: the producer's index filename and
     shard member names stay the same, so the reader's per-artifact discovery and
     the published candidate schema are unchanged.
+
+    Every kind is cell-named, not only ``native``. A matrix lane runs sibling
+    cells concurrently and ``actions/upload-artifact`` collides on a duplicate
+    name within one run, so a kind that ignored ``cell`` would merge every cell
+    into one artifact and lose which cell produced which bytes. ``cell=None``
+    keeps the unsharded names byte-identical.
     """
-    if cell is not None and kind != "native":
-        raise ValueError("transport cell naming applies only to the native transport")
     if kind == "native":
         filename = "native-index.json"
         primary, prefix = cell_artifact_names(cell)
@@ -57,6 +62,11 @@ def transport_artifact_names(kind: str, cell: str | None = None) -> tuple[str, s
         prefix = "required-source-" + label + "-failure-shard-"
     else:
         raise ValueError("transport upload requires one Source-owned confined target")
+    if cell is not None and kind != "native":
+        # Refuse an undeclared or path-bearing cell exactly as the native form does.
+        public_cell_scope(cell)
+        primary = primary + "-cell-" + cell
+        prefix = primary + "-shard-"
     return filename, primary, prefix
 
 

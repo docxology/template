@@ -605,16 +605,12 @@ jobs:
           kind: failed-native
 
 
-  # TODO(native-sharding): `--matrix-cell` is wired for the auxiliary lane
-  # (see the job below) but not for `--mode original`
-  # (`infrastructure.reporting.native_installed_launcher`). It is
-  # `infrastructure/` work and must land together with raising the 600 s
-  # per-control ceiling in
-  # `infrastructure/reporting/native_pdf_whole_control_supervisor.py:66`, so the
-  # exemplar rebind happens once. Until then these jobs are gated on the
-  # repository variable NATIVE_SHARDING_CELLS and `native-original` above
-  # remains the active native lane. To enable: land --matrix-cell, give
-  # upload-readiness-shards a per-cell artifact name, then set
+  # TODO(native-sharding): the 600 s per-control ceiling in
+  # `infrastructure/reporting/native_pdf_whole_control_supervisor.py:66` is the
+  # remaining blocker. `--matrix-cell` and the per-cell artifact name now land
+  # together (this branch), so the exemplar rebind happens once. These jobs stay
+  # gated on the repository variable NATIVE_SHARDING_CELLS and `native-original`
+  # above remains the active native lane. To enable: raise the ceiling, then set
   # NATIVE_SHARDING_CELLS=true.
   native-plan:
     if: vars.NATIVE_SHARDING_CELLS == 'true'

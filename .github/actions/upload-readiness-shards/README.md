@@ -12,6 +12,7 @@ reader admission remain required.
 | `repo-root` | Actual owned producer mirror containing retained logical bytes. |
 | `directory` | Exact confined transport directory under that mirror. |
 | `kind` | `native`, `candidate`, `failed-native`, `failed-reader` or `failed-handoff`. |
+| `cell` | Optional bare declared exemplar naming one matrix cell's artifacts. |
 
 The checker binds the index to the exact repository, run and revision, verifies
 all shard/member bytes and emits the primary name, shard count and prefixes.
@@ -26,6 +27,13 @@ Failure indexes and shards have separate `required-source-*-failure-*` names and
 schema; they cannot satisfy native or candidate acceptance. The failed-handoff
 kind is available to a caller but the release workflow has no separate uploader
 for it.
+
+A `cell` appends `-cell-<cell>` to the primary name and its shard members for
+every kind, because a matrix lane runs sibling cells concurrently and
+`upload-artifact` collides on a duplicate name within one run. It renames only
+the artifacts: the index filename, shard member names and published schema are
+unchanged. An undeclared or path-bearing cell is refused. Omitting `cell` keeps
+the unsharded names above and leaves a non-matrix lane unaffected.
 
 See [AGENTS.md](AGENTS.md) and the
 [acceptance workflow](../../workflows/platform-required-acceptance.yml).
