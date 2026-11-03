@@ -35,6 +35,23 @@ rewrite generated outputs.
   unchanged bytes and rewrite the receipt for current tooling. A refused render
   re-admits the analysis boundary once, and a rebind is refused whenever the
   output tree no longer hashes to what the receipt recorded.
+- `gate.py` owns roster selection. `--changed` may narrow the audited roster
+  only for evidence that cannot reach another exemplar's output: an exact
+  `projects/templates/<name>/...` path selects that exemplar (project ownership
+  is resolved before any documentation exemption, so a manuscript edit is never
+  mistaken for prose), and a repository-level documentation path
+  (`docs/**`, root `*.md`) selects nothing and says so. Every other path —
+  `infrastructure/**`, `scripts/**`, the toolchain, control files, unknown
+  top-level paths, unknown or non-template project trees — widens the selection
+  to the whole baseline roster, because a rendered-provenance receipt binds every
+  tracked implementation file under `infrastructure/` and `scripts/`. An
+  observed empty change set selects nothing; an unobservable one raises instead
+  of guessing a clean tree. Widening never audits a project the caller excluded.
+- A zero-project selection is reported as `skipped — nothing audited (<reason>)`
+  and never as a bare `status: pass`. Publication-gate receipts are
+  `template-publication-gate/v2` and carry a `selection` block (reason, widened,
+  roster size), so a narrowed `--changed` run cannot be presented later as a
+  whole-roster pass.
 
 ## Commands
 

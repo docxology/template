@@ -30,7 +30,7 @@ re-implements them. Stages map onto hosted work:
 | `types` | `Lint & Type Check` | `mypy_ratchet.py` over the source paths |
 | `security` | health `bandit` gate | `bandit -r -ll -c bandit.yaml` over the public scope |
 | `gates` | `Lint & Type Check` hygiene steps | tracked-artifact, confidentiality, mirror-symlink, skills export/operations-manifest, exemplar-config, release-version and duration-manifest checks |
-| `publication` | release publication gate (fast lane) | `scripts/audit/check_publication_outputs.py --changed --jobs 4`, or `--all-public --jobs 4` without `--changed` |
+| `publication` | release publication gate (fast lane) | `scripts/audit/check_publication_outputs.py --changed --jobs 4`, or `--all-public --jobs 4` without `--changed`. `--changed` widens to the full roster for any shared (`infrastructure/`, `scripts/`, toolchain, control) change, because those invalidate every exemplar's rendered-provenance receipt; add `--dry-run` to inspect the resolved roster. |
 | `unit` | `test-project` | `scripts/pipeline/stage_01_test.py --project …` |
 | `infra` | `detect-projects` + `Infrastructure Smoke` | one `infrastructure.core.testing.ci_infra` job per declared shard and contract |
 
