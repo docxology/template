@@ -23,10 +23,14 @@ Resume and incremental reuse are disabled. Canonical analysis, rendering and
 validation targets must execute in order, with every selected stage freshly
 succeeded. Missing tools are blocked; actual failures and timeouts remain failed.
 
-The manual `platform-native-preflight.yml` diagnostic is bounded at 1800
-seconds. Two hosted 900-second cold runs measured the older bound below the
-lifecycle's cost: 406-564 seconds elapsed before the supervised worker started,
-and neither worker had a complete outcome when the clock expired. The
+The manual `platform-native-preflight.yml` diagnostic is bounded at 12000
+seconds, still below the unchanged 14,400-second whole-operation budget. Two
+hosted 900-second cold runs first measured an older bound below the lifecycle's
+cost: 406-564 seconds elapsed before the supervised worker started, and neither
+worker had a complete outcome when the clock expired. The 1,800-second bound is
+likewise measured below the cost: the hosted required-acceptance native
+inventory spent 10,264.8 seconds on its first exemplar without completing it, so
+any bound below roughly 10,300 seconds ends before one exemplar can finish. The
 preflight reserves 30 seconds at the launch boundary and 15 seconds at the
 supervised-worker boundary so the inner owner can return, reap its worker and
 retain process/cleanup/guardian receipts before the outer watcher ends. The
