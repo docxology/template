@@ -134,7 +134,13 @@ def attach_stage_outcome(result: PipelineStageResult, child: StageOutcome | None
         result.outcome = replace(
             child,
             stage_key=key,
-            status=StageStatus.TIMED_OUT if result.exit_code == 124 else StageStatus.INTERRUPTED,
+            status=(
+                StageStatus.TIMED_OUT
+                if result.exit_code == 124 and child.timed_out
+                else StageStatus.INTERRUPTED
+                if result.exit_code == 130
+                else StageStatus.FAILED
+            ),
             diagnostic=result.error_message or child.diagnostic,
         )
     elif child is not None and (not child.complete or result.success):
