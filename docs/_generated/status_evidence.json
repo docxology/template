@@ -144,14 +144,14 @@
       "verified_by": "Codex (agent session)"
     },
     {
-      "command": "`uv run --no-sync --offline python -m infrastructure.publishing.root_release_contract --tag v5.0.0`",
-      "health": "\ud83d\udfe1 Tag cut and contract passing; exact-revision hosted acceptance still absent",
+      "command": "`uv run --no-sync --offline python -m infrastructure.publishing.root_release_contract --tag v5.0.1`",
+      "health": "\ud83d\udfe1 Both tags recorded, contract passing at v5.0.1; exact-revision hosted acceptance still absent",
       "id": "STATUS-ROOT-RELEASE-2",
       "last_verified": "2026-11-04",
       "mode": "manual",
       "receipt": "docs/_generated/status_evidence.json",
       "subsystem": "Root release boundary (`pyproject.toml`, tags, GitHub releases, `CHANGELOG.md`)",
-      "verification_scope": "Root 5.0.0 is the current release intent, superseding the unpublished 4.5.0 preparation. Root metadata, `CHANGELOG.md`, `CITATION.cff` and the release note declare 5.0.0, and both release-version checkers pass at the release commit; all 25 exemplar SDK pins, `[tool.template].platform_version` bindings and locks were re-locked to 5.0.0. Exemplar `manuscript/config.yaml` publication `platform_version` fields and the 15 tracked `output/manuscript/config.yaml` copies moved to 5.0.0 in the same clean change (source edit plus the byte-copy the manuscript injection step performs); the other 10 exemplars have no tracked publication copy to refresh. The `v5.0.0` tag is cut at `e932a5d2a4f5c75f354352b43e54039eac9f63cf` (annotated `9829f410cf1d4edddcefb5374363f11ef366044d`), the root release contract passes at that revision, and the repository's required `CI Gate` is green on that exact commit, with the tagged merge commit also carrying the green gate of the pull-request head in its history. The hosted required-acceptance lane has not run at this revision and remains the open item: ordinary CI and the root contract are not that lane, so no acceptance or publication step may be treated as satisfied.",
+      "verification_scope": "Root 5.0.1 is the current release intent, superseding 5.0.0 for release-note provenance. Root metadata, `CHANGELOG.md`, `CITATION.cff`, the release note and its overview art declare 5.0.1, and `check_release_versions.py` passes with root 5.0.1 across all 25 exemplars. Two tags are named here, and which one supersedes matters. The `v5.0.0` tag is `e932a5d2a4f5c75f354352b43e54039eac9f63cf` (annotated `9829f410cf1d4edddcefb5374363f11ef366044d`); its in-tree copy of `docs/releases/v5.0.0.md` names `c5af32a18560ca12267484b182a94b826b47cf47` as the tagged commit, which is false \u2014 that is the `#215` merge, an intermediate release-train merge 44 commits before the tag \u2014 and the tag is not moved and not re-cut. The `v5.0.1` tag is `3617740049de0f146329c5222a62b41494ca2203` (annotated `c6aae549c334b0ee55a153e5b85c27278b70dd35`), the merge of the release-train pull request that carries the corrected note and the fail-closed release-notes tag-commit check that refuses that defect; `v5.0.1` supersedes `v5.0.0` for note provenance, the root release contract passes at that revision, and the repository's required `CI Gate` is green on that exact commit. The hosted required-acceptance lane has not run at the `v5.0.1` revision and remains the open item: ordinary CI and the root contract are not that lane, so no acceptance or publication step may be treated as satisfied.",
       "verified_by": "Release lane (agent session)"
     },
     {
@@ -201,5 +201,5 @@
   ],
   "schema_version": "template-status-evidence/v1",
   "source_path": "STATUS.md",
-  "source_sha256": "434d4fe605c4e8d392e320b6a98303b6e36eec4cfc6dd0ea99de3380071297ac"
+  "source_sha256": "3a8d0a7daa520b30b840a738a35bc88820bfb94fde7eda5b57c0c92152c20d24"
 }
