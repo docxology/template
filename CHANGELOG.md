@@ -7,6 +7,27 @@ source and contracts; each exemplar retains its own package and publication
 versions. Confidential and local workspaces outside the canonical public roster
 are excluded.
 
+## [5.0.2] - 2026-11-04
+
+See the [5.0.2 release notes](docs/releases/v5.0.2.md). This release moves the root
+and exemplar metadata to 5.0.2 and adds the post-merge rebind automation that keeps
+rendered-provenance receipts current on `main`; it changes no rendered behavior.
+
+- `.github/workflows/rebind.yml` restamps the receipts as its own commit, runs both
+  strict publication gates on the committed tree, and pushes only after they pass. It
+  is dispatch-only until the owner provisions a protected-branch bypass for the
+  pushing identity; its first real run restamped all 25 exemplars, reported the
+  `kmyth` pin, and passed both gates without pushing.
+- The coordinated transaction moved the root package version and lock, and each
+  exemplar's SDK requirement, `[tool.template].platform_version` binding and lock, to
+  5.0.2 while retaining every exemplar's own package version. The fifteen exemplars
+  that track a publication copy were re-rendered and re-receipted; the other ten were
+  rebound to unchanged output bytes.
+- The release ceremony adopts the invariant that the tag be cut at a commit whose tree
+  equals the verified tree, after the `v5.0.1` tag was cut two commits downstream of
+  the revision its receipts were stamped for. The `v5.0.1` tag is not moved and not
+  re-cut; `5.0.2` supersedes it for receipt provenance.
+
 ## [5.0.1] - 2026-11-04
 
 See the [5.0.1 release notes](docs/releases/v5.0.1.md). This release corrects one
