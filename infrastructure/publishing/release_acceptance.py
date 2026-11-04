@@ -80,7 +80,7 @@ def validate_handoff_inputs(
         return True
     if not all((run_id, artifact_id, receipt_sha256)) and any((run_id, artifact_id, receipt_sha256)):
         raise ValueError("a hosted handoff requires every one of run id, artifact id and receipt SHA256")
-    if not composed_receipt:
+    if not composed_receipt.strip():
         raise MissingAcceptanceHandoff("current release requires either a hosted handoff or a composed receipt path")
     from infrastructure.publishing.composed_receipt import validate_composed_receipt
 

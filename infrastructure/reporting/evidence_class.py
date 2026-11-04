@@ -58,6 +58,33 @@ class ClassBinding:
         return {"sha256": self.digest, "members": list(self.members)}
 
 
+@dataclass(frozen=True)
+class ClassUnavailable(Exception):
+    """A scope-owned class that cannot be substantiated in this checkout.
+
+    Failing closed means refusing when a class cannot be proved. It does not
+    mean substituting the repository-wide fingerprint, which is a broader claim
+    that would admit stale per-scope evidence. The cause is carried so a refusal
+    names what is missing instead of looking like a generic staleness.
+    """
+
+    kind: str
+    scope: str
+    cause: str
+
+    def __str__(self) -> str:
+        """Return the refusal text recorded on the gate."""
+        return f"evidence class unavailable for {self.kind} ({self.scope}): {self.cause}"
+
+
+def unavailable_cause(root: Path) -> str:
+    """Return why the stage closure cannot be established for ``root``."""
+    missing = uninitialized_submodules(root)
+    if missing:
+        return f"declared submodule not checked out: {', '.join(missing)}"
+    return "tracked infrastructure/scripts closure is unreadable in this checkout"
+
+
 def uninitialized_submodules(root: Path) -> tuple[str, ...]:
     """Return declared submodule paths that are not checked out.
 
@@ -108,8 +135,9 @@ def stage_digest(root: Path, *, require_submodules: bool = True) -> str | None:
     participate.
 
     ``None`` means the closure cannot be established (a synthetic root, a
-    partial checkout, an uninitialized submodule). Callers must then keep the
-    strongest binding rather than admit a narrowed class it cannot substantiate.
+    partial checkout, an uninitialized submodule). A caller must then REFUSE the
+    scope-owned class rather than substitute a broader closure; widening is how a
+    gate ends up admitting stale per-scope evidence while looking green.
     """
     from infrastructure.validation.rendered_snapshot import RenderedSnapshotError, _fingerprint, _stage_records
 
@@ -137,7 +165,12 @@ def class_binding(
     if kind in _SCOPE_OWNED_KINDS:
         resolved = stage if stage is not None else stage_digest(root)
         if resolved is None:
-            return ClassBinding(repository_fingerprint, ("repository_fingerprint",))
+            # Refuse, never widen. Widening to ``repository_fingerprint`` here is
+            # a different and stronger claim than the one the gate owns, and it
+            # makes every scope-owned class inert on any checkout whose stage
+            # closure is incomplete -- which is every runner that does not
+            # initialize declared submodules.
+            raise ClassUnavailable(kind, str(getattr(requirement, "scope", "")), unavailable_cause(root))
         digest = _compose(
             {
                 "source_identity": getattr(requirement, "source_identity", ""),

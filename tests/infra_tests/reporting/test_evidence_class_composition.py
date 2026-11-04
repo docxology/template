@@ -15,6 +15,9 @@ failure cannot leave the checkout dirty.
 
 from __future__ import annotations
 
+import shutil
+import subprocess
+import tempfile
 from collections.abc import Iterator
 from contextlib import contextmanager
 from pathlib import Path
@@ -23,9 +26,14 @@ from types import SimpleNamespace
 import pytest
 
 from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
-from infrastructure.reporting.evidence_class import class_binding, stage_digest
+from infrastructure.reporting.evidence_class import (
+    ClassUnavailable,
+    class_binding,
+    stage_digest,
+    uninitialized_submodules,
+)
 from infrastructure.reporting.readiness_receipts import source_fingerprint
-from infrastructure.reporting.release_readiness_profile import required_profile
+from infrastructure.reporting.release_readiness_profile import _check_class_binding, required_profile
 from infrastructure.reporting.release_readiness_snapshot import SnapshotReader
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
@@ -45,6 +53,44 @@ def _bindings() -> dict[str, tuple[str, tuple[str, ...]]]:
         )
         for requirement in requirements
     }
+
+
+@contextmanager
+def _submodule_less() -> Iterator[Path]:
+    """Yield a tree that declares a submodule but has not checked it out.
+
+    The failure this reproduces only appears on a checkout shape that omits a
+    declared submodule, which is what a runner without ``submodules: true``
+    produces. The tree keeps the gitlink in the index with an empty worktree
+    directory, so ``uninitialized_submodules`` reports it exactly as it does on
+    a real runner.
+    """
+    root = Path(tempfile.mkdtemp(prefix="template-submodule-less-"))
+    try:
+        subprocess.run(["git", "init", "--quiet", str(root)], check=True, capture_output=True)
+        (root / ".gitmodules").write_text(
+            '[submodule "kmyth"]\n\tpath = infrastructure/steganography/kmyth\n'
+            "\turl = https://example.invalid/kmyth.git\n",
+            encoding="utf-8",
+        )
+        staged = subprocess.run(
+            [
+                "git",
+                "-C",
+                str(root),
+                "update-index",
+                "--add",
+                "--cacheinfo",
+                "160000,1111111111111111111111111111111111111111,infrastructure/steganography/kmyth",
+            ],
+            check=True,
+            capture_output=True,
+        )
+        assert staged.returncode == 0
+        (root / "infrastructure/steganography/kmyth").mkdir(parents=True, exist_ok=True)
+        yield root
+    finally:
+        shutil.rmtree(root, ignore_errors=True)
 
 
 @contextmanager
@@ -127,6 +173,57 @@ def test_stage_digest_is_not_cached_across_observations() -> None:
     after = stage_digest(REPO_ROOT)
     assert during != before, "the stage digest did not observe a tracked implementation change"
     assert after == before, "the stage digest did not return to its original value after restore"
+
+
+def test_unavailable_stage_closure_refuses_instead_of_widening() -> None:
+    """A class that cannot be substantiated is refused, never widened.
+
+    Widening to the repository fingerprint on a missing submodule made every
+    scope-owned class inert on a runner that does not initialize submodules,
+    which is the state that let one exemplar's lock stale all twenty-five. The
+    refusal must carry its cause and must not depend on how the caller passes
+    ``stage``.
+    """
+    with _submodule_less() as root:
+        assert uninitialized_submodules(root), "the control needs an uninitialized submodule"
+        assert stage_digest(root) is None, "the control needs an unavailable stage closure"
+        scope_owned = SimpleNamespace(
+            id="templates/probe:runtime",
+            kind="runtime",
+            scope="templates/probe",
+            source_identity="a" * 64,
+            deliverables_identity="b" * 64,
+        )
+        variants = {"stage omitted": {}, "stage explicitly None": {"stage": None}}
+        for label, extra in variants.items():
+            with pytest.raises(ClassUnavailable) as refusal:
+                class_binding(scope_owned, root, repository_fingerprint="f" * 64, **extra)
+            assert "submodule not checked out" in str(refusal.value), label
+        # The universal digest still belongs to the kinds that genuinely need it.
+        for kind in ("docs", "roster", "root-case"):
+            spanning = SimpleNamespace(
+                id=f"root:{kind}", kind=kind, scope="root", source_identity="a" * 64, deliverables_identity=""
+            )
+            assert class_binding(spanning, root, repository_fingerprint="f" * 64).members == ("repository_fingerprint",)
+
+
+def test_unavailable_class_refuses_admission_at_the_gate() -> None:
+    """An unavailable class fails the gate loudly, in both call shapes."""
+    with _submodule_less() as root:
+        requirement = SimpleNamespace(
+            id="templates/probe:runtime",
+            kind="runtime",
+            scope="templates/probe",
+            source_identity="a" * 64,
+            deliverables_identity="b" * 64,
+        )
+        payload = {
+            "class_binding": {"sha256": "0" * 64, "members": ["source_identity", "deliverables_identity", "stage"]}
+        }
+        for label, extra in {"stage omitted": {}, "stage explicitly None": {"stage": None}}.items():
+            with pytest.raises(ClassUnavailable) as refusal:
+                _check_class_binding(requirement, payload, root, "f" * 64, **extra)
+            assert "submodule not checked out" in str(refusal.value), label
 
 
 def test_scope_owned_binding_names_its_members() -> None:

@@ -17,6 +17,7 @@ from infrastructure.project.public_capabilities import CANONICAL_CI_PYTHON_VERSI
 from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
 from infrastructure.publishing.root_release_contract import validate_runtime_version_provider
 from infrastructure.rendering.config import RenderingConfig
+from infrastructure.reporting.evidence_class import ClassUnavailable
 from infrastructure.reporting.readiness_receipts import (
     SCHEMA_VERSION,
     GateEvidence,
@@ -275,6 +276,8 @@ def _check_class_binding(
         return
     if not isinstance(recorded, dict) or set(recorded) != {"sha256", "members"}:
         raise ValueError("artifact class binding is malformed")
+    # A class that cannot be substantiated in this checkout is refused with its
+    # cause, never admitted against a broader closure.
     expected = class_binding(requirement, root, repository_fingerprint=fingerprint, stage=stage)
     if recorded.get("sha256") != expected.digest or tuple(recorded.get("members") or ()) != expected.members:
         raise ValueError("artifact evidence class is stale for this Source")
@@ -342,6 +345,8 @@ def _gate(
             validate_acceptance(requirement, payload, reader)
             diagnostic = "declared draft remains explicitly unpublished" if requirement.draft else ""
         return GateEvidence(requirement.id, status, requirement.profile, artifact.relative, diagnostic)
+    except ClassUnavailable as unavailable:
+        return GateEvidence(requirement.id, "fail", requirement.profile, diagnostic=str(unavailable))
     except (
         OSError,
         ValueError,

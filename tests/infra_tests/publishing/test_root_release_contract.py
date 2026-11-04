@@ -10,6 +10,10 @@ import subprocess
 
 import pytest
 
+from infrastructure.publishing.release_acceptance import (
+    MissingAcceptanceHandoff,
+    validate_handoff_inputs,
+)
 from infrastructure.publishing.root_release_contract import (
     main,
     root_changelog_versions,
@@ -113,7 +117,7 @@ def test_root_release_workflow_invokes_version_contract() -> None:
     assert (
         names["Verify checkout is the requested tag"]
         < audit_index
-        < names["Require exact-tag acceptance handoff"]
+        < names["Require an exact-tag acceptance handoff"]
         < names["Verify complete authenticated candidate with independently installed current providers"]
         < names["Verify root package release contract"]
         < names["Verify public capability manifest"]
@@ -184,8 +188,48 @@ def test_release_requires_handoff_and_uses_exact_reader_runtime() -> None:
     workflow = yaml.safe_load((REPO_ROOT / ".github/workflows/release.yml").read_text())
     triggers = workflow.get("on", workflow.get(True))
     assert set(triggers) == {"workflow_dispatch"}
-    assert all(item["required"] for item in triggers["workflow_dispatch"]["inputs"].values())
+    inputs = triggers["workflow_dispatch"]["inputs"]
+    # The invariant is "a dispatch cannot be started without naming its evidence",
+    # not "every input is required". Two admissible shapes exist -- one hosted
+    # carrier triple, or one composed receipt -- so the evidence inputs may be
+    # optional individually while the dispatch as a whole still cannot omit all
+    # of them. The `required:` flags are an affordance; the refusals in
+    # `validate_handoff_inputs` are the enforcement, so pin the enforcement.
+    assert set(inputs) == {
+        "tag",
+        "acceptance_run_id",
+        "acceptance_artifact_id",
+        "acceptance_receipt_sha256",
+        "composed_receipt",
+    }
+    assert inputs["tag"]["required"] is True
+    # Every shape that supplies no evidence is refused. Supplying none at all is
+    # a missing receipt; supplying a partial hosted triple is a malformed one.
+    # Either way admission stops before any receipt is read.
+    refused = {
+        "no evidence": ("", "", "", ""),
+        "blank receipt path": ("", "", "", "   "),
+        "id without receipt": ("1234", "", "", ""),
+        "run and artifact only": ("1234", "5678", "", ""),
+    }
+    for _label, (run_id, artifact_id, receipt_sha256, composed_receipt) in refused.items():
+        with pytest.raises((MissingAcceptanceHandoff, ValueError)):
+            validate_handoff_inputs(REPO_ROOT, run_id, artifact_id, receipt_sha256, composed_receipt=composed_receipt)
     steps = workflow["jobs"]["release"]["steps"]
+    # One admission owns both shapes, so neither can be silently skipped, and it
+    # runs before the publication step.
+    handoff = next(step for step in steps if step.get("id") == "acceptance")
+    assert "--composed-receipt" in handoff["run"]
+    assert all(argument in handoff["run"] for argument in ("--run-id", "--artifact-id", "--receipt-sha256"))
+    publish_index = next(index for index, step in enumerate(steps) if "action-gh-release@" in step.get("uses", ""))
+    assert steps.index(handoff) < publish_index
+    # One admission owns both shapes, so neither can be silently skipped, and it
+    # runs before the publication step.
+    handoff = next(step for step in steps if step.get("id") == "acceptance")
+    assert "--composed-receipt" in handoff["run"]
+    assert all(argument in handoff["run"] for argument in ("--run-id", "--artifact-id", "--receipt-sha256"))
+    publish_index = next(index for index, step in enumerate(steps) if "action-gh-release@" in step.get("uses", ""))
+    assert steps.index(handoff) < publish_index
     selected = {
         step.get("with", {}).get("python-version") for step in steps if "actions/setup-python@" in step.get("uses", "")
     }
