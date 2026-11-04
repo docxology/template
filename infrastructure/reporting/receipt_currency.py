@@ -33,6 +33,7 @@ codes are the caller's decision: 0 clean (or report-only), 1 stale under
 from __future__ import annotations
 
 import json
+import os
 import shutil
 import subprocess
 import tempfile
@@ -160,6 +161,12 @@ def computed_config(repo_root: Path, commit: str, *, project: str = DEFAULT_PROJ
     # Letting `mkdtemp` choose the directory also keeps the location under the
     # platform's own policy rather than a hardcoded one.
     scratch = Path(tempfile.mkdtemp()).resolve()
+    # An alternate work-tree alone still writes the checkout into the caller's
+    # real index: `git --work-tree X checkout <commit> -- .` stages every entry
+    # into `.git/index`, so measuring 40 commits leaves the repository with
+    # hundreds of `MM` paths that nobody authored. Point the index inside the
+    # scratch directory so measurement cannot mutate the caller's repository.
+    env = {**os.environ, "GIT_INDEX_FILE": str(scratch / ".git-index")}
     try:
         checkout = subprocess.run(
             ["git", "--work-tree", str(scratch), "checkout", commit, "--", "."],
@@ -167,6 +174,7 @@ def computed_config(repo_root: Path, commit: str, *, project: str = DEFAULT_PROJ
             capture_output=True,
             text=True,
             check=False,
+            env=env,
         )
         if checkout.returncode != 0:
             return None
