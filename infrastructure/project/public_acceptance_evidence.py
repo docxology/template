@@ -342,6 +342,8 @@ def gate_payload(
     status: str,
     details: dict[str, Any],
     blockers: list[dict[str, str]] | None = None,
+    *,
+    repository_root: Path | None = None,
 ) -> dict[str, Any]:
     """Serialize the source-owned required-profile shape without granting other gates."""
     payload: dict[str, Any] = {
@@ -357,6 +359,12 @@ def gate_payload(
     }
     if requirement.scope != "root":
         payload["deliverables_identity"] = requirement.deliverables_identity
+    if repository_root is not None:
+        from infrastructure.reporting.evidence_class import class_binding
+
+        payload["class_binding"] = class_binding(
+            requirement, repository_root, repository_fingerprint=fingerprint
+        ).to_dict()
     if blockers:
         payload["blockers"] = blockers
     return payload
