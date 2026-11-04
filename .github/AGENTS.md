@@ -109,13 +109,14 @@ flowchart TB
     WF --> WF_REL[release.yml<br/>Exact-tag release handoff]
     WF --> WF_REQUIRED[platform-required-acceptance.yml<br/>Original observations + strict candidate collector]
     WF --> WF_DA[dependabot-automerge.yml<br/>Auto-merge safe Dependabot PRs]
+    WF --> WF_RB[rebind.yml<br/>Post-merge rendered-receipt rebind on main]
 
     classDef d fill:#0f172a,stroke:#0f172a,color:#fff
     classDef pkg fill:#1e3a8a,stroke:#0f172a,color:#fff
     classDef f fill:#0f766e,stroke:#0f172a,color:#fff
     class GH d
     class ITPL,WF pkg
-    class META,DEP,PRT,ITPL_F,WF_DOCS,WF_FAST,WF_CI,WF_STALE,WF_REL,WF_REQUIRED f
+    class META,DEP,PRT,ITPL_F,WF_DOCS,WF_FAST,WF_CI,WF_STALE,WF_REL,WF_REQUIRED,WF_RB f
 ```
 
 ## Continuous Integration (CI/CD)
@@ -214,6 +215,28 @@ repository, so `gh pr merge --auto` failed with
 left for human review. Neither job checks out or executes PR HEAD code — they read
 update metadata and call the GitHub API — so the elevated trigger exposes no
 secrets to untrusted code.
+
+### Rebind Workflow (`workflows/rebind.yml`)
+
+Runs on every push to `main` and acts only when the pushed range touched a path
+that can move a rendered-provenance fingerprint: root
+`.gitignore`/`.python-version`/`pyproject.toml`/`uv.lock`, anything tracked under
+`infrastructure/` or `scripts/`, or any tracked exemplar path outside `output/`
+and the snapshot-excluded documentation names. Otherwise it skips and states why
+in the run summary, so no `paths:` filter can hide a run. It initializes the
+`kmyth` submodule before measuring, pins `SOURCE_DATE_EPOCH` to the triggering
+commit, restamps receipts with
+`refresh_rendered_provenance.py --all-public --rebind --jobs 4`, and proves
+`check_publication_outputs.py --all-public --strict --jobs 4`
+(`blocking=0, review_required=0`) plus
+`publication-audit --all-public --strict --rendered` on the tree the commit will
+contain; a failed gate fails the job and commits nothing. Its commit is confined
+to `projects/templates/*/output/reports/*.json`, which cannot trigger the job
+again, and its push is refused if `main` advanced while it ran. The job needs
+`contents: write`; a push made with the repository's own `GITHUB_TOKEN` starts no
+new workflow run, so an exact-SHA `CI Gate` for the rebind commit is obtained by
+dispatching `ci.yml` manually. A protected-branch refusal is reported as a
+repository-setting question.
 
 ## Dependabot (`dependabot.yml`)
 

@@ -55,12 +55,13 @@ flowchart LR
     W --> REL[release.yml<br/>Create GitHub Releases on version tags]
     W --> REQUIRED[platform-required-acceptance.yml<br/>Original observations + strict candidate collector]
     W --> DA[dependabot-automerge.yml<br/>Auto-merge safe Dependabot PRs]
+    W --> RB[rebind.yml<br/>Post-merge receipt rebind on main]
 
     classDef d fill:#0f172a,stroke:#0f172a,color:#fff
     classDef code fill:#1e3a8a,stroke:#0f172a,color:#fff
     classDef doc fill:#0f766e,stroke:#0f172a,color:#fff
     class W d
-    class FAST,CI,STALE,REL,REQUIRED code
+    class FAST,CI,STALE,REL,REQUIRED,RB code
     class META doc
 ```
 
@@ -354,6 +355,26 @@ Triggers on `pull_request_target` (opened, reopened, synchronize, ready_for_revi
 2. `merge` squash-merges the PR after a successful `CI` run for its current head commit, requiring an open non-draft PR into `main`, a CLEAN merge state, and the same head SHA (`--match-head-commit` makes that binding atomic)
 3. Never checks out or executes PR HEAD code — only reads metadata and calls the GitHub API — so the elevated triggers do not expose secrets to untrusted code
 4. GitHub's native auto-merge is not used: `allow_auto_merge` is `false` on this repository, so `gh pr merge --auto` failed with `Auto merge is not allowed for this repository (enablePullRequestAutoMerge)` (run 40627322822). Ineligible or still-blocked PRs are recorded as skips, not failures
+
+---
+
+## Rebind Workflow (`rebind.yml`)
+
+Triggers on `push` to `main` and acts only when the pushed range touched a
+receipt-affecting path. It exists because a rendered-provenance receipt binds the
+tracked implementation under `infrastructure/` and `scripts/` plus its
+exemplar's source and config closure: a merged lock bump or infrastructure edit
+invalidates all 25 receipts without moving a rendered byte, so a tree verified
+green at the pull-request head is red on `main` after the merge.
+
+1. `actions/checkout` initializes the `kmyth` submodule before any measurement. The stage fingerprint of every receipt contains 125 records under `infrastructure/steganography/kmyth`, so a rebind measured without the submodule stamps a digest that CI rejects later
+2. The decision step mirrors `infrastructure/validation/rendered_snapshot/_records.py`: root `.gitignore`/`.python-version`/`pyproject.toml`/`uv.lock`, every tracked path under `infrastructure/` and `scripts/`, and every tracked exemplar path except `output/` and the snapshot-excluded documentation names. Everything else skips, and both the log and the run summary state the reason. There is no `paths:` filter, so a skip is always reported rather than silent
+3. `SOURCE_DATE_EPOCH` is the triggering commit's committer timestamp, never the runner's clock
+4. The rebind is the last step that writes: `refresh_rendered_provenance.py --all-public --rebind --jobs 4` restamps receipts without re-rendering, and the same step stages the footprint so the index agrees with the worktree for the strict gate's clean-index check and the commit contains exactly the bytes that are verified
+5. Both gates run before the commit on that tree: `scripts/audit/check_publication_outputs.py --all-public --strict --jobs 4` must report `blocking=0, review_required=0`, and `publication-audit --all-public --strict --rendered` must pass. A failure fails the job; there is no retry and no override
+6. The commit refuses any path outside `projects/templates/*/output/reports/*.json`, which is what terminates the loop: the rebind's own push matches no receipt-affecting path, so its run skips. `[skip ci]` is deliberately not used; a push made with the repository's own `GITHUB_TOKEN` starts no new workflow run, so if an exact-SHA `CI Gate` is required for the rebind commit (release sign-off), dispatch `ci.yml` manually for it
+7. The push refuses when `main` advanced during the rebind (the newer push event's own run rebinds the newer tip) — no force push, no retry — and reports a protected-branch refusal as a repository-setting question, not a rebind failure
+8. The always-run summary prints the pushed tree, any rebind commit and its tree, the `kmyth` submodule SHA, the decision with its reason, and each step outcome
 
 ---
 
