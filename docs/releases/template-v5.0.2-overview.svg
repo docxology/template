@@ -1,0 +1,69 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="1600" height="900" role="img" aria-label="Template 5.0.2 release order and the tree-identity invariant">
+  <rect width="1600" height="900" fill="#0b1220"/>
+  <text x="60" y="78" fill="#e2e8f0" font-family="Helvetica, Arial, sans-serif" font-size="40" font-weight="bold">Template 5.0.2 — the rebind follows the bump</text>
+  <text x="60" y="120" fill="#94a3b8" font-family="Helvetica, Arial, sans-serif" font-size="24">Root pyproject.toml is in every exemplar's config closure, so the version bump invalidates all 25 receipts.</text>
+
+  <g font-family="Helvetica, Arial, sans-serif">
+    <rect x="60" y="170" width="290" height="130" rx="14" fill="#1e3a8a" stroke="#3b82f6" stroke-width="2"/>
+    <text x="205" y="218" fill="#e2e8f0" font-size="26" font-weight="bold" text-anchor="middle">1 · Bump</text>
+    <text x="205" y="252" fill="#cbd5e1" font-size="19" text-anchor="middle">5.0.1 → 5.0.2</text>
+    <text x="205" y="280" fill="#cbd5e1" font-size="19" text-anchor="middle">own commit, no rebind yet</text>
+
+    <rect x="380" y="170" width="290" height="130" rx="14" fill="#155e75" stroke="#22d3ee" stroke-width="2"/>
+    <text x="525" y="218" fill="#e2e8f0" font-size="26" font-weight="bold" text-anchor="middle">2 · Rebind</text>
+    <text x="525" y="252" fill="#cbd5e1" font-size="19" text-anchor="middle">--all-public --rebind</text>
+    <text x="525" y="280" fill="#cbd5e1" font-size="19" text-anchor="middle">submodule first, epoch pinned</text>
+
+    <rect x="700" y="170" width="290" height="130" rx="14" fill="#14532d" stroke="#22c55e" stroke-width="2"/>
+    <text x="845" y="218" fill="#e2e8f0" font-size="26" font-weight="bold" text-anchor="middle">3 · Verify</text>
+    <text x="845" y="252" fill="#cbd5e1" font-size="19" text-anchor="middle">both gates, committed tree</text>
+    <text x="845" y="280" fill="#cbd5e1" font-size="19" text-anchor="middle">clean index, blocking=0</text>
+
+    <rect x="1020" y="170" width="230" height="130" rx="14" fill="#78350f" stroke="#f59e0b" stroke-width="2"/>
+    <text x="1135" y="218" fill="#e2e8f0" font-size="26" font-weight="bold" text-anchor="middle">4 · Merge</text>
+    <text x="1135" y="252" fill="#cbd5e1" font-size="19" text-anchor="middle">CI Gate from the PR run</text>
+    <text x="1135" y="280" fill="#cbd5e1" font-size="19" text-anchor="middle">tree compared explicitly</text>
+
+    <rect x="1280" y="170" width="260" height="130" rx="14" fill="#4c1d95" stroke="#a78bfa" stroke-width="2"/>
+    <text x="1410" y="218" fill="#e2e8f0" font-size="26" font-weight="bold" text-anchor="middle">5 · Tag + re-verify</text>
+    <text x="1410" y="252" fill="#cbd5e1" font-size="19" text-anchor="middle">v5.0.2 annotated</text>
+    <text x="1410" y="280" fill="#cbd5e1" font-size="19" text-anchor="middle">gates at the tag are the verdict</text>
+
+    <g stroke="#64748b" stroke-width="3" fill="none" marker-end="url(#arrow)">
+      <line x1="350" y1="235" x2="378" y2="235"/>
+      <line x1="670" y1="235" x2="698" y2="235"/>
+      <line x1="990" y1="235" x2="1018" y2="235"/>
+      <line x1="1250" y1="235" x2="1278" y2="235"/>
+    </g>
+  </g>
+
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#64748b"/>
+    </marker>
+  </defs>
+
+  <rect x="60" y="350" width="1480" height="200" rx="14" fill="#0f172a" stroke="#334155" stroke-width="2"/>
+  <text x="90" y="400" fill="#f8fafc" font-family="Helvetica, Arial, sans-serif" font-size="30" font-weight="bold">The invariant: the tag must be cut at a commit whose tree equals the verified tree.</text>
+  <text x="90" y="446" fill="#94a3b8" font-family="Helvetica, Arial, sans-serif" font-size="22">v5.0.1 violated it. Its receipts were stamped at 686a38dc4 and the tag was cut two commits downstream: the contract passed,</text>
+  <text x="90" y="478" fill="#94a3b8" font-family="Helvetica, Arial, sans-serif" font-size="22">and the tag's own tree failed both publication gates on all 25 projects with PUBLICATION.RENDERED_PROVENANCE_VALIDATION_INPUTS_DRIFT.</text>
+  <text x="90" y="516" fill="#e2e8f0" font-family="Helvetica, Arial, sans-serif" font-size="22" font-weight="bold">A contract that passes is not a release verdict. Both gates at the tag are.</text>
+
+  <g font-family="Helvetica, Arial, sans-serif">
+    <rect x="60" y="590" width="720" height="250" rx="14" fill="#0f172a" stroke="#334155" stroke-width="2"/>
+    <text x="90" y="636" fill="#e2e8f0" font-size="26" font-weight="bold">What a receipt binds</text>
+    <text x="90" y="678" fill="#94a3b8" font-size="20">• tracked implementation under infrastructure/ and scripts/</text>
+    <text x="90" y="710" fill="#94a3b8" font-size="20">• the exemplar's own source and config closure</text>
+    <text x="90" y="742" fill="#94a3b8" font-size="20">• root .gitignore, .python-version, pyproject.toml, uv.lock</text>
+    <text x="90" y="774" fill="#94a3b8" font-size="20">• 125 kmyth submodule records inside the stage closure</text>
+    <text x="90" y="806" fill="#f87171" font-size="20">• not the commit id: validity depends on the checkout shape</text>
+
+    <rect x="820" y="590" width="720" height="250" rx="14" fill="#0f172a" stroke="#334155" stroke-width="2"/>
+    <text x="850" y="636" fill="#e2e8f0" font-size="26" font-weight="bold">The automation, dispatch-only</text>
+    <text x="850" y="678" fill="#94a3b8" font-size="20">• acts only on receipt-affecting paths, and reports a skip</text>
+    <text x="850" y="710" fill="#94a3b8" font-size="20">• rebind → commit → both gates → push, nothing in between</text>
+    <text x="850" y="742" fill="#94a3b8" font-size="20">• commit confined to projects/templates/*/output/reports/</text>
+    <text x="850" y="774" fill="#94a3b8" font-size="20">• structural termination: the footprint matches no trigger path</text>
+    <text x="850" y="806" fill="#fbbf24" font-size="20">• push needs a protected-branch bypass the owner must provision</text>
+  </g>
+</svg>

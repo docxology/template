@@ -1,9 +1,10 @@
 # 🚀 Research Project Template
 
-**Current candidate: 5.0.1.** See the [release notes](docs/releases/v5.0.1.md)
+**Current candidate: 5.0.2.** See the [release notes](docs/releases/v5.0.2.md)
 and [acceptance/publication boundary](docs/maintenance/release-boundary.md).
-`5.0.1` supersedes `5.0.0`, whose in-tree note names the wrong tagged commit.
-Candidate metadata does not establish a published release.
+`5.0.2` supersedes `5.0.1`, whose rendered receipts were stale at its tag: that tag
+is not re-cut, and `5.0.2` is cut only at a commit whose tree equals the verified
+tree. Candidate metadata does not establish a published release.
 
 <!-- Badges are qualitative; measured coverage and test counts drift — use `uv run pytest` and CI for ground truth. See docs/RUN_GUIDE.md. -->
 [![Build](https://img.shields.io/badge/build-docs%20%26%20CI-blue)](docs/RUN_GUIDE.md)

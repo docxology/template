@@ -155,6 +155,17 @@
       "verified_by": "Release lane (agent session)"
     },
     {
+      "command": "`uv run --no-sync --offline python -m infrastructure.publishing.root_release_contract --tag v5.0.2`",
+      "health": "\ud83d\udfe1 5.0.2 is the current release intent; exact-revision hosted acceptance still absent",
+      "id": "STATUS-ROOT-RELEASE-3",
+      "last_verified": "2026-11-04",
+      "mode": "manual",
+      "receipt": "docs/_generated/status_evidence.json",
+      "subsystem": "Root release boundary (`pyproject.toml`, tags, GitHub releases, `CHANGELOG.md`)",
+      "verification_scope": "Root 5.0.2 is the current release intent, superseding 5.0.1 for rendered-provenance and release-note provenance. Root metadata, `CHANGELOG.md`, `CITATION.cff`, the release note and its overview art declare 5.0.2, and the coordinated transaction moved all 25 exemplars' SDK requirement, `[tool.template].platform_version` binding and lock to 5.0.2 while retaining exemplar own versions; the fifteen exemplars that track a publication copy were re-rendered and re-receipted and the other ten were rebound. The post-merge rebind automation (`.github/workflows/rebind.yml`) restamps receipts as its own commit and runs both strict publication gates on the committed tree before any push; it is dispatch-only until the owner provisions a protected-branch bypass for the pushing identity. The ceremony adopts the invariant that the tag must be cut at a commit whose tree equals the verified tree, and both publication gates at the tag are the release verdict; the `v5.0.1` tag is not moved and not re-cut, and 5.0.2 supersedes it. The hosted required-acceptance lane has not run at the 5.0.2 revision and remains the open item: ordinary CI and the root contract are not that lane, so no acceptance or publication step may be treated as satisfied.",
+      "verified_by": "Release lane (agent session)"
+    },
+    {
       "command": "`uv run python -m infrastructure.skills check`",
       "health": "\ud83d\udfe1 Platform 4 acceptance pending",
       "id": "STATUS-SKILLS-1",
@@ -201,5 +212,5 @@
   ],
   "schema_version": "template-status-evidence/v1",
   "source_path": "STATUS.md",
-  "source_sha256": "3a8d0a7daa520b30b840a738a35bc88820bfb94fde7eda5b57c0c92152c20d24"
+  "source_sha256": "0210cc7eb730e7fb668c2cedad5080b1ea85e86e7682b2011a8db64d7b0568a7"
 }
