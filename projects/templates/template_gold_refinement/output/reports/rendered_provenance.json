@@ -38,13 +38,13 @@
     },
     {
       "rendered_path": "output/manuscript/05_conclusion.md",
-      "rendered_sha256": "02c93e0595d67396eec976b71080e5591ebdeeed919fc0e6b73db48a8e38b8a3",
+      "rendered_sha256": "c44fad9d6761eceec33fbf369081f2220658e1a2da1672fa1daaa5f6a96c7669",
       "source_path": "manuscript/05_conclusion.md",
       "source_sha256": "b1ff45d46c0805bac6df75595883f1bb3138d15e433bdf73b046ff6521bdabd0"
     },
     {
       "rendered_path": "output/manuscript/06_reproducibility.md",
-      "rendered_sha256": "996bc60bc0f669b6b1c88f5110305686915dfb8d0b7cb7660de47ab3351a4e9e",
+      "rendered_sha256": "7b1133c1946ff8fde19c528c6c1b27f64077499652b70af06200bf2e0fd89231",
       "source_path": "manuscript/06_reproducibility.md",
       "source_sha256": "9160d7cf011ca7feb015ae49daa17536ef93d6bf359e887d27dc357499d4d0dc"
     },
@@ -76,22 +76,22 @@
   "evidence_files": {
     "artifact_manifest": {
       "path": "output/reports/artifact_manifest.json",
-      "sha256": "6f09c649d18e9780cd64b503b8d1cc8c8d3c627648568601d6560e000287e970",
+      "sha256": "5f3b4698c3c2bb99f847e6c24c1808494e86227f85acb62ffe41528c694996ee",
       "size_bytes": 24134
     },
     "combined_manuscript": {
       "path": "output/web/_combined_manuscript.md",
-      "sha256": "674d12c3f39a1ea5a1e962b5ac11d61397cd67ddbcb8bada53d2fd0623bad19f",
+      "sha256": "4a16576cf4d33de28ddbc1130d845a52c1b3649d17f37dfd0680d74c901b8fdd",
       "size_bytes": 104080
     },
     "composition_manifest": {
       "path": "output/reports/manuscript_composition.json",
-      "sha256": "740dc37a0976e3301bfb92bdfa7a6660b9b58a64cee290278701dc4b7fd8de4c",
+      "sha256": "6c96f7353567004e6c95c55cc58012befd5ee2f24aaa05b56e3dfddd0b249443",
       "size_bytes": 2935
     },
     "validation_report": {
       "path": "output/reports/validation_report.json",
-      "sha256": "3eda81a3f5a0df65427c63eb3fdd5ab86267a70cf92f405692f836665680badb",
+      "sha256": "ee002f82e8fb91a8b91b9cd752858aa865fc052831b88aa77df6c666836ffb4f",
       "size_bytes": 13005
     }
   },
@@ -99,11 +99,11 @@
   "fingerprints": {
     "config": {
       "file_count": 16,
-      "sha256": "1a1f3908a8d5f1ab81f0022cf5e8169f6cc9e97cd7a6e17f2447344ecf00e306"
+      "sha256": "a6f85a56a981709c721933a4d396b9212e8eea4697eaf798e1dc7609de4e24ca"
     },
     "output": {
       "file_count": 74,
-      "sha256": "2e850c34bc9b0977c9f97b0bbe48305a865b17fc110fc3f3dc9a7aa39f39bf5f"
+      "sha256": "fd591fed480ddc72afb78a71a98bcaa7205de736ec5f9157fe300c342e12623d"
     },
     "source": {
       "file_count": 46,
