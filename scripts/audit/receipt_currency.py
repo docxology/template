@@ -72,9 +72,11 @@ def _stored_config(commit: str) -> str | None:
     if result.returncode != 0:
         return None
     try:
-        return json.loads(result.stdout)["fingerprints"]["config"]["sha256"]
+        payload = json.loads(result.stdout)
+        digest = payload["fingerprints"]["config"]["sha256"]
     except (json.JSONDecodeError, KeyError, TypeError):
         return None
+    return digest if isinstance(digest, str) else None
 
 
 def _computed_config(commit: str) -> str | None:
@@ -163,12 +165,11 @@ def main(argv: list[str] | None = None) -> int:
         print(f"{'commit':13s} {'stored':18s} {'computed':18s} verdict")
         print("-" * 66)
         for row in rows:
-            print(
-                f"{row.commit[:12]:13s} {str(row.stored)[:16]:18s} "
-                f"{str(row.computed)[:16]:18s} {row.verdict}"
-            )
-        print(f"\nRESULT: {len(rows) - len(stale) - len(unavailable)} current, "
-              f"{len(stale)} STALE, {len(unavailable)} unavailable")
+            print(f"{row.commit[:12]:13s} {str(row.stored)[:16]:18s} {str(row.computed)[:16]:18s} {row.verdict}")
+        print(
+            f"\nRESULT: {len(rows) - len(stale) - len(unavailable)} current, "
+            f"{len(stale)} STALE, {len(unavailable)} unavailable"
+        )
 
     if unavailable:
         print(
