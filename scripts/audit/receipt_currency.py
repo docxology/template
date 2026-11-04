@@ -81,7 +81,11 @@ def _stored_config(commit: str) -> str | None:
 
 def _computed_config(commit: str) -> str | None:
     """Fingerprint the commit's own tree, using the repository's real implementation."""
-    scratch = Path(tempfile.mkdtemp(dir="/tmp")).resolve()
+    # Resolved, not a literal "/tmp": on macOS the temporary root is a symlink,
+    # and the fingerprint walk compares resolved paths against the tree root.
+    # Letting `mkdtemp` choose the directory also keeps the location under the
+    # platform's own policy rather than a hardcoded one.
+    scratch = Path(tempfile.mkdtemp()).resolve()
     try:
         checkout = subprocess.run(
             ["git", "--work-tree", str(scratch), "checkout", commit, "--", "."],
