@@ -1,11 +1,15 @@
 # Release boundary
 
-The root package metadata declares the **5.0.0** release. Its changelog and
-release notes record the release intent, and the `v5.0.0` tag is cut at
+The root package metadata declares the **5.0.1** release. Its changelog and
+release notes record the release intent, and `5.0.1` supersedes `5.0.0`: the
+`v5.0.0` tag is cut at
 `e932a5d2a4f5c75f354352b43e54039eac9f63cf` (annotated
 `9829f410cf1d4edddcefb5374363f11ef366044d`), which is the merge of the
 release-train pull request; the root release contract passes at that revision,
-and so does the repository's required `CI Gate` on the same commit.
+and so does the repository's required `CI Gate` on the same commit. That tag's
+in-tree copy of its own note names the wrong tagged commit and the tag is not
+re-cut, so the corrected note in this tree and the check that refuses the defect
+are what to read; see [the 5.0.1 notes](../releases/v5.0.1.md).
 
 **The hosted required-acceptance lane has not run at that revision**, and
 ordinary CI is not that lane, so none of the acceptance, handoff or publication
@@ -20,8 +24,10 @@ unpublished 4.5.0 preparation to 5.0.0 while retaining exemplar own versions; th
 exemplar `manuscript/config.yaml` publication `platform_version` fields moved with
 their tracked publication copies in the same change, and the fifteen exemplars
 that track a publication copy were re-rendered and re-receipted, so every
-exemplar's rendered provenance binds the released bytes. Current release guidance
-is in [the 5.0.0 notes](../releases/v5.0.0.md).
+exemplar's rendered provenance binds the released bytes. The same transaction then
+moved those bindings from 5.0.0 to 5.0.1, again with the tracked publication copies
+re-rendered and the receipts rebound. Current release guidance is in
+[the 5.0.1 notes](../releases/v5.0.1.md).
 The existing `v4.4.0` tag remains bound to its failed candidate and is not reused.
 Final release-intent metadata must be included in the exact revision submitted
 for release acceptance.

@@ -314,18 +314,6 @@
     },
     {
       "active": true,
-      "checked_at": "2026-10-29T21:28:46Z",
-      "kind": "number",
-      "source": "output/reports/cleanup_report.json:$.skipped_tracked_count",
-      "source_field": "$.skipped_tracked_count",
-      "source_path": "output/reports/cleanup_report.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "64"
-    },
-    {
-      "active": true,
       "checked_at": "2026-09-10T16:33:18Z",
       "kind": "number",
       "source": "projects/templates/template_methods_paper/src/template_methods_paper/methods_dsl/trust.py _GENESIS_HASH (\"0\" * 64)",
@@ -344,18 +332,6 @@
       "source_field": "$.claims[2].value",
       "source_path": "data/claim_ledger.yaml",
       "source_tier": "configuration",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "0.64"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-10-29T21:28:46Z",
-      "kind": "number",
-      "source": "output/reports/cleanup_report.json:$.skipped_tracked_count (numeric variant)",
-      "source_field": "$.skipped_tracked_count",
-      "source_path": "output/reports/cleanup_report.json",
-      "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
       "value": "0.64"
@@ -1991,6 +1967,30 @@
       "stale": false,
       "tolerance": 0.0,
       "value": "0.02"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-11-04T15:41:21Z",
+      "kind": "number",
+      "source": "output/reports/cleanup_report.json:$.skipped_tracked_count",
+      "source_field": "$.skipped_tracked_count",
+      "source_path": "output/reports/cleanup_report.json",
+      "source_tier": "generated_metric",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "65"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-11-04T15:41:21Z",
+      "kind": "number",
+      "source": "output/reports/cleanup_report.json:$.skipped_tracked_count (numeric variant)",
+      "source_field": "$.skipped_tracked_count",
+      "source_path": "output/reports/cleanup_report.json",
+      "source_tier": "generated_metric",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "0.65"
     },
     {
       "active": true,
