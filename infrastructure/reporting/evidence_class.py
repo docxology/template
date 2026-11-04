@@ -58,7 +58,45 @@ class ClassBinding:
         return {"sha256": self.digest, "members": list(self.members)}
 
 
-def stage_digest(root: Path) -> str | None:
+def uninitialized_submodules(root: Path) -> tuple[str, ...]:
+    """Return declared submodule paths that are not checked out.
+
+    A submodule contributes tracked files to the stage closure (the ``kmyth``
+    subtree adds 125 of 1725 records). If one is not initialized, the stage
+    digest is silently *smaller* and will not match a receipt produced from a
+    complete checkout, so the same commit appears to have two different
+    identities. That ambiguity must be refused rather than resolved by whichever
+    checkout happened to run first.
+    """
+    import subprocess
+
+    observed = subprocess.run(
+        ["git", "-C", str(root), "submodule", "status"],
+        capture_output=True,
+        text=True,
+        timeout=30,
+        check=False,
+        env={
+            "PATH": "/usr/bin:/bin:/usr/local/bin:/opt/homebrew/bin",
+            "LC_ALL": "C",
+            "GIT_CONFIG_NOSYSTEM": "1",
+            "GIT_CONFIG_GLOBAL": "/dev/null",
+            "GIT_TERMINAL_PROMPT": "0",
+        },
+    )
+    if observed.returncode != 0:
+        return ()
+    missing: list[str] = []
+    for line in observed.stdout.splitlines():
+        # ' <sha> <path>' is initialized; '-<sha> <path>' is not.
+        if line.startswith("-"):
+            parts = line[1:].split()
+            if len(parts) >= 2:
+                missing.append(parts[1])
+    return tuple(missing)
+
+
+def stage_digest(root: Path, *, require_submodules: bool = True) -> str | None:
     """Return the shared stage-implementation digest, or ``None`` if unavailable.
 
     The stage closure covers every tracked file under ``infrastructure/`` and
@@ -70,11 +108,15 @@ def stage_digest(root: Path) -> str | None:
     participate.
 
     ``None`` means the closure cannot be established (a synthetic root, a
-    partial checkout). Callers must then keep the strongest binding rather than
-    admit a narrowed class it cannot substantiate.
+    partial checkout, an uninitialized submodule). Callers must then keep the
+    strongest binding rather than admit a narrowed class it cannot substantiate.
     """
     from infrastructure.validation.rendered_snapshot import RenderedSnapshotError, _fingerprint, _stage_records
 
+    if require_submodules and uninitialized_submodules(root):
+        # A smaller closure is not a different state of the same tree; it is an
+        # incomplete observation of it.
+        return None
     try:
         return _fingerprint(_stage_records(Path(root))).sha256
     except (RenderedSnapshotError, OSError):
@@ -108,6 +150,27 @@ def class_binding(
         return ClassBinding(repository_fingerprint, ("repository_fingerprint",))
     # An unrecognized kind is never silently narrowed.
     return ClassBinding(repository_fingerprint, ("repository_fingerprint",))
+
+
+# Kinds whose evidence genuinely cannot be produced in a local checkout. A
+# Darwin window-server observation, a real upload/retrieval custody proof, and
+# the cross-host Root cells are properties of the host, not of the commit, so a
+# local run cannot re-establish them.
+_HOSTED_ONLY_KINDS = frozenset({"platform", "transfer"})
+_HOSTED_ONLY_ROOT_CASE_PLATFORMS = frozenset({"darwin"})
+
+
+def hosted_required(requirements: Any) -> bool:
+    """Return whether any required class can only be produced on a hosted run."""
+    for requirement in requirements:
+        if getattr(requirement, "kind", "") in _HOSTED_ONLY_KINDS:
+            return True
+        if (
+            getattr(requirement, "kind", "") == "root-case"
+            and getattr(requirement, "case_platform", "") in _HOSTED_ONLY_ROOT_CASE_PLATFORMS
+        ):
+            return True
+    return False
 
 
 def _compose(values: dict[str, str]) -> str:

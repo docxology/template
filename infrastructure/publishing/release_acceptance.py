@@ -43,20 +43,48 @@ def positive_id(value: str) -> int:
     return int(value)
 
 
-def validate_handoff_inputs(root: Path, run_id: str, artifact_id: str, receipt_sha256: str) -> bool:
-    """Require an explicit evidence handoff for the current root platform contract."""
+def validate_handoff_inputs(
+    root: Path,
+    run_id: str,
+    artifact_id: str,
+    receipt_sha256: str,
+    *,
+    composed_receipt: str = "",
+) -> bool:
+    """Require an explicit evidence handoff before publication.
+
+    Two admitted shapes, and no third:
+
+    * **hosted** -- a run id, artifact id and receipt SHA-256 naming one hosted
+      carrier. Required whenever the class table contains a hosted-only class.
+    * **composed** -- a path to a composed receipt that binds every required
+      class to its own producer, artifact and closure. Admitted only when the
+      class table says no hosted-only class is required.
+
+    Supplying a hosted carrier always takes the strict hosted path. A missing
+    or stale class in a composed receipt is refused; there is no skip flag.
+    """
     version = root_package_version(root)
     match = re.fullmatch(r"(0|[1-9][0-9]*)\.[0-9]+\.[0-9]+(?:[-+][A-Za-z0-9.-]+)?", version)
     if match is None:
         raise ValueError("root release version must have an unambiguous semantic major")
-    if int(match.group(1)) not in {4, 5}:
+    major = int(match.group(1))
+    if major not in {4, 5}:
         raise ValueError("release handoff requires the current platform 4 contract")
-    if not all((run_id, artifact_id, receipt_sha256)):
-        raise MissingAcceptanceHandoff("current release requires a run, artifact, and exact receipt SHA256")
-    positive_id(run_id)
-    positive_id(artifact_id)
-    if _SHA256.fullmatch(receipt_sha256) is None:
-        raise ValueError("acceptance receipt SHA256 must be 64 lowercase hexadecimal characters")
+    # A supplied hosted carrier is always the strict path, whatever the table says.
+    if all((run_id, artifact_id, receipt_sha256)):
+        positive_id(run_id)
+        positive_id(artifact_id)
+        if _SHA256.fullmatch(receipt_sha256) is None:
+            raise ValueError("acceptance receipt SHA256 must be 64 lowercase hexadecimal characters")
+        return True
+    if not all((run_id, artifact_id, receipt_sha256)) and any((run_id, artifact_id, receipt_sha256)):
+        raise ValueError("a hosted handoff requires every one of run id, artifact id and receipt SHA256")
+    if not composed_receipt:
+        raise MissingAcceptanceHandoff("current release requires either a hosted handoff or a composed receipt path")
+    from infrastructure.publishing.composed_receipt import validate_composed_receipt
+
+    validate_composed_receipt(root, Path(composed_receipt))
     return True
 
 
@@ -249,6 +277,11 @@ def main(argv: Sequence[str] | None = None) -> int:
     inputs.add_argument("--run-id", default="")
     inputs.add_argument("--artifact-id", default="")
     inputs.add_argument("--receipt-sha256", default="")
+    inputs.add_argument(
+        "--composed-receipt",
+        default="",
+        help="Composed per-class receipt; admitted only when no required class is hosted-only.",
+    )
     hosted = commands.add_parser("hosted")
     hosted.add_argument("--run-metadata", type=Path, required=True)
     hosted.add_argument("--artifact-metadata", type=Path, required=True)
@@ -272,7 +305,13 @@ def main(argv: Sequence[str] | None = None) -> int:
     args = parser.parse_args(argv)
     try:
         if args.command == "inputs":
-            required = validate_handoff_inputs(args.repo_root, args.run_id, args.artifact_id, args.receipt_sha256)
+            required = validate_handoff_inputs(
+                args.repo_root,
+                args.run_id,
+                args.artifact_id,
+                args.receipt_sha256,
+                composed_receipt=args.composed_receipt,
+            )
             print(f"required={str(required).lower()}")
         elif args.command == "hosted":
             validate_hosted_handoff(

@@ -344,8 +344,15 @@ def gate_payload(
     blockers: list[dict[str, str]] | None = None,
     *,
     repository_root: Path | None = None,
+    stage: str | None = None,
 ) -> dict[str, Any]:
-    """Serialize the source-owned required-profile shape without granting other gates."""
+    """Serialize the source-owned required-profile shape without granting other gates.
+
+    ``stage`` lets a producer that writes many artifacts resolve the shared stage
+    closure once. Omitting it here makes every artifact re-walk the whole
+    implementation tree, which is the same defect as recomputing an expensive
+    closure inside a loop: the cheap argument was available and not passed.
+    """
     payload: dict[str, Any] = {
         "schema_version": ARTIFACT_SCHEMA,
         "gate": requirement.id,
@@ -363,7 +370,7 @@ def gate_payload(
         from infrastructure.reporting.evidence_class import class_binding
 
         payload["class_binding"] = class_binding(
-            requirement, repository_root, repository_fingerprint=fingerprint
+            requirement, repository_root, repository_fingerprint=fingerprint, stage=stage
         ).to_dict()
     if blockers:
         payload["blockers"] = blockers
