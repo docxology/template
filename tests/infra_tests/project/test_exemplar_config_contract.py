@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import hashlib
+import json
 from pathlib import Path
 
 from infrastructure.project.exemplar_config_contract import (
@@ -85,3 +87,76 @@ def test_unknown_config_block_is_reported(tmp_path: Path) -> None:
     )
     report = validate_exemplar_configs(tmp_path, projects=("templates/template_probe",))
     assert any("undeclared_block" in item.detail for item in report.findings)
+
+
+def test_source_platform_version_must_equal_the_root_version(tmp_path: Path) -> None:
+    _scaffold(
+        tmp_path,
+        pin="research-project-template==9.9.9",
+        platform="9.9.9",
+        config_block="",
+        published="1.0.0",
+    )
+    report = validate_exemplar_configs(tmp_path, projects=("templates/template_probe",))
+    details = " ".join(item.detail for item in report.findings)
+    assert "differs from root '9.9.9'" in details
+
+
+def test_stale_uv_lock_sdk_version_is_reported(tmp_path: Path) -> None:
+    _scaffold(
+        tmp_path,
+        pin="research-project-template==9.9.9",
+        platform="9.9.9",
+        config_block="",
+        published="9.9.9",
+    )
+    project = tmp_path / "projects" / "templates" / "template_probe"
+    (project / "uv.lock").write_text(
+        'version = 1\n\n[[package]]\nname = "research-project-template"\nversion = "1.0.0"\n',
+        encoding="utf-8",
+    )
+    report = validate_exemplar_configs(tmp_path, projects=("templates/template_probe",))
+    details = " ".join(item.detail for item in report.findings)
+    assert "uv.lock research-project-template version ['1.0.0']" in details
+
+
+def test_stale_artifact_manifest_sha256_is_reported(tmp_path: Path) -> None:
+    _scaffold(
+        tmp_path,
+        pin="research-project-template==9.9.9",
+        platform="9.9.9",
+        config_block="",
+        published="9.9.9",
+    )
+    project = tmp_path / "projects" / "templates" / "template_probe"
+    reports = project / "output" / "reports"
+    reports.mkdir(parents=True)
+    (reports / "artifact_manifest.json").write_text(
+        json.dumps({"entries": [{"path": "output/manuscript/config.yaml", "sha256": "0" * 64}]}, indent=2) + "\n",
+        encoding="utf-8",
+    )
+    report = validate_exemplar_configs(tmp_path, projects=("templates/template_probe",))
+    details = " ".join(item.detail for item in report.findings)
+    assert "stale sha256" in details
+
+
+def test_matching_artifact_manifest_is_not_reported(tmp_path: Path) -> None:
+    _scaffold(
+        tmp_path,
+        pin="research-project-template==9.9.9",
+        platform="9.9.9",
+        config_block="",
+        published="9.9.9",
+    )
+    project = tmp_path / "projects" / "templates" / "template_probe"
+    generated = project / "output" / "manuscript" / "config.yaml"
+    digest = hashlib.sha256(generated.read_bytes()).hexdigest()
+    reports = project / "output" / "reports"
+    reports.mkdir(parents=True)
+    (reports / "artifact_manifest.json").write_text(
+        json.dumps({"entries": [{"path": "output/manuscript/config.yaml", "sha256": digest}]}, indent=2) + "\n",
+        encoding="utf-8",
+    )
+    report = validate_exemplar_configs(tmp_path, projects=("templates/template_probe",))
+    details = " ".join(item.detail for item in report.findings)
+    assert "artifact_manifest.json" not in details

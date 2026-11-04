@@ -30,7 +30,7 @@ protocols, as [@sec:introduction] claims.
 
 [@fig:step_counts] plots the step count for each compiled method.
 
-![Steps per example method: a bar chart built from `len(plan.steps)` for each plan in `output/data/compiled_plans.json`, plotted by `scripts/methods_analysis.py`.](../output/figures/step_counts.png){#fig:step_counts}
+![Steps per example method: a bar chart built from `len(plan.steps)` for each plan in `output/data/compiled_plans.json`, plotted by `scripts/methods_analysis.py`.](../figures/step_counts.png){#fig:step_counts}
 
 ## Validation gates
 

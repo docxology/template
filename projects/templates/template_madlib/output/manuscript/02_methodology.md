@@ -34,7 +34,7 @@ The claim-boundary contract is also generated. The audit-rule list contains 12 r
 
 Fork migration closes the method. A downstream project should update config rows, source-owned composition, validators, claim-ledger entries, and documentation before replacing exemplar vocabulary with domain claims. Without that migration work, the fork has only changed words, not the evidential status of the generated manuscript.
 
-![Deterministic token-injection flow](../output/figures/token_injection_flow.png){#fig:token-injection-flow}
+![Deterministic token-injection flow](../figures/token_injection_flow.png){#fig:token-injection-flow}
 
 ## Design Principles
 

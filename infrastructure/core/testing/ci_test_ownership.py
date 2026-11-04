@@ -288,6 +288,7 @@ SOURCE_TEST_OWNERS: dict[str, tuple[str, ...]] = {
     "infrastructure/reporting/native_installed_invocation.py": (
         "tests/infra_tests/reporting/test_native_hosted_credentials.py",
         "tests/infra_tests/reporting/test_native_installed_launch_contract.py",
+        "tests/infra_tests/reporting/test_native_refusal_diagnosability.py",
         "tests/infra_tests/reporting/test_native_whole_portability.py",
     ),
     "infrastructure/reporting/native_installed_custody_capture.py": (

@@ -49,7 +49,7 @@ def validate_handoff_inputs(root: Path, run_id: str, artifact_id: str, receipt_s
     match = re.fullmatch(r"(0|[1-9][0-9]*)\.[0-9]+\.[0-9]+(?:[-+][A-Za-z0-9.-]+)?", version)
     if match is None:
         raise ValueError("root release version must have an unambiguous semantic major")
-    if int(match.group(1)) != 4:
+    if int(match.group(1)) not in {4, 5}:
         raise ValueError("release handoff requires the current platform 4 contract")
     if not all((run_id, artifact_id, receipt_sha256)):
         raise MissingAcceptanceHandoff("current release requires a run, artifact, and exact receipt SHA256")

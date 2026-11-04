@@ -38,6 +38,18 @@ def analysis_receipt_path(project_root: Path, run_id: str, stage_key: str) -> Pa
     return project_root / "output/.pipeline/analysis" / run / f"{stage}.json"
 
 
+def deadline_relabels_outcome(result: StageOutcome, deadline: float) -> bool:
+    """Whether a passed deadline may relabel this outcome.
+
+    Completion is the only truth value of an outcome: a stage that satisfied its
+    contract is never discarded by a clock it outlived. ``result.complete`` must
+    therefore be part of the predicate. Artifact run 41564487489, hydration child
+    e4f931d56bb8: began 3603.76, reaped 3821.12, its own deadline 3861.51 (40.39 s
+    of slack), exit 0, while an enclosing deadline had already passed.
+    """
+    return not result.complete and time.monotonic() >= deadline and result.status is not StageStatus.INTERRUPTED
+
+
 def launch_analysis_script(
     script_path: Path,
     repo_root: Path,
@@ -136,9 +148,14 @@ def launch_analysis_script(
             state = result.status if not result.complete else StageStatus.BLOCKED
             result = replace(result, status=state, diagnostic=f"{result.diagnostic}; analysis custody refused: {exc}")
     assert result is not None
-    if time.monotonic() >= deadline and result.status is not StageStatus.INTERRUPTED:
+    if deadline_relabels_outcome(result, deadline):
         result = replace(
-            result, status=StageStatus.TIMED_OUT, diagnostic=f"{result.diagnostic}; analysis deadline exhausted"
+            result,
+            status=StageStatus.TIMED_OUT,
+            diagnostic=(
+                f"{result.diagnostic}; analysis deadline passed during finalisation "
+                "(not the cause of a completed stage)"
+            ),
         )
     return _persist_analysis_result(
         repo_root,
@@ -216,9 +233,14 @@ def _persist_analysis_result(
                 )
                 record.update(outcome=result.to_dict(), complete=False)
                 atomic_write_text_confined(project, target, json.dumps(record, sort_keys=True) + "\n", mode=0o600)
-        if time.monotonic() >= deadline and result.status is not StageStatus.INTERRUPTED:
+        if deadline_relabels_outcome(result, deadline):
             result = replace(
-                result, status=StageStatus.TIMED_OUT, diagnostic=f"{result.diagnostic}; evidence deadline exhausted"
+                result,
+                status=StageStatus.TIMED_OUT,
+                diagnostic=(
+                    f"{result.diagnostic}; evidence deadline passed during finalisation "
+                    "(not the cause of a completed stage)"
+                ),
             )
             record.update(outcome=result.to_dict(), complete=False)
             atomic_write_text_confined(project, target, json.dumps(record, sort_keys=True) + "\n", mode=0o600)
