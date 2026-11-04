@@ -1,19 +1,25 @@
 # Release boundary
 
 The root package metadata declares the **5.0.1** release. Its changelog and
-release notes record the release intent, and `5.0.1` supersedes `5.0.0`: the
-`v5.0.0` tag is cut at
+release notes record the release intent, and `5.0.1` supersedes `5.0.0` for
+release-note provenance. Two tags are named here. The `v5.0.0` tag is cut at
 `e932a5d2a4f5c75f354352b43e54039eac9f63cf` (annotated
-`9829f410cf1d4edddcefb5374363f11ef366044d`), which is the merge of the
-release-train pull request; the root release contract passes at that revision,
-and so does the repository's required `CI Gate` on the same commit. That tag's
-in-tree copy of its own note names the wrong tagged commit and the tag is not
-re-cut, so the corrected note in this tree and the check that refuses the defect
-are what to read; see [the 5.0.1 notes](../releases/v5.0.1.md).
+`9829f410cf1d4edddcefb5374363f11ef366044d`), which is the merge of its
+release-train pull request; its in-tree copy of `docs/releases/v5.0.0.md` names
+`c5af32a18560ca12267484b182a94b826b47cf47` as the tagged commit, which is false:
+that is the `#215` merge, an intermediate release-train merge 44 commits before
+the tag. The tag is not moved and not re-cut. The `v5.0.1` tag is cut at
+`3617740049de0f146329c5222a62b41494ca2203` (annotated
+`c6aae549c334b0ee55a153e5b85c27278b70dd35`), the merge of the release train that
+carries the corrected note and the fail-closed release-notes tag-commit check
+that refuses that defect; the root release contract passes at that revision, and
+so does the repository's required `CI Gate` on the same commit. The corrected
+note in this tree and the check that refuses the defect are what to read; see
+[the 5.0.1 notes](../releases/v5.0.1.md).
 
-**The hosted required-acceptance lane has not run at that revision**, and
+**The hosted required-acceptance lane has not run at the `v5.0.1` revision**, and
 ordinary CI is not that lane, so none of the acceptance, handoff or publication
-steps below may be treated as satisfied: the tag records a released revision,
+steps below may be treated as satisfied: the tags record released revisions,
 not an accepted candidate. Everything downstream of acceptance in this document
 therefore remains an outstanding requirement rather than a description of what
 happened.
