@@ -8,26 +8,46 @@ name: Rebind rendered provenance
 # when the pull-request head is verified and red on main after the merge. That is
 # why no tag can be cut and stay valid while the dependency queue keeps merging.
 #
-# This job restamps the receipts on main as its own commit, proves the complete
-# roster green on the tree that commit will contain, and only then pushes, so a
-# tag can be cut at a commit whose receipts are current.
+# This job restamps the receipts as its own commit, runs both strict gates on
+# that committed tree, and pushes only after they pass, so a tag can be cut at a
+# commit whose receipts are current.
 #
-# Termination is structural, not a marker. The job acts only when the pushed
-# range touched a receipt-affecting path, and its own commit touches only
-# `projects/templates/*/output/reports/*.json`, which is outside that set: the
-# second run skips and says so in the summary. `[skip ci]` is deliberately not
-# used. The rebind commit is verified in-job by the same strict gates CI runs,
-# and a push made with the repository's own GITHUB_TOKEN starts no new workflow
-# run; if an exact-SHA `CI Gate` is later required for this commit (release
-# sign-off), dispatch `ci.yml` manually for it.
+# WHY THIS IS DISPATCH-ONLY TODAY
+# `main` requires the `CI Gate` check with `enforce_admins: true` and no bypass
+# actors. GitHub's documented contract is that required status checks "must have
+# a successful, skipped, or neutral status before collaborators can make changes
+# to a protected branch", and a commit created inside this runner has no status
+# yet, so a direct push of it is refused no matter how thoroughly the job has
+# verified it. The automatic trigger therefore lands only once the owner
+# provisions a credential that may bypass the required check: a branch-protection
+# bypass for the pushing identity, or a fine-grained token in a secret. To
+# activate it, add to the `on:` block below:
+#
+#   push:
+#     branches: [main]
+#
+# The pushed-range classification decided here is already written and tested for
+# that trigger; a manual dispatch assumes an operator asked for the rebind.
+#
+# Termination is structural, not a marker. The job's commit touches only
+# `projects/templates/*/output/reports/*.json`, so the rebind's own push matches
+# no trigger path and the second run skips and says why. `[skip ci]` is
+# deliberately not used: the rebind commit is verified by these same strict
+# gates, and a push made with the repository's own GITHUB_TOKEN starts no new
+# workflow run, so an exact-SHA `CI Gate` for a rebind commit is obtained by
+# dispatching `ci.yml` for it.
 on:
-  push:
-    branches: [main]
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "Run the rebind, the commit and both gates, but do not push"
+        type: boolean
+        default: true
 
 permissions:
   contents: write
 
-# One rebind at a time. A later push queues behind the running rebind. If main
+# One rebind at a time. A later push queues behind the running rebind; if main
 # advances while a rebind runs, the push is refused with an explicit message and
 # the newer push event's own run rebinds the newer tip. There is no retry.
 concurrency:
@@ -44,7 +64,7 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 90
     steps:
-      - name: Check out the pushed commit with submodules
+      - name: Check out the commit to rebind with submodules
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           fetch-depth: 0
@@ -71,26 +91,17 @@ jobs:
       - name: Prepare the locked environment
         run: uv sync --locked
 
-      - name: Decide whether this push invalidates rendered receipts
+      - name: Decide whether this run must rebind
         id: decide
         shell: bash
         env:
+          EVENT_NAME: ${{ github.event_name }}
           PUSH_BEFORE: ${{ github.event.before }}
           PUSH_AFTER: ${{ github.event.after }}
         run: |
           set -euo pipefail
           target="${PUSH_AFTER:-HEAD}"
           if ! git cat-file -e "${target}^{commit}" 2>/dev/null; then target=$(git rev-parse HEAD); fi
-          if [ -n "${PUSH_BEFORE}" ] && git cat-file -e "${PUSH_BEFORE}^{commit}" 2>/dev/null; then
-            changed=$(git diff --name-only "$PUSH_BEFORE" "$target")
-            label="${PUSH_BEFORE:0:12}..${target:0:12}"
-          elif git rev-parse -q --verify "${target}^" >/dev/null; then
-            changed=$(git diff --name-only "${target}^" "$target")
-            label="${target:0:12} (no usable before-commit)"
-          else
-            changed=$(git diff-tree --no-commit-id --name-only -r "$target")
-            label="${target:0:12} (initial commit)"
-          fi
           # Receipt-affecting surface, mirrored from
           # infrastructure/validation/rendered_snapshot/_records.py:
           #   * root .gitignore/.python-version/pyproject.toml/uv.lock
@@ -109,31 +120,68 @@ jobs:
             esac
             return 1
           }
-          count=0
-          affecting=""
-          while IFS= read -r path; do
-            [ -n "$path" ] || continue
-            count=$((count + 1))
-            if is_receipt_affecting "$path"; then
-              affecting="${affecting}${path}"$'\n'
+          # Read paths on stdin; print the count and leave the affecting subset in
+          # $RUNNER_TEMP/affecting.txt.
+          classify_paths() {
+            local count=0 line
+            : > "$RUNNER_TEMP/affecting.txt"
+            while IFS= read -r line; do
+              [ -n "$line" ] || continue
+              count=$((count + 1))
+              if is_receipt_affecting "$line"; then printf '%s\n' "$line" >> "$RUNNER_TEMP/affecting.txt"; fi
+            done
+            printf '%s\n' "$count"
+          }
+          if [ "${EVENT_NAME}" = "push" ]; then
+            if [ -n "${PUSH_BEFORE}" ] && git cat-file -e "${PUSH_BEFORE}^{commit}" 2>/dev/null; then
+              changed=$(git diff --name-only "$PUSH_BEFORE" "$target")
+              label="${PUSH_BEFORE:0:12}..${target:0:12}"
+            elif git rev-parse -q --verify "${target}^" >/dev/null; then
+              changed=$(git diff --name-only "${target}^" "$target")
+              label="${target:0:12} (no usable before-commit)"
+            else
+              changed=$(git diff-tree --no-commit-id --name-only -r "$target")
+              label="${target:0:12} (initial commit)"
             fi
-          done <<< "$changed"
-          n_affecting=$(printf '%s' "$affecting" | grep -c . || true)
-          {
-            echo "range=$label"
-            echo "changed=$count"
-            echo "affecting=$n_affecting"
-          } >> "$GITHUB_OUTPUT"
-          if [ "$n_affecting" -gt 0 ]; then
-            echo "act=true" >> "$GITHUB_OUTPUT"
-            echo "reason=$n_affecting receipt-affecting path(s) in $label" >> "$GITHUB_OUTPUT"
-            printf 'receipt-affecting paths in %s:\n' "$label"
-            printf '%s' "$affecting" | sed 's/^/  /'
+            count=$(printf '%s\n' "$changed" | classify_paths)
+            affecting=$(grep -c . "$RUNNER_TEMP/affecting.txt" || true)
+            {
+              echo "range=$label"
+              echo "changed=$count"
+              echo "affecting=$affecting"
+            } >> "$GITHUB_OUTPUT"
+            if [ "$affecting" -gt 0 ]; then
+              echo "act=true" >> "$GITHUB_OUTPUT"
+              echo "reason=$affecting receipt-affecting path(s) in $label" >> "$GITHUB_OUTPUT"
+              printf 'receipt-affecting paths in %s:\n' "$label"
+              sed 's/^/  /' "$RUNNER_TEMP/affecting.txt"
+            else
+              {
+                echo "act=false"
+                echo "reason=no receipt-affecting path in $label ($count changed path(s))"
+              } >> "$GITHUB_OUTPUT"
+              # There is no `paths:` filter, so a skip is always reported rather than silent.
+              printf 'skip: no receipt-affecting path in %s (%s changed path(s))\n' "$label" "$count"
+              printf '%s\n' "$changed" | head -20 | sed 's/^/  not receipt-affecting: /'
+            fi
           else
-            echo "act=false" >> "$GITHUB_OUTPUT"
-            echo "reason=no receipt-affecting path in $label ($count changed path(s))" >> "$GITHUB_OUTPUT"
-            printf 'skip: no receipt-affecting path in %s (%s changed path(s))\n' "$label" "$count"
-            printf '%s\n' "$changed" | head -20 | sed 's/^/  not receipt-affecting: /'
+            {
+              echo "act=true"
+              echo "reason=manual dispatch on ${target:0:12}"
+              echo "range=${target:0:12}"
+            } >> "$GITHUB_OUTPUT"
+            printf 'manual dispatch: rebinding %s\n' "$target"
+            if git rev-parse -q --verify "${target}^" >/dev/null; then
+              tip_changed=$(git diff --name-only "${target}^" "$target")
+              tip_count=$(printf '%s\n' "$tip_changed" | classify_paths)
+              tip_affecting=$(grep -c . "$RUNNER_TEMP/affecting.txt" || true)
+              {
+                echo "changed=$tip_count"
+                echo "affecting=$tip_affecting"
+              } >> "$GITHUB_OUTPUT"
+              printf 'informational: %s touched %s path(s), %s of them receipt-affecting\n' \
+                "${target:0:12}" "$tip_count" "$tip_affecting"
+            fi
           fi
 
       - name: Rebind rendered receipts and stage the footprint
@@ -144,8 +192,17 @@ jobs:
           PUSH_AFTER: ${{ github.event.after }}
         run: |
           set -euo pipefail
-          # Pin the epoch to the triggering commit's committer timestamp: the
-          # same value the manual rebind uses, and never the runner's clock.
+          # Refuse to rebind anything but the tip of main: a dispatch on a branch
+          # would otherwise build a commit whose parent is not main's history.
+          git fetch --no-tags origin main
+          tip=$(git rev-parse HEAD)
+          main_tip=$(git rev-parse FETCH_HEAD)
+          if [ "$tip" != "$main_tip" ]; then
+            echo "::error::refusing to rebind ${tip:0:12}: it is not the tip of origin/main (${main_tip:0:12}). Dispatch this workflow on main."
+            exit 1
+          fi
+          # Pin the epoch to the commit being rebound: the same value the manual
+          # rebind uses, and never the runner's clock.
           target="${PUSH_AFTER:-HEAD}"
           if ! git cat-file -e "${target}^{commit}" 2>/dev/null; then target=$(git rev-parse HEAD); fi
           epoch=$(git show -s --format=%ct "$target")
@@ -156,65 +213,31 @@ jobs:
           } >> "$GITHUB_ENV"
           uv run --no-sync --offline python scripts/maintenance/refresh_rendered_provenance.py \
             --all-public --rebind --jobs 4
-          # This is the last step that changes bytes. Staging below registers
-          # them in the index so the strict gate's clean-index check sees the
-          # worktree and the index agree, and so the commit contains exactly the
-          # bytes that were verified. Nothing after this step writes a file.
+          # This is the last step that changes bytes. Staging is not the
+          # verification boundary: the gates below run on the committed tree.
           { git diff --name-only; git diff --cached --name-only; } | sort -u > "$RUNNER_TEMP/rebind-footprint.txt"
           while IFS= read -r path; do [ -n "$path" ] && git add -- "$path"; done < "$RUNNER_TEMP/rebind-footprint.txt"
           printf 'staged %s path(s)\n' "$(grep -c . "$RUNNER_TEMP/rebind-footprint.txt" || true)"
-
-      - name: Verify both gates on the tree the commit will contain
-        id: verify
-        if: steps.decide.outputs.act == 'true'
-        shell: bash
-        run: |
-          set -euo pipefail
-          # A failure here means a human must look. There is no retry and no
-          # override: this step exists so that a red gate can never be committed.
-          set +e
-          gate_output=$(uv run --no-sync --offline python scripts/audit/check_publication_outputs.py \
-            --repo-root "$GITHUB_WORKSPACE" --all-public --strict --jobs 4 2>&1)
-          gate_status=$?
-          set -e
-          printf '%s\n' "$gate_output"
-          printf '%s\n' "$gate_output" > "$RUNNER_TEMP/publication-gate.txt"
-          if [ "$gate_status" -ne 0 ]; then
-            echo "::error::publication output gate failed (exit $gate_status); nothing will be committed"
-            exit 1
-          fi
-          if ! printf '%s\n' "$gate_output" | grep -q 'blocking=0, review_required=0'; then
-            echo "::error::publication output gate did not report blocking=0, review_required=0; nothing will be committed"
-            exit 1
-          fi
-          uv run --no-sync --offline python -m infrastructure.validation.cli publication-audit \
-            --all-public --strict --rendered
 
       - name: Commit the rebind
         id: commit
         if: steps.decide.outputs.act == 'true'
         shell: bash
         env:
-          VERIFICATION_OUTCOME: ${{ steps.verify.outcome }}
           TRIGGER_REASON: ${{ steps.decide.outputs.reason }}
           TRIGGER_RANGE: ${{ steps.decide.outputs.range }}
           SUBMODULE_KMYTH: ${{ steps.submodules.outputs.kmyth }}
         run: |
           set -euo pipefail
-          # Re-gated here, not only in the step condition: a failed verification
-          # can never produce a commit, even if the job structure is edited.
-          if [ "${VERIFICATION_OUTCOME:-missing}" != "success" ]; then
-            echo "::error::refusing to commit: verification outcome was '${VERIFICATION_OUTCOME:-missing}', not success"
-            exit 1
-          fi
           changed=$( { git diff --name-only; git diff --cached --name-only; } | sort -u | grep -v '^$' || true )
           if [ -z "$changed" ]; then
             echo "nothing to commit; the receipts already match this tree"
             echo "committed=false" >> "$GITHUB_OUTPUT"
             exit 0
           fi
-          # The rebind footprint is confined to output/reports/, which is what
-          # makes the loop terminate. Anything else is refused, not committed.
+          # The commit is confined to `projects/templates/*/output/reports/*.json`,
+          # so the rebind's own push matches no trigger path — structural
+          # termination, no `[skip ci]`. Anything else is refused, not committed.
           unexpected=$(printf '%s\n' "$changed" | grep -Ev '^projects/templates/[^/]+/output/reports/[A-Za-z0-9_.-]+\.json$' || true)
           if [ -n "$unexpected" ]; then
             echo "::error::refusing to commit: the rebind changed paths outside its output/reports footprint"
@@ -226,16 +249,15 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           message="$RUNNER_TEMP/rebind-commit-message.txt"
           {
-            printf 'chore(provenance): rebind rendered receipts after %s\n\n' "${GITHUB_SHA:0:12}"
+            printf 'chore(provenance): rebind rendered receipts (%s)\n\n' "${TRIGGER_REASON}"
             printf 'Restamps the rendered-provenance receipts of the 25 public exemplars for the\n'
-            printf 'current stage, source and config closures. Trigger: %s. Range: %s.\n\n' "${TRIGGER_REASON}" "${TRIGGER_RANGE}"
-            printf 'Verified on this tree before committing, with the submodule kmyth at %s:\n' "${SUBMODULE_KMYTH}"
+            printf 'current stage, source and config closures. Range: %s. Submodule kmyth: %s.\n' "${TRIGGER_RANGE}" "${SUBMODULE_KMYTH}"
+            printf 'SOURCE_DATE_EPOCH=%s (the commit being rebound).\n\n' "${SOURCE_DATE_EPOCH}"
+            printf 'The rebind is the last change in this commit and no rendered byte moved. Before\n'
+            printf 'this commit is pushed, the job runs both strict gates on this exact committed tree:\n'
             printf '  scripts/audit/check_publication_outputs.py --all-public --strict --jobs 4\n'
-            printf '    -> blocking=0, review_required=0\n'
             printf '  python -m infrastructure.validation.cli publication-audit --all-public --strict --rendered\n'
-            printf '    -> pass\n\n'
-            printf 'SOURCE_DATE_EPOCH=%s (the triggering commit).\n' "${SOURCE_DATE_EPOCH}"
-            printf 'The rebind is the last change in this commit; no rendered byte moved.\n'
+            printf 'and pushes only if both pass and main has not advanced.\n'
           } > "$message"
           git commit -F "$message"
           {
@@ -244,43 +266,90 @@ jobs:
             echo "tree=$(git show -s --format=%T HEAD)"
           } >> "$GITHUB_OUTPUT"
 
-      - name: Push the rebind commit to main
-        id: push
+      - name: Verify both gates on the committed tree
+        id: verify
         if: steps.commit.outputs.committed == 'true'
         shell: bash
         run: |
           set -euo pipefail
+          # The gates run on the committed tree, with a clean index, which is the
+          # state the rebind runbook requires. Nothing has been pushed yet: a
+          # failure here fails the job and leaves the commit in this runner only.
+          set +e
+          gate_output=$(uv run --no-sync --offline python scripts/audit/check_publication_outputs.py \
+            --repo-root "$GITHUB_WORKSPACE" --all-public --strict --jobs 4 2>&1)
+          gate_status=$?
+          set -e
+          printf '%s\n' "$gate_output"
+          printf '%s\n' "$gate_output" > "$RUNNER_TEMP/publication-gate.txt"
+          if [ "$gate_status" -ne 0 ]; then
+            echo "::error::publication output gate failed (exit $gate_status); the rebind will not be pushed"
+            exit 1
+          fi
+          if ! printf '%s\n' "$gate_output" | grep -q 'blocking=0, review_required=0'; then
+            echo "::error::publication output gate did not report blocking=0, review_required=0; the rebind will not be pushed"
+            exit 1
+          fi
+          uv run --no-sync --offline python -m infrastructure.validation.cli publication-audit \
+            --all-public --strict --rendered
+
+      - name: Push the rebind commit to main
+        id: push
+        if: steps.commit.outputs.committed == 'true' && inputs.dry_run != true
+        shell: bash
+        env:
+          DRY_RUN: ${{ inputs.dry_run }}
+          VERIFICATION_OUTCOME: ${{ steps.verify.outcome }}
+        run: |
+          set -euo pipefail
+          # Re-gated here, not only in the step condition: a dry run can never
+          # push, and neither can a verification that did not succeed, even if
+          # the job structure is edited later.
+          if [ "${DRY_RUN:-false}" = "true" ]; then
+            echo "dry run: the rebind commit stays in this runner and main is unchanged"
+            echo "pushed=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          if [ "${VERIFICATION_OUTCOME:-missing}" != "success" ]; then
+            echo "::error::refusing to push: verification outcome was '${VERIFICATION_OUTCOME:-missing}', not success; the commit exists only in this runner"
+            exit 1
+          fi
           # Refuse rather than race: if main moved while this rebind ran, the
           # newer push event's own run rebinds the newer tip. No force, no retry.
           git fetch --no-tags origin main
           remote=$(git rev-parse FETCH_HEAD)
           parent=$(git rev-parse HEAD^)
           if [ "$remote" != "$parent" ]; then
-            echo "::error::main advanced to $remote while this rebind ran (expected parent $parent); not pushing. The newer push event's own run rebinds the newer tip."
+            echo "::error::main advanced to $remote while this rebind ran (expected parent $parent); not pushing"
             exit 1
           fi
           if ! git push origin HEAD:main 2> "$RUNNER_TEMP/push-error.txt"; then
             cat "$RUNNER_TEMP/push-error.txt" >&2
             if grep -qi 'protected branch\|required status check\|GH006' "$RUNNER_TEMP/push-error.txt"; then
-              echo "::error::main refused a direct update from this token. This is a repository-setting question, not a rebind failure: allow the GitHub Actions app (or the pushing identity) to bypass the required 'CI Gate' check, or provide a token that may, then re-run. Nothing was pushed; main is unchanged."
+              echo "::error::main refused a direct update from this token, as expected while the required 'CI Gate' check applies to every change of the branch. Provision a branch-protection bypass for the pushing identity or a token that may bypass before enabling the automatic trigger. Nothing was pushed; main is unchanged."
             fi
             exit 1
           fi
+          echo "pushed=true" >> "$GITHUB_OUTPUT"
 
       - name: Summarize the decision, the tree and the submodule
         if: always()
         shell: bash
         env:
+          EVENT_NAME: ${{ github.event_name }}
+          DRY_RUN: ${{ inputs.dry_run }}
           DECISION_ACT: ${{ steps.decide.outputs.act }}
           DECISION_REASON: ${{ steps.decide.outputs.reason }}
           DECISION_RANGE: ${{ steps.decide.outputs.range }}
           REBIND_OUTCOME: ${{ steps.rebind.outcome }}
-          VERIFY_OUTCOME: ${{ steps.verify.outcome }}
+          COMMIT_OUTCOME: ${{ steps.commit.outcome }}
           COMMITTED: ${{ steps.commit.outputs.committed }}
           COMMIT_SHA: ${{ steps.commit.outputs.commit }}
           TREE_SHA: ${{ steps.commit.outputs.tree }}
+          VERIFY_OUTCOME: ${{ steps.verify.outcome }}
           PUSH_OUTCOME: ${{ steps.push.outcome }}
-          PUSHED_TREE: ${{ github.sha }}
+          PUSHED: ${{ steps.push.outputs.pushed }}
+          TARGET_TREE: ${{ github.sha }}
         run: |
           set -euo pipefail
           submodule=$(git -C infrastructure/steganography/kmyth rev-parse HEAD 2>/dev/null || echo unavailable)
@@ -288,18 +357,22 @@ jobs:
           # shellcheck disable=SC2016 # Backticks in printf formats are literal Markdown.
           {
             printf '### Rebind rendered provenance\n\n'
-            printf -- '- Pushed tree: `%s` (HEAD now `%s`)\n' "${PUSHED_TREE:-unknown}" "$head"
+            printf -- '- Trigger: `%s` (dry run: `%s`)\n' "${EVENT_NAME:-unknown}" "${DRY_RUN:-false}"
+            printf -- '- Rebind target tree: `%s` (HEAD now `%s`)\n' "${TARGET_TREE:-unknown}" "$head"
             printf -- '- Submodule kmyth: `%s`\n' "$submodule"
             printf -- '- Decision: `%s` — %s\n' "${DECISION_ACT:-not evaluated}" "${DECISION_REASON:-no decision recorded}"
             printf -- '- Range: `%s`\n' "${DECISION_RANGE:-unknown}"
-            printf -- '- Rebind: `%s` · Verify: `%s` · Commit: `%s` · Push: `%s`\n' \
-              "${REBIND_OUTCOME:-skipped}" "${VERIFY_OUTCOME:-skipped}" "${COMMITTED:-false}" "${PUSH_OUTCOME:-skipped}"
+            printf -- '- Rebind: `%s` · Commit: `%s` · Verify: `%s` · Push: `%s`\n' \
+              "${REBIND_OUTCOME:-skipped}" "${COMMITTED:-${COMMIT_OUTCOME:-skipped}}" "${VERIFY_OUTCOME:-skipped}" "${PUSHED:-${PUSH_OUTCOME:-skipped}}"
             if [ -n "${COMMIT_SHA:-}" ]; then
-              printf -- '- Rebind commit: `%s` (tree `%s`)\n' "$COMMIT_SHA" "${TREE_SHA:-unknown}"
+              printf -- '- Rebind commit: `%s` (tree `%s`), verified before any push\n' "$COMMIT_SHA" "${TREE_SHA:-unknown}"
             fi
             printf '\n'
             if [ "${DECISION_ACT:-}" != "true" ]; then
               printf 'Skipped: this push touched no receipt-affecting path, so no receipt can be stale.\n'
+            fi
+            if [ "${DRY_RUN:-false}" = "true" ] && [ "${COMMITTED:-false}" = "true" ]; then
+              printf 'Dry run: the rebind commit was built and verified in this runner and was not pushed.\n'
             fi
           } >> "$GITHUB_STEP_SUMMARY"
           cat "$GITHUB_STEP_SUMMARY"

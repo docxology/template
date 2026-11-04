@@ -218,25 +218,30 @@ secrets to untrusted code.
 
 ### Rebind Workflow (`workflows/rebind.yml`)
 
-Runs on every push to `main` and acts only when the pushed range touched a path
-that can move a rendered-provenance fingerprint: root
+Dispatch-only for now (`workflow_dispatch`, `dry_run` default `true`), acting on
+the receipt-affecting surface that can move a fingerprint: root
 `.gitignore`/`.python-version`/`pyproject.toml`/`uv.lock`, anything tracked under
 `infrastructure/` or `scripts/`, or any tracked exemplar path outside `output/`
-and the snapshot-excluded documentation names. Otherwise it skips and states why
-in the run summary, so no `paths:` filter can hide a run. It initializes the
-`kmyth` submodule before measuring, pins `SOURCE_DATE_EPOCH` to the triggering
-commit, restamps receipts with
-`refresh_rendered_provenance.py --all-public --rebind --jobs 4`, and proves
-`check_publication_outputs.py --all-public --strict --jobs 4`
+and the snapshot-excluded documentation names. For a pushed range a non-matching
+push skips and states why in the run summary, so no `paths:` filter can hide a
+run; a manual dispatch always acts. It initializes the `kmyth` submodule before
+measuring, refuses to rebind anything but the tip of `origin/main`, pins
+`SOURCE_DATE_EPOCH` to the committer timestamp of the commit being rebound,
+restamps receipts with
+`refresh_rendered_provenance.py --all-public --rebind --jobs 4`, commits them, and
+then proves `check_publication_outputs.py --all-public --strict --jobs 4`
 (`blocking=0, review_required=0`) plus
-`publication-audit --all-public --strict --rendered` on the tree the commit will
-contain; a failed gate fails the job and commits nothing. Its commit is confined
-to `projects/templates/*/output/reports/*.json`, which cannot trigger the job
-again, and its push is refused if `main` advanced while it ran. The job needs
-`contents: write`; a push made with the repository's own `GITHUB_TOKEN` starts no
-new workflow run, so an exact-SHA `CI Gate` for the rebind commit is obtained by
-dispatching `ci.yml` manually. A protected-branch refusal is reported as a
-repository-setting question.
+`publication-audit --all-public --strict --rendered` on that committed tree
+before anything is pushed; a failed gate fails the job and pushes nothing. The
+commit is confined to `projects/templates/*/output/reports/*.json`, which cannot
+trigger the job again, and the push refuses a failed verification or a `main`
+that advanced. The job needs `contents: write`. It is dispatch-only because
+required status checks must pass before any change reaches a protected branch and
+a runner-created commit has no status yet: the automatic `push` trigger lands
+once the owner provisions a credential that may bypass the check, and an
+exact-SHA `CI Gate` for a rebind commit is obtained by dispatching `ci.yml` for
+it, since a push made with the repository's own `GITHUB_TOKEN` starts no new
+workflow run.
 
 ## Dependabot (`dependabot.yml`)
 

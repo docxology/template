@@ -10,7 +10,7 @@ Focused tests under `tests/infra_tests/config/` for configuration loading and sc
 | --- | --- |
 | `test_secure_config_schema.py` | Secure config YAML schema validation |
 | `test_ci_gate.py` | Real workflow aggregate execution, conditional skip reasons and required-job failures |
-| `test_rebind_workflow.py` | Real post-merge rebind execution: receipt-affecting path decision, loop termination, submodule-first ordering and the commit guard that refuses an unverified tree |
+| `test_rebind_workflow.py` | Real rebind-workflow execution: receipt-affecting path decision, dispatch semantics, loop termination, submodule-first and commit-then-verify ordering, and the commit and push guards (a dry run, an unverified tree or a moved `main` can never push) |
 
 ## Verification
 
