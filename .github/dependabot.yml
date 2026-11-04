@@ -1,6 +1,14 @@
-# Dependabot — repository root only (`/`).
-# - github-actions: weekly Monday 09:00 UTC; group `actions-minor` (minor+patch); max 5 open PRs.
-# - pip: same schedule; reads root pyproject.toml / lockfile (uv-compatible); groups `dev-tools` and `scientific-core`.
+# Dependabot — repository root, plus the 25 template projects under projects/templates/.
+#
+# Version-update coverage of the template locks is the reason this file has a third block.
+# `directory: "/"` (used by the first two blocks) reads only the root manifest and uv.lock:
+# Dependabot does not scan subdirectories for a `directory` entry, so before this change no
+# version-update automation looked at the 25 `projects/templates/*/uv.lock` files at all. On
+# 2026-11-03 those manifests held 1,360 of this repository's 1,467 open alerts (93%), because a
+# version bump applied to one lock never reached the other twenty-four.
+#
+# `directories` (plural) is the key that accepts a glob; `directory` does not.
+# See https://docs.github.com/en/code-security/reference/supply-chain-security/dependabot-options-reference
 version: 2
 updates:
   # ───────────────────────────────────────────
@@ -28,8 +36,12 @@ updates:
         update-types: ["minor", "patch"]
 
   # ───────────────────────────────────────────
-  # Python (uv / pip) — weekly, grouped
+  # Python — root manifest, weekly, grouped
   # ───────────────────────────────────────────
+  # `pip` covers PEP 621 `pyproject.toml` and `.txt` requirement files. It does not read
+  # `uv.lock`; that is the separate `uv` ecosystem, used by the third block below. This block
+  # is left as it was so that this change only adds coverage and does not move the root entry
+  # between ecosystems in the same PR.
   - package-ecosystem: "pip"
     directory: "/"
     schedule:
@@ -67,3 +79,44 @@ updates:
           - "scikit-learn*"
           - "networkx*"
         update-types: ["minor", "patch"]
+
+  # ───────────────────────────────────────────
+  # Python (uv) — the 25 template projects under projects/templates/
+  # ───────────────────────────────────────────
+  # WHY `uv` AND NOT `pip`
+  # The files that need to move are `uv.lock` files. Dependabot's `pip` ecosystem reads `.txt`
+  # requirement files and PEP 621 `pyproject.toml`; `uv.lock` is handled by the `uv` ecosystem
+  # (`package-ecosystem: "uv"`). Pointing `pip` at this glob would have looked like a fix and
+  # updated nothing that matters, because the rule that kept 93% of this repository vulnerable
+  # lives in the locks.
+  #
+  # WHY THIS BLOCK CANNOT FLOOD
+  # Without `group-by`, one dependency needing an update in all 25 templates is 25 pull requests.
+  # `group-by: dependency-name` collapses a dependency's update across every matched directory
+  # into a SINGLE pull request, so a pillow bump is one PR covering all 25 locks, and
+  # `open-pull-requests-limit` caps how many can be open at once. No `update-types` filter is set
+  # deliberately: a filter would push excluded update types back out of the group and back into
+  # per-directory PRs, which is the flood this block exists to prevent.
+  #
+  # A blind spot that produces a flood gets reverted by whoever is on call; a scoped one survives.
+  - package-ecosystem: "uv"
+    directories:
+      - "/projects/templates/*"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+      timezone: "UTC"
+    open-pull-requests-limit: 3
+    rebase-strategy: "auto"
+    labels:
+      - "dependencies"
+      - "automated"
+      - "python"
+    commit-message:
+      prefix: "chore(deps)"
+      include: "scope"
+    groups:
+      templates-by-dependency:
+        group-by: dependency-name
+        patterns: ["*"]
