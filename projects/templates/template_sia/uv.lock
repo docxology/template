@@ -611,7 +611,7 @@ requires-dist = [
     { name = "pillow", specifier = ">=13.0.0" },
     { name = "plotly", marker = "extra == 'dashboard'", specifier = ">=5.0.0" },
     { name = "psutil", marker = "extra == 'monitoring'", specifier = ">=5.9.0" },
-    { name = "pypdf", specifier = ">=6.16.1" },
+    { name = "pypdf", specifier = ">=6.21.4" },
     { name = "python-barcode", marker = "extra == 'steganography'", specifier = ">=0.15" },
     { name = "python-dotenv", marker = "extra == 'deep-research'", specifier = ">=1.2.2" },
     { name = "python-dotenv", marker = "extra == 'dotenv'", specifier = ">=1.2.2" },
