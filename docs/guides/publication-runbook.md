@@ -113,7 +113,10 @@ uv run python scripts/docgen/publication_records.py --refresh-external
 ```
 
 The root release workflow separately admits the successful hosted run, exact
-artifact ID, receipt hash, and tagged revision. See the
+artifact ID, receipt hash, and tagged revision, and it requires that the tag be
+cut at a commit whose tree equals the verified tree: both publication gates, run
+on the committed tree with a clean index before the merge, must pass again at the
+revision the tag names. See the
 [root release boundary](../maintenance/release-boundary.md). Standalone
 exemplars retain their own versions and publication receipts.
 
