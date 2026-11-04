@@ -49,7 +49,6 @@ dependencies = [
   "matplotlib>=3.7",
   # Archive rendering canonicalizes PDFs whenever SOURCE_DATE_EPOCH is set.
   # 6.21.4 is the first pypdf release with no open advisory: the pinned floors carried 18 advisories and 326 open Dependabot alerts in this repository. Do not lower this floor.
-  # 6.21.4 is the first pypdf release with no open advisory: the pinned floors carried 18 advisories and 326 open Dependabot alerts in this repository. Do not lower this floor.
   "pypdf>=6.21.4",
   # scipy, scikit-learn, wordcloud, rdflib are in [scientific] optional group — install with:
   # uv sync --group scientific

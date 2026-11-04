@@ -31,7 +31,6 @@ dependencies = [
     # same pattern as `template_search_project`/`template_newspaper`.
     "reportlab>=4.0.0",
     # 6.21.4 is the first pypdf release with no open advisory: the pinned floors carried 18 advisories and 326 open Dependabot alerts in this repository. Do not lower this floor.
-    # 6.21.4 is the first pypdf release with no open advisory: the pinned floors carried 18 advisories and 326 open Dependabot alerts in this repository. Do not lower this floor.
     "pypdf>=6.21.4",
     # 13.0.0 is the first Pillow release with no open advisory: 12.3.0 carries 130 critical and 598 high alerts in this repository. Do not lower this floor.
     "Pillow>=13.0.0",
