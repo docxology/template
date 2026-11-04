@@ -1,14 +1,27 @@
 # Release boundary
 
-The root package metadata declares the **5.0.0** candidate. Its changelog and
-release notes record the release intent; publication remains pending until the
-acceptance and publication steps below pass. The coordinated release transaction
-moves the root SDK, all 25 exemplar SDK requirements and their
-`[tool.template].platform_version` bindings from the unpublished 4.5.0
-preparation to 5.0.0 while retaining exemplar own versions; the exemplar
-`manuscript/config.yaml` publication `platform_version` fields moved with their
-tracked publication copies in the same change. Current release guidance is
-in [the 5.0.0 notes](../releases/v5.0.0.md).
+The root package metadata declares the **5.0.0** release. Its changelog and
+release notes record the release intent, and the `v5.0.0` tag is cut at
+`e932a5d2a4f5c75f354352b43e54039eac9f63cf` (annotated
+`9829f410cf1d4edddcefb5374363f11ef366044d`), which is the merge of the
+release-train pull request; the root release contract passes at that revision,
+and so does the repository's required `CI Gate` on the same commit.
+
+**The hosted required-acceptance lane has not run at that revision**, and
+ordinary CI is not that lane, so none of the acceptance, handoff or publication
+steps below may be treated as satisfied: the tag records a released revision,
+not an accepted candidate. Everything downstream of acceptance in this document
+therefore remains an outstanding requirement rather than a description of what
+happened.
+
+The coordinated release transaction moved the root SDK, all 25 exemplar SDK
+requirements and their `[tool.template].platform_version` bindings from the
+unpublished 4.5.0 preparation to 5.0.0 while retaining exemplar own versions; the
+exemplar `manuscript/config.yaml` publication `platform_version` fields moved with
+their tracked publication copies in the same change, and the fifteen exemplars
+that track a publication copy were re-rendered and re-receipted, so every
+exemplar's rendered provenance binds the released bytes. Current release guidance
+is in [the 5.0.0 notes](../releases/v5.0.0.md).
 The existing `v4.4.0` tag remains bound to its failed candidate and is not reused.
 Final release-intent metadata must be included in the exact revision submitted
 for release acceptance.
