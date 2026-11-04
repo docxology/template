@@ -157,7 +157,7 @@
     },
     "validation_report": {
       "path": "output/reports/validation_report.json",
-      "sha256": "3deb733ae7148259a29e94c7ba9f4b814b3535b56af499e09be7cfd6e56f6b37",
+      "sha256": "a29b3fba7c988fa6f60e185e0ccfe5fe0588b286f512c3a93657438d5525cae6",
       "size_bytes": 16095
     }
   },
@@ -165,7 +165,7 @@
   "fingerprints": {
     "config": {
       "file_count": 21,
-      "sha256": "4613f8814150c09c82b72acb0e8e2801b7bdfa59d25ba306d5b1b73f57a8d36c"
+      "sha256": "169d52df79c7a8561ea7f0c72d88cbbc7cd809ad420d36c1addff52b02d14418"
     },
     "output": {
       "file_count": 103,

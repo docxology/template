@@ -330,7 +330,7 @@
     "passed": 9,
     "total_checks": 9
   },
-  "timestamp": "2026-11-04T00:21:45Z",
+  "timestamp": "2026-11-04T15:09:16Z",
   "validated_inputs": {
     "artifact_manifest": {
       "path": "output/reports/artifact_manifest.json",
@@ -406,7 +406,7 @@
     "fingerprints": {
       "config": {
         "file_count": 16,
-        "sha256": "980a31b7170e220f556a0fd41cb7fd3ab87d8e8e3ddae9b397c61e44b11ac658"
+        "sha256": "835578176d8325f7499f04375c5e91b9227930738054e2de99f85ef28c5e319e"
       },
       "output": {
         "file_count": 61,
