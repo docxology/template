@@ -208,7 +208,9 @@ public-exemplars = [
 ]
 installed-build = [
     "hatchling==1.32.4",
-    "setuptools==83.0.0",
+    # 84.1.0 is the first setuptools release with no open advisory: 83.0.0 carries
+    # GHSA-xmj3-9gf7-h52w in every lock this group reaches. Do not lower this pin.
+    "setuptools==84.1.0",
     "wheel==0.48.0",
 ]
 

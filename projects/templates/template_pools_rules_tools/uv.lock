@@ -955,7 +955,7 @@ discopy = [{ name = "discopy", specifier = ">=1.0.0" }]
 dotenv = [{ name = "python-dotenv", specifier = ">=1.2.2" }]
 installed-build = [
     { name = "hatchling", specifier = "==1.32.4" },
-    { name = "setuptools", specifier = "==83.0.0" },
+    { name = "setuptools", specifier = "==84.1.0" },
     { name = "wheel", specifier = "==0.48.0" },
 ]
 llm = [{ name = "requests", specifier = ">=2.31.0" }]
