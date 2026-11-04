@@ -18,7 +18,7 @@ classifiers = [
 ]
 dependencies = [
     "template-literature-meta-analysis==0.2.0",
-    "research-project-template==5.0.0",
+    "research-project-template==5.0.1",
     # 6.21.4 is the first pypdf release with no open advisory: the pinned floors carried 18 advisories and 326 open Dependabot alerts in this repository. Do not lower this floor.
     "pypdf>=6.21.4",
     "requests>=2.31.0",
@@ -185,7 +185,7 @@ dev = [
 
 # Compatibility contract for this independent exemplar release.
 [tool.template]
-platform_version = "5.0.0"
+platform_version = "5.0.1"
 tested_python_versions = ["3.14", "3.15"]
 required_unpaid_capabilities = ["retrieval", "screening", "local-classification", "licensed-fulltext"]
 

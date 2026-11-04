@@ -7,6 +7,25 @@ source and contracts; each exemplar retains its own package and publication
 versions. Confidential and local workspaces outside the canonical public roster
 are excluded.
 
+## [5.0.1] - 2026-11-04
+
+See the [5.0.1 release notes](docs/releases/v5.0.1.md). This release corrects one
+release-notes claim and adds the check that refuses it; it changes no behavior.
+
+- `docs/releases/v5.0.0.md` on `main` now names
+  `e932a5d2a4f5c75f354352b43e54039eac9f63cf` as the `v5.0.0` tagged commit and
+  describes `c5af32a18560ca12267484b182a94b826b47cf47` as the intermediate `#215`
+  merge 44 commits before it. The `v5.0.0` tag is not moved: its in-tree copy keeps
+  the wrong sentence, and `5.0.1` supersedes it.
+- `infrastructure/project/release_versions.py` resolves the tag under check and
+  fails closed when the release-note paragraph claiming a tagged commit names a
+  different first commit; an intermediate merge named later in the paragraph stays
+  allowed. The negative control against the wrong paragraph is recorded in the
+  5.0.1 notes.
+- The root version and lock, all 25 exemplar publication `platform_version`
+  bindings and their locks move to 5.0.1, with the 15 tracked publication copies
+  re-rendered and re-receipted.
+
 ## [5.0.0] - 2026-11-03
 
 See the [5.0.0 release notes](docs/releases/v5.0.0.md). This release makes the

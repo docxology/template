@@ -1,7 +1,8 @@
 # 🚀 Research Project Template
 
-**Current candidate: 5.0.0.** See the [release notes](docs/releases/v5.0.0.md)
+**Current candidate: 5.0.1.** See the [release notes](docs/releases/v5.0.1.md)
 and [acceptance/publication boundary](docs/maintenance/release-boundary.md).
+`5.0.1` supersedes `5.0.0`, whose in-tree note names the wrong tagged commit.
 Candidate metadata does not establish a published release.
 
 <!-- Badges are qualitative; measured coverage and test counts drift — use `uv run pytest` and CI for ground truth. See docs/RUN_GUIDE.md. -->
