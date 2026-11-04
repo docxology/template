@@ -100,8 +100,10 @@ jobs:
           PUSH_AFTER: ${{ github.event.after }}
         run: |
           set -euo pipefail
-          target="${PUSH_AFTER:-HEAD}"
-          if ! git cat-file -e "${target}^{commit}" 2>/dev/null; then target=$(git rev-parse HEAD); fi
+          # Resolve the target to a commit id even for a dispatch, so the
+          # decision, the range and the epoch name the commit rather than `HEAD`.
+          target="${PUSH_AFTER:-}"
+          if [ -z "$target" ] || ! git cat-file -e "${target}^{commit}" 2>/dev/null; then target=$(git rev-parse HEAD); fi
           # Receipt-affecting surface, mirrored from
           # infrastructure/validation/rendered_snapshot/_records.py:
           #   * root .gitignore/.python-version/pyproject.toml/uv.lock
@@ -202,9 +204,9 @@ jobs:
             exit 1
           fi
           # Pin the epoch to the commit being rebound: the same value the manual
-          # rebind uses, and never the runner's clock.
-          target="${PUSH_AFTER:-HEAD}"
-          if ! git cat-file -e "${target}^{commit}" 2>/dev/null; then target=$(git rev-parse HEAD); fi
+          # rebind uses, and never the runner's clock. A dispatch resolves it too.
+          target="${PUSH_AFTER:-}"
+          if [ -z "$target" ] || ! git cat-file -e "${target}^{commit}" 2>/dev/null; then target=$(git rev-parse HEAD); fi
           epoch=$(git show -s --format=%ct "$target")
           export SOURCE_DATE_EPOCH="$epoch"
           {

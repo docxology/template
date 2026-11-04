@@ -355,10 +355,13 @@ def test_manual_dispatch_always_acts_and_reports_the_tip(tmp_path: Path) -> None
 
     assert result.returncode == 0, result.stderr
     assert recorded["act"] == "true"
-    assert recorded["reason"].startswith("manual dispatch on ")
+    # The labels name a commit, never the string `HEAD`.
+    assert re.fullmatch(r"manual dispatch on [0-9a-f]{12}", recorded["reason"]), recorded["reason"]
+    assert re.fullmatch(r"[0-9a-f]{12}", recorded["range"]), recorded["range"]
     assert recorded["affecting"] == "1"
-    assert "informational: " in result.stdout
-    assert "1 of them receipt-affecting" in result.stdout
+    assert re.search(r"informational: [0-9a-f]{12} touched 1 path\(s\), 1 of them receipt-affecting", result.stdout), (
+        result.stdout
+    )
 
 
 def test_workflow_is_dispatch_only_until_a_push_credential_exists() -> None:
