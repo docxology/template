@@ -21,13 +21,15 @@ from infrastructure.reporting.receipt_currency import computed_config, stored_co
 
 _RECEIPT = "projects/templates/template_code_project/output/reports/rendered_provenance.json"
 
-_RECEIPT_BODY = """{
-  "fingerprints": {
-    "config": {
-      "sha256": "da31a2b1775f2a096b901d72af78e9d8077eec39e5fca91fb69d998dc8c199c3"
-    }
-  }
-}
+_RECEIPT_DIGEST = "da31a2b1775f2a096b901d72af78e9d8077eec39e5fca91fb69d998dc8c199c3"
+
+_RECEIPT_BODY = f"""{{
+  "fingerprints": {{
+    "config": {{
+      "sha256": "{_RECEIPT_DIGEST}"
+    }}
+  }}
+}}
 """
 
 
@@ -71,6 +73,39 @@ def _seed_repository(root: Path) -> tuple[str, str]:
 
 def _staged(repo: Path) -> list[str]:
     return [line for line in _git(repo, "diff", "--cached", "--name-only").stdout.splitlines() if line]
+
+
+def test_stored_config_is_index_neutral(tmp_path: Path) -> None:
+    """``stored_config`` reads objects with ``git show``; it never materializes.
+
+    Only ``computed_config`` performs a checkout, so only it can write the
+    index. This is asserted rather than assumed because it runs *first* in
+    ``collect``: if reading the stored receipt polluted the index, every row
+    would mutate the caller before a single digest was computed.
+    """
+    sampled, head = _seed_repository(tmp_path)
+    repo = tmp_path / "repo"
+    assert sampled != head
+
+    assert stored_config(repo, sampled, receipt=_RECEIPT) == _RECEIPT_DIGEST
+    assert _staged(repo) == []
+
+
+def test_only_the_checkout_helper_can_write_the_index() -> None:
+    """Guard the shape of the fix: exactly one Git checkout, and it is isolated.
+
+    A partial fix is the failure to avoid. ``--work-tree`` redirects where
+    files land; ``GIT_INDEX_FILE`` redirects which index records them. Using
+    one without the other still mutates the caller's index. This asserts the
+    module has a single checkout and that it carries its own index.
+    """
+    source = Path(computed_config.__module__.replace(".", "/") + ".py")
+    module = Path(__file__).resolve().parents[3] / source
+    text = module.read_text(encoding="utf-8")
+
+    assert text.count('"--work-tree"') == 1, "unexpected number of work-tree redirections"
+    assert text.count('"checkout"') == 1, "unexpected number of Git checkouts"
+    assert "GIT_INDEX_FILE" in text, "the single checkout must redirect its index away from the caller"
 
 
 def test_measurement_never_stages_anything_in_the_caller(tmp_path: Path) -> None:
