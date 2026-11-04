@@ -232,7 +232,10 @@ restamps receipts with
 then proves `check_publication_outputs.py --all-public --strict --jobs 4`
 (`blocking=0, review_required=0`) plus
 `publication-audit --all-public --strict --rendered` on that committed tree
-before anything is pushed; a failed gate fails the job and pushes nothing. The
+before anything is pushed; a failed gate fails the job and pushes nothing. It also
+prints the measured `stage` and `config` digests for one exemplar beside the ones
+its receipt records, so a checkout shape that differs from a developer's is
+visible in the run rather than in a later rejection. The
 commit is confined to `projects/templates/*/output/reports/*.json`, which cannot
 trigger the job again, and the push refuses a failed verification or a `main`
 that advanced. The job needs `contents: write`. It is dispatch-only because

@@ -375,6 +375,7 @@ on `main` after the merge.
 6. The commit is confined to `projects/templates/*/output/reports/*.json`, so the rebind's own push matches no trigger path — structural termination, no `[skip ci]`. Anything else is refused, not committed
 7. The push (only when `dry_run` is false) refuses a verification that did not succeed and refuses when `main` advanced during the rebind — no force push, no retry
 8. The always-run summary prints the trigger and dry-run state, the rebind target tree, any rebind commit and its tree, the `kmyth` submodule SHA, the decision with its reason, and each step outcome
+9. A tolerant informational step prints the measured `stage` and `config` digests beside the ones the receipt records, for `templates/template_code_project`: a green gate cannot show which digest the receipts were stamped with, so a checkout shape that differs from a developer's would otherwise surface as a later rejection by everyone else instead of in the run itself
 
 **Why dispatch-only.** `main` requires the `CI Gate` check with
 `enforce_admins: true` and no bypass actors, and required status checks must have

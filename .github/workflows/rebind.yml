@@ -100,8 +100,10 @@ jobs:
           PUSH_AFTER: ${{ github.event.after }}
         run: |
           set -euo pipefail
-          target="${PUSH_AFTER:-HEAD}"
-          if ! git cat-file -e "${target}^{commit}" 2>/dev/null; then target=$(git rev-parse HEAD); fi
+          # Resolve the target to a commit id even for a dispatch, so the
+          # decision, the range and the epoch name the commit rather than `HEAD`.
+          target="${PUSH_AFTER:-}"
+          if [ -z "$target" ] || ! git cat-file -e "${target}^{commit}" 2>/dev/null; then target=$(git rev-parse HEAD); fi
           # Receipt-affecting surface, mirrored from
           # infrastructure/validation/rendered_snapshot/_records.py:
           #   * root .gitignore/.python-version/pyproject.toml/uv.lock
@@ -202,9 +204,9 @@ jobs:
             exit 1
           fi
           # Pin the epoch to the commit being rebound: the same value the manual
-          # rebind uses, and never the runner's clock.
-          target="${PUSH_AFTER:-HEAD}"
-          if ! git cat-file -e "${target}^{commit}" 2>/dev/null; then target=$(git rev-parse HEAD); fi
+          # rebind uses, and never the runner's clock. A dispatch resolves it too.
+          target="${PUSH_AFTER:-}"
+          if [ -z "$target" ] || ! git cat-file -e "${target}^{commit}" 2>/dev/null; then target=$(git rev-parse HEAD); fi
           epoch=$(git show -s --format=%ct "$target")
           export SOURCE_DATE_EPOCH="$epoch"
           {
@@ -293,6 +295,42 @@ jobs:
           uv run --no-sync --offline python -m infrastructure.validation.cli publication-audit \
             --all-public --strict --rendered
 
+      - name: Report the measured fingerprints of one exemplar
+        id: fingerprints
+        if: steps.decide.outputs.act == 'true'
+        shell: bash
+        # Informational only, and deliberately tolerant: a green gate cannot show
+        # which stage digest the receipts were stamped with, because the rebind
+        # stamps whatever this runner measured. Printing the measured value, its
+        # file count and what the receipt records makes a checkout shape that
+        # differs from a developer's visible in the run rather than in a later
+        # rejection by everyone else.
+        continue-on-error: true
+        run: |
+          set -euo pipefail
+          uv run --no-sync --offline python - <<'PY' | tee "$RUNNER_TEMP/fingerprints.txt"
+          from pathlib import Path
+          import json
+
+          from infrastructure.validation.rendered_snapshot import build_current_rendered_snapshot
+
+          root = Path.cwd()
+          name = "templates/template_code_project"
+          snapshot = build_current_rendered_snapshot(root, name)
+          receipt = json.loads(
+              (root / "projects" / name / "output" / "reports" / "rendered_provenance.json").read_text(
+                  encoding="utf-8"
+              )
+          )
+          for label, measured in (("stage", snapshot.stage), ("config", snapshot.config)):
+              stamped = receipt["fingerprints"][label]
+              print(
+                  f"{label} sha256 {measured.sha256} ({measured.file_count} files); "
+                  f"receipt {stamped['sha256']} ({stamped['file_count']} files); "
+                  f"current {measured.sha256 == stamped['sha256']}"
+              )
+          PY
+
       - name: Push the rebind commit to main
         id: push
         if: steps.commit.outputs.committed == 'true' && inputs.dry_run != true
@@ -366,6 +404,10 @@ jobs:
               "${REBIND_OUTCOME:-skipped}" "${COMMITTED:-${COMMIT_OUTCOME:-skipped}}" "${VERIFY_OUTCOME:-skipped}" "${PUSHED:-${PUSH_OUTCOME:-skipped}}"
             if [ -n "${COMMIT_SHA:-}" ]; then
               printf -- '- Rebind commit: `%s` (tree `%s`), verified before any push\n' "$COMMIT_SHA" "${TREE_SHA:-unknown}"
+            fi
+            if [ -s "${RUNNER_TEMP}/fingerprints.txt" ]; then
+              printf -- '- Measured fingerprints (%s):\n' "templates/template_code_project"
+              sed 's/^/  - /' "${RUNNER_TEMP}/fingerprints.txt"
             fi
             printf '\n'
             if [ "${DECISION_ACT:-}" != "true" ]; then

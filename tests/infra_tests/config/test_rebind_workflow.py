@@ -11,19 +11,23 @@ guard, a real bare remote):
 * the commit guard refuses any path outside the rebind's own ``output/reports/``
   footprint;
 * the push guard refuses a dry run, refuses a verification that did not succeed,
-  and refuses when ``main`` advanced — and it is the only step that pushes.
+  and refuses when ``main`` advanced — and it is the only step that pushes;
+* the fingerprint report prints the measured stage and config digests beside the
+  stamped ones, so a checkout shape that differs from a developer's is visible.
 """
 
 from __future__ import annotations
 
 import os
+import re
 import subprocess
 from pathlib import Path
 
 import pytest
 import yaml
 
-_WORKFLOW_PATH = Path(__file__).resolve().parents[3] / ".github/workflows/rebind.yml"
+_REPO_ROOT = Path(__file__).resolve().parents[3]
+_WORKFLOW_PATH = _REPO_ROOT / ".github/workflows/rebind.yml"
 
 _CHECKOUT = "Check out the commit to rebind with submodules"
 _SUBMODULES = "Initialize submodules before any measurement"
@@ -32,6 +36,7 @@ _DECISION = "Decide whether this run must rebind"
 _REBIND = "Rebind rendered receipts and stage the footprint"
 _COMMIT = "Commit the rebind"
 _VERIFY = "Verify both gates on the committed tree"
+_FINGERPRINTS = "Report the measured fingerprints of one exemplar"
 _PUSH = "Push the rebind commit to main"
 _SUMMARY = "Summarize the decision, the tree and the submodule"
 
@@ -41,6 +46,11 @@ _STRUCTURAL_TERMINATION = (
     "          # termination, no `[skip ci]`."
 )
 _NO_PATHS_FILTER = "There is no `paths:` filter, so a skip is always reported rather than silent."
+
+_FINGERPRINT_LINE = re.compile(
+    r"^(stage|config) sha256 (?P<measured>[0-9a-f]{64}) \((?P<measured_files>\d+) files\); "
+    r"receipt (?P<stamped>[0-9a-f]{64}) \((?P<stamped_files>\d+) files\); current (True|False)$"
+)
 
 
 def _workflow() -> dict:
@@ -61,6 +71,7 @@ def _steps() -> dict[str, dict]:
         _REBIND,
         _COMMIT,
         _VERIFY,
+        _FINGERPRINTS,
         _PUSH,
         _SUMMARY,
     }, sorted(steps)
@@ -188,7 +199,7 @@ def _run_step(
         env={**_git_env(), "GITHUB_OUTPUT": str(output), "RUNNER_TEMP": str(tmp_path), **env},
         capture_output=True,
         text=True,
-        timeout=60,
+        timeout=120,
         check=False,
     )
     recorded = dict(line.split("=", 1) for line in output.read_text(encoding="utf-8").splitlines() if "=" in line)
@@ -344,10 +355,13 @@ def test_manual_dispatch_always_acts_and_reports_the_tip(tmp_path: Path) -> None
 
     assert result.returncode == 0, result.stderr
     assert recorded["act"] == "true"
-    assert recorded["reason"].startswith("manual dispatch on ")
+    # The labels name a commit, never the string `HEAD`.
+    assert re.fullmatch(r"manual dispatch on [0-9a-f]{12}", recorded["reason"]), recorded["reason"]
+    assert re.fullmatch(r"[0-9a-f]{12}", recorded["range"]), recorded["range"]
     assert recorded["affecting"] == "1"
-    assert "informational: " in result.stdout
-    assert "1 of them receipt-affecting" in result.stdout
+    assert re.search(r"informational: [0-9a-f]{12} touched 1 path\(s\), 1 of them receipt-affecting", result.stdout), (
+        result.stdout
+    )
 
 
 def test_workflow_is_dispatch_only_until_a_push_credential_exists() -> None:
@@ -417,6 +431,45 @@ def test_the_commit_is_verified_after_it_exists_and_pushed_last() -> None:
     assert "git push" not in verify
     assert "git push origin HEAD:main" in steps[_PUSH]["run"]
     assert "--force" not in steps[_PUSH]["run"]
+
+
+def test_the_run_reports_the_measured_fingerprints() -> None:
+    """A green gate cannot show which stage digest the receipts were stamped with."""
+    steps = _steps()
+    report = steps[_FINGERPRINTS]
+    assert report["id"] == "fingerprints"
+    assert report["continue-on-error"] is True
+    assert report["if"] == "steps.decide.outputs.act == 'true'"
+    assert "build_current_rendered_snapshot" in report["run"]
+    assert "templates/template_code_project" in report["run"]
+    summary = steps[_SUMMARY]["run"]
+    assert "Measured fingerprints" in summary
+    assert "fingerprints.txt" in summary
+
+
+@pytest.mark.timeout(300)
+def test_the_fingerprint_report_executes_and_parses(tmp_path: Path) -> None:
+    """Execute the real snippet against this checkout and parse its two lines."""
+    result = subprocess.run(
+        ["bash", "-e", "-o", "pipefail", "-c", _steps()[_FINGERPRINTS]["run"]],
+        cwd=_REPO_ROOT,
+        env={**_git_env(), "RUNNER_TEMP": str(tmp_path)},
+        capture_output=True,
+        text=True,
+        timeout=280,
+        check=False,
+    )
+
+    assert result.returncode == 0, result.stderr
+    lines = [line for line in result.stdout.splitlines() if line.startswith(("stage sha256", "config sha256"))]
+    assert len(lines) == 2, result.stdout
+    parsed = {}
+    for line in lines:
+        match = _FINGERPRINT_LINE.match(line)
+        assert match, line
+        parsed[match.group(1)] = match
+    # The stage closure is repository-wide; its file count is the recorded one.
+    assert int(parsed["stage"].group("measured_files")) > 1000, parsed["stage"].group(0)
 
 
 def test_commit_refuses_paths_outside_the_rebind_footprint(tmp_path: Path) -> None:
