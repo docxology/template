@@ -89,7 +89,7 @@ def test_recorded_library_file_mismatch_is_still_detected_and_names_the_file(tmp
 
 
 def test_installed_console_scripts_are_retained_without_false_size_failure() -> None:
-    """A real installed shim is exempt, and its RECORD row really disagrees."""
+    """A real installed shim is retained whether or not its own RECORD row agrees."""
     import csv
     import io
     import sys
@@ -110,11 +110,19 @@ def test_installed_console_scripts_are_retained_without_false_size_failure() -> 
             if not _installer_console_script(relative, content):
                 continue
             inspected += 1
-            # The exemption is only justified because the recorded bytes cannot
-            # describe the installer's shim.
-            assert int(declared_size) != len(content) or not declared_hash
-            with pytest.raises(ValueError, match="differs from RECORD"):
+            # The exemption is justified by who wrote the file, not by an
+            # observed disagreement: a current uv records a shim's real hash and
+            # size, so its own row can agree exactly, and then there is nothing
+            # for the exemption to absorb. Its row may therefore only ever be
+            # handled without a diagnostic, or refused as a RECORD difference.
+            try:
                 _assert_recorded_provider_file(relative, content, declared_hash, declared_size)
+            except ValueError as error:
+                assert "differs from RECORD" in str(error), str(error)
+            # The exemption is not a blanket pass for these bytes: with a row
+            # that really disagrees, the strict comparison still refuses them.
+            with pytest.raises(ValueError, match="differs from RECORD"):
+                _assert_recorded_provider_file(relative, content, "sha256=AAAA", str(len(content) + 1))
     assert inspected, "no installer console-script shim was available to inspect"
 
 
