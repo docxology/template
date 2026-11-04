@@ -358,7 +358,11 @@ def launch_python_stage(
             attempt_exit_codes=attempts,
         )
     if child.timed_out or time.monotonic() >= deadline or (known_original and original == 124):
-        timeout = "Analysis script exited 124 (timeout convention)" if convention_124 else "Python stage timeout"
+        timeout = (
+            "Analysis script exited 124 (timeout convention)"
+            if convention_124
+            else "Child decided 124 while its own clock was intact (the clauses above name the expired envelope)"
+        )
         return StageOutcome(
             stage_key,
             StageStatus.TIMED_OUT,

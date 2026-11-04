@@ -8,11 +8,11 @@ The tables in this section expose the declared surface that controls rendering. 
 
 The configured-field inventory separates 126 explicit YAML path(s) from 11 loader-defaulted path(s). That distinction matters for forks: a field that appears in the rendered manuscript may be intentionally authored in `config.yaml`, or it may be a documented default inherited from the template.
 
-![Configured field origin matrix](../output/figures/configured_field_matrix.png){#fig:configured-field-matrix}
+![Configured field origin matrix](../figures/configured_field_matrix.png){#fig:configured-field-matrix}
 
-![Section configuration heatmap](../output/figures/section_configuration_heatmap.png){#fig:section-configuration-heatmap}
+![Section configuration heatmap](../figures/section_configuration_heatmap.png){#fig:section-configuration-heatmap}
 
-![Field origin summary](../output/figures/field_origin_summary.png){#fig:field-origin-summary}
+![Field origin summary](../figures/field_origin_summary.png){#fig:field-origin-summary}
 
 ## Declared Section Titles
 

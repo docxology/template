@@ -330,7 +330,7 @@ def validate_acceptance(requirement: Requirement, payload: dict[str, Any], reade
     if not isinstance(details, dict) or _integer(details.get("execution_exit_code")) != 0:
         raise ValueError("successful acceptance requires a real zero-exit execution record")
     kind = requirement.kind
-    if re.fullmatch(r"4\.\d+\.\d+", requirement.platform_version) is None:
+    if re.fullmatch(r"(?:4|5)\.\d+\.\d+", requirement.platform_version) is None:
         raise ValueError("acceptance requires a current platform 4 source contract")
     if kind in {"root-policy", "root-case"}:
         from infrastructure.reporting.release_readiness_root_cases import validate_root_cases

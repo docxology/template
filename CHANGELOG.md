@@ -7,6 +7,47 @@ source and contracts; each exemplar retains its own package and publication
 versions. Confidential and local workspaces outside the canonical public roster
 are excluded.
 
+## [5.0.0] - 2026-11-03
+
+See the [5.0.0 release notes](docs/releases/v5.0.0.md). This release makes the
+instruments work well enough to see the real problem clearly.
+
+- Native inventory sharding seam: per-cell transport artifact naming for every
+  kind, with `cell=None` keeping the previous names byte-identically, and a
+  union gate that counts cells rather than shards.
+- Sidecar link-sync consolidation: four linking modules unified.
+- Publication gate selection policy: `--changed` narrowing is admitted only for
+  evidence that cannot reach another project's publication output, and an
+  observation failure raises rather than guessing a clean change set.
+- Diagnosability: a native refusal now names why it refused instead of
+  discarding the reason.
+- Admit platform 5 in the six release guards that accepted only major 4, so the
+  current root version works through the handoff, source-reference, native
+  preparation, custody, readiness and standalone-installation paths.
+- Assert the release surfaces that could previously go stale silently: root
+  `CITATION.cff`, stray `docs/releases/*.svg.png`, the release-note heading and
+  its index entry, the root prose version declarations, each exemplar's
+  manuscript `platform_version`, each exemplar `uv.lock` SDK row, and the
+  artifact-manifest hash of each publication copy.
+- Refuse a rendered run whose existing output verdict is false instead of
+  reporting completion: the stage consults that verdict before its completion
+  line, and the verdict keeps naming its own failing clause.
+- Derive a relabelled stage status from the child outcome's own typed verdict
+  rather than a timeout field `StageOutcome` does not carry; the missing
+  attribute raised `AttributeError` on every timed-out child, and a completed
+  child now keeps its own status under an enclosing exit 124.
+- Keep a hook's own timeout verdict for an incomplete child. Reading every
+  incomplete child's status as final swallowed the 124 that `on_fail`,
+  `pre_stage` and `post_stage` hooks produce when they actually consume their
+  clock, so a failing child whose `on_fail` hook timed out reported a plain
+  failure and the run exited 1 instead of 124. The child's exit code and
+  diagnostic are still preserved on the outcome; only the stage label and run
+  exit code follow the hook, matching the exit-130 half that already did.
+- Refuse a native render input that has no authored counterpart by name instead
+  of letting a custody read raise `FileNotFoundError`: a generated transmission
+  bookend stays a render input, and a missing authored member reports the
+  relative path and both roots.
+
 ## [4.5.0]
 
 See the [4.5.0 release notes](docs/releases/v4.5.0.md). This minor candidate

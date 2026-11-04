@@ -105,12 +105,20 @@ def test_current_root_requires_explicit_handoff(tmp_path: Path) -> None:
     assert validate_handoff_inputs(tmp_path, "123", "789", "a" * 64)
 
 
-@pytest.mark.parametrize("version", ["0.1.0", "3.8.0", "5.0.0"])
+@pytest.mark.parametrize("version", ["0.1.0", "3.8.0", "6.0.0"])
 def test_unsupported_root_contract_cannot_waive_handoff(tmp_path: Path, version: str) -> None:
     _root(tmp_path, version=version)
     for values in (("", "", ""), ("123", "789", "a" * 64)):
         with pytest.raises(ValueError, match="current platform 4"):
             validate_handoff_inputs(tmp_path, *values)
+
+
+def test_platform_five_root_accepts_the_explicit_handoff(tmp_path: Path) -> None:
+    """5.x is the current platform contract; 4.x remains admitted for its prior receipts."""
+    _root(tmp_path, version="5.0.0")
+    with pytest.raises(MissingAcceptanceHandoff):
+        validate_handoff_inputs(tmp_path, "", "", "")
+    assert validate_handoff_inputs(tmp_path, "123", "789", "a" * 64)
 
 
 @pytest.mark.parametrize(

@@ -565,6 +565,14 @@ jobs:
         with:
           python-version: "3.14.4"
       - uses: ./.github/actions/setup-native-installed-readiness
+      - name: Strict rendered publication evidence gate
+        # The native worker refuses on this same strict rendered predicate before
+        # any stage executes, so run it first: a stale receipt fails in seconds
+        # instead of after the bounded native lifecycle. It skips and weakens
+        # nothing; the lane still owns every native check.
+        run: >-
+          .venv/bin/python -m infrastructure.validation.cli publication-audit --all-public
+          --rendered --strict --require-figure-accessibility --format markdown
       - name: Original authenticated installed native format inventory
         id: native
         run: >-
@@ -664,7 +672,7 @@ jobs:
       - name: Keep the declared capacity before native allocation
         run: |
           set -euo pipefail
-          free_before=$(df -Pk --output=avail / | tail -n 1)
+          free_before=$(df -k --output=avail / | tail -n 1)
           for path in \
             /usr/local/lib/android \
             /usr/share/dotnet \
@@ -679,7 +687,7 @@ jobs:
               sudo rm -rf --one-file-system -- "$path" || echo "reclaim-retained=$path"
             fi
           done
-          free_after=$(df -Pk --output=avail / | tail -n 1)
+          free_after=$(df -k --output=avail / | tail -n 1)
           echo "reclaimed_kib=$((free_after - free_before)) free_kib=$free_after"
           if [ "$free_after" -lt 10485760 ]; then
             echo "::warning::free space is below the declared 10 GiB preparation threshold"

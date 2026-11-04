@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import hashlib
+import re
 from pathlib import Path
 from typing import Any
 
@@ -108,6 +109,59 @@ class NativeInstalledInvocationFailure(RuntimeError):
     def __init__(self, result: dict[str, Any]) -> None:
         super().__init__("actual cold installed invocation refused or failed")
         self.result = result
+
+    def __str__(self) -> str:
+        """Name the actual refusing result instead of an opaque category.
+
+        Structured fields are rendered first. When the result carries no
+        diagnostics, the child's final exception line is reported instead: that
+        is where a real refusal states its reason. Only one bounded line is
+        rendered, never the raw streams, since those can carry paths and
+        project content.
+        """
+        base = super().__str__()
+        result = self.result
+        if not isinstance(result, dict):
+            return base
+        observed: list[str] = []
+        if "accepted" in result:
+            observed.append(f"accepted={result['accepted']!r}")
+        if "original_exit_code" in result:
+            observed.append(f"original_exit_code={result['original_exit_code']!r}")
+        if result.get("timed_out") is True:
+            observed.append("timed_out=True")
+        if not self._render_diagnostics(result, observed):
+            self._render_child_error(result, observed)
+        return base if not observed else base + ": " + ", ".join(observed)
+
+    @staticmethod
+    def _render_diagnostics(result: dict[str, Any], observed: list[str]) -> bool:
+        """Render retained structured diagnostics; report whether any existed."""
+        diagnostics = result.get("diagnostics")
+        if not isinstance(diagnostics, list):
+            return False
+        detail = "; ".join(item for item in diagnostics if isinstance(item, str))
+        if not detail:
+            return False
+        observed.append(f"diagnostics={detail[:400]}")
+        return True
+
+    @staticmethod
+    def _render_child_error(result: dict[str, Any], observed: list[str]) -> None:
+        """Report the child's final exception line, which carries the reason."""
+        stderr = result.get("stderr")
+        if not isinstance(stderr, str):
+            return
+        lines = [line.strip() for line in stderr.splitlines() if line.strip()]
+        if not lines:
+            return
+        last = lines[-1]
+        if not _EXCEPTION_LINE.match(last):
+            return
+        observed.append(f"child_error={last[:300]}")
+
+
+_EXCEPTION_LINE = re.compile(r"^(?:[A-Za-z_][\w.]*(?:Error|Exception|Exit|Interrupt|Failure)|SystemExit)\b")
 
 
 def launch_prepared_native(

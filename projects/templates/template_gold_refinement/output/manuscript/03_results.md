@@ -4,7 +4,7 @@ The canonical run completed 5 ordered, continuous stages and reached the configu
 
 ## Purity progression
 
-![Purity progression across the five refinery stages from ore (9K) to nine-nines certification.](../output/figures/purity_progression.png){#fig:purity_progression}
+![Purity progression across the five refinery stages from ore (9K) to nine-nines certification.](../figures/purity_progression.png){#fig:purity_progression}
 
 | Stage | Name | Output purity | Karat | Gain |
 |-------|------|--------------|-------|------|
@@ -16,7 +16,7 @@ The canonical run completed 5 ordered, continuous stages and reached the configu
 
 ## Karat grading scale
 
-![Gold karat grading scale (9K–24K + nine-nines) with refinery stage markers.](../output/figures/karat_grading.png){#fig:karat_grading}
+![Gold karat grading scale (9K–24K + nine-nines) with refinery stage markers.](../figures/karat_grading.png){#fig:karat_grading}
 
 ## Final certification
 
@@ -30,7 +30,7 @@ The canonical run completed 5 ordered, continuous stages and reached the configu
 
 The mega-madlib engine generated 24 tokens from seed 431 across 8 lexicon categories.
 
-![Mega-madlib token distribution across manuscript sections and lexicon categories.](../output/figures/token_density.png){#fig:token_density}
+![Mega-madlib token distribution across manuscript sections and lexicon categories.](../figures/token_density.png){#fig:token_density}
 
 ### Category distribution
 
@@ -106,7 +106,7 @@ recording file paths. It is preserving causal custody from raw material through
 assay and final certification, so a later change to the stage model must move
 through the same graph, table, and validation surfaces.
 
-![Provenance trace: ore → stages → certification purity flow.](../output/figures/provenance_sankey.png){#fig:provenance_sankey}
+![Provenance trace: ore → stages → certification purity flow.](../figures/provenance_sankey.png){#fig:provenance_sankey}
 
 ## Purity vs claim support
 
@@ -114,7 +114,7 @@ The purity-versus-claim-support view in [@fig:purity_claim_scatter] places two d
 
 In the current generated assay, 9 of 9 contribution claims are supported (100.00%). The plot is diagnostic rather than correlational: five stage states and one ledger-level rate do not constitute independent observations suitable for association testing. Its purpose is to reveal disagreement between a late refinery state and weak overall claim support without combining the two into one score.
 
-![Stage purity plotted against the single project-level claim-support assay.](../output/figures/purity_claim_scatter.png){#fig:purity_claim_scatter}
+![Stage purity plotted against the single project-level claim-support assay.](../figures/purity_claim_scatter.png){#fig:purity_claim_scatter}
 
 ## Token selection sensitivity
 
@@ -136,7 +136,7 @@ where a polished section appears stable but its wording is actually controlled
 by hidden or late-bound choices. The result is a sensitivity check on authoring
 machinery, not a claim that any particular synonym is scientifically superior.
 
-![Token selection heatmap: seed × category → selected index.](../output/figures/token_heatmap.png){#fig:token_heatmap}
+![Token selection heatmap: seed × category → selected index.](../figures/token_heatmap.png){#fig:token_heatmap}
 
 ## Integrity gate matrix
 
@@ -160,7 +160,7 @@ strengthening a claim. The result is intentionally local to this exemplar:
 coverage is measured against the specific audit rules configured here, not
 against a universal publication-readiness standard.
 
-![Integrity-gate matrix linking audit rules to tests, manuscript surfaces, and generated artifacts.](../output/figures/integrity_gate_matrix.png){#fig:integrity_gate_matrix}
+![Integrity-gate matrix linking audit rules to tests, manuscript surfaces, and generated artifacts.](../figures/integrity_gate_matrix.png){#fig:integrity_gate_matrix}
 
 ## Formalism traceability
 
@@ -184,7 +184,7 @@ traceability layer should change with it. That is the desired behavior: the
 formal layer is a generated contract, not hand-maintained mathematical
 ornamentation.
 
-![Formalism traceability from source-owned equation identifiers to source evidence.](../output/figures/formalism_traceability.png){#fig:formalism_traceability}
+![Formalism traceability from source-owned equation identifiers to source evidence.](../figures/formalism_traceability.png){#fig:formalism_traceability}
 
 ## Implementation circuit
 
@@ -207,7 +207,7 @@ unsupported claim, the circuit points backward to the owning source surface
 rather than encouraging local patching of rendered Markdown. That direction of
 repair is central to the manuscript's definition of refinement.
 
-![Implementation circuit from config-owned ore through generated manuscript artifacts and validation feedback.](../output/figures/implementation_circuit.png){#fig:implementation_circuit}
+![Implementation circuit from config-owned ore through generated manuscript artifacts and validation feedback.](../figures/implementation_circuit.png){#fig:implementation_circuit}
 
 ## Claim-evidence assay
 
@@ -229,7 +229,7 @@ matters for the security and integrity extensions in this manuscript: a claim
 can be source-owned without becoming a compliance claim, and a generated assay
 can confirm local evidence without pretending to certify the wider supply chain.
 
-![Claim-evidence assay showing supported contribution claims, evidence surfaces, and boundary classifications.](../output/figures/claim_evidence_assay.png){#fig:claim_evidence_assay}
+![Claim-evidence assay showing supported contribution claims, evidence surfaces, and boundary classifications.](../figures/claim_evidence_assay.png){#fig:claim_evidence_assay}
 
 ## Scientific-integrity risk matrix
 
@@ -252,7 +252,7 @@ every high-severity issue has already been eliminated. It shows which risks this
 exemplar has made inspectable and where future work would need to add stronger
 measurement before using stronger language.
 
-![Scientific-integrity risk matrix plotting severity, detectability, residual risk, and owning evidence surface.](../output/figures/integrity_risk_matrix.png){#fig:integrity_risk_matrix}
+![Scientific-integrity risk matrix plotting severity, detectability, residual risk, and owning evidence surface.](../figures/integrity_risk_matrix.png){#fig:integrity_risk_matrix}
 
 ## Evidence-tier ladder
 
@@ -275,7 +275,7 @@ the counts visible in tabular form. Together they close the figure sequence by
 showing not only that the 12 public figures render, but
 also which source tiers make their claims inspectable.
 
-![Evidence-tier ladder summarizing source tiers available to the shared template evidence registry.](../output/figures/evidence_tier_ladder.png){#fig:evidence_tier_ladder}
+![Evidence-tier ladder summarizing source tiers available to the shared template evidence registry.](../figures/evidence_tier_ladder.png){#fig:evidence_tier_ladder}
 
 | Source tier | Count | Role |
 |-------------|-------|------|

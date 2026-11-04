@@ -29,7 +29,7 @@ jobs:
   # outputs that the optional jobs gate on via `needs.detect.outputs.*`.
   detect:
     name: Detect optional projects
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 5
     permissions:
       contents: read
@@ -61,7 +61,7 @@ jobs:
   # (PUBLIC-CAPABILITY-PARITY-1). No project runtime is executed here.
   detect-projects:
     name: Detect public capability matrix
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 5
     permissions:
       contents: read
@@ -100,7 +100,7 @@ jobs:
   # ───────────────────────────────────────────────────────────────────────────
   actionlint:
     name: Actionlint
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 5
     permissions:
       contents: read
@@ -113,7 +113,7 @@ jobs:
 
   lint:
     name: Lint & Type Check
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 10
     permissions:
       contents: read
@@ -222,7 +222,7 @@ jobs:
 # ─────────────────────────────────────────────────────────────────────────────
   health:
     name: Static Health Report
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 20
     permissions:
       contents: read
@@ -266,7 +266,7 @@ jobs:
 # ─────────────────────────────────────────────────────────────────────────────
   verify-no-mocks:
     name: Verify No Mocks Policy
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 5
     # Runs in parallel with `lint` — the no-mocks script only needs the
     # checkout and `uv sync`, not the lint/type results. This shaves ~5 min
@@ -402,7 +402,7 @@ jobs:
           TEMPLATE_CI_XDIST_WORKERS: ${{ matrix.os == 'macos-latest' && '2' || 'auto' }}
           # All four py3.14/Linux shards instrument real execution. The required
           # coverage-infra job merges their complete union and enforces 60%.
-          INFRA_COV_FLAGS: ${{ (matrix.python-version == '3.14' && matrix.os == 'ubuntu-latest') && '--cov=infrastructure --cov-report= --cov-fail-under=0' || '' }}
+          INFRA_COV_FLAGS: ${{ (matrix.python-version == '3.14' && matrix.os == 'ubuntu-24.04') && '--cov=infrastructure --cov-report= --cov-fail-under=0' || '' }}
         # -n auto parallelizes across runner cores (pytest-xdist). Scope-based
         # distribution keeps subprocess-heavy test modules together, avoiding
         # intermittent worker replacement under work-stealing contention.
@@ -432,7 +432,7 @@ jobs:
       # so PR and push runs skip it; the MathJax live-viewport spec still runs
       # on the weekly scheduled (and manually dispatched) lanes.
       - name: Verify completed MathJax equations across live viewport changes
-        if: matrix.shard == 0 && matrix.python-version == '3.14' && matrix.os == 'ubuntu-latest' && (github.event_name == 'schedule' || github.event_name == 'workflow_dispatch')
+        if: matrix.shard == 0 && matrix.python-version == '3.14' && matrix.os == 'ubuntu-24.04' && (github.event_name == 'schedule' || github.event_name == 'workflow_dispatch')
         run: |
           export PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1
           npm install --prefix .tmp/playwright-node --no-package-lock --no-save @playwright/test@1.62.1
@@ -443,7 +443,7 @@ jobs:
             --workers=1 --output=.tmp/mathjax-browser
 
       - name: Export actual infrastructure coverage shard
-        if: matrix.python-version == '3.14' && matrix.os == 'ubuntu-latest'
+        if: matrix.python-version == '3.14' && matrix.os == 'ubuntu-24.04'
         run: uv run python scripts/gates/infra_ci_partition.py --export-shard "${{ matrix.shard }}"
 
       - name: Upload complete selection record
@@ -454,7 +454,7 @@ jobs:
           if-no-files-found: error
 
       - name: Upload actual infrastructure coverage shard
-        if: matrix.python-version == '3.14' && matrix.os == 'ubuntu-latest'
+        if: matrix.python-version == '3.14' && matrix.os == 'ubuntu-24.04'
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: infra-coverage-shard-${{ matrix.shard }}
@@ -463,7 +463,7 @@ jobs:
 
   coverage-infra:
     name: Infrastructure Union Coverage
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 15
     needs: [test-infra]
     permissions:
@@ -511,7 +511,7 @@ jobs:
   test-infra-slow:
     name: "Infra Slow Lane (pytest.mark.slow)"
     if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 90
     needs: [verify-no-mocks]
     permissions:
@@ -562,7 +562,7 @@ jobs:
 # ─────────────────────────────────────────────────────────────────────────────
   test-regression:
     name: "Regression Tier (claim-binding pins)"
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 20
     needs: [verify-no-mocks]
     permissions:
@@ -616,7 +616,7 @@ jobs:
 # ─────────────────────────────────────────────────────────────────────────────
   test-integration:
     name: "Integration Tier (run.sh + pipeline CLI)"
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 20
     needs: [verify-no-mocks]
     permissions:
@@ -659,7 +659,7 @@ jobs:
 # ─────────────────────────────────────────────────────────────────────────────
   test-project:
     name: "Project Tests (${{ matrix.project }}, py${{ matrix.python-version }})"
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     # Each public exemplar runs in its OWN parallel job, so wall-clock is the
     # slowest single project (~active_inference) instead of the ~45 min sequential
     # sum of all public exemplars. Each job enforces that project's own 90% floor via
@@ -925,7 +925,7 @@ jobs:
   fep-lean:
     name: fep_lean (gauss + lake)
     if: needs.detect.outputs.fep_lean == 'true'
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 60
     needs: [verify-no-mocks, detect]
     permissions:
@@ -1037,7 +1037,7 @@ jobs:
 # ─────────────────────────────────────────────────────────────────────────────
   validate:
     name: Validate Manuscripts
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 10
     permissions:
       contents: read
@@ -1151,7 +1151,7 @@ jobs:
 # ─────────────────────────────────────────────────────────────────────────────
   security:
     name: Security Scan
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 10
     permissions:
       contents: read
@@ -1274,7 +1274,7 @@ jobs:
 # ─────────────────────────────────────────────────────────────────────────────
   docs-lint:
     name: Documentation Lint
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 15
     permissions:
       contents: read
@@ -1302,7 +1302,7 @@ jobs:
 # ─────────────────────────────────────────────────────────────────────────────
   performance:
     name: Performance Check
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 5
     # CI-FAST-PERF-1: no `needs:` - this job consumes no upstream artifacts
     # (import benchmarks + informational microbenches only), so declaring
@@ -1423,7 +1423,7 @@ jobs:
   public-matrix-receipt:
     name: Public Matrix Receipt
     if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 120
     permissions:
       contents: read
@@ -1544,7 +1544,7 @@ jobs:
       - docs-lint
       - performance
       - public-matrix-receipt
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 5
     permissions:
       contents: read

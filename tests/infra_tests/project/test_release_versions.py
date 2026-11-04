@@ -42,9 +42,18 @@ def _scaffold(
         "CHANGELOG.md",
         f"# Changelog\n\n## [{root_version}]\n\nNotes.\n",
     )
-    _write(root, f"docs/releases/v{root_version}.md", "# notes\n")
+    _write(root, f"docs/releases/v{root_version}.md", f"# {root_version} — notes\n")
     _write(root, f"docs/releases/template-v{root_version}-overview.svg", "<svg/>\n")
     _write(root, f"docs/releases/template-v{root_version}-overview.png", "png\n")
+    _write(root, "docs/releases/README.md", f"- [{root_version} release intent](v{root_version}.md): probe.\n")
+    _write(root, "CITATION.cff", f'cff-version: 1.2.0\nversion: "{root_version}"\n')
+    _write(root, "README.md", f"# Probe\n\n**Current candidate: {root_version}.**\n")
+    _write(root, "AGENTS.md", f"**Current release scope:** {root_version}.\n")
+    _write(
+        root,
+        "docs/maintenance/release-boundary.md",
+        f"The root package metadata declares the **{root_version}** candidate.\n",
+    )
     publication_lines = [
         f'release_status: "{status}"',
         f'intended_version: "{intended}"',
@@ -163,3 +172,39 @@ def test_actual_checkout_is_version_coherent() -> None:
     report = validate_release_versions(REPO_ROOT)
     assert report.passed, format_release_version_report(report)
     assert report.projects == 25
+
+
+def test_stale_root_citation_version_is_reported(tmp_path: Path) -> None:
+    _scaffold(tmp_path)
+    _write(tmp_path, "CITATION.cff", 'cff-version: 1.2.0\nversion: "4.2.0"\n')
+    report = validate_release_versions(tmp_path, projects=(PROJECT,))
+    assert any(item.rule == "citation-cff" for item in report.findings)
+
+
+def test_stray_release_artifacts_are_reported(tmp_path: Path) -> None:
+    _scaffold(tmp_path)
+    _write(tmp_path, "docs/releases/template-v4.3.0-overview.svg.png", "stray\n")
+    report = validate_release_versions(tmp_path, projects=(PROJECT,))
+    assert any(item.rule == "stray-release-artifact" for item in report.findings)
+
+
+def test_release_notes_heading_must_name_the_version(tmp_path: Path) -> None:
+    _scaffold(tmp_path)
+    _write(tmp_path, "docs/releases/v4.3.0.md", "# Release notes\n")
+    report = validate_release_versions(tmp_path, projects=(PROJECT,))
+    assert any(item.rule == "release-notes-heading" for item in report.findings)
+
+
+def test_releases_index_must_list_the_version(tmp_path: Path) -> None:
+    _scaffold(tmp_path)
+    _write(tmp_path, "docs/releases/README.md", "# Versioned release notes\n\n- [4.2.0](v4.2.0.md): older.\n")
+    report = validate_release_versions(tmp_path, projects=(PROJECT,))
+    assert any(item.rule == "releases-index" for item in report.findings)
+
+
+@pytest.mark.parametrize("relative", ["README.md", "AGENTS.md", "docs/maintenance/release-boundary.md"])
+def test_root_prose_surfaces_must_mention_the_version(tmp_path: Path, relative: str) -> None:
+    _scaffold(tmp_path)
+    _write(tmp_path, relative, "# Probe\n\nNo declared candidate here.\n")
+    report = validate_release_versions(tmp_path, projects=(PROJECT,))
+    assert any(item.rule == "root-surface-version" and relative in item.detail for item in report.findings)

@@ -2090,7 +2090,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-09-13T22:29:36Z",
+      "checked_at": "2026-11-03T23:56:54Z",
       "kind": "number",
       "source": "output/reports/manuscript_composition.json:$.ordered_inputs[3].size_bytes",
       "source_field": "$.ordered_inputs[3].size_bytes",
@@ -2098,11 +2098,11 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "4115"
+      "value": "4108"
     },
     {
       "active": true,
-      "checked_at": "2026-09-13T22:29:36Z",
+      "checked_at": "2026-11-03T23:56:54Z",
       "kind": "number",
       "source": "output/reports/manuscript_composition.json:$.ordered_inputs[3].size_bytes (numeric variant)",
       "source_field": "$.ordered_inputs[3].size_bytes",
@@ -2110,7 +2110,7 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "41.15"
+      "value": "41.08"
     },
     {
       "active": true,

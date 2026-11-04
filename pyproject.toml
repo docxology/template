@@ -18,7 +18,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "research-project-template"
-version = "4.5.0"
+version = "5.0.0"
 description = "A comprehensive template for research projects with test-driven development, automated PDF generation, and professional documentation structure"
 authors = [{ name = "Research Template Team" }]
 readme = "README.md"
@@ -48,6 +48,7 @@ dependencies = [
   "pillow>=13.0.0",
   "matplotlib>=3.7",
   # Archive rendering canonicalizes PDFs whenever SOURCE_DATE_EPOCH is set.
+  # 6.21.4 is the first pypdf release with no open advisory: the pinned floors carried 18 advisories and 326 open Dependabot alerts in this repository. Do not lower this floor.
   # 6.21.4 is the first pypdf release with no open advisory: the pinned floors carried 18 advisories and 326 open Dependabot alerts in this repository. Do not lower this floor.
   "pypdf>=6.21.4",
   # scipy, scikit-learn, wordcloud, rdflib are in [scientific] optional group — install with:

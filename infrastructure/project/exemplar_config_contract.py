@@ -10,6 +10,8 @@ the configuration surface it does not read.
 
 from __future__ import annotations
 
+import hashlib
+import json
 import tomllib
 from dataclasses import dataclass
 from pathlib import Path
@@ -86,11 +88,23 @@ def _sdk_binding(root: Path, project_root: Path, version: str) -> tuple[list[str
         findings.append(f"[tool.uv.sources] must declare {SDK_PACKAGE!r}")
     template = payload.get("tool", {}).get("template") or {}
     declared = template.get("platform_version")
+    lock_path = project_root / "uv.lock"
+    if lock_path.is_file():
+        try:
+            lock_payload = tomllib.loads(lock_path.read_text(encoding="utf-8"))
+        except (OSError, tomllib.TOMLDecodeError) as error:
+            findings.append(f"unreadable uv.lock: {error}")
+        else:
+            rows = lock_payload.get("package")
+            rows = rows if isinstance(rows, list) else []
+            versions = [row.get("version") for row in rows if isinstance(row, dict) and row.get("name") == SDK_PACKAGE]
+            if not versions or any(item != version for item in versions):
+                findings.append(f"uv.lock {SDK_PACKAGE} version {versions!r} differs from {version!r}")
     return findings, declared if isinstance(declared, str) else None
 
 
-def _manuscript_findings(project_name: str, project_root: Path) -> list[str]:
-    """Validate the source config and its generated publication copy."""
+def _manuscript_findings(project_name: str, project_root: Path, version: str) -> list[str]:
+    """Validate the source config, its generated publication copy, and its manifest binding."""
     findings: list[str] = []
     source = project_root / "manuscript" / "config.yaml"
     if not source.is_file():
@@ -103,6 +117,11 @@ def _manuscript_findings(project_name: str, project_root: Path) -> list[str]:
         return ["manuscript/config.yaml must be a mapping"]
     for warning in validate_config_keys(config, source, project_name=project_name):
         findings.append(warning)
+    source_version = (config.get("publication") or {}).get("platform_version")
+    if source_version is not None and str(source_version) != version:
+        findings.append(
+            f"manuscript/config.yaml publication.platform_version {source_version!r} differs from root {version!r}"
+        )
     generated = project_root / "output" / "manuscript" / "config.yaml"
     if generated.is_file():
         try:
@@ -118,6 +137,31 @@ def _manuscript_findings(project_name: str, project_root: Path) -> list[str]:
                     f"{published_version!r} differs from source {source_version!r}; "
                     "regenerate the publication copy"
                 )
+        manifest = project_root / "output" / "reports" / "artifact_manifest.json"
+        if manifest.is_file():
+            try:
+                recorded = json.loads(manifest.read_text(encoding="utf-8"))
+            except (OSError, json.JSONDecodeError) as error:
+                findings.append(f"output/reports/artifact_manifest.json is unreadable: {error}")
+            else:
+                entries = recorded.get("entries") if isinstance(recorded, dict) else None
+                entries = entries if isinstance(entries, list) else []
+                matches = [
+                    entry
+                    for entry in entries
+                    if isinstance(entry, dict) and entry.get("path") == "output/manuscript/config.yaml"
+                ]
+                actual = hashlib.sha256(generated.read_bytes()).hexdigest()
+                if not matches:
+                    findings.append(
+                        "output/reports/artifact_manifest.json has no entry for "
+                        "output/manuscript/config.yaml; run refresh_artifact_manifests.py"
+                    )
+                elif any(entry.get("sha256") != actual for entry in matches):
+                    findings.append(
+                        "output/reports/artifact_manifest.json has stale sha256 for "
+                        "output/manuscript/config.yaml; run refresh_artifact_manifests.py"
+                    )
     return findings
 
 
@@ -151,7 +195,7 @@ def validate_exemplar_configs(repo_root: Path, *, projects: tuple[str, ...] | No
                     f"[tool.template].platform_version {declared_version!r} differs from {version!r}",
                 )
             )
-        for detail in _manuscript_findings(project_name, project_root):
+        for detail in _manuscript_findings(project_name, project_root, version):
             findings.append(ExemplarConfigFinding(name, "manuscript-config", detail))
     return ExemplarConfigReport(projects=len(roster), findings=tuple(findings))
 

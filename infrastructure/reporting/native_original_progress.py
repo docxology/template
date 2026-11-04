@@ -191,6 +191,48 @@ class _PreflightDiagnostics:
         finally:
             self.lock.release()
 
+    def refuse(self, error: BaseException) -> None:
+        """Record why the protected body raised before the sink is closed.
+
+        Bounded DATA only: the exception type and a truncated message. The
+        message shrinks until the fixed record ceiling accepts it, so a long
+        refusal reason cannot silently drop the whole record. This never
+        replaces, swallows or reorders the original exception.
+        """
+        if self.stop.is_set() or not self.lock.acquire(blocking=False):
+            return
+        try:
+            if self.events >= _MAX_EVENTS:
+                return
+            observed = time.monotonic()
+            detail = str(error)
+            for limit in (300, 200, 120, 60, 24, 0):
+                if len(detail) > limit:
+                    detail = detail[:limit] + "..."
+                value: dict[str, object] = {
+                    "schema_version": "template-native-preflight-refusal-v1",
+                    "phase": "preflight-body-raised",
+                    "scope": _SCOPE,
+                    "pid": self.owner_pid,
+                    "observed_monotonic": observed,
+                    "remaining_seconds": self.deadline - observed,
+                    "error_type": type(error).__name__[:80],
+                    "error_message": detail,
+                }
+                encoded = (json.dumps(value, sort_keys=True, allow_nan=False) + "\n").encode(
+                    "ascii", "backslashreplace"
+                )
+                if len(encoded) <= _MAX_RECORD_BYTES and self.byte_count + len(encoded) <= _MAX_BYTES:
+                    self.events += 1
+                    self.byte_count += len(encoded)
+                    self.pending.put(encoded)
+                    return
+                detail = str(error)
+        except Exception:
+            pass
+        finally:
+            self.lock.release()
+
     def _write(self, descriptor: int) -> None:
         """A blocked kernel write is isolated here, never joined beyond the original clock."""
         try:
@@ -270,7 +312,17 @@ def _representative_preflight_diagnostics(deadline: float) -> Iterator[None]:
             except Exception:
                 diagnostics.close()
             _preflight_phase("diagnostics-start", deadline)
-        yield
+        try:
+            yield
+        except BaseException as failure:
+            # Only this body's own exception is a refusal. An enclosing handled
+            # exception must never be reported as the protected body's reason.
+            if diagnostics is not None:
+                try:
+                    diagnostics.refuse(failure)
+                except Exception:
+                    pass
+            raise
     finally:
         if diagnostics is not None:
             try:

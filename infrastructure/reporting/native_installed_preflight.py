@@ -51,6 +51,63 @@ def diagnostic_exit_code(result: dict[str, object], *, deadline: float) -> int:
     return code
 
 
+def refusal_reason(result: dict[str, object]) -> str | None:
+    """Read the actual refusal reason from the result this process already holds.
+
+    The reason is per project in ``native_formats.results``. It is read from that
+    in-memory object, never from a sibling artifact, and never recomputed. An
+    absent or unexpected shape yields no reason rather than an invented one: a
+    missing reason is the honest state, a guessed reason is worse than the gap.
+    """
+    summary = result.get("native_formats")
+    if not isinstance(summary, dict):
+        return None
+    rows = summary.get("results")
+    if not isinstance(rows, list):
+        return None
+    observed: list[str] = []
+    for row in rows:
+        if not isinstance(row, dict):
+            continue
+        diagnostic = row.get("diagnostic")
+        if not isinstance(diagnostic, str) or not diagnostic.strip():
+            continue
+        project = row.get("project")
+        observed.append(f"{project}: {diagnostic}" if isinstance(project, str) else diagnostic)
+    return "; ".join(observed) if observed else None
+
+
+def diagnostic_record(
+    result: dict[str, object],
+    *,
+    code: int,
+    provider_scopes: list[str],
+    operation_started: float,
+    environment_nomination: str | None,
+) -> dict[str, object]:
+    """Build the retained preflight record, naming the reason when one exists.
+
+    Every field that existed before is unchanged, so no reader has to migrate.
+    ``refused_because`` is additive and appears only when the reason is actually
+    known from this process.
+    """
+    record: dict[str, object] = {
+        "schema_version": PREFLIGHT_SCHEMA,
+        "reference_commit_nomination": environment_nomination,
+        "provider_scopes": provider_scopes,
+        "preparation_profile": "selected-project-and-local-providers",
+        "representative_scope": PREFLIGHT_SCOPE,
+        "exit_code": code,
+        "complete_release_acceptance": False,
+        "publication_authorized": False,
+        "elapsed_seconds": time.monotonic() - operation_started,
+    }
+    reason = refusal_reason(result)
+    if reason is not None:
+        record["refused_because"] = reason
+    return record
+
+
 def main(argv: list[str] | None = None) -> int:
     """Run one genuine installed Original/Current exemplar under its original clock."""
     parser = argparse.ArgumentParser(description=__doc__)
@@ -137,21 +194,14 @@ def _run_preflight(args: argparse.Namespace, deadline: float) -> int:
     )
     _preflight_phase("preflight-returned", deadline)
     code = diagnostic_exit_code(result, deadline=deadline)
-    write_json(
-        root,
-        args.evidence_dir / "diagnostic.json",
-        {
-            "schema_version": PREFLIGHT_SCHEMA,
-            "reference_commit_nomination": os.environ.get("TEMPLATE_PUBLIC_REFERENCE_COMMIT"),
-            "provider_scopes": list(wheels),
-            "preparation_profile": "selected-project-and-local-providers",
-            "representative_scope": PREFLIGHT_SCOPE,
-            "exit_code": code,
-            "complete_release_acceptance": False,
-            "publication_authorized": False,
-            "elapsed_seconds": time.monotonic() - args.operation_started_monotonic,
-        },
+    record = diagnostic_record(
+        result,
+        code=code,
+        provider_scopes=list(wheels),
+        operation_started=args.operation_started_monotonic,
+        environment_nomination=os.environ.get("TEMPLATE_PUBLIC_REFERENCE_COMMIT"),
     )
+    write_json(root, args.evidence_dir / "diagnostic.json", record)
     print(
         json.dumps(
             {
@@ -159,6 +209,7 @@ def _run_preflight(args: argparse.Namespace, deadline: float) -> int:
                 "exit_code": code,
                 "complete_release_acceptance": False,
                 "publication_authorized": False,
+                **({"refused_because": record["refused_because"]} if "refused_because" in record else {}),
             },
             sort_keys=True,
         )

@@ -201,7 +201,7 @@ def admit_public_reference(
     if (
         metadata.get("project", {}).get("name") != "research-project-template"
         or not isinstance(metadata.get("project", {}).get("version"), str)
-        or re.fullmatch(r"4\.\d+\.\d+", metadata["project"]["version"]) is None
+        or re.fullmatch(r"(?:4|5)\.\d+\.\d+", metadata["project"]["version"]) is None
     ):
         raise ValueError("public reference requires genuine platform 4 release source metadata")
     for required in ("uv.lock", ".python-version"):

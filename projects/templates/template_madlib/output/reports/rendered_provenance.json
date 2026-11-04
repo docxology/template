@@ -14,13 +14,13 @@
     },
     {
       "rendered_path": "output/manuscript/02_methodology.md",
-      "rendered_sha256": "c6989eabd23d03f2c6986e90491619afbc5c7092f766fc7d634efbaa1157ca51",
+      "rendered_sha256": "e015377784d7ecaab6732ec6b9a1433346c5bac97ffb8beb56549850360235e1",
       "source_path": "manuscript/02_methodology.md",
       "source_sha256": "4a3441b6e07f7dd13bc8008d1b4e4ecd751220d9a715665da6e58989cd2878bb"
     },
     {
       "rendered_path": "output/manuscript/03_results.md",
-      "rendered_sha256": "378f3775d30cc492a1f02379f0bcc0f4045b4323572ef235d8cd9a7890de4a35",
+      "rendered_sha256": "bbc69d044a0be421c7ca2ad743d4a9c8d5bfbc023c9b28abbcf4e3b8bc0a3753",
       "source_path": "manuscript/03_results.md",
       "source_sha256": "dc4009244e6c6f998d5db1ae58fb919dc3bbe6dd9d8874b9998d534a630a2805"
     },
@@ -32,19 +32,19 @@
     },
     {
       "rendered_path": "output/manuscript/05_experimental_setup.md",
-      "rendered_sha256": "6dd2847eb0522529583eaf68c24690e0006e7de6d6e1c8d2d6cdef1c182dfa45",
+      "rendered_sha256": "25ae1b37efa1d9183281bef0840ec421b4515c00c6c975ae583c68b265d2db08",
       "source_path": "manuscript/05_experimental_setup.md",
       "source_sha256": "801d264918b4043e61585d6f282d09bf9150bc4f1c3b5b466cdd7eff2750de75"
     },
     {
       "rendered_path": "output/manuscript/06_evaluation.md",
-      "rendered_sha256": "ff00cb80fe17d7b3ffe815742853e388abe0196dcd1fcbcf6cba1f72f308f9da",
+      "rendered_sha256": "c0cddfb759103fe566bbb795bdd99dd67fa402c9700188936c23bc729df09ae8",
       "source_path": "manuscript/06_evaluation.md",
       "source_sha256": "c109a0acb467cf71d1c0b8d504b540015a1aab8a693b06d13ce6e1cf88ea1f75"
     },
     {
       "rendered_path": "output/manuscript/07_reproducibility.md",
-      "rendered_sha256": "05f7af50c29e999b4e7c7365774150c3d15ec23067b6c9465962a925be481046",
+      "rendered_sha256": "b1090f6f9ad8972f725f9f607f9abb046cdc8a7bd879c6470f8cdc822719e7e5",
       "source_path": "manuscript/07_reproducibility.md",
       "source_sha256": "c159af59625c5aa2a96f227a6face4df46caca09df75437fd7df4676b871cbfa"
     },
@@ -76,22 +76,22 @@
   "evidence_files": {
     "artifact_manifest": {
       "path": "output/reports/artifact_manifest.json",
-      "sha256": "8c93836afeaa3dbfb69ab8815c006cb9f9677523c91f74f336696789b74230a3",
+      "sha256": "364e949de48d86ed6f2967c91deb133a1b88b667e68a166189b6300ee1bd17fb",
       "size_bytes": 22232
     },
     "combined_manuscript": {
       "path": "output/web/_combined_manuscript.md",
-      "sha256": "22044c904f734a63c4abcfc66d517a812bd24ba7e579993a19ecbd63e2abe72d",
+      "sha256": "74a1fcf9431ce7e6dcb97876f62f3a1706694a85814fcd28d9168d6c319e8b58",
       "size_bytes": 73015
     },
     "composition_manifest": {
       "path": "output/reports/manuscript_composition.json",
-      "sha256": "a15c5a61dca4921cd0b7d862fbd7bf386cdbba7d9cd00162c6d93dace2133b7a",
+      "sha256": "dfed5f2c66cc71ccc7c54d630cdc894592e2c4eaf769ff2eb55201281a722cdc",
       "size_bytes": 2928
     },
     "validation_report": {
       "path": "output/reports/validation_report.json",
-      "sha256": "f3745372cc79deb0b52b2edd15030d028fccdb959d1b346813610e8e78dcc10d",
+      "sha256": "18f3c6c675b8716907d19d6ef1b652f8461fe7fcdf3653868a4a7584ab81807a",
       "size_bytes": 12738
     }
   },
@@ -99,19 +99,19 @@
   "fingerprints": {
     "config": {
       "file_count": 17,
-      "sha256": "c1f29410f84adf0552bc84c15713329f3efd6b91f27b4e5eb9758d1f7d5dd77d"
+      "sha256": "8b8e1673d2ca314f2592971efd973529dc86ad013033404fbf54dc185403c541"
     },
     "output": {
       "file_count": 68,
-      "sha256": "4005d7a8659cb925048b35db91622a1f1f2dba1bef5ae75f86df59ac33be5661"
+      "sha256": "ae8d80b435503437724cf2594e3c4d7d5316749cdf7f2233d63002a78e724d66"
     },
     "source": {
       "file_count": 42,
       "sha256": "498fc25e7b70be8833691df8e5087e7f3edcf618495ce1b95847d2964746a6d6"
     },
     "stage": {
-      "file_count": 1722,
-      "sha256": "ecffaf544d43b08d6412a09a0006648412c43cc0976148cc5ccd9cf27f3e20b0"
+      "file_count": 1724,
+      "sha256": "f6fc1faf0493ee76c14eca37fc8defd1135e1b1702ff3626d6db1d28e7183863"
     }
   },
   "project": "templates/template_madlib",

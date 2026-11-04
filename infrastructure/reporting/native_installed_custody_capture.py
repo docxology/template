@@ -41,7 +41,7 @@ def main(argv: list[str] | None = None) -> int:
     if (
         metadata.get("project", {}).get("name") != "research-project-template"
         or not isinstance(expected_version, str)
-        or re.fullmatch(r"4\.\d+\.\d+", expected_version) is None
+        or re.fullmatch(r"(?:4|5)\.\d+\.\d+", expected_version) is None
     ):
         raise ValueError("cold SDK capture requires genuine platform 4 Source metadata")
     requirement = Requirement(

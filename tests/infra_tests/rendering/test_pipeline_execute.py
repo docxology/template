@@ -221,3 +221,26 @@ def test_execute_render_pipeline_outer_exception_returns_one(
     rc = execute_render_pipeline("any_project", repo_root=tmp_path, dependencies=dependencies)
 
     assert rc == 1
+
+
+def test_render_pipeline_refuses_a_false_render_verdict(tmp_path: Path) -> None:
+    """The stage refuses a falsified verdict; it never returns 0 with a success line."""
+    from infrastructure.rendering.pipeline import _render_pipeline_impl
+
+    project = tmp_path / "projects" / "templates" / "template_code_project"
+    _write_minimal_project_tree(project)
+    verdict = {"accept": False}
+    consulted: list[str] = []
+
+    def _verdict(project_name: str, repo_root: Path | None = None) -> bool:
+        consulted.append(project_name)
+        return verdict["accept"]
+
+    dependencies = _dependencies_for(project, verify_outputs=_verdict)
+
+    refused = _render_pipeline_impl("templates/template_code_project", repo_root=tmp_path, dependencies=dependencies)
+    verdict["accept"] = True
+    accepted = _render_pipeline_impl("templates/template_code_project", repo_root=tmp_path, dependencies=dependencies)
+
+    assert (refused, accepted) == (1, 0)
+    assert set(consulted) == {"templates/template_code_project"} and len(consulted) >= 2

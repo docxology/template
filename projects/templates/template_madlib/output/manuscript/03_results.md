@@ -8,11 +8,11 @@ The resolved manuscript also demonstrates the intended failure boundary. If a ma
 
 Visualization is enabled for configured_field_matrix, section_configuration_heatmap, field_origin_summary, token_injection_flow, section_token_allocation, provenance_trace_map, quality_gate_matrix. The configured-field figures are generated from the same explicit/default path inventory written to JSON; the pipeline, allocation, provenance, and gate figures are generated from the same token plan and QA schema.
 
-![Token category density](../output/figures/token_density.png){#fig:token-density}
+![Token category density](../figures/token_density.png){#fig:token-density}
 
-![Section token allocation](../output/figures/section_token_allocation.png){#fig:section-token-allocation}
+![Section token allocation](../figures/section_token_allocation.png){#fig:section-token-allocation}
 
-![Provenance trace map](../output/figures/provenance_trace_map.png){#fig:provenance-trace-map}
+![Provenance trace map](../figures/provenance_trace_map.png){#fig:provenance-trace-map}
 
 ## Token Inventory
 

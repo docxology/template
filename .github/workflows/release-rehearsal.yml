@@ -30,7 +30,7 @@ env:
 jobs:
   rehearsal:
     name: Clean-checkout rehearsal (ubuntu, run ${{ matrix.run-index }})
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 90
     permissions:
       contents: read
@@ -87,7 +87,7 @@ jobs:
     name: Consolidate rehearsal determinism receipt
     needs: [rehearsal]
     if: always()
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 15
     permissions:
       contents: read
