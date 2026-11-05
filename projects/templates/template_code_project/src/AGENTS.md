@@ -85,24 +85,26 @@ from infrastructure.core.logging.utils import get_logger
 
 logger = get_logger(__name__)
 
+
 # Define test problem
-def objective(x): return (x[0] - 1)**2 + (x[1] - 2)**2
-def gradient(x): return np.array([2*(x[0] - 1), 2*(x[1] - 2)])
+def objective(x):
+    return (x[0] - 1) ** 2 + (x[1] - 2) ** 2
+
+
+def gradient(x):
+    return np.array([2 * (x[0] - 1), 2 * (x[1] - 2)])
+
 
 # Run optimization
 result = gradient_descent(np.array([0.0, 0.0]), objective, gradient)
 
 # Analyze numerical stability
-stability = check_numerical_stability(
-    func=objective,
-    test_inputs=[np.array([0.0, 0.0]), result.solution]
-)
+stability = check_numerical_stability(func=objective, test_inputs=[np.array([0.0, 0.0]), result.solution])
 logger.info(f"Stability score: {stability['overall_stable']}")
 
 # Benchmark performance
 benchmark = benchmark_function(
-    func=lambda x: gradient_descent(x, objective, gradient).iterations,
-    test_inputs=[np.array([0.0, 0.0])]
+    func=lambda x: gradient_descent(x, objective, gradient).iterations, test_inputs=[np.array([0.0, 0.0])]
 )
 logger.info(f"Average iterations: {benchmark['mean_time']:.1f}")
 ```
@@ -129,19 +131,19 @@ else:
 ```python
 from template_code_project.core.optimizer import gradient_descent, quadratic_function, compute_gradient
 
+
 # Define objective function
 def objective(x):
     return quadratic_function(x, A=np.eye(len(x)), b=np.ones(len(x)))
 
+
 def gradient(x):
     return compute_gradient(x, A=np.eye(len(x)), b=np.ones(len(x)))
 
+
 # Run optimization
 result = gradient_descent(
-    initial_point=np.array([0.0, 0.0]),
-    objective_func=objective,
-    gradient_func=gradient,
-    step_size=0.1
+    initial_point=np.array([0.0, 0.0]), objective_func=objective, gradient_func=gradient, step_size=0.1
 )
 
 print(f"Optimal point: {result.solution}")
@@ -153,15 +155,15 @@ print(f"Objective value: {result.objective_value}")
 ```python
 # Define custom objective and gradient
 def custom_objective(x):
-    return (x[0] - 1)**2 + (x[1] - 2)**2
+    return (x[0] - 1) ** 2 + (x[1] - 2) ** 2
+
 
 def custom_gradient(x):
-    return np.array([2*(x[0] - 1), 2*(x[1] - 2)])
+    return np.array([2 * (x[0] - 1), 2 * (x[1] - 2)])
+
 
 result = gradient_descent(
-    initial_point=np.array([5.0, 5.0]),
-    objective_func=custom_objective,
-    gradient_func=custom_gradient
+    initial_point=np.array([5.0, 5.0]), objective_func=custom_objective, gradient_func=custom_gradient
 )
 ```
 
@@ -311,11 +313,7 @@ class OptimizationResult:
 #### quadratic_function (function)
 
 ```python
-def quadratic_function(
-    x: np.ndarray,
-    A: Optional[np.ndarray] = None,
-    b: Optional[np.ndarray] = None
-) -> float:
+def quadratic_function(x: np.ndarray, A: Optional[np.ndarray] = None, b: Optional[np.ndarray] = None) -> float:
     """Evaluate quadratic function f(x) = (1/2) x^T A x - b^T x.
 
     Args:
@@ -334,11 +332,7 @@ def quadratic_function(
 #### compute_gradient (function)
 
 ```python
-def compute_gradient(
-    x: np.ndarray,
-    A: Optional[np.ndarray] = None,
-    b: Optional[np.ndarray] = None
-) -> np.ndarray:
+def compute_gradient(x: np.ndarray, A: Optional[np.ndarray] = None, b: Optional[np.ndarray] = None) -> np.ndarray:
     """Compute gradient of quadratic function.
 
     Args:
@@ -361,7 +355,7 @@ def gradient_descent(
     max_iterations: int = 1000,
     tolerance: float = 1e-6,
     step_size: float = 0.01,
-    verbose: bool = False
+    verbose: bool = False,
 ) -> OptimizationResult:
     """Perform gradient descent optimization.
 

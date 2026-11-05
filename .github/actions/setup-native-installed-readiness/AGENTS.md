@@ -4,7 +4,14 @@
 Ubuntu preparation step, called after checkout, pinned source fixtures and
 Python/uv setup. Its `prepare-lean` input accepts only `true` or `false` and
 defaults to `true` for complete native roles. The Code diagnostic explicitly uses
-`false`; it does not exercise Lean. This action has no acceptance outputs. Java and EPUBCheck
+`false`; it does not exercise Lean. `matrix-cell` names the single exemplar a job prepares and is the preferred input:
+after this action's own `uv sync` it derives the extra cache scopes from
+`native_installed_launcher --print-preparation-scopes`, so warming and preparation
+share one predicate. Never resolve those scopes in a workflow step instead: the
+interpreter does not exist before this action, and hosted run 41952164694 lost all
+25 cells to `.venv/bin/python: No such file or directory` (exit 127) that way.
+`project-scopes` remains as an explicit override and defaults to empty, which keeps
+Root-only warming for callers that install nothing else. This action has no acceptance outputs. Java and EPUBCheck
 nominations are exported as `TEMPLATE_NATIVE_JAVA` and
 `TEMPLATE_NATIVE_EPUBCHECK` for the caller's explicit tool arguments.
 

@@ -31,10 +31,13 @@ This document provides documentation for the Research Project Template system, e
 
 ## For assistants and automation
 
-**Current release scope:** [5.0.0](docs/releases/v5.0.0.md) coordinates the root
-SDK and all canonical public exemplars. Follow the
-[release boundary](docs/maintenance/release-boundary.md); preserve original
-acceptance evidence and never infer publication from a version bump or green local checks.
+**Current release scope:** [5.0.2](docs/releases/v5.0.2.md) coordinates the root
+SDK and all canonical public exemplars, superseding `5.0.1`, whose rendered
+receipts were stale at its tag. The tag must be cut at a commit whose tree equals
+the verified tree, and both publication gates at the tag are the release verdict.
+Follow the [release boundary](docs/maintenance/release-boundary.md); preserve
+original acceptance evidence and never infer publication from a version bump or
+green local checks.
 
 **Read order:** [`README.md`](README.md) → [`CLAUDE.md`](CLAUDE.md) → this file for anything not covered there.
 

@@ -104,6 +104,7 @@
     "projects/templates/template_active_inference/output/figures/transmission_integrity_strip.png",
     "projects/templates/template_active_inference/output/figures/transmission_pairing.png",
     "projects/templates/template_active_inference/output/manuscript/00_00_sheaf_coverage.md",
+    "projects/templates/template_active_inference/output/manuscript/00_00_transmission_begin.md",
     "projects/templates/template_active_inference/output/manuscript/00_abstract.md",
     "projects/templates/template_active_inference/output/manuscript/02_intro_motivation.md",
     "projects/templates/template_active_inference/output/manuscript/03_intro_contributions.md",
@@ -119,6 +120,7 @@
     "projects/templates/template_active_inference/output/manuscript/16_appendix_full_sheaf.md",
     "projects/templates/template_active_inference/output/manuscript/17_conclusion.md",
     "projects/templates/template_active_inference/output/manuscript/99_references.md",
+    "projects/templates/template_active_inference/output/manuscript/99_zz_transmission_end.md",
     "projects/templates/template_active_inference/output/manuscript/config.yaml",
     "projects/templates/template_active_inference/output/manuscript/preamble.md",
     "projects/templates/template_active_inference/output/manuscript/references.bib",
@@ -181,5 +183,5 @@
     "projects/templates/template_active_inference/output/web/manuscript__17_conclusion.html",
     "projects/templates/template_active_inference/output/web/manuscript__99_references.html"
   ],
-  "skipped_tracked_count": 180
+  "skipped_tracked_count": 182
 }

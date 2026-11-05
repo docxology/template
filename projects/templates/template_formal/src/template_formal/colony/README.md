@@ -28,15 +28,30 @@ adjacent concerns.
 
 ```python
 from template_formal.colony import (
-    AnalysisArtifacts, ColonyTrialConfig, ColonyTrialResult, ConsensusTickSummary, EmptySummaryError,
-    InMemoryPheromoneField, NullModelTrialConfig, NullModelTrialResult, PheromoneField,
+    AnalysisArtifacts,
+    ColonyTrialConfig,
+    ColonyTrialResult,
+    ConsensusTickSummary,
+    EmptySummaryError,
+    InMemoryPheromoneField,
+    NullModelTrialConfig,
+    NullModelTrialResult,
+    PheromoneField,
     SweepPointResult,
-    consensus_tick_summary, convergence_rate, find_sustained_consensus_tick,
-    fisher_exact_test_two_sided, pearson_r,
-    run_colony_trial, run_demo_colony, run_null_model_trial, run_parameter_sweep,
+    consensus_tick_summary,
+    convergence_rate,
+    find_sustained_consensus_tick,
+    fisher_exact_test_two_sided,
+    pearson_r,
+    run_colony_trial,
+    run_demo_colony,
+    run_null_model_trial,
+    run_parameter_sweep,
     run_publication_analysis,
-    run_statistics_sweep, wilson_score_interval,
-    write_convergence_tick_histogram, write_demo_convergence_figure,
+    run_statistics_sweep,
+    wilson_score_interval,
+    write_convergence_tick_histogram,
+    write_demo_convergence_figure,
 )
 ```
 

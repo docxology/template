@@ -433,7 +433,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-10-29T21:16:00Z",
+      "checked_at": "2026-11-04T15:41:21Z",
       "kind": "number",
       "source": "output/reports/cleanup_report.json:$.skipped_tracked_count",
       "source_field": "$.skipped_tracked_count",
@@ -441,11 +441,11 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "50"
+      "value": "64"
     },
     {
       "active": true,
-      "checked_at": "2026-10-29T21:16:00Z",
+      "checked_at": "2026-11-04T15:41:21Z",
       "kind": "number",
       "source": "output/reports/cleanup_report.json:$.skipped_tracked_count (numeric variant)",
       "source_field": "$.skipped_tracked_count",
@@ -453,7 +453,7 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "0.5"
+      "value": "0.64"
     },
     {
       "active": true,

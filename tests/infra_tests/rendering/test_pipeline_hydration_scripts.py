@@ -117,3 +117,61 @@ def test_hydration_rejects_malformed_actual_source(tmp_path: Path) -> None:
 def test_absent_hydration_script_requires_no_producer(tmp_path: Path) -> None:
     assert run_manuscript_variable_script(tmp_path) == 0
     assert not (tmp_path / "output").exists()
+
+
+def test_hydration_budget_is_available_to_the_child_not_controller_setup(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """The work budget must not be charged for interpreter/audit preparation.
+
+    Negative control for hosted run 41887373712: the hydration clock started
+    before the child launched, 57.9 s of a 300 s budget went to preparation, and
+    the child was SIGKILLed after 242.1 s while the same script needed 297.65 s
+    in that run's analysis stage. Charging setup to the work budget turns a fast
+    internal failure into a reported timeout.
+
+    This child sleeps for most of a short budget. Because preparation now happens
+    before the clock starts, the child always receives the full configured
+    budget and completes; if preparation were charged against it, the effective
+    allowance would be reduced and the sleep would be killed early.
+    """
+    import time
+
+    template_root = tmp_path / "template"
+    project = template_root / "projects" / "project"
+    script = project / "scripts" / "z_generate_manuscript_variables.py"
+    script.parent.mkdir(parents=True)
+    # The child needs almost the whole budget. Admission is measured at ~1-2.6 s
+    # locally and was 57.9 s on the hosted runner, so any admission charged to
+    # this clock leaves the child too little and it is killed before finishing.
+    child_work_seconds = 4.5
+    script.write_text(
+        "\n".join(
+            [
+                "import time",
+                "from pathlib import Path",
+                'Path("output").mkdir(exist_ok=True)',
+                f"time.sleep({child_work_seconds})",
+                'Path("output/hydration_finished.txt").write_text("done", encoding="utf-8")',
+            ]
+        )
+        + "\n",
+        encoding="utf-8",
+    )
+    venv.EnvBuilder(with_pip=False, symlinks=True).create(project / ".venv")
+    monkeypatch.setenv("MANUSCRIPT_HYDRATION_TIMEOUT", "5")
+
+    started = time.monotonic()
+    assert run_manuscript_variable_script(project, template_repo_root=template_root) == 0
+    elapsed = time.monotonic() - started
+
+    assert (project / "output" / "hydration_finished.txt").exists(), (
+        "child must complete inside the configured work budget; if this file is "
+        "absent the child was reaped early because admission consumed its budget"
+    )
+    assert elapsed >= child_work_seconds, "the real child must actually have run"
+    # The child must have been allowed to finish, not reaped at a shortened
+    # deadline derived from setup that already happened.
+    receipt = json.loads(next((project / "output" / ".pipeline" / "analysis").glob("*/*.json")).read_text())
+    assert receipt["outcome"]["child_exit_code"] == 0
+    assert receipt["complete"] is True

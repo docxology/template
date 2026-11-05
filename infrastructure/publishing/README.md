@@ -20,11 +20,7 @@ The Python API exposes BibTeX, APA, and MLA citation helpers. The
 ## Quick Start
 
 ```python
-from infrastructure.publishing import (
-    extract_publication_metadata,
-    generate_citation_bibtex,
-    publish_to_zenodo
-)
+from infrastructure.publishing import extract_publication_metadata, generate_citation_bibtex, publish_to_zenodo
 
 # Extract metadata
 metadata = extract_publication_metadata([Path("manuscript.md")])
@@ -35,9 +31,7 @@ print(bibtex)
 
 # Publish to Zenodo
 result = publish_to_zenodo(
-    metadata,
-    [Path("output/{project_name}/pdf/{project_name}_combined.pdf")],
-    os.getenv("ZENODO_TOKEN")
+    metadata, [Path("output/{project_name}/pdf/{project_name}_combined.pdf")], os.getenv("ZENODO_TOKEN")
 )
 print(f"Published with DOI: {result.doi}")
 ```
@@ -73,6 +67,12 @@ for p in list_platforms(tier=PublishingTier.FIRST_CLASS):
 info = get_platform("pypi")
 print(info.adapter_class)  # 'PyPIAdapter'
 ```
+
+## Composed acceptance receipts
+
+`composed_receipt.py` exposes `validate_composed_receipt` for the bounded `template-composed-acceptance-v1` receipt at `output/readiness/composed-acceptance/receipt.json`. It checks the actual Git revision, complete current required-class roster, passing class entries, producer argv declarations, retained artifact hashes and source-owned class closures. Missing, extra, stale or mismatched classes refuse; source and artifact currency are checked again before the payload is returned. The validator reads evidence and does not run its declared producers or publish a release.
+
+Hosted-only classes still require an authenticated environment that can resolve their origins. Each entry retains the distinction between `observed` run metadata and an unresolved `declared` origin; a run that resolves as failed, incomplete or bound to another revision refuses. A locally provable class cannot claim an unrelated hosted origin. The composed receipt does not replace a required hosted carrier or turn an unverified claim into hosted proof.
 
 ## Modules
 
@@ -243,7 +243,9 @@ never raised, so the batch always completes.
 ```python
 from pathlib import Path
 from infrastructure.publishing.upload_runner import (
-    UploadTargets, select_jobs, run_uploads,
+    UploadTargets,
+    select_jobs,
+    run_uploads,
 )
 
 targets = UploadTargets(
@@ -260,8 +262,8 @@ targets = UploadTargets(
 jobs = select_jobs(include_github=True, include_static=True)
 
 run = run_uploads(targets, jobs=jobs, commit=False)  # DRY-RUN
-print(run.mode, run.ok)        # "DRY-RUN" True
-print(run.results["pinata"])   # per-platform receipt dict
+print(run.mode, run.ok)  # "DRY-RUN" True
+print(run.results["pinata"])  # per-platform receipt dict
 ```
 
 Pass `only=[...]` to `select_jobs()` to restrict the run to named platforms, and

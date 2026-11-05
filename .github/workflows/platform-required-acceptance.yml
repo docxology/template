@@ -564,15 +564,26 @@ jobs:
       - uses: ./.github/actions/setup-python-env
         with:
           python-version: "3.14.4"
+      # The roster-wide lane prepares every public exemplar and installs each one's
+      # own lock, so a Root-only warm cannot serve it either. With no `matrix-cell`
+      # the readiness action derives the full roster after its own `uv sync`, which
+      # is the only point where an interpreter exists.
       - uses: ./.github/actions/setup-native-installed-readiness
       - name: Strict rendered publication evidence gate
         # The native worker refuses on this same strict rendered predicate before
         # any stage executes, so run it first: a stale receipt fails in seconds
         # instead of after the bounded native lifecycle. It skips and weakens
         # nothing; the lane still owns every native check.
+        #
+        # --rendered is deliberately NOT asserted here, for the same reason as in
+        # platform-native-preflight.yml: rendered receipts are rebound only by
+        # rebind.yml, which is dispatch-only and acts on the tip of origin/main.
+        # Asserting a current rendered receipt inside a dispatch-only acceptance
+        # run demands a rebind this run cannot perform. Every source, methods,
+        # evidence, figure, artifact and placeholder check below still blocks.
         run: >-
           .venv/bin/python -m infrastructure.validation.cli publication-audit --all-public
-          --rendered --strict --require-figure-accessibility --format markdown
+          --strict --require-figure-accessibility --format markdown
       - name: Original authenticated installed native format inventory
         id: native
         run: >-
@@ -597,6 +608,13 @@ jobs:
           repo-root: ${{ runner.temp }}/template-native-original-root
           directory: ${{ runner.temp }}/template-native-original-root/output/readiness/native-transport
           kind: native
+          # This roster lane's only output is the release artifact, and every one
+          # of this workflow's 31 failures retained its transport correctly and
+          # then expired after one day before anyone read it. The refusal that
+          # blocks every release has therefore never been diagnosed. Thirty days
+          # covers a release cycle. The per-cell indexes below keep one day:
+          # they are bulk, and they are not the diagnostic.
+          retention-days: 30
       - name: Preserve failed original raw and Code evidence
         if: always() && steps.native.outcome == 'failure'
         run: >-
@@ -611,15 +629,17 @@ jobs:
           repo-root: ${{ github.workspace }}
           directory: ${{ github.workspace }}/output/readiness/failed-native-transport
           kind: failed-native
+          # Failure evidence, not a primary acceptance index. Every one of this
+          # workflow's 31 failures retained its transport and then expired after
+          # one day before anyone read it, so the refusal that blocks every
+          # release has never been diagnosed. Thirty days covers a release cycle;
+          # primary per-cell indexes keep their one-day default.
+          retention-days: 30
 
 
-  # TODO(native-sharding): the 600 s per-control ceiling in
-  # `infrastructure/reporting/native_pdf_whole_control_supervisor.py:66` is the
-  # remaining blocker. `--matrix-cell` and the per-cell artifact name now land
-  # together (this branch), so the exemplar rebind happens once. These jobs stay
-  # gated on the repository variable NATIVE_SHARDING_CELLS and `native-original`
-  # above remains the active native lane. To enable: raise the ceiling, then set
-  # NATIVE_SHARDING_CELLS=true.
+  # The sharded native lane selects every canonical project from Source and
+  # admits only a complete cell union. NATIVE_SHARDING_CELLS selects this lane;
+  # the separately gated monolithic job remains the supported fallback.
   native-plan:
     if: vars.NATIVE_SHARDING_CELLS == 'true'
     runs-on: ubuntu-24.04
@@ -637,9 +657,8 @@ jobs:
         id: plan
         run: |
           set -euo pipefail
-          # TODO(native-sharding): reuse the auxiliary matrix emitter (as here),
-          # or expose an equivalent flag on the native CLI. The `cell` values are
-          # bare project names; `root` is not a project and is excluded.
+          # Reuse the Source-owned auxiliary matrix emitter. The `cell` values
+          # are bare project names; `root` is not a project and is excluded.
           matrix=$(.venv/bin/python -m infrastructure.project.public_acceptance_auxiliary_cli --matrix-json \
             | jq -c '{include: [.include[] | select(.cell != "root")]}')
           echo "matrix=$matrix" >> "$GITHUB_OUTPUT"
@@ -647,8 +666,7 @@ jobs:
   native-original-cell:
     needs: native-plan
     name: native-original-cell (${{ matrix.cell }})
-    # TODO(native-sharding): enable once --matrix-cell lands. Deliberately
-    # gated so a missing selection can never be mistaken for a pass.
+    # Explicit selection keeps a missing cell from being mistaken for a pass.
     if: vars.NATIVE_SHARDING_CELLS == 'true'
     strategy:
       fail-fast: false
@@ -668,7 +686,15 @@ jobs:
       - uses: ./.github/actions/setup-python-env
         with:
           python-version: "3.14.4"
+      # Offline cache scopes are derived inside the readiness action, after its own
+      # `uv sync`. Resolving them in a workflow step here needs an interpreter that
+      # does not exist yet: run 41952164694 died at `.venv/bin/python: No such file
+      # or directory` (exit 127) on all 25 cells. The action takes `matrix-cell`
+      # for exactly this, so warming and preparation share one predicate without a
+      # step ordering that cannot work.
       - uses: ./.github/actions/setup-native-installed-readiness
+        with:
+          matrix-cell: ${{ matrix.cell }}
       - name: Keep the declared capacity before native allocation
         run: |
           set -euo pipefail
@@ -732,6 +758,12 @@ jobs:
           repo-root: ${{ github.workspace }}
           directory: ${{ github.workspace }}/output/readiness/failed-native-transport
           kind: failed-native
+          # Failure evidence, not a primary acceptance index. Every one of this
+          # workflow's 31 failures retained its transport and then expired after
+          # one day before anyone read it, so the refusal that blocks every
+          # release has never been diagnosed. Thirty days covers a release cycle;
+          # primary per-cell indexes keep their one-day default.
+          retention-days: 30
 
   complete:
     needs: [root-original, common-original, auxiliary-original, native-plan, native-original-cell]
@@ -850,6 +882,10 @@ jobs:
           repo-root: ${{ github.workspace }}
           directory: ${{ github.workspace }}/output/readiness/failed-reader-transport
           kind: failed-reader
+          # Failure evidence for the release-critical reader lane: the same
+          # one-day expiry is why the refusal behind 31 failed releases has no
+          # readable trace. Keep it past a release cycle.
+          retention-days: 30
       - name: Summarize required acceptance outcomes
         if: always()
         shell: bash

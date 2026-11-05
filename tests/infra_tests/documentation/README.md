@@ -35,9 +35,7 @@ from infrastructure.documentation import FigureManager
 def test_registry_round_trip(tmp_path):
     path = tmp_path / "registry.json"
     manager = FigureManager(str(path))
-    original = manager.register_figure(
-        filename="figure.png", caption="Measured result.", label="fig:result"
-    )
+    original = manager.register_figure(filename="figure.png", caption="Measured result.", label="fig:result")
     restored = FigureManager(str(path)).get_figure("fig:result")
     assert restored == original
 ```

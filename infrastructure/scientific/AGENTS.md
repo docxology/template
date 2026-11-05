@@ -49,11 +49,7 @@ from infrastructure.scientific import check_numerical_stability, StabilityTest
 # Or import from specific module
 from infrastructure.scientific.stability import check_numerical_stability
 
-stability = check_numerical_stability(
-    your_algorithm,
-    test_inputs,
-    tolerance=1e-12
-)
+stability = check_numerical_stability(your_algorithm, test_inputs, tolerance=1e-12)
 ```
 
 ### Performance Benchmarking
@@ -64,11 +60,7 @@ from infrastructure.scientific import benchmark_function, format_benchmark_repor
 # Or import from specific module
 from infrastructure.scientific.benchmarking import benchmark_function
 
-benchmark = benchmark_function(
-    your_function,
-    test_inputs,
-    iterations=100
-)
+benchmark = benchmark_function(your_function, test_inputs, iterations=100)
 ```
 
 ### Improvement Confirmation
@@ -80,7 +72,7 @@ from infrastructure.scientific import confirm_improvement, Confirmation
 from infrastructure.scientific.confirmation import confirm_improvement
 
 result = confirm_improvement(
-    evaluate=your_evaluator,   # (params, seed) -> metric
+    evaluate=your_evaluator,  # (params, seed) -> metric
     candidate=(0.1, 0.2),
     baseline_metric=1.0,
     seeds=[0, 1, 2, 3],

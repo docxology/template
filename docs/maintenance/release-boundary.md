@@ -1,15 +1,31 @@
 # Release boundary
 
-The root package metadata declares the **5.0.0** release. Its changelog and
-release notes record the release intent, and the `v5.0.0` tag is cut at
+The root package metadata declares the **5.0.2** release. Its changelog and
+release notes record the release intent, and `5.0.2` supersedes `5.0.1` for
+rendered-provenance and release-note provenance. **The tag must be cut at a commit
+whose tree equals the verified tree**: both publication gates, run on the committed
+tree with a clean index before the merge, must pass again at the revision the tag
+names. Three tags are named here. The `v5.0.0` tag is cut at
 `e932a5d2a4f5c75f354352b43e54039eac9f63cf` (annotated
-`9829f410cf1d4edddcefb5374363f11ef366044d`), which is the merge of the
-release-train pull request; the root release contract passes at that revision,
-and so does the repository's required `CI Gate` on the same commit.
+`9829f410cf1d4edddcefb5374363f11ef366044d`), which is the merge of its
+release-train pull request; its in-tree copy of `docs/releases/v5.0.0.md` names
+`c5af32a18560ca12267484b182a94b826b47cf47` as the tagged commit, which is false:
+that is the `#215` merge, an intermediate release-train merge 44 commits before
+the tag. The tag is not moved and not re-cut. The `v5.0.1` tag is cut at
+`3617740049de0f146329c5222a62b41494ca2203` (annotated
+`c6aae549c334b0ee55a153e5b85c27278b70dd35`), the merge of the release train that
+carries the corrected note and the fail-closed release-notes tag-commit check
+that refuses that defect; the root release contract passes at that revision, and
+so does the repository's required `CI Gate` on the same commit — but its rendered
+receipts were stamped two commits upstream, so both publication gates fail on the
+tag's own tree, and `5.0.2` supersedes it. That tag is not moved and not re-cut
+either. The corrected note in this tree and the check that refuses the defect are
+what to read; see [the 5.0.1 notes](../releases/v5.0.1.md) and, for this release,
+[the 5.0.2 notes](../releases/v5.0.2.md).
 
-**The hosted required-acceptance lane has not run at that revision**, and
+**The hosted required-acceptance lane has not run at the `v5.0.1` revision**, and
 ordinary CI is not that lane, so none of the acceptance, handoff or publication
-steps below may be treated as satisfied: the tag records a released revision,
+steps below may be treated as satisfied: the tags record released revisions,
 not an accepted candidate. Everything downstream of acceptance in this document
 therefore remains an outstanding requirement rather than a description of what
 happened.
@@ -20,8 +36,12 @@ unpublished 4.5.0 preparation to 5.0.0 while retaining exemplar own versions; th
 exemplar `manuscript/config.yaml` publication `platform_version` fields moved with
 their tracked publication copies in the same change, and the fifteen exemplars
 that track a publication copy were re-rendered and re-receipted, so every
-exemplar's rendered provenance binds the released bytes. Current release guidance
-is in [the 5.0.0 notes](../releases/v5.0.0.md).
+exemplar's rendered provenance binds the released bytes. The same transaction then
+moved those bindings from 5.0.0 to 5.0.1, again with the tracked publication copies
+re-rendered and the receipts rebound. It then moved them from 5.0.1 to 5.0.2 under
+the same rule: the fifteen exemplars that track a publication copy were re-rendered
+and re-receipted, and the other ten were rebound to unchanged output bytes. Current
+release guidance is in [the 5.0.2 notes](../releases/v5.0.2.md).
 The existing `v4.4.0` tag remains bound to its failed candidate and is not reused.
 Final release-intent metadata must be included in the exact revision submitted
 for release acceptance.

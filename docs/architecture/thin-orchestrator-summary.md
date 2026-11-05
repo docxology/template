@@ -233,9 +233,10 @@ if __name__ == "__main__":
 # scripts/pipeline/stage_01_test.py - DON'T implement parsing logic
 def parse_test_output(stdout, stderr, exit_code):
     # This should be in infrastructure.reporting.pytest_output_parser
-    results = {'passed': 0, 'failed': 0}
+    results = {"passed": 0, "failed": 0}
     # ... parsing logic ...
     return results
+
 
 # Should import from infrastructure instead:
 from infrastructure.reporting.pytest_output_parser import parse_pytest_output

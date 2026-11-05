@@ -27,6 +27,7 @@ Benchmark when:
 ```python
 from infrastructure.core.runtime.function_profiler import monitor_performance
 
+
 @monitor_performance("compute_expensive_operation")
 def compute_expensive_operation(data: np.ndarray) -> Result:
     # This function's time and memory will be tracked
@@ -94,6 +95,7 @@ only). Follow the same convention for new project-level benchmarks.
 import pytest
 from template_code_project.core.optimizer import gradient_descent
 
+
 @pytest.mark.bench
 def test_gradient_descent_performance(benchmark):
     """Benchmark gradient descent convergence speed."""
@@ -103,7 +105,7 @@ def test_gradient_descent_performance(benchmark):
         objective_func=quadratic_function,
         gradient_func=compute_gradient,
         step_size=0.1,
-        tolerance=1e-6
+        tolerance=1e-6,
     )
     assert result.converged
 ```

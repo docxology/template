@@ -5,30 +5,30 @@
     {
       "id": "root_pyproject",
       "kind": "input",
-      "path": "<home>/Documents/Git/gitvault/Local/worktrees/template-4.4.0-completion-20261030/pyproject.toml",
+      "path": "<home>/Documents/Git/gitvault/Local/worktrees/docx-5.0.0-merge-verify-20261103/pyproject.toml",
       "required": false,
-      "sha256": "e002cc2a3e0e2affac2b8b57df5beb62652393151b3146095859505e70de4d67"
+      "sha256": "08adcd31d8e381b03353827776c17a4613af908ddfe36d6a9fd2f2900445695b"
     },
     {
       "id": "root_uv_lock",
       "kind": "input",
-      "path": "<home>/Documents/Git/gitvault/Local/worktrees/template-4.4.0-completion-20261030/uv.lock",
+      "path": "<home>/Documents/Git/gitvault/Local/worktrees/docx-5.0.0-merge-verify-20261103/uv.lock",
       "required": false,
-      "sha256": "9bb9d8910220202448bd37eb9469825f762317d2c4aa53b5a59e9f38e55e0a6f"
+      "sha256": "9dab6a4a62c7aeaf11659ce1252f5fc9c18c4ea08c9f73d0abbb7e50ab22b882"
     },
     {
       "id": "project_pyproject",
       "kind": "input",
       "path": "pyproject.toml",
       "required": false,
-      "sha256": "a9beb3240e120f7c20c8feadce25f9ea1125bbb6de96fdddba2ac879b68e0b2f"
+      "sha256": "3d89ad11c0522c2e6c39d78559744aa0a3d2f3d0577a92409214412b7d3be79f"
     },
     {
       "id": "project_uv_lock",
       "kind": "input",
       "path": "uv.lock",
       "required": false,
-      "sha256": "e6b5ad39a783d5fd5f474cde7e48158f6e0a0866389ed06034fc8d5a3abda330"
+      "sha256": "8178f1d5a7032947fca0a49b44484562627640f12e67c2c9b465fb8d2233771b"
     },
     {
       "id": "autoresearch_config",
@@ -98,7 +98,7 @@
       "kind": "input",
       "path": "manuscript/config.yaml",
       "required": true,
-      "sha256": "22de835f3f911759171db7cf3ed8d3c8b398a752c3df692b22d7b8cd32e9074f"
+      "sha256": "4e282cf2b4ef6a22ee831f047be616d35d64cd567c9341526969bc4866e1ff3b"
     },
     {
       "id": "generated-001",
@@ -112,28 +112,28 @@
       "kind": "generated_artifact",
       "path": "output/data/autoresearch_evidence_overview.json",
       "required": true,
-      "sha256": "cc692ed54a0772d04428435df9d5332263d0c7ea7d74aee1896a51732863100d"
+      "sha256": "0904ec7bd9f2f1ed49ac2ea7537c46b58d42594db77c53745437a99a5fa0c3e2"
     },
     {
       "id": "generated-003",
       "kind": "generated_artifact",
       "path": "output/data/autoresearch_loop.json",
       "required": true,
-      "sha256": "7d899860dd21dc91589168630a24000e2ac3b7590f81c91453789a3ac09eb6a4"
+      "sha256": "4baec1feb7c929f162133b829c456d3266aed8dbf48231f9b0b4483d9c4f215d"
     },
     {
       "id": "generated-004",
       "kind": "generated_artifact",
       "path": "output/data/autoresearch_plan.json",
       "required": true,
-      "sha256": "9d1736c0d528ef50b8d8b5917f896fc12e07ceb4d9c68fb8332d3dcd73b13530"
+      "sha256": "01d0e53b92e3a80a08683e254f9143078a42f8ec4edb8eaed16d5b163cd0d126"
     },
     {
       "id": "generated-005",
       "kind": "generated_artifact",
       "path": "output/data/autoresearch_review_packet.json",
       "required": true,
-      "sha256": "d0acda2465bff3eccf084961da2fe38dfcaf27c05889177a66b75c1ea2626fa4"
+      "sha256": "a812eef8a8ac827009b2be4d27f4f8299a751557637da54497f0cb2751b2cd6e"
     },
     {
       "id": "generated-006",
@@ -154,28 +154,28 @@
       "kind": "generated_artifact",
       "path": "output/data/benchmark_scores.json",
       "required": true,
-      "sha256": "689c7469d343ee77fbc27c29da8380142f7414c61584eb10c803d310355f5aa9"
+      "sha256": "87634cff93b404b8c1e3601454c724b4e2b2a9081cf5bb834115a0b62645e60d"
     },
     {
       "id": "generated-009",
       "kind": "generated_artifact",
       "path": "output/data/figure_quality_report.json",
       "required": true,
-      "sha256": "1bf6b1b28c3c75871c2be767559ad1a964c8c08077a86bf011e62e3d95f8b5fb"
+      "sha256": "4001ab6173701e7977d88452a1af1f9ae3d48319e1cd8df457af7e9f3f773806"
     },
     {
       "id": "generated-010",
       "kind": "generated_artifact",
       "path": "output/data/figure_style.json",
       "required": true,
-      "sha256": "f66b19723816147968cbf57c76b4129c0c22a586d65e2973f364743e9acbf880"
+      "sha256": "6c77bd31124fc4ebaefb3fadd2b4d099bdb8b6e26cdc859fe621c5ebd7adbe01"
     },
     {
       "id": "generated-011",
       "kind": "generated_artifact",
       "path": "output/data/idea_ledger.json",
       "required": true,
-      "sha256": "a7ebc02831039e3560a19ba80991df3e46ae3b3600344b6c2f9b5c5f50acc3ee"
+      "sha256": "f1c63c870248bf64f0dcad4b111aea1f89febffcf062572953f380f47c153c5e"
     },
     {
       "id": "generated-012",
@@ -217,7 +217,7 @@
       "kind": "generated_artifact",
       "path": "output/data/ml_candidate_ledger.json",
       "required": true,
-      "sha256": "4e967f9e8f02524f6f5809c390d560dc57a4cf0b587fd8d2fdf8f544d68ae0cd"
+      "sha256": "b00cbc3fbcddcf150db0b6af5f1897d0ab43c122ded2379b1cffc01b906a6a55"
     },
     {
       "id": "generated-018",
@@ -343,7 +343,7 @@
       "kind": "generated_artifact",
       "path": "output/data/review_decisions.json",
       "required": true,
-      "sha256": "5f71bdcec6920cc99adda56659b46c8d2fc3561891e6f185c121aee7f0d1ec7d"
+      "sha256": "cdfcda4883d50168268830abfacd6fa0c953034498ae287dfc4180531c0d9a5f"
     },
     {
       "id": "generated-036",
@@ -532,7 +532,7 @@
       "kind": "generated_artifact",
       "path": "output/reports/autoresearch_loop.json",
       "required": true,
-      "sha256": "7d899860dd21dc91589168630a24000e2ac3b7590f81c91453789a3ac09eb6a4"
+      "sha256": "4baec1feb7c929f162133b829c456d3266aed8dbf48231f9b0b4483d9c4f215d"
     },
     {
       "id": "generated-063",
@@ -567,7 +567,7 @@
       "kind": "generated_artifact",
       "path": "output/reports/evidence_registry.json",
       "required": true,
-      "sha256": "a5e17bde1a9f1297e5ec3a2e6612a5081c8c47a7f1e86e0cb27f19f5b50a148a"
+      "sha256": "a3f58398bdc219361e6d4bca243c732bbbabf7b06369b78604f1902e8260747f"
     },
     {
       "id": "generated-068",
@@ -587,7 +587,7 @@
   "cyclonedx_complete": false,
   "formal_sbom": false,
   "format": "template_autoresearch_local_inventory",
-  "generated_at": "2026-10-31T05:06:21+00:00",
+  "generated_at": "2026-11-04T15:41:21+00:00",
   "not_external_signing": true,
   "not_network_security_assessment": true,
   "not_runtime_monitoring": true,

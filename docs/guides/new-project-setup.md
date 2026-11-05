@@ -44,6 +44,7 @@ qualified name but are not in default discovery.
 ```python
 import os
 import sys
+
 os.environ.setdefault("MPLBACKEND", "Agg")
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 SRC = os.path.join(ROOT, "src")
@@ -262,8 +263,7 @@ retraction status.
 function_name = func.__name__
 
 # ✅ Works on any callable
-function_name = getattr(func, "__name__",
-    getattr(getattr(func, "func", None), "__name__", repr(func)))
+function_name = getattr(func, "__name__", getattr(getattr(func, "func", None), "__name__", repr(func)))
 ```
 
 **Lesson**: Always use `getattr` chains when accessing `__name__` on callable parameters.

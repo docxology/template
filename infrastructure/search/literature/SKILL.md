@@ -11,15 +11,13 @@ Multi-source literature search modelled after
 ## Quick Search
 
 ```python
-from infrastructure.search.literature import (
-    LiteratureClient, SearchQuery, ArxivBackend, CrossrefBackend
-)
+from infrastructure.search.literature import LiteratureClient, SearchQuery, ArxivBackend, CrossrefBackend
 
 client = LiteratureClient([ArxivBackend(), CrossrefBackend(mailto="you@example.org")])
 result = client.search(SearchQuery(text="protein language model fitness", max_results=20))
 
 print(f"{len(result)} unique papers from {len(result.per_source_counts)} sources")
-print(f"Errors: {result.errors}")    # {} when all backends succeeded
+print(f"Errors: {result.errors}")  # {} when all backends succeeded
 for paper in result.papers[:5]:
     print(f"  [{paper.score:.2f}] {paper.title} ({paper.year}) — {paper.doi or paper.url}")
 ```
@@ -27,9 +25,7 @@ for paper in result.papers[:5]:
 ## Backends
 
 ```python
-from infrastructure.search.literature import (
-    LocalBackend, ArxivBackend, CrossrefBackend, PaperclipBackend
-)
+from infrastructure.search.literature import LocalBackend, ArxivBackend, CrossrefBackend, PaperclipBackend
 
 # Offline / reproducible — searches a JSON corpus on disk.
 local = LocalBackend("data/curated_corpus.json")
@@ -40,6 +36,7 @@ crossref = CrossrefBackend(mailto="you@example.org")
 
 # Paperclip — requires API key.
 import os
+
 paperclip = PaperclipBackend(api_key=os.environ["PAPERCLIP_API_KEY"])
 ```
 
@@ -49,8 +46,9 @@ paperclip = PaperclipBackend(api_key=os.environ["PAPERCLIP_API_KEY"])
 SearchQuery(
     text="adam optimizer",
     max_results=50,
-    year_min=2014, year_max=2025,
-    sources=["arxiv"],          # subset of configured backends
+    year_min=2014,
+    year_max=2025,
+    sources=["arxiv"],  # subset of configured backends
 )
 ```
 
@@ -116,10 +114,12 @@ uv run python -m infrastructure.search.literature.cli search \
 ```python
 from infrastructure.search.literature import CrossrefBackend, HttpResponse
 
+
 class MyClient:
     def get(self, url, *, params=None, headers=None, timeout=10.0):
         # ... return HttpResponse(status_code=200, text=..., url=url)
         ...
+
 
 backend = CrossrefBackend(http_client=MyClient())
 ```

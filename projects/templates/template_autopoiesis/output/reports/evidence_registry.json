@@ -2388,7 +2388,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-10-18T02:09:27Z",
+      "checked_at": "2026-11-04T15:41:21Z",
       "kind": "number",
       "source": "output/reports/test_results.json:$.coverage_details.project.file_coverage.src/template_autopoiesis/primitives/__init__.py.coverage_percent",
       "source_field": "$.coverage_details.project.file_coverage.src/template_autopoiesis/primitives/__init__.py.coverage_percent",
@@ -2400,7 +2400,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-10-18T02:09:27Z",
+      "checked_at": "2026-11-04T15:41:21Z",
       "kind": "number",
       "source": "output/reports/test_results.json:$.coverage_details.project.file_coverage.src/template_autopoiesis/primitives/base.py.coverage_percent",
       "source_field": "$.coverage_details.project.file_coverage.src/template_autopoiesis/primitives/base.py.coverage_percent",

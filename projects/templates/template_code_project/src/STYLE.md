@@ -11,9 +11,10 @@ All functions in `src/` must be **side-effect-free**:
 def quadratic_function(x: np.ndarray, A: np.ndarray, b: np.ndarray) -> float:
     return 0.5 * x @ A @ x - b @ x
 
+
 # ❌ WRONG: Side-effect function — writes files, prints, logs
 def quadratic_function(x, A, b):
-    print(f"Computing f({x})")     # Side effect: I/O
+    print(f"Computing f({x})")  # Side effect: I/O
     result = 0.5 * x @ A @ x - b @ x
     Path("result.txt").write_text(str(result))  # Side effect: file write
     return result
@@ -103,10 +104,7 @@ def quadratic_function(x: np.ndarray, A: np.ndarray, b: np.ndarray) -> float:
     if A.shape[0] != A.shape[1]:
         raise ValueError(f"A must be square, got shape {A.shape}")
     if A.shape[0] != len(x):
-        raise ValueError(
-            f"Dimension mismatch: A is {A.shape[0]}×{A.shape[1]} "
-            f"but x has length {len(x)}"
-        )
+        raise ValueError(f"Dimension mismatch: A is {A.shape[0]}×{A.shape[1]} but x has length {len(x)}")
     return 0.5 * x @ A @ x - b @ x
 ```
 

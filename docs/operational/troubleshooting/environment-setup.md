@@ -40,6 +40,7 @@ def test_function_with_real_data():
     result = process_data(real_data)
     assert result is not None
 
+
 # ❌ FORBIDDEN: Never use mocks
 ```
 

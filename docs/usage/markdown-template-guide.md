@@ -143,6 +143,7 @@ Scripts in the `scripts/` directory are **thin orchestrators** that:
 # When the script adds its project root to sys.path, import the project package.
 from src.optimizer import compute_gradient, quadratic_function
 
+
 def generate_figure():
     # Use projects/{name}/src/ methods for all computation
     data = [-2.0, -1.0, 0.0, 1.0, 2.0]

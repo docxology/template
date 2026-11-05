@@ -20,6 +20,7 @@
     "projects/templates/template_sia/output/release/swh_repo_url.txt",
     "projects/templates/template_sia/output/release/upload_receipts.json",
     "projects/templates/template_sia/output/reports/artifact_manifest.json",
+    "projects/templates/template_sia/output/reports/cleanup_report.json",
     "projects/templates/template_sia/output/reports/evidence_registry.json",
     "projects/templates/template_sia/output/reports/manuscript_composition.json",
     "projects/templates/template_sia/output/reports/rendered_provenance.json",
@@ -51,5 +52,5 @@
     "projects/templates/template_sia/output/web/manuscript__04_conclusion.html",
     "projects/templates/template_sia/output/web/manuscript__99_references.html"
   ],
-  "skipped_tracked_count": 50
+  "skipped_tracked_count": 51
 }

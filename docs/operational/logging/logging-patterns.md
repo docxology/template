@@ -32,7 +32,7 @@ from infrastructure.core.progress import SubStageProgress, ProgressBar
 progress = SubStageProgress(
     total=10,
     stage_name="Rendering PDFs",
-    use_ema=True  # Smoother ETA estimates
+    use_ema=True,  # Smoother ETA estimates
 )
 
 for i, file in enumerate(files, 1):
@@ -52,7 +52,7 @@ from infrastructure.core.progress import LLMProgressTracker
 tracker = LLMProgressTracker(
     total_tokens=1000,
     task="Generating review",
-    show_throughput=True  # Show tokens/sec
+    show_throughput=True,  # Show tokens/sec
 )
 
 for chunk in llm_stream:
@@ -67,9 +67,9 @@ tracker.finish()
 
 ```python
 from infrastructure.core.runtime.eta import (
-    calculate_eta,            # Simple linear ETA
-    calculate_eta_ema,        # Exponential moving average
-    calculate_eta_with_confidence  # With confidence intervals
+    calculate_eta,  # Simple linear ETA
+    calculate_eta_ema,  # Exponential moving average
+    calculate_eta_with_confidence,  # With confidence intervals
 )
 
 # Simple linear

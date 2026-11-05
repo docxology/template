@@ -45,20 +45,20 @@ is_valid, message = validate_fond_structure(Path("fonds/templates/template_bibli
 from infrastructure.fonds import FondInfo, build_fond_info
 
 info = build_fond_info(Path("fonds/templates/template_bibliography"))
-info.name           # "template_bibliography"
-info.fond_type      # "type" from fonds.yaml, or "generic"
-info.has_data       # True iff data/ exists
-info.is_valid       # True iff has_data
-info.qualified_name # "template_bibliography" or "program/name"
+info.name  # "template_bibliography"
+info.fond_type  # "type" from fonds.yaml, or "generic"
+info.has_data  # True iff data/ exists
+info.is_valid  # True iff has_data
+info.qualified_name  # "template_bibliography" or "program/name"
 ```
 
 ## Public scope
 
 ```python
 from infrastructure.fonds.public_scope import (
-    PUBLIC_FOND_NAMES,       # ('templates/template_bibliography', ...)
-    public_fond_infos,       # list[FondInfo] present in checkout
-    public_fond_names,       # list[str] sorted
+    PUBLIC_FOND_NAMES,  # ('templates/template_bibliography', ...)
+    public_fond_infos,  # list[FondInfo] present in checkout
+    public_fond_names,  # list[str] sorted
     public_fond_data_paths,  # list[Path] repo-relative data/ paths for CI scope
 )
 ```
@@ -68,11 +68,13 @@ from infrastructure.fonds.public_scope import (
 ```python
 from pathlib import Path
 from infrastructure.fonds.linking import (
-    sync_private_fond_links, private_fonds_root,
-    is_managed_symlink, LinkSyncResult,
+    sync_private_fond_links,
+    private_fonds_root,
+    is_managed_symlink,
+    LinkSyncResult,
 )
 
-root = private_fonds_root(Path("."))   # Path | None
+root = private_fonds_root(Path("."))  # Path | None
 result: LinkSyncResult = sync_private_fond_links(Path("."), dry_run=True)
 print(result.summary())
 # result.created / .updated / .removed / .skipped / .changed

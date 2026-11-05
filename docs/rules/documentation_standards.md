@@ -312,6 +312,7 @@ def process_data(data: List[str]) -> List[str]:
         ['HELLO', 'WORLD']
     """
 
+
 # ❌ BAD: No examples
 def process_data(data: List[str]) -> List[str]:
     """Process the data."""
@@ -351,6 +352,7 @@ print(result)
 
 # ❌ BAD: Incomplete, won't run
 from module import MyClass
+
 # ... setup here ...
 result.process()
 ```

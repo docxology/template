@@ -129,7 +129,7 @@ export MAX_TEST_FAILURES=5  # Allow up to 5 failures
 ```python
 @pytest.mark.integration
 def test_uv_sync_when_available(tmp_path):
-    if not shutil.which('uv'):
+    if not shutil.which("uv"):
         pytest.skip("uv not installed")
     # Real uv sync execution...
 ```
@@ -203,9 +203,10 @@ uv run pytest tests/ -n auto
 
 ```python
 # ❌ Bad - mocked
-with patch('requests.get') as mock:
+with patch("requests.get") as mock:
     mock.return_value = Mock(json=lambda: {"result": "ok"})
     result = fetch_data()
+
 
 # ✅ Good - real HTTP
 def test_fetch_data(httpserver):

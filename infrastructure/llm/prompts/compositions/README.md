@@ -65,9 +65,7 @@ Four sub-keys targeting specific review types. Referenced as
 ```python
 # Simplified logic from composer.py
 def add_retry_prompt(self, base_prompt: str, retry_type: str = "off_topic") -> str:
-    retry_entry = self.loader.load_composition(
-        f"retry_prompts.json#{retry_type}_reinforcement"
-    )
+    retry_entry = self.loader.load_composition(f"retry_prompts.json#{retry_type}_reinforcement")
     content = retry_entry.get("content", "") if isinstance(retry_entry, dict) else str(retry_entry)
     if content.strip():
         return f"{content}\n\n{base_prompt}"

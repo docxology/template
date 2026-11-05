@@ -4,17 +4,28 @@ on:
   workflow_dispatch:
     inputs:
       tag:
-        description: "Existing root tag with successful exact-revision acceptance"
+        description: >-
+          Existing root tag with successful exact-revision acceptance. Supply the
+          hosted triple below, OR composed_receipt when every required class is
+          named per class in a composed receipt. Publication never proceeds
+          without one of those two evidence shapes.
         required: true
       acceptance_run_id:
-        description: "Successful exact-tag-SHA run that uploaded required acceptance"
-        required: true
+        description: "Hosted shape: successful exact-tag-SHA required-acceptance run ID"
+        required: false
+        default: ""
       acceptance_artifact_id:
-        description: "Exact platform-required-acceptance artifact ID from that run"
-        required: true
+        description: "Hosted shape: exact platform-required-acceptance artifact ID from that run"
+        required: false
+        default: ""
       acceptance_receipt_sha256:
-        description: "SHA256 of output/readiness/release-candidate/receipt.json"
-        required: true
+        description: "Hosted shape: SHA256 of output/readiness/release-candidate/receipt.json"
+        required: false
+        default: ""
+      composed_receipt:
+        description: "Composed shape: repository-relative path to a template-composed-acceptance-v1 receipt"
+        required: false
+        default: ""
 
 permissions:
   contents: write  # Required to create the GitHub Release
@@ -97,17 +108,23 @@ jobs:
           path: ${{ runner.temp }}/publication-receipts/
           if-no-files-found: error
 
-      - name: Require exact-tag acceptance handoff
+      - name: Require an exact-tag acceptance handoff
         id: acceptance
         env:
           ACCEPTANCE_RUN_ID: ${{ inputs.acceptance_run_id }}
           ACCEPTANCE_ARTIFACT_ID: ${{ inputs.acceptance_artifact_id }}
           ACCEPTANCE_RECEIPT_SHA256: ${{ inputs.acceptance_receipt_sha256 }}
+          COMPOSED_RECEIPT: ${{ inputs.composed_receipt }}
         run: |
           set -euo pipefail
+          # Two admitted shapes and no third. A supplied hosted triple always
+          # takes the strict path unchanged. The composed path is admitted only
+          # when every required class is named per class, current, passing and
+          # bound to this exact commit; a missing, stale or unknown class refuses.
           uv run --no-sync --offline python -m infrastructure.publishing.release_acceptance inputs \
             --run-id "$ACCEPTANCE_RUN_ID" --artifact-id "$ACCEPTANCE_ARTIFACT_ID" \
-            --receipt-sha256 "$ACCEPTANCE_RECEIPT_SHA256" >> "$GITHUB_OUTPUT"
+            --receipt-sha256 "$ACCEPTANCE_RECEIPT_SHA256" \
+            --composed-receipt "$COMPOSED_RECEIPT" >> "$GITHUB_OUTPUT"
 
       - name: Verify hosted required-acceptance provenance
         env:

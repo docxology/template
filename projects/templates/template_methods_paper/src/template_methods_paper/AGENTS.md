@@ -81,15 +81,19 @@ stays import-clean.
 
 ```python
 from template_methods_paper import (
-    all_example_methods, run_all_gates, compile_method,
-    to_worklist_markdown, to_csv_rows, to_mermaid,
+    all_example_methods,
+    run_all_gates,
+    compile_method,
+    to_worklist_markdown,
+    to_csv_rows,
+    to_mermaid,
 )
 
-method = all_example_methods()[0]          # PBSPreparation
-gates = run_all_gates(method)              # 4 GateResult, all must pass
-plan = compile_method(method)              # raises MethodValidationError on a failed gate
-print(plan.plan_hash)                      # stable across repeated compilations
-print(to_worklist_markdown(plan))          # human-readable numbered steps
+method = all_example_methods()[0]  # PBSPreparation
+gates = run_all_gates(method)  # 4 GateResult, all must pass
+plan = compile_method(method)  # raises MethodValidationError on a failed gate
+print(plan.plan_hash)  # stable across repeated compilations
+print(to_worklist_markdown(plan))  # human-readable numbered steps
 ```
 
 ## Testing

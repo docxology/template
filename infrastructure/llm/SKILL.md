@@ -39,10 +39,13 @@ config = OllamaClientConfig(default_model="gemma3:4b", temperature=0.7)
 client = LLMClient(config)
 
 # Generate a response
-response = client.query("Summarize this paper...", options=GenerationOptions(
-    max_tokens=2000,
-    temperature=0.3,
-))
+response = client.query(
+    "Summarize this paper...",
+    options=GenerationOptions(
+        max_tokens=2000,
+        temperature=0.3,
+    ),
+)
 ```
 
 ## Conversation Context (`core/context.py`)
@@ -62,9 +65,12 @@ Pre-built research task templates:
 ```python
 from infrastructure.llm import get_template
 from infrastructure.llm.templates import (
-    ResearchTemplate, PaperSummarization,
-    ManuscriptExecutiveSummary, ManuscriptQualityReview,
-    ManuscriptMethodologyReview, ManuscriptImprovementSuggestions,
+    ResearchTemplate,
+    PaperSummarization,
+    ManuscriptExecutiveSummary,
+    ManuscriptQualityReview,
+    ManuscriptMethodologyReview,
+    ManuscriptImprovementSuggestions,
     ManuscriptTranslationAbstract,
 )
 
@@ -86,8 +92,10 @@ directly.
 from infrastructure.llm import is_off_topic
 from infrastructure.llm.validation import (
     detect_repetition,
-    check_format_compliance, validate_section_completeness,
-    calculate_unique_content_ratio, deduplicate_sections,
+    check_format_compliance,
+    validate_section_completeness,
+    calculate_unique_content_ratio,
+    deduplicate_sections,
 )
 
 # Individual checks
@@ -104,13 +112,19 @@ ratio = calculate_unique_content_ratio(response_text)
 
 ```python
 from infrastructure.llm.review import (
-    create_review_client, select_and_start_ollama_model, warmup_model,
-    extract_manuscript_text, generate_review_with_metrics,
-    generate_llm_executive_summary, generate_improvement_suggestions,
-    generate_translation, save_review_outputs,
+    create_review_client,
+    select_and_start_ollama_model,
+    warmup_model,
+    extract_manuscript_text,
+    generate_review_with_metrics,
+    generate_llm_executive_summary,
+    generate_improvement_suggestions,
+    generate_translation,
+    save_review_outputs,
 )
 from infrastructure.llm.review.generator import (
-    generate_quality_review, generate_methodology_review,
+    generate_quality_review,
+    generate_methodology_review,
 )
 
 # Full review workflow
@@ -123,17 +137,21 @@ quality = generate_quality_review(client, text)
 methodology = generate_methodology_review(client, text)
 suggestions = generate_improvement_suggestions(client, text)
 
-save_review_outputs(output_dir, executive=executive, quality=quality,
-                    methodology=methodology, suggestions=suggestions)
+save_review_outputs(output_dir, executive=executive, quality=quality, methodology=methodology, suggestions=suggestions)
 ```
 
 ## Ollama Utilities (`utils/`)
 
 ```python
 from infrastructure.llm.utils import (
-    is_ollama_running, start_ollama_server, ensure_ollama_ready,
-    get_model_names, select_best_model,
-    select_small_fast_model, preload_model, check_model_loaded,
+    is_ollama_running,
+    start_ollama_server,
+    ensure_ollama_ready,
+    get_model_names,
+    select_best_model,
+    select_small_fast_model,
+    preload_model,
+    check_model_loaded,
 )
 
 # Check and start Ollama

@@ -101,10 +101,7 @@ response = client.query("Explain this concept...")
 analysis = client.query_long("Provide analysis...")
 
 # Structured JSON response
-result = client.query_structured(
-    "Extract key points...",
-    schema={"type": "object", "properties": {...}}
-)
+result = client.query_structured("Extract key points...", schema={"type": "object", "properties": {...}})
 
 # Raw (no system prompt)
 completion = client.query_raw("Complete: The quick brown fox")
@@ -126,15 +123,15 @@ response = client.query(prompt, options=opts)
 
 # Full control
 opts = GenerationOptions(
-    temperature=0.7,      # Sampling control; 0.0 can still vary by runtime/model
-    max_tokens=4096,      # Max output tokens
-    top_p=0.9,            # Nucleus sampling
-    top_k=40,             # Top-k sampling
-    seed=42,              # Sampler seed; not a byte-identity guarantee
-    stop=["END", "STOP"], # Stop sequences
-    format_json=True,     # Force JSON output
-    repeat_penalty=1.1,   # Repetition penalty
-    num_ctx=8192,         # Context window
+    temperature=0.7,  # Sampling control; 0.0 can still vary by runtime/model
+    max_tokens=4096,  # Max output tokens
+    top_p=0.9,  # Nucleus sampling
+    top_k=40,  # Top-k sampling
+    seed=42,  # Sampler seed; not a byte-identity guarantee
+    stop=["END", "STOP"],  # Stop sequences
+    format_json=True,  # Force JSON output
+    repeat_penalty=1.1,  # Repetition penalty
+    num_ctx=8192,  # Context window
 )
 ```
 
@@ -165,7 +162,7 @@ data = validate_json(response)
 
 # Validate response length
 validate_short_response(response)  # max_tokens default 150
-validate_long_response(response)   # min_tokens default 500
+validate_long_response(response)  # min_tokens default 500
 
 # Validate structure against a schema
 validate_structure(data, schema)
@@ -275,9 +272,9 @@ client = LLMClient(config)
 
 # Generation options for reviews
 options = GenerationOptions(
-    temperature=0.3,       # Low temperature for consistency
-    max_tokens=4096,       # Allow long responses
-    seed=42,               # Sampling control; record the full environment
+    temperature=0.3,  # Low temperature for consistency
+    max_tokens=4096,  # Allow long responses
+    seed=42,  # Sampling control; record the full environment
 )
 
 # Use query() directly with detailed templates
@@ -359,7 +356,7 @@ def validate_review_quality(response: str, review_type: str) -> Tuple[bool, List
 
     elif review_type == "quality_review":
         # Check for scoring
-        if not re.search(r'\*\*Score:\s*\d\*\*|Score:\s*\d', response, re.I):
+        if not re.search(r"\*\*Score:\s*\d\*\*|Score:\s*\d", response, re.I):
             issues.append("Missing scoring rubric")
 
     elif review_type == "improvement_suggestions":
@@ -371,16 +368,20 @@ def validate_review_quality(response: str, review_type: str) -> Tuple[bool, List
 
     elif review_type == "translation":
         # Check for English abstract and translation sections
-        has_english = any([
-            "english abstract" in response.lower(),
-            "## english" in response.lower(),
-        ])
-        has_translation = any([
-            "translation" in response.lower(),
-            "chinese" in response.lower(),
-            "hindi" in response.lower(),
-            "russian" in response.lower(),
-        ])
+        has_english = any(
+            [
+                "english abstract" in response.lower(),
+                "## english" in response.lower(),
+            ]
+        )
+        has_translation = any(
+            [
+                "translation" in response.lower(),
+                "chinese" in response.lower(),
+                "hindi" in response.lower(),
+                "russian" in response.lower(),
+            ]
+        )
         if not has_english:
             issues.append("Missing English abstract section")
         if not has_translation:
@@ -450,12 +451,14 @@ Following the project's **No Mocks Policy**, LLM tests use:
 ```python
 import pytest
 
+
 # Pure logic test (no Ollama required)
 def test_config_from_env(clean_llm_env):
     """Test configuration loading."""
     os.environ["OLLAMA_HOST"] = "http://test:11434"
     config = OllamaClientConfig.from_env()
     assert config.base_url == "http://test:11434"
+
 
 # Integration test (requires Ollama)
 @pytest.mark.requires_ollama
@@ -534,13 +537,11 @@ for chunk in client.stream_long("Detailed explanation..."):
 
 ```python
 # Apply a template
-summary = client.apply_template(
-    "summarize_abstract",
-    text=abstract_text
-)
+summary = client.apply_template("summarize_abstract", text=abstract_text)
 
 # List available templates
 from infrastructure.llm.templates import TEMPLATES  # noqa: docs-lint
+
 print(list(TEMPLATES.keys()))
 ```
 
@@ -548,6 +549,7 @@ print(list(TEMPLATES.keys()))
 
 ```python
 from infrastructure.llm.templates import ResearchTemplate
+
 
 class MethodologyReview(ResearchTemplate):
     template_str = """Analyze the methodology of this research:
@@ -559,6 +561,7 @@ Provide your analysis with these sections:
 ## Weaknesses
 ## Suggestions for Improvement
 """
+
 
 # Register and use
 template = MethodologyReview()
@@ -581,10 +584,7 @@ TRANSLATION_LANGUAGES = {
 
 # Generate translation
 template = ManuscriptTranslationAbstract()
-prompt = template.render(
-    text=manuscript_text,
-    target_language=TRANSLATION_LANGUAGES["zh"]
-)
+prompt = template.render(text=manuscript_text, target_language=TRANSLATION_LANGUAGES["zh"])
 response = client.query(prompt, options=options)
 ```
 

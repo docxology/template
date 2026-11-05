@@ -18,11 +18,22 @@ single-use transaction handle.
 
 ```python
 from template_formal.storage import (
-    Database, IsolationLevel, QueryBuilder, StorageError,
-    create_schema, open_database, open_fast_test_database,
-    Column, OBSERVATIONS_TABLE, SQL_IDENTIFIER_PATTERN, SqlType, TableSchema,
+    Database,
+    IsolationLevel,
+    QueryBuilder,
+    StorageError,
+    create_schema,
+    open_database,
+    open_fast_test_database,
+    Column,
+    OBSERVATIONS_TABLE,
+    SQL_IDENTIFIER_PATTERN,
+    SqlType,
+    TableSchema,
     validate_sql_identifier,
-    ConsumedHandleError, TransactionHandle, begin_transaction,
+    ConsumedHandleError,
+    TransactionHandle,
+    begin_transaction,
 )
 ```
 

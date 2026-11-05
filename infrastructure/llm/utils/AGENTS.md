@@ -56,8 +56,10 @@ from infrastructure.llm.utils.ollama import (
 def is_ollama_running(base_url: str = "http://localhost:11434", timeout: float = 2.0) -> bool:
     """Check whether the daemon responds on `/api/tags`."""
 
+
 def start_ollama_server(wait_seconds: float = 3.0, max_retries: int = 2) -> bool:
     """Start `ollama serve` and wait for readiness."""
+
 
 def pull_ollama_model(
     model_name: str,
@@ -67,6 +69,7 @@ def pull_ollama_model(
     run=None,
 ) -> tuple[bool, str | None]:
     """Run ``ollama pull``. Optional ``which`` (like :func:`shutil.which`) and ``run`` (like :func:`subprocess.run`) support tests that use real stub executables instead of patching."""
+
 
 def ensure_ollama_ready(base_url: str = "http://localhost:11434", auto_start: bool = True) -> bool:
     """Ensure the daemon is reachable and at least one model is installed."""
@@ -82,8 +85,10 @@ def get_available_model_info(
 ) -> list[dict[str, Any]]:
     """Return the `/api/tags` payload as model dictionaries."""
 
+
 def get_model_names(base_url: str = "http://localhost:11434") -> list[str]:
     """Return installed model names."""
+
 
 def select_best_model(
     preferences: list[str] | None = None,
@@ -91,8 +96,10 @@ def select_best_model(
 ) -> str | None:
     """Return the first matching model from the preference list."""
 
+
 def select_small_fast_model(base_url: str = "http://localhost:11434") -> str | None:
     """Return a fast model for smoke tests and short iterations."""
+
 
 def get_model_info(
     model_name: str,
@@ -100,12 +107,14 @@ def get_model_info(
 ) -> dict[str, Any] | None:
     """Return metadata for one installed model."""
 
+
 def check_model_loaded(
     model_name: str,
     base_url: str = "http://localhost:11434",
     timeout: float = 2.0,
 ) -> tuple[bool, str | None]:
     """Check whether a model is loaded in Ollama memory."""
+
 
 def preload_model(
     model_name: str,
