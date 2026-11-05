@@ -21,9 +21,15 @@ def test_diagnostic_selection_keeps_native_pr_behavior_and_read_only_credentials
     assert trigger["workflow_dispatch"]["inputs"]["diagnostic_arl_auxiliary"]["default"] is False
     assert trigger["pull_request"]["branches"] == ["main"]
     assert workflow["permissions"] == {"contents": "read"}
-    assert workflow["jobs"]["native-preflight"]["if"] == "inputs.diagnostic_arl_auxiliary != true"
+    assert (
+        workflow["jobs"]["native-preflight"]["if"]
+        == "inputs.diagnostic_arl_auxiliary != true && inputs.diagnostic_arl_readback != true"
+    )
     job = workflow["jobs"]["arl-auxiliary-diagnostic"]
-    assert job["if"] == "github.event_name == 'workflow_dispatch' && inputs.diagnostic_arl_auxiliary == true"
+    assert (
+        job["if"]
+        == "github.event_name == 'workflow_dispatch' && inputs.diagnostic_arl_auxiliary == true && inputs.diagnostic_arl_readback != true"
+    )
     assert job.get("permissions", workflow["permissions"]) == {"contents": "read"}
     checkout = next(step for step in job["steps"] if step.get("uses", "").startswith("actions/checkout@"))
     assert checkout["with"]["persist-credentials"] is False
@@ -116,3 +122,66 @@ def test_auxiliary_carriers_preserve_hidden_pipeline_originals_in_the_exact_expo
     assert export["if"] == "always()"
     assert "infrastructure.core.testing.ci_execution_user export" in export["run"]
     assert steps.index(export) < steps.index(upload)
+
+
+def test_downloaded_original_mode_is_exclusive_same_sha_and_read_only() -> None:
+    workflow = _workflow("platform-native-preflight.yml")
+    trigger = workflow.get("on", workflow.get(True))
+    inputs = trigger["workflow_dispatch"]["inputs"]
+    assert inputs["diagnostic_arl_readback"]["default"] is False
+    for key in ("arl_original_run_id", "arl_original_run_attempt", "arl_original_source_sha"):
+        assert inputs[key]["type"] == "string" and inputs[key]["default"] == ""
+    assert len(inputs) == 5
+    job = workflow["jobs"]["arl-transport-readback"]
+    assert job["if"] == "github.event_name == 'workflow_dispatch' && inputs.diagnostic_arl_readback == true"
+    assert job["permissions"] == {"contents": "read", "actions": "read"}
+    steps = job["steps"]
+    named = {step["name"]: step for step in steps if "name" in step}
+    admission = named["Admit the exclusive same-SHA readback request"]
+    assert shlex.split(admission["run"]) == [
+        "python3",
+        "-S",
+        "infrastructure/project/public_acceptance_literature_readback.py",
+        "admit",
+    ]
+    assert steps.index(admission) < next(
+        index for index, step in enumerate(steps) if step.get("uses") == "./.github/actions/setup-acceptance-fixtures"
+    )
+    uses = {step.get("uses", "") for step in steps}
+    for action in ("setup-acceptance-fixtures", "setup-python-env", "setup-meta-provider"):
+        assert "./.github/actions/" + action in uses
+    assert not any("setup-acceptance-model" in action for action in uses)
+    assert not any("setup-acceptance-documents" in action for action in uses)
+    run = named["Authenticate and read the downloaded original"]
+    assert run["env"] == {"GH_TOKEN": "${{ github.token }}"}
+    assert shlex.split(run["run"]) == [
+        ".venv/bin/python",
+        "-I",
+        "-B",
+        "-m",
+        "infrastructure.project.public_acceptance_literature_readback",
+        "read",
+    ]
+    assert run.get("continue-on-error", False) is False
+    checkout = next(step for step in steps if step.get("uses", "").startswith("actions/checkout@"))
+    assert "ref" not in checkout["with"]
+    assert checkout["with"]["persist-credentials"] is False
+    upload = named["Retain the downloaded-original reader"]
+    assert upload["if"] == "always()" and upload["with"]["include-hidden-files"] is True
+    assert upload["with"]["path"] == (
+        "output/readiness/arl-transport-readback/${{ github.run_id }}-${{ github.run_attempt }}/"
+    )
+    assert upload["with"]["if-no-files-found"] == "error"
+    commands = "\n".join(step.get("run", "") for step in steps)
+    assert "public_acceptance_auxiliary_cli" not in commands
+    assert "original_job_outcome" not in commands and "git push" not in commands
+
+
+def test_downloaded_consumer_authenticates_the_actual_producer_step_names() -> None:
+    from infrastructure.project.public_acceptance_literature_readback import _REQUIRED_STEPS
+
+    job = _workflow("platform-native-preflight.yml")["jobs"]["arl-auxiliary-diagnostic"]
+    names = [step.get("name") for step in job["steps"]]
+    positions = [names.index(name) for name in _REQUIRED_STEPS]
+    assert positions == sorted(positions)
+    assert job["name"] == "ARL auxiliary diagnostic"

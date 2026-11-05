@@ -36,6 +36,16 @@ binding, follows exactly one admitted original edge, and reopens every retained
 original/consumed/model file. Failed attempts remain refused; no projection
 retries providers or reuses evidence across invocations.
 
+
+The public_acceptance_literature_readback.py diagnostic authenticates an already
+completed ARL producer through fixed same-repository GitHub APIs. Workflow,
+producer and reader must share the exact immutable SHA. It imports the actual
+downloaded ZIP into a new read-only original directory, uses the existing
+complete artifact closure, then executes the full original group reader with
+its fresh 300-second clock. Missing bytes, unsuccessful/mixed attempts, expired
+artifacts and changed Source refuse; no providers/models or held matrix
+originals are created. Its retained report grants no aggregate/release claim.
+
 Literature auxiliary adapters use `public_acceptance_literature_diagnostics.py`
 to export every producer original before status admission. Keep failed/blocked
 receipts and request/response/execution bytes under the cell's ordinary artifact,

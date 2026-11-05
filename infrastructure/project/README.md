@@ -484,3 +484,12 @@ Progress lines identify preparation and launch; all forwarded text is
 diagnostic only. It cannot replace original process or completion receipts.
 
 The Source-only Active refresh observer lives in active_pipeline_diagnostics.py. It reads the actual project's literal REQUIRED_OUTPUTS registry without importing domain code, records confined phase hashes and bounded raw generated JSON/compiled sections, and invokes genuine project validators under the nominated interpreter with physical-source checks. Missing, malformed, oversized, linked, and foreign-source observations remain unavailable; diagnostic records grant no acceptance. Run it as python -m infrastructure.project.active_pipeline_diagnostics with the selected project src and current Root on PYTHONPATH.
+
+The public_acceptance_literature_readback.py selected-cell diagnostic consumes
+one completed same-SHA ARL workflow artifact through fixed authenticated read
+APIs. It preserves the downloaded ZIP and exact run/job/artifact observations,
+refuses occupied or incomplete originals, and runs the full independent reader
+on a new read-only import. Select diagnostic_arl_readback in the registered
+native-preflight workflow and supply the producer run, attempt and exact SHA;
+keep that branch frozen through both dispatches. It starts no provider/model
+work and does not authorize aggregate acceptance or release.
