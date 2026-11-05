@@ -30,6 +30,7 @@ from infrastructure.reporting.evidence_class import (
     ClassUnavailable,
     class_binding,
     stage_digest,
+    unavailable_cause,
     uninitialized_submodules,
 )
 from infrastructure.reporting.readiness_receipts import source_fingerprint
@@ -39,10 +40,32 @@ from infrastructure.reporting.release_readiness_snapshot import SnapshotReader
 REPO_ROOT = Path(__file__).resolve().parents[3]
 
 
+def _require_stage_closure() -> str:
+    """Return the stage closure these controls measure, or skip with the reason.
+
+    These controls measure how a change moves the class digests of the real
+    tree, which requires a substantiable stage closure. On a checkout that
+    declares ``kmyth`` without initializing it, the closure is unavailable by
+    design and every scope-owned class refuses admission, so there is nothing
+    to measure. Initializing the submodule is the correct fix for a lane that
+    runs these; skipping here keeps a partial checkout from reporting a false
+    failure without hiding the class-binding controls, which assert the
+    refusal directly and need no closure.
+    """
+    resolved = stage_digest(REPO_ROOT)
+    if resolved is None:
+        pytest.skip(
+            "the stage closure is unavailable in this checkout"
+            f" ({unavailable_cause(REPO_ROOT)}); run"
+            " `git submodule update --init infrastructure/steganography/kmyth`"
+        )
+    return resolved
+
+
 def _bindings() -> dict[str, tuple[str, tuple[str, ...]]]:
     """Return every required gate's class digest at the current tree."""
     fingerprint = source_fingerprint(REPO_ROOT)
-    stage = stage_digest(REPO_ROOT)
+    stage = _require_stage_closure()
     requirements, faults = required_profile(REPO_ROOT, SnapshotReader(REPO_ROOT), fingerprint)
     assert not faults, f"the source-owned profile must compile without faults: {faults}"
     assert requirements, "the source-owned profile must declare required gates"
@@ -167,6 +190,7 @@ def test_stage_digest_is_not_cached_across_observations() -> None:
     A cached stage digest would accept stale evidence after a tree change, which
     is the exact failure this paradigm exists to prevent.
     """
+    _require_stage_closure()
     before = stage_digest(REPO_ROOT)
     with _mutated("infrastructure/reporting/readiness_receipts.py", "\n# cache probe\n"):
         during = stage_digest(REPO_ROOT)
@@ -224,6 +248,35 @@ def test_unavailable_class_refuses_admission_at_the_gate() -> None:
             with pytest.raises(ClassUnavailable) as refusal:
                 _check_class_binding(requirement, payload, root, "f" * 64, **extra)
             assert "submodule not checked out" in str(refusal.value), label
+
+
+def test_scope_owned_class_never_returns_the_universal_fingerprint() -> None:
+    """The property: unavailability refuses, it never widens.
+
+    This is stated directly rather than inferred from the member set, because
+    widening to ``repository_fingerprint`` is the specific regression that made
+    every scope-owned class inert on every submodule-less checkout. A scope-owned
+    kind must either produce its own three-member closure or raise; it must never
+    return the universal digest under any checkout shape.
+    """
+    scope_owned = SimpleNamespace(
+        id="templates/probe:runtime",
+        kind="runtime",
+        scope="templates/probe",
+        source_identity="a" * 64,
+        deliverables_identity="b" * 64,
+    )
+    universal = ("repository_fingerprint",)
+    with _submodule_less() as root:
+        assert stage_digest(root) is None
+        for extra in ({}, {"stage": None}):
+            with pytest.raises(ClassUnavailable):
+                class_binding(scope_owned, root, repository_fingerprint="f" * 64, **extra)
+    # And in a complete tree it must produce its own closure, not the universal one.
+    _require_stage_closure()
+    binding = class_binding(scope_owned, REPO_ROOT, repository_fingerprint="f" * 64)
+    assert binding.members == ("source_identity", "deliverables_identity", "stage")
+    assert binding.members != universal
 
 
 def test_scope_owned_binding_names_its_members() -> None:

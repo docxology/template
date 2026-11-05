@@ -31,7 +31,12 @@ from infrastructure.publishing.composed_receipt import (
     validate_composed_receipt,
 )
 from infrastructure.publishing.release_acceptance import MissingAcceptanceHandoff, validate_handoff_inputs
-from infrastructure.reporting.evidence_class import class_binding, hosted_required, stage_digest
+from infrastructure.reporting.evidence_class import (
+    class_binding,
+    hosted_required,
+    stage_digest,
+    unavailable_cause,
+)
 from infrastructure.reporting.readiness_receipts import source_fingerprint
 from infrastructure.reporting.release_readiness_profile import required_profile
 from infrastructure.reporting.release_readiness_snapshot import SnapshotReader
@@ -57,6 +62,17 @@ def _profile() -> tuple[list[Any], str, str | None]:
     """
     fingerprint = source_fingerprint(REPO_ROOT)
     stage = stage_digest(REPO_ROOT)
+    if stage is None:
+        # These controls build a fully-populated composed receipt, which binds a
+        # scope-owned class and therefore needs a substantiable stage closure.
+        # A checkout that declares `kmyth` without initializing it refuses
+        # admission by design, so there is no receipt to compose. That refusal
+        # is pinned in the reporting controls, which need no closure.
+        pytest.skip(
+            "the stage closure is unavailable in this checkout"
+            f" ({unavailable_cause(REPO_ROOT)}); run"
+            " `git submodule update --init infrastructure/steganography/kmyth`"
+        )
     requirements, faults = required_profile(REPO_ROOT, SnapshotReader(REPO_ROOT), fingerprint)
     assert not faults, faults
     return list(requirements), fingerprint, stage

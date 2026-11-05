@@ -20,7 +20,7 @@ from pathlib import Path
 
 import pytest
 
-from infrastructure.reporting.evidence_class import class_binding
+from infrastructure.reporting.evidence_class import class_binding, stage_digest, unavailable_cause
 from infrastructure.reporting.readiness_receipts import source_fingerprint
 from infrastructure.reporting.release_readiness_profile import (
     Requirement,
@@ -32,8 +32,27 @@ from infrastructure.reporting.release_readiness_snapshot import SnapshotReader
 REPO_ROOT = Path(__file__).resolve().parents[3]
 
 
+def _require_stage_closure() -> None:
+    """Skip when this checkout has no substantiable stage closure.
+
+    Every control here admits or refuses a *scope-owned* gate, so it needs a
+    real class binding. On a checkout that declares ``kmyth`` without
+    initializing it the closure is unavailable by design and admission refuses
+    with a named cause instead of widening, so there is nothing to admit. The
+    refusal itself is pinned in ``test_evidence_class_composition.py``, which
+    needs no closure.
+    """
+    if stage_digest(REPO_ROOT) is None:
+        pytest.skip(
+            "the stage closure is unavailable in this checkout"
+            f" ({unavailable_cause(REPO_ROOT)}); run"
+            " `git submodule update --init infrastructure/steganography/kmyth`"
+        )
+
+
 def _scope_owned_requirement() -> Requirement:
     """Return one real scope-owned requirement compiled from current Source."""
+    _require_stage_closure()
     fingerprint = source_fingerprint(REPO_ROOT)
     requirements, faults = required_profile(REPO_ROOT, SnapshotReader(REPO_ROOT), fingerprint)
     assert not faults, faults
