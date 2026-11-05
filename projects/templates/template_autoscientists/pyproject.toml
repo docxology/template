@@ -45,6 +45,15 @@ python_functions = ["test_*"]
 addopts = "-v --tb=short --strict-markers -m 'not requires_ollama'"
 markers = [
     "requires_ollama: actual selected installed local model acceptance; missing capability fails",
+    "requires_docker: requires an explicitly prepared Docker daemon; excluded by default",
+    "network: requires explicitly enabled live network access; provider eligibility and credentials must be verified before execution",
+    "slow: mark test as slow running",
+    "bench: performance benchmark tests",
+    "benchmark: opt-in benchmark tests, including pytest-benchmark settings",
+    "performance: opt-in performance suite alias; excluded by default",
+    "long_running: heavy end-to-end test families; excluded by quick and release profiles",
+    "private_project: tests for private sidecar project tooling",
+    "external_fixture: tests requiring downloaded external fixture trees",
 ]
 
 [tool.coverage.run]
