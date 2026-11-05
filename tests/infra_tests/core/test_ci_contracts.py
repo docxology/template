@@ -352,3 +352,76 @@ def test_native_union_gate_names_an_undeclared_cell(tmp_path: Path) -> None:
     observed = _run_native_union_gate(tmp_path, artifacts, "template_code_project template_sia")
     assert observed.returncode != 0
     assert "unexpected native cell artifacts for: template_formal" in observed.stdout
+
+
+READINESS_ACTION = ROOT / ".github/actions/setup-native-installed-readiness/action.yml"
+ACCEPTANCE_WORKFLOW = ROOT / ".github/workflows/platform-required-acceptance.yml"
+
+
+def test_readiness_action_creates_its_interpreter_before_deriving_cache_scopes() -> None:
+    """A scope report must not outrun the `uv sync` that creates `.venv`.
+
+    Negative control for hosted run 41952164694: every one of the 25 native cells
+    died in 41-94 seconds with
+
+      line 5: .venv/bin/python: No such file or directory
+      ##[error]Process completed with exit code 127
+
+    because a workflow step resolved the offline cache scopes before
+    `setup-native-installed-readiness` had run its `uv sync`. No CI job exercises
+    this workflow's steps, so `CI Gate` stayed green and the regression reached a
+    dispatch.
+
+    The action now derives the scopes itself, after that `uv sync`. This pins the
+    order, because the failure mode is invisible to every other gate.
+    """
+    steps = yaml.safe_load(READINESS_ACTION.read_text(encoding="utf-8"))["runs"]["steps"]
+    sync = next(
+        (index for index, step in enumerate(steps) if "uv sync --locked" in (step.get("run") or "")),
+        None,
+    )
+    derive = next((index for index, step in enumerate(steps) if step.get("id") == "cache-scopes"), None)
+    assert sync is not None, "the readiness action must still create the project environment"
+    assert derive is not None, "the readiness action must derive its own offline cache scopes"
+    assert sync < derive, (
+        "the cache-scope derivation runs before `uv sync` creates `.venv`; "
+        "every cell would fail with exit 127 before any native work"
+    )
+    assert ".venv/bin/python" in (steps[derive].get("run") or "")
+
+
+def test_acceptance_workflow_never_calls_python_before_the_readiness_action() -> None:
+    """The workflow must not repeat the ordering mistake outside the action.
+
+    A workflow step that runs `.venv/bin/python` before
+    `setup-native-installed-readiness` cannot work: nothing has created `.venv` at
+    that point. The cell lane passes `matrix-cell` and lets the action derive the
+    scopes; the roster lanes omit it and receive the full roster.
+    """
+    workflow = yaml.safe_load(ACCEPTANCE_WORKFLOW.read_text(encoding="utf-8"))
+    for job_name, job in workflow["jobs"].items():
+        steps = job.get("steps") or []
+        readiness = next(
+            (
+                index
+                for index, step in enumerate(steps)
+                if str(step.get("uses", "")).endswith("setup-native-installed-readiness")
+            ),
+            None,
+        )
+        if readiness is None:
+            continue
+        for index, step in enumerate(steps):
+            body = step.get("run") or ""
+            if ".venv/bin/python" not in body:
+                continue
+            assert index > readiness, (
+                f"{job_name}: a step running `.venv/bin/python` precedes "
+                "setup-native-installed-readiness, which is what creates it"
+            )
+    # The cell lane must hand the action the cell, not a pre-resolved scope list.
+    cell_job = workflow["jobs"]["native-original-cell"]
+    readiness_step = next(
+        step for step in cell_job["steps"] if str(step.get("uses", "")).endswith("setup-native-installed-readiness")
+    )
+    assert readiness_step["with"]["matrix-cell"] == "${{ matrix.cell }}"
