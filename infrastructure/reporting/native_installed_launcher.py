@@ -105,8 +105,45 @@ def _signed_failure(result: dict[str, object]) -> int:
     return 75
 
 
+def _print_preparation_scopes(argv: list[str]) -> int:
+    """Report the project scopes this invocation would prepare; acquire nothing.
+
+    Offline cache warming happens before custody, so it must be able to ask what
+    the preparation loop will install without creating a mirror, a scratch
+    destination or any evidence. Taking the selection from here keeps one
+    predicate: Root alone pins different versions of four packages, so a cell
+    whose own lock diverges cannot install offline from a Root-only warm.
+    """
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--mode", required=True, choices=("original", "reader", "handoff", "preflight"))
+    parser.add_argument("--source-root", required=True, type=Path)
+    parser.add_argument("--matrix-cell", help="run one declared public exemplar as a sharded matrix cell")
+    parser.add_argument("--print-preparation-scopes", action="store_true", required=True)
+    # Ignore the launch nominations this report does not consume, so the workflow
+    # can pass the same argument vocabulary as the real invocation.
+    args, _unknown = parser.parse_known_args(argv)
+    if args.matrix_cell is not None and args.mode not in {"original", "reader"}:
+        parser.error("native matrix cell scoping applies only to the original and reader roles")
+    if args.matrix_cell is not None:
+        try:
+            native_cell_scope(args.matrix_cell)
+        except ValueError as error:
+            parser.error(str(error))
+    for scope in native_preparation_scopes(args.mode, args.source_root.resolve(strict=True), cell=args.matrix_cell):
+        print(scope)
+    return 0
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
+    # Warming runs before custody, so the scope report is deliberately a separate
+    # parser: it needs neither a mirror, a scratch destination nor any nomination,
+    # and it must not acquire either. Offline cache warming asks this instead of
+    # re-deriving the preparation selection in shell.
+    if argv is None:
+        argv = sys.argv[1:]
+    if "--print-preparation-scopes" in argv:
+        return _print_preparation_scopes(argv)
     parser.add_argument("--mode", required=True, choices=("original", "reader", "handoff", "preflight"))
     parser.add_argument("--source-root", required=True, type=Path)
     parser.add_argument("--source-commit", required=True)
@@ -135,6 +172,16 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--stage-bundle", action="store_true")
     parser.add_argument("--acceptance-artifact-id", type=int)
     parser.add_argument("--acceptance-receipt-sha256")
+    parser.add_argument(
+        "--print-preparation-scopes",
+        action="store_true",
+        help=(
+            "Print the project scopes this invocation would prepare (one per line) "
+            "and exit without launching. Offline cache warming needs the same "
+            "selection the preparation loop uses, so ask here instead of "
+            "re-deriving it in shell."
+        ),
+    )
     args = parser.parse_args(argv)
     started = time.monotonic()
     if not 0 < args.timeout <= 14400:
@@ -151,7 +198,13 @@ def main(argv: list[str] | None = None) -> int:
             cell_scope = native_cell_scope(args.matrix_cell)
         except ValueError as error:
             parser.error(str(error))
+    if args.print_preparation_scopes:
+        # Retained for parity with the workflow flag; main() answers this before
+        # any required nomination is parsed, so this branch is unreachable in the
+        # CLI but keeps direct main() callers honest.
+        return _print_preparation_scopes(argv if argv is not None else sys.argv[1:])
     deadline = started + args.timeout
+
     # The inner owner must return and retain its receipts inside the outer
     # watcher's clock; an identical nested deadline lets the outer watcher kill
     # it before worker process/cleanup/guardian evidence is written.

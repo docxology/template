@@ -239,6 +239,114 @@ def test_only_one_exemplar_declares_a_sibling_local_dependency() -> None:
     assert dependent == ["template_advanced_literature_review"]
 
 
+def test_offline_cache_scope_report_matches_prepared_scopes() -> None:
+    """Cache warming must ask this CLI, not re-derive the selection in shell.
+
+    Negative control for hosted run 41940842593 (job 126961680266): the cell
+    `template_autoresearch_project` warmed only the Root lock and then failed
+    offline at fixture setup with `Failed to download packaging==26.2`, because
+    the Root lock pins `packaging==26.3`. The report must name exactly the scopes
+    the preparation loop installs, so warming cannot drift from preparation.
+    """
+    observed = subprocess.run(
+        (
+            sys.executable,
+            "-m",
+            MODULE,
+            "--mode",
+            "original",
+            "--matrix-cell",
+            "template_autoresearch_project",
+            "--source-root",
+            str(ROOT),
+            "--print-preparation-scopes",
+        ),
+        capture_output=True,
+        text=True,
+        timeout=120,
+        check=True,
+        cwd=ROOT,
+    )
+    assert observed.stdout.split() == list(
+        native_preparation_scopes("original", ROOT, cell="template_autoresearch_project")
+    )
+
+
+def test_offline_cache_scope_report_covers_every_roster_lock() -> None:
+    """The roster-wide lane prepares all 25 exemplars and must warm all 25 locks."""
+    observed = subprocess.run(
+        (
+            sys.executable,
+            "-m",
+            MODULE,
+            "--mode",
+            "original",
+            "--source-root",
+            str(ROOT),
+            "--print-preparation-scopes",
+        ),
+        capture_output=True,
+        text=True,
+        timeout=120,
+        check=True,
+        cwd=ROOT,
+    )
+    assert tuple(observed.stdout.split()) == PUBLIC_PROJECT_NAMES
+
+
+def test_offline_cache_scope_report_refuses_an_undeclared_cell() -> None:
+    """A typo must fail loudly; warming nothing silently reintroduces the defect."""
+    observed = subprocess.run(
+        (
+            sys.executable,
+            "-m",
+            MODULE,
+            "--mode",
+            "original",
+            "--matrix-cell",
+            "template_not_declared",
+            "--source-root",
+            str(ROOT),
+            "--print-preparation-scopes",
+        ),
+        capture_output=True,
+        text=True,
+        timeout=120,
+        cwd=ROOT,
+    )
+    assert observed.returncode != 0
+    assert "matrix cell must name one declared public exemplar" in observed.stderr
+
+
+def test_offline_cache_scope_report_creates_no_custody_destination(tmp_path: Path) -> None:
+    """Warming runs before custody, so the report must not make a mirror or scratch."""
+    mirror = tmp_path / "mirror"
+    scratch = tmp_path / "scratch"
+    subprocess.run(
+        (
+            sys.executable,
+            "-m",
+            MODULE,
+            "--mode",
+            "original",
+            "--source-root",
+            str(ROOT),
+            "--print-preparation-scopes",
+            "--current-root",
+            str(mirror),
+            "--scratch",
+            str(scratch),
+        ),
+        capture_output=True,
+        text=True,
+        timeout=120,
+        check=True,
+        cwd=ROOT,
+    )
+    assert not mirror.exists()
+    assert not scratch.exists()
+
+
 def test_native_preparation_scopes_refuses_a_cell_outside_the_original_and_reader_roles() -> None:
     with pytest.raises(ValueError, match="only to the original and reader roles"):
         native_preparation_scopes("handoff", Path("unused-source"), cell="template_code_project")

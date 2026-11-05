@@ -564,7 +564,22 @@ jobs:
       - uses: ./.github/actions/setup-python-env
         with:
           python-version: "3.14.4"
+      - name: Resolve the exact offline cache scopes for the whole roster
+        id: cache-scopes
+        # The roster-wide lane prepares every public exemplar and installs each
+        # one's own lock, so a Root-only warm cannot serve it either. Ask the
+        # launcher for the selection instead of reaching for PUBLIC_PROJECT_NAMES.
+        run: |
+          set -euo pipefail
+          scopes=$(.venv/bin/python -m infrastructure.reporting.native_installed_launcher \
+            --mode original \
+            --source-root "$GITHUB_WORKSPACE" \
+            --print-preparation-scopes | paste -sd' ' -)
+          echo "project-scopes=$scopes" >> "$GITHUB_OUTPUT"
+          echo "offline cache scopes: root plus $(echo "$scopes" | wc -w) projects"
       - uses: ./.github/actions/setup-native-installed-readiness
+        with:
+          project-scopes: ${{ steps.cache-scopes.outputs.project-scopes }}
       - name: Strict rendered publication evidence gate
         # The native worker refuses on this same strict rendered predicate before
         # any stage executes, so run it first: a stale receipt fails in seconds
@@ -689,7 +704,24 @@ jobs:
       - uses: ./.github/actions/setup-python-env
         with:
           python-version: "3.14.4"
+      - name: Resolve the exact offline cache scopes for this cell
+        id: cache-scopes
+        # The cache action warms one lock per scope, and the preparation loop
+        # prepares the cell plus its local dependency closure. Ask the launcher
+        # for that same selection rather than concatenating a path here: Root
+        # alone pins different versions of four packages, so a diverging cell
+        # cannot install offline (run 41940842593, job 126961680266).
+        run: |
+          set -euo pipefail
+          scopes=$(.venv/bin/python -m infrastructure.reporting.native_installed_launcher \
+            --mode original --matrix-cell "${{ matrix.cell }}" \
+            --source-root "$GITHUB_WORKSPACE" \
+            --print-preparation-scopes | paste -sd' ' -)
+          echo "project-scopes=$scopes" >> "$GITHUB_OUTPUT"
+          echo "offline cache scopes: root $scopes"
       - uses: ./.github/actions/setup-native-installed-readiness
+        with:
+          project-scopes: ${{ steps.cache-scopes.outputs.project-scopes }}
       - name: Keep the declared capacity before native allocation
         run: |
           set -euo pipefail
