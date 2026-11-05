@@ -55,12 +55,13 @@ flowchart LR
     W --> REL[release.yml<br/>Create GitHub Releases on version tags]
     W --> REQUIRED[platform-required-acceptance.yml<br/>Original observations + strict candidate collector]
     W --> DA[dependabot-automerge.yml<br/>Auto-merge safe Dependabot PRs]
+    W --> RB[rebind.yml<br/>Post-merge receipt rebind on main]
 
     classDef d fill:#0f172a,stroke:#0f172a,color:#fff
     classDef code fill:#1e3a8a,stroke:#0f172a,color:#fff
     classDef doc fill:#0f766e,stroke:#0f172a,color:#fff
     class W d
-    class FAST,CI,STALE,REL,REQUIRED code
+    class FAST,CI,STALE,REL,REQUIRED,RB code
     class META doc
 ```
 
@@ -354,6 +355,40 @@ Triggers on `pull_request_target` (opened, reopened, synchronize, ready_for_revi
 2. `merge` squash-merges the PR after a successful `CI` run for its current head commit, requiring an open non-draft PR into `main`, a CLEAN merge state, and the same head SHA (`--match-head-commit` makes that binding atomic)
 3. Never checks out or executes PR HEAD code — only reads metadata and calls the GitHub API — so the elevated triggers do not expose secrets to untrusted code
 4. GitHub's native auto-merge is not used: `allow_auto_merge` is `false` on this repository, so `gh pr merge --auto` failed with `Auto merge is not allowed for this repository (enablePullRequestAutoMerge)` (run 40627322822). Ineligible or still-blocked PRs are recorded as skips, not failures
+
+---
+
+## Rebind Workflow (`rebind.yml`)
+
+Dispatch-only for now (`workflow_dispatch`, `dry_run` default `true`). It exists
+because a rendered-provenance receipt binds the tracked implementation under
+`infrastructure/` and `scripts/` plus its exemplar's source and config closure: a
+merged lock bump or infrastructure edit invalidates all 25 receipts without
+moving a rendered byte, so a tree verified green at the pull-request head is red
+on `main` after the merge.
+
+1. `actions/checkout` initializes the `kmyth` submodule before any measurement. The stage fingerprint of every receipt contains 125 records under `infrastructure/steganography/kmyth`, so a rebind measured without the submodule stamps a digest that CI rejects later
+2. The decision step mirrors `infrastructure/validation/rendered_snapshot/_records.py`: root `.gitignore`/`.python-version`/`pyproject.toml`/`uv.lock`, every tracked path under `infrastructure/` and `scripts/`, and every tracked exemplar path except `output/` and the snapshot-excluded documentation names. For a pushed range everything else skips, and both the log and the run summary state the reason — there is no `paths:` filter, so a skip is always reported rather than silent. A manual dispatch always acts and reports what the tip touched
+3. It refuses to rebind anything but the tip of `origin/main`, and pins `SOURCE_DATE_EPOCH` to the committer timestamp of the commit being rebound, never the runner's clock
+4. The rebind is the last step that writes: `refresh_rendered_provenance.py --all-public --rebind --jobs 4` restamps receipts without re-rendering
+5. Both gates then run on the **committed** tree, with a clean index: `scripts/audit/check_publication_outputs.py --all-public --strict --jobs 4` must report `blocking=0, review_required=0`, and `publication-audit --all-public --strict --rendered` must pass. Nothing has been pushed at that point, and a failure fails the job; there is no retry and no override
+6. The commit is confined to `projects/templates/*/output/reports/*.json`, so the rebind's own push matches no trigger path — structural termination, no `[skip ci]`. Anything else is refused, not committed
+7. The push (only when `dry_run` is false) refuses a verification that did not succeed and refuses when `main` advanced during the rebind — no force push, no retry
+8. The always-run summary prints the trigger and dry-run state, the rebind target tree, any rebind commit and its tree, the `kmyth` submodule SHA, the decision with its reason, and each step outcome
+9. A tolerant informational step prints the measured `stage` and `config` digests beside the ones the receipt records, for `templates/template_code_project`: a green gate cannot show which digest the receipts were stamped with, so a checkout shape that differs from a developer's would otherwise surface as a later rejection by everyone else instead of in the run itself
+
+**Why dispatch-only.** `main` requires the `CI Gate` check with
+`enforce_admins: true` and no bypass actors, and required status checks must have
+a successful, skipped or neutral status before any change reaches a protected
+branch; a commit created inside the runner has no status yet, so a direct push of
+it is refused no matter how thoroughly the job has verified it. The automatic
+trigger lands only once the owner provisions a credential that may bypass the
+check — a branch-protection bypass for the pushing identity, or a fine-grained
+token in a secret — by adding `push: branches: [main]` to the `on:` block; the
+pushed-range classification is already written and tested for that trigger. Until
+then a rebind is a dispatch, and an exact-SHA `CI Gate` for a rebind commit comes
+from dispatching `ci.yml` for it, because a push made with the repository's own
+`GITHUB_TOKEN` starts no new workflow run.
 
 ---
 

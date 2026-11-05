@@ -247,7 +247,7 @@
         "valid": true,
         "warnings": []
       },
-      "total_size_mb": 7.911953926086426
+      "total_size_mb": 7.91330623626709
     },
     "figures": {
       "files": 10,
@@ -282,7 +282,7 @@
         },
         "reports": {
           "files": 4,
-          "size_bytes": 7533
+          "size_bytes": 8951
         },
         "root": {
           "files": 1,
@@ -299,7 +299,7 @@
       },
       "mode": "stable-shippable-output-v1",
       "total_files": 60,
-      "total_size_bytes": 8296285
+      "total_size_bytes": 8297703
     }
   },
   "recommendations": [],
@@ -310,11 +310,11 @@
     "passed": 9,
     "total_checks": 9
   },
-  "timestamp": "2026-11-04T15:19:41Z",
+  "timestamp": "2026-11-04T23:39:23Z",
   "validated_inputs": {
     "artifact_manifest": {
       "path": "output/reports/artifact_manifest.json",
-      "sha256": "6fc209cc6afb60d64ea52ab383e2005d049d0f998fd504272cb867454dfb8646",
+      "sha256": "71c0771152b7e6f1ace74da41c77bfb11600598497af8ce809117d7b89b0ef11",
       "size_bytes": 19627
     },
     "combined_manuscript": {
@@ -380,19 +380,19 @@
     "fingerprints": {
       "config": {
         "file_count": 15,
-        "sha256": "340799e6199e0ff594c395bce0916cd6d6b619a178bac8f3faf700ccc3e4acc1"
+        "sha256": "881cfa7268a2a25827506fb14d9105c8de6dd5e60bfeb84bafe7fc8a8d43a4e6"
       },
       "output": {
         "file_count": 60,
-        "sha256": "74bf912788edd4fd51c40d6206c71914c38179798863a12cb7aa31b9411f46b6"
+        "sha256": "fb31010d4c4b129ec2ef8c59846dee998a32e9ebb04bbfaed3e93b36da345e49"
       },
       "source": {
         "file_count": 51,
         "sha256": "ef590270c743c586ba3acab9ea34212360abbacf03ed71d48887f1938968f7b0"
       },
       "stage": {
-        "file_count": 1724,
-        "sha256": "a134849d6b09bc65e8bbe94175469c29d41b71d50366ba837d3dbb7d0a0f6c96"
+        "file_count": 1726,
+        "sha256": "78f433b909dc8f296b91f6f671b9f57dc0d460756267e1b2488b09d1bb4d6428"
       }
     },
     "project": "templates/template_pools_rules_tools",

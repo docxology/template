@@ -51,6 +51,10 @@ entry and full-guard completion are separate from its DATA/observation body.
 
 ## Overview
 
+Acceptance evidence helpers keep scope selection separate from proof. `evidence_class.py` composes a scope-owned class from its existing source, deliverable and shared stage digests; missing stage custody raises `ClassUnavailable`. Repository-spanning and unrecognized kinds retain the full repository fingerprint, and artifacts without a class binding continue through the existing legacy comparison. The classification does not establish successful execution or publication.
+
+`native_cell_selection.py` names the primary index and shard prefix for one declared native cell without changing index filenames or shard members. `cell_selection` checks local admissibility only. The joined `union_selection` is the sole completeness assertion: every declared public scope appears exactly once, with nothing missing, duplicated or extra.
+
 The reporting module provides reporting capabilities for pipeline execution, including:
 
 - Consolidated pipeline reports (JSON, HTML, Markdown)

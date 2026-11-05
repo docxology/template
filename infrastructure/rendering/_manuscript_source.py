@@ -24,6 +24,13 @@ logger = get_logger(__name__)
 
 _ACCESSIBLE_BEAMER_OVERFLOW_CODE = "slides.density.beamer-overflow"
 
+# Separate, finite allowance for source/runtime admission and content
+# fingerprinting performed by `launch_analysis_script` before the hydration
+# child exists. Measured at 57.9 s on a hosted runner (run 41887373712) and a few
+# seconds locally. Keeping it out of the work budget means admission can never
+# eat the child's time; keeping it finite keeps the whole call bounded.
+HYDRATION_ADMISSION_ALLOWANCE_SECONDS = 300.0
+
 
 def _is_provisional_pre_aux_slide_overflow(manager: RenderManager, error: TemplateError) -> bool:
     """Return whether the canonical post-AUX slide refresh owns this failure.
@@ -204,13 +211,12 @@ def run_manuscript_variable_script(
     if not os.path.lexists(script):
         return 0
 
-    started = time.monotonic()
     root = template_repo_root or Path(__file__).absolute().parents[2]
     env = os.environ.copy()
     if template_repo_root is not None:
         env["TEMPLATE_REPO_ROOT"] = str(template_repo_root)
     try:
-        hydration_timeout = float(env.get("MANUSCRIPT_HYDRATION_TIMEOUT", "300"))
+        hydration_timeout = float(env.get("MANUSCRIPT_HYDRATION_TIMEOUT", "900"))
         if not math.isfinite(hydration_timeout) or hydration_timeout <= 0:
             raise ValueError("Manuscript hydration timeout must be positive finite")
         cmd, env = build_analysis_script_cmd_and_env(script, project_root, root, base_env=env)
@@ -221,6 +227,20 @@ def run_manuscript_variable_script(
         logger.error("Invalid manuscript hydration invocation: %s", exc)
         return 2
 
+    # Start the work clock only once the invocation is fully prepared. Resolving
+    # the interpreter, bytecode prefix and environment is controller setup, not
+    # hydration work: hosted run 41887373712 burned 57.9 s of a 300 s budget
+    # before its child launched, then killed a child that needed 297.65 s in the
+    # same run's analysis stage. A clock started before preparation charges that
+    # setup against the work and reports a fast internal failure as a timeout.
+    started = time.monotonic()
+    # `launch_analysis_script` performs its own source/runtime admission and
+    # fingerprinting before the child exists, and that work is charged to the
+    # same deadline. Grant it an explicit, finite allowance on top of the work
+    # budget so admission can never consume the child's time; the whole call
+    # stays bounded by HYDRATION_ADMISSION_ALLOWANCE_SECONDS + the budget.
+    deadline = started + hydration_timeout + HYDRATION_ADMISSION_ALLOWANCE_SECONDS
+
     logger.info("Hydrating manuscript variables before render: %s", script.name)
     logger.info("Using manuscript hydration interpreter: %s", cmd[0])
     outcome = launch_analysis_script(
@@ -229,7 +249,7 @@ def run_manuscript_variable_script(
         project_root,
         cmd,
         env,
-        started + hydration_timeout,
+        deadline,
         stage_key="hydration:scripts/z_generate_manuscript_variables.py",
         cwd=project_root,
     )

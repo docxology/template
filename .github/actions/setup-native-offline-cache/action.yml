@@ -1,10 +1,19 @@
 name: Prepare Source-locked offline native dependency cache
 description: Warm actual hash-verified locked build and execution dependencies before installed observations.
+inputs:
+  project-scopes:
+    description: >-
+      Space-separated Source project scopes warmed in addition to the Root lock.
+      Each value names one locked exemplar under projects/, for example
+      `templates/template_autoresearch_project`. The Root lock is always warmed.
+    default: ''
 runs:
   using: composite
   steps:
     - name: Warm exact Source-locked offline dependencies for cold installed wheels
       shell: bash
+      env:
+        PROJECT_SCOPES: ${{ inputs.project-scopes }}
       run: |
         set -euo pipefail
         for variable in "${!UV_@}" "${!PIP_@}"; do unset "$variable"; done
@@ -18,21 +27,42 @@ runs:
         interpreter="$GITHUB_WORKSPACE/.venv/bin/python"
         build_requirements=$(mktemp "$RUNNER_TEMP/native-build-requirements.XXXXXX")
         uv export --directory "$GITHUB_WORKSPACE" --locked --only-group installed-build --no-emit-project --no-emit-local --no-header --no-annotate --output-file "$build_requirements"
-        for scope in root; do
+        # Root alone cannot serve a project lock that pins different versions of
+        # the same packages. Hosted run 41940842593, cell
+        # `template_autoresearch_project` (job 126961680266), warmed only Root and
+        # then failed offline during fixture setup:
+        #   error: Failed to download `packaging==26.2`
+        #   cause: Network connectivity is disabled, but the requested data
+        #          wasn't found in the cache
+        # The Root lock carries `packaging==26.3`, and the two locks disagree on
+        # four packages in total, so no Root warm could satisfy that project's
+        # offline install. Warm the Root lock plus exactly the scopes the caller
+        # names: a sharded cell costs one added export, not the whole 25-exemplar
+        # roster.
+        #
+        # The prepared artefact is the shared UV_CACHE_DIR, so one disposable
+        # environment serves every scope.
+        environment=$(mktemp -d "$RUNNER_TEMP/native-dependency-cache.XXXXXX")
+        uv venv --no-project --no-python-downloads --python "$interpreter" "$environment"
+        uv pip sync --no-config --no-build --require-hashes --python "$environment/bin/python" "$build_requirements"
+        for scope in $PROJECT_SCOPES root; do
           metadata="$GITHUB_WORKSPACE"
           if [ "$scope" != root ]; then metadata="$GITHUB_WORKSPACE/projects/$scope"; fi
+          # A named scope must be a real locked project. Warming a typo silently
+          # would reintroduce the offline failure this loop exists to prevent.
+          if [ ! -f "$metadata/uv.lock" ]; then
+            echo "declared offline cache scope is not a locked project: $scope" >&2
+            exit 1
+          fi
           requirements=$(mktemp "$RUNNER_TEMP/native-requirements.XXXXXX")
-          environment=$(mktemp -d "$RUNNER_TEMP/native-dependency-cache.XXXXXX")
           if [ "$scope" = root ]; then
             uv export --directory "$metadata" --locked --group public-exemplars --group active-inference --group rendering --group rendering-pptx --no-emit-package desloppify --group installed-build --no-emit-project --no-emit-local --no-header --no-annotate --output-file "$requirements"
           else
             uv export --directory "$metadata" --locked --no-default-groups --no-emit-project --no-emit-local --no-header --no-annotate --output-file "$requirements"
           fi
           "$interpreter" -m infrastructure.project.locked_dependency_export --metadata-root "$metadata" --requirements "$requirements"
-          uv venv --no-project --no-python-downloads --python "$interpreter" "$environment"
-          uv pip sync --no-config --no-build --require-hashes --python "$environment/bin/python" "$build_requirements"
           uv pip install --no-config --no-build-isolation --no-deps --require-hashes --python "$environment/bin/python" --target "$environment/prepared-dependencies" --requirements "$requirements"
-          rm -r "$environment"
           rm "$requirements"
         done
+        rm -r "$environment"
         rm "$build_requirements"

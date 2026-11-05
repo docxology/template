@@ -13,7 +13,7 @@ from pathlib import Path
 
 import pytest
 
-from infrastructure.reporting.native_renderer_source_call import authored_counterpart
+from infrastructure.reporting.native_renderer_source_call import _is_sdk_lua_asset, authored_counterpart
 from infrastructure.transmission.transmission_bookends import BEGIN_FILENAME
 
 
@@ -69,3 +69,91 @@ def test_a_generated_bookend_absent_from_its_consumed_root_is_refused(tmp_path: 
         authored_counterpart(absent, authored_root=authored, consumed_root=consumed)
 
     assert BEGIN_FILENAME in str(excinfo.value)
+
+
+RENDERING_DIRECTORY = Path(__file__).resolve().parents[3] / "infrastructure" / "rendering"
+
+
+def test_every_shipped_rendering_lua_asset_is_accepted() -> None:
+    """The custody verifier and the shipped assets must agree.
+
+    This is the invariant behind hosted run 41940842593. The previous check named
+    two files while six ship, and four call sites pass a filter the check refused:
+
+      _slides_beamer.py:195          _beamer_allowframebreaks.lua
+      _slides_beamer.py:200          _table_header_breaks.lua
+      _slides_beamer.py:220          _archive_figure_frames.lua
+      combined_native_commands.py:92 _table_header_breaks.lua
+      office_native_projection.py:21 office_semantics.lua
+
+    So `template_newspaper` and `template_data_descriptor` failed a combined-PDF
+    render with "native renderer external operand is not a fixed Source Lua asset"
+    for a filter the repository itself ships.
+
+    Asserting over the directory means the next filter added to
+    `infrastructure/rendering/` fails CI here rather than in an acceptance run.
+    """
+    shipped = sorted(RENDERING_DIRECTORY.glob("*.lua"))
+    assert shipped, "infrastructure/rendering ships no Lua assets; this test would be vacuous"
+    refused = [path.name for path in shipped if not _is_sdk_lua_asset(f"rendering/{path.name}")]
+    assert refused == [], (
+        "the renderer custody check refuses Lua assets this repository ships: "
+        f"{refused}. The predicate is structural (`rendering/<name>.lua`), so a "
+        "refusal here means the file is outside that directory or not a `.lua`."
+    )
+
+
+@pytest.mark.parametrize(
+    "member",
+    [
+        "rendering/nested/formalism.lua",
+        "rendering/../secret.lua",
+        "rendering/formalism.txt",
+        "reporting/formalism.lua",
+        "rendering/formalism.lua.py",
+        "/rendering/formalism.lua",
+        "rendering",
+        "formalism.lua",
+        "./rendering/formalism.lua",
+        "rendering//formalism.lua",
+        "rendering/FORMALISM.LUA",
+    ],
+)
+def test_a_member_that_is_not_a_shipped_rendering_lua_asset_is_refused(member: str) -> None:
+    """The structural rule narrows to exactly `rendering/<name>.lua` and nothing else.
+
+    A derivation that accepted any path would be weaker than the enumeration it
+    replaced, so these are the controls that keep it a narrowing: nested paths,
+    traversal, a wrong extension, another directory, an absolute path, the
+    directory itself, a bare name, a non-canonical form and a case variant.
+    """
+    assert not _is_sdk_lua_asset(member)
+
+
+def test_the_renderer_custody_check_consults_the_structural_predicate() -> None:
+    """The shipped-asset invariant is worthless if the enforcement site ignores it.
+
+    An earlier version of the test above asserted only that `_is_sdk_lua_asset`
+    accepts every shipped filter. Restoring the old two-name enumeration at the
+    enforcement site left that test passing, because the predicate still existed
+    and merely stopped being consulted. This pins the wiring: the external-operand
+    branch must call the predicate, and no literal member enumeration may serve as
+    the check.
+
+    Negative control: reinstate
+    `if sdk_member not in {"rendering/formalism.lua", ...}:` at the call site and
+    this test fails while the module still imports cleanly.
+    """
+    import inspect
+
+    from infrastructure.reporting import native_renderer_source_call
+
+    source = inspect.getsource(native_renderer_source_call)
+    assert "_is_sdk_lua_asset(sdk_member)" in source, (
+        "the renderer custody check no longer consults the structural predicate; "
+        "a literal allowlist will refuse Lua assets the repository ships"
+    )
+    assert 'sdk_member not in {"' not in source, (
+        "the renderer custody check is back to a literal member enumeration; "
+        "every new filter in infrastructure/rendering/ would be refused"
+    )

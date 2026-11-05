@@ -226,6 +226,23 @@ def test_pyproject_toml_domain_parametrized(domain):
     assert f'name = "child_{domain}"' in content
 
 
+def test_pyproject_toml_requires_python_matches_declared_floor():
+    """Rendered pyproject.toml carries the declared Python floor, never a hardcoded literal."""
+    import tomllib
+    from pathlib import Path
+
+    from template_autopoiesis import _platform
+
+    project_root = Path(_platform.__file__).resolve().parents[2]
+    declared = tomllib.loads((project_root / "pyproject.toml").read_text(encoding="utf-8"))["project"][
+        "requires-python"
+    ]
+    spec = _make_spec(domain="optimization")
+    content = emit_file("pyproject.toml", spec)
+    parsed = tomllib.loads(content)
+    assert parsed["project"]["requires-python"] == declared
+
+
 # ---------------------------------------------------------------------------
 # Grammar hash propagation
 # ---------------------------------------------------------------------------

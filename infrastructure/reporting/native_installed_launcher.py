@@ -37,6 +37,7 @@ from infrastructure.reporting.native_source_provider_bootstrap import (
     NATIVE_PREFLIGHT_MODULE,
 )
 from infrastructure.reporting.native_tool_process import run_native_tool_process
+from infrastructure.project.public_package_dependencies import local_dependency_closure
 from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES, public_cell_scope
 from infrastructure.reporting.native_preparation_resources import PREPARATION_PEAK_BYTES, require_native_capacity
 from infrastructure.reporting.native_readiness_input_copy import copy_original_common_readiness, copy_source_mirror_data
@@ -50,7 +51,20 @@ def native_cell_scope(cell: str) -> str:
 def native_preparation_scopes(mode: str, source: Path, cell: str | None = None) -> tuple[str, ...]:
     """Keep complete native roles distinct from the explicitly narrow diagnostic.
 
-    A sharded original cell prepares and executes exactly its own declared scope.
+    A sharded original cell prepares its own declared scope plus that scope's
+    non-root local dependency closure. The cell's declared *selection* is
+    unchanged -- it still executes exactly one exemplar -- but preparation must
+    build a wheel for every scope the provider install will look up.
+
+    Hosted run 41940842593, cell `template_advanced_literature_review` (job
+    126961680263): preparation built wheels only for `("root", cell)` while
+    `native_provider_scopes` demanded the transitive closure, which includes
+    `templates/template_literature_meta_analysis` through that exemplar's
+    `path = "../template_literature_meta_analysis"` source. The lookup raised
+    `KeyError: 'templates/template_literature_meta_analysis'` at
+    `native_installed_preparation.py:420` after 8m51s, before the bounded work
+    began. `--matrix-cell` sharded the scope but not the closure.
+
     The reader and handoff roles stay whole because they bind every cell's
     original transport, and the diagnostic preflight keeps its own narrow scope.
     """
@@ -62,7 +76,14 @@ def native_preparation_scopes(mode: str, source: Path, cell: str | None = None) 
         raise ValueError("unknown native installed preparation mode")
     if cell is not None:
         if mode == "original":
-            return (native_cell_scope(cell),)
+            selection = native_cell_scope(cell)
+            # `root` is prepared unconditionally by the preparation loop, so it
+            # is not a member of this closure. Local closure order is
+            # dependency-first, which keeps the prepared tuple deterministic.
+            providers = tuple(
+                provider for provider in local_dependency_closure(source, selection) if provider != "root"
+            )
+            return tuple(dict.fromkeys((selection, *providers)))
         if mode == "reader":
             # The reader keeps roster-wide preparation: its provider admission
             # still demands every public nomination, and only its Current-side
@@ -84,8 +105,45 @@ def _signed_failure(result: dict[str, object]) -> int:
     return 75
 
 
+def _print_preparation_scopes(argv: list[str]) -> int:
+    """Report the project scopes this invocation would prepare; acquire nothing.
+
+    Offline cache warming happens before custody, so it must be able to ask what
+    the preparation loop will install without creating a mirror, a scratch
+    destination or any evidence. Taking the selection from here keeps one
+    predicate: Root alone pins different versions of four packages, so a cell
+    whose own lock diverges cannot install offline from a Root-only warm.
+    """
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--mode", required=True, choices=("original", "reader", "handoff", "preflight"))
+    parser.add_argument("--source-root", required=True, type=Path)
+    parser.add_argument("--matrix-cell", help="run one declared public exemplar as a sharded matrix cell")
+    parser.add_argument("--print-preparation-scopes", action="store_true", required=True)
+    # Ignore the launch nominations this report does not consume, so the workflow
+    # can pass the same argument vocabulary as the real invocation.
+    args, _unknown = parser.parse_known_args(argv)
+    if args.matrix_cell is not None and args.mode not in {"original", "reader"}:
+        parser.error("native matrix cell scoping applies only to the original and reader roles")
+    if args.matrix_cell is not None:
+        try:
+            native_cell_scope(args.matrix_cell)
+        except ValueError as error:
+            parser.error(str(error))
+    for scope in native_preparation_scopes(args.mode, args.source_root.resolve(strict=True), cell=args.matrix_cell):
+        print(scope)
+    return 0
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
+    # Warming runs before custody, so the scope report is deliberately a separate
+    # parser: it needs neither a mirror, a scratch destination nor any nomination,
+    # and it must not acquire either. Offline cache warming asks this instead of
+    # re-deriving the preparation selection in shell.
+    if argv is None:
+        argv = sys.argv[1:]
+    if "--print-preparation-scopes" in argv:
+        return _print_preparation_scopes(argv)
     parser.add_argument("--mode", required=True, choices=("original", "reader", "handoff", "preflight"))
     parser.add_argument("--source-root", required=True, type=Path)
     parser.add_argument("--source-commit", required=True)
@@ -114,6 +172,16 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--stage-bundle", action="store_true")
     parser.add_argument("--acceptance-artifact-id", type=int)
     parser.add_argument("--acceptance-receipt-sha256")
+    parser.add_argument(
+        "--print-preparation-scopes",
+        action="store_true",
+        help=(
+            "Print the project scopes this invocation would prepare (one per line) "
+            "and exit without launching. Offline cache warming needs the same "
+            "selection the preparation loop uses, so ask here instead of "
+            "re-deriving it in shell."
+        ),
+    )
     args = parser.parse_args(argv)
     started = time.monotonic()
     if not 0 < args.timeout <= 14400:
@@ -130,7 +198,13 @@ def main(argv: list[str] | None = None) -> int:
             cell_scope = native_cell_scope(args.matrix_cell)
         except ValueError as error:
             parser.error(str(error))
+    if args.print_preparation_scopes:
+        # Retained for parity with the workflow flag; main() answers this before
+        # any required nomination is parsed, so this branch is unreachable in the
+        # CLI but keeps direct main() callers honest.
+        return _print_preparation_scopes(argv if argv is not None else sys.argv[1:])
     deadline = started + args.timeout
+
     # The inner owner must return and retain its receipts inside the outer
     # watcher's clock; an identical nested deadline lets the outer watcher kill
     # it before worker process/cleanup/guardian evidence is written.

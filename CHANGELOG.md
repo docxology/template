@@ -7,6 +7,46 @@ source and contracts; each exemplar retains its own package and publication
 versions. Confidential and local workspaces outside the canonical public roster
 are excluded.
 
+## [5.0.2] - 2026-11-04
+
+See the [5.0.2 release notes](docs/releases/v5.0.2.md). This release moves the root
+and exemplar metadata to 5.0.2 and adds the post-merge rebind automation that keeps
+rendered-provenance receipts current on `main`; it changes no rendered behavior.
+
+- `.github/workflows/rebind.yml` restamps the receipts as its own commit, runs both
+  strict publication gates on the committed tree, and pushes only after they pass. It
+  is dispatch-only until the owner provisions a protected-branch bypass for the
+  pushing identity; its first real run restamped all 25 exemplars, reported the
+  `kmyth` pin, and passed both gates without pushing.
+- The coordinated transaction moved the root package version and lock, and each
+  exemplar's SDK requirement, `[tool.template].platform_version` binding and lock, to
+  5.0.2 while retaining every exemplar's own package version. The fifteen exemplars
+  that track a publication copy were re-rendered and re-receipted; the other ten were
+  rebound to unchanged output bytes.
+- The release ceremony adopts the invariant that the tag be cut at a commit whose tree
+  equals the verified tree, after the `v5.0.1` tag was cut two commits downstream of
+  the revision its receipts were stamped for. The `v5.0.1` tag is not moved and not
+  re-cut; `5.0.2` supersedes it for receipt provenance.
+
+## [5.0.1] - 2026-11-04
+
+See the [5.0.1 release notes](docs/releases/v5.0.1.md). This release corrects one
+release-notes claim and adds the check that refuses it; it changes no behavior.
+
+- `docs/releases/v5.0.0.md` on `main` now names
+  `e932a5d2a4f5c75f354352b43e54039eac9f63cf` as the `v5.0.0` tagged commit and
+  describes `c5af32a18560ca12267484b182a94b826b47cf47` as the intermediate `#215`
+  merge 44 commits before it. The `v5.0.0` tag is not moved: its in-tree copy keeps
+  the wrong sentence, and `5.0.1` supersedes it.
+- `infrastructure/project/release_versions.py` resolves the tag under check and
+  fails closed when the release-note paragraph claiming a tagged commit names a
+  different first commit; an intermediate merge named later in the paragraph stays
+  allowed. The negative control against the wrong paragraph is recorded in the
+  5.0.1 notes.
+- The root version and lock, all 25 exemplar publication `platform_version`
+  bindings and their locks move to 5.0.1, with the 15 tracked publication copies
+  re-rendered and re-receipted.
+
 ## [5.0.0] - 2026-11-03
 
 See the [5.0.0 release notes](docs/releases/v5.0.0.md). This release makes the

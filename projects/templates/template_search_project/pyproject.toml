@@ -24,7 +24,7 @@ classifiers = [
 # Runtime dependencies for the *project-local* code in `src/`.
 dependencies = [
     "requests>=2.32.0",
-    "research-project-template==5.0.0",
+    "research-project-template==5.0.2",
     # 6.21.4 is the first pypdf release with no open advisory: the pinned floors carried 18 advisories and 326 open Dependabot alerts in this repository. Do not lower this floor.
     "pypdf>=6.21.4",
     "pyyaml>=6.0,<7.0",
@@ -103,7 +103,7 @@ exclude_lines = [
 
 # Compatibility contract for this independent exemplar release.
 [tool.template]
-platform_version = "5.0.0"
+platform_version = "5.0.2"
 tested_python_versions = ["3.14", "3.15"]
 required_unpaid_capabilities = ["retrieval", "fulltext", "local-synthesis"]
 
