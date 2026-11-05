@@ -570,9 +570,16 @@ jobs:
         # any stage executes, so run it first: a stale receipt fails in seconds
         # instead of after the bounded native lifecycle. It skips and weakens
         # nothing; the lane still owns every native check.
+        #
+        # --rendered is deliberately NOT asserted here, for the same reason as in
+        # platform-native-preflight.yml: rendered receipts are rebound only by
+        # rebind.yml, which is dispatch-only and acts on the tip of origin/main.
+        # Asserting a current rendered receipt inside a dispatch-only acceptance
+        # run demands a rebind this run cannot perform. Every source, methods,
+        # evidence, figure, artifact and placeholder check below still blocks.
         run: >-
           .venv/bin/python -m infrastructure.validation.cli publication-audit --all-public
-          --rendered --strict --require-figure-accessibility --format markdown
+          --strict --require-figure-accessibility --format markdown
       - name: Original authenticated installed native format inventory
         id: native
         run: >-
@@ -597,6 +604,13 @@ jobs:
           repo-root: ${{ runner.temp }}/template-native-original-root
           directory: ${{ runner.temp }}/template-native-original-root/output/readiness/native-transport
           kind: native
+          # This roster lane's only output is the release artifact, and every one
+          # of this workflow's 31 failures retained its transport correctly and
+          # then expired after one day before anyone read it. The refusal that
+          # blocks every release has therefore never been diagnosed. Thirty days
+          # covers a release cycle. The per-cell indexes below keep one day:
+          # they are bulk, and they are not the diagnostic.
+          retention-days: 30
       - name: Preserve failed original raw and Code evidence
         if: always() && steps.native.outcome == 'failure'
         run: >-
@@ -611,15 +625,22 @@ jobs:
           repo-root: ${{ github.workspace }}
           directory: ${{ github.workspace }}/output/readiness/failed-native-transport
           kind: failed-native
+          # Failure evidence, not a primary acceptance index. Every one of this
+          # workflow's 31 failures retained its transport and then expired after
+          # one day before anyone read it, so the refusal that blocks every
+          # release has never been diagnosed. Thirty days covers a release cycle;
+          # primary per-cell indexes keep their one-day default.
+          retention-days: 30
 
 
-  # TODO(native-sharding): the 600 s per-control ceiling in
-  # `infrastructure/reporting/native_pdf_whole_control_supervisor.py:66` is the
-  # remaining blocker. `--matrix-cell` and the per-cell artifact name now land
-  # together (this branch), so the exemplar rebind happens once. These jobs stay
-  # gated on the repository variable NATIVE_SHARDING_CELLS and `native-original`
-  # above remains the active native lane. To enable: raise the ceiling, then set
-  # NATIVE_SHARDING_CELLS=true.
+  # TODO(native-sharding): `--matrix-cell` and the per-cell artifact name have
+  # both landed, and the per-control ceiling this comment used to name is no
+  # longer a blocker: `CONTROL_PHASE_CEILING_SECONDS` was raised 600 -> 3600 in
+  # 6875853d7 ("Bound one whole-PDF control phase by an hour instead of ten
+  # minutes"). The remaining gate is one repository variable: these jobs run only
+  # when NATIVE_SHARDING_CELLS is 'true', and it has never been set, so no sharded
+  # cell has executed. Keep this comment tied to the code: a stale precondition
+  # here is how the lane stayed mislabelled as blocked.
   native-plan:
     if: vars.NATIVE_SHARDING_CELLS == 'true'
     runs-on: ubuntu-24.04
@@ -732,6 +753,12 @@ jobs:
           repo-root: ${{ github.workspace }}
           directory: ${{ github.workspace }}/output/readiness/failed-native-transport
           kind: failed-native
+          # Failure evidence, not a primary acceptance index. Every one of this
+          # workflow's 31 failures retained its transport and then expired after
+          # one day before anyone read it, so the refusal that blocks every
+          # release has never been diagnosed. Thirty days covers a release cycle;
+          # primary per-cell indexes keep their one-day default.
+          retention-days: 30
 
   complete:
     needs: [root-original, common-original, auxiliary-original, native-plan, native-original-cell]
@@ -850,6 +877,10 @@ jobs:
           repo-root: ${{ github.workspace }}
           directory: ${{ github.workspace }}/output/readiness/failed-reader-transport
           kind: failed-reader
+          # Failure evidence for the release-critical reader lane: the same
+          # one-day expiry is why the refusal behind 31 failed releases has no
+          # readable trace. Keep it past a release cycle.
+          retention-days: 30
       - name: Summarize required acceptance outcomes
         if: always()
         shell: bash
