@@ -86,9 +86,7 @@ from pathlib import Path
 client = LLMClient(OllamaClientConfig(default_model="gemma3:4b"))
 
 # Extract manuscript text from a rendered PDF
-text, _ = extract_manuscript_text(
-    Path("output/templates/template_code_project/pdf/template_code_project_combined.pdf")
-)
+text, _ = extract_manuscript_text(Path("output/templates/template_code_project/pdf/template_code_project_combined.pdf"))
 
 # Generate a structured quality review
 result, metrics = generate_review_with_metrics(

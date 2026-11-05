@@ -28,10 +28,11 @@ def function():
     else:
         return False
 
+
 # ❌ BAD: Mixed tabs/spaces
 def function():
-	if condition:  # Tab
-	    return True  # Spaces
+    if condition:  # Tab
+        return True  # Spaces
 ```
 
 #### Imports
@@ -60,21 +61,30 @@ import numpy as np
 # ✅ GOOD: Logical grouping
 import os
 
+
 def function_one():
     pass
 
+
 def function_two():
     pass
+
 
 class MyClass:
     pass
 
+
 # ❌ BAD: Too many or missing blank lines
 import os
+
+
 def function_one():
     pass
+
+
 def function_two():
     pass
+
 
 class MyClass:
     pass
@@ -88,13 +98,16 @@ def process_data():
     processed_data = clean_data(raw_data)
     return processed_data
 
+
 # ✅ GOOD: PascalCase for classes
 class DataProcessor:
     pass
 
+
 # ✅ GOOD: UPPER_CASE for constants
 MAX_RETRIES = 3
 DEFAULT_TIMEOUT = 30
+
 
 # ❌ BAD: camelCase or inconsistent
 def processData():
@@ -254,24 +267,29 @@ from infrastructure.core.logging.utils import get_logger
 
 logger = get_logger(__name__)
 
+
 def process_data(data):
     """Process data."""
     logger.debug(f"Processing {len(data)} items")
     # Implementation...
+
 
 # config.py - Configuration (optional)
 """Configuration for data processing."""
 
 from dataclasses import dataclass
 
+
 @dataclass
 class DataConfig:
     threshold: float = 0.5
+
 
 # cli.py - CLI interface (optional)
 """Command-line interface."""
 
 import argparse
+
 
 def main():
     parser = argparse.ArgumentParser()
@@ -287,15 +305,18 @@ def main():
 import pytest
 from module import function_to_test
 
+
 def test_basic_functionality():
     """Test basic case."""
     result = function_to_test("input")
     assert result == "expected"
 
+
 def test_edge_cases():
     """Test edge cases."""
     assert function_to_test("") is None
     assert function_to_test(None) is None
+
 
 def test_error_conditions():
     """Test error handling."""

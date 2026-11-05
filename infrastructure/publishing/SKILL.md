@@ -86,9 +86,7 @@ package = prepare_arxiv_submission(output_dir)
 ```python
 from infrastructure.publishing.github import create_github_release
 
-url = create_github_release(
-    "v1.0.0", "Release 1.0.0", "Notes", [Path("paper.pdf")], token, "owner/repo"
-)
+url = create_github_release("v1.0.0", "Release 1.0.0", "Notes", [Path("paper.pdf")], token, "owner/repo")
 ```
 
 ## PyPI / TestPyPI distribution
@@ -99,14 +97,14 @@ url = create_github_release(
 from infrastructure.publishing.pypi import PyPIAdapter, PyPIConfig, run_pypi_release
 
 # Using the adapter directly
-adapter = PyPIAdapter(PyPIConfig(test=True))       # reads TESTPYPI_TOKEN from env
-result  = adapter.publish(Path("."), dry_run=False)
+adapter = PyPIAdapter(PyPIConfig(test=True))  # reads TESTPYPI_TOKEN from env
+result = adapter.publish(Path("."), dry_run=False)
 print(result.status, result.url)
 
 # Canonical sandbox transfer with exact retrieval and installed smoke
 result = run_pypi_release(
     Path("."),
-    test=True,           # fixed TestPyPI sandbox
+    test=True,  # fixed TestPyPI sandbox
     dry_run=False,
 )
 ```
@@ -119,10 +117,12 @@ Environment: `PYPI_TOKEN` (production), `TESTPYPI_TOKEN` (test). Both resolved f
 
 ```python
 from infrastructure.publishing.static_site import (
-    SiteDeployConfig, SiteHosting, get_adapter,
+    SiteDeployConfig,
+    SiteHosting,
+    get_adapter,
 )
 
-config  = SiteDeployConfig(
+config = SiteDeployConfig(
     hosting=SiteHosting.GITHUB_PAGES,
     site_dir="output/docs",
     repo="owner/repo",
@@ -144,7 +144,7 @@ and payment targets that do not yet have live adapters.
 from infrastructure.publishing.registry import get_platform, list_platforms, PublishingTier
 
 info = get_platform("pypi")
-print(info.env_vars)   # ('PYPI_TOKEN', 'TESTPYPI_TOKEN')
+print(info.env_vars)  # ('PYPI_TOKEN', 'TESTPYPI_TOKEN')
 
 for p in list_platforms(tag="static_site"):
     print(p.name, p.adapter_class)
@@ -161,15 +161,15 @@ markers. The committed block reflects durable publication state (DOIs, repo,
 ```python
 from pathlib import Path
 from infrastructure.publishing.status_report import (
-    compile_publishing_status, render_status_block, update_readme_block,
+    compile_publishing_status,
+    render_status_block,
+    update_readme_block,
 )
 
 report = compile_publishing_status(Path("projects/templates/template_gold_refinement"))
-print(report.published_count)              # e.g. 7
-block = render_status_block(report)        # marker-wrapped Markdown
-new_text, changed = update_readme_block(
-    readme_text, report, init_after_heading="## Publication and rendering"
-)
+print(report.published_count)  # e.g. 7
+block = render_status_block(report)  # marker-wrapped Markdown
+new_text, changed = update_readme_block(readme_text, report, init_after_heading="## Publication and rendering")
 ```
 
 A caller-supplied `published={"ipfs_pinata": "https://..."}` map upgrades extra
@@ -194,7 +194,7 @@ uploads, or prints token values. `PROBES` covers `github`, `huggingface_hub`,
 ```python
 from infrastructure.publishing.credential_check import check_all, format_results
 
-results = check_all(only=["github", "zenodo"])   # ProbeResult.status: pass|fail|skipped|no-endpoint
+results = check_all(only=["github", "zenodo"])  # ProbeResult.status: pass|fail|skipped|no-endpoint
 print(format_results(results))
 ```
 
@@ -213,7 +213,9 @@ per-platform failure is captured, never aborting the batch.
 ```python
 from pathlib import Path
 from infrastructure.publishing.upload_runner import (
-    UploadTargets, select_jobs, run_uploads,
+    UploadTargets,
+    select_jobs,
+    run_uploads,
 )
 
 targets = UploadTargets(
@@ -225,7 +227,7 @@ targets = UploadTargets(
     osf_title="My Project",
 )
 jobs = select_jobs(include_github=False, include_static=False)  # CORE_UPLOADERS only
-run = run_uploads(targets, jobs=jobs, commit=False)             # dry-run
+run = run_uploads(targets, jobs=jobs, commit=False)  # dry-run
 print(run.mode, run.ok, run.results)
 ```
 

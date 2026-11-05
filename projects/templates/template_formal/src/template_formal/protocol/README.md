@@ -17,10 +17,18 @@ objects.
 
 ```python
 from template_formal.protocol import (
-    MalformedMessage, ProtocolViolation,
-    ClosedSession, EstablishedSession, HandshakingSession, IdleSession,
-    MessageKind, SessionConsumedError, SessionEndpoint, WireMessage,
-    decode_wire_message, encode_wire_message,
+    MalformedMessage,
+    ProtocolViolation,
+    ClosedSession,
+    EstablishedSession,
+    HandshakingSession,
+    IdleSession,
+    MessageKind,
+    SessionConsumedError,
+    SessionEndpoint,
+    WireMessage,
+    decode_wire_message,
+    encode_wire_message,
 )
 ```
 

@@ -50,7 +50,7 @@ from pathlib import Path
 # Raises PDFValidationError if the file exists but cannot be read
 text, metrics = extract_manuscript_text(
     pdf_path=Path("manuscript.pdf"),
-    max_input_length=500_000,   # optional; 0 or None = unlimited
+    max_input_length=500_000,  # optional; 0 or None = unlimited
 )
 print(f"Extracted {metrics.total_words} words, truncated={metrics.truncated}")
 ```
@@ -84,7 +84,7 @@ from infrastructure.llm.templates import TRANSLATION_LANGUAGES
 translated, metrics = generate_translation(
     client=client,
     text=abstract_text,
-    language_code="zh",     # key from TRANSLATION_LANGUAGES
+    language_code="zh",  # key from TRANSLATION_LANGUAGES
     model_name="gemma3:4b",
 )
 ```
@@ -103,7 +103,7 @@ review_text, metrics = generate_review_with_metrics(
     template_class=ManuscriptQualityReview,
     model_name="gemma3:4b",
     temperature=0.3,
-    max_tokens=None,     # defaults to client.config.long_max_tokens
+    max_tokens=None,  # defaults to client.config.long_max_tokens
     max_retries=1,
 )
 ```
@@ -131,7 +131,7 @@ from infrastructure.llm.review import validate_review_quality
 
 is_valid, issues, details = validate_review_quality(
     response=review_text,
-    review_type="quality_review",   # ReviewType literal
+    review_type="quality_review",  # ReviewType literal
     model_name="gemma3:4b",
 )
 ```

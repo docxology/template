@@ -34,8 +34,11 @@ flowchart LR
 
 ```python
 from infrastructure.reference.citation import (
-    parse_bibfile, render_database, write_bibfile,
-    paper_to_bibentry, generate_citation_key,
+    parse_bibfile,
+    render_database,
+    write_bibfile,
+    paper_to_bibentry,
+    generate_citation_key,
 )
 ```
 

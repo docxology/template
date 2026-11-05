@@ -44,7 +44,7 @@ for connector_class in _ALL_CONNECTORS:
 # By domain
 bio = registry.by_domain(ConnectorDomain.biology)
 # Serialisable catalog
-catalog = registry.catalog()   # list[CatalogEntry] — no callables
+catalog = registry.catalog()  # list[CatalogEntry] — no callables
 ```
 
 ## CLI

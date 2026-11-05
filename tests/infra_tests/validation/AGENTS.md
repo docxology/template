@@ -52,18 +52,19 @@ def test_pdf_validation_complete():
         text_content="Sample research content",
         citations=["[1]", "[2]", "[3]"],
         references=["??", "fig:figure1"],  # Unresolved reference
-        equations=["$E = mc^2$", "$$\\sum_{i=1}^n x_i$$"]
+        equations=["$E = mc^2$", "$$\\sum_{i=1}^n x_i$$"],
     )
 
     validator = PDFValidator()
     result = validator.validate_pdf(pdf_path)
 
     # Check validation results
-    assert result['valid'] is False  # Should fail due to unresolved reference
-    assert 'unresolved_references' in result['issues']
-    assert len(result['issues']['unresolved_references']) > 0
-    assert 'citations_found' in result
-    assert result['citations_found'] == 3
+    assert result["valid"] is False  # Should fail due to unresolved reference
+    assert "unresolved_references" in result["issues"]
+    assert len(result["issues"]["unresolved_references"]) > 0
+    assert "citations_found" in result
+    assert result["citations_found"] == 3
+
 
 def test_pdf_text_extraction():
     """Test PDF text extraction accuracy."""
@@ -129,15 +130,16 @@ The experimental setup is shown in Figure 1.
     result = validator.validate_markdown_content(markdown_content, base_path=Path("."))
 
     # Check validation results
-    assert result['valid'] is False  # Missing figure file
-    assert 'missing_images' in result['issues']
-    assert 'figures/method.png' in result['issues']['missing_images']
+    assert result["valid"] is False  # Missing figure file
+    assert "missing_images" in result["issues"]
+    assert "figures/method.png" in result["issues"]["missing_images"]
 
     # Check successful validations
-    assert result['cross_references_valid'] is True
-    assert result['citations_valid'] is True
-    assert 'headings_found' in result
-    assert result['headings_found'] >= 4
+    assert result["cross_references_valid"] is True
+    assert result["citations_valid"] is True
+    assert "headings_found" in result
+    assert result["headings_found"] >= 4
+
 
 def test_markdown_cross_references():
     """Test markdown cross-reference validation."""
@@ -166,9 +168,9 @@ Table: Performance comparison {#tbl:comparison}
     result = validator.validate_cross_references(content_with_refs)
 
     # Validate reference resolution
-    assert result['resolved_references'] == 3  # sec:details, fig:result3, tbl:comparison
-    assert result['unresolved_references'] == 1  # fig:result3 != fig:result3 reference
-    assert result['reference_consistency'] is True
+    assert result["resolved_references"] == 3  # sec:details, fig:result3, tbl:comparison
+    assert result["unresolved_references"] == 1  # fig:result3 != fig:result3 reference
+    assert result["reference_consistency"] is True
 ```
 
 ### Integrity Validation Tests
@@ -187,49 +189,50 @@ def test_file_integrity_validation():
     test_files = create_test_file_set()
 
     # Modify one file to change integrity
-    corrupt_file(test_files['manuscript.md'])
+    corrupt_file(test_files["manuscript.md"])
 
     # Validate integrity
     integrity_result = validate_file_integrity(test_files)
 
-    assert integrity_result['overall_valid'] is False
-    assert 'modified_files' in integrity_result
-    assert 'manuscript.md' in integrity_result['modified_files']
+    assert integrity_result["overall_valid"] is False
+    assert "modified_files" in integrity_result
+    assert "manuscript.md" in integrity_result["modified_files"]
 
     # Check hash verification
-    assert 'file_hashes' in integrity_result
-    assert len(integrity_result['file_hashes']) == len(test_files)
+    assert "file_hashes" in integrity_result
+    assert len(integrity_result["file_hashes"]) == len(test_files)
+
 
 def test_cross_reference_integrity():
     """Test cross-reference integrity across documents."""
     document_set = {
-        'main.md': """
+        "main.md": """
 # Main Document
 
 See Appendix A for details.
 Also refer to Figure 1 in chapter 2.
 """,
-        'appendix.md': """
+        "appendix.md": """
 # Appendix A {#appendix-a}
 
 This is the appendix content.
 
 ![Appendix Figure](appendix_fig.png){#fig:appendix1}
 """,
-        'chapter2.md': """
+        "chapter2.md": """
 # Chapter 2
 
 ![Chapter Figure](chapter_fig.png){#fig:chapter1}
-"""
+""",
     }
 
     integrity_checker = IntegrityValidator()
     result = integrity_checker.validate_cross_document_references(document_set)
 
     # Validate cross-document references
-    assert result['unresolved_external_refs'] == 1  # Figure 1 reference not found in chapter 2
-    assert result['resolved_external_refs'] == 1    # Appendix A reference resolved
-    assert result['internal_refs_valid'] is True
+    assert result["unresolved_external_refs"] == 1  # Figure 1 reference not found in chapter 2
+    assert result["resolved_external_refs"] == 1  # Appendix A reference resolved
+    assert result["internal_refs_valid"] is True
 ```
 
 ### Document Scanning Tests
@@ -284,13 +287,13 @@ We presented a novel algorithm...
     structure = scanner.scan_document_structure(research_paper)
 
     # Validate academic structure
-    required_sections = ['abstract', 'introduction', 'methodology', 'experiments', 'results', 'conclusion']
+    required_sections = ["abstract", "introduction", "methodology", "experiments", "results", "conclusion"]
     for section in required_sections:
-        assert section in structure['sections'], f"Missing required section: {section}"
+        assert section in structure["sections"], f"Missing required section: {section}"
 
-    assert structure['citation_count'] == 1
-    assert structure['word_count'] > 200
-    assert structure['academic_structure_score'] > 0.8
+    assert structure["citation_count"] == 1
+    assert structure["word_count"] > 200
+    assert structure["academic_structure_score"] > 0.8
 ```
 
 ### Figure Validation Tests
@@ -329,11 +332,11 @@ Additional analysis in Figure 2.
     result = validator.validate_figures(document, base_path=Path("."))
 
     # Check validation results
-    assert result['total_figures'] == 2
-    assert result['existing_figures'] == 1  # Only plot.png exists
-    assert result['missing_figures'] == 1   # analysis.png missing
-    assert 'results/plot.png' in result['found_figures']
-    assert 'analysis.png' in result['missing_figures']
+    assert result["total_figures"] == 2
+    assert result["existing_figures"] == 1  # Only plot.png exists
+    assert result["missing_figures"] == 1  # analysis.png missing
+    assert "results/plot.png" in result["found_figures"]
+    assert "analysis.png" in result["missing_figures"]
 ```
 
 ## Test Design Principles
@@ -359,20 +362,20 @@ def test_validation_pipeline_integration():
     validation_results = run_complete_validation(manuscript_files)
 
     # Validate pipeline results
-    assert 'pdf_validation' in validation_results
-    assert 'markdown_validation' in validation_results
-    assert 'integrity_check' in validation_results
+    assert "pdf_validation" in validation_results
+    assert "markdown_validation" in validation_results
+    assert "integrity_check" in validation_results
 
     # Check cross-validation consistency
-    pdf_refs = validation_results['pdf_validation']['references']
-    md_refs = validation_results['markdown_validation']['references']
+    pdf_refs = validation_results["pdf_validation"]["references"]
+    md_refs = validation_results["markdown_validation"]["references"]
 
     # References should be consistent between formats
     assert set(pdf_refs.keys()).issubset(set(md_refs.keys()))
 
     # Overall validation status
-    assert validation_results['overall_valid'] is False  # Expected due to test setup
-    assert len(validation_results['blocking_issues']) > 0
+    assert validation_results["overall_valid"] is False  # Expected due to test setup
+    assert len(validation_results["blocking_issues"]) > 0
 ```
 
 ### Test Organization
@@ -389,33 +392,34 @@ def test_validation_pipeline_integration():
 def comprehensive_test_manuscript():
     """Create test manuscript with various elements."""
     return {
-        'markdown': create_markdown_with_all_elements(),
-        'pdf': create_pdf_from_markdown(markdown_content),
-        'figures': create_test_figure_set(),
-        'bibliography': create_test_bibliography(),
-        'expected_issues': {
-            'unresolved_refs': ['fig:missing'],
-            'missing_files': ['missing_figure.png'],
-            'formatting_issues': ['inconsistent_citation_style']
-        }
+        "markdown": create_markdown_with_all_elements(),
+        "pdf": create_pdf_from_markdown(markdown_content),
+        "figures": create_test_figure_set(),
+        "bibliography": create_test_bibliography(),
+        "expected_issues": {
+            "unresolved_refs": ["fig:missing"],
+            "missing_files": ["missing_figure.png"],
+            "formatting_issues": ["inconsistent_citation_style"],
+        },
     }
+
 
 @pytest.fixture
 def academic_document_standards():
     """Provide academic document standards for testing."""
     return {
-        'required_sections': [
-            'abstract', 'introduction', 'methodology',
-            'experiments', 'results', 'conclusion', 'references'
+        "required_sections": [
+            "abstract",
+            "introduction",
+            "methodology",
+            "experiments",
+            "results",
+            "conclusion",
+            "references",
         ],
-        'citation_formats': ['[1]', '(Smith et al., 2023)', '@smith2023'],
-        'figure_formats': ['.png', '.jpg', '.svg', '.pdf'],
-        'minimum_word_counts': {
-            'abstract': 150,
-            'introduction': 500,
-            'methodology': 800,
-            'conclusion': 300
-        }
+        "citation_formats": ["[1]", "(Smith et al., 2023)", "@smith2023"],
+        "figure_formats": [".png", ".jpg", ".svg", ".pdf"],
+        "minimum_word_counts": {"abstract": 150, "introduction": 500, "methodology": 800, "conclusion": 300},
     }
 ```
 
@@ -456,6 +460,7 @@ We conclude that our approach is effective.
 [1] Author et al. (2023). Previous work.
 """
 
+
 @pytest.fixture
 def document_with_validation_issues():
     """Create document with known validation issues."""
@@ -491,36 +496,39 @@ def compare_validation_results(actual, expected):
     """Compare validation results with expected outcomes."""
 
     # Check overall validity
-    assert actual['valid'] == expected['valid'], f"Validity mismatch: {actual['valid']} != {expected['valid']}"
+    assert actual["valid"] == expected["valid"], f"Validity mismatch: {actual['valid']} != {expected['valid']}"
 
     # Check issue categories
-    for issue_type, expected_issues in expected.get('issues', {}).items():
-        assert issue_type in actual.get('issues', {}), f"Missing issue type: {issue_type}"
+    for issue_type, expected_issues in expected.get("issues", {}).items():
+        assert issue_type in actual.get("issues", {}), f"Missing issue type: {issue_type}"
 
-        actual_issues = actual['issues'][issue_type]
+        actual_issues = actual["issues"][issue_type]
         assert len(actual_issues) == len(expected_issues), f"Issue count mismatch for {issue_type}"
 
         # Check specific issues
         for expected_issue in expected_issues:
             assert expected_issue in actual_issues, f"Missing specific issue: {expected_issue}"
 
+
 def validate_academic_standards(document, standards):
     """Validate document against academic standards."""
 
     # Check required sections
-    for section in standards['required_sections']:
+    for section in standards["required_sections"]:
         assert section in document.lower(), f"Missing required section: {section}"
 
     # Check word counts
     word_counts = analyze_section_word_counts(document)
-    for section, min_words in standards['minimum_word_counts'].items():
-        assert word_counts.get(section, 0) >= min_words, f"Section {section} too short: {word_counts.get(section, 0)} words"
+    for section, min_words in standards["minimum_word_counts"].items():
+        assert word_counts.get(section, 0) >= min_words, (
+            f"Section {section} too short: {word_counts.get(section, 0)} words"
+        )
 
     # Check citation formats
     citations = extract_citations(document)
     valid_formats = 0
     for citation in citations:
-        if any(fmt in citation for fmt in standards['citation_formats']):
+        if any(fmt in citation for fmt in standards["citation_formats"]):
             valid_formats += 1
 
     assert valid_formats / len(citations) > 0.8, f"Too many invalid citations: {valid_formats}/{len(citations)}"
@@ -565,6 +573,7 @@ def test_validate_complete_structure(output_directory_structure):
     result = validate_copied_outputs(output_dir)
     assert result is True
 
+
 def test_validate_small_pdf(tmp_path):
     """Test validation with suspiciously small PDF."""
     output_dir = tmp_path / "output"
@@ -595,6 +604,7 @@ def output_directory_structure(tmp_path):
         (output_dir / subdir).mkdir()
 
     return output_dir
+
 
 @pytest.fixture
 def output_with_pdf(output_directory_structure, pdf_file_fixture):
@@ -680,7 +690,7 @@ def debug_pdf_creation():
         check_latex_installation()
 
         # Test compilation manually
-        result = subprocess.run(['xelatex', '--interaction=nonstopmode', test_latex])
+        result = subprocess.run(["xelatex", "--interaction=nonstopmode", test_latex])
         print(f"LaTeX exit code: {result.returncode}")
 
         if result.returncode != 0:
@@ -706,7 +716,7 @@ def debug_markdown_parsing():
         return False
 
     # Test specific elements
-    elements_to_test = ['headings', 'references', 'citations', 'images']
+    elements_to_test = ["headings", "references", "citations", "images"]
     for element_type in elements_to_test:
         try:
             elements = extract_elements(test_markdown, element_type)
@@ -758,29 +768,25 @@ def test_complete_validation_pipeline():
     test_case = create_validation_test_case()
 
     # Run individual validations
-    pdf_result = validate_pdf(test_case['pdf_path'])
-    markdown_result = validate_markdown(test_case['markdown_path'])
-    integrity_result = check_integrity(test_case['files'])
+    pdf_result = validate_pdf(test_case["pdf_path"])
+    markdown_result = validate_markdown(test_case["markdown_path"])
+    integrity_result = check_integrity(test_case["files"])
 
     # Combine results
-    combined_result = combine_validation_results([
-        pdf_result,
-        markdown_result,
-        integrity_result
-    ])
+    combined_result = combine_validation_results([pdf_result, markdown_result, integrity_result])
 
     # Validate combined assessment
-    assert 'overall_score' in combined_result
-    assert 'critical_issues' in combined_result
-    assert 'recommendations' in combined_result
+    assert "overall_score" in combined_result
+    assert "critical_issues" in combined_result
+    assert "recommendations" in combined_result
 
     # Check consistency across validators
     check_validation_consistency(pdf_result, markdown_result)
 
     # Verify final recommendation
-    if combined_result['overall_score'] < 0.7:
-        assert len(combined_result['recommendations']) > 0
-        assert 'critical' in combined_result['recommendations'][0].lower()
+    if combined_result["overall_score"] < 0.7:
+        assert len(combined_result["recommendations"]) > 0
+        assert "critical" in combined_result["recommendations"][0].lower()
 ```
 
 ## Future Test Enhancements

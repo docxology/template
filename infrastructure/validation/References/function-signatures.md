@@ -60,10 +60,7 @@ def extract_first_n_words(text: str, n: int = 200) -> str:
 
 #### validate_pdf_rendering (function)
 ```python
-def validate_pdf_rendering(
-    pdf_path: Path,
-    n_words: int = 200
-) -> Dict[str, Any]:
+def validate_pdf_rendering(pdf_path: Path, n_words: int = 200) -> Dict[str, Any]:
     """PDF validation for research documents.
 
     Args:
@@ -117,10 +114,7 @@ def collect_symbols(md_paths: List[str]) -> Tuple[Set[str], Set[str]]:
 
 #### validate_images (function)
 ```python
-def validate_images(
-    md_paths: List[str],
-    repo_root: str | Path
-) -> List[DiagnosticEvent]:
+def validate_images(md_paths: List[str], repo_root: str | Path) -> List[DiagnosticEvent]:
     """Validate that all image references in markdown files exist.
 
     Args:
@@ -134,10 +128,7 @@ def validate_images(
 
 #### validate_refs (function)
 ```python
-def validate_refs(
-    md_paths: List[str],
-    repo_root: str | Path
-) -> List[DiagnosticEvent]:
+def validate_refs(md_paths: List[str], repo_root: str | Path) -> List[DiagnosticEvent]:
     """Validate cross-references in markdown files.
 
     Args:
@@ -153,10 +144,7 @@ def validate_refs(
 
 #### validate_math (function)
 ```python
-def validate_math(
-    md_paths: List[str],
-    repo_root: str | Path
-) -> List[DiagnosticEvent]:
+def validate_math(md_paths: List[str], repo_root: str | Path) -> List[DiagnosticEvent]:
     """Validate mathematical equations in markdown files.
 
     Args:
@@ -171,9 +159,7 @@ def validate_math(
 #### validate_markdown (function)
 ```python
 def validate_markdown(
-    markdown_dir: str | Path,
-    repo_root: str | Path,
-    strict: bool = False
+    markdown_dir: str | Path, repo_root: str | Path, strict: bool = False
 ) -> Tuple[List[DiagnosticEvent], int]:
     """markdown validation for research manuscripts.
 
@@ -210,6 +196,7 @@ def find_manuscript_directory(repo_root: str | Path, project_name: str = "projec
 @dataclass
 class IntegrityReport:
     """Container for integrity verification results."""
+
     file_integrity: dict[str, bool] = field(default_factory=dict)
     cross_reference_integrity: dict[str, bool] = field(default_factory=dict)
     data_consistency: dict[str, bool] = field(default_factory=dict)
@@ -222,10 +209,7 @@ class IntegrityReport:
 
 #### verify_file_integrity (function)
 ```python
-def verify_file_integrity(
-    file_paths: List[Path],
-    expected_hashes: Optional[Dict[str, str]] = None
-) -> Dict[str, bool]:
+def verify_file_integrity(file_paths: List[Path], expected_hashes: Optional[Dict[str, str]] = None) -> Dict[str, bool]:
     """Verify file integrity using SHA-256 hashing.
 
     Args:
@@ -239,10 +223,7 @@ def verify_file_integrity(
 
 #### calculate_file_hash (function)
 ```python
-def calculate_file_hash(
-    file_path: Path,
-    algorithm: str = 'sha256'
-) -> Optional[str]:
+def calculate_file_hash(file_path: Path, algorithm: str = "sha256") -> Optional[str]:
     """Calculate hash of a file.
 
     Args:
@@ -322,10 +303,7 @@ def generate_integrity_report(report: IntegrityReport) -> str:
 
 #### validate_build_artifacts (function)
 ```python
-def validate_build_artifacts(
-    output_dir: Path,
-    expected_files: Optional[Dict[str, List[str]]] = None
-) -> Dict[str, Any]:
+def validate_build_artifacts(output_dir: Path, expected_files: Optional[Dict[str, List[str]]] = None) -> Dict[str, Any]:
     """Validate build artifacts exist and are properly structured.
 
     Args:
@@ -378,10 +356,7 @@ def create_integrity_manifest(output_dir: Path) -> Dict[str, Any]:
 
 #### save_integrity_manifest (function)
 ```python
-def save_integrity_manifest(
-    manifest: Dict[str, Any],
-    output_path: Path
-) -> None:
+def save_integrity_manifest(manifest: Dict[str, Any], output_path: Path) -> None:
     """Save integrity manifest to file.
 
     Args:
@@ -406,8 +381,7 @@ def load_integrity_manifest(manifest_path: Path) -> Optional[Dict[str, Any]]:
 #### verify_integrity_against_manifest (function)
 ```python
 def verify_integrity_against_manifest(
-    current_manifest: Dict[str, Any],
-    saved_manifest: Dict[str, Any]
+    current_manifest: Dict[str, Any], saved_manifest: Dict[str, Any]
 ) -> Dict[str, Any]:
     """Compare current integrity against saved manifest.
 
@@ -595,9 +569,7 @@ def validate_output_structure(
 
 #### validate_figure_registry (function)
 ```python
-def validate_figure_registry(
-    registry_path: Path, manuscript_dir: Path
-) -> tuple[bool, list[str]]:
+def validate_figure_registry(registry_path: Path, manuscript_dir: Path) -> tuple[bool, list[str]]:
     """Validate that every ``\\ref{}`` / ``\\label{}`` figure key in
     ``manuscript_dir`` is present in the registry at ``registry_path``.
 
@@ -652,6 +624,7 @@ def main() -> int:
 @dataclass
 class RepoScanResults:
     """Container for repository scan results."""
+
     accuracy_issues: List[ScanAccuracyIssue] = field(default_factory=list)
     completeness_gaps: List[CompletenessGap] = field(default_factory=list)
     statistics: Dict[str, Any] = field(default_factory=dict)
@@ -662,6 +635,7 @@ class RepoScanResults:
 @dataclass(init=False)
 class ScanAccuracyIssue:
     """Accuracy issue found during repository-wide scanning."""
+
     category: str
     severity: str
     file: str
@@ -675,6 +649,7 @@ class ScanAccuracyIssue:
 @dataclass
 class CompletenessGap:
     """Represents a completeness gap found during scanning."""
+
     category: str
     description: str
     severity: str
@@ -845,6 +820,7 @@ def assess_documentation_quality(md_files: List[Path], repo_root: Path) -> Tuple
 @dataclass
 class DocumentationFile:
     """Represents a documentation file."""
+
     path: Path
     content: str
     headings: Set[str]
@@ -856,6 +832,7 @@ class DocumentationFile:
 @dataclass
 class LinkIssue:
     """Represents a link validation issue."""
+
     source_file: Path
     target: str
     line: int
@@ -867,6 +844,7 @@ class LinkIssue:
 @dataclass
 class ScanAccuracyIssue:
     """Represents an accuracy issue."""
+
     category: str
     severity: str
     file: str
@@ -880,6 +858,7 @@ class ScanAccuracyIssue:
 @dataclass
 class CompletenessGap:
     """Represents a completeness gap."""
+
     category: str
     description: str
     severity: str
@@ -890,6 +869,7 @@ class CompletenessGap:
 @dataclass
 class QualityIssue:
     """Represents a quality issue."""
+
     file: Path
     line: int
     issue_type: str
@@ -1137,7 +1117,9 @@ def group_gaps_by_severity(gaps: List[CompletenessGap]) -> Dict[str, int]:
 
 #### analyze_documentation_completeness (function)
 ```python
-def analyze_documentation_completeness(repo_root: Path, documentation_files: List[DocumentationFile]) -> Tuple[Dict, List[CompletenessGap]]:
+def analyze_documentation_completeness(
+    repo_root: Path, documentation_files: List[DocumentationFile]
+) -> Tuple[Dict, List[CompletenessGap]]:
     """Analyze documentation completeness gaps.
 
     Args:
@@ -1290,6 +1272,7 @@ def verify_documentation_accuracy(
 ```python
 def run_link_audit(repo_root: Path) -> int:
     """Run the comprehensive link and reference audit for repo_root."""
+
 
 def main() -> int:
     """Check all documentation links and references comprehensively."""

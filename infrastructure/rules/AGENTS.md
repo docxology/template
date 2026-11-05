@@ -64,18 +64,18 @@ rule_path = resolve_rule_root(Path("."), "templates/template_project_rules")
 ```python
 @dataclass
 class RuleInfo:
-    name: str              # Directory name
-    path: Path             # Absolute path
-    rule_type: str         # "type" field from rules.yaml, or "project"
-    has_soft: bool         # Has soft/ directory (markdown guidelines)
-    has_strong: bool       # Has strong/ directory (yaml/json formal specs)
-    metadata: dict         # Raw rules.yaml content
-    program: str           # Parent program dir ("" for standalone)
+    name: str  # Directory name
+    path: Path  # Absolute path
+    rule_type: str  # "type" field from rules.yaml, or "project"
+    has_soft: bool  # Has soft/ directory (markdown guidelines)
+    has_strong: bool  # Has strong/ directory (yaml/json formal specs)
+    metadata: dict  # Raw rules.yaml content
+    program: str  # Parent program dir ("" for standalone)
 
     @property
     def qualified_name(self) -> str: ...  # "name" or "program/name"
     @property
-    def is_valid(self) -> bool: ...        # True iff has_soft or has_strong
+    def is_valid(self) -> bool: ...  # True iff has_soft or has_strong
 ```
 
 ### `validation.py` (re-exported from `infrastructure.rules`)
@@ -119,8 +119,12 @@ is_valid, message = validate_rule_structure(Path("rules/my_rule"))
 ```python
 @dataclass
 class LinkSyncResult:
-    created: list[str]; updated: list[str]; removed: list[str]; skipped: list[str]
+    created: list[str]
+    updated: list[str]
+    removed: list[str]
+    skipped: list[str]
     private_root: Path | None
+
     @property
     def changed(self) -> bool: ...
     def summary(self) -> str: ...

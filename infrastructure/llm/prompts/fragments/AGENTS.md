@@ -210,10 +210,10 @@ def load_fragment(self, name: str) -> str:
 
     fragment_path = self.fragments_dir / f"{name}.json"
 
-    with open(fragment_path, 'r', encoding='utf-8') as f:
+    with open(fragment_path, "r", encoding="utf-8") as f:
         fragment_data = json.load(f)
 
-    return fragment_data['content']
+    return fragment_data["content"]
 ```
 
 ### Fragment Substitution
@@ -226,7 +226,8 @@ def substitute_fragments(self, template_text: str) -> str:
 
     # Find all fragment references {{fragment_name}}
     import re
-    fragment_refs = re.findall(r'\{\{(\w+)\}\}', template_text)
+
+    fragment_refs = re.findall(r"\{\{(\w+)\}\}", template_text)
 
     result = template_text
     for fragment_name in fragment_refs:
@@ -260,7 +261,7 @@ Please analyze the following manuscript:
 """
 
 # Compose with fragments
-prompt = composer.compose_from_template(template, {'content': manuscript})
+prompt = composer.compose_from_template(template, {"content": manuscript})
 ```
 
 ### Conditional Fragment Application
@@ -271,13 +272,13 @@ prompt = composer.compose_from_template(template, {'content': manuscript})
 def select_fragments_for_task(task_type: str) -> List[str]:
     """Select appropriate fragments based on task type."""
 
-    base_fragments = ['system_prompts', 'format_requirements']
+    base_fragments = ["system_prompts", "format_requirements"]
 
     task_specific = {
-        'review': ['content_requirements', 'validation_hints'],
-        'summarize': ['token_budget_awareness'],
-        'analyze': ['content_requirements', 'section_structures'],
-        'generate': ['format_requirements', 'validation_hints']
+        "review": ["content_requirements", "validation_hints"],
+        "summarize": ["token_budget_awareness"],
+        "analyze": ["content_requirements", "section_structures"],
+        "generate": ["format_requirements", "validation_hints"],
     }
 
     return base_fragments + task_specific.get(task_type, [])
@@ -292,19 +293,15 @@ def create_custom_fragment(name: str, content: str, category: str) -> None:
     """Create a new reusable fragment."""
 
     fragment_data = {
-        'name': name,
-        'description': f'Custom {category} fragment',
-        'version': '1.0',
-        'content': content,
-        'metadata': {
-            'category': category,
-            'compatibility': ['custom'],
-            'tags': ['custom', category]
-        }
+        "name": name,
+        "description": f"Custom {category} fragment",
+        "version": "1.0",
+        "content": content,
+        "metadata": {"category": category, "compatibility": ["custom"], "tags": ["custom", category]},
     }
 
     fragment_path = fragments_dir / f"{name}.json"
-    with open(fragment_path, 'w', encoding='utf-8') as f:
+    with open(fragment_path, "w", encoding="utf-8") as f:
         json.dump(fragment_data, f, indent=2, ensure_ascii=False)
 ```
 
@@ -322,12 +319,12 @@ def test_fragment_content():
 
     # Test all standard fragments load successfully
     standard_fragments = [
-        'system_prompts',
-        'content_requirements',
-        'format_requirements',
-        'section_structures',
-        'token_budget_awareness',
-        'validation_hints'
+        "system_prompts",
+        "content_requirements",
+        "format_requirements",
+        "section_structures",
+        "token_budget_awareness",
+        "validation_hints",
     ]
 
     for fragment_name in standard_fragments:
@@ -348,12 +345,12 @@ def test_fragment_substitution():
     result = composer.substitute_fragments(template)
 
     # Verify fragments were inserted
-    assert 'expert research assistant' in result.lower()
-    assert 'deep understanding' in result.lower()
+    assert "expert research assistant" in result.lower()
+    assert "deep understanding" in result.lower()
 
     # Verify placeholders were removed
-    assert '{{' not in result
-    assert '}}' not in result
+    assert "{{" not in result
+    assert "}}" not in result
 ```
 
 ### Integration Testing
@@ -366,25 +363,25 @@ def test_fragment_integration():
 
     # Create template using multiple fragments
     template = {
-        'parts': [
-            {'type': 'fragment', 'content': '{{system_prompts}}'},
-            {'type': 'instruction', 'content': 'Review this content:'},
-            {'type': 'context', 'content': '{content}'},
-            {'type': 'fragment', 'content': '{{content_requirements}}'},
-            {'type': 'fragment', 'content': '{{format_requirements}}'}
+        "parts": [
+            {"type": "fragment", "content": "{{system_prompts}}"},
+            {"type": "instruction", "content": "Review this content:"},
+            {"type": "context", "content": "{content}"},
+            {"type": "fragment", "content": "{{content_requirements}}"},
+            {"type": "fragment", "content": "{{format_requirements}}"},
         ]
     }
 
-    variables = {'content': 'Sample manuscript content...'}
+    variables = {"content": "Sample manuscript content..."}
 
     # Compose prompt
     prompt = composer.compose_prompt(template, variables)
 
     # Verify all fragments are included
-    assert 'expert research assistant' in prompt.lower()
-    assert 'clear and logical reasoning' in prompt.lower()
-    assert 'bullet points for lists' in prompt.lower()
-    assert 'Sample manuscript content' in prompt
+    assert "expert research assistant" in prompt.lower()
+    assert "clear and logical reasoning" in prompt.lower()
+    assert "bullet points for lists" in prompt.lower()
+    assert "Sample manuscript content" in prompt
 ```
 
 ## Performance Considerations
@@ -431,7 +428,7 @@ def load_fragment_efficiently(self, name: str) -> str:
         logger.warning(f"Large fragment detected: {name}")
 
     # Load with appropriate encoding
-    with open(fragment_path, 'r', encoding='utf-8') as f:
+    with open(fragment_path, "r", encoding="utf-8") as f:
         return f.read()
 ```
 
@@ -473,21 +470,21 @@ def validate_fragment(self, name: str) -> List[str]:
 
     try:
         fragment_path = self.fragments_dir / f"{name}.json"
-        with open(fragment_path, 'r', encoding='utf-8') as f:
+        with open(fragment_path, "r", encoding="utf-8") as f:
             data = json.load(f)
 
         # Required fields
-        if 'content' not in data:
+        if "content" not in data:
             issues.append("Missing 'content' field")
 
-        if not isinstance(data.get('content', ''), str):
+        if not isinstance(data.get("content", ""), str):
             issues.append("'content' field must be a string")
 
-        if len(data.get('content', '').strip()) == 0:
+        if len(data.get("content", "").strip()) == 0:
             issues.append("'content' field cannot be empty")
 
         # Metadata validation
-        metadata = data.get('metadata', {})
+        metadata = data.get("metadata", {})
         if not isinstance(metadata, dict):
             issues.append("'metadata' field must be a dictionary")
 
@@ -508,16 +505,11 @@ def create_fragment_template(name: str, category: str, description: str) -> dict
     """Create a template for new fragments."""
 
     return {
-        'name': name,
-        'description': description,
-        'version': '1.0',
-        'content': '',  # To be filled by user
-        'metadata': {
-            'category': category,
-            'compatibility': [],
-            'dependencies': [],
-            'tags': [category]
-        }
+        "name": name,
+        "description": description,
+        "version": "1.0",
+        "content": "",  # To be filled by user
+        "metadata": {"category": category, "compatibility": [], "dependencies": [], "tags": [category]},
     }
 ```
 
@@ -527,11 +519,11 @@ def create_fragment_template(name: str, category: str, description: str) -> dict
 
 ```python
 CUSTOM_FRAGMENT_CATEGORIES = {
-    'domain_specific': 'Domain-specific knowledge and terminology',
-    'style_guide': 'Writing style and tone guidelines',
-    'formatting': 'Specialized formatting requirements',
-    'workflow': 'Process and workflow guidance',
-    'quality_assurance': 'Quality control and validation'
+    "domain_specific": "Domain-specific knowledge and terminology",
+    "style_guide": "Writing style and tone guidelines",
+    "formatting": "Specialized formatting requirements",
+    "workflow": "Process and workflow guidance",
+    "quality_assurance": "Quality control and validation",
 }
 ```
 
@@ -547,12 +539,12 @@ def update_fragment_version(self, name: str, new_version: str) -> None:
 
     fragment_path = self.fragments_dir / f"{name}.json"
 
-    with open(fragment_path, 'r', encoding='utf-8') as f:
+    with open(fragment_path, "r", encoding="utf-8") as f:
         data = json.load(f)
 
-    data['version'] = new_version
+    data["version"] = new_version
 
-    with open(fragment_path, 'w', encoding='utf-8') as f:
+    with open(fragment_path, "w", encoding="utf-8") as f:
         json.dump(data, f, indent=2, ensure_ascii=False)
 ```
 
@@ -566,7 +558,7 @@ def audit_fragments(self) -> Dict[str, List[str]]:
 
     audit_results = {}
 
-    for fragment_file in self.fragments_dir.glob('*.json'):
+    for fragment_file in self.fragments_dir.glob("*.json"):
         name = fragment_file.stem
         issues = self.validate_fragment(name)
 

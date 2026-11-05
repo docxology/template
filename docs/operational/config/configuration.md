@@ -166,12 +166,8 @@ Retry behavior is configured programmatically via the retry decorators:
 ```python
 from infrastructure.core.runtime.retry import retry_with_backoff
 
-@retry_with_backoff(
-    max_attempts=3,
-    initial_delay=1.0,
-    max_delay=60.0,
-    exponential_base=2.0
-)
+
+@retry_with_backoff(max_attempts=3, initial_delay=1.0, max_delay=60.0, exponential_base=2.0)
 def risky_operation():
     # Will retry up to 3 times with exponential backoff
     pass
@@ -394,8 +390,8 @@ from infrastructure.core.config.schema import register_project_schema_extension
 register_project_schema_extension(
     "my_project",
     {
-        "simulation": dict,    # arbitrary nested mapping
-        "datasets": list,      # list of dataset descriptors
+        "simulation": dict,  # arbitrary nested mapping
+        "datasets": list,  # list of dataset descriptors
         "experiment_id": str,  # short identifier
     },
 )

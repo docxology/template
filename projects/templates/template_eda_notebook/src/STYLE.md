@@ -16,10 +16,11 @@ def histogram_data(frame: pd.DataFrame, column: str, bins: int = 10) -> Histogra
     counts, edges = np.histogram(values, bins=bins)
     return HistogramFigureData(column, [int(c) for c in counts], [float(e) for e in edges])
 
+
 # ❌ WRONG: draws a figure and writes a file from inside src/
 def histogram_data(frame, column, bins=10):
-    plt.hist(frame[column])              # Side effect: plotting
-    plt.savefig("hist.png")              # Side effect: file write
+    plt.hist(frame[column])  # Side effect: plotting
+    plt.savefig("hist.png")  # Side effect: file write
 ```
 
 Plotting, file I/O, and orchestration belong in `scripts/` (and notebook

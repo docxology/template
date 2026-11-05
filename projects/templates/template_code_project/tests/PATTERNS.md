@@ -32,6 +32,7 @@ Pure-math modules (`core/optimizer.py`, `core/invariants.py`, `core/experiment_c
 import pytest
 import numpy as np
 
+
 @pytest.fixture
 def simple_problem():
     """Standard 1D quadratic test problem."""
@@ -49,8 +50,8 @@ def simple_problem():
 
 ```python
 # Standard tolerances for floating-point comparisons
-ATOL = 1e-4   # Absolute tolerance
-RTOL = 1e-6   # Relative tolerance
+ATOL = 1e-4  # Absolute tolerance
+RTOL = 1e-6  # Relative tolerance
 
 # Use in assertions
 np.testing.assert_allclose(result.solution, expected, atol=ATOL)
@@ -87,12 +88,15 @@ class TestQuadraticFunction:
 ## Parametrize Usage
 
 ```python
-@pytest.mark.parametrize("step_size,expected_converged", [
-    (0.01, True),
-    (0.1,  True),
-    (1.0,  True),   # |1 - 1.0| = 0.0 → single-step convergence for unit Hessian
-    (2.5,  False),  # |1 - 2.5| = 1.5 > 1 → diverges for unit Hessian
-])
+@pytest.mark.parametrize(
+    "step_size,expected_converged",
+    [
+        (0.01, True),
+        (0.1, True),
+        (1.0, True),  # |1 - 1.0| = 0.0 → single-step convergence for unit Hessian
+        (2.5, False),  # |1 - 2.5| = 1.5 > 1 → diverges for unit Hessian
+    ],
+)
 def test_convergence_by_step_size(self, step_size, expected_converged):
     """Test convergence across different step sizes.
 
@@ -100,9 +104,7 @@ def test_convergence_by_step_size(self, step_size, expected_converged):
     contraction factor is |1 - α|. Stability requires |1 - α| < 1, i.e.
     0 < α < 2. Step sizes ≥ 2 cause divergence.
     """
-    obj_func, grad_func = make_quadratic_problem(
-        np.array([[1.0]]), np.array([1.0])
-    )
+    obj_func, grad_func = make_quadratic_problem(np.array([[1.0]]), np.array([1.0]))
     result = gradient_descent(
         initial_point=np.array([0.5]),
         objective_func=obj_func,

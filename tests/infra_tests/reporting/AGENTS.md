@@ -46,39 +46,40 @@ def test_pipeline_reporter_basic_reporting():
     """Test basic pipeline reporting functionality."""
     # Create mock pipeline results
     stage_results = [
-        {'stage': 'setup', 'status': 'success', 'duration': 2.5},
-        {'stage': 'testing', 'status': 'success', 'duration': 15.3},
-        {'stage': 'analysis', 'status': 'success', 'duration': 45.2},
-        {'stage': 'rendering', 'status': 'success', 'duration': 28.7}
+        {"stage": "setup", "status": "success", "duration": 2.5},
+        {"stage": "testing", "status": "success", "duration": 15.3},
+        {"stage": "analysis", "status": "success", "duration": 45.2},
+        {"stage": "rendering", "status": "success", "duration": 28.7},
     ]
 
     reporter = PipelineReporter()
     report = reporter.generate_report(stage_results, total_duration=91.7)
 
     # Verify report structure
-    assert report['summary']['total_stages'] == 4
-    assert report['summary']['successful_stages'] == 4
-    assert report['summary']['total_duration'] == 91.7
-    assert 'stage_details' in report
-    assert 'performance_metrics' in report
+    assert report["summary"]["total_stages"] == 4
+    assert report["summary"]["successful_stages"] == 4
+    assert report["summary"]["total_duration"] == 91.7
+    assert "stage_details" in report
+    assert "performance_metrics" in report
+
 
 def test_pipeline_reporter_error_handling():
     """Test error handling in pipeline reporting."""
     # Create results with failures
     stage_results = [
-        {'stage': 'setup', 'status': 'success', 'duration': 2.5},
-        {'stage': 'testing', 'status': 'failed', 'duration': 5.2, 'error': 'Test failure'},
-        {'stage': 'analysis', 'status': 'skipped', 'duration': 0.0}
+        {"stage": "setup", "status": "success", "duration": 2.5},
+        {"stage": "testing", "status": "failed", "duration": 5.2, "error": "Test failure"},
+        {"stage": "analysis", "status": "skipped", "duration": 0.0},
     ]
 
     reporter = PipelineReporter()
     report = reporter.generate_report(stage_results, total_duration=7.7)
 
     # Verify error reporting
-    assert report['summary']['failed_stages'] == 1
-    assert report['summary']['skipped_stages'] == 1
-    assert 'errors' in report
-    assert len(report['errors']) == 1
+    assert report["summary"]["failed_stages"] == 1
+    assert report["summary"]["skipped_stages"] == 1
+    assert "errors" in report
+    assert len(report["errors"]) == 1
 ```
 
 ### Error Aggregation Tests
@@ -96,17 +97,18 @@ def test_error_aggregator_categorization():
     aggregator = ErrorAggregator()
 
     # Add various errors
-    aggregator.add_error('validation', 'PDF validation failed: missing reference', 'rendering')
-    aggregator.add_error('dependency', 'Module not found: numpy', 'analysis')
-    aggregator.add_error('validation', 'Invalid markdown syntax', 'rendering')
-    aggregator.add_error('permission', 'Write access denied', 'output')
+    aggregator.add_error("validation", "PDF validation failed: missing reference", "rendering")
+    aggregator.add_error("dependency", "Module not found: numpy", "analysis")
+    aggregator.add_error("validation", "Invalid markdown syntax", "rendering")
+    aggregator.add_error("permission", "Write access denied", "output")
 
     # Verify categorization
     categorized = aggregator.get_categorized_errors()
-    assert 'validation' in categorized
-    assert 'dependency' in categorized
-    assert 'permission' in categorized
-    assert len(categorized['validation']) == 2  # Two validation errors
+    assert "validation" in categorized
+    assert "dependency" in categorized
+    assert "permission" in categorized
+    assert len(categorized["validation"]) == 2  # Two validation errors
+
 
 def test_error_aggregator_frequency_analysis():
     """Test error frequency analysis."""
@@ -114,19 +116,19 @@ def test_error_aggregator_frequency_analysis():
 
     # Add repeated errors
     for _ in range(3):
-        aggregator.add_error('network', 'Connection timeout', 'api_call')
+        aggregator.add_error("network", "Connection timeout", "api_call")
 
     for _ in range(2):
-        aggregator.add_error('parsing', 'Invalid JSON', 'data_processing')
+        aggregator.add_error("parsing", "Invalid JSON", "data_processing")
 
     # Analyze frequency
     frequency = aggregator.get_error_frequency()
-    assert frequency['network']['count'] == 3
-    assert frequency['parsing']['count'] == 2
+    assert frequency["network"]["count"] == 3
+    assert frequency["parsing"]["count"] == 2
 
     # Verify prioritization
     prioritized = aggregator.get_prioritized_errors()
-    assert prioritized[0]['category'] == 'network'  # Most frequent
+    assert prioritized[0]["category"] == "network"  # Most frequent
 ```
 
 ### HTML Template Tests
@@ -142,37 +144,38 @@ def test_error_aggregator_frequency_analysis():
 def test_html_template_rendering():
     """Test HTML template rendering with data."""
     template_data = {
-        'title': 'Pipeline Report',
-        'stages': [
-            {'name': 'setup', 'duration': 2.5, 'status': 'success'},
-            {'name': 'testing', 'duration': 15.3, 'status': 'success'}
+        "title": "Pipeline Report",
+        "stages": [
+            {"name": "setup", "duration": 2.5, "status": "success"},
+            {"name": "testing", "duration": 15.3, "status": "success"},
         ],
-        'errors': [],
-        'total_duration': 17.8
+        "errors": [],
+        "total_duration": 17.8,
     }
 
     html_output = render_html_report(template_data)
 
     # Verify HTML structure
-    assert '<!DOCTYPE html>' in html_output
-    assert 'Pipeline Report' in html_output
-    assert '17.8' in html_output  # Total duration
+    assert "<!DOCTYPE html>" in html_output
+    assert "Pipeline Report" in html_output
+    assert "17.8" in html_output  # Total duration
 
     # Verify CSS is included
-    assert '<style>' in html_output or 'css' in html_output.lower()
+    assert "<style>" in html_output or "css" in html_output.lower()
+
 
 def test_html_template_error_handling():
     """Test error handling in HTML template rendering."""
     # Test with missing data
-    incomplete_data = {'title': 'Test Report'}  # Missing required fields
+    incomplete_data = {"title": "Test Report"}  # Missing required fields
 
     # Should handle gracefully or raise clear error
     try:
         html_output = render_html_report(incomplete_data)
         # If it succeeds, verify basic structure
-        assert '<html' in html_output
+        assert "<html" in html_output
     except TemplateError as e:
-        assert 'missing' in str(e).lower() or 'required' in str(e).lower()
+        assert "missing" in str(e).lower() or "required" in str(e).lower()
 ```
 
 ### Executive and Multi-Project Tests
@@ -218,7 +221,7 @@ def validate_report_formats(report_data: dict, output_dir: Path):
     validate_json_structure(json_report)
 
     json_file = output_dir / "report.json"
-    save_report(json_report, json_file, 'json')
+    save_report(json_report, json_file, "json")
     assert json_file.exists()
 
     # HTML format
@@ -226,7 +229,7 @@ def validate_report_formats(report_data: dict, output_dir: Path):
     validate_html_structure(html_report)
 
     html_file = output_dir / "report.html"
-    save_report(html_report, html_file, 'html')
+    save_report(html_report, html_file, "html")
     assert html_file.exists()
 
     # Markdown format
@@ -234,7 +237,7 @@ def validate_report_formats(report_data: dict, output_dir: Path):
     validate_markdown_structure(md_report)
 
     md_file = output_dir / "report.md"
-    save_report(md_report, md_file, 'markdown')
+    save_report(md_report, md_file, "markdown")
     assert md_file.exists()
 
     # Verify content consistency across formats
@@ -257,51 +260,47 @@ def sample_pipeline_results():
     """Provide realistic pipeline execution results."""
     return [
         {
-            'stage': 'environment_setup',
-            'status': 'success',
-            'duration': 2.3,
-            'start_time': '2024-01-15T10:00:00',
-            'end_time': '2024-01-15T10:00:02.3'
+            "stage": "environment_setup",
+            "status": "success",
+            "duration": 2.3,
+            "start_time": "2024-01-15T10:00:00",
+            "end_time": "2024-01-15T10:00:02.3",
         },
         {
-            'stage': 'test_execution',
-            'status': 'success',
-            'duration': 45.6,
-            'start_time': '2024-01-15T10:00:02.3',
-            'end_time': '2024-01-15T10:00:47.9',
-            'details': {
-                'tests_run': 150,
-                'tests_passed': 148,
-                'tests_failed': 2,
-                'coverage': 92.5
-            }
+            "stage": "test_execution",
+            "status": "success",
+            "duration": 45.6,
+            "start_time": "2024-01-15T10:00:02.3",
+            "end_time": "2024-01-15T10:00:47.9",
+            "details": {"tests_run": 150, "tests_passed": 148, "tests_failed": 2, "coverage": 92.5},
         },
         {
-            'stage': 'analysis_execution',
-            'status': 'failed',
-            'duration': 12.4,
-            'start_time': '2024-01-15T10:00:47.9',
-            'end_time': '2024-01-15T10:01:00.3',
-            'error': 'AnalysisError: Insufficient data for statistical test',
-            'error_details': {
-                'error_type': 'AnalysisError',
-                'error_location': 'statistical_analysis.py:142',
-                'data_points': 45,
-                'required_minimum': 50
-            }
-        }
+            "stage": "analysis_execution",
+            "status": "failed",
+            "duration": 12.4,
+            "start_time": "2024-01-15T10:00:47.9",
+            "end_time": "2024-01-15T10:01:00.3",
+            "error": "AnalysisError: Insufficient data for statistical test",
+            "error_details": {
+                "error_type": "AnalysisError",
+                "error_location": "statistical_analysis.py:142",
+                "data_points": 45,
+                "required_minimum": 50,
+            },
+        },
     ]
+
 
 @pytest.fixture
 def comprehensive_error_set():
     """Provide diverse set of errors for aggregation testing."""
     return [
-        {'category': 'validation', 'message': 'PDF missing cross-references', 'stage': 'rendering'},
-        {'category': 'dependency', 'message': 'Module numpy not found', 'stage': 'analysis'},
-        {'category': 'validation', 'message': 'Invalid markdown syntax', 'stage': 'processing'},
-        {'category': 'network', 'message': 'Connection timeout to API', 'stage': 'data_fetching'},
-        {'category': 'permission', 'message': 'Write access denied to output directory', 'stage': 'file_output'},
-        {'category': 'validation', 'message': 'Citation key not found', 'stage': 'rendering'}
+        {"category": "validation", "message": "PDF missing cross-references", "stage": "rendering"},
+        {"category": "dependency", "message": "Module numpy not found", "stage": "analysis"},
+        {"category": "validation", "message": "Invalid markdown syntax", "stage": "processing"},
+        {"category": "network", "message": "Connection timeout to API", "stage": "data_fetching"},
+        {"category": "permission", "message": "Write access denied to output directory", "stage": "file_output"},
+        {"category": "validation", "message": "Citation key not found", "stage": "rendering"},
     ]
 ```
 
@@ -318,27 +317,23 @@ def temp_report_dir(tmp_path):
     report_dir.mkdir()
     return report_dir
 
+
 @pytest.fixture
 def mock_pipeline_data():
     """Provide mock pipeline execution data."""
     return {
-        'pipeline_start': '2024-01-15T10:00:00',
-        'pipeline_end': '2024-01-15T10:05:30',
-        'total_duration': 330.0,
-        'stages': [
-            {'name': 'setup', 'status': 'success', 'duration': 5.2},
-            {'name': 'testing', 'status': 'success', 'duration': 120.5},
-            {'name': 'analysis', 'status': 'success', 'duration': 180.3},
-            {'name': 'rendering', 'status': 'success', 'duration': 24.0}
+        "pipeline_start": "2024-01-15T10:00:00",
+        "pipeline_end": "2024-01-15T10:05:30",
+        "total_duration": 330.0,
+        "stages": [
+            {"name": "setup", "status": "success", "duration": 5.2},
+            {"name": "testing", "status": "success", "duration": 120.5},
+            {"name": "analysis", "status": "success", "duration": 180.3},
+            {"name": "rendering", "status": "success", "duration": 24.0},
         ],
-        'errors': [],
-        'warnings': ['Low test coverage: 78%'],
-        'system_info': {
-            'python_version': '3.10.0',
-            'platform': 'Linux',
-            'memory_total': '16GB',
-            'cpu_count': 8
-        }
+        "errors": [],
+        "warnings": ["Low test coverage: 78%"],
+        "system_info": {"python_version": "3.10.0", "platform": "Linux", "memory_total": "16GB", "cpu_count": 8},
     }
 ```
 
@@ -352,32 +347,34 @@ def validate_report_content(report: dict, expected_keys: List[str]):
         assert key in report, f"Missing required key: {key}"
 
     # Validate specific content
-    if 'summary' in report:
-        validate_summary_section(report['summary'])
+    if "summary" in report:
+        validate_summary_section(report["summary"])
 
-    if 'stages' in report:
-        validate_stages_section(report['stages'])
+    if "stages" in report:
+        validate_stages_section(report["stages"])
 
-    if 'errors' in report:
-        validate_errors_section(report['errors'])
+    if "errors" in report:
+        validate_errors_section(report["errors"])
+
 
 def validate_summary_section(summary: dict):
     """Validate summary section structure."""
-    required_fields = ['total_stages', 'successful_stages', 'failed_stages', 'total_duration']
+    required_fields = ["total_stages", "successful_stages", "failed_stages", "total_duration"]
     for field in required_fields:
         assert field in summary, f"Missing summary field: {field}"
         assert isinstance(summary[field], (int, float)), f"Invalid type for {field}"
 
+
 def validate_html_report_structure(html_content: str):
     """Validate HTML report has proper structure."""
-    assert '<!DOCTYPE html>' in html_content
-    assert '<html' in html_content
-    assert '<head>' in html_content
-    assert '<body>' in html_content
-    assert '</html>' in html_content
+    assert "<!DOCTYPE html>" in html_content
+    assert "<html" in html_content
+    assert "<head>" in html_content
+    assert "<body>" in html_content
+    assert "</html>" in html_content
 
     # Check for required sections
-    assert 'Pipeline Report' in html_content or 'Report Summary' in html_content
+    assert "Pipeline Report" in html_content or "Report Summary" in html_content
 ```
 
 ## Running Tests
@@ -443,7 +440,7 @@ def debug_template_rendering():
     """Debug template rendering issues."""
     try:
         # Test with minimal data
-        minimal_data = {'title': 'Test Report', 'stages': []}
+        minimal_data = {"title": "Test Report", "stages": []}
         html = render_html_report(minimal_data)
         print("Minimal template rendering: SUCCESS")
 
@@ -455,6 +452,7 @@ def debug_template_rendering():
     except Exception as e:
         print(f"Template rendering failed: {e}")
         import traceback
+
         traceback.print_exc()
 ```
 
@@ -467,14 +465,14 @@ def debug_file_output():
     import os
 
     # Test basic file operations
-    with tempfile.NamedTemporaryFile(mode='w', delete=False) as f:
+    with tempfile.NamedTemporaryFile(mode="w", delete=False) as f:
         test_content = "Test report content"
         f.write(test_content)
         temp_path = f.name
 
     # Verify file was written
     assert os.path.exists(temp_path)
-    with open(temp_path, 'r') as f:
+    with open(temp_path, "r") as f:
         content = f.read()
     assert content == test_content
 
@@ -496,11 +494,11 @@ def debug_error_categorization():
         "PDF validation failed: missing reference",
         "Module numpy not found",
         "Connection timeout to API",
-        "Invalid markdown syntax"
+        "Invalid markdown syntax",
     ]
 
     for error in test_errors:
-        aggregator.add_error('test', error, 'test_stage')
+        aggregator.add_error("test", error, "test_stage")
 
     categorized = aggregator.get_categorized_errors()
     print(f"Categorized errors: {categorized}")

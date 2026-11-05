@@ -46,9 +46,15 @@ flowchart LR
 
 ```python
 from infrastructure.search.literature import (
-    LiteratureClient, SearchQuery, ArxivBackend, CrossrefBackend,
-    LocalBackend, PaperclipBackend,
-    AbstractFetcher, FulltextFetcher, SearchCache,
+    LiteratureClient,
+    SearchQuery,
+    ArxivBackend,
+    CrossrefBackend,
+    LocalBackend,
+    PaperclipBackend,
+    AbstractFetcher,
+    FulltextFetcher,
+    SearchCache,
 )
 ```
 
