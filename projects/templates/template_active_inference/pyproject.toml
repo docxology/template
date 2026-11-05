@@ -21,7 +21,7 @@ dependencies = [
     "pillow>=13.0.0",
     "pyyaml>=6.0",
     "scipy>=1.11.0",
-    "inferactively-pymdp==1.0.4",
+    "inferactively-pymdp==1.0.3",
 ]
 
 [project.optional-dependencies]
