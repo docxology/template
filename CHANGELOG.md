@@ -7,6 +7,33 @@ source and contracts; each exemplar retains its own package and publication
 versions. Confidential and local workspaces outside the canonical public roster
 are excluded.
 
+## [5.1.0] - 2026-11-05
+
+See the [5.1.0 candidate notes](docs/releases/v5.1.0.md). This coordinated minor
+preparation moves Root and canonical exemplar SDK bindings to 5.1.0 while
+preserving exemplar own versions and third-party locks. The release ceremony requires exact-source acceptance,
+matching tag identity and authenticated publication.
+
+- Bind each ARL capability projection to one invocation's original audited
+  producer, retaining the first verdict even on failure. Separately authenticate
+  and read a downloaded same-Source carrier with the full original reader.
+- Retain bounded, allowlisted HTTP error-header observations while preserving
+  existing retry behavior and keeping quota interpretation separate.
+- Retain structured rendered-validation drift observations and original worker
+  results, plus bounded Active producer phase diagnostics.
+- Prepare native transmission images before Active hydration audits; regenerate
+  its tracked publication evidence through the actual producers.
+- Preserve Newspaper image resource refusals and exercise valid, corrupt and
+  resource-limited images in the persistent project smoke roster.
+- Update development and scientific dependencies within their declared Root and
+  project lock scopes; qualify the actual consumers with the locked toolchain.
+- Retain artifact-only publication refresh and unchanged-output rebind review
+  patches with finite generated ownership, original exits and committed-tree
+  gates. Direct push remains inactive pending its separate owner decision.
+- Freeze final metadata and Source before publication regeneration and coverage.
+  Import genuine coverage literals from measured Source, then rebind unchanged
+  outputs at the committed import before exact-main acceptance.
+
 ## [5.0.2] - 2026-11-04
 
 See the [5.0.2 release notes](docs/releases/v5.0.2.md). This release moves the root
