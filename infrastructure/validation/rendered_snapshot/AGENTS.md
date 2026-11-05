@@ -18,7 +18,9 @@ gate; the public import path is unchanged.
 ## Verification
 
 ```bash
-uv run pytest tests/infra_tests/validation/test_rendered_provenance.py -q
+uv run pytest tests/infra_tests/validation/test_rendered_provenance_roles.py \
+  tests/infra_tests/validation/test_rendered_provenance_stage_closures.py \
+  tests/infra_tests/validation/test_rendered_validation_input_diagnostics.py -q
 uv run python scripts/gates/module_line_count_check.py
 ```
 

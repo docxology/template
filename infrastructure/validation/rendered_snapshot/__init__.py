@@ -352,10 +352,27 @@ def read_committed_validation_report(
     except (OSError, json.JSONDecodeError) as exc:
         raise RenderedSnapshotError("VALIDATION_REPORT_INVALID", f"cannot read validation report: {exc}") from exc
     validated_inputs = validate_green_report_payload(payload, project)
-    if dict(validated_inputs) != current.validated_inputs_dict():
+    current_inputs = current.validated_inputs_dict()
+    if dict(validated_inputs) != current_inputs:
+        changed: list[str] = []
+        for name, expected in current_inputs.items():
+            observed = validated_inputs.get(name)
+            if name == "fingerprints" and isinstance(observed, Mapping) and isinstance(expected, Mapping):
+                changed.extend(
+                    f"fingerprints.{label}"
+                    for label in ("stage", "source", "config", "output")
+                    if observed.get(label) != expected.get(label)
+                )
+                if set(observed) != set(expected):
+                    changed.append("fingerprints.fields")
+            elif observed != expected:
+                changed.append(name)
+        if set(validated_inputs) != set(current_inputs):
+            changed.append("fields")
         raise RenderedSnapshotError(
             "VALIDATION_INPUTS_DRIFT",
-            "validation report was not generated for the exact current rendered snapshot",
+            "validation report was not generated for the exact current rendered snapshot "
+            f"(changed: {', '.join(changed)})",
         )
     return _evidence_file(project_root, path)
 

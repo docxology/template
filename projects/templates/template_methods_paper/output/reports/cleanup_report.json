@@ -34,6 +34,7 @@
     "projects/templates/template_methods_paper/output/release_bundle/manifest.json",
     "projects/templates/template_methods_paper/output/release_bundle/publication_metadata.json",
     "projects/templates/template_methods_paper/output/reports/artifact_manifest.json",
+    "projects/templates/template_methods_paper/output/reports/cleanup_report.json",
     "projects/templates/template_methods_paper/output/reports/evidence_registry.json",
     "projects/templates/template_methods_paper/output/reports/gate_report.json",
     "projects/templates/template_methods_paper/output/reports/manuscript_composition.json",
@@ -65,5 +66,5 @@
     "projects/templates/template_methods_paper/output/web/manuscript__07_scope_and_related_work.html",
     "projects/templates/template_methods_paper/output/web/manuscript__99_references.html"
   ],
-  "skipped_tracked_count": 64
+  "skipped_tracked_count": 65
 }

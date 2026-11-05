@@ -38,13 +38,13 @@
     },
     {
       "rendered_path": "output/manuscript/05_conclusion.md",
-      "rendered_sha256": "d124529152b29fcb746cc61d28825138c8e211edef9220272e8ab98c7692b258",
+      "rendered_sha256": "c44fad9d6761eceec33fbf369081f2220658e1a2da1672fa1daaa5f6a96c7669",
       "source_path": "manuscript/05_conclusion.md",
       "source_sha256": "b1ff45d46c0805bac6df75595883f1bb3138d15e433bdf73b046ff6521bdabd0"
     },
     {
       "rendered_path": "output/manuscript/06_reproducibility.md",
-      "rendered_sha256": "53d609ad22ac1577b2892843a13c2d4e41f3d83575c03c312be50faad1c58bc1",
+      "rendered_sha256": "7b1133c1946ff8fde19c528c6c1b27f64077499652b70af06200bf2e0fd89231",
       "source_path": "manuscript/06_reproducibility.md",
       "source_sha256": "9160d7cf011ca7feb015ae49daa17536ef93d6bf359e887d27dc357499d4d0dc"
     },
@@ -76,22 +76,22 @@
   "evidence_files": {
     "artifact_manifest": {
       "path": "output/reports/artifact_manifest.json",
-      "sha256": "dd5021f2f035ae8efb00038a02e6d08d574280b146c75ea394ae7c6cd521cdf8",
+      "sha256": "5f3b4698c3c2bb99f847e6c24c1808494e86227f85acb62ffe41528c694996ee",
       "size_bytes": 24134
     },
     "combined_manuscript": {
       "path": "output/web/_combined_manuscript.md",
-      "sha256": "d4138cc15b20bab3583442b3ca867f52452fd4ff609592eaa808c0dafed9edb4",
+      "sha256": "4a16576cf4d33de28ddbc1130d845a52c1b3649d17f37dfd0680d74c901b8fdd",
       "size_bytes": 104080
     },
     "composition_manifest": {
       "path": "output/reports/manuscript_composition.json",
-      "sha256": "226f45a1e7e6fa327a03dd74b67b86908b96ce9dc54df969ac9e91e521f33a79",
+      "sha256": "6c96f7353567004e6c95c55cc58012befd5ee2f24aaa05b56e3dfddd0b249443",
       "size_bytes": 2935
     },
     "validation_report": {
       "path": "output/reports/validation_report.json",
-      "sha256": "b2e289ae9d91d52a671791beff15dc37d5653174ad9a9b6b24b15d3902dde4d8",
+      "sha256": "4811f99198e06fff019ae4be540eb5f3330702a6f509ffb7a851fc61b238d207",
       "size_bytes": 13005
     }
   },
@@ -99,19 +99,19 @@
   "fingerprints": {
     "config": {
       "file_count": 16,
-      "sha256": "141e73d3cc86daaba99b1c390fc63a556ac4ba55117c12748a0e9803f64aae83"
+      "sha256": "a6f85a56a981709c721933a4d396b9212e8eea4697eaf798e1dc7609de4e24ca"
     },
     "output": {
       "file_count": 74,
-      "sha256": "5685ecb6463f4f8dbc8e2f3f20eeae6dc40eb7da8e46c97ca2894fce892156e8"
+      "sha256": "fd591fed480ddc72afb78a71a98bcaa7205de736ec5f9157fe300c342e12623d"
     },
     "source": {
       "file_count": 46,
       "sha256": "b3bae35b93e9c99281c3f46656ffec08899a29db8c63d0c289587fe0ecb20c19"
     },
     "stage": {
-      "file_count": 1724,
-      "sha256": "a134849d6b09bc65e8bbe94175469c29d41b71d50366ba837d3dbb7d0a0f6c96"
+      "file_count": 1726,
+      "sha256": "78f433b909dc8f296b91f6f671b9f57dc0d460756267e1b2488b09d1bb4d6428"
     }
   },
   "project": "templates/template_gold_refinement",

@@ -8,8 +8,10 @@ from pathlib import Path
 import pytest
 
 from infrastructure.project.release_versions import (
+    _notes_tag_commit_findings,
     format_release_version_report,
     normalize_version,
+    resolve_tag_commit,
     validate_release_versions,
 )
 
@@ -127,6 +129,50 @@ def test_tag_that_differs_from_the_declared_version_is_reported(tmp_path: Path) 
     _scaffold(tmp_path)
     report = validate_release_versions(tmp_path, tag="v4.1.0", projects=(PROJECT,))
     assert any(item.rule == "tag" for item in report.findings)
+
+
+def test_notes_commit_named_as_the_tagged_commit_must_be_the_tag(tmp_path: Path) -> None:
+    _scaffold(tmp_path)
+    notes = tmp_path / "docs/releases/v4.3.0.md"
+    tagged = "a" * 40
+    intermediate = "b" * 40
+    notes.write_text(
+        "# 4.3.0 — notes\n\n"
+        "Cut from the `v4.3.0` tag. The tagged commit is the merge of the release-train pull request:\n"
+        f"`{intermediate}` (the merge of an earlier series).\n",
+        encoding="utf-8",
+    )
+    findings = _notes_tag_commit_findings(notes, "v4.3.0", tagged)
+    assert [item.rule for item in findings] == ["release-notes-tag-commit"]
+    assert intermediate in findings[0].detail
+    assert tagged in findings[0].detail
+
+    notes.write_text(
+        "# 4.3.0 — notes\n\n"
+        "Cut from the `v4.3.0` tag. The tagged commit is the merge of the release-train pull request,\n"
+        f"`{tagged}`: on top of `{intermediate}`, an intermediate merge 44 commits before the tag.\n",
+        encoding="utf-8",
+    )
+    assert _notes_tag_commit_findings(notes, "v4.3.0", tagged) == []
+
+
+def test_notes_without_a_verifiable_tag_commit_claim_are_allowed(tmp_path: Path) -> None:
+    _scaffold(tmp_path)
+    notes = tmp_path / "docs/releases/v4.3.0.md"
+    # The scaffolded note carries no provenance claim at all.
+    assert _notes_tag_commit_findings(notes, "v4.3.0", "a" * 40) == []
+    # A claim that names no commit has nothing to compare.
+    notes.write_text(
+        "# 4.3.0 — notes\n\nThe tagged commit is the merge of the release-train pull request.\n",
+        encoding="utf-8",
+    )
+    assert _notes_tag_commit_findings(notes, "v4.3.0", "a" * 40) == []
+    # An unresolvable tag belongs to the existing tag rule, not this one.
+    assert _notes_tag_commit_findings(notes, "v4.3.0", None) == []
+
+
+def test_tag_resolution_returns_none_outside_a_repository(tmp_path: Path) -> None:
+    assert resolve_tag_commit(tmp_path, "v4.3.0") is None
 
 
 def test_package_version_must_equal_the_declared_intended_version(tmp_path: Path) -> None:

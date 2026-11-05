@@ -228,8 +228,16 @@ def _run_native_worker(
         "blockers": [],
         "diagnostic": "",
     }
-    env = native_environment(root, Path(sys.executable), directory)
     try:
+        # `native_environment` resolves the interpreter-visible environment and can
+        # raise outside the delivery path it prepares. It belongs inside the
+        # protected body so a failure here is recorded rather than escaping as an
+        # unexplained exit: before this line moved, it was the only statement
+        # between `raw` existing (line 184) and the handler beginning, and it sat
+        # inside no `try` at all. A `SystemExit` raised here produced exactly the
+        # empty-diagnostic worker exit this module's BaseException clause exists to
+        # prevent.
+        env = native_environment(root, Path(sys.executable), directory)
         if runtime["missing"] or runtime["python_version"] not in {
             "3.12",
             "3.13",
@@ -505,6 +513,57 @@ def _run_native_worker(
         if raw["status"] != "blocked":
             raw["status"] = "fail"
             raw["execution_exit_code"] = raw["execution_exit_code"] or 1
+    except BaseException as error:  # noqa: BLE001 - a raising worker must still record why
+        # `except Exception` above cannot see `SystemExit`, `GeneratorExit` or any
+        # other `BaseException` subclass: `SystemExit` inherits from
+        # `BaseException`, not `Exception`. A `sys.exit(1)` or
+        # `raise SystemExit(1)` anywhere in the protected body therefore escaped
+        # unrecorded, leaving `raw["diagnostic"]` empty and emitting no
+        # traceback. Secondary `KeyboardInterrupt` and `SystemExit` are the
+        # canonical cases; the escape property belongs to the parent, so the
+        # handler does too.
+        #
+        # Hosted run 41954325668: all 25 native cells exited 1 with an empty
+        # diagnostic. The retained `receipt.json` recorded
+        # `worker_outcome.class == "SystemExit"` with `system_exit_code: 1`, and
+        # every worker stderr contained only `NATIVE_WORKER_STARTUP_V1` markers —
+        # no traceback exists because `SystemExit` does not produce one.
+        #
+        # Record, then re-raise: the worker must still fail. A worker that
+        # swallowed `SystemExit` and continued would be a worse defect than the
+        # one this clause exists to name.
+        # `str(SystemExit(None))` is the literal "None", which would read as a
+        # real message. Only a non-empty, non-"None" string is worth appending.
+        message = str(error)
+        detail = message if message and message != "None" else ""
+        raw["diagnostic"] = (
+            f"{type(error).__name__} escaped the worker body: {detail}"
+            if detail
+            else f"{type(error).__name__} escaped the worker body"
+        )
+        raw["worker_outcome"] = {
+            "class": type(error).__name__,
+            "kind": "raised",
+            "module": type(error).__module__,
+            "system_exit_code": getattr(error, "code", None),
+        }
+        raw["status"] = "blocked" if raw["status"] == "blocked" else "fail"
+        raw["execution_exit_code"] = raw["execution_exit_code"] or 1
+        close_native_worker_custody(
+            raw,
+            root=root,
+            before=before,
+            formats=formats,
+            directory=directory,
+            specification=specification,
+            source_context=source_context,
+            native_reader=native_reader,
+            runtime=runtime,
+            deadline=deadline,
+            host_before=host_before,
+            interpreter_before=interpreter_before,
+        )
+        raise
     close_native_worker_custody(
         raw,
         root=root,

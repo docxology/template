@@ -28,6 +28,28 @@ from infrastructure.search.literature.models import Paper, merge_papers
 
 CROSSREF_URL = "https://api.crossref.org/works"
 OPENALEX_URL = "https://api.openalex.org/works"
+
+#: Both providers meter anonymous callers far more aggressively than callers that
+#: identify themselves. The identity is a contact address, never a credential.
+_POLITE_POOL_USER_AGENT = "template-literature-acceptance/5.0 (+https://github.com/docxology/template)"
+
+
+def polite_pool_identity(email: str | None) -> dict[str, str]:
+    """Return the request additions that place a call in a provider polite pool.
+
+    OpenAlex and Crossref both admit a ``mailto`` query parameter and ask that
+    automated clients identify themselves; the anonymous budget is what a 429
+    exhausts. An absent or obviously ineffective identity is not an error: the
+    call still runs, and the provider decides. Never guess a real address.
+    """
+    if not isinstance(email, str) or not email.strip():
+        return {"user_agent": _POLITE_POOL_USER_AGENT}
+    candidate = email.strip()
+    if len(candidate) > 254 or "@" not in candidate or any(c.isspace() for c in candidate):
+        return {"user_agent": _POLITE_POOL_USER_AGENT}
+    return {"user_agent": f"{_POLITE_POOL_USER_AGENT} mailto:{candidate}", "mailto": candidate}
+
+
 EUROPEPMC_URL = "https://www.ebi.ac.uk/europepmc/webservices/rest"
 LICENSE_URL = "https://creativecommons.org/licenses/by/4.0/"
 
@@ -139,6 +161,7 @@ def retrieve_openalex_crossref(
     crossref_endpoint: str = CROSSREF_URL,
     year_min: int | None = None,
     year_max: int | None = None,
+    contact_email: str | None = None,
 ) -> list[Paper]:
     """Discover configured title/abstract matches; bind exact Crossref citation bytes."""
     if not isinstance(query, str) or not query.strip() or len(query) > 2000:
@@ -156,21 +179,24 @@ def retrieve_openalex_crossref(
             if type(bound) is not int or not 1 <= bound <= 9999:
                 raise LiteratureFailed("retrieval year bounds must be exact calendar years")
             filters.append(f"{name}:{bound:04d}-" + ("01-01" if name.startswith("from") else "12-31"))
+    openalex_identity = polite_pool_identity(contact_email)
+    crossref_identity = polite_pool_identity(contact_email)
+    openalex_params: dict[str, Any] = {
+        "search.title_and_abstract": query,
+        "per_page": session.settings.max_results,
+        "filter": ",".join(filters),
+    }
+    if "mailto" in openalex_identity:
+        openalex_params["mailto"] = openalex_identity["mailto"]
     raw, metadata = fetch_bytes(
         session,
-        endpoint
-        + "?"
-        + urlencode(
-            {
-                "search.title_and_abstract": query,
-                "per_page": session.settings.max_results,
-                "filter": ",".join(filters),
-            }
-        ),
+        endpoint + "?" + urlencode(openalex_params),
         label,
         max_bytes=2 * 1024 * 1024,
         allow_loopback=endpoint != OPENALEX_URL,
+        user_agent=openalex_identity["user_agent"],
     )
+    metadata["polite_pool"] = "identified" if "mailto" in openalex_identity else "anonymous"
     payload = exact_json(raw)
     rows = payload.get("results") if isinstance(payload, dict) else None
     if not isinstance(rows, list) or len(rows) > session.settings.max_results:
@@ -206,6 +232,7 @@ def retrieve_openalex_crossref(
             f"{label}_doi_{index}",
             max_bytes=2 * 1024 * 1024,
             allow_loopback=crossref_endpoint != CROSSREF_URL,
+            user_agent=crossref_identity["user_agent"],
         )
         bound = exact_json(bound_raw)
         item = bound.get("message") if isinstance(bound, dict) else None
@@ -241,6 +268,7 @@ def retrieve_openalex_crossref(
             "unique_count": len(unique),
             "excluded_records": excluded,
             "http": metadata,
+            "polite_pool_identity": crossref_identity.get("mailto", "anonymous"),
             "sample_scope": (
                 "configured Boolean title/abstract query and complete exact-DOI Crossref citations; "
                 "full-text rights are independently checked only for actual selected downloads"

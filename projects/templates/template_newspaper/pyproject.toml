@@ -18,7 +18,7 @@ classifiers = [
     "Programming Language :: Python :: 3.15",
 ]
 dependencies = [
-    "research-project-template==5.0.0",
+    "research-project-template==5.0.2",
     "pyyaml>=6.0",
     "reportlab>=4.0",
     # 13.0.0 is the first Pillow release with no open advisory: 12.3.0 carries 130 critical and 598 high alerts in this repository. Do not lower this floor.
@@ -71,6 +71,6 @@ exclude_lines = [
 research-project-template = { path = "../../..", editable = true }
 
 [tool.template]
-platform_version = "5.0.0"
+platform_version = "5.0.2"
 tested_python_versions = ["3.14", "3.15"]
 required_unpaid_capabilities = ["print-raster"]

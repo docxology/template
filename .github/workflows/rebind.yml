@@ -1,0 +1,678 @@
+name: Rebind rendered provenance
+
+# Every rendered-provenance receipt binds the tracked implementation under
+# `infrastructure/` and `scripts/` (package AGENTS.md/README.md/DESIGN.md are
+# excluded) plus its exemplar's own source and config closure. A merged lock
+# bump, an exemplar pyproject edit or an infrastructure change therefore
+# invalidates all 25 receipts without moving a rendered byte: the tree is green
+# when the pull-request head is verified and red on main after the merge. That is
+# why no tag can be cut and stay valid while the dependency queue keeps merging.
+#
+# This job restamps the receipts as its own commit, runs both strict gates on
+# that committed tree, and pushes only after they pass, so a tag can be cut at a
+# commit whose receipts are current.
+#
+# WHY THIS IS DISPATCH-ONLY TODAY
+# `main` requires the `CI Gate` check with `enforce_admins: true` and no bypass
+# actors. GitHub's documented contract is that required status checks "must have
+# a successful, skipped, or neutral status before collaborators can make changes
+# to a protected branch", and a commit created inside this runner has no status
+# yet, so a direct push of it is refused no matter how thoroughly the job has
+# verified it. The automatic trigger therefore lands only once the owner
+# provisions a credential that may bypass the required check: a branch-protection
+# bypass for the pushing identity, or a fine-grained token in a secret. To
+# activate it, add to the `on:` block below:
+#
+#   push:
+#     branches: [main]
+#
+# The pushed-range classification decided here is already written and tested for
+# that trigger; a manual dispatch assumes an operator asked for the rebind.
+#
+# Termination is structural, not a marker. The job's commit touches only
+# `projects/templates/*/output/reports/*.json`, so the rebind's own push matches
+# no trigger path and the second run skips and says why. `[skip ci]` is
+# deliberately not used: the rebind commit is verified by these same strict
+# gates, and a push made with the repository's own GITHUB_TOKEN starts no new
+# workflow run, so an exact-SHA `CI Gate` for a rebind commit is obtained by
+# dispatching `ci.yml` for it.
+on:
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "Run the rebind, the commit and both gates, but do not push"
+        type: boolean
+        default: true
+      refresh_active_inference:
+        description: "Regenerate only Active Inference and retain a reviewed patch; requires dry_run"
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+
+# One rebind at a time. A later push queues behind the running rebind; if main
+# advances while a rebind runs, the push is refused with an explicit message and
+# the newer push event's own run rebinds the newer tip. There is no retry.
+concurrency:
+  group: rebind-rendered-provenance
+  cancel-in-progress: false
+
+env:
+  UV_FROZEN: "true"
+  MPLBACKEND: Agg
+
+jobs:
+  # A changed project lock needs its real producers, not an unchanged-byte
+  # rebind. Keep this narrowly scoped repair artifact-only, including on a
+  # branch: an operator reviews and integrates the exact retained patch later.
+  # No credential, push trigger or existing rebind footprint is widened.
+  refresh-active-inference:
+    if: inputs.refresh_active_inference == true
+    name: Prepare Active Inference evidence patch
+    runs-on: ubuntu-24.04
+    timeout-minutes: 180
+    permissions:
+      contents: read
+    steps:
+      - name: Check out the exact refresh source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          submodules: recursive
+          persist-credentials: false
+      - name: Admit an artifact-only Active refresh
+        env:
+          DRY_RUN: ${{ inputs.dry_run }}
+          REFRESH_DIRECTORY: ${{ runner.temp }}/template-active-refresh
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$REFRESH_DIRECTORY"
+          printf 'REFRESH_DIRECTORY=%s\n' "$REFRESH_DIRECTORY" >> "$GITHUB_ENV"
+          if [ "$DRY_RUN" != true ]; then
+            echo 'Active refresh requires dry_run=true; this mode only retains a reviewable patch' >&2
+            exit 1
+          fi
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+          git diff --quiet HEAD
+          test -z "$(git ls-files --others --exclude-standard)"
+          git rev-parse HEAD > "$REFRESH_DIRECTORY/base-commit.txt"
+          git rev-parse 'HEAD^{tree}' > "$REFRESH_DIRECTORY/base-tree.txt"
+      - uses: ./.github/actions/setup-python-env
+        with:
+          python-version: "3.14"
+          dependency-group: active-inference
+      - name: Prepare the current locked Root and Active environments
+        run: |
+          uv sync --locked --group dev --group installed-build --group active-inference
+          uv sync --project projects/templates/template_active_inference \
+            --locked --extra dev --python "$PWD/.venv/bin/python"
+      - uses: ./.github/actions/setup-docs-lint
+      - uses: ./.github/actions/setup-acceptance-documents
+      - name: Prepare the Source-pinned Active Lean compiler
+        shell: bash
+        run: |
+          set -euo pipefail
+          installer="$RUNNER_TEMP/active-refresh-elan-init.sh"
+          curl --fail --location --retry 2 --max-time 60 \
+            https://raw.githubusercontent.com/leanprover/elan/58e8d545e33641f66dbcbd22c4283109e71757be/elan-init.sh \
+            -o "$installer"
+          echo "4bacca9502cb89736fe63d2685abc2947cfbf34dc87673504f1bb4c43eda9264  $installer" | sha256sum --check --status
+          sh "$installer" -y --default-toolchain none
+          pin=$(tr -d '[:space:]' < projects/templates/template_active_inference/lean/lean-toolchain)
+          "$HOME/.elan/bin/elan" toolchain install "$pin"
+          "$HOME/.elan/bin/elan" run "$pin" lean --version
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Regenerate and validate the actual Active producers
+        shell: bash
+        env:
+          ANALYSIS_SCRIPT_TIMEOUT_SEC: "1800"
+        run: |
+          set -euo pipefail
+          run_original() {
+            local label="$1" status=0
+            shift
+            "$@" > "$REFRESH_DIRECTORY/$label.stdout" 2> "$REFRESH_DIRECTORY/$label.stderr" || status=$?
+            printf '%s\n' "$status" > "$REFRESH_DIRECTORY/$label.exit-code"
+            cat "$REFRESH_DIRECTORY/$label.stdout" "$REFRESH_DIRECTORY/$label.stderr"
+            return "$status"
+          }
+          project=templates/template_active_inference
+          run_original analysis uv run --locked --no-sync --offline python \
+            scripts/pipeline/stage_02_analysis.py --project "$project"
+          run_original render-validation uv run --locked --no-sync --offline python \
+            scripts/maintenance/refresh_rendered_provenance.py --project "$project"
+          run_original copy uv run --locked --no-sync --offline python \
+            scripts/pipeline/stage_05_copy.py --project "$project"
+          run_original canonical-validation uv run --locked --no-sync --offline \
+            --project "$PWD/projects/$project" --directory "$PWD/projects/$project" \
+            python scripts/validate_outputs.py
+          run_original disposable-readiness uv run --locked --no-sync --offline python -m pytest \
+            tests/infra_tests/documentation/test_counts_coverage_support.py::test_active_coverage_workspace_preserves_canonical_semantic_readiness \
+            -m slow --no-cov -q
+      - name: Capture the confined Active evidence patch
+        shell: bash
+        run: |
+          set -euo pipefail
+          base=$(cat "$REFRESH_DIRECTORY/base-commit.txt")
+          test "$(git rev-parse HEAD)" = "$base"
+          git diff --cached --quiet
+          git ls-files --others --exclude-standard > "$REFRESH_DIRECTORY/untracked-paths.txt"
+          if [ -s "$REFRESH_DIRECTORY/untracked-paths.txt" ]; then
+            echo 'Refusing incomplete patch capture: review the unexpected untracked paths' >&2
+            cat "$REFRESH_DIRECTORY/untracked-paths.txt" >&2
+            exit 1
+          fi
+          git diff --name-only -z "$base" > "$REFRESH_DIRECTORY/changed-paths.nul"
+          # Validate the entire footprint before staging even one path. Only
+          # tracked generated output and flat numbered compiled sections belong
+          # to this repair. Original source/config/tests remain outside it.
+          while IFS= read -r -d '' path; do
+            if [[ "$path" != projects/templates/template_active_inference/output/* ]] && \
+               [[ ! "$path" =~ ^projects/templates/template_active_inference/manuscript/[0-9][0-9]_[A-Za-z0-9_]+\.md$ ]]; then
+              echo "Refusing refresh path outside the exact Active evidence surface: $path" >&2
+              exit 1
+            fi
+            if [ ! -f "$path" ] || [ -L "$path" ]; then
+              echo "Refusing removed, symlinked or non-regular evidence path: $path" >&2
+              exit 1
+            fi
+            parent=${path%/*}
+            while [[ "$parent" == */* ]]; do
+              test ! -L "$parent"
+              parent=${parent%/*}
+            done
+            test ! -L "$parent"
+            if [ "$(git ls-files -s -- "$path" | cut -d ' ' -f 1)" != 100644 ] || \
+               [ "$(git diff --raw --no-abbrev -- "$path" | cut -d ' ' -f 2)" != 100644 ]; then
+              echo "Refusing evidence path without a tracked regular-file mode: $path" >&2
+              exit 1
+            fi
+          done < "$REFRESH_DIRECTORY/changed-paths.nul"
+          while IFS= read -r -d '' path; do
+            git add -- "$path"
+          done < "$REFRESH_DIRECTORY/changed-paths.nul"
+          git diff --quiet
+          git diff --cached --binary --full-index "$base" > "$REFRESH_DIRECTORY/refresh.patch"
+          git diff --cached --raw --no-abbrev -z "$base" > "$REFRESH_DIRECTORY/changed-blobs.nul"
+          git write-tree > "$REFRESH_DIRECTORY/candidate-tree.txt"
+          if ! git diff --cached --quiet; then
+            git -c user.name='github-actions[bot]' \
+              -c user.email='41898282+github-actions[bot]@users.noreply.github.com' \
+              commit -m 'chore(evidence): regenerate Active Inference from current inputs'
+          fi
+          git rev-parse HEAD > "$REFRESH_DIRECTORY/candidate-commit.txt"
+          test "$(git rev-parse 'HEAD^{tree}')" = "$(cat "$REFRESH_DIRECTORY/candidate-tree.txt")"
+          (
+            cd "$REFRESH_DIRECTORY"
+            shasum -a 256 refresh.patch base-commit.txt base-tree.txt candidate-commit.txt \
+              candidate-tree.txt changed-paths.nul changed-blobs.nul > SHA256SUMS
+          )
+      - name: Verify the committed Active candidate tree
+        shell: bash
+        run: |
+          set -euo pipefail
+          run_original() {
+            local label="$1" status=0
+            shift
+            "$@" > "$REFRESH_DIRECTORY/$label.stdout" 2> "$REFRESH_DIRECTORY/$label.stderr" || status=$?
+            printf '%s\n' "$status" > "$REFRESH_DIRECTORY/$label.exit-code"
+            cat "$REFRESH_DIRECTORY/$label.stdout" "$REFRESH_DIRECTORY/$label.stderr"
+            return "$status"
+          }
+          project=templates/template_active_inference
+          run_original publication-output uv run --locked --no-sync --offline python \
+            scripts/audit/check_publication_outputs.py --project "$project" --strict \
+            --receipts "$REFRESH_DIRECTORY/publication-gate"
+          run_original rendered-audit uv run --locked --no-sync --offline python \
+            -m infrastructure.validation.cli publication-audit --project "$project" --strict --rendered
+          git diff --quiet HEAD
+          test "$(git rev-parse 'HEAD^{tree}')" = "$(cat "$REFRESH_DIRECTORY/candidate-tree.txt")"
+          printf 'Complete selected-project regeneration and committed-tree checks; review patch before integration.\n' \
+            > "$REFRESH_DIRECTORY/COMPLETE.txt"
+      - name: Retain the Active evidence candidate and original diagnostics
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: active-inference-evidence-refresh-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/template-active-refresh/
+          if-no-files-found: error
+          retention-days: 30
+
+  rebind:
+    if: inputs.refresh_active_inference != true
+    name: Rebind rendered provenance
+    runs-on: ubuntu-24.04
+    timeout-minutes: 90
+    steps:
+      - name: Check out the commit to rebind with submodules
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          submodules: recursive
+          persist-credentials: true
+
+      - name: Initialize submodules before any measurement
+        id: submodules
+        shell: bash
+        run: |
+          set -euo pipefail
+          # The stage fingerprint of every receipt contains 125 records under
+          # infrastructure/steganography/kmyth. Measuring without the submodule
+          # reports drift that is not there, and a receipt stamped without it is
+          # exactly what CI rejects later. Initialize first, then report the pin.
+          git submodule update --init --recursive
+          git submodule status --recursive
+          echo "kmyth=$(git -C infrastructure/steganography/kmyth rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+
+      - uses: ./.github/actions/setup-python-env
+        with:
+          python-version: "3.14"
+
+      - name: Prepare the locked environment
+        run: uv sync --locked
+
+      - name: Decide whether this run must rebind
+        id: decide
+        shell: bash
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          PUSH_BEFORE: ${{ github.event.before }}
+          PUSH_AFTER: ${{ github.event.after }}
+        run: |
+          set -euo pipefail
+          # Resolve the target to a commit id even for a dispatch, so the
+          # decision, the range and the epoch name the commit rather than `HEAD`.
+          target="${PUSH_AFTER:-}"
+          if [ -z "$target" ] || ! git cat-file -e "${target}^{commit}" 2>/dev/null; then target=$(git rev-parse HEAD); fi
+          # Receipt-affecting surface, mirrored from
+          # infrastructure/validation/rendered_snapshot/_records.py:
+          #   * root .gitignore/.python-version/pyproject.toml/uv.lock
+          #   * every tracked path under infrastructure/ and scripts/
+          #   * every tracked path in an exemplar tree except output/ (the
+          #     rebind's own footprint and the re-render surface, whose receipts
+          #     a merged change carries itself) and the snapshot-excluded
+          #     documentation names, which cannot move a fingerprint.
+          is_receipt_affecting() {
+            case "$1" in
+              */AGENTS.md|*/README.md|*/SYNTAX.md|*/TO-DO.md|*/TODO.md) return 1 ;;
+              projects/templates/*/output/*) return 1 ;;
+              pyproject.toml|uv.lock|.python-version|.gitignore) return 0 ;;
+              infrastructure/*|scripts/*) return 0 ;;
+              projects/templates/*) return 0 ;;
+            esac
+            return 1
+          }
+          # Read paths on stdin; print the count and leave the affecting subset in
+          # $RUNNER_TEMP/affecting.txt.
+          classify_paths() {
+            local count=0 line
+            : > "$RUNNER_TEMP/affecting.txt"
+            while IFS= read -r line; do
+              [ -n "$line" ] || continue
+              count=$((count + 1))
+              if is_receipt_affecting "$line"; then printf '%s\n' "$line" >> "$RUNNER_TEMP/affecting.txt"; fi
+            done
+            printf '%s\n' "$count"
+          }
+          if [ "${EVENT_NAME}" = "push" ]; then
+            if [ -n "${PUSH_BEFORE}" ] && git cat-file -e "${PUSH_BEFORE}^{commit}" 2>/dev/null; then
+              changed=$(git diff --name-only "$PUSH_BEFORE" "$target")
+              label="${PUSH_BEFORE:0:12}..${target:0:12}"
+            elif git rev-parse -q --verify "${target}^" >/dev/null; then
+              changed=$(git diff --name-only "${target}^" "$target")
+              label="${target:0:12} (no usable before-commit)"
+            else
+              changed=$(git diff-tree --no-commit-id --name-only -r "$target")
+              label="${target:0:12} (initial commit)"
+            fi
+            count=$(printf '%s\n' "$changed" | classify_paths)
+            affecting=$(grep -c . "$RUNNER_TEMP/affecting.txt" || true)
+            {
+              echo "range=$label"
+              echo "changed=$count"
+              echo "affecting=$affecting"
+            } >> "$GITHUB_OUTPUT"
+            if [ "$affecting" -gt 0 ]; then
+              echo "act=true" >> "$GITHUB_OUTPUT"
+              echo "reason=$affecting receipt-affecting path(s) in $label" >> "$GITHUB_OUTPUT"
+              printf 'receipt-affecting paths in %s:\n' "$label"
+              sed 's/^/  /' "$RUNNER_TEMP/affecting.txt"
+            else
+              {
+                echo "act=false"
+                echo "reason=no receipt-affecting path in $label ($count changed path(s))"
+              } >> "$GITHUB_OUTPUT"
+              # There is no `paths:` filter, so a skip is always reported rather than silent.
+              printf 'skip: no receipt-affecting path in %s (%s changed path(s))\n' "$label" "$count"
+              printf '%s\n' "$changed" | head -20 | sed 's/^/  not receipt-affecting: /'
+            fi
+          else
+            {
+              echo "act=true"
+              echo "reason=manual dispatch on ${target:0:12}"
+              echo "range=${target:0:12}"
+            } >> "$GITHUB_OUTPUT"
+            printf 'manual dispatch: rebinding %s\n' "$target"
+            if git rev-parse -q --verify "${target}^" >/dev/null; then
+              tip_changed=$(git diff --name-only "${target}^" "$target")
+              tip_count=$(printf '%s\n' "$tip_changed" | classify_paths)
+              tip_affecting=$(grep -c . "$RUNNER_TEMP/affecting.txt" || true)
+              {
+                echo "changed=$tip_count"
+                echo "affecting=$tip_affecting"
+              } >> "$GITHUB_OUTPUT"
+              printf 'informational: %s touched %s path(s), %s of them receipt-affecting\n' \
+                "${target:0:12}" "$tip_count" "$tip_affecting"
+            fi
+          fi
+
+      - name: Rebind rendered receipts and stage the footprint
+        id: rebind
+        if: steps.decide.outputs.act == 'true'
+        shell: bash
+        env:
+          PUSH_AFTER: ${{ github.event.after }}
+        run: |
+          set -euo pipefail
+          # Refuse to rebind anything but the tip of main: a dispatch on a branch
+          # would otherwise build a commit whose parent is not main's history.
+          git fetch --no-tags origin main
+          tip=$(git rev-parse HEAD)
+          main_tip=$(git rev-parse FETCH_HEAD)
+          if [ "$tip" != "$main_tip" ]; then
+            echo "::error::refusing to rebind ${tip:0:12}: it is not the tip of origin/main (${main_tip:0:12}). Dispatch this workflow on main."
+            exit 1
+          fi
+          # Pin the epoch to the commit being rebound: the same value the manual
+          # rebind uses, and never the runner's clock. A dispatch resolves it too.
+          target="${PUSH_AFTER:-}"
+          if [ -z "$target" ] || ! git cat-file -e "${target}^{commit}" 2>/dev/null; then target=$(git rev-parse HEAD); fi
+          epoch=$(git show -s --format=%ct "$target")
+          export SOURCE_DATE_EPOCH="$epoch"
+          {
+            echo "SOURCE_DATE_EPOCH=$epoch"
+            echo "TEMPLATE_BUILD_EPOCH_SOURCE=git:$target"
+          } >> "$GITHUB_ENV"
+          uv run --no-sync --offline python scripts/maintenance/refresh_rendered_provenance.py \
+            --all-public --rebind --jobs 4
+          # This is the last step that changes bytes. Staging is not the
+          # verification boundary: the gates below run on the committed tree.
+          { git diff --name-only; git diff --cached --name-only; } | sort -u > "$RUNNER_TEMP/rebind-footprint.txt"
+          while IFS= read -r path; do [ -n "$path" ] && git add -- "$path"; done < "$RUNNER_TEMP/rebind-footprint.txt"
+          printf 'staged %s path(s)\n' "$(grep -c . "$RUNNER_TEMP/rebind-footprint.txt" || true)"
+
+      - name: Commit the rebind
+        id: commit
+        if: steps.decide.outputs.act == 'true'
+        shell: bash
+        env:
+          TRIGGER_REASON: ${{ steps.decide.outputs.reason }}
+          TRIGGER_RANGE: ${{ steps.decide.outputs.range }}
+          SUBMODULE_KMYTH: ${{ steps.submodules.outputs.kmyth }}
+        run: |
+          set -euo pipefail
+          changed=$( { git diff --name-only; git diff --cached --name-only; } | sort -u | grep -v '^$' || true )
+          if [ -z "$changed" ]; then
+            echo "nothing to commit; the receipts already match this tree"
+            echo "committed=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          # The commit is confined to `projects/templates/*/output/reports/*.json`,
+          # so the rebind's own push matches no trigger path — structural
+          # termination, no `[skip ci]`. Anything else is refused, not committed.
+          unexpected=$(printf '%s\n' "$changed" | grep -Ev '^projects/templates/[^/]+/output/reports/[A-Za-z0-9_.-]+\.json$' || true)
+          if [ -n "$unexpected" ]; then
+            echo "::error::refusing to commit: the rebind changed paths outside its output/reports footprint"
+            printf '%s\n' "$unexpected"
+            exit 1
+          fi
+          while IFS= read -r path; do [ -n "$path" ] && git add -- "$path"; done <<< "$changed"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          message="$RUNNER_TEMP/rebind-commit-message.txt"
+          {
+            printf 'chore(provenance): rebind rendered receipts (%s)\n\n' "${TRIGGER_REASON}"
+            printf 'Restamps the rendered-provenance receipts of the 25 public exemplars for the\n'
+            printf 'current stage, source and config closures. Range: %s. Submodule kmyth: %s.\n' "${TRIGGER_RANGE}" "${SUBMODULE_KMYTH}"
+            printf 'SOURCE_DATE_EPOCH=%s (the commit being rebound).\n\n' "${SOURCE_DATE_EPOCH}"
+            printf 'The rebind is the last change in this commit and no rendered byte moved. Before\n'
+            printf 'this commit is pushed, the job runs both strict gates on this exact committed tree:\n'
+            printf '  scripts/audit/check_publication_outputs.py --all-public --strict --jobs 4\n'
+            printf '  python -m infrastructure.validation.cli publication-audit --all-public --strict --rendered\n'
+            printf 'and pushes only if both pass and main has not advanced.\n'
+          } > "$message"
+          git commit -F "$message"
+          {
+            echo "committed=true"
+            echo "commit=$(git rev-parse HEAD)"
+            echo "tree=$(git show -s --format=%T HEAD)"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Verify both gates on the committed tree
+        id: verify
+        if: steps.commit.outputs.committed == 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          # The gates run on the committed tree, with a clean index, which is the
+          # state the rebind runbook requires. Nothing has been pushed yet: a
+          # failure here fails the job and leaves the commit in this runner only.
+          set +e
+          gate_output=$(uv run --no-sync --offline python scripts/audit/check_publication_outputs.py \
+            --repo-root "$GITHUB_WORKSPACE" --all-public --strict --jobs 4 \
+            --receipts "$RUNNER_TEMP/rebind-publication-gate" 2>&1)
+          gate_status=$?
+          set -e
+          printf '%s\n' "$gate_status" > "$RUNNER_TEMP/rebind-publication-exit.txt"
+          printf '%s\n' "$gate_output"
+          printf '%s\n' "$gate_output" > "$RUNNER_TEMP/publication-gate.txt"
+          if [ "$gate_status" -ne 0 ]; then
+            echo "::error::publication output gate failed (exit $gate_status); the rebind will not be pushed"
+            exit 1
+          fi
+          if ! printf '%s\n' "$gate_output" | grep -q 'blocking=0, review_required=0'; then
+            echo "::error::publication output gate did not report blocking=0, review_required=0; the rebind will not be pushed"
+            exit 1
+          fi
+          rendered_status=0
+          uv run --no-sync --offline python -m infrastructure.validation.cli publication-audit \
+            --all-public --strict --rendered --format json \
+            > "$RUNNER_TEMP/rebind-rendered-audit.json" 2> "$RUNNER_TEMP/rebind-rendered-audit.stderr" || rendered_status=$?
+          printf '%s\n' "$rendered_status" > "$RUNNER_TEMP/rebind-rendered-exit.txt"
+          cat "$RUNNER_TEMP/rebind-rendered-audit.json" "$RUNNER_TEMP/rebind-rendered-audit.stderr"
+          exit "$rendered_status"
+
+      - name: Capture the verified rebind review patch
+        id: capture
+        if: steps.commit.outputs.committed == 'true' && steps.verify.outcome == 'success'
+        shell: bash
+        env:
+          VERIFIED_COMMIT: ${{ steps.commit.outputs.commit }}
+          VERIFIED_TREE: ${{ steps.commit.outputs.tree }}
+          VERIFICATION_OUTCOME: ${{ steps.verify.outcome }}
+        run: |
+          set -euo pipefail
+          test "$VERIFICATION_OUTCOME" = success
+          test "$(git rev-parse HEAD)" = "$VERIFIED_COMMIT"
+          test "$(git rev-parse 'HEAD^{tree}')" = "$VERIFIED_TREE"
+          test "$(git rev-parse HEAD^)" = "$GITHUB_SHA"
+          git diff --quiet HEAD
+          directory="$RUNNER_TEMP/rebind-review-patch"
+          mkdir -p "$directory"
+          git diff --name-only -z "$GITHUB_SHA" HEAD > "$directory/changed-paths.nul"
+          while IFS= read -r -d '' path; do
+            if [[ ! "$path" =~ ^projects/templates/[^/]+/output/reports/[A-Za-z0-9_.-]+\.json$ ]]; then
+              echo "Refusing review artifact outside the unchanged rebind footprint: $path" >&2
+              exit 1
+            fi
+          done < "$directory/changed-paths.nul"
+          printf '%s\n' "$GITHUB_SHA" > "$directory/base-commit.txt"
+          git rev-parse "$GITHUB_SHA^{tree}" > "$directory/base-tree.txt"
+          git rev-parse HEAD > "$directory/candidate-commit.txt"
+          git rev-parse 'HEAD^{tree}' > "$directory/candidate-tree.txt"
+          git diff --binary --full-index "$GITHUB_SHA" HEAD > "$directory/refresh.patch"
+          git diff --raw --no-abbrev -z "$GITHUB_SHA" HEAD > "$directory/changed-blobs.nul"
+          cp -R "$RUNNER_TEMP/rebind-publication-gate" "$directory/publication-gate"
+          cp "$RUNNER_TEMP/rebind-rendered-audit.json" "$directory/rendered-audit.json"
+          cp "$RUNNER_TEMP/rebind-publication-exit.txt" "$directory/publication-exit.txt"
+          cp "$RUNNER_TEMP/rebind-rendered-exit.txt" "$directory/rendered-exit.txt"
+          test "$(cat "$directory/publication-exit.txt")" = 0
+          test "$(cat "$directory/rendered-exit.txt")" = 0
+          (
+            cd "$directory"
+            shasum -a 256 refresh.patch base-commit.txt base-tree.txt candidate-commit.txt \
+              candidate-tree.txt changed-paths.nul changed-blobs.nul rendered-audit.json \
+              publication-exit.txt rendered-exit.txt > SHA256SUMS
+          )
+          printf 'Both committed-tree gates passed; review this exact patch for ordinary PR integration.\n' \
+            > "$directory/COMPLETE.txt"
+
+      - name: Retain the verified rebind review patch
+        if: steps.commit.outputs.committed == 'true' && steps.verify.outcome == 'success' && steps.capture.outcome == 'success'
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: rebind-review-patch-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/rebind-review-patch/
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Report the measured fingerprints of one exemplar
+        id: fingerprints
+        if: steps.decide.outputs.act == 'true'
+        shell: bash
+        # Informational only, and deliberately tolerant: a green gate cannot show
+        # which stage digest the receipts were stamped with, because the rebind
+        # stamps whatever this runner measured. Printing the measured value, its
+        # file count and what the receipt records makes a checkout shape that
+        # differs from a developer's visible in the run rather than in a later
+        # rejection by everyone else.
+        continue-on-error: true
+        run: |
+          set -euo pipefail
+          uv run --no-sync --offline python - <<'PY' | tee "$RUNNER_TEMP/fingerprints.txt"
+          from pathlib import Path
+          import json
+
+          from infrastructure.validation.rendered_snapshot import build_current_rendered_snapshot
+
+          root = Path.cwd()
+          name = "templates/template_code_project"
+          snapshot = build_current_rendered_snapshot(root, name)
+          receipt = json.loads(
+              (root / "projects" / name / "output" / "reports" / "rendered_provenance.json").read_text(
+                  encoding="utf-8"
+              )
+          )
+          for label, measured in (("stage", snapshot.stage), ("config", snapshot.config)):
+              stamped = receipt["fingerprints"][label]
+              print(
+                  f"{label} sha256 {measured.sha256} ({measured.file_count} files); "
+                  f"receipt {stamped['sha256']} ({stamped['file_count']} files); "
+                  f"current {measured.sha256 == stamped['sha256']}"
+              )
+          PY
+
+      - name: Push the rebind commit to main
+        id: push
+        if: steps.commit.outputs.committed == 'true' && inputs.dry_run != true
+        shell: bash
+        env:
+          DRY_RUN: ${{ inputs.dry_run }}
+          VERIFICATION_OUTCOME: ${{ steps.verify.outcome }}
+        run: |
+          set -euo pipefail
+          # Re-gated here, not only in the step condition: a dry run can never
+          # push, and neither can a verification that did not succeed, even if
+          # the job structure is edited later.
+          if [ "${DRY_RUN:-false}" = "true" ]; then
+            echo "dry run: the rebind commit stays in this runner and main is unchanged"
+            echo "pushed=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          if [ "${VERIFICATION_OUTCOME:-missing}" != "success" ]; then
+            echo "::error::refusing to push: verification outcome was '${VERIFICATION_OUTCOME:-missing}', not success; the commit exists only in this runner"
+            exit 1
+          fi
+          # Refuse rather than race: if main moved while this rebind ran, the
+          # newer push event's own run rebinds the newer tip. No force, no retry.
+          git fetch --no-tags origin main
+          remote=$(git rev-parse FETCH_HEAD)
+          parent=$(git rev-parse HEAD^)
+          if [ "$remote" != "$parent" ]; then
+            echo "::error::main advanced to $remote while this rebind ran (expected parent $parent); not pushing"
+            exit 1
+          fi
+          if ! git push origin HEAD:main 2> "$RUNNER_TEMP/push-error.txt"; then
+            cat "$RUNNER_TEMP/push-error.txt" >&2
+            if grep -qi 'protected branch\|required status check\|GH006' "$RUNNER_TEMP/push-error.txt"; then
+              echo "::error::main refused a direct update from this token, as expected while the required 'CI Gate' check applies to every change of the branch. Provision a branch-protection bypass for the pushing identity or a token that may bypass before enabling the automatic trigger. Nothing was pushed; main is unchanged."
+            fi
+            exit 1
+          fi
+          echo "pushed=true" >> "$GITHUB_OUTPUT"
+
+      - name: Retain original rebind diagnostics
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: rebind-diagnostics-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            ${{ runner.temp }}/publication-gate.txt
+            ${{ runner.temp }}/rebind-publication-exit.txt
+            ${{ runner.temp }}/rebind-rendered-audit.json
+            ${{ runner.temp }}/rebind-rendered-audit.stderr
+            ${{ runner.temp }}/rebind-rendered-exit.txt
+            ${{ runner.temp }}/push-error.txt
+          if-no-files-found: warn
+          retention-days: 30
+
+      - name: Summarize the decision, the tree and the submodule
+        if: always()
+        shell: bash
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          DRY_RUN: ${{ inputs.dry_run }}
+          DECISION_ACT: ${{ steps.decide.outputs.act }}
+          DECISION_REASON: ${{ steps.decide.outputs.reason }}
+          DECISION_RANGE: ${{ steps.decide.outputs.range }}
+          REBIND_OUTCOME: ${{ steps.rebind.outcome }}
+          COMMIT_OUTCOME: ${{ steps.commit.outcome }}
+          COMMITTED: ${{ steps.commit.outputs.committed }}
+          COMMIT_SHA: ${{ steps.commit.outputs.commit }}
+          TREE_SHA: ${{ steps.commit.outputs.tree }}
+          VERIFY_OUTCOME: ${{ steps.verify.outcome }}
+          PUSH_OUTCOME: ${{ steps.push.outcome }}
+          PUSHED: ${{ steps.push.outputs.pushed }}
+          TARGET_TREE: ${{ github.sha }}
+        run: |
+          set -euo pipefail
+          submodule=$(git -C infrastructure/steganography/kmyth rev-parse HEAD 2>/dev/null || echo unavailable)
+          head=$(git rev-parse HEAD 2>/dev/null || echo unavailable)
+          # shellcheck disable=SC2016 # Backticks in printf formats are literal Markdown.
+          {
+            printf '### Rebind rendered provenance\n\n'
+            printf -- '- Trigger: `%s` (dry run: `%s`)\n' "${EVENT_NAME:-unknown}" "${DRY_RUN:-false}"
+            printf -- '- Rebind target tree: `%s` (HEAD now `%s`)\n' "${TARGET_TREE:-unknown}" "$head"
+            printf -- '- Submodule kmyth: `%s`\n' "$submodule"
+            printf -- '- Decision: `%s` — %s\n' "${DECISION_ACT:-not evaluated}" "${DECISION_REASON:-no decision recorded}"
+            printf -- '- Range: `%s`\n' "${DECISION_RANGE:-unknown}"
+            printf -- '- Rebind: `%s` · Commit: `%s` · Verify: `%s` · Push: `%s`\n' \
+              "${REBIND_OUTCOME:-skipped}" "${COMMITTED:-${COMMIT_OUTCOME:-skipped}}" "${VERIFY_OUTCOME:-skipped}" "${PUSHED:-${PUSH_OUTCOME:-skipped}}"
+            if [ -n "${COMMIT_SHA:-}" ]; then
+              printf -- '- Rebind commit: `%s` (tree `%s`), verified before any push\n' "$COMMIT_SHA" "${TREE_SHA:-unknown}"
+            fi
+            if [ -s "${RUNNER_TEMP}/fingerprints.txt" ]; then
+              printf -- '- Measured fingerprints (%s):\n' "templates/template_code_project"
+              sed 's/^/  - /' "${RUNNER_TEMP}/fingerprints.txt"
+            fi
+            printf '\n'
+            if [ "${DECISION_ACT:-}" != "true" ]; then
+              printf 'Skipped: this push touched no receipt-affecting path, so no receipt can be stale.\n'
+            fi
+            if [ "${DRY_RUN:-false}" = "true" ] && [ "${COMMITTED:-false}" = "true" ]; then
+              printf 'Dry run: the rebind commit was built and verified in this runner and was not pushed.\n'
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"
+          cat "$GITHUB_STEP_SUMMARY"

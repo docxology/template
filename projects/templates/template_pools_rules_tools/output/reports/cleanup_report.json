@@ -1,5 +1,18 @@
 {
   "skipped_tracked": [
+    "projects/templates/template_pools_rules_tools/output/arxiv_submission/_combined_manuscript.bbl",
+    "projects/templates/template_pools_rules_tools/output/arxiv_submission/_combined_manuscript.tex",
+    "projects/templates/template_pools_rules_tools/output/arxiv_submission/figures/architecture_overview.png",
+    "projects/templates/template_pools_rules_tools/output/arxiv_submission/figures/cover_art.png",
+    "projects/templates/template_pools_rules_tools/output/arxiv_submission/figures/fond_taxonomy.png",
+    "projects/templates/template_pools_rules_tools/output/arxiv_submission/figures/pipeline_flow.png",
+    "projects/templates/template_pools_rules_tools/output/arxiv_submission/figures/resilience_layers.png",
+    "projects/templates/template_pools_rules_tools/output/arxiv_submission/figures/resource_counts.png",
+    "projects/templates/template_pools_rules_tools/output/arxiv_submission/figures/rule_hierarchy.png",
+    "projects/templates/template_pools_rules_tools/output/arxiv_submission/figures/status_dashboard.png",
+    "projects/templates/template_pools_rules_tools/output/arxiv_submission/figures/tool_contract.png",
+    "projects/templates/template_pools_rules_tools/output/arxiv_submission/references.bib",
+    "projects/templates/template_pools_rules_tools/output/arxiv_submission_20261031.tar.gz",
     "projects/templates/template_pools_rules_tools/output/data/manuscript_variables.json",
     "projects/templates/template_pools_rules_tools/output/figures/architecture_overview.png",
     "projects/templates/template_pools_rules_tools/output/figures/cover_art.png",
@@ -24,6 +37,7 @@
     "projects/templates/template_pools_rules_tools/output/manuscript/references.bib",
     "projects/templates/template_pools_rules_tools/output/pdf/template_pools_rules_tools_combined.pdf",
     "projects/templates/template_pools_rules_tools/output/reports/artifact_manifest.json",
+    "projects/templates/template_pools_rules_tools/output/reports/cleanup_report.json",
     "projects/templates/template_pools_rules_tools/output/reports/evidence_registry.json",
     "projects/templates/template_pools_rules_tools/output/reports/manuscript_composition.json",
     "projects/templates/template_pools_rules_tools/output/reports/rendered_provenance.json",
@@ -51,5 +65,5 @@
     "projects/templates/template_pools_rules_tools/output/web/manuscript__06_integration.html",
     "projects/templates/template_pools_rules_tools/output/web/manuscript__07_conclusion.html"
   ],
-  "skipped_tracked_count": 50
+  "skipped_tracked_count": 64
 }

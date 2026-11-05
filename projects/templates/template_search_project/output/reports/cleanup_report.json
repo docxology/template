@@ -351,6 +351,7 @@
     "projects/templates/template_search_project/output/pdf/template_search_project_combined.pdf",
     "projects/templates/template_search_project/output/reading_report.md",
     "projects/templates/template_search_project/output/reports/artifact_manifest.json",
+    "projects/templates/template_search_project/output/reports/cleanup_report.json",
     "projects/templates/template_search_project/output/reports/dashboard_invariants.txt",
     "projects/templates/template_search_project/output/reports/dashboard_summary.txt",
     "projects/templates/template_search_project/output/reports/evidence_registry.json",
@@ -395,5 +396,5 @@
     "projects/templates/template_search_project/output/web/manuscript__99_references.html",
     "projects/templates/template_search_project/output/web/manuscript__S01_literature_review.html"
   ],
-  "skipped_tracked_count": 394
+  "skipped_tracked_count": 395
 }
