@@ -31,6 +31,7 @@ Set the Agg backend **before** importing pyplot:
 
 ```python
 import os
+
 os.environ.setdefault("MPLBACKEND", "Agg")
 import matplotlib.pyplot as plt
 ```

@@ -68,9 +68,7 @@ those reports under `output/reports/deep_research/`.
 ## Quick Start
 
 ```python
-from infrastructure.search.literature import (
-    LiteratureClient, SearchQuery, ArxivBackend, CrossrefBackend
-)
+from infrastructure.search.literature import LiteratureClient, SearchQuery, ArxivBackend, CrossrefBackend
 
 client = LiteratureClient([ArxivBackend(), CrossrefBackend(mailto="you@example.org")])
 result = client.search(SearchQuery(text="protein language model fitness", max_results=10))

@@ -333,10 +333,7 @@ from infrastructure.core.exceptions import raise_with_context, chain_exceptions
 try:
     risky_operation()
 except ValueError as e:
-    raise chain_exceptions(
-        TemplateError("Operation failed"),
-        e
-    )
+    raise chain_exceptions(TemplateError("Operation failed"), e)
 ```
 
 ### Logging
@@ -372,10 +369,7 @@ from infrastructure.core.credentials import CredentialManager
 
 # Initialize with optional .env and YAML config files
 # Note: python-dotenv is optional - system works without it
-manager = CredentialManager(
-    env_file=Path(".env"),
-    config_file=Path("config.yaml")
-)
+manager = CredentialManager(env_file=Path(".env"), config_file=Path("config.yaml"))
 
 # Get credentials from environment or config
 api_key = manager.get("API_KEY", default="default_key")
@@ -414,6 +408,7 @@ else:
 ### Retry Logic
 ```python
 from infrastructure.core.runtime import retry_with_backoff
+
 
 @retry_with_backoff(max_attempts=3, base_delay=1.0)
 def risky_operation():
@@ -472,12 +467,7 @@ if manager.collect_files():
 ```python
 from infrastructure.core.pipeline import PipelineExecutor, PipelineConfig
 
-config = PipelineConfig(
-    project_name="my_project",
-    repo_root=Path("."),
-    skip_infra=False,
-    mode="core"
-)
+config = PipelineConfig(project_name="my_project", repo_root=Path("."), skip_infra=False, mode="core")
 
 executor = PipelineExecutor(config)
 results = executor.execute_pipeline()
@@ -492,12 +482,7 @@ from infrastructure.core.pipeline.multi_project import MultiProjectConfig, Multi
 from infrastructure.project.discovery import discover_projects
 
 projects = discover_projects(Path("."))
-config = MultiProjectConfig(
-    repo_root=Path("."),
-    projects=projects,
-    run_infra_tests=True,
-    mode="core"
-)
+config = MultiProjectConfig(repo_root=Path("."), projects=projects, run_infra_tests=True, mode="core")
 
 orchestrator = MultiProjectOrchestrator(config)
 result = orchestrator.execute_all_projects()
@@ -510,10 +495,7 @@ print(f"Successful: {result.successful_projects}, Failed: {result.failed_project
 from infrastructure.core.pipeline.summary import generate_pipeline_summary
 
 summary = generate_pipeline_summary(
-    stage_results=results,
-    total_duration=123.45,
-    output_dir=Path("output"),
-    format="text"
+    stage_results=results, total_duration=123.45, output_dir=Path("output"), format="text"
 )
 print(summary)
 ```

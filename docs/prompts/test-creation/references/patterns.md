@@ -15,6 +15,7 @@ def test_api(ollama_test_server):  # or pytest-httpserver fixture pattern
 ```python
 import subprocess
 
+
 def test_cli(tmp_path):
     result = subprocess.run(
         ["uv", "run", "python", "-m", "infrastructure.validation.cli", "markdown", str(tmp_path)],

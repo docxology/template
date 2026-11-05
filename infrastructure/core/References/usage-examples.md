@@ -24,12 +24,7 @@ try:
     result = risky_operation()
 except Exception as e:
     # Raise with context
-    raise_with_context(
-        TemplateError,
-        "Operation failed",
-        operation="risky_operation",
-        input_data=data
-    )
+    raise_with_context(TemplateError, "Operation failed", operation="risky_operation", input_data=data)
 ```
 
 ### Configuration Management
@@ -62,10 +57,7 @@ results = executor.execute_pipeline(resume=True)
 from infrastructure.core.pipeline.multi_project import MultiProjectOrchestrator
 
 # Execute multiple projects
-orchestrator = MultiProjectOrchestrator(
-    Path("."),
-    ["project1", "project2", "project3"]
-)
+orchestrator = MultiProjectOrchestrator(Path("."), ["project1", "project2", "project3"])
 results = orchestrator.execute_all_projects(core_only=True)
 
 # Generate executive report
@@ -136,6 +128,7 @@ class SecurityMonitor:
 ```python
 class SecurityViolation(Exception):
     """Raised when security violation is detected."""
+
     pass
 ```
 
@@ -221,11 +214,7 @@ class TemplateFormatter(logging.Formatter):
 #### calculate_eta (function)
 ```python
 def calculate_eta(
-    current: int,
-    total: int,
-    start_time: float,
-    use_ema: bool = True,
-    alpha: float = 0.1
+    current: int, total: int, start_time: float, use_ema: bool = True, alpha: float = 0.1
 ) -> Optional[float]:
     """Calculate estimated time remaining.
 
@@ -244,11 +233,7 @@ def calculate_eta(
 #### log_progress_bar (function)
 ```python
 def log_progress_bar(
-    current: int,
-    total: int,
-    width: int = 30,
-    task: str = "",
-    logger: Optional[logging.Logger] = None
+    current: int, total: int, width: int = 30, task: str = "", logger: Optional[logging.Logger] = None
 ) -> None:
     """Log a progress bar.
 
@@ -278,9 +263,7 @@ class Spinner:
 #### log_with_spinner (function)
 ```python
 def log_with_spinner(
-    message: str,
-    logger: Optional[logging.Logger] = None,
-    spinner_chars: str = "|/-\\"
+    message: str, logger: Optional[logging.Logger] = None, spinner_chars: str = "|/-\\"
 ) -> Iterator[None]:
     """Context manager for logging with spinner.
 
@@ -311,8 +294,7 @@ class StreamingProgress:
 #### log_progress_streaming (function)
 ```python
 def log_progress_streaming(
-    task: str = "Streaming",
-    logger: Optional[logging.Logger] = None
+    task: str = "Streaming", logger: Optional[logging.Logger] = None
 ) -> Iterator[StreamingProgress]:
     """Context manager for streaming progress.
 
@@ -332,7 +314,7 @@ def log_stage_with_eta(
     total_stages: int,
     stage_name: str,
     pipeline_start: Optional[float] = None,
-    logger: Optional[logging.Logger] = None
+    logger: Optional[logging.Logger] = None,
 ) -> None:
     """Log stage with ETA.
 
@@ -380,11 +362,7 @@ def profile_memory_usage(func: Callable, *args, **kwargs) -> Dict[str, Any]:
 #### benchmark_function (function)
 ```python
 def benchmark_function(
-    func: Callable,
-    *args,
-    iterations: int = 10,
-    warmup_iterations: int = 2,
-    **kwargs
+    func: Callable, *args, iterations: int = 10, warmup_iterations: int = 2, **kwargs
 ) -> Dict[str, Any]:
     """Benchmark function performance.
 
@@ -421,8 +399,7 @@ class CredentialManager:
     - YAML configuration files with environment variable substitution
     """
 
-    def __init__(self, env_file: Optional[Path] = None,
-                 config_file: Optional[Path] = None):
+    def __init__(self, env_file: Optional[Path] = None, config_file: Optional[Path] = None):
         """Initialize credential manager.
 
         Args:
@@ -555,7 +532,7 @@ class ProgressBar:
         width: int = 30,
         show_eta: bool = True,
         update_interval: float = 0.1,
-        use_ema: bool = True
+        use_ema: bool = True,
     ):
         """Initialize progress bar.
 
@@ -601,12 +578,7 @@ class LLMProgressTracker:
         >>> tracker.finish()
     """
 
-    def __init__(
-        self,
-        total_tokens: Optional[int] = None,
-        task: str = "LLM Generation",
-        show_throughput: bool = True
-    ):
+    def __init__(self, total_tokens: Optional[int] = None, task: str = "LLM Generation", show_throughput: bool = True):
         """Initialize LLM progress tracker.
 
         Args:
@@ -708,6 +680,7 @@ def log_progress(self) -> None:
 @dataclass
 class StageResult:
     """Result of a pipeline stage execution."""
+
     name: str
     exit_code: int
     duration: float
@@ -720,6 +693,7 @@ class StageResult:
 @dataclass
 class PipelineCheckpoint:
     """Pipeline checkpoint state."""
+
     pipeline_start_time: float
     last_stage_completed: int
     stage_results: list[StageResult]
@@ -730,7 +704,7 @@ class PipelineCheckpoint:
         """Convert checkpoint to dictionary for serialization."""
 
     @classmethod
-    def from_dict(cls, data: dict[str, Any]) -> 'PipelineCheckpoint':
+    def from_dict(cls, data: dict[str, Any]) -> "PipelineCheckpoint":
         """Create checkpoint from dictionary."""
 ```
 
@@ -750,11 +724,7 @@ class CheckpointManager:
 #### save_checkpoint (method)
 ```python
 def save_checkpoint(
-    self,
-    pipeline_start_time: float,
-    last_stage_completed: int,
-    stage_results: list[StageResult],
-    total_stages: int
+    self, pipeline_start_time: float, last_stage_completed: int, stage_results: list[StageResult], total_stages: int
 ) -> None:
     """Save pipeline checkpoint.
 
@@ -815,7 +785,7 @@ def retry_with_backoff(
     exponential_base: float = 2.0,
     jitter: bool = True,
     exceptions: Tuple[Type[Exception], ...] = (Exception,),
-    on_retry: Optional[Callable[[int, Exception], None]] = None
+    on_retry: Optional[Callable[[int, Exception], None]] = None,
 ) -> Callable[[Callable[..., T]], Callable[..., T]]:
     """Decorator to retry a function with exponential backoff.
 
@@ -836,8 +806,7 @@ def retry_with_backoff(
 #### retry_on_transient_failure (function)
 ```python
 def retry_on_transient_failure(
-    max_attempts: int = 3,
-    initial_delay: float = 1.0
+    max_attempts: int = 3, initial_delay: float = 1.0
 ) -> Callable[[Callable[..., T]], Callable[..., T]]:
     """Decorator for retrying on common transient failures.
 
@@ -868,11 +837,7 @@ class RetryableOperation:
     """
 
     def __init__(
-        self,
-        max_attempts: int = 3,
-        initial_delay: float = 1.0,
-        max_delay: float = 60.0,
-        exponential_base: float = 2.0
+        self, max_attempts: int = 3, initial_delay: float = 1.0, max_delay: float = 60.0, exponential_base: float = 2.0
     ):
         """Initialize retryable operation.
 
@@ -911,6 +876,7 @@ def retry(self, exception: Exception) -> None:
 @dataclass
 class ResourceUsage:
     """Resource usage metrics for a stage or operation."""
+
     cpu_percent: float = 0.0
     memory_mb: float = 0.0
     peak_memory_mb: float = 0.0
@@ -926,6 +892,7 @@ class ResourceUsage:
 @dataclass
 class PerformanceMetrics:
     """Performance metrics for a stage or operation."""
+
     duration: float
     resource_usage: ResourceUsage = field(default_factory=ResourceUsage)
     operations_count: int = 0
@@ -1589,6 +1556,7 @@ class SecurityMonitor:
 ```python
 class SecurityViolation(Exception):
     """Raised when a security violation is detected."""
+
     pass
 ```
 
@@ -1758,10 +1726,7 @@ This module provides function-level profiling utilities (cProfile/tracemalloc) a
 #### generate_pipeline_summary (function)
 ```python
 def generate_pipeline_summary(
-    stage_results: List[StageResult],
-    total_duration: float,
-    output_dir: Path,
-    format: str = "text"
+    stage_results: List[StageResult], total_duration: float, output_dir: Path, format: str = "text"
 ) -> str:
     """Generate pipeline execution summary.
 

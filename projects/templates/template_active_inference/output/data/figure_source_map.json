@@ -39,7 +39,7 @@
         "width": 2281
       },
       "figure_id": "artifact_contract_map",
-      "image_sha256": "c898717bd671afc786cb5c74d349aceb3e00b3256b761d0b08b18a95c2c0e50e",
+      "image_sha256": "5c6cd5e4033791f29952776d48ba0c3c420bb833dc7870b03c4b7bc37a94c499",
       "mapped": true,
       "pixel_provenance_ok": true,
       "renderer": "visualizations.figures.generate_all_figures",
@@ -133,7 +133,7 @@
         "width": 1327
       },
       "figure_id": "causal_ablation_heatmap",
-      "image_sha256": "8da94fcf550d1c688825c4c2c6f518a2d7eb63da90602cdb384a578189faa92a",
+      "image_sha256": "4706a4b65b153e0bf5013bc71a016027925e6003267e3562cfba046c20864562",
       "mapped": true,
       "pixel_provenance_ok": true,
       "renderer": "visualizations.figures.generate_all_figures",
@@ -217,7 +217,7 @@
         "width": 1502
       },
       "figure_id": "cue_tmaze_advantage",
-      "image_sha256": "09ad0ee4a18afbb1e389447c6eee64c6d278cca91d5d476a246acf5d585ba714",
+      "image_sha256": "e6b41ad66afdd23fee15232771c1438554f7c7f4e486c5151a449ff881c7dcc9",
       "mapped": true,
       "pixel_provenance_ok": true,
       "renderer": "visualizations.figures.generate_all_figures",
@@ -267,7 +267,7 @@
         "width": 1100
       },
       "figure_id": "dirichlet_convergence",
-      "image_sha256": "84a1198b76845767810eba40ab65c1ec1d2aa023c5c85b14095a1a0845d9f80a",
+      "image_sha256": "bab9fcffaefbfa2804dea6497a3605dc08b0232708dc5881f7982ae8ebec7050",
       "mapped": true,
       "pixel_provenance_ok": true,
       "renderer": "visualizations.figures.generate_all_figures",
@@ -317,7 +317,7 @@
         "width": 1503
       },
       "figure_id": "efe_decomposition",
-      "image_sha256": "a8811abd5d28de7c0648541669e26d6e6e1c6217ebc805fe4dc037bddc6b1c85",
+      "image_sha256": "2d7c1691270df5f33ad4296ceb7446bf2b11deebb33f2f841effe5995f80383b",
       "mapped": true,
       "pixel_provenance_ok": true,
       "renderer": "visualizations.figures.generate_all_figures",
@@ -366,7 +366,7 @@
         "width": 1023
       },
       "figure_id": "free_energy_curve",
-      "image_sha256": "66e1c40cb4870643736b63bd4ee105a0454789b94c759e37d057572e8e3a48a3",
+      "image_sha256": "cb0461f21980879d99148d57ce43e76500386822ddd5eb74b312aea3bc5d4e82",
       "mapped": true,
       "pixel_provenance_ok": true,
       "renderer": "visualizations.figures.generate_all_figures",
@@ -409,7 +409,7 @@
         "width": 1451
       },
       "figure_id": "gnn_ontology_concordance",
-      "image_sha256": "ab2817c3476bb176d3495edde0937ac8d8d3a4a077e48cfe79007852c1ae9ba5",
+      "image_sha256": "ed3c7b5c7c23106316090bce47ced3947be076c7fe376a09268f8435df0f4327",
       "mapped": true,
       "pixel_provenance_ok": true,
       "renderer": "visualizations.figures.generate_all_figures",
@@ -463,7 +463,7 @@
         "width": 1433
       },
       "figure_id": "invariant_dashboard",
-      "image_sha256": "a6ba7264f0381d5d023ec5e8b72dc1536a02a0b77511dece475a18fce8000515",
+      "image_sha256": "520ed06a0e695b17a05ca83de802ac4ca762232c216fdd3170b19b2c29f3d08c",
       "mapped": true,
       "pixel_provenance_ok": true,
       "renderer": "visualizations.figures.generate_all_figures",
@@ -517,7 +517,7 @@
         "width": 1423
       },
       "figure_id": "ising_mi_curve",
-      "image_sha256": "2d1bcfc867a49eba0595544e020da73b06495473bb298ecc22487f8e816f3f3d",
+      "image_sha256": "8e145438472637b45a2a27288fd239ce66b849c0f4d1ee568e482d2ad4dc38ab",
       "mapped": true,
       "pixel_provenance_ok": true,
       "renderer": "visualizations.figures.generate_all_figures",
@@ -599,7 +599,7 @@
         "width": 1454
       },
       "figure_id": "lean_boundary_status",
-      "image_sha256": "8827ef122eb00991e57c3d7ae8315e63c7072b5f72bd64dbde69201cf9bfc17f",
+      "image_sha256": "3f07ea0a94dbbee54db2c4fac57697bb1f53168a8d7627d9494dbec62ad07ac4",
       "mapped": true,
       "pixel_provenance_ok": true,
       "renderer": "visualizations.figures.generate_all_figures",
@@ -647,7 +647,7 @@
         "width": 1870
       },
       "figure_id": "multi_track_architecture",
-      "image_sha256": "3efa36473fc9f86a741ddbbcb29db97668a5b19bbb5ddd2231c6f5b29f3ffc85",
+      "image_sha256": "2f7181e1dd75be842adc6b9be4a9e7e07ffd66a0b0b996bb676574feb275d0f8",
       "mapped": true,
       "pixel_provenance_ok": true,
       "renderer": "visualizations.figures.generate_all_figures",
@@ -695,7 +695,7 @@
         "width": 1183
       },
       "figure_id": "precision_sweep",
-      "image_sha256": "27f8ba342ef790b81ec399eaa248293b96cc426d39d6dd34fc21b83cac2d5cef",
+      "image_sha256": "ada3c32d4f8a374cdc91b56ed63bd337dead480fc33527a9f546ec80902b43b5",
       "mapped": true,
       "pixel_provenance_ok": true,
       "renderer": "visualizations.figures.generate_all_figures",
@@ -743,7 +743,7 @@
         "width": 1929
       },
       "figure_id": "scholarship_source_map",
-      "image_sha256": "881ff2ddaa980461262bd9f48bc751b7294e2cf25ce748d4da542ec6dbbb3d75",
+      "image_sha256": "59dfde8afbf6efd32842976dd29c9d9b192d56b89766bed44213fa3bd024543b",
       "mapped": true,
       "pixel_provenance_ok": true,
       "renderer": "visualizations.figures.generate_all_figures",
@@ -832,7 +832,7 @@
         "width": 2019
       },
       "figure_id": "security_posture_map",
-      "image_sha256": "6082337390bae8db626279ae096fc00c214f812b47d1c73d89dc0a61b6ccc053",
+      "image_sha256": "f8df4980d42904988676846030c8d3028a4a206f191f52bd427d158b48e15787",
       "mapped": true,
       "pixel_provenance_ok": true,
       "renderer": "visualizations.figures.generate_all_figures",
@@ -919,7 +919,7 @@
         "width": 1614
       },
       "figure_id": "semantic_gluing_graph",
-      "image_sha256": "d94fcf4826ed7cc686fb3e05a234bc523f4e9c99e8ef75e4fc4dda64d00a5e4d",
+      "image_sha256": "9bb2000801dfc552068a4109a89dc4398e8a5f1a6756aadabc0f913c19c37b79",
       "mapped": true,
       "pixel_provenance_ok": true,
       "renderer": "visualizations.figures.generate_all_figures",
@@ -987,7 +987,7 @@
         "width": 5032
       },
       "figure_id": "sheaf_coverage_heatmap",
-      "image_sha256": "8acbcb202c35258e9a4290e46c74231a46d7e8e71604cc2f76f4a690af7e6259",
+      "image_sha256": "967c5f5f9c25e617329f36d794424230e5cfc37c86c39de316176c7c2db8a5e7",
       "mapped": true,
       "pixel_provenance_ok": true,
       "renderer": "visualizations.figures.generate_all_figures",
@@ -1130,7 +1130,7 @@
         "width": 1167
       },
       "figure_id": "si_belief_entropy_curve",
-      "image_sha256": "5bf67bac289c55f9ba3cbcc4b44f91e75e4d4380e46e04d4077ba044d498bf95",
+      "image_sha256": "2a1fc18442888f88ed07f9f790c444519aca62abff4876da544645a3eeb856c5",
       "mapped": true,
       "pixel_provenance_ok": true,
       "renderer": "visualizations.figures.generate_all_figures",
@@ -1177,7 +1177,7 @@
         "width": 1167
       },
       "figure_id": "si_obs_action_trace",
-      "image_sha256": "da34a8b4334b08e46e4101da7b2f63b3b356a2021c630ad0aed63225cf9b801a",
+      "image_sha256": "c70b5a5f9e0f8742b73d12146aeb467e537adb4882b40777bafbfee4e23f6784",
       "mapped": true,
       "pixel_provenance_ok": true,
       "renderer": "visualizations.figures.generate_all_figures",
@@ -1224,7 +1224,7 @@
         "width": 1166
       },
       "figure_id": "si_tmaze_actions",
-      "image_sha256": "c78b2a6ebfae70a37311c513cd043e4d45f8ebafc94fdabc8e00504f7396865b",
+      "image_sha256": "0ef40dc11a195447ceba93e641d124f55c6c3897943da5181e917f2f898d879f",
       "mapped": true,
       "pixel_provenance_ok": true,
       "renderer": "visualizations.figures.generate_all_figures",
@@ -1306,7 +1306,7 @@
         "width": 1550
       },
       "figure_id": "theorem_traceability_graph",
-      "image_sha256": "5c42b2d3da08ca481ee6c50775690f8dc351b725451df8cdcb7bc6fa157c3400",
+      "image_sha256": "83d58ceb42152d8b6292b3ee09ead8ee45310dea979d0976e856f526bf6c0bf8",
       "mapped": true,
       "pixel_provenance_ok": true,
       "renderer": "visualizations.figures.generate_all_figures",
@@ -1390,7 +1390,7 @@
         "width": 1134
       },
       "figure_id": "tmaze_schematic",
-      "image_sha256": "c6da917284d94da7269b73fcdf88bc43c75762583a0c168c74501de88d65b1b6",
+      "image_sha256": "d6ef0d5a0988b26ac8e23a0795d432ad21874ff74154f67875b8cba853baa6ae",
       "mapped": true,
       "pixel_provenance_ok": true,
       "renderer": "visualizations.figures.generate_all_figures",
@@ -1451,7 +1451,7 @@
         "width": 2430
       },
       "figure_id": "track_lane_promotion_map",
-      "image_sha256": "9d002f5bf93f9782d576999b2a637fa520e19e5969d3dfc662b138ff5499caf3",
+      "image_sha256": "6d25caa34603d96e3844df6abdf7ccf7ea9efdb5fcaed567e2a44be240582157",
       "mapped": true,
       "pixel_provenance_ok": true,
       "renderer": "visualizations.figures.generate_all_figures",

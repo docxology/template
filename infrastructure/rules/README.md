@@ -71,12 +71,12 @@ No Python code required — rules are passive specifications.
 
 ```python
 info: RuleInfo = build_rule_info(Path("rules/templates/template_project_rules"))
-info.name           # "template_project_rules"
-info.rule_type      # from rules.yaml "type", or "project"
-info.has_soft       # True iff soft/ exists
-info.has_strong     # True iff strong/ exists
-info.is_valid       # True iff has_soft or has_strong
-info.qualified_name # "template_project_rules" or "templates/template_project_rules"
+info.name  # "template_project_rules"
+info.rule_type  # from rules.yaml "type", or "project"
+info.has_soft  # True iff soft/ exists
+info.has_strong  # True iff strong/ exists
+info.is_valid  # True iff has_soft or has_strong
+info.qualified_name  # "template_project_rules" or "templates/template_project_rules"
 ```
 
 ## Discovery scope
@@ -88,7 +88,7 @@ discovered and validated.
 ```python
 from infrastructure.rules.discovery import (
     NON_RENDERED_RULE_SUBDIRS,  # {"working", "archive"}
-    RENDERED_RULE_SUBDIRS,      # {"templates"}
+    RENDERED_RULE_SUBDIRS,  # {"templates"}
 )
 ```
 
@@ -108,9 +108,9 @@ path = resolve_rule_root(Path("."), "template_project_rules")
 
 ```python
 from infrastructure.rules.public_scope import (
-    PUBLIC_RULE_NAMES,     # tuple of qualified names
-    public_rule_infos,     # list[RuleInfo] present in this checkout
-    public_rule_names,     # list[str] sorted
+    PUBLIC_RULE_NAMES,  # tuple of qualified names
+    public_rule_infos,  # list[RuleInfo] present in this checkout
+    public_rule_names,  # list[str] sorted
 )
 ```
 
@@ -124,8 +124,10 @@ uv run python -m infrastructure.rules.linking --no-prune
 
 ```python
 from infrastructure.rules.linking import (
-    sync_private_rule_links, private_rules_root,
-    is_managed_symlink, LinkSyncResult,
+    sync_private_rule_links,
+    private_rules_root,
+    is_managed_symlink,
+    LinkSyncResult,
 )
 
 result = sync_private_rule_links(Path("."), dry_run=True)

@@ -490,9 +490,11 @@ export AUTHOR_ORCID="0000-0000-0000-0000"
 ```python
 # Good: Thin orchestrator
 from example import calculate_average
+
 data = load_data()
 avg = calculate_average(data)  # Uses src/ method
 plot_results(data, avg)
+
 
 # Bad: Business logic in script
 def calculate_average(data):

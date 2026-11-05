@@ -22,6 +22,7 @@ The Publishing module provides tools for academic publishing workflows. It enabl
 | `root_release_contract.py` | Fail-closed root tag/package/changelog identity gate; exemplar releases stay on standalone repositories |
 | `release_plan.py`, `release_plan_transaction.py` | Exact-input coordinated Root patch/minor plan, locked SDK/manuscript bindings and retained compensating rollback; stale inputs or foreign edits refuse application. Planning and application grant no publication authority. |
 | `release_acceptance.py` | Root 4+ hosted handoff admission: exact same-repository run/revision, bounded public evidence archive, aggregate receipt hash, and complete source-owned candidate profile |
+| `composed_receipt.py` | `validate_composed_receipt` reads a bounded per-class acceptance receipt, requires the complete current profile at the actual Git revision, and checks each producer declaration, artifact hash and class closure. Hosted-only classes require authenticated origin-read capability; origin state distinguishes `observed` from unresolved `declared` metadata, and a resolved failed, incomplete or wrong-revision run refuses. Admission rechecks source/artifact currency and performs no publication. |
 | `deposit_filename.py` | `build_deposit_filename`, `DepositPublishContext`, `deposit_context_from_config` — metadata-driven Zenodo/GitHub upload basename |
 | `publication_ledger.py` | Append-only release ledger for transmission bookends |
 | `release/release_pairing.py` | Structural GitHub ↔ Zenodo pairing validation |
@@ -104,12 +105,13 @@ Both are resolved automatically from `os.environ` when `config.token` is `None`.
 ```python
 from infrastructure.publishing.pypi import PyPIAdapter, PyPIConfig
 
-adapter = PyPIAdapter(PyPIConfig(test=True))         # reads TESTPYPI_TOKEN
-result  = adapter.publish(Path("."), dry_run=False)  # real upload
-print(result.url)                                    # https://test.pypi.org/project/.../
+adapter = PyPIAdapter(PyPIConfig(test=True))  # reads TESTPYPI_TOKEN
+result = adapter.publish(Path("."), dry_run=False)  # real upload
+print(result.url)  # https://test.pypi.org/project/.../
 
 # Equivalent canonical sandbox one-liner
 from infrastructure.publishing.pypi import run_pypi_release
+
 result = run_pypi_release(Path("."), test=True, dry_run=False)
 ```
 
@@ -130,14 +132,14 @@ result = run_pypi_release(Path("."), test=True, dry_run=False)
 ```python
 from infrastructure.publishing.static_site import SiteDeployConfig, SiteHosting, get_adapter
 
-config  = SiteDeployConfig(
+config = SiteDeployConfig(
     hosting=SiteHosting.GITHUB_PAGES,
     site_dir="output/docs",
     repo="owner/repo",
     branch="gh-pages",
 )
-adapter = get_adapter(config)         # returns GitHubPagesAdapter
-result  = adapter.deploy(dry_run=True)
+adapter = get_adapter(config)  # returns GitHubPagesAdapter
+result = adapter.deploy(dry_run=True)
 print(result.status, result.url)
 ```
 
@@ -195,10 +197,10 @@ Prefer importing from the subpackage (`infrastructure.publishing.archival`) for 
 from infrastructure.publishing.registry import get_platform, list_platforms, PublishingTier
 
 info = get_platform("pypi")
-print(info.env_vars)       # ('PYPI_TOKEN', 'TESTPYPI_TOKEN')
+print(info.env_vars)  # ('PYPI_TOKEN', 'TESTPYPI_TOKEN')
 
 static = list_platforms(tag="static_site")
-print([p.name for p in static])   # ['github_pages', 'cloudflare_pages', 'netlify']
+print([p.name for p in static])  # ['github_pages', 'cloudflare_pages', 'netlify']
 
 first_class = list_platforms(tier=PublishingTier.FIRST_CLASS)
 ```
@@ -296,7 +298,7 @@ targets = UploadTargets(
     github_repo="owner/template_gold_refinement",
     osf_title="Gold Refinement",
 )
-run = run_uploads(targets, jobs=select_jobs(), commit=False)   # dry-run core uploaders
+run = run_uploads(targets, jobs=select_jobs(), commit=False)  # dry-run core uploaders
 print(run.mode, run.ok, run.results)
 ```
 
@@ -396,12 +398,13 @@ url = create_github_release("v1.0", "Release 1.0", "Notes", files, token, "owner
 ```python
 from infrastructure.publishing.pypi import PyPIAdapter, PyPIConfig
 
-adapter = PyPIAdapter(PyPIConfig(test=True))           # reads TESTPYPI_TOKEN
-result  = adapter.publish(Path("."), dry_run=False)    # real TestPyPI upload
+adapter = PyPIAdapter(PyPIConfig(test=True))  # reads TESTPYPI_TOKEN
+result = adapter.publish(Path("."), dry_run=False)  # real TestPyPI upload
 print(result.url)
 
 # Canonical sandbox one-liner
 from infrastructure.publishing.pypi import run_pypi_release
+
 result = run_pypi_release(Path("."), test=True, dry_run=False)
 ```
 
@@ -409,10 +412,12 @@ result = run_pypi_release(Path("."), test=True, dry_run=False)
 
 ```python
 from infrastructure.publishing.static_site import (
-    SiteDeployConfig, SiteHosting, get_adapter,
+    SiteDeployConfig,
+    SiteHosting,
+    get_adapter,
 )
 
-config  = SiteDeployConfig(
+config = SiteDeployConfig(
     hosting=SiteHosting.CLOUDFLARE_PAGES,
     site_dir="output/docs",
     site_id="my-docs",  # Cloudflare project name / Netlify site ID

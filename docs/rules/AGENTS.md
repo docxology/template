@@ -349,6 +349,7 @@ from project.src.simulation import SimpleSimulation
 from dataclasses import dataclass
 import os
 
+
 @dataclass
 class ModuleConfig:
     """Module configuration."""
@@ -358,9 +359,7 @@ class ModuleConfig:
     @classmethod
     def from_env(cls) -> "ModuleConfig":
         """Load from environment variables."""
-        return cls(
-            setting=os.getenv("MODULE_SETTING", "default")
-        )
+        return cls(setting=os.getenv("MODULE_SETTING", "default"))
 ```
 
 ### Error Handling Pattern

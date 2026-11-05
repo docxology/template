@@ -118,6 +118,7 @@ import time
 
 logger = get_logger(__name__)
 
+
 @contextmanager
 def log_operation(operation_name: str):
     """Context manager for logging operations.
@@ -137,6 +138,7 @@ def log_operation(operation_name: str):
         logger.error(f"Failed: {operation_name} ({elapsed:.2f}s)", exc_info=True)
         raise
 
+
 # Usage
 with log_operation("Data validation"):
     validate_all_data()
@@ -150,6 +152,7 @@ from infrastructure.core.logging.utils import get_logger
 
 logger = get_logger(__name__)
 
+
 def log_structured(message: str, **context):
     """Log with structured context.
 
@@ -157,19 +160,12 @@ def log_structured(message: str, **context):
         message: Log message
         **context: Structured context data
     """
-    log_entry = {
-        "message": message,
-        **context
-    }
+    log_entry = {"message": message, **context}
     logger.info(json.dumps(log_entry))
 
+
 # Usage
-log_structured(
-    "User created",
-    user_id=123,
-    email="alice@example.com",
-    timestamp="2025-01-01T12:00:00Z"
-)
+log_structured("User created", user_id=123, email="alice@example.com", timestamp="2025-01-01T12:00:00Z")
 ```
 
 ### Progress Logging Pattern
@@ -178,6 +174,7 @@ log_structured(
 from infrastructure.core.logging.utils import get_logger
 
 logger = get_logger(__name__)
+
 
 def process_items(items: list, callback):
     """Process items with progress logging.
@@ -194,14 +191,16 @@ def process_items(items: list, callback):
 
         # Log progress every 10%
         if i % max(1, total // 10) == 0:
-            logger.info(f"Progress: {i}/{total} ({100*i//total}%)")
+            logger.info(f"Progress: {i}/{total} ({100 * i // total}%)")
 
     logger.info(f"Completed: processed {total} items")
+
 
 # Usage
 def process_user(user):
     # Process user...
     pass
+
 
 process_items(users, process_user)
 ```
@@ -213,6 +212,7 @@ from infrastructure.core.logging.utils import get_logger
 import os
 
 logger = get_logger(__name__)
+
 
 def debug_function():
     """Function with debug logging."""
@@ -271,9 +271,9 @@ user_id = 123
 logger.info(f"User login: id={user_id}, timestamp={timestamp}")
 
 # ✅ GOOD: Use appropriate log level
-logger.debug("Variable state: x=10, y=20")     # Development details
-logger.info("User created successfully")        # Normal progress
-logger.warning("Retrying connection attempt")   # Potential issue
+logger.debug("Variable state: x=10, y=20")  # Development details
+logger.info("User created successfully")  # Normal progress
+logger.warning("Retrying connection attempt")  # Potential issue
 logger.error("Failed to save data", exc_info=True)  # Error occurred
 ```
 
@@ -284,6 +284,7 @@ from infrastructure.core.logging.utils import get_logger
 from infrastructure.core.exceptions import ValidationError
 
 logger = get_logger(__name__)
+
 
 def validate_and_log(data: dict) -> bool:
     """Validate data with logging.
@@ -358,9 +359,11 @@ logger.error("User authentication failed")
 import pytest
 from infrastructure.core.logging.utils import get_logger
 
+
 def test_operation_logs_correctly(caplog):
     """Test that operation logs expected messages."""
     import logging
+
     caplog.set_level(logging.INFO)
 
     perform_operation()
@@ -369,9 +372,11 @@ def test_operation_logs_correctly(caplog):
     assert "Operation completed" in caplog.text
     assert "ERROR" not in caplog.text
 
+
 def test_error_logging(caplog):
     """Test error logging."""
     import logging
+
     caplog.set_level(logging.ERROR)
 
     with pytest.raises(Exception):

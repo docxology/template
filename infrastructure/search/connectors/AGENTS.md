@@ -34,9 +34,7 @@ catalog output.
 ## Usage
 
 ```python
-from infrastructure.search.connectors import (
-    ConnectorDomain, ConnectorRegistry, _ALL_CONNECTORS, SearchOptions
-)
+from infrastructure.search.connectors import ConnectorDomain, ConnectorRegistry, _ALL_CONNECTORS, SearchOptions
 
 registry = ConnectorRegistry()
 for connector_class in _ALL_CONNECTORS:
@@ -50,6 +48,7 @@ hits = registry.get("arxiv").search("attention mechanism", SearchOptions(max_res
 
 # Convenience helpers (default registry)
 from infrastructure.search.connectors import list_connectors, search_connector
+
 catalog = list_connectors()
 hits = search_connector("openalex", "CRISPR", max_results=3)
 ```

@@ -566,6 +566,7 @@ try:
 except ImportError:
     psutil = None  # type: ignore[assignment]
 
+
 # Guard usage with None checks
 def get_memory():
     if psutil is None:

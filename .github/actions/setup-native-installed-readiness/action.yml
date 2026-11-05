@@ -7,8 +7,19 @@ inputs:
   project-scopes:
     description: >-
       Space-separated Source project scopes whose locks are warmed in addition to
-      the Root lock. Complete native roles pass the exact scopes the preparation
-      loop will install; the empty default keeps Root-only warming.
+      the Root lock. The empty default keeps Root-only warming, which is correct
+      for callers that install nothing else.
+    default: ''
+  matrix-cell:
+    description: >-
+      The single declared public exemplar this job prepares, as the bare cell name
+      (`template_madlib`). When set, this action derives the extra cache scopes
+      itself from the same predicate the preparation loop uses, after its own
+      `uv sync` has created the interpreter. Prefer this over `project-scopes`:
+      resolving the selection from a workflow step needs an interpreter that does
+      not exist yet at that point, and run 41952164694 died with
+      `.venv/bin/python: No such file or directory` (exit 127) on all 25 cells
+      because that step ran before this action.
     default: ''
 runs:
   using: composite
@@ -103,7 +114,32 @@ runs:
         if not reader.unchanged(): raise ValueError("Source math DATA changed during inspection")
         PYTHON
         fi
+    - name: Derive the offline cache scopes this preparation will install
+      id: cache-scopes
+      shell: bash
+      env:
+        MATRIX_CELL: ${{ inputs.matrix-cell }}
+        EXPLICIT_SCOPES: ${{ inputs.project-scopes }}
+      run: |
+        set -euo pipefail
+        # The interpreter exists here: the `uv sync` step above created it. Asking
+        # the launcher keeps one predicate with the preparation loop, so warming
+        # cannot drift from installing. A workflow step cannot do this, because
+        # `.venv` does not exist before this action (run 41952164694, exit 127).
+        if [ -n "$EXPLICIT_SCOPES" ]; then
+          scopes="$EXPLICIT_SCOPES"
+        elif [ -n "$MATRIX_CELL" ]; then
+          scopes=$(.venv/bin/python -m infrastructure.reporting.native_installed_launcher \
+            --mode original --matrix-cell "$MATRIX_CELL" \
+            --source-root "$PWD" --print-preparation-scopes | paste -sd' ' -)
+        else
+          # Roster-wide roles prepare every exemplar.
+          scopes=$(.venv/bin/python -m infrastructure.reporting.native_installed_launcher \
+            --mode original --source-root "$PWD" --print-preparation-scopes | paste -sd' ' -)
+        fi
+        echo "project-scopes=$scopes" >> "$GITHUB_OUTPUT"
+        echo "offline cache scopes: root plus $(echo "$scopes" | wc -w) project(s)"
     - name: Warm exact Source-locked offline dependencies for cold installed wheels
       uses: ./.github/actions/setup-native-offline-cache
       with:
-        project-scopes: ${{ inputs.project-scopes }}
+        project-scopes: ${{ steps.cache-scopes.outputs.project-scopes }}

@@ -64,18 +64,18 @@ fond_path = resolve_fond_root(Path("."), "templates/template_bibliography")
 ```python
 @dataclass
 class FondInfo:
-    name: str              # Directory name
-    path: Path             # Absolute path
-    fond_type: str         # "type" field from fonds.yaml, or "generic"
-    has_data: bool         # Has data/ directory
-    has_manuscript: bool   # Has manuscript/ directory
-    metadata: dict         # Raw fonds.yaml content
-    program: str           # Parent program dir ("" for standalone)
+    name: str  # Directory name
+    path: Path  # Absolute path
+    fond_type: str  # "type" field from fonds.yaml, or "generic"
+    has_data: bool  # Has data/ directory
+    has_manuscript: bool  # Has manuscript/ directory
+    metadata: dict  # Raw fonds.yaml content
+    program: str  # Parent program dir ("" for standalone)
 
     @property
     def qualified_name(self) -> str: ...  # "name" or "program/name"
     @property
-    def is_valid(self) -> bool: ...        # True iff has_data
+    def is_valid(self) -> bool: ...  # True iff has_data
 ```
 
 ### `validation.py` (re-exported from `infrastructure.fonds`)
@@ -121,8 +121,12 @@ is_valid, message = validate_fond_structure(Path("fonds/my_bibliography"))
 ```python
 @dataclass
 class LinkSyncResult:
-    created: list[str]; updated: list[str]; removed: list[str]; skipped: list[str]
+    created: list[str]
+    updated: list[str]
+    removed: list[str]
+    skipped: list[str]
     private_root: Path | None
+
     @property
     def changed(self) -> bool: ...
     def summary(self) -> str: ...

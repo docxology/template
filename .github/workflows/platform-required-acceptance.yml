@@ -564,22 +564,11 @@ jobs:
       - uses: ./.github/actions/setup-python-env
         with:
           python-version: "3.14.4"
-      - name: Resolve the exact offline cache scopes for the whole roster
-        id: cache-scopes
-        # The roster-wide lane prepares every public exemplar and installs each
-        # one's own lock, so a Root-only warm cannot serve it either. Ask the
-        # launcher for the selection instead of reaching for PUBLIC_PROJECT_NAMES.
-        run: |
-          set -euo pipefail
-          scopes=$(.venv/bin/python -m infrastructure.reporting.native_installed_launcher \
-            --mode original \
-            --source-root "$GITHUB_WORKSPACE" \
-            --print-preparation-scopes | paste -sd' ' -)
-          echo "project-scopes=$scopes" >> "$GITHUB_OUTPUT"
-          echo "offline cache scopes: root plus $(echo "$scopes" | wc -w) projects"
+      # The roster-wide lane prepares every public exemplar and installs each one's
+      # own lock, so a Root-only warm cannot serve it either. With no `matrix-cell`
+      # the readiness action derives the full roster after its own `uv sync`, which
+      # is the only point where an interpreter exists.
       - uses: ./.github/actions/setup-native-installed-readiness
-        with:
-          project-scopes: ${{ steps.cache-scopes.outputs.project-scopes }}
       - name: Strict rendered publication evidence gate
         # The native worker refuses on this same strict rendered predicate before
         # any stage executes, so run it first: a stale receipt fails in seconds
@@ -648,14 +637,9 @@ jobs:
           retention-days: 30
 
 
-  # TODO(native-sharding): `--matrix-cell` and the per-cell artifact name have
-  # both landed, and the per-control ceiling this comment used to name is no
-  # longer a blocker: `CONTROL_PHASE_CEILING_SECONDS` was raised 600 -> 3600 in
-  # 6875853d7 ("Bound one whole-PDF control phase by an hour instead of ten
-  # minutes"). The remaining gate is one repository variable: these jobs run only
-  # when NATIVE_SHARDING_CELLS is 'true', and it has never been set, so no sharded
-  # cell has executed. Keep this comment tied to the code: a stale precondition
-  # here is how the lane stayed mislabelled as blocked.
+  # The sharded native lane selects every canonical project from Source and
+  # admits only a complete cell union. NATIVE_SHARDING_CELLS selects this lane;
+  # the separately gated monolithic job remains the supported fallback.
   native-plan:
     if: vars.NATIVE_SHARDING_CELLS == 'true'
     runs-on: ubuntu-24.04
@@ -673,9 +657,8 @@ jobs:
         id: plan
         run: |
           set -euo pipefail
-          # TODO(native-sharding): reuse the auxiliary matrix emitter (as here),
-          # or expose an equivalent flag on the native CLI. The `cell` values are
-          # bare project names; `root` is not a project and is excluded.
+          # Reuse the Source-owned auxiliary matrix emitter. The `cell` values
+          # are bare project names; `root` is not a project and is excluded.
           matrix=$(.venv/bin/python -m infrastructure.project.public_acceptance_auxiliary_cli --matrix-json \
             | jq -c '{include: [.include[] | select(.cell != "root")]}')
           echo "matrix=$matrix" >> "$GITHUB_OUTPUT"
@@ -683,8 +666,7 @@ jobs:
   native-original-cell:
     needs: native-plan
     name: native-original-cell (${{ matrix.cell }})
-    # TODO(native-sharding): enable once --matrix-cell lands. Deliberately
-    # gated so a missing selection can never be mistaken for a pass.
+    # Explicit selection keeps a missing cell from being mistaken for a pass.
     if: vars.NATIVE_SHARDING_CELLS == 'true'
     strategy:
       fail-fast: false
@@ -704,24 +686,15 @@ jobs:
       - uses: ./.github/actions/setup-python-env
         with:
           python-version: "3.14.4"
-      - name: Resolve the exact offline cache scopes for this cell
-        id: cache-scopes
-        # The cache action warms one lock per scope, and the preparation loop
-        # prepares the cell plus its local dependency closure. Ask the launcher
-        # for that same selection rather than concatenating a path here: Root
-        # alone pins different versions of four packages, so a diverging cell
-        # cannot install offline (run 41940842593, job 126961680266).
-        run: |
-          set -euo pipefail
-          scopes=$(.venv/bin/python -m infrastructure.reporting.native_installed_launcher \
-            --mode original --matrix-cell "${{ matrix.cell }}" \
-            --source-root "$GITHUB_WORKSPACE" \
-            --print-preparation-scopes | paste -sd' ' -)
-          echo "project-scopes=$scopes" >> "$GITHUB_OUTPUT"
-          echo "offline cache scopes: root $scopes"
+      # Offline cache scopes are derived inside the readiness action, after its own
+      # `uv sync`. Resolving them in a workflow step here needs an interpreter that
+      # does not exist yet: run 41952164694 died at `.venv/bin/python: No such file
+      # or directory` (exit 127) on all 25 cells. The action takes `matrix-cell`
+      # for exactly this, so warming and preparation share one predicate without a
+      # step ordering that cannot work.
       - uses: ./.github/actions/setup-native-installed-readiness
         with:
-          project-scopes: ${{ steps.cache-scopes.outputs.project-scopes }}
+          matrix-cell: ${{ matrix.cell }}
       - name: Keep the declared capacity before native allocation
         run: |
           set -euo pipefail

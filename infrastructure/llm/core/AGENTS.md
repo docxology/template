@@ -43,8 +43,7 @@ readable reason; project/manuscript content must not use these paths implicitly.
 The public class is declared as:
 
 ```python
-class LLMClient(_ConnectionMixin, _StructuredQueryMixin):
-    ...
+class LLMClient(_ConnectionMixin, _StructuredQueryMixin): ...
 ```
 
 Authoritative method and parameter lists (including streaming-only kwargs such as
@@ -144,8 +143,10 @@ LLM_SEED=42                           # Random seed
 @dataclass
 class Message:
     """Individual conversation message."""
-    role: str      # "user", "assistant", "system"
-    content: str   # Message content
+
+    role: str  # "user", "assistant", "system"
+    content: str  # Message content
+
 
 class ConversationContext:
     """Manages conversation history and context."""
@@ -174,9 +175,9 @@ class ConversationContext:
 ```python
 def _should_prune(self) -> bool:
     """Check if context pruning is needed."""
-    total_tokens = sum(self.token_counter(msg['content'])
-                      for msg in self.messages)
+    total_tokens = sum(self.token_counter(msg["content"]) for msg in self.messages)
     return total_tokens > self.max_tokens * 0.9  # 90% threshold
+
 
 def _prune_context(self):
     """Prune context to fit within token limits."""
@@ -254,6 +255,7 @@ def test_llm_client_initialization():
     assert client.config.base_url == "http://test:11434"
     assert client.config.default_model == "test-model"
 
+
 def test_conversation_context_management():
     """Test conversation context handling."""
     context = ConversationContext()
@@ -266,14 +268,10 @@ def test_conversation_context_management():
     assert messages[0]["role"] == "user"
     assert messages[0]["content"] == "Hello"
 
+
 def test_generation_options_conversion():
     """Test conversion of options to Ollama format."""
-    options = GenerationOptions(
-        temperature=0.8,
-        max_tokens=1000,
-        top_p=0.9,
-        format_json=True
-    )
+    options = GenerationOptions(temperature=0.8, max_tokens=1000, top_p=0.9, format_json=True)
 
     ollama_opts = options.to_ollama_options(OllamaClientConfig())
     assert ollama_opts["temperature"] == 0.8
@@ -290,6 +288,7 @@ def test_llm_client_query_integration():
     """Test LLM query workflow."""
     # This would require a mock Ollama server
     # Tests connection, request formatting, response processing
+
 
 def test_context_pruning():
     """Test automatic context pruning."""
@@ -402,7 +401,7 @@ config = OllamaClientConfig(
     short_max_tokens=200,
     long_max_tokens=16384,
     timeout=60.0,
-    seed=42
+    seed=42,
 )
 ```
 
@@ -416,7 +415,7 @@ academic_config = OllamaClientConfig(
     Use formal language and provide citations when discussing research methods.""",
     temperature=0.3,  # Lower temperature for more consistent academic writing
     max_tokens=4096,  # Allow longer responses for detailed explanations
-    seed=12345       # Reproducible outputs for academic work
+    seed=12345,  # Reproducible outputs for academic work
 )
 ```
 
@@ -443,15 +442,12 @@ schema = {
         "method": {"type": "string"},
         "advantages": {"type": "array", "items": {"type": "string"}},
         "disadvantages": {"type": "array", "items": {"type": "string"}},
-        "use_cases": {"type": "array", "items": {"type": "string"}}
+        "use_cases": {"type": "array", "items": {"type": "string"}},
     },
-    "required": ["method", "advantages", "disadvantages"]
+    "required": ["method", "advantages", "disadvantages"],
 }
 
-response = client.query_structured(
-    "Analyze the k-means clustering algorithm",
-    schema=schema
-)
+response = client.query_structured("Analyze the k-means clustering algorithm", schema=schema)
 print(f"Method: {response['method']}")
 print(f"Advantages: {response['advantages']}")
 ```

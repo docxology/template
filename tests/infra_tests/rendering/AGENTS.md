@@ -57,6 +57,7 @@ def test_pdf_renderer_basic_compilation():
     assert "Basic Test" in pdf_text
     assert "Test content" in pdf_text
 
+
 def test_pdf_renderer_cross_references():
     """Test cross-reference resolution in PDF output."""
     manuscript = create_manuscript_with_cross_references()
@@ -66,8 +67,8 @@ def test_pdf_renderer_cross_references():
     # Verify cross-references are resolved (not showing ??)
     pdf_text = extract_pdf_text(pdf_path)
     assert "??" not in pdf_text  # No unresolved references
-    assert "[1]" in pdf_text     # Citation present
-    assert "Figure 1" in pdf_text # Figure reference present
+    assert "[1]" in pdf_text  # Citation present
+    assert "Figure 1" in pdf_text  # Figure reference present
 ```
 
 ### Alternative Format Tests
@@ -147,14 +148,15 @@ def validate_rendered_output(output_path: Path, expected_content: List[str]) -> 
         pytest.fail(f"Output file not created: {output_path}")
 
     # Format-specific validation
-    if output_path.suffix == '.pdf':
+    if output_path.suffix == ".pdf":
         return validate_pdf_content(output_path, expected_content)
-    elif output_path.suffix == '.html':
+    elif output_path.suffix == ".html":
         return validate_html_content(output_path, expected_content)
-    elif output_path.name.endswith('.tex'):
+    elif output_path.name.endswith(".tex"):
         return validate_latex_content(output_path, expected_content)
     else:
         return validate_generic_content(output_path, expected_content)
+
 
 def validate_pdf_content(pdf_path: Path, expected_content: List[str]) -> bool:
     """Validate PDF contains expected text content."""
@@ -208,23 +210,25 @@ def temp_output_dir(tmp_path):
     output_dir.mkdir()
     return output_dir
 
+
 @pytest.fixture
 def sample_manuscript():
     """Provide sample manuscript content."""
     return {
-        'title': 'Test Manuscript',
-        'content': '# Introduction\n\nThis is a test manuscript.',
-        'metadata': {'author': 'Test Author', 'date': '2024'}
+        "title": "Test Manuscript",
+        "content": "# Introduction\n\nThis is a test manuscript.",
+        "metadata": {"author": "Test Author", "date": "2024"},
     }
+
 
 @pytest.fixture
 def latex_installation():
     """Ensure LaTeX is available for PDF tests."""
-    if not shutil.which('xelatex'):
+    if not shutil.which("xelatex"):
         pytest.skip("LaTeX (xelatex) not available")
 
     # Check required packages
-    required_packages = ['multirow', 'cleveref', 'doi']
+    required_packages = ["multirow", "cleveref", "doi"]
     missing_packages = check_latex_packages(required_packages)
     if missing_packages:
         pytest.skip(f"Missing LaTeX packages: {missing_packages}")
@@ -238,17 +242,18 @@ def create_test_manuscript(title: str, content: str, metadata: dict = None) -> P
     """Create temporary manuscript file for testing."""
     manuscript = f"""---
 title: {title}
-author: {metadata.get('author', 'Test Author') if metadata else 'Test Author'}
+author: {metadata.get("author", "Test Author") if metadata else "Test Author"}
 ---
 
 {content}
 """
 
-    temp_file = tempfile.NamedTemporaryFile(mode='w', suffix='.md', delete=False)
+    temp_file = tempfile.NamedTemporaryFile(mode="w", suffix=".md", delete=False)
     temp_file.write(manuscript)
     temp_file.close()
 
     return Path(temp_file.name)
+
 
 def create_manuscript_with_cross_references() -> Path:
     """Create manuscript with citations and figure references."""
@@ -276,7 +281,7 @@ The methodology is illustrated in Figure 1.
 def extract_pdf_text(pdf_path: Path) -> str:
     """Extract text content from PDF for validation."""
     try:
-        with open(pdf_path, 'rb') as f:
+        with open(pdf_path, "rb") as f:
             reader = pypdf.PdfReader(f)
             text = ""
             for page in reader.pages:
@@ -285,10 +290,11 @@ def extract_pdf_text(pdf_path: Path) -> str:
     except Exception as e:
         pytest.fail(f"Failed to extract PDF text: {e}")
 
+
 def validate_pdf_structure(pdf_path: Path) -> bool:
     """Validate PDF has proper structure."""
     try:
-        with open(pdf_path, 'rb') as f:
+        with open(pdf_path, "rb") as f:
             reader = pypdf.PdfReader(f)
 
             # Check for pages
@@ -297,7 +303,7 @@ def validate_pdf_structure(pdf_path: Path) -> bool:
 
             # Check for metadata
             metadata = reader.metadata
-            if not metadata.get('/Title'):
+            if not metadata.get("/Title"):
                 return False
 
             return True
@@ -330,7 +336,7 @@ uv run pytest tests/infra_tests/rendering/ --ignore-glob="*latex*"  # Skip if no
 # conftest.py - Conditional test skipping
 def pytest_collection_modifyitems(config, items):
     """Skip LaTeX-dependent tests if LaTeX not available."""
-    if not shutil.which('xelatex'):
+    if not shutil.which("xelatex"):
         skip_latex = pytest.mark.skip(reason="LaTeX (xelatex) not available")
         for item in items:
             if "latex" in item.name or "pdf" in item.name:
@@ -535,3 +541,5 @@ except ImportError:
 **Testing Standards:**
 - [`docs/rules/testing_standards.md`](../../../docs/rules/testing_standards.md) - Testing standards
 - [`docs/development/testing/testing-guide.md`](../../../docs/development/testing/testing-guide.md) - Testing guide
+
+The pipeline transmission-order tests exercise genuine font-provider changes, stale auxiliary-audit refusal, preparation before hydration admission, and the consumed paper-layout and skipped-hydration guards.

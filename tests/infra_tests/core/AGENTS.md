@@ -56,7 +56,8 @@ flowchart TB
 def test_config_loading(project_config_file):
     """Test config loading with file structure"""
     config = load_config(project_config_file)
-    assert config['paper']['title'] == 'Test Research Paper'
+    assert config["paper"]["title"] == "Test Research Paper"
+
 
 def test_translation_languages(tmp_path, sample_project_config):
     """Test translation language extraction from config"""
@@ -64,11 +65,11 @@ def test_translation_languages(tmp_path, sample_project_config):
     config_file = tmp_path / "projects" / "project" / "manuscript" / "config.yaml"
     config_file.parent.mkdir(parents=True)
 
-    with open(config_file, 'w') as f:
+    with open(config_file, "w") as f:
         yaml.dump(sample_project_config, f)
 
     languages = get_translation_languages(tmp_path)
-    assert languages == ['zh', 'hi', 'ru']  # From sample config
+    assert languages == ["zh", "hi", "ru"]  # From sample config
 ```
 
 **Test File Structure Requirements:**
@@ -193,11 +194,12 @@ def test_load_config_from_file():
     config = load_config(config_file)
     assert config.some_setting == expected_value
 
+
 def test_environment_variable_override():
     """Test environment variables override file config."""
-    with mock.patch.dict(os.environ, {'SETTING': 'override'}):
+    with mock.patch.dict(os.environ, {"SETTING": "override"}):
         config = load_config()
-        assert config.setting == 'override'
+        assert config.setting == "override"
 ```
 
 ### Logging Testing
@@ -206,16 +208,17 @@ def test_environment_variable_override():
 ```python
 def test_logger_initialization():
     """Test logger creation with proper configuration."""
-    logger = get_logger('test_module')
-    assert logger.name == 'test_module'
+    logger = get_logger("test_module")
+    assert logger.name == "test_module"
     assert logger.level == logging.INFO
+
 
 def test_context_manager_logging():
     """Test logging context manager functionality."""
     with capture_logs() as logs:
-        with logging_context('operation'):
-            logger.info('test message')
-        assert 'operation' in logs[0]
+        with logging_context("operation"):
+            logger.info("test message")
+        assert "operation" in logs[0]
 ```
 
 ### Exception Testing
@@ -225,10 +228,10 @@ def test_context_manager_logging():
 def test_exception_context_preservation():
     """Test exception context is properly preserved."""
     try:
-        raise TemplateError("test error", context={'key': 'value'})
+        raise TemplateError("test error", context={"key": "value"})
     except TemplateError as e:
-        assert e.context['key'] == 'value'
-        assert 'test error' in str(e)
+        assert e.context["key"] == "value"
+        assert "test error" in str(e)
 ```
 
 ### Performance Testing
@@ -238,10 +241,10 @@ def test_exception_context_preservation():
 def test_performance_monitor():
     """Test performance monitoring accuracy."""
     monitor = PerformanceMonitor()
-    with monitor.track('test_operation'):
+    with monitor.track("test_operation"):
         time.sleep(0.1)
 
-    assert monitor.get_duration('test_operation') >= 0.1
+    assert monitor.get_duration("test_operation") >= 0.1
 ```
 
 ## Testing Infrastructure
@@ -261,6 +264,7 @@ def temp_dir():
     """Provide temporary directory for tests."""
     with tempfile.TemporaryDirectory() as tmp:
         yield Path(tmp)
+
 
 @pytest.fixture
 def test_config():
@@ -326,6 +330,7 @@ uv run pytest tests/infra_tests/core/test_logging_utils.py -s --pdb
 **Test File Template:**
 ```python
 """Tests for module_name functionality."""
+
 import pytest
 from infrastructure.core.module_name import function_to_test  # noqa: docs-lint
 

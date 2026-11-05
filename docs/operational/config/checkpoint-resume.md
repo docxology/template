@@ -147,12 +147,7 @@ from infrastructure.core.runtime.checkpoint import CheckpointManager, StageResul
 manager = CheckpointManager()
 
 # Save checkpoint
-manager.save_checkpoint(
-    pipeline_start_time=time.time(),
-    last_stage_completed=3,
-    stage_results=[...],
-    total_stages=6
-)
+manager.save_checkpoint(pipeline_start_time=time.time(), last_stage_completed=3, stage_results=[...], total_stages=6)
 
 # Load checkpoint
 checkpoint = manager.load_checkpoint()

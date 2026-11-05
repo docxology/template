@@ -70,12 +70,12 @@ Unlike fonds, tools require a `scripts/` directory (not `data/`).
 
 ```python
 info: ToolInfo = build_tool_info(Path("tools/templates/template_code_executor"))
-info.name           # "template_code_executor"
-info.tool_type      # from tools.yaml "type", or "generic"
-info.has_scripts    # True iff scripts/ exists
-info.has_tests      # True iff tests/ exists
-info.is_valid       # True iff has_scripts
-info.qualified_name # "template_code_executor" or "templates/template_code_executor"
+info.name  # "template_code_executor"
+info.tool_type  # from tools.yaml "type", or "generic"
+info.has_scripts  # True iff scripts/ exists
+info.has_tests  # True iff tests/ exists
+info.is_valid  # True iff has_scripts
+info.qualified_name  # "template_code_executor" or "templates/template_code_executor"
 ```
 
 ## Discovery scope
@@ -87,7 +87,7 @@ discovered and validated.
 ```python
 from infrastructure.tools.discovery import (
     NON_RENDERED_TOOL_SUBDIRS,  # {"working", "archive"}
-    RENDERED_TOOL_SUBDIRS,      # {"templates"}
+    RENDERED_TOOL_SUBDIRS,  # {"templates"}
 )
 ```
 
@@ -107,9 +107,9 @@ path = resolve_tool_root(Path("."), "template_code_executor")
 
 ```python
 from infrastructure.tools.public_scope import (
-    PUBLIC_TOOL_NAMES,      # tuple of qualified names
-    public_tool_infos,      # list[ToolInfo] present in this checkout
-    public_tool_names,      # list[str] sorted
+    PUBLIC_TOOL_NAMES,  # tuple of qualified names
+    public_tool_infos,  # list[ToolInfo] present in this checkout
+    public_tool_names,  # list[str] sorted
 )
 ```
 
@@ -123,8 +123,10 @@ uv run python -m infrastructure.tools.linking --no-prune
 
 ```python
 from infrastructure.tools.linking import (
-    sync_private_tool_links, private_tools_root,
-    is_managed_symlink, LinkSyncResult,
+    sync_private_tool_links,
+    private_tools_root,
+    is_managed_symlink,
+    LinkSyncResult,
 )
 
 result = sync_private_tool_links(Path("."), dry_run=True)

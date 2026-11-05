@@ -14,11 +14,19 @@ through the parser without semantic loss.
 
 ```python
 from infrastructure.reference.citation import (
-    BibEntry, BibDatabase,
-    parse_bibfile, parse_bibtex, BibParseError,
-    render_entry, render_database, render_entries, write_bibfile,
-    paper_to_bibentry, generate_citation_key,
-    escape_latex, unescape_latex,
+    BibEntry,
+    BibDatabase,
+    parse_bibfile,
+    parse_bibtex,
+    BibParseError,
+    render_entry,
+    render_database,
+    render_entries,
+    write_bibfile,
+    paper_to_bibentry,
+    generate_citation_key,
+    escape_latex,
+    unescape_latex,
 )
 ```
 
@@ -36,17 +44,20 @@ assert boyd.get("author") == "Boyd, Stephen and Vandenberghe, Lieven"
 
 ```python
 from collections import OrderedDict
+
 entry = BibEntry(
     entry_type="article",
     citation_key="smith2024example",
-    fields=OrderedDict([
-        ("title", "An Example Paper"),
-        ("author", "Smith, Alice and Jones, Bob"),
-        ("journal", "Cambridge UP"),
-        ("year", "2024"),
-        ("pages", "1-10"),  # auto-normalised to "1--10"
-        ("doi", "10.1234/example"),
-    ]),
+    fields=OrderedDict(
+        [
+            ("title", "An Example Paper"),
+            ("author", "Smith, Alice and Jones, Bob"),
+            ("journal", "Cambridge UP"),
+            ("year", "2024"),
+            ("pages", "1-10"),  # auto-normalised to "1--10"
+            ("doi", "10.1234/example"),
+        ]
+    ),
 )
 print(render_entry(entry))
 ```
@@ -103,8 +114,15 @@ offline cache miss so a skipped check never reads as clean.
 
 ```python
 from infrastructure.reference.verification import (
-    ReferenceResolver, ResolutionCache, verify_bibfile, verify_database, verify_entry,
-    VerificationStatus, VerificationReport, ReferenceVerdict, BLOCKING_STATUSES,
+    ReferenceResolver,
+    ResolutionCache,
+    verify_bibfile,
+    verify_database,
+    verify_entry,
+    VerificationStatus,
+    VerificationReport,
+    ReferenceVerdict,
+    BLOCKING_STATUSES,
 )
 
 resolver = ReferenceResolver(cache=ResolutionCache("cache.db"), allow_network=True)

@@ -34,9 +34,7 @@ from simulation import SimpleSimulation
 
 # Create simulation
 sim = SimpleSimulation(
-    parameters={"max_iterations": 100, "target_value": 5.0},
-    seed=42,
-    output_dir="output/simulations"
+    parameters={"max_iterations": 100, "target_value": 5.0}, seed=42, output_dir="output/simulations"
 )
 
 # Run simulation
@@ -181,10 +179,7 @@ Generates automated reports from simulation results.
 from reporting import ReportGenerator
 
 report_gen = ReportGenerator(output_dir="output/reports")
-results = {
-    "summary": {"mean": 1.0, "std": 0.5},
-    "findings": ["Finding 1", "Finding 2"]
-}
+results = {"summary": {"mean": 1.0, "std": 0.5}, "findings": ["Finding 1", "Finding 2"]}
 report_path = report_gen.generate_markdown_report("Report Title", results)
 ```
 

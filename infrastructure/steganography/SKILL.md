@@ -28,8 +28,10 @@ Responsible for generating dense Error-Correction Q-Level QR codes and Code128 b
 
 ```python
 from infrastructure.steganography.barcodes import create_barcode_strip_overlay
+
 overlay_pdf_bytes = create_barcode_strip_overlay(
-    page_width=612, page_height=792,
+    page_width=612,
+    page_height=792,
     code128_data="paper-id-001",
 )
 ```
@@ -40,6 +42,7 @@ Provides deterministic SHA-256 and SHA-512 manifest exports alongside standard P
 
 ```python
 from infrastructure.steganography.hashing import compute_file_hashes, write_hash_manifest
+
 hashes = compute_file_hashes(Path("file.pdf"))
 write_hash_manifest(Path("file.pdf"), hashes)
 ```
@@ -50,6 +53,7 @@ For applying visual steganographic traits like diagonally rendered strings acros
 
 ```python
 from infrastructure.steganography.overlays import create_watermark_overlay
+
 overlay_bytes = create_watermark_overlay(page_width=612, page_height=792, text="CONFIDENTIAL", opacity=0.08)
 ```
 
@@ -60,7 +64,9 @@ into `.ski` sidecar files using the Kmyth toolkit.
 
 ```python
 from infrastructure.steganography.kmyth_adapter import (
-    KmythSealOptions, seal_file_with_kmyth, validate_kmyth_installation,
+    KmythSealOptions,
+    seal_file_with_kmyth,
+    validate_kmyth_installation,
 )
 
 # Validate that kmyth-seal/kmyth-unseal are available

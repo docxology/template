@@ -16,9 +16,16 @@ lives here — see `agent.py`'s module docstring for the full rationale.
 
 ```python
 from template_formal.agent import (
-    Agent, AnyProtocolPhase, BeliefState, CandidateAction, DecisionError,
-    GaussianBelief, StateT, expected_free_energy,
-    gaussian_differential_entropy, gaussian_kl_divergence,
+    Agent,
+    AnyProtocolPhase,
+    BeliefState,
+    CandidateAction,
+    DecisionError,
+    GaussianBelief,
+    StateT,
+    expected_free_energy,
+    gaussian_differential_entropy,
+    gaussian_kl_divergence,
 )
 ```
 

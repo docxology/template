@@ -61,7 +61,7 @@ from pathlib import Path
 config = PipelineConfig(
     project_name="draft_paper",
     repo_root=Path("."),
-    projects_dir="projects/working",   # override default "projects"
+    projects_dir="projects/working",  # override default "projects"
 )
 PipelineExecutor(config).execute_core_pipeline()
 ```

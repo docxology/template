@@ -65,9 +65,9 @@ and the credential check when applicable.
 ```python
 from infrastructure.publishing.registry import first_class_platforms, get_platform
 
-print(len(first_class_platforms()))      # 12
+print(len(first_class_platforms()))  # 12
 zenodo = get_platform("zenodo")
-print(zenodo.env_vars)                    # ('ZENODO_API_TOKEN',)
+print(zenodo.env_vars)  # ('ZENODO_API_TOKEN',)
 print(zenodo.adapter_module, zenodo.adapter_class)
 ```
 
@@ -178,13 +178,11 @@ from infrastructure.publishing.status_report import (
 )
 
 report = compile_publishing_status(Path("projects/templates/template_gold_refinement"))
-print(report.published_count)            # e.g. 7
+print(report.published_count)  # e.g. 7
 print([(p.name, p.state.value) for p in report.platforms])
 
 readme = Path("README.md").read_text(encoding="utf-8")
-new_text, changed = update_readme_block(
-    readme, report, init_after_heading="## Publication and rendering"
-)
+new_text, changed = update_readme_block(readme, report, init_after_heading="## Publication and rendering")
 if changed:
     Path("README.md").write_text(new_text, encoding="utf-8")
 ```
@@ -219,7 +217,7 @@ from infrastructure.publishing.credential_check import check_all, format_results
 results = check_all(only=["github", "zenodo"])
 print(format_results(results))
 for r in results:
-    print(r.name, r.status, r.ok)        # status: pass | fail | skipped | no-endpoint
+    print(r.name, r.status, r.ok)  # status: pass | fail | skipped | no-endpoint
 ```
 
 The `PROBES` catalogue covers `github`, `huggingface_hub`, `osf`, `ipfs_pinata`,
@@ -253,9 +251,9 @@ targets = UploadTargets(
     osf_title="Refinement of Gold",
 )
 
-jobs = select_jobs()                      # CORE_UPLOADERS only (dry-run safe)
+jobs = select_jobs()  # CORE_UPLOADERS only (dry-run safe)
 run = run_uploads(targets, jobs=jobs, commit=False)
-print(run.mode, run.ok)                   # "DRY-RUN", True
+print(run.mode, run.ok)  # "DRY-RUN", True
 print(run.results)
 ```
 

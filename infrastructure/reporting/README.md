@@ -51,6 +51,10 @@ entry and full-guard completion are separate from its DATA/observation body.
 
 ## Overview
 
+Acceptance evidence helpers keep scope selection separate from proof. `evidence_class.py` composes a scope-owned class from its existing source, deliverable and shared stage digests; missing stage custody raises `ClassUnavailable`. Repository-spanning and unrecognized kinds retain the full repository fingerprint, and artifacts without a class binding continue through the existing legacy comparison. The classification does not establish successful execution or publication.
+
+`native_cell_selection.py` names the primary index and shard prefix for one declared native cell without changing index filenames or shard members. `cell_selection` checks local admissibility only. The joined `union_selection` is the sole completeness assertion: every declared public scope appears exactly once, with nothing missing, duplicated or extra.
+
 The reporting module provides reporting capabilities for pipeline execution, including:
 
 - Consolidated pipeline reports (JSON, HTML, Markdown)
@@ -228,8 +232,8 @@ from pathlib import Path
 
 # Collect stage results
 stage_results = [
-    {'name': 'setup', 'exit_code': 0, 'duration': 2.5},
-    {'name': 'tests', 'exit_code': 0, 'duration': 45.2},
+    {"name": "setup", "exit_code": 0, "duration": 2.5},
+    {"name": "tests", "exit_code": 0, "duration": 45.2},
 ]
 
 # Generate report
@@ -237,7 +241,7 @@ report = generate_pipeline_report(
     stage_results=stage_results,
     total_duration=47.7,
     repo_root=Path("."),
-    test_results={'summary': {'total_tests': 878, 'total_passed': 878}},
+    test_results={"summary": {"total_tests": 878, "total_passed": 878}},
 )
 
 # Save in multiple formats
@@ -254,10 +258,10 @@ aggregator = get_error_aggregator()
 
 # Add errors during pipeline execution
 aggregator.add_error(
-    error_type='test_failure',
-    message='Test test_example failed',
-    stage='tests',
-    suggestions=['Review test output', 'Check test data'],
+    error_type="test_failure",
+    message="Test test_example failed",
+    stage="tests",
+    suggestions=["Review test output", "Check test data"],
 )
 
 # Generate error summary
@@ -304,9 +308,7 @@ print(f"Generated {len(dashboard_files)} dashboard and data files")
 from infrastructure.reporting import generate_multi_project_report
 
 # One-line executive reporting workflow
-files = generate_multi_project_report(
-    Path("."), ["project1", "project2"], Path("output/executive_summary")
-)
+files = generate_multi_project_report(Path("."), ["project1", "project2"], Path("output/executive_summary"))
 # Automatically generates:
 # - Executive summary (JSON, HTML, Markdown)
 # - Visual dashboards (PNG, PDF, HTML)
@@ -323,13 +325,13 @@ for fmt, path in files.items():
 from infrastructure.reporting import save_validation_report
 
 validation_results = {
-    'checks': {
-        'pdf_validation': True,
-        'markdown_validation': True,
-        'output_structure': False,
+    "checks": {
+        "pdf_validation": True,
+        "markdown_validation": True,
+        "output_structure": False,
     },
-    'recommendations': [
-        {'priority': 'high', 'issue': 'Missing output directories', 'action': '...'},
+    "recommendations": [
+        {"priority": "high", "issue": "Missing output directories", "action": "..."},
     ],
 }
 

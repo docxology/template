@@ -140,8 +140,7 @@ from pathlib import Path
 
 manager = RenderManager()
 manager.render_combined_pdf(
-    [Path("01_abstract.md"), Path("02_intro.md"), ...],
-    manuscript_dir=Path("projects/{project_name}/manuscript/")
+    [Path("01_abstract.md"), Path("02_intro.md"), ...], manuscript_dir=Path("projects/{project_name}/manuscript/")
 )
 ```
 
@@ -824,11 +823,7 @@ from infrastructure.rendering import RenderManager, RenderingConfig
 from pathlib import Path
 
 # Configure rendering with custom settings
-config = RenderingConfig(
-    latex_compiler="xelatex",
-    max_compilation_passes=4,
-    validate_packages=True
-)
+config = RenderingConfig(latex_compiler="xelatex", max_compilation_passes=4, validate_packages=True)
 
 manager = RenderManager(config)
 
@@ -862,16 +857,10 @@ for format_name, output_path in outputs.items():
 
 ```python
 # Generate PDF slides for conferences
-pdf_slides = manager.render_slides(
-    Path("projects/{project_name}/manuscript/presentation.md"),
-    format="beamer"
-)
+pdf_slides = manager.render_slides(Path("projects/{project_name}/manuscript/presentation.md"), format="beamer")
 
 # Generate interactive HTML slides for web
-html_slides = manager.render_slides(
-    Path("projects/{project_name}/manuscript/presentation.md"),
-    format="revealjs"
-)
+html_slides = manager.render_slides(Path("projects/{project_name}/manuscript/presentation.md"), format="revealjs")
 ```
 
 ### Custom LaTeX Compilation
@@ -881,10 +870,7 @@ from infrastructure.rendering.latex_utils import compile_latex
 
 # Manual LaTeX compilation with custom settings
 success, pdf_path = compile_latex(
-    tex_file=Path("output/latex/manuscript.tex"),
-    output_dir=Path("output/pdf"),
-    compiler="xelatex",
-    max_passes=3
+    tex_file=Path("output/latex/manuscript.tex"), output_dir=Path("output/pdf"), compiler="xelatex", max_passes=3
 )
 
 if success:
@@ -943,9 +929,9 @@ print(f"Found {len(manuscript_files)} manuscript files")
 figure_report = verify_figures_exist(Path("."), Path("manuscript"))
 
 print(f"Figures verified: {figure_report['total_verified']}/{figure_report['total_referenced']}")
-if figure_report['missing_figures']:
+if figure_report["missing_figures"]:
     print("Missing figures:")
-    for missing in figure_report['missing_figures']:
+    for missing in figure_report["missing_figures"]:
         print(f"  - {missing}")
 ```
 
@@ -963,7 +949,7 @@ config = RenderingConfig(
     pandoc_path=os.getenv("PANDOC_PATH", "pandoc"),
     output_dir=Path(os.getenv("RENDER_OUTPUT_DIR", "output")),
     max_compilation_passes=int(os.getenv("MAX_LATEX_PASSES", "4")),
-    validate_packages=os.getenv("VALIDATE_PACKAGES", "true").lower() == "true"
+    validate_packages=os.getenv("VALIDATE_PACKAGES", "true").lower() == "true",
 )
 
 # Use configuration with manager
@@ -1471,3 +1457,5 @@ previous bytes. Both reporting reconstruction consumers rebuild the selected
 algorithm rather than accepting a new name for legacy composition. These are
 composition and engineering guarantees; they do not establish scientific,
 publication, tagged-PDF or accessibility conformance acceptance.
+
+Stage 3 prepares enabled native transmission assets before project hydration can seal their visualization evidence. It preserves explicit paper-frontmatter admission and repeats the bookend write after hydration restores the manuscript tree. Skipping hydration retains the existing final bookend path.
