@@ -1,0 +1,2812 @@
+{
+  "completed_monotonic": 5547.54799956,
+  "inputs": {
+    "preimport_provider": {
+      "installed": {
+        "bytes": 8090247,
+        "files": {
+          "pypdfium2-5.6.0.dist-info/INSTALLER": {
+            "bytes": 2,
+            "identity": {
+              "ctime_ns": 1793817375640890886,
+              "device": 2049,
+              "inode": 10754140,
+              "links": 1,
+              "mode": 33188,
+              "mtime_ns": 1793817375640890886,
+              "size": 2
+            },
+            "sha256": "e6184ce10e266134fdcfa401e8f1a95005bcd4f18d16b62b757323e2833fe9a9"
+          },
+          "pypdfium2-5.6.0.dist-info/METADATA": {
+            "bytes": 68067,
+            "identity": {
+              "ctime_ns": 1793817375598497965,
+              "device": 2049,
+              "inode": 10753794,
+              "links": 1,
+              "mode": 33188,
+              "mtime_ns": 1793817375598416703,
+              "size": 68067
+            },
+            "sha256": "e3b5cd6b71b7d473fe8045341ceee79d2a50ba96b1268e494e8ef091cf7be04f"
+          },
+          "pypdfium2-5.6.0.dist-info/RECORD": {
+            "bytes": 6235,
+            "identity": {
+              "ctime_ns": 1793817375641052551,
+              "device": 2049,
+              "inode": 10753776,
+              "links": 1,
+              "mode": 33188,
+              "mtime_ns": 1793817375641052551,
+              "size": 6235
+            },
+            "sha256": "bf15da51c148b3f2890c863a2cc4131aad8e0995b7bac7633e7edd3bba63d59e"
+          },
+          "pypdfium2-5.6.0.dist-info/REQUESTED": {
+            "bytes": 0,
+            "identity": {
+              "ctime_ns": 1793817375640840213,
+              "device": 2049,
+              "inode": 10754139,
+              "links": 1,
+              "mode": 33188,
+              "mtime_ns": 1793817375640840213,
+              "size": 0
+            },
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          "pypdfium2-5.6.0.dist-info/WHEEL": {
+            "bytes": 145,
+            "identity": {
+              "ctime_ns": 1793817375598301747,
+              "device": 2049,
+              "inode": 10753790,
+              "links": 1,
+              "mode": 33188,
+              "mtime_ns": 1793817375598301747,
+              "size": 145
+            },
+            "sha256": "5796ee091594fbc1d42f7d14bcb61535029cc047bacd6597986a5d8ab6376368"
+          },
+          "pypdfium2-5.6.0.dist-info/entry_points.txt": {
+            "bytes": 58,
+            "identity": {
+              "ctime_ns": 1793817375598135125,
+              "device": 2049,
+              "inode": 10753781,
+              "links": 1,
+              "mode": 33188,
+              "mtime_ns": 1793817375598106131,
+              "size": 58
+            },
+            "sha256": "5159bdd2f7915aba87c3e8d6785a0d7f42259f69b4906196201565becd7756f0"
+          },
+          "pypdfium2-5.6.0.dist-info/licenses/LICENSES/Apache-2.0.txt": {
+            "bytes": 11358,
+            "identity": {
+              "ctime_ns": 1793817375598865453,
+              "device": 2049,
+              "inode": 10753808,
+              "links": 1,
+              "mode": 33188,
+              "mtime_ns": 1793817375598811993,
+              "size": 11358
+            },
+            "sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30"
+          },
+          "pypdfium2-5.6.0.dist-info/licenses/LICENSES/BSD-3-Clause.txt": {
+            "bytes": 1459,
+            "identity": {
+              "ctime_ns": 1793817375598937837,
+              "device": 2049,
+              "inode": 10753812,
+              "links": 1,
+              "mode": 33188,
+              "mtime_ns": 1793817375598927019,
+              "size": 1459
+            },
+            "sha256": "a6d11f0694c0137e9b02924b9d33a159f6c72f220fa4655bb2e1ea3654377d39"
+          },
+          "pypdfium2-5.6.0.dist-info/licenses/LICENSES/CC-BY-4.0.txt": {
+            "bytes": 14527,
+            "identity": {
+              "ctime_ns": 1793817375598750816,
+              "device": 2049,
+              "inode": 10753803,
+              "links": 1,
+              "mode": 33188,
+              "mtime_ns": 1793817375598653776,
+              "size": 14527
+            },
+            "sha256": "419896aea50c15d6e40c5b4baf4bd346f78223b9a354c7357ad00262afdc08ec"
+          },
+          "pypdfium2-5.6.0.dist-info/licenses/data/linux_x64/BUILD_LICENSES/abseil.txt": {
+            "bytes": 11361,
+            "identity": {
+              "ctime_ns": 1793817375599281943,
+              "device": 2049,
+              "inode": 10753825,
+              "links": 1,
+              "mode": 33188,
+              "mtime_ns": 1793817375599232681,
+              "size": 11361
+            },
+            "sha256": "c79a7fea0e3cac04cd43f20e7b648e5a0ff8fa5344e644b0ee09ca1162b62747"
+          },
+          "pypdfium2-5.6.0.dist-info/licenses/data/linux_x64/BUILD_LICENSES/agg23.txt": {
+            "bytes": 725,
+            "identity": {
+              "ctime_ns": 1793817375599926300,
+              "device": 2049,
+              "inode": 10753846,
+              "links": 1,
+              "mode": 33188,
+              "mtime_ns": 1793817375599926300,
+              "size": 725
+            },
+            "sha256": "c110d3ea2ad77467ce0dcff7d3337e6c8be8049a5103f4b9bd5fd911a77972e5"
+          },
+          "pypdfium2-5.6.0.dist-info/licenses/data/linux_x64/BUILD_LICENSES/fast_float.txt": {
+            "bytes": 1079,
+            "identity": {
+              "ctime_ns": 1793817375600048557,
+              "device": 2049,
+              "inode": 10753848,
+              "links": 1,
+              "mode": 33188,
+              "mtime_ns": 1793817375600039783,
+              "size": 1079
+            },
+            "sha256": "e562f3f974ced7e69dd1db77b820b36bcf8f30377f1aa105723fba449c53c4e6"
+          },
+          "pypdfium2-5.6.0.dist-info/licenses/data/linux_x64/BUILD_LICENSES/freetype.txt": {
+            "bytes": 6741,
+            "identity": {
+              "ctime_ns": 1793817375600144870,
+              "device": 2049,
+              "inode": 10753852,
+              "links": 1,
+              "mode": 33188,
+              "mtime_ns": 1793817375600144870,
+              "size": 6741
+            },
+            "sha256": "f4b133e25df1f86ad3ffea453aa0e613f0474f34778dbbb3e437e7b2724937d8"
+          },
+          "pypdfium2-5.6.0.dist-info/licenses/data/linux_x64/BUILD_LICENSES/icu.txt": {
+            "bytes": 26487,
+            "identity": {
+              "ctime_ns": 1793817375600798043,
+              "device": 2049,
+              "inode": 10753868,
+              "links": 1,
+              "mode": 33188,
+              "mtime_ns": 1793817375600798043,
+              "size": 26487
+            },
+            "sha256": "451167c55c0fa447cc2d5632714f5e3c567fe4f1e1badefab2c1333852198aca"
+          },
+          "pypdfium2-5.6.0.dist-info/licenses/data/linux_x64/BUILD_LICENSES/lcms.txt": {
+            "bytes": 1354,
+            "identity": {
+              "ctime_ns": 1793817375599379255,
+              "device": 2049,
+              "inode": 10753829,
+              "links": 1,
+              "mode": 33188,
+              "mtime_ns": 1793817375599342244,
+              "size": 1354
+            },
+            "sha256": "5132b7530ae5acab7058634da86470d3d38bb01d70c2b67ba10c96bc62ced1af"
+          },
+          "pypdfium2-5.6.0.dist-info/licenses/data/linux_x64/BUILD_LICENSES/libjpeg_turbo.ijg": {
+            "bytes": 12799,
+            "identity": {
+              "ctime_ns": 1793817375600536171,
+              "device": 2049,
+              "inode": 10753862,
+              "links": 1,
+              "mode": 33188,
+              "mtime_ns": 1793817375600521545,
+              "size": 12799
+            },
+            "sha256": "75815e3bf6484201a3c3d17a1bbf10f2e8e3237f84df10a2357ea896db2a81d6"
+          },
+          "pypdfium2-5.6.0.dist-info/licenses/data/linux_x64/BUILD_LICENSES/libjpeg_turbo.md": {
+            "bytes": 5620,
+            "identity": {
+              "ctime_ns": 1793817375600938554,
+              "device": 2049,
+              "inode": 10753873,
+              "links": 1,
+              "mode": 33188,
+              "mtime_ns": 1793817375600924430,
+              "size": 5620
+            },
+            "sha256": "96f5b328adbb78eeaaec6980d73fd558cb1e4d62560ed615646bc3cf5e532430"
+          },
+          "pypdfium2-5.6.0.dist-info/licenses/data/linux_x64/BUILD_LICENSES/libopenjpeg.txt": {
+            "bytes": 1794,
+            "identity": {
+              "ctime_ns": 1793817375599698892,
+              "device": 2049,
+              "inode": 10753842,
+              "links": 1,
+              "mode": 33188,
+              "mtime_ns": 1793817375599688525,
+              "size": 1794
+            },
+            "sha256": "c5ab0890a737c2dfa7ba675036554f6d17741d98629b0c2a145354d00617e6b2"
+          },
+          "pypdfium2-5.6.0.dist-info/licenses/data/linux_x64/BUILD_LICENSES/libpng.txt": {
+            "bytes": 5345,
+            "identity": {
+              "ctime_ns": 1793817375599817394,
+              "device": 2049,
+              "inode": 10753845,
+              "links": 1,
+              "mode": 33188,
+              "mtime_ns": 1793817375599817394,
+              "size": 5345
+            },
+            "sha256": "bf5e22b9dce8464064ae17a48ea1133c3369ac9e1d80ef9e320e5219aa14ea9b"
+          },
+          "pypdfium2-5.6.0.dist-info/licenses/data/linux_x64/BUILD_LICENSES/libtiff.txt": {
+            "bytes": 1139,
+            "identity": {
+              "ctime_ns": 1793817375600295650,
+              "device": 2049,
+              "inode": 10753855,
+              "links": 1,
+              "mode": 33188,
+              "mtime_ns": 1793817375600273499,
+              "size": 1139
+            },
+            "sha256": "92b72ba97e6c2749c2a94bc0ef646b47080217f1e772a482b33cf5a5f98a6506"
+          },
+          "pypdfium2-5.6.0.dist-info/licenses/data/linux_x64/BUILD_LICENSES/llvm-libc.txt": {
+            "bytes": 15140,
+            "identity": {
+              "ctime_ns": 1793817375599591040,
+              "device": 2049,
+              "inode": 10753836,
+              "links": 1,
+              "mode": 33188,
+              "mtime_ns": 1793817375599549394,
+              "size": 15140
+            },
+            "sha256": "ebcd9bbf783a73d05c53ba4d586b8d5813dcdf3bbec50265860ccc885e606f47"
+          },
+          "pypdfium2-5.6.0.dist-info/licenses/data/linux_x64/BUILD_LICENSES/pdfium-binaries.txt": {
+            "bytes": 1177,
+            "identity": {
+              "ctime_ns": 1793817375600663572,
+              "device": 2049,
+              "inode": 10753866,
+              "links": 1,
+              "mode": 33188,
+              "mtime_ns": 1793817375600663572,
+              "size": 1177
+            },
+            "sha256": "ba26c1263131696b86c10496b5066b918a20b7161822a80c274d0080105f6c93"
+          },
+          "pypdfium2-5.6.0.dist-info/licenses/data/linux_x64/BUILD_LICENSES/pdfium.txt": {
+            "bytes": 12818,
+            "identity": {
+              "ctime_ns": 1793817375600415134,
+              "device": 2049,
+              "inode": 10753858,
+              "links": 1,
+              "mode": 33188,
+              "mtime_ns": 1793817375600390340,
+              "size": 12818
+            },
+            "sha256": "961eacd9633fff6d051db7208b755e9210e30efac7adec3e6a6d52798f0ccf0e"
+          },
+          "pypdfium2-5.6.0.dist-info/licenses/data/linux_x64/BUILD_LICENSES/simdutf.txt": {
+            "bytes": 1059,
+            "identity": {
+              "ctime_ns": 1793817375599488059,
+              "device": 2049,
+              "inode": 10753832,
+              "links": 1,
+              "mode": 33188,
+              "mtime_ns": 1793817375599448525,
+              "size": 1059
+            },
+            "sha256": "fc8dbc04e03ad4efc08a647ffe7f995b811a95bc04c0e85a56d5277c6593fa5f"
+          },
+          "pypdfium2-5.6.0.dist-info/licenses/data/linux_x64/BUILD_LICENSES/zlib.txt": {
+            "bytes": 1328,
+            "identity": {
+              "ctime_ns": 1793817375601043283,
+              "device": 2049,
+              "inode": 10753877,
+              "links": 1,
+              "mode": 33188,
+              "mtime_ns": 1793817375601043283,
+              "size": 1328
+            },
+            "sha256": "02421fcfbfb1d656ef0b6ff4cd3c39f2946f08c3219fa42db482add7ce1f53ea"
+          },
+          "pypdfium2-5.6.0.dist-info/top_level.txt": {
+            "bytes": 24,
+            "identity": {
+              "ctime_ns": 1793817375598205286,
+              "device": 2049,
+              "inode": 10753786,
+              "links": 1,
+              "mode": 33188,
+              "mtime_ns": 1793817375598205286,
+              "size": 24
+            },
+            "sha256": "3ed00c3c01e52974c8b35417d6e590a0857acaffd958876f98da316b2fd5b698"
+          },
+          "pypdfium2/__init__.py": {
+            "bytes": 251,
+            "identity": {
+              "ctime_ns": 1793817375638653968,
+              "device": 2049,
+              "inode": 10754073,
+              "links": 1,
+              "mode": 33188,
+              "mtime_ns": 1793817375638653968,
+              "size": 251
+            },
+            "sha256": "f39400f78f2199694ec55db88f3a6c8609a2053fda93a00c01dc4e0995faefa4"
+          },
+          "pypdfium2/__main__.py": {
+            "bytes": 2158,
+            "identity": {
+              "ctime_ns": 1793817375640570095,
+              "device": 2049,
+              "inode": 10754130,
+              "links": 1,
+              "mode": 33188,
+              "mtime_ns": 1793817375640507770,
+              "size": 2158
+            },
+            "sha256": "8e275a29019976bd5b49cc51d3b7bc602bf9cbc1d2c394acb6f74a93bdc17545"
+          },
+          "pypdfium2/_cli/__init__.py": {
+            "bytes": 117,
+            "identity": {
+              "ctime_ns": 1793817375640181197,
+              "device": 2049,
+              "inode": 10754122,
+              "links": 1,
+              "mode": 33188,
+              "mtime_ns": 1793817375640181197,
+              "size": 117
+            },
+            "sha256": "587554d9bb466792447cd75832d0932f1fe82ae3d747931725711c505156cbd8"
+          },
+          "pypdfium2/_cli/_parsers.py": {
+            "bytes": 3936,
+            "identity": {
+              "ctime_ns": 1793817375639062383,
+              "device": 2049,
+              "inode": 10754087,
+              "links": 1,
+              "mode": 33188,
+              "mtime_ns": 1793817375639062383,
+              "size": 3936
+            },
+            "sha256": "60f588a6e9e762ea7ff4ca73aa62d8980a049d79331fb810e370640effb5f2ec"
+          },
+          "pypdfium2/_cli/arrange.py": {
+            "bytes": 1483,
+            "identity": {
+              "ctime_ns": 1793817375640080550,
+              "device": 2049,
+              "inode": 10754118,
+              "links": 1,
+              "mode": 33188,
+              "mtime_ns": 1793817375640080550,
+              "size": 1483
+            },
+            "sha256": "1182ef69f26b7143aa5103e68bbf4724bfcae1f01f3c8bd99d454dafd0996e9e"
+          },
+          "pypdfium2/_cli/attachments.py": {
+            "bytes": 2293,
+            "identity": {
+              "ctime_ns": 1793817375639985190,
+              "device": 2049,
+              "inode": 10754113,
+              "links": 1,
+              "mode": 33188,
+              "mtime_ns": 1793817375639972887,
+              "size": 2293
+            },
+            "sha256": "815275bdec2751ef3222449b85f74d30c3a917fbb53b316a68b5f9c12f23984a"
+          },
+          "pypdfium2/_cli/extract_images.py": {
+            "bytes": 2999,
+            "identity": {
+              "ctime_ns": 1793817375639163821,
+              "device": 2049,
+              "inode": 10754091,
+              "links": 1,
+              "mode": 33188,
+              "mtime_ns": 1793817375639163821,
+              "size": 2999
+            },
+            "sha256": "5893fac0651916702026921879e6574d1ae1e4da38ac46a466444e4eda084ffb"
+          },
+          "pypdfium2/_cli/extract_text.py": {
+            "bytes": 1342,
+            "identity": {
+              "ctime_ns": 1793817375639625278,
+              "device": 2049,
+              "inode": 10754107,
+              "links": 1,
+              "mode": 33188,
+              "mtime_ns": 1793817375639625278,
+              "size": 1342
+            },
+            "sha256": "634efbcd5f8e367601fa5ebf6fbd67d3170e143dc787555c300a843cbfc707a0"
+          },
+          "pypdfium2/_cli/imgtopdf.py": {
+            "bytes": 1971,
+            "identity": {
+              "ctime_ns": 1793817375639409914,
+              "device": 2049,
+              "inode": 10754097,
+              "links": 1,
+              "mode": 33188,
+              "mtime_ns": 1793817375639388574,
+              "size": 1971
+            },
+            "sha256": "ba92b38a7af4cedd6c2af4210dc53f8273131993e33292ef45f422a71718172c"
+          },
+          "pypdfium2/_cli/pageobjects.py": {
+            "bytes": 3697,
+            "identity": {
+              "ctime_ns": 1793817375640281926,
+              "device": 2049,
+              "inode": 10754123,
+              "links": 1,
+              "mode": 33188,
+              "mtime_ns": 1793817375640281926,
+              "size": 3697
+            },
+            "sha256": "ac88be679305ca2e5a4541579679d8e5f7c6a5b61a6b9f3752ae8e5da0657a21"
+          },
+          "pypdfium2/_cli/pdfinfo.py": {
+            "bytes": 1892,
+            "identity": {
+              "ctime_ns": 1793817375640431065,
+              "device": 2049,
+              "inode": 10754126,
+              "links": 1,
+              "mode": 33188,
+              "mtime_ns": 1793817375640392334,
+              "size": 1892
+            },
+            "sha256": "bf3f976bfbc6fa990f5338e1432e74204feb96c291f328c78f39ea8b19bc1c70"
+          },
+          "pypdfium2/_cli/render.py": {
+            "bytes": 20423,
+            "identity": {
+              "ctime_ns": 1793817375639566305,
+              "device": 2049,
+              "inode": 10754101,
+              "links": 1,
+              "mode": 33188,
+              "mtime_ns": 1793817375639502077,
+              "size": 20423
+            },
+            "sha256": "da69900c40c9e06128ce0ba10e2b6d9db1da37063a8d175c4a376b19893f1848"
+          },
+          "pypdfium2/_cli/tile.py": {
+            "bytes": 2252,
+            "identity": {
+              "ctime_ns": 1793817375639297862,
+              "device": 2049,
+              "inode": 10754094,
+              "links": 1,
+              "mode": 33188,
+              "mtime_ns": 1793817375639269671,
+              "size": 2252
+            },
+            "sha256": "6e508d4258f1fbe5bd12dc71e53e171b7cfe1daf97f5ad8a00c26442440bf043"
+          },
+          "pypdfium2/_cli/toc.py": {
+            "bytes": 1328,
+            "identity": {
+              "ctime_ns": 1793817375639760298,
+              "device": 2049,
+              "inode": 10754110,
+              "links": 1,
+              "mode": 33188,
+              "mtime_ns": 1793817375639740654,
+              "size": 1328
+            },
+            "sha256": "8c3f50d11946b67345fbfd005d65fb96c8c31361c635eeb6962eaba9484686dd"
+          },
+          "pypdfium2/_helpers/__init__.py": {
+            "bytes": 492,
+            "identity": {
+              "ctime_ns": 1793817375637127148,
+              "device": 2049,
+              "inode": 10754027,
+              "links": 1,
+              "mode": 33188,
+              "mtime_ns": 1793817375637127148,
+              "size": 492
+            },
+            "sha256": "08d4c61b172e8114c53806d55769ee6c12b720a900eb6dbda4d3713372d1a480"
+          },
+          "pypdfium2/_helpers/attachment.py": {
+            "bytes": 5190,
+            "identity": {
+              "ctime_ns": 1793817375605793729,
+              "device": 2049,
+              "inode": 10754014,
+              "links": 1,
+              "mode": 33188,
+              "mtime_ns": 1793817375605782290,
+              "size": 5190
+            },
+            "sha256": "ab82c13c39e61b570b9e7d2c4299b703439ad2589a695a6a0f2ca38a3ba88ab9"
+          },
+          "pypdfium2/_helpers/bitmap.py": {
+            "bytes": 17370,
+            "identity": {
+              "ctime_ns": 1793817375637330899,
+              "device": 2049,
+              "inode": 10754030,
+              "links": 1,
+              "mode": 33188,
+              "mtime_ns": 1793817375637254105,
+              "size": 17370
+            },
+            "sha256": "1c847e7f8e1375737477f3ff3f21e42499794558020238b5046cfa4e6f4cda3c"
+          },
+          "pypdfium2/_helpers/document.py": {
+            "bytes": 25592,
+            "identity": {
+              "ctime_ns": 1793817375636959153,
+              "device": 2049,
+              "inode": 10754022,
+              "links": 1,
+              "mode": 33188,
+              "mtime_ns": 1793817375636959153,
+              "size": 25592
+            },
+            "sha256": "dc99ff1133df4cc9e3dc345dfbdf30845274d1e6ddfe59201c3a0dd07bbde3ba"
+          },
+          "pypdfium2/_helpers/matrix.py": {
+            "bytes": 6435,
+            "identity": {
+              "ctime_ns": 1793817375636808751,
+              "device": 2049,
+              "inode": 10754018,
+              "links": 1,
+              "mode": 33188,
+              "mtime_ns": 1793817375636808751,
+              "size": 6435
+            },
+            "sha256": "8866395a615baf73ce0d5bab839df5ec4b70f3e6f1912e323ec3d182ea12f724"
+          },
+          "pypdfium2/_helpers/misc.py": {
+            "bytes": 578,
+            "identity": {
+              "ctime_ns": 1793817375637671525,
+              "device": 2049,
+              "inode": 10754041,
+              "links": 1,
+              "mode": 33188,
+              "mtime_ns": 1793817375637671525,
+              "size": 578
+            },
+            "sha256": "d03aadd6eba31f210e50319d22989b6ed65abf01a498ade3becededd9b21bdce"
+          },
+          "pypdfium2/_helpers/page.py": {
+            "bytes": 22851,
+            "identity": {
+              "ctime_ns": 1793817375605660590,
+              "device": 2049,
+              "inode": 10754009,
+              "links": 1,
+              "mode": 33188,
+              "mtime_ns": 1793817375605612542,
+              "size": 22851
+            },
+            "sha256": "c263c2468a59a5e5b4717a5f7eee707e8663dd82253e7a6578d06bef154ee5a2"
+          },
+          "pypdfium2/_helpers/pageobjects.py": {
+            "bytes": 23631,
+            "identity": {
+              "ctime_ns": 1793817375637461163,
+              "device": 2049,
+              "inode": 10754033,
+              "links": 1,
+              "mode": 33188,
+              "mtime_ns": 1793817375637421209,
+              "size": 23631
+            },
+            "sha256": "867e7129ec0d4bf6ddf3715c6a847ad52030364c1ceb54949ac9fefd9ad14e41"
+          },
+          "pypdfium2/_helpers/textpage.py": {
+            "bytes": 13301,
+            "identity": {
+              "ctime_ns": 1793817375637560668,
+              "device": 2049,
+              "inode": 10754036,
+              "links": 1,
+              "mode": 33188,
+              "mtime_ns": 1793817375637555330,
+              "size": 13301
+            },
+            "sha256": "28a7d5f6d0c6c0918682d8f7e29368ff9f00a2af86c04d658d94c7aa82c791c9"
+          },
+          "pypdfium2/_helpers/unsupported.py": {
+            "bytes": 1733,
+            "identity": {
+              "ctime_ns": 1793817375637813513,
+              "device": 2049,
+              "inode": 10754043,
+              "links": 1,
+              "mode": 33188,
+              "mtime_ns": 1793817375637813513,
+              "size": 1733
+            },
+            "sha256": "fe64f5dc1c0e24fe90ac3561a79bcc39368c2388776b02b70760be2b6a4797a9"
+          },
+          "pypdfium2/_lazy.py": {
+            "bytes": 965,
+            "identity": {
+              "ctime_ns": 1793817375605441582,
+              "device": 2049,
+              "inode": 10754005,
+              "links": 1,
+              "mode": 33188,
+              "mtime_ns": 1793817375605441582,
+              "size": 965
+            },
+            "sha256": "9887d1f9b7316dee28a24adea7e82e24b8b0e9fef92095111f1ae28eb9c0da76"
+          },
+          "pypdfium2/_library_scope.py": {
+            "bytes": 1640,
+            "identity": {
+              "ctime_ns": 1793817375638441660,
+              "device": 2049,
+              "inode": 10754067,
+              "links": 1,
+              "mode": 33188,
+              "mtime_ns": 1793817375638441660,
+              "size": 1640
+            },
+            "sha256": "ff986925aa81cf77a8fada0b1d269f785e8d028f4e4ae576fa51dec7fd52cdf7"
+          },
+          "pypdfium2/internal/__init__.py": {
+            "bytes": 236,
+            "identity": {
+              "ctime_ns": 1793817375638216657,
+              "device": 2049,
+              "inode": 10754060,
+              "links": 1,
+              "mode": 33188,
+              "mtime_ns": 1793817375638216657,
+              "size": 236
+            },
+            "sha256": "4275d69011d28d2fc540ed106e8e4f7305122f16c57e9beb4271733165c05911"
+          },
+          "pypdfium2/internal/bases.py": {
+            "bytes": 4188,
+            "identity": {
+              "ctime_ns": 1793817375638150903,
+              "device": 2049,
+              "inode": 10754056,
+              "links": 1,
+              "mode": 33188,
+              "mtime_ns": 1793817375638101533,
+              "size": 4188
+            },
+            "sha256": "8153caf206bac954eebfe146c5f52c63154a6e13380a00b31335b0da30d1b987"
+          },
+          "pypdfium2/internal/consts.py": {
+            "bytes": 6868,
+            "identity": {
+              "ctime_ns": 1793817375638331852,
+              "device": 2049,
+              "inode": 10754064,
+              "links": 1,
+              "mode": 33188,
+              "mtime_ns": 1793817375638322898,
+              "size": 6868
+            },
+            "sha256": "6f424143caa4bb0d38b984eb3950a3cb94514462306d6ca6c768413f1f18fe25"
+          },
+          "pypdfium2/internal/utils.py": {
+            "bytes": 2643,
+            "identity": {
+              "ctime_ns": 1793817375638026891,
+              "device": 2049,
+              "inode": 10754050,
+              "links": 1,
+              "mode": 33188,
+              "mtime_ns": 1793817375637985145,
+              "size": 2643
+            },
+            "sha256": "673e10ff1f58e3d32fe4b16f795282a01164fc3151218813fc191948ef09cc1a"
+          },
+          "pypdfium2/raw.py": {
+            "bytes": 268,
+            "identity": {
+              "ctime_ns": 1793817375638544963,
+              "device": 2049,
+              "inode": 10754071,
+              "links": 1,
+              "mode": 33188,
+              "mtime_ns": 1793817375638544963,
+              "size": 268
+            },
+            "sha256": "34390a3e3e0f7c20ad9cf699c569c97212838f7f08584ea44bebabf40b4880da"
+          },
+          "pypdfium2/version.json": {
+            "bytes": 160,
+            "identity": {
+              "ctime_ns": 1793817375638913402,
+              "device": 2049,
+              "inode": 10754079,
+              "links": 1,
+              "mode": 33188,
+              "mtime_ns": 1793817375638902273,
+              "size": 160
+            },
+            "sha256": "8e014e6bdfa7809e2fd39a65816d008d00433e83055833ab6ddeadc0b1a1ff1b"
+          },
+          "pypdfium2/version.py": {
+            "bytes": 5080,
+            "identity": {
+              "ctime_ns": 1793817375638785755,
+              "device": 2049,
+              "inode": 10754076,
+              "links": 1,
+              "mode": 33188,
+              "mtime_ns": 1793817375638785755,
+              "size": 5080
+            },
+            "sha256": "85fd74fecc5017c2bc4e0b9833102cd76baa4fae04b4731709ee1db404c61b8b"
+          },
+          "pypdfium2_raw/__init__.py": {
+            "bytes": 323,
+            "identity": {
+              "ctime_ns": 1793817375605145948,
+              "device": 2049,
+              "inode": 10753996,
+              "links": 1,
+              "mode": 33188,
+              "mtime_ns": 1793817375605136048,
+              "size": 323
+            },
+            "sha256": "01863185536c5a285a24daab64dfac8cf76e65fc0c0e5c00efb18ab3362f2aae"
+          },
+          "pypdfium2_raw/bindings.py": {
+            "bytes": 144884,
+            "identity": {
+              "ctime_ns": 1793817375601345428,
+              "device": 2049,
+              "inode": 10753884,
+              "links": 1,
+              "mode": 33188,
+              "mtime_ns": 1793817375601261539,
+              "size": 144884
+            },
+            "sha256": "4b6c47cd43c31724ebf086829cd5b27462b75071d5a9bb6b5ddc1f29e3417895"
+          },
+          "pypdfium2_raw/libpdfium.so": {
+            "bytes": 7551304,
+            "identity": {
+              "ctime_ns": 1793817375605029810,
+              "device": 2049,
+              "inode": 10753891,
+              "links": 1,
+              "mode": 33188,
+              "mtime_ns": 1793817375604538789,
+              "size": 7551304
+            },
+            "sha256": "31d1de7d5b5e921a9f52c53fd5b6e3c5a821889aad5313f89ca06fd9d4229924"
+          },
+          "pypdfium2_raw/version.json": {
+            "bytes": 143,
+            "identity": {
+              "ctime_ns": 1793817375605288665,
+              "device": 2049,
+              "inode": 10753998,
+              "links": 1,
+              "mode": 33188,
+              "mtime_ns": 1793817375605246466,
+              "size": 143
+            },
+            "sha256": "47d8964ca88afa4654cd936512fd884bfb95079db95c4da4c7d68d8214d4c661"
+          }
+        },
+        "record_identity": {
+          "ctime_ns": 1793817375641052551,
+          "device": 2049,
+          "inode": 10753776,
+          "links": 1,
+          "mode": 33188,
+          "mtime_ns": 1793817375641052551,
+          "size": 6235
+        },
+        "record_sha256": "bf15da51c148b3f2890c863a2cc4131aad8e0995b7bac7633e7edd3bba63d59e",
+        "schema_version": "template-office-live-installed-pdfium-provider-v1",
+        "selection": {
+          "origins": {
+            "pypdfium2": "/home/runner/work/_temp/template-native-preflight-scratch/installed/native-environment/lib/python3.14/site-packages/pypdfium2/__init__.py",
+            "pypdfium2_raw": "/home/runner/work/_temp/template-native-preflight-scratch/installed/native-environment/lib/python3.14/site-packages/pypdfium2_raw/__init__.py"
+          },
+          "site": "/home/runner/work/_temp/template-native-preflight-scratch/installed/native-environment/lib/python3.14/site-packages",
+          "version": "5.6.0"
+        },
+        "unselected_generated_console_scripts": {
+          "../../../bin/pypdfium2": {
+            "bytes": 389,
+            "identity": {
+              "ctime_ns": 1793817375640822468,
+              "device": 2049,
+              "inode": 10515631,
+              "links": 1,
+              "mode": 33261,
+              "mtime_ns": 1793817375640740727,
+              "size": 389
+            },
+            "path": "/home/runner/work/_temp/template-native-preflight-scratch/installed/native-environment/bin/pypdfium2",
+            "sha256": "6f1d37ffeb1b543b7a03f9d9e232f6542d2715a6d45a50273a0c62fcb324fb95"
+          }
+        },
+        "unselected_installation_caches": {}
+      },
+      "member_hashes": {
+        "pypdfium2-5.6.0.dist-info/METADATA": "e3b5cd6b71b7d473fe8045341ceee79d2a50ba96b1268e494e8ef091cf7be04f",
+        "pypdfium2-5.6.0.dist-info/RECORD": "e5dfad6a6d40e8de8651d237b9e034fd1960dfece10abc4ab51cfc24a3c5c552",
+        "pypdfium2-5.6.0.dist-info/WHEEL": "5796ee091594fbc1d42f7d14bcb61535029cc047bacd6597986a5d8ab6376368",
+        "pypdfium2-5.6.0.dist-info/entry_points.txt": "5159bdd2f7915aba87c3e8d6785a0d7f42259f69b4906196201565becd7756f0",
+        "pypdfium2-5.6.0.dist-info/licenses/LICENSES/Apache-2.0.txt": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30",
+        "pypdfium2-5.6.0.dist-info/licenses/LICENSES/BSD-3-Clause.txt": "a6d11f0694c0137e9b02924b9d33a159f6c72f220fa4655bb2e1ea3654377d39",
+        "pypdfium2-5.6.0.dist-info/licenses/LICENSES/CC-BY-4.0.txt": "419896aea50c15d6e40c5b4baf4bd346f78223b9a354c7357ad00262afdc08ec",
+        "pypdfium2-5.6.0.dist-info/licenses/data/linux_x64/BUILD_LICENSES/abseil.txt": "c79a7fea0e3cac04cd43f20e7b648e5a0ff8fa5344e644b0ee09ca1162b62747",
+        "pypdfium2-5.6.0.dist-info/licenses/data/linux_x64/BUILD_LICENSES/agg23.txt": "c110d3ea2ad77467ce0dcff7d3337e6c8be8049a5103f4b9bd5fd911a77972e5",
+        "pypdfium2-5.6.0.dist-info/licenses/data/linux_x64/BUILD_LICENSES/fast_float.txt": "e562f3f974ced7e69dd1db77b820b36bcf8f30377f1aa105723fba449c53c4e6",
+        "pypdfium2-5.6.0.dist-info/licenses/data/linux_x64/BUILD_LICENSES/freetype.txt": "f4b133e25df1f86ad3ffea453aa0e613f0474f34778dbbb3e437e7b2724937d8",
+        "pypdfium2-5.6.0.dist-info/licenses/data/linux_x64/BUILD_LICENSES/icu.txt": "451167c55c0fa447cc2d5632714f5e3c567fe4f1e1badefab2c1333852198aca",
+        "pypdfium2-5.6.0.dist-info/licenses/data/linux_x64/BUILD_LICENSES/lcms.txt": "5132b7530ae5acab7058634da86470d3d38bb01d70c2b67ba10c96bc62ced1af",
+        "pypdfium2-5.6.0.dist-info/licenses/data/linux_x64/BUILD_LICENSES/libjpeg_turbo.ijg": "75815e3bf6484201a3c3d17a1bbf10f2e8e3237f84df10a2357ea896db2a81d6",
+        "pypdfium2-5.6.0.dist-info/licenses/data/linux_x64/BUILD_LICENSES/libjpeg_turbo.md": "96f5b328adbb78eeaaec6980d73fd558cb1e4d62560ed615646bc3cf5e532430",
+        "pypdfium2-5.6.0.dist-info/licenses/data/linux_x64/BUILD_LICENSES/libopenjpeg.txt": "c5ab0890a737c2dfa7ba675036554f6d17741d98629b0c2a145354d00617e6b2",
+        "pypdfium2-5.6.0.dist-info/licenses/data/linux_x64/BUILD_LICENSES/libpng.txt": "bf5e22b9dce8464064ae17a48ea1133c3369ac9e1d80ef9e320e5219aa14ea9b",
+        "pypdfium2-5.6.0.dist-info/licenses/data/linux_x64/BUILD_LICENSES/libtiff.txt": "92b72ba97e6c2749c2a94bc0ef646b47080217f1e772a482b33cf5a5f98a6506",
+        "pypdfium2-5.6.0.dist-info/licenses/data/linux_x64/BUILD_LICENSES/llvm-libc.txt": "ebcd9bbf783a73d05c53ba4d586b8d5813dcdf3bbec50265860ccc885e606f47",
+        "pypdfium2-5.6.0.dist-info/licenses/data/linux_x64/BUILD_LICENSES/pdfium-binaries.txt": "ba26c1263131696b86c10496b5066b918a20b7161822a80c274d0080105f6c93",
+        "pypdfium2-5.6.0.dist-info/licenses/data/linux_x64/BUILD_LICENSES/pdfium.txt": "961eacd9633fff6d051db7208b755e9210e30efac7adec3e6a6d52798f0ccf0e",
+        "pypdfium2-5.6.0.dist-info/licenses/data/linux_x64/BUILD_LICENSES/simdutf.txt": "fc8dbc04e03ad4efc08a647ffe7f995b811a95bc04c0e85a56d5277c6593fa5f",
+        "pypdfium2-5.6.0.dist-info/licenses/data/linux_x64/BUILD_LICENSES/zlib.txt": "02421fcfbfb1d656ef0b6ff4cd3c39f2946f08c3219fa42db482add7ce1f53ea",
+        "pypdfium2-5.6.0.dist-info/top_level.txt": "3ed00c3c01e52974c8b35417d6e590a0857acaffd958876f98da316b2fd5b698",
+        "pypdfium2/__init__.py": "f39400f78f2199694ec55db88f3a6c8609a2053fda93a00c01dc4e0995faefa4",
+        "pypdfium2/__main__.py": "8e275a29019976bd5b49cc51d3b7bc602bf9cbc1d2c394acb6f74a93bdc17545",
+        "pypdfium2/_cli/__init__.py": "587554d9bb466792447cd75832d0932f1fe82ae3d747931725711c505156cbd8",
+        "pypdfium2/_cli/_parsers.py": "60f588a6e9e762ea7ff4ca73aa62d8980a049d79331fb810e370640effb5f2ec",
+        "pypdfium2/_cli/arrange.py": "1182ef69f26b7143aa5103e68bbf4724bfcae1f01f3c8bd99d454dafd0996e9e",
+        "pypdfium2/_cli/attachments.py": "815275bdec2751ef3222449b85f74d30c3a917fbb53b316a68b5f9c12f23984a",
+        "pypdfium2/_cli/extract_images.py": "5893fac0651916702026921879e6574d1ae1e4da38ac46a466444e4eda084ffb",
+        "pypdfium2/_cli/extract_text.py": "634efbcd5f8e367601fa5ebf6fbd67d3170e143dc787555c300a843cbfc707a0",
+        "pypdfium2/_cli/imgtopdf.py": "ba92b38a7af4cedd6c2af4210dc53f8273131993e33292ef45f422a71718172c",
+        "pypdfium2/_cli/pageobjects.py": "ac88be679305ca2e5a4541579679d8e5f7c6a5b61a6b9f3752ae8e5da0657a21",
+        "pypdfium2/_cli/pdfinfo.py": "bf3f976bfbc6fa990f5338e1432e74204feb96c291f328c78f39ea8b19bc1c70",
+        "pypdfium2/_cli/render.py": "da69900c40c9e06128ce0ba10e2b6d9db1da37063a8d175c4a376b19893f1848",
+        "pypdfium2/_cli/tile.py": "6e508d4258f1fbe5bd12dc71e53e171b7cfe1daf97f5ad8a00c26442440bf043",
+        "pypdfium2/_cli/toc.py": "8c3f50d11946b67345fbfd005d65fb96c8c31361c635eeb6962eaba9484686dd",
+        "pypdfium2/_helpers/__init__.py": "08d4c61b172e8114c53806d55769ee6c12b720a900eb6dbda4d3713372d1a480",
+        "pypdfium2/_helpers/attachment.py": "ab82c13c39e61b570b9e7d2c4299b703439ad2589a695a6a0f2ca38a3ba88ab9",
+        "pypdfium2/_helpers/bitmap.py": "1c847e7f8e1375737477f3ff3f21e42499794558020238b5046cfa4e6f4cda3c",
+        "pypdfium2/_helpers/document.py": "dc99ff1133df4cc9e3dc345dfbdf30845274d1e6ddfe59201c3a0dd07bbde3ba",
+        "pypdfium2/_helpers/matrix.py": "8866395a615baf73ce0d5bab839df5ec4b70f3e6f1912e323ec3d182ea12f724",
+        "pypdfium2/_helpers/misc.py": "d03aadd6eba31f210e50319d22989b6ed65abf01a498ade3becededd9b21bdce",
+        "pypdfium2/_helpers/page.py": "c263c2468a59a5e5b4717a5f7eee707e8663dd82253e7a6578d06bef154ee5a2",
+        "pypdfium2/_helpers/pageobjects.py": "867e7129ec0d4bf6ddf3715c6a847ad52030364c1ceb54949ac9fefd9ad14e41",
+        "pypdfium2/_helpers/textpage.py": "28a7d5f6d0c6c0918682d8f7e29368ff9f00a2af86c04d658d94c7aa82c791c9",
+        "pypdfium2/_helpers/unsupported.py": "fe64f5dc1c0e24fe90ac3561a79bcc39368c2388776b02b70760be2b6a4797a9",
+        "pypdfium2/_lazy.py": "9887d1f9b7316dee28a24adea7e82e24b8b0e9fef92095111f1ae28eb9c0da76",
+        "pypdfium2/_library_scope.py": "ff986925aa81cf77a8fada0b1d269f785e8d028f4e4ae576fa51dec7fd52cdf7",
+        "pypdfium2/internal/__init__.py": "4275d69011d28d2fc540ed106e8e4f7305122f16c57e9beb4271733165c05911",
+        "pypdfium2/internal/bases.py": "8153caf206bac954eebfe146c5f52c63154a6e13380a00b31335b0da30d1b987",
+        "pypdfium2/internal/consts.py": "6f424143caa4bb0d38b984eb3950a3cb94514462306d6ca6c768413f1f18fe25",
+        "pypdfium2/internal/utils.py": "673e10ff1f58e3d32fe4b16f795282a01164fc3151218813fc191948ef09cc1a",
+        "pypdfium2/raw.py": "34390a3e3e0f7c20ad9cf699c569c97212838f7f08584ea44bebabf40b4880da",
+        "pypdfium2/version.json": "8e014e6bdfa7809e2fd39a65816d008d00433e83055833ab6ddeadc0b1a1ff1b",
+        "pypdfium2/version.py": "85fd74fecc5017c2bc4e0b9833102cd76baa4fae04b4731709ee1db404c61b8b",
+        "pypdfium2_raw/__init__.py": "01863185536c5a285a24daab64dfac8cf76e65fc0c0e5c00efb18ab3362f2aae",
+        "pypdfium2_raw/bindings.py": "4b6c47cd43c31724ebf086829cd5b27462b75071d5a9bb6b5ddc1f29e3417895",
+        "pypdfium2_raw/libpdfium.so": "31d1de7d5b5e921a9f52c53fd5b6e3c5a821889aad5313f89ca06fd9d4229924",
+        "pypdfium2_raw/version.json": "47d8964ca88afa4654cd936512fd884bfb95079db95c4da4c7d68d8214d4c661"
+      },
+      "schema_version": "template-full-worker-source-locked-pdfium-input-v1",
+      "scope": "templates/template_code_project",
+      "site": "/home/runner/work/_temp/template-native-preflight-scratch/installed/native-environment/lib/python3.14/site-packages",
+      "source_commit": "a043a69116d501abb99bbc784e3d66b0ef7e57a2",
+      "source_identity": "21b5e39bada8cef43da0f4a1ae6e14d15859b1842156569f5105e4df9deb4194",
+      "wheel": {
+        "bytes": 3646387,
+        "identity": {
+          "ctime_ns": 1793817416993522223,
+          "device": 2049,
+          "inode": 10515661,
+          "links": 1,
+          "mode": 33188,
+          "mtime_ns": 1793817416993522223,
+          "size": 3646387
+        },
+        "path": "/home/runner/work/_temp/template-native-preflight-scratch/installed/pypdfium2-5.6.0-py3-none-manylinux_2_17_x86_64.manylinux2014_x86_64.whl",
+        "sha256": "515be355222cc57ae9e62cd5c7c350b8e0c863efc539f80c7d75e2811ba45cb6",
+        "source_lock_sha256": "af892b8d97ec566fe0220125a1de4bee9dfe5710c689e2b9d2c5463595a914a4",
+        "version": "5.6.0"
+      },
+      "wheel_path": "/home/runner/work/_temp/template-native-preflight-scratch/installed/pypdfium2-5.6.0-py3-none-manylinux_2_17_x86_64.manylinux2014_x86_64.whl"
+    }
+  },
+  "interpreter_after": {
+    "identity": {
+      "ctime_ns": 1793816919630512319,
+      "device": 2049,
+      "inode": 2372955,
+      "links": 1,
+      "mode": 33261,
+      "mtime_ns": 1793816919136654756,
+      "size": 17752
+    },
+    "path": "/opt/hostedtoolcache/Python/3.14.4/x64/bin/python3.14",
+    "sha256": "b135f1ae69c99912bc4b035f60255094103c7ee1c4659491ae61385ad5dd09a5"
+  },
+  "interpreter_before": {
+    "identity": {
+      "ctime_ns": 1793816919630512319,
+      "device": 2049,
+      "inode": 2372955,
+      "links": 1,
+      "mode": 33261,
+      "mtime_ns": 1793816919136654756,
+      "size": 17752
+    },
+    "path": "/opt/hostedtoolcache/Python/3.14.4/x64/bin/python3.14",
+    "sha256": "b135f1ae69c99912bc4b035f60255094103c7ee1c4659491ae61385ad5dd09a5"
+  },
+  "loaded_library": "/home/runner/work/_temp/template-native-preflight-scratch/installed/native-environment/lib/python3.14/site-packages/pypdfium2_raw/libpdfium.so",
+  "mapped_image_after": {
+    "images": [
+      {
+        "device": 2049,
+        "inode": 10753891,
+        "offset": "00000000",
+        "path": "/home/runner/work/_temp/template-native-preflight-scratch/installed/native-environment/lib/python3.14/site-packages/pypdfium2_raw/libpdfium.so",
+        "permissions": "r--p",
+        "range": "7f7ddc200000-7f7ddc479000"
+      },
+      {
+        "device": 2049,
+        "inode": 10753891,
+        "offset": "00278000",
+        "path": "/home/runner/work/_temp/template-native-preflight-scratch/installed/native-environment/lib/python3.14/site-packages/pypdfium2_raw/libpdfium.so",
+        "permissions": "r-xp",
+        "range": "7f7ddc479000-7f7ddc809000"
+      },
+      {
+        "device": 2049,
+        "inode": 10753891,
+        "offset": "00607000",
+        "path": "/home/runner/work/_temp/template-native-preflight-scratch/installed/native-environment/lib/python3.14/site-packages/pypdfium2_raw/libpdfium.so",
+        "permissions": "r--p",
+        "range": "7f7ddc809000-7f7ddc81e000"
+      },
+      {
+        "device": 2049,
+        "inode": 10753891,
+        "offset": "0061b000",
+        "path": "/home/runner/work/_temp/template-native-preflight-scratch/installed/native-environment/lib/python3.14/site-packages/pypdfium2_raw/libpdfium.so",
+        "permissions": "rw-p",
+        "range": "7f7ddc81e000-7f7ddc822000"
+      }
+    ],
+    "owner_pid": 13077,
+    "platform": "linux"
+  },
+  "mapped_image_before": {
+    "images": [
+      {
+        "device": 2049,
+        "inode": 10753891,
+        "offset": "00000000",
+        "path": "/home/runner/work/_temp/template-native-preflight-scratch/installed/native-environment/lib/python3.14/site-packages/pypdfium2_raw/libpdfium.so",
+        "permissions": "r--p",
+        "range": "7f7ddc200000-7f7ddc479000"
+      },
+      {
+        "device": 2049,
+        "inode": 10753891,
+        "offset": "00278000",
+        "path": "/home/runner/work/_temp/template-native-preflight-scratch/installed/native-environment/lib/python3.14/site-packages/pypdfium2_raw/libpdfium.so",
+        "permissions": "r-xp",
+        "range": "7f7ddc479000-7f7ddc809000"
+      },
+      {
+        "device": 2049,
+        "inode": 10753891,
+        "offset": "00607000",
+        "path": "/home/runner/work/_temp/template-native-preflight-scratch/installed/native-environment/lib/python3.14/site-packages/pypdfium2_raw/libpdfium.so",
+        "permissions": "r--p",
+        "range": "7f7ddc809000-7f7ddc81e000"
+      },
+      {
+        "device": 2049,
+        "inode": 10753891,
+        "offset": "0061b000",
+        "path": "/home/runner/work/_temp/template-native-preflight-scratch/installed/native-environment/lib/python3.14/site-packages/pypdfium2_raw/libpdfium.so",
+        "permissions": "rw-p",
+        "range": "7f7ddc81e000-7f7ddc822000"
+      }
+    ],
+    "owner_pid": 13077,
+    "platform": "linux"
+  },
+  "mapped_image_before_import": {
+    "images": [],
+    "owner_pid": 13077,
+    "platform": "linux"
+  },
+  "original_OS_exit_authority": "independently authenticated enclosing original supervisor",
+  "original_deadline_monotonic": 12386.719108468,
+  "outputs": {
+    "actual_provider_imports": {
+      "pypdfium2": "/home/runner/work/_temp/template-native-preflight-scratch/installed/native-environment/lib/python3.14/site-packages/pypdfium2/__init__.py",
+      "pypdfium2_raw": "/home/runner/work/_temp/template-native-preflight-scratch/installed/native-environment/lib/python3.14/site-packages/pypdfium2_raw/__init__.py"
+    }
+  },
+  "owner_pid": 13077,
+  "provider_after": {
+    "bytes": 8090247,
+    "files": {
+      "pypdfium2-5.6.0.dist-info/INSTALLER": {
+        "bytes": 2,
+        "identity": {
+          "ctime_ns": 1793817375640890886,
+          "device": 2049,
+          "inode": 10754140,
+          "links": 1,
+          "mode": 33188,
+          "mtime_ns": 1793817375640890886,
+          "size": 2
+        },
+        "sha256": "e6184ce10e266134fdcfa401e8f1a95005bcd4f18d16b62b757323e2833fe9a9"
+      },
+      "pypdfium2-5.6.0.dist-info/METADATA": {
+        "bytes": 68067,
+        "identity": {
+          "ctime_ns": 1793817375598497965,
+          "device": 2049,
+          "inode": 10753794,
+          "links": 1,
+          "mode": 33188,
+          "mtime_ns": 1793817375598416703,
+          "size": 68067
+        },
+        "sha256": "e3b5cd6b71b7d473fe8045341ceee79d2a50ba96b1268e494e8ef091cf7be04f"
+      },
+      "pypdfium2-5.6.0.dist-info/RECORD": {
+        "bytes": 6235,
+        "identity": {
+          "ctime_ns": 1793817375641052551,
+          "device": 2049,
+          "inode": 10753776,
+          "links": 1,
+          "mode": 33188,
+          "mtime_ns": 1793817375641052551,
+          "size": 6235
+        },
+        "sha256": "bf15da51c148b3f2890c863a2cc4131aad8e0995b7bac7633e7edd3bba63d59e"
+      },
+      "pypdfium2-5.6.0.dist-info/REQUESTED": {
+        "bytes": 0,
+        "identity": {
+          "ctime_ns": 1793817375640840213,
+          "device": 2049,
+          "inode": 10754139,
+          "links": 1,
+          "mode": 33188,
+          "mtime_ns": 1793817375640840213,
+          "size": 0
+        },
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "pypdfium2-5.6.0.dist-info/WHEEL": {
+        "bytes": 145,
+        "identity": {
+          "ctime_ns": 1793817375598301747,
+          "device": 2049,
+          "inode": 10753790,
+          "links": 1,
+          "mode": 33188,
+          "mtime_ns": 1793817375598301747,
+          "size": 145
+        },
+        "sha256": "5796ee091594fbc1d42f7d14bcb61535029cc047bacd6597986a5d8ab6376368"
+      },
+      "pypdfium2-5.6.0.dist-info/entry_points.txt": {
+        "bytes": 58,
+        "identity": {
+          "ctime_ns": 1793817375598135125,
+          "device": 2049,
+          "inode": 10753781,
+          "links": 1,
+          "mode": 33188,
+          "mtime_ns": 1793817375598106131,
+          "size": 58
+        },
+        "sha256": "5159bdd2f7915aba87c3e8d6785a0d7f42259f69b4906196201565becd7756f0"
+      },
+      "pypdfium2-5.6.0.dist-info/licenses/LICENSES/Apache-2.0.txt": {
+        "bytes": 11358,
+        "identity": {
+          "ctime_ns": 1793817375598865453,
+          "device": 2049,
+          "inode": 10753808,
+          "links": 1,
+          "mode": 33188,
+          "mtime_ns": 1793817375598811993,
+          "size": 11358
+        },
+        "sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30"
+      },
+      "pypdfium2-5.6.0.dist-info/licenses/LICENSES/BSD-3-Clause.txt": {
+        "bytes": 1459,
+        "identity": {
+          "ctime_ns": 1793817375598937837,
+          "device": 2049,
+          "inode": 10753812,
+          "links": 1,
+          "mode": 33188,
+          "mtime_ns": 1793817375598927019,
+          "size": 1459
+        },
+        "sha256": "a6d11f0694c0137e9b02924b9d33a159f6c72f220fa4655bb2e1ea3654377d39"
+      },
+      "pypdfium2-5.6.0.dist-info/licenses/LICENSES/CC-BY-4.0.txt": {
+        "bytes": 14527,
+        "identity": {
+          "ctime_ns": 1793817375598750816,
+          "device": 2049,
+          "inode": 10753803,
+          "links": 1,
+          "mode": 33188,
+          "mtime_ns": 1793817375598653776,
+          "size": 14527
+        },
+        "sha256": "419896aea50c15d6e40c5b4baf4bd346f78223b9a354c7357ad00262afdc08ec"
+      },
+      "pypdfium2-5.6.0.dist-info/licenses/data/linux_x64/BUILD_LICENSES/abseil.txt": {
+        "bytes": 11361,
+        "identity": {
+          "ctime_ns": 1793817375599281943,
+          "device": 2049,
+          "inode": 10753825,
+          "links": 1,
+          "mode": 33188,
+          "mtime_ns": 1793817375599232681,
+          "size": 11361
+        },
+        "sha256": "c79a7fea0e3cac04cd43f20e7b648e5a0ff8fa5344e644b0ee09ca1162b62747"
+      },
+      "pypdfium2-5.6.0.dist-info/licenses/data/linux_x64/BUILD_LICENSES/agg23.txt": {
+        "bytes": 725,
+        "identity": {
+          "ctime_ns": 1793817375599926300,
+          "device": 2049,
+          "inode": 10753846,
+          "links": 1,
+          "mode": 33188,
+          "mtime_ns": 1793817375599926300,
+          "size": 725
+        },
+        "sha256": "c110d3ea2ad77467ce0dcff7d3337e6c8be8049a5103f4b9bd5fd911a77972e5"
+      },
+      "pypdfium2-5.6.0.dist-info/licenses/data/linux_x64/BUILD_LICENSES/fast_float.txt": {
+        "bytes": 1079,
+        "identity": {
+          "ctime_ns": 1793817375600048557,
+          "device": 2049,
+          "inode": 10753848,
+          "links": 1,
+          "mode": 33188,
+          "mtime_ns": 1793817375600039783,
+          "size": 1079
+        },
+        "sha256": "e562f3f974ced7e69dd1db77b820b36bcf8f30377f1aa105723fba449c53c4e6"
+      },
+      "pypdfium2-5.6.0.dist-info/licenses/data/linux_x64/BUILD_LICENSES/freetype.txt": {
+        "bytes": 6741,
+        "identity": {
+          "ctime_ns": 1793817375600144870,
+          "device": 2049,
+          "inode": 10753852,
+          "links": 1,
+          "mode": 33188,
+          "mtime_ns": 1793817375600144870,
+          "size": 6741
+        },
+        "sha256": "f4b133e25df1f86ad3ffea453aa0e613f0474f34778dbbb3e437e7b2724937d8"
+      },
+      "pypdfium2-5.6.0.dist-info/licenses/data/linux_x64/BUILD_LICENSES/icu.txt": {
+        "bytes": 26487,
+        "identity": {
+          "ctime_ns": 1793817375600798043,
+          "device": 2049,
+          "inode": 10753868,
+          "links": 1,
+          "mode": 33188,
+          "mtime_ns": 1793817375600798043,
+          "size": 26487
+        },
+        "sha256": "451167c55c0fa447cc2d5632714f5e3c567fe4f1e1badefab2c1333852198aca"
+      },
+      "pypdfium2-5.6.0.dist-info/licenses/data/linux_x64/BUILD_LICENSES/lcms.txt": {
+        "bytes": 1354,
+        "identity": {
+          "ctime_ns": 1793817375599379255,
+          "device": 2049,
+          "inode": 10753829,
+          "links": 1,
+          "mode": 33188,
+          "mtime_ns": 1793817375599342244,
+          "size": 1354
+        },
+        "sha256": "5132b7530ae5acab7058634da86470d3d38bb01d70c2b67ba10c96bc62ced1af"
+      },
+      "pypdfium2-5.6.0.dist-info/licenses/data/linux_x64/BUILD_LICENSES/libjpeg_turbo.ijg": {
+        "bytes": 12799,
+        "identity": {
+          "ctime_ns": 1793817375600536171,
+          "device": 2049,
+          "inode": 10753862,
+          "links": 1,
+          "mode": 33188,
+          "mtime_ns": 1793817375600521545,
+          "size": 12799
+        },
+        "sha256": "75815e3bf6484201a3c3d17a1bbf10f2e8e3237f84df10a2357ea896db2a81d6"
+      },
+      "pypdfium2-5.6.0.dist-info/licenses/data/linux_x64/BUILD_LICENSES/libjpeg_turbo.md": {
+        "bytes": 5620,
+        "identity": {
+          "ctime_ns": 1793817375600938554,
+          "device": 2049,
+          "inode": 10753873,
+          "links": 1,
+          "mode": 33188,
+          "mtime_ns": 1793817375600924430,
+          "size": 5620
+        },
+        "sha256": "96f5b328adbb78eeaaec6980d73fd558cb1e4d62560ed615646bc3cf5e532430"
+      },
+      "pypdfium2-5.6.0.dist-info/licenses/data/linux_x64/BUILD_LICENSES/libopenjpeg.txt": {
+        "bytes": 1794,
+        "identity": {
+          "ctime_ns": 1793817375599698892,
+          "device": 2049,
+          "inode": 10753842,
+          "links": 1,
+          "mode": 33188,
+          "mtime_ns": 1793817375599688525,
+          "size": 1794
+        },
+        "sha256": "c5ab0890a737c2dfa7ba675036554f6d17741d98629b0c2a145354d00617e6b2"
+      },
+      "pypdfium2-5.6.0.dist-info/licenses/data/linux_x64/BUILD_LICENSES/libpng.txt": {
+        "bytes": 5345,
+        "identity": {
+          "ctime_ns": 1793817375599817394,
+          "device": 2049,
+          "inode": 10753845,
+          "links": 1,
+          "mode": 33188,
+          "mtime_ns": 1793817375599817394,
+          "size": 5345
+        },
+        "sha256": "bf5e22b9dce8464064ae17a48ea1133c3369ac9e1d80ef9e320e5219aa14ea9b"
+      },
+      "pypdfium2-5.6.0.dist-info/licenses/data/linux_x64/BUILD_LICENSES/libtiff.txt": {
+        "bytes": 1139,
+        "identity": {
+          "ctime_ns": 1793817375600295650,
+          "device": 2049,
+          "inode": 10753855,
+          "links": 1,
+          "mode": 33188,
+          "mtime_ns": 1793817375600273499,
+          "size": 1139
+        },
+        "sha256": "92b72ba97e6c2749c2a94bc0ef646b47080217f1e772a482b33cf5a5f98a6506"
+      },
+      "pypdfium2-5.6.0.dist-info/licenses/data/linux_x64/BUILD_LICENSES/llvm-libc.txt": {
+        "bytes": 15140,
+        "identity": {
+          "ctime_ns": 1793817375599591040,
+          "device": 2049,
+          "inode": 10753836,
+          "links": 1,
+          "mode": 33188,
+          "mtime_ns": 1793817375599549394,
+          "size": 15140
+        },
+        "sha256": "ebcd9bbf783a73d05c53ba4d586b8d5813dcdf3bbec50265860ccc885e606f47"
+      },
+      "pypdfium2-5.6.0.dist-info/licenses/data/linux_x64/BUILD_LICENSES/pdfium-binaries.txt": {
+        "bytes": 1177,
+        "identity": {
+          "ctime_ns": 1793817375600663572,
+          "device": 2049,
+          "inode": 10753866,
+          "links": 1,
+          "mode": 33188,
+          "mtime_ns": 1793817375600663572,
+          "size": 1177
+        },
+        "sha256": "ba26c1263131696b86c10496b5066b918a20b7161822a80c274d0080105f6c93"
+      },
+      "pypdfium2-5.6.0.dist-info/licenses/data/linux_x64/BUILD_LICENSES/pdfium.txt": {
+        "bytes": 12818,
+        "identity": {
+          "ctime_ns": 1793817375600415134,
+          "device": 2049,
+          "inode": 10753858,
+          "links": 1,
+          "mode": 33188,
+          "mtime_ns": 1793817375600390340,
+          "size": 12818
+        },
+        "sha256": "961eacd9633fff6d051db7208b755e9210e30efac7adec3e6a6d52798f0ccf0e"
+      },
+      "pypdfium2-5.6.0.dist-info/licenses/data/linux_x64/BUILD_LICENSES/simdutf.txt": {
+        "bytes": 1059,
+        "identity": {
+          "ctime_ns": 1793817375599488059,
+          "device": 2049,
+          "inode": 10753832,
+          "links": 1,
+          "mode": 33188,
+          "mtime_ns": 1793817375599448525,
+          "size": 1059
+        },
+        "sha256": "fc8dbc04e03ad4efc08a647ffe7f995b811a95bc04c0e85a56d5277c6593fa5f"
+      },
+      "pypdfium2-5.6.0.dist-info/licenses/data/linux_x64/BUILD_LICENSES/zlib.txt": {
+        "bytes": 1328,
+        "identity": {
+          "ctime_ns": 1793817375601043283,
+          "device": 2049,
+          "inode": 10753877,
+          "links": 1,
+          "mode": 33188,
+          "mtime_ns": 1793817375601043283,
+          "size": 1328
+        },
+        "sha256": "02421fcfbfb1d656ef0b6ff4cd3c39f2946f08c3219fa42db482add7ce1f53ea"
+      },
+      "pypdfium2-5.6.0.dist-info/top_level.txt": {
+        "bytes": 24,
+        "identity": {
+          "ctime_ns": 1793817375598205286,
+          "device": 2049,
+          "inode": 10753786,
+          "links": 1,
+          "mode": 33188,
+          "mtime_ns": 1793817375598205286,
+          "size": 24
+        },
+        "sha256": "3ed00c3c01e52974c8b35417d6e590a0857acaffd958876f98da316b2fd5b698"
+      },
+      "pypdfium2/__init__.py": {
+        "bytes": 251,
+        "identity": {
+          "ctime_ns": 1793817375638653968,
+          "device": 2049,
+          "inode": 10754073,
+          "links": 1,
+          "mode": 33188,
+          "mtime_ns": 1793817375638653968,
+          "size": 251
+        },
+        "sha256": "f39400f78f2199694ec55db88f3a6c8609a2053fda93a00c01dc4e0995faefa4"
+      },
+      "pypdfium2/__main__.py": {
+        "bytes": 2158,
+        "identity": {
+          "ctime_ns": 1793817375640570095,
+          "device": 2049,
+          "inode": 10754130,
+          "links": 1,
+          "mode": 33188,
+          "mtime_ns": 1793817375640507770,
+          "size": 2158
+        },
+        "sha256": "8e275a29019976bd5b49cc51d3b7bc602bf9cbc1d2c394acb6f74a93bdc17545"
+      },
+      "pypdfium2/_cli/__init__.py": {
+        "bytes": 117,
+        "identity": {
+          "ctime_ns": 1793817375640181197,
+          "device": 2049,
+          "inode": 10754122,
+          "links": 1,
+          "mode": 33188,
+          "mtime_ns": 1793817375640181197,
+          "size": 117
+        },
+        "sha256": "587554d9bb466792447cd75832d0932f1fe82ae3d747931725711c505156cbd8"
+      },
+      "pypdfium2/_cli/_parsers.py": {
+        "bytes": 3936,
+        "identity": {
+          "ctime_ns": 1793817375639062383,
+          "device": 2049,
+          "inode": 10754087,
+          "links": 1,
+          "mode": 33188,
+          "mtime_ns": 1793817375639062383,
+          "size": 3936
+        },
+        "sha256": "60f588a6e9e762ea7ff4ca73aa62d8980a049d79331fb810e370640effb5f2ec"
+      },
+      "pypdfium2/_cli/arrange.py": {
+        "bytes": 1483,
+        "identity": {
+          "ctime_ns": 1793817375640080550,
+          "device": 2049,
+          "inode": 10754118,
+          "links": 1,
+          "mode": 33188,
+          "mtime_ns": 1793817375640080550,
+          "size": 1483
+        },
+        "sha256": "1182ef69f26b7143aa5103e68bbf4724bfcae1f01f3c8bd99d454dafd0996e9e"
+      },
+      "pypdfium2/_cli/attachments.py": {
+        "bytes": 2293,
+        "identity": {
+          "ctime_ns": 1793817375639985190,
+          "device": 2049,
+          "inode": 10754113,
+          "links": 1,
+          "mode": 33188,
+          "mtime_ns": 1793817375639972887,
+          "size": 2293
+        },
+        "sha256": "815275bdec2751ef3222449b85f74d30c3a917fbb53b316a68b5f9c12f23984a"
+      },
+      "pypdfium2/_cli/extract_images.py": {
+        "bytes": 2999,
+        "identity": {
+          "ctime_ns": 1793817375639163821,
+          "device": 2049,
+          "inode": 10754091,
+          "links": 1,
+          "mode": 33188,
+          "mtime_ns": 1793817375639163821,
+          "size": 2999
+        },
+        "sha256": "5893fac0651916702026921879e6574d1ae1e4da38ac46a466444e4eda084ffb"
+      },
+      "pypdfium2/_cli/extract_text.py": {
+        "bytes": 1342,
+        "identity": {
+          "ctime_ns": 1793817375639625278,
+          "device": 2049,
+          "inode": 10754107,
+          "links": 1,
+          "mode": 33188,
+          "mtime_ns": 1793817375639625278,
+          "size": 1342
+        },
+        "sha256": "634efbcd5f8e367601fa5ebf6fbd67d3170e143dc787555c300a843cbfc707a0"
+      },
+      "pypdfium2/_cli/imgtopdf.py": {
+        "bytes": 1971,
+        "identity": {
+          "ctime_ns": 1793817375639409914,
+          "device": 2049,
+          "inode": 10754097,
+          "links": 1,
+          "mode": 33188,
+          "mtime_ns": 1793817375639388574,
+          "size": 1971
+        },
+        "sha256": "ba92b38a7af4cedd6c2af4210dc53f8273131993e33292ef45f422a71718172c"
+      },
+      "pypdfium2/_cli/pageobjects.py": {
+        "bytes": 3697,
+        "identity": {
+          "ctime_ns": 1793817375640281926,
+          "device": 2049,
+          "inode": 10754123,
+          "links": 1,
+          "mode": 33188,
+          "mtime_ns": 1793817375640281926,
+          "size": 3697
+        },
+        "sha256": "ac88be679305ca2e5a4541579679d8e5f7c6a5b61a6b9f3752ae8e5da0657a21"
+      },
+      "pypdfium2/_cli/pdfinfo.py": {
+        "bytes": 1892,
+        "identity": {
+          "ctime_ns": 1793817375640431065,
+          "device": 2049,
+          "inode": 10754126,
+          "links": 1,
+          "mode": 33188,
+          "mtime_ns": 1793817375640392334,
+          "size": 1892
+        },
+        "sha256": "bf3f976bfbc6fa990f5338e1432e74204feb96c291f328c78f39ea8b19bc1c70"
+      },
+      "pypdfium2/_cli/render.py": {
+        "bytes": 20423,
+        "identity": {
+          "ctime_ns": 1793817375639566305,
+          "device": 2049,
+          "inode": 10754101,
+          "links": 1,
+          "mode": 33188,
+          "mtime_ns": 1793817375639502077,
+          "size": 20423
+        },
+        "sha256": "da69900c40c9e06128ce0ba10e2b6d9db1da37063a8d175c4a376b19893f1848"
+      },
+      "pypdfium2/_cli/tile.py": {
+        "bytes": 2252,
+        "identity": {
+          "ctime_ns": 1793817375639297862,
+          "device": 2049,
+          "inode": 10754094,
+          "links": 1,
+          "mode": 33188,
+          "mtime_ns": 1793817375639269671,
+          "size": 2252
+        },
+        "sha256": "6e508d4258f1fbe5bd12dc71e53e171b7cfe1daf97f5ad8a00c26442440bf043"
+      },
+      "pypdfium2/_cli/toc.py": {
+        "bytes": 1328,
+        "identity": {
+          "ctime_ns": 1793817375639760298,
+          "device": 2049,
+          "inode": 10754110,
+          "links": 1,
+          "mode": 33188,
+          "mtime_ns": 1793817375639740654,
+          "size": 1328
+        },
+        "sha256": "8c3f50d11946b67345fbfd005d65fb96c8c31361c635eeb6962eaba9484686dd"
+      },
+      "pypdfium2/_helpers/__init__.py": {
+        "bytes": 492,
+        "identity": {
+          "ctime_ns": 1793817375637127148,
+          "device": 2049,
+          "inode": 10754027,
+          "links": 1,
+          "mode": 33188,
+          "mtime_ns": 1793817375637127148,
+          "size": 492
+        },
+        "sha256": "08d4c61b172e8114c53806d55769ee6c12b720a900eb6dbda4d3713372d1a480"
+      },
+      "pypdfium2/_helpers/attachment.py": {
+        "bytes": 5190,
+        "identity": {
+          "ctime_ns": 1793817375605793729,
+          "device": 2049,
+          "inode": 10754014,
+          "links": 1,
+          "mode": 33188,
+          "mtime_ns": 1793817375605782290,
+          "size": 5190
+        },
+        "sha256": "ab82c13c39e61b570b9e7d2c4299b703439ad2589a695a6a0f2ca38a3ba88ab9"
+      },
+      "pypdfium2/_helpers/bitmap.py": {
+        "bytes": 17370,
+        "identity": {
+          "ctime_ns": 1793817375637330899,
+          "device": 2049,
+          "inode": 10754030,
+          "links": 1,
+          "mode": 33188,
+          "mtime_ns": 1793817375637254105,
+          "size": 17370
+        },
+        "sha256": "1c847e7f8e1375737477f3ff3f21e42499794558020238b5046cfa4e6f4cda3c"
+      },
+      "pypdfium2/_helpers/document.py": {
+        "bytes": 25592,
+        "identity": {
+          "ctime_ns": 1793817375636959153,
+          "device": 2049,
+          "inode": 10754022,
+          "links": 1,
+          "mode": 33188,
+          "mtime_ns": 1793817375636959153,
+          "size": 25592
+        },
+        "sha256": "dc99ff1133df4cc9e3dc345dfbdf30845274d1e6ddfe59201c3a0dd07bbde3ba"
+      },
+      "pypdfium2/_helpers/matrix.py": {
+        "bytes": 6435,
+        "identity": {
+          "ctime_ns": 1793817375636808751,
+          "device": 2049,
+          "inode": 10754018,
+          "links": 1,
+          "mode": 33188,
+          "mtime_ns": 1793817375636808751,
+          "size": 6435
+        },
+        "sha256": "8866395a615baf73ce0d5bab839df5ec4b70f3e6f1912e323ec3d182ea12f724"
+      },
+      "pypdfium2/_helpers/misc.py": {
+        "bytes": 578,
+        "identity": {
+          "ctime_ns": 1793817375637671525,
+          "device": 2049,
+          "inode": 10754041,
+          "links": 1,
+          "mode": 33188,
+          "mtime_ns": 1793817375637671525,
+          "size": 578
+        },
+        "sha256": "d03aadd6eba31f210e50319d22989b6ed65abf01a498ade3becededd9b21bdce"
+      },
+      "pypdfium2/_helpers/page.py": {
+        "bytes": 22851,
+        "identity": {
+          "ctime_ns": 1793817375605660590,
+          "device": 2049,
+          "inode": 10754009,
+          "links": 1,
+          "mode": 33188,
+          "mtime_ns": 1793817375605612542,
+          "size": 22851
+        },
+        "sha256": "c263c2468a59a5e5b4717a5f7eee707e8663dd82253e7a6578d06bef154ee5a2"
+      },
+      "pypdfium2/_helpers/pageobjects.py": {
+        "bytes": 23631,
+        "identity": {
+          "ctime_ns": 1793817375637461163,
+          "device": 2049,
+          "inode": 10754033,
+          "links": 1,
+          "mode": 33188,
+          "mtime_ns": 1793817375637421209,
+          "size": 23631
+        },
+        "sha256": "867e7129ec0d4bf6ddf3715c6a847ad52030364c1ceb54949ac9fefd9ad14e41"
+      },
+      "pypdfium2/_helpers/textpage.py": {
+        "bytes": 13301,
+        "identity": {
+          "ctime_ns": 1793817375637560668,
+          "device": 2049,
+          "inode": 10754036,
+          "links": 1,
+          "mode": 33188,
+          "mtime_ns": 1793817375637555330,
+          "size": 13301
+        },
+        "sha256": "28a7d5f6d0c6c0918682d8f7e29368ff9f00a2af86c04d658d94c7aa82c791c9"
+      },
+      "pypdfium2/_helpers/unsupported.py": {
+        "bytes": 1733,
+        "identity": {
+          "ctime_ns": 1793817375637813513,
+          "device": 2049,
+          "inode": 10754043,
+          "links": 1,
+          "mode": 33188,
+          "mtime_ns": 1793817375637813513,
+          "size": 1733
+        },
+        "sha256": "fe64f5dc1c0e24fe90ac3561a79bcc39368c2388776b02b70760be2b6a4797a9"
+      },
+      "pypdfium2/_lazy.py": {
+        "bytes": 965,
+        "identity": {
+          "ctime_ns": 1793817375605441582,
+          "device": 2049,
+          "inode": 10754005,
+          "links": 1,
+          "mode": 33188,
+          "mtime_ns": 1793817375605441582,
+          "size": 965
+        },
+        "sha256": "9887d1f9b7316dee28a24adea7e82e24b8b0e9fef92095111f1ae28eb9c0da76"
+      },
+      "pypdfium2/_library_scope.py": {
+        "bytes": 1640,
+        "identity": {
+          "ctime_ns": 1793817375638441660,
+          "device": 2049,
+          "inode": 10754067,
+          "links": 1,
+          "mode": 33188,
+          "mtime_ns": 1793817375638441660,
+          "size": 1640
+        },
+        "sha256": "ff986925aa81cf77a8fada0b1d269f785e8d028f4e4ae576fa51dec7fd52cdf7"
+      },
+      "pypdfium2/internal/__init__.py": {
+        "bytes": 236,
+        "identity": {
+          "ctime_ns": 1793817375638216657,
+          "device": 2049,
+          "inode": 10754060,
+          "links": 1,
+          "mode": 33188,
+          "mtime_ns": 1793817375638216657,
+          "size": 236
+        },
+        "sha256": "4275d69011d28d2fc540ed106e8e4f7305122f16c57e9beb4271733165c05911"
+      },
+      "pypdfium2/internal/bases.py": {
+        "bytes": 4188,
+        "identity": {
+          "ctime_ns": 1793817375638150903,
+          "device": 2049,
+          "inode": 10754056,
+          "links": 1,
+          "mode": 33188,
+          "mtime_ns": 1793817375638101533,
+          "size": 4188
+        },
+        "sha256": "8153caf206bac954eebfe146c5f52c63154a6e13380a00b31335b0da30d1b987"
+      },
+      "pypdfium2/internal/consts.py": {
+        "bytes": 6868,
+        "identity": {
+          "ctime_ns": 1793817375638331852,
+          "device": 2049,
+          "inode": 10754064,
+          "links": 1,
+          "mode": 33188,
+          "mtime_ns": 1793817375638322898,
+          "size": 6868
+        },
+        "sha256": "6f424143caa4bb0d38b984eb3950a3cb94514462306d6ca6c768413f1f18fe25"
+      },
+      "pypdfium2/internal/utils.py": {
+        "bytes": 2643,
+        "identity": {
+          "ctime_ns": 1793817375638026891,
+          "device": 2049,
+          "inode": 10754050,
+          "links": 1,
+          "mode": 33188,
+          "mtime_ns": 1793817375637985145,
+          "size": 2643
+        },
+        "sha256": "673e10ff1f58e3d32fe4b16f795282a01164fc3151218813fc191948ef09cc1a"
+      },
+      "pypdfium2/raw.py": {
+        "bytes": 268,
+        "identity": {
+          "ctime_ns": 1793817375638544963,
+          "device": 2049,
+          "inode": 10754071,
+          "links": 1,
+          "mode": 33188,
+          "mtime_ns": 1793817375638544963,
+          "size": 268
+        },
+        "sha256": "34390a3e3e0f7c20ad9cf699c569c97212838f7f08584ea44bebabf40b4880da"
+      },
+      "pypdfium2/version.json": {
+        "bytes": 160,
+        "identity": {
+          "ctime_ns": 1793817375638913402,
+          "device": 2049,
+          "inode": 10754079,
+          "links": 1,
+          "mode": 33188,
+          "mtime_ns": 1793817375638902273,
+          "size": 160
+        },
+        "sha256": "8e014e6bdfa7809e2fd39a65816d008d00433e83055833ab6ddeadc0b1a1ff1b"
+      },
+      "pypdfium2/version.py": {
+        "bytes": 5080,
+        "identity": {
+          "ctime_ns": 1793817375638785755,
+          "device": 2049,
+          "inode": 10754076,
+          "links": 1,
+          "mode": 33188,
+          "mtime_ns": 1793817375638785755,
+          "size": 5080
+        },
+        "sha256": "85fd74fecc5017c2bc4e0b9833102cd76baa4fae04b4731709ee1db404c61b8b"
+      },
+      "pypdfium2_raw/__init__.py": {
+        "bytes": 323,
+        "identity": {
+          "ctime_ns": 1793817375605145948,
+          "device": 2049,
+          "inode": 10753996,
+          "links": 1,
+          "mode": 33188,
+          "mtime_ns": 1793817375605136048,
+          "size": 323
+        },
+        "sha256": "01863185536c5a285a24daab64dfac8cf76e65fc0c0e5c00efb18ab3362f2aae"
+      },
+      "pypdfium2_raw/bindings.py": {
+        "bytes": 144884,
+        "identity": {
+          "ctime_ns": 1793817375601345428,
+          "device": 2049,
+          "inode": 10753884,
+          "links": 1,
+          "mode": 33188,
+          "mtime_ns": 1793817375601261539,
+          "size": 144884
+        },
+        "sha256": "4b6c47cd43c31724ebf086829cd5b27462b75071d5a9bb6b5ddc1f29e3417895"
+      },
+      "pypdfium2_raw/libpdfium.so": {
+        "bytes": 7551304,
+        "identity": {
+          "ctime_ns": 1793817375605029810,
+          "device": 2049,
+          "inode": 10753891,
+          "links": 1,
+          "mode": 33188,
+          "mtime_ns": 1793817375604538789,
+          "size": 7551304
+        },
+        "sha256": "31d1de7d5b5e921a9f52c53fd5b6e3c5a821889aad5313f89ca06fd9d4229924"
+      },
+      "pypdfium2_raw/version.json": {
+        "bytes": 143,
+        "identity": {
+          "ctime_ns": 1793817375605288665,
+          "device": 2049,
+          "inode": 10753998,
+          "links": 1,
+          "mode": 33188,
+          "mtime_ns": 1793817375605246466,
+          "size": 143
+        },
+        "sha256": "47d8964ca88afa4654cd936512fd884bfb95079db95c4da4c7d68d8214d4c661"
+      }
+    },
+    "record_identity": {
+      "ctime_ns": 1793817375641052551,
+      "device": 2049,
+      "inode": 10753776,
+      "links": 1,
+      "mode": 33188,
+      "mtime_ns": 1793817375641052551,
+      "size": 6235
+    },
+    "record_sha256": "bf15da51c148b3f2890c863a2cc4131aad8e0995b7bac7633e7edd3bba63d59e",
+    "schema_version": "template-office-live-installed-pdfium-provider-v1",
+    "selection": {
+      "origins": {
+        "pypdfium2": "/home/runner/work/_temp/template-native-preflight-scratch/installed/native-environment/lib/python3.14/site-packages/pypdfium2/__init__.py",
+        "pypdfium2_raw": "/home/runner/work/_temp/template-native-preflight-scratch/installed/native-environment/lib/python3.14/site-packages/pypdfium2_raw/__init__.py"
+      },
+      "site": "/home/runner/work/_temp/template-native-preflight-scratch/installed/native-environment/lib/python3.14/site-packages",
+      "version": "5.6.0"
+    },
+    "unselected_generated_console_scripts": {
+      "../../../bin/pypdfium2": {
+        "bytes": 389,
+        "identity": {
+          "ctime_ns": 1793817375640822468,
+          "device": 2049,
+          "inode": 10515631,
+          "links": 1,
+          "mode": 33261,
+          "mtime_ns": 1793817375640740727,
+          "size": 389
+        },
+        "path": "/home/runner/work/_temp/template-native-preflight-scratch/installed/native-environment/bin/pypdfium2",
+        "sha256": "6f1d37ffeb1b543b7a03f9d9e232f6542d2715a6d45a50273a0c62fcb324fb95"
+      }
+    },
+    "unselected_installation_caches": {}
+  },
+  "provider_before": {
+    "bytes": 8090247,
+    "files": {
+      "pypdfium2-5.6.0.dist-info/INSTALLER": {
+        "bytes": 2,
+        "identity": {
+          "ctime_ns": 1793817375640890886,
+          "device": 2049,
+          "inode": 10754140,
+          "links": 1,
+          "mode": 33188,
+          "mtime_ns": 1793817375640890886,
+          "size": 2
+        },
+        "sha256": "e6184ce10e266134fdcfa401e8f1a95005bcd4f18d16b62b757323e2833fe9a9"
+      },
+      "pypdfium2-5.6.0.dist-info/METADATA": {
+        "bytes": 68067,
+        "identity": {
+          "ctime_ns": 1793817375598497965,
+          "device": 2049,
+          "inode": 10753794,
+          "links": 1,
+          "mode": 33188,
+          "mtime_ns": 1793817375598416703,
+          "size": 68067
+        },
+        "sha256": "e3b5cd6b71b7d473fe8045341ceee79d2a50ba96b1268e494e8ef091cf7be04f"
+      },
+      "pypdfium2-5.6.0.dist-info/RECORD": {
+        "bytes": 6235,
+        "identity": {
+          "ctime_ns": 1793817375641052551,
+          "device": 2049,
+          "inode": 10753776,
+          "links": 1,
+          "mode": 33188,
+          "mtime_ns": 1793817375641052551,
+          "size": 6235
+        },
+        "sha256": "bf15da51c148b3f2890c863a2cc4131aad8e0995b7bac7633e7edd3bba63d59e"
+      },
+      "pypdfium2-5.6.0.dist-info/REQUESTED": {
+        "bytes": 0,
+        "identity": {
+          "ctime_ns": 1793817375640840213,
+          "device": 2049,
+          "inode": 10754139,
+          "links": 1,
+          "mode": 33188,
+          "mtime_ns": 1793817375640840213,
+          "size": 0
+        },
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "pypdfium2-5.6.0.dist-info/WHEEL": {
+        "bytes": 145,
+        "identity": {
+          "ctime_ns": 1793817375598301747,
+          "device": 2049,
+          "inode": 10753790,
+          "links": 1,
+          "mode": 33188,
+          "mtime_ns": 1793817375598301747,
+          "size": 145
+        },
+        "sha256": "5796ee091594fbc1d42f7d14bcb61535029cc047bacd6597986a5d8ab6376368"
+      },
+      "pypdfium2-5.6.0.dist-info/entry_points.txt": {
+        "bytes": 58,
+        "identity": {
+          "ctime_ns": 1793817375598135125,
+          "device": 2049,
+          "inode": 10753781,
+          "links": 1,
+          "mode": 33188,
+          "mtime_ns": 1793817375598106131,
+          "size": 58
+        },
+        "sha256": "5159bdd2f7915aba87c3e8d6785a0d7f42259f69b4906196201565becd7756f0"
+      },
+      "pypdfium2-5.6.0.dist-info/licenses/LICENSES/Apache-2.0.txt": {
+        "bytes": 11358,
+        "identity": {
+          "ctime_ns": 1793817375598865453,
+          "device": 2049,
+          "inode": 10753808,
+          "links": 1,
+          "mode": 33188,
+          "mtime_ns": 1793817375598811993,
+          "size": 11358
+        },
+        "sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30"
+      },
+      "pypdfium2-5.6.0.dist-info/licenses/LICENSES/BSD-3-Clause.txt": {
+        "bytes": 1459,
+        "identity": {
+          "ctime_ns": 1793817375598937837,
+          "device": 2049,
+          "inode": 10753812,
+          "links": 1,
+          "mode": 33188,
+          "mtime_ns": 1793817375598927019,
+          "size": 1459
+        },
+        "sha256": "a6d11f0694c0137e9b02924b9d33a159f6c72f220fa4655bb2e1ea3654377d39"
+      },
+      "pypdfium2-5.6.0.dist-info/licenses/LICENSES/CC-BY-4.0.txt": {
+        "bytes": 14527,
+        "identity": {
+          "ctime_ns": 1793817375598750816,
+          "device": 2049,
+          "inode": 10753803,
+          "links": 1,
+          "mode": 33188,
+          "mtime_ns": 1793817375598653776,
+          "size": 14527
+        },
+        "sha256": "419896aea50c15d6e40c5b4baf4bd346f78223b9a354c7357ad00262afdc08ec"
+      },
+      "pypdfium2-5.6.0.dist-info/licenses/data/linux_x64/BUILD_LICENSES/abseil.txt": {
+        "bytes": 11361,
+        "identity": {
+          "ctime_ns": 1793817375599281943,
+          "device": 2049,
+          "inode": 10753825,
+          "links": 1,
+          "mode": 33188,
+          "mtime_ns": 1793817375599232681,
+          "size": 11361
+        },
+        "sha256": "c79a7fea0e3cac04cd43f20e7b648e5a0ff8fa5344e644b0ee09ca1162b62747"
+      },
+      "pypdfium2-5.6.0.dist-info/licenses/data/linux_x64/BUILD_LICENSES/agg23.txt": {
+        "bytes": 725,
+        "identity": {
+          "ctime_ns": 1793817375599926300,
+          "device": 2049,
+          "inode": 10753846,
+          "links": 1,
+          "mode": 33188,
+          "mtime_ns": 1793817375599926300,
+          "size": 725
+        },
+        "sha256": "c110d3ea2ad77467ce0dcff7d3337e6c8be8049a5103f4b9bd5fd911a77972e5"
+      },
+      "pypdfium2-5.6.0.dist-info/licenses/data/linux_x64/BUILD_LICENSES/fast_float.txt": {
+        "bytes": 1079,
+        "identity": {
+          "ctime_ns": 1793817375600048557,
+          "device": 2049,
+          "inode": 10753848,
+          "links": 1,
+          "mode": 33188,
+          "mtime_ns": 1793817375600039783,
+          "size": 1079
+        },
+        "sha256": "e562f3f974ced7e69dd1db77b820b36bcf8f30377f1aa105723fba449c53c4e6"
+      },
+      "pypdfium2-5.6.0.dist-info/licenses/data/linux_x64/BUILD_LICENSES/freetype.txt": {
+        "bytes": 6741,
+        "identity": {
+          "ctime_ns": 1793817375600144870,
+          "device": 2049,
+          "inode": 10753852,
+          "links": 1,
+          "mode": 33188,
+          "mtime_ns": 1793817375600144870,
+          "size": 6741
+        },
+        "sha256": "f4b133e25df1f86ad3ffea453aa0e613f0474f34778dbbb3e437e7b2724937d8"
+      },
+      "pypdfium2-5.6.0.dist-info/licenses/data/linux_x64/BUILD_LICENSES/icu.txt": {
+        "bytes": 26487,
+        "identity": {
+          "ctime_ns": 1793817375600798043,
+          "device": 2049,
+          "inode": 10753868,
+          "links": 1,
+          "mode": 33188,
+          "mtime_ns": 1793817375600798043,
+          "size": 26487
+        },
+        "sha256": "451167c55c0fa447cc2d5632714f5e3c567fe4f1e1badefab2c1333852198aca"
+      },
+      "pypdfium2-5.6.0.dist-info/licenses/data/linux_x64/BUILD_LICENSES/lcms.txt": {
+        "bytes": 1354,
+        "identity": {
+          "ctime_ns": 1793817375599379255,
+          "device": 2049,
+          "inode": 10753829,
+          "links": 1,
+          "mode": 33188,
+          "mtime_ns": 1793817375599342244,
+          "size": 1354
+        },
+        "sha256": "5132b7530ae5acab7058634da86470d3d38bb01d70c2b67ba10c96bc62ced1af"
+      },
+      "pypdfium2-5.6.0.dist-info/licenses/data/linux_x64/BUILD_LICENSES/libjpeg_turbo.ijg": {
+        "bytes": 12799,
+        "identity": {
+          "ctime_ns": 1793817375600536171,
+          "device": 2049,
+          "inode": 10753862,
+          "links": 1,
+          "mode": 33188,
+          "mtime_ns": 1793817375600521545,
+          "size": 12799
+        },
+        "sha256": "75815e3bf6484201a3c3d17a1bbf10f2e8e3237f84df10a2357ea896db2a81d6"
+      },
+      "pypdfium2-5.6.0.dist-info/licenses/data/linux_x64/BUILD_LICENSES/libjpeg_turbo.md": {
+        "bytes": 5620,
+        "identity": {
+          "ctime_ns": 1793817375600938554,
+          "device": 2049,
+          "inode": 10753873,
+          "links": 1,
+          "mode": 33188,
+          "mtime_ns": 1793817375600924430,
+          "size": 5620
+        },
+        "sha256": "96f5b328adbb78eeaaec6980d73fd558cb1e4d62560ed615646bc3cf5e532430"
+      },
+      "pypdfium2-5.6.0.dist-info/licenses/data/linux_x64/BUILD_LICENSES/libopenjpeg.txt": {
+        "bytes": 1794,
+        "identity": {
+          "ctime_ns": 1793817375599698892,
+          "device": 2049,
+          "inode": 10753842,
+          "links": 1,
+          "mode": 33188,
+          "mtime_ns": 1793817375599688525,
+          "size": 1794
+        },
+        "sha256": "c5ab0890a737c2dfa7ba675036554f6d17741d98629b0c2a145354d00617e6b2"
+      },
+      "pypdfium2-5.6.0.dist-info/licenses/data/linux_x64/BUILD_LICENSES/libpng.txt": {
+        "bytes": 5345,
+        "identity": {
+          "ctime_ns": 1793817375599817394,
+          "device": 2049,
+          "inode": 10753845,
+          "links": 1,
+          "mode": 33188,
+          "mtime_ns": 1793817375599817394,
+          "size": 5345
+        },
+        "sha256": "bf5e22b9dce8464064ae17a48ea1133c3369ac9e1d80ef9e320e5219aa14ea9b"
+      },
+      "pypdfium2-5.6.0.dist-info/licenses/data/linux_x64/BUILD_LICENSES/libtiff.txt": {
+        "bytes": 1139,
+        "identity": {
+          "ctime_ns": 1793817375600295650,
+          "device": 2049,
+          "inode": 10753855,
+          "links": 1,
+          "mode": 33188,
+          "mtime_ns": 1793817375600273499,
+          "size": 1139
+        },
+        "sha256": "92b72ba97e6c2749c2a94bc0ef646b47080217f1e772a482b33cf5a5f98a6506"
+      },
+      "pypdfium2-5.6.0.dist-info/licenses/data/linux_x64/BUILD_LICENSES/llvm-libc.txt": {
+        "bytes": 15140,
+        "identity": {
+          "ctime_ns": 1793817375599591040,
+          "device": 2049,
+          "inode": 10753836,
+          "links": 1,
+          "mode": 33188,
+          "mtime_ns": 1793817375599549394,
+          "size": 15140
+        },
+        "sha256": "ebcd9bbf783a73d05c53ba4d586b8d5813dcdf3bbec50265860ccc885e606f47"
+      },
+      "pypdfium2-5.6.0.dist-info/licenses/data/linux_x64/BUILD_LICENSES/pdfium-binaries.txt": {
+        "bytes": 1177,
+        "identity": {
+          "ctime_ns": 1793817375600663572,
+          "device": 2049,
+          "inode": 10753866,
+          "links": 1,
+          "mode": 33188,
+          "mtime_ns": 1793817375600663572,
+          "size": 1177
+        },
+        "sha256": "ba26c1263131696b86c10496b5066b918a20b7161822a80c274d0080105f6c93"
+      },
+      "pypdfium2-5.6.0.dist-info/licenses/data/linux_x64/BUILD_LICENSES/pdfium.txt": {
+        "bytes": 12818,
+        "identity": {
+          "ctime_ns": 1793817375600415134,
+          "device": 2049,
+          "inode": 10753858,
+          "links": 1,
+          "mode": 33188,
+          "mtime_ns": 1793817375600390340,
+          "size": 12818
+        },
+        "sha256": "961eacd9633fff6d051db7208b755e9210e30efac7adec3e6a6d52798f0ccf0e"
+      },
+      "pypdfium2-5.6.0.dist-info/licenses/data/linux_x64/BUILD_LICENSES/simdutf.txt": {
+        "bytes": 1059,
+        "identity": {
+          "ctime_ns": 1793817375599488059,
+          "device": 2049,
+          "inode": 10753832,
+          "links": 1,
+          "mode": 33188,
+          "mtime_ns": 1793817375599448525,
+          "size": 1059
+        },
+        "sha256": "fc8dbc04e03ad4efc08a647ffe7f995b811a95bc04c0e85a56d5277c6593fa5f"
+      },
+      "pypdfium2-5.6.0.dist-info/licenses/data/linux_x64/BUILD_LICENSES/zlib.txt": {
+        "bytes": 1328,
+        "identity": {
+          "ctime_ns": 1793817375601043283,
+          "device": 2049,
+          "inode": 10753877,
+          "links": 1,
+          "mode": 33188,
+          "mtime_ns": 1793817375601043283,
+          "size": 1328
+        },
+        "sha256": "02421fcfbfb1d656ef0b6ff4cd3c39f2946f08c3219fa42db482add7ce1f53ea"
+      },
+      "pypdfium2-5.6.0.dist-info/top_level.txt": {
+        "bytes": 24,
+        "identity": {
+          "ctime_ns": 1793817375598205286,
+          "device": 2049,
+          "inode": 10753786,
+          "links": 1,
+          "mode": 33188,
+          "mtime_ns": 1793817375598205286,
+          "size": 24
+        },
+        "sha256": "3ed00c3c01e52974c8b35417d6e590a0857acaffd958876f98da316b2fd5b698"
+      },
+      "pypdfium2/__init__.py": {
+        "bytes": 251,
+        "identity": {
+          "ctime_ns": 1793817375638653968,
+          "device": 2049,
+          "inode": 10754073,
+          "links": 1,
+          "mode": 33188,
+          "mtime_ns": 1793817375638653968,
+          "size": 251
+        },
+        "sha256": "f39400f78f2199694ec55db88f3a6c8609a2053fda93a00c01dc4e0995faefa4"
+      },
+      "pypdfium2/__main__.py": {
+        "bytes": 2158,
+        "identity": {
+          "ctime_ns": 1793817375640570095,
+          "device": 2049,
+          "inode": 10754130,
+          "links": 1,
+          "mode": 33188,
+          "mtime_ns": 1793817375640507770,
+          "size": 2158
+        },
+        "sha256": "8e275a29019976bd5b49cc51d3b7bc602bf9cbc1d2c394acb6f74a93bdc17545"
+      },
+      "pypdfium2/_cli/__init__.py": {
+        "bytes": 117,
+        "identity": {
+          "ctime_ns": 1793817375640181197,
+          "device": 2049,
+          "inode": 10754122,
+          "links": 1,
+          "mode": 33188,
+          "mtime_ns": 1793817375640181197,
+          "size": 117
+        },
+        "sha256": "587554d9bb466792447cd75832d0932f1fe82ae3d747931725711c505156cbd8"
+      },
+      "pypdfium2/_cli/_parsers.py": {
+        "bytes": 3936,
+        "identity": {
+          "ctime_ns": 1793817375639062383,
+          "device": 2049,
+          "inode": 10754087,
+          "links": 1,
+          "mode": 33188,
+          "mtime_ns": 1793817375639062383,
+          "size": 3936
+        },
+        "sha256": "60f588a6e9e762ea7ff4ca73aa62d8980a049d79331fb810e370640effb5f2ec"
+      },
+      "pypdfium2/_cli/arrange.py": {
+        "bytes": 1483,
+        "identity": {
+          "ctime_ns": 1793817375640080550,
+          "device": 2049,
+          "inode": 10754118,
+          "links": 1,
+          "mode": 33188,
+          "mtime_ns": 1793817375640080550,
+          "size": 1483
+        },
+        "sha256": "1182ef69f26b7143aa5103e68bbf4724bfcae1f01f3c8bd99d454dafd0996e9e"
+      },
+      "pypdfium2/_cli/attachments.py": {
+        "bytes": 2293,
+        "identity": {
+          "ctime_ns": 1793817375639985190,
+          "device": 2049,
+          "inode": 10754113,
+          "links": 1,
+          "mode": 33188,
+          "mtime_ns": 1793817375639972887,
+          "size": 2293
+        },
+        "sha256": "815275bdec2751ef3222449b85f74d30c3a917fbb53b316a68b5f9c12f23984a"
+      },
+      "pypdfium2/_cli/extract_images.py": {
+        "bytes": 2999,
+        "identity": {
+          "ctime_ns": 1793817375639163821,
+          "device": 2049,
+          "inode": 10754091,
+          "links": 1,
+          "mode": 33188,
+          "mtime_ns": 1793817375639163821,
+          "size": 2999
+        },
+        "sha256": "5893fac0651916702026921879e6574d1ae1e4da38ac46a466444e4eda084ffb"
+      },
+      "pypdfium2/_cli/extract_text.py": {
+        "bytes": 1342,
+        "identity": {
+          "ctime_ns": 1793817375639625278,
+          "device": 2049,
+          "inode": 10754107,
+          "links": 1,
+          "mode": 33188,
+          "mtime_ns": 1793817375639625278,
+          "size": 1342
+        },
+        "sha256": "634efbcd5f8e367601fa5ebf6fbd67d3170e143dc787555c300a843cbfc707a0"
+      },
+      "pypdfium2/_cli/imgtopdf.py": {
+        "bytes": 1971,
+        "identity": {
+          "ctime_ns": 1793817375639409914,
+          "device": 2049,
+          "inode": 10754097,
+          "links": 1,
+          "mode": 33188,
+          "mtime_ns": 1793817375639388574,
+          "size": 1971
+        },
+        "sha256": "ba92b38a7af4cedd6c2af4210dc53f8273131993e33292ef45f422a71718172c"
+      },
+      "pypdfium2/_cli/pageobjects.py": {
+        "bytes": 3697,
+        "identity": {
+          "ctime_ns": 1793817375640281926,
+          "device": 2049,
+          "inode": 10754123,
+          "links": 1,
+          "mode": 33188,
+          "mtime_ns": 1793817375640281926,
+          "size": 3697
+        },
+        "sha256": "ac88be679305ca2e5a4541579679d8e5f7c6a5b61a6b9f3752ae8e5da0657a21"
+      },
+      "pypdfium2/_cli/pdfinfo.py": {
+        "bytes": 1892,
+        "identity": {
+          "ctime_ns": 1793817375640431065,
+          "device": 2049,
+          "inode": 10754126,
+          "links": 1,
+          "mode": 33188,
+          "mtime_ns": 1793817375640392334,
+          "size": 1892
+        },
+        "sha256": "bf3f976bfbc6fa990f5338e1432e74204feb96c291f328c78f39ea8b19bc1c70"
+      },
+      "pypdfium2/_cli/render.py": {
+        "bytes": 20423,
+        "identity": {
+          "ctime_ns": 1793817375639566305,
+          "device": 2049,
+          "inode": 10754101,
+          "links": 1,
+          "mode": 33188,
+          "mtime_ns": 1793817375639502077,
+          "size": 20423
+        },
+        "sha256": "da69900c40c9e06128ce0ba10e2b6d9db1da37063a8d175c4a376b19893f1848"
+      },
+      "pypdfium2/_cli/tile.py": {
+        "bytes": 2252,
+        "identity": {
+          "ctime_ns": 1793817375639297862,
+          "device": 2049,
+          "inode": 10754094,
+          "links": 1,
+          "mode": 33188,
+          "mtime_ns": 1793817375639269671,
+          "size": 2252
+        },
+        "sha256": "6e508d4258f1fbe5bd12dc71e53e171b7cfe1daf97f5ad8a00c26442440bf043"
+      },
+      "pypdfium2/_cli/toc.py": {
+        "bytes": 1328,
+        "identity": {
+          "ctime_ns": 1793817375639760298,
+          "device": 2049,
+          "inode": 10754110,
+          "links": 1,
+          "mode": 33188,
+          "mtime_ns": 1793817375639740654,
+          "size": 1328
+        },
+        "sha256": "8c3f50d11946b67345fbfd005d65fb96c8c31361c635eeb6962eaba9484686dd"
+      },
+      "pypdfium2/_helpers/__init__.py": {
+        "bytes": 492,
+        "identity": {
+          "ctime_ns": 1793817375637127148,
+          "device": 2049,
+          "inode": 10754027,
+          "links": 1,
+          "mode": 33188,
+          "mtime_ns": 1793817375637127148,
+          "size": 492
+        },
+        "sha256": "08d4c61b172e8114c53806d55769ee6c12b720a900eb6dbda4d3713372d1a480"
+      },
+      "pypdfium2/_helpers/attachment.py": {
+        "bytes": 5190,
+        "identity": {
+          "ctime_ns": 1793817375605793729,
+          "device": 2049,
+          "inode": 10754014,
+          "links": 1,
+          "mode": 33188,
+          "mtime_ns": 1793817375605782290,
+          "size": 5190
+        },
+        "sha256": "ab82c13c39e61b570b9e7d2c4299b703439ad2589a695a6a0f2ca38a3ba88ab9"
+      },
+      "pypdfium2/_helpers/bitmap.py": {
+        "bytes": 17370,
+        "identity": {
+          "ctime_ns": 1793817375637330899,
+          "device": 2049,
+          "inode": 10754030,
+          "links": 1,
+          "mode": 33188,
+          "mtime_ns": 1793817375637254105,
+          "size": 17370
+        },
+        "sha256": "1c847e7f8e1375737477f3ff3f21e42499794558020238b5046cfa4e6f4cda3c"
+      },
+      "pypdfium2/_helpers/document.py": {
+        "bytes": 25592,
+        "identity": {
+          "ctime_ns": 1793817375636959153,
+          "device": 2049,
+          "inode": 10754022,
+          "links": 1,
+          "mode": 33188,
+          "mtime_ns": 1793817375636959153,
+          "size": 25592
+        },
+        "sha256": "dc99ff1133df4cc9e3dc345dfbdf30845274d1e6ddfe59201c3a0dd07bbde3ba"
+      },
+      "pypdfium2/_helpers/matrix.py": {
+        "bytes": 6435,
+        "identity": {
+          "ctime_ns": 1793817375636808751,
+          "device": 2049,
+          "inode": 10754018,
+          "links": 1,
+          "mode": 33188,
+          "mtime_ns": 1793817375636808751,
+          "size": 6435
+        },
+        "sha256": "8866395a615baf73ce0d5bab839df5ec4b70f3e6f1912e323ec3d182ea12f724"
+      },
+      "pypdfium2/_helpers/misc.py": {
+        "bytes": 578,
+        "identity": {
+          "ctime_ns": 1793817375637671525,
+          "device": 2049,
+          "inode": 10754041,
+          "links": 1,
+          "mode": 33188,
+          "mtime_ns": 1793817375637671525,
+          "size": 578
+        },
+        "sha256": "d03aadd6eba31f210e50319d22989b6ed65abf01a498ade3becededd9b21bdce"
+      },
+      "pypdfium2/_helpers/page.py": {
+        "bytes": 22851,
+        "identity": {
+          "ctime_ns": 1793817375605660590,
+          "device": 2049,
+          "inode": 10754009,
+          "links": 1,
+          "mode": 33188,
+          "mtime_ns": 1793817375605612542,
+          "size": 22851
+        },
+        "sha256": "c263c2468a59a5e5b4717a5f7eee707e8663dd82253e7a6578d06bef154ee5a2"
+      },
+      "pypdfium2/_helpers/pageobjects.py": {
+        "bytes": 23631,
+        "identity": {
+          "ctime_ns": 1793817375637461163,
+          "device": 2049,
+          "inode": 10754033,
+          "links": 1,
+          "mode": 33188,
+          "mtime_ns": 1793817375637421209,
+          "size": 23631
+        },
+        "sha256": "867e7129ec0d4bf6ddf3715c6a847ad52030364c1ceb54949ac9fefd9ad14e41"
+      },
+      "pypdfium2/_helpers/textpage.py": {
+        "bytes": 13301,
+        "identity": {
+          "ctime_ns": 1793817375637560668,
+          "device": 2049,
+          "inode": 10754036,
+          "links": 1,
+          "mode": 33188,
+          "mtime_ns": 1793817375637555330,
+          "size": 13301
+        },
+        "sha256": "28a7d5f6d0c6c0918682d8f7e29368ff9f00a2af86c04d658d94c7aa82c791c9"
+      },
+      "pypdfium2/_helpers/unsupported.py": {
+        "bytes": 1733,
+        "identity": {
+          "ctime_ns": 1793817375637813513,
+          "device": 2049,
+          "inode": 10754043,
+          "links": 1,
+          "mode": 33188,
+          "mtime_ns": 1793817375637813513,
+          "size": 1733
+        },
+        "sha256": "fe64f5dc1c0e24fe90ac3561a79bcc39368c2388776b02b70760be2b6a4797a9"
+      },
+      "pypdfium2/_lazy.py": {
+        "bytes": 965,
+        "identity": {
+          "ctime_ns": 1793817375605441582,
+          "device": 2049,
+          "inode": 10754005,
+          "links": 1,
+          "mode": 33188,
+          "mtime_ns": 1793817375605441582,
+          "size": 965
+        },
+        "sha256": "9887d1f9b7316dee28a24adea7e82e24b8b0e9fef92095111f1ae28eb9c0da76"
+      },
+      "pypdfium2/_library_scope.py": {
+        "bytes": 1640,
+        "identity": {
+          "ctime_ns": 1793817375638441660,
+          "device": 2049,
+          "inode": 10754067,
+          "links": 1,
+          "mode": 33188,
+          "mtime_ns": 1793817375638441660,
+          "size": 1640
+        },
+        "sha256": "ff986925aa81cf77a8fada0b1d269f785e8d028f4e4ae576fa51dec7fd52cdf7"
+      },
+      "pypdfium2/internal/__init__.py": {
+        "bytes": 236,
+        "identity": {
+          "ctime_ns": 1793817375638216657,
+          "device": 2049,
+          "inode": 10754060,
+          "links": 1,
+          "mode": 33188,
+          "mtime_ns": 1793817375638216657,
+          "size": 236
+        },
+        "sha256": "4275d69011d28d2fc540ed106e8e4f7305122f16c57e9beb4271733165c05911"
+      },
+      "pypdfium2/internal/bases.py": {
+        "bytes": 4188,
+        "identity": {
+          "ctime_ns": 1793817375638150903,
+          "device": 2049,
+          "inode": 10754056,
+          "links": 1,
+          "mode": 33188,
+          "mtime_ns": 1793817375638101533,
+          "size": 4188
+        },
+        "sha256": "8153caf206bac954eebfe146c5f52c63154a6e13380a00b31335b0da30d1b987"
+      },
+      "pypdfium2/internal/consts.py": {
+        "bytes": 6868,
+        "identity": {
+          "ctime_ns": 1793817375638331852,
+          "device": 2049,
+          "inode": 10754064,
+          "links": 1,
+          "mode": 33188,
+          "mtime_ns": 1793817375638322898,
+          "size": 6868
+        },
+        "sha256": "6f424143caa4bb0d38b984eb3950a3cb94514462306d6ca6c768413f1f18fe25"
+      },
+      "pypdfium2/internal/utils.py": {
+        "bytes": 2643,
+        "identity": {
+          "ctime_ns": 1793817375638026891,
+          "device": 2049,
+          "inode": 10754050,
+          "links": 1,
+          "mode": 33188,
+          "mtime_ns": 1793817375637985145,
+          "size": 2643
+        },
+        "sha256": "673e10ff1f58e3d32fe4b16f795282a01164fc3151218813fc191948ef09cc1a"
+      },
+      "pypdfium2/raw.py": {
+        "bytes": 268,
+        "identity": {
+          "ctime_ns": 1793817375638544963,
+          "device": 2049,
+          "inode": 10754071,
+          "links": 1,
+          "mode": 33188,
+          "mtime_ns": 1793817375638544963,
+          "size": 268
+        },
+        "sha256": "34390a3e3e0f7c20ad9cf699c569c97212838f7f08584ea44bebabf40b4880da"
+      },
+      "pypdfium2/version.json": {
+        "bytes": 160,
+        "identity": {
+          "ctime_ns": 1793817375638913402,
+          "device": 2049,
+          "inode": 10754079,
+          "links": 1,
+          "mode": 33188,
+          "mtime_ns": 1793817375638902273,
+          "size": 160
+        },
+        "sha256": "8e014e6bdfa7809e2fd39a65816d008d00433e83055833ab6ddeadc0b1a1ff1b"
+      },
+      "pypdfium2/version.py": {
+        "bytes": 5080,
+        "identity": {
+          "ctime_ns": 1793817375638785755,
+          "device": 2049,
+          "inode": 10754076,
+          "links": 1,
+          "mode": 33188,
+          "mtime_ns": 1793817375638785755,
+          "size": 5080
+        },
+        "sha256": "85fd74fecc5017c2bc4e0b9833102cd76baa4fae04b4731709ee1db404c61b8b"
+      },
+      "pypdfium2_raw/__init__.py": {
+        "bytes": 323,
+        "identity": {
+          "ctime_ns": 1793817375605145948,
+          "device": 2049,
+          "inode": 10753996,
+          "links": 1,
+          "mode": 33188,
+          "mtime_ns": 1793817375605136048,
+          "size": 323
+        },
+        "sha256": "01863185536c5a285a24daab64dfac8cf76e65fc0c0e5c00efb18ab3362f2aae"
+      },
+      "pypdfium2_raw/bindings.py": {
+        "bytes": 144884,
+        "identity": {
+          "ctime_ns": 1793817375601345428,
+          "device": 2049,
+          "inode": 10753884,
+          "links": 1,
+          "mode": 33188,
+          "mtime_ns": 1793817375601261539,
+          "size": 144884
+        },
+        "sha256": "4b6c47cd43c31724ebf086829cd5b27462b75071d5a9bb6b5ddc1f29e3417895"
+      },
+      "pypdfium2_raw/libpdfium.so": {
+        "bytes": 7551304,
+        "identity": {
+          "ctime_ns": 1793817375605029810,
+          "device": 2049,
+          "inode": 10753891,
+          "links": 1,
+          "mode": 33188,
+          "mtime_ns": 1793817375604538789,
+          "size": 7551304
+        },
+        "sha256": "31d1de7d5b5e921a9f52c53fd5b6e3c5a821889aad5313f89ca06fd9d4229924"
+      },
+      "pypdfium2_raw/version.json": {
+        "bytes": 143,
+        "identity": {
+          "ctime_ns": 1793817375605288665,
+          "device": 2049,
+          "inode": 10753998,
+          "links": 1,
+          "mode": 33188,
+          "mtime_ns": 1793817375605246466,
+          "size": 143
+        },
+        "sha256": "47d8964ca88afa4654cd936512fd884bfb95079db95c4da4c7d68d8214d4c661"
+      }
+    },
+    "record_identity": {
+      "ctime_ns": 1793817375641052551,
+      "device": 2049,
+      "inode": 10753776,
+      "links": 1,
+      "mode": 33188,
+      "mtime_ns": 1793817375641052551,
+      "size": 6235
+    },
+    "record_sha256": "bf15da51c148b3f2890c863a2cc4131aad8e0995b7bac7633e7edd3bba63d59e",
+    "schema_version": "template-office-live-installed-pdfium-provider-v1",
+    "selection": {
+      "origins": {
+        "pypdfium2": "/home/runner/work/_temp/template-native-preflight-scratch/installed/native-environment/lib/python3.14/site-packages/pypdfium2/__init__.py",
+        "pypdfium2_raw": "/home/runner/work/_temp/template-native-preflight-scratch/installed/native-environment/lib/python3.14/site-packages/pypdfium2_raw/__init__.py"
+      },
+      "site": "/home/runner/work/_temp/template-native-preflight-scratch/installed/native-environment/lib/python3.14/site-packages",
+      "version": "5.6.0"
+    },
+    "unselected_generated_console_scripts": {
+      "../../../bin/pypdfium2": {
+        "bytes": 389,
+        "identity": {
+          "ctime_ns": 1793817375640822468,
+          "device": 2049,
+          "inode": 10515631,
+          "links": 1,
+          "mode": 33261,
+          "mtime_ns": 1793817375640740727,
+          "size": 389
+        },
+        "path": "/home/runner/work/_temp/template-native-preflight-scratch/installed/native-environment/bin/pypdfium2",
+        "sha256": "6f1d37ffeb1b543b7a03f9d9e232f6542d2715a6d45a50273a0c62fcb324fb95"
+      }
+    },
+    "unselected_installation_caches": {}
+  },
+  "run_id": "3ffb2b6780f4457f8fd0744da48f522d",
+  "schema_version": "template-office-original-inline-pdfium-event-v1",
+  "scope": "templates/template_code_project",
+  "source": {
+    "commit": "a043a69116d501abb99bbc784e3d66b0ef7e57a2",
+    "source_identity": "21b5e39bada8cef43da0f4a1ae6e14d15859b1842156569f5105e4df9deb4194"
+  },
+  "wheel": {
+    "bytes": 3646387,
+    "identity": {
+      "ctime_ns": 1793817416993522223,
+      "device": 2049,
+      "inode": 10515661,
+      "links": 1,
+      "mode": 33188,
+      "mtime_ns": 1793817416993522223,
+      "size": 3646387
+    },
+    "path": "/home/runner/work/_temp/template-native-preflight-scratch/installed/pypdfium2-5.6.0-py3-none-manylinux_2_17_x86_64.manylinux2014_x86_64.whl",
+    "sha256": "515be355222cc57ae9e62cd5c7c350b8e0c863efc539f80c7d75e2811ba45cb6",
+    "source_lock_sha256": "af892b8d97ec566fe0220125a1de4bee9dfe5710c689e2b9d2c5463595a914a4",
+    "version": "5.6.0"
+  }
+}

@@ -1,0 +1,177 @@
+"""Deterministic build-time resolution — one source of truth for reproducibility.
+
+Research outputs that claim to be *reproducible* must be byte-stable across runs
+with identical inputs. The enemy is the wall clock: xelatex stamps a
+``/CreationDate`` into every PDF, manuscripts render a ``GENERATION_TIMESTAMP``,
+and data writers default to ``datetime.now()`` — so two runs of the same project
+produce different bytes and the repro-bundle hashes churn.
+
+This module centralizes the fix around the cross-ecosystem
+`SOURCE_DATE_EPOCH <https://reproducible-builds.org/specs/source-date-epoch/>`_
+standard (which xelatex/LuaTeX honor natively for ``/CreationDate``):
+
+- :func:`resolve_source_date_epoch` — the canonical epoch (int seconds) or
+  ``None`` for wall-clock mode.
+- :func:`resolve_build_timestamp` — an ISO-8601 string derived from that epoch
+  (for ``GENERATION_TIMESTAMP``, title-page dates, ``generated_at`` fields).
+- :func:`deterministic_subprocess_env` — a subprocess ``env`` mapping with
+  ``SOURCE_DATE_EPOCH`` injected, to pass to xelatex/biber.
+
+**Precedence** (highest first):
+
+1. An already-set ``SOURCE_DATE_EPOCH`` environment variable (honored verbatim —
+   lets a CI or an outer build pin the value).
+2. Deterministic mode (``deterministic=True`` or ``TEMPLATE_DETERMINISTIC`` truthy):
+   the author-date epoch of ``HEAD`` (``git log -1 --format=%ct``).
+3. Otherwise wall-clock (non-deterministic) — the historical behavior.
+
+Requested deterministic execution refuses invalid epochs or unavailable Git
+evidence. Canonical execution pins this policy before producer launch; operation
+receipts use :func:`now_utc_iso` to describe actual elapsed work.
+"""
+
+from __future__ import annotations
+
+import os
+import subprocess
+from datetime import datetime, timezone
+from pathlib import Path
+
+__all__ = [
+    "TEMPLATE_DETERMINISTIC_ENV",
+    "deterministic_subprocess_env",
+    "is_deterministic_requested",
+    "now_utc_iso",
+    "resolve_build_timestamp",
+    "resolve_source_date_epoch",
+]
+
+TEMPLATE_DETERMINISTIC_ENV = "TEMPLATE_DETERMINISTIC"
+_SOURCE_DATE_EPOCH_ENV = "SOURCE_DATE_EPOCH"
+_TRUTHY = {"1", "true", "yes", "on"}
+_ISO_Z = "%Y-%m-%dT%H:%M:%SZ"
+
+
+def now_utc_iso() -> str:
+    """Return the current wall-clock UTC as a strict ISO-8601 ``Z`` string.
+
+    This is the canonical ``YYYY-MM-DDTHH:MM:SSZ`` wall-clock timestamp, used
+    by publishing providers that stamp human-facing receipt ``timestamp_utc``
+    fields. It intentionally does not consult ``SOURCE_DATE_EPOCH`` — those
+    receipt stamps reflect the moment the operation ran, not a pinned build
+    epoch; deterministic output (renders, manifests) should use
+    :func:`resolve_build_timestamp` instead.
+    """
+    return datetime.now(timezone.utc).strftime(_ISO_Z)
+
+
+def is_deterministic_requested(deterministic: bool | None = None) -> bool:
+    """Resolve the tri-state determinism flag against the environment.
+
+    ``True``/``False`` force the mode; ``None`` consults ``TEMPLATE_DETERMINISTIC``.
+    A pre-set ``SOURCE_DATE_EPOCH`` also implies deterministic mode.
+    """
+    if deterministic is not None:
+        return deterministic
+    if os.environ.get(_SOURCE_DATE_EPOCH_ENV, "").strip():
+        return True
+    return os.environ.get(TEMPLATE_DETERMINISTIC_ENV, "").strip().lower() in _TRUTHY
+
+
+def _git_head_epoch_strict(repo_root: Path) -> int:
+    """Read a finite Git candidate epoch and raise on any failure.
+
+    Raises:
+        RuntimeError: with a descriptive message when git is unavailable, the
+            git log command fails, or its output is not a valid epoch integer.
+    """
+    try:
+        result = subprocess.run(  # noqa: S603 — fixed argv, no shell
+            ["git", "log", "-1", "--format=%ct"],
+            cwd=str(repo_root),
+            check=False,
+            capture_output=True,
+            text=True,
+            timeout=5,
+        )
+    except (FileNotFoundError, OSError, subprocess.SubprocessError) as exc:
+        raise RuntimeError(
+            f"Deterministic build failure: git invocation failed ({exc}). "
+            "Set SOURCE_DATE_EPOCH explicitly or run in a git working tree."
+        ) from exc
+    if result.returncode != 0:
+        raise RuntimeError(
+            f"Deterministic build failure: 'git log' returned exit {result.returncode}. stderr: {result.stderr.strip()}"
+        )
+    raw = result.stdout.strip()
+    try:
+        return int(raw)
+    except ValueError:
+        raise RuntimeError(f"Deterministic build failure: unparseable git epoch {raw!r}")
+
+
+def resolve_source_date_epoch(
+    *,
+    deterministic: bool | None = None,
+    repo_root: Path | None = None,
+) -> int | None:
+    """Return the deterministic epoch (UTC seconds), or ``None`` for wall-clock.
+
+    A pre-set ``SOURCE_DATE_EPOCH`` wins outright. Otherwise, in deterministic
+    mode, the ``HEAD`` commit epoch is used. Returns ``None`` only when the
+    caller explicitly operates outside deterministic mode. Invalid or missing
+    required evidence raises instead of silently substituting the wall clock.
+    """
+    preset = os.environ.get(_SOURCE_DATE_EPOCH_ENV, "").strip()
+    if preset:
+        try:
+            epoch = int(preset)
+            if epoch < 0:
+                raise ValueError("negative epoch")
+            datetime.fromtimestamp(epoch, tz=timezone.utc)
+            return epoch
+        except (ValueError, OverflowError, OSError) as exc:
+            raise ValueError("SOURCE_DATE_EPOCH must be a nonnegative representable integer epoch") from exc
+    if not is_deterministic_requested(deterministic):
+        return None
+    epoch = _git_head_epoch_strict(Path(repo_root) if repo_root is not None else Path.cwd())
+    if epoch < 0:
+        raise ValueError("Git HEAD has a negative build epoch; set SOURCE_DATE_EPOCH explicitly")
+    return epoch
+
+
+def resolve_build_timestamp(
+    *,
+    deterministic: bool | None = None,
+    repo_root: Path | None = None,
+    fmt: str = _ISO_Z,
+) -> str:
+    """Return a build timestamp string (default strict-ISO8601 ``Z``).
+
+    Deterministic mode renders the ``SOURCE_DATE_EPOCH`` / ``HEAD`` epoch in UTC;
+    otherwise the current wall-clock UTC time. Pass ``fmt`` (e.g. ``"%Y-%m-%d"``)
+    for a date-only value such as a title page.
+    """
+    epoch = resolve_source_date_epoch(deterministic=deterministic, repo_root=repo_root)
+    moment = datetime.fromtimestamp(epoch, tz=timezone.utc) if epoch is not None else datetime.now(timezone.utc)
+    return moment.strftime(fmt)
+
+
+def deterministic_subprocess_env(
+    base_env: dict[str, str] | None = None,
+    *,
+    deterministic: bool | None = None,
+    repo_root: Path | None = None,
+) -> dict[str, str]:
+    """Return a subprocess ``env`` with ``SOURCE_DATE_EPOCH`` set when deterministic.
+
+    Pass the result as ``subprocess.run(..., env=...)`` for xelatex/biber so the
+    embedded ``/CreationDate`` is pinned. In wall-clock mode this is a faithful
+    copy of ``base_env`` (default ``os.environ``) with nothing added — a safe
+    no-op, so call sites can always route through it.
+    """
+    env = dict(base_env if base_env is not None else os.environ)
+    epoch = resolve_source_date_epoch(deterministic=deterministic, repo_root=repo_root)
+    if epoch is not None:
+        env[_SOURCE_DATE_EPOCH_ENV] = str(epoch)
+    return env

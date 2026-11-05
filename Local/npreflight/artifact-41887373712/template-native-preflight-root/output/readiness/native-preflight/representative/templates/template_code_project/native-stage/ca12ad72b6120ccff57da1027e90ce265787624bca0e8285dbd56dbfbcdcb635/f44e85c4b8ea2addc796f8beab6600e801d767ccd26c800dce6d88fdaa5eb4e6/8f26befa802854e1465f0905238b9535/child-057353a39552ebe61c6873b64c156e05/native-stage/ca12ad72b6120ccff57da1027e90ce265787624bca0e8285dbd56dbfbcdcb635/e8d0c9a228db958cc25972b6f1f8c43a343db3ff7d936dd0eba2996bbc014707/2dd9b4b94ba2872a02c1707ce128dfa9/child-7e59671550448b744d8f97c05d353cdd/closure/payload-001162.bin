@@ -1,0 +1,428 @@
+"""Link validation utilities for documentation.
+
+This module provides comprehensive validation of markdown links and file references
+across the repository, ensuring all internal documentation links resolve correctly.
+"""
+
+import re
+from pathlib import Path
+
+from infrastructure.core.logging.utils import get_logger
+from infrastructure.validation.docs.scan_scope import (
+    DEFAULT_EXCLUDE_PARTS,
+    iter_markdown_files,
+    should_exclude_path,
+)
+from infrastructure.validation.paths import resolve_markdown_target
+
+logger = get_logger(__name__)
+
+_INDEX_FILES = ("AGENTS.md", "README.md", "index.md")
+
+
+def _directory_index_relative(dir_path: Path, repo_root: Path) -> Path | None:
+    """Return repo-relative path to an index file in *dir_path*, or the directory itself."""
+    repo_root_abs = repo_root.resolve()
+    for name in _INDEX_FILES:
+        index_path = dir_path / name
+        if index_path.is_file():
+            try:
+                return index_path.resolve().relative_to(repo_root_abs)
+            except ValueError:
+                return None
+    if dir_path.is_dir():
+        try:
+            return dir_path.resolve().relative_to(repo_root_abs)
+        except ValueError:
+            return None
+    return None
+
+
+class LinkValidator:
+    """Validates markdown links and file references."""
+
+    def __init__(self, repo_root: Path):
+        """Initialize validator with repository root.
+
+        Args:
+            repo_root: Root directory of the repository
+        """
+        self.repo_root = repo_root
+        self.all_files: set[Path] = set()
+        self.all_dirs: set[Path] = set()
+        self._scan_repository()
+
+    def _scan_repository(self) -> None:
+        """Scan repository for all files.
+
+        Raises:
+            OSError: If the repository root is unreadable or I/O fails during traversal.
+                Propagated to the constructor so callers know the scanner is not usable.
+        """
+        try:
+            for path in self.repo_root.rglob("*"):
+                if should_exclude_path(path, DEFAULT_EXCLUDE_PARTS | {".DS_Store"}):
+                    continue
+
+                if path.is_file():
+                    self.all_files.add(path.relative_to(self.repo_root))
+                elif path.is_dir():
+                    self.all_dirs.add(path.relative_to(self.repo_root))
+        except OSError as e:
+            logger.error(f"Failed to scan repository at {self.repo_root}: {e}")
+            raise
+
+    def extract_markdown_links(self, content: str, file_path: Path) -> list[tuple[str, str, int]]:
+        """Extract all markdown links from content, skipping those inside code blocks.
+
+        Args:
+            content: Markdown content
+            file_path: Path of the file being processed
+
+        Returns:
+            List of tuples (link_text, link_target, line_number)
+        """
+        links = []
+
+        # Pattern for [text](target) links
+        link_pattern = r"\[([^\]]+)\]\(([^)]+)\)"
+        lines = content.split("\n")
+
+        in_code_block = False
+
+        for line_num, line in enumerate(lines, 1):
+            # Track code block state (``` markers)
+            if line.strip().startswith("```"):
+                in_code_block = not in_code_block
+                continue
+
+            # Skip lines inside code blocks
+            if in_code_block:
+                continue
+
+            # Find all links in this line
+            matches = re.findall(link_pattern, line)
+            for match in matches:
+                link_text, link_target = match
+                links.append((link_text, link_target, line_num))
+
+        return links
+
+    def resolve_link_target(self, link_target: str, source_file: Path) -> tuple[Path | None, bool]:
+        """Resolve a link target to a repo-relative path.
+
+        Args:
+            link_target: The link target (relative or absolute path, may contain #anchor)
+            source_file: Path of the file containing the link
+
+        Returns:
+            Tuple of (resolved_path, is_external)
+        """
+        if link_target.startswith(("http://", "https://", "mailto:", "ftp://")):
+            return None, True
+
+        file_part = link_target.split("#", 1)[0] if "#" in link_target else link_target
+
+        if not file_part or file_part.startswith("#"):
+            return source_file, False
+
+        source_abs = source_file if source_file.is_absolute() else (self.repo_root / source_file)
+        repo_root_abs = self.repo_root.resolve()
+
+        resolved = resolve_markdown_target(link_target, source_abs, self.repo_root)
+
+        if resolved.exists and resolved.resolved is None:
+            return None, True
+
+        if file_part.endswith("/"):
+            if resolved.exists and resolved.path_type == "directory" and resolved.resolved is not None:
+                index_rel = _directory_index_relative(resolved.resolved, self.repo_root)
+                return index_rel, False
+
+            for candidate_base in (repo_root_abs, source_abs.parent):
+                candidate_dir = (candidate_base / file_part).resolve()
+                if candidate_dir.exists() and candidate_dir.is_dir() and candidate_dir.is_relative_to(repo_root_abs):
+                    index_rel = _directory_index_relative(candidate_dir, self.repo_root)
+                    return index_rel, False
+            return None, False
+
+        if not resolved.exists or resolved.resolved is None:
+            return None, False
+
+        try:
+            return resolved.resolved.relative_to(repo_root_abs), False
+        except ValueError:
+            return None, False
+
+    def validate_file_links(self, file_path: Path) -> dict[str, list[dict[str, str]]]:
+        """Validate all links in a markdown file.
+
+        Args:
+            file_path: Path to the markdown file
+
+        Returns:
+            Dictionary with 'valid' and 'broken' link lists
+        """
+        try:
+            content = file_path.read_text(encoding="utf-8")
+        except (UnicodeDecodeError, OSError) as e:
+            logger.warning(f"Could not read {file_path}: {e}")
+            return {"valid": [], "broken": []}
+
+        links = self.extract_markdown_links(content, file_path)
+        valid_links = []
+        broken_links = []
+
+        for link_text, link_target, line_num in links:
+            resolved_path, is_external = self.resolve_link_target(link_target, file_path)
+
+            if is_external:
+                # External links are considered valid (we don't check them)
+                valid_links.append(
+                    {
+                        "text": link_text,
+                        "target": link_target,
+                        "line": str(line_num),
+                        "type": "external",
+                    }
+                )
+            elif link_target.startswith("#"):
+                # Anchor links within the same file are valid
+                valid_links.append(
+                    {
+                        "text": link_text,
+                        "target": link_target,
+                        "line": str(line_num),
+                        "type": "anchor",
+                    }
+                )
+            elif "#" in link_target:
+                # Links with anchors (file.md#anchor) - check if file exists
+                if resolved_path and resolved_path in self.all_files:
+                    valid_links.append(
+                        {
+                            "text": link_text,
+                            "target": link_target,
+                            "line": str(line_num),
+                            "type": "internal_anchor",
+                        }
+                    )
+                else:
+                    broken_links.append(
+                        {
+                            "text": link_text,
+                            "target": link_target,
+                            "line": str(line_num),
+                            "type": "broken",
+                            "file": str(file_path),
+                        }
+                    )
+            elif resolved_path:
+                # Check if it's a directory reference (ends with /)
+                # If resolved_path is a file (index file), treat it as valid
+                if link_target.endswith("/"):
+                    if resolved_path in self.all_files:
+                        # Directory link resolved to an index file (AGENTS.md, README.md, etc.)
+                        valid_links.append(
+                            {
+                                "text": link_text,
+                                "target": link_target,
+                                "line": str(line_num),
+                                "type": "directory_index",
+                            }
+                        )
+                    elif resolved_path in self.all_dirs:
+                        # Directory exists but no index file found
+                        valid_links.append(
+                            {
+                                "text": link_text,
+                                "target": link_target,
+                                "line": str(line_num),
+                                "type": "directory",
+                            }
+                        )
+                    else:
+                        broken_links.append(
+                            {
+                                "text": link_text,
+                                "target": link_target,
+                                "line": str(line_num),
+                                "type": "broken",
+                                "file": str(file_path),
+                            }
+                        )
+                elif resolved_path in self.all_files:
+                    valid_links.append(
+                        {
+                            "text": link_text,
+                            "target": str(resolved_path),
+                            "line": str(line_num),
+                            "type": "internal",
+                        }
+                    )
+                else:
+                    broken_links.append(
+                        {
+                            "text": link_text,
+                            "target": link_target,
+                            "line": str(line_num),
+                            "type": "broken",
+                            "file": str(file_path),
+                        }
+                    )
+            else:
+                broken_links.append(
+                    {
+                        "text": link_text,
+                        "target": link_target,
+                        "line": str(line_num),
+                        "type": "broken",
+                        "file": str(file_path),
+                    }
+                )
+
+        return {"valid": valid_links, "broken": broken_links}
+
+    def validate_all_markdown_files(self) -> dict[str, dict[str, list[dict[str, str]]]]:
+        """Validate links in all markdown files in the repository.
+
+        Returns:
+            Dictionary mapping file paths to their validation results
+        """
+        results = {}
+
+        for md_file in iter_markdown_files([self.repo_root]):
+            relative_path = md_file.relative_to(self.repo_root)
+            logger.info(f"Validating links in {relative_path}")
+            results[str(relative_path)] = self.validate_file_links(md_file)
+
+        return results
+
+    def generate_report(self, validation_results: dict[str, dict[str, list[dict[str, str]]]]) -> str:
+        """Generate a comprehensive validation report.
+
+        Args:
+            validation_results: Results from validate_all_markdown_files
+
+        Returns:
+            Formatted report string
+        """
+        total_files = len(validation_results)
+        total_valid_links = 0
+        total_broken_links = 0
+        broken_links_details = []
+
+        for _, file_results in validation_results.items():
+            valid_count = len(file_results["valid"])
+            broken_count = len(file_results["broken"])
+
+            total_valid_links += valid_count
+            total_broken_links += broken_count
+
+            if broken_count > 0:
+                broken_links_details.extend(file_results["broken"])
+
+        # Generate report
+        report_lines = [
+            "# Markdown Link Validation Report",
+            "",
+            "## Summary",
+            "",
+            f"- **Files scanned**: {total_files}",
+            f"- **Valid links**: {total_valid_links}",
+            f"- **Broken links**: {total_broken_links}",
+            "",
+        ]
+
+        if broken_links_details:
+            report_lines.extend(
+                [
+                    "## Broken Links",
+                    "",
+                    "| File | Line | Link Text | Target |",
+                    "|------|------|-----------|--------|",
+                ]
+            )
+
+            for broken in broken_links_details:
+                report_lines.append(
+                    f"| {broken['file']} | {broken['line']} | {broken['text']} | {broken['target']} |"  # noqa: E501
+                )
+
+            report_lines.append("")
+        else:
+            report_lines.extend(
+                [
+                    "## ✅ All Links Valid",
+                    "",
+                    "No broken links found in the repository!",
+                    "",
+                ]
+            )
+
+        # File-by-file breakdown
+        report_lines.extend(
+            [
+                "## File-by-File Results",
+                "",
+                "| File | Valid | Broken |",
+                "|------|-------|--------|",
+            ]
+        )
+
+        for file_path, file_results in validation_results.items():
+            valid_count = len(file_results["valid"])
+            broken_count = len(file_results["broken"])
+            report_lines.append(f"| {file_path} | {valid_count} | {broken_count} |")
+
+        return "\n".join(report_lines)
+
+
+def main(argv: list[str] | None = None) -> int:
+    """Main entry point for link validation."""
+    import argparse
+
+    parser = argparse.ArgumentParser(description="Validate markdown links in repository")
+    parser.add_argument("--output", type=str, help="Output file for validation report")
+    parser.add_argument("--verbose", action="store_true", help="Enable verbose logging")
+
+    args = parser.parse_args(argv)
+
+    # Setup logging
+    if args.verbose:
+        import logging
+
+        logging.getLogger().setLevel(logging.INFO)
+
+    # Run validation
+    repo_root = Path.cwd()
+    validator = LinkValidator(repo_root)
+
+    logger.info("Starting markdown link validation...")
+    results = validator.validate_all_markdown_files()
+
+    # Generate report
+    report = validator.generate_report(results)
+
+    # Count broken links
+    total_broken = sum(len(file_results["broken"]) for file_results in results.values())
+
+    if args.output:
+        _output_path = Path(args.output)
+        _tmp = _output_path.with_suffix(_output_path.suffix + ".tmp")
+        try:
+            _tmp.write_text(report, encoding="utf-8")
+            _tmp.replace(_output_path)
+        except OSError:
+            _tmp.unlink(missing_ok=True)
+            raise
+        logger.info(f"Report written to {args.output}")
+    else:
+        logger.info(report)
+
+    # Return exit code based on validation results
+    return 0 if total_broken == 0 else 1
+
+
+if __name__ == "__main__":
+    exit(main())

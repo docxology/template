@@ -1,0 +1,202 @@
+"""Project-path resolution primitives — the foundation layer's view of ``projects/``.
+
+These are pure ``pathlib`` helpers with no dependency on the higher-level
+``infrastructure.project`` package, so true-foundation modules
+(``core.files``, ``core.runtime``) can resolve project directories without the
+foundation importing upward into ``project`` (which would create a
+``core ↔ project`` layering cycle). ``infrastructure.project.discovery``
+re-exports these names, so existing ``from infrastructure.project.discovery
+import resolve_project_root`` call sites keep working unchanged.
+"""
+
+from __future__ import annotations
+
+from pathlib import Path
+
+#: Typed subfolders under ``projects/`` that hold non-rendered lifecycle mirrors.
+#: Their nested projects are deliberately excluded from discovery so they never
+#: enter the render set. Only ``templates/`` (public exemplars) and optional
+#: ``active/`` hot-seat entries are discovered. ``ongoing/`` holds long-lived
+#: projects with no publication target — visible and qualified-resolvable
+#: (``ongoing/<name>``) but never default-rendered. Keep in sync with
+#: :data:`infrastructure.project.linking.LIFECYCLE_LINK_DIRS`.
+NON_RENDERED_SUBDIRS: frozenset[str] = frozenset({"working", "ongoing", "archive"})
+
+_MANUSCRIPT_SOURCE_SUFFIXES: frozenset[str] = frozenset({".md", ".tex"})
+_MANUSCRIPT_AUXILIARY_NAMES: frozenset[str] = frozenset(
+    {"AGENTS.md", "README.md", "SKILL.md", "SYNTAX.md", "preamble.md"}
+)
+
+
+def find_repo_root() -> Path:
+    """Return the repository root (the directory containing ``infrastructure/``).
+
+    This module lives at ``infrastructure/core/project_paths.py``, so the repo
+    root is two parents up from this file. Centralising the computation here lets
+    callers stop hard-coding their own ``Path(__file__).resolve().parents[N]``
+    depth, which is fragile under file moves and easy to get off by one.
+    """
+    return Path(__file__).resolve().parents[2]
+
+
+def _has_manuscript_sources(directory: Path) -> bool:
+    """Return whether *directory* contains renderable manuscript source files."""
+    if not directory.is_dir():
+        return False
+    try:
+        return any(
+            path.is_file()
+            and path.suffix.lower() in _MANUSCRIPT_SOURCE_SUFFIXES
+            and path.name not in _MANUSCRIPT_AUXILIARY_NAMES
+            for path in directory.rglob("*")
+        )
+    except OSError:
+        return False
+
+
+def resolve_source_manuscript_dir(project_root: Path | str) -> Path:
+    """Return the canonical populated manuscript source directory for a project.
+
+    The conventional ``manuscript/`` tree wins when it contains real Markdown
+    or TeX source.  Projects that keep their manuscript under
+    ``docs/manuscript/`` are supported without a compatibility symlink.  A
+    config-only ``manuscript/`` directory therefore cannot shadow a populated
+    ``docs/manuscript/`` tree.  When neither candidate is populated, the
+    conventional path is returned so existing diagnostics remain stable.
+    """
+    root = Path(project_root)
+    conventional = root / "manuscript"
+    documentation = root / "docs" / "manuscript"
+    for candidate in (conventional, documentation):
+        if _has_manuscript_sources(candidate):
+            return candidate
+    return conventional
+
+
+def validate_project_name(project_name: str) -> str:
+    """Validate and normalize a project-relative name.
+
+    Low-level helpers can be called without the interactive CLI's roster
+    validation. Reject absolute paths, traversal components, NUL bytes, and
+    ambiguous separators while allowing qualified lifecycle names such as
+    ``templates/template_code_project``.
+
+    This is lexical validation only. Managed lifecycle symlinks are an
+    intentional workspace contract and are handled separately by
+    :func:`resolve_project_root`.
+    """
+    if not isinstance(project_name, str) or not project_name:
+        raise ValueError("project name must be a non-empty string")
+    if "\x00" in project_name:
+        raise ValueError("project name must not contain NUL bytes")
+
+    normalized = project_name.replace("\\", "/")
+    parts = normalized.split("/")
+    if (
+        normalized.startswith("/")
+        or (len(parts[0]) == 2 and parts[0][1] == ":")
+        or any(part in {"", ".", ".."} for part in parts)
+    ):
+        raise ValueError(f"project name must be a relative path without traversal: {project_name!r}")
+    return "/".join(parts)
+
+
+def resolve_project_root(repo_root: Path | str, project_name: str) -> Path:
+    """Return the directory for *project_name*, preferring the hot seat over WIP trees.
+
+    Use this when a tool should find a work-in-progress tree (for example COGANT) that has not
+    been promoted to ``projects/active/`` yet. If ``projects/active/<project_name>`` exists and
+    looks like a project source tree, that path wins; otherwise
+    ``projects/working/<project_name>`` is used when present, then a flat
+    standalone ``projects/<project_name>`` tree. A skeletal generated-output
+    directory does not shadow an actual WIP source tree.
+
+    If none of those exist, returns ``projects/active/<project_name>`` so callers get a
+    stable path for error messages.
+
+    Args:
+        repo_root: Repository root (directory containing ``infrastructure/``).
+        project_name: Bare or qualified relative project name
+            (e.g. ``"cogant"`` or ``"templates/template_code_project"``).
+
+    Returns:
+        Absolute resolved path to the project directory.
+    """
+    if isinstance(repo_root, str):
+        repo_root = Path(repo_root)
+    repo_root = repo_root.resolve()
+    project_name = validate_project_name(project_name)
+    projects_root = (repo_root / "projects").resolve()
+
+    def confined_candidate(relative_name: str) -> Path:
+        """Resolve a candidate while preserving intentional leaf symlinks.
+
+        Public and lifecycle projects may be represented by a managed symlink
+        whose target lives in the private sibling workspace. That leaf-link
+        contract remains supported. A symlink hidden in an intermediate path,
+        however, cannot redirect a low-level caller outside ``projects/``.
+        """
+        raw = projects_root.joinpath(*relative_name.split("/"))
+        resolved = raw.resolve(strict=False)
+        if raw.is_symlink():
+            return resolved
+        try:
+            resolved.relative_to(projects_root)
+        except ValueError as exc:
+            raise ValueError(f"project path escapes projects/: {relative_name!r}") from exc
+        return resolved
+
+    def has_project_markers(path: Path) -> bool:
+        """Return True if the directory contains project marker files."""
+        return any((path / marker).exists() for marker in ("src", "tests", "scripts", "manuscript"))
+
+    # A name that already carries a typed-subfolder prefix (e.g. ``active/demo``,
+    # ``working/draft``, ``templates/template_code_project``) is resolved directly
+    # under ``projects/`` without re-prepending the hot-seat prefix.
+    head = project_name.split("/", 1)[0]
+    if head in (NON_RENDERED_SUBDIRS | {"active", "templates"}):
+        qualified = confined_candidate(project_name)
+        if qualified.is_dir():
+            return qualified
+        return qualified
+
+    primary = confined_candidate(f"active/{project_name}")
+    if primary.is_dir() and has_project_markers(primary):
+        return primary
+    wip = confined_candidate(f"working/{project_name}")
+    if wip.is_dir():
+        return wip
+    # A flat standalone tree only wins outright when it carries source markers.
+    # An output-only flat skeleton (e.g. a stale ``projects/<name>/output/``
+    # minted by a prior run) must not shadow a real exemplar under
+    # ``projects/templates/`` — that shadow made bare-name consumers such as
+    # ``build_evidence_graph`` silently see an empty project.
+    flat = confined_candidate(project_name)
+    if flat.is_dir() and has_project_markers(flat):
+        return flat
+    # Public canonical exemplars live under ``projects/templates/<name>`` and
+    # must resolve by bare name as well. Without this, an output-only shadow
+    # under ``projects/active/<name>`` (or the stable error-path fallback below)
+    # shadows a real exemplar source tree, so consumers such as
+    # ``infrastructure.autoresearch.build_autoresearch_plan`` silently load
+    # default config instead of the exemplar's own. Checked after the
+    # hot-seat/WIP/flat trees so an actually-promoted project still wins.
+    templated = confined_candidate(f"templates/{project_name}")
+    if templated.is_dir() and has_project_markers(templated):
+        return templated
+    # Marker-less flat tree with no exemplar counterpart: keep the historical
+    # behavior of returning it so bespoke layouts and error paths still resolve.
+    if flat.is_dir():
+        return flat
+    if primary.is_dir():
+        return primary
+    return primary
+
+
+__all__ = [
+    "NON_RENDERED_SUBDIRS",
+    "find_repo_root",
+    "resolve_project_root",
+    "resolve_source_manuscript_dir",
+    "validate_project_name",
+]

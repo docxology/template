@@ -1,0 +1,29 @@
+{
+  "nested_tool_artifacts": [],
+  "nonce": "828eea0575403068aa4e3c3827b61eb5",
+  "original_checkpoint": {
+    "path": "output/readiness/native-preflight/representative/templates/template_code_project/native-stage/ca12ad72b6120ccff57da1027e90ce265787624bca0e8285dbd56dbfbcdcb635/f44e85c4b8ea2addc796f8beab6600e801d767ccd26c800dce6d88fdaa5eb4e6/8f26befa802854e1465f0905238b9535/child-057353a39552ebe61c6873b64c156e05/native-stage/ca12ad72b6120ccff57da1027e90ce265787624bca0e8285dbd56dbfbcdcb635/09f6d8f4c028a2aa37e496f41d94c2b3334eb37c42da253e48f7f43e45bc9903/dc379afb272205d27eca416c382929f4/child-828eea0575403068aa4e3c3827b61eb5/original.json",
+    "sha256": "d5c75224756978a34f30f0f857967dee1010cfb1fe6400679d80aa41e1f6c2c8"
+  },
+  "parent_pid": 19375,
+  "pipeline_run_id": "c1d845afd8ca444ca4629e4f89d5239a",
+  "request": {
+    "path": "output/readiness/native-preflight/representative/templates/template_code_project/native-stage/ca12ad72b6120ccff57da1027e90ce265787624bca0e8285dbd56dbfbcdcb635/f44e85c4b8ea2addc796f8beab6600e801d767ccd26c800dce6d88fdaa5eb4e6/8f26befa802854e1465f0905238b9535/child-057353a39552ebe61c6873b64c156e05/native-stage/ca12ad72b6120ccff57da1027e90ce265787624bca0e8285dbd56dbfbcdcb635/09f6d8f4c028a2aa37e496f41d94c2b3334eb37c42da253e48f7f43e45bc9903/dc379afb272205d27eca416c382929f4/child-828eea0575403068aa4e3c3827b61eb5/request.json",
+    "sha256": "85872ce2b480617e434f36997c6d114b1965ba30ba886d4b11b6e4d39d9c007c"
+  },
+  "request_digest": "8419068d65eeee4d5f3536710bed065d3e956a2d3ad18c70887860c7432a12df",
+  "result": {
+    "path": "output/readiness/native-preflight/representative/templates/template_code_project/native-stage/ca12ad72b6120ccff57da1027e90ce265787624bca0e8285dbd56dbfbcdcb635/f44e85c4b8ea2addc796f8beab6600e801d767ccd26c800dce6d88fdaa5eb4e6/8f26befa802854e1465f0905238b9535/child-057353a39552ebe61c6873b64c156e05/native-stage/ca12ad72b6120ccff57da1027e90ce265787624bca0e8285dbd56dbfbcdcb635/09f6d8f4c028a2aa37e496f41d94c2b3334eb37c42da253e48f7f43e45bc9903/dc379afb272205d27eca416c382929f4/child-828eea0575403068aa4e3c3827b61eb5/result.json",
+    "sha256": "47d5698532b1c48f30fa9b9f0272b03aa637a102bea3d60b780c07dc5f4c83e6"
+  },
+  "run_id": "3ffb2b6780f4457f8fd0744da48f522d",
+  "schema_version": "template-fixed-native-stage-child-observation-v1",
+  "scope": "templates/template_code_project",
+  "script_intent_authority": "Source stage worker only; child signed OS belongs to parent ToolAPI",
+  "stage_artifacts": [],
+  "stage_children": [],
+  "stage_exception": null,
+  "stage_key": "analysis:scripts/z_generate_manuscript_variables.py",
+  "stage_return_code": 0,
+  "worker_pid": 30281
+}

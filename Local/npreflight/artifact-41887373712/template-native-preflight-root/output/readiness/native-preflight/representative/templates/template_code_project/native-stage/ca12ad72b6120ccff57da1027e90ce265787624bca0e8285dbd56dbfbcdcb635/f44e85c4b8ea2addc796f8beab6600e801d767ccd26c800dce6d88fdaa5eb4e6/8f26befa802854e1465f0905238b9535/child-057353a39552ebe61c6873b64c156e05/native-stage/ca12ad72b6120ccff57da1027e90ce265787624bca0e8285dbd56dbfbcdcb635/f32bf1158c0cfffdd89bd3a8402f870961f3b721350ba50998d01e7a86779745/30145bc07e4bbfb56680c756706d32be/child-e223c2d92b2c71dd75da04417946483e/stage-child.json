@@ -1,0 +1,20 @@
+{
+  "artifact": {
+    "path": "output/readiness/native-preflight/representative/templates/template_code_project/native-stage/ca12ad72b6120ccff57da1027e90ce265787624bca0e8285dbd56dbfbcdcb635/f44e85c4b8ea2addc796f8beab6600e801d767ccd26c800dce6d88fdaa5eb4e6/8f26befa802854e1465f0905238b9535/child-057353a39552ebe61c6873b64c156e05/native-stage/ca12ad72b6120ccff57da1027e90ce265787624bca0e8285dbd56dbfbcdcb635/f32bf1158c0cfffdd89bd3a8402f870961f3b721350ba50998d01e7a86779745/30145bc07e4bbfb56680c756706d32be/child-e223c2d92b2c71dd75da04417946483e/observation.json",
+    "sha256": "54fc685bf1a38e62227a8f6709b54dce5be1bc350639e3bd45bd26ad38138ad9"
+  },
+  "closure_artifact": {
+    "path": "output/readiness/native-preflight/representative/templates/template_code_project/native-stage/ca12ad72b6120ccff57da1027e90ce265787624bca0e8285dbd56dbfbcdcb635/f44e85c4b8ea2addc796f8beab6600e801d767ccd26c800dce6d88fdaa5eb4e6/8f26befa802854e1465f0905238b9535/child-057353a39552ebe61c6873b64c156e05/native-stage/ca12ad72b6120ccff57da1027e90ce265787624bca0e8285dbd56dbfbcdcb635/f32bf1158c0cfffdd89bd3a8402f870961f3b721350ba50998d01e7a86779745/30145bc07e4bbfb56680c756706d32be/child-e223c2d92b2c71dd75da04417946483e/closure/receipt.json",
+    "sha256": "a5da76907e7d6487d86f498c81ab8383b826361d9e15508de7b33130a744fd4f"
+  },
+  "original_exit_code": 0,
+  "process_artifact": {
+    "path": "output/readiness/native-preflight/representative/templates/template_code_project/native-stage/ca12ad72b6120ccff57da1027e90ce265787624bca0e8285dbd56dbfbcdcb635/f44e85c4b8ea2addc796f8beab6600e801d767ccd26c800dce6d88fdaa5eb4e6/8f26befa802854e1465f0905238b9535/child-057353a39552ebe61c6873b64c156e05/native-stage/ca12ad72b6120ccff57da1027e90ce265787624bca0e8285dbd56dbfbcdcb635/f32bf1158c0cfffdd89bd3a8402f870961f3b721350ba50998d01e7a86779745/30145bc07e4bbfb56680c756706d32be/child-e223c2d92b2c71dd75da04417946483e/native-stage-child.json",
+    "sha256": "be5e5c5cfcbb329068f1797792ad71b5bf2208b786f19cd7d68c0654082c3735"
+  },
+  "schema_version": "template-fixed-native-stage-child-packet-v1",
+  "specification_artifact": {
+    "path": "output/readiness/native-preflight/representative/templates/template_code_project/native-stage/ca12ad72b6120ccff57da1027e90ce265787624bca0e8285dbd56dbfbcdcb635/f44e85c4b8ea2addc796f8beab6600e801d767ccd26c800dce6d88fdaa5eb4e6/8f26befa802854e1465f0905238b9535/child-057353a39552ebe61c6873b64c156e05/native-stage/ca12ad72b6120ccff57da1027e90ce265787624bca0e8285dbd56dbfbcdcb635/f32bf1158c0cfffdd89bd3a8402f870961f3b721350ba50998d01e7a86779745/30145bc07e4bbfb56680c756706d32be/child-e223c2d92b2c71dd75da04417946483e/specification.json",
+    "sha256": "12f0c0b41f54513493850d8d71e15984d631ca9021a3a82c486d96fd3c6cce44"
+  }
+}

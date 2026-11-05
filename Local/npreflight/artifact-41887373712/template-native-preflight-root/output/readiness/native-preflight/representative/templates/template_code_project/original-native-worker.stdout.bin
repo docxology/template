@@ -1,0 +1,524 @@
+Discovered 9 manuscript file(s):
+  Main sections (8):
+    • 00_abstract.md
+    • 01_introduction.md
+    • 02_methodology.md
+    • 03_results.md
+    • 04_conclusion.md
+    • 05_experimental_setup.md
+    • 06_reproducibility.md
+    • 07_scope_and_related_work.md
+  References (1):
+    • 99_references.md
+Discovered 11 manuscript file(s):
+  Main sections (9):
+    • 00_00_transmission_begin.md
+    • 00_abstract.md
+    • 01_introduction.md
+    • 02_methodology.md
+    • 03_results.md
+    • 04_conclusion.md
+    • 05_experimental_setup.md
+    • 06_reproducibility.md
+    • 07_scope_and_related_work.md
+  References (2):
+    • 99_references.md
+    • 99_zz_transmission_end.md
+Loading pipeline definition from /home/runner/work/template/template/infrastructure/core/pipeline/pipeline.yaml
+
+  Validating figure registry...
+Figure registry loaded: 6 figure(s)
+All 6 figure references verified
+Discovered 11 manuscript file(s):
+  Main sections (9):
+    • 00_00_transmission_begin.md
+    • 00_abstract.md
+    • 01_introduction.md
+    • 02_methodology.md
+    • 03_results.md
+    • 04_conclusion.md
+    • 05_experimental_setup.md
+    • 06_reproducibility.md
+    • 07_scope_and_related_work.md
+  References (2):
+    • 99_references.md
+    • 99_zz_transmission_end.md
+[STAGE-02] Discovering analysis scripts in projects/templates/template_code_project/...
+[STAGE-02] Using 5 config-declared analysis script(s) from manuscript/config.yaml
+Found: optimization_analysis.py (project: templates/template_code_project)
+Found: 04_benchmark_stage.py (project: templates/template_code_project)
+Found: build_dashboard.py (project: templates/template_code_project)
+Found: generate_api_docs.py (project: templates/template_code_project)
+Found: z_generate_manuscript_variables.py (project: templates/template_code_project)
+
+[1/6] Environment Setup (16% complete)
+  Elapsed: 0s | ETA: 0s
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+==================================================
+STAGE 00: Environment Setup (Project: templates/template_code_project)
+==================================================
+Python 3.14.4 available
+All 3 required packages found
+All 2 build tools available
+All 4 required directories present
+Discovering available projects...
+Target project resolved: /home/runner/work/_temp/template-native-preflight-root/projects/templates/template_code_project
+Discovered 25 valid project(s):
+    template_active_inference: src, tests, scripts, manuscript
+    template_advanced_literature_review: src, tests, scripts, manuscript
+    template_autopoiesis: src, tests, scripts, manuscript
+    template_autoresearch_project: src, tests, scripts, manuscript
+    template_autoscientists: src, tests, scripts, manuscript
+    template_code_project: src, tests, scripts, manuscript
+    template_data_descriptor: src, tests, scripts, manuscript
+    template_eda_notebook: src, tests, scripts, manuscript
+    template_experiment_tree: src, tests, scripts, manuscript
+    template_formal: src, tests, scripts, manuscript
+    template_gold_refinement: src, tests, scripts, manuscript
+    template_literature_meta_analysis: src, tests, scripts, manuscript
+    template_madlib: src, tests, scripts, manuscript
+    template_methods_paper: src, tests, scripts, manuscript
+    template_newspaper: src, tests, scripts, manuscript
+    template_pitch_deck: src, tests, scripts, manuscript
+    template_pools_rules_tools: src, tests, scripts, manuscript
+    template_prose_project: src, tests, scripts, manuscript
+    template_redacted_report: src, tests, scripts, manuscript
+    template_registered_report: src, tests, scripts, manuscript
+    template_search_project: src, tests, scripts, manuscript
+    template_sia: src, tests, scripts, manuscript
+    template_storybook: src, tests, scripts, manuscript
+    template_template: src, tests, scripts, manuscript
+    template_textbook: src, tests, scripts, manuscript
+
+==================================================
+Setup Summary
+==================================================
+SUCCEEDED: Python version
+SUCCEEDED: Dependencies
+SUCCEEDED: Build tools
+SUCCEEDED: Source structure
+SUCCEEDED: Project discovery
+SUCCEEDED: Setup-hook prerequisites (no execution)
+
+✅ Environment setup complete - ready to proceed
+✓ Stage 1 completed successfully (36.8s)
+
+[2/6] Project Tests (33% complete)
+  Elapsed: 37s | ETA: 1m 15s
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+==================================================
+STAGE 01: Run Tests (Project: templates/template_code_project)
+==================================================
+  Resource usage (Test stage start): Memory: 89 MB
+
+==================================================
+Phase 1/1: Project Tests (templates/template_code_project) (Only)
+==================================================
+Multiple manuscript configs found under /home/runner/work/_temp/template-native-preflight-root/projects; pass project_name explicitly
+
+  Running project tests for 'templates/template_code_project' (90% coverage threshold)...
+Test path: /home/runner/work/_temp/template-native-preflight-root/projects/templates/template_code_project/tests
+Coverage target: /home/runner/work/_temp/template-native-preflight-root/projects/templates/template_code_project/src (90% minimum)
+Cleaning coverage database files...
+Coverage database cleanup completed
+============================= test session starts ==============================
+......platform linux -- Python 3.14.4, pytest-9.0.3, pluggy-1.6.0 -- /home/runner/work/_temp/template-native-preflight-scratch/installed/native-environment/bin/python
+.cachedir: .pytest_cache
+.....benchmark: 5.2.3 (defaults: timer=time.perf_counter disable_gc=False min_rounds=5 min_time=0.000005 max_time=1.0 calibration_precision=10 warmup=False warmup_iterations=100000)
+.hypothesis profile 'ci' -> database=None, deadline=None, print_blob=True, derandomize=True, suppress_health_check=(HealthCheck.too_slow,)
+rootdir: /home/runner/work/_temp/template-native-preflight-root/projects/templates/template_code_project
+.configfile: pyproject.toml
+................plugins: jaxtyping-0.3.11, asyncio-1.3.0, xdist-3.8.0, benchmark-5.2.3, timeout-2.4.0, cov-7.0.0, hypothesis-6.152.1, pytest_httpserver-1.1.3
+.asyncio: mode=Mode.STRICT, debug=False, asyncio_default_fixture_loop_scope=None, asyncio_default_test_loop_scope=function
+...collecting ... collected 296 items / 4 deselected / 292 selected
+
+.tests/analysis/test_analysis_coverage.py::TestSdkLogging::test_get_logger_uses_sdk PASSED [  0%]
+.tests/analysis/test_analysis_coverage.py::TestSdkLogging::test_log_success_emits_message PASSED [  0%]
+.tests/analysis/test_analysis_coverage.py::TestValidateOutputs::test_returns_summary_when_infra_available PASSED [  1%]
+.tests/analysis/test_analysis_coverage.py::TestValidateOutputs::test_handles_validation_error PASSED [  1%]
+.tests/analysis/test_analysis_coverage.py::TestValidateOutputs::test_handles_unexpected_error PASSED [  1%]
+.tests/analysis/test_analysis_coverage.py::TestValidateOutputs::test_logs_integrity_issues_when_present PASSED [  2%]
+.tests/analysis/test_analysis_coverage.py::TestSaveValidationReport::test_returns_none_for_empty_report PASSED [  2%]
+.tests/analysis/test_analysis_coverage.py::TestSaveValidationReport::test_saves_json PASSED [  2%]
+.tests/analysis/test_analysis_coverage.py::TestSaveValidationReport::test_returns_none_on_write_oserror PASSED [  3%]
+.tests/analysis/test_analysis_coverage.py::TestSaveValidationReport::test_returns_none_when_reports_path_is_file PASSED [  3%]
+.tests/analysis/test_analysis_coverage.py::TestStabilityScoreBranches::test_recommends_adaptive_step_when_error_large PASSED [  3%]
+.tests/analysis/test_analysis_coverage.py::TestScientificInfraPaths::test_stability_uses_infrastructure_report PASSED [  4%]
+.tests/analysis/test_analysis_coverage.py::TestScientificInfraPaths::test_benchmark_uses_infrastructure_report PASSED [  4%]
+.tests/analysis/test_analysis_coverage.py::TestExtractMetadataExtended::test_includes_convergence_rate_with_history PASSED [  4%]
+.tests/analysis/test_analysis_coverage.py::TestExtractMetadataExtended::test_returns_none_on_bad_results PASSED [  5%]
+.tests/analysis/test_analysis_coverage.py::TestCitationsExtended::test_generates_all_formats_when_infra PASSED [  5%]
+.tests/analysis/test_analysis_coverage.py::TestCitationsExtended::test_returns_none_on_missing_title PASSED [  5%]
+.tests/analysis/test_analysis_coverage.py::TestPublishingExtended::test_writes_citation_files PASSED [  6%]
+.tests/analysis/test_analysis_coverage.py::TestPublishingExtended::test_handles_missing_metadata_keys PASSED [  6%]
+.tests/analysis/test_analysis_coverage.py::TestMainErrors::test_main_reraises_script_execution_error PASSED [  6%]
+.tests/analysis/test_analysis_coverage.py::TestMainErrors::test_main_reraises_template_error PASSED [  7%]
+.tests/analysis/test_analysis_coverage.py::TestMainErrors::test_main_reraises_unexpected_error PASSED [  7%]
+.tests/analysis/test_analysis_coverage.py::TestMainErrors::test_main_reraises_import_error PASSED [  7%]
+.tests/analysis/test_analysis_coverage.py::TestMainErrors::test_main_reraises_file_not_found_error PASSED [  8%]
+.tests/analysis/test_analysis_coverage.py::TestRegisterFigure::test_register_figure_writes_registry PASSED [  8%]
+.tests/analysis/test_analysis_coverage.py::TestRegisterFigure::test_register_figure_handles_oserror PASSED [  8%]
+.tests/analysis/test_analysis_coverage.py::TestRequiredSdk::test_infrastructure_import_fails_without_sdk PASSED [  9%]
+.tests/analysis/test_analysis_integration.py::TestRunConvergenceExperiment::test_returns_all_configured_step_sizes PASSED [  9%]
+.tests/analysis/test_analysis_integration.py::TestRunConvergenceExperiment::test_on_step_callback PASSED [  9%]
+.tests/analysis/test_analysis_integration.py::TestSaveOptimizationResults::test_csv_serializes_full_solution_vector PASSED [ 10%]
+.tests/analysis/test_analysis_integration.py::TestScientificAnalysis::test_stability_analysis_writes_report PASSED [ 10%]
+.tests/analysis/test_analysis_integration.py::TestScientificAnalysis::test_benchmark_writes_report PASSED [ 10%]
+.tests/analysis/test_analysis_integration.py::TestExtractOptimizationMetadata::test_extracts_best_step_size PASSED [ 11%]
+.tests/analysis/test_analysis_integration.py::TestExtractOptimizationMetadata::test_extract_metadata_failure_on_empty PASSED [ 11%]
+.tests/analysis/test_analysis_integration.py::TestAnalysisMathHelpers::test_stability_score_standalone PASSED [ 11%]
+.tests/analysis/test_analysis_integration.py::TestAnalysisMathHelpers::test_benchmark_timings_standalone PASSED [ 12%]
+.tests/analysis/test_analysis_integration.py::TestPublishingHelpers::test_citations_and_save_materials PASSED [ 12%]
+.tests/analysis/test_analysis_integration.py::TestPublishingHelpers::test_save_publishing_materials_handles_missing_keys PASSED [ 13%]
+.tests/analysis/test_analysis_integration.py::TestValidationAndRegistration::test_validate_and_save_report PASSED [ 13%]
+.tests/analysis/test_analysis_integration.py::TestValidationAndRegistration::test_register_figure PASSED [ 13%]
+.tests/analysis/test_analysis_integration.py::TestStabilityAnalysis::test_stability_analysis_execution PASSED [ 14%]
+.tests/analysis/test_analysis_integration.py::TestStabilityAnalysis::test_stability_visualization PASSED [ 14%]
+.tests/analysis/test_analysis_integration.py::TestPerformanceBenchmarking::test_performance_benchmarking_execution PASSED [ 14%]
+.tests/analysis/test_analysis_integration.py::TestPerformanceBenchmarking::test_performance_visualization PASSED [ 15%]
+.tests/analysis/test_analysis_integration.py::TestCompareAlgorithms::test_compare_returns_algorithm_comparison PASSED [ 15%]
+.tests/analysis/test_analysis_integration.py::TestCompareAlgorithms::test_compare_best_variant_converged PASSED [ 15%]
+.tests/analysis/test_analysis_integration.py::TestCompareAlgorithms::test_compare_pre_computed_results PASSED [ 16%]
+.tests/analysis/test_analysis_integration.py::TestCompareAlgorithms::test_compare_convergence_summary_all_converged PASSED [ 16%]
+.tests/analysis/test_analysis_integration.py::TestCompareAlgorithms::test_compare_ranking_table_structure PASSED [ 16%]
+.tests/analysis/test_analysis_integration.py::TestCompareAlgorithms::test_compare_with_timing_enabled PASSED [ 17%]
+.tests/analysis/test_analysis_integration.py::TestCompareAlgorithms::test_compare_with_stability_check PASSED [ 17%]
+.tests/analysis/test_analysis_integration.py::TestCompareAlgorithms::test_compare_history_convergence_rate PASSED [ 17%]
+.tests/analysis/test_analysis_integration.py::TestCompareAlgorithms::test_compare_convergence_rate_zero_when_single_history PASSED [ 18%]
+.tests/analysis/test_analysis_integration.py::TestCompareAlgorithms::test_compare_fastest_slowest_convergence PASSED [ 18%]
+.tests/analysis/test_analysis_integration.py::TestMultiFactorAnalysis::test_multi_factor_returns_report PASSED [ 18%]
+.tests/analysis/test_analysis_integration.py::TestMultiFactorAnalysis::test_composite_score_in_range PASSED [ 19%]
+.tests/analysis/test_analysis_integration.py::TestMultiFactorAnalysis::test_factor_weights_sum_to_one PASSED [ 19%]
+.tests/analysis/test_analysis_integration.py::TestMultiFactorAnalysis::test_recommendations_non_empty PASSED [ 19%]
+.tests/analysis/test_analysis_integration.py::TestMultiFactorAnalysis::test_custom_factor_weights PASSED [ 20%]
+.tests/analysis/test_analysis_integration.py::TestMultiFactorAnalysis::test_custom_factor_weights_with_unknown_key PASSED [ 20%]
+.tests/analysis/test_analysis_integration.py::TestMultiFactorAnalysis::test_factor_weights_zero_total_skips_normalisation PASSED [ 20%]
+.tests/analysis/test_analysis_integration.py::TestMultiFactorAnalysis::test_with_pre_computed_comparison PASSED [ 21%]
+.tests/analysis/test_analysis_integration.py::TestMultiFactorAnalysis::test_degenerate_empty_variants PASSED [ 21%]
+.tests/analysis/test_analysis_integration.py::TestMultiFactorAnalysis::test_factor_breakdown_keys PASSED [ 21%]
+.tests/analysis/test_analysis_integration.py::TestMultiFactorAnalysis::test_stability_fallback_recomputes_when_scores_none PASSED [ 22%]
+.tests/analysis/test_analysis_integration.py::TestMultiFactorAnalysis::test_recommendation_low_convergence PASSED [ 22%]
+.tests/analysis/test_analysis_integration.py::TestMultiFactorAnalysis::test_recommendation_low_stability PASSED [ 22%]
+.tests/analysis/test_analysis_integration.py::TestMultiFactorAnalysis::test_variant_score_unconverged_returns_negative PASSED [ 23%]
+.tests/analysis/test_analysis_integration.py::TestAlphaSweepConfigResolvedAlphas::test_resolved_alphas_raises_when_all_none PASSED [ 23%]
+.tests/analysis/test_analysis_integration.py::TestAlphaSweepConfigResolvedAlphas::test_resolved_alphas_linspace_path PASSED [ 23%]
+.tests/analysis/test_scripts_smoke.py::test_generate_api_docs_writes_reference PASSED [ 24%]
+.tests/analysis/test_scripts_smoke.py::test_preflight_script_emits_diagnostics PASSED [ 24%]
+.tests/analysis/test_scripts_smoke.py::test_run_api_doc_generation_continues_when_glossary_index_fails PASSED [ 25%]
+.tests/core/test_benchmark_support.py::test_run_benchmark_returns_one_measurement_per_input_size PASSED [ 25%]
+.tests/core/test_benchmark_support.py::test_rubric_score_is_real_infra_type_and_passes PASSED [ 25%]
+.tests/core/test_benchmark_support.py::test_payload_has_expected_infra_fields PASSED [ 26%]
+.tests/core/test_benchmark_support.py::test_payload_is_deterministic_across_runs PASSED [ 26%]
+.tests/core/test_benchmark_support.py::test_write_benchmark_report_emits_json PASSED [ 26%]
+.tests/core/test_documentation.py::test_build_api_reference_markdown_contains_core_symbols PASSED [ 27%]
+.tests/core/test_documentation.py::test_run_api_doc_generation_writes_api_reference PASSED [ 27%]
+.tests/core/test_experiment_config.py::TestExperimentConfig::test_load_from_project_yaml PASSED [ 27%]
+.tests/core/test_experiment_config.py::TestExperimentConfig::test_defaults_when_missing_file PASSED [ 28%]
+.tests/core/test_experiment_config.py::TestExperimentConfig::test_array_helpers PASSED [ 28%]
+.tests/core/test_experiment_config.py::TestExperimentConfig::test_to_sweep_config PASSED [ 28%]
+.tests/core/test_experiment_config.py::TestExperimentConfig::test_coerce_list_initial_point PASSED [ 29%]
+.tests/core/test_experiment_config.py::TestExperimentConfig::test_empty_optional_lists_use_defaults PASSED [ 29%]
+.tests/core/test_experiment_config.py::TestExperimentConfig::test_scalar_matrix_and_int_lists PASSED [ 29%]
+.tests/core/test_experiment_config.py::TestExperimentConfig::test_invalid_matrix_falls_back_to_default PASSED [ 30%]
+.tests/core/test_experiment_config.py::TestExperimentConfig::test_empty_initial_point_list_defaults_to_zero PASSED [ 30%]
+.tests/core/test_experiment_config.py::TestExperimentConfig::test_load_without_project_root_uses_module_parent PASSED [ 30%]
+.tests/core/test_experiment_config.py::TestMalformedExperimentValues::test_malformed_value_degrades_to_defaults_with_warning[experiment: 5] PASSED [ 31%]
+.tests/core/test_experiment_config.py::TestMalformedExperimentValues::test_malformed_value_degrades_to_defaults_with_warning[experiment:\n  initial_point: null] PASSED [ 31%]
+.tests/core/test_experiment_config.py::TestMalformedExperimentValues::test_malformed_value_degrades_to_defaults_with_warning[experiment:\n  initial_point: [abc]] PASSED [ 31%]
+.tests/core/test_experiment_config.py::TestMalformedExperimentValues::test_malformed_value_degrades_to_defaults_with_warning[experiment:\n  max_iterations: abc] PASSED [ 32%]
+.tests/core/test_experiment_config.py::TestMalformedExperimentValues::test_malformed_value_degrades_to_defaults_with_warning[experiment:\n  max_iterations: null] PASSED [ 32%]
+..tests/core/test_experiment_config.py::TestMalformedExperimentValues::test_malformed_value_degrades_to_defaults_with_warning[experiment:\n  max_iterations: 1.5] PASSED [ 32%]
+.tests/core/test_experiment_config.py::TestMalformedExperimentValues::test_malformed_value_degrades_to_defaults_with_warning[experiment:\n  tolerance: [1, 2]] PASSED [ 33%]
+.tests/core/test_experiment_config.py::TestMalformedExperimentValues::test_malformed_value_degrades_to_defaults_with_warning[experiment:\n  tolerance: abc] PASSED [ 33%]
+.tests/core/test_experiment_config.py::TestMalformedExperimentValues::test_malformed_value_degrades_to_defaults_with_warning[experiment:\n  step_sizes: [abc]] PASSED [ 33%]
+.tests/core/test_experiment_config.py::TestMalformedExperimentValues::test_malformed_value_degrades_to_defaults_with_warning[experiment:\n  step_sizes: [[1, 2], [3]]] PASSED [ 34%]
+...tests/core/test_experiment_config.py::TestMalformedExperimentValues::test_malformed_value_degrades_to_defaults_with_warning[experiment:\n  quadratic_A: [1.0, 2.0]] PASSED [ 34%]
+....tests/core/test_experiment_config.py::TestMalformedExperimentValues::test_malformed_value_degrades_to_defaults_with_warning[experiment:\n  quadratic_A: [[1.0, 2.0], [3.0]]] PASSED [ 34%]
+.tests/core/test_experiment_config.py::TestMalformedExperimentValues::test_malformed_value_degrades_to_defaults_with_warning[experiment:\n  quadratic_A: [[]]] PASSED [ 35%]
+..tests/core/test_experiment_config.py::TestMalformedExperimentValues::test_malformed_value_degrades_to_defaults_with_warning[experiment:\n  benchmark_dimensions: [1.5]] PASSED [ 35%]
+.tests/core/test_experiment_config.py::TestMalformedExperimentValues::test_malformed_value_degrades_to_defaults_with_warning[experiment:\n  benchmark_dimensions: [-2]] PASSED [ 35%]
+.tests/core/test_experiment_config.py::TestMalformedExperimentValues::test_malformed_value_degrades_to_defaults_with_warning[experiment:\n  benchmark_dimensions: [true]] PASSED [ 36%]
+..tests/core/test_experiment_config.py::TestMalformedExperimentValues::test_malformed_value_degrades_to_defaults_with_warning[experiment:\n  convergence_tolerance: .nan] PASSED [ 36%]
+.tests/core/test_experiment_config.py::TestMalformedExperimentValues::test_nonintegral_dimension_does_not_truncate_but_valid_values_apply PASSED [ 36%]
+.tests/core/test_invariants.py::TestInvariantResult::test_is_dataclass_with_expected_fields PASSED [ 37%]
+.tests/core/test_invariants.py::TestInvariantResult::test_extra_default_is_independent_dict PASSED [ 37%]
+.tests/core/test_invariants.py::TestInvariantResult::test_full_record_construction PASSED [ 38%]
+.tests/core/test_invariants.py::TestOptimizerSweepConfig::test_array_helpers_have_correct_dtype_and_shape PASSED [ 38%]
+.tests/core/test_invariants.py::TestOptimizerSweepConfig::test_closed_form_minimum_matches_linear_solve PASSED [ 38%]
+.tests/core/test_invariants.py::TestOptimizerSweepConfig::test_stable_step_bound_is_two_over_lambda_max PASSED [ 39%]
+.tests/core/test_invariants.py::TestOptimizerSweepConfig::test_run_for_returns_optimization_result PASSED [ 39%]
+.tests/core/test_invariants.py::TestOptimizerSweepConfig::test_run_for_diverges_above_stable_bound PASSED [ 39%]
+.tests/core/test_invariants.py::TestOptimizerSweepConfig::test_config_is_frozen PASSED [ 40%]
+.tests/core/test_invariants.py::TestConvergenceInvariants::test_returns_list_of_invariant_results PASSED [ 40%]
+.tests/core/test_invariants.py::TestConvergenceInvariants::test_emits_three_invariants_per_stable_step_size PASSED [ 40%]
+.tests/core/test_invariants.py::TestConvergenceInvariants::test_stable_step_invariants_actually_pass PASSED [ 41%]
+.tests/core/test_invariants.py::TestConvergenceInvariants::test_objective_history_is_monotone_non_increasing PASSED [ 41%]
+.tests/core/test_invariants.py::TestConvergenceInvariants::test_finite_invariant_includes_every_stable_step_size PASSED [ 41%]
+.tests/core/test_invariants.py::TestConvergenceInvariants::test_2d_problem_emits_invariants_for_all_stable_alphas PASSED [ 42%]
+.tests/core/test_invariants.py::TestGradientConsistencyInvariants::test_returns_single_invariant PASSED [ 42%]
+.tests/core/test_invariants.py::TestGradientConsistencyInvariants::test_witness_below_tolerance_for_canonical_problem PASSED [ 42%]
+.tests/core/test_invariants.py::TestGradientConsistencyInvariants::test_eps_and_seed_are_honoured PASSED [ 43%]
+.tests/core/test_invariants.py::TestGradientConsistencyInvariants::test_witness_holds_for_anisotropic_2d_problem PASSED [ 43%]
+.tests/core/test_invariants.py::TestTrajectoryInvariants::test_emits_one_invariant_per_stable_step_size PASSED [ 43%]
+.tests/core/test_invariants.py::TestTrajectoryInvariants::test_each_trajectory_is_monotone_non_increasing PASSED [ 44%]
+.tests/core/test_invariants.py::TestTrajectoryInvariants::test_unstable_alpha_produces_no_trajectory_record PASSED [ 44%]
+.tests/core/test_invariants.py::TestTrajectoryInvariants::test_max_iter_bounds_history_length PASSED [ 44%]
+.tests/core/test_invariants.py::TestTrajectoryInvariants::test_2d_problem_only_stable_alphas_appear PASSED [ 45%]
+.tests/core/test_invariants.py::TestAllInvariants::test_aggregates_every_family PASSED [ 45%]
+.tests/core/test_invariants.py::TestAllInvariants::test_every_record_is_invariant_result PASSED [ 45%]
+.tests/core/test_invariants.py::TestAllInvariants::test_every_record_has_a_unique_name PASSED [ 46%]
+.tests/core/test_manuscript_metadata.py::test_actual_census_keeps_registered_basename_and_ordinary_counts PASSED [ 46%]
+.tests/core/test_manuscript_metadata.py::test_actual_type_capture_retains_symlink_rather_than_regular_alias PASSED [ 46%]
+.tests/core/test_manuscript_metadata.py::test_actual_timestamp_capture_preserves_source_epoch_and_formatter PASSED [ 47%]
+.tests/core/test_manuscript_variables.py::test_all_keys_present_with_results PASSED [ 47%]
+.tests/core/test_manuscript_variables.py::test_all_keys_present_without_results PASSED [ 47%]
+.tests/core/test_manuscript_variables.py::test_load_config_missing_file PASSED [ 48%]
+.tests/core/test_manuscript_variables.py::test_load_optimization_results_missing_csv PASSED [ 48%]
+.tests/core/test_manuscript_variables.py::test_config_derived_values PASSED [ 48%]
+.tests/core/test_manuscript_variables.py::test_config_step_sizes_match_project_yaml PASSED [ 49%]
+.tests/core/test_manuscript_variables.py::test_result_derived_values PASSED [ 49%]
+.tests/core/test_manuscript_variables.py::test_vector_solution_rows_are_rendered_without_scalar_coercion PASSED [ 50%]
+.tests/core/test_manuscript_variables.py::test_stability_derived PASSED   [ 50%]
+.tests/core/test_manuscript_variables.py::test_fallback_sentinels_when_no_results PASSED [ 50%]
+.tests/core/test_manuscript_variables.py::test_provenance_keys_populated PASSED [ 51%]
+.tests/core/test_manuscript_variables.py::test_output_artifact_eligibility_is_exact PASSED [ 51%]
+.tests/core/test_manuscript_variables.py::test_downstream_artifacts_do_not_change_manuscript_counts PASSED [ 51%]
+.tests/core/test_manuscript_variables.py::test_cold_bootstrap_ignores_self_and_terminal_artifacts PASSED [ 52%]
+.tests/core/test_manuscript_variables.py::test_save_variables_round_trip PASSED [ 52%]
+.tests/core/test_manuscript_variables.py::test_save_variables_creates_parent_dir PASSED [ 52%]
+.tests/core/test_manuscript_variables.py::test_format_sci_zero PASSED     [ 53%]
+.tests/core/test_manuscript_variables.py::test_format_sci_exact_power_of_ten PASSED [ 53%]
+.tests/core/test_manuscript_variables.py::test_format_sci_exact_power_of_ten_negative_exp PASSED [ 53%]
+.tests/core/test_manuscript_variables.py::test_format_sci_non_unit_coeff PASSED [ 54%]
+.tests/core/test_manuscript_variables.py::test_step_agency_label_conservative PASSED [ 54%]
+.tests/core/test_manuscript_variables.py::test_step_agency_label_near_optimal PASSED [ 54%]
+.tests/core/test_manuscript_variables.py::test_step_agency_label_aggressive PASSED [ 55%]
+.tests/core/test_manuscript_variables.py::test_step_agency_label_divergent PASSED [ 55%]
+.tests/core/test_manuscript_variables.py::test_generate_variables_no_config PASSED [ 55%]
+.tests/core/test_manuscript_variables.py::test_generate_variables_require_analysis_outputs_raises PASSED [ 56%]
+.tests/core/test_manuscript_variables.py::test_generate_variables_require_analysis_outputs_passes_with_csv PASSED [ 56%]
+.tests/core/test_manuscript_variables.py::test_result_not_all_converged PASSED [ 56%]
+.tests/core/test_manuscript_variables.py::test_convergence_factor_rho_ge_1 PASSED [ 57%]
+.tests/core/test_manuscript_variables.py::test_all_manuscript_tokens_are_generated PASSED [ 57%]
+.tests/core/test_manuscript_variables.py::TestImportFallback::test_logger_fallback_without_infrastructure PASSED [ 57%]
+.tests/core/test_manuscript_variables.py::test_step_sensitivity_caption_numbers_match_sweep PASSED [ 58%]
+.tests/core/test_native_value_predicate.py::test_entire_actual_scalar_grid_and_variable_mapping PASSED [ 58%]
+.tests/core/test_native_value_predicate.py::test_every_signed_late_csv_field_is_independently_checked[0] PASSED [ 58%]
+.tests/core/test_native_value_predicate.py::test_every_signed_late_csv_field_is_independently_checked[1] PASSED [ 59%]
+.tests/core/test_native_value_predicate.py::test_every_signed_late_csv_field_is_independently_checked[2] PASSED [ 59%]
+.tests/core/test_native_value_predicate.py::test_every_signed_late_csv_field_is_independently_checked[3] PASSED [ 59%]
+.tests/core/test_native_value_predicate.py::test_every_signed_late_csv_field_is_independently_checked[4] PASSED [ 60%]
+.tests/core/test_native_value_predicate.py::test_every_signed_late_csv_field_is_independently_checked[5] PASSED [ 60%]
+.tests/core/test_native_value_predicate.py::test_every_signed_late_csv_field_is_independently_checked[6] PASSED [ 60%]
+.tests/core/test_native_value_predicate.py::test_complete_csv_roster_and_units_fail_closed[missing] PASSED [ 61%]
+.tests/core/test_native_value_predicate.py::test_complete_csv_roster_and_units_fail_closed[repeated] PASSED [ 61%]
+.tests/core/test_native_value_predicate.py::test_complete_csv_roster_and_units_fail_closed[reordered] PASSED [ 61%]
+.tests/core/test_native_value_predicate.py::test_complete_csv_roster_and_units_fail_closed[extra] PASSED [ 62%]
+.tests/core/test_native_value_predicate.py::test_complete_csv_roster_and_units_fail_closed[header] PASSED [ 62%]
+.tests/core/test_native_value_predicate.py::test_complete_csv_roster_and_units_fail_closed[unit] PASSED [ 63%]
+.tests/core/test_native_value_predicate.py::test_complete_csv_roster_and_units_fail_closed[nan] PASSED [ 63%]
+..tests/core/test_native_value_predicate.py::test_numeric_variables_sign_grid_and_units_are_independent[RESULT_OPTIMUM_F-0.5] PASSED [ 63%]
+..tests/core/test_native_value_predicate.py::test_numeric_variables_sign_grid_and_units_are_independent[RESULT_OPTIMUM_X--1.0] PASSED [ 64%]
+.tests/core/test_native_value_predicate.py::test_numeric_variables_sign_grid_and_units_are_independent[RESULT_MAX_ITERATIONS-999] PASSED [ 64%]
+.tests/core/test_native_value_predicate.py::test_numeric_variables_sign_grid_and_units_are_independent[RESULT_AVG_ITERATIONS-352] PASSED [ 64%]
+.tests/core/test_native_value_predicate.py::test_numeric_variables_sign_grid_and_units_are_independent[RESULT_NUM_CONVERGED-6] PASSED [ 65%]
+..tests/core/test_native_value_predicate.py::test_numeric_variables_sign_grid_and_units_are_independent[RESULT_BEST_STEP_SIZE-2.5] PASSED [ 65%]
+..tests/core/test_native_value_predicate.py::test_numeric_variables_sign_grid_and_units_are_independent[RESULT_WORST_STEP_SIZE-1.0] PASSED [ 65%]
+.tests/core/test_native_value_predicate.py::test_numeric_variables_sign_grid_and_units_are_independent[CONFIG_TOLERANCE-10^{-7}] PASSED [ 66%]
+..tests/core/test_native_value_predicate.py::test_numeric_variables_sign_grid_and_units_are_independent[CONFIG_QUADRATIC_A-[(2.0,)]] PASSED [ 66%]
+.tests/core/test_native_value_predicate.py::test_numeric_variables_sign_grid_and_units_are_independent[CONFIG_STABILITY_CELLS-49] PASSED [ 66%]
+.tests/core/test_native_value_predicate.py::test_numeric_variables_sign_grid_and_units_are_independent[CONFIG_BENCHMARK_MAX_DIM-500] PASSED [ 67%]
+.tests/core/test_native_value_predicate.py::test_repeated_and_late_consumed_table_occurrences_are_checked PASSED [ 67%]
+.tests/core/test_native_value_predicate.py::test_malformed_signed_zero_and_serialization_are_not_tolerated PASSED [ 67%]
+.tests/core/test_native_value_predicate.py::test_independent_scalar_recurrence_handles_negative_solution_and_nonidentity_quadratic PASSED [ 68%]
+.tests/core/test_native_value_predicate.py::test_shared_original_deadline_refuses_even_known_correct_data PASSED [ 68%]
+.tests/core/test_native_value_predicate.py::test_declaration_data_cannot_replace_missing_or_malformed_numeric_inputs PASSED [ 68%]
+.tests/core/test_native_value_predicate.py::test_actual_typed_loader_data_is_bound_to_every_explicit_authored_field PASSED [ 69%]
+.tests/core/test_native_value_predicate.py::test_authored_config_fallback_and_malformed_declarations_do_not_qualify PASSED [ 69%]
+.tests/core/test_native_write_text_compatibility.py::test_variable_bytes_match_utf8_json_text_writer PASSED [ 69%]
+.tests/core/test_optimizer.py::TestQuadraticFunction::test_simple_quadratic PASSED [ 70%]
+.tests/core/test_optimizer.py::TestQuadraticFunction::test_multidimensional_quadratic PASSED [ 70%]
+.tests/core/test_optimizer.py::TestQuadraticFunction::test_default_parameters PASSED [ 70%]
+.tests/core/test_optimizer.py::TestQuadraticFunction::test_dimension_mismatch_A PASSED [ 71%]
+.tests/core/test_optimizer.py::TestQuadraticFunction::test_dimension_mismatch_b PASSED [ 71%]
+.tests/core/test_optimizer.py::TestQuadraticFunction::test_non_vector_input_is_rejected PASSED [ 71%]
+.tests/core/test_optimizer.py::TestQuadraticFunction::test_non_vector_b_is_rejected PASSED [ 72%]
+.tests/core/test_optimizer.py::TestQuadraticFunction::test_zero_input PASSED [ 72%]
+.tests/core/test_optimizer.py::TestQuadraticFunction::test_large_input PASSED [ 72%]
+.tests/core/test_optimizer.py::TestQuadraticFunction::test_negative_input PASSED [ 73%]
+.tests/core/test_optimizer.py::TestQuadraticOptimum::test_default_1d_optimum PASSED [ 73%]
+.tests/core/test_optimizer.py::TestQuadraticOptimum::test_non_default_optimum PASSED [ 73%]
+.tests/core/test_optimizer.py::TestComputeGradient::test_simple_gradient PASSED [ 74%]
+.tests/core/test_optimizer.py::TestComputeGradient::test_multidimensional_gradient PASSED [ 74%]
+.tests/core/test_optimizer.py::TestComputeGradient::test_default_gradient PASSED [ 75%]
+.tests/core/test_optimizer.py::TestComputeGradient::test_zero_input PASSED [ 75%]
+.tests/core/test_optimizer.py::TestComputeGradient::test_negative_input PASSED [ 75%]
+.tests/core/test_optimizer.py::TestComputeGradient::test_dimension_mismatch_A PASSED [ 76%]
+.tests/core/test_optimizer.py::TestComputeGradient::test_dimension_mismatch_b PASSED [ 76%]
+.tests/core/test_optimizer.py::TestComputeGradient::test_nan_input_propagates PASSED [ 76%]
+.tests/core/test_optimizer.py::TestComputeGradient::test_inf_input_propagates PASSED [ 77%]
+.tests/core/test_optimizer.py::TestComputeGradient::test_quadratic_function_nan_input_propagates PASSED [ 77%]
+.tests/core/test_optimizer.py::TestOptimizationResult::test_result_creation PASSED [ 77%]
+.tests/core/test_optimizer.py::TestOptimizationResult::test_objective_history_populated PASSED [ 78%]
+.tests/core/test_optimizer.py::TestMakeQuadraticProblem::test_returns_callable_pair PASSED [ 78%]
+.tests/core/test_optimizer.py::TestMakeQuadraticProblem::test_objective_matches_quadratic_function PASSED [ 78%]
+.tests/core/test_optimizer.py::TestMakeQuadraticProblem::test_gradient_matches_compute_gradient PASSED [ 79%]
+.tests/core/test_optimizer.py::TestMakeQuadraticProblem::test_factory_usable_with_gradient_descent PASSED [ 79%]
+.tests/core/test_optimizer.py::TestMakeQuadraticProblem::test_factory_with_default_params PASSED [ 79%]
+.tests/core/test_optimizer.py::TestMakeQuadraticProblem::test_factory_multidimensional PASSED [ 80%]
+.tests/core/test_optimizer.py::TestSimulateTrajectory::test_returns_dict_with_expected_keys PASSED [ 80%]
+.tests/core/test_optimizer.py::TestSimulateTrajectory::test_objectives_decrease_toward_optimum PASSED [ 80%]
+.tests/core/test_optimizer.py::TestSimulateTrajectory::test_iterations_and_objectives_same_length PASSED [ 81%]
+.tests/core/test_optimizer.py::TestSimulateTrajectory::test_iterations_are_sequential PASSED [ 81%]
+.tests/core/test_optimizer.py::TestSimulateTrajectory::test_default_params_produce_valid_trajectory PASSED [ 81%]
+.tests/core/test_optimizer_gradient_descent.py::TestGradientDescent::test_convergence_to_optimum PASSED [ 82%]
+.tests/core/test_optimizer_gradient_descent.py::TestGradientDescent::test_max_iterations_reached PASSED [ 82%]
+.tests/core/test_optimizer_gradient_descent.py::TestGradientDescent::test_already_converged PASSED [ 82%]
+.tests/core/test_optimizer_gradient_descent.py::TestGradientDescent::test_multidimensional_convergence PASSED [ 83%]
+.tests/core/test_optimizer_gradient_descent.py::TestGradientDescent::test_parameter_validation PASSED [ 83%]
+.tests/core/test_optimizer_gradient_descent.py::TestGradientDescent::test_invalid_initial_point PASSED [ 83%]
+.tests/core/test_optimizer_gradient_descent.py::TestGradientDescent::test_gradient_descent_performance PASSED [ 84%]
+.tests/core/test_optimizer_gradient_descent.py::TestGradientDescent::test_numerical_stability PASSED [ 84%]
+.tests/core/test_optimizer_gradient_descent.py::TestGradientDescent::test_divergent_step_size PASSED [ 84%]
+.tests/core/test_optimizer_gradient_descent.py::TestGradientDescent::test_zero_gradient_function_converges_immediately PASSED [ 85%]
+.tests/core/test_optimizer_gradient_descent.py::TestGradientDescent::test_max_iterations_boundary_exactly_one PASSED [ 85%]
+.tests/core/test_optimizer_gradient_descent.py::TestGradientDescent::test_nan_gradient_terminates_at_cap PASSED [ 85%]
+.tests/core/test_optimizer_gradient_descent.py::TestGradientDescent::test_gradient_shape_mismatch_is_rejected PASSED [ 86%]
+.tests/core/test_optimizer_gradient_descent.py::TestGradientDescent::test_non_finite_objective_stops_before_recording_bad_state PASSED [ 86%]
+.tests/core/test_optimizer_gradient_descent.py::TestGradientDescent::test_overflowing_divergence_is_bounded_and_reported PASSED [ 86%]
+.tests/core/test_optimizer_gradient_descent.py::TestGradientDescent::test_verbose_logging_does_not_affect_result PASSED [ 87%]
+.tests/core/test_optimizer_gradient_descent.py::TestPerformanceBenchmarks::test_gradient_descent_timing PASSED [ 87%]
+.tests/core/test_optimizer_gradient_descent.py::TestPerformanceBenchmarks::test_function_evaluation_speed PASSED [ 88%]
+.tests/dashboard/test_dashboard_config.py::TestDashboardConfig::test_yaml_defaults_match_experiment_config PASSED [ 88%]
+.tests/dashboard/test_dashboard_config.py::TestDashboardParseArgs::test_rejects_empty_step_sizes PASSED [ 88%]
+.tests/dashboard/test_dashboard_config.py::TestDashboardParseArgs::test_rejects_mismatched_x0_length PASSED [ 89%]
+.tests/dashboard/test_dashboard_config.py::TestDashboardParseArgs::test_rejects_invalid_alpha_sweep_range PASSED [ 89%]
+.tests/dashboard/test_dashboard_config.py::TestDashboardParseArgs::test_rejects_empty_default_step_sizes PASSED [ 89%]
+.tests/dashboard/test_dashboard_config.py::TestDashboardParseArgs::test_rejects_non_positive_step_size_direct PASSED [ 90%]
+.tests/dashboard/test_dashboard_config.py::TestDashboardParseArgs::test_rejects_alpha_sweep_num_lt_2 PASSED [ 90%]
+.tests/dashboard/test_dashboard_config.py::TestDashboardPayload::test_compute_payload_records_divergent_alpha_sweep PASSED [ 90%]
+.tests/dashboard/test_dashboard_config.py::TestDashboardPayload::test_dashboard_schema_rejects_missing_chart_field PASSED [ 91%]
+.tests/dashboard/test_dashboard_config.py::TestDashboardPayload::test_compute_payload_records_sweep_exception PASSED [ 91%]
+.tests/dashboard/test_dashboard_config.py::TestDashboardPayload::test_main_prints_output_paths PASSED [ 91%]
+.tests/dashboard/test_dashboard_config.py::TestDashboardPayload::test_main_exits_on_failed_invariants PASSED [ 92%]
+.tests/dashboard/test_invariants_and_dashboard.py::TestBuildDashboardCLI::test_default_run PASSED [ 92%]
+.tests/dashboard/test_invariants_and_dashboard.py::TestBuildDashboardCLI::test_payload_step_sizes_match_config_yaml PASSED [ 92%]
+.tests/dashboard/test_invariants_and_dashboard.py::TestBuildDashboardCLI::test_custom_step_sizes PASSED [ 93%]
+.tests/dashboard/test_invariants_and_dashboard.py::TestBuildDashboardCLI::test_custom_quadratic PASSED [ 93%]
+.tests/dashboard/test_invariants_and_dashboard.py::TestBuildDashboardCLI::test_rejects_mismatched_dims PASSED [ 93%]
+.tests/dashboard/test_invariants_and_dashboard.py::TestBuildDashboardCLI::test_rejects_non_positive_step_size PASSED [ 94%]
+.tests/dashboard/test_invariants_and_dashboard.py::TestBuildDashboardCLI::test_dashboard_main_writes_outputs PASSED [ 94%]
+.tests/dashboard/test_invariants_and_dashboard.py::TestBuildDashboardCLI::test_alpha_sweep_handles_divergent_regime PASSED [ 94%]
+.tests/figures/test_figures_orchestration.py::TestFiguresOrchestration::test_convergence_plot_uses_objective_history PASSED [ 95%]
+.tests/figures/test_figures_orchestration.py::TestFiguresOrchestration::test_rate_plot_errors_match_optimum PASSED [ 95%]
+.tests/figures/test_figures_orchestration.py::TestFiguresOrchestration::test_step_size_sensitivity_plot PASSED [ 95%]
+.tests/figures/test_figures_orchestration.py::TestFiguresOrchestration::test_complexity_visualization PASSED [ 96%]
+.tests/figures/test_figures_orchestration.py::TestFiguresOrchestration::test_stability_visualization PASSED [ 96%]
+.tests/figures/test_figures_orchestration.py::TestFiguresOrchestration::test_benchmark_visualization PASSED [ 96%]
+.tests/figures/test_figures_orchestration.py::TestFiguresOrchestration::test_stability_visualization_none_path PASSED [ 97%]
+.tests/figures/test_figures_orchestration.py::TestFiguresOrchestration::test_benchmark_visualization_none_path PASSED [ 97%]
+.tests/figures/test_figures_orchestration.py::TestBackendProfile::test_effective_max_stable_alpha_uses_explicit_value PASSED [ 97%]
+.tests/figures/test_figures_orchestration.py::TestBackendProfile::test_effective_max_stable_alpha_derived PASSED [ 98%]
+.tests/figures/test_figures_orchestration.py::TestBackendProfile::test_effective_label_alpha_uses_explicit_value PASSED [ 98%]
+.tests/figures/test_figures_orchestration.py::TestBackendProfile::test_effective_label_alpha_derived PASSED [ 98%]
+.tests/figures/test_figures_orchestration.py::TestBackendProfile::test_profile_stable_region_returns_zero_to_bound PASSED [ 99%]
+.tests/figures/test_figures_orchestration.py::TestBackendProfile::test_compare_profiles_at_alpha_returns_one_row_per_profile PASSED [ 99%]
+.tests/figures/test_figures_orchestration.py::TestBackendProfile::test_compare_profiles_at_alpha_uses_default_backend_profiles PASSED [100%]
+
+=============================== warnings summary ===============================
+.tests/analysis/test_analysis_integration.py: 2 warnings
+.tests/core/test_invariants.py: 10 warnings
+.tests/core/test_native_value_predicate.py: 31 warnings
+.tests/core/test_optimizer_gradient_descent.py: 1 warning
+.tests/dashboard/test_dashboard_config.py: 1 warning
+.tests/dashboard/test_invariants_and_dashboard.py: 3 warnings
+.  /home/runner/work/_temp/template-native-preflight-root/projects/templates/template_code_project/src/template_code_project/core/optimizer.py:124: RuntimeWarning: overflow encountered in matmul
+..    quadratic_term = 0.5 * x.T @ A @ x
+
+.tests/core/test_invariants.py::TestOptimizerSweepConfig::test_run_for_diverges_above_stable_bound
+..  /home/runner/work/_temp/template-native-preflight-scratch/installed/native-environment/lib/python3.14/site-packages/numpy/linalg/_linalg.py:2784: RuntimeWarning: overflow encountered in dot
+.    sqnorm = x.dot(x)
+
+...-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+================================ tests coverage ================================
+.._______________ coverage: platform linux, python 3.14.4-final-0 ________________
+
+Name                                                         Stmts   Miss Branch BrPart   Cover   Missing
+---------------------------------------------------------------------------------------------------------
+..src/template_code_project/analysis/_infra.py                    12      0      0      0 100.00%
+..src/template_code_project/analysis/_logging.py                   6      0      0      0 100.00%
+..src/template_code_project/analysis/experiments.py               45      0      6      0 100.00%
+..src/template_code_project/analysis/pipeline.py                   5      0      0      0 100.00%
+..src/template_code_project/analysis/publishing.py                54      0      8      1  98.39%   100->105
+..src/template_code_project/analysis/scientific_reports.py       128      0     14      0 100.00%
+..src/template_code_project/analysis/workflow.py                  97     50     22      3  45.38%   55, 66-69, 79-132, 144->147, 151->154
+..src/template_code_project/core/_runtime.py                      65     20     16      4  60.49%   46, 81-83, 95-97, 107-116, 123-126
+..src/template_code_project/core/benchmark_support.py             56      0      2      0 100.00%
+..src/template_code_project/core/documentation.py                  5      0      0      0 100.00%
+..src/template_code_project/core/experiment_config.py            157     14     48      5  90.73%   114-115, 119-121, 152, 166-167, 177, 179-183
+..src/template_code_project/core/invariants.py                    82      0     10      0 100.00%
+..src/template_code_project/core/manuscript_variables.py         230      9     58      6  94.79%   106, 195, 221, 264, 267-268, 270, 458-469
+..src/template_code_project/core/optimizer.py                    144     10     52      4  92.86%   43-44, 46, 57-58, 99, 188, 215-217
+..src/template_code_project/core/project_paths.py                 27      1      4      1  93.55%   33
+..src/template_code_project/core/sweeps.py                        73      0     10      0 100.00%
+..src/template_code_project/dashboard/dashboard.py                73      1     18      2  96.70%   93, 115->114
+..src/template_code_project/dashboard/dashboard_panels.py         32      0      4      0 100.00%
+..src/template_code_project/dashboard/dashboard_payload.py        78     13     36     12  78.07%   47, 51-52, 54, 58, 63, 65-67, 75-77, 81-83, 163
+..src/template_code_project/figures/convergence.py                81      0      8      2  97.75%   80->82, 155->157
+..src/template_code_project/figures/scientific.py                  4      0      0      0 100.00%
+..src/template_code_project/figures/scientific_complexity.py     160      0     18      1  99.44%   562->564
+..src/template_code_project/figures/scientific_stability.py      106      0     18      2  98.39%   78->80, 163->165
+..src/template_code_project/figures/sensitivity.py                52      0      4      1  98.21%   114->116
+..src/template_code_project/figures/viz_config.py                 15      2      6      2  80.95%   94, 97
+---------------------------------------------------------------------------------------------------------
+.TOTAL                                                         1787    120    362     46  91.34%
+Coverage HTML written to dir /home/runner/work/_temp/template-native-preflight-root/projects/templates/template_code_project/htmlcov
+.Coverage JSON written to file /home/runner/work/_temp/template-native-preflight-root/projects/templates/template_code_project/coverage_project.json
+..Required test coverage of 90% reached. Total coverage: 91.34%
+.=============== 292 passed, 4 deselected, 49 warnings in 39.04s ================
+✓ Found coverage: 91.3%
+Project tests completed with 8 warning(s)
+Project tests completed without composable measurement: Original full project collection or all-pass execution differs
+Project test suite completed in 47.6s
+Project tests passed
+Test report saved: /home/runner/work/_temp/template-native-preflight-root/projects/templates/template_code_project/output/.pipeline/tests/test_results.json
+Test summary saved: /home/runner/work/_temp/template-native-preflight-root/projects/templates/template_code_project/output/.pipeline/tests/test_results.md
+
+==================================================
+Test Execution Summary
+==================================================
+
+Infrastructure Results:
+  ⏭ Skipped (not run in this execution)
+  📊 Coverage: N/A (tests not executed)
+
+Project Results:
+  ✓ Passed: 292
+  ⚠ Warnings: 8
+  📊 Coverage: ✓ 91.3% (meets 90.0% threshold)
+  ⏱ Duration: 39s
+
+============================================================
+Infrastructure: ⏭ SKIPPED (intentionally skipped - use --infra-only to run infrastructure tests)
+Project:       ✓ PASSED (292/292 tests, 91.3% coverage)
+--------------------------------------------------------------------------------
+Total:         ✓ PASSED (292/292 tests)
+Coverage:      Infrastructure: N/A | Project: 91.3%
+Duration:      39s
+============================================================
+All tests passed - ready for analysis
+  Resource usage (Test stage end): Memory: 92 MB
+✓ Stage 2 completed successfully (87.0s)
+
+[3/6] Project Analysis (50% complete)
+  Elapsed: 2m 5s | ETA: 2m 5s
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+✓ Stage 3 completed successfully (2563.3s)
+
+[4/6] PDF Rendering (66% complete)
+  Elapsed: 44m 49s | ETA: 22m 24s
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+❌ [PIPELINE_STAGE_FAILED] Pipeline failed at stage 4: PDF Rendering — Check stage logs for details
+Telemetry finalized: 3 stages, 1 warnings, 3419.7s total

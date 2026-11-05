@@ -1,0 +1,17 @@
+{
+  "executable": "/home/runner/work/_temp/template-native-preflight-scratch/installed/native-environment/bin/python",
+  "execution_exit_code": 0,
+  "implementation": "CPython",
+  "interpreter_sha256": "b135f1ae69c99912bc4b035f60255094103c7ee1c4659491ae61385ad5dd09a5",
+  "missing": [],
+  "packages": {
+    "coverage": "7.17.0",
+    "pytest": "9.0.3",
+    "pytest-cov": "7.0.0",
+    "pytest-timeout": "2.4.0",
+    "pytest-xdist": "3.8.0"
+  },
+  "python_full_version": "3.14.4",
+  "python_version": "3.14",
+  "schema_version": "template-public-runtime-v1"
+}
