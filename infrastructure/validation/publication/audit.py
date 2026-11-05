@@ -668,6 +668,29 @@ def _verify_native_audit_source(
     source.verify_correspondence(source.reference, reader.root, reader, deadline)
 
 
+def _require_native_published_report(report: PublicationAuditReport) -> None:
+    """Apply the strict verdict and retain the actual bounded finding explanation."""
+    exit_code = validate_publication_audit(report, strict=True)
+    if exit_code:
+        # `validate_publication_audit` collapses two distinct causes (blocking
+        # findings, and strict review findings) to the same non-zero code, so a
+        # refusal built from the code alone names the gate and discards the
+        # finding. `report` carries everything needed: `status` distinguishes
+        # `fail` from `review` (models.py), and both tuples expose each finding's
+        # own `diagnostic_code`. Hosted run 41954325668: all 25 native cells
+        # exited 1 with this one sentence and empty `formats`, so the cause of 25
+        # failures was unrecoverable from the retained evidence.
+        blocking = report.blocking_findings
+        review = report.review_findings
+        first = blocking[0] if blocking else (review[0] if review else None)
+        raise ValueError(
+            "native Source reference lacks strict published rendered evidence: "
+            f"status={report.status} blocking={len(blocking)} review={len(review)} "
+            f"first={first.diagnostic_code if first is not None else 'none'} "
+            f"detail={' '.join(first.message[:512].split()) if first is not None else 'none'}"
+        )
+
+
 def build_native_published_audit(
     source: NativeSourceContext,
     project: str,
@@ -689,24 +712,7 @@ def build_native_published_audit(
         require_figure_accessibility=True,
     )
     _verify_native_audit_source(source, project, reader, deadline)
-    exit_code = validate_publication_audit(report, strict=True)
-    if exit_code:
-        # `validate_publication_audit` collapses two distinct causes (blocking
-        # findings, and strict review findings) to the same non-zero code, so a
-        # refusal built from the code alone names the gate and discards the
-        # finding. `report` carries everything needed: `status` distinguishes
-        # `fail` from `review` (models.py), and both tuples expose each finding's
-        # own `diagnostic_code`. Hosted run 41954325668: all 25 native cells
-        # exited 1 with this one sentence and empty `formats`, so the cause of 25
-        # failures was unrecoverable from the retained evidence.
-        blocking = report.blocking_findings
-        review = report.review_findings
-        first = blocking[0] if blocking else (review[0] if review else None)
-        raise ValueError(
-            "native Source reference lacks strict published rendered evidence: "
-            f"status={report.status} blocking={len(blocking)} review={len(review)} "
-            f"first={first.diagnostic_code if first is not None else 'none'}"
-        )
+    _require_native_published_report(report)
     return report
 
 

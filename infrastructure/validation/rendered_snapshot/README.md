@@ -19,6 +19,15 @@ from infrastructure.validation.rendered_snapshot import build_current_rendered_s
 
 Focused implementation controls import scanning helpers from `_scan.py`.
 
+## Verification
+
+```bash
+uv run pytest tests/infra_tests/validation/test_rendered_provenance_roles.py \
+  tests/infra_tests/validation/test_rendered_provenance_stage_closures.py \
+  tests/infra_tests/validation/test_rendered_validation_input_diagnostics.py -q
+uv run python scripts/gates/module_line_count_check.py
+```
+
 ## See Also
 
 - [`../AGENTS.md`](../AGENTS.md) - rendered-snapshot role in validation

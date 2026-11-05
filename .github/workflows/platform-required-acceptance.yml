@@ -637,14 +637,9 @@ jobs:
           retention-days: 30
 
 
-  # TODO(native-sharding): `--matrix-cell` and the per-cell artifact name have
-  # both landed, and the per-control ceiling this comment used to name is no
-  # longer a blocker: `CONTROL_PHASE_CEILING_SECONDS` was raised 600 -> 3600 in
-  # 6875853d7 ("Bound one whole-PDF control phase by an hour instead of ten
-  # minutes"). The remaining gate is one repository variable: these jobs run only
-  # when NATIVE_SHARDING_CELLS is 'true', and it has never been set, so no sharded
-  # cell has executed. Keep this comment tied to the code: a stale precondition
-  # here is how the lane stayed mislabelled as blocked.
+  # The sharded native lane selects every canonical project from Source and
+  # admits only a complete cell union. NATIVE_SHARDING_CELLS selects this lane;
+  # the separately gated monolithic job remains the supported fallback.
   native-plan:
     if: vars.NATIVE_SHARDING_CELLS == 'true'
     runs-on: ubuntu-24.04
@@ -662,9 +657,8 @@ jobs:
         id: plan
         run: |
           set -euo pipefail
-          # TODO(native-sharding): reuse the auxiliary matrix emitter (as here),
-          # or expose an equivalent flag on the native CLI. The `cell` values are
-          # bare project names; `root` is not a project and is excluded.
+          # Reuse the Source-owned auxiliary matrix emitter. The `cell` values
+          # are bare project names; `root` is not a project and is excluded.
           matrix=$(.venv/bin/python -m infrastructure.project.public_acceptance_auxiliary_cli --matrix-json \
             | jq -c '{include: [.include[] | select(.cell != "root")]}')
           echo "matrix=$matrix" >> "$GITHUB_OUTPUT"
@@ -672,8 +666,7 @@ jobs:
   native-original-cell:
     needs: native-plan
     name: native-original-cell (${{ matrix.cell }})
-    # TODO(native-sharding): enable once --matrix-cell lands. Deliberately
-    # gated so a missing selection can never be mistaken for a pass.
+    # Explicit selection keeps a missing cell from being mistaken for a pass.
     if: vars.NATIVE_SHARDING_CELLS == 'true'
     strategy:
       fail-fast: false
