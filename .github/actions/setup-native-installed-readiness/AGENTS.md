@@ -4,7 +4,9 @@
 Ubuntu preparation step, called after checkout, pinned source fixtures and
 Python/uv setup. Its `prepare-lean` input accepts only `true` or `false` and
 defaults to `true` for complete native roles. The Code diagnostic explicitly uses
-`false`; it does not exercise Lean. This action has no acceptance outputs. Java and EPUBCheck
+`false`; it does not exercise Lean. `project-scopes` forwards the exact locks to
+warm beside Root and defaults to empty, which keeps Root-only warming for callers
+that install nothing else. This action has no acceptance outputs. Java and EPUBCheck
 nominations are exported as `TEMPLATE_NATIVE_JAVA` and
 `TEMPLATE_NATIVE_EPUBCHECK` for the caller's explicit tool arguments.
 

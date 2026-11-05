@@ -4,6 +4,12 @@ inputs:
   prepare-lean:
     description: Prepare the Source-pinned Lean compiler for the complete native replay.
     default: 'true'
+  project-scopes:
+    description: >-
+      Space-separated Source project scopes whose locks are warmed in addition to
+      the Root lock. Complete native roles pass the exact scopes the preparation
+      loop will install; the empty default keeps Root-only warming.
+    default: ''
 runs:
   using: composite
   steps:
@@ -99,3 +105,5 @@ runs:
         fi
     - name: Warm exact Source-locked offline dependencies for cold installed wheels
       uses: ./.github/actions/setup-native-offline-cache
+      with:
+        project-scopes: ${{ inputs.project-scopes }}
