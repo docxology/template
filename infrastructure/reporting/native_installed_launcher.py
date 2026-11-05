@@ -37,6 +37,7 @@ from infrastructure.reporting.native_source_provider_bootstrap import (
     NATIVE_PREFLIGHT_MODULE,
 )
 from infrastructure.reporting.native_tool_process import run_native_tool_process
+from infrastructure.project.public_package_dependencies import local_dependency_closure
 from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES, public_cell_scope
 from infrastructure.reporting.native_preparation_resources import PREPARATION_PEAK_BYTES, require_native_capacity
 from infrastructure.reporting.native_readiness_input_copy import copy_original_common_readiness, copy_source_mirror_data
@@ -50,7 +51,20 @@ def native_cell_scope(cell: str) -> str:
 def native_preparation_scopes(mode: str, source: Path, cell: str | None = None) -> tuple[str, ...]:
     """Keep complete native roles distinct from the explicitly narrow diagnostic.
 
-    A sharded original cell prepares and executes exactly its own declared scope.
+    A sharded original cell prepares its own declared scope plus that scope's
+    non-root local dependency closure. The cell's declared *selection* is
+    unchanged -- it still executes exactly one exemplar -- but preparation must
+    build a wheel for every scope the provider install will look up.
+
+    Hosted run 41940842593, cell `template_advanced_literature_review` (job
+    126961680263): preparation built wheels only for `("root", cell)` while
+    `native_provider_scopes` demanded the transitive closure, which includes
+    `templates/template_literature_meta_analysis` through that exemplar's
+    `path = "../template_literature_meta_analysis"` source. The lookup raised
+    `KeyError: 'templates/template_literature_meta_analysis'` at
+    `native_installed_preparation.py:420` after 8m51s, before the bounded work
+    began. `--matrix-cell` sharded the scope but not the closure.
+
     The reader and handoff roles stay whole because they bind every cell's
     original transport, and the diagnostic preflight keeps its own narrow scope.
     """
@@ -62,7 +76,14 @@ def native_preparation_scopes(mode: str, source: Path, cell: str | None = None) 
         raise ValueError("unknown native installed preparation mode")
     if cell is not None:
         if mode == "original":
-            return (native_cell_scope(cell),)
+            selection = native_cell_scope(cell)
+            # `root` is prepared unconditionally by the preparation loop, so it
+            # is not a member of this closure. Local closure order is
+            # dependency-first, which keeps the prepared tuple deterministic.
+            providers = tuple(
+                provider for provider in local_dependency_closure(source, selection) if provider != "root"
+            )
+            return tuple(dict.fromkeys((selection, *providers)))
         if mode == "reader":
             # The reader keeps roster-wide preparation: its provider admission
             # still demands every public nomination, and only its Current-side

@@ -10,6 +10,7 @@ import time
 
 import pytest
 
+from infrastructure.project.public_package_dependencies import local_dependency_closure
 from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
 from infrastructure.reporting.native_current_reader_inputs import NativeCurrentAnalysisInputs
 from infrastructure.reporting.native_installed_invocation import launch_prepared_native
@@ -175,13 +176,67 @@ def test_native_cell_scope_resolves_only_declared_public_exemplars() -> None:
 
 @pytest.mark.parametrize("mode", ["reader", "handoff"])
 def test_native_preparation_scopes_keeps_whole_roles_unsharded(mode: str) -> None:
-    assert native_preparation_scopes(mode, Path("unused-source")) == PUBLIC_PROJECT_NAMES
+    assert native_preparation_scopes(mode, ROOT) == PUBLIC_PROJECT_NAMES
 
 
-def test_native_preparation_scopes_narrows_one_original_cell() -> None:
-    assert native_preparation_scopes("original", Path("unused-source"), cell="template_code_project") == (
+@pytest.mark.parametrize("cell", PUBLIC_PROJECT_NAMES)
+def test_native_preparation_scopes_prepares_each_cells_local_closure(cell: str) -> None:
+    """Every scope the provider install looks up must have a prepared wheel.
+
+    Negative control for hosted run 41940842593 (job 126961680263): the cell
+    `template_advanced_literature_review` failed after 8m51s with
+    `KeyError: 'templates/template_literature_meta_analysis'` because
+    preparation built wheels only for `("root", cell)` while the provider
+    install demanded the cell's transitive local closure. `root` is prepared
+    unconditionally, so only non-root closure members must be added.
+    """
+    short = cell.removeprefix("templates/")
+    scopes = native_preparation_scopes("original", ROOT, cell=short)
+
+    # The declared selection is still the cell itself: preparation adds only
+    # dependencies and never drops the selected scope.
+    assert scopes[0] == cell
+
+    # `native_installed_preparation` builds a wheel for ("root", *scopes) and
+    # then looks up every non-root closure member of every prepared scope.
+    # Assert that exact invariant rather than a hard-coded expectation.
+    built = {"root", *scopes}
+    needed = {provider for scope in scopes for provider in local_dependency_closure(ROOT, scope) if provider != "root"}
+    assert needed <= built, f"cell {cell} would raise KeyError for {sorted(needed - built)}"
+
+    # No duplicates, and no accidental roster-wide expansion.
+    assert len(scopes) == len(set(scopes))
+    assert set(scopes) <= set(PUBLIC_PROJECT_NAMES)
+
+
+def test_native_preparation_scopes_adds_nothing_for_a_root_only_cell() -> None:
+    """The 24 exemplars declaring only the root source keep a one-scope tuple.
+
+    This is the assertion that makes the fix safe: it changes exactly one
+    cell's preparation and cannot move any other.
+    """
+    assert native_preparation_scopes("original", ROOT, cell="template_code_project") == (
         "templates/template_code_project",
     )
+    assert native_preparation_scopes("original", ROOT, cell="template_textbook") == ("templates/template_textbook",)
+
+
+def test_native_preparation_scopes_adds_the_sibling_local_dependency() -> None:
+    """The one sibling edge in the public roster is prepared with its dependent."""
+    assert native_preparation_scopes("original", ROOT, cell="template_advanced_literature_review") == (
+        "templates/template_advanced_literature_review",
+        "templates/template_literature_meta_analysis",
+    )
+
+
+def test_only_one_exemplar_declares_a_sibling_local_dependency() -> None:
+    """Guard the premise above: a second edge means this expectation must change."""
+    dependent = [
+        name.removeprefix("templates/")
+        for name in PUBLIC_PROJECT_NAMES
+        if any(provider != "root" for provider in local_dependency_closure(ROOT, name))
+    ]
+    assert dependent == ["template_advanced_literature_review"]
 
 
 def test_native_preparation_scopes_refuses_a_cell_outside_the_original_and_reader_roles() -> None:
