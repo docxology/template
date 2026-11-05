@@ -604,6 +604,13 @@ jobs:
           repo-root: ${{ runner.temp }}/template-native-original-root
           directory: ${{ runner.temp }}/template-native-original-root/output/readiness/native-transport
           kind: native
+          # This roster lane's only output is the release artifact, and every one
+          # of this workflow's 31 failures retained its transport correctly and
+          # then expired after one day before anyone read it. The refusal that
+          # blocks every release has therefore never been diagnosed. Thirty days
+          # covers a release cycle. The per-cell indexes below keep one day:
+          # they are bulk, and they are not the diagnostic.
+          retention-days: 30
       - name: Preserve failed original raw and Code evidence
         if: always() && steps.native.outcome == 'failure'
         run: >-
@@ -870,6 +877,10 @@ jobs:
           repo-root: ${{ github.workspace }}
           directory: ${{ github.workspace }}/output/readiness/failed-reader-transport
           kind: failed-reader
+          # Failure evidence for the release-critical reader lane: the same
+          # one-day expiry is why the refusal behind 31 failed releases has no
+          # readable trace. Keep it past a release cycle.
+          retention-days: 30
       - name: Summarize required acceptance outcomes
         if: always()
         shell: bash

@@ -141,7 +141,11 @@ jobs:
             ${{ runner.temp }}/template-native-preflight-scratch/failed-installed-launch.json
             ${{ runner.temp }}/template-native-preflight-scratch/completed-installed-launch.json
           if-no-files-found: warn
-          retention-days: 7
+          # This is the only retained trace of a diagnostic failure. Seven days
+          # is short enough that a red read after a weekend cannot be diagnosed;
+          # the 82 preflight failures have never produced one. Thirty days lets a
+          # finding outlive the review cycle that noticed it.
+          retention-days: 30
       - name: State the diagnostic boundary
         if: always()
         shell: bash
