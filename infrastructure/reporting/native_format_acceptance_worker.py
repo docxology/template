@@ -524,7 +524,10 @@ def _run_native_worker(
         # Record, then re-raise: the worker must still fail. A worker that
         # swallowed `SystemExit` and continued would be a worse defect than the
         # one this clause exists to name.
-        detail = str(error)
+        # `str(SystemExit(None))` is the literal "None", which would read as a
+        # real message. Only a non-empty, non-"None" string is worth appending.
+        message = str(error)
+        detail = message if message and message != "None" else ""
         raw["diagnostic"] = (
             f"{type(error).__name__} escaped the worker body: {detail}"
             if detail
