@@ -9,7 +9,6 @@ proven to reject bad input, not just accept good input.
 | Module | Role |
 | --- | --- |
 | [`validation.py`](validation.py) | Public facade: `validate_outputs`, `validate_manuscript`, `build_lean` |
-| [`pipeline_diagnostics.py`](pipeline_diagnostics.py) | Diagnostic-only phase hashes, confined generated JSON/compiled-section retention and actual semantic/integration/sheaf issue lists; bounded unavailable observations never authorize acceptance |
 | [`artifact_manifest.py`](artifact_manifest.py) | `REQUIRED_OUTPUTS` SSOT for output gate checks |
 | [`output_checks.py`](output_checks.py) | Thin dispatcher: composes simulation, spine, promoted, and figure checks |
 | [`output_checks_simulation.py`](output_checks_simulation.py) | SI/pymdp schema checks; `add_log_check` (always sets `si_log_present`) |

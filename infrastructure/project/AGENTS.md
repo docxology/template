@@ -787,3 +787,5 @@ serial operation. Parallel cells change aggregate scheduling allowance.
 Never report this as success of the old global deadline. Keep Root's six
 artifacts, Darwin print and native-format originals separate, and preserve
 held contexts through candidate and fresh release handoff validation.
+
+The Source-only Active refresh observer lives in active_pipeline_diagnostics.py. It reads the actual project's literal REQUIRED_OUTPUTS registry without importing domain code, records confined phase hashes and bounded raw generated JSON/compiled sections, and invokes genuine project validators under the nominated interpreter with physical-source checks. Missing, malformed, oversized, linked, and foreign-source observations remain unavailable; diagnostic records grant no acceptance. Run it as python -m infrastructure.project.active_pipeline_diagnostics with the selected project src and current Root on PYTHONPATH.

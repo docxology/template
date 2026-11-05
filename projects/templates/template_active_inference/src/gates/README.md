@@ -3,7 +3,6 @@
 Deterministic gates that check generated outputs are well-formed and concordant
 across the multi-track exemplar before manuscript validation and rendering.
 
-- `pipeline_diagnostics.py` — selected public phase manifests and bounded failure bytes, plus actual semantic, integration and sheaf issue lists from the nominated interpreter. Reads refuse symlinks and fixed file/byte limits; unavailable observations and diagnostic records never establish acceptance.
 - `validation.py` — output/structure validation and cross-track consistency checks.
 - `output_checks.py` — grouped output checks for required files, simulation,
   validation-spine, promoted-track, visualization, and canonical sheaf artifacts.

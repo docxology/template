@@ -7,6 +7,7 @@ pipeline, semantic, publication or release acceptance.
 from __future__ import annotations
 
 import argparse
+import ast
 import hashlib
 import importlib
 import json
@@ -18,7 +19,6 @@ from pathlib import Path
 from typing import Any
 
 from infrastructure.core.files.secure_write import atomic_write_bytes_confined, read_bytes_confined
-from gates.artifact_manifest import REQUIRED_OUTPUTS
 
 MAX_FILES = 256
 MAX_FILE_BYTES = 4 * 1024 * 1024
@@ -32,6 +32,7 @@ SOURCE_INPUTS = (
     "tracks.yaml",
     "pymdp.yaml",
     "manuscript/config.yaml",
+    "src/gates/artifact_manifest.py",
 )
 EXTRA_GENERATED = (
     "output/data/manuscript_variables.json",
@@ -62,10 +63,29 @@ def _destination(project: Path, directory: Path) -> Path:
     return directory
 
 
+def _required_outputs(project: Path) -> tuple[str, ...]:
+    """Read the actual project's literal output registry without importing domain code."""
+    relative = "src/gates/artifact_manifest.py"
+    body = read_bytes_confined(project, project / relative, max_bytes=MAX_FILE_BYTES)
+    declarations = [
+        node.value
+        for node in ast.parse(body, filename=relative).body
+        if isinstance(node, ast.AnnAssign)
+        and isinstance(node.target, ast.Name)
+        and node.target.id == "REQUIRED_OUTPUTS"
+    ]
+    if len(declarations) != 1 or declarations[0] is None:
+        raise ValueError("diagnostic requires one literal Source output registry")
+    values = ast.literal_eval(declarations[0])
+    if not isinstance(values, tuple) or not values or any(not isinstance(value, str) for value in values):
+        raise ValueError("diagnostic Source output registry must be a nonempty tuple of paths")
+    return values
+
+
 def selected_paths(project: Path) -> tuple[tuple[str, bool], ...]:
     """Select only declared JSON, source-config hashes and flat compiled sections."""
     project = _directory(project)
-    generated = {rel for rel in (*REQUIRED_OUTPUTS, *EXTRA_GENERATED) if rel.endswith(".json")}
+    generated = {rel for rel in (*_required_outputs(project), *EXTRA_GENERATED) if rel.endswith(".json")}
     if any(not re.fullmatch(r"output/(data|reports|figures)/[A-Za-z0-9_]+\.json", rel) for rel in generated):
         raise ValueError("diagnostic JSON roster contains an unsupported path")
     for relative in ("output/data", "output/reports", "manuscript"):
@@ -160,7 +180,16 @@ def record_validator_issues(project: Path, directory: Path, role: str) -> Path:
                 issues=[issue[:MAX_ISSUE_CHARS] for issue in issues[:MAX_ISSUES]],
                 dropped_issues=max(0, len(issues) - MAX_ISSUES),
             )
-        except Exception as error:  # noqa: BLE001 - a diagnostic records actual refusals without acceptance
+        except (
+            ImportError,
+            OSError,
+            ValueError,
+            RuntimeError,
+            TypeError,
+            KeyError,
+            AttributeError,
+            ArithmeticError,
+        ) as error:
             observation.update(status="unavailable", exception=type(error).__name__, reason=str(error)[:1024])
         observations.append(observation)
     return _write(

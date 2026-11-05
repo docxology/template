@@ -4,12 +4,15 @@ from __future__ import annotations
 
 import hashlib
 import json
+import shutil
+import subprocess
+import sys
 from pathlib import Path
 
 import pytest
 
-from gates.artifact_manifest import REQUIRED_OUTPUTS
-from gates.pipeline_diagnostics import (
+from infrastructure.project.active_pipeline_diagnostics import (
+    _required_outputs,
     MAX_FILE_BYTES,
     MAX_FILES,
     MAX_TOTAL_BYTES,
@@ -19,7 +22,8 @@ from gates.pipeline_diagnostics import (
     selected_paths,
 )
 
-PROJECT = Path(__file__).resolve().parents[2]
+PROJECT = Path(__file__).resolve().parents[3] / "projects/templates/template_active_inference"
+REQUIRED_OUTPUTS = _required_outputs(PROJECT)
 pytestmark = pytest.mark.timeout(120)
 
 
@@ -30,6 +34,9 @@ def _tree(tmp_path: Path) -> tuple[Path, Path]:
     (root / "output/reports").mkdir()
     (root / "manuscript").mkdir()
     directory.mkdir()
+    registry = root / "src/gates/artifact_manifest.py"
+    registry.parent.mkdir(parents=True)
+    shutil.copy2(PROJECT / "src/gates/artifact_manifest.py", registry)
     return root, directory
 
 
@@ -148,7 +155,27 @@ def test_invalid_labels_and_in_project_destinations_refuse(tmp_path: Path) -> No
 
 def test_real_validators_report_actual_project_issues_and_wrong_source_origin(tmp_path: Path) -> None:
     root, directory = _tree(tmp_path)
-    observed = json.loads(record_validator_issues(PROJECT, directory, "root").read_text())
+    script = """
+import json, sys
+from pathlib import Path
+project, foreign, output = map(Path, sys.argv[1:])
+sys.path.insert(0, str(project / "src"))
+from infrastructure.project.active_pipeline_diagnostics import record_validator_issues
+observed = json.loads(record_validator_issues(project, output, "root").read_text())
+refused = json.loads(record_validator_issues(foreign, output, "active").read_text())
+print(json.dumps({"observed": observed, "refused": refused}))
+"""
+    result = subprocess.run(
+        [sys.executable, "-I", "-B", "-c", script, str(PROJECT), str(root), str(directory)],
+        stdin=subprocess.DEVNULL,
+        capture_output=True,
+        text=True,
+        timeout=60,
+        check=False,
+    )
+    assert result.returncode == 0, result.stdout + result.stderr
+    facts = json.loads(result.stdout.splitlines()[-1])
+    observed, refused = facts["observed"], facts["refused"]
     assert {row["validator"] for row in observed["observations"]} == {
         "semantic_gluing",
         "integration_audit",
@@ -160,10 +187,28 @@ def test_real_validators_report_actual_project_issues_and_wrong_source_origin(tm
             assert row["issue_count"] >= len(row["issues"])
             assert all(isinstance(issue, str) for issue in row["issues"])
             assert Path(row["module_file"]).is_relative_to(PROJECT / "src")
-    refused = json.loads(record_validator_issues(root, directory, "active").read_text())
     assert all(row["status"] == "unavailable" for row in refused["observations"])
     assert all("outside the observed project source" in row["reason"] for row in refused["observations"])
     assert refused["acceptance_authorized"] is False
+
+
+@pytest.mark.parametrize(
+    "declaration",
+    (
+        "REQUIRED_OUTPUTS = ('output/data/result.json',)",
+        "REQUIRED_OUTPUTS: tuple[str, ...] = dangerous()",
+        "REQUIRED_OUTPUTS: tuple[str, ...] = ('output/data/result.json', 1)",
+    ),
+)
+def test_source_output_registry_refuses_missing_or_nonliteral_contracts(tmp_path: Path, declaration: str) -> None:
+    root, directory = _tree(tmp_path)
+    marker = root / "execution-must-not-happen"
+    (root / "src/gates/artifact_manifest.py").write_text(
+        f"def dangerous():\n    open({str(marker)!r}, 'w').write('executed')\n{declaration}\n"
+    )
+    with pytest.raises(ValueError):
+        record_snapshot(root, directory, "before")
+    assert not marker.exists()
 
 
 def test_cli_modes_preserve_diagnostic_only_records(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:

@@ -2,7 +2,7 @@
 
 Generated documentation coverage for every Python `def` and `class` under `src/` and `scripts/`. Entries marked `inventory fallback` have no inline docstring yet, but remain documented here by path, line, kind, and qualified name.
 
-Total documented definitions: 902
+Total documented definitions: 895
 
 ## `src/analytical/bernoulli_toy.py`
 
@@ -205,18 +205,6 @@ Total documented definitions: 902
 | line | kind | name | documentation source | summary |
 | ---: | --- | --- | --- | --- |
 | 6 | `function` | `add_validation_spine_checks` | docstring | Add validation spine checks to the collection. |
-
-## `src/gates/pipeline_diagnostics.py`
-
-| line | kind | name | documentation source | summary |
-| ---: | --- | --- | --- | --- |
-| 48 | `function` | `_directory` | docstring | Reject linked or unavailable directory ancestors before observing children. |
-| 57 | `function` | `_destination` | docstring | Keep diagnostic writes outside the observed project's own state. |
-| 65 | `function` | `selected_paths` | docstring | Select only declared JSON, source-config hashes and flat compiled sections. |
-| 89 | `function` | `_write` | docstring | Atomically retain one finite diagnostic record without following links. |
-| 97 | `function` | `record_snapshot` | docstring | Observe exact selected bytes or explicit read refusals within fixed bounds. |
-| 136 | `function` | `record_validator_issues` | docstring | Call each actual project validator and retain its issues or actual exception. |
-| 181 | `function` | `main` | docstring | Write selected phase DATA; never translate it into a successful gate verdict. |
 
 ## `src/gnn/concordance.py`
 

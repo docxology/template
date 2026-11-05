@@ -144,7 +144,7 @@ jobs:
           record_phase() {
             local phase="$1" diagnostic_status=0
             PYTHONPATH="$PWD/projects/templates/template_active_inference/src:$PWD" \
-              "$PWD/.venv/bin/python" -m gates.pipeline_diagnostics snapshot \
+              "$PWD/.venv/bin/python" -m infrastructure.project.active_pipeline_diagnostics snapshot \
               --project-root "$PWD/projects/templates/template_active_inference" \
               --directory "$REFRESH_DIRECTORY" --phase "$phase" \
               > "$REFRESH_DIRECTORY/$phase.diagnostic.stdout" \
@@ -180,15 +180,15 @@ jobs:
           }
           # Preserve the failed producer's actual bytes before either reader can
           # populate disposable caches or otherwise change a diagnostic input.
-          run_diagnostic failure-snapshot "$PWD/.venv/bin/python" -m gates.pipeline_diagnostics raw \
+          run_diagnostic failure-snapshot "$PWD/.venv/bin/python" -m infrastructure.project.active_pipeline_diagnostics raw \
             --project-root "$project" --directory "$REFRESH_DIRECTORY" --phase failure-before
-          run_diagnostic root-validator-issues "$PWD/.venv/bin/python" -m gates.pipeline_diagnostics validators \
+          run_diagnostic root-validator-issues "$PWD/.venv/bin/python" -m infrastructure.project.active_pipeline_diagnostics validators \
             --project-root "$project" --directory "$REFRESH_DIRECTORY" --phase root
-          run_diagnostic root-validator-after "$PWD/.venv/bin/python" -m gates.pipeline_diagnostics snapshot \
+          run_diagnostic root-validator-after "$PWD/.venv/bin/python" -m infrastructure.project.active_pipeline_diagnostics snapshot \
             --project-root "$project" --directory "$REFRESH_DIRECTORY" --phase root-validator-after
-          run_diagnostic active-validator-issues "$project/.venv/bin/python" -m gates.pipeline_diagnostics validators \
+          run_diagnostic active-validator-issues "$project/.venv/bin/python" -m infrastructure.project.active_pipeline_diagnostics validators \
             --project-root "$project" --directory "$REFRESH_DIRECTORY" --phase active
-          run_diagnostic active-validator-after "$PWD/.venv/bin/python" -m gates.pipeline_diagnostics snapshot \
+          run_diagnostic active-validator-after "$PWD/.venv/bin/python" -m infrastructure.project.active_pipeline_diagnostics snapshot \
             --project-root "$project" --directory "$REFRESH_DIRECTORY" --phase active-validator-after
       - name: Capture the confined Active evidence patch
         shell: bash
