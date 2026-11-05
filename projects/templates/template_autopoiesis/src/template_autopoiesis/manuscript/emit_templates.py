@@ -22,7 +22,7 @@ from __future__ import annotations
 import re
 import textwrap
 
-from .._platform import required_platform_version
+from .._platform import declared_requires_python, required_platform_version
 from ..core.expand import Spec
 
 # ---------------------------------------------------------------------------
@@ -103,7 +103,7 @@ _TEMPLATE_PYPROJECT_TOML = textwrap.dedent("""\
     [project]
     name = "child_@@DOMAIN@@"
     version = "0.1.0"
-    requires-python = ">=3.12"
+    requires-python = "@@REQUIRES_PYTHON@@"
     dependencies = ["numpy", "matplotlib", "pyyaml"]
     # spec_hash: @@SPEC_HASH@@  grammar_hash: @@GRAMMAR_HASH@@
     # seed: @@SEED@@  track: @@TRACK@@  section_set: @@SECTION_SET@@
@@ -231,6 +231,7 @@ def _substitutions_from_spec(spec: Spec) -> dict[str, str]:
     selections = dict(spec.selections)
     return {
         "PLATFORM_VERSION": required_platform_version(),
+        "REQUIRES_PYTHON": declared_requires_python(),
         "DOMAIN": spec.primitive_domain,
         "SPEC_HASH": spec.spec_hash,
         "GRAMMAR_HASH": spec.grammar_hash,
