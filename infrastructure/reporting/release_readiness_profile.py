@@ -17,6 +17,7 @@ from infrastructure.project.public_capabilities import CANONICAL_CI_PYTHON_VERSI
 from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
 from infrastructure.publishing.root_release_contract import validate_runtime_version_provider
 from infrastructure.rendering.config import RenderingConfig
+from infrastructure.reporting.evidence_class import ClassUnavailable
 from infrastructure.reporting.readiness_receipts import (
     SCHEMA_VERSION,
     GateEvidence,
@@ -255,7 +256,41 @@ def required_profile(
     return tuple(requirements), tuple(faults)
 
 
-def _gate(requirement: Requirement, entries: dict[str, Any], reader: SnapshotReader, fingerprint: str) -> GateEvidence:
+def _check_class_binding(
+    requirement: Requirement, payload: dict[str, Any], root: Path, fingerprint: str, *, stage: str | None = None
+) -> None:
+    """Admit a gate against its own evidence class, never one repo-wide digest.
+
+    An artifact that records ``class_binding`` is checked against the recomputed
+    closure for its kind. An artifact that does not -- every receipt produced
+    before separable classes -- falls back to the exact historical
+    ``source_fingerprint`` comparison, so retained evidence keeps today's
+    strictness and nothing becomes newly admissible.
+    """
+    from infrastructure.reporting.evidence_class import class_binding
+
+    recorded = payload.get("class_binding")
+    if recorded is None:
+        if payload.get("source_fingerprint") != fingerprint:
+            raise ValueError("artifact source fingerprint is stale")
+        return
+    if not isinstance(recorded, dict) or set(recorded) != {"sha256", "members"}:
+        raise ValueError("artifact class binding is malformed")
+    # A class that cannot be substantiated in this checkout is refused with its
+    # cause, never admitted against a broader closure.
+    expected = class_binding(requirement, root, repository_fingerprint=fingerprint, stage=stage)
+    if recorded.get("sha256") != expected.digest or tuple(recorded.get("members") or ()) != expected.members:
+        raise ValueError("artifact evidence class is stale for this Source")
+
+
+def _gate(
+    requirement: Requirement,
+    entries: dict[str, Any],
+    reader: SnapshotReader,
+    fingerprint: str,
+    *,
+    stage: str | None = None,
+) -> GateEvidence:
     from infrastructure.reporting.release_readiness_validators import validate_acceptance
 
     entry = entries.get(requirement.id)
@@ -280,13 +315,13 @@ def _gate(requirement: Requirement, entries: dict[str, Any], reader: SnapshotRea
             "platform_version": requirement.platform_version,
             "version": requirement.version,
             "scope": requirement.scope,
-            "source_fingerprint": fingerprint,
             "source_identity": requirement.source_identity,
         }
         if requirement.scope != "root":
             expected["deliverables_identity"] = requirement.deliverables_identity
         if any(payload.get(key) != value for key, value in expected.items()):
             raise ValueError("artifact version/source/scope/status binding is invalid")
+        _check_class_binding(requirement, payload, reader.root, fingerprint, stage=stage)
         status = entry["status"]
         if status == "blocked":
             blockers = payload.get("blockers")
@@ -310,6 +345,8 @@ def _gate(requirement: Requirement, entries: dict[str, Any], reader: SnapshotRea
             validate_acceptance(requirement, payload, reader)
             diagnostic = "declared draft remains explicitly unpublished" if requirement.draft else ""
         return GateEvidence(requirement.id, status, requirement.profile, artifact.relative, diagnostic)
+    except ClassUnavailable as unavailable:
+        return GateEvidence(requirement.id, "fail", requirement.profile, diagnostic=str(unavailable))
     except (
         OSError,
         ValueError,
@@ -352,11 +389,20 @@ def collect_profile(root: Path, receipt_path: Path | None, reader: SnapshotReade
                 (r.platform_version for r in requirements), None
             ):
                 raise ValueError("unsupported receipt schema/version")
-            if receipt.get("source_fingerprint") != fingerprint or receipt.get("roster") != list(PUBLIC_PROJECT_NAMES):
-                raise ValueError("receipt source/roster is stale or incomplete")
+            if receipt.get("roster") != list(PUBLIC_PROJECT_NAMES):
+                raise ValueError("receipt roster is stale or incomplete")
             if not isinstance(receipt.get("gates"), dict):
                 raise ValueError("receipt gates must be a mapping")
             entries = receipt["gates"]
+            # A receipt whose gates carry separable class bindings is admitted
+            # gate by gate below; a receipt produced before separable classes is
+            # still refused unless its one repository-wide digest matches, so
+            # retained evidence keeps exactly today's strictness.
+            carries_classes = any(
+                isinstance(entry, dict) and isinstance(entry.get("class_binding"), dict) for entry in entries.values()
+            )
+            if not carries_classes and receipt.get("source_fingerprint") != fingerprint:
+                raise ValueError("receipt source fingerprint is stale")
             required_ids = {r.id for r in requirements}
             if set(entries) - required_ids:
                 raise ValueError("receipt contains unsupported acceptance gates")
@@ -370,7 +416,15 @@ def collect_profile(root: Path, receipt_path: Path | None, reader: SnapshotReade
                     "receipt", "fail", diagnostic="unsupported, malformed, or source-stale required acceptance receipt"
                 ),
             )
-    gates = faults + tuple(_gate(requirement, entries, reader, fingerprint) for requirement in requirements)
+    # Resolve the shared stage closure once for this admission pass. It is never
+    # cached across passes: a caller that admits evidence and then re-observes the
+    # tree must see a changed stage closure, or stale evidence would be accepted.
+    from infrastructure.reporting.evidence_class import stage_digest
+
+    stage = stage_digest(root)
+    gates = faults + tuple(
+        _gate(requirement, entries, reader, fingerprint, stage=stage) for requirement in requirements
+    )
     try:
         if source_fingerprint(root) != fingerprint or not reader.unchanged():
             gates += (GateEvidence("snapshot", "fail", diagnostic="source or evidence changed during collection"),)

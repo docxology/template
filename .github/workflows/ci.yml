@@ -132,6 +132,12 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
+          # Evidence-class composition resolves a closure that includes the
+          # declared kmyth subtree. Without it the stage closure is unavailable
+          # and every scope-owned class refuses admission, so this shard would
+          # test a checkout shape no release lane ever uses. Match the release,
+          # rebind and native lanes, which all initialize submodules.
+          submodules: true
       - uses: ./.github/actions/setup-python-env
         with:
           dependency-group: installed-build
