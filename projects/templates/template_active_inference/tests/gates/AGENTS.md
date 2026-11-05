@@ -6,6 +6,7 @@ closed. A test that only exercises the happy path does not prove the gate works.
 
 | Test module | Covers |
 | --- | --- |
+| [`test_pipeline_diagnostics.py`](test_pipeline_diagnostics.py) | Actual phase deltas, original failure bytes, symlink and byte/census refusals, real validator issues and wrong-source admission |
 | [`test_claim_ledger.py`](test_claim_ledger.py) | `validate_manuscript` claim-ledger checks (missing file, invalid ledger) |
 | [`test_manuscript_gates.py`](test_manuscript_gates.py) | `validate_manuscript` token/marker/hydration contracts |
 | [`test_output_gates.py`](test_output_gates.py) | `validate_outputs` artifact existence and concordance checks |

@@ -125,6 +125,7 @@ jobs:
           "$HOME/.elan/bin/elan" run "$pin" lean --version
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
       - name: Regenerate and validate the actual Active producers
+        id: active_producers
         shell: bash
         env:
           ANALYSIS_SCRIPT_TIMEOUT_SEC: "1800"
@@ -133,10 +134,22 @@ jobs:
           run_original() {
             local label="$1" status=0
             shift
+            record_phase "$label-before"
             "$@" > "$REFRESH_DIRECTORY/$label.stdout" 2> "$REFRESH_DIRECTORY/$label.stderr" || status=$?
             printf '%s\n' "$status" > "$REFRESH_DIRECTORY/$label.exit-code"
+            record_phase "$label-after"
             cat "$REFRESH_DIRECTORY/$label.stdout" "$REFRESH_DIRECTORY/$label.stderr"
             return "$status"
+          }
+          record_phase() {
+            local phase="$1" diagnostic_status=0
+            PYTHONPATH="$PWD/projects/templates/template_active_inference/src:$PWD" \
+              "$PWD/.venv/bin/python" -m gates.pipeline_diagnostics snapshot \
+              --project-root "$PWD/projects/templates/template_active_inference" \
+              --directory "$REFRESH_DIRECTORY" --phase "$phase" \
+              > "$REFRESH_DIRECTORY/$phase.diagnostic.stdout" \
+              2> "$REFRESH_DIRECTORY/$phase.diagnostic.stderr" || diagnostic_status=$?
+            printf '%s\n' "$diagnostic_status" > "$REFRESH_DIRECTORY/$phase.diagnostic.exit-code"
           }
           project=templates/template_active_inference
           run_original analysis uv run --locked --no-sync --offline python \
@@ -151,6 +164,32 @@ jobs:
           run_original disposable-readiness uv run --locked --no-sync --offline python -m pytest \
             tests/infra_tests/documentation/test_counts_coverage_support.py::test_active_coverage_workspace_preserves_canonical_semantic_readiness \
             -m slow --no-cov -q
+      - name: Preserve failed Active bytes and actual validator issues
+        if: always() && steps.active_producers.outcome == 'failure'
+        continue-on-error: true
+        shell: bash
+        run: |
+          set -uo pipefail
+          project="$PWD/projects/templates/template_active_inference"
+          export PYTHONPATH="$project/src:$PWD"
+          run_diagnostic() {
+            local label="$1" status=0
+            shift
+            "$@" > "$REFRESH_DIRECTORY/$label.stdout" 2> "$REFRESH_DIRECTORY/$label.stderr" || status=$?
+            printf '%s\n' "$status" > "$REFRESH_DIRECTORY/$label.exit-code"
+          }
+          # Preserve the failed producer's actual bytes before either reader can
+          # populate disposable caches or otherwise change a diagnostic input.
+          run_diagnostic failure-snapshot "$PWD/.venv/bin/python" -m gates.pipeline_diagnostics raw \
+            --project-root "$project" --directory "$REFRESH_DIRECTORY" --phase failure-before
+          run_diagnostic root-validator-issues "$PWD/.venv/bin/python" -m gates.pipeline_diagnostics validators \
+            --project-root "$project" --directory "$REFRESH_DIRECTORY" --phase root
+          run_diagnostic root-validator-after "$PWD/.venv/bin/python" -m gates.pipeline_diagnostics snapshot \
+            --project-root "$project" --directory "$REFRESH_DIRECTORY" --phase root-validator-after
+          run_diagnostic active-validator-issues "$project/.venv/bin/python" -m gates.pipeline_diagnostics validators \
+            --project-root "$project" --directory "$REFRESH_DIRECTORY" --phase active
+          run_diagnostic active-validator-after "$PWD/.venv/bin/python" -m gates.pipeline_diagnostics snapshot \
+            --project-root "$project" --directory "$REFRESH_DIRECTORY" --phase active-validator-after
       - name: Capture the confined Active evidence patch
         shell: bash
         run: |
