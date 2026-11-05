@@ -1457,3 +1457,5 @@ previous bytes. Both reporting reconstruction consumers rebuild the selected
 algorithm rather than accepting a new name for legacy composition. These are
 composition and engineering guarantees; they do not establish scientific,
 publication, tagged-PDF or accessibility conformance acceptance.
+
+Stage 3 prepares enabled native transmission assets before project hydration can seal their visualization evidence. It preserves explicit paper-frontmatter admission and repeats the bookend write after hydration restores the manuscript tree. Skipping hydration retains the existing final bookend path.
