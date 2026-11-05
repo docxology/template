@@ -104,3 +104,37 @@ def test_system_exit_escapes_except_exception() -> None:
     assert recorded == ["baseexception-handler"], (
         "if this ever reads ['exception-handler'] the language changed and the BaseException clause is no longer needed"
     )
+
+
+def test_no_statement_between_raw_and_the_handler_sits_outside_a_try() -> None:
+    """The handler must begin as soon as `raw` exists.
+
+    Before this was pinned, `env = native_environment(...)` sat between `raw`
+    being constructed and the protected `try:`, inside no `try` at all. A
+    `SystemExit` raised there escaped with an empty diagnostic -- the exact
+    failure the BaseException clause exists to prevent -- and nothing caught
+    it because the clause is attached to a `try` that had not started yet.
+    """
+    tree = ast.parse(WORKER.read_text(encoding="utf-8"))
+    function = next(
+        node for node in ast.walk(tree) if isinstance(node, ast.FunctionDef) and node.name == "_run_native_worker"
+    )
+    handler_try = next(
+        statement
+        for statement in function.body
+        if isinstance(statement, ast.Try)
+        and any(
+            clause.type is not None and ast.unparse(clause.type) == "BaseException" for clause in statement.handlers
+        )
+    )
+    raw_index = next(
+        index
+        for index, statement in enumerate(function.body)
+        if isinstance(statement, (ast.AnnAssign, ast.Assign))
+        and "raw" in ast.unparse(statement.targets if isinstance(statement, ast.Assign) else [statement.target])
+    )
+    between = function.body[raw_index + 1 : function.body.index(handler_try)]
+    assert between == [], (
+        "statements between `raw` and the protected try: run outside the "
+        f"BaseException handler. Offending lines: {[s.lineno for s in between]}"
+    )

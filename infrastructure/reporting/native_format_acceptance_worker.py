@@ -228,8 +228,16 @@ def _run_native_worker(
         "blockers": [],
         "diagnostic": "",
     }
-    env = native_environment(root, Path(sys.executable), directory)
     try:
+        # `native_environment` resolves the interpreter-visible environment and can
+        # raise outside the delivery path it prepares. It belongs inside the
+        # protected body so a failure here is recorded rather than escaping as an
+        # unexplained exit: before this line moved, it was the only statement
+        # between `raw` existing (line 184) and the handler beginning, and it sat
+        # inside no `try` at all. A `SystemExit` raised here produced exactly the
+        # empty-diagnostic worker exit this module's BaseException clause exists to
+        # prevent.
+        env = native_environment(root, Path(sys.executable), directory)
         if runtime["missing"] or runtime["python_version"] not in {
             "3.12",
             "3.13",
