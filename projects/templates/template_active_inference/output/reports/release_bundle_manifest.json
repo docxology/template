@@ -2,7 +2,7 @@
   "all_copied_outputs_match_or_deferred": true,
   "all_required_sources_present": true,
   "artifact_count": 36,
-  "bundle_hash": "8ff7466349f2aebbf311dabd757a46c3d1534019caf749a59182e903f247d47b",
+  "bundle_hash": "7b3f36af4b00e0b8fb86fc7a8bf25bef31bfa0616eed21f7def330c0cd887745",
   "copied_output_parity": {
     "all_copied_outputs_match": false,
     "all_copied_outputs_match_or_deferred": true,
@@ -681,7 +681,7 @@
       "hash_cycle_excluded": false,
       "required_deliverable": true,
       "source_exists": true,
-      "source_sha256": "83ec0b08db4b50926c12fc25438c2bc72608bbbdd798c0679d74f63e7501f3c9"
+      "source_sha256": "40f442d5411cf6f0f27f6b9238e16bed7b3c32129294a76b94ac42191968d599"
     },
     {
       "artifact": "output/figures/semantic_gluing_graph.png",
@@ -690,7 +690,7 @@
       "hash_cycle_excluded": false,
       "required_deliverable": true,
       "source_exists": true,
-      "source_sha256": "d94fcf4826ed7cc686fb3e05a234bc523f4e9c99e8ef75e4fc4dda64d00a5e4d"
+      "source_sha256": "9bb2000801dfc552068a4109a89dc4398e8a5f1a6756aadabc0f913c19c37b79"
     },
     {
       "artifact": "output/figures/track_lane_promotion_map.png",
@@ -699,7 +699,7 @@
       "hash_cycle_excluded": false,
       "required_deliverable": true,
       "source_exists": true,
-      "source_sha256": "9d002f5bf93f9782d576999b2a637fa520e19e5969d3dfc662b138ff5499caf3"
+      "source_sha256": "6d25caa34603d96e3844df6abdf7ccf7ea9efdb5fcaed567e2a44be240582157"
     },
     {
       "artifact": "output/figures/artifact_contract_map.png",
@@ -708,7 +708,7 @@
       "hash_cycle_excluded": false,
       "required_deliverable": true,
       "source_exists": true,
-      "source_sha256": "c898717bd671afc786cb5c74d349aceb3e00b3256b761d0b08b18a95c2c0e50e"
+      "source_sha256": "5c6cd5e4033791f29952776d48ba0c3c420bb833dc7870b03c4b7bc37a94c499"
     },
     {
       "artifact": "output/figures/theorem_traceability_graph.png",
@@ -717,7 +717,7 @@
       "hash_cycle_excluded": false,
       "required_deliverable": true,
       "source_exists": true,
-      "source_sha256": "5c42b2d3da08ca481ee6c50775690f8dc351b725451df8cdcb7bc6fa157c3400"
+      "source_sha256": "83d58ceb42152d8b6292b3ee09ead8ee45310dea979d0976e856f526bf6c0bf8"
     },
     {
       "artifact": "output/figures/causal_ablation_heatmap.png",
@@ -726,7 +726,7 @@
       "hash_cycle_excluded": false,
       "required_deliverable": true,
       "source_exists": true,
-      "source_sha256": "8da94fcf550d1c688825c4c2c6f518a2d7eb63da90602cdb384a578189faa92a"
+      "source_sha256": "4706a4b65b153e0bf5013bc71a016027925e6003267e3562cfba046c20864562"
     },
     {
       "artifact": "output/figures/scholarship_source_map.png",
@@ -735,7 +735,7 @@
       "hash_cycle_excluded": false,
       "required_deliverable": true,
       "source_exists": true,
-      "source_sha256": "881ff2ddaa980461262bd9f48bc751b7294e2cf25ce748d4da542ec6dbbb3d75"
+      "source_sha256": "59dfde8afbf6efd32842976dd29c9d9b192d56b89766bed44213fa3bd024543b"
     },
     {
       "artifact": "output/reports/visualization_quality_audit.json",
@@ -744,7 +744,7 @@
       "hash_cycle_excluded": false,
       "required_deliverable": true,
       "source_exists": true,
-      "source_sha256": "d3df61043cf3809a04cdd87b3c0543bcc1b1180b88462f9aa155b03a0f18afd6"
+      "source_sha256": "fc84a469565972c0cf7d51b6ed842e67d395cbcc8004d3d1de7ac8f0f04fa172"
     },
     {
       "artifact": "output/data/statistical_visualization_bridge.json",
@@ -780,7 +780,7 @@
       "hash_cycle_excluded": false,
       "required_deliverable": true,
       "source_exists": true,
-      "source_sha256": "65810f3b6f74851ce301c24268af99b8edaf42f6e0458015c8b494f500e8014f"
+      "source_sha256": "dc9d6c4cf63363d2be465f03bd3ca624a9f402a58bea6425559f2e7a1898c0f3"
     },
     {
       "artifact": "output/data/proof_extraction_index.json",

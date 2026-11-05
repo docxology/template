@@ -192,7 +192,7 @@
       "sheaf_tracks": [],
       "source_exists": true,
       "source_hash_fresh": true,
-      "source_sha256": "b40e3562a7e8a13c5b9c54f5f3d27d864549e5077f121b9041345f392747175a",
+      "source_sha256": "7e6e6bac8a5d1270f3b2a65bfd5e118d67c63dbae47b1b6f7ac7f136a9bbfe6d",
       "validation_gates": [
         "validate_outputs"
       ]
@@ -229,7 +229,7 @@
       ],
       "source_exists": true,
       "source_hash_fresh": true,
-      "source_sha256": "8259ff1011b1a9512827bf6ae0a90c373b8bb8d222ab2c77d698feacdcca3c58",
+      "source_sha256": "6d7cbc6634c9115787bb51b8e5432f0869dcd20958da0840c95a55ee717b0bcc",
       "validation_gates": [
         "validate_manuscript",
         "validate_outputs"
@@ -449,7 +449,7 @@
       "sheaf_tracks": [],
       "source_exists": true,
       "source_hash_fresh": true,
-      "source_sha256": "569b75df6e789d27819a14aaf8dae5dbda615da67521f7a237321edbee227434",
+      "source_sha256": "bb112a24f0f2bb0a05a653baa81bc133df6d67e5f4516c325f2e1fcbfe990224",
       "validation_gates": [
         "validate_manuscript",
         "validate_outputs"
@@ -1750,7 +1750,7 @@
       "sheaf_tracks": [],
       "source_exists": true,
       "source_hash_fresh": true,
-      "source_sha256": "c898717bd671afc786cb5c74d349aceb3e00b3256b761d0b08b18a95c2c0e50e",
+      "source_sha256": "5c6cd5e4033791f29952776d48ba0c3c420bb833dc7870b03c4b7bc37a94c499",
       "validation_gates": [
         "figure_registry",
         "validate_outputs"
@@ -1781,7 +1781,7 @@
       "sheaf_tracks": [],
       "source_exists": true,
       "source_hash_fresh": true,
-      "source_sha256": "8da94fcf550d1c688825c4c2c6f518a2d7eb63da90602cdb384a578189faa92a",
+      "source_sha256": "4706a4b65b153e0bf5013bc71a016027925e6003267e3562cfba046c20864562",
       "validation_gates": [
         "figure_registry",
         "validate_outputs"
@@ -1846,7 +1846,7 @@
       "sheaf_tracks": [],
       "source_exists": true,
       "source_hash_fresh": true,
-      "source_sha256": "881ff2ddaa980461262bd9f48bc751b7294e2cf25ce748d4da542ec6dbbb3d75",
+      "source_sha256": "59dfde8afbf6efd32842976dd29c9d9b192d56b89766bed44213fa3bd024543b",
       "validation_gates": [
         "figure_registry",
         "validate_outputs"
@@ -1880,7 +1880,7 @@
       "sheaf_tracks": [],
       "source_exists": true,
       "source_hash_fresh": true,
-      "source_sha256": "6082337390bae8db626279ae096fc00c214f812b47d1c73d89dc0a61b6ccc053",
+      "source_sha256": "f8df4980d42904988676846030c8d3028a4a206f191f52bd427d158b48e15787",
       "validation_gates": [
         "figure_registry",
         "validate_outputs"
@@ -1913,7 +1913,7 @@
       "sheaf_tracks": [],
       "source_exists": true,
       "source_hash_fresh": true,
-      "source_sha256": "d94fcf4826ed7cc686fb3e05a234bc523f4e9c99e8ef75e4fc4dda64d00a5e4d",
+      "source_sha256": "9bb2000801dfc552068a4109a89dc4398e8a5f1a6756aadabc0f913c19c37b79",
       "validation_gates": [
         "figure_registry",
         "validate_outputs"
@@ -1946,7 +1946,7 @@
       "sheaf_tracks": [],
       "source_exists": true,
       "source_hash_fresh": true,
-      "source_sha256": "8acbcb202c35258e9a4290e46c74231a46d7e8e71604cc2f76f4a690af7e6259",
+      "source_sha256": "967c5f5f9c25e617329f36d794424230e5cfc37c86c39de316176c7c2db8a5e7",
       "validation_gates": [
         "figure_registry",
         "validate_outputs"
@@ -2012,7 +2012,7 @@
       "sheaf_tracks": [],
       "source_exists": true,
       "source_hash_fresh": true,
-      "source_sha256": "83ec0b08db4b50926c12fc25438c2bc72608bbbdd798c0679d74f63e7501f3c9",
+      "source_sha256": "40f442d5411cf6f0f27f6b9238e16bed7b3c32129294a76b94ac42191968d599",
       "validation_gates": [
         "validate_outputs"
       ]
@@ -2042,7 +2042,7 @@
       "sheaf_tracks": [],
       "source_exists": true,
       "source_hash_fresh": true,
-      "source_sha256": "5c42b2d3da08ca481ee6c50775690f8dc351b725451df8cdcb7bc6fa157c3400",
+      "source_sha256": "83d58ceb42152d8b6292b3ee09ead8ee45310dea979d0976e856f526bf6c0bf8",
       "validation_gates": [
         "figure_registry",
         "validate_outputs"
@@ -2076,7 +2076,7 @@
       "sheaf_tracks": [],
       "source_exists": true,
       "source_hash_fresh": true,
-      "source_sha256": "9d002f5bf93f9782d576999b2a637fa520e19e5969d3dfc662b138ff5499caf3",
+      "source_sha256": "6d25caa34603d96e3844df6abdf7ccf7ea9efdb5fcaed567e2a44be240582157",
       "validation_gates": [
         "figure_registry",
         "validate_outputs"
@@ -2189,7 +2189,7 @@
       ],
       "source_exists": true,
       "source_hash_fresh": true,
-      "source_sha256": "65810f3b6f74851ce301c24268af99b8edaf42f6e0458015c8b494f500e8014f",
+      "source_sha256": "dc9d6c4cf63363d2be465f03bd3ca624a9f402a58bea6425559f2e7a1898c0f3",
       "validation_gates": [
         "validate_manuscript",
         "validate_outputs"
@@ -2370,7 +2370,7 @@
       "sheaf_tracks": [],
       "source_exists": true,
       "source_hash_fresh": true,
-      "source_sha256": "60512104bbe912af72dccfec40c6f4869f72b710f33b36ae42eb73c7962a297c",
+      "source_sha256": "5e69728ed3599d1a670f94ca8bdd2581bb3abf687b045b9067889e7f9d1d0623",
       "validation_gates": [
         "validate_manuscript",
         "validate_outputs"
@@ -2721,7 +2721,7 @@
       "sheaf_tracks": [],
       "source_exists": true,
       "source_hash_fresh": true,
-      "source_sha256": "ba2af9f61ff338571752d691024dbf34e2ca42bc66a3d14f3a400ecd1510d963",
+      "source_sha256": "1839c89efc0a5046d07e453c7fba32032af8f81a3520bf4bcf0abc922bc58c79",
       "validation_gates": [
         "validate_manuscript",
         "validate_outputs"
@@ -2760,7 +2760,7 @@
       ],
       "source_exists": true,
       "source_hash_fresh": true,
-      "source_sha256": "b30da128afabf49fc8b3850e6c887fe2dab100b6314eb81768b034f464c165de",
+      "source_sha256": "af64d24a1eab97944a7a431739c77c07eba66d99efb7e60484fd24fc10606a0e",
       "validation_gates": [
         "validate_manuscript",
         "validate_outputs"
@@ -3071,7 +3071,7 @@
       "sheaf_tracks": [],
       "source_exists": true,
       "source_hash_fresh": true,
-      "source_sha256": "40989d7f5d4b8ad027e94fcd0e2b7bec1ef74626da010053f4d4bc421b8b3f90",
+      "source_sha256": "f005a0f8ed93d00f8ee9eb67301ff91e724cf6aa8624eba0440aa0b0828f5c24",
       "validation_gates": [
         "validate_manuscript",
         "validate_outputs"
@@ -3112,7 +3112,7 @@
       ],
       "source_exists": true,
       "source_hash_fresh": true,
-      "source_sha256": "d3df61043cf3809a04cdd87b3c0543bcc1b1180b88462f9aa155b03a0f18afd6",
+      "source_sha256": "fc84a469565972c0cf7d51b6ed842e67d395cbcc8004d3d1de7ac8f0f04fa172",
       "validation_gates": [
         "validate_manuscript",
         "validate_outputs"
