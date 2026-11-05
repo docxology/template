@@ -58,7 +58,6 @@ class ClassBinding:
         return {"sha256": self.digest, "members": list(self.members)}
 
 
-@dataclass(frozen=True)
 class ClassUnavailable(Exception):
     """A scope-owned class that cannot be substantiated in this checkout.
 
@@ -66,11 +65,20 @@ class ClassUnavailable(Exception):
     mean substituting the repository-wide fingerprint, which is a broader claim
     that would admit stale per-scope evidence. The cause is carried so a refusal
     names what is missing instead of looking like a generic staleness.
+
+    This must NOT be a frozen dataclass. CPython assigns ``__traceback__`` on
+    every raised exception and pytest's ``pytest.raises(...) as info`` handler
+    assigns it again, so freezing the instance raises ``FrozenInstanceError``
+    from inside the exception machinery. A plain ``raise``/``except`` never
+    touches that attribute, which is why only tests that inspect the exception
+    object exposed it.
     """
 
-    kind: str
-    scope: str
-    cause: str
+    def __init__(self, kind: str, scope: str, cause: str) -> None:
+        super().__init__(kind, scope, cause)
+        self.kind = kind
+        self.scope = scope
+        self.cause = cause
 
     def __str__(self) -> str:
         """Return the refusal text recorded on the gate."""
