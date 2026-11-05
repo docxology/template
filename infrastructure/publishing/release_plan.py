@@ -26,6 +26,7 @@ from yaml.tokens import AliasToken
 from infrastructure.core.files.secure_write import read_bytes_confined
 from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
 from infrastructure.publishing.root_release_contract import validate_runtime_version_provider
+from infrastructure.publishing.release_provider_graph import provider_order as _provider_order
 
 SCHEMA = "template-coordinated-release-plan-v2"
 CONTRACT = "infrastructure/config/release-plan-contract.json"
@@ -181,43 +182,6 @@ def _publication(body: bytes, old: str, new: str) -> bytes:
     if yaml.safe_load(result) != expected:
         raise ValueError("publication transformation changed fields outside the SDK binding")
     return result.encode()
-
-
-def _provider_order(root: Path, metadata: dict[str, dict[str, Any]]) -> list[str]:
-    locations = {root: "root", **{root / "projects" / scope: scope for scope in PUBLIC_PROJECT_NAMES}}
-
-    def normalize(value: str) -> str:
-        return re.sub(r"[-_.]+", "-", value).lower()
-
-    edges: dict[str, list[str]] = {}
-    for scope, payload in metadata.items():
-        base = root if scope == "root" else root / "projects" / scope
-        providers = []
-        for package, declaration in payload.get("tool", {}).get("uv", {}).get("sources", {}).items():
-            if not isinstance(declaration, dict) or "path" not in declaration:
-                raise ValueError("release plan requires explicit local provider declarations")
-            location = Path(os.path.abspath(base / declaration["path"]))
-            provider = locations.get(location)
-            if provider is None or normalize(metadata[provider]["project"]["name"]) != normalize(package):
-                raise ValueError("local provider is outside the canonical public package roster")
-            providers.append(provider)
-        edges[scope] = sorted(set(providers))
-    order: list[str] = []
-    visiting: set[str] = set()
-
-    def visit(scope: str) -> None:
-        if scope in visiting:
-            raise ValueError("release provider graph contains a cycle")
-        if scope not in order:
-            visiting.add(scope)
-            for provider in edges[scope]:
-                visit(provider)
-            visiting.remove(scope)
-            order.append(scope)
-
-    for scope in ("root", *PUBLIC_PROJECT_NAMES):
-        visit(scope)
-    return order
 
 
 def build_release_plan(

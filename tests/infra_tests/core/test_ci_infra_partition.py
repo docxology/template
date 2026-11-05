@@ -303,7 +303,8 @@ def test_actual_xdist_workers_agree_and_only_execute_the_assigned_cases(
     module = root / next(iter(RESERVED_MODULES))
     module.write_text(
         module.read_text()
-        + "\n@pytest.mark.parametrize('private_value', [str(ROOT/'PRIVATE_PARAMETER_SENTINEL')])\n"
+        + "\n@pytest.mark.parametrize('private_value', [str(ROOT/'PRIVATE_PARAMETER_SENTINEL')],\n"
+        + "                         ids=[str(ROOT/'PRIVATE_PARAMETER_SENTINEL')])\n"
         + "def test_actual_parameter_privacy(private_value):\n"
         + "    assert private_value.endswith('PRIVATE_PARAMETER_SENTINEL')\n"
     )

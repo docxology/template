@@ -324,6 +324,13 @@ SOURCE_TEST_OWNERS: dict[str, tuple[str, ...]] = {
     "infrastructure/project/public_acceptance_auxiliary_worker.py": (
         "tests/infra_tests/project/test_public_acceptance_auxiliary.py",
     ),
+    "infrastructure/publishing/publication_refresh_custody.py": (
+        "tests/infra_tests/publishing/test_publication_refresh.py",
+    ),
+    "infrastructure/publishing/release_provider_graph.py": (
+        "tests/infra_tests/publishing/test_publication_refresh.py",
+        "tests/infra_tests/publishing/test_release_plan.py",
+    ),
     "infrastructure/publishing/release_plan_transaction.py": ("tests/infra_tests/publishing/test_release_plan.py",),
     "infrastructure/reporting/native_current_nomination_batch.py": (
         "tests/infra_tests/reporting/test_native_revalidation_data.py",
@@ -503,6 +510,9 @@ SOURCE_TEST_OWNERS: dict[str, tuple[str, ...]] = {
         "tests/infra_tests/reporting/test_required_acceptance_aggregate.py",
         "tests/infra_tests/reporting/test_required_readiness.py",
         "tests/infra_tests/reporting/test_runtime_case_evidence.py",
+        "tests/infra_tests/publishing/test_composed_acceptance.py",
+        "tests/infra_tests/reporting/test_evidence_class_composition.py",
+        "tests/infra_tests/reporting/test_evidence_class_composition_gate.py",
     ),
     "infrastructure/reporting/native_print_source_loader.py": (
         "tests/infra_tests/project/test_auxiliary_print_custody.py",
