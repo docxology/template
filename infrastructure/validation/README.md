@@ -172,10 +172,10 @@ print(f"Found manuscript at: {manuscript_dir}")
 
 # Validate PDF after rendering
 pdf_report = validate_pdf_rendering(Path("output/{project_name}/pdf/{project_name}_combined.pdf"))
-if pdf_report['summary']['has_issues']:
+if pdf_report["summary"]["has_issues"]:
     print(f"PDF has {pdf_report['issues']['total_issues']} issues")
-    for issue_type, count in pdf_report['issues'].items():
-        if count > 0 and issue_type != 'total_issues':
+    for issue_type, count in pdf_report["issues"].items():
+        if count > 0 and issue_type != "total_issues":
             print(f"  {issue_type}: {count}")
 
 # Validate markdown before rendering
@@ -200,6 +200,7 @@ if integrity_report.warnings:
 
 # Generate human-readable report
 from infrastructure.validation.integrity.checks import generate_integrity_report
+
 print(generate_integrity_report(integrity_report))
 ```
 
@@ -436,7 +437,7 @@ Validation serves as quality gates in the pipeline:
 # Graceful error handling in validation
 try:
     report = validate_pdf_rendering(pdf_path)
-    if report['summary']['has_issues']:
+    if report["summary"]["has_issues"]:
         # Log issues but don't fail build
         logger.warning(f"PDF validation found {report['issues']['total_issues']} issues")
         # Continue with warnings
@@ -451,27 +452,14 @@ except PDFValidationError as e:
 ### PDF Validation Report
 ```python
 {
-    'summary': {
-        'has_issues': bool,
-        'total_issues': int,
-        'validation_time': float
+    "summary": {"has_issues": bool, "total_issues": int, "validation_time": float},
+    "issues": {"unresolved_refs": int, "missing_citations": int, "latex_errors": int, "total_issues": int},
+    "text": {
+        "preview": str,  # First N words
+        "total_words": int,
+        "encoding": str,
     },
-    'issues': {
-        'unresolved_refs': int,
-        'missing_citations': int,
-        'latex_errors': int,
-        'total_issues': int
-    },
-    'text': {
-        'preview': str,  # First N words
-        'total_words': int,
-        'encoding': str
-    },
-    'metadata': {
-        'file_size': int,
-        'page_count': int,
-        'creation_date': str
-    }
+    "metadata": {"file_size": int, "page_count": int, "creation_date": str},
 }
 ```
 

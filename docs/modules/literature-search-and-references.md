@@ -39,8 +39,12 @@ flowchart LR
 
 ```python
 from infrastructure.search.literature import (
-    LiteratureClient, SearchQuery, ArxivBackend, CrossrefBackend,
-    AbstractFetcher, FulltextFetcher,
+    LiteratureClient,
+    SearchQuery,
+    ArxivBackend,
+    CrossrefBackend,
+    AbstractFetcher,
+    FulltextFetcher,
 )
 from infrastructure.reference.citation import paper_to_bibentry, write_bibfile
 from infrastructure.reference.citation.models import BibDatabase

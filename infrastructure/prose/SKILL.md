@@ -33,9 +33,9 @@ from infrastructure.prose import compute_metrics, normalise_for_prose
 
 text = "The cat sat on the mat. Dogs run fast."
 metrics = compute_metrics(normalise_for_prose(text))
-print(metrics.flesch_reading_ease)        # 100+ — very easy
-print(metrics.flesch_kincaid_grade)        # ~1
-print(metrics.gunning_fog)                 # ~1.6
+print(metrics.flesch_reading_ease)  # 100+ — very easy
+print(metrics.flesch_kincaid_grade)  # ~1
+print(metrics.gunning_fog)  # ~1.6
 ```
 
 ## Heading structure
@@ -55,7 +55,7 @@ from infrastructure.prose import analyze_quality
 
 q = analyze_quality(text)
 q.passive_count, q.hedge_count, q.citation_count, q.long_sentence_count
-q.citation_density_per_1000   # citations per 1000 words
+q.citation_density_per_1000  # citations per 1000 words
 ```
 
 ## Whole-manuscript report

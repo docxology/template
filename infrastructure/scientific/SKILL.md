@@ -60,12 +60,12 @@ from infrastructure.scientific import confirm_improvement, Confirmation
 
 # Confirm a candidate beats a baseline metric beyond the noise band
 result = confirm_improvement(
-    evaluate=my_evaluator,        # (params, seed) -> metric
+    evaluate=my_evaluator,  # (params, seed) -> metric
     candidate=(0.1, 0.2),
     baseline_metric=1.0,
     seeds=[0, 1, 2, 3],
     noise_scale=0.05,
-    sigma=2.0,                     # noise band width in standard errors of the mean
+    sigma=2.0,  # noise band width in standard errors of the mean
 )
 
 # Inspect the Confirmation dataclass

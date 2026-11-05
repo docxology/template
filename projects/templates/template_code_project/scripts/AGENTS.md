@@ -84,6 +84,7 @@ sys.path.insert(0, str(project_root / "src"))
 
 # Import and run analysis
 from optimization_analysis import main
+
 main()
 ```
 
@@ -265,6 +266,7 @@ Add debug output to scripts:
 
 ```python
 import logging
+
 logging.basicConfig(level=logging.DEBUG)
 ```
 

@@ -90,10 +90,16 @@ Every fix flows through `infrastructure.doctor.safety.mutate(plan, state)`. That
 
 ```python
 from infrastructure.doctor import (
-    DoctorState, run_detectors, build_plans_for_findings,
-    mutate, undo, load_journal,
-    compute_scorecard, compute_exit_code,
-    render_report_text, render_report_json,
+    DoctorState,
+    run_detectors,
+    build_plans_for_findings,
+    mutate,
+    undo,
+    load_journal,
+    compute_scorecard,
+    compute_exit_code,
+    render_report_text,
+    render_report_json,
 )
 ```
 

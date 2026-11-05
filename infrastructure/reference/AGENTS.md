@@ -53,9 +53,7 @@ ideas (CC-BY-NC-4.0); no code vendored. See [`verification/AGENTS.md`](verificat
 ### Byte-compatible BibTeX format
 
 ```python
-from infrastructure.reference.citation import (
-    BibEntry, BibDatabase, render_database, parse_bibfile
-)
+from infrastructure.reference.citation import BibEntry, BibDatabase, render_database, parse_bibfile
 
 # Round-trip the exemplar — output matches input format byte-for-byte.
 db = parse_bibfile("projects/templates/template_code_project/manuscript/references.bib")
@@ -73,9 +71,13 @@ paper = Paper(
     id="doi:10.1126/science.1213847",
     title="Reproducible research in computational science",
     authors=["Roger D Peng"],
-    year=2011, doi="10.1126/science.1213847",
-    venue="Science", venue_type="journal",
-    volume="334", issue="6060", pages="1226-1227",
+    year=2011,
+    doi="10.1126/science.1213847",
+    venue="Science",
+    venue_type="journal",
+    volume="334",
+    issue="6060",
+    pages="1226-1227",
 )
 entry = paper_to_bibentry(paper)
 # entry.citation_key == "peng2011reproducible"

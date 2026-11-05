@@ -163,7 +163,7 @@ from infrastructure.llm.prompts import PromptComposer
 
 composer = PromptComposer()
 prompt = composer.compose_template(
-    'manuscript_reviews.json#manuscript_quality_review',
+    "manuscript_reviews.json#manuscript_quality_review",
     text=manuscript,
 )
 ```

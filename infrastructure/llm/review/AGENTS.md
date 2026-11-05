@@ -37,9 +37,9 @@ flowchart LR
 
 ```python
 from infrastructure.llm.review.generator import (
-    generate_llm_executive_summary,    # ManuscriptExecutiveSummary, temp 0.3
-    generate_quality_review,           # ManuscriptQualityReview, temp 0.3
-    generate_methodology_review,       # ManuscriptMethodologyReview, temp 0.3
+    generate_llm_executive_summary,  # ManuscriptExecutiveSummary, temp 0.3
+    generate_quality_review,  # ManuscriptQualityReview, temp 0.3
+    generate_methodology_review,  # ManuscriptMethodologyReview, temp 0.3
     generate_improvement_suggestions,  # ManuscriptImprovementSuggestions, temp 0.4
 )
 
@@ -90,7 +90,7 @@ from pathlib import Path
 # - Raises PDFValidationError if the file exists but is unreadable
 text, input_metrics = extract_manuscript_text(
     pdf_path=Path("output/project/pdf/combined.pdf"),
-    max_input_length=500_000,   # optional; pass client.config.max_input_length
+    max_input_length=500_000,  # optional; pass client.config.max_input_length
 )
 ```
 
@@ -110,7 +110,7 @@ review_text, metrics = generate_review_with_metrics(
     template_class=ManuscriptQualityReview,
     model_name="gemma3:4b",
     temperature=0.3,
-    max_tokens=None,    # defaults to client.config.long_max_tokens
+    max_tokens=None,  # defaults to client.config.long_max_tokens
     max_retries=1,
 )
 ```
@@ -224,8 +224,8 @@ from infrastructure.llm.review.metrics import estimate_tokens
 ```python
 from infrastructure.llm.review.quality import (
     validate_review_quality,
-    ReviewType,           # Literal alias for the five review type strings
-    ReviewQualityDetails, # TypedDict — shape of the details return value
+    ReviewType,  # Literal alias for the five review type strings
+    ReviewQualityDetails,  # TypedDict — shape of the details return value
 )
 
 # Returns (is_valid: bool, issues: list[str], details: ReviewQualityDetails)
@@ -258,9 +258,7 @@ model_name = select_and_start_ollama_model()
 client = create_review_client(model_name)
 warmup_model(client)
 
-text, input_metrics = extract_manuscript_text(
-    Path("output/project/pdf/combined.pdf")
-)
+text, input_metrics = extract_manuscript_text(Path("output/project/pdf/combined.pdf"))
 
 reviews = {}
 if text:
@@ -307,9 +305,11 @@ Follow the project no-mocks policy — use real function calls with `pytest-http
 from infrastructure.llm.review.metrics import ReviewMetrics, estimate_tokens
 from infrastructure.llm.review.quality import validate_review_quality
 
+
 def test_estimate_tokens():
     # estimate_tokens approximates at ~4 chars/token
     assert estimate_tokens("hello world") == len("hello world") // 4
+
 
 def test_validate_review_quality_short_response():
     is_valid, issues, _ = validate_review_quality(

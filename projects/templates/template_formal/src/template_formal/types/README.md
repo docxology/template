@@ -17,9 +17,24 @@ runtime cost beyond what `uuid.UUID`/`dataclasses` already pay.
 
 ```python
 from template_formal.types import (
-    AgentId, MessageId, TxnId, new_agent_id, new_message_id, new_txn_id,
-    Idle, Handshaking, Established, Closed, PhaseT,
-    Ok, Err, Result, is_ok, map_result, and_then, unwrap_or,
+    AgentId,
+    MessageId,
+    TxnId,
+    new_agent_id,
+    new_message_id,
+    new_txn_id,
+    Idle,
+    Handshaking,
+    Established,
+    Closed,
+    PhaseT,
+    Ok,
+    Err,
+    Result,
+    is_ok,
+    map_result,
+    and_then,
+    unwrap_or,
 )
 ```
 

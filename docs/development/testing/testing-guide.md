@@ -122,7 +122,6 @@ All tests are protected by a **10-second timeout** to prevent hanging:
 ```python
 # pytest-timeout plugin automatically kills tests after 10 seconds
 @pytest.mark.timeout(10)  # Applied globally via pyproject.toml
-
 def test_llm_query(ollama_test_server):
     """Test that times out after 10 seconds if it hangs."""
     # Test implementation
@@ -160,8 +159,10 @@ revision that produced it.
 
 ```python
 """Tests for module_name.py"""
+
 import pytest
 from module_name import function_to_test
+
 
 class TestFunctionName:
     """Test suite for function_to_test."""
@@ -213,6 +214,7 @@ def temp_data_file(tmp_path):
     data_file = tmp_path / "data.csv"
     data_file.write_text("col1,col2\n1,2\n")
     return data_file
+
 
 def test_with_fixture(temp_data_file):
     """Test using fixture."""

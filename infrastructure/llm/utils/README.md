@@ -47,11 +47,7 @@ if ensure_ollama_ready(auto_start=False):
 ### Model Selection
 
 ```python
-from infrastructure.llm.utils.ollama import (
-    select_best_model,
-    get_model_names,
-    get_model_info
-)
+from infrastructure.llm.utils.ollama import select_best_model, get_model_names, get_model_info
 
 # Auto-select best available model
 best_model = select_best_model()
@@ -99,6 +95,7 @@ if not is_ollama_running():
 # Use the configured host from OllamaClientConfig.from_env()
 from infrastructure.llm.core.config import OllamaClientConfig
 from infrastructure.llm.core.client import LLMClient
+
 client = LLMClient(OllamaClientConfig.from_env())
 ```
 
@@ -196,10 +193,8 @@ if not model:
 
 ```python
 # scripts/pipeline/stage_06_llm_review.py
-from infrastructure.llm.utils.ollama import (
-    is_ollama_running,
-    select_best_model
-)
+from infrastructure.llm.utils.ollama import is_ollama_running, select_best_model
+
 
 def setup_llm():
     if not is_ollama_running():
@@ -209,6 +204,7 @@ def setup_llm():
     model = select_best_model()
     from infrastructure.llm.core.client import LLMClient
     from infrastructure.llm.core.config import OllamaClientConfig
+
     return LLMClient(OllamaClientConfig(default_model=model))
 ```
 

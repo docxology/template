@@ -336,10 +336,7 @@ graph TD
 ### Pipeline Stage Integration
 ```python
 # Typical pipeline stage using core modules
-from infrastructure.core import (
-    get_logger, log_operation, ProgressBar,
-    CheckpointManager, TemplateError
-)
+from infrastructure.core import get_logger, log_operation, ProgressBar, CheckpointManager, TemplateError
 
 logger = get_logger(__name__)
 checkpoint = CheckpointManager()
@@ -356,41 +353,33 @@ with log_operation("Stage execution", logger):
             pipeline_start_time=time.time(),
             last_stage_completed=stage_num,
             stage_results=[...],
-            total_stages=total_stages
+            total_stages=total_stages,
         )
 
     except Exception as e:
-        raise TemplateError(
-            f"Stage {stage_num} failed",
-            context={'stage': stage_num, 'error': str(e)}
-        ) from e
+        raise TemplateError(f"Stage {stage_num} failed", context={"stage": stage_num, "error": str(e)}) from e
 ```
 
 ### Error Handling Integration
 ```python
 # error handling pattern
 from infrastructure.core import TemplateError
-from infrastructure.core.exceptions import (
-    ValidationError,
-    raise_with_context, chain_exceptions
-)
+from infrastructure.core.exceptions import ValidationError, raise_with_context, chain_exceptions
+
 
 def validate_input(data: dict) -> None:
     """Validate input with proper error context."""
     try:
-        if 'required_field' not in data:
+        if "required_field" not in data:
             raise_with_context(
                 ValidationError,
                 "Missing required field 'required_field'",
-                field='required_field',
-                data_keys=list(data.keys())
+                field="required_field",
+                data_keys=list(data.keys()),
             )
     except KeyError as e:
         # Chain original exception
-        raise chain_exceptions(
-            ValidationError("Invalid data structure"),
-            e
-        )
+        raise chain_exceptions(ValidationError("Invalid data structure"), e)
 ```
 
 ### Performance Monitoring Integration
@@ -398,6 +387,7 @@ def validate_input(data: dict) -> None:
 # Performance-aware operation
 from infrastructure.core import monitor_performance
 from infrastructure.core.pipeline import get_system_resources
+
 
 def heavy_computation(data_size: int):
     with monitor_performance("Data processing") as monitor:
@@ -416,6 +406,7 @@ def heavy_computation(data_size: int):
 # Configuration-aware module initialization
 from infrastructure.core.config.loader import load_config, get_config_as_dict
 
+
 def initialize_module():
     """Initialize with configuration."""
     # Load from standard location
@@ -425,8 +416,8 @@ def initialize_module():
     env_vars = get_config_as_dict()
 
     # Use configuration
-    author = env_vars.get('AUTHOR_NAME', 'Unknown Author')
-    log_level = int(env_vars.get('LOG_LEVEL', '1'))
+    author = env_vars.get("AUTHOR_NAME", "Unknown Author")
+    log_level = int(env_vars.get("LOG_LEVEL", "1"))
 
     return author, log_level
 ```

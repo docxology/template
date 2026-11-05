@@ -164,9 +164,8 @@ def figure_flowables(fig: Figure, width: float, styles: StyleSheet1, project_roo
             img.drawWidth = width
             img.drawHeight = float(img.imageHeight) * scale
             out.append(img)
-        except (
-            Exception
-        ):  # pragma: no cover - corrupt image  # noqa: BLE001 - defensive: corrupt/unreadable asset, skip gracefully
+        except (OSError, ValueError):
+            # Decoder and file errors use the documented missing-photo fallback.
             resolved = None
     if resolved is None:
         placeholder = Table([[Paragraph("photo", styles["Caption"])]], colWidths=[width], rowHeights=[fig.height])

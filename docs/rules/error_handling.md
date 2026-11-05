@@ -7,12 +7,7 @@ All custom exceptions inherit from `TemplateError` in `infrastructure/core/excep
 ### Import Pattern
 
 ```python
-from infrastructure.core.exceptions import (
-    ValidationError,
-    ConfigurationError,
-    BuildError,
-    raise_with_context
-)
+from infrastructure.core.exceptions import ValidationError, ConfigurationError, BuildError, raise_with_context
 ```
 
 ## Exception Types
@@ -30,12 +25,7 @@ from infrastructure.core.exceptions import (
 ### Raise with Context
 
 ```python
-raise_with_context(
-    ValidationError,
-    "Validation failed",
-    file="data.csv",
-    line=42
-)
+raise_with_context(ValidationError, "Validation failed", file="data.csv", line=42)
 ```
 
 ### Chain Exceptions
@@ -105,56 +95,79 @@ class TemplateError(Exception):
 # Configuration errors
 class ConfigurationError(TemplateError):
     """Configuration or setup failed."""
+
     pass
+
 
 class MissingConfigurationError(ConfigurationError):
     """Required configuration is missing."""
+
     pass
+
 
 # Validation errors
 class ValidationError(TemplateError):
     """Data validation failed."""
+
     pass
+
 
 class DataValidationError(ValidationError):
     """Data format/content invalid."""
+
     pass
+
 
 # Build/Processing errors
 class BuildError(TemplateError):
     """Build or rendering process failed."""
+
     pass
+
 
 class CompilationError(BuildError):
     """LaTeX or code compilation failed."""
+
     pass
+
 
 # File operation errors
 class FileOperationError(TemplateError):
     """File I/O operation failed."""
+
     pass
+
 
 class FileNotFoundError(FileOperationError):
     """Required file not found."""
+
     pass
+
 
 # Dependency errors
 class DependencyError(TemplateError):
     """External dependency missing or invalid."""
+
     pass
+
 
 class MissingDependencyError(DependencyError):
     """Required package or tool not installed."""
+
     pass
+
 
 # Test errors
 class TestError(TemplateError):
     """Test execution or assertion failed."""
+
     pass
+
 
 # Integration errors
 class IntegrationError(TemplateError):
     """System integration failed."""
+
     pass
 ```
 
@@ -167,6 +180,7 @@ from infrastructure.core.exceptions import ValidationError
 import logging
 
 logger = logging.getLogger(__name__)
+
 
 def process_user_data(data: dict) -> None:
     """Process user data with context in exceptions.
@@ -185,11 +199,7 @@ def process_user_data(data: dict) -> None:
     except ValueError as e:
         logger.error(f"Validation failed: {e}")
         raise ValidationError(
-            "Invalid user data",
-            context={
-                "email": data.get("email", "MISSING"),
-                "data": str(data)
-            }
+            "Invalid user data", context={"email": data.get("email", "MISSING"), "data": str(data)}
         ) from e
 ```
 
@@ -229,11 +239,7 @@ def load_config_with_fallback(primary_path: str, fallback_path: str) -> dict:
     logger.error(f"Both config paths failed: {errors}")
     raise ConfigurationError(
         "Failed to load configuration from any path",
-        context={
-            "primary": primary_path,
-            "fallback": fallback_path,
-            "errors": [str(e) for e in errors]
-        }
+        context={"primary": primary_path, "fallback": fallback_path, "errors": [str(e) for e in errors]},
     ) from errors[-1]
 ```
 
@@ -303,11 +309,7 @@ def validate_user_registration(data: dict) -> None:
     # Raise with all errors
     if errors:
         raise ValidationError(
-            "User registration validation failed",
-            context={
-                "errors": errors,
-                "error_count": len(errors)
-            }
+            "User registration validation failed", context={"errors": errors, "error_count": len(errors)}
         )
 ```
 
@@ -319,6 +321,7 @@ def validate_user_registration(data: dict) -> None:
 import pytest
 from infrastructure.core.exceptions import ValidationError
 
+
 def test_validation_error_raised():
     """Test that validation error is raised."""
     with pytest.raises(ValidationError) as exc_info:
@@ -327,6 +330,7 @@ def test_validation_error_raised():
     # Verify error message
     assert "invalid" in str(exc_info.value).lower()
 
+
 def test_validation_error_context():
     """Test that error includes context."""
     with pytest.raises(ValidationError) as exc_info:
@@ -334,6 +338,7 @@ def test_validation_error_context():
 
     error = exc_info.value
     assert error.context.get("invalid_value") == "invalid"
+
 
 def test_exception_chaining():
     """Test that exceptions are properly chained."""

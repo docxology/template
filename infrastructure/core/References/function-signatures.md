@@ -10,7 +10,7 @@ class TemplateError(Exception):
         message: str,
         context: Optional[dict[str, Any]] = None,
         suggestions: Optional[list[str]] = None,
-        recovery_commands: Optional[list[str]] = None
+        recovery_commands: Optional[list[str]] = None,
     ) -> None:
         """Base exception for all template-related errors.
 
@@ -26,6 +26,7 @@ class TemplateError(Exception):
 ```python
 class ConfigurationError(TemplateError):
     """Raised when configuration is invalid or missing."""
+
     pass
 ```
 
@@ -33,6 +34,7 @@ class ConfigurationError(TemplateError):
 ```python
 class MissingConfigurationError(ConfigurationError):
     """Raised when required configuration is missing."""
+
     pass
 ```
 
@@ -40,6 +42,7 @@ class MissingConfigurationError(ConfigurationError):
 ```python
 class InvalidConfigurationError(ConfigurationError):
     """Raised when configuration values are invalid."""
+
     pass
 ```
 
@@ -47,6 +50,7 @@ class InvalidConfigurationError(ConfigurationError):
 ```python
 class ValidationError(TemplateError):
     """Raised when validation fails."""
+
     pass
 ```
 
@@ -54,6 +58,7 @@ class ValidationError(TemplateError):
 ```python
 class MarkdownValidationError(ValidationError):
     """Raised when markdown validation fails."""
+
     pass
 ```
 
@@ -61,6 +66,7 @@ class MarkdownValidationError(ValidationError):
 ```python
 class PDFValidationError(ValidationError):
     """Raised when PDF validation fails."""
+
     pass
 ```
 
@@ -68,6 +74,7 @@ class PDFValidationError(ValidationError):
 ```python
 class DataValidationError(ValidationError):
     """Raised when data validation fails."""
+
     pass
 ```
 
@@ -75,6 +82,7 @@ class DataValidationError(ValidationError):
 ```python
 class BuildError(TemplateError):
     """Raised when build process fails."""
+
     pass
 ```
 
@@ -82,6 +90,7 @@ class BuildError(TemplateError):
 ```python
 class CompilationError(BuildError):
     """Raised when compilation (LaTeX, etc.) fails."""
+
     pass
 ```
 
@@ -89,6 +98,7 @@ class CompilationError(BuildError):
 ```python
 class ScriptExecutionError(BuildError):
     """Raised when script execution fails."""
+
     pass
 ```
 
@@ -96,6 +106,7 @@ class ScriptExecutionError(BuildError):
 ```python
 class PipelineError(BuildError):
     """Raised when pipeline orchestration fails."""
+
     pass
 ```
 
@@ -103,6 +114,7 @@ class PipelineError(BuildError):
 ```python
 class FileOperationError(TemplateError):
     """Raised when file operations fail."""
+
     pass
 ```
 
@@ -122,7 +134,7 @@ class FileNotFoundError(FileOperationError):
         message: str,
         context: Optional[dict[str, Any]] = None,
         suggestions: Optional[list[str]] = None,
-        recovery_commands: Optional[list[str]] = None
+        recovery_commands: Optional[list[str]] = None,
     ) -> None:
         """Initialize file not found error with automatic recovery commands.
 
@@ -138,6 +150,7 @@ class FileNotFoundError(FileOperationError):
 ```python
 class InvalidFileFormatError(FileOperationError):
     """Raised when file format is invalid or unexpected."""
+
     pass
 ```
 
@@ -145,6 +158,7 @@ class InvalidFileFormatError(FileOperationError):
 ```python
 class DependencyError(TemplateError):
     """Raised when dependencies are missing or invalid."""
+
     pass
 ```
 
@@ -161,7 +175,7 @@ class MissingDependencyError(DependencyError):
         message: str,
         context: Optional[dict[str, Any]] = None,
         suggestions: Optional[list[str]] = None,
-        recovery_commands: Optional[list[str]] = None
+        recovery_commands: Optional[list[str]] = None,
     ) -> None:
         """Initialize missing dependency error with automatic installation commands.
 
@@ -177,6 +191,7 @@ class MissingDependencyError(DependencyError):
 ```python
 class VersionMismatchError(DependencyError):
     """Raised when dependency version is incompatible."""
+
     pass
 ```
 
@@ -184,6 +199,7 @@ class VersionMismatchError(DependencyError):
 ```python
 class TestError(TemplateError):
     """Raised when test execution or validation fails."""
+
     pass
 ```
 
@@ -191,6 +207,7 @@ class TestError(TemplateError):
 ```python
 class InsufficientCoverageError(TestError):
     """Raised when test coverage is insufficient."""
+
     pass
 ```
 
@@ -198,6 +215,7 @@ class InsufficientCoverageError(TestError):
 ```python
 class IntegrationError(TemplateError):
     """Raised when component integration fails."""
+
     pass
 ```
 
@@ -205,6 +223,7 @@ class IntegrationError(TemplateError):
 ```python
 class LiteratureSearchError(TemplateError):
     """Raised when literature search operations fail."""
+
     pass
 ```
 
@@ -212,6 +231,7 @@ class LiteratureSearchError(TemplateError):
 ```python
 class APIRateLimitError(LiteratureSearchError):
     """Raised when API rate limits are exceeded."""
+
     pass
 ```
 
@@ -219,6 +239,7 @@ class APIRateLimitError(LiteratureSearchError):
 ```python
 class InvalidQueryError(LiteratureSearchError):
     """Raised when search query is invalid."""
+
     pass
 ```
 
@@ -226,6 +247,7 @@ class InvalidQueryError(LiteratureSearchError):
 ```python
 class LLMError(TemplateError):
     """Base exception for LLM operations."""
+
     pass
 ```
 
@@ -233,6 +255,7 @@ class LLMError(TemplateError):
 ```python
 class LLMConnectionError(LLMError):
     """Raised when connecting to LLM provider fails."""
+
     pass
 ```
 
@@ -240,6 +263,7 @@ class LLMConnectionError(LLMError):
 ```python
 class LLMTemplateError(LLMError):
     """Raised when template processing fails."""
+
     pass
 ```
 
@@ -247,6 +271,7 @@ class LLMTemplateError(LLMError):
 ```python
 class ContextLimitError(LLMError):
     """Raised when token limit is exceeded."""
+
     pass
 ```
 
@@ -254,6 +279,7 @@ class ContextLimitError(LLMError):
 ```python
 class RenderingError(TemplateError):
     """Base exception for rendering operations."""
+
     pass
 ```
 
@@ -261,6 +287,7 @@ class RenderingError(TemplateError):
 ```python
 class FormatError(RenderingError):
     """Raised when output format is invalid or unsupported."""
+
     pass
 ```
 
@@ -268,6 +295,7 @@ class FormatError(RenderingError):
 ```python
 class TemplateRenderingError(RenderingError):
     """Raised when rendering a template fails."""
+
     pass
 ```
 
@@ -275,6 +303,7 @@ class TemplateRenderingError(RenderingError):
 ```python
 class PublishingError(TemplateError):
     """Base exception for publishing operations."""
+
     pass
 ```
 
@@ -282,6 +311,7 @@ class PublishingError(TemplateError):
 ```python
 class UploadError(PublishingError):
     """Raised when file upload fails."""
+
     pass
 ```
 
@@ -289,6 +319,7 @@ class UploadError(PublishingError):
 ```python
 class MetadataError(PublishingError):
     """Raised when metadata validation fails."""
+
     pass
 ```
 
@@ -296,16 +327,13 @@ class MetadataError(PublishingError):
 ```python
 class NotADirectoryError(FileOperationError, builtins.NotADirectoryError):
     """Raised when a path is not a directory when a directory is expected."""
+
     pass
 ```
 
 #### raise_with_context (function)
 ```python
-def raise_with_context(
-    exception_class: type[TemplateError],
-    message: str,
-    **context: Any
-) -> None:
+def raise_with_context(exception_class: type[TemplateError], message: str, **context: Any) -> None:
     """Raise an exception with context information.
 
     Args:
@@ -334,10 +362,7 @@ def format_file_context(file_path: Path | str, line: Optional[int] = None) -> di
 
 #### chain_exceptions (function)
 ```python
-def chain_exceptions(
-    new_exception: TemplateError,
-    original: Exception
-) -> TemplateError:
+def chain_exceptions(new_exception: TemplateError, original: Exception) -> TemplateError:
     """Chain a new exception with the original exception's context.
 
     Args:
@@ -363,11 +388,7 @@ def get_log_level_from_env() -> int:
 
 #### setup_logger (function)
 ```python
-def setup_logger(
-    name: str,
-    level: Optional[int] = None,
-    log_file: Optional[Path | str] = None
-) -> logging.Logger:
+def setup_logger(name: str, level: Optional[int] = None, log_file: Optional[Path | str] = None) -> logging.Logger:
     """Set up a logger with consistent formatting.
 
     Args:
@@ -407,10 +428,7 @@ def set_global_log_level(level: int) -> None:
 ```python
 @contextmanager
 def log_operation(
-    operation: str,
-    logger: Optional[logging.Logger] = None,
-    level: int = logging.INFO,
-    min_duration_to_log: float = 0.1
+    operation: str, logger: Optional[logging.Logger] = None, level: int = logging.INFO, min_duration_to_log: float = 0.1
 ) -> Iterator[None]:
     """Context manager for logging operation start and completion.
 
@@ -428,10 +446,7 @@ def log_operation(
 #### log_timing (function)
 ```python
 @contextmanager
-def log_timing(
-    label: str,
-    logger: Optional[logging.Logger] = None
-) -> Iterator[None]:
+def log_timing(label: str, logger: Optional[logging.Logger] = None) -> Iterator[None]:
     """Context manager for timing operations.
 
     Args:
@@ -480,12 +495,7 @@ def log_header(message: str, logger: Optional[logging.Logger] = None) -> None:
 
 #### log_progress (function)
 ```python
-def log_progress(
-    current: int,
-    total: int,
-    task: str,
-    logger: Optional[logging.Logger] = None
-) -> None:
+def log_progress(current: int, total: int, task: str, logger: Optional[logging.Logger] = None) -> None:
     """Log progress with percentage.
 
     Args:
@@ -498,12 +508,7 @@ def log_progress(
 
 #### log_stage (function)
 ```python
-def log_stage(
-    stage_num: int,
-    total_stages: int,
-    stage_name: str,
-    logger: Optional[logging.Logger] = None
-) -> None:
+def log_stage(stage_num: int, total_stages: int, stage_name: str, logger: Optional[logging.Logger] = None) -> None:
     """Log a pipeline stage header with consistent formatting.
 
     Args:
@@ -516,10 +521,7 @@ def log_stage(
 
 #### log_substep (function)
 ```python
-def log_substep(
-    message: str,
-    logger: Optional[logging.Logger] = None
-) -> None:
+def log_substep(message: str, logger: Optional[logging.Logger] = None) -> None:
     """Log a substep within a stage with consistent indentation.
 
     Args:
@@ -687,7 +689,7 @@ class ProgressBar:
         description: str = "",
         width: int = 50,
         show_eta: bool = True,
-        logger: Optional[logging.Logger] = None
+        logger: Optional[logging.Logger] = None,
     ) -> None:
         """Initialize progress bar.
 
@@ -718,12 +720,7 @@ class SubStageProgress:
     Manages progress through multiple substages within a larger operation.
     """
 
-    def __init__(
-        self,
-        total_stages: int,
-        stage_names: List[str],
-        logger: Optional[logging.Logger] = None
-    ) -> None:
+    def __init__(self, total_stages: int, stage_names: List[str], logger: Optional[logging.Logger] = None) -> None:
         """Initialize substage progress tracker.
 
         Args:
@@ -767,7 +764,7 @@ class PipelineCheckpoint:
         start_time: float,
         completed_stages: List[str],
         stage_results: Dict[str, Any],
-        current_stage: Optional[str] = None
+        current_stage: Optional[str] = None,
     ) -> None:
         """Initialize pipeline checkpoint.
 
@@ -825,11 +822,7 @@ class CheckpointManager:
             List of checkpoint file paths
         """
 
-    def cleanup_old_checkpoints(
-        self,
-        pipeline_name: str,
-        keep_recent: int = 5
-    ) -> None:
+    def cleanup_old_checkpoints(self, pipeline_name: str, keep_recent: int = 5) -> None:
         """Clean up old checkpoint files, keeping only recent ones.
 
         Args:
@@ -849,7 +842,7 @@ def retry_with_backoff(
     backoff_factor: float = 2.0,
     max_delay: float = 60.0,
     exceptions_to_retry: Tuple[type, ...] = (Exception,),
-    logger: Optional[logging.Logger] = None
+    logger: Optional[logging.Logger] = None,
 ) -> Any:
     """Execute function with exponential backoff retry logic.
 
@@ -886,7 +879,7 @@ class RetryableOperation:
         backoff_factor: float = 2.0,
         max_delay: float = 60.0,
         exceptions_to_retry: Tuple[type, ...] = (Exception,),
-        logger: Optional[logging.Logger] = None
+        logger: Optional[logging.Logger] = None,
     ) -> None:
         """Initialize retryable operation.
 
@@ -1039,11 +1032,7 @@ def discover_orchestrators(repo_root: Path) -> List[Path]:
 
 #### copy_final_deliverables (function)
 ```python
-def copy_final_deliverables(
-    repo_root: Path,
-    project_name: str,
-    output_dir: Optional[Path] = None
-) -> List[Path]:
+def copy_final_deliverables(repo_root: Path, project_name: str, output_dir: Optional[Path] = None) -> List[Path]:
     """Copy final deliverables from project output to main output directory.
 
     Args:
@@ -1093,12 +1082,7 @@ class PipelineExecutor:
     Orchestrates the execution of pipeline stages with checkpointing and logging.
     """
 
-    def __init__(
-        self,
-        repo_root: Path,
-        project_name: str,
-        logger: Optional[logging.Logger] = None
-    ) -> None:
+    def __init__(self, repo_root: Path, project_name: str, logger: Optional[logging.Logger] = None) -> None:
         """Initialize pipeline executor.
 
         Args:
@@ -1117,11 +1101,7 @@ class PipelineExecutor:
             Tuple of (success, result_dict)
         """
 
-    def execute_pipeline(
-        self,
-        start_stage: Optional[str] = None,
-        resume: bool = False
-    ) -> Dict[str, Any]:
+    def execute_pipeline(self, start_stage: Optional[str] = None, resume: bool = False) -> Dict[str, Any]:
         """Execute pipeline with optional resume capability.
 
         Args:
@@ -1157,12 +1137,7 @@ class MultiProjectOrchestrator:
     Manages execution of multiple projects with shared infrastructure testing.
     """
 
-    def __init__(
-        self,
-        repo_root: Path,
-        project_names: List[str],
-        logger: Optional[logging.Logger] = None
-    ) -> None:
+    def __init__(self, repo_root: Path, project_names: List[str], logger: Optional[logging.Logger] = None) -> None:
         """Initialize multi-project orchestrator.
 
         Args:
@@ -1171,11 +1146,7 @@ class MultiProjectOrchestrator:
             logger: Logger instance for orchestration messages
         """
 
-    def execute_all_projects(
-        self,
-        core_only: bool = False,
-        resume: bool = False
-    ) -> Dict[str, Any]:
+    def execute_all_projects(self, core_only: bool = False, resume: bool = False) -> Dict[str, Any]:
         """Execute pipelines for all specified projects.
 
         Args:
@@ -1193,10 +1164,7 @@ class MultiProjectOrchestrator:
             Tuple of (success, test_results)
         """
 
-    def generate_executive_report(
-        self,
-        output_dir: Path
-    ) -> List[Path]:
+    def generate_executive_report(self, output_dir: Path) -> List[Path]:
         """Generate executive report across all projects.
 
         Args:
@@ -1211,10 +1179,7 @@ class MultiProjectOrchestrator:
 
 #### generate_pipeline_summary (function)
 ```python
-def generate_pipeline_summary(
-    pipeline_results: Dict[str, Any],
-    repo_root: Path
-) -> Dict[str, Any]:
+def generate_pipeline_summary(pipeline_results: Dict[str, Any], repo_root: Path) -> Dict[str, Any]:
     """Generate pipeline summary with metrics.
 
     Args:

@@ -20,7 +20,9 @@ for method in all_example_methods():
 ```python
 # ❌ WRONG: script implements a validation gate directly
 def my_target_check(method):
-    return all(step.target == method.target for step in method.steps)  # Belongs in src/template_methods_paper/methods_dsl/validation.py
+    return all(
+        step.target == method.target for step in method.steps
+    )  # Belongs in src/template_methods_paper/methods_dsl/validation.py
 ```
 
 If you find yourself writing model, validation, compilation, or export logic
@@ -32,6 +34,7 @@ Set the Agg backend **before** importing pyplot:
 
 ```python
 import os
+
 os.environ.setdefault("MPLBACKEND", "Agg")
 import matplotlib.pyplot as plt
 ```

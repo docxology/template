@@ -12,6 +12,7 @@ This guide covers **development security standards** for the Research Project Te
 # ✅ GOOD: Validate all external inputs
 from infrastructure.core.exceptions import ValidationError
 
+
 def process_user_data(data: dict) -> dict:
     """Process user data with validation."""
     # Validate required fields
@@ -36,7 +37,7 @@ def process_user_data(data: dict) -> dict:
     sanitized = {
         "name": name.strip(),
         "email": email.strip().lower(),
-        "age": data.get("age", 0)  # Optional field with default
+        "age": data.get("age", 0),  # Optional field with default
     }
 
     return sanitized
@@ -47,6 +48,7 @@ def process_user_data(data: dict) -> dict:
 ```python
 from typing import Optional
 import re
+
 
 def validate_email(email: str) -> str:
     """Validate email format and return normalized version."""
@@ -59,6 +61,7 @@ def validate_email(email: str) -> str:
 
     return email.strip().lower()
 
+
 def create_user(name: str, email: str, age: Optional[int] = None) -> dict:
     """Create user with validated inputs."""
     valid_name = validate_name(name)
@@ -68,11 +71,7 @@ def create_user(name: str, email: str, age: Optional[int] = None) -> dict:
         if not isinstance(age, int) or age < 0 or age > 150:
             raise ValidationError("Age must be integer between 0 and 150")
 
-    return {
-        "name": valid_name,
-        "email": valid_email,
-        "age": age
-    }
+    return {"name": valid_name, "email": valid_email, "age": age}
 ```
 
 ## Secret Management
@@ -83,6 +82,7 @@ def create_user(name: str, email: str, age: Optional[int] = None) -> dict:
 # ✅ GOOD: Use environment variables for secrets
 import os
 from typing import Optional
+
 
 class Config:
     """Configuration with secure secret handling."""
@@ -98,9 +98,7 @@ class Config:
         missing = [s for s in required_secrets if not getattr(self, s)]
 
         if missing:
-            raise ConfigurationError(
-                f"Missing required secrets: {', '.join(missing)}"
-            )
+            raise ConfigurationError(f"Missing required secrets: {', '.join(missing)}")
 
     @classmethod
     def from_env(cls) -> "Config":
@@ -116,7 +114,8 @@ class Config:
 # ❌ BAD: Never hardcode secrets
 class BadConfig:
     API_KEY = "hardcoded-secret-key"  # NEVER DO THIS
-    DB_PASSWORD = "password123"       # NEVER DO THIS
+    DB_PASSWORD = "password123"  # NEVER DO THIS
+
 
 # ✅ GOOD: Always use environment variables
 class GoodConfig:
@@ -135,6 +134,7 @@ import os
 from pathlib import Path
 from typing import BinaryIO
 
+
 def safe_read_file(filepath: str | Path) -> str:
     """Safely read a file with security checks."""
     path = Path(filepath).resolve()
@@ -152,8 +152,9 @@ def safe_read_file(filepath: str | Path) -> str:
     if oct(path.stat().st_mode)[-3:] != "600":
         raise SecurityViolation("File has insecure permissions")
 
-    with open(path, 'r', encoding='utf-8') as f:
+    with open(path, "r", encoding="utf-8") as f:
         return f.read()
+
 
 def safe_write_file(filepath: str | Path, content: str) -> None:
     """Safely write to a file with security checks."""
@@ -163,8 +164,8 @@ def safe_write_file(filepath: str | Path, content: str) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
 
     # Write atomically to prevent partial reads
-    temp_path = path.with_suffix('.tmp')
-    with open(temp_path, 'w', encoding='utf-8') as f:
+    temp_path = path.with_suffix(".tmp")
+    with open(temp_path, "w", encoding="utf-8") as f:
         f.write(content)
 
     # Set secure permissions before moving
@@ -240,6 +241,7 @@ dev-dependencies = [
 import subprocess
 from typing import List
 
+
 def safe_run_command(command: List[str], timeout: int = 30) -> str:
     """Safely execute a command with security measures."""
     try:
@@ -248,13 +250,7 @@ def safe_run_command(command: List[str], timeout: int = 30) -> str:
             raise SecurityViolation("Invalid command arguments")
 
         # Use shell=False to prevent shell injection
-        result = subprocess.run(
-            command,
-            capture_output=True,
-            text=True,
-            timeout=timeout,
-            check=True
-        )
+        result = subprocess.run(command, capture_output=True, text=True, timeout=timeout, check=True)
 
         return result.stdout
 
@@ -285,10 +281,10 @@ root = ET.fromstring(untrusted_xml_bytes)
 from xml.etree.ElementTree import Element
 
 # ❌ BAD: stdlib parsers — vulnerable to XXE / entity expansion
-import xml.etree.ElementTree as ET          # exposes ET.parse / ET.fromstring
+import xml.etree.ElementTree as ET  # exposes ET.parse / ET.fromstring
 from xml.etree.ElementTree import fromstring
 from xml.dom.minidom import parseString
-import lxml.etree                            # unsafe by default
+import lxml.etree  # unsafe by default
 ```
 
 Current sanctioned call sites (all use `defusedxml.ElementTree`):
@@ -328,6 +324,7 @@ uv run pytest tests/infra_tests/validation/test_xml_parser_policy.py -q
 ```python
 import pytest
 
+
 def test_input_validation():
     """Test that malicious inputs are rejected."""
 
@@ -347,6 +344,7 @@ def test_input_validation():
     with pytest.raises(ValidationError):
         process_input("A" * 1000000)  # Very long input
 
+
 def test_secure_file_operations():
     """Test secure file handling."""
 
@@ -358,6 +356,7 @@ def test_secure_file_operations():
     large_file = create_large_file(100 * 1024 * 1024)  # 100MB
     with pytest.raises(SecurityViolation):
         safe_read_file(large_file)
+
 
 def test_secret_handling():
     """Test that secrets are handled securely."""
@@ -399,13 +398,14 @@ def test_secure_headers():
 # ✅ GOOD: Use minimal permissions
 def read_config_file(filepath: str) -> dict:
     """Read config with read-only access."""
-    with open(filepath, 'r') as f:  # Read-only mode
+    with open(filepath, "r") as f:  # Read-only mode
         return json.load(f)
+
 
 # ❌ BAD: Unnecessary write permissions
 def read_config_file(filepath: str) -> dict:
     """Read config but allows writing."""
-    with open(filepath, 'r+') as f:  # Read-write mode - unnecessary
+    with open(filepath, "r+") as f:  # Read-write mode - unnecessary
         return json.load(f)
 ```
 
@@ -419,12 +419,13 @@ class SecureConfig:
         self.allow_external_access = False  # Secure default
         self.max_file_size = 1024 * 1024  # Reasonable limit
 
+
 # ❌ BAD: Insecure defaults
 class InsecureConfig:
     def __init__(self):
         self.debug_mode = True  # Insecure default
         self.allow_external_access = True  # Insecure default
-        self.max_file_size = float('inf')  # No limit
+        self.max_file_size = float("inf")  # No limit
 ```
 
 ### Secure Random Generation
@@ -433,21 +434,26 @@ class InsecureConfig:
 import secrets
 import string
 
+
 def generate_secure_token(length: int = 32) -> str:
     """Generate cryptographically secure token."""
     alphabet = string.ascii_letters + string.digits
-    return ''.join(secrets.choice(alphabet) for _ in range(length))
+    return "".join(secrets.choice(alphabet) for _ in range(length))
+
 
 def generate_api_key() -> str:
     """Generate secure API key."""
     # Use secrets module, not random
     return secrets.token_urlsafe(32)
 
+
 # ❌ BAD: Use secrets, not random
 import random  # Insecure for crypto
+
+
 def bad_generate_token(length: int = 32) -> str:
     alphabet = string.ascii_letters + string.digits
-    return ''.join(random.choice(alphabet) for _ in range(length))  # INSECURE
+    return "".join(random.choice(alphabet) for _ in range(length))  # INSECURE
 ```
 
 ## Error Handling Security
@@ -473,6 +479,7 @@ def authenticate_user(username: str, password: str) -> bool:
         logger.error("Authentication error", exc_info=True)
         return False
 
+
 # ❌ BAD: Leaky error messages
 def bad_authenticate_user(username: str, password: str) -> bool:
     """Authentication with information leakage."""
@@ -496,13 +503,15 @@ def bad_authenticate_user(username: str, password: str) -> bool:
 ```python
 import logging
 
+
 # ✅ GOOD: Sanitize data before logging
 def log_user_action(user_id: str, action: str):
     """Log user action securely."""
     # Sanitize sensitive data
-    safe_user_id = user_id.replace('\n', '').replace('\r', '')[:50]
+    safe_user_id = user_id.replace("\n", "").replace("\r", "")[:50]
 
     logger.info(f"User {safe_user_id} performed {action}")
+
 
 # ❌ BAD: Log sensitive data
 def bad_log_user_action(user_id: str, password: str, action: str):
@@ -518,6 +527,7 @@ def bad_log_user_action(user_id: str, password: str, action: str):
 import requests
 from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
+
 
 def create_secure_session() -> requests.Session:
     """Create requests session with security settings."""
@@ -539,21 +549,19 @@ def create_secure_session() -> requests.Session:
 
     return session
 
+
 def secure_api_call(url: str, api_key: str) -> dict:
     """Make secure API call."""
     session = create_secure_session()
 
-    headers = {
-        "Authorization": f"Bearer {api_key}",
-        "User-Agent": "Research-Template/1.0"
-    }
+    headers = {"Authorization": f"Bearer {api_key}", "User-Agent": "Research-Template/1.0"}
 
     try:
         response = session.get(url, headers=headers, timeout=30)
         response.raise_for_status()
 
         # Validate response content type
-        if 'application/json' not in response.headers.get('content-type', ''):
+        if "application/json" not in response.headers.get("content-type", ""):
             raise SecurityViolation("Unexpected response content type")
 
         return response.json()

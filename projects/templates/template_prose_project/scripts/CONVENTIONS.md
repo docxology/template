@@ -15,6 +15,7 @@ Scripts **coordinate**; they never **analyze**:
 from template_prose_project.pipeline.config import load_project_config
 from template_prose_project.pipeline import run_prose_pipeline
 
+
 def main() -> int:
     args = parse_args()
     config = load_project_config(Path(args.config))
@@ -29,7 +30,7 @@ def main() -> int:
 def main():
     config = yaml.safe_load(Path("manuscript/config.yaml").read_text())
     text = (Path("manuscript") / "00_abstract.md").read_text()
-    words = len(re.findall(r"\b\w+\b", text))   # BAD — analysis in script
+    words = len(re.findall(r"\b\w+\b", text))  # BAD — analysis in script
     if words < 100:
         sys.exit(1)
 ```
