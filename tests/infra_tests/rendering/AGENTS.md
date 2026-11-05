@@ -541,3 +541,5 @@ except ImportError:
 **Testing Standards:**
 - [`docs/rules/testing_standards.md`](../../../docs/rules/testing_standards.md) - Testing standards
 - [`docs/development/testing/testing-guide.md`](../../../docs/development/testing/testing-guide.md) - Testing guide
+
+The pipeline transmission-order tests exercise genuine font-provider changes, stale auxiliary-audit refusal, preparation before hydration admission, and the consumed paper-layout and skipped-hydration guards.

@@ -40,7 +40,7 @@
       "aspect_ratio": 2.6405228758169934,
       "classification": "auxiliary_transmission_check",
       "classified": true,
-      "content_sha256": "3edf1f9c793ff97dffeceae439cd51d4ca3c6844005f93f69851f926d8c4475f",
+      "content_sha256": "dd726b50c35e84af7f3c1ba7df8b3299a3167353c5967746333efba72d8b793b",
       "exists": true,
       "filename": "transmission_integrity_strip.png",
       "height_px": 306,
@@ -50,14 +50,14 @@
       "producer": "infrastructure.publishing.transmission_barcode_strip.write_transmission_barcode_strip",
       "reason": "infrastructure-generated integrity strip for transmission bookends",
       "rendered": true,
-      "size_bytes": 17367,
+      "size_bytes": 17713,
       "width_px": 808
     },
     {
       "aspect_ratio": 1.75,
       "classification": "auxiliary_transmission_check",
       "classified": true,
-      "content_sha256": "c2b04423b3cc8bded4206533acb348a01176ed9423b2518c2c8db8377b2d6f1a",
+      "content_sha256": "5056162184c8ed0e291e88be3cab7e53e2552a26c3f31b63c953ad820aec1c13",
       "exists": true,
       "filename": "transmission_pairing.png",
       "height_px": 300,
@@ -67,7 +67,7 @@
       "producer": "infrastructure.publishing.transmission_figure.write_transmission_diagram",
       "reason": "infrastructure-generated release-pairing diagram for transmission bookends",
       "rendered": true,
-      "size_bytes": 10573,
+      "size_bytes": 7358,
       "width_px": 525
     }
   ],
@@ -117,7 +117,7 @@
         "methods_sheaf"
       ],
       "section_bound": true,
-      "size_bytes": 380905,
+      "size_bytes": 385024,
       "source_backed": true,
       "source_mapped": true,
       "sources": [
@@ -167,7 +167,7 @@
         "appendix_full_sheaf"
       ],
       "section_bound": true,
-      "size_bytes": 57471,
+      "size_bytes": 58431,
       "source_backed": true,
       "source_mapped": true,
       "sources": [
@@ -219,7 +219,7 @@
         "results_si_tmaze"
       ],
       "section_bound": true,
-      "size_bytes": 48486,
+      "size_bytes": 49611,
       "source_backed": true,
       "source_mapped": true,
       "sources": [
@@ -268,7 +268,7 @@
         "results_si_tmaze"
       ],
       "section_bound": true,
-      "size_bytes": 64821,
+      "size_bytes": 66492,
       "source_backed": true,
       "source_mapped": true,
       "sources": [
@@ -317,7 +317,7 @@
         "results_si_tmaze"
       ],
       "section_bound": true,
-      "size_bytes": 83198,
+      "size_bytes": 85176,
       "source_backed": true,
       "source_mapped": true,
       "sources": [
@@ -365,7 +365,7 @@
         "results_free_energy"
       ],
       "section_bound": true,
-      "size_bytes": 41219,
+      "size_bytes": 42498,
       "source_backed": true,
       "source_mapped": true,
       "sources": [
@@ -412,7 +412,7 @@
         "methods_analytical"
       ],
       "section_bound": true,
-      "size_bytes": 84486,
+      "size_bytes": 85547,
       "source_backed": true,
       "source_mapped": true,
       "sources": [
@@ -460,7 +460,7 @@
         "results_invariants"
       ],
       "section_bound": true,
-      "size_bytes": 97434,
+      "size_bytes": 98767,
       "source_backed": true,
       "source_mapped": true,
       "sources": [
@@ -511,7 +511,7 @@
         "results_mi_sweep"
       ],
       "section_bound": true,
-      "size_bytes": 93828,
+      "size_bytes": 95768,
       "source_backed": true,
       "source_mapped": true,
       "sources": [
@@ -560,7 +560,7 @@
         "methods_lean"
       ],
       "section_bound": true,
-      "size_bytes": 472841,
+      "size_bytes": 482797,
       "source_backed": true,
       "source_mapped": true,
       "sources": [
@@ -607,7 +607,7 @@
         "intro_contributions"
       ],
       "section_bound": true,
-      "size_bytes": 213748,
+      "size_bytes": 216576,
       "source_backed": true,
       "source_mapped": true,
       "sources": [
@@ -655,7 +655,7 @@
         "results_si_tmaze"
       ],
       "section_bound": true,
-      "size_bytes": 86019,
+      "size_bytes": 88203,
       "source_backed": true,
       "source_mapped": true,
       "sources": [
@@ -704,7 +704,7 @@
         "methods_sheaf"
       ],
       "section_bound": true,
-      "size_bytes": 454246,
+      "size_bytes": 461204,
       "source_backed": true,
       "source_mapped": true,
       "sources": [
@@ -755,7 +755,7 @@
         "methods_sheaf"
       ],
       "section_bound": true,
-      "size_bytes": 191137,
+      "size_bytes": 193535,
       "source_backed": true,
       "source_mapped": true,
       "sources": [
@@ -803,7 +803,7 @@
         "methods_sheaf"
       ],
       "section_bound": true,
-      "size_bytes": 207624,
+      "size_bytes": 210036,
       "source_backed": true,
       "source_mapped": true,
       "sources": [
@@ -853,7 +853,7 @@
         "coverage_page"
       ],
       "section_bound": true,
-      "size_bytes": 188725,
+      "size_bytes": 191584,
       "source_backed": true,
       "source_mapped": true,
       "sources": [
@@ -948,7 +948,7 @@
         "results_si_tmaze"
       ],
       "section_bound": true,
-      "size_bytes": 37270,
+      "size_bytes": 38144,
       "source_backed": true,
       "source_mapped": true,
       "sources": [
@@ -998,7 +998,7 @@
         "results_si_tmaze"
       ],
       "section_bound": true,
-      "size_bytes": 42670,
+      "size_bytes": 43408,
       "source_backed": true,
       "source_mapped": true,
       "sources": [
@@ -1049,7 +1049,7 @@
         "results_si_tmaze"
       ],
       "section_bound": true,
-      "size_bytes": 26900,
+      "size_bytes": 27512,
       "source_backed": true,
       "source_mapped": true,
       "sources": [
@@ -1098,7 +1098,7 @@
         "appendix_full_sheaf"
       ],
       "section_bound": true,
-      "size_bytes": 111089,
+      "size_bytes": 112451,
       "source_backed": true,
       "source_mapped": true,
       "sources": [
@@ -1147,7 +1147,7 @@
         "methods_pymdp"
       ],
       "section_bound": true,
-      "size_bytes": 33864,
+      "size_bytes": 34557,
       "source_backed": true,
       "source_mapped": true,
       "sources": [
@@ -1201,7 +1201,7 @@
         "methods_sheaf"
       ],
       "section_bound": true,
-      "size_bytes": 181360,
+      "size_bytes": 184985,
       "source_backed": true,
       "source_mapped": true,
       "sources": [

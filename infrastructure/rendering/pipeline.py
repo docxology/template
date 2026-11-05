@@ -15,7 +15,8 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
-from infrastructure.core.exceptions import ValidationError
+from infrastructure.core.exceptions import RenderingError, ValidationError
+from infrastructure.core.project_paths import resolve_source_manuscript_dir
 from infrastructure.core.logging.utils import get_logger, log_live_resource_usage, log_success
 from infrastructure.project.discovery import resolve_project_root
 from infrastructure.rendering._combined_exports import (  # noqa: F401
@@ -78,6 +79,30 @@ class RenderPipelineDependencies:
     verify_outputs: Callable[..., bool] = verify_render_outputs
 
 
+def _prepare_bookends_before_hydration(
+    project_root: Path, project_name: str, root: Path, deps: RenderPipelineDependencies
+) -> None:
+    """Prepare native assets before a project seals their visualization evidence."""
+    source = resolve_source_manuscript_dir(project_root)
+    candidates = [source]
+    consumed = project_root / "output" / "manuscript"
+    if consumed.is_dir() and any(consumed.glob("*.md")):
+        candidates.append(consumed)
+    # An explicit consumed paper layout must never acquire legacy bookends,
+    # even when the source config still describes a different layout.
+    try:
+        if any(declared_frontmatter(deps.load_project_config(directory)) for directory in candidates):
+            return
+    except RenderingError:
+        # Hydration may resolve a provisional layout; the final consumed
+        # manuscript still passes the existing strict admission below.
+        return
+    try:
+        deps.write_bookends(project_root, project_name, repo_root=root)
+    except Exception as exc:  # noqa: BLE001 — bookends must not block rendering
+        logger.warning("Transmission bookend preparation skipped: %s", exc)
+
+
 def _render_pipeline_impl(
     project_name: str = "project",
     *,
@@ -103,6 +128,7 @@ def _render_pipeline_impl(
     if skip_manuscript_hydration:
         logger.info("Skipping manuscript-variable hydration (--skip-manuscript-hydration)")
     else:
+        _prepare_bookends_before_hydration(project_root, project_name, root, deps)
         hydration_exit = deps.hydrate_manuscript(project_root, template_repo_root=root)
         if hydration_exit != 0:
             return hydration_exit

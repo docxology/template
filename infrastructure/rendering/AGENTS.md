@@ -383,3 +383,5 @@ behavior and original composition algorithm meanings. See
 real-file tests in `test_paper_frontmatter.py` and
 `test_paper_frontmatter_reconstruction.py`. Final native/source-current and
 independent acceptance remain separate from a development fixture.
+
+Stage 3 prepares enabled native transmission assets before project hydration can seal their visualization evidence. It preserves explicit paper-frontmatter admission and repeats the bookend write after hydration restores the manuscript tree. Skipping hydration retains the existing final bookend path.

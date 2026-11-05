@@ -482,3 +482,5 @@ Nested pipeline supervisors forward up to 256 KiB of each original console
 stream into the retained outer worker streams while execution is active.
 Progress lines identify preparation and launch; all forwarded text is
 diagnostic only. It cannot replace original process or completion receipts.
+
+The Source-only Active refresh observer lives in active_pipeline_diagnostics.py. It reads the actual project's literal REQUIRED_OUTPUTS registry without importing domain code, records confined phase hashes and bounded raw generated JSON/compiled sections, and invokes genuine project validators under the nominated interpreter with physical-source checks. Missing, malformed, oversized, linked, and foreign-source observations remain unavailable; diagnostic records grant no acceptance. Run it as python -m infrastructure.project.active_pipeline_diagnostics with the selected project src and current Root on PYTHONPATH.

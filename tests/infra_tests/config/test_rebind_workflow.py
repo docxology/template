@@ -427,6 +427,13 @@ def test_active_refresh_is_explicit_read_only_artifact_preparation() -> None:
     lifecycle = steps["Regenerate and validate the actual Active producers"]["run"]
     assert lifecycle.index("stage_02_analysis.py") < lifecycle.index("refresh_rendered_provenance.py")
     assert "--rebind" not in lifecycle
+    assert steps["Regenerate and validate the actual Active producers"]["id"] == "active_producers"
+    diagnostics = steps["Preserve failed Active bytes and actual validator issues"]
+    assert diagnostics["if"] == "always() && steps.active_producers.outcome == 'failure'"
+    assert diagnostics["run"].index("pipeline_diagnostics raw") < diagnostics["run"].index(
+        "pipeline_diagnostics validators"
+    )
+    assert 'run_diagnostic active-validator-issues "$project/.venv/bin/python"' in diagnostics["run"]
     assert "test_active_coverage_workspace_preserves_canonical_semantic_readiness" in lifecycle
     names = [step.get("name") for step in job["steps"]]
     assert names.index("Capture the confined Active evidence patch") < names.index(

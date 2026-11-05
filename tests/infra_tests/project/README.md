@@ -19,3 +19,5 @@ uv run pytest tests/infra_tests/project/ -v
 
 - [`AGENTS.md`](AGENTS.md)
 - [`../../../infrastructure/project/README.md`](../../../infrastructure/project/README.md)
+
+The test_active_pipeline_diagnostics.py controls cover actual phase deltas/raw bytes, symlink and byte/census refusals, literal Source registry admission without execution, and real validator issues with foreign-source refusal. The Active domain source remains standalone.
