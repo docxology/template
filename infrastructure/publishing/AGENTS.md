@@ -22,6 +22,7 @@ The Publishing module provides tools for academic publishing workflows. It enabl
 | `root_release_contract.py` | Fail-closed root tag/package/changelog identity gate; exemplar releases stay on standalone repositories |
 | `release_plan.py`, `release_plan_transaction.py` | Exact-input coordinated Root patch/minor plan, locked SDK/manuscript bindings and retained compensating rollback; stale inputs or foreign edits refuse application. Planning and application grant no publication authority. |
 | `release_acceptance.py` | Root 4+ hosted handoff admission: exact same-repository run/revision, bounded public evidence archive, aggregate receipt hash, and complete source-owned candidate profile |
+| `composed_receipt.py` | `validate_composed_receipt` reads a bounded per-class acceptance receipt, requires the complete current profile at the actual Git revision, and checks each producer declaration, artifact hash and class closure. Hosted-only classes require authenticated origin-read capability; origin state distinguishes `observed` from unresolved `declared` metadata, and a resolved failed, incomplete or wrong-revision run refuses. Admission rechecks source/artifact currency and performs no publication. |
 | `deposit_filename.py` | `build_deposit_filename`, `DepositPublishContext`, `deposit_context_from_config` — metadata-driven Zenodo/GitHub upload basename |
 | `publication_ledger.py` | Append-only release ledger for transmission bookends |
 | `release/release_pairing.py` | Structural GitHub ↔ Zenodo pairing validation |

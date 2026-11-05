@@ -15,7 +15,7 @@ needed, and the caller must not discard it.
 
 from __future__ import annotations
 
-import inspect
+from dataclasses import replace
 
 import pytest
 
@@ -65,16 +65,48 @@ def test_status_distinguishes_blocking_from_review() -> None:
     assert _report().status == "pass"
 
 
-def test_refusal_source_reads_counts_and_first_diagnostic_code() -> None:
-    """The raise site must consult the report, not only the exit code."""
-    source = inspect.getsource(audit_module.build_native_published_audit)
-    assert "exit_code = validate_publication_audit(report, strict=True)" in source
-    assert "blocking_findings" in source, source
-    assert "review_findings" in source, source
-    assert "diagnostic_code" in source, (
-        f"the refusal must name the finding: `diagnostic_code` is the model's field for it. Source:\n{source}"
+def test_native_consumer_accepts_the_green_report() -> None:
+    report = _report()
+    before = report.to_dict()
+
+    assert audit_module._require_native_published_report(report) is None
+    assert report.to_dict() == before
+
+
+def test_native_consumer_prefers_a_blocking_finding_over_an_earlier_review() -> None:
+    report = _report("review_required", "fail")
+
+    with pytest.raises(ValueError) as error:
+        audit_module._require_native_published_report(report)
+
+    assert str(error.value).endswith("status=fail blocking=1 review=1 first=PROBE.CODE.1 detail=probe finding 1")
+
+
+def test_native_consumer_retains_one_line_of_actual_finding_detail() -> None:
+    report = _report("fail")
+    finding = replace(
+        report.findings[0],
+        message="validation input drift\n\t(changed: fingerprints.stage)\r\n",
     )
-    assert "report.status" in source, source
+    report = replace(report, findings=(finding,))
+
+    with pytest.raises(ValueError) as error:
+        audit_module._require_native_published_report(report)
+
+    assert str(error.value).endswith("detail=validation input drift (changed: fingerprints.stage)")
+    assert "\n" not in str(error.value)
+    assert "\r" not in str(error.value)
+
+
+def test_native_consumer_bounds_finding_detail() -> None:
+    report = _report("fail")
+    report = replace(report, findings=(replace(report.findings[0], message="x" * 512 + "unretained suffix"),))
+
+    with pytest.raises(ValueError) as error:
+        audit_module._require_native_published_report(report)
+
+    assert str(error.value).split(" detail=", maxsplit=1)[1] == "x" * 512
+    assert "unretained suffix" not in str(error.value)
 
 
 @pytest.mark.parametrize(
@@ -93,5 +125,8 @@ def test_counts_match_the_cause_that_fired(
     assert report.status == expected_status
     assert len(report.blocking_findings) == blocking
     assert len(report.review_findings) == review
-    # The pre-fix message was identical for all three rows; only these fields differ.
-    assert (expected_status, blocking, review) != ("fail", 2, 0) or statuses == ("fail", "fail")
+    with pytest.raises(ValueError) as error:
+        audit_module._require_native_published_report(report)
+    assert str(error.value).endswith(
+        f"status={expected_status} blocking={blocking} review={review} first=PROBE.CODE.0 detail=probe finding 0"
+    )

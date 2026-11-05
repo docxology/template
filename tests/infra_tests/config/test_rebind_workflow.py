@@ -18,6 +18,7 @@ guard, a real bare remote):
 
 from __future__ import annotations
 
+import hashlib
 import os
 import re
 import subprocess
@@ -36,6 +37,9 @@ _DECISION = "Decide whether this run must rebind"
 _REBIND = "Rebind rendered receipts and stage the footprint"
 _COMMIT = "Commit the rebind"
 _VERIFY = "Verify both gates on the committed tree"
+_CAPTURE = "Capture the verified rebind review patch"
+_REVIEW_UPLOAD = "Retain the verified rebind review patch"
+_DIAGNOSTIC_UPLOAD = "Retain original rebind diagnostics"
 _FINGERPRINTS = "Report the measured fingerprints of one exemplar"
 _PUSH = "Push the rebind commit to main"
 _SUMMARY = "Summarize the decision, the tree and the submodule"
@@ -71,11 +75,18 @@ def _steps() -> dict[str, dict]:
         _REBIND,
         _COMMIT,
         _VERIFY,
+        _CAPTURE,
+        _REVIEW_UPLOAD,
+        _DIAGNOSTIC_UPLOAD,
         _FINGERPRINTS,
         _PUSH,
         _SUMMARY,
     }, sorted(steps)
     return steps
+
+
+def _refresh_steps() -> dict[str, dict]:
+    return {step["name"]: step for step in _workflow()["jobs"]["refresh-active-inference"]["steps"] if "name" in step}
 
 
 def _trigger() -> dict:
@@ -196,7 +207,13 @@ def _run_step(
     result = subprocess.run(
         ["bash", "-e", "-o", "pipefail", "-c", step["run"]],
         cwd=repo,
-        env={**_git_env(), "GITHUB_OUTPUT": str(output), "RUNNER_TEMP": str(tmp_path), **env},
+        env={
+            **_git_env(),
+            "GITHUB_OUTPUT": str(output),
+            "GITHUB_ENV": str(tmp_path / "job.env"),
+            "RUNNER_TEMP": str(tmp_path),
+            **env,
+        },
         capture_output=True,
         text=True,
         timeout=120,
@@ -388,6 +405,161 @@ def test_workflow_is_dispatch_only_until_a_push_credential_exists() -> None:
         assert "[skip ci]" not in _executable(step.get("run", "")), step["name"]
 
 
+def test_active_refresh_is_explicit_read_only_artifact_preparation() -> None:
+    workflow = _workflow()
+    assert _trigger()["workflow_dispatch"]["inputs"]["refresh_active_inference"] == {
+        "description": "Regenerate only Active Inference and retain a reviewed patch; requires dry_run",
+        "type": "boolean",
+        "default": False,
+    }
+    job = workflow["jobs"]["refresh-active-inference"]
+    assert job["if"] == "inputs.refresh_active_inference == true"
+    assert _job()["if"] == "inputs.refresh_active_inference != true"
+    assert job["permissions"] == {"contents": "read"}
+    assert "REFRESH_DIRECTORY" not in job.get("env", {})
+    checkout = next(step for step in job["steps"] if step.get("uses", "").startswith("actions/checkout@"))
+    assert checkout["with"]["persist-credentials"] is False
+    assert checkout["with"]["submodules"] == "recursive"
+    scripts = "\n".join(_executable(step.get("run", "")) for step in job["steps"])
+    assert re.search(r"\bgit\s+push\b", scripts) is None
+    assert "github-apply" not in scripts
+    steps = _refresh_steps()
+    lifecycle = steps["Regenerate and validate the actual Active producers"]["run"]
+    assert lifecycle.index("stage_02_analysis.py") < lifecycle.index("refresh_rendered_provenance.py")
+    assert "--rebind" not in lifecycle
+    assert "test_active_coverage_workspace_preserves_canonical_semantic_readiness" in lifecycle
+    names = [step.get("name") for step in job["steps"]]
+    assert names.index("Capture the confined Active evidence patch") < names.index(
+        "Verify the committed Active candidate tree"
+    )
+    verify = steps["Verify the committed Active candidate tree"]["run"]
+    assert "check_publication_outputs.py" in verify
+    assert "--strict --rendered" in verify
+    upload = steps["Retain the Active evidence candidate and original diagnostics"]
+    assert upload["if"] == "always()"
+    assert upload["with"]["retention-days"] == 30
+    assert upload["with"]["path"] == "${{ runner.temp }}/template-active-refresh/"
+    admit = steps["Admit an artifact-only Active refresh"]
+    assert admit["env"]["REFRESH_DIRECTORY"] == "${{ runner.temp }}/template-active-refresh"
+    assert '>> "$GITHUB_ENV"' in admit["run"]
+
+
+def _admit_refresh(repo: Path, tmp_path: Path, *, dry_run: str = "true", sha: str | None = None):
+    directory = tmp_path / "refresh-artifact"
+    result, _ = _run_step(
+        _refresh_steps()["Admit an artifact-only Active refresh"],
+        repo,
+        {
+            "DRY_RUN": dry_run,
+            "GITHUB_SHA": sha or _git(repo, "rev-parse", "HEAD").strip(),
+            "REFRESH_DIRECTORY": str(directory),
+        },
+        tmp_path,
+    )
+    return result, directory
+
+
+@pytest.mark.parametrize("dry_run", ("false", "", "TRUE"))
+def test_active_refresh_admission_refuses_non_dry_requests(tmp_path: Path, dry_run: str) -> None:
+    repo = _repository(tmp_path)
+    result, directory = _admit_refresh(repo, tmp_path, dry_run=dry_run)
+    assert result.returncode != 0
+    assert "requires dry_run=true" in result.stderr
+    assert not (directory / "base-commit.txt").exists()
+
+
+@pytest.mark.parametrize("defect", ("wrong-sha", "dirty-source", "untracked-source"))
+def test_active_refresh_admission_requires_exact_clean_source(tmp_path: Path, defect: str) -> None:
+    repo = _repository(tmp_path)
+    sha = "0" * 40 if defect == "wrong-sha" else None
+    if defect == "dirty-source":
+        _write(repo, "README.md", "preserve this work\n", tracked=False)
+    elif defect == "untracked-source":
+        _write(repo, "new.py", "VALUE = 1\n", tracked=False)
+    result, directory = _admit_refresh(repo, tmp_path, sha=sha)
+    assert result.returncode != 0
+    assert not (directory / "base-commit.txt").exists()
+
+
+def _capture_refresh(repo: Path, directory: Path, tmp_path: Path) -> subprocess.CompletedProcess[str]:
+    result, _ = _run_step(
+        _refresh_steps()["Capture the confined Active evidence patch"],
+        repo,
+        {"REFRESH_DIRECTORY": str(directory)},
+        tmp_path,
+    )
+    return result
+
+
+_ACTIVE_OUTPUT = "projects/templates/template_active_inference/output/data/result.json"
+
+
+def test_active_refresh_patch_replays_exact_binary_candidate_tree(tmp_path: Path) -> None:
+    repo = _repository(tmp_path)
+    figure = "projects/templates/template_active_inference/output/figures/figure.png"
+    section = "projects/templates/template_active_inference/manuscript/01_introduction.md"
+    _commit_paths(repo, [_ACTIVE_OUTPUT, figure, section], "original evidence")
+    result, directory = _admit_refresh(repo, tmp_path)
+    assert result.returncode == 0, result.stderr
+    base = _git(repo, "rev-parse", "HEAD").strip()
+    _write(repo, _ACTIVE_OUTPUT, '{"measured": true}\n', tracked=False)
+    (repo / figure).write_bytes(b"\x89PNG\0genuine-test-binary\xff\n")
+    _write(repo, section, "# Regenerated section\n", tracked=False)
+
+    captured = _capture_refresh(repo, directory, tmp_path)
+    assert captured.returncode == 0, captured.stderr
+    patch = directory / "refresh.patch"
+    assert b"GIT binary patch" in patch.read_bytes()
+    assert (directory / "base-commit.txt").read_text().strip() == base
+    target = (directory / "candidate-tree.txt").read_text().strip()
+    assert _git(repo, "rev-parse", "HEAD^{tree}").strip() == target
+    assert _git(repo, "status", "--porcelain") == ""
+    for line in (directory / "SHA256SUMS").read_text().splitlines():
+        digest, filename = line.split("  ", 1)
+        assert hashlib.sha256((directory / filename).read_bytes()).hexdigest() == digest
+    replay = tmp_path / "replay"
+    _git(tmp_path, "clone", "--no-hardlinks", "-q", str(repo), str(replay))
+    _git(replay, "switch", "--detach", base)
+    _git(replay, "apply", "--index", str(patch))
+    assert _git(replay, "write-tree").strip() == target
+
+
+@pytest.mark.parametrize(
+    "defect", ("outside-project", "authored-source", "nested-section", "untracked", "deleted", "mode", "symlink")
+)
+def test_active_refresh_capture_refuses_widening_before_staging(tmp_path: Path, defect: str) -> None:
+    repo = _repository(tmp_path)
+    authored = "projects/templates/template_active_inference/src/method.py"
+    nested = "projects/templates/template_active_inference/manuscript/01_nested/content.md"
+    _commit_paths(repo, [_ACTIVE_OUTPUT, "infrastructure/unrelated.py", authored, nested], "original inputs")
+    result, directory = _admit_refresh(repo, tmp_path)
+    assert result.returncode == 0, result.stderr
+    _write(repo, _ACTIVE_OUTPUT, '{"refreshed": true}\n', tracked=False)
+    if defect == "outside-project":
+        _write(repo, "infrastructure/unrelated.py", "preserve source\n", tracked=False)
+    elif defect == "authored-source":
+        _write(repo, authored, "preserve source\n", tracked=False)
+    elif defect == "nested-section":
+        _write(repo, nested, "preserve source\n", tracked=False)
+    elif defect == "untracked":
+        _write(repo, "new.py", "preserve untracked\n", tracked=False)
+    elif defect == "deleted":
+        (repo / _ACTIVE_OUTPUT).unlink()
+    elif defect == "mode":
+        (repo / _ACTIVE_OUTPUT).chmod(0o755)
+    elif defect == "symlink":
+        target = tmp_path / "preserved-external.json"
+        target.write_text("external bytes\n")
+        (repo / _ACTIVE_OUTPUT).unlink()
+        (repo / _ACTIVE_OUTPUT).symlink_to(target)
+    captured = _capture_refresh(repo, directory, tmp_path)
+    assert captured.returncode != 0
+    assert _git(repo, "diff", "--cached", "--name-only") == ""
+    assert not (directory / "refresh.patch").exists()
+    if defect == "symlink":
+        assert (tmp_path / "preserved-external.json").read_text() == "external bytes\n"
+
+
 def test_checkout_initializes_the_submodule_before_any_measurement() -> None:
     steps = _steps()
     checkout = next(step for step in _job()["steps"] if step.get("uses", "").startswith("actions/checkout@"))
@@ -431,6 +603,68 @@ def test_the_commit_is_verified_after_it_exists_and_pushed_last() -> None:
     assert "git push" not in verify
     assert "git push origin HEAD:main" in steps[_PUSH]["run"]
     assert "--force" not in steps[_PUSH]["run"]
+
+
+def test_rebind_review_artifact_requires_both_verified_tree_gates() -> None:
+    steps = _steps()
+    assert steps[_CAPTURE]["if"] == "steps.commit.outputs.committed == 'true' && steps.verify.outcome == 'success'"
+    assert steps[_REVIEW_UPLOAD]["if"] == (
+        "steps.commit.outputs.committed == 'true' && steps.verify.outcome == 'success' "
+        "&& steps.capture.outcome == 'success'"
+    )
+    assert steps[_DIAGNOSTIC_UPLOAD]["if"] == "always()"
+    assert "--receipts" in steps[_VERIFY]["run"]
+    assert "--format json" in steps[_VERIFY]["run"]
+    assert "git push" not in steps[_CAPTURE]["run"]
+
+
+@pytest.mark.parametrize("defect", (None, "failed-gate", "moved-tree", "outside-footprint", "missing-receipt"))
+def test_rebind_review_capture_binds_base_tree_patch_and_gate_receipts(tmp_path: Path, defect: str | None) -> None:
+    repo = _repository(tmp_path)
+    path = "projects/templates/template_code_project/output/reports/rendered_provenance.json"
+    _commit_paths(repo, [path], "original receipt")
+    base = _git(repo, "rev-parse", "HEAD").strip()
+    changed = "infrastructure/unrelated.py" if defect == "outside-footprint" else path
+    _commit_paths(repo, [changed], "rebound receipt")
+    commit = _git(repo, "rev-parse", "HEAD").strip()
+    tree = _git(repo, "rev-parse", "HEAD^{tree}").strip()
+    receipts = tmp_path / "rebind-publication-gate"
+    receipts.mkdir()
+    (receipts / "template_code_project.json").write_text('{"blocking": 0}\n')
+    (tmp_path / "rebind-rendered-audit.json").write_text('{"blocking": 0}\n')
+    (tmp_path / "rebind-publication-exit.txt").write_text("0\n")
+    (tmp_path / "rebind-rendered-exit.txt").write_text("0\n")
+    if defect == "missing-receipt":
+        (tmp_path / "rebind-rendered-audit.json").unlink()
+    result, _ = _run_step(
+        _steps()[_CAPTURE],
+        repo,
+        {
+            "VERIFICATION_OUTCOME": "failure" if defect == "failed-gate" else "success",
+            "VERIFIED_COMMIT": commit,
+            "VERIFIED_TREE": "0" * 40 if defect == "moved-tree" else tree,
+            "GITHUB_SHA": base,
+        },
+        tmp_path,
+    )
+    directory = tmp_path / "rebind-review-patch"
+    if defect is not None:
+        assert result.returncode != 0
+        assert not (directory / "COMPLETE.txt").exists()
+        return
+    assert result.returncode == 0, result.stderr
+    assert (directory / "COMPLETE.txt").is_file()
+    assert (directory / "base-commit.txt").read_text().strip() == base
+    assert (directory / "candidate-commit.txt").read_text().strip() == commit
+    assert (directory / "candidate-tree.txt").read_text().strip() == tree
+    assert (directory / "publication-gate/template_code_project.json").read_bytes() == (
+        receipts / "template_code_project.json"
+    ).read_bytes()
+    replay = tmp_path / "replay"
+    _git(tmp_path, "clone", "--no-hardlinks", "-q", str(repo), str(replay))
+    _git(replay, "switch", "--detach", base)
+    _git(replay, "apply", "--index", str(directory / "refresh.patch"))
+    assert _git(replay, "write-tree").strip() == tree
 
 
 def test_the_run_reports_the_measured_fingerprints() -> None:
