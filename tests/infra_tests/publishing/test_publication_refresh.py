@@ -14,7 +14,12 @@ import yaml
 from infrastructure.project.exemplar_config_contract import validate_exemplar_configs
 from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
 from infrastructure.publishing.root_release_contract import root_package_version
-from infrastructure.publishing.publication_refresh import provider_waves, run_logged
+from infrastructure.publishing.publication_refresh import generation_commands, main, provider_waves, run_logged
+from infrastructure.validation.publication.rendered_refresh import rebind_project
+from infrastructure.validation.publication.rendered_provenance import write_rendered_provenance_receipt
+from infrastructure.core.pipeline.artifacts import snapshot_current_artifact_manifest
+from tests.infra_tests.validation._rendered_provenance_helpers import PROJECT, _green_project
+from scripts.maintenance.refresh_rendered_provenance import _parse_args
 from infrastructure.publishing.publication_refresh_custody import (
     _inventory_plan,
     build_plan,
@@ -310,3 +315,96 @@ def test_real_source_inventory_and_mandatory_config_guard(tmp_path: Path) -> Non
     commands = gate_commands(ROOT, tmp_path)
     assert set(commands) == {"exemplar-config", "publication-gate", "rendered-audit"}
     assert commands["exemplar-config"][1:] == ["scripts/audit/check_exemplar_configs.py"]
+
+
+def test_rebind_only_plan_routes_every_canonical_project_to_actual_rebind_cli(repository: Path) -> None:
+    sha = git(repository, "rev-parse", "HEAD").decode().strip()
+    plan = build_plan(repository, sha, "5.1.0", mode="rebind-only")
+    assert plan["mode"] == "rebind-only"
+    assert plan["refresh"] == [] and plan["rebind"] == list(PUBLIC_PROJECT_NAMES)
+    assert plan["compiled_manuscripts"] == []
+    assert all(Path(path).parent.name == "reports" and Path(path).suffix == ".json" for path in plan["allowed"])
+    commands = [
+        item for wave in provider_waves(plan["providers"]) for item in generation_commands(repository, plan, wave)
+    ]
+    assert len(commands) == len(PUBLIC_PROJECT_NAMES)
+    selected = []
+    for _, argv in commands:
+        assert argv[1] == "scripts/maintenance/refresh_rendered_provenance.py"
+        parsed = _parse_args(argv[2:])
+        assert parsed.rebind is True
+        selected.extend(parsed.projects)
+    assert set(selected) == set(PUBLIC_PROJECT_NAMES)
+
+
+@pytest.mark.parametrize(
+    "relative",
+    [
+        f"projects/{ACTIVE}/output/figures/result.svg",
+        f"projects/{ACTIVE}/manuscript/02_compiled.md",
+        f"projects/{ACTIVE}/output/reports/nested/report.json",
+    ],
+)
+def test_rebind_only_refuses_actual_tracked_figure_compiled_or_nested_report_changes(
+    repository: Path, relative: str
+) -> None:
+    target = repository / relative
+    if not target.exists():
+        _write(repository, relative, "original fixture DATA\n")
+        _commit(repository)
+    sha = git(repository, "rev-parse", "HEAD").decode().strip()
+    plan = build_plan(repository, sha, "5.1.0", mode="rebind-only")
+    target.write_bytes(target.read_bytes() + b"changed DATA\n")
+    with pytest.raises(ValueError, match="outside declared generated ownership"):
+        check_footprint(repository, plan)
+
+
+def test_rebind_only_accepts_only_existing_flat_report_updates(repository: Path) -> None:
+    sha = git(repository, "rev-parse", "HEAD").decode().strip()
+    plan = build_plan(repository, sha, "5.1.0", mode="rebind-only")
+    relative = f"projects/{ACTIVE}/output/reports/validation_report.json"
+    _write(repository, relative, '{"fixture":"new validation"}\n')
+    assert check_footprint(repository, plan) == [relative]
+
+
+def test_rebind_only_mode_tamper_refuses_reconstruction_and_dispatched_phase(repository: Path, tmp_path: Path) -> None:
+    sha = git(repository, "rev-parse", "HEAD").decode().strip()
+    plan = build_plan(repository, sha, "5.1.0", mode="rebind-only")
+    plan["mode"] = "refresh"
+    with pytest.raises(ValueError, match="differs"):
+        check_footprint(repository, plan)
+    directory = tmp_path / "mode-operator"
+    directory.mkdir()
+    write_json(directory / "plan.json", build_plan(repository, sha, "5.1.0"))
+    with pytest.raises(ValueError, match="dispatched mode"):
+        main(["--repo-root", str(repository), "--directory", str(directory), "--mode", "rebind-only", "candidate"])
+    assert git(repository, "rev-parse", "HEAD").decode().strip() == sha
+    assert not (directory / "candidate.json").exists()
+
+
+def test_actual_rebind_refuses_changed_output_fingerprint_without_restamping(tmp_path: Path) -> None:
+    project = _green_project(tmp_path)
+    write_rendered_provenance_receipt(tmp_path, PROJECT)
+    receipt = project / "output/reports/rendered_provenance.json"
+    before = receipt.read_bytes()
+    (project / "output/data/result.json").write_text('{"count":8}\n')
+    snapshot_current_artifact_manifest(project / "output")
+    passed, message = rebind_project(PROJECT, tmp_path)
+    assert passed is False and "rendered bytes changed" in message
+    assert receipt.read_bytes() == before
+
+
+def test_rebind_only_workflow_mode_is_explicit_and_carried_to_every_phase() -> None:
+    workflow = yaml.safe_load((ROOT / ".github/workflows/publication-refresh.yml").read_text())
+    trigger = workflow.get("on", workflow.get(True))
+    assert trigger["workflow_dispatch"]["inputs"]["mode"] == {
+        "description": "Rerender tracked publication copies, or revalidate all unchanged output sets",
+        "type": "choice",
+        "options": ["refresh", "rebind-only"],
+        "default": "refresh",
+    }
+    job = workflow["jobs"]["refresh"]
+    assert job["env"]["REFRESH_MODE"] == "$" + "{{ inputs.mode }}"
+    for step in job["steps"]:
+        if "infrastructure.publishing.publication_refresh" in step.get("run", ""):
+            assert '--mode "$REFRESH_MODE"' in step["run"]

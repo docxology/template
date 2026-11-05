@@ -17,6 +17,7 @@ from typing import Any
 from infrastructure.core.secrets import strip_secret_env
 from infrastructure.project.public_acceptance_auxiliary_supervision import supervise
 from infrastructure.publishing.publication_refresh_custody import (
+    REFRESH_MODES,
     build_plan,
     check_footprint,
     commit_candidate,
@@ -81,7 +82,7 @@ def run_logged(root: Path, directory: Path, label: str, argv: list[str], *, time
 
 def _source_plan(root: Path, directory: Path) -> dict[str, Any]:
     plan = load_plan(directory)
-    if plan != build_plan(root, plan["base_commit"], plan["platform_version"]):
+    if plan != build_plan(root, plan["base_commit"], plan["platform_version"], mode=plan["mode"]):
         raise ValueError("publication refresh plan is stale or altered")
     return plan
 
@@ -117,9 +118,28 @@ def prepare_environments(root: Path, directory: Path) -> int:
             return 1
     _source_plan(root, directory)
     write_json(
-        directory / "prepared.json", {"base_commit": plan["base_commit"], "platform_version": plan["platform_version"]}
+        directory / "prepared.json",
+        {"base_commit": plan["base_commit"], "platform_version": plan["platform_version"], "mode": plan["mode"]},
     )
     return 0
+
+
+def generation_commands(root: Path, plan: dict[str, Any], wave: list[str]) -> list[tuple[str, list[str]]]:
+    """Select only the frozen original refresh or unchanged-output rebind CLI."""
+    commands = []
+    for scope in wave:
+        if scope == "root":
+            continue
+        argv = [
+            str(root / ".venv/bin/python"),
+            "scripts/maintenance/refresh_rendered_provenance.py",
+            "--project",
+            scope,
+        ]
+        if scope in plan["rebind"]:
+            argv.append("--rebind")
+        commands.append((scope.replace("/", "__") + "-generate", argv))
+    return commands
 
 
 def generate(root: Path, directory: Path, jobs: int) -> int:
@@ -128,7 +148,11 @@ def generate(root: Path, directory: Path, jobs: int) -> int:
         raise ValueError("publication refresh workers must be between one and four")
     plan = _source_plan(root, directory)
     prepared = json.loads((directory / "prepared.json").read_bytes())
-    if prepared != {"base_commit": plan["base_commit"], "platform_version": plan["platform_version"]}:
+    if prepared != {
+        "base_commit": plan["base_commit"],
+        "platform_version": plan["platform_version"],
+        "mode": plan["mode"],
+    }:
         raise ValueError("current own runtime preparation is missing")
     epoch = git(root, "show", "-s", "--format=%ct", plan["base_commit"]).decode().strip()
     os.environ.update(
@@ -137,16 +161,8 @@ def generate(root: Path, directory: Path, jobs: int) -> int:
         MPLBACKEND="Agg",
         ANALYSIS_SCRIPT_TIMEOUT_SEC="1800",
     )
-    python = str(root / ".venv/bin/python")
     for wave in provider_waves(plan["providers"]):
-        commands = []
-        for scope in wave:
-            if scope == "root":
-                continue
-            argv = [python, "scripts/maintenance/refresh_rendered_provenance.py", "--project", scope]
-            if scope in plan["rebind"]:
-                argv.append("--rebind")
-            commands.append((scope.replace("/", "__") + "-generate", argv))
+        commands = generation_commands(root, plan, wave)
         with ThreadPoolExecutor(max_workers=jobs) as pool:
             futures = [pool.submit(run_logged, root, directory, label, argv) for label, argv in commands]
             codes = [future.result() for future in futures]
@@ -157,6 +173,7 @@ def generate(root: Path, directory: Path, jobs: int) -> int:
         directory / "generated.json",
         {
             "base_commit": plan["base_commit"],
+            "mode": plan["mode"],
             "refresh": plan["refresh"],
             "rebind": plan["rebind"],
             "provider_waves": provider_waves(plan["providers"]),
@@ -181,6 +198,7 @@ def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--repo-root", type=Path, default=Path.cwd())
     parser.add_argument("--directory", type=Path, required=True)
+    parser.add_argument("--mode", choices=REFRESH_MODES, default="refresh")
     commands = parser.add_subparsers(dest="phase", required=True)
     plan_parser = commands.add_parser("plan")
     plan_parser.add_argument("--source-sha", required=True)
@@ -194,11 +212,13 @@ def main(argv: list[str] | None = None) -> int:
     root, directory = args.repo_root.absolute(), args.directory.absolute()
     if directory.is_relative_to(root) or directory != directory.resolve():
         raise ValueError("refresh evidence needs a fresh real directory outside Source")
+    if args.phase != "plan":
+        load_plan(directory, mode=args.mode)
     if args.phase == "plan":
         if importlib.metadata.version("research-project-template") != args.expected_version:
             raise ValueError("prepared Root distribution does not match requested Source version")
         directory.mkdir()
-        write_json(directory / "plan.json", build_plan(root, args.source_sha, args.expected_version))
+        write_json(directory / "plan.json", build_plan(root, args.source_sha, args.expected_version, mode=args.mode))
     elif args.phase == "prepare":
         return prepare_environments(root, directory)
     elif args.phase == "generate":
@@ -208,6 +228,7 @@ def main(argv: list[str] | None = None) -> int:
         plan = load_plan(directory)
         if (
             generated.get("base_commit") != plan["base_commit"]
+            or generated.get("mode") != plan["mode"]
             or generated.get("refresh") != plan["refresh"]
             or generated.get("rebind") != plan["rebind"]
         ):
@@ -224,4 +245,4 @@ if __name__ == "__main__":
     raise SystemExit(main())
 
 
-__all__ = ["generate", "main", "prepare_environments", "provider_waves", "run_logged", "verify"]
+__all__ = ["generate", "generation_commands", "main", "prepare_environments", "provider_waves", "run_logged", "verify"]

@@ -18,7 +18,8 @@ from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
 from infrastructure.publishing.release_provider_graph import current_provider_graph
 from infrastructure.publishing.root_release_contract import root_package_version
 
-SCHEMA = "template-coordinated-publication-refresh/v1"
+SCHEMA = "template-coordinated-publication-refresh/v2"
+REFRESH_MODES = ("refresh", "rebind-only")
 
 
 def git(root: Path, *arguments: str) -> bytes:
@@ -97,8 +98,10 @@ def _compiled(root: Path, scope: str, tracked: dict[str, dict[str, str]]) -> lis
     return targets
 
 
-def _inventory_plan(root: Path, source_sha: str, version: str) -> dict[str, Any]:
+def _inventory_plan(root: Path, source_sha: str, version: str, mode: str = "refresh") -> dict[str, Any]:
     root = root.absolute()
+    if mode not in REFRESH_MODES:
+        raise ValueError("unknown publication refresh mode")
     if not re.fullmatch(r"[0-9a-f]{40}", source_sha):
         raise ValueError("publication refresh requires the exact dispatched Source SHA")
     if git(root, "rev-parse", "--show-toplevel").decode().strip() != str(root):
@@ -109,28 +112,35 @@ def _inventory_plan(root: Path, source_sha: str, version: str) -> dict[str, Any]
     for raw in git(root, "ls-tree", "-rz", "--full-tree", source_sha).split(b"\0"):
         if raw:
             header, encoded_path = raw.split(b"\t", 1)
-            mode, kind, oid = header.decode().split()
-            tracked[encoded_path.decode()] = {"mode": mode, "kind": kind, "blob": oid}
+            blob_mode, kind, oid = header.decode().split()
+            tracked[encoded_path.decode()] = {"mode": blob_mode, "kind": kind, "blob": oid}
     allowed = {}
     refresh = []
+    compiled_manuscripts: list[str] = []
     for scope in PUBLIC_PROJECT_NAMES:
         prefix = f"projects/{scope}/"
         config = prefix + "output/manuscript/config.yaml"
-        if config in tracked:
+        if mode == "refresh" and config in tracked:
             refresh.append(scope)
-        compiled = set(_compiled(root, scope, tracked))
+        compiled = set(_compiled(root, scope, tracked)) if mode == "refresh" else set()
+        compiled_manuscripts.extend(compiled)
         for path, record in tracked.items():
-            if path.startswith(prefix + "output/") or path in compiled:
+            owned = path.startswith(prefix + "output/") or path in compiled
+            if mode == "rebind-only":
+                owned = re.fullmatch(re.escape(prefix) + r"output/reports/[A-Za-z0-9_.-]+\.json", path) is not None
+            if owned:
                 if record["mode"] != "100644" or record["kind"] != "blob":
                     raise ValueError(f"canonical generated evidence must be a tracked regular file: {path}")
                 _regular(root, path)
                 allowed[path] = record
-    if not refresh or not allowed:
+    if (mode == "refresh" and not refresh) or not allowed:
         raise ValueError("canonical tracked publication-copy inventory is missing")
     graph = current_provider_graph(root)
     return {
         "schema_version": SCHEMA,
         "role": "publication-refresh-preparation-only",
+        "mode": mode,
+        "compiled_manuscripts": sorted(compiled_manuscripts),
         "base_commit": source_sha,
         "base_tree": git(root, "rev-parse", source_sha + "^{tree}").decode().strip(),
         "platform_version": version,
@@ -142,29 +152,32 @@ def _inventory_plan(root: Path, source_sha: str, version: str) -> dict[str, Any]
     }
 
 
-def build_plan(root: Path, source_sha: str, version: str) -> dict[str, Any]:
+def build_plan(root: Path, source_sha: str, version: str, *, mode: str = "refresh") -> dict[str, Any]:
     """Bind a clean exact Source and finite canonical generated-path inventory."""
     if git(root, "rev-parse", "HEAD").decode().strip() != source_sha or git(
         root, "status", "--porcelain", "--untracked-files=all"
     ):
         raise ValueError("publication refresh requires a clean exact dispatched Source")
-    return _inventory_plan(root, source_sha, version)
+    return _inventory_plan(root, source_sha, version, mode)
 
 
-def load_plan(directory: Path) -> dict[str, Any]:
+def load_plan(directory: Path, *, mode: str | None = None) -> dict[str, Any]:
     plan = json.loads((directory / "plan.json").read_bytes())
     if (
         not isinstance(plan, dict)
         or plan.get("schema_version") != SCHEMA
         or plan.get("public_roster") != list(PUBLIC_PROJECT_NAMES)
+        or plan.get("mode") not in REFRESH_MODES
     ):
         raise ValueError("unknown refresh plan or canonical roster")
+    if mode is not None and plan["mode"] != mode:
+        raise ValueError("refresh plan mode differs from the dispatched mode")
     return plan
 
 
 def check_footprint(root: Path, plan: dict[str, Any]) -> list[str]:
     """Refuse additions, removals, modes, authored changes and untracked files."""
-    if plan != _inventory_plan(root, plan["base_commit"], plan["platform_version"]):
+    if plan != _inventory_plan(root, plan["base_commit"], plan["platform_version"], plan["mode"]):
         raise ValueError("refresh plan differs from current Source ownership")
     if git(root, "rev-parse", "HEAD").decode().strip() != plan["base_commit"] or git(
         root, "diff", "--cached", "--name-only"
@@ -214,7 +227,7 @@ def finish_review(root: Path, directory: Path) -> Path:
     """Retain the exact patch only after both original committed-tree gates pass."""
     plan = load_plan(directory)
     candidate = json.loads((directory / "candidate.json").read_bytes())
-    if plan != _inventory_plan(root, plan["base_commit"], plan["platform_version"]):
+    if plan != _inventory_plan(root, plan["base_commit"], plan["platform_version"], plan["mode"]):
         raise ValueError("refresh plan differs from committed Source ownership")
     if (
         git(root, "rev-parse", "HEAD").decode().strip() != candidate["commit"]
@@ -306,6 +319,7 @@ def gate_commands(root: Path, directory: Path) -> dict[str, list[str]]:
 
 
 __all__ = [
+    "REFRESH_MODES",
     "build_plan",
     "check_footprint",
     "commit_candidate",

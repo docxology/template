@@ -11,6 +11,11 @@ on:
         description: Final coordinated Root version already present in Source
         type: string
         required: true
+      mode:
+        description: Rerender tracked publication copies, or revalidate all unchanged output sets
+        type: choice
+        options: ["refresh", "rebind-only"]
+        default: "refresh"
       workers:
         description: Independent projects per provider wave
         type: choice
@@ -33,6 +38,8 @@ jobs:
     name: Prepare reviewed publication output patch
     runs-on: ubuntu-24.04
     timeout-minutes: 360
+    env:
+      REFRESH_MODE: ${{ inputs.mode }}
     permissions:
       contents: read
     steps:
@@ -64,7 +71,7 @@ jobs:
           REFRESH_DIRECTORY: ${{ runner.temp }}/coordinated-publication-refresh
         run: >-
           .venv/bin/python -m infrastructure.publishing.publication_refresh
-          --directory "$REFRESH_DIRECTORY"
+          --directory "$REFRESH_DIRECTORY" --mode "$REFRESH_MODE"
           plan --source-sha "$REQUESTED_SOURCE" --expected-version "$EXPECTED_VERSION"
       - name: Prepare Source-pinned native formats, Lean and provider dependencies
         uses: ./.github/actions/setup-native-installed-readiness
@@ -73,27 +80,27 @@ jobs:
           REFRESH_DIRECTORY: ${{ runner.temp }}/coordinated-publication-refresh
         run: >-
           .venv/bin/python -m infrastructure.publishing.publication_refresh
-          --directory "$REFRESH_DIRECTORY" prepare
+          --directory "$REFRESH_DIRECTORY" --mode "$REFRESH_MODE" prepare
       - name: Regenerate publication copies and revalidate the unchanged complement
         env:
           REFRESH_DIRECTORY: ${{ runner.temp }}/coordinated-publication-refresh
           REFRESH_WORKERS: ${{ inputs.workers }}
         run: >-
           .venv/bin/python -m infrastructure.publishing.publication_refresh
-          --directory "$REFRESH_DIRECTORY" generate --jobs "$REFRESH_WORKERS"
+          --directory "$REFRESH_DIRECTORY" --mode "$REFRESH_MODE" generate --jobs "$REFRESH_WORKERS"
       - name: Commit the confined disposable candidate
         env:
           REFRESH_DIRECTORY: ${{ runner.temp }}/coordinated-publication-refresh
         run: >-
           .venv/bin/python -m infrastructure.publishing.publication_refresh
-          --directory "$REFRESH_DIRECTORY" candidate
+          --directory "$REFRESH_DIRECTORY" --mode "$REFRESH_MODE" candidate
       - name: Run both strict all-public gates on the committed tree
         id: verify
         env:
           REFRESH_DIRECTORY: ${{ runner.temp }}/coordinated-publication-refresh
         run: >-
           .venv/bin/python -m infrastructure.publishing.publication_refresh
-          --directory "$REFRESH_DIRECTORY" verify
+          --directory "$REFRESH_DIRECTORY" --mode "$REFRESH_MODE" verify
       - name: Capture the verified binary patch and original receipts
         id: capture
         if: steps.verify.outcome == 'success'
@@ -101,7 +108,7 @@ jobs:
           REFRESH_DIRECTORY: ${{ runner.temp }}/coordinated-publication-refresh
         run: >-
           .venv/bin/python -m infrastructure.publishing.publication_refresh
-          --directory "$REFRESH_DIRECTORY" finish
+          --directory "$REFRESH_DIRECTORY" --mode "$REFRESH_MODE" finish
       - name: Retain the verified patch for ordinary reviewed PR integration
         if: steps.verify.outcome == 'success' && steps.capture.outcome == 'success'
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
