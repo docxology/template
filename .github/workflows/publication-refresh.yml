@@ -1,0 +1,123 @@
+name: Prepare coordinated publication refresh
+
+on:
+  workflow_dispatch:
+    inputs:
+      source_sha:
+        description: Exact dispatched Source commit; must equal this workflow revision
+        type: string
+        required: true
+      expected_version:
+        description: Final coordinated Root version already present in Source
+        type: string
+        required: true
+      workers:
+        description: Independent projects per provider wave
+        type: choice
+        options: ["1", "2", "3", "4"]
+        default: "2"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: coordinated-publication-refresh-${{ github.sha }}
+  cancel-in-progress: false
+
+env:
+  UV_FROZEN: "true"
+  MPLBACKEND: Agg
+
+jobs:
+  refresh:
+    name: Prepare reviewed publication output patch
+    runs-on: ubuntu-24.04
+    timeout-minutes: 360
+    permissions:
+      contents: read
+    steps:
+      - name: Admit the exact dispatched Source
+        shell: bash
+        env:
+          REQUESTED_SOURCE: ${{ inputs.source_sha }}
+        run: |
+          set -euo pipefail
+          if [[ ! "$REQUESTED_SOURCE" =~ ^[0-9a-f]{40}$ ]] || [ "$REQUESTED_SOURCE" != "$GITHUB_SHA" ]; then
+            echo 'source_sha must equal this exact dispatched workflow revision' >&2
+            exit 1
+          fi
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ inputs.source_sha }}
+          fetch-depth: 0
+          submodules: recursive
+          persist-credentials: false
+      - uses: ./.github/actions/setup-python-env
+        with:
+          python-version: "3.14"
+      - name: Reconcile the exact locked Root
+        run: uv sync --locked --group dev --group installed-build --group active-inference --group rendering --group rendering-pptx
+      - name: Plan the tracked canonical publication-copy refresh
+        env:
+          REQUESTED_SOURCE: ${{ inputs.source_sha }}
+          EXPECTED_VERSION: ${{ inputs.expected_version }}
+          REFRESH_DIRECTORY: ${{ runner.temp }}/coordinated-publication-refresh
+        run: >-
+          .venv/bin/python -m infrastructure.publishing.publication_refresh
+          --directory "$REFRESH_DIRECTORY"
+          plan --source-sha "$REQUESTED_SOURCE" --expected-version "$EXPECTED_VERSION"
+      - name: Prepare Source-pinned native formats, Lean and provider dependencies
+        uses: ./.github/actions/setup-native-installed-readiness
+      - name: Prepare and verify all own locked project runtimes in provider order
+        env:
+          REFRESH_DIRECTORY: ${{ runner.temp }}/coordinated-publication-refresh
+        run: >-
+          .venv/bin/python -m infrastructure.publishing.publication_refresh
+          --directory "$REFRESH_DIRECTORY" prepare
+      - name: Regenerate publication copies and revalidate the unchanged complement
+        env:
+          REFRESH_DIRECTORY: ${{ runner.temp }}/coordinated-publication-refresh
+          REFRESH_WORKERS: ${{ inputs.workers }}
+        run: >-
+          .venv/bin/python -m infrastructure.publishing.publication_refresh
+          --directory "$REFRESH_DIRECTORY" generate --jobs "$REFRESH_WORKERS"
+      - name: Commit the confined disposable candidate
+        env:
+          REFRESH_DIRECTORY: ${{ runner.temp }}/coordinated-publication-refresh
+        run: >-
+          .venv/bin/python -m infrastructure.publishing.publication_refresh
+          --directory "$REFRESH_DIRECTORY" candidate
+      - name: Run both strict all-public gates on the committed tree
+        id: verify
+        env:
+          REFRESH_DIRECTORY: ${{ runner.temp }}/coordinated-publication-refresh
+        run: >-
+          .venv/bin/python -m infrastructure.publishing.publication_refresh
+          --directory "$REFRESH_DIRECTORY" verify
+      - name: Capture the verified binary patch and original receipts
+        id: capture
+        if: steps.verify.outcome == 'success'
+        env:
+          REFRESH_DIRECTORY: ${{ runner.temp }}/coordinated-publication-refresh
+        run: >-
+          .venv/bin/python -m infrastructure.publishing.publication_refresh
+          --directory "$REFRESH_DIRECTORY" finish
+      - name: Retain the verified patch for ordinary reviewed PR integration
+        if: steps.verify.outcome == 'success' && steps.capture.outcome == 'success'
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: coordinated-publication-review-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/coordinated-publication-refresh/review/
+          if-no-files-found: error
+          retention-days: 30
+      - name: Retain original diagnostics separately
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: coordinated-publication-diagnostics-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            ${{ runner.temp }}/coordinated-publication-refresh/diagnostics/
+            ${{ runner.temp }}/coordinated-publication-refresh/*.json
+            output/readiness/publication-refresh/
+          if-no-files-found: ignore
+          retention-days: 30

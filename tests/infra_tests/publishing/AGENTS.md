@@ -17,6 +17,7 @@ Tests for `infrastructure/publishing/`: metadata, citations, platform clients, a
 | `test_cli.py` | Publishing CLI smoke and command-schema contracts |
 | `test_executable_bundle.py` | Stage 10 `bundle_project` |
 | `test_publishing_preflight.py` | Payload, path, credential, and PDF preflight contracts |
+| `test_publication_refresh.py` | Real tracked-output/compiler ownership, candidate Git commits, original binary child outcomes and read-only workflow admission |
 | `test_release_receipts.py` | Versioned release metadata, command, authority, and coverage-gap receipts |
 | `test_rehearsal.py` | Offline/dry-run and bounded clean-checkout rehearsal contracts |
 | `test_metadata.py` | Metadata extraction and reporting |

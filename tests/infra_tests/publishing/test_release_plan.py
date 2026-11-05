@@ -23,6 +23,7 @@ from infrastructure.publishing.release_plan import (
     check_release_plan,
     sha256,
 )
+from infrastructure.publishing.release_provider_graph import current_provider_graph
 from infrastructure.publishing.release_plan_transaction import apply_release_plan, rollback_release_plan
 from infrastructure.publishing.root_release_contract import RUNTIME_VERSION_PROVIDER_SOURCE
 
@@ -98,6 +99,13 @@ def test_real_git_plan_apply_and_exact_rollback_preserve_own_versions_and_locks(
     assert plan == _plan(repository)
     check_release_plan(repository, plan)
     assert len(plan["inputs"]) == 80 and len(plan["changes"]) == 77
+    graph = current_provider_graph(repository)
+    assert set(graph) == {"root", *PUBLIC_PROJECT_NAMES}
+    assert all(
+        plan["provider_order"].index(provider) < plan["provider_order"].index(scope)
+        for scope, providers in graph.items()
+        for provider in providers
+    )
     assert plan["provider_order"].index("templates/template_literature_meta_analysis") < plan["provider_order"].index(
         "templates/template_advanced_literature_review"
     )
