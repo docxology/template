@@ -1,0 +1,331 @@
+"""Exact tracked ownership and review-artifact custody for publication refresh."""
+
+from __future__ import annotations
+
+import hashlib
+import json
+import re
+import shutil
+import stat
+import subprocess
+from pathlib import Path
+from typing import Any
+
+import yaml
+
+from infrastructure.core.files.secure_write import read_bytes_confined
+from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
+from infrastructure.publishing.release_provider_graph import current_provider_graph
+from infrastructure.publishing.root_release_contract import root_package_version
+
+SCHEMA = "template-coordinated-publication-refresh/v2"
+REFRESH_MODES = ("refresh", "rebind-only")
+
+
+def git(root: Path, *arguments: str) -> bytes:
+    """Read or mutate only the nominated disposable checkout."""
+    return subprocess.check_output(
+        ["git", "--no-optional-locks", "-c", "core.fsmonitor=false", "-C", str(root), *arguments],
+        stdin=subprocess.DEVNULL,
+        stderr=subprocess.PIPE,
+        timeout=60,
+    )
+
+
+def write_json(path: Path, value: object) -> None:
+    """Publish a new operator record without replacing prior evidence."""
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with path.open("x", encoding="utf-8") as stream:
+        stream.write(json.dumps(value, indent=2, sort_keys=True) + "\n")
+
+
+def _regular(root: Path, relative: str) -> bytes:
+    path = root / relative
+    body = read_bytes_confined(root, path, max_bytes=256 * 1024 * 1024)
+    metadata = path.stat(follow_symlinks=False)
+    if not stat.S_ISREG(metadata.st_mode) or metadata.st_mode & 0o111:
+        raise ValueError(f"refresh evidence must retain mode 100644: {relative}")
+    return body
+
+
+def _compiled(root: Path, scope: str, tracked: dict[str, dict[str, str]]) -> list[str]:
+    """Read explicit sheaf compiler ownership; numbering alone grants nothing."""
+    prefix = f"projects/{scope}/"
+    declaration = prefix + "manuscript/sheaf/manifest.yaml"
+    if declaration not in tracked:
+        return []
+    for source in ("src/manuscript/sheaf/compose.py", "src/manuscript/compilation_io.py"):
+        producer = prefix + source
+        if producer not in tracked:
+            raise ValueError("compiled manuscript declaration lacks its tracked Source producer")
+        _regular(root, producer)
+    manifest = yaml.safe_load(_regular(root, declaration))
+    if (
+        not isinstance(manifest, dict)
+        or manifest.get("schema_version") != 2
+        or not isinstance(manifest.get("sections"), list)
+    ):
+        raise ValueError("compiled manuscript requires the explicit schema-2 sheaf declaration")
+    targets = []
+    for row in manifest["sections"]:
+        if not isinstance(row, dict):
+            raise ValueError("compiled section declaration is malformed")
+        compose = row.get("compose", row.get("kind", "section") == "section")
+        if type(compose) is not bool:
+            raise ValueError("compiled section compose flag must be boolean")
+        if not compose:
+            continue
+        name = row.get("output_name")
+        tracks = row.get("tracks")
+        if not isinstance(name, str) or re.fullmatch(r"[0-9]{2}_[A-Za-z0-9_]+\.md", name) is None:
+            raise ValueError("compiled section needs one explicit flat numbered output_name")
+        if not isinstance(tracks, dict) or not tracks:
+            raise ValueError("compiled section must name its authored fragment inputs")
+        for fragment in tracks.values():
+            if (
+                not isinstance(fragment, str)
+                or not fragment.startswith("manuscript/sections/")
+                or ".." in Path(fragment).parts
+            ):
+                raise ValueError("compiled fragment is outside the authored sections")
+            if prefix + fragment not in tracked:
+                raise ValueError("compiled fragment must be tracked Source")
+            _regular(root, prefix + fragment)
+        target = prefix + "manuscript/" + name
+        if target not in tracked or target in targets:
+            raise ValueError("compiled target must be unique and already tracked")
+        targets.append(target)
+    return targets
+
+
+def _inventory_plan(root: Path, source_sha: str, version: str, mode: str = "refresh") -> dict[str, Any]:
+    root = root.absolute()
+    if mode not in REFRESH_MODES:
+        raise ValueError("unknown publication refresh mode")
+    if not re.fullmatch(r"[0-9a-f]{40}", source_sha):
+        raise ValueError("publication refresh requires the exact dispatched Source SHA")
+    if git(root, "rev-parse", "--show-toplevel").decode().strip() != str(root):
+        raise ValueError("publication refresh needs its actual Git root")
+    if root_package_version(root) != version:
+        raise ValueError("requested release version differs from current Source metadata")
+    tracked = {}
+    for raw in git(root, "ls-tree", "-rz", "--full-tree", source_sha).split(b"\0"):
+        if raw:
+            header, encoded_path = raw.split(b"\t", 1)
+            blob_mode, kind, oid = header.decode().split()
+            tracked[encoded_path.decode()] = {"mode": blob_mode, "kind": kind, "blob": oid}
+    allowed = {}
+    refresh = []
+    compiled_manuscripts: list[str] = []
+    for scope in PUBLIC_PROJECT_NAMES:
+        prefix = f"projects/{scope}/"
+        config = prefix + "output/manuscript/config.yaml"
+        if mode == "refresh" and config in tracked:
+            refresh.append(scope)
+        compiled = set(_compiled(root, scope, tracked)) if mode == "refresh" else set()
+        compiled_manuscripts.extend(compiled)
+        for path, record in tracked.items():
+            owned = path.startswith(prefix + "output/") or path in compiled
+            if mode == "rebind-only":
+                owned = re.fullmatch(re.escape(prefix) + r"output/reports/[A-Za-z0-9_.-]+\.json", path) is not None
+            if owned:
+                if record["mode"] != "100644" or record["kind"] != "blob":
+                    raise ValueError(f"canonical generated evidence must be a tracked regular file: {path}")
+                _regular(root, path)
+                allowed[path] = record
+    if (mode == "refresh" and not refresh) or not allowed:
+        raise ValueError("canonical tracked publication-copy inventory is missing")
+    graph = current_provider_graph(root)
+    return {
+        "schema_version": SCHEMA,
+        "role": "publication-refresh-preparation-only",
+        "mode": mode,
+        "compiled_manuscripts": sorted(compiled_manuscripts),
+        "base_commit": source_sha,
+        "base_tree": git(root, "rev-parse", source_sha + "^{tree}").decode().strip(),
+        "platform_version": version,
+        "public_roster": list(PUBLIC_PROJECT_NAMES),
+        "providers": graph,
+        "refresh": refresh,
+        "rebind": [scope for scope in PUBLIC_PROJECT_NAMES if scope not in refresh],
+        "allowed": allowed,
+    }
+
+
+def build_plan(root: Path, source_sha: str, version: str, *, mode: str = "refresh") -> dict[str, Any]:
+    """Bind a clean exact Source and finite canonical generated-path inventory."""
+    if git(root, "rev-parse", "HEAD").decode().strip() != source_sha or git(
+        root, "status", "--porcelain", "--untracked-files=all"
+    ):
+        raise ValueError("publication refresh requires a clean exact dispatched Source")
+    return _inventory_plan(root, source_sha, version, mode)
+
+
+def load_plan(directory: Path, *, mode: str | None = None) -> dict[str, Any]:
+    plan = json.loads((directory / "plan.json").read_bytes())
+    if (
+        not isinstance(plan, dict)
+        or plan.get("schema_version") != SCHEMA
+        or plan.get("public_roster") != list(PUBLIC_PROJECT_NAMES)
+        or plan.get("mode") not in REFRESH_MODES
+    ):
+        raise ValueError("unknown refresh plan or canonical roster")
+    if mode is not None and plan["mode"] != mode:
+        raise ValueError("refresh plan mode differs from the dispatched mode")
+    return plan
+
+
+def check_footprint(root: Path, plan: dict[str, Any]) -> list[str]:
+    """Refuse additions, removals, modes, authored changes and untracked files."""
+    if plan != _inventory_plan(root, plan["base_commit"], plan["platform_version"], plan["mode"]):
+        raise ValueError("refresh plan differs from current Source ownership")
+    if git(root, "rev-parse", "HEAD").decode().strip() != plan["base_commit"] or git(
+        root, "diff", "--cached", "--name-only"
+    ):
+        raise ValueError("refresh Source or index moved before candidate capture")
+    if git(root, "ls-files", "--others", "--exclude-standard", "-z"):
+        raise ValueError("unexpected untracked path prevents complete refresh capture")
+    changed = [p.decode() for p in git(root, "diff", "--name-only", "-z", plan["base_commit"]).split(b"\0") if p]
+    for path in changed:
+        record = plan["allowed"].get(path)
+        if record is None or record["mode"] != "100644":
+            raise ValueError(f"path is outside declared generated ownership: {path}")
+        _regular(root, path)
+        if git(root, "ls-files", "-s", "--", path).split(b" ", 1)[0] != b"100644":
+            raise ValueError("refresh path changed index mode")
+    return changed
+
+
+def commit_candidate(root: Path, directory: Path) -> dict[str, str]:
+    """Commit only the admitted footprint in the disposable hosted checkout."""
+    plan = load_plan(directory)
+    paths = check_footprint(root, plan)
+    if paths:
+        pathspec = directory / "candidate-paths.nul"
+        pathspec.write_bytes(b"\0".join(p.encode() for p in paths) + b"\0")
+        git(root, "add", "--pathspec-from-file=" + str(pathspec), "--pathspec-file-nul")
+    git(
+        root,
+        "-c",
+        "user.name=github-actions[bot]",
+        "-c",
+        "user.email=41898282+github-actions[bot]@users.noreply.github.com",
+        "commit",
+        "--allow-empty",
+        "-m",
+        "chore(evidence): refresh canonical publication outputs",
+    )
+    result = {
+        "commit": git(root, "rev-parse", "HEAD").decode().strip(),
+        "tree": git(root, "rev-parse", "HEAD^{tree}").decode().strip(),
+    }
+    write_json(directory / "candidate.json", result)
+    return result
+
+
+def finish_review(root: Path, directory: Path) -> Path:
+    """Retain the exact patch only after both original committed-tree gates pass."""
+    plan = load_plan(directory)
+    candidate = json.loads((directory / "candidate.json").read_bytes())
+    if plan != _inventory_plan(root, plan["base_commit"], plan["platform_version"], plan["mode"]):
+        raise ValueError("refresh plan differs from committed Source ownership")
+    if (
+        git(root, "rev-parse", "HEAD").decode().strip() != candidate["commit"]
+        or git(root, "rev-parse", "HEAD^{tree}").decode().strip() != candidate["tree"]
+        or git(root, "rev-parse", "HEAD^").decode().strip() != plan["base_commit"]
+        or git(root, "status", "--porcelain", "--untracked-files=all")
+    ):
+        raise ValueError("committed candidate changed during verification")
+    for label, arguments in gate_commands(root, directory).items():
+        receipt = json.loads((directory / "diagnostics" / f"{label}.exit.json").read_bytes())
+        if (
+            type(receipt.get("returncode")) is not int
+            or receipt["returncode"] != 0
+            or receipt.get("source_commit") != candidate["commit"]
+            or receipt.get("argv") != arguments
+            or receipt.get("process", {}).get("accepted") is not True
+            or receipt.get("original_exit_code") != 0
+            or any(
+                receipt.get(stream + "_sha256")
+                != hashlib.sha256((directory / "diagnostics" / f"{label}.{stream}").read_bytes()).hexdigest()
+                for stream in ("stdout", "stderr")
+            )
+        ):
+            raise ValueError("both original gates must succeed on the committed candidate")
+    changes = []
+    paths = [p.decode() for p in git(root, "diff", "--name-only", "-z", plan["base_commit"], "HEAD").split(b"\0") if p]
+    for path in paths:
+        if path not in plan["allowed"]:
+            raise ValueError("candidate includes a path outside generated ownership")
+        body = _regular(root, path)
+        mode, kind, oid = git(root, "ls-tree", "HEAD", "--", path).split(b"\t")[0].decode().split()
+        if mode != "100644" or kind != "blob":
+            raise ValueError("candidate evidence mode changed")
+        changes.append(
+            {
+                "path": path,
+                "before_blob": plan["allowed"][path]["blob"],
+                "after_blob": oid,
+                "mode": mode,
+                "sha256": hashlib.sha256(body).hexdigest(),
+                "bytes": len(body),
+            }
+        )
+    review = directory / "review"
+    review.mkdir()
+    (review / "refresh.patch").write_bytes(git(root, "diff", "--binary", "--full-index", plan["base_commit"], "HEAD"))
+    write_json(review / "manifest.json", {"plan": plan, "candidate": candidate, "changes": changes})
+    if any(path.is_symlink() for path in (directory / "diagnostics").rglob("*")):
+        raise ValueError("refresh diagnostics must not contain symlinks")
+    shutil.copytree(directory / "diagnostics", review / "receipts", symlinks=False)
+    write_json(review / "COMPLETE.json", {"role": plan["role"], "both_committed_tree_gates_passed": True})
+    sums = []
+    for artifact in sorted(review.rglob("*")):
+        if artifact.is_file():
+            sums.append(
+                hashlib.sha256(artifact.read_bytes()).hexdigest() + "  " + artifact.relative_to(review).as_posix()
+            )
+    (review / "SHA256SUMS").write_text("\n".join(sums) + "\n")
+    return review
+
+
+def gate_commands(root: Path, directory: Path) -> dict[str, list[str]]:
+    """The two exact existing strict all-public gates, without altered policy."""
+    python = str(root / ".venv/bin/python")
+    return {
+        "exemplar-config": [python, "scripts/audit/check_exemplar_configs.py"],
+        "publication-gate": [
+            python,
+            "scripts/audit/check_publication_outputs.py",
+            "--all-public",
+            "--strict",
+            "--jobs",
+            "4",
+            "--receipts",
+            str(directory / "diagnostics/publication-gate"),
+        ],
+        "rendered-audit": [
+            python,
+            "-m",
+            "infrastructure.validation.cli",
+            "publication-audit",
+            "--all-public",
+            "--strict",
+            "--rendered",
+            "--format",
+            "json",
+        ],
+    }
+
+
+__all__ = [
+    "REFRESH_MODES",
+    "build_plan",
+    "check_footprint",
+    "commit_candidate",
+    "finish_review",
+    "gate_commands",
+    "git",
+    "load_plan",
+    "write_json",
+]
