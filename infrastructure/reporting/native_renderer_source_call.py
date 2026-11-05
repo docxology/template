@@ -30,6 +30,42 @@ from infrastructure.validation.output.render_formats import render_config_manusc
 
 _SCHEMA = "template-source-native-renderer-command-v1"
 
+#: Directory, relative to the selected SDK package root, whose shipped Lua assets a
+#: render command may name. The custody property is "this external operand is a
+#: fixed Source Lua asset", which is a *path and extension* fact about the SDK tree,
+#: not a list of file names: an enumeration restates the property and goes stale the
+#: moment a new filter ships. Every other check in the loop below (resolved-path
+#: equality, containment in the SDK root, tracked-and-unmodified bytes) still
+#: applies, so this narrowing is the only thing the directory rule replaces.
+_SDK_LUA_ASSET_DIRECTORY = "rendering"
+_SDK_LUA_ASSET_SUFFIX = ".lua"
+
+
+def _is_sdk_lua_asset(sdk_member: str) -> bool:
+    """True when a SDK-relative member is a shipped Lua asset under ``rendering/``.
+
+    Structural, so a new filter is covered without anyone updating a list, and a
+    file outside ``rendering/`` is still refused. Hosted run 41940842593 failed
+    four cells because the previous enumeration named two of the six shipped
+    filters: the combined-PDF lane passes ``_table_header_breaks.lua``, the slides
+    lane passes ``_beamer_allowframebreaks.lua``, ``_table_header_breaks.lua`` and
+    ``_archive_figure_frames.lua``, and the office projection passes
+    ``office_semantics.lua``.
+    """
+    member = Path(sdk_member)
+    if member.suffix != _SDK_LUA_ASSET_SUFFIX:
+        return False
+    # Exactly one directory level: `rendering/<name>.lua`, never a nested,
+    # traversal-bearing, absolute or redundant-separator path, and never the
+    # directory itself or a bare file name.
+    if member.is_absolute() or len(member.parts) != 2:
+        return False
+    if any(part in {"", ".", ".."} for part in member.parts):
+        return False
+    # `Path` collapses `rendering//x.lua`, so compare the raw member too: a
+    # duplicate separator is not the canonical SDK-relative form.
+    return member.as_posix() == sdk_member and member.parent.as_posix() == _SDK_LUA_ASSET_DIRECTORY
+
 
 def _binding(item: ArtifactSnapshot) -> dict[str, str]:
     return {"path": item.relative, "sha256": item.sha256}
@@ -168,7 +204,7 @@ def run_source_native_pandoc(
             if path != path.resolve(strict=True) or not path.is_relative_to(sdk_root):
                 raise ValueError("native renderer external operand is outside its actual selected SDK")
             sdk_member = path.relative_to(sdk_root).as_posix()
-            if sdk_member not in {"rendering/formalism.lua", "rendering/convert_latex_images.lua"}:
+            if not _is_sdk_lua_asset(sdk_member):
                 raise ValueError("native renderer external operand is not a fixed Source Lua asset")
             original = hold(root / "infrastructure" / sdk_member)
             if original.content != owner.source.reference.read(original.relative):
