@@ -165,3 +165,66 @@ def test_pure_and_abi3_wheels_still_serve_later_minors() -> None:
 def test_target_minor_must_be_a_cpython_minor() -> None:
     with pytest.raises(ValueError, match="minor"):
         exporter.normalize_locked_sdist_requirements(_lock(), _requirements(), minor="3.x")
+
+
+def _declared_canonical_minors() -> tuple[str, ...]:
+    from infrastructure.project.public_capabilities import CANONICAL_CI_PYTHON_VERSIONS
+
+    return tuple(CANONICAL_CI_PYTHON_VERSIONS)
+
+
+def _locked_packages(lock_path: Path) -> list[dict[str, object]]:
+    import tomllib
+
+    payload = tomllib.loads(lock_path.read_text(encoding="utf-8"))
+    packages = payload.get("package")
+    assert isinstance(packages, list), lock_path
+    return packages
+
+
+def _repository_locks(root: Path) -> list[Path]:
+    """Return every lock the acceptance warming step actually visits."""
+    from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
+
+    locks = [root / "uv.lock"]
+    locks.extend(root / "projects" / name / "uv.lock" for name in PUBLIC_PROJECT_NAMES)
+    return [lock for lock in locks if lock.is_file()]
+
+
+def test_every_locked_registry_release_can_install_on_each_canonical_minor() -> None:
+    """A declared runtime must be installable from its own lock, with no sdist gap.
+
+    The hosted warming step exports each scope's lock once per declared minor and
+    refuses any registry release whose locked wheels cannot serve that interpreter
+    and that carries no exact sdist. A Dependabot patch bump narrowed a transitive
+    ``jaxlib`` bound and silently dropped the newest declared minor, which only
+    surfaced as ``ValueError: locked package without registry wheels requires its
+    exact sdist`` inside the acceptance job. This predicate states the invariant
+    directly over the committed locks, so the next such bump fails here instead.
+    """
+    root = Path(__file__).resolve().parents[3]
+    locks = _repository_locks(root)
+    assert locks, "acceptance warming expects at least the root lock"
+    minors = _declared_canonical_minors()
+    assert minors, "canonical runtime roster must not be empty"
+
+    unservable: list[str] = []
+    for lock in locks:
+        for package in _locked_packages(lock):
+            source = package.get("source") or {}
+            if "registry" not in source:
+                continue
+            wheels = package.get("wheels") or []
+            has_sdist = isinstance(package.get("sdist"), dict)
+            for minor in minors:
+                serves = any(
+                    exporter._wheel_serves_minor(str(wheel.get("url", "")).rsplit("/", 1)[-1], minor)
+                    for wheel in wheels
+                )
+                if not serves and not has_sdist:
+                    unservable.append(
+                        f"{lock.relative_to(root)}: {package.get('name')}=={package.get('version')} "
+                        f"cannot install on {minor} (wheels={len(wheels)}, sdist=absent)"
+                    )
+
+    assert not unservable, "declared runtimes are not installable from their own locks:\n" + "\n".join(unservable)
