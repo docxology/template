@@ -71,10 +71,10 @@ with log_operation("Running simulation", log):
 with log_timing("Complex calculation", log):
     complex_calculation()
 
+
 # Decorator: logs call/return/duration at DEBUG level
 @log_function_call(log)
-def process_batch(items):
-    ...
+def process_batch(items): ...
 ```
 
 ### Resource monitoring
@@ -149,7 +149,11 @@ omit it to fall back to a module-named logger:
 
 ```python
 from infrastructure.core.logging.utils import (
-    log_success, log_header, log_progress, log_stage, log_substep,
+    log_success,
+    log_header,
+    log_progress,
+    log_stage,
+    log_substep,
 )
 
 # Success confirmation
@@ -236,14 +240,14 @@ log = get_logger("my_script")
 
 ```python
 # ✅ GOOD: Use appropriate levels
-log.debug("Variable x = 42")      # Debug: internal state
-log.info("Processing 1000 files") # Info: normal operation
+log.debug("Variable x = 42")  # Debug: internal state
+log.info("Processing 1000 files")  # Info: normal operation
 log.warning("File not found, using default")  # Warning: recoverable issues
-log.error("Failed to connect to database")    # Error: operation failure
+log.error("Failed to connect to database")  # Error: operation failure
 
 # ❌ BAD: Wrong levels
-log.info("x = 42")                # Too verbose for info
-log.error("File not found")       # Not an error if handled
+log.info("x = 42")  # Too verbose for info
+log.error("File not found")  # Not an error if handled
 ```
 
 ### 3. Context Managers for Operations
@@ -288,8 +292,10 @@ argument (or defaults to a module-named logger when omitted).
 def get_logger(name: str) -> logging.Logger:
     """Return a logger configured with the template's standard handlers."""
 
+
 def setup_logger(name: str, level: int | None = None, log_file: Path | str | None = None) -> logging.Logger:
     """Configure and return a logger with console handler and optional file handler."""
+
 
 # Specialized functions (infrastructure.core.logging.utils / pipeline_logging)
 def log_success(message: str, logger: logging.Logger | None = None) -> None: ...
@@ -299,9 +305,15 @@ def log_stage(stage_num: int, total_stages: int, stage_name: str, logger: loggin
 def log_substep(message: str, logger: logging.Logger | None = None) -> None: ...
 def log_live_resource_usage(stage_name: str = "", logger: logging.Logger | None = None) -> None: ...
 
+
 # Context managers / decorator
-def log_operation(operation: str, logger: logging.Logger | None = None, level: int = logging.INFO,
-                   min_duration_to_log: float = 0.1, log_completion: bool = True) -> ContextManager[None]: ...
+def log_operation(
+    operation: str,
+    logger: logging.Logger | None = None,
+    level: int = logging.INFO,
+    min_duration_to_log: float = 0.1,
+    log_completion: bool = True,
+) -> ContextManager[None]: ...
 def log_timing(label: str, logger: logging.Logger | None = None) -> ContextManager[None]: ...
 def log_function_call(logger: logging.Logger | None = None) -> Callable: ...  # decorator factory
 ```
@@ -383,6 +395,7 @@ unset NO_EMOJI
 ```python
 # Ensure directory exists and is writable
 import os
+
 os.makedirs(os.path.dirname(log_file), exist_ok=True)
 ```
 

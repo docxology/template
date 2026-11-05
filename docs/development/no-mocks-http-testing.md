@@ -55,15 +55,21 @@ from infrastructure.search.literature.models import SearchQuery
 
 
 def test_crossref_parses_real_payload(httpserver: HTTPServer):
-    httpserver.expect_request("/works").respond_with_json({
-        "message": {"items": [{
-            "DOI": "10.1126/science.1213847",
-            "title": ["Reproducible research"],
-            "issued": {"date-parts": [[2011]]},
-            "type": "journal-article",
-            "score": 12.5,
-        }]}
-    })
+    httpserver.expect_request("/works").respond_with_json(
+        {
+            "message": {
+                "items": [
+                    {
+                        "DOI": "10.1126/science.1213847",
+                        "title": ["Reproducible research"],
+                        "issued": {"date-parts": [[2011]]},
+                        "type": "journal-article",
+                        "score": 12.5,
+                    }
+                ]
+            }
+        }
+    )
     backend = CrossrefBackend(
         http_client=UrllibHttpClient(),
         base_url=httpserver.url_for("/works"),
@@ -103,9 +109,7 @@ Network failures are also tested without mocks:
 
 ```python
 def test_non_200_raises(httpserver):
-    httpserver.expect_request("/works").respond_with_data(
-        "internal error", status=500
-    )
+    httpserver.expect_request("/works").respond_with_data("internal error", status=500)
     backend = CrossrefBackend(base_url=httpserver.url_for("/works"))
     with pytest.raises(BackendError, match="HTTP 500"):
         backend.search(SearchQuery(text="x"))

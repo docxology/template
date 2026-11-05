@@ -47,7 +47,7 @@ config = OllamaClientConfig(
     default_model="gemma3:4b",
     temperature=0.7,
     max_tokens=2048,
-    system_prompt="You are a research assistant"
+    system_prompt="You are a research assistant",
 )
 
 client = LLMClient(config)
@@ -75,8 +75,8 @@ schema = {
     "properties": {
         "title": {"type": "string"},
         "summary": {"type": "string"},
-        "key_points": {"type": "array", "items": {"type": "string"}}
-    }
+        "key_points": {"type": "array", "items": {"type": "string"}},
+    },
 }
 
 result = client.query_structured("Analyze this research", schema=schema)
@@ -139,6 +139,7 @@ is_running = client.check_connection()
 
 # Basic daemon check
 from infrastructure.llm.utils.ollama import is_ollama_running
+
 print(f"Ollama running: {is_ollama_running()}")
 ```
 

@@ -66,9 +66,12 @@ uv run python -m infrastructure.validation.cli markdown projects/{name}/manuscri
 
 ```python
 from infrastructure.validation import (
-    verify_output_integrity, verify_file_integrity,
-    verify_cross_references, verify_data_consistency,
-    verify_academic_standards, generate_integrity_report,
+    verify_output_integrity,
+    verify_file_integrity,
+    verify_cross_references,
+    verify_data_consistency,
+    verify_academic_standards,
+    generate_integrity_report,
 )
 
 # Full integrity check
@@ -142,8 +145,12 @@ report = generate_audit_report(audit_results)
 
 ```python
 from infrastructure.validation import (
-    categorize_by_type, assign_severity, filter_false_positives,
-    prioritize_issues, group_related_issues, generate_issue_summary,
+    categorize_by_type,
+    assign_severity,
+    filter_false_positives,
+    prioritize_issues,
+    group_related_issues,
+    generate_issue_summary,
 )
 
 categorized = categorize_by_type(raw_issues)
@@ -173,6 +180,7 @@ completeness_report, gaps = analyze_documentation_completeness(repo_root, docume
 
 ```python
 from infrastructure.validation.repo.scanner import RepositoryScanner
+
 scanner = RepositoryScanner(repo_root)
 results = scanner.scan_all()
 ```
@@ -197,6 +205,7 @@ does not prove that monkeypatch dependency replacements are absent:
 
 ```python
 from infrastructure.validation.output.no_mock_enforcer import scan_lexical_mock_policy
+
 scan = scan_lexical_mock_policy(tests_dir, repo_root)
 violations = (*scan.violations, *scan.errors)
 ```

@@ -85,10 +85,10 @@ prompt = PaperSummarization().render(
     year="2024",
     source="arXiv",
     text=paper_text,
-    domain="computer_science",        # optional
-    domain_instructions=None,         # optional; defaults to built-in hints
-    reference_count=42,               # optional
-    references_section_found=True,    # optional
+    domain="computer_science",  # optional
+    domain_instructions=None,  # optional; defaults to built-in hints
+    reference_count=42,  # optional
+    references_section_found=True,  # optional
 )
 ```
 

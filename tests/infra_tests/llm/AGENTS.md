@@ -111,9 +111,11 @@ def default_config():
     """OllamaClientConfig with auto-discovered model from Ollama.
     Falls back to the configured default if Ollama is not available."""
 
+
 @pytest.fixture
 def config_with_system_prompt():
     """OllamaClientConfig with auto_inject_system_prompt=True."""
+
 
 @pytest.fixture
 def generation_options():
@@ -136,9 +138,11 @@ def clean_llm_env():
 def sample_messages():
     """List of conversation messages for context testing."""
 
+
 @pytest.fixture
 def sample_json_responses():
     """Dict of valid/invalid JSON strings for validation testing."""
+
 
 @pytest.fixture
 def sample_schema():

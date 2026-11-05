@@ -20,11 +20,7 @@ The Python API exposes BibTeX, APA, and MLA citation helpers. The
 ## Quick Start
 
 ```python
-from infrastructure.publishing import (
-    extract_publication_metadata,
-    generate_citation_bibtex,
-    publish_to_zenodo
-)
+from infrastructure.publishing import extract_publication_metadata, generate_citation_bibtex, publish_to_zenodo
 
 # Extract metadata
 metadata = extract_publication_metadata([Path("manuscript.md")])
@@ -35,9 +31,7 @@ print(bibtex)
 
 # Publish to Zenodo
 result = publish_to_zenodo(
-    metadata,
-    [Path("output/{project_name}/pdf/{project_name}_combined.pdf")],
-    os.getenv("ZENODO_TOKEN")
+    metadata, [Path("output/{project_name}/pdf/{project_name}_combined.pdf")], os.getenv("ZENODO_TOKEN")
 )
 print(f"Published with DOI: {result.doi}")
 ```
@@ -249,7 +243,9 @@ never raised, so the batch always completes.
 ```python
 from pathlib import Path
 from infrastructure.publishing.upload_runner import (
-    UploadTargets, select_jobs, run_uploads,
+    UploadTargets,
+    select_jobs,
+    run_uploads,
 )
 
 targets = UploadTargets(
@@ -266,8 +262,8 @@ targets = UploadTargets(
 jobs = select_jobs(include_github=True, include_static=True)
 
 run = run_uploads(targets, jobs=jobs, commit=False)  # DRY-RUN
-print(run.mode, run.ok)        # "DRY-RUN" True
-print(run.results["pinata"])   # per-platform receipt dict
+print(run.mode, run.ok)  # "DRY-RUN" True
+print(run.results["pinata"])  # per-platform receipt dict
 ```
 
 Pass `only=[...]` to `select_jobs()` to restrict the run to named platforms, and

@@ -28,9 +28,9 @@ renderer = RenderManager(
 
 # Render a single source file (.md or .tex)
 renderer.render_pdf(source_file)
-renderer.render_web(source_file)        # standalone HTML
-renderer.render_slides(source_file)     # beamer (PDF) by default
-renderer.render_all(source_file)        # archive md → Beamer + web; tex → PDF
+renderer.render_web(source_file)  # standalone HTML
+renderer.render_slides(source_file)  # beamer (PDF) by default
+renderer.render_all(source_file)  # archive md → Beamer + web; tex → PDF
 
 # Render combined manuscript from multiple ordered source files
 renderer.render_combined_pdf(source_files, manuscript_dir, project_name="my_project")
@@ -153,7 +153,7 @@ Direct import required (not in `__init__.py`):
 from infrastructure.rendering.slides_renderer import SlidesRenderer
 
 renderer = SlidesRenderer(config)
-renderer.render(source_file, output_format="beamer")    # PDF slides
+renderer.render(source_file, output_format="beamer")  # PDF slides
 renderer.render(source_file, output_format="revealjs")  # HTML slides
 ```
 

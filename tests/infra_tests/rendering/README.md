@@ -223,3 +223,5 @@ graph TD
 - [AGENTS.md](AGENTS.md) - test documentation
 - [../../../infrastructure/rendering/README.md](../../../infrastructure/rendering/README.md) - Rendering module overview
 - [../../../tests/README.md](../../../tests/README.md) - Test suite overview
+
+The pipeline transmission-order tests exercise genuine font-provider changes, stale auxiliary-audit refusal, preparation before hydration admission, and the consumed paper-layout and skipped-hydration guards.

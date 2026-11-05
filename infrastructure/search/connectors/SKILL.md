@@ -105,14 +105,14 @@ any connector error exits 1 after the report is written.
 
 ```python
 from infrastructure.search.connectors import (
-    Connector,           # Protocol — search(query, opts) + fetch(id, opts)
-    ConnectorDomain,     # Enum: biology, literature, proteomics, ...
-    ConnectorHit,        # Normalised result record
-    CatalogEntry,        # Registry metadata for a connector
-    SearchOptions,       # max_results, year_min, year_max, extra
-    FetchOptions,        # include_abstract, extra
-    ConnectorError,      # Base exception
-    ConnectorRegistry,   # register / get / catalog / domain filtering
+    Connector,  # Protocol — search(query, opts) + fetch(id, opts)
+    ConnectorDomain,  # Enum: biology, literature, proteomics, ...
+    ConnectorHit,  # Normalised result record
+    CatalogEntry,  # Registry metadata for a connector
+    SearchOptions,  # max_results, year_min, year_max, extra
+    FetchOptions,  # include_abstract, extra
+    ConnectorError,  # Base exception
+    ConnectorRegistry,  # register / get / catalog / domain filtering
 )
 ```
 

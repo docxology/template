@@ -7,8 +7,12 @@
 class RenderManager:
     """Manages multi-format rendering from a single source."""
 
-    def __init__(self, config: Optional[RenderingConfig] = None,
-                 manuscript_dir: Optional[Path] = None, figures_dir: Optional[Path] = None):
+    def __init__(
+        self,
+        config: Optional[RenderingConfig] = None,
+        manuscript_dir: Optional[Path] = None,
+        figures_dir: Optional[Path] = None,
+    ):
         """Initialize render manager.
 
         Args:
@@ -74,7 +78,9 @@ class RenderManager:
             Path to generated HTML
         """
 
-    def render_combined_pdf(self, source_files: List[Path], manuscript_dir: Path, project_name: str = "project") -> Path:
+    def render_combined_pdf(
+        self, source_files: List[Path], manuscript_dir: Path, project_name: str = "project"
+    ) -> Path:
         """Render combined PDF from multiple markdown files.
 
         Args:
@@ -86,7 +92,9 @@ class RenderManager:
             Path to generated combined PDF file
         """
 
-    def render_combined_web(self, source_files: List[Path], manuscript_dir: Path, project_name: str = "project") -> Path:
+    def render_combined_web(
+        self, source_files: List[Path], manuscript_dir: Path, project_name: str = "project"
+    ) -> Path:
         """Render combined HTML from multiple markdown files.
 
         Args:
@@ -527,6 +535,7 @@ def compile_latex(
 ```python
 class PackageStatus(NamedTuple):
     """Status of a LaTeX package check."""
+
     package: str
     available: bool
     version: Optional[str] = None
@@ -537,6 +546,7 @@ class PackageStatus(NamedTuple):
 ```python
 class ValidationReport:
     """Report of LaTeX package validation."""
+
     checked_packages: List[str]
     available_packages: List[str]
     missing_packages: List[str]
@@ -576,8 +586,7 @@ def check_latex_package(package_name: str, kpsewhich_path: Optional[Path] = None
 #### validate_packages (function)
 ```python
 def validate_packages(
-    required_packages: Optional[List[str]] = None,
-    kpsewhich_path: Optional[Path] = None
+    required_packages: Optional[List[str]] = None, kpsewhich_path: Optional[Path] = None
 ) -> ValidationReport:
     """Validate all required LaTeX packages.
 
@@ -637,7 +646,7 @@ class RenderingConfig:
         pandoc_path: str = "pandoc",
         output_dir: Path = Path("output"),
         max_compilation_passes: int = 4,
-        validate_packages: bool = True
+        validate_packages: bool = True,
     ):
         """Initialize rendering configuration.
 

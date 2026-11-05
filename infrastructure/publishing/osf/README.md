@@ -34,7 +34,7 @@ from infrastructure.publishing.osf import OSFAdapter, OSFConfig
 
 # New public node from a title:
 adapter = OSFAdapter(OSFConfig(title="My Paper", category="project", public=True))
-print(adapter.publish(Path("output/bundle"), dry_run=True).extra)   # safe preview
+print(adapter.publish(Path("output/bundle"), dry_run=True).extra)  # safe preview
 
 # Real deposit (token from OSF_TOKEN, or pass token=...):
 result = adapter.publish(Path("output/bundle"), dry_run=False)

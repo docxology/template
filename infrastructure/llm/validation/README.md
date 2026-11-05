@@ -64,7 +64,7 @@ tokens = estimate_tokens(response_text)
 ok = validate_complete(
     response_text,
     mode=ResponseMode.STRUCTURED,
-    schema={"required": ["summary"], "properties": {"summary": {"type": "string"}}}
+    schema={"required": ["summary"], "properties": {"summary": {"type": "string"}}},
 )
 ```
 
@@ -161,6 +161,7 @@ from infrastructure.llm.validation import (
 from infrastructure.llm.core.config import ResponseMode
 from infrastructure.core.exceptions import ValidationError
 
+
 def get_validated_response(llm_client, prompt):
     response = llm_client.query(prompt)
 
@@ -197,8 +198,8 @@ schema = {
 }
 
 try:
-    data = validate_json(response_text)       # parse JSON (strips markdown fences)
-    validate_structure(data, schema)           # check required fields + types
+    data = validate_json(response_text)  # parse JSON (strips markdown fences)
+    validate_structure(data, schema)  # check required fields + types
 except ValidationError as e:
     print(f"Structured response invalid: {e}")
 ```

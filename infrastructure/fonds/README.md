@@ -71,12 +71,12 @@ No Python code required — fonds are passive data stores.
 
 ```python
 info: FondInfo = build_fond_info(Path("fonds/templates/template_bibliography"))
-info.name           # "template_bibliography"
-info.fond_type      # from fonds.yaml "type", or "generic"
-info.has_data       # True iff data/ exists
-info.has_manuscript # True iff manuscript/ exists
-info.is_valid       # True iff has_data
-info.qualified_name # "template_bibliography" or "templates/template_bibliography"
+info.name  # "template_bibliography"
+info.fond_type  # from fonds.yaml "type", or "generic"
+info.has_data  # True iff data/ exists
+info.has_manuscript  # True iff manuscript/ exists
+info.is_valid  # True iff has_data
+info.qualified_name  # "template_bibliography" or "templates/template_bibliography"
 ```
 
 ## Discovery scope
@@ -88,7 +88,7 @@ discovered and validated.
 ```python
 from infrastructure.fonds.discovery import (
     NON_RENDERED_FOND_SUBDIRS,  # {"working", "archive"}
-    RENDERED_FOND_SUBDIRS,      # {"templates"}
+    RENDERED_FOND_SUBDIRS,  # {"templates"}
 )
 ```
 
@@ -108,10 +108,10 @@ path = resolve_fond_root(Path("."), "template_bibliography")
 
 ```python
 from infrastructure.fonds.public_scope import (
-    PUBLIC_FOND_NAMES,         # tuple of qualified names
-    public_fond_infos,         # list[FondInfo] present in this checkout
-    public_fond_names,         # list[str] sorted
-    public_fond_data_paths,    # list[Path] repo-relative data/ paths
+    PUBLIC_FOND_NAMES,  # tuple of qualified names
+    public_fond_infos,  # list[FondInfo] present in this checkout
+    public_fond_names,  # list[str] sorted
+    public_fond_data_paths,  # list[Path] repo-relative data/ paths
 )
 ```
 
@@ -125,8 +125,10 @@ uv run python -m infrastructure.fonds.linking --no-prune
 
 ```python
 from infrastructure.fonds.linking import (
-    sync_private_fond_links, private_fonds_root,
-    is_managed_symlink, LinkSyncResult,
+    sync_private_fond_links,
+    private_fonds_root,
+    is_managed_symlink,
+    LinkSyncResult,
 )
 
 result = sync_private_fond_links(Path("."), dry_run=True)

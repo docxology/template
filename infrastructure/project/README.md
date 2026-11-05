@@ -152,9 +152,9 @@ Imported by `core/health.py`, `documentation/active_projects_doc.py`, and
 
 ```python
 from infrastructure.project.public_scope import (
-    PUBLIC_PROJECT_NAMES,      # canonical public exemplar names under projects/templates/
-    public_ci_lint_paths,      # public source, tests, scripts, and notebooks for Ruff
-    public_ci_source_paths,    # import-safe public src/ paths fed to mypy
+    PUBLIC_PROJECT_NAMES,  # canonical public exemplar names under projects/templates/
+    public_ci_lint_paths,  # public source, tests, scripts, and notebooks for Ruff
+    public_ci_source_paths,  # import-safe public src/ paths fed to mypy
 )
 ```
 
@@ -264,6 +264,7 @@ The project module integrates with the analysis pipeline:
 # scripts/pipeline/stage_02_analysis.py uses project discovery
 from infrastructure.project import discover_projects
 
+
 def run_analysis_pipeline():
     projects = discover_projects(repo_root)
 
@@ -280,6 +281,7 @@ Project tests are executed through the test pipeline:
 ```python
 # scripts/pipeline/stage_01_test.py uses project validation
 from infrastructure.project import validate_project_structure
+
 
 def run_project_tests(project_name: str):
     project_dir = repo_root / "projects" / project_name
@@ -480,3 +482,5 @@ Nested pipeline supervisors forward up to 256 KiB of each original console
 stream into the retained outer worker streams while execution is active.
 Progress lines identify preparation and launch; all forwarded text is
 diagnostic only. It cannot replace original process or completion receipts.
+
+The Source-only Active refresh observer lives in active_pipeline_diagnostics.py. It reads the actual project's literal REQUIRED_OUTPUTS registry without importing domain code, records confined phase hashes and bounded raw generated JSON/compiled sections, and invokes genuine project validators under the nominated interpreter with physical-source checks. Missing, malformed, oversized, linked, and foreign-source observations remain unavailable; diagnostic records grant no acceptance. Run it as python -m infrastructure.project.active_pipeline_diagnostics with the selected project src and current Root on PYTHONPATH.
