@@ -5,6 +5,7 @@ from __future__ import annotations
 import shlex
 from pathlib import Path
 
+import pytest
 import yaml
 
 ROOT = Path(__file__).resolve().parents[3]
@@ -87,3 +88,31 @@ def test_diagnostic_uses_the_existing_genuine_preparation_and_owned_model_cleanu
     assert "git push" not in all_commands
     assert "release.yml" not in all_commands
     assert "required_acceptance_aggregate" not in all_commands
+
+
+@pytest.mark.parametrize(
+    ("workflow_name", "job_name", "cell"),
+    [
+        ("platform-native-preflight.yml", "arl-auxiliary-diagnostic", "template_advanced_literature_review"),
+        ("platform-required-acceptance.yml", "auxiliary-original", "${{ matrix.cell }}"),
+    ],
+)
+def test_auxiliary_carriers_preserve_hidden_pipeline_originals_in_the_exact_exported_cell(
+    workflow_name: str, job_name: str, cell: str
+) -> None:
+    # The actual portable-pipeline validator reads every original output binding,
+    # including .pipeline/execution.json and .checkpoints. The pinned upload
+    # action omits hidden members unless this delivery option is explicit.
+    job = _workflow(workflow_name)["jobs"][job_name]
+    steps = job["steps"]
+    upload = next(step for step in steps if step.get("name") == "Retain original auxiliary audit")
+    assert upload["with"]["include-hidden-files"] is True
+    assert upload["with"]["path"] == "${{ env.TEMPLATE_CI_ARTIFACT_DIRECTORY }}/auxiliary-linux/" + cell + "/"
+    assert upload["with"]["if-no-files-found"] == "error"
+    assert upload["if"] == "always()"
+    export = next(
+        step for step in steps if step.get("name") == "Export original Linux readiness bytes for the artifact reader"
+    )
+    assert export["if"] == "always()"
+    assert "infrastructure.core.testing.ci_execution_user export" in export["run"]
+    assert steps.index(export) < steps.index(upload)

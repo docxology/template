@@ -544,6 +544,8 @@ jobs:
         with:
           name: required-source-auxiliary-linux-${{ matrix.cell }}
           path: ${{ env.TEMPLATE_CI_ARTIFACT_DIRECTORY }}/auxiliary-linux/${{ matrix.cell }}/
+          # Portable pipeline custody includes hidden original execution/cache bytes.
+          include-hidden-files: true
           if-no-files-found: error
           retention-days: 1
 

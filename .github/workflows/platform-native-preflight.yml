@@ -275,6 +275,8 @@ jobs:
         with:
           name: auxiliary-preflight-arl-${{ github.run_id }}-${{ github.run_attempt }}
           path: ${{ env.TEMPLATE_CI_ARTIFACT_DIRECTORY }}/auxiliary-linux/template_advanced_literature_review/
+          # Portable pipeline custody includes hidden original execution/cache bytes.
+          include-hidden-files: true
           if-no-files-found: error
           retention-days: 30
       - name: State the selected-cell diagnostic boundary
