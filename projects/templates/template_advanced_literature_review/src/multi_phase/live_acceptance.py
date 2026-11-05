@@ -111,6 +111,27 @@ def _fulltext_candidates(phase_candidates: dict[str, list[Any]]) -> list[Any]:
     return candidates
 
 
+def _declared_contact_email(project_root: Path) -> str | None:
+    """Return the project's own declared correspondence address, if any.
+
+    OpenAlex and Crossref meter anonymous callers far more aggressively than
+    identified ones. The address is read from the frozen manuscript config the
+    run already consumes, so acceptance never invents an identity and never
+    reaches for an ambient environment value.
+    """
+    import yaml
+
+    config = yaml.safe_load((project_root / "manuscript/config.yaml").read_text(encoding="utf-8"))
+    if not isinstance(config, dict):
+        return None
+    for row in config.get("authors") or []:
+        if isinstance(row, dict) and row.get("corresponding") is True:
+            email = row.get("email")
+            if isinstance(email, str) and email.strip():
+                return email.strip()
+    return None
+
+
 def run_live(
     project_root: Path,
     directory: Path,
@@ -147,6 +168,7 @@ def run_live(
         selected_queries: dict[str, str] = {}
         selected_providers: dict[str, str] = {}
         phase_candidates: dict[str, list[Any]] = {}
+        contact_email = _declared_contact_email(project_root)
         for index, phase in enumerate(phases):
             config = runner.search_phases[phase]
             query = config["queries"][0]
@@ -163,6 +185,7 @@ def run_live(
                     crossref_endpoint=crossref_endpoint,
                     year_min=limits.get("min_year"),
                     year_max=limits.get("max_year"),
+                    contact_email=contact_email,
                 )
                 selected_providers[phase] = "openalex-crossref"
             elif engines.get("crossref") is True:
