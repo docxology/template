@@ -3,7 +3,11 @@
 from __future__ import annotations
 
 import argparse
+from datetime import datetime
+from email.message import Message
+from email.utils import parsedate_to_datetime
 import ipaddress
+import re
 import socket
 import sys
 import tempfile
@@ -37,6 +41,72 @@ _RETRY_BASE_DELAY_SECONDS = 2.0
 #: The polite-pool request budget may be exhausted for well over a minute, so a
 #: single short backoff is not enough; the ceiling keeps one worker finite.
 _RETRY_MAX_DELAY_SECONDS = 20.0
+
+
+_ERROR_HEADER_NAMES = (
+    "Retry-After",
+    "X-RateLimit-Limit",
+    "X-RateLimit-Remaining",
+    "X-RateLimit-Credits-Used",
+    "X-RateLimit-Reset",
+)
+_ERROR_HEADER_MAX_CHARS = 64
+
+
+def _error_header_format(name: str, value: str) -> str | None:
+    """Recognize bounded numeric/date DATA without deriving a quota or cooldown."""
+    if re.fullmatch(r"[0-9]{1,20}(?:\.[0-9]{1,12})?", value):
+        return "number"
+    if name not in {"Retry-After", "X-RateLimit-Reset"}:
+        return None
+    if re.fullmatch(
+        r"(?:Mon|Tue|Wed|Thu|Fri|Sat|Sun), [0-9]{2} "
+        r"(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec) "
+        r"[0-9]{4} [0-9]{2}:[0-9]{2}:[0-9]{2} GMT",
+        value,
+    ):
+        try:
+            parsedate_to_datetime(value)
+        except (ValueError, OverflowError):
+            return None
+        return "http-date"
+    if name == "X-RateLimit-Reset" and re.fullmatch(
+        r"[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}"
+        r"(?:\.[0-9]{1,6})?(?:Z|[+-][0-9]{2}:[0-9]{2})",
+        value,
+    ):
+        try:
+            datetime.fromisoformat(value)
+        except ValueError:
+            return None
+        return "iso-date-time"
+    return None
+
+
+def _error_header_observations(headers: Message | None) -> dict[str, dict[str, str]]:
+    """Retain only validated allowlisted fields; rejected values never enter receipts."""
+    observations = {}
+    for name in _ERROR_HEADER_NAMES:
+        if headers is None:
+            row = {"status": "unavailable", "reason": "response-headers-unavailable"}
+        else:
+            offered = headers.get_all(name)
+            if offered is None:
+                row = {"status": "absent"}
+            elif len(offered) != 1:
+                row = {"status": "unavailable", "reason": "multiple-values"}
+            elif not isinstance(offered[0], str) or len(offered[0]) > _ERROR_HEADER_MAX_CHARS:
+                row = {"status": "unavailable", "reason": "invalid-or-oversized-value"}
+            else:
+                value = offered[0].strip()
+                form = _error_header_format(name, value)
+                row = (
+                    {"status": "observed", "value": value, "format": form}
+                    if form is not None
+                    else {"status": "unavailable", "reason": "unsupported-value"}
+                )
+        observations[name] = row
+    return observations
 
 
 def _retry_delay(attempt: int, retry_after: str | None) -> float:
@@ -154,7 +224,13 @@ def _http_worker(invocation: dict[str, Any], directory: Path) -> int:
                 return 0
         except urllib.error.HTTPError as exc:
             retry_after = exc.headers.get("Retry-After") if exc.headers is not None else None
-            metadata["attempts"].append({"attempt": attempt + 1, "status_code": exc.code})
+            metadata["attempts"].append(
+                {
+                    "attempt": attempt + 1,
+                    "status_code": exc.code,
+                    "error_response_headers": _error_header_observations(exc.headers),
+                }
+            )
             metadata.update(status="blocked", status_code=exc.code, redirects=handler.redirects)
             write_json(directory / "http.json", metadata)
             if exc.code not in _RETRY_STATUSES or attempt + 1 >= _MAX_RETRY_ATTEMPTS:

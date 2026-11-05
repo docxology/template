@@ -22,3 +22,5 @@ uv run pytest tests/infra_tests/search/ -v
 
 - [`README.md`](README.md)
 - [`../../../infrastructure/search/AGENTS.md`](../../../infrastructure/search/AGENTS.md)
+
+The live-transport retry controls use actual loopback HTTP errors to verify bounded retry history and the fixed retry/quota header observations, including absent/invalid/duplicate values and exclusion of private headers and bodies.
