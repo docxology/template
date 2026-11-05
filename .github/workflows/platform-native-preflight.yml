@@ -2,6 +2,11 @@ name: Native candidate preflight
 
 on:
   workflow_dispatch:
+    inputs:
+      diagnostic_arl_auxiliary:
+        description: "Run the complete ARL auxiliary cell and independent reader as a diagnostic"
+        type: boolean
+        default: false
   pull_request:
     branches: [main]
     paths:
@@ -29,6 +34,7 @@ env:
 
 jobs:
   native-preflight:
+    if: inputs.diagnostic_arl_auxiliary != true
     # Ubuntu 26.04 has no setup-python build for 3.14.4; this workflow needs the
     # same reviewed Noble image as ci.yml and the required acceptance.
     runs-on: ubuntu-24.04
@@ -150,3 +156,127 @@ jobs:
         if: always()
         shell: bash
         run: echo 'Native preflight is diagnostic feedback; complete same-SHA required acceptance still authorizes release.' >> "$GITHUB_STEP_SUMMARY"
+
+  arl-auxiliary-diagnostic:
+    if: github.event_name == 'workflow_dispatch' && inputs.diagnostic_arl_auxiliary == true
+    name: ARL auxiliary diagnostic
+    runs-on: ubuntu-24.04
+    timeout-minutes: 90
+    env:
+      OLLAMA_SKIP_TEST_MODEL_PULL: '1'
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+          submodules: true
+      - name: Admit the exact dispatched Source revision
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+          git diff --quiet HEAD
+      - uses: ./.github/actions/setup-acceptance-fixtures
+      - uses: ./.github/actions/setup-python-env
+      - name: Prepare the locked auxiliary environment
+        run: uv sync --locked --inexact --group dev --group installed-build --group active-inference --group timeseries-bench --group rendering-pptx
+      - name: Populate the locked build-tool cache for offline auxiliary fixtures
+        run: |
+          set -euo pipefail
+          unset UV_FROZEN
+          auxiliary_build_cache=$(mktemp -d "$RUNNER_TEMP/template-auxiliary-build-cache.XXXXXX")
+          # Offline fixtures resolve hashed registry requirements. A restored
+          # environment or URL-based lock sync alone does not prepare that cache.
+          uv export --locked --only-group installed-build --no-emit-project --no-emit-local \
+            --no-header --no-annotate --output-file "$auxiliary_build_cache/build.txt"
+          uv export --project projects/templates/template_autoresearch_project --locked \
+            --no-default-groups --no-emit-project --no-emit-local --no-header --no-annotate \
+            --output-file "$auxiliary_build_cache/runtime.txt"
+          for kind in build runtime; do
+            uv venv --no-project --no-python-downloads --python .venv/bin/python "$auxiliary_build_cache/$kind"
+            uv pip sync --no-config --no-build --require-hashes \
+              --python "$auxiliary_build_cache/$kind/bin/python" "$auxiliary_build_cache/$kind.txt"
+          done
+          rm -r -- "$auxiliary_build_cache"
+      - uses: ./.github/actions/setup-meta-provider
+      - uses: ./.github/actions/setup-docs-lint
+      - uses: ./.github/actions/setup-acceptance-documents
+      - name: Prepare source-locked browser math dependencies
+        run: .venv/bin/python -m infrastructure.reporting.native_dependency_preparation --repo-root .
+      - name: Prepare the declared Java launcher
+        run: sudo apt-get install -y --no-install-recommends default-jre-headless
+      - uses: ./.github/actions/setup-acceptance-model
+      - uses: ./.github/actions/setup-ci-execution-user
+        with:
+          docker: 'false'
+      - name: Complete source-owned auxiliary project selection
+        id: auxiliary
+        run: >-
+          .venv/bin/python -m infrastructure.core.testing.ci_execution_user run
+          --state "$RUNNER_TEMP/template-ci-execution/state.json" --
+          .venv/bin/python -m infrastructure.project.public_acceptance_auxiliary_cli
+          --matrix-cell "template_advanced_literature_review" --local-model smollm2:360m
+          --auxiliary-workers 1
+          --timeout-seconds 1800 --evidence-dir "output/readiness/auxiliary-linux/template_advanced_literature_review"
+      - name: Independently read every original ARL gate and its complete group
+        if: always()
+        run: >-
+          .venv/bin/python -m infrastructure.core.testing.ci_execution_user run
+          --state "$RUNNER_TEMP/template-ci-execution/state.json" --
+          .venv/bin/python -m infrastructure.project.public_acceptance_literature_group_cli
+          --receipt output/readiness/auxiliary-linux/template_advanced_literature_review/receipt.json
+          --output output/readiness/auxiliary-linux/template_advanced_literature_review/independent-reader.json
+          --timeout-seconds 300
+      - name: Stop only the owned model daemon and descendants
+        if: always()
+        shell: bash
+        run: |
+          python - <<'PYTHON'
+          import json, os, signal, subprocess, time
+          from pathlib import Path
+          def members(group):
+              rows = subprocess.check_output(["ps", "-axo", "pid=,pgid=,lstart=,stat="], text=True)
+              result = {}
+              for line in rows.splitlines():
+                  fields = line.split()
+                  if len(fields) >= 8 and int(fields[1]) == group and not fields[7].startswith("Z"):
+                      result[int(fields[0])] = " ".join(fields[2:7])
+              return result
+          directory = os.environ.get("TEMPLATE_ACCEPTANCE_MODEL_DIRECTORY")
+          owner = Path(directory) / "daemon-owner.json" if directory else None
+          if owner is not None and owner.is_file():
+              record = json.loads(owner.read_text())
+              group = record["pid"]
+              known = {int(pid): birth for pid, birth in record["members"].items()}
+              current = members(group)
+              if current:
+                  assert any(current.get(pid) == birth for pid, birth in known.items()), "Refuse an unverified or reused process group"
+                  known.update(current)
+                  os.killpg(group, signal.SIGTERM)
+                  deadline = time.monotonic() + 5
+                  while members(group) and time.monotonic() < deadline:
+                      time.sleep(0.1)
+                  current = members(group)
+                  if current:
+                      assert any(current.get(pid) == birth for pid, birth in known.items()), "Refuse a reused group during cleanup"
+                      os.killpg(group, signal.SIGKILL)
+                      deadline = time.monotonic() + 5
+                      while members(group) and time.monotonic() < deadline:
+                          time.sleep(0.1)
+                  assert not members(group), "Owned daemon descendants remain alive"
+              (Path(directory) / "daemon-cleanup.json").write_text(json.dumps({"owned_group": group, "live_members_remaining": members(group), "original_exit": 0}))
+          PYTHON
+      - name: Export original Linux readiness bytes for the artifact reader
+        if: always()
+        run: >-
+          .venv/bin/python -m infrastructure.core.testing.ci_execution_user export
+          --state "$RUNNER_TEMP/template-ci-execution/state.json"
+      - name: Retain original auxiliary audit
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
+        with:
+          name: auxiliary-preflight-arl-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ env.TEMPLATE_CI_ARTIFACT_DIRECTORY }}/auxiliary-linux/template_advanced_literature_review/
+          if-no-files-found: error
+          retention-days: 30
+      - name: State the selected-cell diagnostic boundary
+        if: always()
+        run: echo 'This diagnostic checks the complete ARL auxiliary cell; full same-SHA required acceptance remains mandatory for release.' >> "$GITHUB_STEP_SUMMARY"

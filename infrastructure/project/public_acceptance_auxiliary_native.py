@@ -74,12 +74,20 @@ def native_execution(
     inputs: dict[str, Any],
     *,
     operation_deadline: float | None = None,
+    literature_group: dict[str, str] | None = None,
+    literature_origin: dict[str, str] | None = None,
 ) -> dict[str, Any] | None:
     """Execute known native APIs; absent tools/models retain their original blockers."""
     scope = gate.split(":", 1)[0]
     project = root / "projects" / scope
     capability = gate.split(":live:", 1)[1] if ":live:" in gate else ""
     native: dict[str, Any]
+    if literature_origin is not None:
+        from infrastructure.project.public_acceptance_literature_group import project_origin
+
+        if literature_group is None or operation_deadline is None:
+            raise ValueError("literature projection omitted its original group/deadline")
+        return project_origin(root, gate, directory, inputs, literature_group, literature_origin, operation_deadline)
     if scope == "templates/template_formal" and capability in {"lean", "tlc"}:
         module = project_module(root, scope, "template_formal.tool_acceptance")
         native = module.run_formal_tools(project, timeout=min(budget, 600), acquire=False)
@@ -165,6 +173,16 @@ def native_execution(
         deadline = operation_deadline if operation_deadline is not None else time.monotonic() + budget
         settings = LiveSettings(model=model, run_timeout_seconds=min(budget, 600))
         output = project / "output/.pipeline/literature_acceptance" / uuid.uuid4().hex
+        if literature_group is not None:
+            from infrastructure.project.public_acceptance_literature_group import GATES, read_group
+            from infrastructure.reporting.readiness_receipts import source_fingerprint
+            from infrastructure.reporting.release_readiness_snapshot import SnapshotReader
+
+            plan = read_group(
+                SnapshotReader(root, operation_deadline=deadline), literature_group, gate, source_fingerprint(root)
+            )
+            if gate != GATES[0] or plan["model"] != model or plan["operation_deadline"] != deadline:
+                raise ValueError("literature original changed its selected first gate/model/deadline")
         receipt = module.run_live(project, output, settings)
         native, bound, originals = retain_literature_originals(root, project, receipt, directory, deadline)
         context = literature_failure_context(native, capability, bound, originals)
@@ -194,6 +212,12 @@ def native_execution(
             "execution_artifact": execution,
             "assertions": {"actual_provider_and_consumed_custody": True},
             "native_artifact": bound,
+            "literature_originals": originals,
+            **(
+                {"literature_role": "original", "literature_group": literature_group}
+                if literature_group is not None
+                else {}
+            ),
         }
     if gate.endswith(":domain"):
         from infrastructure.project.public_acceptance_auxiliary_domains import execute_domain

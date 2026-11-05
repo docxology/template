@@ -106,10 +106,12 @@ def _evidence_closure(reader: SnapshotReader, relative: str) -> dict[str, bytes]
     """Follow exact public artifact bindings, excluding unrelated readiness outputs."""
     observed: dict[str, bytes] = {}
 
-    def visit(path: str, expected: str | None = None) -> None:
+    def visit(path: str, expected: str | None = None, expected_bytes: int | None = None) -> None:
         held = reader.read(path)
         if expected is not None and held.sha256 != expected:
             raise ValueError("bundle artifact differs from its original reference")
+        if expected_bytes is not None and len(held.content) != expected_bytes:
+            raise ValueError("bundle artifact differs from its original size")
         if not Path(path).is_relative_to("output/readiness"):
             return  # Source remains in the exact checkout, never overwritten by transfer.
         if path in observed:
@@ -131,6 +133,15 @@ def _evidence_closure(reader: SnapshotReader, relative: str) -> dict[str, bytes]
                 and isinstance(value.get("sha256"), str)
             ):
                 visit(value["path"], value["sha256"])
+            if set(value) == {"path", "sha256", "bytes"}:
+                if (
+                    not isinstance(value["path"], str)
+                    or not isinstance(value["sha256"], str)
+                    or type(value["bytes"]) is not int
+                    or value["bytes"] < 0
+                ):
+                    raise ValueError("bundle sized artifact binding is malformed")
+                visit(value["path"], value["sha256"], value["bytes"])
             if isinstance(value.get("artifact"), str) and isinstance(value.get("artifact_sha256"), str):
                 visit(value["artifact"], value["artifact_sha256"])
             for item in value.values():

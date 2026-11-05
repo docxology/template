@@ -56,9 +56,18 @@ def _auxiliary_gate_operation(
     deadline: float,
     fingerprint: str,
     producer_inputs: dict[str, dict[str, Any]] | None,
+    literature_group: Any = None,
 ) -> AuxiliaryOperation:
     """Prepare and admit one genuine gate entirely on the controller thread."""
+    from infrastructure.project.public_acceptance_literature_group import GATES, retain_origin
+
     gate = requirement.id
+    grouped = literature_group is not None and gate in GATES
+    group_spec = {"literature_group": literature_group.binding} if grouped else {}
+    if grouped and gate != GATES[0]:
+        if literature_group.origin is None:
+            raise ValueError("literature projection cannot precede its original terminal observation")
+        group_spec["literature_origin"] = literature_group.origin
     cell = directory / f"{index:03d}"
     status, details, blockers = "blocked", {}, []
     if gate == "root:sandbox:transfer":
@@ -90,6 +99,7 @@ def _auxiliary_gate_operation(
                 "operation_deadline": deadline,
                 "raw_path": raw_path.relative_to(root).as_posix(),
                 "producer_inputs": (producer_inputs or {}).get(requirement.scope, {}),
+                **group_spec,
                 **(
                     {
                         "run_id": uuid.uuid4().hex,
@@ -174,6 +184,11 @@ def _auxiliary_gate_operation(
                 {
                     "gate": gate,
                     "negative": True,
+                    **(
+                        {"literature_group": literature_group.binding, "operation_deadline": deadline}
+                        if grouped
+                        else {}
+                    ),
                     "budget": 10,
                     "raw_path": (cell / "negative-facts.json").relative_to(root).as_posix(),
                 },
@@ -237,6 +252,8 @@ def _auxiliary_gate_operation(
                 details["diagnostic"] = str(error)
     payload = gate_payload(requirement, fingerprint, status, details, blockers)
     bound = write_json(root, cell / "gate.json", payload)
+    if grouped:
+        retain_origin(root, directory, literature_group, gate, bound)
     return gate, {
         "status": status,
         "command": details.get("command", ["auxiliary-preflight", gate]),
@@ -286,11 +303,22 @@ def run_auxiliary_acceptance(
         root, evidence_dir or root / "output/readiness" / f"auxiliary-{uuid.uuid4().hex}", fresh=True
     )
     python = (interpreter or Path(sys.executable)).absolute()
+    from infrastructure.project.public_acceptance_literature_group import create_group
+
+    literature_group = create_group(root, directory, matrix_selection, python, fingerprint, producer_inputs, deadline)
     operations = [
         (
             available[gate].scope,
             _auxiliary_gate_operation(
-                root, available[gate], index, directory, python, deadline, fingerprint, producer_inputs
+                root,
+                available[gate],
+                index,
+                directory,
+                python,
+                deadline,
+                fingerprint,
+                producer_inputs,
+                literature_group,
             ),
         )
         for index, gate in enumerate(selection)
@@ -357,6 +385,11 @@ def run_auxiliary_acceptance(
         "gates": output,
         "source_current": current,
         "auxiliary_workers": workers,
+        **(
+            {"literature_group": literature_group.binding, "literature_origin": literature_group.origin}
+            if literature_group is not None
+            else {}
+        ),
         **({"auxiliary_selection": matrix_selection} if matrix_selection is not None else {}),
         "deadline_exhausted": expired,
         "exit_code": 1

@@ -71,6 +71,9 @@ def authenticate_matrix(reader: SnapshotReader, receipt: dict[str, Any], require
             raise ValueError("auxiliary original receipt changed after live collection")
         validate_cell(report, requirements, cell)
         validate_auxiliary_receipt_closure(report)
+        from infrastructure.project.public_acceptance_literature_group import validate_group_report
+
+        validate_group_report(report, reader, cell)
         for gate in gates:
             if receipt["gates"].get(gate) != report["gates"][gate]:
                 raise ValueError("candidate replaced an original auxiliary gate observation")

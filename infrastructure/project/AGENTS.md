@@ -22,6 +22,20 @@ fixed same-run Darwin producer job/artifact using actual API/download results.
 Do not construct print originals from parsed receipts or broaden Root's six
 artifact roster; the live supervisor/collector owns the capability.
 
+`public_acceptance_literature_group_cli.py` independently reads every gate of
+one complete ARL original cell through the strict Source requirements. The
+registered native-preflight workflow can dispatch this diagnostic separately;
+it grants no aggregate or release acceptance.
+
+`public_acceptance_literature_group.py` groups only the complete serial ARL
+matrix cell: one actual literature producer, then independently supervised
+capability readers, each with its own executed negative control. Group nonce,
+Source selection, source/interpreter/model identity and original operation clock
+are bound in the invocation and worker specs. The hosted reader consumes that
+binding, follows exactly one admitted original edge, and reopens every retained
+original/consumed/model file. Failed attempts remain refused; no projection
+retries providers or reuses evidence across invocations.
+
 Literature auxiliary adapters use `public_acceptance_literature_diagnostics.py`
 to export every producer original before status admission. Keep failed/blocked
 receipts and request/response/execution bytes under the cell's ordinary artifact,
