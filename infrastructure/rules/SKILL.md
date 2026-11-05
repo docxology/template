@@ -46,21 +46,21 @@ is_valid, message = validate_rule_structure(Path("rules/templates/template_proje
 from infrastructure.rules import RuleInfo, build_rule_info
 
 info = build_rule_info(Path("rules/templates/template_project_rules"))
-info.name           # "template_project_rules"
-info.rule_type      # "type" from rules.yaml, or "project"
-info.has_soft       # True iff soft/ exists
-info.has_strong     # True iff strong/ exists
-info.is_valid       # True iff has_soft or has_strong
-info.qualified_name # "template_project_rules" or "program/name"
+info.name  # "template_project_rules"
+info.rule_type  # "type" from rules.yaml, or "project"
+info.has_soft  # True iff soft/ exists
+info.has_strong  # True iff strong/ exists
+info.is_valid  # True iff has_soft or has_strong
+info.qualified_name  # "template_project_rules" or "program/name"
 ```
 
 ## Public scope
 
 ```python
 from infrastructure.rules.public_scope import (
-    PUBLIC_RULE_NAMES,   # ('templates/template_project_rules', 'templates/template_manuscript_rules')
-    public_rule_infos,   # list[RuleInfo] present in checkout
-    public_rule_names,   # list[str] sorted
+    PUBLIC_RULE_NAMES,  # ('templates/template_project_rules', 'templates/template_manuscript_rules')
+    public_rule_infos,  # list[RuleInfo] present in checkout
+    public_rule_names,  # list[str] sorted
 )
 ```
 
@@ -69,11 +69,13 @@ from infrastructure.rules.public_scope import (
 ```python
 from pathlib import Path
 from infrastructure.rules.linking import (
-    sync_private_rule_links, private_rules_root,
-    is_managed_symlink, LinkSyncResult,
+    sync_private_rule_links,
+    private_rules_root,
+    is_managed_symlink,
+    LinkSyncResult,
 )
 
-root = private_rules_root(Path("."))   # Path | None
+root = private_rules_root(Path("."))  # Path | None
 result: LinkSyncResult = sync_private_rule_links(Path("."), dry_run=True)
 print(result.summary())
 # result.created / .updated / .removed / .skipped / .changed

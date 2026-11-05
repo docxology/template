@@ -86,6 +86,7 @@ def test_validation_passes():
     data = {"name": "Alice", "age": 30}
     assert validate_data(data) is True
 
+
 # ❌ ABSOLUTELY FORBIDDEN: NEVER use any mocking
 # def test_validation_passes():
 #     mock_data = MagicMock()  # NEVER ALLOWED
@@ -108,6 +109,7 @@ def test_config_from_env(clean_llm_env):
     config = OllamaClientConfig.from_env()
     assert config.base_url == "http://test:11434"
 
+
 # ✅ GOOD: Integration test with marker
 @pytest.mark.requires_ollama
 class TestLLMIntegration:
@@ -119,6 +121,7 @@ class TestLLMIntegration:
         client = LLMClient()
         response = client.query("Hello")
         assert response is not None
+
 
 # Run commands:
 # pytest -m "not requires_ollama"  # Deselect local Ollama tests
@@ -133,6 +136,7 @@ def test_sort_returns_sorted_list():
     result = sort_numbers([3, 1, 2])
     assert result == [1, 2, 3]
 
+
 # ❌ BAD: Testing implementation details
 # Testing "how" something works (implementation) is brittle and not valuable.
 # Only test "what" the function does (observable behavior).
@@ -146,6 +150,7 @@ def test_validation_fails_when_email_is_missing():
     data = {"name": "Alice"}  # No email
     with pytest.raises(ValidationError):
         validate_user_data(data)
+
 
 # ❌ BAD: Unclear what's tested
 def test_validation_error():
@@ -175,13 +180,16 @@ def test_format_string():
 def test_add():
     assert add(2, 2) == 4
 
+
 def test_subtract():
     assert subtract(4, 2) == 2
+
 
 # ❌ BAD: Tests depend on each other
 def test_initialization():
     global calculator
     calculator = Calculator()
+
 
 def test_add():
     global calculator
@@ -218,6 +226,7 @@ def test_validation_error_has_context():
     else:
         pytest.fail("ValidationError not raised")
 
+
 # Or using pytest.raises
 def test_validation_error_with_pytest_raises():
     """Cleaner approach using pytest.raises."""
@@ -233,14 +242,12 @@ def test_validation_error_with_pytest_raises():
 # conftest.py - Shared fixtures
 import pytest
 
+
 @pytest.fixture
 def sample_data():
     """Provide sample test data."""
-    return {
-        "name": "Alice",
-        "email": "alice@example.com",
-        "age": 30
-    }
+    return {"name": "Alice", "email": "alice@example.com", "age": 30}
+
 
 @pytest.fixture
 def temp_file(tmp_path):
@@ -249,11 +256,13 @@ def temp_file(tmp_path):
     file.write_text("test content")
     return file
 
+
 # test_module.py - Use fixtures
 def test_user_creation(sample_data):
     """Test using fixture."""
     user = create_user(**sample_data)
     assert user.name == sample_data["name"]
+
 
 def test_file_reading(temp_file):
     """Test using temporary file."""
@@ -266,21 +275,29 @@ def test_file_reading(temp_file):
 ```python
 import pytest
 
-@pytest.mark.parametrize("input,expected", [
-    ("123", 123),
-    ("456", 456),
-    ("0", 0),
-    ("-123", -123),
-])
+
+@pytest.mark.parametrize(
+    "input,expected",
+    [
+        ("123", 123),
+        ("456", 456),
+        ("0", 0),
+        ("-123", -123),
+    ],
+)
 def test_parse_integer(input, expected):
     """Test parsing various integer strings."""
     assert parse_integer(input) == expected
 
-@pytest.mark.parametrize("invalid_input", [
-    "abc",      # Not a number
-    "12.34",    # Float, not int
-    "",         # Empty
-])
+
+@pytest.mark.parametrize(
+    "invalid_input",
+    [
+        "abc",  # Not a number
+        "12.34",  # Float, not int
+        "",  # Empty
+    ],
+)
 def test_parse_integer_invalid(invalid_input):
     """Test that invalid inputs raise errors."""
     with pytest.raises(ValueError):
@@ -293,6 +310,7 @@ def test_parse_integer_invalid(invalid_input):
 def test_operation_is_logged(caplog):
     """Test that operation is properly logged."""
     import logging
+
     caplog.set_level(logging.INFO)
 
     perform_operation()
@@ -339,7 +357,7 @@ def test_analysis_script_generates_output(tmp_path):
     result = subprocess.run(
         ["python3", "projects/templates/template_code_project/scripts/optimization_analysis.py"],
         capture_output=True,
-        text=True
+        text=True,
     )
 
     # Check execution
@@ -358,18 +376,18 @@ import pytest
 from pathlib import Path
 import tempfile
 
+
 @pytest.fixture
 def test_data_dir():
     """Path to test data directory."""
     return Path(__file__).parent / "data"
 
+
 @pytest.fixture
 def sample_data():
     """Load sample test data."""
-    return {
-        "count": 100,
-        "items": list(range(100))
-    }
+    return {"count": 100, "items": list(range(100))}
+
 
 @pytest.fixture
 def temp_dir():
@@ -377,10 +395,12 @@ def temp_dir():
     with tempfile.TemporaryDirectory() as tmpdir:
         yield Path(tmpdir)
 
+
 @pytest.fixture
 def logger_fixture(caplog):
     """Set up logging capture for testing logging."""
     import logging
+
     caplog.set_level(logging.DEBUG)
     return caplog
 ```

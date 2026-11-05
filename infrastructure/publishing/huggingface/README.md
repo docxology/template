@@ -38,9 +38,7 @@ servers always use the raw path.
 from pathlib import Path
 from infrastructure.publishing.huggingface import HuggingFaceHubAdapter, HuggingFaceConfig, HFRepoType
 
-adapter = HuggingFaceHubAdapter(
-    HuggingFaceConfig(repo_id="docxology/my-paper", repo_type=HFRepoType.DATASET)
-)
+adapter = HuggingFaceHubAdapter(HuggingFaceConfig(repo_id="docxology/my-paper", repo_type=HFRepoType.DATASET))
 
 # Always-safe dry run (no network, lists files that would be uploaded):
 print(adapter.publish(Path("output/bundle"), dry_run=True).uploaded)

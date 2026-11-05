@@ -86,6 +86,7 @@ from template_code_project.core.optimizer import (
     gradient_descent_with_momentum,
 )
 
+
 def test_gradient_descent_with_momentum_converges():
     """Momentum descent converges on a quadratic bowl."""
     result = gradient_descent_with_momentum(
@@ -171,6 +172,7 @@ def test_momentum_step_sizes_converge(step_size):
         step_size=step_size,
     )
     assert result.converged
+
 
 def test_momentum_respects_iteration_cap():
     """The iteration cap terminates with a recorded reason."""
@@ -263,6 +265,7 @@ from template_code_project.core.optimizer import OptimizationResult
 @dataclass
 class OptimizerConfig:
     """Configuration for optimization algorithms."""
+
     learning_rate: float = 0.01
     max_iterations: int = 1000
     tolerance: float = 1e-6
@@ -298,10 +301,7 @@ def adam_optimizer(
         v_hat = [vi / (1 - beta2**t) for vi in v]
 
         # Update parameters
-        x_new = [
-            xi - config.learning_rate * mh / (vh**0.5 + epsilon)
-            for xi, mh, vh in zip(x, m_hat, v_hat)
-        ]
+        x_new = [xi - config.learning_rate * mh / (vh**0.5 + epsilon) for xi, mh, vh in zip(x, m_hat, v_hat)]
 
         # Check convergence
         if all(abs(x_new[i] - x[i]) < config.tolerance for i in range(len(x))):
@@ -338,6 +338,7 @@ def adam_optimizer(
 import numpy as np
 from template_code_project.core.advanced_optimizers import OptimizerConfig, adam_optimizer
 
+
 class TestObjectiveFunctions:
     """Test functions for optimization."""
 
@@ -347,32 +348,30 @@ class TestObjectiveFunctions:
 
     @staticmethod
     def quadratic_gradient(x):
-        return [2*xi for xi in x]
+        return [2 * xi for xi in x]
 
     @staticmethod
     def rosenbrock(x):
-        return sum(100*(x[i+1] - x[i]**2)**2 + (1 - x[i])**2
-                  for i in range(len(x)-1))
+        return sum(100 * (x[i + 1] - x[i] ** 2) ** 2 + (1 - x[i]) ** 2 for i in range(len(x) - 1))
 
     @staticmethod
     def rosenbrock_gradient(x):
         grad = [0.0] * len(x)
-        for i in range(len(x)-1):
-            grad[i] += -400*x[i]*(x[i+1] - x[i]**2) - 2*(1 - x[i])
-            grad[i+1] += 200*(x[i+1] - x[i]**2)
+        for i in range(len(x) - 1):
+            grad[i] += -400 * x[i] * (x[i + 1] - x[i] ** 2) - 2 * (1 - x[i])
+            grad[i + 1] += 200 * (x[i + 1] - x[i] ** 2)
         return grad
+
 
 def test_adam_rosenbrock():
     """Test Adam on Rosenbrock function."""
     config = OptimizerConfig(learning_rate=0.01, max_iterations=5000)
     result = adam_optimizer(
-        TestObjectiveFunctions.rosenbrock,
-        TestObjectiveFunctions.rosenbrock_gradient,
-        [0.0, 0.0],
-        config
+        TestObjectiveFunctions.rosenbrock, TestObjectiveFunctions.rosenbrock_gradient, [0.0, 0.0], config
     )
     # Rosenbrock minimum at [1, 1]
     assert all(abs(xi - 1.0) < 0.1 for xi in result.solution)
+
 
 def test_adam_history_is_recorded():
     """Adam records the objective at every step."""
@@ -393,9 +392,11 @@ def test_adam_history_is_recorded():
 # projects/templates/template_code_project/scripts/optimizer_comparison.py  # illustrative
 #!/usr/bin/env python3
 """Compare multiple optimization algorithms."""
+
 import os
 import matplotlib
-matplotlib.use('Agg')
+
+matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import numpy as np
 
@@ -404,16 +405,18 @@ import numpy as np
 from template_code_project.core.advanced_optimizers import OptimizerConfig, adam_optimizer  # illustrative
 from template_code_project.core.optimizer import gradient_descent
 
+
 def rosenbrock(x):
-    return sum(100*(x[i+1] - x[i]**2)**2 + (1 - x[i])**2
-              for i in range(len(x)-1))
+    return sum(100 * (x[i + 1] - x[i] ** 2) ** 2 + (1 - x[i]) ** 2 for i in range(len(x) - 1))
+
 
 def rosenbrock_gradient(x):
     grad = np.zeros_like(x)
-    for i in range(len(x)-1):
-        grad[i] += -400*x[i]*(x[i+1] - x[i]**2) - 2*(1 - x[i])
-        grad[i+1] += 200*(x[i+1] - x[i]**2)
+    for i in range(len(x) - 1):
+        grad[i] += -400 * x[i] * (x[i + 1] - x[i] ** 2) - 2 * (1 - x[i])
+        grad[i + 1] += 200 * (x[i + 1] - x[i] ** 2)
     return grad
+
 
 def main():
     config = OptimizerConfig(learning_rate=0.001, max_iterations=2000)
@@ -434,26 +437,27 @@ def main():
     # Plot convergence
     baseline_history = list(result_baseline.objective_history or [])
     adam_history = list(result_adam.objective_history or [])
-    ax.semilogy(baseline_history, label='Gradient descent')
-    ax.semilogy(adam_history, label='Adam')
-    ax.set_xlabel('Iteration')
-    ax.set_ylabel('Objective Value')
-    ax.set_title('Convergence Comparison')
+    ax.semilogy(baseline_history, label="Gradient descent")
+    ax.semilogy(adam_history, label="Adam")
+    ax.set_xlabel("Iteration")
+    ax.set_ylabel("Objective Value")
+    ax.set_title("Convergence Comparison")
     ax.legend()
     ax.grid(True, alpha=0.3)
 
     plt.tight_layout()
 
     # Save
-    output_path = 'output/figures/optimizer_comparison.png'
+    output_path = "output/figures/optimizer_comparison.png"
     os.makedirs(os.path.dirname(output_path), exist_ok=True)
-    fig.savefig(output_path, dpi=300, bbox_inches='tight')
+    fig.savefig(output_path, dpi=300, bbox_inches="tight")
     plt.close(fig)
 
     # Print for manifest
     print(output_path)
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     main()
 ```
 

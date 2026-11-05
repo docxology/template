@@ -120,9 +120,7 @@ report = evaluate_promotion_candidate(
     Path("/path/to/private/candidate"),
     project_name="working/<candidate-name>",
     orchestration_attestation=Path("/path/to/promotion.yaml"),
-    security_attestation=Path(
-        "/path/to/private/candidate/promotion-security.yaml"
-    ),
+    security_attestation=Path("/path/to/private/candidate/promotion-security.yaml"),
     as_of=date.fromisoformat("<YYYY-MM-DD>"),
 )
 ```

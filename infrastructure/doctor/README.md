@@ -132,9 +132,11 @@ handlers (`delete_paths`, `chmod`, `write_file`, `run_uv_sync`):
 ```python
 from infrastructure.doctor.safety import register_handler
 
+
 def _my_handler(plan, state):
     for path in plan.affected_paths:
         ...  # only touch declared paths
+
 
 register_handler("my_action_kind", _my_handler)
 ```

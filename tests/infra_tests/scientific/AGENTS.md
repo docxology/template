@@ -43,7 +43,7 @@ def test_scientific_utilities():
     from infrastructure.scientific.benchmarking import benchmark_function
 
     # Test numerical stability checking
-    stable_result = check_numerical_stability(lambda x: x**2 + 2*x + 1, [1, 2, 3])
+    stable_result = check_numerical_stability(lambda x: x**2 + 2 * x + 1, [1, 2, 3])
     assert stable_result.stability_score > 0.8
 
     # Test benchmarking
@@ -77,11 +77,11 @@ def test_performance_benchmarking():
 
     # Generate performance report from results list
     report = format_benchmark_report([result])
-    assert 'Performance Analysis Report' in report
+    assert "Performance Analysis Report" in report
 
     # The formatter produces deterministic Markdown output
     formatted = format_benchmark_report([result])
-    assert 'Performance Analysis Report' in formatted
+    assert "Performance Analysis Report" in formatted
 ```
 
 ### Confirmation Tests
@@ -113,10 +113,11 @@ def test_numerical_stability():
     assert isinstance(result, StabilityTest)
     assert result.stability_score >= 0.0
     assert result.stability_score <= 1.0
-    assert 'numerical_stability' in result.test_name
+    assert "numerical_stability" in result.test_name
 
     # Check stability of an ill-behaved function (division by near-zero)
     import numpy as np
+
     unstable = lambda x: 1.0 / (x + 1e-15) if abs(x) < 1e-14 else x
     unstable_result = check_numerical_stability(unstable, [0.0, 1e-15, 1.0])
     assert isinstance(unstable_result, StabilityTest)
@@ -137,37 +138,32 @@ def test_numerical_stability():
 def validate_scientific_algorithm(algorithm, test_cases):
     """scientific validation of algorithms."""
 
-    results = {
-        'correctness': [],
-        'performance': [],
-        'stability': [],
-        'scalability': []
-    }
+    results = {"correctness": [], "performance": [], "stability": [], "scalability": []}
 
     for test_case in test_cases:
         # Test correctness
-        result = algorithm(test_case['input'])
-        correctness = validate_result(result, test_case['expected'])
-        results['correctness'].append(correctness)
+        result = algorithm(test_case["input"])
+        correctness = validate_result(result, test_case["expected"])
+        results["correctness"].append(correctness)
 
         # Test performance
-        performance = benchmark_algorithm(algorithm, test_case['input'])
-        results['performance'].append(performance)
+        performance = benchmark_algorithm(algorithm, test_case["input"])
+        results["performance"].append(performance)
 
         # Test stability
-        stability = test_numerical_stability(algorithm, test_case['input'])
-        results['stability'].append(stability)
+        stability = test_numerical_stability(algorithm, test_case["input"])
+        results["stability"].append(stability)
 
         # Test scalability
-        scalability = test_scalability(algorithm, test_case['input'])
-        results['scalability'].append(scalability)
+        scalability = test_scalability(algorithm, test_case["input"])
+        results["scalability"].append(scalability)
 
     # Aggregate results
     summary = {
-        'overall_correctness': sum(results['correctness']) / len(results['correctness']),
-        'average_performance': statistics.mean(results['performance']),
-        'stability_score': min(results['stability']),  # Worst case
-        'scalability_rating': assess_scalability(results['scalability'])
+        "overall_correctness": sum(results["correctness"]) / len(results["correctness"]),
+        "average_performance": statistics.mean(results["performance"]),
+        "stability_score": min(results["stability"]),  # Worst case
+        "scalability_rating": assess_scalability(results["scalability"]),
     }
 
     return summary
@@ -187,24 +183,25 @@ def validate_scientific_algorithm(algorithm, test_cases):
 def scientific_test_data():
     """Provide realistic scientific test datasets."""
     return {
-        'tabular_data': load_research_dataset('clinical_trials.csv'),
-        'time_series': generate_synthetic_time_series(length=1000, trend=0.1),
-        'image_data': load_medical_images('mri_scans/', sample_size=50),
-        'genomic_data': load_genomic_sequences('sequences.fasta', n_sequences=100),
-        'network_data': generate_social_network(nodes=500, edges=2000),
-        'spatial_data': load_geographic_data('environmental_samples.geojson')
+        "tabular_data": load_research_dataset("clinical_trials.csv"),
+        "time_series": generate_synthetic_time_series(length=1000, trend=0.1),
+        "image_data": load_medical_images("mri_scans/", sample_size=50),
+        "genomic_data": load_genomic_sequences("sequences.fasta", n_sequences=100),
+        "network_data": generate_social_network(nodes=500, edges=2000),
+        "spatial_data": load_geographic_data("environmental_samples.geojson"),
     }
+
 
 @pytest.fixture
 def research_algorithms():
     """Provide research algorithms for testing."""
     return {
-        'statistical_model': lambda data: run_linear_regression(data),
-        'machine_learning': lambda data: train_neural_network(data),
-        'optimization': lambda data: genetic_algorithm_optimization(data),
-        'simulation': lambda params: monte_carlo_simulation(params),
-        'clustering': lambda data: hierarchical_clustering(data),
-        'dimensionality_reduction': lambda data: pca_reduction(data, n_components=10)
+        "statistical_model": lambda data: run_linear_regression(data),
+        "machine_learning": lambda data: train_neural_network(data),
+        "optimization": lambda data: genetic_algorithm_optimization(data),
+        "simulation": lambda params: monte_carlo_simulation(params),
+        "clustering": lambda data: hierarchical_clustering(data),
+        "dimensionality_reduction": lambda data: pca_reduction(data, n_components=10),
     }
 ```
 
@@ -225,16 +222,17 @@ def synthetic_research_dataset():
     X[:, 0] = X[:, 1] + X[:, 2] * 0.5 + np.random.randn(n_samples) * 0.1
     y = (X[:, 0] + X[:, 1] > 0).astype(int)
 
-    return pd.DataFrame(X, columns=[f'feature_{i}' for i in range(n_features)]), y
+    return pd.DataFrame(X, columns=[f"feature_{i}" for i in range(n_features)]), y
+
 
 @pytest.fixture
 def performance_test_cases():
     """Provide performance benchmarking test cases."""
     return [
-        {'name': 'small_dataset', 'size': (100, 10), 'iterations': 100},
-        {'name': 'medium_dataset', 'size': (1000, 50), 'iterations': 50},
-        {'name': 'large_dataset', 'size': (10000, 100), 'iterations': 10},
-        {'name': 'sparse_data', 'size': (5000, 200), 'sparsity': 0.1, 'iterations': 20}
+        {"name": "small_dataset", "size": (100, 10), "iterations": 100},
+        {"name": "medium_dataset", "size": (1000, 50), "iterations": 50},
+        {"name": "large_dataset", "size": (10000, 100), "iterations": 10},
+        {"name": "sparse_data", "size": (5000, 200), "sparsity": 0.1, "iterations": 20},
     ]
 ```
 
@@ -247,26 +245,26 @@ def validate_scientific_result(result, expected_properties):
 
     # Check result structure
     assert isinstance(result, dict), "Result must be a dictionary"
-    assert 'converged' in result, "Must indicate convergence status"
-    assert 'metrics' in result, "Must include evaluation metrics"
+    assert "converged" in result, "Must indicate convergence status"
+    assert "metrics" in result, "Must include evaluation metrics"
 
     # Validate convergence
-    if expected_properties.get('should_converge', True):
-        assert result['converged'] is True, "Algorithm should have converged"
+    if expected_properties.get("should_converge", True):
+        assert result["converged"] is True, "Algorithm should have converged"
 
     # Validate metrics
-    metrics = result['metrics']
-    for expected_metric in expected_properties.get('required_metrics', []):
+    metrics = result["metrics"]
+    for expected_metric in expected_properties.get("required_metrics", []):
         assert expected_metric in metrics, f"Missing required metric: {expected_metric}"
 
         metric_value = metrics[expected_metric]
-        if 'metric_ranges' in expected_properties:
-            min_val, max_val = expected_properties['metric_ranges'].get(expected_metric, (-float('inf'), float('inf')))
+        if "metric_ranges" in expected_properties:
+            min_val, max_val = expected_properties["metric_ranges"].get(expected_metric, (-float("inf"), float("inf")))
             assert min_val <= metric_value <= max_val, f"Metric {expected_metric} out of range: {metric_value}"
 
     # Validate computational properties
-    if 'max_runtime' in expected_properties:
-        assert result.get('runtime', 0) <= expected_properties['max_runtime'], "Exceeded maximum runtime"
+    if "max_runtime" in expected_properties:
+        assert result.get("runtime", 0) <= expected_properties["max_runtime"], "Exceeded maximum runtime"
 
     return True
 ```
@@ -369,11 +367,7 @@ def stable_performance_test():
     # Accept results if low variability
     assert cv < 0.1, f"High runtime variability: CV = {cv}"
 
-    return {
-        'mean_runtime': mean_runtime,
-        'std_runtime': std_runtime,
-        'coefficient_of_variation': cv
-    }
+    return {"mean_runtime": mean_runtime, "std_runtime": std_runtime, "coefficient_of_variation": cv}
 ```
 
 ### Memory and Resource Issues
@@ -388,7 +382,9 @@ def test_large_scale_computation():
     required_memory = estimate_memory_requirement(large_dataset)
 
     if available_memory < required_memory * 1.2:  # 20% buffer
-        pytest.skip(f"Insufficient memory: {available_memory / 1e9:.1f}GB available, {required_memory / 1e9:.1f}GB required")
+        pytest.skip(
+            f"Insufficient memory: {available_memory / 1e9:.1f}GB available, {required_memory / 1e9:.1f}GB required"
+        )
 
     # Run test with resource monitoring
     with memory_monitor() as mem_monitor:
@@ -413,7 +409,7 @@ def test_research_pipeline():
 
     # 1. Data validation
     data_validation = validate_research_data(raw_dataset)
-    assert data_validation['valid']
+    assert data_validation["valid"]
 
     # 2. Algorithm selection and benchmarking
     algorithms = [algorithm1, algorithm2, algorithm3]
@@ -424,7 +420,7 @@ def test_research_pipeline():
 
     # 3. Stability analysis
     stability_report = analyze_stability(best_algorithm, validated_data)
-    assert stability_report['stable']
+    assert stability_report["stable"]
 
     # 4. Documentation generation
     docs = generate_api_docs(best_algorithm)
@@ -433,11 +429,11 @@ def test_research_pipeline():
     # 5. Result validation
     final_result = best_algorithm(validated_data)
     result_validation = validate_scientific_result(final_result, research_requirements)
-    assert result_validation['valid']
+    assert result_validation["valid"]
 
     # 6. Reproducibility check
     reproducibility = verify_reproducibility(best_algorithm, validated_data, random_seed=42)
-    assert reproducibility['reproducible']
+    assert reproducibility["reproducible"]
 ```
 
 ## Future Test Enhancements

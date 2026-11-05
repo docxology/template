@@ -21,15 +21,18 @@ def process_data(input_data: str, count: int = 10) -> dict:
     """Process data with type hints on all parameters."""
     return {"processed": input_data, "count": count}
 
+
 # ✅ GOOD: More complex return type
 def get_users(db: Database, limit: int) -> list[dict]:
     """Return list of user dictionaries."""
     return db.query("SELECT * FROM users LIMIT ?", limit)
 
+
 # ❌ BAD: Missing type hints
 def process_data(input_data, count=10):
     """Missing type hints."""
     return {"processed": input_data, "count": count}
+
 
 # ❌ BAD: Incomplete type hints
 def process_data(input_data: str, count: int = 10):
@@ -115,15 +118,18 @@ class DataProcessor:
 ```python
 from typing import Union
 
+
 # ✅ GOOD: Using Union for multiple types
 def parse_input(value: Union[str, int]) -> str:
     """Parse string or integer input."""
     return str(value)
 
+
 # ✅ GOOD: Python 3.10+ pipe syntax
 def parse_input(value: str | int) -> str:
     """Parse string or integer input (Python 3.10+)."""
     return str(value)
+
 
 # ✅ GOOD: Optional (Union with None)
 def get_config(path: str) -> Union[dict, None]:
@@ -131,6 +137,7 @@ def get_config(path: str) -> Union[dict, None]:
     if os.path.exists(path):
         return load_config(path)
     return None
+
 
 # Shorthand for Optional
 def get_config(path: str) -> dict | None:
@@ -145,34 +152,41 @@ def get_config(path: str) -> dict | None:
 ```python
 from typing import List, Dict, Set, Tuple
 
+
 # ✅ GOOD: Specific element types
 def process_items(items: List[str]) -> Dict[str, int]:
     """Process list of strings, return count dict."""
     return {item: len(item) for item in items}
+
 
 # ✅ GOOD: Nested collections
 def get_data() -> List[Dict[str, Union[str, int]]]:
     """Return list of dictionaries with string/int values."""
     return [{"name": "Alice", "age": 30}]
 
+
 # ✅ GOOD: Python 3.9+ style (lowercase)
 def process_items(items: list[str]) -> dict[str, int]:
     """Process list of strings, return count dict."""
     return {item: len(item) for item in items}
+
 
 # ✅ GOOD: Set and Tuple
 def get_unique_ids(data: List[Dict]) -> Set[int]:
     """Extract unique IDs."""
     return {item["id"] for item in data}
 
+
 def get_coordinates() -> Tuple[int, int]:
     """Return x, y coordinates."""
     return (0, 0)
+
 
 # ✅ GOOD: Variable-length tuple
 def get_items() -> Tuple[str, ...]:
     """Return variable number of strings."""
     return ("a", "b", "c")
+
 
 # ❌ BAD: Vague collection types
 def process_items(items: list) -> dict:
@@ -185,22 +199,28 @@ def process_items(items: list) -> dict:
 ```python
 from typing import Callable
 
+
 # ✅ GOOD: Function that takes and returns
 def apply_function(func: Callable[[int, int], int], a: int, b: int) -> int:
     """Apply a function to two integers."""
     return func(a, b)
+
 
 # ✅ GOOD: Function with no parameters
 def run_task(task: Callable[[], None]) -> None:
     """Run a task that takes no arguments."""
     task()
 
+
 # ✅ GOOD: Function that returns a function
 def get_multiplier(factor: int) -> Callable[[int], int]:
     """Return a function that multiplies by factor."""
+
     def multiply(x: int) -> int:
         return x * factor
+
     return multiply
+
 
 # Usage
 multiply_by_2 = get_multiplier(2)
@@ -213,15 +233,18 @@ result = multiply_by_2(5)  # 10
 from typing import TypeVar, Generic
 
 # ✅ GOOD: Generic type variable
-T = TypeVar('T')
+T = TypeVar("T")
+
 
 def first_item(items: List[T]) -> T:
     """Get first item from list."""
     return items[0]
 
+
 # Usage works with any type
-first_int = first_item([1, 2, 3])      # int
-first_str = first_item(["a", "b"])     # str
+first_int = first_item([1, 2, 3])  # int
+first_str = first_item(["a", "b"])  # str
+
 
 # ✅ GOOD: Generic class
 class Container(Generic[T]):
@@ -233,6 +256,7 @@ class Container(Generic[T]):
     def get(self) -> T:
         """Get the contained item."""
         return self.item
+
 
 # Usage
 int_container = Container[int](42)
@@ -246,15 +270,18 @@ str_container = Container[str]("hello")
 ```python
 from typing import Literal
 
+
 # ✅ GOOD: Only specific values allowed
 def set_log_level(level: Literal["DEBUG", "INFO", "WARN", "ERROR"]) -> None:
     """Set log level to specific values only."""
     pass
 
+
 # ✅ GOOD: With numbers
 def set_direction(direction: Literal[0, 90, 180, 270]) -> None:
     """Set direction to cardinal directions."""
     pass
+
 
 # Usage - only these values are valid
 set_log_level("DEBUG")  # ✅ OK
@@ -266,32 +293,34 @@ set_log_level("INVALID")  # ❌ Type checker catches this
 ```python
 from typing import TypedDict
 
+
 # ✅ GOOD: Define dictionary structure
 class UserData(TypedDict):
     """User data structure."""
+
     name: str
     email: str
     age: int
     is_active: bool
 
+
 def create_user(data: UserData) -> None:
     """Create user from typed dictionary."""
     print(f"Creating user: {data['name']}")
 
+
 # Usage - clear structure
-user: UserData = {
-    "name": "Alice",
-    "email": "alice@example.com",
-    "age": 30,
-    "is_active": True
-}
+user: UserData = {"name": "Alice", "email": "alice@example.com", "age": 30, "is_active": True}
 create_user(user)
+
 
 # ✅ GOOD: Optional fields
 class ConfigData(TypedDict, total=False):
     """Config with optional fields."""
+
     debug: bool  # Optional
     timeout: int  # Optional
+
 
 config: ConfigData = {"debug": True}  # OK
 ```
@@ -301,6 +330,7 @@ config: ConfigData = {"debug": True}  # OK
 ```python
 from typing import Protocol
 
+
 # ✅ GOOD: Define interface without inheritance
 class Drawable(Protocol):
     """Anything that can be drawn."""
@@ -309,12 +339,14 @@ class Drawable(Protocol):
         """Draw the object."""
         ...
 
+
 class Circle:
     """Circle that implements Drawable."""
 
     def draw(self) -> None:
         """Draw circle."""
         print("Drawing circle")
+
 
 class Square:
     """Square that implements Drawable."""
@@ -323,13 +355,15 @@ class Square:
         """Draw square."""
         print("Drawing square")
 
+
 def render(obj: Drawable) -> None:
     """Render any drawable object."""
     obj.draw()
 
+
 # Works with any object implementing draw()
-render(Circle())   # ✅ OK
-render(Square())   # ✅ OK
+render(Circle())  # ✅ OK
+render(Square())  # ✅ OK
 ```
 
 ## Inheritance and Self Types
@@ -338,6 +372,7 @@ render(Square())   # ✅ OK
 
 ```python
 from typing import Self
+
 
 # ✅ GOOD: Builder pattern with fluent API
 class QueryBuilder:
@@ -357,6 +392,7 @@ class QueryBuilder:
         """Execute query."""
         # ... execute ...
         return []
+
 
 # Fluent usage
 query = QueryBuilder().filter("active=true").limit(10).execute()
@@ -378,8 +414,10 @@ class Node:
         """Add child node."""
         pass
 
+
 # ✅ GOOD: Using __future__ annotations (Python 3.7+)
 from __future__ import annotations
+
 
 class Node:
     """Tree node (with future annotations)."""
@@ -450,6 +488,7 @@ def validate_email(email: str) -> bool:
     """Return validation result."""
     return "@" in email
 
+
 # ✅ GOOD: Result with error
 def parse_config(filepath: str) -> dict | None:
     """Return dict or None if parsing failed."""
@@ -457,6 +496,7 @@ def parse_config(filepath: str) -> dict | None:
         return json.load(open(filepath))
     except Exception:
         return None
+
 
 # ✅ GOOD: Multiple return types (use Union)
 def get_value(key: str) -> str | int | None:
@@ -470,6 +510,7 @@ def get_value(key: str) -> str | int | None:
 from typing import Iterator, Callable
 from contextlib import contextmanager
 
+
 # ✅ GOOD: Context manager
 class Connection:
     """Database connection."""
@@ -481,6 +522,7 @@ class Connection:
     def __exit__(self, *args: object) -> None:
         """Exit context."""
         pass
+
 
 # ✅ GOOD: Generator-based context manager
 @contextmanager
@@ -498,10 +540,8 @@ def get_connection(url: str) -> Iterator[Connection]:
 ### 1. Import Type Hints at Module Top
 
 ```python
-from typing import (
-    List, Dict, Optional, Union, Tuple, Callable,
-    Any, TypeVar, Generic
-)
+from typing import List, Dict, Optional, Union, Tuple, Callable, Any, TypeVar, Generic
+
 
 # Not inside functions
 def good_function(items: List[str]) -> Dict[str, int]:
@@ -515,8 +555,10 @@ def good_function(items: List[str]) -> Dict[str, int]:
 def process(items: list[str]) -> dict[str, int]:
     pass
 
+
 # ⚠️ OK: Still works but older style
 from typing import List, Dict
+
 
 def process(items: List[str]) -> Dict[str, int]:
     pass
@@ -529,9 +571,11 @@ def process(items: List[str]) -> Dict[str, int]:
 def process(items: list[str], mapping: dict[str, int]) -> None:
     pass
 
+
 # ❌ BAD: Too generic
 def process(items: list, mapping: dict) -> None:
     pass
+
 
 # ❌ VERY BAD: Any type loses type safety
 def process(items: list[Any], mapping: dict[Any, Any]) -> None:
@@ -545,6 +589,7 @@ def process(items: list[Any], mapping: dict[Any, Any]) -> None:
 def create_user(name: str, age: int) -> User:
     user = User(name, age)  # Type clear from function
     return user
+
 
 # ❌ UNNECESSARY: Over-annotating
 def create_user(name: str, age: int) -> User:

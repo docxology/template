@@ -27,10 +27,17 @@ infrastructure is faked.
 @pytest.fixture
 def linear_method() -> Method:
     return Method(
-        name="LinearDemo", version="1.0", target=Target.HUMAN,
+        name="LinearDemo",
+        version="1.0",
+        target=Target.HUMAN,
         steps=(
-            Step(step_id=1, name="Add water", kind=StepKind.ADD, target=Target.HUMAN,
-                 parameters=(Parameter("volume", Quantity(10.0, "mL")),)),
+            Step(
+                step_id=1,
+                name="Add water",
+                kind=StepKind.ADD,
+                target=Target.HUMAN,
+                parameters=(Parameter("volume", Quantity(10.0, "mL")),),
+            ),
             Step(step_id=2, name="Mix", kind=StepKind.MIX, target=Target.HUMAN, depends_on=(1,)),
             Step(step_id=3, name="Validate", kind=StepKind.VALIDATE, target=Target.HUMAN, depends_on=(2,)),
         ),

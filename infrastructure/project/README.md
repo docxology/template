@@ -152,9 +152,9 @@ Imported by `core/health.py`, `documentation/active_projects_doc.py`, and
 
 ```python
 from infrastructure.project.public_scope import (
-    PUBLIC_PROJECT_NAMES,      # canonical public exemplar names under projects/templates/
-    public_ci_lint_paths,      # public source, tests, scripts, and notebooks for Ruff
-    public_ci_source_paths,    # import-safe public src/ paths fed to mypy
+    PUBLIC_PROJECT_NAMES,  # canonical public exemplar names under projects/templates/
+    public_ci_lint_paths,  # public source, tests, scripts, and notebooks for Ruff
+    public_ci_source_paths,  # import-safe public src/ paths fed to mypy
 )
 ```
 
@@ -264,6 +264,7 @@ The project module integrates with the analysis pipeline:
 # scripts/pipeline/stage_02_analysis.py uses project discovery
 from infrastructure.project import discover_projects
 
+
 def run_analysis_pipeline():
     projects = discover_projects(repo_root)
 
@@ -280,6 +281,7 @@ Project tests are executed through the test pipeline:
 ```python
 # scripts/pipeline/stage_01_test.py uses project validation
 from infrastructure.project import validate_project_structure
+
 
 def run_project_tests(project_name: str):
     project_dir = repo_root / "projects" / project_name

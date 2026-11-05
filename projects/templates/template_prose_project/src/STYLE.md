@@ -142,9 +142,7 @@ value so users can diagnose without reading source:
 
 ```python
 raise FileNotFoundError(f"manuscript_dir does not exist: {manuscript_dir}")
-raise ValueError(
-    f"target_grade_level_min ({lo}) must be < target_grade_level_max ({hi})"
-)
+raise ValueError(f"target_grade_level_min ({lo}) must be < target_grade_level_max ({hi})")
 ```
 
 Tests assert on substrings of these messages, so message format is part

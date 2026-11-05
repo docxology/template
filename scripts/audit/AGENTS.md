@@ -41,6 +41,7 @@ Each script uses `parents[2]` to reach the repo root from `scripts/audit/`:
 ```python
 sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 from scripts import ensure_repo_root_on_path
+
 ensure_repo_root_on_path()
 ```
 

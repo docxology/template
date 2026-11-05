@@ -16,17 +16,10 @@ from infrastructure.scientific import (
 )
 
 # Check numerical stability
-stability = check_numerical_stability(
-    your_algorithm,
-    [test_input_1, test_input_2]
-)
+stability = check_numerical_stability(your_algorithm, [test_input_1, test_input_2])
 
 # Benchmark performance
-benchmark = benchmark_function(
-    your_algorithm,
-    [test_input_1, test_input_2],
-    iterations=100
-)
+benchmark = benchmark_function(your_algorithm, [test_input_1, test_input_2], iterations=100)
 ```
 
 ## Module Architecture

@@ -17,7 +17,7 @@ result = gradient_descent(
     initial_point=np.array([0.0]),
     objective_func=lambda x: quadratic_function(x),
     gradient_func=lambda x: x - 1,  # Gradient of f(x) = 0.5*x^2 - x
-    step_size=0.1
+    step_size=0.1,
 )
 
 logger.info(f"Optimal solution: {result.solution}")

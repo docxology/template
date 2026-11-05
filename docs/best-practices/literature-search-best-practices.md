@@ -85,8 +85,7 @@ the same paper from two sources is one entry.
 ## Write Citation Keys Carefully
 
 ```python
-generate_citation_key(authors=["Cauchy, Augustin-Louis"], year=1847,
-                     title="Méthode générale")
+generate_citation_key(authors=["Cauchy, Augustin-Louis"], year=1847, title="Méthode générale")
 # → "cauchy1847methode"
 ```
 

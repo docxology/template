@@ -18,8 +18,11 @@ the `--natbib` invocation site).
 
 ```python
 from infrastructure.reference.citation import (
-    parse_bibfile, render_database, write_bibfile,
-    paper_to_bibentry, BibDatabase,
+    parse_bibfile,
+    render_database,
+    write_bibfile,
+    paper_to_bibentry,
+    BibDatabase,
 )
 from infrastructure.search.literature import LiteratureClient, SearchQuery, ArxivBackend
 

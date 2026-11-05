@@ -130,11 +130,7 @@
    ```python
    def analyze_data(values):
        """Analyze data and return statistics."""
-       return {
-           'mean': sum(values) / len(values),
-           'max': max(values),
-           'min': min(values)
-       }
+       return {"mean": sum(values) / len(values), "max": max(values), "min": min(values)}
    ```
 
 2. **Create tests (90% minimum coverage required)**
@@ -146,11 +142,12 @@
    ```python
    from projects.templates.template_code_project.src.data_analysis import analyze_data
 
+
    def test_analyze_data():
        result = analyze_data([1, 2, 3, 4, 5])
-       assert result['mean'] == 3.0
-       assert result['max'] == 5
-       assert result['min'] == 1
+       assert result["mean"] == 3.0
+       assert result["max"] == 5
+       assert result["min"] == 1
    ```
 
 3. **Run tests**
@@ -178,9 +175,8 @@
 
    # Script handles visualization only
    fig, ax = plt.subplots()
-   ax.bar(['Mean', 'Max', 'Min'],
-          [stats['mean'], stats['max'], stats['min']])
-   ax.set_title('Data Analysis')
+   ax.bar(["Mean", "Max", "Min"], [stats["mean"], stats["max"], stats["min"]])
+   ax.set_title("Data Analysis")
 
    # Save to output
    output_path = Path("projects/templates/template_code_project/output/figures/my_analysis.png")
@@ -341,10 +337,12 @@ uv run python -m infrastructure.validation.cli markdown projects/templates/templ
    ```python
    """Statistical analysis functions."""
 
+
    def calculate_variance(values):
        """Calculate sample variance."""
        mean = sum(values) / len(values)
        return sum((x - mean) ** 2 for x in values) / (len(values) - 1)
+
 
    def calculate_std_dev(values):
        """Calculate standard deviation."""
@@ -360,10 +358,12 @@ uv run python -m infrastructure.validation.cli markdown projects/templates/templ
    ```python
    from projects.templates.template_code_project.src.statistics import calculate_variance, calculate_std_dev
 
+
    def test_calculate_variance():
        values = [1, 2, 3, 4, 5]
        var = calculate_variance(values)
        assert abs(var - 2.5) < 1e-10
+
 
    def test_calculate_std_dev():
        values = [1, 2, 3, 4, 5]
@@ -427,10 +427,12 @@ uv run python -m infrastructure.validation.cli markdown projects/templates/templ
        result = my_function([1, 2, 3])
        assert result == expected_value
 
+
    def test_my_function_edge_cases():
        """Test edge cases."""
        assert my_function([]) == default_value
        assert my_function([1]) == single_value
+
 
    def test_my_function_errors():
        """Test error handling."""
@@ -563,6 +565,7 @@ def process(value):
         return value * 2
     else:  # Not covered - need test
         return 0
+
 
 # Add test for uncovered branch
 def test_process_negative():

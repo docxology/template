@@ -66,12 +66,16 @@ the library. This boundary is enforced by the
 
 ```python
 from template_eda_notebook import (
-    load_dataset, clean_dataset, summary_statistics,
-    correlation_matrix, strongest_pairs, histogram_data,
+    load_dataset,
+    clean_dataset,
+    summary_statistics,
+    correlation_matrix,
+    strongest_pairs,
+    histogram_data,
 )
 
-raw = load_dataset()                     # shipped CSV, NaNs preserved
-clean, report = clean_dataset(raw)       # report.dropped tells you how many
+raw = load_dataset()  # shipped CSV, NaNs preserved
+clean, report = clean_dataset(raw)  # report.dropped tells you how many
 for stat in summary_statistics(clean):
     print(stat.column, stat.mean, stat.std)
 
