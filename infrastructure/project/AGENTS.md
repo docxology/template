@@ -337,14 +337,14 @@ A project without `setup_hook.yaml` behaves exactly as before — the hook simpl
 ```python
 @dataclass
 class ProjectInfo:
-    name: str              # Project directory name
-    path: Path             # Absolute path to project
-    has_src: bool          # Has src/ directory
-    has_tests: bool        # Has tests/ directory
-    has_scripts: bool      # Has scripts/ directory
-    has_manuscript: bool   # Has manuscript/ directory
-    metadata: dict         # Extracted metadata
-    program: str           # Parent program directory name ("" for standalone projects)
+    name: str  # Project directory name
+    path: Path  # Absolute path to project
+    has_src: bool  # Has src/ directory
+    has_tests: bool  # Has tests/ directory
+    has_scripts: bool  # Has scripts/ directory
+    has_manuscript: bool  # Has manuscript/ directory
+    metadata: dict  # Extracted metadata
+    program: str  # Parent program directory name ("" for standalone projects)
 
     @property
     def is_valid(self) -> bool:
@@ -533,12 +533,7 @@ authors:
 
 If no configuration files found:
 ```python
-{
-    "name": "{project_directory_name}",
-    "description": "",
-    "version": "0.1.0",
-    "authors": []
-}
+{"name": "{project_directory_name}", "description": "", "version": "0.1.0", "authors": []}
 ```
 
 ## Validation Rules
@@ -667,6 +662,7 @@ Enable debug logging to see project discovery details:
 
 ```python
 import logging
+
 logging.getLogger("infrastructure.project.discovery").setLevel(logging.DEBUG)
 
 projects = discover_projects(repo_root)

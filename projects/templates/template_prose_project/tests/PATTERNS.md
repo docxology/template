@@ -34,7 +34,7 @@ def test_check_against_real_manuscript(tmp_path: Path):
         encoding="utf-8",
     )
     (manuscript_dir / "references.bib").write_text(
-        '@article{smith2020, title={A}, author={Smith, J.}, year={2020}}\n',
+        "@article{smith2020, title={A}, author={Smith, J.}, year={2020}}\n",
         encoding="utf-8",
     )
 
@@ -65,7 +65,7 @@ def _write_bib(path: Path, entries: dict[str, dict[str, str]]) -> Path:
     """Write a minimal BibTeX file. Keys → fields → values."""
     parts = []
     for key, fields in entries.items():
-        field_str = ", ".join(f'{k}={{{v}}}' for k, v in fields.items())
+        field_str = ", ".join(f"{k}={{{v}}}" for k, v in fields.items())
         parts.append(f"@article{{{key}, {field_str}}}\n")
     path.write_text("".join(parts), encoding="utf-8")
     return path
@@ -87,8 +87,10 @@ def test_run_prose_pipeline_offline(tmp_path: Path):
         [
             sys.executable,
             str(PROJECT_ROOT / "scripts" / "run_prose_pipeline.py"),
-            "--config", str(iso / "manuscript" / "config.yaml"),
-            "--project-root", str(iso),
+            "--config",
+            str(iso / "manuscript" / "config.yaml"),
+            "--project-root",
+            str(iso),
         ],
         cwd=REPO_ROOT,
         capture_output=True,

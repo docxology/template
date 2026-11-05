@@ -133,10 +133,12 @@ def process_data(items: list[str], count: int = 10) -> dict[str, int]:
 ```python
 import pytest
 
+
 def test_feature_with_real_data():
     """Test feature using test data (no mocks)."""
     result = function({"name": "Alice", "age": 30})
     assert result["valid"] is True
+
 
 def test_feature_error_condition():
     """Test that errors are raised correctly."""

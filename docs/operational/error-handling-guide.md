@@ -13,13 +13,7 @@ from infrastructure.core.logging.utils import get_logger
 logger = get_logger(__name__)
 
 # Raise with context
-raise_with_context(
-    ValidationError,
-    "Data validation failed",
-    file="data.csv",
-    line=42,
-    column="temperature"
-)
+raise_with_context(ValidationError, "Data validation failed", file="data.csv", line=42, column="temperature")
 
 # Catch specific errors
 try:
@@ -109,12 +103,7 @@ if not is_valid(data):
 from infrastructure.core.exceptions import raise_with_context, FileNotFoundError
 
 if not path.exists():
-    raise_with_context(
-        FileNotFoundError,
-        "Required file not found",
-        file=str(path),
-        searched_in=str(Path.cwd())
-    )
+    raise_with_context(FileNotFoundError, "Required file not found", file=str(path), searched_in=str(Path.cwd()))
 ```
 
 ### Chain Exceptions
@@ -159,16 +148,10 @@ except TemplateError as e:
 from infrastructure.core.exceptions import ConfigurationError, MissingConfigurationError
 
 # Missing configuration
-raise MissingConfigurationError(
-    "Required key not found",
-    context={"key": "author", "file": "config.yaml"}
-)
+raise MissingConfigurationError("Required key not found", context={"key": "author", "file": "config.yaml"})
 
 # Invalid configuration
-raise InvalidConfigurationError(
-    "Invalid email format",
-    context={"field": "email", "value": "invalid"}
-)
+raise InvalidConfigurationError("Invalid email format", context={"field": "email", "value": "invalid"})
 ```
 
 ### Validation Errors
@@ -177,16 +160,10 @@ raise InvalidConfigurationError(
 from infrastructure.core.exceptions import ValidationError, MarkdownValidationError
 
 # Markdown validation
-raise MarkdownValidationError(
-    "Image file not found",
-    context={"image": "figure.png", "file": "intro.md", "line": 42}
-)
+raise MarkdownValidationError("Image file not found", context={"image": "figure.png", "file": "intro.md", "line": 42})
 
 # Data validation
-raise DataValidationError(
-    "NaN values detected",
-    context={"column": "temperature", "count": 5}
-)
+raise DataValidationError("NaN values detected", context={"column": "temperature", "count": 5})
 ```
 
 ### Build Errors
@@ -195,16 +172,10 @@ raise DataValidationError(
 from infrastructure.core.exceptions import BuildError, CompilationError
 
 # Compilation failure
-raise CompilationError(
-    "LaTeX compilation failed",
-    context={"file": "manuscript.tex", "exit_code": 1}
-)
+raise CompilationError("LaTeX compilation failed", context={"file": "manuscript.tex", "exit_code": 1})
 
 # Script failure
-raise ScriptExecutionError(
-    "Analysis script failed",
-    context={"script": "analysis.py", "exit_code": 1}
-)
+raise ScriptExecutionError("Analysis script failed", context={"script": "analysis.py", "exit_code": 1})
 ```
 
 ## Integration with Logging
@@ -246,20 +217,10 @@ except ValidationError as e:
 ```python
 def validate_file(path: Path) -> None:
     if not path.exists():
-        raise_with_context(
-            FileNotFoundError,
-            "File not found",
-            file=str(path),
-            expected_location=str(path.parent)
-        )
+        raise_with_context(FileNotFoundError, "File not found", file=str(path), expected_location=str(path.parent))
 
-    if not path.suffix == '.csv':
-        raise_with_context(
-            InvalidFileFormatError,
-            "Expected CSV file",
-            file=str(path),
-            detected_type=path.suffix
-        )
+    if not path.suffix == ".csv":
+        raise_with_context(InvalidFileFormatError, "Expected CSV file", file=str(path), detected_type=path.suffix)
 ```
 
 ### Pipeline Error Handling

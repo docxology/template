@@ -38,6 +38,7 @@ flowchart LR
 from infrastructure.llm.templates.base import ResearchTemplate
 from infrastructure.core.exceptions import LLMTemplateError
 
+
 class ResearchTemplate:
     template_str: str = ""
 
@@ -54,8 +55,10 @@ class ResearchTemplate:
 ```python
 from infrastructure.llm.templates.base import ResearchTemplate
 
+
 class MyTemplate(ResearchTemplate):
     template_str = "Summarise: ${text}"
+
 
 prompt = MyTemplate().render(text="paper content here")
 ```
@@ -148,12 +151,12 @@ from infrastructure.llm.templates import REVIEW_MIN_WORDS
 
 ```python
 from infrastructure.llm.templates import (
-    ManuscriptExecutiveSummary,      # manuscript_reviews.py
-    ManuscriptQualityReview,         # manuscript_reviews.py
-    ManuscriptMethodologyReview,     # manuscript_suggestions.py
-    ManuscriptImprovementSuggestions,# manuscript_suggestions.py
-    ManuscriptTranslationAbstract,   # manuscript_translation.py
-    TRANSLATION_LANGUAGES,           # manuscript_translation.py
+    ManuscriptExecutiveSummary,  # manuscript_reviews.py
+    ManuscriptQualityReview,  # manuscript_reviews.py
+    ManuscriptMethodologyReview,  # manuscript_suggestions.py
+    ManuscriptImprovementSuggestions,  # manuscript_suggestions.py
+    ManuscriptTranslationAbstract,  # manuscript_translation.py
+    TRANSLATION_LANGUAGES,  # manuscript_translation.py
 )
 
 # Standard manuscript review
@@ -173,10 +176,10 @@ Simple single-variable templates defined directly in `research.py`:
 
 ```python
 from infrastructure.llm.templates import (
-    SummarizeAbstract,     # template_str uses ${text}
-    LiteratureReview,      # template_str uses ${summaries}
-    CodeDocumentation,     # template_str uses ${code}
-    DataInterpretation,    # template_str uses ${stats}
+    SummarizeAbstract,  # template_str uses ${text}
+    LiteratureReview,  # template_str uses ${summaries}
+    CodeDocumentation,  # template_str uses ${code}
+    DataInterpretation,  # template_str uses ${stats}
 )
 
 prompt = SummarizeAbstract().render(text=abstract_text)
@@ -198,10 +201,10 @@ prompt = PaperSummarization().render(
     year="2024",
     source="arXiv",
     text=paper_text,
-    domain="computer_science",     # optional — e.g. "physics", "biology"
-    domain_instructions=None,      # optional; use None for built-in domain hints
-    reference_count=42,            # optional — detected citation count
-    references_section_found=True, # optional
+    domain="computer_science",  # optional — e.g. "physics", "biology"
+    domain_instructions=None,  # optional; use None for built-in domain hints
+    reference_count=42,  # optional — detected citation count
+    references_section_found=True,  # optional
 )
 ```
 
@@ -284,18 +287,20 @@ from infrastructure.llm.templates import SummarizeAbstract, get_template
 from infrastructure.core.exceptions import LLMTemplateError
 import pytest
 
+
 def test_summarize_abstract_renders():
     prompt = SummarizeAbstract().render(text="Sample abstract text.")
     assert "Sample abstract text." in prompt
+
 
 def test_get_template_unknown_raises():
     with pytest.raises(LLMTemplateError):
         get_template("nonexistent_template")
 
+
 def test_paper_summarization_render():
     prompt = PaperSummarization().render(
-        title="Test Paper", authors="Author A", year="2024",
-        source="arXiv", text="Paper body text."
+        title="Test Paper", authors="Author A", year="2024", source="arXiv", text="Paper body text."
     )
     assert "Test Paper" in prompt
     assert "Paper body text." in prompt

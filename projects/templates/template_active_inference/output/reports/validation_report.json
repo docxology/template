@@ -227,7 +227,7 @@
         "valid": true,
         "warnings": []
       },
-      "total_size_mb": 17.508769035339355
+      "total_size_mb": 17.50895404815674
     },
     "figures": {
       "files": 27,
@@ -262,7 +262,7 @@
         },
         "reports": {
           "files": 33,
-          "size_bytes": 448852
+          "size_bytes": 449046
         },
         "web": {
           "files": 20,
@@ -271,7 +271,7 @@
       },
       "mode": "stable-shippable-output-v1",
       "total_files": 178,
-      "total_size_bytes": 18359275
+      "total_size_bytes": 18359469
     }
   },
   "recommendations": [],
@@ -282,11 +282,11 @@
     "passed": 9,
     "total_checks": 9
   },
-  "timestamp": "2026-11-04T15:19:41Z",
+  "timestamp": "2026-11-04T23:39:23Z",
   "validated_inputs": {
     "artifact_manifest": {
       "path": "output/reports/artifact_manifest.json",
-      "sha256": "8fc9295273b6478cc58d45186ad76d772db569acc69bb59c319ce540cde7eb7d",
+      "sha256": "aeeaee44e7ef87ed697eab63650c48b9264ea6195416cbd5a3c996915af36212",
       "size_bytes": 58791
     },
     "combined_manuscript": {
@@ -412,19 +412,19 @@
     "fingerprints": {
       "config": {
         "file_count": 27,
-        "sha256": "20ce555e95b794dc9c3ec15cdf4e449b1358f537b6fb74c985ebe688186557a3"
+        "sha256": "1acc3bc2fe604ea0caedeab2afbd8382058c49f007a8e322aab4fe7f454975fe"
       },
       "output": {
         "file_count": 178,
-        "sha256": "02fdb76104c0df076dd137862f36019276f299ee3df6eacdc433d45364737dea"
+        "sha256": "bd06b02f67739a1fa91bc771bbaeecd7304eff77c9f2aa6ee2cfdadf76ecc698"
       },
       "source": {
         "file_count": 283,
         "sha256": "5238fc792ac2563532713448c8e6262c8f3fb84d9249a0ddad88f96fa1d625ac"
       },
       "stage": {
-        "file_count": 1724,
-        "sha256": "a134849d6b09bc65e8bbe94175469c29d41b71d50366ba837d3dbb7d0a0f6c96"
+        "file_count": 1726,
+        "sha256": "78f433b909dc8f296b91f6f671b9f57dc0d460756267e1b2488b09d1bb4d6428"
       }
     },
     "project": "templates/template_active_inference",

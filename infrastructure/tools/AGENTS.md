@@ -63,18 +63,18 @@ tool_path = resolve_tool_root(Path("."), "templates/template_code_executor")
 ```python
 @dataclass
 class ToolInfo:
-    name: str              # Directory name
-    path: Path             # Absolute path
-    tool_type: str         # "type" field from tools.yaml, or "generic"
-    has_scripts: bool      # Has scripts/ directory
-    has_tests: bool        # Has tests/ directory
-    metadata: dict         # Raw tools.yaml content
-    program: str           # Parent program dir ("" for standalone)
+    name: str  # Directory name
+    path: Path  # Absolute path
+    tool_type: str  # "type" field from tools.yaml, or "generic"
+    has_scripts: bool  # Has scripts/ directory
+    has_tests: bool  # Has tests/ directory
+    metadata: dict  # Raw tools.yaml content
+    program: str  # Parent program dir ("" for standalone)
 
     @property
     def qualified_name(self) -> str: ...  # "name" or "program/name"
     @property
-    def is_valid(self) -> bool: ...        # True iff has_scripts
+    def is_valid(self) -> bool: ...  # True iff has_scripts
 ```
 
 ### `validation.py` (re-exported from `infrastructure.tools`)
@@ -118,8 +118,12 @@ is_valid, message = validate_tool_structure(Path("tools/templates/template_code_
 ```python
 @dataclass
 class LinkSyncResult:
-    created: list[str]; updated: list[str]; removed: list[str]; skipped: list[str]
+    created: list[str]
+    updated: list[str]
+    removed: list[str]
+    skipped: list[str]
     private_root: Path | None
+
     @property
     def changed(self) -> bool: ...
     def summary(self) -> str: ...

@@ -13,9 +13,12 @@ Pipeline reporting, error aggregation, and executive dashboard generation.
 from pathlib import Path
 
 from infrastructure.reporting import (
-    generate_pipeline_report, save_pipeline_report,
-    save_validation_report, save_test_results,
-    save_performance_report, save_error_summary,
+    generate_pipeline_report,
+    save_pipeline_report,
+    save_validation_report,
+    save_test_results,
+    save_performance_report,
+    save_error_summary,
 )
 from infrastructure.reporting.report_generator import generate_test_report
 
@@ -47,8 +50,10 @@ saved_files = save_validation_report(validation_data, output_dir)
 
 ```python
 from infrastructure.reporting import (
-    ErrorAggregator, ErrorEntry,
-    get_error_aggregator, reset_error_aggregator,
+    ErrorAggregator,
+    ErrorEntry,
+    get_error_aggregator,
+    reset_error_aggregator,
 )
 
 # Singleton aggregator
@@ -69,8 +74,11 @@ reset_error_aggregator()
 
 ```python
 from infrastructure.reporting import (
-    generate_executive_summary, save_executive_summary,
-    collect_project_metrics, ProjectMetrics, ExecutiveSummary,
+    generate_executive_summary,
+    save_executive_summary,
+    collect_project_metrics,
+    ProjectMetrics,
+    ExecutiveSummary,
 )
 
 # Generate cross-project executive summary
@@ -138,6 +146,7 @@ files = generate_multi_project_report(
 
 ```python
 from infrastructure.reporting.markdown_formatter import run_test_summary_generation
+
 run_test_summary_generation()
 ```
 
@@ -145,6 +154,7 @@ run_test_summary_generation()
 
 ```python
 from infrastructure.reporting.manuscript_overview import generate_manuscript_overview
+
 overview = generate_manuscript_overview(pdf_path, output_dir, project_name)
 ```
 
@@ -152,5 +162,6 @@ overview = generate_manuscript_overview(pdf_path, output_dir, project_name)
 
 ```python
 from infrastructure.reporting.coverage_parser import extract_coverage_percentage
+
 passed, pct = extract_coverage_percentage(stdout_text, coverage_json_paths)
 ```

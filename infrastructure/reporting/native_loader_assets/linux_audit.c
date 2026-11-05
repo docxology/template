@@ -66,6 +66,28 @@ static long call6(long n, long a, long b, long c, long d, long e, long f) {
     return x0;
 #endif
 }
+/* `fail` never returns: the only syscall it reaches is `exit_group`, which
+ * terminates every thread and cannot fall through. That fact must be in the
+ * *declaration*, because callers rely on it: `get` ends with `fail();` and has
+ * no trailing `return`, and the compiler refuses to prove the path unreachable
+ * from a plain `void` prototype. The build uses `-Wall -Wextra -Werror`
+ * (`native_loader_build.py`), so `-Werror=return-type` failed the audit-loader
+ * build outright. Hosted run 41940842593, cells `template_madlib` (job
+ * 126961680585) and `template_pools_rules_tools` (job 126961680276), both at
+ * `source-loader-audit.c:131`.
+ *
+ * The attribute is truthful, not a warning silencer. Marking a function
+ * `noreturn` when it can return is undefined behaviour at every call site, so
+ * this is only correct because `__NR_exit_group` is terminal by definition.
+ *
+ * C11 `_Noreturn` is used when the compiler provides it, with the GCC/Clang
+ * spelling as the fallback; the build invokes `cc` and every supported
+ * toolchain accepts one of the two. */
+#if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 201112L
+_Noreturn
+#else
+__attribute__((noreturn))
+#endif
 static void fail(void) {
     call6(__NR_exit_group, 125, 0, 0, 0, 0, 0);
     __builtin_unreachable();

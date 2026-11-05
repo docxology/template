@@ -25,7 +25,7 @@ config = SiteDeployConfig(
     hosting=SiteHosting.GITHUB_PAGES,
     site_dir=Path("output/my_project/site"),
     project_name="my_project",
-    dry_run=True,          # default — no network calls
+    dry_run=True,  # default — no network calls
 )
 
 adapter = get_adapter(SiteHosting.GITHUB_PAGES)
@@ -40,7 +40,7 @@ config = SiteDeployConfig(
     hosting=SiteHosting.CLOUDFLARE_PAGES,
     site_dir=Path("output/my_project/site"),
     project_name="my_project",
-    dry_run=False,         # requires CLOUDFLARE_API_TOKEN
+    dry_run=False,  # requires CLOUDFLARE_API_TOKEN
 )
 adapter = get_adapter(SiteHosting.CLOUDFLARE_PAGES)
 result = adapter.deploy(config)
@@ -54,7 +54,7 @@ config = SiteDeployConfig(
     site_dir=Path("output/my_project/site"),
     project_name="my_project",
     dry_run=False,
-    production=True,       # promote to production URL
+    production=True,  # promote to production URL
 )
 adapter = get_adapter(SiteHosting.NETLIFY)
 result = adapter.deploy(config)

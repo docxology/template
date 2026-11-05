@@ -14,7 +14,8 @@ API on 2026-06-02** with a real key — not just read from the client code.
 
 ```python
 from infrastructure.search.exa import ExaClient
-client = ExaClient.from_env()   # reads EXA_API_KEY from the environment
+
+client = ExaClient.from_env()  # reads EXA_API_KEY from the environment
 ```
 
 `from_env()` reads `os.environ` only — it does **not** auto-load `.env`. Either
@@ -75,7 +76,7 @@ consumed uniformly. Fields:
 r = client.search("active inference free energy principle tutorial", num_results=3)
 for x in r.results:
     print(x.title, x.url, x.author, x.highlights[:1])
-print(r.cost_dollars)   # e.g. 0.007
+print(r.cost_dollars)  # e.g. 0.007
 ```
 
 Defaults to `highlights=True` (the token-efficient mode). **What you learn:**
@@ -99,16 +100,27 @@ citations**. This is the path for "pull entities + where each fact came from."
 
 ```python
 schema = {
-  "type": "object", "required": ["researchers"],
-  "properties": {"researchers": {"type": "array", "items": {
-    "type": "object", "required": ["name"],
-    "properties": {"name": {"type": "string"}, "affiliation": {"type": "string"}}}}},
+    "type": "object",
+    "required": ["researchers"],
+    "properties": {
+        "researchers": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "required": ["name"],
+                "properties": {"name": {"type": "string"}, "affiliation": {"type": "string"}},
+            },
+        }
+    },
 }
-r = client.search("key researchers in active inference", type="deep",
-                  output_schema=schema,
-                  system_prompt="Prefer primary sources; dedupe people.")
-print(r.output.content)      # → {"researchers": [{"name": "Karl J. Friston", "affiliation": "…UCL…"}, …]}
-for g in r.output.grounding: # field-level provenance
+r = client.search(
+    "key researchers in active inference",
+    type="deep",
+    output_schema=schema,
+    system_prompt="Prefer primary sources; dedupe people.",
+)
+print(r.output.content)  # → {"researchers": [{"name": "Karl J. Friston", "affiliation": "…UCL…"}, …]}
+for g in r.output.grounding:  # field-level provenance
     print(g.field, g.confidence, [c["url"] for c in g.citations])
 ```
 
@@ -139,7 +151,7 @@ confidence — i.e. extraction *and* its evidence in one call.
 ```python
 r = client.contents(["https://en.wikipedia.org/wiki/Free_energy_principle"], text=True)
 x = r.results[0]
-print(x.title, len(x.text))   # "Free energy principle - Wikipedia", 44039
+print(x.title, len(x.text))  # "Free energy principle - Wikipedia", 44039
 ```
 
 **Live result:** 44 039 chars of parsed text, cost $0.001 (cheapest endpoint).
@@ -160,8 +172,9 @@ and don't need to inspect raw results.
 
 ```python
 r = client.answer("What is the free energy principle in one sentence?")
-print(r.answer)                                  # synthesised, with [1][2][3] markers
-for c in r.citations: print(c.title, "::", c.url)
+print(r.answer)  # synthesised, with [1][2][3] markers
+for c in r.citations:
+    print(c.title, "::", c.url)
 ```
 
 **Live result:** a one-sentence grounded answer plus 4 citations including the
@@ -179,9 +192,9 @@ list as `ExaResult` citations.
 a URL instead of free text.
 
 ```python
-r = client.find_similar("https://arxiv.org/abs/1706.03762",
-                        num_results=3, exclude_source_domain=True)
-for x in r.results: print(x.score, x.title, x.url)
+r = client.find_similar("https://arxiv.org/abs/1706.03762", num_results=3, exclude_source_domain=True)
+for x in r.results:
+    print(x.score, x.title, x.url)
 ```
 
 **Live result (2026-06-02, post-fix):** for the "Attention Is All You Need"

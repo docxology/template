@@ -109,13 +109,14 @@ flowchart TB
     WF --> WF_REL[release.yml<br/>Exact-tag release handoff]
     WF --> WF_REQUIRED[platform-required-acceptance.yml<br/>Original observations + strict candidate collector]
     WF --> WF_DA[dependabot-automerge.yml<br/>Auto-merge safe Dependabot PRs]
+    WF --> WF_RB[rebind.yml<br/>Post-merge rendered-receipt rebind on main]
 
     classDef d fill:#0f172a,stroke:#0f172a,color:#fff
     classDef pkg fill:#1e3a8a,stroke:#0f172a,color:#fff
     classDef f fill:#0f766e,stroke:#0f172a,color:#fff
     class GH d
     class ITPL,WF pkg
-    class META,DEP,PRT,ITPL_F,WF_DOCS,WF_FAST,WF_CI,WF_STALE,WF_REL,WF_REQUIRED f
+    class META,DEP,PRT,ITPL_F,WF_DOCS,WF_FAST,WF_CI,WF_STALE,WF_REL,WF_REQUIRED,WF_RB f
 ```
 
 ## Continuous Integration (CI/CD)
@@ -214,6 +215,36 @@ repository, so `gh pr merge --auto` failed with
 left for human review. Neither job checks out or executes PR HEAD code — they read
 update metadata and call the GitHub API — so the elevated trigger exposes no
 secrets to untrusted code.
+
+### Rebind Workflow (`workflows/rebind.yml`)
+
+Dispatch-only for now (`workflow_dispatch`, `dry_run` default `true`), acting on
+the receipt-affecting surface that can move a fingerprint: root
+`.gitignore`/`.python-version`/`pyproject.toml`/`uv.lock`, anything tracked under
+`infrastructure/` or `scripts/`, or any tracked exemplar path outside `output/`
+and the snapshot-excluded documentation names. For a pushed range a non-matching
+push skips and states why in the run summary, so no `paths:` filter can hide a
+run; a manual dispatch always acts. It initializes the `kmyth` submodule before
+measuring, refuses to rebind anything but the tip of `origin/main`, pins
+`SOURCE_DATE_EPOCH` to the committer timestamp of the commit being rebound,
+restamps receipts with
+`refresh_rendered_provenance.py --all-public --rebind --jobs 4`, commits them, and
+then proves `check_publication_outputs.py --all-public --strict --jobs 4`
+(`blocking=0, review_required=0`) plus
+`publication-audit --all-public --strict --rendered` on that committed tree
+before anything is pushed; a failed gate fails the job and pushes nothing. It also
+prints the measured `stage` and `config` digests for one exemplar beside the ones
+its receipt records, so a checkout shape that differs from a developer's is
+visible in the run rather than in a later rejection. The
+commit is confined to `projects/templates/*/output/reports/*.json`, which cannot
+trigger the job again, and the push refuses a failed verification or a `main`
+that advanced. The job needs `contents: write`. It is dispatch-only because
+required status checks must pass before any change reaches a protected branch and
+a runner-created commit has no status yet: the automatic `push` trigger lands
+once the owner provisions a credential that may bypass the check, and an
+exact-SHA `CI Gate` for a rebind commit is obtained by dispatching `ci.yml` for
+it, since a push made with the repository's own `GITHUB_TOKEN` starts no new
+workflow run.
 
 ## Dependabot (`dependabot.yml`)
 

@@ -120,10 +120,7 @@ def test_aggregate_errors():
 ```python
 # test_pipeline_report.py pattern
 def test_generate_report():
-    report = generate_pipeline_report(
-        stage_results=[{"name": "test", "exit_code": 0}],
-        total_duration=10.0
-    )
+    report = generate_pipeline_report(stage_results=[{"name": "test", "exit_code": 0}], total_duration=10.0)
     assert report["summary"]["total_stages"] == 1
 ```
 

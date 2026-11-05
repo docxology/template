@@ -72,10 +72,12 @@ with log_with_spinner("Loading model...", logger):
 ```python
 from infrastructure.core.logging.utils import log_function_call
 
+
 @log_function_call(logger)
 def process_file(filename: str) -> bool:
     """Process a file."""
     return True
+
 
 # Automatically logs:
 # - Function call with arguments
@@ -96,7 +98,7 @@ log_header("STAGE 01: Setup", logger)
 
 # Progress tracking
 for i in range(total):
-    log_progress(i+1, total, "Processing files", logger)
+    log_progress(i + 1, total, "Processing files", logger)
 
 # Success messages
 log_success("All files processed", logger)
@@ -176,6 +178,7 @@ export NO_EMOJI=1
 ```python
 #!/usr/bin/env python3
 """Script description."""
+
 from pathlib import Path
 import sys
 
@@ -189,6 +192,7 @@ from infrastructure.core.logging.utils import get_logger, log_header, log_succes
 
 logger = get_logger(__name__)
 
+
 def main() -> int:
     log_header("SCRIPT NAME", logger)
 
@@ -199,6 +203,7 @@ def main() -> int:
     except Exception as e:
         logger.error(f"Failed: {e}", exc_info=True)
         return 1
+
 
 if __name__ == "__main__":
     exit(main())
@@ -235,13 +240,14 @@ def process_file(file_path: Path) -> dict:
 ```python
 # Setup
 from infrastructure.core.logging.utils import get_logger, log_operation, log_success
+
 logger = get_logger(__name__)
 
 # Levels
-logger.debug("Diagnostic")    # LOG_LEVEL=0
-logger.info("Progress")       # LOG_LEVEL=1 (default)
-logger.warning("Issue")       # LOG_LEVEL=2
-logger.error("Failure")       # LOG_LEVEL=3
+logger.debug("Diagnostic")  # LOG_LEVEL=0
+logger.info("Progress")  # LOG_LEVEL=1 (default)
+logger.warning("Issue")  # LOG_LEVEL=2
+logger.error("Failure")  # LOG_LEVEL=3
 
 # Context managers
 with log_operation("Task", logger):

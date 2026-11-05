@@ -686,7 +686,15 @@ def test_transitive_platform_and_worker_environment_are_required() -> None:
         metadata = BytesParser().parsebytes(metadata_bytes)
         assert metadata.get_all("Name") == ["research-project-template"]
         assert metadata.get_all("Version") == [PLATFORM_VERSION]
-        assert metadata.get_all("Requires-Python") == [">=3.12"]
+        # Compare against the floor the root package actually declares, not a
+        # literal. A pinned runtime here silently stale-dates the moment the
+        # platform floor moves, and this assertion then fails the acceptance
+        # gate for a reason unrelated to the cell's content. The root release
+        # artifact check reads the same field the same way.
+        declared_python = tomllib.loads((PROJECT.parents[2] / "pyproject.toml").read_text(encoding="utf-8"))["project"][
+            "requires-python"
+        ]
+        assert metadata.get_all("Requires-Python") == [declared_python]
         requirements = metadata.get_all("Requires-Dist")
         assert requirements
         for declared in requirements:

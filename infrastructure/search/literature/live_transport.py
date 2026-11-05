@@ -26,6 +26,31 @@ from infrastructure.search.literature.live_contract import (
 
 SOURCE_PATH = "infrastructure/search/literature/live_transport.py"
 
+#: Statuses the keyless literature providers use to mean "slow down". They are
+#: retried with bounded backoff inside the worker's own deadline, matching the
+#: ``ArxivBackend._RETRY_STATUSES`` pattern this repository already ships. The
+#: widening of a provider's anonymous budget is external and cannot be
+#: requested, so a 429 is only ever retried within the declared request budget.
+_RETRY_STATUSES = frozenset({429, 503})
+_MAX_RETRY_ATTEMPTS = 3
+_RETRY_BASE_DELAY_SECONDS = 2.0
+#: The polite-pool request budget may be exhausted for well over a minute, so a
+#: single short backoff is not enough; the ceiling keeps one worker finite.
+_RETRY_MAX_DELAY_SECONDS = 20.0
+
+
+def _retry_delay(attempt: int, retry_after: str | None) -> float:
+    """Return a bounded wait, honouring a numeric ``Retry-After`` when offered."""
+    if retry_after is not None:
+        try:
+            offered = float(retry_after.strip())
+        except (AttributeError, ValueError):
+            offered = -1.0
+        if 0.0 <= offered <= _RETRY_MAX_DELAY_SECONDS:
+            return offered
+    backoff: float = _RETRY_BASE_DELAY_SECONDS * (2**attempt)
+    return min(backoff, _RETRY_MAX_DELAY_SECONDS)
+
 
 def validate_public_url(url: str, *, allow_loopback: bool = False) -> str:
     """Reject credentials, private addresses, and non-HTTP transports before any request."""
@@ -69,66 +94,78 @@ def _http_worker(invocation: dict[str, Any], directory: Path) -> int:
     deadline = time.monotonic() + invocation["timeout_seconds"]
     handler = _ValidatedRedirect(invocation["allow_loopback"])
     opener = urllib.request.build_opener(urllib.request.ProxyHandler({}), handler)
-    request = urllib.request.Request(
-        url, headers={"User-Agent": "template-literature-acceptance/4.0 (unpaid bounded research)"}
-    )
-    metadata: dict[str, Any] = {"requested_url": url, "status": "incomplete"}
+    headers = {
+        "User-Agent": invocation.get("user_agent") or "template-literature-acceptance/4.0 (unpaid bounded research)"
+    }
+    metadata: dict[str, Any] = {"requested_url": url, "status": "incomplete", "attempts": []}
     write_json(directory / "http.json", metadata)
-    try:
-        with opener.open(request, timeout=invocation["timeout_seconds"]) as response:
-            chunks: list[bytes] = []
-            size = 0
-            while True:
-                if time.monotonic() >= deadline:
-                    raise TimeoutError("HTTP response read deadline exceeded")
-                chunk = response.read1(65536)
-                if not chunk:
-                    break
-                size += len(chunk)
-                if size > invocation["max_bytes"]:
-                    raise LiteratureFailed("literature response exceeds byte ceiling")
-                chunks.append(chunk)
-            raw = b"".join(chunks)
-            if not raw:
-                raise LiteratureFailed("literature provider returned an empty response")
-            (directory / "body.bin").write_bytes(raw)
-            metadata.update(
-                status="passed",
-                status_code=response.status,
-                final_url=response.geturl(),
-                redirects=handler.redirects,
-                size_bytes=len(raw),
-                sha256=sha256(raw),
-                content_type=response.headers.get("Content-Type", ""),
-            )
-            media_type = metadata["content_type"].partition(";")[0].strip().lower()
-            lowered = raw.lower()
-            radware_captcha = b"<title>radware bot manager captcha</title>" in lowered and b"h-captcha" in lowered
-            client_challenge = all(
-                marker in lowered
-                for marker in (
-                    b"<title>client challenge</title>",
-                    b"/_fs-ch-1t1wmsgaoggasxcx/script.js?reload=true",
-                    b"<noscript>",
-                    b"javascript is disabled in your browser.",
-                    b"please enable javascript to proceed.",
-                )
-            )
-            if media_type in {"text/html", "application/xhtml+xml"} and (radware_captcha or client_challenge):
-                challenge = "a Radware browser CAPTCHA" if radware_captcha else "a JavaScript client challenge"
+    for attempt in range(_MAX_RETRY_ATTEMPTS):
+        request = urllib.request.Request(url, headers=headers)
+        try:
+            with opener.open(request, timeout=invocation["timeout_seconds"]) as response:
+                chunks: list[bytes] = []
+                size = 0
+                while True:
+                    if time.monotonic() >= deadline:
+                        raise TimeoutError("HTTP response read deadline exceeded")
+                    chunk = response.read1(65536)
+                    if not chunk:
+                        break
+                    size += len(chunk)
+                    if size > invocation["max_bytes"]:
+                        raise LiteratureFailed("literature response exceeds byte ceiling")
+                    chunks.append(chunk)
+                raw = b"".join(chunks)
+                if not raw:
+                    raise LiteratureFailed("literature provider returned an empty response")
+                (directory / "body.bin").write_bytes(raw)
                 metadata.update(
-                    status="blocked",
-                    diagnostic="publisher requires " + challenge,
-                    response_headers=list(response.headers.items()),
+                    status="passed",
+                    status_code=response.status,
+                    final_url=response.geturl(),
+                    redirects=handler.redirects,
+                    size_bytes=len(raw),
+                    sha256=sha256(raw),
+                    content_type=response.headers.get("Content-Type", ""),
                 )
+                media_type = metadata["content_type"].partition(";")[0].strip().lower()
+                lowered = raw.lower()
+                radware_captcha = b"<title>radware bot manager captcha</title>" in lowered and b"h-captcha" in lowered
+                client_challenge = all(
+                    marker in lowered
+                    for marker in (
+                        b"<title>client challenge</title>",
+                        b"/_fs-ch-1t1wmsgaoggasxcx/script.js?reload=true",
+                        b"<noscript>",
+                        b"javascript is disabled in your browser.",
+                        b"please enable javascript to proceed.",
+                    )
+                )
+                if media_type in {"text/html", "application/xhtml+xml"} and (radware_captcha or client_challenge):
+                    challenge = "a Radware browser CAPTCHA" if radware_captcha else "a JavaScript client challenge"
+                    metadata.update(
+                        status="blocked",
+                        diagnostic="publisher requires " + challenge,
+                        response_headers=list(response.headers.items()),
+                    )
+                    write_json(directory / "http.json", metadata)
+                    raise LiteratureBlocked("unpaid HTTP provider requires " + challenge)
                 write_json(directory / "http.json", metadata)
-                raise LiteratureBlocked("unpaid HTTP provider requires " + challenge)
+                return 0
+        except urllib.error.HTTPError as exc:
+            retry_after = exc.headers.get("Retry-After") if exc.headers is not None else None
+            metadata["attempts"].append({"attempt": attempt + 1, "status_code": exc.code})
+            metadata.update(status="blocked", status_code=exc.code, redirects=handler.redirects)
             write_json(directory / "http.json", metadata)
-    except urllib.error.HTTPError as exc:
-        metadata.update(status="blocked", status_code=exc.code, redirects=handler.redirects)
-        write_json(directory / "http.json", metadata)
-        raise LiteratureBlocked(f"unpaid HTTP provider returned status {exc.code}") from exc
-    return 0
+            if exc.code not in _RETRY_STATUSES or attempt + 1 >= _MAX_RETRY_ATTEMPTS:
+                raise LiteratureBlocked(f"unpaid HTTP provider returned status {exc.code}") from exc
+            delay = _retry_delay(attempt, retry_after)
+            if time.monotonic() + delay >= deadline:
+                raise LiteratureBlocked(
+                    f"unpaid HTTP provider returned status {exc.code}; retry budget exhausted"
+                ) from exc
+            time.sleep(delay)
+    raise LiteratureBlocked("unpaid HTTP provider retry budget exhausted")
 
 
 def _model_worker(invocation: dict[str, Any], directory: Path) -> int:
@@ -248,20 +285,36 @@ def _supervise(session: LiveSession, directory: Path, invocation: dict[str, Any]
 
 
 def fetch_bytes(
-    session: LiveSession, url: str, label: str, *, max_bytes: int = 8 * 1024 * 1024, allow_loopback: bool = False
+    session: LiveSession,
+    url: str,
+    label: str,
+    *,
+    max_bytes: int = 8 * 1024 * 1024,
+    allow_loopback: bool = False,
+    user_agent: str | None = None,
 ) -> tuple[bytes, dict[str, Any]]:
     """Retain exact requested URL, redirects, media metadata, and consumed response bytes."""
     if type(max_bytes) is not int or not 1 <= max_bytes <= 16 * 1024 * 1024:
         raise LiteratureFailed("HTTP byte ceiling must be an exact integer between 1 and 16 MiB")
     if not label or not label.replace("_", "").isalnum():
         raise LiteratureFailed("HTTP artifact label must be a safe component")
+    if user_agent is not None:
+        # A caller-supplied identity identifies this run to the provider's polite
+        # pool; it must never carry credentials or break a header.
+        if not isinstance(user_agent, str) or not user_agent.strip() or len(user_agent) > 256:
+            raise LiteratureFailed("HTTP user agent must be a bounded nonempty string")
+        if any(character in user_agent for character in "\r\n"):
+            raise LiteratureFailed("HTTP user agent cannot contain a line break")
     directory = session.directory / label
-    _supervise(
-        session,
-        directory,
-        {"url": url, "timeout_seconds": session.timeout(), "max_bytes": max_bytes, "allow_loopback": allow_loopback},
-        "http",
-    )
+    invocation: dict[str, Any] = {
+        "url": url,
+        "timeout_seconds": session.timeout(),
+        "max_bytes": max_bytes,
+        "allow_loopback": allow_loopback,
+    }
+    if user_agent is not None:
+        invocation["user_agent"] = user_agent
+    _supervise(session, directory, invocation, "http")
     body = session.consume(directory / "body.bin")
     metadata = exact_json(session.consume(directory / "http.json"))
     if metadata.get("sha256") != sha256(body) or metadata.get("size_bytes") != len(body):

@@ -165,11 +165,7 @@ stats = calculate_descriptive_stats(results)
 
 # Infrastructure: Manage figures
 fm = FigureManager()
-fm.register_figure(
-    filename="results.png",
-    caption="Simulation results",
-    label="fig:results"
-)
+fm.register_figure(filename="results.png", caption="Simulation results", label="fig:results")
 ```
 
 ---
@@ -238,11 +234,7 @@ fig = plot_results(data)
 fig.savefig("output/figures/results.png")
 
 fm = FigureManager()
-fm.register_figure(
-    filename="results.png",
-    caption="Results visualization",
-    label="fig:results"
-)
+fm.register_figure(filename="results.png", caption="Results visualization", label="fig:results")
 ```
 
 **✅ Layer 2 → Layer 2:** Project modules can import from other project modules
@@ -434,7 +426,9 @@ flowchart TB
 
    ```python
    """New algorithm implementation."""
+
    from typing import List, Optional
+
 
    def analyze_data(data: List[float]) -> Optional[float]:
        """Analyze data.
@@ -482,6 +476,7 @@ flowchart TB
 
    ```python
    """New validation tool."""
+
 
    def validate_output_structure(output_dir: str) -> bool:
        """Validate output directory structure."""
@@ -556,6 +551,7 @@ full-suite/coverage-report commands.
 ```python
 # In project scripts - mark layer transitions
 import logging
+
 logger = logging.getLogger(__name__)
 
 logger.info("[LAYER-2-PROJECT] Starting simulation...")

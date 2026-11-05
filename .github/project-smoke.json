@@ -62,7 +62,8 @@
   ],
   "templates/template_newspaper": [
     "tests/test_content.py",
-    "tests/test_geometry.py"
+    "tests/test_geometry.py",
+    "tests/test_components.py"
   ],
   "templates/template_pitch_deck": [
     "tests/test_deck_audit.py",

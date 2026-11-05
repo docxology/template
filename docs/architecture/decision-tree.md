@@ -106,10 +106,8 @@ The publisher validates files and metadata; rendering assigns visible numbers.
 ```python
 # infrastructure/validation/integrity/checks.py
 
-def verify_output_integrity(
-    output_dir: str,
-    expected_files: List[str]
-) -> bool:
+
+def verify_output_integrity(output_dir: str, expected_files: List[str]) -> bool:
     """Verify expected build artifacts exist.
 
     This is infrastructure - validates ANY project's outputs.
@@ -144,11 +142,13 @@ def verify_output_integrity(
 ```python
 # projects/{name}/src/simulation.py
 
+
 class MySimulation(SimulationBase):
     """Specific simulation for our research.
 
     This is scientific - implements OUR algorithm.
     """
+
     def step(self) -> None:
         """Execute one simulation step."""
         # Our specific algorithm here
@@ -174,10 +174,8 @@ class MySimulation(SimulationBase):
 ```python
 # projects/{name}/src/analysis.py
 
-def analyze_convergence(
-    results: np.ndarray,
-    tolerance: float
-) -> Dict[str, Any]:
+
+def analyze_convergence(results: np.ndarray, tolerance: float) -> Dict[str, Any]:
     """Analyze convergence of OUR algorithm.
 
     This is scientific - domain-specific analysis.
@@ -197,9 +195,8 @@ def analyze_convergence(
 ```python
 # projects/{name}/src/plots.py
 
-def plot_experimental_results(
-    data: Dict[str, np.ndarray]
-) -> plt.Figure:
+
+def plot_experimental_results(data: Dict[str, np.ndarray]) -> plt.Figure:
     """Plot results specific to our experiments.
 
     This is scientific - domain-specific visualization.
@@ -246,6 +243,7 @@ def plot_experimental_results(
    ```python
    # Infrastructure: Generic normalization
    from infrastructure.data_processing import normalize_data  # noqa: docs-lint
+
 
    # Scientific: Use generic + add domain logic
    def preprocess_our_data(raw_data):
@@ -318,6 +316,7 @@ flowchart TB
 # BAD: infrastructure/validation/integrity/checks.py
 from project.src.simulation import MySimulation  # ❌ Don't do this!
 
+
 def verify_scientific_output(sim: MySimulation):
     pass
 ```
@@ -334,6 +333,7 @@ def custom_algorithm(data):
     # Complex algorithm here  ❌ Don't do this!
     pass
 
+
 # Scripts should orchestrate, not compute
 ```
 
@@ -347,6 +347,7 @@ def custom_algorithm(data):
 # BAD: infrastructure/plots.py
 def plot_convergence(data):
     pass
+
 
 # BAD: projects/{name}/src/plots.py
 def plot_convergence(data):  # ❌ Duplicate!
@@ -407,17 +408,14 @@ Rule: If it can be tested independently, it goes in src/.
 # projects/{name}/src/my_analysis.py
 from infrastructure.documentation import FigureManager
 
+
 def analyze_and_report(data):
     # Scientific computation
     results = run_analysis(data)
 
     # Persist metadata through the reusable infrastructure API
     fm = FigureManager()
-    fm.register_figure(
-        filename="results.png",
-        caption="Analysis results",
-        label="fig:results"
-    )
+    fm.register_figure(filename="results.png", caption="Analysis results", label="fig:results")
 
     return results
 ```
@@ -450,12 +448,14 @@ def test_figure_numbering():
     fm.register_figure(filename="a.png", caption="Figure A", label="fig:a")
     assert len(fm.figures) == 1
 
+
 # Project code → projects/{name}/tests/
 # projects/{name}/tests/test_simulation.py
 def test_simulation_step():
     sim = MySimulation()
     sim.step()
     assert sim.time == 1.0
+
 
 # Integration tests → tests/integration/
 # tests/integration/test_full_pipeline.py

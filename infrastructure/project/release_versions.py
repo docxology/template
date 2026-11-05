@@ -26,6 +26,7 @@ from pathlib import Path
 import yaml
 
 from infrastructure.core.project_pyproject import load_project_pyproject
+from infrastructure.core.subprocess_policy import SubprocessPolicy, run_with_policy
 from infrastructure.publishing.root_release_contract import (
     root_changelog_versions,
     validate_root_release_tag,
@@ -144,7 +145,80 @@ def _root_findings(root: Path, version: str, tag: str | None) -> list[ReleaseVer
             validate_root_release_tag(root, tag)
         except ValueError as error:
             findings.append(ReleaseVersionFinding("root", "tag", str(error)))
+        else:
+            findings.extend(_notes_tag_commit_findings(notes, tag, resolve_tag_commit(root, tag)))
     return findings
+
+
+def resolve_tag_commit(root: Path, tag: str) -> str | None:
+    """Return the commit ``tag`` resolves to, or ``None`` when Git cannot say.
+
+    A synthetic checkout with no repository, or a tag that does not exist,
+    returns ``None`` rather than failing: a commit named as the tagged commit
+    can only be required to be that commit when the tag is real.
+    """
+    policy = SubprocessPolicy(
+        policy_id="git-metadata",
+        source_path="infrastructure/project/release_versions.py",
+        timeout_seconds=30,
+        capture_output=True,
+        credential_free=True,
+    )
+    try:
+        result = run_with_policy(
+            ["git", "rev-parse", "--verify", f"{tag}^{{commit}}"], cwd=root, env=None, policy=policy
+        )
+    except (OSError, ValueError):
+        return None
+    if result.returncode != 0:
+        return None
+    stdout = result.stdout
+    if isinstance(stdout, bytes):
+        stdout = stdout.decode("utf-8", errors="replace")
+    return stdout.strip() or None
+
+
+_TAGGED_COMMIT_CLAIM = re.compile(r"tagged commit", re.IGNORECASE)
+_BACKTICKED_COMMIT = re.compile(r"`([0-9a-f]{40})`")
+
+
+def _notes_tag_commit_findings(notes: Path, tag: str, tag_commit: str | None) -> list[ReleaseVersionFinding]:
+    """Require a commit named as the tagged commit to be the tag's own commit.
+
+    A reader verifies a release note by running ``git rev-parse <tag>^{commit}``
+    and matching the SHA on that line. Only the first commit named in the claim
+    paragraph is the appositive of "the tagged commit", so only it is compared;
+    an intermediate merge named later in the same paragraph is a different
+    statement and stays allowed. A sentence that puts the wrong commit in the
+    appositive position reads as a true statement about the wrong commit, which
+    is why this fails closed on a mismatch instead of warning.
+    """
+    if tag_commit is None:
+        return []
+    try:
+        text = notes.read_text(encoding="utf-8")
+    except OSError:
+        return []
+    claim = _TAGGED_COMMIT_CLAIM.search(text)
+    if claim is None:
+        return []
+    start = text.rfind("\n\n", 0, claim.start())
+    paragraph = text[start + 2 :] if start >= 0 else text
+    end = paragraph.find("\n\n")
+    if end >= 0:
+        paragraph = paragraph[:end]
+    named = _BACKTICKED_COMMIT.findall(paragraph)
+    if not named:
+        return []
+    if named[0] != tag_commit:
+        return [
+            ReleaseVersionFinding(
+                "root",
+                "release-notes-tag-commit",
+                f"{notes.name} names {named[0]} as the tagged commit but {tag} resolves to {tag_commit}",
+            )
+        ]
+    return []
 
 
 def _project_findings(root: Path, name: str, root_version: str, record: object) -> list[ReleaseVersionFinding]:

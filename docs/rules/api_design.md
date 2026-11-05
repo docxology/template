@@ -32,11 +32,7 @@ Consistent API design ensures that all modules provide clear, intuitive, and mai
 ```python
 # ✅ GOOD: Clear, typed function signature
 def process_data(
-    data: list[dict],
-    *,
-    normalize: bool = True,
-    validate: bool = True,
-    timeout: float = 30.0
+    data: list[dict], *, normalize: bool = True, validate: bool = True, timeout: float = 30.0
 ) -> dict[str, Any]:
     """Process a list of data dictionaries.
 
@@ -75,14 +71,11 @@ def create_user(name: str = "Anonymous", email: str) -> User:  # email required 
 ```python
 # ✅ GOOD: Use * to separate positional from keyword-only
 def configure_service(
-    host: str,
-    port: int = 8080,
-    *,
-    ssl_enabled: bool = True,
-    max_connections: int = 100
+    host: str, port: int = 8080, *, ssl_enabled: bool = True, max_connections: int = 100
 ) -> ServiceConfig:
     """Configure service with clear parameter separation."""
     pass
+
 
 # This enforces clarity:
 service = configure_service("localhost", 8080, ssl_enabled=False, max_connections=50)
@@ -118,19 +111,23 @@ def load_config(config: str | Path | dict) -> dict:
 @dataclass
 class ProcessResult:
     """Result of data processing operation."""
+
     success: bool
     data: list[dict] | None = None
     errors: list[str] | None = None
     metadata: dict[str, Any] | None = None
+
 
 def process_batch(data: list[dict]) -> ProcessResult:
     """Process batch of data items."""
     # Always return ProcessResult, even for errors
     pass
 
+
 # ❌ BAD: Inconsistent return types
 def process_batch(data: list[dict]) -> list[dict]:  # Success case
     return processed_data
+
 
 def process_batch(data: list[dict]) -> None:  # Error case - raises instead
     raise ProcessingError()
@@ -142,24 +139,31 @@ def process_batch(data: list[dict]) -> None:  # Error case - raises instead
 # ✅ GOOD: Use result types for operations that can fail
 from typing import Union
 
+
 @dataclass
 class Success:
     """Successful operation result."""
+
     value: Any
+
 
 @dataclass
 class Failure:
     """Failed operation result."""
+
     error: str
     context: dict | None = None
 
+
 Result = Union[Success, Failure]
+
 
 def safe_divide(a: float, b: float) -> Result:
     """Safely divide two numbers."""
     if b == 0:
         return Failure("Division by zero", {"a": a, "b": b})
     return Success(a / b)
+
 
 # Usage
 result = safe_divide(10, 2)
@@ -278,6 +282,7 @@ class DatabaseConnection:
         # Implementation
         pass
 
+
 # Usage
 with DatabaseConnection("sqlite:///data.db") as db:
     results = db.query("SELECT * FROM users")
@@ -301,11 +306,9 @@ __all__ = [
     "process_data",
     "validate_input",
     "ExampleProcessor",
-
     # Configuration
     "ExampleConfig",
     "DEFAULT_SETTINGS",
-
     # Exceptions
     "ExampleError",
     "ValidationError",
@@ -381,6 +384,7 @@ def create_processor(config: dict | None = None) -> ExampleProcessor:
     validated_config = validate_config(config)
     return ExampleProcessor(validated_config)
 
+
 def create_processor_from_file(config_path: str | Path) -> ExampleProcessor:
     """Create processor from configuration file.
 
@@ -423,14 +427,9 @@ class ProcessorBuilder:
         """Build configured processor."""
         return create_processor(self._config)
 
+
 # Usage
-processor = (
-    ProcessorBuilder()
-    .with_timeout(60.0)
-    .with_validation(True)
-    .with_parallel_processing(4)
-    .build()
-)
+processor = ProcessorBuilder().with_timeout(60.0).with_validation(True).with_parallel_processing(4).build()
 ```
 
 ## Error Handling in APIs
@@ -441,18 +440,25 @@ processor = (
 # ✅ GOOD: Module-specific exceptions
 class ExampleError(Exception):
     """Base exception for example module."""
+
     pass
+
 
 class ValidationError(ExampleError):
     """Input validation failed."""
+
     pass
+
 
 class ProcessingError(ExampleError):
     """Data processing failed."""
+
     pass
+
 
 class ConfigurationError(ExampleError):
     """Configuration is invalid."""
+
     pass
 ```
 
@@ -468,20 +474,13 @@ def validate_input(data: Any) -> None:
     """
     if not isinstance(data, dict):
         raise ValidationError(
-            "Input must be a dictionary",
-            context={
-                "received_type": type(data).__name__,
-                "expected_type": "dict"
-            }
+            "Input must be a dictionary", context={"received_type": type(data).__name__, "expected_type": "dict"}
         )
 
     if "required_field" not in data:
         raise ValidationError(
             "Missing required field: required_field",
-            context={
-                "available_fields": list(data.keys()),
-                "missing_field": "required_field"
-            }
+            context={"available_fields": list(data.keys()), "missing_field": "required_field"},
         )
 ```
 
@@ -493,6 +492,7 @@ def validate_input(data: Any) -> None:
 # ✅ GOOD: Async API design
 import asyncio
 from typing import AsyncIterator
+
 
 async def process_data_async(data: list[dict]) -> dict[str, Any]:
     """Process data asynchronously.
@@ -507,6 +507,7 @@ async def process_data_async(data: list[dict]) -> dict[str, Any]:
     await asyncio.sleep(0.1)
     return {"processed": len(data)}
 
+
 async def process_stream(data_stream: AsyncIterator[dict]) -> AsyncIterator[dict]:
     """Process streaming data asynchronously.
 
@@ -519,6 +520,7 @@ async def process_stream(data_stream: AsyncIterator[dict]) -> AsyncIterator[dict
     async for item in data_stream:
         processed = await process_item_async(item)
         yield processed
+
 
 # Usage
 async def main():
@@ -556,7 +558,7 @@ def analyze_dataset(
     method: str = "auto",
     parameters: dict[str, Any] | None = None,
     validate_results: bool = True,
-    progress_callback: Callable[[float], None] | None = None
+    progress_callback: Callable[[float], None] | None = None,
 ) -> AnalysisResult:
     """Analyze dataset using specified method.
 
@@ -644,6 +646,7 @@ def test_process_data_api_contract():
     assert isinstance(result["processed_count"], int)
     assert isinstance(result["errors"], list)
 
+
 def test_process_data_error_contract():
     """Test process_data error handling contract."""
     # Test with invalid input
@@ -655,7 +658,7 @@ def test_process_data_error_contract():
     assert "invalid" in str(error).lower()
 
     # Verify context is provided
-    assert hasattr(error, 'context')
+    assert hasattr(error, "context")
     assert error.context is not None
 ```
 
@@ -697,8 +700,8 @@ a second function name are fine; parallel `old_name` → `new_name` shims are no
 
 ```python
 # ✅ GOOD: single canonical API with an opt-in flag
-def process_data(data: list[dict], *, enhanced: bool = False) -> dict:
-    ...
+def process_data(data: list[dict], *, enhanced: bool = False) -> dict: ...
+
 
 # ❌ BAD: wrapper preserving a removed name (forbidden here)
 def process_data_v1(data: list[dict]) -> dict:

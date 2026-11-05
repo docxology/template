@@ -106,29 +106,33 @@ echo "ML build!"
 # projects/working/machine_learning/scripts/external_simulation.py
 #!/usr/bin/env python3
 """Integrate external simulation tool."""
+
 import subprocess
 import json
 import os
 
-from machine_learning.analysis import process_simulation_results  # From the project's nested src package (PROJECT_ROOT/src on sys.path)
+from machine_learning.analysis import (
+    process_simulation_results,
+)  # From the project's nested src package (PROJECT_ROOT/src on sys.path)
+
 
 def run_external_tool(config_file):
     """Run external simulation tool."""
 
     # Prepare configuration
-    with open(config_file, 'r') as f:
+    with open(config_file, "r") as f:
         config = json.load(f)
 
     # Run external tool
     result = subprocess.run(
-        ['external_simulator', '--config', config_file, '--output', 'raw_results.json'],
+        ["external_simulator", "--config", config_file, "--output", "raw_results.json"],
         capture_output=True,
         text=True,
-        check=True
+        check=True,
     )
 
     # Load raw results
-    with open('raw_results.json', 'r') as f:
+    with open("raw_results.json", "r") as f:
         raw_data = json.load(f)
 
     # Use src/ methods for analysis
@@ -139,15 +143,17 @@ def run_external_tool(config_file):
 
     return processed
 
+
 def main():
-    configs = ['config1.json', 'config2.json', 'config3.json']
+    configs = ["config1.json", "config2.json", "config3.json"]
 
     for config in configs:
         print(f"Running simulation: {config}")
         results = run_external_tool(config)
         save_results(results, config)
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     main()
 ```
 
@@ -259,13 +265,15 @@ jobs:
 # scripts/auto_documentation.py (illustrative example — not part of the live pipeline)
 #!/usr/bin/env python3
 """Automatically generate API documentation."""
+
 import inspect
 import ast
 import os
 
+
 def extract_module_info(module_path):
     """Extract documentation from Python module."""
-    with open(module_path, 'r') as f:
+    with open(module_path, "r") as f:
         tree = ast.parse(f.read())
 
     functions = []
@@ -273,59 +281,65 @@ def extract_module_info(module_path):
 
     for node in ast.walk(tree):
         if isinstance(node, ast.FunctionDef):
-            if not node.name.startswith('_'):
-                functions.append({
-                    'name': node.name,
-                    'docstring': ast.get_docstring(node),
-                    'args': [arg.arg for arg in node.args.args],
-                })
+            if not node.name.startswith("_"):
+                functions.append(
+                    {
+                        "name": node.name,
+                        "docstring": ast.get_docstring(node),
+                        "args": [arg.arg for arg in node.args.args],
+                    }
+                )
 
         elif isinstance(node, ast.ClassDef):
-            if not node.name.startswith('_'):
-                classes.append({
-                    'name': node.name,
-                    'docstring': ast.get_docstring(node),
-                    'methods': [m.name for m in node.body
-                               if isinstance(m, ast.FunctionDef)
-                               and not m.name.startswith('_')]
-                })
+            if not node.name.startswith("_"):
+                classes.append(
+                    {
+                        "name": node.name,
+                        "docstring": ast.get_docstring(node),
+                        "methods": [
+                            m.name for m in node.body if isinstance(m, ast.FunctionDef) and not m.name.startswith("_")
+                        ],
+                    }
+                )
 
-    return {'functions': functions, 'classes': classes}
+    return {"functions": functions, "classes": classes}
+
 
 def generate_markdown_docs(module_name, info):
     """Generate markdown documentation."""
     md = f"# {module_name} API Reference\n\n"
 
-    if info['classes']:
+    if info["classes"]:
         md += "## Classes\n\n"
-        for cls in info['classes']:
+        for cls in info["classes"]:
             md += f"### `{cls['name']}`\n\n"
-            if cls['docstring']:
+            if cls["docstring"]:
                 md += f"{cls['docstring']}\n\n"
-            if cls['methods']:
+            if cls["methods"]:
                 md += "**Methods:**\n"
-                for method in cls['methods']:
+                for method in cls["methods"]:
                     md += f"- `{method}()`\n"
                 md += "\n"
 
-    if info['functions']:
+    if info["functions"]:
         md += "## Functions\n\n"
-        for func in info['functions']:
-            args = ', '.join(func['args'])
+        for func in info["functions"]:
+            args = ", ".join(func["args"])
             md += f"### `{func['name']}({args})`\n\n"
-            if func['docstring']:
+            if func["docstring"]:
                 md += f"{func['docstring']}\n\n"
 
     return md
 
+
 def main():
     """Generate documentation for all projects/{name}/src/ modules."""
-    src_dir = 'projects/templates/template_code_project/src'
-    output_dir = 'output/api_docs'
+    src_dir = "projects/templates/template_code_project/src"
+    output_dir = "output/api_docs"
     os.makedirs(output_dir, exist_ok=True)
 
     for filename in os.listdir(src_dir):
-        if filename.endswith('.py') and not filename.startswith('_'):
+        if filename.endswith(".py") and not filename.startswith("_"):
             module_path = os.path.join(src_dir, filename)
             module_name = filename[:-3]
 
@@ -333,13 +347,14 @@ def main():
             info = extract_module_info(module_path)
             md = generate_markdown_docs(module_name, info)
 
-            output_path = os.path.join(output_dir, f'{module_name}.md')
-            with open(output_path, 'w') as f:
+            output_path = os.path.join(output_dir, f"{module_name}.md")
+            with open(output_path, "w") as f:
                 f.write(md)
 
             print(output_path)
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     main()
 ```
 
@@ -386,6 +401,7 @@ See the [Publishing Guide](publishing-guide.md) for the full workflow.
 # projects/templates/template_code_project/scripts/literature_analysis.py
 #!/usr/bin/env python3
 """Analyze research trends from literature."""
+
 import requests
 from collections import Counter
 
@@ -393,10 +409,12 @@ from collections import Counter
 # PROJECT_ROOT/src must be on sys.path, as in the exemplar's scripts)
 from template_code_project.analysis.text_analysis import extract_keywords, analyze_trends
 
+
 def fetch_papers(query, max_results=100):
     """Fetch papers from API (e.g., arXiv, PubMed)."""
     # Implement API calls
     pass
+
 
 def analyze_research_trends(query):
     """Analyze trends in research literature."""
@@ -405,7 +423,7 @@ def analyze_research_trends(query):
     papers = fetch_papers(query)
 
     # Extract abstracts
-    abstracts = [p['abstract'] for p in papers]
+    abstracts = [p["abstract"] for p in papers]
 
     # Use projects/{name}/src/ methods for analysis
     all_keywords = []
@@ -418,6 +436,7 @@ def analyze_research_trends(query):
     trends = analyze_trends(keyword_counts, papers)
 
     return trends
+
 
 def generate_trend_report(trends):
     """Generate trend analysis report."""

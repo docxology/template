@@ -31,7 +31,9 @@ To prepare a review, use a fresh canonical export and a fresh destination clone:
 import json
 from pathlib import Path
 from infrastructure.publishing.publication_tree import (
-    PublicationTarget, prepare_removal_plan, review_plan_sha256,
+    PublicationTarget,
+    prepare_removal_plan,
+    review_plan_sha256,
 )
 
 target = PublicationTarget("https://github.com/owner/exemplar", "main")

@@ -47,8 +47,7 @@ class PromptComposer:
         self.templates_dir = fragments_dir.parent / "templates"
         self._fragments_cache = {}
 
-    def compose_prompt(self, template_name: str, variables: Dict[str, Any],
-                      options: CompositionOptions = None) -> str:
+    def compose_prompt(self, template_name: str, variables: Dict[str, Any], options: CompositionOptions = None) -> str:
         """Compose a prompt from template and variables.
 
         Process:
@@ -78,7 +77,7 @@ def _load_template(self, template_name: str) -> Dict[str, Any]:
     if not template_path.exists():
         raise PromptError(f"Template not found: {template_name}")
 
-    with open(template_path, 'r', encoding='utf-8') as f:
+    with open(template_path, "r", encoding="utf-8") as f:
         template = json.load(f)
 
     # Validate template structure
@@ -118,8 +117,7 @@ def _apply_fragments(self, prompt_parts: List[str], context: Dict[str, Any]) -> 
 **Advanced Variable Processing:**
 
 ```python
-def _substitute_variables(self, template_parts: List[str],
-                         variables: Dict[str, Any]) -> List[str]:
+def _substitute_variables(self, template_parts: List[str], variables: Dict[str, Any]) -> List[str]:
     """Substitute variables in template parts with advanced processing."""
 
     processed_parts = []
@@ -166,7 +164,7 @@ class PromptLoader:
         if not template_path.exists():
             raise FileNotFoundError(f"Template not found: {name}")
 
-        with open(template_path, 'r', encoding='utf-8') as f:
+        with open(template_path, "r", encoding="utf-8") as f:
             template = json.load(f)
 
         if validate:
@@ -185,11 +183,11 @@ class PromptLoader:
         if not fragment_path.exists():
             raise FileNotFoundError(f"Fragment not found: {name}")
 
-        with open(fragment_path, 'r', encoding='utf-8') as f:
+        with open(fragment_path, "r", encoding="utf-8") as f:
             fragment_data = json.load(f)
 
         # Extract content (fragments are simple content dictionaries)
-        content = fragment_data.get('content', '')
+        content = fragment_data.get("content", "")
         if not content:
             raise ValueError(f"Invalid fragment format: {name}")
 
@@ -205,27 +203,27 @@ class PromptLoader:
 def validate_template(self, template: Dict[str, Any]) -> None:
     """Validate template structure and content."""
 
-    required_fields = ['name', 'description', 'parts', 'variables']
+    required_fields = ["name", "description", "parts", "variables"]
     for field in required_fields:
         if field not in template:
             raise ValidationError(f"Missing required field: {field}")
 
     # Validate parts structure
-    if not isinstance(template['parts'], list):
+    if not isinstance(template["parts"], list):
         raise ValidationError("Template parts must be a list")
 
-    for i, part in enumerate(template['parts']):
+    for i, part in enumerate(template["parts"]):
         if not isinstance(part, dict):
             raise ValidationError(f"Part {i} must be a dictionary")
 
-        if 'type' not in part:
+        if "type" not in part:
             raise ValidationError(f"Part {i} missing 'type' field")
 
-        if part['type'] not in ['instruction', 'context', 'example', 'fragment']:
+        if part["type"] not in ["instruction", "context", "example", "fragment"]:
             raise ValidationError(f"Invalid part type: {part['type']}")
 
     # Validate variables
-    self._validate_variables(template.get('variables', {}))
+    self._validate_variables(template.get("variables", {}))
 ```
 
 ### Fragment Components
@@ -274,15 +272,16 @@ composer = PromptComposer()
 
 # Compose manuscript review prompt
 variables = {
-    'manuscript_content': manuscript_text,
-    'word_count': len(manuscript_text.split()),
-    'review_type': 'comprehensive'
+    "manuscript_content": manuscript_text,
+    "word_count": len(manuscript_text.split()),
+    "review_type": "comprehensive",
 }
 
-review_prompt = composer.compose_prompt('manuscript_reviews', variables)
+review_prompt = composer.compose_prompt("manuscript_reviews", variables)
 
 # Use with LLM client
 from infrastructure.llm.core import LLMClient
+
 client = LLMClient()
 response = client.query_structured(review_prompt, schema=review_schema)
 ```
@@ -294,12 +293,12 @@ response = client.query_structured(review_prompt, schema=review_schema)
 ```python
 # Compose paper summarization prompt
 summarization_vars = {
-    'paper_content': paper_text,
-    'max_summary_length': 500,
-    'focus_areas': ['methodology', 'findings', 'implications']
+    "paper_content": paper_text,
+    "max_summary_length": 500,
+    "focus_areas": ["methodology", "findings", "implications"],
 }
 
-summary_prompt = composer.compose_prompt('paper_summarization', summarization_vars)
+summary_prompt = composer.compose_prompt("paper_summarization", summarization_vars)
 
 # Generate summary
 summary = client.query(summary_prompt, options=GenerationOptions(max_tokens=600))
@@ -405,14 +404,15 @@ def test_template_validation():
     loader = PromptLoader()
 
     # Test valid template
-    template = loader.load_template('manuscript_reviews')
-    assert template['name'] == 'manuscript_reviews'
-    assert 'variables' in template
-    assert 'parts' in template
+    template = loader.load_template("manuscript_reviews")
+    assert template["name"] == "manuscript_reviews"
+    assert "variables" in template
+    assert "parts" in template
 
     # Test invalid template
     with pytest.raises(ValidationError):
-        loader.load_template('invalid_template')
+        loader.load_template("invalid_template")
+
 
 def test_fragment_loading():
     """Test fragment loading functionality."""
@@ -420,13 +420,13 @@ def test_fragment_loading():
     loader = PromptLoader()
 
     # Test existing fragment
-    content = loader.load_fragment('system_prompts')
+    content = loader.load_fragment("system_prompts")
     assert isinstance(content, str)
     assert len(content) > 0
 
     # Test non-existent fragment
     with pytest.raises(FileNotFoundError):
-        loader.load_fragment('nonexistent_fragment')
+        loader.load_fragment("nonexistent_fragment")
 ```
 
 ### Composition Testing
@@ -439,22 +439,19 @@ def test_prompt_composition():
 
     composer = PromptComposer()
 
-    variables = {
-        'manuscript_content': 'Sample manuscript text...',
-        'review_type': 'technical'
-    }
+    variables = {"manuscript_content": "Sample manuscript text...", "review_type": "technical"}
 
     # Compose prompt
-    prompt = composer.compose_prompt('manuscript_reviews', variables)
+    prompt = composer.compose_prompt("manuscript_reviews", variables)
 
     # Verify composition
     assert isinstance(prompt, str)
     assert len(prompt) > 0
-    assert 'technical review' in prompt.lower()
-    assert 'Sample manuscript text' in prompt
+    assert "technical review" in prompt.lower()
+    assert "Sample manuscript text" in prompt
 
     # Verify fragment insertion
-    assert 'expert research assistant' in prompt.lower()
+    assert "expert research assistant" in prompt.lower()
 ```
 
 **Variable Substitution Tests:**
@@ -467,7 +464,7 @@ def test_variable_substitution():
 
     # Test simple substitution
     template_parts = ["Review type: {review_type}", "Content: {content}"]
-    variables = {'review_type': 'comprehensive', 'content': 'test content'}
+    variables = {"review_type": "comprehensive", "content": "test content"}
 
     result = composer._substitute_variables(template_parts, variables)
 
@@ -535,21 +532,21 @@ def _validate_template_structure(self, template: Dict[str, Any]) -> None:
     """Validate template structure."""
 
     # Required fields
-    required = ['name', 'description', 'parts', 'variables']
+    required = ["name", "description", "parts", "variables"]
     missing = [field for field in required if field not in template]
 
     if missing:
         raise TemplateValidationError(f"Missing required fields: {missing}")
 
     # Parts validation
-    if not isinstance(template['parts'], list):
+    if not isinstance(template["parts"], list):
         raise TemplateValidationError("Parts must be a list")
 
-    for i, part in enumerate(template['parts']):
+    for i, part in enumerate(template["parts"]):
         self._validate_part(part, i)
 
     # Variables validation
-    if not isinstance(template.get('variables', {}), dict):
+    if not isinstance(template.get("variables", {}), dict):
         raise TemplateValidationError("Variables must be a dictionary")
 ```
 
@@ -586,12 +583,9 @@ from infrastructure.llm.prompts import PromptComposer
 composer = PromptComposer()
 
 # Basic review prompt
-variables = {
-    'manuscript_content': manuscript,
-    'review_focus': 'methodology'
-}
+variables = {"manuscript_content": manuscript, "review_focus": "methodology"}
 
-prompt = composer.compose_prompt('manuscript_reviews', variables)
+prompt = composer.compose_prompt("manuscript_reviews", variables)
 ```
 
 ### Advanced Composition
@@ -604,12 +598,12 @@ composer = PromptComposer()
 
 # Custom composition with specific fragments
 variables = {
-    'task_description': 'Analyze this research paper',
-    'content': paper_text,
-    'fragments': ['system_prompts', 'content_requirements']
+    "task_description": "Analyze this research paper",
+    "content": paper_text,
+    "fragments": ["system_prompts", "content_requirements"],
 }
 
-prompt = composer.compose_prompt('custom_analysis', variables)
+prompt = composer.compose_prompt("custom_analysis", variables)
 ```
 
 ### Template Development
@@ -619,22 +613,20 @@ prompt = composer.compose_prompt('custom_analysis', variables)
 ```python
 # Template creation workflow
 template_data = {
-    'name': 'custom_review',
-    'description': 'Custom manuscript review template',
-    'variables': {
-        'content': {'type': 'string', 'required': True},
-        'style': {'type': 'string', 'default': 'formal'}
-    },
-    'parts': [
-        {'type': 'fragment', 'content': '{{system_prompts}}'},
-        {'type': 'instruction', 'content': 'Review this content in {{style}} style'},
-        {'type': 'context', 'content': '{{content}}'}
-    ]
+    "name": "custom_review",
+    "description": "Custom manuscript review template",
+    "variables": {"content": {"type": "string", "required": True}, "style": {"type": "string", "default": "formal"}},
+    "parts": [
+        {"type": "fragment", "content": "{{system_prompts}}"},
+        {"type": "instruction", "content": "Review this content in {{style}} style"},
+        {"type": "context", "content": "{{content}}"},
+    ],
 }
 
 # Save template
 import json
-with open('templates/custom_review.json', 'w') as f:
+
+with open("templates/custom_review.json", "w") as f:
     json.dump(template_data, f, indent=2)
 ```
 
@@ -646,11 +638,12 @@ with open('templates/custom_review.json', 'w') as f:
 
 ```python
 # Use custom prompt directory
-composer = PromptComposer(prompts_dir=Path('/custom/prompts'))
+composer = PromptComposer(prompts_dir=Path("/custom/prompts"))
 
 # Or set via environment
 import os
-os.environ['LLM_PROMPTS_DIR'] = '/custom/prompts'
+
+os.environ["LLM_PROMPTS_DIR"] = "/custom/prompts"
 ```
 
 ### Template Search Paths
@@ -661,11 +654,7 @@ os.environ['LLM_PROMPTS_DIR'] = '/custom/prompts'
 def _find_template_path(self, name: str) -> Path:
     """Find template in configured search paths."""
 
-    search_paths = [
-        self.templates_dir,
-        Path.home() / '.llm_templates',
-        Path('/usr/local/share/llm_templates')
-    ]
+    search_paths = [self.templates_dir, Path.home() / ".llm_templates", Path("/usr/local/share/llm_templates")]
 
     for path in search_paths:
         template_path = path / f"{name}.json"
@@ -723,7 +712,7 @@ with open(fragment_path) as f:
     fragment = json.load(f)
 
 print(f"Fragment structure: {fragment.keys()}")
-assert 'content' in fragment, "Fragment missing 'content' field"
+assert "content" in fragment, "Fragment missing 'content' field"
 ```
 
 **Variable Substitution Issues:**
@@ -731,7 +720,7 @@ assert 'content' in fragment, "Fragment missing 'content' field"
 ```python
 # Debug variable substitution
 template_parts = ["Review: {content}", "Type: {review_type}"]
-variables = {'content': 'test', 'review_type': 'full'}
+variables = {"content": "test", "review_type": "full"}
 
 try:
     result = composer._substitute_variables(template_parts, variables)
@@ -750,7 +739,7 @@ except Exception as e:
 import time
 
 start_time = time.time()
-prompt = composer.compose_prompt('manuscript_reviews', variables)
+prompt = composer.compose_prompt("manuscript_reviews", variables)
 end_time = time.time()
 
 print(f"Composition time: {end_time - start_time:.3f} seconds")

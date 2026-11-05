@@ -45,20 +45,20 @@ is_valid, message = validate_tool_structure(Path("tools/templates/template_code_
 from infrastructure.tools import ToolInfo, build_tool_info
 
 info = build_tool_info(Path("tools/templates/template_code_executor"))
-info.name           # "template_code_executor"
-info.tool_type      # "type" from tools.yaml, or "generic"
-info.has_scripts    # True iff scripts/ exists
-info.is_valid       # True iff has_scripts
-info.qualified_name # "template_code_executor" or "program/name"
+info.name  # "template_code_executor"
+info.tool_type  # "type" from tools.yaml, or "generic"
+info.has_scripts  # True iff scripts/ exists
+info.is_valid  # True iff has_scripts
+info.qualified_name  # "template_code_executor" or "program/name"
 ```
 
 ## Public scope
 
 ```python
 from infrastructure.tools.public_scope import (
-    PUBLIC_TOOL_NAMES,   # ('templates/template_code_executor',)
-    public_tool_infos,   # list[ToolInfo] present in checkout
-    public_tool_names,   # list[str] sorted
+    PUBLIC_TOOL_NAMES,  # ('templates/template_code_executor',)
+    public_tool_infos,  # list[ToolInfo] present in checkout
+    public_tool_names,  # list[str] sorted
 )
 ```
 
@@ -67,11 +67,13 @@ from infrastructure.tools.public_scope import (
 ```python
 from pathlib import Path
 from infrastructure.tools.linking import (
-    sync_private_tool_links, private_tools_root,
-    is_managed_symlink, LinkSyncResult,
+    sync_private_tool_links,
+    private_tools_root,
+    is_managed_symlink,
+    LinkSyncResult,
 )
 
-root = private_tools_root(Path("."))   # Path | None
+root = private_tools_root(Path("."))  # Path | None
 result: LinkSyncResult = sync_private_tool_links(Path("."), dry_run=True)
 print(result.summary())
 # result.created / .updated / .removed / .skipped / .changed
