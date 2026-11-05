@@ -4,26 +4,36 @@ Typed block model + fail-closed checker for well-typed manuscripts.
 
 ```python
 from infrastructure.formal_contracts import (
-    Claim, DependencyEdge, EdgeKind, Evidence, EvidenceTier,
-    FormalStatement, MatchPolicy, Section, compose, check_manuscript,
+    Claim,
+    DependencyEdge,
+    EdgeKind,
+    Evidence,
+    EvidenceTier,
+    FormalStatement,
+    MatchPolicy,
+    Section,
+    compose,
+    check_manuscript,
 )
 
-ms = compose([
-    Section(id="sec:main", children=("claim:1", "ev:1", "def:1")),
-    FormalStatement(id="def:1", kind="definition"),
-    Evidence(id="ev:1", tier=EvidenceTier.STRONG),
-    Claim(
-        id="claim:1",
-        statement="X holds",
-        evidence=(
-            DependencyEdge(
-                target_id="ev:1",
-                kind=EdgeKind.SUPPORTS,
-                policy=MatchPolicy(min_tier=EvidenceTier.STRONG),
+ms = compose(
+    [
+        Section(id="sec:main", children=("claim:1", "ev:1", "def:1")),
+        FormalStatement(id="def:1", kind="definition"),
+        Evidence(id="ev:1", tier=EvidenceTier.STRONG),
+        Claim(
+            id="claim:1",
+            statement="X holds",
+            evidence=(
+                DependencyEdge(
+                    target_id="ev:1",
+                    kind=EdgeKind.SUPPORTS,
+                    policy=MatchPolicy(min_tier=EvidenceTier.STRONG),
+                ),
             ),
         ),
-    ),
-])
+    ]
+)
 report = check_manuscript(ms)
 assert report.ok
 ```

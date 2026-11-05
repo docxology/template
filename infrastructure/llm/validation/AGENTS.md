@@ -163,9 +163,9 @@ from infrastructure.llm.validation.repetition import (
 
 # RepetitionResult is a NamedTuple with three fields.
 result: RepetitionResult = detect_repetition(text)
-print(result.found)        # bool
-print(result.examples)     # list[str] — first 100 chars of each duplicate
-print(result.unique_ratio) # float 0.0–1.0
+print(result.found)  # bool
+print(result.examples)  # list[str] — first 100 chars of each duplicate
+print(result.unique_ratio)  # float 0.0–1.0
 
 # Positional unpacking is supported (7 call sites rely on it):
 found, examples, ratio = detect_repetition(text)
@@ -244,6 +244,7 @@ from infrastructure.llm.validation import (
 from infrastructure.llm.core.config import ResponseMode
 from infrastructure.core.exceptions import ValidationError
 
+
 def validate_llm_response(response: str, required_headers: list[str] | None = None) -> str:
     """Validate and clean an LLM response. Returns cleaned text or raises."""
 
@@ -283,8 +284,8 @@ schema = {
 }
 
 try:
-    data = validate_json(response_text)      # strips ```json fences, parses
-    validate_structure(data, schema)          # required keys + basic type check
+    data = validate_json(response_text)  # strips ```json fences, parses
+    validate_structure(data, schema)  # required keys + basic type check
 except ValidationError as e:
     print(f"Structured response invalid: {e}")
 ```
@@ -328,14 +329,17 @@ from infrastructure.llm.validation import (
 from infrastructure.core.exceptions import ValidationError
 import pytest
 
+
 def test_validate_json_strips_fences():
-    content = "```json\n{\"key\": \"value\"}\n```"
+    content = '```json\n{"key": "value"}\n```'
     data = validate_json(content)
     assert data == {"key": "value"}
+
 
 def test_validate_json_raises_on_bad_input():
     with pytest.raises(ValidationError):
         validate_json("not json at all")
+
 
 def test_detect_repetition_finds_duplicates():
     text = "## Introduction\nSame content.\n\n## Introduction\nSame content."
@@ -343,12 +347,15 @@ def test_detect_repetition_finds_duplicates():
     assert found
     assert ratio < 1.0
 
+
 def test_is_off_topic_rejects_ai_refusal():
     assert is_off_topic("I can't help with that request.")
+
 
 def test_is_off_topic_accepts_manuscript_review():
     review = "## Overview\nThe manuscript presents strong methodology.\nThe authors clearly..."
     assert not is_off_topic(review)
+
 
 def test_validate_section_completeness():
     response = "## Overview\nContent.\n\n## Results\nData."

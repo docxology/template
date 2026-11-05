@@ -74,13 +74,13 @@ CLI flags on the stage script above.
 
 ```python
 from infrastructure.provenance import (
-    Provenance,        # Main interface — record / link / get / list / query
-    ArtifactNode,       # File/dataset node: .path, .content_hash, .size_bytes
-    RunNode,            # Pipeline-run node: .command, .exit_code, .duration_seconds
-    SourceNode,         # External-source node
-    ClaimNode,          # Scientific-claim node
-    Edge,               # Directed edge between two node ids: .from_id, .to_id, .relation
-    EdgeRelation,       # Enum of edge relations (e.g. produced_by)
+    Provenance,  # Main interface — record / link / get / list / query
+    ArtifactNode,  # File/dataset node: .path, .content_hash, .size_bytes
+    RunNode,  # Pipeline-run node: .command, .exit_code, .duration_seconds
+    SourceNode,  # External-source node
+    ClaimNode,  # Scientific-claim node
+    Edge,  # Directed edge between two node ids: .from_id, .to_id, .relation
+    EdgeRelation,  # Enum of edge relations (e.g. produced_by)
 )
 ```
 
@@ -91,7 +91,7 @@ Every node id is a SHA-256 hash derived from its kind + identifying fields
 
 ```python
 artifact = ArtifactNode.create("results.json", path="output/results.json", content_hash="sha256:abc123...")
-print(artifact.node_id)       # deterministic id derived from label + path
+print(artifact.node_id)  # deterministic id derived from label + path
 print(artifact.content_hash)  # "sha256:abc123..." (caller-supplied, not computed by create())
 ```
 

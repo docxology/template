@@ -82,14 +82,11 @@ from ..reporting import generate_pipeline_report  # DON'T
 from infrastructure.core.exceptions import (  # noqa: docs-lint
     ReportingError,
     LLMConnectionError,
-    RenderingError
+    RenderingError,
 )
 
 # Good: Raise with context
-raise ReportingError(
-    "Report generation failed",
-    context={"format": "html", "stage": stage_name}
-)
+raise ReportingError("Report generation failed", context={"format": "html", "stage": stage_name})
 ```
 
 ### Logging
@@ -163,9 +160,7 @@ class ModuleConfig:
 
     @classmethod
     def from_env(cls) -> ModuleConfig:
-        return cls(
-            setting=os.getenv("MODULE_SETTING", "default")
-        )
+        return cls(setting=os.getenv("MODULE_SETTING", "default"))
 ```
 
 ## API Design
@@ -351,9 +346,12 @@ from infrastructure.core.exceptions import ValidationError
 
 logger = get_logger(__name__)
 
+
 class ExampleError(Exception):
     """Example module error."""
+
     pass
+
 
 def process_data(data: str) -> str:
     """Process data.
@@ -381,6 +379,7 @@ def process_data(data: str) -> str:
         logger.error(f"Processing failed: {e}")
         raise ValidationError("Invalid data") from e
 
+
 def validate_input(data: str) -> str:
     """Validate input data.
 
@@ -407,6 +406,7 @@ def validate_input(data: str) -> str:
 
 from dataclasses import dataclass
 import os
+
 
 @dataclass
 class ExampleConfig:
@@ -447,6 +447,7 @@ from .config import ExampleConfig
 
 logger = get_logger(__name__)
 
+
 def main() -> int:
     """Main entry point.
 
@@ -467,6 +468,7 @@ def main() -> int:
     except Exception as e:
         logger.error(f"Error: {e}", exc_info=True)
         return 1
+
 
 if __name__ == "__main__":
     exit(main())

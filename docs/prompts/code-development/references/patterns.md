@@ -8,6 +8,7 @@ from infrastructure.core.logging.utils import get_logger
 
 logger = get_logger(__name__)
 
+
 def main() -> None:
     output_dir = Path("projects/<project>/output/figures")
     output_dir.mkdir(parents=True, exist_ok=True)
@@ -20,6 +21,7 @@ def main() -> None:
 
 ```python
 from infrastructure.core.exceptions import TemplateError
+
 
 class DomainError(TemplateError):
     pass

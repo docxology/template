@@ -110,7 +110,8 @@ paper = Paper(
     authors=["Roger D Peng"],
     year=2011,
     doi="10.1126/science.1213847",
-    venue="Science", venue_type="journal",
+    venue="Science",
+    venue_type="journal",
     pages="1226-1227",
     source="crossref",
     score=0.95,
@@ -128,22 +129,21 @@ or reference existence (`infrastructure.reference.verification` owns that).
 ### Multi-backend aggregation with failure isolation
 
 ```python
-from infrastructure.search.literature import (
-    LiteratureClient, SearchQuery, ArxivBackend, CrossrefBackend
-)
+from infrastructure.search.literature import LiteratureClient, SearchQuery, ArxivBackend, CrossrefBackend
 
 client = LiteratureClient([ArxivBackend(), CrossrefBackend()])
 result = client.search(SearchQuery(text="adam optimizer", max_results=20))
 
 # A network outage in one backend never breaks the search:
 print(result.per_source_counts)  # {"arxiv": 20, "crossref": 18}
-print(result.errors)              # {} (or {"crossref": "HTTP 503"} on outage)
+print(result.errors)  # {} (or {"crossref": "HTTP 503"} on outage)
 ```
 
 ### DOI / arXiv-aware deduplication
 
 ```python
 from infrastructure.search.literature import merge_papers
+
 unique = merge_papers([*arxiv_results, *crossref_results])
 ```
 
@@ -154,6 +154,7 @@ wins; missing fields on the winner are filled from the loser.
 
 ```python
 from infrastructure.search.literature import SearchCache
+
 cache = SearchCache("output/cache", ttl_seconds=86400)
 client = LiteratureClient([ArxivBackend()], cache=cache)
 client.search(SearchQuery(text="x"))  # writes search_<hash>.json

@@ -21,10 +21,12 @@ logger.info("Processing started")
 with log_operation("Processing data"):
     process()
 
+
 # Decorator for automatic timing and logging
 @log_timing
 def expensive_operation():
     pass
+
 
 # Structured progress logging
 log_stage(1, 10, "Running Tests")
@@ -54,9 +56,15 @@ All exceptions extend `TemplateError`. Use context-preserving helpers:
 ```python
 from infrastructure.core import TemplateError
 from infrastructure.core.exceptions import (
-    ConfigurationError, ValidationError, BuildError,
-    RenderingError, LLMError, PublishingError,
-    raise_with_context, chain_exceptions, format_file_context,
+    ConfigurationError,
+    ValidationError,
+    BuildError,
+    RenderingError,
+    LLMError,
+    PublishingError,
+    raise_with_context,
+    chain_exceptions,
+    format_file_context,
 )
 
 # Raise with file context
@@ -114,6 +122,7 @@ progress.update(10)
 ```python
 from infrastructure.core.runtime import retry_with_backoff
 
+
 @retry_with_backoff(max_retries=3, base_delay=1.0)
 def flaky_operation():
     pass
@@ -129,8 +138,11 @@ resources = get_system_resources()
 monitor = PerformanceMonitor()
 
 profiler = CodeProfiler()
+
+
 def heavy_computation() -> None:
     pass
+
 
 with profiler.monitor("heavy_computation"):
     heavy_computation()
@@ -149,6 +161,7 @@ validator.validate_content_size(content_bytes)
 
 sanitized = sanitize_llm_input(user_text)
 
+
 @rate_limit(max_requests=10, window_seconds=60)
 def api_call():
     pass
@@ -158,8 +171,11 @@ def api_call():
 
 ```python
 from infrastructure.core.runtime.environment import (
-    check_python_version, check_dependencies, check_build_tools,
-    setup_directories, verify_source_structure,
+    check_python_version,
+    check_dependencies,
+    check_build_tools,
+    setup_directories,
+    verify_source_structure,
 )
 ```
 
@@ -168,6 +184,7 @@ from infrastructure.core.runtime.environment import (
 ```python
 from infrastructure.core.files.cleanup import clean_output_directory
 from infrastructure.core.files.operations import copy_final_deliverables
+
 clean_output_directory(output_path)
 copy_final_deliverables(source, destination)
 ```
@@ -178,6 +195,7 @@ copy_final_deliverables(source, destination)
 from infrastructure.core.pipeline.multi_project import MultiProjectConfig, MultiProjectOrchestrator
 from pathlib import Path
 from infrastructure.project.discovery import discover_projects
+
 repo_root = Path(".").resolve()
 config = MultiProjectConfig(repo_root=repo_root, projects=discover_projects(repo_root), mode="core")
 orchestrator = MultiProjectOrchestrator(config)
@@ -188,6 +206,7 @@ result = orchestrator.execute_all_projects()
 
 ```python
 from infrastructure.core import SystemHealthChecker
+
 checker = SystemHealthChecker()
 status = checker.get_health_status()
 ```

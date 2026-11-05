@@ -111,6 +111,7 @@ stage runner isolates projects and combines only the resulting coverage data.
 ```python
 # In project scripts — mark layer transitions
 import logging
+
 logger = logging.getLogger(__name__)
 
 logger.info("[LAYER-2-PROJECT] Starting simulation...")

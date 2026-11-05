@@ -36,7 +36,9 @@ immutable, and `Path` for filesystem arguments.
 
 ```python
 def compile_method(method: Method) -> Plan: ...
-def append_record(chain: tuple[StateRecord, ...], key: str, value: str, tier: ProvenanceTier) -> tuple[StateRecord, ...]: ...
+def append_record(
+    chain: tuple[StateRecord, ...], key: str, value: str, tier: ProvenanceTier
+) -> tuple[StateRecord, ...]: ...
 ```
 
 ## Docstring Format
@@ -99,18 +101,51 @@ sync with `src/template_methods_paper/methods_dsl/__init__.py` — drift is caug
 
 ```python
 __all__ = [
-    "GATE_COUNT", "CycleError", "Dimension", "DimensionError", "GateResult",
-    "Method", "MethodModelError", "MethodValidationError", "Parameter",
-    "Plan", "PlanStep", "ProvenanceTier", "Quantity", "Resource",
-    "StateRecord", "Step", "StepKind", "Target", "all_example_methods",
-    "append_record", "check_compatible", "compile_method",
-    "demo_chain_report", "EXPORT_RECEIPT_SCHEMA", "export_receipt",
-    "dimension_of", "known_units",
-    "pbs_preparation_method", "plan_gate", "run_all_gates", "semantic_gate",
-    "sensor_calibration_method", "structural_gate", "target_accepts",
-    "target_gate", "to_csv_rows", "to_json", "to_mermaid",
-    "to_worklist_markdown", "topological_order", "verify_chain",
-    "write_all_exports", "write_csv", "write_json", "write_json_report",
+    "GATE_COUNT",
+    "CycleError",
+    "Dimension",
+    "DimensionError",
+    "GateResult",
+    "Method",
+    "MethodModelError",
+    "MethodValidationError",
+    "Parameter",
+    "Plan",
+    "PlanStep",
+    "ProvenanceTier",
+    "Quantity",
+    "Resource",
+    "StateRecord",
+    "Step",
+    "StepKind",
+    "Target",
+    "all_example_methods",
+    "append_record",
+    "check_compatible",
+    "compile_method",
+    "demo_chain_report",
+    "EXPORT_RECEIPT_SCHEMA",
+    "export_receipt",
+    "dimension_of",
+    "known_units",
+    "pbs_preparation_method",
+    "plan_gate",
+    "run_all_gates",
+    "semantic_gate",
+    "sensor_calibration_method",
+    "structural_gate",
+    "target_accepts",
+    "target_gate",
+    "to_csv_rows",
+    "to_json",
+    "to_mermaid",
+    "to_worklist_markdown",
+    "topological_order",
+    "verify_chain",
+    "write_all_exports",
+    "write_csv",
+    "write_json",
+    "write_json_report",
 ]
 ```
 

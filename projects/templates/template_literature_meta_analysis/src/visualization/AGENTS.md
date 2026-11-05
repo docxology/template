@@ -56,9 +56,9 @@ static PNG files. No analysis logic belongs here.
 from visualization.style import VIZ_CONFIG, SUBFIELD_NAMES, HYPOTHESIS_NAMES, apply_visual_style
 
 apply_visual_style()  # call once per function
-palette = VIZ_CONFIG["palette"]        # list of 8 hex colors
-figsize = VIZ_CONFIG["figsize"]        # (12, 7)
-dpi = VIZ_CONFIG["dpi"]               # 300
-title_size = VIZ_CONFIG["title_size"] # 20
-font_size = VIZ_CONFIG["font_size"]   # 16 (minimum)
+palette = VIZ_CONFIG["palette"]  # list of 8 hex colors
+figsize = VIZ_CONFIG["figsize"]  # (12, 7)
+dpi = VIZ_CONFIG["dpi"]  # 300
+title_size = VIZ_CONFIG["title_size"]  # 20
+font_size = VIZ_CONFIG["font_size"]  # 16 (minimum)
 ```

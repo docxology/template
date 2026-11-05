@@ -13,34 +13,37 @@ BibTeX I/O matching `projects/templates/template_code_project/manuscript/referen
 from infrastructure.reference.citation import parse_bibfile, parse_bibtex
 
 db = parse_bibfile("projects/templates/template_code_project/manuscript/references.bib")
-print(len(db))                      # 8
-print(db.keys())                    # ['nocedal2006numerical', ...]
+print(len(db))  # 8
+print(db.keys())  # ['nocedal2006numerical', ...]
 entry = db.find("boyd2004convex")
-print(entry.entry_type)             # 'article'
-print(entry.get("author"))          # 'Boyd, Stephen and Vandenberghe, Lieven'
-print(db.preamble)                  # The @comment{...} block
+print(entry.entry_type)  # 'article'
+print(entry.get("author"))  # 'Boyd, Stephen and Vandenberghe, Lieven'
+print(db.preamble)  # The @comment{...} block
 ```
 
 ## Writing
 
 ```python
 from collections import OrderedDict
-from infrastructure.reference.citation import (
-    BibEntry, BibDatabase, render_database, write_bibfile
-)
+from infrastructure.reference.citation import BibEntry, BibDatabase, render_database, write_bibfile
 
 db = BibDatabase()
-db.add(BibEntry(
-    "article", "smith2024example",
-    OrderedDict([
-        ("title", "An Example Paper"),
-        ("author", "Smith, Alice and Jones, Bob"),
-        ("journal", "Cambridge UP"),
-        ("year", "2024"),
-        ("pages", "1-10"),       # auto-normalised to "1--10"
-        ("doi", "10.1234/example"),
-    ]),
-))
+db.add(
+    BibEntry(
+        "article",
+        "smith2024example",
+        OrderedDict(
+            [
+                ("title", "An Example Paper"),
+                ("author", "Smith, Alice and Jones, Bob"),
+                ("journal", "Cambridge UP"),
+                ("year", "2024"),
+                ("pages", "1-10"),  # auto-normalised to "1--10"
+                ("doi", "10.1234/example"),
+            ]
+        ),
+    )
+)
 print(render_database(db))
 write_bibfile("output/refs.bib", db)
 ```
@@ -51,8 +54,10 @@ write_bibfile("output/refs.bib", db)
 from infrastructure.reference.citation import paper_to_bibentry, generate_citation_key
 from infrastructure.search.literature import Paper
 
-paper = Paper(id="x", title="Adam", authors=["Kingma, Diederik P", "Ba, Jimmy"], year=2014, venue="ICLR", venue_type="conference")
-entry = paper_to_bibentry(paper)        # entry_type → "inproceedings", key → "kingma2014adam"
+paper = Paper(
+    id="x", title="Adam", authors=["Kingma, Diederik P", "Ba, Jimmy"], year=2014, venue="ICLR", venue_type="conference"
+)
+entry = paper_to_bibentry(paper)  # entry_type → "inproceedings", key → "kingma2014adam"
 
 # Override either field:
 entry = paper_to_bibentry(paper, citation_key="my_custom_key", entry_type="misc")
@@ -79,8 +84,9 @@ uv run python -m infrastructure.reference.citation.cli convert papers.json refs.
 
 ```python
 from infrastructure.reference.citation import escape_latex, unescape_latex
-escape_latex("Smith & Co")            # 'Smith \\& Co'
-unescape_latex(r"Smith \& Co")        # 'Smith & Co'
+
+escape_latex("Smith & Co")  # 'Smith \\& Co'
+unescape_latex(r"Smith \& Co")  # 'Smith & Co'
 ```
 
 The writer applies escaping automatically; you only need these helpers when

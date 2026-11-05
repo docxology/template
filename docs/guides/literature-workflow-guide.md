@@ -68,8 +68,13 @@ so Pandoc with `--natbib` picks it up unchanged.
 ```python
 from pathlib import Path
 from infrastructure.search.literature import (
-    LiteratureClient, SearchQuery, ArxivBackend, CrossrefBackend,
-    AbstractFetcher, FulltextFetcher, write_corpus,
+    LiteratureClient,
+    SearchQuery,
+    ArxivBackend,
+    CrossrefBackend,
+    AbstractFetcher,
+    FulltextFetcher,
+    write_corpus,
 )
 from infrastructure.reference.citation import paper_to_bibentry, write_bibfile
 from infrastructure.reference.citation.models import BibDatabase
@@ -79,13 +84,13 @@ OUT = Path("output/literature_demo")
 OUT.mkdir(parents=True, exist_ok=True)
 
 # Discover.
-client = LiteratureClient([
-    ArxivBackend(),
-    CrossrefBackend(mailto="you@example.org"),
-])
-result = client.search(
-    SearchQuery(text="Bayesian neural network calibration", max_results=20)
+client = LiteratureClient(
+    [
+        ArxivBackend(),
+        CrossrefBackend(mailto="you@example.org"),
+    ]
 )
+result = client.search(SearchQuery(text="Bayesian neural network calibration", max_results=20))
 
 # Enrich (real fetches, cached on disk; no mocks).
 abstracts = AbstractFetcher(cache_dir=OUT / "cache" / "abs")
@@ -103,13 +108,10 @@ write_bibfile(OUT / "references.bib", db)
 
 # Synthesise with Ollama.
 llm = LLMClient(OllamaClientConfig(default_model="gemma3:4b"))
-joined = "\n\n".join(
-    f"### {p.title}\n{p.abstract or ''}" for p in result.papers if p.abstract
-)
+joined = "\n\n".join(f"### {p.title}\n{p.abstract or ''}" for p in result.papers if p.abstract)
 prompt = (
     "You are a literature analyst. Summarise the key methods, common "
-    "assumptions, and disagreements across the following abstracts.\n\n"
-    + joined
+    "assumptions, and disagreements across the following abstracts.\n\n" + joined
 )
 report = llm.query(prompt)  # LLMClient.query(prompt) -> str
 (OUT / "synthesis.md").write_text(report, encoding="utf-8")

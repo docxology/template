@@ -109,6 +109,7 @@ graph TD
 # scripts/pipeline/stage_03_render.py (orchestrator)
 from infrastructure.rendering import RenderManager
 
+
 def run_render_pipeline():
     renderer = RenderManager()  # Import business logic
     pdf = renderer.render_pdf("manuscript.tex")  # Delegate computation
@@ -121,13 +122,13 @@ def run_render_pipeline():
 # scripts/pipeline/stage_03_render.py (WRONG - implements logic)
 def render_pdf_to_tex(content):
     # Business logic in orchestrator - WRONG!
-    lines = content.split('\n')
+    lines = content.split("\n")
     tex_lines = []
     for line in lines:
-        if line.startswith('# '):
-            tex_lines.append(f'\\section{{{line[2:]}}}')
+        if line.startswith("# "):
+            tex_lines.append(f"\\section{{{line[2:]}}}")
         # ... complex rendering logic ...
-    return '\n'.join(tex_lines)
+    return "\n".join(tex_lines)
 ```
 
 ## Multi-Project Support

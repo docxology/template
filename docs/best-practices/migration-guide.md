@@ -323,11 +323,14 @@ def process_data(data):
     result = sum(data) / len(data)  # Business logic
     return result
 
+
 # New script (thin orchestrator)
 import sys
 from pathlib import Path
+
 sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
 from statistics import calculate_average  # Import from src/
+
 
 def process_data(data):
     result = calculate_average(data)  # Use src/ method
@@ -422,6 +425,7 @@ ls -la output/templates/template_code_project/pdf/
 # Add src/ to path
 import sys
 from pathlib import Path
+
 sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
 
 # Or use absolute imports

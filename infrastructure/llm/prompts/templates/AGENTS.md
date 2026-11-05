@@ -247,16 +247,17 @@ composer = PromptComposer()
 
 # Prepare variables
 variables = {
-    'manuscript_content': full_manuscript_text,
-    'review_type': 'comprehensive',
-    'word_count': len(full_manuscript_text.split())
+    "manuscript_content": full_manuscript_text,
+    "review_type": "comprehensive",
+    "word_count": len(full_manuscript_text.split()),
 }
 
 # Compose prompt
-review_prompt = composer.compose_prompt('manuscript_reviews', variables)
+review_prompt = composer.compose_prompt("manuscript_reviews", variables)
 
 # Use with LLM
 from infrastructure.llm.core import LLMClient
+
 client = LLMClient()
 review_response = client.query(review_prompt)
 ```
@@ -268,13 +269,13 @@ review_response = client.query(review_prompt)
 ```python
 # Advanced summarization configuration
 variables = {
-    'paper_content': paper_text,
-    'max_summary_length': 300,
-    'focus_areas': ['methodology', 'results', 'practical implications'],
-    'audience_level': 'general'
+    "paper_content": paper_text,
+    "max_summary_length": 300,
+    "focus_areas": ["methodology", "results", "practical implications"],
+    "audience_level": "general",
 }
 
-summary_prompt = composer.compose_prompt('paper_summarization', variables)
+summary_prompt = composer.compose_prompt("paper_summarization", variables)
 
 # Generate focused summary
 summary = client.query(summary_prompt, options=GenerationOptions(max_tokens=400))
@@ -291,18 +292,18 @@ def create_research_template(name: str, description: str, variables: dict, parts
     """Create a new research prompt template."""
 
     template = {
-        'name': name,
-        'description': description,
-        'version': '1.0',
-        'variables': variables,
-        'parts': parts,
-        'metadata': {
-            'category': 'research',
-            'complexity': 'intermediate',
-            'estimated_tokens': estimate_token_count(parts),
-            'expected_output_format': 'markdown',
-            'tags': ['research', 'academic']
-        }
+        "name": name,
+        "description": description,
+        "version": "1.0",
+        "variables": variables,
+        "parts": parts,
+        "metadata": {
+            "category": "research",
+            "complexity": "intermediate",
+            "estimated_tokens": estimate_token_count(parts),
+            "expected_output_format": "markdown",
+            "tags": ["research", "academic"],
+        },
     }
 
     return template
@@ -327,25 +328,25 @@ def validate_template_quality(template: dict) -> List[str]:
     issues = []
 
     # Required fields
-    required = ['name', 'description', 'variables', 'parts']
+    required = ["name", "description", "variables", "parts"]
     for field in required:
         if field not in template:
             issues.append(f"Missing required field: {field}")
 
     # Variable validation
-    variables = template.get('variables', {})
+    variables = template.get("variables", {})
     for var_name, var_config in variables.items():
-        if 'type' not in var_config:
+        if "type" not in var_config:
             issues.append(f"Variable {var_name} missing 'type' field")
-        if var_config.get('required', False) and 'default' not in var_config:
+        if var_config.get("required", False) and "default" not in var_config:
             issues.append(f"Required variable {var_name} missing default value")
 
     # Parts validation
-    parts = template.get('parts', [])
+    parts = template.get("parts", [])
     for i, part in enumerate(parts):
-        if 'type' not in part:
+        if "type" not in part:
             issues.append(f"Part {i} missing 'type' field")
-        if 'content' not in part:
+        if "content" not in part:
             issues.append(f"Part {i} missing 'content' field")
 
     return issues
@@ -361,7 +362,7 @@ def validate_template_quality(template: dict) -> List[str]:
 def discover_available_templates(self) -> List[str]:
     """Discover all available templates."""
 
-    template_files = list(self.templates_dir.glob('*.json'))
+    template_files = list(self.templates_dir.glob("*.json"))
     template_names = [f.stem for f in template_files]
 
     # Validate templates
@@ -387,14 +388,14 @@ def get_template_info(self, name: str) -> Dict[str, Any]:
     template = self.load_template(name)
 
     return {
-        'name': template['name'],
-        'description': template['description'],
-        'version': template['version'],
-        'variables': template['variables'],
-        'category': template.get('metadata', {}).get('category', 'general'),
-        'complexity': template.get('metadata', {}).get('complexity', 'intermediate'),
-        'estimated_tokens': template.get('metadata', {}).get('estimated_tokens', 1000),
-        'tags': template.get('metadata', {}).get('tags', [])
+        "name": template["name"],
+        "description": template["description"],
+        "version": template["version"],
+        "variables": template["variables"],
+        "category": template.get("metadata", {}).get("category", "general"),
+        "complexity": template.get("metadata", {}).get("complexity", "intermediate"),
+        "estimated_tokens": template.get("metadata", {}).get("estimated_tokens", 1000),
+        "tags": template.get("metadata", {}).get("tags", []),
     }
 ```
 
@@ -410,29 +411,29 @@ def test_template_validation():
 
     composer = PromptComposer()
 
-    templates = ['manuscript_reviews', 'paper_summarization']
+    templates = ["manuscript_reviews", "paper_summarization"]
 
     for template_name in templates:
         # Load template
         template = composer.load_template(template_name)
 
         # Validate structure
-        assert 'name' in template
-        assert 'description' in template
-        assert 'variables' in template
-        assert 'parts' in template
-        assert isinstance(template['parts'], list)
+        assert "name" in template
+        assert "description" in template
+        assert "variables" in template
+        assert "parts" in template
+        assert isinstance(template["parts"], list)
 
         # Validate variables
-        variables = template['variables']
+        variables = template["variables"]
         assert isinstance(variables, dict)
 
         # Test composition
         # Use default values for required variables
         test_vars = {}
         for var_name, var_config in variables.items():
-            if var_config.get('required', False) and 'default' in var_config:
-                test_vars[var_name] = var_config['default']
+            if var_config.get("required", False) and "default" in var_config:
+                test_vars[var_name] = var_config["default"]
 
         # Should compose without errors
         prompt = composer.compose_prompt(template_name, test_vars)
@@ -452,18 +453,18 @@ def test_template_composition():
 
     # Test manuscript review template
     variables = {
-        'manuscript_content': 'Sample manuscript content for testing.',
-        'review_type': 'technical',
-        'word_count': 50
+        "manuscript_content": "Sample manuscript content for testing.",
+        "review_type": "technical",
+        "word_count": 50,
     }
 
-    prompt = composer.compose_prompt('manuscript_reviews', variables)
+    prompt = composer.compose_prompt("manuscript_reviews", variables)
 
     # Verify composition
-    assert 'technical review' in prompt.lower()
-    assert 'Sample manuscript content' in prompt
-    assert 'system_prompts' not in prompt  # Fragments should be replaced
-    assert '{{' not in prompt  # All placeholders should be resolved
+    assert "technical review" in prompt.lower()
+    assert "Sample manuscript content" in prompt
+    assert "system_prompts" not in prompt  # Fragments should be replaced
+    assert "{{" not in prompt  # All placeholders should be resolved
 ```
 
 ### Performance Testing
@@ -477,8 +478,8 @@ def benchmark_template_composition():
     composer = PromptComposer()
 
     test_variables = {
-        'manuscript_content': 'x' * 10000,  # 10KB content
-        'review_type': 'comprehensive'
+        "manuscript_content": "x" * 10000,  # 10KB content
+        "review_type": "comprehensive",
     }
 
     import time
@@ -486,7 +487,7 @@ def benchmark_template_composition():
     # Benchmark composition time
     start_time = time.time()
     for _ in range(100):
-        prompt = composer.compose_prompt('manuscript_reviews', test_variables)
+        prompt = composer.compose_prompt("manuscript_reviews", test_variables)
 
     end_time = time.time()
 
@@ -495,7 +496,7 @@ def benchmark_template_composition():
 
     # Verify output quality
     assert len(prompt) > 1000  # Reasonable output length
-    assert 'review' in prompt.lower()
+    assert "review" in prompt.lower()
 ```
 
 ## Error Handling
@@ -533,13 +534,13 @@ def validate_template_variables(self, template_name: str, variables: Dict[str, A
     """Validate provided variables against template requirements."""
 
     template = self.load_template(template_name)
-    template_vars = template.get('variables', {})
+    template_vars = template.get("variables", {})
 
     issues = []
 
     # Check required variables
     for var_name, var_config in template_vars.items():
-        if var_config.get('required', False) and var_name not in variables:
+        if var_config.get("required", False) and var_name not in variables:
             issues.append(f"Missing required variable: {var_name}")
 
     # Validate variable types and constraints
@@ -566,16 +567,16 @@ def create_template_variant(base_template: str, modifications: Dict[str, Any]) -
     base = self.load_template(base_template).copy()
 
     # Apply modifications
-    if 'variables' in modifications:
-        base['variables'].update(modifications['variables'])
+    if "variables" in modifications:
+        base["variables"].update(modifications["variables"])
 
-    if 'parts' in modifications:
+    if "parts" in modifications:
         # Handle part additions/modifications
-        base['parts'].extend(modifications['parts'])
+        base["parts"].extend(modifications["parts"])
 
     # Update metadata
-    base['version'] = increment_version(base['version'])
-    base['name'] = f"{base_template}_{modifications.get('suffix', 'variant')}"
+    base["version"] = increment_version(base["version"])
+    base["name"] = f"{base_template}_{modifications.get('suffix', 'variant')}"
 
     return base
 ```
@@ -586,30 +587,30 @@ def create_template_variant(base_template: str, modifications: Dict[str, Any]) -
 
 ```python
 RESEARCH_DOMAIN_TEMPLATES = {
-    'machine_learning': {
-        'variables': {
-            'model_type': {'type': 'string', 'enum': ['supervised', 'unsupervised', 'reinforcement']},
-            'dataset_size': {'type': 'number'},
-            'performance_metrics': {'type': 'array'}
+    "machine_learning": {
+        "variables": {
+            "model_type": {"type": "string", "enum": ["supervised", "unsupervised", "reinforcement"]},
+            "dataset_size": {"type": "number"},
+            "performance_metrics": {"type": "array"},
         },
-        'special_instructions': [
+        "special_instructions": [
             "Evaluate model architecture appropriateness",
             "Assess training methodology and validation",
-            "Review performance metrics and baselines"
-        ]
+            "Review performance metrics and baselines",
+        ],
     },
-    'clinical_trials': {
-        'variables': {
-            'study_design': {'type': 'string', 'enum': ['rct', 'cohort', 'case_control']},
-            'sample_size': {'type': 'number'},
-            'outcome_measures': {'type': 'array'}
+    "clinical_trials": {
+        "variables": {
+            "study_design": {"type": "string", "enum": ["rct", "cohort", "case_control"]},
+            "sample_size": {"type": "number"},
+            "outcome_measures": {"type": "array"},
         },
-        'special_instructions': [
+        "special_instructions": [
             "Evaluate study design and statistical power",
             "Assess ethical considerations and IRB approval",
-            "Review data collection and analysis methods"
-        ]
-    }
+            "Review data collection and analysis methods",
+        ],
+    },
 }
 ```
 
@@ -629,11 +630,11 @@ def update_template_version(self, name: str, changes: Dict[str, Any]) -> None:
     template.update(changes)
 
     # Increment version
-    current_version = template['version']
-    template['version'] = increment_version(current_version)
+    current_version = template["version"]
+    template["version"] = increment_version(current_version)
 
     # Update last modified timestamp
-    template['metadata']['last_modified'] = datetime.now().isoformat()
+    template["metadata"]["last_modified"] = datetime.now().isoformat()
 
     # Save updated template
     self.save_template(name, template)
@@ -649,7 +650,7 @@ def audit_templates(self) -> Dict[str, List[str]]:
 
     audit_results = {}
 
-    for template_file in self.templates_dir.glob('*.json'):
+    for template_file in self.templates_dir.glob("*.json"):
         name = template_file.stem
 
         issues = []

@@ -105,6 +105,7 @@ flowchart TB
 
 ```python
 from infrastructure.project.discovery import discover_projects
+
 projects = discover_projects(repo_root)
 ```
 

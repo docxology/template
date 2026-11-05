@@ -98,7 +98,8 @@ uv run python scripts/pipeline/stage_02_analysis.py \
 
 import os
 import matplotlib
-matplotlib.use('Agg')  # Headless backend
+
+matplotlib.use("Agg")  # Headless backend
 import matplotlib.pyplot as plt
 
 # Project scripts add PROJECT_ROOT/src to sys.path before importing
@@ -110,37 +111,39 @@ import matplotlib.pyplot as plt
 # modules used later in this guide ARE built step by step below.
 from template_code_project.analysis.example import calculate_average, find_maximum, find_minimum
 
+
 def main():
     # Sample data
     data = [1.2, 2.3, 1.8, 3.4, 2.1]
 
     # USE src/ methods for computation - NEVER implement here
     avg = calculate_average(data)  # illustrative: src/template_code_project/analysis/example.py
-    max_val = find_maximum(data)   # illustrative: src/template_code_project/analysis/example.py
-    min_val = find_minimum(data)   # illustrative: src/template_code_project/analysis/example.py
+    max_val = find_maximum(data)  # illustrative: src/template_code_project/analysis/example.py
+    min_val = find_minimum(data)  # illustrative: src/template_code_project/analysis/example.py
 
     # Script ONLY handles visualization
     fig, ax = plt.subplots(figsize=(8, 6))
-    ax.plot(data, marker='o', label='Data')
-    ax.axhline(avg, color='r', linestyle='--', label=f'Average: {avg:.2f}')
-    ax.axhline(max_val, color='g', linestyle=':', label=f'Max: {max_val:.2f}')
-    ax.axhline(min_val, color='b', linestyle=':', label=f'Min: {min_val:.2f}')
+    ax.plot(data, marker="o", label="Data")
+    ax.axhline(avg, color="r", linestyle="--", label=f"Average: {avg:.2f}")
+    ax.axhline(max_val, color="g", linestyle=":", label=f"Max: {max_val:.2f}")
+    ax.axhline(min_val, color="b", linestyle=":", label=f"Min: {min_val:.2f}")
     ax.legend()
-    ax.set_title('Data Analysis')
-    ax.set_xlabel('Index')
-    ax.set_ylabel('Value')
+    ax.set_title("Data Analysis")
+    ax.set_xlabel("Index")
+    ax.set_ylabel("Value")
 
     # Save output
-    output_dir = 'projects/templates/template_code_project/output/figures'
+    output_dir = "projects/templates/template_code_project/output/figures"
     os.makedirs(output_dir, exist_ok=True)
-    output_path = os.path.join(output_dir, 'my_analysis.png')
-    fig.savefig(output_path, dpi=300, bbox_inches='tight')
+    output_path = os.path.join(output_dir, "my_analysis.png")
+    fig.savefig(output_path, dpi=300, bbox_inches="tight")
     plt.close(fig)
 
     # Print path for build system manifest
     print(output_path)
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     main()
 ```
 
@@ -209,6 +212,7 @@ from template_code_project.analysis.statistics import (
     calculate_sample_variance,
 )
 
+
 def test_calculate_sample_statistics():
     values = [1, 2, 3, 4, 5]
     assert calculate_mean(values) == pytest.approx(3.0)
@@ -235,7 +239,8 @@ uv run pytest projects/templates/template_code_project/tests/test_statistics.py 
 #!/usr/bin/env python3
 import os
 import matplotlib
-matplotlib.use('Agg')
+
+matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import numpy as np
 
@@ -243,6 +248,7 @@ from template_code_project.analysis.statistics import (
     calculate_mean,
     calculate_sample_std_dev,
 )
+
 
 def main():
     # Generate sample data
@@ -255,23 +261,24 @@ def main():
 
     # Script handles visualization only
     fig, ax = plt.subplots()
-    ax.hist(data, bins=20, alpha=0.7, label='Data')
-    ax.axvline(mean, color='black', label=f'Mean: {mean:.2f}')
-    ax.axvline(mean + sample_sd, color='r', linestyle='--', label=f'Mean + SD: {mean + sample_sd:.2f}')
-    ax.axvline(mean - sample_sd, color='r', linestyle='--', label=f'Mean - SD: {mean - sample_sd:.2f}')
+    ax.hist(data, bins=20, alpha=0.7, label="Data")
+    ax.axvline(mean, color="black", label=f"Mean: {mean:.2f}")
+    ax.axvline(mean + sample_sd, color="r", linestyle="--", label=f"Mean + SD: {mean + sample_sd:.2f}")
+    ax.axvline(mean - sample_sd, color="r", linestyle="--", label=f"Mean - SD: {mean - sample_sd:.2f}")
     ax.legend()
-    ax.set_title('Distribution with Standard Deviation')
+    ax.set_title("Distribution with Standard Deviation")
 
     # Save
-    output_path = 'projects/templates/template_code_project/output/figures/statistics_figure.png'
+    output_path = "projects/templates/template_code_project/output/figures/statistics_figure.png"
     os.makedirs(os.path.dirname(output_path), exist_ok=True)
-    fig.savefig(output_path, dpi=300, bbox_inches='tight')
+    fig.savefig(output_path, dpi=300, bbox_inches="tight")
     plt.close(fig)
 
     # Print for manifest
     print(output_path)
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     main()
 ```
 
@@ -303,7 +310,7 @@ transformations needed to interpret the panel.
 **Line Plot**:
 
 ```python
-ax.plot(x_data, y_data, marker='o', label='Series')
+ax.plot(x_data, y_data, marker="o", label="Series")
 ```
 
 **Scatter Plot**:
@@ -370,12 +377,14 @@ When adding new analysis capabilities:
 import pytest
 from template_code_project.analysis.correlation import calculate_correlation, calculate_r_squared, linear_regression
 
+
 def test_calculate_correlation_perfect():
     """Test positive correlation."""
     x = [1, 2, 3, 4, 5]
     y = [2, 4, 6, 8, 10]
     corr = calculate_correlation(x, y)
     assert abs(corr - 1.0) < 1e-10
+
 
 def test_calculate_correlation_negative():
     """Test negative correlation."""
@@ -384,12 +393,14 @@ def test_calculate_correlation_negative():
     corr = calculate_correlation(x, y)
     assert abs(corr - (-1.0)) < 1e-10
 
+
 def test_calculate_r_squared():
     """Test R-squared calculation."""
     x = [1, 2, 3, 4, 5]
     y = [2, 4, 6, 8, 10]
     r2 = calculate_r_squared(x, y)
     assert abs(r2 - 1.0) < 1e-10
+
 
 def test_linear_regression():
     """Test linear regression."""
@@ -419,9 +430,7 @@ import math
 from collections.abc import Sequence
 
 
-def _validated_pair(
-    x: Sequence[float], y: Sequence[float]
-) -> tuple[tuple[float, ...], tuple[float, ...]]:
+def _validated_pair(x: Sequence[float], y: Sequence[float]) -> tuple[tuple[float, ...], tuple[float, ...]]:
     x_values = tuple(float(value) for value in x)
     y_values = tuple(float(value) for value in y)
     if len(x_values) != len(y_values):
@@ -431,6 +440,7 @@ def _validated_pair(
     if not all(math.isfinite(value) for value in (*x_values, *y_values)):
         raise ValueError("observations must be finite")
     return x_values, y_values
+
 
 def calculate_correlation(x: Sequence[float], y: Sequence[float]) -> float:
     """Calculate Pearson correlation coefficient.
@@ -455,6 +465,7 @@ def calculate_correlation(x: Sequence[float], y: Sequence[float]) -> float:
 
     return numerator / (denominator_x * denominator_y)
 
+
 def calculate_r_squared(x: Sequence[float], y: Sequence[float]) -> float:
     """Return squared Pearson correlation for paired observations.
 
@@ -466,7 +477,8 @@ def calculate_r_squared(x: Sequence[float], y: Sequence[float]) -> float:
         R-squared value between 0 and 1
     """
     corr = calculate_correlation(x, y)
-    return corr ** 2
+    return corr**2
+
 
 def linear_regression(x: Sequence[float], y: Sequence[float]) -> tuple[float, float]:
     """Perform simple linear regression.
@@ -509,11 +521,16 @@ Ensure coverage requirements are met before proceeding.
 #!/usr/bin/env python3
 import os
 import matplotlib
-matplotlib.use('Agg')
+
+matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import numpy as np
 
-from template_code_project.analysis.correlation import calculate_correlation, linear_regression  # illustrative: from your project's analysis package
+from template_code_project.analysis.correlation import (
+    calculate_correlation,
+    linear_regression,
+)  # illustrative: from your project's analysis package
+
 
 def main():
     # Generate sample data
@@ -527,24 +544,25 @@ def main():
 
     # Script handles visualization only
     fig, ax = plt.subplots(figsize=(8, 6))
-    ax.scatter(x, y, alpha=0.5, label='Synthetic observations')
-    ax.plot(x, slope * x + intercept, 'r-', label='Fitted line')
-    ax.set_title('Illustrative simple linear regression')
-    ax.set_xlabel('X')
-    ax.set_ylabel('Y')
+    ax.scatter(x, y, alpha=0.5, label="Synthetic observations")
+    ax.plot(x, slope * x + intercept, "r-", label="Fitted line")
+    ax.set_title("Illustrative simple linear regression")
+    ax.set_xlabel("X")
+    ax.set_ylabel("Y")
     ax.legend()
     ax.grid(True, alpha=0.3)
 
     # Save
-    output_path = 'projects/templates/template_code_project/output/figures/correlation_analysis.png'
+    output_path = "projects/templates/template_code_project/output/figures/correlation_analysis.png"
     os.makedirs(os.path.dirname(output_path), exist_ok=True)
-    fig.savefig(output_path, dpi=300, bbox_inches='tight')
+    fig.savefig(output_path, dpi=300, bbox_inches="tight")
     plt.close(fig)
 
     # Print for manifest
     print(output_path)
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     main()
 ```
 
@@ -561,18 +579,17 @@ import numpy as np
 import csv
 
 # Save as NPZ (NumPy compressed)
-np.savez('projects/templates/template_code_project/output/data/analysis_data.npz',
-         x=x, y=y, correlation=corr)
+np.savez("projects/templates/template_code_project/output/data/analysis_data.npz", x=x, y=y, correlation=corr)
 
 # Save as CSV (portable)
-with open('projects/templates/template_code_project/output/data/analysis_data.csv', 'w', newline='') as f:
+with open("projects/templates/template_code_project/output/data/analysis_data.csv", "w", newline="") as f:
     writer = csv.writer(f)
-    writer.writerow(['x', 'y'])
+    writer.writerow(["x", "y"])
     writer.writerows(zip(x, y))
 
 # Print both paths
-print('projects/templates/template_code_project/output/data/analysis_data.npz')
-print('projects/templates/template_code_project/output/data/analysis_data.csv')
+print("projects/templates/template_code_project/output/data/analysis_data.npz")
+print("projects/templates/template_code_project/output/data/analysis_data.csv")
 ```
 
 ---
@@ -713,22 +730,24 @@ failed dataset from the reported denominator.
 import os
 from correlation import calculate_correlation, linear_regression
 
+
 def process_dataset(filename):
     """Process single dataset."""
     # Load data
     data = load_data(filename)  # Implement as needed
 
     # Use src/ methods
-    corr = calculate_correlation(data['x'], data['y'])
-    slope, intercept = linear_regression(data['x'], data['y'])
+    corr = calculate_correlation(data["x"], data["y"])
+    slope, intercept = linear_regression(data["x"], data["y"])
 
     # Generate figure
     generate_figure(data, corr, slope, intercept, filename)
 
     return corr, slope, intercept
 
+
 def main():
-    datasets = ['data1.csv', 'data2.csv', 'data3.csv']
+    datasets = ["data1.csv", "data2.csv", "data3.csv"]
     results = {}
 
     for dataset in datasets:
@@ -738,7 +757,8 @@ def main():
     # Save summary
     save_results_table(results)
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     main()
 ```
 
@@ -758,9 +778,10 @@ if __name__ == '__main__':
 **Solution**:
 ```python
 import os
-output_dir = 'projects/templates/template_code_project/output/figures'
+
+output_dir = "projects/templates/template_code_project/output/figures"
 os.makedirs(output_dir, exist_ok=True)  # Create if missing
-fig.savefig(os.path.join(output_dir, 'figure.png'), dpi=300)
+fig.savefig(os.path.join(output_dir, "figure.png"), dpi=300)
 ```
 
 ### Import Errors in Scripts
@@ -781,7 +802,8 @@ uv run python projects/templates/template_code_project/scripts/my_figure.py
 **Solution**:
 ```python
 import matplotlib
-matplotlib.use('Agg')  # Must be BEFORE pyplot import
+
+matplotlib.use("Agg")  # Must be BEFORE pyplot import
 import matplotlib.pyplot as plt
 ```
 
@@ -823,6 +845,7 @@ uv run python -m infrastructure.validation.cli publication-audit \
 **Solution**: Use absolute paths with project root:
 ```python
 from pathlib import Path
+
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 data_path = PROJECT_ROOT / "data" / "data.csv"
 ```
@@ -837,6 +860,7 @@ data_path = PROJECT_ROOT / "data" / "data.csv"
 
 ```python
 import functools
+
 
 @functools.lru_cache(maxsize=None)
 def expensive_calculation(x):
@@ -896,9 +920,7 @@ from infrastructure.documentation import FigureManager
 
 # Register figure metadata at the project-owned path. The manuscript still
 # needs a matching {#fig:convergence} label.
-manager = FigureManager(
-    registry_file="projects/templates/template_code_project/output/figures/figure_registry.json"
-)
+manager = FigureManager(registry_file="projects/templates/template_code_project/output/figures/figure_registry.json")
 manager.register_figure(
     filename="convergence.png",
     caption="Objective value across recorded optimization iterations.",

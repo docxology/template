@@ -10,8 +10,10 @@ from __future__ import annotations
 from pathlib import Path
 
 import pytest
+from PIL import Image as PILImage
 from reportlab.lib.styles import StyleSheet1
-from reportlab.platypus import Table
+from reportlab.lib.utils import ImageReader
+from reportlab.platypus import Image, Table
 
 from newspaper.components import (
     _boxed,
@@ -122,6 +124,46 @@ def test_figure_flowables_missing_image_uses_placeholder(styles: StyleSheet1, tm
     fig = Figure(path="missing/photo.png", caption="A photo", credit="Staff", height=100)
     items = figure_flowables(fig, width=200.0, styles=styles, project_root=tmp_path)
     assert len(items) > 0
+
+
+def test_figure_flowables_valid_image_preserves_aspect_ratio(styles: StyleSheet1, tmp_path: Path) -> None:
+    image = tmp_path / "photo.png"
+    PILImage.new("RGB", (80, 40), color=(200, 180, 140)).save(image)
+    fig = Figure(path="photo.png", caption="A photo", credit="Staff", height=100)
+
+    items = figure_flowables(fig, width=200.0, styles=styles, project_root=tmp_path)
+
+    assert isinstance(items[0], Image)
+    assert items[0].drawWidth == 200.0
+    assert items[0].drawHeight == 100.0
+
+
+def test_figure_flowables_corrupt_image_uses_placeholder(styles: StyleSheet1, tmp_path: Path) -> None:
+    image = tmp_path / "corrupt.png"
+    image.write_bytes(b"NOT A VALID IMAGE FILE")
+    # Exercise ReportLab's real lazy decoder and establish the expected failure.
+    with pytest.raises(OSError):
+        Image(str(image)).imageWidth
+    fig = Figure(path="corrupt.png", caption="A photo", credit="Staff", height=100)
+
+    items = figure_flowables(fig, width=200.0, styles=styles, project_root=tmp_path)
+
+    assert isinstance(items[0], Table)
+
+
+def test_figure_flowables_preserves_reportlab_memory_refusal(styles: StyleSheet1, tmp_path: Path) -> None:
+    image = tmp_path / "limited.png"
+    PILImage.new("RGB", (3, 2), color=(200, 180, 140)).save(image)
+    fig = Figure(path="limited.png", caption="A photo", credit="Staff", height=100)
+    previous_limit = ImageReader._max_image_size
+    try:
+        # A genuine configured resource refusal must reach the caller rather
+        # than being reported as an unreadable-photo placeholder.
+        ImageReader.set_max_image_size(1)
+        with pytest.raises(MemoryError, match="image would use"):
+            figure_flowables(fig, width=200.0, styles=styles, project_root=tmp_path)
+    finally:
+        ImageReader.set_max_image_size(previous_limit)
 
 
 def test_figure_flowables_no_caption_no_credit(styles: StyleSheet1, tmp_path: Path) -> None:

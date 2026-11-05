@@ -12,8 +12,8 @@ kernel; its computations are checked by an independent NumPy/Pandas oracle.
 ```python
 from template_eda_notebook import load_dataset, clean_dataset, summary_statistics, correlation_matrix
 
-raw = load_dataset()                 # shipped CSV, NaNs preserved
-clean, report = clean_dataset(raw)   # report.dropped = rows removed
+raw = load_dataset()  # shipped CSV, NaNs preserved
+clean, report = clean_dataset(raw)  # report.dropped = rows removed
 for stat in summary_statistics(clean):
     print(stat.column, stat.mean, stat.std)
 print(correlation_matrix(clean))

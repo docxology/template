@@ -14,10 +14,21 @@ backend produces normalised `Paper` records that downstream consumers
 
 ```python
 from infrastructure.search.literature import (
-    Paper, SearchQuery, SearchResult, merge_papers,
-    SearchBackend, LocalBackend, CrossrefBackend, ArxivBackend, PaperclipBackend,
-    LiteratureClient, SearchCache,
-    HttpClient, UrllibHttpClient, HttpResponse, BackendError,
+    Paper,
+    SearchQuery,
+    SearchResult,
+    merge_papers,
+    SearchBackend,
+    LocalBackend,
+    CrossrefBackend,
+    ArxivBackend,
+    PaperclipBackend,
+    LiteratureClient,
+    SearchCache,
+    HttpClient,
+    UrllibHttpClient,
+    HttpResponse,
+    BackendError,
 )
 ```
 
@@ -57,10 +68,9 @@ Corpus format — either a list of `Paper` dicts or `{"papers": [...]}`:
 
 ```python
 import os
+
 backend = PaperclipBackend(api_key=os.environ["PAPERCLIP_API_KEY"])
-result = LiteratureClient([backend]).search(
-    SearchQuery(text="GRPO hyperparameters", sources=["arxiv"], max_results=50)
-)
+result = LiteratureClient([backend]).search(SearchQuery(text="GRPO hyperparameters", sources=["arxiv"], max_results=50))
 ```
 
 ### Cache results for reproducibility
@@ -79,6 +89,7 @@ client.search(SearchQuery(text="adam optimizer"))
 
 ```python
 from infrastructure.search.literature import merge_papers
+
 unique = merge_papers(result_a.papers + result_b.papers)
 ```
 
@@ -125,9 +136,9 @@ resp = client.search("Next.js route handler authentication example", num_results
 for r in resp.results:
     print(r.title, r.url)
 
-client.contents(["https://example.com/post"], text=True)   # parsed content for known URLs
-client.answer("What is retrieval-augmented generation?")    # grounded answer + citations
-client.find_similar("https://example.com/post")             # similar pages for a seed URL
+client.contents(["https://example.com/post"], text=True)  # parsed content for known URLs
+client.answer("What is retrieval-augmented generation?")  # grounded answer + citations
+client.find_similar("https://example.com/post")  # similar pages for a seed URL
 ```
 
 ### CLI
@@ -191,9 +202,7 @@ connection errors with an OpenAI `Idempotency-Key`.
 ## End-to-End: search → BibTeX → PDF
 
 ```python
-from infrastructure.search.literature import (
-    LiteratureClient, SearchQuery, ArxivBackend, CrossrefBackend
-)
+from infrastructure.search.literature import LiteratureClient, SearchQuery, ArxivBackend, CrossrefBackend
 from infrastructure.reference.citation import paper_to_bibentry, write_bibfile
 from infrastructure.reference.citation.models import BibDatabase
 
