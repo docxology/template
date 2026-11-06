@@ -35,7 +35,7 @@ from infrastructure.core.testing.pytest_observations import (
 
 ANCHOR_ENV = "PIPELINE_TEST_MEASUREMENT_SHA256"
 _PLUGIN = "infrastructure.core.testing.pytest_receipt"
-_SCHEMA = "template-project-test-measurement/v1"
+MEASUREMENT_SCHEMA = "template-project-test-measurement/v2"
 _PUBLICATION: ContextVar[dict[str, str] | None] = ContextVar("project_test_measurement_publication", default=None)
 
 
@@ -66,7 +66,8 @@ def _context(env: Mapping[str, str]) -> dict[str, str]:
     return {name: env[name] for name in names}
 
 
-def _inventory(project: Path) -> list[str]:
+def project_measurement_inventory(project: Path) -> list[str]:
+    """Return the actual conventional test-file membership used by the owner."""
     # Reuse is deliberately restricted to a complete conventional pytest tree.
     # A project with custom collection remains eligible for genuine fresh tests.
     return sorted(
@@ -140,7 +141,7 @@ def prepare_measurement(
         nonce,
         directory,
         tuple(cmd[5:]),
-        tuple(_inventory(project)),
+        tuple(project_measurement_inventory(project)),
         float(floor),
         deadline,
     )
@@ -152,12 +153,13 @@ def _bound_bytes(project: Path, path: Path) -> bytes:
 
 def _commitment(project: Path, path: Path) -> dict[str, str]:
     return {
-        "path": path.relative_to(project).as_posix(),
+        "project_path": path.relative_to(project).as_posix(),
         "sha256": hashlib.sha256(_bound_bytes(project, path)).hexdigest(),
     }
 
 
-def _coverage(project: Path, raw: bytes, floor: float) -> dict[str, Any]:
+def measurement_coverage_report(raw: bytes, floor: float) -> dict[str, Any]:
+    """Decode actual branch-coverage DATA and enforce its Source-declared floor."""
     report = json.loads(raw)
     percentage = report["totals"]["percent_covered"]
     if (
@@ -168,27 +170,35 @@ def _coverage(project: Path, raw: bytes, floor: float) -> dict[str, Any]:
         or not report["files"]
     ):
         raise ValueError("Original project branch coverage does not meet its declared floor")
-    for name in report["files"]:
-        path = Path(name)
-        target = path if path.is_absolute() else project / path
-        # Read the actual named Source through the same no-follow boundary.
-        target.relative_to(project / "src")
-        read_bytes_confined(project, target)
     return cast(dict[str, Any], report)
 
 
-def _execution(
-    project: Path, directory: Path, nonce: str, arguments: list[str], files: list[str]
-) -> tuple[int, list[dict[str, str]]]:
-    paths = sorted(directory.glob("execution-*.json"))
-    if not paths:
-        raise ValueError("Original project execution callback is missing")
-    if len(paths) > 1:
-        raise MeasurementIneligible("Measurement requires one original serial controller, without retries")
-    raw = _bound_bytes(project, paths[0])
+def measurement_source_paths(project: Path, report: dict[str, Any]) -> tuple[Path, ...]:
+    """Validate original coverage coordinates; returned paths grant no read authority."""
+    paths = []
+    for name in report["files"]:
+        if not isinstance(name, str) or "\\" in name or "\0" in name or ".." in Path(name).parts:
+            raise ValueError("Original coverage Source path is unsafe")
+        path = Path(name)
+        target = path if path.is_absolute() else project / path
+        target.relative_to(project / "src")
+        paths.append(target)
+    return tuple(paths)
+
+
+def _coverage(project: Path, raw: bytes, floor: float) -> dict[str, Any]:
+    report = measurement_coverage_report(raw, floor)
+    for target in measurement_source_paths(project, report):
+        # Read the actual named Source through the same no-follow boundary.
+        read_bytes_confined(project, target)
+    return report
+
+
+def measurement_execution_snapshot(raw: bytes, nonce: str, arguments: list[str], files: list[str]) -> int:
+    """Decode one actual retained callback with the live owner's same predicates."""
     value = json.loads(raw)
-    selected, _ = read_execution_receipts(directory, nonce, snapshots=(raw,))
-    collected, deselected, profile = read_execution_collection(directory, nonce, snapshots=(raw,))
+    selected, _ = read_execution_receipts(Path("."), nonce, snapshots=(raw,))
+    collected, deselected, profile = read_execution_collection(Path("."), nonce, snapshots=(raw,))
     if (
         value["worker"] != "controller"
         or value["selected"] != list(selected)
@@ -211,8 +221,20 @@ def _execution(
         )
     ):
         raise MeasurementIneligible("Original full project collection or all-pass execution differs")
-    return len(selected), [
-        {"path": paths[0].relative_to(project).as_posix(), "sha256": hashlib.sha256(raw).hexdigest()}
+    return len(selected)
+
+
+def _execution(
+    project: Path, directory: Path, nonce: str, arguments: list[str], files: list[str]
+) -> tuple[int, list[dict[str, str]]]:
+    paths = sorted(directory.glob("execution-*.json"))
+    if not paths:
+        raise ValueError("Original project execution callback is missing")
+    if len(paths) > 1:
+        raise MeasurementIneligible("Measurement requires one original serial controller, without retries")
+    raw = _bound_bytes(project, paths[0])
+    return measurement_execution_snapshot(raw, nonce, arguments, files), [
+        {"project_path": paths[0].relative_to(project).as_posix(), "sha256": hashlib.sha256(raw).hexdigest()}
     ]
 
 
@@ -228,11 +250,11 @@ def publish_measurement(observation: ProjectTestMeasurement, *, original_exit_co
     if (
         source_content_fingerprint(item.repo, item.project) != item.source
         or analysis_runtime_binding(item.project, interpreter=item.interpreter) != item.runtime
-        or _inventory(item.project) != list(item.files)
+        or project_measurement_inventory(item.project) != list(item.files)
     ):
         raise ValueError("Original test Source/runtime changed during execution")
     record: dict[str, Any] = {
-        "schema": _SCHEMA,
+        "schema": MEASUREMENT_SCHEMA,
         "project": str(item.project),
         "repo": str(item.repo),
         "context": item.context,
@@ -286,21 +308,23 @@ def validate_measurement(project: Path, env: Mapping[str, str], anchor: str) -> 
 
     floor = project_declared_coverage_floor(project)
     if (
-        value["schema"] != _SCHEMA
+        value["schema"] != MEASUREMENT_SCHEMA
         or value["project"] != str(project)
         or value["context"] != context
         or value["original_exit_code"] != 0
         or value["interpreter"] != str(selected)
         or value["source"] != source_content_fingerprint(repo, project)
         or value["runtime"] != analysis_runtime_binding(project, interpreter=selected)
-        or value["files"] != _inventory(project)
+        or value["files"] != project_measurement_inventory(project)
         or floor is None
         or value["floor"] != floor
     ):
         raise ValueError("Project measurement does not match current Source/runtime/run/floor")
     coverage_raw = b""
     for entry in [*value["receipts"], value["coverage"], value["database"]]:
-        path = project / entry["path"]
+        if set(entry) != {"project_path", "sha256"}:
+            raise ValueError("Project measurement requires an exact project-relative commitment")
+        path = project / entry["project_path"]
         artifact_raw = _bound_bytes(project, path)
         if hashlib.sha256(artifact_raw).hexdigest() != entry["sha256"]:
             raise ValueError("Original project measurement artifact changed")
@@ -325,4 +349,13 @@ def consume_measurement(project: Path, output: Path | None = None) -> tuple[int,
     return count, f"{report['totals']['percent_covered']:.2f}"
 
 
-__all__ = ["consume_measurement", "prepare_measurement", "publish_measurement"]
+__all__ = [
+    "MEASUREMENT_SCHEMA",
+    "consume_measurement",
+    "measurement_coverage_report",
+    "measurement_execution_snapshot",
+    "measurement_source_paths",
+    "prepare_measurement",
+    "project_measurement_inventory",
+    "publish_measurement",
+]

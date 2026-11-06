@@ -20,6 +20,7 @@ import yaml
 
 from infrastructure.core.config.loader import validate_config_keys
 from infrastructure.core.project_pyproject import load_project_pyproject
+from infrastructure.core.testing.pytest_marker_exprs import repository_marker_expression
 from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
 
 SDK_PACKAGE = "research-project-template"
@@ -101,6 +102,24 @@ def _sdk_binding(root: Path, project_root: Path, version: str) -> tuple[list[str
             if not versions or any(item != version for item in versions):
                 findings.append(f"uv.lock {SDK_PACKAGE} version {versions!r} differs from {version!r}")
     return findings, declared if isinstance(declared, str) else None
+
+
+def _pytest_marker_findings(project_root: Path) -> list[str]:
+    "Keep the canonical profile vocabulary valid under strict pytest selection."
+    try:
+        payload = tomllib.loads((project_root / "pyproject.toml").read_text(encoding="utf-8"))
+    except (OSError, tomllib.TOMLDecodeError) as error:
+        return [f"unreadable pyproject.toml: {error}"]
+    options = payload.get("tool", {}).get("pytest", {}).get("ini_options", {})
+    markers = options.get("markers", []) if isinstance(options, dict) else None
+    if not isinstance(markers, list) or any(not isinstance(item, str) for item in markers):
+        return ["pytest markers must be a list of declared marker strings"]
+    registered = {item.split(":", 1)[0].split("(", 1)[0].strip() for item in markers}
+    required = {clause.removeprefix("not ") for clause in repository_marker_expression().split(" and ")}
+    missing = sorted(required - registered)
+    if missing:
+        return ["pytest markers must declare canonical profile names: " + ", ".join(missing)]
+    return []
 
 
 def _manuscript_findings(project_name: str, project_root: Path, version: str) -> list[str]:
@@ -195,6 +214,8 @@ def validate_exemplar_configs(repo_root: Path, *, projects: tuple[str, ...] | No
                     f"[tool.template].platform_version {declared_version!r} differs from {version!r}",
                 )
             )
+        for detail in _pytest_marker_findings(project_root):
+            findings.append(ExemplarConfigFinding(name, "pytest-markers", detail))
         for detail in _manuscript_findings(project_name, project_root, version):
             findings.append(ExemplarConfigFinding(name, "manuscript-config", detail))
     return ExemplarConfigReport(projects=len(roster), findings=tuple(findings))

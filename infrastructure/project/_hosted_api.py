@@ -19,6 +19,7 @@ from infrastructure.reporting.release_readiness_snapshot import json_object_from
 
 _PENDING: ContextVar[_ReaderCredentials | None] = ContextVar("fixed_hosted_reader_credentials", default=None)
 _KEY = object()
+_ARL_WORKFLOW = ".github/workflows/platform-native-preflight.yml"
 
 
 class _ReaderCredentials:
@@ -101,10 +102,9 @@ class _FixedHostedApi:
         self._used: set[str] = set()
 
     def _execute(self, command: list[str], label: str) -> tuple[dict[str, Any], dict[str, str]]:
-        from infrastructure.project.public_hosted_origin import _process
-
-        from infrastructure.project.public_hosted_origin import DOWNLOAD_SCRIPT, WORKFLOW, _api_command
         import re
+
+        from infrastructure.project.public_hosted_origin import DOWNLOAD_SCRIPT, WORKFLOW, _api_command, _process
 
         api_command = command
         if command[:4] == [sys.executable, "-I", "-c", DOWNLOAD_SCRIPT]:
@@ -114,7 +114,12 @@ class _FixedHostedApi:
         endpoint = api_command[-1] if api_command else ""
         prefix = f"repos/{self.repository}"
         allowed = (
-            endpoint in {f"{prefix}/actions/runs/{self.run_id}", f"{prefix}/contents/{WORKFLOW}?ref={self.head}"}
+            endpoint
+            in {
+                f"{prefix}/actions/runs/{self.run_id}",
+                f"{prefix}/contents/{WORKFLOW}?ref={self.head}",
+                f"{prefix}/contents/{_ARL_WORKFLOW}?ref={self.head}",
+            }
             or re.fullmatch(
                 re.escape(prefix)
                 + rf"/actions/(?:artifacts/[1-9][0-9]*(?:/zip)?|runs/{self.run_id}/"
@@ -171,6 +176,10 @@ class _FixedHostedApi:
         from infrastructure.project.public_hosted_origin import WORKFLOW
 
         return self._json(f"repos/{self.repository}/contents/{WORKFLOW}?ref={self.head}", "workflow")
+
+    def arl_workflow_metadata(self) -> tuple[dict[str, Any], dict[str, str]]:
+        """Read only the fixed same-SHA ARL diagnostic workflow."""
+        return self._json(f"repos/{self.repository}/contents/{_ARL_WORKFLOW}?ref={self.head}", "arl-workflow")
 
     def artifact_metadata(self, artifact_id: int) -> tuple[dict[str, Any], dict[str, str]]:
         self._positive(artifact_id)

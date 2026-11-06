@@ -4,6 +4,12 @@ from __future__ import annotations
 
 import hashlib
 import json
+import os
+import subprocess
+import sys
+import tomllib
+
+import pytest
 from pathlib import Path
 
 from infrastructure.project.exemplar_config_contract import (
@@ -11,7 +17,20 @@ from infrastructure.project.exemplar_config_contract import (
     validate_exemplar_configs,
 )
 
+from infrastructure.core.testing.pytest_marker_exprs import repository_marker_expression
+from infrastructure.core.testing.pytest_profiles import build_profile_marker_expression, resolve_test_profile
+from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
+
 REPO_ROOT = Path(__file__).resolve().parents[3]
+_ROOT_PYTEST_OPTIONS = tomllib.loads((REPO_ROOT / "pyproject.toml").read_text(encoding="utf-8"))["tool"]["pytest"][
+    "ini_options"
+]
+_CANONICAL_MARKERS = tuple(clause.removeprefix("not ") for clause in repository_marker_expression().split(" and "))
+_CANONICAL_DECLARATIONS = [
+    row
+    for row in _ROOT_PYTEST_OPTIONS["markers"]
+    if row.split(":", 1)[0].split("(", 1)[0].strip() in _CANONICAL_MARKERS
+]
 
 
 def test_every_canonical_exemplar_satisfies_the_configuration_contract() -> None:
@@ -36,6 +55,8 @@ def _scaffold(
         'research-project-template = { path = "../../..", editable = true }\n\n'
         "[tool.template]\n"
         f'platform_version = "{platform}"\n'
+        "\n[tool.pytest.ini_options]\n"
+        f"markers = {json.dumps(_CANONICAL_DECLARATIONS)}\n"
     )
     (project / "manuscript" / "config.yaml").write_text(
         f'paper:\n  title: probe\npublication:\n  platform_version: "{published}"\n{config_block}',
@@ -160,3 +181,76 @@ def test_matching_artifact_manifest_is_not_reported(tmp_path: Path) -> None:
     report = validate_exemplar_configs(tmp_path, projects=("templates/template_probe",))
     details = " ".join(item.detail for item in report.findings)
     assert "artifact_manifest.json" not in details
+
+
+@pytest.mark.parametrize("missing", _CANONICAL_MARKERS)
+def test_missing_canonical_profile_marker_is_reported(tmp_path: Path, missing: str) -> None:
+    _scaffold(tmp_path, pin="research-project-template==9.9.9", platform="9.9.9", config_block="", published="9.9.9")
+    project = tmp_path / "projects/templates/template_probe"
+    config = project / "pyproject.toml"
+    declarations = [row for row in _CANONICAL_DECLARATIONS if row.split(":", 1)[0].strip() != missing]
+    config.write_text(config.read_text().replace(json.dumps(_CANONICAL_DECLARATIONS), json.dumps(declarations)))
+    report = validate_exemplar_configs(tmp_path, projects=("templates/template_probe",))
+    findings = [item for item in report.findings if item.rule == "pytest-markers"]
+    assert len(findings) == 1 and findings[0].detail.endswith(missing)
+
+
+def _strict_selection(tmp_path: Path, declarations: list[str], expression: str, *, foreign: bool = False):
+    config = tmp_path / "pyproject.toml"
+    config.write_text(
+        "[tool.pytest.ini_options]\nstrict_markers = true\n" + "markers = " + json.dumps(declarations) + "\n"
+    )
+    cases = tmp_path / "test_selection.py"
+    cases.write_text(
+        "import pytest\n\ndef test_baseline():\n    assert True\n"
+        + "".join(f"\n@pytest.mark.{marker}\ndef test_{marker}():\n    assert True\n" for marker in _CANONICAL_MARKERS)
+        + ("\n@pytest.mark.foreign_marker_control\ndef test_foreign():\n    assert True\n" if foreign else "")
+    )
+    environment = os.environ.copy()
+    environment["PYTEST_DISABLE_PLUGIN_AUTOLOAD"] = "1"
+    for key in ("PYTEST_ADDOPTS", "PYTEST_PLUGINS"):
+        environment.pop(key, None)
+    return subprocess.run(
+        [
+            sys.executable,
+            "-m",
+            "pytest",
+            "-c",
+            str(config),
+            "--confcutdir",
+            str(tmp_path),
+            "--strict-markers",
+            "-p",
+            "no:cacheprovider",
+            "-q",
+            "-m",
+            expression,
+            str(cases),
+        ],
+        cwd=tmp_path,
+        env=environment,
+        stdin=subprocess.DEVNULL,
+        capture_output=True,
+        text=True,
+        timeout=30,
+        check=False,
+    )
+
+
+@pytest.mark.parametrize("project", PUBLIC_PROJECT_NAMES)
+@pytest.mark.parametrize(
+    "profile, expected", [("quick", "1 passed, 10 deselected"), ("release", "2 passed, 9 deselected")]
+)
+def test_actual_project_marker_declarations_preserve_strict_profile_selection(
+    tmp_path: Path, project: str, profile: str, expected: str
+) -> None:
+    metadata = tomllib.loads((REPO_ROOT / "projects" / project / "pyproject.toml").read_text(encoding="utf-8"))
+    declarations = metadata["tool"]["pytest"]["ini_options"]["markers"]
+    expression = build_profile_marker_expression(resolve_test_profile(profile))
+    assert expression is not None
+    selected = _strict_selection(tmp_path, declarations, expression)
+    assert selected.returncode == 0, selected.stdout + selected.stderr
+    assert expected in selected.stdout
+    rejected = _strict_selection(tmp_path, declarations, expression, foreign=True)
+    assert rejected.returncode == 2, rejected.stdout + rejected.stderr
+    assert "foreign_marker_control" in rejected.stdout + rejected.stderr

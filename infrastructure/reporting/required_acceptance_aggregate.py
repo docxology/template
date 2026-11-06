@@ -4,14 +4,13 @@ from __future__ import annotations
 
 import argparse
 import hashlib
-import json
 import re
 import subprocess
+import time
 from pathlib import Path
 from typing import Any, Sequence
 
 from infrastructure.project.public_acceptance_evidence import write_json
-from infrastructure.project.public_root_census_encoding import SCHEMA as CENSUS_ENCODING_SCHEMA, decode
 from infrastructure.core.files.secure_write import atomic_write_bytes_confined
 from infrastructure.project.public_capabilities import CANONICAL_CI_PYTHON_VERSIONS
 from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
@@ -103,44 +102,26 @@ def auxiliary_owned_projection(values: dict[str, dict[str, Any]], requirements: 
 
 
 def _evidence_closure(reader: SnapshotReader, relative: str) -> dict[str, bytes]:
-    """Follow exact public artifact bindings, excluding unrelated readiness outputs."""
-    observed: dict[str, bytes] = {}
+    """Follow the bounded whole-transport graph, preserving exact public bindings."""
+    from infrastructure.reporting.required_candidate_transport import _graph_paths
 
-    def visit(path: str, expected: str | None = None) -> None:
-        held = reader.read(path)
-        if expected is not None and held.sha256 != expected:
-            raise ValueError("bundle artifact differs from its original reference")
-        if not Path(path).is_relative_to("output/readiness"):
-            return  # Source remains in the exact checkout, never overwritten by transfer.
-        if path in observed:
-            return
-        observed[path] = held.content
-        if sum(len(content) for content in observed.values()) > 64 * 1024 * 1024:
-            raise ValueError("complete acceptance exceeds the hosted archive byte ceiling")
-        if path.endswith(".json"):
-            payload = json.loads(held.content)
-            if isinstance(payload, dict) and payload.get("schema_version") == CENSUS_ENCODING_SCHEMA:
-                payload = decode(payload)
-            walk(payload)
+    deadline = reader.operation_deadline
+    if deadline is None and reader.native_operation is not None:
+        deadline = reader.native_operation.deadline
+    if deadline is None:
+        deadline = time.monotonic() + 300
+    paths = _graph_paths(reader.root, relative, reader, deadline=deadline, strict_bindings=True)
+    content = {}
+    from infrastructure.project.public_reference_git import remaining
 
-    def walk(value: object) -> None:
-        if isinstance(value, dict):
-            if (
-                set(value) in ({"path", "sha256"}, {"path", "sha256", "width_px", "height_px", "variance"})
-                and isinstance(value.get("path"), str)
-                and isinstance(value.get("sha256"), str)
-            ):
-                visit(value["path"], value["sha256"])
-            if isinstance(value.get("artifact"), str) and isinstance(value.get("artifact_sha256"), str):
-                visit(value["artifact"], value["artifact_sha256"])
-            for item in value.values():
-                walk(item)
-        elif isinstance(value, list):
-            for item in value:
-                walk(item)
-
-    visit(relative)
-    return observed
+    for path in paths:
+        remaining(deadline)
+        content[path] = reader.read(path).content
+    remaining(deadline)
+    if not reader.unchanged():
+        raise ValueError("bundle evidence changed during complete bounded readback")
+    remaining(deadline)
+    return content
 
 
 def stage_passed_bundle(

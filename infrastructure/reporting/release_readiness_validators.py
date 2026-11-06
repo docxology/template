@@ -241,6 +241,16 @@ def _export(requirement: Requirement, details: dict[str, Any], reader: SnapshotR
 
 
 def _live(requirement: Requirement, details: dict[str, Any], reader: SnapshotReader) -> None:
+    if details.get("execution_kind") == "projection":
+        from infrastructure.project.public_acceptance_literature_group import validate_projection_execution
+
+        if details.get("capability") != requirement.capability or details.get("paid") is not False:
+            raise ValueError("literature projection changed its declared unpaid capability")
+        validate_projection_execution(requirement.id, details, reader)
+        _oracles(details, reader)
+        # validate_acceptance still requires this reader's own audited process,
+        # its negative control, and one completely admitted original-only chain.
+        return
     if (
         details.get("capability") != requirement.capability
         or details.get("paid") is not False

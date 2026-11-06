@@ -279,6 +279,10 @@ def validate_auxiliary_process(gate: str, fingerprint: str, details: dict[str, A
         )
         for stream in negative.get("streams", {}).values():
             artifact(stream)
+    if "literature_group" in spec or "literature_role" in details or "literature_origin" in spec:
+        from infrastructure.project.public_acceptance_literature_group import validate_group_process
+
+        validate_group_process(gate, fingerprint, details, reader, process, spec)
     if details.get("native_artifact"):
         native = artifact(details["native_artifact"]).json_object()
         if native.get("status") != "passed":

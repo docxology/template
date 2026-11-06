@@ -452,6 +452,13 @@ before checking capability status. Failed and blocked originals remain available
 in the ordinary auxiliary artifact. Transport uses the existing file/byte bounds
 and original operation deadline; retained diagnostics grant no acceptance.
 
+The capability-group v2 interpreter descriptor uses `executable` and `sha256`
+for the original absolute runtime identity. It is not a repository artifact
+binding. The strict reader still checks that executable and hash against the
+actual producer process and original runtime; both generic artifact walkers
+retain their absolute-path refusals. Group v1 DATA remains retained historical
+evidence and is never rewritten or upgraded to grant current admission.
+
 Disposable Pitch pipelines obtain repository facts from the complete original
 Root as explicitly bound DATA. `public_acceptance_auxiliary_reference.py`
 admits its actual Git HEAD and Source fingerprint with `PublicReference` under
@@ -485,6 +492,15 @@ diagnostic only. It cannot replace original process or completion receipts.
 
 The Source-only Active refresh observer lives in active_pipeline_diagnostics.py. It reads the actual project's literal REQUIRED_OUTPUTS registry without importing domain code, records confined phase hashes and bounded raw generated JSON/compiled sections, and invokes genuine project validators under the nominated interpreter with physical-source checks. Missing, malformed, oversized, linked, and foreign-source observations remain unavailable; diagnostic records grant no acceptance. Run it as python -m infrastructure.project.active_pipeline_diagnostics with the selected project src and current Root on PYTHONPATH.
 
+The public_acceptance_literature_readback.py selected-cell diagnostic consumes
+one completed same-SHA ARL workflow artifact through fixed authenticated read
+APIs. It preserves the downloaded ZIP and exact run/job/artifact observations,
+refuses occupied or incomplete originals, and runs the full independent reader
+on a new read-only import. Select diagnostic_arl_readback in the registered
+native-preflight workflow and supply the producer run, attempt and exact SHA;
+keep that branch frozen through both dispatches. It starts no provider/model
+work and does not authorize aggregate acceptance or release.
+
 
 `public_root_policy_census.py` composes the existing original canonical census,
 same-environment family ledger and optional existing draft author. Review
@@ -493,3 +509,14 @@ member/fixture-observation hashes; the helper only binds the fresh census
 identities into new decision DATA. Only canonical Linux 3.14 emits a draft;
 other supported targets independently collect and check the same template.
 Neither collection nor a draft installs policy or grants runtime/release acceptance.
+
+### Portable project-test measurement custody
+
+`public_acceptance_pipeline_measurement.py` retains the genuine pipeline child's
+executor-held test-measurement anchor and every original project artifact. The
+portable v2 pipeline manifest binds the unchanged raw measurement, coverage JSON,
+coverage database and all declared callbacks to canonical current-root copies.
+Its independent reader checks the complete inventory, original coordinates,
+Source/runtime/run context, actual callback outcomes and branch coverage.
+Pipeline child stream files are created and exported in the same Source-owned
+outer cell coordinate; raw process JSON is never rewritten during export.

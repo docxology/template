@@ -1,5 +1,26 @@
 # Reporting Package
 
+Auxiliary original ZIP import uses the existing Source-native whole-transport
+8 GiB ceiling separately from the unchanged 64 MiB compressed archive and
+individual-file limits and the 10,000-member auxiliary census. It preflights
+physical disk reserve, decodes one bounded member at a time, and verifies exact
+copied bytes. Both the matrix collector and the distinct ARL readback use this
+same importer, and the matrix accumulates actual decoded bytes and member counts
+across its cells before the next import, retaining the whole 200,000-member ceiling. The shared graph collector preserves exact sized bindings,
+Source exclusion, member and byte totals, and the original finite reader clock.
+Byte transport grants no process, provider, model, aggregate or release authority;
+the full consumer still validates every original and capability projection.
+
+Artifact graphs nominate only the exact `path`/`sha256` binding, its `bytes`
+variant, and the native raster variant with `width_px`, `height_px` and `variance`.
+Additional fields describe owner-specific DATA rather than granting Root path
+coordinates. Native candidate packing still includes the authenticated native
+custodian's complete census and every readiness snapshot consumed by the same
+passing reader. Its original absolute-in-Root and parent-relative `payload-*`
+normalization remain unchanged. Graphs accept general JSON values, including
+arrays, while rejecting duplicate fields at every depth. Semantic object readers
+continue to require a JSON object.
+
 `native_auxiliary_print_custody.py` separates the fixed audited live print
 producer from completed originals. Tool events come directly from the actual
 ToolAPI; only the genuine supervisor return or live same-run collector mints

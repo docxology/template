@@ -105,3 +105,5 @@ JavaScript instructions. It does not execute challenge scripts. Other HTML and
 malformed PDF responses still fail PDF extraction; DOI, license, candidate and
 deadline checks are unchanged. A blocked access attempt can proceed through the
 existing bounded full-text candidate route, and cannot satisfy full-text itself.
+
+HTTP error attempts retain optional error_response_headers DATA for Retry-After and X-RateLimit-Limit, Remaining, Credits-Used and Reset only. Each fixed field is observed with a bounded numeric/date value, absent, or unavailable with a value-free reason; duplicate, invalid and oversized values are never echoed. These observations infer neither quota cause nor cooldown and do not change the three-attempt retry policy, delays, deadlines or blocked outcome. Arbitrary headers, cookies, credentials and HTTP error bodies are not added to this record.

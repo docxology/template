@@ -79,8 +79,8 @@ def _has_public_prefix(parts: tuple[str, ...], prefixes: frozenset[tuple[str, ..
     return any(parts[:depth] in prefixes for depth in depths)
 
 
-def json_object_from_bytes(content: bytes) -> dict[str, Any]:
-    """Decode retained JSON objects without ambiguous fields at any depth."""
+def json_value_from_bytes(content: bytes) -> Any:
+    """Decode any retained JSON value without ambiguous fields at any depth."""
 
     def unique_object(pairs: list[tuple[str, Any]]) -> dict[str, Any]:
         result: dict[str, Any] = {}
@@ -90,7 +90,12 @@ def json_object_from_bytes(content: bytes) -> dict[str, Any]:
             result[key] = value
         return result
 
-    value = json.loads(content, object_pairs_hook=unique_object)
+    return json.loads(content, object_pairs_hook=unique_object)
+
+
+def json_object_from_bytes(content: bytes) -> dict[str, Any]:
+    """Keep semantic evidence object-only after duplicate-safe value decoding."""
+    value = json_value_from_bytes(content)
     if not isinstance(value, dict):
         raise ValueError("acceptance artifact must be a JSON object")
     return value

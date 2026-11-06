@@ -22,6 +22,37 @@ fixed same-run Darwin producer job/artifact using actual API/download results.
 Do not construct print originals from parsed receipts or broaden Root's six
 artifact roster; the live supervisor/collector owns the capability.
 
+`public_acceptance_literature_group_cli.py` independently reads every gate of
+one complete ARL original cell through the strict Source requirements. The
+registered native-preflight workflow can dispatch this diagnostic separately;
+it grants no aggregate or release acceptance.
+
+`public_acceptance_literature_group.py` groups only the complete serial ARL
+matrix cell: one actual literature producer, then independently supervised
+capability readers, each with its own executed negative control. Group nonce,
+Source selection, source/interpreter/model identity and original operation clock
+are bound in the invocation and worker specs. The hosted reader consumes that
+binding, follows exactly one admitted original edge, and reopens every retained
+original/consumed/model file. Failed attempts remain refused; no projection
+retries providers or reuses evidence across invocations.
+
+The capability-group v2 interpreter descriptor uses `executable` and `sha256`
+for the original absolute runtime identity. It is not a repository artifact
+binding. The strict reader still checks that executable and hash against the
+actual producer process and original runtime; both generic artifact walkers
+retain their absolute-path refusals. Group v1 DATA remains retained historical
+evidence and is never rewritten or upgraded to grant current admission.
+
+
+The public_acceptance_literature_readback.py diagnostic authenticates an already
+completed ARL producer through fixed same-repository GitHub APIs. Workflow,
+producer and reader must share the exact immutable SHA. It imports the actual
+downloaded ZIP into a new read-only original directory, uses the existing
+complete artifact closure, then executes the full original group reader with
+its fresh 300-second clock. Missing bytes, unsuccessful/mixed attempts, expired
+artifacts and changed Source refuse; no providers/models or held matrix
+originals are created. Its retained report grants no aggregate/release claim.
+
 Literature auxiliary adapters use `public_acceptance_literature_diagnostics.py`
 to export every producer original before status admission. Keep failed/blocked
 receipts and request/response/execution bytes under the cell's ordinary artifact,
@@ -794,3 +825,14 @@ member/fixture-observation hashes; the helper only binds the fresh census
 identities into new decision DATA. Only canonical Linux 3.14 emits a draft;
 other supported targets independently collect and check the same template.
 Neither collection nor a draft installs policy or grants runtime/release acceptance.
+
+### Portable project measurement owner
+
+`public_acceptance_pipeline_measurement.py` owns byte-complete portable
+measurement custody. Preserve actual Stage 01 executor-held anchor capture, the
+measurement v2 project-coordinate schema, exact canonical export inventories and
+full independent callback/coverage readback. All declared receipts, report and
+database bytes must survive before the disposable producer disappears.
+`public_acceptance_auxiliary_pipeline.py` derives child/spec/bootstrap/stream
+coordinates from the Source-bound portable artifact cell; keep supervisor v3,
+Root public path policy and generic graph rules intact.

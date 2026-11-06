@@ -29,6 +29,8 @@ def execute(
     directory: Path | None = None,
     inputs: dict[str, Any] | None = None,
     operation_deadline: float | None = None,
+    literature_group: dict[str, str] | None = None,
+    literature_origin: dict[str, str] | None = None,
 ) -> dict[str, Any]:
     """Invoke actual owned implementations; never substitute fixture success."""
     if gate == "root:roster":
@@ -178,7 +180,16 @@ def execute(
     if directory is not None:
         from infrastructure.project.public_acceptance_auxiliary_native import native_execution
 
-        native = native_execution(root, gate, budget, directory, inputs or {}, operation_deadline=operation_deadline)
+        native = native_execution(
+            root,
+            gate,
+            budget,
+            directory,
+            inputs or {},
+            operation_deadline=operation_deadline,
+            literature_group=literature_group,
+            literature_origin=literature_origin,
+        )
         if native is not None:
             return native
     scope, kind = gate.rsplit(":", 1)
@@ -404,6 +415,8 @@ def run_specification(root: Path, spec: dict[str, Any]) -> int:
                     directory=(root / spec["raw_path"]).parent,
                     inputs=spec.get("producer_inputs", {}),
                     operation_deadline=spec.get("operation_deadline"),
+                    literature_group=spec.get("literature_group"),
+                    literature_origin=spec.get("literature_origin"),
                 ),
                 status="pass",
             )

@@ -170,6 +170,38 @@ def test_complete_archive_closure_retains_native_raster_rows_and_refuses_changed
         _evidence_closure(SnapshotReader(tmp_path), receipt["path"])
 
 
+def test_complete_archive_retains_exact_sized_original_bytes_and_refuses_tamper(tmp_path):
+    from infrastructure.project.installed_acceptance_artifacts import write_binary
+    from infrastructure.project.public_acceptance_evidence import write_json
+    from infrastructure.reporting.required_acceptance_aggregate import _evidence_closure
+    from infrastructure.reporting.release_readiness_snapshot import SnapshotReader
+
+    content = bytes(range(256)) + b"actual retained provider/model response bytes"
+    artifact = write_binary(tmp_path, tmp_path / "output/readiness/originals/response.bin", content)
+    original = {**artifact, "bytes": len(content)}
+    manifest = write_json(tmp_path, tmp_path / "output/readiness/originals.json", {"files": {"response.bin": original}})
+    receipt = write_json(tmp_path, tmp_path / "output/readiness/receipt.json", {"literature_originals": manifest})
+    closure = _evidence_closure(SnapshotReader(tmp_path), receipt["path"])
+    assert set(closure) == {receipt["path"], manifest["path"], artifact["path"]}
+    assert closure[artifact["path"]] == content
+    (tmp_path / artifact["path"]).write_bytes(content + b"changed")
+    with pytest.raises(ValueError, match="original reference"):
+        _evidence_closure(SnapshotReader(tmp_path), receipt["path"])
+
+
+@pytest.mark.parametrize("size", [0, -1, True, "7"])
+def test_complete_archive_refuses_incorrect_or_malformed_original_size(tmp_path, size):
+    from infrastructure.project.installed_acceptance_artifacts import write_binary
+    from infrastructure.project.public_acceptance_evidence import write_json
+    from infrastructure.reporting.required_acceptance_aggregate import _evidence_closure
+    from infrastructure.reporting.release_readiness_snapshot import SnapshotReader
+
+    artifact = write_binary(tmp_path, tmp_path / "output/readiness/original.bin", b"retained")
+    receipt = write_json(tmp_path, tmp_path / "output/readiness/receipt.json", {"files": [{**artifact, "bytes": size}]})
+    with pytest.raises(ValueError, match="original size|sized artifact binding"):
+        _evidence_closure(SnapshotReader(tmp_path), receipt["path"])
+
+
 def _held_census(*scopes):
     """A held native census exposing the one fact the union assertion reads."""
     from types import SimpleNamespace
