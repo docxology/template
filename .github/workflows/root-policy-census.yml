@@ -1,0 +1,218 @@
+name: Root policy census and reviewed draft
+
+on:
+  workflow_dispatch:
+    inputs:
+      source_sha:
+        description: Exact dispatch commit; must equal this workflow revision
+        type: string
+        required: true
+      mode:
+        description: Collect review candidates, or additionally author a reviewed Linux 3.14 draft
+        type: choice
+        options: [collect, author]
+        default: collect
+      review_template_path:
+        description: Author only; committed infrastructure/config JSON with exhaustive reviewed classifications
+        type: string
+        default: ""
+      review_template_sha256:
+        description: Author only; SHA256 of that exact committed template
+        type: string
+        default: ""
+
+permissions:
+  contents: read
+
+concurrency:
+  group: root-policy-census-${{ github.run_id }}
+  cancel-in-progress: false
+
+env:
+  UV_FROZEN: "true"
+  OLLAMA_SKIP_TEST_MODEL_PULL: "1"
+  MPLBACKEND: Agg
+
+jobs:
+  census:
+    name: Root policy census (${{ matrix.host }}, ${{ matrix.python }})
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 75
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - {runner: ubuntu-24.04, host: linux, python: "3.14"}
+          - {runner: ubuntu-24.04, host: linux, python: "3.15"}
+          - {runner: macos-latest, host: darwin, python: "3.14"}
+          - {runner: macos-latest, host: darwin, python: "3.15"}
+    steps:
+      - name: Admit the exact dispatch and review mode
+        shell: bash
+        env:
+          REQUESTED_SOURCE: ${{ inputs.source_sha }}
+          REQUESTED_MODE: ${{ inputs.mode }}
+          REVIEW_PATH: ${{ inputs.review_template_path }}
+          REVIEW_SHA256: ${{ inputs.review_template_sha256 }}
+        run: |
+          set -euo pipefail
+          [[ "$REQUESTED_SOURCE" =~ ^[0-9a-f]{40}$ ]] && [ "$REQUESTED_SOURCE" = "$GITHUB_SHA" ]
+          case "$REQUESTED_MODE" in
+            collect) [ -z "$REVIEW_PATH" ] && [ -z "$REVIEW_SHA256" ] ;;
+            author)
+              [[ "$REVIEW_PATH" =~ ^infrastructure/config/[A-Za-z0-9_./-]+\.json$ ]]
+              [[ "$REVIEW_PATH" != *..* ]] && [[ "$REVIEW_SHA256" =~ ^[0-9a-f]{64}$ ]]
+              ;;
+            *) exit 1 ;;
+          esac
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ inputs.source_sha }}
+          submodules: true
+          persist-credentials: false
+      - uses: ./.github/actions/setup-python-env
+        with:
+          python-version: ${{ matrix.python }}
+      - name: Prepare the own locked collection environment
+        run: >-
+          uv sync --locked --inexact --group dev --group installed-build
+          --group active-inference --group timeseries-bench --group rendering-pptx
+          --python '${{ matrix.python }}'
+      - name: Prepare exact Source-locked PDFium wheel fixture
+        shell: bash
+        run: |
+          set -euo pipefail
+          wheel=$(.venv/bin/python -B -m infrastructure.project.pdfium_fixture_preparation \
+            --repo-root "$PWD" --temporary-root "$RUNNER_TEMP")
+          echo "TEMPLATE_TEST_PDFIUM_WHEEL=$wheel" >> "$GITHUB_ENV"
+      - uses: ./.github/actions/setup-acceptance-fixtures
+      - uses: ./.github/actions/setup-docs-lint
+      - uses: ./.github/actions/setup-acceptance-documents
+      - name: Prepare source-locked browser math dependencies
+        run: .venv/bin/python -m infrastructure.reporting.native_dependency_preparation --repo-root .
+      - uses: ./.github/actions/setup-acceptance-model
+      - uses: ./.github/actions/setup-ci-execution-user
+        if: runner.os == 'Linux'
+      - name: Collect the original full census and same-job review ledger
+        id: census
+        continue-on-error: true
+        shell: bash
+        env:
+          HOST: ${{ matrix.host }}
+          MINOR: ${{ matrix.python }}
+          REQUESTED_MODE: ${{ inputs.mode }}
+          REVIEW_PATH: ${{ inputs.review_template_path }}
+          REVIEW_SHA256: ${{ inputs.review_template_sha256 }}
+        run: |
+          set -euo pipefail
+          original="$RUNNER_TEMP/root-policy-cli-$HOST-$MINOR"
+          mkdir "$original"
+          mode=collect
+          if [ "$REQUESTED_MODE" = author ]; then
+            mode=review
+            if [ "$HOST" = linux ] && [ "$MINOR" = 3.14 ]; then mode=author; fi
+          fi
+          command=(.venv/bin/python -B -m infrastructure.project.public_root_policy_census
+            --source-sha "$GITHUB_SHA" --mode "$mode" --timeout-seconds 660
+            --directory "$PWD/output/readiness/root-policy-census/$HOST-$MINOR")
+          if [ "$mode" != collect ]; then
+            command+=(--review-template-path "$REVIEW_PATH" --review-template-sha256 "$REVIEW_SHA256")
+          fi
+          original_status=0
+          if [ "$RUNNER_OS" = Linux ]; then
+            .venv/bin/python -m infrastructure.core.testing.ci_execution_user run \
+              --state "$RUNNER_TEMP/template-ci-execution/state.json" -- "${command[@]}" \
+              > "$original/stdout.raw" 2> "$original/stderr.raw" || original_status=$?
+          else
+            "${command[@]}" > "$original/stdout.raw" 2> "$original/stderr.raw" || original_status=$?
+          fi
+          printf '%s\n' "$original_status" > "$original/exit-code"
+          exit "$original_status"
+      - name: Stop only the owned model daemon and descendants
+        if: always()
+        shell: bash
+        run: |
+          python - <<'PYTHON'
+          import json, os, signal, subprocess, time
+          from pathlib import Path
+          def members(group):
+              rows = subprocess.check_output(["ps", "-axo", "pid=,pgid=,lstart=,stat="], text=True)
+              result = {}
+              for line in rows.splitlines():
+                  fields = line.split()
+                  if len(fields) >= 8 and int(fields[1]) == group and not fields[7].startswith("Z"):
+                      result[int(fields[0])] = " ".join(fields[2:7])
+              return result
+          directory = os.environ.get("TEMPLATE_ACCEPTANCE_MODEL_DIRECTORY")
+          owner = Path(directory) / "daemon-owner.json" if directory else None
+          if owner is not None and owner.is_file():
+              record = json.loads(owner.read_text())
+              group = record["pid"]
+              known = {int(pid): birth for pid, birth in record["members"].items()}
+              current = members(group)
+              if current:
+                  assert any(current.get(pid) == birth for pid, birth in known.items()), "Refuse an unverified or reused process group"
+                  known.update(current)
+                  os.killpg(group, signal.SIGTERM)
+                  deadline = time.monotonic() + 5
+                  while members(group) and time.monotonic() < deadline:
+                      time.sleep(0.1)
+                  current = members(group)
+                  if current:
+                      assert any(current.get(pid) == birth for pid, birth in known.items()), "Refuse a reused group during cleanup"
+                      os.killpg(group, signal.SIGKILL)
+                      deadline = time.monotonic() + 5
+                      while members(group) and time.monotonic() < deadline:
+                          time.sleep(0.1)
+                  assert not members(group), "Owned daemon descendants remain alive"
+              (Path(directory) / "daemon-cleanup.json").write_text(json.dumps({"owned_group": group, "live_members_remaining": members(group), "original_exit": 0}))
+          PYTHON
+      - name: Export original Linux census bytes
+        id: linux_export
+        if: always() && runner.os == 'Linux'
+        run: >-
+          .venv/bin/python -m infrastructure.core.testing.ci_execution_user export
+          --state "$RUNNER_TEMP/template-ci-execution/state.json"
+      - name: Export original macOS census bytes
+        id: darwin_export
+        if: always() && runner.os == 'macOS'
+        run: |
+          .venv/bin/python -B - <<'PYTHON'
+          import json, os, tempfile, time
+          from pathlib import Path
+          from infrastructure.core.testing._ci_execution_files import _export
+          destination = Path(tempfile.mkdtemp(prefix="template-root-census-artifacts-", dir=os.environ["RUNNER_TEMP"]))
+          exclusions = []
+          total = _export(Path.cwd() / "output/readiness", destination, time.monotonic() + 120, exclusions=exclusions)
+          with Path(os.environ["GITHUB_ENV"]).open("a") as environment:
+              environment.write(f"TEMPLATE_CI_ARTIFACT_DIRECTORY={destination}\n")
+          print(json.dumps({"transport_bytes": total, "excluded_pytest_scratch": exclusions, "runtime_acceptance": False}))
+          PYTHON
+      - name: Retain original census and same-job review DATA
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: root-policy-census-${{ matrix.host }}-${{ matrix.python }}-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ env.TEMPLATE_CI_ARTIFACT_DIRECTORY }}/root-policy-census/${{ matrix.host }}-${{ matrix.python }}/
+          include-hidden-files: true
+          if-no-files-found: error
+          retention-days: 30
+      - name: Retain original CLI streams and exit
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: root-policy-census-cli-${{ matrix.host }}-${{ matrix.python }}-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/root-policy-cli-${{ matrix.host }}-${{ matrix.python }}/
+          include-hidden-files: true
+          if-no-files-found: error
+          retention-days: 30
+      - name: Require original collection and complete export
+        if: always()
+        shell: bash
+        env:
+          CENSUS_OUTCOME: ${{ steps.census.outcome }}
+          EXPORT_OUTCOME: ${{ runner.os == 'Linux' && steps.linux_export.outcome || steps.darwin_export.outcome }}
+        run: |
+          set -euo pipefail
+          [ "$CENSUS_OUTCOME" = success ] && [ "$EXPORT_OUTCOME" = success ]
+          echo 'Canonical collection/review DATA only; no cases executed, policy installed, runtime accepted, tag or release authorized.' >> "$GITHUB_STEP_SUMMARY"

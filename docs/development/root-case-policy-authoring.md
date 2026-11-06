@@ -48,3 +48,67 @@ checks remain mandatory. One reviewed policy declares both Python minors and
 both host platforms; every applicable target independently authenticates its
 own actual census and runtime providers against that policy. Installing the
 policy requires a new census because policy bytes contribute to source identity.
+
+
+## Exact-source collection and same-job draft workflow
+
+The manual [`root-policy-census.yml`](../../.github/workflows/root-policy-census.yml)
+requires `source_sha` to equal its actual dispatch revision. It collects all four
+supported Linux/Darwin and Python 3.14/3.15 targets using the existing canonical
+owner with its 660-second collection clock. A finite refusal remains a refusal;
+there is no collection filtering, skipped-module admission or invented census.
+The prepared environment mirrors current `root-original`: own locked groups,
+exact PDFium fixture, public fixtures, documentation/native browser assets and
+the existing pinned model readiness preparation. Preparation does not execute
+Root test bodies or a project's live acceptance producer. Original daemon
+cleanup and unprivileged Linux/actual macOS guards remain in use.
+
+`collect` mode invokes the original census and immediately calls `family_ledger`
+in that same physical job and runtime. It retains `original-bundle.json`,
+`family-ledger.json`, the collector's complete bound evidence and `report.json`,
+plus separate raw CLI stdout/stderr/exit artifacts. Hidden members are preserved;
+only the existing declared disposable pytest scratch exclusion applies. All
+artifacts are review DATA and remain distinct from classified runtime evidence.
+
+A downloaded canonical census cannot be passed to the local author as if it
+were a local original: the existing reader binds the physical Root identity,
+selected runtime, provider locations, exact original commands and source. Do not
+rewrite these fields. To author after reviewing the first ledgers, commit an
+exhaustive review template under `infrastructure/config/`, then dispatch `author`
+with that exact path and SHA-256. Every target takes a **new** canonical census
+and ledger. Only Linux 3.14 calls the existing `author_policy` in the same job;
+the other targets check the same template against their fresh observations.
+No template is created or classification inferred by the workflow.
+
+The template has exact top-level fields `schema_version` (value
+`template-root-policy-review-template-v1`), `modules` and `obligations`. Each
+module includes the existing reviewed-decision fields `path`, `source_sha256`,
+`families`, `decision`, `exceptions` and `evidence`, plus
+`family_observations_sha256 = digest(ledger_module["families"])` using the existing
+policy digest. The observations hash binds every original member, source,
+marker/fixture metadata hash and closure result. Missing, extra, duplicated or
+changed modules/families/parameters/fixtures refuse before authoring. Every lane,
+obligation, exception and source-hashed line reference remains an explicit
+review decision and is subsequently checked by the existing strict author.
+
+The helper binds only the actual fresh `source_identity` and `census_sha256` into
+new ignored `reviewed-decisions.json` DATA. It does not reuse an older census,
+change a recorded original, waive portable authentication or install the draft.
+A changed template contributes to the new global Source identity; unchanged
+reviewed module/member/fixture identities must still match. Compare all four
+fresh ledgers before parent-owned encoding/install of the reviewed draft.
+Installing policy requires another exact-source census as described above.
+
+Percentage/date-only changes in `counts_coverage.py` change global Source/stage
+identity but have no direct test/fixture-origin or snapshot-derived parameter-ID
+path in the current Root observer/test contracts. Active's explicit support
+closure does not include encoded Root policy or the review template. Fresh
+four-target collection remains the falsifier for an indirect metadata/member
+change; a mismatch requires review, not a hash restamp or dropped case.
+
+
+The canonical owner retains actual `coordinator.stdout`/`coordinator.stderr` and,
+when the child collection launches, `census.stdout`/`census.stderr` as separate
+bounded diagnostic files. They preserve a real startup/collection refusal without
+changing the strict process-record fields or admitting it as successful evidence.
+Original diagnostics are retained; display summaries do not replace their bytes.
