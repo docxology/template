@@ -30,8 +30,8 @@ ROOT = Path(__file__).resolve().parents[3]
 pytestmark = pytest.mark.timeout(90)
 
 
-def _original(root: Path, fault: str = "none"):
-    project = root / "projects/demo"
+def _original(root: Path, fault: str = "none", *, scope: str = "demo"):
+    project = root / "projects" / scope
     (project / "src").mkdir(parents=True)
     (project / "tests").mkdir()
     (project / "pyproject.toml").write_text(
@@ -243,7 +243,7 @@ def test_actual_stage_completion_carries_original_publication(tmp_path: Path, re
             f"project = Path({str(project)!r})\n"
             "path = measurement_path(project, os.environ['PIPELINE_RUN_ID'])\n"
             "record = json.loads(path.read_bytes())\n"
-            "report_path = project / record['coverage']['path']\n"
+            "report_path = project / record['coverage']['project_path']\n"
             "report = json.loads(report_path.read_bytes())\n"
             "report['meta']['timestamp'] = 're-signed after original publication'\n"
             "report_path.write_text(json.dumps(report))\n"

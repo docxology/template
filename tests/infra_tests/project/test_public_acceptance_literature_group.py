@@ -20,6 +20,7 @@ from infrastructure.project.public_acceptance_literature_group import (
     CAPABILITIES,
     CELL,
     GATES,
+    GROUP_SCHEMA,
     ORIGIN_SCHEMA,
     SCOPE,
     LiteratureGroup,
@@ -216,7 +217,8 @@ def test_separate_controller_invocations_have_distinct_group_identity(tmp_path: 
     assert all(group.origin is None for group in groups)
     for plan in plans:
         assert plan["model"] == "explicit"
-        assert plan["interpreter"]["sha256"] == _digest(python.read_bytes())
+        assert plan["schema_version"] == GROUP_SCHEMA == "template-literature-capability-group-v2"
+        assert plan["interpreter"] == {"executable": str(python), "sha256": _digest(python.read_bytes())}
         assert plan["selection"] == selected
         assert plan["operation_deadline"] == 12345.0
 
@@ -346,8 +348,55 @@ def test_group_reader_rederives_the_complete_selection_from_actual_source(real_g
     assert reader.unchanged()
 
 
+@pytest.mark.parametrize("strict", [True, False])
+def test_group_runtime_descriptor_does_not_nominate_an_artifact(real_group, strict: bool) -> None:
+    from infrastructure.reporting.required_candidate_transport import _graph_paths
+
+    root, _, group, _ = real_group
+    reader = SnapshotReader(root, operation_deadline=time.monotonic() + 60)
+    paths = _graph_paths(
+        root, group.binding["path"], reader, deadline=reader.operation_deadline, strict_bindings=strict
+    )
+    assert paths == {group.binding["path"]: group.binding["sha256"]}
+    # The actual generic reader held the group only. The absolute interpreter
+    # remains runtime DATA; it did not become a confined artifact read.
+    assert set(reader.snapshots) == {root / group.binding["path"]}
+    assert reader.unchanged()
+
+
+def test_legacy_group_wire_shape_reproduces_actual_strict_transport_refusal(real_group) -> None:
+    from infrastructure.reporting.required_candidate_transport import _graph_paths
+
+    root, directory, group, fingerprint = real_group
+    plan = bound(SnapshotReader(root), group.binding).json_object()
+    plan["schema_version"] = "template-literature-capability-group-v1"
+    plan["interpreter"] = {"path": plan["interpreter"]["executable"], "sha256": plan["interpreter"]["sha256"]}
+    binding = write_json(root, directory / "literature-group.json", plan)
+    reader = SnapshotReader(root, operation_deadline=time.monotonic() + 60)
+    with pytest.raises(ValueError, match="absolute|public"):
+        _graph_paths(root, binding["path"], reader, deadline=reader.operation_deadline, strict_bindings=True)
+    from infrastructure.project.public_acceptance_literature_group import read_group
+
+    with pytest.raises(ValueError, match="identity"):
+        read_group(SnapshotReader(root), binding, GATES[0], fingerprint)
+
+
 @pytest.mark.parametrize(
-    "defect", ["scope", "selection", "capability-order", "source", "directory", "deadline", "nonce", "interpreter"]
+    "defect",
+    [
+        "scope",
+        "selection",
+        "capability-order",
+        "source",
+        "directory",
+        "deadline",
+        "nonce",
+        "interpreter",
+        "old-schema",
+        "old-interpreter-field",
+        "interpreter-extra",
+        "interpreter-hash",
+    ],
 )
 def test_group_reader_refuses_resealed_foreign_plan(real_group, defect: str) -> None:
     from infrastructure.project.public_acceptance_literature_group import read_group
@@ -369,7 +418,15 @@ def test_group_reader_refuses_resealed_foreign_plan(real_group, defect: str) -> 
     elif defect == "nonce":
         plan["nonce"] = "not-a-nonce"
     elif defect == "interpreter":
-        plan["interpreter"]["path"] = "relative-python"
+        plan["interpreter"]["executable"] = "relative-python"
+    elif defect == "old-schema":
+        plan["schema_version"] = "template-literature-capability-group-v1"
+    elif defect == "old-interpreter-field":
+        plan["interpreter"]["path"] = plan["interpreter"].pop("executable")
+    elif defect == "interpreter-extra":
+        plan["interpreter"]["authority"] = "self-asserted"
+    elif defect == "interpreter-hash":
+        plan["interpreter"]["sha256"] = "malformed"
     altered = write_json(root, directory / "literature-group.json", plan)
     with pytest.raises(ValueError):
         read_group(SnapshotReader(root), altered, GATES[0], fingerprint)
@@ -381,6 +438,8 @@ def test_group_reader_refuses_resealed_foreign_plan(real_group, defect: str) -> 
         "model",
         "interpreter",
         "interpreter-bytes",
+        "resealed-plan-executable",
+        "resealed-plan-executable-bytes",
         "spec-deadline",
         "process-deadline",
         "nonce-binding",
@@ -395,7 +454,7 @@ def test_group_process_identity_predicate_rejects_foreign_observations(real_grou
     details = {"literature_role": "original", "literature_group": group.binding}
     process = {
         "spec_artifact": {"path": str(directory.relative_to(root) / "002/spec.json")},
-        "selected_interpreter": plan["interpreter"]["path"],
+        "selected_interpreter": plan["interpreter"]["executable"],
         "executable_sha256": plan["interpreter"]["sha256"],
         "original_deadline_monotonic": plan["operation_deadline"],
     }
@@ -410,6 +469,14 @@ def test_group_process_identity_predicate_rejects_foreign_observations(real_grou
         process["selected_interpreter"] = "/foreign/python"
     elif defect == "interpreter-bytes":
         process["executable_sha256"] = "0" * 64
+    elif defect in {"resealed-plan-executable", "resealed-plan-executable-bytes"}:
+        if defect == "resealed-plan-executable":
+            plan["interpreter"]["executable"] = "/foreign/original-python"
+        else:
+            plan["interpreter"]["sha256"] = "0" * 64
+        altered = write_json(root, directory / "literature-group.json", plan)
+        details["literature_group"] = altered
+        spec["literature_group"] = altered
     elif defect == "spec-deadline":
         spec["operation_deadline"] += 1
     elif defect == "process-deadline":

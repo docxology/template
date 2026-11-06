@@ -5,6 +5,10 @@ their runtime fits the smoke deadline. Unlisted helpers retain broad fallback.
 """
 
 SOURCE_TEST_OWNERS: dict[str, tuple[str, ...]] = {
+    "infrastructure/core/testing/project_test_measurement.py": (
+        "tests/infra_tests/core/test_project_test_measurement.py",
+        "tests/infra_tests/project/test_public_acceptance_pipeline_measurement.py",
+    ),
     "infrastructure/reporting/native_worker_startup_diagnostics.py": (
         "tests/infra_tests/reporting/test_native_worker_startup_diagnostics.py",
         "tests/infra_tests/reporting/test_native_worker_execution_diagnostics.py",
@@ -312,6 +316,7 @@ SOURCE_TEST_OWNERS: dict[str, tuple[str, ...]] = {
         "tests/infra_tests/project/test_public_acceptance_auxiliary.py",
     ),
     "infrastructure/project/public_acceptance_auxiliary_pipeline.py": (
+        "tests/infra_tests/project/test_public_acceptance_pipeline_measurement.py",
         "tests/infra_tests/project/test_auxiliary_audited_bootstrap.py",
         "tests/infra_tests/project/test_public_acceptance_auxiliary.py",
     ),
@@ -380,6 +385,7 @@ SOURCE_TEST_OWNERS: dict[str, tuple[str, ...]] = {
         "tests/infra_tests/reporting/test_native_pdfium_verify_current.py",
     ),
     "infrastructure/project/_hosted_api.py": (
+        "tests/infra_tests/project/test_public_acceptance_literature_readback.py",
         "tests/infra_tests/project/test_auxiliary_print_custody.py",
         "tests/infra_tests/project/test_hosted_api.py",
         "tests/infra_tests/project/test_public_hosted_origin.py",
@@ -404,6 +410,7 @@ SOURCE_TEST_OWNERS: dict[str, tuple[str, ...]] = {
         "tests/infra_tests/project/test_public_acceptance_auxiliary_parallel.py",
     ),
     "infrastructure/project/public_hosted_origin.py": (
+        "tests/infra_tests/project/test_public_acceptance_literature_readback.py",
         "tests/infra_tests/project/test_auxiliary_matrix.py",
         "tests/infra_tests/project/test_auxiliary_print_custody.py",
         "tests/infra_tests/project/test_hosted_api.py",
@@ -491,6 +498,7 @@ SOURCE_TEST_OWNERS: dict[str, tuple[str, ...]] = {
         "tests/infra_tests/reporting/test_native_stage_child_contracts.py",
     ),
     "infrastructure/reporting/readiness_receipts.py": (
+        "tests/infra_tests/project/test_public_acceptance_literature_group.py",
         "tests/infra_tests/project/test_auxiliary_matrix.py",
         "tests/infra_tests/project/test_copy_exemplar.py",
         "tests/infra_tests/project/test_public_acceptance.py",

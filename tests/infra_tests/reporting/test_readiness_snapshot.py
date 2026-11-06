@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import hashlib
+import json
 import os
 import sys
 import time
@@ -550,3 +551,25 @@ def test_generic_agent_config_is_bound_while_runtime_memory_stays_private(tmp_pa
         reader.read(private.relative_to(tmp_path).as_posix())
     (tmp_path / ".agents/skill_manifest.json").write_text("changed public manifest\n")
     assert not reader.unchanged() and source_fingerprint(tmp_path) != before
+
+
+@pytest.mark.parametrize("content", [b'[{"nested": [1, null, false]}]', b"3", b"null"])
+def test_general_json_value_does_not_widen_semantic_object_readers(tmp_path: Path, content: bytes) -> None:
+    from infrastructure.reporting.release_readiness_snapshot import json_value_from_bytes
+
+    output = tmp_path / "output/readiness"
+    output.mkdir(parents=True)
+    (output / "value.json").write_bytes(content)
+    held = SnapshotReader(tmp_path).read("output/readiness/value.json")
+    assert json_value_from_bytes(held.content) == json.loads(content)
+    with pytest.raises(ValueError, match="JSON object"):
+        held.json_object()
+
+
+@pytest.mark.parametrize("content", [b'[{"outer": [{"same": 1, "same": 2}]}]', b'{"same": 1, "same": 2}'])
+def test_json_value_and_object_decoders_both_refuse_nested_duplicate_fields(content: bytes) -> None:
+    from infrastructure.reporting.release_readiness_snapshot import json_object_from_bytes, json_value_from_bytes
+
+    for decode in (json_value_from_bytes, json_object_from_bytes):
+        with pytest.raises(ValueError, match="repeats JSON field"):
+            decode(content)

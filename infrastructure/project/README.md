@@ -452,6 +452,13 @@ before checking capability status. Failed and blocked originals remain available
 in the ordinary auxiliary artifact. Transport uses the existing file/byte bounds
 and original operation deadline; retained diagnostics grant no acceptance.
 
+The capability-group v2 interpreter descriptor uses `executable` and `sha256`
+for the original absolute runtime identity. It is not a repository artifact
+binding. The strict reader still checks that executable and hash against the
+actual producer process and original runtime; both generic artifact walkers
+retain their absolute-path refusals. Group v1 DATA remains retained historical
+evidence and is never rewritten or upgraded to grant current admission.
+
 Disposable Pitch pipelines obtain repository facts from the complete original
 Root as explicitly bound DATA. `public_acceptance_auxiliary_reference.py`
 admits its actual Git HEAD and Source fingerprint with `PublicReference` under
@@ -493,3 +500,23 @@ on a new read-only import. Select diagnostic_arl_readback in the registered
 native-preflight workflow and supply the producer run, attempt and exact SHA;
 keep that branch frozen through both dispatches. It starts no provider/model
 work and does not authorize aggregate acceptance or release.
+
+
+`public_root_policy_census.py` composes the existing original canonical census,
+same-environment family ledger and optional existing draft author. Review
+classifications are exhaustive Source JSON with exact module/family/source and
+member/fixture-observation hashes; the helper only binds the fresh census
+identities into new decision DATA. Only canonical Linux 3.14 emits a draft;
+other supported targets independently collect and check the same template.
+Neither collection nor a draft installs policy or grants runtime/release acceptance.
+
+### Portable project-test measurement custody
+
+`public_acceptance_pipeline_measurement.py` retains the genuine pipeline child's
+executor-held test-measurement anchor and every original project artifact. The
+portable v2 pipeline manifest binds the unchanged raw measurement, coverage JSON,
+coverage database and all declared callbacks to canonical current-root copies.
+Its independent reader checks the complete inventory, original coordinates,
+Source/runtime/run context, actual callback outcomes and branch coverage.
+Pipeline child stream files are created and exported in the same Source-owned
+outer cell coordinate; raw process JSON is never rewritten during export.

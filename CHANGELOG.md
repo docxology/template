@@ -17,6 +17,13 @@ matching tag identity and authenticated publication.
 - Bind each ARL capability projection to one invocation's original audited
   producer, retaining the first verdict even on failure. Separately authenticate
   and read a downloaded same-Source carrier with the full original reader.
+- Stream downloaded auxiliary evidence under the existing native aggregate
+  budget while preserving per-file bounds and the complete required closure.
+- Collect and review Root family policy through actual same-checkout census
+  originals on both supported Python minors and host families. Keep policy
+  authoring separate from runtime and release acceptance.
+- Probe the existing real tagged-PDF test independently on all four targets;
+  require one passing case with no skip before drawing a capability conclusion.
 - Retain bounded, allowlisted HTTP error-header observations while preserving
   existing retry behavior and keeping quota interpretation separate.
 - Retain structured rendered-validation drift observations and original worker
@@ -31,8 +38,10 @@ matching tag identity and authenticated publication.
   patches with finite generated ownership, original exits and committed-tree
   gates. Direct push remains inactive pending its separate owner decision.
 - Freeze final metadata and Source before publication regeneration and coverage.
-  Import genuine coverage literals from measured Source, then rebind unchanged
-  outputs at the committed import before exact-main acceptance.
+  Import genuine coverage literals from measured Source, regenerate publication
+  outputs that consume those values, compare measured source/support hashes and
+  remeasure affected source changes before all-project unchanged-output rebind
+  and exact-main acceptance.
 
 ## [5.0.2] - 2026-11-04
 

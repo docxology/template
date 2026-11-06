@@ -36,6 +36,13 @@ binding, follows exactly one admitted original edge, and reopens every retained
 original/consumed/model file. Failed attempts remain refused; no projection
 retries providers or reuses evidence across invocations.
 
+The capability-group v2 interpreter descriptor uses `executable` and `sha256`
+for the original absolute runtime identity. It is not a repository artifact
+binding. The strict reader still checks that executable and hash against the
+actual producer process and original runtime; both generic artifact walkers
+retain their absolute-path refusals. Group v1 DATA remains retained historical
+evidence and is never rewritten or upgraded to grant current admission.
+
 
 The public_acceptance_literature_readback.py diagnostic authenticates an already
 completed ARL producer through fixed same-repository GitHub APIs. Workflow,
@@ -809,3 +816,23 @@ artifacts, Darwin print and native-format originals separate, and preserve
 held contexts through candidate and fresh release handoff validation.
 
 The Source-only Active refresh observer lives in active_pipeline_diagnostics.py. It reads the actual project's literal REQUIRED_OUTPUTS registry without importing domain code, records confined phase hashes and bounded raw generated JSON/compiled sections, and invokes genuine project validators under the nominated interpreter with physical-source checks. Missing, malformed, oversized, linked, and foreign-source observations remain unavailable; diagnostic records grant no acceptance. Run it as python -m infrastructure.project.active_pipeline_diagnostics with the selected project src and current Root on PYTHONPATH.
+
+
+`public_root_policy_census.py` composes the existing original canonical census,
+same-environment family ledger and optional existing draft author. Review
+classifications are exhaustive Source JSON with exact module/family/source and
+member/fixture-observation hashes; the helper only binds the fresh census
+identities into new decision DATA. Only canonical Linux 3.14 emits a draft;
+other supported targets independently collect and check the same template.
+Neither collection nor a draft installs policy or grants runtime/release acceptance.
+
+### Portable project measurement owner
+
+`public_acceptance_pipeline_measurement.py` owns byte-complete portable
+measurement custody. Preserve actual Stage 01 executor-held anchor capture, the
+measurement v2 project-coordinate schema, exact canonical export inventories and
+full independent callback/coverage readback. All declared receipts, report and
+database bytes must survive before the disposable producer disappears.
+`public_acceptance_auxiliary_pipeline.py` derives child/spec/bootstrap/stream
+coordinates from the Source-bound portable artifact cell; keep supervisor v3,
+Root public path policy and generic graph rules intact.

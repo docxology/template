@@ -18,7 +18,7 @@ from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
 from infrastructure.publishing.release_provider_graph import current_provider_graph
 from infrastructure.publishing.root_release_contract import root_package_version
 
-SCHEMA = "template-coordinated-publication-refresh/v2"
+SCHEMA = "template-coordinated-publication-refresh/v3"
 REFRESH_MODES = ("refresh", "rebind-only")
 
 
@@ -98,6 +98,73 @@ def _compiled(root: Path, scope: str, tracked: dict[str, dict[str, str]]) -> lis
     return targets
 
 
+# One reviewed semantic dependency: these producers consume live COUNTS/version
+# facts into Pitch DATA/decks. This is Source policy, never an operator list.
+DEPENDENT_ANALYSIS_SCOPE = "templates/template_pitch_deck"
+_DEPENDENT_INPUTS = (
+    "docs/_generated/COUNTS.md",
+    "pyproject.toml",
+    "infrastructure/__init__.py",
+    "projects/templates/template_pitch_deck/manuscript/config.yaml",
+)
+_DEPENDENT_PRODUCERS = (
+    "scripts/pipeline/stage_02_analysis.py",
+    "projects/templates/template_pitch_deck/scripts/16_generate_charts.py",
+    "projects/templates/template_pitch_deck/scripts/20_render_decks.py",
+    "projects/templates/template_pitch_deck/src/template_pitch_deck/coverage_chart_data.py",
+    "projects/templates/template_pitch_deck/src/template_pitch_deck/deck_tokens.py",
+    "projects/templates/template_pitch_deck/src/template_pitch_deck/infra_facts.py",
+    "projects/templates/template_pitch_deck/src/template_pitch_deck/paths.py",
+    "projects/templates/template_pitch_deck/src/template_pitch_deck/render_orchestration.py",
+    "projects/templates/template_pitch_deck/src/template_pitch_deck/standalone_slides.py",
+)
+
+
+def _dependent_analysis(root: Path, tracked: dict[str, dict[str, str]], mode: str) -> dict[str, dict[str, Any]]:
+    """Bind the finite reviewed consumer without changing generated ownership."""
+    if mode == "rebind-only":
+        return {}
+    if DEPENDENT_ANALYSIS_SCOPE not in PUBLIC_PROJECT_NAMES:
+        raise ValueError("dependent analysis must belong to the canonical public roster")
+
+    def bindings(paths: tuple[str, ...]) -> list[dict[str, Any]]:
+        result = []
+        for relative in paths:
+            record = tracked.get(relative)
+            if record is None or record["kind"] != "blob" or record["mode"] not in {"100644", "100755"}:
+                raise ValueError("dependent analysis requires its tracked Source input/producer: " + relative)
+            body = read_bytes_confined(root, root / relative, max_bytes=256 * 1024 * 1024)
+            if not stat.S_ISREG((root / relative).stat(follow_symlinks=False).st_mode):
+                raise ValueError("dependent analysis Source must remain a regular file")
+            result.append({"path": relative, **record, "sha256": hashlib.sha256(body).hexdigest(), "bytes": len(body)})
+        return result
+
+    config = yaml.safe_load(_regular(root, "projects/" + DEPENDENT_ANALYSIS_SCOPE + "/manuscript/config.yaml"))
+    deck = config.get("project_config", {}).get("deck", {}) if isinstance(config, dict) else {}
+    subject = deck.get("pitch_subject", "template_template") if isinstance(deck, dict) else None
+    if not isinstance(subject, str) or "templates/" + subject not in PUBLIC_PROJECT_NAMES:
+        raise ValueError("dependent Pitch subject must be one declared canonical public project")
+    inputs = (*_DEPENDENT_INPUTS, "projects/templates/" + subject + "/manuscript/config.yaml")
+    input_bindings = bindings(tuple(dict.fromkeys(inputs)))
+    producer_bindings = bindings(_DEPENDENT_PRODUCERS)
+    from infrastructure.core.script_discovery import discover_analysis_scripts
+
+    scripts = tuple(
+        path.relative_to(root).as_posix() for path in discover_analysis_scripts(root, DEPENDENT_ANALYSIS_SCOPE)
+    )
+    charts, decks = _DEPENDENT_PRODUCERS[1:3]
+    if charts not in scripts or decks not in scripts or scripts.index(charts) >= scripts.index(decks):
+        raise ValueError("dependent Pitch Stage 02 must select its charts before its deck producer")
+    return {
+        DEPENDENT_ANALYSIS_SCOPE: {
+            "inputs": input_bindings,
+            "producers": producer_bindings,
+            "analysis_scripts": bindings(scripts),
+            "stage": "scripts/pipeline/stage_02_analysis.py",
+        }
+    }
+
+
 def _inventory_plan(root: Path, source_sha: str, version: str, mode: str = "refresh") -> dict[str, Any]:
     root = root.absolute()
     if mode not in REFRESH_MODES:
@@ -116,11 +183,15 @@ def _inventory_plan(root: Path, source_sha: str, version: str, mode: str = "refr
             tracked[encoded_path.decode()] = {"mode": blob_mode, "kind": kind, "blob": oid}
     allowed = {}
     refresh = []
+    publication_copies = []
+    dependent_analysis = _dependent_analysis(root, tracked, mode)
     compiled_manuscripts: list[str] = []
     for scope in PUBLIC_PROJECT_NAMES:
         prefix = f"projects/{scope}/"
         config = prefix + "output/manuscript/config.yaml"
         if mode == "refresh" and config in tracked:
+            publication_copies.append(scope)
+        if mode == "refresh" and (config in tracked or scope in dependent_analysis):
             refresh.append(scope)
         compiled = set(_compiled(root, scope, tracked)) if mode == "refresh" else set()
         compiled_manuscripts.extend(compiled)
@@ -141,6 +212,8 @@ def _inventory_plan(root: Path, source_sha: str, version: str, mode: str = "refr
         "role": "publication-refresh-preparation-only",
         "mode": mode,
         "compiled_manuscripts": sorted(compiled_manuscripts),
+        "dependent_analysis": dependent_analysis,
+        "publication_copies": publication_copies,
         "base_commit": source_sha,
         "base_tree": git(root, "rev-parse", source_sha + "^{tree}").decode().strip(),
         "platform_version": version,
@@ -252,6 +325,26 @@ def finish_review(root: Path, directory: Path) -> Path:
             )
         ):
             raise ValueError("both original gates must succeed on the committed candidate")
+    if plan["dependent_analysis"]:
+        from infrastructure.publishing.publication_refresh import generation_commands
+
+        for scope in plan["dependent_analysis"]:
+            for label, arguments in generation_commands(root, plan, [scope]):
+                original = json.loads((directory / "diagnostics" / f"{label}.exit.json").read_bytes())
+                if (
+                    type(original.get("returncode")) is not int
+                    or original["returncode"] != 0
+                    or original.get("original_exit_code") != 0
+                    or original.get("source_commit") != plan["base_commit"]
+                    or original.get("argv") != arguments
+                    or original.get("process", {}).get("accepted") is not True
+                    or any(
+                        original.get(stream + "_sha256")
+                        != hashlib.sha256((directory / "diagnostics" / f"{label}.{stream}").read_bytes()).hexdigest()
+                        for stream in ("stdout", "stderr")
+                    )
+                ):
+                    raise ValueError("dependent analysis and refresh require their actual successful original commands")
     changes = []
     paths = [p.decode() for p in git(root, "diff", "--name-only", "-z", plan["base_commit"], "HEAD").split(b"\0") if p]
     for path in paths:

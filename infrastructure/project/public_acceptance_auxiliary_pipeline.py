@@ -21,6 +21,7 @@ from pathlib import Path
 from typing import Any
 
 from infrastructure.project.public_acceptance_auxiliary_supervision import complete_auxiliary_observation
+from infrastructure.core.files.secure_write import read_bytes_confined
 
 from infrastructure.core.pipeline.fingerprints import canonical_digest
 from infrastructure.project.public_acceptance_evidence import evidence_directory, write_json
@@ -43,8 +44,49 @@ from infrastructure.project.public_acceptance_auxiliary_pipeline_environment imp
 )
 
 
-SCHEMA = "template-auxiliary-pipeline-portable-v1"
+SCHEMA = "template-auxiliary-pipeline-portable-v2"
 _REQUIRED = frozenset({"setup", "project_tests", "analysis", "render_pdf", "validate", "copy"})
+
+
+def _child_relative(root: Path, directory: Path) -> Path:
+    return evidence_directory(root, directory).relative_to(root) / "pipeline-child"
+
+
+def _retain_pipeline_streams(root: Path, directory: Path, copied: Path, process: dict[str, Any]) -> dict[str, Any]:
+    from infrastructure.project.public_acceptance_auxiliary_supervision import MAX_STREAM_BYTES
+
+    child = _child_relative(root, directory)
+    if set(process["streams"]) != {"stdout", "stderr"}:
+        raise ValueError("portable pipeline omitted an original stream")
+    retained = {}
+    for name, binding in process["streams"].items():
+        relative = (child / "execution" / f"{name}.txt").as_posix()
+        if set(binding) != {"path", "sha256"} or binding["path"] != relative:
+            raise ValueError("pipeline original stream was not born in the Source-owned cell coordinate")
+        body = read_bytes_confined(copied, copied / relative, max_bytes=MAX_STREAM_BYTES)
+        if hashlib.sha256(body).hexdigest() != binding["sha256"]:
+            raise ValueError("pipeline original stream changed before portable export")
+        retained[name] = write_binary(root, root / relative, body)
+    return retained
+
+
+def _validate_pipeline_streams(
+    custody: dict[str, Any], process: dict[str, Any], reader: SnapshotReader, child: Path
+) -> None:
+    if set(custody["retained_streams"]) != {"stdout", "stderr"} or set(process["streams"]) != {"stdout", "stderr"}:
+        raise ValueError("portable pipeline omitted an original stream")
+    for name, binding in custody["retained_streams"].items():
+        expected = (child / "execution" / f"{name}.txt").as_posix()
+        original = process["streams"][name]
+        if (
+            set(binding) != {"path", "sha256"}
+            or set(original) != {"path", "sha256"}
+            or binding["path"] != expected
+            or original["path"] != expected
+            or binding["sha256"] != original["sha256"]
+            or reader.read(expected).sha256 != original["sha256"]
+        ):
+            raise ValueError("portable pipeline original stream coordinate or bytes changed")
 
 
 def child(spec_path: str) -> int:
@@ -66,6 +108,9 @@ def child(spec_path: str) -> int:
     executor = PipelineExecutor(config)
     results = executor.execute_pipeline(deadline_monotonic=spec.get("operation_deadline"))
     execution = execution_record_payload(executor, results)
+    from infrastructure.project.public_acceptance_pipeline_measurement import capture_project_measurement
+
+    measurement = capture_project_measurement(executor, execution)
     after = _components(root, scope)
     env_after = environment_observation(root, scope)
     result = {
@@ -87,6 +132,7 @@ def child(spec_path: str) -> int:
         "environment_before": env_before,
         "environment_after": env_after,
         "execution": execution,
+        "project_test_measurement": measurement,
         "original_exit_code": executor.run_result(results).exit_code,
     }
     Path(spec["result_path"]).write_text(json.dumps(result, indent=2, sort_keys=True) + "\n")
@@ -200,7 +246,9 @@ def run_pipeline(
                     "source_binding": {"path": relative, "sha256": snapshot.sha256},
                 }
             )
-        inner = copied / "output/readiness/pipeline-child"
+        # Born in the same Source-owned cell coordinate as the retained bytes.
+        child_relative = _child_relative(root, directory)
+        inner = copied / child_relative
         inner.mkdir(parents=True)
         spec = {
             "root": str(copied),
@@ -277,12 +325,7 @@ def run_pipeline(
             bootstrap_payload=payload,
             stream_diagnostics=True,
         )
-        retained_streams = {
-            name: write_binary(
-                root, directory / "pipeline-child" / f"{name}.txt", (copied / binding["path"]).read_bytes()
-            )
-            for name, binding in process["streams"].items()
-        }
+        retained_streams = _retain_pipeline_streams(root, directory, copied, process)
         process_binding = write_json(root, directory / "pipeline-child-process.json", process)
         spec_binding = write_binary(root, directory / "pipeline-child-spec.json", spec_path.read_bytes())
         bootstrap_binding = write_binary(
@@ -320,6 +363,9 @@ def run_pipeline(
                     "binding": write_binary(root, directory / "pipeline-outputs" / relative, content),
                 }
             )
+        from infrastructure.project.public_acceptance_pipeline_measurement import retain_project_measurement
+
+        measurement_artifacts = retain_project_measurement(root, directory, copied, scope, facts, artifacts, size)
         details = {
             "pipeline_schema": SCHEMA,
             "mode": "core",
@@ -343,6 +389,7 @@ def run_pipeline(
                     "retained_streams": retained_streams,
                     "output_before": baseline,
                     "output_after": artifacts,
+                    "project_test_measurement": measurement_artifacts,
                 },
             ),
         }
@@ -407,6 +454,8 @@ def validate_portable_pipeline(
     if details.get("pipeline_schema") != SCHEMA or not isinstance(details.get("portable_pipeline_artifact"), dict):
         raise ValueError("versioned portable pipeline requires its original artifact binding")
     custody = artifact(details["portable_pipeline_artifact"]).json_object()
+    portable_directory = reader.public_path(details["portable_pipeline_artifact"]["path"]).parent
+    child_relative = _child_relative(reader.root, portable_directory)
     if (
         custody.get("schema_version") != SCHEMA
         or custody.get("scope") != scope
@@ -445,7 +494,7 @@ def validate_portable_pipeline(
             "scope": scope,
             "budget": details["plan"]["run_timeout_seconds"],
             "operation_deadline": process["original_deadline_monotonic"],
-            "result_path": str(Path(producer) / "output/readiness/pipeline-child/facts.json"),
+            "result_path": str(Path(producer) / child_relative / "facts.json"),
         }
         or facts.get("schema_version") != SCHEMA
         or facts.get("scope") != scope
@@ -463,13 +512,11 @@ def validate_portable_pipeline(
         reader,
         process,
         module=PIPELINE,
-        arguments=("--child-spec", str(Path(producer) / "output/readiness/pipeline-child/spec.json")),
-        execution_relative="output/readiness/pipeline-child/execution",
+        arguments=("--child-spec", str(Path(producer) / child_relative / "spec.json")),
+        execution_relative=(child_relative / "execution").as_posix(),
         retained_payload=custody["bootstrap_artifact"],
     )
-    for name, binding in custody["retained_streams"].items():
-        if artifact(binding).sha256 != process["streams"][name]["sha256"]:
-            raise ValueError("portable pipeline original streams changed")
+    _validate_pipeline_streams(custody, process, reader, child_relative)
     before, after = facts["source_before"], facts["source_after"]
     env_before, env_after = facts["environment_before"], facts["environment_after"]
     if (
@@ -563,6 +610,9 @@ def validate_portable_pipeline(
     execution_file = next((row for row in files if row["relative"] == ".pipeline/execution.json"), None)
     if execution_file is None or artifact(execution_file["binding"]).json_object() != execution:
         raise ValueError("portable pipeline omitted its original complete execution record")
+    from infrastructure.project.public_acceptance_pipeline_measurement import validate_retained_project_measurement
+
+    validate_retained_project_measurement(scope, custody, facts, process, reader, portable_directory)
 
 
 if __name__ == "__main__":

@@ -266,3 +266,37 @@ jobs:
 - [`AGENTS.md`](AGENTS.md) — Full CI/CD technical documentation
 - [`../AGENTS.md`](../AGENTS.md) — GitHub integration overview
 - [`../../AGENTS.md`](../../AGENTS.md) — Root system overview
+
+
+`root-policy-census.yml` is manual collection/review only. Its four Linux/Darwin
+3.14/3.15 targets admit the exact dispatch SHA and use the current Root-original
+locked groups and pinned fixture/document/browser/model preparation chain. The
+existing pinned model readiness inference is preparation, not an executed Root
+test or unpaid-capability producer. Linux keeps the existing unprivileged
+execution profile; owned-daemon cleanup and bounded export run after collection.
+Both original CLI streams/exit and all census/ledger bindings are retained with
+hidden files for thirty days. Optional author mode creates only a canonical
+Linux 3.14 draft from an exhaustive reviewed committed template; the other three
+targets collect again and refuse any template/member/fixture drift. It cannot
+install policy, push, tag, publish or satisfy required runtime acceptance.
+
+
+## Focused tagged PDF capability probe
+
+[`root-tagged-pdf-probe.yml`](root-tagged-pdf-probe.yml) is manual-only. Its four
+Linux/macOS Python 3.14/3.15 targets require the exact dispatch and checkout SHA,
+use the Source-locked Root environment and existing native document preparation,
+and run only `test_registry_alt_reaches_real_tagged_pdf_structure_tree` from
+[`test_figure_alt_real_pandoc.py`](../../tests/infra_tests/rendering/test_figure_alt_real_pandoc.py).
+The original test and its skip predicates remain unchanged. The probe additionally
+requires an actual zero pytest exit and exactly one JUnit case with no failure,
+error or skip; an unsupported LuaLaTeX tagging mode therefore fails the probe.
+
+Linux uses the existing unprivileged execution account. The test's disposable
+scratch stays outside Source; the artifact retains original pytest argv,
+stdout/stderr bytes, exit and JUnit, plus bounded selected TeX/log/PDF/figure
+diagnostics. Original wrapper streams and exit are retained separately, including
+bootstrap refusals. Both exports include hidden files and remain available for
+thirty days. This diagnostic does not install policy, execute other Root cases,
+or grant full Root, native, scientific or release acceptance. The genuine four
+target run is still required to establish this capability on hosted toolchains.

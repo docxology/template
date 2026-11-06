@@ -23,7 +23,7 @@ SCOPE = "templates/template_advanced_literature_review"
 CELL = "template_advanced_literature_review"
 CAPABILITIES = ("retrieval", "screening", "local-classification", "licensed-fulltext")
 GATES = tuple(f"{SCOPE}:live:{name}" for name in CAPABILITIES)
-GROUP_SCHEMA = "template-literature-capability-group-v1"
+GROUP_SCHEMA = "template-literature-capability-group-v2"
 ORIGIN_SCHEMA = "template-literature-capability-origin-v1"
 PROJECTION_SCHEMA = "template-literature-capability-projection-v1"
 # Match the original bounded unprivileged export; candidate transport keeps its own ceilings.
@@ -70,7 +70,7 @@ def create_group(
         "selection": matrix_selection,
         "directory": directory.relative_to(root).as_posix(),
         "source_fingerprint": fingerprint,
-        "interpreter": {"path": str(python), "sha256": hashlib.sha256(python.read_bytes()).hexdigest()},
+        "interpreter": {"executable": str(python), "sha256": hashlib.sha256(python.read_bytes()).hexdigest()},
         "model": model,
         "operation_deadline": deadline,
     }
@@ -137,9 +137,9 @@ def read_group(reader: SnapshotReader, binding: Any, gate: str, fingerprint: str
     interpreter = plan["interpreter"]
     if (
         not isinstance(interpreter, dict)
-        or set(interpreter) != {"path", "sha256"}
-        or not isinstance(interpreter["path"], str)
-        or not Path(interpreter["path"]).is_absolute()
+        or set(interpreter) != {"executable", "sha256"}
+        or not isinstance(interpreter["executable"], str)
+        or not Path(interpreter["executable"]).is_absolute()
         or not isinstance(interpreter["sha256"], str)
         or re.fullmatch(r"[0-9a-f]{64}", interpreter["sha256"]) is None
     ):
@@ -407,7 +407,7 @@ def validate_group_process(
         spec.get("literature_group") != binding
         or Path(spec_path).parent.parent != directory
         or spec.get("producer_inputs", {}).get("model") != plan["model"]
-        or process.get("selected_interpreter") != plan["interpreter"]["path"]
+        or process.get("selected_interpreter") != plan["interpreter"]["executable"]
         or process.get("executable_sha256") != plan["interpreter"]["sha256"]
         or process.get("original_deadline_monotonic") != plan["operation_deadline"]
         or spec.get("operation_deadline") != plan["operation_deadline"]

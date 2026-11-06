@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1000" viewBox="0 0 1600 1000" role="img" aria-labelledby="title description">
   <title id="title">Template 5.1.0 — evidence follows final Source</title>
-  <desc id="description">Release sequence. Freeze versions and Source, generate publication outputs and measure coverage, then validate and accept the exact revision. The lower sequence shows measured Source C, imported literals D and report-only unchanged-output rebind E. Exact-source acceptance and authenticated publication are required.</desc>
+  <desc id="description">Release sequence. Freeze versions and Source, generate publication outputs and measure coverage, then validate and accept the exact revision. The lower sequence shows measured Source C, imported literals D, genuine dependent output refresh Q with measured input comparisons, and report-only unchanged-output rebind E. Exact-source acceptance and authenticated publication are required.</desc>
   <defs>
     <linearGradient id="background" x2="1" y2="1"><stop stop-color="#0b1220"/><stop offset="1" stop-color="#12283b"/></linearGradient>
     <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10Z" fill="#94a3b8"/></marker>
@@ -42,19 +42,22 @@
     </g>
 
     <rect x="64" y="541" width="1472" height="276" rx="20" fill="#0d1b2b" stroke="#40546c" stroke-width="2"/>
-    <text x="96" y="588" fill="#f8fafc" font-size="27" font-weight="700">Coverage import without rerendering measured Source</text>
+    <text x="96" y="588" fill="#f8fafc" font-size="27" font-weight="700">Keep measured input identities through the final import</text>
     <g text-anchor="middle">
-      <circle cx="192" cy="674" r="35" fill="#21516e"/><text x="192" y="685" fill="#f8fafc" font-size="31" font-weight="700">C</text>
-      <text x="192" y="738" fill="#cbd5e1" font-size="22">Measured commit</text>
-      <circle cx="800" cy="674" r="35" fill="#21516e"/><text x="800" y="685" fill="#f8fafc" font-size="31" font-weight="700">D</text>
-      <text x="800" y="738" fill="#cbd5e1" font-size="22">Commit imported literals</text>
-      <circle cx="1408" cy="674" r="35" fill="#21516e"/><text x="1408" y="685" fill="#f8fafc" font-size="31" font-weight="700">E</text>
-      <text x="1408" y="738" fill="#cbd5e1" font-size="22">Review report patch</text>
+      <circle cx="200" cy="674" r="35" fill="#21516e"/><text x="200" y="685" fill="#f8fafc" font-size="31" font-weight="700">C</text>
+      <text x="200" y="738" fill="#cbd5e1" font-size="21">Measured Source</text>
+      <circle cx="600" cy="674" r="35" fill="#21516e"/><text x="600" y="685" fill="#f8fafc" font-size="31" font-weight="700">D</text>
+      <text x="600" y="738" fill="#cbd5e1" font-size="21">Commit imported literals</text>
+      <circle cx="1000" cy="674" r="35" fill="#21516e"/><text x="1000" y="685" fill="#f8fafc" font-size="31" font-weight="700">Q</text>
+      <text x="1000" y="738" fill="#cbd5e1" font-size="21">Refresh dependent outputs</text>
+      <circle cx="1400" cy="674" r="35" fill="#21516e"/><text x="1400" y="685" fill="#f8fafc" font-size="31" font-weight="700">E</text>
+      <text x="1400" y="738" fill="#cbd5e1" font-size="21">Review report patch</text>
     </g>
-    <g stroke="#94a3b8" stroke-width="3" marker-end="url(#arrow)"><path d="M242 674H748"/><path d="M850 674H1356"/></g>
-    <text x="495" y="653" fill="#93d3df" font-size="22" text-anchor="middle">Import real literals while HEAD = C</text>
-    <text x="1103" y="653" fill="#93d3df" font-size="22" text-anchor="middle">All 25 rebind; output bytes unchanged</text>
-    <text x="800" y="783" fill="#a7bed2" font-size="22" text-anchor="middle">Fingerprint refusal → real refresh and affected remeasurement. No restamping changed bytes.</text>
+    <g stroke="#94a3b8" stroke-width="3" marker-end="url(#arrow)"><path d="M250 674H548"/><path d="M650 674H948"/><path d="M1050 674H1348"/></g>
+    <text x="400" y="653" fill="#93d3df" font-size="20" text-anchor="middle">Import while HEAD = C</text>
+    <text x="800" y="653" fill="#93d3df" font-size="20" text-anchor="middle">Real counts consumers</text>
+    <text x="1200" y="653" fill="#93d3df" font-size="20" text-anchor="middle">All 25 rebind unchanged</text>
+    <text x="800" y="783" fill="#a7bed2" font-size="21" text-anchor="middle">Compare source/support hashes to C; remeasure affected changes. Never relabel percentages.</text>
 
     <text x="64" y="882" fill="#f8fafc" font-size="26" font-weight="700">Publish only the accepted Source and its verified tree.</text>
     <text x="64" y="923" fill="#a6bdd1" font-size="23">Retain original tags, historical releases, raw results and artifact custody.</text>
