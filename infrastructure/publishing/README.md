@@ -1,5 +1,14 @@
 # Publishing Module - Quick Reference
 
+The coordinated publication refresh v3 plan owns one explicit dependent consumer:
+Pitch reads COUNTS/version facts into chart DATA and PDF/PPTX content. Default
+refresh runs canonical Stage 02 then the existing refresh sequentially for Pitch,
+in the same provider wave and prepared authentic SDK. It retains fifteen tracked
+publication-copy projects and nine unchanged rebinds. Rebind-only still routes all
+25 projects through strict unchanged-output revalidation with no analysis/render
+fallback. Source-bound input/producer hashes add no generated ownership; only the
+existing tracked regular output/sheaf paths may enter the reviewed patch.
+
 Tools for academic publishing, citations, and platform integration.
 
 Repository metadata is normalized by `infrastructure/metadata/repository_metadata.py`; non-dry-run

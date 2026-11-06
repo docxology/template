@@ -130,6 +130,13 @@ def generation_commands(root: Path, plan: dict[str, Any], wave: list[str]) -> li
     for scope in wave:
         if scope == "root":
             continue
+        if scope in plan["dependent_analysis"]:
+            commands.append(
+                (
+                    scope.replace("/", "__") + "-analysis",
+                    [str(root / ".venv/bin/python"), "scripts/pipeline/stage_02_analysis.py", "--project", scope],
+                )
+            )
         argv = [
             str(root / ".venv/bin/python"),
             "scripts/maintenance/refresh_rendered_provenance.py",
@@ -140,6 +147,15 @@ def generation_commands(root: Path, plan: dict[str, Any], wave: list[str]) -> li
             argv.append("--rebind")
         commands.append((scope.replace("/", "__") + "-generate", argv))
     return commands
+
+
+def _generation_sequence(root: Path, directory: Path, commands: list[tuple[str, list[str]]]) -> int:
+    """Keep a project's actual analysis/refresh commands sequential and terminal."""
+    for label, argv in commands:
+        code = run_logged(root, directory, label, argv)
+        if code:
+            return code
+    return 0
 
 
 def generate(root: Path, directory: Path, jobs: int) -> int:
@@ -162,9 +178,12 @@ def generate(root: Path, directory: Path, jobs: int) -> int:
         ANALYSIS_SCRIPT_TIMEOUT_SEC="1800",
     )
     for wave in provider_waves(plan["providers"]):
-        commands = generation_commands(root, plan, wave)
         with ThreadPoolExecutor(max_workers=jobs) as pool:
-            futures = [pool.submit(run_logged, root, directory, label, argv) for label, argv in commands]
+            futures = [
+                pool.submit(_generation_sequence, root, directory, generation_commands(root, plan, [scope]))
+                for scope in wave
+                if scope != "root"
+            ]
             codes = [future.result() for future in futures]
         if any(codes):
             return 1
@@ -175,6 +194,7 @@ def generate(root: Path, directory: Path, jobs: int) -> int:
             "base_commit": plan["base_commit"],
             "mode": plan["mode"],
             "refresh": plan["refresh"],
+            "dependent_analysis": sorted(plan["dependent_analysis"]),
             "rebind": plan["rebind"],
             "provider_waves": provider_waves(plan["providers"]),
         },
@@ -230,6 +250,7 @@ def main(argv: list[str] | None = None) -> int:
             generated.get("base_commit") != plan["base_commit"]
             or generated.get("mode") != plan["mode"]
             or generated.get("refresh") != plan["refresh"]
+            or generated.get("dependent_analysis") != sorted(plan["dependent_analysis"])
             or generated.get("rebind") != plan["rebind"]
         ):
             raise ValueError("complete producer result is missing")

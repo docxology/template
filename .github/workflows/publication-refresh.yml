@@ -12,7 +12,7 @@ on:
         type: string
         required: true
       mode:
-        description: Rerender tracked publication copies, or revalidate all unchanged output sets
+        description: Refresh publication copies and dependent Pitch analysis, or revalidate unchanged outputs
         type: choice
         options: ["refresh", "rebind-only"]
         default: "refresh"
@@ -81,7 +81,7 @@ jobs:
         run: >-
           .venv/bin/python -m infrastructure.publishing.publication_refresh
           --directory "$REFRESH_DIRECTORY" --mode "$REFRESH_MODE" prepare
-      - name: Regenerate publication copies and revalidate the unchanged complement
+      - name: Regenerate publication copies and dependent Pitch facts; revalidate the complement
         env:
           REFRESH_DIRECTORY: ${{ runner.temp }}/coordinated-publication-refresh
           REFRESH_WORKERS: ${{ inputs.workers }}
