@@ -9,6 +9,16 @@ publication-copy projects and nine unchanged rebinds. Rebind-only still routes a
 fallback. Source-bound input/producer hashes add no generated ownership; only the
 existing tracked regular output/sheaf paths may enter the reviewed patch.
 
+The hosted controller runs plan, locked preparation, generation, candidate,
+strict verification and capture in one `run` payload under the existing fresh
+unprivileged Linux execution account. Its original Git preflight precedes the phase
+chain and is not repeated after the disposable candidate commit. The strict
+same-owner process census, guardian, deadlines and exit predicates are unchanged.
+Evidence is created in the account's existing caller-readable artifact directory
+outside Source; only the final successful payload admits a review upload.
+Original diagnostics remain available after a failed phase. Inputs are explicit
+CLI arguments; the account's runtime environment allowlist is unchanged.
+
 ## Purpose
 
 The Publishing module provides tools for academic publishing workflows. It enables DOI management, citation generation in multiple formats, publication metadata extraction, and automated publishing to major academic platforms (Zenodo, arXiv, GitHub) as well as package distribution (PyPI), static-site hosting, and long-horizon multi-target archival.

@@ -213,6 +213,34 @@ def verify(root: Path, directory: Path) -> int:
     return 1 if any(codes) else 0
 
 
+def run_coordinated(
+    root: Path, directory: Path, source_sha: str, expected_version: str, jobs: int, *, mode: str = "refresh"
+) -> int:
+    """Run every existing phase in one execution-account payload; failure is terminal."""
+    if type(jobs) is not int or not 1 <= jobs <= 4:
+        raise ValueError("publication refresh workers must be between one and four")
+    common = ["--repo-root", str(root), "--directory", str(directory), "--mode", mode]
+    phases = (
+        ["plan", "--source-sha", source_sha, "--expected-version", expected_version],
+        ["prepare"],
+        ["generate", "--jobs", str(jobs)],
+        ["candidate"],
+        ["verify"],
+        ["finish"],
+    )
+    # Public artifact DATA must remain readable by the original upload account.
+    # This does not change atomic producer modes or any ownership predicate.
+    previous_umask = os.umask(0o022)
+    try:
+        for phase in phases:
+            result = main([*common, *phase])
+            if result:
+                return result
+    finally:
+        os.umask(previous_umask)
+    return 0
+
+
 def main(argv: list[str] | None = None) -> int:
     """Expose only the finite phases used by the manual artifact workflow."""
     parser = argparse.ArgumentParser(description=__doc__)
@@ -223,6 +251,10 @@ def main(argv: list[str] | None = None) -> int:
     plan_parser = commands.add_parser("plan")
     plan_parser.add_argument("--source-sha", required=True)
     plan_parser.add_argument("--expected-version", required=True)
+    coordinated = commands.add_parser("run")
+    coordinated.add_argument("--source-sha", required=True)
+    coordinated.add_argument("--expected-version", required=True)
+    coordinated.add_argument("--jobs", type=int, default=2)
     commands.add_parser("prepare")
     run = commands.add_parser("generate")
     run.add_argument("--jobs", type=int, default=2)
@@ -232,6 +264,8 @@ def main(argv: list[str] | None = None) -> int:
     root, directory = args.repo_root.absolute(), args.directory.absolute()
     if directory.is_relative_to(root) or directory != directory.resolve():
         raise ValueError("refresh evidence needs a fresh real directory outside Source")
+    if args.phase == "run":
+        return run_coordinated(root, directory, args.source_sha, args.expected_version, args.jobs, mode=args.mode)
     if args.phase != "plan":
         load_plan(directory, mode=args.mode)
     if args.phase == "plan":
@@ -266,4 +300,13 @@ if __name__ == "__main__":
     raise SystemExit(main())
 
 
-__all__ = ["generate", "generation_commands", "main", "prepare_environments", "provider_waves", "run_logged", "verify"]
+__all__ = [
+    "generate",
+    "generation_commands",
+    "main",
+    "prepare_environments",
+    "provider_waves",
+    "run_coordinated",
+    "run_logged",
+    "verify",
+]
