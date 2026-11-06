@@ -15,6 +15,7 @@ from typing import Any
 
 import pytest
 
+from infrastructure.core.files.secure_write import atomic_write_bytes_confined
 from infrastructure.core.implementation_custody import capture_implementation_custody, verify_implementation_custody
 from infrastructure.core.subprocess_policy import SubprocessPolicy, run_with_policy
 from infrastructure.project.public_acceptance_case_observer import RootCaseObserver
@@ -167,6 +168,8 @@ def _coordinate(root: Path, directory: Path, timeout_seconds: int, run_id: str, 
             policy_id="root-canonical-census-v2", source_path=__name__, timeout_seconds=remaining, credential_free=True
         ),
     )
+    atomic_write_bytes_confined(root, directory / "census.stdout", observed.stdout.encode())
+    atomic_write_bytes_confined(root, directory / "census.stderr", observed.stderr.encode())
     receipt_reader = SnapshotReader(root)
     receipt_path = directory / "census.json"
     receipt_binding = None
@@ -238,6 +241,8 @@ def produce_root_census(root: Path, directory: Path, *, timeout_seconds: int = 6
             credential_free=True,
         ),
     )
+    atomic_write_bytes_confined(root, directory / "coordinator.stdout", observed.stdout.encode())
+    atomic_write_bytes_confined(root, directory / "coordinator.stderr", observed.stderr.encode())
     reader = SnapshotReader(root)
     bundle_binding = None
     bundle: dict[str, Any] = {}

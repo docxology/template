@@ -785,3 +785,12 @@ artifacts, Darwin print and native-format originals separate, and preserve
 held contexts through candidate and fresh release handoff validation.
 
 The Source-only Active refresh observer lives in active_pipeline_diagnostics.py. It reads the actual project's literal REQUIRED_OUTPUTS registry without importing domain code, records confined phase hashes and bounded raw generated JSON/compiled sections, and invokes genuine project validators under the nominated interpreter with physical-source checks. Missing, malformed, oversized, linked, and foreign-source observations remain unavailable; diagnostic records grant no acceptance. Run it as python -m infrastructure.project.active_pipeline_diagnostics with the selected project src and current Root on PYTHONPATH.
+
+
+`public_root_policy_census.py` composes the existing original canonical census,
+same-environment family ledger and optional existing draft author. Review
+classifications are exhaustive Source JSON with exact module/family/source and
+member/fixture-observation hashes; the helper only binds the fresh census
+identities into new decision DATA. Only canonical Linux 3.14 emits a draft;
+other supported targets independently collect and check the same template.
+Neither collection nor a draft installs policy or grants runtime/release acceptance.
