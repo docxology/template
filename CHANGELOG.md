@@ -99,6 +99,16 @@ matching tag identity and authenticated publication.
   the shared pipeline API examples and retain successful native-cell artifacts
   for 30 days.
 
+- Add an exact Mermaid CLI 12.2 native profile using the patched Mermaid 12.3
+  browser distribution. Preserve the curated SDK font and rectangular viewport
+  APIs, actual caller custody and every native proof gate; retain historical
+  profiles separately.
+- Update the locked Node tooling to patched KaTeX and Zod dependency versions,
+  retain the scoped dependency audit, and run a persistent inherited-trust
+  regression. Resolve the Source-locked Puppeteer browser deterministically.
+- Bind ordinary Mermaid caches to renderer, font and toolchain inputs; native
+  custody requires each actual producer call even when prior image bytes exist.
+
 ## [5.0.2] - 2026-11-04
 
 See the [5.0.2 release notes](docs/releases/v5.0.2.md). This release moves the root
