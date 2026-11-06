@@ -38,7 +38,10 @@ from infrastructure.reporting.native_format_pdf_source_decode_bounds import (
     SourceImageDecodeBudget,
 )
 from infrastructure.reporting.native_full_worker_pdfium import NativePDFiumSelection, admit_full_worker_pdfium_providers
-from infrastructure.reporting.native_hosted_original_custody import collect_native_hosted_originals
+from infrastructure.reporting.native_hosted_original_custody import (
+    collect_native_hosted_originals,
+    collect_native_hosted_cell_union,
+)
 from infrastructure.reporting.native_mermaid_runtime_selection import (
     NativeMermaidSelection,
 )
@@ -77,6 +80,7 @@ def _main(argv: list[str] | None = None) -> int:
         "--matrix-cell",
         help="shard the Current side to one declared public exemplar while keeping every provider nomination",
     )
+    parser.add_argument("--native-cell-union", action="store_true")
     parser.add_argument("--pdfium-site", type=Path, required=True)
     parser.add_argument("--pdfium-wheel", type=Path, required=True)
     parser.add_argument("--office-font-file", action="append", default=[], type=Path)
@@ -95,6 +99,8 @@ def _main(argv: list[str] | None = None) -> int:
     parser.add_argument("--acceptance-artifact-id", type=int)
     parser.add_argument("--acceptance-receipt-sha256")
     args = parser.parse_args(argv)
+    if args.native_cell_union and args.matrix_cell:
+        parser.error("native cell union cannot also select one matrix cell")
     if not 0 < args.timeout <= 14400 or not 0 < args.operation_started_monotonic < time.monotonic():
         parser.error("reader requires its actual already-started outer Source clock")
     if bool(args.epubcheck_jar) != bool(args.java_executable):
@@ -147,15 +153,25 @@ def _main(argv: list[str] | None = None) -> int:
             args.mermaid_chrome_executable,
         )
         fonts = NativeOfficeReaderSelection(mermaid, tuple(args.office_font_file))
-        custodian = collect_native_hosted_originals(
-            source,
-            root / "output/readiness/native-hosted-origin",
-            repository=args.repository,
-            run_id=args.run_id,
-            head_sha=args.revision,
-            deadline=deadline,
-            cell=args.matrix_cell or None,
-        )
+        if args.native_cell_union:
+            custodian = collect_native_hosted_cell_union(
+                source,
+                root / "output/readiness/native-hosted-origin",
+                repository=args.repository,
+                run_id=args.run_id,
+                head_sha=args.revision,
+                deadline=deadline,
+            )
+        else:
+            custodian = collect_native_hosted_originals(
+                source,
+                root / "output/readiness/native-hosted-origin",
+                repository=args.repository,
+                run_id=args.run_id,
+                head_sha=args.revision,
+                deadline=deadline,
+                cell=args.matrix_cell or None,
+            )
         originals = admit_authenticated_native_originals(
             custodian, source, current_pdfium_providers=providers, deadline=deadline
         )
@@ -308,7 +324,7 @@ def _main(argv: list[str] | None = None) -> int:
         context = AuxiliaryMatrixHostedContext(
             root_origin, args.repository, args.run_id, args.revision, original_print, original_matrix
         )
-        receipts = [*args.receipt, custodian.native_receipt_binding()["path"]]
+        receipts = [*args.receipt, *(binding["path"] for binding in custodian.native_receipt_bindings())]
         if len(set(receipts)) != len(receipts):
             raise ValueError("reader refuses duplicate native/common original receipt ownership")
         # Current and per-format Office owners are opened serially by the
