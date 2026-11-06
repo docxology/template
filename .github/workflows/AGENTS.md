@@ -541,3 +541,24 @@ hidden files for thirty days. Optional author mode creates only a canonical
 Linux 3.14 draft from an exhaustive reviewed committed template; the other three
 targets collect again and refuse any template/member/fixture drift. It cannot
 install policy, push, tag, publish or satisfy required runtime acceptance.
+
+
+## Manual tagged PDF tool probe
+
+[`root-tagged-pdf-probe.yml`](root-tagged-pdf-probe.yml) probes the unchanged
+`tests/infra_tests/rendering/test_figure_alt_real_pandoc.py::test_registry_alt_reaches_real_tagged_pdf_structure_tree`
+on Linux/macOS with both supported Python minors. `source_sha` must equal
+`GITHUB_SHA`, and both checkout and imported/installed Root SDK identity are
+checked before the actual test. Preparation uses the current locked Root groups
+and `setup-acceptance-documents` without changing TeX versions or preparing a
+model/provider producer. Linux retains the existing execution-user boundary.
+
+The original argv, binary stdout/stderr, actual exit and JUnit are diagnostic
+inputs, not substituted test results. Require exactly one completed testcase
+and zero JUnit failures/errors/skips; the test's unsupported-tool skip is a
+failed probe. An always-run bounded export retains the test diagnostics and
+selected case files (at most 64 regular TeX/log/PDF/aux/PNG/JSON files, 4 MiB each,
+16 MiB total) separately from original wrapper streams/exit. Hidden files are
+included in each narrow artifact. No policy, full Root/native or release
+acceptance follows from this one-family capability check. Preserve the frozen
+census and ARL preflight protocols when changing this separate workflow.
