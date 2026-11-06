@@ -64,57 +64,29 @@ jobs:
           python-version: "3.14"
       - name: Reconcile the exact locked Root
         run: uv sync --locked --group dev --group installed-build --group active-inference --group rendering --group rendering-pptx
-      - name: Plan the tracked canonical publication-copy refresh
+      - name: Prepare Source-pinned native formats, Lean and provider dependencies
+        uses: ./.github/actions/setup-native-installed-readiness
+      - uses: ./.github/actions/setup-ci-execution-user
+      - name: Run every coordinated phase under the fresh unprivileged execution account
+        id: coordinated
         env:
           REQUESTED_SOURCE: ${{ inputs.source_sha }}
           EXPECTED_VERSION: ${{ inputs.expected_version }}
-          REFRESH_DIRECTORY: ${{ runner.temp }}/coordinated-publication-refresh
+          REFRESH_WORKERS: ${{ inputs.workers }}
+          REFRESH_DIRECTORY: ${{ runner.temp }}/template-ci-execution/artifacts/coordinated-publication-refresh
         run: >-
+          .venv/bin/python -m infrastructure.core.testing.ci_execution_user run
+          --state "$RUNNER_TEMP/template-ci-execution/state.json" --
           .venv/bin/python -m infrastructure.publishing.publication_refresh
           --directory "$REFRESH_DIRECTORY" --mode "$REFRESH_MODE"
-          plan --source-sha "$REQUESTED_SOURCE" --expected-version "$EXPECTED_VERSION"
-      - name: Prepare Source-pinned native formats, Lean and provider dependencies
-        uses: ./.github/actions/setup-native-installed-readiness
-      - name: Prepare and verify all own locked project runtimes in provider order
-        env:
-          REFRESH_DIRECTORY: ${{ runner.temp }}/coordinated-publication-refresh
-        run: >-
-          .venv/bin/python -m infrastructure.publishing.publication_refresh
-          --directory "$REFRESH_DIRECTORY" --mode "$REFRESH_MODE" prepare
-      - name: Regenerate publication copies and dependent Pitch facts; revalidate the complement
-        env:
-          REFRESH_DIRECTORY: ${{ runner.temp }}/coordinated-publication-refresh
-          REFRESH_WORKERS: ${{ inputs.workers }}
-        run: >-
-          .venv/bin/python -m infrastructure.publishing.publication_refresh
-          --directory "$REFRESH_DIRECTORY" --mode "$REFRESH_MODE" generate --jobs "$REFRESH_WORKERS"
-      - name: Commit the confined disposable candidate
-        env:
-          REFRESH_DIRECTORY: ${{ runner.temp }}/coordinated-publication-refresh
-        run: >-
-          .venv/bin/python -m infrastructure.publishing.publication_refresh
-          --directory "$REFRESH_DIRECTORY" --mode "$REFRESH_MODE" candidate
-      - name: Run both strict all-public gates on the committed tree
-        id: verify
-        env:
-          REFRESH_DIRECTORY: ${{ runner.temp }}/coordinated-publication-refresh
-        run: >-
-          .venv/bin/python -m infrastructure.publishing.publication_refresh
-          --directory "$REFRESH_DIRECTORY" --mode "$REFRESH_MODE" verify
-      - name: Capture the verified binary patch and original receipts
-        id: capture
-        if: steps.verify.outcome == 'success'
-        env:
-          REFRESH_DIRECTORY: ${{ runner.temp }}/coordinated-publication-refresh
-        run: >-
-          .venv/bin/python -m infrastructure.publishing.publication_refresh
-          --directory "$REFRESH_DIRECTORY" --mode "$REFRESH_MODE" finish
+          run --source-sha "$REQUESTED_SOURCE" --expected-version "$EXPECTED_VERSION"
+          --jobs "$REFRESH_WORKERS"
       - name: Retain the verified patch for ordinary reviewed PR integration
-        if: steps.verify.outcome == 'success' && steps.capture.outcome == 'success'
+        if: steps.coordinated.outcome == 'success'
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: coordinated-publication-review-${{ github.run_id }}-${{ github.run_attempt }}
-          path: ${{ runner.temp }}/coordinated-publication-refresh/review/
+          path: ${{ runner.temp }}/template-ci-execution/artifacts/coordinated-publication-refresh/review/
           if-no-files-found: error
           retention-days: 30
       - name: Retain original diagnostics separately
@@ -123,8 +95,8 @@ jobs:
         with:
           name: coordinated-publication-diagnostics-${{ github.run_id }}-${{ github.run_attempt }}
           path: |
-            ${{ runner.temp }}/coordinated-publication-refresh/diagnostics/
-            ${{ runner.temp }}/coordinated-publication-refresh/*.json
+            ${{ runner.temp }}/template-ci-execution/artifacts/coordinated-publication-refresh/diagnostics/
+            ${{ runner.temp }}/template-ci-execution/artifacts/coordinated-publication-refresh/*.json
             output/readiness/publication-refresh/
           if-no-files-found: ignore
           retention-days: 30
