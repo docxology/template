@@ -16,19 +16,17 @@ from pathlib import Path
 from types import MappingProxyType
 from typing import Any, Mapping, cast
 
-from infrastructure.core.files.secure_write import atomic_write_bytes_confined
 from infrastructure.project.auxiliary_matrix_plan import matrix_plan, receipt_path, validate_cell
 from infrastructure.project.auxiliary_print_hosted import AuxiliaryPrintHostedContext, _utc
 from infrastructure.project.public_acceptance_evidence import evidence_directory, write_json
 from infrastructure.project.public_hosted_origin import (
-    MAX_ARCHIVE,
     MAX_LISTING_PAGES,
     WORKFLOW,
     _context,
     _merge_listing_pages,
 )
 from infrastructure.project.public_reference_git import remaining
-from infrastructure.reporting.native_hosted_transport_archive import _archive
+from infrastructure.reporting.native_hosted_transport_archive import import_auxiliary_archive
 from infrastructure.reporting.original_job_outcome import validate_auxiliary_receipt_closure
 from infrastructure.reporting.release_readiness_snapshot import SnapshotReader
 
@@ -228,7 +226,9 @@ def collect_auxiliary_matrix(
     ]
     if set(actual_names) != expected_names or len(actual_names) != len(expected_names):
         raise ValueError("auxiliary artifact roster differs from complete Source matrix")
-    cells, members, archives = {}, {}, []
+    cells, archives = {}, []
+    members: dict[str, str] = {}
+    decoded_bytes = 0
     for cell in plan:
         remaining(deadline)
         artifact = _producer(cell, artifacts, jobs, run)
@@ -246,18 +246,18 @@ def collect_auxiliary_matrix(
         if artifact.get("size_in_bytes") != len(content) or artifact.get("digest") != "sha256:" + digest:
             raise ValueError("auxiliary original archive differs from live API digest/size")
         archives.append({"path": archive_path.relative_to(root).as_posix(), "sha256": digest})
-        payloads = _archive(content, maximum=MAX_ARCHIVE, count=10000)
-        if "receipt.json" not in payloads:
-            raise ValueError("auxiliary original omitted its literal receipt")
-        for relative, content in payloads.items():
-            label = (Path(receipt_path(cell)).parent / relative).as_posix()
-            target = reader.public_path(label)
-            if target.exists() or target.is_symlink():
-                if reader.read(label).content != content:
-                    raise ValueError("auxiliary authenticated original conflicts with existing DATA")
-            else:
-                atomic_write_bytes_confined(root, target, content, mode=0o600)
-            members[label] = hashlib.sha256(content).hexdigest()
+        imported, imported_bytes = import_auxiliary_archive(
+            root,
+            root / Path(receipt_path(cell)).parent,
+            content,
+            deadline=deadline,
+            mode=0o600,
+            fresh=False,
+            prior_decoded_bytes=decoded_bytes,
+            prior_members=len(members),
+        )
+        decoded_bytes += imported_bytes
+        members.update(imported)
         receipt = reader.read(receipt_path(cell))
         validate_cell(receipt.json_object(), requirements, cell)
         validate_auxiliary_receipt_closure(receipt.json_object())

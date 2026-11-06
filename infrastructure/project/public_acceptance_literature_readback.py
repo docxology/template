@@ -282,29 +282,22 @@ def collect_carrier(
 
 def import_originals(root: Path, archive: bytes, deadline: float) -> dict[str, Any]:
     """Import only a new immutable DATA tree using the existing archive/closure guards."""
-    from infrastructure.core.files.secure_write import atomic_write_bytes_confined
     from infrastructure.core.pipeline.fingerprint_files import anchored_parent, verify_directory
     from infrastructure.core.testing._ci_execution_files import _entries
     from infrastructure.project.public_acceptance_evidence import evidence_directory
-    from infrastructure.project.public_hosted_origin import MAX_ARCHIVE
-    from infrastructure.reporting.native_hosted_transport_archive import _archive
+    from infrastructure.reporting.native_hosted_transport_archive import import_auxiliary_archive
     from infrastructure.reporting.release_readiness_snapshot import SnapshotReader
     from infrastructure.reporting.required_acceptance_aggregate import _evidence_closure
 
     _remaining(deadline)
     destination = evidence_directory(root, root / ORIGINAL_DIRECTORY, fresh=True)
-    members = _archive(archive, maximum=MAX_ARCHIVE, count=10000)
-    if "receipt.json" not in members:
-        raise ValueError("ARL original archive omitted its literal receipt")
-    destination.mkdir(parents=True, mode=0o700)
+    members, _ = import_auxiliary_archive(root, destination, archive, deadline=deadline, mode=0o400, fresh=True)
     directories = {destination}
-    for relative, body in members.items():
-        _remaining(deadline)
-        target = destination / relative
-        atomic_write_bytes_confined(root, target, body, mode=0o400)
+    for label in members:
+        target = root / label
         directories.update(parent for parent in target.parents if parent.is_relative_to(destination))
     entries = _entries(destination, deadline)
-    if set(entries) != directories | {destination / relative for relative in members}:
+    if set(entries) != directories | {root / label for label in members}:
         raise ValueError("ARL imported original file/directory census changed")
     for path in sorted(directories, key=lambda item: len(item.parts), reverse=True):
         _remaining(deadline)
@@ -318,10 +311,10 @@ def import_originals(root: Path, archive: bytes, deadline: float) -> dict[str, A
             finally:
                 os.close(descriptor)
     reader = SnapshotReader(root, operation_deadline=deadline)
-    for relative, body in members.items():
+    for label, digest in members.items():
         _remaining(deadline)
-        held = reader.read(ORIGINAL_DIRECTORY + "/" + relative)
-        if held.content != body or stat.S_IMODE(held.path.stat(follow_symlinks=False).st_mode) != 0o400:
+        held = reader.read(label)
+        if held.sha256 != digest or stat.S_IMODE(held.path.stat(follow_symlinks=False).st_mode) != 0o400:
             raise ValueError("ARL imported original bytes/read-only role changed")
     closure = _evidence_closure(reader, ORIGINAL_DIRECTORY + "/receipt.json")
     _remaining(deadline)
