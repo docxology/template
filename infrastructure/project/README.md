@@ -509,3 +509,14 @@ member/fixture-observation hashes; the helper only binds the fresh census
 identities into new decision DATA. Only canonical Linux 3.14 emits a draft;
 other supported targets independently collect and check the same template.
 Neither collection nor a draft installs policy or grants runtime/release acceptance.
+
+### Portable project-test measurement custody
+
+`public_acceptance_pipeline_measurement.py` retains the genuine pipeline child's
+executor-held test-measurement anchor and every original project artifact. The
+portable v2 pipeline manifest binds the unchanged raw measurement, coverage JSON,
+coverage database and all declared callbacks to canonical current-root copies.
+Its independent reader checks the complete inventory, original coordinates,
+Source/runtime/run context, actual callback outcomes and branch coverage.
+Pipeline child stream files are created and exported in the same Source-owned
+outer cell coordinate; raw process JSON is never rewritten during export.

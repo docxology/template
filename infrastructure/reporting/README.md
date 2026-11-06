@@ -11,6 +11,16 @@ Source exclusion, member and byte totals, and the original finite reader clock.
 Byte transport grants no process, provider, model, aggregate or release authority;
 the full consumer still validates every original and capability projection.
 
+Artifact graphs nominate only the exact `path`/`sha256` binding, its `bytes`
+variant, and the native raster variant with `width_px`, `height_px` and `variance`.
+Additional fields describe owner-specific DATA rather than granting Root path
+coordinates. Native candidate packing still includes the authenticated native
+custodian's complete census and every readiness snapshot consumed by the same
+passing reader. Its original absolute-in-Root and parent-relative `payload-*`
+normalization remain unchanged. Graphs accept general JSON values, including
+arrays, while rejecting duplicate fields at every depth. Semantic object readers
+continue to require a JSON object.
+
 Pipeline reporting and error aggregation utilities.
 
 `native_auxiliary_print_custody.py` owns only the fixed Darwin auxiliary print

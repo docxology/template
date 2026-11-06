@@ -49,3 +49,12 @@ Source, ancestor Git checkouts and the selected runtime. Only the actual worker
 adds that fresh path to its pytest call. Receipt, XML and coverage paths retain
 their declared evidence locations and all original deadlines. Scratch cleanup
 requires the same held physical directory; transported paths grant no cleanup.
+
+### Project measurement portability
+
+Preserve `project_test_measurement.py` v2 project-relative commitment semantics
+(`project_path` plus `sha256`) and the actual executor-held Stage 01 anchor.
+Absent evidence may permit a fresh test invocation; present invalid evidence
+remains terminal. Snapshot decoders used by portable custody must retain the
+complete serial selection/all-pass and Source branch-coverage predicates.
+Never reconstruct an executor-held hash from a published measurement.

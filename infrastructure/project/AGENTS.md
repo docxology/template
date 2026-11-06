@@ -825,3 +825,14 @@ member/fixture-observation hashes; the helper only binds the fresh census
 identities into new decision DATA. Only canonical Linux 3.14 emits a draft;
 other supported targets independently collect and check the same template.
 Neither collection nor a draft installs policy or grants runtime/release acceptance.
+
+### Portable project measurement owner
+
+`public_acceptance_pipeline_measurement.py` owns byte-complete portable
+measurement custody. Preserve actual Stage 01 executor-held anchor capture, the
+measurement v2 project-coordinate schema, exact canonical export inventories and
+full independent callback/coverage readback. All declared receipts, report and
+database bytes must survive before the disposable producer disappears.
+`public_acceptance_auxiliary_pipeline.py` derives child/spec/bootstrap/stream
+coordinates from the Source-bound portable artifact cell; keep supervisor v3,
+Root public path policy and generic graph rules intact.

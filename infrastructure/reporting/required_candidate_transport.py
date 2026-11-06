@@ -32,7 +32,7 @@ from infrastructure.reporting.native_hosted_original_producer import _zip
 from infrastructure.reporting.native_hosted_original_custody import NativeHostedArtifactCustodian
 from infrastructure.reporting.native_source_external_admission import NativeSourceContext
 from infrastructure.reporting.release_readiness_profile import collect_profile
-from infrastructure.reporting.release_readiness_snapshot import ArtifactSnapshot, SnapshotReader
+from infrastructure.reporting.release_readiness_snapshot import ArtifactSnapshot, SnapshotReader, json_value_from_bytes
 
 SCHEMA = "template-required-candidate-sharded-transport-v1"
 INDEX_PATH = "candidate-index.json"
@@ -53,7 +53,7 @@ class RequiredCandidatePackingInputs:
 def _graph_paths(
     root: Path, receipt: str, reader: SnapshotReader, *, deadline: float, strict_bindings: bool = False
 ) -> dict[str, str]:
-    """Walk bounded exact bindings; preserve strict public or native payload labels."""
+    """Walk exact artifact bindings; preserve strict public or native payload labels."""
     pending: list[tuple[str, str | None, int | None]] = [(receipt, None, None)]
     paths: dict[str, str] = {}
     total = 0
@@ -73,7 +73,7 @@ def _graph_paths(
                 {"path", "sha256", "bytes"},
                 {"path", "sha256", "width_px", "height_px", "variance"},
             )
-            if isinstance(path, str) and isinstance(digest, str) and (exact if strict_bindings else len(digest) == 64):
+            if isinstance(path, str) and isinstance(digest, str) and exact:
                 label = Path(path)
                 if strict_bindings:
                     pending.append((path, digest, size))
@@ -120,7 +120,7 @@ def _graph_paths(
         if label.endswith(".json"):
             from infrastructure.project.public_root_census_encoding import SCHEMA as CENSUS_ENCODING_SCHEMA, decode
 
-            payload = json.loads(held.content) if strict_bindings else held.json_object()
+            payload = json_value_from_bytes(held.content)
             if isinstance(payload, dict) and payload.get("schema_version") == CENSUS_ENCODING_SCHEMA:
                 payload = decode(payload)
             walk(payload, held.path.parent)

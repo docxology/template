@@ -296,3 +296,191 @@ def test_shared_importer_refuses_invalid_or_exhausted_whole_member_census(tmp_pa
             prior_members=prior,
         )
     assert not destination.exists()
+
+
+def test_candidate_graph_does_not_reinterpret_project_file_records_as_root_bindings(tmp_path: Path) -> None:
+    root_source = tmp_path / "pyproject.toml"
+    root_source.write_bytes(b"actual Root configuration")
+    project = tmp_path / "projects/templates/template_advanced_literature_review"
+    project.mkdir(parents=True)
+    (project / "pyproject.toml").write_bytes(b"different project configuration")
+    project_record = {
+        "path": "pyproject.toml",
+        "sha256": hashlib.sha256((project / "pyproject.toml").read_bytes()).hexdigest(),
+        "bytes": (project / "pyproject.toml").stat().st_size,
+        "native_identity": [1, 2, 3, 4, 5],
+        "retained_path": "output/.pipeline/analysis-data/original.bin",
+    }
+    output = tmp_path / "output/readiness/cell"
+    output.mkdir(parents=True)
+    content = b"actual canonical retained output"
+    (output / "original.bin").write_bytes(content)
+    binding = {"path": "output/readiness/cell/original.bin", "sha256": hashlib.sha256(content).hexdigest()}
+    receipt = "output/readiness/cell/receipt.json"
+    (tmp_path / receipt).write_text(
+        json.dumps(
+            {
+                "canonical": binding,
+                "project_analysis_records": [project_record],
+                "phase_artifacts": [
+                    {"path": "cross_phase_analysis.json", "sha256": "a" * 64, "size_bytes": 17, "phases": ["phase1"]}
+                ],
+                "project_validation_inputs": [
+                    {"path": "output/reports/artifact_manifest.json", "sha256": "b" * 64, "size_bytes": 23}
+                ],
+            }
+        )
+    )
+    reader = SnapshotReader(tmp_path)
+    closure = _graph_paths(tmp_path, receipt, reader, deadline=time.monotonic() + 30)
+    assert closure == {
+        receipt: hashlib.sha256((tmp_path / receipt).read_bytes()).hexdigest(),
+        binding["path"]: binding["sha256"],
+    }
+    assert set(reader.snapshots) == {tmp_path / receipt, output / "original.bin"}
+    assert reader.unchanged()
+
+
+@pytest.mark.parametrize("strict", [False, True])
+def test_graph_traverses_real_json_arrays_and_deep_exact_bindings(tmp_path: Path, strict: bool) -> None:
+    output = tmp_path / "output/readiness"
+    output.mkdir(parents=True)
+    content = b"retained through an actual top-level JSON list"
+    target = output / "original.bin"
+    target.write_bytes(content)
+    binding = {
+        "path": "output/readiness/original.bin",
+        "sha256": hashlib.sha256(content).hexdigest(),
+        "bytes": len(content),
+    }
+    graph = output / "topics.json"
+    graph.write_text(json.dumps(["actual topic", {"nested": [[{"original": binding}]]}, 3, None, False]))
+    reader = SnapshotReader(tmp_path)
+    closure = _graph_paths(
+        tmp_path, "output/readiness/topics.json", reader, deadline=time.monotonic() + 30, strict_bindings=strict
+    )
+    assert closure == {
+        "output/readiness/topics.json": hashlib.sha256(graph.read_bytes()).hexdigest(),
+        binding["path"]: binding["sha256"],
+    }
+    assert reader.unchanged()
+
+
+def test_candidate_graph_preserves_native_absolute_and_parent_payload_coordinates(tmp_path: Path) -> None:
+    output = tmp_path / "output/readiness/native"
+    output.mkdir(parents=True)
+    absolute = output / "original.bin"
+    payload = output / "payload-actual"
+    absolute.write_bytes(b"actual native retained bytes")
+    payload.write_bytes(b"actual parent-relative native payload")
+    graph = output / "receipt.json"
+    graph.write_text(
+        json.dumps(
+            {
+                "absolute": {"path": str(absolute), "sha256": hashlib.sha256(absolute.read_bytes()).hexdigest()},
+                "payload": {"path": payload.name, "sha256": hashlib.sha256(payload.read_bytes()).hexdigest()},
+                "artifact_pair": {
+                    "artifact": "output/readiness/native/original.bin",
+                    "artifact_sha256": hashlib.sha256(absolute.read_bytes()).hexdigest(),
+                    "status": "DATA",
+                },
+            }
+        )
+    )
+    reader = SnapshotReader(tmp_path)
+    closure = _graph_paths(tmp_path, graph.relative_to(tmp_path).as_posix(), reader, deadline=time.monotonic() + 30)
+    assert set(closure) == {path.relative_to(tmp_path).as_posix() for path in (graph, absolute, payload)}
+    assert reader.unchanged()
+    with pytest.raises(ValueError, match="absolute|root artifact"):
+        _graph_paths(
+            tmp_path,
+            graph.relative_to(tmp_path).as_posix(),
+            SnapshotReader(tmp_path),
+            deadline=time.monotonic() + 30,
+            strict_bindings=True,
+        )
+
+
+@pytest.mark.parametrize("strict", [False, True])
+@pytest.mark.parametrize("shape", ["plain", "sized", "raster"])
+def test_exact_root_bindings_round_trip_and_refuse_real_tamper(tmp_path: Path, strict: bool, shape: str) -> None:
+    output = tmp_path / "output/readiness"
+    output.mkdir(parents=True)
+    content = bytes(range(256)) + b"complete original body"
+    target = output / "original.bin"
+    target.write_bytes(content)
+    binding = {"path": "output/readiness/original.bin", "sha256": hashlib.sha256(content).hexdigest()}
+    if shape == "sized":
+        binding["bytes"] = len(content)
+    elif shape == "raster":
+        binding.update(width_px=32, height_px=24, variance=1.25)
+    graph = output / "receipt.json"
+    graph.write_text(json.dumps({"original": binding}))
+    closure = _graph_paths(
+        tmp_path,
+        "output/readiness/receipt.json",
+        SnapshotReader(tmp_path),
+        deadline=time.monotonic() + 30,
+        strict_bindings=strict,
+    )
+    originals = {label: (tmp_path / label).read_bytes() for label in closure}
+    with zipfile.ZipFile(io.BytesIO(_zip(originals))) as archive:
+        assert {label: archive.read(label) for label in archive.namelist()} == originals
+    assert originals[binding["path"]] == content
+    target.write_bytes(content + b"actual changed bytes")
+    with pytest.raises(ValueError, match="original reference|verified binding"):
+        _graph_paths(
+            tmp_path,
+            "output/readiness/receipt.json",
+            SnapshotReader(tmp_path),
+            deadline=time.monotonic() + 30,
+            strict_bindings=strict,
+        )
+
+
+@pytest.mark.parametrize("strict", [False, True])
+def test_graph_refuses_conflicting_exact_commitments(tmp_path: Path, strict: bool) -> None:
+    output = tmp_path / "output/readiness"
+    output.mkdir(parents=True)
+    content = b"actual retained bytes"
+    (output / "original.bin").write_bytes(content)
+    binding = {"path": "output/readiness/original.bin", "sha256": hashlib.sha256(content).hexdigest()}
+    (output / "receipt.json").write_text(
+        json.dumps(
+            [
+                {**binding, "sha256": "0" * 64},
+                binding,
+            ]
+        )
+    )
+    with pytest.raises(ValueError, match="conflicting exact"):
+        _graph_paths(
+            tmp_path,
+            "output/readiness/receipt.json",
+            SnapshotReader(tmp_path),
+            deadline=time.monotonic() + 30,
+            strict_bindings=strict,
+        )
+
+
+@pytest.mark.parametrize("strict", [False, True])
+@pytest.mark.parametrize(
+    "raw",
+    [
+        b'[{"nested": {"same": 1, "same": 2}}]',
+        b'{"nested": [1, 2,}',
+        b'{"original": {"path": "first", "path": "second", "sha256": "a"}}',
+    ],
+)
+def test_graph_refuses_ambiguous_or_malformed_json_values(tmp_path: Path, strict: bool, raw: bytes) -> None:
+    output = tmp_path / "output/readiness"
+    output.mkdir(parents=True)
+    (output / "receipt.json").write_bytes(raw)
+    with pytest.raises(ValueError):
+        _graph_paths(
+            tmp_path,
+            "output/readiness/receipt.json",
+            SnapshotReader(tmp_path),
+            deadline=time.monotonic() + 30,
+            strict_bindings=strict,
+        )

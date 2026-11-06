@@ -76,3 +76,20 @@ Source, ancestor Git checkouts and the selected runtime. Only the actual worker
 adds that fresh path to its pytest call. Receipt, XML and coverage paths retain
 their declared evidence locations and all original deadlines. Scratch cleanup
 requires the same held physical directory; transported paths grant no cleanup.
+
+### Project measurement coordinates
+
+`project_test_measurement.py` publishes `template-project-test-measurement/v2`.
+Its exact `project_path`/`sha256` commitments name files relative to the measured
+project, including every original execution receipt, coverage report and coverage
+database. The executor-held hash, same-run context, actual serial all-pass
+selection, branch coverage floor, Source and runtime checks remain required.
+Portable pipeline custody retains explicit canonical copies and validates the
+same actual callback and coverage bytes through the owner's snapshot decoders.
+Project-relative DATA never grants a repository-root artifact path.
+
+Portable consumers share the public owner DATA helpers
+`measurement_execution_snapshot`, `measurement_coverage_report`,
+`measurement_source_paths` and `project_measurement_inventory`, and the explicit
+`MEASUREMENT_SCHEMA`. These helpers do not grant process or acceptance authority;
+the caller must retain the original held anchor and independently admit bytes.
