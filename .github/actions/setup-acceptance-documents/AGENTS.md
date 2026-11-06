@@ -32,7 +32,7 @@ selects its prepared `output/runtime-envs/3.14/bin/python`. The helper's
 support, and runs the unchanged LaTeX package validator with it. It performs no
 Python bootstrap, dependency sync or implicit reconciliation. Missing runtime,
 native tools, packages or failed validation remain failures. Linux native
-preparation explicitly includes `texlive-plain-generic` for the actual `soul.sty`
+preparation selects the upstream plain-generic collection for the actual `soul.sty`
 provider. After platform package preparation, require successful `kpsewhich
 soul.sty` resolution and an actual provider file; retain its path and SHA-256.
 A package inventory or cached archive cannot replace that runtime lookup.
@@ -53,3 +53,29 @@ fallbacks, repository signatures, keyrings, packages and execution limits
 unchanged. Refuse unknown or changing files/stanzas; do not rewrite other APT
 configuration. Run permanent byte-policy tests without host APT access and use a
 separate disposable Linux root-file control for filesystem behavior.
+
+## Frozen Linux TeX and tagged-PDF capability
+
+Native Linux preparation installs one upstream TeX Live 2025 final tree from
+the [official historical repository](https://www.tug.org/texlive/acquire.html#past).
+The installer dated 2026-03-01 and repository database retain exact Source-pinned
+lengths and SHA-256 digests. The installer verifies its package downloads from
+that frozen repository; a closing database hash check rejects repository drift.
+The selected basic, LaTeX, LuaTeX, XeTeX, scientific, bibliography, recommended
+font and plain-generic collections replace the former Debian TeX package union.
+Documentation and package sources are excluded, and installation has a 1,200-second
+bound with 30 seconds for termination. All TeX executables select that same tree
+on PATH. Converter mode and the prepared Python environment remain unchanged.
+
+This coherent snapshot includes the LaTeX tagging interface documented by the
+[LaTeX project](https://www.latex-project.org/publications/2025-UFi-FMi-TUB-tb143fischer-tagging25.pdf).
+Do not transplant current packages into the older Debian engine or substitute
+a mutable current CTAN repository. A selected version, successful installer,
+package inventory or cache never establishes native capability: the real tagged
+PDF test must execute and pass without skips on the exact candidate Source.
+
+Native preparation records actual executable versions, resolved paths, hashes,
+and resolved LaTeX/tagpdf/metadata provider hashes in
+`$RUNNER_TEMP/template-acceptance-document-provenance.json`. The focused probe
+retains that record with its original wrapper streams. Genuine setup failures,
+test skips and failed original exits remain failures.
