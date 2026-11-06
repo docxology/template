@@ -29,6 +29,7 @@ This package coordinates existing Layer-1 modules (`infrastructure.core.pipeline
 - **Slug validation** rejects traversal (`..`), NUL bytes, `-` prefixes, unknown project names from `discover_projects()`.
 - **Qualified exemplar paths** resolve as `templates/<name>` and `active/<name>` under `projects/` (see [`docs/_generated/active_projects.md`](../../docs/_generated/active_projects.md)). Live counts link to [`docs/_generated/COUNTS.md`](../../docs/_generated/COUNTS.md).
 - **Modes:** `--mode core` is the default local run. `--mode live` explicitly selects live capabilities. Opt-in publication remains directly invoked. Both single and multi-project completion require exact expected stage contracts. Shared infrastructure runs once before serial or parallel project execution; failure prevents project execution.
+- **Resume:** `pipeline --all-projects --resume` passes the existing checkpoint policy to every selected project. Shared infrastructure still runs fresh once. Missing, stale, or non-reusable checkpoints retain their refusal status; never fall back to fresh execution. `--incremental` remains single-project only, and the all-projects combination refuses with invocation error 2 before constructing a runner.
 - **Tests:** [`tests/infra_tests/orchestration/`](../../tests/infra_tests/orchestration/).
 
 ## See also

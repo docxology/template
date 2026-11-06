@@ -7,7 +7,6 @@ document provenance, hash values, timestamps, and encrypted payloads.
 import re
 from collections.abc import Mapping
 from pathlib import Path
-from typing import Any
 
 from infrastructure.core.logging.utils import get_logger
 from infrastructure.steganography.config import (
@@ -99,20 +98,10 @@ def inject_pdf_metadata(
 
     reader = PdfReader(str(input_pdf))
     writer = PdfWriter()
+    writer.clone_document_from_reader(reader)
 
-    for page in reader.pages:
-        writer.add_page(page)
-
-    # Preserve existing metadata and overlay new values
-    existing: dict[str, Any] = {}
-    if reader.metadata:
-        for key, value in reader.metadata.items():
-            if isinstance(value, str):
-                existing[key] = value
-
-    # Merge: new values override existing
-    merged = {**existing, **metadata}
-    writer.add_metadata(merged)
+    # Keep the complete existing catalog; only nominated Info values change.
+    writer.add_metadata(metadata)
 
     # Embed XMP metadata if provided
     if xmp_string:
@@ -127,6 +116,11 @@ def inject_pdf_metadata(
     if attachments:
         for filename, content in attachments.items():
             try:
+                # Replacing an explicitly nominated name must not leave an
+                # older visible manifest ahead of the new one.
+                for attachment in list(writer.attachment_list):
+                    if filename in (attachment.name, attachment.alternative_name):
+                        attachment.delete()
                 writer.add_attachment(filename, content)
                 logger.debug(f"Attachment embedded: {filename} ({len(content)} bytes)")
             except Exception as att_err:  # noqa: BLE001 — pypdf exceptions vary by PDF structure

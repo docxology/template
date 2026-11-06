@@ -65,6 +65,16 @@ class TestEncryption:
 
         from infrastructure.steganography.encryption import apply_pdf_password
 
+        from infrastructure.steganography.metadata import inject_pdf_metadata
+
+        xmp = '<x:xmpmeta xmlns:x="adobe:ns:meta/"><catalog>preserved</catalog></x:xmpmeta>'
+        inject_pdf_metadata(
+            tmp_pdf,
+            tmp_pdf,
+            metadata={"/Title": "Catalog preservation"},
+            xmp_string=xmp,
+            attachments={"provenance.txt": b"original provenance"},
+        )
         output = tmp_path / "encrypted.pdf"
         result = apply_pdf_password(tmp_pdf, output, user_password="test123")
         assert result.exists()
@@ -73,6 +83,9 @@ class TestEncryption:
         reader = PdfReader(str(result))
         assert reader.is_encrypted is True
         assert reader.decrypt("test123") > 0
+        assert reader.attachments["provenance.txt"][0] == b"original provenance"
+        assert reader.trailer["/Root"]["/Metadata"].get_data() == xmp.encode()
+        assert reader.metadata.title == "Catalog preservation"
         encrypt_dict = reader.trailer["/Encrypt"]
         assert encrypt_dict["/Length"] == 256
         assert encrypt_dict["/CF"]["/StdCF"]["/CFM"] == "/AESV3"
@@ -121,6 +134,10 @@ class TestEncryptDecryptRoundtrip:
         assert base64.b64decode(encrypted["key"]) == key
         decrypted = decrypt_payload(encrypted["ciphertext"], encrypted["nonce"], encrypted["key"])
         assert decrypted == plaintext
+        repeated = encrypt_payload(plaintext, key=key)
+        assert repeated["nonce"] != encrypted["nonce"]
+        assert repeated["ciphertext"] != encrypted["ciphertext"]
+        assert decrypt_payload(repeated["ciphertext"], repeated["nonce"], repeated["key"]) == plaintext
 
     @pytest.mark.skipif(not CRYPTOGRAPHY_AVAILABLE, reason="cryptography not installed")
     def test_different_keys_different_ciphertext(self):

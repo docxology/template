@@ -54,6 +54,7 @@ class MultiProjectInvocation:
 
     skip_infra: bool = False
     mode: str = "core"
+    resume: bool = False
 
 
 @dataclass
@@ -153,6 +154,7 @@ class PipelineRunner:
             projects=projects,
             run_infra_tests=not invocation.skip_infra,
             mode=invocation.mode,
+            resume=invocation.resume,
         )
         try:
             config.deadline_monotonic = time.monotonic() + config.run_timeout_seconds

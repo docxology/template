@@ -48,10 +48,14 @@ def get_security_headers() -> dict[str, str]:
 
 
 def get_cors_headers(origin: str | None = None) -> dict[str, str]:
-    """Get CORS headers for cross-origin requests.
+    """Return CORS headers for an explicitly allowed origin.
+
+    No origin omits the allow-origin header and permits no CORS origin.
+    The literal string ``null`` names an opaque origin; it is not a deny-all
+    sentinel. Callers select allowed origins using their own access policy.
 
     Args:
-        origin: Allowed origin (None for deny all)
+        origin: Explicitly allowed origin (None for deny all).
 
     Returns:
         Dictionary of CORS headers
@@ -65,8 +69,6 @@ def get_cors_headers(origin: str | None = None) -> dict[str, str]:
     if origin:
         headers["Access-Control-Allow-Origin"] = origin
         headers["Access-Control-Allow-Credentials"] = "true"
-    else:
-        headers["Access-Control-Allow-Origin"] = "null"
 
     return headers
 

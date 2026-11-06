@@ -5,6 +5,31 @@ from __future__ import annotations
 import pytest
 
 
+@pytest.mark.parametrize(
+    "field",
+    [
+        "enabled",
+        "overlays_enabled",
+        "barcodes_enabled",
+        "metadata_enabled",
+        "hashing_enabled",
+        "encryption_enabled",
+        "manifest_enabled",
+        "kmyth_enabled",
+        "kmyth_required",
+        "kmyth_overwrite",
+    ],
+)
+@pytest.mark.parametrize("value", ["false", 0, None])
+def test_boolean_config_requires_explicit_booleans(field, value):
+    from infrastructure.steganography.config import SteganographyConfig
+
+    with pytest.raises(ValueError, match=f"{field} must be a boolean"):
+        SteganographyConfig.from_dict({field: value})
+    with pytest.raises(ValueError, match=f"{field} must be a boolean"):
+        SteganographyConfig(**{field: value})
+
+
 class TestSteganographyConfig:
     def test_default_config_disabled(self):
         from infrastructure.steganography.config import SteganographyConfig

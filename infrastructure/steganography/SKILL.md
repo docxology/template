@@ -117,3 +117,36 @@ For detailed documentation on the entire system, refer to the central documentat
 - **Architecture**: [docs/architecture/](../../docs/architecture/), [docs/core/](../../docs/core/), [docs/modules/](../../docs/modules/)
 - **Security & Provenance**: [docs/security/](../../docs/security/), [docs/best-practices/](../../docs/best-practices/)
 - **Usage & Ops**: [docs/usage/](../../docs/usage/), [docs/operational/](../../docs/operational/), [docs/development/](../../docs/development/), [docs/guides/](../../docs/guides/), [docs/prompts/](../../docs/prompts/), [docs/reference/](../../docs/reference/)
+
+## Repeat calls and publication
+
+Each `process()` invocation takes an independent, validated configuration snapshot
+and owns its hashes, document ID and Git provenance. Boolean options require
+actual `true`/`false` values; quoted strings do not enable a technique. A disabled
+processor returns the input without reading optional PDF dependencies or copying it.
+
+Source and destination paths must be distinct, including existing hardlink or
+symlink aliases. The PDF is built and parsed in a private temporary directory.
+The legacy manifest remains `<source-stem>.hashes.json`, even when the output PDF
+has a different name. Required Kmyth sealing also completes on staged bytes before
+publication. A failed required producer leaves previous PDF, manifest and sealed
+sidecars intact. Kmyth subprocess environments remove credential variables and
+agent socket nominations while preserving explicit TPM/library configuration.
+
+`publication.py` prepares destination-local files and retained preimages, preserving
+existing destination modes. Individual replacements are atomic; this is not a
+crash-atomic transaction across several files. Ordinary publication errors roll
+back only replacements whose identity is still ours. If another writer changes a
+replacement, recovery preimages remain on disk and the exception reports them
+instead of overwriting that edit. Cooperating publishers acquire finite per-path
+locks in the system temporary directory.
+
+Deterministic mode applies to unencrypted output. Encryption continues to use fresh
+cryptographic randomness; do not reuse AES-GCM nonces to reproduce encrypted bytes.
+TPM availability and actual sealing require a separately provisioned backend;
+filesystem and missing-provider controls do not establish TPM acceptance.
+
+Catalog composition preserves existing Info fields, XMP, outlines and attachments
+through overlay, metadata and password-encryption stages. Explicit metadata values
+override their named fields; a requested attachment name replaces its previous
+visible entries once, while unrelated attachments remain.

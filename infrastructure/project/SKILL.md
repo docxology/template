@@ -93,9 +93,9 @@ from infrastructure.core.pipeline.multi_project import MultiProjectConfig, Multi
 
 # Discover and run all projects
 projects = discover_projects(repo_root)
-config = MultiProjectConfig(projects=[p.name for p in projects])
+config = MultiProjectConfig(repo_root=repo_root, projects=projects)
 orchestrator = MultiProjectOrchestrator(config)
-result = orchestrator.run()
+result = orchestrator.execute_all_projects()
 ```
 
 **CLI:**

@@ -171,13 +171,9 @@ def apply_pdf_password(
 
     reader = PdfReader(str(input_pdf))
     writer = PdfWriter()
-
-    for page in reader.pages:
-        writer.add_page(page)
-
-    # Copy existing metadata
-    if reader.metadata:
-        writer.add_metadata({k: v for k, v in reader.metadata.items() if isinstance(v, str)})
+    # Preserve the whole document catalog (including XMP and attachments)
+    # assembled by earlier techniques, then apply fresh PDF encryption.
+    writer.clone_document_from_reader(reader)
 
     writer.encrypt(
         user_password=user_password,

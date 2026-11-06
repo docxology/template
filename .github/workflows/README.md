@@ -325,4 +325,6 @@ complete its genuine installed Original and upload its distinct native index and
 shards. Cell-qualified original evidence/transport paths preserve all receipts;
 the fresh reader consumes them all under one Source and clock. The legacy whole
 roster route retains its existing paths when sharding is disabled. Neither a cell
-nor transport DATA alone grants whole-roster or release acceptance.
+nor transport DATA alone grants whole-roster or release acceptance. Successful
+native-cell indexes and shards explicitly request 30 days of artifact retention.
+Retainers still check each actual artifact expiry at retrieval time.

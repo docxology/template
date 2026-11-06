@@ -12,9 +12,14 @@ from __future__ import annotations
 import os
 import shutil
 import subprocess
+import stat
+import tempfile
+from collections.abc import Mapping
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
+
+from infrastructure.core.secrets import strip_secret_env
 
 KMYTH_REPOSITORY_URL = "https://github.com/docxology/kmyth"
 KMYTH_SUBMODULE_DIRNAME = "kmyth"
@@ -150,63 +155,129 @@ def validate_kmyth_installation(
     )
 
 
+def _file_identity(path: Path, *, follow_symlinks: bool = False) -> tuple[int, ...] | None:
+    try:
+        info = path.stat() if follow_symlinks else path.lstat()
+    except FileNotFoundError:
+        return None
+    if not stat.S_ISREG(info.st_mode):
+        raise ValueError(f"Kmyth artifact must be a regular file: {path}")
+    return (info.st_dev, info.st_ino, info.st_mode, info.st_size, info.st_mtime_ns, info.st_ctime_ns, info.st_nlink)
+
+
+def _require_distinct_files(source: Path, destination: Path) -> None:
+    if source.resolve() == destination.resolve() or (destination.exists() and source.samefile(destination)):
+        raise ValueError("Kmyth input, staged output and destination must be distinct files")
+
+
+def _publish_sealed_file(
+    staged: Path,
+    source: Path,
+    destination: Path,
+    *,
+    overwrite: bool,
+    expected_destination: tuple[int, ...] | None,
+) -> None:
+    """Publish verified filesystem DATA, never proof of TPM sealing.
+
+    The caller supplies only its private staged output after command success.
+    Original inputs and the previous destination are never removed in advance.
+    """
+    _require_distinct_files(source, destination)
+    identity = _file_identity(staged)
+    if identity is None or identity[3] <= 0 or identity[6] != 1:
+        raise KmythCommandError("kmyth-seal must create an independent nonempty regular staged file")
+    _require_distinct_files(source, staged)
+    _require_distinct_files(staged, destination)
+    if _file_identity(destination) != expected_destination:
+        raise FileExistsError("Kmyth destination changed before publication")
+    if expected_destination is not None and not overwrite:
+        raise FileExistsError(f"Kmyth output already exists: {destination}")
+    with os.fdopen(os.open(staged, os.O_RDONLY | getattr(os, "O_NOFOLLOW", 0)), "rb") as held:
+        opened = os.fstat(held.fileno())
+        if (
+            not stat.S_ISREG(opened.st_mode)
+            or opened.st_size <= 0
+            or opened.st_nlink != 1
+            or (opened.st_dev, opened.st_ino) != identity[:2]
+        ):
+            raise KmythCommandError("Kmyth staged file changed while opening")
+        if expected_destination is not None:
+            os.fchmod(held.fileno(), stat.S_IMODE(expected_destination[2]))
+        os.fsync(held.fileno())
+        after = os.fstat(held.fileno())
+        if not stat.S_ISREG(after.st_mode) or after.st_size <= 0 or after.st_nlink != 1:
+            raise KmythCommandError("Kmyth staged file changed before publication")
+        identity = (
+            after.st_dev,
+            after.st_ino,
+            after.st_mode,
+            after.st_size,
+            after.st_mtime_ns,
+            after.st_ctime_ns,
+            after.st_nlink,
+        )
+    if _file_identity(staged) != identity or _file_identity(destination) != expected_destination:
+        raise KmythCommandError("Kmyth staged output or destination changed before publication")
+    if overwrite:
+        os.replace(staged, destination)
+    else:
+        # Same-directory staging keeps this atomic no-clobber publication on one filesystem.
+        os.link(staged, destination)
+
+
 def seal_file_with_kmyth(
     input_path: Path,
     output_path: Path | None = None,
     *,
     options: KmythSealOptions | None = None,
 ) -> Path:
-    """Seal *input_path* with ``kmyth-seal`` and return the ``.ski`` path."""
+    """Seal an artifact while preserving its input and previous sidecar on failure."""
     opts = options or KmythSealOptions()
     source = Path(input_path)
     if not source.exists():
         raise FileNotFoundError(f"Kmyth input artifact does not exist: {source}")
-
-    destination = output_path or Path(str(source) + opts.output_suffix)
-    destination.parent.mkdir(parents=True, exist_ok=True)
-    if destination.exists():
-        if not opts.overwrite:
-            raise FileExistsError(f"Kmyth output already exists: {destination}")
-        destination.unlink()
+    original_input = _file_identity(source, follow_symlinks=True)
+    destination = Path(output_path) if output_path is not None else Path(str(source) + opts.output_suffix)
+    _require_distinct_files(source, destination)
+    expected_destination = _file_identity(destination)
+    if expected_destination is not None and not opts.overwrite:
+        raise FileExistsError(f"Kmyth output already exists: {destination}")
 
     availability = validate_kmyth_installation(binary_dir=opts.binary_dir, source_dir=opts.source_dir)
     if not availability.available or availability.seal_path is None:
         raise KmythUnavailableError(availability.summary())
 
-    argv = [
-        str(availability.seal_path),
-        "--input",
-        str(source),
-        "--output",
-        str(destination),
-    ]
-    if opts.pcrs:
-        argv.extend(["--pcrs_list", ", ".join(str(pcr) for pcr in opts.pcrs)])
-    if opts.cipher:
-        argv.extend(["--cipher", opts.cipher])
-
-    try:
-        result = subprocess.run(  # noqa: S603 - fixed argv, shell=False
-            argv,
-            check=False,
-            capture_output=True,
-            text=True,
-            timeout=opts.timeout_seconds,
-            env=_build_subprocess_env(opts),
+    destination.parent.mkdir(parents=True, exist_ok=True)
+    with tempfile.TemporaryDirectory(prefix=".kmyth-seal-", dir=destination.parent) as temporary:
+        staged = Path(temporary) / "sealed.ski"
+        argv = [str(availability.seal_path), "--input", str(source), "--output", str(staged)]
+        if opts.pcrs:
+            argv.extend(["--pcrs_list", ", ".join(str(pcr) for pcr in opts.pcrs)])
+        if opts.cipher:
+            argv.extend(["--cipher", opts.cipher])
+        try:
+            result = subprocess.run(  # noqa: S603 - explicit selected executable, shell=False
+                argv,
+                stdin=subprocess.DEVNULL,
+                check=False,
+                capture_output=True,
+                text=True,
+                timeout=opts.timeout_seconds,
+                env=_build_subprocess_env(opts),
+            )
+        except subprocess.TimeoutExpired as exc:
+            raise KmythCommandError(f"kmyth-seal timed out after {opts.timeout_seconds} seconds") from exc
+        except OSError as exc:
+            raise KmythCommandError(f"kmyth-seal invocation failed: {exc}") from exc
+        if result.returncode != 0:
+            detail = result.stderr.strip() or result.stdout.strip() or f"exit status {result.returncode}"
+            raise KmythCommandError(f"kmyth-seal failed for {source.name}: {detail}")
+        if _file_identity(source, follow_symlinks=True) != original_input:
+            raise KmythCommandError("Kmyth input changed during sealing")
+        _publish_sealed_file(
+            staged, source, destination, overwrite=opts.overwrite, expected_destination=expected_destination
         )
-    except subprocess.TimeoutExpired as exc:
-        raise KmythCommandError(f"kmyth-seal timed out after {opts.timeout_seconds} seconds") from exc
-    except OSError as exc:
-        raise KmythCommandError(f"kmyth-seal invocation failed: {exc}") from exc
-
-    if result.returncode != 0:
-        stderr = result.stderr.strip()
-        stdout = result.stdout.strip()
-        detail = stderr or stdout or f"exit status {result.returncode}"
-        raise KmythCommandError(f"kmyth-seal failed for {source.name}: {detail}")
-
-    if not destination.exists():
-        raise KmythCommandError(f"kmyth-seal completed but did not create {destination}")
     return destination
 
 
@@ -254,14 +325,20 @@ def normalize_kmyth_seal_artifacts(value: Any) -> list[str]:
     return normalized or ["hash_manifest"]
 
 
-def _build_subprocess_env(options: KmythSealOptions) -> dict[str, str]:
+def _build_subprocess_env(
+    options: KmythSealOptions,
+    base_env: Mapping[str, str] | None = None,
+) -> dict[str, str]:
     """Build the environment for the kmyth-seal subprocess.
 
-    Inherits the current process environment and adds:
+    Removes credential-like names and agent sockets, then preserves explicit
+    TPM and library nominations:
     - ``TSS2_TCTI_DEFAULT``: if ``options.tcti_config`` is set
     - ``DYLD_LIBRARY_PATH``: ensures TPM2-TSS and OpenSSL libs are found
     """
-    env = dict(os.environ)
+    env = strip_secret_env(base_env)
+    for name in ("SSH_AUTH_SOCK", "GPG_AGENT_INFO"):
+        env.pop(name, None)
     if options.tcti_config:
         env["TSS2_TCTI_DEFAULT"] = options.tcti_config
     # Ensure .so symlinks exist for dlopen

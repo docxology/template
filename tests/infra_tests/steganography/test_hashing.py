@@ -6,6 +6,21 @@ import json
 from pathlib import Path
 
 
+def test_concurrent_manifest_writers_publish_complete_documents(tmp_pdf: Path):
+    from concurrent.futures import ThreadPoolExecutor
+    from infrastructure.steganography.hashing import write_hash_manifest
+
+    def write(index: int) -> Path:
+        return write_hash_manifest(tmp_pdf, {"sha256": str(index)}, extra={"writer": index})
+
+    with ThreadPoolExecutor(max_workers=8) as workers:
+        paths = list(workers.map(write, range(32)))
+    assert all(path == tmp_pdf.with_suffix(".hashes.json") for path in paths)
+    value = json.loads(paths[0].read_text())
+    assert value["hashes"]["sha256"] == str(value["writer"])
+    assert not list(tmp_pdf.parent.glob(f".{paths[0].name}.*"))
+
+
 class TestHashing:
     def test_compute_file_hashes(self, tmp_pdf: Path):
         from infrastructure.steganography.hashing import compute_file_hashes

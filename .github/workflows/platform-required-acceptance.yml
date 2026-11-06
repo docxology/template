@@ -746,6 +746,7 @@ jobs:
           directory: ${{ runner.temp }}/template-native-original-root/output/readiness/native-cell-transports/${{ matrix.cell }}
           kind: native
           cell: ${{ matrix.cell }}
+          retention-days: 30
       - name: Preserve failed original raw and Code evidence
         if: always() && steps.native.outcome == 'failure'
         run: >-

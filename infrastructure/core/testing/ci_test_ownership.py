@@ -539,6 +539,14 @@ _PAPER_FRONTMATTER_TESTS = (
     "tests/infra_tests/reporting/test_paper_frontmatter_reconstruction_native.py",
 )
 SUPPLEMENTAL_TEST_OWNERS: dict[str, tuple[str, ...]] = {
+    "infrastructure/steganography/metadata.py": ("tests/infra_tests/steganography/test_processor.py",),
+    "infrastructure/core/secrets.py": ("tests/infra_tests/steganography/test_kmyth_adapter.py",),
+    "infrastructure/steganography/publication.py": (
+        "tests/infra_tests/steganography/test_publication.py",
+        "tests/infra_tests/steganography/test_processor.py",
+        "tests/infra_tests/steganography/test_hashing.py",
+    ),
+    "infrastructure/steganography/encryption.py": ("tests/infra_tests/steganography/test_processor.py",),
     "infrastructure/core/config/schema.py": _PAPER_FRONTMATTER_TESTS,
     "infrastructure/rendering/_paper_frontmatter.py": _PAPER_FRONTMATTER_TESTS,
     "infrastructure/rendering/_paper_frontmatter_render.py": _PAPER_FRONTMATTER_TESTS,
