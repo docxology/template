@@ -56,12 +56,17 @@ jobs:
           REVIEW_SHA256: ${{ inputs.review_template_sha256 }}
         run: |
           set -euo pipefail
-          [[ "$REQUESTED_SOURCE" =~ ^[0-9a-f]{40}$ ]] && [ "$REQUESTED_SOURCE" = "$GITHUB_SHA" ]
+          [[ "$REQUESTED_SOURCE" =~ ^[0-9a-f]{40}$ ]] || exit 1
+          [ "$REQUESTED_SOURCE" = "$GITHUB_SHA" ] || exit 1
           case "$REQUESTED_MODE" in
-            collect) [ -z "$REVIEW_PATH" ] && [ -z "$REVIEW_SHA256" ] ;;
+            collect)
+              [ -z "$REVIEW_PATH" ] || exit 1
+              [ -z "$REVIEW_SHA256" ] || exit 1
+              ;;
             author)
-              [[ "$REVIEW_PATH" =~ ^infrastructure/config/[A-Za-z0-9_./-]+\.json$ ]]
-              [[ "$REVIEW_PATH" != *..* ]] && [[ "$REVIEW_SHA256" =~ ^[0-9a-f]{64}$ ]]
+              [[ "$REVIEW_PATH" =~ ^infrastructure/config/[A-Za-z0-9_./-]+\.json$ ]] || exit 1
+              [[ "$REVIEW_PATH" != *..* ]] || exit 1
+              [[ "$REVIEW_SHA256" =~ ^[0-9a-f]{64}$ ]] || exit 1
               ;;
             *) exit 1 ;;
           esac
@@ -214,5 +219,6 @@ jobs:
           EXPORT_OUTCOME: ${{ runner.os == 'Linux' && steps.linux_export.outcome || steps.darwin_export.outcome }}
         run: |
           set -euo pipefail
-          [ "$CENSUS_OUTCOME" = success ] && [ "$EXPORT_OUTCOME" = success ]
+          [ "$CENSUS_OUTCOME" = success ] || exit 1
+          [ "$EXPORT_OUTCOME" = success ] || exit 1
           echo 'Canonical collection/review DATA only; no cases executed, policy installed, runtime accepted, tag or release authorized.' >> "$GITHUB_STEP_SUMMARY"

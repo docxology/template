@@ -562,3 +562,20 @@ selected case files (at most 64 regular TeX/log/PDF/aux/PNG/JSON files, 4 MiB ea
 included in each narrow artifact. No policy, full Root/native or release
 acceptance follows from this one-family capability check. Preserve the frozen
 census and ARL preflight protocols when changing this separate workflow.
+
+## Mandatory manual-probe and census guards
+
+The tagged-PDF probe and policy-census workflows test each required dispatch,
+review-mode and final outcome predicate as a separate shell command with an
+explicit failure exit. This also avoids reliance on version-specific errexit
+handling of compound double-bracket tests. Do not join
+mandatory assertions with an AND list followed by another command: Bash
+`set -e` permits its first predicate to fail, and a later summary can hide the
+failed outcome. Continue-on-error retains diagnostics; the final guard must
+propagate the original failed outcome after export.
+
+The probe retains the native setup action's actual document-tool provenance
+alongside the wrapper exit and streams. A green Actions conclusion alone cannot
+qualify the tool: require the original wrapper exit zero, the exact unchanged
+test's one-case JUnit result with zero skips/errors/failures, and its passed
+probe record. Compiler logs and PDFs remain original bounded diagnostics.

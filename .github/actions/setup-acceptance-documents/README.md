@@ -25,7 +25,7 @@ In native mode, the action prepares pinned Pandoc and crossref before the shared
 audit, then installs the complete Linux TeX/reader package union in one step or
 prepares BasicTeX and native readers on macOS. Both platforms probe the selected
 Pandoc/crossref, XeLaTeX, BibTeX, `pdftoppm`, and `pdffonts` executables. Linux
-explicitly installs `texlive-plain-generic`, which supplies `soul.sty` for the
+selects the upstream plain-generic collection, which supplies `soul.sty` for the
 selected Pandoc highlighting preamble. Both platforms resolve `soul.sty` with
 `kpsewhich`, require its actual file, and record its provider path and SHA-256
 before document tests. Call it
@@ -37,7 +37,7 @@ sync or reconcile Python, so each caller keeps its selected dependency groups;
  cached package files cannot replace actual
 package installation, archive verification, or executable probes.
 
-Only the official Pandoc, crossref and JuliaMono archives are cached under
+Only the official Pandoc, crossref, JuliaMono, frozen TeX installer and database archives are cached under
 `RUNNER_TEMP`, keyed by operating system, architecture, validated mode and the
 action's declared source hash. Every restored or freshly downloaded archive must pass its exact
 byte-length and SHA-256 checks before extraction or executable probes. Corruption
@@ -50,3 +50,29 @@ coverage threshold or required acceptance gate is removed. The effect on runtime
 and hosted cost must be measured after genuine execution.
 
 See [AGENTS.md](AGENTS.md) for ownership and cleanup requirements.
+
+## Frozen Linux TeX and tagged-PDF capability
+
+Native Linux preparation installs one upstream TeX Live 2025 final tree from
+the [official historical repository](https://www.tug.org/texlive/acquire.html#past).
+The installer dated 2026-03-01 and repository database retain exact Source-pinned
+lengths and SHA-256 digests. The installer verifies its package downloads from
+that frozen repository; a closing database hash check rejects repository drift.
+The selected basic, LaTeX, LuaTeX, XeTeX, scientific, bibliography, recommended
+font and plain-generic collections replace the former Debian TeX package union.
+Documentation and package sources are excluded, and installation has a 1,200-second
+bound with 30 seconds for termination. All TeX executables select that same tree
+on PATH. Converter mode and the prepared Python environment remain unchanged.
+
+This coherent snapshot includes the LaTeX tagging interface documented by the
+[LaTeX project](https://www.latex-project.org/publications/2025-UFi-FMi-TUB-tb143fischer-tagging25.pdf).
+Do not transplant current packages into the older Debian engine or substitute
+a mutable current CTAN repository. A selected version, successful installer,
+package inventory or cache never establishes native capability: the real tagged
+PDF test must execute and pass without skips on the exact candidate Source.
+
+Native preparation records actual executable versions, resolved paths, hashes,
+and resolved LaTeX/tagpdf/metadata provider hashes in
+`$RUNNER_TEMP/template-acceptance-document-provenance.json`. The focused probe
+retains that record with its original wrapper streams. Genuine setup failures,
+test skips and failed original exits remain failures.
