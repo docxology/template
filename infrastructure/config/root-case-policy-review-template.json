@@ -2924,7 +2924,7 @@
         "tests/infra_tests/core/test_ci_test_ownership.py::test_supplemental_paper_protocol_owners_are_real_complete_modules",
         "tests/infra_tests/core/test_ci_test_ownership.py::test_unowned_reporting_helper_still_selects_complete_package_fallback"
       ],
-      "family_observations_sha256": "9cbcfb6fcf241d132c88bcb4dc8f20e9ea28a8cbd6eabb0e9109bb9352186d2e",
+      "family_observations_sha256": "f527c5e4feeaaab377853e4cebf56d76556c3641b1325e2a0d6328cd81e394b9",
       "decision": {
         "lane": "core",
         "obligations": []
@@ -20158,15 +20158,20 @@
     },
     {
       "path": "tests/infra_tests/rendering/test_mermaid_figure.py",
-      "source_sha256": "e6bcc181bda77a67f239e2f705aa2376e88a5ce53c6eca5e47d1308f4180c6c6",
+      "source_sha256": "78dc4224f7caa4406ba801bea9ea1c4b0077d2f3957cc00f5ef65b58afffc8e3",
       "families": [
+        "tests/infra_tests/rendering/test_mermaid_figure.py::test_mermaid122_actual_math_browser_render",
+        "tests/infra_tests/rendering/test_mermaid_figure.py::test_mermaid122_cache_rejects_changed_viewport",
+        "tests/infra_tests/rendering/test_mermaid_figure.py::test_mermaid122_cache_rejects_modified_output_bytes",
+        "tests/infra_tests/rendering/test_mermaid_figure.py::test_mermaid122_regenerates_legacy_source_only_cache",
+        "tests/infra_tests/rendering/test_mermaid_figure.py::test_mermaid122_standalone_preserves_custom_viewport_and_background",
         "tests/infra_tests/rendering/test_mermaid_figure.py::test_render_mermaid_png_is_a_noop_when_source_unchanged",
         "tests/infra_tests/rendering/test_mermaid_figure.py::test_render_mermaid_png_produces_real_file",
         "tests/infra_tests/rendering/test_mermaid_figure.py::test_render_mermaid_png_raises_clear_error_without_mmdc",
         "tests/infra_tests/rendering/test_mermaid_figure.py::test_render_mermaid_png_re_renders_when_source_changes",
         "tests/infra_tests/rendering/test_mermaid_figure.py::test_render_mermaid_png_writes_mmd_sidecar_for_cache_check"
       ],
-      "family_observations_sha256": "aef37f9d0efa7b6af475afebea76ba93ae355103d78bf84259a4a5099cd6da20",
+      "family_observations_sha256": "f868a14e5baf39cc170da6fba17d5f493641de53af434752f41642a7a98c4d50",
       "decision": {
         "lane": "core",
         "obligations": [
@@ -20185,8 +20190,68 @@
       "evidence": [
         {
           "path": "tests/infra_tests/rendering/test_mermaid_figure.py",
-          "source_sha256": "e6bcc181bda77a67f239e2f705aa2376e88a5ce53c6eca5e47d1308f4180c6c6",
-          "line": 1
+          "source_sha256": "78dc4224f7caa4406ba801bea9ea1c4b0077d2f3957cc00f5ef65b58afffc8e3",
+          "line": 107
+        },
+        {
+          "path": "tests/infra_tests/rendering/test_mermaid_figure.py",
+          "source_sha256": "78dc4224f7caa4406ba801bea9ea1c4b0077d2f3957cc00f5ef65b58afffc8e3",
+          "line": 88
+        },
+        {
+          "path": "tests/infra_tests/rendering/test_mermaid_figure.py",
+          "source_sha256": "78dc4224f7caa4406ba801bea9ea1c4b0077d2f3957cc00f5ef65b58afffc8e3",
+          "line": 99
+        },
+        {
+          "path": "tests/infra_tests/rendering/test_mermaid_figure.py",
+          "source_sha256": "78dc4224f7caa4406ba801bea9ea1c4b0077d2f3957cc00f5ef65b58afffc8e3",
+          "line": 114
+        },
+        {
+          "path": "tests/infra_tests/rendering/test_mermaid_figure.py",
+          "source_sha256": "78dc4224f7caa4406ba801bea9ea1c4b0077d2f3957cc00f5ef65b58afffc8e3",
+          "line": 77
+        },
+        {
+          "path": "tests/infra_tests/rendering/test_mermaid_figure.py",
+          "source_sha256": "78dc4224f7caa4406ba801bea9ea1c4b0077d2f3957cc00f5ef65b58afffc8e3",
+          "line": 52
+        },
+        {
+          "path": "tests/infra_tests/rendering/test_mermaid_figure.py",
+          "source_sha256": "78dc4224f7caa4406ba801bea9ea1c4b0077d2f3957cc00f5ef65b58afffc8e3",
+          "line": 36
+        },
+        {
+          "path": "tests/infra_tests/rendering/test_mermaid_figure.py",
+          "source_sha256": "78dc4224f7caa4406ba801bea9ea1c4b0077d2f3957cc00f5ef65b58afffc8e3",
+          "line": 26
+        },
+        {
+          "path": "tests/infra_tests/rendering/test_mermaid_figure.py",
+          "source_sha256": "78dc4224f7caa4406ba801bea9ea1c4b0077d2f3957cc00f5ef65b58afffc8e3",
+          "line": 64
+        },
+        {
+          "path": "tests/infra_tests/rendering/test_mermaid_figure.py",
+          "source_sha256": "78dc4224f7caa4406ba801bea9ea1c4b0077d2f3957cc00f5ef65b58afffc8e3",
+          "line": 43
+        },
+        {
+          "path": "infrastructure/rendering/mermaid_figure.py",
+          "source_sha256": "933f4d822b4d3c49ee9ce3b283c2bb98d795552418cbc216d9ef087063186109",
+          "line": 41
+        },
+        {
+          "path": "infrastructure/rendering/_mermaid_v122.py",
+          "source_sha256": "12c5f3a90f2a0910a8658fb66b6f9ee2c6bd9044156466daf11bfe7b946c10aa",
+          "line": 16
+        },
+        {
+          "path": "infrastructure/rendering/_mermaid_v122.py",
+          "source_sha256": "12c5f3a90f2a0910a8658fb66b6f9ee2c6bd9044156466daf11bfe7b946c10aa",
+          "line": 75
         }
       ]
     },
@@ -20786,8 +20851,10 @@
     },
     {
       "path": "tests/infra_tests/rendering/test_pdf_mermaid.py",
-      "source_sha256": "163cabe049a3d90c5687786a4081b3bb0d63c43e22f9b345f58541a576d979ca",
+      "source_sha256": "44a5f71a91f71c88c30dffacabb6eb0784bb7a63c58c2c0d6928158d93e8a39f",
       "families": [
+        "tests/infra_tests/rendering/test_pdf_mermaid.py::test_inline_mermaid_regenerates_changed_profile_cache",
+        "tests/infra_tests/rendering/test_pdf_mermaid.py::test_inline_mermaid_regenerates_foreign_tooling_cache",
         "tests/infra_tests/rendering/test_pdf_mermaid.py::test_replace_inline_mermaid_falls_back_on_empty_source",
         "tests/infra_tests/rendering/test_pdf_mermaid.py::test_replace_inline_mermaid_falls_back_when_no_chrome_resolves",
         "tests/infra_tests/rendering/test_pdf_mermaid.py::test_replace_inline_mermaid_preserves_repo_puppeteer_config_and_authored_alt",
@@ -20798,36 +20865,137 @@
         "tests/infra_tests/rendering/test_pdf_mermaid.py::test_resolve_chrome_uses_system_candidates_then_none",
         "tests/infra_tests/rendering/test_pdf_mermaid.py::test_unprofiled_mermaid_executable_is_refused_before_execution"
       ],
-      "family_observations_sha256": "00b22390fbbba389b6c3b60ab5510e55a2cda815dffe61a240568f418b90e727",
+      "family_observations_sha256": "be92d94f8118ac996abada8622ee7df6e23919126d479d2b9cbbf5d407a4e92d",
       "decision": {
         "lane": "core",
-        "obligations": []
+        "obligations": [
+          "chrome-renderer",
+          "mermaid",
+          "node"
+        ]
       },
       "exceptions": [
         {
-          "id": "tests/infra_tests/rendering/test_pdf_mermaid.py::test_replace_inline_mermaid_preserves_repo_puppeteer_config_and_authored_alt",
+          "id": "tests/infra_tests/rendering/test_pdf_mermaid.py::test_replace_inline_mermaid_falls_back_on_empty_source",
           "lane": "core",
-          "obligations": [
-            "chrome-renderer",
-            "mermaid",
-            "node"
-          ]
+          "obligations": []
         },
         {
-          "id": "tests/infra_tests/rendering/test_pdf_mermaid.py::test_replace_inline_mermaid_runtime_config_is_real_then_portable",
+          "id": "tests/infra_tests/rendering/test_pdf_mermaid.py::test_replace_inline_mermaid_falls_back_when_no_chrome_resolves",
           "lane": "core",
-          "obligations": [
-            "chrome-renderer",
-            "mermaid",
-            "node"
-          ]
+          "obligations": []
+        },
+        {
+          "id": "tests/infra_tests/rendering/test_pdf_mermaid.py::test_resolve_chrome_prefers_env_path_over_cache_and_system",
+          "lane": "core",
+          "obligations": []
+        },
+        {
+          "id": "tests/infra_tests/rendering/test_pdf_mermaid.py::test_resolve_chrome_prefers_headless_shell_at_same_version",
+          "lane": "core",
+          "obligations": []
+        },
+        {
+          "id": "tests/infra_tests/rendering/test_pdf_mermaid.py::test_resolve_chrome_uses_newest_cache_executable",
+          "lane": "core",
+          "obligations": []
+        },
+        {
+          "id": "tests/infra_tests/rendering/test_pdf_mermaid.py::test_resolve_chrome_uses_system_candidates_then_none",
+          "lane": "core",
+          "obligations": []
+        },
+        {
+          "id": "tests/infra_tests/rendering/test_pdf_mermaid.py::test_unprofiled_mermaid_executable_is_refused_before_execution",
+          "lane": "core",
+          "obligations": []
         }
       ],
       "evidence": [
         {
           "path": "tests/infra_tests/rendering/test_pdf_mermaid.py",
-          "source_sha256": "163cabe049a3d90c5687786a4081b3bb0d63c43e22f9b345f58541a576d979ca",
-          "line": 1
+          "source_sha256": "44a5f71a91f71c88c30dffacabb6eb0784bb7a63c58c2c0d6928158d93e8a39f",
+          "line": 294
+        },
+        {
+          "path": "tests/infra_tests/rendering/test_pdf_mermaid.py",
+          "source_sha256": "44a5f71a91f71c88c30dffacabb6eb0784bb7a63c58c2c0d6928158d93e8a39f",
+          "line": 321
+        },
+        {
+          "path": "tests/infra_tests/rendering/test_pdf_mermaid.py",
+          "source_sha256": "44a5f71a91f71c88c30dffacabb6eb0784bb7a63c58c2c0d6928158d93e8a39f",
+          "line": 221
+        },
+        {
+          "path": "tests/infra_tests/rendering/test_pdf_mermaid.py",
+          "source_sha256": "44a5f71a91f71c88c30dffacabb6eb0784bb7a63c58c2c0d6928158d93e8a39f",
+          "line": 196
+        },
+        {
+          "path": "tests/infra_tests/rendering/test_pdf_mermaid.py",
+          "source_sha256": "44a5f71a91f71c88c30dffacabb6eb0784bb7a63c58c2c0d6928158d93e8a39f",
+          "line": 173
+        },
+        {
+          "path": "tests/infra_tests/rendering/test_pdf_mermaid.py",
+          "source_sha256": "44a5f71a91f71c88c30dffacabb6eb0784bb7a63c58c2c0d6928158d93e8a39f",
+          "line": 245
+        },
+        {
+          "path": "tests/infra_tests/rendering/test_pdf_mermaid.py",
+          "source_sha256": "44a5f71a91f71c88c30dffacabb6eb0784bb7a63c58c2c0d6928158d93e8a39f",
+          "line": 39
+        },
+        {
+          "path": "tests/infra_tests/rendering/test_pdf_mermaid.py",
+          "source_sha256": "44a5f71a91f71c88c30dffacabb6eb0784bb7a63c58c2c0d6928158d93e8a39f",
+          "line": 82
+        },
+        {
+          "path": "tests/infra_tests/rendering/test_pdf_mermaid.py",
+          "source_sha256": "44a5f71a91f71c88c30dffacabb6eb0784bb7a63c58c2c0d6928158d93e8a39f",
+          "line": 54
+        },
+        {
+          "path": "tests/infra_tests/rendering/test_pdf_mermaid.py",
+          "source_sha256": "44a5f71a91f71c88c30dffacabb6eb0784bb7a63c58c2c0d6928158d93e8a39f",
+          "line": 111
+        },
+        {
+          "path": "tests/infra_tests/rendering/test_pdf_mermaid.py",
+          "source_sha256": "44a5f71a91f71c88c30dffacabb6eb0784bb7a63c58c2c0d6928158d93e8a39f",
+          "line": 269
+        },
+        {
+          "path": "tests/infra_tests/rendering/test_pdf_mermaid.py",
+          "source_sha256": "44a5f71a91f71c88c30dffacabb6eb0784bb7a63c58c2c0d6928158d93e8a39f",
+          "line": 126
+        },
+        {
+          "path": "tests/infra_tests/rendering/test_pdf_mermaid.py",
+          "source_sha256": "44a5f71a91f71c88c30dffacabb6eb0784bb7a63c58c2c0d6928158d93e8a39f",
+          "line": 141
+        },
+        {
+          "path": "tests/infra_tests/rendering/test_pdf_mermaid.py",
+          "source_sha256": "44a5f71a91f71c88c30dffacabb6eb0784bb7a63c58c2c0d6928158d93e8a39f",
+          "line": 25
+        },
+        {
+          "path": "infrastructure/rendering/_pdf_mermaid.py",
+          "source_sha256": "a4f876de2c9b12688494478eb49b1e7eb9712d87891991a640efd0a5f33e3900",
+          "line": 480
+        },
+        {
+          "path": "infrastructure/rendering/_pdf_mermaid.py",
+          "source_sha256": "a4f876de2c9b12688494478eb49b1e7eb9712d87891991a640efd0a5f33e3900",
+          "line": 64
+        },
+        {
+          "path": "infrastructure/rendering/_mermaid_v122.py",
+          "source_sha256": "12c5f3a90f2a0910a8658fb66b6f9ee2c6bd9044156466daf11bfe7b946c10aa",
+          "line": 55
         }
       ]
     },
@@ -25770,15 +25938,20 @@
     },
     {
       "path": "tests/infra_tests/reporting/test_native_mermaid_runtime_profile.py",
-      "source_sha256": "d05c932717658d7470e79ea5af777adcf23c260e360b3c4c1aa1bf1576557c94",
+      "source_sha256": "5bf6ca8f2b83972b5c80b3bd5b9f250a495c5b10c90ac7a68c19e328548db348",
       "families": [
         "tests/infra_tests/reporting/test_native_mermaid_runtime_profile.py::test_actual_private_adapter_loader_rejects_changed_packaged_asset",
         "tests/infra_tests/reporting/test_native_mermaid_runtime_profile.py::test_actual_root_profile_binds_locked_node24_and_current_mermaid_source",
         "tests/infra_tests/reporting/test_native_mermaid_runtime_profile.py::test_actual_single_and_ordered_sdk_adapters_match_current_source_bytes",
+        "tests/infra_tests/reporting/test_native_mermaid_runtime_profile.py::test_current122_cannot_borrow_legacy_or_malformed_render_profiles",
+        "tests/infra_tests/reporting/test_native_mermaid_runtime_profile.py::test_current122_literal_request_keeps_its_distinct_fixed_native_namespace",
+        "tests/infra_tests/reporting/test_native_mermaid_runtime_profile.py::test_historical12_cannot_borrow_current_licensed_live_report_gate",
+        "tests/infra_tests/reporting/test_native_mermaid_runtime_profile.py::test_historical_office_cli_keeps_current_api_profile_explicitly_unsupported",
+        "tests/infra_tests/reporting/test_native_mermaid_runtime_profile.py::test_licensed_live_report_data_namespace_is_bound_to_exact_version",
         "tests/infra_tests/reporting/test_native_mermaid_runtime_profile.py::test_matching_foreign_root_and_lock_engine_cannot_enter_current_profile",
         "tests/infra_tests/reporting/test_native_mermaid_runtime_profile.py::test_missing_or_disagreeing_locked_root_engine_refuses"
       ],
-      "family_observations_sha256": "c742620f31b64313e7c61f42eff2ff9b9a2dc999a6c3ffec6f6b6c2584fea1b3",
+      "family_observations_sha256": "0f2f8914b3947a26f9084f480c01745e1d4f3453b0052a8021500ad9b1f95c11",
       "decision": {
         "lane": "core",
         "obligations": []
@@ -25787,8 +25960,98 @@
       "evidence": [
         {
           "path": "tests/infra_tests/reporting/test_native_mermaid_runtime_profile.py",
-          "source_sha256": "d05c932717658d7470e79ea5af777adcf23c260e360b3c4c1aa1bf1576557c94",
-          "line": 1
+          "source_sha256": "5bf6ca8f2b83972b5c80b3bd5b9f250a495c5b10c90ac7a68c19e328548db348",
+          "line": 91
+        },
+        {
+          "path": "tests/infra_tests/reporting/test_native_mermaid_runtime_profile.py",
+          "source_sha256": "5bf6ca8f2b83972b5c80b3bd5b9f250a495c5b10c90ac7a68c19e328548db348",
+          "line": 40
+        },
+        {
+          "path": "tests/infra_tests/reporting/test_native_mermaid_runtime_profile.py",
+          "source_sha256": "5bf6ca8f2b83972b5c80b3bd5b9f250a495c5b10c90ac7a68c19e328548db348",
+          "line": 76
+        },
+        {
+          "path": "tests/infra_tests/reporting/test_native_mermaid_runtime_profile.py",
+          "source_sha256": "5bf6ca8f2b83972b5c80b3bd5b9f250a495c5b10c90ac7a68c19e328548db348",
+          "line": 114
+        },
+        {
+          "path": "tests/infra_tests/reporting/test_native_mermaid_runtime_profile.py",
+          "source_sha256": "5bf6ca8f2b83972b5c80b3bd5b9f250a495c5b10c90ac7a68c19e328548db348",
+          "line": 124
+        },
+        {
+          "path": "tests/infra_tests/reporting/test_native_mermaid_runtime_profile.py",
+          "source_sha256": "5bf6ca8f2b83972b5c80b3bd5b9f250a495c5b10c90ac7a68c19e328548db348",
+          "line": 180
+        },
+        {
+          "path": "tests/infra_tests/reporting/test_native_mermaid_runtime_profile.py",
+          "source_sha256": "5bf6ca8f2b83972b5c80b3bd5b9f250a495c5b10c90ac7a68c19e328548db348",
+          "line": 186
+        },
+        {
+          "path": "tests/infra_tests/reporting/test_native_mermaid_runtime_profile.py",
+          "source_sha256": "5bf6ca8f2b83972b5c80b3bd5b9f250a495c5b10c90ac7a68c19e328548db348",
+          "line": 142
+        },
+        {
+          "path": "tests/infra_tests/reporting/test_native_mermaid_runtime_profile.py",
+          "source_sha256": "5bf6ca8f2b83972b5c80b3bd5b9f250a495c5b10c90ac7a68c19e328548db348",
+          "line": 52
+        },
+        {
+          "path": "tests/infra_tests/reporting/test_native_mermaid_runtime_profile.py",
+          "source_sha256": "5bf6ca8f2b83972b5c80b3bd5b9f250a495c5b10c90ac7a68c19e328548db348",
+          "line": 64
+        },
+        {
+          "path": "tests/infra_tests/reporting/test_native_mermaid_runtime_profile.py",
+          "source_sha256": "5bf6ca8f2b83972b5c80b3bd5b9f250a495c5b10c90ac7a68c19e328548db348",
+          "line": 32
+        },
+        {
+          "path": "infrastructure/rendering/_mermaid_native_profile.py",
+          "source_sha256": "4dca3545ef6baf428dcd1fb7c8b4fe684d756f077ba5fb0edc174feec91e3764",
+          "line": 17
+        },
+        {
+          "path": "infrastructure/rendering/_mermaid_native_profile.py",
+          "source_sha256": "4dca3545ef6baf428dcd1fb7c8b4fe684d756f077ba5fb0edc174feec91e3764",
+          "line": 58
+        },
+        {
+          "path": "infrastructure/rendering/_mermaid_v122.py",
+          "source_sha256": "12c5f3a90f2a0910a8658fb66b6f9ee2c6bd9044156466daf11bfe7b946c10aa",
+          "line": 34
+        },
+        {
+          "path": "infrastructure/rendering/_mermaid_v122.py",
+          "source_sha256": "12c5f3a90f2a0910a8658fb66b6f9ee2c6bd9044156466daf11bfe7b946c10aa",
+          "line": 75
+        },
+        {
+          "path": "infrastructure/reporting/native_mermaid_source_reference.py",
+          "source_sha256": "9e2149143455dff3cda4c496e44284e21a68fe5c5fae7d075c3646ebddf26065",
+          "line": 143
+        },
+        {
+          "path": "infrastructure/reporting/native_mermaid_source_reference.py",
+          "source_sha256": "9e2149143455dff3cda4c496e44284e21a68fe5c5fae7d075c3646ebddf26065",
+          "line": 150
+        },
+        {
+          "path": "infrastructure/reporting/native_mermaid_runtime_selection.py",
+          "source_sha256": "f47f58c54c156484b39c47262ec848b9a8ec95c73f959eb61549cee6c366c985",
+          "line": 85
+        },
+        {
+          "path": "infrastructure/reporting/native_office_mermaid_source.py",
+          "source_sha256": "901807b6f814bd81a4a4e7cf3d27c625f70e3f19e4209c57f7063ea3d1ab8eb0",
+          "line": 53
         }
       ]
     },
