@@ -7,6 +7,7 @@ Ollama-gated LLM tests). The error-path test does not require ``mmdc``.
 
 from __future__ import annotations
 
+import json
 import shutil
 from pathlib import Path
 
@@ -70,3 +71,51 @@ def test_render_mermaid_png_re_renders_when_source_changes(tmp_path: Path):
     second_bytes = output_path.read_bytes()
 
     assert first_bytes != second_bytes
+
+
+@pytest.mark.skipif(not _MMDC_AVAILABLE, reason="mmdc (mermaid-cli) not installed")
+def test_mermaid122_standalone_preserves_custom_viewport_and_background(tmp_path: Path):
+    output = render_mermaid_png(_SIMPLE_DIAGRAM, tmp_path / "diagram.png", width=1240, height=760, background="ivory")
+    request = json.loads(output.with_suffix(".mermaid-v122-request.json").read_bytes())
+    assert request["schema_version"] == "template-mermaid-v122-standalone-viewport-licensed-font-request-v1"
+    assert request["render_profile"]["viewport_width"] == 1240
+    assert request["render_profile"]["viewport_height"] == 760
+    assert request["render_profile"]["background_color"] == "ivory"
+    assert output.read_bytes().startswith(b"\x89PNG\r\n\x1a\n")
+
+
+@pytest.mark.skipif(not _MMDC_AVAILABLE, reason="mmdc (mermaid-cli) not installed")
+def test_mermaid122_cache_rejects_changed_viewport(tmp_path: Path):
+    output = render_mermaid_png(_SIMPLE_DIAGRAM, tmp_path / "diagram.png")
+    first_mtime = output.stat().st_mtime_ns
+    render_mermaid_png(_SIMPLE_DIAGRAM, output, width=700, height=450)
+    assert output.stat().st_mtime_ns != first_mtime
+    request = json.loads(output.with_suffix(".mermaid-v122-request.json").read_bytes())
+    assert request["render_profile"]["viewport_width"] == 700
+    assert request["render_profile"]["viewport_height"] == 450
+
+
+@pytest.mark.skipif(not _MMDC_AVAILABLE, reason="mmdc (mermaid-cli) not installed")
+def test_mermaid122_cache_rejects_modified_output_bytes(tmp_path: Path):
+    output = render_mermaid_png(_SIMPLE_DIAGRAM, tmp_path / "diagram.png")
+    output.write_bytes(b"changed-png-bytes")
+    render_mermaid_png(_SIMPLE_DIAGRAM, output)
+    assert output.read_bytes().startswith(b"\x89PNG\r\n\x1a\n")
+
+
+@pytest.mark.skipif(not _MMDC_AVAILABLE, reason="mmdc (mermaid-cli) not installed")
+def test_mermaid122_actual_math_browser_render(tmp_path: Path):
+    output = render_mermaid_png('flowchart TD\n    A["$$x^2 + y^2$$"]\n', tmp_path / "math.png")
+    assert output.read_bytes().startswith(b"\x89PNG\r\n\x1a\n")
+    assert output.stat().st_size > 100
+
+
+@pytest.mark.skipif(not _MMDC_AVAILABLE, reason="mmdc (mermaid-cli) not installed")
+def test_mermaid122_regenerates_legacy_source_only_cache(tmp_path: Path):
+    output = tmp_path / "diagram.png"
+    output.write_bytes(b"legacy-png-from-an-earlier-profile")
+    output.with_suffix(".mmd").write_text(_SIMPLE_DIAGRAM + "\n", encoding="utf-8")
+    render_mermaid_png(_SIMPLE_DIAGRAM, output)
+    assert output.read_bytes().startswith(b"\x89PNG\r\n\x1a\n")
+    cache = json.loads(output.with_suffix(".mermaid-cache.json").read_bytes())
+    assert cache["schema_version"] == "template-mermaid122-standalone-cache-v1"

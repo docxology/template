@@ -1459,3 +1459,16 @@ composition and engineering guarantees; they do not establish scientific,
 publication, tagged-PDF or accessibility conformance acceptance.
 
 Stage 3 prepares enabled native transmission assets before project hydration can seal their visualization evidence. It preserves explicit paper-frontmatter admission and repeats the bookend write after hydration restores the manuscript tree. Skipping hydration retains the existing final bookend path.
+
+
+The current exact Mermaid CLI12.2 profile is owned by [`_mermaid_v122.py`](_mermaid_v122.py)
+and its separate single/ordered SDK assets. It preserves the curated licensed
+font constructor before layout, used-face embedding, explicit default theme,
+1400×900 native viewport and scale one, with upstream font embedding disabled.
+Historical11.16 and12.0 profiles remain exact separate adapters. The standalone
+caller preserves custom rectangles/backgrounds through a distinct literal
+request; those values cannot borrow native fixed-profile admission. Ordinary
+current-profile caches bind the actual Source lock, Node body and consumed
+adapter/request/font inputs; genuine native owners always execute their call.
+Run `npm run test:katex-trust` for the output-only inherited-trust regression.
+Component rendering and dependency audits do not grant native or release acceptance.

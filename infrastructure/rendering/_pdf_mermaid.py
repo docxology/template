@@ -22,7 +22,7 @@ from infrastructure.core.exceptions import RenderingError
 from infrastructure.core.logging.utils import get_logger
 from infrastructure.rendering.chrome import resolve_chrome_executable as _resolve_chrome_executable
 from infrastructure.rendering._pdf_title_page_latex import _latex_graphic_alt_text
-from infrastructure.rendering import _mermaid_v11
+from infrastructure.rendering import _mermaid_v11, _mermaid_v122
 from infrastructure.rendering._mermaid_source_font_default import (
     PROFILE_NAME,
     SCRIPT_NAME,
@@ -494,6 +494,7 @@ def _render_mermaid(
     mmd_path.write_text(source + "\n", encoding="utf-8")
     use_api12 = False
     use_api11 = False
+    use_api122 = False
     inputs: tuple[Path, ...] = (mmd_path, *((puppeteer_config,) if puppeteer_config is not None else ()))
     try:
         entry = Path(mmdc).resolve(strict=True)
@@ -507,21 +508,26 @@ def _render_mermaid(
                 and metadata.get("name") == "@mermaid-js/mermaid-cli"
                 and metadata.get("version") == "11.16.0"
             )
+            use_api122 = (
+                isinstance(metadata, dict)
+                and metadata.get("name") == "@mermaid-js/mermaid-cli"
+                and metadata.get("version") == "12.2.0"
+            )
             use_api12 = (
                 isinstance(metadata, dict)
                 and metadata.get("name") == "@mermaid-js/mermaid-cli"
                 and metadata.get("version") == "12.0.0"
             )
-        if use_api12 or use_api11:
-            module = _mermaid_v11 if use_api11 else None
+        if use_api12 or use_api11 or use_api122:
+            module = _mermaid_v122 if use_api122 else _mermaid_v11 if use_api11 else None
             package = module.selected_package(mmdc) if module is not None else selected_package(mmdc)
             node = shutil.which("node")
             if node is None:
                 raise ValueError("the selected Mermaid API requires its admitted Node executable")
-            api_version = "v11" if use_api11 else "v12"
+            api_version = "v122" if use_api122 else "v11" if use_api11 else "v12"
             adapter = output_dir / f"{stem}.mermaid-{api_version}.mjs"
             request = output_dir / f"{stem}.mermaid-{api_version}-request.json"
-            if use_api11:
+            if use_api11 or use_api122:
                 helper = output_dir / SCRIPT_NAME
                 fonts = output_dir / PROFILE_NAME
                 helper.write_bytes(default_font_script_bytes())
@@ -552,7 +558,34 @@ def _render_mermaid(
     before = {str(path.absolute()): hashlib.sha256(path.read_bytes()).hexdigest() for path in inputs}
     cache = output_dir / f"{stem}.mermaid-cache.json"
     cache_binding = {"policy": policy, "inputs": before, "source": source, "mmdc": str(Path(mmdc).resolve(strict=True))}
-    if png_path.is_file() and png_path.stat().st_size > 0 and cache.is_file():
+    cache_identity_complete = True
+    if use_api122:
+        source_lock = package.parents[2] / "package-lock.json"
+        cache_identity_complete = (
+            source_lock.is_file() and not source_lock.is_symlink() and source_lock.stat().st_size <= 4 * 1024 * 1024
+        )
+        if cache_identity_complete:
+            try:
+                selected_node = Path(node).resolve(strict=True)
+                with selected_node.open("rb") as stream:
+                    node_sha256 = hashlib.file_digest(stream, "sha256").hexdigest()
+                cache_binding["tooling"] = {
+                    "source_lock_sha256": hashlib.sha256(source_lock.read_bytes()).hexdigest(),
+                    "node_path": str(selected_node),
+                    "node_sha256": node_sha256,
+                    "cli_manifest_sha256": hashlib.sha256((package / "package.json").read_bytes()).hexdigest(),
+                    "cli_api_sha256": hashlib.sha256((package / "src/index.js").read_bytes()).hexdigest(),
+                }
+            except OSError:
+                cache_identity_complete = False
+    custody = native_render_custody("native-origin Mermaid production lacks its independently admitted Source owner")
+    if (
+        custody is None
+        and cache_identity_complete
+        and png_path.is_file()
+        and png_path.stat().st_size > 0
+        and cache.is_file()
+    ):
         try:
             cached = json.loads(cache.read_bytes())
         except (ValueError, OSError):
@@ -564,9 +597,6 @@ def _render_mermaid(
     try:
         # Intentionally convert every mmdc execution failure into a documented
         # caller-side fallback so combined PDF rendering can continue.
-        custody = native_render_custody(
-            "native-origin Mermaid production lacks its independently admitted Source owner"
-        )
         # The launcher is called from this frame: native custody verifies
         # this exact function as its caller.
         completed = (
