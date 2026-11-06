@@ -14,10 +14,16 @@ The Source-owned controller is
 current metadata graph used by coordinated version planning. The controller
 derives the rerender roster from the canonical projects whose
 `output/manuscript/config.yaml` is already tracked. It renders and validates
-those projects with the existing `rendered_refresh` producer and revalidates the
-unchanged output bytes of the canonical complement. The roster is not a fixed
+those projects with the existing `rendered_refresh` producer. One reviewed
+semantic consumer, `templates/template_pitch_deck`, additionally reads COUNTS and
+version facts during canonical Stage 02; default refresh runs that genuine stage
+before its existing non-rebind refresh. The remaining canonical projects revalidate
+their unchanged output bytes. Current Source therefore has fifteen tracked
+publication-copy projects, Pitch analysis/refresh, and nine unchanged rebinds. The roster is not a fixed
 list of fifteen names. Provider dependencies finish before their consumers,
-with one to four independent project workers per wave.
+with one to four independent project workers per wave. A project owns one
+sequential command chain, so Pitch analysis and refresh never race. A nonzero or
+unaccepted analysis result is terminal; it cannot fall through to refresh.
 
 Before generation, the workflow prepares the exact locked Root and own project
 environments and checks the actual SDK version and source origin. The existing
@@ -25,6 +31,13 @@ native preparation action supplies the Source-pinned Lean, document/browser,
 Java and format-reader tools and hash-verified dependency cache. Missing tools,
 an unknown provider, stale metadata, a dirty checkout or an incorrect requested
 SHA refuses the run.
+
+The v3 plan binds the one fixed dependent consumer, its actual canonical subject,
+COUNTS/version input bytes and reviewed Stage 02/reader/compiler paths to the exact
+Source commit. The actual canonical Stage 02 selection is also bound and must
+include chart generation before deck rendering. Private or unknown subjects,
+missing producers and changed inputs
+refuse before generation. This declaration grants no additional output paths.
 
 Capture admits only the finite base-tracked canonical output inventory in mode
 100644. Flat numbered manuscript sections additionally require explicit
@@ -51,10 +64,11 @@ publication validation and exact-SHA required acceptance remain the separate
 
 ## Coverage import and unchanged-output rebind
 
-The default mode remains `refresh`: regenerate the tracked publication copies
-and revalidate the unchanged complement. Select `rebind-only` explicitly after a
-coverage-literal import changes the shared stage implementation without changing
-publication outputs. The requested mode is frozen in the Source-derived plan,
+The default mode remains `refresh`: regenerate tracked publication copies, run
+the genuine dependent Pitch analysis/refresh, and revalidate the unchanged
+complement. A coverage import changes semantic Pitch inputs as well as the shared
+stage fingerprint. Regenerate those dependent outputs before using `rebind-only`;
+unchanged output bytes alone cannot prove that displayed measurements are current. The requested mode is frozen in the Source-derived plan,
 preparation and generation records, checked against the dispatch on every phase,
 and retained in the review manifest.
 
@@ -73,14 +87,21 @@ Use this sequence after final metadata and genuine publication generation settle
 2. While HEAD remains C, import those exact measured values into the owning
    coverage-literal store and regenerate its provenance. Verify every measured
    project input hash still matches C; retain the original measurements.
-3. Commit the imported literals and provenance as D. The project coverage-input
-   hashes stay unchanged, while the shared rendered-stage hash advances.
-4. Dispatch this workflow on the exact branch D with `source_sha=D`,
-   `expected_version=<final version>` and `mode=rebind-only`. It produces the
-   confined generated candidate E and its exact reviewed patch.
-5. Integrate E through the ordinary PR path, verify the final CI Gate and the
-   integrated tree, then perform required acceptance on the exact final main
-   revision. Keep original C measurements bound to their unchanged input hashes.
+3. Commit the imported literals and provenance as D. Preserve the original C
+   measurements and compare every project/support identity with C.
+4. Produce dependent publication candidate Q through the actual Source-owned
+   analysis/refresh chain. The default hosted refresh includes Pitch's genuine
+   Stage 02 before refresh, the fifteen publication copies, and nine rebinds.
+   Check its complete footprint and strict committed-tree gates. If any project
+   source, compiled manuscript or measured support input changes, remeasure that
+   affected input after it settles; never keep a mismatched C identity.
+5. With dependent outputs current and unchanged, dispatch `mode=rebind-only` at
+   the exact Source Q, `source_sha=Q`, and the actual final `expected_version`.
+   This all-project strict receipt rebind produces E without analysis or render
+   fallback. Integrate its exact reviewed patch through the ordinary PR path.
+6. Verify the integrated tree and current CI Gate, then perform required acceptance
+   on the exact final main revision. C measurements retain `source_commit=C`
+   only while their original measured project/support hashes still match.
 
 If the unchanged-output rebind refuses, preserve its original failure. Perform
 an explicit real refresh and remeasure any affected inputs after their Source
