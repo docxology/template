@@ -24,6 +24,7 @@ from infrastructure.project.public_acceptance_evidence import evidence_directory
 from infrastructure.project.public_hosted_origin import MAX_ARCHIVE, _context
 from infrastructure.project.public_reference_git import remaining
 from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
+from infrastructure.reporting.native_cell_selection import native_transport_scopes, validate_native_transport_receipt
 from infrastructure.reporting.native_format_joint_source import (
     NativeOriginalLaunch,
     NativeReaderOperation,
@@ -84,7 +85,7 @@ def pack_native_hosted_originals(
     deadline: float,
     native_receipt: ArtifactSnapshot,
 ) -> dict[str, Any]:
-    """Freeze the actual all25 originals before the same Source owner closes.
+    """Freeze the actual selected originals before the same Source owner closes.
 
     The supplied originals must have completed genuine supervision and exact
     Source/Code closure. No receipt-decoding or arbitrary path census can mint
@@ -96,8 +97,7 @@ def pack_native_hosted_originals(
     if producer is None or producer.source is not source or producer.deadline != deadline:
         raise ValueError("native transport requires the genuine live Source producer and its original clock")
     _context(repository, run_id, source.reference.commit)
-    if tuple(originals) != PUBLIC_PROJECT_NAMES:
-        raise ValueError("native transport requires the complete ordered Source public roster")
+    selected = native_transport_scopes(tuple(originals))
     root = source.bindings.current_root
     directory = evidence_directory(root, directory, fresh=True)
     directory.mkdir(parents=True, mode=0o700)
@@ -116,16 +116,9 @@ def pack_native_hosted_originals(
 
     held_receipt = SnapshotReader(root).read(native_receipt.relative)
     receipt_data = held_receipt.json_object()
-    expected_gates = {scope + ":formats" for scope in PUBLIC_PROJECT_NAMES}
-    if (
-        held_receipt.content != native_receipt.content
-        or held_receipt.sha256 != native_receipt.sha256
-        or set(receipt_data.get("gates", {})) != expected_gates
-        or any(row.get("status") != "pass" for row in receipt_data["gates"].values())
-        or receipt_data.get("native_formats", {}).get("selected_projects") != list(PUBLIC_PROJECT_NAMES)
-        or receipt_data["native_formats"].get("observed_projects") != len(PUBLIC_PROJECT_NAMES)
-    ):
-        raise ValueError("native transport requires the actual complete validated all25 native receipt")
+    if held_receipt.content != native_receipt.content or held_receipt.sha256 != native_receipt.sha256:
+        raise ValueError("native transport requires its unchanged genuinely held native receipt")
+    validate_native_transport_receipt(selected, receipt_data)
 
     def admit(label: str, digest: str | None = None) -> None:
         label = _path(label)
@@ -300,7 +293,7 @@ def pack_native_hosted_originals(
         "hosted_run_id": run_id,
         "source_commit": source.reference.commit,
         "source_identity": source.reference.source_identity,
-        "scopes": list(PUBLIC_PROJECT_NAMES),
+        "scopes": list(selected),
         "originals": original_rows,
         "pdfium_wheels": wheel_rows,
         "shards": shards,

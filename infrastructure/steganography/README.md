@@ -10,6 +10,7 @@ with layered security and steganographic techniques.
 |------|---------|
 | `__init__.py` | Public API: `SteganographyProcessor`, `SteganographyConfig`, `embed_steganography`, `resolve_build_timestamp` |
 | `config.py` | `SteganographyConfig` dataclass with per-technique toggles |
+| `publication.py` | Validated staging and per-file atomic PDF/sidecar publication |
 | `core.py` | `SteganographyProcessor` orchestrator class |
 | `overlays.py` | Diagonal watermark + footer + invisible text overlays (reportlab) |
 | `barcodes.py` | QR code, Code128, barcode strip generation |
@@ -154,8 +155,8 @@ embed_steganography(Path("paper.pdf"), config=config, title="My Paper")
   `kmyth-unseal` in either `kmyth_binary_dir`, the submodule's `bin/`
   directory, or `PATH`.
 - When `kmyth_enabled: true`, the processor writes `.ski` sidecars for the
-  configured `kmyth_seal_artifacts` after the steganography PDF and hash
-  manifest exist. By default only the hash manifest is sealed.
+  configured `kmyth_seal_artifacts` from private staged PDF and hash
+  manifest bytes, before public destinations change. By default only the hash manifest is sealed.
 - Set `kmyth_required: true` to make missing Kmyth tools or TPM seal failures
   fatal. With the default `false`, secure-run logs a warning and continues.
 - Kmyth `.ski` files are TPM-bound artifacts. Keep the upstream warning in
@@ -166,7 +167,7 @@ embed_steganography(Path("paper.pdf"), config=config, title="My Paper")
 Setting `STEGANOGRAPHY_DETERMINISTIC=1` (or passing `--deterministic` to
 `secure_run.sh`) pins every embedded timestamp to the latest commit's
 strict-ISO8601 committer date and derives the `Doc-ID` from a SHA-256 of
-that timestamp. Two consecutive runs against the same `HEAD` produce
+that timestamp. Two consecutive unencrypted runs against the same `HEAD` produce
 **byte-identical** `*_steganography.pdf` files — useful for provenance
 audits and content-addressable storage. Trade-off: the embedded
 timestamp no longer reflects rendering time. Falls back to wall-clock
@@ -196,3 +197,36 @@ flowchart LR
 The module follows the thin orchestrator pattern: `SteganographyProcessor.process()`
 chains each technique in sequence, each operating on the working PDF copy.
 The original input PDF is never modified.
+
+## Repeat calls and publication
+
+Each `process()` invocation takes an independent, validated configuration snapshot
+and owns its hashes, document ID and Git provenance. Boolean options require
+actual `true`/`false` values; quoted strings do not enable a technique. A disabled
+processor returns the input without reading optional PDF dependencies or copying it.
+
+Source and destination paths must be distinct, including existing hardlink or
+symlink aliases. The PDF is built and parsed in a private temporary directory.
+The legacy manifest remains `<source-stem>.hashes.json`, even when the output PDF
+has a different name. Required Kmyth sealing also completes on staged bytes before
+publication. A failed required producer leaves previous PDF, manifest and sealed
+sidecars intact. Kmyth subprocess environments remove credential variables and
+agent socket nominations while preserving explicit TPM/library configuration.
+
+`publication.py` prepares destination-local files and retained preimages, preserving
+existing destination modes. Individual replacements are atomic; this is not a
+crash-atomic transaction across several files. Ordinary publication errors roll
+back only replacements whose identity is still ours. If another writer changes a
+replacement, recovery preimages remain on disk and the exception reports them
+instead of overwriting that edit. Cooperating publishers acquire finite per-path
+locks in the system temporary directory.
+
+Deterministic mode applies to unencrypted output. Encryption continues to use fresh
+cryptographic randomness; do not reuse AES-GCM nonces to reproduce encrypted bytes.
+TPM availability and actual sealing require a separately provisioned backend;
+filesystem and missing-provider controls do not establish TPM acceptance.
+
+Catalog composition preserves existing Info fields, XMP, outlines and attachments
+through overlay, metadata and password-encryption stages. Explicit metadata values
+override their named fields; a requested attachment name replaces its previous
+visible entries once, while unrelated attachments remain.

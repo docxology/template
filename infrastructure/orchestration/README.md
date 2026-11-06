@@ -15,6 +15,9 @@ uv run python -m infrastructure.orchestration pipeline --project templates/templ
 # Explicitly select live capabilities
 uv run python -m infrastructure.orchestration pipeline --project templates/template_code_project --mode live
 
+# Request checkpoint validation for every discovered project
+uv run python -m infrastructure.orchestration pipeline --all-projects --resume
+
 # Read-only private-project promotion gate
 uv run python -m infrastructure.orchestration promotion-check \
   --attestation /path/to/private-project/promotion.yaml
@@ -31,6 +34,14 @@ uv run python -m infrastructure.project.promotion candidate \
   --project-root /path/to/candidate --attestation /path/to/promotion-security.yaml \
   --as-of 2026-07-20 --json
 ```
+
+For `pipeline --all-projects --resume`, each project receives the existing
+checkpoint validation policy. Shared infrastructure runs fresh once when enabled.
+Missing, stale, or non-reusable checkpoints keep their original refusal status;
+they never silently start a fresh project run. Start a fresh run explicitly by
+omitting `--resume`. Incremental execution remains a single-project option;
+combining `--all-projects` and `--incremental` returns invocation error 2
+before constructing a pipeline runner.
 
 Automated coverage for this package lives under `tests/infra_tests/orchestration/`.
 

@@ -317,3 +317,14 @@ alongside the wrapper exit and streams. A green Actions conclusion alone cannot
 qualify the tool: require the original wrapper exit zero, the exact unchanged
 test's one-case JUnit result with zero skips/errors/failures, and its passed
 probe record. Compiler logs and PDFs remain original bounded diagnostics.
+
+
+When `NATIVE_SHARDING_CELLS` is `true`, the required-acceptance reader and release
+handoff explicitly select `--native-cell-union`. Every Source-declared cell must
+complete its genuine installed Original and upload its distinct native index and
+shards. Cell-qualified original evidence/transport paths preserve all receipts;
+the fresh reader consumes them all under one Source and clock. The legacy whole
+roster route retains its existing paths when sharding is disabled. Neither a cell
+nor transport DATA alone grants whole-roster or release acceptance. Successful
+native-cell indexes and shards explicitly request 30 days of artifact retention.
+Retainers still check each actual artifact expiry at retrieval time.

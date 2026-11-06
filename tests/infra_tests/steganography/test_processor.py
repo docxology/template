@@ -10,6 +10,138 @@ import pytest
 from tests.infra_tests.steganography.conftest import has_pypdf, has_qrcode, has_reportlab
 
 
+def _plain_pdf(path: Path, *, width: int = 200) -> Path:
+    from pypdf import PdfWriter
+
+    writer = PdfWriter()
+    writer.add_blank_page(width=width, height=300)
+    with path.open("wb") as stream:
+        writer.write(stream)
+    return path
+
+
+def _metadata_processor():
+    from infrastructure.steganography.config import SteganographyConfig
+    from infrastructure.steganography.core import SteganographyProcessor
+
+    return SteganographyProcessor(
+        SteganographyConfig(
+            enabled=True,
+            overlays_enabled=False,
+            barcodes_enabled=False,
+            metadata_enabled=True,
+            hashing_enabled=True,
+        )
+    )
+
+
+def test_reused_processor_does_not_embed_previous_document_hashes(tmp_path: Path):
+    from pypdf import PdfReader
+
+    first = _plain_pdf(tmp_path / "first.pdf")
+    second = _plain_pdf(tmp_path / "second.pdf", width=400)
+    processor = _metadata_processor()
+    processor.process(first)
+    processor.config.hashing_enabled = False
+    output = processor.process(second)
+    attachment = PdfReader(output).attachments["stego_manifest.json"][0]
+    assert json.loads(attachment)["hashes"] == {}
+    assert not second.with_suffix(".hashes.json").exists()
+
+
+@pytest.mark.parametrize("alias", ["same-path", "hardlink", "symlink"])
+def test_source_alias_refused_before_any_artifact_write(tmp_path: Path, alias: str):
+    import os
+
+    source = _plain_pdf(tmp_path / "source.pdf")
+    original = source.read_bytes()
+    output = source if alias == "same-path" else tmp_path / "alias.pdf"
+    if alias == "hardlink":
+        os.link(source, output)
+    elif alias == "symlink":
+        output.symlink_to(source)
+    with pytest.raises(ValueError):
+        _metadata_processor().process(source, output)
+    assert source.read_bytes() == original
+    assert not source.with_suffix(".hashes.json").exists()
+
+
+def test_missing_output_parent_preserves_previous_manifest(tmp_path: Path):
+    source = _plain_pdf(tmp_path / "source.pdf")
+    manifest = source.with_suffix(".hashes.json")
+    manifest.write_bytes(b"previous manifest")
+    with pytest.raises(FileNotFoundError):
+        _metadata_processor().process(source, tmp_path / "missing" / "output.pdf")
+    assert manifest.read_bytes() == b"previous manifest"
+
+
+def test_required_missing_kmyth_preserves_all_published_artifacts(tmp_path: Path, monkeypatch):
+    source = _plain_pdf(tmp_path / "source.pdf")
+    output = _plain_pdf(tmp_path / "result.pdf", width=100)
+    manifest = source.with_suffix(".hashes.json")
+    manifest.write_bytes(b"previous manifest")
+    pdf_sealed = output.with_name(output.name + ".ski")
+    manifest_sealed = manifest.with_name(manifest.name + ".ski")
+    pdf_sealed.write_bytes(b"previous PDF seal")
+    manifest_sealed.write_bytes(b"previous manifest seal")
+    before = {path: path.read_bytes() for path in [source, output, manifest, pdf_sealed, manifest_sealed]}
+    processor = _metadata_processor()
+    processor.config.kmyth_enabled = processor.config.kmyth_required = True
+    processor.config.kmyth_binary_dir = str(tmp_path / "no-binaries")
+    processor.config.kmyth_source_dir = str(tmp_path / "no-source")
+    processor.config.kmyth_seal_artifacts = ["pdf", "hash_manifest"]
+    monkeypatch.setenv("PATH", "")
+    from infrastructure.steganography.kmyth_adapter import KmythUnavailableError
+
+    with pytest.raises(KmythUnavailableError):
+        processor.process(source, output)
+    assert {path: path.read_bytes() for path in before} == before
+    assert not list(tmp_path.glob(".steganography-*"))
+
+
+def test_success_preserves_source_manifest_name_and_previous_destination_modes(tmp_path: Path):
+    import hashlib
+    import stat
+    from pypdf import PdfReader
+
+    source = _plain_pdf(tmp_path / "source.pdf")
+    output = _plain_pdf(tmp_path / "result.pdf", width=100)
+    manifest = source.with_suffix(".hashes.json")
+    manifest.write_bytes(b"previous manifest")
+    output.chmod(0o640)
+    manifest.chmod(0o600)
+    _metadata_processor().process(source, output)
+    assert len(PdfReader(output).pages) == 1
+    assert json.loads(manifest.read_text())["hashes"]["sha256"] == hashlib.sha256(source.read_bytes()).hexdigest()
+    assert not output.with_suffix(".hashes.json").exists()
+    assert stat.S_IMODE(output.stat().st_mode) == 0o640
+    assert stat.S_IMODE(manifest.stat().st_mode) == 0o600
+
+
+def test_runtime_config_mutation_is_validated_before_processing(tmp_path: Path):
+    source = _plain_pdf(tmp_path / "source.pdf")
+    processor = _metadata_processor()
+    processor.config.enabled = "false"
+    with pytest.raises(ValueError, match="enabled must be a boolean"):
+        processor.process(source)
+    assert sorted(path.name for path in tmp_path.iterdir()) == ["source.pdf"]
+
+
+def test_encrypted_variant_keeps_embedded_provenance_attachment(tmp_path: Path):
+    from pypdf import PdfReader
+
+    source = _plain_pdf(tmp_path / "source.pdf")
+    processor = _metadata_processor()
+    processor.config.encryption_enabled = True
+    processor.config.pdf_password = "component-password"
+    result = processor.process(source)
+    reader = PdfReader(result)
+    assert reader.is_encrypted
+    assert reader.decrypt("component-password")
+    attachment = reader.attachments["stego_manifest.json"][0]
+    assert json.loads(attachment)["hashes"]
+
+
 class TestSteganographyProcessor:
     def test_process_disabled_returns_input(self, tmp_pdf: Path):
         from infrastructure.steganography.config import SteganographyConfig
@@ -126,3 +258,37 @@ class TestProcessPdfConvenience:
         )
         output = tmp_path / "convenience_test.pdf"
         assert embed_steganography(tmp_pdf, output_pdf=output, config=config).exists()
+
+
+def test_overlay_only_preserves_existing_document_catalog(tmp_path: Path):
+    from pypdf import PdfReader, PdfWriter
+    from infrastructure.steganography.config import DocumentMetadata, SteganographyConfig
+    from infrastructure.steganography.core import SteganographyProcessor
+    from infrastructure.steganography.metadata import build_xmp_packet
+
+    source = tmp_path / "catalog.pdf"
+    xmp = build_xmp_packet(DocumentMetadata(title="Original catalog")).encode()
+    writer = PdfWriter()
+    writer.add_blank_page(width=300, height=400)
+    writer.add_metadata({"/Title": "Original catalog"})
+    writer.xmp_metadata = xmp
+    writer.add_attachment("original.txt", b"unrelated original attachment")
+    writer.add_outline_item("Original section", 0)
+    with source.open("wb") as stream:
+        writer.write(stream)
+    original = source.read_bytes()
+    config = SteganographyConfig(
+        enabled=True,
+        overlays_enabled=True,
+        barcodes_enabled=False,
+        metadata_enabled=False,
+        hashing_enabled=False,
+        manifest_enabled=False,
+    )
+    output = SteganographyProcessor(config).process(source)
+    assert source.read_bytes() == original
+    reader = PdfReader(output)
+    assert reader.attachments["original.txt"] == [b"unrelated original attachment"]
+    assert reader.trailer["/Root"]["/Metadata"].get_data() == xmp
+    assert reader.metadata.title == "Original catalog"
+    assert reader.outline[0].title == "Original section"

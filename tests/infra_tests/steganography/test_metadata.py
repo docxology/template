@@ -63,12 +63,37 @@ class TestMetadata:
 
     @pytest.mark.skipif(not has_pypdf(), reason="pypdf not installed")
     def test_inject_pdf_metadata(self, tmp_pdf: Path, tmp_path: Path):
+        from pypdf import PdfReader, PdfWriter
         from infrastructure.steganography.metadata import inject_pdf_metadata
 
+        xmp = build_xmp_packet(DocumentMetadata(title="Original XMP")).encode()
+        writer = PdfWriter()
+        writer.clone_document_from_reader(PdfReader(tmp_pdf))
+        writer.add_metadata({"/Title": "Old title", "/Author": "Original author"})
+        writer.xmp_metadata = xmp
+        writer.add_attachment("original.txt", b"unrelated original attachment")
+        writer.add_attachment("stego_manifest.json", b"old managed manifest")
+        writer.add_outline_item("Original section", 0)
+        seeded = tmp_path / "catalog-seed.pdf"
+        with seeded.open("wb") as stream:
+            writer.write(stream)
+        seeded.replace(tmp_pdf)
+        original = tmp_pdf.read_bytes()
         output = tmp_path / "output_meta.pdf"
-        inject_pdf_metadata(tmp_pdf, output, {"/Title": "Injected Title", "/CustomKey": "CustomValue"})
-        assert output.exists()
-        assert output.stat().st_size > 0
+        inject_pdf_metadata(
+            tmp_pdf,
+            output,
+            {"/Title": "Injected Title", "/CustomKey": "CustomValue"},
+            attachments={"stego_manifest.json": b"new managed manifest"},
+        )
+        assert tmp_pdf.read_bytes() == original
+        reader = PdfReader(output)
+        assert reader.metadata.title == "Injected Title"
+        assert reader.metadata.author == "Original author"
+        assert reader.attachments["original.txt"] == [b"unrelated original attachment"]
+        assert reader.attachments["stego_manifest.json"] == [b"new managed manifest"]
+        assert reader.trailer["/Root"]["/Metadata"].get_data() == xmp
+        assert reader.outline[0].title == "Original section"
 
     def test_build_xmp_packet(self):
         from infrastructure.steganography.config import DocumentMetadata

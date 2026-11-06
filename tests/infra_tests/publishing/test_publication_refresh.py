@@ -20,6 +20,7 @@ from infrastructure.publishing.publication_refresh import (
     generation_commands,
     main,
     provider_waves,
+    run_coordinated,
     run_logged,
 )
 from infrastructure.validation.publication.rendered_refresh import rebind_project
@@ -306,7 +307,25 @@ def test_manual_workflow_has_no_write_credential_and_requires_both_original_gate
     assert checkout["with"]["persist-credentials"] is False
     assert any(row.get("uses") == "./.github/actions/setup-native-installed-readiness" for row in steps)
     upload = next(row for row in steps if row.get("name", "").startswith("Retain the verified patch"))
-    assert "steps.verify.outcome == 'success'" in upload["if"] and "steps.capture.outcome == 'success'" in upload["if"]
+    assert upload["if"] == "steps.coordinated.outcome == 'success'"
+    setup = next(i for i, row in enumerate(steps) if row.get("uses") == "./.github/actions/setup-ci-execution-user")
+    native = next(
+        i for i, row in enumerate(steps) if row.get("uses") == "./.github/actions/setup-native-installed-readiness"
+    )
+    owned = [(i, row) for i, row in enumerate(steps) if "ci_execution_user run" in row.get("run", "")]
+    assert len(owned) == 1
+    index, payload = owned[0]
+    assert native < setup < index and payload["id"] == "coordinated"
+    assert payload.get("continue-on-error", False) is False
+    assert '--state "$RUNNER_TEMP/template-ci-execution/state.json" --' in payload["run"]
+    assert 'run --source-sha "$REQUESTED_SOURCE" --expected-version "$EXPECTED_VERSION"' in payload["run"]
+    assert '--jobs "$REFRESH_WORKERS"' in payload["run"]
+    artifact_root = "$" + "{{ runner.temp }}/template-ci-execution/artifacts/coordinated-publication-refresh"
+    assert payload["env"]["REFRESH_DIRECTORY"] == artifact_root
+    assert upload["with"]["path"] == artifact_root + "/review/"
+    diagnostic = next(row for row in steps if row.get("name") == "Retain original diagnostics separately")
+    assert diagnostic["if"] == "always()" and artifact_root + "/diagnostics/" in diagnostic["with"]["path"]
+    assert "output/readiness/publication-refresh/" in diagnostic["with"]["path"]
     assert not any("push" in row.get("run", "") for row in steps)
 
 
@@ -605,3 +624,52 @@ def test_dependent_analysis_refuses_omitted_or_reordered_canonical_consumers(
     _commit(repository)
     with pytest.raises(ValueError, match="charts before.*deck"):
         _plan(repository)
+
+
+@pytest.mark.parametrize("mode", ["refresh", "rebind-only"])
+def test_coordinated_run_keeps_actual_prepare_failure_terminal(
+    repository: Path, tmp_path: Path, monkeypatch: pytest.MonkeyPatch, mode: str
+) -> None:
+    version = root_package_version(ROOT)
+    for relative in (
+        "pyproject.toml",
+        *["projects/" + scope + "/pyproject.toml" for scope in PUBLIC_PROJECT_NAMES],
+        *["projects/" + scope + "/manuscript/config.yaml" for scope in PUBLIC_PROJECT_NAMES],
+    ):
+        path = repository / relative
+        path.write_text(path.read_text().replace("5.1.0", version))
+    first = next(
+        scope for wave in provider_waves(current_provider_graph(repository)) for scope in wave if scope != "root"
+    )
+    # This is an actual uv parse refusal, before network/build/runtime work.
+    _write(repository, "projects/" + first + "/uv.lock", "[invalid-lock\n")
+    source = _commit(repository)
+    monkeypatch.setenv("UV_OFFLINE", "1")
+    directory = tmp_path / ("coordinated-" + mode)
+    assert run_coordinated(repository, directory, source, version, 2, mode=mode) != 0
+    label = first.replace("/", "__") + "-prepare"
+    original = json.loads((directory / "diagnostics" / (label + ".exit.json")).read_bytes())
+    assert original["original_exit_code"] != 0 and original["returncode"] != 0
+    assert original["process"]["command"][1:3] == ["sync", "--locked"]
+    assert json.loads((directory / "plan.json").read_bytes())["mode"] == mode
+    assert sorted(path.name for path in (directory / "diagnostics").iterdir()) == [
+        label + ".exit.json",
+        label + ".stderr",
+        label + ".stdout",
+    ]
+    assert not any(
+        (directory / name).exists() for name in ("prepared.json", "generated.json", "candidate.json", "review")
+    )
+    assert git(repository, "rev-parse", "HEAD").decode().strip() == source
+
+
+@pytest.mark.parametrize("workers", [0, 5, True])
+def test_coordinated_run_refuses_bad_workers_before_creating_any_evidence(
+    repository: Path, tmp_path: Path, workers: int
+) -> None:
+    directory = tmp_path / "bad-workers"
+    source = git(repository, "rev-parse", "HEAD").decode().strip()
+    with pytest.raises(ValueError, match="workers"):
+        run_coordinated(repository, directory, source, root_package_version(ROOT), workers)
+    assert not directory.exists()
+    assert git(repository, "rev-parse", "HEAD").decode().strip() == source

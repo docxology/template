@@ -76,12 +76,19 @@ def cmd_pipeline(ns: argparse.Namespace, *, runner_factory: Any = PipelineRunner
     """Run one validated project or the explicit all-projects selection."""
     repo_root = resolve_repo_root(ns)
     if ns.all_projects:
+        if ns.incremental:
+            print(
+                "Invalid pipeline invocation: --incremental is supported only for a single-project pipeline",
+                file=sys.stderr,
+            )
+            return 2
         runner = runner_factory(repo_root=repo_root)
         return int(
             runner.run_multi(
                 MultiProjectInvocation(
                     skip_infra=ns.skip_infra,
                     mode=ns.mode,
+                    resume=ns.resume,
                 )
             )
         )

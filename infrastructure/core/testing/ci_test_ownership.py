@@ -285,6 +285,7 @@ SOURCE_TEST_OWNERS: dict[str, tuple[str, ...]] = {
         "tests/infra_tests/reporting/test_native_revalidation_data.py",
     ),
     "infrastructure/reporting/native_installed_launcher.py": (
+        "tests/infra_tests/reporting/test_native_cell_selection.py",
         "tests/infra_tests/reporting/test_native_installed_preflight.py",
         "tests/infra_tests/reporting/test_native_installed_launch_contract.py",
         "tests/infra_tests/reporting/test_native_whole_portability.py",
@@ -450,6 +451,7 @@ SOURCE_TEST_OWNERS: dict[str, tuple[str, ...]] = {
         "tests/infra_tests/reporting/test_readiness_artifact_oracles.py",
     ),
     "infrastructure/reporting/native_hosted_original_custody.py": (
+        "tests/infra_tests/reporting/test_native_cell_selection.py",
         "tests/infra_tests/reporting/test_native_hosted_credentials.py",
         "tests/infra_tests/reporting/test_native_original_mutable_reception.py",
     ),
@@ -537,6 +539,14 @@ _PAPER_FRONTMATTER_TESTS = (
     "tests/infra_tests/reporting/test_paper_frontmatter_reconstruction_native.py",
 )
 SUPPLEMENTAL_TEST_OWNERS: dict[str, tuple[str, ...]] = {
+    "infrastructure/steganography/metadata.py": ("tests/infra_tests/steganography/test_processor.py",),
+    "infrastructure/core/secrets.py": ("tests/infra_tests/steganography/test_kmyth_adapter.py",),
+    "infrastructure/steganography/publication.py": (
+        "tests/infra_tests/steganography/test_publication.py",
+        "tests/infra_tests/steganography/test_processor.py",
+        "tests/infra_tests/steganography/test_hashing.py",
+    ),
+    "infrastructure/steganography/encryption.py": ("tests/infra_tests/steganography/test_processor.py",),
     "infrastructure/core/config/schema.py": _PAPER_FRONTMATTER_TESTS,
     "infrastructure/rendering/_paper_frontmatter.py": _PAPER_FRONTMATTER_TESTS,
     "infrastructure/rendering/_paper_frontmatter_render.py": _PAPER_FRONTMATTER_TESTS,

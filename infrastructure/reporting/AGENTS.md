@@ -537,3 +537,14 @@ closure and final physical factory/registry checks precede child publication.
 No guard spans execution, accepts callbacks or yields reusable verification.
 Public independent verification APIs remain fresh; clocks and original signed
 failure outcomes retain authority.
+
+
+Native hosted transport accepts one declared matrix scope or the complete ordered
+public roster; each receipt must match that exact completed selection. Original
+cell evidence and transport directories include the cell at creation, so distinct
+original receipts never overwrite each other. The explicit `--native-cell-union`
+reader/handoff mode authenticates every declared cell through its real collector
+and holds each custodian under the same Source and deadline. It consumes every
+original receipt and rejects conflicting shared bytes. DATA selection helpers in
+`native_cell_selection.py` grant no native authority; the full union and complete
+profile validators remain mandatory before candidate publication.

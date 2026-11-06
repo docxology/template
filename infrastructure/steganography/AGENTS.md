@@ -24,7 +24,7 @@ footers, barcode payloads, XMP packets, and hash manifests.
 * `deterministic=True` (or `STEGANOGRAPHY_DETERMINISTIC=1` in the
   environment with `deterministic=None`) — returns
   `git log -1 --format=%cI` from `repo_root` (defaults to `Path.cwd()`).
-  Same `HEAD` ⇒ same timestamp ⇒ byte-identical
+  Same `HEAD` ⇒ same timestamp ⇒ byte-identical unencrypted
   `*_steganography.pdf` across runs.
 * Otherwise — current UTC wall-clock time as `YYYY-MM-DDTHH:MM:SSZ`.
 * Missing `git` or non-zero exit ⇒ logs a single warning and falls back
@@ -42,6 +42,7 @@ Chains: hashing → overlays → barcodes → metadata → encryption → manife
 | File | Responsibility |
 |------|---------------|
 | `config.py` | `SteganographyConfig` dataclass |
+| `publication.py` | Validated staging and per-file atomic PDF/sidecar publication |
 | `core.py` | `SteganographyProcessor` orchestrator |
 | `overlays.py` | Watermark, footer, invisible text (reportlab) |
 | `barcodes.py` | QR, Code128, barcode strips (public API) |
@@ -153,3 +154,36 @@ The `start_tpm_backend.py` script prints these for `eval`. The
 ```bash
 uv run pytest tests/infra_tests/steganography/ -v
 ```
+
+## Repeat calls and publication
+
+Each `process()` invocation takes an independent, validated configuration snapshot
+and owns its hashes, document ID and Git provenance. Boolean options require
+actual `true`/`false` values; quoted strings do not enable a technique. A disabled
+processor returns the input without reading optional PDF dependencies or copying it.
+
+Source and destination paths must be distinct, including existing hardlink or
+symlink aliases. The PDF is built and parsed in a private temporary directory.
+The legacy manifest remains `<source-stem>.hashes.json`, even when the output PDF
+has a different name. Required Kmyth sealing also completes on staged bytes before
+publication. A failed required producer leaves previous PDF, manifest and sealed
+sidecars intact. Kmyth subprocess environments remove credential variables and
+agent socket nominations while preserving explicit TPM/library configuration.
+
+`publication.py` prepares destination-local files and retained preimages, preserving
+existing destination modes. Individual replacements are atomic; this is not a
+crash-atomic transaction across several files. Ordinary publication errors roll
+back only replacements whose identity is still ours. If another writer changes a
+replacement, recovery preimages remain on disk and the exception reports them
+instead of overwriting that edit. Cooperating publishers acquire finite per-path
+locks in the system temporary directory.
+
+Deterministic mode applies to unencrypted output. Encryption continues to use fresh
+cryptographic randomness; do not reuse AES-GCM nonces to reproduce encrypted bytes.
+TPM availability and actual sealing require a separately provisioned backend;
+filesystem and missing-provider controls do not establish TPM acceptance.
+
+Catalog composition preserves existing Info fields, XMP, outlines and attachments
+through overlay, metadata and password-encryption stages. Explicit metadata values
+override their named fields; a requested attachment name replaces its previous
+visible entries once, while unrelated attachments remain.

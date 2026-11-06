@@ -32,6 +32,17 @@ Java and format-reader tools and hash-verified dependency cache. Missing tools,
 an unknown provider, stale metadata, a dirty checkout or an incorrect requested
 SHA refuses the run.
 
+
+The hosted controller runs plan, locked preparation, generation, candidate,
+strict verification and capture in one `run` payload under the existing fresh
+unprivileged Linux execution account. Its original Git preflight precedes the phase
+chain and is not repeated after the disposable candidate commit. The strict
+same-owner process census, guardian, deadlines and exit predicates are unchanged.
+Evidence is created in the account's existing caller-readable artifact directory
+outside Source; only the final successful payload admits a review upload.
+Original diagnostics remain available after a failed phase. Inputs are explicit
+CLI arguments; the account's runtime environment allowlist is unchanged.
+
 The v3 plan binds the one fixed dependent consumer, its actual canonical subject,
 COUNTS/version input bytes and reviewed Stage 02/reader/compiler paths to the exact
 Source commit. The actual canonical Stage 02 selection is also bound and must

@@ -241,7 +241,8 @@ class TestSecurityHeaders:
     def test_get_cors_headers_without_origin(self):
         """Test CORS headers when no origin specified."""
         headers = get_cors_headers()
-        assert headers["Access-Control-Allow-Origin"] == "null"
+        assert "Access-Control-Allow-Origin" not in headers
+        assert "Access-Control-Allow-Credentials" not in headers
         assert "Access-Control-Allow-Methods" in headers
         assert "Access-Control-Allow-Headers" in headers
 

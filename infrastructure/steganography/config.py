@@ -13,7 +13,7 @@ secure-pipeline runs produce byte-identical PDFs.
 
 import os
 import subprocess
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, fields
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
@@ -86,6 +86,7 @@ def resolve_build_timestamp(
             ["git", "log", "-1", "--format=%cI"],
             cwd=str(cwd),
             check=False,
+            stdin=subprocess.DEVNULL,
             capture_output=True,
             text=True,
             timeout=5,
@@ -139,6 +140,7 @@ def resolve_git_commit(*, repo_root: Path | None = None) -> str | None:
             ["git", "rev-parse", "HEAD"],
             cwd=str(cwd),
             check=False,
+            stdin=subprocess.DEVNULL,
             capture_output=True,
             text=True,
             timeout=5,
@@ -263,13 +265,21 @@ class SteganographyConfig:
     kmyth_overwrite: bool = True
     kmyth_timeout_seconds: int = 120
 
+    def __post_init__(self) -> None:
+        """Boolean configuration is explicit, including the master opt-in."""
+        for item in fields(self):
+            if item.type is bool and type(getattr(self, item.name)) is not bool:
+                raise ValueError(f"Steganography option {item.name} must be a boolean")
+
     # ── Factory ───────────────────────────────────────────────────────
 
     @classmethod
     def from_dict(cls, data: dict[str, Any] | None) -> "SteganographyConfig":
         """Build config from declared canonical fields, rejecting unknown keys."""
-        if not data:
+        if data is None:
             return cls()
+        if not isinstance(data, dict):
+            raise ValueError("Steganography configuration must be a mapping")
 
         known_fields = {f.name for f in cls.__dataclass_fields__.values()}
         unknown = set(data) - known_fields

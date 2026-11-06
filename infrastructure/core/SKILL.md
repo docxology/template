@@ -85,9 +85,9 @@ except RenderingError as e:
 from pathlib import Path
 from infrastructure.core.pipeline import PipelineExecutor, PipelineConfig
 
-config = PipelineConfig(project_name="my_project", repo_root=Path("."), skip_llm=True)
+config = PipelineConfig(project_name="my_project", repo_root=Path("."), mode="core")
 executor = PipelineExecutor(config)
-results = executor.execute_core_pipeline()  # or execute_full_pipeline()
+results = executor.execute_pipeline()  # mode="live" explicitly selects live capabilities
 ```
 
 ## Checkpoint & Resume (`runtime/checkpoint.py`)
@@ -149,6 +149,10 @@ with profiler.monitor("heavy_computation"):
 ```
 
 ## Security (`security.py`)
+
+`get_cors_headers()` defaults to denying cross-origin access by omitting
+`Access-Control-Allow-Origin`. Supply an explicitly allowed origin to enable
+that response policy.
 
 ```python
 from infrastructure.core.security import SecurityValidator, RateLimiter, rate_limit

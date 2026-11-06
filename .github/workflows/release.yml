@@ -158,6 +158,7 @@ jobs:
           ACCEPTANCE_ARTIFACT_ID: ${{ inputs.acceptance_artifact_id }}
         run: >-
           .venv/bin/python -m infrastructure.reporting.native_installed_launcher --mode handoff
+          ${{ vars.NATIVE_SHARDING_CELLS == 'true' && '--native-cell-union' || '' }}
           --source-root "$GITHUB_WORKSPACE" --source-commit "$(git rev-parse HEAD)"
           --source-identity "$(.venv/bin/python -c 'from pathlib import Path;from infrastructure.reporting.readiness_receipts import source_fingerprint;print(source_fingerprint(Path.cwd()))')"
           --current-root "$RUNNER_TEMP/template-release-reader-root"

@@ -7,12 +7,11 @@ output PDF.
 """
 
 import io
-import os
 import shutil
 import tempfile
 from pathlib import Path
 
-from dataclasses import dataclass, field
+from dataclasses import asdict, dataclass, field
 
 from infrastructure.core.logging.utils import get_logger, log_operation
 from infrastructure.steganography.config import DocumentMetadata, SteganographyConfig, resolve_git_commit
@@ -34,6 +33,17 @@ class BarcodeBuildContext:
     source_file_size: int = 0
 
 
+@dataclass(frozen=True)
+class ProcessingContext:
+    """Identity and configuration owned by exactly one processing invocation."""
+
+    config: SteganographyConfig
+    document_id: str
+    hashes: dict[str, str]
+    git_commit: str | None
+    source_file_size: int
+
+
 class SteganographyProcessor:
     """Orchestrates steganographic PDF post-processing.
 
@@ -48,9 +58,6 @@ class SteganographyProcessor:
     def __init__(self, config: SteganographyConfig | None = None):
         """Initialize steganography processor with configuration."""
         self.config = config or SteganographyConfig()
-        self._document_id: str = ""
-        self._hashes: dict[str, str] = {}
-        self._git_commit: str | None = None
 
     # ── Public API ───────────────────────────────────────────────────
 
@@ -78,112 +85,114 @@ class SteganographyProcessor:
         Returns:
             Path to the generated steganography PDF.
         """
-        if not self.config.enabled:
+        config = SteganographyConfig.from_dict(asdict(self.config))
+        if not config.enabled:
             logger.info("Steganography disabled — skipping processing")
             return input_pdf
-
         if not input_pdf.exists():
             raise FileNotFoundError(f"Input PDF not found: {input_pdf}")
-
         if output_pdf is None:
-            output_pdf = input_pdf.with_stem(input_pdf.stem + self.config.output_suffix)
+            output_pdf = input_pdf.with_stem(input_pdf.stem + config.output_suffix)
 
-        logger.info("╔══ Steganography Processing ═══════════════════════════════╗")
-        logger.info(f"║  Input:  {input_pdf.name}")
-        logger.info(f"║  Output: {output_pdf.name}")
+        from infrastructure.steganography.encryption import generate_document_id
+        from infrastructure.steganography.publication import publish_artifacts, validate_destinations, validate_pdf
 
-        # Start with a working copy
-        working_pdf = self._make_working_copy(input_pdf)
+        manifest_path = (
+            input_pdf.with_suffix(".hashes.json") if config.hashing_enabled and config.manifest_enabled else None
+        )
+        destinations = [output_pdf, *([manifest_path] if manifest_path is not None else [])]
+        if config.kmyth_enabled:
+            for artifact in config.kmyth_seal_artifacts:
+                target = output_pdf if artifact == "pdf" else manifest_path
+                if target is not None:
+                    destinations.append(target.with_name(target.name + config.kmyth_output_suffix))
+        validate_destinations(input_pdf, destinations)
 
-        try:
-            # 1. Compute hashes of the *original* PDF
-            if self.config.hashing_enabled:
-                self._step_hashing(input_pdf)
+        if config.kmyth_enabled and not config.kmyth_overwrite:
+            selected = []
+            for artifact in config.kmyth_seal_artifacts:
+                target = output_pdf if artifact == "pdf" else manifest_path
+                sealed = target.with_name(target.name + config.kmyth_output_suffix) if target is not None else None
+                if sealed is not None and sealed.exists():
+                    if config.kmyth_required:
+                        raise FileExistsError(sealed)
+                    logger.warning("Kmyth sidecar already exists; preserving %s", sealed.name)
+                else:
+                    selected.append(artifact)
+            config.kmyth_seal_artifacts = selected
 
-            # 2. Generate document ID
-            from infrastructure.steganography.encryption import generate_document_id
-
-            self._document_id = generate_document_id()
-            self._git_commit = resolve_git_commit()
-            logger.info(f"║  Doc-ID: {self._document_id}")
-            if self._git_commit:
-                logger.info("║  Git:    %s", self._git_commit[:12])
-            else:
-                logger.info("║  Git:    unavailable")
-
-            # 3. Apply overlays and barcodes (merged onto each page)
-            if self.config.overlays_enabled or self.config.barcodes_enabled:
-                bc_ctx = BarcodeBuildContext(
+        logger.info("Steganography processing %s → %s", input_pdf.name, output_pdf.name)
+        with tempfile.TemporaryDirectory(prefix=".steganography-", dir=output_pdf.parent) as temporary:
+            directory = Path(temporary)
+            working_pdf = directory / "working.pdf"
+            shutil.copy2(input_pdf, working_pdf)
+            ctx = ProcessingContext(
+                config=config,
+                document_id=generate_document_id(),
+                hashes=self._step_hashing(working_pdf, config) if config.hashing_enabled else {},
+                git_commit=resolve_git_commit(),
+                source_file_size=working_pdf.stat().st_size,
+            )
+            if config.overlays_enabled or config.barcodes_enabled:
+                barcode_context = BarcodeBuildContext(
                     title=title,
-                    authors=authors or [],
-                    keywords=keywords or [],
-                    author_emails=author_emails or [],
-                    document_id=self._document_id,
-                    hashes=self._hashes,
+                    authors=list(authors or []),
+                    keywords=list(keywords or []),
+                    author_emails=list(author_emails or []),
+                    document_id=ctx.document_id,
+                    hashes=ctx.hashes,
                     source_filename=input_pdf.name,
-                    source_file_size=input_pdf.stat().st_size,
+                    source_file_size=ctx.source_file_size,
                 )
-                working_pdf = self._step_overlays_and_barcodes(working_pdf, bc_ctx)
+                working_pdf = self._step_overlays_and_barcodes(working_pdf, barcode_context, config)
+            if config.metadata_enabled:
+                working_pdf = self._step_metadata(working_pdf, ctx, title=title, authors=authors, keywords=keywords)
+            if config.encryption_enabled and config.pdf_password:
+                working_pdf = self._step_encryption(working_pdf, config)
+            validate_pdf(working_pdf, password=config.pdf_password)
 
-            # 4. Inject metadata
-            if self.config.metadata_enabled:
-                working_pdf = self._step_metadata(
-                    working_pdf,
-                    title=title,
-                    authors=authors,
-                    keywords=keywords,
-                )
-
-            # 5. Encrypt (password protection)
-            if self.config.encryption_enabled and self.config.pdf_password:
-                working_pdf = self._step_encryption(working_pdf)
-
-            # 6. Write hash manifest sidecar
-            manifest_path: Path | None = None
-            if self.config.hashing_enabled and self.config.manifest_enabled:
-                manifest_path = self._step_manifest(input_pdf)
-
-            # Copy working file to final destination
-            shutil.copy2(str(working_pdf), str(output_pdf))
-            logger.info(f"║  ✓ Steganography PDF written: {output_pdf.name}")
-
-            # 7. Optionally seal selected artifacts through Kmyth/TPM.
-            if self.config.kmyth_enabled:
-                self._step_kmyth(output_pdf, manifest_path)
-
-            logger.info("╚═══════════════════════════════════════════════════════════╝")
-            return output_pdf
-
-        finally:
-            # Clean up temp files
-            if working_pdf != input_pdf and working_pdf.exists():
-                try:
-                    working_pdf.unlink()
-                except OSError as e:
-                    logger.debug(f"Failed to delete working PDF {working_pdf}: {e}")
+            # No public artifact is changed until all required producers succeed.
+            staged_manifest = (
+                self._step_manifest(input_pdf, ctx, directory / "manifest.json") if manifest_path else None
+            )
+            artifacts = {output_pdf: working_pdf}
+            if manifest_path is not None and staged_manifest is not None:
+                artifacts[manifest_path] = staged_manifest
+            sealed_destinations: set[Path] = set()
+            if config.kmyth_enabled:
+                for sealed in self._step_kmyth(working_pdf, staged_manifest, config):
+                    original = (
+                        working_pdf if sealed.name == working_pdf.name + config.kmyth_output_suffix else staged_manifest
+                    )
+                    if original is None:
+                        raise ValueError("Kmyth returned an unselected artifact")
+                    destination = output_pdf if original == working_pdf else manifest_path
+                    if destination is None:
+                        raise ValueError("Kmyth returned an artifact without a destination")
+                    target = destination.with_name(destination.name + config.kmyth_output_suffix)
+                    artifacts[target] = sealed
+                    sealed_destinations.add(target)
+            publish_artifacts(
+                artifacts,
+                source=input_pdf,
+                no_overwrite=sealed_destinations if not config.kmyth_overwrite else None,
+            )
+        logger.info("Steganography PDF written: %s", output_pdf.name)
+        return output_pdf
 
     # ── Private pipeline steps ───────────────────────────────────────
 
-    def _make_working_copy(self, input_pdf: Path) -> Path:
-        """Copy the input PDF to a temp file for in-place mutations."""
-        fd, tmp_str = tempfile.mkstemp(suffix=".pdf", prefix="steg_")
-        os.close(fd)
-        tmp = Path(tmp_str)
-        shutil.copy2(str(input_pdf), str(tmp))
-        return tmp
-
-    def _step_hashing(self, pdf_path: Path) -> None:
-        """Compute file hashes and store for later use."""
+    def _step_hashing(self, pdf_path: Path, config: SteganographyConfig) -> dict[str, str]:
+        """Compute hashes for this invocation, never processor instance state."""
         from infrastructure.steganography.hashing import compute_file_hashes
 
-        self._hashes = compute_file_hashes(pdf_path, algorithms=self.config.hash_algorithms)
-        for algo, digest in self._hashes.items():
-            logger.info(f"║  {algo.upper()}: {digest[:32] + '…'}")
+        return compute_file_hashes(pdf_path, algorithms=config.hash_algorithms)
 
     def _step_overlays_and_barcodes(
         self,
         working_pdf: Path,
         ctx: BarcodeBuildContext,
+        config: SteganographyConfig,
     ) -> Path:
         """Merge overlay and barcode pages onto every page of the PDF."""
         try:
@@ -193,6 +202,7 @@ class SteganographyProcessor:
 
         reader = PdfReader(str(working_pdf))
         writer = PdfWriter()
+        writer.clone_document_from_reader(reader)
         total_pages = len(reader.pages)
 
         hash_short = ""
@@ -202,10 +212,10 @@ class SteganographyProcessor:
 
         # Build QR overlay data once if in QR mode
         qr_overlay_data = ""
-        if self.config.overlays_enabled and self.config.overlay_mode == "qr":
+        if config.overlays_enabled and config.overlay_mode == "qr":
             from infrastructure.steganography.barcodes import build_barcode_payload
 
-            qr_overlay_data = self.config.overlay_qr_data or build_barcode_payload(
+            qr_overlay_data = config.overlay_qr_data or build_barcode_payload(
                 title=ctx.title,
                 hashes=ctx.hashes,
                 document_id=ctx.document_id,
@@ -214,19 +224,18 @@ class SteganographyProcessor:
         for page_idx, page in enumerate(reader.pages):
             page_width = float(page.mediabox.width)
             page_height = float(page.mediabox.height)
-            writer.add_page(page)
-            out_page = writer.pages[-1]
+            out_page = writer.pages[page_idx]
 
             # ── Full-page overlay (text, QR, or none) ────────────
-            if self.config.overlays_enabled and self.config.overlay_mode != "none":
-                if self.config.overlay_mode == "qr":
+            if config.overlays_enabled and config.overlay_mode != "none":
+                if config.overlay_mode == "qr":
                     from infrastructure.steganography.overlays import create_qr_overlay
 
                     wm_bytes = create_qr_overlay(
                         page_width,
                         page_height,
                         qr_data=qr_overlay_data,
-                        opacity=self.config.overlay_opacity,
+                        opacity=config.overlay_opacity,
                     )
                 else:  # 'text' (default)
                     from infrastructure.steganography.overlays import create_watermark_overlay
@@ -234,17 +243,17 @@ class SteganographyProcessor:
                     wm_bytes = create_watermark_overlay(
                         page_width,
                         page_height,
-                        text=self.config.overlay_text,
-                        opacity=self.config.overlay_opacity,
-                        color_rgb=self.config.overlay_color_rgb,
-                        font_size=self.config.overlay_font_size,
-                        repeat_count=self.config.overlay_repeat_count,
+                        text=config.overlay_text,
+                        opacity=config.overlay_opacity,
+                        color_rgb=config.overlay_color_rgb,
+                        font_size=config.overlay_font_size,
+                        repeat_count=config.overlay_repeat_count,
                     )
                 wm_page = PdfReader(io.BytesIO(wm_bytes)).pages[0]
                 out_page.merge_page(wm_page)
 
             # ── Footer overlay (always if overlays enabled) ──────
-            if self.config.overlays_enabled:
+            if config.overlays_enabled:
                 from infrastructure.steganography.overlays import (
                     FooterConfig,
                     create_footer_overlay,
@@ -273,7 +282,7 @@ class SteganographyProcessor:
                     out_page.merge_page(inv_page)
 
             # ── Barcode strip ────────────────────────────────────
-            if self.config.barcodes_enabled:
+            if config.barcodes_enabled:
                 from infrastructure.steganography.barcodes import create_barcode_strip_overlay
 
                 c128_payload = f"ID:{ctx.document_id[:16]}|P:{page_idx + 1}"
@@ -309,6 +318,7 @@ class SteganographyProcessor:
     def _step_metadata(
         self,
         working_pdf: Path,
+        ctx: ProcessingContext,
         title: str = "",
         authors: list[str] | None = None,
         keywords: list[str] | None = None,
@@ -324,23 +334,23 @@ class SteganographyProcessor:
         doc = DocumentMetadata(
             title=title,
             authors=authors,
-            hashes=self._hashes,
-            document_id=self._document_id,
+            hashes=ctx.hashes,
+            document_id=ctx.document_id,
             keywords=keywords,
             extra={
-                "GitCommit": self._git_commit or "unavailable",
-                "GitCommitAvailable": str(bool(self._git_commit)).lower(),
+                "GitCommit": ctx.git_commit or "unavailable",
+                "GitCommitAvailable": str(bool(ctx.git_commit)).lower(),
             },
         )
         meta = build_document_metadata(doc)
         xmp = build_xmp_packet(doc)
 
         manifest_dict = {
-            "document_id": self._document_id,
-            "hashes": self._hashes,
+            "document_id": ctx.document_id,
+            "hashes": ctx.hashes,
             "title": title,
-            "git_commit": self._git_commit,
-            "git_commit_available": bool(self._git_commit),
+            "git_commit": ctx.git_commit,
+            "git_commit_available": bool(ctx.git_commit),
             "steganography_applied": True,
         }
         attachments = {"stego_manifest.json": json.dumps(manifest_dict, indent=2).encode("utf-8")}
@@ -349,7 +359,7 @@ class SteganographyProcessor:
         logger.info("║  ✓ Metadata, XMP, and manifest attachment injected")
         return working_pdf
 
-    def _step_encryption(self, working_pdf: Path) -> Path:
+    def _step_encryption(self, working_pdf: Path, config: SteganographyConfig) -> Path:
         """Apply PDF password protection."""
         from infrastructure.steganography.encryption import apply_pdf_password
 
@@ -357,33 +367,36 @@ class SteganographyProcessor:
         apply_pdf_password(
             working_pdf,
             enc_path,
-            user_password=self.config.pdf_password or "",
-            algorithm=self.config.pdf_encryption_algorithm,
+            user_password=config.pdf_password or "",
+            algorithm=config.pdf_encryption_algorithm,
         )
         working_pdf.unlink()
         enc_path.rename(working_pdf)
         logger.info("║  ✓ PDF password protection applied")
         return working_pdf
 
-    def _step_manifest(self, original_pdf: Path) -> Path:
+    def _step_manifest(self, original_pdf: Path, ctx: ProcessingContext, output_path: Path) -> Path:
         """Write the JSON hash manifest sidecar."""
         from infrastructure.steganography.hashing import write_hash_manifest
 
         manifest_path = write_hash_manifest(
             original_pdf,
-            self._hashes,
+            ctx.hashes,
+            output_path=output_path,
             extra={
-                "document_id": self._document_id,
-                "source_size_bytes": original_pdf.stat().st_size,
-                "git_commit": self._git_commit,
-                "git_commit_available": bool(self._git_commit),
+                "document_id": ctx.document_id,
+                "source_size_bytes": ctx.source_file_size,
+                "git_commit": ctx.git_commit,
+                "git_commit_available": bool(ctx.git_commit),
                 "steganography_applied": "true",
             },
         )
         logger.info("║  ✓ Hash manifest written")
         return manifest_path
 
-    def _step_kmyth(self, output_pdf: Path, manifest_path: Path | None) -> list[Path]:
+    def _step_kmyth(
+        self, output_pdf: Path, manifest_path: Path | None, config: SteganographyConfig | None = None
+    ) -> list[Path]:
         """Seal configured artifacts with Kmyth when explicitly enabled."""
         from infrastructure.steganography.kmyth_adapter import (
             KmythCommandError,
@@ -393,8 +406,9 @@ class SteganographyProcessor:
             validate_kmyth_installation,
         )
 
+        config = config or SteganographyConfig.from_dict(asdict(self.config))
         targets: list[Path] = []
-        for artifact in self.config.kmyth_seal_artifacts:
+        for artifact in config.kmyth_seal_artifacts:
             if artifact == "pdf":
                 targets.append(output_pdf)
             elif artifact == "hash_manifest":
@@ -408,15 +422,15 @@ class SteganographyProcessor:
 
         if not targets:
             message = "Kmyth enabled but no sealable artifacts were selected."
-            if self.config.kmyth_required:
+            if config.kmyth_required:
                 raise KmythUnavailableError(message)
             logger.warning(message)
             return []
 
-        options = KmythSealOptions.from_config(self.config)
+        options = KmythSealOptions.from_config(config)
         availability = validate_kmyth_installation(binary_dir=options.binary_dir, source_dir=options.source_dir)
         if not availability.available:
-            if self.config.kmyth_required:
+            if config.kmyth_required:
                 raise KmythUnavailableError(availability.summary())
             logger.warning("Kmyth sealing skipped: %s", availability.summary())
             return []
@@ -426,7 +440,7 @@ class SteganographyProcessor:
             try:
                 sealed.append(seal_file_with_kmyth(target, options=options))
             except (KmythCommandError, KmythUnavailableError, FileExistsError, FileNotFoundError) as exc:
-                if self.config.kmyth_required:
+                if config.kmyth_required:
                     raise
                 logger.warning("Kmyth sealing skipped for %s: %s", target.name, exc)
                 return sealed
