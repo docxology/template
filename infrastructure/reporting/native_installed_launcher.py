@@ -39,6 +39,7 @@ from infrastructure.reporting.native_source_provider_bootstrap import (
 from infrastructure.reporting.native_tool_process import run_native_tool_process
 from infrastructure.project.public_package_dependencies import local_dependency_closure
 from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES, public_cell_scope
+from infrastructure.reporting.native_cell_selection import native_cell_directories
 from infrastructure.reporting.native_preparation_resources import PREPARATION_PEAK_BYTES, require_native_capacity
 from infrastructure.reporting.native_readiness_input_copy import copy_original_common_readiness, copy_source_mirror_data
 
@@ -118,10 +119,13 @@ def _print_preparation_scopes(argv: list[str]) -> int:
     parser.add_argument("--mode", required=True, choices=("original", "reader", "handoff", "preflight"))
     parser.add_argument("--source-root", required=True, type=Path)
     parser.add_argument("--matrix-cell", help="run one declared public exemplar as a sharded matrix cell")
+    parser.add_argument("--native-cell-union", action="store_true", help="read every genuine native matrix cell")
     parser.add_argument("--print-preparation-scopes", action="store_true", required=True)
     # Ignore the launch nominations this report does not consume, so the workflow
     # can pass the same argument vocabulary as the real invocation.
     args, _unknown = parser.parse_known_args(argv)
+    if args.native_cell_union and (args.mode not in {"reader", "handoff"} or args.matrix_cell is not None):
+        parser.error("native cell union is exclusive to the complete reader or handoff")
     if args.matrix_cell is not None and args.mode not in {"original", "reader"}:
         parser.error("native matrix cell scoping applies only to the original and reader roles")
     if args.matrix_cell is not None:
@@ -154,6 +158,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--uv", required=True, type=Path)
     parser.add_argument("--timeout", type=int, default=14400)
     parser.add_argument("--matrix-cell", help="run one declared public exemplar as a sharded matrix cell")
+    parser.add_argument("--native-cell-union", action="store_true", help="read every genuine native matrix cell")
     parser.add_argument("--expected-platform", required=True, choices=("Linux", "Darwin"))
     parser.add_argument("--mermaid-package-root", required=True, type=Path)
     parser.add_argument("--mermaid-dependency-root", required=True, type=Path)
@@ -190,6 +195,8 @@ def main(argv: list[str] | None = None) -> int:
         parser.error(
             f"diagnostic preflight requires an explicit timeout at most {PREFLIGHT_MAX_OPERATION_SECONDS} seconds"
         )
+    if args.native_cell_union and (args.mode not in {"reader", "handoff"} or args.matrix_cell is not None):
+        parser.error("native cell union is exclusive to the complete reader or handoff")
     cell_scope: str | None = None
     if args.matrix_cell is not None:
         if args.mode not in {"original", "reader"}:
@@ -278,7 +285,10 @@ def main(argv: list[str] | None = None) -> int:
             body = source_file_bytes(admitted.path)
             if hashlib.sha256(body).hexdigest() != admitted.sha256:
                 raise ValueError("frozen provider wheel changed before current-root DATA retention")
-            target = mirror / "output/readiness" / ("native-provider-wheels-" + args.mode) / scope / admitted.path.name
+            provider_directory = mirror / "output/readiness" / ("native-provider-wheels-" + args.mode)
+            if args.matrix_cell is not None:
+                provider_directory /= args.matrix_cell
+            target = provider_directory / scope / admitted.path.name
             atomic_write_bytes_confined(mirror, target, body, mode=0o600)
             if source_file_bytes(target) != body:
                 raise ValueError("current-root provider DATA differs from the Source-frozen wheel")
@@ -318,13 +328,15 @@ def main(argv: list[str] | None = None) -> int:
                 "--current-analysis-root",
                 str(scratch / "native-analysis-current"),
                 "--evidence-dir",
-                str(mirror / "output/readiness" / ("native-preflight" if args.mode == "preflight" else "native")),
+                str(mirror / "output/readiness/native-preflight")
+                if args.mode == "preflight"
+                else str(mirror / native_cell_directories(args.matrix_cell)[0]),
                 *common,
             )
             if args.mode == "original":
                 arguments += (
                     "--hosted-transport-dir",
-                    str(mirror / "output/readiness/native-transport"),
+                    str(mirror / native_cell_directories(args.matrix_cell)[1]),
                     "--hosted-repository",
                     args.repository,
                     "--hosted-run-id",
@@ -368,6 +380,8 @@ def main(argv: list[str] | None = None) -> int:
                     "--java-executable",
                     str(args.java_executable),
                 )
+            if args.native_cell_union:
+                arguments += ("--native-cell-union",)
             if args.stage_bundle:
                 arguments += ("--stage-bundle",)
             if cell_scope is not None:
@@ -405,15 +419,17 @@ def main(argv: list[str] | None = None) -> int:
             "matrix_cell": args.matrix_cell,
             "matrix_cell_scope": cell_scope,
             "actual_original_result": result,
-            "native_transport": str(mirror / "output/readiness/native-transport") if args.mode == "original" else None,
+            "native_transport": str(mirror / native_cell_directories(args.matrix_cell)[1])
+            if args.mode == "original"
+            else None,
         }
         if args.mode in {"original", "reader"}:
             sys.stdout.write(
                 "transport_directory="
                 + str(
-                    mirror
-                    / "output/readiness"
-                    / ("native-transport" if args.mode == "original" else "candidate-transport")
+                    mirror / native_cell_directories(args.matrix_cell)[1]
+                    if args.mode == "original"
+                    else mirror / "output/readiness/candidate-transport"
                 )
                 + "\n"
             )

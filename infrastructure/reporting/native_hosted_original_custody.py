@@ -13,6 +13,7 @@ import json
 import os
 import re
 import types
+from collections.abc import Mapping
 from pathlib import Path
 from typing import Any
 
@@ -28,7 +29,11 @@ from infrastructure.project.public_hosted_origin import (
 )
 from infrastructure.project.public_reference_git import remaining
 from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES, public_cell_scope
-from infrastructure.reporting.native_cell_selection import cell_artifact_names
+from infrastructure.reporting.native_cell_selection import (
+    cell_artifact_names,
+    native_union_members,
+    validate_native_transport_receipt,
+)
 from infrastructure.reporting.native_source_external_admission import NativeSourceContext
 from infrastructure.reporting.release_readiness_snapshot import SnapshotReader, json_object_from_bytes
 
@@ -203,6 +208,10 @@ class NativeHostedArtifactCustodian:
         value = dict(self._index["native_receipt"])
         self.read_original_file(self._index["scopes"][0], value)
         return value
+
+    def native_receipt_bindings(self) -> tuple[dict[str, str], ...]:
+        """Keep the legacy original as one binding; unions retain every distinct original."""
+        return (self.native_receipt_binding(),)
 
     def retained_file_bindings(self) -> tuple[dict[str, Any], ...]:
         """Expose the complete authenticated byte census, without exporting authority."""
@@ -508,3 +517,113 @@ def collect_native_hosted_originals(
     return NativeHostedArtifactCustodian(
         source, index, members, tuple(observations), deadline=deadline, key=_COLLECTOR_KEY
     )
+
+
+class NativeHostedCellUnion(NativeHostedArtifactCustodian):
+    """Delegate to every real cell custodian under one live Source and original clock.
+
+    No combined Original or passing receipt is minted. The full reader consumes
+    each independently authenticated cell receipt and every retained byte.
+    """
+
+    def __init__(
+        self,
+        source: NativeSourceContext,
+        cells: Mapping[str, NativeHostedArtifactCustodian],
+        *,
+        deadline: float,
+        key: object,
+    ) -> None:
+        if (
+            key is not _COLLECTOR_KEY
+            or not isinstance(source, NativeSourceContext)
+            or tuple(cells) != PUBLIC_PROJECT_NAMES
+        ):
+            raise ValueError("native union requires its actual complete ordered cell collector")
+        self._source = source
+        self._owner_pid = os.getpid()
+        self._deadline = deadline
+        self._cells = types.MappingProxyType(dict(cells))
+        self.repository = next(iter(cells.values())).repository
+        self.run_id = next(iter(cells.values())).run_id
+        self.head_sha = source.reference.commit
+        for scope, held in self._cells.items():
+            if (
+                type(held) is not NativeHostedArtifactCustodian
+                or held._index["scopes"] != [scope]
+                or held.deadline != deadline
+                or (held.repository, held.run_id, held.head_sha) != (self.repository, self.run_id, self.head_sha)
+            ):
+                raise ValueError("native cell union lost exact cell, Source, run or clock ownership")
+            held.verify_source(source, scope=scope)
+            binding = held.native_receipt_binding()
+            validate_native_transport_receipt((scope,), json_object_from_bytes(held.read_original_file(scope, binding)))
+        self.retained_file_bindings()
+
+    def verify_source(self, source: NativeSourceContext, *, scope: str) -> None:
+        remaining(self.deadline)
+        if source is not self._source or scope not in self._cells:
+            raise ValueError("native union lost its actual collector/current Source scope")
+        self._cells[scope].verify_source(source, scope=scope)
+
+    def read_original_file(self, scope: str, binding: object) -> bytes:
+        self.verify_source(self._source, scope=scope)
+        return self._cells[scope].read_original_file(scope, binding)
+
+    def original_source_binding(self, scope: str) -> tuple[str, str, str]:
+        self.verify_source(self._source, scope=scope)
+        return self._cells[scope].original_source_binding(scope)
+
+    def original_pdfium_inputs(self, scope: str) -> dict[str, Any]:
+        self.verify_source(self._source, scope=scope)
+        return self._cells[scope].original_pdfium_inputs(scope)
+
+    def read_original_pdfium_wheel(self, scope: str) -> tuple[str, bytes]:
+        self.verify_source(self._source, scope=scope)
+        return self._cells[scope].read_original_pdfium_wheel(scope)
+
+    def original_launch_data(self, scope: str) -> dict[str, Any]:
+        self.verify_source(self._source, scope=scope)
+        return self._cells[scope].original_launch_data(scope)
+
+    def native_receipt_binding(self) -> dict[str, str]:
+        raise ValueError("native cell union has distinct original receipts; consume every binding")
+
+    def native_receipt_bindings(self) -> tuple[dict[str, str], ...]:
+        return tuple(cell.native_receipt_binding() for cell in self._cells.values())
+
+    def retained_file_bindings(self) -> tuple[dict[str, Any], ...]:
+        remaining(self.deadline)
+        result = native_union_members(
+            tuple((scope, cell.retained_file_bindings()) for scope, cell in self._cells.items())
+        )
+        remaining(self.deadline)
+        return result
+
+
+def collect_native_hosted_cell_union(
+    source: NativeSourceContext,
+    directory: Path,
+    *,
+    repository: str,
+    run_id: int,
+    head_sha: str,
+    deadline: float,
+) -> NativeHostedArtifactCustodian:
+    """Authenticate all Source cells now; no partial union or retained-JSON entry exists."""
+    remaining(deadline)
+    if not isinstance(source, NativeSourceContext) or source.reference.commit != head_sha:
+        raise ValueError("native union collector requires independently admitted exact-commit Source")
+    cells = {}
+    for scope in PUBLIC_PROJECT_NAMES:
+        cell = scope.removeprefix("templates/")
+        cells[scope] = collect_native_hosted_originals(
+            source,
+            directory / "cells" / cell,
+            repository=repository,
+            run_id=run_id,
+            head_sha=head_sha,
+            deadline=deadline,
+            cell=cell,
+        )
+    return NativeHostedCellUnion(source, cells, deadline=deadline, key=_COLLECTOR_KEY)
