@@ -201,6 +201,68 @@ runs:
                           "already_preferred": current == preferred}), flush=True)
         PYTHON
         fi
+    - name: Prepare the frozen tagging-capable Linux TeX distribution
+      if: steps.preparation-mode.outputs.mode == 'native' && runner.os == 'Linux'
+      shell: bash
+      run: |
+        set -euo pipefail
+        [ "$RUNNER_ARCH" = X64 ]
+        repository=https://ftp.math.utah.edu/pub/tex/historic/systems/texlive/2025/tlnet-final
+        archives="$RUNNER_TEMP/template-acceptance-document-archives"
+        installer="$archives/install-tl-2025-final.tar.gz"
+        database="$archives/texlive-2025-final.tlpdb.xz"
+        for archive in "$installer" "$database"; do test ! -L "$archive"; done
+        if [ ! -e "$installer" ]; then
+          curl --fail --location --retry 2 --max-time 180 --output "$installer" "$repository/install-tl-unx.tar.gz"
+        fi
+        if [ ! -e "$database" ]; then
+          curl --fail --location --retry 2 --max-time 180 --output "$database" "$repository/tlpkg/texlive.tlpdb.xz"
+        fi
+        [ "$(wc -c < "$installer" | tr -d ' ')" = 5866884 ]
+        [ "$(wc -c < "$database" | tr -d ' ')" = 2704836 ]
+        echo "311df9f1477fd90c520159d1feddc2d6270f010d8349d1f6bdb9461a93b48a5c  $installer" | shasum -a 256 --check --status
+        echo "56df038e9070a3d587eeceb5def3f154b2cacccef36d4295bb49e0618977c34a  $database" | shasum -a 256 --check --status
+        # One frozen repository supplies both the engine and its complete package closure.
+        # Do not transplant current LaTeX packages into Ubuntu's TeX Live 2023.
+        destination=/usr/local/share/template-texlive-2025-final
+        test ! -e "$destination"
+        test ! -L "$destination"
+        preparation=$(mktemp -d "$RUNNER_TEMP/template-texlive-preparation.XXXXXX")
+        tar -xzf "$installer" -C "$preparation"
+        cat > "$preparation/install.profile" <<PROFILE
+        selected_scheme scheme-custom
+        TEXDIR $destination
+        TEXMFLOCAL $destination/texmf-local
+        TEXMFSYSCONFIG $destination/texmf-config
+        TEXMFSYSVAR $destination/texmf-var
+        binary_x86_64-linux 1
+        collection-basic 1
+        collection-latex 1
+        collection-latexrecommended 1
+        collection-latexextra 1
+        collection-luatex 1
+        collection-xetex 1
+        collection-bibtexextra 1
+        collection-mathscience 1
+        collection-fontsrecommended 1
+        collection-plaingeneric 1
+        collection-langenglish 1
+        instopt_adjustpath 0
+        tlpdbopt_install_docfiles 0
+        tlpdbopt_install_srcfiles 0
+        PROFILE
+        sudo timeout --signal=TERM --kill-after=30 1200s \
+          "$preparation/install-tl-20260301/install-tl" --no-interaction --verify-downloads \
+          --repository "$repository" --profile "$preparation/install.profile"
+        # Refuse repository drift even after a completed disposable installation.
+        curl --fail --location --max-time 180 --output "$preparation/closing.tlpdb.xz" "$repository/tlpkg/texlive.tlpdb.xz"
+        echo "56df038e9070a3d587eeceb5def3f154b2cacccef36d4295bb49e0618977c34a  $preparation/closing.tlpdb.xz" | shasum -a 256 --check --status
+        export PATH="$destination/bin/x86_64-linux:$PATH"
+        echo "$destination/bin/x86_64-linux" >> "$GITHUB_PATH"
+        lualatex --version
+        xelatex --version
+        tlmgr --version
+        tlmgr option repository
     - name: Prepare native document prerequisites
       if: steps.preparation-mode.outputs.mode == 'native'
       shell: bash
@@ -219,10 +281,7 @@ runs:
           "$chrome" --version
           echo "CHROME_EXECUTABLE_PATH=$chrome" >> "$GITHUB_ENV"
           sudo apt-get update
-          sudo apt-get install -y --no-install-recommends \
-            poppler-utils zbar-tools texlive-luatex texlive-science \
-            texlive-xetex texlive-latex-extra texlive-bibtex-extra \
-            texlive-fonts-recommended texlive-latex-recommended texlive-plain-generic lmodern fonts-dejavu
+          sudo apt-get install -y --no-install-recommends poppler-utils zbar-tools fonts-dejavu
         else
           brew install poppler zbar
           export PATH="/Library/TeX/texbin:$PATH"
@@ -236,7 +295,7 @@ runs:
           sudo /Library/TeX/texbin/tlmgr update --self
         fi
         # The prior step supplies the exact pinned Pandoc on PATH. The full
-        # Linux package union prevents a second TeX installation; macOS still
+        # Linux upstream tree supplies one coherent TeX package union; macOS
         # provisions BasicTeX and audits the actual LaTeX package inventory.
         bash scripts/shell/setup-system-deps.sh --prepared-python "$PREPARED_PYTHON"
         if [ "$RUNNER_OS" = macOS ]; then
@@ -289,3 +348,37 @@ runs:
           tar -xzf "$archive" -C "$fonts"
         fi
         echo "TTFONTS=$fonts//:" >> "$GITHUB_ENV"
+    - name: Record actual native TeX providers
+      if: steps.preparation-mode.outputs.mode == 'native'
+      shell: bash
+      env:
+        PREPARED_PYTHON: ${{ inputs.python-executable }}
+      run: |
+        set -euo pipefail
+        "$PREPARED_PYTHON" -I -B - <<'PYTHON'
+        import hashlib, json, os, shutil, subprocess
+        from pathlib import Path
+        tools = {}
+        for name in ("lualatex", "xelatex", "kpsewhich", "bibtex", "pandoc", "pandoc-crossref"):
+            found = shutil.which(name)
+            assert found, f"missing prepared tool: {name}"
+            path = Path(found).resolve(strict=True)
+            result = subprocess.run([found, "--version"], stdin=subprocess.DEVNULL, capture_output=True, check=True, timeout=15)
+            tools[name] = {"selected_path": found, "resolved_path": str(path), "sha256": hashlib.sha256(path.read_bytes()).hexdigest(), "version_stdout": result.stdout.decode(), "version_stderr": result.stderr.decode()}
+        providers = {}
+        for name in ("latex.ltx", "tagpdf.sty", "documentmetadata-support.ltx"):
+            result = subprocess.run(["kpsewhich", name], stdin=subprocess.DEVNULL, capture_output=True, check=True, timeout=15)
+            path = Path(result.stdout.decode().strip()).resolve(strict=True)
+            assert path.is_file(), f"missing TeX provider: {name}"
+            body = path.read_bytes()
+            providers[name] = {"path": str(path), "bytes": len(body), "sha256": hashlib.sha256(body).hexdigest()}
+        source = subprocess.check_output(["git", "rev-parse", "HEAD"], stdin=subprocess.DEVNULL, text=True).strip()
+        provenance = {"source_sha": source, "run_id": int(os.environ["GITHUB_RUN_ID"]), "run_attempt": int(os.environ["GITHUB_RUN_ATTEMPT"]), "role": "prepared native document tool provenance only", "runtime_acceptance": False, "host": os.environ["RUNNER_OS"], "tools": tools, "providers": providers}
+        if os.environ["RUNNER_OS"] == "Linux":
+            provenance["distribution"] = {"repository": "https://ftp.math.utah.edu/pub/tex/historic/systems/texlive/2025/tlnet-final", "installer_sha256": "311df9f1477fd90c520159d1feddc2d6270f010d8349d1f6bdb9461a93b48a5c", "repository_database_xz_sha256": "56df038e9070a3d587eeceb5def3f154b2cacccef36d4295bb49e0618977c34a"}
+        target = Path(os.environ["RUNNER_TEMP"]) / "template-acceptance-document-provenance.json"
+        with target.open("x") as output:
+            json.dump(provenance, output, indent=2)
+            output.write("\n")
+        print(json.dumps(provenance))
+        PYTHON

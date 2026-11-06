@@ -300,3 +300,20 @@ bootstrap refusals. Both exports include hidden files and remain available for
 thirty days. This diagnostic does not install policy, execute other Root cases,
 or grant full Root, native, scientific or release acceptance. The genuine four
 target run is still required to establish this capability on hosted toolchains.
+
+## Mandatory manual-probe and census guards
+
+The tagged-PDF probe and policy-census workflows test each required dispatch,
+review-mode and final outcome predicate as a separate shell command with an
+explicit failure exit. This also avoids reliance on version-specific errexit
+handling of compound double-bracket tests. Do not join
+mandatory assertions with an AND list followed by another command: Bash
+`set -e` permits its first predicate to fail, and a later summary can hide the
+failed outcome. Continue-on-error retains diagnostics; the final guard must
+propagate the original failed outcome after export.
+
+The probe retains the native setup action's actual document-tool provenance
+alongside the wrapper exit and streams. A green Actions conclusion alone cannot
+qualify the tool: require the original wrapper exit zero, the exact unchanged
+test's one-case JUnit result with zero skips/errors/failures, and its passed
+probe record. Compiler logs and PDFs remain original bounded diagnostics.
