@@ -7,7 +7,7 @@ source and contracts; each exemplar retains its own package and publication
 versions. Confidential and local workspaces outside the canonical public roster
 are excluded.
 
-## [5.1.0] - 2026-11-05
+## [5.1.0] - 2026-11-06
 
 See the [5.1.0 candidate notes](docs/releases/v5.1.0.md). This coordinated minor
 preparation moves Root and canonical exemplar SDK bindings to 5.1.0 while
@@ -42,6 +42,32 @@ matching tag identity and authenticated publication.
   outputs that consume those values, compare measured source/support hashes and
   remeasure affected source changes before all-project unchanged-output rebind
   and exact-main acceptance.
+
+- Run coordinated publication preparation under the existing fresh execution
+  account, preserving strict original-process observation and terminal phase
+  failures through the disposable candidate and review capture.
+- Prepare Linux document tools from one frozen official TeX Live 2025 final
+  repository, with pinned installer and database bytes and coherent engine and
+  package selection.
+- Pack each native matrix cell with its exact selected original and collect the
+  complete ordered 25-cell union through the real artifact custodians. Assign
+  distinct receipt and transport paths at original creation, and preserve every
+  original receipt rather than synthesizing an aggregate pass.
+
+- Honor multi-project resume through the existing checkpoint policy and refuse
+  unsupported all-project incremental requests before execution.
+- Isolate optional PDF processing state per invocation, validate opt-in types,
+  stage PDF and sidecar publication, preserve prior destination modes and recover
+  ordinary publication errors without overwriting foreign edits.
+- Preserve existing PDF catalog objects through overlays, metadata injection and
+  password encryption except for explicitly replaced metadata; retain fresh
+  encryption randomness and the legacy source-name hash manifest convention.
+- Preserve Kmyth inputs and existing sidecars on provider failure, reject source
+  aliases, and remove inherited credential names and agent sockets from its
+  child environment while retaining declared TPM and library nominees.
+- Omit the CORS allow-origin header for the declared deny-default case, correct
+  the shared pipeline API examples and retain successful native-cell artifacts
+  for 30 days.
 
 ## [5.0.2] - 2026-11-04
 
