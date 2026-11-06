@@ -452,6 +452,13 @@ before checking capability status. Failed and blocked originals remain available
 in the ordinary auxiliary artifact. Transport uses the existing file/byte bounds
 and original operation deadline; retained diagnostics grant no acceptance.
 
+The capability-group v2 interpreter descriptor uses `executable` and `sha256`
+for the original absolute runtime identity. It is not a repository artifact
+binding. The strict reader still checks that executable and hash against the
+actual producer process and original runtime; both generic artifact walkers
+retain their absolute-path refusals. Group v1 DATA remains retained historical
+evidence and is never rewritten or upgraded to grant current admission.
+
 Disposable Pitch pipelines obtain repository facts from the complete original
 Root as explicitly bound DATA. `public_acceptance_auxiliary_reference.py`
 admits its actual Git HEAD and Source fingerprint with `PublicReference` under

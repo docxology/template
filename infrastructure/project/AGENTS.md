@@ -36,6 +36,13 @@ binding, follows exactly one admitted original edge, and reopens every retained
 original/consumed/model file. Failed attempts remain refused; no projection
 retries providers or reuses evidence across invocations.
 
+The capability-group v2 interpreter descriptor uses `executable` and `sha256`
+for the original absolute runtime identity. It is not a repository artifact
+binding. The strict reader still checks that executable and hash against the
+actual producer process and original runtime; both generic artifact walkers
+retain their absolute-path refusals. Group v1 DATA remains retained historical
+evidence and is never rewritten or upgraded to grant current admission.
+
 
 The public_acceptance_literature_readback.py diagnostic authenticates an already
 completed ARL producer through fixed same-repository GitHub APIs. Workflow,
