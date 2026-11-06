@@ -7,6 +7,9 @@ other submodules.
 
 import hashlib
 import json
+import os
+import stat
+import tempfile
 from pathlib import Path
 from typing import Any
 
@@ -76,6 +79,10 @@ def write_hash_manifest(
     if output_path is None:
         output_path = pdf_path.with_suffix(".hashes.json")
 
+    from infrastructure.steganography.publication import validate_destinations
+
+    validate_destinations(pdf_path, [output_path])
+
     manifest: dict[str, Any] = {
         "source_file": pdf_path.name,
         "timestamp": resolve_build_timestamp(),
@@ -84,9 +91,15 @@ def write_hash_manifest(
     if extra:
         manifest.update(extra)
 
-    _tmp = output_path.with_suffix(output_path.suffix + ".tmp")
+    descriptor, temporary = tempfile.mkstemp(prefix=f".{output_path.name}.", dir=output_path.parent)
+    _tmp = Path(temporary)
     try:
-        _tmp.write_text(json.dumps(manifest, indent=2), encoding="utf-8")
+        with os.fdopen(descriptor, "w", encoding="utf-8") as stream:
+            stream.write(json.dumps(manifest, indent=2))
+            stream.flush()
+            if output_path.exists():
+                os.fchmod(stream.fileno(), stat.S_IMODE(output_path.stat().st_mode))
+            os.fsync(stream.fileno())
         _tmp.replace(output_path)
     except Exception:  # noqa: BLE001 — atomic-write cleanup; any failure must unlink the temp file before re-raising to the caller
         _tmp.unlink(missing_ok=True)
