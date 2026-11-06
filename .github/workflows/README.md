@@ -266,3 +266,16 @@ jobs:
 - [`AGENTS.md`](AGENTS.md) — Full CI/CD technical documentation
 - [`../AGENTS.md`](../AGENTS.md) — GitHub integration overview
 - [`../../AGENTS.md`](../../AGENTS.md) — Root system overview
+
+
+`root-policy-census.yml` is manual collection/review only. Its four Linux/Darwin
+3.14/3.15 targets admit the exact dispatch SHA and use the current Root-original
+locked groups and pinned fixture/document/browser/model preparation chain. The
+existing pinned model readiness inference is preparation, not an executed Root
+test or unpaid-capability producer. Linux keeps the existing unprivileged
+execution profile; owned-daemon cleanup and bounded export run after collection.
+Both original CLI streams/exit and all census/ledger bindings are retained with
+hidden files for thirty days. Optional author mode creates only a canonical
+Linux 3.14 draft from an exhaustive reviewed committed template; the other three
+targets collect again and refuse any template/member/fixture drift. It cannot
+install policy, push, tag, publish or satisfy required runtime acceptance.

@@ -493,3 +493,12 @@ on a new read-only import. Select diagnostic_arl_readback in the registered
 native-preflight workflow and supply the producer run, attempt and exact SHA;
 keep that branch frozen through both dispatches. It starts no provider/model
 work and does not authorize aggregate acceptance or release.
+
+
+`public_root_policy_census.py` composes the existing original canonical census,
+same-environment family ledger and optional existing draft author. Review
+classifications are exhaustive Source JSON with exact module/family/source and
+member/fixture-observation hashes; the helper only binds the fresh census
+identities into new decision DATA. Only canonical Linux 3.14 emits a draft;
+other supported targets independently collect and check the same template.
+Neither collection nor a draft installs policy or grants runtime/release acceptance.

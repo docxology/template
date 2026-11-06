@@ -43,3 +43,10 @@ uv run pytest tests/infra_tests/project/ --cov=infrastructure.project --cov-repo
 - [`README.md`](README.md)
 
 The test_active_pipeline_diagnostics.py controls cover actual phase deltas/raw bytes, symlink and byte/census refusals, literal Source registry admission without execution, and real validator issues with foreign-source refusal. The Active domain source remains standalone.
+
+
+`test_public_root_policy_census.py` checks actual Source-template Git/file
+admission, strict fresh member/fixture review binding, executable workflow input
+admission and macOS export programs, full four-target/preparation delivery, and
+real CLI refusal before census on wrong Source. Component DATA fixtures never
+stand in for an original census or classified runtime acceptance.
