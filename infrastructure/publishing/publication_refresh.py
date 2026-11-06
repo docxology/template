@@ -158,10 +158,15 @@ def _generation_sequence(root: Path, directory: Path, commands: list[tuple[str, 
     return 0
 
 
+def _require_single_worker(jobs: int) -> None:
+    """Keep peer producers outside the shared execution-account census."""
+    if type(jobs) is not int or jobs != 1:
+        raise ValueError("publication refresh workers must be exactly one for the shared execution-account census")
+
+
 def generate(root: Path, directory: Path, jobs: int) -> int:
     """Refresh tracked publication copies; revalidate the unchanged complement."""
-    if type(jobs) is not int or not 1 <= jobs <= 4:
-        raise ValueError("publication refresh workers must be between one and four")
+    _require_single_worker(jobs)
     plan = _source_plan(root, directory)
     prepared = json.loads((directory / "prepared.json").read_bytes())
     if prepared != {
@@ -217,8 +222,7 @@ def run_coordinated(
     root: Path, directory: Path, source_sha: str, expected_version: str, jobs: int, *, mode: str = "refresh"
 ) -> int:
     """Run every existing phase in one execution-account payload; failure is terminal."""
-    if type(jobs) is not int or not 1 <= jobs <= 4:
-        raise ValueError("publication refresh workers must be between one and four")
+    _require_single_worker(jobs)
     common = ["--repo-root", str(root), "--directory", str(directory), "--mode", mode]
     phases = (
         ["plan", "--source-sha", source_sha, "--expected-version", expected_version],
@@ -254,13 +258,15 @@ def main(argv: list[str] | None = None) -> int:
     coordinated = commands.add_parser("run")
     coordinated.add_argument("--source-sha", required=True)
     coordinated.add_argument("--expected-version", required=True)
-    coordinated.add_argument("--jobs", type=int, default=2)
+    coordinated.add_argument("--jobs", type=int, default=1)
     commands.add_parser("prepare")
     run = commands.add_parser("generate")
-    run.add_argument("--jobs", type=int, default=2)
+    run.add_argument("--jobs", type=int, default=1)
     for phase in ("candidate", "verify", "finish"):
         commands.add_parser(phase)
     args = parser.parse_args(argv)
+    if args.phase in ("run", "generate"):
+        _require_single_worker(args.jobs)
     root, directory = args.repo_root.absolute(), args.directory.absolute()
     if directory.is_relative_to(root) or directory != directory.resolve():
         raise ValueError("refresh evidence needs a fresh real directory outside Source")

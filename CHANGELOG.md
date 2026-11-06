@@ -44,8 +44,9 @@ matching tag identity and authenticated publication.
   and exact-main acceptance.
 
 - Run coordinated publication preparation under the existing fresh execution
-  account, preserving strict original-process observation and terminal phase
-  failures through the disposable candidate and review capture.
+  account with exactly one generation worker, preserving strict original-process
+  observation and terminal phase failures through the disposable candidate and
+  review capture. Refuse concurrent shared-account workers before any phase.
 - Prepare Linux document tools from one frozen official TeX Live 2025 final
   repository, with pinned installer and database bytes and coherent engine and
   package selection.
