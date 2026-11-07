@@ -156,18 +156,20 @@ def capture_hydration_input(
                 if _stat_at(held.descriptor, relative.name) is not None:
                     return None
                 return _InputSnapshot(project, artifact, tuple(directories), None, None)
-            identity = _file_identity(item)
+            file_identity = _file_identity(item)
             content = read_bytes_confined(
                 project, project / relative, max_bytes=MAX_FILE_BYTES, expected_root_identity=root_identity
             )
             actual = _stat_at(held.descriptor, relative.name)
             if (
                 actual is None
-                or _file_identity(actual) != identity
+                or _file_identity(actual) != file_identity
                 or not all(item.matches_path() for item in held_directories)
             ):
                 return None
-            return _InputSnapshot(project, artifact, tuple(directories), identity, hashlib.sha256(content).hexdigest())
+            return _InputSnapshot(
+                project, artifact, tuple(directories), file_identity, hashlib.sha256(content).hexdigest()
+            )
     except (OSError, ValueError):
         return None
 

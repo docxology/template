@@ -43,14 +43,9 @@ try:
     from .experiment_config import load_experiment_config
     from .optimizer import quadratic_optimum
 except ImportError:  # pragma: no cover — standalone load (no package context)
-    from template_code_project.core._runtime import (  # type: ignore[no-redef]  # type: ignore[no-redef]
-        analysis_metadata_observation,
-        get_logger,
-        project_root,
-        read_analysis_bytes,  # type: ignore[no-redef]
-        retain_analysis_metadata,
-        write_analysis_bytes,
-    )
+    from template_code_project.core._runtime import get_logger, project_root, write_analysis_bytes  # type: ignore[no-redef]
+    from template_code_project.core._runtime import read_analysis_bytes  # type: ignore[no-redef]
+    from template_code_project.core._runtime import analysis_metadata_observation, retain_analysis_metadata  # type: ignore[no-redef]
     from template_code_project.core.experiment_config import load_experiment_config  # type: ignore[no-redef]
     from template_code_project.core.optimizer import quadratic_optimum  # type: ignore[no-redef]
 
