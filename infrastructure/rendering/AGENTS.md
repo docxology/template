@@ -150,13 +150,16 @@ on nested/spanned header content. Literal examples are not a rewrite surface.
   options only on the opt-in `metadata.tagged_pdf: true` LuaLaTeX path.
   Untagged PDFs are unchanged, and neither tagged rendering nor metadata
   injection is a claim of PDF/UA certification.
-- Nested manuscript-relative image paths are rebased to the deployed web
-  figure directory before exact registry matching. This nested-path rewrite
-  targets image `src` attributes, not literal paths in prose or code examples.
-- Declared bibliography processing is blocking: a nonzero native BibTeX exit or
-  preparation failure stops before final PDF promotion. Keep the prior published
-  PDF unchanged and retain the native diagnostics; do not continue without its
-  required bibliography or add a second compiler path in a consuming project.
+- Rebase image sources only in emitted HTML, before exact web registry matching.
+  Never apply HTML image rewriting to raw Markdown, where inline/fenced code
+  may contain literal image tags and paths.
+- Requested bibliography processing is blocking: a nonzero native BibTeX exit
+  stops before final PDF promotion. Actual compiler auxiliary requests, including
+  `nocite` and included aux files, determine whether processing is required;
+  merely retaining an unused `.bib` file does not.
+- Keep prior published PDFs on source/compilation failure. Remove stale staging
+  PDFs before each compile and never accept an old final/staging PDF as a new
+  producer result. Retain diagnostics; consuming projects need no second driver.
 - Figure-registry 1.2 records may add a structured `long_description` and an
   `exact_value_fallback`. The renderer associates long descriptions through
   `aria-details`, validates the exact-value identifier inventory and its safe
