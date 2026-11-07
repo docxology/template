@@ -9,8 +9,6 @@ tree is dirty. The CLI wrapper stays thin; every producer invocation lives here.
 from __future__ import annotations
 
 import json
-import subprocess
-import sys
 from concurrent.futures import ProcessPoolExecutor, as_completed
 from pathlib import Path
 
@@ -47,22 +45,7 @@ def refresh_project(name: str, root: Path) -> tuple[bool, str]:
     old_paths = _manifest_paths(project_root)
     render_code = execute_render_pipeline(name, repo_root=root)
     if render_code != 0:
-        # A refused render usually means the admitted analysis boundary no longer
-        # matches the project data. `output/.pipeline` is disposable derived
-        # state, so clear it, re-run the canonical analysis stage once and retry.
-        import shutil
-
-        shutil.rmtree(project_root / "output" / ".pipeline", ignore_errors=True)
-        reanalysis = subprocess.run(
-            [sys.executable, str(root / "scripts" / "pipeline" / "stage_02_analysis.py"), "--project", name],
-            cwd=root,
-            capture_output=True,
-            text=True,
-        )
-        if reanalysis.returncode == 0:
-            render_code = execute_render_pipeline(name, repo_root=root)
-        if render_code != 0:
-            return False, "[RENDER_FAILED] canonical Stage 3 render failed after re-admitting the analysis boundary"
+        return False, f"[RENDER_FAILED] canonical Stage 3 render exited {render_code}"
     try:
         manifest = snapshot_current_artifact_manifest(
             project_root / "output",

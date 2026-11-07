@@ -8,51 +8,64 @@ Historical CLI11.16.0 and CLI12.0.0 profiles remain separate exact adapters.
 
 from __future__ import annotations
 
+from dataclasses import dataclass
 from pathlib import Path
 from types import ModuleType
 
 from infrastructure.rendering import _mermaid_v11, _mermaid_v12, _mermaid_v122
 
 
-def _profile(version: str) -> ModuleType:
-    if version == "12.2.0":
-        return _mermaid_v122
-    if version == "11.16.0":
-        return _mermaid_v11
-    if version == "12.0.0":
-        return _mermaid_v12
-    raise ValueError("selected Mermaid version has no Source-owned finite native profile")
+@dataclass(frozen=True)
+class NativeMermaidProfile:
+    adapter: ModuleType
+    suffix: str
+    sdk_fonts: bool
+    bind_inline_tooling: bool
+
+
+_PROFILES = {
+    "11.16.0": NativeMermaidProfile(_mermaid_v11, "v11", sdk_fonts=True, bind_inline_tooling=False),
+    "12.0.0": NativeMermaidProfile(_mermaid_v12, "v12", sdk_fonts=False, bind_inline_tooling=False),
+    "12.2.0": NativeMermaidProfile(_mermaid_v122, "v122", sdk_fonts=True, bind_inline_tooling=True),
+}
+
+
+def find_native_profile(version: object) -> NativeMermaidProfile | None:
+    """Select a Source-owned row without applying the caller's refusal policy."""
+    return _PROFILES.get(version) if isinstance(version, str) else None
+
+
+def _profile(version: str) -> NativeMermaidProfile:
+    profile = find_native_profile(version)
+    if profile is None:
+        raise ValueError("selected Mermaid version has no Source-owned finite native profile")
+    return profile
 
 
 def adapter_filename(version: str) -> str:
-    _profile(version)
-    return {
-        "11.16.0": "original-mermaid-v11.mjs",
-        "12.0.0": "original-mermaid-v12.mjs",
-        "12.2.0": "original-mermaid-v122.mjs",
-    }[version]
+    return f"original-mermaid-{_profile(version).suffix}.mjs"
 
 
 def adapter_sha256(version: str) -> str:
-    return str(_profile(version).ADAPTER_SHA256)
+    return str(_profile(version).adapter.ADAPTER_SHA256)
 
 
 def adapter_bytes(version: str) -> bytes:
-    value: bytes = _profile(version).adapter_bytes()
+    value: bytes = _profile(version).adapter.adapter_bytes()
     return value
 
 
 def policy(version: str) -> str:
-    return str(_profile(version).POLICY)
+    return str(_profile(version).adapter.POLICY)
 
 
 def rendering_profile(version: str) -> dict[str, str | int | bool]:
-    value: dict[str, str | int | bool] = _profile(version).rendering_profile()
+    value: dict[str, str | int | bool] = _profile(version).adapter.rendering_profile()
     return value
 
 
 def validate_rendering_profile(version: str, value: object) -> None:
-    _profile(version).validate_rendering_profile(value)
+    _profile(version).adapter.validate_rendering_profile(value)
 
 
 def request_bytes(
@@ -63,5 +76,7 @@ def request_bytes(
     output_format: str,
     puppeteer_config: Path | None,
 ) -> bytes:
-    value: bytes = _profile(version).request_bytes(package_root, source, output, output_format, puppeteer_config)
+    value: bytes = _profile(version).adapter.request_bytes(
+        package_root, source, output, output_format, puppeteer_config
+    )
     return value
