@@ -583,8 +583,8 @@ mjx-container[display="true"] {
 Reference</h1>
 <p>This section inventories every Layer‑1 subdirectory returned by
 <code>31</code> <code>discover_infrastructure_modules(repo_root)</code>.
-File totals use <code>1335</code> Python sources across infra +
-<code>12,564</code> infra tests guarding them. Documentation Duality =
+File totals use <code>1355</code> Python sources across infra +
+<code>13,093</code> infra tests guarding them. Documentation Duality =
 paired <code>README.md</code> + <code>AGENTS.md</code>; optional
 <code>SKILL.md</code> manifests feed
 <code>python -m infrastructure.skills</code>.</p>
@@ -629,7 +629,7 @@ paired <code>README.md</code> + <code>AGENTS.md</code>; optional
 </tr>
 <tr>
 <td><code>core</code></td>
-<td style="text-align: center;">201</td>
+<td style="text-align: center;">202</td>
 <td style="text-align: center;">✓</td>
 <td style="text-align: center;">✓</td>
 <td><code>get_logger</code>, <code>load_config</code>,
@@ -711,7 +711,7 @@ contracts + validation</td>
 </tr>
 <tr>
 <td><code>project</code></td>
-<td style="text-align: center;">117</td>
+<td style="text-align: center;">123</td>
 <td style="text-align: center;">✓</td>
 <td style="text-align: center;">✓</td>
 <td><code>discover_projects</code>, workspace management</td>
@@ -732,7 +732,7 @@ contracts + validation</td>
 </tr>
 <tr>
 <td><code>publishing</code></td>
-<td style="text-align: center;">85</td>
+<td style="text-align: center;">89</td>
 <td style="text-align: center;">✓</td>
 <td style="text-align: center;">✓</td>
 <td>Zenodo, executable bundle, archival targets</td>
@@ -746,14 +746,14 @@ contracts + validation</td>
 </tr>
 <tr>
 <td><code>rendering</code></td>
-<td style="text-align: center;">120</td>
+<td style="text-align: center;">123</td>
 <td style="text-align: center;">✓</td>
 <td style="text-align: center;">✓</td>
 <td>PDF/HTML/slide rendering, Pandoc filters</td>
 </tr>
 <tr>
 <td><code>reporting</code></td>
-<td style="text-align: center;">411</td>
+<td style="text-align: center;">416</td>
 <td style="text-align: center;">✓</td>
 <td style="text-align: center;">✓</td>
 <td>Coverage parsers, dashboards, executive artefacts</td>
@@ -804,7 +804,7 @@ capture</td>
 </tr>
 <tr>
 <td><code>steganography</code></td>
-<td style="text-align: center;">13</td>
+<td style="text-align: center;">14</td>
 <td style="text-align: center;">✓</td>
 <td style="text-align: center;">✓</td>
 <td>Watermark overlays + hash manifests</td>
@@ -853,8 +853,8 @@ id="infrastructureconfig-non-package-subdirectory"><code>infrastructure/config</
 (<code>.env.template</code>, hardened defaults referenced by Docker +
 CLI). <code>config/</code> carries no <code>__init__.py</code>, so it is
 a configuration subdirectory rather than an importable package.</p>
-<h3 id="infrastructure.core-201-files"><code>infrastructure.core</code>
-(201 files)</h3>
+<h3 id="infrastructure.core-202-files"><code>infrastructure.core</code>
+(202 files)</h3>
 <p>Checkpointing, logging, pipeline YAML parsing, telemetry bridges,
 filesystem helpers, hardened exceptions. Everything else imports logging
 + error taxonomy from here first.</p>
@@ -917,8 +917,8 @@ interactive menus, subprocess wiring for thin shell wrappers
 (<code>run.sh</code>, <code>secure_run.sh</code>), and stubs used in CI
 for menu parsing tests.</p>
 <h3
-id="infrastructure.project-117-files"><code>infrastructure.project</code>
-(117 files)</h3>
+id="infrastructure.project-123-files"><code>infrastructure.project</code>
+(123 files)</h3>
 <p>Canonical discovery (<code>discover_projects</code>) enforcing
 <code>src/</code> + <code>tests/</code>, slug validation, nested WIP
 namespaces.</p>
@@ -937,8 +937,8 @@ structured Review system with severity (blocking/major/minor/info) and
 verdict (refutes/supports). Features a CLI and pipeline integration
 hooks for automatic lineage recording after every stage.</p>
 <h3
-id="infrastructure.publishing-85-files"><code>infrastructure.publishing</code>
-(85 files)</h3>
+id="infrastructure.publishing-89-files"><code>infrastructure.publishing</code>
+(89 files)</h3>
 <p>Metadata models, APA/BibTeX/MLA formatters, optional Zenodo
 clients.</p>
 <h3
@@ -947,13 +947,13 @@ id="infrastructure.reference-16-files"><code>infrastructure.reference</code>
 <p>Citation/BibTeX parsing + conversion utilities leveraged by
 manuscripts and retrieval scripts.</p>
 <h3
-id="infrastructure.rendering-120-files"><code>infrastructure.rendering</code>
-(120 files)</h3>
+id="infrastructure.rendering-123-files"><code>infrastructure.rendering</code>
+(123 files)</h3>
 <p>Pandoc shim, Unicode/XeLaTeX postprocessors, combined PDF/HTML/slide
 exporters.</p>
 <h3
-id="infrastructure.reporting-411-files"><code>infrastructure.reporting</code>
-(411 files)</h3>
+id="infrastructure.reporting-416-files"><code>infrastructure.reporting</code>
+(416 files)</h3>
 <p>Parses pytest + coverage artefacts for dashboards; pairs with
 Stage 01 summaries and downstream executive exports.</p>
 <h3
@@ -1002,8 +1002,8 @@ files)</h3>
 <p>Discovers <code>SKILL.md</code> frontmatter →
 <code>.agents/skill_manifest.json</code>.</p>
 <h3
-id="infrastructure.steganography-13-files"><code>infrastructure.steganography</code>
-(13 files)</h3>
+id="infrastructure.steganography-14-files"><code>infrastructure.steganography</code>
+(14 files)</h3>
 <p>Watermark overlays, hashing companions triggered by secure pipeline
 path.</p>
 <h3 id="infrastructure.tools-6-files"><code>infrastructure.tools</code>
