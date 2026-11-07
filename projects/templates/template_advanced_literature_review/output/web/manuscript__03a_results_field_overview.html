@@ -187,6 +187,69 @@ window.MathJax.output = Object.assign({}, templateMathOutput, {
     lineleading: 0.5
   })
 });
+var templateMathOptions = window.MathJax.options || {};
+window.MathJax.options = Object.assign({}, templateMathOptions, {
+  renderActions: Object.assign({}, templateMathOptions.renderActions, {
+    // Use the documented find action/MathItem extension point. MathJax 4.0.0's
+    // default finder spreads every DOM text run into push() arguments, exceeding
+    // the browser argument stack on large books even with very little math.
+    find: [10, function (doc) {
+      if (doc.processed.isSet("findMath")) return;
+      var adaptor = doc.adaptor;
+      adaptor.document = doc.document;
+      var containers = adaptor.getElements(
+        doc.options.elements || [adaptor.body(doc.document)], doc.document
+      );
+      // Retain the pinned HTMLDocument.findPosition source offsets/order
+      // (MathJax-src 4.0.0, ts/handlers/html/HTMLDocument.ts, Apache-2.0).
+      function position(nodes, item, location, delim) {
+        var parts = nodes[item.n];
+        var index = location.n;
+        var order = item.n;
+        var increment = 1 / (parts.length || 1);
+        for (var part of parts) {
+          if (index <= part[1] && adaptor.kind(part[0]) === "#text") {
+            return {i: order, node: part[0], n: Math.max(index, 0), delim: delim};
+          }
+          index -= part[1];
+          order += increment;
+        }
+        return {node: null, n: 0, delim: delim};
+      }
+      for (var jax of doc.inputJax) {
+        var list = new doc.options.MathList();
+        if (jax.processStrings) {
+          var strings = [];
+          var nodes = [];
+          for (var container of containers) {
+            var found = doc.domStrings.find(container);
+            // Append individually: neither DOM size nor expression count becomes
+            // a function argument count. Keep the scanner's complete run mapping.
+            for (var string of found[0]) strings.push(string);
+            for (var nodeList of found[1]) nodes.push(nodeList);
+          }
+          for (var item of jax.findMath(strings)) {
+            list.push(new doc.options.MathItem(
+              item.math, jax, item.display,
+              position(nodes, item, item.start, item.open),
+              position(nodes, item, item.end, item.close)
+            ));
+          }
+        } else {
+          for (var container of containers) {
+            for (var item of jax.findMath(container)) {
+              list.push(new doc.options.MathItem(
+                item.math, jax, item.display, item.start, item.end
+              ));
+            }
+          }
+        }
+        doc.math.merge(list);
+      }
+      doc.processed.set("findMath");
+    }, "", false]
+  })
+});
 window.normalizeTemplateMathJaxAria = function () {
   document.querySelectorAll("mjx-speech[aria-roledescription]").forEach(function (node) {
     var roleDescription = node.getAttribute("aria-roledescription") || "";
@@ -660,7 +723,8 @@ dated temporal subset; identifier and full-text coverage below use the
 retrieved fixture.</p>
 <!-- FIGURE: growth_curve.png -->
 <figure id="fig:growth_curve">
-<a class="figure-full-size-link" href="../figures/growth_curve.png" target="_blank" rel="noopener" aria-label="Open full-size figure, Publication growth curve for Exoplanet Atmospheres."><img src="../figures/growth_curve.png" title="Publication Growth Curve"
+<a class="figure-full-size-link" href="../figures/growth_curve.png" target="_blank" rel="noopener" aria-label="Open full-size figure, Publication growth curve for Exoplanet Atmospheres."><img src="../figures/growth_curve.png"
+title="Publication Growth Curve"
 alt="Dual-axis time series with annual publication counts as bars, a dashed moving-average line, and cumulative publications as a marked line. Annotations identify the peak year, median year, total N, span, and CAGR." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Publication growth curve for Exoplanet
 Atmospheres. Annual publication counts (bars) and cumulative total
@@ -786,7 +850,8 @@ configured sub-area, with Observational Methods dominant at
 </figure>
 <!-- FIGURE: subfield_timeline.png -->
 <figure id="fig:subfield_timeline">
-<a class="figure-full-size-link" href="../figures/subfield_timeline.png" target="_blank" rel="noopener" aria-label="Open full-size figure, Subfield timeline for Exoplanet Atmospheres."><img src="../figures/subfield_timeline.png" title="Subfield Timeline"
+<a class="figure-full-size-link" href="../figures/subfield_timeline.png" target="_blank" rel="noopener" aria-label="Open full-size figure, Subfield timeline for Exoplanet Atmospheres."><img src="../figures/subfield_timeline.png"
+title="Subfield Timeline"
 alt="Stacked area chart of publication counts by year. Coloured bands identify configured subfields, and their combined height at each year gives the annual corpus total; an inset reports total N across all bands." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Subfield timeline for Exoplanet
 Atmospheres. Stacked annual publication counts by subfield show how each

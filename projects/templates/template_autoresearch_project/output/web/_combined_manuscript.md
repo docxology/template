@@ -340,7 +340,7 @@ non-claims, not production deployment certification.
 The loop is implemented through the project source surface summarized by the
 validated run artifacts. The project scripts remain thin dispatchers; reusable
 behavior writes `output/data/autoresearch_loop.json`, `output/data/ml_task_results.json`,
-`../figures/figure_registry.json`, `output/data/autoresearch_phase_ledger.json`, and
+`output/figures/figure_registry.json`, `output/data/autoresearch_phase_ledger.json`, and
 `output/data/manuscript_variable_provenance.json`.
 
 ## Task And Data {#sec:task-data}
@@ -545,7 +545,7 @@ The experiment writes `output/data/ml_task_results.json`, `output/data/ml_candid
 `output/reports/ml_benchmark_score.json`, `output/data/benchmark_boundary.json`,
 `output/data/figure_quality_report.json`, and
 registered figures through
-`../figures/figure_registry.json`. The diagnostic payloads preserve probabilities,
+`output/figures/figure_registry.json`. The diagnostic payloads preserve probabilities,
 confidence and margin summaries, class metrics, calibration bins,
 confusion-pair summaries, train/test gaps, deterministic no-retrain
 perturbation scores, bootstrap intervals, paired baseline comparison,
@@ -1035,32 +1035,32 @@ figure(s) with validity `false`.
 | output/data/research_program.json | Loop artifact |
 | output/data/review_decisions.json | Review packet |
 | output/data/run_ledger.json | Run or candidate ledger |
-| ../figures/autoresearch_candidate_lifecycle.png | Generated figure |
-| ../figures/autoresearch_closure_flow.png | Generated figure |
-| ../figures/autoresearch_integrity_chain.png | Generated figure |
-| ../figures/autoresearch_security_control_matrix.png | Generated figure |
-| ../figures/autoresearch_stage_matrix.png | Generated figure |
-| ../figures/figure_registry.json | Loop artifact |
-| ../figures/ml_bootstrap_intervals.png | Generated figure |
-| ../figures/ml_calibration_reliability.png | Generated figure |
-| ../figures/ml_candidate_rank_stability.png | Generated figure |
-| ../figures/ml_candidate_scores.png | Generated figure |
-| ../figures/ml_classification_metrics_heatmap.png | Generated figure |
-| ../figures/ml_complexity_accuracy.png | Generated figure |
-| ../figures/ml_confusion_matrix.png | Generated figure |
-| ../figures/ml_confusion_pairs.png | Generated figure |
-| ../figures/ml_generalization_gap.png | Generated figure |
-| ../figures/ml_learning_curves.png | Generated figure |
-| ../figures/ml_paired_correctness.png | Generated figure |
-| ../figures/ml_per_class_accuracy.png | Generated figure |
-| ../figures/ml_probability_margin_distribution.png | Generated figure |
-| ../figures/ml_probability_quality.png | Generated figure |
-| ../figures/ml_robustness_matrix.png | Generated figure |
-| ../figures/ml_selective_accuracy.png | Generated figure |
-| ../figures/ml_training_dynamics.png | Generated figure |
-| ../figures/mnist_class_balance.png | Generated figure |
-| ../figures/mnist_error_examples.png | Generated figure |
-| ../figures/mnist_subset_contact_sheet.png | Generated figure |
+| output/figures/autoresearch_candidate_lifecycle.png | Generated figure |
+| output/figures/autoresearch_closure_flow.png | Generated figure |
+| output/figures/autoresearch_integrity_chain.png | Generated figure |
+| output/figures/autoresearch_security_control_matrix.png | Generated figure |
+| output/figures/autoresearch_stage_matrix.png | Generated figure |
+| output/figures/figure_registry.json | Loop artifact |
+| output/figures/ml_bootstrap_intervals.png | Generated figure |
+| output/figures/ml_calibration_reliability.png | Generated figure |
+| output/figures/ml_candidate_rank_stability.png | Generated figure |
+| output/figures/ml_candidate_scores.png | Generated figure |
+| output/figures/ml_classification_metrics_heatmap.png | Generated figure |
+| output/figures/ml_complexity_accuracy.png | Generated figure |
+| output/figures/ml_confusion_matrix.png | Generated figure |
+| output/figures/ml_confusion_pairs.png | Generated figure |
+| output/figures/ml_generalization_gap.png | Generated figure |
+| output/figures/ml_learning_curves.png | Generated figure |
+| output/figures/ml_paired_correctness.png | Generated figure |
+| output/figures/ml_per_class_accuracy.png | Generated figure |
+| output/figures/ml_probability_margin_distribution.png | Generated figure |
+| output/figures/ml_probability_quality.png | Generated figure |
+| output/figures/ml_robustness_matrix.png | Generated figure |
+| output/figures/ml_selective_accuracy.png | Generated figure |
+| output/figures/ml_training_dynamics.png | Generated figure |
+| output/figures/mnist_class_balance.png | Generated figure |
+| output/figures/mnist_error_examples.png | Generated figure |
+| output/figures/mnist_subset_contact_sheet.png | Generated figure |
 | output/reports/autoresearch_evidence_overview.md | Evidence registry |
 | output/reports/autoresearch_loop.json | Loop artifact |
 | output/reports/autoresearch_loop.md | Loop artifact |
@@ -1207,7 +1207,7 @@ recorded as deferred for human review rather than as self-approval.
 | output/data/ml_training_diagnostics.json | 7 |
 | output/data/research_object_manifest.json | 2 |
 | output/data/review_decisions.json | 1 |
-| ../figures/figure_registry.json | 51 |
+| output/figures/figure_registry.json | 51 |
 | output/reports/artifact_manifest.json | 1 |
 
 : Variable provenance summary from `output/data/manuscript_variable_provenance.json`. {#tbl:variable-provenance}

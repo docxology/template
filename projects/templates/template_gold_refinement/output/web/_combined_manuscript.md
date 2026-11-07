@@ -237,7 +237,7 @@ Karat grades map purity fractions to a gold-fineness vocabulary used here as an 
 | Schema intake | `manuscript/config.yaml` | Load and validate `gold_refinement` block | `GoldRefinementConfig` | config schema tests |
 | Refinery execution | `GoldRefinementConfig` | Run five refinery stages with monotone purity | `RefineryResult` | monotone purity test |
 | Token planning | `GoldRefinementConfig` | Expand slots into deterministic token choices | `TokenPlan` | seed-stability tests |
-| Figure generation | `RefineryResult` and `TokenPlan` | Generate purity progression, karat grading, and token density figures | `../figures/*.png` | nonblank figure tests |
+| Figure generation | `RefineryResult` and `TokenPlan` | Generate purity progression, karat grading, and token density figures | `output/figures/*.png` | nonblank figure tests |
 | Integrity risk modeling | audit rules, failure modes, claims, and shared evidence registry | Score integrity dimensions and summarize evidence tiers | integrity tables and risk visualizations | `tests/test_integrity.py` |
 | Security assay | `gold_refinement.security_assay` | Map adversarial threats and standards to source-owned evidence and claim boundaries | security assay table and variables | `tests/test_security_assay.py` |
 | Manuscript hydration | manuscript shells and `manuscript_variables.json` | Resolve `{{TOKEN}}` placeholders into `output/manuscript/` | hydrated Markdown manuscript | unresolved-token scan |
@@ -803,7 +803,7 @@ Executable-publication scholarship sharpens that norm. Executable research compe
 
 - **Seed:** 431
 - **Config hash:** a396bc74ae68b7f3
-- **Generation timestamp:** 2026-11-07T07:01:20Z
+- **Generation timestamp:** 2026-11-07T12:55:38Z
 - **Python version:** 3.14.10
 
 ## Artifact inventory
@@ -921,7 +921,7 @@ The software improvements in this version do not remove these limitations. Enfor
 | Monotone purity | Does purity increase strictly across all refinery stages? | `assert_monotone_increase` passes on the purity sequence. | `src/template_gold_refinement/refinery.py` and `output/data/refinery_results.json` |
 | Token provenance | Can every selected token be traced to a category, section, value, and config key? | The token plan contains one row for each generated token. | `output/reports/token_plan.json` |
 | Karat grade correctness | Does each stage map to the correct karat grade? | `karat_for_purity` returns the expected grade for each stage. | `src/template_gold_refinement/purity.py` |
-| Integrity risk visibility | Can the manuscript identify high-severity integrity failures and the validator or artifact that detects them? | The integrity risk model emits dimensions, owners, residual risk scores, and evidence-tier rows. | `src/template_gold_refinement/integrity.py` and `../figures/integrity_risk_matrix.png` |
+| Integrity risk visibility | Can the manuscript identify high-severity integrity failures and the validator or artifact that detects them? | The integrity risk model emits dimensions, owners, residual risk scores, and evidence-tier rows. | `src/template_gold_refinement/integrity.py` and `output/figures/integrity_risk_matrix.png` |
 | Scholarship boundary | Do pre-1800 metallurgy references support the analogy, reproducibility, provenance, and source-domain framing without being used as evidence for universal manuscript-quality claims? | The scope, discussion, and evaluation sections cite historically bounded metallurgy scholarship while keeping certification local to source-owned gates. | `manuscript/references.bib` and `manuscript/07_scope.md` |
 | Reporting-guideline completeness | Does the manuscript distinguish checklist-style completeness from methodological validity? | The methods, scope, discussion, and evaluation sections cite reporting-guideline scholarship while explicitly limiting what the local gates prove. | `manuscript/02_methodology.md`, `manuscript/04_discussion.md`, `manuscript/07_scope.md`, and `manuscript/08_evaluation.md` |
 | Executable-compendium identity | Can a reader identify the executable package, metadata stack, software release, and generated artifacts needed to rebuild the manuscript? | The reproducibility, scope, evaluation, and authoring-contract sections cite executable-publication and software-citation scholarship while keeping preservation and portability claims bounded. | `manuscript/06_reproducibility.md`, `manuscript/07_scope.md`, `manuscript/08_evaluation.md`, `manuscript/09_authoring_contract.md`, `output/reports/evidence_registry.json`, and `output/reports/output_statistics.json` |

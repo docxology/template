@@ -273,6 +273,69 @@ window.MathJax.output = Object.assign({}, templateMathOutput, {
     lineleading: 0.5
   })
 });
+var templateMathOptions = window.MathJax.options || {};
+window.MathJax.options = Object.assign({}, templateMathOptions, {
+  renderActions: Object.assign({}, templateMathOptions.renderActions, {
+    // Use the documented find action/MathItem extension point. MathJax 4.0.0's
+    // default finder spreads every DOM text run into push() arguments, exceeding
+    // the browser argument stack on large books even with very little math.
+    find: [10, function (doc) {
+      if (doc.processed.isSet("findMath")) return;
+      var adaptor = doc.adaptor;
+      adaptor.document = doc.document;
+      var containers = adaptor.getElements(
+        doc.options.elements || [adaptor.body(doc.document)], doc.document
+      );
+      // Retain the pinned HTMLDocument.findPosition source offsets/order
+      // (MathJax-src 4.0.0, ts/handlers/html/HTMLDocument.ts, Apache-2.0).
+      function position(nodes, item, location, delim) {
+        var parts = nodes[item.n];
+        var index = location.n;
+        var order = item.n;
+        var increment = 1 / (parts.length || 1);
+        for (var part of parts) {
+          if (index <= part[1] && adaptor.kind(part[0]) === "#text") {
+            return {i: order, node: part[0], n: Math.max(index, 0), delim: delim};
+          }
+          index -= part[1];
+          order += increment;
+        }
+        return {node: null, n: 0, delim: delim};
+      }
+      for (var jax of doc.inputJax) {
+        var list = new doc.options.MathList();
+        if (jax.processStrings) {
+          var strings = [];
+          var nodes = [];
+          for (var container of containers) {
+            var found = doc.domStrings.find(container);
+            // Append individually: neither DOM size nor expression count becomes
+            // a function argument count. Keep the scanner's complete run mapping.
+            for (var string of found[0]) strings.push(string);
+            for (var nodeList of found[1]) nodes.push(nodeList);
+          }
+          for (var item of jax.findMath(strings)) {
+            list.push(new doc.options.MathItem(
+              item.math, jax, item.display,
+              position(nodes, item, item.start, item.open),
+              position(nodes, item, item.end, item.close)
+            ));
+          }
+        } else {
+          for (var container of containers) {
+            for (var item of jax.findMath(container)) {
+              list.push(new doc.options.MathItem(
+                item.math, jax, item.display, item.start, item.end
+              ));
+            }
+          }
+        }
+        doc.math.merge(list);
+      }
+      doc.processed.set("findMath");
+    }, "", false]
+  })
+});
 window.normalizeTemplateMathJaxAria = function () {
   document.querySelectorAll("mjx-speech[aria-roledescription]").forEach(function (node) {
     var roleDescription = node.getAttribute("aria-roledescription") || "";
@@ -1759,7 +1822,8 @@ retained analyzed subset. A field-wide estimate of research activity
 would require a separate live coverage audit.</p>
 <!-- FIGURE: growth_curve.png -->
 <figure id="fig:growth_curve">
-<a class="figure-full-size-link" href="../figures/growth_curve.png" target="_blank" rel="noopener" aria-label="Open full-size Figure 2, Publication growth curve for Modafinil."><img src="../figures/growth_curve.png" title="Publication Growth Curve"
+<a class="figure-full-size-link" href="../figures/growth_curve.png" target="_blank" rel="noopener" aria-label="Open full-size Figure 2, Publication growth curve for Modafinil."><img src="../figures/growth_curve.png"
+title="Publication Growth Curve"
 alt="Dual-axis time series with annual publication counts as bars, a dashed moving-average line, and cumulative publications as a marked line. Annotations identify the peak year, median year, total N, span, and CAGR." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Figure 2: Publication growth curve for
 Modafinil. Annual publication counts (bars) and cumulative total (line)
@@ -1897,7 +1961,8 @@ configured sub-area, with Clinical Sleep dominant at 63.0%.</figcaption>
 </figure>
 <!-- FIGURE: subfield_timeline.png -->
 <figure id="fig:subfield_timeline">
-<a class="figure-full-size-link" href="../figures/subfield_timeline.png" target="_blank" rel="noopener" aria-label="Open full-size Figure 5, Subfield timeline for Modafinil."><img src="../figures/subfield_timeline.png" title="Subfield Timeline"
+<a class="figure-full-size-link" href="../figures/subfield_timeline.png" target="_blank" rel="noopener" aria-label="Open full-size Figure 5, Subfield timeline for Modafinil."><img src="../figures/subfield_timeline.png"
+title="Subfield Timeline"
 alt="Stacked area chart of publication counts by year. Coloured bands identify configured subfields, and their combined height at each year gives the annual corpus total; an inset reports total N across all bands." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Figure 5: Subfield timeline for
 Modafinil. Stacked annual publication counts by subfield show how each
@@ -2207,7 +2272,8 @@ taxonomy, revealing connections that the explicit classification does
 not capture.</p>
 <!-- FIGURE: topic_term_bars.png -->
 <figure id="fig:topic_term_bars">
-<a class="figure-full-size-link" href="../figures/topic_term_bars.png" target="_blank" rel="noopener" aria-label="Open full-size Figure 9, Topic-term bar charts for Modafinil."><img src="../figures/topic_term_bars.png" title="Topic-Term Weights"
+<a class="figure-full-size-link" href="../figures/topic_term_bars.png" target="_blank" rel="noopener" aria-label="Open full-size Figure 9, Topic-term bar charts for Modafinil."><img src="../figures/topic_term_bars.png"
+title="Topic-Term Weights"
 alt="Grid of horizontal bar charts, one panel per NMF topic. Each panel lists up to ten leading terms on the vertical axis, and bar length represents that term&#x27;s weight in the topic." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Figure 9: Topic-term bar charts for
 Modafinil. Each panel shows the top weighted terms for one of 5 NMF
@@ -2507,7 +2573,8 @@ vocabulary.</figcaption>
 </figure>
 <!-- FIGURE: cooccurrence_matrix.png -->
 <figure id="fig:cooccurrence_matrix">
-<a class="figure-full-size-link" href="../figures/cooccurrence_matrix.png" target="_blank" rel="noopener" aria-label="Open full-size Figure 16, Term co-occurrence matrix for Modafinil."><img src="../figures/cooccurrence_matrix.png" title="Term Co-occurrence"
+<a class="figure-full-size-link" href="../figures/cooccurrence_matrix.png" target="_blank" rel="noopener" aria-label="Open full-size Figure 16, Term co-occurrence matrix for Modafinil."><img src="../figures/cooccurrence_matrix.png"
+title="Term Co-occurrence"
 alt="Symmetric square matrix for the thirty most frequent document-level terms. Rows and columns list the same terms; increasingly dark blue cells indicate larger normalized within-document co-occurrence, with a zero diagonal." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Figure 16: Term co-occurrence matrix for
 Modafinil. Each cell shows the normalized co-occurrence frequency of two
@@ -2665,7 +2732,8 @@ members, serve as integrative reviews or meta-analyses that connect
 disparate threads of the literature.</p>
 <!-- FIGURE: citation_network.png -->
 <figure id="fig:citation_network">
-<a class="figure-full-size-link" href="../figures/citation_network.png" target="_blank" rel="noopener" aria-label="Open full-size Figure 17, Citation network for Modafinil."><img src="../figures/citation_network.png" title="Citation Network"
+<a class="figure-full-size-link" href="../figures/citation_network.png" target="_blank" rel="noopener" aria-label="Open full-size Figure 17, Citation network for Modafinil."><img src="../figures/citation_network.png"
+title="Citation Network"
 alt="Directed spring-layout citation graph in which arrows represent citation links, node area increases with in-degree, and node colour denotes detected community when available. The five highest-in-degree papers are labelled." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Figure 17: Citation network for
 Modafinil. Nodes represent papers; directed edges represent citation
@@ -2930,8 +2998,8 @@ class="header-section-number">16.3</span> Reproducibility</h2>
 <p>This manuscript was generated from a live retrieval run using 10
 engines. Every number, table, and figure in this document is injected
 from a committed artifact (<code>output/data/*.json</code>,
-<code>../figures/*.png</code>). Re-running the pipeline with the same
-configuration reproduces identical data outputs; the 21 figures are
+<code>output/figures/*.png</code>). Re-running the pipeline with the
+same configuration reproduces identical data outputs; the 21 figures are
 deterministic given fixed seeds, and the manuscript text is regenerated
 from the same template. No number in this document was typed by
 hand.</p>

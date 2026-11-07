@@ -247,7 +247,7 @@
         "valid": true,
         "warnings": []
       },
-      "total_size_mb": 7.91030216217041
+      "total_size_mb": 7.91285514831543
     },
     "figures": {
       "files": 10,
@@ -294,12 +294,12 @@
         },
         "web": {
           "files": 12,
-          "size_bytes": 2350826
+          "size_bytes": 2353503
         }
       },
       "mode": "stable-shippable-output-v1",
       "total_files": 60,
-      "total_size_bytes": 8294553
+      "total_size_bytes": 8297230
     }
   },
   "recommendations": [],
@@ -310,21 +310,21 @@
     "passed": 9,
     "total_checks": 9
   },
-  "timestamp": "2026-11-07T08:16:30Z",
+  "timestamp": "2026-11-07T12:55:38Z",
   "validated_inputs": {
     "artifact_manifest": {
       "path": "output/reports/artifact_manifest.json",
-      "sha256": "da0ff522f42eae4f823aafc3ea8d1b6bc388699a18f4d8c3fb93bc3d9a9977c7",
+      "sha256": "aacf6ed914192ba7a390911499b2704d3f77e94717d2f3f79f018ecbafe26e51",
       "size_bytes": 19627
     },
     "combined_manuscript": {
       "path": "output/web/_combined_manuscript.md",
-      "sha256": "b02292d7646e34fb0f18e6197503d14d67720c41045d1f8987a77ff7be396c89",
-      "size_bytes": 60698
+      "sha256": "602df6d8f85157910af853b13cff4f7194bf9c78589204a18966e9a068ea7c15",
+      "size_bytes": 60706
     },
     "composition_manifest": {
       "path": "output/reports/manuscript_composition.json",
-      "sha256": "fbe77fea8a1b3c148e3c60e6136ff255419d49b31f00212dfd39976890fdba7b",
+      "sha256": "524e0f5f7ac5fffcc1e99e5b62b6d7785b077fde92a5604008dc136e61094a73",
       "size_bytes": 2116
     },
     "consumed_manuscript": [
@@ -384,15 +384,15 @@
       },
       "output": {
         "file_count": 60,
-        "sha256": "e8946a00b00941b6f9ee964b960bc06f1ef1c2621a4bb9cb3b1984a7790e020e"
+        "sha256": "52c0ca25d7fab163e675b4e305b0bf96601766c45af3dd618c021451764237f4"
       },
       "source": {
         "file_count": 51,
         "sha256": "ef590270c743c586ba3acab9ea34212360abbacf03ed71d48887f1938968f7b0"
       },
       "stage": {
-        "file_count": 1742,
-        "sha256": "e873fc8d848886c1b6b5a152c3f10fd07f360be43926f4a35c759e4dbb72d725"
+        "file_count": 1744,
+        "sha256": "20e02b410d849cd07cea510b3ef6c0682ded2060e2f493338770e849c31b7919"
       }
     },
     "project": "templates/template_pools_rules_tools",

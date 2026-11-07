@@ -49,7 +49,7 @@ repository's configured project coverage gate, generates 18 artifacts
 (1 figures, 7 data files,
 10 reports) per pipeline run, and injects reproducibility
 metadata (configuration hash `e8bbba50b298ba3f`, build timestamp
-`2026-11-07T07:01:20Z`) into [@sec:reproducibility].
+`2026-11-07T12:55:38Z`) into [@sec:reproducibility].
 
 **Keywords:** methods paper, domain-specific language, controlled methods, deterministic compilation, staged validation, dimensional analysis
 
@@ -554,7 +554,7 @@ The typical analysis order is:
 
 1. `scripts/methods_analysis.py` — compiles every example method, runs all
    gates, exports worklist/CSV/Mermaid/JSON per method, demonstrates the
-   provenance hash-chain, and writes `../figures/step_counts.png`,
+   provenance hash-chain, and writes `output/figures/step_counts.png`,
    printing each output path for manifest collection.
 2. `scripts/z_generate_manuscript_variables.py` — reads `manuscript/config.yaml`
    and the analysis outputs, then resolves every generated variable in
@@ -654,7 +654,7 @@ evidence-registry validation. The manuscript intentionally does not
 hand-transcribe volatile values, so prose and artifacts cannot disagree.
 Configuration provenance is itself injected: `e8bbba50b298ba3f` is the
 SHA-256 of `manuscript/config.yaml` at build time, and
-`2026-11-07T07:01:20Z` records when the variables were generated
+`2026-11-07T12:55:38Z` records when the variables were generated
 (honoring `SOURCE_DATE_EPOCH` for byte-reproducible builds).
 
 

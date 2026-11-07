@@ -190,6 +190,69 @@ window.MathJax.output = Object.assign({}, templateMathOutput, {
     lineleading: 0.5
   })
 });
+var templateMathOptions = window.MathJax.options || {};
+window.MathJax.options = Object.assign({}, templateMathOptions, {
+  renderActions: Object.assign({}, templateMathOptions.renderActions, {
+    // Use the documented find action/MathItem extension point. MathJax 4.0.0's
+    // default finder spreads every DOM text run into push() arguments, exceeding
+    // the browser argument stack on large books even with very little math.
+    find: [10, function (doc) {
+      if (doc.processed.isSet("findMath")) return;
+      var adaptor = doc.adaptor;
+      adaptor.document = doc.document;
+      var containers = adaptor.getElements(
+        doc.options.elements || [adaptor.body(doc.document)], doc.document
+      );
+      // Retain the pinned HTMLDocument.findPosition source offsets/order
+      // (MathJax-src 4.0.0, ts/handlers/html/HTMLDocument.ts, Apache-2.0).
+      function position(nodes, item, location, delim) {
+        var parts = nodes[item.n];
+        var index = location.n;
+        var order = item.n;
+        var increment = 1 / (parts.length || 1);
+        for (var part of parts) {
+          if (index <= part[1] && adaptor.kind(part[0]) === "#text") {
+            return {i: order, node: part[0], n: Math.max(index, 0), delim: delim};
+          }
+          index -= part[1];
+          order += increment;
+        }
+        return {node: null, n: 0, delim: delim};
+      }
+      for (var jax of doc.inputJax) {
+        var list = new doc.options.MathList();
+        if (jax.processStrings) {
+          var strings = [];
+          var nodes = [];
+          for (var container of containers) {
+            var found = doc.domStrings.find(container);
+            // Append individually: neither DOM size nor expression count becomes
+            // a function argument count. Keep the scanner's complete run mapping.
+            for (var string of found[0]) strings.push(string);
+            for (var nodeList of found[1]) nodes.push(nodeList);
+          }
+          for (var item of jax.findMath(strings)) {
+            list.push(new doc.options.MathItem(
+              item.math, jax, item.display,
+              position(nodes, item, item.start, item.open),
+              position(nodes, item, item.end, item.close)
+            ));
+          }
+        } else {
+          for (var container of containers) {
+            for (var item of jax.findMath(container)) {
+              list.push(new doc.options.MathItem(
+                item.math, jax, item.display, item.start, item.end
+              ));
+            }
+          }
+        }
+        doc.math.merge(list);
+      }
+      doc.processed.set("findMath");
+    }, "", false]
+  })
+});
 window.normalizeTemplateMathJaxAria = function () {
   document.querySelectorAll("mjx-speech[aria-roledescription]").forEach(function (node) {
     var roleDescription = node.getAttribute("aria-roledescription") || "";
@@ -1451,7 +1514,7 @@ non-claim boundaries.</td>
 <td>Write the cover overview, token-injection flow, section allocation,
 provenance trace, quality gate, and configured-field figures from
 generated data.</td>
-<td>Nonblank figure tests and ../figures/figure_registry.json.</td>
+<td>Nonblank figure tests and output/figures/figure_registry.json.</td>
 <td><code>registered figure set</code></td>
 </tr>
 <tr>
@@ -3282,7 +3345,7 @@ output/data/token_inventory.json.</td>
 <tr>
 <td>Figure registry integrity</td>
 <td>Every referenced figure label is present in
-../figures/figure_registry.json.</td>
+output/figures/figure_registry.json.</td>
 <td>scripts/pipeline/stage_04_validate.py figure registry check.</td>
 <td><code>validation</code></td>
 </tr>
@@ -3378,7 +3441,7 @@ condition.</td>
 <td>Does every manuscript figure reference have a generated registry
 entry?</td>
 <td>Figure registry validation passes.</td>
-<td><code>../figures/figure_registry.json</code></td>
+<td><code>output/figures/figure_registry.json</code></td>
 </tr>
 <tr>
 <td>Method-figure alignment</td>
@@ -3475,7 +3538,7 @@ ability to regenerate them from the tracked project tree and to observe
 the same validation gates passing.</p>
 <ul>
 <li>Config hash: <code>2b7844ce7bd7da5c</code></li>
-<li>Generated: <code>2026-11-07T07:01:20Z</code> (derived from
+<li>Generated: <code>2026-11-07T12:55:38Z</code> (derived from
 <code>SOURCE_DATE_EPOCH</code>; an explicit <code>not-recorded</code>
 marker is emitted when the reproducible timestamp is not supplied)</li>
 <li>Python: <code>3.14.10</code></li>
