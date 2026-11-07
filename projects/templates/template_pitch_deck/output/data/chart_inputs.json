@@ -129,19 +129,19 @@
   "infrastructure_python": [
     [
       "reporting",
-      411
+      416
     ],
     [
       "core",
-      201
-    ],
-    [
-      "rendering",
-      120
+      202
     ],
     [
       "project",
-      117
+      123
+    ],
+    [
+      "rendering",
+      123
     ],
     [
       "validation",
@@ -149,7 +149,7 @@
     ],
     [
       "publishing",
-      85
+      89
     ],
     [
       "search",
@@ -177,7 +177,7 @@
     ],
     [
       "steganography",
-      13
+      14
     ],
     [
       "autoresearch",
